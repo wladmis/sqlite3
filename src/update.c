@@ -126,8 +126,10 @@ void sqliteUpdate(
     }
     if( i<pIdx->nColumn ) nIdx++;
   }
-  apIdx = sqliteMalloc( sizeof(Index*) * nIdx );
-  if( apIdx==0 ) goto update_cleanup;
+  if( nIdx>0 ){
+    apIdx = sqliteMalloc( sizeof(Index*) * nIdx );
+    if( apIdx==0 ) goto update_cleanup;
+  }
   for(nIdx=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
     for(i=0; i<pIdx->nColumn; i++){
       if( aXRef[pIdx->aiColumn[i]]>=0 ) break;

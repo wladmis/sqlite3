@@ -60,6 +60,7 @@ void *sqliteMalloc_(int n, char *zFile, int line){
     sqlite_iMallocFail--;
     if( sqlite_iMallocFail==0 ) return 0;
   }
+  if( n==0 ) return 0;
   k = (n+sizeof(int)-1)/sizeof(int);
   pi = malloc( (3+k)*sizeof(int));
   if( pi==0 ) return 0;
