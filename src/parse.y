@@ -23,13 +23,11 @@
 %syntax_error {
   if( pParse->zErrMsg==0 ){
     if( TOKEN.z[0] ){
-      sqliteSetNString(&pParse->zErrMsg, 
-          "near \"", -1, TOKEN.z, TOKEN.n, "\": syntax error", -1, 0);
+      sqliteErrorMsg(pParse, "near \"%T\": syntax error", &TOKEN);
     }else{
-      sqliteSetString(&pParse->zErrMsg, "incomplete SQL statement", (char*)0);
+      sqliteErrorMsg(pParse, "incomplete SQL statement");
     }
   }
-  pParse->nErr++;
 }
 %name sqliteParser
 %include {

@@ -847,23 +847,21 @@ int sqliteExprCheck(Parse *pParse, Expr *pExpr, int allowAgg, int *pIsAgg){
         is_agg = pDef->xFunc==0;
       }
       if( is_agg && !allowAgg ){
-        sqliteSetNString(&pParse->zErrMsg, "misuse of aggregate function ", -1,
-           zId, nId, "()", 2, 0);
-        pParse->nErr++;
+        sqliteErrorMsg(pParse, "misuse of aggregate function %.*s()", nId, zId);
         nErr++;
         is_agg = 0;
       }else if( no_such_func ){
-        sqliteSetNString(&pParse->zErrMsg, "no such function: ", -1, zId,nId,0);
-        pParse->nErr++;
+        sqliteErrorMsg(pParse, "no such function: %.*s", nId, zId);
         nErr++;
       }else if( wrong_num_args ){
-        sqliteSetNString(&pParse->zErrMsg, 
-           "wrong number of arguments to function ", -1, zId, nId, "()", 2, 0);
-        pParse->nErr++;
+        sqliteErrorMsg(pParse,"wrong number of arguments to function %.*s()",
+             nId, zId);
         nErr++;
       }
-      if( is_agg ) pExpr->op = TK_AGG_FUNCTION;
-      if( is_agg && pIsAgg ) *pIsAgg = 1;
+      if( is_agg ){
+        pExpr->op = TK_AGG_FUNCTION;
+        if( pIsAgg ) *pIsAgg = 1;
+      }
       for(i=0; nErr==0 && i<n; i++){
         nErr = sqliteExprCheck(pParse, pExpr->pList->a[i].pExpr,
                                allowAgg && !is_agg, pIsAgg);
