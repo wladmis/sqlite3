@@ -260,7 +260,7 @@ void generateColumnNames(Parse *pParse, IdList *pTabList, ExprList *pEList){
         char *zTab;
  
         zTab = pTabList->a[p->iTable - pParse->nTab].zAlias;
-        if( zTab==0 ) zTab = pTab->zName;
+        if( showFullNames || zTab==0 ) zTab = pTab->zName;
         sqliteSetString(&zName, zTab, ".", pTab->aCol[p->iColumn].zName, 0);
         sqliteVdbeAddOp(v, OP_ColumnName, i, 0);
         sqliteVdbeChangeP3(v, -1, zName, strlen(zName));

@@ -1457,7 +1457,7 @@ case OP_Precision: {
   POPSTACK;
   Release(p, nos);
   zStack[nos] = sqliteStrDup(zBuf);
-  aStack[nos].n = strlen(zStack[tos]) + 1;
+  aStack[nos].n = strlen(zStack[nos]) + 1;
   aStack[nos].flags = STK_Str | STK_Dyn;
   break;
 }

@@ -158,6 +158,9 @@ do_test func-4.9 {
   catchsql {SELECT round(c,a) FROM t1 ORDER BY a}
 } {0 {3.0 -12345.68 -5.000}}
 do_test func-4.10 {
+  catchsql {SELECT 'x' || round(c,a) || 'y' FROM t1 ORDER BY a}
+} {0 {x3.0y x-12345.68y x-5.000y}}
+do_test func-4.11 {
   catchsql {SELECT round() FROM t1 ORDER BY a}
 } {1 {too few arguments to function round()}}
 
