@@ -66,6 +66,8 @@ do_test dbbe-1.4 {
   lappend v $msg
 } {1 {not a directory: "testdb"}}
 
+if {$::tcl_platform(platform)!="windows"} {
+
 # Access permission denied on the directory.
 #
 do_test dbbe-1.5 {
@@ -99,6 +101,8 @@ do_test dbbe-1.6b {
   set v [catch {sqlite db testdb 0444} msg]
   lappend v $msg
 } {0 {}}
+
+} ;# End of if( platform!=windows )
 
 # Make sure a table can be accessed by either uppercase or lowercase
 # names

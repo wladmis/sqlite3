@@ -36,6 +36,9 @@ if {![info exists dbprefix]} {
 }
 switch $dbprefix {
   gdbm: {
+   foreach f [glob -nocomplain testdb/*] {
+     catch {file delete -force $f}
+   }
    if {[catch {file delete -force testdb}]} {
      exec rm -rf testdb
    }

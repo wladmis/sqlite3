@@ -721,7 +721,12 @@ static int sqliteMemDelete(DbbeCursor *pCursr, int nKey, char *pKey){
 ** directory.
 */
 static int sqliteMemOpenTempFile(Dbbe *pDbbe, FILE **ppFile){
+#if OS_UNIX
   const char *zTemps[] = { "/usr/tmp", "/var/tmp", "/tmp", "/temp", 0};
+#endif
+#if OS_WIN
+  const char *zTemps[] = { "c:/temp", "c:", 0};
+#endif
   const char *zDir;
   int i;
   struct stat statbuf;

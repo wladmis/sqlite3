@@ -98,7 +98,11 @@ int sqliteDbbeOpenTempFile(const char *zDir, Dbbe *pBe, FILE **ppFile){
     zFile = 0;
     sqliteSetString(&zFile, zDir, zBuf, 0);
   }while( access(zFile,0)==0 && limit-- >= 0 );
+#if OS_WIN
+  *ppFile = pBe->apTemp[i] = fopen(zFile, "w+b");
+#else
   *ppFile = pBe->apTemp[i] = fopen(zFile, "w+");
+#endif
   if( pBe->apTemp[i]==0 ){
     rc = SQLITE_ERROR;
     sqliteFree(zFile);
