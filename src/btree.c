@@ -2564,7 +2564,7 @@ int sqliteBtreeUpdateMeta(Btree *pBt, int *aMeta){
   }
   pP1 = pBt->page1;
   rc = sqlitepager_write(pP1);
-  if( rc ) return rc;	
+  if( rc ) return rc;   
   memcpy(pP1->aMeta, &aMeta[1], sizeof(pP1->aMeta));
   return SQLITE_OK;
 }

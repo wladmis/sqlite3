@@ -4560,7 +4560,7 @@ case OP_PushList: {
   p->keylistStackDepth++;
   assert(p->keylistStackDepth > 0);
   p->keylistStack = sqliteRealloc(p->keylistStack, 
-	  sizeof(Keylist *) * p->keylistStackDepth);
+          sizeof(Keylist *) * p->keylistStackDepth);
   p->keylistStack[p->keylistStackDepth - 1] = p->pList;
   p->pList = 0;
   break;
