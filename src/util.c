@@ -713,6 +713,24 @@ double sqliteAtoF(const char *z){
   return sign<0 ? -v1 : v1;
 }
 
+/*
+** The string zNum represents an integer.  There might be some other
+** information following the integer too, but that part is ignored.
+** If the integer that the prefix of zNum represents will fit in a
+** 32-bit signed integer, return TRUE.  Otherwise return FALSE.
+**
+** This routine returns FALSE for the string -2147483648 even that
+** that number will, in theory fit in a 32-bit integer.  But positive
+** 2147483648 will not fit in 32 bits.  So it seems safer to return
+** false.
+*/
+int sqliteFitsIn32Bits(const char *zNum){
+  int i, c;
+  if( *zNum=='-' || *zNum=='+' ) zNum++;
+  for(i=0; (c=zNum[i])>='0' && c<='9'; i++){}
+  return i<10 || (i==10 && memcmp(zNum,"2147483647",10)<=0);
+}
+
 /* This comparison routine is what we use for comparison operations
 ** between numeric values in an SQL expression.  "Numeric" is a little
 ** bit misleading here.  What we mean is that the strings have a

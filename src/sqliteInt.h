@@ -1205,3 +1205,4 @@ int sqliteFixExprList(DbFixer*, ExprList*);
 int sqliteFixTriggerStep(DbFixer*, TriggerStep*);
 double sqliteAtoF(const char *z);
 int sqlite_snprintf(int,char*,const char*,...);
+int sqliteFitsIn32Bits(const char *);
