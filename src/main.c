@@ -531,8 +531,9 @@ int sqlite3_close(sqlite3 *db){
 
 #ifndef SQLITE_OMIT_GLOBALRECOVER
   {
-    sqlite3 *pPrev = pDbList;
+    sqlite3 *pPrev;
     sqlite3OsEnterMutex();
+    pPrev = pDbList;
     while( pPrev && pPrev->pNext!=db ){
       pPrev = pPrev->pNext;
     }
