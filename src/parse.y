@@ -150,6 +150,7 @@ id(A) ::= ID(X).         {A = X;}
 %ifdef SQLITE_OMIT_COMPOUND_SELECT
   EXCEPT INTERSECT UNION
 %endif
+  REINDEX RENAME AUTOINCR CDATE CTIME CTIMESTAMP ALTER
   .
 
 // Define operator precedence early so that this is the first occurance
