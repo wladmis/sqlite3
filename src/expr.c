@@ -1280,6 +1280,7 @@ static int codeSubqueryStep(void *pArg, Expr *pExpr){
 
       pNC = pCoder->pNC;
       if( pNC ) nRef = pNC->nRef;
+      sqlite3CodeVerifySchema(pParse, -1); /* Insert the cookie verifier Goto */
       v = sqlite3GetVdbe(pParse);
       addr = sqlite3VdbeAddOp(v, OP_Goto, 0, 0);
       pExpr->iColumn = pParse->nMem++;
