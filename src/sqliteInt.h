@@ -17,6 +17,14 @@
 #define _SQLITEINT_H_
 
 /*
+** Cursor support is turned off unless the SQLITE_ENABLE_CURSOR option
+** is defined.
+*/
+#ifndef SQLITE_ENABLE_CURSOR
+# define SQLITE_OMIT_CURSOR 1
+#endif
+
+/*
 ** These #defines should enable >2GB file support on Posix if the
 ** underlying operating system supports it.  If the OS lacks
 ** large file support, or if the OS is windows, these should be no-ops.

@@ -23,8 +23,8 @@
 **
 ** @(#) $Id$
 */
-#ifndef SQLITE_OMIT_CURSOR
 #include "sqliteInt.h"
+#ifndef SQLITE_OMIT_CURSOR
 #include "vdbeInt.h"
 
 /*
