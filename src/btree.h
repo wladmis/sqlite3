@@ -41,7 +41,7 @@ int sqlite3BtreeOpen(const char *zFilename, Btree **, int nCache, int flags);
 int sqlite3BtreeClose(Btree*);
 int sqlite3BtreeSetCacheSize(Btree*,int);
 int sqlite3BtreeSetSafetyLevel(Btree*,int);
-int sqlite3BtreeBeginTrans(Btree*);
+int sqlite3BtreeBeginTrans(Btree*,int);
 int sqlite3BtreeCommit(Btree*);
 int sqlite3BtreeRollback(Btree*);
 int sqlite3BtreeBeginStmt(Btree*);

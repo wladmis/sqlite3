@@ -555,8 +555,8 @@ void sqlite3StartTable(
       pParse->nErr++;
       return;
     }
-    if( db->flags & SQLITE_InTrans ){
-      rc = sqlite3BtreeBeginTrans(db->aDb[1].pBt);
+    if( db->flags & !db->autoCommit ){
+      rc = sqlite3BtreeBeginTrans(db->aDb[1].pBt, 1);
       if( rc!=SQLITE_OK ){
         sqlite3ErrorMsg(pParse, "unable to get a write lock on "
           "the temporary database file");
@@ -2255,7 +2255,7 @@ void sqlite3CodeVerifySchema(Parse *pParse, int iDb){
 void sqlite3BeginWriteOperation(Parse *pParse, int setStatement, int iDb){
   Vdbe *v = sqlite3GetVdbe(pParse);
   if( v==0 ) return;
-  sqlite3VdbeAddOp(v, OP_Transaction, iDb, 0);
+  sqlite3VdbeAddOp(v, OP_Transaction, iDb, 1);
   sqlite3CodeVerifySchema(pParse, iDb);
   if( setStatement ){
     sqlite3VdbeAddOp(v, OP_Statement, iDb, 0);

@@ -196,7 +196,7 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite *db){
     u32 meta;
 
     assert( 0==sqlite3BtreeIsInTrans(pMain) );
-    rc = sqlite3BtreeBeginTrans(db->aDb[0].pBt);
+    rc = sqlite3BtreeBeginTrans(db->aDb[0].pBt, 1);
     if( rc!=SQLITE_OK ) goto end_of_vacuum;
 
     /* Copy Btree meta values 3 and 4. These correspond to SQL layer meta 
