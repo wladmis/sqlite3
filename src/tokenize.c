@@ -177,6 +177,11 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       *tokenType = TK_BITNOT;
       return 1;
     }
+    case '#': {
+      for(i=1; isdigit(z[i]); i++){}
+      *tokenType = TK_REGISTER;
+      return i;
+    }
     case '\'': case '"': {
       int delim = z[0];
       for(i=1; (c=z[i])!=0; i++){

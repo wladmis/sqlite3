@@ -27,6 +27,7 @@ execsql {
 
 # Create tables t1 and t2 in database file test2.db
 file delete -force test2.db
+file delete -force test2.db-journal
 sqlite3 db2 test2.db
 execsql {
   CREATE TABLE t1(a, b);
@@ -68,9 +69,6 @@ do_test attach3-2.1 {
     CREATE INDEX aux.i1 on t3(e);
   }
 } {}
-execsql {
-  pragma vdbe_trace = off;
-}
 do_test attach3-2.2 {
   execsql {
     SELECT * FROM sqlite_master WHERE name = 'i1';

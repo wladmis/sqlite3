@@ -588,6 +588,7 @@ expr(A) ::= INTEGER(X).      {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= FLOAT(X).        {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= STRING(X).       {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= BLOB(X).         {A = sqlite3Expr(@X, 0, 0, &X);}
+expr(A) ::= REGISTER(X).     {A = sqlite3RegisterExpr(pParse, &X);}
 expr(A) ::= VARIABLE(X).     {
   Token *pToken = &X;
   Expr *pExpr = A = sqlite3Expr(TK_VARIABLE, 0, 0, pToken);

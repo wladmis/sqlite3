@@ -199,6 +199,34 @@ Expr *sqlite3Expr(int op, Expr *pLeft, Expr *pRight, Token *pToken){
 }
 
 /*
+** When doing a nested parse, you can include terms in an expression
+** that look like this:   #0 #1 #2 ...  These terms refer to elements
+** on the stack.  "#0" (or just "#") means the top of the stack.
+** "#1" means the next down on the stack.  And so forth.
+**
+** This routine is called by the parser to deal with on of those terms.
+** It immediately generates code to store the value in a memory location.
+** The returns an expression that will code to extract the value from
+** that memory location as needed.
+*/
+Expr *sqlite3RegisterExpr(Parse *pParse, Token *pToken){
+  Vdbe *v = pParse->pVdbe;
+  Expr *p;
+  int depth;
+  if( v==0 ) return 0;
+  if( pParse->nested==0 ){
+    sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", pToken);
+    return 0;
+  }
+  p = sqlite3Expr(TK_REGISTER, 0, 0, pToken);
+  depth = atoi(&pToken->z[1]);
+  p->iTable = pParse->nMem++;
+  sqlite3VdbeAddOp(v, OP_Dup, depth, 0);
+  sqlite3VdbeAddOp(v, OP_MemStore, p->iTable, 1);
+  return p;
+}
+
+/*
 ** Join two expressions using an AND operator.  If either expression is
 ** NULL, then just return the other expression.
 */
@@ -1237,6 +1265,10 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       if( pExpr->token.n>1 ){
         sqlite3VdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
       }
+      break;
+    }
+    case TK_REGISTER: {
+      sqlite3VdbeAddOp(v, OP_MemLoad, pExpr->iTable, 0);
       break;
     }
     case TK_LT:
