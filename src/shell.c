@@ -847,7 +847,8 @@ static int do_meta_command(char *zLine, struct callback_data *p){
 
   if( c=='e' && strncmp(azArg[0], "explain", n)==0 ){
     int j;
-    char *z = nArg>=2 ? azArg[1] : "1";
+    static char zOne[] = "1";
+    char *z = nArg>=2 ? azArg[1] : zOne;
     int val = atoi(z);
     for(j=0; z[j]; j++){
       z[j] = tolower((unsigned char)z[j]);
