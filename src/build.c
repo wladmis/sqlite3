@@ -327,7 +327,6 @@ void sqlite3RollbackInternalChanges(sqlite *db){
 ** This routine is called when a commit occurs.
 */
 void sqlite3CommitInternalChanges(sqlite *db){
-  db->aDb[0].schema_cookie = db->next_cookie;
   db->flags &= ~SQLITE_InternChanges;
 }
 

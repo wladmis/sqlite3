@@ -275,8 +275,6 @@ static int sqlite3InitOne(sqlite *db, int iDb, char **pzErrMsg){
     }
     if( db->safety_level==0 ) db->safety_level = 2;
 
-    /* FIX ME: Every struct Db will need a next_cookie */
-    db->next_cookie = meta[0];
     db->file_format = meta[1];
     if( db->file_format==0 ){
       /* This happens if the database was initially empty */

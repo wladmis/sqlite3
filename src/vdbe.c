@@ -4585,7 +4585,7 @@ default: {
           char zBuf[100];
           sqlite3VdbeMemPrettyPrint(&pTos[i], zBuf, 100);
           fprintf(p->trace, " ");
-          fprintf(p->trace, zBuf);
+          fprintf(p->trace, "%s", zBuf);
         }
       }
       if( rc!=0 ) fprintf(p->trace," rc=%d",rc);
