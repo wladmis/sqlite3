@@ -1101,7 +1101,7 @@ void sqliteSrcListAddAlias(SrcList*, Token*);
 void sqliteSrcListAssignCursors(Parse*, SrcList*);
 void sqliteIdListDelete(IdList*);
 void sqliteSrcListDelete(SrcList*);
-void sqliteCreateIndex(Parse*,Token*,SrcList*,IdList*,int,int,Token*,Token*);
+void sqliteCreateIndex(Parse*,Token*,SrcList*,IdList*,int,Token*,Token*);
 void sqliteDropIndex(Parse*, SrcList*);
 void sqliteAddKeyType(Vdbe*, ExprList*);
 void sqliteAddIdxKeyType(Vdbe*, Index*);
