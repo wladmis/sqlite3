@@ -507,4 +507,11 @@ test_expr2 expr-7.57 {((a>0 IS NULL OR 0) AND 1) OR 0} {{}}
 
 test_expr2 expr-7.58  {(a||'')<='1'}                  {1}
 
+test_expr2 expr-7.59 {LIKE('10%',b)}                  {10 20}
+test_expr2 expr-7.60 {LIKE('_4',b)}                   {6}
+test_expr2 expr-7.61 {GLOB('1?',a)}            {10 11 12 13 14 15 16 17 18 19}
+test_expr2 expr-7.62 {GLOB('1*4',b)}                  {10 14}
+test_expr2 expr-7.63 {GLOB('*1[456]',b)}              {4}
+
+
 finish_test
