@@ -211,5 +211,34 @@ datetest 9.5 {julianday(datetime(1000))} {1000}
 datetest 9.6 {julianday(datetime(10000))} {10000}
 datetest 9.7 {julianday(datetime(100000))} {100000}
 
+# datetime() with just an HH:MM:SS correctly inserts the date 2000-01-01.
+#
+datetest 10.1 {datetime('01:02:03')}  {2000-01-01 01:02:03}
+datetest 10.2 {date('01:02:03')}  {2000-01-01}
+datetest 10.3 {strftime('%Y-%m-%d %H:%M','01:02:03')} {2000-01-01 01:02}
+
+# Test the new HH:MM:SS modifier
+#
+datetest 11.1 {datetime('2004-02-28 20:00:00', '-01:20:30')} \
+   {2004-02-28 18:39:30}
+datetest 11.2 {datetime('2004-02-28 20:00:00', '+12:30:00')} \
+   {2004-02-29 08:30:00}
+datetest 11.3 {datetime('2004-02-28 20:00:00', '+12:30')} \
+   {2004-02-29 08:30:00}
+datetest 11.4 {datetime('2004-02-28 20:00:00', '12:30')} \
+   {2004-02-29 08:30:00}
+datetest 11.5 {datetime('2004-02-28 20:00:00', '-12:00')} \
+   {2004-02-28 08:00:00}
+datetest 11.6 {datetime('2004-02-28 20:00:00', '-12:01')} \
+   {2004-02-28 07:59:00}
+datetest 11.7 {datetime('2004-02-28 20:00:00', '-11:59')} \
+   {2004-02-28 08:01:00}
+datetest 11.8 {datetime('2004-02-28 20:00:00', '11:59')} \
+   {2004-02-29 07:59:00}
+datetest 11.9 {datetime('2004-02-28 20:00:00', '12:01')} \
+   {2004-02-29 08:01:00}
+
+
+
 
 finish_test
