@@ -447,9 +447,10 @@ void sqlite3OpenMasterTable(Vdbe *v, int iDb){
 */
 int findDb(sqlite3 *db, Token *pName){
   int i;
-  for(i=0; i<db->nDb; i++){
-    if( pName->n==strlen(db->aDb[i].zName) && 
-        0==sqlite3StrNICmp(db->aDb[i].zName, pName->z, pName->n) ){
+  Db *pDb;
+  for(pDb=db->aDb, i=0; i<db->nDb; i++, pDb++){
+    if( pName->n==strlen(pDb->zName) && 
+        0==sqlite3StrNICmp(pDb->zName, pName->z, pName->n) ){
       return i;
     }
   }
@@ -474,7 +475,7 @@ int findDb(sqlite3 *db, Token *pName){
 */
 int sqlite3TwoPartName(
   Parse *pParse,      /* Parsing and code generating context */
-  Token *pName1,      /* The "xxx" in the name "xxx.yyy" */
+  Token *pName1,      /* The "xxx" in the name "xxx.yyy" or "xxx" */
   Token *pName2,      /* The "yyy" in the name "xxx.yyy" */
   Token **pUnqual     /* Write the unqualified object name here */
 ){

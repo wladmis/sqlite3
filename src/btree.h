@@ -31,11 +31,9 @@ typedef struct BtCursor BtCursor;
 
 
 int sqlite3BtreeOpen(
-  const char *zFilename, 
-  Btree **, 
-  int nCache, 
-  int flags,
-  void *pBusyHandler
+  const char *zFilename,   /* Name of database file to open */
+  Btree **,                /* Return open Btree* here */
+  int flags                /* Flags */
 );
 
 /* The flags parameter to sqlite3BtreeOpen can be the bitwise or of the
@@ -45,8 +43,11 @@ int sqlite3BtreeOpen(
 #define BTREE_MEMORY        2  /* In-memory DB.  No argument */
 
 int sqlite3BtreeClose(Btree*);
+int sqlite3BtreeSetBusyHandler(Btree*,BusyHandler*);
 int sqlite3BtreeSetCacheSize(Btree*,int);
 int sqlite3BtreeSetSafetyLevel(Btree*,int);
+int sqlite3BtreeSetPageSize(Btree*,int,int);
+int sqlite3BtreeGetPageSize(Btree*);
 int sqlite3BtreeBeginTrans(Btree*,int);
 int sqlite3BtreeCommit(Btree*);
 int sqlite3BtreeRollback(Btree*);

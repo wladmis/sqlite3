@@ -91,19 +91,15 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
     sqlite3ErrorMsg(pParse, "unable to open database: %s", zFile);
   }
 #if SQLITE_HAS_CODEC
-  {
-    extern int sqliteCodecAttach(sqlite*, int, void*, int);
+  assert( pKey!=0 );
+  if( pKey->n>0 ){
+    extern int sqlite3CodecAttach(sqlite*, int, void*, int);
     char *zKey = 0;
     int nKey;
-    if( pKey && pKey->z && pKey->n ){
-      sqlite3SetNString(&zKey, pKey->z, pKey->n, 0);
-      sqlite3Dequote(zKey);
-      nKey = strlen(zKey);
-    }else{
-      zKey = 0;
-      nKey = 0;
-    }
-    sqliteCodecAttach(db, db->nDb-1, zKey, nKey);
+    sqlite3BtreeSetPageSize(aNew->pBt, -1, 4);
+    sqlite3CodecAttach(db, db->nDb-1, zKey, nKey);
+    zKey = sqlite3NameFromToken(pKey);
+    nKey = strlen(zKey);
   }
 #endif
   sqliteFree(zFile);
