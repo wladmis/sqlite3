@@ -59,6 +59,8 @@ int sqlite3BtreeIsInStmt(Btree*);
 int sqlite3BtreeSync(Btree*, const char *zMaster);
 
 const char *sqlite3BtreeGetFilename(Btree *);
+const char *sqlite3BtreeGetDirname(Btree *);
+const char *sqlite3BtreeGetJournalname(Btree *);
 int sqlite3BtreeCopyFile(Btree *, Btree *);
 
 /* The flags parameter to sqlite3BtreeCreateTable can be the bitwise OR

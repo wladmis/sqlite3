@@ -4197,6 +4197,24 @@ const char *sqlite3BtreeGetFilename(Btree *pBt){
 }
 
 /*
+** Return the pathname of the directory that contains the database file.
+*/
+const char *sqlite3BtreeGetDirname(Btree *pBt){
+  assert( pBt->pPager!=0 );
+  return sqlite3pager_dirname(pBt->pPager);
+}
+
+/*
+** Return the pathname of the journal file for this database. The return
+** value of this routine is the same regardless of whether the journal file
+** has been created or not.
+*/
+const char *sqlite3BtreeGetJournalname(Btree *pBt){
+  assert( pBt->pPager!=0 );
+  return sqlite3pager_journalname(pBt->pPager);
+}
+
+/*
 ** Copy the complete content of pBtFrom into pBtTo.  A transaction
 ** must be active for both files.
 **
