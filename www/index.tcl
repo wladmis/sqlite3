@@ -96,6 +96,8 @@ Among the SQL features that SQLite does not currently implement are:</p>
 <li>The <a href="fileformat.html">file format</a> used by SQLite databases.</li>
 <li>The <a href="arch.html">Architecture of the SQLite Library</a> describes
     how the library is put together.  <b>(preliminary)</b></li>
+<li>A description of the <a href="opcode.html">virtual machine</a> that
+    SQLite uses to access the database.  <b>(preliminary)</b></li>
 <li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.
     <b>(under development)</b></li>
 </ul>
