@@ -196,7 +196,9 @@ static char *one_input_line(const char *zPrior, FILE *in){
     zPrompt = mainPrompt;
   }
   zResult = readline(zPrompt);
+#if defined(HAVE_READLINE) && HAVE_READLINE==1
   if( zResult ) add_history(zResult);
+#endif
   return zResult;
 }
 
@@ -360,6 +362,7 @@ static void output_csv(struct callback_data *p, const char *z, int bSep){
   }
 }
 
+#ifdef SIGINT
 /*
 ** This routine runs when the user presses Ctrl-C
 */
@@ -367,6 +370,7 @@ static void interrupt_handler(int NotUsed){
   seenInterrupt = 1;
   if( db ) sqlite3_interrupt(db);
 }
+#endif
 
 /*
 ** This is the callback routine that the SQLite library
@@ -1775,7 +1779,9 @@ int main(int argc, char **argv){
       if( zHome && (zHistory = malloc(strlen(zHome)+20))!=0 ){
         sprintf(zHistory,"%s/.sqlite_history", zHome);
       }
+#if defined(HAVE_READLINE) && HAVE_READLINE==1
       if( zHistory ) read_history(zHistory);
+#endif
       process_input(&data, 0);
       if( zHistory ){
         stifle_history(100);
