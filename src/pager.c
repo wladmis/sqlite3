@@ -456,7 +456,7 @@ int sqlitepager_open(Pager **ppPager, const char *zFilename, int mxPage){
   pPager->nRef = 0;
   pPager->dbSize = -1;
   pPager->nPage = 0;
-  pPager->mxPage = mxPage>10 ? mxPage : 10;
+  pPager->mxPage = mxPage>5 ? mxPage : 10;
   pPager->state = SQLITE_UNLOCK;
   pPager->errMask = 0;
   pPager->pFirst = 0;
@@ -620,6 +620,7 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
         pPager->pAll->pPrevAll = pPg;
       }
       pPg->pPrevAll = 0;
+      pPager->pAll = pPg;
       pPager->nPage++;
     }else{
       /* Recycle an older page.  First locate the page to be recycled.
@@ -776,7 +777,7 @@ int sqlitepager_unref(void *pData){
 int sqlitepager_write(void *pData){
   PgHdr *pPg = DATA_TO_PGHDR(pData);
   Pager *pPager = pPg->pPager;
-  int rc;
+  int rc = SQLITE_OK;
 
   if( pPager->errMask ){ 
     return pager_errcode(pPager);
