@@ -625,6 +625,8 @@ WhereInfo *sqliteWhereBegin(
             break;
           }
         }
+      }else{
+        geFlag = 1;
       }
       brk = pLevel->brk = sqliteVdbeMakeLabel(v);
       cont = pLevel->cont = sqliteVdbeMakeLabel(v);

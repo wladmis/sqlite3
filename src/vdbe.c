@@ -3991,7 +3991,7 @@ case OP_Substr: {
   }else{
     start = pOp->p1;
   }
-  if( start>0 ) start--;
+  if( start ) start--;
   VERIFY( if( p->tos<0 ) goto not_enough_stack; )
   if( Stringify(p, p->tos) ) goto no_mem;
 
