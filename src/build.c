@@ -789,7 +789,6 @@ CollSeq *sqlite3ChangeCollatingFunction(
       return 0;
     }
     pColl->zName = (char*)&pColl[1];
-    pColl->reverseOrder = 0;
     memcpy(pColl->zName, zName, nName+1);
     sqlite3HashInsert(&db->aCollSeq, pColl->zName, nName, pColl);
   }

@@ -71,6 +71,15 @@ typedef struct VdbeOpList VdbeOpList;
 #define P3_COLLSEQ  (-4)  /* P3 is a pointer to a CollSeq structure */
 #define P3_KEYINFO  (-5)  /* P3 is a pointer to a KeyInfo structure */
 
+/* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
+** is made.  That copy is freed when the Vdbe is finalized.  But if the
+** argument is P3_KEYINFO_HANDOFF, the passed in pointer is used.  It still
+** gets freed when the Vdbe is finalized so it still should be obtained
+** from a single sqliteMalloc().  But no copy is made and the calling
+** function should *not* try to free the KeyInfo.
+*/
+#define P3_KEYINFO_HANDOFF (-6)
+
 /*
 ** The following macro converts a relative address in the p2 field
 ** of a VdbeOp structure into a negative number so that 
