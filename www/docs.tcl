@@ -32,6 +32,9 @@ doc {Version 3 C/C++ API} {capi3.html} {
   A description of the C/C++ interface bindings for SQLite version 3.0.0
   and following.
 }
+doc {Version 3 C/C++ API<br>Reference} {capi3ref.html} {
+  This document describes each API function separately.
+}
 
 doc {Tcl API} {tclsqlite.html} {
   A description of the TCL interface bindings for SQLite.
