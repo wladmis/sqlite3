@@ -72,6 +72,8 @@ void sqlitepager_dont_rollback(void*);
 void sqlitepager_dont_write(Pager*, Pgno);
 int *sqlitepager_stats(Pager*);
 void sqlitepager_set_safety_level(Pager*,int);
+const char *sqlitepager_filename(Pager*);
+int sqlitepager_rename(Pager*, const char *zNewName);
 
 #ifdef SQLITE_TEST
 void sqlitepager_refdump(Pager*);
