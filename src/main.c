@@ -1023,3 +1023,29 @@ void *sqlite_trace(sqlite *db, void (*xTrace)(void*,const char*), void *pArg){
   return 0;
 #endif
 }
+
+/*
+** Register functions to be invoked when a transaction is started or when
+** a transaction commits.  If either function returns non-zero, then the
+** corresponding operation aborts with a constraint error.
+*/
+void *sqlite_begin_hook(
+  sqlite *db,
+  int (*xCallback)(void*),
+  void *pArg
+){
+  void *pOld = db->pBeginArg;
+  db->xBeginCallback = xCallback;
+  db->pBeginArg = pArg;
+  return pOld;
+}
+void *sqlite_commit_hook(
+  sqlite *db,
+  int (*xCallback)(void*),
+  void *pArg
+){
+  void *pOld = db->pCommitArg;
+  db->xCommitCallback = xCallback;
+  db->pCommitArg = pArg;
+  return pOld;
+}
