@@ -115,7 +115,6 @@ do_test temptable-2.5 {
   lappend r $msg
 } {1 {no such table: t2}}
 
-
 # Make sure indices on temporary tables are also temporary.
 #
 do_test temptable-3.1 {

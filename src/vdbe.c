@@ -3021,7 +3021,6 @@ case OP_Open: {
     case OP_OpenAux:     wrFlag = 0;  pX = db->pBeTemp;  break;
     case OP_OpenWrAux:   wrFlag = 1;  pX = db->pBeTemp;  break;
   }
-  assert( pX!=0 );
   if( p2<=0 ){
     if( tos<0 ) goto not_enough_stack;
     Integerify(p, tos);
@@ -3047,6 +3046,7 @@ case OP_Open: {
   cleanupCursor(&p->aCsr[i]);
   memset(&p->aCsr[i], 0, sizeof(Cursor));
   p->aCsr[i].nullRow = 1;
+  if( pX==0 ) break;
   do{
     rc = sqliteBtreeCursor(pX, p2, wrFlag, &p->aCsr[i].pCursor);
     switch( rc ){

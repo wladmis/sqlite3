@@ -65,9 +65,9 @@ input ::= cmdlist.
 cmdlist ::= ecmd.
 cmdlist ::= cmdlist ecmd.
 ecmd ::= explain cmd SEMI.  {sqliteExec(pParse);}
-ecmd ::= cmd SEMI.          {sqliteExec(pParse);}
 ecmd ::= SEMI.
-explain ::= EXPLAIN.    {pParse->explain = 1;}
+explain ::= EXPLAIN.    { sqliteBeginParse(pParse, 1); }
+explain ::= .           { sqliteBeginParse(pParse, 0); }
 
 ///////////////////// Begin and end transactions. ////////////////////////////
 //
@@ -87,8 +87,8 @@ create_table ::= CREATE(X) temp(T) TABLE ids(Y). {
    sqliteStartTable(pParse,&X,&Y,T);
 }
 %type temp {int}
-temp(A) ::= TEMP.  {A = 1;}
-temp(A) ::= .      {A = 0;}
+temp(A) ::= TEMP.  {A = pParse->isTemp || !pParse->initFlag;}
+temp(A) ::= .      {A = pParse->isTemp;}
 create_table_args ::= LP columnlist conslist_opt RP(X). {
   sqliteEndTable(pParse,&X,0);
 }
