@@ -1068,8 +1068,10 @@ int sqlite3ExprType(Expr *p){
 */
 static void codeInteger(Vdbe *v, const char *z, int n){
   int i;
-  if( sqlite3GetInt32(z, &i) || (i=0, sqlite3FitsIn64Bits(z))!=0 ){
-    sqlite3VdbeOp3(v, OP_Integer, i, 0, z, n);
+  if( sqlite3GetInt32(z, &i) ){
+    sqlite3VdbeAddOp(v, OP_Integer, i, 0);
+  }else if( sqlite3FitsIn64Bits(z) ){
+    sqlite3VdbeOp3(v, OP_Integer, 0, 0, z, n);
   }else{
     sqlite3VdbeOp3(v, OP_Real, 0, 0, z, n);
   }
