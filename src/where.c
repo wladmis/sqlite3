@@ -188,7 +188,7 @@ WhereInfo *sqliteWhereBegin(
   ** be the first nested loop and so on.  aOrder[pTabList->nId-1] will
   ** be the innermost loop.
   **
-  ** Someday will put in a good algorithm here to reorder to the loops
+  ** Someday will put in a good algorithm here to reorder the loops
   ** for an effiecient query.  But for now, just use whatever order the
   ** tables appear in in the pTabList.
   */
@@ -212,7 +212,7 @@ WhereInfo *sqliteWhereBegin(
     Index *pBestIdx = 0;
 
     /* Do a search for usable indices.  Leave pBestIdx pointing to
-    ** most specific usable index.
+    ** the most specific usable index.
     **
     ** "Most specific" means that pBestIdx is the usable index that
     ** has the largest value for nField.  A usable index is one for
@@ -255,6 +255,7 @@ WhereInfo *sqliteWhereBegin(
       }
     }
     aIdx[i] = pBestIdx;
+    loopMask |= 1<<idx;
   }
 
   /* Open all tables in the pTabList and all indices in aIdx[].
