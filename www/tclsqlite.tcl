@@ -46,7 +46,7 @@ the database is stored.
 
 <p>
 Once an SQLite database is open, it can be controlled using 
-methods of the <i>dbcmd</i>.  There are currently 18 methods
+methods of the <i>dbcmd</i>.  There are currently 19 methods
 defined:</p>
 
 <p>
@@ -66,6 +66,7 @@ foreach m [lsort {
  eval
  function
  last_insert_rowid
+ nullvalue
  onecolumn
  progress
  timeout
@@ -364,6 +365,24 @@ db function hex {format 0x%X}
 </b></blockquote>
 
 }
+
+##############################################################################
+METHOD nullvalue {
+
+<p>
+The "nullvalue" method changes the representation for NULL returned
+as result of the "eval" method.</p>
+
+<blockquote><b>
+db1 nullvalue NULL
+</b></blockquote>
+
+<p>The "nullvalue" method is useful to differ between NULL and empty
+column values as Tcl lacks a NULL representation.  The default
+representation for NULL values is an empty string.</p>
+}
+
+
 
 ##############################################################################
 METHOD onecolumn {
