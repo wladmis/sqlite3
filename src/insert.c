@@ -523,7 +523,7 @@ void sqlite3Insert(
       }else if( pSelect ){
         sqlite3VdbeAddOp(v, OP_Dup, nColumn-j-1, 1);
       }else{
-        sqlite3ExprCode(pParse, pList->a[j].pExpr);
+        sqlite3ExprCodeAndCache(pParse, pList->a[j].pExpr);
       }
     }
     sqlite3VdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
