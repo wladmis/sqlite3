@@ -114,9 +114,14 @@
 #ifndef INTPTR_TYPE
 # if SQLITE_PTR_SZ==4
 #   define INTPTR_TYPE int
-#   define UINTPTR_TYPE unsigned int
 # else
 #   define INTPTR_TYPE sqlite_int64
+# endif
+#endif
+#ifndef UINTPTR_TYPE
+# if SQLITE_PTR_SZ==4
+#   define UINTPTR_TYPE unsigned int
+# else
 #   define UINTPTR_TYPE sqlite_uint64
 # endif
 #endif
