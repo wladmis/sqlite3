@@ -645,7 +645,7 @@ static int sqliteMain(
   if( sParse.useCallback==0 ){
     assert( ppVm );
     *ppVm = (sqlite_vm*)sParse.pVdbe;
-    *pzTail = sParse.zTail;
+    if( pzTail ) *pzTail = sParse.zTail;
   }
   if( sqliteSafetyOff(db) ) goto exec_misuse;
   return sParse.rc;

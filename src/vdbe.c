@@ -810,16 +810,18 @@ int sqlite_step(
     rc = sqliteVdbeExec(p);
   }
   if( rc==SQLITE_DONE || rc==SQLITE_ROW ){
-    *pazColName = (const char**)p->azColName;
-    *pN = p->nResColumn;
+    if( pazColName ) *pazColName = (const char**)p->azColName;
+    if( pN ) *pN = p->nResColumn;
   }else{
-    *pN = 0;
-    *pazColName = 0;
+    if( pazColName) *pazColName = 0;
+    if( pN ) *pN = 0;
   }
-  if( rc==SQLITE_ROW ){
-    *pazValue = (const char**)p->azResColumn;
-  }else{
-    *pazValue = 0;
+  if( pazValue ){
+    if( rc==SQLITE_ROW ){
+      *pazValue = (const char**)p->azResColumn;
+    }else{
+      *pazValue = 0;
+    }
   }
   if( sqliteSafetyOff(db) ){
     return SQLITE_MISUSE;
