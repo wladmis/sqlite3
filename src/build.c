@@ -445,7 +445,7 @@ void sqliteAddDefaultValue(Parse *pParse, Token *pVal, int minusFlag){
 */
 static void changeCookie(sqlite *db){
   if( db->next_cookie==db->schema_cookie ){
-    db->next_cookie = db->schema_cookie + sqliteRandomByte() + 1;
+    db->next_cookie = db->schema_cookie + sqliteRandomByte(db) + 1;
     db->flags |= SQLITE_InternChanges;
   }
 }
