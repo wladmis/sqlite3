@@ -2378,6 +2378,9 @@ static int getPayload(
 int sqlite3BtreeKey(BtCursor *pCur, u32 offset, u32 amt, void *pBuf){
   assert( pCur->isValid );
   assert( pCur->pPage!=0 );
+  if( pCur->pPage->intKey ){
+    return SQLITE_CORRUPT;
+  }
   assert( pCur->pPage->intKey==0 );
   assert( pCur->idx>=0 && pCur->idx<pCur->pPage->nCell );
   return getPayload(pCur, offset, amt, (unsigned char*)pBuf, 0);
