@@ -372,7 +372,15 @@ expr(A) ::= expr(X) ISNULL(E). {
   A = sqliteExpr(TK_ISNULL, X, 0, 0);
   sqliteExprSpan(A,&X->span,&E);
 }
+expr(A) ::= expr(X) IS NULL(E). {
+  A = sqliteExpr(TK_ISNULL, X, 0, 0);
+  sqliteExprSpan(A,&X->span,&E);
+}
 expr(A) ::= expr(X) NOTNULL(E). {
+  A = sqliteExpr(TK_NOTNULL, X, 0, 0);
+  sqliteExprSpan(A,&X->span,&E);
+}
+expr(A) ::= expr(X) NOT NULL(E). {
   A = sqliteExpr(TK_NOTNULL, X, 0, 0);
   sqliteExprSpan(A,&X->span,&E);
 }
