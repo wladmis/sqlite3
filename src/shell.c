@@ -1200,7 +1200,7 @@ int main(int argc, char **argv){
     }
   }else{
     extern int isatty();
-    if( isatty(0) ){
+    if( isatty(fileno(stdout)) ){
       char *zHome;
       char *zHistory = 0;
       printf(
