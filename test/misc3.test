@@ -222,7 +222,7 @@ do_test misc3-5.1 {
     INSERT INTO x2 VALUES(3,'three');
     INSERT INTO x2 VALUES(4,'four');
     SELECT x2.c AS c, e, b FROM x2 LEFT JOIN
-       (SELECT b, max(c) AS c FROM x1 GROUP BY b)
+       (SELECT b, max(c)+0 AS c FROM x1 GROUP BY b)
        USING(c);
   }
 } {1 one cat 2 two {} 3 three {} 4 four dog}
@@ -230,7 +230,7 @@ do_test misc4-5.2 {
   execsql {
     SELECT * FROM (
       SELECT x2.c AS c, e, b FROM x2 LEFT JOIN
-         (SELECT b, max(c) AS c FROM x1 GROUP BY b)
+         (SELECT b, max(c)+0 AS c FROM x1 GROUP BY b)
          USING(c)
     );
   }
