@@ -122,7 +122,7 @@ static int selectInnerLoop(
     nColumn = pEList->nExpr;
   }else{
     for(i=0; i<nColumn; i++){
-      sqliteVdbeAddOp(v, OP_Field, srcTab, i, 0, 0);
+      sqliteVdbeAddOp(v, OP_Column, srcTab, i, 0, 0);
     }
   }
 
@@ -171,7 +171,7 @@ static int selectInnerLoop(
   */
   if( eDest==SRT_Table ){
     sqliteVdbeAddOp(v, OP_MakeRecord, nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_New, iParm, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_NewRecno, iParm, 0, 0, 0);
     sqliteVdbeAddOp(v, OP_Pull, 1, 0, 0, 0);
     sqliteVdbeAddOp(v, OP_Put, iParm, 0, 0, 0);
   }else 

@@ -124,7 +124,7 @@ typedef struct VdbeOp VdbeOp;
 
 #define OP_FileOpen           45
 #define OP_FileRead           46
-#define OP_FileField          47
+#define OP_FileColumn         47
 #define OP_FileClose          48
 
 #define OP_AggReset           49

@@ -26,6 +26,8 @@
 **
 ** @(#) $Id$
 */
+#ifndef _BTREE_H_
+#define _BTREE_H_
 
 typedef struct Btree Btree;
 typedef struct BtCursor BtCursor;
@@ -62,6 +64,8 @@ int sqliteBtreeUpdateMeta(Btree*, int*);
 #ifdef SQLITE_TEST
 int sqliteBtreePageDump(Btree*, int, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
-Pager *sqliteBtreePager(Btree*);
+struct Pager *sqliteBtreePager(Btree*);
 char *sqliteBtreeSanityCheck(Btree*, int*, int);
 #endif
+
+#endif /* _BTREE_H_ */

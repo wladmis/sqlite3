@@ -476,7 +476,7 @@ static const char *findTempDir(void){
   struct stat buf;
   for(i=0; i<sizeof(azDirs)/sizeof(azDirs[0]); i++){
     if( stat(azDirs[i], &buf)==0 && S_ISDIR(buf.st_mode)
-         && S_IWUSR(buf.st_mode) ){
+         && access(azDirs[i], W_OK) ){
        return azDirs[i];
     }
   }
@@ -515,11 +515,11 @@ int sqlitepager_open(
     tempFile = 0;
   }else{
     int cnt = 8;
-    char *zDir = findTempDir();
+    const char *zDir = findTempDir();
     if( zDir==0 ) return SQLITE_CANTOPEN;
     do{
       cnt--;
-      sprintf(zTemp,"%s/_sqlite_%u",(unsigned)sqliteRandomInteger());
+      sprintf(zTemp,"%s/_sqlite_%u", zDir, (unsigned)sqliteRandomInteger());
       fd = open(zTemp, O_RDWR|O_CREAT|O_EXCL, 0600);
     }while( cnt>0 && fd<0 );
     zFilename = zTemp;
@@ -1138,7 +1138,7 @@ int sqlitepager_rollback(Pager *pPager){
 ** if the database is (in theory) writable.
 */
 int sqlitepager_isreadonly(Pager *pPager){
-  return pPager->readonly;
+  return pPager->readOnly;
 }
 
 /*

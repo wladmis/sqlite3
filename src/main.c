@@ -233,7 +233,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
       }
     }
     sqliteFree(db);
-    return rc;
+    return 0;
   }
 
   /* Assume file format 1 unless the database says otherwise */
