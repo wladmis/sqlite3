@@ -838,7 +838,7 @@ int sqlitepager_open(
   if( sqlite_malloc_failed ){
     return SQLITE_NOMEM;
   }
-  if( zFilename ){
+  if( zFilename && zFilename[0] ){
     zFullPathname = sqliteOsFullPathname(zFilename);
     rc = sqliteOsOpenReadWrite(zFullPathname, &fd, &readOnly);
     tempFile = 0;
