@@ -46,6 +46,9 @@
 ** for a self-join, for example) then two DbbeCursor structures are
 ** created but there is only a single BeFile structure with an
 ** nRef of 2.
+**
+** This backend uses a separate disk file for each database table
+** and index.
 */
 typedef struct BeFile BeFile;
 struct BeFile {
@@ -545,7 +548,7 @@ static int sqliteGdbmDelete(DbbeCursor *pCursr, int nKey, char *pKey){
 ** used to implement the GDBM backend.
 */
 static struct DbbeMethods gdbmMethods = {
-  /* n         Close */   sqliteGdbmClose,
+  /*           Close */   sqliteGdbmClose,
   /*      OpenCursor */   sqliteGdbmOpenCursor,
   /*       DropTable */   sqliteGdbmDropTable,
   /* ReorganizeTable */   sqliteGdbmReorganizeTable,

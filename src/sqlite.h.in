@@ -142,6 +142,8 @@ int sqlite_exec(
 #define SQLITE_CORRUPT   10   /* The database disk image is malformed */
 #define SQLITE_NOTFOUND  11   /* Table or record not found */
 #define SQLITE_FULL      12   /* Insertion failed because database is full */
+#define SQLITE_CANTOPEN  13   /* Unable to open the database file */
+#define SQLITE_PROTOCOL  14   /* Database lock protocol error */
 
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically
