@@ -408,7 +408,7 @@ else
   AC_CHECK_HEADER(tcl.h, [found=yes])
 fi
 if test "$found" = "no"; then
-  for dir in /usr/local /usr/X11* /usr/pkg /usr/contrib /usr; do
+  for dir in /usr/local /usr/X11 /usr/X11R6 /usr/pkg /usr/contrib /usr; do
     AC_CHECK_FILE($dir/include/tcl.h, found=yes)
     if test "$found" = "yes"; then
       TARGET_TCL_INC="-I$dir/include"
