@@ -1268,3 +1268,10 @@ int sqliteFixTriggerStep(DbFixer*, TriggerStep*);
 double sqliteAtoF(const char *z, const char **);
 char *sqlite_snprintf(int,char*,const char*,...);
 int sqliteFitsIn32Bits(const char *);
+
+unsigned char *sqlite3utf16to8(const void *pData, int N);
+void *sqlite3utf8to16be(const unsigned char *pIn, int N);
+void *sqlite3utf8to16le(const unsigned char *pIn, int N);
+void sqlite3utf16to16le(void *pData, int N);
+void sqlite3utf16to16be(void *pData, int N);
+
