@@ -1121,7 +1121,9 @@ case OP_Function: {
   ctx.z = 0;
   ctx.isError = 0;
   ctx.isStep = 0;
+  if( sqliteSafetyOff(db) ) goto abort_due_to_misuse;
   (*ctx.pFunc->xFunc)(&ctx, n, (const char**)&zStack[p->tos-n+1]);
+  if( sqliteSafetyOn(db) ) goto abort_due_to_misuse;
   sqliteVdbePopStack(p, n);
   p->tos++;
   aStack[p->tos] = ctx.s;
