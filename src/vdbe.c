@@ -3646,15 +3646,20 @@ case OP_IdxIsNull: {
 */
 case OP_Destroy: {
   int iMoved;
-  rc = sqlite3BtreeDropTable(db->aDb[pOp->p2].pBt, pOp->p1, &iMoved);
-  pTos++;
-  pTos->flags = MEM_Int;
-  pTos->i = iMoved;
-#ifndef SQLITE_OMIT_AUTOVACUUM
-  if( iMoved!=0 ){
-    sqlite3RootPageMoved(&db->aDb[pOp->p2], iMoved, pOp->p1);
+  if( db->activeVdbeCnt>1 ){
+    rc = SQLITE_LOCKED;
+  }else{
+    assert( db->activeVdbeCnt==1 );
+    rc = sqlite3BtreeDropTable(db->aDb[pOp->p2].pBt, pOp->p1, &iMoved);
+    pTos++;
+    pTos->flags = MEM_Int;
+    pTos->i = iMoved;
+  #ifndef SQLITE_OMIT_AUTOVACUUM
+    if( rc==SQLITE_OK && iMoved!=0 ){
+      sqlite3RootPageMoved(&db->aDb[pOp->p2], iMoved, pOp->p1);
+    }
+  #endif
   }
-#endif
   break;
 }
 
