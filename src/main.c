@@ -976,6 +976,24 @@ void *sqlite_trace(sqlite *db, void (*xTrace)(void*,const char*), void *pArg){
   return pOld;
 }
 
+/*** EXPERIMENTAL ***
+**
+** Register a function to be invoked when a transaction comments.
+** If either function returns non-zero, then the commit becomes a
+** rollback.
+*/
+void *sqlite_commit_hook(
+  sqlite *db,               /* Attach the hook to this database */
+  int (*xCallback)(void*),  /* Function to invoke on each commit */
+  void *pArg                /* Argument to the function */
+){
+  void *pOld = db->pCommitArg;
+  db->xCommitCallback = xCallback;
+  db->pCommitArg = pArg;
+  return pOld;
+}
+
+
 /*
 ** This routine is called to create a connection to a database BTree
 ** driver.  If zFilename is the name of a file, then that file is

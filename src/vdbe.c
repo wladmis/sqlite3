@@ -2245,6 +2245,13 @@ case OP_Transaction: {
 */
 case OP_Commit: {
   int i;
+  if( db->xCommitCallback!=0 ){
+    if( sqliteSafetyOff(db) ) goto abort_due_to_misuse; 
+    if( db->xCommitCallback(db->pCommitArg)!=0 ){
+      rc = SQLITE_CONSTRAINT;
+    }
+    if( sqliteSafetyOn(db) ) goto abort_due_to_misuse;
+  }
   for(i=0; rc==SQLITE_OK && i<db->nDb; i++){
     if( db->aDb[i].inTrans ){
       rc = sqliteBtreeCommit(db->aDb[i].pBt);
