@@ -1266,6 +1266,15 @@ int sqlite3BtreeSetSafetyLevel(Btree *pBt, int level){
 
 /*
 ** Change the default pages size and the number of reserved bytes per page.
+**
+** The page size must be a power of 2 between 512 and 65536.  If the page
+** size supplied does not meet this constraint then the page size is not
+** changed.
+**
+** Page sizes are constrained to be a power of two so that the region
+** of the database file used for locking (beginning at PENDING_BYTE,
+** the first byte past the 1GB boundary, 0x40000000) needs to occur
+** at the beginning of a page.
 */
 int sqlite3BtreeSetPageSize(Btree *pBt, int pageSize, int nReserve){
   if( pBt->pageSizeFixed ){
@@ -1274,7 +1283,8 @@ int sqlite3BtreeSetPageSize(Btree *pBt, int pageSize, int nReserve){
   if( nReserve<0 ){
     nReserve = pBt->pageSize - pBt->usableSize;
   }
-  if( pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE ){
+  if( pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE &&
+        ((pageSize-1)&pageSize)==0 ){
     pBt->pageSize = pageSize;
     pBt->psAligned = FORCE_ALIGNMENT(pageSize);
     sqlite3pager_set_pagesize(pBt->pPager, pageSize);
