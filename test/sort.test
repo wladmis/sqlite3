@@ -121,4 +121,38 @@ do_test sort-2.3 {
   }
 } {{x -1.29} {x -1.28} {x -1.27} {x -1.26} {x -1.25} {x -1.24} {x -1.23} {x -1.22}}
 
+# This is a bug fix for 2.2.4.
+# Strings are normally mapped to upper-case for a caseless comparison.
+# But this can cause problems for characters in between 'Z' and 'a'.
+#
+do_test sort-3.1 {
+  execsql {
+    CREATE TABLE t2(a,b);
+    INSERT INTO t2 VALUES('AGLIENTU',1);
+    INSERT INTO t2 VALUES('AGLIE`',2);
+    INSERT INTO t2 VALUES('AGNA',3);
+    SELECT a, b FROM t2 ORDER BY a;
+  }
+} {AGLIENTU 1 AGLIE` 2 AGNA 3}
+do_test sort-3.2 {
+  execsql {
+    SELECT a, b FROM t2 ORDER BY a DESC;
+  }
+} {AGNA 3 AGLIE` 2 AGLIENTU 1}
+do_test sort-3.3 {
+  execsql {
+    DELETE FROM t2;
+    INSERT INTO t2 VALUES('aglientu',1);
+    INSERT INTO t2 VALUES('aglie`',2);
+    INSERT INTO t2 VALUES('agna',3);
+    SELECT a, b FROM t2 ORDER BY a;
+  }
+} {aglie` 2 aglientu 1 agna 3}
+do_test sort-3.4 {
+  execsql {
+    SELECT a, b FROM t2 ORDER BY a DESC;
+  }
+} {agna 3 aglientu 1 aglie` 2}
+
+
 finish_test

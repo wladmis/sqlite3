@@ -551,6 +551,8 @@ static int sortStrCmp(const char *atext, const char *btext, int useCase){
       if( (ca=map[*a++])!=(cb=map[*b++]) ) break;
       cclass = stateMachine[cclass*N_CHAR_CLASS + charClass[ca]];
     }while( ca!=0 );
+    if( ca>='[' && ca<='`' ) cb = b[-1];
+    if( cb>='[' && cb<='`' ) ca = a[-1];
   }
   switch( cclass ){
     case 0:

@@ -816,6 +816,12 @@ int sqliteSelect(
   if( pOrderBy ){
     for(i=0; i<pOrderBy->nExpr; i++){
       Expr *pE = pOrderBy->a[i].pExpr;
+      if( sqliteExprIsConstant(pE) ){
+        sqliteSetString(&pParse->zErrMsg, 
+             "ORDER BY expressions should not be constant", 0);
+        pParse->nErr++;
+        return 1;
+      }
       if( sqliteExprResolveIds(pParse, pTabList, pEList, pE) ){
         return 1;
       }
@@ -827,6 +833,12 @@ int sqliteSelect(
   if( pGroupBy ){
     for(i=0; i<pGroupBy->nExpr; i++){
       Expr *pE = pGroupBy->a[i].pExpr;
+      if( sqliteExprIsConstant(pE) ){
+        sqliteSetString(&pParse->zErrMsg, 
+             "GROUP BY expressions should not be constant", 0);
+        pParse->nErr++;
+        return 1;
+      }
       if( sqliteExprResolveIds(pParse, pTabList, pEList, pE) ){
         return 1;
       }

@@ -242,6 +242,11 @@ do_test select1-4.4 {
   set v [catch {execsql {SELECT f1 FROM test1 ORDER BY min(f1)}} msg]
   lappend v $msg
 } {1 {too few arguments to function min()}}
+do_test select1-4.5 {
+  catchsql {
+    SELECT f1 FROM test1 ORDER BY 8.4;
+  }
+} {1 {ORDER BY expressions should not be constant}}
 
 # ORDER BY ignored on an aggregate query
 #

@@ -528,3 +528,4 @@ void sqliteBeginTransaction(Parse*);
 void sqliteCommitTransaction(Parse*);
 void sqliteRollbackTransaction(Parse*);
 char *sqlite_mprintf(const char *, ...);
+int sqliteExprIsConstant(Expr*);
