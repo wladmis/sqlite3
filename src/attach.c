@@ -33,7 +33,7 @@ void sqlite3Attach(
   Db *aNew;
   int rc, i;
   char *zFile, *zName;
-  sqlite *db;
+  sqlite3 *db;
   Vdbe *v;
 
   v = sqlite3GetVdbe(pParse);
@@ -154,7 +154,7 @@ void sqlite3Attach(
 */
 void sqlite3Detach(Parse *pParse, Token *pDbname){
   int i;
-  sqlite *db;
+  sqlite3 *db;
   Vdbe *v;
   Db *pDb = 0;
 
@@ -206,7 +206,7 @@ int sqlite3FixInit(
   const char *zType,  /* "view", "trigger", or "index" */
   const Token *pName  /* Name of the view, trigger, or index */
 ){
-  sqlite *db;
+  sqlite3 *db;
 
   if( iDb<0 || iDb==1 ) return 0;
   db = pParse->db;

@@ -44,7 +44,7 @@ const char *sqlite3_libversion();
 ** Each open sqlite database is represented by an instance of the
 ** following opaque structure.
 */
-typedef struct sqlite sqlite3;
+typedef struct sqlite3 sqlite3;
 
 
 /*

@@ -179,7 +179,7 @@ void sqlite3Insert(
   int nColumn;          /* Number of columns in the data */
   int base = 0;         /* VDBE Cursor number for pTab */
   int iCont=0,iBreak=0; /* Beginning and end of the loop over srcTab */
-  sqlite *db;           /* The main database structure */
+  sqlite3 *db;          /* The main database structure */
   int keyColumn = -1;   /* Column that is the INTEGER PRIMARY KEY */
   int endOfLoop;        /* Label for the end of the insertion loop */
   int useTempTable;     /* Store SELECT results in intermediate table */
