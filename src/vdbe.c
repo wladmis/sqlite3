@@ -1096,6 +1096,7 @@ int sqliteVdbeList(
   char zAddr[20];
   char zP1[20];
   char zP2[20];
+  char zP3[40];
   static char *azColumnNames[] = {
      "addr", "opcode", "p1", "p2", "p3", 0
   };
@@ -1116,7 +1117,12 @@ int sqliteVdbeList(
     sprintf(zAddr,"%d",i);
     sprintf(zP1,"%d", p->aOp[i].p1);
     sprintf(zP2,"%d", p->aOp[i].p2);
-    azValue[4] = p->aOp[i].p3type!=P3_POINTER ? p->aOp[i].p3 : "";
+    if( p->aOp[i].p3type==P3_POINTER ){
+      sprintf(zP3, "ptr(%#x)", (int)p->aOp[i].p3);
+      azValue[4] = zP3;
+    }else{
+      azValue[4] = p->aOp[i].p3;
+    }
     azValue[1] = zOpName[p->aOp[i].opcode];
     if( xCallback(pArg, 5, azValue, azColumnNames) ){
       rc = SQLITE_ABORT;
