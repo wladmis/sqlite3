@@ -190,6 +190,13 @@ static void ifnullFunc(sqlite_func *context, int argc, const char **argv){
 }
 
 /*
+** Implementation of random().  Return a random integer.  
+*/
+static void randomFunc(sqlite_func *context, int argc, const char **argv){
+  sqlite_set_result_int(context, sqliteRandomInteger());
+}
+
+/*
 ** An instance of the following structure holds the context of a
 ** sum() or avg() aggregate computation.
 */
@@ -375,7 +382,7 @@ void sqliteRegisterBuildinFunctions(sqlite *db){
     { "coalesce",  -1, ifnullFunc },
     { "coalesce",   0, 0          },
     { "coalesce",   1, 0          },
-
+    { "random",    -1, randomFunc },
   };
   static struct {
     char *zName;

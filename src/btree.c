@@ -2105,6 +2105,40 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
   }
 
   /*
+  ** Put the new pages in accending order.  This helps to
+  ** keep entries in the disk file in order so that a scan
+  ** of the table is a linear scan through the file.  That
+  ** in turn helps the operating system to deliver pages
+  ** from the disk more rapidly.
+  **
+  ** An O(n^2) insertion sort algorithm is used, but since
+  ** n is never more than 3, that should not be a problem.
+  **
+  ** This one optimization makes the database about 25%
+  ** faster for large insertions and deletions.
+  */
+  for(i=0; i<k-1; i++){
+    int minV = pgnoNew[i];
+    int minI = i;
+    for(j=i+1; j<k; j++){
+      if( pgnoNew[j]<minV ){
+        minI = j;
+        minV = pgnoNew[j];
+      }
+    }
+    if( minI>i ){
+      int t;
+      MemPage *pT;
+      t = pgnoNew[i];
+      pT = apNew[i];
+      pgnoNew[i] = pgnoNew[minI];
+      apNew[i] = apNew[minI];
+      pgnoNew[minI] = t;
+      apNew[minI] = pT;
+    }
+  }
+
+  /*
   ** Evenly distribute the data in apCell[] across the new pages.
   ** Insert divider cells into pParent as necessary.
   */
