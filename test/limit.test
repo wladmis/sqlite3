@@ -163,4 +163,44 @@ do_test limit-5.5 {
   }
 } {1000 1528204 593161 0 3107 505 1005}
 
+# There is some contraversy about whether LIMIT 0 should be the same as
+# no limit at all or if LIMIT 0 should result in zero output rows.
+#
+do_test limit-6.1 {
+  execsql {
+    BEGIN;
+    CREATE TABLE t6(a);
+    INSERT INTO t6 VALUES(1);
+    INSERT INTO t6 VALUES(2);
+    INSERT INTO t6 SELECT a+2 FROM t6;
+    COMMIT;
+    SELECT * FROM t6;
+  }
+} {1 2 3 4}
+do_test limit-6.2 {
+  execsql {
+    SELECT * FROM t6 LIMIT -1 OFFSET -1;
+  }
+} {1 2 3 4}
+do_test limit-6.3 {
+  execsql {
+    SELECT * FROM t6 LIMIT 2 OFFSET -123;
+  }
+} {1 2}
+do_test limit-6.4 {
+  execsql {
+    SELECT * FROM t6 LIMIT -432 OFFSET 2;
+  }
+} {3 4}
+do_test limit-6.5 {
+  execsql {
+    SELECT * FROM t6 LIMIT 0
+  }
+} {1 2 3 4}
+do_test limit-6.6 {
+  execsql {
+    SELECT * FROM t6 LIMIT 0 OFFSET 1
+  }
+} {2 3 4}
+
 finish_test
