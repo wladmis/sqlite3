@@ -113,4 +113,19 @@ do_test select2-3.3 {
   set sqlite_search_count
 } {29999}
 
+# Make sure we can optimize functions in the WHERE clause that
+# use fields from two or more different table.  (Bug #6)
+#
+do_test select2-4.1 {
+  execsql {
+    CREATE TABLE aa(a);
+    CREATE TABLE bb(b);
+    INSERT INTO aa VALUES(1);
+    INSERT INTO aa VALUES(3);
+    INSERT INTO bb VALUES(2);
+    INSERT INTO bb VALUES(4);
+    SELECT * FROM aa, bb WHERE max(a,b)>2;
+  }
+} {1 4 3 2 3 4}
+
 finish_test

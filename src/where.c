@@ -90,6 +90,12 @@ static int exprTableUsage(int base, Expr *p){
   if( p->pLeft ){
     mask |= exprTableUsage(base, p->pLeft);
   }
+  if( p->pList ){
+    int i;
+    for(i=0; i<p->pList->nExpr; i++){
+      mask |= exprTableUsage(base, p->pList->a[i].pExpr);
+    }
+  }
   return mask;
 }
 
