@@ -928,6 +928,7 @@ void *sqlite_trace(sqlite *db, void (*xTrace)(void*,const char*), void *pArg){
   db->xTrace = xTrace;
   db->pTraceArg = pArg;
   return pOld;
+  return 0;
 }
 
 /*
