@@ -920,3 +920,9 @@ database_kw_opt ::= .
 cmd ::= DETACH database_kw_opt nm(D). {
   sqlite3Detach(pParse, &D);
 }
+
+////////////////////////// REINDEX collation //////////////////////////////////
+%ifndef SQLITE_OMIT_REINDEX
+cmd ::= REINDEX.                {sqlite3Reindex(pParse, 0, 0);}
+cmd ::= REINDEX nm(X) dbnm(Y).  {sqlite3Reindex(pParse, &X, &Y);}
+%endif
