@@ -200,9 +200,9 @@ extern const int sqlite3one;
 # define sqliteRealloc       sqlite3Realloc
 /* # define sqliteRealloc_(X,Y) sqlite3Realloc(X,Y) */
 # define sqlite3StrRealloc(X)
+# define sqliteStrDup         sqlite3StrDup
+# define sqliteStrNDup        sqlite3StrNDup
 #endif
-#define sqliteStrDup         sqlite3StrDup
-#define sqliteStrNDup        sqlite3StrNDup
 
 /*
 ** This variable gets set if malloc() ever fails.  After it gets set,
@@ -1224,12 +1224,12 @@ void sqlite3RealToSortable(double r, char *);
   void sqlite3CheckMemory(void*,int);
   void sqlite3FreeX(void *p);
 #else
-  void *sqliteMalloc(int);
-  void *sqliteMallocRaw(int);
-  void sqliteFree(void*);
-  void *sqliteRealloc(void*,int);
-  char *sqliteStrDup(const char*);
-  char *sqliteStrNDup(const char*, int);
+  void *sqlite3Malloc(int);
+  void *sqlite3MallocRaw(int);
+  void sqlite3Free(void*);
+  void *sqlite3Realloc(void*,int);
+  char *sqlite3StrDup(const char*);
+  char *sqlite3StrNDup(const char*, int);
 # define sqlite3CheckMemory(a,b)
 #endif
 char *sqlite3MPrintf(const char*, ...);
