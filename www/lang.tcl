@@ -1092,8 +1092,9 @@ The usual sort order is used to determine the maximum.</td>
 
 <tr>
 <td valign="top" align="right">min(<i>X</i>)</td>
-<td valign="top">Return the minimum value of all values in the group.
-The usual sort order is used to determine the minimum.</td>
+<td valign="top">Return the minimum non-NULL value of all values in the group.
+The usual sort order is used to determine the minimum.  NULL is only returned
+if all values in the group are NULL.</td>
 </tr>
 
 <tr>

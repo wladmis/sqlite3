@@ -2076,6 +2076,14 @@ static int simpleMinMaxQuery(Parse *pParse, Select *p, int eDest, int iParm){
     sqlite3VdbeOp3(v, OP_OpenRead, base+1, pIdx->tnum,
                    (char*)&pIdx->keyInfo, P3_KEYINFO);
     sqlite3VdbeAddOp(v, seekOp, base+1, 0);
+    if( seekOp==OP_Rewind ){
+      int addr;
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, base+1, pIdx->nColumn+1);
+      sqlite3VdbeAddOp(v, OP_KeyAsData, base+1, 1);
+      addr = sqlite3VdbeAddOp(v, OP_IdxColumn, base+1, 0);
+      sqlite3VdbeAddOp(v, OP_NotNull, 1, addr+3);
+      sqlite3VdbeAddOp(v, OP_Next, 1, addr);
+    }
     sqlite3VdbeAddOp(v, OP_IdxRecno, base+1, 0);
     sqlite3VdbeAddOp(v, OP_Close, base+1, 0);
     sqlite3VdbeAddOp(v, OP_MoveGe, base, 0);

@@ -159,7 +159,7 @@ do_test select1-2.8 {
 } {0 {11 33}}
 do_test select1-2.8.1 {
   execsql {SELECT coalesce(min(a),'xyzzy') FROM t3}
-} {xyzzy}
+} {11}
 do_test select1-2.8.2 {
   execsql {SELECT min(coalesce(a,'xyzzy')) FROM t3}
 } {11}

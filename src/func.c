@@ -979,13 +979,16 @@ struct MinMaxCtx {
 ** Routines to implement min() and max() aggregate functions.
 */
 static void minmaxStep(sqlite3_context *context, int argc, sqlite3_value **argv){
-  int max = 0;
-  int cmp = 0;
   Mem *pArg  = (Mem *)argv[0];
-  Mem *pBest = (Mem *)sqlite3_aggregate_context(context, sizeof(*pBest));
+  Mem *pBest;
+
+  if( sqlite3_value_type(argv[0])==SQLITE_NULL ) return;
+  pBest = (Mem *)sqlite3_aggregate_context(context, sizeof(*pBest));
   if( !pBest ) return;
 
   if( pBest->flags ){
+    int max;
+    int cmp;
     CollSeq *pColl = sqlite3GetFuncCollSeq(context);
     /* This step function is used for both the min() and max() aggregates,
     ** the only difference between the two being that the sense of the
