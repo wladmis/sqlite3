@@ -271,6 +271,7 @@ as ::= AS.
 %type from {IdList*}
 %destructor from {sqliteIdListDelete($$);}
 
+from(A) ::= .                                 {A = sqliteMalloc(sizeof(*A));}
 from(A) ::= FROM seltablist(X).               {A = X;}
 stl_prefix(A) ::= seltablist(X) COMMA.        {A = X;}
 stl_prefix(A) ::= .                           {A = 0;}
