@@ -290,7 +290,7 @@ static int sqlite_default_busy_callback(
  int count                /* Number of times table has been busy */
 ){
   int rc;
-#ifdef HAVE_USLEEP
+#if defined(HAVE_USLEEP) && HAVE_USLEEP
   int delay = 10000;
   int prior_delay = 0;
   int timeout = (int)Timeout;

@@ -138,6 +138,13 @@ static int rc4byte(struct rc4 *p){
 }
 
 /*
+** The "mkdir()" function only takes one argument under Windows.
+*/
+#if OS_WIN
+# define mkdir(A,B) mkdir(A)
+#endif
+
+/*
 ** This routine opens a new database.  For the GDBM driver
 ** implemented here, the database name is the name of the directory
 ** containing all the files of the database.

@@ -285,7 +285,7 @@ else
   TARGET_RANLIB=$RANLIB
 fi
 if test "$config_TARGET_AR" != ""; then
-  TARGET_RANLIB=$config_TARGET_AR
+  TARGET_AR=$config_TARGET_AR
 else
   TARGET_AR='ar cr'
 fi
@@ -502,7 +502,11 @@ if test "$found" = "no"; then
   done
 fi
 if test "$found" = "yes"; then
-  TARGET_HAVE_READLINE=1
+  if test "$TARGET_READLINE_LIBS" = ""; then
+    TARGET_HAVE_READLINE=0
+  else
+    TARGET_HAVE_READLINE=1
+  fi
 else
   TARGET_HAVE_READLINE=0
 fi
