@@ -1593,6 +1593,7 @@ int sqliteVdbeExec(
               rc = 1;
             }
             pc--;
+            PopStack(p, 1);
           }
           p->aTab[i].index = j+1;
         }
