@@ -302,7 +302,7 @@ int sqliteInit(sqlite *db, char **pzErrMsg){
 /*
 ** The version of the library
 */
-static const char rcsid[] = "@(#) $Id$";
+const char rcsid[] = "@(#) \044Id: SQLite version " SQLITE_VERSION " $";
 const char sqlite_version[] = SQLITE_VERSION;
 
 /*
