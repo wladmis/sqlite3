@@ -93,9 +93,20 @@ static int DbEvalCallback(
         return 1;
       }
       if( cbData->zArray[0] ){
+        Tcl_DString dType;
+        Tcl_DStringInit(&dType);
         Tcl_SetVar2(cbData->interp, cbData->zArray, "*",
              Tcl_DStringValue(&dCol), TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
+        Tcl_DStringAppend(&dType, "typeof:", -1);
+        Tcl_DStringAppend(&dType, Tcl_DStringValue(&dCol), -1);
+        Tcl_DStringFree(&dCol);
+        Tcl_ExternalToUtfDString(NULL, azN[i+argc+1], -1, &dCol);
+        Tcl_SetVar2(cbData->interp, cbData->zArray, 
+             Tcl_DStringValue(&dType), Tcl_DStringValue(&dCol),
+             TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
+        Tcl_DStringFree(&dType);
       }
+      
       Tcl_DStringFree(&dCol);
     }
   }
@@ -152,8 +163,13 @@ static int DbEvalCallback(
   if( azCol==0 || (cbData->once && cbData->zArray[0]) ){
     Tcl_SetVar2(cbData->interp, cbData->zArray, "*", "", 0);
     for(i=0; i<nCol; i++){
+      char *z;
       Tcl_SetVar2(cbData->interp, cbData->zArray, "*", azN[i],
          TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
+      z = sqlite_mprintf("typeof:%s", azN[i]);
+      Tcl_SetVar2(cbData->interp, cbData->zArray, z, azN[i+nCol+1],
+         TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
+      sqlite_freemem(z);
     }
     cbData->once = 0;
   }
