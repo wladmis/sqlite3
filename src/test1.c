@@ -696,30 +696,6 @@ static int test_register_func(
 }
 
 /*
-** This SQLite callback records the datatype of all columns.
-**
-** The pArg argument is really a pointer to a TCL interpreter.  The
-** column names are inserted as the result of this interpreter.
-**
-** This routine returns non-zero which causes the query to abort.
-*/
-static int rememberDataTypes(void *pArg, int nCol, char **argv, char **colv){
-  int i;
-  Tcl_Interp *interp = (Tcl_Interp*)pArg;
-  Tcl_Obj *pList, *pElem;
-  if( colv[nCol+1]==0 ){
-    return 1;
-  }
-  pList = Tcl_NewObj();
-  for(i=0; i<nCol; i++){
-    pElem = Tcl_NewStringObj(colv[i+nCol] ? colv[i+nCol] : "NULL", -1);
-    Tcl_ListObjAppendElement(interp, pList, pElem);
-  }
-  Tcl_SetObjResult(interp, pList);
-  return 1;
-}
-
-/*
 ** Usage:  sqlite3_finalize  STMT 
 **
 ** Finalize a statement handle.
@@ -742,7 +718,7 @@ static int test_finalize(
   if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
 
   rc = sqlite3_finalize(pStmt);
-  Tcl_SetResult(interp, errorName(rc), TCL_STATIC);
+  Tcl_SetResult(interp, (char *)errorName(rc), TCL_STATIC);
   if( rc ){
     return TCL_ERROR;
   }
