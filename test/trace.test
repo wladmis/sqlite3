@@ -75,6 +75,7 @@ do_test trace-2.4 {
 do_test trace-2.5 {
   set TRACE_OUT
 } {SELECT * FROM t1}
+catch {sqlite3_finalize $STMT}
 
 
 finish_test
