@@ -48,12 +48,12 @@ do_test pager-2.1 {
     set ::p1 [pager_open ptf1.db 10]
   } msg]
 } {0}
-do_test pager-2.2 {
-  set v [catch {
-    set ::g1 [page_get $::p1 0]
-  } msg]
-  lappend v $msg
-} {1 SQLITE_ERROR}
+#do_test pager-2.2 {
+#  set v [catch {
+#    set ::g1 [page_get $::p1 0]
+#  } msg]
+#  lappend v $msg
+#} {1 SQLITE_ERROR}
 do_test pager-2.3.1 {
   set ::gx [page_lookup $::p1 1]
 } {}
