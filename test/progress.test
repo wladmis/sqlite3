@@ -44,6 +44,13 @@ do_test progress-1.0 {
   }
   expr $counter > 1
 } 1
+do_test progress-1.0.1 {
+  db progress
+} {::namespace inscope :: {incr counter} ; expr 0}
+do_test progress-1.0.2 {
+  set v [catch {db progress xyz bogus} msg]
+  lappend v $msg
+} {1 {expected integer but got "xyz"}}
 
 # Test that the query is abandoned when the progress callback returns non-zero
 do_test progress1.1 {
