@@ -393,12 +393,14 @@ static void sqliteResetColumnNames(Table *pTable){
   int i;
   Column *pCol;
   assert( pTable!=0 );
-  for(i=0, pCol=pTable->aCol; i<pTable->nCol; i++, pCol++){
-    sqliteFree(pCol->zName);
-    sqlite3ExprDelete(pCol->pDflt);
-    sqliteFree(pCol->zType);
+  if( (pCol = pTable->aCol)!=0 ){
+    for(i=0; i<pTable->nCol; i++, pCol++){
+      sqliteFree(pCol->zName);
+      sqlite3ExprDelete(pCol->pDflt);
+      sqliteFree(pCol->zType);
+    }
+    sqliteFree(pTable->aCol);
   }
-  sqliteFree(pTable->aCol);
   pTable->aCol = 0;
   pTable->nCol = 0;
 }

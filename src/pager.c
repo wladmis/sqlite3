@@ -2634,7 +2634,7 @@ static int pager_open_journal(Pager *pPager){
   pPager->nRec = 0;
   if( pPager->errMask!=0 ){
     rc = pager_errcode(pPager);
-    return rc;
+    goto failed_to_open_journal;
   }
   pPager->origDbSize = pPager->dbSize;
 
