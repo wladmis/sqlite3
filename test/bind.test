@@ -17,6 +17,23 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+proc sqlite_step {stmt N VALS COLS} {
+  upvar VALS vals
+  upvar COLS cols
+  set vals [list]
+  set cols [list]
+
+  set rc [sqlite3_step $stmt]
+  for {set i 0} {$i < [sqlite3_column_count $stmt]} {incr i} {
+    lappend cols [sqlite3_column_name $stmt $i]
+  }
+  for {set i 0} {$i < [sqlite3_data_count $stmt]} {incr i} {
+    lappend vals [sqlite3_column_data $stmt $i]
+  }
+
+  return $rc
+}
+
 do_test bind-1.1 {
   db close
   set DB [sqlite db test.db]
