@@ -1192,6 +1192,9 @@ int sqlite3BtreeOpen(
     pBt->maxEmbedFrac = 64;   /* 25% */
     pBt->minEmbedFrac = 32;   /* 12.5% */
     pBt->minLeafFrac = 32;    /* 12.5% */
+    if( zFilename && strcmp(zFilename,":memory:") ){
+      pBt->autoVacuum = SQLITE_DEFAULT_AUTOVACUUM;
+    }
     nReserve = 0;
   }else{
     nReserve = zDbHeader[20];
@@ -1199,17 +1202,14 @@ int sqlite3BtreeOpen(
     pBt->minEmbedFrac = zDbHeader[22];
     pBt->minLeafFrac = zDbHeader[23];
     pBt->pageSizeFixed = 1;
+#ifndef SQLITE_OMIT_AUTOVACUUM
+    pBt->autoVacuum = (get4byte(&zDbHeader[36 + 4*4])?1:0);
+#endif
   }
   pBt->usableSize = pBt->pageSize - nReserve;
   pBt->psAligned = FORCE_ALIGNMENT(pBt->pageSize);
   sqlite3pager_set_pagesize(pBt->pPager, pBt->pageSize);
   *ppBtree = pBt;
-#ifdef SQLITE_AUTOVACUUM
-  /* Note: This is temporary code for use during development of auto-vacuum. */
-  if( zFilename && 0!=strcmp(zFilename, ":memory:") ){
-    pBt->autoVacuum = 1;
-  }
-#endif
   return SQLITE_OK;
 }
 
@@ -1304,6 +1304,37 @@ int sqlite3BtreeGetPageSize(Btree *pBt){
 int sqlite3BtreeGetReserve(Btree *pBt){
   return pBt->pageSize - pBt->usableSize;
 }
+
+/*
+** Change the 'auto-vacuum' property of the database. If the 'autoVacuum'
+** parameter is non-zero, then auto-vacuum mode is enabled. If zero, it
+** is disabled. The default value for the auto-vacuum property is 
+** determined by the SQLITE_DEFAULT_AUTOVACUUM macro.
+*/
+int sqlite3BtreeSetAutoVacuum(Btree *pBt, int autoVacuum){
+#ifdef SQLITE_OMIT_AUTOVACUUM
+  return SQLITE_READONLY
+#else
+  if( pBt->pageSizeFixed ){
+    return SQLITE_READONLY;
+  }
+  pBt->autoVacuum = (autoVacuum?1:0);
+  return SQLITE_OK;
+#endif
+}
+
+/*
+** Return the value of the 'auto-vacuum' property. If auto-vacuum is 
+** enabled 1 is returned. Otherwise 0.
+*/
+int sqlite3BtreeGetAutoVacuum(Btree *pBt){
+#ifdef SQLITE_OMIT_AUTOVACUUM
+  return 0;
+#else
+  return pBt->autoVacuum;
+#endif
+}
+
 
 /*
 ** Get a reference to pPage1 of the database file.  This will

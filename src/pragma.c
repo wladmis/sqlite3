@@ -272,6 +272,25 @@ void sqlite3Pragma(
   }else
 
   /*
+  **  PRAGMA [database.]auto_vacuum
+  **  PRAGMA [database.]auto_vacuum=N
+  **
+  ** Get or set the (boolean) value of the database 'auto-vacuum' parameter.
+  */
+#ifndef SQLITE_OMIT_AUTOVACUUM
+  if( sqlite3StrICmp(zLeft,"auto_vacuum")==0 ){
+    Btree *pBt = pDb->pBt;
+    if( !zRight ){
+      int auto_vacuum = 
+          pBt ? sqlite3BtreeGetAutoVacuum(pBt) : SQLITE_DEFAULT_AUTOVACUUM;
+      returnSingleInt(pParse, "auto_vacuum", auto_vacuum);
+    }else{
+      sqlite3BtreeSetAutoVacuum(pBt, getBoolean(zRight));
+    }
+  }else
+#endif
+
+  /*
   **  PRAGMA [database.]cache_size
   **  PRAGMA [database.]cache_size=N
   **
