@@ -263,6 +263,16 @@ do_test select6-4.3 {
     SELECT DISTINCT y FROM (SELECT y FROM t1) WHERE y<5 ORDER BY y
   }
 } {1 2 3 4}
+do_test select6-4.4 {
+  execsql {
+    SELECT avg(y) FROM (SELECT DISTINCT y FROM t1) WHERE y<5 ORDER BY y
+  }
+} {2.5}
+do_test select6-4.5 {
+  execsql {
+    SELECT avg(y) FROM (SELECT DISTINCT y FROM t1 WHERE y<5) ORDER BY y
+  }
+} {2.5}
 
 
 finish_test
