@@ -3881,7 +3881,8 @@ case OP_CreateTable: {
   assert( pOp->p2>=0 && pOp->p2<db->nDb );
   assert( db->aDb[pOp->p2].pBt!=0 );
   if( pOp->opcode==OP_CreateTable ){
-    flags = BTREE_INTKEY;
+    /* flags = BTREE_INTKEY; */
+    flags = BTREE_LEAFDATA|BTREE_INTKEY;
   }else{
     flags = BTREE_ZERODATA;
   }
