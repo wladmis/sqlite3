@@ -3503,7 +3503,7 @@ case OP_OpenTemp: {
   cleanupCursor(pCx);
   memset(pCx, 0, sizeof(*pCx));
   pCx->nullRow = 1;
-  rc = sqliteBtreeFactory(db, ":temp:", 1, TEMP_PAGES, &pCx->pBt);
+  rc = sqliteBtreeFactory(db, 0, 1, TEMP_PAGES, &pCx->pBt);
 
   if( rc==SQLITE_OK ){
     rc = sqliteBtreeBeginTrans(pCx->pBt);
