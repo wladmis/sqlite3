@@ -2661,9 +2661,8 @@ case OP_MoveGt: {
       if( res<0 ){
         sqlite3BtreeNext(pC->pCursor, &res);
         pC->recnoIsValid = 0;
-        if( res && pOp->p2>0 ){
-          pc = pOp->p2 - 1;
-        }
+      }else{
+        res = 0;
       }
     }else{
       assert( oc==OP_MoveLt || oc==OP_MoveLe );
@@ -2676,8 +2675,12 @@ case OP_MoveGt: {
         */
         res = sqlite3BtreeEof(pC->pCursor);
       }
-      if( res && pOp->p2>0 ){
+    }
+    if( res ){
+      if( pOp->p2>0 ){
         pc = pOp->p2 - 1;
+      }else{
+        pC->nullRow = 1;
       }
     }
   }

@@ -589,7 +589,7 @@ do_test collate4-4.3 {
   count {
     SELECT min(a) FROM collate4t1;
   }
-} {10 1}
+} {10 2}
 do_test collate4-4.4 {
   count {
     SELECT max(a) FROM collate4t1;
