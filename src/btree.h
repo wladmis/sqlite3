@@ -85,7 +85,8 @@ int sqlite3BtreeFlags(BtCursor*);
 int sqlite3BtreePrevious(BtCursor*, int *pRes);
 int sqlite3BtreeKeySize(BtCursor*, u64 *pSize);
 int sqlite3BtreeKey(BtCursor*, u32 offset, u32 amt, void*);
-void *sqlite3BtreeKeyFetch(BtCursor*);
+const void *sqlite3BtreeKeyFetch(BtCursor*, int amt);
+const void *sqlite3BtreeDataFetch(BtCursor*, int amt);
 int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
 int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
 
