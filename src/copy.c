@@ -37,7 +37,6 @@ void sqliteCopy(
   int i;
   Vdbe *v;
   int addr, end;
-  Index *pIdx;
   char *zFile = 0;
   const char *zDb;
   sqlite *db = pParse->db;
