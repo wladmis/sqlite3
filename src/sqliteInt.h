@@ -27,8 +27,8 @@
 ** The maximum number of in-memory pages to use for the main database
 ** table and for temporary tables.
 */
-#define MAX_PAGES   100
-#define TEMP_PAGES   25
+#define MAX_PAGES   2000
+#define TEMP_PAGES   500
 
 /*
 ** Integers of known sizes.  These typedefs might change for architectures
