@@ -2617,12 +2617,25 @@ int sqliteVdbeExec(
         c = zDelim[0];
         nDelim = strlen(zDelim);
         p->azField[0] = z;
-        for(i=1; *z!=0 && i<nField; i++){
-          while( *z && (*z!=c || strncmp(z,zDelim,nDelim)) ){ z++; }
-          if( *z ){
-            *z = 0;
-            z += nDelim;
-            p->azField[i] = z;
+        for(i=1; *z!=0 && i<=nField; i++){
+          int from, to;
+          from = to = 0;
+          while( z[from] ){
+            if( z[from]=='\\' && z[from+1]!=0 ){
+              z[to++] = z[from+1];
+              from += 2;
+              continue;
+            }
+            if( z[from]==c && strncmp(&z[from],zDelim,nDelim)==0 ) break;
+            z[to++] = z[from++];
+          }
+          if( z[from] ){
+            z[to] = 0;
+            z += from + nDelim;
+            if( i<nField ) p->azField[i] = z;
+          }else{
+            z[to] = 0;
+            z = "";
           }
         }
         while( i<nField ){
