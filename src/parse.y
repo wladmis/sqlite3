@@ -65,13 +65,10 @@ struct TrigEvent { int a; IdList * b; };
 %nonassoc END_OF_FILE ILLEGAL SPACE UNCLOSED_STRING COMMENT FUNCTION
           COLUMN AGG_FUNCTION.
 
-// Input is zero or more commands.
+// Input is a single SQL command
 input ::= cmdlist.
-
-// A list of commands is zero or more commands
-//
-cmdlist ::= ecmd.
 cmdlist ::= cmdlist ecmd.
+cmdlist ::= ecmd.
 ecmd ::= explain cmdx SEMI.
 ecmd ::= SEMI.
 cmdx ::= cmd.           { sqliteExec(pParse); }
