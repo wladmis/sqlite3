@@ -16,6 +16,14 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Skip this whole file if date and time functions are omitted
+# at compile-time
+#
+if {!$sqlite_options(datetime)} {
+  finish_test
+  return
+}
+
 proc datetest {tnum expr result} {
   do_test date-$tnum [subst {
     execsql "SELECT coalesce($expr,'NULL')"

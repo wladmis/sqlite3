@@ -71,7 +71,6 @@ do_test bigfile-1.2 {
   }
 } $::MAGIC_SUM
 
-
 # The previous test may fail on some systems because they are unable
 # to handle large files.  If that is so, then skip all of the following
 # tests.  We will know the above test failed because the "db" command

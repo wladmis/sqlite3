@@ -19,7 +19,7 @@
 #include "sqliteInt.h"
 #include "os.h"
 
-#if !defined(SQLITE_OMIT_VACUUM) || SQLITE_OMIT_VACUUM
+#ifndef SQLITE_OMIT_VACUUM
 /*
 ** Generate a random name of 20 character in length.
 */
@@ -93,7 +93,7 @@ void sqlite3Vacuum(Parse *pParse, Token *pTableName){
 */
 int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   int rc = SQLITE_OK;     /* Return code from service routines */
-#if !defined(SQLITE_OMIT_VACUUM) || SQLITE_OMIT_VACUUM
+#ifndef SQLITE_OMIT_VACUUM
   const char *zFilename;  /* full pathname of the database file */
   int nFilename;          /* number of characters  in zFilename[] */
   char *zTemp = 0;        /* a temporary file in same directory as zFilename */
