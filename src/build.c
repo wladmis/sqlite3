@@ -628,7 +628,7 @@ void sqliteEndTable(Parse *pParse, Token *pEnd){
       sqliteVdbeAddOp(v, OP_String, 0, 0);
       sqliteVdbeChangeP3(v, -1, p->zName, P3_STATIC);
     }
-    addr = sqliteVdbeAddOp(v, OP_CreateTable, 0, 0);
+    addr = sqliteVdbeAddOp(v, OP_CreateTable, 0, p->isTemp);
     sqliteVdbeChangeP3(v, addr, (char *)&p->tnum, P3_POINTER);
     p->tnum = 0;
     if( !p->isTemp ){
