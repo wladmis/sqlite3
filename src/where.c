@@ -348,7 +348,7 @@ WhereInfo *sqliteWhereBegin(
   nExpr = exprSplit(ARRAYSIZE(aExpr), aExpr, pWhere);
   if( nExpr==ARRAYSIZE(aExpr) ){
     char zBuf[50];
-    sprintf(zBuf, "%d", ARRAYSIZE(aExpr)-1);
+    sprintf(zBuf, "%d", (int)ARRAYSIZE(aExpr)-1);
     sqliteSetString(&pParse->zErrMsg, "WHERE clause too complex - no more "
        "than ", zBuf, " terms allowed", 0);
     pParse->nErr++;

@@ -17,6 +17,7 @@
 **
 ** $Id$
 */
+#include <string.h>
 
 /*
 ** Encode a binary buffer "in" of size n bytes so that it contains
