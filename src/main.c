@@ -182,6 +182,7 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
     pTab = sqliteFindTable(db, MASTER_NAME);
     if( pTab ){
       pTab->readOnly = 1;
+      pTab->tnum = 2;
     }
     db->flags |= SQLITE_Initialized;
     sqliteCommitInternalChanges(db);
