@@ -83,24 +83,26 @@ do_test select2-3.1 {
   execsql {SELECT f1 FROM tbl2 WHERE 1000=f2}
 } {500}
 
+# SQLite v3: Change the expressions in the following four test cases
+# from 1000=f2 to '1000'=f2. This is because fields read in using
+# the COPY command have manifest type TEXT.
 do_test select2-3.2a {
   execsql {CREATE INDEX idx1 ON tbl2(f2)}
 } {}
-
 do_test select2-3.2b {
-  execsql {SELECT f1 FROM tbl2 WHERE 1000=f2}
+  execsql {SELECT f1 FROM tbl2 WHERE '1000'=f2}
 } {500}
 do_test select2-3.2c {
-  execsql {SELECT f1 FROM tbl2 WHERE f2=1000}
+  execsql {SELECT f1 FROM tbl2 WHERE f2='1000'}
 } {500}
 do_test select2-3.2d {
   set sqlite_search_count 0
-  execsql {SELECT * FROM tbl2 WHERE 1000=f2}
+  execsql {SELECT * FROM tbl2 WHERE '1000'=f2}
   set sqlite_search_count
 } {3}
 do_test select2-3.2e {
   set sqlite_search_count 0
-  execsql {SELECT * FROM tbl2 WHERE f2=1000}
+  execsql {SELECT * FROM tbl2 WHERE f2='1000'}
   set sqlite_search_count
 } {3}
 
