@@ -1160,7 +1160,7 @@ information.</p>
 Section SELECT select
 
 Syntax {sql-statement} {
-SELECT <result> [FROM <table-list>]
+SELECT [DISTINCT] <result> [FROM <table-list>]
 [WHERE <expr>]
 [GROUP BY <expr-list>]
 [HAVING <expr>]
