@@ -496,9 +496,8 @@ void sqlite3Insert(
       sqlite3VdbeAddOp(v, OP_Integer, -1, 0);
     }else if( useTempTable ){
       sqlite3VdbeAddOp(v, OP_Column, srcTab, keyColumn);
-    }else if( pSelect ){
-      sqlite3VdbeAddOp(v, OP_Dup, nColumn - keyColumn - 1, 1);
     }else{
+      assert( pSelect==0 );  /* Otherwise useTempTable is true */
       sqlite3ExprCode(pParse, pList->a[keyColumn].pExpr);
       sqlite3VdbeAddOp(v, OP_NotNull, -1, sqlite3VdbeCurrentAddr(v)+3);
       sqlite3VdbeAddOp(v, OP_Pop, 1, 0);
@@ -520,9 +519,8 @@ void sqlite3Insert(
         sqlite3ExprCode(pParse, pTab->aCol[i].pDflt);
       }else if( useTempTable ){
         sqlite3VdbeAddOp(v, OP_Column, srcTab, j); 
-      }else if( pSelect ){
-        sqlite3VdbeAddOp(v, OP_Dup, nColumn-j-1, 1);
       }else{
+        assert( pSelect==0 ); /* Otherwise useTempTable is true */
         sqlite3ExprCodeAndCache(pParse, pList->a[j].pExpr);
       }
     }
