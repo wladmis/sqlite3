@@ -2,18 +2,8 @@
 # Run this script to generated a faq.html output file
 #
 set rcsid {$Id$}
-
-puts {<html>
-<head>
-  <title>SQLite Frequently Asked Questions</title>
-</head>
-<body bgcolor="white">
-<h1 align="center">Frequently Asked Questions</h1>
-}
-puts "<p align=center>
-(This page was last modified on [lrange $rcsid 3 4] UTC)
-</p>"
-
+source common.tcl
+header {SQLite Frequently Asked Questions</title>}
 
 set cnt 1
 proc faq {question answer} {
@@ -432,12 +422,19 @@ faq {
 # End of questions and answers.
 #############
 
-puts {<DL COMPACT>}
+puts {<h2>Frequently Asked Questions</h2>}
+
+# puts {<DL COMPACT>}
+# for {set i 1} {$i<$cnt} {incr i} {
+#   puts "  <DT><A HREF=\"#q$i\">($i)</A></DT>"
+#   puts "  <DD>[lindex $faq($i) 0]</DD>"
+# }
+# puts {</DL>}
+puts {<OL>}
 for {set i 1} {$i<$cnt} {incr i} {
-  puts "  <DT><A HREF=\"#q$i\">($i)</A></DT>"
-  puts "  <DD>[lindex $faq($i) 0]</DD>"
+  puts "<li><a href=\"#q$i\">[lindex $faq($i) 0]</a></li>"
 }
-puts {</DL>}
+puts {</OL>}
 
 for {set i 1} {$i<$cnt} {incr i} {
   puts "<A NAME=\"q$i\"><HR />"
@@ -445,11 +442,5 @@ for {set i 1} {$i<$cnt} {incr i} {
   puts "<BLOCKQUOTE>[lindex $faq($i) 1]</BLOCKQUOTE></LI>\n"
 }
 
-puts {
-</OL>
-<p><hr /></p>
-<p><a href="index.html"><img src="/goback.jpg" border=0 />
-Back to the SQLite Home Page</a>
-</p>
-
-</body></html>}
+puts {</OL>}
+footer $rcsid

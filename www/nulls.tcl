@@ -2,21 +2,11 @@
 # Run this script to generated a nulls.html output file
 #
 set rcsid {$Id$}
-
-puts {<html>
-<head>
-<title>NULL Handling In SQLite Versus Other Database Engines</title>
-</head>
-<body bgcolor="white">
-<h1 align="center">
-NULL Handling in SQLite Versus Other Database Engines
-</h1>
-}
-puts "<p align=\"center\">
-(This page was last modified on [lrange $rcsid 3 4] UTC)
-</p>"
-
+source common.tcl
+header {NULL Handling in SQLite}
 puts {
+<h2>NULL Handling in SQLite Versus Other Database Engines</h2>
+
 <p>
 The goal is
 to make SQLite handle NULLs in a standards-compliant way.
@@ -334,11 +324,6 @@ select * from t2;
 drop table t1;
 drop table t2;
 </pre>
-
-<p><hr /></p>
-<p><a href="index.html"><img src="/goback.jpg" border=0 />
-Back to the SQLite Home Page</a>
-</p>
-</body>
-</html>
 }
+
+footer $rcsid

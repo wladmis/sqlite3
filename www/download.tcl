@@ -2,11 +2,11 @@
 # Run this TCL script to generate HTML for the download.html file.
 #
 set rcsid {$Id$}
+source common.tcl
+header {SQLite Download Page}
 
-puts {<html>
-<head><title>SQLite Download Page</title></head>
-<body bgcolor=white>
-<h1 align=center>SQLite Download Page</h1>
+puts {
+<h2>SQLite Download Page</h1>
 <table width="100%" cellpadding="5">
 }
 
@@ -95,13 +95,4 @@ foreach name [lsort -dict -decreasing [glob -nocomplain sqlite-*.tar.gz]] {
       Version $vers of the source tree including all documentation.
   "
 }
-
-puts {
-</table>
-<p><hr /></p>
-<p>
-<a href="index.html"><img src="/goback.jpg" border=0 />
-Back to the SQLite home page</a>
-</p>
-
-</body></html>}
+footer $rcsid

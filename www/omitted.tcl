@@ -2,21 +2,11 @@
 # Run this script to generated a omitted.html output file
 #
 set rcsid {$Id$}
-
-puts {<html>
-<head>
-  <title>SQL Features That SQLite Does Not Implement</title>
-</head>
-<body bgcolor="white">
-<h1 align="center">
-SQL Features That SQLite Does Not Implement
-</h1>
-}
-puts "<p align=center>
-(This page was last modified on [lrange $rcsid 3 4] UTC)
-</p>"
-
+source common.tcl
+header {SQL Features That SQLite Does Not Implement}
 puts {
+<h2>SQL Features That SQLite Does Not Implement</h2>
+
 <p>
 Rather than try to list all the features of SQL92 that SQLite does
 support, it is much easier to list those that it does not.
@@ -104,9 +94,5 @@ add them to the Wiki page at
 <a href="http://www.sqlite.org/cvstrac/wiki?p=UnsupportedSql">
 http://www.sqlite.org/cvstrac/wiki?p=Unsupported</a>
 </p>
-<p><hr /></p>
-<p><a href="index.html"><img src="/goback.jpg" border=0 />
-Back to the SQLite Home Page</a>
-</p>
-
-</body></html>}
+}
+footer $rcsid
