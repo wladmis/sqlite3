@@ -43,6 +43,7 @@ static char *errorName(int rc){
     case SQLITE_FULL:       zName = "SQLITE_FULL";        break;
     case SQLITE_CANTOPEN:   zName = "SQLITE_CANTOPEN";    break;
     case SQLITE_PROTOCOL:   zName = "SQLITE_PROTOCOL";    break;
+    case SQLITE_EMPTY:      zName = "SQLITE_EMPTY";       break;
     default:                zName = "SQLITE_Unknown";     break;
   }
   return zName;
