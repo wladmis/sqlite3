@@ -1773,8 +1773,6 @@ static int getPayload(
 ** the available payload.
 */
 int sqlite3BtreeKey(BtCursor *pCur, u32 offset, u32 amt, void *pBuf){
-  assert( amt>=0 );
-  assert( offset>=0 );
   if( pCur->isValid==0 ){
     return pCur->status;
   }
@@ -1797,8 +1795,6 @@ int sqlite3BtreeData(BtCursor *pCur, u32 offset, u32 amt, void *pBuf){
   if( !pCur->isValid ){
     return pCur->status ? pCur->status : SQLITE_INTERNAL;
   }
-  assert( amt>=0 );
-  assert( offset>=0 );
   assert( pCur->pPage!=0 );
   assert( pCur->idx>=0 && pCur->idx<pCur->pPage->nCell );
   return getPayload(pCur, offset, amt, pBuf, 1);
