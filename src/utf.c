@@ -608,3 +608,5 @@ int sqlite3utfTranslate(
   }
   return SQLITE_OK;
 }
+
+

@@ -861,7 +861,7 @@ int sqlite3_create_function(
   sqlite *db,          /* Add the function to this database connection */
   const char *zName,   /* Name of the function to add */
   int nArg,            /* Number of arguments */
-  void (*xFunc)(sqlite_func*,int,const char**),  /* The implementation */
+  void (*xFunc)(sqlite_func*,int,sqlite3_value **), /* The implementation */
   void *pUserData      /* User data */
 ){
   FuncDef *p;

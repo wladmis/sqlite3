@@ -2269,33 +2269,29 @@ divide_by_zero:
 ** See also: AggFunc
 */
 case OP_Function: {
-  int n, i;
+  int i;
   Mem *pArg;
-  char **azArgv;
   sqlite_func ctx;
+  sqlite3_value **apVal;
+  int n = pOp->p1;
 
   n = pOp->p1;
+  apVal = sqliteMalloc(sizeof(sqlite3_value*)*n);
+  assert( apVal || n==0 );
+
   pArg = &pTos[1-n];
-  azArgv = p->zArgv;
   for(i=0; i<n; i++, pArg++){
-    if( pArg->flags & MEM_Null ){
-      azArgv[i] = 0;
-    }else if( !(pArg->flags&MEM_Str) ){
-      Stringify(pArg, TEXT_Utf8);
-      azArgv[i] = pArg->z;
-    }else{
-      SetEncodingFlags(pArg, db->enc);
-      SetEncoding(pArg, MEM_Utf8|MEM_Term);
-      azArgv[i] = pArg->z;
-    }
+    SetEncodingFlags(pArg, db->enc);
+    apVal[i] = pArg;
   }
+
   ctx.pFunc = (FuncDef*)pOp->p3;
   ctx.s.flags = MEM_Null;
   ctx.s.z = 0;
   ctx.isError = 0;
   ctx.isStep = 0;
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
-  (*ctx.pFunc->xFunc)(&ctx, n, (const char**)azArgv);
+  (*ctx.pFunc->xFunc)(&ctx, n, apVal);
   if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
   popStack(&pTos, n);
   pTos++;
@@ -2317,6 +2313,7 @@ case OP_Function: {
     SetEncoding(pTos, encToFlags(db->enc)|MEM_Term);
   }
 
+  if( apVal ) sqliteFree(apVal);
   break;
 }
 
