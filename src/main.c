@@ -474,8 +474,8 @@ static int sqliteDefaultBusyCallback(
       break;
     }
   }
-  if( prior_delay + delay > timeout*1000 ){
-    delay = timeout*1000 - prior_delay;
+  if( prior_delay + delay > timeout ){
+    delay = timeout - prior_delay;
     if( delay<=0 ) return 0;
   }
   sqliteOsSleep(delay);
