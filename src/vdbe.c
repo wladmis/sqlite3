@@ -1284,7 +1284,9 @@ case OP_Callback: {
   VERIFY( if( i<0 ) goto not_enough_stack; )
   VERIFY( if( NeedStack(p, p->tos+2) ) goto no_mem; )
   for(j=i; j<=p->tos; j++){
-    if( (aStack[j].flags & STK_Null)==0 ){
+    if( aStack[j].flags & STK_Null ){
+      zStack[j] = 0;
+    }else{
       if( Stringify(p, j) ) goto no_mem;
     }
   }
