@@ -118,11 +118,18 @@ respected if it already exists.
 <p><b>SQLITE_OMIT_BLOB_LITERAL</b><br>
 When this option is defined, it is not possible to specify a blob in
 an SQL statement using the X'ABCD' syntax.</p> 
-<p>WARNING: The VACUUM command depends on this syntax for vacuuming databases
-that contain blobs, so disabling this functionality may render a database
-unvacuumable.
+}
+#<p>WARNING: The VACUUM command depends on this syntax for vacuuming databases
+#that contain blobs, so disabling this functionality may render a database
+#unvacuumable.
+#</p>
+#<p><i>TODO: Need a link here - is that syntax documented anywhere?</i><p>
+puts {
+
+<p><b>SQLITE_OMIT_COMPLETE</b><br>
+This option causes the <a href="capi3ref.html#sqlite3_complete">
+sqlite3_complete</a> API to be omitted.
 </p>
-<p><i>TODO: Need a link here - is that syntax documented anywhere?</i><p>
 
 <p><b>SQLITE_OMIT_COMPOUND_SELECT</b><br>
 This option is used to omit the compound SELECT functionality. 
@@ -269,4 +276,3 @@ for which the schema contains VIEW objects.
 </p>
 }
 footer $rcsid
-
