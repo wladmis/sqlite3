@@ -439,12 +439,14 @@ WhereInfo *sqliteWhereBegin(
       cont = pLevel->cont = brk;
       sqliteVdbeAddOp(v, OP_MustBeInt, 0, brk);
       if( i==pTabList->nId-1 && pushKey ){
-        /* Note: The OP_Dup below will cause the key to be left on the
-        ** stack if the key does not exists and the OP_NotExists jump is
+        /* Note: The OP_Dup below will cause the recno to be left on the
+        ** stack if the record does not exists and the OP_NotExists jump is
         ** taken.  This violates a general rule of the VDBE that you should
         ** never leave values on the stack in order to avoid a stack overflow.
         ** But in this case, the OP_Dup will never happen inside of a loop,
-        ** so it is safe to leave it on the stack.
+        ** because the pushKey flag is only true for UPDATE and DELETE, not
+        ** for SELECT, and nested loops only occur on a SELECT.
+        ** So it is safe to leave the recno on the stack.
         */
         haveKey = 1;
         sqliteVdbeAddOp(v, OP_Dup, 0, 0);

@@ -101,4 +101,17 @@ do_test misc1-2.2 {
            GROUP BY two, four ORDER BY sum(one) desc}
 } {8 two no 6 one yes 4 two yes 3 thr yes}
 
+# Here's a test for a bug found by Joel Lucsy.  The code below
+# was causing an assertion failure.
+#
+do_test misc1-3.1 {
+  set r [execsql {
+    CREATE TABLE t1(a);
+    INSERT INTO t1 VALUES('hi');
+    PRAGMA full_column_names=on;
+    SELECT rowid, * FROM t1;
+  }]
+  lindex $r 1
+} {hi}
+
 finish_test
