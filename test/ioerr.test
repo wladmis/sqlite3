@@ -106,16 +106,9 @@ for {set n 1} {$go} {incr n} {
     set ::sqlite_io_error_pending $n
   }] $n
   do_test ioerr-2.$n.3 {
-if {$n==41} {
-  # set sqlite_os_trace 1
-  breakpoint
-}
     set r [catch {db eval {
       VACUUM;
     }} msg]
-    # puts "error_pending=$::sqlite_io_error_pending"
-    # if {$r} {puts $msg}
-set sqlite_os_trace 0
     set ::go [expr {$::sqlite_io_error_pending<=0}]
     expr {$::sqlite_io_error_pending>0 || $r!=0}
     set ::sqlite_io_error_pending 0
