@@ -114,12 +114,32 @@ set encodings [list UTF-8 UTF-16le UTF-16be]
 set i 1
 foreach enc $encodings {
   file delete -force test.db
-  sqlite db test.db $enc
+  sqlite db test.db
   db eval "PRAGMA encoding = \"$enc\""
   execsql $dbcontents
   db close
   run_test_script enc2-$i $enc
   incr i
 }
+
+# Test that it is an error to try to attach a database with a different
+# encoding to the main database.
+do_test enc2-4.1 {
+  file delete -force test.db
+  sqlite db test.db
+  db eval "PRAGMA encoding = 'UTF-8'"
+  db eval "CREATE TABLE abc(a, b, c);"
+} {}
+do_test enc2-4.2 {
+  file delete -force test2.db
+  sqlite db2 test2.db
+  db2 eval "PRAGMA encoding = 'UTF-16'"
+  db2 eval "CREATE TABLE abc(a, b, c);"
+} {}
+do_test enc2-4.3 {
+  catchsql {
+    ATTACH 'test2.db' as aux;
+  }
+} {1 {attached databases must use the same text encoding as main database}}
 
 finish_test

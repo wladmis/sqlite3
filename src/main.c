@@ -382,21 +382,15 @@ int sqlite3Init(sqlite *db, char **pzErrMsg){
 ** This routine is a no-op if the database schema is already initialised.
 ** Otherwise, the schema is loaded. An error code is returned.
 */
-int sqlite3ReadSchema(sqlite *db){
+int sqlite3ReadSchema(sqlite *db, char **pzErrMsg){
   int rc = SQLITE_OK;
-  char *zErrMsg = 0;
 
   if( !db->init.busy ){
     if( (db->flags & SQLITE_Initialized)==0 ){
-      rc = sqlite3Init(db, &zErrMsg);
+      rc = sqlite3Init(db, pzErrMsg);
     }
   }
-  assert( (db->flags & SQLITE_Initialized)!=0 || db->init.busy );
-
-  sqlite3Error(db, rc, zErrMsg);
-  if( zErrMsg ){
-    sqliteFree(zErrMsg);
-  }
+  assert( rc!=SQLITE_OK || (db->flags & SQLITE_Initialized)||db->init.busy );
   return rc;
 }
 
