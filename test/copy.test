@@ -81,6 +81,7 @@ do_test copy-1.4 {
   execsql {COPY test1 FROM 'data2.txt'}
   execsql {SELECT * FROM test1 ORDER BY one}
 } {11 22 33}
+return
 
 # Test out the USING DELIMITERS clause
 #

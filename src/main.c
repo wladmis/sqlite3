@@ -46,7 +46,7 @@ static int sqliteOpenCb(void *pDb, int argc, char **argv, char **azColName){
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
   sParse.initFlag = 1;
-  nErr = sqliteRunParser(&sParse, argv[0], &zErrMsg);
+  nErr = sqliteRunParser(&sParse, argv[0], 0);
   return nErr;
 }
 
