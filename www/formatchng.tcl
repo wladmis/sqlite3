@@ -154,7 +154,7 @@ occurred since version 1.0.0:
   indices on "text" columns occur in a different order for version
   2.7.0 and later database.  Hence version 2.6.3 and earlier of SQLite 
   will be unable to read a 2.7.0 or later database.  But version 2.7.0
-  and later of SQLite will read earlier database version.</p>
+  and later of SQLite will read earlier databases.</p>
   </td>
 </tr>
 <tr>

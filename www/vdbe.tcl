@@ -105,16 +105,17 @@ INSERT with the special keyword "EXPLAIN".  The EXPLAIN keyword
 will cause <b>sqlite</b> to print the VDBE program rather than 
 execute it.  We have:</p>
 }
-
 proc Code {body} {
-  puts {<blockquote><pre>}
+  puts {<blockquote><tt>}
   regsub -all {&} [string trim $body] {\&amp;} body
   regsub -all {>} $body {\&gt;} body
   regsub -all {<} $body {\&lt;} body
-  regsub -all {\(\(\(} $body {<font color="#00671f"><u>} body
-  regsub -all {\)\)\)} $body {</u></font>} body
+  regsub -all {\(\(\(} $body {<b>} body
+  regsub -all {\)\)\)} $body {</b>} body
+  regsub -all { } $body {\&nbsp;} body
+  regsub -all \n $body <br>\n body
   puts $body
-  puts {</pre></blockquote>}
+  puts {</tt></blockquote>}
 }
 
 Code {

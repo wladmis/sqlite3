@@ -76,7 +76,7 @@ A journal file begins with 8 bytes as follows:
 Processes that are attempting to rollback a journal use these 8 bytes
 as a sanity check to make sure the file they think is a journal really
 is a valid journal.  Prior version of SQLite used different journal
-file formats.  The magic numbers for these prior formats is differ
+file formats.  The magic numbers for these prior formats are different
 so that if a new version of the library attempts to rollback a journal
 created by an earlier version, it can detect that the journal uses
 an obsolete format and make the necessary adjustments.  This article
