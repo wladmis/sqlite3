@@ -882,6 +882,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     data.colWidth[0] = 3;
     data.colWidth[1] = 15;
     data.colWidth[2] = 58;
+    data.cnt = 0;
     sqlite3_exec(p->db, "PRAGMA database_list; ", callback, &data, &zErrMsg);
     if( zErrMsg ){
       fprintf(stderr,"Error: %s\n", zErrMsg);
