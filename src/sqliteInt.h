@@ -230,7 +230,7 @@ struct Table {
   char *zName;     /* Name of the table */
   int nCol;        /* Number of columns in this table */
   Column *aCol;    /* Information about each column */
-  int iPKey;       /* Use this column as the record-number for each row */
+  int iPKey;       /* If not less then 0, use aCol[iPKey] as the primary key */
   Index *pIndex;   /* List of SQL indexes on this table. */
   int tnum;        /* Page containing root for this table */
   u8 readOnly;     /* True if this table should not be written by the user */
