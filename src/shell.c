@@ -721,14 +721,14 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     if( nArg==1 ){
       rc = sqlite_get_table(db,
         "SELECT name FROM sqlite_master "
-        "WHERE type='table' "
+        "WHERE type IN ('table','view') "
         "ORDER BY name",
         &azResult, &nRow, 0, &zErrMsg
       );
     }else{
       rc = sqlite_get_table_printf(db,
         "SELECT name FROM sqlite_master "
-        "WHERE type='table' AND name LIKE '%%%q%%' "
+        "WHERE type IN ('table','view') AND name LIKE '%%%q%%' "
         "ORDER BY name",
         &azResult, &nRow, 0, &zErrMsg, azArg[1]
       );

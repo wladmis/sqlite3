@@ -86,5 +86,41 @@ do_test view-1.8 {
   }
 } {2 3 5 6 8 9}
 
+do_test view-2.1 {
+  execsql {
+    CREATE VIEW v2 AS SELECT * FROM t1 WHERE a>5
+  };  # No semicolon
+  execsql2 {
+    SELECT * FROM v2;
+  }
+} {x 7 a 8 b 9 c 10}
+do_test view-2.2 {
+  catchsql {
+    INSERT INTO v2 VALUES(1,2,3,4);
+  }
+} {1 {view v2 may not be modified}}
+do_test view-2.3 {
+  catchsql {
+    UPDATE v2 SET a=10 WHERE a=5;
+  }
+} {1 {view v2 may not be modified}}
+do_test view-2.4 {
+  catchsql {
+    DELETE FROM v2;
+  }
+} {1 {view v2 may not be modified}}
+do_test view-2.5 {
+  execsql {
+    INSERT INTO t1 VALUES(11,12,13,14);
+    SELECT * FROM v2 ORDER BY x;
+  }
+} {7 8 9 10 11 12 13 14}
+do_test view-2.6 {
+  execsql {
+    SELECT x FROM v2 WHERE a>10
+  }
+} {11}
+
+
 
 finish_test

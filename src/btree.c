@@ -2988,6 +2988,7 @@ char *sqliteBtreeIntegrityCheck(Btree *pBt, int *aRoot, int nRoot){
   /* Check all the tables.
   */
   for(i=0; i<nRoot; i++){
+    if( aRoot[i]==0 ) continue;
     checkTreePage(&sCheck, aRoot[i], 0, "List of tree roots: ", 0,0,0,0);
   }
 

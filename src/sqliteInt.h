@@ -586,7 +586,7 @@ void sqliteEndTable(Parse*,Token*,Select*);
 void sqliteCreateView(Parse*,Token*,Token*,Select*);
 int sqliteViewGetColumnNames(Parse*,Table*);
 void sqliteViewResetAll(sqlite*);
-void sqliteDropTable(Parse*, Token*);
+void sqliteDropTable(Parse*, Token*, int);
 void sqliteDeleteTable(sqlite*, Table*);
 void sqliteInsert(Parse*, Token*, ExprList*, Select*, IdList*, int);
 IdList *sqliteIdListAppend(IdList*, Token*);
