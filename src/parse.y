@@ -664,6 +664,22 @@ expr(A) ::= expr(X) NOT IN LP select(Y) RP(E).  {
   A = sqliteExpr(TK_NOT, A, 0, 0);
   sqliteExprSpan(A,&X->span,&E);
 }
+expr(A) ::= expr(X) IN nm(Y) dbnm(D). {
+  SrcList *pSrc = sqliteSrcListAppend(0, &Y, &D);
+  ExprList *pList = sqliteExprListAppend(0, sqliteExpr(TK_ALL,0,0,0), 0);
+  A = sqliteExpr(TK_IN, X, 0, 0);
+  if( A ) A->pSelect = sqliteSelectNew(pList,pSrc,0,0,0,0,0,-1,0);
+  sqliteExprSpan(A,&X->span,D.z?&D:&Y);
+}
+expr(A) ::= expr(X) NOT IN nm(Y) dbnm(D). {
+  SrcList *pSrc = sqliteSrcListAppend(0, &Y, &D);
+  ExprList *pList = sqliteExprListAppend(0, sqliteExpr(TK_ALL,0,0,0), 0);
+  A = sqliteExpr(TK_IN, X, 0, 0);
+  if( A ) A->pSelect = sqliteSelectNew(pList,pSrc,0,0,0,0,0,-1,0);
+  A = sqliteExpr(TK_NOT, A, 0, 0);
+  sqliteExprSpan(A,&X->span,D.z?&D:&Y);
+}
+
 
 /* CASE expressions */
 expr(A) ::= CASE(C) case_operand(X) case_exprlist(Y) case_else(Z) END(E). {
