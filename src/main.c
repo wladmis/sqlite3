@@ -648,6 +648,7 @@ int sqlite_create_function(
   UserFunc *p;
   if( db==0 || zName==0 ) return 1;
   p = sqliteFindUserFunction(db, zName, strlen(zName), nArg, 1);
+  if( p==0 ) return 1;
   p->xFunc = xFunc;
   p->xStep = 0;
   p->xFinalize = 0;
@@ -663,6 +664,7 @@ int sqlite_create_aggregate(
   UserFunc *p;
   if( db==0 || zName==0 ) return 1;
   p = sqliteFindUserFunction(db, zName, strlen(zName), nArg, 1);
+  if( p==0 ) return 1;
   p->xFunc = 0;
   p->xStep = xStep;
   p->xFinalize = xFinalize;
