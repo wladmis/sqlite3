@@ -49,7 +49,7 @@ static void lowerFunc(void *context, int argc, const char **argv){
 
 /*
 ** An instance of the following structure holds the context of a
-** standard deviation computation.
+** variance or standard deviation computation.
 */
 typedef struct StdDevCtx StdDevCtx;
 struct StdDevCtx {
@@ -90,8 +90,9 @@ static void stdDevFinalize(void *stddev, void *context){
 }
 
 /*
-** This file registered all of the above C functions as SQL
-** functions.
+** This function registered all of the above C functions as SQL
+** functions.  This should be the only routine in this file with
+** external linkage.
 */
 void sqliteRegisterBuildinFunctions(sqlite *db){
   sqlite_create_function(db, "upper", 1, upperFunc);

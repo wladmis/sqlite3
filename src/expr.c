@@ -111,7 +111,7 @@ void sqliteExprDelete(Expr *p){
 ** the life of the view.)  When that happens we have to make a
 ** persistent copy of the input buffer and translate the Expr.token.z
 ** and Expr.span.z fields to point to the copy rather than the 
-** original input buffer.  The following group of routines to that
+** original input buffer.  The following group of routines handle that
 ** translation.
 **
 ** The "offset" parameter is the distance from the original input buffer
