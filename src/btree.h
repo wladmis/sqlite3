@@ -93,7 +93,7 @@ char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot);
 struct Pager *sqlite3BtreePager(Btree*);
 
 #ifdef SQLITE_TEST
-int sqlite3BtreeCursorDump(BtCursor*, int*);
+int sqlite3BtreeCursorInfo(BtCursor*, int*);
 void sqlite3BtreeCursorList(Btree*);
 int sqlite3BtreeFlags(BtCursor*);
 int sqlite3BtreePageDump(Btree*, int, int recursive);

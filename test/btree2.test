@@ -353,7 +353,7 @@ after 100
     } {}
     set cnt 6
     for {set i 2} {$i<=6} {incr i} {
-      if {[lindex [btree_cursor_dump [set ::c$i]] 0]!=$i} {incr cnt}
+      if {[lindex [btree_cursor_info [set ::c$i]] 0]!=$i} {incr cnt}
     }
     do_test $testid.1 {
       btree_begin_transaction $::b
