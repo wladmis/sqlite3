@@ -290,7 +290,7 @@ SQLite 2.0:   real   3.12   user   0.02   sys   0.31
 <p>
 SQLite 2.0 is much slower at dropping tables.  This may be because
 both SQLite 1.0 and PostgreSQL can drop a table simply by unlinking
-or renaming a file, since that both use one or more files per table.
+or renaming a file, since both store database tables in separate files.
 SQLite 2.0, on the other hand, uses a single file for the entire
 database, so dropping a table involves moving lots of page of that
 file to the free-list, which takes time.
