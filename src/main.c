@@ -115,7 +115,7 @@ int upgrade_3_callback(void *pInit, int argc, char **argv, char **NotUsed){
   int rc;
   Table *pTab;
   Trigger *pTrig;
-  char *zErr;
+  char *zErr = 0;
 
   pTab = sqliteFindTable(pData->db, argv[0]);
   if( pTab ){

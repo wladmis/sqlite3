@@ -170,13 +170,12 @@ void sqliteDeleteFrom(
       int endOfLoop = sqliteVdbeMakeLabel(v);
       int addr;
       openOp = pTab->isTemp ? OP_OpenAux : OP_Open;
-      assert( base==0 );
-      sqliteVdbeAddOp(v, openOp, 0, pTab->tnum);
-      sqliteVdbeAddOp(v, OP_Rewind, 0, sqliteVdbeCurrentAddr(v)+2);
+      sqliteVdbeAddOp(v, openOp, base, pTab->tnum);
+      sqliteVdbeAddOp(v, OP_Rewind, base, sqliteVdbeCurrentAddr(v)+2);
       addr = sqliteVdbeAddOp(v, OP_AddImm, 1, 0);
-      sqliteVdbeAddOp(v, OP_Next, 0, addr);
+      sqliteVdbeAddOp(v, OP_Next, base, addr);
       sqliteVdbeResolveLabel(v, endOfLoop);
-      sqliteVdbeAddOp(v, OP_Close, 0, 0);
+      sqliteVdbeAddOp(v, OP_Close, base, 0);
     }
     sqliteVdbeAddOp(v, OP_Clear, pTab->tnum, pTab->isTemp);
     for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
