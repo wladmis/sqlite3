@@ -282,7 +282,9 @@ for use by the engine.</p>
 
 <p>Each column definition is the name of the column followed by the
 datatype for that column, then one or more optional column constraints.
-The datatype for the column is (usually) ignored and may be omitted.
+SQLite is <a href="datatypes.html">typeless</a>.
+The datatype for the column does not constraint what data may be put
+in that column.
 All information is stored as null-terminated strings.
 The UNIQUE constraint causes an index to be created on the specified
 columns.  This index must contain unique keys.

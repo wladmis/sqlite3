@@ -132,6 +132,7 @@ puts {<h2>Documentation</h2>
 <li><a href="faq.html">Frequently Asked Questions</a> are available online.</li>
 <li>Information on the <a href="sqlite.html">sqlite</a>
     command-line utility.</li>
+<li>SQLite is <a href="datatypes.html">typeless</a>.
 <li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.</li>
 <li>The <a href="c_interface.html">C/C++ Interface</a>.</li>
 <li>The <a href="tclsqlite.html">Tcl Binding</a> to SQLite.</li>
