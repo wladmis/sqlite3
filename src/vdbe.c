@@ -335,7 +335,7 @@ static void hardIntegerify(Mem *pStack){
 #define Realify(P) if(((P)->flags&MEM_Real)==0){ hardRealify(P); }
 static void hardRealify(Mem *pStack){
   if( pStack->flags & MEM_Str ){
-    pStack->r = sqliteAtoF(pStack->z);
+    pStack->r = sqliteAtoF(pStack->z, 0);
   }else if( pStack->flags & MEM_Int ){
     pStack->r = pStack->i;
   }else{
@@ -2039,7 +2039,7 @@ case OP_MakeKey: {
       if( (flags & (MEM_Real|MEM_Int))==MEM_Int ){
         pRec->r = pRec->i;
       }else if( (flags & (MEM_Real|MEM_Int))==0 ){
-        pRec->r = sqliteAtoF(pRec->z);
+        pRec->r = sqliteAtoF(pRec->z, 0);
       }
       Release(pRec);
       z = pRec->zShort;
