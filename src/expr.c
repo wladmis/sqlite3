@@ -1080,6 +1080,27 @@ int sqlite3ExprCheck(Parse *pParse, Expr *pExpr, int allowAgg, int *pIsAgg){
 }
 
 /*
+** Call sqlite3ExprResolveIds() followed by sqlite3ExprCheck().
+**
+** This routine is provided as a convenience since it is very common
+** to call ResolveIds() and Check() back to back.
+*/
+int sqlite3ExprResolveAndCheck(
+  Parse *pParse,     /* The parser context */
+  SrcList *pSrcList, /* List of tables used to resolve column names */
+  ExprList *pEList,  /* List of expressions used to resolve "AS" */
+  Expr *pExpr,       /* The expression to be analyzed. */
+  int allowAgg,      /* True to allow aggregate expressions */
+  int *pIsAgg        /* Set to TRUE if aggregates are found */
+){
+  if( pExpr==0 ) return 0;
+  if( sqlite3ExprResolveIds(pParse,pSrcList,pEList,pExpr) ){
+    return 1;
+  }
+  return sqlite3ExprCheck(pParse, pExpr, allowAgg, pIsAgg);
+}
+
+/*
 ** Generate an instruction that will put the integer describe by
 ** text z[0..n-1] on the stack.
 */

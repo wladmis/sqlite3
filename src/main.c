@@ -1253,7 +1253,7 @@ int sqlite3_finalize(sqlite3_stmt *pStmt){
 */
 int sqlite3_reset(sqlite3_stmt *pStmt){
   int rc = sqlite3VdbeReset((Vdbe*)pStmt);
-  sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0);
+  sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0, 0, 0);
   return rc;
 }
 

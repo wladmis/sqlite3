@@ -888,8 +888,6 @@ struct WhereInfo {
   int iContinue;       /* Jump here to continue with next record */
   int iBreak;          /* Jump here to break out of the loop */
   int nLevel;          /* Number of nested loop */
-  int savedNTab;       /* Value of pParse->nTab before WhereBegin() */
-  int peakNTab;        /* Value of pParse->nTab after WhereBegin() */
   WhereLevel a[1];     /* Information about each nest loop in the WHERE */
 };
 
@@ -1278,6 +1276,7 @@ int sqlite3ExprCheck(Parse*, Expr*, int, int*);
 int sqlite3ExprCompare(Expr*, Expr*);
 int sqliteFuncId(Token*);
 int sqlite3ExprResolveIds(Parse*, SrcList*, ExprList*, Expr*);
+int sqlite3ExprResolveAndCheck(Parse*,SrcList*,ExprList*,Expr*,int,int*);
 int sqlite3ExprAnalyzeAggregates(Parse*, Expr*);
 Vdbe *sqlite3GetVdbe(Parse*);
 void sqlite3Randomness(int, void*);
@@ -1294,7 +1293,7 @@ void sqlite3GenerateRowIndexDelete(sqlite*, Vdbe*, Table*, int, char*);
 void sqlite3GenerateIndexKey(Vdbe*, Index*, int);
 void sqlite3GenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
 void sqlite3CompleteInsertion(Parse*, Table*, int, char*, int, int, int);
-int sqlite3OpenTableAndIndices(Parse*, Table*, int);
+void sqlite3OpenTableAndIndices(Parse*, Table*, int, int);
 void sqlite3BeginWriteOperation(Parse*, int, int);
 void sqlite3EndWriteOperation(Parse*);
 Expr *sqlite3ExprDup(Expr*);

@@ -96,7 +96,8 @@ void sqlite3FinishCoding(Parse *pParse){
   if( v && pParse->nErr==0 ){
     FILE *trace = (db->flags & SQLITE_VdbeTrace)!=0 ? stdout : 0;
     sqlite3VdbeTrace(v, trace);
-    sqlite3VdbeMakeReady(v, pParse->nVar, pParse->explain);
+    sqlite3VdbeMakeReady(v, pParse->nVar, pParse->nMem+3,
+                         pParse->nTab+3, pParse->explain);
     pParse->rc = pParse->nErr ? SQLITE_ERROR : SQLITE_DONE;
     pParse->colNamesSet = 0;
   }else if( pParse->rc==SQLITE_OK ){
