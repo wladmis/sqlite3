@@ -449,9 +449,11 @@ void sqlite3Update(
   }
 
   /*
-  ** Return the number of rows that were changed.
+  ** Return the number of rows that were changed. If this routine is 
+  ** generating code because of a call to sqlite3NestedParse(), do not
+  ** invoke the callback function.
   */
-  if( db->flags & SQLITE_CountRows && !pParse->trigStack ){
+  if( db->flags & SQLITE_CountRows && !pParse->trigStack && pParse->nested==0 ){
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
     sqlite3VdbeSetNumCols(v, 1);
     sqlite3VdbeSetColName(v, 0, "rows updated", P3_STATIC);

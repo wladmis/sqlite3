@@ -634,9 +634,11 @@ void sqlite3Insert(
   }
 
   /*
-  ** Return the number of rows inserted.
+  ** Return the number of rows inserted. If this routine is 
+  ** generating code because of a call to sqlite3NestedParse(), do not
+  ** invoke the callback function.
   */
-  if( db->flags & SQLITE_CountRows ){
+  if( db->flags & SQLITE_CountRows && pParse->nested==0 ){
     sqlite3VdbeAddOp(v, OP_MemLoad, iCntMem, 0);
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
     sqlite3VdbeSetNumCols(v, 1);
