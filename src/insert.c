@@ -380,7 +380,7 @@ void sqlite3Insert(
     nColumn = pList->nExpr;
     dummy.nSrc = 0;
     for(i=0; i<nColumn; i++){
-      if( sqlite3ExprResolveAndCheck(pParse,&dummy,0,pList->a[i].pExpr,0,0) ){
+      if( sqlite3ExprResolveNames(pParse,&dummy,0,pList->a[i].pExpr,0,0,1) ){
         goto insert_cleanup;
       }
     }

@@ -884,7 +884,7 @@ void sqlite3AddDefaultValue(Parse *pParse, Expr *pExpr){
   }else{
     sqlite3ExprDelete(pCol->pDflt);
     pCol->pDflt = sqlite3ExprDup(pExpr);
-    sqlite3ExprCheck(pParse, pExpr, 0, 0);
+    sqlite3ExprResolveNames(pParse,0,0,pExpr,0,0,0);
   }
   sqlite3ExprDelete(pExpr);
 }
