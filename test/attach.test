@@ -488,7 +488,7 @@ do_test attach-5.1 {
       SELECT 'no-op';
     END;
   } db2
-} {1 {triggers may not be added to auxiliary database orig}}
+} {1 {trigger r1 cannot reference objects in database orig}}
 do_test attach-5.2 {
   catchsql {
     CREATE TABLE t5(x,y);

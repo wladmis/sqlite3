@@ -2142,12 +2142,12 @@ case OP_MakeRecord: {
   pTos++;
   pTos->n = nByte;
   if( nByte<=sizeof(zTemp) ){
-    assert( zNewRecord==zTemp );
+    assert( zNewRecord==(unsigned char *)zTemp );
     pTos->z = pTos->zShort;
     memcpy(pTos->zShort, zTemp, nByte);
     pTos->flags = MEM_Blob | MEM_Short;
   }else{
-    assert( zNewRecord!=zTemp );
+    assert( zNewRecord!=(unsigned char *)zTemp );
     pTos->z = zNewRecord;
     pTos->flags = MEM_Blob | MEM_Dyn;
   }
