@@ -124,7 +124,7 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
   ** database scheme.
   */
   static VdbeOp initProg[] = {
-    { OP_OpenTbl,    0, 0,  MASTER_NAME},
+    { OP_OpenTbl,  0, 0,  MASTER_NAME},
     { OP_Next,     0, 9,  0},           /* 1 */
     { OP_Field,    0, 0,  0},
     { OP_String,   0, 0,  "meta"},
