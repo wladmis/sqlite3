@@ -498,7 +498,7 @@ int sqlite3utf8LikeCompare(
   return *zString==0;
 }
 
-#ifndef NDEBUG
+#if defined(SQLITE_TEST)
 /*
 ** This routine is called from the TCL test function "translate_selftest".
 ** It checks that the primitives for serializing and deserializing
@@ -542,5 +542,3 @@ void sqlite3utfSelfTest(){
   }
 }
 #endif
-
-

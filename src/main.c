@@ -398,7 +398,7 @@ int sqlite3ReadSchema(sqlite *db, char **pzErrMsg){
 /*
 ** The version of the library
 */
-const char rcsid[] = "@(#) \044Id: SQLite version " SQLITE_VERSION " $";
+const char rcsid3[] = "@(#) \044Id: SQLite version " SQLITE_VERSION " $";
 const char sqlite3_version[] = SQLITE_VERSION;
 
 /*

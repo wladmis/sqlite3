@@ -377,9 +377,9 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
 #ifndef NDEBUG
   if( sqlite3StrICmp(zLeft, "trigger_overhead_test")==0 ){
     if( getBoolean(zRight) ){
-      always_code_trigger_setup = 1;
+      sqlite3_always_code_trigger_setup = 1;
     }else{
-      always_code_trigger_setup = 0;
+      sqlite3_always_code_trigger_setup = 0;
     }
   }else
 #endif
