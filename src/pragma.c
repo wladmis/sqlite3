@@ -767,17 +767,18 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       char *zName;
       u8 enc;
     } encnames[] = {
-      { "UTF-8", SQLITE_UTF8 },
-      { "UTF-16le", SQLITE_UTF16LE },
-      { "UTF-16be", SQLITE_UTF16BE },
-      { "UTF-16", SQLITE_UTF16NATIVE },
-      { "UTF8", SQLITE_UTF8 },
-      { "UTF16le", SQLITE_UTF16LE },
-      { "UTF16be", SQLITE_UTF16BE },
-      { "UTF16", SQLITE_UTF16NATIVE },
+      { "UTF-8",    SQLITE_UTF8        },
+      { "UTF8",     SQLITE_UTF8        },
+      { "UTF-16le", SQLITE_UTF16LE     },
+      { "UTF16le",  SQLITE_UTF16LE     },
+      { "UTF-16be", SQLITE_UTF16BE     },
+      { "UTF16be",  SQLITE_UTF16BE     },
+      { "UTF-16",   0 /* Filled in at run-time */ },
+      { "UTF16",    0 /* Filled in at run-time */ },
       { 0, 0 }
     };
     struct EncName *pEnc;
+    encnames[6].enc = encnames[7].enc = SQLITE_UTF16NATIVE;
     if( pRight->z==pLeft->z ){    /* "PRAGMA encoding" */
       if( SQLITE_OK!=sqlite3ReadSchema(pParse->db, &pParse->zErrMsg) ){
         pParse->nErr++;
