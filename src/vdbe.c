@@ -3735,6 +3735,7 @@ case OP_DropTrigger: {
 }
 
 
+#ifndef SQLITE_OMIT_INTEGRITY_CHECK
 /* Opcode: IntegrityCk * P2 *
 **
 ** Do an analysis of the currently open database.  Push onto the
@@ -3786,6 +3787,7 @@ case OP_IntegrityCk: {
   sqliteFree(aRoot);
   break;
 }
+#endif /* SQLITE_OMIT_INTEGRITY_CHECK */
 
 /* Opcode: ListWrite * * *
 **

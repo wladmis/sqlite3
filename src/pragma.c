@@ -444,6 +444,7 @@ void sqlite3Pragma(
     }
   }else
 
+#ifndef SQLITE_OMIT_FOREIGN_KEY
   if( sqlite3StrICmp(zLeft, "foreign_key_list")==0 && zRight ){
     FKey *pFK;
     Table *pTab;
@@ -477,6 +478,7 @@ void sqlite3Pragma(
       }
     }
   }else
+#endif /* !defined(SQLITE_OMIT_FOREIGN_KEY) */
 
   if( sqlite3StrICmp(zLeft, "database_list")==0 ){
     int i;
@@ -507,6 +509,7 @@ void sqlite3Pragma(
   }else
 #endif
 
+#ifndef SQLITE_OMIT_INTEGRITY_CHECK
   if( sqlite3StrICmp(zLeft, "integrity_check")==0 ){
     int i, j, addr;
 
@@ -631,6 +634,8 @@ void sqlite3Pragma(
     addr = sqlite3VdbeAddOpList(v, ArraySize(endCode), endCode);
     sqlite3VdbeChangeP2(v, addr+2, addr+ArraySize(endCode));
   }else
+#endif /* SQLITE_OMIT_INTEGRITY_CHECK */
+
   /*
   **   PRAGMA encoding
   **   PRAGMA encoding = "utf-8"|"utf-16"|"utf-16le"|"utf-16be"

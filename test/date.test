@@ -19,7 +19,7 @@ source $testdir/tester.tcl
 # Skip this whole file if date and time functions are omitted
 # at compile-time
 #
-if {!$sqlite_options(datetime)} {
+ifcapable {!datetime} {
   finish_test
   return
 }

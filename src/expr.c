@@ -700,6 +700,7 @@ static int lookupName(
     }
   }
 
+#ifndef SQLITE_OMIT_TRIGGER
   /* If we have not already resolved the name, then maybe 
   ** it is a new.* or old.* trigger argument reference
   */
@@ -733,6 +734,7 @@ static int lookupName(
       }
     }
   }
+#endif /* !defined(SQLITE_OMIT_TRIGGER) */
 
   /*
   ** Perhaps the name is a reference to the ROWID

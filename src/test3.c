@@ -578,7 +578,11 @@ static int btree_integrity_check(
   for(i=0; i<argc-2; i++){
     if( Tcl_GetInt(interp, argv[i+2], &aRoot[i]) ) return TCL_ERROR;
   }
+#ifndef SQLITE_OMIT_INTEGRITY_CHECK
   zResult = sqlite3BtreeIntegrityCheck(pBt, aRoot, nRoot);
+#else
+  zResult = "ok";
+#endif
   if( zResult ){
     Tcl_AppendResult(interp, zResult, 0);
     sqliteFree(zResult); 
