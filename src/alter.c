@@ -444,7 +444,7 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   zCol = sqliteStrNDup(pColDef->z, pColDef->n);
   if( zCol ){
     char *zEnd = &zCol[pColDef->n-1];
-    while( zEnd>zCol && *zEnd==';' || isspace(*(unsigned char *)zEnd) ){
+    while( (zEnd>zCol && *zEnd==';') || isspace(*(unsigned char *)zEnd) ){
       *zEnd-- = '\0';
     }
     sqlite3NestedParse(pParse, 
@@ -548,4 +548,3 @@ exit_begin_add_column:
   return;
 }
 #endif  /* SQLITE_ALTER_TABLE */
-

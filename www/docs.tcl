@@ -128,5 +128,10 @@ doc {Compilation Options} {compile.html} {
   in order to reduce binary size.
 }
 
+doc {Backwards Compatibility} {formatchng.html} {
+  This document details all of the incompatible changes to the SQLite
+  file format that have occurred since version 1.0.0.
+}
+
 puts {</table>}
 footer $rcsid

@@ -181,6 +181,10 @@ statement, with the following restrictions:
 the amount of data in the table.  The ALTER TABLE command runs as quickly
 on a table with 10 million rows as it does on a table with 1 row.
 </p>
+
+<p>After ADD COLUMN has been run on a database, that database will not
+be readable by SQLite version 3.1.3 and earlier until the database
+is <a href="lang_vacuum.html">VACUUM</a>ed.</p>
 }
 
 Section {ATTACH DATABASE} attach
