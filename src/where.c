@@ -853,7 +853,7 @@ WhereInfo *sqliteWhereBegin(
         }else{
           sqliteExprCode(pParse, aExpr[k].p->pLeft);
         }
-        sqliteVdbeAddOp(v, OP_MustBeInt, 1, brk);
+        sqliteVdbeAddOp(v, OP_IsNumeric, 1, brk);
         if( aExpr[k].p->op==TK_LT || aExpr[k].p->op==TK_GT ){
           sqliteVdbeAddOp(v, OP_AddImm, 1, 0);
         }
@@ -872,7 +872,7 @@ WhereInfo *sqliteWhereBegin(
         }else{
           sqliteExprCode(pParse, aExpr[k].p->pLeft);
         }
-        sqliteVdbeAddOp(v, OP_MustBeInt, 1, sqliteVdbeCurrentAddr(v)+1);
+        /* sqliteVdbeAddOp(v, OP_MustBeInt, 0, sqliteVdbeCurrentAddr(v)+1); */
         pLevel->iMem = pParse->nMem++;
         sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
         if( aExpr[k].p->op==TK_LT || aExpr[k].p->op==TK_GT ){

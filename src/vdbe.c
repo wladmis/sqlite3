@@ -2268,6 +2268,30 @@ case OP_AddImm: {
   break;
 }
 
+/* Opcode: IsNumeric P1 P2 *
+**
+** Check the top of the stack to see if it is a numeric value.  A numeric
+** value is an integer, a real number, or a string that looks like an 
+** integer or a real number.  When P1==0, pop the stack and jump to P2
+** if the value is numeric.  Otherwise fall through and leave the stack
+** unchanged.  The sense of the test is inverted when P1==1.
+*/
+case OP_IsNumeric: {
+  int tos = p->tos;
+  int r;
+  VERIFY( if( tos<0 ) goto not_enough_stack; )
+  r = (aStack[tos].flags & (STK_Int|STK_Real))!=0 
+           || (zStack[tos] && sqliteIsNumber(zStack[tos]));
+  if( pOp->p1 ){
+    r = !r;
+  }
+  if( r ){
+    POPSTACK;
+    pc = pOp->p2 - 1;
+  }
+  break;
+}
+
 /* Opcode: MustBeInt P1 P2 *
 ** 
 ** Force the top of the stack to be an integer.  If the top of the
@@ -2294,14 +2318,24 @@ case OP_MustBeInt: {
   }else if( aStack[tos].flags & STK_Str ){
     int v;
     if( !toInt(zStack[tos], &v) ){
-      goto mismatch;
+      double r;
+      if( !sqliteIsNumber(zStack[tos]) ){
+        goto mismatch;
+      }
+      Realify(p, tos);
+      assert( (aStack[tos].flags & STK_Real)!=0 );
+      v = aStack[tos].r;
+      r = (double)v;
+      if( r!=aStack[tos].r ){
+        goto mismatch;
+      }
     }
-    p->aStack[tos].i = v;
+    aStack[tos].i = v;
   }else{
     goto mismatch;
   }
   Release(p, tos);
-  p->aStack[tos].flags = STK_Int;
+  aStack[tos].flags = STK_Int;
   break;
 
 mismatch:
