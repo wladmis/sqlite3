@@ -64,7 +64,7 @@ do_test attach2-2.1 {
 do_test attach2-2.2 {
   # make sure test2.db did get attached.
   db_list db
-} {0 main 1 temp 2 t2}
+} {0 main 2 t2}
 db2 eval {COMMIT}
 
 do_test attach2-2.5 {
