@@ -1,7 +1,7 @@
 #
 # Run this Tcl script to generate the speed.html file.
 #
-set rcsid {$Id: }
+set rcsid {$Id$ }
 
 puts {<html>
 <head>
