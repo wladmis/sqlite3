@@ -81,6 +81,22 @@ typedef struct VdbeOpList VdbeOpList;
 #include "opcodes.h"
 
 /*
+** An instance of the following structure is passed as the first
+** argument to sqlite3VdbeKeyCompare and is used to control the 
+** comparison of the two keys.
+**
+** If the KeyInfo.incrKey value is true and the comparison would
+** otherwise be equal, then return a result as if the second key larger.
+*/
+typedef struct KeyInfo KeyInfo;
+struct KeyInfo {
+  u8 incrKey;           /* Increase value of 2nd key by epsilon */
+  u8 reverseOrder;      /* If true, reverse the comparison order */
+  int nField;           /* Number of entries in aColl[] */
+  struct CollSeq *aColl[1];  /* Collating sequence for each term of the key */
+};
+
+/*
 ** Prototypes for the VDBE interface.  See comments on the implementation
 ** for a description of what each of these routines does.
 */
