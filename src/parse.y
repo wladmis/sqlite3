@@ -176,13 +176,7 @@ sortlist(A) ::= sortitem(Y) sortorder(Z).
     A = sqliteExprListAppend(0,Y,0);
     A->a[0].idx = Z;
   }
-sortitem(A) ::= ID(X).           {A = sqliteExpr(TK_ID, 0, 0, &X);}
-sortitem(A) ::= ID(X) DOT ID(Y). 
-  {
-     Expr *temp1 = sqliteExpr(TK_ID, 0, 0, &X);
-     Expr *temp2 = sqliteExpr(TK_ID, 0, 0, &Y);
-     A = sqliteExpr(TK_DOT, temp1, temp2, 0);
-  }
+sortitem(A) ::= expr(X).   {A = X;}
 
 %type sortorder {int}
 

@@ -154,8 +154,11 @@ void sqliteSelect(
       if( pTabList->nId>1 ){
         char *zName = 0;
         Table *pTab = pTabList->a[p->iTable].pTab;
-        sqliteSetString(&zName, pTab->zName, ".", 
-               pTab->azCol[p->iField], 0);
+        char *zTab;
+
+        zTab = pTabList->a[p->iTable].zAlias;
+        if( zTab==0 ) zTab = pTab->zName;
+        sqliteSetString(&zName, zTab, ".", pTab->azCol[p->iField], 0);
         sqliteVdbeAddOp(v, OP_ColumnName, i, 0, zName, 0);
         sqliteFree(zName);
       }else{
@@ -191,8 +194,10 @@ void sqliteSelect(
 
   /* Pull the requested fields.
   */
-  for(i=0; i<pEList->nExpr; i++){
-    sqliteExprCode(pParse, pEList->a[i].pExpr);
+  if( !isAgg ){
+    for(i=0; i<pEList->nExpr; i++){
+      sqliteExprCode(pParse, pEList->a[i].pExpr);
+    }
   }
   
   /* If there is no ORDER BY clause, then we can invoke the callback
