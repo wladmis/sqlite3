@@ -392,7 +392,7 @@ int sqliteHashNoCase(const char *z, int n){
   int h = 0;
   if( n<=0 ) n = strlen(z);
   while( n > 0  ){
-    h = (h<<3) ^ h ^ UpperToLower[*z++];
+    h = (h<<3) ^ h ^ UpperToLower[(unsigned char)*z++];
     n--;
   }
   if( h<0 ) h = -h;
