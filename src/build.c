@@ -3017,7 +3017,10 @@ void sqlite3AlterRenameTable(
               "'sqlite_autoindex_' || %Q || substr(name, %d+18,10) "
             "ELSE name END "
       "WHERE tbl_name=%Q AND type IN ('table', 'index', 'trigger');", 
-      zDb, SCHEMA_TABLE(iDb), zName, zName, zName, zName, 
+      zDb, SCHEMA_TABLE(iDb), zName, zName, zName, 
+#ifndef SQLITE_OMIT_TRIGGER
+zName,
+#endif
       zName, strlen(pTab->zName), pTab->zName
   );
 
