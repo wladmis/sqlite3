@@ -189,7 +189,7 @@ void sqliteDeleteFrom(
   }
 
   /* The usual case: There is a WHERE clause so we have to scan through
-  ** the table an pick which records to delete.
+  ** the table and pick which records to delete.
   */
   else{
     /* Begin the database scan

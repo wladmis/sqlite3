@@ -178,8 +178,8 @@ static void lowerFunc(sqlite_func *context, int argc, const char **argv){
 
 /*
 ** Implementation of the IFNULL(), NVL(), and COALESCE() functions.  
-** All three do the same thing.  They return the first argument
-** non-NULL argument.
+** All three do the same thing.  They return the first non-NULL
+** argument.
 */
 static void ifnullFunc(sqlite_func *context, int argc, const char **argv){
   int i;
