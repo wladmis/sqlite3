@@ -206,6 +206,10 @@ database schema version and user version from the build. Specifically, the
 <a href="pragma.html#pragma_user_version">user_version</a>
 pragmas are omitted.
 
+<p><b>SQLITE_OMIT_SUBQUERY</b><br>
+<p>If defined, support for sub-selects and the IN() operator are omitted.
+</p>
+
 <p><b>SQLITE_OMIT_TCL_VARIABLE</b><br>
 <p>If this macro is defined, then the special "$<variable-name>" syntax
 used to automatically bind SQL variables to TCL variables is omitted.
