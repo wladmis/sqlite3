@@ -60,7 +60,7 @@
 /*
 ** The maximum number of attached databases.  This must be at least 2
 ** in order to support the main database file (0) and the file used to
-** hold temporary tables (1).  And it must be less than 256 because the
+** hold temporary tables (1).  And it must be less than 256 because
 ** an unsigned character is used to stored the database index.
 */
 #define MAX_ATTACHED 10
@@ -306,7 +306,7 @@ struct sqlite {
                                           /*   the count using a callback. */
 #define SQLITE_NullCallback   0x00000080  /* Invoke the callback once if the */
                                           /*   result set is empty */
-#define SQLITE_ResultDetails  0x00000100  /* Details added to result set */
+/*#define SQLITE_ResultDetails  0x00000100 * (UNUSED -- flag free for reuse) */
 #define SQLITE_UnresetViews   0x00000200  /* True if one or more views have */
                                           /*   defined column names */
 #define SQLITE_ReportTypes    0x00000400  /* Include information on datatypes */
