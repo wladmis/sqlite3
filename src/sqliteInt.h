@@ -225,6 +225,10 @@ struct sqlite {
   int magic;                    /* Magic number for detect library misuse */
   int nChange;                  /* Number of rows changed */
   int recursionDepth;           /* Number of nested calls to sqlite_exec() */
+#ifndef SQLITE_OMIT_TRACE
+  void (*xTrace)(void*,const char*);     /* Trace function */
+  void *pTraceArg;                       /* Argument to the trace function */
+#endif
 #ifndef SQLITE_OMIT_AUTHORIZATION
   int (*xAuth)(void*,int,const char*,const char*); /* Access Auth function */
   void *pAuthArg;               /* 1st argument to the access auth function */

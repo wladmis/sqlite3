@@ -602,6 +602,9 @@ int sqlite_exec(
 ){
   Parse sParse;
 
+#ifndef SQLITE_OMIT_TRACE
+  if( db->xTrace ) db->xTrace(db->pTraceArg, zSql);
+#endif
   if( pzErrMsg ) *pzErrMsg = 0;
   if( sqliteSafetyOn(db) ) goto exec_misuse;
   if( (db->flags & SQLITE_Initialized)==0 ){
@@ -857,6 +860,26 @@ int sqlite_function_type(sqlite *db, const char *zName, int dataType){
   }
   return SQLITE_OK;
 }
+
+/*
+** Register a trace function.  The pArg from the previously registered trace
+** is returned.  
+**
+** A NULL trace function means that no tracing is executes.  A non-NULL
+** trace is a pointer to a function that is invoked at the start of each
+** sqlite_exec().
+*/
+void *sqlite_trace(sqlite *db, void (*xTrace)(void*,const char*), void *pArg){
+#ifndef SQLITE_OMIT_TRACE
+  void *pOld = db->pTraceArg;
+  db->xTrace = xTrace;
+  db->pTraceArg = pArg;
+  return pOld;
+#else
+  return 0;
+#endif
+}
+
 
 /*
 ** Attempt to open the file named in the argument as the auxiliary database

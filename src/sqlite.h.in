@@ -555,6 +555,13 @@ int sqlite_set_authorizer(
 #define SQLITE_IGNORE 2   /* Don't allow access, but don't generate an error */
 
 /*
+** Register a function that is called at every invocation of sqlite_exec().
+** This function can be used (for example) to generate a log file of all
+** SQL executed against a database.
+*/
+void *sqlite_trace(sqlite*, void(*xTrace)(void*,const char*), void*);
+
+/*
 ** Attempt to open the file named in the argument as the auxiliary database
 ** file.  The auxiliary database file is used to store TEMP tables.  But
 ** by using this API, it is possible to trick SQLite into opening two
