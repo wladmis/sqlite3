@@ -710,11 +710,16 @@ case OP_String: {
   if( pOp->p3 ){
     pTos->flags = MEM_Str|MEM_Static|MEM_Term;
     pTos->z = pOp->p3;
+#ifndef SQLITE_OMIT_UTF16
     if( db->enc==SQLITE_UTF8 ){
       pTos->n = strlen(pTos->z);
     }else{
       pTos->n  = sqlite3utf16ByteLen(pTos->z, -1);
     }
+#else
+    assert( db->enc==SQLITE_UTF8 );
+    pTos->n = strlen(pTos->z);
+#endif
     pTos->enc = db->enc;
   }else{
     pTos->flags = MEM_Null;

@@ -18,6 +18,13 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Skip this test if the build does not support multiple encodings.
+#
+ifcapable {!utf16} {
+  finish_test
+  return
+}
+
 proc do_bincmp_test {testname got expect} {
   binary scan $expect \c* expectvals
   binary scan $got \c* gotvals
@@ -143,6 +150,3 @@ test_conversion enc-8 [string repeat "\u007E\u007F\u0080\u0081" 100]
 test_conversion enc-9 [string repeat "\u07FE\u07FF\u0800\u0801\uFFF0" 100]
 
 finish_test
-
-
-

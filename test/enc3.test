@@ -18,12 +18,14 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-do_test enc3-1.1 {
-  execsql {
-    PRAGMA encoding=utf16le;
-    PRAGMA encoding;
-  }
-} {UTF-16le}
+ifcapable {utf16} {
+  do_test enc3-1.1 {
+    execsql {
+      PRAGMA encoding=utf16le;
+      PRAGMA encoding;
+    }
+  } {UTF-16le}
+}
 do_test enc3-1.2 {
   execsql {
     CREATE TABLE t1(x,y);

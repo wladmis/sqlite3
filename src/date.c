@@ -938,14 +938,13 @@ static void currentTimeFunc(
   char *zFormat = (char *)sqlite3_user_data(context);
   char zBuf[20];
 
-#ifdef SQLITE_TEST
-  /* This test variable is located in os_XXX.c */
-extern int sqlite3_current_time;
-#endif
   time(&t);
 #ifdef SQLITE_TEST
-  if( sqlite3_current_time ){
-    t = sqlite3_current_time;
+  {
+    extern int sqlite3_current_time;  /* See os_XXX.c */
+    if( sqlite3_current_time ){
+      t = sqlite3_current_time;
+    }
   }
 #endif
 
@@ -1001,4 +1000,3 @@ void sqlite3RegisterDateTimeFunctions(sqlite3 *db){
   }
 #endif
 }
-

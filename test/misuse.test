@@ -68,11 +68,13 @@ do_test misuse-1.3 {
 # but that has changed.  The following tests used to cause errors but now
 # they do not.
 #
-do_test misuse-1.4 {
-  catchsql2 {
-     SELECT x_sqlite_exec('SELECT * FROM t1') AS xyz;
-  } 
-} {0 {xyz {1 2}}}
+ifcapable {utf16} {
+  do_test misuse-1.4 {
+    catchsql2 {
+       SELECT x_sqlite_exec('SELECT * FROM t1') AS xyz;
+    } 
+  } {0 {xyz {1 2}}}
+}
 do_test misuse-1.5 {
   catchsql2 {SELECT * FROM t1}
 } {0 {a b 1 2}}
