@@ -712,7 +712,7 @@ static char zHelp[] =
   ".import FILE TABLE     Import data from FILE into TABLE\n"
   ".indices TABLE         Show names of all indices on TABLE\n"
   ".mode MODE ?TABLE?     Set output mode where MODE is on of:\n"
-  "                         cvs      Comma-separated values\n"
+  "                         csv      Comma-separated values\n"
   "                         column   Left-aligned columns.  (See .width)\n"
   "                         html     HTML <table> code\n"
   "                         insert   SQL insert statements for TABLE\n"
