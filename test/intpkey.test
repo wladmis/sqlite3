@@ -34,7 +34,7 @@ do_test intpkey-1.1 {
     SELECT name FROM sqlite_master
     WHERE type='index' AND tbl_name='t1';
   }
-} {{(t1 autoindex 1)}}
+} {sqlite_autoindex_t1_1}
 
 # Now create a table with an integer primary key and verify that
 # there is no associated index.
