@@ -1723,6 +1723,25 @@ int sqlitepager_iswriteable(void *pData){
 }
 
 /*
+** Replace the content of a single page with the information in the third
+** argument.
+*/
+int sqlitepager_overwrite(Pager *pPager, Pgno pgno, void *pData){
+  void *pPage;
+  int rc;
+
+  rc = sqlitepager_get(pPager, pgno, &pPage);
+  if( rc==SQLITE_OK ){
+    rc = sqlitepager_write(pPage);
+    if( rc==SQLITE_OK ){
+      memcpy(pPage, pData, SQLITE_PAGE_SIZE);
+    }
+    sqlitepager_unref(pPage);
+  }
+  return rc;
+}
+
+/*
 ** A call to this routine tells the pager that it is not necessary to
 ** write the information on page "pgno" back to the disk, even though
 ** that page might be marked as dirty.

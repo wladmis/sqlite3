@@ -69,7 +69,7 @@ the tokenizer to call the parser.  YACC has it backwards.</p>
 <p>The parser is the piece that assigns meaning to tokens based on
 their context.  The parser for SQLite is generated using the
 <a href="http://www.hwaci.com/sw/lemon/">Lemon</a> LALR(1) parser
-generator.  Lemon does the same job as YACC/BISON, but is uses
+generator.  Lemon does the same job as YACC/BISON, but it uses
 a different input syntax which is less error-prone.
 Lemon also generates a parser which is reentrant and thread-safe.
 And lemon defines the concept of a non-terminal destructor so
