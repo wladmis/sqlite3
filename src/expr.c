@@ -1046,7 +1046,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       break;
     }
     case TK_VARIABLE: {
-      sqliteVdbeAddOp(v, OP_Variable, atoi(&pExpr->token.z[1]), 0);
+      sqliteVdbeAddOp(v, OP_Variable, pExpr->iTable, 0);
       break;
     }
     case TK_LT:

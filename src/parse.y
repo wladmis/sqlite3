@@ -541,7 +541,10 @@ expr(A) ::= expr(B) ORACLE_OUTER_JOIN.
 expr(A) ::= INTEGER(X).      {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
 expr(A) ::= FLOAT(X).        {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
 expr(A) ::= STRING(X).       {A = sqliteExpr(TK_STRING, 0, 0, &X);}
-expr(A) ::= VARIABLE(X).     {A = sqliteExpr(TK_VARIABLE, 0, 0, &X);}
+expr(A) ::= VARIABLE(X).     {
+  A = sqliteExpr(TK_VARIABLE, 0, 0, &X);
+  if( A ) A->iTable = ++pParse->nVar;
+}
 expr(A) ::= ID(X) LP exprlist(Y) RP(E). {
   A = sqliteExprFunction(Y, &X);
   sqliteExprSpan(A,&X,&E);

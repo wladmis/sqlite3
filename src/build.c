@@ -51,6 +51,7 @@ void sqliteBeginParse(Parse *pParse, int explainFlag){
       DbClearProperty(db, i, DB_Cookie);
     }
   }
+  pParse->nVar = 0;
 }
 
 /*
@@ -86,7 +87,8 @@ void sqliteExec(Parse *pParse){
   if( v && pParse->nErr==0 ){
     FILE *trace = (db->flags & SQLITE_VdbeTrace)!=0 ? stdout : 0;
     sqliteVdbeTrace(v, trace);
-    sqliteVdbeMakeReady(v, xCallback, pParse->pArg, pParse->explain);
+    sqliteVdbeMakeReady(v, pParse->nVar, xCallback, pParse->pArg,
+                        pParse->explain);
     if( pParse->useCallback ){
       if( pParse->explain ){
         rc = sqliteVdbeList(v);
@@ -110,6 +112,7 @@ void sqliteExec(Parse *pParse){
   pParse->nMem = 0;
   pParse->nSet = 0;
   pParse->nAgg = 0;
+  pParse->nVar = 0;
 }
 
 /*
