@@ -581,9 +581,11 @@ static int parseModifier(const char *zMod, DateTime *p){
         computeJD(&tx);
         computeJD(p);
         clearYMD_HMS_TZ(p);
-        if( z[0]=='-' ) tx.rJD = -tx.rJD;
         day = (int)tx.rJD;
-        p->rJD += tx.rJD - day;
+        tx.rJD -= day;
+        tx.rJD -= 0.5;
+        if( z[0]=='-' ) tx.rJD = -tx.rJD;
+        p->rJD += tx.rJD;
         rc = 0;
         break;
       }
