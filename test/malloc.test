@@ -65,10 +65,6 @@ for {set go 1; set i 1} {$go} {incr i} {
   } {1 1}
 }
 
-finish_test
-return
-
-
 set fd [open ./data.tmp w]
 for {set i 1} {$i<=20} {incr i} {
   puts $fd "$i\t[expr {$i*$i}]\t[expr {100-$i}] abcdefghijklmnopqrstuvwxyz"
@@ -176,6 +172,40 @@ for {set go 1; set i 1} {$go} {incr i} {
              WHERE a IN (SELECT a FROM t1 WHERE a<10);
          DROP INDEX i1;
          DELETE FROM t1;
+         COMMIT;
+       }} msg]
+     }
+     set leftover [lindex [sqlite_malloc_stat] 2]
+     if {$leftover>0} {
+       if {$leftover>1} {puts "\nLeftover: $leftover\nReturn=$v  Message=$msg"}
+       set ::go 0
+       set v {1 1}
+     } else {
+       set v2 [expr {$msg=="" || $msg=="out of memory"}]
+       if {!$v2} {puts "\nError message returned: $msg"}
+       lappend v $v2
+     }
+  } {1 1}
+}
+for {set go 1; set i 1} {$go} {incr i} {
+  do_test malloc-5.$i {
+     sqlite_malloc_fail 0
+     catch {db close}
+     catch {file delete -force test.db}
+     catch {file delete -force test.db-journal}
+     sqlite_malloc_fail $i
+     set v [catch {sqlite db test.db} msg]
+     if {$v} {
+       set msg ""
+     } else {
+       set v [catch {execsql {
+         BEGIN TRANSACTION;
+         CREATE TABLE t1(a,b);
+         CREATE TABLE t2(x,y);
+         CREATE TRIGGER r1 AFTER INSERT ON t1 BEGIN
+           INSERT INTO t2(x,y) VALUES(new.rowid,1);
+         END;
+         INSERT INTO t1(a,b) VALUES(2,3);
          COMMIT;
        }} msg]
      }

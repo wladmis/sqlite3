@@ -186,6 +186,7 @@ ExprList *sqliteExprListDup(ExprList *p){
   if( pNew==0 ) return 0;
   pNew->nExpr = p->nExpr;
   pNew->a = sqliteMalloc( p->nExpr*sizeof(p->a[0]) );
+  if( pNew->a==0 ) return 0;
   for(i=0; i<p->nExpr; i++){
     pNew->a[i].pExpr = sqliteExprDup(p->a[i].pExpr);
     pNew->a[i].zName = sqliteStrDup(p->a[i].zName);
@@ -203,6 +204,7 @@ IdList *sqliteIdListDup(IdList *p){
   if( pNew==0 ) return 0;
   pNew->nId = p->nId;
   pNew->a = sqliteMalloc( p->nId*sizeof(p->a[0]) );
+  if( pNew->a==0 ) return 0;
   for(i=0; i<p->nId; i++){
     pNew->a[i].zName = sqliteStrDup(p->a[i].zName);
     pNew->a[i].zAlias = sqliteStrDup(p->a[i].zAlias);

@@ -387,8 +387,11 @@ static void clearHashTable(sqlite *db, int preserveTemps){
   HashElem *pElem;
   Hash temp1;
   Hash temp2;
-  assert( sqliteHashFirst(&db->tblDrop)==0 ); /* There can not be uncommitted */
-  assert( sqliteHashFirst(&db->idxDrop)==0 ); /*   DROP TABLEs or DROP INDEXs */
+
+  /* Make sure there are no uncommited DROPs */
+  assert( sqliteHashFirst(&db->tblDrop)==0 || sqlite_malloc_failed );
+  assert( sqliteHashFirst(&db->idxDrop)==0 || sqlite_malloc_failed );
+  assert( sqliteHashFirst(&db->trigDrop)==0 || sqlite_malloc_failed );
   temp1 = db->tblHash;
   temp2 = db->trigHash;
   sqliteHashInit(&db->trigHash, SQLITE_HASH_STRING, 0);
