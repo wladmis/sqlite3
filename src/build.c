@@ -886,6 +886,9 @@ char sqlite3AffinityType(const char *zType, int nType){
     {"BLOB", 4, SQLITE_AFF_NONE},
   };
 
+  if( nType==0 ){
+    return SQLITE_AFF_NONE;
+  }
   for(i=0; i<sizeof(substrings)/sizeof(substrings[0]); i++){
     int c1 = substrings[i].zSub[0];
     int c2 = tolower(c1);

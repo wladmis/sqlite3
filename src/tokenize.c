@@ -702,10 +702,9 @@ int sqlite3_complete(const char *zSql){
 */
 int sqlite3_complete16(const void *zSql){
   int rc;
-  char *zSql8 = sqlite3utf16to8(zSql, -1, SQLITE3_BIGENDIAN);
+  char *zSql8 = sqlite3utf16to8(zSql, -1, SQLITE_BIGENDIAN);
   if( !zSql8 ) return 0;
   rc = sqlite3_complete(zSql8);
   sqliteFree(zSql8);
   return rc;
 }
-

@@ -62,9 +62,9 @@ struct UtfString {
 /* TODO: Implement this macro in os.h. It should be 1 on big-endian
 ** machines, and 0 on little-endian.
 */
-#define SQLITE3_NATIVE_BIGENDIAN 0
+#define SQLITE_NATIVE_BIGENDIAN 0
 
-#if SQLITE3_NATIVE_BIGENDIAN == 1
+#if SQLITE_NATIVE_BIGENDIAN == 1
 #define BOM_BIGENDIAN 0x0000FFFE
 #define BOM_LITTLEENDIAN 0x0000FEFF
 #else
@@ -523,7 +523,7 @@ static void utf16to16(void *pData, int N, int big_endian){
     inout.n = sqlite3utf16ByteLen(inout.pZ, -1);
   }
 
-  if( readUtf16Bom(&inout, SQLITE3_BIGENDIAN)!=big_endian ){
+  if( readUtf16Bom(&inout, SQLITE_BIGENDIAN)!=big_endian ){
     /* swab(&inout.pZ[inout.c], inout.pZ, inout.n-inout.c); */
     int i;
     for(i=0; i<(inout.n-inout.c); i += 2){
