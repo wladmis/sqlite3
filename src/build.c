@@ -1702,7 +1702,7 @@ static void destroyRootPage(Parse *pParse, int iTable, int iDb){
 #ifndef SQLITE_OMIT_AUTOVACUUM
   /* OP_Destroy pushes an integer onto the stack. If this integer
   ** is non-zero, then it is the root page number of a table moved to
-  ** location iTable. The following code modifis the sqlite_master table to
+  ** location iTable. The following code modifies the sqlite_master table to
   ** reflect this.
   **
   ** The "#0" in the SQL is a special constant that means whatever value
