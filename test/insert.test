@@ -253,5 +253,21 @@ do_test insert-5.7 {
   expr {[lsearch $x OpenTemp]>0}
 } {0}
 
+# Ticket #334:  REPLACE statement corrupting indices.
+#
+do_test insert-6.1 {
+  execsql {
+    CREATE TABLE t1(a INTEGER PRIMARY KEY, b UNIQUE);
+    INSERT INTO t1 VALUES(1,2);
+    INSERT INTO t1 VALUES(2,3);
+    SELECT b FROM t1 WHERE b=2;
+  }
+} {2}
+do_test insert-6.2 {
+  execsql {
+    REPLACE INTO t1 VALUES(1,4);
+    SELECT b FROM t1 WHERE b=2;
+  }
+} {}
 
 finish_test
