@@ -406,8 +406,7 @@ void sqlite3Pragma(
         sqlite3VdbeOp3(v, OP_String8, 0, 0,
            pTab->aCol[i].zType ? pTab->aCol[i].zType : "numeric", 0);
         sqlite3VdbeAddOp(v, OP_Integer, pTab->aCol[i].notNull, 0);
-        sqlite3VdbeOp3(v, OP_String8, 0, 0,
-           pTab->aCol[i].zDflt, P3_STATIC);
+        sqlite3ExprCode(pParse, pTab->aCol[i].pDflt);
         sqlite3VdbeAddOp(v, OP_Integer, pTab->aCol[i].isPrimKey, 0);
         sqlite3VdbeAddOp(v, OP_Callback, 6, 0);
       }

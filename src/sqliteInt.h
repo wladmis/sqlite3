@@ -488,7 +488,7 @@ struct FuncDef {
 */
 struct Column {
   char *zName;     /* Name of this column */
-  char *zDflt;     /* Default value of this column */
+  Expr *pDflt;     /* Default value of this column */
   char *zType;     /* Data type for this column */
   CollSeq *pColl;  /* Collating sequence.  If NULL, use the default */
   u8 notNull;      /* True if there is a NOT NULL constraint */
@@ -1277,7 +1277,7 @@ void sqlite3AddColumn(Parse*,Token*);
 void sqlite3AddNotNull(Parse*, int);
 void sqlite3AddPrimaryKey(Parse*, ExprList*, int, int);
 void sqlite3AddColumnType(Parse*,Token*,Token*);
-void sqlite3AddDefaultValue(Parse*,Token*,int);
+void sqlite3AddDefaultValue(Parse*,Expr*);
 void sqlite3AddCollateType(Parse*, const char*, int);
 void sqlite3EndTable(Parse*,Token*,Select*);
 

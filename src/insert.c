@@ -490,7 +490,7 @@ void sqlite3Insert(
         }
       }
       if( pColumn && j>=pColumn->nId ){
-        sqlite3VdbeOp3(v, OP_String8, 0, 0, pTab->aCol[i].zDflt, P3_STATIC);
+        sqlite3ExprCode(pParse, pTab->aCol[i].pDflt);
       }else if( useTempTable ){
         sqlite3VdbeAddOp(v, OP_Column, srcTab, j); 
       }else if( pSelect ){
@@ -571,7 +571,7 @@ void sqlite3Insert(
         }
       }
       if( pColumn && j>=pColumn->nId ){
-        sqlite3VdbeOp3(v, OP_String8, 0, 0, pTab->aCol[i].zDflt, P3_STATIC);
+        sqlite3ExprCode(pParse, pTab->aCol[i].pDflt);
       }else if( useTempTable ){
         sqlite3VdbeAddOp(v, OP_Column, srcTab, j); 
       }else if( pSelect ){
@@ -772,7 +772,7 @@ void sqlite3GenerateConstraintChecks(
     }else if( onError==OE_Default ){
       onError = OE_Abort;
     }
-    if( onError==OE_Replace && pTab->aCol[i].zDflt==0 ){
+    if( onError==OE_Replace && pTab->aCol[i].pDflt==0 ){
       onError = OE_Abort;
     }
     sqlite3VdbeAddOp(v, OP_Dup, nCol-1-i, 1);
@@ -794,7 +794,7 @@ void sqlite3GenerateConstraintChecks(
         break;
       }
       case OE_Replace: {
-        sqlite3VdbeOp3(v, OP_String8, 0, 0, pTab->aCol[i].zDflt, P3_STATIC);
+        sqlite3ExprCode(pParse, pTab->aCol[i].pDflt);
         sqlite3VdbeAddOp(v, OP_Push, nCol-i, 0);
         break;
       }
