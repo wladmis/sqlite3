@@ -157,7 +157,7 @@ do_test insert-3.4 {
   execsql {SELECT * FROM test2 WHERE f1=22 AND f2=-4.44}
 } {22 -4.44 hi abc-123 wham}
 do_test insert-3.5 {
-  set x [execsql {PRAGMA sanity_check}]
+  set x [execsql {PRAGMA integrity_check}]
   if {$x==""} {set x ok}
   set x
 } {ok}

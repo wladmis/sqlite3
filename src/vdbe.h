@@ -104,7 +104,7 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Clear              31
 #define OP_CreateIndex        32
 #define OP_CreateTable        33
-#define OP_SanityCheck        34
+#define OP_IntegrityCk        34
 
 #define OP_IdxPut             35
 #define OP_IdxDelete          36

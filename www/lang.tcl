@@ -750,14 +750,12 @@ with caution.</p>
     This only works if the library is compiled without the NDEBUG macro.
     </p></li>
 
-<li><p><b>PRAGMA sanity_check;</b></p>
+<li><p><b>PRAGMA integrity_check;</b></p>
     <p>The command does an integrity check of the entire database.  It
     looks for out-of-order records, missing pages, and malformed records.
     If any problems are found, then a single string is returned which is
     a description of all problems.  If everything is in order, "ok" is
-    returned.  This command is used for testing and debugging only and
-    is not available if the library is compiled 
-    with the -DNDEBUG=1 compiler option.</p>
+    returned.</p>
 
 <li><p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
     <p>For each column in the named table, invoke the callback function

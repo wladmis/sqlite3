@@ -56,12 +56,12 @@ int sqliteBtreeCloseCursor(BtCursor*);
 int sqliteBtreeGetMeta(Btree*, int*);
 int sqliteBtreeUpdateMeta(Btree*, int*);
 
+char *sqliteBtreeIntegrityCheck(Btree*, int*, int);
 
-#ifndef NDEBUG2
+#ifdef SQLITE_TEST
 int sqliteBtreePageDump(Btree*, int, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
 struct Pager *sqliteBtreePager(Btree*);
-char *sqliteBtreeSanityCheck(Btree*, int*, int);
 #endif
 
 #endif /* _BTREE_H_ */

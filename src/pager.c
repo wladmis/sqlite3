@@ -653,7 +653,7 @@ int sqlitepager_ref(void *pData){
 **
 ** Writing all free dirty pages to the database after the sync is a
 ** non-obvious optimization.  fsync() is an expensive operation so we
-** want to minimize the number it is called.  After an fsync() call,
+** want to minimize the number ot times it is called. After an fsync() call,
 ** we are free to write dirty pages back to the database.  It is best
 ** to go ahead and write as many dirty pages as possible to minimize 
 ** the risk of having to do another fsync() later on.  Writing dirty
@@ -1234,7 +1234,7 @@ int *sqlitepager_stats(Pager *pPager){
 **
 ** This routine should be called with the transaction journal already
 ** open.  A new checkpoint journal is created that can be used to rollback
-** changes of a single command within a larger transaction.
+** changes of a single SQL command within a larger transaction.
 */
 int sqlitepager_ckpt_begin(Pager *pPager){
   int rc;

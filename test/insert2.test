@@ -113,7 +113,7 @@ do_test insert2-2.3 {
 } {hi 2 1}
 
 do_test insert2-4.0 {
-  set x [execsql {PRAGMA sanity_check}]
+  set x [execsql {PRAGMA integrity_check}]
   if {$x==""} {set x ok}
   set x
 } {ok}

@@ -31,7 +31,7 @@
 ** well be good enough.  But maybe not.  Or maybe lrand48() has some
 ** subtle problems on some systems that could cause problems.  It is hard
 ** to know.  To minimize the risk of problems due to bad lrand48()
-** implementations, SQLite uses is this random number generator based
+** implementations, SQLite uses this random number generator based
 ** on RC4, which we know works very well.
 */
 static int randomByte(){
