@@ -384,7 +384,7 @@ static int callback(void *pArg, int nArg, char **azArg, char **azCol){
         output_html_string(p->out, azArg[i] ? azArg[i] : p->nullvalue);
         fprintf(p->out,"</TD>\n");
       }
-      fprintf(p->out,"</TD></TR>\n");
+      fprintf(p->out,"</TR>\n");
       break;
     }
     case MODE_Insert: {
