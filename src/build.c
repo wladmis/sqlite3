@@ -839,14 +839,15 @@ void sqliteCreateView(
   Parse *pParse,     /* The parsing context */
   Token *pBegin,     /* The CREATE token that begins the statement */
   Token *pName,      /* The token that holds the name of the view */
-  Select *pSelect    /* A SELECT statement that will become the new view */
+  Select *pSelect,   /* A SELECT statement that will become the new view */
+  int isTemp         /* TRUE for a TEMPORARY view */
 ){
   Token sEnd;
   Table *p;
   const char *z;
   int n, offset;
 
-  sqliteStartTable(pParse, pBegin, pName, 0);
+  sqliteStartTable(pParse, pBegin, pName, isTemp);
   p = pParse->pNewTable;
   if( p==0 ){
     sqliteSelectDelete(pSelect);

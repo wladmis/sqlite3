@@ -234,8 +234,8 @@ cmd ::= DROP TABLE nm(X).          {sqliteDropTable(pParse,&X,0);}
 
 ///////////////////// The CREATE VIEW statement /////////////////////////////
 //
-cmd ::= CREATE(X) VIEW nm(Y) AS select(S). {
-  sqliteCreateView(pParse, &X, &Y, S);
+cmd ::= CREATE(X) temp(T) VIEW nm(Y) AS select(S). {
+  sqliteCreateView(pParse, &X, &Y, S, T);
 }
 cmd ::= DROP VIEW nm(X). {
   sqliteDropTable(pParse, &X, 1);
