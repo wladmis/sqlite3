@@ -281,6 +281,10 @@ do_test sort-7.2 {
     SELECT b FROM t4 ORDER BY 1
   }
 } {1 11 12 2}
+
+# Omit tests sort-7.3 to sort-7.8 if view support was disabled at
+# compilatation time.
+ifcapable view {
 do_test sort-7.3 {
   execsql {
     CREATE VIEW v4 AS SELECT * FROM t4;
@@ -312,6 +316,8 @@ do_test sort-7.8 {
     SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1;
   }
 } {1 11 12 2}
+} ;# ifcapable view
+
 #### Version 3 works differently here:
 #do_test sort-7.9 {
 #  execsql {

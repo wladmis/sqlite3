@@ -33,6 +33,7 @@ do_test select7-1.1 {
 
 # Nested views do not handle * properly.  Ticket #826.
 #
+ifcapable view {
 do_test select7-2.1 {
   execsql {
     CREATE TABLE x(id integer primary key, a TEXT NULL);
@@ -45,6 +46,7 @@ do_test select7-2.1 {
     SELECT * FROM tv2;
   }
 } {1 1}
+} ;# ifcapable view
 
 
 finish_test

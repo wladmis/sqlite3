@@ -600,11 +600,13 @@ do_test index-18.2 {
     CREATE INDEX sqlite_i1 ON t7(c);
   }
 } {1 {object name reserved for internal use: sqlite_i1}}
+ifcapable view {
 do_test index-18.3 {
   catchsql {
     CREATE VIEW sqlite_v1 AS SELECT * FROM t7;
   }
 } {1 {object name reserved for internal use: sqlite_v1}}
+} ;# ifcapable view
 ifcapable {trigger} {
   do_test index-18.4 {
     catchsql {

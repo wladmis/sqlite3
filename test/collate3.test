@@ -311,6 +311,7 @@ proc numeric_compare {lhs rhs} {
 
 # Check we can create a view that uses an explicit collation 
 # sequence and then close and re-open the database.
+ifcapable view {
 do_test collate3-4.9 {
   db collate user_defined numeric_compare
   execsql {
@@ -341,6 +342,7 @@ do_test collate3-4.12 {
     DROP TABLE collate3t1;
   }
 } {}
+} ;# ifcapable view
 
 #
 # Test the collation factory. In the code, the "no such collation sequence"
