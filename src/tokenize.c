@@ -105,6 +105,7 @@ static Keyword aKeywordTable[] = {
   { "PARTIAL",           0, TK_PARTIAL,          0 },
   { "PRAGMA",            0, TK_PRAGMA,           0 },
   { "PRIMARY",           0, TK_PRIMARY,          0 },
+  { "RAISE",             0, TK_RAISE,            0 },
   { "REFERENCES",        0, TK_REFERENCES,       0 },
   { "REPLACE",           0, TK_REPLACE,          0 },
   { "RESTRICT",          0, TK_RESTRICT,         0 },

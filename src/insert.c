@@ -235,6 +235,7 @@ void sqliteInsert(
     iCont = sqliteVdbeCurrentAddr(v);
   }
 
+  endOfLoop = sqliteVdbeMakeLabel(v);
   if( row_triggers_exist ){
 
     /* build the new.* reference row */
@@ -262,7 +263,7 @@ void sqliteInsert(
 
     /* Fire BEFORE triggers */
     if( sqliteCodeRowTrigger(pParse, TK_INSERT, 0, TK_BEFORE, pTab, newIdx, -1, 
-        onError) ){
+        onError, endOfLoop) ){
       goto insert_cleanup;
     }
 
@@ -336,7 +337,6 @@ void sqliteInsert(
     /* Generate code to check constraints and generate index keys and
     ** do the insertion.
     */
-    endOfLoop = sqliteVdbeMakeLabel(v);
     sqliteGenerateConstraintChecks(pParse, pTab, base, 0,0,0,onError,endOfLoop);
     sqliteCompleteInsertion(pParse, pTab, base, 0,0,0);
 
@@ -358,7 +358,7 @@ void sqliteInsert(
 
     /* Code AFTER triggers */
     if( sqliteCodeRowTrigger(pParse, TK_INSERT, 0, TK_AFTER, pTab, newIdx, -1, 
-          onError) ){
+          onError, endOfLoop) ){
       goto insert_cleanup;
     }
   }

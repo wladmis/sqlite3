@@ -1395,6 +1395,10 @@ case OP_Halt: {
   if( pOp->p1!=SQLITE_OK ){
     rc = pOp->p1;
     errorAction = pOp->p2;
+    if( pOp->p3 ){
+	sqliteSetString(pzErrMsg, pOp->p3, 0);
+	goto cleanup;
+    }
     goto abort_due_to_error;
   }else{
     pc = p->nOp-1;

@@ -243,7 +243,7 @@ void sqliteUpdate(
     sqliteVdbeAddOp(v, OP_Rewind, newIdx, 0);
 
     if( sqliteCodeRowTrigger(pParse, TK_UPDATE, pChanges, TK_BEFORE, pTab, 
-          newIdx, oldIdx, onError) ){
+          newIdx, oldIdx, onError, addr) ){
       goto update_cleanup;
     }
   }
@@ -350,7 +350,7 @@ void sqliteUpdate(
     pParse->nTab = base;
 
     if( sqliteCodeRowTrigger(pParse, TK_UPDATE, pChanges, TK_AFTER, pTab, 
-          newIdx, oldIdx, onError) ){
+          newIdx, oldIdx, onError, addr) ){
       goto update_cleanup;
     }
   }
