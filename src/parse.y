@@ -442,7 +442,7 @@ sortlist(A) ::= sortlist(X) COMMA sortitem(Y) collate(C) sortorder(Z). {
 }
 sortlist(A) ::= sortitem(Y) collate(C) sortorder(Z). {
   A = sqlite3ExprListAppend(0,Y,C.n>0?&C:0);
-  if( A ) A->a[0].sortOrder = Z;
+  if( A && A->a ) A->a[0].sortOrder = Z;
 }
 sortitem(A) ::= expr(X).   {A = X;}
 

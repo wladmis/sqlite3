@@ -963,6 +963,10 @@ int sqlite3_prepare(
   char *zErrMsg = 0;
   int rc = SQLITE_OK;
 
+  if( sqlite3_malloc_failed ){
+    return SQLITE_NOMEM;
+  }
+
   assert( ppStmt );
   *ppStmt = 0;
   if( sqlite3SafetyOn(db) ){

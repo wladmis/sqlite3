@@ -31,6 +31,7 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   Vdbe *v;
 
   v = sqlite3GetVdbe(pParse);
+  if( !v ) return;
   sqlite3VdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;
@@ -140,6 +141,7 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   Db *pDb = 0;
 
   v = sqlite3GetVdbe(pParse);
+  if( !v ) return;
   sqlite3VdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;

@@ -2317,7 +2317,7 @@ static int pager_open_journal(Pager *pPager){
     pPager->aInJournal = 0;
     sqlite3OsUnlock(&pPager->fd, SHARED_LOCK);
     pPager->state = PAGER_SHARED;
-    return SQLITE_CANTOPEN;
+    return rc;
   }
   sqlite3OsOpenDirectory(pPager->zDirectory, &pPager->jfd);
   pPager->journalOpen = 1;

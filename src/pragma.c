@@ -148,6 +148,7 @@ void sqlite3Pragma(
   if( iDb<0 ) return;
 
   zLeft = sqlite3NameFromToken(pId);
+  if( !zLeft ) return;
   if( minusFlag ){
     zRight = 0;
     sqlite3SetNString(&zRight, "-", 1, pValue->z, pValue->n, 0);
