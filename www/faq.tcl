@@ -354,8 +354,8 @@ faq {
   and you can not include binary data in the middle of the ASCII text string
   of an INSERT statement.</p>
 
-  <p>SQLite is 8-bit clean with regard to the data is stores as long as
-  the data does not contain any NUL characters.  If you want to store binary
+  <p>SQLite is 8-bit clean with regard to the data it stores as long as
+  the data does not contain any '\000' characters.  If you want to store binary
   data, consider encoding your data in such a way that it contains no NUL
   characters and inserting it that way.  You might use URL-style encoding:
   encode NUL as "%00" and "%" as "%25".  Or, you might consider encoding your
