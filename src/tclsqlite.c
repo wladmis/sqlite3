@@ -1412,12 +1412,12 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 #ifdef SQLITE_TEST
   {
     extern void Md5_Register(sqlite3*);
-#ifdef SQLITE_DEBUG
+#ifdef SQLITE_MEMDEBUG
     int mallocfail = sqlite3_iMallocFail;
     sqlite3_iMallocFail = 0;
 #endif
     Md5_Register(p->db);
-#ifdef SQLITE_DEBUG
+#ifdef SQLITE_MEMDEBUG
     sqlite3_iMallocFail = mallocfail;
 #endif
    }
