@@ -40,7 +40,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 #else
-# define readline getline
+# define readline(p) getline(p,stdin)
 # define add_history(X) 
 #endif
 
