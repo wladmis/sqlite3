@@ -105,9 +105,13 @@ if {$tcl_platform(platform)=="unix"} {
 }
 
 # Run the malloc tests and the misuse test after memory leak detection.
-# Both tests leak memory.
+# Both tests leak memory. Currently, misuse.test also leaks a handful of
+# file descriptors. This is not considered a problem, but can cause tests
+# in malloc.test to fail. So set the open-file count to zero before running
+# malloc.test to get around this.
 #
 catch {source $testdir/misuse.test}
+set sqlite_open_file_count 0
 catch {source $testdir/malloc.test}
 
 catch {db close}

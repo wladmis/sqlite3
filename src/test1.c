@@ -1771,6 +1771,30 @@ static int test_open16(
 }
 
 /*
+** Usage: sqlite3_complete16 <UTF-16 string>
+**
+** Return 1 if the supplied argument is a complete SQL statement, or zero
+** otherwise.
+*/
+static int test_complete16(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  char *zBuf;
+
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "<utf-16 sql>");
+    return TCL_ERROR;
+  }
+
+  zBuf = Tcl_GetByteArrayFromObj(objv[1], 0);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(sqlite3_complete16(zBuf)));
+  return TCL_OK;
+}
+
+/*
 ** Usage: sqlite3_step STMT
 **
 ** Advance the statement to the next row.
@@ -2276,6 +2300,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_errmsg16",              test_errmsg16      ,0 },
      { "sqlite3_open",                  test_open          ,0 },
      { "sqlite3_open16",                test_open16        ,0 },
+     { "sqlite3_complete16",            test_complete16    ,0 },
 
      { "sqlite3_prepare",               test_prepare       ,0 },
      { "sqlite3_prepare16",             test_prepare16     ,0 },
