@@ -61,12 +61,15 @@ three functions and one opaque structure.</li>
 
 puts {<h2>Current Status</h2>
 
-<p>A <a href="http://cvs.hwaci.com:2080/sqlite/timeline">change history</a>
+<p>A <a href="changes.html">Change Summary</a> is available on this
+website.  You can also access a detailed
+<a href="http://cvs.hwaci.com:2080/sqlite/timeline">change history</a>
 and a list of
-<a href="http://cvs.hwaci.com:2080/sqlite/rptview?rn=2">open bugs</a> are
-both available from the 
-<a href="http://cvs.hwaci.com:2080/sqlite/">CVS server</a>.
-Complete source code and precompiled binaries for the latest release are
+<a href="http://cvs.hwaci.com:2080/sqlite/rptview?rn=2">open bugs</a> 
+from the 
+<a href="http://cvs.hwaci.com:2080/sqlite/">CVS server</a>.</p>
+
+<p>Complete source code and precompiled binaries for the latest release are
 <a href="download.html">available for download</a> on this site.  You
 can also obtain the latest changes by anonymous CVS access:
 <blockquote><pre>
