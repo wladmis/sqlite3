@@ -172,7 +172,8 @@ ExprList *sqliteExprListDup(ExprList *p){
       ** the names of columns in the result set needs this information */
       sqliteTokenCopy(&pNewExpr->span, &pOldExpr->span);
     }
-    assert( pNewExpr==0 || pNewExpr->span.z!=0 || pOldExpr->span.z==0 );
+    assert( pNewExpr==0 || pNewExpr->span.z!=0 
+            || pOldExpr->span.z==0 || sqlite_malloc_failed );
     pNew->a[i].zName = sqliteStrDup(p->a[i].zName);
     pNew->a[i].sortOrder = p->a[i].sortOrder;
     pNew->a[i].isAgg = p->a[i].isAgg;
