@@ -872,7 +872,7 @@ WhereInfo *sqliteWhereBegin(
         }
         /* sqliteVdbeAddOp(v, OP_MustBeInt, 0, sqliteVdbeCurrentAddr(v)+1); */
         pLevel->iMem = pParse->nMem++;
-        sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
+        sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 1);
         if( aExpr[k].p->op==TK_LT || aExpr[k].p->op==TK_GT ){
           testOp = OP_Ge;
         }else{

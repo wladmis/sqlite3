@@ -545,6 +545,7 @@ int sqliteVdbeExec(
   }
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
+    assert( p->tos<=pc );
 #ifdef VDBE_PROFILE
     origPc = pc;
     start = hwtime();
