@@ -348,7 +348,7 @@ WhereInfo *sqliteWhereBegin(
   }
   pWInfo->iContinue = cont;
   if( pushKey && !haveKey ){
-    sqliteVdbeAddOp(v, OP_Key, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Key, base, 0, 0, 0);
   }
   sqliteFree(aOrder);
   return pWInfo;

@@ -314,3 +314,4 @@ char *sqliteTableNameFromToken(Token*);
 int sqliteExprCheck(Parse*, Expr*, int, int*);
 int sqliteFuncId(Token*);
 int sqliteExprResolveIds(Parse*, IdList*, Expr*);
+void sqliteExprResolveInSelect(Parse*, Expr*);

@@ -795,7 +795,7 @@ int sqliteVdbeList(
   azField[3] = zP2;
   azField[5] = 0;
   rc = SQLITE_OK;
-  if( pzErrMsg ){ *pzErrMsg = 0; }
+  /* if( pzErrMsg ){ *pzErrMsg = 0; } */
   for(i=0; rc==SQLITE_OK && i<p->nOp; i++){
     sprintf(zAddr,"%d",i);
     sprintf(zP1,"%d", p->aOp[i].p1);
@@ -878,7 +878,7 @@ int sqliteVdbeExec(
     p->trace = stderr;
   }
 #endif
-  if( pzErrMsg ){ *pzErrMsg = 0; }
+  /* if( pzErrMsg ){ *pzErrMsg = 0; } */
   for(pc=0; rc==SQLITE_OK && pc<p->nOp && pc>=0; pc++){
     pOp = &p->aOp[pc];
     if( p->trace ){

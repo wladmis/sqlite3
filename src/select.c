@@ -166,6 +166,15 @@ int sqliteSelect(
   /* Resolve the field names and do a semantics check on all the expressions.
   */
   for(i=0; i<pEList->nExpr; i++){
+    sqliteExprResolveInSelect(pParse, pEList->a[i].pExpr);
+  }
+  if( pWhere ) sqliteExprResolveInSelect(pParse, pWhere);
+  if( pOrderBy ){
+    for(i=0; i<pOrderBy->nExpr; i++){
+      sqliteExprResolveInSelect(pParse, pOrderBy->a[i].pExpr);
+    }
+  }
+  for(i=0; i<pEList->nExpr; i++){
     if( sqliteExprResolveIds(pParse, pTabList, pEList->a[i].pExpr) ){
       return 1;
     }
