@@ -296,7 +296,7 @@ fieldlist(A) ::= id(Y).                    {A = sqliteIdListAppend(0,&Y);}
 %left EQ NE ISNULL NOTNULL IS LIKE GLOB BETWEEN IN.
 %left GT GE LT LE.
 %left PLUS MINUS.
-%left STAR SLASH PERCENT.
+%left STAR SLASH.
 %right UMINUS.
 
 %type expr {Expr*}

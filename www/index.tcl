@@ -92,14 +92,13 @@ Among the SQL features that SQLite does not currently implement are:</p>
 <p><ul>
 <li>Information on the <a href="sqlite.html">sqlite</a>
     command-line utility.</li>
+<li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.</li>
 <li>The <a href="c_interface.html">C/C++ Interface</a>.</li>
 <li>The <a href="fileformat.html">file format</a> used by SQLite databases.</li>
 <li>The <a href="arch.html">Architecture of the SQLite Library</a> describes
-    how the library is put together.  <b>(preliminary)</b></li>
+    how the library is put together.</li>
 <li>A description of the <a href="opcode.html">virtual machine</a> that
-    SQLite uses to access the database.  <b>(preliminary)</b></li>
-<li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.
-    <b>(under development)</b></li>
+    SQLite uses to access the database.</li>
 </ul>
 </p>
 
