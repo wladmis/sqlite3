@@ -787,4 +787,41 @@ do_test capi3-12.8 {
   }
 } {1 2 3 4}
 
+# Test cases capi3-13.* test the sqlite3_clear_bindings() and 
+# sqlite3_sleep APIs.
+#
+if {[llength [info commands sqlite3_clear_bindings]]>0} {
+  do_test capi3-13.1 {
+    execsql {
+      DELETE FROM t1;
+    }
+    set STMT [sqlite3_prepare $DB "INSERT INTO t1 VALUES(?, ?)" -1 TAIL]
+    sqlite3_step $STMT
+  } {SQLITE_DONE}
+  do_test capi3-13.2 {
+    sqlite3_reset $STMT
+    sqlite3_bind_text $STMT 1 hello 5
+    sqlite3_bind_text $STMT 2 world 5
+    sqlite3_step $STMT
+  } {SQLITE_DONE}
+  do_test capi3-13.3 {
+    sqlite3_reset $STMT
+    sqlite3_clear_bindings $STMT
+    sqlite3_step $STMT
+  } {SQLITE_DONE}
+  do_test capi3-13-4 {
+    sqlite3_finalize $STMT
+    execsql {
+      SELECT * FROM t1;
+    }
+  } {{} {} hello world {} {}}
+}
+if {[llength [info commands sqlite3_sleep]]>0} {
+  do_test capi3-13-5 {
+    set ms [sqlite3_sleep 80]
+    expr {$ms==80 || $ms==1000}
+  } {1}
+}
+
 finish_test
+
