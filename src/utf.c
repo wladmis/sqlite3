@@ -122,6 +122,27 @@ static int readUtf16Bom(UtfString *pStr, int big_endian){
   return big_endian;
 }
 
+/*
+** zData is a UTF-16 encoded string, nData bytes in length. This routine
+** checks if there is a byte-order mark at the start of zData. If no
+** byte order mark is found 0 is returned. Otherwise TEXT_Utf16be or
+** TEXT_Utf16le is returned, depending on whether The BOM indicates that
+** the text is big-endian or little-endian.
+*/
+u8 sqlite3UtfReadBom(const void *zData, int nData){
+  if( nData<0 || nData>1 ){
+    u8 b1 = *(u8 *)zData;
+    u8 b2 = *(((u8 *)zData) + 1);
+    if( b1==0xFE && b2==0xFF ){
+      return TEXT_Utf16be;
+    }
+    if( b1==0xFF && b2==0xFE ){
+      return TEXT_Utf16le;
+    }
+  }
+  return 0;
+}
+
 
 /*
 ** Read a single unicode character from the UTF-8 encoded string *pStr. The

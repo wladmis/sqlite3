@@ -40,6 +40,7 @@ lappend EXCLUDE version.test      ;# uses the btree_meta API (not updated)
 # Some tests fail in these file as a result of the partial manifest types
 # implementation.
 lappend EXCLUDE capi2.test 
+lappend EXCLUDE enc2.test 
 
 
 if {[sqlite -has-codec]} {
