@@ -68,13 +68,19 @@ cmd ::= ROLLBACK trans_opt.    {sqliteRollbackTransaction(pParse);}
 ///////////////////// The CREATE TABLE statement ////////////////////////////
 //
 cmd ::= create_table create_table_args.
-create_table ::= CREATE(X) temp(T) TABLE ids(Y).
-                                           {sqliteStartTable(pParse,&X,&Y,T);}
+create_table ::= CREATE(X) temp(T) TABLE ids(Y). {
+   sqliteStartTable(pParse,&X,&Y,T);
+}
 %type temp {int}
 temp(A) ::= TEMP.  {A = 1;}
 temp(A) ::= .      {A = 0;}
-create_table_args ::= LP columnlist conslist_opt RP(X).
-                                           {sqliteEndTable(pParse,&X);}
+create_table_args ::= LP columnlist conslist_opt RP(X). {
+  sqliteEndTable(pParse,&X,0);
+}
+create_table_args ::= AS select(S). {
+  sqliteEndTable(pParse,0,S);
+  sqliteSelectDelete(S);
+}
 columnlist ::= columnlist COMMA column.
 columnlist ::= column.
 

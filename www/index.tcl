@@ -44,7 +44,7 @@ puts {<h2>Features</h2>
 <li>A complete database (with multiple tables and indices) is
     stored in a single disk file.</li>
 <li>Atomic commit and rollback protect data integrity.</li>
-<li>Small memory footprint: about 14000 lines of C code.</li>
+<li>Small memory footprint: less than 20K lines of C code.</li>
 <li><a href="speed.html">Four times faster</a> than PostgreSQL.
     Twice as fast as SQLite 1.0.</li>
 <li>Very simple 

@@ -395,6 +395,13 @@ int sqlite_complete(const char *zSql){
       case '\f': {
         break;
       }
+      case '[': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!=']' ){ zSql++; }
+        if( *zSql==0 ) return 0;
+        break;
+      }
       case '\'': {
         isComplete = 0;
         zSql++;
