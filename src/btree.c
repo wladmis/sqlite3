@@ -1504,6 +1504,7 @@ create_cursor_exception:
   return rc;
 }
 
+#if 0  /* Not Used */
 /*
 ** Change the value of the comparison function used by a cursor.
 */
@@ -1515,6 +1516,7 @@ void sqlite3BtreeSetCompare(
   pCur->xCompare = xCmp ? xCmp : dfltCompare;
   pCur->pArg = pArg;
 }
+#endif
 
 /*
 ** Close a cursor.  The read lock on the database file is released
