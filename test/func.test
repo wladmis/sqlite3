@@ -329,4 +329,12 @@ do_test func-10.5 {
   }
 } {1.234}
 
+# Test the built-in sqlite_version(*) SQL function.
+#
+do_test func-11.1 {
+  execsql {
+    SELECT sqlite_version(*);
+  }
+} [sqlite -version]
+
 finish_test

@@ -247,6 +247,14 @@ static void nullifFunc(sqlite_func *context, int argc, const char **argv){
   }
 }
 
+/*
+** Implementation of the VERSION(*) function.  The result is the version
+** of the SQLite library that is running.
+*/
+static void versionFunc(sqlite_func *context, int argc, const char **argv){
+  sqlite_set_result_string(context, sqlite_version, -1);
+}
+
 #ifdef SQLITE_TEST
 /*
 ** This function generates a string of random characters.  Used for
@@ -481,6 +489,7 @@ void sqliteRegisterBuiltinFunctions(sqlite *db){
     { "like",       2, SQLITE_NUMERIC, likeFunc   },
     { "glob",       2, SQLITE_NUMERIC, globFunc   },
     { "nullif",     2, SQLITE_ARGS,    nullifFunc },
+    { "sqlite_version",0,SQLITE_TEXT,  versionFunc},
 #ifdef SQLITE_TEST
     { "randstr",    2, SQLITE_TEXT,    randStr    },
 #endif
