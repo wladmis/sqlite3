@@ -403,3 +403,9 @@ do_test crash-6.2 {
   signature
 } $sig
 
+# The AUTOVACUUM was changed above.  We have to reset it for
+# other scripts that run as part of "fulltest"
+#
+set AUTOVACUUM $sqlite_options(default_autovacuum)
+
+finish_test
