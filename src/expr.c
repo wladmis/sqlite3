@@ -481,6 +481,33 @@ int sqliteExprResolveIds(
           }
         }
       }
+
+      /* If we have not already resolved this *.* expression, then maybe 
+       * it is a new.* or old.* trigger argument reference */
+      if (cnt == 0 && pParse->trigStack != 0) {
+        TriggerStack * tt = pParse->trigStack;
+        int j;
+        int t = 0;
+        if (tt->newIdx != -1 && sqliteStrICmp("new", zLeft) == 0) {
+          pExpr->iTable = tt->newIdx;
+          cntTab++;
+          t = 1;
+        }
+        if (tt->oldIdx != -1 && sqliteStrICmp("old", zLeft) == 0) {
+          pExpr->iTable = tt->oldIdx;
+          cntTab++;
+          t = 1;
+        }
+
+        if (t) 
+          for(j=0; j<tt->pTab->nCol; j++) {
+            if( sqliteStrICmp(tt->pTab->aCol[j].zName, zRight)==0 ){
+              cnt++;
+              pExpr->iColumn = j;
+            }
+          }
+      }
+
       if( cnt==0 && cntTab==1 && sqliteIsRowid(zRight) ){
         cnt = 1;
         pExpr->iColumn = -1;

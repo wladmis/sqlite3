@@ -216,6 +216,22 @@ WhereInfo *sqliteWhereBegin(
   */
   for(i=0; i<nExpr; i++){
     exprAnalyze(base, &aExpr[i]);
+    if (pParse->trigStack && pParse->trigStack->newIdx >= 0) {
+	aExpr[i].prereqRight = 
+	    aExpr[i].prereqRight & ~(1 << pParse->trigStack->newIdx - base);
+	aExpr[i].prereqLeft = 
+	    aExpr[i].prereqLeft & ~(1 << pParse->trigStack->newIdx - base);
+	aExpr[i].prereqAll = 
+	    aExpr[i].prereqAll & ~(1 << pParse->trigStack->newIdx - base);
+    }
+    if (pParse->trigStack && pParse->trigStack->oldIdx >= 0) {
+	aExpr[i].prereqRight = 
+	    aExpr[i].prereqRight & ~(1 << pParse->trigStack->oldIdx - base);
+	aExpr[i].prereqLeft = 
+	    aExpr[i].prereqLeft & ~(1 << pParse->trigStack->oldIdx - base);
+	aExpr[i].prereqAll = 
+	    aExpr[i].prereqAll & ~(1 << pParse->trigStack->oldIdx - base);
+    }
   }
 
   /* Figure out a good nesting order for the tables.  aOrder[0] will
