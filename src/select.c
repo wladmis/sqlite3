@@ -781,6 +781,7 @@ int sqliteSelect(
   /* Do an analysis of aggregate expressions.
   */
   if( isAgg ){
+    assert( pParse->nAgg==0 && pParse->iAggCount<0 );
     for(i=0; i<pEList->nExpr; i++){
       if( sqliteExprAnalyzeAggregates(pParse, pEList->a[i].pExpr) ){
         return 1;

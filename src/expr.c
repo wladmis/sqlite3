@@ -834,7 +834,6 @@ int sqliteExprAnalyzeAggregates(Parse *pParse, Expr *pExpr){
         if( aAgg[i].isAgg ) continue;
         if( aAgg[i].pExpr->iTable==pExpr->iTable
          && aAgg[i].pExpr->iField==pExpr->iField ){
-          pExpr->iAgg = i;
           break;
         }
       }
@@ -844,6 +843,7 @@ int sqliteExprAnalyzeAggregates(Parse *pParse, Expr *pExpr){
         pParse->aAgg[i].isAgg = 0;
         pParse->aAgg[i].pExpr = pExpr;
       }
+      pExpr->iAgg = i;
       break;
     }
     case TK_AGG_FUNCTION: {
