@@ -228,12 +228,12 @@ struct Pager {
   PgHdr *pFirstSynced;        /* First free page with PgHdr.needSync==0 */
   PgHdr *pAll;                /* List of all pages */
   PgHdr *pStmt;               /* List of pages in the statement subjournal */
-  PgHdr *aHash[N_PG_HASH];    /* Hash table to map page number to PgHdr */
   off_t journalOff;           /* Current byte offset in the journal file */
   off_t journalHdr;           /* Byte offset to previous journal header */
   off_t stmtHdrOff;           /* First journal header written this statement */
   off_t stmtCksum;            /* cksumInit when statement was started */
   int sectorSize;             /* Assumed sector size during rollback */
+  PgHdr *aHash[N_PG_HASH];    /* Hash table to map page number to PgHdr */
 };
 
 /*
