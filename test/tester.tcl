@@ -82,13 +82,7 @@ proc finish_test {} {
 # A procedure to execute SQL
 #
 proc execsql {sql} {
-  set result {}
-  db eval $sql data {
-    foreach f $data(*) {
-      lappend result $data($f)
-    }
-  }
-  return $result
+  return [db eval $sql]
 }
 
 # Another procedure to execute SQL.  This one includes the field

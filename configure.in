@@ -416,6 +416,9 @@ if test "$found" = "no"; then
     fi
   done
 fi
+if test "$found" = "no"; then
+  TARGET_TCL_INC="-DNO_TCL=1"
+fi
 AC_SUBST(TARGET_TCL_INC)
 
 ##########
