@@ -202,4 +202,16 @@ do_test view-5.2 {
   }
 } {1 22 4 55}
 
+do_test view-6.1 {
+  execsql {
+    SELECT min(x), min(a), min(b), min(c), min(a+b+c) FROM v2;
+  }
+} {7 8 9 10 27}
+do_test view-6.2 {
+  execsql {
+    SELECT max(x), max(a), max(b), max(c), max(a+b+c) FROM v2;
+  }
+} {11 12 13 14 39}
+
+
 finish_test

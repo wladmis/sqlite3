@@ -1391,6 +1391,7 @@ int sqliteExprCompare(Expr *pA, Expr *pB){
     return 0;
   }
   if( pA->pSelect || pB->pSelect ) return 0;
+  if( pA->iTable!=pB->iTable || pA->iColumn!=pB->iColumn ) return 0;
   if( pA->token.z ){
     if( pB->token.z==0 ) return 0;
     if( pB->token.n!=pA->token.n ) return 0;
