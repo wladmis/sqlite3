@@ -407,8 +407,8 @@ The data layout of a cell looks like this:
 
 <p>
 The first four bytes are the pointer.  The size of the key is a 24-bit
-where the upper 8 bits are taken from by 8 and the lower 16 bits are
-token from bytes 4 and 5 (or bytes 5 and 4 on little-endian machines.)
+where the upper 8 bits are taken from byte 8 and the lower 16 bits are
+taken from bytes 4 and 5 (or bytes 5 and 4 on little-endian machines.)
 The size of the data is another 24-bit value where the upper 8 bits
 are taken from byte 9 and the lower 16 bits are taken from bytes 10 and
 11 or 11 and 10, depending on the byte order.  Bytes 6 and 7 are the
