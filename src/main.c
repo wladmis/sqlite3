@@ -300,6 +300,9 @@ static int sqliteInitOne(sqlite *db, int iDb, char **pzErrMsg){
     if( size==0 ){ size = MAX_PAGES; }
     db->cache_size = size;
     db->safety_level = meta[4];
+    if( meta[6]>0 && meta[6]<=2 && db->temp_store==0 ){
+      db->temp_store = meta[6];
+    }
     if( db->safety_level==0 ) db->safety_level = 2;
 
     /*

@@ -56,7 +56,8 @@ puts {<h2>Features</h2>
 <li>Database files can be freely shared between machines with
     different byte orders.</li>
 <li>Supports databases up to 2 terabytes (2^41 bytes) in size.</li>
-<li>Small memory footprint: less than 25K lines of C code.</li>
+<li>A zero-configuration database engine - no DBA needed.</li>
+<li>Small memory footprint: less than 30K lines of C code.</li>
 <li><a href="speed.html">Two times faster</a> than PostgreSQL and
     MySQL for many common operations.</li>
 <li>Very simple 

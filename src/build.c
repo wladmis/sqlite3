@@ -484,7 +484,6 @@ void sqliteStartTable(
       if( rc!=SQLITE_OK ){
         sqliteErrorMsg(pParse, "unable to get a write lock on "
           "the temporary database file");
-        pParse->nErr++;
         return;
       }
     }
