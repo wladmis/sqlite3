@@ -4651,6 +4651,19 @@ case OP_SetNext: {
   break;
 }
 
+/* Opcode: Vacuum * * *
+**
+** Vacuum the entire database.  This opcode will cause other virtual
+** machines to be created and run.  It may not be called from within
+** a transaction.
+*/
+case OP_Vacuum: {
+  if( sqliteSafetyOff(db) ) goto abort_due_to_misuse; 
+  rc = sqliteRunVacuum(&p->zErrMsg, db);
+  if( sqliteSafetyOn(db) ) goto abort_due_to_misuse;
+  break;
+}
+
 /* An other opcode is illegal...
 */
 default: {
