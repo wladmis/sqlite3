@@ -543,4 +543,8 @@ ifcapable datetime {
 }
 set sqlite_current_time 0
 
+do_test expr-9.1 {
+  execsql {SELECT round(-('-'||'123'))}
+} 123
+
 finish_test
