@@ -162,6 +162,7 @@ int sqlite_exec(
 #define SQLITE_CONSTRAINT  19   /* Abort due to contraint violation */
 #define SQLITE_MISMATCH    20   /* Data type mismatch */
 #define SQLITE_MISUSE      21   /* Library used incorrectly */
+#define SQLITE_NOLFS       22   /* Uses OS features not supported on host */
 
 /*
 ** Each entry in an SQLite table has a unique integer key.  (The key is

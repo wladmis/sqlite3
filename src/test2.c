@@ -48,6 +48,7 @@ static char *errorName(int rc){
     case SQLITE_CONSTRAINT: zName = "SQLITE_CONSTRAINT";  break;
     case SQLITE_MISMATCH:   zName = "SQLITE_MISMATCH";    break;
     case SQLITE_MISUSE:     zName = "SQLITE_MISUSE";      break;
+    case SQLITE_NOLFS:      zName = "SQLITE_NOLFS";       break;
     default:                zName = "SQLITE_Unknown";     break;
   }
   return zName;
