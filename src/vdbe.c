@@ -835,58 +835,6 @@ case OP_Variable: {
   break;
 }
 
-/* Opcode: Utf16le_8 * * *
-**
-** The element on the top of the stack must be a little-endian UTF-16
-** encoded string. It is translated in-place to UTF-8.
-*/
-case OP_Utf16le_8: {
-  rc = SQLITE_INTERNAL;
-  break;
-}
-
-/* Opcode: Utf16be_8 * * *
-**
-** The element on the top of the stack must be a big-endian UTF-16
-** encoded string. It is translated in-place to UTF-8.
-*/
-case OP_Utf16be_8: {
-  rc = SQLITE_INTERNAL;
-  break;
-}
-
-/* Opcode: Utf8_16be * * *
-**
-** The element on the top of the stack must be a UTF-8 encoded
-** string. It is translated to big-endian UTF-16.
-*/
-case OP_Utf8_16be: {
-  rc = SQLITE_INTERNAL;
-  break;
-}
-
-/* Opcode: Utf8_16le * * *
-**
-** The element on the top of the stack must be a UTF-8 encoded
-** string. It is translated to little-endian UTF-16.
-*/
-case OP_Utf8_16le: {
-  rc = SQLITE_INTERNAL;
-  break;
-}
-
-/*
-** Opcode: UtfSwab
-**
-** The element on the top of the stack must be an UTF-16 encoded
-** string. Every second byte is exchanged, so as to translate
-** the string from little-endian to big-endian or vice versa.
-*/
-case OP_UtfSwab: {
-  rc = SQLITE_INTERNAL;
-  break;
-}
-
 /* Opcode: Pop P1 * *
 **
 ** P1 elements are popped off of the top of stack and discarded.
