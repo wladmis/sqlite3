@@ -3432,7 +3432,7 @@ static void dropCell(MemPage *pPage, int idx, int sz){
 **
 ** If nSkip is non-zero, then do not copy the first nSkip bytes of the
 ** cell. The caller will overwrite them after this function returns. If
-** nSkip is non-zero, then pCell may not point to a valid memory location 
+** nSkip is non-zero, then pCell may not point to an invalid memory location 
 ** (but pCell+nSkip is always valid).
 */
 static int insertCell(
