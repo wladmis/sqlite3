@@ -1716,17 +1716,6 @@ case OP_Push: {
   break;
 }
 
-/* Opcode: ColumnCount P1 * *
-**
-** Specify the number of column values that will appear in the
-** array passed as the 4th parameter to the callback. 
-*/
-case OP_ColumnCount: {
-  p->azColName[pOp->p1] = 0;
-  p->nCallback = 0;
-  break;
-}
-
 /* Opcode: ColumnName P1 * P3
 **
 ** P3 becomes the P1-th column name (first is 0).  An array of pointers

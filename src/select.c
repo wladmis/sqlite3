@@ -689,11 +689,13 @@ static void generateColumnNames(
   int i;
   if( pParse->colNamesSet || v==0 || sqlite_malloc_failed ) return;
   pParse->colNamesSet = 1;
+#if 0
   if( pParse->db->flags & SQLITE_ReportTypes ){
     sqliteVdbeAddOp(v, OP_ColumnCount, pEList->nExpr*2, 0);
   }else{
     sqliteVdbeAddOp(v, OP_ColumnCount, pEList->nExpr, 0);
   }
+#endif
   for(i=0; i<pEList->nExpr; i++){
     Expr *p;
     char *zType = 0;

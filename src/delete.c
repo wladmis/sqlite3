@@ -296,7 +296,6 @@ void sqliteDeleteFrom(
   ** Return the number of rows that were deleted.
   */
   if( db->flags & SQLITE_CountRows ){
-    sqliteVdbeAddOp(v, OP_ColumnCount, 1, 0);
     sqliteVdbeAddOp(v, OP_ColumnName, 0, 0);
     sqliteVdbeChangeP3(v, -1, "rows deleted", P3_STATIC);
     sqliteVdbeAddOp(v, OP_Callback, 1, 0);

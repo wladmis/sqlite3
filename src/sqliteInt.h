@@ -726,7 +726,7 @@ struct Parse {
   Token sLastToken;    /* The last token parsed */
   Table *pNewTable;    /* A table being constructed by CREATE TABLE */
   Vdbe *pVdbe;         /* An engine for executing database bytecode */
-  u8 colNamesSet;      /* TRUE after OP_ColumnCount has been issued to pVdbe */
+  u8 colNamesSet;      /* TRUE after OP_ColumnName has been issued to pVdbe */
   u8 explain;          /* True if the EXPLAIN flag is found on the query */
   u8 initFlag;         /* True if reparsing CREATE TABLEs */
   u8 nameClash;        /* A permanent table name clashes with temp table name */
