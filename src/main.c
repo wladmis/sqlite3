@@ -58,6 +58,7 @@ int sqliteInitCallback(void *pInit, int argc, char **argv, char **azColName){
   int nErr = 0;
 
   assert( argc==5 );
+  if( argv==0 ) return 0;   /* Might happen if EMPTY_RESULT_CALLBACKS are on */
   if( argv[0]==0 ){
     corruptSchema(pData);
     return 1;
