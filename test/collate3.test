@@ -221,11 +221,13 @@ do_test collate3-3.6 {
     DELETE FROM collate3t1;
   }
 } {0 {}}
-do_test collate3-3.8 {
-  catchsql {
-    PRAGMA integrity_check
-  }
-} {1 {no such collation sequence: string_compare}}
+ifcapable {integrityck} {
+  do_test collate3-3.8 {
+    catchsql {
+      PRAGMA integrity_check
+    }
+  } {1 {no such collation sequence: string_compare}}
+}
 do_test collate3-3.9 {
   catchsql {
     SELECT * FROM collate3t1;

@@ -39,20 +39,12 @@ do_test btree7-1.1 {
     INSERT INTO t1 VALUES(9, '$bigdata');
   "
 } {}
-#puts [execsql {select * from sqlite_master}]
-#set bt [btree_open test.db 2000 0]
-#btree_tree_dump $bt 2
-do_test btree7-1.2 {
-  execsql {PRAGMA integrity_check}
-} {ok}
+integrity_check btree7-1.2
 do_test btree7-1.3 {
   execsql "
     INSERT INTO t1 VALUES(4, '$bigdata');
   "
 } {}
-#btree_tree_dump $bt 2
-do_test btree7-1.4 {
-  execsql {PRAGMA integrity_check}
-} {ok}
+integrity_check btree7-1.4
 
 finish_test

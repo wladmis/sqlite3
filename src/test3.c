@@ -562,10 +562,10 @@ static int btree_integrity_check(
   const char **argv      /* Text of each argument */
 ){
   Btree *pBt;
-  char *zResult;
   int nRoot;
   int *aRoot;
   int i;
+  char *zResult;
 
   if( argc<3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
@@ -581,7 +581,7 @@ static int btree_integrity_check(
 #ifndef SQLITE_OMIT_INTEGRITY_CHECK
   zResult = sqlite3BtreeIntegrityCheck(pBt, aRoot, nRoot);
 #else
-  zResult = "ok";
+  zResult = 0;
 #endif
   if( zResult ){
     Tcl_AppendResult(interp, zResult, 0);

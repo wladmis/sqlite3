@@ -59,10 +59,13 @@ do_test pager3-1.1 {
   }
   db close
   sqlite3 db test.db
-  execsql {
-    pragma integrity_check;
+  set r ok
+  ifcapable {integrityck} {
+    set r [execsql {
+      pragma integrity_check;
+    }]
   }
+  set r
 } ok
-
 
 finish_test
