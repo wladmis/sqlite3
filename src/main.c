@@ -826,6 +826,31 @@ void sqlite_busy_handler(
   db->pBusyArg = pArg;
 }
 
+#ifndef SQLITE_OMIT_PROGRESS_CALLBACK
+/*
+** This routine sets the progress callback for an Sqlite database to the
+** given callback function with the given argument. The progress callback will
+** be invoked every nOps opcodes.
+*/
+void sqlite_progress_handler(
+  sqlite *db, 
+  int nOps,
+  int (*xProgress)(void*), 
+  void *pArg
+){
+  if( nOps>0 ){
+    db->xProgress = xProgress;
+    db->nProgressOps = nOps;
+    db->pProgressArg = pArg;
+  }else{
+    db->xProgress = 0;
+    db->nProgressOps = 0;
+    db->pProgressArg = 0;
+  }
+}
+#endif
+
+
 /*
 ** This routine installs a default busy handler that waits for the
 ** specified number of milliseconds before returning 0.
