@@ -35,7 +35,6 @@ set LeakList {}
 set EXCLUDE {
   all.test
   quick.test
-  malloc.test
   misuse.test
   memleak.test
   btree2.test

@@ -645,7 +645,7 @@ WhereInfo *sqlite3WhereBegin(
   */
   pWInfo = sqliteMalloc( sizeof(WhereInfo) + pTabList->nSrc*sizeof(WhereLevel));
   if( sqlite3_malloc_failed ){
-    /* sqliteFree(pWInfo); // Leak memory when malloc fails */
+    sqliteFree(pWInfo); /* Avoid leaking memory when malloc fails */
     return 0;
   }
   pWInfo->pParse = pParse;
