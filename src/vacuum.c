@@ -256,7 +256,7 @@ int sqliteRunVacuum(char **pzErrMsg, sqlite *db){
   strcpy(zTemp, zFilename);
   for(i=0; i<10; i++){
     zTemp[nFilename] = '-';
-    randomName(&zTemp[nFilename+1]);
+    randomName((unsigned char*)&zTemp[nFilename+1]);
     if( !sqliteOsFileExists(zTemp) ) break;
   }
   if( i>=10 ){
