@@ -1210,7 +1210,7 @@ int sqlite3_open16(
 ** sqlite3_errcode(), sqlite3_errmsg() and sqlite3_errmsg16().
 */
 int sqlite3_finalize(sqlite3_stmt *pStmt){
-  return sqlite3VdbeFinalize((Vdbe*)pStmt, 0);
+  return sqlite3VdbeFinalize((Vdbe*)pStmt);
 }
 
 /*
@@ -1222,7 +1222,7 @@ int sqlite3_finalize(sqlite3_stmt *pStmt){
 ** sqlite3_errcode(), sqlite3_errmsg() and sqlite3_errmsg16().
 */
 int sqlite3_reset(sqlite3_stmt *pStmt){
-  int rc = sqlite3VdbeReset((Vdbe*)pStmt, 0);
+  int rc = sqlite3VdbeReset((Vdbe*)pStmt);
   sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0);
   return rc;
 }

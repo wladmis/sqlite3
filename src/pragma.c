@@ -808,8 +808,7 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
           }
         }
         if( !pEnc->zName ){
-          sqlite3Error(pParse->db, SQLITE_ERROR, 
-              "Unsupported encoding: %s", zRight);
+          sqlite3ErrorMsg(pParse, "Unsupported encoding: %s", zRight);
         }
       }
     }
