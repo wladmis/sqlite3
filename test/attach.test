@@ -151,7 +151,7 @@ do_test attach-1.20.1 {
     DETACH db5;
   }
   db_list db
-} {0 main 1 temp 2 db2 3 db3 4 db4 5 db11 6 db6 7 db7 8 db8 9 db9 10 db10}
+} {0 main 1 temp 2 db2 3 db3 4 db4 5 db6 6 db7 7 db8 8 db9 9 db10 10 db11}
 integrity_check attach-1.20.2
 do_test attach-1.21 {
   catchsql {
