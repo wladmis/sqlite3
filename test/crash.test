@@ -46,8 +46,15 @@ proc crashsql {crashdelay crashfile sql} {
 
   set f [open crash.tcl w]
   puts $f "sqlite3_crashparams $crashdelay $cfile"
-  puts $f "sqlite3 db test.db"
-  puts $f "db eval {pragma cache_size = 10}"
+  puts $f {sqlite3 db test.db}
+
+  # This block sets the cache size of the main database to 10
+  # pages. This is done in case the build is configured to omit
+  # "PRAGMA cache_size".
+  puts $f {db eval {SELECT * FROM sqlite_master;}}
+  puts $f {set bt [btree_from_db db]}
+  puts $f {btree_set_cache_size $bt 10}
+
   puts $f "db eval {"
   puts $f   "$sql"
   puts $f "}"
