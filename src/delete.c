@@ -150,7 +150,7 @@ void sqlite3DeleteFrom(
   */
   assert( pTabList->nSrc==1 );
   iCur = pTabList->a[0].iCursor = pParse->nTab++;
-  if( sqlite3ExprResolveNames(pParse, pTabList, 0, pWhere, 0, 1) ){
+  if( sqlite3ExprResolveNames(pParse, pTabList, 0, 0, pWhere, 0, 1) ){
     goto delete_from_cleanup;
   }
 
@@ -174,7 +174,7 @@ void sqlite3DeleteFrom(
   */
   if( isView ){
     Select *pView = sqlite3SelectDup(pTab->pSelect);
-    sqlite3Select(pParse, pView, SRT_TempTable, iCur, 0, 0, 0, 0);
+    sqlite3Select(pParse, pView, SRT_TempTable, iCur, 0, 0, 0, 0, 0);
     sqlite3SelectDelete(pView);
   }
 
