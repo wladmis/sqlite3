@@ -40,6 +40,11 @@ doc {Tcl API} {tclsqlite.html} {
   A description of the TCL interface bindings for SQLite.
 }
 
+doc {Locking And Concurrency<br>In SQLite Version 3} {lockingv3.html} {
+  A description of how the new locking code in version 3 increases
+  concurrancy and decreases the problem of writer starvation.
+}
+
 doc {Version 2 DataTypes } {datatypes.html} {
   A description of how SQLite version 2 handles SQL datatypes.
 }
