@@ -32,6 +32,7 @@ struct ExprInfo {
                           ** p->pRight is not the column of any table */
   unsigned prereqLeft;    /* Tables referenced by p->pLeft */
   unsigned prereqRight;   /* Tables referenced by p->pRight */
+  unsigned prereqAll;     /* Tables referenced by this expression in any way */
 };
 
 /*
@@ -130,6 +131,7 @@ static void exprAnalyze(int base, ExprInfo *pInfo){
   Expr *pExpr = pInfo->p;
   pInfo->prereqLeft = exprTableUsage(base, pExpr->pLeft);
   pInfo->prereqRight = exprTableUsage(base, pExpr->pRight);
+  pInfo->prereqAll = exprTableUsage(base, pExpr);
   pInfo->indexable = 0;
   pInfo->idxLeft = -1;
   pInfo->idxRight = -1;
@@ -751,8 +753,7 @@ WhereInfo *sqliteWhereBegin(
     */
     for(j=0; j<nExpr; j++){
       if( aExpr[j].p==0 ) continue;
-      if( (aExpr[j].prereqRight & loopMask)!=aExpr[j].prereqRight ) continue;
-      if( (aExpr[j].prereqLeft & loopMask)!=aExpr[j].prereqLeft ) continue;
+      if( (aExpr[j].prereqAll & loopMask)!=aExpr[j].prereqAll ) continue;
       if( haveKey ){
         haveKey = 0;
         sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0);
