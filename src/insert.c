@@ -234,6 +234,13 @@ void sqlite3Insert(
     goto insert_cleanup;
   }
 
+  /* Ensure all required collation sequences are available. */
+  for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
+    if( sqlite3CheckIndexCollSeq(pParse, pIdx) ){
+      goto insert_cleanup;
+    }
+  }
+
   /* Allocate a VDBE
   */
   v = sqlite3GetVdbe(pParse);

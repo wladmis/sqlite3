@@ -179,6 +179,7 @@ void sqlite3Update(
       }
     }
     if( i<pIdx->nColumn ){
+      if( sqlite3CheckIndexCollSeq(pParse, pIdx) ) goto update_cleanup;
       apIdx[nIdx++] = pIdx;
       aIdxUsed[j] = 1;
     }else{

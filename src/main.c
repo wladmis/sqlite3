@@ -1217,3 +1217,25 @@ int sqlite3_create_collation16(
   sqliteFree(zName8);
   return rc;
 }
+
+int sqlite3_collation_needed(
+  sqlite3 *db, 
+  void *pCollNeededArg, 
+  void(*xCollNeeded)(void*,sqlite3*,int eTextRep,const char*)
+){
+  db->xCollNeeded = xCollNeeded;
+  db->xCollNeeded16 = 0;
+  db->pCollNeededArg = pCollNeededArg;
+  return SQLITE_OK;
+}
+int sqlite3_collation_needed16(
+  sqlite3 *db, 
+  void *pCollNeededArg, 
+  void(*xCollNeeded16)(void*,sqlite3*,int eTextRep,const void*)
+){
+  db->xCollNeeded = 0;
+  db->xCollNeeded16 = xCollNeeded16;
+  db->pCollNeededArg = pCollNeededArg;
+  return SQLITE_OK;
+}
+

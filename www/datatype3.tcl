@@ -327,8 +327,7 @@ NOCASE and REVERSE:
 <p>
 Each column of each table has a default collation type. If a collation type
 other than BINARY is required, a COLLATE clause is specified as part of the
-<a href="lang.html#createtable">column definition</a> to define it.used as
-illustrated in the example below to 
+<a href="lang.html#createtable">column definition</a> to define it. 
 </p>  
 
 <p>
