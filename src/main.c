@@ -420,8 +420,13 @@ static int binaryCollatingFunc(
 }
 
 /*
-** Another built-in collating sequence: NOCASE. At the moment there is
-** only a UTF-8 implementation.
+** Another built-in collating sequence: NOCASE. 
+**
+** This collating sequence is intended to be used for "case independant
+** comparison". SQLite's knowledge of upper and lower case equivalents
+** extends only to the 26 characters used in the English language.
+**
+** At the moment there is only a UTF-8 implementation.
 */
 static int nocaseCollatingFunc(
   void *NotUsed,

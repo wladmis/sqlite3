@@ -475,6 +475,7 @@ struct FuncDef {
   void (*xFunc)(sqlite3_context*,int,sqlite3_value**); /* Regular function */
   void (*xStep)(sqlite3_context*,int,sqlite3_value**); /* Aggregate step */
   void (*xFinalize)(sqlite3_context*);                /* Aggregate finializer */
+  u8 needCollSeq;      /* True if sqlite3GetFuncCollSeq() might be called */
 };
 
 /*
@@ -953,6 +954,7 @@ struct Select {
   int nLimit, nOffset;   /* LIMIT and OFFSET values.  -1 means not used */
   int iLimit, iOffset;   /* Memory registers holding LIMIT & OFFSET counters */
   char *zSelect;         /* Complete text of the SELECT command */
+  IdList **ppOpenTemp;   /* OP_OpenTemp addresses used by multi-selects */
 };
 
 /*
