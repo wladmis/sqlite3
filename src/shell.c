@@ -746,7 +746,7 @@ static char zHelp[] =
   ".help                  Show this message\n"
   ".import FILE TABLE     Import data from FILE into TABLE\n"
   ".indices TABLE         Show names of all indices on TABLE\n"
-  ".mode MODE ?TABLE?     Set output mode where MODE is on of:\n"
+  ".mode MODE ?TABLE?     Set output mode where MODE is one of:\n"
   "                         csv      Comma-separated values\n"
   "                         column   Left-aligned columns.  (See .width)\n"
   "                         html     HTML <table> code\n"
