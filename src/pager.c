@@ -1517,6 +1517,7 @@ ckpt_begin_failed:
 int sqlitepager_ckpt_commit(Pager *pPager){
   if( pPager->ckptInUse ){
     PgHdr *pPg;
+    sqliteOsSeek(&pPager->cpfd, 0);
     sqliteOsTruncate(&pPager->cpfd, 0);
     pPager->ckptInUse = 0;
     sqliteFree( pPager->aInCkpt );
