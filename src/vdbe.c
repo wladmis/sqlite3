@@ -2468,7 +2468,7 @@ case OP_IncrKey: {
 case OP_Checkpoint: {
   rc = sqliteBtreeBeginCkpt(pBt);
   if( rc==SQLITE_OK && db->pBeTemp ){
-     rc = sqliteBtreeBeginCkpt(pBt);
+     rc = sqliteBtreeBeginCkpt(db->pBeTemp);
   }
   break;
 }
