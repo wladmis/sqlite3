@@ -101,7 +101,10 @@ void sqliteInsert(
       }
     }
   }
-  v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
+  v = pParse->pVdbe;
+  if( v==0 ){
+    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
+  }
   if( v ){
     Index *pIdx;
     sqliteVdbeAddOp(v, OP_Open, 0, 1, pTab->zName, 0);

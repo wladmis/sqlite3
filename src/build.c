@@ -108,6 +108,8 @@ void sqliteExprDelete(Expr *p){
   if( p==0 ) return;
   if( p->pLeft ) sqliteExprDelete(p->pLeft);
   if( p->pRight ) sqliteExprDelete(p->pRight);
+  if( p->pList ) sqliteExprListDelete(p->pList);
+  if( p->pSelect ) sqliteSelectDelete(p->pSelect);
   sqliteFree(p);
 }
 
