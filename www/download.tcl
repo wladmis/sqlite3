@@ -40,6 +40,12 @@ Product sqlite-VERSION.bin.gz {
   See <a href="sqlite.html">the documentation</a> for additional information.
 }
 
+Product sqlite3-VERSION.bin.gz {
+  A statically linked command-line program for accessing and modifing
+  SQLite databases.
+  See <a href="sqlite.html">the documentation</a> for additional information.
+}
+
 Product tclsqlite-VERSION.so.gz {
   Bindings for TCL.  You can import this shared library into either
   tclsh or wish to get SQLite database access from Tcl/Tk.
@@ -134,6 +140,17 @@ cvs -d :pserver:anonymous@www.sqlite.org:/sqlite checkout sqlite
 <p>
 When the first command prompts you for a password, enter "anonymous".
 </p>
+
+<p>
+To access the SQLite version 2.8 sources, begin by getting the 3.0
+tree as described above.  Then update to the "version_2" branch
+as follows:
+</p>
+
+<blockquote><pre>
+cvs update -r version_2
+</pre></blockquote>
+
 }
 
 footer $rcsid
