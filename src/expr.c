@@ -430,7 +430,6 @@ int sqliteExprResolveIds(
     case TK_ID: {
       int cnt = 0;      /* Number of matches */
       int i;            /* Loop counter */
-      int rc;           /* Return code */
       char *z;
       assert( pExpr->token.z );
       z = sqliteStrNDup(pExpr->token.z, pExpr->token.n);
