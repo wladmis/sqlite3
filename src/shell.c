@@ -365,7 +365,9 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     data.showHeader = 0;
     data.mode = MODE_List;
     if( nArg>1 ){
-      sprintf(zSql, "SELECT sql FROM sqlite_master WHERE name LIKE '%.900s'",
+      sprintf(zSql, "SELECT sql FROM sqlite_master "
+                    "WHERE tbl_name LIKE '%.800s'"
+                    "ORDER BY type DESC, name",
          azArg[1]);
     }else{
       sprintf(zSql, "SELECT sql FROM sqlite_master "

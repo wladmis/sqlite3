@@ -2375,9 +2375,9 @@ int sqliteVdbeExec(
         zNewKey = sqliteMalloc( nByte );
         if( zNewKey==0 ) goto no_mem;
         j = 0;
-        k = nField-1;
+        k = 0;
         for(i=p->tos-nField+1; i<=p->tos; i++){
-          zNewKey[j++] = pOp->p3[k--];
+          zNewKey[j++] = pOp->p3[k++];
           memcpy(&zNewKey[j], p->zStack[i], p->aStack[i].n-1);
           j += p->aStack[i].n-1;
           zNewKey[j++] = 0;
