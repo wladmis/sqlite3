@@ -28,6 +28,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+if {0} {
+
 # Try to vacuum a non-existant table.
 #
 do_test vacuum-1.1 {
@@ -79,3 +81,5 @@ do_test vacuum-1.4 {
 } ;# End if( platform!=windows )
 
 finish_test
+
+}

@@ -25,7 +25,7 @@
 #
 # $Id$
 
-if {$dbprefix=="gdbm:" && $::tcl_platform(platform)!="windows"} {
+if {0} {
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl

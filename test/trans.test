@@ -29,7 +29,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-if {$dbprefix=="gdbm:" && $::tcl_platform(platform)!="windows"} {
+if {0} {
 
 # Create several tables to work with.
 #

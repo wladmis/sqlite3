@@ -475,10 +475,10 @@ static const char *findTempDir(void){
   int i;
   struct stat buf;
   for(i=0; i<sizeof(azDirs)/sizeof(azDirs[0]); i++){
-    if( stat(azDirs[i], &buf)==0 && S_ISDIR(buf.st_mode)
-         && access(azDirs[i], W_OK) ){
-       return azDirs[i];
-    }
+    if( stat(azDirs[i], &buf) ) continue;
+    if( !S_ISDIR(buf.st_mode) ) continue;
+    if( access(azDirs[i], 07) ) continue;
+    return azDirs[i];
   }
   return 0;
 }

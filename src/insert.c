@@ -181,7 +181,7 @@ void sqliteInsert(
 
   /* Create a new entry in the table and fill it with data.
   */
-  sqliteVdbeAddOp(v, OP_NewRecno, 0, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_NewRecno, base, 0, 0, 0);
   if( pTab->pIndex ){
     sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
   }

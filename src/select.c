@@ -181,8 +181,8 @@ static int selectInnerLoop(
   ** the temporary table iParm.
   */
   if( eDest==SRT_Except ){
-    sqliteVdbeAddOp(v, OP_MakeRecord, nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_MoveTo, iParm, 0, 0, 0);
+    int addr = sqliteVdbeAddOp(v, OP_MakeRecord, nColumn, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_NotFound, iParm, addr+3, 0, 0);
     sqliteVdbeAddOp(v, OP_Delete, iParm, 0, 0, 0);
   }else 
 

@@ -517,7 +517,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       }else if( pExpr->iColumn>=0 ){
         sqliteVdbeAddOp(v, OP_Column, pExpr->iTable, pExpr->iColumn, 0, 0);
       }else{
-        sqliteVdbeAddOp(v, OP_FullKey, pExpr->iTable, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Recno, pExpr->iTable, 0, 0, 0);
       }
       break;
     }

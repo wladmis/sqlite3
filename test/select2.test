@@ -78,6 +78,7 @@ do_test select2-2.0 {
     puts $f "$i\t[expr {$i*2}]\t[expr {$i*3}]"
   }
   close $f
+  # execsql {--vdbe-trace-on--}
   execsql {COPY tbl2 FROM './testdata1.txt'}
   file delete -force ./testdata1.txt
 } {}

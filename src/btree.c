@@ -1702,7 +1702,7 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
   ** underfull.
   */
   assert( sqlitepager_iswriteable(pPage) );
-  if( !pPage->isOverfull && pPage->nFree<SQLITE_PAGE_SIZE/3 ){
+  if( !pPage->isOverfull && pPage->nFree<SQLITE_PAGE_SIZE/2 && pPage->nCell>=2){
     relinkCellList(pPage);
     return SQLITE_OK;
   }
@@ -1981,9 +1981,14 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
     pParent->apCell[nxDiv]->h.leftChild = pgnoNew[nNew-1];
   }
   if( pCur ){
-    assert( pOldCurPage!=0 );
-    sqlitepager_ref(pCur->pPage);
-    sqlitepager_unref(pOldCurPage);
+    if( j<=iCur && pCur->pPage==pParent && pCur->idx>idxDiv[nOld-1] ){
+      assert( pCur->pPage==pOldCurPage );
+      pCur->idx += nNew - nOld;
+    }else{
+      assert( pOldCurPage!=0 );
+      sqlitepager_ref(pCur->pPage);
+      sqlitepager_unref(pOldCurPage);
+    }
   }
 
   /*
@@ -2063,6 +2068,8 @@ int sqliteBtreeInsert(
   }
   insertCell(pPage, pCur->idx, &newCell, szNew);
   rc = balance(pCur->pBt, pPage, pCur);
+  /* sqliteBtreePageDump(pCur->pBt, pCur->pgnoRoot, 1); */
+  /* fflush(stdout); */
   return rc;
 }
 

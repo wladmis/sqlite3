@@ -354,7 +354,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
 #ifndef NDEBUG
         char *z = pParse->sLastToken.z;
         if( sqliteStrNICmp(z,"--parser-trace-on--",19)==0 ){
-          trace = stderr;
+          trace = stdout;
           sqliteParserTrace(trace, "parser: ");
         }else if( sqliteStrNICmp(z,"--parser-trace-off--", 20)==0 ){
           trace = 0;

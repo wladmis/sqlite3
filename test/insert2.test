@@ -45,10 +45,12 @@ do_test insert2-1.0 {
 do_test insert2-1.1 {
   execsql {
     CREATE TABLE t1(log int, cnt int);
+---vdbe-trace-on--
     INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log;
   }
   execsql {SELECT * FROM t1 ORDER BY log}
 } {0 1 1 1 2 2 3 4 4 8 5 4}
+
 do_test insert2-1.2 {
   catch {execsql {DROP TABLE t1}}
   execsql {
