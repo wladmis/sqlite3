@@ -24,7 +24,7 @@ ifcapable !altertable {
   return
 }
 
-ource $testdir/tester.tcl
+source $testdir/tester.tcl
 
 # Test Organisation:
 # ------------------
@@ -337,4 +337,3 @@ ifcapable vacuum {
 }
 
 finish_test
-
