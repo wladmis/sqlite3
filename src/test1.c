@@ -180,10 +180,10 @@ static int test_mprintf_z(
   int i;
 
   for(i=2; i<argc; i++){
-    zResult = sqlite_mprintf("%z%s%s", zResult, argv[1], argv[i]);
+    zResult = sqliteMPrintf("%z%s%s", zResult, argv[1], argv[i]);
   }
   Tcl_AppendResult(interp, zResult, 0);
-  sqlite_freemem(zResult);
+  sqliteFree(zResult);
   return TCL_OK;
 }
 
