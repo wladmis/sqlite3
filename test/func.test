@@ -392,6 +392,7 @@ do_test func-13.1 {
     SELECT test_auxdata('hello world');
   }
 } {0}
+
 do_test func-13.2 {
   execsql {
     CREATE TABLE t4(a, b);
@@ -433,6 +434,5 @@ do_test func-13.7 {
   }
   lappend res [sqlite3_finalize $STMT]
 } {{0 0} {1 0} SQLITE_OK}
-
 
 finish_test
