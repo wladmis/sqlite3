@@ -71,6 +71,7 @@ static Keyword aKeywordTable[] = {
   { "EACH",              TK_EACH,         },
   { "ELSE",              TK_ELSE,         },
   { "EXCEPT",            TK_EXCEPT,       },
+  { "EXCLUSIVE",         TK_EXCLUSIVE,    },
   { "EXPLAIN",           TK_EXPLAIN,      },
   { "FAIL",              TK_FAIL,         },
   { "FOR",               TK_FOR,          },

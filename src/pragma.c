@@ -261,7 +261,6 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp(v, OP_Ge, 0, addr+3);
       sqlite3VdbeAddOp(v, OP_Negative, 0, 0);
       sqlite3VdbeAddOp(v, OP_SetCookie, iDb, 2);
-      sqlite3EndWriteOperation(pParse);
       pDb->cache_size = size;
       sqlite3BtreeSetCacheSize(pDb->pBt, pDb->cache_size);
     }

@@ -616,8 +616,6 @@ void sqlite3Insert(
     }
   }
 
-  sqlite3EndWriteOperation(pParse);
-
   /*
   ** Return the number of rows inserted.
   */

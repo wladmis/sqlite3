@@ -430,8 +430,6 @@ void sqlite3Update(
     sqlite3VdbeAddOp(v, OP_Close, oldIdx, 0);
   }
 
-  sqlite3EndWriteOperation(pParse);
-
   /*
   ** Return the number of rows that were changed.
   */

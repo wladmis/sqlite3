@@ -307,7 +307,6 @@ void sqlite3DeleteFrom(
       sqlite3VdbeAddOp(v, OP_Close, iCur, 0);
     }
   }
-  sqlite3EndWriteOperation(pParse);
 
   /*
   ** Return the number of rows that were deleted.

@@ -2157,7 +2157,8 @@ case OP_AutoCommit: {
 ** other process can start another write transaction while this transaction is
 ** underway.  Starting a write transaction also creates a rollback journal. A
 ** write transaction must be started before any changes can be made to the
-** database.
+** database.  If P2 is 2 or greater then an EXCLUSIVE lock is also obtained
+** on the file.
 **
 ** If P2 is zero, then a read-lock is obtained on the database file.
 */
