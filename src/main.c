@@ -372,6 +372,7 @@ int sqlite3ReadSchema(Parse *pParse){
 */
 const char rcsid3[] = "@(#) \044Id: SQLite version " SQLITE_VERSION " $";
 const char sqlite3_version[] = SQLITE_VERSION;
+const char *sqlite3_libversion(void){ return sqlite3_version; }
 
 /*
 ** This is the default collating function named "BINARY" which is always

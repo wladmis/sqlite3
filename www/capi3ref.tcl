@@ -48,6 +48,15 @@ above in order to indicates success or failure.
 }
 
 api {} {
+  const char *sqlite3_libversion(void);
+} {
+  Return a pointer to a string which contains the version number of
+  the library.  The same string is available in the global
+  variable named "sqlite3_version".  This interface is provided since
+  windows is unable to access global variables in DLLs.
+}
+
+api {} {
   void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
 } {
   Aggregate functions use the following routine to allocate
