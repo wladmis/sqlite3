@@ -844,7 +844,10 @@ const char *sqlite3_errmsg(sqlite3 *db){
     */
     return sqlite3ErrStr(SQLITE_NOMEM);
   }
-  if( db->magic!=SQLITE_MAGIC_OPEN && db->magic!=SQLITE_MAGIC_BUSY ){
+  if( db->magic!=SQLITE_MAGIC_OPEN && 
+      db->magic!=SQLITE_MAGIC_BUSY &&
+      db->magic!=SQLITE_MAGIC_CLOSED 
+  ){
     return sqlite3ErrStr(SQLITE_MISUSE);
   }
   if( !sqlite3_value_text(db->pErr) ){
