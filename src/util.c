@@ -27,11 +27,11 @@ void print_stack_trace(){
   int i;
   int n = backtrace(bt, 30);
 
-  sqlite3DebugPrintf("STACK: ");
+  fprintf(stderr, "STACK: ");
   for(i=0; i<n;i++){
-    sqlite3DebugPrintf("%p ", bt[i]);
+    fprintf(stderr, "%p ", bt[i]);
   }
-  sqlite3DebugPrintf("\n");
+  fprintf(stderr, "\n");
 }
 #else
 #define print_stack_trace()

@@ -691,7 +691,9 @@ void sqlite3StartTable(
   ** index or table name in the same database.  Issue an error message if
   ** it does.
   */
-  if( SQLITE_OK!=sqlite3ReadSchema(pParse) ) return;
+  if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
+    goto begin_table_error;
+  }
   pTable = sqlite3FindTable(db, zName, db->aDb[iDb].zName);
   if( pTable ){
     sqlite3ErrorMsg(pParse, "table %T already exists", pName);

@@ -709,6 +709,11 @@ do_test pragma-10.3 {
 
 } ;# ifcapable trigger
 
+# Reset the sqlite3_temp_directory variable for the next run of tests:
+sqlite3 dbX :memory:
+dbX eval {PRAGMA temp_store_directory = ""}
+dbX close
+
 finish_test
 
 

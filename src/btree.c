@@ -495,15 +495,14 @@ static int ptrmapPut(Btree *pBt, Pgno key, u8 eType, Pgno parent){
   if( eType!=pPtrmap[offset] || get4byte(&pPtrmap[offset+1])!=parent ){
     TRACE(("PTRMAP_UPDATE: %d->(%d,%d)\n", key, eType, parent));
     rc = sqlite3pager_write(pPtrmap);
-    if( rc!=0 ){
-      return rc;
+    if( rc==SQLITE_OK ){
+      pPtrmap[offset] = eType;
+      put4byte(&pPtrmap[offset+1], parent);
     }
-    pPtrmap[offset] = eType;
-    put4byte(&pPtrmap[offset+1], parent);
   }
 
   sqlite3pager_unref(pPtrmap);
-  return SQLITE_OK;
+  return rc;
 }
 
 /*
