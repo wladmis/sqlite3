@@ -723,13 +723,13 @@ static int memRbtreeCursor(
   pCur = *ppCur = sqliteMalloc(sizeof(RbtCursor));
   if( sqlite_malloc_failed ) return SQLITE_NOMEM;
   pCur->pTree  = sqliteHashFind(&tree->tblHash, 0, iTable);
+  assert( pCur->pTree );
   pCur->pRbtree = tree;
   pCur->iTree  = iTable;
   pCur->pOps = &sqliteRbtreeCursorOps;
   pCur->wrFlag = wrFlag;
   pCur->pShared = pCur->pTree->pCursors;
   pCur->pTree->pCursors = pCur;
-  
 
   assert( (*ppCur)->pTree );
   return SQLITE_OK;

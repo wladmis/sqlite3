@@ -676,7 +676,7 @@ static void generateColumnTypes(
       }
     }
     sqliteVdbeAddOp(v, OP_ColumnName, i + pEList->nExpr, 0);
-    sqliteVdbeChangeP3(v, -1, zType, P3_STATIC);
+    sqliteVdbeChangeP3(v, -1, zType, 0);
   }
 }
 
