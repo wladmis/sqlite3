@@ -1327,7 +1327,7 @@ int sqliteBtreeNext(BtCursor *pCur, int *pRes){
     if( pRes ) *pRes = 1;
     return SQLITE_ABORT;
   }
-  if( pCur->bSkipNext ){
+  if( pCur->bSkipNext && pCur->idx<pCur->pPage->nCell ){
     pCur->bSkipNext = 0;
     if( pRes ) *pRes = 0;
     return SQLITE_OK;
@@ -2194,14 +2194,18 @@ int sqliteBtreeDelete(BtCursor *pCur){
     if( rc ) return rc;
     pCur->bSkipNext = 1;
     dropCell(leafCur.pPage, leafCur.idx, szNext);
-    rc = balance(pCur->pBt, leafCur.pPage, 0);
+    rc = balance(pCur->pBt, leafCur.pPage, pCur);
     releaseTempCursor(&leafCur);
   }else{
     dropCell(pPage, pCur->idx, cellSize(pCell));
     if( pCur->idx>=pPage->nCell ){
       pCur->idx = pPage->nCell-1;
-      if( pCur->idx<0 ){ pCur->idx = 0; }
-      pCur->bSkipNext = 0;
+      if( pCur->idx<0 ){ 
+        pCur->idx = 0;
+        pCur->bSkipNext = 1;
+      }else{
+        pCur->bSkipNext = 0;
+      }
     }else{
       pCur->bSkipNext = 1;
     }

@@ -189,6 +189,16 @@ do_test index-6.3 {
   execsql {DROP TABLE test2}
   execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
 } {}
+do_test index-6.4 {
+  execsql {
+    CREATE TABLE test1(a,b);
+    CREATE INDEX index1 ON test1(a);
+    CREATE INDEX index2 ON test1(b);
+    CREATE INDEX index3 ON test1(a,b);
+    DROP TABLE test1;
+    SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name;
+  }
+} {}
 
 # Create a primary key
 #

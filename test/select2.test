@@ -26,6 +26,7 @@ for {set i 0} {$i<=30} {incr i} {
 close $f
 execsql {COPY tbl1 FROM './testdata1.txt'}
 file delete -force ./testdata1.txt
+catch {unset data}
 
 # Do a second query inside a first.
 #

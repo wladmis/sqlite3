@@ -997,11 +997,11 @@ do_test btree-13.1 {
 #   4.  Implement btree_sanity and put it throughout this script
 #
 
-do_test btree-10.98 {
+do_test btree-15.98 {
   btree_close_cursor $::c1
   lindex [btree_pager_stats $::b1] 1
 } {1}
-do_test btree-10.99 {
+do_test btree-15.99 {
   btree_rollback $::b1
   lindex [btree_pager_stats $::b1] 1
 } {0}
