@@ -40,8 +40,10 @@ const int sqlite3one = 1;
 ** that the database is corrupt.
 */
 static void corruptSchema(InitData *pData, const char *zExtra){
-  sqlite3SetString(pData->pzErrMsg, "malformed database schema",
-     zExtra!=0 && zExtra[0]!=0 ? " - " : (char*)0, zExtra, (char*)0);
+  if( !sqlite3_malloc_failed ){
+    sqlite3SetString(pData->pzErrMsg, "malformed database schema",
+       zExtra!=0 && zExtra[0]!=0 ? " - " : (char*)0, zExtra, (char*)0);
+  }
 }
 
 /*
