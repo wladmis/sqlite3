@@ -52,6 +52,7 @@ static Keyword aKeywordTable[] = {
   { "CASE",              0, TK_CASE,             0 },
   { "CHECK",             0, TK_CHECK,            0 },
   { "CLUSTER",           0, TK_CLUSTER,          0 },
+  { "COLLATE",           0, TK_COLLATE,          0 },
   { "COMMIT",            0, TK_COMMIT,           0 },
   { "CONFLICT",          0, TK_CONFLICT,         0 },
   { "CONSTRAINT",        0, TK_CONSTRAINT,       0 },

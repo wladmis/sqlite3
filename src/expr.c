@@ -167,6 +167,7 @@ Expr *sqliteExprDup(Expr *p){
   pNew = sqliteMalloc( sizeof(*p) );
   if( pNew==0 ) return 0;
   pNew->op = p->op;
+  pNew->dataType = p->dataType;
   pNew->pLeft = sqliteExprDup(p->pLeft);
   pNew->pRight = sqliteExprDup(p->pRight);
   pNew->pList = sqliteExprListDup(p->pList);
