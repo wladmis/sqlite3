@@ -472,7 +472,8 @@ if test "$config_TARGET_READLINE_LIBS" != ""; then
 else
   CC=$TARGET_CC
   LIBS=""
-  AC_SEARCH_LIBS(readline, readline,,,)
+  AC_SEARCH_LIBS(tgetent, [readline ncurses curses termcap])
+  AC_CHECK_LIB([readline], [readline])
   TARGET_READLINE_LIBS="$LIBS"
 fi
 AC_SUBST(TARGET_READLINE_LIBS)
