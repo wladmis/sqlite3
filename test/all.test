@@ -34,8 +34,8 @@ set EXCLUDE {
   quick.test
   malloc.test
   misuse.test
-  btree2.test
 }
+#  btree2.test
 
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
   if {$Counter%2} {

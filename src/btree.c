@@ -1569,6 +1569,12 @@ static int freePage(Btree *pBt, void *pPage, Pgno pgno){
     pgno = sqlitepager_pagenumber(pOvfl);
   }
   assert( pgno>2 );
+  pMemPage = (MemPage*)pPage;
+  pMemPage->isInit = 0;
+  if( pMemPage->pParent ){
+    sqlitepager_unref(pMemPage->pParent);
+    pMemPage->pParent = 0;
+  }
   rc = sqlitepager_write(pPage1);
   if( rc ){
     return rc;
@@ -1606,12 +1612,6 @@ static int freePage(Btree *pBt, void *pPage, Pgno pgno){
   pOvfl->iNext = pPage1->freeList;
   pPage1->freeList = pgno;
   memset(pOvfl->aPayload, 0, OVERFLOW_SIZE);
-  pMemPage = (MemPage*)pPage;
-  pMemPage->isInit = 0;
-  if( pMemPage->pParent ){
-    sqlitepager_unref(pMemPage->pParent);
-    pMemPage->pParent = 0;
-  }
   if( needUnref ) rc = sqlitepager_unref(pOvfl);
   return rc;
 }
