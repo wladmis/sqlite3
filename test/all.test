@@ -67,7 +67,6 @@ set EXCLUDE {
 ifcapable default_autovacuum {
   lappend EXCLUDE btree2.test
   lappend EXCLUDE btree4.test
-  lappend EXCLUDE corrupt.test
 }
 
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
