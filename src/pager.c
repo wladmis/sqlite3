@@ -444,7 +444,7 @@ static int pager_playback(Pager *pPager){
   if( rc!=SQLITE_OK ){
     goto end_playback;
   }
-  if( nRec <= sizeof(aMagic)+sizeof(Pgno) ){
+  if( nRec < sizeof(aMagic)+sizeof(Pgno) ){
     goto end_playback;
   }
   nRec = (nRec - (sizeof(aMagic)+sizeof(Pgno))) / sizeof(PageRecord);
