@@ -659,7 +659,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** call to sqlite3_exec().
   */
   case DB_ERRORCODE: {
-    Tcl_SetObjResult(interp, Tcl_NewIntObj(pDb->rc));
+    Tcl_SetObjResult(interp, Tcl_NewIntObj(sqlite3_errcode(pDb->db)));
     break;
   }
    
