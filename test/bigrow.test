@@ -173,7 +173,7 @@ do_test bigrow-4.2 {
 } {one 122880 hi}
 do_test bigrow-4.3 {
   execsql {
-    UPDATE t1 SET b=substr(b,0,65515)
+    UPDATE t1 SET b=substr(b,1,65515)
   }
   execsql {SELECT a,length(b),c FROM t1}
 } {one 65515 hi}
