@@ -139,7 +139,7 @@ ON <table-name> ( <column-name> [, <column-name>]* )
 
 puts {
 <p>The CREATE INDEX command consists of the keywords "CREATE INDEX" followed
-by the name of the new index, the keyword "ON" the name of a previously
+by the name of the new index, the keyword "ON", the name of a previously
 created table that is to be indexed, and a parenthesized list of names of
 columns in the table that are used for the index key.
 Each column name can be followed by one of the "ASC" or "DESC" keywords

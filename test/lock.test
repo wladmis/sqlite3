@@ -50,7 +50,7 @@ do_test lock-1.1 {
   puts $f "WHERE a.f1+b.f1==0.5;"
   close $f
   set ::lock_pid [exec ./sqlite testdb <slow.sql &]
-  after 10
+  after 250
   set v {}
 } {}
 

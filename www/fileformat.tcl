@@ -215,8 +215,7 @@ table that has the corresponding value for the <b>a</b> column.</p>
 The index entry for -11 contains only a single entry and is 4
 bytes in size.  The index entry for 10 is 16 bytes in size but
 contains only 2 entries.  The first integer is the number of
-entires.  The two integer keys follow.  The last 4 bytes unused
-and are set to zero.
+entires.  The two integer keys follow.  The last 4 bytes are unused.
 }
 
 puts {
