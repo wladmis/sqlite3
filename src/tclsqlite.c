@@ -380,6 +380,7 @@ int Sqlite_SafeInit(Tcl_Interp *interp){
   return TCL_OK;
 }
 
+#if 0
 /*
 ** If compiled using mktclapp, this routine runs to initialize
 ** everything.
@@ -387,6 +388,7 @@ int Sqlite_SafeInit(Tcl_Interp *interp){
 int Et_AppInit(Tcl_Interp *interp){
   return Sqlite_Init(interp);
 }
+#endif
 
 /*
 ** If the macro TCLSH is defined and is one, then put in code for the
