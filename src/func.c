@@ -290,7 +290,7 @@ static void soundexFunc(sqlite_func *context, int argc, const char **argv){
     zResult[j] = 0;
     sqlite_set_result_string(context, zResult, 4);
   }else{
-    sqlite_set_result_string(context, zResult, "?000", 4);
+    sqlite_set_result_string(context, "?000", 4);
   }
 }
 #endif
