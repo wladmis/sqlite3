@@ -683,8 +683,6 @@ int sqliteGlobCompare(const char *zPattern, const char *zString){
 int 
 sqliteLikeCompare(const unsigned char *zPattern, const unsigned char *zString){
   register char c;
-  int invert;
-  int seen;
   char c2;
 
   while( (c = UpperToLower[*zPattern])!=0 ){

@@ -269,3 +269,4 @@ int sqliteLikeCompare(const unsigned char*,const unsigned char*);
 char *sqliteTableNameFromToken(Token*);
 int sqliteExprCheck(Parse*, Expr*, int, int*);
 int sqliteFuncId(Token*);
+int sqliteExprResolveIds(Parse*, IdList*, Expr*);

@@ -53,7 +53,6 @@
 static char *getline(char *zPrompt){
   char *zLine;
   int nLine;
-  char *z;
   int n;
   int eol;
 
@@ -433,7 +432,7 @@ int main(int argc, char **argv){
       argc--;
       argv++;
     }else if( argc>=3 && strcmp(argv[0],"-separator")==0 ){
-      sprintf(data.separator,"%.*s",sizeof(data.separator)-1,argv[2]);
+      sprintf(data.separator,"%.*s",(int)sizeof(data.separator)-1,argv[2]);
       argc -= 2;
       argv += 2;
     }else if( strcmp(argv[1],"-header")==0 ){
