@@ -44,7 +44,7 @@ static void minmaxFunc(
   CollSeq *pColl;
 
   if( argc==0 ) return;
-  mask = (int)sqlite3_user_data(context);
+  mask = sqlite3_user_data(context)==0 ? 0 : -1;
   pColl = sqlite3GetFuncCollSeq(context);
   assert( pColl );
   assert( mask==-1 || mask==0 );

@@ -578,8 +578,8 @@ static int sqliteDefaultBusyCallback(
   static const short int totals[] =
      { 0, 1, 3,  8, 18, 33, 53, 78, 103, 128, 178, 228, 287};
 # define NDELAY (sizeof(delays)/sizeof(delays[0]))
-  int timeout = (int)Timeout;
-  int delay, prior;
+  ptr timeout = (ptr)Timeout;
+  ptr delay, prior;
 
   if( count <= NDELAY ){
     delay = delays[count-1];
@@ -649,7 +649,7 @@ void sqlite3_progress_handler(
 */
 int sqlite3_busy_timeout(sqlite3 *db, int ms){
   if( ms>0 ){
-    sqlite3_busy_handler(db, sqliteDefaultBusyCallback, (void*)ms);
+    sqlite3_busy_handler(db, sqliteDefaultBusyCallback, (void*)(ptr)ms);
   }else{
     sqlite3_busy_handler(db, 0, 0);
   }
