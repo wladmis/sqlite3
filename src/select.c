@@ -2523,7 +2523,7 @@ int sqlite3Select(
   /* Begin the database scan
   */
   pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0, 
-                            pGroupBy ? 0 : &pOrderBy, -1);
+                            pGroupBy ? 0 : &pOrderBy);
   if( pWInfo==0 ) goto select_end;
 
   /* Use the standard inner loop if we are not dealing with
