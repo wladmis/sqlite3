@@ -898,11 +898,7 @@ void sqliteCreateView(
     sqliteSelectDelete(pSelect);
     return;
   }
-  /* Ignore ORDER BY clauses on a SELECT */
-  if( pSelect->pOrderBy ){
-    sqliteExprListDelete(pSelect->pOrderBy);
-    pSelect->pOrderBy = 0;
-  }
+
   /* Make a copy of the entire SELECT statement that defines the view.
   ** This will force all the Expr.token.z values to be dynamically
   ** allocated rather than point to the input string - which means that
