@@ -15,8 +15,8 @@
 **
 ** $Id$
 */
-#include "os.h"
 #include "sqliteInt.h"
+#include "os.h"
 #include "pager.h"
 #include "tcl.h"
 #include <stdlib.h>
@@ -497,7 +497,7 @@ static int fake_big_file(
 ){
   int rc;
   int n;
-  off_t offset;
+  i64 offset;
   OsFile fd;
   int readOnly = 0;
   if( argc!=3 ){
