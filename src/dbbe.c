@@ -382,7 +382,12 @@ int sqliteDbbeOpenCursor(
   pCursr->pFile = pFile;
   pCursr->readPending = 0;
   pCursr->needRewind = 1;
-  *ppCursr = pCursr;
+  if( rc!=SQLITE_OK ){
+    sqliteDbbeCloseCursor(pCursr);
+    *ppCursr = 0;
+  }else{
+    *ppCursr = pCursr;
+  }
   return rc;
 }
 

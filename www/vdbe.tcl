@@ -728,7 +728,7 @@ created for every SQLite database.  It looks like this:</p>
 <blockquote><pre>
 CREATE TABLE sqlite_master (
   type      TEXT,    -- either "table" or "index"
-  name      TEXT,    -- name of the table or index
+  name      TEXT,    -- name of this table or index
   tbl_name  TEXT,    -- for indices: name of associated table
   sql       TEXT     -- SQL text of the original CREATE statement
 )
@@ -751,7 +751,7 @@ the first thing it does is a SELECT to read the "sql"
 columns from all entries of the sqlite_master table.
 The "sql" column contains the complete SQL text of the
 CREATE statement that originally generated the index or
-table.  This text is fed back into the SQLite parse
+table.  This text is fed back into the SQLite parser
 and used to reconstruct the
 internal data structures describing the index or table.</p>
 

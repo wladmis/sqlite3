@@ -187,7 +187,8 @@ void sqliteVdbeDequoteP3(Vdbe*, int addr);
 int sqliteVdbeMakeLabel(Vdbe*);
 void sqliteVdbeDelete(Vdbe*);
 int sqliteVdbeOpcode(const char *zName);
-int sqliteVdbeExec(Vdbe*,sqlite_callback,void*,char**);
+int sqliteVdbeExec(Vdbe*,sqlite_callback,void*,char**,void*,
+                   int(*)(void*,const char*,int));
 int sqliteVdbeList(Vdbe*,sqlite_callback,void*,char**);
 void sqliteVdbeResolveLabel(Vdbe*, int);
 int sqliteVdbeCurrentAddr(Vdbe*);

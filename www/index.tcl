@@ -50,8 +50,8 @@ an separate RDBMS.</p>
 <li>Import and export data from 
 <a href="http://www.postgresql.org/">PostgreSQL</a>.</li>
 <li>Very simple 
-<a href="c_interface.html">C/C++ interface</a> uses only
-four functions and one opaque structure.</li>
+<a href="c_interface.html">C/C++ interface</a> requires the use of only
+three functions and one opaque structure.</li>
 <li>A <a href="http://dev.scriptics.com/">Tcl</a> interface is
 included.</li>
 <li>Command-line access program <a href="sqlite.html">sqlite</a> uses

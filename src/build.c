@@ -56,7 +56,8 @@ void sqliteExec(Parse *pParse){
       FILE *trace = (pParse->db->flags & SQLITE_VdbeTrace)!=0 ? stderr : 0;
       sqliteVdbeTrace(pParse->pVdbe, trace);
       sqliteVdbeExec(pParse->pVdbe, pParse->xCallback, pParse->pArg, 
-                     &pParse->zErrMsg);
+                     &pParse->zErrMsg, pParse->db->pBusyArg,
+                     pParse->db->xBusyCallback);
     }
     sqliteVdbeDelete(pParse->pVdbe);
     pParse->pVdbe = 0;

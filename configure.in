@@ -510,6 +510,11 @@ AC_SUBST(TARGET_READLINE_INC)
 AC_SUBST(TARGET_HAVE_READLINE)
 
 #########
+# Figure out whether or not we have a "usleep()" function.
+#
+AC_CHECK_FUNC(usleep, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_USLEEP=1"])
+
+#########
 # Generate the output files.
 #
 AC_OUTPUT(Makefile)
