@@ -37,6 +37,7 @@ do_test attach2-1.1 {
   }
 } {0 {}}
 
+db close
 for {set i 2} {$i<=15} {incr i} {
   catch {db$i close}
 }

@@ -474,6 +474,7 @@ do_test attach-4.13 {
 do_test attach-5.1 {
   db close
   sqlite db test.db
+  db2 close
   file delete -force test2.db
   sqlite db2 test2.db
   catchsql {
