@@ -2002,7 +2002,6 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
   int rc;                      /* The return code */
   int iCur;                    /* apCell[iCur] is the cell of the cursor */
   MemPage *pOldCurPage;        /* The cursor originally points to this page */
-  int totalSize;               /* Total bytes for all cells */
   int subtotal;                /* Subtotal of bytes in cells on one page */
   int cntNew[4];               /* Index in apCell[] of cell after i-th page */
   int szNew[4];                /* Combined size of cells place on i-th page */
@@ -2227,10 +2226,6 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
   ** This little patch of code is critical for keeping the tree
   ** balanced. 
   */
-  totalSize = 0;
-  for(i=0; i<nCell; i++){
-    totalSize += szCell[i];
-  }
   for(subtotal=k=i=0; i<nCell; i++){
     subtotal += szCell[i];
     if( subtotal > USABLE_SPACE ){
