@@ -740,7 +740,7 @@ int sqlite3FitsIn64Bits(const char *zNum){
 */
 int sqlite3GetInt64(const char *zNum, i64 *pValue){
   if( sqlite3FitsIn64Bits(zNum) ){
-    sqlite3atoi64(zNum, pValue, TEXT_Utf8);
+    sqlite3atoi64(zNum, pValue);
     return 1;
   }
   return 0;
