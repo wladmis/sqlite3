@@ -746,6 +746,19 @@ int sqliteBtreeSetCacheSize(Btree *pBt, int mxPage){
 }
 
 /*
+** Change the way data is synced to disk in order to increase or decrease
+** how well the database resists damage due to OS crashes and power
+** failures.  Level 1 is the same as asynchronous (no syncs() occur and
+** there is a high probability of damage)  Level 2 is the default.  There
+** is a very low but non-zero probability of damage.  Level 3 reduces the
+** probability of damage to near zero but with a write performance reduction.
+*/
+int sqliteBtreeSetSafetyLevel(Btree *pBt, int level){
+  sqlitepager_set_safety_level(pBt->pPager, level);
+  return SQLITE_OK;
+}
+
+/*
 ** Get a reference to page1 of the database file.  This will
 ** also acquire a readlock on that file.
 **

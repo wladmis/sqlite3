@@ -273,6 +273,9 @@ int sqliteInit(sqlite *db, char **pzErrMsg){
   if( size==0 ){ size = MAX_PAGES; }
   db->cache_size = size;
   sqliteBtreeSetCacheSize(db->pBe, size);
+  db->safety_level = meta[4];
+  if( db->safety_level==0 ) db->safety_level = 2;
+  sqliteBtreeSetSafetyLevel(db->pBe, db->safety_level);
 
   /*
   **     file_format==1    Version 2.1.0.

@@ -24,6 +24,7 @@ typedef struct BtCursor BtCursor;
 int sqliteBtreeOpen(const char *zFilename, int mode, int nPg, Btree **ppBtree);
 int sqliteBtreeClose(Btree*);
 int sqliteBtreeSetCacheSize(Btree*, int);
+int sqliteBtreeSetSafetyLevel(Btree*, int);
 
 int sqliteBtreeBeginTrans(Btree*);
 int sqliteBtreeCommit(Btree*);
@@ -54,7 +55,7 @@ int sqliteBtreeDataSize(BtCursor*, int *pSize);
 int sqliteBtreeData(BtCursor*, int offset, int amt, char *zBuf);
 int sqliteBtreeCloseCursor(BtCursor*);
 
-#define SQLITE_N_BTREE_META 4
+#define SQLITE_N_BTREE_META 10
 int sqliteBtreeGetMeta(Btree*, int*);
 int sqliteBtreeUpdateMeta(Btree*, int*);
 

@@ -70,6 +70,7 @@ int sqlitepager_ckpt_rollback(Pager*);
 void sqlitepager_dont_rollback(void*);
 void sqlitepager_dont_write(Pager*, Pgno);
 int *sqlitepager_stats(Pager*);
+void sqlitepager_set_safety_level(Pager*,int);
 
 #ifdef SQLITE_TEST
 void sqlitepager_refdump(Pager*);
