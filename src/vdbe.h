@@ -231,6 +231,7 @@ void sqliteVdbeChangeP1(Vdbe*, int addr, int P1);
 void sqliteVdbeChangeP2(Vdbe*, int addr, int P2);
 void sqliteVdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);
 void sqliteVdbeDequoteP3(Vdbe*, int addr);
+int sqliteVdbeFindOp(Vdbe*, int, int);
 int sqliteVdbeMakeLabel(Vdbe*);
 void sqliteVdbeDelete(Vdbe*);
 int sqliteVdbeOpcode(const char *zName);

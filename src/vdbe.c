@@ -540,6 +540,18 @@ void sqliteVdbeCompressSpace(Vdbe *p, int addr){
 }
 
 /*
+** Search for the current program for the given opcode and P2
+** value.  Return 1 if found and 0 if not found.
+*/
+int sqliteVdbeFindOp(Vdbe *p, int op, int p2){
+  int i;
+  for(i=0; i<p->nOp; i++){
+    if( p->aOp[i].opcode==op && p->aOp[i].p2==p2 ) return 1;
+  }
+  return 0;
+}
+
+/*
 ** The following group or routines are employed by installable functions
 ** to return their results.
 **
@@ -5231,7 +5243,7 @@ cleanup:
   }
   sqliteBtreeCommitCkpt(pBt);
   if( db->pBeTemp ) sqliteBtreeCommitCkpt(db->pBeTemp);
-  assert( p->tos<pc );
+  assert( p->tos<pc || sqlite_malloc_failed==1 );
   return rc;
 
   /* Jump to here if a malloc() fails.  It's hard to get a malloc()

@@ -1102,9 +1102,11 @@ void sqliteWhereEnd(WhereInfo *pWInfo){
       sqliteVdbeAddOp(v, OP_Close, pLevel->iCur, 0);
     }
   }
+#if 0  /* Never reuse a cursor */
   if( pWInfo->pParse->nTab==pWInfo->peakNTab ){
     pWInfo->pParse->nTab = pWInfo->savedNTab;
   }
+#endif
   sqliteFree(pWInfo);
   return;
 }

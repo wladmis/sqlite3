@@ -610,6 +610,7 @@ struct Select {
 #define SRT_TempTable    8  /* Store result in a trasient table */
 #define SRT_Discard      9  /* Do not save the results anywhere */
 #define SRT_Sorter      10  /* Store results in the sorter */
+#define SRT_Subroutine  11  /* Call a subroutine to handle results */
 
 /*
 ** When a SELECT uses aggregate functions (like "count(*)" or "avg(f1)")
