@@ -124,11 +124,20 @@ api {} {
 } {
   Return the name of the n-th wildcard in the precompiled statement.
   Wildcards of the form ":AAA" have a name which is the string ":AAA".
-  Wildcards of the form "?" have no name.
+  Wildcards of the form "?" or "?NNN" have no name.
 
   If the value n is out of range or if the n-th wildcard is nameless,
   then NULL is returned.  The returned string is always in the
   UTF-8 encoding.
+}
+
+api {} {
+  int sqlite3_bind_parameter_index(sqlite3_stmt*, const char *zName);
+} {
+  Return the index of the wildcard with the given name.
+  The name must match exactly.
+  If there is no wildcard with the given name, return 0.
+  The string zName is always in the UTF-8 encoding.
 }
 
 api {} {

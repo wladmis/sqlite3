@@ -68,6 +68,11 @@
 #define MAX_ATTACHED 10
 
 /*
+** The maximum value of a ?nnn wildcard that the parser will accept.
+*/
+#define SQLITE_MAX_VARIABLE_NUMBER 999
+
+/*
 ** When building SQLite for embedded systems where memory is scarce,
 ** you can define one or more of the following macros to omit extra
 ** features of the library and thus keep the size of the library to
@@ -990,6 +995,9 @@ struct Parse {
   int nSet;            /* Number of sets used so far */
   int nAgg;            /* Number of aggregate expressions */
   int nVar;            /* Number of '?' variables seen in the SQL so far */
+  int nVarExpr;        /* Number of used slots in apVarExpr[] */
+  int nVarExprAlloc;   /* Number of allocated slots in apVarExpr[] */
+  Expr **apVarExpr;    /* Pointers to :aaa and $aaaa wildcard expressions */
   AggExpr *aAgg;       /* An array of aggregate expressions */
   const char *zAuthContext; /* The 6th parameter to db->xAuth callbacks */
   Trigger *pNewTrigger;     /* Trigger under construct by a CREATE TRIGGER */
@@ -1209,6 +1217,7 @@ Expr *sqlite3Expr(int, Expr*, Expr*, Token*);
 Expr *sqlite3ExprAnd(Expr*, Expr*);
 void sqlite3ExprSpan(Expr*,Token*,Token*);
 Expr *sqlite3ExprFunction(ExprList*, Token*);
+void sqlite3ExprAssignVarNumber(Parse*, Expr*);
 void sqlite3ExprDelete(Expr*);
 ExprList *sqlite3ExprListAppend(ExprList*,Expr*,Token*);
 void sqlite3ExprListDelete(ExprList*);

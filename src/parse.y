@@ -560,9 +560,7 @@ expr(A) ::= BLOB(X).         {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= VARIABLE(X).     {
   Token *pToken = &X;
   Expr *pExpr = A = sqlite3Expr(TK_VARIABLE, 0, 0, pToken);
-  if( pExpr ){
-    pExpr->iTable = ++pParse->nVar;
-  }
+  sqlite3ExprAssignVarNumber(pParse, pExpr);
 }
 expr(A) ::= ID(X) LP exprlist(Y) RP(E). {
   A = sqlite3ExprFunction(Y, &X);
