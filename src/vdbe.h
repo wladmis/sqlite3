@@ -71,6 +71,7 @@ typedef struct VdbeOpList VdbeOpList;
 #define P3_COLLSEQ  (-4)  /* P3 is a pointer to a CollSeq structure */
 #define P3_FUNCDEF  (-5)  /* P3 is a pointer to a FuncDef structure */
 #define P3_KEYINFO  (-6)  /* P3 is a pointer to a KeyInfo structure */
+#define P3_VDBEFUNC (-7)  /* P3 is a pointer to a VdbeFunc structure */
 
 /* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
 ** is made.  That copy is freed when the Vdbe is finalized.  But if the
