@@ -771,8 +771,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
   }else
 
   if( c=='q' && strncmp(azArg[0], "quit", n)==0 ){
-    if( p->db ) sqlite_close(p->db);
-    exit(0);
+    rc = 1;
   }else
 
   if( c=='r' && strncmp(azArg[0], "read", n)==0 && nArg==2 ){
