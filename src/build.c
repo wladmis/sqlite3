@@ -1630,7 +1630,7 @@ void sqliteCreateIndex(
   strcpy(pIndex->zName, zName);
   pIndex->pTable = pTab;
   pIndex->nColumn = pList->nId;
-  pIndex->onError = pIndex->isUnique = onError;
+  pIndex->onError = onError;
   pIndex->autoIndex = pName==0;
   pIndex->iDb = isTemp ? 1 : pParse->iDb;
 
