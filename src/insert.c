@@ -100,6 +100,9 @@ void sqliteInsert(
       if( sqliteExprResolveIds(pParse, 0, &dummy, 0, pList->a[i].pExpr) ){
         goto insert_cleanup;
       }
+      if( sqliteExprCheck(pParse, pList->a[i].pExpr, 0, 0) ){
+        goto insert_cleanup;
+      }
     }
   }
 
