@@ -240,7 +240,7 @@ void sqliteUnlinkAndDeleteIndex(sqlite *db, Index *pIndex){
 **
 ** If iDb<=0 then reset the internal schema tables for all database
 ** files.  If iDb>=2 then reset the internal schema for only the
-** single file indicates.
+** single file indicated.
 */
 void sqliteResetInternalSchema(sqlite *db, int iDb){
   HashElem *pElem;
@@ -1098,7 +1098,7 @@ void sqliteCreateView(
 /*
 ** The Table structure pTable is really a VIEW.  Fill in the names of
 ** the columns of the view in the pTable structure.  Return the number
-** of errors.  If an error is seen leave an error message in pPare->zErrMsg.
+** of errors.  If an error is seen leave an error message in pParse->zErrMsg.
 */
 int sqliteViewGetColumnNames(Parse *pParse, Table *pTable){
   ExprList *pEList;
