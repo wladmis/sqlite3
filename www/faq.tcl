@@ -199,10 +199,15 @@ faq {
 
   <p>The locking mechanism used to control simultaneous access might
   not work correctly if the database file is kept on an NFS filesystem.
+  This is because file locking is broken on some NFS implementations.
   You should avoid putting SQLite database files on NFS if multiple
   processes might try to access the file at the same time.  On Windows,
   Microsoft's documentation says that locking may not work under FAT
-  filesystems if you are not running the Share.exe daemon.</p>
+  filesystems if you are not running the Share.exe daemon.  People who
+  have a lot of experience with Windows tell me that file locking of
+  network files is very buggy and is not dependable.  If what they
+  say is true, sharing an SQLite database between two or more Windows
+  machines might cause unexpected problems.</p>
 
   <p>Locking in SQLite is very course-grained.  SQLite locks the
   entire database.  Big database servers (PostgreSQL, Oracle, etc.)
