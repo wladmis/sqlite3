@@ -913,6 +913,7 @@ static int pager_unwritelock(Pager *pPager){
     pPager->dirtyCache = 0;
     pPager->nRec = 0;
   }else{
+    assert( pPager->aInJournal==0 );
     assert( pPager->dirtyCache==0 || pPager->useJournal==0 );
   }
   rc = sqlite3OsUnlock(&pPager->fd, SHARED_LOCK);
@@ -1985,6 +1986,7 @@ int sqlite3pager_close(Pager *pPager){
   if( pPager->journalOpen ){
     sqlite3OsClose(&pPager->jfd);
   }
+  sqliteFree(pPager->aInJournal);
   if( pPager->stmtOpen ){
     sqlite3OsClose(&pPager->stfd);
   }
@@ -2618,6 +2620,7 @@ static int pager_open_journal(Pager *pPager){
   assert( pPager->state>=PAGER_RESERVED );
   assert( pPager->journalOpen==0 );
   assert( pPager->useJournal );
+  assert( pPager->aInJournal==0 );
   sqlite3pager_pagecount(pPager);
   pPager->aInJournal = sqliteMalloc( pPager->dbSize/8 + 1 );
   if( pPager->aInJournal==0 ){
