@@ -49,7 +49,7 @@ do_test pagesize-1.5 {
 } 2048
 do_test pagesize-1.6 {
   file size test.db
-} 2048
+} 4096
 
 
 
