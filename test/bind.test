@@ -494,8 +494,10 @@ catch {sqlite3_finalize $VM}
 
 # Make sure we catch an unterminated "(" in a Tcl-style variable name
 #
-do_test bind-11.1 {
-  catchsql {SELECT * FROM sqlite_master WHERE name=$abc(123 and sql NOT NULL;}
-} {1 {unrecognized token: "$abc(123"}}
+ifcapable tclvar {
+  do_test bind-11.1 {
+    catchsql {SELECT * FROM sqlite_master WHERE name=$abc(123 and sql NOT NULL;}
+  } {1 {unrecognized token: "$abc(123"}}
+}
 
 finish_test

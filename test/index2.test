@@ -65,7 +65,9 @@ do_test index2-2.1 {
   execsql $sql
 } {}
 do_test index2-2.2 {
-  execsql {EXPLAIN SELECT c9 FROM t1 ORDER BY c1, c2, c3, c4, c5}
+  ifcapable explain {
+    execsql {EXPLAIN SELECT c9 FROM t1 ORDER BY c1, c2, c3, c4, c5}
+  }
   execsql {SELECT c9 FROM t1 ORDER BY c1, c2, c3, c4, c5, c6 LIMIT 5}
 } {9 10009 20009 30009 40009}
 

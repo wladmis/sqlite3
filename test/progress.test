@@ -16,6 +16,13 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# If the progress callback is not available in this build, skip this
+# whole file.
+ifcapable !progress {
+  finish_test
+  return
+}
+
 # Build some test data
 #
 execsql {
