@@ -1211,7 +1211,7 @@ CollSeq *sqlite3ChangeCollatingFunction(sqlite*,const char*,int,
 void sqlite3EndTable(Parse*,Token*,Select*);
 void sqlite3CreateView(Parse*,Token*,Token*,Select*,int);
 int sqlite3ViewGetColumnNames(Parse*,Table*);
-void sqlite3DropTable(Parse*, Token*, int);
+void sqlite3DropTable(Parse*, SrcList*, int);
 void sqlite3DeleteTable(sqlite*, Table*);
 void sqlite3Insert(Parse*, SrcList*, ExprList*, Select*, IdList*, int);
 IdList *sqlite3IdListAppend(IdList*, Token*);

@@ -262,7 +262,9 @@ resolvetype(A) ::= REPLACE.                  { A = OE_Replace; }
 
 ////////////////////////// The DROP TABLE /////////////////////////////////////
 //
-cmd ::= DROP TABLE nm(X).          {sqlite3DropTable(pParse,&X,0);}
+cmd ::= DROP TABLE nm(X) dbnm(Y).   {
+  sqlite3DropTable(pParse, sqlite3SrcListAppend(0,&X,&Y), 0);
+}
 
 ///////////////////// The CREATE VIEW statement /////////////////////////////
 //
