@@ -748,7 +748,7 @@ int sqliteSortCompare(const char *a, const char *b){
   int len;
   int res = 0;
   int isNumA, isNumB;
-  int dir;
+  int dir = 0;
 
   while( res==0 && *a && *b ){
     if( a[0]=='N' || b[0]=='N' ){
