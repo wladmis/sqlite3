@@ -741,7 +741,7 @@ static void generateColumnNames(
   sqlite3 *db = pParse->db;
   int fullNames, shortNames;
 
-#ifdef SQLITE_OMIT_EXPLAIN
+#ifndef SQLITE_OMIT_EXPLAIN
   /* If this is an EXPLAIN, skip this step */
   if( pParse->explain ){
     return;

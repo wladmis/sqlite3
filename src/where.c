@@ -650,7 +650,6 @@ WhereInfo *sqlite3WhereBegin(
     createMask(&maskSet, pTabList->a[i].iCursor);
   }
   for(pTerm=aExpr, i=0; i<nExpr; i++, pTerm++){
-    TriggerStack *pStack;
     exprAnalyze(pTabList, &maskSet, pTerm);
   }
 

@@ -800,7 +800,7 @@ int sqlite3SafetyCheck(sqlite3 *db){
 int sqlite3PutVarint(unsigned char *p, u64 v){
   int i, j, n;
   u8 buf[10];
-  if( v & 0xff00000000000000 ){
+  if( v & (((u64)0xff000000)<<32) ){
     p[8] = v;
     v >>= 8;
     for(i=7; i>=0; i--){

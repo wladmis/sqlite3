@@ -597,6 +597,7 @@ do_test capi2-7.11a {
 
 ifcapable {explain} {
   do_test capi2-7.12 {
+btree_breakpoint
     set x [stepsql $DB {EXPLAIN SELECT * FROM t1}]
     lindex $x 0
   } {0}
