@@ -493,20 +493,6 @@ const unsigned char sqlite3UpperToLower[] = {
 #define UpperToLower sqlite3UpperToLower
 
 /*
-** This function computes a hash on the name of a keyword.
-** Case is not significant.
-*/
-int sqlite3HashNoCase(const char *z, int n){
-  int h = 0;
-  if( n<=0 ) n = strlen(z);
-  while( n > 0  ){
-    h = (h<<3) ^ h ^ UpperToLower[(unsigned char)*z++];
-    n--;
-  }
-  return h & 0x7fffffff;
-}
-
-/*
 ** Some systems have stricmp().  Others have strcasecmp().  Because
 ** there is no consistency, we will define our own.
 */
