@@ -1205,6 +1205,9 @@ int sqlite3pager_pagecount(Pager *pPager){
     return 0;
   }
   n /= SQLITE_PAGE_SIZE;
+  if( !pPager->memDb && n==PENDING_BYTE/SQLITE_PAGE_SIZE ){
+    n++;
+  }
   if( pPager->state!=PAGER_UNLOCK ){
     pPager->dbSize = n;
   }
@@ -2209,6 +2212,9 @@ int sqlite3pager_write(void *pData){
   */
   if( pPager->dbSize<(int)pPg->pgno ){
     pPager->dbSize = pPg->pgno;
+    if( !pPager->memDb && pPager->dbSize==PENDING_BYTE/pPager->pageSize ){
+      pPager->dbSize++;
+    }
   }
   return rc;
 }

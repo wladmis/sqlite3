@@ -207,6 +207,7 @@
 #include "sqliteInt.h"
 #include "pager.h"
 #include "btree.h"
+#include "os.h"
 #include <assert.h>
 
 
@@ -4146,6 +4147,10 @@ char *sqlite3BtreeIntegrityCheck(Btree *pBt, int *aRoot, int nRoot){
   }
   sCheck.anRef = sqliteMallocRaw( (sCheck.nPage+1)*sizeof(sCheck.anRef[0]) );
   for(i=0; i<=sCheck.nPage; i++){ sCheck.anRef[i] = 0; }
+  i = PENDING_BYTE/pBt->pageSize + 1;
+  if( i<=sCheck.nPage ){
+    sCheck.anRef[i] = 1;
+  }
   sCheck.zErrMsg = 0;
 
   /* Check the integrity of the freelist
