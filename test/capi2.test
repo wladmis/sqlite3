@@ -97,13 +97,13 @@ do_test capi2-1.11 {
 do_test capi2-2.1 {
   set SQL {
     SELECT name, rowid FROM sqlite_master;
-    SELECT name, rowid FROM sqlite_temp_master;
+    SELECT name, rowid FROM sqlite_master WHERE 0;
     -- A comment at the end
   }
   set VM [sqlite3_prepare $DB $SQL -1 SQL]
   set SQL
 } {
-    SELECT name, rowid FROM sqlite_temp_master;
+    SELECT name, rowid FROM sqlite_master WHERE 0;
     -- A comment at the end
   }
 do_test capi2-2.2 {

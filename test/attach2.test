@@ -152,6 +152,16 @@ for {set i 2} {$i<=15} {incr i} {
 # A procedure to verify the status of locks on a database.
 #
 proc lock_status {testnum db expected_result} {
+  # If the database was compiled with OMIT_TEMPDB set, then 
+  # the lock_status list will not contain an entry for the temp
+  # db. But the test code doesn't know this, so it's easiest 
+  # to filter it out here.
+  ifcapable !tempdb {
+    set expected_result [concat \
+        [lrange $expected_result 0 1] \
+        [lrange $expected_result 4 end] \
+    ]
+  }
   do_test attach2-$testnum [subst {
     $db cache flush  ;# The lock_status pragma should not be cached
     execsql {PRAGMA lock_status} $db

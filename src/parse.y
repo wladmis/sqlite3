@@ -112,7 +112,9 @@ create_table ::= CREATE(X) temp(T) TABLE nm(Y) dbnm(Z). {
    sqlite3StartTable(pParse,&X,&Y,&Z,T,0);
 }
 %type temp {int}
+%ifndef SQLITE_OMIT_TEMPDB
 temp(A) ::= TEMP.  {A = 1;}
+%endif
 temp(A) ::= .      {A = 0;}
 create_table_args ::= LP columnlist conslist_opt(X) RP(Y). {
   sqlite3EndTable(pParse,&X,&Y,0);

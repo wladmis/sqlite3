@@ -291,7 +291,7 @@ do_test alter3-5.99 {
 # Test that the table schema is correctly reloaded when a column
 # is added to a table.
 #
-ifcapable trigger {
+ifcapable trigger&&tempdb {
   do_test alter3-6.1 {
     execsql {
       CREATE TABLE t1(a, b);

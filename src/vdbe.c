@@ -3819,7 +3819,7 @@ case OP_ParseSchema: {
 
   assert( iDb>=0 && iDb<db->nDb );
   if( !DbHasProperty(db, iDb, DB_SchemaLoaded) ) break;
-  zMaster = iDb==1 ? TEMP_MASTER_NAME : MASTER_NAME;
+  zMaster = SCHEMA_TABLE(iDb);
   initData.db = db;
   initData.pzErrMsg = &p->zErrMsg;
   zSql = sqlite3MPrintf(

@@ -260,12 +260,22 @@ do_test func-8.2 {
     SELECT max('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t2;
   }
 } {z+67890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP}
-do_test func-8.3 {
-  execsql {
-    CREATE TEMP TABLE t3 AS SELECT a FROM t2 ORDER BY a DESC;
-    SELECT min('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t3;
-  }
-} {z+1abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP}
+
+ifcapable tempdb {
+  do_test func-8.3 {
+    execsql {
+      CREATE TEMP TABLE t3 AS SELECT a FROM t2 ORDER BY a DESC;
+      SELECT min('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t3;
+    }
+  } {z+1abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP}
+} else {
+  do_test func-8.3 {
+    execsql {
+      CREATE TABLE t3 AS SELECT a FROM t2 ORDER BY a DESC;
+      SELECT min('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t3;
+    }
+  } {z+1abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP}
+}
 do_test func-8.4 {
   execsql {
     SELECT max('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t3;

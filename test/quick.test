@@ -19,6 +19,7 @@ proc finish_test {} {}
 set ISQUICK 1
 
 set EXCLUDE {
+  alter.test
   all.test
   btree2.test
   btree3.test

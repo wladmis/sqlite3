@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !tempdb {
+  finish_test
+  return
+}
+
 # Create an alternative connection to the database
 #
 do_test temptable-1.0 {
