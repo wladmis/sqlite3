@@ -239,7 +239,9 @@ do_test index-8.1 {
 #
 do_test index-9.1 {
   execsql {CREATE TABLE tab1(a int)}
-  execsql {EXPLAIN CREATE INDEX idx1 ON tab1(a)}
+  ifcapable {explain} {
+    execsql {EXPLAIN CREATE INDEX idx1 ON tab1(a)}
+  }
   execsql {SELECT name FROM sqlite_master WHERE tbl_name='tab1'}
 } {tab1}
 do_test index-9.2 {

@@ -359,6 +359,14 @@ do_test select6-7.4 {
   }
 } {c abc b 2 a 1 a 1 b 2 c abc}
 
+# The remaining tests in this file depend on the EXPLAIN keyword.
+# Skip these tests if EXPLAIN is disabled in the current build.
+#
+ifcapable {!explain} {
+  finish_test
+  return
+}
+
 # The following procedure compiles the SQL given as an argument and returns
 # TRUE if that SQL uses any transient tables and returns FALSE if no
 # transient tables are used.  This is used to make sure that the

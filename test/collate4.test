@@ -35,9 +35,9 @@ proc count sql {
 # opcode it appends "sort"
 #
 proc cksort {sql} {
+  set ::sqlite_sort_count 0
   set data [execsql $sql]
-  set prog [execsql "EXPLAIN $sql"]
-  if {[regexp Sort $prog]} {set x sort} {set x nosort}
+  if {$::sqlite_sort_count} {set x sort} {set x nosort}
   lappend data $x
   return $data
 }

@@ -70,6 +70,15 @@ int sqlite3_search_count = 0;
 int sqlite3_interrupt_count = 0;
 
 /*
+** The next global variable is incremented each type the OP_Sort opcode
+** is executed.  The test procedures use this information to make sure that
+** sorting is occurring or not occuring at appropriate times.   This variable
+** has no function other than to help verify the correct operation of the
+** library.
+*/
+int sqlite3_sort_count = 0;
+
+/*
 ** Release the memory associated with the given stack level.  This
 ** leaves the Mem.flags field in an inconsistent state.
 */
@@ -3951,6 +3960,7 @@ case OP_Sort: {
   KeyInfo *pKeyInfo = (KeyInfo*)pOp->p3;
   Sorter *pElem;
   Sorter *apSorter[NSORT];
+  sqlite3_sort_count++;
   pKeyInfo->enc = p->db->enc;
   for(i=0; i<NSORT; i++){
     apSorter[i] = 0;
