@@ -134,6 +134,20 @@ do_test vacuum-3.1 {
   }
 } {}
 
+# Ticket #464.  Make sure VACUUM works with the sqlite_compile() API.
+#
+if 0 {
+do_test vacuum-4.1 {
+  db close
+  set DB [sqlite db test.db]
+  set VM [sqlite_compile $DB {VACUUM} TAIL]
+  sqlite_step $VM N VALUES COLNAMES
+} {SQLITE_DONE}
+do_test vacuum-4.2 {
+  sqlite_finalize $VM
+} {}
+}
+
 catch {db2 close}
 
 # finish_test
