@@ -553,7 +553,7 @@ const char *sqlite3ErrStr(int rc){
     case SQLITE_NOLFS:      z = "kernel lacks large file support";       break;
     case SQLITE_AUTH:       z = "authorization denied";                  break;
     case SQLITE_FORMAT:     z = "auxiliary database format error";       break;
-    case SQLITE_RANGE:      z = "bind index out of range";               break;
+    case SQLITE_RANGE:      z = "bind or column index out of range";     break;
     case SQLITE_NOTADB:     z = "file is encrypted or is not a database";break;
     default:                z = "unknown error";                         break;
   }
