@@ -675,6 +675,22 @@ int sqliteBtreeOpen(
   Btree *pBt;
   int rc;
 
+  /*
+  ** The following asserts make sure that structures used by the btree are
+  ** the right size.  This is to guard against size changes that result
+  ** when compiling on a different architecture.
+  */
+  assert( sizeof(u32)==4 );
+  assert( sizeof(u16)==2 );
+  assert( sizeof(Pgno)==4 );
+  assert( sizeof(PageHdr)==8 );
+  assert( sizeof(CellHdr)==12 );
+  assert( sizeof(FreeBlk)==4 );
+  assert( sizeof(OverflowPage)==SQLITE_PAGE_SIZE );
+  assert( sizeof(FreelistInfo)==OVERFLOW_SIZE );
+  assert( sizeof(ptr)==sizeof(char*) );
+  assert( sizeof(uptr)==sizeof(ptr) );
+
   pBt = sqliteMalloc( sizeof(*pBt) );
   if( pBt==0 ){
     *ppBtree = 0;
