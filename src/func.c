@@ -904,8 +904,7 @@ static void minmaxStep(sqlite3_context *context, int argc, sqlite3_value **argv)
   Mem *pArg  = (Mem *)argv[0];
   Mem *pBest = (Mem *)sqlite3_aggregate_context(context, sizeof(*pBest));
 
-  if( SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
-
+  if( !pBest || SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
   if( pBest->flags ){
     CollSeq *pColl = sqlite3GetFuncCollSeq(context);
     /* This step function is used for both the min() and max() aggregates,

@@ -1084,11 +1084,11 @@ int sqlite3pager_open(
   void  *pBusyHandler      /* Busy callback */
 ){
   Pager *pPager;
-  char *zFullPathname;
+  char *zFullPathname = 0;
   int nameLen;
   OsFile fd;
   int rc, i;
-  int tempFile;
+  int tempFile = 0;
   int memDb = 0;
   int readOnly = 0;
   char zTemp[SQLITE_TEMPNAME_SIZE];
@@ -1105,27 +1105,31 @@ int sqlite3pager_open(
       rc = SQLITE_OK;
     }else{
       zFullPathname = sqlite3OsFullPathname(zFilename);
-      rc = sqlite3OsOpenReadWrite(zFullPathname, &fd, &readOnly);
-      tempFile = 0;
+      if( zFullPathname ){
+        rc = sqlite3OsOpenReadWrite(zFullPathname, &fd, &readOnly);
+      }
     }
   }else{
     rc = sqlite3pager_opentemp(zTemp, &fd);
     zFilename = zTemp;
     zFullPathname = sqlite3OsFullPathname(zFilename);
-    tempFile = 1;
+    if( rc==SQLITE_OK ){
+      tempFile = 1;
+    }
   }
-  if( sqlite3_malloc_failed ){
+  if( !zFullPathname ){
     return SQLITE_NOMEM;
   }
   if( rc!=SQLITE_OK ){
-    sqliteFree(zFullPathname);
-    return SQLITE_CANTOPEN;
+    if( tempFile ) sqlite3OsClose(&fd);
+    if( zFullPathname ) sqliteFree(zFullPathname);
+    return rc;
   }
   nameLen = strlen(zFullPathname);
   pPager = sqliteMalloc( sizeof(*pPager) + nameLen*3 + 30 );
   if( pPager==0 ){
-    sqlite3OsClose(&fd);
-    sqliteFree(zFullPathname);
+    if( tempFile ) sqlite3OsClose(&fd);
+    if( zFullPathname ) sqliteFree(zFullPathname);
     return SQLITE_NOMEM;
   }
   SET_PAGER(pPager);
@@ -1735,7 +1739,9 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
                               + sizeof(u32) + pPager->nExtra
                               + pPager->memDb*sizeof(PgHistory) );
       if( pPg==0 ){
-        pager_unwritelock(pPager);
+        if( !pPager->memDb ){
+          pager_unwritelock(pPager);
+        }
         pPager->errMask |= PAGER_ERR_MEM;
         return SQLITE_NOMEM;
       }

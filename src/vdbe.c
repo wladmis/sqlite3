@@ -3205,9 +3205,8 @@ case OP_PutStrKey: {
         pTos->flags = MEM_Null;
       }else{
         pC->pData = sqliteMallocRaw( pC->nData+2 );
-        if( pC->pData ){
-          memcpy(pC->pData, pTos->z, pC->nData);
-        }
+        if( !pC->pData ) goto no_mem;
+        memcpy(pC->pData, pTos->z, pC->nData);
         pC->pData[pC->nData] = 0;
         pC->pData[pC->nData+1] = 0;
       }
