@@ -822,7 +822,6 @@ static int btree_payload_size(
   sqliteBtreeDataSize(pCur, &n2);
   sprintf(zBuf, "%d", n1+n2);
   Tcl_AppendResult(interp, zBuf, 0);
-  free(zBuf);
   return SQLITE_OK;
 }
 
