@@ -20,7 +20,10 @@ foreach line [split $file \n] {
   }
   if {[regexp {^/\* Opcode: } $line]} {
     set current_op [lindex $line 2]
-    set Opcode($current_op:args) [lrange $line 3 end]
+    set txt [lrange $line 3 end]
+    regsub -all {>} $txt {\&gt;} txt
+    regsub -all {<} $txt {\&lt;} txt
+    set Opcode($current_op:args) $txt
     lappend OpcodeList $current_op
     continue
   }
@@ -33,6 +36,8 @@ foreach line [split $file \n] {
   if {$line==""} {
     append Opcode($current_op:text) \n<p>
   } else {
+    regsub -all {>} $line {\&gt;} line
+    regsub -all {<} $line {\&lt;} line
     append Opcode($current_op:text) \n$line
   }
 }
