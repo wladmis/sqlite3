@@ -36,7 +36,9 @@ if {![info exists dbprefix]} {
 }
 switch $dbprefix {
   gdbm: {
-   file delete -force testdb
+   if {[catch {file delete -force testdb}]} {
+     exec rm -rf testdb
+   }
    file mkdir testdb
   }
   memory: {
@@ -154,4 +156,12 @@ proc execsql2 {sql} {
     }
   }
   return $result
+}
+
+# Delete a file or directory
+#
+proc forcedelete {filename} {
+  if {[catch {file delete -force $filename}]} {
+    exec rm -rf $filename
+  }
 }

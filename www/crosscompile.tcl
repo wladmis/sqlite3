@@ -148,9 +148,9 @@ cat &gt;&gt;systems.h &lt;&lt;\END
 #undef  UNLOCK_FILE
 #define UNLOCK_FILE(x)
 #undef  READLOCK_FILE
-#define READLOCK_FILE(x)
+#define READLOCK_FILE(x)  lock_val=0;
 #undef  WRITELOCK_FILE
-#define WRITELOCK_FILE(x)
+#define WRITELOCK_FILE(x) lock_val=0;
 #endif
 END
 </pre></blockquote>

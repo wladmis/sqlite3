@@ -28,7 +28,7 @@
 #ifndef NO_TCL     /* Omit this whole file if TCL is unavailable */
 
 #include "sqlite.h"
-#include <tcl.h>
+#include "tcl.h"
 #include <stdlib.h>
 #include <string.h>
 

@@ -30,7 +30,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-
+#include <time.h>
 
 /*
 ** Get a single 8-bit random value from the RC4 PRNG.
