@@ -64,7 +64,7 @@ puts {<h2>Features</h2>
 three functions and one opaque structure.</li>
 <li><a href="tclsqlite.html">TCL bindings</a> included.
     Bindings for many other languages 
-    <a href="http://cvs.hwaci.com/sqlite/wiki?p=SqliteWrappers>
+    <a href="http://cvs.hwaci.com/sqlite/wiki?p=SqliteWrappers">
     available separately.</a></li>
 <li>Simple, well-commented source code.</li>
 <li>Automated test suite provides near 100% code coverage.</li>
