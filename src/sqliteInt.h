@@ -241,7 +241,7 @@ struct Db {
   Hash idxHash;        /* All (named) indices indexed by name */
   Hash trigHash;       /* All triggers indexed by name */
   Hash aFKey;          /* Foreign keys indexed by to-table */
-  u8 inTrans;          /* True if a transaction is underway for this backend */
+  u8 inTrans;          /* 0: not writable.  1: Transaction.  2: Checkpoint */
   u16 flags;           /* Flags associated with this database */
 };
 

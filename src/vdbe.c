@@ -3168,8 +3168,9 @@ case OP_IncrKey: {
 */
 case OP_Checkpoint: {
   int i = pOp->p1;
-  if( i>=0 && i<db->nDb && db->aDb[i].pBt ){
+  if( i>=0 && i<db->nDb && db->aDb[i].pBt && db->aDb[i].inTrans==1 ){
     rc = sqliteBtreeBeginCkpt(db->aDb[i].pBt);
+    if( rc==SQLITE_OK ) db->aDb[i].inTrans = 2;
   }
   break;
 }
@@ -5826,8 +5827,9 @@ int sqliteVdbeFinalize(Vdbe *p, char **pzErrMsg){
     sqliteRollbackInternalChanges(db);
   }
   for(i=0; i<db->nDb; i++){
-    if( db->aDb[i].pBt ){
+    if( db->aDb[i].pBt && db->aDb[i].inTrans==2 ){
       sqliteBtreeCommitCkpt(db->aDb[i].pBt);
+      db->aDb[i].inTrans = 1;
     }
   }
   assert( p->tos<p->pc || sqlite_malloc_failed==1 );
