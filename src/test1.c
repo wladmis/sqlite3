@@ -722,7 +722,7 @@ static int test_register_func(
   if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
   rc = sqlite3_create_function(db, argv[2], -1, 0, 0, 0, testFunc, 0, 0);
   if( rc!=0 ){
-    Tcl_AppendResult(interp, sqlite3_error_string(rc), 0);
+    Tcl_AppendResult(interp, sqlite3ErrStr(rc), 0);
     return TCL_ERROR;
   }
   return TCL_OK;
@@ -839,7 +839,7 @@ static int test_bind(
   if( rc ){
     char zBuf[50];
     sprintf(zBuf, "(%d) ", rc);
-    Tcl_AppendResult(interp, zBuf, sqlite3_error_string(rc), 0);
+    Tcl_AppendResult(interp, zBuf, sqlite3ErrStr(rc), 0);
     return TCL_ERROR;
   }
   return TCL_OK;

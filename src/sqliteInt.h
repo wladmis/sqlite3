@@ -1357,3 +1357,4 @@ int sqlite3utfTranslate(const void *, int , u8 , void **, int *, u8);
 u8 sqlite3UtfReadBom(const void *zData, int nData);
 void *sqlite3HexToBlob(const char *z);
 int sqlite3TwoPartName(Parse *, Token *, Token *, Token **);
+const char *sqlite3ErrStr(int);

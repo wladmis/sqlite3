@@ -213,13 +213,6 @@ int sqlite3_changes(sqlite*);
 */
 int sqlite3_last_statement_changes(sqlite*);
 
-/* If the parameter to this routine is one of the return value constants
-** defined above, then this routine returns a constant text string which
-** descripts (in English) the meaning of the return value.
-*/
-const char *sqlite3_error_string(int);
-#define sqliteErrStr sqlite3_error_string  /* Legacy. Do not use in new code. */
-
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically
 ** called in response to a user action such as pressing "Cancel"

@@ -773,7 +773,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       free(zErrMsg);
       rc = TCL_ERROR;
     }else if( rc!=SQLITE_OK ){
-      Tcl_AppendResult(interp, sqlite3_error_string(rc), 0);
+      Tcl_AppendResult(interp, sqlite3ErrStr(rc), 0);
       rc = TCL_ERROR;
     }
     break;
@@ -795,7 +795,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 #ifdef SQLITE_HAS_CODEC
     rc = sqlite_rekey(pDb->db, pKey, nKey);
     if( rc ){
-      Tcl_AppendResult(interp, sqlite3_error_string(rc), 0);
+      Tcl_AppendResult(interp, sqlite3ErrStr(rc), 0);
       rc = TCL_ERROR;
     }
 #endif

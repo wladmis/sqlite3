@@ -2271,7 +2271,7 @@ case OP_Transaction: {
           p->pTos = pTos;
           return SQLITE_BUSY;
         }else if( (*db->xBusyCallback)(db->pBusyArg, "", busy++)==0 ){
-          sqlite3SetString(&p->zErrMsg, sqlite3_error_string(rc), (char*)0);
+          sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
           busy = 0;
         }
         break;
@@ -2473,7 +2473,7 @@ case OP_OpenWrite: {
           p->pTos = &pTos[1 + (pOp->p2<=0)]; /* Operands must remain on stack */
           return SQLITE_BUSY;
         }else if( (*db->xBusyCallback)(db->pBusyArg, pOp->p3, ++busy)==0 ){
-          sqlite3SetString(&p->zErrMsg, sqlite3_error_string(rc), (char*)0);
+          sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
           busy = 0;
         }
         break;
@@ -4527,7 +4527,7 @@ abort_due_to_misuse:
 abort_due_to_error:
   if( p->zErrMsg==0 ){
     if( sqlite3_malloc_failed ) rc = SQLITE_NOMEM;
-    sqlite3SetString(&p->zErrMsg, sqlite3_error_string(rc), (char*)0);
+    sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
   }
   goto vdbe_halt;
 
@@ -4542,6 +4542,6 @@ abort_due_to_interrupt:
   }else{
     rc = SQLITE_INTERRUPT;
   }
-  sqlite3SetString(&p->zErrMsg, sqlite3_error_string(rc), (char*)0);
+  sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
   goto vdbe_halt;
 }
