@@ -2119,6 +2119,7 @@ int sqlite3Select(
     case SRT_Union:
     case SRT_Except:
     case SRT_Discard:
+    case SRT_Set:
       pOrderBy = 0;
       break;
     default:
