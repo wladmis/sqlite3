@@ -28,12 +28,10 @@ set EXCLUDE {
   format3.test
 }
 
-lappend EXCLUDE interrupt.test    ;# assert() fails in btree
 lappend EXCLUDE ioerr.test        ;# seg-faults (?)
 lappend EXCLUDE memdb.test        ;# fails - malformed database
 
 lappend EXCLUDE printf.test       ;# sqlite3_XX vs sqlite_XX problem
-lappend EXCLUDE auth.test         ;# Cannot attach empty databases.
 lappend EXCLUDE tableapi.test     ;# sqlite3_XX vs sqlite_XX problem
 lappend EXCLUDE version.test      ;# uses the btree_meta API (not updated)
 

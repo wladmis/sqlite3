@@ -4711,6 +4711,7 @@ abort_due_to_interrupt:
   }else{
     rc = SQLITE_INTERRUPT;
   }
+  p->rc = rc;
   sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
   goto vdbe_halt;
 }
