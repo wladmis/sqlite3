@@ -251,13 +251,11 @@ char *sqliteStrNDup_(const char *z, int n, char *zFile, int line){
 */
 void *sqliteMalloc(int n){
   void *p;
-  if( n==0 ) return 0;
-  p = malloc(n);
-  if( p==0 ){
+  if( (p = malloc(n))==0 ){
     sqlite_malloc_failed++;
-    return 0;
+  }else{
+    memset(p, 0, n);
   }
-  memset(p, 0, n);
   return p;
 }
 
@@ -267,11 +265,8 @@ void *sqliteMalloc(int n){
 */
 void *sqliteMallocRaw(int n){
   void *p;
-  if( n==0 ) return 0;
-  p = malloc(n);
-  if( p==0 ){
+  if( (p = malloc(n))==0 ){
     sqlite_malloc_failed++;
-    return 0;
   }
   return p;
 }
