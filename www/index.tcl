@@ -165,7 +165,7 @@ puts {<h2>Professional Support and Custom Modifications</h2>}
 puts {
 <p>
 If you would like professional support for SQLite
-or if you want custom modifications to SQLite preformed by the
+or if you want custom modifications to SQLite performed by the
 original author, these services are available for a modest fee.
 For additional information visit
 <a href="http://www.hwaci.com/sw/sqlite/support.html">
