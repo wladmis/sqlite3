@@ -217,9 +217,9 @@ do_test join-3.7 {
 } {1 {unknown or unsupported join type: INNER OUTER}}
 do_test join-3.7 {
   catchsql {
-    SELECT * FROM t1 BOGUS JOIN t2;
+    SELECT * FROM t1 LEFT BOGUS JOIN t2;
   }
-} {1 {unknown or unsupported join type: BOGUS}}
+} {1 {unknown or unsupported join type: LEFT BOGUS}}
 
 
 finish_test
