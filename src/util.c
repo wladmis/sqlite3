@@ -605,9 +605,9 @@ int main(int argc, char **argv){
 #endif
 
 /*
-** This routine is used for sorting.  Each key is a list one or more
-** null-terminated strings.  The list is terminated by two null in
-** a row.  For example, the following text is strings:
+** This routine is used for sorting.  Each key is a list of one or more
+** null-terminated strings.  The list is terminated by two nulls in
+** a row.  For example, the following text is key with three strings:
 **
 **            +one\000-two\000+three\000\000
 **
