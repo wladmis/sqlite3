@@ -3784,11 +3784,21 @@ case OP_ListWrite: {
 
 /* Opcode: ListRewind * * *
 **
-** Rewind the temporary buffer back to the beginning.  This is 
-** now a no-op.
+** Rewind the temporary buffer back to the beginning.
 */
 case OP_ListRewind: {
-  /* This is now a no-op */
+  /* What this opcode codes, really, is reverse the order of the
+  ** linked list of Keylist structures so that they are read out
+  ** in the same order that they were read in. */
+  Keylist *pRev, *pTop;
+  pRev = 0;
+  while( p->pList ){
+    pTop = p->pList;
+    p->pList = pTop->pNext;
+    pTop->pNext = pRev;
+    pRev = pTop;
+  }
+  p->pList = pRev;
   break;
 }
 
