@@ -37,7 +37,14 @@
 /*
 ** The database backend supports two opaque structures.  A Dbbe is
 ** a context for the entire set of tables forming a complete
-** database.  A DbbeTable is a single table.  
+** database.  A DbbeTable is a single table.
+**
+** Note that at this level, the term "table" can mean either an
+** SQL table or an SQL index.  In this module, a table stores a
+** single arbitrary-length key and corresponding arbitrary-length
+** data.  The differences between tables and indices, and the
+** segregation of data into various fields or columns is handled
+** by software at higher layers.
 **
 ** The DbbeTable structure holds some state information, such as
 ** the key and data from the last retrieval.  For this reason, 
@@ -91,7 +98,10 @@ int sqliteDbbeTest(DbbeTable*, int nKey, char *pKey);
 int sqliteDbbeCopyKey(DbbeTable*, int offset, int size, char *zBuf);
 int sqliteDbbeCopyData(DbbeTable*, int offset, int size, char *zBuf);
 
-/* Retrieve the key or data.  The result is ephemeral.
+/* Retrieve the key or data.  The result is ephemeral.  In other words,
+** the result is stored in a buffer that might be overwritten on the next
+** call to any DBBE routine.  If the results are needed for longer than
+** that, you must make a copy.
 */
 char *sqliteDbbeReadKey(DbbeTable*, int offset);
 char *sqliteDbbeReadData(DbbeTable*, int offset);
