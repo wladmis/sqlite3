@@ -3393,14 +3393,6 @@ static void assemblePage(
 }
 
 /*
-** GCC does not define the offsetof() macro so we'll have to do it
-** ourselves.
-*/
-#ifndef offsetof
-#define offsetof(STRUCTURE,FIELD) ((int)((char*)&((STRUCTURE*)0)->FIELD))
-#endif
-
-/*
 ** The following parameters determine how many adjacent pages get involved
 ** in a balancing operation.  NN is the number of neighbors on either side
 ** of the page that participate in the balancing operation.  NB is the
