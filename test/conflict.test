@@ -491,10 +491,6 @@ do_test conflict-8.6.1 {
   db changes
 } {3}
 
-do_test insert-99.1 {
-  set x [execsql {PRAGMA integrity_check}]
-  if {$x==""} {set x ok}
-  set x
-} {ok}
+integrity_check conflict-99.1
 
 finish_test

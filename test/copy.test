@@ -226,12 +226,7 @@ do_test copy-5.7 {
   }
 } {0}
 
-do_test copy-6.0 {
-  set x [execsql {PRAGMA integrity_check}]
-  if {$x==""} {set x ok}
-  set x
-} {ok}
- 
+integrity_check copy-6.0
 
 # Cleanup 
 #

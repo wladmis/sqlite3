@@ -115,11 +115,7 @@ do_test insert2-2.3 {
   }
 } {hi 2 1}
 
-do_test insert2-3.0 {
-  set x [execsql {PRAGMA integrity_check}]
-  if {$x==""} {set x ok}
-  set x
-} {ok}
+integrity_check insert2-3.0
 
 # File table t4 with lots of data
 #
@@ -193,5 +189,6 @@ do_test insert2-3.7 {
 do_test insert2-3.8 {
   db changes
 } {159}
+integrity_check insert2-3.9
 
 finish_test
