@@ -230,5 +230,11 @@ do_test func-6.2 {
   execsql {SELECT coalesce(upper(a),'nil') FROM t2}
 } {1 nil 345 nil 67890}
 
+# Test the last_insert_rowid() function
+#
+do_test func-7.1 {
+  execsql {SELECT last_insert_rowid()}
+} [db last_insert_rowid]
+
 
 finish_test
