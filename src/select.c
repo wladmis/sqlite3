@@ -1196,8 +1196,7 @@ int sqliteSelect(
   /* ORDER BY is ignored if we are not sending the result to a callback.
   */
   if( eDest!=SRT_Callback ){
-    sqliteExprListDelete(p->pOrderBy);
-    pOrderBy = p->pOrderBy = 0;
+    pOrderBy = 0;
   }
 
   /* At this point, we should have allocated all the cursors that we
@@ -1291,7 +1290,9 @@ int sqliteSelect(
                  p, i, &isAgg);
     pTabList = p->pSrc;
     pWhere = p->pWhere;
-    pOrderBy = p->pOrderBy;
+    if( eDest==SRT_Callback ){
+      pOrderBy = p->pOrderBy;
+    }
     pGroupBy = p->pGroupBy;
     pHaving = p->pHaving;
     isDistinct = p->isDistinct;
