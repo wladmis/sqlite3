@@ -552,7 +552,7 @@ static void testFunc(sqlite_func *context, int argc, const char **argv){
     }else if( sqliteStrICmp(argv[0],"int")==0 ){
       sqlite_set_result_int(context, atoi(argv[1]));
     }else if( sqliteStrICmp(argv[0],"double")==0 ){
-      sqlite_set_result_double(context, atof(argv[1]));
+      sqlite_set_result_double(context, sqliteAtoF(argv[1]));
     }else{
       sqlite_set_result_error(context,"first argument should be one of: "
           "string int double", -1);

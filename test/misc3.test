@@ -68,4 +68,35 @@ do_test misc3-1.2 {
   }
 } ok
 
+# Tests of the sqliteAtoF() function in util.c
+#
+do_test misc3-2.1 {
+  execsql {SELECT 2e-25*0.5e25}
+} 1
+do_test misc3-2.2 {
+  execsql {SELECT 2.0e-25*000000.500000000000000000000000000000e+00025}
+} 1
+do_test misc3-2.3 {
+  execsql {SELECT 000000000002e-0000000025*0.5e25}
+} 1
+do_test misc3-2.4 {
+  execsql {SELECT 2e-25*0.5e250}
+} 1e+225
+do_test misc3-2.5 {
+  execsql {SELECT 2.0e-250*0.5e25}
+} 1e-225
+do_test misc3-2.6 {
+  execsql {SELECT '-2.0e-127' * '-0.5e27'}
+} 1e-100
+do_test misc3-2.7 {
+  execsql {SELECT '+2.0e-127' * '-0.5e27'}
+} -1e-100
+do_test misc3-2.8 {
+  execsql {SELECT 2.0e-27 * '+0.5e+127'}
+} 1e+100
+do_test misc3-2.9 {
+  execsql {SELECT 2.0e-27 * '+0.000005e+132'}
+} 1e+100
+
+
 finish_test
