@@ -198,7 +198,7 @@ proc stepsql {dbptr sql} {
   set sql [string trim $sql]
   set r 0
   while {[string length $sql]>0} {
-    if {[catch {sqlite_compile $dbptr $sql sqltail} vm]} {
+    if {[catch {sqlite3_prepare $dbptr $sql -1 sqltail} vm]} {
       return [list 1 $vm]
     }
     set sql [string trim $sqltail]

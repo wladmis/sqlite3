@@ -21,7 +21,7 @@ do_test bind-1.1 {
   db close
   set DB [sqlite db test.db]
   execsql {CREATE TABLE t1(a,b,c)}
-  set VM [sqlite_compile $DB {INSERT INTO t1 VALUES(?,?,?)} TAIL]
+  set VM [sqlite3_prepare $DB {INSERT INTO t1 VALUES(?,?,?)} -1 TAIL]
   set TAIL
 } {}
 do_test bind-1.2 {
@@ -71,7 +71,7 @@ do_test bind-2.1 {
   execsql {
     DELETE FROM t1;
   }
-  set VM [sqlite_compile $DB {INSERT INTO t1 VALUES(?,?,?)} TAIL]
+  set VM [sqlite3_bind_int32 $DB {INSERT INTO t1 VALUES(?,?,?)} TAIL]
   set TAIL
 } {}
 
