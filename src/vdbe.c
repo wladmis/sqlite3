@@ -1288,8 +1288,12 @@ case OP_Function: {
   }
   /* If the function returned an error, throw an exception */
   if( ctx.isError ){
-    sqlite3SetString(&p->zErrMsg, 
-       (pTos->flags & MEM_Str)!=0 ? pTos->z : "user function error", (char*)0);
+    if( !(pTos->flags&MEM_Str) ){
+      sqlite3SetString(&p->zErrMsg, "user function error", (char*)0);
+    }else{
+      sqlite3SetString(&p->zErrMsg, sqlite3_value_text(pTos), (char*)0);
+      sqlite3VdbeChangeEncoding(pTos, db->enc);
+    }
     rc = SQLITE_ERROR;
   }
   break;
