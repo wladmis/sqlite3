@@ -511,8 +511,8 @@ Select *sqlite3SelectDup(Select *p){
   pNew->pOrderBy = sqlite3ExprListDup(p->pOrderBy);
   pNew->op = p->op;
   pNew->pPrior = sqlite3SelectDup(p->pPrior);
-  pNew->nLimit = p->nLimit;
-  pNew->nOffset = p->nOffset;
+  pNew->pLimit = sqlite3ExprDup(p->pLimit);
+  pNew->pOffset = sqlite3ExprDup(p->pOffset);
   pNew->iLimit = -1;
   pNew->iOffset = -1;
   pNew->ppOpenTemp = 0;

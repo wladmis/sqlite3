@@ -212,7 +212,9 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   rc = execExecSql(db, 
       "SELECT 'DELETE FROM vacuum_db.' || quote(name) || ';' "
       "FROM sqlite_master WHERE name='sqlite_sequence' "
-      "UNION ALL "
+  );
+  if( rc!=SQLITE_OK ) goto end_of_vacuum;
+  rc = execExecSql(db, 
       "SELECT 'INSERT INTO vacuum_db.' || quote(name) "
       "|| ' SELECT * FROM ' || quote(name) || ';' "
       "FROM sqlite_master WHERE name=='sqlite_sequence';"

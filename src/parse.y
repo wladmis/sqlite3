@@ -39,8 +39,8 @@
 ** LIMIT clause of a SELECT statement.
 */
 struct LimitVal {
-  int limit;    /* The LIMIT value.  -1 if there is no limit */
-  int offset;   /* The OFFSET.  0 if there is none */
+  Expr *pLimit;    /* The LIMIT expression.  NULL if there is no limit */
+  Expr *pOffset;   /* The OFFSET expression.  NULL if there is none */
 };
 
 /*
@@ -343,7 +343,7 @@ multiselect_op(A) ::= EXCEPT(OP).     {A = @OP;}
 %endif // SQLITE_OMIT_COMPOUND_SELECT
 oneselect(A) ::= SELECT distinct(D) selcollist(W) from(X) where_opt(Y)
                  groupby_opt(P) having_opt(Q) orderby_opt(Z) limit_opt(L). {
-  A = sqlite3SelectNew(W,X,Y,P,Q,Z,D,L.limit,L.offset);
+  A = sqlite3SelectNew(W,X,Y,P,Q,Z,D,L.pLimit,L.pOffset);
 }
 
 // The "distinct" nonterminal is true (1) if the DISTINCT keyword is
@@ -442,7 +442,7 @@ seltablist(A) ::= stl_prefix(X) nm(Y) dbnm(D) as(Z) on_opt(N) using_opt(U). {
   %destructor seltablist_paren {sqlite3SelectDelete($$);}
   seltablist_paren(A) ::= select(S).      {A = S;}
   seltablist_paren(A) ::= seltablist(F).  {
-     A = sqlite3SelectNew(0,F,0,0,0,0,0,-1,0);
+     A = sqlite3SelectNew(0,F,0,0,0,0,0,0,0);
   }
 %endif // SQLITE_OMIT_SUBQUERY
 
@@ -513,12 +513,16 @@ having_opt(A) ::= .                {A = 0;}
 having_opt(A) ::= HAVING expr(X).  {A = X;}
 
 %type limit_opt {struct LimitVal}
-limit_opt(A) ::= .                     {A.limit = -1; A.offset = 0;}
-limit_opt(A) ::= LIMIT signed(X).      {A.limit = X; A.offset = 0;}
-limit_opt(A) ::= LIMIT signed(X) OFFSET signed(Y). 
-                                       {A.limit = X; A.offset = Y;}
-limit_opt(A) ::= LIMIT signed(X) COMMA signed(Y). 
-                                       {A.limit = Y; A.offset = X;}
+%destructor limit_opt {
+  sqlite3ExprDelete($$.pLimit);
+  sqlite3ExprDelete($$.pOffset);
+}
+limit_opt(A) ::= .                     {A.pLimit = 0; A.pOffset = 0;}
+limit_opt(A) ::= LIMIT expr(X).        {A.pLimit = X; A.pOffset = 0;}
+limit_opt(A) ::= LIMIT expr(X) OFFSET expr(Y). 
+                                       {A.pLimit = X; A.pOffset = Y;}
+limit_opt(A) ::= LIMIT expr(X) COMMA expr(Y). 
+                                       {A.pOffset = X; A.pLimit = Y;}
 
 /////////////////////////// The DELETE statement /////////////////////////////
 //
@@ -726,7 +730,7 @@ expr(A) ::= expr(W) between_op(N) expr(X) AND expr(Y). [BETWEEN] {
   expr(A) ::= expr(X) in_op(N) nm(Y) dbnm(Z). [IN] {
     SrcList *pSrc = sqlite3SrcListAppend(0,&Y,&Z);
     A = sqlite3Expr(TK_IN, X, 0, 0);
-    if( A ) A->pSelect = sqlite3SelectNew(0,pSrc,0,0,0,0,0,-1,0);
+    if( A ) A->pSelect = sqlite3SelectNew(0,pSrc,0,0,0,0,0,0,0);
     if( N ) A = sqlite3Expr(TK_NOT, A, 0, 0);
     sqlite3ExprSpan(A,&X->span,Z.z?&Z:&Y);
   }
