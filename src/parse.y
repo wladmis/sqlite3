@@ -283,10 +283,18 @@ seltablist(A) ::= stl_prefix(X) ids(Y) as ids(Z). {
 seltablist(A) ::= stl_prefix(X) LP select(S) RP. {
   A = sqliteIdListAppend(X,0);
   A->a[A->nId-1].pSelect = S;
+  if( S->pOrderBy ){
+    sqliteExprListDelete(S->pOrderBy);
+    S->pOrderBy = 0;
+  }
 }
 seltablist(A) ::= stl_prefix(X) LP select(S) RP as ids(Z). {
   A = sqliteIdListAppend(X,0);
   A->a[A->nId-1].pSelect = S;
+  if( S->pOrderBy ){
+    sqliteExprListDelete(S->pOrderBy);
+    S->pOrderBy = 0;
+  }
   sqliteIdListAddAlias(A,&Z);
 }
 
