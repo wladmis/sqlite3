@@ -332,7 +332,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   sqliteHashInit(&db->tblDrop, SQLITE_HASH_POINTER, 0);
   sqliteHashInit(&db->idxDrop, SQLITE_HASH_POINTER, 0);
   sqliteHashInit(&db->aFunc, SQLITE_HASH_STRING, 1);
-  sqliteRegisterBuildinFunctions(db);
+  sqliteRegisterBuiltinFunctions(db);
   db->onError = OE_Default;
   db->priorNewRowid = 0;
   db->magic = SQLITE_MAGIC_BUSY;

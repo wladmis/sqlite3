@@ -886,7 +886,7 @@ SrcList *sqliteSrcListDup(SrcList*);
 IdList *sqliteIdListDup(IdList*);
 Select *sqliteSelectDup(Select*);
 FuncDef *sqliteFindFunction(sqlite*,const char*,int,int,int);
-void sqliteRegisterBuildinFunctions(sqlite*);
+void sqliteRegisterBuiltinFunctions(sqlite*);
 int sqliteSafetyOn(sqlite*);
 int sqliteSafetyOff(sqlite*);
 int sqliteSafetyCheck(sqlite*);

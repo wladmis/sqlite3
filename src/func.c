@@ -412,7 +412,7 @@ static void minMaxFinalize(sqlite_func *context){
 ** functions.  This should be the only routine in this file with
 ** external linkage.
 */
-void sqliteRegisterBuildinFunctions(sqlite *db){
+void sqliteRegisterBuiltinFunctions(sqlite *db){
   static struct {
      char *zName;
      int nArg;
