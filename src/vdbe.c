@@ -2212,7 +2212,8 @@ case OP_Statement: {
 /* Opcode: AutoCommit P1 P2 *
 **
 ** Set the database auto-commit flag to P1 (1 or 0). If P2 is true, roll
-** back any currently active btree transactions.
+** back any currently active btree transactions. If there are any active
+** VMs (apart from this one), then the COMMIT or ROLLBACK statement fails.
 */
 case OP_AutoCommit: {
   u8 i = pOp->p1;
@@ -2221,7 +2222,17 @@ case OP_AutoCommit: {
   assert( i==1 || i==0 );
   assert( i==1 || rollback==0 );
 
-  if( i!=db->autoCommit ){
+  assert( db->activeVdbeCnt>0 );
+
+  if( db->activeVdbeCnt>1 && i && !db->autoCommit ){
+    /* If this instruction implements a COMMIT or ROLLBACK, other VMs are
+    ** still running, and a transaction is active, return an error indicating
+    ** that the other VMs must complete first. 
+    */
+    sqlite3SetString(&p->zErrMsg, "cannot ", rollback?"rollback":"commit", 
+        " transaction - SQL statements in progress", 0);
+    rc = SQLITE_ERROR;
+  }else if( i!=db->autoCommit ){
     db->autoCommit = i;
     p->autoCommitOn |= i;
     if( pOp->p2 ){
