@@ -195,7 +195,7 @@ struct sqlite {
 */
 struct FuncDef {
   void (*xFunc)(sqlite_func*,int,const char**);   /* Regular function */
-  void *(*xStep)(sqlite_func*,int,const char**);  /* Aggregate function step */
+  void (*xStep)(sqlite_func*,int,const char**);  /* Aggregate function step */
   void (*xFinalize)(sqlite_func*);           /* Aggregate function finializer */
   int nArg;                                  /* Number of arguments */
   void *pUserData;                           /* User data parameter */
