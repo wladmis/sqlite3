@@ -247,7 +247,7 @@ integrity_check copy-7.1
 
 # Cleanup 
 #
-file delete -force data1.txt data2.txt data3.txt data4.txt data5.txt \
+#file delete -force data1.txt data2.txt data3.txt data4.txt data5.txt \
                    data6.txt dataX.txt
 
 finish_test
