@@ -328,6 +328,7 @@ struct Select {
   ExprList *pOrderBy;    /* The ORDER BY clause */
   int op;                /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
   Select *pPrior;        /* Prior select in a compound select statement */
+  int nLimit, nOffset;   /* LIMIT and OFFSET values.  -1 means not used */
 };
 
 /*
@@ -407,6 +408,7 @@ int sqliteStrNICmp(const char *, const char *, int);
 int sqliteHashNoCase(const char *, int);
 int sqliteCompare(const char *, const char *);
 int sqliteSortCompare(const char *, const char *);
+void sqliteRealToSortable(double r, char *);
 #ifdef MEMORY_DEBUG
   void *sqliteMalloc_(int,char*,int);
   void sqliteFree_(void*,char*,int);
@@ -449,7 +451,8 @@ void sqliteIdListDelete(IdList*);
 void sqliteCreateIndex(Parse*, Token*, Token*, IdList*, int, Token*, Token*);
 void sqliteDropIndex(Parse*, Token*);
 int sqliteSelect(Parse*, Select*, int, int);
-Select *sqliteSelectNew(ExprList*,IdList*,Expr*,ExprList*,Expr*,ExprList*,int);
+Select *sqliteSelectNew(ExprList*,IdList*,Expr*,ExprList*,Expr*,ExprList*,
+                        int,int,int);
 void sqliteSelectDelete(Select*);
 void sqliteDeleteFrom(Parse*, Token*, Expr*);
 void sqliteUpdate(Parse*, Token*, ExprList*, Expr*);
