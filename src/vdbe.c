@@ -660,6 +660,7 @@ static void AggReset(Agg *pAgg){
       Mem *pMem = &pElem->aMem[i];
       if( pAgg->apFunc[i] && (pMem->s.flags & STK_AggCtx)!=0 ){
         sqlite_func ctx;
+        ctx.pFunc = pAgg->apFunc[i];
         ctx.s.flags = STK_Null;
         ctx.z = 0;
         ctx.pAgg = pMem->z;
