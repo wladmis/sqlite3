@@ -250,9 +250,10 @@ extern int sqlite3_malloc_failed;
 ** only.  They only work if SQLITE_DEBUG is defined.
 */
 #ifdef SQLITE_DEBUG
-extern int sqlite3_nMalloc;       /* Number of sqliteMalloc() calls */
-extern int sqlite3_nFree;         /* Number of sqliteFree() calls */
-extern int sqlite3_iMallocFail;   /* Fail sqliteMalloc() after this many calls */
+extern int sqlite3_nMalloc;      /* Number of sqliteMalloc() calls */
+extern int sqlite3_nFree;        /* Number of sqliteFree() calls */
+extern int sqlite3_iMallocFail;  /* Fail sqliteMalloc() after this many calls */
+extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 #endif
 
 /*

@@ -33,7 +33,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {db close}
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
-     sqlite_malloc_fail $i
+     sqlite_malloc_fail $i [expr {$i%4}]
      set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
