@@ -54,11 +54,20 @@ do_test select7-2.1 {
 
 # Do not allow GROUP BY without an aggregate. Ticket #1039.
 #
+# Change: force any query with a GROUP BY clause to be processed as
+# an aggregate query, whether it contains aggregates or not.
+#
 ifcapable subquery {
+  # do_test select7-3.1 {
+  #   catchsql {
+  #     SELECT * FROM (SELECT * FROM sqlite_master) GROUP BY name
+  #   }
+  # } {1 {GROUP BY may only be used on aggregate queries}}
   do_test select7-3.1 {
     catchsql {
       SELECT * FROM (SELECT * FROM sqlite_master) GROUP BY name
     }
-  } {1 {GROUP BY may only be used on aggregate queries}}
+  } [list 0 [execsql {SELECT * FROM sqlite_master ORDER BY name}]]
 }
 finish_test
+

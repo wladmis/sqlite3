@@ -2435,11 +2435,9 @@ int sqlite3Select(
     if( sqlite3ExprResolveNames(pParse, pTabList, pEList, pNC, pHaving, 1, 1) ){
       goto select_end;
     }
-    if( ExprHasProperty(pHaving, EP_Agg) ) isAgg = 1;
   }
-  if( pGroupBy && !isAgg ){
-    sqlite3ErrorMsg(pParse, "GROUP BY may only be used on aggregate queries");
-    goto select_end;
+  if( pGroupBy ){
+    isAgg = 1;
   }
   if( processOrderGroupBy(pParse,pOrderBy,pTabList,pEList,pNC,isAgg,"ORDER")
    || processOrderGroupBy(pParse,pGroupBy,pTabList,pEList,pNC,isAgg,"GROUP")
