@@ -688,6 +688,7 @@ int main(int argc, char **argv){
   char *zErrMsg = 0;
   char *argv0 = argv[0];
   struct callback_data data;
+  int echo = 0;
 
   memset(&data, 0, sizeof(data));
   data.mode = MODE_List;
@@ -719,6 +720,10 @@ int main(int argc, char **argv){
       argv++;
     }else if( strcmp(argv[1],"-noheader")==0 ){
       data.showHeader = 0;
+      argc--;
+      argv++;
+    }else if( strcmp(argv[1],"-echo")==0 ){
+      echo = 1;
       argc--;
       argv++;
     }else{
@@ -763,6 +768,7 @@ int main(int argc, char **argv){
       );
     }
     while( (zLine = one_input_line(zSql, istty))!=0 ){
+      if( echo ) printf("%s\n", zLine);
       if( zLine && zLine[0]=='.' ){
         do_meta_command(zLine, db, &data);
         free(zLine);
@@ -792,7 +798,7 @@ int main(int argc, char **argv){
         data.cnt = 0;
         if( sqlite_exec(db, zSql, callback, &data, &zErrMsg)!=0 
              && zErrMsg!=0 ){
-          if( !istty ) printf("%s\n",zSql);
+          if( !istty && !echo ) printf("%s\n",zSql);
           printf("SQL error: %s\n", zErrMsg);
           free(zErrMsg);
           zErrMsg = 0;
