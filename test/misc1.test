@@ -222,7 +222,7 @@ do_test misc1-7.4 {
   catchsql {
     INSERT INTO t5 VALUES(1,2,4);
   }
-} {1 {uniqueness constraint failed}}
+} {1 {columns a, b are not unique}}
 do_test misc1-7.5 {
   catchsql {
     INSERT INTO t5 VALUES(0,2,4);
