@@ -358,7 +358,7 @@ static int sortableByRowid(
 **   (2)  SELECT * FROM t1 LEFT JOIN t2 ON t1.a=t2.x AND t2.z='ok'
 **   (3)  SELECT * FROM t1, t2 WHERE t1.a=t2.x AND t2.z='ok'
 **
-** The t2.z='ok' is disabled in the in (2) because it did not originate
+** The t2.z='ok' is disabled in the in (2) because it originates
 ** in the ON clause.  The term is disabled in (3) because it is not part
 ** of a LEFT OUTER JOIN.  In (1), the term is not disabled.
 **
