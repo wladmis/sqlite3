@@ -336,4 +336,27 @@ do_test select6-6.6 {
   }
 } {1 3}
 
+# Subselects with no FROM clause
+#
+do_test select6-7.1 {
+  execsql {
+    SELECT * FROM (SELECT 1)
+  }
+} {1}
+do_test select6-7.2 {
+  execsql {
+    SELECT c,b,a,* FROM (SELECT 1 AS 'a', 2 AS 'b', 'abc' AS 'c')
+  }
+} {abc 2 1 1 2 abc}
+do_test select6-7.3 {
+  execsql {
+    SELECT c,b,a,* FROM (SELECT 1 AS 'a', 2 AS 'b', 'abc' AS 'c' WHERE 0)
+  }
+} {}
+do_test select6-7.4 {
+  execsql2 {
+    SELECT c,b,a,* FROM (SELECT 1 AS 'a', 2 AS 'b', 'abc' AS 'c' WHERE 1)
+  }
+} {c abc b 2 a 1 a 1 b 2 c abc}
+
 finish_test

@@ -237,4 +237,29 @@ do_test where-3.3 {
   }
 } {15 86 86 9}
 
+# Test to see that the special case of a constant WHERE clause is
+# handled.
+#
+do_test where-4.1 {
+  count {
+    SELECT * FROM t1 WHERE 0
+  }
+} {0}
+do_test where-4.2 {
+  count {
+    SELECT * FROM t1 WHERE 1 LIMIT 1
+  }
+} {1 0 4 0}
+do_test where-4.3 {
+  execsql {
+    SELECT 99 WHERE 0
+  }
+} {}
+do_test where-4.4 {
+  execsql {
+    SELECT 99 WHERE 1
+  }
+} {99}
+
+
 finish_test

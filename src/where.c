@@ -193,6 +193,14 @@ WhereInfo *sqliteWhereBegin(
   pWInfo->pTabList = pTabList;
   pWInfo->base = base;
   pWInfo->peakNTab = pWInfo->savedNTab = pParse->nTab;
+  pWInfo->iBreak = sqliteVdbeMakeLabel(v);
+
+  /* Special case: a WHERE clause that is constant.  Evaluate the
+  ** expression and either jump over all of the code or fall thru.
+  */
+  if( pWhere && sqliteExprIsConstant(pWhere) ){
+    sqliteExprIfFalse(pParse, pWhere, pWInfo->iBreak);
+  }
 
   /* Split the WHERE clause into as many as 32 separate subexpressions
   ** where each subexpression is separated by an AND operator.  Any additional
@@ -422,7 +430,6 @@ WhereInfo *sqliteWhereBegin(
   /* Generate the code to do the search
   */
   loopMask = 0;
-  pWInfo->iBreak = sqliteVdbeMakeLabel(v);
   for(i=0; i<pTabList->nId; i++){
     int j, k;
     int idx = aOrder[i];
