@@ -1752,6 +1752,7 @@ FuncDef *sqlite3FindFunction(
     pBest->nArg = nArg;
     pBest->pNext = pFirst;
     pBest->zName = (char*)&pBest[1];
+    pBest->iPrefEnc = eTextRep;
     memcpy(pBest->zName, zName, nName);
     pBest->zName[nName] = 0;
     sqlite3HashInsert(&db->aFunc, pBest->zName, nName, (void*)pBest);
