@@ -15,6 +15,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable {!bloblit} {
+  finish_test
+  return
+}
+
 proc bin_to_hex {blob} {
   set bytes {}
   binary scan $blob \c* bytes
@@ -116,5 +121,3 @@ do_test blob-2.3 {
 } {CDEF12 345678}
 
 finish_test
-
-

@@ -713,6 +713,7 @@ case OP_String: {
   break;
 }
 
+#ifndef SQLITE_OMIT_BLOB_LITERAL
 /* Opcode: HexBlob * * P3
 **
 ** P3 is an UTF-8 SQL hex encoding of a blob. The blob is pushed onto the
@@ -742,6 +743,7 @@ case OP_HexBlob: {            /* same as TK_BLOB */
 
   /* Fall through to the next case, OP_Blob. */
 }
+#endif /* SQLITE_OMIT_BLOB_LITERAL */
 
 /* Opcode: Blob P1 * P3
 **

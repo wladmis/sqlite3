@@ -64,7 +64,11 @@ set values {
   { '5'    integer integer text text    }
   { 'abc'  text    text    text text    }
   { NULL   null    null    null null    }
-  { X'00'  blob    blob    blob blob    }
+}
+ifcapable {bloblit} {
+  lappend values {
+    { X'00'  blob    blob    blob blob    }
+  }
 }
 
 # This code tests that the storage classes specified above (in the $values

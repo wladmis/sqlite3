@@ -899,6 +899,8 @@ int sqlite3VarintLen(u64 v){
   return i;
 }
 
+#if (!defined(SQLITE_OMIT_BLOB_LITERAL) && !defined(SQLITE_HAS_CODEC)) \
+    || defined(SQLITE_TEST)
 /*
 ** Translate a single byte of Hex into an integer.
 */
@@ -913,7 +915,9 @@ static int hexToInt(int h){
     return 0;
   }
 }
+#endif /* (!SQLITE_OMIT_BLOB_LITERAL && !SQLITE_HAS_CODEC) || SQLITE_TEST */
 
+#if !defined(SQLITE_OMIT_BLOB_LITERAL) && !defined(SQLITE_HAS_CODEC)
 /*
 ** Convert a BLOB literal of the form "x'hhhhhh'" into its binary
 ** value.  Return a pointer to its binary value.  Space to hold the
@@ -932,6 +936,7 @@ void *sqlite3HexToBlob(const char *z){
   }
   return zBlob;
 }
+#endif /* !SQLITE_OMIT_BLOB_LITERAL && !SQLITE_HAS_CODEC */
 
 #if defined(SQLITE_TEST)
 /*
