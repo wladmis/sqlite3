@@ -2031,7 +2031,10 @@ FuncDef *sqlite3FindFunction(
     pBest->iPrefEnc = enc;
     memcpy(pBest->zName, zName, nName);
     pBest->zName[nName] = 0;
-    sqlite3HashInsert(&db->aFunc, pBest->zName, nName, (void*)pBest);
+    if( pBest==sqlite3HashInsert(&db->aFunc,pBest->zName,nName,(void*)pBest) ){
+      sqliteFree(pBest);
+      return 0;
+    }
   }
 
   if( pBest && (pBest->xStep || pBest->xFunc || createFlag) ){
