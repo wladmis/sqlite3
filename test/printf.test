@@ -18,27 +18,28 @@ source $testdir/tester.tcl
 
 set n 1
 foreach v {1 2 5 10 99 100 1000000 999999999 0 -1 -2 -5 -10 -99 -100 -9999999} {
+  set v32 [expr {$v&0xffffffff}]
   do_test printf-1.$n.1 [subst {
     sqlite3_mprintf_int {Three integers: %d %x %o} $v $v $v
-  }] [format {Three integers: %d %x %o} $v $v $v]
+  }] [format {Three integers: %d %x %o} $v $v32 $v32]
   do_test printf-1.$n.2 [subst {
     sqlite3_mprintf_int {Three integers: (%6d) (%6x) (%6o)} $v $v $v
-  }] [format {Three integers: (%6d) (%6x) (%6o)} $v $v $v]
+  }] [format {Three integers: (%6d) (%6x) (%6o)} $v $v32 $v32]
   do_test printf-1.$n.3 [subst {
     sqlite3_mprintf_int {Three integers: (%-6d) (%-6x) (%-6o)} $v $v $v
-  }] [format {Three integers: (%-6d) (%-6x) (%-6o)} $v $v $v]
+  }] [format {Three integers: (%-6d) (%-6x) (%-6o)} $v $v32 $v32]
   do_test printf-1.$n.4 [subst {
     sqlite3_mprintf_int {Three integers: (%+6d) (%+6x) (%+6o)} $v $v $v
-  }] [format {Three integers: (%+6d) (%+6x) (%+6o)} $v $v $v]
+  }] [format {Three integers: (%+6d) (%+6x) (%+6o)} $v $v32 $v32]
   do_test printf-1.$n.5 [subst {
     sqlite3_mprintf_int {Three integers: (%06d) (%06x) (%06o)} $v $v $v
-  }] [format {Three integers: (%06d) (%06x) (%06o)} $v $v $v]
+  }] [format {Three integers: (%06d) (%06x) (%06o)} $v $v32 $v32]
   do_test printf-1.$n.6 [subst {
     sqlite3_mprintf_int {Three integers: (% 6d) (% 6x) (% 6o)} $v $v $v
-  }] [format {Three integers: (% 6d) (% 6x) (% 6o)} $v $v $v]
+  }] [format {Three integers: (% 6d) (% 6x) (% 6o)} $v $v32 $v32]
   do_test printf-1.$n.7 [subst {
     sqlite3_mprintf_int {Three integers: (%#6d) (%#6x) (%#6o)} $v $v $v
-  }] [format {Three integers: (%#6d) (%#6x) (%#6o)} $v $v $v]
+  }] [format {Three integers: (%#6d) (%#6x) (%#6o)} $v $v32 $v32]
   incr n
 }
 
