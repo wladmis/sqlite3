@@ -64,7 +64,7 @@ do_test rollback-1.5 {
 #
 do_test rollback-1.6 {
   sqlite3_reset $STMT
-} {}
+} {SQLITE_OK}
 do_test rollback-1.7 {
   sqlite3_step $STMT
 } {SQLITE_ROW}
