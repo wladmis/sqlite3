@@ -153,5 +153,7 @@ do_test lock2-1.10 {
   }
 } {table abc abc 2 {CREATE TABLE abc(a, b, c)}}
 
-finish_test
+catch {testfixture $::tf1 {db close}}
+catch {close $::tf1}
 
+finish_test

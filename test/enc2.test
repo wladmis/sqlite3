@@ -302,6 +302,7 @@ do_test enc2-6.3 {
   }
 } {{UTF-16BE sqlite}}
 
+db close
 file delete -force test.db
 set DB [sqlite3 db test.db]
 execsql {pragma encoding = 'UTF-16LE'}
@@ -334,6 +335,7 @@ do_test enc2-6.6 {
   }
 } {{UTF-16BE sqlite}}
 
+db close
 file delete -force test.db
 set DB [sqlite3 db test.db]
 execsql {pragma encoding = 'UTF-16BE'}
@@ -413,8 +415,3 @@ db2 close
 
 
 finish_test
-
-
-
-
-
