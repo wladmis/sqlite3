@@ -670,14 +670,18 @@ static const char *columnType(Parse *pParse, SrcList *pTabList, Expr *pExpr){
       }
       break;
     }
-    case TK_AS:
-      zType = columnType(pParse, pTabList, pExpr->pLeft); 
-      break;
     case TK_SELECT: {
       Select *pS = pExpr->pSelect;
       zType = columnType(pParse, pS->pSrc, pS->pEList->a[0].pExpr); 
       break;
     }
+    case TK_AS:
+      /* The TK_AS operator can only occur in ORDER BY, GROUP BY, HAVING,
+      ** and LIMIT clauses.  But pExpr originates in the result set of a
+      ** SELECT.  So pExpr can never contain an AS operator.
+      */
+      assert( 0 );
+      /* Fall thru */
     default:
       zType = 0;
   }

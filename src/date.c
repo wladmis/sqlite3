@@ -315,12 +315,10 @@ static int parseDateOrTime(const char *zDate, DateTime *p){
     return 0;
   }else if( sqlite3StrICmp(zDate,"now")==0){
     double r;
-    if( sqlite3OsCurrentTime(&r)==0 ){
-      p->rJD = r;
-      p->validJD = 1;
-      return 0;
-    }
-    return 1;
+    sqlite3OsCurrentTime(&r);
+    p->rJD = r;
+    p->validJD = 1;
+    return 0;
   }else if( sqlite3IsNumber(zDate, 0, SQLITE_UTF8) ){
     p->rJD = sqlite3AtoF(zDate, 0);
     p->validJD = 1;

@@ -614,16 +614,6 @@ int sqlite3ExprIsInteger(Expr *p, int *pValue){
       }
       break;
     }
-    case TK_STRING: {
-      const u8 *z = (u8*)p->token.z;
-      int n = p->token.n;
-      if( n>0 && z[0]=='-' ){ z++; n--; }
-      while( n>0 && *z && isdigit(*z) ){ z++; n--; }
-      if( n==0 && sqlite3GetInt32(p->token.z, pValue) ){
-        return 1;
-      }
-      break;
-    }
     case TK_UPLUS: {
       return sqlite3ExprIsInteger(p->pLeft, pValue);
     }

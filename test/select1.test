@@ -291,9 +291,24 @@ do_test select1-4.6 {
     SELECT f1 FROM test1 ORDER BY '8.4';
   }
 } {1 {ORDER BY terms must not be non-integer constants}}
-do_test select1-4.7 {
+do_test select1-4.7.1 {
   catchsql {
     SELECT f1 FROM test1 ORDER BY 'xyz';
+  }
+} {1 {ORDER BY terms must not be non-integer constants}}
+do_test select1-4.7.2 {
+  catchsql {
+    SELECT f1 FROM test1 ORDER BY -8.4;
+  }
+} {1 {ORDER BY terms must not be non-integer constants}}
+do_test select1-4.7.3 {
+  catchsql {
+    SELECT f1 FROM test1 ORDER BY +8.4;
+  }
+} {1 {ORDER BY terms must not be non-integer constants}}
+do_test select1-4.7.4 {
+  catchsql {
+    SELECT f1 FROM test1 ORDER BY 4294967296; -- constant larger than 32 bits
   }
 } {1 {ORDER BY terms must not be non-integer constants}}
 do_test select1-4.8 {
@@ -304,16 +319,26 @@ do_test select1-4.8 {
     SELECT * FROM t5 ORDER BY 1;
   }
 } {1 10 2 9}
-do_test select1-4.9 {
+do_test select1-4.9.1 {
   execsql {
     SELECT * FROM t5 ORDER BY 2;
   }
 } {2 9 1 10}
-do_test select1-4.10 {
+do_test select1-4.9.2 {
+  execsql {
+    SELECT * FROM t5 ORDER BY +2;
+  }
+} {2 9 1 10}
+do_test select1-4.10.1 {
   catchsql {
     SELECT * FROM t5 ORDER BY 3;
   }
 } {1 {ORDER BY column number 3 out of range - should be between 1 and 2}}
+do_test select1-4.10.2 {
+  catchsql {
+    SELECT * FROM t5 ORDER BY -1;
+  }
+} {1 {ORDER BY column number -1 out of range - should be between 1 and 2}}
 do_test select1-4.11 {
   execsql {
     INSERT INTO t5 VALUES(3,10);
