@@ -23,7 +23,8 @@ void sqliteUpdate(
   Parse *pParse,         /* The parser context */
   Token *pTableName,     /* The table in which we should change things */
   ExprList *pChanges,    /* Things to be changed */
-  Expr *pWhere           /* The WHERE clause.  May be null */
+  Expr *pWhere,          /* The WHERE clause.  May be null */
+  int onError            /* How to handle constraint errors */
 ){
   int i, j;              /* Loop counters */
   Table *pTab;           /* The table to be updated */

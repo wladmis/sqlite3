@@ -65,7 +65,7 @@ puts {<h2>Current Status</h2>
 The latest source code is
 <a href="download.html">available for download</a>.
 There are currently no known memory leaks or bugs
-in version 2.2.1 of the library.
+in version 2.2.5 of the library.
 </p>
 
 <p>
