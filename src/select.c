@@ -728,9 +728,12 @@ static int fillInColumnList(Parse *pParse, Select *p){
           }
         }
         if( !tableSeen ){
-          assert( pName!=0 );
-          sqliteSetNString(&pParse->zErrMsg, "no such table: ", -1, 
-            pName->z, pName->n, 0);
+          if( pName ){
+            sqliteSetNString(&pParse->zErrMsg, "no such table: ", -1, 
+              pName->z, pName->n, 0);
+          }else{
+            sqliteSetString(&pParse->zErrMsg, "no tables specified", 0);
+          }
           rc = 1;
         }
       }
