@@ -384,6 +384,7 @@ struct Index {
   int tnum;        /* Page containing root of this index in database file */
   u8 isUnique;     /* OE_Abort, OE_Ignore, OE_Replace, or OE_None */
   u8 onError;      /* OE_Abort, OE_Ignore, OE_Replace, or OE_None */
+  u8 autoIndex;    /* True if is automatically created (ex: by UNIQUE) */
   Index *pNext;    /* The next index associated with the same table */
 };
 
