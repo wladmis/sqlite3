@@ -1865,7 +1865,7 @@ case OP_Column: {
     if( pC->nullRow ){
       payloadSize = 0;
     }else if( pC->keyAsData ){
-      u64 payloadSize64;
+      i64 payloadSize64;
       sqlite3BtreeKeySize(pCrsr, &payloadSize64);
       payloadSize = payloadSize64;
     }else{
@@ -2070,6 +2070,11 @@ case OP_MakeRecord: {
     u64 serial_type = sqlite3VdbeSerialType(pRec);
     nBytes += sqlite3VdbeSerialTypeLen(serial_type);
     nBytes += sqlite3VarintLen(serial_type);
+  }
+
+  if( nBytes>MAX_BYTES_PER_ROW ){
+    rc = SQLITE_TOOBIG;
+    goto abort_due_to_error;
   }
 
   /* Allocate space for the new record. */
@@ -2327,6 +2332,11 @@ case OP_MakeIdxKey: {
     rowid = pRec->i;
     nByte += sqlite3VarintLen(rowid);
     nByte++;
+  }
+  
+  if( nByte>MAX_BYTES_PER_ROW ){
+    rc = SQLITE_TOOBIG;
+    goto abort_due_to_error;
   }
 
   /* Allocate space for the new key */
@@ -2832,7 +2842,7 @@ case OP_MoveTo: {
     pC->nullRow = 0;
     if( pC->intKey ){
       i64 iKey;
-      assert( pTos->flags & MEM_Int );
+      Integerify(pTos);
       iKey = intToKey(pTos->i);
       if( pOp->p2==0 && pOp->opcode==OP_MoveTo ){
         pC->movetoTarget = iKey;

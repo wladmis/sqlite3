@@ -283,8 +283,9 @@ for {set i 1} {$i<=100} {incr i} {
   incr end 100
 }
 
+
 btree_close_cursor $c2
 btree_commit $b1
-
+btree_close $b1
 
 finish_test

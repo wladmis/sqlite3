@@ -37,7 +37,7 @@ do_test version-1.1 {
 #
 do_test version-1.2 {
   db close
-  set ::bt [btree_open test.db]
+  set ::bt [btree_open test.db 100 0]
   btree_begin_transaction $::bt
   set ::meta [btree_get_meta $::bt]
   btree_rollback $::bt

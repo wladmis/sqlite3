@@ -1523,22 +1523,24 @@ int sqlite3BtreeDataSize(BtCursor *pCur, u32 *pSize){
   unsigned char *cell;
 
   if( !pCur->isValid ){
-    return pCur->status ? pCur->status : SQLITE_INTERNAL;
-  }
-  pPage = pCur->pPage;
-  assert( pPage!=0 );
-  assert( pPage->isInit );
-  pageIntegrity(pPage);
-  if( !pPage->hasData ){
+    /* Not pointing at a valid entry - set *pSize to 0. */
     *pSize = 0;
   }else{
-    assert( pCur->idx>=0 && pCur->idx<pPage->nCell );
-    cell = pPage->aCell[pCur->idx];
-    cell += 2;   /* Skip the offset to the next cell */
-    if( !pPage->leaf ){
-      cell += 4;  /* Skip the child pointer */
+    pPage = pCur->pPage;
+    assert( pPage!=0 );
+    assert( pPage->isInit );
+    pageIntegrity(pPage);
+    if( !pPage->hasData ){
+      *pSize = 0;
+    }else{
+      assert( pCur->idx>=0 && pCur->idx<pPage->nCell );
+      cell = pPage->aCell[pCur->idx];
+      cell += 2;   /* Skip the offset to the next cell */
+      if( !pPage->leaf ){
+        cell += 4;  /* Skip the child pointer */
+      }
+      getVarint32(cell, pSize);
     }
-    getVarint32(cell, pSize);
   }
   return SQLITE_OK;
 }

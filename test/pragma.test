@@ -257,7 +257,7 @@ do_test pragma-3.1 {
 } {1 11 2 3 2 22 3 4}
 do_test pragma-3.2 {
   set rootpage [execsql {SELECT rootpage FROM sqlite_master WHERE name='i2'}]
-  set db [btree_open test.db]
+  set db [btree_open test.db 100 0]
   btree_begin_transaction $db
   set c [btree_cursor $db $rootpage 1]
   btree_first $c
