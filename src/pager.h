@@ -59,6 +59,7 @@ Pgno sqlitepager_pagenumber(void*);
 int sqlitepager_write(void*);
 int sqlitepager_iswriteable(void*);
 int sqlitepager_pagecount(Pager*);
+int sqlitepager_begin(void*);
 int sqlitepager_commit(Pager*);
 int sqlitepager_rollback(Pager*);
 int sqlitepager_isreadonly(Pager*);

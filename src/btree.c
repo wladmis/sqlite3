@@ -762,7 +762,7 @@ int sqliteBtreeBeginTrans(Btree *pBt){
   if( sqlitepager_isreadonly(pBt->pPager) ){
     return SQLITE_READONLY;
   }
-  rc = sqlitepager_write(pBt->page1);
+  rc = sqlitepager_begin(pBt->page1);
   if( rc==SQLITE_OK ){
     rc = newDatabase(pBt);
   }
