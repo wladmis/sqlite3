@@ -442,15 +442,17 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       rc = sqlite_exec(pDb->db, zSql, DbEvalCallback2, pList, &zErrMsg);
       Tcl_SetObjResult(interp, pList);
     }
-    if( zErrMsg ){
+    if( rc==SQLITE_ABORT ){
+      if( zErrMsg ) free(zErrMsg);
+      rc = cbData.tcl_rc;
+    }else if( zErrMsg ){
       Tcl_SetResult(interp, zErrMsg, TCL_VOLATILE);
       free(zErrMsg);
       rc = TCL_ERROR;
-    }else if( rc!=SQLITE_OK && rc!=SQLITE_ABORT ){
+    }else if( rc!=SQLITE_OK ){
       Tcl_AppendResult(interp, sqlite_error_string(rc), 0);
       rc = TCL_ERROR;
     }else{
-      rc = cbData.tcl_rc;
     }
     Tcl_DecrRefCount(objv[2]);
 #ifdef UTF_TRANSLATION_NEEDED

@@ -635,6 +635,9 @@ int sqlite_exec(
     db->flags &= ~SQLITE_InTrans;
     sqliteResetInternalSchema(db);
   }
+  if( sParse.rc!=SQLITE_OK && pzErrMsg && *pzErrMsg==0 ){
+    sqliteSetString(pzErrMsg, sqlite_error_string(sParse.rc), 0);
+  }
   sqliteStrRealloc(pzErrMsg);
   if( sParse.rc==SQLITE_SCHEMA ){
     sqliteResetInternalSchema(db);
