@@ -330,6 +330,11 @@ faq {
   within a 1-megabyte row of the SQLITE_MASTER table.  Other than this,
   there are no constraints on the length of the name of a table, or on the
   number of columns, etc.  Indices are similarly unconstrained.</p>
+
+  <p>The names of tables, indices, view, triggers, and columns can be
+  as long as desired.  However, the names of SQL functions (as created
+  by the <a href="c_interface.html#cfunc">sqlite_create_function()</a> API)
+  may not exceed 255 characters in length.</p>
 }
 
 faq {

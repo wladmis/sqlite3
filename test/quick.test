@@ -23,6 +23,7 @@ set EXCLUDE {
   quick.test
   btree2.test
   malloc.test
+  memleak.test
 }
 
 foreach testfile [lsort -dictionary [glob $testdir/*.test]] {

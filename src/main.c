@@ -795,8 +795,11 @@ int sqlite_create_function(
   void *pUserData      /* User data */
 ){
   FuncDef *p;
+  int nName;
   if( db==0 || zName==0 || sqliteSafetyCheck(db) ) return 1;
-  p = sqliteFindFunction(db, zName, strlen(zName), nArg, 1);
+  nName = strlen(zName);
+  if( nName>255 ) return 1;
+  p = sqliteFindFunction(db, zName, nName, nArg, 1);
   if( p==0 ) return 1;
   p->xFunc = xFunc;
   p->xStep = 0;
@@ -813,8 +816,11 @@ int sqlite_create_aggregate(
   void *pUserData      /* User data */
 ){
   FuncDef *p;
+  int nName;
   if( db==0 || zName==0 || sqliteSafetyCheck(db) ) return 1;
-  p = sqliteFindFunction(db, zName, strlen(zName), nArg, 1);
+  nName = strlen(zName);
+  if( nName>255 ) return 1;
+  p = sqliteFindFunction(db, zName, nName, nArg, 1);
   if( p==0 ) return 1;
   p->xFunc = 0;
   p->xStep = xStep;
