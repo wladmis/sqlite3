@@ -183,6 +183,17 @@ proc catchsql {sql {db db}} {
   return $r
 }
 
+# Do an VDBE code dump on the SQL given
+#
+proc explain {sql {db db}} {
+  puts ""
+  puts "addr  opcode        p1       p2     p3             "
+  puts "----  ------------  ------  ------  ---------------"
+  $db eval "explain $sql" {} {
+    puts [format {%-4d  %-12.12s  %-6d  %-6d  %s} $addr $opcode $p1 $p2 $p3]
+  }
+}
+
 # Another procedure to execute SQL.  This one includes the field
 # names in the returned list.
 #

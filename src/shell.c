@@ -547,6 +547,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
   }else
 
   if( c=='e' && strncmp(azArg[0], "exit", n)==0 ){
+    sqlite_close(db);
     exit(0);
   }else
 
