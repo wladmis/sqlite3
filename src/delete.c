@@ -234,8 +234,7 @@ void sqlite3DeleteFrom(
         sqlite3VdbeAddOp(v, OP_OpenRead, iCur, pTab->tnum);
         sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
       }
-      sqlite3VdbeAddOp(v, OP_MoveTo, iCur, 0);
-
+      sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
       sqlite3VdbeAddOp(v, OP_Recno, iCur, 0);
       sqlite3VdbeAddOp(v, OP_RowData, iCur, 0);
       sqlite3VdbeAddOp(v, OP_PutIntKey, oldIdx, 0);
@@ -394,6 +393,3 @@ void sqlite3GenerateRowIndexDelete(
     sqlite3VdbeAddOp(v, OP_IdxDelete, iCur+i, 0);
   }
 }
-
-
-

@@ -2023,7 +2023,7 @@ static int simpleMinMaxQuery(Parse *pParse, Select *p, int eDest, int iParm){
     sqlite3VdbeAddOp(v, seekOp, base+1, 0);
     sqlite3VdbeAddOp(v, OP_IdxRecno, base+1, 0);
     sqlite3VdbeAddOp(v, OP_Close, base+1, 0);
-    sqlite3VdbeAddOp(v, OP_MoveTo, base, 0);
+    sqlite3VdbeAddOp(v, OP_MoveGe, base, 0);
   }
   eList.nExpr = 1;
   memset(&eListItem, 0, sizeof(eListItem));

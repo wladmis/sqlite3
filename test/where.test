@@ -140,6 +140,7 @@ do_test where-1.25 {
 do_test where-1.27 {
   count {SELECT w FROM t1 WHERE x=3 AND y+1==122}
 } {10 17}
+
 do_test where-1.28 {
   count {SELECT w FROM t1 WHERE x+1=4 AND y+1==122}
 } {10 99}

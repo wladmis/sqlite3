@@ -262,7 +262,7 @@ void sqlite3Update(
       sqlite3VdbeAddOp(v, OP_OpenRead, iCur, pTab->tnum);
       sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
     }
-    sqlite3VdbeAddOp(v, OP_MoveTo, iCur, 0);
+    sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
 
     /* Generate the OLD table
     */
@@ -458,6 +458,3 @@ update_cleanup:
   sqlite3ExprDelete(pWhere);
   return;
 }
-
-
-
