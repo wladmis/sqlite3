@@ -320,7 +320,7 @@ void *sqliteHashInsert(Hash *pH, const void *pKey, int nKey, void *data){
     }
     memcpy((void*)new_elem->pKey, pKey, nKey);
   }else{
-    new_elem->pKey = (const void*)pKey;
+    new_elem->pKey = (void*)pKey;
   }
   new_elem->nKey = nKey;
   pH->count++;
