@@ -668,7 +668,7 @@ int main(int argc, char **argv){
       }
       exit(1);
     }else{
-      printf("Database \"%s\" opened READ ONLY!\n", argv[1]);
+      fprintf(stderr,"Database \"%s\" opened READ ONLY!\n", argv[1]);
     }
   }
   data.out = stdout;
