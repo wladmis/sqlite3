@@ -1934,7 +1934,8 @@ static int pager_open_journal(Pager *pPager){
     rc = write32bits(&pPager->jfd, pPager->nMaster);
   }
   if( rc==SQLITE_OK ){
-    rc = sqlite3OsSeek(&pPager->jfd, 24 + pPager->nMaster);
+    sqlite3OsSeek(&pPager->jfd, 24 + pPager->nMaster - 1);
+    rc = sqlite3OsWrite(&pPager->jfd, "\000", 1);
   }
   if( pPager->stmtAutoopen && rc==SQLITE_OK ){
     rc = sqlite3pager_stmt_begin(pPager);

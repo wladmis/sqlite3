@@ -1250,7 +1250,7 @@ int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag, int nMaster){
   }
 
   if( rc==SQLITE_OK && wrflag ){
-    rc = sqlite3pager_begin(pBt->pPage1->aData, 0);
+    rc = sqlite3pager_begin(pBt->pPage1->aData, nMaster);
     if( rc==SQLITE_OK ){
       rc = newDatabase(pBt);
     }

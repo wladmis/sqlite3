@@ -1033,6 +1033,9 @@ static int openDatabase(
   /* Open the backend database driver */
   if( zFilename[0]==':' && strcmp(zFilename,":memory:")==0 ){
     db->temp_store = 2;
+    db->nMaster = 0;    /* Disable atomic multi-file commit for :memory: */
+  }else{
+    db->nMaster = -1;   /* Size of master journal filename initially unknown */
   }
   rc = sqlite3BtreeFactory(db, zFilename, 0, MAX_PAGES, &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
@@ -1161,4 +1164,3 @@ int sqlite3_create_collation16(
   sqliteFree(zName8);
   return rc;
 }
-

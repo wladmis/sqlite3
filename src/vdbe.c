@@ -2319,8 +2319,10 @@ case OP_Transaction: {
   pBt = db->aDb[i].pBt;
 
   if( pBt ){
-    int nMaster = strlen(sqlite3BtreeGetFilename(db->aDb[0].pBt))+11;
-    rc = sqlite3BtreeBeginTrans(pBt, pOp->p2, nMaster);
+    if( db->nMaster<0 ){
+      db->nMaster = strlen(sqlite3BtreeGetFilename(db->aDb[0].pBt))+20;
+    }
+    rc = sqlite3BtreeBeginTrans(pBt, pOp->p2, db->nMaster);
     if( rc==SQLITE_BUSY ){
         if( db->busyHandler.xFunc==0 ){
           p->pc = pc;

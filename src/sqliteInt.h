@@ -422,6 +422,7 @@ struct sqlite {
   void *zErrMsg16;              /* Most recent error message (UTF-16 encoded) */
   u8 enc;                       /* Text encoding for this database. */
   u8 autoCommit;                /* The auto-commit flag. */
+  int nMaster;                  /* Length of master journal name. -1=unknown */
 };
 
 /*
