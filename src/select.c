@@ -796,6 +796,13 @@ int sqliteSelect(
     if( pHaving && sqliteExprAnalyzeAggregates(pParse, pHaving) ){
       return 1;
     }
+    if( pOrderBy ){
+      for(i=0; i<pOrderBy->nExpr; i++){
+        if( sqliteExprAnalyzeAggregates(pParse, pOrderBy->a[i].pExpr) ){
+          return 1;
+        }
+      }
+    }
   }
 
   /* Begin generating code.
