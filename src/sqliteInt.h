@@ -95,6 +95,9 @@
 **
 **         cc '-DUINTPTR_TYPE=long long int' ...
 */
+#ifndef INT64_TYPE
+# define INT64_TYPE long long int
+#endif
 #ifndef UINT64_TYPE
 # define UINT64_TYPE unsigned long long int
 #endif
@@ -1274,4 +1277,3 @@ void *sqlite3utf8to16be(const unsigned char *pIn, int N);
 void *sqlite3utf8to16le(const unsigned char *pIn, int N);
 void sqlite3utf16to16le(void *pData, int N);
 void sqlite3utf16to16be(void *pData, int N);
-
