@@ -1196,7 +1196,7 @@ int sqliteSafetyOff(sqlite *db){
 ** at the wrong time or in the wrong sequence.
 */
 int sqliteSafetyCheck(sqlite *db){
-  if( db->recursionDepth ){
+  if( db->pVdbe!=0 ){
     db->magic = SQLITE_MAGIC_ERROR;
     return 1;
   }
