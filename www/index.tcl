@@ -10,7 +10,9 @@ puts {<html>
 <a href="http://www.gnu.org/software/gdbm/gdbm.html">GDBM</a></h1>
 <p align=center>}
 puts "This page was last modified on [lrange $rcsid 3 4] GMT<br>"
-puts "The SQLite source code was last modifed on [exec cat last_change] GMT"
+set vers [lindex $argv 0]
+puts "The latest SQLite version is <b>$vers</b>"
+puts " created on [exec cat last_change] GMT"
 puts {</p>}
 
 puts {<h2>Introduction</h2>
@@ -126,10 +128,13 @@ Click to subscribe to sqlite</a>
 puts {<h2>Download</h2>
 
 <p>You can download a tarball containing all source
-code for SQLite (including the TCL scripts that generate the
+code for SQLite
+}
+puts "version $vers"
+puts {
+(including the TCL scripts that generate the
 HTML files for this website) at <a href="sqlite.tar.gz">sqlite.tar.gz</a>.}
-puts "This is a [file size sqlite.tar.gz] byte download.  The
-tarball was last modified at [clock format [file mtime sqlite.tar.gz]]"
+puts "This is a [file size sqlite.tar.gz] byte download."
 puts {</p>
 
 <p>To build sqlite under Unix, just unwrap the tarball, create a separate

@@ -30,6 +30,12 @@
 #define _SQLITE_H_
 
 /*
+** The version of the SQLite library
+*/
+#define SQLITE_VERSION          --VERS--
+#define SQLITE_VERSION_STRING  "--VERS--"
+
+/*
 ** Each open sqlite database is represented by an instance of the
 ** following opaque structure.
 */
