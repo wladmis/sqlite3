@@ -212,5 +212,29 @@ do_test minmax-6.7 {
   }
 } {}
 
+# Make sure the max(x) and min(x) optimizations work for nested
+# queries.  Ticket #587.
+#
+do_test minmax-7.1 {
+  execsql {
+    SELECT max(x) FROM t1;
+  }
+} 20
+do_test minmax-7.2 {
+  execsql {
+    SELECT * FROM (SELECT max(x) FROM t1);
+  }
+} 20
+do_test minmax-7.3 {
+  execsql {
+    SELECT min(x) FROM t1;
+  }
+} 1
+do_test minmax-7.4 {
+  execsql {
+    SELECT * FROM (SELECT min(x) FROM t1);
+  }
+} 1
+
 
 finish_test

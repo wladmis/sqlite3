@@ -1900,6 +1900,12 @@ static int simpleMinMaxQuery(Parse *pParse, Select *p, int eDest, int iParm){
     generateColumnTypes(pParse, p->pSrc, p->pEList);
   }
 
+  /* If the output is destined for a temporary table, open that table.
+  */
+  if( eDest==SRT_TempTable ){
+    sqliteVdbeAddOp(v, OP_OpenTemp, iParm, 0);
+  }
+
   /* Generating code to find the min or the max.  Basically all we have
   ** to do is find the first or the last entry in the chosen index.  If
   ** the min() or max() is on the INTEGER PRIMARY KEY, then find the first
