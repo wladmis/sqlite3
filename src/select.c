@@ -845,6 +845,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
       sprintf(zBuf, "column%d", i+1);
       pTab->aCol[i].zName = sqliteStrDup(zBuf);
     }
+    sqlite3Dequote(aCol[i].zName);
 
     zType = sqliteStrDup(columnType(pParse, pSelect->pSrc ,p));
     pTab->aCol[i].zType = zType;

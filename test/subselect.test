@@ -150,6 +150,4 @@ do_test subselect-3.9 {
   }
 } {4}
 
-
-
 finish_test
