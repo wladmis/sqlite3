@@ -599,6 +599,8 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       HashElem *x;
       int cnt = 0;
 
+      sqlite3CodeVerifySchema(pParse, i);
+
       /* Do an integrity check of the B-Tree
       */
       for(x=sqliteHashFirst(&db->aDb[i].tblHash); x; x=sqliteHashNext(x)){

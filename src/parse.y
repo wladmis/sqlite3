@@ -69,7 +69,7 @@ cmdlist ::= cmdlist ecmd.
 cmdlist ::= ecmd.
 ecmd ::= explain cmdx SEMI.
 ecmd ::= SEMI.
-cmdx ::= cmd.           { sqlite3Exec(pParse); }
+cmdx ::= cmd.           { sqlite3FinishCoding(pParse); }
 explain ::= EXPLAIN.    { sqlite3BeginParse(pParse, 1); }
 explain ::= .           { sqlite3BeginParse(pParse, 0); }
 

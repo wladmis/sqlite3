@@ -671,6 +671,7 @@ WhereInfo *sqlite3WhereBegin(
 
   /* Open all tables in the pTabList and all indices used by those tables.
   */
+  sqlite3CodeVerifySchema(pParse, 1);  /* Inserts the cookie verifier Goto */
   for(i=0; i<pTabList->nSrc; i++){
     Table *pTab;
     Index *pIx;
@@ -680,7 +681,9 @@ WhereInfo *sqlite3WhereBegin(
     sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
     sqlite3VdbeAddOp(v, OP_OpenRead, pTabList->a[i].iCursor, pTab->tnum);
     sqlite3VdbeAddOp(v, OP_SetNumColumns, pTabList->a[i].iCursor, pTab->nCol);
-    sqlite3CodeVerifySchema(pParse, pTab->iDb);
+    if( pTab->tnum>1 ){
+      sqlite3CodeVerifySchema(pParse, pTab->iDb);
+    }
     if( (pIx = pWInfo->a[i].pIdx)!=0 ){
       sqlite3VdbeAddOp(v, OP_Integer, pIx->iDb, 0);
       sqlite3VdbeOp3(v, OP_OpenRead, pWInfo->a[i].iCur, pIx->tnum,
