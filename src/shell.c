@@ -855,6 +855,10 @@ int main(int argc, char **argv){
       data.mode = MODE_Line;
       argc--;
       argv++;
+    }else if( strcmp(argv[1],"-column")==0 ){
+      data.mode = MODE_Column;
+      argc--;
+      argv++;
     }else if( argc>=3 && strcmp(argv[1],"-separator")==0 ){
       sprintf(data.separator,"%.*s",(int)sizeof(data.separator)-1,argv[2]);
       argc -= 2;
