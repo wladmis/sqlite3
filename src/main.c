@@ -352,6 +352,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
 
   /* Attempt to read the schema */
   rc = sqliteInit(db, pzErrMsg);
+  db->magic = SQLITE_MAGIC_OPEN;
   if( sqlite_malloc_failed ){
     sqlite_close(db);
     goto no_mem_on_open;
@@ -363,7 +364,6 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
     sqliteFree(*pzErrMsg);
     *pzErrMsg = 0;
   }
-  db->magic = SQLITE_MAGIC_OPEN;
   return db;
 
 no_mem_on_open:
