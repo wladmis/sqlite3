@@ -17,7 +17,7 @@
 */
 
 /*
-** The size of one page
+** The size of a page.
 **
 ** You can change this value to another (reasonable) value you want.
 ** It need not be a power of two, though the interface to the disk
@@ -71,7 +71,7 @@ typedef struct Pager Pager;
 */
 int sqlite3pager_open(Pager **ppPager, const char *zFilename,
                      int nPage, int nExtra, int useJournal);
-void sqlite3pager_set_destructor(Pager*, void(*)(void*));
+void sqlite3pager_set_destructor(Pager*, void(*)(void*,int));
 void sqlite3pager_set_cachesize(Pager*, int);
 int sqlite3pager_close(Pager *pPager);
 int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage);
@@ -103,6 +103,3 @@ void sqlite3pager_set_codec(Pager*,void(*)(void*,void*,Pgno,int),void*);
 void sqlite3pager_refdump(Pager*);
 int pager3_refinfo_enable;
 #endif
-
-
-
