@@ -2177,8 +2177,9 @@ int sqliteSelect(
   /* Do an analysis of aggregate expressions.
   */
   sqliteAggregateInfoReset(pParse);
-  if( isAgg ){
+  if( isAgg || pGroupBy ){
     assert( pParse->nAgg==0 );
+    isAgg = 1;
     for(i=0; i<pEList->nExpr; i++){
       if( sqliteExprAnalyzeAggregates(pParse, pEList->a[i].pExpr) ){
         goto select_end;
