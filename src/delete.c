@@ -377,7 +377,6 @@ void sqlite3GenerateRowIndexDelete(
   Index *pIdx;
 
   for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
-    int j;
     if( aIdxUsed!=0 && aIdxUsed[i-1]==0 ) continue;
     sqlite3GenerateIndexKey(v, pIdx, iCur);
     sqlite3VdbeAddOp(v, OP_IdxDelete, iCur+i, 0);

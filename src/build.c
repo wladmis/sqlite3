@@ -556,7 +556,7 @@ void sqlite3StartTable(
       return;
     }
     if( db->flags & !db->autoCommit ){
-      rc = sqlite3BtreeBeginTrans(db->aDb[1].pBt, 1);
+      rc = sqlite3BtreeBeginTrans(db->aDb[1].pBt, 1, 0);
       if( rc!=SQLITE_OK ){
         sqlite3ErrorMsg(pParse, "unable to get a write lock on "
           "the temporary database file");

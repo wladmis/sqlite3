@@ -632,7 +632,7 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
         loopTop = sqlite3VdbeAddOp(v, OP_Rewind, 1, 0);
         sqlite3VdbeAddOp(v, OP_MemIncr, 1, 0);
         for(j=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, j++){
-          int k, jmp2;
+          int jmp2;
           static VdbeOpList idxErr[] = {
             { OP_MemIncr,     0,  0,  0},
             { OP_String8,      0,  0,  "rowid "},
