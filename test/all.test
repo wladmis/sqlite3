@@ -78,6 +78,11 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
   if {[info exists Leak]} {
     lappend LeakList $Leak
   }
+
+  # Reset the sqlite3_temp_directory variable for the next run of tests:
+  sqlite3 db :memory:
+  db eval {PRAGMA temp_store_directory = ""}
+  db close
 }
 
 # Do one last test to look for a memory leak in the library.  This will
