@@ -3610,7 +3610,16 @@ case OP_IdxIsNull: {
 ** See also: Clear
 */
 case OP_Destroy: {
-  rc = sqlite3BtreeDropTable(db->aDb[pOp->p2].pBt, pOp->p1);
+  int iMoved;
+  rc = sqlite3BtreeDropTable(db->aDb[pOp->p2].pBt, pOp->p1, &iMoved);
+#ifndef SQLITE_OMIT_AUTOVACUUM
+  pTos++;
+  pTos->flags = MEM_Int;
+  pTos->i = iMoved;
+  if( iMoved!=0 ){
+    sqlite3RootPageMoved(&db->aDb[pOp->p2], iMoved, pOp->p1);
+  }
+#endif
   break;
 }
 

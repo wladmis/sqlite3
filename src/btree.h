@@ -72,7 +72,7 @@ int sqlite3BtreeCopyFile(Btree *, Btree *);
 #define BTREE_ZERODATA   2    /* Table has keys only - no data */
 #define BTREE_LEAFDATA   4    /* Data stored in leaves only.  Implies INTKEY */
 
-int sqlite3BtreeDropTable(Btree*, int);
+int sqlite3BtreeDropTable(Btree*, int, int*);
 int sqlite3BtreeClearTable(Btree*, int);
 int sqlite3BtreeGetMeta(Btree*, int idx, u32 *pValue);
 int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);

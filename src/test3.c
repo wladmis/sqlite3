@@ -322,7 +322,7 @@ static int btree_drop_table(
   }
   pBt = sqlite3TextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &iTable) ) return TCL_ERROR;
-  rc = sqlite3BtreeDropTable(pBt, iTable);
+  rc = sqlite3BtreeDropTable(pBt, iTable, 0);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;

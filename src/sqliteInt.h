@@ -1432,5 +1432,6 @@ void sqlite3ValueFree(sqlite3_value*);
 sqlite3_value *sqlite3ValueNew();
 sqlite3_value *sqlite3GetTransientValue(sqlite3*db);
 extern const unsigned char sqlite3UpperToLower[];
+void sqlite3RootPageMoved(Db*, int, int);
 
 #endif
