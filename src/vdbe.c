@@ -2873,6 +2873,11 @@ case OP_NewRecno: {
     int res, rx=SQLITE_OK, cnt;
     i64 x;
     cnt = 0;
+    if( (sqlite3BtreeFlags(pC->pCursor)&(BTREE_INTKEY|BTREE_ZERODATA)) !=
+          BTREE_INTKEY ){
+      rc = SQLITE_CORRUPT;
+      goto abort_due_to_error;
+    }
     assert( (sqlite3BtreeFlags(pC->pCursor) & BTREE_INTKEY)!=0 );
     assert( (sqlite3BtreeFlags(pC->pCursor) & BTREE_ZERODATA)==0 );
 
