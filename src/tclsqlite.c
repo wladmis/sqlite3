@@ -507,6 +507,12 @@ int TCLSH_MAIN(int argc, char **argv){
   Tcl_FindExecutable(argv[0]);
   interp = Tcl_CreateInterp();
   Sqlite_Init(interp);
+#ifdef SQLITE_TEST1
+  {
+    extern int Sqlitetest1_Init(Tcl_Interp*);
+    Sqlitetest1_Init(interp);
+  }
+#endif
   if( argc>=2 ){
     int i;
     Tcl_SetVar(interp,"argv0",argv[1],TCL_GLOBAL_ONLY);

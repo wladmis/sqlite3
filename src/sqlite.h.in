@@ -342,5 +342,4 @@ int sqlite_get_table_vprintf(
   va_list ap             /* Arguments to the format string */
 );
 
-
 #endif /* _SQLITE_H_ */

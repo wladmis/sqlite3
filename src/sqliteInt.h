@@ -432,3 +432,4 @@ char *sqliteDbbeNameToFile(const char*,const char*,const char*);
 void sqliteBeginTransaction(Parse*);
 void sqliteCommitTransaction(Parse*);
 void sqliteRollbackTransaction(Parse*);
+char *sqlite_mprintf(const char *, ...);
