@@ -436,8 +436,9 @@ struct Token {
 ** operand.
 */
 struct Expr {
-  u16 op;                /* Operation performed by this node */
+  u8 op;                 /* Operation performed by this node */
   u8 dataType;           /* Either SQLITE_SO_TEXT or SQLITE_SO_NUM */
+  u8 isJoinExpr;         /* Origina is the ON or USING phrase of a join */
   Expr *pLeft, *pRight;  /* Left and right subnodes */
   ExprList *pList;       /* A list of expressions used as function arguments
                          ** or in "<expr> IN (<expr-list)" */
