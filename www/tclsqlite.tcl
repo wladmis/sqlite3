@@ -61,6 +61,7 @@ defined:</p>
 <li> complete
 <li> eval
 <li> last_insert_rowid
+<li> onecolumn
 <li> timeout
 </ul>
 </p>
@@ -248,6 +249,17 @@ should return "1" if it wants SQLite to abandon the current operation.
 
 <p>The "last_insert_rowid" method returns an integer which is the ROWID
 of the most recently inserted database row.</p>
+
+<h2>The "onecolumn" method</h2>
+
+<p>The "onecolumn" method works like "eval" in that it evaluates the
+SQL query statement given as its argument.  The difference is that
+"onecolumn" returns a single element which is the first column of the
+first row of the query result.</p>
+
+<p>This is a convenience method.  It saves the user from having to
+do a "<tt>[lindex&nbsp;...&nbsp;0]</tt>" on the results of an "eval"
+in order to extract a single column result.</p>
 
 <h2>The "changes" method</h2>
 
