@@ -17,7 +17,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-if {[info commands btree_open]!=""} {
+if {[info commands btree_open]!="" && $SQLITE_PAGE_SIZE==1024 
+     && $SQLITE_USABLE_SIZE==1024} {
 
 # Basic functionality.  Open and close a database.
 #

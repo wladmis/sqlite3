@@ -468,8 +468,8 @@ static int page_write(
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
   }
-  strncpy((char*)pPage, argv[2], SQLITE_PAGE_SIZE-1);
-  ((char*)pPage)[SQLITE_PAGE_SIZE-1] = 0;
+  strncpy((char*)pPage, argv[2], SQLITE_USABLE_SIZE-1);
+  ((char*)pPage)[SQLITE_USABLE_SIZE-1] = 0;
   return TCL_OK;
 }
 
@@ -525,6 +525,7 @@ static int fake_big_file(
 */
 int Sqlitetest2_Init(Tcl_Interp *interp){
   extern int sqlite_io_error_pending;
+  char zBuf[100];
   static struct {
     char *zName;
     Tcl_CmdProc *xProc;
@@ -556,5 +557,11 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   Tcl_LinkVar(interp, "journal_format",
      (char*)&journal_format, TCL_LINK_INT);
 #endif
+  sprintf(zBuf, "%d", SQLITE_PAGE_SIZE);
+  Tcl_SetVar(interp, "SQLITE_PAGE_SIZE", zBuf, TCL_GLOBAL_ONLY); 
+  sprintf(zBuf, "%d", SQLITE_PAGE_RESERVE);
+  Tcl_SetVar(interp, "SQLITE_PAGE_RESERVE", zBuf, TCL_GLOBAL_ONLY); 
+  sprintf(zBuf, "%d", SQLITE_USABLE_SIZE);
+  Tcl_SetVar(interp, "SQLITE_USABLE_SIZE", zBuf, TCL_GLOBAL_ONLY); 
   return TCL_OK;
 }
