@@ -2368,7 +2368,7 @@ void sqlite3DropIndex(Parse *pParse, SrcList *pName){
     sqlite3VdbeChangeP3(v, base+1, pIndex->zName, 0);
     sqlite3ChangeCookie(db, v, pIndex->iDb);
     /* sqlite3VdbeAddOp(v, OP_Destroy, pIndex->tnum, pIndex->iDb); */
-    destroyRootPage(v, pIndex->tnum, pIndex->iDb);
+    destroyRootPage(pParse, pIndex->tnum, pIndex->iDb);
     sqlite3VdbeAddOp(v, OP_Close, 0, 0);
     sqlite3VdbeOp3(v, OP_DropIndex, pIndex->iDb, 0, pIndex->zName, 0);
   }
