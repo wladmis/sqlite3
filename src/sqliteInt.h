@@ -661,3 +661,4 @@ FuncDef *sqliteFindFunction(sqlite*,const char*,int,int,int);
 void sqliteRegisterBuildinFunctions(sqlite*);
 int sqliteSafetyOn(sqlite*);
 int sqliteSafetyOff(sqlite*);
+int sqliteSafetyCheck(sqlite*);

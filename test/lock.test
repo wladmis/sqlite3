@@ -21,6 +21,7 @@ source $testdir/tester.tcl
 #
 do_test lock-1.0 {
   sqlite db2 ./test.db
+  set dummy {}
 } {}
 do_test lock-1.1 {
   execsql {SELECT name FROM sqlite_master WHERE type='table' ORDER BY name}

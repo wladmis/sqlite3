@@ -21,6 +21,7 @@ source $testdir/tester.tcl
 #
 do_test temptable-1.0 {
   sqlite db2 ./test.db
+  set dummy {}
 } {}
 
 # Create a permanent table.

@@ -80,7 +80,7 @@ do_test main-2.0 {
   puts $fd hi!
   close $fd
   set v [catch {sqlite db test.db} msg]
-  lappend v $msg
+  if {$v} {lappend v $msg} {lappend v {}}
 } {0 {}}
 
 # Here are some tests for tokenize.c.  

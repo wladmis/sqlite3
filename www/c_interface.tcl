@@ -300,9 +300,7 @@ an INTEGER PRIMARY KEY column is only allowed to store integer data.
 is used incorrectly.  Examples of incorrect usage include calling
 <b>sqlite_exec()</b> after the database has been closed using
 <b>sqlite_close()</b> or calling <b>sqlite_exec()</b> with the same
-database pointer simultaneously from two separate threads.  The
-library makes an effort to detect these sorts of problems, but it
-cannot detect them with 100% accuracy.
+database pointer simultaneously from two separate threads.
 </p></dd>
 </dl>
 </blockquote>
