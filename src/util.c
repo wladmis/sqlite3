@@ -226,6 +226,32 @@ void sqliteSetNString(char **pz, ...){
   va_end(ap);
 }
 
+/*
+** Convert an SQL-style quoted string into a normal string by removing
+** the quote characters.  The conversion is done in-place.  If the
+** input does not begin with a quote character, then this routine
+** is a no-op.
+*/
+void sqliteDequote(char *z){
+  int quote;
+  int i, j;
+  quote = z[0];
+  if( quote!='\'' && quote!='"' ) return;
+  for(i=1, j=0; z[i]; i++){
+    if( z[i]==quote ){
+      if( z[i+1]==quote ){
+        z[j++] = quote;
+        i++;
+      }else{
+        z[j++] = 0;
+        break;
+      }
+    }else{
+      z[j++] = z[i];
+    }
+  }
+}
+
 /* An array to map all upper-case characters into their corresponding
 ** lower-case character. 
 */

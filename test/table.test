@@ -89,6 +89,26 @@ do_test table-1.6 {
   execsql {SELECT name FROM sqlite_master}
 } {}
 
+# Repeat the above steps, but this time quote the table name.
+#
+do_test table-1.10 {
+  execsql {CREATE TABLE "create" (f1 int)}
+  execsql {SELECT name FROM sqlite_master}
+} {create}
+do_test table-1.11 {
+  execsql {DROP TABLE "create"}
+  execsql {SELECT name FROM "sqlite_master"}
+} {}
+do_test table-1.12 {
+  execsql {CREATE TABLE test1("f1 ho" int)}
+  execsql {SELECT name as "X" FROM sqlite_master}
+} {test1}
+do_test table-1.13 {
+  execsql {DROP TABLE "TEST1"}
+  execsql {SELECT name FROM "sqlite_master"}
+} {}
+
+
 
 # Verify that we cannot make two tables with the same name
 #
