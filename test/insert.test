@@ -269,5 +269,16 @@ do_test insert-6.2 {
     SELECT b FROM t1 WHERE b=2;
   }
 } {}
+do_test insert-6.3 {
+  execsql {
+    UPDATE OR REPLACE t1 SET a=2 WHERE b=4;
+    SELECT * FROM t1 WHERE b=4;
+  }
+} {2 4}
+do_test insert-6.4 {
+  execsql {
+    SELECT * FROM t1 WHERE b=3;
+  }
+} {}
 
 finish_test

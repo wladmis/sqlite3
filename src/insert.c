@@ -748,7 +748,7 @@ void sqliteGenerateConstraintChecks(
       case OE_Replace: {
         sqliteGenerateRowIndexDelete(pParse->db, v, pTab, base, 0);
         if( isUpdate ){
-          sqliteVdbeAddOp(v, OP_Dup, nCol+extra+1+hasTwoRecnos, 1);
+          sqliteVdbeAddOp(v, OP_Dup, nCol+hasTwoRecnos, 1);
           sqliteVdbeAddOp(v, OP_MoveTo, base, 0);
         }
         seenReplace = 1;

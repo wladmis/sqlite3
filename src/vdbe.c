@@ -2287,7 +2287,7 @@ case OP_MustBeInt: {
     /* Do nothing */
   }else if( aStack[tos].flags & STK_Real ){
     int i = aStack[tos].r;
-    double r = i;
+    double r = (double)i;
     if( r!=aStack[tos].r ){
       goto mismatch;
     }
