@@ -135,7 +135,7 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   int i;
   sqlite *db;
   Vdbe *v;
-  Db *pDb;
+  Db *pDb = 0;
 
   v = sqlite3GetVdbe(pParse);
   sqlite3VdbeAddOp(v, OP_Halt, 0, 0);

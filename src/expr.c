@@ -26,6 +26,7 @@ char const *sqlite3AffinityString(char affinity){
     default:
       assert(0);
   }
+  return 0;
 }
 
 

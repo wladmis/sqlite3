@@ -443,7 +443,7 @@ static void parseCellPtr(
   }else{
     nPayload = 0;
   }
-  n += getVarint(&pCell[n], &pInfo->nKey);
+  n += getVarint(&pCell[n], (u64 *)&pInfo->nKey);
   pInfo->nHeader = n;
   pInfo->nData = nPayload;
   if( !pPage->intKey ){

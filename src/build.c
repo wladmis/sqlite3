@@ -231,7 +231,8 @@ void sqlite3UnlinkAndDeleteIndex(sqlite *db, Index *pIndex){
 ** Erase all schema information from the in-memory hash tables of
 ** a sigle database.  This routine is called to reclaim memory
 ** before the closes.  It is also called during a rollback
-** if there were schema changes during the transaction.
+** if there were schema changes during the transaction or if a
+** schema-cookie mismatch occurs.
 **
 ** If iDb<=0 then reset the internal schema tables for all database
 ** files.  If iDb>=2 then reset the internal schema for only the
