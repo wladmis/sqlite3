@@ -27,8 +27,8 @@ proc Code {body} {
   regsub -all {&} [string trim $body] {\&amp;} body
   regsub -all {>} $body {\&gt;} body
   regsub -all {<} $body {\&lt;} body
-  regsub -all {\(\(\(} $body {<font color="#00671f"><i>} body
-  regsub -all {\)\)\)} $body {</i></font>} body
+  regsub -all {\(\(\(} $body {<font color="#00671f"><u>} body
+  regsub -all {\)\)\)} $body {</u></font>} body
   puts $body
   puts {</pre></blockquote>}
 }
