@@ -184,7 +184,7 @@ void sqliteInsert(
           sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
         }
       }else if( srcTab>=0 ){
-        sqliteVdbeAddOp(v, OP_Field, srcTab, i, 0, 0); 
+        sqliteVdbeAddOp(v, OP_Field, srcTab, idx, 0, 0); 
       }else{
         sqliteExprCode(pParse, pList->a[j].pExpr);
       }
