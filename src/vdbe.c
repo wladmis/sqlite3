@@ -4309,7 +4309,8 @@ case OP_MemLoad: {
   memcpy(&aStack[tos], &p->aMem[i].s, sizeof(aStack[tos])-NBFS);;
   if( aStack[tos].flags & STK_Str ){
     zStack[tos] = p->aMem[i].z;
-    aStack[tos].flags = STK_Str | STK_Static;
+    aStack[tos].flags |= STK_Static;
+    aStack[tos].flags &= ~STK_Dyn;
   }
   break;
 }

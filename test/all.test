@@ -37,6 +37,11 @@ set EXCLUDE {
 }
 
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
+  if {$Counter%2} {
+    set ::SETUP_SQL {PRAGMA default_synchronous=off;}
+  } else {
+    catch {unset ::SETUP_SQL}
+  }
   foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
     set tail [file tail $testfile]
     if {[lsearch -exact $EXCLUDE $tail]>=0} continue

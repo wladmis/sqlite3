@@ -44,9 +44,9 @@ static int sqliteOpenCb(void *pDb, int argc, char **argv, char **azColName){
   switch( argv[0][0] ){
     case 'c': {  /* Recommended pager cache size */
       int size = atoi(argv[3]);
-      if( size!=0 ){
-        sqliteBtreeSetCacheSize(db->pBe, size);
-      }
+      if( size==0 ){ size = MAX_PAGES; }
+      db->cache_size = size;
+      sqliteBtreeSetCacheSize(db->pBe, size);
       break;
     }
     case 'f': {  /* File format */

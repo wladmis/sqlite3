@@ -434,6 +434,13 @@ end_ckpt_playback:
 
 /*
 ** Change the maximum number of in-memory pages that are allowed.
+**
+** The maximum number is the absolute value of the mxPage parameter.
+** If mxPage is negative, the noSync flag is also set.  noSync bypasses
+** calls to sqliteOsSync().  The pager runs much faster with noSync on,
+** but if the operating system crashes or there is an abrupt power 
+** failure, the database file might be left in an inconsistent and
+** unrepairable state.  
 */
 void sqlitepager_set_cachesize(Pager *pPager, int mxPage){
   if( mxPage>=0 ){

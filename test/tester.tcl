@@ -46,6 +46,9 @@ catch {db close}
 file delete -force test.db
 file delete -force test.db-journal
 sqlite db ./test.db
+if {[info exists ::SETUP_SQL]} {
+  db eval $::SETUP_SQL
+}
 
 # Abort early if this script has been run before.
 #
