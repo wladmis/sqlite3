@@ -2778,7 +2778,7 @@ sync_exit:
   return rc;
 }
 
-#ifdef SQLITE_DEBUG
+#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
 /*
 ** Return the current state of the file lock for the given pager.
 ** The return value is one of NO_LOCK, SHARED_LOCK, RESERVED_LOCK,

@@ -16,7 +16,7 @@
 #include "sqliteInt.h"
 #include <ctype.h>
 
-#ifdef SQLITE_DEBUG
+#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
 # include "pager.h"
 # include "btree.h"
 #endif
@@ -816,7 +816,7 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
-#ifdef SQLITE_DEBUG
+#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
   /*
   ** Report the current state of file logs for all databases
   */
