@@ -360,7 +360,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   db->magic = SQLITE_MAGIC_BUSY;
   
   /* Open the backend database driver */
-  rc = sqliteBtreeOpen(zFilename, mode, MAX_PAGES, &db->pBe);
+  rc = sqliteBtreeOpen(zFilename, 0, MAX_PAGES, &db->pBe);
   if( rc!=SQLITE_OK ){
     switch( rc ){
       default: {

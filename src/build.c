@@ -2305,7 +2305,6 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       sqliteVdbeAddOpList(v, ArraySize(tableInfoPreface), tableInfoPreface);
       sqliteViewGetColumnNames(pParse, pTab);
       for(i=0; i<pTab->nCol; i++){
-        char *zType;
         sqliteVdbeAddOp(v, OP_Integer, i, 0);
         sqliteVdbeAddOp(v, OP_String, 0, 0);
         sqliteVdbeChangeP3(v, -1, pTab->aCol[i].zName, P3_STATIC);

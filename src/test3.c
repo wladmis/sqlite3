@@ -67,7 +67,7 @@ static int btree_open(
        " FILENAME\"", 0);
     return TCL_ERROR;
   }
-  rc = sqliteBtreeOpen(argv[1], 0666, 1000, &pBt);
+  rc = sqliteBtreeOpen(argv[1], 0, 1000, &pBt);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
