@@ -1711,7 +1711,7 @@ int sqliteVdbeExec(
           }
           case SQLITE_READONLY: {
             sqliteSetString(pzErrMsg,"table ", pOp->p3, 
-               " is already opened for reading", 0);
+               " is readonly", 0);
             break;
           }
           case SQLITE_NOMEM: {

@@ -58,7 +58,7 @@ do_test delete-3.1b {
 } {1 2 2 4 4 16}
 do_test delete-3.1c {
   execsql {CREATE INDEX index1 ON table1(f1)}
-  execsql {DELETE FROM table1 WHERE f1=3}
+  execsql {DELETE FROM 'table1' WHERE f1=3}
   execsql {SELECT * FROM table1 ORDER BY f1}
 } {1 2 2 4 4 16}
 do_test delete-3.1d {

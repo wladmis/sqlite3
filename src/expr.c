@@ -400,7 +400,8 @@ int sqliteExprCheck(Parse *pParse, Expr *pExpr, int allowAgg, int *pIsAgg){
       if( is_agg ) pExpr->op = TK_AGG_FUNCTION;
       if( is_agg && pIsAgg ) *pIsAgg = 1;
       for(i=0; nErr==0 && i<n; i++){
-        nErr = sqliteExprCheck(pParse, pExpr->pList->a[i].pExpr, 0, 0);
+        nErr = sqliteExprCheck(pParse, pExpr->pList->a[i].pExpr,
+                               allowAgg && !is_agg, pIsAgg);
       }
     }
     default: {
