@@ -34,7 +34,8 @@ static int getBoolean(char *z){
 
 /*
 ** Interpret the given string as a safety level.  Return 0 for OFF,
-** 1 for ON or NORMAL and 2 for FULL.
+** 1 for ON or NORMAL and 2 for FULL.  Return 1 for an empty or 
+** unrecognized string argument.
 **
 ** Note that the values returned are one less that the values that
 ** should be passed into sqliteBtreeSetSafetyLevel().  The is done
