@@ -40,7 +40,6 @@ static int sqliteOpenCb(void *pDb, int argc, char **argv, char **azColName){
   sqlite *db = (sqlite*)pDb;
   Parse sParse;
   int nErr;
-  char *zErrMsg = 0;
 
   if( argc!=1 ) return 0;
   memset(&sParse, 0, sizeof(sParse));

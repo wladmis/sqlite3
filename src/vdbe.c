@@ -44,6 +44,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
+#include <unistd.h>
 
 /*
 ** SQL is translated into a sequence of instructions to be
@@ -741,7 +742,6 @@ int sqliteVdbeExec(
       */
       case OP_Null: {
         int i = ++p->tos;
-        char *z;
         if( NeedStack(p, p->tos) ) goto no_mem;
         p->zStack[i] = 0;
         p->aStack[i].flags = STK_Null;
