@@ -551,7 +551,6 @@ int sqliteFuncId(Token*);
 int sqliteExprResolveIds(Parse*, IdList*, ExprList*, Expr*);
 void sqliteExprResolveInSelect(Parse*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
-void sqliteParseInfoReset(Parse*);
 Vdbe *sqliteGetVdbe(Parse*);
 int sqliteRandomByte(void);
 int sqliteRandomInteger(void);

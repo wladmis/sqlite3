@@ -371,7 +371,6 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   db->flags &= ~SQLITE_Interrupt;
   pParse->rc = SQLITE_OK;
   i = 0;
-  sqliteParseInfoReset(pParse);
   pEngine = sqliteParserAlloc((void*(*)(int))malloc);
   if( pEngine==0 ){
     sqliteSetString(pzErrMsg, "out of memory", 0);
@@ -451,7 +450,6 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     sqliteDeleteTable(pParse->db, pParse->pNewTable);
     pParse->pNewTable = 0;
   }
-  sqliteParseInfoReset(pParse);
   if( nErr>0 && pParse->rc==SQLITE_OK ){
     pParse->rc = SQLITE_ERROR;
   }
