@@ -5162,7 +5162,7 @@ case OP_SetFound: {
   int tos = p->tos;
   VERIFY( if( tos<0 ) goto not_enough_stack; )
   if( Stringify(p, tos) ) goto no_mem;
-  if( VERIFY( i>=0 && i<p->nSet &&) 
+  if( i>=0 && i<p->nSet &&
        sqliteHashFind(&p->aSet[i].hash, zStack[tos], aStack[tos].n)){
     pc = pOp->p2 - 1;
   }
@@ -5181,7 +5181,7 @@ case OP_SetNotFound: {
   int tos = p->tos;
   VERIFY( if( tos<0 ) goto not_enough_stack; )
   if( Stringify(p, tos) ) goto no_mem;
-  if(VERIFY( i>=0 && i<p->nSet &&)
+  if( i<0 || i>=p->nSet ||
        sqliteHashFind(&p->aSet[i].hash, zStack[tos], aStack[tos].n)==0 ){
     pc = pOp->p2 - 1;
   }
@@ -5205,7 +5205,10 @@ case OP_SetFirst:
 case OP_SetNext: {
   Set *pSet;
   int tos;
-  VERIFY( if( pOp->p1<0 || pOp->p1>=p->nSet ) goto bad_instruction; )
+  if( pOp->p1<0 || pOp->p1>=p->nSet ){
+    if( pOp->opcode==OP_SetFirst ) pc = pOp->p2 - 1;
+    break;
+  }
   pSet = &p->aSet[pOp->p1];
   if( pOp->opcode==OP_SetFirst ){
     pSet->prev = sqliteHashFirst(&pSet->hash);
