@@ -831,11 +831,11 @@ foreach_clause(A) ::= .                   { A = TK_ROW; }
 foreach_clause(A) ::= FOR EACH ROW.       { A = TK_ROW; }
 foreach_clause(A) ::= FOR EACH STATEMENT. { A = TK_STATEMENT; }
 
-%type when_clause {Expr *}
+%type when_clause {Expr*}
 when_clause(A) ::= .             { A = 0; }
 when_clause(A) ::= WHEN expr(X). { A = X; }
 
-%type trigger_cmd_list {TriggerStep *}
+%type trigger_cmd_list {TriggerStep*}
 %destructor trigger_cmd_list {sqlite3DeleteTriggerStep($$);}
 trigger_cmd_list(A) ::= trigger_cmd(X) SEMI trigger_cmd_list(Y). {
   X->pNext = Y;
@@ -843,7 +843,7 @@ trigger_cmd_list(A) ::= trigger_cmd(X) SEMI trigger_cmd_list(Y). {
 }
 trigger_cmd_list(A) ::= . { A = 0; }
 
-%type trigger_cmd {TriggerStep *}
+%type trigger_cmd {TriggerStep*}
 %destructor trigger_cmd {sqlite3DeleteTriggerStep($$);}
 // UPDATE 
 trigger_cmd(A) ::= UPDATE orconf(R) nm(X) SET setlist(Y) where_opt(Z).  
