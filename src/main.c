@@ -225,7 +225,7 @@ static int sqlite3InitOne(sqlite *db, int iDb, char **pzErrMsg){
   **    meta[3]   Synchronous setting.  1:off, 2:normal, 3:full
   **    meta[4]   Db text encoding. 1:UTF-8 3:UTF-16 LE 4:UTF-16 BE
   **    meta[5]   Pragma temp_store value.  See comments on BtreeFactory
-  **    meta[6]
+  **    meta[6]   
   **    meta[7]
   **    meta[8]
   **    meta[9]
