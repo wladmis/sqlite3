@@ -42,7 +42,7 @@ void sqlite3Copy(
   sqlite *db = pParse->db;
 
 
-  if( sqlite_malloc_failed  ) goto copy_cleanup;
+  if( sqlite3_malloc_failed  ) goto copy_cleanup;
   assert( pTableName->nSrc==1 );
   pTab = sqlite3SrcListLookup(pParse, pTableName);
   if( pTab==0 || sqlite3IsReadOnly(pParse, pTab, 0) ) goto copy_cleanup;

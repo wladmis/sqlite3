@@ -76,7 +76,7 @@ void sqlite3DeleteFrom(
   int oldIdx = -1;             /* Cursor for the OLD table of AFTER triggers */
 
   sContext.pParse = 0;
-  if( pParse->nErr || sqlite_malloc_failed ){
+  if( pParse->nErr || sqlite3_malloc_failed ){
     pTabList = 0;
     goto delete_from_cleanup;
   }

@@ -59,7 +59,7 @@ void sqlite3Update(
   int oldIdx      = -1;  /* index of trigger "old" temp table       */
 
   sContext.pParse = 0;
-  if( pParse->nErr || sqlite_malloc_failed ) goto update_cleanup;
+  if( pParse->nErr || sqlite3_malloc_failed ) goto update_cleanup;
   db = pParse->db;
   assert( pTabList->nSrc==1 );
 

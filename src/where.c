@@ -389,7 +389,7 @@ WhereInfo *sqlite3WhereBegin(
   ** return value.
   */
   pWInfo = sqliteMalloc( sizeof(WhereInfo) + pTabList->nSrc*sizeof(WhereLevel));
-  if( sqlite_malloc_failed ){
+  if( sqlite3_malloc_failed ){
     sqliteFree(pWInfo);
     return 0;
   }

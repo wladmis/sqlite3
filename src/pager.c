@@ -932,7 +932,7 @@ int sqlite3pager_open(
   char zTemp[SQLITE_TEMPNAME_SIZE];
 
   *ppPager = 0;
-  if( sqlite_malloc_failed ){
+  if( sqlite3_malloc_failed ){
     return SQLITE_NOMEM;
   }
   if( zFilename && zFilename[0] ){
@@ -945,7 +945,7 @@ int sqlite3pager_open(
     zFullPathname = sqlite3OsFullPathname(zFilename);
     tempFile = 1;
   }
-  if( sqlite_malloc_failed ){
+  if( sqlite3_malloc_failed ){
     return SQLITE_NOMEM;
   }
   if( rc!=SQLITE_OK ){
