@@ -769,7 +769,8 @@ int sqliteSortCompare(const char *a, const char *b){
 ** The following procedure converts a double-precision floating point
 ** number into a string.  The resulting string has the property that
 ** two such strings comparied using strcmp() or memcmp() will give the
-** same results as comparing the original floating point numbers.
+** same results as a numeric comparison of the original floating point
+** numbers.
 **
 ** This routine is used to generate database keys from floating point
 ** numbers such that the keys sort in the same order as the original

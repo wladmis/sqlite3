@@ -1616,7 +1616,7 @@ difficulty understanding the rest.</p>
 
 <p>If you find errors in either the documentation or the code,
 feel free to fix them and/or contact the author at
-<a href="drh@hwaci.com">drh@hwaci.com</a>.  Your bug fixes or
+<a href="mailto:drh@hwaci.com">drh@hwaci.com</a>.  Your bug fixes or
 suggestions are always welcomed.</p>
 }
 

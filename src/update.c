@@ -110,7 +110,7 @@ void sqliteUpdate(
     }
   }
 
-  /* Allocate memory for the array apIdx[] and fill it pointers to every
+  /* Allocate memory for the array apIdx[] and fill it with pointers to every
   ** index that needs to be updated.  Indices only need updating if their
   ** key includes one of the columns named in pChanges.
   */
@@ -193,7 +193,7 @@ void sqliteUpdate(
     sqliteVdbeAddOp(v, OP_IdxDelete, base+i+1, 0);
   }
 
-  /* Compute a completely new data for this record.  
+  /* Compute new data for this record.  
   */
   for(i=0; i<pTab->nCol; i++){
     j = aXRef[i];
