@@ -589,7 +589,7 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       { OP_IntegrityCk, 0, 0,        0},    /* 8 */
       { OP_Dup,         0, 1,        0},
       { OP_String,      0, 0,        "ok"},
-      { OP_StrEq,       0, 13,       0},    /* 11 */
+      { OP_Eq,          0, 13,       0},    /* 11 */
       { OP_MemIncr,     0, 0,        0},
       { OP_String,      0, 0,        "*** in database "},
       { OP_String,      0, 0,        0},    /* 14 */
@@ -713,6 +713,3 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
   sqliteFree(zLeft);
   sqliteFree(zRight);
 }
-
-
-
