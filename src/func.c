@@ -925,8 +925,7 @@ static void test_error(
   int nArg,
   sqlite3_value **argv
 ){
-  // sqlite3_result_error(pCtx, sqlite3_value_text(argv[0]), 0);
-  sqlite3_result_error(pCtx, 0, 0);
+  sqlite3_result_error(pCtx, sqlite3_value_text(argv[0]), 0);
 }
 #endif /* SQLITE_TEST */
 
