@@ -3713,12 +3713,6 @@ int sqlite3BtreeFlags(BtCursor *pCur){
   return pPage ? pPage->aData[pPage->hdrOffset] : 0;
 }
 
-/******************************************************************************
-** The complete implementation of the BTree subsystem is above this line.
-** All the code the follows is for testing and troubleshooting the BTree
-** subsystem.  None of the code that follows is used during normal operation.
-******************************************************************************/
-
 /*
 ** Print a disassembly of the given page on standard output.  This routine
 ** is used for debugging and testing only.
