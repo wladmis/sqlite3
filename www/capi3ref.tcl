@@ -104,6 +104,25 @@ api {} {
 }
 
 api {} {
+  int sqlite3_bind_parameter_count(sqlite3_stmt*);
+} {
+  Return the number of wildcards in the precompiled statement given as
+  the argument.
+}
+
+api {} {
+  const char *sqlite3_bind_parameter_name(sqlite3_stmt*, int n);
+} {
+  Return the name of the n-th wildcard in the precompiled statement.
+  Wildcards of the form ":N:" have a name which is the string ":N:".
+  Wildcards of the form "?" have no name.
+
+  If the value n is out of range or if the n-th wildcard is nameless,
+  then NULL is returned.  The returned string is always in the
+  UTF-8 encoding.
+}
+
+api {} {
   int sqlite3_busy_handler(sqlite3*, int(*)(void*,int), void*);
 } {
  This routine identifies a callback function that is invoked

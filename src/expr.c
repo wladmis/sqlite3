@@ -1162,6 +1162,9 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     }
     case TK_VARIABLE: {
       sqlite3VdbeAddOp(v, OP_Variable, pExpr->iTable, 0);
+      if( pExpr->token.n>1 ){
+        sqlite3VdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
+      }
       break;
     }
     case TK_LT:

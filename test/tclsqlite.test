@@ -103,7 +103,7 @@ do_test tcl-1.13 {
 do_test tcl-1.14 {
   set v [catch {db eval} msg]
   lappend v $msg
-} {1 {wrong # args: should be "db eval SQL ?ARRAY-NAME CODE?"}}
+} {1 {wrong # args: should be "db eval SQL ?ARRAY-NAME? ?SCRIPT?"}}
 do_test tcl-1.15 {
   set v [catch {db function} msg]
   lappend v $msg

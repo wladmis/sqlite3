@@ -558,8 +558,16 @@ expr(A) ::= FLOAT(X).        {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= STRING(X).       {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= BLOB(X).         {A = sqlite3Expr(@X, 0, 0, &X);}
 expr(A) ::= VARIABLE(X).     {
-  A = sqlite3Expr(TK_VARIABLE, 0, 0, &X);
-  if( A ) A->iTable = ++pParse->nVar;
+  Token *pToken = &X;
+  Expr *pExpr = A = sqlite3Expr(TK_VARIABLE, 0, 0, pToken);
+  if( pExpr ){
+    if( pToken->z[0]==':' ){
+      int n = pExpr->iTable = atoi(&pToken->z[1]);
+      if( pParse->nVar<n ) pParse->nVar = n;
+    }else{
+      pExpr->iTable = ++pParse->nVar;
+    }
+  }
 }
 expr(A) ::= ID(X) LP exprlist(Y) RP(E). {
   A = sqlite3ExprFunction(Y, &X);
