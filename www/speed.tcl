@@ -184,7 +184,7 @@ SELECT count(*), avg(b) FROM t2 WHERE c LIKE '%one hundred%';<br>
 <p>
 This set of 100 queries uses string comparisons instead of
 numerical comparisions.  As a result, the speed of SQLite is
-compariable to are better then PostgreSQL and MySQL.
+compariable to or better then PostgreSQL and MySQL.
 </p>
 
 <h2>Test 5: Creating an index</h2>
