@@ -136,7 +136,7 @@ struct callback_data {
 /*
 ** These are the allowed modes.
 */
-#define MODE_Line     0  /* One field per line.  Blank line between records */
+#define MODE_Line     0  /* One column per line.  Blank line between records */
 #define MODE_Column   1  /* One record per line in neat columns */
 #define MODE_List     2  /* One record per line with a separator */
 #define MODE_Html     3  /* Generate an XHTML table */

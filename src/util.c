@@ -360,7 +360,7 @@ int sqliteHashNoCase(const char *z, int n){
 }
 
 /*
-** Some system shave stricmp().  Others have strcasecmp().  Because
+** Some systems have stricmp().  Others have strcasecmp().  Because
 ** there is no consistency, we will define our own.
 */
 int sqliteStrICmp(const char *zLeft, const char *zRight){

@@ -68,7 +68,7 @@ void sqliteDeleteFrom(
   }
   pTab = pTabList->a[0].pTab;
 
-  /* Resolve the field names in all the expressions.
+  /* Resolve the column names in all the expressions.
   */
   if( pWhere ){
     sqliteExprResolveInSelect(pParse, pWhere);
@@ -117,10 +117,10 @@ void sqliteDeleteFrom(
     for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
       int j;
       sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
-      for(j=0; j<pIdx->nField; j++){
-        sqliteVdbeAddOp(v, OP_Field, base, pIdx->aiField[j], 0, 0);
+      for(j=0; j<pIdx->nColumn; j++){
+        sqliteVdbeAddOp(v, OP_Field, base, pIdx->aiColumn[j], 0, 0);
       }
-      sqliteVdbeAddOp(v, OP_MakeKey, pIdx->nField, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_MakeKey, pIdx->nColumn, 0, 0, 0);
       sqliteVdbeAddOp(v, OP_DeleteIdx, base+i, 0, 0, 0);
     }
   }
