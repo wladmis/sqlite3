@@ -161,4 +161,11 @@ do_test printf-9.4 {
   sqlite3_mprintf_int {%yhello} 0 0 0
 } {%}
 
+# Ticket #812
+#
+do_test printf-10.1 {
+  sqlite3_mprintf_stronly %s {}
+} {}
+
+
 finish_test

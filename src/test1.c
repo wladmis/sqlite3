@@ -670,6 +670,31 @@ static int sqlite3_mprintf_scaled(
 }
 
 /*
+** Usage:  sqlite3_mprintf_stronly FORMAT STRING
+**
+** Call mprintf with a single double argument which is the product of the
+** two arguments given above.  This is used to generate overflow and underflow
+** doubles to test that they are converted properly.
+*/
+static int sqlite3_mprintf_stronly(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  char *z;
+  if( argc!=3 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+       " FORMAT STRING\"", 0);
+    return TCL_ERROR;
+  }
+  z = sqlite3_mprintf(argv[1], argv[2]);
+  Tcl_AppendResult(interp, z, 0);
+  sqlite3_free(z);
+  return TCL_OK;
+}
+
+/*
 ** Usage: sqlite_malloc_fail N
 **
 ** Rig sqliteMalloc() to fail on the N-th call.  Turn off this mechanism
@@ -2287,6 +2312,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_mprintf_int",           (Tcl_CmdProc*)sqlite3_mprintf_int    },
      { "sqlite3_mprintf_int64",         (Tcl_CmdProc*)sqlite3_mprintf_int64  },
      { "sqlite3_mprintf_str",           (Tcl_CmdProc*)sqlite3_mprintf_str    },
+     { "sqlite3_mprintf_stronly",       (Tcl_CmdProc*)sqlite3_mprintf_stronly},
      { "sqlite3_mprintf_double",        (Tcl_CmdProc*)sqlite3_mprintf_double },
      { "sqlite3_mprintf_scaled",        (Tcl_CmdProc*)sqlite3_mprintf_scaled },
      { "sqlite3_mprintf_z_test",        (Tcl_CmdProc*)test_mprintf_z        },

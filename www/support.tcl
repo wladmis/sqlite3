@@ -25,11 +25,18 @@ sent by to you by return email.
 </p>
 
 <p>
-An archive of the mailing list can be found at
+There are multiple archives of the mailing list:
+</p>
+
+<blockquote>
 <a href="http://www.mail-archive.com/sqlite-users%40sqlite.org/">
-http://www.mail-archive.com/sqlite-users%40sqlite.org</a> and at
+http://www.mail-archive.com/sqlite-users%40sqlite.org</a><br>
 <a href="http://www.theaimsgroup.com/">
-http://www.theaimsgroup.com/</a>.
+http://www.theaimsgroup.com/</a><br>
+<a href="http://news.gmane.org/gmane.comp.db.sqlite.general">
+http://news.gmane.org/gmane.comp.db.sqlite.general</a>
+</blockquote>
+
 </p>
 
 <h3>Professional Support</h3>
