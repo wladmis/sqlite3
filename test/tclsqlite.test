@@ -62,6 +62,7 @@ do_test tcl-1.6 {
       expr x*
     }
   } msg]
+  regsub {:.*$} $msg {} msg
   lappend v $msg
 } {1 {syntax error in expression "x*"}}
 

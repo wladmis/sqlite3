@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include "sqlite.h"
 #include <ctype.h>
-#ifdef OS_UNIX
+#if !defined(_WIN32) && !defined(WIN32)
 # include <signal.h>
 #endif
 
