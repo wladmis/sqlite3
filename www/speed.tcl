@@ -10,7 +10,7 @@ puts {
 
 <font color="red"><b>
 Note:  This document is old.  It describes a speed comparison between
-an older version of SQLite against archic versions of MySQL and PostgreSQL.
+an older version of SQLite against archaic versions of MySQL and PostgreSQL.
 Readers are invited to contribute more up-to-date speed comparisons
 on the <a href="http://www.sqlite.org/cvstrac/wiki">SQLite Wiki</a>.
 <p>

@@ -25,6 +25,11 @@ doc {Appropriate Uses For SQLite} {whentouse.html} {
   database engine might be a better choice.
 }
 
+doc {Distinctive Features} {different.html} {
+  This document enumerates and describes some of the features of
+  SQLite that make it different from other SQL database engines.
+}
+
 doc {SQLite In 5 Minutes Or Less} {quickstart.html} {
   A very quick introduction to programming with SQLite.
 }

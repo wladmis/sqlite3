@@ -8,7 +8,12 @@ puts {
 <h2>The Virtual Database Engine of SQLite</h2>
 
 <blockquote><b>
-This document describes the virtual machine used in SQLite version 2.8.0.  
+This document describes the virtual machine used in SQLite version 2.8.0. 
+The virtual machine in SQLite version 3.0 and 3.1 is very similar in
+concept but many of the opcodes have changed and the algorithms are
+somewhat different.  Use this document as a rough guide to the idea
+behind the virtual machine in SQLite version 3, not as a reference on
+how the virtual machine works.
 </b></blockquote>
 }
 
