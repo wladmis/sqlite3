@@ -219,4 +219,17 @@ do_test vacuum-7.0 {
 } {}
 db2 close
 
+# Ticket #873.  VACUUM a database that has ' in its name.
+#
+do_test vacuum-8.1 {
+  file delete -force a'z.db
+  file delete -force a'z.db-journal
+  sqlite3 db2 a'z.db
+  execsql {
+    CREATE TABLE t1(t);
+    VACUUM;
+  } db2
+} {}
+db2 close
+
 # finish_test
