@@ -189,7 +189,7 @@ do_test version-2.2 {
   close $fd
   set rc [catch {sqlite db test.db} msg]
   lappend rc $msg
-} {1 {}}
+} {1 {database disk image is malformed}}
 
 
 finish_test
