@@ -136,6 +136,27 @@ occurred since version 1.0.0:
   upgraded to the new format.</p>
   </td>
 </tr>
+<tr>
+  <td valign="top">2.6.3 to 2.7.0</td>
+  <td valign="top">2002-Aug-13</td>
+  <td><p>Beginning with version 2.7.0, SQLite understands two different
+  datatypes: text and numeric.  Text data sorts in memcmp() order.
+  Numeric data sorts in numerical order if it looks like a number,
+  or in memcmp() order if it does not.</p>
+
+  <p>When SQLite version 2.7.0 or later opens a 2.6.3 or earlier database,
+  it assumes all columns of all tables have type "numeric".  For 2.7.0
+  and later databases, columns have type "text" if their datatype
+  string contains the substrings "char" or "clob" or "blob" or "text".
+  Otherwise they are of type "numeric".</p>
+
+  <p>Because "text" columns have a different sort order from numeric,
+  indices on "text" columns occur in a different order for version
+  2.7.0 and later database.  Hence version 2.6.3 and earlier of SQLite 
+  will be unable to read a 2.7.0 or later database.  But version 2.7.0
+  and later of SQLite will read earlier database version.</p>
+  </td>
+</tr>
 </table>
 </blockquote>
 

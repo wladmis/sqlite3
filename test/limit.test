@@ -115,6 +115,6 @@ do_test limit-4.3 {
     FROM t3 LIMIT 1000;
     SELECT x FROM t4 ORDER BY y DESC LIMIT 1 OFFSET 999;
   }
-} {1}
+} {1000}
 
 finish_test

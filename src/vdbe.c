@@ -2308,12 +2308,12 @@ case OP_StrGe: {
     c = strcmp(zStack[nos], zStack[tos]);
   }
   switch( pOp->opcode ){
-    case OP_Eq:    c = c==0;     break;
-    case OP_Ne:    c = c!=0;     break;
-    case OP_Lt:    c = c<0;      break;
-    case OP_Le:    c = c<=0;     break;
-    case OP_Gt:    c = c>0;      break;
-    default:       c = c>=0;     break;
+    case OP_StrEq:    c = c==0;     break;
+    case OP_StrNe:    c = c!=0;     break;
+    case OP_StrLt:    c = c<0;      break;
+    case OP_StrLe:    c = c<=0;     break;
+    case OP_StrGt:    c = c>0;      break;
+    default:          c = c>=0;     break;
   }
   POPSTACK;
   POPSTACK;

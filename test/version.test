@@ -18,7 +18,7 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
 # Current file format version
-set VX 3
+set VX 4
 
 # Create a new database
 #

@@ -749,6 +749,7 @@ WhereInfo *sqliteWhereBegin(
       pLevel->iMem = pParse->nMem++;
       cont = pLevel->cont = sqliteVdbeMakeLabel(v);
       sqliteVdbeAddOp(v, OP_MakeKey, nColumn, 0);
+      sqliteAddIdxKeyType(v, pIdx);
       if( nColumn==pIdx->nColumn ){
         sqliteVdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
         testOp = OP_IdxGT;
@@ -931,6 +932,7 @@ WhereInfo *sqliteWhereBegin(
       if( testOp!=OP_Noop ){
         pLevel->iMem = pParse->nMem++;
         sqliteVdbeAddOp(v, OP_MakeKey, nEqColumn + (score & 1), 0);
+        sqliteAddIdxKeyType(v, pIdx);
         if( leFlag ){
           sqliteVdbeAddOp(v, OP_IncrKey, 0, 0);
         }
@@ -975,6 +977,7 @@ WhereInfo *sqliteWhereBegin(
       cont = pLevel->cont = sqliteVdbeMakeLabel(v);
       if( nEqColumn>0 || (score&2)!=0 ){
         sqliteVdbeAddOp(v, OP_MakeKey, nEqColumn + ((score&2)!=0), 0);
+        sqliteAddIdxKeyType(v, pIdx);
         if( !geFlag ){
           sqliteVdbeAddOp(v, OP_IncrKey, 0, 0);
         }
