@@ -410,4 +410,26 @@ do_test sort-9.7 {
 } {3}
 } ;# endif bloblit
 
+# Ticket #1092 - ORDER BY on rowid fields.
+do_test sort-10.1 {
+  execsql {
+    CREATE TABLE t7(c INTEGER PRIMARY KEY);
+    INSERT INTO t7 VALUES(1);
+    INSERT INTO t7 VALUES(2);
+    INSERT INTO t7 VALUES(3);
+    INSERT INTO t7 VALUES(4);
+  }
+} {}
+do_test sort-10.2 {
+  execsql {
+    SELECT c FROM t7 WHERE c<=3 ORDER BY c DESC;
+  }
+} {3 2 1}
+do_test sort-10.3 {
+  execsql {
+    SELECT c FROM t7 WHERE c<3 ORDER BY c DESC;
+  }
+} {2 1}
+
 finish_test
+
