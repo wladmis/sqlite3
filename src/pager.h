@@ -74,5 +74,5 @@ int *sqlitepager_stats(Pager*);
 #ifdef SQLITE_TEST
 void sqlitepager_refdump(Pager*);
 int pager_refinfo_enable;
-int pager_old_format;
+int journal_format;
 #endif

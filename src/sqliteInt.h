@@ -417,7 +417,7 @@ struct FKey {
 ** referenced table row is propagated into the row that holds the
 ** foreign key.
 ** 
-** The following there symbolic values are used to record which type
+** The following symbolic values are used to record which type
 ** of action to take.
 */
 #define OE_None     0   /* There is no constraint to check */
