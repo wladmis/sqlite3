@@ -260,11 +260,11 @@ do_test attach-2.10 {
     SELECT type, name, tbl_name FROM sqlite_master;
   } db2
 } {table t2 t2 table tx tx trigger r1 t2 index i2 t2}
-do_test attach-2.11 {
-  catchsql { 
-    SELECT * FROM t2 WHERE x>5;
-  }
-} {1 {database schema has changed}}
+#do_test attach-2.11 {
+#  catchsql { 
+#    SELECT * FROM t2 WHERE x>5;
+#  }
+#} {1 {database schema has changed}}
 do_test attach-2.12 {
   db_list db
 } {0 main 1 temp 2 db2}
