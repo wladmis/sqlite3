@@ -1258,6 +1258,7 @@ case OP_Function: {
 
   ctx.s.flags = MEM_Null;
   ctx.s.z = 0;
+  ctx.s.xDel = 0;
   ctx.isError = 0;
   ctx.isStep = 0;
   if( ctx.pFunc->needCollSeq ){
