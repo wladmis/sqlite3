@@ -105,6 +105,7 @@ newer versions of SQLite.
 <p>The following documentation is currently available:</p>
 
 <p><ul>
+<li><a href="faq.html">Frequently Asked Questions</a> are available online.</li>
 <li>Information on the <a href="sqlite.html">sqlite</a>
     command-line utility.</li>
 <li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.</li>

@@ -90,7 +90,7 @@ do_test bigrow-1.8 {
 } {abc}
 do_test bigrow-1.9 {
   execsql "SELECT b FROM t1 WHERE a!='$::big1' ORDER BY a"
-} {B 2}
+} {2 B}
 
 # Try doing some indexing on big columns
 #

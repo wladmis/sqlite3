@@ -556,9 +556,9 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     p->showHeader = 1;
     p->colWidth[0] = 4;
     p->colWidth[1] = 12;
-    p->colWidth[2] = 5;
-    p->colWidth[3] = 5;
-    p->colWidth[4] = 40;
+    p->colWidth[2] = 10;
+    p->colWidth[3] = 10;
+    p->colWidth[4] = 35;
   }else
 
   if( c=='h' && strncmp(azArg[0], "header", n)==0 && nArg>1 ){

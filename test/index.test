@@ -331,4 +331,54 @@ do_test index-11.1 {
   concat [execsql {SELECT c FROM t3 WHERE b==10}] $sqlite_search_count
 } {0.10 3}
 
+# Numeric strings should compare as if they were numbers.  So even if the
+# strings are not character-by-character the same, if they represent the
+# same number they should compare equal to one another.  Verify that this
+# is true in indices.
+#
+do_test index-12.1 {
+  execsql {
+    CREATE TABLE t4(a,b);
+    INSERT INTO t4 VALUES('0.0',1);
+    INSERT INTO t4 VALUES('0.00',2);
+    INSERT INTO t4 VALUES('abc',3);
+    INSERT INTO t4 VALUES('-1.0',4);
+    INSERT INTO t4 VALUES('+1.0',5);
+    INSERT INTO t4 VALUES('0',6);
+    INSERT INTO t4 VALUES('00000',7);
+    SELECT a FROM t4 ORDER BY b;
+  }
+} {0.0 0.00 abc -1.0 +1.0 0 00000}
+do_test index-12.2 {
+  execsql {
+    SELECT a FROM t4 WHERE a==0 ORDER BY b
+  }
+} {0.0 0.00 0 00000}
+do_test index-12.3 {
+  execsql {
+    SELECT a FROM t4 WHERE a<0.5 ORDER BY b
+  }
+} {0.0 0.00 -1.0 0 00000}
+do_test index-12.4 {
+  execsql {
+    SELECT a FROM t4 WHERE a>-0.5 ORDER BY b
+  }
+} {0.0 0.00 abc +1.0 0 00000}
+do_test index-12.5 {
+  execsql {
+    CREATE INDEX t4i1 ON t4(a);
+    SELECT a FROM t4 WHERE a==0 ORDER BY b
+  }
+} {0.0 0.00 0 00000}
+do_test index-12.6 {
+  execsql {
+    SELECT a FROM t4 WHERE a<0.5 ORDER BY b
+  }
+} {0.0 0.00 -1.0 0 00000}
+do_test index-12.7 {
+  execsql {
+    SELECT a FROM t4 WHERE a>-0.5 ORDER BY b
+  }
+} {0.0 0.00 abc +1.0 0 00000}
+
 finish_test

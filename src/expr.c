@@ -511,8 +511,8 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       break;
     }
     case TK_INTEGER: {
-      int i = atoi(pExpr->token.z);
-      sqliteVdbeAddOp(v, OP_Integer, i, 0);
+      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
       break;
     }
     case TK_FLOAT: {
@@ -576,11 +576,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
     }
     case TK_UMINUS: {
       assert( pExpr->pLeft );
-      if( pExpr->pLeft->op==TK_INTEGER ){
-        int i = atoi(pExpr->pLeft->token.z);
-        sqliteVdbeAddOp(v, OP_Integer, -i, 0);
-        break;
-      }else if( pExpr->pLeft->op==TK_FLOAT ){
+      if( pExpr->pLeft->op==TK_FLOAT || pExpr->pLeft->op==TK_INTEGER ){
         Token *p = &pExpr->pLeft->token;
         char *z = sqliteMalloc( p->n + 2 );
         sprintf(z, "-%.*s", p->n, p->z);
