@@ -9,7 +9,7 @@
 #
 #***********************************************************************
 # This file attempts to check the library in an out-of-memory situation.
-# When compiled with -DMEMORY_DEBUG=1, the SQLite library accepts a special
+# When compiled with -DSQLITE_DEBUG=1, the SQLite library accepts a special
 # command (sqlite_malloc_fail N) which causes the N-th malloc to fail.  This
 # special feature is used to see what happens in the library if a malloc
 # were to really fail due to an out-of-memory situation.
@@ -22,7 +22,7 @@ source $testdir/tester.tcl
 # Only run these tests if memory debugging is turned on.
 #
 if {[info command sqlite_malloc_stat]==""} {
-   puts "Skipping malloc tests: not compiled with -DMEMORY_DEBUG..."
+   puts "Skipping malloc tests: not compiled with -DSQLITE_DEBUG..."
    finish_test
    return
 }

@@ -81,7 +81,7 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
 }
 
 # Do one last test to look for a memory leak in the library.  This will
-# only work if SQLite is compiled with the -DMEMORY_DEBUG=1 flag.
+# only work if SQLite is compiled with the -DSQLITE_DEBUG=1 flag.
 #
 if {$LeakList!=""} {
   puts -nonewline memory-leak-test...

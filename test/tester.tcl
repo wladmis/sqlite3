@@ -117,7 +117,7 @@ proc do_test {name cmd expected} {
 }
 
 # The procedure uses the special "sqlite_malloc_stat" command
-# (which is only available if SQLite is compiled with -DMEMORY_DEBUG=1)
+# (which is only available if SQLite is compiled with -DSQLITE_DEBUG=1)
 # to see how many malloc()s have not been free()ed.  The number
 # of surplus malloc()s is stored in the global variable $::Leak.
 # If the value in $::Leak grows, it may mean there is a memory leak

@@ -19,6 +19,12 @@ proc doc {name url desc} {
   puts {</td></tr>}
 }
 
+doc {Appropriate Uses For SQLite} {whentouse.html} {
+  This document describes situations where SQLite is an approriate
+  database engine to use versus situations where a client/server
+  database engine might be a better choice.
+}
+
 doc {SQLite In 5 Minutes Or Less} {quickstart.html} {
   A very quick introduction to programming with SQLite.
 }
@@ -59,6 +65,7 @@ doc {Locking And Concurrency<br>In SQLite Version 3} {lockingv3.html} {
 
 doc {Version 2 DataTypes } {datatypes.html} {
   A description of how SQLite version 2 handles SQL datatypes.
+  Short summary:  Everything is a string.
 }
 doc {Version 3 DataTypes } {datatype3.html} {
   SQLite version 3 introduces the concept of manifest typing, where the

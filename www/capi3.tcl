@@ -234,10 +234,10 @@ is executed using:
 </pre></blockquote>
 
 <p>
-The sqlite3_step() routine return SQLITE3_ROW if it is returning a single
-row of the result set, or SQLITE3_DONE if execution has completed, either
-normally or due to an error.  It might also return SQLITE3_BUSY if it is
-unable to open the database file.  If the return value is SQLITE3_ROW, then
+The sqlite3_step() routine return SQLITE_ROW if it is returning a single
+row of the result set, or SQLITE_DONE if execution has completed, either
+normally or due to an error.  It might also return SQLITE_BUSY if it is
+unable to open the database file.  If the return value is SQLITE_ROW, then
 the following routines can be used to extract information about that row
 of the result set:
 </p>
@@ -339,11 +339,11 @@ User defined functions can be created using the following routine:
      void (*xStep)(sqlite3_context*,int,sqlite3_value**),
      void (*xFinal)(sqlite3_context*)
    );
-   #define SQLITE3_UTF8     1
-   #define SQLITE3_UTF16    2
-   #define SQLITE3_UTF16BE  3
-   #define SQLITE3_UTF16LE  4
-   #define SQLITE3_ANY      5
+   #define SQLITE_UTF8     1
+   #define SQLITE_UTF16    2
+   #define SQLITE_UTF16BE  3
+   #define SQLITE_UTF16LE  4
+   #define SQLITE_ANY      5
 </pre></blockquote>
 
 <p>
@@ -432,8 +432,8 @@ collating sequences:
 The sqlite3_create_collation() function specifies a collating sequence name
 and a comparison function to implement that collating sequence.  The
 comparison function is only used for comparing text values.  The eTextRep
-parameter is one of SQLITE3_UTF8, SQLITE3_UTF16LE, SQLITE3_UTF16BE, or
-SQLITE3_ANY to specify which text representation the comparison function works
+parameter is one of SQLITE_UTF8, SQLITE_UTF16LE, SQLITE_UTF16BE, or
+SQLITE_ANY to specify which text representation the comparison function works
 with.  Separate comparison functions can exist for the same collating
 sequence for each of the UTF-8, UTF-16LE and UTF-16BE text representations.
 The sqlite3_create_collation16() works like sqlite3_create_collation() except
