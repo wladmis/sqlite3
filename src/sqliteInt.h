@@ -55,6 +55,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <stddef.h>
 
 /*
 ** The maximum number of in-memory pages to use for the main database
