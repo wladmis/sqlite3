@@ -170,6 +170,19 @@ do_test where-1.37 {
   count {SELECT w FROM t1 WHERE w+1<=4 ORDER BY w}
 } {1 2 3 199}
 
+do_test where-1.38 {
+  count {SELECT (w) FROM t1 WHERE (w)>(97)}
+} {98 99 100 6}
+do_test where-1.39 {
+  count {SELECT (w) FROM t1 WHERE (w)>=(97)}
+} {97 98 99 100 8}
+do_test where-1.40 {
+  count {SELECT (w) FROM t1 WHERE (w)==(97)}
+} {97 3}
+do_test where-1.41 {
+  count {SELECT (w) FROM t1 WHERE ((w)+(1))==(98)}
+} {97 99}
+
 
 # Do the same kind of thing except use a join as the data source.
 #

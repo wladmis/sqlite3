@@ -424,7 +424,6 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
       break;
     }
     pParse->sLastToken.z = &zSql[i];
-    pParse->sLastToken.base = 1;
     pParse->sLastToken.dyn = 0;
     pParse->sLastToken.n = sqliteGetToken((unsigned char*)&zSql[i], &tokenType);
     i += pParse->sLastToken.n;
