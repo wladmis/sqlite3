@@ -254,7 +254,9 @@ separate file distinct from the main database file.</p>
 
 <p>There are no arbitrary limits on the number
 of columns or on the number of constraints in a table.
-The total amount of data in a single row is limited to 65535 bytes.</p>
+The total amount of data in a single row is limited to about
+1 megabytes.  (This limit can be increased to 16MB by changing
+a single #define in the source code and recompiling.)</p>
 
 <p>The exact text
 of each CREATE TABLE statement is stored in the <b>sqlite_master</b>
