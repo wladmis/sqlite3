@@ -308,7 +308,7 @@ struct LikePattern {
   struct LikeState {
     int val;           /* Unicode codepoint or -1 for any char i.e. '_' */
     int failstate;     /* State to jump to if next char is not val */
-  } aState[0];
+  } aState[1];
 };
 typedef struct LikePattern LikePattern;
 
@@ -1093,4 +1093,3 @@ void sqlite3RegisterBuiltinFunctions(sqlite *db){
   }
   sqlite3RegisterDateTimeFunctions(db);
 }
-

@@ -1309,16 +1309,7 @@ case OP_Function: {
   ** immediately call the destructor for any non-static values.
   */
   if( ctx.pVdbeFunc ){
-    int mask = pOp->p2;
-    for(i=0; i<ctx.pVdbeFunc->nAux; i++){
-      struct AuxData *pAux = &ctx.pVdbeFunc->apAux[i];
-      if( (i>31 || !(mask&(1<<i))) && pAux->pAux ){
-        if( pAux->xDelete ){
-          pAux->xDelete(pAux->pAux);
-        }
-        pAux->pAux = 0;
-      }
-    }
+    sqlite3VdbeDeleteAuxData(ctx.pVdbeFunc, pOp->p2);
     pOp->p3 = (char *)ctx.pVdbeFunc;
     pOp->p3type = P3_VDBEFUNC;
   }
