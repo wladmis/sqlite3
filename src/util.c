@@ -1134,5 +1134,32 @@ int sqlite3SafetyCheck(sqlite *db){
   return 0;
 }
 
+int sqlite3PutVarint(unsigned char *p, u64 v){
+  int i = 0;
+  do{
+    p[i++] = (v & 0x7f) | 0x80;
+    v >>= 7;
+  }while( v!=0 );
+  p[i-1] &= 0x7f;
+  return i;
+}
 
+int sqlite3GetVarint(unsigned char *p, u64 *v){
+  u64 x = p[0] & 0x7f;
+  int n = 0;
+  while( (p[n++]&0x80)!=0 ){
+    x |= (p[n]&0x7f)<<(n*7);
+  }
+  *v = x;
+  return n;
+}
+
+int sqlite3VarintLen(u64 v){
+  int i = 0;
+  do{
+    i++;
+    v >>= 7;
+  }while( v!=0 );
+  return i;
+}
 
