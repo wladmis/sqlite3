@@ -2945,7 +2945,7 @@ static int balance_nonroot(MemPage *pPage){
   ** process of being overwritten.
   */
   for(i=0; i<nOld; i++){
-    MemPage *p = apCopy[i] = (MemPage*)&aCopy[i+1][-sizeof(MemPage)];
+    MemPage *p = apCopy[i] = (MemPage*)&aCopy[i+1][-(int)sizeof(MemPage)];
     p->aData = &((u8*)p)[-pBt->pageSize];
     memcpy(p->aData, apOld[i]->aData, pBt->pageSize + sizeof(MemPage));
     p->aData = &((u8*)p)[-pBt->pageSize];
