@@ -19,6 +19,10 @@ proc doc {name url desc} {
   puts {</td></tr>}
 }
 
+doc {SQLite In 5 Minutes Or Less} {quickstart.html} {
+  A very quick introduction to programming with SQLite.
+}
+
 doc {SQL Syntax} {lang.html} {
   This document describes the SQL language that is understood by
   SQLite.  

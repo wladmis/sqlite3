@@ -9,6 +9,28 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Sep-02} {Version 3.0.6 (beta)} {
+  Because of some important changes to sqlite3_step(),
+  we have decided to
+  do an additional beta release prior to the first "stable" release.
+  If no serious problems are discovered in this version, we will
+  release version 3.0 "stable" in about a week.
+}
+
+
+newsitem {2004-Aug-29} {Version 3.0.5 (beta)} {
+  The fourth beta release of SQLite version 3.0 is now available.
+  The next release is expected to be called "stable".
+}
+
+
+newsitem {2004-Aug-08} {Version 3.0.4 (beta)} {
+  The third beta release of SQLite version 3.0 is now available.
+  This new beta fixes several bugs including a database corruption
+  problem that can occur when doing a DELETE while a SELECT is pending.
+  Expect at least one more beta before version 3.0 goes final.
+}
+
 newsitem {2004-Jly-22} {Version 3.0.3 (beta)} {
   The second beta release of SQLite version 3.0 is now available.
   This new beta fixes many bugs and adds support for databases with
