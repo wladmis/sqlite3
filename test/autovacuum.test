@@ -90,7 +90,6 @@ foreach delete_order $delete_orders {
     } {ok}
   }
 
-# set btree_trace 1
   foreach delete $delete_order {
     # Delete one set of rows from the table.
     do_test autovacuum-1.$tn.($delete).1 {

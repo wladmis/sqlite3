@@ -17,6 +17,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable memorydb {
+
 # In the following sequence of tests, compute the MD5 sum of the content
 # of a table, make lots of modifications to that table, then do a rollback.
 # Verify that after the rollback, the MD5 checksum is unchanged.
@@ -366,5 +368,7 @@ for {set i 1} {$i<=256} {incr i} {
      execsql {SELECT count(*) FROM t6}
   } [expr {256-$i}]
 }
+
+} ;# ifcapable memorydb
 
 finish_test

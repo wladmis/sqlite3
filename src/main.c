@@ -842,6 +842,7 @@ int sqlite3BtreeFactory(
 #if TEMP_STORE==0
     /* Do nothing */
 #endif
+#ifndef SQLITE_OMIT_MEMORYDB
 #if TEMP_STORE==1
     if( db->temp_store==2 ) zFilename = ":memory:";
 #endif
@@ -851,6 +852,7 @@ int sqlite3BtreeFactory(
 #if TEMP_STORE==3
     zFilename = ":memory:";
 #endif
+#endif /* SQLITE_OMIT_MEMORYDB */
   }
 
   rc = sqlite3BtreeOpen(zFilename, ppBtree, btree_flags);

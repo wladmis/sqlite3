@@ -1678,7 +1678,11 @@ int main(int argc, char **argv){
   if( i<argc ){
     data.zDbFilename = argv[i++];
   }else{
+#ifndef SQLITE_OMIT_MEMORYDB
     data.zDbFilename = ":memory:";
+#else
+    data.zDbFilename = 0;
+#endif
   }
   if( i<argc ){
     zFirstCmd = argv[i++];
