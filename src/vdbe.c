@@ -2632,7 +2632,7 @@ case OP_MakeRecord: {
 ** P3 is a string that is P1 characters long.  Each character is either
 ** an 'n' or a 't' to indicates if the argument should be numeric or
 ** text.  The first character corresponds to the lowest element on the
-** stack.
+** stack.  If P3 is NULL then all arguments are assumed to be numeric.
 **
 ** See also: MakeIdxKey, SortMakeKey
 */
@@ -2661,7 +2661,7 @@ case OP_MakeRecord: {
 ** P3 is a string that is P1 characters long.  Each character is either
 ** an 'n' or a 't' to indicates if the argument should be numeric or
 ** text.  The first character corresponds to the lowest element on the
-** stack.
+** stack.  If P3 is null then all arguments are assumed to be numeric.
 **
 ** See also:  MakeKey, SortMakeKey
 */

@@ -434,6 +434,31 @@ do_test table-10.8 {
   }
 } {0 {}}
 
-
+# Test for the "typeof" function.
+#
+do_test table-11.1 {
+  execsql {
+    CREATE TABLE t7(
+       a integer primary key,
+       b number(5,10),
+       c character varying (8),
+       d VARCHAR(9),
+       e clob,
+       f BLOB,
+       g Text,
+       h
+    );
+    INSERT INTO t7(a) VALUES(1);
+    SELECT typeof(a), typeof(b), typeof(c), typeof(d),
+           typeof(e), typeof(f), typeof(g), typeof(h)
+    FROM t7 LIMIT 1;
+  }
+} {numeric numeric text text text text text numeric}
+do_test table-11.2 {
+  execsql {
+    SELECT typeof(a+b), typeof(a||b), typeof(c+d), typeof(c||d)
+    FROM t7 LIMIT 1;
+  }
+} {numeric text numeric text}
 
 finish_test

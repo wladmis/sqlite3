@@ -394,9 +394,9 @@ sortlist(A) ::= sortlist(X) COMMA sortitem(Y) collate(C) sortorder(Z). {
   A = sqliteExprListAppend(X,Y,0);
   if( A ) A->a[A->nExpr-1].sortOrder = C+Z;
 }
-sortlist(A) ::= sortitem(Y) sortorder(Z). {
+sortlist(A) ::= sortitem(Y) collate(C) sortorder(Z). {
   A = sqliteExprListAppend(0,Y,0);
-  if( A ) A->a[0].sortOrder = Z;
+  if( A ) A->a[0].sortOrder = C+Z;
 }
 sortitem(A) ::= expr(X).   {A = X;}
 

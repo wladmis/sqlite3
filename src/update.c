@@ -319,7 +319,7 @@ void sqliteUpdate(
 
   /* Delete the old indices for the current record.
   */
-  sqliteGenerateRowIndexDelete(v, pTab, base, aIdxUsed);
+  sqliteGenerateRowIndexDelete(db, v, pTab, base, aIdxUsed);
 
   /* If changing the record number, delete the old record.
   */
