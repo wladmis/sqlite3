@@ -94,7 +94,7 @@ int main(int argc, char **argv){
   }
   db = <b>sqlite_open</b>(argv[1], 0, &zErrMsg);
   if( db==0 ){
-    fprintf(stderr, "Can't open database: %s\n", &zErrMsg);
+    fprintf(stderr, "Can't open database: %s\n", zErrMsg);
     exit(1);
   }
   rc = <b>sqlite_exec</b>(db, argv[2], callback, 0, &zErrMsg);
