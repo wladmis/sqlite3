@@ -57,7 +57,7 @@ int sqliteBtreeGetMeta(Btree*, int*);
 int sqliteBtreeUpdateMeta(Btree*, int*);
 
 
-#ifndef NDEBUG
+#ifndef NDEBUG2
 int sqliteBtreePageDump(Btree*, int, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
 struct Pager *sqliteBtreePager(Btree*);

@@ -2459,9 +2459,9 @@ int sqliteBtreeUpdateMeta(Btree *pBt, int *aMeta){
 ** All the code the follows is for testing and troubleshooting the BTree
 ** subsystem.  None of the code that follows is used during normal operation.
 ** All of the following code is omitted if the library is compiled with
-** the -DNDEBUG=1 compiler option.
+** the -DNDEBUG2=1 compiler option.
 ******************************************************************************/
-#ifndef NDEBUG
+#ifndef NDEBUG2
 
 /*
 ** Print a disassembly of the given page on standard output.  This routine
