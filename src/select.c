@@ -436,14 +436,16 @@ static int selectInnerLoop(
     ** item into the set table with bogus data.
     */
     case SRT_Set: {
+      int lbl = sqliteVdbeMakeLabel(v);
       assert( nColumn==1 );
-      sqliteVdbeAddOp(v, OP_IsNull, -1, sqliteVdbeCurrentAddr(v)+3);
-      sqliteVdbeAddOp(v, OP_String, 0, 0);
+      sqliteVdbeAddOp(v, OP_IsNull, -1, lbl);
       if( pOrderBy ){
         pushOntoSorter(pParse, v, pOrderBy);
       }else{
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
         sqliteVdbeAddOp(v, OP_PutStrKey, iParm, 0);
       }
+      sqliteVdbeResolveLabel(v, lbl);
       break;
     }
 

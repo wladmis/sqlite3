@@ -293,12 +293,8 @@ void sqliteUpdate(
   ** on top of the stack.)
   */
   if( chngRecno ){
-    if( pTab->iPKey<0 || (j = aXRef[pTab->iPKey])<0 ){
-      sqliteVdbeAddOp(v, OP_Dup, 0, 0);
-    }else{
-      sqliteExprCode(pParse, pChanges->a[j].pExpr);
-      sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
-    }
+    sqliteExprCode(pParse, pRecnoExpr);
+    sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
   }
 
   /* Compute new data for this record.  
