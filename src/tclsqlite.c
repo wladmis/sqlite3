@@ -813,8 +813,9 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     pFunc->zScript = (char*)&pFunc[1];
     pDb->pFunc = pFunc;
     strcpy(pFunc->zScript, zScript);
-    sqlite3_create_function(pDb->db, zName, -1, SQLITE_UTF8,
+    rc = sqlite3_create_function(pDb->db, zName, -1, SQLITE_UTF8,
         pFunc, tclSqlFunc, 0, 0);
+    if( rc!=SQLITE_OK ) rc = TCL_ERROR;
     break;
   }
 
