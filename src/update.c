@@ -155,8 +155,9 @@ void sqliteUpdate(
   ** open every index that needs updating.
   */
   sqliteVdbeAddOp(v, OP_ListRewind, 0, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_Open, 0, 1, pTab->zName, 0);
   for(i=0; i<nIdx; i++){
-    sqliteVdbeAddOp(v, OP_Open, i+1, 0, apIdx[i]->zName, 0);
+    sqliteVdbeAddOp(v, OP_Open, i+1, 1, apIdx[i]->zName, 0);
   }
 
   /* Loop over every record that needs updating.  We have to load

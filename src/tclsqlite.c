@@ -201,7 +201,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int argc, char **argv){
     return TCL_ERROR;
   }
   if( argc==3 ){
-    mode = 0;
+    mode = 0666;
   }else if( Tcl_GetInt(interp, argv[3], &mode)!=TCL_OK ){
     return TCL_ERROR;
   }

@@ -103,8 +103,9 @@ void sqliteDeleteFrom(
   /* Delete every item identified in the list.
   */
   sqliteVdbeAddOp(v, OP_ListRewind, 0, 0, 0, 0);
+  sqliteVdbeAddOp(v, OP_Open, 0, 1, pTab->zName, 0);
   for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
-    sqliteVdbeAddOp(v, OP_Open, i, 0, pIdx->zName, 0);
+    sqliteVdbeAddOp(v, OP_Open, i, 1, pIdx->zName, 0);
   }
   end = sqliteVdbeMakeLabel(v);
   addr = sqliteVdbeAddOp(v, OP_ListRead, 0, end, 0, 0);
