@@ -46,7 +46,7 @@ struct ExprInfo {
 typedef struct ExprMaskSet ExprMaskSet;
 struct ExprMaskSet {
   int n;          /* Number of assigned cursor values */
-  int ix[32];     /* Cursor assigned to each bit */
+  int ix[31];     /* Cursor assigned to each bit */
 };
 
 /*
@@ -123,7 +123,9 @@ static int exprTableUsage(ExprMaskSet *pMaskSet, Expr *p){
   unsigned int mask = 0;
   if( p==0 ) return 0;
   if( p->op==TK_COLUMN ){
-    return getMask(pMaskSet, p->iTable);
+    mask = getMask(pMaskSet, p->iTable);
+    if( mask==0 ) mask = -1;
+    return mask;
   }
   if( p->pRight ){
     mask = exprTableUsage(pMaskSet, p->pRight);
