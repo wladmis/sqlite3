@@ -857,6 +857,9 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
   if( prepSelectStmt(pParse, pSelect) ){
     return 0;
   }
+  if( sqlite3SelectResolve(pParse, pSelect, 0) ){
+    return 0;
+  }
   pTab = sqliteMalloc( sizeof(Table) );
   if( pTab==0 ){
     return 0;
@@ -989,7 +992,6 @@ static int prepSelectStmt(Parse *pParse, Select *p){
         pFrom->zAlias =
           sqlite3MPrintf("sqlite_subquery_%p_", (void*)pFrom->pSelect);
       }
-      sqlite3SelectResolve(pParse, pFrom->pSelect, 0);
       pFrom->pTab = pTab = 
         sqlite3ResultSetOfSelect(pParse, pFrom->zAlias, pFrom->pSelect);
       if( pTab==0 ){
