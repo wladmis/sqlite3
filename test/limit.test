@@ -194,13 +194,23 @@ do_test limit-6.4 {
 } {3 4}
 do_test limit-6.5 {
   execsql {
-    SELECT * FROM t6 LIMIT 0
+    SELECT * FROM t6 LIMIT -1
   }
 } {1 2 3 4}
 do_test limit-6.6 {
   execsql {
-    SELECT * FROM t6 LIMIT 0 OFFSET 1
+    SELECT * FROM t6 LIMIT -1 OFFSET 1
   }
 } {2 3 4}
+do_test limit-6.7 {
+  execsql {
+    SELECT * FROM t6 LIMIT 0
+  }
+} {}
+do_test limit-6.8 {
+  execsql {
+    SELECT * FROM t6 LIMIT 0 OFFSET 1
+  }
+} {}
 
 finish_test

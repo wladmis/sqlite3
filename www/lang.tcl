@@ -1550,7 +1550,7 @@ sort expression may be optionally followed by ASC or DESC to specify
 the sort order.</p>
 
 <p>The LIMIT clause places an upper bound on the number of rows
-returned in the result.  A LIMIT of 0 indicates no upper bound.
+returned in the result.  A negative LIMIT indicates no upper bound.
 The optional OFFSET following LIMIT specifies how many
 rows to skip at the beginning of the result set.</p>
 
