@@ -824,7 +824,17 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       break;
     }
     case TK_INTEGER: {
-      sqliteVdbeAddOp(v, OP_Integer, atoi(pExpr->token.z), 0);
+      int iVal = atoi(pExpr->token.z);
+      char zBuf[30];
+      sprintf(zBuf,"%d",iVal);
+      if( strlen(zBuf)!=pExpr->token.n 
+            || strncmp(pExpr->token.z,zBuf,pExpr->token.n)!=0 ){
+        /* If the integer value cannot be represented exactly in 32 bits,
+        ** then code it as a string instead. */
+        sqliteVdbeAddOp(v, OP_String, 0, 0);
+      }else{
+        sqliteVdbeAddOp(v, OP_Integer, iVal, 0);
+      }
       sqliteVdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
       break;
     }
