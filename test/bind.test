@@ -498,5 +498,4 @@ do_test bind-11.1 {
   catchsql {SELECT * FROM sqlite_master WHERE name=$abc(123 and sql NOT NULL;}
 } {1 {unrecognized token: "$abc(123"}}
 
-
 finish_test

@@ -750,7 +750,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       }
       for(i=1; i<=nVar; i++){
         const char *zVar = sqlite3_bind_parameter_name(pStmt, i);
-        if( zVar[0]=='$' || zVar[0]==':' ){
+        if( zVar!=0 && (zVar[0]=='$' || zVar[0]==':') ){
           Tcl_Obj *pVar = Tcl_GetVar2Ex(interp, &zVar[1], 0, 0);
           if( pVar ){
             int n;
