@@ -478,6 +478,24 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp(v, OP_Callback, 3, 0);
     }
   }else
+
+#ifndef SQLITE_OMIT_CURSOR
+  if( sqlite3StrICmp(zLeft, "cursor_list")==0 ){
+    int i;
+    if( sqlite3ReadSchema(pParse) ) goto pragma_out;
+    sqlite3VdbeSetNumCols(v, 2);
+    sqlite3VdbeSetColName(v, 0, "seq", P3_STATIC);
+    sqlite3VdbeSetColName(v, 1, "name", P3_STATIC);
+    for(i=0; i<db->nSqlCursor; i++){
+      SqlCursor *p = db->apSqlCursor[i];
+      if( p==0 ) continue;
+      assert( p->zName!=0 );
+      sqlite3VdbeAddOp(v, OP_Integer, i, 0);
+      sqlite3VdbeOp3(v, OP_String8, 0, 0, p->zName, 0);
+      sqlite3VdbeAddOp(v, OP_Callback, 2, 0);
+    }
+  }else
+#endif /* SQLITE_OMIT_CURSOR */
 #endif /* SQLITE_OMIT_SCHEMA_PRAGMAS */
 
 #ifndef SQLITE_OMIT_FOREIGN_KEY

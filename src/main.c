@@ -500,6 +500,13 @@ int sqlite3_close(sqlite3 *db){
     sqlite3ValueFree(db->pErr);
   }
 
+#ifndef SQLITE_OMIT_CURSOR
+  for(j=0; j<db->nSqlCursor; j++){
+    sqlite3CursorDelete(db->apSqlCursor[j]);
+  }
+  sqliteFree(db->apSqlCursor);
+#endif
+
   db->magic = SQLITE_MAGIC_ERROR;
   sqliteFree(db);
   return SQLITE_OK;
