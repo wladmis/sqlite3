@@ -380,6 +380,8 @@ static int auth_callback(
     case SQLITE_SELECT            : zCode="SQLITE_SELECT"; break;
     case SQLITE_TRANSACTION       : zCode="SQLITE_TRANSACTION"; break;
     case SQLITE_UPDATE            : zCode="SQLITE_UPDATE"; break;
+    case SQLITE_ATTACH            : zCode="SQLITE_ATTACH"; break;
+    case SQLITE_DETACH            : zCode="SQLITE_DETACH"; break;
     default                       : zCode="????"; break;
   }
   Tcl_DStringInit(&str);
