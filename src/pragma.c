@@ -283,7 +283,7 @@ void sqlite3Pragma(
       int size = pBt ? sqlite3BtreeGetPageSize(pBt) : 0;
       returnSingleInt(pParse, "page_size", size);
     }else{
-      sqlite3BtreeSetPageSize(pBt, atoi(zRight), 0);
+      sqlite3BtreeSetPageSize(pBt, atoi(zRight), sqlite3BtreeGetReserve(pBt));
     }
   }else
 
