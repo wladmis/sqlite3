@@ -253,8 +253,8 @@ void sqliteUpdate(
 
   /* Do constraint checks
   */
-  sqliteGenerateConstraintChecks(pParse, pTab, base, aIdxUsed, chngRecno,
-                                 onError, addr,1);
+  sqliteGenerateConstraintChecks(pParse, pTab, base, aIdxUsed, chngRecno, 1,
+                                 onError, addr);
 
   /* Delete the old indices for the current record.
   */
@@ -268,7 +268,7 @@ void sqliteUpdate(
 
   /* Create the new index entries and the new record.
   */
-  sqliteCompleteInsertion(pParse, pTab, base, aIdxUsed, chngRecno);
+  sqliteCompleteInsertion(pParse, pTab, base, aIdxUsed, chngRecno, 1);
 
   /* Increment the row counter 
   */

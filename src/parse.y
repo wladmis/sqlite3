@@ -548,10 +548,10 @@ cmd ::= DROP INDEX ids(X).      {sqliteDropIndex(pParse, &X);}
 
 ///////////////////////////// The COPY command ///////////////////////////////
 //
-cmd ::= COPY ids(X) FROM ids(Y) USING DELIMITERS STRING(Z).
-    {sqliteCopy(pParse,&X,&Y,&Z);}
-cmd ::= COPY ids(X) FROM ids(Y).
-    {sqliteCopy(pParse,&X,&Y,0);}
+cmd ::= COPY onconf_u(R) ids(X) FROM ids(Y) USING DELIMITERS STRING(Z).
+    {sqliteCopy(pParse,&X,&Y,&Z,R);}
+cmd ::= COPY onconf_u(R) ids(X) FROM ids(Y).
+    {sqliteCopy(pParse,&X,&Y,0,R);}
 
 ///////////////////////////// The VACUUM command /////////////////////////////
 //

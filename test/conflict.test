@@ -162,7 +162,7 @@ do_test conflict-2.2 {
   }
 } {1 {constraint failed}}
 do_test conflict-2.3 {
-  catchsql {
+  catchsql { 
     INSERT ON CONFLICT IGNORE INTO t1 VALUES(1,2,4);
     SELECT c FROM t1 ORDER BY c;
   }
