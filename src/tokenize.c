@@ -353,6 +353,9 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
           nErr++;
           sqliteFree(pParse->zErrMsg);
           pParse->zErrMsg = 0;
+        }else if( pParse->rc!=SQLITE_OK ){
+          sqliteSetString(pzErrMsg, sqliteErrStr(pParse->rc), 0);
+          nErr++;
         }
         break;
     }
