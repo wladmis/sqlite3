@@ -30,7 +30,7 @@
 typedef struct Btree Btree;
 typedef struct BtCursor BtCursor;
 
-int sqliteBtreeOpen(const char *zFilename, int mode, Btree **ppBtree);
+int sqliteBtreeOpen(const char *zFilename, int mode, int nPg, Btree **ppBtree);
 int sqliteBtreeClose(Btree*);
 
 int sqliteBtreeBeginTrans(Btree*);
@@ -58,7 +58,7 @@ int sqliteBtreeUpdateMeta(Btree*, int*);
 
 
 #ifdef SQLITE_TEST
-int sqliteBtreePageDump(Btree*, int);
+int sqliteBtreePageDump(Btree*, int, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
 Pager *sqliteBtreePager(Btree*);
 char *sqliteBtreeSanityCheck(Btree*, int*, int);

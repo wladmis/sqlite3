@@ -53,6 +53,7 @@ int sqlitepager_ref(void*);
 int sqlitepager_unref(void*);
 Pgno sqlitepager_pagenumber(void*);
 int sqlitepager_write(void*);
+int sqlitepager_iswriteable(void*);
 int sqlitepager_pagecount(Pager*);
 int sqlitepager_commit(Pager*);
 int sqlitepager_rollback(Pager*);
