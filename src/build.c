@@ -1663,7 +1663,7 @@ static void destroyTable(Parse *pParse, Table *pTab){
 #ifdef SQLITE_OMIT_AUTOVACUUM
   destroyRootPage(pParse, pTab->tnum, pTab->iDb);
   for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-    destroyRootPage(v, pIdx->tnum, pIdx->iDb);
+    destroyRootPage(pParse, pIdx->tnum, pIdx->iDb);
   }
 #else
   /* If the database may be auto-vacuum capable (if SQLITE_OMIT_AUTOVACUUM
