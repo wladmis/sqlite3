@@ -61,7 +61,7 @@ do_test pagesize-1.7 {
   
 
 
-foreach PGSZ {512 2000 2048 3000 4096} {
+foreach PGSZ {512 515 516 751 2000 2001 2002 2003 2004 2048 3000 4096} {
   do_test pagesize-2.$PGSZ.1 {
     db close
     file delete -force test.db
