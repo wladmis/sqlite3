@@ -866,7 +866,7 @@ int main(int argc, char **argv){
       data.mode = MODE_Line;
       argc--;
       argv++;
-    }else if( argc>=3 && strcmp(argv[0],"-separator")==0 ){
+    }else if( argc>=3 && strcmp(argv[1],"-separator")==0 ){
       sprintf(data.separator,"%.*s",(int)sizeof(data.separator)-1,argv[2]);
       argc -= 2;
       argv += 2;
