@@ -202,7 +202,7 @@ cmd ::= DROP VIEW ids(X). {
 //////////////////////// The SELECT statement /////////////////////////////////
 //
 cmd ::= select(X).  {
-  sqliteSelect(pParse, X, SRT_Callback, 0);
+  sqliteSelect(pParse, X, SRT_Callback, 0, 0, 0, 0);
   sqliteSelectDelete(X);
 }
 

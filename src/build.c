@@ -17,7 +17,7 @@
 **     DROP TABLE
 **     CREATE INDEX
 **     DROP INDEX
-**     creating expressions and ID lists
+**     creating ID lists
 **     COPY
 **     VACUUM
 **     BEGIN TRANSACTION
@@ -791,7 +791,7 @@ void sqliteEndTable(Parse *pParse, Token *pEnd, Select *pSelect){
       int op = p->isTemp ? OP_OpenWrAux : OP_OpenWrite;
       sqliteVdbeAddOp(v, op, 1, 0);
       pParse->nTab = 2;
-      sqliteSelect(pParse, pSelect, SRT_Table, 1);
+      sqliteSelect(pParse, pSelect, SRT_Table, 1, 0, 0, 0);
     }
     sqliteEndWriteOperation(pParse);
   }

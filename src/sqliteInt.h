@@ -434,6 +434,8 @@ struct WhereInfo {
   int iBreak;          /* Jump here to break out of the loop */
   int base;            /* Index of first Open opcode */
   int nLevel;          /* Number of nested loop */
+  int savedNTab;       /* Value of pParse->nTab before WhereBegin() */
+  int peakNTab;        /* Value of pParse->nTab after WhereBegin() */
   WhereLevel a[1];     /* Information about each nest loop in the WHERE */
 };
 
@@ -461,6 +463,7 @@ struct Select {
   Select *pPrior;        /* Prior select in a compound select statement */
   int nLimit, nOffset;   /* LIMIT and OFFSET values.  -1 means not used */
   char *zSelect;         /* Complete text of the SELECT command */
+  int base;              /* Index of VDBE cursor for left-most FROM table */
 };
 
 /*
@@ -521,7 +524,7 @@ struct Parse {
   int nameClash;       /* A permanent table name clashes with temp table name */
   int newTnum;         /* Table number to use when reparsing CREATE TABLEs */
   int nErr;            /* Number of errors seen */
-  int nTab;            /* Number of previously allocated cursors */
+  int nTab;            /* Number of previously allocated VDBE cursors */
   int nMem;            /* Number of memory cells used so far */
   int nSet;            /* Number of sets used so far */
   int nAgg;            /* Number of aggregate expressions */
@@ -586,7 +589,7 @@ void sqliteIdListAddAlias(IdList*, Token*);
 void sqliteIdListDelete(IdList*);
 void sqliteCreateIndex(Parse*, Token*, Token*, IdList*, int, Token*, Token*);
 void sqliteDropIndex(Parse*, Token*);
-int sqliteSelect(Parse*, Select*, int, int);
+int sqliteSelect(Parse*, Select*, int, int, Select*, int, int);
 Select *sqliteSelectNew(ExprList*,IdList*,Expr*,ExprList*,Expr*,ExprList*,
                         int,int,int);
 void sqliteSelectDelete(Select*);
@@ -595,7 +598,7 @@ Table *sqliteTableNameToTable(Parse*, const char*);
 IdList *sqliteTableTokenToIdList(Parse*, Token*);
 void sqliteDeleteFrom(Parse*, Token*, Expr*);
 void sqliteUpdate(Parse*, Token*, ExprList*, Expr*, int);
-WhereInfo *sqliteWhereBegin(Parse*, IdList*, Expr*, int);
+WhereInfo *sqliteWhereBegin(Parse*, int, IdList*, Expr*, int);
 void sqliteWhereEnd(WhereInfo*);
 void sqliteExprCode(Parse*, Expr*);
 void sqliteExprIfTrue(Parse*, Expr*, int);
@@ -611,8 +614,7 @@ char *sqliteTableNameFromToken(Token*);
 int sqliteExprCheck(Parse*, Expr*, int, int*);
 int sqliteExprCompare(Expr*, Expr*);
 int sqliteFuncId(Token*);
-int sqliteExprResolveIds(Parse*, IdList*, ExprList*, Expr*);
-void sqliteExprResolveInSelect(Parse*, Expr*);
+int sqliteExprResolveIds(Parse*, int, IdList*, ExprList*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
 Vdbe *sqliteGetVdbe(Parse*);
 int sqliteRandomByte(void);
