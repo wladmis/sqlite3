@@ -1167,16 +1167,11 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     case TK_REM:
     case TK_BITAND:
     case TK_BITOR:
-    case TK_SLASH: {
-      sqlite3ExprCode(pParse, pExpr->pLeft);
-      sqlite3ExprCode(pParse, pExpr->pRight);
-      sqlite3VdbeAddOp(v, op, 0, 0);
-      break;
-    }
+    case TK_SLASH:
     case TK_LSHIFT:
     case TK_RSHIFT: {
-      sqlite3ExprCode(pParse, pExpr->pRight);
       sqlite3ExprCode(pParse, pExpr->pLeft);
+      sqlite3ExprCode(pParse, pExpr->pRight);
       sqlite3VdbeAddOp(v, op, 0, 0);
       break;
     }
