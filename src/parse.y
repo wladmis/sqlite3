@@ -92,7 +92,15 @@ carglist ::= carglist carg.
 carglist ::= .
 carg ::= CONSTRAINT ID ccons.
 carg ::= ccons.
-carg ::= DEFAULT expr.
+carg ::= DEFAULT STRING(X).          {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT ID(X).              {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT INTEGER(X).         {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT PLUS INTEGER(X).    {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT MINUS INTEGER(X).   {sqliteAddDefaultValue(pParse,&X,1);}
+carg ::= DEFAULT FLOAT(X).           {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT PLUS FLOAT(X).      {sqliteAddDefaultValue(pParse,&X,0);}
+carg ::= DEFAULT MINUS FLOAT(X).     {sqliteAddDefaultValue(pParse,&X,1);}
+carg ::= DEFAULT NULL. 
 
 // In addition to the type name, we also care about the primary key.
 //
@@ -220,7 +228,19 @@ cmd ::= INSERT INTO ID(X) fieldlist_opt(F) VALUES LP itemlist(Y) RP.
 itemlist(A) ::= itemlist(X) COMMA item(Y).  {A = sqliteExprListAppend(X,Y,0);}
 itemlist(A) ::= item(X).     {A = sqliteExprListAppend(0,X,0);}
 item(A) ::= INTEGER(X).      {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
+item(A) ::= PLUS INTEGER(X). {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
+item(A) ::= MINUS INTEGER(X). {
+  A = sqliteExpr(TK_INTEGER, 0, 0, 0);
+  A->token.z = 0;
+  sqliteSetNString(&A->token.z, "-", 1, X.z, X.n, 0);
+}
 item(A) ::= FLOAT(X).        {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
+item(A) ::= PLUS FLOAT(X).   {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
+item(A) ::= MINUS FLOAT(X).  {
+  A = sqliteExpr(TK_FLOAT, 0, 0, 0);
+  A->token.z = 0;
+  sqliteSetNString(&A->token.z, "-", 1, X.z, X.n, 0);
+}
 item(A) ::= STRING(X).       {A = sqliteExpr(TK_STRING, 0, 0, &X);}
 
 %type fieldlist_opt {IdList*}

@@ -165,12 +165,12 @@ void sqliteSelect(
 
         zTab = pTabList->a[p->iTable].zAlias;
         if( zTab==0 ) zTab = pTab->zName;
-        sqliteSetString(&zName, zTab, ".", pTab->azCol[p->iField], 0);
+        sqliteSetString(&zName, zTab, ".", pTab->aCol[p->iField].zName, 0);
         sqliteVdbeAddOp(v, OP_ColumnName, i, 0, zName, 0);
         sqliteFree(zName);
       }else{
         Table *pTab = pTabList->a[0].pTab;
-        sqliteVdbeAddOp(v, OP_ColumnName, i, 0, pTab->azCol[p->iField], 0);
+        sqliteVdbeAddOp(v, OP_ColumnName, i, 0, pTab->aCol[p->iField].zName, 0);
       }
     }
   }

@@ -52,7 +52,7 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
         Table *pTab = pTabList->a[i].pTab;
         if( pTab==0 ) continue;
         for(j=0; j<pTab->nCol; j++){
-          if( sqliteStrICmp(pTab->azCol[j], z)==0 ){
+          if( sqliteStrICmp(pTab->aCol[j].zName, z)==0 ){
             cnt++;
             pExpr->iTable = i;
             pExpr->iField = j;
@@ -102,7 +102,7 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
         }
         if( sqliteStrICmp(zTab, zLeft)!=0 ) continue;
         for(j=0; j<pTab->nCol; j++){
-          if( sqliteStrICmp(pTab->azCol[j], zRight)==0 ){
+          if( sqliteStrICmp(pTab->aCol[j].zName, zRight)==0 ){
             cnt++;
             pExpr->iTable = i;
             pExpr->iField = j;

@@ -88,7 +88,7 @@ void sqliteInsert(
     }
     for(i=0; i<pField->nId; i++){
       for(j=0; j<pTab->nCol; j++){
-        if( sqliteStrICmp(pField->a[i].zName, pTab->azCol[j])==0 ){
+        if( sqliteStrICmp(pField->a[i].zName, pTab->aCol[j].zName)==0 ){
           pField->a[i].idx = j;
           break;
         }
@@ -121,7 +121,9 @@ void sqliteInsert(
         }
       }
       if( pField && j>=pField->nId ){
-        sqliteVdbeAddOp(v, OP_String, 0, 0, "", 0);
+        char *zDflt = pTab->aCol[i].zDflt;
+        if( zDflt==0 ) zDflt = "";
+        sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
       }else{
         sqliteExprCode(pParse, pList->a[j].pExpr);
       }
@@ -143,7 +145,9 @@ void sqliteInsert(
           }
         }
         if( pField && j>=pField->nId ){
-          sqliteVdbeAddOp(v, OP_String, 0, 0, "", 0);
+          char *zDflt = pTab->aCol[idx].zDflt;
+          if( zDflt==0 ) zDflt = "";
+          sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
         }else{
           sqliteExprCode(pParse, pList->a[j].pExpr);
         }
