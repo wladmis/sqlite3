@@ -47,10 +47,8 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
     return;
   }
 
-  zFile = 0;
-  sqlite3SetNString(&zFile, pFilename->z, pFilename->n, 0);
+  zFile = sqlite3NameFromToken(pFilename);;
   if( zFile==0 ) return;
-  sqlite3Dequote(zFile);
 #ifndef SQLITE_OMIT_AUTHORIZATION
   if( sqlite3AuthCheck(pParse, SQLITE_ATTACH, zFile, 0, 0)!=SQLITE_OK ){
     sqliteFree(zFile);
@@ -58,10 +56,8 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   }
 #endif /* SQLITE_OMIT_AUTHORIZATION */
 
-  zName = 0;
-  sqlite3SetNString(&zName, pDbname->z, pDbname->n, 0);
+  zName = sqlite3NameFromToken(pDbname);
   if( zName==0 ) return;
-  sqlite3Dequote(zName);
   for(i=0; i<db->nDb; i++){
     if( db->aDb[i].zName && sqlite3StrICmp(db->aDb[i].zName, zName)==0 ){
       sqlite3ErrorMsg(pParse, "database %z is already in use", zName);
@@ -311,6 +307,3 @@ int sqlite3FixTriggerStep(
   }
   return 0;
 }
-
-
-

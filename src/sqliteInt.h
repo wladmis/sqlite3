@@ -1302,7 +1302,7 @@ void sqlite3UnlinkAndDeleteIndex(sqlite*,Index*);
 void sqlite3Vacuum(Parse*, Token*);
 int sqlite3RunVacuum(char**, sqlite*);
 int sqlite3GlobCompare(const unsigned char*,const unsigned char*);
-char *sqlite3TableNameFromToken(Token*);
+char *sqlite3NameFromToken(Token*);
 int sqlite3ExprCheck(Parse*, Expr*, int, int*);
 int sqlite3ExprType(Expr*);
 int sqlite3ExprCompare(Expr*, Expr*);

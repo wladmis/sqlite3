@@ -1125,9 +1125,8 @@ static int matchOrderbyToColumn(
       if( pEList->a[j].zName && (pE->op==TK_ID || pE->op==TK_STRING) ){
         char *zName, *zLabel;
         zName = pEList->a[j].zName;
-        assert( pE->token.z );
-        zLabel = sqliteStrNDup(pE->token.z, pE->token.n);
-        sqlite3Dequote(zLabel);
+        zLabel = sqlite3NameFromToken(&pE->token);
+        assert( zLabel!=0 );
         if( sqlite3StrICmp(zName, zLabel)==0 ){ 
           iCol = j;
         }
