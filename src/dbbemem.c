@@ -434,6 +434,7 @@ static void deleteMTable(MTable *p){
     sqliteFree(data);
   }
   ArrayClear(&p->data);
+  sqliteFree(p->zName);
   sqliteFree(p);
 }
 
