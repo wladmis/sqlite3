@@ -1802,7 +1802,19 @@ int sqlite3pager_close(Pager *pPager){
     case PAGER_RESERVED:
     case PAGER_SYNCED: 
     case PAGER_EXCLUSIVE: {
+      /* We ignore any IO errors that occur during the rollback
+      ** operation. So disable IO error simulation so that testing
+      ** works more easily.
+      */
+#if defined(SQLITE_TEST) && (defined(OS_UNIX) || defined(OS_WIN))
+      extern int sqlite3_io_error_pending;
+      int ioerr_cnt = sqlite3_io_error_pending;
+      sqlite3_io_error_pending = -1;
+#endif
       sqlite3pager_rollback(pPager);
+#if defined(SQLITE_TEST) && (defined(OS_UNIX) || defined(OS_WIN))
+      sqlite3_io_error_pending = ioerr_cnt;
+#endif
       if( !MEMDB ){
         sqlite3OsUnlock(&pPager->fd, NO_LOCK);
       }

@@ -154,7 +154,7 @@ do_test  view-3.4 {
     SELECT * FROM v3 LIMIT 4;
   }
 } {b 2 b 3 b 5 b 6}
-do_test  view-3.5 {
+do_test view-3.5 {
   execsql2 {
     CREATE VIEW v4 AS 
       SELECT a, b FROM t1 

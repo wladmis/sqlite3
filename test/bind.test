@@ -478,16 +478,16 @@ do_test bind-10.15 {
 do_test bind-10.16 {
   sqlite3_bind_parameter_name $VM 1
 } :abc
-do_test bind-10.16 {
+do_test bind-10.17 {
   sqlite3_bind_parameter_name $VM 2
 } {}
-do_test bind-10.16 {
+do_test bind-10.18 {
   sqlite3_bind_parameter_name $VM 3
 } {}
-do_test bind-10.16 {
+do_test bind-10.19 {
   sqlite3_bind_parameter_name $VM 4
 } {?4}
-do_test bind-10.16 {
+do_test bind-10.20 {
   sqlite3_bind_parameter_name $VM 5
 } :pqr
 catch {sqlite3_finalize $VM}

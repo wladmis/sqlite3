@@ -317,7 +317,7 @@ cmd ::= DROP VIEW fullname(X). {
 //////////////////////// The SELECT statement /////////////////////////////////
 //
 cmd ::= select(X).  {
-  sqlite3Select(pParse, X, SRT_Callback, 0, 0, 0, 0, 0, 0);
+  sqlite3Select(pParse, X, SRT_Callback, 0, 0, 0, 0, 0);
   sqlite3SelectDelete(X);
 }
 
@@ -609,7 +609,7 @@ expr(A) ::= VARIABLE(X).     {
   Expr *pExpr = A = sqlite3Expr(TK_VARIABLE, 0, 0, pToken);
   sqlite3ExprAssignVarNumber(pParse, pExpr);
 }
-term(A) ::= ID(X) LP exprlist(Y) RP(E). {
+expr(A) ::= ID(X) LP exprlist(Y) RP(E). {
   A = sqlite3ExprFunction(Y, &X);
   sqlite3ExprSpan(A,&X,&E);
 }
