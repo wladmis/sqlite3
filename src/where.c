@@ -385,7 +385,7 @@ WhereInfo *sqliteWhereBegin(
         }
       }
       sqliteVdbeAddOp(v, OP_MakeKey, pIdx->nColumn, 0, 0, 0);
-      sqliteVdbeAddOp(v, OP_Fetch, base+pTabList->nId+i, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_BeginIdx, base+pTabList->nId+i, 0, 0, 0);
       sqliteVdbeAddOp(v, OP_NextIdx, base+pTabList->nId+i, brk, 0, cont);
       if( i==pTabList->nId-1 && pushKey ){
         haveKey = 1;

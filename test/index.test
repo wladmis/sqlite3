@@ -349,6 +349,6 @@ do_test index-11.1 {
     execsql "INSERT INTO t3 VALUES('x${i}x',$i,0.$i)"
   }
   execsql {SELECT c, fcnt() FROM t3 WHERE b==10}
-} {0.10 2}
+} {0.10 1}
 
 finish_test

@@ -92,7 +92,7 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Destroy            18
 #define OP_Reorganize         19
 
-#define OP_ResetIdx           20
+#define OP_BeginIdx           20
 #define OP_NextIdx            21
 #define OP_PutIdx             22
 #define OP_DeleteIdx          23
