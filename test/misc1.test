@@ -320,4 +320,47 @@ do_test misc1-11.2 {
   lappend rc $msg
 } {0 3}
 
+# Make sure string comparisons really do compare strings in format4+.
+# Similar tests in the format3.test file show that for format3 and earlier
+# all comparisions where numeric if either operand looked like a number.
+#
+do_test misc1-12.1 {
+  execsql {SELECT '0'=='0.0'}
+} {0}
+do_test misc1-12.2 {
+  execsql {SELECT '0'==0.0}
+} {1}
+do_test misc1-12.3 {
+  execsql {SELECT '12345678901234567890'=='12345678901234567891'}
+} {0}
+do_test misc1-12.4 {
+  execsql {
+    CREATE TABLE t6(a INT UNIQUE, b TEXT UNIQUE);
+    INSERT INTO t6 VALUES('0','0.0');
+    SELECT * FROM t6;
+  }
+} {0 0.0}
+do_test misc1-12.5 {
+  execsql {
+    INSERT OR IGNORE INTO t6 VALUES(0.0,'x');
+    SELECT * FROM t6;
+  }
+} {0 0.0}
+do_test misc1-12.6 {
+  execsql {
+    INSERT OR IGNORE INTO t6 VALUES('y',0);
+    SELECT * FROM t6;
+  }
+} {0 0.0 y 0}
+do_test misc1-12.7 {
+  execsql {
+    CREATE TABLE t7(x INTEGER, y TEXT, z);
+    INSERT INTO t7 VALUES(0,0,1);
+    INSERT INTO t7 VALUES(0.0,0,2);
+    INSERT INTO t7 VALUES(0,0.0,3);
+    INSERT INTO t7 VALUES(0.0,0.0,4);
+    SELECT DISTINCT x, y FROM t7 ORDER BY z;
+  }
+} {0 0 0 0.0}
+
 finish_test
