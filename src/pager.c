@@ -316,7 +316,7 @@ static int write32bits(OsFile *fd, u32 val){
 */
 static void store32bits(u32 val, PgHdr *p, int offset){
   unsigned char *ac;
-  ac = &((char*)PGHDR_TO_DATA(p))[offset];
+  ac = &((unsigned char*)PGHDR_TO_DATA(p))[offset];
   if( journal_format<=1 ){
     memcpy(ac, &val, 4);
   }else{
