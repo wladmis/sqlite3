@@ -47,6 +47,10 @@
 # define stifle_history(X)
 #endif
 
+/* Make sure isatty() has a prototype.
+*/
+extern int isatty();
+
 /*
 ** The following is the open SQLite database.  We make a pointer
 ** to this database a static variable so that it can be accessed
@@ -1046,7 +1050,7 @@ static void process_sqliterc(struct callback_data *p, char *sqliterc_override){
     free(home_dir);
   }
   in = fopen(sqliterc,"r");
-  if(in) {
+  if(in && isatty(fileno(stdout))) {
     printf("Loading resources from %s\n",sqliterc);
     process_input(p,in);
     fclose(in);
@@ -1182,7 +1186,6 @@ int main(int argc, char **argv){
       }
     }
   }else{
-    extern int isatty();
     if( isatty(fileno(stdout)) && isatty(fileno(stdin)) ){
       char *zHome;
       char *zHistory = 0;
