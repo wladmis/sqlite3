@@ -543,6 +543,8 @@ void sqlite3StartTable(
     if( !isTemp ){
       sqlite3VdbeAddOp(v, OP_Integer, db->file_format, 0);
       sqlite3VdbeAddOp(v, OP_SetCookie, 0, 1);
+      sqlite3VdbeAddOp(v, OP_Integer, db->enc, 0);
+      sqlite3VdbeAddOp(v, OP_SetCookie, 0, 4);
     }
     sqlite3OpenMasterTable(v, isTemp);
     sqlite3VdbeAddOp(v, OP_NewRecno, 0, 0);
