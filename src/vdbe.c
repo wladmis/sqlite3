@@ -994,6 +994,7 @@ static int toInt(const char *zNum, int *pNum){
   }else{
     neg = 0;
   }
+  if( *zNum==0 ) return 0;
   while( isdigit(*zNum) ){
     v = v*10 + *zNum - '0';
     zNum++;
@@ -1569,8 +1570,8 @@ void sqliteVdbeMakeReady(
 ** immediately.  There will be no error message but the p->rc field is
 ** set to SQLITE_ABORT and this routine will return SQLITE_ERROR.
 **
-** A memory allocation error causes p->rc to be set SQLITE_NOMEM and this
-** routien to return SQLITE_ERROR.
+** A memory allocation error causes p->rc to be set to SQLITE_NOMEM and this
+** routine to return SQLITE_ERROR.
 **
 ** Other fatal errors return SQLITE_ERROR.
 **

@@ -128,9 +128,15 @@ do_test intpkey-1.12 {
 # Try to insert a non-integer value into the primary key field.  This
 # should result in a data type mismatch.
 #
-do_test intpkey-1.13 {
+do_test intpkey-1.13.1 {
   set r [catch {execsql {
     INSERT INTO t1 VALUES('x','y','z');
+  }} msg]
+  lappend r $msg
+} {1 {datatype mismatch}}
+do_test intpkey-1.13.2 {
+  set r [catch {execsql {
+    INSERT INTO t1 VALUES('','y','z');
   }} msg]
   lappend r $msg
 } {1 {datatype mismatch}}
