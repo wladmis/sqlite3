@@ -71,9 +71,11 @@ static int getSafetyLevel(char *z){
 ** and 0 to use the compile-time default.
 */
 static int getTempStore(char *z){
-  if (sqliteStrICmp(z, "file") == 0) {
+  if( z[0]>='0' || z[0]<='2' ){
+    return z[0] - '0';
+  }else if( sqliteStrICmp(z, "file")==0 ){
     return 1;
-  }else if(sqliteStrICmp(z, "memory") == 0) {
+  }else if( sqliteStrICmp(z, "memory")==0 ){
     return 2;
   }else{
     return 0;

@@ -1327,7 +1327,7 @@ static struct Pager *memBtreePager(Btree* tree)
 ** Return the full pathname of the underlying database file.
 */
 static const char *memBtreeGetFilename(Btree *pBt){
-  return ":memory:";
+  return 0;  /* A NULL return indicates there is no underlying file */
 }
 
 /*
