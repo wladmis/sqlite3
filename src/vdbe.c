@@ -4712,9 +4712,9 @@ case OP_SortPut: {
 case OP_Sort: {
   int i;
   KeyInfo *pKeyInfo = (KeyInfo*)pOp->p3;
-  pKeyInfo->enc = p->db->enc;
   Sorter *pElem;
   Sorter *apSorter[NSORT];
+  pKeyInfo->enc = p->db->enc;
   for(i=0; i<NSORT; i++){
     apSorter[i] = 0;
   }
