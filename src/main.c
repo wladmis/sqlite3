@@ -1287,4 +1287,3 @@ int sqlite3_collation_needed16(
   db->pCollNeededArg = pCollNeededArg;
   return SQLITE_OK;
 }
-

@@ -1504,7 +1504,7 @@ int sqlite3BtreeCursor(
   pCur->pBt = pBt;
   pCur->wrFlag = wrFlag;
   pCur->idx = 0;
-  pCur->info.nSize = 0;
+  memset(&pCur->info, 0, sizeof(pCur->info));
   pCur->pNext = pBt->pCursor;
   if( pCur->pNext ){
     pCur->pNext->pPrev = pCur;
