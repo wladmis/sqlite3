@@ -27,8 +27,11 @@ if {[info commands btree_open]!=""} {
 #
 file delete -force test1.bt
 file delete -force test1.bt-journal
-set b1 [btree_open test1.bt]
-btree_begin_transaction $::b1
+set b1 [btree_open test1.bt 2000 0]
+btree_begin_transaction $b1
+do_test btree4-0.1 {
+  btree_create_table $b1 0
+} 2
 
 set data {abcdefghijklmnopqrstuvwxyz0123456789}
 append data $data
