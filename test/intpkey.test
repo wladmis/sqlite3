@@ -557,5 +557,46 @@ do_test intpkey-14.6 {
   }
 } {2 2 2 3 3 3}
 
-finish_test
+# Check for proper handling of primary keys greater than 2^31.
+# Ticket #1188
+#
+do_test intpkey-15.1 {
+  execsql {
+    INSERT INTO t1 VALUES(2147483647, 'big-1', 123);
+    SELECT * FROM t1 WHERE a>2147483648;
+  }
+} {}
+do_test intpkey-15.2 {
+  execsql {
+    INSERT INTO t1 VALUES(NULL, 'big-2', 234);
+    SELECT b FROM t1 WHERE a>=2147483648;
+  }
+} {big-2}
+do_test intpkey-15.3 {
+  execsql {
+    SELECT b FROM t1 WHERE a>2147483648;
+  }
+} {}
+do_test intpkey-15.4 {
+  execsql {
+    SELECT b FROM t1 WHERE a>=2147483647;
+  }
+} {big-1 big-2}
+do_test intpkey-15.5 {
+  execsql {
+    SELECT b FROM t1 WHERE a<2147483648;
+  }
+} {y zero 2 hello second hello b-20 b-22 new 3 big-1}
+do_test intpkey-15.6 {
+  execsql {
+    SELECT b FROM t1 WHERE a<12345678901;
+  }
+} {y zero 2 hello second hello b-20 b-22 new 3 big-1 big-2}
+do_test intpkey-15.7 {
+  execsql {
+    SELECT b FROM t1 WHERE a>12345678901;
+  }
+} {}
 
+
+finish_test

@@ -1316,7 +1316,7 @@ case OP_AddImm: {            /* no-push */
 ** greater than its current value if P1==1.
 */
 case OP_ForceInt: {            /* no-push */
-  int v;
+  i64 v;
   assert( pTos>=p->aStack );
   applyAffinity(pTos, SQLITE_AFF_INTEGER, db->enc);
   if( (pTos->flags & (MEM_Int|MEM_Real))==0 ){
