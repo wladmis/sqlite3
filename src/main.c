@@ -521,7 +521,6 @@ void sqlite3RollbackAll(sqlite *db){
     }
   }
   sqlite3ResetInternalSchema(db, 0);
-  /* sqlite3RollbackInternalChanges(db); */
 }
 
 /*
@@ -987,7 +986,7 @@ int sqlite3_prepare(
     ** Make a copy of that part of the SQL string since zSQL is const
     ** and we must pass a zero terminated string to the trace function
     ** The copy is unnecessary if the tail pointer is pointing at the
-    ** beginnig or end of the SQL string.
+    ** beginning or end of the SQL string.
     */
     if( sParse.zTail && sParse.zTail!=zSql && *sParse.zTail ){
       char *tmpSql = sqliteStrNDup(zSql, sParse.zTail - zSql);

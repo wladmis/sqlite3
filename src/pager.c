@@ -2798,10 +2798,7 @@ int sqlite3pager_commit(Pager *pPager){
   /* Jump here if anything goes wrong during the commit process.
   */
 commit_abort:
-  rc = sqlite3pager_rollback(pPager);
-  if( rc==SQLITE_OK ){
-    rc = SQLITE_FULL;
-  }
+  sqlite3pager_rollback(pPager);
   return rc;
 }
 

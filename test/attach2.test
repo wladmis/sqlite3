@@ -263,7 +263,6 @@ do_test attach2-4.9 {
 lock_status 4.9.1 db {main shared temp closed file2 shared}
 lock_status 4.9.2 db2 {main reserved temp closed file2 reserved}
 
-btree_breakpoint
 do_test attach2-4.10 {
   # We cannot commit db2 while db is holding a read-lock
   catchsql {COMMIT} db2
@@ -273,7 +272,6 @@ lock_status 4.10.1 db {main shared temp closed file2 shared}
 lock_status 4.10.2 db2 {main pending temp closed file2 reserved}
 
 set sqlite_os_trace 0
-btree_breakpoint
 do_test attach2-4.11 {
   # db is able to commit.
   catchsql {COMMIT}
