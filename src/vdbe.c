@@ -4319,12 +4319,9 @@ case OP_AggGet: {
   assert( i>=0 && i<p->agg.nMem );
   pTos++;
   sqlite3VdbeMemShallowCopy(pTos, &pFocus->aMem[i], MEM_Ephem);
-  assert( (pTos->flags & MEM_Str)==0 || pTos->enc==db->enc );
-#if 0
   if( pTos->flags&MEM_Str ){
     sqlite3VdbeChangeEncoding(pTos, db->enc);
   }
-#endif
   break;
 }
 
