@@ -143,7 +143,6 @@ void sqliteUpdate(
 
   /* Begin the database scan
   */
-  sqliteVdbeAddOp(v, OP_ListOpen, 0, 0);
   pWInfo = sqliteWhereBegin(pParse, pTabList, pWhere, 1);
   if( pWInfo==0 ) goto update_cleanup;
 
@@ -233,7 +232,7 @@ void sqliteUpdate(
   */
   sqliteVdbeAddOp(v, OP_Goto, 0, addr);
   sqliteVdbeResolveLabel(v, end);
-  sqliteVdbeAddOp(v, OP_ListClose, 0, 0);
+  sqliteVdbeAddOp(v, OP_ListReset, 0, 0);
   if( (db->flags & SQLITE_InTrans)==0 ){
     sqliteVdbeAddOp(v, OP_Commit, 0, 0);
   }

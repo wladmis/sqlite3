@@ -222,7 +222,7 @@ static void generateSortTail(Vdbe *v, int nColumn){
   sqliteVdbeAddOp(v, OP_SortCallback, nColumn, 0);
   sqliteVdbeAddOp(v, OP_Goto, 0, addr);
   sqliteVdbeResolveLabel(v, end);
-  sqliteVdbeAddOp(v, OP_SortClose, 0, 0);
+  sqliteVdbeAddOp(v, OP_SortReset, 0, 0);
 }
 
 /*
@@ -551,9 +551,6 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
         int iCont, iBreak;
         assert( p->pEList );
         generateColumnNames(pParse, 0, p->pEList);
-        if( p->pOrderBy ){
-          sqliteVdbeAddOp(v, OP_SortOpen, 0, 0);
-        }
         sqliteVdbeAddOp(v, OP_Rewind, unionTab, 0);
         iBreak = sqliteVdbeMakeLabel(v);
         iCont = sqliteVdbeAddOp(v, OP_Next, unionTab, iBreak);
@@ -605,9 +602,6 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
       */
       assert( p->pEList );
       generateColumnNames(pParse, 0, p->pEList);
-      if( p->pOrderBy ){
-        sqliteVdbeAddOp(v, OP_SortOpen, 0, 0);
-      }
       sqliteVdbeAddOp(v, OP_Rewind, tab1, 0);
       iBreak = sqliteVdbeMakeLabel(v);
       iCont = sqliteVdbeAddOp(v, OP_Next, tab1, iBreak);
@@ -859,9 +853,6 @@ int sqliteSelect(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) return 1;
-  if( pOrderBy ){
-    sqliteVdbeAddOp(v, OP_SortOpen, 0, 0);
-  }
 
   /* Identify column names if we will be using in the callback.  This
   ** step is skipped if the output is going to a table or a memory cell.
