@@ -553,13 +553,6 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   }
   Tcl_LinkVar(interp, "sqlite3_io_error_pending",
      (char*)&sqlite3_io_error_pending, TCL_LINK_INT);
-#ifdef SQLITE_TEST
-  {
-    extern int journal_format;
-    Tcl_LinkVar(interp, "journal_format",
-       (char*)&journal_format, TCL_LINK_INT);
-  }
-#endif
   sprintf(zBuf, "%d", SQLITE_PAGE_SIZE);
   Tcl_SetVar(interp, "SQLITE_PAGE_SIZE", zBuf, TCL_GLOBAL_ONLY); 
   sprintf(zBuf, "%d", SQLITE_PAGE_RESERVE);
@@ -568,6 +561,3 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   Tcl_SetVar(interp, "SQLITE_USABLE_SIZE", zBuf, TCL_GLOBAL_ONLY); 
   return TCL_OK;
 }
-
-
-

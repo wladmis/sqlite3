@@ -73,7 +73,6 @@ for {set i 2} {$i<=$limit} {incr i} {
   set ::sig [signature one]
   # puts "sig=$sig"
   set cnt [lindex $::sig 0]
-  set ::journal_format [expr {($i%3)+1}]
   if {$i%2==0} {
     execsql {PRAGMA synchronous=FULL}
   } else {
