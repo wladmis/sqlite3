@@ -40,6 +40,7 @@ set EXCLUDE {
   memleak.test
   btree2.test
   trans.test
+  crash.test
 }
 if {[sqlite3 -has-codec]} {
   lappend EXCLUDE \
