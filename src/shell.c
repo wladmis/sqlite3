@@ -984,11 +984,8 @@ static char *find_home_dir(void){
 #if !defined(_WIN32) && !defined(WIN32)
   struct passwd *pwent;
   uid_t uid = getuid();
-  while( (pwent=getpwent()) != NULL) {
-    if(pwent->pw_uid == uid) {
-      home_dir = pwent->pw_dir;
-      break;
-    }
+  if( (pwent=getpwuid(uid)) != NULL) {
+    home_dir = pwent->pw_dir;
   }
 #endif
 
