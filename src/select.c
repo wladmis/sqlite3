@@ -157,13 +157,17 @@ static void addWhereTerm(
   dummy.z = zCol;
   dummy.n = strlen(zCol);
   pE1a = sqliteExpr(TK_ID, 0, 0, &dummy);
+  pE1a->staticToken = 1;
   pE2a = sqliteExpr(TK_ID, 0, 0, &dummy);
+  pE2a->staticToken = 1;
   dummy.z = pTab1->zName;
   dummy.n = strlen(dummy.z);
   pE1b = sqliteExpr(TK_ID, 0, 0, &dummy);
+  pE1b->staticToken = 1;
   dummy.z = pTab2->zName;
   dummy.n = strlen(dummy.z);
   pE2b = sqliteExpr(TK_ID, 0, 0, &dummy);
+  pE2b->staticToken = 1;
   pE1c = sqliteExpr(TK_DOT, pE1b, pE1a, 0);
   pE2c = sqliteExpr(TK_DOT, pE2b, pE2a, 0);
   pE = sqliteExpr(TK_EQ, pE1c, pE2c, 0);

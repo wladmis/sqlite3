@@ -898,6 +898,9 @@ int sqliteViewGetColumnNames(Parse *pParse, Table *pTable){
   **
   **     CREATE VIEW one AS SELECT * FROM two;
   **     CREATE VIEW two AS SELECT * FROM one;
+  **
+  ** Actually, this error is caught previously and so the following test
+  ** should always fail.  But we will leave it in place just to be safe.
   */
   if( pTable->nCol<0 ){
     sqliteSetString(&pParse->zErrMsg, "view ", pTable->zName,

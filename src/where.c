@@ -1033,6 +1033,10 @@ WhereInfo *sqliteWhereBegin(
         if( aExpr[j].p==0 ) continue;
         if( (aExpr[j].prereqAll & loopMask)!=aExpr[j].prereqAll ) continue;
         if( haveKey ){
+          /* Cannot happen.  "haveKey" can only be true if pushKey is true
+          ** an pushKey can only be true for DELETE and UPDATE and there are
+          ** no outer joins with DELETE and UPDATE.
+          */
           haveKey = 0;
           sqliteVdbeAddOp(v, OP_MoveTo, base+idx, 0);
         }

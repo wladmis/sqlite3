@@ -164,6 +164,21 @@ do_test join-2.3 {
     SELECT * FROM t1 NATURAL RIGHT OUTER JOIN t2;
   }
 } {1 {RIGHT and FULL OUTER JOINs are not currently supported}}
+do_test join-2.4 {
+  execsql {
+    SELECT * FROM t1 LEFT JOIN t2 ON t1.a=t2.d
+  }
+} {1 2 3 {} {} {} 2 3 4 {} {} {} 3 4 5 1 2 3}
+do_test join-2.5 {
+  execsql {
+    SELECT * FROM t1 LEFT JOIN t2 ON t1.a=t2.d WHERE t1.a>1
+  }
+} {2 3 4 {} {} {} 3 4 5 1 2 3}
+do_test join-2.6 {
+  execsql {
+    SELECT * FROM t1 LEFT JOIN t2 ON t1.a=t2.d WHERE t2.b IS NULL OR t2.b>1
+  }
+} {1 2 3 {} {} {} 2 3 4 {} {} {}}
 
 do_test join-3.1 {
   catchsql {
