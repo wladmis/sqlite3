@@ -370,4 +370,13 @@ do_test table-8.8 {
   }
 } {1 {no such table: no_such_table}}
 
+# Make sure we cannot have duplicate column names within a table.
+#
+do_test table-9.1 {
+  catchsql {
+    CREATE TABLE t6(a,b,a);
+  }
+} {1 {duplicate column name: a}}
+
+
 finish_test
