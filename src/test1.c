@@ -30,9 +30,11 @@
 /*
 ** Decode a pointer to an sqlite object.
 */
-static int getDbPointer(Tcl_Interp *interp, const char *zArg, sqlite **ppDb){
-  if( sscanf(zArg, PTR_FMT, (void**)ppDb)!=1 ){
-    Tcl_AppendResult(interp, "\"", zArg, "\" is not a valid pointer value", 0);
+static int getDbPointer(Tcl_Interp *interp, const char *zA, sqlite **ppDb){
+  if( sscanf(zA, PTR_FMT, (void**)ppDb)!=1 && 
+      (zA[0]!='0' || zA[1]!='x' || sscanf(&zA[2], PTR_FMT, (void**)ppDb)!=1)
+  ){
+    Tcl_AppendResult(interp, "\"", zA, "\" is not a valid pointer value", 0);
     return TCL_ERROR;
   }
   return TCL_OK;
