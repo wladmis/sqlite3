@@ -313,7 +313,7 @@ void *sqliteHashInsert(Hash *pH, const void *pKey, int nKey, void *data){
   new_elem = (HashElem*)sqliteMalloc( sizeof(HashElem) );
   if( new_elem==0 ) return data;
   if( pH->copyKey && pKey!=0 ){
-    new_elem->pKey = sqliteMalloc( nKey );
+    new_elem->pKey = sqliteMallocRaw( nKey );
     if( new_elem->pKey==0 ){
       sqliteFree(new_elem);
       return data;

@@ -962,13 +962,14 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
     pPager->nMiss++;
     if( pPager->nPage<pPager->mxPage || pPager->pFirst==0 ){
       /* Create a new page */
-      pPg = sqliteMalloc( sizeof(*pPg) + SQLITE_PAGE_SIZE + pPager->nExtra );
+      pPg = sqliteMallocRaw( sizeof(*pPg) + SQLITE_PAGE_SIZE + pPager->nExtra );
       if( pPg==0 ){
         *ppPage = 0;
         pager_unwritelock(pPager);
         pPager->errMask |= PAGER_ERR_MEM;
         return SQLITE_NOMEM;
       }
+      memset(pPg, 0, sizeof(*pPg));
       pPg->pPager = pPager;
       pPg->pNextAll = pPager->pAll;
       if( pPager->pAll ){
