@@ -384,7 +384,7 @@ struct Column {
   char *zDflt;     /* Default value of this column */
   char *zType;     /* Data type for this column */
   u8 notNull;      /* True if there is a NOT NULL constraint */
-  u8 isPrimKey;    /* True if this column is an INTEGER PRIMARY KEY */
+  u8 isPrimKey;    /* True if this column is part of the PRIMARY KEY */
   u8 sortOrder;    /* Some combination of SQLITE_SO_... values */
 };
 
