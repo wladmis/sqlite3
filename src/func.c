@@ -358,7 +358,7 @@ static void randStr(sqlite_func *context, int argc, const char **argv){
   if( argc>=2 ){
     iMax = atoi(argv[1]);
     if( iMax<iMin ) iMax = iMin;
-    if( iMax>=sizeof(zBuf) ) iMax = sizeof(zBuf);
+    if( iMax>=sizeof(zBuf) ) iMax = sizeof(zBuf)-1;
   }else{
     iMax = 50;
   }
@@ -367,6 +367,7 @@ static void randStr(sqlite_func *context, int argc, const char **argv){
     r = sqliteRandomInteger() & 0x7fffffff;
     n += r%(iMax + 1 - iMin);
   }
+  assert( n<sizeof(zBuf) );
   r = 0;
   for(i=0; i<n; i++){
     r = (r + sqliteRandomByte())% (sizeof(zSrc)-1);
