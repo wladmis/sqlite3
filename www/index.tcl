@@ -139,6 +139,8 @@ puts {<h2>Documentation</h2>
 <li>SQLite is <a href="datatypes.html">typeless</a>.
 <li>The <a href="lang.html">SQL Language</a> subset understood by SQLite.</li>
 <li>The <a href="c_interface.html">C/C++ Interface</a>.</li>
+<li>The <a href="nulls.html">NULL handling</a> in SQLite versus
+    other SQL database engines.</li>
 <li>The <a href="tclsqlite.html">Tcl Binding</a> to SQLite.</li>
 <li>The <a href="arch.html">Architecture of the SQLite Library</a> describes
     how the library is put together.</li>
