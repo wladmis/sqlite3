@@ -1767,7 +1767,7 @@ void sqliteCreateIndex(
         if( pTab->iPKey==iCol ){
           sqliteVdbeAddOp(v, OP_Dup, i, 0);
         }else{
-          sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i]);
+          sqliteVdbeAddOp(v, OP_Column, 2, iCol);
         }
       }
       sqliteVdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0);
@@ -1993,7 +1993,7 @@ void sqliteSrcListAssignCursors(Parse *pParse, SrcList *pList){
   int i;
   for(i=0; i<pList->nSrc; i++){
     if( pList->a[i].iCursor<0 ){
-      pList->a[i].iCursor = ++pParse->nTab;
+      pList->a[i].iCursor = pParse->nTab++;
     }
   }
 }

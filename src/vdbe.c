@@ -3520,27 +3520,6 @@ case OP_OpenPseudo: {
   break;
 }
 
-/*
-** Opcode: RenameCursor P1 P2 *
-**
-** Rename cursor number P1 as cursor number P2.  If P2 was previously
-** opened is is closed before the renaming occurs.
-*/
-case OP_RenameCursor: {
-  int from = pOp->p1;
-  int to = pOp->p2;
-  VERIFY( if( from<0 || to<0 ) goto bad_instruction; )
-  if( to<p->nCursor && p->aCsr[to].pCursor ){
-    cleanupCursor(&p->aCsr[to]);
-  }
-  expandCursorArraySize(p, to);
-  if( from<p->nCursor ){
-    memcpy(&p->aCsr[to], &p->aCsr[from], sizeof(p->aCsr[0]));
-    memset(&p->aCsr[from], 0, sizeof(p->aCsr[0]));
-  }
-  break;
-}
-
 /* Opcode: Close P1 * *
 **
 ** Close a cursor previously opened as P1.  If P1 is not
