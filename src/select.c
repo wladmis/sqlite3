@@ -534,7 +534,7 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
       int iCont, iBreak;
 
       /* INTERSECT is different from the others since it requires
-      ** two temporary tables.  Hence it has its own case.  Begine
+      ** two temporary tables.  Hence it has its own case.  Begin
       ** by allocating the tables we will need.
       */
       tab1 = pParse->nTab++;

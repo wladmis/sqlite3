@@ -103,7 +103,7 @@ void sqliteUpdate(
       goto update_cleanup;
     }
     for(j=0; j<pTab->nCol; j++){
-      if( strcmp(pTab->aCol[j].zName, pChanges->a[i].zName)==0 ){
+      if( sqliteStrICmp(pTab->aCol[j].zName, pChanges->a[i].zName)==0 ){
         aXRef[j] = i;
         break;
       }
