@@ -4487,6 +4487,7 @@ int sqlite3BtreeCreateTable(Btree *pBt, int *piTable, int flags){
       pRoot = pPageMove;
     } 
 
+    /* Update the pointer-map and meta-data with the new root-page number. */
     rc = ptrmapPut(pBt, pgnoRoot, PTRMAP_ROOTPAGE, 0);
     if( rc ){
       releasePage(pRoot);
@@ -4497,6 +4498,7 @@ int sqlite3BtreeCreateTable(Btree *pBt, int *piTable, int flags){
       releasePage(pRoot);
       return rc;
     }
+
   }else{
     rc = allocatePage(pBt, &pRoot, &pgnoRoot, 1, 0);
     if( rc ) return rc;

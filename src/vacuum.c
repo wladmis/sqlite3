@@ -166,6 +166,10 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   assert( sqlite3BtreeGetPageSize(pTemp)==sqlite3BtreeGetPageSize(pMain) );
   execSql(db, "PRAGMA vacuum_db.synchronous=OFF");
 
+#ifndef SQLITE_OMIT_AUTOVACUUM
+  sqlite3BtreeSetAutoVacuum(pTemp, sqlite3BtreeGetAutoVacuum(pMain));
+#endif
+
   /* Begin a transaction */
   rc = execSql(db, "BEGIN;");
   if( rc!=SQLITE_OK ) goto end_of_vacuum;
