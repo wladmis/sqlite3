@@ -843,6 +843,8 @@ with caution.</p>
     <p>When on, the COUNT_CHANGES pragma causes the callback function to
     be invoked once for each DELETE, INSERT, or UPDATE operation.  The
     argument is the number of rows that were changed.</p>
+    <p>This pragma may be removed from future versions of SQLite.
+    Consider using the <b>sqlite_changes()</b> API function instead.</p></li>
 
 <li><p><b>PRAGMA default_cache_size;
        <br>PRAGMA default_cache_size = </b><i>Number-of-pages</i><b>;</b></p>

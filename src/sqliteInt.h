@@ -167,6 +167,8 @@ struct sqlite {
   int lastRowid;                /* ROWID of most recent insert */
   int priorNewRowid;            /* Last randomly generated ROWID */
   int onError;                  /* Default conflict algorithm */
+  int nChange;                  /* Number of rows changed */
+  int recursionDepth;           /* Number of nested calls to sqlite_exec() */
 };
 
 /*
@@ -630,7 +632,7 @@ void sqliteCommitTransaction(Parse*);
 void sqliteRollbackTransaction(Parse*);
 char *sqlite_mprintf(const char *, ...);
 int sqliteExprIsConstant(Expr*);
-void sqliteGenerateRowDelete(Vdbe*, Table*, int);
+void sqliteGenerateRowDelete(Vdbe*, Table*, int, int);
 void sqliteGenerateRowIndexDelete(Vdbe*, Table*, int, char*);
 void sqliteGenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
 void sqliteCompleteInsertion(Parse*, Table*, int, char*, int, int);
