@@ -95,7 +95,7 @@ static int DbEvalCallback(
       if( cbData->zArray[0] ){
         Tcl_SetVar2(cbData->interp, cbData->zArray, "*",
              Tcl_DStringValue(&dCol), TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
-        if( azN[nCol]!=0 } {
+        if( azN[nCol]!=0 ){
           Tcl_DString dType;
           Tcl_DStringInit(&dType);
           Tcl_DStringAppend(&dType, "typeof:", -1);
