@@ -55,6 +55,8 @@ set values [list \
   [list 5.0   INTEGER REAL    TEXT REAL] \
   [list 5     INTEGER INTEGER TEXT INTEGER] \
   [list '5.0' INTEGER REAL    TEXT TEXT] \
+  [list '-5.0' INTEGER REAL    TEXT TEXT] \
+  [list '-5.0' INTEGER REAL    TEXT TEXT] \
   [list '5'   INTEGER INTEGER TEXT TEXT] \
   [list 'abc' TEXT    TEXT    TEXT TEXT] \
   [list NULL  NULL    NULL    NULL NULL] \

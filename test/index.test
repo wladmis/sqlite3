@@ -349,7 +349,7 @@ integrity_check index-11.2
 # representations are not retained. i.e. '+1.0' becomes '1'.
 do_test index-12.1 {
   execsql {
-    CREATE TABLE t4(a,b);
+    CREATE TABLE t4(a NUM,b);
     INSERT INTO t4 VALUES('0.0',1);
     INSERT INTO t4 VALUES('0.00',2);
     INSERT INTO t4 VALUES('abc',3);

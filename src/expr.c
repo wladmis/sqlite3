@@ -1170,7 +1170,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
         if( pExpr->pLeft->op==TK_INTEGER && sqlite3FitsIn32Bits(z) ){
           sqlite3VdbeAddOp(v, OP_Integer, atoi(z), 0);
         }else{
-          sqlite3VdbeAddOp(v, OP_String, 0, 0);
+          sqlite3VdbeAddOp(v, OP_Real, 0, 0);
         }
         sqlite3VdbeChangeP3(v, -1, z, p->n+1);
         sqliteFree(z);
