@@ -498,8 +498,8 @@ int sqlite3VdbeExec(
   assert( p->rc==SQLITE_OK || p->rc==SQLITE_BUSY );
   p->rc = SQLITE_OK;
   assert( p->explain==0 );
-  if( sqlite3_malloc_failed ) goto no_mem;
   pTos = p->pTos;
+  if( sqlite3_malloc_failed ) goto no_mem;
   if( p->popStack ){
     popStack(&pTos, p->popStack);
     p->popStack = 0;
