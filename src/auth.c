@@ -33,7 +33,6 @@
 ** is a copy of the 3rd argument to this routine.  The second argument
 ** to the auth function is one of these constants:
 **
-**       SQLITE_COPY
 **       SQLITE_CREATE_INDEX
 **       SQLITE_CREATE_TABLE
 **       SQLITE_CREATE_TEMP_INDEX
@@ -150,7 +149,7 @@ void sqlite3AuthRead(
       sqlite3ErrorMsg(pParse, "access to %s.%s.%s is prohibited", 
          zDBase, pTab->zName, zCol);
     }else{
-      sqlite3ErrorMsg(pParse, "access to %s.%s is prohibited", pTab->zName,zCol);
+      sqlite3ErrorMsg(pParse, "access to %s.%s is prohibited",pTab->zName,zCol);
     }
     pParse->rc = SQLITE_AUTH;
   }else if( rc!=SQLITE_OK ){
@@ -222,6 +221,3 @@ void sqlite3AuthContextPop(AuthContext *pContext){
 }
 
 #endif /* SQLITE_OMIT_AUTHORIZATION */
-
-
-
