@@ -89,3 +89,16 @@ proc execsql {sql} {
   }
   return $result
 }
+
+# Another procedure to execute SQL.  This one includes the field
+# names in the returned list.
+#
+proc execsql2 {sql} {
+  set result {}
+  db eval $sql data {
+    foreach f $data(*) {
+      lappend result $f $data($f)
+    }
+  }
+  return $result
+}
