@@ -1435,6 +1435,7 @@ int sqlite3pager_open(
     }
   }
   if( !zFullPathname ){
+    sqlite3OsClose(&fd);
     return SQLITE_NOMEM;
   }
   if( rc!=SQLITE_OK ){
