@@ -110,6 +110,14 @@
 /* #define SQLITE_OMIT_ALTERTABLE */
 
 /*
+** Provide a default value for TEMP_STORE in case it is not specified
+** on the command-line
+*/
+#ifndef TEMP_STORE
+# define TEMP_STORE 1
+#endif
+
+/*
 ** GCC does not define the offsetof() macro so we'll have to do it
 ** ourselves.
 */

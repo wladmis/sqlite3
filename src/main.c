@@ -843,9 +843,6 @@ int sqlite3BtreeFactory(
     btree_flags |= BTREE_OMIT_JOURNAL;
   }
   if( zFilename==0 ){
-#ifndef TEMP_STORE
-# define TEMP_STORE 1
-#endif
 #if TEMP_STORE==0
     /* Do nothing */
 #endif

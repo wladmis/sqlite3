@@ -1439,20 +1439,20 @@ int Sqlite3_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.4", 0);
   Tcl_CreateObjCommand(interp, "sqlite3", (Tcl_ObjCmdProc*)DbMain, 0, 0);
   Tcl_PkgProvide(interp, "sqlite3", "3.0");
+  Tcl_CreateObjCommand(interp, "sqlite", (Tcl_ObjCmdProc*)DbMain, 0, 0);
+  Tcl_PkgProvide(interp, "sqlite", "3.0");
   return TCL_OK;
 }
-int Tclsqlite3_Init(Tcl_Interp *interp){
-  Tcl_InitStubs(interp, "8.4", 0);
-  Tcl_CreateObjCommand(interp, "sqlite3", (Tcl_ObjCmdProc*)DbMain, 0, 0);
-  Tcl_PkgProvide(interp, "sqlite3", "3.0");
-  return TCL_OK;
-}
-int Sqlite3_SafeInit(Tcl_Interp *interp){
-  return TCL_OK;
-}
-int Tclsqlite3_SafeInit(Tcl_Interp *interp){
-  return TCL_OK;
-}
+int Tclsqlite3_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+int Sqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+int Tclsqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+
+#ifndef SQLITE_3_SUFFIX_ONLY
+int Sqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+int Tclsqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+int Sqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+int Tclsqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+#endif
 
 #ifdef TCLSH
 /*****************************************************************************
