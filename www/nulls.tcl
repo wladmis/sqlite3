@@ -30,7 +30,7 @@ A copy of the test script is found at the end of this document.
 <p>
 SQLite was originally coded in such a way that the answer to
 all questions in the chart below would be "Yes".  But the
-expriments run on other SQL engines showed that none of them
+experiments run on other SQL engines showed that none of them
 worked this way.  So SQLite was modified to work the same as
 Oracle, PostgreSQL, and DB2.  This involved making NULLs
 indistinct for the purposes of the SELECT DISTINCT statement and

@@ -118,11 +118,11 @@ All SQLite source code is maintained in a
 <a href="http://www.cvshome.org/">CVS</a> repository that is
 available for read-only access by anyone.  You can 
 interactively view the
-respository contents and download individual files
+repository contents and download individual files
 by visiting
 <a href="http://www.sqlite.org/cvstrac/dir?d=sqlite">
 http://www.sqlite.org/cvstrac/dir?d=sqlite</a>.
-To access the respository directly, use the following
+To access the repository directly, use the following
 commands:
 </p>
 

@@ -173,7 +173,7 @@ two values being compared, according to the following rules:</P>
 
 	<LI><P>A TEXT value is less than a BLOB value. When two TEXT values
 	are compared, the C library function memcmp() is usually used to
-	determine the result. However this can be overriden, as described
+	determine the result. However this can be overridden, as described
 	under 'User-defined collation Sequences' below.</P>
 
 	<LI><P>When two BLOB values are compared, the result is always

@@ -145,7 +145,7 @@ is assumed that you are using version 2.7.0 or later of SQLite.
 
 <p>
 For an expression, the datatype of the result is often determined by
-the outermost operator.  For example, arithmatic operators ("+", "*", "%")
+the outermost operator.  For example, arithmetic operators ("+", "*", "%")
 always return a numeric results.  The string concatenation operator
 ("||") returns a text result.  And so forth.  If you are ever in doubt
 about the datatype of an expression you can use the special <b>typeof()</b>

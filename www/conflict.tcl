@@ -75,7 +75,7 @@ MySQL usually uses FAIL but can be instructed to use IGNORE or REPLACE.
 By supporting all five alternatives, SQLite provides maximum
 portability.</p>
 
-<p>Another reason for supporing multiple algorithms is that sometimes
+<p>Another reason for supporting multiple algorithms is that sometimes
 it is useful to use an algorithm other than the default.
 Suppose, for example, you are
 inserting 1000 records into a database, all within a single
@@ -83,7 +83,7 @@ transaction, but one of those records is malformed and causes
 a constraint error.  Under PostgreSQL or Oracle, none of the
 1000 records would get inserted.  In MySQL, some subset of the
 records that appeared before the malformed record would be inserted
-but the rest would not.  Neither behavior is espeically helpful.
+but the rest would not.  Neither behavior is especially helpful.
 What you really want is to use the IGNORE algorithm to insert
 all but the malformed record.</p>
 

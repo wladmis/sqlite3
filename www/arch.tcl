@@ -165,7 +165,7 @@ comment at the beginning of <b>btree.c</b>.</p>
 <p>The B-tree module requests information from the disk in fixed-size
 chunks.  The default chunk size is 1024 bytes but can vary between 512
 and 65536 bytes.
-The page cache is reponsible for reading, writing, and
+The page cache is responsible for reading, writing, and
 caching these chunks.
 The page cache also provides the rollback and atomic commit abstraction
 and takes care of locking of the database file.  The
