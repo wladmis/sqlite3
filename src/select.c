@@ -2361,6 +2361,10 @@ int sqlite3Select(
       goto select_end;
     }
   }
+  if( pGroupBy && !isAgg ){
+    sqlite3ErrorMsg(pParse, "GROUP BY may only be used on aggregate queries");
+    goto select_end;
+  }
   if( processOrderGroupBy(pParse, pOrderBy, pTabList, pEList, isAgg, "ORDER")
    || processOrderGroupBy(pParse, pGroupBy, pTabList, pEList, isAgg, "GROUP")
   ){
