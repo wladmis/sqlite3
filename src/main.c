@@ -195,9 +195,9 @@ const char sqlite_version[] = SQLITE_VERSION;
 ** following global constant always lets us know.
 */
 #ifdef SQLITE_UTF8
-char sqlite_encoding[] = "UTF-8";
+const char sqlite_encoding[] = "UTF-8";
 #else
-char sqlite_encoding[] = "iso8859";
+const char sqlite_encoding[] = "iso8859";
 #endif
 
 /*

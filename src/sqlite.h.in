@@ -55,7 +55,7 @@ extern const char sqlite_version[];
 ** see.  The character encoding makes a difference for the LIKE and GLOB
 ** operators and for the LENGTH() and SUBSTR() functions.
 */
-extern char sqlite_encoding[];
+extern const char sqlite_encoding[];
 
 /*
 ** Each open sqlite database is represented by an instance of the
