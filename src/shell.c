@@ -784,7 +784,7 @@ static void process_input(struct callback_data *p, FILE *in){
   char *zErrMsg;
   while( (zLine = one_input_line(zSql, in))!=0 ){
     if( p->echoOn ) printf("%s\n", zLine);
-    if( zLine && zLine[0]=='.' ){
+    if( zLine && zLine[0]=='.' && nSql==0 ){
       do_meta_command(zLine, db, p);
       free(zLine);
       continue;
