@@ -380,6 +380,8 @@ do_test attach-3.15 {
   execsql {SELECT * FROM t1}
 } {1 2 3 4}
 
+#set btree_trace 1
+#puts stderr "###################"; flush stderr
 # Ticket #323
 do_test attach-4.1 {
   execsql {DETACH db2}

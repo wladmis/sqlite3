@@ -2266,7 +2266,8 @@ int sqlite3BtreePrevious(BtCursor *pCur, int *pRes){
 ** enabled.
 */
 #if SQLITE_TEST
-# define TRACE(X)   if( sqlite3_btree_trace ){ printf X; fflush(stdout); }
+# define TRACE(X)   if( sqlite3_btree_trace )\
+                        { sqlite3DebugPrintf X; fflush(stdout); }
 #else
 # define TRACE(X)
 #endif
