@@ -399,6 +399,10 @@ faq {
   on the Linux box where SQLite is developed) and it can use up to twice
   as much temporary disk space as the original file while it is running.
   </p>
+
+  <p>As of SQLite version 3.1, an alternative to using the VACUUM command
+  is auto-vacuum mode, enabled using the 
+  <a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a>.</p>
 }
 
 faq {

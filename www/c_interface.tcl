@@ -136,13 +136,13 @@ argv[i] == 0
 
 <p>The names of the columns are contained in first <i>argc</i>
 entries of the fourth argument.
-If the <a href="lang.html#pragma_show_datatypes">SHOW_DATATYPES</a> pragma
+If the <a href="pragma.html#pragma_show_datatypes">SHOW_DATATYPES</a> pragma
 is on (it is off by default) then
 the second <i>argc</i> entries in the 4th argument are the datatypes
 for the corresponding columns.
 </p>
 
-<p>If the <a href="lang.html#pragma_empty_result_callbacks">
+<p>If the <a href="pragma.html#pragma_empty_result_callbacks">
 EMPTY_RESULT_CALLBACKS</a> pragma is set to ON and the result of
 a query is an empty set, then the callback is invoked once with the
 third parameter (argv) set to 0.  In other words

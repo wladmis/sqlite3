@@ -303,7 +303,7 @@ program, which the VDBE appends when it prepares a program to run.</p>
 <h2>Tracing VDBE Program Execution</h2>
 
 <p>If the SQLite library is compiled without the NDEBUG preprocessor 
-macro, then the PRAGMA <a href="lang.html#pragma_vdbe_trace">vdbe_trace
+macro, then the PRAGMA <a href="pragma.html#pragma_vdbe_trace">vdbe_trace
 </a> causes the VDBE to trace the execution of programs.  Though this 
 feature was originally intended for testing and debugging, it can also 
 be useful in learning about how the VDBE operates.  

@@ -28,6 +28,11 @@ doc {SQL Syntax} {lang.html} {
   SQLite.  
 }
 
+doc {Pragma commands} {pragma.html} {
+  This document describes SQLite performance tuning options and other 
+  special purpose database commands.
+}
+
 doc {Version 2 C/C++ API} {c_interface.html} {
   A description of the C/C++ interface bindings for SQLite through version 
   2.8
