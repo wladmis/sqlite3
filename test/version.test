@@ -177,6 +177,6 @@ do_test version-2.1 {
   catch {file attributes test.db -readonly 1}
   set rc [catch {sqlite db test.db} msg]
   lappend rc $msg
-} {1 {unable to upgrade database to the version 2.6 format}}
+} {1 {unable to upgrade database to the version 2.6 format: attempt to write a readonly database}}
 
 finish_test
