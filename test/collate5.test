@@ -199,7 +199,7 @@ do_test collate5-3.0 {
   execsql {
     SELECT a FROM collate5t1 UNION ALL SELECT a FROM collate5t2 ORDER BY 1;
   }
-} {A a A a B b B b N n}
+} {a A a A b B b B n N}
 do_test collate5-3.1 {
   execsql {
     SELECT a FROM collate5t2 UNION ALL SELECT a FROM collate5t1 ORDER BY 1;

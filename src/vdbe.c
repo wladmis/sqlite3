@@ -4117,8 +4117,13 @@ case OP_SortPut: {        /* no-push */
   if( Dynamicify(pTos, db->enc) ) goto no_mem;
   pSorter = sqliteMallocRaw( sizeof(Sorter) );
   if( pSorter==0 ) goto no_mem;
-  pSorter->pNext = p->pSort;
-  p->pSort = pSorter;
+  pSorter->pNext = 0;
+  if( p->pSortTail ){
+    p->pSortTail->pNext = pSorter;
+  }else{
+    p->pSort = pSorter;
+  }
+  p->pSortTail = pSorter;
   assert( pTos->flags & MEM_Dyn );
   pSorter->nKey = pTos->n;
   pSorter->zKey = pTos->z;
