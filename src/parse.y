@@ -98,27 +98,32 @@ columnid ::= ids(X).                {sqliteAddColumn(pParse,&X);}
 
 // An IDENTIFIER can be a generic identifier, or one of several
 // keywords.  Any non-standard keyword can also be an identifier.
-// We also make DESC and identifier since it comes up so often (as
-// an abbreviation of "description").
 //
 %type id {Token}
 id(A) ::= ABORT(X).      {A = X;}
+id(A) ::= AFTER(X).      {A = X;}
 id(A) ::= ASC(X).        {A = X;}
+id(A) ::= BEFORE(X).     {A = X;}
 id(A) ::= BEGIN(X).      {A = X;}
 id(A) ::= CLUSTER(X).    {A = X;}
 id(A) ::= CONFLICT(X).   {A = X;}
 id(A) ::= COPY(X).       {A = X;}
 id(A) ::= DELIMITERS(X). {A = X;}
 id(A) ::= DESC(X).       {A = X;}
+id(A) ::= EACH(X).       {A = X;}
 id(A) ::= END(X).        {A = X;}
 id(A) ::= EXPLAIN(X).    {A = X;}
 id(A) ::= FAIL(X).       {A = X;}
+id(A) ::= FOR(X).        {A = X;}
 id(A) ::= ID(X).         {A = X;}
 id(A) ::= IGNORE(X).     {A = X;}
+id(A) ::= INSTEAD(X).    {A = X;}
 id(A) ::= KEY(X).        {A = X;}
+id(A) ::= OF(X).         {A = X;}
 id(A) ::= OFFSET(X).     {A = X;}
 id(A) ::= PRAGMA(X).     {A = X;}
 id(A) ::= REPLACE(X).    {A = X;}
+id(A) ::= ROW(X).        {A = X;}
 id(A) ::= TEMP(X).       {A = X;}
 id(A) ::= TRIGGER(X).    {A = X;}
 id(A) ::= VACUUM(X).     {A = X;}

@@ -22,6 +22,7 @@ source $testdir/tester.tcl
 #
 do_test misuse-1.1 {
   db close
+  catch {file delete -force test2.db}
   set ::DB [sqlite db test2.db]
   execsql {
     CREATE TABLE t1(a,b);

@@ -177,7 +177,7 @@ void sqliteUpdate(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
-  sqliteBeginMultiWriteOperation(pParse);
+  sqliteBeginWriteOperation(pParse, 1);
 
   /* Begin the database scan
   */
