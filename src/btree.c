@@ -2461,7 +2461,7 @@ int sqliteBtreeUpdateMeta(Btree *pBt, int *aMeta){
 ** All of the following code is omitted if the library is compiled with
 ** the -DNDEBUG=1 compiler option.
 ******************************************************************************/
-#ifndef NDEEBUG
+#ifndef NDEBUG
 
 /*
 ** Print a disassembly of the given page on standard output.  This routine

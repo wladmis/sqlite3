@@ -377,5 +377,10 @@ foreach {i conf1 conf2 cmd t0 t1 t2} {
   } [list $t0 $t1 $t2]
 }
 
+do_test insert-99.1 {
+  set x [execsql {PRAGMA sanity_check}]
+  if {$x==""} {set x ok}
+  set x
+} {ok}
 
 finish_test

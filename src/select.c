@@ -335,7 +335,7 @@ static int fillInColumnList(Parse *pParse, Select *p){
     if( pTabList->a[i].zName==0 ){
       /* No table name is given.  Instead, there is a (SELECT ...) statement
       ** the results of which should be used in place of the table.  The
-      ** was this is implemented is that the (SELECT ...) writes its results
+      ** way this is implemented is that the (SELECT ...) writes its results
       ** into a temporary table which is then scanned like any other table.
       */
       sqliteSetString(&pParse->zErrMsg, 

@@ -207,6 +207,30 @@ do_test copy-5.4 {
     SELECT * FROM t1;
   }
 } {0 {22 33 11 33 22 44}}
+
+do_test copy-5.5 {
+  execsql {
+    DELETE FROM t1;
+    PRAGMA count_changes=on;
+    COPY t1 FROM 'data5.txt' USING DELIMITERS '|';
+  }
+} {2}
+do_test copy-5.6 {
+  execsql {
+    COPY OR REPLACE t1 FROM 'data5.txt' USING DELIMITERS '|';
+  }
+} {2}
+do_test copy-5.7 {
+  execsql {
+    COPY OR IGNORE t1 FROM 'data5.txt' USING DELIMITERS '|';
+  }
+} {0}
+
+do_test copy-6.0 {
+  set x [execsql {PRAGMA sanity_check}]
+  if {$x==""} {set x ok}
+  set x
+} {ok}
  
 
 # Cleanup 

@@ -64,8 +64,7 @@ puts {<h2>Current Status</h2>
 <p>A <a href="changes.html">change history</a> is available online.
 The latest source code is
 <a href="download.html">available for download</a>.
-There are currently no known memory leaks or bugs
-in version 2.2.5 of the library.
+For a list of recently discovered bugs, refer to the change history.
 </p>
 
 <p>
