@@ -99,5 +99,4 @@ do_test misc4-3.1 {
 } {{} {} 1 x 1 z}
 } ;# ifcapable compound
 
-
 finish_test

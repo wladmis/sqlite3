@@ -926,10 +926,9 @@ static int hexToInt(int h){
     return h - '0';
   }else if( h>='a' && h<='f' ){
     return h - 'a' + 10;
-  }else if( h>='A' && h<='F' ){
-    return h - 'A' + 10;
   }else{
-    return 0;
+    assert( h>='A' && h<='F' );
+    return h - 'A' + 10;
   }
 }
 #endif /* (!SQLITE_OMIT_BLOB_LITERAL && !SQLITE_HAS_CODEC) || SQLITE_TEST */
