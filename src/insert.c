@@ -91,6 +91,14 @@ void sqliteInsert(
 
   if( pTab==0 ) goto insert_cleanup;
 
+  /* If pTab is really a view, make sure it has been initialized.
+  */
+  if( pTab->pSelect ){
+    if( sqliteViewGetColumnNames(pParse, pTab) ){
+      goto insert_cleanup;
+    }
+  }
+
   /* Allocate a VDBE
   */
   v = sqliteGetVdbe(pParse);
