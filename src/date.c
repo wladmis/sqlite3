@@ -866,8 +866,8 @@ void sqlite3RegisterDateTimeFunctions(sqlite *db){
   int i;
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3_create_function(db, aFuncs[i].zName,
-           aFuncs[i].nArg, aFuncs[i].xFunc, 0);
+    sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg, 0, 0, 0,
+        aFuncs[i].xFunc, 0, 0);
     if( aFuncs[i].xFunc ){
       sqlite3_function_type(db, aFuncs[i].zName, aFuncs[i].dataType);
     }

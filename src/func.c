@@ -668,16 +668,16 @@ void sqlite3RegisterBuiltinFunctions(sqlite *db){
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
     void *pArg = aFuncs[i].argType==2 ? (void*)(-1) : db;
-    sqlite3_create_function(db, aFuncs[i].zName,
-           aFuncs[i].nArg, aFuncs[i].xFunc, pArg);
+    sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg, 0, 0,
+        pArg, aFuncs[i].xFunc, 0, 0);
     if( aFuncs[i].xFunc ){
       sqlite3_function_type(db, aFuncs[i].zName, aFuncs[i].dataType);
     }
   }
   for(i=0; i<sizeof(aAggs)/sizeof(aAggs[0]); i++){
     void *pArg = aAggs[i].argType==2 ? (void*)(-1) : db;
-    sqlite3_create_aggregate(db, aAggs[i].zName,
-           aAggs[i].nArg, aAggs[i].xStep, aAggs[i].xFinalize, pArg);
+    sqlite3_create_function(db, aAggs[i].zName, aAggs[i].nArg, 0, 0, pArg,
+        0, aAggs[i].xStep, aAggs[i].xFinalize);
     sqlite3_function_type(db, aAggs[i].zName, aAggs[i].dataType);
   }
 

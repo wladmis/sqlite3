@@ -1272,9 +1272,9 @@ static int multiSelect(
   int rc = SQLITE_OK;  /* Success code from a subroutine */
   Select *pPrior;     /* Another SELECT immediately to our left */
   Vdbe *v;            /* Generate code to this VDBE */
+#if 0 /* NOT USED */
   char *affStr = 0;
 
-#if 0 /* NOT USED */
   if( !aff ){
     int len;
     rc = fillInColumnList(pParse, p);

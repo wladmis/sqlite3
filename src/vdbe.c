@@ -574,7 +574,7 @@ const unsigned char *sqlite3_column_data(sqlite3_stmt *pStmt, int i){
 ** If a translation fails because of a malloc() failure, a NULL pointer
 ** is returned.
 */
-const unsigned char *sqlite3_value_data(sqlite3_value* pVal){
+const unsigned char *sqlite3_value_data(sqlite3_value *pVal){
   if( pVal->flags&MEM_Null ){
     /* For a NULL return a NULL Pointer */
     return 0;
