@@ -587,6 +587,17 @@ AC_SUBST(TARGET_READLINE_INC)
 AC_SUBST(TARGET_HAVE_READLINE)
 
 #########
+# check for debug enabled
+AC_ARG_ENABLE(debug, [  --enable-debug         enable debugging & verbose explain],
+      [use_debug=$enableval],[use_debug=no])
+if test "${use_debug}" = "yes" ; then
+  TARGET_DEBUG=""
+else
+  TARGET_DEBUG="-DNDEBUG"
+fi
+AC_SUBST(TARGET_DEBUG)
+
+#########
 # Figure out whether or not we have a "usleep()" function.
 #
 AC_CHECK_FUNC(usleep, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_USLEEP=1"])
