@@ -137,7 +137,9 @@ static void ArrayClear(Array *array){
 static int ArrayHash(Datum d){
   int h = 0;
   while( d.n-- > 0 ){
-    h = (h<<9) ^ (h<<3) ^ h ^ *(((char*)d.p)++);
+    /* The funky case "*(char**)&d.p" is to work around a bug the
+    ** c89 compiler of HPUX. */
+    h = (h<<9) ^ (h<<3) ^ h ^ *((*(char**)&d.p)++);
   }
   if( h<0 ) h = -h; 
   return h;
