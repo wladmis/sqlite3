@@ -2559,6 +2559,8 @@ static int pager_open_journal(Pager *pPager){
   if( rc!=SQLITE_OK ){
     goto failed_to_open_journal;
   }
+  SET_FULLSYNC(pPager->jfd, pPager->fullSync);
+  SET_FULLSYNC(pPager->fd, pPager->fullSync);
   sqlite3OsOpenDirectory(pPager->zDirectory, &pPager->jfd);
   pPager->journalOpen = 1;
   pPager->journalStarted = 0;

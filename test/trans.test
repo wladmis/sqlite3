@@ -855,6 +855,8 @@ for {set i 2} {$i<=$limit} {incr i} {
   } else {
     execsql {PRAGMA synchronous=NORMAL}
   }
+  set sqlite_sync_count 0
+  set sqlite_fullsync_count 0
   do_test trans-9.$i.1-$cnt {
      execsql {
        BEGIN;
@@ -877,11 +879,17 @@ for {set i 2} {$i<=$limit} {incr i} {
      signature
   } $sig
   if {$i<$limit} {
-    do_test trans-9.$i.9-$cnt {
+    do_test trans-9.$i.3-$cnt {
        execsql {
          INSERT INTO t3 SELECT randstr(10,400) FROM t3 WHERE random()%10==0;
        }
     } {}
+    do_test trans-9.$i.4-$cnt {
+       expr {$sqlite_sync_count>0}
+    } 1
+    do_test trans-9.$i.5-$cnt {
+       expr {$sqlite_fullsync_count>0}
+    } [expr {$i%2==0}]
   }
   set ::pager_old_format 0
 }
