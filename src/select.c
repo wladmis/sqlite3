@@ -918,10 +918,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
     sNC.pSrcList = pSelect->pSrc;
     zType = sqliteStrDup(columnType(&sNC, p));
     pCol->zType = zType;
-    pCol->affinity = SQLITE_AFF_NUMERIC;
-    if( zType ){
-      pCol->affinity = sqlite3AffinityType(zType, strlen(zType));
-    }
+    pCol->affinity = sqlite3ExprAffinity(p);
     pCol->pColl = sqlite3ExprCollSeq(pParse, p);
     if( !pCol->pColl ){
       pCol->pColl = pParse->db->pDfltColl;

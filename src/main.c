@@ -279,7 +279,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   }else{
     char *zSql;
     zSql = sqlite3MPrintf(
-        "SELECT name, rootpage, sql, %s FROM '%q'.%s",
+        "SELECT name, rootpage, sql, '%s' FROM '%q'.%s",
         zDbNum, db->aDb[iDb].zName, zMasterName);
     sqlite3SafetyOff(db);
     rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
