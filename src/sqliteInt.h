@@ -464,7 +464,6 @@ struct Column {
   u8 notNull;      /* True if there is a NOT NULL constraint */
   u8 isPrimKey;    /* True if this column is part of the PRIMARY KEY */
   char affinity;   /* One of the SQLITE_AFF_... values */
-  u8 dottedName;   /* True if zName contains a "." character */
 };
 
 /*

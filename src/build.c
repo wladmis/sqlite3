@@ -951,18 +951,9 @@ CollSeq *sqlite3FindCollSeq(
   int create
 ){
   CollSeq *pColl = findCollSeqEntry(db, zName, nName, create);
-  if( pColl ) switch( enc ){
-    case SQLITE_UTF8:
-      break;
-    case SQLITE_UTF16LE:
-      pColl = &pColl[1];
-      break;
-    case SQLITE_UTF16BE:
-      pColl = &pColl[2];
-      break;
-    default: 
-      assert(!"Cannot happen");
-  }
+  assert( SQLITE_UTF8==1 && SQLITE_UTF16LE==2 && SQLITE_UTF16BE==3 );
+  assert( enc>=SQLITE_UTF8 && enc<=SQLITE_UTF16BE );
+  if( pColl ) pColl += enc-1;
   return pColl;
 }
 

@@ -20,6 +20,7 @@ source $testdir/tester.tcl
 
 # An unrestricted join
 #
+catch {unset ::result}
 set result {}
 for {set N 1} {$N<=40} {incr N} {
   lappend result $N
