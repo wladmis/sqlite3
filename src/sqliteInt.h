@@ -1208,6 +1208,7 @@ int sqlite3KeywordCode(const char*, int);
 int sqlite3RunParser(Parse*, const char*, char **);
 void sqlite3FinishCoding(Parse*);
 Expr *sqlite3Expr(int, Expr*, Expr*, Token*);
+Expr *sqlite3ExprAnd(Expr*, Expr*);
 void sqlite3ExprSpan(Expr*,Token*,Token*);
 Expr *sqlite3ExprFunction(ExprList*, Token*);
 void sqlite3ExprDelete(Expr*);

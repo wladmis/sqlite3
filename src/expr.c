@@ -220,6 +220,20 @@ Expr *sqlite3Expr(int op, Expr *pLeft, Expr *pRight, Token *pToken){
 }
 
 /*
+** Join two expressions using an AND operator.  If either expression is
+** NULL, then just return the other expression.
+*/
+Expr *sqlite3ExprAnd(Expr *pLeft, Expr *pRight){
+  if( pLeft==0 ){
+    return pRight;
+  }else if( pRight==0 ){
+    return pLeft;
+  }else{
+    return sqlite3Expr(TK_AND, pLeft, pRight, 0);
+  }
+}
+
+/*
 ** Set the Expr.span field of the given expression to span all
 ** text between the two given tokens.
 */
