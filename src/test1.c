@@ -431,10 +431,10 @@ typedef struct CountCtx CountCtx;
 struct CountCtx {
   int n;
 };
-static void countStep(sqlite_func *context, int argc, const char **argv){
+static void countStep(sqlite_func *context, int argc, sqlite3_value **argv){
   CountCtx *p;
   p = sqlite3_aggregate_context(context, sizeof(*p));
-  if( (argc==0 || argv[0]) && p ){
+  if( (argc==0 || SQLITE3_NULL!=sqlite3_value_type(argv[0]) ) && p ){
     p->n++;
   }
 }   

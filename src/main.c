@@ -882,7 +882,7 @@ int sqlite3_create_aggregate(
   sqlite *db,          /* Add the function to this database connection */
   const char *zName,   /* Name of the function to add */
   int nArg,            /* Number of arguments */
-  void (*xStep)(sqlite_func*,int,const char**), /* The step function */
+  void (*xStep)(sqlite_func*,int,sqlite3_value**), /* The step function */
   void (*xFinalize)(sqlite_func*),              /* The finalizer */
   void *pUserData      /* User data */
 ){
