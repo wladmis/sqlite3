@@ -51,7 +51,7 @@ input ::= cmdlist.
 // add them to the sqliteTokens.h output file.
 //
 input ::= END_OF_FILE ILLEGAL SPACE UNCLOSED_STRING COMMENT FUNCTION
-          UMINUS FIELD.
+          UMINUS FIELD AGG_FUNCTION.
 
 // A list of commands is zero or more commands
 //
@@ -141,8 +141,8 @@ cmd ::= select(X).  {
 %destructor select {sqliteSelectDelete($$);}
 
 select(A) ::= SELECT distinct(D) selcollist(W) from(X) where_opt(Y)
-              orderby_opt(Z). {
-  A = sqliteSelectNew(W,X,Y,0,0,Z,D);
+              groupby_opt(P) having_opt(Q) orderby_opt(Z). {
+  A = sqliteSelectNew(W,X,Y,P,Q,Z,D);
 }
 
 // The "distinct" nonterminal is true (1) if the DISTINCT keyword is
@@ -211,6 +211,16 @@ sortitem(A) ::= expr(X).   {A = X;}
 sortorder(A) ::= ASC.      {A = 0;}
 sortorder(A) ::= DESC.     {A = 1;}
 sortorder(A) ::= .         {A = 0;}
+
+%type groupby_opt {ExprList*}
+%destructor groupby_opt {sqliteExprListDelete($$);}
+groupby_opt(A) ::= .     {A = 0;}
+groupby_opt(A) ::= GROUP BY exprlist(X).  {A = X;}
+
+%type having_opt {Expr*}
+%destructor having_opt {sqliteExprDelete($$);}
+having_opt(A) ::= .      {A = 0;}
+having_opt(A) ::= HAVING expr(X).  {A = X;}
 
 cmd ::= DELETE FROM ID(X) where_opt(Y).
     {sqliteDeleteFrom(pParse, &X, Y);}

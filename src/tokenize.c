@@ -68,6 +68,8 @@ static Keyword aKeywordTable[] = {
   { "EXPLAIN",           0, TK_EXPLAIN,          0 },
   { "FROM",              0, TK_FROM,             0 },
   { "GLOB",              0, TK_GLOB,             0 },
+  { "GROUP",             0, TK_GROUP,            0 },
+  { "HAVING",            0, TK_HAVING,           0 },
   { "IN",                0, TK_IN,               0 },
   { "INDEX",             0, TK_INDEX,            0 },
   { "INSERT",            0, TK_INSERT,           0 },
@@ -298,6 +300,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
   extern void sqliteParserTrace(FILE*, char *);
 
   i = 0;
+  sqliteParseInfoReset(pParse);
   pEngine = sqliteParserAlloc((void*(*)(int))malloc);
   if( pEngine==0 ){
     sqliteSetString(pzErrMsg, "out of memory", 0);
@@ -382,5 +385,6 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
     sqliteDeleteTable(pParse->db, pParse->pNewTable);
     pParse->pNewTable = 0;
   }
+  sqliteParseInfoReset(pParse);
   return nErr;
 }
