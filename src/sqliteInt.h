@@ -1204,6 +1204,7 @@ void sqliteGenerateRowDelete(sqlite*, Vdbe*, Table*, int, int);
 void sqliteGenerateRowIndexDelete(sqlite*, Vdbe*, Table*, int, char*);
 void sqliteGenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
 void sqliteCompleteInsertion(Parse*, Table*, int, char*, int, int, int);
+int sqliteOpenTableAndIndices(Parse*, Table*, int);
 void sqliteBeginWriteOperation(Parse*, int, int);
 void sqliteEndWriteOperation(Parse*);
 Expr *sqliteExprDup(Expr*);

@@ -253,12 +253,7 @@ void sqliteDeleteFrom(
       ** cursors are opened only once on the outside the loop.
       */
       pParse->nTab = iCur + 1;
-      sqliteVdbeAddOp(v, OP_Integer, pTab->iDb, 0);
-      sqliteVdbeAddOp(v, OP_OpenWrite, iCur, pTab->tnum);
-      for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
-        sqliteVdbeAddOp(v, OP_Integer, pIdx->iDb, 0);
-        sqliteVdbeAddOp(v, OP_OpenWrite, pParse->nTab++, pIdx->tnum);
-      }
+      sqliteOpenTableAndIndices(pParse, pTab, iCur);
 
       /* This is the beginning of the delete loop when there are no
       ** row triggers */
