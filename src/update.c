@@ -101,7 +101,7 @@ void sqliteUpdate(
     }
     for(j=0; j<pTab->nCol; j++){
       if( sqliteStrICmp(pTab->aCol[j].zName, pChanges->a[i].zName)==0 ){
-        if( i==pTab->iPKey ){
+        if( j==pTab->iPKey ){
           chngRecno = 1;
           pRecnoExpr = pChanges->a[i].pExpr;
         }
