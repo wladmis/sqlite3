@@ -390,10 +390,10 @@ static unsigned char UpperToLower[] = {
 */
 int sqliteHashNoCase(const char *z, int n){
   int h = 0;
-  int c;
   if( n<=0 ) n = strlen(z);
-  while( n-- > 0 && (c = *z++)!=0 ){
-    h = (h<<3) ^ h ^ UpperToLower[c];
+  while( n > 0  ){
+    h = (h<<3) ^ h ^ UpperToLower[*z++];
+    n--;
   }
   if( h<0 ) h = -h;
   return h;
