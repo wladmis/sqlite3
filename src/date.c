@@ -47,13 +47,14 @@
 **      Willmann-Bell, Inc
 **      Richmond, Virginia (USA)
 */
-#ifndef SQLITE_OMIT_DATETIME_FUNCS
 #include "os.h"
 #include "sqliteInt.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+
+#ifndef SQLITE_OMIT_DATETIME_FUNCS
 
 /*
 ** A structure for holding a single date and time.
