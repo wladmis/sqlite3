@@ -907,9 +907,16 @@ int main(int argc, char **argv){
   }
   data.out = stdout;
   if( argc==3 ){
-    if( sqlite_exec(db, argv[2], callback, &data, &zErrMsg)!=0 && zErrMsg!=0 ){
-      fprintf(stderr,"SQL error: %s\n", zErrMsg);
-      exit(1);
+    if( argv[2][0]=='.' ){
+      do_meta_command(argv[2], db, &data);
+      exit(0);
+    }else{
+      int rc;
+      rc = sqlite_exec(db, argv[2], callback, &data, &zErrMsg);
+      if( rc!=0 && zErrMsg!=0 ){
+        fprintf(stderr,"SQL error: %s\n", zErrMsg);
+        exit(1);
+      }
     }
   }else{
     extern int isatty();
