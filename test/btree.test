@@ -1033,6 +1033,31 @@ do_test btree-15.99 {
 } {0}
 btree_pager_ref_dump $::b1
 
+# Miscellaneous tests.
+#
+# btree-16.1 - Check that a statement cannot be started if a transaction is not
+#              active.
+do_test btree-16.1 {
+  catch {btree_begin_statement $::b1} msg
+  set msg
+} SQLITE_ERROR
+
+do_test btree-16.2 {
+  btree_begin_transaction $::b1
+  set ::c1 [btree_cursor $::b1 2 1]
+  btree_insert $::c1 1 helloworld
+  btree_close_cursor $::c1
+  btree_commit $::b1
+} {}
+do_test btree-16.3 {
+  set ::c1 [btree_cursor $::b1 2 1]
+  btree_first $::c1
+} 0
+do_test btree-16.4 {
+  catch {btree_data $::c1 [expr [btree_payload_size $::c1] + 10]} msg
+  set msg
+} SQLITE_ERROR
+
 do_test btree-99.1 {
   btree_close $::b1
 } {}

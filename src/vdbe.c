@@ -1879,7 +1879,10 @@ case OP_Column: {
     zData = &zRec[aOffset[p2]];
   }else{
     len = sqlite3VdbeSerialTypeLen(aType[p2]);
-    sqlite3VdbeMemFromBtree(pCrsr, aOffset[p2], len, pC->keyAsData, &sMem);
+    rc = sqlite3VdbeMemFromBtree(pCrsr, aOffset[p2], len, pC->keyAsData, &sMem);
+    if( rc!=SQLITE_OK ){
+      goto abort_due_to_error;
+    }
     zData = sMem.z;
   }
   sqlite3VdbeSerialGet(zData, aType[p2], pTos);
