@@ -1835,6 +1835,8 @@ static void substExpr(Expr *pExpr, int iTable, ExprList *pEList){
       pExpr->iAgg = pNew->iAgg;
       sqlite3TokenCopy(&pExpr->token, &pNew->token);
       sqlite3TokenCopy(&pExpr->span, &pNew->span);
+      pExpr->pSelect = sqlite3SelectDup(pNew->pSelect);
+      pExpr->flags = pNew->flags;
     }
   }else{
     substExpr(pExpr->pLeft, iTable, pEList);

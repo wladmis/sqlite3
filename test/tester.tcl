@@ -303,9 +303,6 @@ proc crashsql {crashdelay crashfile sql} {
 #
 proc do_ioerr_test {testname args} {
 
-  if {$testname=="ioerr-2"} {
-    breakpoint
-  }
   set ::ioerropts(-start) 1
   set ::ioerropts(-cksum) 0
 

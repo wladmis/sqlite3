@@ -3222,6 +3222,9 @@ static int clearCell(MemPage *pPage, unsigned char *pCell){
   ovflPgno = get4byte(&pCell[info.iOverflow]);
   while( ovflPgno!=0 ){
     MemPage *pOvfl;
+    if( ovflPgno>sqlite3pager_pagecount(pBt->pPager) ){
+      return SQLITE_CORRUPT;
+    }
     rc = getPage(pBt, ovflPgno, &pOvfl);
     if( rc ) return rc;
     ovflPgno = get4byte(pOvfl->aData);
@@ -4765,6 +4768,10 @@ static int clearDatabasePage(
   int rc;
   unsigned char *pCell;
   int i;
+
+  if( pgno>sqlite3pager_pagecount(pBt->pPager) ){
+    return SQLITE_CORRUPT;
+  }
 
   rc = getAndInitPage(pBt, pgno, &pPage, pParent);
   if( rc ) return rc;
