@@ -160,6 +160,7 @@ int sqlite_exec(
 #define SQLITE_CANTOPEN  13   /* Unable to open the database file */
 #define SQLITE_PROTOCOL  14   /* Database lock protocol error */
 #define SQLITE_EMPTY     15   /* Database table is empty */
+#define SQLITE_SCHEMA    16   /* The database schema changed */
 
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically

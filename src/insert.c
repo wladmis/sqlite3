@@ -87,6 +87,7 @@ void sqliteInsert(
   if( v==0 ) goto insert_cleanup;
   if( (pParse->db->flags & SQLITE_InTrans)==0 ){
     sqliteVdbeAddOp(v, OP_Transaction, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_VerifyCookie, pParse->db->schema_cookie, 0, 0, 0);
   }
 
   /* Figure out how many columns of data are supplied.  If the data
