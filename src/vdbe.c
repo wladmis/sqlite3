@@ -2970,6 +2970,12 @@ case OP_PutStrKey: {
         pC->nextRowidValid = 0;
       }
     }
+    if( pTos->flags & MEM_Null ){
+      pTos->z = 0;
+      pTos->n = 0;
+    }else{
+      assert( pTos->flags & MEM_Str );
+    }
     if( pC->pseudoTable ){
       /* PutStrKey does not work for pseudo-tables.
       ** The following assert makes sure we are not trying to use
