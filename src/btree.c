@@ -1719,7 +1719,7 @@ static int allocatePage(Btree *, MemPage **, Pgno *, Pgno, u8);
 ** This routine is called prior to sqlite3pager_commit when a transaction
 ** is commited for an auto-vacuum database.
 */
-static int autoVacuumCommit(Btree *pBt){
+static int autoVacuumCommit(Btree *pBt, Pgno *nTrunc){
   Pager *pPager = pBt->pPager;
   Pgno nFreeList;   /* Number of pages remaining on the free-list. */
   int nPtrMap;      /* Number of pointer-map pages deallocated */
@@ -1746,6 +1746,7 @@ static int autoVacuumCommit(Btree *pBt){
   */
   nFreeList = get4byte(&pBt->pPage1->aData[36]);
   if( nFreeList==0 ){
+    *nTrunc = 0;
     return SQLITE_OK;
   }
 
@@ -1803,8 +1804,8 @@ static int autoVacuumCommit(Btree *pBt){
   if( rc!=SQLITE_OK ) goto autovacuum_out;
   put4byte(&pBt->pPage1->aData[32], 0);
   put4byte(&pBt->pPage1->aData[36], 0);
-  rc = sqlite3pager_truncate(pBt->pPager, finSize);
   if( rc!=SQLITE_OK ) goto autovacuum_out;
+  *nTrunc = finSize;
 
 autovacuum_out:
   /* TODO: A goto autovacuum_out; will fail to call releasePage() on 
@@ -5378,12 +5379,14 @@ int sqlite3BtreeIsInStmt(Btree *pBt){
 int sqlite3BtreeSync(Btree *pBt, const char *zMaster){
   if( pBt->inTrans==TRANS_WRITE ){
 #ifndef SQLITE_OMIT_AUTOVACUUM
+    Pgno nTrunc = 0;
     if( pBt->autoVacuum ){
-      int rc = autoVacuumCommit(pBt); 
+      int rc = autoVacuumCommit(pBt, &nTrunc); 
       if( rc!=SQLITE_OK ) return rc;
     }
+    return sqlite3pager_sync(pBt->pPager, zMaster, nTrunc);
 #endif
-    return sqlite3pager_sync(pBt->pPager, zMaster);
+    return sqlite3pager_sync(pBt->pPager, zMaster, 0);
   }
   return SQLITE_OK;
 }

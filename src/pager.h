@@ -76,7 +76,7 @@ int sqlite3pager_pagecount(Pager*);
 int sqlite3pager_truncate(Pager*,Pgno);
 int sqlite3pager_begin(void*, int exFlag);
 int sqlite3pager_commit(Pager*);
-int sqlite3pager_sync(Pager*,const char *zMaster);
+int sqlite3pager_sync(Pager*,const char *zMaster, Pgno);
 int sqlite3pager_rollback(Pager*);
 int sqlite3pager_isreadonly(Pager*);
 int sqlite3pager_stmt_begin(Pager*);
