@@ -51,6 +51,11 @@ int sqliteInitCallback(void *pDb, int argc, char **argv, char **azColName){
       break;
     }
     case 'f': {  /* File format */
+      /*
+      ** file_format==1  Version 2.1.0.
+      ** file_format==2  Version 2.2.0.  Integer primary key.
+      ** file_format==3  Version 2.6.0.  Separate text and numeric datatypes.
+      */
       db->file_format = atoi(argv[3]);
       break;
     }
@@ -826,4 +831,15 @@ int sqlite_create_aggregate(
   p->xFinalize = xFinalize;
   p->pUserData = pUserData;
   return 0;
+}
+
+/*
+** Change the datatype for all functions with a given name.
+*/
+int sqlite_function_type(sqlite *db, const char *zName, int dataType){
+  FuncDef *p = (FuncDef*)sqliteHashFind(&db->aFunc, zName, strlen(zName));
+  while( p ){
+    p->dataType = dataType; 
+    p = p->pNext;
+  }
 }
