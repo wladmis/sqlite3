@@ -890,7 +890,7 @@ int sqliteBtreeCloseCursor(BtCursor *pCur){
   }
   unlockBtreeIfUnused(pBt);
   nLock = (int)sqliteHashFind(&pBt->locks, 0, pCur->pgnoRoot);
-  assert( nLock!=0 );
+  assert( nLock!=0 || sqlite_malloc_failed );
   nLock = nLock<0 ? 0 : nLock-1;
   sqliteHashInsert(&pBt->locks, 0, pCur->pgnoRoot, (void*)nLock);
   sqliteFree(pCur);

@@ -65,8 +65,9 @@ if {$LeakList!=""} {
   puts " Ok"
 }
 
-if {[file readable $testdir/malloc.test]} {
-  source $testdir/malloc.test
-}
+# Run the malloc tests after memory leak detection.  We do leak
+# some if malloc fails.
+#
+catch {source $testdir/malloc.test}
 
 really_finish_test

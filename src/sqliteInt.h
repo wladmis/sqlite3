@@ -269,7 +269,7 @@ struct Expr {
 */
 struct ExprList {
   int nExpr;             /* Number of expressions on the list */
-  struct {
+  struct ExprList_item {
     Expr *pExpr;           /* The list of expressions */
     char *zName;           /* Token associated with this expression */
     char sortOrder;        /* 1 for DESC or 0 for ASC */
@@ -283,7 +283,7 @@ struct ExprList {
 */
 struct IdList {
   int nId;         /* Number of identifiers on the list */
-  struct {
+  struct IdList_item {
     char *zName;      /* Text of the identifier. */
     char *zAlias;     /* The "B" part of a "A AS B" phrase.  zName is the "A" */
     int idx;          /* Index in some Table.aCol[] of a column named zName */
@@ -454,6 +454,7 @@ void sqliteExprIfTrue(Parse*, Expr*, int);
 void sqliteExprIfFalse(Parse*, Expr*, int);
 Table *sqliteFindTable(sqlite*,char*);
 Index *sqliteFindIndex(sqlite*,char*);
+void sqliteUnlinkAndDeleteIndex(sqlite*,Index*);
 void sqliteCopy(Parse*, Token*, Token*, Token*);
 void sqliteVacuum(Parse*, Token*);
 int sqliteGlobCompare(const unsigned char*,const unsigned char*);

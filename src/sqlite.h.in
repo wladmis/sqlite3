@@ -165,7 +165,8 @@ int sqlite_exec(
 ** defined above, then this routine returns a constant text string which
 ** descripts (in English) the meaning of the return value.
 */
-const char *sqliteErrStr(int);
+const char *sqlite_error_string(int);
+#define sqliteErrStr sqlite_error_string  /* Legacy. Do not use in new code. */
 
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically

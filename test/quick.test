@@ -21,6 +21,7 @@ set EXCLUDE {
   all.test
   quick.test
   btree2.test
+  malloc.test
 }
 
 foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
