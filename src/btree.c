@@ -1505,14 +1505,13 @@ static void releaseTempCursor(BtCursor *pCur){
 ** Using this cache reduces the number of calls to parseCell().
 */
 static void getCellInfo(BtCursor *pCur){
-  MemPage *pPage = pCur->pPage;
   if( !pCur->infoValid ){
-    parseCell(pPage, pCur->idx, &pCur->info);
+    parseCell(pCur->pPage, pCur->idx, &pCur->info);
     pCur->infoValid = 1;
   }else{
 #ifndef NDEBUG
     CellInfo info;
-    parseCell(pPage, pCur->idx, &info);
+    parseCell(pCur->pPage, pCur->idx, &info);
     assert( memcmp(&info, &pCur->info, sizeof(info))==0 );
 #endif
   }
