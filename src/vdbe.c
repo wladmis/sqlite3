@@ -1273,7 +1273,7 @@ case OP_Function: {
   */
   if( ctx.pVdbeFunc ){
     int mask = pOp->p2;
-    for(i=0; i<n; i++){
+    for(i=0; i<ctx.pVdbeFunc->nAux; i++){
       struct AuxData *pAux = &ctx.pVdbeFunc->apAux[i];
       if( (i>31 || !(mask&(1<<i))) && pAux->pAux ){
         pAux->xDelete(pAux->pAux);

@@ -656,7 +656,7 @@ int sqlite3_create_function(
     return SQLITE_ERROR;
   }
 
-  p = sqlite3FindFunction(db, zFunctionName, nName, nArg, 1);
+  p = sqlite3FindFunction(db, zFunctionName, nName, nArg, eTextRep, 1);
   if( p==0 ) return 1;
   p->xFunc = xFunc;
   p->xStep = xStep;
