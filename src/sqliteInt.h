@@ -309,6 +309,7 @@ struct WhereLevel {
   int iMem;            /* Memory cell used by this level */
   Index *pIdx;         /* Index used */
   int iCur;            /* Cursor number used for this index */
+  int score;           /* How well this indexed scored */
   int brk;             /* Jump here to break out of the loop */
   int cont;            /* Jump here to continue with the next loop cycle */
   int op, p1, p2;      /* Opcode used to terminate the loop */
