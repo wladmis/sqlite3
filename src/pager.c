@@ -1511,7 +1511,7 @@ static int pager_open_journal(Pager *pPager){
   if( journal_format==JOURNAL_FORMAT_3 ){
     rc = sqliteOsWrite(&pPager->jfd, aJournalMagic3, sizeof(aJournalMagic3));
     if( rc==SQLITE_OK ){
-      rc = write32bits(&pPager->jfd, pPager->tempFile ? 0xffffffff : 0);
+      rc = write32bits(&pPager->jfd, pPager->noSync ? 0xffffffff : 0);
     }
     if( rc==SQLITE_OK ){
       pPager->cksumInit = (u32)sqliteRandomInteger();

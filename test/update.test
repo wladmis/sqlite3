@@ -217,6 +217,7 @@ do_test update-5.6.5 {
 
 # Repeat the previous sequence of tests with a different index.
 #
+execsql {PRAGMA synchronous=FULL}
 do_test update-6.0 {
   execsql {DROP INDEX idx1}
   execsql {CREATE INDEX idx1 ON test1(f2)}

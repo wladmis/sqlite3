@@ -67,7 +67,7 @@ the first argument and the second argument is one or more SQL statements
 to execute against the database.  The function calls to pay attention
 to here are the call to <b>sqlite_open()</b> on line 22 which opens
 the database, <b>sqlite_exec()</b> on line 27 that executes SQL
-command against the database, and <b>sqlite_close()</b> on line 31
+commands against the database, and <b>sqlite_close()</b> on line 31
 that closes the database connection.</p>
 
 <blockquote><pre>
