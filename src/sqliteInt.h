@@ -914,7 +914,7 @@ struct WhereLevel {
   Index *pIdx;         /* Index used.  NULL if no index */
   int iTabCur;         /* The VDBE cursor used to access the table */
   int iIdxCur;         /* The VDBE cursor used to acesss pIdx */
-  int score;           /* How well this indexed scored */
+  int score;           /* How well this index scored */
   int brk;             /* Jump here to break out of the loop */
   int cont;            /* Jump here to continue with the next loop cycle */
   int op, p1, p2;      /* Opcode used to terminate the loop */
