@@ -174,6 +174,10 @@ puts {<h2>Related Sites</h2>
 <li><p>An ODBC driver for SQLite can be found at
        <a href="http://www.ch-werner.de/sqliteodbc/">
        http://www.ch-werner.de/sqliteodbc/</a>.</p></li>
+
+<li><p>A PHP module for SQLite can be found at
+       <a href="http://freshmeat.net/projects/sqlite-php">
+       http://freshmeat.net/projects/sqlite-php</a></li>
 </ul>}
 
 puts {
