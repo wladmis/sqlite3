@@ -611,6 +611,9 @@ struct Table {
   Trigger *pTrigger; /* List of SQL triggers on this table */
   FKey *pFKey;       /* Linked list of all foreign keys in this table */
   char *zColAff;     /* String defining the affinity of each column */
+#ifndef SQLITE_OMIT_ALTERTABLE
+  int addColOffset;  /* Offset in CREATE TABLE statement to add a new column */
+#endif
 };
 
 /*
@@ -1367,7 +1370,7 @@ void sqlite3AddPrimaryKey(Parse*, ExprList*, int, int);
 void sqlite3AddColumnType(Parse*,Token*,Token*);
 void sqlite3AddDefaultValue(Parse*,Expr*);
 void sqlite3AddCollateType(Parse*, const char*, int);
-void sqlite3EndTable(Parse*,Token*,Select*);
+void sqlite3EndTable(Parse*,Token*,Token*,Select*);
 
 #ifndef SQLITE_OMIT_VIEW
   void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int);
@@ -1554,5 +1557,7 @@ void sqlite3ExpirePreparedStatements(sqlite3*);
 void sqlite3CodeSubselect(Parse *, Expr *);
 int sqlite3SelectResolve(Parse *, Select *, NameContext *);
 void sqlite3ColumnDefault(Vdbe *, Table *, int);
+void sqlite3AlterFinishAddColumn(Parse *, Token *);
+void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 
 #endif
