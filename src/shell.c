@@ -223,15 +223,11 @@ static int is_numeric(const char *z){
 static void output_quoted_string(FILE *out, const char *z){
   int i;
   int nSingle = 0;
-  int nDouble = 0;
   for(i=0; z[i]; i++){
     if( z[i]=='\'' ) nSingle++;
-    else if( z[i]=='"' ) nDouble++;
   }
   if( nSingle==0 ){
     fprintf(out,"'%s'",z);
-  }else if( nDouble==0 ){
-    fprintf(out,"\"%s\"",z);
   }else{
     fprintf(out,"'");
     while( *z ){
