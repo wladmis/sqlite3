@@ -152,6 +152,7 @@ static int DbCmd(void *cd, Tcl_Interp *interp, int argc, char **argv){
     }
     if( argc==5 ){
       cbData.interp = interp;
+      cbData.once = 1;
       cbData.zArray = argv[3];
       cbData.zCode = argv[4];
       zErrMsg = 0;

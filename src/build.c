@@ -243,7 +243,7 @@ void sqliteAddColumn(Parse *pParse, Token *pName){
   char **pz;
   if( (p = pParse->pNewTable)==0 ) return;
   if( (p->nCol & 0x7)==0 ){
-    p->azCol = sqliteRealloc( p->azCol, (p->nCol+9)*sizeof(p->azCol[0]));
+    p->azCol = sqliteRealloc( p->azCol, (p->nCol+8)*sizeof(p->azCol[0]));
   }
   if( p->azCol==0 ){
     p->nCol = 0;
@@ -473,7 +473,7 @@ void sqliteCreateIndex(
   /* 
   ** Allocate the index structure. 
   */
-  pIndex = sqliteMalloc( sizeof(Index) + strlen(zName) + 
+  pIndex = sqliteMalloc( sizeof(Index) + strlen(zName) + 1 +
                         sizeof(int)*pList->nId );
   if( pIndex==0 ){
     sqliteSetString(&pParse->zErrMsg, "out of memory", 0);

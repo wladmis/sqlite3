@@ -35,6 +35,13 @@
 #include <string.h>
 #include <assert.h>
 
+/* #define MEMORY_DEBUG 1 */
+#ifdef MEMORY_DEBUG
+# define sqliteMalloc(X)    sqliteMalloc_(X,__FILE__,__LINE__)
+# define sqliteFree(X)      sqliteFree_(X,__FILE__,__LINE__)
+# define sqliteRealloc(X,Y) sqliteRealloc_(X,Y,__FILE__,__LINE__)
+#endif
+
 /*
 ** The number of entries in the in-memory hash table holding the
 ** schema.
@@ -200,9 +207,15 @@ int sqliteStrNICmp(const char *, const char *, int);
 int sqliteHashNoCase(const char *, int);
 int sqliteCompare(const char *, const char *);
 int sqliteSortCompare(const char *, const char *);
-void *sqliteMalloc(int);
-void sqliteFree(void*);
-void *sqliteRealloc(void*,int);
+#ifdef MEMORY_DEBUG
+  void *sqliteMalloc_(int,char*,int);
+  void sqliteFree_(void*,char*,int);
+  void *sqliteRealloc_(void*,int,char*,int);
+#else
+  void *sqliteMalloc(int);
+  void sqliteFree(void*);
+  void *sqliteRealloc(void*,int);
+#endif
 int sqliteGetToken(const char*, int *);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);

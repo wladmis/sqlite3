@@ -31,6 +31,7 @@
 */
 #include "sqliteInt.h"
 #include <ctype.h>
+#include <stdlib.h>
 
 /*
 ** All the keywords of the SQL language are stored as in a hash
@@ -287,7 +288,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
   extern void sqliteParserTrace(FILE*, char *);
 
   i = 0;
-  pEngine = sqliteParserAlloc(sqliteMalloc);
+  pEngine = sqliteParserAlloc((void(*)())malloc);
   if( pEngine==0 ){
     sqliteSetString(pzErrMsg, "out of memory", 0);
     return 1;
@@ -354,7 +355,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
        nErr++;
     }
   }
-  sqliteParserFree(pEngine, sqliteFree);
+  sqliteParserFree(pEngine, free);
   if( pParse->zErrMsg ){
     if( pzErrMsg ){
       *pzErrMsg = pParse->zErrMsg;
