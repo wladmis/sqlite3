@@ -117,12 +117,12 @@ void sqliteInsert(
     assert( pSelect->pEList );
     nColumn = pSelect->pEList->nExpr;
   }else{
-    IdList dummy;
+    SrcList dummy;
     assert( pList!=0 );
     srcTab = -1;
     assert( pList );
     nColumn = pList->nExpr;
-    dummy.nId = 0;
+    dummy.nSrc = 0;
     for(i=0; i<nColumn; i++){
       if( sqliteExprResolveIds(pParse, 0, &dummy, 0, pList->a[i].pExpr) ){
         goto insert_cleanup;
