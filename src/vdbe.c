@@ -1211,6 +1211,7 @@ case OP_String: {
 ** P1 elements are popped off of the top of stack and discarded.
 */
 case OP_Pop: {
+  assert( p->tos+1>=pOp->p1 );
   PopStack(p, pOp->p1);
   break;
 }

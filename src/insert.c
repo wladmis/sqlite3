@@ -482,7 +482,7 @@ void sqliteGenerateConstraintChecks(
     if( overrideError!=OE_Default ){
       onError = overrideError;
     }
-    sqliteVdbeAddOp(v, OP_Dup, extra+nCol+2, 1);
+    sqliteVdbeAddOp(v, OP_Dup, extra+nCol+1+recnoChng, 1);
     jumpInst = sqliteVdbeAddOp(v, OP_IsUnique, base+iCur+1, 0);
     switch( onError ){
       case OE_Abort: {
@@ -496,7 +496,6 @@ void sqliteGenerateConstraintChecks(
         break;
       }
       case OE_Replace: {
-        sqliteVdbeAddOp(v, OP_MoveTo, base, 0);
         sqliteGenerateRowDelete(v, pTab, base);
         if( isUpdate ){
           sqliteVdbeAddOp(v, OP_Dup, nCol+extra+recnoChng, 1);
