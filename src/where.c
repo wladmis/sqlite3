@@ -62,8 +62,8 @@ static int exprSplit(int nSlot, ExprInfo *aSlot, Expr *pExpr){
     aSlot[0].p = pExpr->pLeft;
     cnt = 1 + exprSplit(nSlot-1, &aSlot[1], pExpr->pRight);
   }else{
-    cnt = exprSplit(nSlot, aSlot, pExpr->pRight);
-    cnt += exprSplit(nSlot-cnt, &aSlot[cnt], pExpr->pLeft);
+    cnt = exprSplit(nSlot, aSlot, pExpr->pLeft);
+    cnt += exprSplit(nSlot-cnt, &aSlot[cnt], pExpr->pRight);
   }
   return cnt;
 }

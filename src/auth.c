@@ -71,6 +71,7 @@ static void sqliteAuthBadReturnCode(Parse *pParse, int rc){
     " from the authorization function - should be SQLITE_OK, "
     "SQLITE_IGNORE, or SQLITE_DENY", 0);
   pParse->nErr++;
+  pParse->rc = SQLITE_MISUSE;
 }
 
 /*
@@ -113,6 +114,7 @@ void sqliteAuthRead(
     sqliteSetString(&pParse->zErrMsg,"access to ",
         pTab->zName, ".", zCol, " is prohibited", 0);
     pParse->nErr++;
+    pParse->rc = SQLITE_AUTH;
   }else if( rc!=SQLITE_OK ){
     sqliteAuthBadReturnCode(pParse, rc);
   }
@@ -138,6 +140,7 @@ int sqliteAuthCheck(
   rc = db->xAuth(db->pAuthArg, code, zArg1, zArg2);
   if( rc==SQLITE_DENY ){
     sqliteSetString(&pParse->zErrMsg, "not authorized", 0);
+    pParse->rc = SQLITE_AUTH;
     pParse->nErr++;
   }else if( rc!=SQLITE_OK && rc!=SQLITE_IGNORE ){
     rc = SQLITE_DENY;
