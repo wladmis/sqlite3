@@ -19,7 +19,6 @@
 **     DROP INDEX
 **     creating ID lists
 **     COPY
-**     VACUUM
 **     BEGIN TRANSACTION
 **     COMMIT
 **     ROLLBACK
@@ -2079,20 +2078,6 @@ copy_cleanup:
   sqliteSrcListDelete(pTableName);
   sqliteFree(zFile);
   return;
-}
-
-/*
-** The non-standard VACUUM command is used to clean up the database,
-** collapse free space, etc.  It is modelled after the VACUUM command
-** in PostgreSQL.
-**
-** In version 1.0.x of SQLite, the VACUUM command would call
-** gdbm_reorganize() on all the database tables.  But beginning
-** with 2.0.0, SQLite no longer uses GDBM so this command has
-** become a no-op.
-*/
-void sqliteVacuum(Parse *pParse, Token *pTableName){
-  /* Do nothing */
 }
 
 /*

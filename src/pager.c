@@ -2056,13 +2056,13 @@ int sqlitepager_rename(Pager *pPager, const char *zNewName){
   memcpy(zJournal, zNew, nName);
   strcpy(&zJournal[nName], "-journal");
   if( pPager->journalOpen ){
-    rc = sqliteOsRename(pPager->zJournal, zJournal);
+    rc = sqliteOsFileRename(pPager->zJournal, zJournal);
     if( rc ){
       sqliteFree(zNew);
       return rc;
     }
   }
-  rc = sqliteOsRename(pPager->zFilename, zNew);
+  rc = sqliteOsFileRename(pPager->zFilename, zNew);
   if( rc ){
     sqliteFree(zNew);
     return rc;
