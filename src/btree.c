@@ -2668,7 +2668,8 @@ static void reparentPage(Btree *pBt, Pgno pgno, MemPage *pNewParent, int idx){
   assert( pBt->pPager!=0 );
   aData = sqlite3pager_lookup(pBt->pPager, pgno);
   if( aData ){
-    pThis = (MemPage*)&aData[pBt->usableSize];
+    pThis = (MemPage*)&aData[pBt->pageSize];
+    assert( pThis->aData==aData );
     if( pThis->isInit ){
       if( pThis->pParent!=pNewParent ){
         if( pThis->pParent ) sqlite3pager_unref(pThis->pParent->aData);
