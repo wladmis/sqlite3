@@ -13,7 +13,7 @@
 **
 ** This file implements an in-core database using Red-Black balanced
 ** binary trees.
-**
+** 
 ** It was contributed to SQLite by anonymous on 2003-Feb-04 23:24:49 UTC.
 */
 #include "btree.h"
