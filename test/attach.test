@@ -360,6 +360,7 @@ do_test attach-3.4 {
 # prevent test2.db from being read by db2.
 do_test attach-3.5 {
   execsql {SELECT * FROM t2}
+btree_breakpoint
   catchsql {
     SELECT * FROM t2;
   } db2;

@@ -126,6 +126,7 @@ void sqlite3Attach(
   }
 #endif
   sqliteFree(zFile);
+  sqlite3ExpirePreparedStatements(db);
   db->flags &= ~SQLITE_Initialized;
   if( pParse->nErr==0 && rc==SQLITE_OK ){
     rc = sqlite3ReadSchema(pParse);
@@ -190,6 +191,7 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   sqlite3BtreeClose(pDb->pBt);
   pDb->pBt = 0;
   sqlite3ResetInternalSchema(db, 0);
+  sqlite3ExpirePreparedStatements(db);
 }
 
 /*
@@ -334,4 +336,3 @@ int sqlite3FixTriggerStep(
   return 0;
 }
 #endif
-
