@@ -58,6 +58,13 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Jun-09} {Version 2.8.14 Released} {
+  SQLite version 2.8.14 is a patch release to the stable 2.8 series.
+  There is no reason to upgrade if 2.8.13 is working ok for you.
+  This is only a bug-fix release.  Most developement effort is
+  going into version 3.0.0 which is due out soon.
+}
+
 newsitem {2004-May-31} {CVS Access Temporarily Disabled} {
   Anonymous access to the CVS repository will be suspended
   for 2 weeks beginning on 2004-June-04.  Everyone will still
