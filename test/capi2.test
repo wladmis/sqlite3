@@ -208,7 +208,7 @@ do_test capi2-3.7 {
        [sqlite3_column_count $VM] \
        [get_row_values $VM] \
        [get_column_names $VM]
-} {SQLITE_ROW 1 {{}} {5/0 NUMERIC}}
+} {SQLITE_ROW 1 {{}} {5/0 {}}}
 do_test capi2-3.8 {
   sqlite3_finalize $VM
 } {SQLITE_OK}

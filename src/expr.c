@@ -1060,43 +1060,6 @@ int sqlite3ExprCheck(Parse *pParse, Expr *pExpr, int allowAgg, int *pIsAgg){
 }
 
 /*
-** Return one of the SQLITE_AFF_* affinity types that indicates the likely
-** data type of the result of the given expression.
-**
-** Not every expression has a fixed type.  If the type cannot be determined
-** at compile-time, then try to return the type affinity if the expression
-** is a column.  Otherwise just return SQLITE_AFF_NONE.
-**
-** The sqlite3ExprResolveIds() and sqlite3ExprCheck() routines must have
-** both been called on the expression before it is passed to this routine.
-*/
-int sqlite3ExprType(Expr *p){
-  if( p==0 ) return SQLITE_AFF_NONE;
-  while( p ) switch( p->op ){
-    case TK_CONCAT:
-    case TK_STRING:
-    case TK_BLOB:
-      return SQLITE_AFF_TEXT;
-
-    case TK_AS:
-      p = p->pLeft;
-      break;
-
-    case TK_VARIABLE:
-    case TK_NULL:
-      return SQLITE_AFF_NONE;
-
-    case TK_SELECT:   /*** FIX ME ****/
-    case TK_COLUMN:   /*** FIX ME ****/
-    case TK_CASE:     /*** FIX ME ****/
-
-    default:
-      return SQLITE_AFF_NUMERIC;
-  }
-  return SQLITE_AFF_NONE;
-}
-
-/*
 ** Generate an instruction that will put the integer describe by
 ** text z[0..n-1] on the stack.
 */
