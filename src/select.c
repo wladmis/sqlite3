@@ -676,8 +676,9 @@ static int fillInColumnList(Parse *pParse, Select *p){
           if( zTabName==0 || zTabName[0]==0 ){ 
             zTabName = pTab->zName;
           }
-          if( pName && (zTabName==0 || zTabName[0]==0 ||
-                sqliteStrNICmp(pName->z, zTabName, pName->n)!=0) ){
+          if( pName && (zTabName==0 || zTabName[0]==0 || 
+                 sqliteStrNICmp(pName->z, zTabName, pName->n)!=0 ||
+                 zTabName[pName->n]!=0) ){
             continue;
           }
           tableSeen = 1;
