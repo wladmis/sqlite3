@@ -61,6 +61,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Mar-27} {Version 3.2.1} {
+  This release fixes a memory allocation problem in the new
+  <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>
+  command.
+}
+
 newsitem {2005-Mar-21} {Version 3.2.0} {
   The primary purpose for version 3.2.0 is to add support for
   <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>.
