@@ -565,6 +565,12 @@ void sqliteGenerateConstraintChecks(
       if( onError==OE_Default ) onError = OE_Abort;
     }
     if( onError!=OE_Replace ){
+      int jumpInst2;
+      if( isUpdate ){
+        sqliteVdbeAddOp(v, OP_Dup, nCol+1, 1);
+        sqliteVdbeAddOp(v, OP_Dup, nCol+1, 1);
+        jumpInst2 = sqliteVdbeAddOp(v, OP_Eq, 0, 0);
+      }
       sqliteVdbeAddOp(v, OP_Dup, nCol, 1);
       jumpInst = sqliteVdbeAddOp(v, OP_NotExists, base, 0);
       switch( onError ){
@@ -584,6 +590,7 @@ void sqliteGenerateConstraintChecks(
       contAddr = sqliteVdbeCurrentAddr(v);
       sqliteVdbeChangeP2(v, jumpInst, contAddr);
       if( isUpdate ){
+        sqliteVdbeChangeP2(v, jumpInst2, contAddr);
         sqliteVdbeAddOp(v, OP_Dup, nCol+1, 1);
         sqliteVdbeAddOp(v, OP_MoveTo, base, 0);
       }
