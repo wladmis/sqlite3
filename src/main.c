@@ -844,7 +844,7 @@ int sqlite_function_type(sqlite *db, const char *zName, int dataType){
 ** separate databases and acting on them as if they were one.
 **
 ** This routine closes the existing auxiliary database file, which will
-** cause any previously created TEMP tables to be created.
+** cause any previously created TEMP tables to be dropped.
 **
 ** The zName parameter can be a NULL pointer or an empty string to cause
 ** a temporary file to be opened and automatically deleted when closed.
