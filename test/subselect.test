@@ -46,7 +46,7 @@ do_test subselect-1.1 {
 do_test subselect-1.2 {
   set v [catch {execsql {SELECT * FROM t1 WHERE a = (SELECT * FROM t1)}} msg]
   lappend v $msg
-} {1 {only a single result allowed for a SELECT this is part of an expression}}
+} {1 {only a single result allowed for a SELECT that is part of an expression}}
 
 # A subselect without an aggregate.
 #
@@ -86,5 +86,13 @@ do_test subselect-1.5 {
     WHERE x = (SELECT sum(b) FROM t1 where a notnull) - (SELECT sum(a) FROM t1)
   }
 } {8}
+
+# Try something useful.  Delete every entry from t2 where the
+# x value is less than half of the maximum.
+#
+do_test subselect-1.6 {
+  execsql {DELETE FROM t2 WHERE x < 0.5*(SELECT max(x) FROM t2)}
+  execsql {SELECT x FROM t2 ORDER BY x}
+} {2 3 4}
 
 finish_test
