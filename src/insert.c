@@ -188,12 +188,14 @@ void sqlite3Insert(
   int iCleanup = 0;     /* Address of the cleanup code */
   int iInsertBlock = 0; /* Address of the subroutine used to insert data */
   int iCntMem = 0;      /* Memory cell used for the row counter */
-  int isView;           /* True if attempting to insert into a view */
+  int newIdx = -1;      /* Cursor for the NEW table */
 
+#ifndef SQLITE_OMIT_TRIGGER
+  int isView;                 /* True if attempting to insert into a view */
   int row_triggers_exist = 0; /* True if there are FOR EACH ROW triggers */
   int before_triggers;        /* True if there are BEFORE triggers */
   int after_triggers;         /* True if there are AFTER triggers */
-  int newIdx = -1;            /* Cursor for the NEW table */
+#endif
 
   if( pParse->nErr || sqlite3_malloc_failed ) goto insert_cleanup;
   db = pParse->db;

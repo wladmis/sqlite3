@@ -153,6 +153,7 @@ do_test attach3-6.2 {
   }
 } {}
 
+ifcapable {trigger} {
 # Create a trigger in the auxilary database.
 do_test attach3-7.1 {
   execsql {
@@ -211,6 +212,7 @@ do_test attach3-9.2 {
     SELECT count(*) FROM sqlite_temp_master;
   }
 } {0}
+} ;# endif trigger
 
 # Make sure the aux.sqlite_master table is read-only
 do_test attach3-10.0 {

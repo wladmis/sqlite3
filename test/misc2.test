@@ -18,6 +18,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable {trigger} {
 # Test for ticket #360
 #
 do_test misc2-1.1 {
@@ -35,6 +36,7 @@ do_test misc2-1.2 {
     INSERT INTO foo(bar) VALUES (111);
   }
 } {1 aiieee}
+} ;# endif trigger
 
 # Make sure ROWID works on a view and a subquery.  Ticket #364
 #

@@ -16,6 +16,14 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# If the VACUUM statement is disabled in the current build, skip all
+# the tests in this file.
+#
+ifcapable {!vacuum} {
+  finish_test
+  return
+}
+
 set fcnt 1
 proc cksum {{db db}} {
   set sql "SELECT name, type, sql FROM sqlite_master ORDER BY name, type"

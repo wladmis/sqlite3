@@ -598,11 +598,13 @@ do_test index-18.3 {
     CREATE VIEW sqlite_v1 AS SELECT * FROM t7;
   }
 } {1 {object name reserved for internal use: sqlite_v1}}
-do_test index-18.4 {
-  catchsql {
-    CREATE TRIGGER sqlite_tr1 BEFORE INSERT ON t7 BEGIN SELECT 1; END;
-  }
-} {1 {object name reserved for internal use: sqlite_tr1}}
+ifcapable {trigger} {
+  do_test index-18.4 {
+    catchsql {
+      CREATE TRIGGER sqlite_tr1 BEFORE INSERT ON t7 BEGIN SELECT 1; END;
+    }
+  } {1 {object name reserved for internal use: sqlite_tr1}}
+}
 do_test index-18.5 {
   execsql {
     DROP TABLE t7;

@@ -368,6 +368,7 @@ do_test rowid-7.8 {
   }
 } {2 66 3 111}
 
+ifcapable {trigger} {
 # Make sure AFTER triggers that do INSERTs do not change the last_insert_rowid.
 # Ticket #290
 #
@@ -419,6 +420,17 @@ do_test rowid-8.8 {
     SELECT rowid, * FROM t4;
   }
 } {1 1 2 133 3 134}
+} ;# endif trigger
+
+# If triggers are not enable, simulate their effect for the tests that
+# follow.
+ifcapable {!trigger} {
+  execsql {
+    CREATE TABLE t3(a integer primary key);
+    INSERT INTO t3 VALUES(123);
+    INSERT INTO t3 VALUES(124);
+  }
+}
 
 # ticket #377: Comparison between integer primiary key and floating point
 # values.
