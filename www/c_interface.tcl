@@ -446,7 +446,7 @@ same information as the 2nd through 4th parameters of the
 the <b>sqlite_exec</b> interface.  Except, with <b>sqlite_step</b>
 the column datatype information is always included in the in the
 4th parameter regardless of whether or not the
-<a href="lang.html#pragma_show_datatypes">SHOW_DATATYPES</a> pragma
+<a href="pragma.html#pragma_show_datatypes">SHOW_DATATYPES</a> pragma
 is on or off.
 </p>
 
