@@ -809,7 +809,7 @@ static int pager_playback(Pager *pPager, int useJournalSize){
       rc = SQLITE_NOMEM;
       goto end_playback;
     }
-    rc = sqlite3OsRead(&pPager->jfd, zMaster, pPager->nMaster);
+    rc = sqlite3OsRead(&pPager->jfd, zMaster, nMaster);
     if( rc!=SQLITE_OK || (zMaster[0] && !sqlite3OsFileExists(zMaster)) ){
       goto end_playback;
     }
