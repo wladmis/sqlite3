@@ -2080,11 +2080,6 @@ case OP_MakeRecord: {
   nHdr += sqlite3VarintLen(nHdr);
   nByte = nHdr+nData;
 
-  if( nByte>MAX_BYTES_PER_ROW ){
-    rc = SQLITE_TOOBIG;
-    goto abort_due_to_error;
-  }
-
   /* Allocate space for the new record. */
   if( nByte>sizeof(zTemp) ){
     zNewRecord = sqliteMallocRaw(nByte);

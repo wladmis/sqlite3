@@ -2414,6 +2414,7 @@ int sqlite3pager_begin(void *pData){
       pPager->state = PAGER_EXCLUSIVE;
       pPager->origDbSize = pPager->dbSize;
     }else{
+#if 0
       int busy = 1;
       do {
         rc = sqlite3OsLock(&pPager->fd, RESERVED_LOCK);
@@ -2422,7 +2423,16 @@ int sqlite3pager_begin(void *pData){
           pPager->pBusyHandler->xFunc && 
           pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, busy++)
       );
+#endif
+      rc = sqlite3OsLock(&pPager->fd, RESERVED_LOCK);
       if( rc!=SQLITE_OK ){
+        /* We do not call the busy handler when we fail to get a reserved lock.
+        ** The only reason we might fail is because another process is holding
+        ** the reserved lock.  But the other process will not be able to
+        ** release its reserved lock until this process releases its shared
+        ** lock.  So we might as well fail in this process, let it release
+        ** its shared lock so that the other process can commit.
+        */
         return rc;
       }
       pPager->state = PAGER_RESERVED;
