@@ -87,6 +87,8 @@ typedef struct VdbeOpList VdbeOpList;
 Vdbe *sqliteVdbeCreate(sqlite*);
 void sqliteVdbeCreateCallback(Vdbe*, int*);
 int sqliteVdbeAddOp(Vdbe*,int,int,int);
+int sqliteVdbeOp3(Vdbe*,int,int,int,const char *zP3,int);
+int sqliteVdbeCode(Vdbe*,...);
 int sqliteVdbeAddOpList(Vdbe*, int nOp, VdbeOpList const *aOp);
 void sqliteVdbeChangeP1(Vdbe*, int addr, int P1);
 void sqliteVdbeChangeP2(Vdbe*, int addr, int P2);

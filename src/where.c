@@ -669,18 +669,17 @@ WhereInfo *sqliteWhereBegin(
   */
   for(i=0; i<pTabList->nSrc; i++){
     Table *pTab;
+    Index *pIx;
 
     pTab = pTabList->a[i].pTab;
     if( pTab->isTransient || pTab->pSelect ) continue;
     sqliteVdbeAddOp(v, OP_Integer, pTab->iDb, 0);
-    sqliteVdbeAddOp(v, OP_OpenRead, pTabList->a[i].iCursor, pTab->tnum);
-    sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
+    sqliteVdbeOp3(v, OP_OpenRead, pTabList->a[i].iCursor, pTab->tnum,
+                     pTab->zName, P3_STATIC);
     sqliteCodeVerifySchema(pParse, pTab->iDb);
-    if( pWInfo->a[i].pIdx!=0 ){
-      sqliteVdbeAddOp(v, OP_Integer, pWInfo->a[i].pIdx->iDb, 0);
-      sqliteVdbeAddOp(v, OP_OpenRead,
-                      pWInfo->a[i].iCur, pWInfo->a[i].pIdx->tnum);
-      sqliteVdbeChangeP3(v, -1, pWInfo->a[i].pIdx->zName, P3_STATIC);
+    if( (pIx = pWInfo->a[i].pIdx)!=0 ){
+      sqliteVdbeAddOp(v, OP_Integer, pIx->iDb, 0);
+      sqliteVdbeOp3(v, OP_OpenRead, pWInfo->a[i].iCur, pIx->tnum, pIx->zName,0);
     }
   }
 
