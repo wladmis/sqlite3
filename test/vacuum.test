@@ -23,6 +23,10 @@ ifcapable {!vacuum} {
   finish_test
   return
 }
+if $AUTOVACUUM {
+  finish_test
+  return
+}
 
 set fcnt 1
 proc cksum {{db db}} {

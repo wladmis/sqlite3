@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable default_autovacuum {
+  finish_test
+  return
+}
+
 # Basic functionality.  Open and close a database.
 #
 do_test btree-1.1 {

@@ -420,7 +420,7 @@ do_test enc2-7.4 {
   execsql {
     SELECT * FROM sqlite_master;
   }
-} {table abc abc 2 {CREATE TABLE abc(a, b, c)}}
+} "table abc abc [expr $AUTOVACUUM?3:2] {CREATE TABLE abc(a, b, c)}"
 do_test enc2-7.5 {
   execsql {
     PRAGMA encoding;

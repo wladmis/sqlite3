@@ -3331,6 +3331,8 @@ int sqlite3pager_movepage(Pager *pPager, void *pData, Pgno pgno){
     unlinkHashChain(pPager, pPgOld);
     pPgOld->dirty = 0;
     if( pPgOld->needSync ){
+      assert( pPgOld->inJournal );
+      pPg->inJournal = 1;
       pPg->needSync = 1;
     }
   }

@@ -87,7 +87,7 @@ foreach PGSZ {512 2048 4096 8192} {
   } $PGSZ
   do_test pagesize-2.$PGSZ.3 {
     file size test.db
-  } [expr {$PGSZ*2}]
+  } [expr {$PGSZ*($AUTOVACUUM?3:2)}]
   ifcapable {vacuum} {
     do_test pagesize-2.$PGSZ.4 {
       execsql {VACUUM}

@@ -106,6 +106,7 @@
 /* #define SQLITE_OMIT_VACUUM         1 */
 /* #define SQLITE_OMIT_DATETIME_FUNCS 1 */
 /* #define SQLITE_OMIT_PROGRESS_CALLBACK 1 */
+/* #define SQLITE_OMIT_AUTOVACUUM */
 
 /*
 ** GCC does not define the offsetof() macro so we'll have to do it
