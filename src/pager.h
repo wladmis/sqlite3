@@ -27,7 +27,6 @@
 **
 ** @(#) $Id$
 */
-#include "sqliteInt.h"
 
 /*
 ** The size of one page
@@ -45,12 +44,14 @@ typedef unsigned int Pgno;
 */
 typedef struct Pager Pager;
 
-int sqlite_pager_open(Pager **ppPager, const char *zFilename);
-int sqlite_pager_close(Pager *pPager);
-int sqlite_pager_get(Pager *pPager, Pgno pgno, void **ppPage);
-int sqlite_pager_unref(void*);
-Pgno sqlite_pager_pagenumber(void*);
-int sqlite_pager_write(void*);
-int sqlite_pager_pagecount(Pager*);
-int sqlite_pager_commit(Pager*);
-int sqlite_pager_rollback(Pager*);
+int sqlitepager_open(Pager **ppPager, const char *zFilename, int nPage);
+int sqlitepager_close(Pager *pPager);
+int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage);
+int sqlitepager_unref(void*);
+Pgno sqlitepager_pagenumber(void*);
+int sqlitepager_write(void*);
+int sqlitepager_pagecount(Pager*);
+int sqlitepager_commit(Pager*);
+int sqlitepager_rollback(Pager*);
+
+int *sqlitepager_stats(Pager*);
