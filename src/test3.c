@@ -997,7 +997,7 @@ static int btree_key(
   sqlite3BtreeKeySize(pCur, &n);
   if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
     char zBuf2[60];
-    sqlite3_snprintf(sizeof(zBuf),zBuf2, "%llu", n);
+    sqlite3_snprintf(sizeof(zBuf2),zBuf2, "%llu", n);
     Tcl_AppendResult(interp, zBuf2, 0);
   }else{
     zBuf = malloc( n+1 );
