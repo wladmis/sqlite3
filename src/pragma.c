@@ -577,9 +577,9 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     /* Code to do an BTree integrity check on a single database file.
     */
     static VdbeOpList checkDb[] = {
-      { OP_SetInsert,   0, 0,        "2"},
+      { OP_SetInsert,   0, 0,        "1"},
       { OP_Integer,     0, 0,        0},    /* 1 */
-      { OP_OpenRead,    0, 2,        0},
+      { OP_OpenRead,    0, MASTER_ROOT, 0},
       { OP_Rewind,      0, 7,        0},    /* 3 */
       { OP_Column,      0, 3,        0},    /* 4 */
       { OP_SetInsert,   0, 0,        0},
