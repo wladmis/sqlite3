@@ -82,6 +82,7 @@ static Keyword aKeywordTable[] = {
   { "INTO",              0, TK_INTO,             0 },
   { "IS",                0, TK_IS,               0 },
   { "ISNULL",            0, TK_ISNULL,           0 },
+  { "JOIN",              0, TK_JOIN,             0 },
   { "KEY",               0, TK_KEY,              0 },
   { "LIKE",              0, TK_LIKE,             0 },
   { "LIMIT",             0, TK_LIMIT,            0 },
