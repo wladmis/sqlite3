@@ -33,7 +33,6 @@ lappend EXCLUDE ioerr.test        ;# seg-faults (?)
 lappend EXCLUDE memdb.test        ;# fails - malformed database
 lappend EXCLUDE misc3.test        ;# seg-faults (?)
 lappend EXCLUDE printf.test       ;# sqlite3_XX vs sqlite_XX problem
-lappend EXCLUDE rowid.test        ;# sql logic error
 lappend EXCLUDE table.test        ;# assert() fails in pager
 lappend EXCLUDE trans.test        ;# assert() fails in pager
 lappend EXCLUDE vacuum.test       ;# seg-fault

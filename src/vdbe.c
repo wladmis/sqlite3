@@ -3227,7 +3227,7 @@ case OP_PutStrKey: {
   if( ((pC = &p->aCsr[i])->pCursor!=0 || pC->pseudoTable) ){
     char *zKey;
     i64 nKey; 
-    int iKey;
+    i64 iKey;
     if( pOp->opcode==OP_PutStrKey ){
       Stringify(pNos);
       nKey = pNos->n;

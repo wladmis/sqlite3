@@ -3284,7 +3284,7 @@ int sqlite3BtreeInsert(
   if( pCur->status ){
     return pCur->status;  /* A rollback destroyed this cursor */
   }
-  if( !pBt->inTrans || nKey+nData==0 ){
+  if( !pBt->inTrans ){
     /* Must start a transaction before doing an insert */
     return pBt->readOnly ? SQLITE_READONLY : SQLITE_ERROR;
   }
