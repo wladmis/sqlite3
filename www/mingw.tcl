@@ -1,5 +1,5 @@
 #
-# Run this Tcl script to generate the crosscompile.html file.
+# Run this Tcl script to generate the mingw.html file.
 #
 set rcsid {$Id$}
 
