@@ -305,6 +305,16 @@ else
 fi
 AC_SUBST(THREADSAFE)
 
+if test "$THREADSAFE" = "1"; then
+  LIBS=""
+  AC_CHECK_LIB(pthread, pthread_create)
+  TARGET_THREAD_LIB="$LIBS"
+  LIBS=""
+else
+  TARGET_THREAD_LIB=""
+fi
+AC_SUBST(TARGET_THREAD_LIB)
+
 ##########
 # Do we want to support release
 #
