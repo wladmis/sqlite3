@@ -1206,6 +1206,7 @@ void sqlite3FreeX(void*);
 char *sqlite3MPrintf(const char*, ...);
 char *sqlite3VMPrintf(const char*, va_list);
 void sqlite3DebugPrintf(const char*, ...);
+void *sqlite3TextToPtr(const char*);
 void sqlite3SetString(char **, const char *, ...);
 void sqlite3SetNString(char **, ...);
 void sqlite3ErrorMsg(Parse*, const char*, ...);
