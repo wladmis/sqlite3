@@ -160,8 +160,8 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite *db){
   ** the contents to the temporary database.
   */
   rc = execExecSql(db, 
-      "SELECT 'INSERT INTO vacuum_db.' || name "
-      "|| ' SELECT * FROM ' || name || ';'"
+      "SELECT 'INSERT INTO vacuum_db.' || quote(name) "
+      "|| ' SELECT * FROM ' || quote(name) || ';'"
       "FROM sqlite_master "
       "WHERE type = 'table';"
   );
