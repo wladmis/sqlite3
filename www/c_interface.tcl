@@ -695,7 +695,7 @@ result.</p>
 <p>As an example, consider the following query:</p>
 
 <blockquote>
-SELECT employee_name, login, host FROM users WHERE logic LIKE 'd%';
+SELECT employee_name, login, host FROM users WHERE login LIKE 'd%';
 </blockquote>
 
 <p>This query will return the name, login and host computer name
