@@ -819,7 +819,7 @@ void sqliteRealToSortable(double r, char *z){
   while( r>0.0 && cnt<10 ){
     int digit;
     r *= 64.0;
-    digit = r;
+    digit = (int)r;
     assert( digit>=0 && digit<64 );
     *z++ = zDigit[digit & 0x3f];
     r -= digit;
