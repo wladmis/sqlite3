@@ -477,9 +477,9 @@ int sqlite3VdbeExec(
 #endif
     pOp = &p->aOp[pc];
 
-    /* Only allow tracing if NDEBUG is not defined.
+    /* Only allow tracing if SQLITE_DEBUG is defined.
     */
-#ifndef NDEBUG
+#ifdef SQLITE_DEBUG
     if( p->trace ){
       if( pc==0 ){
         printf("VDBE Execution Trace:\n");
@@ -487,8 +487,6 @@ int sqlite3VdbeExec(
       }
       sqlite3VdbePrintOp(p->trace, pc, pOp);
     }
-#endif
-#ifdef SQLITE_TEST
     if( p->trace==0 && pc==0 && sqlite3OsFileExists("vdbe_sqltrace") ){
       sqlite3VdbePrintSql(p);
     }
