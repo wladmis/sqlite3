@@ -43,7 +43,6 @@ lappend EXCLUDE version.test      ;# uses the btree_meta API (not updated)
 
 # Some tests fail in these file as a result of the partial manifest types
 # implementation.
-lappend EXCLUDE misc1.test 
 lappend EXCLUDE capi2.test 
 
 
