@@ -399,12 +399,16 @@ do_test intpkey-6.4 {
 
 # Do an insert of values with the columns specified out of order.
 #
-execsql {pragma vdbe_trace=on;}
 do_test intpkey-7.1 {
   execsql {
     INSERT INTO t1(c,b,a) VALUES('row','new',30);
     SELECT * FROM t1 WHERE rowid>=30;
   }
 } {30 new row}
+do_test intpkey-7.2 {
+  execsql {
+    SELECT * FROM t1 WHERE rowid>20;
+  }
+} {22 b-22 c-22 30 new row}
 
 finish_test

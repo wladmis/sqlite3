@@ -142,7 +142,7 @@ void sqliteInsert(
         if( sqliteStrICmp(pColumn->a[i].zName, pTab->aCol[j].zName)==0 ){
           pColumn->a[i].idx = j;
           if( j==pTab->iPKey ){
-            keyColumn = j;
+            keyColumn = i;
           }
           break;
         }
