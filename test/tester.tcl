@@ -83,8 +83,7 @@ proc finish_test {} {
 proc execsql {sql} {
   set result {}
   db eval $sql data {
-    foreach f [lsort [array names data]] {
-      if {$f=="*"} continue
+    foreach f $data(*) {
       lappend result $data($f)
     }
   }
