@@ -167,5 +167,11 @@ do_test printf-10.1 {
   sqlite3_mprintf_stronly %s {}
 } {}
 
+# Ticket #831
+#
+do_test printf-10.2 {
+  sqlite3_mprintf_stronly %q {}
+} {}
+
 
 finish_test
