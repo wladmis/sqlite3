@@ -347,25 +347,9 @@ insert_cmd(A) ::= REPLACE.            {A = OE_Replace;}
 
 %type itemlist {ExprList*}
 %destructor itemlist {sqliteExprListDelete($$);}
-%type item {Expr*}
-%destructor item {sqliteExprDelete($$);}
 
-itemlist(A) ::= itemlist(X) COMMA item(Y).  {A = sqliteExprListAppend(X,Y,0);}
-itemlist(A) ::= item(X).     {A = sqliteExprListAppend(0,X,0);}
-item(A) ::= INTEGER(X).      {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
-item(A) ::= PLUS INTEGER(X). {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
-item(A) ::= MINUS INTEGER(X). {
-  A = sqliteExpr(TK_UMINUS, 0, 0, 0);
-  if( A ) A->pLeft = sqliteExpr(TK_INTEGER, 0, 0, &X);
-}
-item(A) ::= FLOAT(X).        {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
-item(A) ::= PLUS FLOAT(X).   {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
-item(A) ::= MINUS FLOAT(X).  {
-  A = sqliteExpr(TK_UMINUS, 0, 0, 0);
-  if( A ) A->pLeft = sqliteExpr(TK_FLOAT, 0, 0, &X);
-}
-item(A) ::= STRING(X).       {A = sqliteExpr(TK_STRING, 0, 0, &X);}
-item(A) ::= NULL.            {A = sqliteExpr(TK_NULL, 0, 0, 0);}
+itemlist(A) ::= itemlist(X) COMMA expr(Y).  {A = sqliteExprListAppend(X,Y,0);}
+itemlist(A) ::= expr(X).                    {A = sqliteExprListAppend(0,X,0);}
 
 %type inscollist_opt {IdList*}
 %destructor inscollist_opt {sqliteIdListDelete($$);}

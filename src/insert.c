@@ -100,10 +100,20 @@ void sqliteInsert(
     assert( pSelect->pEList );
     nColumn = pSelect->pEList->nExpr;
   }else{
+    IdList dummy;
     assert( pList!=0 );
     srcTab = -1;
     assert( pList );
     nColumn = pList->nExpr;
+    for(i=0; i<nColumn; i++){
+      sqliteExprResolveInSelect(pParse, pList->a[i].pExpr);
+    }
+    dummy.nId = 0;
+    for(i=0; i<nColumn; i++){
+      if( sqliteExprResolveIds(pParse, &dummy, 0, pList->a[i].pExpr) ){
+        goto insert_cleanup;
+      }
+    }
   }
 
   /* Make sure the number of columns in the source data matches the number
