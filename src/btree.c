@@ -2724,7 +2724,8 @@ static int fileBtreeDelete(BtCursor *pCur){
     getTempCursor(pCur, &leafCur);
     rc = fileBtreeNext(&leafCur, &notUsed);
     if( rc!=SQLITE_OK ){
-      return SQLITE_CORRUPT;
+      if( rc!=SQLITE_NOMEM ) rc = SQLITE_CORRUPT;
+      return rc;
     }
     rc = sqlitepager_write(leafCur.pPage);
     if( rc ) return rc;

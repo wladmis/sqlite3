@@ -4865,6 +4865,7 @@ abort_due_to_misuse:
   */
 abort_due_to_error:
   if( p->zErrMsg==0 ){
+    if( sqlite_malloc_failed ) rc = SQLITE_NOMEM;
     sqliteSetString(&p->zErrMsg, sqlite_error_string(rc), (char*)0);
   }
   goto vdbe_halt;

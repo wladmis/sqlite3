@@ -615,7 +615,7 @@ int sqlite_exec(
     pVm = 0;
     rc = sqlite_compile(db, zSql, &zLeftover, &pVm, pzErrMsg);
     if( rc!=SQLITE_OK ){
-      assert( pVm==0 );
+      assert( pVm==0 || sqlite_malloc_failed );
       return rc;
     }
     if( pVm==0 ){
