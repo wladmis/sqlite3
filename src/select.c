@@ -404,6 +404,15 @@ static int selectInnerLoop(
     sqliteVdbeAddOp(v, OP_Goto, 0, iBreak);
   }else
 
+  /* Discard the results.  This is used for SELECT statements inside
+  ** the body of a TRIGGER.  The purpose of such selects is to call
+  ** user-defined functions that have side effects.  We do not care
+  ** about the actual results of the select.
+  */
+  if( eDest==SRT_Discard ){
+    sqliteVdbeAddOp(v, OP_Pop, nColumn, 0);
+  }else
+
   /* If none of the above, send the data to the callback function.
   */
   {
