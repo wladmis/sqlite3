@@ -86,7 +86,6 @@
 */
 /* #define SQLITE_OMIT_AUTHORIZATION  1 */
 /* #define SQLITE_OMIT_INMEMORYDB     1 */
-/* #define SQLITE_OMIT_TRACE          1 */
 /* #define SQLITE_OMIT_VACUUM         1 */
 
 /*
@@ -105,9 +104,6 @@
 #ifndef UINT8_TYPE
 # define UINT8_TYPE unsigned char
 #endif
-#ifndef INT8_TYPE
-# define INT8_TYPE signed char
-#endif
 #ifndef INTPTR_TYPE
 # if SQLITE_PTR_SZ==4
 #   define INTPTR_TYPE int
@@ -118,7 +114,6 @@
 typedef UINT32_TYPE u32;           /* 4-byte unsigned integer */
 typedef UINT16_TYPE u16;           /* 2-byte unsigned integer */
 typedef UINT8_TYPE u8;             /* 1-byte unsigned integer */
-typedef INT8_TYPE i8;              /* 1-byte signed integer */
 typedef INTPTR_TYPE ptr;           /* Big enough to hold a pointer */
 typedef unsigned INTPTR_TYPE uptr; /* Big enough to hold a pointer */
 
@@ -278,10 +273,6 @@ struct sqlite {
   int nTable;                   /* Number of tables in the database */
   void *pBusyArg;               /* 1st Argument to the busy callback */
   int (*xBusyCallback)(void *,const char*,int);  /* The busy callback */
-  void *pBeginArg;              /* Argument to the xBeginCallback() */
-  int (*xBeginCallback)(void*); /* Invoked at every transaction start */
-  void *pCommitArg;             /* Argument to xCommitCallback() */   
-  int (*xCommitCallback)(void*);/* Invoked at every commit. */
   Hash aFunc;                   /* All functions that can be in SQL exprs */
   int lastRowid;                /* ROWID of most recent insert */
   int priorNewRowid;            /* Last randomly generated ROWID */
@@ -585,7 +576,7 @@ struct Token {
 struct Expr {
   u8 op;                 /* Operation performed by this node */
   u8 dataType;           /* Either SQLITE_SO_TEXT or SQLITE_SO_NUM */
-  i8 iDb;                /* Database referenced by this expression */
+  u8 iDb;                /* Database referenced by this expression */
   u8 flags;              /* Various flags.  See below */
   Expr *pLeft, *pRight;  /* Left and right subnodes */
   ExprList *pList;       /* A list of expressions used as function arguments
