@@ -273,6 +273,12 @@ then sqlite3_data_count() will return 0 whereas sqlite3_column_count() will
 continue to return the number of columns in the result set.
 </p>
 
+<p>Returned data is examined using the other sqlite3_column_XXX() functions, 
+all of which take a column number as their second parameter. Columns are
+zero-indexed from left to right. Note that this is different to parameters,
+which are indexed starting at one.
+</p>
+
 <p>
 The sqlite3_column_type() function returns the
 datatype for the value in the Nth column.  The return value is one
