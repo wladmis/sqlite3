@@ -125,6 +125,7 @@ do_test vacuum-2.4 {
 #
 do_test vacuum-3.1 {
   db close
+  db2 close
   file delete test.db
   sqlite db test.db
   execsql {
