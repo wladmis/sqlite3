@@ -41,5 +41,6 @@ do_test misc4-1.1 {
     SELECT * FROM temp.t2;
   }
 } {1}
+catch {sqlite3_finalize $stmt}
 
 finish_test

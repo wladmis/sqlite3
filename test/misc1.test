@@ -346,10 +346,10 @@ do_test misc1-11.2 {
 #
 do_test misc1-12.1 {
   execsql {SELECT '0'=='0.0'}
-} {1}
+} {0}
 do_test misc1-12.2 {
   execsql {SELECT '0'==0.0}
-} {1}
+} {0}
 do_test misc1-12.3 {
   execsql {SELECT '12345678901234567890'=='12345678901234567891'}
 } {0}

@@ -93,10 +93,11 @@ char sqlite3CompareAffinity(Expr *pExpr, char aff2){
       return SQLITE_AFF_NONE;
     }
   }else if( !aff1 && !aff2 ){
-    /* Neither side of the comparison is a column. Use numeric affinity
-    ** for the comparison.
+    /* Neither side of the comparison is a column.  Compare the
+    ** results directly.
     */
-    return SQLITE_AFF_NUMERIC;
+    /* return SQLITE_AFF_NUMERIC;  // Ticket #805 */
+    return SQLITE_AFF_NONE;
   }else{
     /* One side is a column, the other is not. Use the columns affinity. */
     return (aff1 + aff2);
