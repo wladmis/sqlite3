@@ -74,6 +74,7 @@ proc do_test {name cmd expected} {
 #
 proc finish_test {} {
   global nTest nErr
+  catch {db close}
   puts "$nErr errors out of $nTest tests"
   exit $nErr
 }

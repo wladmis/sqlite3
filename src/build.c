@@ -191,6 +191,7 @@ void sqliteDeleteTable(sqlite *db, Table *pTable){
     pNext = pIndex->pNext;
     sqliteDeleteIndex(db, pIndex);
   }
+  sqliteFree(pTable->zName);
   sqliteFree(pTable->aCol);
   sqliteFree(pTable);
 }
@@ -202,8 +203,7 @@ void sqliteDeleteTable(sqlite *db, Table *pTable){
 ** be freed by the calling function.
 */
 char *sqliteTableNameFromToken(Token *pName){
-  char *zName = 0;
-  sqliteSetNString(&zName, pName->z, pName->n, 0);
+  char *zName = sqliteStrNDup(pName->z, pName->n);
   sqliteDequote(zName);
   return zName;
 }

@@ -271,16 +271,14 @@ itemlist(A) ::= item(X).     {A = sqliteExprListAppend(0,X,0);}
 item(A) ::= INTEGER(X).      {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
 item(A) ::= PLUS INTEGER(X). {A = sqliteExpr(TK_INTEGER, 0, 0, &X);}
 item(A) ::= MINUS INTEGER(X). {
-  A = sqliteExpr(TK_INTEGER, 0, 0, 0);
-  A->token.z = 0;
-  sqliteSetNString(&A->token.z, "-", 1, X.z, X.n, 0);
+  A = sqliteExpr(TK_UMINUS, 0, 0, 0);
+  A->pLeft = sqliteExpr(TK_INTEGER, 0, 0, &X);
 }
 item(A) ::= FLOAT(X).        {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
 item(A) ::= PLUS FLOAT(X).   {A = sqliteExpr(TK_FLOAT, 0, 0, &X);}
 item(A) ::= MINUS FLOAT(X).  {
-  A = sqliteExpr(TK_FLOAT, 0, 0, 0);
-  A->token.z = 0;
-  sqliteSetNString(&A->token.z, "-", 1, X.z, X.n, 0);
+  A = sqliteExpr(TK_UMINUS, 0, 0, 0);
+  A->pLeft = sqliteExpr(TK_FLOAT, 0, 0, &X);
 }
 item(A) ::= STRING(X).       {A = sqliteExpr(TK_STRING, 0, 0, &X);}
 item(A) ::= NULL.            {A = sqliteExpr(TK_NULL, 0, 0, 0);}
