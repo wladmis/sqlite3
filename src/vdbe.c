@@ -552,6 +552,7 @@ char *sqlite_set_result_string(sqlite_func *p, const char *zResult, int n){
     p->s.flags = STK_Null;
     n = 0;
     p->z = 0;
+    p->s.n = 0;
   }else{
     if( n<0 ) n = strlen(zResult);
     if( n<NBFS-1 ){
@@ -567,8 +568,8 @@ char *sqlite_set_result_string(sqlite_func *p, const char *zResult, int n){
       }
       p->s.flags = STK_Str | STK_Dyn;
     }
+    p->s.n = n+1;
   }
-  p->s.n = n;
   return p->z;
 }
 void sqlite_set_result_int(sqlite_func *p, int iResult){
@@ -1878,7 +1879,7 @@ case OP_Function: {
   sqlite_func ctx;
 
   n = pOp->p1;
-  VERIFY( if( n<=0 ) goto bad_instruction; )
+  VERIFY( if( n<0 ) goto bad_instruction; )
   VERIFY( if( p->tos+1<n ) goto not_enough_stack; )
   for(i=p->tos-n+1; i<=p->tos; i++){
     if( (aStack[i].flags & STK_Null)==0 ){
