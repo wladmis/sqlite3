@@ -5901,3 +5901,29 @@ int sqliteVdbeFinalize(Vdbe *p, char **pzErrMsg){
   }
   return rc;
 }
+
+/*
+** Create a new Vdbe in *pOut and populate it with the program from p. Then
+** pass p to sqliteVdbeFinalize().
+*/
+int sqliteVdbeReset(Vdbe *p, char ** pErrMsg, Vdbe** pOut)
+{
+  if( pOut && p->rc != SQLITE_SCHEMA ){
+
+    /* Create a new VDBE and populate it with the program used by the old
+    ** VDBE. Don't copy the last instruction of the program, as this is an 
+    ** OP_Halt coded by sqliteVdbeMakeReady(). 
+    */
+    *pOut = sqliteVdbeCreate( p->db );
+    (*pOut)->aOp = p->aOp;
+    (*pOut)->nOp = p->nOp-1;
+    (*pOut)->nOpAlloc = p->nOpAlloc;
+    sqliteVdbeMakeReady( *pOut, p->xCallback, p->pCbArg, (int)p->explain );
+    p->aOp = 0;
+    p->nOp = 0;
+    p->nOpAlloc = 0;
+  }else if( pOut ){
+    *pOut = NULL;
+  }
+  return sqliteVdbeFinalize(p, pErrMsg);
+}

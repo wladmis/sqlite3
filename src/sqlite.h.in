@@ -684,6 +684,21 @@ int sqlite_step(
 */
 int sqlite_finalize(sqlite_vm*, char **pzErrMsg);
 
+/*
+** This routine deletes the virtual machine, writes any error message to
+** *pzErrMsg and returns an SQLite return code in the same way as the
+** sqlite_finalize() function.
+**
+** Additionally, if ppVm is not NULL, *ppVm is left pointing to a new virtual
+** machine loaded with the compiled version of the original query ready for
+** execution.
+**
+** If sqlite_reset() returns SQLITE_SCHEMA, then *ppVm is set to NULL.
+**
+******* THIS IS AN EXPERIMENTAL API AND IS SUBJECT TO CHANGE ******
+*/
+int sqlite_reset(sqlite_vm *, char **pzErrMsg, sqlite_vm **ppVm);
+
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
 #endif

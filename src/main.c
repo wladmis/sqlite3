@@ -715,6 +715,21 @@ int sqlite_finalize(
 }
 
 /*
+** Destroy a virtual machine in the same manner as sqlite_finalize(). If 
+** possible, leave *ppVm pointing at a new virtual machine which may be
+** used to re-execute the query.
+*/
+int sqlite_reset(
+  sqlite_vm *pVm,            /* The virtual machine to be destroyed */
+  char **pzErrMsg,           /* OUT: Write error messages here */
+  sqlite_vm **ppVm           /* OUT: The new virtual machine */
+){
+  int rc = sqliteVdbeReset((Vdbe*)pVm, pzErrMsg, (Vdbe **)ppVm);
+  sqliteStrRealloc(pzErrMsg);
+  return rc;
+}
+
+/*
 ** Return a static string that describes the kind of error specified in the
 ** argument.
 */

@@ -92,5 +92,6 @@ void sqliteVdbeResolveLabel(Vdbe*, int);
 int sqliteVdbeCurrentAddr(Vdbe*);
 void sqliteVdbeTrace(Vdbe*,FILE*);
 void sqliteVdbeCompressSpace(Vdbe*,int);
+int sqliteVdbeReset(Vdbe*,char **,Vdbe**);
 
 #endif
