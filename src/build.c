@@ -1766,7 +1766,7 @@ void sqliteCreateIndex(
     sqliteVdbeAddOp(v, OP_String, 0, 0);
     sqliteVdbeChangeP3(v, -1, "index", P3_STATIC);
     sqliteVdbeAddOp(v, OP_String, 0, 0);
-    sqliteVdbeChangeP3(v, -1, pIndex->zName, P3_STATIC);
+    sqliteVdbeChangeP3(v, -1, pIndex->zName, strlen(pIndex->zName));
     sqliteVdbeAddOp(v, OP_String, 0, 0);
     sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
     addr = sqliteVdbeAddOp(v, OP_CreateIndex, 0, isTemp);
