@@ -546,6 +546,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
   */
   while( zLine[i] && nArg<ArraySize(azArg) ){
     while( isspace(zLine[i]) ){ i++; }
+    if( zLine[i]==0 ) break;
     if( zLine[i]=='\'' || zLine[i]=='"' ){
       int delim = zLine[i++];
       azArg[nArg++] = &zLine[i];
