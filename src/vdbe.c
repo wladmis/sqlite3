@@ -3452,8 +3452,12 @@ case OP_Next: {
 
   if( VERIFY( i>=0 && i<p->nCursor && ) (pCrsr = p->aCsr[i].pCursor)!=0 ){
     int res;
-    rc = sqliteBtreeNext(pCrsr, &res);
-    p->aCsr[i].nullRow = res;
+    if( p->aCsr[i].nullRow ){
+      res = 1;
+    }else{
+      rc = sqliteBtreeNext(pCrsr, &res);
+      p->aCsr[i].nullRow = res;
+    }
     if( res==0 ){
       pc = pOp->p2 - 1;
       sqlite_search_count++;

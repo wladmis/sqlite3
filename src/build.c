@@ -1595,6 +1595,19 @@ void sqliteIdListDelete(IdList *pList){
 }
 
 /*
+** Return the index in pList of the identifier named zId.  Return -1
+** if not found.
+*/
+int sqliteIdListIndex(IdList *pList, const char *zName){
+  int i;
+  if( pList==0 ) return -1;
+  for(i=0; i<pList->nId; i++){
+    if( sqliteStrICmp(pList->a[i].zName, zName)==0 ) return i;
+  }
+  return -1;
+}
+
+/*
 ** Delete an entire SrcList including all its substructure.
 */
 void sqliteSrcListDelete(SrcList *pList){
