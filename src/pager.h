@@ -65,6 +65,8 @@ int sqlitepager_isreadonly(Pager*);
 int sqlitepager_ckpt_begin(Pager*);
 int sqlitepager_ckpt_commit(Pager*);
 int sqlitepager_ckpt_rollback(Pager*);
+void sqlitepager_dont_rollback(void*);
+void sqlitepager_dont_write(Pager*, Pgno);
 int *sqlitepager_stats(Pager*);
 
 #ifdef SQLITE_TEST
