@@ -827,7 +827,7 @@ WhereInfo *sqlite3WhereBegin(
       sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
 
       /* Generate an index key from the top nColumn elements of the stack */
-      sqlite3VdbeAddOp(v, OP_MakeKey, nColumn, 0);
+      sqlite3VdbeAddOp(v, OP_MakeRecord, nColumn, 0);
       sqlite3IndexAffinityStr(v, pIdx);
       sqlite3VdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
 
@@ -1029,7 +1029,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3VdbeAddOp(v, OP_NotNull, -nCol, sqlite3VdbeCurrentAddr(v)+3);
         sqlite3VdbeAddOp(v, OP_Pop, nCol, 0);
         sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
-        sqlite3VdbeAddOp(v, OP_MakeKey, nCol, 0);
+        sqlite3VdbeAddOp(v, OP_MakeRecord, nCol, 0);
         sqlite3IndexAffinityStr(v, pIdx);
         if( pLevel->bRev ){
           int op = leFlag ? OP_MoveLe : OP_MoveLt;
@@ -1083,7 +1083,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3VdbeAddOp(v, OP_NotNull, -nCol, sqlite3VdbeCurrentAddr(v)+3);
         sqlite3VdbeAddOp(v, OP_Pop, nCol, 0);
         sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
-        sqlite3VdbeAddOp(v, OP_MakeKey, nCol, 0);
+        sqlite3VdbeAddOp(v, OP_MakeRecord, nCol, 0);
         sqlite3IndexAffinityStr(v, pIdx);
         if( pLevel->bRev ){
           pLevel->iMem = pParse->nMem++;
