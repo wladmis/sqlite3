@@ -574,6 +574,7 @@ int sqlite_complete(const char *zSql){
         break;
       }
       case ' ':
+      case '\r':
       case '\t':
       case '\n':
       case '\f': {

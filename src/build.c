@@ -1976,8 +1976,21 @@ SrcList *sqliteSrcListAppend(SrcList *pList, Token *pTable, Token *pDatabase){
       sqliteDequote(*pz);
     }
   }
+  pList->a[pList->nSrc].iCursor = -1;
   pList->nSrc++;
   return pList;
+}
+
+/*
+** Assign cursors to all tables in a SrcList
+*/
+void sqliteSrcListAssignCursors(Parse *pParse, SrcList *pList){
+  int i;
+  for(i=0; i<pList->nSrc; i++){
+    if( pList->a[i].iCursor<0 ){
+      pList->a[i].iCursor = ++pParse->nTab;
+    }
+  }
 }
 
 /*

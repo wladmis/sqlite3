@@ -669,6 +669,7 @@ struct SrcList {
     Table *pTab;      /* An SQL table corresponding to zName */
     Select *pSelect;  /* A SELECT statement used in place of a table name */
     int jointype;     /* Type of join between this table and the next */
+    int iCursor;      /* The VDBE cursor number used to access this table */
     Expr *pOn;        /* The ON clause of a join */
     IdList *pUsing;   /* The USING clause of a join */
   } a[1];             /* One entry for each identifier on the list */
