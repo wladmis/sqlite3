@@ -59,8 +59,8 @@ proc newsitem {date title text} {
 }
 
 newsitem {2004-Sep-02} {Version 3.0.6 (beta)} {
-  Because of some important changes to way sqlite3_step() responds
-  to locked databases when trying to do a COMMIT, we decided to
+  Because of some important changes to sqlite3_step(),
+  we have decided to
   do an additional beta release prior to the first "stable" release.
   If no serious problems are discovered in this version, we will
   release version 3.0 "stable" in about a week.
