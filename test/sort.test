@@ -347,4 +347,15 @@ do_test sort-7.14 {
   }
 } {1 11 12 2}
 
+# Ticket #297
+#
+do_test sort-8.1 {
+  execsql {
+    CREATE TABLE t5(a real, b text);
+    INSERT INTO t5 VALUES(100,'A1');
+    INSERT INTO t5 VALUES(100.0,'A2');
+    SELECT * FROM t5 ORDER BY a, b;
+  }
+} {100 A1 100.0 A2}
+
 finish_test
