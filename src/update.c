@@ -155,6 +155,12 @@ void sqliteUpdate(
   */
   sqliteWhereEnd(pWInfo);
 
+  /* Initialize the count of updated rows
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_Integer, 0, 0);
+  }
+
   /* Rewind the list of records that need to be updated and
   ** open every index that needs updating.
   */
@@ -216,6 +222,12 @@ void sqliteUpdate(
   sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
   sqliteVdbeAddOp(v, OP_Put, base, 0);
 
+  /* Increment the count of rows affected by the update
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_AddImm, 1, 0);
+  }
+
   /* Repeat the above with the next record to be updated, until
   ** all record selected by the WHERE clause have been updated.
   */
@@ -224,6 +236,16 @@ void sqliteUpdate(
   sqliteVdbeAddOp(v, OP_ListClose, 0, 0);
   if( (db->flags & SQLITE_InTrans)==0 ){
     sqliteVdbeAddOp(v, OP_Commit, 0, 0);
+  }
+
+  /*
+  ** Return the number of rows that were changed.
+  */
+  if( db->flags & SQLITE_CountRows ){
+    sqliteVdbeAddOp(v, OP_ColumnCount, 1, 0);
+    sqliteVdbeAddOp(v, OP_ColumnName, 0, 0);
+    sqliteVdbeChangeP3(v, -1, "rows updated", P3_STATIC);
+    sqliteVdbeAddOp(v, OP_Callback, 1, 0);
   }
 
 update_cleanup:

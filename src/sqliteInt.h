@@ -163,6 +163,9 @@ struct sqlite {
 #define SQLITE_InTrans        0x00000008  /* True if in a transaction */
 #define SQLITE_InternChanges  0x00000010  /* Uncommitted Hash table changes */
 #define SQLITE_FullColNames   0x00000020  /* Show full column names on SELECT */
+#define SQLITE_CountRows      0x00000040  /* Count rows changed by INSERT, */
+                                          /*   DELETE, or UPDATE and return */
+                                          /*   the count using a callback. */
 
 /*
 ** Current file format version

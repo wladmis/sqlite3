@@ -1441,6 +1441,14 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "count_changes")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_CountRows;
+    }else{
+      db->flags &= ~SQLITE_CountRows;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "table_info")==0 ){
     Table *pTab;
     Vdbe *v;
