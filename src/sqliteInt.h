@@ -87,6 +87,7 @@
 /* #define SQLITE_OMIT_AUTHORIZATION  1 */
 /* #define SQLITE_OMIT_INMEMORYDB     1 */
 /* #define SQLITE_OMIT_VACUUM         1 */
+/* #define SQLITE_OMIT_TIMEDATE_FUNCS 1 */
 
 /*
 ** Integers of known sizes.  These typedefs might change for architectures
