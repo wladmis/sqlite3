@@ -2954,14 +2954,14 @@ case OP_NewRecno: {
         }else{
           sqlite3BtreeKeySize(pC->pCursor, &v);
           v = keyToInt(v);
-          if( v==0x7fffffffffffffff ){
+          if( v==0x7fffffffffffffffLL ){
             pC->useRandomRowid = 1;
           }else{
             v++;
           }
         }
       }
-      if( v<0x7fffffffffffffff ){
+      if( v<0x7fffffffffffffffLL ){
         pC->nextRowidValid = 1;
         pC->nextRowid = v+1;
       }else{
