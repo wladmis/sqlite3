@@ -545,6 +545,12 @@ int sqlite_changes(sqlite *db){
   return db->nChange;
 }
 
+/*
+** Return the number of changes produced by the last INSERT, UPDATE, or
+** DELETE statement to complete execution. The count does not include
+** changes due to SQL statements executed in trigger programs that were
+** triggered by that statement
+*/
 int sqlite_last_statement_changes(sqlite *db){
   return db->lsChange;
 }
