@@ -16,12 +16,18 @@
 **
 ** It was contributed to SQLite by anonymous on 2003-Feb-04 23:24:49 UTC.
 */
-
 #define SQLITE_NO_BTREE_DEFS
-
 #include "btree.h"
 #include "sqliteInt.h"
 #include <assert.h>
+
+/*
+** Omit this whole file if the SQLITE_OMIT_INMEMORYDB macro is
+** defined.  This allows a lot of code to be omitted for installations
+** that do not need it.
+*/
+#ifndef SQLITE_OMIT_INMEMORYDB
+
 
 typedef struct BtRbTree BtRbTree;
 typedef struct BtRbNode BtRbNode;
@@ -565,7 +571,6 @@ static void btreeLogRollbackOp(Btree* pBtree, BtRollbackOp *pRollbackOp)
 
 int sqliteRBtreeOpen(const char *zFilename, int mode, int nPg, Btree **ppBtree)
 {
-  int tnum;
   *ppBtree = (Btree *)sqliteMalloc(sizeof(Btree));
   sqliteHashInit(&(*ppBtree)->tblHash, SQLITE_HASH_INT, 0);
 
@@ -590,7 +595,6 @@ int sqliteRBtreeOpen(const char *zFilename, int mode, int nPg, Btree **ppBtree)
  */
 static int sqliteBtreeCreateTable(Btree* tree, int* n)
 {
-  BtRbTree *pNewTbl;
   assert( tree->eTransState != TRANS_NONE );
 
   *n = tree->next_idx++;
@@ -690,7 +694,6 @@ static int sqliteBtreeCursor(Btree* tree, int iTable, int wrFlag, BtCursor **ppC
 static int sqliteBtreeInsert(BtCursor* pCur, const void *pKey, int nKey,
 			     const void *pDataInput, int nData)
 {
-  BtRbNode *pNode; /* The new node that is begin inserted */
   void * pData;
   int match;
 
@@ -1161,7 +1164,6 @@ static int sqliteBtreeClose(Btree* tree)
 {
   HashElem *p;
   for(p=sqliteHashFirst(&tree->tblHash); p; p=sqliteHashNext(p)){
-    BtRbTree *pTree = sqliteHashData(p);
     tree->eTransState = TRANS_ROLLBACK;
     sqliteBtreeClearTable(tree, sqliteHashKeysize(p));
     sqliteFree(sqliteHashData(p));
@@ -1223,9 +1225,9 @@ static void execute_rollback_list(Btree *pBtree, BtRollbackOp *pList)
 {
   BtRollbackOp *pTmp;
   BtCursor cur;
-  cur.pBtree = pBtree;
-
   int res;
+
+  cur.pBtree = pBtree;
   while( pList ){
     switch( pList->eOp ){
       case ROLLBACK_INSERT:
@@ -1391,3 +1393,5 @@ static BtCursorOps sqliteBtreeCursorOps = {
 #endif
 
 };
+
+#endif /* SQLITE_OMIT_INMEMORYDB */

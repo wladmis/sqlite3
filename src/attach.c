@@ -119,6 +119,7 @@ void sqliteDetach(Parse *pParse, Token *pDbname){
   }
   sqliteBtreeClose(db->aDb[i].pBt);
   db->aDb[i].pBt = 0;
+  sqliteFree(db->aDb[i].zName);
   sqliteResetInternalSchema(db, i);
   db->nDb--;
   if( i<db->nDb ){

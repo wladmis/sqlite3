@@ -94,7 +94,7 @@ void sqliteCopy(
       }
     }
     sqliteGenerateConstraintChecks(pParse, pTab, 0, 0, 0, 0, onError, addr);
-    sqliteCompleteInsertion(pParse, pTab, 0, 0, 0, 0);
+    sqliteCompleteInsertion(pParse, pTab, 0, 0, 0, 0, -1);
     if( (db->flags & SQLITE_CountRows)!=0 ){
       sqliteVdbeAddOp(v, OP_AddImm, 1, 0);  /* Increment row count */
     }

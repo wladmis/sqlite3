@@ -547,12 +547,8 @@ int sqliteExprResolveIds(
           if( sqliteStrICmp(pTab->aCol[j].zName, zRight)==0 ){
             cnt++;
             pExpr->iTable = i + base;
-            if( j==pTab->iPKey ){
-              /* Substitute the record number for the INTEGER PRIMARY KEY */
-              pExpr->iColumn = -1;
-            }else{
-              pExpr->iColumn = j;
-            }
+            /* Substitute the rowid (column -1) for the INTEGER PRIMARY KEY */
+            pExpr->iColumn = j==pTab->iPKey ? -1 : j;
             pExpr->dataType = pTab->aCol[j].sortOrder & SQLITE_SO_TYPEMASK;
           }
         }
@@ -580,7 +576,7 @@ int sqliteExprResolveIds(
           for(j=0; j < pTab->nCol; j++) {
             if( sqliteStrICmp(pTab->aCol[j].zName, zRight)==0 ){
               cnt++;
-              pExpr->iColumn = j;
+              pExpr->iColumn = j==pTab->iPKey ? -1 : j;
               pExpr->dataType = pTab->aCol[j].sortOrder & SQLITE_SO_TYPEMASK;
             }
           }
