@@ -471,8 +471,10 @@ static int allocateSpace(Btree *pBt, MemPage *pPage, int nByte){
   FreeBlk *p;
   u16 *pIdx;
   int start;
-  int cnt = 0;
   int iSize;
+#ifndef NDEBUG
+  int cnt = 0;
+#endif
 
   assert( sqlitepager_iswriteable(pPage) );
   assert( nByte==ROUNDUP(nByte) );
