@@ -1951,7 +1951,6 @@ static void invalidateCursors(Btree *pBt){
 ** Print debugging information about all cursors to standard output.
 */
 void sqlite3BtreeCursorList(Btree *pBt){
-#ifndef SQLITE_OMIT_CURSOR
   BtCursor *pCur;
   for(pCur=pBt->pCursor; pCur; pCur=pCur->pNext){
     MemPage *pPage = pCur->pPage;
@@ -1962,7 +1961,6 @@ void sqlite3BtreeCursorList(Btree *pBt){
        pCur->isValid ? "" : " eof"
     );
   }
-#endif
 }
 #endif
 

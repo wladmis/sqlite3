@@ -453,8 +453,8 @@ ExprList *sqlite3ExprListDup(ExprList *p){
 ** sqlite3SelectDup(), can be called. sqlite3SelectDup() is sometimes
 ** called with a NULL argument.
 */
-#if !defined(SQLITE_OMIT_CURSOR) || !defined(SQLITE_OMIT_VIEW) \
- || !defined(SQLITE_OMIT_TRIGGER) || !defined(SQLITE_OMIT_SUBQUERY)
+#if !defined(SQLITE_OMIT_VIEW) || !defined(SQLITE_OMIT_TRIGGER) \
+ || !defined(SQLITE_OMIT_SUBQUERY)
 SrcList *sqlite3SrcListDup(SrcList *p){
   SrcList *pNew;
   int i;

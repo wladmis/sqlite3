@@ -81,7 +81,6 @@ for {set i [expr {1*256}]} {$i<$fsize-256} {incr i 256} {
   seek $fd $i
   puts -nonewline $fd $junk
   close $fd
-  sqlite3 db test.db
   do_test corrupt-2.$tn.1 {
     sqlite3 db test.db
     catchsql {SELECT count(*) FROM sqlite_master}
