@@ -23,7 +23,7 @@ for {set i 2} {$i<=15} {incr i} {
   file delete -force test$i.db-journal
 }
 
-set btree_trace 1
+set btree_trace 0
 do_test attach-1.1 {
   execsql {
     CREATE TABLE t1(a,b);

@@ -3436,7 +3436,12 @@ int sqlite3BtreeDropTable(Btree *pBt, int iTable){
 /*
 ** Read the meta-information out of a database file.  Meta[0]
 ** is the number of free pages currently in the database.  Meta[1]
-** through meta[15] are available for use by higher layers.
+** through meta[15] are available for use by higher layers.  Meta[0]
+** is read-only, the others are read/write.
+** 
+** The schema layer numbers meta values differently.  At the schema
+** layer (and the SetCookie and ReadCookie opcodes) the number of
+** free pages is not visible.  So Cookie[0] is the same as Meta[1].
 */
 int sqlite3BtreeGetMeta(Btree *pBt, int idx, u32 *pMeta){
   int rc;
