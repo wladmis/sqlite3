@@ -2940,7 +2940,7 @@ void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
   /* Read the database schema. If an error occurs, leave an error message
   ** and code in pParse and return NULL. */
   if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
-    return 0;
+    return;
   }
 
   if( pName1==0 || pName1->z==0 ){
