@@ -696,6 +696,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     strcpy(pCollate->zScript, zScript);
     if( sqlite3_create_collation(pDb->db, zName, SQLITE_UTF8, 
         pCollate, tclSqlCollate) ){
+      Tcl_SetResult(interp, (char *)sqlite3_errmsg(pDb->db), TCL_VOLATILE);
       return TCL_ERROR;
     }
     break;
@@ -1128,7 +1129,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     rc = sqlite3_create_function(pDb->db, zName, -1, SQLITE_UTF8,
         pFunc, tclSqlFunc, 0, 0);
     if( rc!=SQLITE_OK ){
-       rc = TCL_ERROR;
+      rc = TCL_ERROR;
+      Tcl_SetResult(interp, (char *)sqlite3_errmsg(pDb->db), TCL_VOLATILE);
     }else{
       /* Must flush any cached statements */
       flushStmtCache( pDb );

@@ -71,7 +71,7 @@ ifcapable tclvar {
       }
       execsql {COMMIT}
     }]
-    set result {}
+    list
   } {}
   puts "time with cache: $::t1"
 }
@@ -86,7 +86,7 @@ do_test select2-2.0.2 {
     }
     execsql {COMMIT}
   }]
-  set result {}
+  list
 } {}
 puts "time without cache: $t2"
 ifcapable tclvar {
