@@ -2046,6 +2046,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
 	  ** trashed when the nRec field is updated).
           */
           pPager->nRec = 0;
+          assert( pPager->journalOff > 0 );
           rc = writeJournalHdr(pPager);
           if( rc!=0 ){
             sqlite3pager_rollback(pPager);
