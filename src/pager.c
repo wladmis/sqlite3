@@ -571,6 +571,10 @@ static int pager_playback(Pager *pPager, int useJournalSize){
   if( rc!=SQLITE_OK ){
     goto end_playback;
   }
+
+  /* If the journal file is too small to contain a complete header,
+  ** then ignore the journal completely.
+  */
   if( szJ < sizeof(aMagic)+sizeof(Pgno) ){
     goto end_playback;
   }
@@ -594,6 +598,15 @@ static int pager_playback(Pager *pPager, int useJournalSize){
     goto end_playback;
   }
   if( format>=JOURNAL_FORMAT_3 ){
+    if( szJ < sizeof(aMagic) + 3*sizeof(u32) ){
+      /* Ignore the journal if it is too small to contain a complete
+      ** header.  We already did this test once above, but at the prior
+      ** test, we did not know the journal format and so we had to assume
+      ** the smallest possible header.  Now we know the header is bigger
+      ** than that so we test again.
+      */
+      goto end_playback;
+    }
     rc = read32bits(format, &pPager->jfd, (u32*)&nRec);
     if( rc ) goto end_playback;
     rc = read32bits(format, &pPager->jfd, &pPager->cksumInit);
@@ -630,7 +643,7 @@ static int pager_playback(Pager *pPager, int useJournalSize){
 
   /* Pages that have been written to the journal but never synced
   ** where not restored by the loop above.  We have to restore those
-  ** pages by reading the back from the original database.
+  ** pages by reading them back from the original database.
   */
   if( rc==SQLITE_OK ){
     PgHdr *pPg;
@@ -1896,7 +1909,8 @@ int sqlitepager_commit(Pager *pPager){
     return rc;
   }
   assert( pPager->journalOpen );
-  if( pPager->needSync && sqliteOsSync(&pPager->jfd)!=SQLITE_OK ){
+  rc = syncAllPages(pPager);
+  if( rc!=SQLITE_OK ){
     goto commit_abort;
   }
   pPg = pager_get_all_dirty_pages(pPager);
