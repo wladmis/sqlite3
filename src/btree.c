@@ -4743,12 +4743,11 @@ int sqlite3BtreeFlags(BtCursor *pCur){
   return pPage ? pPage->aData[pPage->hdrOffset] : 0;
 }
 
+#ifdef SQLITE_DEBUG
 /*
 ** Print a disassembly of the given page on standard output.  This routine
 ** is used for debugging and testing only.
 */
-#ifdef SQLITE_TEST
-#ifndef SQLITE_OMIT_BTREEPAGEDUMP
 static int btreePageDump(Btree *pBt, int pgno, int recursive, MemPage *pParent){
   int rc;
   MemPage *pPage;
@@ -4845,11 +4844,8 @@ static int btreePageDump(Btree *pBt, int pgno, int recursive, MemPage *pParent){
   fflush(stdout);
   return SQLITE_OK;
 }
-#endif
 int sqlite3BtreePageDump(Btree *pBt, int pgno, int recursive){
-#ifndef SQLITE_OMIT_BTREEPAGEDUMP
   return btreePageDump(pBt, pgno, recursive, 0);
-#endif
 }
 #endif
 

@@ -44,10 +44,10 @@ void print_stack_trace(){
 int sqlite3_malloc_failed = 0;
 
 /*
-** If SQLITE_DEBUG is defined, then use versions of malloc() and
+** If SQLITE_TEST is defined, then use versions of malloc() and
 ** free() that track memory usage and check for buffer overruns.
 */
-#ifdef SQLITE_DEBUG
+#ifdef SQLITE_TEST
 
 /*
 ** For keeping track of the number of mallocs and frees.   This
@@ -251,7 +251,7 @@ void sqlite3FreeX(void *p){
 ** The following versions of malloc() and free() are for use in a
 ** normal build.
 */
-#if !defined(SQLITE_DEBUG)
+#if !defined(SQLITE_TEST)
 
 /*
 ** Allocate new memory and set it to zero.  Return NULL if
@@ -329,7 +329,7 @@ char *sqlite3StrNDup(const char *z, int n){
   }
   return zNew;
 }
-#endif /* !defined(SQLITE_DEBUG) */
+#endif /* !defined(SQLITE_TEST) */
 
 /*
 ** Create a string from the 2nd and subsequent arguments (up to the
