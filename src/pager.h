@@ -103,3 +103,6 @@ void sqlite3pager_set_codec(Pager*,void(*)(void*,void*,Pgno,int),void*);
 void sqlite3pager_refdump(Pager*);
 int pager3_refinfo_enable;
 #endif
+
+
+

@@ -1087,3 +1087,6 @@ int Sqlitetest3_Init(Tcl_Interp *interp){
      TCL_LINK_INT);
   return TCL_OK;
 }
+
+
+

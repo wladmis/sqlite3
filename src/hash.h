@@ -78,10 +78,10 @@ struct HashElem {
 /*
 ** Access routines.  To delete, insert a NULL pointer.
 */
-void sqliteHashInit(Hash*, int keytype, int copyKey);
-void *sqliteHashInsert(Hash*, const void *pKey, int nKey, void *pData);
-void *sqliteHashFind(const Hash*, const void *pKey, int nKey);
-void sqliteHashClear(Hash*);
+void sqlite3HashInit(Hash*, int keytype, int copyKey);
+void *sqlite3HashInsert(Hash*, const void *pKey, int nKey, void *pData);
+void *sqlite3HashFind(const Hash*, const void *pKey, int nKey);
+void sqlite3HashClear(Hash*);
 
 /*
 ** Macros for looping over all elements of a hash table.  The idiom is
@@ -107,3 +107,6 @@ void sqliteHashClear(Hash*);
 #define sqliteHashCount(H)  ((H)->count)
 
 #endif /* _SQLITE_HASH_H_ */
+
+
+

@@ -252,3 +252,6 @@ int main(int argc, char **argv){
     (nByteOut-nByteIn)*100.0/(double)nByteIn);
 }
 #endif /* ENCODER_TEST */
+
+
+
