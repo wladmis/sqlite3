@@ -152,4 +152,24 @@ if {[clock format 0 -format %Z]=="EST"} {
       {2039-07-01 07:00:00}
 }
 
+# Date-time functions that contain NULL arguments return a NULL
+# result.
+#
+datetest 7.1 {datetime(null)} NULL
+datetest 7.2 {datetime('now',null)} NULL
+datetest 7.3 {datetime('now','localtime',null)} NULL
+datetest 7.4 {time(null)} NULL
+datetest 7.5 {time('now',null)} NULL
+datetest 7.6 {time('now','localtime',null)} NULL
+datetest 7.7 {date(null)} NULL
+datetest 7.8 {date('now',null)} NULL
+datetest 7.9 {date('now','localtime',null)} NULL
+datetest 7.10 {julianday(null)} NULL
+datetest 7.11 {julianday('now',null)} NULL
+datetest 7.12 {julianday('now','localtime',null)} NULL
+datetest 7.13 {strftime(null,'now')} NULL
+datetest 7.14 {strftime('%s',null)} NULL
+datetest 7.15 {strftime('%s','now',null)} NULL
+datetest 7.16 {strftime('%s','now','localtime',null)} NULL
+
 finish_test
