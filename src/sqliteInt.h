@@ -31,11 +31,6 @@
 #define TEMP_PAGES   25
 
 /*
-** File format version number
-*/
-#define FILE_FORMAT 1
-
-/*
 ** Integers of known sizes.  These typedefs might change for architectures
 ** where the sizes very.  Preprocessor macros are available so that the
 ** types can be conveniently redefined at compile-type.  Like this:
@@ -555,6 +550,7 @@ void sqliteRealToSortable(double r, char *);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);
 void sqliteDequote(char*);
+int sqliteKeywordCode(const char*, int);
 int sqliteRunParser(Parse*, const char*, char **);
 void sqliteExec(Parse*);
 Expr *sqliteExpr(int, Expr*, Expr*, Token*);

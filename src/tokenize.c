@@ -116,7 +116,7 @@ static Keyword *apHashTable[KEY_HASH_SIZE];
 ** keyword.  If it is a keyword, the token code of that keyword is 
 ** returned.  If the input is not a keyword, TK_ID is returned.
 */
-static int sqliteKeywordCode(const char *z, int n){
+int sqliteKeywordCode(const char *z, int n){
   int h;
   Keyword *p;
   if( aKeywordTable[0].len==0 ){
