@@ -8,6 +8,10 @@
 **    May you find forgiveness for yourself and forgive others.
 **    May you share freely, never taking more than you give.
 **
+** 2002 April 18
+**
+** I, Matthew O. Persico, hereby release all edits made by me to
+** this source into the public domain.
 *************************************************************************
 ** This file contains code to implement the "sqlite" command line
 ** utility for accessing SQLite databases.
