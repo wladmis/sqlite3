@@ -53,6 +53,8 @@ void sqlite3FinishCoding(Parse *pParse){
   if( sqlite3_malloc_failed ) return;
   if( pParse->nested ) return;
 
+  if( !pParse->pVdbe ) return;
+
   /* Begin by generating some termination code at the end of the
   ** vdbe program
   */
