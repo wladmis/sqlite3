@@ -384,7 +384,7 @@ fi
 if test "$CYGWIN" = "yes"; then
   BUILD_EXEEXT=.exe
 else
-  BUILD_EXEEXT=""
+  BUILD_EXEEXT=$EXEEXT
 fi
 if test "$cross" = "0"; then
   TARGET_EXEEXT=$BUILD_EXEEXT
@@ -435,7 +435,7 @@ else
   else 
     LIBS=""
     AC_SEARCH_LIBS(Tcl_Init, dnl
-        tcl8.4 tcl8.3 tcl8.2 tcl8.1 tcl8.0 tcl80 tcl,,,$otherlibs)
+        tcl8.4 tcl8.3 tcl84 tcl83 tcl,,,$otherlibs)
   fi
   TARGET_TCL_LIBS="$LIBS $otherlibs"
 fi
@@ -509,7 +509,7 @@ else
   AC_CHECK_HEADER(readline.h, [found=yes])
 fi
 if test "$found" = "no"; then
-  for dir in /usr /usr/local /usr/local/readline /usr/contrib; do
+  for dir in /usr /usr/local /usr/local/readline /usr/contrib /mingw; do
     AC_CHECK_FILE($dir/include/readline.h, found=yes)
     if test "$found" = "yes"; then
       TARGET_READLINE_INC="-I$dir/include"
