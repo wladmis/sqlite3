@@ -166,6 +166,8 @@ if test "$temp" = ""; then
 ** the configure script or any subdirectory of that directory.   Rerun  **
 ** the configure script from a directory that is separate from the      **
 ** source tree.                                                         **
+**                                                                      **
+** See the README file for additional information.                      **
 **************************************************************************])
 fi
 
