@@ -334,50 +334,11 @@ static void put4byte(unsigned char *p, u32 v){
 }
 
 /*
-** Read a variable-length integer.  Store the result in *pResult.
-** Return the number of bytes in the integer.
+** Routines to read and write variable-length integers.
 */
-static unsigned int getVarint(unsigned char *p, u64 *pResult){
-  u64 x = 0;
-  int n = 0;
-  unsigned char c;
-  do{
-    c = p[n++];
-    x = (x<<7) | (c & 0x7f);
-  }while( (c & 0x80)!=0 );
-  *pResult = x;
-  return n;
-}
-static unsigned int getVarint32(unsigned char *p, u32 *pResult){
-  u32 x = 0;
-  int n = 0;
-  unsigned char c;
-  do{
-    c = p[n++];
-    x = (x<<7) | (c & 0x7f);
-  }while( (c & 0x80)!=0 );
-  *pResult = x;
-  return n;
-}
-
-/*
-** Write a variable length integer with value v into p[].  Return
-** the number of bytes written.
-*/
-static unsigned int putVarint(unsigned char *p, u64 v){
-  int i, j, n;
-  u8 buf[10];
-  n = 0;
-  do{
-    buf[n++] = (v & 0x7f) | 0x80;
-    v >>= 7;
-  }while( v!=0 );
-  buf[0] &= 0x7f;
-  for(i=0, j=n-1; j>=0; j--, i++){
-    p[i] = buf[j];
-  }
-  return n;
-}
+#define getVarint    sqlite3GetVarint
+#define getVarint32  sqlite3GetVarint32
+#define putVarint    sqlite3PutVarint
 
 /*
 ** Parse a cell header and fill in the CellInfo structure.

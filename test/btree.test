@@ -17,6 +17,21 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Testing of varint reading writing.
+#
+do_test btree-0.1 {
+  btree_varint_test 0 0 500 1
+} {}
+do_test btree-0.2 {
+  btree_varint_test 1024 1 500 1
+} {}
+do_test btree-0.3 {
+  btree_varint_test -1 1 500 1
+} {}
+do_test btree-0.4 {
+  btree_varint_test -1 100000 500 1
+} {}
+
 # Basic functionality.  Open and close a database.
 #
 do_test btree-1.1 {
