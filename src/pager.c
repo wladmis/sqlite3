@@ -327,7 +327,7 @@ static int pager_playback(Pager *pPager){
   */
   for(i=nRec-1; i>=0; i--){
     /* Seek to the beginning of the segment */
-    off_t ofst;
+    int ofst;
     ofst = i*sizeof(PageRecord) + sizeof(aMagic) + sizeof(Pgno);
     rc = sqliteOsSeek(pPager->jfd, ofst);
     if( rc!=SQLITE_OK ) break;

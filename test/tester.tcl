@@ -42,8 +42,9 @@ if {[sqlite -tcl-uses-utf]} {
 
 # Create a test database
 #
-file delete -force ./test.db
-file delete -force ./test.db-journal
+catch {db close}
+file delete -force test.db
+file delete -force test.db-journal
 sqlite db ./test.db
 
 # Abort early if this script has been run before.
