@@ -1730,6 +1730,7 @@ void sqliteBeginTransaction(Parse *pParse, int onError){
   if( db->flags & SQLITE_InTrans ) return;
   sqliteBeginWriteOperation(pParse, 0);
   db->flags |= SQLITE_InTrans;
+  db->pid = sqliteOsProcessId();
   db->onError = onError;
 }
 
