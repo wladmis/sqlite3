@@ -41,7 +41,7 @@ echo .dump | old-sqlite old-db | sqlite db
 
 <p>This file format change was made to work around a potential 
 inefficiency in GDBM that comes up when large indices are created 
-on tables where many entries in the table have the same key.</p>
+on tables where many entries in the table have the same index key.</p>
 
 <h2>Features</h2>
 
