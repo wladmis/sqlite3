@@ -209,6 +209,16 @@ static void last_insert_rowid(sqlite_func *context, int arg, const char **argv){
   sqlite_set_result_int(context, sqlite_last_insert_rowid(db));
 }
 
+static void change_count(sqlite_func *context, int arg, const char **argv){
+  sqlite *db = sqlite_user_data(context);
+  sqlite_set_result_int(context, sqlite_changes(db));
+}
+static void last_statement_change_count(sqlite_func *context, int arg,
+                                        const char **argv){
+  sqlite *db = sqlite_user_data(context);
+  sqlite_set_result_int(context, sqlite_last_statement_changes(db));
+}
+
 /*
 ** Implementation of the like() SQL function.  This function implements
 ** the build-in LIKE operator.  The first argument to the function is the
@@ -613,6 +623,12 @@ void sqliteRegisterBuiltinFunctions(sqlite *db){
   sqlite_create_function(db, "last_insert_rowid", 0, 
            last_insert_rowid, db);
   sqlite_function_type(db, "last_insert_rowid", SQLITE_NUMERIC);
+  sqlite_create_function(db, "change_count", 0, change_count, db);
+  sqlite_function_type(db, "change_count", SQLITE_NUMERIC);
+  sqlite_create_function(db, "last_statement_change_count", 0, 
+           last_statement_change_count, db);
+  sqlite_function_type(db, "last_statement_change_count", SQLITE_NUMERIC);
+
   for(i=0; i<sizeof(aAggs)/sizeof(aAggs[0]); i++){
     sqlite_create_aggregate(db, aAggs[i].zName,
            aAggs[i].nArg, aAggs[i].xStep, aAggs[i].xFinalize, 0);

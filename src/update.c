@@ -430,6 +430,7 @@ void sqliteUpdate(
     sqliteVdbeAddOp(v, OP_Close, oldIdx, 0);
   }
 
+  sqliteVdbeAddOp(v, OP_SetCounts, 0, 0);
   sqliteEndWriteOperation(pParse);
 
   /*

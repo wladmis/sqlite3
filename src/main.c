@@ -545,6 +545,10 @@ int sqlite_changes(sqlite *db){
   return db->nChange;
 }
 
+int sqlite_last_statement_changes(sqlite *db){
+  return db->lsChange;
+}
+
 /*
 ** Close an existing SQLite database
 */
