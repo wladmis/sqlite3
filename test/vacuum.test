@@ -107,11 +107,8 @@ do_test vacuum-2.2 {
   catchsql {
     VACUUM
   }
-} {1 {database schema has changed}}
+} {0 {}}
 do_test vacuum-2.3 {
-  execsql {
-    VACUUM;
-  }
   cksum
 } $cksum
 do_test vacuum-2.4 {

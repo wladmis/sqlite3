@@ -112,7 +112,7 @@ void sqliteExec(Parse *pParse){
       pParse->rc = pParse->nErr ? SQLITE_ERROR : SQLITE_DONE;
     }
     pParse->colNamesSet = 0;
-  }else if( pParse->useCallback==0 ){
+  }else if( pParse->useCallback==0 && pParse->rc==SQLITE_OK ){
     pParse->rc = SQLITE_ERROR;
   }
   pParse->nTab = 0;

@@ -1502,8 +1502,8 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
 
   /* Issue a null callback if that is what the user wants.
   */
-  if( eDest==SRT_Callback &&
-    (pParse->useCallback==0 || (pParse->db->flags & SQLITE_NullCallback)!=0)
+  if( eDest==SRT_Callback /* &&
+    (pParse->useCallback==0 || (pParse->db->flags & SQLITE_NullCallback)!=0) */
   ){
     sqliteVdbeAddOp(v, OP_NullCallback, p->pEList->nExpr, 0);
   }
@@ -2402,8 +2402,8 @@ int sqliteSelect(
 
   /* Issue a null callback if that is what the user wants.
   */
-  if( eDest==SRT_Callback &&
-    (pParse->useCallback==0 || (pParse->db->flags & SQLITE_NullCallback)!=0)
+  if( eDest==SRT_Callback /* &&
+    (pParse->useCallback==0 || (pParse->db->flags & SQLITE_NullCallback)!=0) */
   ){
     sqliteVdbeAddOp(v, OP_NullCallback, pEList->nExpr, 0);
   }
