@@ -841,14 +841,18 @@ expr(A) ::= RAISE(X) LP FAIL COMMA nm(Z) RP(Y).  {
 
 ////////////////////////  DROP TRIGGER statement //////////////////////////////
 cmd ::= DROP TRIGGER nm(X) dbnm(D). {
-    sqliteDropTrigger(pParse,sqliteSrcListAppend(0,&X,&D),0);
+  sqliteDropTrigger(pParse,sqliteSrcListAppend(0,&X,&D),0);
 }
 
 //////////////////////// ATTACH DATABASE file AS name /////////////////////////
-cmd ::= ATTACH database_kw_opt ids AS nm.
+cmd ::= ATTACH database_kw_opt ids(F) AS nm(D). {
+  sqliteAttach(pParse, &F, &D);
+}
 
 database_kw_opt ::= DATABASE.
 database_kw_opt ::= .
 
 //////////////////////// DETACH DATABASE name /////////////////////////////////
-cmd ::= DETACH database_kw_opt nm.
+cmd ::= DETACH database_kw_opt nm(D). {
+  sqliteDetach(pParse, &D);
+}
