@@ -445,6 +445,11 @@ do_test pager-5.1 {
 } {}
 }
 
+# The following tests cover rolling back hot journal files. 
+# They can't be run on windows because the windows version of 
+# SQLite holds a mandatory exclusive lock on journal files it has open.
+#
+if {$tcl_platform(platform)!="windows"} {
 do_test pager-6.1 {
   file delete -force test2.db
   file delete -force test2.db-journal
@@ -514,6 +519,7 @@ do_test pager-6.3 {
 do_test pager-6.4 {
   db2 close
 } {}
+}
 finish_test
 
 
