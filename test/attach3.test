@@ -212,6 +212,14 @@ do_test attach3-9.2 {
   }
 } {0}
 
+# Make sure the aux.sqlite_master table is read-only
+do_test attach3-10.0 {
+  catchsql {
+    INSERT INTO aux.sqlite_master VALUES(1, 2, 3, 4, 5);
+  }
+} {1 {table sqlite_master may not be modified}}
+
+
 finish_test
 
 
