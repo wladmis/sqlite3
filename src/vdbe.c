@@ -39,6 +39,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
+#include "os.h"
 #include <ctype.h>
 
 /*
@@ -1497,9 +1498,6 @@ void sqliteVdbeMakeReady(
   int isExplain                  /* True if the EXPLAIN keywords is present */
 ){
   int n;
-#ifdef MEMORY_DEBUG
-  extern int access(const char*,int);
-#endif
 
   assert( p!=0 );
   assert( p->aStack==0 );
@@ -1524,7 +1522,7 @@ void sqliteVdbeMakeReady(
   sqliteHashInit(&p->agg.hash, SQLITE_HASH_BINARY, 0);
   p->agg.pSearch = 0;
 #ifdef MEMORY_DEBUG
-  if( access("vdbe_trace",0)==0 ){
+  if( sqliteOsFileExists("vdbe_trace") ){
     p->trace = stdout;
   }
 #endif
