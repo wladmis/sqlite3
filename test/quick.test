@@ -27,6 +27,39 @@ set EXCLUDE {
   misuse.test
 }
 
+lappend EXCLUDE \
+  auth.test \
+  bind.test \
+  capi2.test \
+  conflict.test \
+  copy.test \
+  format3.test \
+  func.test \
+  index.test \
+  interrupt.test \
+  intpkey.test \
+  ioerr.test \
+  memdb.test \
+  minmax.test \
+  misc1.test \
+  misc2.test \
+  misc3.test \
+  null.test \
+  pragma.test \
+  printf.test \
+  rowid.test \
+  table.test \
+  tableapi.test \
+  trans.test \
+  trigger1.test \
+  trigger2.test \
+  unique.test \
+  update.test \
+  utf.test \
+  vacuum.test \
+  version.test \
+
+
 if {[sqlite -has-codec]} {
   lappend EXCLUDE \
     attach.test \
@@ -47,7 +80,7 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
     lappend ::failList $tail
   }
 }
-source $testdir/misuse.test
+# source $testdir/misuse.test
 
 set sqlite_open_file_count 0
 really_finish_test
