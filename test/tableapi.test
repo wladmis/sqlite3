@@ -144,6 +144,15 @@ do_test tableapi-3.7 {
   } {}
 } {0 0 2 a b}
 
+do_test tableapi-4.1 {
+  set rc [catch {
+    sqlite_get_table_printf $::dbx {
+      SELECT * FROM xyz;  SELECT * FROM sqlite_master
+    } {}
+  } msg]
+  concat $rc $msg
+} {0 1 {sqlite_get_table() called with two or more incompatible queries}}
+
 do_test tableapi-99.0 {
   sqlite_close $::dbx
 } {}
