@@ -30,8 +30,10 @@ follows will provide a quick overview of each of these components.
 
 <h2>Interface</h2>
 
-<p>The public interface to the SQLite library is implemented by
-four functions found in the <b>main.c</b> source file.  Additional
+<p>Most of the public interface to the SQLite library is implemented by
+four functions found in the <b>main.c</b> source file.  The
+<b>sqlite_get_table()</b> routine is implemented in <b>table.c</b>.
+The Tcl interface is implemented by <b>tclsqlite.c</b>.  More
 information on the C interface to SQLite is
 <a href="c_interface.html">available separately</a>.<p>
 
