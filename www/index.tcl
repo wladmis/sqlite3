@@ -55,6 +55,7 @@ puts {<h2>Features</h2>
 <li>Atomic commit and rollback protect data integrity.</li>
 <li>Database files can be freely shared between machines with
     different byte orders.</li>
+<li>Supports databases up to 2 terabytes (2^41 bytes) in size.</li>
 <li>Small memory footprint: less than 25K lines of C code.</li>
 <li><a href="speed.html">Four times faster</a> than PostgreSQL.
     Twice as fast as SQLite 1.0.</li>

@@ -20,9 +20,9 @@
 **
 ** @(#) $Id$
 */
+#include "os.h"         /* Must be first to enable large file support */
 #include "sqliteInt.h"
 #include "pager.h"
-#include "os.h"
 #include <assert.h>
 #include <string.h>
 
