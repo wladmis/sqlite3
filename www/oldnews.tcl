@@ -9,6 +9,18 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Jan-21} {Version 3.1.0 (alpha) Released} {
+  Version 3.1.0 (alpha) is now available on the
+  website.  Verison 3.1.0 is fully backwards compatible with the 3.0 series
+  and features many new features including Autovacuum and correlated
+  subqueries.  See the
+  <a href="http://www.sqlite.org/releasenotes310.html">release notes</a>
+  for details.
+
+  This is an alpha release.  A beta release is expected in about a week
+  with the first stable release to follow after two more weeks.
+}
+
 newsitem {2004-Oct-11} {Version 3.0.8} {
   Version 3.0.8 of SQLite contains several code optimizations and minor
   bug fixes and adds support for DEFERRED, IMMEDIATE, and EXCLUSIVE
