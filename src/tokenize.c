@@ -46,6 +46,7 @@ static Keyword aKeywordTable[] = {
   { "BEGIN",             0, TK_BEGIN,            0 },
   { "BETWEEN",           0, TK_BETWEEN,          0 },
   { "BY",                0, TK_BY,               0 },
+  { "CASE",              0, TK_CASE,             0 },
   { "CHECK",             0, TK_CHECK,            0 },
   { "CLUSTER",           0, TK_CLUSTER,          0 },
   { "COMMIT",            0, TK_COMMIT,           0 },
@@ -60,6 +61,7 @@ static Keyword aKeywordTable[] = {
   { "DISTINCT",          0, TK_DISTINCT,         0 },
   { "DROP",              0, TK_DROP,             0 },
   { "END",               0, TK_END,              0 },
+  { "ELSE",              0, TK_ELSE,             0 },
   { "EXCEPT",            0, TK_EXCEPT,           0 },
   { "EXPLAIN",           0, TK_EXPLAIN,          0 },
   { "FAIL",              0, TK_FAIL,             0 },
@@ -94,6 +96,7 @@ static Keyword aKeywordTable[] = {
   { "TABLE",             0, TK_TABLE,            0 },
   { "TEMP",              0, TK_TEMP,             0 },
   { "TEMPORARY",         0, TK_TEMP,             0 },
+  { "THEN",              0, TK_THEN,             0 },
   { "TRANSACTION",       0, TK_TRANSACTION,      0 },
   { "UNION",             0, TK_UNION,            0 },
   { "UNIQUE",            0, TK_UNIQUE,           0 },
@@ -102,6 +105,7 @@ static Keyword aKeywordTable[] = {
   { "VACUUM",            0, TK_VACUUM,           0 },
   { "VALUES",            0, TK_VALUES,           0 },
   { "VIEW",              0, TK_VIEW,             0 },
+  { "WHEN",              0, TK_WHEN,             0 },
   { "WHERE",             0, TK_WHERE,            0 },
 };
 
