@@ -2959,6 +2959,10 @@ case OP_Transaction: {
         }
         break;
       }
+      case SQLITE_READONLY: {
+        rc = SQLITE_OK;
+        /* Fall thru into the next case */
+      }
       case SQLITE_OK: {
         busy = 0;
         break;
