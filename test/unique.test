@@ -162,4 +162,37 @@ do_test unique-3.4 {
   }
 } {1 {constraint failed}}
 
+# Make sure NULLs are distinct as far as the UNIQUE tests are
+# concerned.
+#
+do_test unique-4.1 {
+  execsql {
+    CREATE TABLE t4(a UNIQUE, b, c, UNIQUE(b,c));
+    INSERT INTO t4 VALUES(1,2,3);
+    INSERT INTO t4 VALUES(NULL, 2, NULL);
+    SELECT * FROM t4;
+  }
+} {1 2 3 {} 2 {}}
+do_test unique-4.2 {
+  catchsql {
+    INSERT INTO t4 VALUES(NULL, 3, 4);
+  }
+} {0 {}}
+do_test unique-4.3 {
+  execsql {
+    SELECT * FROM t4
+  }
+} {1 2 3 {} 2 {} {} 3 4}
+do_test unique-4.4 {
+  catchsql {
+    INSERT INTO t4 VALUES(2, 2, NULL);
+  }
+} {0 {}}
+do_test unique-4.5 {
+  execsql {
+    SELECT * FROM t4
+  }
+} {1 2 3 {} 2 {} {} 3 4 2 2 {}}
+
+
 finish_test
