@@ -388,7 +388,6 @@ struct sqlite {
   int errCode;                  /* Most recent error code (SQLITE_*) */
   u8 enc;                       /* Text encoding for this database. */
   u8 autoCommit;                /* The auto-commit flag. */
-  int nMaster;                  /* Length of master journal name. -1=unknown */
   void(*xCollNeeded)(void*,sqlite3*,int eTextRep,const char*);
   void(*xCollNeeded16)(void*,sqlite3*,int eTextRep,const void*);
   void *pCollNeededArg;

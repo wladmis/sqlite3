@@ -129,7 +129,7 @@ static int btree_begin_transaction(
     return TCL_ERROR;
   }
   if( Tcl_GetInt(interp, argv[1], (int*)&pBt) ) return TCL_ERROR;
-  rc = sqlite3BtreeBeginTrans(pBt, 1, 0);
+  rc = sqlite3BtreeBeginTrans(pBt, 1);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;

@@ -2361,7 +2361,7 @@ static int pager_open_journal(Pager *pPager){
 **
 ** If the database is already reserved for writing, this routine is a no-op.
 */
-int sqlite3pager_begin(void *pData, int dummy_fixme){
+int sqlite3pager_begin(void *pData){
   PgHdr *pPg = DATA_TO_PGHDR(pData);
   Pager *pPager = pPg->pPager;
   int rc = SQLITE_OK;
@@ -2445,7 +2445,7 @@ int sqlite3pager_write(void *pData){
   ** create it if it does not.
   */
   assert( pPager->state!=PAGER_UNLOCK );
-  rc = sqlite3pager_begin(pData, 0);
+  rc = sqlite3pager_begin(pData);
   if( rc!=SQLITE_OK ){
     return rc;
   }

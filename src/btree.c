@@ -1231,7 +1231,7 @@ static int newDatabase(Btree *pBt){
 ** This is so that appropriate space can be allocated in the journal file
 ** when it is created..
 */
-int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag, int nMaster){
+int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag){
   int rc = SQLITE_OK;
 
   /* If the btree is already in a write-transaction, or it
@@ -1251,7 +1251,7 @@ int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag, int nMaster){
   }
 
   if( rc==SQLITE_OK && wrflag ){
-    rc = sqlite3pager_begin(pBt->pPage1->aData, nMaster);
+    rc = sqlite3pager_begin(pBt->pPage1->aData);
     if( rc==SQLITE_OK ){
       rc = newDatabase(pBt);
     }
