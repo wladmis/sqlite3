@@ -428,7 +428,7 @@ int sqlite_complete(const char *zSql){
 */
 int sqlite_exec(
   sqlite *db,                 /* The database on which the SQL executes */
-  char *zSql,                 /* The SQL to be executed */
+  const char *zSql,           /* The SQL to be executed */
   sqlite_callback xCallback,  /* Invoke this callback routine */
   void *pArg,                 /* First argument to xCallback() */
   char **pzErrMsg             /* Write error messages here */
