@@ -663,7 +663,7 @@ static void generateColumnTypes(
         default:                  zType = "ANY";     break;
       }
     }
-    sqlite3VdbeOp3(v, OP_ColumnName, i + pEList->nExpr, 0, zType, 0);
+    sqlite3VdbeSetColName(v, i+pEList->nExpr, zType, P3_STATIC);
   }
 }
 
@@ -740,6 +740,7 @@ static void generateColumnNames(
       sqlite3VdbeSetColName(v, i, zName, 0);
     }
   }
+  generateColumnTypes(pParse, pTabList, pEList);
 }
 
 /*
