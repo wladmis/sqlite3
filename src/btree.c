@@ -1484,7 +1484,7 @@ int sqlite3BtreeCursor(
       return rc;
     }
   }
-  pCur = sqliteMalloc( sizeof(*pCur) );
+  pCur = sqliteMallocRaw( sizeof(*pCur) );
   if( pCur==0 ){
     rc = SQLITE_NOMEM;
     goto create_cursor_exception;
@@ -1492,6 +1492,7 @@ int sqlite3BtreeCursor(
   pCur->pgnoRoot = (Pgno)iTable;
   if( iTable==1 && sqlite3pager_pagecount(pBt->pPager)==0 ){
     rc = SQLITE_EMPTY;
+    pCur->pPage = 0;
     goto create_cursor_exception;
   }
   rc = getAndInitPage(pBt, pCur->pgnoRoot, &pCur->pPage, 0);
