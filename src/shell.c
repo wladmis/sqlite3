@@ -512,12 +512,11 @@ static void open_db(struct callback_data *p){
   if( p->db==0 ){
     char *zErrMsg = 0;
 #ifdef SQLITE_HAS_CODEC
-    if( p->zKey && p->zKey[0] ){
-      int n = strlen(p->zKey);
-      p->db = sqlite_open_encrypted(p->zDbFilename, p->zKey, n, &zErrMsg);
-    }else
-#endif
+    int n = p->zKey ? strlen(p->zKey) : 0;
+    p->db = sqlite_open_encrypted(p->zDbFilename, p->zKey, n, &zErrMsg);
+#else
     p->db = sqlite_open(p->zDbFilename, 0, &zErrMsg);
+#endif
     if( p->db==0 ){
       if( zErrMsg ){
         fprintf(stderr,"Unable to open database \"%s\": %s\n", 
