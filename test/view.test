@@ -271,7 +271,6 @@ do_test view-8.1 {
     SELECT * FROM v6 ORDER BY xyz;
   }
 } {7 2 13 5 19 8 27 12}
-if 0 {
 do_test view-8.2 {
   db close
   sqlite db test.db
@@ -285,6 +284,7 @@ do_test view-8.3 {
     SELECT * FROM v7 ORDER BY a;
   }
 } {9 18 27 39}
+if 0 {
 do_test view-8.4 {
   execsql { PRAGMA vdbe_trace=on;
     CREATE VIEW v8 AS SELECT max(cnt) FROM
