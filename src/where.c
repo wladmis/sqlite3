@@ -371,7 +371,7 @@ WhereInfo *sqliteWhereBegin(
   /* Special case: a WHERE clause that is constant.  Evaluate the
   ** expression and either jump over all of the code or fall thru.
   */
-  if( pWhere && sqliteExprIsConstant(pWhere) ){
+  if( pWhere && (pTabList->nSrc==0 || sqliteExprIsConstant(pWhere)) ){
     sqliteExprIfFalse(pParse, pWhere, pWInfo->iBreak, 1);
     pWhere = 0;
   }
