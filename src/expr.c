@@ -999,7 +999,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
     case TK_GE:
     case TK_NE:
     case TK_EQ: {
-      if( pParse->db->file_format>=3 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
+      if( pParse->db->file_format>=4 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
         op += 6;  /* Convert numeric opcodes to text opcodes */
       }
       /* Fall through into the next case */
@@ -1232,7 +1232,7 @@ void sqliteExprIfTrue(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
     case TK_EQ: {
       sqliteExprCode(pParse, pExpr->pLeft);
       sqliteExprCode(pParse, pExpr->pRight);
-      if( pParse->db->file_format>=3 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
+      if( pParse->db->file_format>=4 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
         op += 6;  /* Convert numeric opcodes to text opcodes */
       }
       sqliteVdbeAddOp(v, op, jumpIfNull, dest);
@@ -1325,7 +1325,7 @@ void sqliteExprIfFalse(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
     case TK_GE:
     case TK_NE:
     case TK_EQ: {
-      if( pParse->db->file_format>=3 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
+      if( pParse->db->file_format>=4 && sqliteExprType(pExpr)==SQLITE_SO_TEXT ){
         op += 6;  /* Convert numeric opcodes to text opcodes */
       }
       sqliteExprCode(pParse, pExpr->pLeft);

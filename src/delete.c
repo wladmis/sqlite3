@@ -381,7 +381,7 @@ void sqliteGenerateRowIndexDelete(
       }
     }
     sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
-    if( db->file_format>=3 ) sqliteAddIdxKeyType(v, pIdx);
+    if( db->file_format>=4 ) sqliteAddIdxKeyType(v, pIdx);
     sqliteVdbeAddOp(v, OP_IdxDelete, base+i, 0);
   }
 }

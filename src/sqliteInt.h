@@ -187,7 +187,8 @@ typedef struct TriggerStack TriggerStack;
 **
 **     file_format==1    Version 2.1.0.
 **     file_format==2    Version 2.2.0. Add support for INTEGER PRIMARY KEY.
-**     file_format==3    Version 2.6.0. Add support for separate numeric and
+**     file_format==3    Version 2.6.0. Fix empty-string index bug.
+**     file_format==4    Version 2.7.0. Add support for separate numeric and
 **                       text datatypes.
 */
 struct sqlite {
