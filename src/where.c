@@ -425,6 +425,7 @@ WhereInfo *sqliteWhereBegin(
     ** form ROWID<expr or ROWID<=expr set iDirectLt[i] to the term index.
     ** For terms like ROWID>expr or ROWID>=expr set iDirectGt[i].
     */
+    pWInfo->a[i].iCur = -1;
     iDirectEq[i] = -1;
     iDirectLt[i] = -1;
     iDirectGt[i] = -1;
@@ -577,8 +578,6 @@ WhereInfo *sqliteWhereBegin(
     if( pBestIdx ){
       pWInfo->a[i].iCur = pParse->nTab++;
       pWInfo->peakNTab = pParse->nTab;
-    }else{
-      pWInfo->a[i].iCur = -1;
     }
   }
 
