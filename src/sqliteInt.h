@@ -452,6 +452,9 @@ struct sqlite3 {
   sqlite3_value *pErr;          /* Most recent error message */
   char *zErrMsg;                /* Most recent error message (UTF-8 encoded) */
   char *zErrMsg16;              /* Most recent error message (UTF-16 encoded) */
+#ifndef SQLITE_OMIT_GLOBALRECOVER
+  sqlite3 *pNext;               /* Linked list of open db handles. */
+#endif
 };
 
 /*

@@ -28,6 +28,7 @@ set EXCLUDE {
   corrupt.test
   crash.test
   malloc.test
+  malloc2.test
   memleak.test
   misuse.test
   quick.test
