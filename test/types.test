@@ -219,7 +219,7 @@ do_test types-2.2.2 {
   execsql {
     SELECT a FROM t2;
   }
-} {0 12345.678 -12345.678}
+} {0.0 12345.678 -12345.678}
 
 # Check that all the record sizes are as we expected.
 do_test types-2.2.3 {

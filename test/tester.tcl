@@ -40,6 +40,8 @@ if {[sqlite3 -tcl-uses-utf]} {
   }
 }
 
+set tcl_precision 15
+
 # Use the pager codec if it is available
 #
 if {[sqlite3 -has-codec] && [info command sqlite_orig]==""} {

@@ -113,12 +113,12 @@ do_test subselect-3.2 {
   execsql {
     SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x LIMIT 2);
   }
-} {3}
+} {3.0}
 do_test subselect-3.3 {
   execsql {
     SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x DESC LIMIT 2);
   }
-} {11}
+} {11.0}
 do_test subselect-3.4 {
   execsql {
     SELECT (SELECT x FROM t3 ORDER BY x);

@@ -134,7 +134,7 @@ do_test minmax-4.2 {
       (SELECT null, y+1 FROM t1 UNION SELECT * FROM t1)
     GROUP BY y ORDER BY y;
   }
-} {1 1 2 5 3 22 4 92 5 90 6 0}
+} {1 1.0 2 5.0 3 22.0 4 92.0 5 90.0 6 0.0}
 do_test minmax-4.3 {
   execsql {
     SELECT y, count(x), count(*) FROM

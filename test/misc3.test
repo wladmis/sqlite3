@@ -72,13 +72,13 @@ do_test misc3-1.2 {
 #
 do_test misc3-2.1 {
   execsql {SELECT 2e-25*0.5e25}
-} 1
+} 1.0
 do_test misc3-2.2 {
   execsql {SELECT 2.0e-25*000000.500000000000000000000000000000e+00025}
-} 1
+} 1.0
 do_test misc3-2.3 {
   execsql {SELECT 000000000002e-0000000025*0.5e25}
-} 1
+} 1.0
 do_test misc3-2.4 {
   execsql {SELECT 2e-25*0.5e250}
 } 1e+225
