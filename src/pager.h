@@ -24,7 +24,9 @@
 ** experiments show that a page size of 1024 gives the best speed.
 ** (The speed differences are minimal.)
 */
+#ifndef SQLITE_PAGE_SIZE
 #define SQLITE_PAGE_SIZE 1024
+#endif
 
 /*
 ** Maximum number of pages in one database.  (This is a limitation of
@@ -75,6 +77,7 @@ int *sqlitepager_stats(Pager*);
 void sqlitepager_set_safety_level(Pager*,int);
 const char *sqlitepager_filename(Pager*);
 int sqlitepager_rename(Pager*, const char *zNewName);
+void sqlitepager_set_codec(Pager*,void(*)(void*,void*,int),void*);
 
 #ifdef SQLITE_TEST
 void sqlitepager_refdump(Pager*);
