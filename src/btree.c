@@ -3070,6 +3070,9 @@ static int allocatePage(
           if( rc==SQLITE_OK ){
             sqlite3pager_dont_rollback((*ppPage)->aData);
             rc = sqlite3pager_write((*ppPage)->aData);
+            if( rc!=SQLITE_OK ){
+              releasePage(*ppPage);
+            }
           }
           searchList = 0;
         }
@@ -3098,6 +3101,9 @@ static int allocatePage(
     rc = getPage(pBt, *pPgno, ppPage);
     if( rc ) return rc;
     rc = sqlite3pager_write((*ppPage)->aData);
+    if( rc!=SQLITE_OK ){
+      releasePage(*ppPage);
+    }
     TRACE(("ALLOCATE: %d from end of file\n", *pPgno));
   }
 
@@ -4294,6 +4300,7 @@ static int balance_shallower(MemPage *pPage){
     assert( pPage->nOverflow==0 );
 #ifndef SQLITE_OMIT_AUTOVACUUM
     if( pBt->autoVacuum ){
+      int i;
       for(i=0; i<pPage->nCell; i++){ 
         rc = ptrmapPutOvfl(pPage, i);
         if( rc!=SQLITE_OK ){
