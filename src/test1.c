@@ -541,6 +541,18 @@ static int sqlite3_mprintf_int(
 }
 
 /*
+** If zNum represents an integer that will fit in 64-bits, then set
+** *pValue to that integer and return true.  Otherwise return false.
+*/
+static int sqlite3GetInt64(const char *zNum, i64 *pValue){
+  if( sqlite3FitsIn64Bits(zNum) ){
+    sqlite3atoi64(zNum, pValue);
+    return 1;
+  }
+  return 0;
+}
+
+/*
 ** Usage:  sqlite3_mprintf_int64 FORMAT INTEGER INTEGER INTEGER
 **
 ** Call mprintf with three 64-bit integer arguments

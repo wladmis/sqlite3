@@ -1279,6 +1279,23 @@ static int btree_varint_test(
       Tcl_AppendResult(interp, zErr, 0);
       return TCL_ERROR;
     }
+    if( (in & 0xffffffff)==in ){
+      u32 out32;
+      n2 = sqlite3GetVarint32(zBuf, &out32);
+      out = out32;
+      if( n1!=n2 ){
+        sprintf(zErr, "PutVarint returned %d and GetVarint32 returned %d", 
+                  n1, n2);
+        Tcl_AppendResult(interp, zErr, 0);
+        return TCL_ERROR;
+      }
+      if( in!=out ){
+        sprintf(zErr, "Wrote 0x%016llx and got back 0x%016llx from GetVarint32",
+            in, out);
+        Tcl_AppendResult(interp, zErr, 0);
+        return TCL_ERROR;
+      }
+    }
 
     /* In order to get realistic timings, run getVarint 19 more times.
     ** This is because getVarint is called about 20 times more often

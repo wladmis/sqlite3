@@ -1338,7 +1338,6 @@ int sqlite3FixTriggerStep(DbFixer*, TriggerStep*);
 double sqlite3AtoF(const char *z, const char **);
 char *sqlite3_snprintf(int,char*,const char*,...);
 int sqlite3GetInt32(const char *, int*);
-int sqlite3GetInt64(const char *, i64*);
 int sqlite3FitsIn64Bits(const char *);
 int sqlite3utf16ByteLen(const void *pData, int nChar);
 int sqlite3utf8CharLen(const char *pData, int nByte);
