@@ -1406,6 +1406,15 @@ create_cursor_exception:
   return rc;
 }
 
+void sqlite3BtreeSetCompare(
+  BtCursor *pCur,
+  int(* xCmp)(void*,int,const void*,int,const void*),
+  void *pArg
+){
+  pCur->xCompare = xCmp ? xCmp : dfltCompare;
+  pCur->pArg = pArg;
+}
+
 /*
 ** Close a cursor.  The read lock on the database file is released
 ** when the last cursor is closed.

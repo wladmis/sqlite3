@@ -45,7 +45,6 @@ lappend EXCLUDE version.test      ;# uses the btree_meta API (not updated)
 # implementation.
 lappend EXCLUDE misc1.test 
 lappend EXCLUDE capi2.test 
-lappend EXCLUDE sort.test
 lappend EXCLUDE where.test
 
 

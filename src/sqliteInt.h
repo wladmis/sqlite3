@@ -1191,7 +1191,7 @@ void sqlite3CreateIndex(Parse*,Token*,SrcList*,IdList*,int,Token*,Token*);
 void sqlite3DropIndex(Parse*, SrcList*);
 void sqlite3AddKeyType(Vdbe*, ExprList*);
 void sqlite3AddIdxKeyType(Vdbe*, Index*);
-int sqlite3Select(Parse*, Select*, int, int, Select*, int, int*);
+int sqlite3Select(Parse*, Select*, int, int, Select*, int, int*, char *aff);
 Select *sqlite3SelectNew(ExprList*,SrcList*,Expr*,ExprList*,Expr*,ExprList*,
                         int,int,int);
 void sqlite3SelectDelete(Select*);
@@ -1309,3 +1309,4 @@ void sqlite3TableAffinityStr(Vdbe *, Table *);
 char sqlite3CompareAffinity(Expr *pExpr, char aff2);
 char const *sqlite3AffinityString(char affinity);
 int sqlite3IndexAffinityOk(Expr *pExpr, char idx_affinity);
+char sqlite3ExprAffinity(Expr *pExpr);
