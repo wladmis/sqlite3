@@ -18,7 +18,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "sqlite.h"
-#include "sqliteInt.h"
 #include <ctype.h>
 
 #if !defined(_WIN32) && !defined(WIN32) && !defined(__MACOS__)
