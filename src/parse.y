@@ -114,12 +114,12 @@ ccons ::= CHECK LP expr RP.
 conslist_opt ::= .
 conslist_opt ::= COMMA conslist.
 conslist ::= conslist COMMA tcons.
+conslist ::= conslist tcons.
 conslist ::= tcons.
-tcons ::= CONSTRAINT id tcons2.
-tcons ::= tcons2.
-tcons2 ::= PRIMARY KEY LP idxlist(X) RP. {sqliteCreateIndex(pParse,0,0,X,0,0);}
-tcons2 ::= UNIQUE LP idlist RP.
-tcons2 ::= CHECK expr.
+tcons ::= CONSTRAINT id.
+tcons ::= PRIMARY KEY LP idxlist(X) RP. {sqliteCreateIndex(pParse,0,0,X,0,0);}
+tcons ::= UNIQUE LP idlist RP.
+tcons ::= CHECK expr.
 idlist ::= idlist COMMA id.
 idlist ::= id.
 
