@@ -1002,7 +1002,7 @@ static void process_input(struct callback_data *p, FILE *in){
       seenInterrupt = 0;
     }
     if( p->echoOn ) printf("%s\n", zLine);
-    if( _all_whitespace(zLine) ) continue;
+    if( (zSql==0 || zSql[0]==0) && _all_whitespace(zLine) ) continue;
     if( zLine && zLine[0]=='.' && nSql==0 ){
       int rc = do_meta_command(zLine, p);
       free(zLine);
