@@ -154,7 +154,8 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   if( rc!=SQLITE_OK ) goto end_of_vacuum;
   assert( strcmp(db->aDb[db->nDb-1].zName,"vacuum_db")==0 );
   pTemp = db->aDb[db->nDb-1].pBt;
-  sqlite3BtreeSetPageSize(pTemp, sqlite3BtreeGetPageSize(pMain), 0);
+  sqlite3BtreeSetPageSize(pTemp, sqlite3BtreeGetPageSize(pMain),
+     sqlite3BtreeGetReserve(pMain));
   assert( sqlite3BtreeGetPageSize(pTemp)==sqlite3BtreeGetPageSize(pMain) );
   execSql(db, "PRAGMA vacuum_db.synchronous=OFF");
 
