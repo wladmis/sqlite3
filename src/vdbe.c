@@ -4759,6 +4759,14 @@ case OP_MemStore: {
     p->nMem = i + 5;
     aMem = sqliteRealloc(p->aMem, p->nMem*sizeof(p->aMem[0]));
     if( aMem==0 ) goto no_mem;
+    if( aMem!=p->aMem ){
+      int j;
+      for(j=0; j<nOld; j++){
+        if( aMem[j].z==p->aMem[j].s.z ){
+          aMem[j].z = aMem[j].s.z;
+        }
+      }
+    }
     p->aMem = aMem;
     if( nOld<p->nMem ){
       memset(&p->aMem[nOld], 0, sizeof(p->aMem[0])*(p->nMem-nOld));
