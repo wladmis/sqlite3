@@ -84,6 +84,7 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   sqlite3HashInit(&aNew->trigHash, SQLITE_HASH_STRING, 0);
   sqlite3HashInit(&aNew->aFKey, SQLITE_HASH_STRING, 1);
   aNew->zName = zName;
+  aNew->safety_level = 3;
   rc = sqlite3BtreeFactory(db, zFile, 0, MAX_PAGES, &aNew->pBt);
   if( rc ){
     sqlite3ErrorMsg(pParse, "unable to open database: %s", zFile);
