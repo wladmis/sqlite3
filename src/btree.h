@@ -30,6 +30,7 @@ int sqliteBtreeCommit(Btree*);
 int sqliteBtreeRollback(Btree*);
 
 int sqliteBtreeCreateTable(Btree*, int*);
+int sqliteBtreeCreateIndex(Btree*, int*);
 int sqliteBtreeDropTable(Btree*, int);
 int sqliteBtreeClearTable(Btree*, int);
 

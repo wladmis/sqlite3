@@ -439,6 +439,7 @@ WhereInfo *sqliteWhereBegin(
       sqliteVdbeAddOp(v, OP_MustBeInt, 0, brk);
       if( i==pTabList->nId-1 && pushKey ){
         haveKey = 1;
+        sqliteVdbeAddOp(v, OP_Distinct, base+idx, brk);
       }else{
         sqliteVdbeAddOp(v, OP_NotFound, base+idx, brk);
         haveKey = 0;

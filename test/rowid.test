@@ -263,4 +263,25 @@ do_test rowid-5.1 {
   execsql {SELECT max(x) FROM t1}
 } {8}
 
+# Make sure a "WHERE rowid=X" clause works when there is no ROWID of X.
+#
+do_test rowid-6.1 {
+  execsql {
+    SELECT x FROM t1
+  }
+} {1 2 3 4 5 6 7 8}
+do_test rowid-6.2 {
+  for {set ::norow 1} {[execsql {SELECT x FROM t1 WHERE rowid=10}]!=""} \
+    {incr ::norow} {}
+  execsql [subst {
+    DELETE FROM t1 WHERE rowid=$::norow
+  }]
+} {}
+do_test rowid-6.3 {
+  execsql {
+    SELECT x FROM t1
+  }
+} {1 2 3 4 5 6 7 8}
+
+
 finish_test

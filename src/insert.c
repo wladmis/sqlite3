@@ -84,7 +84,7 @@ void sqliteInsert(
   }
 
   /* Figure out how many columns of data are supplied.  If the data
-  ** is comming from a SELECT statement, then this step has to generate
+  ** is coming from a SELECT statement, then this step has to generate
   ** all the code to implement the SELECT statement and leave the data
   ** in a temporary table.  If data is coming from an expression list,
   ** then we just have to count the number of expressions.
