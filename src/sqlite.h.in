@@ -50,8 +50,13 @@ typedef struct sqlite sqlite3;
 **
 ** Call this function with a pointer to a structure that was previously
 ** returned from sqlite3_open() and the corresponding database will by closed.
+**
+** All SQL statements prepared using sqlite3_prepare() or
+** sqlite3_prepare16() must be deallocated using sqlite3_finalize() before
+** this routine is called. Otherwise, SQLITE_BUSY is returned and the
+** database connection remains open.
 */
-void sqlite3_close(sqlite *);
+int sqlite3_close(sqlite *);
 
 /*
 ** The type for a callback function.

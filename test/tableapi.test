@@ -196,6 +196,6 @@ do_test tableapi-5.2 {
 
 do_test tableapi-99.0 {
   sqlite3_close $::dbx
-} {}
+} {SQLITE_OK}
 
 finish_test
