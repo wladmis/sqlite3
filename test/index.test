@@ -204,7 +204,7 @@ do_test index-7.2 {
 } {16}
 do_test index-7.3 {
   set code [execsql {EXPLAIN SELECT f1 FROM test1 WHERE f2=65536}]
-  expr {[lsearch $code test1__primary_key]>0}
+  expr {[lsearch $code {test1 (primary key)}]>0}
 } {1}
 do_test index-7.4 {
   execsql {DROP table test1}
