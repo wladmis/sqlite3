@@ -10,8 +10,7 @@
 **
 *************************************************************************
 ** This module contains C code that generates VDBE code used to process
-** the WHERE clause of SQL statements.  Also found here are subroutines
-** to generate VDBE code to evaluate expressions.
+** the WHERE clause of SQL statements.
 **
 ** $Id$
 */
