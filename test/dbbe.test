@@ -130,7 +130,7 @@ do_test dbbe-3.1 {
   sqlite db testdb 0444
   set v [catch {execsql {INSERT INTO t1 VALUES(1)}} msg]
   lappend v $msg
-} {1 {table t1 is readonly}}
+} {7 {table t1 is readonly}}
 
 
 finish_test

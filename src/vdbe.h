@@ -182,7 +182,7 @@ typedef struct VdbeOp VdbeOp;
 ** Prototypes for the VDBE interface.  See comments on the implementation
 ** for a description of what each of these routines does.
 */
-Vdbe *sqliteVdbeCreate(Dbbe*);
+Vdbe *sqliteVdbeCreate(sqlite*);
 int sqliteVdbeAddOp(Vdbe*,int,int,int,const char*,int);
 int sqliteVdbeAddOpList(Vdbe*, int nOp, VdbeOp const *aOp);
 void sqliteVdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);

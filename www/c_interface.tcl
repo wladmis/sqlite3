@@ -68,6 +68,8 @@ int sqlite_get_table(
 
 void sqlite_free_table(char**);
 
+void sqlite_interrupt(sqlite*);
+
 int sqlite_complete(const char *sql);
 
 void sqlite_busy_handler(sqlite*, int (*)(void*,const char*,int), void*);
@@ -263,6 +265,10 @@ a database file that was originally opened for reading only.  This can
 happen if the callback from a query attempts to update the table
 being queried.
 </p></dd>
+<dt>SQLITE_INTERRUPT</dt>
+<dd><p>This value is returned if a call to <b>sqlite_interrupt()</b>
+interrupts a database operation in progress.
+</p></dd>
 </dl>
 </blockquote>
 
@@ -316,6 +322,14 @@ to <b>sqlite_free_table()</b> when the table is no longer needed.</p>
 
 <p>The <b>sqlite_get_table()</b> routine returns the same integer
 result code as <b>sqlite_exec()</b>.</p>
+
+<h2>Interrupting an SQLite operation</h2>
+
+<p>The <b>sqlite_interrupt()</b> function can be called from a
+different thread or from a signal handler to the current database
+operation to exit at its first opportunity.  When this happens,
+the <b>sqlite_exec()</b> routine (or the equivalent) that started
+the database operation will return SQLITE_INTERRUPT.</p>
 
 <h2>Testing for a complete SQL statement</h2>
 

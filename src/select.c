@@ -424,7 +424,7 @@ static int matchOrderbyToColumn(
 Vdbe *sqliteGetVdbe(Parse *pParse){
   Vdbe *v = pParse->pVdbe;
   if( v==0 ){
-    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
+    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db);
   }
   if( v==0 ){
     sqliteSetString(&pParse->zErrMsg, "out of memory", 0);
@@ -818,7 +818,7 @@ int sqliteSelect(
   */
   v = pParse->pVdbe;
   if( v==0 ){
-    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
+    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db);
   }
   if( v==0 ){
     sqliteSetString(&pParse->zErrMsg, "out of memory", 0);

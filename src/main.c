@@ -154,7 +154,7 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
   /* Create a virtual machine to run the initialization program.  Run
   ** the program.  The delete the virtual machine.
   */
-  vdbe = sqliteVdbeCreate(db->pBe);
+  vdbe = sqliteVdbeCreate(db);
   if( vdbe==0 ){
     sqliteSetString(pzErrMsg, "out of memory",0); 
     return 1;
@@ -227,7 +227,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   if( rc!=SQLITE_OK && rc!=SQLITE_BUSY ){
     sqlite_close(db);
     return 0;
-  }else{
+  }else /* if( pzErrMsg ) */{
     free(*pzErrMsg);
     *pzErrMsg = 0;
   }
@@ -311,9 +311,8 @@ int sqlite_exec(
   sParse.db = db;
   sParse.xCallback = xCallback;
   sParse.pArg = pArg;
-  rc = sqliteRunParser(&sParse, zSql, pzErrMsg);
-  sqliteStrRealloc(pzErrMsg);
-  return rc;
+  sqliteRunParser(&sParse, zSql, pzErrMsg);
+  return sParse.rc;
 }
 
 /*
@@ -381,4 +380,11 @@ void sqlite_busy_timeout(sqlite *db, int ms){
   }else{
     sqlite_busy_handler(db, 0, 0);
   }
+}
+
+/*
+** Cause any pending operation to stop at its earliest opportunity.
+*/
+void sqlite_interrupt(sqlite *db){
+  db->flags |= SQLITE_Interrupt;
 }
