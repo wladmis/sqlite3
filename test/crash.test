@@ -388,5 +388,18 @@ do_test crash-5.5 {
   signature
 } $sig
 
-
+#--------------------------------------------------------------------------
+# The following test cases - crash-6.* - test that a DROP TABLE operation
+# is correctly rolled back in the event of a crash while the database file
+# is being written. This is mainly to test that all pages are written to the
+# journal file before truncation in an auto-vacuum database.
+#
+do_test crash-6.1 {
+  crashsql 1 test.db {
+    DROP TABLE abc;
+  }
+} {1 {child process exited abnormally}}
+do_test crash-6.2 {
+  signature
+} $sig
 
