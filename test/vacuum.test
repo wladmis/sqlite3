@@ -266,4 +266,40 @@ do_test vacuum-8.1 {
 } {}
 db2 close
 
+# Ticket #1095:  Vacuum a table that uses AUTOINCREMENT
+#
+ifcapable {autoinc} {
+  do_test vacuum-9.1 {
+    execsql {
+      DROP TABLE 'abc abc';
+      CREATE TABLE autoinc(a INTEGER PRIMARY KEY AUTOINCREMENT, b);
+      INSERT INTO autoinc(b) VALUES('hi');
+      INSERT INTO autoinc(b) VALUES('there');
+      DELETE FROM autoinc;
+    }
+    set ::cksum [cksum]
+    expr {$::cksum!=""}
+  } {1}
+  do_test vacuum-9.2 {
+    execsql {
+      VACUUM;
+    }
+    cksum
+  } $::cksum
+  do_test vacuum-9.3 {
+    execsql {
+      INSERT INTO autoinc(b) VALUES('one');
+      INSERT INTO autoinc(b) VALUES('two');
+    }
+    set ::cksum [cksum]
+    expr {$::cksum!=""}
+  } {1}
+  do_test vacuum-9.4 {
+    execsql {
+      VACUUM;
+    }
+    cksum
+  } $::cksum
+}
+
 # finish_test
