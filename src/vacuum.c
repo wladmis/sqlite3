@@ -217,8 +217,8 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite *db){
   }
 
 end_of_vacuum:
-  execSql(db, "DETACH vacuum_db;");
   execSql(db, "ROLLBACK;");
+  execSql(db, "DETACH vacuum_db;");
   if( zTemp ){
     sqlite3OsDelete(zTemp);
     sqliteFree(zTemp);

@@ -57,7 +57,7 @@ extern int isatty();
 ** to this database a static variable so that it can be accessed
 ** by the SIGINT handler to interrupt database processing.
 */
-static sqlite *db = 0;
+static sqlite3 *db = 0;
 
 /*
 ** True if an interrupt (Control-C) has been received.
@@ -170,7 +170,7 @@ struct previous_mode_data {
 ** state and mode information.
 */
 struct callback_data {
-  sqlite *db;            /* The database */
+  sqlite3 *db;            /* The database */
   int echoOn;            /* True to echo input commands */
   int cnt;               /* Number of records displayed so far */
   FILE *out;             /* Write results here */

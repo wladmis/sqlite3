@@ -41,6 +41,12 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
     return;
   }
 
+  if( !db->autoCommit ){
+    sqlite3ErrorMsg(pParse, "cannot ATTACH database within transaction");
+    pParse->rc = SQLITE_ERROR;
+    return;
+  }
+
   zFile = 0;
   sqlite3SetNString(&zFile, pFilename->z, pFilename->n, 0);
   if( zFile==0 ) return;
@@ -147,6 +153,11 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   }
   if( i<2 ){
     sqlite3ErrorMsg(pParse, "cannot detach database %T", pDbname);
+    return;
+  }
+  if( !db->autoCommit ){
+    sqlite3ErrorMsg(pParse, "cannot DETACH database within transaction");
+    pParse->rc = SQLITE_ERROR;
     return;
   }
 #ifndef SQLITE_OMIT_AUTHORIZATION

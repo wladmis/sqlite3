@@ -339,6 +339,30 @@ do_test attach2-5.5 {
   glob test.db*
 } {test.db test.db2}
 
+# Check that a database cannot be ATTACHed or DETACHed during a transaction.
+do_test attach2-6.1 {
+  execsql {
+    BEGIN;
+  }
+} {}
+do_test attach2-6.2 {
+  catchsql {
+    ATTACH 'test3.db' as aux2;
+  }
+} {1 {cannot ATTACH database within transaction}}
+
+do_test attach2-6.3 {
+  catchsql {
+    DETACH aux;
+  }
+} {1 {cannot DETACH database within transaction}}
+do_test attach2-6.4 {
+  execsql {
+    COMMIT;
+    DETACH aux;
+  }
+} {}
+
 db close
 
 finish_test
