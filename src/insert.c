@@ -92,7 +92,7 @@ void sqliteInsert(
   if( pSelect ){
     int rc;
     srcTab = pParse->nTab++;
-    sqliteVdbeAddOp(v, OP_Open, srcTab, 1, 0, 0);
+    sqliteVdbeAddOp(v, OP_OpenTbl, srcTab, 1, 0, 0);
     rc = sqliteSelect(pParse, pSelect, SRT_Table, srcTab);
     if( rc ) goto insert_cleanup;
     assert( pSelect->pEList );
@@ -156,9 +156,9 @@ void sqliteInsert(
   ** all indices of that table.
   */
   base = pParse->nTab;
-  sqliteVdbeAddOp(v, OP_Open, base, 1, pTab->zName, 0);
+  sqliteVdbeAddOp(v, OP_OpenTbl, base, 1, pTab->zName, 0);
   for(idx=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, idx++){
-    sqliteVdbeAddOp(v, OP_Open, idx+base, 1, pIdx->zName, 0);
+    sqliteVdbeAddOp(v, OP_OpenIdx, idx+base, 1, pIdx->zName, 0);
   }
 
   /* If the data source is a SELECT statement, then we have to create
