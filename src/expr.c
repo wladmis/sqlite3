@@ -179,7 +179,7 @@ static int codeCompare(
 ** for this node is obtained from sqliteMalloc().  The calling function
 ** is responsible for making sure the node eventually gets freed.
 */
-Expr *sqlite3Expr(int op, Expr *pLeft, Expr *pRight, Token *pToken){
+Expr *sqlite3Expr(int op, Expr *pLeft, Expr *pRight, const Token *pToken){
   Expr *pNew;
   pNew = sqliteMalloc( sizeof(Expr) );
   if( pNew==0 ){

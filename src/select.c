@@ -2547,16 +2547,8 @@ int sqlite3Select(
 
   /* Begin the database scan
   */
-#if 0 /* ndef SQLITE_OMIT_CURSOR */
-  if( p->pFetch ){
-    pWInfo = sqlite3WhereBeginFetch(pParse, pTabList, pWhere,
-                                    pOrderby, p->pFetch);
-  }else
-#endif
-  {
-    pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0,
-                               pGroupBy ? 0 : &pOrderBy);
-  }
+  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0,
+                             pGroupBy ? 0 : &pOrderBy, p->pFetch);
   if( pWInfo==0 ) goto select_end;
 
   /* Use the standard inner loop if we are not dealing with

@@ -498,17 +498,14 @@ static void codeEqualityTerm(
 **
 ** If the where clause loops cannot be arranged to provide the correct
 ** output order, then the *ppOrderBy is unchanged.
-**
-** If parameter iTabCur is non-negative, then it is a cursor already open
-** on table pTabList->aSrc[0]. Use this cursor instead of opening a new
-** one.
 */
 WhereInfo *sqlite3WhereBegin(
   Parse *pParse,        /* The parser context */
   SrcList *pTabList,    /* A list of all tables to be scanned */
   Expr *pWhere,         /* The WHERE clause */
   int pushKey,          /* If TRUE, leave the table key on the stack */
-  ExprList **ppOrderBy  /* An ORDER BY clause, or NULL */
+  ExprList **ppOrderBy, /* An ORDER BY clause, or NULL */
+  Fetch *pFetch         /* Initial location of cursors.  NULL otherwise */
 ){
   int i;                     /* Loop counter */
   WhereInfo *pWInfo;         /* Will become the return value of this function */
@@ -528,6 +525,9 @@ WhereInfo *sqlite3WhereBegin(
   ** UPDATE statement)
   */
   assert( pushKey==0 || pTabList->nSrc==1 );
+
+  /*
+  */
 
   /* Split the WHERE clause into separate subexpressions where each
   ** subexpression is separated by an AND operator.  If the aExpr[]
