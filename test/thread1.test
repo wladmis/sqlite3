@@ -147,12 +147,12 @@ do_test thread1-2.9 {
   thread_result C
 } SQLITE_DONE
 do_test thread1-2.10 {
-  execsql {SELECT * FROM t2}
-} {98 99}
-do_test thread1-2.11 {
   thread_finalize C
   thread_result C
 } SQLITE_OK
+do_test thread1-2.11 {
+  execsql {SELECT * FROM t2}
+} {98 99}
 
 thread_halt *   
 finish_test
