@@ -899,7 +899,7 @@ void sqliteDropTable(Parse *pParse, Token *pName){
     sqliteBeginWriteOperation(pParse);
     if( !pTable->isTemp ){
       base = sqliteVdbeAddOpList(v, ArraySize(dropTable), dropTable);
-      sqliteVdbeChangeP3(v, base+2, pTable->zName, P3_STATIC);
+      sqliteVdbeChangeP3(v, base+2, pTable->zName, 0);
       changeCookie(db);
       sqliteVdbeChangeP1(v, base+9, db->next_cookie);
     }

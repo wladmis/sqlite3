@@ -228,10 +228,12 @@ WhereInfo *sqliteWhereBegin(
   ** iDirectEq[], iDirectLt[], or iDirectGt[] elements for that table
   ** to the index of the term containing the ROWID.  We always prefer
   ** to use a ROWID which can directly access a table rather than an
-  ** index which requires two accesses.
+  ** index which requires reading an index first to get the rowid then
+  ** doing a second read of the actual database table.
   **
   ** Actually, if there are more than 32 tables in the join, only the
-  ** first 32 tables are candidates for indices.
+  ** first 32 tables are candidates for indices.  This is (again) due
+  ** to the limit of 32 bits in an integer bitmask.
   */
   loopMask = 0;
   for(i=0; i<pTabList->nId && i<ARRAYSIZE(aDirect); i++){

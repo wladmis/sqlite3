@@ -203,18 +203,18 @@ cmd ::= select(X).  {
 %destructor oneselect {sqliteSelectDelete($$);}
 
 select(A) ::= oneselect(X).                      {A = X;}
-select(A) ::= select(X) joinop(Y) oneselect(Z).  {
+select(A) ::= select(X) multiselect_op(Y) oneselect(Z).  {
   if( Z ){
     Z->op = Y;
     Z->pPrior = X;
   }
   A = Z;
 }
-%type joinop {int}
-joinop(A) ::= UNION.      {A = TK_UNION;}
-joinop(A) ::= UNION ALL.  {A = TK_ALL;}
-joinop(A) ::= INTERSECT.  {A = TK_INTERSECT;}
-joinop(A) ::= EXCEPT.     {A = TK_EXCEPT;}
+%type multiselect_op {int}
+multiselect_op(A) ::= UNION.      {A = TK_UNION;}
+multiselect_op(A) ::= UNION ALL.  {A = TK_ALL;}
+multiselect_op(A) ::= INTERSECT.  {A = TK_INTERSECT;}
+multiselect_op(A) ::= EXCEPT.     {A = TK_EXCEPT;}
 oneselect(A) ::= SELECT distinct(D) selcollist(W) from(X) where_opt(Y)
                  groupby_opt(P) having_opt(Q) orderby_opt(Z) limit_opt(L). {
   A = sqliteSelectNew(W,X,Y,P,Q,Z,D,L.a,L.b);
