@@ -307,6 +307,7 @@ void sqlite3Insert(
       */
       sqlite3VdbeChangeP2(v, iInitCode, sqlite3VdbeCurrentAddr(v));
       sqlite3VdbeAddOp(v, OP_OpenTemp, srcTab, 0);
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, srcTab, pTab->nCol);
       sqlite3VdbeAddOp(v, OP_Goto, 0, iSelectLoop);
       sqlite3VdbeResolveLabel(v, iCleanup);
     }else{
@@ -1001,6 +1002,7 @@ int sqlite3OpenTableAndIndices(Parse *pParse, Table *pTab, int base){
   assert( v!=0 );
   sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
   sqlite3VdbeOp3(v, OP_OpenWrite, base, pTab->tnum, pTab->zName, P3_STATIC);
+  sqlite3VdbeAddOp(v, OP_SetNumColumns, base, pTab->nCol);
   for(i=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
     sqlite3VdbeAddOp(v, OP_Integer, pIdx->iDb, 0);
     sqlite3VdbeOp3(v, OP_OpenWrite, i+base, pIdx->tnum, pIdx->zName, P3_STATIC);

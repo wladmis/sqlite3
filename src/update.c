@@ -258,6 +258,7 @@ void sqlite3Update(
     if( !isView ){
       sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
       sqlite3VdbeAddOp(v, OP_OpenRead, iCur, pTab->tnum);
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
     }
     sqlite3VdbeAddOp(v, OP_MoveTo, iCur, 0);
 
@@ -313,6 +314,7 @@ void sqlite3Update(
     */
     sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
     sqlite3VdbeAddOp(v, OP_OpenWrite, iCur, pTab->tnum);
+    sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
     if( onError==OE_Replace ){
       openAll = 1;
     }else{

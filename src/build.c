@@ -407,6 +407,7 @@ char *sqlite3TableNameFromToken(Token *pName){
 void sqlite3OpenMasterTable(Vdbe *v, int isTemp){
   sqlite3VdbeAddOp(v, OP_Integer, isTemp, 0);
   sqlite3VdbeAddOp(v, OP_OpenWrite, 0, MASTER_ROOT);
+  sqlite3VdbeAddOp(v, OP_SetNumColumns, 0, 5); /* sqlite_master has 5 columns */
 }
 
 /*
@@ -1724,6 +1725,7 @@ void sqlite3CreateIndex(
     if( pTable ){
       sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
       sqlite3VdbeOp3(v, OP_OpenRead, 2, pTab->tnum, pTab->zName, 0);
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, 2, pTab->nCol);
       lbl2 = sqlite3VdbeMakeLabel(v);
       sqlite3VdbeAddOp(v, OP_Rewind, 2, lbl2);
       lbl1 = sqlite3VdbeAddOp(v, OP_Recno, 2, 0);
