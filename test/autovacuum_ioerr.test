@@ -16,6 +16,14 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+
+# If this build of the library does not support auto-vacuum, omit this
+# whole file.
+ifcapable {!autovacuum} {
+  finish_test
+  return
+}
+
 rename finish_test really_finish_test2
 proc finish_test {} {}
 set ISQUICK 1

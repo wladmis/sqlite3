@@ -40,6 +40,7 @@ proc catchsql2 {sql} {
 do_test misuse-1.1 {
   db close
   catch {file delete -force test2.db}
+  catch {file delete -force test2.db-journal}
   set ::DB [sqlite3 db test2.db]
   execsql {
     CREATE TABLE t1(a,b);

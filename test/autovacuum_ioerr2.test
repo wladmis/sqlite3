@@ -20,6 +20,13 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# If this build of the library does not support auto-vacuum, omit this
+# whole file.
+ifcapable {!autovacuum} {
+  finish_test
+  return
+}
+
 proc opendb {} {
   catch {file delete -force test.db}
   catch {file delete -force test.db-journal}
