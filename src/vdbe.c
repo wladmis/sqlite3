@@ -582,7 +582,7 @@ void sqliteVdbeDequoteP3(Vdbe *p, int addr){
 ** delete leading and trailing whitespace.
 */
 void sqliteVdbeCompressSpace(Vdbe *p, int addr){
-  char *z;
+  unsigned char *z;
   int i, j;
   Op *pOp;
   assert( p->magic==VDBE_MAGIC_INIT );
@@ -595,7 +595,7 @@ void sqliteVdbeCompressSpace(Vdbe *p, int addr){
     pOp->p3 = sqliteStrDup(pOp->p3);
     pOp->p3type = P3_DYNAMIC;
   }
-  z = pOp->p3;
+  z = (unsigned char*)pOp->p3;
   if( z==0 ) return;
   i = j = 0;
   while( isspace(z[i]) ){ i++; }
