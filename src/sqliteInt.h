@@ -700,9 +700,9 @@ struct Index {
 ** and Token.n when Token.z==0.
 */
 struct Token {
-  const char *z;      /* Text of the token.  Not NULL-terminated! */
-  unsigned dyn  : 1;  /* True for malloced memory, false for static */
-  unsigned n    : 31; /* Number of characters in this token */
+  const unsigned char *z; /* Text of the token.  Not NULL-terminated! */
+  unsigned dyn  : 1;      /* True for malloced memory, false for static */
+  unsigned n    : 31;     /* Number of characters in this token */
 };
 
 /*

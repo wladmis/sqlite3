@@ -24,8 +24,8 @@
 /*
 ** Interpret the given string as a boolean value.
 */
-static int getBoolean(const char *z){
-  static char *azTrue[] = { "yes", "on", "true" };
+static int getBoolean(const u8 *z){
+  static const u8 *azTrue[] = { "yes", "on", "true" };
   int i;
   if( z[0]==0 ) return 0;
   if( isdigit(z[0]) || (z[0]=='-' && isdigit(z[1])) ){
@@ -47,9 +47,9 @@ static int getBoolean(const char *z){
 ** to support legacy SQL code.  The safety level used to be boolean
 ** and older scripts may have used numbers 0 for OFF and 1 for ON.
 */
-static int getSafetyLevel(char *z){
+static int getSafetyLevel(u8 *z){
   static const struct {
-    const char *zWord;
+    const u8 *zWord;
     int val;
   } aKey[] = {
     { "no",    0 },

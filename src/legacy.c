@@ -108,7 +108,7 @@ int sqlite3_exec(
         if( rc!=SQLITE_SCHEMA ){
           nRetry = 0;
           zSql = zLeftover;
-          while( isspace(zSql[0]) ) zSql++;
+          while( isspace((unsigned char)zSql[0]) ) zSql++;
         }
         break;
       }

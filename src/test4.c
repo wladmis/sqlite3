@@ -106,7 +106,7 @@ static void *thread_main(void *pArg){
 ** the interpreter and return -1.
 */
 static int parse_thread_id(Tcl_Interp *interp, const char *zArg){
-  if( zArg==0 || zArg[0]==0 || zArg[1]!=0 || !isupper(zArg[0]) ){
+  if( zArg==0 || zArg[0]==0 || zArg[1]!=0 || !isupper((unsigned char)zArg[0]) ){
     Tcl_AppendResult(interp, "thread ID must be an upper case letter", 0);
     return -1;
   }

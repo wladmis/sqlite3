@@ -513,7 +513,7 @@ int sqlite3ExprIsInteger(Expr *p, int *pValue){
       break;
     }
     case TK_STRING: {
-      const char *z = p->token.z;
+      const u8 *z = (u8*)p->token.z;
       int n = p->token.n;
       if( n>0 && z[0]=='-' ){ z++; n--; }
       while( n>0 && *z && isdigit(*z) ){ z++; n--; }
