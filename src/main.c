@@ -478,6 +478,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   db->magic = SQLITE_MAGIC_BUSY;
   db->nDb = 2;
   db->aDb = db->aDbStatic;
+  db->flags |= SQLITE_ShortColNames;
   sqliteHashInit(&db->aFunc, SQLITE_HASH_STRING, 1);
   for(i=0; i<db->nDb; i++){
     sqliteHashInit(&db->aDb[i].tblHash, SQLITE_HASH_STRING, 0);

@@ -310,6 +310,14 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "short_column_names")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_ShortColNames;
+    }else{
+      db->flags &= ~SQLITE_ShortColNames;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "show_datatypes")==0 ){
     if( getBoolean(zRight) ){
       db->flags |= SQLITE_ReportTypes;
