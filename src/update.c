@@ -436,7 +436,7 @@ void sqliteUpdate(
   ** Return the number of rows that were changed.
   */
   if( db->flags & SQLITE_CountRows && !pParse->trigStack ){
-    sqliteVdbeAddOp(v, OP_ColumnName, 0, 0);
+    sqliteVdbeAddOp(v, OP_ColumnName, 0, 1);
     sqliteVdbeChangeP3(v, -1, "rows updated", P3_STATIC);
     sqliteVdbeAddOp(v, OP_Callback, 1, 0);
   }

@@ -541,7 +541,7 @@ void sqliteInsert(
   ** Return the number of rows inserted.
   */
   if( db->flags & SQLITE_CountRows ){
-    sqliteVdbeAddOp(v, OP_ColumnName, 0, 0);
+    sqliteVdbeAddOp(v, OP_ColumnName, 0, 1);
     sqliteVdbeChangeP3(v, -1, "rows inserted", P3_STATIC);
     sqliteVdbeAddOp(v, OP_MemLoad, iCntMem, 0);
     sqliteVdbeAddOp(v, OP_Callback, 1, 0);
