@@ -253,9 +253,9 @@ static int callback(void *pArg, int nArg, char **azArg, char **azCol){
              w = 0;
           }
           if( w<=0 ){
-            w = strlen(azCol[i]);
+            w = strlen(azCol[i] ? azCol[i] : "");
             if( w<10 ) w = 10;
-            n = strlen(azArg[i]);
+            n = strlen(azArg[i] ? azArg[i] : "");
             if( w<n ) w = n;
           }
           if( i<ArraySize(p->actualWidth) ){
