@@ -437,6 +437,10 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** callback string is returned.
   */
   case DB_AUTHORIZER: {
+#ifdef SQLITE_OMIT_AUTHORIZATION
+    Tcl_AppendResult(interp, "authorization not available in this build", 0);
+    return TCL_ERROR;
+#else
     if( objc>3 ){
       Tcl_WrongNumArgs(interp, 2, objv, "?CALLBACK?");
       return TCL_ERROR;
@@ -457,15 +461,14 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       }else{
         pDb->zAuth = 0;
       }
-#ifndef SQLITE_OMIT_AUTHORIZATION
       if( pDb->zAuth ){
         pDb->interp = interp;
         sqlite3_set_authorizer(pDb->db, auth_callback, pDb);
       }else{
         sqlite3_set_authorizer(pDb->db, 0, 0);
       }
-#endif
     }
+#endif
     break;
   }
 

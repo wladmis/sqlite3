@@ -20,6 +20,10 @@ source $testdir/tester.tcl
 
 # disable this test if the SQLITE_OMIT_AUTHORIZATION macro is
 # defined during compilation.
+if {[catch {db auth {}} msg]} {
+  finish_test
+  return
+}
 
 do_test auth-1.1.1 {
   db close

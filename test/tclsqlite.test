@@ -74,10 +74,12 @@ do_test tcl-1.7 {
   set v [catch {db} msg]
   lappend v $msg
 } {1 {wrong # args: should be "db SUBCOMMAND ..."}}
-do_test tcl-1.8 {
-  set v [catch {db authorizer 1 2 3} msg]
-  lappend v $msg
-} {1 {wrong # args: should be "db authorizer ?CALLBACK?"}}
+if {[catch {db auth {}}]==0} {
+  do_test tcl-1.8 {
+    set v [catch {db authorizer 1 2 3} msg]
+    lappend v $msg
+  } {1 {wrong # args: should be "db authorizer ?CALLBACK?"}}
+}
 do_test tcl-1.9 {
   set v [catch {db busy 1 2 3} msg]
   lappend v $msg
