@@ -265,3 +265,5 @@ do_test rowid-5.1 {
   execsql {DELETE FROM t1 WHERE _rowid_ IN (SELECT oid FROM t1 WHERE x>8)}
   execsql {SELECT max(x) FROM t1}
 } {8}
+
+finish_test
