@@ -36,6 +36,11 @@
 #include <assert.h>
 
 /*
+** The paging system deals with 32-bit integers.
+*/
+typedef unsigned int u32;
+
+/*
 ** If memory allocation problems are found, recompile with
 **
 **      -DMEMORY_DEBUG=1

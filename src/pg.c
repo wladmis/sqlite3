@@ -695,7 +695,15 @@ int sqlitePgTouch(void *pD){
 ** Return the number of the first unused page at the end of the
 ** database file.
 */
-int sqlitePgAlloc(Pgr *p, int *pPgno){
+int sqlitePgAlloc(Pgr *p, u32 *pPgno){
   *pPgno = p->nDbPg;
   return SQLITE_OK;
+}
+
+/*
+** Return the page number associated with the given page.
+*/
+u32 sqlitePgNum(void *pD){
+  Pghdr *pPg = DATA_TO_PG(pD);
+  return pPg->dbpgno;
 }

@@ -33,21 +33,20 @@ int sqliteDbBeginTransaction(Db*);
 int sqliteDbCommit(Db*);
 int sqliteDbRollback(Db*);
 
-int sqliteDbCreateTable(Db*, int *pPgno);
-int sqliteDbDropTable(Db*, int pgno);
+int sqliteDbCreateTable(Db*, int *pTblno);
+int sqliteDbDropTable(Db*, int tblno);
 
-int sqliteDbCursorOpen(Db*, int pgno, DbCursor**);
+int sqliteDbCursorOpen(Db*, int tblno, DbCursor**);
 int sqliteDbCursorClose(DbCursor*);
 
-int sqliteDbCursorMoveTo(DbCursor*, int key);
 int sqliteDbCursorFirst(DbCursor*);
 int sqliteDbCursorNext(DbCursor*);
-int sqliteDbCursorDelete(DbCursor*);
 int sqliteDbCursorDatasize(DbCursor*);
-int sqliteDbCursorRead(DbCursor*, int amt, int offset, char *buf);
-int sqliteDbCursorInsert(DbCursor*, int key, int nData, char *pData);
-
-int sqliteDbCursorMoveToIdx(DbCursor*, int nKey, char *pKey);
 int sqliteDbCursorKeysize(DbCursor*);
+int sqliteDbCursorRead(DbCursor*, int amt, int offset, char *buf);
 int sqliteDbCursorReadKey(DbCursor*, int amt, int offset, char *buf);
-int sqliteDbCursorInsertIdx(DbCursor*, int nKey, char *pKey, int nData, char*);
+int sqliteDbCursorMoveTo(DbCursor*, int nKey, void *pKey);
+int sqliteDbCursorDelete(DbCursor*);
+int sqliteDbCursorInsert(DbCursor*, int nKey, void *pKey, int nData, void *pD);
+
+int sqliteDbReorganize(Db*);

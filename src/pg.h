@@ -27,10 +27,6 @@
 typedef struct Pgr Pgr;
 #define SQLITE_PAGE_SIZE 1024
 
-/*
-** The paging system deals with 32-bit integers.
-*/
-typedef unsigned int u32;
 
 int sqlitePgOpen(const char *filename, Pgr **pp);
 int sqlitePgClose(Pgr*);
@@ -40,4 +36,5 @@ int sqlitePgRollback(Pgr*);
 int sqlitePgGet(Pgr*, u32 pgno, void **);
 int sqlitePgUnref(void*);
 int sqlitePgTouch(void*);
-int sqlitePgAlloc(Pgr*, int*);
+int sqlitePgAlloc(Pgr*, u32*);
+u32 sqlitePgNum(void*);
