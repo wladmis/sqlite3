@@ -575,6 +575,7 @@ foreach {code english} $code2english {
 }
 
 # Test the error message when a "real" out of memory occurs.
+if {[info command sqlite_malloc_stat]!=""} {
 set sqlite_malloc_fail 1
 do_test capi3-10-1 {
   set ::DB [sqlite3 db test.db]
@@ -591,6 +592,7 @@ do_test capi3-10-3 {
 } {out of memory}
 db close
 sqlite_malloc_fail 0
+}
 
 finish_test
 
