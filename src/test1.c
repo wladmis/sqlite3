@@ -1300,7 +1300,7 @@ static int test_open(
   }
 
   zFilename = Tcl_GetString(objv[1]);
-  rc = sqlite3_open(zFilename, &db, 0);
+  rc = sqlite3_open(zFilename, &db);
   
   if( makePointerStr(interp, zBuf, db) ) return TCL_ERROR;
   Tcl_AppendResult(interp, zBuf, 0);
@@ -1328,7 +1328,7 @@ static int test_open16(
   }
 
   zFilename = Tcl_GetByteArrayFromObj(objv[1], 0);
-  rc = sqlite3_open16(zFilename, &db, 0);
+  rc = sqlite3_open16(zFilename, &db);
   
   if( makePointerStr(interp, zBuf, db) ) return TCL_ERROR;
   Tcl_AppendResult(interp, zBuf, 0);

@@ -66,7 +66,7 @@ static void *thread_main(void *pArg){
   if( p->db ){
     sqlite3_close(p->db);
   }
-  sqlite3_open(p->zFilename, &p->db, 0);
+  sqlite3_open(p->zFilename, &p->db);
   if( SQLITE_OK!=sqlite3_errcode(p->db) ){
     p->zErr = strdup(sqlite3_errmsg(p->db));
     sqlite3_close(p->db);

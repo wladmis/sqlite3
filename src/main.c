@@ -1041,8 +1041,7 @@ opendb_out:
 */
 int sqlite3_open(
   const char *zFilename, 
-  sqlite3 **ppDb, 
-  const char **options
+  sqlite3 **ppDb 
 ){
   return openDatabase(zFilename, ppDb);
 }
@@ -1052,8 +1051,7 @@ int sqlite3_open(
 */
 int sqlite3_open16(
   const void *zFilename, 
-  sqlite3 **ppDb, 
-  const char **options
+  sqlite3 **ppDb
 ){
   char *zFilename8;   /* zFilename encoded in UTF-8 instead of UTF-16 */
   int rc;

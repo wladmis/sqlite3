@@ -487,13 +487,11 @@ void *sqlite3_commit_hook(sqlite*, int(*)(void*), void*);
 */
 int sqlite3_open(
   const char *filename,   /* Database filename (UTF-8) */
-  sqlite3 **ppDb,         /* OUT: SQLite db handle */
-  const char **args       /* Null terminated array of option strings */
+  sqlite3 **ppDb          /* OUT: SQLite db handle */
 );
 int sqlite3_open16(
   const void *filename,   /* Database filename (UTF-16) */
-  sqlite3 **ppDb,         /* OUT: SQLite db handle */
-  const char **args       /* Null terminated array of option strings */
+  sqlite3 **ppDb          /* OUT: SQLite db handle */
 );
 
 /*

@@ -692,7 +692,7 @@ static void open_db(struct callback_data *p){
     db = p->db = sqlite3_open_encrypted(p->zDbFilename, p->zKey, n, 0, &zErrMsg);
     assert(0); /* Encrypted databases are broken in SQLite 3 */
 #else
-    sqlite3_open(p->zDbFilename, &p->db, 0);
+    sqlite3_open(p->zDbFilename, &p->db);
     db = p->db;
 #endif
     if( SQLITE_OK!=sqlite3_errcode(db) ){

@@ -662,10 +662,10 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   pCol->zName = z;
  
   /* If there is no type specified, columns have the default affinity
-  ** 'NUMERIC'. If there is a type specified, then sqlite3AddColumnType()
-  ** will be called next to set pCol->affinity correctly.
+  ** 'NONE'. If there is a type specified, then sqlite3AddColumnType() will
+  ** be called next to set pCol->affinity correctly.
   */
-  pCol->affinity = SQLITE_AFF_NUMERIC;
+  pCol->affinity = SQLITE_AFF_NONE;
   pCol->pColl = pParse->db->pDfltColl;
   p->nCol++;
 }
