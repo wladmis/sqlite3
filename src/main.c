@@ -187,7 +187,7 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
 /*
 ** The version of the library
 */
-const char sqlite_version[] = SQLITE_VERSION_STRING;
+const char sqlite_version[] = SQLITE_VERSION;
 
 /*
 ** Open a new SQLite database.  Construct an "sqlite" structure to define
