@@ -160,14 +160,15 @@ void *sqliteRealloc_(void *oldP, int n, char *zFile, int line){
   oldPi = oldP;
   oldPi -= N_GUARD+1;
   if( oldPi[0]!=0xdead1122 ){
-    fprintf(stderr,"Low-end memory corruption in realloc at 0x%x\n", (int)p);
+    fprintf(stderr,"Low-end memory corruption in realloc at 0x%x\n", (int)oldP);
     return 0;
   }
   oldN = oldPi[N_GUARD];
   oldK = (oldN+sizeof(int)-1)/sizeof(int);
   for(i=0; i<N_GUARD; i++){
     if( oldPi[oldK+N_GUARD+1+i]!=0xdead3344 ){
-      fprintf(stderr,"High-end memory corruption in realloc at 0x%x\n", (int)p);
+      fprintf(stderr,"High-end memory corruption in realloc at 0x%x\n",
+              (int)oldP);
       return 0;
     }
   }
