@@ -5864,7 +5864,8 @@ default: {
         assert( (pTos->flags & (MEM_Static|MEM_Dyn|MEM_Ephem|MEM_Short))==0 );
       }
       /* MEM_Null excludes all other types */
-      assert( pTos->flags==MEM_Null || (pTos->flags&MEM_Null)==0 );
+      assert( (pTos->flags&(MEM_Str|MEM_Int|MEM_Real|MEM_Blob))==0
+              || (pTos->flags&MEM_Null)==0 );
     }
     if( pc<-1 || pc>=p->nOp ){
       sqlite3SetString(&p->zErrMsg, "jump destination out of range", (char*)0);
