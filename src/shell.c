@@ -1039,7 +1039,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
       i = 0;
       lineno++;
       azCol[0] = zLine;
-      for(i=0, z=zLine; *z; z++){
+      for(i=0, z=zLine; *z && *z!='\n' && *z!='\r'; z++){
         if( *z==p->separator[0] && strncmp(z, p->separator, nSep)==0 ){
           *z = 0;
           i++;
