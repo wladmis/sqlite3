@@ -64,7 +64,7 @@ for memory leaks and is found to be clean.</p>
 <p><b>Important Note:</b>  A bug was found in the processing of UPDATE
 statements when the WHERE clause contained some terms that could be 
 satisfied using indices and other terms which could not.  The problem
-was fixed in version 1.0.21.  Users of prior versions of SQLite should
+was fixed in version 1.0.22.  Users of prior versions of SQLite should
 consider upgrading.</p>
 
 <p>

@@ -578,7 +578,7 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
       }
       iBreak = sqliteVdbeMakeLabel(v);
       iCont = sqliteVdbeAddOp(v, OP_Next, tab1, iBreak, 0, 0);
-      sqliteVdbeAddOp(v, OP_Key, tab1, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_FullKey, tab1, 0, 0, 0);
       sqliteVdbeAddOp(v, OP_NotFound, tab2, iCont, 0, 0);
       rc = selectInnerLoop(pParse, 0, tab1, p->pEList->nExpr,
                              p->pOrderBy, -1, eDest, iParm, 
