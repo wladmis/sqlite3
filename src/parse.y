@@ -48,7 +48,8 @@ struct LimitVal {
 ** Then the "b" IdList records the list "a,b,c".
 */
 struct TrigEvent { int a; IdList * b; };
-}
+
+} // end %include
 
 // These are extra tokens used by the lexer but never seen by the
 // parser.  We put them in a rule so that the parser generator will

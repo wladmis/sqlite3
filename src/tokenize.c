@@ -442,7 +442,7 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
         sqliteSetNString(pzErrMsg, "unrecognized token: \"", -1, 
            pParse->sLastToken.z, pParse->sLastToken.n, "\"", 1, 0);
         nErr++;
-        goto abort_parse;cvs
+        goto abort_parse;
       }
       default: {
         sqliteParser(pEngine, tokenType, pParse->sLastToken, pParse);
