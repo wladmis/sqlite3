@@ -325,6 +325,23 @@ static int sqlite_malloc_stat(
 #endif
 
 /*
+** Usage:  sqlite_abort
+**
+** Shutdown the process immediately.  This is not a clean shutdown.
+** This command is used to test the recoverability of a database in
+** the event of a program crash.
+*/
+static int sqlite_abort(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  assert( interp==0 );   /* This will always fail */
+  return TCL_OK;
+}
+
+/*
 ** Register commands with the TCL interpreter.
 */
 int Sqlitetest1_Init(Tcl_Interp *interp){
@@ -344,5 +361,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   Tcl_CreateCommand(interp, "sqlite_malloc_fail", sqlite_malloc_fail, 0, 0);
   Tcl_CreateCommand(interp, "sqlite_malloc_stat", sqlite_malloc_stat, 0, 0);
 #endif
+  Tcl_CreateCommand(interp, "sqlite_abort", sqlite_abort, 0, 0);
   return TCL_OK;
 }

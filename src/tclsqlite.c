@@ -531,6 +531,12 @@ static int DbMain(void *cd, Tcl_Interp *interp, int argc, char **argv){
     return TCL_ERROR;
   }
   Tcl_CreateObjCommand(interp, argv[1], DbObjCmd, (char*)p, DbDeleteCmd);
+#ifdef SQLITE_TEST
+  {
+     extern void Md5_Register(sqlite*);
+     Md5_Register(p->db);
+  }
+#endif  
   return TCL_OK;
 }
 
