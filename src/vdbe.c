@@ -2820,7 +2820,7 @@ int sqliteVdbeExec(
           sqliteFree(p->agg.apHash);
           p->agg.apHash = 0;
           p->agg.pCurrent = p->agg.pFirst;
-        }else if( p->agg.pCurrent==p->agg.pFirst ){
+        }else if( p->agg.pCurrent==p->agg.pFirst && p->agg.pCurrent!=0 ){
           int i;
           AggElem *pElem = p->agg.pCurrent;
           for(i=0; i<p->agg.nMem; i++){
