@@ -124,6 +124,7 @@ id(A) ::= OFFSET(X).     {A = X;}
 id(A) ::= PRAGMA(X).     {A = X;}
 id(A) ::= REPLACE(X).    {A = X;}
 id(A) ::= ROW(X).        {A = X;}
+id(A) ::= STATEMENT(X).  {A = X;}
 id(A) ::= TEMP(X).       {A = X;}
 id(A) ::= TRIGGER(X).    {A = X;}
 id(A) ::= VACUUM(X).     {A = X;}
