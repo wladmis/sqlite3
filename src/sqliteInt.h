@@ -977,8 +977,6 @@ struct Select {
   ExprList *pEList;      /* The fields of the result */
   u8 op;                 /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
   u8 isDistinct;         /* True if the DISTINCT keyword is present */
-  u8 isAgg;              /* True if uses aggregate functions */
-  u8 namesResolved;      /* True if processed by sqlite3ExprResolve() */
   SrcList *pSrc;         /* The FROM clause */
   Expr *pWhere;          /* The WHERE clause */
   ExprList *pGroupBy;    /* The GROUP BY clause */
