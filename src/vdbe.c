@@ -1970,7 +1970,7 @@ int sqliteVdbeExec(
       /* Opcode: KeyAsData P1 P2 *
       **
       ** Turn the key-as-data mode for cursor P1 either on (if P2==1) or
-      ** off (if P2==0).  In key-as-data mode, the OP_Fetch opcode pulls
+      ** off (if P2==0).  In key-as-data mode, the OP_Field opcode pulls
       ** data off of the key rather than the data.  This is useful for
       ** processing compound selects.
       */
