@@ -547,7 +547,7 @@ static int hardStringify(Vdbe *p, int i){
   char zBuf[30];
   int fg = p->aStack[i].flags;
   if( fg & STK_Real ){
-    sprintf(zBuf,"%g",p->aStack[i].r);
+    sprintf(zBuf,"%.15g",p->aStack[i].r);
   }else if( fg & STK_Int ){
     sprintf(zBuf,"%d",p->aStack[i].i);
   }else{
