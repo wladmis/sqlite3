@@ -1351,3 +1351,4 @@ int sqlite3atoi64(const char*, i64*);
 void sqlite3Error(sqlite *, int, const char*,...);
 int sqlite3utfTranslate(const void *, int , u8 , void **, int *, u8);
 u8 sqlite3UtfReadBom(const void *zData, int nData);
+char *sqlite3HexToBlob(const char *z);

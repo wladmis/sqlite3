@@ -815,10 +815,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
           if( SQLITE3_BLOB!=sqlite3_column_type(pStmt, i) ){
             pVal = Tcl_NewStringObj(sqlite3_column_text(pStmt, i), -1);
           }else{
-            pVal = Tcl_NewByteArrayObj(
-              sqlite3_column_blob(pStmt, i),
-              sqlite3_column_bytes(pStmt, i)
-            );
+            int bytes = sqlite3_column_bytes(pStmt, i);
+            pVal = Tcl_NewByteArrayObj(sqlite3_column_blob(pStmt, i), bytes);
           }
   
           if( objc==5 ){

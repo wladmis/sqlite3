@@ -377,14 +377,19 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
     }
     case 'x': case 'X': {
       if( z[1]=='\'' || z[1]=='"' ){
-        int delim = z[0];
-        for(i=1; z[i]; i++){
+        int delim = z[1];
+        *tokenType = TK_BLOB;
+        for(i=2; z[i]; i++){
           if( z[i]==delim ){
+            if( i%2 ) *tokenType = TK_ILLEGAL;
             break;
+          }
+          if( !isxdigit(z[i]) ){
+            *tokenType = TK_ILLEGAL;
+            return i;
           }
         }
         if( z[i] ) i++;
-        *tokenType = TK_BLOB;
         return i;
       }
       /* Otherwise fall through to the next case */
