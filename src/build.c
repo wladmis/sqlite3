@@ -2421,7 +2421,7 @@ void sqlite3CreateIndex(
 
     /* Create the rootpage for the index
     */
-    sqlite3BeginWriteOperation(pParse, 0, iDb);
+    sqlite3BeginWriteOperation(pParse, 1, iDb);
     sqlite3VdbeAddOp(v, OP_CreateIndex, iDb, 0);
     sqlite3VdbeAddOp(v, OP_MemStore, iMem, 0);
 
