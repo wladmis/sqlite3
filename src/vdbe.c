@@ -2845,6 +2845,8 @@ case OP_Commit: {
   if( rc==SQLITE_OK ){
     sqliteCommitInternalChanges(db);
   }else{
+    if( db->pBeTemp ) sqliteBtreeRollback(db->pBeTemp);
+    sqliteBtreeRollback(pBt);
     sqliteRollbackInternalChanges(db);
   }
   break;
