@@ -4153,8 +4153,8 @@ static int balance_nonroot(MemPage *pPage){
   j = 0;
   for(i=0; i<nNew; i++){
     /* Assemble the new sibling page. */
-    assert( j<nMaxCells );
     MemPage *pNew = apNew[i];
+    assert( j<nMaxCells );
     assert( pNew->pgno==pgnoNew[i] );
     assemblePage(pNew, cntNew[i]-j, &apCell[j], &szCell[j]);
     assert( pNew->nCell>0 );
