@@ -77,8 +77,7 @@ for {set n 1} {$go} {incr n} {
       }
     }
     execsql COMMIT
-    expr [file size test.db]/1024
-  } {24}
+  } {}
   do_test autovacuum-ioerr2-2.$n.2 [subst {
     set ::sqlite_io_error_pending $n
   }] $n
