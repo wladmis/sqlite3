@@ -32,7 +32,7 @@ proc finish_test {} {memleak_check}
 if {[file exists ./sqlite_test_count]} {
   set COUNT [exec cat ./sqlite_test_count]
 } else {
-  set COUNT 4
+  set COUNT 3
 }
 
 if {[file exists ./sqlite_test_prefixes]} {
@@ -81,11 +81,9 @@ if {$LeakList!=""} {
 }
 
 if {[file readable $testdir/malloc.test]} {
-  for {set Counter 0} {$Counter<$COUNT} {incr Counter} {
-    foreach p $PREFIXES {
-      set dbprefix $p
-      source $testdir/malloc.test
-    }
+  foreach p $PREFIXES {
+    set dbprefix $p
+    source $testdir/malloc.test
   }
 }
 

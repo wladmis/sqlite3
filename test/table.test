@@ -313,21 +313,23 @@ do_test table-7.1 {
       asc text,
       explain int,
       vacuum boolean,
-      delimiters varchar(10)
+      delimiters varchar(10),
+      begin blob,
+      end clob
     )
   }} msg]
   lappend v $msg
 } {0 {}}
 do_test table-7.2 {
   execsql {
-    INSERT INTO weird VALUES('a','b',9,0,'xyz');
+    INSERT INTO weird VALUES('a','b',9,0,'xyz','hi','y''all');
     SELECT * FROM weird;
   }
-} {a b 9 0 xyz}
+} {a b 9 0 xyz hi y'all}
 do_test table-7.3 {
   execsql2 {
     SELECT * FROM weird;
   }
-} {desc a asc b explain 9 vacuum 0 delimiters xyz}
+} {desc a asc b explain 9 vacuum 0 delimiters xyz begin hi end y'all}
 
 finish_test
