@@ -2278,6 +2278,7 @@ case OP_AutoCommit: {
 
   if( i!=db->autoCommit ){
     db->autoCommit = i;
+    p->autoCommitOn |= i;
     if( pOp->p2 ){
       sqlite3RollbackAll(db);
     }
