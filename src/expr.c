@@ -1181,7 +1181,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     case TK_CONCAT: {
       sqlite3ExprCode(pParse, pExpr->pLeft);
       sqlite3ExprCode(pParse, pExpr->pRight);
-      sqlite3VdbeAddOp(v, OP_Concat, 2, 0);
+      sqlite3VdbeAddOp(v, OP_Concat8, 2, 0);
       break;
     }
     case TK_UMINUS: {
