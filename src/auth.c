@@ -174,6 +174,11 @@ int sqlite3AuthCheck(
   sqlite *db = pParse->db;
   int rc;
 
+  /* Don't do any authorization checks if the database is initialising. */
+  if( db->init.busy ){
+    return SQLITE_OK;
+  }
+
   if( db->xAuth==0 ){
     return SQLITE_OK;
   }
