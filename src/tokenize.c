@@ -333,6 +333,11 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       }
       return i;
     }
+    case '[': {
+      for(i=1; z[i] && z[i-1]!=']'; i++){}
+      *tokenType = TK_ID;
+      return i;
+    }
     default: {
       if( !isIdChar[*z] ){
         break;

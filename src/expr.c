@@ -157,6 +157,7 @@ int sqliteExprResolveIds(
       int cnt = 0;      /* Number of matches */
       int i;            /* Loop counter */
       char *z = sqliteStrNDup(pExpr->token.z, pExpr->token.n);
+      sqliteDequote(z);
       if( z==0 ) return 1;
       for(i=0; i<pTabList->nId; i++){
         int j;
