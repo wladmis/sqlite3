@@ -257,29 +257,50 @@ void sqlite_close(sqlite *db){
 ** Return TRUE if the given SQL string ends in a semicolon.
 */
 int sqlite_complete(const char *zSql){
-  int i;
-  int lastWasSemi = 0;
-
-  i = 0;
-  while( i>=0 && zSql[i]!=0 ){
-    int tokenType;
-    int n;
-
-    n = sqliteGetToken(&zSql[i], &tokenType);
-    switch( tokenType ){
-      case TK_SPACE:
-      case TK_COMMENT:
+  int isComplete = 0;
+  while( *zSql ){
+    switch( *zSql ){
+      case ';': {
+        isComplete = 1;
         break;
-      case TK_SEMI:
-        lastWasSemi = 1;
+      }
+      case ' ':
+      case '\t':
+      case '\n':
+      case '\f': {
         break;
-      default:
-        lastWasSemi = 0;
+      }
+      case '\'': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!='\'' ){ zSql++; }
+        if( *zSql==0 ) return 0;
         break;
+      }
+      case '"': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!='"' ){ zSql++; }
+        if( *zSql==0 ) return 0;
+        break;
+      }
+      case '-': {
+        if( zSql[1]!='-' ){
+          isComplete = 0;
+          break;
+        }
+        while( *zSql && *zSql!='\n' ){ zSql++; }
+        if( *zSql==0 ) return isComplete;
+        break;
+      } 
+      default: {
+        isComplete = 0;
+        break;
+      }
     }
-    i += n;
+    zSql++;
   }
-  return lastWasSemi;
+  return isComplete;
 }
 
 /*

@@ -39,6 +39,15 @@
 #ifdef MEMORY_DEBUG
 
 /*
+** For keeping track of the number of mallocs and frees.   This
+** is used to check for memory leaks.
+*/
+int sqlite_nMalloc;         /* Number of sqliteMalloc() calls */
+int sqlite_nFree;           /* Number of sqliteFree() calls */
+int sqlite_iMallocFail;     /* Fail sqliteMalloc() after this many calls */
+
+
+/*
 ** Allocate new memory and set it to zero.  Return NULL if
 ** no memory is available.
 */
@@ -361,7 +370,7 @@ int sqliteHashNoCase(const char *z, int n){
   int c;
   if( n<=0 ) n = strlen(z);
   while( n-- > 0 && (c = *z++)!=0 ){
-    h = h<<3 ^ h ^ UpperToLower[c];
+    h = (h<<3) ^ h ^ UpperToLower[c];
   }
   if( h<0 ) h = -h;
   return h;

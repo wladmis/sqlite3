@@ -62,17 +62,18 @@
 
 /*
 ** The following global variables are used for testing and debugging
-** only.  Thy only work if MEMORY_DEBUG is defined.
+** only.  They only work if MEMORY_DEBUG is defined.
 */
 #ifdef MEMORY_DEBUG
-int sqlite_nMalloc;         /* Number of sqliteMalloc() calls */
-int sqlite_nFree;           /* Number of sqliteFree() calls */
-int sqlite_iMallocFail;     /* Fail sqliteMalloc() after this many calls */
+extern int sqlite_nMalloc;       /* Number of sqliteMalloc() calls */
+extern int sqlite_nFree;         /* Number of sqliteFree() calls */
+extern int sqlite_iMallocFail;   /* Fail sqliteMalloc() after this many calls */
 #endif
 
 /*
 ** The number of entries in the in-memory hash array holding the
-** database schema.
+** database schema.  (Collision resolution is by chaining, so the
+** table will hold more than this many entries.)
 */
 #define N_HASH        51
 
@@ -123,7 +124,7 @@ typedef struct AggExpr AggExpr;
 */
 struct sqlite {
   Dbbe *pBe;                 /* The backend driver */
-  int flags;                 /* Miscellanous flags */
+  int flags;                 /* Miscellanous flags. See below */
   int file_format;           /* What file format version is this database? */
   int nTable;                /* Number of tables in the database */
   void *pBusyArg;            /* 1st Argument to the busy callback */

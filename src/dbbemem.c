@@ -26,7 +26,7 @@
 ** sqlite and the code that does the actually reading and writing
 ** of information to the disk.
 **
-** This file uses an in-memory hash talbe as the database backend. 
+** This file uses an in-memory hash table as the database backend. 
 **
 ** $Id$
 */

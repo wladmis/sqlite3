@@ -102,7 +102,7 @@ static Keyword aKeywordTable[] = {
 /*
 ** This is the hash table
 */
-#define KEY_HASH_SIZE 37
+#define KEY_HASH_SIZE 69
 static Keyword *apHashTable[KEY_HASH_SIZE];
 
 
