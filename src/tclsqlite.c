@@ -1287,7 +1287,7 @@ int TCLSH_MAIN(int argc, char **argv){
     int i;
     Tcl_SetVar(interp,"argv0",argv[1],TCL_GLOBAL_ONLY);
     Tcl_SetVar(interp,"argv", "", TCL_GLOBAL_ONLY);
-    for(i=2; i<argc; i++){
+    for(i=3-TCLSH; i<argc; i++){
       Tcl_SetVar(interp, "argv", argv[i],
           TCL_GLOBAL_ONLY | TCL_LIST_ELEMENT | TCL_APPEND_VALUE);
     }
