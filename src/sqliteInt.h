@@ -893,6 +893,7 @@ struct Trigger {
   char *name;             /* The name of the trigger                        */
   char *table;            /* The table or view to which the trigger applies */
   u8 iDb;                 /* Database containing this trigger               */
+  u8 iTabDb;              /* Database containing Trigger.table              */
   u8 op;                  /* One of TK_DELETE, TK_UPDATE, TK_INSERT         */
   u8 tr_tm;               /* One of TK_BEFORE, TK_AFTER */
   Expr *pWhen;            /* The WHEN clause of the expresion (may be NULL) */
@@ -1135,7 +1136,8 @@ int sqliteSafetyCheck(sqlite*);
 void sqliteChangeCookie(sqlite*, Vdbe*);
 void sqliteBeginTrigger(Parse*, Token*,int,int,IdList*,SrcList*,int,Expr*,int);
 void sqliteFinishTrigger(Parse*, TriggerStep*, Token*);
-void sqliteDropTrigger(Parse*, SrcList*, int);
+void sqliteDropTrigger(Parse*, SrcList*);
+void sqliteDropTriggerPtr(Parse*, Trigger*, int);
 int sqliteTriggersExist(Parse* , Trigger* , int , int , int, ExprList*);
 int sqliteCodeRowTrigger(Parse*, int, ExprList*, int, Table *, int, int, 
                          int, int);

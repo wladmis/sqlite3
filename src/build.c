@@ -1297,12 +1297,8 @@ void sqliteDropTable(Parse *pParse, Token *pName, int isView){
     /* Drop all triggers associated with the table being dropped */
     pTrigger = pTable->pTrigger;
     while( pTrigger ){
-      SrcList *pNm;
       assert( pTrigger->iDb==pTable->iDb || pTrigger->iDb==1 );
-      pNm = sqliteSrcListAppend(0, 0, 0);
-      pNm->a[0].zName = sqliteStrDup(pTrigger->name);
-      pNm->a[0].zDatabase = sqliteStrDup(db->aDb[pTable->iDb].zName);
-      sqliteDropTrigger(pParse, pNm, 1);
+      sqliteDropTriggerPtr(pParse, pTrigger, 1);
       if( pParse->explain ){
         pTrigger = pTrigger->pNext;
       }else{
