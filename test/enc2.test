@@ -448,11 +448,13 @@ proc utf16 {utf8} {
   append utf16 "\x00\x00"
   return $utf16
 }
-do_test enc2-8.1 {
-  sqlite3_complete16 [utf16 "SELECT * FROM t1;"]
-} {1}
-do_test enc2-8.2 {
-  sqlite3_complete16 [utf16 "SELECT * FROM"]
-} {0}
+ifcapable {complete} {
+  do_test enc2-8.1 {
+    sqlite3_complete16 [utf16 "SELECT * FROM t1;"]
+  } {1}
+  do_test enc2-8.2 {
+    sqlite3_complete16 [utf16 "SELECT * FROM"]
+  } {0}
+}
 
 finish_test

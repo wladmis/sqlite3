@@ -729,6 +729,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** built-in "info complete" command of Tcl.
   */
   case DB_COMPLETE: {
+#ifndef SQLITE_OMIT_COMPLETE
     Tcl_Obj *pResult;
     int isComplete;
     if( objc!=3 ){
@@ -738,6 +739,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     isComplete = sqlite3_complete( Tcl_GetStringFromObj(objv[2], 0) );
     pResult = Tcl_GetObjResult(interp);
     Tcl_SetBooleanObj(pResult, isComplete);
+#endif
     break;
   }
 
