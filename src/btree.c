@@ -2737,7 +2737,7 @@ static int checkTreePage(
     cur.idx = i;
     zKey2 = sqliteMalloc( NKEY(pCell->h)+1 );
     getPayload(&cur, 0, NKEY(pCell->h), zKey2);
-    if( zKey1 && strcmp(zKey1,zKey2)>=0 ){
+    if( zKey1 && strcmp(zKey1,zKey2)>0 ){
       checkAppendMsg(pCheck, zContext, "Key is out of order");
     }
 

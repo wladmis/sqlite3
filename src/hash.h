@@ -98,5 +98,11 @@ void sqliteHashClear(Hash*);
 #define sqliteHashFirst(H)  ((H)->first)
 #define sqliteHashNext(E)   ((E)->next)
 #define sqliteHashData(E)   ((E)->data)
+#define sqliteHashKey(E)    ((E)->pKey)
+
+/*
+** Number of entries in a hash table
+*/
+#define sqliteHashCount(H)  ((H)->count)
 
 #endif /* _SQLITE_HASH_H_ */

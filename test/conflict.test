@@ -367,6 +367,7 @@ foreach {i conf1 conf2 cmd t0 t1 t2} {
       UPDATE t3 SET x=0;
       BEGIN $conf2;
       $cmd t3 SET x=1;
+      $cmd t1 SET b=b*2;
       $cmd t1 SET a=c+5;
     }]} r1]
     execsql {COMMIT}
