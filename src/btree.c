@@ -1825,9 +1825,6 @@ static int autoVacuumCommit(Btree *pBt, Pgno *nTrunc){
   *nTrunc = finSize;
 
 autovacuum_out:
-  /* TODO: A goto autovacuum_out; will fail to call releasePage() on 
-  ** outstanding references. Fix.
-  */
   assert( nRef==*sqlite3pager_stats(pPager) );
   if( rc!=SQLITE_OK ){
     sqlite3pager_rollback(pPager);
@@ -5267,7 +5264,6 @@ char *sqlite3BtreeIntegrityCheck(Btree *pBt, int *aRoot, int nRoot){
   for(i=0; i<nRoot; i++){
     if( aRoot[i]==0 ) continue;
 #ifndef SQLITE_OMIT_AUTOVACUUM
-/* Note: This is temporary code for use during development of auto-vacuum. */
     if( pBt->autoVacuum && aRoot[i]>1 ){
       checkPtrmap(&sCheck, aRoot[i], PTRMAP_ROOTPAGE, 0, 0);
     }

@@ -32,8 +32,7 @@ set EXCLUDE {
   misuse.test
   quick.test
   utf16.test
-
-  autovacuum.test
+  autovacuum_crash.test
 }
 
 if {[sqlite3 -has-codec]} {
