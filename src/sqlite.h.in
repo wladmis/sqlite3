@@ -364,6 +364,7 @@ void sqlite3_free_table(char **result);
 char *sqlite3_mprintf(const char*,...);
 char *sqlite3_vmprintf(const char*, va_list);
 void sqlite3_free(char *z);
+char *sqlite3_snprintf(int,char*,const char*, ...);
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
 /*

@@ -902,10 +902,8 @@ cmd ::= ATTACH database_kw_opt ids(F) AS nm(D) key_opt(K). {
 }
 %type key_opt {struct AttachKey}
 key_opt(A) ::= .                     { A.type = 0; }
-%ifdef SQLITE_HAS_CODEC
 key_opt(A) ::= KEY ids(X).           { A.type=1; A.key = X; }
-key_opt(A) ::= KEY BLOB(X).          { A.type=2; A.Key = X; }
-%endif
+key_opt(A) ::= KEY BLOB(X).          { A.type=2; A.key = X; }
 
 database_kw_opt ::= DATABASE.
 database_kw_opt ::= .

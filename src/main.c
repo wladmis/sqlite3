@@ -1242,7 +1242,7 @@ int sqlite3_open16(
 ** sqlite3_errcode(), sqlite3_errmsg() and sqlite3_errmsg16().
 */
 int sqlite3_finalize(sqlite3_stmt *pStmt){
-  return sqlite3VdbeFinalize((Vdbe*)pStmt);
+  return pStmt ? sqlite3VdbeFinalize((Vdbe*)pStmt) : SQLITE_OK;
 }
 
 /*
