@@ -185,7 +185,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
     sqlite_close(db);
     return 0;
   }else{
-    sqliteFree(pzErrMsg);
+    sqliteFree(*pzErrMsg);
     *pzErrMsg = 0;
   }
   return db;

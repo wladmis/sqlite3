@@ -29,9 +29,17 @@ source $testdir/tester.tcl
 rename finish_test really_finish_test
 proc finish_test {} {}
 
-foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
-  if {[file tail $testfile]=="all.test"} continue
-  source $testfile
+if {[file exists ./sqlite_test_count]} {
+  set COUNT [exec cat ./sqlite_test_count]
+} else {
+  set COUNT 1
+}
+
+for {set Counter 0} {$Counter<$COUNT} {incr Counter} {
+  foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
+    if {[file tail $testfile]=="all.test"} continue
+    source $testfile
+  }
 }
 
 really_finish_test
