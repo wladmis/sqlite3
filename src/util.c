@@ -202,7 +202,7 @@ void *sqlite3Realloc_(void *oldP, int n, char *zFile, int line){
   p = &pi[N_GUARD+1];
   memcpy(p, oldP, n>oldN ? oldN : n);
   if( n>oldN ){
-    memset(&((char*)p)[oldN], 0, n-oldN);
+    memset(&((char*)p)[oldN], 0x55, n-oldN);
   }
   memset(oldPi, 0xab, (oldK+N_GUARD+2)*sizeof(int));
   free(oldPi);
