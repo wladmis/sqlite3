@@ -182,7 +182,7 @@ struct sqlite {
   Hash tblDrop;                 /* Uncommitted DROP TABLEs */
   Hash idxDrop;                 /* Uncommitted DROP INDEXs */
   int lastRowid;                /* ROWID of most recent insert */
-  int nextRowid;                /* Next generated rowID */
+  int priorNewRowid;            /* Last randomly generated ROWID */
   int onError;                  /* Default conflict algorithm */
 };
 

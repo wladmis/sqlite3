@@ -378,7 +378,7 @@ header file that comes in the source tree.</p>
 <p>Every row of an SQLite table has a unique integer key.  If the
 table has a column labeled INTEGER PRIMARY KEY, then that column
 servers as the key.  If there is no INTEGER PRIMARY KEY column then
-the key is a random integer.  The key for a row can be accessed in
+the key is a unique integer.  The key for a row can be accessed in
 a SELECT statement or used in a WHERE or ORDER BY clause using any
 of the names "ROWID", "OID", or "_ROWID_".</p>
 
