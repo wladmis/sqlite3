@@ -894,7 +894,10 @@ const void *sqlite3_errmsg16(sqlite3 *db){
   };
 
   if( db && db->pErr ){
-    if( db->magic==SQLITE_MAGIC_ERROR ){
+    if( db->magic!=SQLITE_MAGIC_OPEN && 
+        db->magic!=SQLITE_MAGIC_BUSY &&
+        db->magic!=SQLITE_MAGIC_CLOSED 
+    ){
       return (void *)(&misuseBe[SQLITE_UTF16NATIVE==SQLITE_UTF16LE?1:0]);
     }
     if( !sqlite3_value_text16(db->pErr) ){
@@ -1277,6 +1280,7 @@ int sqlite3_create_collation(
   }else{
     pColl->xCmp = xCompare;
     pColl->pUser = pCtx;
+    pColl->enc = enc;
   }
   sqlite3Error(db, rc, 0);
   return rc;

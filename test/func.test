@@ -440,4 +440,16 @@ do_test func-13.7 {
   lappend res [sqlite3_finalize $STMT]
 } {{0 0} {1 0} SQLITE_OK}
 
+# Make sure that a function with a very long name is rejected
+do_test func-14.1 {
+  catch {
+    db function [string repeat X 254] {return "hello"}
+  } 
+} {0}
+do_test func-14.2 {
+  catch {
+    db function [string repeat X 256] {return "hello"}
+  }
+} {1}
+
 finish_test
