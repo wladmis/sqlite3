@@ -1144,7 +1144,7 @@ int sqlite3PutVarint(unsigned char *p, u64 v){
   return i;
 }
 
-int sqlite3GetVarint(unsigned char *p, u64 *v){
+int sqlite3GetVarint(const unsigned char *p, u64 *v){
   u64 x = p[0] & 0x7f;
   int n = 0;
   while( (p[n++]&0x80)!=0 ){

@@ -1285,6 +1285,6 @@ void *sqlite3utf8to16le(const unsigned char *pIn, int N);
 void sqlite3utf16to16le(void *pData, int N);
 void sqlite3utf16to16be(void *pData, int N);
 int sqlite3PutVarint(unsigned char *, u64);
-int sqlite3GetVarint(unsigned char *, u64 *);
+int sqlite3GetVarint(const unsigned char *, u64 *);
 int sqlite3VarintLen(u64 v);
 
