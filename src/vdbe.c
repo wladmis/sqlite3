@@ -979,7 +979,8 @@ static int hardDeephem(Vdbe *p, int i){
   if( z==0 ) return 1;
   memcpy(z, *pzStack, pStack->n);
   *pzStack = z;
-  pStack->flags &= !STK_Ephem;
+  pStack->flags &= ~STK_Ephem;
+  pStack->flags |= STK_Dyn;
   return 0;
 }
 

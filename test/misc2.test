@@ -29,6 +29,11 @@ do_test misc2-1.1 {
     END;
     INSERT INTO foo(bar) VALUES (1);
   }
+} {0 {}}
+do_test misc2-1.2 {
+  catchsql {
+    INSERT INTO foo(bar) VALUES (111);
+  }
 } {1 aiieee}
 
 # Make sure ROWID works on a view and a subquery.  Ticket #364
