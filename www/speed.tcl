@@ -37,7 +37,7 @@ conclusions drawn from these experiments:
 </p></li>
 <li><p>
   SQLite does not execute CREATE INDEX or DROP TABLE as fast as
-  the other databases.  But this as not seen is a problem because
+  the other databases.  But this is not seen as a problem because
   those are infrequent operations.
 </p></li>
 <li><p>
