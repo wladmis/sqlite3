@@ -626,11 +626,7 @@ void sqlite3AddColumnType(Parse *pParse, Token *pFirst, Token *pLast){
     z[j++] = c;
   }
   z[j] = 0;
-  if( pParse->db->file_format>=4 ){
-    pCol->sortOrder = sqlite3CollateType(z, n);
-  }else{
-    pCol->sortOrder = SQLITE_SO_NUM;
-  }
+  pCol->sortOrder = sqlite3CollateType(z, n);
 }
 
 /*
