@@ -28,7 +28,7 @@ proc sqlite_step {stmt N VALS COLS} {
     lappend cols [sqlite3_column_name $stmt $i]
   }
   for {set i 0} {$i < [sqlite3_data_count $stmt]} {incr i} {
-    lappend vals [sqlite3_column_data $stmt $i]
+    lappend vals [sqlite3_column_text $stmt $i]
   }
 
   return $rc
