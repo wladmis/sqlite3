@@ -995,6 +995,7 @@ WhereInfo *sqlite3WhereBegin(
       cont = pLevel->cont = sqlite3VdbeMakeLabel(v);
       sqlite3VdbeAddOp(v, OP_MustBeInt, 1, brk);
       sqlite3VdbeAddOp(v, OP_NotExists, iCur, brk);
+      VdbeComment((v, "pk"));
       pLevel->op = OP_Noop;
     }else if( pIdx!=0 && pLevel->score>3 && (pLevel->score&0x0c)==0 ){
       /* Case 2:  There is an index and all terms of the WHERE clause that
@@ -1080,6 +1081,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3ExprCode(pParse, pX->pRight);
         sqlite3VdbeAddOp(v, OP_ForceInt, pX->op==TK_LT || pX->op==TK_GT, brk);
         sqlite3VdbeAddOp(v, bRev ? OP_MoveLt : OP_MoveGe, iCur, brk);
+        VdbeComment((v, "pk"));
         disableTerm(pLevel, &pTerm->p);
       }else{
         sqlite3VdbeAddOp(v, bRev ? OP_Last : OP_Rewind, iCur, brk);
