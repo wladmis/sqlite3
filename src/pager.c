@@ -1468,6 +1468,7 @@ int sqlite3pager_open(
   sqliteFree(zFullPathname);
   strcpy(&pPager->zJournal[nameLen], "-journal");
   pPager->fd = fd;
+  pPager->fd.pPager = pPager;
   pPager->journalOpen = 0;
   pPager->useJournal = useJournal && !memDb;
   pPager->stmtOpen = 0;
