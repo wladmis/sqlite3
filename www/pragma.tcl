@@ -132,6 +132,14 @@ puts {
     you can set the cache size once and that setting is retained and reused
     every time you reopen the database.</p></li>
 
+<a name="pragma_default_synchronous"></a>
+<li><p><b>PRAGMA default_synchronous;</b></p>
+    <p>This pragma was available in version 2.8 but was removed in version
+    3.0.  It is a dangerous pragma whose use is discouraged.  To help
+    dissuide users of version 2.8 from employing this pragma, the documentation
+    will not tell you what it does.</p></li>
+
+
 <a name="pragma_empty_result_callbacks"></a>
 <li><p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>0 | 1</i><b>;</b></p>
