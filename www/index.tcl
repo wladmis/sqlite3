@@ -22,14 +22,14 @@ access program (<a href="sqlite.html">sqlite</a>)
 and a C library (<a href="c_interface.html">libsqlite.a</a>)
 that can be linked
 with a C/C++ program to provide SQL database access without
-an separate RDBMS.</p>
+a separate RDBMS.</p>
 
 <h2>Important News Flash!</h2>
 <p>
 The SQLite file format was changed in an incompatible way on
 Aug 2, 2000.  If you are updated the library and have databases
 built using the old version of the library, you should save your
-old databases into an ASCII fileformat then reimport those
+old databases into an ASCII file then reimport those
 database using the new library.  For example, if you change the
 name of the old <b>sqlite</b> utility to "old-sqlite" and
 change the name of the old database directory to "old-db", then
