@@ -168,7 +168,7 @@ static int test_translate(
     sqlite3ValueSetStr(pVal, -1, z, enc_from, xDel);
   }
 
-  z = sqlite3ValueText(pVal, enc_to);
+  z = (char *)sqlite3ValueText(pVal, enc_to);
   len = sqlite3ValueBytes(pVal, enc_to) + (enc_to==SQLITE_UTF8?1:2);
   Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(z, len));
 
