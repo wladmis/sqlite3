@@ -1713,12 +1713,15 @@ int sqlitepager_rollback(Pager *pPager){
   ** worked if it had occurred after an OS crash or unexpected power
   ** loss.
   */
-  if( pPager->syncJSize<sizeof(aJournalMagic)+sizeof(Pgno) ){
-    pPager->syncJSize = sizeof(aJournalMagic)+sizeof(Pgno);
+  if( !pPager->noSync ){
+    assert( !pPager->tempFile );
+    if( pPager->syncJSize<sizeof(aJournalMagic)+sizeof(Pgno) ){
+      pPager->syncJSize = sizeof(aJournalMagic)+sizeof(Pgno);
+    }
+    TRACE2("TRUNCATE JOURNAL %lld\n", pPager->syncJSize);
+    rc =  sqliteOsTruncate(&pPager->jfd, pPager->syncJSize);
+    if( rc ) return rc;
   }
-  TRACE2("TRUNCATE JOURNAL %lld\n", pPager->syncJSize);
-  rc =  sqliteOsTruncate(&pPager->jfd, pPager->syncJSize);
-  if( rc ) return rc;
 #endif
 
   if( pPager->errMask!=0 && pPager->errMask!=PAGER_ERR_FULL ){
