@@ -331,7 +331,7 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
         break;
       }
       for(i=1; isIdChar[z[i]]; i++){}
-      *tokenType = sqliteKeywordCode(z, i);
+      *tokenType = sqliteKeywordCode((char*)z, i);
       return i;
     }
   }

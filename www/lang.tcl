@@ -637,6 +637,16 @@ with caution.</p>
     be invoked once for each DELETE, INSERT, or UPDATE operation.  The
     argument is the number of rows that were changed.</p>
 
+<li><p><b>PRAGMA empty_result_callbacks = ON;
+       <br>PRAGMA empty_result_callbacks = OFF;</b></p>
+    <p>When on, the EMPTY_RESULT_CALLBACKS pragma causes the callback
+    function to be invoked once for each query that has an empty result
+    set.  The third "<b>argv</b>" parameter to the callback is set to NULL
+    because there is no data to report.  But the second "<b>argc</b>" and
+    fourth "<b>columnNames</b>" parameters are valid and can be used to
+    determine the number and names of the columns that would have been in
+    the result set had the set not been empty.</p>
+
 <li><p><b>PRAGMA full_column_names = ON;
        <br>PRAGMA full_column_names = OFF;</b></p>
     <p>The column names reported in an SQLite callback are normally just

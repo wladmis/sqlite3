@@ -994,5 +994,13 @@ int sqliteSelect(
     generateSortTail(v, pEList->nExpr);
   }
   pParse->nTab = base;
+
+
+  /* Issue a null callback if that is what the user wants.
+  */
+  if( (pParse->db->flags & SQLITE_NullCallback)!=0 && eDest==SRT_Callback ){
+    sqliteVdbeAddOp(v, OP_NullCallback, pEList->nExpr, 0);
+  }
+
   return 0;
 }

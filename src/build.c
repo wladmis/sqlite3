@@ -1449,6 +1449,14 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "empty_result_callbacks")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_NullCallback;
+    }else{
+      db->flags &= ~SQLITE_NullCallback;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "table_info")==0 ){
     Table *pTab;
     Vdbe *v;

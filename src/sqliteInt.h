@@ -166,6 +166,8 @@ struct sqlite {
 #define SQLITE_CountRows      0x00000040  /* Count rows changed by INSERT, */
                                           /*   DELETE, or UPDATE and return */
                                           /*   the count using a callback. */
+#define SQLITE_NullCallback   0x00000080  /* Invoke the callback once if the */
+                                          /*   result set is empty */
 
 /*
 ** Current file format version
