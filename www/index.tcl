@@ -62,10 +62,8 @@ The following are the known limitations:</p>
 
 <p>
 <ul>
-<li>The UNION, INTERSECTION and EXCEPT operations connecting multiple
-SELECT statements are not yet implement</li>
 <li>Constraints are parsed but are not enforced</li>
-<li>There is not support for transactions or rollback</li>
+<li>There is no support for transactions or rollback</li>
 </ul>
 </p>
 
