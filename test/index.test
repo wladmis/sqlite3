@@ -650,5 +650,19 @@ do_test index-19.6 {
   }
 } {1 {conflicting ON CONFLICT clauses specified}}
 
-finish_test
+# Drop index with a quoted name.  Ticket #695.
+#
+do_test index-20.1 {
+  execsql {
+    CREATE INDEX "t6i2" ON t6(c);
+    DROP INDEX "t6i2";
+  }
+} {}
+do_test index-20.2 {
+  execsql {
+    DROP INDEX "t6i1";
+  }
+} {}
+   
 
+finish_test
