@@ -675,16 +675,6 @@ int sqlite_step(
 */
 int sqlite_finalize(sqlite_vm*, char **pzErrMsg);
 
-/*
-** Attempt to open the file named in the argument as the auxiliary database
-** file.  The auxiliary database file is used to store TEMP tables.  But
-** by using this API, it is possible to trick SQLite into opening two
-** separate databases and acting on them as if they were one.
-**
-****** THIS IS AN EXPERIMENTAL API AND IS SUBJECT TO CHANGE. ******
-*/
-int sqlite_open_aux_file(sqlite *db, const char *zName, char **pzErrMsg);
-
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
 #endif
