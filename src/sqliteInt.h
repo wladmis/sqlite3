@@ -823,3 +823,4 @@ TriggerStep *sqliteTriggerSelectStep(Select*);
 TriggerStep *sqliteTriggerInsertStep(Token*, IdList*, ExprList*, Select*, int);
 TriggerStep *sqliteTriggerUpdateStep(Token*, ExprList*, Expr*, int);
 TriggerStep *sqliteTriggerDeleteStep(Token*, Expr*);
+void sqliteDeleteTrigger(Trigger*);
