@@ -100,6 +100,7 @@ void sqlite3Copy(
       sqlite3VdbeAddOp(v, OP_ColumnName, 0, 1);
       sqlite3VdbeChangeP3(v, -1, "rows inserted", P3_STATIC);
       sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+      sqlite3VdbeSetNumCols(v, 1);
     }
   }
   

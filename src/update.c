@@ -448,6 +448,7 @@ void sqlite3Update(
   if( db->flags & SQLITE_CountRows && !pParse->trigStack ){
     sqlite3VdbeOp3(v, OP_ColumnName, 0, 1, "rows updated", P3_STATIC);
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+    sqlite3VdbeSetNumCols(v, 1);
   }
 
 update_cleanup:

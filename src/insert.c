@@ -620,6 +620,7 @@ void sqlite3Insert(
     sqlite3VdbeOp3(v, OP_ColumnName, 0, 1, "rows inserted", P3_STATIC);
     sqlite3VdbeAddOp(v, OP_MemLoad, iCntMem, 0);
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+    sqlite3VdbeSetNumCols(v, 1);
   }
 
 insert_cleanup:

@@ -306,6 +306,7 @@ void sqlite3DeleteFrom(
     sqlite3VdbeAddOp(v, OP_ColumnName, 0, 1);
     sqlite3VdbeChangeP3(v, -1, "rows deleted", P3_STATIC);
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+    sqlite3VdbeSetNumCols(v, 1);
   }
 
 delete_from_cleanup:
