@@ -38,10 +38,6 @@
 # define TRACE(X)  printf X; fflush(stdout);
 #endif  
 
-#ifndef SQLITE_IOERR
-# define SQLITE_IOERR SQLITE_ERROR
-#endif
-
 /*
 ** Hash table sizes
 */

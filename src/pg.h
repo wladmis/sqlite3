@@ -36,5 +36,5 @@ int sqlitePgRollback(Pgr*);
 int sqlitePgGet(Pgr*, u32 pgno, void **);
 int sqlitePgUnref(void*);
 int sqlitePgTouch(void*);
-int sqlitePgAlloc(Pgr*, u32*);
+int sqlitePgCount(Pgr*, u32*);
 u32 sqlitePgNum(void*);
