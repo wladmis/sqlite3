@@ -166,7 +166,6 @@ do_test sqlite6-3.2 {
     ORDER BY [a.q]
   }
 } {1 1 1 2 2 3 3 4 7 4 8 15 5 5 20}
-
 do_test select6-3.3 {
   execsql {
     SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1)
