@@ -3916,7 +3916,8 @@ case OP_NewRecno: {
 ** be an integer.  The stack is popped twice by this instruction.
 **
 ** If P2==1 then the row change count is incremented.  If P2==0 the
-** row change count is unmodified.
+** row change count is unmodified.  The rowid is stored for subsequent
+** return by the sqlite_last_insert_rowid() function if P2 is 1.
 */
 /* Opcode: PutStrKey P1 * *
 **
@@ -3945,8 +3946,10 @@ case OP_PutStrKey: {
       nKey = sizeof(int);
       iKey = intToKey(aStack[nos].i);
       zKey = (char*)&iKey;
-      db->lastRowid = aStack[nos].i;
-      if( pOp->p2 ) db->nChange++;
+      if( pOp->p2 ){
+        db->nChange++;
+        db->lastRowid = aStack[nos].i;
+      }
       if( pC->nextRowidValid && aStack[nos].i>=pC->nextRowid ){
         pC->nextRowidValid = 0;
       }
