@@ -1782,7 +1782,7 @@ static int test_sqlite3OsUnlock(
   if( getFilePointer(interp, Tcl_GetString(objv[1]), &pFile) ){
     return TCL_ERROR;
   }
-  rc = sqlite3OsUnlock(pFile);
+  rc = sqlite3OsUnlock(pFile, NO_LOCK);
   if( rc!=SQLITE_OK ){
     Tcl_SetResult(interp, (char *)errorName(rc), TCL_STATIC);
     return TCL_ERROR;
