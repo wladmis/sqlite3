@@ -2551,7 +2551,7 @@ void sqlite3BeginWriteOperation(Parse *pParse, int setStatement, int iDb){
   if( setStatement ){
     sqlite3VdbeAddOp(v, OP_Statement, iDb, 0);
   }
-  if( iDb!=1 ){
+  if( iDb!=1 && pParse->db->aDb[1].pBt!=0 ){
     sqlite3BeginWriteOperation(pParse, setStatement, 1);
   }
 }
