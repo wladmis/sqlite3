@@ -115,7 +115,7 @@ struct Pager *sqlite3BtreePager(Btree*);
 
 
 #ifdef SQLITE_TEST
-int sqlite3BtreeCursorInfo(BtCursor*, int*);
+int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
 void sqlite3BtreeCursorList(Btree*);
 int sqlite3BtreePageDump(Btree*, int, int recursive);
 #endif
