@@ -101,7 +101,7 @@ do_test $t.8 {
 
 do_test $t.9 {
   sqlite3_finalize $STMT
-} {}
+} SQLITE_OK
 
 do_test $t.99 {
   db close

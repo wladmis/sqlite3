@@ -82,7 +82,7 @@ do_test bind-1.9 {
 
 do_test bind-1.99 {
   sqlite3_finalize $VM
-} {}
+} SQLITE_OK
 
 do_test bind-2.1 {
   execsql {
@@ -234,7 +234,7 @@ do_test bind-8.7 {
 
 do_test bind-9.99 {
   sqlite3_finalize $VM
-} {}
+} SQLITE_OK
 
 
 

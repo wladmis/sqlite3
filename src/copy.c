@@ -97,10 +97,9 @@ void sqlite3Copy(
     sqlite3VdbeAddOp(v, OP_Noop, 0, 0);
     sqlite3EndWriteOperation(pParse);
     if( db->flags & SQLITE_CountRows ){
-      sqlite3VdbeAddOp(v, OP_ColumnName, 0, 1);
-      sqlite3VdbeChangeP3(v, -1, "rows inserted", P3_STATIC);
       sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
       sqlite3VdbeSetNumCols(v, 1);
+      sqlite3VdbeSetColName(v, 0, "rows inserted", P3_STATIC);
     }
   }
   

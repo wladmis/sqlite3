@@ -930,6 +930,11 @@ int sqlite3_prepare(
 
   if( rc==SQLITE_OK && sParse.pVdbe && sParse.explain ){
     sqlite3VdbeSetNumCols(sParse.pVdbe, 5);
+    sqlite3VdbeSetColName(sParse.pVdbe, 0, "addr", P3_STATIC);
+    sqlite3VdbeSetColName(sParse.pVdbe, 1, "opcode", P3_STATIC);
+    sqlite3VdbeSetColName(sParse.pVdbe, 2, "p1", P3_STATIC);
+    sqlite3VdbeSetColName(sParse.pVdbe, 3, "p2", P3_STATIC);
+    sqlite3VdbeSetColName(sParse.pVdbe, 4, "p3", P3_STATIC);
   } 
 
 prepare_out:

@@ -303,10 +303,9 @@ void sqlite3DeleteFrom(
   ** Return the number of rows that were deleted.
   */
   if( db->flags & SQLITE_CountRows ){
-    sqlite3VdbeAddOp(v, OP_ColumnName, 0, 1);
-    sqlite3VdbeChangeP3(v, -1, "rows deleted", P3_STATIC);
     sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
     sqlite3VdbeSetNumCols(v, 1);
+    sqlite3VdbeSetColName(v, 0, "rows deleted", P3_STATIC);
   }
 
 delete_from_cleanup:
