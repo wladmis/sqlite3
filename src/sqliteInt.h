@@ -254,6 +254,8 @@ struct Db {
   Hash aFKey;          /* Foreign keys indexed by to-table */
   u8 inTrans;          /* 0: not writable.  1: Transaction.  2: Checkpoint */
   u16 flags;           /* Flags associated with this database */
+  void *pAux;          /* Auxiliary data.  Usually NULL */
+  void (*xFreeAux)(void*);  /* Routine to free pAux */
 };
 
 /*
@@ -1207,7 +1209,7 @@ void sqliteDeferForeignKey(Parse*, int);
 # define sqliteAuthContextPush(a,b,c)
 # define sqliteAuthContextPop(a)  ((void)(a))
 #endif
-void sqliteAttach(Parse*, Token*, Token*);
+void sqliteAttach(Parse*, Token*, Token*, Token*);
 void sqliteDetach(Parse*, Token*);
 int sqliteBtreeFactory(const sqlite *db, const char *zFilename,
                        int mode, int nPg, Btree **ppBtree);

@@ -552,13 +552,10 @@ void sqlite_close(sqlite *db){
   }
   db->magic = SQLITE_MAGIC_CLOSED;
   for(j=0; j<db->nDb; j++){
-    if( db->aDb[j].pBt ){
-      sqliteBtreeClose(db->aDb[j].pBt);
-      db->aDb[j].pBt = 0;
-    }
-    if( j>=2 ){
-      sqliteFree(db->aDb[j].zName);
-      db->aDb[j].zName = 0;
+    struct Db *pDb = &db->aDb[j];
+    if( pDb->pBt ){
+      sqliteBtreeClose(pDb->pBt);
+      pDb->pBt = 0;
     }
   }
   sqliteResetInternalSchema(db, 0);

@@ -280,10 +280,18 @@ void sqliteResetInternalSchema(sqlite *db, int iDb){
   ** schema hash tables and therefore do not have to make any changes
   ** to any of those tables.
   */
+  for(i=0; i<db->nDb; i++){
+    struct Db *pDb = &db->aDb[i];
+    if( pDb->pBt==0 ){
+      if( pDb->pAux && pDb->xFreeAux ) pDb->xFreeAux(pDb->pAux);
+      pDb->pAux = 0;
+    }
+  }
   for(i=j=2; i<db->nDb; i++){
-    if( db->aDb[i].pBt==0 ){
-      sqliteFree(db->aDb[i].zName);
-      db->aDb[i].zName = 0;
+    struct Db *pDb = &db->aDb[i];
+    if( pDb->pBt==0 ){
+      sqliteFree(pDb->zName);
+      pDb->zName = 0;
       continue;
     }
     if( j<i ){
