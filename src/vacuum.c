@@ -19,8 +19,6 @@
 #include "sqliteInt.h"
 #include "os.h"
 
-#define SQLITE_OMIT_VACUUM 1
-
 /*
 ** A structure for holding a dynamic string - a string that can grow
 ** without bound. 
@@ -45,7 +43,7 @@ struct vacuumStruct {
   dynStr s1, s2;       /* Two dynamic strings */
 };
 
-#ifdef SQLITE_OMIT_VACUUM
+#if !defined(SQLITE_OMIT_VACUUM) || SQLITE_OMIT_VACUUM
 /*
 ** Append text to a dynamic string
 */
@@ -205,7 +203,7 @@ static void randomName(char *zBuf){
 ** become a no-op.
 */
 void sqliteVacuum(Parse *pParse, Token *pTableName){
-#ifdef SQLITE_OMIT_VACUUM
+#if !defined(SQLITE_OMIT_VACUUM) || SQLITE_OMIT_VACUUM
   const char *zFilename;  /* full pathname of the database file */
   int nFilename;          /* number of characters  in zFilename[] */
   char *zTemp = 0;        /* a temporary file in same directory as zFilename */
