@@ -817,6 +817,7 @@ struct Expr {
 #define EP_FromJoin     0x0001  /* Originated in ON or USING clause of a join */
 #define EP_Agg          0x0002  /* Contains one or more aggregate functions */
 #define EP_Resolved     0x0004  /* IDs have been resolved to COLUMNs */
+#define EP_Error        0x0008  /* Expression contains one or more errors */
 
 /*
 ** These macros can be used to test, set, or clear bits in the 
@@ -1423,7 +1424,7 @@ char *sqlite3NameFromToken(Token*);
 int sqlite3ExprCheck(Parse*, Expr*, int, int*);
 int sqlite3ExprCompare(Expr*, Expr*);
 int sqliteFuncId(Token*);
-int sqlite3ExprResolveNames(Parse*, SrcList*, ExprList*, Expr*, int, int*, int);
+int sqlite3ExprResolveNames(Parse*, SrcList*, ExprList*, Expr*, int, int);
 int sqlite3ExprCodeSubquery(Parse*, Expr*);
 int sqlite3ExprAnalyzeAggregates(Parse*, Expr*);
 Vdbe *sqlite3GetVdbe(Parse*);
