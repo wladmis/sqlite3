@@ -302,6 +302,7 @@ WhereInfo *sqliteWhereBegin(
       int gtMask = 0;  /* Index columns covered by an x>... constraing */
       int nEq, m, score;
 
+      if( pIdx->isDropped ) continue;   /* Ignore dropped indices */
       if( pIdx->nColumn>32 ) continue;  /* Ignore indices too many columns */
       for(j=0; j<nExpr; j++){
         if( aExpr[j].idxLeft==idx 
