@@ -574,6 +574,8 @@ WhereInfo *sqliteWhereBegin(
     if( pBestIdx ){
       pWInfo->a[i].iCur = pParse->nTab++;
       pWInfo->peakNTab = pParse->nTab;
+    }else{
+      pWInfo->a[i].iCur = -1;
     }
   }
 
@@ -1077,8 +1079,11 @@ void sqliteWhereEnd(WhereInfo *pWInfo){
     if( pLevel->iLeftJoin ){
       int addr;
       addr = sqliteVdbeAddOp(v, OP_MemLoad, pLevel->iLeftJoin, 0);
-      sqliteVdbeAddOp(v, OP_NotNull, 1, addr+4);
+      sqliteVdbeAddOp(v, OP_NotNull, 1, addr+4 + (pLevel->iCur>=0));
       sqliteVdbeAddOp(v, OP_NullRow, base+i, 0);
+      if( pLevel->iCur>=0 ){
+        sqliteVdbeAddOp(v, OP_NullRow, pLevel->iCur, 0);
+      }
       sqliteVdbeAddOp(v, OP_Goto, 0, pLevel->top);
     }
   }
