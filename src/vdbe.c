@@ -5163,7 +5163,6 @@ case OP_AggNext: {
     int i;
     sqlite_func ctx;
     Mem *aMem;
-    int nErr = 0;
     p->agg.pCurrent = sqliteHashData(p->agg.pSearch);
     aMem = p->agg.pCurrent->aMem;
     for(i=0; i<p->agg.nMem; i++){
@@ -5187,7 +5186,6 @@ case OP_AggNext: {
               (aMem[i].s.flags & (STK_Dyn|STK_Static|STK_Ephem))==0 ){
         aMem[i].z = aMem[i].s.z;
       }
-      nErr += ctx.isError;
     }
   }
   break;
