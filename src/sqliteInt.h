@@ -35,6 +35,13 @@
 #include <assert.h>
 
 /*
+** The maximum number of in-memory pages to use for the main database
+** table and for temporary tables.
+*/
+#define MAX_PAGES   150
+#define TEMP_PAGES   50
+
+/*
 ** The paging system deals with 32-bit integers.
 */
 typedef unsigned int u32;

@@ -243,7 +243,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   if( db==0 ) goto no_mem_on_open;
   
   /* Open the backend database driver */
-  rc = sqliteBtreeOpen(zFilename, mode, 100, &db->pBe);
+  rc = sqliteBtreeOpen(zFilename, mode, MAX_PAGES, &db->pBe);
   if( rc!=SQLITE_OK ){
     switch( rc ){
       default: {

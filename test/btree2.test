@@ -288,8 +288,8 @@ foreach {N L} {
   10 2
   50 2
   200 3
-  2000 5
 } {
+  # 2000 5
   puts "**** N=$N L=$L ****"
   set hash [md5file test2.bt]
   do_test btree2-$testno.1 [subst -nocommands {

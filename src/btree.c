@@ -1702,7 +1702,8 @@ static int balance(Btree *pBt, MemPage *pPage, BtCursor *pCur){
   ** underfull.
   */
   assert( sqlitepager_iswriteable(pPage) );
-  if( !pPage->isOverfull && pPage->nFree<SQLITE_PAGE_SIZE/2 && pPage->nCell>=2){
+  if( !pPage->isOverfull && pPage->nFree<SQLITE_PAGE_SIZE/2 
+        && pPage->nCell>=2){
     relinkCellList(pPage);
     return SQLITE_OK;
   }
