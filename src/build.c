@@ -2670,6 +2670,11 @@ void sqliteAttach(Parse *pParse, Token *pFilename, Token *pDbname){
 
   if( pParse->explain ) return;
   db = pParse->db;
+  if( db->nDb>=MAX_ATTACHED ){
+    sqliteErrorMsg(pParse, "too many attached databases - max %d", 
+       MAX_ATTACHED);
+    return;
+  }
   if( db->aDb==db->aDbStatic ){
     aNew = sqliteMalloc( sizeof(db->aDb[0])*3 );
     if( aNew==0 ) return;

@@ -58,6 +58,14 @@
 #define NULL_DISTINCT_FOR_UNIQUE 1
 
 /*
+** The maximum number of attached databases.  This must be at least 2
+** in order to support the main database file (0) and the file used to
+** hold temporary tables (1).  And it must be less than 256 because the
+** an unsigned character is used to stored the database index.
+*/
+#define MAX_ATTACHED 10
+
+/*
 ** Integers of known sizes.  These typedefs might change for architectures
 ** where the sizes very.  Preprocessor macros are available so that the
 ** types can be conveniently redefined at compile-type.  Like this:

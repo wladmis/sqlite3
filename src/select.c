@@ -1591,7 +1591,7 @@ substExprList(ExprList *pList, int iTable, ExprList *pEList, int iSub){
 ** The subquery is p->pSrc->a[iFrom].  isAgg is true if the outer query
 ** uses aggregates and subqueryIsAgg is true if the subquery uses aggregates.
 **
-** If flattening is not attempted, this routine is a no-op and return 0.
+** If flattening is not attempted, this routine is a no-op and returns 0.
 ** If flattening is attempted this routine returns 1.
 **
 ** All of the expression analysis must occur on both the outer query and
