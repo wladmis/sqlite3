@@ -293,6 +293,7 @@ Section {Pragmas to debug the library} debug
 
 puts {
 <ul>
+<a name="pragma_integrity_check"></a>
 <li><p><b>PRAGMA integrity_check;</b></p>
     <p>The command does an integrity check of the entire database.  It
     looks for out-of-order records, missing pages, malformed records, and
@@ -301,6 +302,7 @@ puts {
     a description of all problems.  If everything is in order, "ok" is
     returned.</p></li>
 
+<a name="pragma_parser_trace"></a>
 <li><p><b>PRAGMA parser_trace = ON; </b>(1)<b>
     <br>PRAGMA parser_trace = OFF;</b> (0)</p>
     <p>Turn tracing of the SQL parser inside of the

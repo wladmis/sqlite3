@@ -449,8 +449,8 @@ void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
 /*
 ** This routine configures a callback function - the progress callback - that
 ** is invoked periodically during long running calls to sqlite3_exec(),
-** sqlite3_step() and sqlite3_get_table(). An example use for this API is to keep
-** a GUI updated during a large query.
+** sqlite3_step() and sqlite3_get_table(). An example use for this API is to 
+** keep a GUI updated during a large query.
 **
 ** The progress callback is invoked once for every N virtual machine opcodes,
 ** where N is the second argument to this function. The progress callback

@@ -110,5 +110,11 @@ doc {VDBE Opcodes} {opcode.html} {
   SQLite.
 }
 
+doc {Compilation Options} {compile.html} {
+  This document describes the compile time options that may be set to 
+  modify the default behaviour of the library or omit optional features
+  in order to reduce binary size.
+}
+
 puts {</table>}
 footer $rcsid
