@@ -409,7 +409,6 @@ WhereInfo *sqliteWhereBegin(
     if( goDirect ){
       /* Case 1:  We can directly reference a single row using the ROWID field.
       */
-      cont = brk;
       for(k=0; k<nExpr; k++){
         if( aExpr[k].p==0 ) continue;
         if( aExpr[k].idxLeft==idx 

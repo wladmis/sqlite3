@@ -589,6 +589,8 @@ static int btree_move_to(
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
   }
+  if( res<0 ) res = -1;
+  if( res>0 ) res = 1;
   sprintf(zBuf,"%d",res);
   Tcl_AppendResult(interp, zBuf, 0);
   return SQLITE_OK;
