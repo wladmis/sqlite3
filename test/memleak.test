@@ -41,8 +41,14 @@ set EXCLUDE {
   btree2.test
   trans.test
 }
+if {[llength $argv]>0} {
+  set FILELIST $argv
+  set argv {}
+} else {
+  set FILELIST [lsort -dictionary [glob $testdir/*.test]]
+}
 
-foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
+foreach testfile $FILELIST {
   set tail [file tail $testfile]
   if {[lsearch -exact $EXCLUDE $tail]>=0} continue
   set LeakList {}

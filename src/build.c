@@ -606,12 +606,12 @@ void sqliteAddPrimaryKey(Parse *pParse, IdList *pList, int onError){
   Table *pTab = pParse->pNewTable;
   char *zType = 0;
   int iCol = -1;
-  if( pTab==0 ) return;
+  if( pTab==0 ) goto primary_key_exit;
   if( pTab->hasPrimKey ){
     sqliteSetString(&pParse->zErrMsg, "table \"", pTab->zName, 
         "\" has more than one primary key", 0);
     pParse->nErr++;
-    return;
+    goto primary_key_exit;
   }
   pTab->hasPrimKey = 1;
   if( pList==0 ){
@@ -630,7 +630,12 @@ void sqliteAddPrimaryKey(Parse *pParse, IdList *pList, int onError){
     pTab->keyConf = onError;
   }else{
     sqliteCreateIndex(pParse, 0, 0, pList, onError, 0, 0);
+    pList = 0;
   }
+
+primary_key_exit:
+  sqliteIdListDelete(pList);
+  return;
 }
 
 /*
