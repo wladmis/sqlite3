@@ -497,7 +497,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
       sqlite_exec(db,
         "SELECT name, type, sql FROM sqlite_master "
         "WHERE type!='meta' AND sql NOT NULL "
-        "ORDER BY tbl_name, type DESC, name",
+        "ORDER BY substr(type,2,1), name",
         dump_callback, p, &zErrMsg
       );
     }else{
@@ -506,10 +506,9 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
         sqlite_exec_printf(db, 
           "SELECT name, type, sql FROM sqlite_master "
           "WHERE tbl_name LIKE '%q' AND type!='meta' AND sql NOT NULL "
-          "ORDER BY type DESC, name",
+          "ORDER BY substr(type,2,1), name",
           dump_callback, p, &zErrMsg, azArg[i]
         );
-        
       }
     }
     if( zErrMsg ){
