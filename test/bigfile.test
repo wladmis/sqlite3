@@ -18,6 +18,12 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# These tests only work for Tcl version 8.4 and later.  Prior to 8.4,
+# Tcl was unable to handle large files.
+#
+scan $::tcl_version %f vx
+if {$vx<8.4} return
+
 # This is the md5 checksum of all the data in table t1 as created
 # by the first test.  We will use this number to make sure that data
 # never changes.
