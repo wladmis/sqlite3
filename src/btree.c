@@ -1252,6 +1252,7 @@ int sqliteBtreeFirst(BtCursor *pCur, int *pRes){
   }
   *pRes = 0;
   rc = moveToLeftmost(pCur);
+  pCur->bSkipNext = 0;
   return rc;
 }
 
