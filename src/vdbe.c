@@ -603,15 +603,24 @@ void sqliteVdbeCompressSpace(Vdbe *p, int addr){
 
 /*
 ** Search for the current program for the given opcode and P2
-** value.  Return 1 if found and 0 if not found.
+** value.  Return the address plus 1 if found and 0 if not found.
 */
 int sqliteVdbeFindOp(Vdbe *p, int op, int p2){
   int i;
   assert( p->magic==VDBE_MAGIC_INIT );
   for(i=0; i<p->nOp; i++){
-    if( p->aOp[i].opcode==op && p->aOp[i].p2==p2 ) return 1;
+    if( p->aOp[i].opcode==op && p->aOp[i].p2==p2 ) return i+1;
   }
   return 0;
+}
+
+/*
+** Return the opcode for a given address.
+*/
+VdbeOp *sqliteVdbeGetOp(Vdbe *p, int addr){
+  assert( p->magic==VDBE_MAGIC_INIT );
+  assert( addr>=0 && addr<p->nOp );
+  return &p->aOp[addr];
 }
 
 /*
