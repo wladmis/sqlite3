@@ -1987,6 +1987,8 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
       }
       if( c==0 ){
         if( pPage->leafData && !pPage->leaf ){
+          lwr = pCur->idx;
+          upr = lwr - 1;
           break;
         }else{
           pCur->iMatch = c;
