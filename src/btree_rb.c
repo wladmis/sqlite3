@@ -1326,7 +1326,6 @@ static int memRbtreeRollbackCkpt(Rbtree* tree)
   tree->pCheckRollbackTail = 0;
   tree->eTransState = TRANS_INTRANSACTION;
   return SQLITE_OK;
-  return SQLITE_OK;
 }
 
 #ifdef SQLITE_TEST
