@@ -282,7 +282,6 @@ void sqliteUpdate(
   ** So make the cursor point at the old record.
   */
   if( !row_triggers_exist ){
-    int ii;
     sqliteVdbeAddOp(v, OP_ListRewind, 0, 0);
     addr = sqliteVdbeAddOp(v, OP_ListRead, 0, 0);
     sqliteVdbeAddOp(v, OP_Dup, 0, 0);
