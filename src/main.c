@@ -570,8 +570,8 @@ void sqlite3_busy_handler(
   int (*xBusy)(void*,const char*,int),
   void *pArg
 ){
-  db->xBusyCallback = xBusy;
-  db->pBusyArg = pArg;
+  db->busyHandler.xFunc = xBusy;
+  db->busyHandler.pArg = pArg;
 }
 
 #ifndef SQLITE_OMIT_PROGRESS_CALLBACK
@@ -762,7 +762,8 @@ int sqlite3BtreeFactory(
     btree_flags |= BTREE_MEMORY;
   }
 
-  return sqlite3BtreeOpen(zFilename, ppBtree, nCache, btree_flags);
+  return sqlite3BtreeOpen(zFilename, ppBtree, nCache, btree_flags,
+      &db->busyHandler);
 }
 
 /*
@@ -847,9 +848,7 @@ int sqlite3_prepare(
   if( !db->init.busy ){
     if( (db->flags & SQLITE_Initialized)==0 ){
       int cnt = 1;
-      while( (rc = sqlite3Init(db, &zErrMsg))==SQLITE_BUSY
-         && db->xBusyCallback
-         && db->xBusyCallback(db->pBusyArg, "", cnt++)!=0 ){}
+      rc = sqlite3Init(db, &zErrMsg);
       if( rc!=SQLITE_OK ){
         goto prepare_out;
       }

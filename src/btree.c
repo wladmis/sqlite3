@@ -977,7 +977,8 @@ int sqlite3BtreeOpen(
   const char *zFilename,  /* Name of the file containing the BTree database */
   Btree **ppBtree,        /* Pointer to new Btree object written here */
   int nCache,             /* Number of cache pages */
-  int flags               /* Options */
+  int flags,              /* Options */
+  void *pBusyHandler      /* Busy callback info passed to pager layer */
 ){
   Btree *pBt;
   int rc;
@@ -1002,7 +1003,7 @@ int sqlite3BtreeOpen(
   }
   if( nCache<10 ) nCache = 10;
   rc = sqlite3pager_open(&pBt->pPager, zFilename, nCache, EXTRA_SIZE,
-                        (flags & BTREE_OMIT_JOURNAL)==0);
+                        (flags & BTREE_OMIT_JOURNAL)==0, pBusyHandler);
   if( rc!=SQLITE_OK ){
     if( pBt->pPager ) sqlite3pager_close(pBt->pPager);
     sqliteFree(pBt);

@@ -30,7 +30,13 @@ typedef struct Btree Btree;
 typedef struct BtCursor BtCursor;
 
 
-int sqlite3BtreeOpen(const char *zFilename, Btree **, int nCache, int flags);
+int sqlite3BtreeOpen(
+  const char *zFilename, 
+  Btree **, 
+  int nCache, 
+  int flags,
+  void *pBusyHandler
+);
 
 /* The flags parameter to sqlite3BtreeOpen can be the bitwise or of the
 ** following values.
