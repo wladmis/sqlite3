@@ -1727,6 +1727,7 @@ static void unlinkPage(PgHdr *pPg){
   unlinkHashChain(pPager, pPg);
 }
 
+#ifndef SQLITE_OMIT_MEMORYDB
 /*
 ** This routine is used to truncate an in-memory database.  Delete
 ** all pages whose pgno is larger than pPager->dbSize and is unreferenced.
@@ -1752,6 +1753,9 @@ static void memoryTruncate(Pager *pPager){
     }
   }
 }
+#else
+#define memoryTruncate(p)
+#endif
 
 /*
 ** Truncate the file to the number of pages specified.
@@ -2743,6 +2747,7 @@ int sqlite3pager_iswriteable(void *pData){
   return pPg->dirty;
 }
 
+#ifndef SQLITE_OMIT_VACUUM
 /*
 ** Replace the content of a single page with the information in the third
 ** argument.
@@ -2761,6 +2766,7 @@ int sqlite3pager_overwrite(Pager *pPager, Pgno pgno, void *pData){
   }
   return rc;
 }
+#endif
 
 /*
 ** A call to this routine tells the pager that it is not necessary to

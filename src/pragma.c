@@ -62,6 +62,7 @@ static int getBoolean(const u8 *z){
   return getSafetyLevel(z)&1;
 }
 
+#ifndef SQLITE_OMIT_PAGER_PRAGMAS
 /*
 ** Interpret the given string as a temp db location. Return 1 for file
 ** backed temporary databases, 2 for the Red-Black tree in memory database
@@ -113,6 +114,7 @@ static int changeTempStorage(Parse *pParse, const char *zStorageType){
   db->temp_store = ts;
   return SQLITE_OK;
 }
+#endif
 
 /*
 ** Generate code to return a single integer value.

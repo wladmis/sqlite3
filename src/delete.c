@@ -43,10 +43,12 @@ int sqlite3IsReadOnly(Parse *pParse, Table *pTab, int viewOk){
     sqlite3ErrorMsg(pParse, "table %s may not be modified", pTab->zName);
     return 1;
   }
+#ifndef SQLITE_OMIT_VIEW
   if( !viewOk && pTab->pSelect ){
     sqlite3ErrorMsg(pParse,"cannot modify %s because it is a view",pTab->zName);
     return 1;
   }
+#endif
   return 0;
 }
 
