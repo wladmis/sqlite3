@@ -1015,6 +1015,7 @@ WhereInfo *sqlite3WhereBegin(
           if( pTerm->idxLeft==iCur
              && (pTerm->prereqRight & loopMask)==pTerm->prereqRight 
              && pX->pLeft->iColumn==pIdx->aiColumn[j]
+             && (pX->op==TK_EQ || pX->op==TK_IN)
           ){
             char idxaff = pIdx->pTable->aCol[pX->pLeft->iColumn].affinity;
             if( sqlite3IndexAffinityOk(pX, idxaff) ){
