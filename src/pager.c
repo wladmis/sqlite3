@@ -2786,7 +2786,7 @@ sync_exit:
 */
 int sqlite3pager_lockstate(Pager *pPager){
 #ifdef OS_TEST
-  return pPager->fd.fd.locktype;
+  return pPager->fd->fd.locktype;
 #else
   return pPager->fd.locktype;
 #endif

@@ -984,6 +984,27 @@ bad_args:
   return TCL_ERROR;
 }
 
+static int sqlite3_crashseed(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+#ifdef OS_TEST
+  int seed;
+  if( objc!=2 ) goto bad_args;
+  if( Tcl_GetIntFromObj(interp, objv[2], &seed) ) return TCL_ERROR;
+  sqlite3SetCrashseed(seed);
+#endif
+  return TCL_OK;
+
+bad_args:
+  Tcl_AppendResult(interp, "wrong # args: should be \"",
+      Tcl_GetStringFromObj(objv[0], 0), "<seed>", 0);
+  return TCL_ERROR;
+}
+
+
 /*
 ** Usage:    breakpoint
 **
@@ -1995,6 +2016,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3OsLock",         test_sqlite3OsLock, 0 },
      { "sqlite3OsUnlock",       test_sqlite3OsUnlock, 0 },
      { "add_test_collate",      test_collate, 0         },
+     { "sqlite3_crashseed",     sqlite3_crashseed, 0         },
 
   };
   int i;
