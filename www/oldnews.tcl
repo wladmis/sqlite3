@@ -9,6 +9,13 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Oct-11} {Version 3.0.8} {
+  Version 3.0.8 of SQLite contains several code optimizations and minor
+  bug fixes and adds support for DEFERRED, IMMEDIATE, and EXCLUSIVE
+  transactions.  This is an incremental release.  There is no reason
+  to upgrade from version 3.0.7 if that version is working for you.
+}
+
 newsitem {2004-Sep-18} {Version 3.0.7} {
   Version 3.0 has now been in use by multiple projects for several
   months with no major difficulties.   We consider it stable and

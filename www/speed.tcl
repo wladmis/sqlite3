@@ -8,6 +8,17 @@ header {SQLite Database Speed Comparison}
 puts {
 <h2>Database Speed Comparison</h2>
 
+<font color="red"><b>
+Note:  This document is old.  It describes a speed comparison between
+an older version of SQLite against archic versions of MySQL and PostgreSQL.
+Readers are invited to contribute more up-to-date speed comparisons
+on the <a href="http://www.sqlite.org/cvstrac/wiki">SQLite Wiki</a>.
+<p>
+The numbers here are old enough to be nearly meaningless.  Until it is
+updated, use this document only as proof that SQLite is not a
+sluggard.
+</b></font>
+
 <h3>Executive Summary</h3>
 
 <p>A series of tests were run to measure the relative performance of

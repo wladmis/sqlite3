@@ -33,11 +33,6 @@ feature {CHECK constraints} {
   NOT NULL and UNIQUE constraints are enforced, however.
 }
 
-feature {Variable subqueries} {
-  Subqueries must be static.  They are evaluated only once.  They may not,
-  therefore, refer to variables in the main query.
-}
-
 feature {FOREIGN KEY constraints} {
   FOREIGN KEY constraints are parsed but are not enforced.
 }
@@ -53,6 +48,7 @@ feature {Complete trigger support} {
 feature {ALTER TABLE} {
   To change a table you have to delete it (saving its contents to a temporary
   table) and recreate it from scratch.
+  ("ALTER TABLE ... RENAME TABLE ..." was added to version 3.1.0.)
 }
 
 feature {Nested transactions} {
