@@ -336,15 +336,15 @@ int sqliteSelect(
   }
   if( pHaving ){
     if( pGroupBy==0 ){
-      sqliteSetString(&pParse->zErrMsg, "a GROUP BY clause is required to "
-         "use HAVING", 0);
+      sqliteSetString(&pParse->zErrMsg, "a GROUP BY clause is required "
+         "before HAVING", 0);
       pParse->nErr++;
       return 1;
     }
     if( sqliteExprResolveIds(pParse, pTabList, pHaving) ){
       return 1;
     }
-    if( sqliteExprCheck(pParse, pHaving, 0, 0) ){
+    if( sqliteExprCheck(pParse, pHaving, isAgg, 0) ){
       return 1;
     }
   }
