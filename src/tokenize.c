@@ -333,7 +333,6 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
     }
     switch( tokenType ){
       case TK_SPACE:
-        break;
       case TK_COMMENT: {
         break;
       }

@@ -595,6 +595,10 @@ static void pageDestructor(void *pData){
 ** Actually, this routine just sets up the internal data structures
 ** for accessing the database.  We do not open the database file 
 ** until the first page is loaded.
+**
+** zFilename is the name of the database file.  If zFilename is NULL
+** a new database with a random name is created.  The database will be
+** destroyed when sqliteBtreeClose() is called.
 */
 int sqliteBtreeOpen(
   const char *zFilename,    /* Name of the file containing the BTree database */

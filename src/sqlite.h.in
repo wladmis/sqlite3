@@ -24,6 +24,13 @@
 #define SQLITE_VERSION         "--VERS--"
 
 /*
+** Make sure we can call this stuff from C++.
+*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
 ** The version string is also compiled into the library so that a program
 ** can check to make sure that the lib*.a file and the *.h file are from
 ** the same version.
@@ -341,5 +348,9 @@ int sqlite_get_table_vprintf(
   char **errmsg,         /* Error msg written here */
   va_list ap             /* Arguments to the format string */
 );
+
+#ifdef __cplusplus
+}  /* End of the 'extern "C"' block */
+#endif
 
 #endif /* _SQLITE_H_ */

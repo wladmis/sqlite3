@@ -170,6 +170,10 @@ puts {<h2>Related Sites</h2>
 
 <ul>
 
+<li><p>An ODBC driver for SQLite can be found at
+       <a href="http://www.ch-werner.de/sqliteodbc/">
+       http://www.ch-werner.de/sqliteodbc/</a>.</p></li>
+
 <li><p>Here is a good <a href="http://w3.one.net/~jhoffman/sqltut.htm">
        tutorial on SQL</a>.</p></li>
 

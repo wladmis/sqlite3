@@ -250,7 +250,7 @@ void generateColumnNames(Parse *pParse, IdList *pTabList, ExprList *pEList){
       sprintf(zName, "column%d", i+1);
       sqliteVdbeAddOp(v, OP_ColumnName, i, 0, zName, 0);
     }else{
-      if( pTabList->nId>1 ){
+      if( pTabList->nId>1 || (pParse->db->flags & SQLITE_FullColNames)!=0 ){
         char *zName = 0;
         Table *pTab = pTabList->a[p->iTable].pTab;
         char *zTab;
@@ -861,7 +861,7 @@ int sqliteSelect(
   /* Initialize the memory cell to NULL
   */
   if( eDest==SRT_Mem ){
-    sqliteVdbeAddOp(v, OP_Null, 0, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_String, 0, 0, 0, 0);
     sqliteVdbeAddOp(v, OP_MemStore, iParm, 0, 0, 0);
   }
 

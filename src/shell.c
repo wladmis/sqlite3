@@ -18,7 +18,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "sqlite.h"
-#include <unistd.h>
 #include <ctype.h>
 #ifdef OS_UNIX
 # include <signal.h>
@@ -603,8 +602,6 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     }else if( strncmp(azArg[1],"html",n2)==0 ){
       p->mode = MODE_Html;
     }else if( strncmp(azArg[1],"insert",n2)==0 ){
-      char *zTab;
-      int k, n;
       p->mode = MODE_Insert;
       if( nArg>=3 ){
         set_table_name(p, azArg[2]);
@@ -908,6 +905,7 @@ int main(int argc, char **argv){
       exit(1);
     }
   }else{
+    extern int isatty();
     if( isatty(0) ){
       printf(
         "SQLite version %s\n"
