@@ -9,6 +9,30 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Jun-30} {Version 3.0.2 (beta) Released} {
+  The first beta release of SQLite version 3.0 is now available.
+  Version 3.0 adds support for internationalization and a new
+  more compact file format. 
+  <a href="version3.html">Details.</a>
+  As of this release, the API and file format are frozen.  All
+  regression tests pass (over 100000 tests) and the test suite
+  exercises over 95% of the code.
+
+  SQLite version 3.0 is made possible in part by AOL
+  developers supporting and embracing great Open-Source Software.
+}
+  
+
+newsitem {2004-Jun-25} {Website hacked} {
+  The www.sqlite.org website was hacked sometime around 2004-Jun-22
+  because the lead SQLite developer failed to properly patch CVS.
+  Evidence suggests that the attacker was unable to elevate privileges
+  above user "cvs".  Nevertheless, as a precaution the entire website
+  has been reconstructed from scratch on a fresh machine.  All services
+  should be back to normal as of 2004-Jun-28.
+}
+
+
 newsitem {2004-Jun-18} {Version 3.0.0 (alpha) Released} {
   The first alpha release of SQLite version 3.0 is available for
   public review and comment.  Version 3.0 enhances internationalization support
