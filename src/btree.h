@@ -45,6 +45,7 @@ int sqliteBtreeInsert(BtCursor*, const void *pKey, int nKey,
 int sqliteBtreeFirst(BtCursor*, int *pRes);
 int sqliteBtreeLast(BtCursor*, int *pRes);
 int sqliteBtreeNext(BtCursor*, int *pRes);
+int sqliteBtreePrevious(BtCursor*, int *pRes);
 int sqliteBtreeKeySize(BtCursor*, int *pSize);
 int sqliteBtreeKey(BtCursor*, int offset, int amt, char *zBuf);
 int sqliteBtreeKeyCompare(BtCursor*, const void *pKey, int nKey,

@@ -23,6 +23,24 @@ if {[file exists ./sqlite_test_count]} {
   set COUNT 4
 }
 
+if {[llength $argv]>0} {
+  foreach {name value} $argv {
+    switch -- $name {
+      -count {
+         set COUNT $value
+      }
+      -quick {
+         set ISQUICK $value
+      }
+      default {
+         puts stderr "Unknown option: $name"
+         exit
+      }
+    }
+  }
+}
+set argv {}
+
 # LeakList will hold a list of the number of unfreed mallocs after
 # each round of the test.  This number should be constant.  If it
 # grows, it may mean there is a memory leak in the library.

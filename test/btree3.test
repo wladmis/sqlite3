@@ -47,7 +47,7 @@ for {set k 2} {$k<=10} {incr k} {
     set jkey [format %02d $j]
     btree_clear_table $::b1 2
     set ::c1 [btree_cursor $::b1 2 1]
-    for {set i 1} {$i<=$k+1} {incr i} {
+    for {set i 1} {$i<=$k} {incr i} {
       set key [format %02d $i]
       do_test btree3-$k.$j.1.$i {
         btree_insert $::c1 $::key $::data
@@ -61,10 +61,18 @@ for {set k 2} {$k<=10} {incr k} {
     do_test btree3-$k.$j.3 {
       btree_delete $::c1
     } {}
-    do_test btree3-$k.$j.4 {
-      btree_next $::c1
-      btree_key $::c1
-    } [format %02d [expr $j+1]]
+    if {$j<$k} {
+      do_test btree3-$k.$j.4 {
+        btree_next $::c1
+        btree_key $::c1
+      } [format %02d [expr $j+1]]
+    }
+    if {$j>1} {
+      do_test btree3-$k.$j.5 {
+        btree_prev $::c1
+        btree_key $::c1
+      } [format %02d [expr $j-1]]
+    }
     btree_close_cursor $::c1
   }
 }
