@@ -138,6 +138,8 @@ extern const int sqlite3one;
 #define SQLITE_BIGENDIAN    (*(char *)(&sqlite3one)==0)
 #define SQLITE_LITTLEENDIAN (*(char *)(&sqlite3one)==1)
 
+typedef struct sqlite sqlite;
+
 /*
 ** Defer sourcing vdbe.h until after the "u8" typedef is defined.
 */
@@ -272,7 +274,6 @@ typedef struct KeyClass KeyClass;
 typedef struct CollSeq CollSeq;
 typedef struct KeyInfo KeyInfo;
 typedef struct BusyHandler BusyHandler;
-
 
 /*
 ** Each database file to be accessed by the system is an instance

@@ -95,7 +95,7 @@ api {} {
  special value SQLITE_STATIC, then the library assumes that the information
  is in static, unmanaged space and does not need to be freed.  If the
  fifth argument has the value SQLITE_TRANSIENT, then SQLite makes its
- on private copy of the data.
+ own private copy of the data.
 
  The sqlite3_bind_*() routine must be called after
  sqlite3_prepare() or sqlite3_reset() and before sqlite3_step().
