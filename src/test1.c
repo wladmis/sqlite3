@@ -162,6 +162,30 @@ static int test_exec_printf(
 }
 
 /*
+** Usage:  sqlite_mprintf_z_test  SEPARATOR  ARG0  ARG1 ...
+**
+** Test the %z format of mprintf().  Use multiple mprintf() calls to 
+** concatenate arg0 through argn using separator as the separator.
+** Return the result.
+*/
+static int test_mprintf_z(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  char *zResult = 0;
+  int i;
+
+  for(i=2; i<argc; i++){
+    zResult = sqlite_mprintf("%z%s%s", zResult, argv[1], argv[i]);
+  }
+  Tcl_AppendResult(interp, zResult, 0);
+  sqlite_freemem(zResult);
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite_get_table_printf  DB  FORMAT  STRING
 **
 ** Invoke the sqlite_get_table_printf() interface using the open database
@@ -779,6 +803,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite_mprintf_int",             (Tcl_CmdProc*)sqlite_mprintf_int    },
      { "sqlite_mprintf_str",             (Tcl_CmdProc*)sqlite_mprintf_str    },
      { "sqlite_mprintf_double",          (Tcl_CmdProc*)sqlite_mprintf_double },
+     { "sqlite_mprintf_z_test",          (Tcl_CmdProc*)test_mprintf_z        },
      { "sqlite_open",                    (Tcl_CmdProc*)sqlite_test_open      },
      { "sqlite_last_insert_rowid",       (Tcl_CmdProc*)test_last_rowid       },
      { "sqlite_exec_printf",             (Tcl_CmdProc*)test_exec_printf      },
