@@ -1389,6 +1389,7 @@ static int moveToChild(BtCursor *pCur, int newPgno){
   sqlitepager_unref(pCur->pPage);
   pCur->pPage = pNewPage;
   pCur->idx = 0;
+  if( pNewPage->nCell<1 ) return SQLITE_CORRUPT;
   return SQLITE_OK;
 }
 
