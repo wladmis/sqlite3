@@ -440,7 +440,7 @@ static int parseModifier(const char *zMod, DateTime *p){
   int n;
   double r;
   char z[30];
-  for(n=0; n<sizeof(z)-1; n++){
+  for(n=0; n<sizeof(z)-1 && zMod[n]; n++){
     z[n] = tolower(zMod[n]);
   }
   z[n] = 0;
