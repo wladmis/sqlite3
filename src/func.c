@@ -946,7 +946,7 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
     { "random",            -1, 0, SQLITE_UTF8,    0, randomFunc },
     { "like",               2, 0, SQLITE_UTF8,    0, likeFunc   },
     { "glob",               2, 0, SQLITE_UTF8,    0, globFunc   },
-    { "nullif",             2, 0, SQLITE_UTF8,    0, nullifFunc },
+    { "nullif",             2, 0, SQLITE_UTF8,    1, nullifFunc },
     { "sqlite_version",     0, 0, SQLITE_UTF8,    0, versionFunc},
     { "quote",              1, 0, SQLITE_UTF8,    0, quoteFunc  },
     { "last_insert_rowid",  0, 1, SQLITE_UTF8,    0, last_insert_rowid },
