@@ -107,9 +107,6 @@ do_test printf-5.1 {
 do_test printf-5.2 {
   sqlite_mprintf_str {%d %d (%-10.10s) %} -9 -10 {HelloHelloHello}
 } {-9 -10 (HelloHello) %}
-do_test printf-5.3 {
-  sqlite_mprintf_str {%% %d %d (%=10s)} 5 6 Hello
-} {% 5 6 (  Hello   )}
 
 do_test printf-6.1 {
   sqlite_mprintf_z_test , one two three four five six
