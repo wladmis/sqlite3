@@ -861,7 +861,7 @@ int sqlite3_create_function(
   sqlite *db,          /* Add the function to this database connection */
   const char *zName,   /* Name of the function to add */
   int nArg,            /* Number of arguments */
-  void (*xFunc)(sqlite_func*,int,sqlite3_value **), /* The implementation */
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value **), /* The implementation */
   void *pUserData      /* User data */
 ){
   FuncDef *p;
@@ -882,8 +882,8 @@ int sqlite3_create_aggregate(
   sqlite *db,          /* Add the function to this database connection */
   const char *zName,   /* Name of the function to add */
   int nArg,            /* Number of arguments */
-  void (*xStep)(sqlite_func*,int,sqlite3_value**), /* The step function */
-  void (*xFinalize)(sqlite_func*),              /* The finalizer */
+  void (*xStep)(sqlite3_context*,int,sqlite3_value**), /* The step function */
+  void (*xFinalize)(sqlite3_context*),              /* The finalizer */
   void *pUserData      /* User data */
 ){
   FuncDef *p;

@@ -379,7 +379,7 @@ static int DbCommitHandler(void *cd){
 ** This routine is called to evaluate an SQL function implemented
 ** using TCL script.
 */
-static void tclSqlFunc(sqlite_func *context, int argc, sqlite3_value **argv){
+static void tclSqlFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   SqlFunc *p = sqlite3_user_data(context);
   Tcl_DString cmd;
   int i;
