@@ -421,6 +421,7 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     }
   }
   if( zSql[i]==0 ){
+    sqliteParser(pEngine, TK_SEMI, pParse->sLastToken, pParse);
     sqliteParser(pEngine, 0, pParse->sLastToken, pParse);
     if( pParse->zErrMsg && pParse->sErrToken.z ){
        sqliteSetNString(pzErrMsg, "near \"", -1, 

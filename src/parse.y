@@ -48,10 +48,10 @@ input ::= cmdlist.
 // A list of commands is zero or more commands
 //
 cmdlist ::= ecmd.
-cmdlist ::= cmdlist SEMI ecmd.
-ecmd ::= explain cmd.  {sqliteExec(pParse);}
-ecmd ::= cmd.          {sqliteExec(pParse);}
-ecmd ::= .
+cmdlist ::= cmdlist ecmd.
+ecmd ::= explain cmd SEMI.  {sqliteExec(pParse);}
+ecmd ::= cmd SEMI.          {sqliteExec(pParse);}
+ecmd ::= SEMI.
 explain ::= EXPLAIN.    {pParse->explain = 1;}
 
 ///////////////////// Begin and end transactions. ////////////////////////////
