@@ -2553,7 +2553,6 @@ case OP_MoveGt: {
     *pC->pIncrKey = oc==OP_MoveGt || oc==OP_MoveLe;
     if( pC->intKey ){
       i64 iKey;
-      assert( !pOp->p3 );
       Integerify(pTos);
       iKey = intToKey(pTos->i);
       if( pOp->p2==0 && pOp->opcode==OP_MoveGe ){
