@@ -686,8 +686,16 @@ static int btree_insert(
   }
   if( Tcl_GetInt(interp, argv[1], (int*)&pCur) ) return TCL_ERROR;
   if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
+/*
     int iKey;
     if( Tcl_GetInt(interp, argv[2], &iKey) ) return TCL_ERROR;
+*/
+    i64 iKey;
+    Tcl_Obj *obj = Tcl_NewStringObj(argv[2], -1);
+    Tcl_IncrRefCount(obj);
+    if( Tcl_GetWideIntFromObj(interp, obj, &iKey) ) return TCL_ERROR;
+    Tcl_DecrRefCount(obj);
+
     rc = sqlite3BtreeInsert(pCur, 0, iKey, argv[3], strlen(argv[3]));
   }else{
     rc = sqlite3BtreeInsert(pCur, argv[2], strlen(argv[2]),

@@ -309,7 +309,7 @@ static unsigned int getVarint(unsigned char *p, u64 *pResult){
   u64 x = p[0] & 0x7f;
   int n = 0;
   while( (p[n++]&0x80)!=0 ){
-    x |= (p[n]&0x7f)<<(n*7);
+    x |= ((u64)(p[n]&0x7f))<<(n*7);
   }
   *pResult = x;
   return n;

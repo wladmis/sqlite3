@@ -3211,7 +3211,8 @@ case OP_PutStrKey: {
       ** the integer key, and zKey to NULL.
       */
       if( pC->intKey ){
-        nKey = pNos->i;
+        nKey = intToKey(pNos->i);
+        assert( keyToInt(nKey)==pNos->i );
         zKey = 0;
       }else{
         /* TODO: can this happen? zKey is not correctly byte-ordered here! */
