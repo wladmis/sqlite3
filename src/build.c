@@ -1763,7 +1763,12 @@ void sqliteCreateIndex(
       sqliteVdbeAddOp(v, OP_Rewind, 2, lbl2);
       lbl1 = sqliteVdbeAddOp(v, OP_Recno, 2, 0);
       for(i=0; i<pIndex->nColumn; i++){
-        sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i]);
+        int iCol = pIndex->aiColumn[i];
+        if( pTab->iPKey==iCol ){
+          sqliteVdbeAddOp(v, OP_Dup, i, 0);
+        }else{
+          sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i]);
+        }
       }
       sqliteVdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0);
       if( db->file_format>=4 ) sqliteAddIdxKeyType(v, pIndex);
