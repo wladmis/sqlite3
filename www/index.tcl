@@ -119,6 +119,9 @@ puts {<h2>Related Sites</h2>
        about the Berkeley DB library, see
        <a href="http://www.sleepcat.com/">http://www.sleepycat.com</a>
        </p></li>
+
+<li><p>Here is a <a href="http://w3.one.net/~jhoffman/sqltut.htm">
+       tutorial on SQL</a>.</p></li>
 </ul>}
 
 puts {
