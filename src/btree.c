@@ -2505,13 +2505,13 @@ Pager *sqliteBtreePager(Btree *pBt){
 */
 typedef struct SanityCheck SanityCheck;
 struct SanityCheck {
-  Btree *pBt;    // The tree being checked out
-  Pager *pPager; // The associated pager.  Also accessible by pBt->pPager
-  int nPage;     // Number of pages in the database
-  int *anRef;    // Number of times each page is referenced
-  int nTreePage; // Number of BTree pages
-  int nByte;     // Number of bytes of data stored on BTree pages
-  char *zErrMsg; // An error message.  NULL of no errors seen.
+  Btree *pBt;    /* The tree being checked out */
+  Pager *pPager; /* The associated pager.  Also accessible by pBt->pPager */
+  int nPage;     /* Number of pages in the database */
+  int *anRef;    /* Number of times each page is referenced */
+  int nTreePage; /* Number of BTree pages */
+  int nByte;     /* Number of bytes of data stored on BTree pages */
+  char *zErrMsg; /* An error message.  NULL of no errors seen. */
 };
 
 /*
