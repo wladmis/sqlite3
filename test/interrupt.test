@@ -141,4 +141,32 @@ for {set i 1} {$i<50} {incr i 5} {
   } {}
 }
 
+# There are reports of a memory leak if an interrupt occurs during
+# the beginning of a complex query - before the first callback.  We
+# will try to reproduce it here:
+#
+execsql {
+  UPDATE t1 SET b=round((100-rowid)/10);
+}
+set sql {
+  SELECT sum(a.a), max(a.a), min(b.a), a.b 
+  FROM t1 AS a, t1 AS b
+  WHERE b.rowid=a.b
+  GROUP BY 4 ORDER BY 1;
+}
+set sqlite_interrupt_count 1000000
+execsql $sql
+set max_count [expr {1000000-$sqlite_interrupt_count}]
+for {set i 1} {$i<$max_count-5} {incr i 1} {
+  do_test interrupt-4.$i.1 {
+    set ::sqlite_interrupt_count $::i
+    catchsql {
+      SELECT sum(a.a), max(a.a), min(b.a), a.b 
+      FROM t1 AS a, t1 AS b
+      WHERE b.rowid=a.b
+      GROUP BY 4 ORDER BY 1;
+    }
+  } {1 interrupted}
+}
+
 finish_test
