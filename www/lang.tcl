@@ -1008,14 +1008,6 @@ user function <a href="#likeFunc"> like(<i>X</i>,<i>Y</i>)</a>.</p>
 }
 
 puts {
-<p>The LIKE operator does a wildcard comparison.  The operand
-to the right contains the wildcards.}
-puts "A percent symbol [Operator %] in the right operand
-matches any sequence of zero or more characters on the left.
-An underscore [Operator _] on the right
-matches any single character on the left."
-
-puts {
 The LIKE operator is not case sensitive and will match upper case
 characters on one side against lower case characters on the other.  
 (A bug: SQLite only understands upper/lower case for 7-bit Latin
