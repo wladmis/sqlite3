@@ -149,5 +149,11 @@ do_test subselect-3.9 {
     SELECT (SELECT x FROM t3 ORDER BY x DESC LIMIT 1 OFFSET 2);
   }
 } {4}
+do_test subselect-3.10 {
+  execsql {
+    SELECT x FROM t3 WHERE x IN
+       (SELECT x FROM t3 ORDER BY x DESC LIMIT 1 OFFSET 2);
+  }
+} {4}
 
 finish_test
