@@ -15,7 +15,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-
+#include <ctype.h>
 
 /*
 ** Construct a new expression node and return a pointer to it.  Memory
