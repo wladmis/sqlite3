@@ -1552,7 +1552,12 @@ the sort order.</p>
 <p>The LIMIT clause places an upper bound on the number of rows
 returned in the result.  A negative LIMIT indicates no upper bound.
 The optional OFFSET following LIMIT specifies how many
-rows to skip at the beginning of the result set.</p>
+rows to skip at the beginning of the result set.
+In a compound query, the LIMIT clause may only appear on the
+final SELECT statement.
+The limit is applied to the entire query not
+to the individual SELECT statement to which it is attached.
+</p>
 
 <p>A compound SELECT is formed from two or more simple SELECTs connected
 by one of the operators UNION, UNION ALL, INTERSECT, or EXCEPT.  In

@@ -778,16 +778,17 @@ struct WhereInfo {
 ** in the VDBE that record the limit and offset counters.
 */
 struct Select {
-  int isDistinct;        /* True if the DISTINCT keyword is present */
   ExprList *pEList;      /* The fields of the result */
+  u8 op;                 /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
+  u8 isDistinct;         /* True if the DISTINCT keyword is present */
   SrcList *pSrc;         /* The FROM clause */
   Expr *pWhere;          /* The WHERE clause */
   ExprList *pGroupBy;    /* The GROUP BY clause */
   Expr *pHaving;         /* The HAVING clause */
   ExprList *pOrderBy;    /* The ORDER BY clause */
-  int op;                /* One of: TK_UNION TK_ALL TK_INTERSECT TK_EXCEPT */
   Select *pPrior;        /* Prior select in a compound select statement */
   int nLimit, nOffset;   /* LIMIT and OFFSET values.  -1 means not used */
+  int iLimit, iOffset;   /* Memory registers holding LIMIT & OFFSET counters */
   char *zSelect;         /* Complete text of the SELECT command */
 };
 

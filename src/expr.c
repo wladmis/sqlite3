@@ -235,6 +235,8 @@ Select *sqliteSelectDup(Select *p){
   pNew->nLimit = p->nLimit;
   pNew->nOffset = p->nOffset;
   pNew->zSelect = 0;
+  pNew->iLimit = -1;
+  pNew->iOffset = -1;
   return pNew;
 }
 
