@@ -1840,6 +1840,20 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView){
       pTrigger = pTrigger->pNext;
     }
 
+#ifndef SQLITE_OMIT_AUTOINCREMENT
+    /* Remove any entries of the sqlite_sequence table associated with
+    ** the table being dropped. This is done before the table is dropped
+    ** at the btree level, in case the sqlite_sequence table needs to
+    ** move as a result of the drop (can happen in auto-vacuum mode).
+    */
+    if( pTab->autoInc ){
+      sqlite3NestedParse(pParse,
+        "DELETE FROM %s.sqlite_sequence WHERE name=%Q",
+        pDb->zName, pTab->zName
+      );
+    }
+#endif
+
     /* Drop all SQLITE_MASTER table and index entries that refer to the
     ** table. The program name loops through the master table and deletes
     ** every row that refers to a table of the same name as the one being
@@ -1853,17 +1867,6 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView){
     if( !isView ){
       destroyTable(pParse, pTab);
     }
-
-#ifndef SQLITE_OMIT_AUTOINCREMENT
-    /* Remove any entries of the sqlite_sequence table associated with
-    ** the table being dropped */
-    if( pTab->autoInc ){
-      sqlite3NestedParse(pParse,
-        "DELETE FROM %s.sqlite_sequence WHERE name=%Q",
-        pDb->zName, pTab->zName
-      );
-    }
-#endif
 
     /* Remove the table entry from SQLite's internal schema
     */
