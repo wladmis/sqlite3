@@ -1666,11 +1666,6 @@ case OP_SetNumColumns: {
   break;
 }
 
-/* Opcode: IdxColumn P1 * *
-**
-** P1 is a cursor opened on an index. Push the first field from the
-** current index key onto the stack.
-*/
 /* Opcode: Column P1 P2 *
 **
 ** Interpret the data that cursor P1 points to as a structure built using
@@ -1688,7 +1683,6 @@ case OP_SetNumColumns: {
 ** stack.  The column value is not copied. The number of columns in the
 ** record is stored on the stack just above the record itself.
 */
-case OP_IdxColumn:
 case OP_Column: {
   u32 payloadSize;   /* Number of bytes in the record */
   int p1 = pOp->p1;  /* P1 value of the opcode */
@@ -3482,7 +3476,7 @@ case OP_IdxDelete: {
 /* Opcode: IdxRecno P1 * *
 **
 ** Push onto the stack an integer which is the varint located at the
-** end of the index key pointed to by cursor P1.  These integer should be
+** end of the index key pointed to by cursor P1.  This integer should be
 ** the record number of the table entry to which this index entry points.
 **
 ** See also: Recno, MakeIdxKey.
