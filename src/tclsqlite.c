@@ -587,6 +587,9 @@ static int DbMain(void *cd, Tcl_Interp *interp, int argc, char **argv){
   /* The return value is the value of the sqlite* pointer
   */
   sprintf(zBuf, "%p", p->db);
+  if( strncmp(zBuf,"0x",2) ){
+    sprintf(zBuf, "0x%p", p->db);
+  }
   Tcl_AppendResult(interp, zBuf, 0);
 
   /* If compiled with SQLITE_TEST turned on, then register the "md5sum"
