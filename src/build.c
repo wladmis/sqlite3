@@ -784,7 +784,7 @@ void sqlite3AddColumnType(Parse *pParse, Token *pFirst, Token *pLast){
   if( i<0 ) return;
   pCol = &p->aCol[i];
   pz = &pCol->zType;
-  n = pLast->n + Addr(pLast->z) - Addr(pFirst->z);
+  n = pLast->n + (pLast->z - pFirst->z);
   assert( pCol->zType==0 );
   z = pCol->zType = sqlite3MPrintf("%.*s", n, pFirst->z);
   if( z==0 ) return;
