@@ -829,7 +829,7 @@ int sqlitepager_ref(void *pData){
 */
 static int syncAllPages(Pager *pPager){
   PgHdr *pPg;
-  Pgno lastPgno;
+  Pgno lastPgno = 0;
   int rc = SQLITE_OK;
 
   /* Sync the journal before modifying the main database
