@@ -31,6 +31,11 @@
 #define TEMP_PAGES   25
 
 /*
+** File format version number
+*/
+#define FILE_FORMAT 1
+
+/*
 ** Integers of known sizes.  These typedefs might change for architectures
 ** where the sizes very.  Preprocessor macros are available so that the
 ** types can be conveniently redefined at compile-type.  Like this:
@@ -213,7 +218,8 @@ struct Column {
   char *zName;     /* Name of this column */
   char *zDflt;     /* Default value of this column */
   char *zType;     /* Data type for this column */
-  int notNull;     /* True if there is a NOT NULL constraint */
+  u8 notNull;      /* True if there is a NOT NULL constraint */
+  u8 isPrimKey;    /* True if this column is an INTEGER PRIMARY KEY */
 };
 
 /*
@@ -224,12 +230,14 @@ struct Table {
   char *zName;     /* Name of the table */
   int nCol;        /* Number of columns in this table */
   Column *aCol;    /* Information about each column */
+  int iPKey;       /* Use this column as the record-number for each row */
   Index *pIndex;   /* List of SQL indexes on this table. */
   int tnum;        /* Page containing root for this table */
   u8 readOnly;     /* True if this table should not be written by the user */
   u8 isCommit;     /* True if creation of this table has been committed */
   u8 isDelete;     /* True if this table is being deleted */
   u8 isTemp;       /* True if stored in db->pBeTemp instead of db->pBe */
+  u8 hasPrimKey;   /* True if there exists a primary key */
 };
 
 /*

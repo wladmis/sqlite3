@@ -127,7 +127,12 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
           if( sqliteStrICmp(pTab->aCol[j].zName, z)==0 ){
             cnt++;
             pExpr->iTable = i + pParse->nTab;
-            pExpr->iColumn = j;
+            if( j==pTab->iPKey ){
+              /* Substitute the record number for the INTEGER PRIMARY KEY */
+              pExpr->iColumn = -1;
+            }else{
+              pExpr->iColumn = j;
+            }
           }
         }
       }
@@ -190,7 +195,12 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
           if( sqliteStrICmp(pTab->aCol[j].zName, zRight)==0 ){
             cnt++;
             pExpr->iTable = i + pParse->nTab;
-            pExpr->iColumn = j;
+            if( j==pTab->iPKey ){
+              /* Substitute the record number for the INTEGER PRIMARY KEY */
+              pExpr->iColumn = -1;
+            }else{
+              pExpr->iColumn = j;
+            }
           }
         }
       }

@@ -28,6 +28,15 @@ do_test unique-1.1 {
        c text
     );
   }
+} {1 {table "t1" has more than one primary key}}
+do_test unique-1.1b {
+  catchsql {
+    CREATE TABLE t1(
+       a int PRIMARY KEY,
+       b int UNIQUE,
+       c text
+    );
+  }
 } {0 {}}
 do_test unique-1.2 {
   catchsql {
