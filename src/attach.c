@@ -28,7 +28,10 @@ void sqliteAttach(Parse *pParse, Token *pFilename, Token *pDbname){
   int rc, i;
   char *zFile, *zName;
   sqlite *db;
+  Vdbe *v;
 
+  v = sqliteGetVdbe(pParse);
+  sqliteVdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;
   if( db->file_format<4 ){
@@ -117,7 +120,10 @@ void sqliteAttach(Parse *pParse, Token *pFilename, Token *pDbname){
 void sqliteDetach(Parse *pParse, Token *pDbname){
   int i;
   sqlite *db;
+  Vdbe *v;
 
+  v = sqliteGetVdbe(pParse);
+  sqliteVdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;
   for(i=0; i<db->nDb; i++){

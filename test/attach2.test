@@ -118,6 +118,24 @@ do_test attach2-2.12 {
   }
 } {1 {cannot commit - no transaction is active}}
 
+# Ticket #574:  Make sure it works usingi the non-callback API
+#
+do_test attach2-3.1 {
+  db close
+  db2 eval ROLLBACK
+  set DB [sqlite db test.db]
+  set rc [catch {sqlite_compile $DB "ATTACH 'test2.db' AS t2" TAIL} VM]
+  if {$rc} {lappend rc $VM}
+  sqlite_finalize $VM
+  set rc
+} {0}
+do_test attach2-3.2 {
+  set rc [catch {sqlite_compile $DB "DETACH t2" TAIL} VM]
+  if {$rc} {lappend rc $VM}
+  sqlite_finalize $VM
+  set rc
+} {0}
+
 db close
 for {set i 2} {$i<=15} {incr i} {
   catch {db$i close}
