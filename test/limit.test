@@ -90,6 +90,7 @@ do_test limit-3.1 {
   }
 } {50 51 52 53 54}
 
+btree_breakpoint
 do_test limit-4.1 {
   execsql {
     BEGIN;
