@@ -74,6 +74,8 @@
 
 /*
 ** Each in-memory image of a page begins with the following header.
+** This header is only visible to this pager module.  The client
+** code that calls pager sees only the data that follows the header.
 */
 typedef struct PgHdr PgHdr;
 struct PgHdr {

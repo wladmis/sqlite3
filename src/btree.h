@@ -37,8 +37,10 @@ int sqliteBtreeBeginTrans(Btree*);
 int sqliteBtreeCommit(Btree*);
 int sqliteBtreeRollback(Btree*);
 
+int sqliteBtreeCreateTable(Btree*, int*);
+int sqliteBtreeDropTable(Btree*, int);
 
-int sqliteBtreeCursor(Btree*, BtCursor **ppCur);
+int sqliteBtreeCursor(Btree*, int iTable, BtCursor **ppCur);
 int sqliteBtreeMoveto(BtCursor*, void *pKey, int nKey, *pRes);
 int sqliteBtreeDelete(BtCursor*);
 int sqliteBtreeInsert(BtCursor*, void *pKey, int nKey, void *pData, int nData);
