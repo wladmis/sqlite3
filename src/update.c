@@ -218,7 +218,7 @@ void sqliteUpdate(
     sqliteVdbeAddOp(v, OP_Dup, 0, 0);
 
     sqliteVdbeAddOp(v, OP_Dup, 0, 0);
-    sqliteVdbeAddOp(v, OP_Open, base, pTab->tnum);
+    sqliteVdbeAddOp(v, (pTab->isTemp?OP_OpenAux:OP_Open), base, pTab->tnum);
     sqliteVdbeAddOp(v, OP_MoveTo, base, 0);
 
     sqliteVdbeAddOp(v, OP_Integer, 13, 0);
