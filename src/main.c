@@ -401,7 +401,7 @@ static void clearHashTable(sqlite *db, int preserveTemps){
     Trigger * pTrigger = sqliteHashData(pElem);
     Table *pTab = sqliteFindTable(db, pTrigger->table);
     assert(pTab);
-    if( pTab->isTemp ){ 
+    if( pTab->isTemp && preserveTemps ){ 
       sqliteHashInsert(&db->trigHash, pTrigger->name, strlen(pTrigger->name), 
           pTrigger);
     }else{
