@@ -255,6 +255,11 @@ selcollist(A) ::= sclp(P) expr(X) as ids(Y). {A = sqliteExprListAppend(P,X,&Y);}
 selcollist(A) ::= sclp(P) STAR. {
   A = sqliteExprListAppend(P, sqliteExpr(TK_ALL, 0, 0, 0), 0);
 }
+selcollist(A) ::= sclp(P) ids(X) DOT STAR. {
+  Expr *pRight = sqliteExpr(TK_ALL, 0, 0, 0);
+  Expr *pLeft = sqliteExpr(TK_ID, 0, 0, &X);
+  A = sqliteExprListAppend(P, sqliteExpr(TK_DOT, pLeft, pRight, 0), 0);
+}
 as ::= .
 as ::= AS.
 
