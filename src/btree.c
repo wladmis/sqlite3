@@ -1640,6 +1640,9 @@ static int autoVacuumCommit(Btree *pBt){
   nFreeList = get4byte(&pBt->pPage1->aData[36]);
   if( nFreeList==0 ) return SQLITE_OK;
 
+  /* TODO: This does not calculate finDbSize correctly for the case where
+  ** pointer-map pages must be deallocated.
+  */
   origDbSize = sqlite3pager_pagecount(pPager);
   finDbSize = origDbSize - nFreeList;
   TRACE(("AUTOVACUUM: Begin (db size %d->%d)\n", origDbSize, finDbSize));
@@ -1671,8 +1674,9 @@ static int autoVacuumCommit(Btree *pBt){
     if( rc!=SQLITE_OK ) goto autovacuum_out;
     assert( eType!=PTRMAP_ROOTPAGE );
 
-    /* If iDbPage is already on the free-list, do not swap it. */
-    if( eType==PTRMAP_FREEPAGE ){
+    /* If iDbPage is a free or pointer map page, do not swap it. */
+    if( eType==PTRMAP_FREEPAGE ||
+        iDbPage==PTRMAP_PAGENO(pBt->pageSize, iDbPage) ){
       continue;
     }
     rc = getPage(pBt, iDbPage, &pDbMemPage);
