@@ -1464,6 +1464,14 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "result_set_details")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_ResultDetails;
+    }else{
+      db->flags &= ~SQLITE_ResultDetails;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "count_changes")==0 ){
     if( getBoolean(zRight) ){
       db->flags |= SQLITE_CountRows;
