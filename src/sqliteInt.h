@@ -565,4 +565,5 @@ void sqliteGenerateRowIndexDelete(Vdbe*, Table*, int, char*);
 void sqliteGenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
 void sqliteCompleteInsertion(Parse*, Table*, int, char*, int, int);
 void sqliteBeginWriteOperation(Parse*);
+void sqliteBeginMultiWriteOperation(Parse*);
 void sqliteEndWriteOperation(Parse*);

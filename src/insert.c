@@ -79,7 +79,11 @@ void sqliteInsert(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto insert_cleanup;
-  sqliteBeginWriteOperation(pParse);
+  if( pSelect ){
+    sqliteBeginMultiWriteOperation(pParse);
+  }else{
+    sqliteBeginWriteOperation(pParse);
+  }
 
   /* Figure out how many columns of data are supplied.  If the data
   ** is coming from a SELECT statement, then this step has to generate

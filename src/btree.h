@@ -28,6 +28,9 @@ int sqliteBtreeSetCacheSize(Btree*, int);
 int sqliteBtreeBeginTrans(Btree*);
 int sqliteBtreeCommit(Btree*);
 int sqliteBtreeRollback(Btree*);
+int sqliteBtreeBeginCkpt(Btree*);
+int sqliteBtreeCommitCkpt(Btree*);
+int sqliteBtreeRollbackCkpt(Btree*);
 
 int sqliteBtreeCreateTable(Btree*, int*);
 int sqliteBtreeCreateIndex(Btree*, int*);
