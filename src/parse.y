@@ -435,11 +435,11 @@ using_opt(U) ::= .                        {U = 0;}
 orderby_opt(A) ::= .                          {A = 0;}
 orderby_opt(A) ::= ORDER BY sortlist(X).      {A = X;}
 sortlist(A) ::= sortlist(X) COMMA sortitem(Y) collate(C) sortorder(Z). {
-  A = sqlite3ExprListAppend(X,Y,&C);
+  A = sqlite3ExprListAppend(X,Y,C.n>0?&C:0);
   if( A ) A->a[A->nExpr-1].sortOrder = Z;
 }
 sortlist(A) ::= sortitem(Y) collate(C) sortorder(Z). {
-  A = sqlite3ExprListAppend(0,Y,&C);
+  A = sqlite3ExprListAppend(0,Y,C.n>0?&C:0);
   if( A ) A->a[0].sortOrder = Z;
 }
 sortitem(A) ::= expr(X).   {A = X;}
