@@ -440,6 +440,9 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   }
   
   /* Open the backend database driver */
+  if( zFilename[0]==':' && strcmp(zFilename,":memory:")==0 ){
+    db->temp_store = 2;
+  }
   rc = sqliteBtreeFactory(db, zFilename, 0, MAX_PAGES, &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
     switch( rc ){
