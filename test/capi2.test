@@ -393,7 +393,7 @@ do_test capi2-6.28 {
 do_test capi2-6.99 {
   list [catch {sqlite_finalize $VM1} msg] [set msg]
 } {0 {}}
-execsql {ROLLBACK}
+catchsql {ROLLBACK}
 
 do_test capi2-7.1 {
   stepsql $DB {
