@@ -93,6 +93,7 @@ void sqliteInsert(
 ){
   Table *pTab;          /* The table to insert into */
   char *zTab;           /* Name of the table into which we are inserting */
+  const char *zDb;      /* Name of the database holding this table */
   int i, j, idx;        /* Loop counters */
   Vdbe *v;              /* Generate code into this virtual machine */
   Index *pIdx;          /* For looping over indices of the table */
@@ -126,7 +127,9 @@ void sqliteInsert(
   if( pTab==0 ){
     goto insert_cleanup;
   }
-  if( sqliteAuthCheck(pParse, SQLITE_INSERT, pTab->zName, 0) ){
+  assert( pTab->iDb<db->nDb );
+  zDb = db->aDb[pTab->iDb].zName;
+  if( sqliteAuthCheck(pParse, SQLITE_INSERT, pTab->zName, 0, zDb) ){
     goto insert_cleanup;
   }
 

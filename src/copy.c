@@ -39,6 +39,7 @@ void sqliteCopy(
   int addr, end;
   Index *pIdx;
   char *zFile = 0;
+  const char *zDb;
   sqlite *db = pParse->db;
 
 
@@ -48,8 +49,10 @@ void sqliteCopy(
   if( pTab==0 || sqliteIsReadOnly(pParse, pTab) ) goto copy_cleanup;
   zFile = sqliteStrNDup(pFilename->z, pFilename->n);
   sqliteDequote(zFile);
-  if( sqliteAuthCheck(pParse, SQLITE_INSERT, pTab->zName, zFile)
-      || sqliteAuthCheck(pParse, SQLITE_COPY, pTab->zName, zFile) ){
+  assert( pTab->iDb>=0 && pTab->iDb<db->nDb );
+  zDb = db->aDb[pTab->iDb].zName;
+  if( sqliteAuthCheck(pParse, SQLITE_INSERT, pTab->zName, 0, zDb)
+      || sqliteAuthCheck(pParse, SQLITE_COPY, pTab->zName, zFile, zDb) ){
     goto copy_cleanup;
   }
   v = sqliteGetVdbe(pParse);

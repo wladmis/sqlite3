@@ -139,7 +139,7 @@ void sqliteUpdate(
     {
       int rc;
       rc = sqliteAuthCheck(pParse, SQLITE_UPDATE, pTab->zName,
-                           pTab->aCol[j].zName);
+                           pTab->aCol[j].zName, db->aDb[pTab->iDb].zName);
       if( rc==SQLITE_DENY ){
         goto update_cleanup;
       }else if( rc==SQLITE_IGNORE ){
