@@ -248,3 +248,6 @@ void sqliteExprIfTrue(Parse*, Expr*, int);
 void sqliteExprIfFalse(Parse*, Expr*, int);
 Table *sqliteFindTable(sqlite*,char*);
 void sqliteCopy(Parse*, Token*, Token*, Token*);
+void sqliteVacuum(Parse*, Token*);
+int sqliteGlobCompare(const char*,const char*);
+int sqliteLikeCompare(const unsigned char*,const unsigned char*);

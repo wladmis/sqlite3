@@ -1528,3 +1528,46 @@ void sqliteCopy(
 copy_cleanup:
   return;
 }
+
+/*
+** The non-standard VACUUM command is used to clean up the database,
+** collapse free space, etc.  It is modelled after the VACUUM command
+** in PostgreSQL.
+*/
+void sqliteVacuum(Parse *pParse, Token *pTableName){
+  char *zName;
+  Vdbe *v;
+
+  if( pTableName ){
+    zName = sqliteTableNameFromToken(pTableName);
+  }else{
+    zName = 0;
+  }
+  if( zName && sqliteFindIndex(pParse->db, zName)==0
+    && sqliteFindTable(pParse->db, zName)==0 ){
+    sqliteSetString(&pParse->zErrMsg, "no such table or index: ", zName, 0);
+    pParse->nErr++;
+    goto vacuum_cleanup;
+  }
+  v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
+  if( v==0 ) goto vacuum_cleanup;
+  if( zName ){
+    sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, zName, 0);
+  }else{
+    int h;
+    Table *pTab;
+    Index *pIdx;
+    for(h=0; h<N_HASH; h++){
+      for(pTab=pParse->db->apTblHash[h]; pTab; pTab=pTab->pHash){
+        sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, pTab->zName, 0);
+        for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
+          sqliteVdbeAddOp(v, OP_Reorganize, 0, 0, pIdx->zName, 0);
+        }
+      }
+    }
+  }
+
+vacuum_cleanup:
+  sqliteFree(zName);
+  return;
+}

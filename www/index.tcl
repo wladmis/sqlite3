@@ -47,6 +47,9 @@ can be used as an example of how to interact with the SQLite C
 library.  For more information on the sqlite program,
 see <a href="sqlite.html">sqlite.html</a>.</p>
 
+<p>A history of changes to SQLite is found
+<a href="changes.html">here</a>.</p>
+
 <p>SQLite does not try to implement every feature of SQL.  But it
 does strive to implement to most commonly used features.  SQLite
 currently understands the following SQL commands:</p>
@@ -71,7 +74,6 @@ implement are as follows:</p>
 <ul>
 <li>ALTER TABLE</li>
 <li>The GROUP BY or HAVING clauses of a SELECT</li>
-<li>The LIKE or IN operators</li>
 <li>The COUNT(), MAX(), MIN(), and AVG() functions</li>
 <li>Constraints</li>
 <li>Nested queries</li>

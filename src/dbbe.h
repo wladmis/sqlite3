@@ -65,6 +65,9 @@ DbbeTable *sqliteDbbeOpenTable(Dbbe*, const char *zTableName, int writeable);
 /* Delete a table from the database */
 void sqliteDbbeDropTable(Dbbe*, const char *zTableName);
 
+/* Reorganize a table to speed access or reduce its disk usage */
+void sqliteDbbeReorganizeTable(Dbbe*, const char *zTableName);
+
 /* Close a table */
 void sqliteDbbeCloseTable(DbbeTable*);
 

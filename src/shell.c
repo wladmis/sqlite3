@@ -300,7 +300,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     data.showHeader = 0;
     data.mode = MODE_List;
     sprintf(zSql, "SELECT name FROM sqlite_master "
-                  "WHERE type='index' AND tbl_name='%.00s' "
+                  "WHERE type='index' AND tbl_name LIKE '%.00s' "
                   "ORDER BY name", azArg[1]);
     sqlite_exec(db, zSql, callback, &data, &zErrMsg);
     if( zErrMsg ){
@@ -343,7 +343,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     data.showHeader = 0;
     data.mode = MODE_List;
     if( nArg>1 ){
-      sprintf(zSql, "SELECT sql FROM sqlite_master WHERE name='%.900s'",
+      sprintf(zSql, "SELECT sql FROM sqlite_master WHERE name LIKE '%.900s'",
          azArg[1]);
     }else{
       sprintf(zSql, "SELECT sql FROM sqlite_master "

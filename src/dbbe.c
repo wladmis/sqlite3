@@ -200,6 +200,22 @@ void sqliteDbbeDropTable(Dbbe *pBe, const char *zTable){
 }
 
 /*
+** Reorganize a table to reduce search times and disk usage.
+*/
+void sqliteDbbeReorganizeTable(Dbbe *pBe, const char *zTable){
+  char *zFile;            /* Name of the table file */
+  DbbeTable *pTab;
+
+  pTab = sqliteDbbeOpenTable(pBe, zTable, 1);
+  if( pTab && pTab->pFile && pTab->pFile->dbf ){
+    gdbm_reorganize(pTab->pFile->dbf);
+  }
+  if( pTab ){
+    sqliteDbbeCloseTable(pTab);
+  }
+}
+
+/*
 ** Close a table previously opened by sqliteDbbeOpenTable().
 */
 void sqliteDbbeCloseTable(DbbeTable *pTable){

@@ -236,7 +236,7 @@ fieldlist(A) ::= ID(Y).                    {A = sqliteIdListAppend(0,&Y);}
 
 %left OR.
 %left AND.
-%left EQ NE ISNULL NOTNULL IS.
+%left EQ NE ISNULL NOTNULL IS LIKE GLOB.
 %left GT GE LT LE.
 %left PLUS MINUS.
 %left STAR SLASH PERCENT.
@@ -264,7 +264,9 @@ expr(A) ::= expr(X) LE expr(Y).    {A = sqliteExpr(TK_LE, X, Y, 0);}
 expr(A) ::= expr(X) GE expr(Y).    {A = sqliteExpr(TK_GE, X, Y, 0);}
 expr(A) ::= expr(X) NE expr(Y).    {A = sqliteExpr(TK_NE, X, Y, 0);}
 expr(A) ::= expr(X) EQ expr(Y).    {A = sqliteExpr(TK_EQ, X, Y, 0);}
-expr(A) ::= expr(X) IS expr(Y).    {A = sqliteExpr(TK_EQ, X, Y, 0);}
+expr(A) ::= expr(X) LIKE expr(Y).  {A = sqliteExpr(TK_LIKE, X, Y, 0);}
+expr(A) ::= expr(X) GLOB expr(Y).   {A = sqliteExpr(TK_GLOB,X,Y,0);}
+// expr(A) ::= expr(X) IS expr(Y).    {A = sqliteExpr(TK_EQ, X, Y, 0);}
 expr(A) ::= expr(X) PLUS expr(Y).  {A = sqliteExpr(TK_PLUS, X, Y, 0);}
 expr(A) ::= expr(X) MINUS expr(Y). {A = sqliteExpr(TK_MINUS, X, Y, 0);}
 expr(A) ::= expr(X) STAR expr(Y).  {A = sqliteExpr(TK_STAR, X, Y, 0);}
@@ -309,3 +311,6 @@ cmd ::= COPY id(X) FROM id(Y) USING DELIMITERS STRING(Z).
     {sqliteCopy(pParse,&X,&Y,&Z);}
 cmd ::= COPY id(X) FROM id(Y).
     {sqliteCopy(pParse,&X,&Y,0);}
+
+cmd ::= VACUUM.                {sqliteVacuum(pParse,0);}
+cmd ::= VACUUM id(X).          {sqliteVacuum(pParse,&X);}
