@@ -9,6 +9,16 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Feb-01} {Version 3.1.1 (beta) Released} {
+  Version 3.1.1 (beta) is now available on the
+  website.  Verison 3.1.1 is fully backwards compatible with the 3.0 series
+  and features many new features including Autovacuum and correlated
+  subqueries.  The
+  <a href="http://www.sqlite.org/releasenotes310.html">release notes</a>
+  From version 3.1.0 apply equally to this release beta.  A stable release
+  is expected within a couple of weeks.
+}
+
 newsitem {2005-Jan-21} {Version 3.1.0 (alpha) Released} {
   Version 3.1.0 (alpha) is now available on the
   website.  Verison 3.1.0 is fully backwards compatible with the 3.0 series
@@ -71,6 +81,14 @@ newsitem {2004-July-22} {Version 3.0.3 (beta)} {
 
   SQLite version 3.0 is made possible in part by AOL
   developers supporting and embracing great Open-Source Software.
+}
+
+newsitem {2004-Jly-22} {Version 2.8.15} {
+  SQLite version 2.8.15 is a maintenance release for the version 2.8
+  series.  Version 2.8 continues to be maintained with bug fixes, but
+  no new features will be added to version 2.8.  All the changes in
+  this release are minor.  If you are not having problems, there is
+  there is no reason to upgrade.
 }
 
 newsitem {2004-Jun-30} {Version 3.0.2 (beta) Released} {
