@@ -1028,7 +1028,6 @@ sqliteGlobCompare(const unsigned char *zPattern, const unsigned char *zString){
           zPattern++;
         }
         if( c==0 ) return 1;
-        c = UpperToLower[c];
         if( c=='[' ){
           while( *zString && sqliteGlobCompare(&zPattern[1],zString)==0 ){
             sqliteNextChar(zString);
