@@ -62,6 +62,16 @@
 #define ArraySize(X)    (sizeof(X)/sizeof(X[0]))
 
 /*
+** Integer identifiers for functions.
+*/
+#define FN_Unknown    0
+#define FN_Count      1
+#define FN_Min        2
+#define FN_Max        3
+#define FN_Sum        4
+#define FN_Avg        5
+
+/*
 ** Forward references to structures
 */
 typedef struct Table Table;
@@ -151,6 +161,7 @@ struct ExprList {
     Expr *pExpr;           /* The list of expressions */
     char *zName;           /* Token associated with this expression */
     int idx;               /* ... */
+    int isAgg;             /* True if this is an aggregate like count(*) */
   } *a;                  /* One entry for each expression */
 };
 
@@ -251,3 +262,6 @@ void sqliteCopy(Parse*, Token*, Token*, Token*);
 void sqliteVacuum(Parse*, Token*);
 int sqliteGlobCompare(const char*,const char*);
 int sqliteLikeCompare(const unsigned char*,const unsigned char*);
+char *sqliteTableNameFromToken(Token*);
+int sqliteExprCheck(Parse*, Expr*, int, int*);
+int sqliteFuncId(Token*);

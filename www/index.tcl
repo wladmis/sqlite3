@@ -50,31 +50,13 @@ see <a href="sqlite.html">sqlite.html</a>.</p>
 <p>A history of changes to SQLite is found
 <a href="changes.html">here</a>.</p>
 
-<p>SQLite does not try to implement every feature of SQL.  But it
-does strive to implement to most commonly used features.  SQLite
-currently understands the following SQL commands:</p>
-
-<p>
-<ul>
-<li>CREATE TABLE</li>
-<li>CREATE INDEX</li>
-<li>DROP TABLE</li>
-<li>DROP INDEX</li>
-<li>INSERT INTO</li>
-<li>UPDATE</li>
-<li>SELECT</li>
-<li>DELETE FROM</li>
-</ul>
-</p>
-
-<p>A few of the many SQL features that SQLite does not (currently) 
+<p>SQLite does not try to implement every feature of SQL. 
+A few of the many SQL features that SQLite does not (currently) 
 implement are as follows:</p>
 
 <p>
 <ul>
-<li>ALTER TABLE</li>
 <li>The GROUP BY or HAVING clauses of a SELECT</li>
-<li>The COUNT(), MAX(), MIN(), and AVG() functions</li>
 <li>Constraints</li>
 <li>Nested queries</li>
 <li>Transactions or rollback</li>

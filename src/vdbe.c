@@ -879,6 +879,7 @@ int sqliteVdbeExec(
             sqliteFree(p->zStack[nos]);
             p->zStack[nos] = p->zStack[tos];
             p->iStack[nos] = p->iStack[tos];
+            p->zStack[tos] = 0;
           }
         }
         p->tos--;
@@ -888,7 +889,10 @@ int sqliteVdbeExec(
       /* Opcode: Min * * *
       **
       ** Pop the top two elements from the stack then push back the
-      ** smaller of the two.
+      ** smaller of the two. 
+      **
+      ** If P1==1, always choose TOS for the min and decrement P1.
+      ** This is self-altering code...
       */
       case OP_Min: {
         int tos = p->tos;
@@ -901,10 +905,17 @@ int sqliteVdbeExec(
         }else{
           Stringify(p, tos);
           Stringify(p, nos);
-          if( sqliteCompare(p->zStack[nos], p->zStack[tos])>0 ){
+          if( pOp->p1==1 ){
             sqliteFree(p->zStack[nos]);
             p->zStack[nos] = p->zStack[tos];
             p->iStack[nos] = p->iStack[tos];
+            p->zStack[tos] = 0;
+            pOp->p1 = 0;
+          }else if( sqliteCompare(p->zStack[nos], p->zStack[tos])>0 ){
+            sqliteFree(p->zStack[nos]);
+            p->zStack[nos] = p->zStack[tos];
+            p->iStack[nos] = p->iStack[tos];
+            p->zStack[tos] = 0;
           }
         }
         p->tos--;
