@@ -448,6 +448,7 @@ struct sqlite {
 struct FuncDef {
   char *zName;         /* SQL name of the function */
   int nArg;            /* Number of arguments.  -1 means unlimited */
+  int iPrefEnc;        /* Preferred text encoding */
   void *pUserData;     /* User data parameter */
   FuncDef *pNext;      /* Next function with same name */
   void (*xFunc)(sqlite3_context*,int,sqlite3_value**); /* Regular function */

@@ -371,13 +371,6 @@ char *sqlite3_vmprintf(const char*, va_list);
 void sqlite3_free(char *z);
 
 /*
-** Windows systems need functions to call to return the sqlite3_version
-** and sqlite3_encoding strings.
-*/
-const char *sqlite3_libversion(void);
-const char *sqlite3_libencoding(void);
-
-/*
 ** This routine registers a callback with the SQLite library.  The
 ** callback is invoked (at compile-time, not at run-time) for each
 ** attempt to access a column of a table in the database.  The callback
