@@ -160,6 +160,11 @@ do_test insert-3.3 {
 do_test insert-3.4 {
   execsql {SELECT * FROM test2 WHERE f1=22 AND f2=-4.44}
 } {22 -4.44 hi abc-123 wham}
+ifcapable {reindex} {
+  do_test insert-3.5 {
+    execsql REINDEX
+  } {}
+}
 integrity_check insert-3.5
 
 # Test of expressions in the VALUES clause
@@ -293,6 +298,11 @@ do_test insert-6.4 {
     SELECT * FROM t1 WHERE b=3;
   }
 } {}
+ifcapable {reindex} {
+  do_test insert-6.7 {
+    execsql REINDEX
+  } {}
+}
 
 integrity_check insert-99.0
 

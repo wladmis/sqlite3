@@ -86,6 +86,13 @@ do_test index-3.1 {
            WHERE type='index' AND tbl_name='test1'
            ORDER BY name}
 } $r
+integrity_check index-3.2.1
+ifcapable {reindex} {
+  do_test index-3.2.2 {
+    execsql REINDEX
+  } {}
+}
+integrity_check index-3.2.3
 
 
 # Verify that all the indices go away when we drop the table.
@@ -653,6 +660,13 @@ do_test index-19.6 {
     );
   }
 } {1 {conflicting ON CONFLICT clauses specified}}
+
+ifcapable {reindex} {
+  do_test index-19.7 {
+    execsql REINDEX
+  } {}
+}
+integrity_check index-19.8
 
 # Drop index with a quoted name.  Ticket #695.
 #
