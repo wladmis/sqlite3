@@ -1331,10 +1331,10 @@ static const char *memBtreeGetFilename(Btree *pBt){
 }
 
 /*
-** Change the name of the underlying database file.
+** The copy file function is not implemented for the in-memory database
 */
-static int memBtreeChangeFilename(Btree *pBt, const char *zNew){
-  return SQLITE_OK;
+static int memBtreeCopyFile(Btree *pBt, Btree *pBt2){
+  return SQLITE_INTERNAL;  /* Not implemented */
 }
 
 static BtOps sqliteBtreeOps = {
@@ -1356,7 +1356,7 @@ static BtOps sqliteBtreeOps = {
     memBtreeUpdateMeta,
     memBtreeIntegrityCheck,
     memBtreeGetFilename,
-    memBtreeChangeFilename,
+    memBtreeCopyFile,
 
 #ifdef SQLITE_TEST
     memBtreePageDump,

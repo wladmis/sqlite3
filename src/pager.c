@@ -928,6 +928,28 @@ int sqlitepager_pagecount(Pager *pPager){
 }
 
 /*
+** Forward declaration
+*/
+static int syncAllPages(Pager*);
+
+/*
+** Truncate the file to the number of pages specified.
+*/
+int sqlitepager_truncate(Pager *pPager, Pgno nPage){
+  int rc;
+  if( pPager->dbSize<0 ) sqlitepager_pagecount(pPager);
+  if( nPage>=pPager->dbSize ){
+    return SQLITE_OK;
+  }
+  syncAllPages(pPager);
+  rc = sqliteOsTruncate(&pPager->fd, SQLITE_PAGE_SIZE*(off_t)nPage);
+  if( rc==SQLITE_OK ){
+    pPager->dbSize = nPage;
+  }
+  return rc;
+}
+
+/*
 ** Shutdown the page cache.  Free all memory and close all files.
 **
 ** If a transaction was in progress when this routine is called, that
@@ -2035,43 +2057,6 @@ int sqlitepager_ckpt_rollback(Pager *pPager){
 */
 const char *sqlitepager_filename(Pager *pPager){
   return pPager->zFilename;
-}
-
-/*
-** Rename the database file
-*/
-int sqlitepager_rename(Pager *pPager, const char *zNewName){
-  char *zNew;
-  char *zJournal;
-  int nName;
-  int rc;
-
-  nName = strlen(zNewName);
-  zNew = sqliteMalloc( nName*2 + 30 );
-  if( zNew==0 ){
-    return SQLITE_NOMEM;
-  }
-  memcpy(zNew, zNewName, nName+1);
-  zJournal = &zNew[nName+1];
-  memcpy(zJournal, zNew, nName);
-  strcpy(&zJournal[nName], "-journal");
-  if( pPager->journalOpen ){
-    rc = sqliteOsFileRename(pPager->zJournal, zJournal);
-    if( rc ){
-      sqliteFree(zNew);
-      return rc;
-    }
-  }
-  rc = sqliteOsFileRename(pPager->zFilename, zNew);
-  if( rc ){
-    sqliteFree(zNew);
-    return rc;
-  }
-  if( pPager->zFilename!=(char*)&pPager[1] ){
-    sqliteFree(pPager->zFilename);
-  }
-  pPager->zFilename = zNew;
-  return SQLITE_OK;
 }
 
 #ifdef SQLITE_TEST
