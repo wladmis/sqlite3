@@ -908,10 +908,8 @@ static int fillInColumnList(Parse *pParse, Select *p){
     }else{
       /* An ordinary table or view name in the FROM clause */
       pTabList->a[i].pTab = pTab = 
-        sqliteFindTable(pParse->db, pTabList->a[i].zName,
-                                    pTabList->a[i].zDatabase);
+        sqliteLocateTable(pParse,pTabList->a[i].zName,pTabList->a[i].zDatabase);
       if( pTab==0 ){
-        sqliteErrorMsg(pParse, "no such table: %S", pTabList, i);
         return 1;
       }
       if( pTab->pSelect ){

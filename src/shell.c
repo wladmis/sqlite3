@@ -285,7 +285,8 @@ static int callback(void *pArg, int nArg, char **azArg, char **azCol){
       }
       if( p->cnt++>0 ) fprintf(p->out,"\n");
       for(i=0; i<nArg; i++){
-        fprintf(p->out,"%*s = %s\n", w, azCol[i], azArg[i] ? azArg[i] : p->nullvalue);
+        fprintf(p->out,"%*s = %s\n", w, azCol[i], 
+                azArg[i] ? azArg[i] : p->nullvalue);
       }
       break;
     }
