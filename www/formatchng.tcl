@@ -115,6 +115,27 @@ occurred since version 1.0.0:
   and initialization will fail.
   </td>
 </tr>
+<tr>
+  <td valign="top">2.5.6 to 2.6.0</td>
+  <td valign="top">2002-July-17</td>
+  <td>A design flaw in the layout of indices required a file format change
+  to correct.  This change appeared in version 2.6.0.<p>
+
+  If you use version 2.6.0 or later of the library to open a database file
+  that was originally created by version 2.5.6 or earlier, an attempt to
+  rebuild the database into the new format will occur automatically.
+  This can take some time for a large database.  (Allow 1 or 2 seconds
+  per megabyte of database under Unix - longer under Windows.)  This format
+  conversion is irreversible.  It is <strong>strongly</strong> suggested
+  that you make a backup copy of older database files prior to opening them
+  with version 2.6.0 or later of the library, in case there are errors in
+  the format conversion logic.<p>
+
+  Version 2.6.0 or later of the library cannot open read-only database
+  files from version 2.5.6 or earlier, since read-only files cannot be
+  upgraded to the new format.</p>
+  </td>
+</tr>
 </table>
 </blockquote>
 
