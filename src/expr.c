@@ -430,6 +430,7 @@ int sqliteExprResolveIds(
     case TK_ID: {
       int cnt = 0;      /* Number of matches */
       int i;            /* Loop counter */
+      int rc;           /* Return code */
       char *z;
       assert( pExpr->token.z );
       z = sqliteStrNDup(pExpr->token.z, pExpr->token.n);
@@ -487,6 +488,9 @@ int sqliteExprResolveIds(
           pExpr->token.z, pExpr->token.n, 0);
         pParse->nErr++;
         return 1;
+      }
+      if( pExpr->op==TK_COLUMN ){
+        sqliteAuthRead(pParse, pExpr, pTabList, base);
       }
       break; 
     }
@@ -595,6 +599,7 @@ int sqliteExprResolveIds(
       sqliteExprDelete(pRight);
       pExpr->pRight = 0;
       pExpr->op = TK_COLUMN;
+      sqliteAuthRead(pParse, pExpr, pTabList, base);
       break;
     }
 

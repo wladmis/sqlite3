@@ -689,6 +689,7 @@ const char *sqlite_error_string(int rc){
     case SQLITE_MISMATCH:   z = "datatype mismatch";                     break;
     case SQLITE_MISUSE:     z = "library routine called out of sequence";break;
     case SQLITE_NOLFS:      z = "kernel lacks large file support";       break;
+    case SQLITE_AUTH:       z = "authorization denied";                  break;
     default:                z = "unknown error";                         break;
   }
   return z;

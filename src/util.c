@@ -85,6 +85,24 @@ void *sqliteMalloc_(int n, int bZero, char *zFile, int line){
 }
 
 /*
+** Check to see if the given pointer was obtained from sqliteMalloc()
+** and is able to hold at least N bytes.  Raise an exception if this
+** is not the case.
+**
+** This routine is used for testing purposes only.
+*/
+void sqliteCheckMemory(void *p, int N){
+  int *pi = p;
+  int n, k;
+  pi -= 2;
+  assert( pi[0]==0xdead1122 );
+  n = pi[1];
+  assert( N>=0 && N<n );
+  k = (n+sizeof(int)-1)/sizeof(int);
+  assert( pi[k+2]==0xdead3344 );
+}
+
+/*
 ** Free memory previously obtained from sqliteMalloc()
 */
 void sqliteFree_(void *p, char *zFile, int line){

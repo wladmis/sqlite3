@@ -1050,6 +1050,7 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
     }
     pPg->pgno = pgno;
     if( pPager->aInJournal && (int)pgno<=pPager->origDbSize ){
+      sqliteCheckMemory(pPager->aInJournal, pgno/8);
       pPg->inJournal = (pPager->aInJournal[pgno/8] & (1<<(pgno&7)))!=0;
     }else{
       pPg->inJournal = 0;

@@ -53,6 +53,7 @@ void sqliteUpdate(
   int oldIdx      = -1;  /* index of trigger "old" temp table       */
 
   if( pParse->nErr || sqlite_malloc_failed ) goto update_cleanup;
+  if( sqliteAuthCommand(pParse, "UPDATE", 0) ) goto update_cleanup;
   db = pParse->db;
 
   /* Check for the special case of a VIEW with one or more ON UPDATE triggers 
@@ -110,7 +111,9 @@ void sqliteUpdate(
 
   /* Resolve the column names in all the expressions in both the
   ** WHERE clause and in the new values.  Also find the column index
-  ** for each column to be updated in the pChanges array.
+  ** for each column to be updated in the pChanges array.  For each
+  ** column to be updated, make sure we have authorization to change
+  ** that column.
   */
   if( pWhere ){
     if( sqliteExprResolveIds(pParse, base, pTabList, 0, pWhere) ){
@@ -144,6 +147,11 @@ void sqliteUpdate(
       pParse->nErr++;
       goto update_cleanup;
     }
+#ifndef SQLITE_OMIT_AUTHORIZATION
+    if( sqliteAuthWrite(pParse, pTab, j)==SQLITE_IGNORE ){
+      aXRef[j] = -1;
+    }
+#endif
   }
 
   /* Allocate memory for the array apIdx[] and fill it with pointers to every

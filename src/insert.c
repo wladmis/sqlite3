@@ -114,6 +114,7 @@ void sqliteInsert(
   int newIdx = -1;
 
   if( pParse->nErr || sqlite_malloc_failed ) goto insert_cleanup;
+  if( sqliteAuthCommand(pParse, "INSERT", 0) ) goto insert_cleanup;
   db = pParse->db;
 
   /* Locate the table into which we will be inserting new information.
