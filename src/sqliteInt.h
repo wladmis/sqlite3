@@ -444,6 +444,7 @@ void sqliteExprCode(Parse*, Expr*);
 void sqliteExprIfTrue(Parse*, Expr*, int);
 void sqliteExprIfFalse(Parse*, Expr*, int);
 Table *sqliteFindTable(sqlite*,char*);
+Index *sqliteFindIndex(sqlite*,char*);
 void sqliteCopy(Parse*, Token*, Token*, Token*);
 void sqliteVacuum(Parse*, Token*);
 int sqliteGlobCompare(const unsigned char*,const unsigned char*);

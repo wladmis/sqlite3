@@ -174,6 +174,15 @@ proc execsql {sql {db db}} {
   return [$db eval $sql]
 }
 
+# Execute SQL and catch exceptions.
+#
+proc catchsql {sql {db db}} {
+  # puts "SQL = $sql"
+  set r [catch {$db eval $sql} msg]
+  lappend r $msg
+  return $r
+}
+
 # Another procedure to execute SQL.  This one includes the field
 # names in the returned list.
 #

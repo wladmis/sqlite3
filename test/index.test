@@ -203,9 +203,11 @@ do_test index-7.2 {
   execsql {SELECT f1 FROM test1 WHERE f2=65536}
 } {16}
 do_test index-7.3 {
-  set code [execsql {EXPLAIN SELECT f1 FROM test1 WHERE f2=65536}]
-  expr {[lsearch $code {test1 (primary key)}]>0}
-} {1}
+  execsql {
+    SELECT name FROM sqlite_master 
+    WHERE type='index' AND tbl_name='test1'
+  }
+} {{(test1 autoindex 1)}}
 do_test index-7.4 {
   execsql {DROP table test1}
   execsql {SELECT name FROM sqlite_master WHERE type!='meta'}

@@ -163,7 +163,7 @@ set big_table \
 )}
 do_test table-3.1 {
   execsql $big_table
-  execsql {SELECT sql FROM sqlite_master WHERE type!='meta'}
+  execsql {SELECT sql FROM sqlite_master WHERE type=='table'}
 } \{$big_table\}
 do_test table-3.2 {
   set v [catch {execsql {CREATE TABLE BIG(xyz foo)}} msg]

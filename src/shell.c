@@ -648,6 +648,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
                       "  type text,\n"
                       "  name text,\n"
                       "  tbl_name text,\n"
+                      "  rootpage integer,\n"
                       "  sql text\n"
                       ")";
         new_argv[1] = 0;
