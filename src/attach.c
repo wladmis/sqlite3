@@ -23,7 +23,13 @@
 ** The pFilename and pDbname arguments are the tokens that define the
 ** filename and dbname in the ATTACH statement.
 */
-void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey){
+void sqlite3Attach(
+  Parse *pParse,       /* The parser context */
+  Token *pFilename,    /* Name of database file */
+  Token *pDbname,      /* Name of the database to use internally */
+  int keyType,         /* 0: no key.  1: TEXT,  2: BLOB */
+  Token *pKey          /* Text of the key for keytype 2 and 3 */
+){
   Db *aNew;
   int rc, i;
   char *zFile, *zName;
@@ -91,14 +97,32 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
     sqlite3ErrorMsg(pParse, "unable to open database: %s", zFile);
   }
 #if SQLITE_HAS_CODEC
-  assert( pKey!=0 );
-  if( pKey->n>0 ){
-    extern int sqlite3CodecAttach(sqlite*, int, void*, int);
-    char *zKey = 0;
+  {
+    extern int sqlite3CodecAttach(sqlite3*, int, void*, int);
+    char *zKey;
     int nKey;
+    if( keyType==0 ){
+      /* No key specified.  Use the key from the main database */
+      extern void sqlite3CodecGetKey(sqlite3*, int, void**, int*);
+      sqlite3CodecGetKey(db, 0, (void**)&zKey, &nKey);
+    }else if( keyType==1 ){
+      /* Key specified as text */
+      zKey = sqlite3NameFromToken(pKey);
+      nKey = strlen(zKey);
+    }else{
+      /* Key specified as a BLOB */
+      char *zTemp;
+      assert( keyType==2 );
+      pKey->z++;
+      pKey->n--;
+      zTemp = sqlite3NameFromToken(pKey);
+      zKey = sqlite3HexToBlob(zTemp);
+      sqliteFree(zTemp);
+    }
     sqlite3CodecAttach(db, db->nDb-1, zKey, nKey);
-    zKey = sqlite3NameFromToken(pKey);
-    nKey = strlen(zKey);
+    if( keyType ){
+      sqliteFree(zKey);
+    }
   }
 #endif
   sqliteFree(zFile);

@@ -25,18 +25,13 @@ set EXCLUDE {
   malloc.test
   memleak.test
   misuse.test
-  format3.test
   crash.test
   utf16.test
 }
 
 if {[sqlite3 -has-codec]} {
-  lappend EXCLUDE \
-    attach.test \
-    attach2.test \
-    auth.test \
-    format3.test \
-    version.test
+  # lappend EXCLUDE \
+  #  conflict.test
 }
 
 foreach testfile [lsort -dictionary [glob $testdir/*.test]] {

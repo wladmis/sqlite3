@@ -54,6 +54,11 @@ struct LimitVal {
 */
 struct TrigEvent { int a; IdList * b; };
 
+/*
+** An instance of this structure holds the ATTACH key and the key type.
+*/
+struct AttachKey { int type;  Token key; };
+
 } // end %include
 
 // These are extra tokens used by the lexer but never seen by the
@@ -893,11 +898,14 @@ cmd ::= DROP TRIGGER nm(X) dbnm(D). {
 
 //////////////////////// ATTACH DATABASE file AS name /////////////////////////
 cmd ::= ATTACH database_kw_opt ids(F) AS nm(D) key_opt(K). {
-  sqlite3Attach(pParse, &F, &D, &K);
+  sqlite3Attach(pParse, &F, &D, K.type, &K.key);
 }
-%type key_opt {Token}
-key_opt(A) ::= USING ids(X).  { A = X; }
-key_opt(A) ::= .              { A.z = 0; A.n = 0; }
+%type key_opt {struct AttachKey}
+key_opt(A) ::= .                     { A.type = 0; }
+%ifdef SQLITE_HAS_CODEC
+key_opt(A) ::= KEY ids(X).           { A.type=1; A.key = X; }
+key_opt(A) ::= KEY BLOB(X).          { A.type=2; A.Key = X; }
+%endif
 
 database_kw_opt ::= DATABASE.
 database_kw_opt ::= .

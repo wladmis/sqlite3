@@ -1330,7 +1330,7 @@ void sqlite3DeferForeignKey(Parse*, int);
 # define sqlite3AuthContextPush(a,b,c)
 # define sqlite3AuthContextPop(a)  ((void)(a))
 #endif
-void sqlite3Attach(Parse*, Token*, Token*, Token*);
+void sqlite3Attach(Parse*, Token*, Token*, int, Token*);
 void sqlite3Detach(Parse*, Token*);
 int sqlite3BtreeFactory(const sqlite *db, const char *zFilename,
                        int omitJournal, int nCache, Btree **ppBtree);

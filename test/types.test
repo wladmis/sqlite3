@@ -37,6 +37,10 @@ source $testdir/tester.tcl
 # types-3.*: Test that the '=' operator respects manifest types.
 #
 
+# Disable encryption on the database for this test.
+db close
+set DB [sqlite3 db test.db]
+sqlite3_rekey $DB {}
 
 # Create a table with one column for each type of affinity
 do_test types-1.1.0 {
