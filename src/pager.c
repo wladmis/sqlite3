@@ -222,6 +222,7 @@ struct Pager {
   u8 memDb;                   /* True to inhibit all file I/O */
   u8 *aInJournal;             /* One bit for each page in the database file */
   u8 *aInStmt;                /* One bit for each page in the database */
+  u8 setMaster;               /* True if a m-j name has been written to jrnl */
   BusyHandler *pBusyHandler;  /* Pointer to sqlite.busyHandler */
   PgHdr *pFirst, *pLast;      /* List of free pages */
   PgHdr *pFirstSynced;        /* First free page with PgHdr.needSync==0 */
@@ -233,7 +234,6 @@ struct Pager {
   off_t stmtHdrOff;           /* First journal header written this statement */
   off_t stmtCksum;            /* cksumInit when statement was started */
   int sectorSize;             /* Assumed sector size during rollback */
-  u8 setMaster;               /* True if a m-j name has been written to jrnl */
 };
 
 /*
@@ -660,6 +660,7 @@ static int writeMasterJournal(Pager *pPager, const char *zMaster){
   if( rc!=SQLITE_OK ) return rc;
 
   rc = sqlite3OsWrite(&pPager->jfd, aJournalMagic, sizeof(aJournalMagic));
+  pPager->needSync = 1;
   return rc;
 }
 
