@@ -130,7 +130,7 @@ you cannot in general convert a BLOB into text.
 
 <p>
 In most other SQL database engines the datatype is associated with
-the table column the holds the data - with the data container.
+the table column that holds the data - with the data container.
 In SQLite 3.0, the datatype is associated with the data itself, not
 with its container.
 <a href="http://www.paulgraham.com/">Paul Graham</a> in his book 
@@ -184,7 +184,7 @@ format juggling.
 
 <p>
 SQLite is not particular about the text it receives and is more than
-happen to process text strings that are not normalized or even
+happy to process text strings that are not normalized or even
 well-formed UTF-8 or UTF-16.  Thus, programmers who want to store
 IS08859 data can do so using the UTF-8 interfaces.  As long as no
 attempts are made to use a UTF-16 collating sequence or SQL function,
