@@ -201,7 +201,7 @@ static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
 ** Implementation of the upper() and lower() SQL functions.
 */
 static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
-  char *z;
+  unsigned char *z;
   int i;
   if( argc<1 || SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
   z = sqliteMalloc(sqlite3_value_bytes(argv[0])+1);
@@ -214,7 +214,7 @@ static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   sqliteFree(z);
 }
 static void lowerFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
-  char *z;
+  unsigned char *z;
   int i;
   if( argc<1 || SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
   z = sqliteMalloc(sqlite3_value_bytes(argv[0])+1);
