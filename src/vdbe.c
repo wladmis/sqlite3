@@ -2332,7 +2332,11 @@ case OP_NewRecno: {
       v = ux.i;
       rx = sqliteBtreeMoveto(p->aCsr[i].pCursor, &v, sizeof(v), &res);
       cnt++;
-    }while( cnt<10 && rx==SQLITE_OK && res==0 );
+    }while( cnt<200 && rx==SQLITE_OK && res==0 );
+    if( rx==SQLITE_OK && res==0 ){
+      rc = SQLITE_FULL;
+      goto abort_due_to_error;
+    }
   }
   VERIFY( NeedStack(p, p->tos+1); )
   p->tos++;
