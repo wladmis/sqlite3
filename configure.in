@@ -442,7 +442,7 @@ if test "$config_TARGET_GDBM_INC" != ""; then
   found=yes
 fi
 if test "$found" = "yes"; then
-  AC_MSG_RESULT($TARGET_TCL_INC)
+  AC_MSG_RESULT($TARGET_GDBM_INC)
 else
   AC_MSG_RESULT(not specified: still searching...)
   AC_CHECK_HEADER(gdbm.h, [found=yes])
