@@ -165,7 +165,7 @@ api {} {
  If the callback returns non-zero, then another attempt is made to open the
  database for reading and the cycle repeats.
 
- That a busy handler is registered does not guarantee that
+ The presence of a busy handler does not guarantee that
  it will be invoked when there is lock contention.
  If SQLite determines that invoking the busy handler could result in
  a deadlock, it will return SQLITE_BUSY instead.
