@@ -415,7 +415,7 @@ static int lookupName(
   int i, j;            /* Loop counters */
   int cnt = 0;         /* Number of matching column names */
   int cntTab = 0;      /* Number of matching table names */
-  sqlite *db;          /* The database */
+  sqlite *db = pParse->db;  /* The database */
 
   assert( pColumnToken && pColumnToken->z ); /* The Z in X.Y.Z cannot be NULL */
   if( pDbToken && pDbToken->z ){
