@@ -48,6 +48,7 @@ void sqliteInsert(
   int base;             /* First available cursor */
   int iCont, iBreak;    /* Beginning and end of the loop over srcTab */
   sqlite *db;           /* The main database structure */
+  int openOp;           /* Opcode used to open cursors */
 
   if( pParse->nErr || sqlite_malloc_failed ) goto insert_cleanup;
   db = pParse->db;
@@ -155,9 +156,10 @@ void sqliteInsert(
   ** all indices of that table.
   */
   base = pParse->nTab;
-  sqliteVdbeAddOp(v, OP_OpenWrite, base, pTab->tnum, pTab->zName, 0);
+  openOp = pTab->isTemp ? OP_OpenWrAux : OP_OpenWrite;
+  sqliteVdbeAddOp(v, openOp, base, pTab->tnum, pTab->zName, 0);
   for(idx=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, idx++){
-    sqliteVdbeAddOp(v, OP_OpenWrite, idx+base, pIdx->tnum, pIdx->zName, 0);
+    sqliteVdbeAddOp(v, openOp, idx+base, pIdx->tnum, pIdx->zName, 0);
   }
 
   /* If the data source is a SELECT statement, then we have to create

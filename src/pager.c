@@ -640,12 +640,16 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
     /* If a journal file exists, try to play it back.
     */
     if( sqliteOsFileExists(pPager->zJournal) ){
-       int rc;
+       int rc, dummy;
 
        /* Open the journal for exclusive access.  Return SQLITE_BUSY if
-       ** we cannot get exclusive access to the journal file
+       ** we cannot get exclusive access to the journal file. 
+       **
+       ** Even though we will only be reading from the journal, not writing,
+       ** we have to open the journal for writing in order to obtain an
+       ** exclusive access lock.
        */
-       rc = sqliteOsOpenReadOnly(pPager->zJournal, &pPager->jfd);
+       rc = sqliteOsOpenReadWrite(pPager->zJournal, &pPager->jfd, &dummy);
        if( rc==SQLITE_OK ){
          pPager->journalOpen = 1;
        }

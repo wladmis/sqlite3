@@ -39,6 +39,7 @@ void sqliteUpdate(
   int *aXRef = 0;        /* aXRef[i] is the index in pChanges->a[] of the
                          ** an expression for the i-th column of the table.
                          ** aXRef[i]==-1 if the i-th column is not changed. */
+  int openOp;            /* Opcode used to open tables */
 
   if( pParse->nErr || sqlite_malloc_failed ) goto update_cleanup;
   db = pParse->db;
@@ -159,9 +160,10 @@ void sqliteUpdate(
   */
   sqliteVdbeAddOp(v, OP_ListRewind, 0, 0, 0, 0);
   base = pParse->nTab;
-  sqliteVdbeAddOp(v, OP_OpenWrite, base, pTab->tnum, 0, 0);
+  openOp = pTab->isTemp ? OP_OpenWrAux : OP_OpenWrite;
+  sqliteVdbeAddOp(v, openOp, base, pTab->tnum, 0, 0);
   for(i=0; i<nIdx; i++){
-    sqliteVdbeAddOp(v, OP_OpenWrite, base+i+1, apIdx[i]->tnum, 0, 0);
+    sqliteVdbeAddOp(v, openOp, base+i+1, apIdx[i]->tnum, 0, 0);
   }
 
   /* Loop over every record that needs updating.  We have to load

@@ -285,15 +285,19 @@ WhereInfo *sqliteWhereBegin(
   /* Open all tables in the pTabList and all indices in aIdx[].
   */
   for(i=0; i<pTabList->nId; i++){
-    sqliteVdbeAddOp(v, OP_Open, base+i, pTabList->a[i].pTab->tnum,
-         pTabList->a[i].pTab->zName, 0);
+    int openOp;
+    Table *pTab;
+
+    pTab = pTabList->a[i].pTab;
+    openOp = pTab->isTemp ? OP_OpenAux : OP_Open;
+    sqliteVdbeAddOp(v, openOp, base+i, pTab->tnum, pTab->zName, 0);
     if( i==0 && !pParse->schemaVerified &&
           (pParse->db->flags & SQLITE_InTrans)==0 ){
       sqliteVdbeAddOp(v, OP_VerifyCookie, pParse->db->schema_cookie, 0, 0, 0);
       pParse->schemaVerified = 1;
     }
     if( i<ARRAYSIZE(aIdx) && aIdx[i]!=0 ){
-      sqliteVdbeAddOp(v, OP_Open, base+pTabList->nId+i, aIdx[i]->tnum,
+      sqliteVdbeAddOp(v, openOp, base+pTabList->nId+i, aIdx[i]->tnum,
           aIdx[i]->zName, 0);
     }
   }
