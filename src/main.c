@@ -238,12 +238,16 @@ int sqliteInit(sqlite *db, char **pzErrMsg){
   */
   if( db->pBe==0 ) return SQLITE_OK;
   rc = sqliteBtreeCursor(db->pBe, 2, 0, &curMain);
-  if( rc ) return rc;
+  if( rc ){
+    sqliteResetInternalSchema(db);
+    return rc;
+  }
 
   /* Get the database meta information
   */
   rc = sqliteBtreeGetMeta(db->pBe, meta);
   if( rc ){
+    sqliteResetInternalSchema(db);
     sqliteBtreeCloseCursor(curMain);
     return rc;
   }
@@ -374,7 +378,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   ** upgrade fails for any reason (ex: out of disk space, database
   ** is read only, interrupt receive, etc.) then refuse to open.
   */
-  if( db->file_format<3 ){
+  if( rc==SQLITE_OK && db->file_format<3 ){
     char *zErr = 0;
     InitData initData;
     int meta[SQLITE_N_BTREE_META];
