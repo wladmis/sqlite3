@@ -388,6 +388,8 @@ do_test pragma-7.3 {
 # pragma-8.2: PRAGMA user_version
 #
 
+ifcapable schema_version {
+
 # First check that we can set the schema version and then retrieve the
 # same value.
 do_test pragma-8.1.1 {
@@ -583,5 +585,7 @@ do_test pragma-8.2.15 {
     PRAGMA user_version;
   }
 } {-450}
+
+} ; # ifcapable schema_version
 
 finish_test
