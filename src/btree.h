@@ -87,7 +87,6 @@ int sqlite3BtreeKey(BtCursor*, u32 offset, u32 amt, void*);
 void *sqlite3BtreeKeyFetch(BtCursor*);
 int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
 int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
-int sqlite3BtreeKeyCompare(BtCursor *, const void *, int, int, int *);
 
 char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot);
 struct Pager *sqlite3BtreePager(Btree*);
