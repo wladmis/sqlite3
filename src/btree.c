@@ -5072,6 +5072,8 @@ static int checkTreePage(
   char zContext[100];
   char *hit;
 
+  sprintf(zContext, "Page %d: ", iPage);
+
   /* Check that the page exists
   */
   cur.pBt = pBt = pCheck->pBt;
