@@ -206,7 +206,16 @@ void sqliteInsert(
     if( srcTab>=0 ){
       sqliteVdbeAddOp(v, OP_Column, srcTab, keyColumn);
     }else{
+      int addr;
       sqliteExprCode(pParse, pList->a[keyColumn].pExpr);
+
+      /* If the PRIMARY KEY expression is NULL, then use OP_NewRecno
+      ** to generate a unique primary key value.
+      */
+      addr = sqliteVdbeAddOp(v, OP_Dup, 0, 1);
+      sqliteVdbeAddOp(v, OP_NotNull, 0, addr+4);
+      sqliteVdbeAddOp(v, OP_Pop, 1, 0);
+      sqliteVdbeAddOp(v, OP_NewRecno, base, 0);
     }
     sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
   }else{

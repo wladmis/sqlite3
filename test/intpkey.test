@@ -438,4 +438,22 @@ do_test intpkey-9.1 {
   }
 } {5 5 www 11 11 www}
 
+
+# Check insert of NULL for primary key
+#
+do_test intpkey-10.1 {
+  execsql {
+    DROP TABLE t2;
+    CREATE TABLE t2(x INTEGER PRIMARY KEY, y, z);
+    INSERT INTO t2 VALUES(NULL, 1, 2);
+    SELECT * from t2;
+  }
+} {1 1 2}
+do_test intpkey-10.2 {
+  execsql {
+    INSERT INTO t2 VALUES(NULL, 2, 3);
+    SELECT * from t2 WHERE x=2;
+  }
+} {2 2 3}
+
 finish_test
