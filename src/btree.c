@@ -2760,7 +2760,7 @@ static void checkAppendMsg(IntegrityCk *pCheck, char *zMsg1, char *zMsg2){
 */
 static int checkRef(IntegrityCk *pCheck, int iPage, char *zContext){
   if( iPage==0 ) return 1;
-  if( iPage>pCheck->nPage ){
+  if( iPage>pCheck->nPage || iPage<0 ){
     char zBuf[100];
     sprintf(zBuf, "invalid page number %d", iPage);
     checkAppendMsg(pCheck, zContext, zBuf);
@@ -3006,6 +3006,10 @@ char *sqliteBtreeIntegrityCheck(Btree *pBt, int *aRoot, int nRoot){
   sCheck.pBt = pBt;
   sCheck.pPager = pBt->pPager;
   sCheck.nPage = sqlitepager_pagecount(sCheck.pPager);
+  if( sCheck.nPage==0 ){
+    unlockBtreeIfUnused(pBt);
+    return 0;
+  }
   sCheck.anRef = sqliteMalloc( (sCheck.nPage+1)*sizeof(sCheck.anRef[0]) );
   sCheck.anRef[1] = 1;
   for(i=2; i<=sCheck.nPage; i++){ sCheck.anRef[i] = 0; }
