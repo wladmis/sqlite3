@@ -218,6 +218,11 @@ extern int sqlite_iMallocFail;   /* Fail sqliteMalloc() after this many calls */
 #define TEMP_MASTER_NAME  "sqlite_temp_master"
 
 /*
+** The root-page of the master database table.
+*/
+#define MASTER_ROOT       1
+
+/*
 ** The name of the schema table.
 */
 #define SCHEMA_TABLE(x)  (x?TEMP_MASTER_NAME:MASTER_NAME)

@@ -400,7 +400,7 @@ char *sqlite3TableNameFromToken(Token *pName){
 */
 void sqlite3OpenMasterTable(Vdbe *v, int isTemp){
   sqlite3VdbeAddOp(v, OP_Integer, isTemp, 0);
-  sqlite3VdbeAddOp(v, OP_OpenWrite, 0, 2);
+  sqlite3VdbeAddOp(v, OP_OpenWrite, 0, MASTER_ROOT);
 }
 
 /*
