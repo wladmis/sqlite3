@@ -96,7 +96,6 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
     extern int sqlite3CodecAttach(sqlite*, int, void*, int);
     char *zKey = 0;
     int nKey;
-    sqlite3BtreeSetPageSize(aNew->pBt, -1, 4);
     sqlite3CodecAttach(db, db->nDb-1, zKey, nKey);
     zKey = sqlite3NameFromToken(pKey);
     nKey = strlen(zKey);

@@ -1124,6 +1124,9 @@ int sqlite3BtreeSetPageSize(Btree *pBt, int pageSize, int nReserve){
 int sqlite3BtreeGetPageSize(Btree *pBt){
   return pBt->pageSize;
 }
+int sqlite3BtreeGetReserve(Btree *pBt){
+  return pBt->pageSize - pBt->usableSize;
+}
 
 /*
 ** Get a reference to pPage1 of the database file.  This will
