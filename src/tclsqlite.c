@@ -917,7 +917,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     pCollate->pNext = pDb->pCollate;
     pCollate->zScript = (char*)&pCollate[1];
     strcpy(pCollate->zScript, zScript);
-    if( sqlite3_create_collation(pDb->db, zName, 0, pCollate, tclSqlCollate) ){
+    if( sqlite3_create_collation(pDb->db, zName, SQLITE_UTF8, 
+        pCollate, tclSqlCollate) ){
       return TCL_ERROR;
     }
     break;

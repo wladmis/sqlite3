@@ -29,7 +29,7 @@
 /*
 ** Macros for troubleshooting.  Normally turned off
 */
-#if 1
+#if 0
 static Pager *mainPager = 0;
 #define SET_PAGER(X)  if( mainPager==0 ) mainPager = (X)
 #define CLR_PAGER(X)  if( mainPager==(X) ) mainPager = 0
