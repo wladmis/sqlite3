@@ -257,6 +257,15 @@ seltablist(A) ::= stl_prefix(X) ids(Y) as ids(Z). {
   A = sqliteIdListAppend(X,&Y);
   sqliteIdListAddAlias(A,&Z);
 }
+seltablist(A) ::= stl_prefix(X) LP select(S) RP. {
+  A = sqliteIdListAppend(X,0);
+  A->a[A->nId-1].pSelect = S;
+}
+seltablist(A) ::= stl_prefix(X) LP select(S) RP as ids(Z). {
+  A = sqliteIdListAppend(X,0);
+  A->a[A->nId-1].pSelect = S;
+  sqliteIdListAddAlias(A,&Z);
+}
 
 %type orderby_opt {ExprList*}
 %destructor orderby_opt {sqliteExprListDelete($$);}

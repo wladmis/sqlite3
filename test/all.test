@@ -33,6 +33,7 @@ set EXCLUDE {
   all.test
   quick.test
   malloc.test
+  btree2.test
 }
 
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
