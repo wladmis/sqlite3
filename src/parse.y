@@ -705,16 +705,16 @@ expr(A) ::= expr(W) between_op(N) expr(X) AND expr(Y). [BETWEEN] {
   if( N ) A = sqlite3Expr(TK_NOT, A, 0, 0);
   sqlite3ExprSpan(A,&W->span,&Y->span);
 }
-%type in_op {int}
-in_op(A) ::= IN.      {A = 0;}
-in_op(A) ::= NOT IN.  {A = 1;}
-expr(A) ::= expr(X) in_op(N) LP exprlist(Y) RP(E). [IN] {
-  A = sqlite3Expr(TK_IN, X, 0, 0);
-  if( A ) A->pList = Y;
-  if( N ) A = sqlite3Expr(TK_NOT, A, 0, 0);
-  sqlite3ExprSpan(A,&X->span,&E);
-}
 %ifndef SQLITE_OMIT_SUBQUERY
+  %type in_op {int}
+  in_op(A) ::= IN.      {A = 0;}
+  in_op(A) ::= NOT IN.  {A = 1;}
+  expr(A) ::= expr(X) in_op(N) LP exprlist(Y) RP(E). [IN] {
+    A = sqlite3Expr(TK_IN, X, 0, 0);
+    if( A ) A->pList = Y;
+    if( N ) A = sqlite3Expr(TK_NOT, A, 0, 0);
+    sqlite3ExprSpan(A,&X->span,&E);
+  }
   expr(A) ::= LP(B) select(X) RP(E). {
     A = sqlite3Expr(TK_SELECT, 0, 0, 0);
     if( A ) A->pSelect = X;

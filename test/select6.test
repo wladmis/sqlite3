@@ -17,6 +17,12 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Omit this whole file if the library is build without subquery support.
+ifcapable !subquery {
+  finish_test
+  return
+}
+
 do_test select6-1.0 {
   execsql {
     BEGIN;

@@ -240,10 +240,14 @@ proc integrity_check {name} {
 # Evaluate a boolean expression of capabilities.  If true, execute the
 # code.  Omit the code if false.
 #
-proc ifcapable {expr code} {
+proc ifcapable {expr code {else ""} {elsecode ""}} {
   regsub -all {[a-z_0-9]+} $expr {$::sqlite_options(&)} e2
-  if !($e2) return
-  return -code [catch {uplevel 1 $code}]
+  if ($e2) {
+    set c [catch {uplevel 1 $code} r]
+  } else {
+    set c [catch {uplevel 1 $elsecode} r]
+  }
+  return -code $c $r
 }
 
 # This proc execs a seperate process that crashes midway through executing

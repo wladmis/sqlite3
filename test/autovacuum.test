@@ -95,7 +95,7 @@ foreach delete_order $delete_orders {
     # Delete one set of rows from the table.
     do_test autovacuum-1.$tn.($delete).1 {
       execsql "
-        DELETE FROM av1 WHERE oid IN ([join $delete ,])
+        DELETE FROM av1 WHERE oid = [join $delete "OR oid = "]
       "
     } {}
 

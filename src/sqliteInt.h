@@ -110,7 +110,7 @@
 ** a minimum.
 */
 /* #define SQLITE_OMIT_AUTHORIZATION  1 */
-/* #define SQLITE_OMIT_INMEMORYDB     1 */
+/* #define SQLITE_OMIT_MEMORYDB     1 */
 /* #define SQLITE_OMIT_VACUUM         1 */
 /* #define SQLITE_OMIT_DATETIME_FUNCS 1 */
 /* #define SQLITE_OMIT_PROGRESS_CALLBACK 1 */
