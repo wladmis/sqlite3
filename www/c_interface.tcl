@@ -185,6 +185,7 @@ the type of error.  Here is a complete list of the return codes:
 #define SQLITE_SCHEMA      17   /* The database schema changed */
 #define SQLITE_TOOBIG      18   /* Too much data for one row of a table */
 #define SQLITE_CONSTRAINT  19   /* Abort due to contraint violation */
+#define SQLITE_MISMATCH    20   /* Data type mismatch */
 </pre></blockquote>
 
 <p>
@@ -286,6 +287,12 @@ in a single row, this is the return code you get.
 <dt>SQLITE_CONSTRAINT</dt>
 <dd><p>This constant is returned if the SQL statement would have violated
 a database constraint.
+</p></dd>
+<dt>SQLITE_MISMATCH</dt>
+<dd><p>This error occurs when there is an attempt to insert non-integer
+data into a column labeled INTEGER PRIMARY KEY.  For most columns, SQLite
+ignores the data type and allows any kind of data to be stored.  But
+an INTEGER PRIMARY KEY column is only allowed to store integer data.
 </p></dd>
 </dl>
 </blockquote>
