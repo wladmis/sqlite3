@@ -571,8 +571,11 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     char *zErrMsg = 0;
     open_db(p);
     memcpy(&data, p, sizeof(data));
-    data.showHeader = 0;
+    data.showHeader = 1;
     data.mode = MODE_Column;
+    data.colWidth[0] = 3;
+    data.colWidth[1] = 15;
+    data.colWidth[2] = 58;
     sqlite_exec(p->db, "PRAGMA database_list; ", callback, &data, &zErrMsg);
     if( zErrMsg ){
       fprintf(stderr,"Error: %s\n", zErrMsg);
