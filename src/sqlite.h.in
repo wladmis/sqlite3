@@ -242,7 +242,7 @@ int sqlite3_complete16(const void *sql);
 ** data structures out from under the executing query and will 
 ** probably result in a coredump.
 */
-void sqlite3_busy_handler(sqlite*, int(*)(void*,const char*,int), void*);
+void sqlite3_busy_handler(sqlite*, int(*)(void*,int), void*);
 
 /*
 ** This routine sets a busy handler that sleeps for a while when a

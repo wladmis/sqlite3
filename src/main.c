@@ -608,7 +608,7 @@ static int sqliteDefaultBusyCallback(
 */
 void sqlite3_busy_handler(
   sqlite *db,
-  int (*xBusy)(void*,const char*,int),
+  int (*xBusy)(void*,int),
   void *pArg
 ){
   db->busyHandler.xFunc = xBusy;

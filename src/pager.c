@@ -1555,7 +1555,7 @@ static int pager_write_pagelist(PgHdr *pList){
   }while( rc==SQLITE_BUSY && 
       pPager->pBusyHandler && 
       pPager->pBusyHandler->xFunc && 
-      pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, "", busy++)
+      pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, busy++)
   );
   if( rc!=SQLITE_OK ){
     return rc;
@@ -1639,7 +1639,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
     }while( rc==SQLITE_BUSY && 
         pPager->pBusyHandler && 
         pPager->pBusyHandler->xFunc && 
-        pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, "", busy++)
+        pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, busy++)
     );
     if( rc!=SQLITE_OK ){
       return rc;
@@ -2030,7 +2030,7 @@ int sqlite3pager_begin(void *pData, int nMaster){
       }while( rc==SQLITE_BUSY && 
           pPager->pBusyHandler && 
           pPager->pBusyHandler->xFunc && 
-          pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, "", busy++)
+          pPager->pBusyHandler->xFunc(pPager->pBusyHandler->pArg, busy++)
       );
       if( rc!=SQLITE_OK ){
         return rc;

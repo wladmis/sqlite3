@@ -342,8 +342,8 @@ struct Db {
 ** callback is currently invoked only from within pager.c.
 */
 struct BusyHandler {
-  int (*xFunc)(void *,const char*,int);  /* The busy callback */
-  void *pArg;                            /* First arg to busy callback */
+  int (*xFunc)(void *,int);  /* The busy callback */
+  void *pArg;                /* First arg to busy callback */
 };
 
 /*
