@@ -281,7 +281,12 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
   */
   if( pMem->enc!=SQLITE_UTF8 && desiredEnc!=SQLITE_UTF8 ){
     u8 temp;
-    sqlite3VdbeMemMakeWriteable(pMem);
+    int rc;
+    rc = sqlite3VdbeMemMakeWriteable(pMem);
+    if( rc!=SQLITE_OK ){
+      assert( rc==SQLITE_NOMEM );
+      return SQLITE_NOMEM;
+    }
     zIn = pMem->z;
     zTerm = &zIn[pMem->n];
     while( zIn<zTerm ){

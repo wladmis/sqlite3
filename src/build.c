@@ -80,11 +80,16 @@ void sqlite3FinishCoding(Parse *pParse){
       }
       sqlite3VdbeAddOp(v, OP_Goto, 0, pParse->cookieGoto);
     }
-  }
 
 #ifndef NDEBUG
-  sqlite3VdbeOp3(v, OP_Noop, 0, 0, pParse->zSql, pParse->zTail - pParse->zSql);
+    /* Add a No-op that contains the complete text of the compiled SQL
+    ** statement as its P3 argument.  This does not change the functionality
+    ** of the program.  But it does make it easier to debug.
+    */
+    sqlite3VdbeOp3(v, OP_Noop, 0, 0, pParse->zSql, pParse->zTail-pParse->zSql);
 #endif
+  }
+
 
   /* Get the VDBE program ready for execution
   */

@@ -478,6 +478,9 @@ abort_parse:
     sqlite3Parser(pEngine, 0, pParse->sLastToken, pParse);
   }
   sqlite3ParserFree(pEngine, free);
+  if( sqlite3_malloc_failed ){
+    pParse->rc = SQLITE_NOMEM;
+  }
   if( pParse->rc!=SQLITE_OK && pParse->rc!=SQLITE_DONE && pParse->zErrMsg==0 ){
     sqlite3SetString(&pParse->zErrMsg, sqlite3ErrStr(pParse->rc),
                     (char*)0);
