@@ -826,7 +826,7 @@ static int lookupName(
     ** Note that the expression in the result set should have already been
     ** resolved by the time the WHERE clause is resolved.
     */
-    if( cnt==0 && pEList!=0 ){
+    if( cnt==0 && pEList!=0 && zTab==0 ){
       for(j=0; j<pEList->nExpr; j++){
         char *zAs = pEList->a[j].zName;
         if( zAs!=0 && sqlite3StrICmp(zAs, zCol)==0 ){
