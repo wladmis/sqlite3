@@ -137,11 +137,17 @@ id(A) ::= ID(X).         {A = X;}
 // causes them to be assigned integer values that are close together,
 // which keeps parser tables smaller.
 //
+// The token values assigned to these symbols is determined by the order
+// in which lemon first sees them.  It must be the case that ISNULL/NOTNULL,
+// NE/EQ, GT/LE, and GE/LT are separated by only a single value.  See
+// the sqlite3ExprIfFalse() routine for additional information on this
+// constraint.
+//
 %left OR.
 %left AND.
 %right NOT.
-%left ISNULL NOTNULL IS LIKE GLOB BETWEEN IN NE EQ.
-%left GT GE LT LE.
+%left IS LIKE GLOB BETWEEN IN ISNULL NOTNULL NE EQ.
+%left GT LE GE LT.
 %left BITAND BITOR LSHIFT RSHIFT.
 %left PLUS MINUS.
 %left STAR SLASH REM.

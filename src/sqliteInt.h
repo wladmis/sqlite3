@@ -767,9 +767,9 @@ struct Token {
 struct Expr {
   u8 op;                 /* Operation performed by this node */
   char affinity;         /* The affinity of the column or 0 if not a column */
-  CollSeq *pColl;        /* The collation type of the column or 0 */
   u8 iDb;                /* Database referenced by this expression */
   u8 flags;              /* Various flags.  See below */
+  CollSeq *pColl;        /* The collation type of the column or 0 */
   Expr *pLeft, *pRight;  /* Left and right subnodes */
   ExprList *pList;       /* A list of expressions used as function arguments
                          ** or in "<expr> IN (<expr-list)" */
