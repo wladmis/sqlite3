@@ -1401,3 +1401,10 @@ CollSeq *sqlite3LocateCollSeq(Parse *pParse, const char *zName, int nName);
 CollSeq *sqlite3ExprCollSeq(Parse *pParse, Expr *pExpr);
 int sqlite3CheckCollSeq(Parse *, CollSeq *);
 int sqlite3CheckIndexCollSeq(Parse *, Index *);
+
+const void *sqlite3ValueText(sqlite3_value*, u8);
+int sqlite3ValueBytes(sqlite3_value*, u8);
+void sqlite3ValueSetStr(sqlite3_value*, int, const void *,u8);
+void sqlite3ValueFree(sqlite3_value*);
+sqlite3_value *sqlite3ValueNew();
+

@@ -912,10 +912,10 @@ CollSeq *sqlite3FindCollSeq(
     case TEXT_Utf8:
       break;
     case TEXT_Utf16le:
-      pColl = &pColl[2];
+      pColl = &pColl[1];
       break;
     case TEXT_Utf16be:
-      pColl = &pColl[1];
+      pColl = &pColl[2];
       break;
     default: 
       assert(!"Cannot happen");
