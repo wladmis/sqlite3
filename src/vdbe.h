@@ -39,9 +39,6 @@ struct VdbeOp {
   int p2;             /* Second parameter (often the jump destination) */
   char *p3;           /* Third parameter */
   int p3type;         /* P3_STATIC, P3_DYNAMIC or P3_POINTER */
-#ifndef NDEBUG
-  char *zComment;     /* Comments explaining what this opcode does */
-#endif
 #ifdef VDBE_PROFILE
   int cnt;            /* Number of times this instruction was executed */
   long long cycles;   /* Total time spend executing this instruction */
@@ -118,7 +115,6 @@ int sqlite3VdbeFinalize(Vdbe*);
 void sqlite3VdbeResolveLabel(Vdbe*, int);
 int sqlite3VdbeCurrentAddr(Vdbe*);
 void sqlite3VdbeTrace(Vdbe*,FILE*);
-void sqlite3VdbeCompressSpace(Vdbe*,int);
 int sqlite3VdbeReset(Vdbe*);
 int sqliteVdbeSetVariables(Vdbe*,int,const char**);
 void sqlite3VdbeSetNumCols(Vdbe*,int);
