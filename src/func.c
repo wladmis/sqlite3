@@ -200,9 +200,37 @@ static void randomFunc(sqlite_func *context, int argc, const char **argv){
 ** Implementation of the last_insert_rowid() SQL function.  The return
 ** value is the same as the sqlite_last_insert_rowid() API function.
 */
-static void last_insert_rowid(sqlite_func *context, int arg, char **argv){
+static void last_insert_rowid(sqlite_func *context, int arg, const char **argv){
   sqlite *db = sqlite_user_data(context);
   sqlite_set_result_int(context, sqlite_last_insert_rowid(db));
+}
+
+/*
+** Implementation of the like() SQL function.  This function implements
+** the build-in LIKE operator.  The first argument to the function is the
+** string and the second argument is the pattern.  So, the SQL statements:
+**
+**       A LIKE B
+**
+** is implemented as like(A,B).
+*/
+static void likeFunc(sqlite_func *context, int arg, const char **argv){
+  sqlite_set_result_int(context, 
+     sqliteLikeCompare(argv[0] ? argv[0] : "",argv[1] ? argv[1] : ""));
+}
+
+/*
+** Implementation of the glob() SQL function.  This function implements
+** the build-in GLOB operator.  The first argument to the function is the
+** string and the second argument is the pattern.  So, the SQL statements:
+**
+**       A GLOB B
+**
+** is implemented as glob(A,B).
+*/
+static void globFunc(sqlite_func *context, int arg, const char **argv){
+  sqlite_set_result_int(context,
+    sqliteGlobCompare(argv[0] ? argv[0] : "",argv[1] ? argv[1] : ""));
 }
 
 /*
@@ -394,6 +422,8 @@ void sqliteRegisterBuildinFunctions(sqlite *db){
     { "coalesce",   0, 0          },
     { "coalesce",   1, 0          },
     { "random",    -1, randomFunc },
+    { "like",       2, likeFunc   },
+    { "glob",       2, globFunc   },
   };
   static struct {
     char *zName;
