@@ -955,13 +955,20 @@ int sqlitepager_write(void *pData){
     }
     sqliteOsUnlock(pPager->fd);
     if( sqliteOsLock(pPager->fd, 1)!=SQLITE_OK ){
+      sqliteOsUnlock(pPager->fd);
+      rc = sqliteOsLock(pPager->fd, 0);
       sqliteFree(pPager->aInJournal);
       sqliteOsClose(pPager->jfd);
       sqliteOsDelete(pPager->zJournal);
       pPager->journalOpen = 0;
-      pPager->state = SQLITE_UNLOCK;
-      pPager->errMask |= PAGER_ERR_LOCK;
-      return SQLITE_PROTOCOL;
+      if( rc ){
+        pPager->state = SQLITE_UNLOCK;
+        pPager->errMask |= PAGER_ERR_LOCK;
+        return SQLITE_PROTOCOL;
+      }else{
+        pPager->state = SQLITE_READLOCK;
+        return SQLITE_BUSY;
+      }
     }
     pPager->state = SQLITE_WRITELOCK;
     sqlitepager_pagecount(pPager);
