@@ -286,10 +286,13 @@ void sqlite3Insert(
     if( row_triggers_exist ){
       useTempTable = 1;
     }else{
-      int addr = sqlite3VdbeFindOp(v, 0, OP_OpenRead, pTab->tnum);
+      int addr = 0;
       useTempTable = 0;
-      if( addr>0 ){
-        VdbeOp *pOp = sqlite3VdbeGetOp(v, addr-2);
+      while( useTempTable==0 ){
+        VdbeOp *pOp;
+        addr = sqlite3VdbeFindOp(v, addr, OP_OpenRead, pTab->tnum);
+        if( addr==0 ) break;
+        pOp = sqlite3VdbeGetOp(v, addr-2);
         if( pOp->opcode==OP_Integer && pOp->p1==pTab->iDb ){
           useTempTable = 1;
         }
