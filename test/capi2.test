@@ -17,30 +17,6 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-# proc sqlite_step {stmt N VALS COLS} {
-#   upvar $VALS vals
-#   upvar $COLS cols
-#   upvar $N n
-#   set vals [list]
-#   set cols [list]
-# 
-#   set n [sqlite3_column_count $stmt]
-# 
-#   set rc [sqlite3_step $stmt]
-#   for {set i 0} {$i < [sqlite3_column_count $stmt]} {incr i} {
-#     lappend cols [sqlite3_column_name $stmt $i]
-#   }
-#   for {set i 0} {$i < [sqlite3_column_count $stmt]} {incr i} {
-#     lappend cols [sqlite3_column_decltype $stmt $i]
-#   }
-# 
-#   for {set i 0} {$i < [sqlite3_data_count $stmt]} {incr i} {
-#     lappend vals [sqlite3_column_text $stmt $i]
-#   }
-# 
-#   return $rc
-# }
-
 # Return the text values from the current row pointed at by STMT as a list.
 proc get_row_values {STMT} {
   set VALUES [list]
