@@ -4191,6 +4191,7 @@ case OP_NullRow: {
 
   if( VERIFY( i>=0 && i<p->nCursor && ) (pCrsr = p->aCsr[i].pCursor)!=0 ){
     p->aCsr[i].nullRow = 1;
+    p->aCsr[i].recnoIsValid = 0;
   }
   break;
 }
