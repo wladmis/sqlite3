@@ -1106,7 +1106,7 @@ ExprList *sqliteExprListAppend(ExprList *pList, Expr *pExpr, Token *pName){
     }
     pList->a = a;
   }
-  if( pExpr ){
+  if( pExpr || pName ){
     i = pList->nExpr++;
     pList->a[i].pExpr = pExpr;
     pList->a[i].zName = 0;

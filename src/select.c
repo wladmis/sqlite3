@@ -364,8 +364,13 @@ static int fillInColumnList(Parse *pParse, Select *p){
         if( pExpr==0 ) break;
         pExpr->pLeft = sqliteExpr(TK_ID, 0, 0, 0);
         if( pExpr->pLeft==0 ){ sqliteExprDelete(pExpr); break; }
-        pExpr->pLeft->token.z = pTab->zName;
-        pExpr->pLeft->token.n = strlen(pTab->zName);
+        if( pTabList->a[i].zAlias && pTabList->a[i].zAlias[0] ){
+          pExpr->pLeft->token.z = pTabList->a[i].zAlias;
+          pExpr->pLeft->token.n = strlen(pTabList->a[i].zAlias);
+        }else{
+          pExpr->pLeft->token.z = pTab->zName;
+          pExpr->pLeft->token.n = strlen(pTab->zName);
+        }
         pExpr->pRight = sqliteExpr(TK_ID, 0, 0, 0);
         if( pExpr->pRight==0 ){ sqliteExprDelete(pExpr); break; }
         pExpr->pRight->token.z = pTab->aCol[j].zName;

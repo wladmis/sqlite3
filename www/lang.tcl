@@ -509,6 +509,7 @@ SELECT <result> FROM <table-list>
 [HAVING <expression>]
 [<compound-op> <select>]*
 [ORDER BY <sort-expr-list>]
+[LIMIT <integer> [OFFSET <integer>]]
 } {result} {
 STAR | <result-column> [, <result-column>]*
 } {result-column} {
@@ -558,6 +559,11 @@ result for a simple SELECT, but in a compound SELECT each sort
 expression must exactly match one of the result columns.  Each
 sort expression may be optionally followed by ASC or DESC to specify
 the sort order.</p>
+
+<p>The LIMIT clause places an upper bound on the number of rows
+returned in the result.  A LIMIT of 0 indicates no upper bound.
+The optional OFFSET following LIMIT specifies how many
+rows to skip at the beginning of the result set.</p>
 
 <p>A compound SELECT is formed from two or more simple SELECTs connected
 by one of the operators UNION, UNION ALL, INTERSECT, or EXCEPT.  In
