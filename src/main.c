@@ -321,7 +321,7 @@ static int sqliteInitOne(sqlite *db, int iDb, char **pzErrMsg){
     db->aDb[iDb].pBt = 0;
     return SQLITE_FORMAT;
   }
-  sqliteBtreeSetCacheSize(db->aDb[iDb].pBt, size);
+  sqliteBtreeSetCacheSize(db->aDb[iDb].pBt, db->cache_size);
   sqliteBtreeSetSafetyLevel(db->aDb[iDb].pBt, meta[4]==0 ? 2 : meta[4]);
 
   /* Read the schema information out of the schema tables
