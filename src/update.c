@@ -140,9 +140,7 @@ void sqliteUpdate(
       }
     }
     if( j>=pTab->nCol ){
-      sqliteSetString(&pParse->zErrMsg, "no such column: ", 
-         pChanges->a[i].zName, 0);
-      pParse->nErr++;
+      sqliteErrorMsg(pParse, "no such column: %s", pChanges->a[i].zName);
       goto update_cleanup;
     }
 #ifndef SQLITE_OMIT_AUTHORIZATION

@@ -961,6 +961,7 @@ void sqliteRealToSortable(double r, char *);
 char *sqliteMPrintf(const char *,...);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);
+void sqliteErrorMsg(Parse*, const char*, ...);
 void sqliteDequote(char*);
 int sqliteKeywordCode(const char*, int);
 int sqliteRunParser(Parse*, const char*, char **);
