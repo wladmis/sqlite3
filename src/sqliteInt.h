@@ -1374,3 +1374,4 @@ void *sqlite3HexToBlob(const char *z);
 int sqlite3TwoPartName(Parse *, Token *, Token *, Token **);
 const char *sqlite3ErrStr(int);
 int sqlite3ReadUniChar(const char *zStr, int *pOffset, u8 *pEnc, int fold);
+int sqlite3ReadSchema(sqlite *db);

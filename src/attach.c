@@ -105,7 +105,7 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   db->flags &= ~SQLITE_Initialized;
   if( pParse->nErr ) return;
   if( rc==SQLITE_OK ){
-    rc = sqlite3Init(pParse->db, &pParse->zErrMsg);
+    rc = sqlite3ReadSchema(pParse->db);
   }
   if( rc ){
     int i = db->nDb - 1;
