@@ -509,6 +509,7 @@ struct Select {
 struct AggExpr {
   int isAgg;        /* if TRUE contains an aggregate function */
   Expr *pExpr;      /* The expression */
+  UserFunc *pUser;  /* User-defined aggregate function */
 };
 
 /*

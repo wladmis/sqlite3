@@ -1257,6 +1257,12 @@ int sqliteExprAnalyzeAggregates(Parse *pParse, Expr *pExpr){
         if( i<0 ) return 1;
         pParse->aAgg[i].isAgg = 1;
         pParse->aAgg[i].pExpr = pExpr;
+        if( pExpr->iColumn==FN_Unknown ){
+          pParse->aAgg[i].pUser = sqliteFindUserFunction(pParse->db,
+             pExpr->token.z, pExpr->token.n, pExpr->pList->nExpr, 0);
+        }else{
+          pParse->aAgg[i].pUser = 0;
+        }
       }
       pExpr->iAgg = i;
       break;
