@@ -67,7 +67,7 @@ overflow pages.  Traditional B-trees are still used for indices.</p>
 
 <p>
 The new file format also supports variable pages sizes between 512 and
-65536 bytes.  The size of a page is stored in the file header so the
+32768 bytes.  The size of a page is stored in the file header so the
 same library can read databases with different pages sizes, in theory,
 though this feature has not yet been implemented in practice.
 </p>
