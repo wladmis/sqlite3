@@ -1111,14 +1111,14 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 */
 int Sqlite3_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.0", 0);
-  Tcl_CreateObjCommand(interp, "sqlite", (Tcl_ObjCmdProc*)DbMain, 0, 0);
-  Tcl_PkgProvide(interp, "sqlite", "2.0");
+  Tcl_CreateObjCommand(interp, "sqlite3", (Tcl_ObjCmdProc*)DbMain, 0, 0);
+  Tcl_PkgProvide(interp, "sqlite3", "3.0");
   return TCL_OK;
 }
 int Tclsqlite3_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.0", 0);
-  Tcl_CreateObjCommand(interp, "sqlite", (Tcl_ObjCmdProc*)DbMain, 0, 0);
-  Tcl_PkgProvide(interp, "sqlite", "2.0");
+  Tcl_CreateObjCommand(interp, "sqlite3", (Tcl_ObjCmdProc*)DbMain, 0, 0);
+  Tcl_PkgProvide(interp, "sqlite3", "3.0");
   return TCL_OK;
 }
 int Sqlite3_SafeInit(Tcl_Interp *interp){

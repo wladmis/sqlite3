@@ -121,7 +121,7 @@ do_test misc2-5.1 {
 #
 do_test misc2-6.1 {
   db close
-  sqlite db {}
+  sqlite3 db {}
   execsql {
     CREATE TABLE t1(a,b);
     INSERT INTO t1 VALUES(1,2);
@@ -136,7 +136,7 @@ do_test misc2-6.1 {
 do_test misc2-7.1 {
   db close
   file delete -force test.db
-  sqlite db test.db
+  sqlite3 db test.db
   execsql {
     CREATE TABLE t1(x);
     INSERT INTO t1 VALUES(1);
@@ -159,7 +159,7 @@ do_test misc2-7.2 {
 do_test misc2-7.3 {
   db close
   file delete -force test.db
-  sqlite db :memory:
+  sqlite3 db :memory:
   execsql {
     CREATE TABLE t1(x);
     INSERT INTO t1 VALUES(1);

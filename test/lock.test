@@ -20,7 +20,7 @@ source $testdir/tester.tcl
 # Create an alternative connection to the database
 #
 do_test lock-1.0 {
-  sqlite db2 ./test.db
+  sqlite3 db2 ./test.db
   set dummy {}
 } {}
 do_test lock-1.1 {
@@ -273,7 +273,7 @@ do_test lock-4.1 {
   catch {db eval ROLLBACK}
   db eval BEGIN
   db eval {UPDATE t1 SET a=0 WHERE 0}
-  sqlite db2 ./test.db
+  sqlite3 db2 ./test.db
   catchsql {UPDATE t1 SET a=0} db2
 } {1 {database is locked}}
 do_test lock-4.2 {

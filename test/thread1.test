@@ -19,7 +19,7 @@ source $testdir/tester.tcl
 
 # Skip this whole file if the thread testing code is not enabled
 #
-if {[llength [info command thread_step]]==0 || [sqlite -has-codec]} {
+if {[llength [info command thread_step]]==0 || [sqlite3 -has-codec]} {
   finish_test
   return
 }

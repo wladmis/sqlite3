@@ -41,7 +41,7 @@ set EXCLUDE {
   btree2.test
   trans.test
 }
-if {[sqlite -has-codec]} {
+if {[sqlite3 -has-codec]} {
   lappend EXCLUDE \
     attach.test \
     attach2.test \

@@ -411,7 +411,7 @@ if 0 {
 # fault, but we might as well test for it.
 #
 do_test pager-5.1 {
-  sqlite db test.db
+  sqlite3 db test.db
   execsql {
     BEGIN;
     CREATE TABLE t1(x);

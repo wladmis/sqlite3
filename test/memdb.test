@@ -25,8 +25,8 @@ source $testdir/tester.tcl
 #
 do_test memdb-1.1 {
   db close
-  sqlite db :memory:
-  # sqlite db test.db
+  sqlite3 db :memory:
+  # sqlite3 db test.db
   execsql {
     BEGIN;
     CREATE TABLE t3(x TEXT);

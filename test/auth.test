@@ -23,7 +23,7 @@ source $testdir/tester.tcl
 
 do_test auth-1.1.1 {
   db close
-  set ::DB [sqlite db test.db]
+  set ::DB [sqlite3 db test.db]
   proc auth {code arg1 arg2 arg3 arg4} {
     if {$code=="SQLITE_INSERT" && $arg1=="sqlite_master"} {
       return SQLITE_DENY

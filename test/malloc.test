@@ -34,7 +34,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
      sqlite_malloc_fail $i
-     set v [catch {sqlite db test.db} msg]
+     set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
      } else {
@@ -78,7 +78,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
      sqlite_malloc_fail $i
-     set v [catch {sqlite db test.db} msg]
+     set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
      } else {
@@ -122,7 +122,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
      sqlite_malloc_fail $i
-     set v [catch {sqlite db test.db} msg]
+     set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
      } else {
@@ -162,7 +162,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
      sqlite_malloc_fail $i
-     set v [catch {sqlite db test.db} msg]
+     set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
      } else {
@@ -203,7 +203,7 @@ for {set go 1; set i 1} {$go} {incr i} {
      catch {file delete -force test.db}
      catch {file delete -force test.db-journal}
      sqlite_malloc_fail $i
-     set v [catch {sqlite db test.db} msg]
+     set v [catch {sqlite3 db test.db} msg]
      if {$v} {
        set msg ""
      } else {

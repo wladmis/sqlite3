@@ -328,7 +328,7 @@ do_test misc1-10.10 {
 do_test misc1-11.1 {
   execsql {BEGIN}
   execsql {UPDATE t1 SET a=0 WHERE 0}
-  sqlite db2 test.db
+  sqlite3 db2 test.db
   set rc [catch {db2 eval {SELECT count(*) FROM t1}} msg]
   lappend rc $msg
 # v2 result: {1 {database is locked}}
