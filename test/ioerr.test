@@ -132,7 +132,8 @@ do_ioerr_test ioerr-5 -sqlprep {
 
 # Test IO errors when replaying two hot journals from a 2-file 
 # transaction. This test only runs on UNIX.
-if {$tcl_platform(platform)=="unix" && [file exists ./crashtest]} {
+if {$tcl_platform(platform)=="unix" && [file exists ./crashtest]
+     && ![catch {sqlite3 -has-codec} r] && !$r} {
   do_ioerr_test ioerr-6 -tclprep {
     execsql {
       ATTACH 'test2.db' as aux;
@@ -185,5 +186,3 @@ if {$tcl_platform(platform)!="windows"} {
 }
 
 finish_test
-
-
