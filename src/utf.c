@@ -598,11 +598,11 @@ int sqlite3utfTranslate(
       *zOut = sqlite3utf8to16be(zData, nData);
     }
     if( !(*zOut) ) return SQLITE_NOMEM;
-    *nOut = sqlite3utf16ByteLen(*zOut, -1)+2;
+    *nOut = sqlite3utf16ByteLen(*zOut, -1);
   }else{
     *zOut = sqlite3utf16to8(zData, nData, enc1==TEXT_Utf16be);
     if( !(*zOut) ) return SQLITE_NOMEM;
-    *nOut = strlen(*zOut)+1;
+    *nOut = strlen(*zOut);
   }
   return SQLITE_OK;
 }

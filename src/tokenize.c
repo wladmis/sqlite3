@@ -375,6 +375,20 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       *tokenType = TK_VARIABLE;
       return 1;
     }
+    case 'x': case 'X': {
+      if( z[1]=='\'' || z[1]=='"' ){
+        int delim = z[0];
+        for(i=1; z[i]; i++){
+          if( z[i]==delim ){
+            break;
+          }
+        }
+        if( z[i] ) i++;
+        *tokenType = TK_BLOB;
+        return i;
+      }
+      /* Otherwise fall through to the next case */
+    }
     default: {
       if( (*z&0x80)==0 && !isIdChar[*z] ){
         break;

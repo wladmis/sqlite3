@@ -549,6 +549,7 @@ expr(A) ::= nm(X) DOT nm(Y) DOT nm(Z). {
 expr(A) ::= INTEGER(X).      {A = sqlite3Expr(TK_INTEGER, 0, 0, &X);}
 expr(A) ::= FLOAT(X).        {A = sqlite3Expr(TK_FLOAT, 0, 0, &X);}
 expr(A) ::= STRING(X).       {A = sqlite3Expr(TK_STRING, 0, 0, &X);}
+expr(A) ::= BLOB(X).         {A = sqlite3Expr(TK_BLOB, 0, 0, &X);}
 expr(A) ::= VARIABLE(X).     {
   A = sqlite3Expr(TK_VARIABLE, 0, 0, &X);
   if( A ) A->iTable = ++pParse->nVar;

@@ -174,7 +174,7 @@ do_test bind-5.3 {
 # UTF-8 text
 do_test bind-6.1 {
   sqlite3_bind_text $VM 1 hellothere 5
-  sqlite3_bind_text $VM 2 "." 2
+  sqlite3_bind_text $VM 2 ".." 1
   sqlite3_bind_text $VM 3 world -1
   sqlite_step $VM N VALUES COLNAMES
   sqlite3_reset $VM

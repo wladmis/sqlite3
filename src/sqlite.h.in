@@ -373,6 +373,8 @@ char *sqlite3_mprintf(const char*,...);
 char *sqlite3_vmprintf(const char*, va_list);
 void sqlite3_free(char *z);
 
+void sqlite3_freemem(void *z);
+
 /*
 ** Windows systems need functions to call to return the sqlite3_version
 ** and sqlite3_encoding strings.
