@@ -100,4 +100,56 @@ do_test subselect-2.3 {
   }
 } {0}
 
+# Verify that the ORDER BY clause is honored in a subquery.
+#
+do_test subselect-3.1 {
+  execsql {
+    CREATE TABLE t3(x int);
+    INSERT INTO t3 SELECT a FROM t1 UNION ALL SELECT b FROM t1;
+    SELECT * FROM t3 ORDER BY x;
+  }
+} {1 2 3 4 5 6}
+do_test subselect-3.2 {
+  execsql {
+    SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x LIMIT 2);
+  }
+} {3}
+do_test subselect-3.3 {
+  execsql {
+    SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x DESC LIMIT 2);
+  }
+} {11}
+do_test subselect-3.4 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x);
+  }
+} {1}
+do_test subselect-3.5 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x DESC);
+  }
+} {6}
+do_test subselect-3.6 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x LIMIT 1);
+  }
+} {1}
+do_test subselect-3.7 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x DESC LIMIT 1);
+  }
+} {6}
+do_test subselect-3.8 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x LIMIT 1 OFFSET 2);
+  }
+} {3}
+do_test subselect-3.9 {
+  execsql {
+    SELECT (SELECT x FROM t3 ORDER BY x DESC LIMIT 1 OFFSET 2);
+  }
+} {4}
+
+
+
 finish_test
