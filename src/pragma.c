@@ -384,7 +384,7 @@ void sqlite3Pragma(
   if( sqlite3StrICmp(zLeft, "table_info")==0 && zRight ){
     Table *pTab;
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
-    pTab = sqlite3FindTable(db, zRight, 0);
+    pTab = sqlite3FindTable(db, zRight, zDb);
     if( pTab ){
       int i;
       sqlite3VdbeSetNumCols(v, 6);
@@ -413,7 +413,7 @@ void sqlite3Pragma(
     Index *pIdx;
     Table *pTab;
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
-    pIdx = sqlite3FindIndex(db, zRight, 0);
+    pIdx = sqlite3FindIndex(db, zRight, zDb);
     if( pIdx ){
       int i;
       pTab = pIdx->pTable;
@@ -436,7 +436,7 @@ void sqlite3Pragma(
     Index *pIdx;
     Table *pTab;
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
-    pTab = sqlite3FindTable(db, zRight, 0);
+    pTab = sqlite3FindTable(db, zRight, zDb);
     if( pTab ){
       v = sqlite3GetVdbe(pParse);
       pIdx = pTab->pIndex;
@@ -462,7 +462,7 @@ void sqlite3Pragma(
     FKey *pFK;
     Table *pTab;
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
-    pTab = sqlite3FindTable(db, zRight, 0);
+    pTab = sqlite3FindTable(db, zRight, zDb);
     if( pTab ){
       v = sqlite3GetVdbe(pParse);
       pFK = pTab->pFKey;
