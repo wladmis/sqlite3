@@ -858,6 +858,9 @@ int sqlite3BtreeFactory(
   if( omitJournal ){
     btree_flags |= BTREE_OMIT_JOURNAL;
   }
+  if( db->flags & SQLITE_NoReadlock ){
+    btree_flags |= BTREE_NO_READLOCK;
+  }
   if( zFilename==0 ){
 #if TEMP_STORE==0
     /* Do nothing */

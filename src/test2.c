@@ -81,7 +81,7 @@ static int pager_open(
     return TCL_ERROR;
   }
   if( Tcl_GetInt(interp, argv[2], &nPage) ) return TCL_ERROR;
-  rc = sqlite3pager_open(&pPager, argv[1], 0, 1);
+  rc = sqlite3pager_open(&pPager, argv[1], 0, 0);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;

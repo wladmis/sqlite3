@@ -46,9 +46,13 @@ int sqlite3BtreeOpen(
 
 /* The flags parameter to sqlite3BtreeOpen can be the bitwise or of the
 ** following values.
+**
+** NOTE:  These values must match the corresponding PAGER_ values in
+** pager.h.
 */
 #define BTREE_OMIT_JOURNAL  1  /* Do not use journal.  No argument */
-#define BTREE_MEMORY        2  /* In-memory DB.  No argument */
+#define BTREE_NO_READLOCK   2  /* Omit readlocks on readonly files */
+#define BTREE_MEMORY        4  /* In-memory DB.  No argument */
 
 int sqlite3BtreeClose(Btree*);
 int sqlite3BtreeSetBusyHandler(Btree*,BusyHandler*);

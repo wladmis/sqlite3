@@ -1223,8 +1223,7 @@ int sqlite3BtreeOpen(
     *ppBtree = 0;
     return SQLITE_NOMEM;
   }
-  rc = sqlite3pager_open(&pBt->pPager, zFilename, EXTRA_SIZE,
-                        (flags & BTREE_OMIT_JOURNAL)==0);
+  rc = sqlite3pager_open(&pBt->pPager, zFilename, EXTRA_SIZE, flags);
   if( rc!=SQLITE_OK ){
     if( pBt->pPager ) sqlite3pager_close(pBt->pPager);
     sqliteFree(pBt);

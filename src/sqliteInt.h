@@ -469,6 +469,8 @@ struct sqlite3 {
 #define SQLITE_SqlTrace       0x00000200  /* Debug print SQL as it executes */
 #define SQLITE_VdbeListing    0x00000400  /* Debug listings of VDBE programs */
 #define SQLITE_WriteSchema    0x00000800  /* OK to update SQLITE_MASTER */
+#define SQLITE_NoReadlock     0x00001000  /* Readlocks are omitted when 
+                                          ** accessing read-only databases */
 
 /*
 ** Possible values for the sqlite.magic field.

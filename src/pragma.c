@@ -148,6 +148,7 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     { "empty_result_callbacks",   SQLITE_NullCallback  },
     /* The following is VERY experimental */
     { "writable_schema",          SQLITE_WriteSchema   },
+    { "omit_readlock",            SQLITE_NoReadlock    },
   };
   int i;
   const struct sPragmaType *p;
