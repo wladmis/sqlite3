@@ -612,7 +612,11 @@ static void generateColumnNames(
   int i;
   if( pParse->colNamesSet || v==0 || sqlite_malloc_failed ) return;
   pParse->colNamesSet = 1;
-  sqliteVdbeAddOp(v, OP_ColumnCount, pEList->nExpr*2+1, 0);
+  if( pParse->db->flags & SQLITE_ReportTypes ){
+    sqliteVdbeAddOp(v, OP_ColumnCount, pEList->nExpr*2, 0);
+  }else{
+    sqliteVdbeAddOp(v, OP_ColumnCount, pEList->nExpr, 0);
+  }
   for(i=0; i<pEList->nExpr; i++){
     Expr *p;
     char *zType = 0;
@@ -672,15 +676,17 @@ static void generateColumnNames(
       sqliteVdbeAddOp(v, OP_ColumnName, i, 0);
       sqliteVdbeChangeP3(v, -1, zName, strlen(zName));
     }
-    if( zType==0 ){
-      if( sqliteExprType(p)==SQLITE_SO_TEXT ){
-        zType = "TEXT";
-      }else{
-        zType = "NUMERIC";
+    if( pParse->db->flags & SQLITE_ReportTypes ){
+      if( zType==0 ){
+        if( sqliteExprType(p)==SQLITE_SO_TEXT ){
+          zType = "TEXT";
+        }else{
+          zType = "NUMERIC";
+        }
       }
+      sqliteVdbeAddOp(v, OP_ColumnName, i + pEList->nExpr, 0);
+      sqliteVdbeChangeP3(v, -1, zType, P3_STATIC);
     }
-    sqliteVdbeAddOp(v, OP_ColumnName, i + pEList->nExpr + 1, 0);
-    sqliteVdbeChangeP3(v, -1, zType, P3_STATIC);
   }
 }
 

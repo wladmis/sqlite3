@@ -230,6 +230,8 @@ struct sqlite {
 #define SQLITE_ResultDetails  0x00000100  /* Details added to result set */
 #define SQLITE_UnresetViews   0x00000200  /* True if one or more views have */
                                           /*   defined column names */
+#define SQLITE_ReportTypes    0x00000400  /* Include information on datatypes */
+                                          /*   in 4th argument of callback */
 
 /*
 ** Possible values for the sqlite.magic field.

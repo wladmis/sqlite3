@@ -2044,6 +2044,14 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "show_datatypes")==0 ){
+    if( getBoolean(zRight) ){
+      db->flags |= SQLITE_ReportTypes;
+    }else{
+      db->flags &= ~SQLITE_ReportTypes;
+    }
+  }else
+
   if( sqliteStrICmp(zLeft, "result_set_details")==0 ){
     if( getBoolean(zRight) ){
       db->flags |= SQLITE_ResultDetails;
