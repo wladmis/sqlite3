@@ -268,10 +268,10 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   SqliteDb *pDb = (SqliteDb*)cd;
   int choice;
   static char *DB_optStrs[] = {
-     "busy",   "close",  "complete",  "eval",  "timeout", 0
+     "busy",   "close",  "complete",  "eval",  "last_insert_rowid", "timeout", 0
   };
   enum DB_opts {
-     DB_BUSY,  DB_CLOSE, DB_COMPLETE, DB_EVAL, DB_TIMEOUT
+     DB_BUSY,  DB_CLOSE, DB_COMPLETE, DB_EVAL, DB_LAST_INSERT_ROWID, DB_TIMEOUT
   };
 
   if( objc<2 ){
@@ -422,6 +422,24 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     }
 #endif
     return rc;
+  }
+
+  /*
+  **     $db last_insert_rowid 
+  **
+  ** Return an integer which is the ROWID for the most recent insert.
+  */
+  case DB_LAST_INSERT_ROWID: {
+    Tcl_Obj *pResult;
+    int rowid;
+    if( objc!=2 ){
+      Tcl_WrongNumArgs(interp, 2, objv, "");
+      return TCL_ERROR;
+    }
+    rowid = sqlite_last_insert_rowid(pDb->db);
+    pResult = Tcl_GetObjResult(interp);
+    Tcl_SetIntObj(pResult, rowid);
+    break;
   }
 
   /*

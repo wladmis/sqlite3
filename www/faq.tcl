@@ -81,6 +81,11 @@ SELECT * FROM ex1;
   the case and you cannot count on that behavior.  The keys will never
   be sequential.  If you need sequential keys, use the counter implemention
   described first.</p>
+
+  <p>Beginning with version 2.2.3, there is a new API function named
+  <b>sqlite_last_insert_rowid()</b> which will return the integer key
+  for the most recent insert operation.  See the API documentation for
+  details.</p>
 }
 
 faq {

@@ -181,6 +181,7 @@ struct sqlite {
   Hash idxHash;                 /* All (named) indices indexed by name */
   Hash tblDrop;                 /* Uncommitted DROP TABLEs */
   Hash idxDrop;                 /* Uncommitted DROP INDEXs */
+  int lastRowid;                /* ROWID of most recent insert */
   int nextRowid;                /* Next generated rowID */
 };
 

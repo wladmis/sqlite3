@@ -55,7 +55,8 @@ do_test intpkey-1.3 {
   execsql {
     INSERT INTO t1 VALUES(5,'hello','world');
   }
-} {}
+  db last_insert_rowid
+} {5}
 do_test intpkey-1.4 {
   execsql {
     SELECT * FROM t1;
@@ -87,6 +88,9 @@ do_test intpkey-1.8 {
   }} msg]
   lappend r $msg
 } {0 {}}
+do_test intpkey-1.8.1 {
+  db last_insert_rowid
+} {6}
 do_test intpkey-1.9 {
   execsql {
     SELECT rowid, * FROM t1;

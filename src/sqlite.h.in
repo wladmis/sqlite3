@@ -162,6 +162,17 @@ int sqlite_exec(
 #define SQLITE_CONSTRAINT  19   /* Abort due to contraint violation */
 #define SQLITE_MISMATCH    20   /* Data type mismatch */
 
+/*
+** Each entry in an SQLite table has a unique integer key.  (The key is
+** the value of the INTEGER PRIMARY KEY column if there is such a column,
+** otherwise the key is generated at random.  The unique key is always
+** available as the ROWID, OID, or _ROWID_ column.)  The following routine
+** returns the integer key of the most recent insert in the database.
+**
+** This function is similar to the mysql_insert_id() function from MySQL.
+*/
+int sqlite_last_insert_rowid(sqlite*);
+
 /* If the parameter to this routine is one of the return value constants
 ** defined above, then this routine returns a constant text string which
 ** descripts (in English) the meaning of the return value.

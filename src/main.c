@@ -359,6 +359,13 @@ static void clearHashTable(sqlite *db, int preserveTemps){
 }
 
 /*
+** Return the ROWID of the most recent insert
+*/
+int sqlite_last_insert_rowid(sqlite *db){
+  return db->lastRowid;
+}
+
+/*
 ** Close an existing SQLite database
 */
 void sqlite_close(sqlite *db){
