@@ -28,6 +28,9 @@ doc {Version 2 C/C++ API} {c_interface.html} {
   A description of the C/C++ interface bindings for SQLite through version 
   2.8
 }
+doc {SQLite Version 3} {version3.html} {
+  A summary of of the changes between SQLite version 2.8 and SQLite version 3.0.
+}
 doc {Version 3 C/C++ API} {capi3.html} {
   A description of the C/C++ interface bindings for SQLite version 3.0.0
   and following.

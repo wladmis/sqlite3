@@ -60,13 +60,14 @@ proc newsitem {date title text} {
 
 newsitem {2004-Jun-18} {Version 3.0.0 (alpha) Released} {
   The first alpha release of SQLite version 3.0 is available for
-  public review and comment.  Version 3.0 enhances i18n support
+  public review and comment.  Version 3.0 enhances internationalization support
   through the use of UTF-16 and user-defined text collating sequences.
   BLOBs can now be stored directly, without encoding.
   A new file format results in databases that are 25% smaller (depending
   on content).  The code is also a little faster.  In spite of the many
-  new features, the library footprint is still less than 235KB
+  new features, the library footprint is still less than 240KB
   (x86, gcc -O1).
+  <a href="version3.html">Additional information</a>.
 
   Our intent is to freeze the file format and API on 2004-Jul-01.
   Users are encouraged to review and evaluate this alpha release carefully 

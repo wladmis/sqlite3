@@ -124,10 +124,12 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     { "vdbe_trace",               SQLITE_VdbeTrace     },
     { "sql_trace",                SQLITE_SqlTrace      },
     { "vdbe_listing",             SQLITE_VdbeListing   },
+#if 1  /* FIX ME:  Remove the following pragmas */
     { "full_column_names",        SQLITE_FullColNames  },
     { "short_column_names",       SQLITE_ShortColNames },
     { "count_changes",            SQLITE_CountRows     },
     { "empty_result_callbacks",   SQLITE_NullCallback  },
+#endif
   };
   int i;
   for(i=0; i<sizeof(aPragma)/sizeof(aPragma[0]); i++){

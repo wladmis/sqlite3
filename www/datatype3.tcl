@@ -309,8 +309,8 @@ instead of memcmp().
 </p>  
 <p>
 Aside from the default collation sequence BINARY, implemented using
-memcmp(), SQLite features two extra built-in collation sequences,
-NOCASE and REVERSE:
+memcmp(), SQLite features two extra built-in collation sequences 
+intended for testing purposes, NOCASE and REVERSE:
 </p>  
 <UL>
 	<LI><b>BINARY</b> - Compares string data using memcmp(), regardless
