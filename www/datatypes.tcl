@@ -169,7 +169,7 @@ text
 </pre></blockquote>
 
 <p>
-For table columns, the datatype is determined by the datatype declaration
+For table columns, the datatype is determined by the type declaration
 of the CREATE TABLE statement.  The datatype is text if and only if
 the type declaration contains one or more of the following strings:
 </p>

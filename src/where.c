@@ -181,6 +181,10 @@ static Index *findSortingIndex(
       /* Indices can only be used for ascending sort order */
       return 0;
     }
+    if( (pOrderBy->a[i].sortOrder & SQLITE_SO_TYPEMASK)!=SQLITE_SO_UNK ){
+      /* Do not sort by index if there is a COLLATE clause */
+      return 0;
+    }
     p = pOrderBy->a[i].pExpr;
     if( p->op!=TK_COLUMN || p->iTable!=base ){
       /* Can not use an index sort on anything that is not a column in the
