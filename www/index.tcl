@@ -63,7 +63,9 @@ puts {<h2>Features</h2>
 <a href="c_interface.html">C/C++ interface</a> requires the use of only
 three functions and one opaque structure.</li>
 <li><a href="tclsqlite.html">TCL bindings</a> included.
-    Bindings for many other languages available separately.</li>
+    Bindings for many other languages 
+    <a href="http://cvs.hwaci.com/sqlite/wiki?p=SqliteWrappers>
+    available separately.</a></li>
 <li>Simple, well-commented source code.</li>
 <li>Automated test suite provides near 100% code coverage.</li>
 <li>Self-contained: no external dependencies.</li>
