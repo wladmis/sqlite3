@@ -1014,7 +1014,6 @@ static int openDatabase(
   /* Allocate the sqlite data structure */
   db = sqliteMalloc( sizeof(sqlite) );
   if( db==0 ) goto opendb_out;
-  db->onError = OE_Default;
   db->priorNewRowid = 0;
   db->magic = SQLITE_MAGIC_BUSY;
   db->nDb = 2;

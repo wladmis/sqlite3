@@ -2172,7 +2172,7 @@ void sqlite3SrcListDelete(SrcList *pList){
 /*
 ** Begin a transaction
 */
-void sqlite3BeginTransaction(Parse *pParse, int onError){
+void sqlite3BeginTransaction(Parse *pParse){
   sqlite *db;
   Vdbe *v;
 
@@ -2183,8 +2183,6 @@ void sqlite3BeginTransaction(Parse *pParse, int onError){
   v = sqlite3GetVdbe(pParse);
   if( !v ) return;
   sqlite3VdbeAddOp(v, OP_AutoCommit, 0, 0);
-
-  /* FIX ME: Need to deal with onError */
 }
 
 /*

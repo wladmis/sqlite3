@@ -747,8 +747,6 @@ void sqlite3GenerateConstraintChecks(
     if( onError==OE_None ) continue;
     if( overrideError!=OE_Default ){
       onError = overrideError;
-    }else if( pParse->db->onError!=OE_Default ){
-      onError = pParse->db->onError;
     }else if( onError==OE_Default ){
       onError = OE_Abort;
     }
@@ -795,8 +793,6 @@ void sqlite3GenerateConstraintChecks(
     onError = pTab->keyConf;
     if( overrideError!=OE_Default ){
       onError = overrideError;
-    }else if( pParse->db->onError!=OE_Default ){
-      onError = pParse->db->onError;
     }else if( onError==OE_Default ){
       onError = OE_Abort;
     }
@@ -872,8 +868,6 @@ void sqlite3GenerateConstraintChecks(
     if( onError==OE_None ) continue;  /* pIdx is not a UNIQUE index */
     if( overrideError!=OE_Default ){
       onError = overrideError;
-    }else if( pParse->db->onError!=OE_Default ){
-      onError = pParse->db->onError;
     }else if( onError==OE_Default ){
       onError = OE_Abort;
     }

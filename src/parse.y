@@ -76,7 +76,7 @@ explain ::= .           { sqlite3BeginParse(pParse, 0); }
 ///////////////////// Begin and end transactions. ////////////////////////////
 //
 
-cmd ::= BEGIN trans_opt onconf(R).  {sqlite3BeginTransaction(pParse,R);}
+cmd ::= BEGIN trans_opt.  {sqlite3BeginTransaction(pParse);}
 trans_opt ::= .
 trans_opt ::= TRANSACTION.
 trans_opt ::= TRANSACTION nm.

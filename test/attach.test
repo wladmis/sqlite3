@@ -444,13 +444,11 @@ do_test attach-4.8 {
   execsql {
     ATTACH DATABASE 'test2.db' AS db2;
     INSERT INTO db2.t3 VALUES(13,14);
-pragma vdbe_trace = on;
     SELECT * FROM db2.t4 UNION ALL SELECT * FROM main.t4;
   }
 } {db2.6 db2.13 main.11}
 do_test attach-4.9 {
   execsql {
-pragma vdbe_trace = off;
     INSERT INTO main.t3 VALUES(15,16);
     SELECT * FROM db2.t4 UNION ALL SELECT * FROM main.t4;
   }
