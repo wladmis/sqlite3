@@ -990,7 +990,10 @@ static int getPayload(BtCursor *pCur, int offset, int amt, char *zBuf){
     }
     sqlitepager_unref(pOvfl);
   }
-  return amt==0 ? SQLITE_OK : SQLITE_CORRUPT;
+  if( amt>0 ){
+    return SQLITE_CORRUPT;
+  }
+  return SQLITE_OK;
 }
 
 /*
