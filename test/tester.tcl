@@ -246,6 +246,41 @@ proc ifcapable {expr code} {
   return -code [catch {uplevel 1 $code}]
 }
 
+# This proc execs a seperate process that crashes midway through executing
+# the SQL script $sql on database test.db.
+#
+# The crash occurs during a sync() of file $crashfile. When the crash
+# occurs a random subset of all unsynced writes made by the process are
+# written into the files on disk. Argument $crashdelay indicates the
+# number of file syncs to wait before crashing.
+#
+# The return value is a list of two elements. The first element is a
+# boolean, indicating whether or not the process actually crashed or
+# reported some other error. The second element in the returned list is the
+# error message. This is "child process exited abnormally" if the crash
+# occured.
+#
+proc crashsql {crashdelay crashfile sql} {
+  if {$::tcl_platform(platform)!="unix"} {
+    error "crashsql should only be used on unix"
+  }
+  set cfile [file join [pwd] $crashfile]
+
+  set f [open crash.tcl w]
+  puts $f "sqlite3_crashparams $crashdelay $cfile"
+  puts $f "sqlite3 db test.db"
+  puts $f "db eval {pragma cache_size = 10}"
+  puts $f "db eval {"
+  puts $f   "$sql"
+  puts $f "}"
+  close $f
+
+  set r [catch {
+    exec [file join . crashtest] crash.tcl >@stdout
+  } msg]
+  lappend r $msg
+}
+
 # If the library is compiled with the SQLITE_DEFAULT_AUTOVACUUM macro set
 # to non-zero, then set the global variable $AUTOVACUUM to 1.
 set AUTOVACUUM $sqlite_options(default_autovacuum)
