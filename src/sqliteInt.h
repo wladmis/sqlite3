@@ -130,6 +130,14 @@ typedef INTPTR_TYPE ptr;           /* Big enough to hold a pointer */
 typedef unsigned INTPTR_TYPE uptr; /* Big enough to hold a pointer */
 
 /*
+** Macros to determine whether the machine is big or little endian,
+** evaluated at runtime.
+*/
+extern const int sqlite3one;
+#define SQLITE3_BIGENDIAN    (*(char *)(&sqlite3one)==0)
+#define SQLITE3_LITTLEENDIAN (*(char *)(&sqlite3one)==1)
+
+/*
 ** Defer sourcing vdbe.h until after the "u8" typedef is defined.
 */
 #include "vdbe.h"

@@ -30,6 +30,12 @@ typedef struct {
 } InitData;
 
 /*
+** The following constant value is used by the SQLITE3_BIGENDIAN and
+** SQLITE3_LITTLEENDIAN macros.
+*/
+const int sqlite3one = 1;
+
+/*
 ** Fill the InitData structure with an error message that indicates
 ** that the database is corrupt.
 */
@@ -1335,4 +1341,3 @@ int sqlite3_reset_new(sqlite3_stmt *pStmt){
   sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0);
   return rc;
 }
-

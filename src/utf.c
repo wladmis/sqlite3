@@ -49,11 +49,8 @@
 ** replacement character U+FFFD for each pair of bytes that cannot be
 ** interpeted as part of a valid unicode character.
 */
-
 #include <assert.h>
-#include <unistd.h>
 #include "sqliteInt.h"
-#include "os.h"
 
 typedef struct UtfString UtfString;
 struct UtfString {
@@ -590,5 +587,3 @@ int sqlite3utfTranslate(
   }
   return SQLITE_OK;
 }
- 
-
