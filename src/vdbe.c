@@ -2363,8 +2363,15 @@ case OP_SetCookie: {
 */
 case OP_VerifyCookie: {
   int iMeta;
+  Btree *pBt;
   assert( pOp->p1>=0 && pOp->p1<db->nDb );
-  rc = sqlite3BtreeGetMeta(db->aDb[pOp->p1].pBt, 1, (u32 *)&iMeta);
+  pBt = db->aDb[pOp->p1].pBt;
+  if( pBt ){
+    rc = sqlite3BtreeGetMeta(pBt, 1, (u32 *)&iMeta);
+  }else{
+    rc = SQLITE_OK;
+    iMeta = 0;
+  }
   if( rc==SQLITE_OK && iMeta!=pOp->p2 ){
     sqlite3SetString(&p->zErrMsg, "database schema has changed", (char*)0);
     rc = SQLITE_SCHEMA;

@@ -133,6 +133,7 @@ do_test tcl-1.19 {
 
 
 if {[sqlite3 -tcl-uses-utf]} {
+  catch {unset ::result}
   do_test tcl-2.1 {
     execsql "CREATE TABLE t\u0123x(a int, b\u1235 float)"
     execsql "PRAGMA table_info(t\u0123x)"

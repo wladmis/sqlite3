@@ -695,7 +695,7 @@ WhereInfo *sqlite3WhereBegin(
 
   /* Open all tables in the pTabList and all indices used by those tables.
   */
-  sqlite3CodeVerifySchema(pParse, 1);  /* Inserts the cookie verifier Goto */
+  sqlite3CodeVerifySchema(pParse, -1); /* Insert the cookie verifier Goto */
   for(i=0; i<pTabList->nSrc; i++){
     Table *pTab;
     Index *pIx;
