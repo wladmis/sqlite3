@@ -669,9 +669,7 @@ void sqlite3_interrupt(sqlite3 *db){
 ** SQLite is a DLL.  For some reason, it does not work to call free()
 ** directly.
 **
-** Note that we need to call free() not sqliteFree() here, since every
-** string that is exported from SQLite should have already passed through
-** sqlite3StrRealloc().
+** Note that we need to call free() not sqliteFree() here.
 */
 void sqlite3_free(char *p){ free(p); }
 
