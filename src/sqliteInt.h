@@ -904,7 +904,7 @@ struct Trigger {
   IdList *pColumns;       /* If this is an UPDATE OF <column-list> trigger,
                              the <column-list> is stored here */
   int foreach;            /* One of TK_ROW or TK_STATEMENT */
-  Token *pNameToken;      /* Token containing zName. Use during parsing only */
+  Token nameToken;        /* Token containing zName. Use during parsing only */
 
   TriggerStep *step_list; /* Link list of trigger program steps             */
   Trigger *pNext;         /* Next trigger associated with the table */

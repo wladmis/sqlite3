@@ -148,6 +148,7 @@ int sqliteFixInit(
   if( iDb<0 || iDb==1 ) return 0;
   db = pParse->db;
   assert( db->nDb>iDb );
+  pFix->pParse = pParse;
   pFix->zDb = db->aDb[iDb].zName;
   pFix->zType = zType;
   pFix->pName = pName;
@@ -182,8 +183,9 @@ int sqliteFixSrcList(
       pList->a[i].zDatabase = sqliteStrDup(zDb);
     }else if( sqliteStrICmp(pList->a[i].zDatabase,zDb)!=0 ){
       sqliteErrorMsg(pFix->pParse,
-         "%s %.*s cannot reference objects in database %s",
-         pFix->zType, pFix->pName->n, pFix->pName->z, pList->a[i].zDatabase);
+         "%s %z cannot reference objects in database %s",
+         pFix->zType, sqliteStrNDup(pFix->pName->z, pFix->pName->n),
+         pList->a[i].zDatabase);
       return 1;
     }
     if( sqliteFixSelect(pFix, pList->a[i].pSelect) ) return 1;

@@ -718,4 +718,21 @@ do_test format3-11.7 {
   }
 } {0 0}
 
+# Make sure attempts to attach a format 3 database fail.
+#
+do_test format3-12.1 {
+  file delete -force test2.db
+  sqlite db2 test2.db
+  catchsql {
+    CREATE TABLE t8(x,y);
+    ATTACH DATABASE 'test.db' AS format3;
+  } db2;
+} {1 {incompatible file format in auxiliary database: format3}}
+do_test format3-12.2 {
+  catchsql {
+    ATTACH DATABASE 'test2.db' AS test2;
+  }
+} {1 {cannot attach auxiliary databases to an older format master database}}
+db2 close
+
 finish_test
