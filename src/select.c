@@ -1504,6 +1504,8 @@ static int multiSelect(
       p->pOrderBy = pOrderBy;
       p->nLimit = nLimit;
       p->nOffset = nOffset;
+      p->iLimit = -1;
+      p->iOffset = -1;
       if( rc ){
         goto multi_select_end;
       }

@@ -317,4 +317,36 @@ do_test limit-8.3 {
   }
 } {25 26 27 28 29}
 
+# Make sure limits on multiple subqueries work correctly.
+# Ticket #1035
+#
+do_test limit-9.1 {
+  execsql {
+    SELECT * FROM (SELECT * FROM t6 LIMIT 3);
+  }
+} {1 2 3}
+do_test limit-9.2 {
+  execsql {
+    CREATE TABLE t7 AS SELECT * FROM t6;
+    SELECT * FROM (SELECT * FROM t7 LIMIT 3);
+  }
+} {1 2 3}
+do_test limit-9.3 {
+  execsql {
+    SELECT * FROM (SELECT * FROM t6 LIMIT 3)
+    UNION
+    SELECT * FROM (SELECT * FROM t7 LIMIT 3)
+    ORDER BY 1
+  }
+} {1 2 3}
+do_test limit-9.4 {
+  execsql {
+    SELECT * FROM (SELECT * FROM t6 LIMIT 3)
+    UNION
+    SELECT * FROM (SELECT * FROM t7 LIMIT 3)
+    ORDER BY 1
+    LIMIT 2
+  }
+} {1 2}
+
 finish_test
