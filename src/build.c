@@ -699,8 +699,7 @@ void sqlite3AddPrimaryKey(Parse *pParse, IdList *pList, int onError){
   if( iCol>=0 && iCol<pTab->nCol ){
     zType = pTab->aCol[iCol].zType;
   }
-  if( pParse->db->file_format>=1 && 
-           zType && sqlite3StrICmp(zType, "INTEGER")==0 ){
+  if( zType && sqlite3StrICmp(zType, "INTEGER")==0 ){
     pTab->iPKey = iCol;
     pTab->keyConf = onError;
   }else{
@@ -1721,7 +1720,7 @@ void sqlite3CreateIndex(
         }
       }
       sqlite3VdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0);
-      if( db->file_format>=4 ) sqlite3AddIdxKeyType(v, pIndex);
+      sqlite3AddIdxKeyType(v, pIndex);
       sqlite3VdbeOp3(v, OP_IdxPut, 1, pIndex->onError!=OE_None,
                       "indexed columns are not unique", P3_STATIC);
       sqlite3VdbeAddOp(v, OP_Next, 2, lbl1);

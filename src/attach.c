@@ -34,12 +34,6 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   sqlite3VdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;
-  if( db->file_format<4 ){
-    sqlite3ErrorMsg(pParse, "cannot attach auxiliary databases to an "
-       "older format master database", 0);
-    pParse->rc = SQLITE_ERROR;
-    return;
-  }
   if( db->nDb>=MAX_ATTACHED+2 ){
     sqlite3ErrorMsg(pParse, "too many attached databases - max %d", 
        MAX_ATTACHED);
