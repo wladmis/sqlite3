@@ -64,7 +64,6 @@ void sqliteAttach(Parse *pParse, Token *pFilename, Token *pDbname){
       sqliteErrorMsg(pParse, "database %z is already in use", zName);
       pParse->rc = SQLITE_ERROR;
       sqliteFree(zFile);
-      sqliteFree(zName);
       return;
     }
   }
