@@ -1115,6 +1115,19 @@ int sqlite3_rekey(
   const void *pKey, int nKey     /* The new key */
 );
 
+/*
+** If the following global variable is made to point to a constant
+** string which is the name of a directory, then all temporary files
+** created by SQLite will be placed in that directory.  If this variable
+** is NULL pointer, then SQLite does a search for an appropriate temporary
+** file directory.
+**
+** This variable should only be changed when there are no open databases.
+** Once sqlite3_open() has been called, this variable should not be changed
+** until all database connections are closed.
+*/
+extern const char *sqlite_temp_directory;
+
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
 #endif
