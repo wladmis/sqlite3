@@ -644,6 +644,7 @@ static const char *columnType(Parse *pParse, SrcList *pTabList, Expr *pExpr){
       zType = "INTEGER";
     }else{
       zType = pTab->aCol[iCol].zType;
+      if( !zType ) zType = "";
     }
   }else{
     switch( sqlite3ExprType(pExpr) ){
@@ -670,7 +671,10 @@ static void generateColumnTypes(
     Expr *p = pEList->a[i].pExpr;
     const char *zType = columnType(pParse, pTabList, p);
     if( p==0 ) continue;
-    sqlite3VdbeSetColName(v, i+pEList->nExpr, zType, P3_STATIC);
+    /* The vdbe must make it's own copy of the column-type, in case the 
+    ** schema is reset before this virtual machine is deleted.
+    */
+    sqlite3VdbeSetColName(v, i+pEList->nExpr, zType, strlen(zType));
   }
 }
 
