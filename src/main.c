@@ -600,9 +600,6 @@ int sqlite_exec(
 
   if( pzErrMsg ) *pzErrMsg = 0;
   if( sqliteSafetyOn(db) ) goto exec_misuse;
-  if( (db->flags & SQLITE_InTrans)!=0 && db->pid!=sqliteOsProcessId() ){
-    goto exec_misuse;
-  }
   if( (db->flags & SQLITE_Initialized)==0 ){
     int rc = sqliteInit(db, pzErrMsg);
     if( rc!=SQLITE_OK ){

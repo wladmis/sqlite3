@@ -234,9 +234,7 @@ faq {
 
   <p>Under UNIX, you should not carry an open SQLite database across
   a fork() system call into the child process.  Problems will result
-  if you do.  Under LinuxThreads, because each thread has its own
-  process ID, you may not start a transaction in one thread and attempt
-  to complete it in another.</p>
+  if you do.</p>
 }
 
 faq {

@@ -200,7 +200,6 @@ struct sqlite {
   int next_cookie;              /* Value of schema_cookie after commit */
   int cache_size;               /* Number of pages to use in the cache */
   int nTable;                   /* Number of tables in the database */
-  int pid;                      /* Process ID that started the transaction */
   void *pBusyArg;               /* 1st Argument to the busy callback */
   int (*xBusyCallback)(void *,const char*,int);  /* The busy callback */
   Hash tblHash;                 /* All tables indexed by name */
