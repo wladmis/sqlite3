@@ -58,6 +58,13 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Jun-25} {Website hacked} {
+  The www.sqlite.org website was hacked because the lead SQLite developer
+  failed to properly patch CVS.  Some features of the website might be
+  inaccessible or inoperative over the next several days as we rebuild
+  the server from scratch.  Please be patient.
+}
+
 newsitem {2004-Jun-18} {Version 3.0.0 (alpha) Released} {
   The first alpha release of SQLite version 3.0 is available for
   public review and comment.  Version 3.0 enhances internationalization support
