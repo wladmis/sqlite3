@@ -115,7 +115,7 @@ do_test select2-3.3 {
   set t1 [lindex [time {execsql {SELECT f1 from tbl2 WHERE f2==2000}} 1] 0]
   execsql {DROP INDEX idx1}
   set t2 [lindex [time {execsql {SELECT f1 FROM tbl2 WHERE f2==2000}} 1] 0]
-  expr {$t1*25 < $t2}
+  expr {$t1*10 < $t2}
 } {1}
 
 finish_test

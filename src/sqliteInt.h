@@ -204,6 +204,7 @@ struct Expr {
   Expr *pLeft, *pRight;  /* Left and right subnodes */
   ExprList *pList;       /* A list of expressions used as a function argument */
   Token token;           /* An operand token */
+  Token span;            /* Complete text of the expression */
   int iTable, iColumn;   /* When op==TK_COLUMN, then this expr node means the
                          ** iColumn-th field of the iTable-th table.  When
                          ** op==TK_FUNCTION, iColumn holds the function id */
@@ -365,6 +366,7 @@ void sqliteDequote(char*);
 int sqliteRunParser(Parse*, char*, char **);
 void sqliteExec(Parse*);
 Expr *sqliteExpr(int, Expr*, Expr*, Token*);
+void sqliteExprSpan(Expr*,Token*,Token*);
 Expr *sqliteExprFunction(ExprList*, Token*);
 void sqliteExprDelete(Expr*);
 ExprList *sqliteExprListAppend(ExprList*,Expr*,Token*);

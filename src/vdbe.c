@@ -353,6 +353,32 @@ void sqliteVdbeDequoteP3(Vdbe *p, int addr){
 }
 
 /*
+** On the P3 argument of the given instruction, change all
+** strings of whitespace characters into a single space and
+** delete leading and trailing whitespace.
+*/
+void sqliteVdbeCompressSpace(Vdbe *p, int addr){
+  char *z;
+  int i, j;
+  if( addr<0 || addr>=p->nOp ) return;
+  z = p->aOp[addr].p3;
+  i = j = 0;
+  while( isspace(z[i]) ){ i++; }
+  while( z[i] ){
+    if( isspace(z[i]) ){
+      z[j++] = ' ';
+      while( isspace(z[++i]) ){}
+    }else{
+      z[j++] = z[i++];
+    }
+  }
+  while( i>0 && isspace(z[i-1]) ){
+    z[i-1] = 0;
+    i--;
+  }
+}
+
+/*
 ** Create a new symbolic label for an instruction that has yet to be
 ** coded.  The symbolic label is really just a negative number.  The
 ** label can be used as the P2 value of an operation.  Later, when
