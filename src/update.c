@@ -331,7 +331,8 @@ void sqlite3Update(
     for(i=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
       if( openAll || aIdxUsed[i] ){
         sqlite3VdbeAddOp(v, OP_Integer, pIdx->iDb, 0);
-        sqlite3VdbeAddOp(v, OP_OpenWrite, iCur+i+1, pIdx->tnum);
+        sqlite3VdbeOp3(v, OP_OpenWrite, iCur+i+1, pIdx->tnum,
+                       (char*)&pIdx->keyInfo, P3_KEYINFO);
         assert( pParse->nTab>iCur+i+1 );
       }
     }

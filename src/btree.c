@@ -1406,10 +1406,13 @@ create_cursor_exception:
   return rc;
 }
 
+/*
+** Change the value of the comparison function used by a cursor.
+*/
 void sqlite3BtreeSetCompare(
-  BtCursor *pCur,
-  int(* xCmp)(void*,int,const void*,int,const void*),
-  void *pArg
+  BtCursor *pCur,     /* The cursor to whose comparison function is changed */
+  int(*xCmp)(void*,int,const void*,int,const void*), /* New comparison func */
+  void *pArg          /* First argument to xCmp() */
 ){
   pCur->xCompare = xCmp ? xCmp : dfltCompare;
   pCur->pArg = pArg;

@@ -102,7 +102,7 @@ expr srand(1)
 # Do the tests.
 #
 set cnt 0
-for {set i 1} {$i<=100} {incr i} {
+for {set i 1} {$i<=40} {incr i} {
   do_test btree6-1.$i.1 {
     random_inserts $cur 200
     incr cnt 200

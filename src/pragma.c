@@ -638,12 +638,13 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
 
         if( pTab->pIndex==0 ) continue;
         sqlite3VdbeAddOp(v, OP_Integer, i, 0);
-        sqlite3VdbeOp3(v, OP_OpenRead, 1, pTab->tnum, pTab->zName, 0);
+        sqlite3VdbeAddOp(v, OP_OpenRead, 1, pTab->tnum);
         sqlite3VdbeAddOp(v, OP_SetNumColumns, 1, pTab->nCol);
         for(j=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, j++){
           if( pIdx->tnum==0 ) continue;
           sqlite3VdbeAddOp(v, OP_Integer, pIdx->iDb, 0);
-          sqlite3VdbeOp3(v, OP_OpenRead, j+2, pIdx->tnum, pIdx->zName, 0);
+          sqlite3VdbeOp3(v, OP_OpenRead, j+2, pIdx->tnum, 
+                         (char*)&pIdx->keyInfo, P3_KEYINFO);
         }
         sqlite3VdbeAddOp(v, OP_Integer, 0, 0);
         sqlite3VdbeAddOp(v, OP_MemStore, 1, 1);
