@@ -384,6 +384,7 @@ int sqlite_get_table_vprintf(
   char **errmsg,         /* Error msg written here */
   va_list ap             /* Arguments to the format string */
 );
+char *sqlite_mprintf(const char*,...);
 
 /*
 ** Windows systems should call this routine to free memory that
