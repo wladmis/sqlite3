@@ -1518,7 +1518,7 @@ case OP_Ge: {
   if( flags&MEM_Null ){
     popStack(&pTos, 2);
     if( pOp->p2 ){
-      if( pOp->p1 ) pc = pOp->p2-1;
+      if( (pOp->p1&0xFF) ) pc = pOp->p2-1;
     }else{
       pTos++;
       pTos->flags = MEM_Null;

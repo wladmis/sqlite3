@@ -1098,7 +1098,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     case TK_INTEGER: {
       if( pExpr->op==TK_INTEGER && sqlite3FitsIn32Bits(pExpr->token.z) ){
         sqlite3VdbeAddOp(v, OP_Integer, atoi(pExpr->token.z), 0);
-      }else if( pExpr->op==TK_FLOAT ){
+      }else if( pExpr->op==TK_FLOAT || pExpr->op==TK_INTEGER ){
         sqlite3VdbeAddOp(v, OP_Real, 0, 0);
       }else{
         sqlite3VdbeAddOp(v, OP_String, 0, 0);
