@@ -1176,9 +1176,9 @@ void sqliteDeferForeignKey(Parse*, int);
   void sqliteAuthContextPop(AuthContext*);
 #else
 # define sqliteAuthRead(a,b,c)
-# define sqliteAuthCheck(a,b,c,d)    SQLITE_OK
+# define sqliteAuthCheck(a,b,c,d,e)    SQLITE_OK
 # define sqliteAuthContextPush(a,b,c)
-# define sqliteAuthContextPop(a)
+# define sqliteAuthContextPop(a)  ((void)(a))
 #endif
 void sqliteAttach(Parse*, Token*, Token*);
 void sqliteDetach(Parse*, Token*);
