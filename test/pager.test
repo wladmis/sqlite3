@@ -29,7 +29,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-if {$dbprefix!="mem:" && [info commands pager_open]!=""} {
+if {$dbprefix!="memory:" && [info commands pager_open]!=""} {
 
 # Basic sanity check.  Open and close a pager.
 #

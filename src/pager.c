@@ -476,6 +476,7 @@ int sqlitepager_open(
   pPager->errMask = 0;
   pPager->pFirst = 0;
   pPager->pLast = 0;
+  pPager->nExtra = nExtra;
   memset(pPager->aHash, 0, sizeof(pPager->aHash));
   *ppPager = pPager;
   return SQLITE_OK;
