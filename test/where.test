@@ -364,7 +364,7 @@ do_test where-5.14 {
 proc cksort {sql} {
   set data [execsql $sql]
   set prog [execsql "EXPLAIN $sql"]
-  if {[regexp SortCallback $prog]} {set x sort} {set x nosort}
+  if {[regexp Sort $prog]} {set x sort} {set x nosort}
   lappend data $x
   return $data
 }
