@@ -4076,6 +4076,9 @@ static int balance_shallower(MemPage *pPage){
           szCell[i] = cellSizePtr(pChild, apCell[i]);
         }
         assemblePage(pPage, pChild->nCell, apCell, szCell);
+        /* Copy the right-pointer of the child to the parent. */
+        put4byte(&pPage->aData[pPage->hdrOffset+8], 
+            get4byte(&pChild->aData[pChild->hdrOffset+8]));
         freePage(pChild);
         TRACE(("BALANCE: child %d transfer to page 1\n", pChild->pgno));
       }else{
