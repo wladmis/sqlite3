@@ -395,7 +395,7 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd){
     memcpy(PGHDR_TO_DATA(pPg), pgRec.aData, SQLITE_PAGE_SIZE);
     memset(PGHDR_TO_EXTRA(pPg), 0, pPager->nExtra);
   }
-  rc = sqliteOsSeek(&pPager->fd, (pgRec.pgno-1)*SQLITE_PAGE_SIZE);
+  rc = sqliteOsSeek(&pPager->fd, (pgRec.pgno-1)*(off_t)SQLITE_PAGE_SIZE);
   if( rc==SQLITE_OK ){
     rc = sqliteOsWrite(&pPager->fd, pgRec.aData, SQLITE_PAGE_SIZE);
   }
@@ -834,7 +834,7 @@ static int syncAllPages(Pager *pPager){
   for(pPg=pPager->pFirst; pPg; pPg=pPg->pNextFree){
     if( pPg->dirty ){
       if( lastPgno==0 || pPg->pgno!=lastPgno+1 ){
-        sqliteOsSeek(&pPager->fd, (pPg->pgno-1)*SQLITE_PAGE_SIZE);
+        sqliteOsSeek(&pPager->fd, (pPg->pgno-1)*(off_t)SQLITE_PAGE_SIZE);
       }
       rc = sqliteOsWrite(&pPager->fd, PGHDR_TO_DATA(pPg), SQLITE_PAGE_SIZE);
       if( rc!=SQLITE_OK ) break;
@@ -1061,7 +1061,7 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
       memset(PGHDR_TO_DATA(pPg), 0, SQLITE_PAGE_SIZE);
     }else{
       int rc;
-      sqliteOsSeek(&pPager->fd, (pgno-1)*SQLITE_PAGE_SIZE);
+      sqliteOsSeek(&pPager->fd, (pgno-1)*(off_t)SQLITE_PAGE_SIZE);
       rc = sqliteOsRead(&pPager->fd, PGHDR_TO_DATA(pPg), SQLITE_PAGE_SIZE);
       if( rc!=SQLITE_OK ){
         off_t fileSize;
@@ -1457,7 +1457,7 @@ int sqlitepager_commit(Pager *pPager){
   }
   for(pPg=pPager->pAll; pPg; pPg=pPg->pNextAll){
     if( pPg->dirty==0 ) continue;
-    rc = sqliteOsSeek(&pPager->fd, (pPg->pgno-1)*SQLITE_PAGE_SIZE);
+    rc = sqliteOsSeek(&pPager->fd, (pPg->pgno-1)*(off_t)SQLITE_PAGE_SIZE);
     if( rc!=SQLITE_OK ) goto commit_abort;
     rc = sqliteOsWrite(&pPager->fd, PGHDR_TO_DATA(pPg), SQLITE_PAGE_SIZE);
     if( rc!=SQLITE_OK ) goto commit_abort;
