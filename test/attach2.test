@@ -323,7 +323,7 @@ do_test attach2-5.2 {
   }
 } {}
 do_test attach2-5.3 {
-  glob test.db*
+  lsort [glob test.db*]
 } {test.db test.db2}
 do_test attach2-5.4 {
   execsql {
@@ -334,7 +334,7 @@ do_test attach2-5.4 {
   }
 } {}
 do_test attach2-5.5 {
-  glob test.db*
+  lsort [glob test.db*]
 } {test.db test.db2}
 
 # Check that a database cannot be ATTACHed or DETACHed during a transaction.
