@@ -295,7 +295,7 @@ static void quoteFunc(sqlite_func *context, int argc, const char **argv){
   if( argc<1 ) return;
   if( argv[0]==0 ){
     sqlite3_set_result_string(context, "NULL", 4);
-  }else if( sqlite3IsNumber(argv[0], 0) ){
+  }else if( sqlite3IsNumber(argv[0], 0, TEXT_Utf8) ){
     sqlite3_set_result_string(context, argv[0], -1);
   }else{
     int i,j,n;

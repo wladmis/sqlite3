@@ -80,7 +80,7 @@ static char continuePrompt[20]; /* Continuation prompt. default: "   ...> " */
 /*
 ** Determines if a string is a number of not.
 */
-extern int sqlite3IsNumber(const char*, int*);
+extern int sqlite3IsNumber(const char*, int*, unsigned char);
 
 /*
 ** This routine reads a line of text from standard input, stores
@@ -392,7 +392,7 @@ static int callback(void *pArg, int nArg, char **azArg, char **azCol){
         char *zSep = i>0 ? ",": "";
         if( azArg[i]==0 ){
           fprintf(p->out,"%sNULL",zSep);
-        }else if( sqlite3IsNumber(azArg[i], 0) ){
+        }else if( sqlite3IsNumber(azArg[i], 0, 1) ){
           fprintf(p->out,"%s%s",zSep, azArg[i]);
         }else{
           if( zSep[0] ) fprintf(p->out,"%s",zSep);
