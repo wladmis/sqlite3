@@ -1759,8 +1759,8 @@ case OP_Callback: {
 **
 ** Invoke the callback function once with the 2nd argument (the
 ** number of columns) equal to P1 and with the 4th argument (the
-** names of the columns) set according to prior OP_ColumnName and
-** OP_ColumnCount instructions.  This is all like the regular
+** names of the columns) set according to prior OP_ColumnName
+** instructions.  This is all like the regular
 ** OP_Callback or OP_SortCallback opcodes.  But the 3rd argument
 ** which normally contains a pointer to an array of pointers to
 ** data is NULL.
