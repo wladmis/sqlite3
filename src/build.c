@@ -876,14 +876,13 @@ static char sqlite3AffinityType(const char *zType, int nType){
     return SQLITE_AFF_NONE;
   }
   for(i=0; i<sizeof(substrings)/sizeof(substrings[0]); i++){
-    int c1 = substrings[i].zSub[0];
-    int c2 = tolower(c1);
-    int limit = nType - substrings[i].nSub;
-    const char *z = substrings[i].zSub;
-    for(n=0; n<=limit; n++){
-      int c = zType[n];
-      if( (c==c1 || c==c2)
-             && 0==sqlite3StrNICmp(&zType[n], z, substrings[i].nSub) ){
+    const char *zSub = substrings[i].zSub;
+    int c1 = tolower(zSub[0]);
+    int len = substrings[i].nSub;
+    int limit = nType - len;
+    const char *z = zType;
+    for(n=0; n<=limit; n++, z++){
+      if( tolower(z[0])==c1 && 0==sqlite3StrNICmp(z, zSub, len) ){
         return substrings[i].affinity;
       }
     }
