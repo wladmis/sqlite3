@@ -73,6 +73,23 @@ do_test select4-1.1e {
   }
 } {8 7 6 5 5 4 3 2 1 0}
 execsql {DROP TABLE t2}
+do_test select4-1.1f {
+  execsql {
+    SELECT DISTINCT log FROM t1
+    UNION ALL
+    SELECT n FROM t1 WHERE log=2
+  }
+} {0 1 2 3 4 5 3 4}
+do_test select4-1.1g {
+  execsql {
+    CREATE TABLE t2 AS 
+      SELECT DISTINCT log FROM t1
+      UNION ALL
+      SELECT n FROM t1 WHERE log=2;
+    SELECT * FROM t2;
+  }
+} {0 1 2 3 4 5 3 4}
+execsql {DROP TABLE t2}
 do_test select4-1.2 {
   execsql {
     SELECT log FROM t1 WHERE n IN 

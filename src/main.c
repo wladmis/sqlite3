@@ -843,4 +843,5 @@ int sqlite_function_type(sqlite *db, const char *zName, int dataType){
     p->dataType = dataType; 
     p = p->pNext;
   }
+  return SQLITE_OK;
 }
