@@ -98,11 +98,20 @@ void sqliteUpdate(
     oldIdx = pParse->nTab++;
   }
 
+  /* Allocate a cursors for the main database table and for all indices.
+  ** The index cursors might not be used, but if they are used they
+  ** need to occur right after the database cursor.  So go ahead and
+  ** allocate enough space, just in case.
+  */
+  base = pParse->nTab++;
+  for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
+    pParse->nTab++;
+  }
+
   /* Resolve the column names in all the expressions in both the
   ** WHERE clause and in the new values.  Also find the column index
   ** for each column to be updated in the pChanges array.
   */
-  base = pParse->nTab++;
   if( pWhere ){
     if( sqliteExprResolveIds(pParse, base, pTabList, 0, pWhere) ){
       goto update_cleanup;
@@ -270,9 +279,8 @@ void sqliteUpdate(
   for(i=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
     if( openAll || aIdxUsed[i] ){
       sqliteVdbeAddOp(v, openOp, base+i+1, pIdx->tnum);
-      assert( pParse->nTab==base+i+1 );
+      assert( pParse->nTab>base+i+1 );
     }
-    pParse->nTab++;
   }
 
   /* Loop over every record that needs updating.  We have to load
