@@ -391,7 +391,7 @@ static void tclSqlFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
     if( SQLITE3_NULL==sqlite3_value_type(argv[i]) ){
       Tcl_DStringAppendElement(&cmd, "");
     }else{
-      Tcl_DStringAppendElement(&cmd, sqlite3_value_data(argv[i]));
+      Tcl_DStringAppendElement(&cmd, sqlite3_value_text(argv[i]));
     }
   }
   rc = Tcl_Eval(p->interp, Tcl_DStringValue(&cmd));

@@ -90,7 +90,7 @@ int sqlite3_exec(
         if( rc==SQLITE_ROW ){
           azVals = &azCols[nCol];
           for(i=0; i<nCol; i++){
-            azVals[i] = (char *)sqlite3_column_data(pStmt, i);
+            azVals[i] = (char *)sqlite3_column_text(pStmt, i);
           }
         }
         if( xCallback(pArg, nCol, azVals, azCols) ){
@@ -133,5 +133,3 @@ exec_out:
 
   return rc;
 }
-
-
