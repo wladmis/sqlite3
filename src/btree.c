@@ -350,6 +350,12 @@ struct BtCursor {
 };
 
 /*
+** Forward declaration
+*/
+static int checkReadLocks(Btree*,Pgno,BtCursor*);
+
+
+/*
 ** Read or write a two- and four-byte big-endian integer values.
 */
 static u32 get2byte(unsigned char *p){
@@ -1560,7 +1566,6 @@ int sqlite3BtreeCursor(
 
   *ppCur = 0;
   if( wrFlag ){
-    static int checkReadLocks(Btree*,Pgno,BtCursor*);
     if( pBt->readOnly ){
       return SQLITE_READONLY;
     }
