@@ -140,8 +140,8 @@ typedef struct VdbeOp VdbeOp;
 #define OP_AggNext            61
 #define OP_AggSet             62
 #define OP_AggGet             63
-#define OP_AggFinalizer       64
-#define OP_AggFunc            65
+#define OP_AggFunc            64
+#define OP_AggInit            65
 
 #define OP_SetInsert          66
 #define OP_SetFound           67

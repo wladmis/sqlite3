@@ -206,11 +206,12 @@ struct sqlite {
 ** points to a linked list of these structures.
 */
 struct UserFunc {
-  void (*xFunc)(void*,int,const char**);   /* Regular function */
-  void *(*xStep)(void*,int,const char**);  /* Aggregate function step */
-  void (*xFinalize)(void*,void*);          /* Aggregate function finializer */
-  int nArg;                                /* Number of arguments */
-  UserFunc *pNext;                         /* Next function with same name */
+  void (*xFunc)(sqlite_func*,int,const char**);   /* Regular function */
+  void *(*xStep)(sqlite_func*,int,const char**);  /* Aggregate function step */
+  void (*xFinalize)(sqlite_func*);           /* Aggregate function finializer */
+  int nArg;                                  /* Number of arguments */
+  void *pUserData;                           /* User data parameter */
+  UserFunc *pNext;                           /* Next function with same name */
 };
 
 /*
