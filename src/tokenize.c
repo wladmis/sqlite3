@@ -431,6 +431,11 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     sqlite3SetString(pzErrMsg, "out of memory", (char*)0);
     return 1;
   }
+#ifndef NDEBUG
+  if( sqlite3OsFileExists("vdbe_sqltrace") ){
+    printf("SQL To Compiler: [%s]\n", zSql);
+  }
+#endif
   pParse->sLastToken.dyn = 0;
   pParse->zTail = zSql;
   while( sqlite3_malloc_failed==0 && zSql[i]!=0 ){
@@ -714,4 +719,3 @@ int sqlite3_complete16(const void *zSql){
   sqlite3ValueFree(pVal);
   return rc;
 }
-
