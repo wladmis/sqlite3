@@ -17,6 +17,13 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# This test script depends entirely on "PRAGMA page_size". So if this
+# pragma is not available, omit the whole file.
+ifcapable !pager_pragmas {
+  finish_test
+  return
+}
+
 do_test pagesize-1.1 {
   execsql {PRAGMA page_size}
 } 1024
