@@ -255,12 +255,16 @@ void *sqliteRealloc(void *p, int n){
 ** Make a copy of a string in memory obtained from sqliteMalloc()
 */
 char *sqliteStrDup(const char *z){
-  char *zNew = sqliteMalloc(strlen(z)+1);
+  char *zNew;
+  if( z==0 ) return 0;
+  zNew = sqliteMalloc(strlen(z)+1);
   if( zNew ) strcpy(zNew, z);
   return zNew;
 }
 char *sqliteStrNDup(const char *z, int n){
-  char *zNew = sqliteMalloc(n+1);
+  char *zNew;
+  if( z==0 ) return 0;
+  zNew = sqliteMalloc(n+1);
   if( zNew ){
     memcpy(zNew, z, n);
     zNew[n] = 0;
