@@ -237,7 +237,7 @@ puts {
 <tr><th>Opcode&nbsp;Name</th><th>Description</th></tr>}
 foreach op [lsort -dictionary $OpcodeList] {
   puts {<tr><td valign="top" align="center">}
-  puts "$op"
+  puts "<a name=\"$op\">$op</a>"
   puts "<td>[string trim $Opcode($op:text)]</td></tr>"
 }
 puts {</table></p>}
