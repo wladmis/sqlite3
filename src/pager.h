@@ -45,10 +45,11 @@ typedef unsigned int Pgno;
 typedef struct Pager Pager;
 
 int sqlitepager_open(Pager **ppPager,const char *zFilename,int nPage,int nEx);
-void sqiltepager_set_destructor(Pager*, void(*)(void*));
+void sqlitepager_set_destructor(Pager*, void(*)(void*));
 int sqlitepager_close(Pager *pPager);
 int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage);
 void *sqlitepager_lookup(Pager *pPager, Pgno pgno);
+int sqlitepager_ref(void*);
 int sqlitepager_unref(void*);
 Pgno sqlitepager_pagenumber(void*);
 int sqlitepager_write(void*);

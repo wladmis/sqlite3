@@ -562,7 +562,8 @@ Pgno sqlitepager_pagenumber(void *pData){
 ** currently on the freelist (the reference count is zero) then
 ** remove it from the freelist.
 */
-static void sqlitepager_ref(PgHdr *pPg){
+int sqlitepager_ref(void *pData){
+  PgHdr *pPg = DATA_TO_PGHDR(pData);
   if( pPg->nRef==0 ){
     /* The page is currently on the freelist.  Remove it. */
     if( pPg->pPrevFree ){
@@ -578,6 +579,7 @@ static void sqlitepager_ref(PgHdr *pPg){
     pPg->pPager->nRef++;
   }
   pPg->nRef++;
+  return SQLITE_OK;
 }
 
 /*
