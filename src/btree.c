@@ -3781,7 +3781,7 @@ static int balance_nonroot(MemPage *pPage){
   u8 *apDiv[NB];               /* Divider cells in pParent */
   int cntNew[NB+2];            /* Index in aCell[] of cell after i-th page */
   int szNew[NB+2];             /* Combined size of cells place on i-th page */
-  u8 **apCell;                 /* All cells begin balanced */
+  u8 **apCell = 0;             /* All cells begin balanced */
   int *szCell;                 /* Local size of all cells in apCell[] */
   u8 *aCopy[NB];               /* Space for holding data of apCopy[] */
   u8 *aSpace;                  /* Space to hold copies of dividers cells */
