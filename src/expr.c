@@ -476,6 +476,7 @@ SrcList *sqlite3SrcListDup(SrcList *p){
     pNewItem->pSelect = sqlite3SelectDup(pOldItem->pSelect);
     pNewItem->pOn = sqlite3ExprDup(pOldItem->pOn);
     pNewItem->pUsing = sqlite3IdListDup(pOldItem->pUsing);
+    pNewItem->colUsed = pOldItem->colUsed;
   }
   return pNew;
 }

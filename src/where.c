@@ -1428,6 +1428,8 @@ void sqlite3WhereEnd(WhereInfo *pWInfo){
         }else if( pOp->opcode==OP_Recno ){
           pOp->p1 = pLevel->iIdxCur;
           pOp->opcode = OP_IdxRecno;
+        }else if( pOp->opcode==OP_NullRow ){
+          pOp->opcode = OP_Noop;
         }
       }
     }
