@@ -2136,7 +2136,7 @@ case OP_Column: {
 **  't'            TEXT
 **  'o'            NONE
 **
-** If P3 is NULL then datatype coercion occurs.
+** If P3 is NULL then no datatype coercion occurs.
 */
 /* Opcode MakeRecord P1 * P3
 **
