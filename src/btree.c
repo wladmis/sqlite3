@@ -3229,7 +3229,7 @@ static void checkList(
       FreelistInfo *pInfo = (FreelistInfo*)pOvfl->aPayload;
       int n = SWAB32(pCheck->pBt, pInfo->nFree);
       for(i=0; i<n; i++){
-        checkRef(pCheck, SWAB32(pCheck->pBt, pInfo->aFree[i]), zMsg);
+        checkRef(pCheck, SWAB32(pCheck->pBt, pInfo->aFree[i]), zContext);
       }
       N -= n;
     }

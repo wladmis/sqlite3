@@ -57,7 +57,7 @@ void sqliteCopy(
   }
   v = sqliteGetVdbe(pParse);
   if( v ){
-    sqliteBeginWriteOperation(pParse, 1, pTab->iDb==1);
+    sqliteBeginWriteOperation(pParse, 1, pTab->iDb);
     addr = sqliteVdbeAddOp(v, OP_FileOpen, 0, 0);
     sqliteVdbeChangeP3(v, addr, pFilename->z, pFilename->n);
     sqliteVdbeDequoteP3(v, addr);

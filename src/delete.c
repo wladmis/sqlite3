@@ -142,8 +142,7 @@ void sqliteDeleteFrom(
   if( v==0 ){
     goto delete_from_cleanup;
   }
-  sqliteBeginWriteOperation(pParse, row_triggers_exist,
-       !row_triggers_exist && pTab->iDb==1);
+  sqliteBeginWriteOperation(pParse, row_triggers_exist, pTab->iDb);
 
   /* If we are trying to delete from a view, construct that view into
   ** a temporary table.

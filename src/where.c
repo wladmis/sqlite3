@@ -680,10 +680,7 @@ WhereInfo *sqliteWhereBegin(
     sqliteVdbeAddOp(v, OP_Integer, pTab->iDb, 0);
     sqliteVdbeAddOp(v, OP_OpenRead, pTabList->a[i].iCursor, pTab->tnum);
     sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
-    if( i==0 && !pParse->schemaVerified &&
-          (pParse->db->flags & SQLITE_InTrans)==0 ){
-      sqliteCodeVerifySchema(pParse);
-    }
+    sqliteCodeVerifySchema(pParse, pTab->iDb);
     if( pWInfo->a[i].pIdx!=0 ){
       sqliteVdbeAddOp(v, OP_Integer, pWInfo->a[i].pIdx->iDb, 0);
       sqliteVdbeAddOp(v, OP_OpenRead,
