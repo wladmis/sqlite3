@@ -2893,10 +2893,12 @@ case OP_NewRecno: {
       cnt = 0;
       do{
         if( v==0 || cnt>2 ){
-          v = sqliteRandomInteger();
+          sqliteRandomness(sizeof(v), &v);
           if( cnt<5 ) v &= 0xffffff;
         }else{
-          v += sqliteRandomByte() + 1;
+          unsigned char r;
+          sqliteRandomness(1, &r);
+          v += r + 1;
         }
         if( v==0 ) continue;
         x = intToKey(v);

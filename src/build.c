@@ -819,7 +819,9 @@ void sqliteAddCollateType(Parse *pParse, int collType){
 */
 void sqliteChangeCookie(sqlite *db, Vdbe *v){
   if( db->next_cookie==db->aDb[0].schema_cookie ){
-    db->next_cookie = db->aDb[0].schema_cookie + sqliteRandomByte() + 1;
+    unsigned char r;
+    sqliteRandomness(1, &r);
+    db->next_cookie = db->aDb[0].schema_cookie + r + 1;
     db->flags |= SQLITE_InternChanges;
     sqliteVdbeAddOp(v, OP_Integer, db->next_cookie, 0);
     sqliteVdbeAddOp(v, OP_SetCookie, 0, 0);

@@ -185,14 +185,14 @@ static int vacuumCallback3(void *pArg, int argc, char **argv, char **NotUsed){
 /*
 ** Generate a random name of 20 character in length.
 */
-static void randomName(char *zBuf){
-  static const char zChars[] =
+static void randomName(unsigned char *zBuf){
+  static const unsigned char zChars[] =
     "abcdefghijklmnopqrstuvwxyz"
     "0123456789";
   int i;
+  sqliteRandomness(20, zBuf);
   for(i=0; i<20; i++){
-    int n = sqliteRandomByte() % (sizeof(zChars)-1);
-    zBuf[i] = zChars[n];
+    zBuf[i] = zChars[ zBuf[i]%(sizeof(zChars)-1) ];
   }
 }
 #endif
