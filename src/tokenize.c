@@ -487,6 +487,10 @@ abort_parse:
     sqliteDeleteTable(pParse->db, pParse->pNewTable);
     pParse->pNewTable = 0;
   }
+  if( pParse->pNewTrigger ){
+    sqliteDeleteTrigger(pParse->pNewTrigger);
+    pParse->pNewTrigger = 0;
+  }
   if( nErr>0 && (pParse->rc==SQLITE_OK || pParse->rc==SQLITE_DONE) ){
     pParse->rc = SQLITE_ERROR;
   }
