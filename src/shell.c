@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "sqlite.h"
+#include "sqlite3.h"
 #include <ctype.h>
 
 #if !defined(_WIN32) && !defined(WIN32) && !defined(__MACOS__)
@@ -1349,6 +1349,3 @@ int main(int argc, char **argv){
   if( db ) sqlite3_close(db);
   return 0;
 }
-
-
-
