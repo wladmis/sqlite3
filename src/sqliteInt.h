@@ -419,3 +419,8 @@ void sqliteExprResolveInSelect(Parse*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
 void sqliteParseInfoReset(Parse*);
 Vdbe *sqliteGetVdbe(Parse*);
+int sqliteRandomByte(void);
+int sqliteRandomInteger(void);
+void sqliteRandomName(char*,char*);
+int sqliteDbbeOpenTempFile(Dbbe*, FILE**);
+void sqliteDbbeCloseTempFile(Dbbe*, FILE*);

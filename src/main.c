@@ -239,7 +239,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
 */
 void sqlite_close(sqlite *db){
   int i;
-  db->pBe->Close(db->pBe);
+  db->pBe->x->Close(db->pBe);
   for(i=0; i<N_HASH; i++){
     Table *pNext, *pList = db->apTblHash[i];
     db->apTblHash[i] = 0;
