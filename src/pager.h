@@ -91,6 +91,7 @@ const char *sqlite3pager_dirname(Pager*);
 const char *sqlite3pager_journalname(Pager*);
 int sqlite3pager_rename(Pager*, const char *zNewName);
 void sqlite3pager_set_codec(Pager*,void(*)(void*,void*,Pgno,int),void*);
+int sqlite3pager_movepage(Pager*,void*,Pgno);
 
 #if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
 int sqlite3pager_lockstate(Pager*);
