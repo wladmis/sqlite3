@@ -220,6 +220,9 @@ Expr *sqlite3RegisterExpr(Parse *pParse, Token *pToken){
     return 0;
   }
   p = sqlite3Expr(TK_REGISTER, 0, 0, pToken);
+  if( p==0 ){
+    return 0;  /* Malloc failed */
+  }
   depth = atoi(&pToken->z[1]);
   if( depth>=0 ){
     p->iTable = pParse->nMem++;

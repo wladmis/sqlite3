@@ -136,6 +136,9 @@ void sqlite3NestedParse(Parse *pParse, const char *zFormat, ...){
   va_start(ap, zFormat);
   zSql = sqlite3VMPrintf(zFormat, ap);
   va_end(ap);
+  if( zSql==0 ){
+    return;   /* A malloc must have failed */
+  }
   pParse->nested++;
   memcpy(saveBuf, &pParse->nVar, SAVE_SZ);
   memset(&pParse->nVar, 0, SAVE_SZ);
@@ -516,17 +519,22 @@ void sqlite3OpenMasterTable(Vdbe *v, int iDb){
 ** does not exist.
 */
 int findDb(sqlite3 *db, Token *pName){
-  int i;
-  Db *pDb;
-  char *zName = sqlite3NameFromToken(pName);
-  int n = strlen(zName);
-  for(pDb=db->aDb, i=0; i<db->nDb; i++, pDb++){
-    if( n==strlen(pDb->zName) && 0==sqlite3StrICmp(pDb->zName, zName) ){
-      sqliteFree(zName);
-      return i;
+  int i;         /* Database number */
+  int n;         /* Number of characters in the name */
+  Db *pDb;       /* A database whose name space is being searched */
+  char *zName;   /* Name we are searching for */
+
+  zName = sqlite3NameFromToken(pName);
+  if( zName ){
+    n = strlen(zName);
+    for(pDb=db->aDb, i=0; i<db->nDb; i++, pDb++){
+      if( n==strlen(pDb->zName) && 0==sqlite3StrICmp(pDb->zName, zName) ){
+        sqliteFree(zName);
+        return i;
+      }
     }
+    sqliteFree(zName);
   }
-  sqliteFree(zName);
   return -1;
 }
 
