@@ -588,8 +588,7 @@ int sqliteHashNoCase(const char *z, int n){
     h = (h<<3) ^ h ^ UpperToLower[(unsigned char)*z++];
     n--;
   }
-  if( h<0 ) h = -h;
-  return h;
+  return h & 0x7fffffff;
 }
 
 /*
