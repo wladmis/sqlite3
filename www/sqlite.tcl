@@ -12,7 +12,7 @@ puts {<html>
 sqlite: A program to administer SQLite databases
 </h1>}
 puts "<p align=center>
-(This page was last modified on [lrange $rcsid 3 4] GMT)
+(This page was last modified on [lrange $rcsid 3 4] UTC)
 </p>"
 
 puts {

@@ -12,7 +12,7 @@ puts {<html>
 Notes On How To Compile SQLite Using The MinGW Cross-Compiler
 </h1>}
 puts "<p align=center>
-(This page was last modified on [lrange $rcsid 3 4] GMT)
+(This page was last modified on [lrange $rcsid 3 4] UTC)
 </p>"
 
 puts {

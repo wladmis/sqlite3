@@ -8,10 +8,10 @@ puts {<html>
 <body bgcolor=white>
 <h1 align=center>SQLite Download Page</h1>}
 #<p align=center>}
-#puts "This page was last modified on [lrange $rcsid 3 4] GMT<br>"
+#puts "This page was last modified on [lrange $rcsid 3 4] UTC<br>"
 #set vers [lindex $argv 0]
 #puts "The latest SQLite version is <b>$vers</b>"
-#puts " created on [exec cat last_change] GMT"
+#puts " created on [exec cat last_change] UTC"
 #puts {</p>}
 
 puts {<h2>Precompiled Binaries For Linux</h2>}

@@ -12,7 +12,7 @@ puts {<html>
 SQLite Virtual Machine Opcodes
 </h1>}
 puts "<p align=center>
-(This page was last modified on [lrange $rcsid 3 4] GMT)
+(This page was last modified on [lrange $rcsid 3 4] UTC)
 </p>"
 
 set fd [open [lindex $argv 0] r]
