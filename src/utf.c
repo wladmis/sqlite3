@@ -58,8 +58,8 @@
 ** sqlite3utf8LikeCompare()  - Do a LIKE match given two UTF8 char* strings.
 **
 */
-#include <assert.h>
 #include "sqliteInt.h"
+#include <assert.h>
 #include "vdbeInt.h"
 
 /*
