@@ -13,6 +13,7 @@
 **
 ** @(#) $Id$
 */
+#include "config.h"
 #include "sqlite.h"
 #include "hash.h"
 #include "vdbe.h"
@@ -73,7 +74,11 @@
 # define UINT8_TYPE unsigned char
 #endif
 #ifndef INTPTR_TYPE
-# define INTPTR_TYPE int
+# if SQLITE_PTR_SZ==4
+#   define INTPTR_TYPE int
+# else
+#   define INTPTR_TYPE long long
+# endif
 #endif
 typedef UINT32_TYPE u32;           /* 4-byte unsigned integer */
 typedef UINT16_TYPE u16;           /* 2-byte unsigned integer */
