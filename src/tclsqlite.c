@@ -938,11 +938,14 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       */
       if( pArray ){
         Tcl_Obj *pColList = Tcl_NewObj();
+        Tcl_Obj *pStar = Tcl_NewStringObj("*", -1);
         Tcl_IncrRefCount(pColList);
         for(i=0; i<nCol; i++){
           Tcl_ListObjAppendElement(interp, pColList, apColName[i]);
         }
-        Tcl_ObjSetVar2(interp, pArray, Tcl_NewStringObj("*",-1), pColList,0);
+        Tcl_ObjSetVar2(interp, pArray, pStar, pColList,0);
+        Tcl_DecrRefCount(pColList);
+        Tcl_DecrRefCount(pStar);
       }
 
       /* Execute the SQL
