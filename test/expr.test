@@ -297,6 +297,9 @@ test_expr expr-6.22b {t1='abcdefg', t2='a*[^def]g'} {t1 GLOB t2} 0
 test_expr expr-6.23 {t1='abcdefg', t2='a*?g'} {t1 GLOB t2} 1
 test_expr expr-6.24 {t1='ac', t2='a*c'} {t1 GLOB t2} 1
 test_expr expr-6.25 {t1='ac', t2='a*?c'} {t1 GLOB t2} 0
+test_expr expr-6.26 {t1='a*c', t2='a[*]c'} {t1 GLOB t2} 1
+test_expr expr-6.27 {t1='a?c', t2='a[?]c'} {t1 GLOB t2} 1
+test_expr expr-6.28 {t1='a[c', t2='a[[]c'} {t1 GLOB t2} 1
 
 
 # These tests only work on versions of TCL that support Unicode
@@ -502,4 +505,3 @@ ifcapable datetime {
 set sqlite_current_time 0
 
 finish_test
-
