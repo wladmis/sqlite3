@@ -374,14 +374,9 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       return 1;
     }
     case ':': {
-      for(i=1; isdigit(z[i]); i++){}
-      if( i>1 && z[i]==':' ){
-        *tokenType = TK_VARIABLE;
-        return i+1;
-      }else{
-        *tokenType = TK_ILLEGAL;
-        return i;
-      }
+      for(i=1; (z[i]&0x80)!=0 || isIdChar[z[i]]; i++){}
+      *tokenType = i>1 ? TK_VARIABLE : TK_ILLEGAL;
+      return i;
     }
     case '$': {
       int c;
