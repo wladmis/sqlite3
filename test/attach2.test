@@ -304,8 +304,6 @@ db close
 db2 close
 file delete -force test2.db
 
-if 0 {
-
 # These tests - attach2-5.* - check that the master journal file is deleted
 # correctly when a multi-file transaction is committed or rolled back.
 #
@@ -342,9 +340,6 @@ do_test attach2-5.5 {
 } {test.db test.db2}
 
 db close
-
-}
-
 
 finish_test
 
