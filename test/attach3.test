@@ -219,9 +219,23 @@ do_test attach3-10.0 {
   }
 } {1 {table sqlite_master may not be modified}}
 
+# Failure to attach leaves us in a workable state.
+# Ticket #811
+#
+do_test attach3-11.0 {
+  catchsql {
+    ATTACH DATABASE '/nodir/nofile.x' AS notadb;
+  }
+} {1 {unable to open database: /nodir/nofile.x}}
+do_test attach3-11.1 {
+  catchsql {
+    ATTACH DATABASE ':memory:' AS notadb;
+  }
+} {0 {}}
+do_test attach3-11.2 {
+  catchsql {
+    DETACH DATABASE notadb;
+  }
+} {0 {}}
 
 finish_test
-
-
-
-

@@ -108,8 +108,7 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
 #endif
   sqliteFree(zFile);
   db->flags &= ~SQLITE_Initialized;
-  if( pParse->nErr ) return;
-  if( rc==SQLITE_OK ){
+  if( pParse->nErr==0 && rc==SQLITE_OK ){
     rc = sqlite3ReadSchema(pParse);
   }
   if( rc ){
