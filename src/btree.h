@@ -55,8 +55,9 @@ int sqlite3BtreeCopyFile(Btree *, Btree *);
 /* The flags parameter to sqlite3BtreeCreateTable can be the bitwise OR
 ** of the following flags:
 */
-#define BTREE_INTKEY     1      /* Table has only 64-bit integer keys */
-#define BTREE_ZERODATA   2      /* Table has keys only - no data */
+#define BTREE_INTKEY     1    /* Table has only 64-bit signed integer keys */
+#define BTREE_ZERODATA   2    /* Table has keys only - no data */
+#define BTREE_LEAFDATA   4    /* Data stored in leaves only.  Implies INTKEY */
 
 int sqlite3BtreeDropTable(Btree*, int);
 int sqlite3BtreeClearTable(Btree*, int);
