@@ -299,7 +299,9 @@ int sqliteExprIsConstant(Expr *p){
     case TK_ID:
     case TK_COLUMN:
     case TK_DOT:
+    case TK_FUNCTION:
       return 0;
+    case TK_NULL:
     case TK_STRING:
     case TK_INTEGER:
     case TK_FLOAT:
