@@ -49,7 +49,11 @@
 ** BTree begins on page 2 of the file.  (Pages are numbered beginning with
 ** 1, not 0.)  Thus a minimum database contains 2 pages.
 */
-/* We don't want the btree function macros */
+
+/* We don't want the btree function macros as they clash with the functions
+** defined in this file. This may be fixed in future by renaming the macros
+** or the functions defined here, or both.
+*/
 #define SQLITE_NO_BTREE_DEFS
 
 #include "sqliteInt.h"

@@ -305,6 +305,53 @@ else
 fi
 AC_SUBST(ENCODING)
 
+##########
+# Do we want to support in-ram databases for ATTACH DATABASE and sqlite_open
+#
+AC_ARG_ENABLE(incore-db, 
+[  --enable-incore-db           Support incore database],,enable_incore-db=yes)
+AC_MSG_CHECKING([whether to support incore databases for attach and open])
+if test "$enable_incore-db" = "no"; then
+  INCOREDB=0
+  ALLOWATTACHMEM=0
+  AC_MSG_RESULT([no])
+else
+  INCOREDB=1
+  ALLOWATTACHMEM=1
+  AC_MSG_RESULT([yes])
+fi
+AC_SUBST(ALLOWATTACHMEM)
+
+##########
+# Do we want temporary databases in memory
+#
+AC_ARG_ENABLE(tempdb-in-ram, 
+[  --enable-tempdb-in-ram     Use an in-ram database for temporary tables],,enable_tempdb-in-ram=no)
+AC_MSG_CHECKING([whether to use an in-ram database for temporary tables])
+case "$enable_tempdb-in-ram" in
+  never ) 
+    TEMPDBINCORE=0
+    AC_MSG_RESULT([never])
+  ;;
+  no ) 
+    INCOREDB=1
+    TEMPDBINCORE=1
+    AC_MSG_RESULT([no])
+  ;;
+  always ) 
+    INCOREDB=1
+    TEMPDBINCORE=3
+    AC_MSG_RESULT([always])
+  ;;
+  * ) 
+    INCOREDB=1
+    TEMPDBINCORE=2
+    AC_MSG_RESULT([yes])
+  ;;
+esac
+AC_SUBST(INCOREDB)
+AC_SUBST(TEMPDBINCORE)
+
 ###########
 # Lots of things are different if we are compiling for Windows using
 # the CYGWIN environment.  So check for that special case and handle

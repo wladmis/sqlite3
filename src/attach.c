@@ -76,7 +76,7 @@ void sqliteAttach(Parse *pParse, Token *pFilename, Token *pDbname){
   sqliteSetNString(&zFile, pFilename->z, pFilename->n, 0);
   if( zFile==0 ) return;
   sqliteDequote(zFile);
-  rc = sqliteBtreeOpen(zFile, 0, MAX_PAGES, &aNew->pBt);
+  rc = sqliteBtreeFactory(db, zFile, 0, MAX_PAGES, &aNew->pBt);
   if( rc ){
     sqliteErrorMsg(pParse, "unable to open database: %s", zFile);
   }

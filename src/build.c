@@ -436,7 +436,7 @@ void sqliteStartTable(
   ** holding temporary tables is open.
   */
   if( isTemp && db->aDb[1].pBt==0 && !pParse->explain ){
-    int rc = sqliteBtreeOpen(0, 0, MAX_PAGES, &db->aDb[1].pBt);
+    int rc = sqliteBtreeFactory(db, ":temp:", 0, MAX_PAGES, &db->aDb[1].pBt);
     if( rc!=SQLITE_OK ){
       sqliteSetString(&pParse->zErrMsg, "unable to open a temporary database "
         "file for storing temporary tables", 0);
