@@ -727,8 +727,8 @@ static int sqliteMemOpenTempFile(Dbbe *pDbbe, FILE **ppFile){
   struct stat statbuf;
   for(i=0; zTemps[i]; i++){
     zDir = zTemps[i];
-    if( stat("/usr/tmp", &statbuf)==0 && S_ISDIR(statbuf.st_mode) 
-      && access("/usr/tmp", W_OK|X_OK)==0 ){
+    if( stat(zDir, &statbuf)==0 && S_ISDIR(statbuf.st_mode) 
+      && access(zDir, W_OK|X_OK)==0 ){
         break;
     }
   }
