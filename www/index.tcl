@@ -15,7 +15,7 @@ Features include:
 
 <p><ul>
 <li>ACID (Atomic, Consistent, Isolated, Durable) transactions.</li>
-<li>A zero-configuration - no DBA needed.</li>
+<li>Zero-configuration - no setup or administration needed.</li>
 <li>Implements most of SQL92.
     (<a href="omitted.html">Features not supported</a>)</li>
 <li>A complete database is stored in a single disk file.</li>
