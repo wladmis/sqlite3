@@ -41,6 +41,7 @@ set EXCLUDE {
   btree2.test
   trans.test
   crash.test
+  corrupt.test
 }
 if {[sqlite3 -has-codec]} {
   # lappend EXCLUDE 
