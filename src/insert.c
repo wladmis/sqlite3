@@ -252,7 +252,7 @@ void sqliteInsert(
   /* Create the new record and put it into the database.
   */
   sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
-  sqliteVdbeAddOp(v, OP_Put, base, keyColumn>=0);
+  sqliteVdbeAddOp(v, OP_PutIntKey, base, keyColumn>=0);
   
   /* Create appropriate entries for the new data row in all indices
   ** of the table.

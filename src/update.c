@@ -265,7 +265,7 @@ void sqliteUpdate(
   /* Write the new data back into the database.
   */
   sqliteVdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
-  sqliteVdbeAddOp(v, OP_Put, base, 0);
+  sqliteVdbeAddOp(v, OP_PutIntKey, base, 0);
 
   /* Increment the count of rows affected by the update
   */
