@@ -231,7 +231,7 @@ void sqliteInsert(
       }
     }
     sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_PutIdx, idx+base, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_PutIdx, idx+base, pIdx->isUnique, 0, 0);
   }
 
   /* The bottom of the loop, if the data source is a SELECT statement

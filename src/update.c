@@ -206,7 +206,7 @@ void sqliteUpdate(
       sqliteVdbeAddOp(v, OP_Dup, j+pTab->nCol-pIdx->aiColumn[j], 0, 0, 0);
     }
     sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0, 0, 0);
-    sqliteVdbeAddOp(v, OP_PutIdx, base+i+1, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_PutIdx, base+i+1, pIdx->isUnique, 0, 0);
   }
 
   /* Write the new data back into the database.
