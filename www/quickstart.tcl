@@ -45,7 +45,7 @@ if {$argc!=2} {
   puts stderr "Usage: %s DATABASE SQL-STATEMENT"
   exit 1
 }
-load /usr/lib/tclsqlite3.so Sqlite
+load /usr/lib/tclsqlite3.so Sqlite3
 <b>sqlite3</b> db [lindex $argv 0]
 <b>db</b> eval [lindex $argv 1] x {
   foreach v $x(*) {
