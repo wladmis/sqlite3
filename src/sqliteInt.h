@@ -1306,4 +1306,6 @@ int sqlite3VarintLen(u64 v);
 char sqlite3AffinityType(const char *, int);
 void sqlite3IndexAffinityStr(Vdbe *, Index *);
 void sqlite3TableAffinityStr(Vdbe *, Table *);
-
+char sqlite3CompareAffinity(Expr *pExpr, char aff2);
+char const *sqlite3AffinityString(char affinity);
+int sqlite3IndexAffinityOk(Expr *pExpr, char idx_affinity);
