@@ -166,7 +166,7 @@ puts {
 
 <p>The sqlite program is able to show the results of a query
 in five different formats: "line", "column", "list", "html", and "insert".
-You can use the ".mode" dot command to switch between these three output
+You can use the ".mode" dot command to switch between these output
 formats.</p>
 
 <p>The default output mode is "list".  In
