@@ -48,12 +48,12 @@
 **      Richmond, Virginia (USA)
 */
 #ifndef SQLITE_OMIT_DATETIME_FUNCS
+#include "os.h"
+#include "sqliteInt.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
-#include "sqliteInt.h"
-#include "os.h"
 
 /*
 ** A structure for holding a single date and time.
