@@ -47,7 +47,16 @@ Product sqlite.so.gz {
 }
 
 foreach name [lsort -dict [glob -nocomplain sqlite-*.i386.rpm]] {
-  Product $name "An RPM for Linux"
+  if {[regexp -- -devel- $name]} {
+    Product $name {
+      RPM containing documentation, header files, and static library.
+    }
+  } else {
+    Product $name {
+      RPM containing shared libraries and the <b>sqlite</b> command-line
+      program.
+    }
+  }
 }
 
 puts {<h2>Precompiled Binaries For Windows</h2>}
@@ -77,7 +86,7 @@ Product {sqlite_source.zip} {
 }
 
 foreach name [lsort -dict [glob -nocomplain sqlite-*.src.rpm]] {
-  Product $name "Source RPM"
+  Product $name "RPM containing complete source code"
 }
 
 foreach name [lsort -dict -decreasing [glob -nocomplain sqlite-*.tar.gz]] {
