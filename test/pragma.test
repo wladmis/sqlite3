@@ -264,8 +264,6 @@ do_test pragma-3.2 {
   btree_commit $db
   btree_close $db
   execsql {PRAGMA integrity_check}
-} {{rowid 1 missing from index i2
-wrong # of entries in index i2
-}}
+} {{rowid 1 missing from index i2} {wrong # of entries in index i2}}
 
 finish_test
