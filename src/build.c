@@ -121,6 +121,7 @@ Table *sqlite3FindTable(sqlite *db, const char *zName, const char *zDatabase){
   Table *p = 0;
   int i;
   int rc = sqlite3ReadSchema(db, 0);
+  assert( zName!=0 );
   for(i=0; rc==SQLITE_OK && i<db->nDb; i++){
     int j = (i<2) ? i^1 : i;   /* Search TEMP before MAIN */
     if( zDatabase!=0 && sqlite3StrICmp(zDatabase, db->aDb[j].zName) ) continue;
