@@ -278,7 +278,7 @@ sql> (((.mode list)))
 sql> (((.separator |)))
 sql> (((.output test_file_1.txt)))
 sql> (((select * from tbl1;)))
-sql> (((.exit
+sql> (((.exit)))
 $ (((cat test_file_1.txt)))
 hello|10
 goodbye|20
