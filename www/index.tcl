@@ -62,7 +62,7 @@ proc newsitem {date title text} {
 }
 
 newsitem {2004-Oct-11} {Version 3.0.8} {
-  Version 3.0.8 of SQLite contains versions code optimizations and minor
+  Version 3.0.8 of SQLite contains several code optimizations and minor
   bug fixes and adds support for DEFERRED, IMMEDIATE, and EXCLUSIVE
   transactions.  This is an incremental release.  There is no reason
   to upgrade from version 3.0.7 if that version is working for you.
