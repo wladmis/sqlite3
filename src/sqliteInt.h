@@ -860,6 +860,11 @@ struct IdList {
 };
 
 /*
+** The bitmask datatype defined below is used for various optimizations.
+*/
+typedef unsigned int Bitmask;
+
+/*
 ** The following structure describes the FROM clause of a SELECT statement.
 ** Each table or subquery in the FROM clause is a separate element of
 ** the SrcList.a[] array.
@@ -883,6 +888,7 @@ struct SrcList {
     int iCursor;      /* The VDBE cursor number used to access this table */
     Expr *pOn;        /* The ON clause of a join */
     IdList *pUsing;   /* The USING clause of a join */
+    Bitmask colUsed;  /* Bit N (1<<N) set if column N or pTab is used */
   } a[1];             /* One entry for each identifier on the list */
 };
 
