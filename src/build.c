@@ -81,6 +81,10 @@ void sqliteExec(Parse *pParse){
     pParse->rc = rc;
     pParse->schemaVerified = 0;
   }
+  pParse->nTab = 0;
+  pParse->nMem = 0;
+  pParse->nSet = 0;
+  pParse->nAgg = 0;
 }
 
 /*
