@@ -99,6 +99,11 @@ Among the SQL features that SQLite does not currently implement are:</p>
     how the library is put together.</li>
 <li>A description of the <a href="opcode.html">virtual machine</a> that
     SQLite uses to access the database.</li>
+<li>Instructions for building 
+    <a href="crosscompile.html">SQLite for Win98/NT</a> using the
+    MinGW cross-compiler.  There are also instructions on
+    <a href="mingw.html">building MinGW</a> in case you don't already have
+    a copy.</li>
 </ul>
 </p>
 
