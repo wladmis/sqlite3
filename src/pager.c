@@ -841,6 +841,7 @@ end_ckpt_playback:
 void sqlitepager_set_cachesize(Pager *pPager, int mxPage){
   if( mxPage>=0 ){
     pPager->noSync = pPager->tempFile;
+    if( pPager->noSync==0 ) pPager->needSync = 0;
   }else{
     pPager->noSync = 1;
     mxPage = -mxPage;
@@ -879,6 +880,7 @@ void sqlitepager_set_cachesize(Pager *pPager, int mxPage){
 void sqlitepager_set_safety_level(Pager *pPager, int level){
   pPager->noSync =  level==1 || pPager->tempFile;
   pPager->fullSync = level==3 && !pPager->tempFile;
+  if( pPager->noSync==0 ) pPager->needSync = 0;
 }
 
 /*
@@ -1180,7 +1182,8 @@ static int syncJournal(Pager *pPager){
   if( pPager->needSync ){
     if( !pPager->tempFile ){
       assert( pPager->journalOpen );
-      assert( !pPager->noSync );
+      /* assert( !pPager->noSync ); // noSync might be set if synchronous
+      ** was turned off after the transaction was started.  Ticket #615 */
 #ifndef NDEBUG
       {
         /* Make sure the pPager->nRec counter we are keeping agrees
