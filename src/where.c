@@ -527,7 +527,7 @@ static void codeEqualityTerm(
 **
 ** The code that sqlite3WhereBegin() generates leaves the cursors named
 ** in pTabList pointing at their appropriate entries.  The [...] code
-** can use OP_Column and OP_Recno opcodes on these cursors to extra
+** can use OP_Column and OP_Recno opcodes on these cursors to extract
 ** data from the various tables of the loop.
 **
 ** If the WHERE clause is empty, the foreach loops must each scan their
