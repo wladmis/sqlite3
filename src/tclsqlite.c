@@ -68,6 +68,7 @@ static int DbEvalCallback(
   int i, rc;
   if( cbData->zArray[0] ){
     if( cbData->once ){
+      Tcl_SetVar2(cbData->interp, cbData->zArray, "*", "", 0);
       for(i=0; i<nCol; i++){
         Tcl_SetVar2(cbData->interp, cbData->zArray, "*", azN[i],
            TCL_LIST_ELEMENT|TCL_APPEND_VALUE);
@@ -87,7 +88,7 @@ static int DbEvalCallback(
   }
   cbData->once = 0;
   rc = Tcl_EvalObj(cbData->interp, cbData->pCode);
-  return rc;
+  return rc!=TCL_OK && rc!=TCL_CONTINUE;
 }
 
 /*
