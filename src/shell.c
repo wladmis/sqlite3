@@ -1170,6 +1170,9 @@ static const char zOptions[] =
   "   -[no]header          turn headers on or off\n"
   "   -column              set output mode to 'column'\n"
   "   -html                set output mode to HTML\n"
+#ifdef SQLITE_HAS_CRYPTO
+  "   -key KEY             encryption key\n"
+#endif                 
   "   -line                set output mode to 'line'\n"
   "   -list                set output mode to 'list'\n"
   "   -separator 'x'       set output field separator (|)\n"

@@ -3139,7 +3139,6 @@ static int fileBtreeCursorDump(BtCursor *pCur, int *aResult){
 }
 #endif
 
-#ifdef SQLITE_TEST
 /*
 ** Return the pager associated with a BTree.  This routine is used for
 ** testing and debugging only.
@@ -3147,7 +3146,6 @@ static int fileBtreeCursorDump(BtCursor *pCur, int *aResult){
 static Pager *fileBtreePager(Btree *pBt){
   return pBt->pPager;
 }
-#endif
 
 /*
 ** This structure is passed around through all the sanity checking routines
@@ -3555,9 +3553,9 @@ static BtOps sqliteBtreeOps = {
     fileBtreeIntegrityCheck,
     fileBtreeGetFilename,
     fileBtreeCopyFile,
+    fileBtreePager,
 #ifdef SQLITE_TEST
     fileBtreePageDump,
-    fileBtreePager
 #endif
 };
 static BtCursorOps sqliteBtreeCursorOps = {
