@@ -461,9 +461,8 @@ struct SrcList {
 */
 #define JT_INNER     0x0001    /* Any kind of inner or cross join */
 #define JT_NATURAL   0x0002    /* True for a "natural" join */
-#define JT_LEFT      0x0014    /* Left outer join */
-#define JT_RIGHT     0x0018    /* Right outer join */
-#define JT_FULL      0x001a    /* Combination of left and right outer join */
+#define JT_LEFT      0x0004    /* Left outer join */
+#define JT_RIGHT     0x0008    /* Right outer join */
 #define JT_OUTER     0x0010    /* The "OUTER" keyword is present */
 #define JT_ERROR     0x0020    /* unknown or unsupported join type */
 
