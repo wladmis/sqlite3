@@ -141,4 +141,32 @@ do_test reindex-2.8 {
 } {ABCD BCDE abc bcd}
 integrity_check reindex-2.8.1
 
+# Try to REINDEX an index for which the collation sequence is not available.
+#
+do_test reindex-3.1 {
+  sqlite3 db2 test.db
+  catchsql {
+    REINDEX c1;
+  } db2
+} {1 {no such collation sequence: c1}}
+do_test reindex-3.2 {
+  proc need_collate {collation} {
+    db2 collate c1 c1
+  }
+  db2 collation_needed need_collate
+  catchsql {
+    REINDEX c1;
+  } db2
+} {0 {}}
+do_test reindex-3.3 {
+  catchsql {
+    REINDEX;
+  } db2
+} {1 {no such collation sequence: c2}}
+
+do_test reindex-3.99 {
+  db2 close
+} {}
+
 finish_test
+

@@ -2065,6 +2065,14 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
   }
 #endif
 
+  /* Ensure all the required collation sequences are available. This
+  ** routine will invoke the collation-needed callback if necessary (and
+  ** if one has been registered).
+  */
+  if( sqlite3CheckIndexCollSeq(pParse, pIndex) ){
+    return;
+  }
+
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) return;
   if( memRootPage>=0 ){
@@ -2928,6 +2936,12 @@ void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
   int iDb;                    /* The database index number */
   sqlite3 *db = pParse->db;   /* The database connection */
   Token *pObjName;            /* Name of the table or index to be reindexed */
+
+  /* Read the database schema. If an error occurs, leave an error message
+  ** and code in pParse and return NULL. */
+  if( SQLITE_OK!=sqlite3ReadSchema(pParse) ){
+    return 0;
+  }
 
   if( pName1==0 || pName1->z==0 ){
     reindexDatabases(pParse, 0);
