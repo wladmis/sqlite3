@@ -50,6 +50,12 @@ typedef unsigned short int u16;       /* 2-byte unsigned integer */
 typedef unsigned char u8;             /* 1-byte unsigned integer */
 
 /*
+** The maximum number of bytes of data that can be put into a single
+** row of a single table.
+*/
+#define MAX_BYTES_PER_ROW  65535
+
+/*
 ** If memory allocation problems are found, recompile with
 **
 **      -DMEMORY_DEBUG=1
