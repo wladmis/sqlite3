@@ -112,4 +112,15 @@ do_test printf-6.1 {
   sqlite_mprintf_z_test , one two three four five six
 } {,one,two,three,four,five,six}
 
+
+do_test printf-7.1 {
+  sqlite_mprintf_scaled {A double: %g} 1.0e307 1.0
+} {A double: 1e+307}
+do_test printf-7.2 {
+  sqlite_mprintf_scaled {A double: %g} 1.0e307 10.0
+} {A double: 1e+308}
+do_test printf-7.3 {
+  sqlite_mprintf_scaled {A double: %g} 1.0e307 100.0
+} {A double: NaN}
+
 finish_test
