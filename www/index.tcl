@@ -69,7 +69,7 @@ only reached when <tt>malloc()</tt> fails.</p>
   But it only ignores case for 7-bit Latin characters.
   The case of 8-bit iso8859 characters or UTF-8 characters is
   signification.  Hence, <b>'a'&nbsp;LIKE&nbsp;'A'</b> returns
-  TRUE but <b>'&aelig;'&nbsp;LIKE&nbsp;'&AElig;'</b>" returns FALSE.
+  TRUE but <b>'&aelig;'&nbsp;LIKE&nbsp;'&AElig;'</b> returns FALSE.
 </p></li>
 </ul>
 
@@ -147,7 +147,7 @@ found <a href="crosscompile.html">here</a>.
 puts {<h2>Command-line Usage Example</h2>
 
 <p>Download the source archive and compile the <b>sqlite</b>
-program as described above.  The type:</p>
+program as described above.  Then type:</p>
 
 <blockquote><pre>
 bash$ sqlite ~/newdb              <i>Directory ~/newdb created automatically</i>
