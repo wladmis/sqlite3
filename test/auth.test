@@ -1654,9 +1654,11 @@ do_test auth-1.259 {
     DETACH DATABASE test1;
   }
 } {0 {}}
+ifcapable schema_pragmas {
 do_test auth-1.260 {
   lindex [execsql {PRAGMA database_list}] 7
 } {test1}
+} ;# ifcapable schema_pragmas
 do_test auth-1.261 {
   proc auth {code arg1 arg2 arg3 arg4} {
     if {$code=="SQLITE_DETACH"} {
@@ -1669,9 +1671,11 @@ do_test auth-1.261 {
     DETACH DATABASE test1;
   }
 } {1 {not authorized}}
+ifcapable schema_pragmas {
 do_test auth-1.262 {
   lindex [execsql {PRAGMA database_list}] 7
 } {test1}
+} ;# ifcapable schema_pragmas
 db authorizer {}
 execsql {DETACH DATABASE test1}
 db authorizer ::auth

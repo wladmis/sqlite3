@@ -61,10 +61,12 @@ do_test attach2-2.1 {
     ATTACH 'test2.db' AS t2;
   }
 } {0 {}}
+ifcapable schema_pragmas {
 do_test attach2-2.2 {
   # make sure test2.db did get attached.
   db_list db
 } {0 main 2 t2}
+} ;# ifcapable schema_pragmas
 db2 eval {COMMIT}
 
 do_test attach2-2.5 {
