@@ -197,10 +197,11 @@ static void output_quoted_string(FILE *out, const char *z){
         fprintf(out,"%.*s''",i,z);
         z += i+1;
       }else{
-        fprintf(out,"%s'",z);
+        fprintf(out,"%s",z);
         break;
       }
     }
+    fprintf(out,"'");
   }
 }
 
