@@ -730,8 +730,12 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       }
       break;
     }
-    case TK_FLOAT:
     case TK_INTEGER: {
+      sqliteVdbeAddOp(v, OP_Integer, atoi(pExpr->token.z), 0);
+      sqliteVdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
+      break;
+    }
+    case TK_FLOAT: {
       sqliteVdbeAddOp(v, OP_String, 0, 0);
       assert( pExpr->token.z );
       sqliteVdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
@@ -798,7 +802,11 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
         Token *p = &pExpr->pLeft->token;
         char *z = sqliteMalloc( p->n + 2 );
         sprintf(z, "-%.*s", p->n, p->z);
-        sqliteVdbeAddOp(v, OP_String, 0, 0);
+        if( pExpr->pLeft->op==TK_INTEGER ){
+          sqliteVdbeAddOp(v, OP_Integer, atoi(z), 0);
+        }else{
+          sqliteVdbeAddOp(v, OP_String, 0, 0);
+        }
         sqliteVdbeChangeP3(v, -1, z, p->n+1);
         sqliteFree(z);
         break;
