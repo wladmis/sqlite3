@@ -40,6 +40,7 @@ do_test misc2-1.2 {
 
 # Make sure ROWID works on a view and a subquery.  Ticket #364
 #
+ifcapable view {
 do_test misc2-2.1 {
   execsql {
     CREATE TABLE t1(a,b,c);
@@ -49,7 +50,6 @@ do_test misc2-2.1 {
     SELECT rowid, * FROM (SELECT * FROM t1, t2);
   }
 } {{} 1 2 3 7 8 9}
-ifcapable view {
 do_test misc2-2.2 {
   execsql {
     CREATE VIEW v1 AS SELECT * FROM t1, t2;

@@ -102,6 +102,7 @@ do_test subselect-2.3 {
 
 # Verify that the ORDER BY clause is honored in a subquery.
 #
+ifcapable compound {
 do_test subselect-3.1 {
   execsql {
     CREATE TABLE t3(x int);
@@ -109,6 +110,18 @@ do_test subselect-3.1 {
     SELECT * FROM t3 ORDER BY x;
   }
 } {1 2 3 4 5 6}
+} ;# ifcapable compound
+ifcapable !compound {
+do_test subselect-3.1 {
+  execsql {
+    CREATE TABLE t3(x int);
+    INSERT INTO t3 SELECT a FROM t1; 
+    INSERT INTO t3 SELECT b FROM t1;
+    SELECT * FROM t3 ORDER BY x;
+  }
+} {1 2 3 4 5 6}
+} ;# ifcapable !compound
+
 do_test subselect-3.2 {
   execsql {
     SELECT sum(x) FROM (SELECT x FROM t3 ORDER BY x LIMIT 2);

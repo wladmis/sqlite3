@@ -296,6 +296,8 @@ do_test sort-7.4 {
     SELECT b FROM v4 ORDER BY 1;
   }
 } {1 11 12 2}
+
+ifcapable compound {
 do_test sort-7.5 {
   execsql {
     SELECT a FROM t4 UNION SELECT a FROM v4 ORDER BY 1;
@@ -316,6 +318,7 @@ do_test sort-7.8 {
     SELECT b FROM t4 UNION SELECT b FROM v4 ORDER BY 1;
   }
 } {1 11 12 2}
+} ;# ifcapable compound
 } ;# ifcapable view
 
 #### Version 3 works differently here:

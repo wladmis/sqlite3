@@ -69,6 +69,13 @@ do_test collate5-1.3 {
   }
 } {a apple A Apple b banana n {}}
 
+# The remainder of this file tests compound SELECT statements.
+# Omit it if the library is compiled such that they are omitted.
+#
+ifcapable !compound {
+  finish_test
+  return
+}
 
 #
 # Tests named collate5-2.* focus on UNION, EXCEPT and INTERSECT

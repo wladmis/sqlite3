@@ -273,11 +273,13 @@ do_test memdb-6.4 {
     SELECT * FROM t2;
   }
 } {1 2 1 2 3 2 3 4 1 4 5 4}
+ifcapable compound {
 do_test memdb-6.5 {
   execsql {
     SELECT a FROM t2 UNION SELECT b FROM t2 ORDER BY 1;
   }
 } {1 2 3 4 5}
+} ;# ifcapable compound 
 do_test memdb-6.6 {
   execsql {
     CREATE INDEX i2 ON t2(c);

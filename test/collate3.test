@@ -120,6 +120,7 @@ do_test collate3-2.8 {
   }
 } {1 {no such collation sequence: string_compare}} 
 
+ifcapable compound {
 do_test collate3-2.9 {
   catchsql {
     SELECT c1 FROM collate3t1 UNION SELECT c1 FROM collate3t1;
@@ -165,6 +166,7 @@ do_test collate3-2.17 {
     SELECT c1 FROM collate3t1 UNION ALL SELECT c1 FROM collate3t1 ORDER BY 1;
   }
 } {1 {no such collation sequence: string_compare}} 
+} ;# ifcapable compound
 
 #
 # Create an index that uses a collation sequence then close and

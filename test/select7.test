@@ -16,6 +16,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable compound {
+
 # A 3-way INTERSECT.  Ticket #875
 do_test select7-1.1 {
   execsql {
@@ -47,6 +49,8 @@ do_test select7-2.1 {
   }
 } {1 1}
 } ;# ifcapable view
+
+} ;# ifcapable compound
 
 
 finish_test

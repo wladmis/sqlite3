@@ -175,14 +175,17 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   */
   rc = execExecSql(db, 
       "SELECT 'CREATE TABLE vacuum_db.' || substr(sql,14,100000000) "
-      "  FROM sqlite_master WHERE type='table' "
-      "UNION ALL "
-      "SELECT 'CREATE INDEX vacuum_db.' || substr(sql,14,100000000) "
-      "  FROM sqlite_master WHERE sql LIKE 'CREATE INDEX %' "
-      "UNION ALL "
+      "  FROM sqlite_master WHERE type='table'");
+  if( rc!=SQLITE_OK ) goto end_of_vacuum;
+  rc = execExecSql(db, 
+      "SELECT 'CREATE INDEX vacuum_db.' || substr(sql,14,100000000)"
+      "  FROM sqlite_master WHERE sql LIKE 'CREATE INDEX %' ");
+  if( rc!=SQLITE_OK ) goto end_of_vacuum;
+  rc = execExecSql(db, 
       "SELECT 'CREATE UNIQUE INDEX vacuum_db.' || substr(sql,21,100000000) "
-      "  FROM sqlite_master WHERE sql LIKE 'CREATE UNIQUE INDEX %'"
-      "UNION ALL "
+      "  FROM sqlite_master WHERE sql LIKE 'CREATE UNIQUE INDEX %'");
+  if( rc!=SQLITE_OK ) goto end_of_vacuum;
+  rc = execExecSql(db, 
       "SELECT 'CREATE VIEW vacuum_db.' || substr(sql,13,100000000) "
       "  FROM sqlite_master WHERE type='view'"
   );

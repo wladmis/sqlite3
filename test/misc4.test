@@ -84,6 +84,7 @@ do_test misc4-2.4 {
 
 # Ticket #966
 #
+ifcapable compound {
 do_test misc4-3.1 {
   execsql { 
     CREATE TABLE Table1(ID integer primary key, Value TEXT);
@@ -96,6 +97,7 @@ do_test misc4-3.1 {
     ORDER BY 1, 2;
   }
 } {{} {} 1 x 1 z}
+} ;# ifcapable compound
 
 
 finish_test
