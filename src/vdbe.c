@@ -1578,7 +1578,7 @@ case OP_ColumnCount: {
 ** a coredump.
 */
 case OP_ColumnName: {
-  p->azColName[pOp->p1] = pOp->p3 ? pOp->p3 : "";
+  p->azColName[pOp->p1] = pOp->p3;
   p->nCallback = 0;
   break;
 }

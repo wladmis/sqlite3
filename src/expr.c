@@ -889,6 +889,22 @@ int sqliteExprType(Expr *p){
       p = p->pSelect->pEList->a[0].pExpr;
       break;
 
+    case TK_CASE: {
+      if( p->pRight && sqliteExprType(p->pRight)==SQLITE_SO_NUM ){
+        return SQLITE_SO_NUM;
+      }
+      if( p->pList ){
+        int i;
+        ExprList *pList = p->pList;
+        for(i=1; i<pList->nExpr; i+=2){
+          if( sqliteExprType(pList->a[i].pExpr)==SQLITE_SO_NUM ){
+            return SQLITE_SO_NUM;
+          }
+        }
+      }
+      return SQLITE_SO_TEXT;
+    }
+
     default:
       assert( p->op==TK_ABORT );  /* Can't Happen */
       break;
