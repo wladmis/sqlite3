@@ -745,6 +745,7 @@ const char *sqlite_error_string(int rc){
     case SQLITE_MISUSE:     z = "library routine called out of sequence";break;
     case SQLITE_NOLFS:      z = "kernel lacks large file support";       break;
     case SQLITE_AUTH:       z = "authorization denied";                  break;
+    case SQLITE_FORMAT:     z = "auxiliary database format error";       break;
     default:                z = "unknown error";                         break;
   }
   return z;
