@@ -122,8 +122,11 @@ void sqliteInsert(
       }
       if( pField && j>=pField->nId ){
         char *zDflt = pTab->aCol[i].zDflt;
-        if( zDflt==0 ) zDflt = "";
-        sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
+        if( zDflt==0 ){
+          sqliteVdbeAddOp(v, OP_Null, 0, 0, 0, 0);
+        }else{
+          sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
+        }
       }else{
         sqliteExprCode(pParse, pList->a[j].pExpr);
       }
@@ -146,8 +149,11 @@ void sqliteInsert(
         }
         if( pField && j>=pField->nId ){
           char *zDflt = pTab->aCol[idx].zDflt;
-          if( zDflt==0 ) zDflt = "";
-          sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
+          if( zDflt==0 ){
+            sqliteVdbeAddOp(v, OP_Null, 0, 0, 0, 0);
+          }else{
+            sqliteVdbeAddOp(v, OP_String, 0, 0, zDflt, 0);
+          }
         }else{
           sqliteExprCode(pParse, pList->a[j].pExpr);
         }

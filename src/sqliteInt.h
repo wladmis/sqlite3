@@ -35,7 +35,7 @@
 #include <string.h>
 #include <assert.h>
 
-/* #define MEMORY_DEBUG 2 */
+#define MEMORY_DEBUG 1
 #ifdef MEMORY_DEBUG
 # define sqliteMalloc(X)    sqliteMalloc_(X,__FILE__,__LINE__)
 # define sqliteFree(X)      sqliteFree_(X,__FILE__,__LINE__)

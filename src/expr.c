@@ -324,7 +324,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       break;
     }
     case TK_NULL: {
-      sqliteVdbeAddOp(v, OP_String, 0, 0, "", 0);
+      sqliteVdbeAddOp(v, OP_Null, 0, 0, 0, 0);
       break;
     }
     case TK_AND:
