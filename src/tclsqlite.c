@@ -480,7 +480,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     DB_CLOSE,             DB_COMPLETE,         DB_ERRORCODE,
     DB_EVAL,              DB_FUNCTION,         DB_LAST_INSERT_ROWID,
     DB_ONECOLUMN,         DB_TIMEOUT,          DB_TRACE,            
-    DB_PROGRESS,
+    DB_PROGRESS
   };
 
   if( objc<2 ){
