@@ -684,7 +684,9 @@ int main(int argc, char **argv){
     int istty = isatty(0);
     if( istty ){
       printf(
-        "Enter \".help\" for instructions\n"
+        "SQLite version %s\n"
+        "Enter \".help\" for instructions\n",
+        sqlite_version
       );
     }
     while( (zLine = one_input_line(zSql, istty))!=0 ){
