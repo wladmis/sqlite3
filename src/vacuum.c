@@ -314,8 +314,7 @@ end_of_vacuum:
   sqliteFree(sVac.s1.z);
   sqliteFree(sVac.s2.z);
   if( zErrMsg ) sqlite_freemem(zErrMsg);
-  if( rc==SQLITE_ABORT ) rc = SQLITE_ERROR;
-  if( sVac.rc!=SQLITE_OK ) rc = sVac.rc;
+  if( rc==SQLITE_ABORT ) sVac.rc = SQLITE_ERROR;
   return sVac.rc;
 #endif
 }
