@@ -1271,7 +1271,7 @@ int sqliteSelect(
         }
       }
       sqliteVdbeAddOp(v, OP_Integer, i, 0);
-      sqliteVdbeAddOp(v, OP_AggFunc, 0, pE->pList->nExpr);
+      sqliteVdbeAddOp(v, OP_AggFunc, 0, pE->pList ? pE->pList->nExpr : 0);
       assert( pParse->aAgg[i].pFunc!=0 );
       assert( pParse->aAgg[i].pFunc->xStep!=0 );
       sqliteVdbeChangeP3(v, -1, (char*)pParse->aAgg[i].pFunc, P3_POINTER);

@@ -4432,7 +4432,7 @@ case OP_AggFunc: {
   Mem *pMem;
   sqlite_func ctx;
 
-  VERIFY( if( n<=0 ) goto bad_instruction; )
+  VERIFY( if( n<0 ) goto bad_instruction; )
   VERIFY( if( p->tos+1<n ) goto not_enough_stack; )
   VERIFY( if( aStack[p->tos].flags!=STK_Int ) goto bad_instruction; )
   for(i=p->tos-n; i<p->tos; i++){
@@ -4612,7 +4612,6 @@ case OP_AggNext: {
       int freeCtx;
       if( p->agg.apFunc[i]==0 ) continue;
       if( p->agg.apFunc[i]->xFinalize==0 ) continue;
-      if( (aMem[i].s.flags & STK_AggCtx)==0 ) continue;
       ctx.s.flags = STK_Null;
       ctx.z = 0;
       ctx.pAgg = (void*)aMem[i].z;

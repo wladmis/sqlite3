@@ -1180,7 +1180,8 @@ int sqliteExprAnalyzeAggregates(Parse *pParse, Expr *pExpr){
         pParse->aAgg[i].isAgg = 1;
         pParse->aAgg[i].pExpr = pExpr;
         pParse->aAgg[i].pFunc = sqliteFindFunction(pParse->db,
-             pExpr->token.z, pExpr->token.n, pExpr->pList->nExpr, 0);
+             pExpr->token.z, pExpr->token.n,
+             pExpr->pList ? pExpr->pList->nExpr : 0, 0);
       }
       pExpr->iAgg = i;
       break;

@@ -269,9 +269,7 @@ static void countStep(sqlite_func *context, int argc, const char **argv){
 static void countFinalize(sqlite_func *context){
   CountCtx *p;
   p = sqlite_aggregate_context(context, sizeof(*p));
-  if( p ){
-    sqlite_set_result_int(context, p->n);
-  }
+  sqlite_set_result_int(context, p ? p->n : 0);
 }
 
 /*
