@@ -824,6 +824,7 @@ int sqlite3ExprResolveIds(
       keyInfo.aColl[0] = pParse->db->pDfltColl;
       sqlite3VdbeOp3(v, OP_OpenTemp, pExpr->iTable, 0, \
            (char*)&keyInfo, P3_KEYINFO);
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, pExpr->iTable, 1);
 
       if( pExpr->pSelect ){
         /* Case 1:     expr IN (SELECT ...)
