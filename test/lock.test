@@ -232,7 +232,19 @@ do_test lock-2.7 {
   lappend r $msg
   lappend r $::callback_value
 } {0 {} {1 2 3}}
-integrity_check lock-2.8
+
+# Test the built-in busy timeout handler
+#
+do_test lock-2.8 {
+  db2 timeout 400
+  execsql BEGIN
+  catchsql BEGIN db2
+} {1 {database is locked}}
+do_test lock-2.9 {
+  db2 timeout 0
+  execsql COMMIT
+} {}
+integrity_check lock-2.10
 
 # Try to start two transactions in a row
 #
