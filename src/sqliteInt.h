@@ -320,6 +320,7 @@ struct Db {
 #define DB_SchemaLoaded    0x0004  /* The schema has been loaded */
 #define DB_UnresetViews    0x0008  /* Some views have defined column names */
 
+#if 0
 /*
 ** Possible values for the Db.textEnc field.
 */
@@ -327,6 +328,9 @@ struct Db {
 #define TEXT_Utf16le       2
 #define TEXT_Utf16be       3
 #define TEXT_Utf16         (SQLITE_BIGENDIAN?TEXT_Utf16be:TEXT_Utf16le)
+#endif
+
+#define SQLITE_UTF16NATIVE (SQLITE_BIGENDIAN?SQLITE_UTF16BE:SQLITE_UTF16LE)
 
 /*
 ** An instance of the following structure is used to store the busy-handler

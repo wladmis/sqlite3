@@ -330,9 +330,9 @@ int sqlite3_create_collation16(
   int(*xCompare)(void*,int,const void*,int,const void*)
 );
 #define SQLITE_UTF8     1
-#define SQLITE_UTF16    2
-#define SQLITE_UTF16BE  3
-#define SQLITE_UTF16LE  4
+#define SQLITE_UTF16BE  2
+#define SQLITE_UTF16LE  3
+#define SQLITE_UTF16    4
 } {
  These two functions are used to add new collation sequences to the
  sqlite3 handle specified as the first argument. 

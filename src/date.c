@@ -321,7 +321,7 @@ static int parseDateOrTime(const char *zDate, DateTime *p){
       return 0;
     }
     return 1;
-  }else if( sqlite3IsNumber(zDate, 0, TEXT_Utf8) ){
+  }else if( sqlite3IsNumber(zDate, 0, SQLITE_UTF8) ){
     p->rJD = sqlite3AtoF(zDate, 0);
     p->validJD = 1;
     return 0;
