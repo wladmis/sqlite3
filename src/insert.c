@@ -1007,6 +1007,7 @@ void sqlite3OpenTableAndIndices(
   assert( v!=0 );
   sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
   sqlite3VdbeAddOp(v, op, base, pTab->tnum);
+  VdbeComment((v, "# %s", pTab->zName));
   sqlite3VdbeAddOp(v, OP_SetNumColumns, base, pTab->nCol);
   for(i=1, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
     sqlite3VdbeAddOp(v, OP_Integer, pIdx->iDb, 0);

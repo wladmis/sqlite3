@@ -602,7 +602,3 @@ do_test collate2-5.5 {
 } {aa aa}
 
 finish_test
-
-
-
-
