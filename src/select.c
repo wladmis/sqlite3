@@ -684,7 +684,7 @@ static void generateColumnNames(
 
   /* If this is an EXPLAIN, skip this step */
   if( pParse->explain ){
-    return SQLITE_OK;
+    return;
   }
 
   assert( v!=0 );
@@ -695,7 +695,6 @@ static void generateColumnNames(
   sqlite3VdbeSetNumCols(v, pEList->nExpr);
   for(i=0; i<pEList->nExpr; i++){
     Expr *p;
-    int p2 = i==pEList->nExpr-1;
     p = pEList->a[i].pExpr;
     if( p==0 ) continue;
     if( pEList->a[i].zName ){

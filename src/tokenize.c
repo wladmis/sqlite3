@@ -694,3 +694,18 @@ int sqlite3_complete(const char *zSql){
   }
   return state==0;
 }
+
+/*
+** This routine is the same as the sqlite3_complete() routine described
+** above, except that the parameter is required to be UTF-16 encoded, not
+** UTF-8.
+*/
+int sqlite3_complete16(const void *zSql){
+  int rc;
+  char *zSql8 = sqlite3utf16to8(zSql, -1, SQLITE3_BIGENDIAN);
+  if( !zSql8 ) return 0;
+  rc = sqlite3_complete(zSql8);
+  sqliteFree(zSql8);
+  return rc;
+}
+

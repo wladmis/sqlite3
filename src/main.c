@@ -1102,6 +1102,88 @@ int sqlite3_open16(
 }
 
 /*
+** Open a new database handle.
+*/
+int sqlite3_open_vararg(
+  const char *filename,   /* Database filename (UTF-8) */
+  sqlite3 **ppDb,         /* OUT: SQLite db handle */
+  ...                     /* Option strings */
+){
+  va_list ap;
+  const char **aOpts = 0;
+  int nOpts = 0;
+  int rc;
+
+  /* Count the arguments */
+  va_start(ap, ppDb);
+  while( va_arg(ap, const char *) ) nOpts++;
+  va_end(ap);
+
+  /* If there are more than zero arguments, construct an array */
+  if( nOpts ){
+    aOpts = (const char **)sqliteMalloc(sizeof(const char *)*nOpts+1);
+    if( !aOpts ){
+      *ppDb = 0;
+      return SQLITE_NOMEM;
+    }
+    va_start(ap, ppDb);
+    nOpts = 0;
+    while( va_arg(ap, const char *) ){
+      aOpts[nOpts] = va_arg(ap, const char *);
+      nOpts++;
+    }
+    aOpts[nOpts] = 0;
+    va_end(ap);
+  }
+  
+  /* Call the regular sqlite3_open() */
+  rc = sqlite3_open(filename, ppDb, aOpts);
+  if( aOpts ) sqliteFree(aOpts);
+  return rc;
+}
+
+/*
+** Open a new database handle.
+*/
+int sqlite3_open16_vararg(
+  const void *filename,   /* Database filename (UTF-16) */
+  sqlite3 **ppDb,         /* OUT: SQLite db handle */
+  ...                     /* Option strings */
+){
+  va_list ap;
+  const char **aOpts = 0;
+  int nOpts = 0;
+  int rc;
+
+  /* Count the arguments */
+  va_start(ap, ppDb);
+  while( va_arg(ap, const char *) ) nOpts++;
+  va_end(ap);
+
+  /* If there are more than zero arguments, construct an array */
+  if( nOpts ){
+    aOpts = (const char **)sqliteMalloc(sizeof(const char *)*nOpts+1);
+    if( !aOpts ){
+      *ppDb = 0;
+      return SQLITE_NOMEM;
+    }
+    va_start(ap, ppDb);
+    nOpts = 0;
+    while( va_arg(ap, const char *) ){
+      aOpts[nOpts] = va_arg(ap, const char *);
+      nOpts++;
+    }
+    aOpts[nOpts] = 0;
+    va_end(ap);
+  }
+  
+  /* Call the regular sqlite3_open16() */
+  rc = sqlite3_open16(filename, ppDb, aOpts);
+  if( aOpts ) sqliteFree(aOpts);
+  return rc;
+}
+
+/*
 ** The following routine destroys a virtual machine that is created by
 ** the sqlite3_compile() routine. The integer returned is an SQLITE_
 ** success/failure code that describes the result of executing the virtual
