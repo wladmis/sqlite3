@@ -59,8 +59,16 @@ static void minmaxFunc(sqlite_func *context, int argc, sqlite3_value **argv){
 ** Return the type of the argument.
 */
 static void typeofFunc(sqlite_func *context, int argc, sqlite3_value **argv){
+  const char *z = 0;
   assert( argc==2 );
-  sqlite3_set_result_string(context, sqlite3_value_data(argv[1]), -1);
+  switch( sqlite3_value_type(argv[0]) ){
+    case SQLITE3_NULL: z = "null" ; break;
+    case SQLITE3_INTEGER: z = "integer" ; break;
+    case SQLITE3_TEXT: z = "text" ; break;
+    case SQLITE3_FLOAT: z = "real" ; break;
+    case SQLITE3_BLOB: z = "blob" ; break;
+  }
+  sqlite3_set_result_string(context, z, -1);
 }
 
 /*
