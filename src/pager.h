@@ -44,14 +44,14 @@ typedef unsigned int Pgno;
 */
 typedef struct Pager Pager;
 
-int sqlitepager_open(Pager **ppPager, const char *zFilename, int nPage);
+int sqlitepager_open(Pager **ppPager, const char *zFilename,int nPage,int nEx);
 int sqlitepager_close(Pager *pPager);
 int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage);
+void *sqlitepager_lookup(Pager *pPager, Pgno pgno);
 int sqlitepager_unref(void*);
 Pgno sqlitepager_pagenumber(void*);
 int sqlitepager_write(void*);
 int sqlitepager_pagecount(Pager*);
 int sqlitepager_commit(Pager*);
 int sqlitepager_rollback(Pager*);
-
 int *sqlitepager_stats(Pager*);

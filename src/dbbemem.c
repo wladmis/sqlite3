@@ -33,10 +33,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <sys/stat.h>
-#include <unistd.h>
 #include <ctype.h>
-#include <time.h>
 
 
 typedef struct Array Array;

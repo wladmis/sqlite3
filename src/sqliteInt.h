@@ -29,7 +29,9 @@
 #include "dbbe.h"
 #include "vdbe.h"
 #include "parse.h"
+#ifndef DISABLE_GDBM
 #include <gdbm.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -32,6 +32,7 @@
 **
 ** $Id$
 */
+#ifndef DISABLE_GDBM
 #include "sqliteInt.h"
 #include <gdbm.h>
 #include <sys/stat.h>
@@ -674,3 +675,4 @@ Dbbe *sqliteGdbmOpen(
   pNew->pOpen = 0;
   return &pNew->dbbe;
 }
+#endif /* DISABLE_GDBM */

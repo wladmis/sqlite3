@@ -29,7 +29,9 @@
 ** $Id$
 */
 #include "sqliteInt.h"
+#if defined(HAVE_USLEEP) && HAVE_USLEEP
 #include <unistd.h>
+#endif
 
 /*
 ** This is the callback routine for the code that initializes the

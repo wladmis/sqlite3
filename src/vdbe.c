@@ -44,7 +44,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <unistd.h>
 #include <ctype.h>
 
 /*
