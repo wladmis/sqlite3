@@ -160,6 +160,15 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Subtract           83
 #define OP_Multiply           84
 #define OP_Divide             85
+#define OP_Remainder
+#define OP_BitAnd
+#define OP_BitOr
+#define OP_BitNot
+#define OP_ShiftLeft
+#define OP_ShiftRight
+#define OP_Power
+#define OP_Exp
+#define OP_Log
 #define OP_Min                86
 #define OP_Max                87
 #define OP_Like               88

@@ -1477,6 +1477,36 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     }
   }else
 
+  if( sqliteStrICmp(zLeft, "index_list")==0 ){
+    Index *pIdx;
+    Table *pTab;
+    Vdbe *v;
+    pTab = sqliteFindTable(db, zRight);
+    if( pTab ){
+      v = sqliteGetVdbe(pParse);
+      pIdx = pTab->pIndex;
+    }
+    if( pTab && pIdx && v ){
+      int i = 0; 
+      static VdbeOp indexListPreface[] = {
+        { OP_ColumnCount, 3, 0,       0},
+        { OP_ColumnName,  0, 0,       "seq"},
+        { OP_ColumnName,  1, 0,       "name"},
+        { OP_ColumnName,  2, 0,       "unique"},
+      };
+
+      sqliteVdbeAddOpList(v, ArraySize(indexListPreface), indexListPreface);
+      while(pIdx){
+        sqliteVdbeAddOp(v, OP_Integer, i, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_String, 0, 0, pIdx->zName, 0);
+        sqliteVdbeAddOp(v, OP_Integer, pIdx->isUnique, 0, 0, 0);
+        sqliteVdbeAddOp(v, OP_Callback, 3, 0, 0, 0);
+	++i;
+	pIdx = pIdx->pNext;
+      }
+    }
+  }else
+
 #ifndef NDEBUG
   if( sqliteStrICmp(zLeft, "parser_trace")==0 ){
     extern void sqliteParserTrace(FILE*, char *);
