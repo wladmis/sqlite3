@@ -175,10 +175,17 @@ struct CellHdr {
   Pgno leftChild; /* Child page that comes before this cell */
   u16 nKey;       /* Number of bytes in the key */
   u16 iNext;      /* Index in MemPage.u.aDisk[] of next cell in sorted order */
-  u8 nKeyHi;
-  u8 nDataHi;
+  u8 nKeyHi;      /* Upper 8 bits of key size for keys larger than 64K bytes */
+  u8 nDataHi;     /* Upper 8 bits of data size when the size is more than 64K */
   u16 nData;      /* Number of bytes of data */
 };
+
+/*
+** The key and data size are split into a lower 16-bit segment and an
+** upper 8-bit segment in order to pack them together into a smaller
+** space.  The following macros reassembly a key or data size back
+** into an integer.
+*/
 #define NKEY(h)  (h.nKey + h.nKeyHi*65536)
 #define NDATA(h) (h.nData + h.nDataHi*65536)
 

@@ -1098,7 +1098,7 @@ int sqliteVdbeExec(
 ** we transition back to normal indentation.
 *****************************************************************************/
 
-/* Opcode:  Goto P2 * *
+/* Opcode:  Goto * P2 *
 **
 ** An unconditional jump to address P2.
 ** The next instruction executed will be 

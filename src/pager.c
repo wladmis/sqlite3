@@ -605,7 +605,7 @@ static int syncAllPages(Pager *pPager){
 /*
 ** Acquire a page.
 **
-** A read lock on the disk file is obtained when the first page acquired. 
+** A read lock on the disk file is obtained when the first page is acquired. 
 ** This read lock is dropped when the last page is released.
 **
 ** A _get works for any page number greater than 0.  If the database
