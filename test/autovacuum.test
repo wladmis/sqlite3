@@ -488,4 +488,37 @@ do_test autovacuum-3.7 {
   file_pages
 } [expr $AUTOVACUUM?1:2]
 
+#-----------------------------------------------------------------------
+# Test that if a statement transaction around a CREATE INDEX statement is
+# rolled back no corruption occurs.
+#
+do_test autovacuum-4.1 {
+  execsql {
+    CREATE TABLE av1(a, b);
+    BEGIN;
+  }
+  for {set i 0} {$i<100} {incr i} {
+    execsql "INSERT INTO av1 VALUES($i, '[string repeat X 200]');"
+  }
+  execsql "INSERT INTO av1 VALUES(99, '[string repeat X 200]');"
+  execsql {
+    SELECT sum(a) FROM av1;
+  }
+} {5049.0}
+do_test autovacuum-4.2 {
+  catchsql {
+    CREATE UNIQUE INDEX av1_i ON av1(a);
+  }
+} {1 {indexed columns are not unique}}
+do_test autovacuum-4.3 {
+  execsql {
+    SELECT sum(a) FROM av1;
+  }
+} {5049.0}
+do_test autovacuum-4.4 {
+  execsql {
+    COMMIT;
+  }
+} {}
+
 finish_test

@@ -4699,6 +4699,11 @@ int sqlite3BtreeCreateTable(Btree *pBt, int *piTable, int flags){
       }
       assert( eType!=PTRMAP_ROOTPAGE );
       assert( eType!=PTRMAP_FREEPAGE );
+      rc = sqlite3pager_write(pRoot->aData);
+      if( rc!=SQLITE_OK ){
+        releasePage(pRoot);
+        return rc;
+      }
       rc = relocatePage(pBt, pRoot, eType, iPtrPage, pgnoMove);
       releasePage(pRoot);
       if( rc!=SQLITE_OK ){
