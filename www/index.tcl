@@ -72,9 +72,7 @@ Among the SQL features that SQLite does not currently implement are:</p>
 
 <p>
 <ul>
-<li>outer joins</li>
 <li>constraints are parsed but are not enforced</li>
-<li>no support for transactions or rollback</li>
 </ul>
 </p>
 
