@@ -1282,6 +1282,7 @@ case OP_Function: {
 
   /* Copy the result of the function to the top of the stack */
   pTos++;
+  sqlite3VdbeChangeEncoding(&ctx.s, db->enc);
   *pTos = ctx.s;
   if( pTos->flags & MEM_Short ){
     pTos->z = pTos->zShort;
