@@ -355,7 +355,6 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   sqliteHashInit(&db->trigHash, SQLITE_HASH_STRING, 0);
   sqliteHashInit(&db->aFunc, SQLITE_HASH_STRING, 1);
   sqliteHashInit(&db->aFKey, SQLITE_HASH_STRING, 1);
-  sqliteRegisterBuiltinFunctions(db);
   db->onError = OE_Default;
   db->priorNewRowid = 0;
   db->magic = SQLITE_MAGIC_BUSY;
@@ -374,6 +373,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   }
 
   /* Attempt to read the schema */
+  sqliteRegisterBuiltinFunctions(db);
   rc = sqliteInit(db, pzErrMsg);
   db->magic = SQLITE_MAGIC_OPEN;
   if( sqlite_malloc_failed ){
