@@ -65,7 +65,7 @@ static BtCursorOps sqliteBtreeCursorOps;
 ** X is an unsigned integer.  SWAB16 byte swaps a 16-bit integer.
 ** SWAB32 byteswaps a 32-bit integer.
 */
-#define SWAB16(B,X)   ((B)->needSwab? swab16(X) : (X))
+#define SWAB16(B,X)   ((B)->needSwab? swab16((u16)X) : ((u16)X))
 #define SWAB32(B,X)   ((B)->needSwab? swab32(X) : (X))
 #define SWAB_ADD(B,X,A) \
    if((B)->needSwab){ X=swab32(swab32(X)+A); }else{ X += (A); }
@@ -536,7 +536,7 @@ static void freeSpace(Btree *pBt, MemPage *pPage, int start, int size){
       if( idx + iSize + size == SWAB16(pBt, pFBlk->iNext) ){
         pNext = (FreeBlk*)&pPage->u.aDisk[idx + iSize + size];
         if( pBt->needSwab ){
-          pFBlk->iSize = swab16(swab16(pNext->iSize)+iSize+size);
+          pFBlk->iSize = swab16((u16)swab16(pNext->iSize)+iSize+size);
         }else{
           pFBlk->iSize += pNext->iSize;
         }
