@@ -166,6 +166,18 @@ static void lowerFunc(sqlite_func *context, int argc, const char **argv){
 }
 
 /*
+** Implementation of the IFNULL() and NVL() functions.  (both do the
+** same thing.  They return their first argument if it is not NULL or
+** their second argument if the first is NULL.
+*/
+static void ifnullFunc(sqlite_func *context, int argc, const char **argv){
+  const char *z;
+  assert( argc==2 );
+  z = argv[0] ? argv[0] : argv[1];
+  sqlite_set_result_string(context, z, -1);
+}
+
+/*
 ** An instance of the following structure holds the context of a
 ** sum() or avg() aggregate computation.
 */
@@ -350,6 +362,8 @@ void sqliteRegisterBuildinFunctions(sqlite *db){
     { "round",  2, roundFunc  },
     { "upper",  1, upperFunc  },
     { "lower",  1, lowerFunc  },
+    { "ifnull", 2, ifnullFunc },
+    { "nvl",    2, ifnullFunc },
   };
   static struct {
     char *zName;
