@@ -665,7 +665,7 @@ int sqliteCompare(const char *atext, const char *btext){
   int result;
   int isNumA, isNumB;
   if( atext==0 ){
-    return -(btext!=0);
+    return -1;
   }else if( btext==0 ){
     return 1;
   }
