@@ -231,3 +231,5 @@ do_test misc2-9.3 {
     SELECT count(*) FROM x;
   }
 } [expr 5*5*5*5]
+
+finish_test
