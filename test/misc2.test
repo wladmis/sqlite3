@@ -49,17 +49,19 @@ do_test misc2-2.1 {
   }
 } {}
 ifcapable view {
-do_test misc2-2.2 {
-  execsql {
-    SELECT rowid, * FROM (SELECT * FROM t1, t2);
+  ifcapable subquery {
+    do_test misc2-2.2 {
+      execsql {
+        SELECT rowid, * FROM (SELECT * FROM t1, t2);
+      }
+    } {{} 1 2 3 7 8 9}
   }
-} {{} 1 2 3 7 8 9}
-do_test misc2-2.3 {
-  execsql {
-    CREATE VIEW v1 AS SELECT * FROM t1, t2;
-    SELECT rowid, * FROM v1;
-  }
-} {{} 1 2 3 7 8 9}
+  do_test misc2-2.3 {
+    execsql {
+      CREATE VIEW v1 AS SELECT * FROM t1, t2;
+      SELECT rowid, * FROM v1;
+    }
+  } {{} 1 2 3 7 8 9}
 } ;# ifcapable view
 
 # Check name binding precedence.  Ticket #387

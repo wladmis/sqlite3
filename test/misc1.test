@@ -554,7 +554,7 @@ do_test misc1-17.1 {
     END;
     INSERT INTO TempTable(TestString) VALUES ('1');
     INSERT INTO TempTable(TestString) VALUES ('2');
-    UPDATE TempTable SET TestString = TestString + 1 WHERE TestID IN (1, 2);
+    UPDATE TempTable SET TestString = TestString + 1 WHERE TestID=1 OR TestId=2;
     COMMIT;
     SELECT TestString FROM RealTable ORDER BY 1;
   }

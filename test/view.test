@@ -335,28 +335,31 @@ do_test view-8.3 {
     SELECT * FROM v7 ORDER BY a;
   }
 } {9 18 27 39}
-do_test view-8.4 {
-  execsql {
-    CREATE VIEW v8 AS SELECT max(cnt) AS mx FROM
-      (SELECT a%2 AS eo, count(*) AS cnt FROM t1 GROUP BY eo);
-    SELECT * FROM v8;
-  }
-} 3
-do_test view-8.5 {
-  execsql {
-    SELECT mx+10, mx*2 FROM v8;
-  }
-} {13 6}
-do_test view-8.6 {
-  execsql {
-    SELECT mx+10, pqr FROM v6, v8 WHERE xyz=2;
-  }
-} {13 7}
-do_test view-8.7 {
-  execsql {
-    SELECT mx+10, pqr FROM v6, v8 WHERE xyz>2;
-  }
-} {13 13 13 19 13 27}
+
+ifcapable subquery {
+  do_test view-8.4 {
+    execsql {
+      CREATE VIEW v8 AS SELECT max(cnt) AS mx FROM
+        (SELECT a%2 AS eo, count(*) AS cnt FROM t1 GROUP BY eo);
+      SELECT * FROM v8;
+    }
+  } 3
+  do_test view-8.5 {
+    execsql {
+      SELECT mx+10, mx*2 FROM v8;
+    }
+  } {13 6}
+  do_test view-8.6 {
+    execsql {
+      SELECT mx+10, pqr FROM v6, v8 WHERE xyz=2;
+    }
+  } {13 7}
+  do_test view-8.7 {
+    execsql {
+      SELECT mx+10, pqr FROM v6, v8 WHERE xyz>2;
+    }
+  } {13 13 13 19 13 27}
+} ;# ifcapable subquery
 
 # Tests for a bug found by Michiel de Wit involving ORDER BY in a VIEW.
 #

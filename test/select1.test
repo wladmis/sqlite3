@@ -782,21 +782,21 @@ ifcapable subquery {
   } {}
 }
 
-ifcapable compound {
-do_test select1-12.9 {
-  execsql2 {
-    SELECT x FROM (
-      SELECT a,b FROM t3 UNION SELECT a AS 'x', b AS 'y' FROM t4 ORDER BY a,b
-    ) ORDER BY x;
-  }
-} {x 1 x 3}
-do_test select1-12.10 {
-  execsql2 {
-    SELECT z.x FROM (
-      SELECT a,b FROM t3 UNION SELECT a AS 'x', b AS 'y' FROM t4 ORDER BY a,b
-    ) AS 'z' ORDER BY x;
-  }
-} {x 1 x 3}
+ifcapable {compound && subquery} {
+  do_test select1-12.9 {
+    execsql2 {
+      SELECT x FROM (
+        SELECT a,b FROM t3 UNION SELECT a AS 'x', b AS 'y' FROM t4 ORDER BY a,b
+      ) ORDER BY x;
+    }
+  } {x 1 x 3}
+  do_test select1-12.10 {
+    execsql2 {
+      SELECT z.x FROM (
+        SELECT a,b FROM t3 UNION SELECT a AS 'x', b AS 'y' FROM t4 ORDER BY a,b
+      ) AS 'z' ORDER BY x;
+    }
+  } {x 1 x 3}
 } ;# ifcapable compound
 
 

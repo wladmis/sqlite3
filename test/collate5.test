@@ -181,11 +181,10 @@ do_test collate5-2.4.0 {
   foreach ii $::lens { 
     execsql "INSERT INTO collate5t3 VALUES($ii, '[string repeat a $ii]');"
   }
-  execsql {
+  expr [llength [execsql {
     COMMIT;
-    SELECT count(*) FROM 
-        (SELECT * FROM collate5t3 UNION SELECT * FROM collate5t3);
-  }
+    SELECT * FROM collate5t3 UNION SELECT * FROM collate5t3;
+  }]] / 2
 } [llength $::lens]
 do_test collate5-2.4.1 {
   execsql {DROP TABLE collate5t3;}
