@@ -4505,10 +4505,14 @@ case OP_IdxRecno: {
     int v;
     int sz;
     sqliteBtreeKeySize(pCrsr, &sz);
-    sqliteBtreeKey(pCrsr, sz - sizeof(u32), sizeof(u32), (char*)&v);
-    v = keyToInt(v);
-    aStack[tos].i = v;
-    aStack[tos].flags = STK_Int;
+    if( sz<sizeof(u32) ){
+      aStack[tos].flags = STK_Null;
+    }else{
+      sqliteBtreeKey(pCrsr, sz - sizeof(u32), sizeof(u32), (char*)&v);
+      v = keyToInt(v);
+      aStack[tos].i = v;
+      aStack[tos].flags = STK_Int;
+    }
   }
   break;
 }
