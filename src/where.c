@@ -640,7 +640,7 @@ WhereInfo *sqliteWhereBegin(
 
     pTab = pTabList->a[i].pTab;
     if( pTab->isTransient || pTab->pSelect ) continue;
-    sqliteVdbeAddOp(v, OP_Integer, pTab->isTemp, 0);
+    sqliteVdbeAddOp(v, OP_Integer, pTab->iDb, 0);
     sqliteVdbeAddOp(v, OP_OpenRead, base+i, pTab->tnum);
     sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);
     if( i==0 && !pParse->schemaVerified &&
@@ -648,7 +648,7 @@ WhereInfo *sqliteWhereBegin(
       sqliteCodeVerifySchema(pParse);
     }
     if( pWInfo->a[i].pIdx!=0 ){
-      sqliteVdbeAddOp(v, OP_Integer, pTab->isTemp, 0);
+      sqliteVdbeAddOp(v, OP_Integer, pWInfo->a[i].pIdx->iDb, 0);
       sqliteVdbeAddOp(v, OP_OpenRead,
                       pWInfo->a[i].iCur, pWInfo->a[i].pIdx->tnum);
       sqliteVdbeChangeP3(v, -1, pWInfo->a[i].pIdx->zName, P3_STATIC);
