@@ -183,12 +183,16 @@ void sqliteStrRealloc(char **pz){
 ** Make a copy of a string in memory obtained from sqliteMalloc()
 */
 char *sqliteStrDup_(const char *z, char *zFile, int line){
-  char *zNew = sqliteMalloc_(strlen(z)+1, zFile, line);
+  char *zNew;
+  if( z==0 ) return 0;
+  zNew = sqliteMalloc_(strlen(z)+1, zFile, line);
   if( zNew ) strcpy(zNew, z);
   return zNew;
 }
 char *sqliteStrNDup_(const char *z, int n, char *zFile, int line){
-  char *zNew = sqliteMalloc_(n+1, zFile, line);
+  char *zNew;
+  if( z==0 ) return 0;
+  zNew = sqliteMalloc_(n+1, zFile, line);
   if( zNew ){
     memcpy(zNew, z, n);
     zNew[n] = 0;
