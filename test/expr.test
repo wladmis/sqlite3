@@ -126,6 +126,8 @@ test_expr expr-1.96 {i1=NULL, i2=3} {coalesce(i1<<i2,99)} 99
 test_expr expr-1.97 {i1=32, i2=NULL} {coalesce(i1>>i2,99)} 99
 test_expr expr-1.98 {i1=NULL, i2=NULL} {coalesce(i1|i2,99)} 99
 test_expr expr-1.99 {i1=32, i2=NULL} {coalesce(i1&i2,99)} 99
+test_expr expr-1.100 {i1=1, i2=''} {i1=i2} 0
+test_expr expr-1.101 {i1=0, i2=''} {i1=i2} 0
 
 test_expr expr-2.1 {r1=1.23, r2=2.34} {r1+r2} 3.57
 test_expr expr-2.2 {r1=1.23, r2=2.34} {r1-r2} -1.11
