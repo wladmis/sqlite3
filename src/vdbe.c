@@ -426,7 +426,7 @@ static int AggInsert(Agg *p, char *zKey){
   AggElem *pElem;
   int i;
   if( p->nHash <= p->nElem*2 ){
-    AggRehash(p, p->nElem*2 + 103);
+    AggRehash(p, p->nElem*2 + 19);
   }
   if( p->nHash==0 ) return 1;
   pElem = sqliteMalloc( sizeof(AggElem) + strlen(zKey) + 1 +

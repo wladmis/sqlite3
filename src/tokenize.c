@@ -211,7 +211,7 @@ int sqliteGetToken(const char *z, int *tokenType){
     case '!': {
       if( z[1]!='=' ){
         *tokenType = TK_ILLEGAL;
-        return 1;
+        return 2;
       }else{
         *tokenType = TK_NE;
         return 2;
@@ -245,23 +245,23 @@ int sqliteGetToken(const char *z, int *tokenType){
     }
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9': {
+      *tokenType = TK_INTEGER;
       for(i=1; z[i] && isdigit(z[i]); i++){}
       if( z[i]=='.' ){
         i++;
         while( z[i] && isdigit(z[i]) ){ i++; }
-        if( (z[i]=='e' || z[i]=='E') &&
+        *tokenType = TK_FLOAT;
+      }
+      if( (z[i]=='e' || z[i]=='E') &&
            ( isdigit(z[i+1]) 
             || ((z[i+1]=='+' || z[i+1]=='-') && isdigit(z[i+2]))
            )
-        ){
-          i += 2;
-          while( z[i] && isdigit(z[i]) ){ i++; }
-        }
+      ){
+        i += 2;
+        while( z[i] && isdigit(z[i]) ){ i++; }
         *tokenType = TK_FLOAT;
       }else if( z[0]=='.' ){
         *tokenType = TK_FLOAT;
-      }else{
-        *tokenType = TK_INTEGER;
       }
       return i;
     }
@@ -363,8 +363,8 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
         break;
       }
       case TK_ILLEGAL:
-        sqliteSetNString(pzErrMsg, "illegal token: \"", -1, 
-           pParse->sLastToken.z, pParse->sLastToken.n, 0);
+        sqliteSetNString(pzErrMsg, "unrecognized token: \"", -1, 
+           pParse->sLastToken.z, pParse->sLastToken.n, "\"", 1, 0);
         nErr++;
         break;
       default:

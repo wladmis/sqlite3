@@ -32,8 +32,7 @@
 %token_type {Token}
 %extra_argument {Parse *pParse}
 %syntax_error {
-  sqliteSetNString(&pParse->zErrMsg,"syntax error near \"",0,TOKEN.z,TOKEN.n,
-                   "\"", 1, 0);
+  sqliteSetString(&pParse->zErrMsg,"syntax error",0);
   pParse->sErrToken = TOKEN;
 }
 %name sqliteParser
