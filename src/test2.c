@@ -512,11 +512,11 @@ static int fake_big_file(
     return TCL_ERROR;
   }
   rc = sqliteOsWrite(&fd, "Hello, World!", 14);
+  sqliteOsClose(&fd);
   if( rc ){
     Tcl_AppendResult(interp, "write failed: ", errorName(rc), 0);
     return TCL_ERROR;
   }
-  sqliteOsClose(&fd);
   return TCL_OK;
 }
 
