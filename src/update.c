@@ -53,7 +53,6 @@ void sqliteUpdate(
   int oldIdx      = -1;  /* index of trigger "old" temp table       */
 
   if( pParse->nErr || sqlite_malloc_failed ) goto update_cleanup;
-  if( sqliteAuthCommand(pParse, "UPDATE", 0) ) goto update_cleanup;
   db = pParse->db;
 
   /* Check for the special case of a VIEW with one or more ON UPDATE triggers 
@@ -148,8 +147,15 @@ void sqliteUpdate(
       goto update_cleanup;
     }
 #ifndef SQLITE_OMIT_AUTHORIZATION
-    if( sqliteAuthWrite(pParse, pTab, j)==SQLITE_IGNORE ){
-      aXRef[j] = -1;
+    {
+      int rc;
+      rc = sqliteAuthCheck(pParse, SQLITE_UPDATE, pTab->zName,
+                           pTab->aCol[j].zName);
+      if( rc==SQLITE_DENY ){
+        goto update_cleanup;
+      }else if( rc==SQLITE_IGNORE ){
+        aXRef[j] = -1;
+      }
     }
 #endif
   }

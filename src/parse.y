@@ -85,7 +85,7 @@ cmd ::= ROLLBACK trans_opt.    {sqliteRollbackTransaction(pParse);}
 //
 cmd ::= create_table create_table_args.
 create_table ::= CREATE(X) temp(T) TABLE nm(Y). {
-   sqliteStartTable(pParse,&X,&Y,T);
+   sqliteStartTable(pParse,&X,&Y,T,0);
 }
 %type temp {int}
 temp(A) ::= TEMP.  {A = pParse->isTemp || !pParse->initFlag;}
