@@ -4213,11 +4213,11 @@ case OP_Recno: {
   assert( i>=0 && i<p->nCursor );
   if( (pC = &p->aCsr[i])->recnoIsValid ){
     v = pC->lastRecno;
-  }else if( pC->nullRow ){
-    aStack[tos].flags = STK_Null;
-    break;
   }else if( pC->pseudoTable ){
     v = keyToInt(pC->iKey);
+  }else if( pC->nullRow || pC->pCursor==0 ){
+    aStack[tos].flags = STK_Null;
+    break;
   }else{
     assert( pC->pCursor!=0 );
     sqliteBtreeKey(pC->pCursor, 0, sizeof(u32), (char*)&v);
