@@ -622,6 +622,14 @@ int sqlite3_bind_text16(sqlite3_stmt*, int, const void*, int, void(*)(void*));
 int sqlite3_bind_value(sqlite3_stmt*, int, const sqlite3_value*);
 
 /*
+** Return the number of wildcards in a compiled SQL statement.  This
+** routine was added to support DBD::SQLite.
+**
+**** EXPERIMENTAL *****
+*/
+int sqlite3_bind_parameter_count(sqlite3_stmt*);
+
+/*
 ** Return the number of columns in the result set returned by the compiled
 ** SQL statement. This routine returns 0 if pStmt is an SQL statement
 ** that does not return data (for example an UPDATE).

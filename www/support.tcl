@@ -27,7 +27,9 @@ sent by to you by return email.
 <p>
 An archive of the mailing list can be found at
 <a href="http://www.mail-archive.com/sqlite-users%40sqlite.org/">
-http://www.mail-archive.com/sqlite-users%40sqlite.org</a>.
+http://www.mail-archive.com/sqlite-users%40sqlite.org</a> and at
+<a href="http://www.theaimsgroup.com/">
+http://www.theaimsgroup.com/</a>.
 </p>
 
 <h3>Professional Support</h3>
