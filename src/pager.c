@@ -517,13 +517,22 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int useCksum){
     }
   }
 
-  /* Playback the page.  Update the in-memory copy of the page
-  ** at the same time, if there is one.
+  assert( pPager->state==PAGER_RESERVED || pPager->state==PAGER_EXCLUSIVE );
+
+  /* If the pager is in RESERVED state, then there must be a copy of this
+  ** page in the pager cache. In this case just update the pager cache,
+  ** not the database file.
+  **
+  ** If in EXCLUSIVE state, then we update the pager cache if it exists
+  ** and the main file. The page is then marked not dirty.
   */
   pPg = pager_lookup(pPager, pgno);
+  assert( pPager->state==PAGER_EXCLUSIVE || pPg );
   TRACE2("PLAYBACK page %d\n", pgno);
-  sqlite3OsSeek(&pPager->fd, (pgno-1)*(off_t)SQLITE_PAGE_SIZE);
-  rc = sqlite3OsWrite(&pPager->fd, aData, SQLITE_PAGE_SIZE);
+  if( pPager->state==PAGER_EXCLUSIVE ){
+    sqlite3OsSeek(&pPager->fd, (pgno-1)*(off_t)SQLITE_PAGE_SIZE);
+    rc = sqlite3OsWrite(&pPager->fd, aData, SQLITE_PAGE_SIZE);
+  }
   if( pPg ){
     /* No page should ever be rolled back that is in use, except for page
     ** 1 which is held in use in order to keep the lock on the database
