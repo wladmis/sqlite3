@@ -13,6 +13,9 @@
 **
 ** @(#) $Id$
 */
+#ifndef _SQLITEINT_H_
+#define _SQLITEINT_H_
+
 #include "config.h"
 #include "sqlite3.h"
 #include "hash.h"
@@ -1397,3 +1400,5 @@ void sqlite3ValueSetStr(sqlite3_value*, int, const void *,u8, void(*)(void*));
 void sqlite3ValueFree(sqlite3_value*);
 sqlite3_value *sqlite3ValueNew();
 sqlite3_value *sqlite3GetTransientValue(sqlite *db);
+
+#endif
