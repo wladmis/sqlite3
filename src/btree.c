@@ -4138,8 +4138,8 @@ int sqlite3BtreeCopyFile(Btree *pBtTo, Btree *pBtFrom){
 
   if( !pBtTo->inTrans || !pBtFrom->inTrans ) return SQLITE_ERROR;
   if( pBtTo->pCursor ) return SQLITE_BUSY;
-  memcpy(pBtTo->pPage1, pBtFrom->pPage1, pBtFrom->usableSize);
-  rc = sqlite3pager_overwrite(pBtTo->pPager, 1, pBtFrom->pPage1);
+  memcpy(pBtTo->pPage1->aData, pBtFrom->pPage1->aData, pBtFrom->usableSize);
+  rc = sqlite3pager_overwrite(pBtTo->pPager, 1, pBtFrom->pPage1->aData);
   nToPage = sqlite3pager_pagecount(pBtTo->pPager);
   nPage = sqlite3pager_pagecount(pBtFrom->pPager);
   for(i=2; rc==SQLITE_OK && i<=nPage; i++){
