@@ -430,6 +430,13 @@ check_header $STMT capi3-5.1 {a b c} {VARINT BLOB VARCHAR(16)}
 do_test capi3-5.2 {
   sqlite3_step $STMT
 } SQLITE_ROW
+do_test capi3-5.2.1 {
+  sqlite3_expired $STMT
+} {0}
+do_test capi3-5.2.2 {
+  db auth {}
+  sqlite3_expired $STMT
+} {1}
 
 check_header $STMT capi3-5.3 {a b c} {VARINT BLOB VARCHAR(16)}
 check_data $STMT capi3-5.4 {INTEGER INTEGER TEXT} {1 2 3} {1.0 2.0 3.0} {1 2 3}
@@ -824,4 +831,3 @@ if {[llength [info commands sqlite3_sleep]]>0} {
 }
 
 finish_test
-

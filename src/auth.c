@@ -76,6 +76,7 @@ int sqlite3_set_authorizer(
 ){
   db->xAuth = xAuth;
   db->pAuthArg = pArg;
+  sqlite3ExpirePreparedStatements(db);
   return SQLITE_OK;
 }
 

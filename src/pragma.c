@@ -160,10 +160,13 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
         if( v ){
           returnSingleInt(pParse, p->zName, (db->flags & p->mask)!=0 );
         }
-      }else if( getBoolean(zRight) ){
-        db->flags |= p->mask;
       }else{
-        db->flags &= ~p->mask;
+        if( getBoolean(zRight) ){
+          db->flags |= p->mask;
+        }else{
+          db->flags &= ~p->mask;
+        }
+        sqlite3ExpirePreparedStatements(db);
       }
       return 1;
     }

@@ -950,6 +950,28 @@ static int test_reset(
 }
 
 /*
+** Usage:  sqlite3_expired STMT 
+**
+** Return TRUE if a recompilation of the statement is recommended.
+*/
+static int test_expired(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  sqlite3_stmt *pStmt;
+  if( objc!=2 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"",
+        Tcl_GetStringFromObj(objv[0], 0), " <STMT>", 0);
+    return TCL_ERROR;
+  }
+  if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj(sqlite3_expired(pStmt)));
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite3_changes DB
 **
 ** Return the number of changes made to the database by the last SQL
@@ -2848,6 +2870,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_prepare16",             test_prepare16     ,0 },
      { "sqlite3_finalize",              test_finalize      ,0 },
      { "sqlite3_reset",                 test_reset         ,0 },
+     { "sqlite3_expired",               test_expired       ,0 },
      { "sqlite3_changes",               test_changes       ,0 },
      { "sqlite3_step",                  test_step          ,0 },
 

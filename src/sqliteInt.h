@@ -1572,6 +1572,7 @@ void sqlite3Reindex(Parse*, Token*, Token*);
 void sqlite3AlterRenameTable(Parse*, SrcList*, Token*);
 int sqlite3GetToken(const unsigned char *, int *);
 void sqlite3NestedParse(Parse*, const char*, ...);
+void sqlite3ExpirePreparedStatements(sqlite3*);
 
 #ifndef SQLITE_OMIT_CURSOR
 void sqlite3CursorDelete(SqlCursor*);

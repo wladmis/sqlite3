@@ -1175,6 +1175,18 @@ int sqlite3_rekey(
 int sqlite3_sleep(int);
 
 /*
+** Return TRUE (non-zero) of the statement supplied as an argument needs
+** to be recompiled.  A statement needs to be recompiled whenever the
+** execution environment changes in a way that would alter the program
+** that sqlite3_prepare() generates.  For example, if new functions or
+** collating sequences are registered or if an authorizer function is
+** added or changed.
+**
+******* THIS IS AN EXPERIMENTAL API AND IS SUBJECT TO CHANGE ******
+*/
+int sqlite3_expired(sqlite3_stmt*);
+
+/*
 ** If the following global variable is made to point to a
 ** string which is the name of a directory, then all temporary files
 ** created by SQLite will be placed in that directory.  If this variable
