@@ -693,9 +693,9 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** that have the same name as the fields extracted by the query.
   */
   case DB_EVAL: {
-    char const *zSql;
-    char const *zLeft;
-    sqlite3_stmt *pStmt;
+    char const *zSql;      /* Next SQL statement to execute */
+    char const *zLeft;     /* What is left after first stmt in zSql */
+    sqlite3_stmt *pStmt;   /* Compiled SQL statment */
     Tcl_Obj *pArray;       /* Name of array into which results are written */
     Tcl_Obj *pScript;      /* Script to run for each result set */
 
