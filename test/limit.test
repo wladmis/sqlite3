@@ -56,5 +56,23 @@ do_test limit-1.7 {
   execsql {SELECT * FROM t1 AS a, t1 AS b ORDER BY a.x, b.x LIMIT 5 OFFSET 32}
 } {1 5 0 5 1 5 1 5 1 5 2 5 1 5 3 5 1 5 4 5}
 
+do_test limit-2.1 {
+  execsql {
+    CREATE VIEW v1 AS SELECT * FROM t1 LIMIT 2;
+    SELECT count(*) FROM (SELECT * FROM v1);
+  }
+} 2
+do_test limit-2.2 {
+  execsql {
+    CREATE TABLE t2 AS SELECT * FROM t1 LIMIT 2;
+    SELECT count(*) FROM t2;
+  }
+} 2
+do_test limit-2.3 {
+  execsql {
+    SELECT count(*) FROM t1 WHERE rowid IN (SELECT rowid FROM t1 LIMIT 2);
+  }
+} 2
+
 
 finish_test

@@ -204,9 +204,10 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Function          119
 
 #define OP_Limit             120
+#define OP_LimitCk           121
 
 
-#define OP_MAX               120
+#define OP_MAX               121
 
 /*
 ** Prototypes for the VDBE interface.  See comments on the implementation

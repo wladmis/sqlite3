@@ -258,6 +258,7 @@ WhereInfo *sqliteWhereBegin(
   */
   if( pWhere && sqliteExprIsConstant(pWhere) ){
     sqliteExprIfFalse(pParse, pWhere, pWInfo->iBreak, 1);
+    pWhere = 0;
   }
 
   /* Split the WHERE clause into as many as 32 separate subexpressions
