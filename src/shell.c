@@ -659,12 +659,17 @@ int main(int argc, char **argv){
   }
   data.db = db = sqlite_open(argv[1], 0666, &zErrMsg);
   if( db==0 ){
-    if( zErrMsg ){
-      fprintf(stderr,"Unable to open database \"%s\": %s\n", argv[1], zErrMsg);
+    data.db = db = sqlite_open(argv[1], 0444, &zErrMsg);
+    if( db==0 ){
+      if( zErrMsg ){
+        fprintf(stderr,"Unable to open database \"%s\": %s\n", argv[1],zErrMsg);
+      }else{
+        fprintf(stderr,"Unable to open database %s\n", argv[1]);
+      }
+      exit(1);
     }else{
-      fprintf(stderr,"Unable to open database %s\n", argv[1]);
+      printf("Database \"%s\" opened READ ONLY!\n", argv[1]);
     }
-    exit(1);
   }
   data.out = stdout;
   if( argc==3 ){

@@ -329,6 +329,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int argc, char **argv){
 */
 int Sqlite_Init(Tcl_Interp *interp){
   Tcl_CreateCommand(interp, "sqlite", DbMain, 0, 0);
+  Tcl_PkgProvide(interp, "sqlite", "1.0");
   return TCL_OK;
 }
 int Sqlite_SafeInit(Tcl_Interp *interp){

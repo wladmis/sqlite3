@@ -79,7 +79,7 @@ int sqliteDbbeOpenCursor(Dbbe*, const char *zName, int writeable, DbbeCursor**);
 void sqliteDbbeDropTable(Dbbe*, const char *zTableName);
 
 /* Reorganize a table to speed access or reduce its disk usage */
-void sqliteDbbeReorganizeTable(Dbbe*, const char *zTableName);
+int sqliteDbbeReorganizeTable(Dbbe*, const char *zTableName);
 
 /* Close a cursor */
 void sqliteDbbeCloseCursor(DbbeCursor*);
