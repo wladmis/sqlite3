@@ -973,7 +973,8 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int useCksum){
   pPg = pager_lookup(pPager, pgno);
   assert( pPager->state>=PAGER_EXCLUSIVE || pPg );
   TRACE3("PLAYBACK %d page %d\n", PAGERID(pPager), pgno);
-  if( pPager->state>=PAGER_EXCLUSIVE ){
+  assert( jfd == (useCksum ? &pPager->jfd : &pPager->stfd) );
+  if( pPager->state>=PAGER_EXCLUSIVE && (useCksum || !pPg || !pPg->needSync) ){
     sqlite3OsSeek(&pPager->fd, (pgno-1)*(i64)pPager->pageSize);
     rc = sqlite3OsWrite(&pPager->fd, aData, pPager->pageSize);
   }
