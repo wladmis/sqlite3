@@ -371,7 +371,7 @@ do_test intpkey-5.1 {
     SELECT * FROM t1 WHERE a=0;
   }
 } {0 zero entry 0}
-do_test intpkey=5.2 {
+do_test intpkey-5.2 {
   execsql {
     SELECT rowid, a FROM t1
   }
