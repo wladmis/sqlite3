@@ -208,7 +208,7 @@ void sqlite3Pragma(
   if( !zLeft ) return;
   if( minusFlag ){
     zRight = 0;
-    sqlite3SetNString(&zRight, "-", 1, pValue->z, pValue->n, 0);
+    sqlite3SetNString(&zRight, "-", 1, pValue->z, pValue->n, (char*)0);
   }else{
     zRight = sqlite3NameFromToken(pValue);
   }
