@@ -182,8 +182,9 @@ struct ExprList {
   struct {
     Expr *pExpr;           /* The list of expressions */
     char *zName;           /* Token associated with this expression */
-    int idx;               /* ... */
-    int isAgg;             /* True if this is an aggregate like count(*) */
+    char sortOrder;        /* 1 for DESC or 0 for ASC */
+    char isAgg;            /* True if this is an aggregate like count(*) */
+    char done;             /* A flag to indicate when processing is finished */
   } *a;                  /* One entry for each expression */
 };
 
@@ -279,6 +280,7 @@ struct Parse {
   Token sLastToken;    /* The last token parsed */
   Table *pNewTable;    /* A table being constructed by CREATE TABLE */
   Vdbe *pVdbe;         /* An engine for executing database bytecode */
+  int colNamesSet;     /* TRUE after OP_ColumnCount has been issued to pVdbe */
   int explain;         /* True if the EXPLAIN flag is found on the query */
   int initFlag;        /* True if reparsing CREATE TABLEs */
   int nErr;            /* Number of errors seen */
@@ -349,8 +351,10 @@ int sqliteGlobCompare(const char*,const char*);
 int sqliteLikeCompare(const unsigned char*,const unsigned char*);
 char *sqliteTableNameFromToken(Token*);
 int sqliteExprCheck(Parse*, Expr*, int, int*);
+int sqliteExprCompare(Expr*, Expr*);
 int sqliteFuncId(Token*);
 int sqliteExprResolveIds(Parse*, IdList*, Expr*);
 void sqliteExprResolveInSelect(Parse*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
-void sqlitePArseInfoReset(Parse*);
+void sqliteParseInfoReset(Parse*);
+Vdbe *sqliteGetVdbe(Parse*);

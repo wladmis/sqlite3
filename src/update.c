@@ -104,7 +104,7 @@ void sqliteUpdate(
     }
     for(j=0; j<pTab->nCol; j++){
       if( strcmp(pTab->aCol[j].zName, pChanges->a[i].zName)==0 ){
-        pChanges->a[i].idx = j;
+        /* pChanges->a[i].idx = j; */
         aXRef[j] = i;
         break;
       }
@@ -138,10 +138,7 @@ void sqliteUpdate(
 
   /* Begin generating code.
   */
-  v = pParse->pVdbe;
-  if( v==0 ){
-    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
-  }
+  v = sqliteGetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
 
   /* Begin the database scan

@@ -67,10 +67,7 @@ void sqliteInsert(
     pParse->nErr++;
     goto insert_cleanup;
   }
-  v = pParse->pVdbe;
-  if( v==0 ){
-    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
-  }
+  v = sqliteGetVdbe(pParse);
   if( v==0 ) goto insert_cleanup;
   if( pSelect ){
     int rc;

@@ -129,6 +129,10 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
   ** the program.  The delete the virtual machine.
   */
   vdbe = sqliteVdbeCreate(db->pBe);
+  if( vdbe==0 ){
+    sqliteSetString(pzErrMsg, "out of memory",0); 
+    return 1;
+  }
   sqliteVdbeAddOpList(vdbe, sizeof(initProg)/sizeof(initProg[0]), initProg);
   rc = sqliteVdbeExec(vdbe, sqliteOpenCb, db, pzErrMsg);
   sqliteVdbeDelete(vdbe);

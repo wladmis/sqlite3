@@ -82,10 +82,7 @@ void sqliteDeleteFrom(
 
   /* Begin generating code.
   */
-  v = pParse->pVdbe;
-  if( v==0 ){
-    v = pParse->pVdbe = sqliteVdbeCreate(pParse->db->pBe);
-  }
+  v = sqliteGetVdbe(pParse);
   if( v==0 ) goto delete_from_cleanup;
 
   /* Begin the database scan
