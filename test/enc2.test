@@ -126,6 +126,10 @@ do_test $t.9 {
   sqlite3_finalize $STMT
 } SQLITE_OK
 
+ifcapable vacuum {
+  execsql VACUUM
+}
+
 do_test $t.10 {
   db eval {PRAGMA encoding}
 } $enc
