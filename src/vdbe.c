@@ -841,6 +841,48 @@ static void applyAffinity(Mem *pRec, char affinity){
 }
 
 /*
+** Write a nice string representation of the contents of cell pMem
+** into buffer zBuf, length nBuf.
+*/
+#ifndef NDEBUG
+void prettyPrintMem(Mem *pMem, char *zBuf, int nBuf){
+  char *zCsr = zBuf;
+  int f = pMem->flags;
+
+  if( f&MEM_Blob ){
+    int i;
+    char c;
+    if( f & MEM_Dyn ){
+      c = 'z';
+      assert( (f & (MEM_Static|MEM_Ephem))==0 );
+    }else if( f & MEM_Static ){
+      c = 't';
+      assert( (f & (MEM_Dyn|MEM_Ephem))==0 );
+    }else if( f & MEM_Ephem ){
+      c = 'e';
+      assert( (f & (MEM_Static|MEM_Dyn))==0 );
+    }else{
+      c = 's';
+    }
+
+    zCsr += sprintf(zCsr, "%c[", c);
+    for(i=0; i<16 && i<pMem->n; i++){
+      zCsr += sprintf(zCsr, "%02X ", ((int)pMem->z[i] & 0xFF));
+    }
+    for(i=0; i<16 && i<pMem->n; i++){
+      char z = pMem->z[i];
+      if( z<32 || z>126 ) *zCsr++ = '.';
+      else *zCsr++ = z;
+    }
+
+    zCsr += sprintf(zCsr, "]");
+  }
+
+  *zCsr = '\0';
+}
+#endif
+
+/*
 ** Move data out of a btree key or data field and into a Mem structure.
 ** The data or key is taken from the entry that pCur is currently pointing
 ** to.  offset and amt determine what portion of the data or key to retrieve.
@@ -5274,7 +5316,7 @@ default: {
           fprintf(p->trace, " i:%lld", pTos[i].i);
         }else if( pTos[i].flags & MEM_Real ){
           fprintf(p->trace, " r:%g", pTos[i].r);
-        }else if( pTos[i].flags & (MEM_Str|MEM_Blob) ){
+        }else if( pTos[i].flags & MEM_Str ){
           int j, k;
           char zBuf[100];
           zBuf[0] = ' ';
@@ -5307,7 +5349,10 @@ default: {
           zBuf[k++] = 0;
           fprintf(p->trace, "%s", zBuf);
         }else{
-          fprintf(p->trace, " ???");
+          char zBuf[100];
+          prettyPrintMem(pTos, zBuf, 100);
+          fprintf(p->trace, " ");
+          fprintf(p->trace, zBuf);
         }
       }
       if( rc!=0 ) fprintf(p->trace," rc=%d",rc);
