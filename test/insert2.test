@@ -125,6 +125,7 @@ do_test insert2-3.1 {
   }
 } {1 2}
 do_test insert2-3.2 {
+  set x [db total_changes]
   execsql {
     BEGIN;
     INSERT INTO t4 VALUES(2,4);
@@ -138,7 +139,7 @@ do_test insert2-3.2 {
     INSERT INTO t4 VALUES(10,20);
     COMMIT;
   }
-  db changes
+  expr [db total_changes] - $x
 } {9}
 do_test insert2-3.2.1 {
   execsql {

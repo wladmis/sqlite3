@@ -448,13 +448,10 @@ int sqlite3_changes(sqlite *db){
 }
 
 /*
-** Return the number of changes produced by the last INSERT, UPDATE, or
-** DELETE statement to complete execution. The count does not include
-** changes due to SQL statements executed in trigger programs that were
-** triggered by that statement
+** Return the number of changes since the database handle was opened.
 */
-int sqlite3_last_statement_changes(sqlite *db){
-  return db->lsChange;
+int sqlite3_total_changes(sqlite3 *db){
+  return db->nTotalChange;
 }
 
 /*
@@ -952,7 +949,6 @@ int sqlite3_prepare(
     goto prepare_out;
   }
 
-  if( db->pVdbe==0 ){ db->nChange = 0; }
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
   sqlite3RunParser(&sParse, zSql, &zErrMsg);

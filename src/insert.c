@@ -245,6 +245,7 @@ void sqlite3Insert(
   */
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) goto insert_cleanup;
+  sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, pSelect || row_triggers_exist, pTab->iDb);
 
   /* if there are row triggers, allocate a temp table for new.* references. */
@@ -617,7 +618,6 @@ void sqlite3Insert(
     }
   }
 
-  sqlite3VdbeAddOp(v, OP_SetCounts, 0, 0);
   sqlite3EndWriteOperation(pParse);
 
   /*
@@ -967,6 +967,7 @@ void sqlite3CompleteInsertion(
   Vdbe *v;
   int nIdx;
   Index *pIdx;
+  int pik_flags;
 
   v = sqlite3GetVdbe(pParse);
   assert( v!=0 );
@@ -983,9 +984,9 @@ void sqlite3CompleteInsertion(
     sqlite3VdbeAddOp(v, OP_Dup, 1, 0);
     sqlite3VdbeAddOp(v, OP_PutIntKey, newIdx, 0);
   }
-  sqlite3VdbeAddOp(v, OP_PutIntKey, base,
-    (pParse->trigStack?0:OPFLAG_NCHANGE) |
-    (isUpdate?0:OPFLAG_LASTROWID) | OPFLAG_CSCHANGE);
+  pik_flags = (OPFLAG_NCHANGE|(isUpdate?0:OPFLAG_LASTROWID));
+  sqlite3VdbeAddOp(v, OP_PutIntKey, base, pik_flags);
+  
   if( isUpdate && recnoChng ){
     sqlite3VdbeAddOp(v, OP_Pop, 1, 0);
   }

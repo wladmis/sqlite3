@@ -209,6 +209,7 @@ void sqlite3Update(
   */
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
+  sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, 1, pTab->iDb);
 
   /* If we are trying to update a view, construct that view into
@@ -440,7 +441,6 @@ void sqlite3Update(
     sqlite3VdbeAddOp(v, OP_Close, oldIdx, 0);
   }
 
-  sqlite3VdbeAddOp(v, OP_SetCounts, 0, 0);
   sqlite3EndWriteOperation(pParse);
 
   /*
