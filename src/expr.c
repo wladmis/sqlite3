@@ -1039,12 +1039,14 @@ int sqlite3ExprType(Expr *p){
   if( p==0 ) return SQLITE_AFF_NONE;
   while( p ) switch( p->op ){
     case TK_CONCAT:
+    case TK_STRING:
       return SQLITE_AFF_TEXT;
 
     case TK_AS:
       p = p->pLeft;
       break;
 
+    case TK_VARIABLE:
     case TK_NULL:
       return SQLITE_AFF_NONE;
 

@@ -4237,65 +4237,6 @@ case OP_SortMakeRec: {
   break;
 }
 
-/* Opcode: SortMakeKey * * P3
-**
-** Convert the top few entries of the stack into a sort key.  The
-** number of stack entries consumed is the number of characters in 
-** the string P3.  One character from P3 is prepended to each entry.
-** The first character of P3 is prepended to the element lowest in
-** the stack and the last character of P3 is prepended to the top of
-** the stack.  All stack entries are separated by a \000 character
-** in the result.  The whole key is terminated by two \000 characters
-** in a row.
-**
-** "N" is substituted in place of the P3 character for NULL values.
-**
-** See also the MakeKey and MakeIdxKey opcodes.
-*/
-case OP_SortMakeKey: {
-  char *zNewKey;
-  int nByte;
-  int nField;
-  int i, j, k;
-  Mem *pRec;
-
-  nField = strlen(pOp->p3);
-  pRec = &pTos[1-nField];
-  nByte = 1;
-  for(i=0; i<nField; i++, pRec++){
-    if( pRec->flags & MEM_Null ){
-      nByte += 2;
-    }else{
-      Stringify(pRec);
-      nByte += pRec->n+2;
-    }
-  }
-  zNewKey = sqliteMallocRaw( nByte );
-  if( zNewKey==0 ) goto no_mem;
-  j = 0;
-  k = 0;
-  for(pRec=&pTos[1-nField], i=0; i<nField; i++, pRec++){
-    if( pRec->flags & MEM_Null ){
-      zNewKey[j++] = 'N';
-      zNewKey[j++] = 0;
-      k++;
-    }else{
-      zNewKey[j++] = pOp->p3[k++];
-      memcpy(&zNewKey[j], pRec->z, pRec->n-1);
-      j += pRec->n-1;
-      zNewKey[j++] = 0;
-    }
-  }
-  zNewKey[j] = 0;
-  assert( j<nByte );
-  popStack(&pTos, nField);
-  pTos++;
-  pTos->n = nByte;
-  pTos->flags = MEM_Str|MEM_Dyn;
-  pTos->z = zNewKey;
-  break;
-}
-
 /* Opcode: Sort * * P3
 **
 ** Sort all elements on the sorter.  The algorithm is a
