@@ -73,9 +73,12 @@
 ** Change these typedefs when porting to new architectures.
 */
 typedef unsigned int uptr;
-/*  typedef unsigned int u32; -- already defined in sqliteInt.h */
-typedef unsigned short int u16;
-typedef unsigned char u8;
+
+/* There are already definedin sqliteInt.h...
+** typedef unsigned int u32;
+** typedef unsigned short int u16;
+** typedef unsigned char u8;
+*/
 
 /*
 ** This macro casts a pointer to an integer.  Useful for doing

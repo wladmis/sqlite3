@@ -42,9 +42,12 @@
 #define TEMP_PAGES   25
 
 /*
-** The paging system deals with 32-bit integers.
+** Integers of known sizes.  These typedefs much change for architectures
+** where the sizes very.
 */
-typedef unsigned int u32;
+typedef unsigned int u32;             /* 4-byte unsigned integer */
+typedef unsigned short int u16;       /* 2-byte unsigned integer */
+typedef unsigned char u8;             /* 1-byte unsigned integer */
 
 /*
 ** If memory allocation problems are found, recompile with

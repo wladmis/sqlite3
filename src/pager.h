@@ -34,6 +34,12 @@
 #define SQLITE_PAGE_SIZE 1024
 
 /*
+** Maximum number of pages in one database.  (This is a limitation of
+** imposed by 4GB files size limits.)
+*/
+#define SQLITE_MAX_PAGE 1073741823
+
+/*
 ** The type used to represent a page number.  The first page in a file
 ** is called page 1.  0 is used to represent "not a page".
 */

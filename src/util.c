@@ -997,6 +997,7 @@ const char *sqliteErrStr(int rc){
     case SQLITE_PROTOCOL:   z = "database locking protocol failure";     break;
     case SQLITE_EMPTY:      z = "table contains no data";                break;
     case SQLITE_SCHEMA:     z = "database schema has changed";           break;
+    case SQLITE_TOOBIG:     z = "too much data for one table row";       break;
     default:                z = "unknown error";                         break;
   }
   return z;

@@ -161,6 +161,7 @@ int sqlite_exec(
 #define SQLITE_PROTOCOL  14   /* Database lock protocol error */
 #define SQLITE_EMPTY     15   /* Database table is empty */
 #define SQLITE_SCHEMA    16   /* The database schema changed */
+#define SQLITE_TOOBIG    17   /* Too much data for one row of a table */
 
 /* This function causes any pending database operation to abort and
 ** return at its earliest opportunity.  This routine is typically
