@@ -26,7 +26,7 @@ proc Product {pattern desc} {
     puts "<td valign=\"top\">[string trim $d2]</td></tr>"
   }
 }
-#cd doc
+cd doc
 
 proc Heading {title} {
   puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
