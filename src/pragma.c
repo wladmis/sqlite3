@@ -119,8 +119,10 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
 ** Check to make sure the schema is loaded.  Return 1 if it is not.
 */
 static int checkSchema(Parse *pParse){
-  if( SQLITE_OK!=sqlite3ReadSchema(pParse->db, &pParse->zErrMsg) ){
+  int rc = sqlite3ReadSchema(pParse->db, &pParse->zErrMsg);
+  if( SQLITE_OK!=rc ){
     pParse->nErr++;
+    pParse->rc = rc;
     return 1;
   }
   return 0;
@@ -500,6 +502,7 @@ void sqlite3Pragma(
           cnt++;
         }
       }
+      assert( cnt>0 );
       sqlite3VdbeAddOp(v, OP_IntegrityCk, cnt, i);
       sqlite3VdbeAddOp(v, OP_Dup, 0, 1);
       addr = sqlite3VdbeOp3(v, OP_String8, 0, 0, "ok", P3_STATIC);
