@@ -703,9 +703,7 @@ WhereInfo *sqlite3WhereBegin(
     sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
     sqlite3VdbeAddOp(v, OP_OpenRead, pTabList->a[i].iCursor, pTab->tnum);
     sqlite3VdbeAddOp(v, OP_SetNumColumns, pTabList->a[i].iCursor, pTab->nCol);
-    if( pTab->tnum>1 ){
-      sqlite3CodeVerifySchema(pParse, pTab->iDb);
-    }
+    sqlite3CodeVerifySchema(pParse, pTab->iDb);
     if( (pIx = pWInfo->a[i].pIdx)!=0 ){
       sqlite3VdbeAddOp(v, OP_Integer, pIx->iDb, 0);
       sqlite3VdbeOp3(v, OP_OpenRead, pWInfo->a[i].iCur, pIx->tnum,
