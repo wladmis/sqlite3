@@ -136,19 +136,19 @@ do_test pager-2.17 {
 } {0 {}}
 do_test pager-2.20 {
   pager_stats $::p1
-} {ref 1 page 1 max 10 size -1 state 1 err 0 hit 0 miss 2 ovfl 0}
+} {ref 1 page 1 max 10 size -1 state 1 err 0 hit 1 miss 2 ovfl 0}
 do_test pager-2.19 {
   pager_pagecount $::p1
 } {1}
 do_test pager-2.21 {
   pager_stats $::p1
-} {ref 1 page 1 max 10 size 1 state 1 err 0 hit 0 miss 2 ovfl 0}
+} {ref 1 page 1 max 10 size 1 state 1 err 0 hit 1 miss 2 ovfl 0}
 do_test pager-2.22 {
   page_unref $::g1
 } {}
 do_test pager-2.23 {
   pager_stats $::p1
-} {ref 0 page 0 max 10 size -1 state 0 err 0 hit 0 miss 2 ovfl 0}
+} {ref 0 page 0 max 10 size -1 state 0 err 0 hit 1 miss 2 ovfl 0}
 do_test pager-2.24 {
   set v [catch {
     page_get $::p1 1
