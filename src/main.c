@@ -436,7 +436,7 @@ static int nocaseCollatingFunc(
 /*
 ** Return the ROWID of the most recent insert
 */
-long long int sqlite3_last_insert_rowid(sqlite *db){
+sqlite_int64 sqlite3_last_insert_rowid(sqlite *db){
   return db->lastRowid;
 }
 
