@@ -217,7 +217,9 @@ char *sqliteStrNDup_(const char *z, int n, char *zFile, int line){
 ** no memory is available.
 */
 void *sqliteMalloc(int n){
-  void *p = malloc(n);
+  void *p;
+  if( n==0 ) return 0;
+  p = malloc(n);
   if( p==0 ){
     sqlite_malloc_failed++;
     return 0;
