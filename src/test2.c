@@ -499,6 +499,7 @@ static int fake_big_file(
     return TCL_ERROR;
   }
   if( Tcl_GetInt(interp, argv[1], &n) ) return TCL_ERROR;
+  memset(&fd, 0, sizeof(fd));
   rc = sqlite3OsOpenReadWrite(argv[2], &fd, &readOnly);
   if( rc ){
     Tcl_AppendResult(interp, "open failed: ", errorName(rc), 0);

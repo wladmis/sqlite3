@@ -366,9 +366,3 @@ do_test attach2-6.4 {
 db close
 
 finish_test
-
-
-
-
-
-

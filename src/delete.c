@@ -44,7 +44,7 @@ int sqlite3IsReadOnly(Parse *pParse, Table *pTab, int viewOk){
     return 1;
   }
   if( !viewOk && pTab->pSelect ){
-    sqlite3ErrorMsg(pParse, "cannot modify %s because it is a view",pTab->zName);
+    sqlite3ErrorMsg(pParse,"cannot modify %s because it is a view",pTab->zName);
     return 1;
   }
   return 0;
