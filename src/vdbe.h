@@ -50,9 +50,9 @@ typedef struct VdbeOp VdbeOp;
 ** Allowed values of VdbeOp.p3type
 */
 #define P3_NOTUSED    0   /* The P3 parameter is not used */
-#define P3_DYNAMIC    1   /* Pointer to a string obtained from sqliteMalloc() */
-#define P3_STATIC   (-1)  /* Pointer to a static string */
-#define P3_POINTER  (-2)  /* P3 is a pointer to some structure or object */
+#define P3_DYNAMIC  (-1)  /* Pointer to a string obtained from sqliteMalloc() */
+#define P3_STATIC   (-2)  /* Pointer to a static string */
+#define P3_POINTER  (-3)  /* P3 is a pointer to some structure or object */
 
 /*
 ** The following macro converts a relative address in the p2 field

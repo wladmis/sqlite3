@@ -726,6 +726,7 @@ static int test_compile(
   }
   if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
   rc = sqlite_compile(db, argv[2], &zTail, &vm, &zErr);
+  Tcl_SetVar(interp, argv[3], zTail, 0);
   if( rc ){
     assert( vm==0 );
     sprintf(zBuf, "(%d) ", rc);
@@ -737,7 +738,6 @@ static int test_compile(
     sprintf(zBuf, "%p", vm);
     Tcl_AppendResult(interp, zBuf, 0);
   }
-  Tcl_SetVar(interp, argv[3], zTail, 0);
   return TCL_OK;
 }
 

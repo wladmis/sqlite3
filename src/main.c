@@ -716,7 +716,9 @@ int sqlite_finalize(
   sqlite_vm *pVm,            /* The virtual machine to be destroyed */
   char **pzErrMsg            /* OUT: Write error messages here */
 ){
-  return sqliteVdbeFinalize((Vdbe*)pVm, pzErrMsg);
+  int rc = sqliteVdbeFinalize((Vdbe*)pVm, pzErrMsg);
+  sqliteStrRealloc(pzErrMsg);
+  return rc;
 }
 
 /*

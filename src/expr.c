@@ -1216,7 +1216,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       } else {
 	  assert( pExpr->iColumn == OE_Ignore );
 	  sqliteVdbeAddOp(v, OP_Goto, 0, pParse->trigStack->ignoreJump);
-	  sqliteVdbeChangeP3(v, -1, "(IGNORE jump)", -1);
+	  sqliteVdbeChangeP3(v, -1, "(IGNORE jump)", 0);
       }
     }
     break;

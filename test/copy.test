@@ -196,7 +196,7 @@ do_test copy-5.2 {
     COPY t1 FROM 'data6.txt' USING DELIMITERS '|';
     SELECT * FROM t1;
   }
-} {1 {constraint failed}}
+} {1 {uniqueness constraint failed}}
 do_test copy-5.3 {
   set fd [open data6.txt w]
   puts $fd "33|22|44"

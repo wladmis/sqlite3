@@ -924,6 +924,7 @@ void sqliteRealToSortable(double r, char *);
   char *sqliteStrNDup(const char*, int);
 # define sqliteCheckMemory(a,b)
 #endif
+char *sqliteMPrintf(const char *,...);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);
 void sqliteDequote(char*);

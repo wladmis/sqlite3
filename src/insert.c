@@ -657,7 +657,11 @@ void sqliteGenerateConstraintChecks(
       case OE_Rollback:
       case OE_Abort:
       case OE_Fail: {
+        char *zMsg = 0;
         sqliteVdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, onError);
+        sqliteSetString(&zMsg, pTab->zName, ".", pTab->aCol[i].zName,
+                        " may not be NULL", 0);
+        sqliteVdbeChangeP3(v, -1, zMsg, P3_DYNAMIC);
         break;
       }
       case OE_Ignore: {
@@ -707,6 +711,7 @@ void sqliteGenerateConstraintChecks(
         case OE_Abort:
         case OE_Fail: {
           sqliteVdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, onError);
+          sqliteVdbeChangeP3(v, -1, "PRIMARY KEY must be unique", P3_STATIC);
           break;
         }
         case OE_Ignore: {
@@ -760,6 +765,7 @@ void sqliteGenerateConstraintChecks(
       case OE_Abort:
       case OE_Fail: {
         sqliteVdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, onError);
+        sqliteVdbeChangeP3(v, -1, "uniqueness constraint failed", P3_STATIC);
         break;
       }
       case OE_Ignore: {
