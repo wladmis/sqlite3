@@ -3983,7 +3983,7 @@ case OP_ContextPop: {
 **
 ** The TOS is the key and the NOS is the data.  Pop both from the stack
 ** and put them on the sorter.  The key and data should have been
-** made using SortMakeKey and SortMakeRec, respectively.
+** made using the MakeRecord opcode.
 */
 case OP_SortPut: {
   Mem *pNos = &pTos[-1];
