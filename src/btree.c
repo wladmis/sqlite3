@@ -1325,6 +1325,30 @@ int sqliteBtreeFirst(BtCursor *pCur, int *pRes){
   return rc;
 }
 
+/* Move the cursor to the last entry in the table.  Return SQLITE_OK
+** on success.  Set *pRes to 0 if the cursor actually points to something
+** or set *pRes to 1 if the table is empty and there is no first element.
+*/
+int sqliteBtreeLast(BtCursor *pCur, int *pRes){
+  int rc;
+  Pgno pgno;
+  if( pCur->pPage==0 ) return SQLITE_ABORT;
+  rc = moveToRoot(pCur);
+  if( rc ) return rc;
+  if( pCur->pPage->nCell==0 ){
+    *pRes = 1;
+    return SQLITE_OK;
+  }
+  *pRes = 0;
+  while( (pgno = pCur->pPage->u.hdr.rightChild)!=0 ){
+    rc = moveToChild(pCur, pgno);
+    if( rc ) return rc;
+  }
+  pCur->idx = pCur->pPage->nCell-1;
+  pCur->bSkipNext = 0;
+  return rc;
+}
+
 /* Move the cursor so that it points to an entry near pKey.
 ** Return a success code.
 **

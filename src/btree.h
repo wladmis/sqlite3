@@ -43,6 +43,7 @@ int sqliteBtreeDelete(BtCursor*);
 int sqliteBtreeInsert(BtCursor*, const void *pKey, int nKey,
                                  const void *pData, int nData);
 int sqliteBtreeFirst(BtCursor*, int *pRes);
+int sqliteBtreeLast(BtCursor*, int *pRes);
 int sqliteBtreeNext(BtCursor*, int *pRes);
 int sqliteBtreeKeySize(BtCursor*, int *pSize);
 int sqliteBtreeKey(BtCursor*, int offset, int amt, char *zBuf);
