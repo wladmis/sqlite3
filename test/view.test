@@ -68,7 +68,7 @@ do_test view-1.6 {
     DROP TABLE t1;
     SELECT * FROM v1 ORDER BY a;
   }
-} {1 {no such table: t1}}
+} {1 {no such table: main.t1}}
 do_test view-1.7 {
   execsql {
     CREATE TABLE t1(x,a,b,c);
