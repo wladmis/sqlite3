@@ -14,7 +14,7 @@ Features include:
 </p>
 
 <p><ul>
-<li>Transaction are atomic, consistent, isolated, and durable (ACID)
+<li>Transactions are atomic, consistent, isolated, and durable (ACID)
     even after system crashes and power failures.
 <li>Zero-configuration - no setup or administration needed.</li>
 <li>Implements most of SQL92.
