@@ -725,7 +725,7 @@ static int sqliteMemOpenTempFile(Dbbe *pDbbe, FILE **ppFile){
   const char *zTemps[] = { "/usr/tmp", "/var/tmp", "/tmp", "/temp", 0};
 #endif
 #if OS_WIN
-  const char *zTemps[] = { "c:/temp", "c:", 0};
+  const char *zTemps[] = { "/temp", "c:/temp", "c:", "d:", "e:", 0};
 #endif
   const char *zDir;
   int i;
