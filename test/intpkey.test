@@ -179,6 +179,7 @@ do_test intpkey-2.1.4 {
     SELECT * FROM t1 WHERE b>='y' AND rowid<10
   }
 } {-3 y z}
+
 do_test intpkey-2.2 {
   execsql {
     UPDATE t1 SET a=8 WHERE b=='y';

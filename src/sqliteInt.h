@@ -547,3 +547,7 @@ void sqliteCommitTransaction(Parse*);
 void sqliteRollbackTransaction(Parse*);
 char *sqlite_mprintf(const char *, ...);
 int sqliteExprIsConstant(Expr*);
+void sqliteGenerateRowDelete(Vdbe*, Table*, int);
+void sqliteGenerateRowIndexDelete(Vdbe*, Table*, int, char*);
+void sqliteGenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
+void sqliteCompleteInsertion(Parse*, Table*, int, char*, int);
