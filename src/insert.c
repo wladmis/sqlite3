@@ -307,7 +307,7 @@ void sqlite3Insert(
       */
       sqlite3VdbeChangeP2(v, iInitCode, sqlite3VdbeCurrentAddr(v));
       sqlite3VdbeAddOp(v, OP_OpenTemp, srcTab, 0);
-      sqlite3VdbeAddOp(v, OP_SetNumColumns, srcTab, pTab->nCol);
+      sqlite3VdbeAddOp(v, OP_SetNumColumns, srcTab, nColumn);
       sqlite3VdbeAddOp(v, OP_Goto, 0, iSelectLoop);
       sqlite3VdbeResolveLabel(v, iCleanup);
     }else{
