@@ -20,12 +20,13 @@ set ISQUICK 1
 
 set EXCLUDE {
   all.test
-  quick.test
   btree2.test
+  corrupt.test
+  crash.test
   malloc.test
   memleak.test
   misuse.test
-  crash.test
+  quick.test
   utf16.test
 }
 
