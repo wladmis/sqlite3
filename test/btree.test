@@ -990,6 +990,9 @@ do_test btree-12.12 {
   btree_next $::c1
   btree_key $::c1
 } {402}
+do_test btree-13.1 {
+  btree_sanity_check $::b1 2 3
+} {}
 
 # To Do:
 #

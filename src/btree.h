@@ -61,4 +61,5 @@ int sqliteBtreeUpdateMeta(Btree*, int*);
 int sqliteBtreePageDump(Btree*, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
 Pager *sqliteBtreePager(Btree*);
+char *sqliteBtreeSanityCheck(Btree*, int*, int);
 #endif
