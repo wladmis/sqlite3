@@ -38,7 +38,7 @@ Table *sqlite3SrcListLookup(Parse *pParse, SrcList *pSrc){
 ** writable return 0;
 */
 int sqlite3IsReadOnly(Parse *pParse, Table *pTab, int viewOk){
-  if( pTab->readOnly ){
+  if( pTab->readOnly && (pParse->db->flags & SQLITE_WriteSchema)==0 ){
     sqlite3ErrorMsg(pParse, "table %s may not be modified", pTab->zName);
     return 1;
   }

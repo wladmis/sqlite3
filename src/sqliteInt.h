@@ -443,6 +443,7 @@ struct sqlite3 {
                                           /*   result set is empty */
 #define SQLITE_SqlTrace       0x00000200  /* Debug print SQL as it executes */
 #define SQLITE_VdbeListing    0x00000400  /* Debug listings of VDBE programs */
+#define SQLITE_WriteSchema    0x00000800  /* OK to update SQLITE_MASTER */
 
 /*
 ** Possible values for the sqlite.magic field.
