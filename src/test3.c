@@ -72,7 +72,7 @@ static int btree_open(
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
   }
-  sprintf(zBuf,"0x%x",(int)pBt);
+  sprintf(zBuf,"%p", pBt);
   Tcl_AppendResult(interp, zBuf, 0);
   return TCL_OK;
 }
