@@ -159,6 +159,25 @@ static const unsigned char aJournalMagic[] = {
 #define pager_hash(PN)  ((PN)%N_PG_HASH)
 
 /*
+** Enable reference count tracking here:
+*/
+#if SQLITE_TEST
+int pager_refinfo_enable = 0;
+  static void pager_refinfo(PgHdr *p){
+    static int cnt = 0;
+    if( !pager_refinfo_enable ) return;
+    printf(
+       "REFCNT: %4d addr=0x%08x nRef=%d\n",
+       p->pgno, (int)PGHDR_TO_DATA(p), p->nRef
+    );
+    cnt++;   /* Something to set a breakpoint on */
+  }
+# define REFINFO(X)  pager_refinfo(X)
+#else
+# define REFINFO(X)
+#endif
+
+/*
 ** Attempt to acquire a read lock (if wrlock==0) or a write lock (if wrlock==1)
 ** on the database file.  Return 0 on success and non-zero if the lock 
 ** could not be acquired.
@@ -579,6 +598,7 @@ static void page_ref(PgHdr *pPg){
     pPg->pPager->nRef++;
   }
   pPg->nRef++;
+  REFINFO(pPg);
 }
 
 /*
@@ -754,6 +774,7 @@ int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage){
     pPg->inJournal = 0;
     pPg->dirty = 0;
     pPg->nRef = 1;
+    REFINFO(pPg);
     pPager->nRef++;
     h = pager_hash(pgno);
     pPg->pNextHash = pPager->aHash[h];
@@ -830,6 +851,7 @@ int sqlitepager_unref(void *pData){
   assert( pPg->nRef>0 );
   pPager = pPg->pPager;
   pPg->nRef--;
+  REFINFO(pPg);
 
   /* When the number of references to a page reach 0, call the
   ** destructor and add the page to the freelist.
@@ -1034,3 +1056,17 @@ int *sqlitepager_stats(Pager *pPager){
   a[8] = pPager->nOvfl;
   return a;
 }
+
+#if SQLITE_TEST
+/*
+** Print a listing of all referenced pages and their ref count.
+*/
+void sqlitepager_refdump(Pager *pPager){
+  PgHdr *pPg;
+  for(pPg=pPager->pAll; pPg; pPg=pPg->pNextAll){
+    if( pPg->nRef<=0 ) continue;
+    printf("PAGE %3d addr=0x%08x nRef=%d\n", 
+       pPg->pgno, (int)PGHDR_TO_DATA(pPg), pPg->nRef);
+  }
+}
+#endif

@@ -57,3 +57,8 @@ int sqlitepager_pagecount(Pager*);
 int sqlitepager_commit(Pager*);
 int sqlitepager_rollback(Pager*);
 int *sqlitepager_stats(Pager*);
+
+#ifdef SQLITE_TEST
+void sqlitepager_refdump(Pager*);
+int pager_refinfo_enable;
+#endif

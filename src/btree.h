@@ -60,4 +60,5 @@ int sqliteBtreeUpdateMeta(Btree*, int*);
 #ifdef SQLITE_TEST
 int sqliteBtreePageDump(Btree*, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
+Pager *sqliteBtreePager(Btree*);
 #endif
