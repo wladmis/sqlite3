@@ -3714,7 +3714,7 @@ case OP_IdxIsNull: {
   k = sqlite3GetVarint32(z, &serial_type);
   for(; k<n && i>0; i--){
     k += sqlite3GetVarint32(&z[k], &serial_type);
-    if( serial_type==6 ){   /* Serial type 6 is a NULL */
+    if( serial_type==0 ){   /* Serial type 0 is a NULL */
       pc = pOp->p2-1;
       break;
     }
