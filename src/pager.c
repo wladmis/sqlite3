@@ -1659,9 +1659,7 @@ static void memoryTruncate(Pager *pPager){
 */
 int sqlite3pager_truncate(Pager *pPager, Pgno nPage){
   int rc;
-  if( pPager->dbSize<0 ){
-    sqlite3pager_pagecount(pPager);
-  }
+  sqlite3pager_pagecount(pPager);
   if( pPager->errMask!=0 ){
     rc = pager_errcode(pPager);
     return rc;
@@ -2211,7 +2209,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
     if( pPager->nExtra>0 ){
       memset(PGHDR_TO_EXTRA(pPg, pPager), 0, pPager->nExtra);
     }
-    if( pPager->dbSize<0 ) sqlite3pager_pagecount(pPager);
+    sqlite3pager_pagecount(pPager);
     if( pPager->errMask!=0 ){
       sqlite3pager_unref(PGHDR_TO_DATA(pPg));
       rc = pager_errcode(pPager);
@@ -2917,6 +2915,7 @@ int sqlite3pager_stmt_begin(Pager *pPager){
   int rc;
   char zTemp[SQLITE_TEMPNAME_SIZE];
   assert( !pPager->stmtInUse );
+  assert( pPager->dbSize>=0 );
   TRACE2("STMT-BEGIN %d\n", pPager->fd.h);
   if( pPager->memDb ){
     pPager->stmtInUse = 1;
