@@ -15,11 +15,15 @@ puts "<p align=center>
 (This page was last modified on [lrange $rcsid 3 4] GMT)
 </p>"
 
-# puts {
-# <blockquote><font color="red"><b>This document is
-# currently under development.  It is incomplete and contains
-# errors.  Use it accordingly.</b></font></blockquote>
-# }
+puts {
+<blockquote><font color="red"><b>
+This document describes the
+virtual machine used in SQLite version 1.0.  It has not been
+updated to reflect important changes that have occurred for
+version 2.0.  Some of the information presented below is
+obsolete and/or incorrect.  Use it accordingly.
+</b></font></blockquote>
+}
 
 puts {
 <p>If you want to know how the SQLite library works internally,
