@@ -4582,7 +4582,11 @@ int sqlite3BtreeDropTable(Btree *pBt, int iTable, int *piMoved){
         *piMoved = maxRootPgno;
       }
 
-      rc = sqlite3BtreeUpdateMeta(pBt, 4, maxRootPgno-1);
+      maxRootPgno--;
+      if( maxRootPgno==PTRMAP_PAGENO(pBt->pageSize, maxRootPgno) ){
+        maxRootPgno--;
+      }
+      rc = sqlite3BtreeUpdateMeta(pBt, 4, maxRootPgno);
     }else{
       rc = freePage(pPage);
       releasePage(pPage);
