@@ -542,6 +542,9 @@ static void minMaxFinalize(sqlite_func *context){
 /****************************************************************************
 ** Time and date functions.
 **
+** 1970-01-01 00:00:00 is JD 2440587.5.
+** 2000-01-01 00:00:00 is JD 2451544.5
+**
 ** SQLite processes all times and dates as Julian Day numbers.  The
 ** dates and times are stored as the number of days since noon
 ** in Greenwich on November 24, 4714 B.C. according to the Gregorian

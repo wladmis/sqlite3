@@ -380,6 +380,12 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       *tokenType = TK_ID;
       return i;
     }
+    case '$': {
+      if( !isdigit(z[1]) ) break;
+      for(i=1; z[i] && isdigit(z[i]); i++){}
+      *tokenType = TK_VARIABLE;
+      return i;
+    }
     default: {
       if( !isIdChar[*z] ){
         break;
