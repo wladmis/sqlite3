@@ -311,7 +311,7 @@ do_test pragma-6.1 {
     lappend res $idx $name
   }
   set res
-} {0 main 1 temp 2 aux}
+} {0 main 2 aux}
 do_test pragma-6.2 {
   execsql {
     pragma table_info(t2)
