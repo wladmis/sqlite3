@@ -1151,6 +1151,12 @@ page1_init_failed:
 */
 static void unlockBtreeIfUnused(Btree *pBt){
   if( pBt->inTrans==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
+    if( pBt->pPage1->aData==0 ){
+      MemPage *pPage = pBt->pPage1;
+      pPage->aData = &((char*)pPage)[-pBt->pageSize];
+      pPage->pBt = pBt;
+      pPage->pgno = 1;
+    }
     releasePage(pBt->pPage1);
     pBt->pPage1 = 0;
     pBt->inStmt = 0;
@@ -1585,6 +1591,7 @@ static void getCellInfo(BtCursor *pCur){
   }else{
 #ifndef NDEBUG
     CellInfo info;
+    memset(&info, 0, sizeof(info));
     parseCell(pCur->pPage, pCur->idx, &info);
     assert( memcmp(&info, &pCur->info, sizeof(info))==0 );
 #endif
