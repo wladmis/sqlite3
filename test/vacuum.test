@@ -208,5 +208,6 @@ do_test vacuum-7.0 {
     VACUUM;
   } db2
 } {}
+db2 close
 
 # finish_test
