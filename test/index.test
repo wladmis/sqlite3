@@ -601,6 +601,54 @@ do_test index-18.4 {
     CREATE TRIGGER sqlite_tr1 BEFORE INSERT ON t7 BEGIN SELECT 1; END;
   }
 } {1 {object name reserved for internal use: sqlite_tr1}}
+do_test index-18.5 {
+  execsql {
+    DROP TABLE t7;
+  }
+} {}
+
+# These tests ensure that if multiple table definition constraints are
+# implemented by a single indice, the correct ON CONFLICT policy applies.
+do_test index-19.1 {
+  execsql {
+    CREATE TABLE t7(a UNIQUE PRIMARY KEY);
+    CREATE TABLE t8(a UNIQUE PRIMARY KEY ON CONFLICT ROLLBACK);
+    INSERT INTO t7 VALUES(1);
+    INSERT INTO t8 VALUES(1);
+  }
+} {}
+do_test index-19.2 {
+  catchsql {
+    BEGIN;
+    INSERT INTO t7 VALUES(1);
+  }
+} {1 {column a is not unique}}
+do_test index-19.3 {
+  catchsql {
+    BEGIN;
+  }
+} {1 {cannot start a transaction within a transaction}}
+do_test index-19.4 {
+  catchsql {
+    INSERT INTO t8 VALUES(1);
+  }
+} {1 {column a is not unique}}
+do_test index-19.5 {
+  catchsql {
+    BEGIN;
+    COMMIT;
+  }
+} {0 {}}
+do_test index-19.6 {
+  catchsql {
+    DROP TABLE t7;
+    DROP TABLE t8;
+    CREATE TABLE t7(
+       a PRIMARY KEY ON CONFLICT FAIL, 
+       UNIQUE(a) ON CONFLICT IGNORE
+    );
+  }
+} {1 {conflicting ON CONFLICT clauses specified}}
 
 finish_test
 
