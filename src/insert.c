@@ -50,7 +50,7 @@ void sqlite3IndexAffinityStr(Vdbe *v, Index *pIdx){
     pIdx->zColAff[pIdx->nColumn] = '\0';
   }
  
-  sqlite3VdbeChangeP3(v, -1, pIdx->zColAff, P3_STATIC);
+  sqlite3VdbeChangeP3(v, -1, pIdx->zColAff, 0);
 }
 
 /*
@@ -91,7 +91,7 @@ void sqlite3TableAffinityStr(Vdbe *v, Table *pTab){
     pTab->zColAff = zColAff;
   }
 
-  sqlite3VdbeChangeP3(v, -1, pTab->zColAff, P3_STATIC);
+  sqlite3VdbeChangeP3(v, -1, pTab->zColAff, 0);
 }
 
 

@@ -306,6 +306,7 @@ catchsql {COMMIT;}
 # Test schema-query pragmas
 #
 do_test pragma-6.1 {
+  set res {}
   foreach {idx name file} [execsql {pragma database_list}] {
     lappend res $idx $name
   }

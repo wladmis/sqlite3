@@ -3764,6 +3764,42 @@ case OP_ParseSchema: {
   break;  
 }
 
+/* Opcode: DropTable P1 * P3
+**
+** Remove the internal (in-memory) data structures that describe
+** the table named P3 in database P1.  This is called after a table
+** is dropped in order to keep the internal representation of the
+** schema consistent with what is on disk.
+*/
+case OP_DropTable: {
+  sqlite3UnlinkAndDeleteTable(db, pOp->p1, pOp->p3);
+  break;
+}
+
+/* Opcode: DropIndex P1 * P3
+**
+** Remove the internal (in-memory) data structures that describe
+** the index named P3 in database P1.  This is called after an index
+** is dropped in order to keep the internal representation of the
+** schema consistent with what is on disk.
+*/
+case OP_DropIndex: {
+  sqlite3UnlinkAndDeleteIndex(db, pOp->p1, pOp->p3);
+  break;
+}
+
+/* Opcode: DropTrigger P1 * P3
+**
+** Remove the internal (in-memory) data structures that describe
+** the trigger named P3 in database P1.  This is called after a trigger
+** is dropped in order to keep the internal representation of the
+** schema consistent with what is on disk.
+*/
+case OP_DropTrigger: {
+  sqlite3UnlinkAndDeleteTrigger(db, pOp->p1, pOp->p3);
+  break;
+}
+
 
 /* Opcode: IntegrityCk * P2 *
 **
