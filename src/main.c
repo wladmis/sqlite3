@@ -599,6 +599,19 @@ int sqlite_complete(const char *zSql){
         if( *zSql==0 ) return 0;
         break;
       }
+      case '/': {
+        if( zSql[1]!='*' ){
+          isComplete = 0;
+          seenText = 1;
+          seenCreate = 0;
+          break;
+        }
+        zSql += 2;
+        while( zSql[0] && (zSql[0]!='*' || zSql[1]!='/') ){ zSql++; }
+        if( zSql[0]==0 ) return 0;
+        zSql += 2;
+        break;
+      }
       case '-': {
         if( zSql[1]!='-' ){
           isComplete = 0;
@@ -662,7 +675,7 @@ int sqlite_complete(const char *zSql){
     }
     zSql++;
   }
-  return seenText && isComplete && requireEnd==0;
+  return /* seenText && */ isComplete && requireEnd==0;
 }
 
 /*
