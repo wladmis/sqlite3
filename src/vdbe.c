@@ -2301,10 +2301,6 @@ case OP_NewRecno: {
     ** to double the speed of the COPY operation.
     */
     int res, rx, cnt, x;
-    union {
-       char zBuf[sizeof(int)];
-       int i;
-    } ux;
     cnt = 0;
     v = db->nextRowid;
     do{

@@ -258,7 +258,7 @@ static int sqlite_mprintf_double(
 /*
 ** Usage: sqlite_malloc_fail N
 **
-** Rig sqliteMalloc() to fail on the N-th call.  Turn of this mechanism
+** Rig sqliteMalloc() to fail on the N-th call.  Turn off this mechanism
 ** and reset the sqlite_malloc_failed variable is N==0.
 */
 #ifdef MEMORY_DEBUG
