@@ -38,7 +38,7 @@ extern "C" {
 ** global variables.
 */
 extern const char sqlite3_version[];
-const char *sqlite3_libversion();
+const char *sqlite3_libversion(void);
 
 /*
 ** Each open sqlite database is represented by an instance of the
