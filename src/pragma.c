@@ -539,6 +539,20 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp(v, OP_Callback, 3, 0);
     }
   }else
+
+  if( sqlite3StrICmp(zLeft, "collation_list")==0 ){
+    int i = 0;
+    HashElem *p;
+    sqlite3VdbeSetNumCols(v, 2);
+    sqlite3VdbeSetColName(v, 0, "seq", P3_STATIC);
+    sqlite3VdbeSetColName(v, 1, "name", P3_STATIC);
+    for(p=sqliteHashFirst(&db->aCollSeq); p; p=sqliteHashNext(p)){
+      CollSeq *pColl = (CollSeq *)sqliteHashData(p);
+      sqlite3VdbeAddOp(v, OP_Integer, i++, 0);
+      sqlite3VdbeOp3(v, OP_String8, 0, 0, pColl->zName, 0);
+      sqlite3VdbeAddOp(v, OP_Callback, 2, 0);
+    }
+  }else
 #endif /* SQLITE_OMIT_SCHEMA_PRAGMAS */
 
 #ifndef SQLITE_OMIT_FOREIGN_KEY
