@@ -1328,6 +1328,11 @@ int sqliteVdbeExec(
             sqliteSetString(pzErrMsg,"table ", pOp->p3, " is locked", 0);
             break;
           }
+          case SQLITE_PERM: {
+            sqliteSetString(pzErrMsg, pOp->p2 ? "write" : "read",
+              " permission denied for table ", pOp->p3, 0);
+            break;
+          }
           case SQLITE_READONLY: {
             sqliteSetString(pzErrMsg,"table ", pOp->p3, 
                " is already opened for reading", 0);

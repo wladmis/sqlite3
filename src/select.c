@@ -198,7 +198,7 @@ void sqliteSelect(
   */
   if( distinct ){
     distinct = pTabList->nId*2+1;
-    sqliteVdbeAddOp(v, OP_Open, distinct, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_Open, distinct, 1, 0, 0);
   }
   pWInfo = sqliteWhereBegin(pParse, pTabList, pWhere, 0);
   if( pWInfo==0 ) goto select_cleanup;

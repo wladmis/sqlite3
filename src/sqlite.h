@@ -115,9 +115,12 @@ int sqlite_exec(
 #define SQLITE_OK        0    /* Successful result */
 #define SQLITE_INTERNAL  1    /* An internal logic error in SQLite */
 #define SQLITE_ERROR     2    /* SQL error or missing database */
-#define SQLITE_ABORT     3    /* Callback routine requested an abort */
-#define SQLITE_BUSY      4    /* One or more database files are locked */
-#define SQLITE_NOMEM     5    /* A malloc() failed */
+#define SQLITE_PERM      3    /* Access permission denied */
+#define SQLITE_ABORT     4    /* Callback routine requested an abort */
+#define SQLITE_BUSY      5    /* One or more database files are locked */
+#define SQLITE_NOMEM     6    /* A malloc() failed */
+#define SQLITE_READONLY  7    /* Attempt to write a readonly database */
+
 
 
 /* This function returns true if the given input string comprises

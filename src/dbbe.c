@@ -297,7 +297,13 @@ int sqliteDbbeOpenTable(
     pFile->pNext = pBe->pOpen;
     pBe->pOpen = pFile;
     if( pFile->dbf==0 ){
-      rc = SQLITE_BUSY;
+      if( !writeable && access(zFile,0) ){
+        rc = SQLITE_OK;
+      }else if( access(zFile,W_OK|R_OK) ){
+        rc = SQLITE_PERM;
+      }else{
+        rc = SQLITE_BUSY;
+      }
     }
   }else{
     sqliteFree(zFile);
