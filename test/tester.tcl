@@ -25,6 +25,18 @@
 #
 # $Id$
 
+# Create a test database
+#
+file delete -force testdb
+file mkdir testdb
+sqlite db testdb
+
+# Abort early if this script has been run before.
+#
+if {[info exists nTest]} return
+
+# Set the test counters to zero
+#
 set nErr 0
 set nTest 0
 
@@ -65,12 +77,6 @@ proc finish_test {} {
   puts "$nErr errors out of $nTest tests"
   exit $nErr
 }
-
-# Create a test database
-#
-file delete -force testdb
-file mkdir testdb
-sqlite db testdb
 
 # A procedure to execute SQL
 #
