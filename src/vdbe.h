@@ -202,7 +202,7 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Noop              117
 #define OP_Strlen            118
 #define OP_Substr            119
-#define OP_UserFunc          120
+#define OP_Function          120
 
 #define OP_Limit             121
 

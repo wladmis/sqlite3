@@ -659,8 +659,14 @@ static int isNum(const char *z){
 */
 int sqliteCompare(const char *atext, const char *btext){
   int result;
-  int isNumA = isNum(atext);
-  int isNumB = isNum(btext);
+  int isNumA, isNumB;
+  if( atext==0 ){
+    return -(btext!=0);
+  }else if( btext==0 ){
+    return 1;
+  }
+  isNumA = isNum(atext);
+  isNumB = isNum(btext);
   if( isNumA ){
     if( !isNumB ){
       result = -1;
