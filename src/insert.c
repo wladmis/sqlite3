@@ -292,14 +292,13 @@ void sqliteInsert(
         sqliteVdbeAddOp(v, OP_Column, srcTab, keyColumn);
       }else{
         sqliteExprCode(pParse, pList->a[keyColumn].pExpr);
-
-        /* If the PRIMARY KEY expression is NULL, then use OP_NewRecno
-        ** to generate a unique primary key value.
-        */
-        sqliteVdbeAddOp(v, OP_NotNull, -1, sqliteVdbeCurrentAddr(v)+3);
-        sqliteVdbeAddOp(v, OP_Pop, 1, 0);
-        sqliteVdbeAddOp(v, OP_NewRecno, base, 0);
       }
+      /* If the PRIMARY KEY expression is NULL, then use OP_NewRecno
+      ** to generate a unique primary key value.
+      */
+      sqliteVdbeAddOp(v, OP_NotNull, -1, sqliteVdbeCurrentAddr(v)+3);
+      sqliteVdbeAddOp(v, OP_Pop, 1, 0);
+      sqliteVdbeAddOp(v, OP_NewRecno, base, 0);
       sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
     }else{
       sqliteVdbeAddOp(v, OP_NewRecno, base, 0);

@@ -455,5 +455,11 @@ do_test intpkey-10.2 {
     SELECT * from t2 WHERE x=2;
   }
 } {2 2 3}
+do_test intpkey-10.3 {
+  execsql {
+    INSERT INTO t2 SELECT NULL, z, y FROM t2;
+    SELECT * FROM t2;
+  }
+} {1 1 2 2 2 3 3 2 1 4 3 2}
 
 finish_test
