@@ -610,6 +610,13 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
   v = sqliteGetVdbe(pParse);
   if( v==0 ) return 1;
 
+  /* Create the destination temporary table if necessary
+  */
+  if( eDest==SRT_TempTable ){
+    sqliteVdbeAddOp(v, OP_OpenTemp, iParm, 0);
+    eDest = SRT_Table;
+  }
+
   /* Process the UNION or INTERSECTION
   */
   base = pParse->nTab;
