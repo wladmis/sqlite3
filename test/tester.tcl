@@ -139,6 +139,7 @@ proc finish_test {} {
 # A procedure to execute SQL
 #
 proc execsql {sql} {
+  # puts "SQL = $sql"
   return [db eval $sql]
 }
 
