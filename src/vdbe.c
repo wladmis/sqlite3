@@ -1416,7 +1416,7 @@ case OP_MustBeInt: {
     }
     if( !sqlite3atoi64(pTos->z, &v) ){
       double r;
-      if( !sqlite3IsNumber(pTos->z, 0, db->enc) ){
+      if( !sqlite3IsNumber(pTos->z, 0, SQLITE_UTF8) ){
         goto mismatch;
       }
       Realify(pTos);
