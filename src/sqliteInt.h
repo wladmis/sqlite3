@@ -1100,7 +1100,7 @@ struct Trigger {
   u8 iDb;                 /* Database containing this trigger               */
   u8 iTabDb;              /* Database containing Trigger.table              */
   u8 op;                  /* One of TK_DELETE, TK_UPDATE, TK_INSERT         */
-  u8 tr_tm;               /* One of TK_BEFORE, TK_AFTER */
+  u8 tr_tm;               /* One of TRIGGER_BEFORE, TRIGGER_AFTER */
   Expr *pWhen;            /* The WHEN clause of the expresion (may be NULL) */
   IdList *pColumns;       /* If this is an UPDATE OF <column-list> trigger,
                              the <column-list> is stored here */
@@ -1110,6 +1110,16 @@ struct Trigger {
   TriggerStep *step_list; /* Link list of trigger program steps             */
   Trigger *pNext;         /* Next trigger associated with the table */
 };
+
+/*
+** A trigger is either a BEFORE or an AFTER trigger.  The following constants
+** determine which. 
+**
+** If there are multiple triggers, you might of some BEFORE and some AFTER.
+** In that cases, the constants below can be ORed together.
+*/
+#define TRIGGER_BEFORE  1
+#define TRIGGER_AFTER   2
 
 /*
  * An instance of struct TriggerStep is used to store a single SQL statement
@@ -1399,7 +1409,7 @@ void sqlite3ChangeCookie(sqlite3*, Vdbe*, int);
   void sqlite3FinishTrigger(Parse*, TriggerStep*, Token*);
   void sqlite3DropTrigger(Parse*, SrcList*);
   void sqlite3DropTriggerPtr(Parse*, Trigger*, int);
-  int sqlite3TriggersExist(Parse* , Trigger* , int , int , int, ExprList*);
+  int sqlite3TriggersExist(Parse*, Table*, int, ExprList*);
   int sqlite3CodeRowTrigger(Parse*, int, ExprList*, int, Table *, int, int, 
                            int, int);
   void sqliteViewTriggers(Parse*, Table*, Expr*, int, ExprList*);
