@@ -829,6 +829,11 @@ void sqliteCreateView(
     sqliteSelectDelete(pSelect);
     return;
   }
+  /* Ignore ORDER BY clauses on a SELECT */
+  if( pSelect->pOrderBy ){
+    sqliteExprListDelete(pSelect->pOrderBy);
+    pSelect->pOrderBy = 0;
+  }
   p->pSelect = pSelect;
   if( !pParse->initFlag ){
     if( sqliteViewGetColumnNames(pParse, p) ){

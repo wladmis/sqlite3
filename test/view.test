@@ -146,6 +146,16 @@ do_test  view-3.4 {
     SELECT * FROM v3 LIMIT 4;
   }
 } {b 2 b 3 b 5 b 6}
+do_test  view-3.5 {
+  execsql2 {
+    CREATE VIEW v4 AS 
+      SELECT a, b FROM t1 
+      UNION
+      SELECT b AS 'x', a AS 'y' FROM t1
+      ORDER BY x, y;
+    SELECT y FROM v4 ORDER BY y LIMIT 4;
+  }
+} {y 2 y 3 y 5 y 6}
 
 
 finish_test
