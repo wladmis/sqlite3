@@ -496,6 +496,14 @@ void *sqlite_aggregate_context(sqlite_func*, int nBytes);
 */
 int sqlite_aggregate_count(sqlite_func*);
 
+/*
+** Attempt to open the file named in the argument as the auxiliary database
+** file.  The auxiliary database file is used to store TEMP tables.  But
+** by using this API, it is possible to trick SQLite into opening two
+** separate databases and acting on them as if they were one.
+*/
+int sqlite_open_aux_file(sqlite *db, const char *zName, char **pzErrMsg);
+
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
 #endif
