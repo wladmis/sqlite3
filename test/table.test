@@ -492,7 +492,7 @@ do_test table-11.1 {
            typeof(e), typeof(f), typeof(g), typeof(h)
     FROM t7 LIMIT 1;
   }
-} {numeric numeric text text text text text numeric}
+} {numeric numeric text text text numeric text numeric}
 do_test table-11.2 {
   execsql {
     SELECT typeof(a+b), typeof(a||b), typeof(c+d), typeof(c||d)
