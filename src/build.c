@@ -622,7 +622,6 @@ void sqliteAddPrimaryKey(Parse *pParse, IdList *pList, int onError){
 */
 int sqliteCollateType(const char *zType, int nType){
   int i;
-  int sortOrder = SQLITE_SO_NUM;
   for(i=0; i<nType-1; i++){
     switch( zType[i] ){
       case 'b':
