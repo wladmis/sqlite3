@@ -1082,10 +1082,10 @@ static int memBtreeKey(BtCursor* pCur, int offset, int amt, char *zBuf)
 {
   if( !pCur->pNode ) return 0;
   if( !pCur->pNode->pKey || ((amt + offset) <= pCur->pNode->nKey) ){
-    memcpy(zBuf, pCur->pNode->pKey+offset, amt);
+    memcpy(zBuf, ((char*)pCur->pNode->pKey)+offset, amt);
     return amt;
   }else{
-    memcpy(zBuf, pCur->pNode->pKey+offset ,pCur->pNode->nKey-offset);
+    memcpy(zBuf, ((char*)pCur->pNode->pKey)+offset, pCur->pNode->nKey-offset);
     return pCur->pNode->nKey-offset;
   }
   assert(0);
@@ -1105,10 +1105,10 @@ static int memBtreeData(BtCursor *pCur, int offset, int amt, char *zBuf)
 {
   if( !pCur->pNode ) return 0;
   if( (amt + offset) <= pCur->pNode->nData ){
-    memcpy(zBuf, pCur->pNode->pData+offset, amt);
+    memcpy(zBuf, ((char*)pCur->pNode->pData)+offset, amt);
     return amt;
   }else{
-    memcpy(zBuf, pCur->pNode->pData+offset ,pCur->pNode->nData-offset);
+    memcpy(zBuf, ((char*)pCur->pNode->pData)+offset ,pCur->pNode->nData-offset);
     return pCur->pNode->nData-offset;
   }
   assert(0);

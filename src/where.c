@@ -1144,7 +1144,9 @@ void sqliteWhereEnd(WhereInfo *pWInfo){
   }
   sqliteVdbeResolveLabel(v, pWInfo->iBreak);
   for(i=0; i<pTabList->nSrc; i++){
-    if( pTabList->a[i].pTab->isTransient ) continue;
+    Table *pTab = pTabList->a[i].pTab;
+    assert( pTab!=0 );
+    if( pTab->isTransient || pTab->pSelect ) continue;
     pLevel = &pWInfo->a[i];
     sqliteVdbeAddOp(v, OP_Close, base+i, 0);
     if( pLevel->pIdx!=0 ){

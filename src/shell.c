@@ -1183,7 +1183,7 @@ int main(int argc, char **argv){
     }
   }else{
     extern int isatty();
-    if( isatty(fileno(stdout)) ){
+    if( isatty(fileno(stdout)) && isatty(fileno(stdin)) ){
       char *zHome;
       char *zHistory = 0;
       printf(

@@ -829,6 +829,7 @@ struct Parse {
   int nSet;            /* Number of sets used so far */
   int nAgg;            /* Number of aggregate expressions */
   AggExpr *aAgg;       /* An array of aggregate expressions */
+  const char *zAuthContext; /* The 6th parameter to db->xAuth callbacks */
   Trigger *pNewTrigger;     /* Trigger under construct by a CREATE TRIGGER */
   TriggerStack *trigStack;  /* Trigger actions being coded */
 };
@@ -1039,7 +1040,7 @@ Select *sqliteSelectNew(ExprList*,SrcList*,Expr*,ExprList*,Expr*,ExprList*,
 void sqliteSelectDelete(Select*);
 void sqliteSelectUnbind(Select*);
 Table *sqliteSrcListLookup(Parse*, SrcList*);
-int sqliteIsReadOnly(Parse*, Table*);
+int sqliteIsReadOnly(Parse*, Table*, int);
 void sqliteDeleteFrom(Parse*, SrcList*, Expr*);
 void sqliteUpdate(Parse*, SrcList*, ExprList*, Expr*, int);
 WhereInfo *sqliteWhereBegin(Parse*, int, SrcList*, Expr*, int, ExprList**);
