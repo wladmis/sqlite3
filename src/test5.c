@@ -18,6 +18,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
+#include "os.h"         /* to get SQLITE3_BIGENDIAN */
 #include "tcl.h"
 #include <stdlib.h>
 #include <string.h>
@@ -166,7 +167,7 @@ static int sqlite_utf16to8(
   }
 
   in = Tcl_GetByteArrayFromObj(objv[1], 0);
-  out = sqlite3utf16to8(in, -1);
+  out = sqlite3utf16to8(in, -1, SQLITE3_BIGENDIAN);
   res = Tcl_NewByteArrayObj(out, strlen(out)+1);
   sqliteFree(out);
 
