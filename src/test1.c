@@ -993,7 +993,7 @@ static int sqlite3_crashseed(
 #ifdef OS_TEST
   int seed;
   if( objc!=2 ) goto bad_args;
-  if( Tcl_GetIntFromObj(interp, objv[2], &seed) ) return TCL_ERROR;
+  if( Tcl_GetIntFromObj(interp, objv[1], &seed) ) return TCL_ERROR;
   sqlite3SetCrashseed(seed);
 #endif
   return TCL_OK;
