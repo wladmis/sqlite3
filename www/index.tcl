@@ -57,8 +57,9 @@ puts {<h2>Features</h2>
     different byte orders.</li>
 <li>Supports databases up to 2 terabytes (2^41 bytes) in size.</li>
 <li>Small memory footprint: less than 25K lines of C code.</li>
-<li><a href="speed.html">Four times faster</a> than PostgreSQL.
-    Twice as fast as SQLite 1.0.</li>
+<li><a href="speed.html">10x faster</a> than PostgreSQL and
+    <a href="speed.html">2x faster</a> than MySQL for many common 
+    operations.</li>
 <li>Very simple 
 <a href="c_interface.html">C/C++ interface</a> requires the use of only
 three functions and one opaque structure.</li>
