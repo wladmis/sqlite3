@@ -59,8 +59,7 @@ the <a href="http://www.google.com/search?q=gnu+readline+library">GNU
 Readline library</a></li>
 <li>A Tcl-based test suite provides near 100% code coverage</li>
 <li>7500+ lines of C code.  No external dependencies other than GDBM.</li>
-<li>Built and tested under Linux, HPUX, and WinNT.
-Should work under any Unix or Win95/98/2000.</li>
+<li>Built and tested under Linux, HPUX, and WinNT.</li>
 </ul>
 </p>
 

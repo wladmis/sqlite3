@@ -246,7 +246,7 @@ where_opt(A) ::= WHERE expr(X).       {A = X;}
 cmd ::= UPDATE id(X) SET setlist(Y) where_opt(Z).
     {sqliteUpdate(pParse,&X,Y,Z);}
 
-setlist(A) ::= id(X) EQ expr(Y) COMMA setlist(Z).
+setlist(A) ::= setlist(Z) COMMA id(X) EQ expr(Y).
     {A = sqliteExprListAppend(Z,Y,&X);}
 setlist(A) ::= id(X) EQ expr(Y).   {A = sqliteExprListAppend(0,Y,&X);}
 
