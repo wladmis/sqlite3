@@ -254,6 +254,13 @@ struct sqlite {
 };
 
 /*
+** The following are the indices of in sqlite.aDb[] of the main database
+** file and the file used to store TEMP tables.
+*/
+#define DB_TMP     0
+#define DB_MAIN    1
+
+/*
 ** Possible values for the sqlite.flags.
 */
 #define SQLITE_VdbeTrace      0x00000001  /* True to trace VDBE execution */
@@ -1001,7 +1008,8 @@ Select *sqliteSelectNew(ExprList*,SrcList*,Expr*,ExprList*,Expr*,ExprList*,
                         int,int,int);
 void sqliteSelectDelete(Select*);
 void sqliteSelectUnbind(Select*);
-Table *sqliteTableNameToTable(Parse*, const char*, const char*);
+Table *sqliteSrcListLookup(Parse*, SrcList*);
+int sqliteIsReadOnly(Parse*, Table*);
 void sqliteDeleteFrom(Parse*, SrcList*, Expr*);
 void sqliteUpdate(Parse*, SrcList*, ExprList*, Expr*, int);
 WhereInfo *sqliteWhereBegin(Parse*, int, SrcList*, Expr*, int, ExprList**);
