@@ -109,7 +109,7 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
   db->flags &= ~SQLITE_Initialized;
   if( pParse->nErr ) return;
   if( rc==SQLITE_OK ){
-    rc = sqlite3ReadSchema(pParse->db, &pParse->zErrMsg);
+    rc = sqlite3ReadSchema(pParse);
   }
   if( rc ){
     int i = db->nDb - 1;
@@ -119,8 +119,10 @@ void sqlite3Attach(Parse *pParse, Token *pFilename, Token *pDbname, Token *pKey)
       db->aDb[i].pBt = 0;
     }
     sqlite3ResetInternalSchema(db, 0);
-    pParse->nErr++;
-    pParse->rc = SQLITE_ERROR;
+    if( 0==pParse->nErr ){
+      pParse->nErr++;
+      pParse->rc = SQLITE_ERROR;
+    }
   }
 }
 

@@ -1360,7 +1360,7 @@ void *sqlite3HexToBlob(const char *z);
 int sqlite3TwoPartName(Parse *, Token *, Token *, Token **);
 const char *sqlite3ErrStr(int);
 int sqlite3ReadUniChar(const char *zStr, int *pOffset, u8 *pEnc, int fold);
-int sqlite3ReadSchema(sqlite *db, char **);
+int sqlite3ReadSchema(Parse *pParse);
 CollSeq *sqlite3FindCollSeq(sqlite *,u8 enc, const char *,int,int);
 CollSeq *sqlite3LocateCollSeq(Parse *pParse, const char *zName, int nName);
 CollSeq *sqlite3ExprCollSeq(Parse *pParse, Expr *pExpr);
