@@ -568,8 +568,8 @@ ExprList *sqlite3ExprListAppend(ExprList *pList, Expr *pExpr, Token *pName){
   if( pExpr || pName ){
     struct ExprList_item *pItem = &pList->a[pList->nExpr++];
     memset(pItem, 0, sizeof(*pItem));
-    pItem->pExpr = pExpr;
     pItem->zName = sqlite3NameFromToken(pName);
+    pItem->pExpr = pExpr;
   }
   return pList;
 

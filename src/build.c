@@ -2320,7 +2320,7 @@ void sqlite3CreateIndex(
   */
   pIndex = sqliteMalloc( sizeof(Index) + strlen(zName) + 1 +
                         (sizeof(int) + sizeof(CollSeq*))*pList->nExpr );
-  if( pIndex==0 ) goto exit_create_index;
+  if( sqlite3_malloc_failed ) goto exit_create_index;
   pIndex->aiColumn = (int*)&pIndex->keyInfo.aColl[pList->nExpr];
   pIndex->zName = (char*)&pIndex->aiColumn[pList->nExpr];
   strcpy(pIndex->zName, zName);
