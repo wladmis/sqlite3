@@ -171,6 +171,7 @@ for {set i 1} {$i<=100} {incr i} {
   } {}
 }
 
+#btree_tree_dump $b1 1
 btree_close_cursor $c1
 btree_commit $b1
 btree_begin_transaction $b1

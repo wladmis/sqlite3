@@ -1134,7 +1134,7 @@ static int newDatabase(Btree *pBt){
   data[22] = pBt->minEmbedFrac;
   data[23] = pBt->minLeafFrac;
   memset(&data[24], 0, 100-24);
-  zeroPage(pP1, PTF_INTKEY|PTF_LEAF );
+  zeroPage(pP1, PTF_INTKEY|PTF_LEAF|PTF_LEAFDATA );
   return SQLITE_OK;
 }
 
