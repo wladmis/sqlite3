@@ -2091,7 +2091,7 @@ case OP_MakeRecord: {
   if( addRowid ){
     zCsr += sqlite3VdbeSerialPut(zCsr, pRowid);
   }
-  assert( zCsr<=(zNewRecord+nByte) );
+  assert( zCsr==(zNewRecord+nByte) );
 
   /* Pop entries off the stack if required. Push the new record on. */
   if( !leaveOnStack ){
