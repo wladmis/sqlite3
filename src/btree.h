@@ -34,6 +34,7 @@ typedef struct BtCursor BtCursor;
 
 int sqliteBtreeOpen(const char *zFilename, int mode, int nPg, Btree **ppBtree);
 int sqliteBtreeClose(Btree*);
+int sqliteBtreeSetCacheSize(Btree*, int);
 
 int sqliteBtreeBeginTrans(Btree*);
 int sqliteBtreeCommit(Btree*);

@@ -46,6 +46,7 @@ typedef struct Pager Pager;
 
 int sqlitepager_open(Pager **ppPager,const char *zFilename,int nPage,int nEx);
 void sqlitepager_set_destructor(Pager*, void(*)(void*));
+void sqlitepager_set_cachesize(Pager*, int);
 int sqlitepager_close(Pager *pPager);
 int sqlitepager_get(Pager *pPager, Pgno pgno, void **ppPage);
 void *sqlitepager_lookup(Pager *pPager, Pgno pgno);

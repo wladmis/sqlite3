@@ -30,6 +30,7 @@
 */
 %token_prefix TK_
 %token_type {Token}
+%default_type {Token}
 %extra_argument {Parse *pParse}
 %syntax_error {
   sqliteSetString(&pParse->zErrMsg,"syntax error",0);
@@ -100,6 +101,8 @@ id(A) ::= EXPLAIN(X).    {A = X;}
 id(A) ::= VACUUM(X).     {A = X;}
 id(A) ::= BEGIN(X).      {A = X;}
 id(A) ::= END(X).        {A = X;}
+id(A) ::= PRAGMA(X).     {A = X;}
+id(A) ::= CLUSTER(X).    {A = X;}
 id(A) ::= ID(X).         {A = X;}
 
 // And "ids" is an identifer-or-string.
@@ -478,3 +481,14 @@ cmd ::= COPY ids(X) FROM ids(Y).
 
 cmd ::= VACUUM.                {sqliteVacuum(pParse,0);}
 cmd ::= VACUUM ids(X).         {sqliteVacuum(pParse,&X);}
+
+cmd ::= PRAGMA ids(X) EQ ids(Y).         {sqlitePragma(pParse,&X,&Y,0);}
+cmd ::= PRAGMA ids(X) EQ ON(Y).          {sqlitePragma(pParse,&X,&Y,0);}
+cmd ::= PRAGMA ids(X) EQ plus_num(Y).    {sqlitePragma(pParse,&X,&Y,0);}
+cmd ::= PRAGMA ids(X) EQ minus_num(Y).   {sqlitePragma(pParse,&X,&Y,1);}
+plus_num(A) ::= plus_opt number(X).   {A = X;}
+minus_num(A) ::= MINUS number(X).     {A = X;}
+number(A) ::= INTEGER(X).  {A = X;}
+number(A) ::= FLOAT(X).    {A = X;}
+plus_opt ::= PLUS.
+plus_opt ::= .

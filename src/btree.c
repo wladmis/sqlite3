@@ -644,6 +644,14 @@ int sqliteBtreeClose(Btree *pBt){
 }
 
 /*
+** Change the number of pages in the cache.
+*/
+int sqliteBtreeSetCacheSize(Btree *pBt, int mxPage){
+  sqlitepager_set_cachesize(pBt->pPager, mxPage);
+  return SQLITE_OK;
+}
+
+/*
 ** Get a reference to page1 of the database file.  This will
 ** also acquire a readlock on that file.
 **
