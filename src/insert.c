@@ -262,7 +262,7 @@ void sqlite3Insert(
   */
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) goto insert_cleanup;
-  sqlite3VdbeCountChanges(v);
+  if( pParse->nested==0 ) sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, pSelect || row_triggers_exist, pTab->iDb);
 
   /* if there are row triggers, allocate a temp table for new.* references. */
@@ -999,7 +999,11 @@ void sqlite3CompleteInsertion(
     sqlite3VdbeAddOp(v, OP_Dup, 1, 0);
     sqlite3VdbeAddOp(v, OP_PutIntKey, newIdx, 0);
   }
-  pik_flags = (OPFLAG_NCHANGE|(isUpdate?0:OPFLAG_LASTROWID));
+  if( pParse->nested ){
+    pik_flags = 0;
+  }else{
+    pik_flags = (OPFLAG_NCHANGE|(isUpdate?0:OPFLAG_LASTROWID));
+  }
   sqlite3VdbeAddOp(v, OP_PutIntKey, base, pik_flags);
   
   if( isUpdate && recnoChng ){

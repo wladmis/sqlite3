@@ -220,7 +220,7 @@ void sqlite3Update(
   */
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
-  sqlite3VdbeCountChanges(v);
+  if( pParse->nested==0 ) sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, 1, pTab->iDb);
 
   /* If we are trying to update a view, construct that view into

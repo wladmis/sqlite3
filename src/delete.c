@@ -170,7 +170,7 @@ void sqlite3DeleteFrom(
   if( v==0 ){
     goto delete_from_cleanup;
   }
-  sqlite3VdbeCountChanges(v);
+  if( pParse->nested==0 ) sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, row_triggers_exist, pTab->iDb);
 
   /* If we are trying to delete from a view, construct that view into
@@ -295,7 +295,7 @@ void sqlite3DeleteFrom(
       }
 
       /* Delete the row */
-      sqlite3GenerateRowDelete(db, v, pTab, iCur, 1);
+      sqlite3GenerateRowDelete(db, v, pTab, iCur, pParse->nested==0);
     }
 
     /* If there are row triggers, close all cursors then invoke

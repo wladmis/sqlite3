@@ -324,7 +324,8 @@ struct Db {
   u8 inTrans;          /* 0: not writable.  1: Transaction.  2: Checkpoint */
   u8 safety_level;     /* How aggressive at synching data to disk */
   int cache_size;      /* Number of pages to use in the cache */
-  void *pAux;          /* Auxiliary data.  Usually NULL */
+  Table *pSeqTab;      /* The sqlite_sequence table used by AUTOINCREMENT */
+  void *pAux;               /* Auxiliary data.  Usually NULL */
   void (*xFreeAux)(void*);  /* Routine to free pAux */
 };
 
