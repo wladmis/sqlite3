@@ -1007,6 +1007,7 @@ prepare_out:
   }
   if( zErrMsg ){
     sqlite3Error(db, rc, "%s", zErrMsg);
+    sqliteFree(zErrMsg);
   }else{
     sqlite3Error(db, rc, 0);
   }

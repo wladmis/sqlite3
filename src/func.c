@@ -931,6 +931,7 @@ static void minMaxFinalize(sqlite3_context *context){
   if( pRes->flags ){
     sqlite3_result_value(context, pRes);
   }
+  sqlite3VdbeMemRelease(pRes);
 }
 
 /*
