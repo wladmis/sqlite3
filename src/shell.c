@@ -92,7 +92,7 @@ static char *getline(char *zPrompt, FILE *in){
 ** Retrieve a single line of input text.  "isatty" is true if text
 ** is coming from a terminal.  In that case, we issue a prompt and
 ** attempt to use "readline" for command-line editing.  If "isatty"
-** is false, use "getline" instead of "readline" and issue to prompt.
+** is false, use "getline" instead of "readline" and issue no prompt.
 **
 ** zPrior is a string of prior text retrieved.  If not the empty
 ** string, then issue a continuation prompt.

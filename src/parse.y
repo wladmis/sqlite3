@@ -102,6 +102,7 @@ id(A) ::= CLUSTER(X).    {A = X;}
 id(A) ::= ID(X).         {A = X;}
 id(A) ::= TEMP(X).       {A = X;}
 id(A) ::= OFFSET(X).     {A = X;}
+id(A) ::= KEY(X).        {A = X;}
 
 // And "ids" is an identifer-or-string.
 //

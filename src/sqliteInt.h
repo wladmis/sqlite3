@@ -120,13 +120,6 @@ extern int sqlite_iMallocFail;   /* Fail sqliteMalloc() after this many calls */
 #endif
 
 /*
-** The number of entries in the in-memory hash array holding the
-** database schema.  (Collision resolution is by chaining, so the
-** table will hold more than this many entries.)
-*/
-#define N_HASH        51
-
-/*
 ** Name of the master database table.  The master database table
 ** is a special table that holds the names and attributes of all
 ** user tables and indices.
