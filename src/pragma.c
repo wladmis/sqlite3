@@ -295,12 +295,12 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
       { OP_AddImm,     -1, 0,        0},  /* 10 */
       { OP_Callback,    1, 0,        0}
     };
+    int addr;
     if( pRight->z==pLeft->z ){
       sqlite3VdbeSetNumCols(v, 1);
-      int addr = sqlite3VdbeAddOpList(v, ArraySize(getSync), getSync);
+      addr = sqlite3VdbeAddOpList(v, ArraySize(getSync), getSync);
       sqlite3VdbeChangeP2(v, addr+3, addr+10);
     }else{
-      int addr;
       int size = db->cache_size;
       if( size<0 ) size = -size;
       sqlite3BeginWriteOperation(pParse, 0, 0);

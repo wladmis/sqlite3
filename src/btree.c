@@ -2399,7 +2399,7 @@ static int fillInCell(
   int *pnSize                    /* Write cell size here */
 ){
   int nPayload;
-  const void *pSrc;
+  const u8 *pSrc;
   int nSrc, n, rc;
   int spaceLeft;
   MemPage *pOvfl = 0;
