@@ -1457,5 +1457,6 @@ sqlite3_value *sqlite3GetTransientValue(sqlite3*db);
 extern const unsigned char sqlite3UpperToLower[];
 void sqlite3RootPageMoved(Db*, int, int);
 void sqlite3Reindex(Parse*, Token*, Token*);
+void sqlite3NestedParse(Parse*, const char*, ...);
 
 #endif
