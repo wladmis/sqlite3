@@ -285,7 +285,7 @@ do_test func-10.1 {
   catchsql {
     SELECT testfunc(NULL,NULL);
   }
-} {1 {first argument to test function may not be NULL}}
+} {1 {first argument should be one of: int int64 string double null value}}
 do_test func-10.2 {
   execsql {
     SELECT testfunc(
