@@ -60,7 +60,11 @@
 ** The maximum number of in-memory pages to use for the main database
 ** table and for temporary tables.
 */
-#define MAX_PAGES   2000
+#ifdef SQLITE_DEFAULT_CACHE_SIZE
+# define MAX_PAGES SQLITE_DEFAULT_CACHE_SIZE
+#else
+# define MAX_PAGES   2000
+#endif
 #define TEMP_PAGES   500
 
 /*

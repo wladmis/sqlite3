@@ -11,7 +11,7 @@ puts {
 }
 
 proc Product {pattern desc} {
-  regsub VERSION $pattern {([0-9a-z._]+)} p2
+  regsub VERSION $pattern {([0-9][0-9a-z._]+)} p2
   set p2 [string map {* .*} $p2]
   regsub VERSION $pattern {*} p3
   set flist [glob -nocomplain $p3]
