@@ -734,11 +734,16 @@ case OP_String8: {
   pOp->opcode = OP_String;
 
   if( db->enc!=SQLITE_UTF8 && pOp->p3 ){
+    char *z = pOp->p3;
     if( db->enc==SQLITE_UTF16LE ){
-      pOp->p3 = sqlite3utf8to16le(pOp->p3, -1);
+      pOp->p3 = sqlite3utf8to16le(z, -1);
     }else{
-      pOp->p3 = sqlite3utf8to16be(pOp->p3, -1);
+      pOp->p3 = sqlite3utf8to16be(z, -1);
     }
+    if( pOp->p3type==P3_DYNAMIC ){
+      sqliteFree(z);
+    }
+    pOp->p3type = P3_DYNAMIC;
     if( !pOp->p3 ) goto no_mem;
   }
 
@@ -788,6 +793,9 @@ case OP_HexBlob: {
     pOp->p3 = zBlob;
     pOp->p3type = P3_DYNAMIC;
   }else{
+    if( pOp->p3type==P3_DYNAMIC ){
+      sqliteFree(pOp->p3);
+    }
     pOp->p3type = P3_STATIC;
     pOp->p3 = "";
   }
@@ -4542,11 +4550,12 @@ case OP_AggNext: {
       ctx.s.flags = MEM_Null;
       ctx.s.z = aMem[i].zShort;
       ctx.pAgg = (void*)aMem[i].z;
-      freeCtx = aMem[i].z && aMem[i].z!=aMem[i].zShort;
       ctx.cnt = aMem[i].i;
       ctx.isStep = 0;
       ctx.pFunc = p->agg.apFunc[i];
       (*p->agg.apFunc[i]->xFinalize)(&ctx);
+      aMem[i].z = ctx.pAgg;
+      freeCtx = aMem[i].z && aMem[i].z!=aMem[i].zShort;
       if( freeCtx ){
         sqliteFree( aMem[i].z );
       }

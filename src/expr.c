@@ -307,7 +307,10 @@ ExprList *sqlite3ExprListDup(ExprList *p){
   if( pNew==0 ) return 0;
   pNew->nExpr = pNew->nAlloc = p->nExpr;
   pNew->a = pItem = sqliteMalloc( p->nExpr*sizeof(p->a[0]) );
-  if( pItem==0 ) return 0;  /* Leaks memory after a malloc failure */
+  if( pItem==0 ){
+    sqliteFree(pNew);
+    return 0;
+  } 
   for(i=0; i<p->nExpr; i++, pItem++){
     Expr *pNewExpr, *pOldExpr;
     pItem->pExpr = pNewExpr = sqlite3ExprDup(pOldExpr = p->a[i].pExpr);
