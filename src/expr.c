@@ -183,6 +183,8 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
         sqliteFree(zRight);
         return 1;
       }
+      sqliteDequote(zLeft);
+      sqliteDequote(zRight);
       pExpr->iTable = -1;
       for(i=0; i<pTabList->nId; i++){
         int j;
