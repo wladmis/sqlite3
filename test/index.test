@@ -160,7 +160,7 @@ do_test index-4.13 {
 do_test index-5.1 {
   set v [catch {execsql {CREATE INDEX index1 ON sqlite_master(name)}} msg]
   lappend v $msg
-} {1 {table sqlite_master may not have new indices added}}
+} {1 {table sqlite_master may not be indexed}}
 do_test index-5.2 {
   execsql {SELECT name FROM sqlite_master WHERE type!='meta'}
 } {}
