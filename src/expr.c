@@ -364,11 +364,11 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
     case TK_ISNULL:
     case TK_NOTNULL: {
       int dest;
-      sqliteVdbeAddOp(v, OP_Integer, 0, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_Integer, 1, 0, 0, 0);
       sqliteExprCode(pParse, pExpr->pLeft);
       dest = sqliteVdbeCurrentAddr(v) + 2;
       sqliteVdbeAddOp(v, op, 0, dest, 0, 0);
-      sqliteVdbeAddOp(v, OP_AddImm, 1, 0, 0, 0);
+      sqliteVdbeAddOp(v, OP_AddImm, -1, 0, 0, 0);
       break;
     }
     case TK_FUNCTION: {
