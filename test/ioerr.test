@@ -174,4 +174,33 @@ for {set n 1} {$go} {incr n} {
 }
 set ::sqlite_io_error_pending 0
 
+set ::go 1
+for {set n 1} {$go} {incr n} {
+  do_test ioerr-4.$n.1 {
+    set ::sqlite_io_error_pending 0
+    db close
+    catch {file delete -force test.db}
+    catch {file delete -force test.db-journal}
+    sqlite3 db test.db
+    set sql "CREATE TABLE abc(a1"
+    for {set i 2} {$i<1300} {incr i} {
+      append sql ", a$i"
+    }
+    append sql ");"
+    execsql $sql
+    execsql {INSERT INTO abc (a1) VALUES(NULL)}
+  } {}
+  do_test ioerr-4.$n.2 [subst {
+    set ::sqlite_io_error_pending $n
+  }] $n
+  do_test ioerr-4.$n.3 {
+    set r [catch {db eval {
+      SELECT * FROM abc;
+    }} msg]
+    set ::go [expr {$::sqlite_io_error_pending<=0}]
+    expr {$::sqlite_io_error_pending>0 || $r!=0}
+  } {1}
+}
+set ::sqlite_io_error_pending 0
+
 finish_test

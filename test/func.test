@@ -452,4 +452,10 @@ do_test func-14.2 {
   }
 } {1}
 
+do_test func-15.1 {
+  catchsql {
+    select test_error(NULL);
+  }
+} {1 {user function error}}
+
 finish_test
