@@ -353,6 +353,12 @@ CREATE TRIGGER <trigger-name> [ BEFORE | AFTER ]
 <trigger-action>
 }
 
+Syntax {sql-statement} {
+CREATE TRIGGER <trigger-name> INSTEAD OF
+<database-event> ON <view-name>
+<trigger-action>
+}
+
 Syntax {database-event} {
 DELETE | 
 INSERT | 
@@ -425,12 +431,13 @@ policy is used instead.</p>
 <p>Triggers are automatically dropped when the table that they are 
 associated with is dropped.</p>
 
-<p>Triggers may be created on views, as well as ordinary tables. If one or
-more INSERT, DELETE or UPDATE triggers are defined on a view, then it is not
-an error to execute an INSERT, DELETE or UPDATE statement on the view, 
-respectively. Thereafter, executing an INSERT, DELETE or UPDATE on the view
-causes the associated triggers to fire. The real tables underlying the view
-are not modified (except possibly explicitly, by a trigger program).</p>
+<p>Triggers may be created on views, as well as ordinary tables, by specifying
+INSTEAD OF in the CREATE TRIGGER statement. If one or more ON INSERT, ON DELETE
+or ON UPDATE triggers are defined on a view, then it is not an error to execute
+an INSERT, DELETE or UPDATE statement on the view, respectively. Thereafter,
+executing an INSERT, DELETE or UPDATE on the view causes the associated
+  triggers to fire. The real tables underlying the view are not modified
+  (except possibly explicitly, by a trigger program).</p>
 
 <p><b>Example:</b></p>
 
