@@ -56,11 +56,9 @@ Dbbe *sqliteDbbeOpen(
   if( strncmp(zName, "gdbm:", 5)==0 ){
     return sqliteGdbmOpen(&zName[5], writeFlag, createFlag, pzErrMsg);
   }
-#if 0
   if( strncmp(zName, "memory:", 7)==0 ){
     extern Dbbe *sqliteMemOpen(const char*,int,int,char**);
     return sqliteMemOpen(&zName[7], writeFlag, createFlag, pzErrMsg);
   }
-#endif
   return sqliteGdbmOpen(zName, writeFlag, createFlag, pzErrMsg);
 }

@@ -25,6 +25,8 @@
 #
 # $Id$
 
+if {$dbprefix=="gdbm:"} {
+
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
@@ -99,3 +101,5 @@ catch {exec kill -HUP $::lock_pid}
 catch {exec kill -9 $::lock_pid}
 
 finish_test
+
+}
