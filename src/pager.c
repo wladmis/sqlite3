@@ -521,7 +521,11 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int useCksum){
 
   /* If the pager is in RESERVED state, then there must be a copy of this
   ** page in the pager cache. In this case just update the pager cache,
-  ** not the database file.
+  ** not the database file. The page is left marked dirty in this case.
+  **
+  ** FIX ME: Ideally the page would only be left marked dirty when the
+  ** pager is in RESERVED state if it was dirty when this statement
+  ** transaction was started. 
   **
   ** If in EXCLUSIVE state, then we update the pager cache if it exists
   ** and the main file. The page is then marked not dirty.
@@ -545,8 +549,11 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int useCksum){
     if( pPager->xDestructor ){
       pPager->xDestructor(pData, pPager->pageSize);
     }
-    pPg->dirty = 0;
-    pPg->needSync = 0;
+    if( pPager->state==PAGER_EXCLUSIVE ){
+      pPg->dirty = 0;
+      pPg->needSync = 0;
+    }
+
     CODEC(pPager, pData, pPg->pgno, 3);
   }
   return rc;

@@ -142,4 +142,6 @@ do_test enc2-4.3 {
   }
 } {1 {attached databases must use the same text encoding as main database}}
 
+db2 close
+
 finish_test
