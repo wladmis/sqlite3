@@ -977,7 +977,7 @@ void sqliteGenerateRowDelete(sqlite*, Vdbe*, Table*, int, int);
 void sqliteGenerateRowIndexDelete(sqlite*, Vdbe*, Table*, int, char*);
 void sqliteGenerateConstraintChecks(Parse*,Table*,int,char*,int,int,int,int);
 void sqliteCompleteInsertion(Parse*, Table*, int, char*, int, int);
-void sqliteBeginWriteOperation(Parse*, int);
+void sqliteBeginWriteOperation(Parse*, int, int);
 void sqliteEndWriteOperation(Parse*);
 Expr *sqliteExprDup(Expr*);
 void sqliteTokenCopy(Token*, Token*);

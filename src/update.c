@@ -186,7 +186,7 @@ void sqliteUpdate(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto update_cleanup;
-  sqliteBeginWriteOperation(pParse, 1);
+  sqliteBeginWriteOperation(pParse, 1, !row_triggers_exist && pTab->isTemp);
 
   /* Begin the database scan
   */

@@ -160,7 +160,8 @@ void sqliteInsert(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto insert_cleanup;
-  sqliteBeginWriteOperation(pParse, pSelect || row_triggers_exist);
+  sqliteBeginWriteOperation(pParse, pSelect || row_triggers_exist,
+         !row_triggers_exist && pTab->isTemp);
 
   /* if there are row triggers, allocate a temp table for new.* references. */
   if( row_triggers_exist ){
