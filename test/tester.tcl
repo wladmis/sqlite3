@@ -205,7 +205,7 @@ proc stepsql {dbptr sql} {
     while {[sqlite_step $vm N VAL COL]=="SQLITE_ROW"} {
       foreach v $VAL {lappend r $v}
     }
-    if {[catch {sqlite_finalize $vm} errmsg]} {
+    if {[catch {sqlite3_finalize $vm} errmsg]} {
       return [list 1 $errmsg]
     }
   }

@@ -139,7 +139,7 @@ do_test vacuum-4.1 {
   sqlite_step $VM N VALUES COLNAMES
 } {SQLITE_DONE}
 do_test vacuum-4.2 {
-  sqlite_finalize $VM
+  sqlite3_finalize $VM
 } {}
 
 # Ticket #515.  VACUUM after deleting and recreating the table that

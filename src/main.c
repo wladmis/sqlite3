@@ -1361,6 +1361,32 @@ int sqlite3_open16(
   return rc;
 }
 
+/*
+** The following routine destroys a virtual machine that is created by
+** the sqlite3_compile() routine. The integer returned is an SQLITE_
+** success/failure code that describes the result of executing the virtual
+** machine.
+**
+** This routine sets the error code and string returned by
+** sqlite3_errcode(), sqlite3_errmsg() and sqlite3_errmsg16().
+*/
+int sqlite3_finalize_new(sqlite3_stmt *pStmt){
+  return sqlite3VdbeFinalize((Vdbe*)pStmt, 0);
+}
+
+/*
+** Terminate the current execution of an SQL statement and reset it
+** back to its starting state so that it can be reused. A success code from
+** the prior execution is returned.
+**
+** This routine sets the error code and string returned by
+** sqlite3_errcode(), sqlite3_errmsg() and sqlite3_errmsg16().
+*/
+int sqlite3_reset_new(sqlite3_stmt *pStmt){
+  int rc = sqlite3VdbeReset((Vdbe*)pStmt, 0);
+  sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0);
+  return rc;
+}
 
 #if 0
 

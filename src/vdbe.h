@@ -113,8 +113,6 @@ VdbeOp *sqlite3VdbeGetOp(Vdbe*, int);
 int sqlite3VdbeMakeLabel(Vdbe*);
 void sqlite3VdbeDelete(Vdbe*);
 void sqlite3VdbeMakeReady(Vdbe*,int,int);
-int sqlite3VdbeExec(Vdbe*);
-int sqlite3VdbeList(Vdbe*);
 int sqlite3VdbeFinalize(Vdbe*,char**);
 void sqlite3VdbeResolveLabel(Vdbe*, int);
 int sqlite3VdbeCurrentAddr(Vdbe*);
