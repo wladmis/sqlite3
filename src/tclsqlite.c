@@ -858,6 +858,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   case DB_TRACE: {
     if( objc>3 ){
       Tcl_WrongNumArgs(interp, 2, objv, "?CALLBACK?");
+      return TCL_ERROR;
     }else if( objc==2 ){
       if( pDb->zTrace ){
         Tcl_AppendResult(interp, pDb->zTrace, 0);

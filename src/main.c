@@ -981,7 +981,7 @@ int sqlite3_prepare(
       char *tmpSql = sqliteStrNDup(zSql, sParse.zTail - zSql);
       if( tmpSql ){
         db->xTrace(db->pTraceArg, tmpSql);
-        free(tmpSql);
+        sqliteFree(tmpSql);
       }else{
         /* If a memory error occurred during the copy,
         ** trace entire SQL string and fall through to the
