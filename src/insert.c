@@ -127,6 +127,9 @@ void sqliteInsert(
     pParse->nErr++;
     goto insert_cleanup;
   }
+  if( sqliteAuthInsert(pParse, zTab, 0) ){
+    goto insert_cleanup;
+  }
 
   /* Ensure that:
   *  (a) the table is not read-only, 
