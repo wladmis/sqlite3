@@ -1209,7 +1209,7 @@ void sqlite3AddCollateType(Parse*, const char*, int);
 CollSeq *sqlite3ChangeCollatingFunction(sqlite*,const char*,int,
                   void*, int(*)(void*,int,const void*,int,const void*));
 void sqlite3EndTable(Parse*,Token*,Select*);
-void sqlite3CreateView(Parse*,Token*,Token*,Select*,int);
+void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int);
 int sqlite3ViewGetColumnNames(Parse*,Table*);
 void sqlite3DropTable(Parse*, SrcList*, int);
 void sqlite3DeleteTable(sqlite*, Table*);

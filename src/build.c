@@ -1148,7 +1148,8 @@ void sqlite3EndTable(Parse *pParse, Token *pEnd, Select *pSelect){
 void sqlite3CreateView(
   Parse *pParse,     /* The parsing context */
   Token *pBegin,     /* The CREATE token that begins the statement */
-  Token *pName,      /* The token that holds the name of the view */
+  Token *pName1,     /* The token that holds the name of the view */
+  Token *pName2,     /* The token that holds the name of the view */
   Select *pSelect,   /* A SELECT statement that will become the new view */
   int isTemp         /* TRUE for a TEMPORARY view */
 ){
@@ -1157,13 +1158,15 @@ void sqlite3CreateView(
   const char *z;
   Token sEnd;
   DbFixer sFix;
+  Token *pName;
 
-  sqlite3StartTable(pParse, pBegin, pName, 0, isTemp, 1);
+  sqlite3StartTable(pParse, pBegin, pName1, pName2, isTemp, 1);
   p = pParse->pNewTable;
   if( p==0 || pParse->nErr ){
     sqlite3SelectDelete(pSelect);
     return;
   }
+  resolveSchemaName(pParse, pName1, pName2, &pName);
   if( sqlite3FixInit(&sFix, pParse, p->iDb, "view", pName)
     && sqlite3FixSelect(&sFix, pSelect)
   ){

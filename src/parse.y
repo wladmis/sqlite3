@@ -268,11 +268,11 @@ cmd ::= DROP TABLE nm(X) dbnm(Y).   {
 
 ///////////////////// The CREATE VIEW statement /////////////////////////////
 //
-cmd ::= CREATE(X) temp(T) VIEW nm(Y) AS select(S). {
-  sqlite3CreateView(pParse, &X, &Y, S, T);
+cmd ::= CREATE(X) temp(T) VIEW nm(Y) dbnm(Z) AS select(S). {
+  sqlite3CreateView(pParse, &X, &Y, &Z, S, T);
 }
-cmd ::= DROP VIEW nm(X). {
-  sqlite3DropTable(pParse, &X, 1);
+cmd ::= DROP VIEW nm(X) dbnm(Y). {
+  sqlite3DropTable(pParse, sqlite3SrcListAppend(0,&X,&Y), 1);
 }
 
 //////////////////////// The SELECT statement /////////////////////////////////
