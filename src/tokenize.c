@@ -65,7 +65,7 @@ static const char isIdChar[] = {
 ** Return the length of the token that begins at z[0]. 
 ** Store the token type in *tokenType before returning.
 */
-static int sqliteGetToken(const unsigned char *z, int *tokenType){
+int sqlite3GetToken(const unsigned char *z, int *tokenType){
   int i, c;
   switch( *z ){
     case ' ': case '\t': case '\n': case '\f': case '\r': {
@@ -349,7 +349,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     assert( i>=0 );
     pParse->sLastToken.z = &zSql[i];
     assert( pParse->sLastToken.dyn==0 );
-    pParse->sLastToken.n = sqliteGetToken((unsigned char*)&zSql[i], &tokenType);
+    pParse->sLastToken.n = sqlite3GetToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
     switch( tokenType ){
       case TK_SPACE:

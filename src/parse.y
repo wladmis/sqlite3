@@ -953,3 +953,10 @@ cmd ::= DETACH database_kw_opt nm(D). {
 cmd ::= REINDEX.                {sqlite3Reindex(pParse, 0, 0);}
 cmd ::= REINDEX nm(X) dbnm(Y).  {sqlite3Reindex(pParse, &X, &Y);}
 %endif
+
+//////////////////////// ALTER TABLE table ... ////////////////////////////////
+%ifndef SQLITE_OMIT_ALTERTABLE
+cmd ::= ALTER TABLE fullname(X) RENAME TO nm(Z). {
+  sqlite3AlterRenameTable(pParse,X,&Z);
+}
+%endif
