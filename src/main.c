@@ -394,14 +394,14 @@ static void clearHashTable(sqlite *db, int preserveTemps){
   sqliteHashInit(&db->trigHash, SQLITE_HASH_STRING, 0);
   sqliteHashClear(&db->idxHash);
 
-  for (pElem=sqliteHashFirst(&temp2); pElem; pElem=sqliteHashNext(pElem)){
+  for(pElem=sqliteHashFirst(&temp2); pElem; pElem=sqliteHashNext(pElem)){
     Trigger * pTrigger = sqliteHashData(pElem);
     Table *pTab = sqliteFindTable(db, pTrigger->table);
     assert(pTab);
-    if (pTab->isTemp) { 
+    if( pTab->isTemp ){ 
       sqliteHashInsert(&db->trigHash, pTrigger->name, strlen(pTrigger->name), 
           pTrigger);
-    } else {
+    }else{
       sqliteDeleteTrigger(pTrigger);
     }
   }
@@ -434,7 +434,6 @@ static void clearHashTable(sqlite *db, int preserveTemps){
     }
   }
   sqliteHashClear(&temp1);
-
   db->flags &= ~SQLITE_Initialized;
 }
 
