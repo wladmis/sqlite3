@@ -30,6 +30,7 @@ execsql {COMMIT}
 do_test select2-1.1 {
   set sql {SELECT DISTINCT f1 FROM tbl1 ORDER BY f1}
   set r {}
+  catch {unset data}
   db eval $sql data {
     set f1 $data(f1)
     lappend r $f1:

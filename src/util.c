@@ -1299,7 +1299,7 @@ int sqlite3VarintLen(u64 v){
   return i;
 }
 
-char * sqlite3HexToBlob(const char *z){
+void *sqlite3HexToBlob(const char *z){
   char *zBlob;
   int i;
   int n = strlen(z);

@@ -535,14 +535,17 @@ do_test select1-8.5 {
 
 # Check the behavior when the result set is empty
 #
-do_test select1-9.1 {
-  catch {unset r}
-  set r(*) {}
-  db eval {SELECT * FROM test1 WHERE f1<0} r {}
-  set r(*)
-} {}
+# SQLite v3 always sets r(*).
+#
+# do_test select1-9.1 {
+#   catch {unset r}
+#   set r(*) {}
+#   db eval {SELECT * FROM test1 WHERE f1<0} r {}
+#   set r(*)
+# } {}
 do_test select1-9.2 {
   execsql {PRAGMA empty_result_callbacks=on}
+  catch {unset r}
   set r(*) {}
   db eval {SELECT * FROM test1 WHERE f1<0} r {}
   set r(*)
