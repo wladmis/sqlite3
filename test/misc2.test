@@ -179,3 +179,11 @@ do_test misc2-7.4 {
   } msg]
   lappend rc $msg
 } {1 {database table is locked}}
+
+# Ticket #453.  If the SQL ended with "-", the tokenizer was calling that
+# an incomplete token, which caused problem.  The solution was to just call
+# it a minus sign.
+#
+do_test misc2-8.1 {
+  catchsql {-}
+} {1 {near "-": syntax error}}
