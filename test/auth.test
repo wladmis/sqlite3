@@ -1,4 +1,4 @@
-# 2003 January 12
+# 2003 April 4
 #
 # The author disclaims copyright to this source code.  In place of
 # a legal notice, here is a blessing:
@@ -9,7 +9,8 @@
 #
 #***********************************************************************
 # This file implements regression tests for SQLite library.  The
-# focus of this script testing the sqlite_set_authorizer() API.
+# focus of this script is testing the ATTACH and DETACH commands
+# and related functionality.
 #
 # $Id$
 #
