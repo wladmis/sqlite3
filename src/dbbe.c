@@ -176,7 +176,7 @@ DbbeTable *sqliteDbbeOpenTable(
     }
     pFile->pNext = pBe->pOpen;
     pBe->pOpen = pFile;
-    pFile->dbf = gdbm_open(pFile->zName, 0, GDBM_WRCREAT, 0640, 0);
+    pFile->dbf = gdbm_open(pFile->zName, 0, GDBM_WRCREAT|GDBM_FAST, 0640, 0);
   }else{
     sqliteFree(zFile);
     pFile->nRef++;
@@ -209,6 +209,9 @@ void sqliteDbbeCloseTable(DbbeTable *pTable){
   pFile = pTable->pFile;
   pBe = pTable->pBe;
   pFile->nRef--;
+  if( pFile->dbf!=NULL ){
+    gdbm_sync(pFile->dbf);
+  }
   if( pFile->nRef<=0 ){
     if( pFile->dbf!=NULL ){
       gdbm_close(pFile->dbf);
