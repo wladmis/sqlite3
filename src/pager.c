@@ -213,9 +213,16 @@ struct PgHistory {
 
 /*
 ** How big to make the hash table used for locating in-memory pages
-** by page number.
+** by page number. This macro looks a little silly, but is evaluated
+** at compile-time, not run-time (at least for gcc this is true).
 */
-#define N_PG_HASH 2048
+#define N_PG_HASH (\
+  (MAX_PAGES>1024)?2048: \
+  (MAX_PAGES>512)?1024: \
+  (MAX_PAGES>256)?512: \
+  (MAX_PAGES>128)?256: \
+  (MAX_PAGES>64)?128:64 \
+)
 
 /*
 ** Hash a page number
