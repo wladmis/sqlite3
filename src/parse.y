@@ -721,7 +721,7 @@ idxlist_opt(A) ::= .                         {A = 0;}
 idxlist_opt(A) ::= LP idxlist(X) RP.         {A = X;}
 idxlist(A) ::= idxlist(X) COMMA idxitem(Y).  {A = sqliteIdListAppend(X,&Y);}
 idxlist(A) ::= idxitem(Y).                   {A = sqliteIdListAppend(0,&Y);}
-idxitem(A) ::= nm(X).                        {A = X;}
+idxitem(A) ::= nm(X) sortorder.              {A = X;}
 
 ///////////////////////////// The DROP INDEX command /////////////////////////
 //
