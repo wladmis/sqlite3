@@ -43,6 +43,12 @@ do_test auth-1.1.2 {
 do_test auth-1.1.3 {
   db authorizer
 } {::auth}
+do_test auth-1.1.4 {
+  # Ticket #896.
+  catchsql {
+    SELECT x;
+  }
+} {1 {no such column: x}}
 do_test auth-1.2 {
   execsql {SELECT name FROM sqlite_master}
 } {}
