@@ -319,11 +319,11 @@ void sqliteAddDefaultValue(Parse *pParse, Token *pVal, int minusFlag){
 void sqliteEndTable(Parse *pParse, Token *pEnd){
   Table *p;
   int h;
-  int addVersion;      /* True to insert a "file format" meta record */
+  int addMeta;       /* True to insert a meta records into the file */
 
   if( pParse->nErr ) return;
   p = pParse->pNewTable;
-  addVersion =  p!=0 && pParse->db->nTable==1;
+  addMeta =  p!=0 && pParse->db->nTable==1;
 
   /* Add the table to the in-memory representation of the database
   */
@@ -367,7 +367,7 @@ void sqliteEndTable(Parse *pParse, Token *pEnd){
     sqliteVdbeChangeP3(v, base+3, p->zName, 0);
     sqliteVdbeChangeP3(v, base+4, p->zName, 0);
     sqliteVdbeChangeP3(v, base+5, pParse->sFirstToken.z, n);
-    if( addVersion ){
+    if( addMeta ){
       sqliteVdbeAddOpList(v, ArraySize(addVersion), addVersion);
     }
     sqliteVdbeAddOp(v, OP_Close, 0, 0, 0, 0);
