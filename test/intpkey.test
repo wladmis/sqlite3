@@ -482,4 +482,6 @@ do_test intpkey-11.1 {
   }
 } {}
 
+integrity_check intpkey-12.1
+
 finish_test

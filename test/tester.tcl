@@ -247,5 +247,5 @@ proc forcedelete {filename} {
 proc integrity_check {name} {
   do_test $name {
     execsql {PRAGMA integrity_check}
-  } {ok ok}
+  } {ok}
 }

@@ -116,7 +116,7 @@ do_test memdb-2.1 {
   execsql {
     PRAGMA integrity_check
   }
-} {ok ok}
+} {ok}
 
 do_test memdb-3.1 {
   execsql {

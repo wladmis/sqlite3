@@ -281,4 +281,6 @@ do_test insert-6.4 {
   }
 } {}
 
+integrity_check insert-99.0
+
 finish_test

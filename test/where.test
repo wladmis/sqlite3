@@ -737,5 +737,6 @@ do_test where-10.4 {
   }
 } {50}
 
+integrity_check {where-99.0}
 
 finish_test

@@ -38,7 +38,7 @@
 **
 ** If that were all the encoder did, it would work, but in certain cases
 ** it could double the size of the encoded string.  For example, to
-** encode a string of 100 0x27 character would require 100 instances of
+** encode a string of 100 0x27 characters would require 100 instances of
 ** the 0x01 0x03 escape sequence resulting in a 200-character output.
 ** We would prefer to keep the size of the encoded string smaller than
 ** this.
