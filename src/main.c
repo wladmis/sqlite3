@@ -121,6 +121,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   if( pzErrMsg ) *pzErrMsg = 0;
   if( db==0 ){
     sqliteSetString(pzErrMsg, "out of memory", 0);
+    sqliteStrRealloc(pzErrMsg);
     return 0;
   }
   
@@ -215,5 +216,6 @@ int sqlite_exec(
   sParse.xCallback = xCallback;
   sParse.pArg = pArg;
   nErr = sqliteRunParser(&sParse, zSql, pzErrMsg);
+  sqliteStrRealloc(pzErrMsg);
   return nErr;
 }

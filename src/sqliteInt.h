@@ -35,11 +35,14 @@
 #include <string.h>
 #include <assert.h>
 
-/* #define MEMORY_DEBUG 1 */
+/* #define MEMORY_DEBUG 2 */
 #ifdef MEMORY_DEBUG
 # define sqliteMalloc(X)    sqliteMalloc_(X,__FILE__,__LINE__)
 # define sqliteFree(X)      sqliteFree_(X,__FILE__,__LINE__)
 # define sqliteRealloc(X,Y) sqliteRealloc_(X,Y,__FILE__,__LINE__)
+  void sqliteStrRealloc(char**);
+#else
+# define sqliteStrRealloc(X)
 #endif
 
 /*
