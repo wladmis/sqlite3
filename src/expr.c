@@ -990,7 +990,6 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
   NameContext *pNC = (NameContext*)pArg;
   SrcList *pSrcList;
   Parse *pParse;
-  int i;
 
   assert( pNC!=0 );
   pSrcList = pNC->pSrcList;
@@ -1000,6 +999,7 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
   ExprSetProperty(pExpr, EP_Resolved);
 #ifndef NDEBUG
   if( pSrcList ){
+    int i;
     for(i=0; i<pSrcList->nSrc; i++){
       assert( pSrcList->a[i].iCursor>=0 && pSrcList->a[i].iCursor<pParse->nTab);
     }
