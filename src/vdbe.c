@@ -979,6 +979,7 @@ static int hardDeephem(Vdbe *p, int i){
   if( z==0 ) return 1;
   memcpy(z, *pzStack, pStack->n);
   *pzStack = z;
+  pStack->flags &= !STK_Ephem;
   return 0;
 }
 
@@ -1835,6 +1836,7 @@ case OP_Pull: {
   Stack ts;
   char *tz;
   VERIFY( if( from<0 ) goto not_enough_stack; )
+  Deephemeralize(p, from);
   ts = aStack[from];
   tz = zStack[from];
   Deephemeralize(p, to);
