@@ -798,7 +798,7 @@ WhereInfo *sqlite3WhereBegin(
       sqlite3VdbeAddOp(v, OP_Pop, nColumn, 0);
       sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
       sqlite3VdbeAddOp(v, OP_MakeKey, nColumn, 0);
-      sqlite3AddIdxKeyType(v, pIdx);
+      sqlite3IndexAffinityStr(v, pIdx);
       sqlite3VdbeAddOp(v, OP_MemStore, pLevel->iMem, 0);
       if( nColumn==pIdx->nColumn || pLevel->bRev ){
         testOp = OP_IdxGT;
@@ -1003,7 +1003,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3VdbeAddOp(v, OP_Pop, nCol, 0);
         sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
         sqlite3VdbeAddOp(v, OP_MakeKey, nCol, 0);
-        sqlite3AddIdxKeyType(v, pIdx);
+        sqlite3IndexAffinityStr(v, pIdx);
         if( pLevel->bRev ){
           sqlite3VdbeAddOp(v, OP_MoveLt, pLevel->iCur, brk);
           if( !geFlag ){
@@ -1059,7 +1059,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3VdbeAddOp(v, OP_Pop, nCol, 0);
         sqlite3VdbeAddOp(v, OP_Goto, 0, brk);
         sqlite3VdbeAddOp(v, OP_MakeKey, nCol, 0);
-        sqlite3AddIdxKeyType(v, pIdx);
+        sqlite3IndexAffinityStr(v, pIdx);
         if( pLevel->bRev ){
           pLevel->iMem = pParse->nMem++;
           sqlite3VdbeAddOp(v, OP_MemStore, pLevel->iMem, 1);

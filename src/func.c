@@ -571,6 +571,7 @@ void sqlite3RegisterBuiltinFunctions(sqlite *db){
     { "max",       -1, SQLITE_ARGS,    2, minmaxFunc },
     { "max",        0, 0,              2, 0          },
     { "typeof",     1, SQLITE_TEXT,    0, typeofFunc },
+    { "classof",    1, SQLITE_TEXT,    0, typeofFunc }, /* FIX ME: hack */
     { "length",     1, SQLITE_NUMERIC, 0, lengthFunc },
     { "substr",     3, SQLITE_TEXT,    0, substrFunc },
     { "abs",        1, SQLITE_NUMERIC, 0, absFunc    },
