@@ -58,6 +58,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Aug-29} {Version 3.0.5 (beta)} {
+  The fourth beta release of SQLite version 3.0 is now available.
+  The next release is expected to be called "stable".
+}
+
+
 newsitem {2004-Aug-08} {Version 3.0.4 (beta)} {
   The third beta release of SQLite version 3.0 is now available.
   This new beta fixes several bugs including a database corruption
