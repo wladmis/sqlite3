@@ -621,9 +621,14 @@ do_test select1-11.3 {
     SELECT * FROM t3 AS x, t4 AS y;
   }
 } {x.a 1 x.b 2 y.a 3 y.b 4}
-do_test select1-11.4 {
+do_test select1-11.4.1 {
   execsql {
     SELECT t3.*, t4.b FROM t3, t4;
+  }
+} {1 2 4}
+do_test select1-11.4.2 {
+  execsql {
+    SELECT "t3".*, t4.b FROM t3, t4;
   }
 } {1 2 4}
 do_test select1-11.5 {
