@@ -122,5 +122,11 @@ do_test minmax-3.3 {
   set sqlite_search_count
 } {0}
 
+do_test minmax-4.1 {
+  execsql {
+    SELECT coalesce(min(x),-1), coalesce(max(x),-1) FROM
+      (SELECT * FROM t1 UNION SELECT NULL as 'x', NULL as 'y')
+  }
+} {-1 -1}
 
 finish_test

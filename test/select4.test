@@ -290,6 +290,14 @@ do_test select4-6.6 {
   }
 } {1 2}
 
+# Test distinctness of NULL in other ways.
+#
+do_test select4-6.7 {
+  execsql {
+    SELECT NULL EXCEPT SELECT NULL
+  }
+} {{}}
+
 
 # Make sure column names are correct when a compound select appears as
 # an expression in the WHERE clause.
