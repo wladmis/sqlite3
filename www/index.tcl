@@ -65,9 +65,7 @@ puts {<h2>Current Status</h2>
 The latest source code is
 <a href="download.html">available for download</a>.
 There are currently no known memory leaks or bugs
-in the library.
-SQLite 2.1.7 is currently being used in several mission-critical
-applications.  SQLite 2.2.0 is in beta-test.
+in version 2.2.1 of the library.
 </p>
 
 <p>
