@@ -192,7 +192,7 @@ occurred since version 1.0.0:
   <td valign="top">2004-Jan-21</td>
   <td><p>Version 3.1.0 adds support for
   <a href="pragma.html#pragma_auto_vacuum">autovacuum mode</a>.
-  Prior versions of SQLite will be able to read and autovacuumed
+  Prior versions of SQLite will be able to read an autovacuumed
   database but will not be able to write it.  If autovaccum is disabled
   (which is the default condition)
   then databases are fully forwards and backwards compatible.</p>
