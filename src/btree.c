@@ -3746,6 +3746,11 @@ int sqlite3BtreeGetMeta(Btree *pBt, int idx, u32 *pMeta){
   if( rc ) return rc;
   *pMeta = get4byte(&pP1[36 + idx*4]);
   sqlite3pager_unref(pP1);
+
+  /* The current implementation is unable to handle writes to an autovacuumed
+  ** database.  So make such a database readonly. */
+  if( idx==4 && *pMeta>0 ) pBt->readOnly = 1;
+
   return SQLITE_OK;
 }
 
