@@ -886,6 +886,7 @@ for {set i 2} {$i<=$limit} {incr i} {
        }
     } {}
   }
+  set ::pager_old_format 0
 }
    
 finish_test
