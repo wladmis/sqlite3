@@ -110,7 +110,6 @@ static void sqliteGdbmClose(Dbbe *pDbbe){
     memset(pFile, 0, sizeof(*pFile));   
     sqliteFree(pFile);
   }
-  sqliteDbbeCloseAllTempFiles(pDbbe);
   memset(pBe, 0, sizeof(*pBe));
   sqliteFree(pBe);
 }
@@ -542,15 +541,6 @@ static int sqliteGdbmDelete(DbbeCursor *pCursr, int nKey, char *pKey){
 }
 
 /*
-** Open a temporary file.  The file is located in the same directory
-** as the rest of the database.
-*/
-static int sqliteGdbmOpenTempFile(Dbbe *pDbbe, FILE **ppFile){
-  Dbbex *pBe = (Dbbex*)pDbbe;
-  return sqliteDbbeOpenTempFile(pBe->zDir, pDbbe, ppFile);
-}
-
-/*
 ** This variable contains pointers to all of the access methods
 ** used to implement the GDBM backend.
 */
@@ -573,8 +563,6 @@ static struct DbbeMethods gdbmMethods = {
   /*             New */   sqliteGdbmNew,
   /*             Put */   sqliteGdbmPut,
   /*          Delete */   sqliteGdbmDelete,
-  /*    OpenTempFile */   sqliteGdbmOpenTempFile,
-  /*   CloseTempFile */   sqliteDbbeCloseTempFile
 };
 
 

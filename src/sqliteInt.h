@@ -427,7 +427,4 @@ Vdbe *sqliteGetVdbe(Parse*);
 int sqliteRandomByte(void);
 int sqliteRandomInteger(void);
 void sqliteRandomName(char*,char*);
-int sqliteDbbeOpenTempFile(const char*, Dbbe*, FILE**);
-void sqliteDbbeCloseTempFile(Dbbe*, FILE*);
-void sqliteDbbeCloseAllTempFiles(Dbbe*);
 char *sqliteDbbeNameToFile(const char*,const char*,const char*);

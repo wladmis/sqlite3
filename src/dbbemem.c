@@ -399,7 +399,6 @@ static void sqliteMemClose(Dbbe *pDbbe){
     deleteMTable(pTble);
   }
   ArrayClear(&pBe->tables);
-  sqliteDbbeCloseAllTempFiles(pDbbe);
   memset(pBe, 0, sizeof(*pBe));
   sqliteFree(pBe);
 }
@@ -717,31 +716,6 @@ static int sqliteMemDelete(DbbeCursor *pCursr, int nKey, char *pKey){
 }
 
 /*
-** Open a temporary file.  The file is located in the current working
-** directory.
-*/
-static int sqliteMemOpenTempFile(Dbbe *pDbbe, FILE **ppFile){
-#if OS_UNIX
-  const char *zTemps[] = { "/usr/tmp", "/var/tmp", "/tmp", "/temp", 0};
-#endif
-#if OS_WIN
-  const char *zTemps[] = { "/temp", "c:/temp", "c:", "d:", "e:", 0};
-#endif
-  const char *zDir;
-  int i;
-  struct stat statbuf;
-  for(i=0; zTemps[i]; i++){
-    zDir = zTemps[i];
-    if( stat(zDir, &statbuf)==0 && S_ISDIR(statbuf.st_mode) 
-      && access(zDir, W_OK|X_OK)==0 ){
-        break;
-    }
-  }
-  if( zDir==0 ) zDir = ".";
-  return sqliteDbbeOpenTempFile(zDir, pDbbe, ppFile);
-}
-
-/*
 ** This variable contains pointers to all of the access methods
 ** used to implement the MEMORY backend.
 */
@@ -764,8 +738,6 @@ static struct DbbeMethods memoryMethods = {
   /*             New */   sqliteMemNew,
   /*             Put */   sqliteMemPut,
   /*          Delete */   sqliteMemDelete,
-  /*    OpenTempFile */   sqliteMemOpenTempFile,
-  /*   CloseTempFile */   sqliteDbbeCloseTempFile
 };
 
 /*
