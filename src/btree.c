@@ -1495,7 +1495,8 @@ int sqliteBtreeLast(BtCursor *pCur, int *pRes){
 ** this value is as follows:
 **
 **     *pRes<0      The cursor is left pointing at an entry that
-**                  is smaller than pKey.
+**                  is smaller than pKey or if the table is empty
+**                  and the cursor is therefore left point to nothing.
 **
 **     *pRes==0     The cursor is left pointing at an entry that
 **                  exactly matches pKey.
@@ -1513,7 +1514,7 @@ int sqliteBtreeMoveto(BtCursor *pCur, const void *pKey, int nKey, int *pRes){
     int lwr, upr;
     Pgno chldPg;
     MemPage *pPage = pCur->pPage;
-    int c = -1;
+    int c = -1;  /* pRes return if table is empty must be -1 */
     lwr = 0;
     upr = pPage->nCell-1;
     while( lwr<=upr ){
