@@ -1087,7 +1087,8 @@ int sqlite3pager_open(
   char *zFullPathname = 0;
   int nameLen;
   OsFile fd;
-  int rc, i;
+  int rc = SQLITE_OK;
+  int i;
   int tempFile = 0;
   int memDb = 0;
   int readOnly = 0;

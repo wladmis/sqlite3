@@ -32,7 +32,7 @@ void sqlite3Update(
 ){
   int i, j;              /* Loop counters */
   Table *pTab;           /* The table to be updated */
-  int addr;              /* VDBE instruction address of the start of the loop */
+  int addr = 0;          /* VDBE instruction address of the start of the loop */
   WhereInfo *pWInfo;     /* Information about the WHERE clause */
   Vdbe *v;               /* The virtual database engine */
   Index *pIdx;           /* For looping over indices */
@@ -46,8 +46,8 @@ void sqlite3Update(
                          ** an expression for the i-th column of the table.
                          ** aXRef[i]==-1 if the i-th column is not changed. */
   int chngRecno;         /* True if the record number is being changed */
-  Expr *pRecnoExpr;      /* Expression defining the new record number */
-  int openAll;           /* True if all indices need to be opened */
+  Expr *pRecnoExpr = 0;  /* Expression defining the new record number */
+  int openAll = 0;       /* True if all indices need to be opened */
   int isView;            /* Trying to update a view */
   AuthContext sContext;  /* The authorization context */
 

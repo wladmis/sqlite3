@@ -1160,7 +1160,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     case TK_FLOAT:    op = OP_Real;       break;
     case TK_STRING:   op = OP_String8;     break;
     case TK_BLOB:     op = OP_HexBlob;    break;
-    default: break;
+    default: op = 0; break;
   }
   switch( pExpr->op ){
     case TK_COLUMN: {

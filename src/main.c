@@ -1021,7 +1021,7 @@ prepare_out:
   if( rc==SQLITE_OK ){
     *ppStmt = (sqlite3_stmt*)sParse.pVdbe;
   }else if( sParse.pVdbe ){
-    sqlite3_finalize(sParse.pVdbe);
+    sqlite3_finalize((sqlite3_stmt*)sParse.pVdbe);
   }
 
   if( zErrMsg ){

@@ -1404,7 +1404,7 @@ static int multiSelect(
     case TK_EXCEPT:
     case TK_UNION: {
       int unionTab;    /* Cursor number of the temporary table holding result */
-      int op;          /* One of the SRT_ operations to apply to self */
+      int op = 0;      /* One of the SRT_ operations to apply to self */
       int priorOp;     /* The SRT_ operation to apply to prior selects */
       int nLimit, nOffset; /* Saved values of p->nLimit and p->nOffset */
       ExprList *pOrderBy;  /* The ORDER BY clause for the right SELECT */
@@ -2342,7 +2342,7 @@ int sqlite3Select(
   /* Generate code for all sub-queries in the FROM clause
   */
   for(i=0; i<pTabList->nSrc; i++){
-    const char *zSavedAuthContext;
+    const char *zSavedAuthContext = 0;
     int needRestoreContext;
 
     if( pTabList->a[i].pSelect==0 ) continue;
