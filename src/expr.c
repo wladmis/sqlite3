@@ -137,9 +137,18 @@ void sqliteExprListMoveStrings(ExprList *pList, int offset){
     sqliteExprMoveStrings(pList->a[i].pExpr, offset);
   }
 }
+static void sqliteSrcListMoveStrings(SrcList *pSrc, int offset){
+  int i;
+  if( pSrc==0 ) return;
+  for(i=0; i<pSrc->nSrc; i++){
+    sqliteSelectMoveStrings(pSrc->a[i].pSelect, offset);
+    sqliteExprMoveStrings(pSrc->a[i].pOn, offset);
+  }
+}
 void sqliteSelectMoveStrings(Select *pSelect, int offset){
   if( pSelect==0 ) return;
   sqliteExprListMoveStrings(pSelect->pEList, offset);
+  sqliteSrcListMoveStrings(pSelect->pSrc, offset);
   sqliteExprMoveStrings(pSelect->pWhere, offset);
   sqliteExprListMoveStrings(pSelect->pGroupBy, offset);
   sqliteExprMoveStrings(pSelect->pHaving, offset);
