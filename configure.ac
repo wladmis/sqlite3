@@ -154,6 +154,12 @@ if test "$program_prefix" = "NONE"; then
 fi
 AC_SUBST(program_prefix)
 
+if test -f VERSION; then
+  VERSION=`cat VERSION`
+  echo "Version set to $VERSION"
+fi
+AC_SUBST(VERSION)
+
 #########
 # Check to see if the --with-hints=FILE option is used.  If there is none,
 # then check for a files named "$host.hints" and ../$hosts.hints where
@@ -474,4 +480,7 @@ AC_CHECK_FUNC(usleep, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_USLEEP=1"])
 #########
 # Generate the output files.
 #
-AC_OUTPUT(Makefile)
+AC_OUTPUT([
+Makefile
+sqlite.pc
+])
