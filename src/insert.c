@@ -60,9 +60,12 @@ void sqliteInsert(
   int base;             /* First available cursor */
   int iCont, iBreak;    /* Beginning and end of the loop over srcTab */
 
+  if( pParse->nErr || sqlite_malloc_failed ) goto insert_cleanup;
+
   /* Locate the table into which we will be inserting new information.
   */
   zTab = sqliteTableNameFromToken(pTableName);
+  if( zTab==0 ) goto insert_cleanup;
   pTab = sqliteFindTable(pParse->db, zTab);
   sqliteFree(zTab);
   if( pTab==0 ){
@@ -94,10 +97,11 @@ void sqliteInsert(
     srcTab = pParse->nTab++;
     sqliteVdbeAddOp(v, OP_OpenTbl, srcTab, 1, 0, 0);
     rc = sqliteSelect(pParse, pSelect, SRT_Table, srcTab);
-    if( rc ) goto insert_cleanup;
+    if( rc || pParse->nErr || sqlite_malloc_failed ) goto insert_cleanup;
     assert( pSelect->pEList );
     nColumn = pSelect->pEList->nExpr;
   }else{
+    assert( pList!=0 );
     srcTab = -1;
     assert( pList );
     nColumn = pList->nExpr;

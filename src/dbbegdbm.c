@@ -185,6 +185,7 @@ static int sqliteGdbmOpenCursor(
   if( pCursr==0 ) return SQLITE_NOMEM;
   if( zTable ){
     zFile = sqliteFileOfTable(pBe, zTable);
+    if( zFile==0 ) return SQLITE_NOMEM;
     for(pFile=pBe->pOpen; pFile; pFile=pFile->pNext){
       if( strcmp(pFile->zName,zFile)==0 ) break;
     }

@@ -66,6 +66,12 @@ typedef unsigned int u32;
 #endif
 
 /*
+** This variable gets set if malloc() ever fails.  After it gets set,
+** the SQLite library shuts down permanently.
+*/
+extern int sqlite_malloc_failed;
+
+/*
 ** The following global variables are used for testing and debugging
 ** only.  They only work if MEMORY_DEBUG is defined.
 */
@@ -257,8 +263,9 @@ struct IdList {
   struct {
     char *zName;      /* Text of the identifier. */
     char *zAlias;     /* The "B" part of a "A AS B" phrase.  zName is the "A" */
-    Table *pTab;      /* An SQL table corresponding to zName */
     int idx;          /* Index in some Table.aCol[] of a column named zName */
+    Table *pTab;      /* An SQL table corresponding to zName */
+    Select *pSelect;  /* A SELECT statement used in place of a table name */
   } *a;            /* One entry for each identifier on the list */
 };
 

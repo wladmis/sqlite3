@@ -65,6 +65,7 @@ Dbbe *sqliteDbbeOpen(
   return sqliteGdbmOpen(zName, writeFlag, createFlag, pzErrMsg);
 }
 
+#if 0  /* NOT USED */
 /*
 ** Translate the name of an SQL table (or index) into the name 
 ** of a file that holds the key/data pairs for that table or
@@ -115,3 +116,4 @@ char *sqliteDbbeNameToFile(
   zFile[i] = 0;
   return zFile;
 }
+#endif /* NOT USED */

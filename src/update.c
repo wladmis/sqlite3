@@ -51,12 +51,15 @@ void sqliteUpdate(
                          ** an expression for the i-th column of the table.
                          ** aXRef[i]==-1 if the i-th column is not changed. */
 
+  if( pParse->nErr || sqlite_malloc_failed ) goto update_cleanup;
+
   /* Locate the table which we want to update.  This table has to be
   ** put in an IdList structure because some of the subroutines we
   ** will be calling are designed to work with multiple tables and expect
   ** an IdList* parameter instead of just a Table* parameger.
   */
   pTabList = sqliteIdListAppend(0, pTableName);
+  if( pTabList==0 ) goto update_cleanup;
   for(i=0; i<pTabList->nId; i++){
     pTabList->a[i].pTab = sqliteFindTable(pParse->db, pTabList->a[i].zName);
     if( pTabList->a[i].pTab==0 ){

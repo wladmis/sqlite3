@@ -170,8 +170,9 @@ WhereInfo *sqliteWhereBegin(
   ** return value.
   */
   pWInfo = sqliteMalloc( sizeof(WhereInfo) );
-  if( pWInfo==0 ){
+  if( sqlite_malloc_failed ){
     sqliteFree(aOrder);
+    sqliteFree(pWInfo);
     return 0;
   }
   pWInfo->pParse = pParse;
