@@ -236,5 +236,13 @@ do_test func-7.1 {
   execsql {SELECT last_insert_rowid()}
 } [db last_insert_rowid]
 
+# Tests for aggregate functions and how they handle NULLs.
+#
+do_test func-8.1 {
+  execsql {
+    SELECT sum(a), count(a), round(avg(a),2), min(a), max(a), count(*) FROM t2;
+  }
+} {68236 3 22745.33 1 67890 5}
+
 
 finish_test
