@@ -64,7 +64,7 @@ currently understands the following SQL commands:</p>
 </ul>
 </p>
 
-<p>Some the many SQL features that SQLite does not (currently) 
+<p>A few of the many SQL features that SQLite does not (currently) 
 implement are as follows:</p>
 
 <p>
