@@ -321,6 +321,21 @@ fi
 AC_SUBST(ALLOWATTACHMEM)
 
 ##########
+# Do we want to support release
+#
+AC_ARG_ENABLE(releasemode, 
+[  --enable-releasemode           Support libtool link to release mode],,enable_releasemode=no)
+AC_MSG_CHECKING([whether to support shared library linked as release mode or not])
+if test "$enable_releasemode" = "no"; then
+  ALLOWRELEASE=""
+  AC_MSG_RESULT([no])
+else
+  ALLOWRELEASE="-release `cat VERSION`"
+  AC_MSG_RESULT([yes])
+fi
+AC_SUBST(ALLOWRELEASE)
+
+##########
 # Do we want temporary databases in memory
 #
 AC_ARG_ENABLE(tempdb-in-ram, 
