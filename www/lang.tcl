@@ -1237,11 +1237,11 @@ value, then the ABORT algorithm is used.</p>
 <p>When this conflict resolution strategy deletes rows in order to
 satisfy a constraint, it does not invoke delete triggers on those
 rows.  But that may change in a future release.</p>
+</dl>
 
 <p>The algorithm specified in the OR clause of a COPY, INSERT, or UPDATE
 overrides any algorithm specified in a CREATE TABLE or CREATE INDEX.
 If no algorithm is specified anywhere, the ABORT algorithm is used.</p>
-
 }
 # <p>For additional information, see 
 # <a href="conflict.html">conflict.html</a>.</p>
@@ -1348,6 +1348,12 @@ In a compound query, the LIMIT clause may only appear on the
 final SELECT statement.
 The limit is applied to the entire query not
 to the individual SELECT statement to which it is attached.
+Note that if the OFFSET keyword is used in the LIMIT clause, then the
+limit is the first number and the offset is the second number.  If a
+comma is used instead of the OFFSET keyword, then the offset is the
+first number and the limit is the second number.  This seeming
+contradition is intentional - it maximizes compatibility with legacy
+SQL database systems.
 </p>
 
 <p>A compound SELECT is formed from two or more simple SELECTs connected
