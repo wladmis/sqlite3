@@ -248,6 +248,7 @@ do_test func-7.1 {
 # Tests for aggregate functions and how they handle NULLs.
 #
 do_test func-8.1 {
+  execsql {EXPLAIN SELECT sum(a) FROM t2;}
   execsql {
     SELECT sum(a), count(a), round(avg(a),2), min(a), max(a), count(*) FROM t2;
   }
