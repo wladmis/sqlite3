@@ -513,7 +513,7 @@ static void open_db(struct callback_data *p){
     char *zErrMsg = 0;
 #ifdef SQLITE_HAS_CODEC
     int n = p->zKey ? strlen(p->zKey) : 0;
-    p->db = sqlite_open_encrypted(p->zDbFilename, p->zKey, n, &zErrMsg);
+    p->db = sqlite_open_encrypted(p->zDbFilename, p->zKey, n, 0, &zErrMsg);
 #else
     p->db = sqlite_open(p->zDbFilename, 0, &zErrMsg);
 #endif

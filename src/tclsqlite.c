@@ -1064,7 +1064,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   memset(p, 0, sizeof(*p));
   zFile = Tcl_GetStringFromObj(objv[2], 0);
 #ifdef SQLITE_HAS_CODEC
-  p->db = sqlite_open_encrypted(zFile, pKey, nKey, &zErrMsg);
+  p->db = sqlite_open_encrypted(zFile, pKey, nKey, 0, &zErrMsg);
 #else
   p->db = sqlite_open(zFile, mode, &zErrMsg);
 #endif
