@@ -347,9 +347,9 @@ int sqliteExprIsInteger(Expr *p, int *pValue){
       return 1;
     }
     case TK_STRING: {
-      char *z = p->token.z;
+      const char *z = p->token.z;
       int n = p->token.n;
-      if( n>0 && z=='-' ){ z++; n--; }
+      if( n>0 && z[0]=='-' ){ z++; n--; }
       while( n>0 && *z && isdigit(*z) ){ z++; n--; }
       if( n==0 ){
         *pValue = atoi(p->token.z);
