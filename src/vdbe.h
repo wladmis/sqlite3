@@ -108,8 +108,6 @@ void sqlite3VdbeTrace(Vdbe*,FILE*);
 void sqlite3VdbeCompressSpace(Vdbe*,int);
 int sqlite3VdbeReset(Vdbe*,char **);
 int sqliteVdbeSetVariables(Vdbe*,int,const char**);
+int sqlite3VdbeKeyCompare(void*,int,const u8*,int, const u8*);
 
 #endif
-
-
-
