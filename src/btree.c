@@ -277,7 +277,7 @@ struct OverflowPage {
 ** outside of u.aDisk[].  This is a transient situation that is quickly
 ** resolved.  But while it is happening, it is possible for a database
 ** page to hold as many as two more cells than it might otherwise hold.
-** The extra too entries in apCell[] are an allowance for this situation.
+** The extra two entries in apCell[] are an allowance for this situation.
 **
 ** The pParent field points back to the parent page.  This allows us to
 ** walk up the BTree from any leaf to the root.  Care must be taken to

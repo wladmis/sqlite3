@@ -1840,7 +1840,7 @@ case OP_Not: {
   break;
 }
 
-/* Opcode:  * * *
+/* Opcode: BitNot * * *
 **
 ** Interpret the top of the stack as an value.  Replace it
 ** with its ones-complement.
