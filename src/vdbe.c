@@ -2804,18 +2804,16 @@ case OP_NotExists: {
   assert( i>=0 && i<p->nCursor );
   assert( p->apCsr[i]!=0 );
   if( (pCrsr = (pC = p->apCsr[i])->pCursor)!=0 ){
-    int res, rx;
+    int res;
     u64 iKey;
     assert( pTos->flags & MEM_Int );
     assert( p->apCsr[i]->intKey );
     iKey = intToKey(pTos->i);
-    // rx = sqlite3BtreeMoveto(pCrsr, 0, iKey, &res);
     rc = sqlite3BtreeMoveto(pCrsr, 0, iKey, &res);
     pC->lastRecno = pTos->i;
     pC->recnoIsValid = res==0;
     pC->nullRow = 0;
     pC->cacheValid = 0;
-    // if( rx!=SQLITE_OK || res!=0 ){
     if( res!=0 ){
       pc = pOp->p2 - 1;
       pC->recnoIsValid = 0;
