@@ -571,7 +571,7 @@ DROP VIEW <view-name>
 }
 
 puts {
-<p>The DROP VIEW statement consists of the keywords "DROP TABLE" followed
+<p>The DROP VIEW statement consists of the keywords "DROP VIEW" followed
 by the name of the view.  The view named is removed from the database.
 But no actual data is modified.</p>}
 
