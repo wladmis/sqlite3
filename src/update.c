@@ -58,6 +58,7 @@ void sqliteUpdate(
   pTabList = sqliteTableTokenToIdList(pParse, pTableName);
   if( pTabList==0 ) goto update_cleanup;
   pTab = pTabList->a[0].pTab;
+  assert( pTab->pSelect==0 );  /* This table is not a VIEW */
   aXRef = sqliteMalloc( sizeof(int) * pTab->nCol );
   if( aXRef==0 ) goto update_cleanup;
   for(i=0; i<pTab->nCol; i++) aXRef[i] = -1;

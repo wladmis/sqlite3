@@ -98,7 +98,9 @@ void sqliteDeleteFrom(
   */
   pTabList = sqliteTableTokenToIdList(pParse, pTableName);
   if( pTabList==0 ) goto delete_from_cleanup;
+  assert( pTabList->nId==1 );
   pTab = pTabList->a[0].pTab;
+  assert( pTab->pSelect==0 );  /* This table is not a view */
 
   /* Resolve the column names in all the expressions.
   */
