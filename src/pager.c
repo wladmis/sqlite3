@@ -1520,6 +1520,7 @@ static int pager_open_journal(Pager *pPager){
   assert( pPager->state==SQLITE_WRITELOCK );
   assert( pPager->journalOpen==0 );
   assert( pPager->useJournal );
+  sqlitepager_pagecount(pPager);
   pPager->aInJournal = sqliteMalloc( pPager->dbSize/8 + 1 );
   if( pPager->aInJournal==0 ){
     sqliteOsReadLock(&pPager->fd);
@@ -1539,7 +1540,6 @@ static int pager_open_journal(Pager *pPager){
   pPager->needSync = 0;
   pPager->alwaysRollback = 0;
   pPager->nRec = 0;
-  sqlitepager_pagecount(pPager);
   if( pPager->errMask!=0 ){
     rc = pager_errcode(pPager);
     return rc;
