@@ -57,10 +57,7 @@ explain ::= EXPLAIN.    {pParse->explain = 1;}
 ///////////////////// Begin and end transactions. ////////////////////////////
 //
 
-// For now, disable the ability to change the default conflict resolution
-// algorithm in a transaction.  We made add it back later.
-// cmd ::= BEGIN trans_opt onconf(R).  {sqliteBeginTransaction(pParse,R);}
-cmd ::= BEGIN trans_opt.        {sqliteBeginTransaction(pParse, OE_Default);}
+cmd ::= BEGIN trans_opt onconf(R).  {sqliteBeginTransaction(pParse,R);}
 trans_opt ::= .
 trans_opt ::= TRANSACTION.
 trans_opt ::= TRANSACTION ids.

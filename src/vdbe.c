@@ -4511,10 +4511,9 @@ cleanup:
         break;
       }
     }
-  }else{
-    sqliteBtreeCommitCkpt(pBt);
-    if( db->pBeTemp ) sqliteBtreeCommitCkpt(db->pBeTemp);
-  }   
+  }
+  sqliteBtreeCommitCkpt(pBt);
+  if( db->pBeTemp ) sqliteBtreeCommitCkpt(db->pBeTemp);
   return rc;
 
   /* Jump to here if a malloc() fails.  It's hard to get a malloc()
