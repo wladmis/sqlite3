@@ -217,6 +217,15 @@ int sqliteGetToken(const char *z, int *tokenType){
         return 2;
       }
     }
+    case '|': {
+      if( z[1]!='|' ){
+        *tokenType = TK_ILLEGAL;
+        return 1;
+      }else{
+        *tokenType = TK_CONCAT;
+        return 2;
+      }
+    }
     case ',': {
       *tokenType = TK_COMMA;
       return 1;

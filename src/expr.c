@@ -505,6 +505,12 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       sqliteVdbeAddOp(v, op, 0, 0, 0, 0);
       break;
     }
+    case TK_CONCAT: {
+      sqliteExprCode(pParse, pExpr->pLeft);
+      sqliteExprCode(pParse, pExpr->pRight);
+      sqliteVdbeAddOp(v, OP_Concat, 2, 0, 0, 0);
+      break;
+    }
     case TK_LT:
     case TK_LE:
     case TK_GT:
