@@ -337,7 +337,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
           sqliteParserTrace(trace, "parser: ");
         }else if( sqliteStrNICmp(z,"--vdbe-trace-on--",17)==0 ){
           pParse->db->flags |= SQLITE_VdbeTrace;
-        }else if( sqliteStrNICmp(z,"--vdbe-trace-off--", 19)==0 ){
+        }else if( sqliteStrNICmp(z,"--vdbe-trace-off--", 18)==0 ){
           pParse->db->flags &= ~SQLITE_VdbeTrace;
         }
         break;
