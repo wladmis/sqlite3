@@ -4150,7 +4150,7 @@ const char *sqlite3BtreeGetFilename(Btree *pBt){
 ** must be active for both files.
 **
 ** The size of file pBtFrom may be reduced by this operation.
-** If anything goes wrong, the transaction on pBtFrom is rolled back.
+** If anything goes wrong, the transaction on pBtTo is rolled back.
 */
 int sqlite3BtreeCopyFile(Btree *pBtTo, Btree *pBtFrom){
   int rc = SQLITE_OK;

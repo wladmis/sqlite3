@@ -172,7 +172,7 @@ do_test attach3-5.3 {
   execsql {
     SELECT * FROM aux.sqlite_master WHERE name = 'tr1';
   }
-} {trigger tr1 t3 0 {CREATE TRIGGER aux.tr1 AFTER INSERT ON t3 BEGIN
+} {trigger tr1 t3 0 {CREATE TRIGGER tr1 AFTER INSERT ON t3 BEGIN
       INSERT INTO t3 VALUES(new.e*2, new.f*2);
     END}}
 
