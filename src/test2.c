@@ -493,5 +493,9 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   Tcl_CreateCommand(interp, "page_number", page_number, 0, 0);
   Tcl_LinkVar(interp, "sqlite_io_error_pending",
      (char*)&sqlite_io_error_pending, TCL_LINK_INT);
+#ifdef SQLITE_TEST
+  Tcl_LinkVar(interp, "pager_old_format",
+     (char*)&pager_old_format, TCL_LINK_INT);
+#endif
   return TCL_OK;
 }

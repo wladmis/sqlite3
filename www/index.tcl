@@ -213,10 +213,4 @@ puts {<h2>Related Sites</h2>
 </ul>}
 
 puts {
-<p><hr /></p>
-<p>
-<a href="../index.html"><img src="/goback.jpg" border=0 />
-More Open Source Software</a> from Hwaci.
-</p>
-
 </body></html>}
