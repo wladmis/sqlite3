@@ -425,6 +425,23 @@ static int binaryCollatingFunc(
 }
 
 /*
+** Another built-in collating sequence: NOCASE. At the moment there is
+** only a UTF-8 implementation.
+*/
+static int nocaseCollatingFunc(
+  void *NotUsed,
+  int nKey1, const void *pKey1,
+  int nKey2, const void *pKey2
+){
+  int r = sqlite3StrNICmp(
+      (const char *)pKey1, (const char *)pKey2, (nKey1>nKey2)?nKey1:nKey2);
+  if( 0==r ){
+    r = nKey1-nKey2;
+  }
+  return r;
+}
+
+/*
 ** Return the ROWID of the most recent insert
 */
 long long int sqlite3_last_insert_rowid(sqlite *db){
@@ -1001,9 +1018,24 @@ static int openDatabase(
     sqlite3HashInit(&db->aDb[i].trigHash, SQLITE_HASH_STRING, 0);
     sqlite3HashInit(&db->aDb[i].aFKey, SQLITE_HASH_STRING, 1);
   }
-  db->pDfltColl =
-     sqlite3ChangeCollatingFunction(db, "BINARY", 6, 0, binaryCollatingFunc);
   
+  /* Add the default collation sequence BINARY. BINARY works for both UTF-8
+  ** and UTF-16, so add a version for each to avoid any unnecessary
+  ** conversions. The only error that can occur here is a malloc() failure.
+  */
+  sqlite3_create_collation(db, "BINARY", 0, 0, binaryCollatingFunc);
+  sqlite3_create_collation(db, "BINARY", 1, 0, binaryCollatingFunc);
+  db->pDfltColl = sqlite3FindCollSeq(db, "BINARY", 6, 0);
+  if( !db->pDfltColl ){
+    rc = db->errCode;
+    assert( rc!=SQLITE_OK );
+    db->magic = SQLITE_MAGIC_CLOSED;
+    goto opendb_out;
+  }
+
+  /* Also add a UTF-8 case-insensitive collation sequence. */
+  sqlite3_create_collation(db, "NOCASE", 0, 0, nocaseCollatingFunc);
+
   /* Open the backend database driver */
   if( zFilename[0]==':' && strcmp(zFilename,":memory:")==0 ){
     db->temp_store = 2;
@@ -1098,3 +1130,41 @@ int sqlite3_reset(sqlite3_stmt *pStmt){
   sqlite3VdbeMakeReady((Vdbe*)pStmt, -1, 0);
   return rc;
 }
+
+int sqlite3_create_collation(
+  sqlite3* db, 
+  const char *zName, 
+  int pref16, 
+  void* pCtx,
+  int(*xCompare)(void*,int,const void*,int,const void*)
+){
+  CollSeq *pColl;
+  int rc = SQLITE_OK;
+  pColl = sqlite3FindCollSeq(db, zName, strlen(zName), 1);
+  if( 0==pColl ){
+   rc = SQLITE_NOMEM;
+  }else if( pref16 ){
+    pColl->xCmp16 = xCompare;
+    pColl->pUser16 = pCtx;
+  }else{
+    pColl->xCmp = xCompare;
+    pColl->pUser = pCtx;
+  }
+  sqlite3Error(db, rc, 0);
+  return SQLITE_OK;
+}
+
+int sqlite3_create_collation16(
+  sqlite3* db, 
+  const char *zName, 
+  int pref16, 
+  void* pCtx,
+  int(*xCompare)(void*,int,const void*,int,const void*)
+){
+  int rc;
+  char *zName8 = sqlite3utf16to8(zName, -1, SQLITE_BIGENDIAN);
+  rc = sqlite3_create_collation(db, zName8, pref16, pCtx, xCompare);
+  sqliteFree(zName8);
+  return rc;
+}
+

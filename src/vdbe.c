@@ -1510,25 +1510,25 @@ mismatch:
 /* Opcode: Lt P1 P2 P3
 **
 ** This works just like the Eq opcode except that the jump is taken if
-** the 2nd element down on the task is less than the top of the stack.
+** the 2nd element down on the stack is less than the top of the stack.
 ** See the Eq opcode for additional information.
 */
 /* Opcode: Le P1 P2 P3
 **
 ** This works just like the Eq opcode except that the jump is taken if
-** the 2nd element down on the task is less than or equal to the
+** the 2nd element down on the stack is less than or equal to the
 ** top of the stack.  See the Eq opcode for additional information.
 */
 /* Opcode: Gt P1 P2 P3
 **
 ** This works just like the Eq opcode except that the jump is taken if
-** the 2nd element down on the task is greater than the top of the stack.
+** the 2nd element down on the stack is greater than the top of the stack.
 ** See the Eq opcode for additional information.
 */
 /* Opcode: Ge P1 P2 P3
 **
 ** This works just like the Eq opcode except that the jump is taken if
-** the 2nd element down on the task is greater than or equal to the
+** the 2nd element down on the stack is greater than or equal to the
 ** top of the stack.  See the Eq opcode for additional information.
 */
 case OP_Eq:
