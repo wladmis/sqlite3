@@ -381,8 +381,8 @@ puts "\"[Operator \\.]\".</p>"
 Section {CREATE INDEX} createindex
 
 Syntax {sql-statement} {
-CREATE [UNIQUE] INDEX <index-name> 
-ON [<database-name> .] <table-name> ( <column-name> [, <column-name>]* )
+CREATE [UNIQUE] INDEX [<database-name> .] <index-name> 
+ON <table-name> ( <column-name> [, <column-name>]* )
 [ ON CONFLICT <conflict-algorithm> ]
 } {column-name} {
 <name> [ COLLATE <collation-name>] [ ASC | DESC ]
