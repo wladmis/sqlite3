@@ -256,7 +256,9 @@ setlist(A) ::= ID(X) EQ expr(Y) COMMA setlist(Z).
 setlist(A) ::= ID(X) EQ expr(Y).   {A = sqliteExprListAppend(0,Y,&X);}
 
 cmd ::= INSERT INTO ID(X) fieldlist_opt(F) VALUES LP itemlist(Y) RP.
-               {sqliteInsert(pParse, &X, Y, F);}
+               {sqliteInsert(pParse, &X, Y, 0, F);}
+cmd ::= INSERT INTO ID(X) fieldlist_opt(F) select(S).
+               {sqliteInsert(pParse, &X, 0, S, F);}
 
 
 %type itemlist {ExprList*}

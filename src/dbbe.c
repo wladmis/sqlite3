@@ -161,7 +161,7 @@ Dbbe *sqliteDbbeOpen(
     return 0;
   }
   zMaster = 0;
-  sqliteSetString(&zMaster, zName, "/" MASTER_NAME, 0);
+  sqliteSetString(&zMaster, zName, "/" MASTER_NAME ".tbl", 0);
   if( stat(zMaster, &statbuf)==0
    && access(zMaster, writeFlag ? (W_OK|R_OK) : R_OK)!=0 ){
     sqliteSetString(pzErrMsg, "access permission denied for ", zMaster, 0);

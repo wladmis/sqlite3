@@ -240,6 +240,7 @@ struct Select {
 #define SRT_Set          3  /* Store result as unique keys in a table */
 #define SRT_Union        5  /* Store result as keys in a table */
 #define SRT_Except       6  /* Remove result from a UNION table */
+#define SRT_Table        7  /* Store result as data with a unique key */
 
 /*
 ** When a SELECT uses aggregate functions (like "count(*)" or "avg(f1)")
@@ -325,7 +326,7 @@ void sqliteAddDefaultValue(Parse*,Token*,int);
 void sqliteEndTable(Parse*,Token*);
 void sqliteDropTable(Parse*, Token*);
 void sqliteDeleteTable(sqlite*, Table*);
-void sqliteInsert(Parse*, Token*, ExprList*, IdList*);
+void sqliteInsert(Parse*, Token*, ExprList*, Select*, IdList*);
 IdList *sqliteIdListAppend(IdList*, Token*);
 void sqliteIdListAddAlias(IdList*, Token*);
 void sqliteIdListDelete(IdList*);

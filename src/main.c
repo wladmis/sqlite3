@@ -174,6 +174,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   /* Open the backend database driver */
   db->pBe = sqliteDbbeOpen(zFilename, (mode&0222)!=0, mode!=0, pzErrMsg);
   if( db->pBe==0 ){
+    sqliteStrRealloc(pzErrMsg);
     sqliteFree(db);
     return 0;
   }

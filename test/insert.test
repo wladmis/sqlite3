@@ -126,12 +126,13 @@ do_test insert-2.3 {
 # on a table that has indices.  In particular we want to verify
 # that the correct default values are inserted into the indices.
 #
-execsql {DELETE FROM test2}
-execsql {CREATE INDEX index9 ON test2(f1,f2)}
-execsql {CREATE INDEX indext ON test2(f4,f5)}
-
 do_test insert-3.1 {
-  execsql {SELECT * from test2}
+  execsql {
+    DELETE FROM test2;
+    CREATE INDEX index9 ON test2(f1,f2);
+    CREATE INDEX indext ON test2(f4,f5);
+    SELECT * from test2;
+  }
 } {}
 do_test insert-3.2 {
   execsql {INSERT INTO test2(f2,f4) VALUES(-3.33,'hum')}
