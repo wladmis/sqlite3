@@ -241,7 +241,7 @@ do_test lock-3.1 {
   set r [catch {execsql {BEGIN TRANSACTION}} msg]
   execsql {ROLLBACK}
   lappend r $msg
-} {0 {}}
+} {1 {cannot start a transaction within a transaction}}
 integrity_check lock-3.2
 
 do_test lock-999.1 {

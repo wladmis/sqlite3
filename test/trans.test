@@ -173,13 +173,13 @@ do_test trans-4.1 {
     COMMIT;
   } db} msg]
   lappend v $msg
-} {0 {}}
+} {1 {cannot commit - no transaction is active}}
 do_test trans-4.2 {
   set v [catch {execsql {
     ROLLBACK;
   } db} msg]
   lappend v $msg
-} {0 {}}
+} {1 {cannot rollback - no transaction is active}}
 do_test trans-4.3 {
   set v [catch {execsql {
     BEGIN TRANSACTION;
@@ -205,7 +205,7 @@ do_test trans-4.6 {
     SELECT a FROM one ORDER BY a;
   } db} msg]
   lappend v $msg
-} {0 {1 2 3 4}}
+} {1 {cannot start a transaction within a transaction}}
 do_test trans-4.7 {
   set v [catch {execsql {
     SELECT a FROM two ORDER BY a;
