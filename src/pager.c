@@ -2705,6 +2705,17 @@ sync_exit:
   return rc;
 }
 
+#ifdef SQLITE_DEBUG
+/*
+** Return the current state of the file lock for the given pager.
+** The return value is one of NO_LOCK, SHARED_LOCK, RESERVED_LOCK,
+** PENDING_LOCK, or EXCLUSIVE_LOCK.
+*/
+int sqlite3pager_lockstate(Pager *pPager){
+  return pPager->fd.locktype;
+}
+#endif
+
 #ifdef SQLITE_TEST
 /*
 ** Print a listing of all referenced pages and their ref count.

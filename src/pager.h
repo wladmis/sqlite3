@@ -101,6 +101,10 @@ const char *sqlite3pager_filename(Pager*);
 int sqlite3pager_rename(Pager*, const char *zNewName);
 void sqlite3pager_set_codec(Pager*,void(*)(void*,void*,Pgno,int),void*);
 
+#ifdef SQLITE_DEBUG
+int sqlite3pager_lockstate(Pager*);
+#endif
+
 #ifdef SQLITE_TEST
 void sqlite3pager_refdump(Pager*);
 int pager3_refinfo_enable;
