@@ -244,14 +244,14 @@ static int sqliteProcessJoin(Parse *pParse, Select *p){
       assert( i<pSrc->nSrc-1 );
       pList = pTerm->pUsing;
       for(j=0; j<pList->nId; j++){
-        if( columnIndex(pTerm->pTab, pList->a[i].zName)<0 ||
-            columnIndex(pOther->pTab, pList->a[i].zName)<0 ){
+        if( columnIndex(pTerm->pTab, pList->a[j].zName)<0 ||
+            columnIndex(pOther->pTab, pList->a[j].zName)<0 ){
           sqliteSetString(&pParse->zErrMsg, "cannot join using column ",
-            pList->a[i].zName, " - column not present in both tables", 0);
+            pList->a[j].zName, " - column not present in both tables", 0);
           pParse->nErr++;
           return 1;
         }
-        addWhereTerm(pList->a[i].zName, pTerm->pTab, pOther->pTab, &p->pWhere);
+        addWhereTerm(pList->a[j].zName, pTerm->pTab, pOther->pTab, &p->pWhere);
       }
     }
   }
@@ -1745,14 +1745,14 @@ int sqliteSelect(
   }else{
     int iMem = pParse->nMem++;
     sqliteVdbeAddOp(v, OP_Integer, -p->nLimit, 0);
-    sqliteVdbeAddOp(v, OP_MemStore, iMem, 0);
+    sqliteVdbeAddOp(v, OP_MemStore, iMem, 1);
     p->nLimit = iMem;
     if( p->nOffset<=0 ){
       p->nOffset = 0;
     }else{
       iMem = pParse->nMem++;
       sqliteVdbeAddOp(v, OP_Integer, -p->nOffset, 0);
-      sqliteVdbeAddOp(v, OP_MemStore, iMem, 0);
+      sqliteVdbeAddOp(v, OP_MemStore, iMem, 1);
       p->nOffset = iMem;
     }
   }
