@@ -231,6 +231,12 @@ faq {
   not be able to see the new table right away.  You might have to
   get the other threads to close and reopen their connection to
   the database before they will be able to see the new table.</p>
+
+  <p>Under UNIX, you should not carry an open SQLite database across
+  a fork() system call into the child process.  Problems will result
+  if you do.  Under LinuxThreads, because each thread has its own
+  process ID, you may not start a transaction in one thread and attempt
+  to complete it in another.</p>
 }
 
 faq {
