@@ -519,9 +519,9 @@ do_test btree-6.13 {
 do_test btree-7.1 {
   btree_begin_transaction $::b1
 } {}
-if 0 {
 catch {unset key}
 catch {unset data}
+if 0 {
 do_test btree-7.2 {
   # Each record will be 10 bytes in size.
   #   + 100 bytes of database header
