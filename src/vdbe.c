@@ -3678,6 +3678,8 @@ case OP_CreateTable: {
     pTos->flags = MEM_Int;
     *(u32*)pOp->p3 = pgno;
     pOp->p3 = 0;
+  }else{
+    pTos->flags = MEM_Null;
   }
   break;
 }
