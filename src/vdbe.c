@@ -3198,16 +3198,29 @@ case OP_PutStrKey: {
   assert( i>=0 && i<p->nCursor );
   if( ((pC = &p->aCsr[i])->pCursor!=0 || pC->pseudoTable) ){
     char *zKey;
-    int nKey, iKey;
+    i64 nKey; 
+    int iKey;
     if( pOp->opcode==OP_PutStrKey ){
       Stringify(pNos);
       nKey = pNos->n;
       zKey = pNos->z;
     }else{
       assert( pNos->flags & MEM_Int );
-      nKey = sizeof(int);
-      iKey = intToKey(pNos->i);
-      zKey = (char*)&iKey;
+
+      /* If the table is an INTKEY table, set nKey to the value of
+      ** the integer key, and zKey to NULL.
+      */
+      if( pC->intKey ){
+        nKey = pNos->i;
+        zKey = 0;
+      }else{
+        /* TODO: can this happen? zKey is not correctly byte-ordered here! */
+        assert(!"TODO");
+        nKey = sizeof(i64);
+        zKey = (char*)&iKey;
+      }
+      iKey = pNos->i;
+
       if( pOp->p2 & OPFLAG_NCHANGE ) db->nChange++;
       if( pOp->p2 & OPFLAG_LASTROWID ) db->lastRowid = pNos->i;
       if( pOp->p2 & OPFLAG_CSCHANGE ) db->csChange++;
