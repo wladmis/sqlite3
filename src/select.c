@@ -1750,7 +1750,7 @@ int sqliteSelect(
 
   /* Begin the database scan
   */
-  pWInfo = sqliteWhereBegin(pParse, p->base, pTabList, pWhere, 0);
+  pWInfo = sqliteWhereBegin(pParse, p->base, pTabList, pWhere, 0, &pOrderBy);
   if( pWInfo==0 ) goto select_end;
 
   /* Use the standard inner loop if we are not dealing with
@@ -1763,7 +1763,7 @@ int sqliteSelect(
     }
   }
 
-  /* If we are dealing with aggregates, then to the special aggregate
+  /* If we are dealing with aggregates, then do the special aggregate
   ** processing.  
   */
   else{

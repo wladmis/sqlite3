@@ -862,7 +862,7 @@ Table *sqliteTableNameToTable(Parse*, const char*);
 SrcList *sqliteTableTokenToSrcList(Parse*, Token*);
 void sqliteDeleteFrom(Parse*, Token*, Expr*);
 void sqliteUpdate(Parse*, Token*, ExprList*, Expr*, int);
-WhereInfo *sqliteWhereBegin(Parse*, int, SrcList*, Expr*, int);
+WhereInfo *sqliteWhereBegin(Parse*, int, SrcList*, Expr*, int, ExprList**);
 void sqliteWhereEnd(WhereInfo*);
 void sqliteExprCode(Parse*, Expr*);
 void sqliteExprIfTrue(Parse*, Expr*, int, int);

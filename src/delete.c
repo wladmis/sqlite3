@@ -190,7 +190,7 @@ void sqliteDeleteFrom(
   else{
     /* Begin the database scan
     */
-    pWInfo = sqliteWhereBegin(pParse, base, pTabList, pWhere, 1);
+    pWInfo = sqliteWhereBegin(pParse, base, pTabList, pWhere, 1, 0);
     if( pWInfo==0 ) goto delete_from_cleanup;
 
     /* Remember the key of every item to be deleted.

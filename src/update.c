@@ -181,7 +181,7 @@ void sqliteUpdate(
 
   /* Begin the database scan
   */
-  pWInfo = sqliteWhereBegin(pParse, base, pTabList, pWhere, 1);
+  pWInfo = sqliteWhereBegin(pParse, base, pTabList, pWhere, 1, 0);
   if( pWInfo==0 ) goto update_cleanup;
 
   /* Remember the index of every item to be updated.
