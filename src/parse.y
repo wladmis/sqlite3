@@ -515,13 +515,13 @@ idxlist(A) ::= idxitem(Y).
      {A = sqliteIdListAppend(0,&Y);}
 idxitem(A) ::= ids(X).          {A = X;}
 
-///////////////////////////// The CREATE INDEX command ///////////////////////
+///////////////////////////// The DROP INDEX command /////////////////////////
 //
 
 cmd ::= DROP INDEX ids(X).      {sqliteDropIndex(pParse, &X);}
 
 
-///////////////////////////// The DROP INDEX command /////////////////////////
+///////////////////////////// The COPY command ///////////////////////////////
 //
 cmd ::= COPY ids(X) FROM ids(Y) USING DELIMITERS STRING(Z).
     {sqliteCopy(pParse,&X,&Y,&Z);}

@@ -215,7 +215,7 @@ void sqliteUpdate(
   if( chngRecno ){
     sqliteVdbeAddOp(v, OP_Pop, 1, 0);
     sqliteExprCode(pParse, pRecnoExpr);
-    sqliteVdbeAddOp(v, OP_AddImm, 0, 0);
+    sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
   }
 
   /* Compute new data for this record.  

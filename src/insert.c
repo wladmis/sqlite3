@@ -200,7 +200,7 @@ void sqliteInsert(
     }else{
       sqliteExprCode(pParse, pList->a[keyColumn].pExpr);
     }
-    sqliteVdbeAddOp(v, OP_AddImm, 0, 0);  /* Make sure ROWID is an integer */
+    sqliteVdbeAddOp(v, OP_MustBeInt, 0, 0);
   }else{
     sqliteVdbeAddOp(v, OP_NewRecno, base, 0);
   }

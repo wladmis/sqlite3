@@ -1070,6 +1070,7 @@ const char *sqlite_error_string(int rc){
     case SQLITE_SCHEMA:     z = "database schema has changed";           break;
     case SQLITE_TOOBIG:     z = "too much data for one table row";       break;
     case SQLITE_CONSTRAINT: z = "constraint failed";                     break;
+    case SQLITE_MISMATCH:   z = "datatype mismatch";                     break;
     default:                z = "unknown error";                         break;
   }
   return z;
