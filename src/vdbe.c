@@ -928,7 +928,8 @@ static void hardRealify(Vdbe *p, int i){
 static void PopStack(Vdbe *p, int N){
   assert( N>=0 );
   if( p->zStack==0 ) return;
-  assert( p->aStack );
+  assert( p->aStack || sqlite_malloc_failed );
+  if( p->aStack==0 ) return;
   while( N-- > 0 ){
     if( p->aStack[p->tos].flags & STK_Dyn ){
       sqliteFree(p->zStack[p->tos]);
