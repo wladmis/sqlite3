@@ -397,5 +397,3 @@ do_test capi3-6.4 {
 } {SQLITE_OK}
 
 finish_test
-
-
