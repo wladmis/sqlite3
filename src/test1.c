@@ -940,9 +940,9 @@ static int test_collate_func(
   }
 
   pVal = sqlite3ValueNew();
-  sqlite3ValueSetStr(pVal, nA, zA, encin);
+  sqlite3ValueSetStr(pVal, nA, zA, encin, SQLITE_STATIC);
   Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),-1));
-  sqlite3ValueSetStr(pVal, nB, zB, encin);
+  sqlite3ValueSetStr(pVal, nB, zB, encin, SQLITE_STATIC);
   Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),-1));
   sqlite3ValueFree(pVal);
 
