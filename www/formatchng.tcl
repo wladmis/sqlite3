@@ -167,7 +167,7 @@ occurred since version 1.0.0:
   </td>
 </tr>
 <tr>
-  <td valign="top">2.8.13 to 3.0.0</td>
+  <td valign="top">2.8.14 to 3.0.0</td>
   <td valign="top">(pending)</td>
   <td><p>Version 3.0.0 is a major upgrade for SQLite that incorporates
   support for UTF-16, BLOBs, and a more compact encoding that results
