@@ -43,10 +43,8 @@ int sqliteDbCursorFirst(DbCursor*);
 int sqliteDbCursorNext(DbCursor*);
 int sqliteDbCursorDatasize(DbCursor*);
 int sqliteDbCursorKeysize(DbCursor*);
-int sqliteDbCursorRead(DbCursor*, int amt, int offset, char *buf);
-int sqliteDbCursorReadKey(DbCursor*, int amt, int offset, char *buf);
-int sqliteDbCursorMoveTo(DbCursor*, int nKey, void *pKey);
-int sqliteDbCursorDelete(DbCursor*);
-int sqliteDbCursorInsert(DbCursor*, int nKey, void *pKey, int nData, void *pD);
-
-int sqliteDbReorganize(Db*);
+int sqliteDbCursorRead(DbCursor*, int amt, int offset, void *buf);
+int sqliteDbCursorReadKey(DbCursor*, int amt, int offset, void *buf);
+int sqliteDbCursorFind(DbCursor*, int nKey, const void *pKey, int createSize);
+int sqliteDbCursorResize(DbCursor*, int nData);
+int sqliteDbCursorWrite(DbCursor*, int amt, int offset, const void *buf);
