@@ -327,7 +327,6 @@ static int sqlite_default_busy_callback(
  const char *NotUsed,     /* The name of the table that is busy */
  int count                /* Number of times table has been busy */
 ){
-  int rc;
 #if defined(HAVE_USLEEP) && HAVE_USLEEP
   int delay = 10000;
   int prior_delay = 0;

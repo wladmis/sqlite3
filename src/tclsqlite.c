@@ -138,7 +138,6 @@ static int DbBusyHandler(void *cd, const char *zTable, int nTries){
   int rc;
   char zVal[30];
   char *zCmd;
-  char *zResult;
   Tcl_DString cmd;
 
   Tcl_DStringInit(&cmd);

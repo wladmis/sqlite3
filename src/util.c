@@ -32,8 +32,11 @@
 #include <stdarg.h>
 #include <ctype.h>
 
+/*
+** If MEMORY_DEBUG is defined, then use versions of malloc() and
+** free() that track memory usage and check for buffer overruns.
+*/
 #ifdef MEMORY_DEBUG
-
 
 /*
 ** Allocate new memory and set it to zero.  Return NULL if
@@ -164,9 +167,14 @@ char *sqliteStrNDup_(const char *z, int n, char *zFile, int line){
   }
   return zNew;
 }
+#endif /* MEMORY_DEBUG */
 
+/*
+** The following versions of malloc() and free() are for use in a
+** normal build.
+*/
+#if !defined(MEMORY_DEBUG)
 
-#else  /* !defined(MEMORY_DEBUG) */
 /*
 ** Allocate new memory and set it to zero.  Return NULL if
 ** no memory is available.
@@ -219,7 +227,7 @@ char *sqliteStrNDup(const char *z, int n){
   }
   return zNew;
 }
-#endif /* MEMORY_DEBUG */
+#endif /* !defined(MEMORY_DEBUG) */
 
 /*
 ** Create a string from the 2nd and subsequent arguments (up to the
