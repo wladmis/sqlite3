@@ -1480,6 +1480,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
 	  sqlite3VdbeDequoteP3(v, -1);
       } else {
 	  assert( pExpr->iColumn == OE_Ignore );
+          sqlite3VdbeAddOp(v, OP_ContextPop, 0, 0);
 	  sqlite3VdbeOp3(v, OP_Goto, 0, pParse->trigStack->ignoreJump,
                            "(IGNORE jump)", 0);
       }
