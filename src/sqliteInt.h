@@ -99,6 +99,8 @@ int sqlite_iMallocFail;     /* Fail sqliteMalloc() after this many calls */
 #define FN_Sum        4
 #define FN_Avg        5
 #define FN_Fcnt       6
+#define FN_Length     7
+#define FN_Substr     8
 
 /*
 ** Forward references to structures
