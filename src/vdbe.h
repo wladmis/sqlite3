@@ -63,6 +63,13 @@ typedef struct VdbeOp VdbeOp;
 #define ADDR(X)  (-1-(X))
 
 /*
+** The sqliteVdbeExec() routine can return any of the normal SQLite return
+** codes defined in sqlite.h.  But it can also return the following
+** additional values:
+*/
+#define SQLITE_CALLBACK    100    /* sqliteVdbeExec() hit an OP_Callback */
+
+/*
 ** The makefile scans the vdbe.c source file and creates the "opcodes.h"
 ** header file that defines a number for each opcode used by the VDBE.
 */
@@ -83,9 +90,10 @@ void sqliteVdbeDequoteP3(Vdbe*, int addr);
 int sqliteVdbeFindOp(Vdbe*, int, int);
 int sqliteVdbeMakeLabel(Vdbe*);
 void sqliteVdbeDelete(Vdbe*);
-int sqliteVdbeExec(Vdbe*,sqlite_callback,void*,char**,void*,
-                   int(*)(void*,const char*,int));
-int sqliteVdbeList(Vdbe*,sqlite_callback,void*,char**);
+void sqliteVdbeMakeReady(Vdbe*,sqlite_callback,void*,int);
+int sqliteVdbeExec(Vdbe*);
+int sqliteVdbeList(Vdbe*);
+int sqliteVdbeFinalize(Vdbe*,char**);
 void sqliteVdbeResolveLabel(Vdbe*, int);
 int sqliteVdbeCurrentAddr(Vdbe*);
 void sqliteVdbeTrace(Vdbe*,FILE*);

@@ -21,8 +21,15 @@
 %default_type {Token}
 %extra_argument {Parse *pParse}
 %syntax_error {
-  sqliteSetString(&pParse->zErrMsg,"syntax error",0);
-  pParse->sErrToken = TOKEN;
+  if( pParse->zErrMsg==0 ){
+    if( TOKEN.z[0] ){
+      sqliteSetNString(&pParse->zErrMsg, 
+          "near \"", -1, TOKEN.z, TOKEN.n, "\": syntax error", -1, 0);
+    }else{
+      sqliteSetString(&pParse->zErrMsg, "incomplete SQL statement", 0);
+    }
+  }
+  pParse->nErr++;
 }
 %name sqliteParser
 %include {

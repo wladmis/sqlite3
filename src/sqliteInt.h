@@ -748,6 +748,7 @@ struct Parse {
   u8 schemaVerified;   /* True if an OP_VerifySchema has been coded someplace
                        ** other than after an OP_Transaction */
   u8 isTemp;           /* True if parsing temporary tables */
+  u8 useCallback;      /* True if callbacks should be used to report results */
   int newTnum;         /* Table number to use when reparsing CREATE TABLEs */
   int nErr;            /* Number of errors seen */
   int nTab;            /* Number of previously allocated VDBE cursors */
