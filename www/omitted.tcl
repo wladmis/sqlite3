@@ -45,10 +45,11 @@ feature {Complete trigger support} {
   triggers - triggers that trigger themselves.
 }
 
-feature {ALTER TABLE} {
-  To change a table you have to delete it (saving its contents to a temporary
-  table) and recreate it from scratch.
-  ("ALTER TABLE ... RENAME TABLE ..." was added to version 3.1.0.)
+feature {Complete ALTER TABLE support} {
+  Only the RENAME TABLE and ADD COLUMN variants of the 
+  ALTER TABLE command are supported.  Other kinds of ALTER TABLE operations
+  such as
+  DROP COLUMN, ALTER COLUMN, ADD CONSTRAINT, and so forth are omitted.
 }
 
 feature {Nested transactions} {

@@ -176,6 +176,11 @@ statement, with the following restrictions:
 <li>If a NOT NULL constraint is specified, then the column must have a
     default value other than NULL.
 </ul>
+
+<p>The execution time of the ALTER TABLE command is independent of
+the amount of data in the table.  The ALTER TABLE command runs as quickly
+on a table with 10 million rows as it does on a table with 1 row.
+</p>
 }
 
 Section {ATTACH DATABASE} attach
