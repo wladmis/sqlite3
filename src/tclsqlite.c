@@ -1218,7 +1218,7 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest1_Init(interp);
     Sqlitetest2_Init(interp);
     Sqlitetest3_Init(interp);
-/*    Sqlitetest4_Init(interp); */
+    Sqlitetest4_Init(interp);
     Sqlitetest5_Init(interp);
     Md5_Init(interp);
   }

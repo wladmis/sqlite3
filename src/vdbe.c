@@ -15,7 +15,7 @@
 ** VDBE instances.  This file is solely interested in executing
 ** the VDBE program.
 **
-** In the external interface, an "sqlite_vm*" is an opaque pointer
+** In the external interface, an "sqlite3_stmt*" is an opaque pointer
 ** to a VDBE.
 **
 ** The SQL parser generates a program which is then executed by
