@@ -440,10 +440,10 @@ having_opt(A) ::= HAVING expr(X).  {A = X;}
 %type limit_opt {struct LimitVal}
 limit_opt(A) ::= .                  {A.limit = -1; A.offset = 0;}
 limit_opt(A) ::= LIMIT INTEGER(X).  {A.limit = atoi(X.z); A.offset = 0;}
-limit_opt(A) ::= LIMIT INTEGER(X) limit_sep INTEGER(Y). 
+limit_opt(A) ::= LIMIT INTEGER(X) OFFSET INTEGER(Y). 
                                     {A.limit = atoi(X.z); A.offset = atoi(Y.z);}
-limit_sep ::= OFFSET.
-limit_sep ::= COMMA.
+limit_opt(A) ::= LIMIT INTEGER(X) COMMA INTEGER(Y). 
+                                    {A.limit = atoi(Y.z); A.offset = atoi(X.z);}
 
 /////////////////////////// The DELETE statement /////////////////////////////
 //
