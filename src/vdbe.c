@@ -4864,7 +4864,6 @@ cleanup:
       case OE_Rollback: {
         sqliteBtreeRollback(pBt);
         if( db->pBeTemp ) sqliteBtreeRollback(db->pBeTemp);
-        sqliteRollbackInternalChanges(db);
         db->flags &= ~SQLITE_InTrans;
         db->onError = OE_Default;
         break;
@@ -4873,13 +4872,13 @@ cleanup:
         if( undoTransOnError ){
           sqliteBtreeCommit(pBt);
           if( db->pBeTemp ) sqliteBtreeCommit(db->pBeTemp);
-          sqliteCommitInternalChanges(db);
           db->flags &= ~SQLITE_InTrans;
           db->onError = OE_Default;
         }
         break;
       }
     }
+    sqliteRollbackInternalChanges(db);
   }
   sqliteBtreeCommitCkpt(pBt);
   if( db->pBeTemp ) sqliteBtreeCommitCkpt(db->pBeTemp);
