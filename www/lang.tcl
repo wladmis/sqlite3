@@ -561,7 +561,7 @@ their result across all rows of the result set.</p>
 </tr>
 
 <tr>
-<td valign="top" align="right">coelasce(<i>X</i>,<i>Y</i>,...)</td>
+<td valign="top" align="right">coalesce(<i>X</i>,<i>Y</i>,...)</td>
 <td valign="top">Return a copy of the first non-NULL argument.  If
 all arguments are NULL then NULL is returned.</td>
 </tr>
@@ -613,7 +613,7 @@ assumed.</td>
 </tr>
 
 <tr>
-<td valign="top" align="right">subst(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
+<td valign="top" align="right">substr(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
 <td valign="top">Return a substring of input string <i>X</i> that begins
 with the <i>Y</i>-th character and which is <i>Z</i> characters long.
 The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
