@@ -96,7 +96,6 @@ struct Vdbe {
   int nStackAlloc;    /* Size of the stack */
   int *iStack;        /* Integer values of the stack */
   char **zStack;      /* Text or binary values of the stack */
-  char *aFlags;       /* Flags associated with each stack entry */
   char **azColName;   /* Becomes the 4th parameter to callbacks */
   int nTable;         /* Number of slots in aTab[] */
   VdbeTable *aTab;    /* On element of this array for each open table */
