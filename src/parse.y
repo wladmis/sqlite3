@@ -120,6 +120,7 @@ id(A) ::= OFFSET(X).     {A = X;}
 id(A) ::= PRAGMA(X).     {A = X;}
 id(A) ::= REPLACE(X).    {A = X;}
 id(A) ::= TEMP(X).       {A = X;}
+id(A) ::= TRIGGER(X).    {A = X;}
 id(A) ::= VACUUM(X).     {A = X;}
 id(A) ::= VIEW(X).       {A = X;}
 
@@ -692,4 +693,3 @@ trigger_cmd(A) ::= select(X).  {A = sqliteTriggerSelectStep(X); }
 cmd ::= DROP TRIGGER ids(X). {
     sqliteDropTrigger(pParse,&X,0);
 }
-
