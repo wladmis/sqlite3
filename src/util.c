@@ -728,6 +728,13 @@ int sqliteSortCompare(const char *a, const char *b){
   int isNumA, isNumB;
 
   while( res==0 && *a && *b ){
+    if( a[1]==0 ){
+      res = -1;
+      break;
+    }else if( b[1]==0 ){
+      res = +1;
+      break;
+    }
     isNumA = sqliteIsNumber(&a[1]);
     isNumB = sqliteIsNumber(&b[1]);
     if( isNumA ){
