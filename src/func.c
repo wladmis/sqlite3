@@ -372,7 +372,7 @@ static int patternCompare(
         }
         zPattern++;
       }
-      if( c && sqlite3ReadUtf8(&zPattern[1])==esc ){
+      if( c && esc && sqlite3ReadUtf8(&zPattern[1])==esc ){
         u8 const *zTemp = &zPattern[1];
         sqliteNextChar(zTemp);
         c = *zTemp;
@@ -433,7 +433,7 @@ static int patternCompare(
       if( c2==0 || (seen ^ invert)==0 ) return 0;
       sqliteNextChar(zString);
       zPattern++;
-    }else if( !prevEscape && sqlite3ReadUtf8(zPattern)==esc){
+    }else if( esc && !prevEscape && sqlite3ReadUtf8(zPattern)==esc){
       prevEscape = 1;
       sqliteNextChar(zPattern);
     }else{
