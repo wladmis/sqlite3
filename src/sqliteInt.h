@@ -983,6 +983,7 @@ struct Parse {
   Token sErrToken;     /* The token at which the error occurred */
   Token sNameToken;    /* Token with unqualified schema object name */
   Token sLastToken;    /* The last token parsed */
+  const char *zSql;    /* All SQL text */
   const char *zTail;   /* All SQL text past the last semicolon parsed */
   Table *pNewTable;    /* A table being constructed by CREATE TABLE */
   Vdbe *pVdbe;         /* An engine for executing database bytecode */

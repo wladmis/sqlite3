@@ -247,6 +247,7 @@ end_of_vacuum:
     sqliteFree(zTemp);
   }
   if( zSql ) sqliteFree( zSql );
+  sqlite3ResetInternalSchema(db, 0);
 #endif
   return rc;
-} 
+}

@@ -508,9 +508,19 @@ int sqlite3VdbeExec(
     */
 #ifndef NDEBUG
     if( p->trace ){
+      if( pc==0 ){
+        printf("VDBE Execution Trace:\n");
+        sqlite3VdbePrintSql(p);
+      }
       sqlite3VdbePrintOp(p->trace, pc, pOp);
     }
 #endif
+#ifdef SQLITE_TEST
+    if( p->trace==0 && pc==0 && sqlite3OsFileExists("vdbe_sqltrace") ){
+      sqlite3VdbePrintSql(p);
+    }
+#endif
+      
 
     /* Check to see if we need to simulate an interrupt.  This only happens
     ** if we have a special test build.
@@ -2283,13 +2293,20 @@ case OP_ReadCookie: {
 ** A transaction must be started before executing this opcode.
 */
 case OP_SetCookie: {
+  Db *pDb;
   assert( pOp->p2<SQLITE_N_BTREE_META );
   assert( pOp->p1>=0 && pOp->p1<db->nDb );
-  assert( db->aDb[pOp->p1].pBt!=0 );
+  pDb = &db->aDb[pOp->p1];
+  assert( pDb->pBt!=0 );
   assert( pTos>=p->aStack );
   Integerify(pTos);
   /* See note about index shifting on OP_ReadCookie */
-  rc = sqlite3BtreeUpdateMeta(db->aDb[pOp->p1].pBt, 1+pOp->p2, (int)pTos->i);
+  rc = sqlite3BtreeUpdateMeta(pDb->pBt, 1+pOp->p2, (int)pTos->i);
+  if( pOp->p2==0 ){
+    /* When the schema cookie changes, record the new cookie internally */
+    pDb->schema_cookie = pTos->i;
+    db->flags |= SQLITE_InternChanges;
+  }
   assert( (pTos->flags & MEM_Dyn)==0 );
   pTos--;
   break;
@@ -3730,6 +3747,7 @@ case OP_ParseSchema: {
   InitData initData;
 
   assert( iDb>=0 && iDb<db->nDb );
+  if( !DbHasProperty(db, iDb, DB_SchemaLoaded) ) break;
   zMaster = iDb==1 ? TEMP_MASTER_NAME : MASTER_NAME;
   initData.db = db;
   initData.pzErrMsg = &p->zErrMsg;

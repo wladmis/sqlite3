@@ -1025,7 +1025,7 @@ int sqlite3_prepare(
     goto prepare_out;
   }
   if( sParse.rc==SQLITE_DONE ) sParse.rc = SQLITE_OK;
-  if( sParse.checkSchema && !schemaIsValid(db) ){
+  if( sParse.rc!=SQLITE_OK && sParse.checkSchema && !schemaIsValid(db) ){
     sParse.rc = SQLITE_SCHEMA;
   }
   if( sParse.rc==SQLITE_SCHEMA ){
