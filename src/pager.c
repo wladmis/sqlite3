@@ -1093,7 +1093,7 @@ int sqlitepager_write(void *pData){
   ** then write the current page to the checkpoint journal.
   */
   if( pPager->ckptOpen && !pPg->inCkpt && (int)pPg->pgno<=pPager->ckptSize ){
-    assert( pPg->inJournal );
+    assert( pPg->inJournal || (int)pPg->pgno>pPager->origDbSize );
     rc = sqliteOsWrite(&pPager->cpfd, &pPg->pgno, sizeof(Pgno));
     if( rc==SQLITE_OK ){
       rc = sqliteOsWrite(&pPager->cpfd, pData, SQLITE_PAGE_SIZE);
