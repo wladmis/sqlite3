@@ -4237,7 +4237,20 @@ case OP_AggGet: {
   AggElem *pFocus;
   int i = pOp->p2;
   pFocus = p->agg.pCurrent;
-  if( pFocus==0 ) goto no_mem;
+  if( pFocus==0 ){
+    int res;
+    if( sqlite3_malloc_failed ) goto no_mem;
+    rc = sqlite3BtreeFirst(p->agg.pCsr, &res);
+    if( rc!=SQLITE_OK ){
+      return rc;
+    }
+    if( res!=0 ){
+      rc = AggInsert(&p->agg,"",1);
+      pFocus = p->agg.pCurrent;
+    }else{
+      rc = sqlite3BtreeData(p->agg.pCsr, 0, 4, (char *)&pFocus);
+    }
+  }
   assert( i>=0 && i<p->agg.nMem );
   pTos++;
   sqlite3VdbeMemShallowCopy(pTos, &pFocus->aMem[i], MEM_Ephem);
