@@ -449,13 +449,24 @@ do_test autoinc-5.4 {
 # Requirement REQ00310:  Make sure an insert fails if the sequence is
 # already at its maximum value.
 #
-do_test autoinc-6.1 {
-  execsql {
-    CREATE TABLE t6(v INTEGER PRIMARY KEY AUTOINCREMENT, w);
-    INSERT INTO t6 VALUES(9223372036854775807,1);
-    SELECT seq FROM main.sqlite_sequence WHERE name='t6';
-  }
-} 9223372036854775807
+ifcapable {rowid32} {
+  do_test autoinc-6.1 {
+    execsql {
+      CREATE TABLE t6(v INTEGER PRIMARY KEY AUTOINCREMENT, w);
+      INSERT INTO t6 VALUES(2147483647,1);
+      SELECT seq FROM main.sqlite_sequence WHERE name='t6';
+    }
+  } 2147483647
+}
+ifcapable {!rowid32} {
+  do_test autoinc-6.1 {
+    execsql {
+      CREATE TABLE t6(v INTEGER PRIMARY KEY AUTOINCREMENT, w);
+      INSERT INTO t6 VALUES(9223372036854775807,1);
+      SELECT seq FROM main.sqlite_sequence WHERE name='t6';
+    }
+  } 9223372036854775807
+}
 do_test autoinc-6.2 {
   catchsql {
     INSERT INTO t6 VALUES(NULL,1);
