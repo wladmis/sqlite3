@@ -123,7 +123,7 @@ struct sqlite {
   Dbbe *pBe;                 /* The backend driver */
   int flags;                 /* Miscellanous flags */
   void *pBusyArg;            /* 1st Argument to the busy callback */
-  int (*xBusyCallback)(void *,const char*,int);
+  int (*xBusyCallback)(void *,const char*,int);  /* The busy callback */
   Table *apTblHash[N_HASH];  /* All tables of the database */
   Index *apIdxHash[N_HASH];  /* All indices of the database */
 };

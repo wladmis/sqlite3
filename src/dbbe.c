@@ -629,6 +629,7 @@ int sqliteDbbeNew(DbbeCursor *pCursr){
     for(i=0; i<4; i++){
       iKey = (iKey<<8) + rc4byte(pRc4);
     }
+    if( iKey==0 ) continue;
     key.dptr = (char*)&iKey;
     key.dsize = 4;
     go = gdbm_exists(pCursr->pFile->dbf, key);
