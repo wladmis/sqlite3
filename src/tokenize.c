@@ -62,6 +62,7 @@ static Keyword aKeywordTable[] = {
   { "END",               0, TK_END,              0 },
   { "EXCEPT",            0, TK_EXCEPT,           0 },
   { "EXPLAIN",           0, TK_EXPLAIN,          0 },
+  { "FAIL",              0, TK_FAIL,             0 },
   { "FROM",              0, TK_FROM,             0 },
   { "GLOB",              0, TK_GLOB,             0 },
   { "GROUP",             0, TK_GROUP,            0 },

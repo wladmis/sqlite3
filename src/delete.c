@@ -82,11 +82,7 @@ void sqliteDeleteFrom(
   */
   v = sqliteGetVdbe(pParse);
   if( v==0 ) goto delete_from_cleanup;
-  if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Transaction, 0, 0);
-    sqliteVdbeAddOp(v, OP_VerifyCookie, db->schema_cookie, 0);
-    pParse->schemaVerified = 1;
-  }
+  sqliteBeginWriteOperation(pParse);
 
   /* Initialize the counter of the number of rows deleted, if
   ** we are counting rows.
@@ -156,9 +152,7 @@ void sqliteDeleteFrom(
     sqliteVdbeResolveLabel(v, end);
     sqliteVdbeAddOp(v, OP_ListReset, 0, 0);
   }
-  if( (db->flags & SQLITE_InTrans)==0 ){
-    sqliteVdbeAddOp(v, OP_Commit, 0, 0);
-  }
+  sqliteEndWriteOperation(pParse);
 
   /*
   ** Return the number of rows that were deleted.

@@ -276,6 +276,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   sqliteHashInit(&db->tblDrop, SQLITE_HASH_POINTER, 0);
   sqliteHashInit(&db->idxDrop, SQLITE_HASH_POINTER, 0);
   db->nextRowid = sqliteRandomInteger();
+  db->onError = OE_Default;
   
   /* Open the backend database driver */
   rc = sqliteBtreeOpen(zFilename, mode, MAX_PAGES, &db->pBe);

@@ -333,6 +333,11 @@ default algorithm specified in the CREATE TABLE statement.
 See the section titled
 <a href="#conflict">ON CONFLICT</a> for additional information.</p>
 
+<p>CHECK constraints are ignored in the current implementation.
+Support for CHECK constraints may be added in the future.  As of
+version 2.3.0, NOT NULL, PRIMARY KEY, and UNIQUE constraints all
+work.</p>
+
 <p>There are no arbitrary limits on the number
 of columns or on the number of constraints in a table.
 The total amount of data in a single row is limited to about
