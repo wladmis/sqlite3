@@ -646,3 +646,4 @@ void sqliteExprMoveStrings(Expr*, int);
 void sqliteExprListMoveStrings(ExprList*, int);
 void sqliteSelectMoveStrings(Select*, int);
 UserFunc *sqliteFindUserFunction(sqlite*,const char*,int,int,int);
+void sqliteRegisterBuildinFunctions(sqlite*);
