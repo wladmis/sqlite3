@@ -28,10 +28,6 @@ set EXCLUDE {
   format3.test
 }
 
-lappend EXCLUDE ioerr.test        ;# seg-faults (?)
-lappend EXCLUDE memdb.test        ;# fails - malformed database
-lappend EXCLUDE version.test      ;# This is obsolete.
-
 if {[sqlite -has-codec]} {
   lappend EXCLUDE \
     attach.test \

@@ -551,7 +551,7 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   for(i=0; i<sizeof(aCmd)/sizeof(aCmd[0]); i++){
     Tcl_CreateCommand(interp, aCmd[i].zName, aCmd[i].xProc, 0, 0);
   }
-  Tcl_LinkVar(interp, "sqlite3_io_error_pending",
+  Tcl_LinkVar(interp, "sqlite_io_error_pending",
      (char*)&sqlite3_io_error_pending, TCL_LINK_INT);
   sprintf(zBuf, "%d", SQLITE_PAGE_SIZE);
   Tcl_SetVar(interp, "SQLITE_PAGE_SIZE", zBuf, TCL_GLOBAL_ONLY); 

@@ -1514,6 +1514,7 @@ int sqlite3BtreeCursor(
     pCur->pPage = 0;
     goto create_cursor_exception;
   }
+  pCur->pPage = 0;  /* For exit-handler, in case getAndInitPage() fails. */
   rc = getAndInitPage(pBt, pCur->pgnoRoot, &pCur->pPage, 0);
   if( rc!=SQLITE_OK ){
     goto create_cursor_exception;
@@ -4252,11 +4253,9 @@ int sqlite3BtreeCopyFile(Btree *pBtTo, Btree *pBtFrom){
     return SQLITE_ERROR;
   }
   if( pBtTo->pCursor ) return SQLITE_BUSY;
-  memcpy(pBtTo->pPage1->aData, pBtFrom->pPage1->aData, pBtFrom->usableSize);
-  rc = sqlite3pager_overwrite(pBtTo->pPager, 1, pBtFrom->pPage1->aData);
   nToPage = sqlite3pager_pagecount(pBtTo->pPager);
   nPage = sqlite3pager_pagecount(pBtFrom->pPager);
-  for(i=2; rc==SQLITE_OK && i<=nPage; i++){
+  for(i=1; rc==SQLITE_OK && i<=nPage; i++){
     void *pPage;
     rc = sqlite3pager_get(pBtFrom->pPager, i, &pPage);
     if( rc ) break;
