@@ -30,7 +30,7 @@ typedef struct HashElem HashElem;
 ** this structure opaque.
 */
 struct Hash {
-  char keyClass;          /* SQLITE_HASH_INT, ..._STRING, or _BINARY */
+  char keyClass;          /* SQLITE_HASH_INT, _POINTER, _STRING, _BINARY */
   char copyKey;           /* True if copy of key made on insert */
   int count;              /* Number of entries in this table */
   HashElem *first;        /* The first element of the array */

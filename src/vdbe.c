@@ -2368,9 +2368,9 @@ case OP_NewRecno: {
     v = db->nextRowid;
     do{
       if( cnt>5 ){
-        v = sqliteRandomInteger(db);
+        v = sqliteRandomInteger();
       }else{
-        v += sqliteRandomByte(db) + 1;
+        v += sqliteRandomByte() + 1;
       }
       if( v==0 ) continue;
       x = bigEndian(v);
