@@ -180,7 +180,9 @@ puts {
 If you would like professional support for SQLite
 or if you want custom modifications to SQLite preformed by the
 original author, these services are available for a modest fee.
-For additional information contact:</p>
+For additional information visit
+<a href="http://www.hwaci.com/sw/sqlite/support.html">
+http://www.hwaci.com/sw/sqlite/support.html</a> or contact:</p>
 
 <blockquote>
 D. Richard Hipp <br />

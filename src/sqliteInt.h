@@ -948,7 +948,7 @@ void sqliteAddNotNull(Parse*, int);
 void sqliteAddPrimaryKey(Parse*, IdList*, int);
 void sqliteAddColumnType(Parse*,Token*,Token*);
 void sqliteAddDefaultValue(Parse*,Token*,int);
-int sqliteCollateType(Parse*, Token*);
+int sqliteCollateType(const char*, int);
 void sqliteAddCollateType(Parse*, int);
 void sqliteEndTable(Parse*,Token*,Select*);
 void sqliteCreateView(Parse*,Token*,Token*,Select*,int);

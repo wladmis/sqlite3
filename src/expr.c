@@ -122,7 +122,7 @@ void sqliteExprDelete(Expr *p){
 Expr *sqliteExprDup(Expr *p){
   Expr *pNew;
   if( p==0 ) return 0;
-  pNew = sqliteMalloc( sizeof(*p) );
+  pNew = sqliteMallocRaw( sizeof(*p) );
   if( pNew==0 ) return 0;
   memcpy(pNew, p, sizeof(*pNew));
   if( p->token.z!=0 ){
