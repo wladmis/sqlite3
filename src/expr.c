@@ -738,7 +738,7 @@ void sqliteExprIfTrue(Parse *pParse, Expr *pExpr, int dest){
 }
 
 /*
-** Generate code for boolean expression such that a jump is made
+** Generate code for a boolean expression such that a jump is made
 ** to the label "dest" if the expression is false but execution
 ** continues straight thru if the expression is true.
 */

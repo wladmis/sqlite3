@@ -458,7 +458,7 @@ meaning of single-quote within a string literal.
 </p>
 
 <p>Consider an example.  Suppose you are trying to insert a string
-values into a database table where the string value was obtained from
+value into a database table where the string value was obtained from
 user input.  Suppose the string to be inserted is stored in a variable
 named zString.  The code to do the insertion might look like this:</p>
 

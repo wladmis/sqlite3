@@ -168,7 +168,7 @@ struct Table {
 };
 
 /*
-** Each SQL index is represented in memory by and
+** Each SQL index is represented in memory by an
 ** instance of the following structure.
 **
 ** The columns of the table that are to be indexed are described
@@ -201,7 +201,7 @@ struct Index {
 ** this structure.
 */
 struct Token {
-  char *z;      /* Text of the token */
+  char *z;      /* Text of the token.  Not NULL-terminated! */
   int n;        /* Number of characters in this token */
 };
 
