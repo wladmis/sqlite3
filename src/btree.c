@@ -793,7 +793,7 @@ static int lockBtree(Btree *pBt){
     PageOne *pP1 = pBt->page1;
     if( strcmp(pP1->zMagic,zMagicHeader)!=0 ||
           (pP1->iMagic!=MAGIC && swab32(pP1->iMagic)!=MAGIC) ){
-      rc = SQLITE_CORRUPT;
+      rc = SQLITE_NOTADB;
       goto page1_init_failed;
     }
     pBt->needSwab = pP1->iMagic!=MAGIC;

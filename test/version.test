@@ -192,7 +192,7 @@ do_test version-2.2 {
   close $fd
   set rc [catch {sqlite db test.db} msg]
   lappend rc $msg
-} {1 {database disk image is malformed}}
+} {1 {file is encrypted or is not a database}}
 
 
 finish_test
