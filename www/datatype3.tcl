@@ -299,6 +299,7 @@ modes, as follows:</P>
 	false.</P>
 </UL>
 
+<a name="collation"></a>
 <h3>7. User-defined Collation Sequences</h3>
 
 <p>
