@@ -126,6 +126,14 @@ do_test select3-4.4 {
     ORDER BY max(n)
   }
 } {3 4 4 8 5 15}
+do_test select3-4.5 {
+  execsql {
+    SELECT log AS x FROM t1 
+    GROUP BY x
+    HAVING count(*)>=4 
+    ORDER BY max(n)
+  }
+} {3 4 5}
 
 do_test select3-5.1 {
   execsql {
