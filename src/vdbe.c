@@ -59,6 +59,15 @@
 */
 int sqlite_search_count = 0;
 
+/*
+** When this global variable is positive, it gets decremented once before
+** each instruction in the VDBE.  When reaches zero, the SQLITE_Interrupt
+** of the db.flags field is set in order to simulate and interrupt.
+**
+** This facility is used for testing purposes only.  It does not function
+** in an ordinary build.
+*/
+int sqlite_interrupt_count = 0;
 
 /*
 ** Advance the virtual machine to the next output row.
@@ -514,6 +523,18 @@ int sqliteVdbeExec(
 #ifndef NDEBUG
     if( p->trace ){
       sqliteVdbePrintOp(p->trace, pc, pOp);
+    }
+#endif
+
+    /* Check to see if we need to simulate an interrupt.  This only happens
+    ** if we have a special test build.
+    */
+#ifdef SQLITE_TEST
+    if( sqlite_interrupt_count>0 ){
+      sqlite_interrupt_count--;
+      if( sqlite_interrupt_count==0 ){
+        sqlite_interrupt(db);
+      }
     }
 #endif
 
