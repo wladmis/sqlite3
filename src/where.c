@@ -338,8 +338,12 @@ WhereInfo *sqliteWhereBegin(
       if( (aExpr[j].prereqRight & loopMask)!=aExpr[j].prereqRight ) continue;
       if( (aExpr[j].prereqLeft & loopMask)!=aExpr[j].prereqLeft ) continue;
       if( haveKey ){
+        if( pushKey && i==pTabList->nId-1 ){
+          sqliteVdbeAddOp(v, OP_Dup, 0, 0, 0, 0);
+        }else{
+          haveKey = 0;
+        }
         sqliteVdbeAddOp(v, OP_Fetch, base+idx, 0, 0, 0);
-        haveKey = 0;
       }
       sqliteExprIfFalse(pParse, aExpr[j].p, cont);
       aExpr[j].p = 0;
