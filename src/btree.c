@@ -1014,12 +1014,8 @@ static void pageReinit(void *pData, int pageSize){
 }
 
 /*
-** Open a new database.
-**
-** Actually, this routine just sets up the internal data structures
-** for accessing the database.  We do not open the database file 
-** until the first page is loaded.
-**
+** Open a database file.
+** 
 ** zFilename is the name of the database file.  If zFilename is NULL
 ** a new database with a random name is created.  This randomly named
 ** database file will be deleted when sqlite3BtreeClose() is called.
