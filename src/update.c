@@ -279,7 +279,7 @@ void sqlite3Update(
     }
     for(i=0; i<pTab->nCol; i++){
       if( i==pTab->iPKey ){
-        sqlite3VdbeAddOp(v, OP_String, 0, 0);
+        sqlite3VdbeAddOp(v, OP_String8, 0, 0);
         continue;
       }
       j = aXRef[i];
@@ -363,7 +363,7 @@ void sqlite3Update(
     */
     for(i=0; i<pTab->nCol; i++){
       if( i==pTab->iPKey ){
-        sqlite3VdbeAddOp(v, OP_String, 0, 0);
+        sqlite3VdbeAddOp(v, OP_String8, 0, 0);
         continue;
       }
       j = aXRef[i];
