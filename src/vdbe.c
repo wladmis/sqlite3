@@ -1715,6 +1715,7 @@ int sqliteVdbeExec(
           }
         }
         p->aTab[i].index = 0;
+        p->aTab[i].keyAsData = 0;
         break;
       }
 
