@@ -602,11 +602,11 @@ int sqlite_exec(
 ){
   Parse sParse;
 
+  if( pzErrMsg ) *pzErrMsg = 0;
+  if( sqliteSafetyOn(db) ) goto exec_misuse;
 #ifndef SQLITE_OMIT_TRACE
   if( db->xTrace ) db->xTrace(db->pTraceArg, zSql);
 #endif
-  if( pzErrMsg ) *pzErrMsg = 0;
-  if( sqliteSafetyOn(db) ) goto exec_misuse;
   if( (db->flags & SQLITE_Initialized)==0 ){
     int rc, cnt = 1;
     while( (rc = sqliteInit(db, pzErrMsg))==SQLITE_BUSY
