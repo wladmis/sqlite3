@@ -1163,7 +1163,7 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       sqliteExprCode(pParse, pExpr->pLeft);
       addr = sqliteVdbeCurrentAddr(v);
       sqliteVdbeAddOp(v, OP_NotNull, -1, addr+4);
-      sqliteVdbeAddOp(v, OP_Pop, 1, 0);
+      sqliteVdbeAddOp(v, OP_Pop, 2, 0);
       sqliteVdbeAddOp(v, OP_String, 0, 0);
       sqliteVdbeAddOp(v, OP_Goto, 0, addr+6);
       if( pExpr->pSelect ){
