@@ -642,17 +642,7 @@ void sqlite3Pragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
             { OP_Concat,      4,  0,  0},
             { OP_Callback,    1,  0,  0},
           };
-          sqlite3VdbeAddOp(v, OP_Recno, 1, 0);
-          for(k=0; k<pIdx->nColumn; k++){
-            int idx = pIdx->aiColumn[k];
-            if( idx==pTab->iPKey ){
-              sqlite3VdbeAddOp(v, OP_Recno, 1, 0);
-            }else{
-              sqlite3VdbeAddOp(v, OP_Column, 1, idx);
-            }
-          }
-          sqlite3VdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
-          sqlite3IndexAffinityStr(v, pIdx);
+          sqlite3GenerateIndexKey(v, pIdx, 1);
           jmp2 = sqlite3VdbeAddOp(v, OP_Found, j+2, 0);
           addr = sqlite3VdbeAddOpList(v, ArraySize(idxErr), idxErr);
           sqlite3VdbeChangeP3(v, addr+4, pIdx->zName, P3_STATIC);

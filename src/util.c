@@ -393,7 +393,7 @@ void sqlite3SetNString(char **pz, ...){
   while( (z = va_arg(ap, const char*))!=0 ){
     n = va_arg(ap, int);
     if( n<=0 ) n = strlen(z);
-    strncpy(zResult, z, n);
+    memcpy(zResult, z, n);
     zResult += n;
   }
   *zResult = 0;
@@ -1330,7 +1330,3 @@ void *sqlite3HexToBlob(const char *z){
   }
   return zBlob;
 }
-
-
-
-

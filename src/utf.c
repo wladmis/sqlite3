@@ -25,9 +25,9 @@
 **
 ** Notes on UTF-16:  (with wwww+1==uuuuu)
 **
-**      Word-0            Word-1             Value
-**  110110wwwwxxxxxx 110111yyyyyyyyyy        000uuuuu xxxxxxyy yyyyyyyy
-**  xxxxxxxxyyyyyyyy                         00000000 xxxxxxxx yyyyyyyy
+**      Word-0               Word-1          Value
+**  110110ww wwzzzzyy   110111yy yyxxxxxx    000uuuuu zzzzyyyy yyxxxxxx
+**  zzzzyyyy yyxxxxxx                        00000000 zzzzyyyy yyxxxxxx
 **
 **
 ** BOM or Byte Order Mark:
