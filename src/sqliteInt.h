@@ -614,6 +614,7 @@ struct WhereLevel {
   int iLeftJoin;       /* Memory cell used to implement LEFT OUTER JOIN */
   int top;             /* First instruction of interior of the loop */
   int inOp, inP1, inP2;/* Opcode used to implement an IN operator */
+  int bRev;            /* Do the scan in the reverse direction */
 };
 
 /*
