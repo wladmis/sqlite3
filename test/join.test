@@ -414,9 +414,11 @@ do_test join-9.1 {
 
 ifcapable subquery {
   do_test join-9.1.1 {
-    SELECT * FROM t12 NATURAL LEFT JOIN t13
+    execsql {
+      SELECT * FROM t12 NATURAL LEFT JOIN t13
       EXCEPT
       SELECT * FROM t12 NATURAL LEFT JOIN (SELECT * FROM t13 WHERE b>0);
+    }
   } {}
 }
 ifcapable view {
