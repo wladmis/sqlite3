@@ -119,7 +119,6 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     { "vdbe_trace",               SQLITE_VdbeTrace     },
     { "full_column_names",        SQLITE_FullColNames  },
     { "short_column_names",       SQLITE_ShortColNames },
-    { "show_datatypes",           SQLITE_ReportTypes   },
     { "count_changes",            SQLITE_CountRows     },
     { "empty_result_callbacks",   SQLITE_NullCallback  },
   };

@@ -444,8 +444,6 @@ struct sqlite {
                                           /*   the count using a callback. */
 #define SQLITE_NullCallback   0x00000100  /* Invoke the callback once if the */
                                           /*   result set is empty */
-#define SQLITE_ReportTypes    0x00000200  /* Include information on datatypes */
-                                          /*   in 4th argument of callback */
 
 /*
 ** Possible values for the sqlite.magic field.

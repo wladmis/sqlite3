@@ -655,18 +655,12 @@ int sqlite3_create_function(
   FuncDef *p;
   int nName;
 
-  if( db==0 || zFunctionName==0 || sqlite3SafetyCheck(db) ){
-    return SQLITE_ERROR;
-  }
-  if( (xFunc && (xFinal || xStep)) || (!xFunc && (!xFinal && !xStep)) ){
-    return SQLITE_ERROR;
-  }
-  if( nArg<-1 || nArg>127 ){
-    return SQLITE_ERROR;
-  }
-
-  nName = strlen(zFunctionName);
-  if( nName>255 ){
+  if( (db==0 || zFunctionName==0 || sqlite3SafetyCheck(db)) ||
+      (xFunc && (xFinal || xStep)) || 
+      (!xFunc && (xFinal && !xStep)) ||
+      (!xFunc && (!xFinal && xStep)) ||
+      (nArg<-1 || nArg>127) ||
+      (255<(nName = strlen(zFunctionName))) ){
     return SQLITE_ERROR;
   }
 
@@ -678,7 +672,6 @@ int sqlite3_create_function(
   p->pUserData = pUserData;
   return SQLITE_OK;
 }
-
 int sqlite3_create_function16(
   sqlite3 *db,
   const void *zFunctionName,
