@@ -440,4 +440,24 @@ do_test misc1-13.1 {
    }
 } {1 2 3 4 5 6 7 8 9 10 11}
 
+# Make sure a database connection still works after changing the
+# working directory.
+#
+do_test misc1-14.1 {
+  file mkdir tempdir
+  cd tempdir
+  execsql {BEGIN}
+  file exists ./test.db-journal
+} {0}
+do_test misc1-14.2 {
+  file exists ../test.db-journal
+} {1}
+do_test misc1-14.3 {
+  cd ..
+  file delete tempdir
+  execsql {COMMIT}
+  file exists ./test.db-journal
+} {0}
+
+
 finish_test

@@ -626,6 +626,7 @@ int sqlitepager_open(
   int useJournal           /* TRUE to use a rollback journal on this file */
 ){
   Pager *pPager;
+  char *zFullPathname;
   int nameLen;
   OsFile fd;
   int rc;
@@ -638,26 +639,34 @@ int sqlitepager_open(
     return SQLITE_NOMEM;
   }
   if( zFilename ){
-    rc = sqliteOsOpenReadWrite(zFilename, &fd, &readOnly);
+    zFullPathname = sqliteOsFullPathname(zFilename);
+    rc = sqliteOsOpenReadWrite(zFullPathname, &fd, &readOnly);
     tempFile = 0;
   }else{
     rc = sqlitepager_opentemp(zTemp, &fd);
     zFilename = zTemp;
+    zFullPathname = sqliteOsFullPathname(zFilename);
     tempFile = 1;
   }
+  if( sqlite_malloc_failed ){
+    return SQLITE_NOMEM;
+  }
   if( rc!=SQLITE_OK ){
+    sqliteFree(zFullPathname);
     return SQLITE_CANTOPEN;
   }
-  nameLen = strlen(zFilename);
+  nameLen = strlen(zFullPathname);
   pPager = sqliteMalloc( sizeof(*pPager) + nameLen*2 + 30 );
   if( pPager==0 ){
     sqliteOsClose(&fd);
+    sqliteFree(zFullPathname);
     return SQLITE_NOMEM;
   }
   pPager->zFilename = (char*)&pPager[1];
   pPager->zJournal = &pPager->zFilename[nameLen+1];
-  strcpy(pPager->zFilename, zFilename);
-  strcpy(pPager->zJournal, zFilename);
+  strcpy(pPager->zFilename, zFullPathname);
+  strcpy(pPager->zJournal, zFullPathname);
+  sqliteFree(zFullPathname);
   strcpy(&pPager->zJournal[nameLen], "-journal");
   pPager->fd = fd;
   pPager->journalOpen = 0;
