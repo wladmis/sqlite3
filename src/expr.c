@@ -301,7 +301,6 @@ int sqliteExprIsConstant(Expr *p){
     case TK_DOT:
       return 0;
     case TK_STRING:
-      return p->token.z[0]=='\'';
     case TK_INTEGER:
     case TK_FLOAT:
       return 1;
