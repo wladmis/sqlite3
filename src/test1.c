@@ -2533,6 +2533,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   Tcl_LinkVar(interp, "sqlite_static_bind_value",
       (char*)&sqlite_static_bind_value, TCL_LINK_STRING);
   Tcl_LinkVar(interp, "sqlite_temp_directory",
-      (char*)&sqlite_temp_directory, TCL_LINK_STRING);
+      (char*)&sqlite3_temp_directory, TCL_LINK_STRING);
   return TCL_OK;
 }
