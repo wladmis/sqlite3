@@ -449,7 +449,7 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
     }
     sqlite3NestedParse(pParse, 
         "UPDATE %Q.%s SET "
-          "sql = substr(sql,0,%d) || ', ' || %Q || substr(sql,%d,length(sql)) "
+          "sql = substr(sql,1,%d) || ', ' || %Q || substr(sql,%d,length(sql)) "
         "WHERE type = 'table' AND name = %Q", 
       zDb, SCHEMA_TABLE(iDb), pNew->addColOffset, zCol, pNew->addColOffset+1,
       zTab

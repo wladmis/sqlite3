@@ -23,6 +23,7 @@ if { [llength $argv]>0 } {
   set argv [list]
 } else {
   set F {
+    alter.test alter2.test alter3.test
     auth.test bind.test blob.test capi2.test capi3.test collate1.test
     collate2.test collate3.test collate4.test collate5.test collate6.test
     conflict.test date.test delete.test expr.test fkey1.test func.test
