@@ -549,3 +549,22 @@ void sqlite_busy_timeout(sqlite *db, int ms){
 void sqlite_interrupt(sqlite *db){
   db->flags |= SQLITE_Interrupt;
 }
+
+/*
+** Windows systems should call this routine to free memory that
+** is returned in the in the errmsg parameter of sqlite_open() when
+** SQLite is a DLL.  For some reason, it does not work to call free()
+** directly.
+**
+** Note that we need to call free() not sqliteFree() here, since every
+** string that is exported from SQLite should have already passed through
+** sqliteStrRealloc().
+*/
+void sqlite_freemem(void *p){ free(p); }
+
+/*
+** Windows systems need functions to call to return the sqlite_version
+** and sqlite_encoding strings.
+*/
+const char *sqlite_libversion(void){ return sqlite_version; }
+const char *sqlite_libencoding(void){ return sqlite_encoding; }
