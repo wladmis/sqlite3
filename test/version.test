@@ -177,6 +177,9 @@ do_test version-2.1 {
   btree_close $::bt
   catch {file attributes test.db -permissions 0444}
   catch {file attributes test.db -readonly 1}
+  if {[file writable test.db]} {
+    error "Unable to make the database file test.db readonly - rerun this test as an unprivileged user"
+  }
   set rc [catch {sqlite db test.db} msg]
   lappend rc $msg
 } {1 {unable to upgrade database to the version 2.6 format: attempt to write a readonly database}}

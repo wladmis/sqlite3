@@ -312,11 +312,17 @@ do_test temptable-6.2 {
   catch {file attributes test.db -permissions 0444}
   catch {file attributes test.db -readonly 1}
   sqlite db test.db
+  if {[file writable test.db]} {
+    error "Unable to make the database file test.db readonly - rerun this test as an unprivileged user"
+  }
   execsql {
     SELECT * FROM t8;
   }
 } {xyzzy}
 do_test temptable-6.3 {
+  if {[file writable test.db]} {
+    error "Unable to make the database file test.db readonly - rerun this test as an unprivileged user"
+  }
   catchsql {
     CREATE TABLE t9(x,y);
   }
@@ -333,6 +339,9 @@ do_test temptable-6.5 {
   }
 } {0 {1 2}}
 do_test temptable-6.6 {
+  if {[file writable test.db]} {
+    error "Unable to make the database file test.db readonly - rerun this test as an unprivileged user"
+  }
   catchsql {
     INSERT INTO t8 VALUES('hello');
     SELECT * FROM t8;

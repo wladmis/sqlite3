@@ -344,6 +344,7 @@ do_test btree-4.8 {
 } {2}
 do_test btree-4.9 {
   set r {}
+  btree_first $::c1
   while 1 {
     set key [btree_key $::c1]
     if {$key==""} break
