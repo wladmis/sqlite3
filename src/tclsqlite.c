@@ -22,7 +22,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define NUM_PREPARED_STMTS 0
+#define NUM_PREPARED_STMTS 10
 #define MAX_PREPARED_STMTS 100
 
 /*

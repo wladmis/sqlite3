@@ -1287,6 +1287,14 @@ int sqlite3_create_collation(
     );
     return SQLITE_ERROR;
   }
+
+  /* If removing a collation sequence, then set the expired flag for
+  ** all precompiled statements.
+  */
+  if( !xCompare ){
+    sqlite3ExpirePreparedStatements(db);
+  }
+
   pColl = sqlite3FindCollSeq(db, (u8)enc, zName, strlen(zName), 1);
   if( 0==pColl ){
    rc = SQLITE_NOMEM;

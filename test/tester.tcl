@@ -60,7 +60,7 @@ if {[sqlite3 -has-codec] && [info command sqlite_orig]==""} {
 catch {db close}
 file delete -force test.db
 file delete -force test.db-journal
-sqlite3 db ./test.db
+set ::DB [sqlite3 db ./test.db]
 if {[info exists ::SETUP_SQL]} {
   db eval $::SETUP_SQL
 }

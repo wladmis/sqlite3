@@ -25,6 +25,14 @@ if {[catch {db auth {}} msg]} {
   return
 }
 
+rename proc proc_real
+proc_real proc {name arguments script} {
+  proc_real $name $arguments $script
+  if {$name=="auth"} {
+    db authorizer ::auth
+  }
+}
+
 do_test auth-1.1.1 {
   db close
   set ::DB [sqlite3 db test.db]
@@ -2107,5 +2115,8 @@ do_test auth-4.5 {
   SQLITE_READ   v1     x  main r3]
 
 } ;# ifcapable view && trigger
+
+rename proc {}
+rename proc_real proc
 
 finish_test

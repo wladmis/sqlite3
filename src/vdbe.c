@@ -4495,6 +4495,24 @@ case OP_CursorLoad: {
 }
 #endif /* SQLITE_OMIT_CURSOR */
 
+/* Opcode: Expire P1 * *
+**
+** Cause precompiled statements to become expired. An expired statement
+** fails with an error code of SQLITE_SCHEMA if it is ever executed 
+** (via sqlite3_step()).
+** 
+** If P1 is 0, then all SQL statements become expired. If P1 is non-zero,
+** then only the currently executing statement is affected. 
+*/
+case OP_Expire: {
+  if( !pOp->p1 ){
+    sqlite3ExpirePreparedStatements(db);
+  }else{
+    p->expired = 1;
+  }
+  break;
+}
+
 
 
 /* An other opcode is illegal...
