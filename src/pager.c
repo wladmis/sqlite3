@@ -1383,7 +1383,7 @@ static int sqlite3pager_opentemp(char *zFile, OsFile *fd){
     cnt--;
     sqlite3OsTempFileName(zFile);
     rc = sqlite3OsOpenExclusive(zFile, fd, 1);
-  }while( cnt>0 && rc!=SQLITE_OK );
+  }while( cnt>0 && rc!=SQLITE_OK && rc!=SQLITE_NOMEM );
   return rc;
 }
 
