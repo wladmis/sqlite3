@@ -573,14 +573,10 @@ void sqliteExprCode(Parse *pParse, Expr *pExpr){
       }
       break;
     }
+    case TK_FLOAT:
     case TK_INTEGER: {
       sqliteVdbeAddOp(v, OP_String, 0, 0);
       sqliteVdbeChangeP3(v, -1, pExpr->token.z, pExpr->token.n);
-      break;
-    }
-    case TK_FLOAT: {
-      int addr = sqliteVdbeAddOp(v, OP_String, 0, 0);
-      sqliteVdbeChangeP3(v, addr, pExpr->token.z, pExpr->token.n);
       break;
     }
     case TK_STRING: {
