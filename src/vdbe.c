@@ -1845,7 +1845,7 @@ case OP_Pull: {
   tz = zStack[from];
   Deephemeralize(p, to);
   for(i=from; i<to; i++){
-    Deephemeralize(p, i);
+    Deephemeralize(p, i+1);
     aStack[i] = aStack[i+1];
     assert( (aStack[i].flags & STK_Ephem)==0 );
     if( aStack[i].flags & (STK_Dyn|STK_Static) ){
