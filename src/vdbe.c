@@ -509,6 +509,7 @@ int sqliteVdbeExec(
     popStack(&pTos, p->popStack);
     p->popStack = 0;
   }
+  CHECK_FOR_INTERRUPT;
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
     assert( pTos<=&p->aStack[pc] );
