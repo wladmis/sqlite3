@@ -216,7 +216,7 @@ void sqlite3Update(
   if( isView ){
     Select *pView;
     pView = sqlite3SelectDup(pTab->pSelect);
-    sqlite3Select(pParse, pView, SRT_TempTable, iCur, 0, 0, 0);
+    sqlite3Select(pParse, pView, SRT_TempTable, iCur, 0, 0, 0, 0);
     sqlite3SelectDelete(pView);
   }
 
@@ -243,7 +243,9 @@ void sqlite3Update(
     /* Create pseudo-tables for NEW and OLD
     */
     sqlite3VdbeAddOp(v, OP_OpenPseudo, oldIdx, 0);
+    sqlite3VdbeAddOp(v, OP_SetNumColumns, oldIdx, pTab->nCol);
     sqlite3VdbeAddOp(v, OP_OpenPseudo, newIdx, 0);
+    sqlite3VdbeAddOp(v, OP_SetNumColumns, newIdx, pTab->nCol);
 
     /* The top of the update loop for when there are triggers.
     */
