@@ -478,7 +478,6 @@ static int test_create_function(
 ){
   int rc;
   sqlite3 *db;
-  sqlite3_value *pVal;
   extern void Md5_Register(sqlite3*);
 
   if( argc!=2 ){
@@ -494,6 +493,7 @@ static int test_create_function(
   /* Use the sqlite3_create_function16() API here. Mainly for fun, but also 
   ** because it is not tested anywhere else. */
   if( rc==SQLITE_OK ){
+    sqlite3_value *pVal;
     pVal = sqlite3ValueNew();
     sqlite3ValueSetStr(pVal, -1, "x_sqlite_exec", SQLITE_UTF8, SQLITE_STATIC);
     rc = sqlite3_create_function16(db, 

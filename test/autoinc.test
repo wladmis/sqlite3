@@ -476,5 +476,13 @@ do_test autoinc-7.1 {
   }
 } {3 345}
 
+# Test that if the AUTOINCREMENT is applied to a non integer primary key
+# the error message is sensible.
+do_test autoinc-7.2 {
+  catchsql {
+    CREATE TABLE t8(x TEXT PRIMARY KEY AUTOINCREMENT);
+  }
+} {1 {AUTOINCREMENT is only allowed on an INTEGER PRIMARY KEY}}
+
 catch {db2 close}
 finish_test

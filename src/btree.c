@@ -1331,6 +1331,7 @@ int sqlite3BtreeSetSafetyLevel(Btree *pBt, int level){
 }
 #endif
 
+#if !defined(SQLITE_OMIT_PAGER_PRAGMAS) || !defined(SQLITE_OMIT_VACUUM)
 /*
 ** Change the default pages size and the number of reserved bytes per page.
 **
@@ -1372,6 +1373,7 @@ int sqlite3BtreeGetPageSize(Btree *pBt){
 int sqlite3BtreeGetReserve(Btree *pBt){
   return pBt->pageSize - pBt->usableSize;
 }
+#endif /* !defined(SQLITE_OMIT_PAGER_PRAGMAS) || !defined(SQLITE_OMIT_VACUUM) */
 
 /*
 ** Change the 'auto-vacuum' property of the database. If the 'autoVacuum'
