@@ -9,6 +9,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2004-Sep-18} {Version 3.0.7} {
+  Version 3.0 has now been in use by multiple projects for several
+  months with no major difficulties.   We consider it stable and
+  ready for production use. 
+}
+
 newsitem {2004-Sep-02} {Version 3.0.6 (beta)} {
   Because of some important changes to sqlite3_step(),
   we have decided to
@@ -31,7 +37,7 @@ newsitem {2004-Aug-08} {Version 3.0.4 (beta)} {
   Expect at least one more beta before version 3.0 goes final.
 }
 
-newsitem {2004-Jly-22} {Version 3.0.3 (beta)} {
+newsitem {2004-July-22} {Version 3.0.3 (beta)} {
   The second beta release of SQLite version 3.0 is now available.
   This new beta fixes many bugs and adds support for databases with
   varying page sizes.  The next 3.0 release will probably be called
