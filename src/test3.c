@@ -715,9 +715,11 @@ static int btree_key(
   sqliteBtreeKeySize(pCur, &n);
   zBuf = malloc( n+1 );
   rc = sqliteBtreeKey(pCur, 0, n, zBuf);
-  if( rc ){
+  if( rc!=n ){
+    char zMsg[100];
     free(zBuf);
-    Tcl_AppendResult(interp, errorName(rc), 0);
+    sprintf(zMsg, "truncated key: got %d of %d bytes", rc, n);
+    Tcl_AppendResult(interp, zMsg, 0);
     return TCL_ERROR;
   }
   zBuf[n] = 0;
@@ -751,9 +753,11 @@ static int btree_data(
   sqliteBtreeDataSize(pCur, &n);
   zBuf = malloc( n+1 );
   rc = sqliteBtreeData(pCur, 0, n, zBuf);
-  if( rc ){
+  if( rc!=n ){
+    char zMsg[100];
     free(zBuf);
-    Tcl_AppendResult(interp, errorName(rc), 0);
+    sprintf(zMsg, "truncated data: got %d of %d bytes", rc, n);
+    Tcl_AppendResult(interp, zMsg, 0);
     return TCL_ERROR;
   }
   zBuf[n] = 0;

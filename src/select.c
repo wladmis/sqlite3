@@ -182,6 +182,7 @@ static int selectInnerLoop(
   */
   if( eDest==SRT_Except ){
     sqliteVdbeAddOp(v, OP_MakeRecord, nColumn, 0, 0, 0);
+    sqliteVdbeAddOp(v, OP_MoveTo, iParm, 0, 0, 0);
     sqliteVdbeAddOp(v, OP_Delete, iParm, 0, 0, 0);
   }else 
 

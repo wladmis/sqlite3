@@ -112,7 +112,6 @@ do_test select2-3.2e {
 
 # omit the time-dependent tests
 #
-testif gdbm:
 do_probtest select2-3.2f {
   set t1 [lindex [time {execsql {SELECT f1 FROM tbl2 WHERE 1000=f2}} 1] 0]
   set t2 [lindex [time {execsql {SELECT f1 FROM tbl2 WHERE f2=1000}} 1] 0]

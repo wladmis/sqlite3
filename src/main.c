@@ -253,6 +253,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
       }
     }
     sqliteFree(db);
+    sqliteStrRealloc(pzErrMsg);
     return 0;
   }
 
@@ -265,6 +266,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
     goto no_mem_on_open;
   }else if( rc!=SQLITE_OK && rc!=SQLITE_BUSY ){
     sqlite_close(db);
+    sqliteStrRealloc(pzErrMsg);
     return 0;
   }else /* if( pzErrMsg ) */{
     sqliteFree(*pzErrMsg);

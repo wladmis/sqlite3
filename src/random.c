@@ -87,7 +87,7 @@ int sqliteRandomByte(void){
   prng_state.s[prng_state.i] = prng_state.s[prng_state.j];
   prng_state.s[prng_state.j] = t;
   t = prng_state.s[prng_state.i] + prng_state.s[prng_state.j];
-  return t & 0xff;
+  return prng_state.s[t & 0xff];
 }
 
 /*
