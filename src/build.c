@@ -83,7 +83,14 @@ void sqliteExec(Parse *pParse){
 
   if( sqlite_malloc_failed ) return;
   xCallback = pParse->xCallback;
-  if( xCallback==0 && pParse->useCallback ) xCallback = fakeCallback;
+  if( xCallback==0 ){
+    if( pParse->useCallback ){
+      xCallback = fakeCallback;
+    }else if( v==0 ){
+      v = sqliteGetVdbe(pParse);
+      sqliteVdbeAddOp(v, OP_Halt, 0, 0);
+    }
+  }
   if( v && pParse->nErr==0 ){
     FILE *trace = (db->flags & SQLITE_VdbeTrace)!=0 ? stdout : 0;
     sqliteVdbeTrace(v, trace);
