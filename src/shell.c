@@ -656,7 +656,11 @@ static int dump_callback(void *pArg, int nArg, char **azArg, char **azCol){
   zType = azArg[1];
   zSql = azArg[2];
   
-  fprintf(p->out, "%s;\n", zSql);
+  if( strcasecmp(zTable,"sqlite_sequence")!=0 ){
+    fprintf(p->out, "%s;\n", zSql);
+  }else{
+    fprintf(p->out, "DELETE FROM sqlite_sequence;\n");
+  }
 
   if( strcmp(zType, "table")==0 ){
     sqlite3_stmt *pTableInfo = 0;
