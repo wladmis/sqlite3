@@ -1668,6 +1668,7 @@ static void destroyRootPage(Vdbe *v, int iTable, int iDb){
 #endif
 
   sqlite3VdbeAddOp(v, OP_Destroy, iTable, iDb);
+  sqlite3VdbeAddOp(v, OP_Pop, 1, 0);
 #ifndef SQLITE_OMIT_AUTOVACUUM
   base = sqlite3VdbeAddOpList(v, ArraySize(updateMaster), updateMaster);
   sqlite3VdbeChangeP1(v, base+13, iTable);
