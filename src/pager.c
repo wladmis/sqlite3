@@ -475,7 +475,7 @@ static int seekJournalHdr(Pager *pPager){
 ** - 4 bytes: Initial database page count.
 ** - 4 bytes: Sector size used by the process that wrote this journal.
 ** 
-** Followed by (JOURNAL_HDR_SZ - 20) bytes of unused space.
+** Followed by (JOURNAL_HDR_SZ - 24) bytes of unused space.
 */
 static int writeJournalHdr(Pager *pPager){
 
