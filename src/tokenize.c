@@ -144,7 +144,7 @@ static int sqliteKeywordCode(const char *z, int n){
 int sqliteGetToken(const char *z, int *tokenType){
   int i;
   switch( *z ){
-    case ' ': case '\t': case '\n': case '\f': {
+    case ' ': case '\t': case '\n': case '\f': case '\r': {
       for(i=1; z[i] && isspace(z[i]); i++){}
       *tokenType = TK_SPACE;
       return i;
@@ -350,7 +350,7 @@ int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
         }else if( sqliteStrNICmp(z,"--vdbe-trace-off--", 18)==0 ){
           pParse->db->flags &= ~SQLITE_VdbeTrace;
 #ifdef MEMORY_DEBUG
-        }else if( sqliteStrNICmp(z,"--malloc-file=",14)==0 ){
+        }else if( sqliteStrNICmp(z,"--malloc-fail=",14)==0 ){
           sqlite_iMallocFail = atoi(&z[14]);
         }else if( sqliteStrNICmp(z,"--malloc-stats--", 16)==0 ){
           if( pParse->xCallback ){
