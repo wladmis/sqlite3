@@ -76,26 +76,6 @@ Among the SQL features that SQLite does not currently implement are:</p>
 </ul>
 </p>
 
-<h2>Important News Flash!</h2>
-<p>
-The SQLite file format was changed in an incompatible way on
-Aug 2, 2000 (prior to version 1.0, when SQLite was still in Beta).
-If you are updated the library and have databases
-built using the old version of the library, you should save your
-old databases into an ASCII file then reimport the
-database using the new library.  For example, if you change the
-name of the old <b>sqlite</b> utility to "old-sqlite" and
-change the name of the old database directory to "old-db", then
-you can reconstruct the database as follows:</p>
-
-<blockquote><pre>
-echo .dump | old-sqlite old-db | sqlite db
-</pre></blockquote>
-
-<p>This file format change was made to work around a potential 
-inefficiency in GDBM that comes up when large indices are created 
-on tables where many entries in the table have the same index key.</p>
-
 <h2>Documentation</h2>
 
 <p>The following documentation is currently available:</p>
