@@ -512,9 +512,11 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetest1_Init(Tcl_Interp*);
     extern int Sqlitetest2_Init(Tcl_Interp*);
     extern int Sqlitetest3_Init(Tcl_Interp*);
+    extern int Md5_Init(Tcl_Interp*);
     Sqlitetest1_Init(interp);
     Sqlitetest2_Init(interp);
     Sqlitetest3_Init(interp);
+    Md5_Init(interp);
   }
 #endif
   if( argc>=2 ){
