@@ -153,6 +153,7 @@ for {set i 2} {$i<=15} {incr i} {
 #
 proc lock_status {testnum db expected_result} {
   do_test attach2-$testnum [subst {
+    $db cache flush  ;# The lock_status pragma should not be cached
     execsql {PRAGMA lock_status} $db
   }] $expected_result
 }
