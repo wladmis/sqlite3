@@ -158,6 +158,7 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   sqlite3 *db;
   Vdbe *v;
   Db *pDb = 0;
+  char *zName;
 
   v = sqlite3GetVdbe(pParse);
   if( !v ) return;
@@ -165,20 +166,22 @@ void sqlite3Detach(Parse *pParse, Token *pDbname){
   sqlite3VdbeAddOp(v, OP_Halt, 0, 0);
   if( pParse->explain ) return;
   db = pParse->db;
+  zName = sqlite3NameFromToken(pDbname);
+  if( zName==0 ) return;
   for(i=0; i<db->nDb; i++){
     pDb = &db->aDb[i];
-    if( pDb->pBt==0 || pDb->zName==0 ) continue;
-    if( strlen(pDb->zName)!=pDbname->n ) continue;
-    if( sqlite3StrNICmp(pDb->zName, pDbname->z, pDbname->n)==0 ) break;
+    if( pDb->pBt==0 ) continue;
+    if( sqlite3StrICmp(pDb->zName, zName)==0 ) break;
   }
   if( i>=db->nDb ){
-    sqlite3ErrorMsg(pParse, "no such database: %T", pDbname);
+    sqlite3ErrorMsg(pParse, "no such database: %z", zName);
     return;
   }
   if( i<2 ){
-    sqlite3ErrorMsg(pParse, "cannot detach database %T", pDbname);
+    sqlite3ErrorMsg(pParse, "cannot detach database %z", zName);
     return;
   }
+  sqliteFree(zName);
   if( !db->autoCommit ){
     sqlite3ErrorMsg(pParse, "cannot DETACH database within transaction");
     pParse->rc = SQLITE_ERROR;
