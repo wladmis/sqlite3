@@ -1308,7 +1308,7 @@ static int moveToLeftmost(BtCursor *pCur){
 
 /* Move the cursor to the first entry in the table.  Return SQLITE_OK
 ** on success.  Set *pRes to 0 if the cursor actually points to something
-** or set *pRes to 1 if the table is empty and there is no first element.
+** or set *pRes to 1 if the table is empty.
 */
 int sqliteBtreeFirst(BtCursor *pCur, int *pRes){
   int rc;
@@ -1327,7 +1327,7 @@ int sqliteBtreeFirst(BtCursor *pCur, int *pRes){
 
 /* Move the cursor to the last entry in the table.  Return SQLITE_OK
 ** on success.  Set *pRes to 0 if the cursor actually points to something
-** or set *pRes to 1 if the table is empty and there is no first element.
+** or set *pRes to 1 if the table is empty.
 */
 int sqliteBtreeLast(BtCursor *pCur, int *pRes){
   int rc;
