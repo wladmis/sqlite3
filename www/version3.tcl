@@ -281,5 +281,13 @@ To further support this capability, commits of transactions involving
 two or more ATTACHed database are now atomic.
 </p>
 
+<h3>Credits</h3>
+
+<p>
+SQLite version 3.0 is made possible in part by AOL developers
+supporting and embracing great Open-Source Software.
+</p>
+
+
 }
 footer {$Id$}
