@@ -613,6 +613,10 @@ int sqlite_exec(
       sqliteSafetyOff(db);
       return rc;
     }
+    if( pzErrMsg ){
+      sqliteFree(*pzErrMsg);
+      *pzErrMsg = 0;
+    }
   }
   if( db->file_format<3 ){
     sqliteSafetyOff(db);

@@ -4874,7 +4874,7 @@ case OP_MemLoad: {
   if( aStack[tos].flags & STK_Str ){
     zStack[tos] = p->aMem[i].z;
     aStack[tos].flags |= STK_Ephem;
-    aStack[tos].flags &= ~STK_Dyn;
+    aStack[tos].flags &= ~(STK_Dyn|STK_Static);
   }
   break;
 }
@@ -5306,6 +5306,7 @@ default: {
           fprintf(p->trace, " ???");
         }
       }
+      if( rc!=0 ) fprintf(p->trace," rc=%d",rc);
       fprintf(p->trace,"\n");
     }
 #endif
