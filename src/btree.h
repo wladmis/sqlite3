@@ -39,18 +39,12 @@ int sqliteBtreeRollback(Btree*);
 
 
 int sqliteBtreeCursor(Btree*, BtCursor **ppCur);
-
-/* Move the cursor so that it points to an entry near pKey.
-** Return 0 if the cursor is left pointing exactly at pKey.
-** Return -1 if the cursor points to the largest entry less than pKey.
-** Return 1 if the cursor points to the smallest entry greater than pKey.
-*/
-int sqliteBtreeMoveto(BtCursor*, void *pKey, int nKey);
+int sqliteBtreeMoveto(BtCursor*, void *pKey, int nKey, *pRes);
 int sqliteBtreeDelete(BtCursor*);
 int sqliteBtreeInsert(BtCursor*, void *pKey, int nKey, void *pData, int nData);
-int sqliteBtreeNext(BtCursor*);
-int sqliteBtreeKeySize(BtCursor*);
+int sqliteBtreeNext(BtCursor*, int *pRes);
+int sqliteBtreeKeySize(BtCursor*, int *pSize);
 int sqliteBtreeKey(BtCursor*, int offset, int amt, char *zBuf);
-int sqliteBtreeDataSize(BtCursor*);
+int sqliteBtreeDataSize(BtCursor*, int *pSize);
 int sqliteBtreeData(BtCursor*, int offset, int amt, char *zBuf);
 int sqliteBtreeCloseCursor(BtCursor*);
