@@ -412,7 +412,6 @@ int sqliteSortCompare(const char *, const char *);
   char *sqliteStrDup(const char*);
   char *sqliteStrNDup(const char*, int);
 #endif
-int sqliteGetToken(const char*, int *);
 void sqliteSetString(char **, const char *, ...);
 void sqliteSetNString(char **, ...);
 void sqliteDequote(char*);

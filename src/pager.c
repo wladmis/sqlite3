@@ -1076,7 +1076,7 @@ int sqlitepager_rollback(Pager *pPager){
   }
   pPager->dbSize = -1;
   return rc;
-};
+}
 
 /*
 ** Return TRUE if the database file is opened read-only.  Return FALSE

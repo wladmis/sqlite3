@@ -256,10 +256,10 @@ void generateColumnNames(Parse *pParse, IdList *pTabList, ExprList *pEList){
     }else if( p->op==TK_COLUMN && pTabList ){
       if( pTabList->nId>1 || showFullNames ){
         char *zName = 0;
-        Table *pTab = pTabList->a[p->iTable].pTab;
+        Table *pTab = pTabList->a[p->iTable - pParse->nTab].pTab;
         char *zTab;
  
-        zTab = pTabList->a[p->iTable].zAlias;
+        zTab = pTabList->a[p->iTable - pParse->nTab].zAlias;
         if( zTab==0 ) zTab = pTab->zName;
         sqliteSetString(&zName, zTab, ".", pTab->aCol[p->iColumn].zName, 0);
         sqliteVdbeAddOp(v, OP_ColumnName, i, 0);
