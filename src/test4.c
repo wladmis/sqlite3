@@ -65,7 +65,12 @@ static void *thread_main(void *pArg){
   if( p->db ){
     sqlite3_close(p->db);
   }
-  p->db = sqlite3_open(p->zFilename, 0, &p->zErr);
+  sqlite3_open(p->zFilename, &p->db, 0);
+  if( SQLITE_OK!=sqlite3_errcode(p->db) ){
+    p->zErr = strdup(sqlite3_errmsg(p->db));
+    sqlite3_close(p->db);
+    p->db = 0;
+  }
   p->vm = 0;
   p->completed = 1;
   while( p->opnum<=p->completed ) sched_yield();

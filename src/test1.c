@@ -1367,7 +1367,7 @@ static int test_open(
   }
 
   zFilename = Tcl_GetString(objv[1]);
-  rc = sqlite3_open_new(zFilename, &db, 0);
+  rc = sqlite3_open(zFilename, &db, 0);
   
   if( makePointerStr(interp, zBuf, db) ) return TCL_ERROR;
   Tcl_AppendResult(interp, zBuf, 0);
