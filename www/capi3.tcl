@@ -378,7 +378,7 @@ The sqlite3_create_collation() function specifies a collating sequence name
 and a comparison function to implement that collating sequence.  The
 comparison function is only used for comparing text values.  The eTextRep
 parameter is one of SQLITE3_UTF8, SQLITE3_UTF16LE, SQLITE3_UTF16BE, or
-SQLITE3_ANY to specify which text representation to comparison function works
+SQLITE3_ANY to specify which text representation the comparison function works
 with.  Separate comparison functions can exist for the same collating
 sequence for each of the UTF-8, UTF-16LE and UTF-16BE text representations.
 The sqlite3_create_collation16() works like sqlite3_create_collation() except
