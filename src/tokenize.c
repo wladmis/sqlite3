@@ -234,8 +234,13 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       return 1;
     }
     case '(': {
-      *tokenType = TK_LP;
-      return 1;
+      if( z[1]=='+' && z[2]==')' ){
+        *tokenType = TK_ORACLE_OUTER_JOIN;
+        return 3;
+      }else{
+        *tokenType = TK_LP;
+        return 1;
+      }
     }
     case ')': {
       *tokenType = TK_RP;
