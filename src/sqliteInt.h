@@ -517,7 +517,7 @@ char *sqliteTableNameFromToken(Token*);
 int sqliteExprCheck(Parse*, Expr*, int, int*);
 int sqliteExprCompare(Expr*, Expr*);
 int sqliteFuncId(Token*);
-int sqliteExprResolveIds(Parse*, IdList*, Expr*);
+int sqliteExprResolveIds(Parse*, IdList*, ExprList*, Expr*);
 void sqliteExprResolveInSelect(Parse*, Expr*);
 int sqliteExprAnalyzeAggregates(Parse*, Expr*);
 void sqliteParseInfoReset(Parse*);

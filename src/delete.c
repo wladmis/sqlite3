@@ -70,7 +70,7 @@ void sqliteDeleteFrom(
   */
   if( pWhere ){
     sqliteExprResolveInSelect(pParse, pWhere);
-    if( sqliteExprResolveIds(pParse, pTabList, pWhere) ){
+    if( sqliteExprResolveIds(pParse, pTabList, 0, pWhere) ){
       goto delete_from_cleanup;
     }
     if( sqliteExprCheck(pParse, pWhere, 0, 0) ){

@@ -161,7 +161,7 @@ faq {
   on my SparcStation.
 } {
   <p>The x86 processor on your linux box is little-endian (meaning that
-  the least signification byte of integers comes first) but the Sparc is
+  the least significant byte of integers comes first) but the Sparc is
   big-endian (the most significant bytes comes first).  SQLite databases
   created on a little-endian architecture cannot be used on a big-endian
   machine and vice versa.</p>

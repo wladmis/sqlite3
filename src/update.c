@@ -84,7 +84,7 @@ void sqliteUpdate(
     sqliteExprResolveInSelect(pParse, pChanges->a[i].pExpr);
   }
   if( pWhere ){
-    if( sqliteExprResolveIds(pParse, pTabList, pWhere) ){
+    if( sqliteExprResolveIds(pParse, pTabList, 0, pWhere) ){
       goto update_cleanup;
     }
     if( sqliteExprCheck(pParse, pWhere, 0, 0) ){
@@ -93,7 +93,7 @@ void sqliteUpdate(
   }
   chngRecno = 0;
   for(i=0; i<pChanges->nExpr; i++){
-    if( sqliteExprResolveIds(pParse, pTabList, pChanges->a[i].pExpr) ){
+    if( sqliteExprResolveIds(pParse, pTabList, 0, pChanges->a[i].pExpr) ){
       goto update_cleanup;
     }
     if( sqliteExprCheck(pParse, pChanges->a[i].pExpr, 0, 0) ){

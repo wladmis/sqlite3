@@ -128,18 +128,6 @@ Expr *sqliteExprFunction(ExprList *pList, Token *pToken){
 }
 
 /*
-** Recursively delete an expression tree.
-*/
-void sqliteExprDelete(Expr *p){
-  if( p==0 ) return;
-  if( p->pLeft ) sqliteExprDelete(p->pLeft);
-  if( p->pRight ) sqliteExprDelete(p->pRight);
-  if( p->pList ) sqliteExprListDelete(p->pList);
-  if( p->pSelect ) sqliteSelectDelete(p->pSelect);
-  sqliteFree(p);
-}
-
-/*
 ** Locate the in-memory structure that describes 
 ** a particular database table given the name
 ** of that table.  Return NULL if not found.
