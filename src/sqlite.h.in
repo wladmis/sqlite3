@@ -363,6 +363,21 @@ int sqlite_get_table_vprintf(
 );
 
 /*
+** Windows systems should call this routine to free memory that
+** is returned in the in the errmsg parameter of sqlite_open() when
+** SQLite is a DLL.  For some reason, it does not work to call free()
+** directly.
+*/
+void sqlite_freemem(void *p);
+
+/*
+** Windows systems need functions to call to return the sqlite_version
+** and sqlite_encoding strings.
+*/
+const char *sqlite_libversion(void);
+const char *sqlite_libencoding(void);
+
+/*
 ** A pointer to the following structure is used to communicate with
 ** the implementations of user-defined functions.
 */
