@@ -376,8 +376,8 @@ int sqlite3utf8CharLen(const char *pZ, int nByte){
 */
 int sqlite3utf16ByteLen(const void *pZ, int nChar){
   if( nChar<0 ){
-    const unsigned char *pC1 = pZ;
-    const unsigned char *pC2 = pZ+1;
+    const unsigned char *pC1 = (unsigned char *)pZ;
+    const unsigned char *pC2 = (unsigned char *)pZ+1;
     while( *pC1 || *pC2 ){
       pC1 += 2;
       pC2 += 2;
