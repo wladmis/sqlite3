@@ -2549,7 +2549,7 @@ int sqlite3Select(
 
   /* Begin the database scan
   */
-  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0,
+  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere,
                              pGroupBy ? 0 : &pOrderBy, p->pFetch);
   if( pWInfo==0 ) goto select_end;
 

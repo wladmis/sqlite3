@@ -389,14 +389,14 @@ void sqlite3Pragma(
         if( sqlite3_temp_directory ){
           if( strlen(sqlite3_temp_directory) < strlen(zRight) + 1){
             sqlite3FreeX(sqlite3_temp_directory);
-            sqlite3_temp_directory = sqlite3Malloc( strlen(zRight) + 1 );
+            sqlite3_temp_directory = sqliteMalloc( strlen(zRight) + 1 );
             if( sqlite3_temp_directory==0 ){
               goto pragma_out;
             }
             sqlite3_temp_directory[0] = '\0';
           }
         }else{
-          sqlite3_temp_directory = sqlite3Malloc( strlen(zRight) + 1 );
+          sqlite3_temp_directory = sqliteMalloc( strlen(zRight) + 1 );
           if( sqlite3_temp_directory==0 ){
             goto pragma_out;
           }

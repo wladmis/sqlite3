@@ -227,11 +227,12 @@ void sqlite3Update(
 
   /* Begin the database scan
   */
-  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 1, 0, 0);
+  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0, 0);
   if( pWInfo==0 ) goto update_cleanup;
 
   /* Remember the index of every item to be updated.
   */
+  sqlite3VdbeAddOp(v, OP_Recno, iCur, 0);
   sqlite3VdbeAddOp(v, OP_ListWrite, 0, 0);
 
   /* End the database scan loop.
