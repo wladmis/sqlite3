@@ -91,7 +91,7 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
         db->init.newTnum = atoi(argv[2]);
         if( sqlite3_exec(db, argv[3], 0, 0, &zErr) ){
           corruptSchema(pData, zErr);
-          sqlite3_freemem(zErr);
+          sqlite3_free(zErr);
         }
         db->init.iDb = 0;
       }else{
@@ -638,7 +638,7 @@ void sqlite3_interrupt(sqlite *db){
 ** string that is exported from SQLite should have already passed through
 ** sqlite3StrRealloc().
 */
-void sqlite3_freemem(void *p){ free(p); }
+void sqlite3_free(char *p){ free(p); }
 
 /*
 ** Windows systems need functions to call to return the sqlite3_version

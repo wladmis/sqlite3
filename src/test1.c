@@ -514,7 +514,7 @@ static int sqlite3_mprintf_int(
   }
   z = sqlite3_mprintf(argv[1], a[0], a[1], a[2]);
   Tcl_AppendResult(interp, z, 0);
-  sqlite3_freemem(z);
+  sqlite3_free(z);
   return TCL_OK;
 }
 
@@ -541,7 +541,7 @@ static int sqlite3_mprintf_str(
   }
   z = sqlite3_mprintf(argv[1], a[0], a[1], argc>4 ? argv[4] : NULL);
   Tcl_AppendResult(interp, z, 0);
-  sqlite3_freemem(z);
+  sqlite3_free(z);
   return TCL_OK;
 }
 
@@ -570,7 +570,7 @@ static int sqlite3_mprintf_double(
   if( Tcl_GetDouble(interp, argv[4], &r) ) return TCL_ERROR;
   z = sqlite3_mprintf(argv[1], a[0], a[1], r);
   Tcl_AppendResult(interp, z, 0);
-  sqlite3_freemem(z);
+  sqlite3_free(z);
   return TCL_OK;
 }
 
@@ -600,7 +600,7 @@ static int sqlite3_mprintf_scaled(
   }
   z = sqlite3_mprintf(argv[1], r[0]*r[1]);
   Tcl_AppendResult(interp, z, 0);
-  sqlite3_freemem(z);
+  sqlite3_free(z);
   return TCL_OK;
 }
 

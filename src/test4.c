@@ -77,7 +77,7 @@ static void *thread_main(void *pArg){
   while( p->opnum<=p->completed ) sched_yield();
   while( p->xOp ){
     if( p->zErr && p->zErr!=p->zStaticErr ){
-      sqlite3_freemem(p->zErr);
+      sqlite3_free(p->zErr);
       p->zErr = 0;
     }
     (*p->xOp)(p);
@@ -93,7 +93,7 @@ static void *thread_main(void *pArg){
     p->db = 0;
   }
   if( p->zErr && p->zErr!=p->zStaticErr ){
-    sqlite3_freemem(p->zErr);
+    sqlite3_free(p->zErr);
     p->zErr = 0;
   }
   p->completed++;
