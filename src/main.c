@@ -426,7 +426,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   }
   
   /* Open the backend database driver */
-  rc = sqliteBtreeOpen(zFilename, 0, MAX_PAGES, &db->aDb[0].pBt);
+  rc = sqliteBtreeFactory(db, zFilename, 0, MAX_PAGES, &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
     switch( rc ){
       default: {
@@ -1064,8 +1064,6 @@ void *sqlite_commit_hook(
 ** the connection is closed.)  If zFilename is NULL then the database
 ** is for temporary use only and is deleted as soon as the connection
 ** is closed.
-**
-** 
 **
 ** A temporary database can be either a disk file (that is automatically
 ** deleted when the file is closed) or a set of red-black trees held in memory,
