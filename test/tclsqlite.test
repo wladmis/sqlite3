@@ -170,6 +170,24 @@ do_test tcl-3.4 {
   set rc [catch {db onecolumn {SELECT bogus}} errmsg]
   lappend rc $errmsg
 } {1 {no such column: bogus}}
+do_test tcl-3.5 {
+  set b 50
+  set rc [catch {db one {SELECT * FROM t1 WHERE b>$b}} msg]
+  lappend rc $msg
+} {0 41}
+do_test tcl-3.6 {
+  set b 500
+  set rc [catch {db one {SELECT * FROM t1 WHERE b>$b}} msg]
+  lappend rc $msg
+} {0 {}}
+do_test tcl-3.7 {
+  set b 500
+  set rc [catch {db one {
+    INSERT INTO t1 VALUES(99,510);
+    SELECT * FROM t1 WHERE b>$b
+  }} msg]
+  lappend rc $msg
+} {0 99}
 
 # Turn the busy handler on and off
 #
