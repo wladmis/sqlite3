@@ -1254,11 +1254,10 @@ end_playback:
   }
   if( zMaster ){
     /* If there was a master journal and this routine will return true,
-    ** see if it is possible to delete the master journal. If errors 
-    ** occur during this process, ignore them.
+    ** see if it is possible to delete the master journal.
     */
     if( rc==SQLITE_OK ){
-      pager_delmaster(zMaster);
+      rc = pager_delmaster(zMaster);
     }
     sqliteFree(zMaster);
   }

@@ -309,7 +309,6 @@ do_test table-7.3 {
 # Try out the CREATE TABLE AS syntax
 #
 do_test table-8.1 {
-breakpoint
   execsql2 {
     CREATE TABLE t2 AS SELECT * FROM weird;
     SELECT * FROM t2;

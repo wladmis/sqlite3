@@ -197,7 +197,6 @@ do_test collate3-3.0 {
   expr 0
 } 0
 db eval {select * from collate3t1}
-breakpoint
 do_test collate3-3.1 {
   catchsql {
     INSERT INTO collate3t1 VALUES('xxx', 0);
