@@ -594,7 +594,7 @@ int sqlite3StrNICmp(const char *zLeft, const char *zRight, int N){
 */
 int sqlite3IsNumber(const char *z, int *realnum, u8 enc){
   int incr = (enc==SQLITE_UTF8?1:2);
-  if( enc==SQLITE_UTF16LE ) z++;
+  if( enc==SQLITE_UTF16BE ) z++;
   if( *z=='-' || *z=='+' ) z += incr;
   if( !isdigit(*z) ){
     return 0;

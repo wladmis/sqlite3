@@ -17,6 +17,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+set ::stmtlist {}
 do_test trace-1.1 {
   set rc [catch {db trace 1 2 3} msg]
   lappend rc $msg

@@ -32,14 +32,13 @@ if { [llength $argv]>0 } {
     memdb.test minmax.test misc1.test misc2.test misc3.test notnull.test
     null.test progress.test quote.test rowid.test select1.test select2.test
     select3.test select4.test select5.test select6.test sort.test 
-    subselect.test tableapi.test table.test tclsqlite.test temptable.test
-    trace.test trans.test trigger1.test trigger2.test trigger3.test
+    subselect.test tableapi.test table.test temptable.test
+    trace.test trigger1.test trigger2.test trigger3.test
     trigger4.test types2.test types.test unique.test update.test
     vacuum.test view.test where.test
   }
   foreach f $F {lappend FILES $testdir/$f}
 }
-puts $FILES
 
 rename sqlite3 real_sqlite3
 proc sqlite3 {args} {

@@ -420,7 +420,7 @@ static int btree_update_meta(
   }
   if( Tcl_GetInt(interp, argv[1], (int*)&pBt) ) return TCL_ERROR;
   for(i=1; i<SQLITE_N_BTREE_META; i++){
-    if( Tcl_GetInt(interp, argv[i+1], &aMeta[i]) ) return TCL_ERROR;
+    if( Tcl_GetInt(interp, argv[i+2], &aMeta[i]) ) return TCL_ERROR;
   }
   for(i=1; i<SQLITE_N_BTREE_META; i++){
     rc = sqlite3BtreeUpdateMeta(pBt, i, aMeta[i]);

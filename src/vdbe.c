@@ -702,6 +702,7 @@ case OP_Real: {
   pTos->enc = SQLITE_UTF8;
   pTos->r = sqlite3VdbeRealValue(pTos);
   pTos->flags |= MEM_Real;
+  sqlite3VdbeChangeEncoding(pTos, db->enc);
   break;
 }
 
