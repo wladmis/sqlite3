@@ -991,7 +991,7 @@ void sqliteCreateIndex(
         sqliteVdbeAddOp(v, OP_Column, 2, pIndex->aiColumn[i]);
       }
       sqliteVdbeAddOp(v, OP_MakeIdxKey, pIndex->nColumn, 0);
-      sqliteVdbeAddOp(v, OP_PutIdx, 1, pIndex->isUnique);
+      sqliteVdbeAddOp(v, OP_IdxPut, 1, pIndex->isUnique);
       sqliteVdbeAddOp(v, OP_Goto, 0, lbl1);
       sqliteVdbeResolveLabel(v, lbl2);
       sqliteVdbeAddOp(v, OP_Noop, 0, 0);
@@ -1282,7 +1282,7 @@ void sqliteCopy(
         sqliteVdbeAddOp(v, OP_FileColumn, pIdx->aiColumn[j], 0);
       }
       sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
-      sqliteVdbeAddOp(v, OP_PutIdx, i, pIdx->isUnique);
+      sqliteVdbeAddOp(v, OP_IdxPut, i, pIdx->isUnique);
     }
     sqliteVdbeAddOp(v, OP_Goto, 0, addr);
     sqliteVdbeResolveLabel(v, end);

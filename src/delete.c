@@ -161,7 +161,7 @@ void sqliteDeleteFrom(
           sqliteVdbeAddOp(v, OP_Column, base, pIdx->aiColumn[j]);
         }
         sqliteVdbeAddOp(v, OP_MakeIdxKey, pIdx->nColumn, 0);
-        sqliteVdbeAddOp(v, OP_DeleteIdx, base+i, 0);
+        sqliteVdbeAddOp(v, OP_IdxDelete, base+i, 0);
       }
     }
     sqliteVdbeAddOp(v, OP_Delete, base, 0);

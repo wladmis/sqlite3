@@ -200,7 +200,7 @@ static int selectInnerLoop(
   */
   if( eDest==SRT_Mem ){
     assert( nColumn==1 );
-    sqliteVdbeAddOp(v, OP_MemStore, iParm, 0);
+    sqliteVdbeAddOp(v, OP_MemStore, iParm, 1);
     sqliteVdbeAddOp(v, OP_Goto, 0, iBreak);
   }else
 
@@ -907,7 +907,7 @@ int sqliteSelect(
   */
   if( eDest==SRT_Mem ){
     sqliteVdbeAddOp(v, OP_String, 0, 0);
-    sqliteVdbeAddOp(v, OP_MemStore, iParm, 0);
+    sqliteVdbeAddOp(v, OP_MemStore, iParm, 1);
   }
 
   /* Begin the database scan
