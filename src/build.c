@@ -2039,6 +2039,13 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
   Vdbe *v;                       /* Generate code into this virtual machine */
   int isUnique;                  /* True for a unique index */
 
+#ifndef SQLITE_OMIT_AUTHORIZATION
+  if( sqlite3AuthCheck(pParse, SQLITE_REINDEX, pIndex->zName, 0,
+      pParse->db->aDb[pIndex->iDb].zName ) ){
+    return;
+  }
+#endif
+
   v = sqlite3GetVdbe(pParse);
   if( v==0 ) return;
   if( memRootPage>=0 ){
