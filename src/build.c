@@ -2959,6 +2959,19 @@ void sqlite3AlterRenameTable(
     return;
   }
 
+  /* Make sure it is not a system table being altered, or a reserved name
+  ** that the table is being renamed to.
+  */
+  if( strlen(pTab->zName)>6 && 0==sqlite3StrNICmp(pTab->zName, "sqlite_", 7) ){
+    sqlite3ErrorMsg(pParse, "table %s may not be altered", pTab->zName);
+    sqliteFree(zName);
+    return;
+  }
+  if( SQLITE_OK!=sqlite3CheckObjectName(pParse, zName) ){
+    sqliteFree(zName);
+    return;
+  }
+
 #ifndef SQLITE_OMIT_AUTHORIZATION
   /* Invoke the authorization callback. */
   if( sqlite3AuthCheck(pParse, SQLITE_ALTER_TABLE, zDb, pTab->zName, 0) ){
