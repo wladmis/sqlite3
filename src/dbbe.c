@@ -270,8 +270,8 @@ int sqliteDbbeOpenTable(
       sqliteFree(zFile);
       return SQLITE_NOMEM;
     }
-    if( pFile->zName ){
-      pFile->dbf = gdbm_open(pFile->zName, 0, rw_mask, mode, 0);
+    if( zFile ){
+      pFile->dbf = gdbm_open(zFile, 0, rw_mask, mode, 0);
     }else{
       int limit;
       struct rc4 *pRc4;
