@@ -29,8 +29,8 @@
 typedef struct Keyword Keyword;
 struct Keyword {
   char *zName;             /* The keyword name */
-  int len;                 /* Number of characters in the keyword */
-  int tokenType;           /* The token value for this keyword */
+  u16 len;                 /* Number of characters in the keyword */
+  u16 tokenType;           /* The token value for this keyword */
   Keyword *pNext;          /* Next keyword with the same hash */
 };
 
@@ -235,13 +235,8 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
       return 1;
     }
     case '(': {
-      if( z[1]=='+' && z[2]==')' ){
-        *tokenType = TK_ORACLE_OUTER_JOIN;
-        return 3;
-      }else{
-        *tokenType = TK_LP;
-        return 1;
-      }
+      *tokenType = TK_LP;
+      return 1;
     }
     case ')': {
       *tokenType = TK_RP;
