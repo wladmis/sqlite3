@@ -473,22 +473,22 @@ do_test index-14.8 {
   execsql {
     SELECT c FROM t6 WHERE a<'abc';
   }
-} {3 5 2 1}
+} {5 2 1}
 do_test index-14.9 {
   execsql {
     SELECT c FROM t6 WHERE a<='abc';
   }
-} {3 5 2 1 4}
+} {5 2 1 4}
 do_test index-14.10 {
   execsql {
     SELECT c FROM t6 WHERE a<='';
   }
-} {3 5 2 1}
+} {5 2 1}
 do_test index-14.11 {
   execsql {
     SELECT c FROM t6 WHERE a<'';
   }
-} {3 5}
+} {5}
 integrity_check index-14.12
 
 do_test index-15.1 {
