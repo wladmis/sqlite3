@@ -15,7 +15,7 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#if defined(OS_UNIX) && defined(THREADSAFE) && THREADSAFE==1
+#if defined(OS_UNIX) && OS_UNIX==1 && defined(THREADSAFE) && THREADSAFE==1
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -138,6 +138,7 @@ static int tcl_thread_create(
   sqliteFree(threadset[i].zFilename);
   threadset[i].zFilename = sqliteStrDup(argv[2]);
   threadset[i].opnum = 1;
+  threadset[i].completed = 0;
   rc = pthread_create(&x, 0, thread_main, &threadset[i]);
   if( rc ){
     Tcl_AppendResult(interp, "failed to create the thread", 0);
