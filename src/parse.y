@@ -147,7 +147,7 @@ id(A) ::= ID(X).         {A = X;}
 %left AND.
 %right NOT.
 %left IS LIKE GLOB BETWEEN IN ISNULL NOTNULL NE EQ.
-%left GT LE GE LT.
+%left GT LE LT GE.
 %left BITAND BITOR LSHIFT RSHIFT.
 %left PLUS MINUS.
 %left STAR SLASH REM.
