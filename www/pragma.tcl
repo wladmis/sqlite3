@@ -175,11 +175,12 @@ puts {
     the way SQLite names columns of data returned by SELECT statements
     when the expression for the column is a table-column name or the
     wildcard "*".  Normally, such result columns are named
-    <table-name/alias>.<column-name> if the SELECT statement joins two or
-    more tables together, or simply <column-name> if the SELECT
+    &lt;table-name/alias&gt;&lt;column-name&gt; if the SELECT statement joins 
+    two or
+    more tables together, or simply &lt;column-name&gt; if the SELECT
     statement queries a single table. When the full-column-names flag
-    is set, such columns are always named <table-name/alias>.<column-name>,
-    regardless of whether or not a join is performed.
+    is set, such columns are always named &lt;table-name/alias&gt;
+    &lt;column-name&gt; regardless of whether or not a join is performed.
     </p>
     <p>If both the short-column-names and full-column-names are set,
     then the behaviour associated with the full-column-names flag is
@@ -199,17 +200,17 @@ puts {
 </li>
 
 <a name="pragma_short_column_names"></a>
-<li><p><b>PRAGMA full_column_names;
-       <br>PRAGMA full_column_names = </b><i>0 | 1</i><b>;</b></p>
+<li><p><b>PRAGMA short_column_names;
+       <br>PRAGMA short_column_names = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the short-column-names flag. This flag affects
     the way SQLite names columns of data returned by SELECT statements
     when the expression for the column is a table-column name or the
     wildcard "*".  Normally, such result columns are named
-    <table-name/alias>.<column-name> if the SELECT statement joins two or
-    more tables together, or simply <column-name> if the SELECT
-    statement queries a single table. When the short-column-names flag
-    is set, such columns are always named <column-name>, regardless of
-    whether or not a join is performed.
+    &lt;table-name/alias&gt;lt;column-name&gt; if the SELECT statement 
+    joins two or more tables together, or simply &lt;column-name&gt; if 
+    the SELECT statement queries a single table. When the short-column-names 
+    flag is set, such columns are always named &lt;column-name&gt; 
+    regardless of whether or not a join is performed.
     </p>
     <p>If both the short-column-names and full-column-names are set,
     then the behaviour associated with the full-column-names flag is
