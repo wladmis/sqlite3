@@ -354,6 +354,7 @@ if {$tcl_platform(platform)=="unix"} {
   }
 }
 
+if {$tcl_platform(platform)!="windows"} {
 do_malloc_test 14 -tclprep {
   catch {db close}
   sqlite3 db2 test2.db
@@ -372,6 +373,7 @@ do_malloc_test 14 -tclprep {
   db eval {
     SELECT * FROM t1;
   }  
+}
 }
 
 # Ensure that no file descriptors were leaked.
