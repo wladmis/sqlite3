@@ -34,6 +34,7 @@
 */
 #include "sqliteInt.h"
 #include <unistd.h>
+#include <ctype.h>
 
 /*
 ** This routine opens a new database.  It looks at the first

@@ -2522,7 +2522,6 @@ int sqliteVdbeExec(
       */
       case OP_ListRead: {
         int i = pOp->p1;
-        int val, amt;
         Keylist *pKeylist;
         VERIFY(if( i<0 || i>=p->nList ) goto bad_instruction;)
         pKeylist = p->apList[i];

@@ -129,7 +129,6 @@ int sqliteExprResolveIds(Parse *pParse, IdList *pTabList, Expr *pExpr){
     case TK_ID: {
       int cnt = 0;      /* Number of matches */
       int i;            /* Loop counter */
-      int isRowid = 0;  /* True if this is the ROWID column */
       char *z = sqliteStrNDup(pExpr->token.z, pExpr->token.n);
       for(i=0; i<pTabList->nId; i++){
         int j;

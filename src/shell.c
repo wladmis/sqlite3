@@ -584,6 +584,7 @@ static void do_meta_command(char *zLine, sqlite *db, struct callback_data *p){
     data.showHeader = 0;
     data.mode = MODE_Semi;
     if( nArg>1 ){
+      extern int sqliteStrICmp(const char*,const char*);
       if( sqliteStrICmp(azArg[1],"sqlite_master")==0 ){
         char *new_argv[2], *new_colv[2];
         new_argv[0] = "CREATE TABLE sqlite_master (\n"
