@@ -158,7 +158,7 @@ proc finish_test {} {
   finalize_testing
 }
 proc finalize_testing {} {
-  global nTest nErr nProb
+  global nTest nErr nProb sqlite_open_file_count
   if {$nErr==0} memleak_check
   catch {db close}
   puts "$nErr errors out of $nTest tests"
@@ -166,6 +166,10 @@ proc finalize_testing {} {
   if {$nProb>0} {
     puts "$nProb probabilistic tests also failed, but this does"
     puts "not necessarily indicate a malfunction."
+  }
+  if {$sqlite_open_file_count} {
+    puts "$sqlite_open_file_count files were left open"
+    incr nErr
   }
   exit [expr {$nErr>0}]
 }

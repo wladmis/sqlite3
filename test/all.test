@@ -67,6 +67,12 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
     set tail [file tail $testfile]
     if {[lsearch -exact $EXCLUDE $tail]>=0} continue
     source $testfile
+    catch {db close}
+    if {$sqlite_open_file_count>0} {
+      puts "$tail did not close all files: $sqlite_open_file_count"
+      incr nErr
+      lappend ::failList $tail
+    }
   }
   if {[info exists Leak]} {
     lappend LeakList $Leak
@@ -98,4 +104,6 @@ if {$LeakList!=""} {
 catch {source $testdir/misuse.test}
 catch {source $testdir/malloc.test}
 
+catch {db close}
+set sqlite_open_file_count 0
 really_finish_test

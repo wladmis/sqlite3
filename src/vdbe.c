@@ -5741,5 +5741,8 @@ int sqliteVdbeFinalize(Vdbe *p, char **pzErrMsg){
 #endif
   rc = p->rc;
   sqliteVdbeDelete(p);
+  if( db->want_to_close && db->pVdbe==0 ){
+    sqlite_close(db);
+  }
   return rc;
 }

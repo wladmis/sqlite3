@@ -457,7 +457,11 @@ int sqlite_changes(sqlite *db){
 */
 void sqlite_close(sqlite *db){
   HashElem *i;
-  if( sqliteSafetyCheck(db) || sqliteSafetyOn(db) ){ return; }
+  db->want_to_close = 1;
+  if( sqliteSafetyCheck(db) || sqliteSafetyOn(db) ){
+    /* printf("DID NOT CLOSE\n"); fflush(stdout); */
+    return;
+  }
   db->magic = SQLITE_MAGIC_CLOSED;
   sqliteBtreeClose(db->pBe);
   sqliteResetInternalSchema(db);

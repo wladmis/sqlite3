@@ -390,4 +390,6 @@ do_test capi2-6.99 {
   list [catch {sqlite_finalize $VM1} msg] [set msg]
 } {0 {}}
 
+db2 close
+
 finish_test

@@ -209,6 +209,7 @@ struct sqlite {
   int flags;                    /* Miscellanous flags. See below */
   u8 file_format;               /* What file format version is this database? */
   u8 safety_level;              /* How aggressive at synching data to disk */
+  u8 want_to_close;             /* Close after all VDBEs are deallocated */
   int schema_cookie;            /* Magic number that changes with the schema */
   int next_cookie;              /* Value of schema_cookie after commit */
   int cache_size;               /* Number of pages to use in the cache */
