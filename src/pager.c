@@ -1952,7 +1952,17 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
     ){
        int rc;
 
-       /* Get an EXCLUSIVE lock on the database file. */
+       /* Get an EXCLUSIVE lock on the database file. At this point it is
+       ** important that a RESERVED lock is not obtained on the way to the
+       ** EXCLUSIVE lock. If it were, another process might open the
+       ** database file, detect the RESERVED lock, and conclude that the
+       ** database is safe to read while this process is still rolling it 
+       ** back.
+       ** 
+       ** Because the intermediate RESERVED lock is not requested, the
+       ** second process will get to this point in the code and fail to
+       ** obtain it's own EXCLUSIVE lock on the database file.
+       */
        rc = sqlite3OsLock(&pPager->fd, EXCLUSIVE_LOCK);
        if( rc!=SQLITE_OK ){
          sqlite3OsUnlock(&pPager->fd, NO_LOCK);
