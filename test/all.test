@@ -20,7 +20,7 @@ proc finish_test {} {memleak_check}
 if {[file exists ./sqlite_test_count]} {
   set COUNT [exec cat ./sqlite_test_count]
 } else {
-  set COUNT 3
+  set COUNT 4
 }
 
 # LeakList will hold a list of the number of unfreed mallocs after
@@ -38,6 +38,7 @@ set EXCLUDE {
 #  btree2.test
 
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
+  set btree_native_byte_order [expr {($Counter>>1)&0x1}]
   if {$Counter%2} {
     set ::SETUP_SQL {PRAGMA default_synchronous=off;}
   } else {

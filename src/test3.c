@@ -496,7 +496,7 @@ static int btree_integrity_check(
   zResult = sqliteBtreeIntegrityCheck(pBt, aRoot, nRoot);
   if( zResult ){
     Tcl_AppendResult(interp, zResult, 0);
-    free(zResult); 
+    sqliteFree(zResult); 
   }
   return TCL_OK;
 }
@@ -905,6 +905,8 @@ int Sqlitetest3_Init(Tcl_Interp *interp){
   Tcl_CreateCommand(interp, "btree_cursor_dump", btree_cursor_dump, 0, 0);
   Tcl_CreateCommand(interp, "btree_integrity_check", btree_integrity_check,0,0);
   Tcl_LinkVar(interp, "pager_refinfo_enable", (char*)&pager_refinfo_enable,
+     TCL_LINK_INT);
+  Tcl_LinkVar(interp, "btree_native_byte_order",(char*)&btree_native_byte_order,
      TCL_LINK_INT);
   return TCL_OK;
 }

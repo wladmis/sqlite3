@@ -164,6 +164,7 @@ carg ::= DEFAULT NULL.
 // In addition to the type name, we also care about the primary key and
 // UNIQUE constraints.
 //
+ccons ::= NULL onconf.
 ccons ::= NOT NULL onconf(R).               {sqliteAddNotNull(pParse, R);}
 ccons ::= PRIMARY KEY sortorder onconf(R).  {sqliteAddPrimaryKey(pParse,0,R);}
 ccons ::= UNIQUE onconf(R).            {sqliteCreateIndex(pParse,0,0,0,R,0,0);}

@@ -153,26 +153,15 @@ faq {
   My linux box is not able to read an SQLite database that was created
   on my SparcStation.
 } {
+  <p>You need to upgrade your SQLite library to version 2.6.3 or later.</p>
+
   <p>The x86 processor on your linux box is little-endian (meaning that
   the least significant byte of integers comes first) but the Sparc is
   big-endian (the most significant bytes comes first).  SQLite databases
-  created on a little-endian architecture cannot be used on a big-endian
-  machine and vice versa.</p>
-
-  <p>If you need to move the database from one machine to another, you'll
-  have to do an ASCII dump of the database on the source machine and then
-  reconstruct the database at the destination machine.  The following is
-  a typical command for transferring an SQLite databases between two
-  machines:
-<blockquote><pre>
-echo .dump | sqlite from.db | ssh sparc sqlite to.db
-</pre></blockquote>
-  The command above assumes the name of the destination machine is
-  <b>sparc</b> and that you have SSH running on both the source and
-  destination.  An alternative approach is to save the output of the first
-  <b>sqlite</b> command in a temporary file, move the temporary file
-  to the destination machine, then run the second <b>sqlite</b> command
-  while redirecting input from the temporary file.</p>
+  created on a little-endian architecture cannot be on a big-endian
+  machine by version 2.6.2 or earlier of SQLite.  Beginning with
+  version 2.6.3, SQLite should be able to read and write database files
+  regardless of byte order of the machine on which the file was created.</p>
 }
 
 faq {

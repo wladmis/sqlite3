@@ -63,6 +63,7 @@ char *sqliteBtreeIntegrityCheck(Btree*, int*, int);
 int sqliteBtreePageDump(Btree*, int, int);
 int sqliteBtreeCursorDump(BtCursor*, int*);
 struct Pager *sqliteBtreePager(Btree*);
+int btree_native_byte_order;
 #endif
 
 #endif /* _BTREE_H_ */

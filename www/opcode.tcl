@@ -91,7 +91,7 @@ When the virtual machine halts, all memory
 that it allocated is released and all database cursors it may
 have had open are closed.  If the execution stopped due to an
 error, any pending transactions are terminated and changes made
-to the database are rollback.</p>
+to the database are rolled back.</p>
 
 <p>The virtual machine also contains an operand stack of unlimited
 depth.  Many of the opcodes use operands from the stack.  See the
