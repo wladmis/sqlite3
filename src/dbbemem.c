@@ -669,7 +669,7 @@ static int sqliteMemNew(DbbeCursor *pCursr){
   int go = 1;
 
   while( go ){
-    iKey = sqliteRandomInteger();
+    iKey = sqliteRandomInteger() & 0x7fffffff;
     if( iKey==0 ) continue;
     key.p = (char*)&iKey;
     key.n = 4;

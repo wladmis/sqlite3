@@ -620,7 +620,9 @@ static int multiSelect(Parse *pParse, Select *p, int eDest, int iParm){
 **
 **     SRT_Union       Store results as a key in a temporary table iParm
 **
-**     SRT_Except      Remove results form the temporary talbe iParm.
+**     SRT_Except      Remove results form the temporary table iParm.
+**
+**     SRT_Table       Store results in temporary table iParm
 **
 ** This routine returns the number of errors.  If any errors are
 ** encountered, then an appropriate error message is left in

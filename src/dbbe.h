@@ -151,6 +151,15 @@ struct DbbeMethods {
 
   /* Remove an entry from the table */
   int (*Delete)(DbbeCursor*, int nKey, char *pKey);
+
+  /* Begin a transaction. */
+  int (*BeginTransaction)(Dbbe*);
+
+  /* Commit a transaction. */
+  int (*Commit)(Dbbe*);
+
+  /* Rollback a transaction. */
+  int (*Rollback)(Dbbe*);
 };
 
 /*

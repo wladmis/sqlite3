@@ -76,6 +76,12 @@ do_test main-1.13 {
   db complete {DROP TABLE xyz; -- hi
   }
 } {1}
+do_test main-1.14 {
+  db complete {SELECT a-b FROM t1; }
+} {1}
+do_test main-1.15 {
+  db complete {SELECT a-b FROM t1 }
+} {0}
 
 # Try to open a database with a corrupt master file.
 #

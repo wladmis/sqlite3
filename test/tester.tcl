@@ -186,9 +186,9 @@ proc finish_test {} {
 
 # A procedure to execute SQL
 #
-proc execsql {sql} {
+proc execsql {sql {db db}} {
   # puts "SQL = $sql"
-  return [db eval $sql]
+  return [$db eval $sql]
 }
 
 # Another procedure to execute SQL.  This one includes the field

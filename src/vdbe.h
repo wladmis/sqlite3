@@ -178,7 +178,7 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Strlen             91
 #define OP_Substr             92
 
-#define OP_MAX                92
+#define OP_MAX                93
 
 /*
 ** Prototypes for the VDBE interface.  See comments on the implementation

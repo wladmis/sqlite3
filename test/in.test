@@ -145,6 +145,12 @@ do_test in-4.2 {
   }
   execsql {SELECT a FROM t1 ORDER BY a}
 } {1 2 3 4 5 6 7 8}
+do_test in-4.3 {
+  execsql {
+    DELETE FROM t1 WHERE b NOT IN (SELECT b FROM t1 WHERE a>4)
+  }
+  execsql {SELECT a FROM t1 ORDER BY a}
+} {5 6 7 8}
 
 # Do an IN with a constant RHS but where the RHS has many, many
 # elements.  We need to test that collisions in the hash table

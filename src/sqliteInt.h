@@ -144,6 +144,7 @@ struct sqlite {
 #define SQLITE_VdbeTrace    0x00000001  /* True to trace VDBE execution */
 #define SQLITE_Initialized  0x00000002  /* True after initialization */
 #define SQLITE_Interrupt    0x00000004  /* Cancel current operation */
+#define SQLITE_InTrans      0x00000008  /* True if in a transaction */
 
 /*
 ** Current file format version
@@ -428,3 +429,6 @@ int sqliteRandomByte(void);
 int sqliteRandomInteger(void);
 void sqliteRandomName(char*,char*);
 char *sqliteDbbeNameToFile(const char*,const char*,const char*);
+void sqliteBeginTransaction(Parse*);
+void sqliteCommitTransaction(Parse*);
+void sqliteRollbackTransaction(Parse*);
