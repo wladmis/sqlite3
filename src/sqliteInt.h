@@ -359,6 +359,7 @@ struct Parse {
   int colNamesSet;     /* TRUE after OP_ColumnCount has been issued to pVdbe */
   int explain;         /* True if the EXPLAIN flag is found on the query */
   int initFlag;        /* True if reparsing CREATE TABLEs */
+  int newTnum;         /* Table number to use when reparsing CREATE TABLEs */
   int nErr;            /* Number of errors seen */
   int nTab;            /* Number of previously allocated cursors */
   int nMem;            /* Number of memory cells used so far */

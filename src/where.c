@@ -358,6 +358,7 @@ WhereInfo *sqliteWhereBegin(
       /* Case 2:  There was no usable index.  We must do a complete
       ** scan of the table.
       */
+      sqliteVdbeAddOp(v, OP_Rewind, base+idx, 0, 0, 0);
       cont = sqliteVdbeMakeLabel(v);
       sqliteVdbeAddOp(v, OP_Next, base+idx, brk, 0, cont);
       haveKey = 0;
