@@ -122,6 +122,8 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     int mask;           /* Mask for the db->flags value */
   } aPragma[] = {
     { "vdbe_trace",               SQLITE_VdbeTrace     },
+    { "sql_trace",                SQLITE_SqlTrace      },
+    { "vdbe_listing",             SQLITE_VdbeListing   },
     { "full_column_names",        SQLITE_FullColNames  },
     { "short_column_names",       SQLITE_ShortColNames },
     { "count_changes",            SQLITE_CountRows     },

@@ -931,6 +931,16 @@ int sqlite3_prepare(
     }
   }
 
+  /* Print a copy of SQL as it is executed if the SQL_TRACE pragma is turned
+  ** on in debugging mode.
+  */
+#ifdef SQLITE_DEBUG
+  if( (db->flags & SQLITE_SqlTrace)!=0 && sParse.zTail && sParse.zTail!=zSql ){
+    sqlite3DebugPrintf("SQL-trace: %.*s\n", sParse.zTail - zSql, zSql);
+  }
+#endif /* SQLITE_DEBUG */
+
+
   if( sqlite3_malloc_failed ){
     rc = SQLITE_NOMEM;
     sqlite3RollbackAll(db);
