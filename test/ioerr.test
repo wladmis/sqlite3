@@ -232,7 +232,7 @@ do_ioerr_test 5 -sqlprep {
 
 # Test IO errors when replaying two hot journals from a 2-file 
 # transaction. This test only runs on UNIX.
-if {$tcl_platform(platform)=="unix"} {
+if {$tcl_platform(platform)=="unix" && [file exists ./crashtest]} {
   do_ioerr_test 6 -tclprep {
     set rc [crashsql 2 test2.db-journal {
       ATTACH 'test2.db' as aux;
