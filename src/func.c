@@ -324,8 +324,7 @@ static void randStr(sqlite_func *context, int argc, const char **argv){
   }
   n = iMin;
   if( iMax>iMin ){
-    r = sqliteRandomInteger();
-    if( r<0 ) r = -r;
+    r = sqliteRandomInteger() & 0x7fffffff;
     n += r%(iMax + 1 - iMin);
   }
   r = 0;
