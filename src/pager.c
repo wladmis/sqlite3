@@ -1115,11 +1115,14 @@ Pgno sqlite3pager_pagenumber(void *pData){
 }
 
 /*
-** Increment the reference count for a page.  If the page is
-** currently on the freelist (the reference count is zero) then
+** The page_ref() function increments the reference count for a page.
+** If the page is currently on the freelist (the reference count is zero) then
 ** remove it from the freelist.
+**
+** For non-test systems, page_ref() is a macro that calls _page_ref()
+** online of the reference count is zero.  For test systems, page_ref()
+** is a real function so that we can set breakpoints and trace it.
 */
-#define page_ref(P)   ((P)->nRef==0?_page_ref(P):(void)(P)->nRef++)
 static void _page_ref(PgHdr *pPg){
   if( pPg->nRef==0 ){
     /* The page is currently on the freelist.  Remove it. */
@@ -1143,6 +1146,18 @@ static void _page_ref(PgHdr *pPg){
   pPg->nRef++;
   REFINFO(pPg);
 }
+#ifdef SQLITE_TEST
+  static void page_ref(PgHdr *pPg){
+    if( pPg->nRef==0 ){
+      _page_ref(pPg);
+    }else{
+      pPg->nRef++;
+      REFINFO(pPg);
+    }
+  }
+#else
+# define page_ref(P)   ((P)->nRef==0?_page_ref(P):(void)(P)->nRef++)
+#endif
 
 /*
 ** Increment the reference count for a page.  The input pointer is
@@ -2220,6 +2235,3 @@ void sqlite3pager_refdump(Pager *pPager){
   }
 }
 #endif
-
-
-
