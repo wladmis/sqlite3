@@ -702,7 +702,7 @@ int sqlite3_complete(const char *zSql){
 */
 int sqlite3_complete16(const void *zSql){
   sqlite3_value *pVal;
-  char *zSql8;
+  char const *zSql8;
   int rc = 0;
 
   pVal = sqlite3ValueNew();
@@ -710,7 +710,6 @@ int sqlite3_complete16(const void *zSql){
   zSql8 = sqlite3ValueText(pVal, SQLITE_UTF8);
   if( zSql8 ){
     rc = sqlite3_complete(zSql8);
-    sqliteFree(zSql8);
   }
   sqlite3ValueFree(pVal);
   return rc;

@@ -950,7 +950,7 @@ static void callCollNeeded(sqlite *db, const char *zName, int nName){
   /* No collation sequence of this type for this encoding is registered.
   ** Call the collation factory to see if it can supply us with one.
   */
-  char *zExternal = 0;
+  char const *zExternal = 0;
   assert( !db->xCollNeeded || !db->xCollNeeded16 );
   if( nName<0 ) nName = strlen(zName);
   if( db->xCollNeeded ){
