@@ -974,9 +974,6 @@ int sqliteExprType(Expr *p){
 }
 
 /*
-** Run
-
-/*
 ** Generate code into the current Vdbe to evaluate the given
 ** expression and leave the result on the top of stack.
 */
