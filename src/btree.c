@@ -4307,11 +4307,6 @@ static int balance(MemPage *pPage){
 ** then this routine returns SQLITE_OK.
 */
 static int checkReadLocks(Btree *pBt, Pgno pgnoRoot, BtCursor *pExclude){
-  BtCursor *p;
-  for(p=pBt->pCursor; p; p=p->pNext){
-    if( p->pgnoRoot!=pgnoRoot || p==pExclude ) continue;
-    if( p->wrFlag==0 ) return SQLITE_LOCKED;
-  }
   return SQLITE_OK;
 }
 
@@ -4512,7 +4507,6 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     BtCursor leafCur;
     unsigned char *pNext;
     int szNext;
-    int notUsed;
     unsigned char *tempCell;
     assert( !pPage->leafData );
 

@@ -98,16 +98,17 @@ do_test lock-1.17 {
   set x
 } {8 9}
 
-# You cannot UPDATE a table from within the callback of a SELECT
-# on that same table because the SELECT has the table locked.
+# Previously, this test ensured that you cannot UPDATE a table from within the
+# callback of a SELECT on that same table because the SELECT has the table
+# locked. But as of 3.10 you can do this, so the test is removed.
 #
-do_test lock-1.18 {
-  db eval {SELECT * FROM t1} qv {
-    set r [catch {db eval {UPDATE t1 SET a=b, b=a}} msg]
-    lappend r $msg
-  }
-  set r
-} {1 {database table is locked}}
+#do_test lock-1.18 {
+#  db eval {SELECT * FROM t1} qv {
+#    set r [catch {db eval {UPDATE t1 SET a=b, b=a}} msg]
+#    lappend r $msg
+#  }
+#  set r
+#} {1 {database table is locked}}
 
 # But you can UPDATE a different table from the one that is used in
 # the SELECT.
