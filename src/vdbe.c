@@ -4715,6 +4715,7 @@ cleanup:
   }
   sqliteBtreeCommitCkpt(pBt);
   if( db->pBeTemp ) sqliteBtreeCommitCkpt(db->pBeTemp);
+  assert( p->tos<pc );
   return rc;
 
   /* Jump to here if a malloc() fails.  It's hard to get a malloc()

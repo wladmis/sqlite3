@@ -519,7 +519,7 @@ void sqliteGenerateConstraintChecks(
       }
       case OE_Ignore: {
         assert( seenReplace==0 );
-        sqliteVdbeAddOp(v, OP_Pop, nCol+extra+2+hasTwoRecnos, 0);
+        sqliteVdbeAddOp(v, OP_Pop, nCol+extra+3+hasTwoRecnos, 0);
         sqliteVdbeAddOp(v, OP_Goto, 0, ignoreDest);
         break;
       }
