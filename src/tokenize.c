@@ -57,7 +57,6 @@ static Keyword aKeywordTable[] = {
   { "COMMIT",            TK_COMMIT,       },
   { "CONFLICT",          TK_CONFLICT,     },
   { "CONSTRAINT",        TK_CONSTRAINT,   },
-  { "COPY",              TK_COPY,         },
   { "CREATE",            TK_CREATE,       },
   { "CROSS",             TK_JOIN_KW,      },
   { "DATABASE",          TK_DATABASE,     },
@@ -65,7 +64,6 @@ static Keyword aKeywordTable[] = {
   { "DEFERRED",          TK_DEFERRED,     },
   { "DEFERRABLE",        TK_DEFERRABLE,   },
   { "DELETE",            TK_DELETE,       },
-  { "DELIMITERS",        TK_DELIMITERS,   },
   { "DESC",              TK_DESC,         },
   { "DETACH",            TK_DETACH,       },
   { "DISTINCT",          TK_DISTINCT,     },
@@ -696,6 +694,3 @@ int sqlite3_complete(const char *zSql){
   }
   return state==0;
 }
-
-
-
