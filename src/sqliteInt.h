@@ -17,7 +17,6 @@
 #include "sqlite.h"
 #include "hash.h"
 #include "parse.h"
-#include "btree.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -96,6 +95,9 @@
 **
 **         cc '-DUINTPTR_TYPE=long long int' ...
 */
+#ifndef UINT64_TYPE
+# define UINT64_TYPE unsigned long long int
+#endif
 #ifndef UINT32_TYPE
 # define UINT32_TYPE unsigned int
 #endif
@@ -115,6 +117,7 @@
 #   define INTPTR_TYPE long long
 # endif
 #endif
+typedef UINT64_TYPE u64;           /* 8-byte unsigned integer */
 typedef UINT32_TYPE u32;           /* 4-byte unsigned integer */
 typedef UINT16_TYPE u16;           /* 2-byte unsigned integer */
 typedef UINT8_TYPE u8;             /* 1-byte unsigned integer */
@@ -126,6 +129,7 @@ typedef unsigned INTPTR_TYPE uptr; /* Big enough to hold a pointer */
 ** Defer sourcing vdbe.h until after the "u8" typedef is defined.
 */
 #include "vdbe.h"
+#include "btree.h"
 
 /*
 ** Most C compilers these days recognize "long double", don't they?

@@ -405,6 +405,7 @@ void sqliteSetNString(char **pz, ...){
   va_end(ap);
 }
 
+#if 0
 /*
 ** Add an error message to pParse->zErrMsg and increment pParse->nErr.
 ** The following formatting characters are allowed:
@@ -423,6 +424,7 @@ void sqliteErrorMsg(Parse *pParse, const char *zFormat, ...){
   pParse->zErrMsg = sqliteVMPrintf(zFormat, ap);
   va_end(ap);
 }
+#endif
 
 /*
 ** Convert an SQL-style quoted string into a normal string by removing
