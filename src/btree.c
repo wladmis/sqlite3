@@ -2854,7 +2854,7 @@ int sqlite3BtreePrevious(BtCursor *pCur, int *pRes){
     }
     pCur->idx--;
     pCur->info.nSize = 0;
-    if( pPage->leafData ){
+    if( pPage->leafData && !pPage->leaf ){
       rc = sqlite3BtreePrevious(pCur, pRes);
     }else{
       rc = SQLITE_OK;
