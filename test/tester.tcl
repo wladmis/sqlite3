@@ -40,6 +40,19 @@ if {[sqlite -tcl-uses-utf]} {
   }
 }
 
+# Use the pager codec if it is available
+#
+if {[sqlite -has-codec] && [info command sqlite_orig]==""} {
+  rename sqlite sqlite_orig
+  proc sqlite {args} {
+    if {[llength $args]==2 && [string index [lindex $args 0] 0]!="-"} {
+      lappend args -key {xyzzy}
+    }
+    uplevel 1 sqlite_orig $args
+  }
+}
+
+
 # Create a test database
 #
 catch {db close}

@@ -1425,8 +1425,7 @@ static int memRbtreeCursorDump(RbtCursor* pCur, int* aRes)
 
 static struct Pager *memRbtreePager(Rbtree* tree)
 {
-  assert(!"Cannot call sqliteRbtreePager");
-  return SQLITE_OK;
+  return 0;
 }
 
 /*

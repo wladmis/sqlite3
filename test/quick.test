@@ -27,6 +27,15 @@ set EXCLUDE {
   misuse.test
 }
 
+if {[sqlite -has-codec]} {
+  lappend EXCLUDE \
+    attach.test \
+    attach2.test \
+    auth.test \
+    format3.test \
+    version.test
+}
+
 foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
   set tail [file tail $testfile]
   if {[lsearch -exact $EXCLUDE $tail]>=0} continue
