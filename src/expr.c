@@ -1764,7 +1764,7 @@ FuncDef *sqlite3FindFunction(
     **
     ** A larger value of 'matchqual' indicates a more desirable match.
     */
-    if( p->nArg==-1 || p->nArg==nArg || nArg==-1 ){
+    if( (p->xStep||p->xFunc ) && (p->nArg==-1||p->nArg==nArg||nArg==-1) ){
       int match = 1;          /* Quality of this match */
       if( p->nArg==nArg || nArg==-1 ){
         match = 4;
