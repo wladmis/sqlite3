@@ -107,7 +107,7 @@ proc do_test {name cmd expected} {
     puts "\nExpected: \[$expected\]\n     Got: \[$result\]"
     incr nErr
     lappend ::failList $name
-    if {$nErr>=1} {puts "*** Giving up..."; finalize_testing}
+    if {$nErr>=100} {puts "*** Giving up..."; finalize_testing}
   } else {
     puts " Ok"
   }

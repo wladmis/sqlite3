@@ -258,6 +258,7 @@ typedef struct TriggerStack TriggerStack;
 typedef struct FKey FKey;
 typedef struct Db Db;
 typedef struct AuthContext AuthContext;
+typedef struct KeyClass KeyClass;
 
 /*
 ** Each database file to be accessed by the system is an instance

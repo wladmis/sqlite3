@@ -286,15 +286,9 @@ static int sqlite3InitOne(sqlite *db, int iDb, char **pzErrMsg){
   }else{
     if( iDb==0 ){
       /* This SQL statement tries to read the temp.* schema from the
-      ** sqlite_temp_master table. It might return SQLITE_EMPTY. We
-      ** unset the SQLITE_InternChanges flag temporarily to ensure
-      ** that the sqlite_master entry is not removed from the internal
-      ** schema if this does return SQLITE_EMPTY.
+      ** sqlite_temp_master table. It might return SQLITE_EMPTY. 
       */
-      assert( db->flags&SQLITE_InternChanges );
-      db->flags &= ~SQLITE_InternChanges;
       rc = sqlite3_exec(db, init_script1, sqlite3InitCallback, &initData, 0);
-      db->flags |= SQLITE_InternChanges;
       if( rc==SQLITE_OK || rc==SQLITE_EMPTY ){
         rc = sqlite3_exec(db, init_script2, sqlite3InitCallback, &initData, 0);
       }
