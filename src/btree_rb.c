@@ -276,12 +276,16 @@ static char *append_node(char * orig, BtRbNode *pNode, int indent)
 
 /*
  * Print a representation of a node to stdout. This function is only included
- * so you can call it from within a debugger if things get really bad.
+ * so you can call it from within a debugger if things get really bad.  It
+ * is not called from anyplace in the code.
  */
 static void print_node(BtRbNode *pNode)
 {
     char * str = append_node(0, pNode, 0);
     printf(str);
+
+    /* Suppress a warning message about print_node() being unused */
+    (void)print_node;
 }
 
 /* 
