@@ -618,6 +618,13 @@ do_test capi2-9.1 {
   sqlite3_finalize $VM1
 } {SQLITE_OK}
 
+do_test capi2-10.1 {
+  sqlite3_finalize 0
+} {SQLITE_OK}
+do_test capi2-10.2 {
+  sqlite3_reset 0
+} {SQLITE_OK}
+
 db2 close
 
 finish_test

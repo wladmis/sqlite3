@@ -212,8 +212,7 @@ do_test lock-2.8 {
   db2 timeout 400
   execsql BEGIN
   execsql {UPDATE t1 SET a = 0 WHERE 0}
-  # catchsql BEGIN db2
-  catchsql {UPDATE t1 SET a = 0 WHERE 0} db2
+  catchsql {BEGIN EXCLUSIVE;} db2
 } {1 {database is locked}}
 do_test lock-2.9 {
   db2 timeout 0

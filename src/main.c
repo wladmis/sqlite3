@@ -1160,14 +1160,8 @@ static int openDatabase(
   ** is accessed.
   */
   sqlite3RegisterBuiltinFunctions(db);
-  if( rc==SQLITE_OK ){
-    sqlite3Error(db, SQLITE_OK, 0);
-    db->magic = SQLITE_MAGIC_OPEN;
-  }else{
-    sqlite3Error(db, rc, "%s", zErrMsg, 0);
-    if( zErrMsg ) sqliteFree(zErrMsg);
-    db->magic = SQLITE_MAGIC_CLOSED;
-  }
+  sqlite3Error(db, SQLITE_OK, 0);
+  db->magic = SQLITE_MAGIC_OPEN;
 
 opendb_out:
   if( sqlite3_errcode(db)==SQLITE_OK && sqlite3_malloc_failed ){
