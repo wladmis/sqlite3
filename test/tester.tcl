@@ -214,6 +214,26 @@ proc execsql2 {sql} {
   return $result
 }
 
+# Use the non-callback API to execute multiple SQL statements
+#
+proc stepsql {dbptr sql} {
+  set sql [string trim $sql]
+  set r 0
+  while {[string length $sql]>0} {
+    if {[catch {sqlite_compile $dbptr $sql sqltail} vm]} {
+      return [list 1 $vm]
+    }
+    set sql [string trim $sqltail]
+    while {[sqlite_step $vm N VAL COL]=="SQLITE_ROW"} {
+      foreach v $VAL {lappend r $v}
+    }
+    if {[catch {sqlite_finalize $vm} errmsg]} {
+      return [list 1 $errmsg]
+    }
+  }
+  return $r
+}
+
 # Delete a file or directory
 #
 proc forcedelete {filename} {

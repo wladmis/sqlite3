@@ -1300,7 +1300,7 @@ int sqliteVdbeList(
       p->rc = SQLITE_MISUSE;
     }
   }
-  return p->rc==SQLITE_OK ? SQLITE_OK : SQLITE_ERROR;
+  return p->rc==SQLITE_OK ? SQLITE_DONE : SQLITE_ERROR;
 }
 
 /*
