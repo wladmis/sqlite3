@@ -346,7 +346,7 @@ static int sqliteGetToken(const unsigned char *z, int *tokenType){
 ** memory obtained from malloc() and *pzErrMsg made to point to that
 ** error message.  Or maybe not.
 */
-int sqliteRunParser(Parse *pParse, char *zSql, char **pzErrMsg){
+int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   int nErr = 0;
   int i;
   void *pEngine;

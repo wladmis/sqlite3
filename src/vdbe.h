@@ -207,7 +207,7 @@ void sqliteVdbeCreateCallback(Vdbe*, int*);
 int sqliteVdbeAddOp(Vdbe*,int,int,int);
 int sqliteVdbeAddOpList(Vdbe*, int nOp, VdbeOp const *aOp);
 void sqliteVdbeChangeP1(Vdbe*, int addr, int P1);
-void sqliteVdbeChangeP3(Vdbe*, int addr, char *zP1, int N);
+void sqliteVdbeChangeP3(Vdbe*, int addr, const char *zP1, int N);
 void sqliteVdbeDequoteP3(Vdbe*, int addr);
 int sqliteVdbeMakeLabel(Vdbe*);
 void sqliteVdbeDelete(Vdbe*);

@@ -101,7 +101,7 @@ static int exprTableUsage(int base, Expr *p){
 ** structure.
 **
 ** "base" is the cursor number (the value of the iTable field) that
-** corresponds to the first entyr in the table list.  This is the
+** corresponds to the first entry in the table list.  This is the
 ** same as pParse->nTab.
 */
 static void exprAnalyze(int base, ExprInfo *pInfo){
