@@ -26,7 +26,7 @@
       sqliteSetNString(&pParse->zErrMsg, 
           "near \"", -1, TOKEN.z, TOKEN.n, "\": syntax error", -1, 0);
     }else{
-      sqliteSetString(&pParse->zErrMsg, "incomplete SQL statement", 0);
+      sqliteSetString(&pParse->zErrMsg, "incomplete SQL statement", (char*)0);
     }
   }
   pParse->nErr++;

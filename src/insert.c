@@ -688,7 +688,7 @@ void sqliteGenerateConstraintChecks(
         char *zMsg = 0;
         sqliteVdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, onError);
         sqliteSetString(&zMsg, pTab->zName, ".", pTab->aCol[i].zName,
-                        " may not be NULL", 0);
+                        " may not be NULL", (char*)0);
         sqliteVdbeChangeP3(v, -1, zMsg, P3_DYNAMIC);
         break;
       }

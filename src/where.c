@@ -383,7 +383,7 @@ WhereInfo *sqliteWhereBegin(
     char zBuf[50];
     sprintf(zBuf, "%d", (int)ARRAYSIZE(aExpr)-1);
     sqliteSetString(&pParse->zErrMsg, "WHERE clause too complex - no more "
-       "than ", zBuf, " terms allowed", 0);
+       "than ", zBuf, " terms allowed", (char*)0);
     pParse->nErr++;
     return 0;
   }

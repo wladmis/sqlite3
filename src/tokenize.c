@@ -413,7 +413,7 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   i = 0;
   pEngine = sqliteParserAlloc((void*(*)(int))malloc);
   if( pEngine==0 ){
-    sqliteSetString(pzErrMsg, "out of memory", 0);
+    sqliteSetString(pzErrMsg, "out of memory", (char*)0);
     return 1;
   }
   pParse->sLastToken.dyn = 0;
@@ -429,7 +429,7 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
       case TK_COMMENT: {
         if( (db->flags & SQLITE_Interrupt)!=0 ){
           pParse->rc = SQLITE_INTERRUPT;
-          sqliteSetString(pzErrMsg, "interrupt", 0);
+          sqliteSetString(pzErrMsg, "interrupt", (char*)0);
           goto abort_parse;
         }
         break;
@@ -464,7 +464,8 @@ abort_parse:
   }
   sqliteParserFree(pEngine, free);
   if( pParse->rc!=SQLITE_OK && pParse->rc!=SQLITE_DONE && pParse->zErrMsg==0 ){
-    sqliteSetString(&pParse->zErrMsg, sqlite_error_string(pParse->rc), 0);
+    sqliteSetString(&pParse->zErrMsg, sqlite_error_string(pParse->rc),
+                    (char*)0);
   }
   if( pParse->zErrMsg ){
     if( pzErrMsg && *pzErrMsg==0 ){

@@ -3169,10 +3169,10 @@ static void checkAppendMsg(IntegrityCk *pCheck, char *zMsg1, char *zMsg2){
   if( pCheck->zErrMsg ){
     char *zOld = pCheck->zErrMsg;
     pCheck->zErrMsg = 0;
-    sqliteSetString(&pCheck->zErrMsg, zOld, "\n", zMsg1, zMsg2, 0);
+    sqliteSetString(&pCheck->zErrMsg, zOld, "\n", zMsg1, zMsg2, (char*)0);
     sqliteFree(zOld);
   }else{
-    sqliteSetString(&pCheck->zErrMsg, zMsg1, zMsg2, 0);
+    sqliteSetString(&pCheck->zErrMsg, zMsg1, zMsg2, (char*)0);
   }
 }
 

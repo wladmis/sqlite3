@@ -265,7 +265,7 @@ static char *append_val(char * orig, char const * val)
     return sqliteStrDup( val );
   } else{
     char * ret = 0;
-    sqliteSetString(&ret, orig, val, 0);
+    sqliteSetString(&ret, orig, val, (char*)0);
     sqliteFree( orig );
     return ret;
   }
