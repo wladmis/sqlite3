@@ -2149,7 +2149,11 @@ void sqlitePragma(Parse *pParse, Token *pLeft, Token *pRight, int minusFlag){
     zRight = sqliteStrNDup(pRight->z, pRight->n);
     sqliteDequote(zRight);
   }
-  if( sqliteAuthCheck(pParse, SQLITE_PRAGMA, zLeft, zRight) ) return;
+  if( sqliteAuthCheck(pParse, SQLITE_PRAGMA, zLeft, zRight) ){
+    sqliteFree(zLeft);
+    sqliteFree(zRight);
+    return;
+  }
  
   /*
   **  PRAGMA default_cache_size
