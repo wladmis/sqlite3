@@ -1060,7 +1060,7 @@ static int test_bind_blob(
   if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
   if( Tcl_GetIntFromObj(interp, objv[2], &idx) ) return TCL_ERROR;
   value = Tcl_GetString(objv[3]);
-  if( Tcl_GetIntFromObj(interp, objv[2], &bytes) ) return TCL_ERROR;
+  if( Tcl_GetIntFromObj(interp, objv[4], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_bind_blob(pStmt, idx, value, bytes, 1);
   if( rc!=SQLITE_OK ){
