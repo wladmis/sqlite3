@@ -267,8 +267,8 @@ ExprList *sqliteExprListAppend(ExprList *pList, Expr *pExpr, Token *pName){
   }
   if( pList->a && (pExpr || pName) ){
     i = pList->nExpr++;
+    memset(&pList->a[i], 0, sizeof(pList->a[i]));
     pList->a[i].pExpr = pExpr;
-    pList->a[i].zName = 0;
     if( pName ){
       sqliteSetNString(&pList->a[i].zName, pName->z, pName->n, 0);
       sqliteDequote(pList->a[i].zName);
