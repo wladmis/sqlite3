@@ -62,13 +62,6 @@ all code except for a few areas which are unreachable or which are
 only reached when <tt>malloc()</tt> fails.  The code has been tested
 for memory leaks and is found to be clean.</p>
 
-<p><b>Important Note:</b>  Beginning with version 1.0.29, the LIKE and
-GLOB operators assume both operands are UTF-8 strings.  Prior to that,
-both operators assumed plain ASCII strings.  Users of earlier versions
-of SQLite that invoke LIKE or GLOB to compare strings containing
-characters greater than 127 may have problems when they upgrade to
-version 1.0.29 or later.</p>
-
 <p><b>Important Note:</b>  Serious bugs have been found in versions
 1.0.22 on Unix and 1.0.26 on Windows.  Users of these or earlier
 versions of SQLite should upgrade.</p>

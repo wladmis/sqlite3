@@ -191,6 +191,16 @@ static int sqliteInit(sqlite *db, char **pzErrMsg){
 const char sqlite_version[] = SQLITE_VERSION;
 
 /*
+** Does the library expect data to be encoded as UTF-8 or iso8859?  The
+** following global constant always lets us know.
+*/
+#ifdef SQLITE_UTF8
+char sqlite_encoding[] = "UTF-8";
+#else
+char sqlite_encoding[] = "iso8859";
+#endif
+
+/*
 ** Open a new SQLite database.  Construct an "sqlite" structure to define
 ** the state of this database and return a pointer to that structure.
 **
