@@ -79,7 +79,7 @@ struct HashElem {
 ** Access routines.  To delete, insert a NULL pointer.
 */
 void sqliteHashInit(Hash*, int keytype, int copyKey);
-void *sqliteHashInsert(Hash*, void *pKey, int nKey, void *pData);
+void *sqliteHashInsert(Hash*, const void *pKey, int nKey, void *pData);
 void *sqliteHashFind(const Hash*, const void *pKey, int nKey);
 void sqliteHashClear(Hash*);
 

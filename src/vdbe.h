@@ -198,13 +198,14 @@ typedef struct VdbeOp VdbeOp;
 #define OP_Not               113
 #define OP_Concat            114
 #define OP_Noop              115
-
 #define OP_Strlen            116
 #define OP_Substr            117
+#define OP_UserFunc          118
+#define OP_UserAgg           119
 
-#define OP_Limit             118
+#define OP_Limit             120
 
-#define OP_MAX               118
+#define OP_MAX               120
 
 /*
 ** Prototypes for the VDBE interface.  See comments on the implementation
