@@ -717,7 +717,7 @@ void sqliteAddPrimaryKey(Parse *pParse, IdList *pList, int onError){
   }else{
     for(i=0; i<pList->nId; i++){
       for(iCol=0; iCol<pTab->nCol; iCol++){
-        if( sqliteStrICmp(pList->a[0].zName, pTab->aCol[iCol].zName)==0 ) break;
+        if( sqliteStrICmp(pList->a[i].zName, pTab->aCol[iCol].zName)==0 ) break;
       }
       if( iCol<pTab->nCol ) pTab->aCol[iCol].isPrimKey = 1;
     }
