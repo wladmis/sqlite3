@@ -167,7 +167,7 @@ do_test func-4.3 {
 } {0 {2 1.2345678901234 2}}
 do_test func-4.4 {
   catchsql {SELECT abs(c) FROM t1 ORDER BY a}
-} {0 {3 12345.67890 5}}
+} {0 {3 12345.6789 5}}
 do_test func-4.4.1 {
   execsql {SELECT abs(a) FROM t2}
 } {1 {} 345 {} 67890}

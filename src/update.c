@@ -287,6 +287,7 @@ void sqlite3Update(
       }
     }
     sqlite3VdbeAddOp(v, OP_MakeRecord, pTab->nCol, 0);
+    sqlite3AddRecordType(v, pTab);
     sqlite3VdbeAddOp(v, OP_PutIntKey, newIdx, 0);
     if( !isView ){
       sqlite3VdbeAddOp(v, OP_Close, iCur, 0);

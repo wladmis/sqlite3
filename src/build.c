@@ -350,6 +350,9 @@ void sqlite3DeleteTable(sqlite *db, Table *pTable){
   }
   sqliteFree(pTable->zName);
   sqliteFree(pTable->aCol);
+  if( pTable->zColAff ){
+    sqliteFree(pTable->zColAff);
+  }
   sqlite3SelectDelete(pTable->pSelect);
   sqliteFree(pTable);
 }
