@@ -60,20 +60,9 @@ void sqliteInsert(
   */
   zTab = sqliteTableNameFromToken(pTableName);
   if( zTab==0 ) goto insert_cleanup;
-  pTab = sqliteFindTable(db, zTab);
+  pTab = sqliteTableNameToTable(pParse, zTab);
   sqliteFree(zTab);
-  if( pTab==0 ){
-    sqliteSetNString(&pParse->zErrMsg, "no such table: ", 0, 
-        pTableName->z, pTableName->n, 0);
-    pParse->nErr++;
-    goto insert_cleanup;
-  }
-  if( pTab->readOnly ){
-    sqliteSetString(&pParse->zErrMsg, "table ", pTab->zName,
-        " may not be modified", 0);
-    pParse->nErr++;
-    goto insert_cleanup;
-  }
+  if( pTab==0 ) goto insert_cleanup;
 
   /* Allocate a VDBE
   */

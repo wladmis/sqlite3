@@ -399,7 +399,7 @@ WhereInfo *sqliteWhereBegin(
     Table *pTab;
 
     pTab = pTabList->a[i].pTab;
-    if( pTab->isTransient ) continue;
+    if( pTab->isTransient || pTab->pSelect ) continue;
     openOp = pTab->isTemp ? OP_OpenAux : OP_Open;
     sqliteVdbeAddOp(v, openOp, base+i, pTab->tnum);
     sqliteVdbeChangeP3(v, -1, pTab->zName, P3_STATIC);

@@ -101,6 +101,7 @@ static Keyword aKeywordTable[] = {
   { "USING",             0, TK_USING,            0 },
   { "VACUUM",            0, TK_VACUUM,           0 },
   { "VALUES",            0, TK_VALUES,           0 },
+  { "VIEW",              0, TK_VIEW,             0 },
   { "WHERE",             0, TK_WHERE,            0 },
 };
 
@@ -419,7 +420,7 @@ int sqliteRunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
         break;
     }
   }
-  if( nErr==0 && (db->flags & SQLITE_Interrupt)==0 ){
+  if( zSql[i]==0 ){
     sqliteParser(pEngine, 0, pParse->sLastToken, pParse);
     if( pParse->zErrMsg && pParse->sErrToken.z ){
        sqliteSetNString(pzErrMsg, "near \"", -1, 

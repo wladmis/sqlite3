@@ -190,6 +190,15 @@ resolvetype(A) ::= REPLACE.                  { A = OE_Replace; }
 //
 cmd ::= DROP TABLE ids(X).          {sqliteDropTable(pParse,&X);}
 
+///////////////////// The CREATE VIEW statement /////////////////////////////
+//
+cmd ::= CREATE(X) VIEW ids(Y) AS select(S). {
+  sqliteCreateView(pParse, &X, &Y, S);
+}
+cmd ::= DROP VIEW ids(X). {
+  sqliteDropTable(pParse, &X);
+}
+
 //////////////////////// The SELECT statement /////////////////////////////////
 //
 cmd ::= select(X).  {
