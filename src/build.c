@@ -1693,8 +1693,8 @@ void sqliteCreateIndex(
   */
   if( !pParse->explain ){
     Index *p;
-    p = sqliteHashInsert(&db->aDb[isTemp].idxHash, 
-                         pIndex->zName, strlen(zName)+1, pIndex);
+    p = sqliteHashInsert(&db->aDb[pIndex->iDb].idxHash, 
+                         pIndex->zName, strlen(pIndex->zName)+1, pIndex);
     if( p ){
       assert( p==pIndex );  /* Malloc must have failed */
       sqliteFree(pIndex);
