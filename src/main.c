@@ -73,7 +73,12 @@ static int sqliteOpenCb(void *pDb, int argc, char **argv, char **azColName){
         */
         Index *pIndex = sqliteFindIndex(db, argv[1]);
         if( pIndex==0 || pIndex->tnum!=0 ){
-          nErr++;
+          /* This can occur if there exists an index on a TEMP table which
+          ** has the same name as another index on a permanent index.  Since
+          ** the permanent table is hidden by the TEMP table, we can also
+          ** safely ignore the index on the permanent table.
+          */
+          /* Do Nothing */;
         }else{
           pIndex->tnum = atoi(argv[2]);
         }

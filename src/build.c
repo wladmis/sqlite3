@@ -205,7 +205,7 @@ void sqliteUnlinkAndDeleteIndex(sqlite *db, Index *pIndex){
 ** executed.  If a ROLLBACK occurs, the indices are moved back into
 ** the main index hash table.
 */
-void sqlitePendingDropIndex(sqlite *db, Index *p){
+static void sqlitePendingDropIndex(sqlite *db, Index *p){
   if( !p->isCommit ){
     sqliteUnlinkAndDeleteIndex(db, p);
   }else{
@@ -273,7 +273,7 @@ static void sqliteUnlinkAndDeleteTable(sqlite *db, Table *p){
 ** then the tables on the drop queue are moved back into the main
 ** hash table.
 */
-void sqlitePendingDropTable(sqlite *db, Table *pTbl){
+static void sqlitePendingDropTable(sqlite *db, Table *pTbl){
   if( !pTbl->isCommit ){
     sqliteUnlinkAndDeleteTable(db, pTbl);
   }else{
@@ -954,6 +954,7 @@ void sqliteCreateIndex(
     zName = 0;
     sqliteSetString(&zName, "(", pTab->zName, " autoindex ", zBuf, 0);
     if( zName==0 ) goto exit_create_index;
+    hideName = sqliteFindIndex(db, zName)!=0;
   }
 
   /* If pList==0, it means this routine was called to make a primary
