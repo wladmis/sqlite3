@@ -569,7 +569,9 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int format){
     */
     assert( pPg->nRef==0 || pPg->pgno==1 );
     memcpy(PGHDR_TO_DATA(pPg), pgRec.aData, SQLITE_PAGE_SIZE);
-    memset(PGHDR_TO_EXTRA(pPg), 0, pPager->nExtra);
+    if( pPager->xDestructor ){
+      pPager->xDestructor(PGHDR_TO_DATA(pPg));
+    }
     pPg->dirty = 0;
     pPg->needSync = 0;
     CODEC(pPager, PGHDR_TO_DATA(pPg), pPg->pgno, 3);

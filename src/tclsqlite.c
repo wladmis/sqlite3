@@ -1212,7 +1212,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Md5_Init(Tcl_Interp*);
     /* Sqlitetest1_Init(interp); */
     Sqlitetest2_Init(interp);
-    /* Sqlitetest3_Init(interp); */
+    Sqlitetest3_Init(interp);
     /* Sqlitetest4_Init(interp); */
     Sqlitetest5_Init(interp);
     Md5_Init(interp);
