@@ -108,6 +108,10 @@ static void substrFunc(sqlite_func *context, int argc, const char **argv){
 #endif
   if( p1<0 ){
     p1 += len;
+    if( p1<0 ){
+      p2 += p1;
+      p1 = 0;
+    }
   }else if( p1>0 ){
     p1--;
   }
@@ -124,6 +128,7 @@ static void substrFunc(sqlite_func *context, int argc, const char **argv){
     if( (z[i]&0xc0)!=0x80 ) p2++;
   }
 #endif
+  if( p2<0 ) p2 = 0;
   sqlite_set_result_string(context, &z[p1], p2);
 }
 
