@@ -33,6 +33,7 @@ set EXCLUDE {
   quick.test
   utf16.test
   autovacuum_crash.test
+  btree8.test
 }
 
 if {[sqlite3 -has-codec]} {
