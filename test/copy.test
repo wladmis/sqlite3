@@ -40,6 +40,7 @@ puts $f "11|22|33"
 puts $f "22|33|11"
 close $f
 set f [open dataX.txt w]
+fconfigure $f -translation binary 
 puts -nonewline $f "11|22|33\r"
 puts -nonewline $f "22|33|44\r\n"
 puts -nonewline $f "33|44|55\n"
