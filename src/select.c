@@ -366,18 +366,20 @@ static int matchOrderbyToColumn(
     return 1;
   }
   if( pSelect->pPrior ){
-    matchOrderbyToColumn(pParse, pSelect->pPrior, pOrderBy, iTable, 0);
+    if( matchOrderbyToColumn(pParse, pSelect->pPrior, pOrderBy, iTable, 0) ){
+      return 1;
+    }
   }
   pEList = pSelect->pEList;
   for(i=0; i<pOrderBy->nExpr; i++){
     Expr *pE = pOrderBy->a[i].pExpr;
+    int match = 0;
     if( pOrderBy->a[i].done ) continue;
     for(j=0; j<pEList->nExpr; j++){
-      int match = 0;
       if( pEList->a[i].zName && (pE->op==TK_ID || pE->op==TK_STRING) ){
         char *zName = pEList->a[i].zName;
         char *zLabel = 0;
-        sqliteSetString(&zLabel, pE->token.z, pE->token.n, 0);
+        sqliteSetNString(&zLabel, pE->token.z, pE->token.n, 0);
         sqliteDequote(zLabel);
         if( sqliteStrICmp(zName, zLabel)==0 ){ 
           match = 1; 
@@ -394,7 +396,7 @@ static int matchOrderbyToColumn(
         break;
       }
     }
-    if( mustComplete ){
+    if( !match && mustComplete ){
       char zBuf[30];
       sprintf(zBuf,"%d",i+1);
       sqliteSetString(&pParse->zErrMsg, "ORDER BY term number ", zBuf, 
