@@ -865,7 +865,7 @@ end_stmt_playback:
 void sqlite3pager_set_cachesize(Pager *pPager, int mxPage){
   if( mxPage>=0 ){
     pPager->noSync = pPager->tempFile;
-    if( pPager->noSync==0 ) pPager->needSync = 0;
+    if( pPager->noSync ) pPager->needSync = 0; 
   }else{
     pPager->noSync = 1;
     mxPage = -mxPage;
@@ -904,7 +904,7 @@ void sqlite3pager_set_cachesize(Pager *pPager, int mxPage){
 void sqlite3pager_set_safety_level(Pager *pPager, int level){
   pPager->noSync =  level==1 || pPager->tempFile;
   pPager->fullSync = level==3 && !pPager->tempFile;
-  if( pPager->noSync==0 ) pPager->needSync = 0;
+  if( pPager->noSync ) pPager->needSync = 0;
 }
 
 /*

@@ -4183,3 +4183,17 @@ int sqlite3BtreeCopyFile(Btree *pBtTo, Btree *pBtFrom){
   }
   return rc;  
 }
+
+/*
+** Return non-zero if a transaction is active.
+*/
+int sqlite3BtreeIsInTrans(Btree *pBt){
+  return (pBt && pBt->inTrans);
+}
+
+/*
+** Return non-zero if a statement transaction is active.
+*/
+int sqlite3BtreeIsInStmt(Btree *pBt){
+  return (pBt && pBt->inStmt);
+}

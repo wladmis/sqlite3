@@ -88,6 +88,7 @@ integrity_check trans-2.11
 do_test trans-3.1 {
   execsql {
     BEGIN;
+    UPDATE one SET a = 0 WHERE 0;
     SELECT a FROM one ORDER BY a;
   }
 } {1 2 3}
@@ -183,6 +184,7 @@ do_test trans-4.2 {
 do_test trans-4.3 {
   set v [catch {execsql {
     BEGIN TRANSACTION;
+    UPDATE two SET a = 0 WHERE 0;
     SELECT a FROM two ORDER BY a;
   } db} msg]
   lappend v $msg

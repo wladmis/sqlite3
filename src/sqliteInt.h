@@ -389,6 +389,7 @@ struct sqlite {
     u8 busy;                       /* TRUE if currently initializing */
   } init;
   struct Vdbe *pVdbe;           /* List of active virtual machines */
+  int activeVdbeCnt;            /* Number of vdbes currently executing */
   void (*xTrace)(void*,const char*);     /* Trace function */
   void *pTraceArg;                       /* Argument to the trace function */
 #ifndef SQLITE_OMIT_AUTHORIZATION
@@ -406,6 +407,7 @@ struct sqlite {
   char *zErrMsg;                /* Most recent error message (UTF-8 encoded) */
   void *zErrMsg16;              /* Most recent error message (UTF-16 encoded) */
   u8 enc;                       /* Text encoding for this database. */
+  u8 autoCommit;                /* The auto-commit flag. */
 };
 
 /*
@@ -989,6 +991,7 @@ struct Parse {
   const char *zAuthContext; /* The 6th parameter to db->xAuth callbacks */
   Trigger *pNewTrigger;     /* Trigger under construct by a CREATE TRIGGER */
   TriggerStack *trigStack;  /* Trigger actions being coded */
+  u64 cookieMask;      /* Bitmask of schema verified databases */
 };
 
 /*

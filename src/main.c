@@ -1020,6 +1020,7 @@ static int openDatabase(
   db->nDb = 2;
   db->aDb = db->aDbStatic;
   db->enc = def_enc;
+  db->autoCommit = 1;
   /* db->flags |= SQLITE_ShortColNames; */
   sqlite3HashInit(&db->aFunc, SQLITE_HASH_STRING, 0);
   sqlite3HashInit(&db->aCollSeq, SQLITE_HASH_STRING, 0);

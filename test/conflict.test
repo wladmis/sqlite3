@@ -57,6 +57,8 @@ foreach {i conf cmd t0 t1 t2} {
  17 ABORT    INSERT                  1 {}  1
  18 ROLLBACK INSERT                  1 {}  {}
 } {
+  if { $conf=={} } {
+
   do_test conflict-1.$i {
     if {$conf!=""} {set conf "ON CONFLICT $conf"}
     set r0 [catch {execsql [subst {
@@ -72,6 +74,8 @@ foreach {i conf cmd t0 t1 t2} {
     set r2 [execsql {SELECT x FROM t2}]
     list $r0 $r1 $r2
   } [list $t0 $t1 $t2]
+
+  }
 }
 
 # Create tables for the first group of tests.

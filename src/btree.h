@@ -48,6 +48,8 @@ int sqlite3BtreeBeginStmt(Btree*);
 int sqlite3BtreeCommitStmt(Btree*);
 int sqlite3BtreeRollbackStmt(Btree*);
 int sqlite3BtreeCreateTable(Btree*, int*, int flags);
+int sqlite3BtreeIsInTrans(Btree*);
+int sqlite3BtreeIsInStmt(Btree*);
 
 const char *sqlite3BtreeGetFilename(Btree *);
 int sqlite3BtreeCopyFile(Btree *, Btree *);

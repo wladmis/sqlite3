@@ -93,7 +93,7 @@ static int changeTempStorage(Parse *pParse, const char *zStorageType){
   sqlite *db = pParse->db;
   if( db->temp_store==ts ) return SQLITE_OK;
   if( db->aDb[1].pBt!=0 ){
-    if( db->flags & SQLITE_InTrans ){
+    if( !db->autoCommit ){
       sqlite3ErrorMsg(pParse, "temporary storage cannot be changed "
         "from within a transaction");
       return SQLITE_ERROR;
