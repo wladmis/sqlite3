@@ -354,6 +354,7 @@ sqlite *sqlite_open(const char *zFilename, int mode, char **pzErrMsg){
   sqliteHashInit(&db->idxHash, SQLITE_HASH_STRING, 0);
   sqliteHashInit(&db->trigHash, SQLITE_HASH_STRING, 0);
   sqliteHashInit(&db->aFunc, SQLITE_HASH_STRING, 1);
+  sqliteHashInit(&db->aFKey, SQLITE_HASH_STRING, 1);
   sqliteRegisterBuiltinFunctions(db);
   db->onError = OE_Default;
   db->priorNewRowid = 0;
@@ -466,6 +467,7 @@ void sqlite_close(sqlite *db){
     }
   }
   sqliteHashClear(&db->aFunc);
+  sqliteHashClear(&db->aFKey);
   sqliteFree(db);
 }
 

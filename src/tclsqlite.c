@@ -643,13 +643,13 @@ static int DbMain(void *cd, Tcl_Interp *interp, int argc, char **argv){
 */
 int Sqlite_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.0", 0);
-  Tcl_CreateCommand(interp, "sqlite", DbMain, 0, 0);
+  Tcl_CreateCommand(interp, "sqlite", (Tcl_CmdProc*)DbMain, 0, 0);
   Tcl_PkgProvide(interp, "sqlite", "2.0");
   return TCL_OK;
 }
 int Tclsqlite_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.0", 0);
-  Tcl_CreateCommand(interp, "sqlite", DbMain, 0, 0);
+  Tcl_CreateCommand(interp, "sqlite", (Tcl_CmdProc*)DbMain, 0, 0);
   Tcl_PkgProvide(interp, "sqlite", "2.0");
   return TCL_OK;
 }
