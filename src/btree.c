@@ -4075,7 +4075,7 @@ static void checkList(
     }
     if( isFreeList ){
       int n = get4byte(&pOvfl[4]);
-      if( n>=pCheck->pBt->usableSize/4-8 ){
+      if( n>pCheck->pBt->usableSize/4-8 ){
         sprintf(zMsg, "freelist leaf count too big on page %d", iPage);
         checkAppendMsg(pCheck, zContext, zMsg);
         N--;

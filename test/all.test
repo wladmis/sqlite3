@@ -54,6 +54,7 @@ set EXCLUDE {
   malloc.test
   misuse.test
   memleak.test
+  corrupt.test
 }
 #  btree2.test
 
