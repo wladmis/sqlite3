@@ -97,24 +97,26 @@ columnid ::= ids(X).                {sqliteAddColumn(pParse,&X);}
 // an abbreviation of "description").
 //
 %type id {Token}
-id(A) ::= DESC(X).       {A = X;}
-id(A) ::= ASC(X).        {A = X;}
-id(A) ::= DELIMITERS(X). {A = X;}
-id(A) ::= EXPLAIN(X).    {A = X;}
-id(A) ::= VACUUM(X).     {A = X;}
-id(A) ::= BEGIN(X).      {A = X;}
-id(A) ::= END(X).        {A = X;}
-id(A) ::= PRAGMA(X).     {A = X;}
-id(A) ::= CLUSTER(X).    {A = X;}
-id(A) ::= ID(X).         {A = X;}
-id(A) ::= TEMP(X).       {A = X;}
-id(A) ::= OFFSET(X).     {A = X;}
-id(A) ::= KEY(X).        {A = X;}
 id(A) ::= ABORT(X).      {A = X;}
-id(A) ::= IGNORE(X).     {A = X;}
-id(A) ::= REPLACE(X).    {A = X;}
-id(A) ::= FAIL(X).       {A = X;}
+id(A) ::= ASC(X).        {A = X;}
+id(A) ::= BEGIN(X).      {A = X;}
+id(A) ::= CLUSTER(X).    {A = X;}
 id(A) ::= CONFLICT(X).   {A = X;}
+id(A) ::= COPY(X).       {A = X;}
+id(A) ::= DELIMITERS(X). {A = X;}
+id(A) ::= DESC(X).       {A = X;}
+id(A) ::= END(X).        {A = X;}
+id(A) ::= EXPLAIN(X).    {A = X;}
+id(A) ::= FAIL(X).       {A = X;}
+id(A) ::= ID(X).         {A = X;}
+id(A) ::= IGNORE(X).     {A = X;}
+id(A) ::= KEY(X).        {A = X;}
+id(A) ::= OFFSET(X).     {A = X;}
+id(A) ::= PRAGMA(X).     {A = X;}
+id(A) ::= REPLACE(X).    {A = X;}
+id(A) ::= TEMP(X).       {A = X;}
+id(A) ::= VACUUM(X).     {A = X;}
+id(A) ::= VIEW(X).       {A = X;}
 
 // And "ids" is an identifer-or-string.
 //
