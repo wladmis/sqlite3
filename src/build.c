@@ -1452,7 +1452,7 @@ void sqlite3CreateView(
     sEnd.z += sEnd.n;
   }
   sEnd.n = 0;
-  n = ((int)sEnd.z) - (int)pBegin->z;
+  n = sEnd.z - pBegin->z;
   z = pBegin->z;
   while( n>0 && (z[n-1]==';' || isspace(z[n-1])) ){ n--; }
   sEnd.z = &z[n-1];
