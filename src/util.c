@@ -67,6 +67,7 @@ void *sqliteRealloc(void *p, int n){
     sqliteFree(p);
     return 0;
   }
+  /* printf("realloc 0x%x size: %d bytes\n", (int)p, n); */
   return realloc(p, n);
 }
 
