@@ -297,13 +297,13 @@ void sqlite3Update(
     */
     sqlite3VdbeAddOp(v, OP_ListRewind, 0, 0);
     addr = sqlite3VdbeAddOp(v, OP_ListRead, 0, 0);
-    sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
 
-    /* Open a cursor and make it point to the record that is
-    ** being updated.
-    */
-    sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
     if( !isView ){
+      sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
+      sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
+      /* Open a cursor and make it point to the record that is
+      ** being updated.
+      */
       sqlite3OpenTableForReading(v, iCur, pTab);
     }
     sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
