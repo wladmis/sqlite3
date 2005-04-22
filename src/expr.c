@@ -529,7 +529,6 @@ Select *sqlite3SelectDup(Select *p){
   pNew->iLimit = -1;
   pNew->iOffset = -1;
   pNew->ppOpenTemp = 0;
-  pNew->pFetch = 0;
   pNew->isResolved = p->isResolved;
   pNew->isAgg = p->isAgg;
   return pNew;

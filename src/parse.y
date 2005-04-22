@@ -543,13 +543,13 @@ cmd ::= DELETE FROM fullname(X) where_opt(Y). {sqlite3DeleteFrom(pParse,X,Y);}
 where_opt(A) ::= .                    {A = 0;}
 where_opt(A) ::= WHERE expr(X).       {A = X;}
 
-%type setlist {ExprList*}
-%destructor setlist {sqlite3ExprListDelete($$);}
-
 ////////////////////////// The UPDATE command ////////////////////////////////
 //
 cmd ::= UPDATE orconf(R) fullname(X) SET setlist(Y) where_opt(Z).
     {sqlite3Update(pParse,X,Y,Z,R);}
+
+%type setlist {ExprList*}
+%destructor setlist {sqlite3ExprListDelete($$);}
 
 setlist(A) ::= setlist(Z) COMMA nm(X) EQ expr(Y).
     {A = sqlite3ExprListAppend(Z,Y,&X);}
