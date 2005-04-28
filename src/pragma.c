@@ -905,6 +905,17 @@ void sqlite3Pragma(
   }else
 #endif
 
+#ifdef SQLITE_SSE
+  /*
+  ** Check to see if the sqlite_statements table exists.  Create it
+  ** if it does not.
+  */
+  if( sqlite3StrICmp(zLeft, "create_sqlite_statement_table")==0 ){
+    extern int sqlite3CreateStatementsTable(sqlite3*);
+    sqlite3CreateStatementsTable(db);
+  }else
+#endif
+
   {}
 
   if( v ){

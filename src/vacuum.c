@@ -296,5 +296,16 @@ end_of_vacuum:
   if( zSql ) sqliteFree( zSql );
   sqlite3ResetInternalSchema(db, 0);
 #endif
+
+#ifdef SQLITE_SSE
+  /* If the SSE extension is compiled in, recompile all statements
+  ** in the sqlite_statements table after a successful VACUUM
+  */
+  if( rc==SQLITE_OK ){
+    extern int sqlite3RecompileStatements(sqlite3*);
+    rc = sqlite3RecompileStatements(db);
+  }
+#endif /* SQLITE_SSE */
+
   return rc;
 }
