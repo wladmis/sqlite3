@@ -20,6 +20,7 @@
 **
 ** @(#) $Id$
 */
+#ifndef SQLITE_OMIT_DISKIO
 #include "sqliteInt.h"
 #include "os.h"
 #include "pager.h"
@@ -3591,3 +3592,5 @@ void sqlite3pager_refdump(Pager *pPager){
   }
 }
 #endif
+
+#endif /* SQLITE_OMIT_DISKIO */
