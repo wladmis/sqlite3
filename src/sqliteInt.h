@@ -715,7 +715,8 @@ struct FKey {
 ** comparison of the two index keys.
 **
 ** If the KeyInfo.incrKey value is true and the comparison would
-** otherwise be equal, then return a result as if the second key larger.
+** otherwise be equal, then return a result as if the second key
+** were larger.
 */
 struct KeyInfo {
   u8 enc;             /* Text encoding - one of the TEXT_Utf* values */

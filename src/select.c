@@ -689,6 +689,20 @@ static const char *columnType(NameContext *pNC, Expr *pExpr){
           pNC = pNC->pNext;
         }
       }
+      if( pTab==0 ){
+        /* FIX ME:
+        ** This can occurs if you have something like "SELECT new.x;" inside
+        ** a trigger.  In other words, if you reference the special "new"
+        ** table in the result set of a select.  We do not have a good way
+        ** to find the actual table type, so call it "TEXT".  This is really
+        ** something of a bug, but I do not know how to fix it.
+        **
+        ** This code does not produce the correct answer - it just prevents
+        ** a segfault.  See ticket #1229.
+        */
+        zType = "TEXT";
+        break;
+      }
       assert( pTab );
       if( iCol<0 ) iCol = pTab->iPKey;
       assert( iCol==-1 || (iCol>=0 && iCol<pTab->nCol) );
