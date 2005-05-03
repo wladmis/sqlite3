@@ -65,9 +65,11 @@ static int memcnt = 0;
 #endif
 
 /*
-** Number of 32-bit guard words
+** Number of 32-bit guard words.  This should probably be a multiple of
+** 2 since on 64-bit machines we want the value returned by sqliteMalloc()
+** to be 8-byte aligned.
 */
-#define N_GUARD 1
+#define N_GUARD 2
 
 /*
 ** Allocate new memory and set it to zero.  Return NULL if
