@@ -632,7 +632,7 @@ static int sqliteDefaultBusyCallback(
     prior = totals[count];
   }else{
     delay = delays[NDELAY-1];
-    prior = totals[NDELAY-1] + delay*(count-NDELAY-1);
+    prior = totals[NDELAY-1] + delay*(count-(NDELAY-1));
   }
   if( prior + delay > timeout ){
     delay = timeout - prior;
