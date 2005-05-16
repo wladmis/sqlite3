@@ -929,6 +929,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
     /* Get the typename, type affinity, and collating sequence for the
     ** column.
     */
+    memset(&sNC, 0, sizeof(sNC));
     sNC.pSrcList = pSelect->pSrc;
     zType = sqliteStrDup(columnType(&sNC, p));
     pCol->zType = zType;
