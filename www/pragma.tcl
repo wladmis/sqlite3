@@ -240,13 +240,13 @@ puts {
     the operating system crashes or if there is a power failure, the database
     will be uncorrupted after rebooting.  FULL synchronous is very 
     safe, but it is also slow.  
-    When synchronous is NORMAL (1, the default), the SQLite database
+    When synchronous is NORMAL, the SQLite database
     engine will still pause at the most critical moments, but less often
     than in FULL mode.  There is a very small (though non-zero) chance that
     a power failure at just the wrong time could corrupt the database in
     NORMAL mode.  But in practice, you are more likely to suffer
     a catastrophic disk failure or some other unrecoverable hardware
-    fault.  So NORMAL is the default mode.
+    fault.
     With synchronous OFF (0), SQLite continues without pausing
     as soon as it has handed data off to the operating system.
     If the application running SQLite crashes, the data will be safe, but
@@ -254,7 +254,11 @@ puts {
     crashes or the computer loses power before that data has been written
     to the disk surface.  On the other hand, some
     operations are as much as 50 or more times faster with synchronous OFF.
-    </p></li>
+    </p>
+    <p>In SQLite version 2, the default value is NORMAL. For version 3, the
+    default was changed to FULL.
+    </p>
+</li>
 
 
 <a name="pragma_temp_store"></a>
