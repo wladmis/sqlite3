@@ -793,7 +793,7 @@ WhereInfo *sqlite3WhereBegin(
              && (pTerm->prereqRight & loopMask)==pTerm->prereqRight ){
           int iColumn = pX->pLeft->iColumn;
           int k;
-          char idxaff = pIdx->pTable->aCol[iColumn].affinity; 
+          char idxaff = iColumn>=0 ? pIdx->pTable->aCol[iColumn].affinity : 0; 
           for(k=0; k<pIdx->nColumn; k++){
             /* If the collating sequences or affinities don't match, 
             ** ignore this index.  */
