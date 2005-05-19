@@ -2836,7 +2836,7 @@ int sqlite3Select(
         if( !pColl ) pColl = pParse->db->pDfltColl;
         sqlite3VdbeOp3(v, OP_CollSeq, 0, 0, (char *)pColl, P3_COLLSEQ);
       }
-      sqlite3VdbeOp3(v, OP_AggFunc, 0, nExpr, (char*)pDef, P3_POINTER);
+      sqlite3VdbeOp3(v, OP_AggFunc, 0, nExpr, (char*)pDef, P3_FUNCDEF);
     }
   }
 
