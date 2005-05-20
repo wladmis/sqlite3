@@ -71,7 +71,7 @@ int sqlite3pager_open(Pager **ppPager, const char *zFilename,
 void sqlite3pager_set_busyhandler(Pager*, BusyHandler *pBusyHandler);
 void sqlite3pager_set_destructor(Pager*, void(*)(void*,int));
 void sqlite3pager_set_reiniter(Pager*, void(*)(void*,int));
-void sqlite3pager_set_pagesize(Pager*, int);
+int sqlite3pager_set_pagesize(Pager*, int);
 void sqlite3pager_read_fileheader(Pager*, int, unsigned char*);
 void sqlite3pager_set_cachesize(Pager*, int);
 int sqlite3pager_close(Pager *pPager);

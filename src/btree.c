@@ -1362,8 +1362,7 @@ int sqlite3BtreeSetPageSize(Btree *pBt, int pageSize, int nReserve){
   if( pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE &&
         ((pageSize-1)&pageSize)==0 ){
     assert( (pageSize & 7)==0 );
-    pBt->pageSize = pageSize;
-    sqlite3pager_set_pagesize(pBt->pPager, pageSize);
+    pBt->pageSize = sqlite3pager_set_pagesize(pBt->pPager, pageSize);
   }
   pBt->usableSize = pBt->pageSize - nReserve;
   return SQLITE_OK;
