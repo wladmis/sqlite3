@@ -341,7 +341,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   db->flags &= ~SQLITE_Interrupt;
   pParse->rc = SQLITE_OK;
   i = 0;
-  pEngine = sqlite3ParserAlloc((void*(*)(int))malloc);
+  pEngine = sqlite3ParserAlloc((void*(*)(int))sqlite3MallocX);
   if( pEngine==0 ){
     sqlite3SetString(pzErrMsg, "out of memory", (char*)0);
     return 1;
@@ -401,7 +401,7 @@ abort_parse:
     }
     sqlite3Parser(pEngine, 0, pParse->sLastToken, pParse);
   }
-  sqlite3ParserFree(pEngine, free);
+  sqlite3ParserFree(pEngine, sqlite3FreeX);
   if( sqlite3_malloc_failed ){
     pParse->rc = SQLITE_NOMEM;
   }

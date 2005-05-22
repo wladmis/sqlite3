@@ -113,6 +113,13 @@ void *sqlite3Malloc_(int n, int bZero, char *zFile, int line){
 }
 
 /*
+** This version of malloc is always a real function, never a macro
+*/
+void *sqlite3MallocX(int n){
+  return sqlite3Malloc_(n, 0, __FILE__, __LINE__);
+}
+
+/*
 ** Check to see if the given pointer was obtained from sqliteMalloc()
 ** and is able to hold at least N bytes.  Raise an exception if this
 ** is not the case.

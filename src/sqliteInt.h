@@ -1345,8 +1345,10 @@ void sqlite3RealToSortable(double r, char *);
   char *sqlite3StrDup(const char*);
   char *sqlite3StrNDup(const char*, int);
 # define sqlite3CheckMemory(a,b)
+# define sqlite3MallocX sqlite3Malloc
 #endif
 void sqlite3FreeX(void*);
+void *sqlite3MallocX(int);
 char *sqlite3MPrintf(const char*, ...);
 char *sqlite3VMPrintf(const char*, va_list);
 void sqlite3DebugPrintf(const char*, ...);
