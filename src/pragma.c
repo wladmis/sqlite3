@@ -911,8 +911,8 @@ void sqlite3Pragma(
   ** if it does not.
   */
   if( sqlite3StrICmp(zLeft, "create_sqlite_statement_table")==0 ){
-    extern int sqlite3CreateStatementsTable(sqlite3*);
-    sqlite3CreateStatementsTable(db);
+    extern int sqlite3CreateStatementsTable(Parse*);
+    sqlite3CreateStatementsTable(pParse);
   }else
 #endif
 
