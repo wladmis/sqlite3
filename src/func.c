@@ -1035,4 +1035,10 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
     }
   }
   sqlite3RegisterDateTimeFunctions(db);
+#ifdef SQLITE_SSE
+  {
+    extern int sqlite3SseFunctions(sqlite3*);
+    sqlite3SseFunctions(db);
+  }
+#endif
 }
