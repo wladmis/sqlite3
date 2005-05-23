@@ -397,7 +397,7 @@ void sqlite3SetString(char **pz, const char *zFirst, ...){
 ** zFormat and any string tokens that follow it are assumed to be
 ** encoded in UTF-8.
 **
-** To clear the most recent error for slqite handle "db", sqlite3Error
+** To clear the most recent error for sqlite handle "db", sqlite3Error
 ** should be called with err_code set to SQLITE_OK and zFormat set
 ** to NULL.
 */

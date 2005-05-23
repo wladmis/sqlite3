@@ -313,6 +313,9 @@ end_of_vacuum:
   if( rc==SQLITE_OK ){
     extern int sqlite3RecompileStatements(sqlite3*);
     rc = sqlite3RecompileStatements(db);
+    if( rc!=SQLITE_OK ){
+      sqlite3SetString(pzErrMsg, sqlite3_errmsg(db), (char *)0);
+    }
   }
 #endif /* SQLITE_SSE */
 
