@@ -464,6 +464,9 @@ struct sqlite3 {
   Hash aCollSeq;                /* All collating sequences */
   BusyHandler busyHandler;      /* Busy callback */
   Db aDbStatic[2];              /* Static space for the 2 default backends */
+#ifdef SQLITE_SSE
+  sqlite3_stmt *pFetch;         /* Used by SSE to fetch stored statements */
+#endif
 };
 
 /*

@@ -547,6 +547,10 @@ int sqlite3_close(sqlite3 *db){
   }
 #endif
 
+#ifdef SQLITE_SSE
+  sqlite3_finalize(db->pFetch);
+#endif 
+
   db->magic = SQLITE_MAGIC_ERROR;
   sqliteFree(db);
   return SQLITE_OK;
