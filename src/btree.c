@@ -1219,8 +1219,6 @@ int sqlite3BtreeOpen(
   assert( sizeof(u32)==4 );
   assert( sizeof(u16)==2 );
   assert( sizeof(Pgno)==4 );
-  assert( sizeof(ptr)==sizeof(char*) );
-  assert( sizeof(uptr)==sizeof(ptr) );
 
   pBt = sqliteMalloc( sizeof(*pBt) );
   if( pBt==0 ){
