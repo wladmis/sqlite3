@@ -1578,4 +1578,8 @@ void sqlite3AlterFinishAddColumn(Parse *, Token *);
 void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 const char *sqlite3TestErrorName(int);
 
+#ifdef SQLITE_SSE
+#include "sseInt.h"
+#endif
+
 #endif

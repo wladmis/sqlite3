@@ -47,6 +47,19 @@ static void corruptSchema(InitData *pData, const char *zExtra){
   }
 }
 
+#ifndef SQLITE_OMIT_UTF16
+/* 
+** Return the transient sqlite3_value object used for encoding conversions
+** during SQL compilation.
+*/
+sqlite3_value *sqlite3GetTransientValue(sqlite3 *db){
+  if( !db->pValue ){
+    db->pValue = sqlite3ValueNew();
+  }
+  return db->pValue;
+}
+#endif
+
 /*
 ** This is the callback routine for the code that initializes the
 ** database.  See sqlite3Init() below for additional information.
