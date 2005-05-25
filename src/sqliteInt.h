@@ -1561,6 +1561,7 @@ void sqlite3ColumnDefault(Vdbe *, Table *, int);
 void sqlite3AlterFinishAddColumn(Parse *, Token *);
 void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 const char *sqlite3TestErrorName(int);
+CollSeq *sqlite3GetCollSeq(sqlite3*, CollSeq *, const char *, int);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
