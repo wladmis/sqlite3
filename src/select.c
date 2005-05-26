@@ -2735,7 +2735,14 @@ int sqlite3Select(
     for(i=0; i<pParse->nAgg; i++){
       FuncDef *pFunc;
       if( (pFunc = pParse->aAgg[i].pFunc)!=0 && pFunc->xFinalize!=0 ){
-        sqlite3VdbeOp3(v, OP_AggInit, 0, i, (char*)pFunc, P3_FUNCDEF);
+        int nExpr = 0;
+#ifdef SQLITE_SSE
+        Expr *pAggExpr = pParse->aAgg[i].pExpr;
+        if( pAggExpr && pAggExpr->pList ){
+          nExpr = pAggExpr->pList->nExpr;
+        }
+#endif
+        sqlite3VdbeOp3(v, OP_AggInit, nExpr, i, (char*)pFunc, P3_FUNCDEF);
       }
     }
     if( pGroupBy ){
