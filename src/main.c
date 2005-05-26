@@ -131,6 +131,10 @@ int sqlite3_close(sqlite3 *db){
     return SQLITE_MISUSE;
   }
 
+#ifdef SQLITE_SSE
+  sqlite3_finalize(db->pFetch);
+#endif 
+
   /* If there are any outstanding VMs, return SQLITE_BUSY. */
   if( db->pVdbe ){
     sqlite3Error(db, SQLITE_BUSY, 
@@ -199,10 +203,6 @@ int sqlite3_close(sqlite3 *db){
     sqlite3OsLeaveMutex();
   }
 #endif
-
-#ifdef SQLITE_SSE
-  sqlite3_finalize(db->pFetch);
-#endif 
 
   db->magic = SQLITE_MAGIC_ERROR;
   sqliteFree(db);
