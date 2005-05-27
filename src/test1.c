@@ -2407,6 +2407,7 @@ static int test_stmt_int(
   return TCL_OK;
 }
 
+#ifndef SQLITE_OMIT_DISKIO
 /*
 ** Usage:  sqlite3OsOpenReadWrite <filename>
 */
@@ -2566,6 +2567,7 @@ static int test_sqlite3OsTempFileName(
   Tcl_AppendResult(interp, zFile, 0);
   return TCL_OK;
 }
+#endif
 
 /*
 ** Usage:  sqlite_set_magic  DB  MAGIC-NUMBER
@@ -3049,6 +3051,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_global_recover",    test_global_recover, 0   },
 
      /* Functions from os.h */
+#ifndef SQLITE_OMIT_DISKIO
      { "sqlite3OsOpenReadWrite",test_sqlite3OsOpenReadWrite, 0 },
      { "sqlite3OsClose",        test_sqlite3OsClose, 0 },
      { "sqlite3OsLock",         test_sqlite3OsLock, 0 },
@@ -3056,6 +3059,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
    
      /* Custom test interfaces */
      { "sqlite3OsUnlock",         test_sqlite3OsUnlock, 0    },
+#endif
 #ifndef SQLITE_OMIT_UTF16
      { "add_test_collate",        test_collate, 0            },
      { "add_test_collate_needed", test_collate_needed, 0     },
