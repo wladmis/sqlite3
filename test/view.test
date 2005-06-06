@@ -440,4 +440,12 @@ do_test view-11.3 {
   }
 } {This this THIS}
 
+# Ticket #1270:  Do not allow parameters in view definitions.
+#
+do_test view-12.1 {
+  catchsql {
+    CREATE VIEW v12 AS SELECT a FROM t1 WHERE b=?
+  }
+} {1 {parameters are not allowed in views}}
+
 finish_test
