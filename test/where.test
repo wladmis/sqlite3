@@ -300,6 +300,16 @@ do_test where-4.4 {
     SELECT 99 WHERE 1
   }
 } {99}
+do_test where-4.5 {
+  execsql {
+    SELECT 99 WHERE 0.1
+  }
+} {99}
+do_test where-4.6 {
+  execsql {
+    SELECT 99 WHERE 0.0
+  }
+} {}
 
 # Verify that IN operators in a WHERE clause are handled correctly.
 # Omit these tests if the build is not capable of sub-queries.

@@ -1639,7 +1639,11 @@ case OP_IfNot: {            /* no-push */
   if( pTos->flags & MEM_Null ){
     c = pOp->p1;
   }else{
+#ifdef SQLITE_OMIT_FLOATING_POINT
     c = sqlite3VdbeIntValue(pTos);
+#else
+    c = sqlite3VdbeRealValue(pTos)!=0.0;
+#endif
     if( pOp->opcode==OP_IfNot ) c = !c;
   }
   Release(pTos);
