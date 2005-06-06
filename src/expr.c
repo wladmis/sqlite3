@@ -825,6 +825,12 @@ static int lookupName(
             pExpr->iColumn = j==pTab->iPKey ? -1 : j;
             pExpr->affinity = pTab->aCol[j].affinity;
             pExpr->pColl = pTab->aCol[j].pColl;
+            if( pItem->jointype & JT_NATURAL ){
+              /* If this match occurred in the left table of a natural join,
+              ** then skip the right table to avoid a duplicate match */
+              pItem++;
+              i++;
+            }
             break;
           }
         }
