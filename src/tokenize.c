@@ -344,7 +344,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   pEngine = sqlite3ParserAlloc((void*(*)(int))sqlite3MallocX);
   if( pEngine==0 ){
     sqlite3SetString(pzErrMsg, "out of memory", (char*)0);
-    return 1;
+    return SQLITE_NOMEM;
   }
   assert( pParse->sLastToken.dyn==0 );
   assert( pParse->pNewTable==0 );
