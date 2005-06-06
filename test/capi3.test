@@ -853,4 +853,12 @@ if {[llength [info commands sqlite3_sleep]]>0} {
   } {1}
 }
 
+# Ticket #1219:  Make sure binding APIs can handle a NULL pointer.
+#
+do_test capi3-14.1 {
+  set rc [catch {sqlite3_bind_text 0 1 hello 5} msg]
+  lappend rc $msg
+} {1 SQLITE_MISUSE}
+
+
 finish_test
