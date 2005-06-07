@@ -306,17 +306,5 @@ end_of_vacuum:
   sqlite3ResetInternalSchema(db, 0);
 #endif
 
-#ifdef SQLITE_SSE
-  /* If the SSE extension is compiled in, recompile all statements
-  ** in the sqlite_statements table after a successful VACUUM
-  */
-  if( rc==SQLITE_OK ){
-    rc = sqlite3RecompileStatements(db);
-    if( rc!=SQLITE_OK ){
-      sqlite3SetString(pzErrMsg, sqlite3_errmsg(db), (char *)0);
-    }
-  }
-#endif /* SQLITE_SSE */
-
   return rc;
 }
