@@ -1141,7 +1141,7 @@ struct AuthContext {
 };
 
 /*
-** Bitfield flags for P2 value in OP_PutIntKey and OP_Delete
+** Bitfield flags for P2 value in OP_Insert and OP_Delete
 */
 #define OPFLAG_NCHANGE   1    /* Set to update db->nChange */
 #define OPFLAG_LASTROWID 2    /* Set to update db->lastRowid */

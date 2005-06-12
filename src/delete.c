@@ -239,7 +239,7 @@ void sqlite3DeleteFrom(
 
     /* Remember the rowid of every item to be deleted.
     */
-    sqlite3VdbeAddOp(v, OP_Recno, iCur, 0);
+    sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
     sqlite3VdbeAddOp(v, OP_ListWrite, 0, 0);
     if( db->flags & SQLITE_CountRows ){
       sqlite3VdbeAddOp(v, OP_AddImm, 1, 0);
@@ -273,9 +273,9 @@ void sqlite3DeleteFrom(
         sqlite3OpenTableForReading(v, iCur, pTab);
       }
       sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
-      sqlite3VdbeAddOp(v, OP_Recno, iCur, 0);
+      sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
       sqlite3VdbeAddOp(v, OP_RowData, iCur, 0);
-      sqlite3VdbeAddOp(v, OP_PutIntKey, oldIdx, 0);
+      sqlite3VdbeAddOp(v, OP_Insert, oldIdx, 0);
       if( !isView ){
         sqlite3VdbeAddOp(v, OP_Close, iCur, 0);
       }
@@ -432,7 +432,7 @@ void sqlite3GenerateIndexKey(
   int j;
   Table *pTab = pIdx->pTable;
 
-  sqlite3VdbeAddOp(v, OP_Recno, iCur, 0);
+  sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
   for(j=0; j<pIdx->nColumn; j++){
     int idx = pIdx->aiColumn[j];
     if( idx==pTab->iPKey ){
