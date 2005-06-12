@@ -61,6 +61,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Jun-13} {Version 3.2.2} {
+  This release includes numerous minor bug fixes, speed improvements,
+  and code size reductions.  There is no reason to upgrade unless you
+  are having problems or unless you just want to.
+}
+
 newsitem {2005-Mar-29} {Version 3.2.1} {
   This release fixes a memory allocation problem in the new
   <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>
