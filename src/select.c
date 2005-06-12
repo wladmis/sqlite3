@@ -1690,7 +1690,7 @@ static int multiSelect(
       iCont = sqlite3VdbeMakeLabel(v);
       sqlite3VdbeAddOp(v, OP_Rewind, tab1, iBreak);
       computeLimitRegisters(pParse, p);
-      iStart = sqlite3VdbeAddOp(v, OP_FullKey, tab1, 0);
+      iStart = sqlite3VdbeAddOp(v, OP_RowKey, tab1, 0);
       sqlite3VdbeAddOp(v, OP_NotFound, tab2, iCont);
       rc = selectInnerLoop(pParse, p, p->pEList, tab1, p->pEList->nExpr,
                              p->pOrderBy, -1, eDest, iParm, 
