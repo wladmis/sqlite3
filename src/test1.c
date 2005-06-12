@@ -63,7 +63,7 @@ const char *sqlite3TestErrorName(int rc){
 ** Convert an sqlite3_stmt* into an sqlite3*.  This depends on the
 ** fact that the sqlite3* is the first field in the Vdbe structure.
 */
-#define StmtToDb(X)   ((X)?*(sqlite3**)(X):0)
+#define StmtToDb(X)   sqlite3_db_handle(X)
 
 /*
 ** Check a return value to make sure it agrees with the results
