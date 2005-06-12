@@ -1111,7 +1111,7 @@ api {} {
 api {} {
   int sqlite3_expired(sqlite3_stmt*);
 } {
- Return TRUE (non-zero) of the statement supplied as an argument needs
+ Return TRUE (non-zero) if the statement supplied as an argument needs
  to be recompiled.  A statement needs to be recompiled whenever the
  execution environment changes in a way that would alter the program
  that sqlite3_prepare() generates.  For example, if new functions or
