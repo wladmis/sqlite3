@@ -745,7 +745,7 @@ void sqlite3StartTable(
   ** so that INSERT can find the table easily.
   */
 #ifndef SQLITE_OMIT_AUTOINCREMENT
-  if( strcmp(zName, "sqlite_sequence")==0 ){
+  if( !pParse->nested && strcmp(zName, "sqlite_sequence")==0 ){
     db->aDb[iDb].pSeqTab = pTable;
   }
 #endif
