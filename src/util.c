@@ -372,8 +372,8 @@ void sqlite3SetString(char **pz, ...){
     zResult += strlen(zResult);
   }
   va_end(ap);
-#ifdef SQLITE_DEBUG
-#if SQLITE_DEBUG>1
+#ifdef SQLITE_MEMDEBUG
+#if SQLITE_MEMDEBUG>1
   fprintf(stderr,"string at 0x%x is %s\n", (int)*pz, *pz);
 #endif
 #endif
