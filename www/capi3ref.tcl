@@ -846,6 +846,12 @@ int sqlite3_open16(
  Whether or not an error occurs when it is opened, resources associated
  with the sqlite3* handle should be released by passing it to
  sqlite3_close() when it is no longer required.
+
+ The returned sqlite3* can only be used in the same thread in which it
+ was created.  It is an error to call sqlite3_open() in one thread then
+ pass the resulting database handle off to another thread to use.  This
+ restriction is due to goofy design decisions (bugs?) in the way some
+ threading implementations interact with file locks.
 }
 
 api {} {
@@ -1048,8 +1054,8 @@ int sqlite3_step(sqlite3_stmt*);
  SQLITE_MISUSE means that the this routine was called inappropriately.
  Perhaps it was called on a virtual machine that had already been
  finalized or on one that had previously returned SQLITE_ERROR or
- SQLITE_DONE.  Or it could be the case the the same database connection
- is being used simultaneously by two or more threads.
+ SQLITE_DONE.  Or it could be the case that a database connection
+ is being used by a different thread than the one it was created it.
 }
 
 api {} {
