@@ -1000,7 +1000,7 @@ case OP_Concat: {           /* same as TK_CONCAT */
     pTerm = &pTos[1-nField];
     for(i=j=0; i<nField; i++, pTerm++){
       int n = pTerm->n;
-      assert( pTerm->flags & MEM_Str );
+      assert( pTerm->flags & (MEM_Str|MEM_Blob) );
       memcpy(&zNew[j], pTerm->z, n);
       j += n;
     }
