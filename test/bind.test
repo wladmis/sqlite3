@@ -104,13 +104,13 @@ ifcapable {tclvar} {
     execsql {
       DELETE FROM t1;
     }
-    set VM [sqlite3_prepare $DB {INSERT INTO t1 VALUES($one,$::two,${x{y}z})}\
+    set VM [sqlite3_prepare $DB {INSERT INTO t1 VALUES($one,$::two,$x(-z-))}\
             -1 TX]
     set TX
   } {}
   set v1 {$one}
   set v2 {$::two}
-  set v3 {${x{y}z}}
+  set v3 {$x(-z-)}
 }
 ifcapable {!tclvar} {
   do_test bind-2.1 {
