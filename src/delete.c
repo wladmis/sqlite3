@@ -442,6 +442,6 @@ void sqlite3GenerateIndexKey(
       sqlite3ColumnDefault(v, pTab, idx);
     }
   }
-  sqlite3VdbeAddOp(v, OP_MakeRecord, pIdx->nColumn, (1<<24));
+  sqlite3VdbeAddOp(v, OP_MakeIdxRec, pIdx->nColumn, 0);
   sqlite3IndexAffinityStr(v, pIdx);
 }
