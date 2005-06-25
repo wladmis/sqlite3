@@ -1099,7 +1099,7 @@ all arguments are NULL then NULL is returned.  There must be at least
 <a href="capi3ref.html#sqlite3_create_function">sqlite3_create_function()</a> 
 interface can
 be used to override this function and thereby change the operation
-of the <a href="#glob">GLOB</a> operator.</td>
+of the <a href="#globFunc">GLOB</a> operator.</td>
 </tr>
 
 <tr>

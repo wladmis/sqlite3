@@ -1369,7 +1369,7 @@ void sqlite3StartTable(Parse*,Token*,Token*,Token*,int,int);
 void sqlite3AddColumn(Parse*,Token*);
 void sqlite3AddNotNull(Parse*, int);
 void sqlite3AddPrimaryKey(Parse*, ExprList*, int, int);
-void sqlite3AddColumnType(Parse*,Token*,Token*);
+void sqlite3AddColumnType(Parse*,Token*);
 void sqlite3AddDefaultValue(Parse*,Expr*);
 void sqlite3AddCollateType(Parse*, const char*, int);
 void sqlite3EndTable(Parse*,Token*,Token*,Select*);
@@ -1508,7 +1508,7 @@ int sqlite3FixSelect(DbFixer*, Select*);
 int sqlite3FixExpr(DbFixer*, Expr*);
 int sqlite3FixExprList(DbFixer*, ExprList*);
 int sqlite3FixTriggerStep(DbFixer*, TriggerStep*);
-double sqlite3AtoF(const char *z, const char **);
+int sqlite3AtoF(const char *z, double*);
 char *sqlite3_snprintf(int,char*,const char*,...);
 int sqlite3GetInt32(const char *, int*);
 int sqlite3FitsIn64Bits(const char *);
@@ -1563,6 +1563,7 @@ void sqlite3AlterFinishAddColumn(Parse *, Token *);
 void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 const char *sqlite3TestErrorName(int);
 CollSeq *sqlite3GetCollSeq(sqlite3*, CollSeq *, const char *, int);
+char sqlite3AffinityType(const Token*);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
