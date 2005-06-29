@@ -268,6 +268,7 @@ void sqlite3FreeX(void *p){
 */
 void *sqlite3Malloc(int n){
   void *p;
+  if( n==0 ) return 0;
   if( (p = malloc(n))==0 ){
     if( n>0 ) sqlite3_malloc_failed++;
   }else{
