@@ -283,6 +283,7 @@ void *sqlite3Malloc(int n){
 */
 void *sqlite3MallocRaw(int n){
   void *p;
+  if( n==0 ) return 0;
   if( (p = malloc(n))==0 ){
     if( n>0 ) sqlite3_malloc_failed++;
   }
