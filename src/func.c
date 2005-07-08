@@ -309,7 +309,15 @@ struct compareInfo {
   u8 noCase;
 };
 static const struct compareInfo globInfo = { '*', '?', '[', 0 };
-static const struct compareInfo likeInfo = { '%', '_',   0, 1 };
+#ifndef SQLITE_CASE_SENSITIVE_LIKE
+  /* The correct SQL-92 behavior is for the LIKE operator to ignore
+  ** case.  Thus  'a' LIKE 'A' would be true. */
+  static const struct compareInfo likeInfo = { '%', '_',   0, 1 };
+#else
+  /* If SQLITE_CASE_SENSITIVE_LIKE is defined, then the LIKE operator
+  ** is case sensitive causing 'a' LIKE 'A' to be false */
+  static const struct compareInfo likeInfo = { '%', '_',   0, 0 };
+#endif
 
 /*
 ** X is a pointer to the first byte of a UTF-8 character.  Increment
