@@ -507,7 +507,7 @@ static void codeEqualityTerm(
 }
 
 /*
-** The number of bits in a Bitmask
+** The number of bits in a Bitmask.  "BMS" means "BitMask Size".
 */
 #define BMS  (sizeof(Bitmask)*8-1)
 

@@ -1036,7 +1036,7 @@ struct Select {
   Expr *pLimit;          /* LIMIT expression. NULL means not used. */
   Expr *pOffset;         /* OFFSET expression. NULL means not used. */
   int iLimit, iOffset;   /* Memory registers holding LIMIT & OFFSET counters */
-  IdList **ppOpenTemp;   /* OP_OpenTemp addresses used by multi-selects */
+  IdList **ppOpenVirtual;/* OP_OpenVirtual addresses used by multi-selects */
   u8 isResolved;         /* True once sqlite3SelectResolve() has run. */
   u8 isAgg;              /* True if this is an aggregate query */
 };
