@@ -1565,6 +1565,7 @@ void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 const char *sqlite3TestErrorName(int);
 CollSeq *sqlite3GetCollSeq(sqlite3*, CollSeq *, const char *, int);
 char sqlite3AffinityType(const Token*);
+void sqlite3Analyze(Parse*, Token*, Token*);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
