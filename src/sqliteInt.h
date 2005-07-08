@@ -838,12 +838,13 @@ struct Expr {
 /*
 ** The following are the meanings of bits in the Expr.flags field.
 */
-#define EP_FromJoin     0x0001  /* Originated in ON or USING clause of a join */
-#define EP_Agg          0x0002  /* Contains one or more aggregate functions */
-#define EP_Resolved     0x0004  /* IDs have been resolved to COLUMNs */
-#define EP_Error        0x0008  /* Expression contains one or more errors */
-#define EP_Not          0x0010  /* Operator preceeded by NOT */
-#define EP_VarSelect    0x0020  /* pSelect is correlated, not constant */
+#define EP_FromJoin     0x01  /* Originated in ON or USING clause of a join */
+#define EP_Agg          0x02  /* Contains one or more aggregate functions */
+#define EP_Resolved     0x04  /* IDs have been resolved to COLUMNs */
+#define EP_Error        0x08  /* Expression contains one or more errors */
+#define EP_Not          0x10  /* Operator preceeded by NOT */
+#define EP_VarSelect    0x20  /* pSelect is correlated, not constant */
+#define EP_OptOnly      0x40  /* A constraint used by the optimizer only */
 
 /*
 ** These macros can be used to test, set, or clear bits in the 
