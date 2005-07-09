@@ -1002,10 +1002,9 @@ int sqlite3_value_type(sqlite3_value*);
 void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
 
 /*
-** The pUserData parameter to the sqlite3_create_function() and
-** sqlite3_create_aggregate() routines used to register user functions
-** is available to the implementation of the function using this
-** call.
+** The pUserData parameter to the sqlite3_create_function()
+** routine used to register user functions is available to
+** the implementation of the function using this call.
 */
 void *sqlite3_user_data(sqlite3_context*);
 
