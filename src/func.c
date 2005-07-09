@@ -194,7 +194,7 @@ static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   }
   if( SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
   r = sqlite3_value_double(argv[0]);
-  sprintf(zBuf,"%.*f",n,r);
+  sqlite3_snprintf(sizeof(zBuf),zBuf,"%.*f",n,r);
   sqlite3_result_text(context, zBuf, -1, SQLITE_TRANSIENT);
 }
 
