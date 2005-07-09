@@ -1606,8 +1606,6 @@ static int newDatabase(Btree *pBt){
 */
 int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag){
   int rc = SQLITE_OK;
-  int busy = 0;
-  BusyHandler *pH;
 
   /* If the btree is already in a write-transaction, or it
   ** is already in a read-transaction and a read-transaction
@@ -1641,9 +1639,7 @@ int sqlite3BtreeBeginTrans(Btree *pBt, int wrflag){
       unlockBtreeIfUnused(pBt);
     }
   }while( rc==SQLITE_BUSY && pBt->inTrans==TRANS_NONE &&
-      (pH = pBt->pBusyHandler)!=0 && 
-      pH->xFunc && pH->xFunc(pH->pArg, busy++)
-  );
+          sqlite3InvokeBusyHandler(pBt->pBusyHandler) );
   return rc;
 }
 

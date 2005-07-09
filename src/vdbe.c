@@ -478,6 +478,7 @@ int sqlite3VdbeExec(
     p->popStack = 0;
   }
   p->resOnStack = 0;
+  db->busyHandler.nBusy = 0;
   CHECK_FOR_INTERRUPT;
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
