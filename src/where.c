@@ -968,16 +968,21 @@ WhereInfo *sqlite3WhereBegin(
 #ifdef SQLITE_TEST
     /* Record in the query plan information about the current table
     ** and the index used to access it (if any).  If the table itself
-    ** is not used, its name is followed by '*'.  If no index is used
+    ** is not used, its name is just '{}'.  If no index is used
     ** the index is listed as "{}"
     */
     {
-      int n = strlen(pTab->zName);
+      char *z = pTabItem->zAlias;
+      int n;
+      if( z==0 ) z = pTab->zName;
+      n = strlen(z);
       if( n+nQPlan < sizeof(sqlite3_query_plan)-10 ){
-        strcpy(&sqlite3_query_plan[nQPlan], pTab->zName);
-        nQPlan += n;
-        if( (pLevel->score & 1)==0 ){
-          sqlite3_query_plan[nQPlan++] = '*';
+        if( (pLevel->score & 1)!=0 ){
+          strcpy(&sqlite3_query_plan[nQPlan], "{}");
+          nQPlan += 2;
+        }else{
+          strcpy(&sqlite3_query_plan[nQPlan], z);
+          nQPlan += n;
         }
         sqlite3_query_plan[nQPlan++] = ' ';
       }
