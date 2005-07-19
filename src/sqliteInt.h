@@ -845,7 +845,6 @@ struct Expr {
 #define EP_Error        0x08  /* Expression contains one or more errors */
 #define EP_Not          0x10  /* Operator preceeded by NOT */
 #define EP_VarSelect    0x20  /* pSelect is correlated, not constant */
-#define EP_OptOnly      0x40  /* A constraint used by the optimizer only */
 
 /*
 ** These macros can be used to test, set, or clear bits in the 
