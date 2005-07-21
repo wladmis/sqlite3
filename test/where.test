@@ -78,7 +78,7 @@ do_test where-1.4 {
   count {SELECT x, y FROM t1 WHERE 11=w AND x>2}
 } {3 144 3}
 do_test where-1.4.2 {
-   set sqlite_query_plan
+  set sqlite_query_plan
 } {t1 i1w}
 do_test where-1.5 {
   count {SELECT x, y FROM t1 WHERE y<200 AND w=11 AND x>2}
