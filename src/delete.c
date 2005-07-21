@@ -65,8 +65,8 @@ void sqlite3OpenTableForReading(
   Table *pTab     /* The table to be opened */
 ){
   sqlite3VdbeAddOp(v, OP_Integer, pTab->iDb, 0);
-  sqlite3VdbeAddOp(v, OP_OpenRead, iCur, pTab->tnum);
   VdbeComment((v, "# %s", pTab->zName));
+  sqlite3VdbeAddOp(v, OP_OpenRead, iCur, pTab->tnum);
   sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
 }
 

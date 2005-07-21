@@ -47,7 +47,11 @@ void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
     u8 enc = sqlite3VdbeDb(v)->enc;
     Column *pCol = &pTab->aCol[i];
     sqlite3ValueFromExpr(pCol->pDflt, enc, pCol->affinity, &pValue);
-    sqlite3VdbeChangeP3(v, -1, (const char *)pValue, P3_MEM);
+    if( pValue ){
+      sqlite3VdbeChangeP3(v, -1, (const char *)pValue, P3_MEM);
+    }else{
+      VdbeComment((v, "# %s.%s", pTab->zName, pCol->zName));
+    }
   }
 }
 
