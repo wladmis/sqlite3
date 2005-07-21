@@ -432,4 +432,3 @@ do_test sort-10.3 {
 } {2 1}
 
 finish_test
-

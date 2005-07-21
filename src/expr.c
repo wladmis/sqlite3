@@ -93,6 +93,7 @@ char sqlite3CompareAffinity(Expr *pExpr, char aff2){
     return SQLITE_AFF_NONE;
   }else{
     /* One side is a column, the other is not. Use the columns affinity. */
+    assert( aff1==0 || aff2==0 );
     return (aff1 + aff2);
   }
 }
@@ -488,6 +489,7 @@ SrcList *sqlite3SrcListDup(SrcList *p){
     pNewItem->pSelect = sqlite3SelectDup(pOldItem->pSelect);
     pNewItem->pOn = sqlite3ExprDup(pOldItem->pOn);
     pNewItem->pUsing = sqlite3IdListDup(pOldItem->pUsing);
+    pNewItem->pWIdx = 0;
     pNewItem->colUsed = pOldItem->colUsed;
   }
   return pNew;
