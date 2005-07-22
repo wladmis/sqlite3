@@ -960,7 +960,8 @@ struct WhereLevel {
   int cont;             /* Jump here to continue with the next loop cycle */
   int top;              /* First instruction of interior of the loop */
   int op, p1, p2;       /* Opcode used to terminate the loop */
-  int inOp, inP1, inP2; /* Opcode used to implement an IN operator */
+  int nIn;              /* Number of IN operators constraining this loop */
+  int *aInLoop;         /* Loop terminators for IN operators */
 };
 
 /*
