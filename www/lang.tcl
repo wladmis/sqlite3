@@ -541,9 +541,10 @@ on automatic B-Tree key generation is available
 <a href="autoinc.html">separately</a>.</p>
 
 <p>If the "TEMP" or "TEMPORARY" keyword occurs in between "CREATE"
-and "TABLE" then the table that is created is only visible to the
-process that opened the database and is automatically deleted when
-the database is closed.  Any indices created on a temporary table
+and "TABLE" then the table that is created is only visible
+within that same database connection
+and is automatically deleted when
+the database connection is closed.  Any indices created on a temporary table
 are also temporary.  Temporary tables and indices are stored in a
 separate file distinct from the main database file.</p>
 
