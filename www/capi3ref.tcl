@@ -322,8 +322,8 @@ int sqlite3_column_type(sqlite3_stmt*, int iCol);
 <tr><th>Internal Type</th><th>Requested Type</th><th>Conversion</th></tr>
 <tr><td> NULL    </td><td> INTEGER</td><td>Result is 0</td></tr>
 <tr><td> NULL </td><td>    FLOAT </td><td> Result is 0.0</td></tr>
-<tr><td> NULL </td><td>    TEXT </td><td>  Result is an empty string</td></tr>
-<tr><td> NULL </td><td>    BLOB </td><td>  Result is a zero-length BLOB</td></tr>
+<tr><td> NULL </td><td>    TEXT </td><td>  Result is NULL pointer</td></tr>
+<tr><td> NULL </td><td>    BLOB </td><td>  Result is NULL pointer</td></tr>
 <tr><td> INTEGER </td><td> FLOAT </td><td> Convert from integer to float</td></tr>
 <tr><td> INTEGER </td><td> TEXT </td><td>  ASCII rendering of the integer</td></tr>
 <tr><td> INTEGER </td><td> BLOB </td><td>  Same as for INTEGER->TEXT</td></tr>
