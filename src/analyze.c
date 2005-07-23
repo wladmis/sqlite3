@@ -364,10 +364,7 @@ void sqlite3AnalysisLoad(sqlite3 *db, int iDb){
   /* Clear any prior statistics */
   for(i=sqliteHashFirst(&db->aDb[iDb].idxHash); i; i=sqliteHashNext(i)){
     Index *pIdx = sqliteHashData(i);
-    int j;
-    for(j=0; j<=pIdx->nColumn; j++){
-      pIdx->aiRowEst[j] = j<100 ? 1000*(100-j) : 100;
-    }
+    sqlite3DefaultRowEst(pIdx);
   }
 
   /* Check to make sure the sqlite_stat1 table existss */
