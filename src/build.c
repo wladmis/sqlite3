@@ -2179,12 +2179,12 @@ void sqlite3CreateIndex(
   /* 
   ** Allocate the index structure. 
   */
-  pIndex = sqliteMalloc( sizeof(Index) + strlen(zName) + 1 +
+  pIndex = sqliteMalloc( sizeof(Index) + strlen(zName) + 1 + sizeof(int) +
                         (sizeof(int)*2 + sizeof(CollSeq*))*pList->nExpr );
   if( sqlite3_malloc_failed ) goto exit_create_index;
   pIndex->aiColumn = (int*)&pIndex->keyInfo.aColl[pList->nExpr];
   pIndex->aiRowEst = &pIndex->aiColumn[pList->nExpr];
-  pIndex->zName = (char*)&pIndex->aiRowEst[pList->nExpr];
+  pIndex->zName = (char*)&pIndex->aiRowEst[pList->nExpr+1];
   strcpy(pIndex->zName, zName);
   pIndex->pTable = pTab;
   pIndex->nColumn = pList->nExpr;
