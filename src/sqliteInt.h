@@ -1569,6 +1569,7 @@ CollSeq *sqlite3GetCollSeq(sqlite3*, CollSeq *, const char *, int);
 char sqlite3AffinityType(const Token*);
 void sqlite3Analyze(Parse*, Token*, Token*);
 int sqlite3InvokeBusyHandler(BusyHandler*);
+int sqlite3FindDb(sqlite3*, Token*);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
