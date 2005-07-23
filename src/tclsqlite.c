@@ -472,6 +472,7 @@ static int auth_callback(
     case SQLITE_DETACH            : zCode="SQLITE_DETACH"; break;
     case SQLITE_ALTER_TABLE       : zCode="SQLITE_ALTER_TABLE"; break;
     case SQLITE_REINDEX           : zCode="SQLITE_REINDEX"; break;
+    case SQLITE_ANALYZE           : zCode="SQLITE_ANALYZE"; break;
     default                       : zCode="????"; break;
   }
   Tcl_DStringInit(&str);

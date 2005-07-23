@@ -452,6 +452,7 @@ int sqlite3_set_authorizer(
 #define SQLITE_DETACH               25   /* Database Name   NULL            */
 #define SQLITE_ALTER_TABLE          26   /* Database Name   Table Name      */
 #define SQLITE_REINDEX              27   /* Index Name      NULL            */
+#define SQLITE_ANALYZE              28   /* Table Name      NULL            */
 
 
 /*
