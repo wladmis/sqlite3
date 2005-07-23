@@ -3889,6 +3889,21 @@ case OP_ParseSchema: {        /* no-push */
   break;  
 }
 
+#ifndef SQLITE_OMIT_ANALYZE
+/* Opcode: LoadAnalysis P1 * *
+**
+** Read the sqlite_stat1 table for database P1 and load the content
+** of that table into the internal index hash table.  This will cause
+** the analysis to be used when preparing all subsequent queries.
+*/
+case OP_LoadAnalysis: {        /* no-push */
+  int iDb = pOp->p1;
+  assert( iDb>=0 && iDb<db->nDb );
+  sqlite3AnalysisLoad(db, iDb);
+  break;  
+}
+#endif /* SQLITE_OMIT_ANALYZE */
+
 /* Opcode: DropTable P1 * P3
 **
 ** Remove the internal (in-memory) data structures that describe

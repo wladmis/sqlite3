@@ -294,6 +294,11 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
     sqlite3SafetyOn(db);
     sqliteFree(zSql);
+#ifndef SQLITE_OMIT_ANALYZE
+    if( rc==SQLITE_OK ){
+      sqlite3AnalysisLoad(db, iDb);
+    }
+#endif
     sqlite3BtreeCloseCursor(curMain);
   }
   if( sqlite3_malloc_failed ){
@@ -526,4 +531,3 @@ int sqlite3_prepare16(
   return rc;
 }
 #endif /* SQLITE_OMIT_UTF16 */
-
