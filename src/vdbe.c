@@ -454,7 +454,6 @@ int sqlite3VdbeExec(
   int rc = SQLITE_OK;        /* Value to return */
   sqlite3 *db = p->db;       /* The database */
   Mem *pTos;                 /* Top entry in the operand stack */
-  char zBuf[100];            /* Space to sprintf() an integer */
 #ifdef VDBE_PROFILE
   unsigned long long start;  /* CPU clock count at start of opcode */
   int origPc;                /* Program counter at start of opcode */
@@ -2539,11 +2538,7 @@ case OP_OpenWrite: {       /* no-push */
     p2 = pTos->i;
     assert( (pTos->flags & MEM_Dyn)==0 );
     pTos--;
-    if( p2<2 ){
-      sqlite3SetString(&p->zErrMsg, "root page number less than 2", (char*)0);
-      rc = SQLITE_INTERNAL;
-      break;
-    }
+    assert( p2>=2 );
   }
   assert( i>=0 );
   pCur = allocateCursor(p, i);
@@ -4605,9 +4600,7 @@ case OP_Expire: {        /* no-push */
 /* An other opcode is illegal...
 */
 default: {
-  sqlite3_snprintf(sizeof(zBuf),zBuf,"%d",pOp->opcode);
-  sqlite3SetString(&p->zErrMsg, "unknown opcode ", zBuf, (char*)0);
-  rc = SQLITE_INTERNAL;
+  assert( 0 );
   break;
 }
 
@@ -4644,10 +4637,7 @@ default: {
     if( pTos>=p->aStack ){
       sqlite3VdbeMemSanity(pTos, db->enc);
     }
-    if( pc<-1 || pc>=p->nOp ){
-      sqlite3SetString(&p->zErrMsg, "jump destination out of range", (char*)0);
-      rc = SQLITE_INTERNAL;
-    }
+    assert( pc>=-1 && pc<p->nOp );
 #ifdef SQLITE_DEBUG
     /* Code for tracing the vdbe stack. */
     if( p->trace && pTos>=p->aStack ){
