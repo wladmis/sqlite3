@@ -201,7 +201,6 @@ do_test where2-5.2 {
   }
 } {99 6 10000 10006 sort t1 i1w}
 
-
 integrity_check {where2-99.0}
 
 finish_test
