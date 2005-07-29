@@ -2195,7 +2195,21 @@ do_test auth-4.5 {
 
 } ;# ifcapable view && trigger
 
+# Ticket #1338:  Make sure authentication works in the presence of an AS
+# clause.
+#
+do_test auth-5.1 {
+  proc auth {code arg1 arg2 arg3 arg4} {
+    return SQLITE_OK
+  }
+  execsql {
+    SELECT count(a) AS cnt FROM t4 ORDER BY cnt
+  }
+} {1}
+
+
 rename proc {}
 rename proc_real proc
+
 
 finish_test
