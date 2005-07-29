@@ -1334,7 +1334,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
           ** this code only executes once.  Because for a non-constant
           ** expression we need to rerun this code each time.
           */
-          if( testAddr>=0 && !sqlite3ExprIsConstant(pE2) ){
+          if( testAddr>0 && !sqlite3ExprIsConstant(pE2) ){
             VdbeOp *aOp = sqlite3VdbeGetOp(v, testAddr-1);
             int i;
             for(i=0; i<4; i++){
