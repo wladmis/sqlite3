@@ -1518,7 +1518,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
         TTYPE_DEFERRED, TTYPE_EXCLUSIVE, TTYPE_IMMEDIATE
       };
       int ttype;
-      if( Tcl_GetIndexFromObj(interp, objv[2], TTYPE_strs, "transaction_type",
+      if( Tcl_GetIndexFromObj(interp, objv[2], TTYPE_strs, "transaction type",
                               0, &ttype) ){
         return TCL_ERROR;
       }
