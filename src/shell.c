@@ -1093,6 +1093,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
           }
         }
       }
+      *z = 0;
       if( i+1!=nCol ){
         fprintf(stderr,"%s line %d: expected %d columns of data but found %d\n",
            zFile, lineno, nCol, i+1);
