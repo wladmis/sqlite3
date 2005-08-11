@@ -480,7 +480,7 @@ do_test autoinc-6.2 {
   catchsql {
     INSERT INTO t6 VALUES(NULL,1);
   }
-} {1 {database is full}}
+} {1 {database or disk is full}}
 
 # Allow the AUTOINCREMENT keyword inside the parentheses
 # on a separate PRIMARY KEY designation.

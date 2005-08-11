@@ -29,12 +29,12 @@ do_test diskfull-1.2 {
   catchsql {
     INSERT INTO t1 SELECT * FROM t1;
   }
-} {1 {database is full}}
+} {1 {database or disk is full}}
 do_test diskfull-1.3 {
   set sqlite_diskfull_pending 1
   catchsql {
     DELETE FROM t1;
   }
-} {1 {database is full}}
+} {1 {database or disk is full}}
 
 finish_test
