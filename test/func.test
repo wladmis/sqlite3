@@ -485,6 +485,16 @@ do_test func-16.1 {
   }
 } {X'616263' NULL}
 
+# Correctly handle function error messages that include %.  Ticket #1354
+#
+do_test func-17.1 {
+  proc testfunc1 args {error "Error %d with %s percents %p"}
+  db function testfunc1 ::testfunc1
+  catchsql {
+    SELECT testfunc1(1,2,3);
+  }
+} {1 {Error %d with %s percents %p}}
+
 
 
 finish_test
