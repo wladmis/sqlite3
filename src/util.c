@@ -470,7 +470,8 @@ void sqlite3Dequote(char *z){
   switch( quote ){
     case '\'':  break;
     case '"':   break;
-    case '[':   quote = ']';  break;
+    case '`':   break;                /* For MySQL compatibility */
+    case '[':   quote = ']';  break;  /* For MS SqlServer compatibility */
     default:    return;
   }
   for(i=1, j=0; z[i]; i++){

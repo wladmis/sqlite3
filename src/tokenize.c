@@ -183,7 +183,9 @@ static int getToken(const unsigned char *z, int *tokenType){
       *tokenType = TK_BITNOT;
       return 1;
     }
-    case '\'': case '"': {
+    case '`':
+    case '\'':
+    case '"': {
       int delim = z[0];
       for(i=1; (c=z[i])!=0; i++){
         if( c==delim ){
@@ -565,6 +567,7 @@ int sqlite3_complete(const char *zSql){
         token = tkOTHER;
         break;
       }
+      case '`':     /* Grave-accent quoted symbols used by MySQL */
       case '"':     /* single- and double-quoted strings */
       case '\'': {
         int c = *zSql;
