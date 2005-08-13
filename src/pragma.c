@@ -604,7 +604,7 @@ void sqlite3Pragma(
   if( sqlite3StrICmp(zLeft, "parser_trace")==0 ){
     extern void sqlite3ParserTrace(FILE*, char *);
     if( getBoolean(zRight) ){
-      sqlite3ParserTrace(stdout, "parser: ");
+      sqlite3ParserTrace(stderr, "parser: ");
     }else{
       sqlite3ParserTrace(0, 0);
     }
