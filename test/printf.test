@@ -180,5 +180,30 @@ do_test printf-10.3 {
   sqlite3_mprintf_double {%d %d %f} 1 1 1e300
 } {1 1 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.000000}
 
+# The non-standard '!' flag on a 'g' conversion forces a decimal point
+# and at least one digit on either side of the decimal point.
+#
+do_test printf-11.1 {
+  sqlite3_mprintf_double {%d %d %!g} 1 1 1
+} {1 1 1.0}
+do_test printf-11.2 {
+  sqlite3_mprintf_double {%d %d %!g} 1 1 123
+} {1 1 123.0}
+do_test printf-11.3 {
+  sqlite3_mprintf_double {%d %d %!g} 1 1 12.3
+} {1 1 12.3}
+do_test printf-11.4 {
+  sqlite3_mprintf_double {%d %d %!g} 1 1 0.123
+} {1 1 0.123}
+do_test printf-11.5 {
+  sqlite3_mprintf_double {%d %d %!.15g} 1 1 1
+} {1 1 1.0}
+do_test printf-11.6 {
+  sqlite3_mprintf_double {%d %d %!.15g} 1 1 1e10
+} {1 1 10000000000.0}
+do_test printf-11.7 {
+  sqlite3_mprintf_double {%d %d %!.15g} 1 1 1e300
+} {1 1 1.0e+300}
+
 
 finish_test
