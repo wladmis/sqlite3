@@ -471,6 +471,7 @@ int sqlite3_create_function(
 
   p = sqlite3FindFunction(db, zFunctionName, nName, nArg, enc, 1);
   if( p==0 ) return SQLITE_NOMEM;
+  p->flags = 0;
   p->xFunc = xFunc;
   p->xStep = xStep;
   p->xFinalize = xFinal;
