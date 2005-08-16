@@ -1512,7 +1512,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       pScript = objv[2];
     } else {
       static const char *TTYPE_strs[] = {
-        "deferred",   "exclusive",  "immediate"
+        "deferred",   "exclusive",  "immediate", 0
       };
       enum TTYPE_enum {
         TTYPE_DEFERRED, TTYPE_EXCLUSIVE, TTYPE_IMMEDIATE
