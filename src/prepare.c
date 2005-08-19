@@ -375,7 +375,7 @@ int sqlite3ReadSchema(Parse *pParse){
       rc = sqlite3Init(db, &pParse->zErrMsg);
     }
   }
-  assert( rc!=SQLITE_OK || (db->flags & SQLITE_Initialized)||db->init.busy );
+  assert( rc!=SQLITE_OK || (db->flags & SQLITE_Initialized) || db->init.busy );
   if( rc!=SQLITE_OK ){
     pParse->rc = rc;
     pParse->nErr++;

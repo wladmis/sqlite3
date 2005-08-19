@@ -1198,7 +1198,7 @@ static void codeAllEqualityTerms(
 
   /* Evaluate the equality constraints
   */
-  for(j=0; 1; j++){
+  for(j=0; j<pIdx->nColumn; j++){
     int k = pIdx->aiColumn[j];
     pTerm = findTerm(pWC, iCur, k, notReady, WO_EQ|WO_IN, pIdx);
     if( pTerm==0 ) break;
@@ -1739,7 +1739,7 @@ WhereInfo *sqlite3WhereBegin(
       int nEq = pLevel->nEq;
 
       /* Generate code to evaluate all constraint terms using == or IN
-      ** and level the values of those terms on the stack.
+      ** and leave the values of those terms on the stack.
       */
       codeAllEqualityTerms(pParse, pLevel, &wc, notReady, brk);
 
