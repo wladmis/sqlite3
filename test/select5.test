@@ -49,12 +49,16 @@ do_test select5-1.3 {
 
 # Some error messages associated with aggregates and GROUP BY
 #
-do_test select5-2.1 {
-  set v [catch {execsql {
+do_test select5-2.1.1 {
+  catchsql {
     SELECT y, count(*) FROM t1 GROUP BY z ORDER BY y
-  }} msg]
-  lappend v $msg
+  }
 } {1 {no such column: z}}
+do_test select5-2.1.2 {
+  catchsql {
+    SELECT y, count(*) FROM t1 GROUP BY temp.t1.y ORDER BY y
+  }
+} {1 {no such column: temp.t1.y}}
 do_test select5-2.2 {
   set v [catch {execsql {
     SELECT y, count(*) FROM t1 GROUP BY z(y) ORDER BY y
@@ -153,4 +157,3 @@ do_test select5-5.5 {
 } {1 2 6 4}
 
 finish_test
-

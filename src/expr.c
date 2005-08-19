@@ -390,10 +390,6 @@ void sqlite3DequoteExpr(Expr *p){
   }
   ExprSetProperty(p, EP_Dequoted);
   if( p->token.dyn==0 ){
-    if( p->op==TK_BLOB ){
-      p->token.n--;
-      p->token.z++;
-    }
     sqlite3TokenCopy(&p->token, &p->token);
   }
   sqlite3Dequote((char*)p->token.z);
