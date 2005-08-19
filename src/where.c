@@ -525,6 +525,7 @@ static void exprAnalyze(
   int nPattern;
   int isComplete;
 
+  if( sqlite3_malloc_failed ) return;
   prereqLeft = exprTableUsage(pMaskSet, pExpr->pLeft);
   pTerm->prereqRight = exprTableUsage(pMaskSet, pExpr->pRight);
   pTerm->prereqAll = prereqAll = exprTableUsage(pMaskSet, pExpr);
@@ -1383,6 +1384,9 @@ WhereInfo *sqlite3WhereBegin(
     createMask(&maskSet, pTabList->a[i].iCursor);
   }
   exprAnalyzeAll(pTabList, &maskSet, &wc);
+  if( sqlite3_malloc_failed ){
+    goto whereBeginNoMem;
+  }
 
   /* Chose the best index to use for each table in the FROM clause.
   **
