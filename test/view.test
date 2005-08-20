@@ -448,4 +448,13 @@ do_test view-12.1 {
   }
 } {1 {parameters are not allowed in views}}
 
+do_test view-13.1 {
+  file delete -force test2.db
+  catchsql {
+    ATTACH 'test2.db' AS two;
+    CREATE TABLE two.t2(x,y);
+    CREATE VIEW v13 AS SELECT y FROM two.t2;
+  }
+} {1 {view v13 cannot reference objects in database two}}
+
 finish_test

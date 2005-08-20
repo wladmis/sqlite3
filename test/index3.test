@@ -40,4 +40,19 @@ do_test index3-1.3 {
 } {0 {}}
 integrity_check index3-1.4
 
+# This test corrupts the database file so it must be the last test
+# in the series.
+#
+do_test index3-99.1 {
+  execsql {
+    PRAGMA writable_schema=on;
+    UPDATE sqlite_master SET sql='nonsense';
+  }
+  db close
+  sqlite3 db test.db
+  catchsql {
+    DROP INDEX i1;
+  }
+} {1 {malformed database schema - near "nonsense": syntax error}}
+
 finish_test
