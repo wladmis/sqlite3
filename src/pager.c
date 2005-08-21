@@ -1758,7 +1758,11 @@ int sqlite3pager_pagecount(Pager *pPager){
     pPager->errMask |= PAGER_ERR_DISK;
     return 0;
   }
-  n /= pPager->pageSize;
+  if( n>0 && n<pPager->pageSize ){
+    n = 1;
+  }else{
+    n /= pPager->pageSize;
+  }
   if( !MEMDB && n==PENDING_BYTE/pPager->pageSize ){
     n++;
   }
