@@ -487,6 +487,20 @@ do_test misc5-4.1 {
   }
 } {1 {file is encrypted or is not a database}}
 
+# Ticket #1371.  Allow floating point numbers of the form .N  or N.
+#
+do_test misc5-5.1 {
+  execsql {SELECT .1 }
+} 0.1
+do_test misc5-5.2 {
+  execsql {SELECT 2. }
+} 2.0
+do_test misc5-5.3 {
+  execsql {SELECT 3.e0 }
+} 3.0
+do_test misc5-5.4 {
+  execsql {SELECT .4e+1}
+} 4.0
 
 
 finish_test
