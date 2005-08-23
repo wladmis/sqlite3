@@ -1175,7 +1175,7 @@ the SELECT yields no rows, then the value of the SELECT is NULL.</p>
 
 <p>A CAST expression changes the datatype of the <expr> into the
 type specified by &lt;type&gt;. 
-&lt;type&gt; can be any non-empty type name that if valid
+&lt;type&gt; can be any non-empty type name that is valid
 for the type in a column definition of a CREATE TABLE statement.</p>
 
 <p>Both simple and aggregate functions are supported.  A simple
