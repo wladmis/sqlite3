@@ -1467,8 +1467,16 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     }
 #ifndef SQLITE_OMIT_BLOB_LITERAL
     case TK_BLOB: {
+      int n;
+      const char *z;
       assert( TK_BLOB==OP_HexBlob );
-      sqlite3VdbeOp3(v, op, 0, 0, pExpr->token.z+2, pExpr->token.n-3);
+      n = pExpr->token.n - 3;
+      z = pExpr->token.z + 2;
+      assert( n>=0 );
+      if( n==0 ){
+        z = "";
+      }
+      sqlite3VdbeOp3(v, op, 0, 0, z, n);
       break;
     }
 #endif
