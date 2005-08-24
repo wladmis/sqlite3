@@ -63,6 +63,11 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Aug-24} {Version 3.2.4} {
+  This release fixes a bug in the new optimizer that can lead to segfaults
+  when parsing very complex WHERE clauses.
+}
+
 newsitem {2005-Aug-21} {Version 3.2.3} {
   This release adds the <a href="lang_analyze.html">ANALYZE</a> command,
   the <a href="lang_expr.html">CAST</a> operator, and many
