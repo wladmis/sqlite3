@@ -624,6 +624,8 @@ void sqlite3ExprListDelete(ExprList *pList){
 **
 ** The return value from this routine is 1 to abandon the tree walk
 ** and 0 to continue.
+**
+** NOTICE:  This routine does *not* descend into subqueries.
 */
 static int walkExprList(ExprList *, int (*)(void *, Expr*), void *);
 static int walkExprTree(Expr *pExpr, int (*xFunc)(void*,Expr*), void *pArg){
@@ -696,6 +698,11 @@ static int exprNodeIsConstant(void *pArg, Expr *pExpr){
 #endif
       *((int*)pArg) = 0;
       return 2;
+    case TK_IN:
+      if( pExpr->pSelect ){
+        *((int*)pArg) = 0;
+        return 2;
+      }
     default:
       return 0;
   }
