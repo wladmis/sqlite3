@@ -36,13 +36,13 @@ proc Heading {title} {
 Heading {Precompiled Binaries for Linux}
 
 Product sqlite3-VERSION.bin.gz {
-  A statically linked command-line program for accessing and modifing
+  A command-line program for accessing and modifing
   SQLite databases.
   See <a href="sqlite.html">the documentation</a> for additional information.
 }
 
 Product sqlite-VERSION.bin.gz {
-  A statically linked command-line program for accessing and modifing
+  A command-line program for accessing and modifing
   2 SQLite databases.
   See <a href="sqlite.html">the documentation</a> for additional information.
 }
