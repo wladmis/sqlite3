@@ -66,7 +66,7 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
-newsitem {2005-Aug-28} {Version 3.2.5} {
+newsitem {2005-Aug-27} {Version 3.2.5} {
   This release fixes a bug that causes DELETEs and UPDATEs to fail if
   they attempt to changes more than 40960 rows.
 }
