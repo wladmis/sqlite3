@@ -883,16 +883,6 @@ static void countFinalize(sqlite3_context *context){
 }
 
 /*
-** This function tracks state information for the min() and max()
-** aggregate functions.
-*/
-typedef struct MinMaxCtx MinMaxCtx;
-struct MinMaxCtx {
-  char *z;         /* The best so far */
-  char zBuf[28];   /* Space that can be used for storage */
-};
-
-/*
 ** Routines to implement min() and max() aggregate functions.
 */
 static void minmaxStep(sqlite3_context *context, int argc, sqlite3_value **argv){
