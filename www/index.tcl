@@ -67,8 +67,8 @@ proc newsitem {date title text} {
 }
 
 newsitem {2005-Aug-27} {Version 3.2.5} {
-  This release fixes a bug that causes DELETEs and UPDATEs to fail if
-  they attempt to changes more than 40960 rows.
+  This release fixes a few more lingering bugs in the new code.
+  We expect that this release will be stable and ready for production use.
 }
 
 newsitem {2005-Aug-24} {Version 3.2.4} {
