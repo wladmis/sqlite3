@@ -779,7 +779,7 @@ static int writeMasterJournal(Pager *pPager, const char *zMaster){
   if( rc!=SQLITE_OK ) return rc;
 
   rc = sqlite3OsWrite(&pPager->jfd, aJournalMagic, sizeof(aJournalMagic));
-  pPager->needSync = 1;
+  pPager->needSync = !pPager->noSync;
   return rc;
 }
 
@@ -3343,6 +3343,14 @@ const char *sqlite3pager_dirname(Pager *pPager){
 */
 const char *sqlite3pager_journalname(Pager *pPager){
   return pPager->zJournal;
+}
+
+/*
+** Return true if fsync() calls are disabled for this pager.  Return FALSE
+** if fsync()s are executed normally.
+*/
+int sqlite3pager_nosync(Pager *pPager){
+  return pPager->noSync;
 }
 
 /*

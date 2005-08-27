@@ -1345,6 +1345,15 @@ int sqlite3BtreeSetSafetyLevel(Btree *pBt, int level){
 }
 #endif
 
+/*
+** Return TRUE if the given btree is set to safety level 1.  In other
+** words, return TRUE if no sync() occurs on the disk files.
+*/
+int sqlite3BtreeSyncDisabled(Btree *pBt){
+  assert( pBt && pBt->pPager );
+  return sqlite3pager_nosync(pBt->pPager);
+}
+
 #if !defined(SQLITE_OMIT_PAGER_PRAGMAS) || !defined(SQLITE_OMIT_VACUUM)
 /*
 ** Change the default pages size and the number of reserved bytes per page.
