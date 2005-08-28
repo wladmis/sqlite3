@@ -479,8 +479,11 @@ static int isLikeOrGlob(
   Expr *pRight, *pLeft;
   ExprList *pList;
   int c, cnt;
+  int noCase;
   char wc[3];
-  if( !sqlite3IsLikeFunction(db, pExpr, wc) ){
+  CollSeq *pColl;
+
+  if( !sqlite3IsLikeFunction(db, pExpr, &noCase, wc) ){
     return 0;
   }
   pList = pExpr->pList;
@@ -490,6 +493,14 @@ static int isLikeOrGlob(
   }
   pLeft = pList->a[1].pExpr;
   if( pLeft->op!=TK_COLUMN ){
+    return 0;
+  }
+  pColl = pLeft->pColl;
+  if( pColl==0 ){
+    pColl = db->pDfltColl;
+  }
+  if( (pColl->type!=SQLITE_COLL_BINARY || noCase) &&
+      (pColl->type!=SQLITE_COLL_NOCASE || !noCase) ){
     return 0;
   }
   sqlite3DequoteExpr(pRight);

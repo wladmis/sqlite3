@@ -213,7 +213,8 @@ then only indices associated with that one table are analyzed.</p>
 table named <b>sqlite_stat1</b>.  Future enhancements may create
 additional tables with the same name pattern except with the "1"
 changed to a different digit.  The <b>sqlite_stat1</b> table cannot
-be DROPped, but it all the content can be DELETEd which as the
+be <a href="#droptable">DROP</a>ped,
+but it all the content can be <a href="#delete">DELETE</a>d which has the
 same effect.</p>
 }
 
