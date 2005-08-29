@@ -1698,6 +1698,13 @@ int main(int argc, char **argv){
   }
   data.out = stdout;
 
+#ifdef SQLITE_OMIT_MEMORYDB
+  if( data.zDbFilename==0 ){
+    fprintf(stderr,"%s: no database filename specified\n", argv[0]);
+    exit(1);
+  }
+#endif
+
   /* Go ahead and open the database file if it already exists.  If the
   ** file does not exist, delay opening it.  This prevents empty database
   ** files from being created if a user mistypes the database name argument
