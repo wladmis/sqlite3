@@ -420,8 +420,10 @@ struct sqlite3 {
   } init;
   struct Vdbe *pVdbe;           /* List of active virtual machines */
   int activeVdbeCnt;            /* Number of vdbes currently executing */
-  void (*xTrace)(void*,const char*);     /* Trace function */
-  void *pTraceArg;                       /* Argument to the trace function */
+  void (*xTrace)(void*,const char*);        /* Trace function */
+  void *pTraceArg;                          /* Argument to the trace function */
+  void (*xProfile)(void*,const char*,u64);  /* Profiling function */
+  void *pProfileArg;                        /* Argument to profile function */
   void *pCommitArg;             /* Argument to xCommitCallback() */   
   int (*xCommitCallback)(void*);/* Invoked at every commit. */
   void(*xCollNeeded)(void*,sqlite3*,int eTextRep,const char*);

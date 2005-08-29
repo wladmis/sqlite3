@@ -85,6 +85,7 @@ void sqlite3FinishCoding(Parse *pParse){
       sqlite3VdbeAddOp(v, OP_Goto, 0, pParse->cookieGoto);
     }
 
+#ifndef SQLITE_OMIT_TRACE
     /* Add a No-op that contains the complete text of the compiled SQL
     ** statement as its P3 argument.  This does not change the functionality
     ** of the program. 
@@ -92,6 +93,7 @@ void sqlite3FinishCoding(Parse *pParse){
     ** This is used to implement sqlite3_trace().
     */
     sqlite3VdbeOp3(v, OP_Noop, 0, 0, pParse->zSql, pParse->zTail-pParse->zSql);
+#endif /* SQLITE_OMIT_TRACE */
   }
 
 
