@@ -30,8 +30,8 @@ Features include:
 <li>Supports databases up to 2 terabytes
     (2<sup><small>41</small></sup> bytes) in size.</li>
 <li>Sizes of strings and BLOBs limited only by available memory.</li>
-<li>Small code footprint: less than 30K lines of C code,
-    less than 250KB code space (gcc on i486)</li>
+<li>Small code footprint: less than 250KiB fully configured or less
+    than 150KiB with optional features omitted.</li>
 <li><a href="speed.html">Faster</a> than popular client/server database
     engines for most common operations.</li>
 <li>Simple, easy to use <a href="capi3.html">API</a>.</li>
