@@ -2632,10 +2632,10 @@ int sqlite3Select(
   ** names that have been explicitly specified.
   */
   if( pOrderBy ){
-    for(i=0; i<pOrderBy->nExpr; i++){
-      if( pOrderBy->a[i].zName ){
-        pOrderBy->a[i].pExpr->pColl = 
-            sqlite3LocateCollSeq(pParse, pOrderBy->a[i].zName, -1);
+    struct ExprList_item *pTerm;
+    for(i=0, pTerm=pOrderBy->a; i<pOrderBy->nExpr; i++, pTerm++){
+      if( pTerm->zName ){
+        pTerm->pExpr->pColl = sqlite3LocateCollSeq(pParse, pTerm->zName, -1);
       }
     }
     if( pParse->nErr ){
@@ -2664,27 +2664,17 @@ int sqlite3Select(
 
     assert( pParse->nAgg==0 );
     isAgg = 1;
-    for(i=0; i<pEList->nExpr; i++){
-      if( sqlite3ExprAnalyzeAggregates(&sNC, pEList->a[i].pExpr) ){
-        goto select_end;
-      }
+    if( sqlite3ExprAnalyzeAggList(&sNC, pEList) ){
+      goto select_end;
     }
-    if( pGroupBy ){
-      for(i=0; i<pGroupBy->nExpr; i++){
-        if( sqlite3ExprAnalyzeAggregates(&sNC, pGroupBy->a[i].pExpr) ){
-          goto select_end;
-        }
-      }
+    if( sqlite3ExprAnalyzeAggList(&sNC, pGroupBy) ){
+      goto select_end;
     }
     if( pHaving && sqlite3ExprAnalyzeAggregates(&sNC, pHaving) ){
       goto select_end;
     }
-    if( pOrderBy ){
-      for(i=0; i<pOrderBy->nExpr; i++){
-        if( sqlite3ExprAnalyzeAggregates(&sNC, pOrderBy->a[i].pExpr) ){
-          goto select_end;
-        }
-      }
+    if( sqlite3ExprAnalyzeAggList(&sNC, pOrderBy) ){
+      goto select_end;
     }
   }
 
