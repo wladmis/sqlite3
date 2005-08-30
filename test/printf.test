@@ -219,4 +219,17 @@ do_test printf-12.1 {
   sqlite3_mprintf_double {%d %d %.2000g} 1 1 1.0
 } {1 1 1}
 
+# Floating point boundary cases
+#
+do_test printf-13.1 {
+  sqlite3_mprintf_hexdouble %.20f 4024000000000000
+} {10.00000000000000000000}
+do_test printf-13.2 {
+  sqlite3_mprintf_hexdouble %.20f 4197d78400000000
+} {100000000.00000000000000000000}
+do_test printf-13.3 {
+  sqlite3_mprintf_hexdouble %.20f 4693b8b5b5056e17
+} {100000000000000000000000000000000.00000000000000000000}
+
+
 finish_test
