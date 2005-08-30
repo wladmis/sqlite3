@@ -313,7 +313,7 @@ static void output_c_string(FILE *out, const char *z){
       fputc('\\', out);
       fputc('r', out);
     }else if( !isprint(c) ){
-      fprintf(out, "\\%03o", c);
+      fprintf(out, "\\%03o", c&0xff);
     }else{
       fputc(c, out);
     }
