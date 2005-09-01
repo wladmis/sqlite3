@@ -546,9 +546,12 @@ Select *sqlite3SelectDup(Select *p){
   pNew->pOffset = sqlite3ExprDup(p->pOffset);
   pNew->iLimit = -1;
   pNew->iOffset = -1;
-  pNew->ppOpenVirtual = 0;
   pNew->isResolved = p->isResolved;
   pNew->isAgg = p->isAgg;
+  pNew->pRightmost = 0;
+  pNew->addrOpenVirt[0] = -1;
+  pNew->addrOpenVirt[1] = -1;
+  pNew->addrOpenVirt[2] = -1;
   return pNew;
 }
 #else
