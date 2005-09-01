@@ -185,6 +185,7 @@ proc test_collate {enc lhs rhs} {
   set l [lsearch -exact $::values $lhs]
   set r [lsearch -exact $::values $rhs]
   set res [expr $l - $r]
+  # puts "enc=$enc lhs=$lhs/$l rhs=$rhs/$r res=$res"
   return $res
 }
 

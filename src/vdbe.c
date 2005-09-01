@@ -3004,6 +3004,24 @@ case OP_NotExists: {        /* no-push */
   break;
 }
 
+/* Opcode: Sequence P1 * *
+**
+** Push an integer onto the stack which is the next available
+** sequence number for cursor P1.  The sequence number on the
+** cursor is incremented after the push.
+*/
+case OP_Sequence: {
+  int i = pOp->p1;
+  assert( pTos>=p->aStack );
+  assert( i>=0 && i<p->nCursor );
+  assert( p->apCsr[i]!=0 );
+  pTos++;
+  pTos->i = p->apCsr[i]->seqCount++;
+  pTos->flags = MEM_Int;
+  break;
+}
+
+
 /* Opcode: NewRowid P1 P2 *
 **
 ** Get a new integer record number (a.k.a "rowid") used as the key to a table.
@@ -3448,6 +3466,7 @@ case OP_Last: {        /* no-push */
 */
 case OP_Sort: {        /* no-push */
   sqlite3_sort_count++;
+  sqlite3_search_count--;
   /* Fall through into OP_Rewind */
 }
 /* Opcode: Rewind P1 P2 *

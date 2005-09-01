@@ -1141,6 +1141,7 @@ static int test_collate_func(
   Tcl_Interp *i = pTestCollateInterp;
   int encin = (int)pCtx;
   int res;
+  int n;
 
   sqlite3_value *pVal;
   Tcl_Obj *pX;
@@ -1164,9 +1165,11 @@ static int test_collate_func(
 
   pVal = sqlite3ValueNew();
   sqlite3ValueSetStr(pVal, nA, zA, encin, SQLITE_STATIC);
-  Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),-1));
+  n = sqlite3_value_bytes(pVal);
+  Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),n));
   sqlite3ValueSetStr(pVal, nB, zB, encin, SQLITE_STATIC);
-  Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),-1));
+  n = sqlite3_value_bytes(pVal);
+  Tcl_ListObjAppendElement(i,pX,Tcl_NewStringObj(sqlite3_value_text(pVal),n));
   sqlite3ValueFree(pVal);
 
   Tcl_EvalObjEx(i, pX, 0);
