@@ -813,7 +813,8 @@ static int sortableByRowid(
   assert( pOrderBy!=0 );
   assert( pOrderBy->nExpr>0 );
   p = pOrderBy->a[0].pExpr;
-  if( p->op==TK_COLUMN && p->iTable==base && p->iColumn==-1 ){
+  if( pOrderBy->nExpr==1 && p->op==TK_COLUMN && p->iTable==base
+          && p->iColumn==-1 ){
     *pbRev = pOrderBy->a[0].sortOrder;
     return 1;
   }

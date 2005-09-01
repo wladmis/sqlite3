@@ -447,4 +447,21 @@ do_test sort-11.1 {
   }
 } {3 4}
 
+# Trouble reported on the mailing list.  Check for overly aggressive
+# (which is to say, incorrect) optimization of order-by with a rowid
+# in a join.
+#
+do_test sort-12.1 {
+  execsql {
+    create table a (id integer primary key);
+    create table b (id integer primary key, aId integer, text);
+    insert into a values (1);
+    insert into b values (2, 1, 'xxx');
+    insert into b values (1, 1, 'zzz');
+    insert into b values (3, 1, 'yyy');
+    select a.id, b.id, b.text from a join b on (a.id = b.aId)
+      order by a.id, b.text;
+  }
+} {1 2 xxx 1 3 yyy 1 1 zzz}
+
 finish_test

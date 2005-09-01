@@ -590,22 +590,22 @@ do_test where-6.21 {
   cksort {
     SELECT y FROM t1 ORDER BY rowid, y LIMIT 3;
   }
-} {4 9 16 nosort}
+} {4 9 16 sort}
 do_test where-6.22 {
   cksort {
     SELECT y FROM t1 ORDER BY rowid, y DESC LIMIT 3;
   }
-} {4 9 16 nosort}
+} {4 9 16 sort}
 do_test where-6.23 {
   cksort {
     SELECT y FROM t1 WHERE y>4 ORDER BY rowid, w, x LIMIT 3;
   }
-} {9 16 25 nosort}
+} {9 16 25 sort}
 do_test where-6.24 {
   cksort {
     SELECT y FROM t1 WHERE y>=9 ORDER BY rowid, x DESC, w LIMIT 3;
   }
-} {9 16 25 nosort}
+} {9 16 25 sort}
 do_test where-6.25 {
   cksort {
     SELECT y FROM t1 WHERE y>4 AND y<25 ORDER BY rowid;
@@ -620,7 +620,7 @@ do_test where-6.27 {
   cksort {
     SELECT y FROM t1 WHERE y<=25 ORDER BY _rowid_, w+y;
   }
-} {4 9 16 25 nosort}
+} {4 9 16 25 sort}
 
 
 # Tests for reverse-order sorting.
@@ -782,19 +782,19 @@ do_test where-7.31 {
 } {10201 10000 9801 nosort}
 do_test where-7.32 {
   cksort {
-    SELECT y FROM t1 WHERE y<25 ORDER BY rowid DESC, x
+    SELECT y FROM t1 WHERE y<25 ORDER BY rowid DESC
   }
 } {16 9 4 nosort}
 do_test where-7.33 {
   cksort {
-    SELECT y FROM t1 WHERE y<=25 ORDER BY rowid DESC, x
+    SELECT y FROM t1 WHERE y<=25 ORDER BY rowid DESC
   }
 } {25 16 9 4 nosort}
 do_test where-7.34 {
   cksort {
     SELECT y FROM t1 WHERE y<25 AND y>4 ORDER BY rowid DESC, y DESC
   }
-} {16 9 nosort}
+} {16 9 sort}
 do_test where-7.35 {
   cksort {
     SELECT y FROM t1 WHERE y<25 AND y>=4 ORDER BY rowid DESC
