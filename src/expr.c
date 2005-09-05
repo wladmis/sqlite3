@@ -2078,7 +2078,6 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
   NameContext *pNC = (NameContext *)pArg;
   Parse *pParse = pNC->pParse;
   SrcList *pSrcList = pNC->pSrcList;
-  Expr *pAggExpr;
 
   switch( pExpr->op ){
     case TK_COLUMN: {
@@ -2086,9 +2085,10 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
         if( pExpr->iTable==pSrcList->a[i].iCursor ){
           pAgg = pParse->aAgg;
           for(i=0; i<pParse->nAgg; i++, pAgg++){
+            Expr *pE;
             if( pAgg->isAgg ) continue;
-            if( (pAggExpr = pAgg->pExpr)->iTable==pExpr->iTable
-             && pAggExpr->iColumn==pExpr->iColumn ){
+            pE = pAgg->pExpr;
+            if( pE->iTable==pExpr->iTable && pE->iColumn==pExpr->iColumn ){
               break;
             }
           }

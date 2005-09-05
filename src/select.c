@@ -2167,8 +2167,7 @@ static int simpleMinMaxQuery(Parse *pParse, Select *p, int eDest, int iParm){
   /* If the output is destined for a temporary table, open that table.
   */
   if( eDest==SRT_TempTable ){
-    sqlite3VdbeAddOp(v, OP_OpenVirtual, iParm, 0);
-    sqlite3VdbeAddOp(v, OP_SetNumColumns, iParm, 1);
+    sqlite3VdbeAddOp(v, OP_OpenVirtual, iParm, 1);
   }
 
   /* Generating code to find the min or the max.  Basically all we have
