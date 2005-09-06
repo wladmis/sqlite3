@@ -333,7 +333,7 @@ static int analysisLoader(void *pData, int argc, char **argv, char **azNotUsed){
   const char *z;
 
   assert( argc==2 );
-  if( argv[0]==0 || argv[1]==0 ){
+  if( argv==0 || argv[0]==0 || argv[1]==0 ){
     return 0;
   }
   pIndex = sqlite3FindIndex(pInfo->db, argv[0], pInfo->zDatabase);

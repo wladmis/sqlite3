@@ -45,8 +45,14 @@ do_test analyze-1.4 {
     SELECT count(*) FROM sqlite_master WHERE name='sqlite_stat1'
   }
 } {0}
-do_test analyze-1.5 {
+do_test analyze-1.5.1 {
   catchsql {
+    ANALYZE
+  }
+} {0 {}}
+do_test analyze-1.5.2 {
+  catchsql {
+    PRAGMA empty_result_callbacks=1;
     ANALYZE
   }
 } {0 {}}
