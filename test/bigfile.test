@@ -175,6 +175,11 @@ do_test bigfile-1.16 {
     SELECT md5sum(x) FROM t3;
   }
 } $::MAGIC_SUM
+do_test bigfile-1.17 {
+  execsql {
+    SELECT md5sum(x) FROM t4;
+  }
+} $::MAGIC_SUM
 
 } ;# End of the "if( db command exists )"
 

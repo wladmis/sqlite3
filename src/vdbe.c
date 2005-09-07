@@ -708,6 +708,7 @@ case OP_String: {
 case OP_Null: {
   pTos++;
   pTos->flags = MEM_Null;
+  pTos->n = 0;
   break;
 }
 
