@@ -814,6 +814,7 @@ struct AggInfo {
     int iColumn;             /* Column number within the source table */
     int iSorterColumn;       /* Column number in the sorting index */
     int iMem;                /* Memory location that acts as accumulator */
+    Expr *pExpr;             /* The original expression */
   } *aCol;
   int nColumn;            /* Number of used entries in aCol[] */
   int nColumnAlloc;       /* Number of slots allocated for aCol[] */

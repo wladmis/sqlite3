@@ -2131,6 +2131,7 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
               pCol->iColumn = pExpr->iColumn;
               pCol->iMem = pParse->nMem++;
               pCol->iSorterColumn = -1;
+              pCol->pExpr = pExpr;
               if( pAggInfo->pGroupBy ){
                 int j, n;
                 ExprList *pGB = pAggInfo->pGroupBy;

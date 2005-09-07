@@ -99,7 +99,7 @@ do_test misc4-3.1 {
        UNION SELECT ID, max(Value) FROM Table2 GROUP BY 1
     ORDER BY 1, 2;
   }
-} {{} {} 1 x 1 z}
+} {1 x 1 z}
 } ;# ifcapable compound
 
 # Ticket #1047.  Make sure column types are preserved in subqueries.

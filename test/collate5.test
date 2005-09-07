@@ -252,15 +252,15 @@ do_test collate5-4.0 {
   }
 } {}
 do_test collate5-4.1 {
-  execsql {
+  string tolower [execsql {
     SELECT a, count(*) FROM collate5t1 GROUP BY a;
-  }
+  }]
 } {a 2 b 2}
 do_test collate5-4.2 {
   execsql {
-    SELECT a, b, count(*) FROM collate5t1 GROUP BY a, b;
+    SELECT a, b, count(*) FROM collate5t1 GROUP BY a, b ORDER BY a, b;
   }
-} {a 1 2 b 2 1 B 3 1}
+} {A 1.0 2 b 2 1 B 3 1}
 do_test collate5-4.3 {
   execsql {
     DROP TABLE collate5t1;
