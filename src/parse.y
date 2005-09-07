@@ -93,7 +93,7 @@ struct AttachKey { int type;  Token key; };
 // add them to the parse.h output file.
 //
 %nonassoc END_OF_FILE ILLEGAL SPACE UNCLOSED_STRING COMMENT FUNCTION
-          COLUMN AGG_FUNCTION CONST_FUNC.
+          COLUMN AGG_FUNCTION AGG_COLUMN CONST_FUNC.
 
 // Input is a single SQL command
 input ::= cmdlist.
