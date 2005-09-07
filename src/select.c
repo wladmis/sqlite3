@@ -2431,7 +2431,9 @@ static void finalizeAggFunctions(Parse *pParse, AggInfo *pAggInfo){
   int i;
   struct AggInfo_func *pF;
   for(i=0, pF=pAggInfo->aFunc; i<pAggInfo->nFunc; i++, pF++){
-    sqlite3VdbeAddOp(v, OP_AggFinal, pF->iMem, 0);
+    ExprList *pList = pF->pExpr->pList;
+    sqlite3VdbeOp3(v, OP_AggFinal, pF->iMem, pList ? pList->nExpr : 0,
+                      (void*)pF->pFunc, P3_FUNCDEF);
   }
 }
 
