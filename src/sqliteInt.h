@@ -1131,8 +1131,8 @@ struct Select {
 #define SRT_Callback     4  /* Invoke a callback with each row of result */
 #define SRT_Mem          5  /* Store result in a memory cell */
 #define SRT_Set          6  /* Store non-null results as keys in an index */
-#define SRT_Table        7  /* Store result as data and add automatic rowid */
-#define SRT_VirtualTab   8  /* Create virtual table and store results there */
+#define SRT_Table        7  /* Store result as data with an automatic rowid */
+#define SRT_VirtualTab   8  /* Create virtual table and store like SRT_Table */
 #define SRT_Subroutine   9  /* Call a subroutine to handle results */
 #define SRT_Exists      10  /* Put 0 or 1 in a memory cell */
 
