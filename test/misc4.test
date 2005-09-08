@@ -100,6 +100,13 @@ do_test misc4-3.1 {
     ORDER BY 1, 2;
   }
 } {1 x 1 z}
+do_test misc4-3.2 {
+  catchsql { 
+    SELECT ID, Value FROM Table1
+       UNION SELECT ID, max(Value) FROM Table2 GROUP BY 1, 2
+    ORDER BY 1, 2;
+  }
+} {1 {aggregate functions are not allowed in the GROUP BY clause}}
 } ;# ifcapable compound
 
 # Ticket #1047.  Make sure column types are preserved in subqueries.
