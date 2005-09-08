@@ -118,7 +118,7 @@ do_test select5-4.5 {
   execsql {
     SELECT sum(x) FROM t1 WHERE x>100
   }
-} {0.0}
+} {0}
 
 # Some tests for queries with a GROUP BY clause but no aggregate functions.
 #

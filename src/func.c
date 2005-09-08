@@ -819,6 +819,7 @@ typedef struct SumCtx SumCtx;
 struct SumCtx {
   double sum;     /* Sum of terms */
   int cnt;        /* Number of elements summed */
+  int isFloat;    /* True if there has been any floating point value */
 };
 
 /*
@@ -826,17 +827,26 @@ struct SumCtx {
 */
 static void sumStep(sqlite3_context *context, int argc, sqlite3_value **argv){
   SumCtx *p;
+  int type;
   if( argc<1 ) return;
   p = sqlite3_aggregate_context(context, sizeof(*p));
-  if( p && SQLITE_NULL!=sqlite3_value_type(argv[0]) ){
+  type = sqlite3_value_type(argv[0]);
+  if( p && type!=SQLITE_NULL ){
     p->sum += sqlite3_value_double(argv[0]);
     p->cnt++;
+    if( type==SQLITE_FLOAT ) p->isFloat = 1;
   }
 }
 static void sumFinalize(sqlite3_context *context){
   SumCtx *p;
   p = sqlite3_aggregate_context(context, 0);
-  sqlite3_result_double(context, p ? p->sum : 0.0);
+  if( p==0 ){
+    sqlite3_result_int(context, 0);
+  }else if( p->isFloat ){
+    sqlite3_result_double(context, p->sum);
+  }else{
+    sqlite3_result_int64(context, (i64)p->sum);
+  }
 }
 static void avgFinalize(sqlite3_context *context){
   SumCtx *p;

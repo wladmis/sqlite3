@@ -128,7 +128,7 @@ ifcapable subquery {
         from a, (select key,sum(period) from b group by key) as x
         where a.key=x.key;
     }
-  } {01 data01 01 3.0 +1 data+1 +1 7.0}
+  } {01 data01 01 3 +1 data+1 +1 7}
 
   # This test case tests the same property as misc4-4.1, but it is
   # a bit smaller which makes it easier to work with while debugging.

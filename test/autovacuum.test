@@ -504,7 +504,7 @@ do_test autovacuum-4.1 {
   execsql {
     SELECT sum(a) FROM av1;
   }
-} {5049.0}
+} {5049}
 do_test autovacuum-4.2 {
   catchsql {
     CREATE UNIQUE INDEX av1_i ON av1(a);
@@ -514,7 +514,7 @@ do_test autovacuum-4.3 {
   execsql {
     SELECT sum(a) FROM av1;
   }
-} {5049.0}
+} {5049}
 do_test autovacuum-4.4 {
   execsql {
     COMMIT;
