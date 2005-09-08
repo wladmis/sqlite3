@@ -174,7 +174,7 @@ do_test crash-2.1 {
   execsql { COMMIT }
   set ::sig [signature]
   execsql { SELECT sum(a), sum(b), sum(c) from abc }
-} {499500.0 999000.0 1498500.0}
+} {499500 999000 1498500}
 do_test crash-2.2 {
   expr ([file size test.db] / 1024)>16
 } {1}
