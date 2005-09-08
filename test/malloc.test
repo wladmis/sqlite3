@@ -56,7 +56,6 @@ proc do_malloc_test {tn args} {
 
   set ::go 1
   for {set ::n 1} {$::go} {incr ::n} {
-
     do_test malloc-$tn.$::n {
 
       sqlite_malloc_fail 0

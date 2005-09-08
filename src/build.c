@@ -2496,11 +2496,13 @@ int sqlite3ArrayAllocate(void **ppArray, int szEntry, int initSize){
   int *an = (int*)&ppArray[1];
   if( an[0]>=an[1] ){
     void *pNew;
-    an[1] = an[1]*2 + initSize;
-    pNew = sqliteRealloc(*ppArray, an[1]*szEntry);
+    int newSize;
+    newSize = an[1]*2 + initSize;
+    pNew = sqliteRealloc(*ppArray, newSize*szEntry);
     if( pNew==0 ){
       return -1;
     }
+    an[1] = newSize;
     *ppArray = pNew;
   }
   p = *ppArray;
