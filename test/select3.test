@@ -233,7 +233,7 @@ do_test select3-7.2 {
   execsql {
     SELECT a, sum(b) FROM t2 WHERE b=5;
   }
-} {{} 0}
+} {{} {}}
 
 
 finish_test
