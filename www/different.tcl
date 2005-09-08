@@ -212,8 +212,8 @@ feature extensions {SQL language extensions} {
   <a href="lang_detach.html">DETACH</a> commands that allow multiple
   independent databases to be used together in the same query.
   And SQLite defines APIs that allows the user to add new
-  <a href="capi3ref.html#sqlite3_create_function>SQL functions</a>
-  and <a href="capi3ref.html#sqlite3_create_collation>collating sequences</a>.
+  <a href="capi3ref.html#sqlite3_create_function">SQL functions</a>
+  and <a href="capi3ref.html#sqlite3_create_collation">collating sequences</a>.
 }
 
 

@@ -14,7 +14,7 @@ proc doc {name url desc} {
   regsub -all { +} $name {\&nbsp;} name
   puts "<a href=\"$url\">$name</a></td>"
   puts {<td width="10"></td>}
-  puts {<td align="top" align="left">}
+  puts {<td valign="top" align="left">}
   puts $desc
   puts {</td></tr>}
 }
