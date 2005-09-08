@@ -2920,7 +2920,7 @@ int sqlite3Select(
         sqlite3VdbeAddOp(v, OP_MakeRecord, j, 0);
         sqlite3VdbeAddOp(v, OP_IdxInsert, sAggInfo.sortingIdx, 0);
         sqlite3WhereEnd(pWInfo);
-        sqlite3VdbeAddOp(v, OP_Sort, sAggInfo.sortingIdx, 0);
+        sqlite3VdbeAddOp(v, OP_Sort, sAggInfo.sortingIdx, addrEnd);
         sAggInfo.useSortingIdx = 1;
       }
 
