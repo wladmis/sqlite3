@@ -2481,13 +2481,11 @@ static const unsigned char *fetchPayload(
 ){
   unsigned char *aPayload;
   MemPage *pPage;
-  Btree *pBt;
   u32 nKey;
   int nLocal;
 
   assert( pCur!=0 && pCur->pPage!=0 );
   assert( pCur->isValid );
-  pBt = pCur->pBt;
   pPage = pCur->pPage;
   pageIntegrity(pPage);
   assert( pCur->idx>=0 && pCur->idx<pPage->nCell );
@@ -2585,7 +2583,6 @@ static int isRootPage(MemPage *pPage){
 ** the largest cell index.
 */
 static void moveToParent(BtCursor *pCur){
-  Pgno oldPgno;
   MemPage *pParent;
   MemPage *pPage;
   int idxParent;
@@ -2600,7 +2597,6 @@ static void moveToParent(BtCursor *pCur){
   pageIntegrity(pParent);
   idxParent = pPage->idxParent;
   sqlite3pager_ref(pParent->aData);
-  oldPgno = pPage->pgno;
   releasePage(pPage);
   pCur->pPage = pParent;
   pCur->info.nSize = 0;
@@ -5480,7 +5476,7 @@ static int checkTreePage(
   u8 *data;
   BtCursor cur;
   Btree *pBt;
-  int maxLocal, usableSize;
+  int usableSize;
   char zContext[100];
   char *hit;
 
@@ -5497,7 +5493,6 @@ static int checkTreePage(
        "unable to get the page. error code=%d", rc);
     return 0;
   }
-  maxLocal = pPage->leafData ? pBt->maxLeaf : pBt->maxLocal;
   if( (rc = initPage(pPage, pParent))!=0 ){
     checkAppendMsg(pCheck, zContext, "initPage() returns error code %d", rc);
     releasePage(pPage);

@@ -3658,13 +3658,12 @@ case OP_IdxLT:          /* no-push */
 case OP_IdxGT:          /* no-push */
 case OP_IdxGE: {        /* no-push */
   int i= pOp->p1;
-  BtCursor *pCrsr;
   Cursor *pC;
 
   assert( i>=0 && i<p->nCursor );
   assert( p->apCsr[i]!=0 );
   assert( pTos>=p->aStack );
-  if( (pCrsr = (pC = p->apCsr[i])->pCursor)!=0 ){
+  if( (pC = p->apCsr[i])->pCursor!=0 ){
     int res, rc;
  
     assert( pTos->flags & MEM_Blob );  /* Created using OP_Make*Key */
