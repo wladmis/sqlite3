@@ -2038,6 +2038,7 @@ int sqlite3ExprCompare(Expr *pA, Expr *pB){
     return 0;
   }
   if( pA->op!=pB->op ) return 0;
+  if( (pA->flags & EP_Distinct)!=(pB->flags & EP_Distinct) ) return 0;
   if( !sqlite3ExprCompare(pA->pLeft, pB->pLeft) ) return 0;
   if( !sqlite3ExprCompare(pA->pRight, pB->pRight) ) return 0;
   if( pA->pList ){
@@ -2189,6 +2190,11 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
             pItem->pFunc = sqlite3FindFunction(pParse->db,
                    pExpr->token.z, pExpr->token.n,
                    pExpr->pList ? pExpr->pList->nExpr : 0, enc, 0);
+            if( pExpr->flags & EP_Distinct ){
+              pItem->iDistinct = pParse->nTab++;
+            }else{
+              pItem->iDistinct = -1;
+            }
           }
         }
         /* Make pExpr point to the appropriate pAggInfo->aFunc[] entry
