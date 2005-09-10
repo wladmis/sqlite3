@@ -1499,6 +1499,20 @@ WhereInfo *sqlite3WhereBegin(
     Index *pIx;
     int iIdxCur = pLevel->iIdxCur;
 
+#ifndef SQLITE_OMIT_EXPLAIN
+    if( pParse->explain==2 ){
+      char *zMsg;
+      struct SrcList_item *pItem = &pTabList->a[pLevel->iFrom];
+      zMsg = sqlite3MPrintf("TABLE %s", pItem->zName);
+      if( pItem->zAlias ){
+        zMsg = sqlite3MPrintf("%z AS %s", zMsg, pItem->zAlias);
+      }
+      if( (pIx = pLevel->pIdx)!=0 ){
+        zMsg = sqlite3MPrintf("%z WITH INDEX %s", zMsg, pIx->zName);
+      }
+      sqlite3VdbeOp3(v, OP_Explain, i, pLevel->iFrom, zMsg, P3_DYNAMIC);
+    }
+#endif /* SQLITE_OMIT_EXPLAIN */
     pTabItem = &pTabList->a[pLevel->iFrom];
     pTab = pTabItem->pTab;
     if( pTab->isTransient || pTab->pSelect ) continue;

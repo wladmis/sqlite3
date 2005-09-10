@@ -104,7 +104,8 @@ ecmd ::= SEMI.
 ecmd ::= explain cmdx SEMI.
 explain ::= .           { sqlite3BeginParse(pParse, 0); }
 %ifndef SQLITE_OMIT_EXPLAIN
-explain ::= EXPLAIN.    { sqlite3BeginParse(pParse, 1); }
+explain ::= EXPLAIN.              { sqlite3BeginParse(pParse, 1); }
+explain ::= EXPLAIN QUERY PLAN.   { sqlite3BeginParse(pParse, 2); }
 %endif
 
 ///////////////////// Begin and end transactions. ////////////////////////////
@@ -172,7 +173,7 @@ id(A) ::= ID(X).         {A = X;}
 %fallback ID
   ABORT AFTER ANALYZE ASC ATTACH BEFORE BEGIN CASCADE CAST CONFLICT
   DATABASE DEFERRED DESC DETACH EACH END EXCLUSIVE EXPLAIN FAIL FOR
-  IGNORE IMMEDIATE INITIALLY INSTEAD LIKE_KW MATCH KEY
+  IGNORE IMMEDIATE INITIALLY INSTEAD LIKE_KW MATCH PLAN QUERY KEY
   OF OFFSET PRAGMA RAISE REPLACE RESTRICT ROW STATEMENT
   TEMP TRIGGER VACUUM VIEW
 %ifdef SQLITE_OMIT_COMPOUND_SELECT

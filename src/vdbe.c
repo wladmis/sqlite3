@@ -1645,6 +1645,13 @@ case OP_BitNot: {             /* same as TK_BITNOT, no-push */
 ** Do nothing.  This instruction is often useful as a jump
 ** destination.
 */
+/*
+** The magic Explain opcode are only inserted when explain==2 (which
+** is to say when the EXPLAIN QUERY PLAN syntax is used.)
+** This opcode records information from the optimizer.  It is the
+** the same as a no-op.  This opcodesnever appears in a real VM program.
+*/
+case OP_Explain:
 case OP_Noop: {            /* no-push */
   break;
 }
