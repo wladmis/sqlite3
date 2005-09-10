@@ -388,6 +388,11 @@ do_test table-9.1 {
     CREATE TABLE t6(a,b,a);
   }
 } {1 {duplicate column name: a}}
+do_test table-9.2 {
+  catchsql {
+    CREATE TABLE t6(a varchar(100), b blob, a integer);
+  }
+} {1 {duplicate column name: a}}
 
 # Check the foreign key syntax.
 #

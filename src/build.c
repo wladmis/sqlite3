@@ -940,7 +940,7 @@ void sqlite3AddColumnType(Parse *pParse, Token *pType){
   i = p->nCol-1;
   if( i<0 ) return;
   pCol = &p->aCol[i];
-  assert( pCol->zType==0 );
+  sqliteFree(pCol->zType);
   pCol->zType = sqlite3NameFromToken(pType);
   pCol->affinity = sqlite3AffinityType(pType);
 }
