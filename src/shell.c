@@ -905,11 +905,12 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     if( nArg==1 ){
       run_schema_dump_query(p, 
         "SELECT name, type, sql FROM sqlite_master "
-        "WHERE sql NOT NULL AND type=='table'", 0
+        "WHERE sql NOT NULL AND type=='table' AND name NOT LIKE 'sqlite_%'", 0
       );
       run_schema_dump_query(p, 
         "SELECT name, type, sql FROM sqlite_master "
-        "WHERE sql NOT NULL AND type!='table' AND type!='meta'", 0
+        "WHERE sql NOT NULL AND type!='table' AND type!='meta' "
+        "AND name NOT LIKE 'sqlite_%'", 0
       );
     }else{
       int i;
@@ -1290,7 +1291,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
          "SELECT sql FROM "
          "  (SELECT * FROM sqlite_master UNION ALL"
          "   SELECT * FROM sqlite_temp_master) "
-         "WHERE type!='meta' AND sql NOTNULL "
+         "WHERE type!='meta' AND sql NOTNULL AND name NOT LIKE 'sqlite_%'"
          "ORDER BY substr(type,2,1), name",
          callback, &data, &zErrMsg
       );
@@ -1334,7 +1335,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     if( nArg==1 ){
       rc = sqlite3_get_table(p->db,
         "SELECT name FROM sqlite_master "
-        "WHERE type IN ('table','view') "
+        "WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'"
         "UNION ALL "
         "SELECT name FROM sqlite_temp_master "
         "WHERE type IN ('table','view') "

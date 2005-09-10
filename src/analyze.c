@@ -88,8 +88,8 @@ static void analyzeOneTable(
   int addr;        /* The address of an instruction */
 
   v = sqlite3GetVdbe(pParse);
-  if( pTab==0 || pTab->pIndex==0 || pTab->pIndex->pNext==0 ){
-    /* Do no analysis for tables with fewer than 2 indices */
+  if( pTab==0 || pTab->pIndex==0 ){
+    /* Do no analysis for tables that have no indices */
     return;
   }
 
