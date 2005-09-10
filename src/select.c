@@ -73,6 +73,7 @@ Select *sqlite3SelectNew(
 ** in terms of the following bit values:
 **
 **     JT_INNER
+**     JT_CROSS
 **     JT_OUTER
 **     JT_NATURAL
 **     JT_LEFT
@@ -98,7 +99,7 @@ int sqlite3JoinType(Parse *pParse, Token *pA, Token *pB, Token *pC){
     { "full",    4, JT_LEFT|JT_RIGHT|JT_OUTER },
     { "outer",   5, JT_OUTER },
     { "inner",   5, JT_INNER },
-    { "cross",   5, JT_INNER },
+    { "cross",   5, JT_INNER|JT_CROSS },
   };
   int i, j;
   apAll[0] = pA;
