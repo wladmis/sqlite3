@@ -1352,10 +1352,19 @@ UTF-8 strings.</td>
 </table>
 
 <p>
-The following aggregate functions are available by default.  Additional
+The aggregate functions shown below are available by default.  Additional
 aggregate functions written in C may be added using the 
 <a href="capi3ref.html#sqlite3_create_function">sqlite3_create_function()</a>
 API.</p>
+
+<p>
+In any aggregate function that takes a single argument, that argument
+can be preceeded by the keyword DISTINCT.  In such cases, duplicate
+elements are filtered before being passed into the aggregate function.
+For example, the function "count(distinct X)" will return the number
+of distinct values of column X instead of the total number of non-null
+values in column X.
+</p>
 
 <table border=0 cellpadding=10>
 <tr>

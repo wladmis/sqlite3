@@ -56,11 +56,6 @@ feature {Nested transactions} {
   The current implementation only allows a single active transaction.
 }
 
-feature {The COUNT(DISTINCT X) function} {
-  You can accomplish the same thing using a subquery, like this:<br />
-  &nbsp;&nbsp;SELECT count(x) FROM (SELECT DISTINCT x FROM tbl);
-}
-
 feature {RIGHT and FULL OUTER JOIN} {
   LEFT OUTER JOIN is implemented, but not RIGHT OUTER JOIN or
   FULL OUTER JOIN.

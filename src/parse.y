@@ -665,8 +665,6 @@ expr(A) ::= ID(X) LP distinct(D) exprlist(Y) RP(E). {
   A = sqlite3ExprFunction(Y, &X);
   sqlite3ExprSpan(A,&X,&E);
   if( D ){
-    sqlite3ErrorMsg(pParse, "DISTINCT in an aggregate function "
-        "is not currently supported");
     A->flags |= EP_Distinct;
   }
 }
