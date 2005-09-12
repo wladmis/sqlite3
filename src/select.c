@@ -2490,7 +2490,7 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
     if( pF->iDistinct>=0 ){
       addrNext = sqlite3VdbeMakeLabel(v);
       assert( nArg==1 );
-      codeDistinct(v, pF->iDistinct, addrNext, 1, 1);
+      codeDistinct(v, pF->iDistinct, addrNext, 1, 2);
     }
     if( pF->pFunc->needCollSeq ){
       CollSeq *pColl = 0;
