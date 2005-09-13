@@ -17,6 +17,17 @@
 #define _SQLITEINT_H_
 
 /*
+** Many people are failing to set -DNDEBUG=1 when compiling SQLite.
+** Setting NDEBUG makes the code smaller and run slower.  So the following
+** lines are added to automatically set NDEBUG unless the -DSQLITE_DEBUG=1
+** option is set.  Thus NDEBUG becomes an opt-in rather than an opt-out
+** feature.
+*/
+#if !defined(NDEBUG) && defined(SQLITE_DEBUG)
+# define NDEBUG 1
+#endif
+
+/*
 ** These #defines should enable >2GB file support on Posix if the
 ** underlying operating system supports it.  If the OS lacks
 ** large file support, or if the OS is windows, these should be no-ops.
