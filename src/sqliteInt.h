@@ -18,7 +18,7 @@
 
 /*
 ** Many people are failing to set -DNDEBUG=1 when compiling SQLite.
-** Setting NDEBUG makes the code smaller and run slower.  So the following
+** Setting NDEBUG makes the code smaller and run faster.  So the following
 ** lines are added to automatically set NDEBUG unless the -DSQLITE_DEBUG=1
 ** option is set.  Thus NDEBUG becomes an opt-in rather than an opt-out
 ** feature.
