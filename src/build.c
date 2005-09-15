@@ -1015,7 +1015,9 @@ void sqlite3AddPrimaryKey(
           break;
         }
       }
-      if( iCol<pTab->nCol ) pTab->aCol[iCol].isPrimKey = 1;
+      if( iCol<pTab->nCol ){
+        pTab->aCol[iCol].isPrimKey = i<255 ? i+1 : 255;
+      }
     }
     if( pList->nExpr>1 ) iCol = -1;
   }
