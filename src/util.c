@@ -367,6 +367,20 @@ char *sqlite3StrNDup(const char *z, int n){
 #endif /* !defined(SQLITE_MEMDEBUG) */
 
 /*
+** Reallocate a buffer to a different size.  This is similar to
+** sqliteRealloc() except that if the allocation fails the buffer
+** is freed.
+*/
+void sqlite3ReallocOrFree(void **ppBuf, int newSize){
+  void *pNew = sqliteRealloc(*ppBuf, newSize);
+  if( pNew ){
+    *ppBuf = pNew;
+  }else{
+    sqliteFree(*ppBuf);
+  }
+}
+
+/*
 ** Create a string from the 2nd and subsequent arguments (up to the
 ** first NULL argument), store the string in memory obtained from
 ** sqliteMalloc() and make the pointer indicated by the 1st argument

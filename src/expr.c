@@ -355,7 +355,7 @@ void sqlite3ExprAssignVarNumber(Parse *pParse, Expr *pExpr){
       pExpr->iTable = ++pParse->nVar;
       if( pParse->nVarExpr>=pParse->nVarExprAlloc-1 ){
         pParse->nVarExprAlloc += pParse->nVarExprAlloc + 10;
-        pParse->apVarExpr = sqliteRealloc(pParse->apVarExpr,
+        sqlite3ReallocOrFree((void**)&pParse->apVarExpr,
                        pParse->nVarExprAlloc*sizeof(pParse->apVarExpr[0]) );
       }
       if( !sqlite3_malloc_failed ){
@@ -1291,7 +1291,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
     int mem = pParse->nMem++;
     sqlite3VdbeAddOp(v, OP_MemLoad, mem, 0);
     testAddr = sqlite3VdbeAddOp(v, OP_If, 0, 0);
-    assert( testAddr>0 );
+    assert( testAddr>0 || sqlite3_malloc_failed );
     sqlite3VdbeAddOp(v, OP_Integer, 1, 0);
     sqlite3VdbeAddOp(v, OP_MemStore, mem, 1);
   }

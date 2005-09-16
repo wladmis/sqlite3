@@ -1400,6 +1400,7 @@ void sqlite3RealToSortable(double r, char *);
 # define sqlite3CheckMemory(a,b)
 # define sqlite3MallocX sqlite3Malloc
 #endif
+void sqlite3ReallocOrFree(void**,int);
 void sqlite3FreeX(void*);
 void *sqlite3MallocX(int);
 char *sqlite3MPrintf(const char*, ...);

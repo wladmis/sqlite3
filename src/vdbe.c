@@ -4017,7 +4017,7 @@ case OP_ContextPush: {        /* no-push */
   /* FIX ME: This should be allocated as part of the vdbe at compile-time */
   if( i>=p->contextStackDepth ){
     p->contextStackDepth = i+1;
-    p->contextStack = sqliteRealloc(p->contextStack, sizeof(Context)*(i+1));
+    sqlite3ReallocOrFree((void**)&p->contextStack, sizeof(Context)*(i+1));
     if( p->contextStack==0 ) goto no_mem;
   }
   pContext = &p->contextStack[i];
