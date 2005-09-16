@@ -1875,7 +1875,7 @@ static int autoVacuumCommit(Btree *pBt, Pgno *nTrunc){
   origSize = sqlite3pager_pagecount(pPager);
   nPtrMap = (nFreeList-origSize+PTRMAP_PAGENO(pgsz, origSize)+pgsz/5)/(pgsz/5);
   finSize = origSize - nFreeList - nPtrMap;
-  if( origSize>PENDING_BYTE_PAGE(pBt) && finSize<=PENDING_BYTE_PAGE(pBt) ){
+  if( origSize>=PENDING_BYTE_PAGE(pBt) && finSize<=PENDING_BYTE_PAGE(pBt) ){
     finSize--;
     if( PTRMAP_ISPAGE(pBt->usableSize, finSize) ){
       finSize--;

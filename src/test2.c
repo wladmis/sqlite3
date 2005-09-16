@@ -555,6 +555,10 @@ static int fake_big_file(
 }
 #endif
 
+#ifdef SQLITE_TEST
+unsigned int sqlite3_pending_byte = 0x0010000;
+#endif
+
 /*
 ** Register commands with the TCL interpreter.
 */
@@ -596,6 +600,8 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
      (char*)&sqlite3_diskfull_pending, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_diskfull",
      (char*)&sqlite3_diskfull, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite_pending_byte",
+     (char*)&sqlite3_pending_byte, TCL_LINK_INT);
   Tcl_LinkVar(interp, "pager_pagesize",
      (char*)&test_pagesize, TCL_LINK_INT);
   return TCL_OK;
