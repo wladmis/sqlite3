@@ -555,10 +555,6 @@ static int fake_big_file(
 }
 #endif
 
-#ifdef SQLITE_TEST
-unsigned int sqlite3_pending_byte = 0x0010000;
-#endif
-
 /*
 ** Register commands with the TCL interpreter.
 */
