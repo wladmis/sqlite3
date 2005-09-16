@@ -2307,7 +2307,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
   /* The maximum page number is 2^31. Return SQLITE_CORRUPT if a page
   ** number greater than this, or zero, is requested.
   */
-  if( pgno>PAGER_MAX_PGNO || pgno==0 ){
+  if( pgno>PAGER_MAX_PGNO || pgno==0 || pgno==PAGER_MJ_PGNO(pPager) ){
     return SQLITE_CORRUPT;
   }
 
@@ -2833,6 +2833,10 @@ int sqlite3pager_write(void *pData){
           }
         }else{
           u32 cksum;
+          /* We should never write to the journal file the page that
+          ** contains the database locks.  The following assert verifies
+          ** that we do not. */
+          assert( pPg->pgno!=PAGER_MJ_PGNO(pPager) );
           CODEC(pPager, pData, pPg->pgno, 7);
           cksum = pager_cksum(pPager, pPg->pgno, pData);
           saved = *(u32*)PGHDR_TO_EXTRA(pPg, pPager);
@@ -3459,8 +3463,9 @@ int sqlite3pager_sync(Pager *pPager, const char *zMaster, Pgno nTrunc){
         */
         Pgno i;
         void *pPage;
+        int iSkip = PAGER_MJ_PGNO(pPager);
         for( i=nTrunc+1; i<=pPager->origDbSize; i++ ){
-          if( !(pPager->aInJournal[i/8] & (1<<(i&7))) ){
+          if( !(pPager->aInJournal[i/8] & (1<<(i&7))) && i!=iSkip ){
             rc = sqlite3pager_get(pPager, i, &pPage);
             if( rc!=SQLITE_OK ) goto sync_exit;
             rc = sqlite3pager_write(pPage);
