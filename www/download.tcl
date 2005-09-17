@@ -43,7 +43,7 @@ Product sqlite3-VERSION.bin.gz {
 
 Product sqlite-VERSION.bin.gz {
   A command-line program for accessing and modifing
-  2 SQLite databases.
+  SQLite databases.
   See <a href="sqlite.html">the documentation</a> for additional information.
 }
 
