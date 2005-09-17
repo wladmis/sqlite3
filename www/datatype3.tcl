@@ -56,6 +56,7 @@ User-defined functions may return values with any storage class. It
 is not generally possible to determine the storage class of the
 result of an expression at compile time.</P>
 
+<a name="affinity">
 <h3>2. Column Affinity</h3>
 
 <p>
