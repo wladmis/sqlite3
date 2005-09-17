@@ -1471,7 +1471,7 @@ WhereInfo *sqlite3WhereBegin(
         continue;
       }
       cost = bestIndex(pParse, &wc, pTabItem, notReady,
-                       (j==0 && ppOrderBy) ? *ppOrderBy : 0,
+                       (i==0 && ppOrderBy) ? *ppOrderBy : 0,
                        &pIdx, &flags, &nEq);
       if( cost<lowestCost ){
         lowestCost = cost;
