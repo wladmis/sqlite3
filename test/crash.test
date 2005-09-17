@@ -46,6 +46,7 @@ proc crashsql {crashdelay crashfile sql} {
 
   set f [open crash.tcl w]
   puts $f "sqlite3_crashparams $crashdelay $cfile"
+  puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
   puts $f {sqlite3 db test.db}
 
   # This block sets the cache size of the main database to 10
