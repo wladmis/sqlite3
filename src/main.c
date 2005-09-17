@@ -1047,3 +1047,14 @@ recover_out:
 int sqlite3_get_autocommit(sqlite3 *db){
   return db->autoCommit;
 }
+
+#ifdef SQLITE_DEBUG
+/*
+** The following routine is subtituted for constant SQLITE_CORRUPT in
+** debugging builds.  This provides a way to set a breakpoint for when
+** corruption is first detected.
+*/
+int sqlite3Corrupt(void){
+  return SQLITE_CORRUPT;
+}
+#endif

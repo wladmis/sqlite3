@@ -1374,6 +1374,19 @@ typedef struct {
 extern int sqlite3_always_code_trigger_setup;
 
 /*
+** The SQLITE_CORRUPT_BKPT macro can be either a constant (for production
+** builds) or a function call (for debugging).  If it is a function call,
+** it allows the operator to set a breakpoint at the spot where database
+** corruption is first detected.
+*/
+#ifdef SQLITE_DEBUG
+  extern int sqlite3Corrupt(void);
+# define SQLITE_CORRUPT_BKPT sqlite3Corrupt()
+#else
+# define SQLITE_CORRUPT_BKPT SQLITE_CORRUPT
+#endif
+
+/*
 ** Internal function prototypes
 */
 int sqlite3StrICmp(const char *, const char *);

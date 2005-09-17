@@ -41,6 +41,7 @@ if {[sqlite3 -tcl-uses-utf]} {
 }
 
 set tcl_precision 15
+set sqlite_pending_byte 0x0010000
 
 # Use the pager codec if it is available
 #
