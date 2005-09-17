@@ -373,11 +373,10 @@ char *sqlite3StrNDup(const char *z, int n){
 */
 void sqlite3ReallocOrFree(void **ppBuf, int newSize){
   void *pNew = sqliteRealloc(*ppBuf, newSize);
-  if( pNew ){
-    *ppBuf = pNew;
-  }else{
+  if( pNew==0 ){
     sqliteFree(*ppBuf);
   }
+  *ppBuf = pNew;
 }
 
 /*
