@@ -93,6 +93,9 @@ do_test lock2-1.1 {
     db eval {select * from sqlite_master}
   }
 } {}
+do_test lock2-1.1.1 {
+  execsql {pragma lock_status}
+} {main unlocked temp closed}
 do_test lock2-1.2 {
   execsql {
     BEGIN;
