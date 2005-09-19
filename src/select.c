@@ -1786,6 +1786,7 @@ static int multiSelect(
       assert( p->addrOpenVirt[2]>=0 );
       addr = p->addrOpenVirt[2];
       sqlite3VdbeChangeP2(v, addr, p->pEList->nExpr+2);
+      pKeyInfo->nField = pOrderBy->nExpr;
       sqlite3VdbeChangeP3(v, addr, (char*)pKeyInfo, P3_KEYINFO_HANDOFF);
       pKeyInfo = 0;
       generateSortTail(pParse, p, v, p->pEList->nExpr, eDest, iParm);
