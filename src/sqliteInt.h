@@ -903,6 +903,7 @@ struct Expr {
                          ** iColumn-th field of the iTable-th table. */
   AggInfo *pAggInfo;     /* Used by TK_AGG_COLUMN and TK_AGG_FUNCTION */
   int iAgg;              /* Which entry in pAggInfo->aCol[] or ->aFunc[] */
+  int iRightJoinTable;   /* If EP_FromJoin, the right table of the join */
   Select *pSelect;       /* When the expression is a sub-select.  Also the
                          ** right side of "<expr> IN (<select>)" */
   Table *pTab;           /* Table for OP_Column expressions. */
