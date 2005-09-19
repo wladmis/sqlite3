@@ -1571,6 +1571,7 @@ static int multiSelect(
       }
       p->pPrior = 0;
       p->pOrderBy = 0;
+      p->disallowOrderBy = pOrderBy!=0;
       pLimit = p->pLimit;
       p->pLimit = 0;
       pOffset = p->pOffset;
@@ -1971,7 +1972,7 @@ static int flattenSubquery(
      return 0;
   }
   if( p->isDistinct && subqueryIsAgg ) return 0;
-  if( p->pOrderBy && pSub->pOrderBy ) return 0;
+  if( (p->disallowOrderBy || p->pOrderBy) && pSub->pOrderBy ) return 0;
 
   /* Restriction 3:  If the subquery is a join, make sure the subquery is 
   ** not used as the right operand of an outer join.  Examples of why this
