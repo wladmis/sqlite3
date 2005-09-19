@@ -1264,7 +1264,7 @@ static void codeAllEqualityTerms(
   }
 }
 
-#if defined(SQLITE_TEST) || defined(SQLITE_DEBUG)
+#if defined(SQLITE_TEST)
 /*
 ** The following variable holds a text description of query plan generated
 ** by the most recent call to sqlite3WhereBegin().  Each call to WhereBegin
