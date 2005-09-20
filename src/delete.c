@@ -380,7 +380,7 @@ void sqlite3GenerateRowDelete(
   addr = sqlite3VdbeAddOp(v, OP_NotExists, iCur, 0);
   sqlite3GenerateRowIndexDelete(db, v, pTab, iCur, 0);
   sqlite3VdbeAddOp(v, OP_Delete, iCur, (count?OPFLAG_NCHANGE:0));
-  sqlite3VdbeChangeP2(v, addr, sqlite3VdbeCurrentAddr(v));
+  sqlite3VdbeJumpHere(v, addr);
 }
 
 /*

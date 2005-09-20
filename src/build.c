@@ -76,7 +76,7 @@ void sqlite3FinishCoding(Parse *pParse){
     if( pParse->cookieGoto>0 ){
       u32 mask;
       int iDb;
-      sqlite3VdbeChangeP2(v, pParse->cookieGoto-1, sqlite3VdbeCurrentAddr(v));
+      sqlite3VdbeJumpHere(v, pParse->cookieGoto-1);
       for(iDb=0, mask=1; iDb<db->nDb; mask<<=1, iDb++){
         if( (mask & pParse->cookieMask)==0 ) continue;
         sqlite3VdbeAddOp(v, OP_Transaction, iDb, (mask & pParse->writeMask)!=0);
@@ -2002,7 +2002,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
   }
   sqlite3VdbeAddOp(v, OP_IdxInsert, iIdx, 0);
   sqlite3VdbeAddOp(v, OP_Next, iTab, addr1+1);
-  sqlite3VdbeChangeP2(v, addr1, sqlite3VdbeCurrentAddr(v));
+  sqlite3VdbeJumpHere(v, addr1);
   sqlite3VdbeAddOp(v, OP_Close, iTab, 0);
   sqlite3VdbeAddOp(v, OP_Close, iIdx, 0);
 }

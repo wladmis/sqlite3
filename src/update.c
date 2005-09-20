@@ -469,7 +469,7 @@ void sqlite3Update(
   ** all record selected by the WHERE clause have been updated.
   */
   sqlite3VdbeAddOp(v, OP_Goto, 0, addr);
-  sqlite3VdbeChangeP2(v, addr, sqlite3VdbeCurrentAddr(v));
+  sqlite3VdbeJumpHere(v, addr);
 
   /* Close all tables if there were no FOR EACH ROW triggers */
   if( !triggers_exist ){

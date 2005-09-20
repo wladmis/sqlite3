@@ -4177,6 +4177,39 @@ case OP_IfMemPos: {        /* no-push */
   break;
 }
 
+/* Opcode: MemNull P1 * *
+**
+** Store a NULL in memory cell P1
+*/
+case OP_MemNull: {
+  assert( pOp->p1>=0 && pOp->p1<p->nMem );
+  sqlite3VdbeMemSetNull(&p->aMem[pOp->p1]);
+  break;
+}
+
+/* Opcode: MemInt P1 P2 *
+**
+** Store the integer value P1 in memory cell P2.
+*/
+case OP_MemInt: {
+  assert( pOp->p2>=0 && pOp->p2<p->nMem );
+  sqlite3VdbeMemSetInt64(&p->aMem[pOp->p2], pOp->p1);
+  break;
+}
+
+/* Opcode: MemMove P1 P2 *
+**
+** Move the content of memory cell P2 over to memory cell P1.
+** Any prior content of P1 is erased.  Memory cell P2 is left
+** containing a NULL.
+*/
+case OP_MemMove: {
+  assert( pOp->p1>=0 && pOp->p1<p->nMem );
+  assert( pOp->p2>=0 && pOp->p2<p->nMem );
+  rc = sqlite3VdbeMemMove(&p->aMem[pOp->p1], &p->aMem[pOp->p2]);
+  break;
+}
+
 /* Opcode: AggStep P1 P2 P3
 **
 ** Execute the step function for an aggregate.  The
