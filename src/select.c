@@ -3020,7 +3020,7 @@ int sqlite3Select(
         if( j==0 ){
           sqlite3VdbeAddOp(v, OP_Eq, 0x200, addrProcessRow);
         }else{
-          sqlite3VdbeAddOp(v, OP_Ne, 0x300, addrGroupByChange);
+          sqlite3VdbeAddOp(v, OP_Ne, 0x200, addrGroupByChange);
         }
         sqlite3VdbeChangeP3(v, -1, (void*)pKeyInfo->aColl[j], P3_COLLSEQ);
       }
