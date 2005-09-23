@@ -548,6 +548,8 @@ Select *sqlite3SelectDup(Select *p){
   pNew->iOffset = -1;
   pNew->isResolved = p->isResolved;
   pNew->isAgg = p->isAgg;
+  pNew->usesVirt = 0;
+  pNew->disallowOrderBy = 0;
   pNew->pRightmost = 0;
   pNew->addrOpenVirt[0] = -1;
   pNew->addrOpenVirt[1] = -1;
