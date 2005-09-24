@@ -66,6 +66,11 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2005-Sep-24} {Version 3.2.7} {
+  This version fixes several minor and obscure bugs.
+  Upgrade only if you are having problems.
+}
+
 newsitem {2005-Sep-16} {Version 3.2.6 - Critical Bug Fix} {
   This version fixes a bug that can result in database
   corruption if a VACUUM of a 1 gibibyte or larger database fails
