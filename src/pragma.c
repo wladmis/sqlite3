@@ -677,6 +677,7 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
       sqlite3VdbeAddOp(v, OP_Concat, 0, 1);
       sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+      sqlite3VdbeAddOp(v, OP_MemIncr, 0, 0);
 
       /* Make sure all the indices are constructed correctly.
       */
