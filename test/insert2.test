@@ -34,6 +34,13 @@ do_test insert2-1.1.1 {
   execsql {
     CREATE TABLE t1(log int, cnt int);
     PRAGMA count_changes=on;
+  }
+  ifcapable explain {
+    execsql {
+      EXPLAIN INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log;
+    }
+  }
+  execsql {
     INSERT INTO t1 SELECT log, count(*) FROM d1 GROUP BY log;
   }
 } {6}
@@ -269,4 +276,3 @@ ifcapable subquery {
 }
 
 finish_test
-
