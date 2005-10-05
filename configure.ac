@@ -611,8 +611,7 @@ AC_CHECK_FUNC(usleep, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_USLEEP=1"])
 # Redefine fdatasync as fsync on systems that lack fdatasync
 #--------------------------------------------------------------------
 
-AC_CHECK_FUNC(fdatasync, , AC_DEFINE(fdatasync, fsync))
-
+AC_CHECK_FUNC(fdatasync, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_FDATASYNC=1"])
 
 #########
 # Generate the output files.
