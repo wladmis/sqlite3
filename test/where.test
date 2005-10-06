@@ -306,7 +306,7 @@ do_test where-4.2 {
   count {
     SELECT * FROM t1 WHERE 1 LIMIT 1
   }
-} {1 0 4 1}
+} {1 0 4 0}
 do_test where-4.3 {
   execsql {
     SELECT 99 WHERE 0

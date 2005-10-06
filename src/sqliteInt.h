@@ -1149,7 +1149,7 @@ struct Select {
 #define SRT_Table        7  /* Store result as data with an automatic rowid */
 #define SRT_VirtualTab   8  /* Create virtual table and store like SRT_Table */
 #define SRT_Subroutine   9  /* Call a subroutine to handle results */
-#define SRT_Exists      10  /* Put 0 or 1 in a memory cell */
+#define SRT_Exists      10  /* Store 1 if the result is not empty */
 
 /*
 ** An SQL parser context.  A copy of this structure is passed through
