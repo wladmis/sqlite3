@@ -60,6 +60,18 @@
 #include <stddef.h>
 
 /*
+** If compiling for a processor that lacks floating point support,
+** substitute integer for floating-point
+*/
+#ifdef SQLITE_OMIT_FLOATING_POINT
+# define double sqlite_int64
+# define LONGDOUBLE_TYPE sqlite_int64
+# define SQLITE_BIG_DBL (0x7fffffffffffffff)
+# define SQLITE_OMIT_DATETIME_FUNCS 1
+# define SQLITE_OMIT_TRACE 1
+#endif
+
+/*
 ** The maximum number of in-memory pages to use for the main database
 ** table and for temporary tables. Internally, the MAX_PAGES and 
 ** TEMP_PAGES macros are used. To override the default values at
@@ -127,20 +139,6 @@
 ** The maximum value of a ?nnn wildcard that the parser will accept.
 */
 #define SQLITE_MAX_VARIABLE_NUMBER 999
-
-/*
-** When building SQLite for embedded systems where memory is scarce,
-** you can define one or more of the following macros to omit extra
-** features of the library and thus keep the size of the library to
-** a minimum.
-*/
-/* #define SQLITE_OMIT_AUTHORIZATION  1 */
-/* #define SQLITE_OMIT_MEMORYDB     1 */
-/* #define SQLITE_OMIT_VACUUM         1 */
-/* #define SQLITE_OMIT_DATETIME_FUNCS 1 */
-/* #define SQLITE_OMIT_PROGRESS_CALLBACK 1 */
-/* #define SQLITE_OMIT_AUTOVACUUM */
-/* #define SQLITE_OMIT_ALTERTABLE */
 
 /*
 ** Provide a default value for TEMP_STORE in case it is not specified

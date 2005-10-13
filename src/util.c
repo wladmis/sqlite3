@@ -606,6 +606,7 @@ int sqlite3IsNumber(const char *z, int *realnum, u8 enc){
 ** for SQL.  So this routine always uses "." regardless of locale.
 */
 int sqlite3AtoF(const char *z, double *pResult){
+#ifndef SQLITE_OMIT_FLOATING_POINT
   int sign = 1;
   const char *zBegin = z;
   LONGDOUBLE_TYPE v1 = 0.0;
@@ -656,6 +657,9 @@ int sqlite3AtoF(const char *z, double *pResult){
   }
   *pResult = sign<0 ? -v1 : v1;
   return z - zBegin;
+#else
+  return sqlite3atoi64(z, pResult);
+#endif /* SQLITE_OMIT_FLOATING_POINT */
 }
 
 /*

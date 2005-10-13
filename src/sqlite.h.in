@@ -86,6 +86,13 @@ typedef struct sqlite3 sqlite3;
   typedef unsigned long long int sqlite_uint64;
 #endif
 
+/*
+** If compiling for a processor that lacks floating point support,
+** substitute integer for floating-point
+*/
+#ifdef SQLITE_OMIT_FLOATING_POINT
+# define double sqlite_int64
+#endif
 
 /*
 ** A function to close the database.
@@ -1268,6 +1275,14 @@ int sqlite3_get_autocommit(sqlite3*);
 ** the statement in the first place.
 */
 sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
+
+/*
+** Undo the hack that converts floating point types to integer for
+** builds on processors without floating point support.
+*/
+#ifdef SQLITE_OMIT_FLOATING_POINT
+# undef double
+#endif
 
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
