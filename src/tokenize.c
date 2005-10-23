@@ -196,9 +196,13 @@ static int getToken(const unsigned char *z, int *tokenType){
           }
         }
       }
-      if( c ) i++;
-      *tokenType = TK_STRING;
-      return i;
+      if( c ){
+        *tokenType = TK_STRING;
+        return i+1;
+      }else{
+        *tokenType = TK_ILLEGAL;
+        return i;
+      }
     }
     case '.': {
 #ifndef SQLITE_OMIT_FLOATING_POINT
