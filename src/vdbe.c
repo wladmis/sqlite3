@@ -1214,7 +1214,7 @@ case OP_BitOr:                  /* same as TK_BITOR, no-push */
 case OP_ShiftLeft:              /* same as TK_LSHIFT, no-push */
 case OP_ShiftRight: {           /* same as TK_RSHIFT, no-push */
   Mem *pNos = &pTos[-1];
-  int a, b;
+  i64 a, b;
 
   assert( pNos>=p->aStack );
   if( (pTos->flags | pNos->flags) & MEM_Null ){
