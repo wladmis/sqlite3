@@ -68,8 +68,12 @@ do_test types3-2.3 {
   set V [db one {SELECT 1234567890123456}]
   tcl_variable_type V
 } wideInt
-do_test types3-2.4 {
-  set V [db one {SELECT 1234567890123456.0}]
+do_test types3-2.4.1 {
+  set V [db one {SELECT 1234567890123456.1}]
+  tcl_variable_type V
+} wideInt
+do_test types3-2.4.2 {
+  set V [db one {SELECT 1234567890123.456}]
   tcl_variable_type V
 } double
 do_test types3-2.5 {

@@ -188,6 +188,7 @@ static void analyzeOneTable(
       sqlite3VdbeAddOp(v, OP_AddImm, -1, 0);
       sqlite3VdbeAddOp(v, OP_MemLoad, iMem+i+1, 0);
       sqlite3VdbeAddOp(v, OP_Divide, 0, 0);
+      sqlite3VdbeAddOp(v, OP_ToInt, 0, 0);
       if( i==nCol-1 ){
         sqlite3VdbeAddOp(v, OP_Concat, nCol*2-1, 0);
       }else{

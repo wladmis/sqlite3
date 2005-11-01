@@ -38,10 +38,10 @@ do_test cast-1.4 {
 } text
 do_test cast-1.5 {
   execsql {SELECT CAST(x'616263' AS numeric)}
-} 0.0
+} 0
 do_test cast-1.6 {
   execsql {SELECT typeof(CAST(x'616263' AS numeric))}
-} real
+} integer
 do_test cast-1.7 {
   execsql {SELECT CAST(x'616263' AS blob)}
 } abc
@@ -158,10 +158,10 @@ do_test cast-1.44 {
 } text
 do_test cast-1.45 {
   execsql {SELECT CAST('123abc' AS numeric)}
-} 123.0
+} 123
 do_test cast-1.46 {
   execsql {SELECT typeof(CAST('123abc' AS numeric))}
-} real
+} integer
 do_test cast-1.47 {
   execsql {SELECT CAST('123abc' AS blob)}
 } {123abc}

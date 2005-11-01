@@ -494,13 +494,13 @@ do_test misc5-5.1 {
 } 0.1
 do_test misc5-5.2 {
   execsql {SELECT 2. }
-} 2.0
+} 2
 do_test misc5-5.3 {
   execsql {SELECT 3.e0 }
-} 3.0
+} 3
 do_test misc5-5.4 {
   execsql {SELECT .4e+1}
-} 4.0
+} 4
 
 
 finish_test

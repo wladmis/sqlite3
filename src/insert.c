@@ -24,7 +24,6 @@
 **  Character      Column affinity
 **  ------------------------------
 **  'n'            NUMERIC
-**  'i'            INTEGER
 **  't'            TEXT
 **  'o'            NONE
 */
@@ -62,7 +61,6 @@ void sqlite3IndexAffinityStr(Vdbe *v, Index *pIdx){
 **  Character      Column affinity
 **  ------------------------------
 **  'n'            NUMERIC
-**  'i'            INTEGER
 **  't'            TEXT
 **  'o'            NONE
 */
