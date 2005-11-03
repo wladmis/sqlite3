@@ -1200,7 +1200,16 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
           ExprSetProperty(pExpr, EP_VarSelect);
         }
       }
+      break;
     }
+#ifndef SQLITE_OMIT_CHECK
+    case TK_VARIABLE: {
+      if( pNC->isCheck ){
+        sqlite3ErrorMsg(pParse,"parameters prohibited in CHECK constraints");
+      }
+      break;
+    }
+#endif
   }
   return 0;
 }

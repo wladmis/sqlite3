@@ -275,6 +275,21 @@ do_test check_4.9 {
   }
 } {0 {}}
 
+do_test check-5.1 {
+  catchsql {
+    CREATE TABLE t5(x, y,
+      CHECK( x*y<:abc )
+    );
+  }
+} {1 {parameters prohibited in CHECK constraints}}
+do_test check-5.2 {
+  catchsql {
+    CREATE TABLE t5(x, y,
+      CHECK( x*y<? )
+    );
+  }
+} {1 {parameters prohibited in CHECK constraints}}
+
 
 
 finish_test
