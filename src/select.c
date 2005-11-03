@@ -2384,14 +2384,8 @@ int sqlite3SelectResolve(
   /* Resolve the expressions in the LIMIT and OFFSET clauses. These
   ** are not allowed to refer to any names, so pass an empty NameContext.
   */
+  memset(&sNC, 0, sizeof(sNC));
   sNC.pParse = pParse;
-  sNC.hasAgg = 0;
-  sNC.nErr = 0;
-  sNC.nRef = 0;
-  sNC.pEList = 0;
-  sNC.allowAgg = 0;
-  sNC.pSrcList = 0;
-  sNC.pNext = 0;
   if( sqlite3ExprResolveNames(&sNC, p->pLimit) ||
       sqlite3ExprResolveNames(&sNC, p->pOffset) ){
     return SQLITE_ERROR;

@@ -268,7 +268,7 @@ ccons ::= NOT NULL onconf(R).               {sqlite3AddNotNull(pParse, R);}
 ccons ::= PRIMARY KEY sortorder onconf(R) autoinc(I).
                                      {sqlite3AddPrimaryKey(pParse,0,R,I);}
 ccons ::= UNIQUE onconf(R).          {sqlite3CreateIndex(pParse,0,0,0,0,R,0,0);}
-ccons ::= CHECK LP expr(X) RP onconf. {sqlite3ExprDelete(X);}
+ccons ::= CHECK LP expr(X) RP.       {sqlite3AddCheckConstraint(pParse, X);}
 ccons ::= REFERENCES nm(T) idxlist_opt(TA) refargs(R).
                                 {sqlite3CreateForeignKey(pParse,0,&T,TA,R);}
 ccons ::= defer_subclause(D).   {sqlite3DeferForeignKey(pParse,D);}

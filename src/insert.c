@@ -868,7 +868,18 @@ void sqlite3GenerateConstraintChecks(
 
   /* Test all CHECK constraints
   */
-  /**** TBD ****/
+#ifndef SQLITE_OMIT_CHECK
+  if( pTab->pCheck ){
+    int allOk = sqlite3VdbeMakeLabel(v);
+    assert( pParse->ckOffset==0 );
+    pParse->ckOffset = nCol;
+    sqlite3ExprIfTrue(pParse, pTab->pCheck, allOk, 0);
+    assert( pParse->ckOffset==nCol );
+    pParse->ckOffset = 0;
+    sqlite3VdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort);
+    sqlite3VdbeResolveLabel(v, allOk);
+  }
+#endif /* !defined(SQLITE_OMIT_CHECK) */
 
   /* If we have an INTEGER PRIMARY KEY, make sure the primary key
   ** of the new record does not previously exist.  Except, if this

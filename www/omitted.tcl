@@ -28,11 +28,6 @@ proc feature {name desc} {
   puts "<td valign=\"top\">$desc</td></tr>"
 }
 
-feature {CHECK constraints} {
-  CHECK constraints are parsed but they are not enforced.
-  NOT NULL and UNIQUE constraints are enforced, however.
-}
-
 feature {FOREIGN KEY constraints} {
   FOREIGN KEY constraints are parsed but are not enforced.
 }
