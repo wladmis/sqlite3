@@ -60,24 +60,25 @@ do_test check-1.7 {
   catchsql {
     INSERT INTO t1 VALUES(NULL,6);
   }
-} {1 {constraint failed}}
+} {0 {}}
 do_test check-1.8 {
   execsql {
     SELECT * FROM t1;
   }  
-} {3 4}
+} {3 4 {} 6}
 do_test check-1.9 {
   catchsql {
     INSERT INTO t1 VALUES(2,NULL);
   }
-} {1 {constraint failed}}
+} {0 {}}
 do_test check-1.10 {
   execsql {
     SELECT * FROM t1;
   }  
-} {3 4}
+} {3 4 {} 6 2 {}}
 do_test check-1.11 {
   execsql {
+    DELETE FROM t1 WHERE x IS NULL OR x!=3;
     UPDATE t1 SET x=2 WHERE x==3;
     SELECT * FROM t1;
   }

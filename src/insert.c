@@ -873,7 +873,7 @@ void sqlite3GenerateConstraintChecks(
     int allOk = sqlite3VdbeMakeLabel(v);
     assert( pParse->ckOffset==0 );
     pParse->ckOffset = nCol;
-    sqlite3ExprIfTrue(pParse, pTab->pCheck, allOk, 0);
+    sqlite3ExprIfTrue(pParse, pTab->pCheck, allOk, 1);
     assert( pParse->ckOffset==nCol );
     pParse->ckOffset = 0;
     sqlite3VdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort);
