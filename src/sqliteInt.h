@@ -489,6 +489,7 @@ struct sqlite3 {
 #define SQLITE_WriteSchema    0x00000800  /* OK to update SQLITE_MASTER */
 #define SQLITE_NoReadlock     0x00001000  /* Readlocks are omitted when 
                                           ** accessing read-only databases */
+#define SQLITE_IgnoreChecks   0x00002000  /* Do not enforce check constraints */
 
 /*
 ** Possible values for the sqlite.magic field.

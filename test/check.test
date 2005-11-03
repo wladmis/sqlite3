@@ -256,5 +256,25 @@ do_test check-4.6 {
     SELECT * FROM t4;
   }
 } {12 -22}
+do_test check-4.7 {
+  execsql {
+    PRAGMA ignore_check_constraints=ON;
+    UPDATE t4 SET x=0, y=1;
+    SELECT * FROM t4;
+  }
+} {0 1}
+do_test check-4.8 {
+  catchsql {
+    PRAGMA ignore_check_constraints=OFF;
+    UPDATE t4 SET x=0, y=2;
+  }
+} {1 {constraint failed}}
+do_test check_4.9 {
+  catchsql {
+    VACUUM
+  }
+} {0 {}}
+
+
 
 finish_test

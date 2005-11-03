@@ -869,7 +869,7 @@ void sqlite3GenerateConstraintChecks(
   /* Test all CHECK constraints
   */
 #ifndef SQLITE_OMIT_CHECK
-  if( pTab->pCheck ){
+  if( pTab->pCheck && (pParse->db->flags & SQLITE_IgnoreChecks)==0 ){
     int allOk = sqlite3VdbeMakeLabel(v);
     assert( pParse->ckOffset==0 );
     pParse->ckOffset = nCol;
