@@ -1088,6 +1088,7 @@ struct NameContext {
   int nErr;            /* Number of errors encountered while resolving names */
   u8 allowAgg;         /* Aggregate functions allowed here */
   u8 hasAgg;           /* True if aggregates are seen */
+  u8 isCheck;          /* True if resolving names in a CHECK constraint */
   int nDepth;          /* Depth of subquery recursion. 1 for no recursion */
   AggInfo *pAggInfo;   /* Information about aggregates at this level */
   NameContext *pNext;  /* Next outer name context.  NULL for outermost */

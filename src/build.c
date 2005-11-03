@@ -1307,6 +1307,7 @@ void sqlite3EndTable(
     sSrc.a[0].iCursor = -1;
     sNC.pParse = pParse;
     sNC.pSrcList = &sSrc;
+    sNC.isCheck = 1;
     if( sqlite3ExprResolveNames(&sNC, p->pCheck) ){
       return;
     }
