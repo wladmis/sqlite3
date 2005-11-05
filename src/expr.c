@@ -1188,12 +1188,12 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
 #endif
     case TK_IN: {
       if( pExpr->pSelect ){
+        int nRef = pNC->nRef;
 #ifndef SQLITE_OMIT_CHECK
         if( pNC->isCheck ){
           sqlite3ErrorMsg(pParse,"subqueries prohibited in CHECK constraints");
         }
 #endif
-        int nRef = pNC->nRef;
         sqlite3SelectResolve(pParse, pExpr->pSelect, pNC);
         assert( pNC->nRef>=nRef );
         if( nRef!=pNC->nRef ){
