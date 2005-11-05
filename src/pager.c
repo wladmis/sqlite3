@@ -1761,9 +1761,9 @@ void enable_simulated_io_errors(void){
   sqlite3_io_error_pending = saved_cnt;
 }
 #else
-# define clear_simulated_io_error(X)
-# define disable_simulated_io_errors(X)
-# define enable_simulated_io_errors(X)
+# define clear_simulated_io_error()
+# define disable_simulated_io_errors()
+# define enable_simulated_io_errors()
 #endif
 
 /*
