@@ -511,7 +511,7 @@ do_test func-18.2 {
     INSERT INTO t5 VALUES(0.0);
     SELECT sum(x) FROM t5;
   }
-} {9902}
+} {9902.0}
 
 # The sum of nothing is NULL.  But the sum of all NULLs is NULL.
 #

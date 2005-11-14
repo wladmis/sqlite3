@@ -230,7 +230,6 @@ do_test where-1.41 {
 # Do the same kind of thing except use a join as the data source.
 #
 do_test where-2.1 {
-btree_breakpoint
   count {
     SELECT w, p FROM t2, t1
     WHERE x=q AND y=s AND r=8977

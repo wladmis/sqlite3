@@ -494,7 +494,7 @@ do_test autoinc-7.1 {
     INSERT INTO t7(y) VALUES(345);
     SELECT * FROM t7;
   }
-} {3 345}
+} {3 345.0}
 
 # Test that if the AUTOINCREMENT is applied to a non integer primary key
 # the error message is sensible.

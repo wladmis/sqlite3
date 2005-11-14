@@ -195,7 +195,7 @@ static void analyzeOneTable(
         sqlite3VdbeAddOp(v, OP_Dup, 1, 0);
       }
     }
-    sqlite3VdbeOp3(v, OP_MakeRecord, 3, 0, "ttt", 0);
+    sqlite3VdbeOp3(v, OP_MakeRecord, 3, 0, "aaa", 0);
     sqlite3VdbeAddOp(v, OP_Insert, iStatCur, 0);
     sqlite3VdbeJumpHere(v, addr);
   }

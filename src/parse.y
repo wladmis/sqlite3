@@ -95,6 +95,9 @@ struct AttachKey { int type;  Token key; };
 %nonassoc END_OF_FILE ILLEGAL SPACE UNCLOSED_STRING COMMENT FUNCTION
           COLUMN AGG_FUNCTION AGG_COLUMN CONST_FUNC.
 
+// Extra tokens used by the code generator by never seen by the parser.
+%nonassoc TO_TEXT TO_BLOB TO_NUMERIC TO_INT TO_REAL.
+
 // Input is a single SQL command
 input ::= cmdlist.
 cmdlist ::= cmdlist ecmd.

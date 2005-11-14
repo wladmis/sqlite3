@@ -17,8 +17,8 @@
 #include "sqliteInt.h"
 
 /*
-** The most recently coded instruction was an OP_Column to retrieve column
-** 'i' of table pTab. This routine sets the P3 parameter of the 
+** The most recently coded instruction was an OP_Column to retrieve the
+** i-th column of table pTab. This routine sets the P3 parameter of the 
 ** OP_Column to the default value, if any.
 **
 ** The default value of a column is specified by a DEFAULT clause in the 

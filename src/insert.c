@@ -305,7 +305,7 @@ void sqlite3Insert(
     sqlite3VdbeAddOp(v, OP_Rewind, iCur, base+13);
     sqlite3VdbeAddOp(v, OP_Column, iCur, 0);
     sqlite3VdbeOp3(v, OP_String8, 0, 0, pTab->zName, 0);
-    sqlite3VdbeAddOp(v, OP_Ne, 28417, base+12);
+    sqlite3VdbeAddOp(v, OP_Ne, 0x100, base+12);
     sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
     sqlite3VdbeAddOp(v, OP_MemStore, counterRowid, 1);
     sqlite3VdbeAddOp(v, OP_Column, iCur, 1);
