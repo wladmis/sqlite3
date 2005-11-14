@@ -1669,7 +1669,7 @@ a single big table.  The difference is that in UNION all result rows
 are distinct where in UNION ALL there may be duplicates.
 The INTERSECT operator takes the intersection of the results of the
 left and right SELECTs.  EXCEPT takes the result of left SELECT after
-removing the results of the right SELECT.  When three are more SELECTs
+removing the results of the right SELECT.  When three or more SELECTs
 are connected into a compound, they group from left to right.</p>
 }
 
