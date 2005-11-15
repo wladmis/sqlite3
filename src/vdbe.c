@@ -208,8 +208,10 @@ static void applyAffinity(Mem *pRec, char affinity, u8 enc){
       */
       int realnum;
       sqlite3VdbeMemNulTerminate(pRec);
-      if( (pRec->flags&MEM_Str) && sqlite3IsNumber(pRec->z, &realnum, enc) ){
+      if( (pRec->flags&MEM_Str)
+           && sqlite3IsNumber(pRec->z, &realnum, pRec->enc) ){
         i64 value;
+        sqlite3VdbeChangeEncoding(pRec, SQLITE_UTF8);
         if( !realnum && sqlite3atoi64(pRec->z, &value) ){
           sqlite3VdbeMemRelease(pRec);
           pRec->i = value;
