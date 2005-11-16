@@ -1650,7 +1650,12 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
     }
     case TK_AGG_FUNCTION: {
       AggInfo *pInfo = pExpr->pAggInfo;
-      sqlite3VdbeAddOp(v, OP_MemLoad, pInfo->aFunc[pExpr->iAgg].iMem, 0);
+      if( pInfo==0 ){
+        sqlite3ErrorMsg(pParse, "misuse of aggregate: %T",
+            &pExpr->span);
+      }else{
+        sqlite3VdbeAddOp(v, OP_MemLoad, pInfo->aFunc[pExpr->iAgg].iMem, 0);
+      }
       break;
     }
     case TK_CONST_FUNC:
