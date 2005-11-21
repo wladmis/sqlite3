@@ -1551,7 +1551,7 @@ WhereInfo *sqlite3WhereBegin(
       if( (pIx = pLevel->pIdx)!=0 ){
         zMsg = sqlite3MPrintf("%z WITH INDEX %s", zMsg, pIx->zName);
       }else if( pLevel->flags & (WHERE_ROWID_EQ|WHERE_ROWID_RANGE) ){
-        zMsg = sqlite3MPrintf("%z USING INTEGER PRIMARY KEY", zMsg);
+        zMsg = sqlite3MPrintf("%z USING PRIMARY KEY", zMsg);
       }
       sqlite3VdbeOp3(v, OP_Explain, i, pLevel->iFrom, zMsg, P3_DYNAMIC);
     }
