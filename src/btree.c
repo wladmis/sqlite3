@@ -794,7 +794,7 @@ static void _pageIntegrity(MemPage *pPage){
 ** Defragment the page given.  All Cells are moved to the
 ** end of the page and all free space is collected into one
 ** big FreeBlk that occurs in between the header and cell
-** index and the cell data.
+** pointer array and the cell content area.
 */
 static int defragmentPage(MemPage *pPage){
   int i;                     /* Loop counter */

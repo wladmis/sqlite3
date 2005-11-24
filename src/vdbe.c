@@ -1324,7 +1324,7 @@ case OP_RealAffinity: {                  /* no-push */
 /* Opcode: ToText * * *
 **
 ** Force the value on the top of the stack to be text.
-** If the value is numeric, convert it to an using the
+** If the value is numeric, convert it to a string using the
 ** equivalent of printf().  Blob values are unchanged and
 ** are afterwards simply interpreted as text.
 **
