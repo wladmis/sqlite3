@@ -88,7 +88,7 @@ PARAGRAPH {
 }
 
 PARAGRAPH {
-  In order be used by an index, a term must be of one of the following
+  To be usable by an index a term must be of one of the following
   forms:
 }
 SYNTAX {
