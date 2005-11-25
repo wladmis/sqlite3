@@ -18,6 +18,12 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# If SQLITE_DISABLE_LFS is defined, omit this file.
+ifcapable !lfs {
+  finish_test
+  return
+}
+
 # These tests only work for Tcl version 8.4 and later.  Prior to 8.4,
 # Tcl was unable to handle large files.
 #
