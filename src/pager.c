@@ -1659,7 +1659,7 @@ int sqlite3pager_open(
   strcpy(pPager->zJournal, zFullPathname);
   sqliteFree(zFullPathname);
   strcpy(&pPager->zJournal[nameLen], "-journal");
-  pPager->fd = fd;
+  sqlite3Io.xCopyOsFile(&pPager->fd,&fd);
   pPager->journalOpen = 0;
   pPager->useJournal = useJournal && !memDb;
   pPager->noReadlock = noReadlock && readOnly;
