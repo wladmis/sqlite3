@@ -422,7 +422,7 @@ int sqlite3VdbeExec(
       }
       sqlite3VdbePrintOp(p->trace, pc, pOp);
     }
-    if( p->trace==0 && pc==0 && sqlite3OsFileExists("vdbe_sqltrace") ){
+    if( p->trace==0 && pc==0 && sqlite3Io.xFileExists("vdbe_sqltrace") ){
       sqlite3VdbePrintSql(p);
     }
 #endif

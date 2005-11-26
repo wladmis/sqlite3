@@ -392,7 +392,7 @@ void sqlite3Pragma(
         sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
       }
     }else{
-      if( zRight[0] && !sqlite3OsIsDirWritable(zRight) ){
+      if( zRight[0] && !sqlite3Io.xIsDirWritable(zRight) ){
         sqlite3ErrorMsg(pParse, "not a writable directory");
         goto pragma_out;
       }

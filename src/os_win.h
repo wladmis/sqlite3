@@ -26,6 +26,7 @@
 */
 typedef struct OsFile OsFile;
 struct OsFile {
+  void *pAux;             /* Available for use by alternative backends */
   HANDLE h;               /* Handle for accessing the file */
   unsigned char locktype; /* Type of lock currently held on this file */
   unsigned char isOpen;   /* True if needs to be closed */

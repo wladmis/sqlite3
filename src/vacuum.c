@@ -146,7 +146,7 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   do {
     zTemp[nFilename] = '-';
     randomName((unsigned char*)&zTemp[nFilename+1]);
-  } while( sqlite3OsFileExists(zTemp) );
+  } while( sqlite3Io.xFileExists(zTemp) );
 
   /* Attach the temporary database as 'vacuum_db'. The synchronous pragma
   ** can be set to 'off' for this file, as it is not recovered if a crash
@@ -300,7 +300,7 @@ end_of_vacuum:
     rc = rc2;
   }
   if( zTemp ){
-    sqlite3OsDelete(zTemp);
+    sqlite3Io.xDelete(zTemp);
     sqliteFree(zTemp);
   }
   sqliteFree( zSql );

@@ -281,7 +281,7 @@ proc crashsql {crashdelay crashfile sql} {
   close $f
 
   set r [catch {
-    exec [file join . crashtest] crash.tcl >@stdout
+    exec [info nameofexec] crash.tcl >@stdout
   } msg]
   lappend r $msg
 }
