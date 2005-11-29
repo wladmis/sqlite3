@@ -742,5 +742,4 @@ db close
 file delete -force test2.db
 file delete -force no-such-file
 
-
 finish_test
