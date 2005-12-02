@@ -3,9 +3,9 @@
 #
 set rcsid {$Id$}
 source common.tcl
-header {sqlite: A program of interacting with SQLite databases}
+header {sqlite: A command-line access program for SQLite databases}
 puts {
-<h2>sqlite: A command-line program to administer SQLite databases</h2>
+<h2>sqlite: A command-line access program for SQLite databases</h2>
 
 <p>The SQLite library includes a simple command-line utility named
 <b>sqlite</b> that allows the user to manually enter and execute SQL
