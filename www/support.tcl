@@ -31,8 +31,8 @@ There are multiple archives of the mailing list:
 <blockquote>
 <a href="http://www.mail-archive.com/sqlite-users%40sqlite.org/">
 http://www.mail-archive.com/sqlite-users%40sqlite.org</a><br>
-<a href="http://www.theaimsgroup.com/">
-http://www.theaimsgroup.com/</a><br>
+<a href="http://marc.10east.com/?l=sqlite-users&r=1&w=2">
+http://marc.10east.com/?l=sqlite-users&r=1&w=2</a><br>
 <a href="http://news.gmane.org/gmane.comp.db.sqlite.general">
 http://news.gmane.org/gmane.comp.db.sqlite.general</a>
 </blockquote>
