@@ -516,6 +516,11 @@ do_test bind-12.1 {
            length(cast(x AS BLOB)), quote(cast(x AS BLOB)) FROM t3
   }
 } {text 3 'abc' 10 X'6162630078797A007071'}
-
+do_test bind-12.2 {
+  sqlite3_create_function $DB
+  execsql {
+    SELECT quote(cast(x_coalesce(x) AS blob)) FROM t3
+  }
+} {X'6162630078797A007071'}
 
 finish_test

@@ -373,8 +373,8 @@ static void ifnullFunc(sqlite3_context *context, int argc, sqlite3_value **argv)
   int i;
   for(i=0; i<argc; i++){
     if( SQLITE_NULL!=sqlite3_value_type(argv[i]) ){
-      sqlite3_result_text(context, sqlite3_value_text(argv[i]), -1,
-          SQLITE_TRANSIENT);
+      sqlite3_result_text(context, sqlite3_value_text(argv[i]),
+          sqlite3_value_bytes(argv[i]), SQLITE_TRANSIENT);
       break;
     }
   }
