@@ -150,6 +150,7 @@ void sqlite3Attach(
     if( pParse->rc==SQLITE_OK ){
       pParse->rc = SQLITE_ERROR;
     }
+    db->nDb = i;
   }
 
 attach_end:

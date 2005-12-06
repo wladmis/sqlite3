@@ -122,7 +122,7 @@ exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
   if( azCols ) sqliteFree(azCols);
 
-  if( sqlite3_malloc_failed ){
+  if( sqlite3Tsd()->mallocFailed ){
     rc = SQLITE_NOMEM;
   }
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){

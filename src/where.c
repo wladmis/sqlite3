@@ -567,7 +567,7 @@ static void exprAnalyze(
   int nPattern;
   int isComplete;
 
-  if( sqlite3_malloc_failed ) return;
+  if( sqlite3Tsd()->mallocFailed ) return;
   prereqLeft = exprTableUsage(pMaskSet, pExpr->pLeft);
   if( pExpr->op==TK_IN ){
     assert( pExpr->pRight==0 );
@@ -1432,7 +1432,7 @@ WhereInfo *sqlite3WhereBegin(
   ** return value.
   */
   pWInfo = sqliteMalloc( sizeof(WhereInfo) + pTabList->nSrc*sizeof(WhereLevel));
-  if( sqlite3_malloc_failed ){
+  if( sqlite3Tsd()->mallocFailed ){
     goto whereBeginNoMem;
   }
   pWInfo->pParse = pParse;
@@ -1456,7 +1456,7 @@ WhereInfo *sqlite3WhereBegin(
     createMask(&maskSet, pTabList->a[i].iCursor);
   }
   exprAnalyzeAll(pTabList, &maskSet, &wc);
-  if( sqlite3_malloc_failed ){
+  if( sqlite3Tsd()->mallocFailed ){
     goto whereBeginNoMem;
   }
 

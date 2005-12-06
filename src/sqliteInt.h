@@ -264,12 +264,6 @@ struct BusyHandler {
 #endif
 
 /*
-** This variable gets set if malloc() ever fails.  After it gets set,
-** the SQLite library shuts down permanently.
-*/
-extern int sqlite3_malloc_failed;
-
-/*
 ** The following global variables are used for testing and debugging
 ** only.  They only work if SQLITE_DEBUG is defined.
 */
@@ -1386,6 +1380,14 @@ typedef struct {
 } InitData;
 
 /*
+** An instance of this structure is allocated for each thread that uses SQLite.
+*/
+typedef struct SqliteTsd SqliteTsd;
+struct SqliteTsd {
+  int mallocFailed;               /* True after a malloc() has failed */
+};
+
+/*
  * This global flag is set for performance testing of triggers. When it is set
  * SQLite will perform the overhead of building new and old trigger references 
  * even when no triggers exist
@@ -1674,6 +1676,8 @@ void sqlite3AnalysisLoad(sqlite3*,int iDB);
 void sqlite3DefaultRowEst(Index*);
 void sqlite3RegisterLikeFunctions(sqlite3*, int);
 int sqlite3IsLikeFunction(sqlite3*,Expr*,int*,char*);
+SqliteTsd *sqlite3Tsd();
+void sqlite3ClearMallocFailed();
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
