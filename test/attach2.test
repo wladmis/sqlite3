@@ -134,12 +134,14 @@ do_test attach2-3.1 {
   set DB [sqlite3 db test.db]
   set rc [catch {sqlite3_prepare $DB "ATTACH 'test2.db' AS t2" -1 TAIL} VM]
   if {$rc} {lappend rc $VM}
+  sqlite3_step $VM
   sqlite3_finalize $VM
   set rc
 } {0}
 do_test attach2-3.2 {
   set rc [catch {sqlite3_prepare $DB "DETACH t2" -1 TAIL} VM]
   if {$rc} {lappend rc $VM}
+  sqlite3_step $VM
   sqlite3_finalize $VM
   set rc
 } {0}

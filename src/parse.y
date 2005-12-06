@@ -990,20 +990,19 @@ cmd ::= DROP TRIGGER fullname(X). {
 %endif // !SQLITE_OMIT_TRIGGER
 
 //////////////////////// ATTACH DATABASE file AS name /////////////////////////
-cmd ::= ATTACH database_kw_opt ids(F) AS nm(D) key_opt(K). {
-  sqlite3Attach(pParse, &F, &D, K.type, &K.key);
+cmd ::= ATTACH database_kw_opt expr(F) AS expr(D) key_opt(K). {
+  sqlite3Attach(pParse, F, D, K);
 }
-%type key_opt {struct AttachKey}
-key_opt(A) ::= .                     { A.type = 0; }
-key_opt(A) ::= KEY ids(X).           { A.type=1; A.key = X; }
-key_opt(A) ::= KEY BLOB(X).          { A.type=2; A.key = X; }
+%type key_opt {Expr *}
+key_opt(A) ::= .                     { A = 0; }
+key_opt(A) ::= KEY expr(X).          { A = X; }
 
 database_kw_opt ::= DATABASE.
 database_kw_opt ::= .
 
 //////////////////////// DETACH DATABASE name /////////////////////////////////
-cmd ::= DETACH database_kw_opt nm(D). {
-  sqlite3Detach(pParse, &D);
+cmd ::= DETACH database_kw_opt expr(D). {
+  sqlite3Detach(pParse, D);
 }
 
 ////////////////////////// REINDEX collation //////////////////////////////////
