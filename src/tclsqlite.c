@@ -402,7 +402,7 @@ static void tclSqlFunc(sqlite3_context *context, int argc, sqlite3_value**argv){
         }
         default: {
           int bytes = sqlite3_value_bytes(pIn);
-          pVal = Tcl_NewStringObj(sqlite3_value_text(pIn), bytes);
+          pVal = Tcl_NewStringObj((char *)sqlite3_value_text(pIn), bytes);
           break;
         }
       }
@@ -449,8 +449,8 @@ static void tclSqlFunc(sqlite3_context *context, int argc, sqlite3_value**argv){
       Tcl_GetWideIntFromObj(0, pVar, &v);
       sqlite3_result_int64(context, v);
     }else{
-      data = Tcl_GetStringFromObj(pVar, &n);
-      sqlite3_result_text(context, data, n, SQLITE_TRANSIENT);
+      data = (unsigned char *)Tcl_GetStringFromObj(pVar, &n);
+      sqlite3_result_text(context, (char *)data, n, SQLITE_TRANSIENT);
     }
   }
 }
@@ -1285,8 +1285,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
               Tcl_GetWideIntFromObj(interp, pVar, &v);
               sqlite3_bind_int64(pStmt, i, v);
             }else{
-              data = Tcl_GetStringFromObj(pVar, &n);
-              sqlite3_bind_text(pStmt, i, data, n, SQLITE_STATIC);
+              data = (unsigned char *)Tcl_GetStringFromObj(pVar, &n);
+              sqlite3_bind_text(pStmt, i, (char *)data, n, SQLITE_STATIC);
               Tcl_IncrRefCount(pVar);
               apParm[nParm++] = pVar;
             }
@@ -1354,7 +1354,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
               break;
             }
             default: {
-              pVal = dbTextToObj(sqlite3_column_text(pStmt, i));
+              pVal = dbTextToObj((char *)sqlite3_column_text(pStmt, i));
               break;
             }
           }

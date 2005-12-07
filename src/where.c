@@ -521,7 +521,7 @@ static int isLikeOrGlob(
     return 0;
   }
   sqlite3DequoteExpr(pRight);
-  z = pRight->token.z;
+  z = (char *)pRight->token.z;
   for(cnt=0; (c=z[cnt])!=0 && c!=wc[0] && c!=wc[1] && c!=wc[2]; cnt++){}
   if( cnt==0 || 255==(u8)z[cnt] ){
     return 0;
