@@ -922,6 +922,12 @@ void sqlite3Pragma(
   }else
 #endif
 
+#if SQLITE_HAS_CODEC
+  if( sqlite3StrICmp(zLeft, "key")==0 ){
+    sqlite3_key(db, zRight, strlen(zRight));
+  }else
+#endif
+
   {}
 
   if( v ){
