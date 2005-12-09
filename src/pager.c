@@ -950,7 +950,7 @@ static int pager_unwritelock(Pager *pPager){
 ** only the middle sector is corrupt, we will still have a reasonable
 ** chance of failing the checksum and thus detecting the problem.
 */
-static u32 pager_cksum(Pager *pPager, Pgno pgno, const char *aData){
+static u32 pager_cksum(Pager *pPager, Pgno pgno, const u8 *aData){
   u32 cksum = pPager->cksumInit;
   int i = pPager->pageSize-200;
   while( i>0 ){

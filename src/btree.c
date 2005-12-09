@@ -1535,7 +1535,7 @@ static void unlockBtreeIfUnused(Btree *pBt){
   if( pBt->inTrans==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
     if( pBt->pPage1->aData==0 ){
       MemPage *pPage = pBt->pPage1;
-      pPage->aData = &((char*)pPage)[-pBt->pageSize];
+      pPage->aData = &((u8*)pPage)[-pBt->pageSize];
       pPage->pBt = pBt;
       pPage->pgno = 1;
     }

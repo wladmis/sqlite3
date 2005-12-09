@@ -59,7 +59,7 @@ static int execExecSql(sqlite3 *db, const char *zSql){
   if( rc!=SQLITE_OK ) return rc;
 
   while( SQLITE_ROW==sqlite3_step(pStmt) ){
-    rc = execSql(db, sqlite3_column_text(pStmt, 0));
+    rc = execSql(db, (char*)sqlite3_column_text(pStmt, 0));
     if( rc!=SQLITE_OK ){
       sqlite3_finalize(pStmt);
       return rc;

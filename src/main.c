@@ -641,7 +641,7 @@ const char *sqlite3_errmsg(sqlite3 *db){
   if( sqlite3SafetyCheck(db) || db->errCode==SQLITE_MISUSE ){
     return sqlite3ErrStr(SQLITE_MISUSE);
   }
-  z = sqlite3_value_text(db->pErr);
+  z = (char*)sqlite3_value_text(db->pErr);
   if( z==0 ){
     z = sqlite3ErrStr(db->errCode);
   }

@@ -478,7 +478,6 @@ int sqlite3_prepare(
   } 
 #endif
 
-prepare_out:
   if( sqlite3SafetyOff(db) ){
     rc = SQLITE_MISUSE;
   }
