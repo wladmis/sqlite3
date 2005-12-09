@@ -972,7 +972,7 @@ static int btree_keysize(
     return TCL_ERROR;
   }
   pCur = sqlite3TextToPtr(argv[1]);
-  sqlite3BtreeKeySize(pCur, &n);
+  sqlite3BtreeKeySize(pCur, (i64*)&n);
   sqlite3_snprintf(sizeof(zBuf),zBuf, "%llu", n);
   Tcl_AppendResult(interp, zBuf, 0);
   return SQLITE_OK;
@@ -1000,7 +1000,7 @@ static int btree_key(
     return TCL_ERROR;
   }
   pCur = sqlite3TextToPtr(argv[1]);
-  sqlite3BtreeKeySize(pCur, &n);
+  sqlite3BtreeKeySize(pCur, (i64*)&n);
   if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
     char zBuf2[60];
     sqlite3_snprintf(sizeof(zBuf2),zBuf2, "%llu", n);
@@ -1084,7 +1084,7 @@ static int btree_fetch_key(
   }
   pCur = sqlite3TextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &n) ) return TCL_ERROR;
-  sqlite3BtreeKeySize(pCur, &nKey);
+  sqlite3BtreeKeySize(pCur, (i64*)&nKey);
   zBuf = sqlite3BtreeKeyFetch(pCur, &amt);
   if( zBuf && amt>=n ){
     assert( nKey<sizeof(zStatic) );
@@ -1159,9 +1159,9 @@ static int btree_payload_size(
   if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
     n1 = 0;
   }else{
-    sqlite3BtreeKeySize(pCur, &n1);
+    sqlite3BtreeKeySize(pCur, (i64*)&n1);
   }
-  sqlite3BtreeDataSize(pCur, &n2);
+  sqlite3BtreeDataSize(pCur, (u32*)&n2);
   sqlite3_snprintf(sizeof(zBuf),zBuf, "%d", (int)(n1+n2));
   Tcl_AppendResult(interp, zBuf, 0);
   return SQLITE_OK;
