@@ -3221,8 +3221,10 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_current_time, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_os_trace",
       (char*)&sqlite3_os_trace, TCL_LINK_INT);
+#ifdef SQLITE_MEMDEBUG
   Tcl_LinkVar(interp, "sqlite_malloc_id",
       (char*)&sqlite3_malloc_id, TCL_LINK_STRING);
+#endif
 #if OS_WIN
   Tcl_LinkVar(interp, "sqlite_os_type",
       (char*)&sqlite3_os_type, TCL_LINK_INT);

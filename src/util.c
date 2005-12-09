@@ -1214,7 +1214,7 @@ static SqliteTsd tsd = {
 #ifndef NDEBUG
   , 1                  /* mallocAllowed flag */
 #endif
-#ifndef SQLITE_MEMDEBUG
+#ifdef SQLITE_MEMDEBUG
   , 0
   , 0
   , 0

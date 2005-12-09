@@ -145,7 +145,9 @@ proc finalize_testing {} {
   catch {db2 close}
   catch {db3 close}
 
-pp_check_for_leaks
+  catch {
+    pp_check_for_leaks
+  }
 
   puts "$nErr errors out of $nTest tests"
   puts "Failures on these tests: $::failList"
