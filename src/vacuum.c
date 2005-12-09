@@ -311,12 +311,17 @@ end_of_vacuum:
   db->autoCommit = 1;
 
   if( pDetach ){
+    int mf = sqlite3Tsd()->mallocFailed;
+    sqlite3Tsd()->mallocFailed = 0;
+    sqlite3MallocDisallow();
     ((Vdbe *)pDetach)->expired = 0;
     sqlite3_step(pDetach);
     rc2 = sqlite3_finalize(pDetach);
     if( rc==SQLITE_OK ){
       rc = rc2;
     }
+    sqlite3MallocAllow();
+    sqlite3Tsd()->mallocFailed = mf;
   }
 
   /* If one of the execSql() calls above returned SQLITE_NOMEM, then the

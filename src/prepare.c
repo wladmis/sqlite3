@@ -503,7 +503,7 @@ prepare_out:
     sqlite3Error(db, rc, 0);
   }
 
-  sqlite3ClearMallocFailed();
+  sqlite3MallocClearFailed();
   return rc;
 }
 

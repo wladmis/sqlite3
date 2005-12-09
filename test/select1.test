@@ -799,5 +799,4 @@ ifcapable {compound && subquery} {
   } {x 1 x 3}
 } ;# ifcapable compound
 
-
 finish_test

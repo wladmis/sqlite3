@@ -390,11 +390,15 @@ int sqlite3VdbeExec(
 
   if( p->magic!=VDBE_MAGIC_RUN ) return SQLITE_MISUSE;
   assert( db->magic==SQLITE_MAGIC_BUSY );
+  pTos = p->pTos;
+  if( p->rc==SQLITE_NOMEM ){
+    /* This happens if a malloc() inside a call to sqlite3_column_text() or
+    ** sqlite3_column_text16() failed.  */
+    goto no_mem;
+  }
   assert( p->rc==SQLITE_OK || p->rc==SQLITE_BUSY );
   p->rc = SQLITE_OK;
   assert( p->explain==0 );
-  pTos = p->pTos;
-  if( sqlite3Tsd()->mallocFailed ) goto no_mem;
   if( p->popStack ){
     popStack(&pTos, p->popStack);
     p->popStack = 0;
@@ -3898,13 +3902,13 @@ case OP_ParseSchema: {        /* no-push */
   db->init.busy = 1;
   assert(0==sqlite3Tsd()->mallocFailed);
   rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
+  sqliteFree(zSql);
   db->init.busy = 0;
   sqlite3SafetyOn(db);
   if( rc==SQLITE_NOMEM ){
     sqlite3Tsd()->mallocFailed = 1;
     goto no_mem;
   }
-  sqliteFree(zSql);
   break;  
 }
 
