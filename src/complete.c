@@ -255,6 +255,9 @@ int sqlite3_complete16(const void *zSql){
   zSql8 = sqlite3ValueText(pVal, SQLITE_UTF8);
   if( zSql8 ){
     rc = sqlite3_complete(zSql8);
+  }else if( zSql ){
+    rc = SQLITE_NOMEM;
+    sqlite3MallocClearFailed();
   }
   sqlite3ValueFree(pVal);
   return rc;

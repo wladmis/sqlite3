@@ -810,7 +810,6 @@ static int sqlite_malloc_fail(
   }
   sqlite3_iMallocFail = n;
   sqlite3_iMallocReset = rep;
-  sqlite3Tsd()->mallocFailed = 0;
   return TCL_OK;
 }
 #endif

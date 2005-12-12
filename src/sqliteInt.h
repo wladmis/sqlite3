@@ -269,6 +269,11 @@ extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 typedef struct SqliteTsd SqliteTsd;
 struct SqliteTsd {
   int mallocFailed;               /* True after a malloc() has failed */
+#ifndef SQLITE_OMIT_SOFTHEAPLIMIT
+  unsigned int nSoftHeapLimit;    /* (uint)-1 for unlimited */
+  unsigned int nAlloc;            /* Number of bytes currently allocated */
+#endif
+
 #ifndef NDEBUG
   int mallocAllowed;              /* assert() in sqlite3Malloc() if not set */
 #endif

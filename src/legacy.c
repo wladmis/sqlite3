@@ -70,7 +70,6 @@ int sqlite3_exec(
     nCol = sqlite3_column_count(pStmt);
     azCols = sqliteMalloc(2*nCol*sizeof(const char *));
     if( nCol && !azCols ){
-      rc = SQLITE_NOMEM;
       goto exec_out;
     }
 
@@ -124,7 +123,9 @@ exec_out:
 
   if( sqlite3Tsd()->mallocFailed ){
     rc = SQLITE_NOMEM;
+    sqlite3MallocClearFailed();
   }
+
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){
     *pzErrMsg = malloc(1+strlen(sqlite3_errmsg(db)));
     if( *pzErrMsg ){

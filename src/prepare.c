@@ -443,12 +443,6 @@ int sqlite3_prepare(
 
   if( sqlite3Tsd()->mallocFailed ){
     sParse.rc = SQLITE_NOMEM;
-#if 0
-    sqlite3RollbackInternalChanges(db);
-    sqlite3RollbackAll(db);
-    db->flags &= ~SQLITE_InTrans;
-    db->autoCommit = 1;
-#endif
   }
   if( sParse.rc==SQLITE_DONE ) sParse.rc = SQLITE_OK;
   if( sParse.rc!=SQLITE_OK && sParse.checkSchema && !schemaIsValid(db) ){
