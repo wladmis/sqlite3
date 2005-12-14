@@ -36,7 +36,7 @@ static void callCollNeeded(sqlite3 *db, const char *zName, int nName){
   if( db->xCollNeeded16 ){
     char const *zExternal;
     sqlite3_value *pTmp = sqlite3GetTransientValue(db);
-    sqlite3ValueSetStr(pTmp, -1, zName, SQLITE_UTF8, SQLITE_STATIC);
+    sqlite3ValueSetStr(pTmp, nName, zName, SQLITE_UTF8, SQLITE_STATIC);
     zExternal = sqlite3ValueText(pTmp, SQLITE_UTF16NATIVE);
     if( !zExternal ) return;
     db->xCollNeeded16(db->pCollNeededArg, db, (int)db->enc, zExternal);
