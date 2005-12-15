@@ -548,6 +548,19 @@ void *sqlite3_commit_hook(
   return pOld;
 }
 
+/*
+** Register a callback to be invoked each time a row is updated,
+** inserted or deleted using this database connection.
+*/
+void sqlite3_update_hook(
+  sqlite3 *db,              /* Attach the hook to this database */
+  void (*xCallback)(void*,int,char const *,char const *,sqlite_int64),
+  void *pArg                /* Argument to the function */
+){
+  db->xUpdateCallback = xCallback;
+  db->pUpdateArg = pArg;
+}
+
 
 /*
 ** This routine is called to create a connection to a database BTree
