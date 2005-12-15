@@ -49,6 +49,7 @@ set LeakList {}
 
 set EXCLUDE {
   all.test
+  async.test
   crash.test
   autovacuum_crash.test
   quick.test

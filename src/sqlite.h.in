@@ -1291,6 +1291,10 @@ sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
 */
 void sqlite3_soft_heap_limit(int);
 
+
+int sqlite3_set_io_routine(int, void *);
+void *sqlite3_get_io_routine(int);
+
 /*
 ** Undo the hack that converts floating point types to integer for
 ** builds on processors without floating point support.

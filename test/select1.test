@@ -23,6 +23,7 @@ do_test select1-1.1 {
   lappend v $msg
 } {1 {no such table: test1}}
 
+
 execsql {CREATE TABLE test1(f1 int, f2 int)}
 
 do_test select1-1.2 {
@@ -798,5 +799,6 @@ ifcapable {compound && subquery} {
     }
   } {x 1 x 3}
 } ;# ifcapable compound
+
 
 finish_test
