@@ -1309,12 +1309,17 @@ void sqlite3_soft_heap_limit(int);
 **
 ** The update hook is not invoked when internal system tables are
 ** modified (i.e. sqlite_master and sqlite_sequence).
+**
+** If another function was previously registered, its pArg value is returned.
+** Otherwise NULL is returned.
 */
-void sqlite3_update_hook(
+void *sqlite3_update_hook(
   sqlite3*, 
   void(*)(void *,int ,char const *,char const *,sqlite_int64),
   void*
 );
+
+void *sqlite3_rollback_hook(sqlite3*, void(*)(void *), void*);
 
 /*
 ** Undo the hack that converts floating point types to integer for

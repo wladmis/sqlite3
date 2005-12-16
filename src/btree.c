@@ -4906,9 +4906,11 @@ int sqlite3BtreeClearTable(Btree *pBt, int iTable){
     }
   }
   rc = clearDatabasePage(pBt, (Pgno)iTable, 0, 0);
+#if 0
   if( rc ){
     sqlite3BtreeRollback(pBt);
   }
+#endif
   return rc;
 }
 
