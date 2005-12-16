@@ -231,8 +231,12 @@ db update_hook {}
 # error condition).
 #
 # hook-5.1.* - Test explicit rollbacks.
-# hook-5.2.* - Test implicit rollbacks.
-# hook-5.3.* - Test hot-journal rollbacks.
+# hook-5.2.* - Test implicit rollbacks caused by constraint failure.
+#
+# hook-5.3.* - Test implicit rollbacks caused by IO errors.
+# hook-5.4.* - Test implicit rollbacks caused by malloc() failure.
+# hook-5.5.* - Test hot-journal rollbacks. Or should the rollback hook 
+#              not be called for these?
 #
 
 do_test hook-5.0 {
@@ -243,6 +247,7 @@ do_test hook-5.0 {
 } {}
 
 # Test explicit rollbacks. Not much can really go wrong here.
+#
 do_test hook-5.1.1 {
   set ::rollback_hook 0
   execsql {
@@ -253,6 +258,7 @@ do_test hook-5.1.1 {
 } {1}
 
 # Test implicit rollbacks caused by constraints.
+#
 do_test hook-5.2.1 {
   set ::rollback_hook 0
   catchsql {
@@ -271,6 +277,7 @@ do_test hook-5.2.2 {
 } {1}
 
 #
+# End rollback-hook testing.
 #----------------------------------------------------------------------------
 
 finish_test

@@ -5818,15 +5818,3 @@ int sqlite3BtreeSync(Btree *pBt, const char *zMaster){
   return SQLITE_OK;
 }
 
-#ifndef SQLITE_OMIT_GLOBALRECOVER
-/*
-** Reset the btree and underlying pager after a malloc() failure. Any
-** transaction that was active when malloc() failed is rolled back.
-*/
-int sqlite3BtreeReset(Btree *pBt){
-  if( pBt->pCursor ) return SQLITE_BUSY;
-  pBt->inTrans = TRANS_NONE;
-  unlockBtreeIfUnused(pBt);
-  return sqlite3pager_reset(pBt->pPager);
-}
-#endif

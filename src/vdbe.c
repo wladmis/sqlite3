@@ -2299,16 +2299,19 @@ case OP_AutoCommit: {       /* no-push */
         " transaction - SQL statements in progress", 0);
     rc = SQLITE_ERROR;
   }else if( i!=db->autoCommit ){
-    db->autoCommit = i;
     if( pOp->p2 ){
       assert( i==1 );
       sqlite3RollbackAll(db);
-    }else if( sqlite3VdbeHalt(p)==SQLITE_BUSY ){
-      p->pTos = pTos;
-      p->pc = pc;
-      db->autoCommit = 1-i;
-      p->rc = SQLITE_BUSY;
-      return SQLITE_BUSY;
+      db->autoCommit = 1;
+    }else{
+      db->autoCommit = i;
+      if( sqlite3VdbeHalt(p)==SQLITE_BUSY ){
+        p->pTos = pTos;
+        p->pc = pc;
+        db->autoCommit = 1-i;
+        p->rc = SQLITE_BUSY;
+        return SQLITE_BUSY;
+      }
     }
     return SQLITE_DONE;
   }else{
