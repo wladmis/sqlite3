@@ -490,7 +490,7 @@ if {![sqlite3 -has-codec]} {
     set ::bt [btree_open test.db 10 0]
     btree_begin_transaction $::bt
     set meta [btree_get_meta $::bt]
-    lset meta 2 4
+    lset meta 2 5
     eval [concat btree_update_meta $::bt [lrange $meta 0 end]]
     btree_commit $::bt
     btree_close $::bt
