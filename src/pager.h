@@ -16,6 +16,9 @@
 ** @(#) $Id$
 */
 
+#ifndef _PAGER_H_
+#define _PAGER_H_
+
 /*
 ** The default size of a database page.
 */
@@ -114,3 +117,5 @@ int sqlite3pager_lockstate(Pager*);
 void sqlite3pager_refdump(Pager*);
 int pager3_refinfo_enable;
 #endif
+
+#endif /* _PAGER_H_ */

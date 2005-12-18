@@ -226,6 +226,7 @@ struct BusyHandler {
 */
 #include "vdbe.h"
 #include "btree.h"
+#include "pager.h"
 
 /*
 ** This macro casts a pointer to an integer.  Useful for doing
@@ -261,7 +262,8 @@ extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 
 #endif
 
-#define sqliteFree(x)     sqlite3FreeX(x)
+#define sqliteFree(x)          sqlite3FreeX(x)
+#define sqliteAllocSize(x)     sqlite3AllocSize(x)
 
 /*
 ** An instance of this structure is allocated for each thread that uses SQLite.
@@ -270,9 +272,11 @@ typedef struct SqliteTsd SqliteTsd;
 struct SqliteTsd {
   int isInit;                     /* True if structure has been initialised */
   int mallocFailed;               /* True after a malloc() has failed */
-#ifndef SQLITE_OMIT_SOFTHEAPLIMIT
+
+#ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
   unsigned int nSoftHeapLimit;    /* (uint)-1 for unlimited */
   unsigned int nAlloc;            /* Number of bytes currently allocated */
+  Pager *pPager;                  /* Linked list of all pagers in this thread */
 #endif
 
 #ifndef NDEBUG
@@ -1437,6 +1441,7 @@ char *sqlite3StrNDup(const char*, int);
 void sqlite3ReallocOrFree(void**,int);
 void sqlite3FreeX(void*);
 void *sqlite3MallocX(int);
+int sqlite3AllocSize(void *);
 
 char *sqlite3MPrintf(const char*, ...);
 char *sqlite3VMPrintf(const char*, va_list);
