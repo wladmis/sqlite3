@@ -66,9 +66,10 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
-newsitem {2005-Dec-19} {Version 3.2.8} {
-  This version contains a single one-line change from 3.2.7.  That change
-  fixes a problem which might cause database corruption if a large INSERT or
+newsitem {2005-Dec-19} {Versions 3.2.8 and 2.8.17} {
+  These versions contain one-line changes to 3.2.7 and 2.8.16 to fix a bug
+  that has been present since March of 2002 and version 2.4.0.
+  That bug might possibly cause database corruption if a large INSERT or
   UPDATE statement within a multi-statement transaction fails due to a
   uniqueness constraint but the containing transaction commits.
 }
