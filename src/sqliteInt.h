@@ -272,7 +272,6 @@ typedef struct SqliteTsd SqliteTsd;
 struct SqliteTsd {
   int isInit;                     /* True if structure has been initialised */
   int mallocFailed;               /* True after a malloc() has failed */
-
 #ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
   unsigned int nSoftHeapLimit;    /* (uint)-1 for unlimited */
   unsigned int nAlloc;            /* Number of bytes currently allocated */
