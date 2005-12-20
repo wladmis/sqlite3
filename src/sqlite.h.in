@@ -1289,7 +1289,7 @@ sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
 ** This function is only available if the library was compiled without the 
 ** SQLITE_OMIT_MEMORY_MANAGEMENT option set.
 */
-void sqlite3_soft_heap_limit(int);
+void sqlite3_soft_heap_limit(sqlite_int64);
 
 /*
 ** Register a callback function with the database connection identified by the 

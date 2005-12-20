@@ -2309,6 +2309,9 @@ static int hasHotJournal(Pager *pPager){
   }
 }
 
+/*
+** Try to find a page in the cache that can be recycled.
+*/
 static int pager_recycle(Pager *pPager, int syncOk, PgHdr **ppPg){
   PgHdr *pPg;
   *ppPg = 0;
@@ -2323,7 +2326,7 @@ static int pager_recycle(Pager *pPager, int syncOk, PgHdr **ppPg){
   ** very slow operation, so we work hard to avoid it.  But sometimes
   ** it can't be helped.
   */
-  if( pPg==0 && pPager->pFirst && syncOk ){
+  if( pPg==0 && pPager->pFirst && syncOk && !MEMDB){
     int rc = syncJournal(pPager);
     if( rc!=0 ){
       sqlite3pager_rollback(pPager);
