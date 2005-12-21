@@ -2763,7 +2763,8 @@ case OP_MoveGt: {       /* no-push */
       pC->lastRowid = pTos->i;
       pC->rowidIsValid = res==0;
     }else{
-      Stringify(pTos, db->enc);
+      assert( pTos->flags & MEM_Blob );
+      /* Stringify(pTos, db->enc); */
       rc = sqlite3BtreeMoveto(pC->pCursor, pTos->z, pTos->n, &res);
       if( rc!=SQLITE_OK ){
         goto abort_due_to_error;

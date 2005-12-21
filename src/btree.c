@@ -2721,7 +2721,7 @@ int sqlite3BtreeLast(BtCursor *pCur, int *pRes){
 **
 ** For INTKEY tables, only the nKey parameter is used.  pKey is
 ** ignored.  For other tables, nKey is the number of bytes of data
-** in nKey.  The comparison function specified when the cursor was
+** in pKey.  The comparison function specified when the cursor was
 ** created is used to compare keys.
 **
 ** If an exact match is not found, then the cursor is always
@@ -5817,4 +5817,3 @@ int sqlite3BtreeSync(Btree *pBt, const char *zMaster){
   }
   return SQLITE_OK;
 }
-
