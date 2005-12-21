@@ -385,7 +385,6 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   char *zCol;               /* Null-terminated column definition */
   Column *pCol;             /* The new column */
   Expr *pDflt;              /* Default value for the new column */
-  Vdbe *v;
 
   if( pParse->nErr ) return;
   pNew = pParse->pNewTable;
@@ -467,23 +466,6 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   /* Reload the schema of the modified table. */
   reloadTableSchema(pParse, pTab, pTab->zName);
 }
-
-/*
-** Generate code to make sure the file format number is at least minFormat.
-** The generated code will increase the file format number if necessary.
-*/
-void sqlite3MinimumFileFormat(Parse *pParse, int iDb, int minFormat){
-  Vdbe *v;
-  v = sqlite3GetVdbe(pParse);
-  if( v ){
-    sqlite3VdbeAddOp(v, OP_ReadCookie, iDb, 1);
-    sqlite3VdbeAddOp(v, OP_Integer, minFormat, 0);
-    sqlite3VdbeAddOp(v, OP_Ge, 0, sqlite3VdbeCurrentAddr(v)+3);
-    sqlite3VdbeAddOp(v, OP_Integer, minFormat, 0);
-    sqlite3VdbeAddOp(v, OP_SetCookie, iDb, 1);
-  }
-}
-
 
 /*
 ** This function is called by the parser after the table-name in
