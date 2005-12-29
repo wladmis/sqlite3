@@ -40,8 +40,7 @@ proc get_file_format {{fname test.db}} {
   lindex $meta 2
 }
 
-# Verify that the file format jumps to (at least) 4 as soon as a
-# descending index is created.
+# Verify that the file format starts as 4
 #
 do_test descidx2-1.1 {
   execsql {
@@ -49,7 +48,7 @@ do_test descidx2-1.1 {
     CREATE INDEX i1 ON t1(b ASC);
   }
   get_file_format
-} {1}
+} {4}
 do_test descidx2-1.2 {
   execsql {
     CREATE INDEX i2 ON t1(a DESC);
