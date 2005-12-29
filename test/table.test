@@ -103,6 +103,9 @@ do_test table-2.1c {
   lappend v $msg
 } {1 {object name reserved for internal use: sqlite_master}}
 do_test table-2.1d {
+  catchsql {CREATE TABLE IF NOT EXISTS test2(x,y)}
+} {0 {}}
+do_test table-2.1e {
   execsql {DROP TABLE test2; SELECT name FROM sqlite_master WHERE type!='meta'}
 } {}
 

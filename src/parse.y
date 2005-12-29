@@ -120,9 +120,12 @@ cmd ::= ROLLBACK trans_opt.    {sqlite3RollbackTransaction(pParse);}
 ///////////////////// The CREATE TABLE statement ////////////////////////////
 //
 cmd ::= create_table create_table_args.
-create_table ::= CREATE(X) temp(T) TABLE nm(Y) dbnm(Z). {
-   sqlite3StartTable(pParse,&X,&Y,&Z,T,0);
+create_table ::= CREATE(X) temp(T) TABLE ifnotexists(E) nm(Y) dbnm(Z). {
+   sqlite3StartTable(pParse,&X,&Y,&Z,T,0,E);
 }
+%type ifnotexists {int}
+ifnotexists(A) ::= .              {A = 0;}
+ifnotexists(A) ::= IF NOT EXISTS. {A = 1;}
 %type temp {int}
 %ifndef SQLITE_OMIT_TEMPDB
 temp(A) ::= TEMP.  {A = 1;}

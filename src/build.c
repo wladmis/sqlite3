@@ -635,7 +635,8 @@ void sqlite3StartTable(
   Token *pName1,   /* First part of the name of the table or view */
   Token *pName2,   /* Second part of the name of the table or view */
   int isTemp,      /* True if this is a TEMP table */
-  int isView       /* True if this is a VIEW */
+  int isView,      /* True if this is a VIEW */
+  int noErr        /* Do nothing if table already exists */
 ){
   Table *pTable;
   char *zName = 0; /* The name of the new table */
@@ -713,7 +714,9 @@ void sqlite3StartTable(
   }
   pTable = sqlite3FindTable(db, zName, db->aDb[iDb].zName);
   if( pTable ){
-    sqlite3ErrorMsg(pParse, "table %T already exists", pName);
+    if( !noErr ){
+      sqlite3ErrorMsg(pParse, "table %T already exists", pName);
+    }
     goto begin_table_error;
   }
   if( sqlite3FindIndex(db, zName, 0)!=0 && (iDb==0 || !db->init.busy) ){
@@ -1505,7 +1508,7 @@ void sqlite3CreateView(
     sqlite3SelectDelete(pSelect);
     return;
   }
-  sqlite3StartTable(pParse, pBegin, pName1, pName2, isTemp, 1);
+  sqlite3StartTable(pParse, pBegin, pName1, pName2, isTemp, 1, 0);
   p = pParse->pNewTable;
   if( p==0 || pParse->nErr ){
     sqlite3SelectDelete(pSelect);
