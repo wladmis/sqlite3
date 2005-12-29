@@ -830,7 +830,7 @@ static void resolve_backslashes(char *z){
       }else if( c=='r' ){
         c = '\r';
       }else if( c>='0' && c<='7' ){
-        c =- '0';
+        c -= '0';
         if( z[i+1]>='0' && z[i+1]<='7' ){
           i++;
           c = (c<<3) + z[i] - '0';
