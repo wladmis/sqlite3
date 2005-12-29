@@ -130,7 +130,8 @@ static void attachFunc(
   {
     extern int sqlite3CodecAttach(sqlite3*, int, void*, int);
     extern void sqlite3CodecGetKey(sqlite3*, int, void**, int*);
-
+    int nKey;
+    char *zKey;
     int t = sqlite3_value_type(argv[2]);
     switch( t ){
       case SQLITE_INTEGER:
