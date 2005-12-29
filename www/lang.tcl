@@ -875,7 +875,7 @@ will be freed automatically by DROP INDEX.</p>
 Section {DROP TABLE} droptable
 
 Syntax {sql-command} {
-DROP TABLE [<database-name>.] <table-name>
+DROP TABLE [IF EXISTS] [<database-name>.] <table-name>
 }
 
 puts {
@@ -891,6 +891,9 @@ later INSERTs.  To
 remove free space in the database, use the <a href="#vacuum">VACUUM</a> 
 command.  If AUTOVACUUM mode is enabled for a database then space
 will be freed automatically by DROP TABLE.</p>
+
+<p>The optional IF EXISTS clause suppresses the error that would normally
+result if the table does not exist.</p>
 }
 
 

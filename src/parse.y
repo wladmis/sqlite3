@@ -172,7 +172,7 @@ id(A) ::= ID(X).         {A = X;}
 %ifdef SQLITE_OMIT_COMPOUND_SELECT
   EXCEPT INTERSECT UNION
 %endif
-  REINDEX RENAME CTIME_KW
+  REINDEX RENAME CTIME_KW IF
   .
 
 // Define operator precedence early so that this is the first occurance
@@ -336,9 +336,12 @@ resolvetype(A) ::= REPLACE.                  {A = OE_Replace;}
 
 ////////////////////////// The DROP TABLE /////////////////////////////////////
 //
-cmd ::= DROP TABLE fullname(X). {
-  sqlite3DropTable(pParse, X, 0);
+cmd ::= DROP TABLE ifexists(E) fullname(X). {
+  sqlite3DropTable(pParse, X, 0, E);
 }
+%type ifexists {int}
+ifexists(A) ::= IF EXISTS.   {A = 1;}
+ifexists(A) ::= .            {A = 0;}
 
 ///////////////////// The CREATE VIEW statement /////////////////////////////
 //
@@ -346,8 +349,8 @@ cmd ::= DROP TABLE fullname(X). {
 cmd ::= CREATE(X) temp(T) VIEW nm(Y) dbnm(Z) AS select(S). {
   sqlite3CreateView(pParse, &X, &Y, &Z, S, T);
 }
-cmd ::= DROP VIEW fullname(X). {
-  sqlite3DropTable(pParse, X, 1);
+cmd ::= DROP VIEW ifexists(E) fullname(X). {
+  sqlite3DropTable(pParse, X, 1, E);
 }
 %endif // SQLITE_OMIT_VIEW
 

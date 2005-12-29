@@ -762,6 +762,15 @@ void sqlite3ErrorMsg(Parse *pParse, const char *zFormat, ...){
 }
 
 /*
+** Clear the error message in pParse, if any
+*/
+void sqlite3ErrorClear(Parse *pParse){
+  sqliteFree(pParse->zErrMsg);
+  pParse->zErrMsg = 0;
+  pParse->nErr = 0;
+}
+
+/*
 ** Convert an SQL-style quoted string into a normal string by removing
 ** the quote characters.  The conversion is done in-place.  If the
 ** input does not begin with a quote character, then this routine
@@ -1331,5 +1340,3 @@ void sqlite3MallocAllow(){
   sqlite3Tsd()->mallocAllowed = 1;
 }
 #endif
-
-
