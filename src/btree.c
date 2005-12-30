@@ -531,7 +531,9 @@ static int lockTable(Btree *p, Pgno iTable, u8 eLock){
   ** and a read-lock requested, we don't incorrectly downgrade the lock.
   */
   assert( WRITE_LOCK>READ_LOCK );
-  pLock->eLock = MAX(pLock->eLock, eLock);
+  if( eLock>pLock->eLock ){
+    pLock->eLock = eLock;
+  }
 
   return SQLITE_OK;
 }
