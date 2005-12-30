@@ -36,10 +36,12 @@
 */
 typedef struct Btree Btree;
 typedef struct BtCursor BtCursor;
+typedef struct BtShared BtShared;
 
 
 int sqlite3BtreeOpen(
   const char *zFilename,   /* Name of database file to open */
+  sqlite3 *db,             /* Associated database connection */
   Btree **,                /* Return open Btree* here */
   int flags                /* Flags */
 );

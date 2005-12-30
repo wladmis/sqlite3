@@ -891,6 +891,38 @@ static int sqlite_malloc_outstanding(
 #endif
 
 /*
+** Usage: sqlite3_enable_shared_cache BOOLEAN
+**
+*/
+#ifndef SQLITE_OMIT_SHARED_CACHE
+static int test_enable_shared_cache(
+  ClientData clientData,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  int rc;
+  int enable;
+  SqliteTsd *pTsd = sqlite3Tsd();
+  Tcl_SetObjResult(interp, Tcl_NewBooleanObj(pTsd->useSharedData));
+
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "BOOLEAN");
+    return TCL_ERROR;
+  }
+  if( Tcl_GetBooleanFromObj(interp, objv[1], &enable) ){
+    return TCL_ERROR;
+  }
+  rc = sqlite3_enable_shared_cache(enable);
+  if( rc!=SQLITE_OK ){
+    Tcl_SetResult(interp, (char *)sqlite3ErrStr(rc), TCL_STATIC);
+    return TCL_ERROR;
+  }
+  return TCL_OK;
+}
+#endif
+
+/*
 ** Usage:  sqlite_abort
 **
 ** Shutdown the process immediately.  This is not a clean shutdown.
@@ -3074,6 +3106,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "schema_version", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_OMIT_SHARED_CACHE
+  Tcl_SetVar2(interp, "sqlite_options", "shared_cache", "0", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "shared_cache", "1", TCL_GLOBAL_ONLY);
+#endif
+
 #ifdef SQLITE_OMIT_SUBQUERY
   Tcl_SetVar2(interp, "sqlite_options", "subquery", "0", TCL_GLOBAL_ONLY);
 #else
@@ -3250,6 +3288,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 #endif
      { "sqlite3_test_errstr",     test_errstr, 0             },
      { "tcl_variable_type",       tcl_variable_type, 0       },
+#ifndef SQLITE_OMIT_SHARED_CACHE
+     { "sqlite3_enable_shared_cache", test_enable_shared_cache, 0},
+#endif
   };
   static int bitmask_size = sizeof(Bitmask)*8;
   int i;

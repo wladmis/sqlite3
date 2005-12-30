@@ -289,6 +289,11 @@ struct SqliteTsd {
   Pager *pPager;           /* Linked list of all pagers in this thread */
 #endif
 
+#ifndef SQLITE_OMIT_SHARED_CACHE
+  u8 useSharedData;        /* True if shared pagers and schemas are enabled */
+  BtShared *pBtree;
+#endif
+
 #ifdef SQLITE_MEMDEBUG
   i64 nMaxAlloc;           /* High water mark of SqliteTsd.nAlloc */
   int mallocAllowed;       /* assert() in sqlite3Malloc() if not set */

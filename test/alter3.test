@@ -360,6 +360,7 @@ do_test alter3-8.1 {
     CREATE TABLE t4(c1);
   }
 } {}
+set ::sql ""
 do_test alter3-8.2 {
   set cols c1
   for {set i 2} {$i < 100} {incr i} {

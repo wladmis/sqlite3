@@ -440,6 +440,7 @@ proc copy_file {from to} {
 #
 proc check_for_leaks {} {
   set ret [list]
+  set cnt 0
   foreach alloc [sqlite_malloc_outstanding] {
     foreach {nBytes file iLine userstring backtrace} $alloc {}
     set stack [list]
@@ -447,18 +448,21 @@ proc check_for_leaks {} {
 
     # The first command in this block will probably fail on windows. This
     # means there will be no stack dump available.
-    catch {
-      set stuff [eval "exec addr2line -e ./testfixture -f $backtrace"]
-      foreach {func line} $stuff {
-        if {$func != "??" || $line != "??:0"} {
-          regexp {.*/(.*)} $line dummy line
-          lappend stack "${func}() $line"
-        } else {
-          if {[lindex $stack end] != "..."} {
-            lappend stack "..."
+    if {$cnt < 25} {
+      catch {
+        set stuff [eval "exec addr2line -e ./testfixture -f $backtrace"]
+        foreach {func line} $stuff {
+          if {$func != "??" || $line != "??:0"} {
+            regexp {.*/(.*)} $line dummy line
+            lappend stack "${func}() $line"
+          } else {
+            if {[lindex $stack end] != "..."} {
+              lappend stack "..."
+            }
           }
         }
       }
+      incr cnt
     }
 
     if {!$skip} {

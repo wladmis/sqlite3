@@ -1339,6 +1339,14 @@ void *sqlite3_rollback_hook(sqlite3*, void(*)(void *), void*);
 int sqlite3_release_memory(int);
 
 /*
+** This function is only available if the library is compiled without
+** the SQLITE_OMIT_SHARED_CACHE macro defined. It is used to enable or
+** disable (if the argument is true or false, respectively) the 
+** "shared pager" feature.
+*/
+int sqlite3_enable_shared_cache(int);
+
+/*
 ** Undo the hack that converts floating point types to integer for
 ** builds on processors without floating point support.
 */

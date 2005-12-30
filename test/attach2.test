@@ -18,7 +18,6 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-
 # Ticket #354
 #
 # Databases test.db and test2.db contain identical schemas.  Make
@@ -157,7 +156,7 @@ proc lock_status {testnum db expected_result} {
   # If the database was compiled with OMIT_TEMPDB set, then 
   # the lock_status list will not contain an entry for the temp
   # db. But the test code doesn't know this, so it's easiest 
-  # to filter it out here.
+  # to filter it out of the $expected_result list here.
   ifcapable !tempdb {
     set expected_result [concat \
         [lrange $expected_result 0 1] \
