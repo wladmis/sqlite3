@@ -2298,7 +2298,7 @@ case OP_AutoCommit: {       /* no-push */
     ** that the other VMs must complete first. 
     */
     sqlite3SetString(&p->zErrMsg, "cannot ", rollback?"rollback":"commit", 
-        " transaction - SQL statements in progress", 0);
+        " transaction - SQL statements in progress", (char*)0);
     rc = SQLITE_ERROR;
   }else if( i!=db->autoCommit ){
     if( pOp->p2 ){
@@ -2320,7 +2320,7 @@ case OP_AutoCommit: {       /* no-push */
     sqlite3SetString(&p->zErrMsg,
         (!i)?"cannot start a transaction within a transaction":(
         (rollback)?"cannot rollback - no transaction is active":
-                   "cannot commit - no transaction is active"), 0);
+                   "cannot commit - no transaction is active"), (char*)0);
          
     rc = SQLITE_ERROR;
   }

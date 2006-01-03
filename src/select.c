@@ -892,7 +892,7 @@ static void generateColumnNames(
  
         zTab = pTabList->a[j].zAlias;
         if( fullNames || zTab==0 ) zTab = pTab->zName;
-        sqlite3SetString(&zName, zTab, ".", zCol, 0);
+        sqlite3SetString(&zName, zTab, ".", zCol, (char*)0);
         sqlite3VdbeSetColName(v, i, zName, P3_DYNAMIC);
       }else{
         sqlite3VdbeSetColName(v, i, zCol, strlen(zCol));

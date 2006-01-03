@@ -1005,9 +1005,9 @@ static int lookupName(
     char *zErr;
     zErr = cnt==0 ? "no such column: %s" : "ambiguous column name: %s";
     if( zDb ){
-      sqlite3SetString(&z, zDb, ".", zTab, ".", zCol, 0);
+      sqlite3SetString(&z, zDb, ".", zTab, ".", zCol, (char*)0);
     }else if( zTab ){
-      sqlite3SetString(&z, zTab, ".", zCol, 0);
+      sqlite3SetString(&z, zTab, ".", zCol, (char*)0);
     }else{
       z = sqliteStrDup(zCol);
     }
