@@ -53,7 +53,7 @@ do_test trace-1.5 {
 # happens on each execution.
 #
 db close
-set DB [sqlite3 db test.db]
+sqlite3 db test.db; set DB [sqlite3_connection_pointer db]
 do_test trace-2.1 {
   set STMT [sqlite3_prepare $DB {INSERT INTO t1 VALUES(2,3)} -1 TAIL]
   db trace trace_proc
@@ -116,7 +116,7 @@ do_test trace-3.5 {
 # happens on each execution.
 #
 db close
-set DB [sqlite3 db test.db]
+sqlite3 db test.db; set DB [sqlite3_connection_pointer db]
 do_test trace-4.1 {
   set STMT [sqlite3_prepare $DB {INSERT INTO t2 VALUES(2,3)} -1 TAIL]
   db trace trace_proc

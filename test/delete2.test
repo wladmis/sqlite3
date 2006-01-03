@@ -38,8 +38,7 @@ source $testdir/tester.tcl
 # Create a table that has an index.
 #
 do_test delete2-1.1 {
-  db close
-  set DB [sqlite3 db test.db]
+  set DB [sqlite3_connection_pointer db]
   execsql {
     CREATE TABLE q(s string, id string, constraint pk_q primary key(id));
     BEGIN;

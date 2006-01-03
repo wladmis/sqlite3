@@ -512,7 +512,8 @@ do_test autoinc-8.1 {
   catch {db2 close}
   catch {db close}
   file delete -force test.db
-  set DB [sqlite3 db test.db]
+  sqlite3 db test.db
+  set DB [sqlite3_connection_pointer db]
   set STMT [sqlite3_prepare $DB {
      CREATE TABLE t1(
        x INTEGER PRIMARY KEY AUTOINCREMENT

@@ -20,9 +20,9 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
 
-db close
-set DB [sqlite3 db test.db]
-set DB2 [sqlite3 db2 test.db]
+set DB [sqlite3_connection_pointer db]
+sqlite3 db2 test.db
+set DB2 [sqlite3_connection_pointer db2]
 
 # Create some data in the database
 #

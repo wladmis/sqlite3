@@ -16,8 +16,7 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
-db close
-set DB [sqlite3 db test.db]
+set DB [sqlite3_connection_pointer db]
 
 # Compute a checksum on the entire database.
 #

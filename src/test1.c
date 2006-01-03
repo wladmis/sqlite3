@@ -21,6 +21,48 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+** This is a copy of the first part of the SqliteDb structure in 
+** tclsqlite.c.  We need it here so that the get_sqlite_pointer routine
+** can extract the sqlite3* pointer from an existing Tcl SQLite
+** connection.
+*/
+struct SqliteDb {
+  sqlite3 *db;
+};
+
+/*
+** A TCL command that returns the address of the sqlite* pointer
+** for an sqlite connection instance.  Bad things happen if the
+** input is not an sqlite connection.
+*/
+static int get_sqlite_pointer(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  struct SqliteDb *p;
+  Tcl_CmdInfo cmdInfo;
+  char zBuf[100];
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "SQLITE-CONNECTION");
+    return TCL_ERROR;
+  }
+  if( !Tcl_GetCommandInfo(interp, Tcl_GetString(objv[1]), &cmdInfo) ){
+    Tcl_AppendResult(interp, "command not found: ",
+           Tcl_GetString(objv[1]), (char*)0);
+    return TCL_ERROR;
+  }
+  p = (struct SqliteDb*)cmdInfo.objClientData;
+  sprintf(zBuf, "%p", p->db);
+  if( strncmp(zBuf,"0x",2) ){
+    sprintf(zBuf, "0x%p", p->db);
+  }
+  Tcl_AppendResult(interp, zBuf, 0);
+  return TCL_OK;
+}
+
 const char *sqlite3TestErrorName(int rc){
   const char *zName = 0;
   switch( rc ){
@@ -3219,6 +3261,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      Tcl_ObjCmdProc *xProc;
      void *clientData;
   } aObjCmd[] = {
+     { "sqlite3_connection_pointer",    get_sqlite_pointer, 0 },
      { "sqlite3_bind_int",              test_bind_int,      0 },
      { "sqlite3_bind_int64",            test_bind_int64,    0 },
      { "sqlite3_bind_double",           test_bind_double,   0 },
