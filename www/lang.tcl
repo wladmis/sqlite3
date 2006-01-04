@@ -440,7 +440,7 @@ puts "\"[Operator \\.]\".</p>"
 Section {CREATE INDEX} createindex
 
 Syntax {sql-statement} {
-CREATE [UNIQUE] INDEX [<database-name> .] <index-name> 
+CREATE [UNIQUE] INDEX [IF NOT EXISTS] [<database-name> .] <index-name> 
 ON <table-name> ( <column-name> [, <column-name>]* )
 [ ON CONFLICT <conflict-algorithm> ]
 } {column-name} {
@@ -853,7 +853,7 @@ others intact.</p>
 Section {DROP INDEX} dropindex
 
 Syntax {sql-command} {
-DROP INDEX [<database-name> .] <index-name>
+DROP INDEX [IF EXISTS] [<database-name> .] <index-name>
 }
 
 puts {
