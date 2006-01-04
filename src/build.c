@@ -2161,6 +2161,7 @@ void sqlite3CreateIndex(
   }else{
     assert( pName==0 );
     pTab =  pParse->pNewTable;
+    if( !pTab ) goto exit_create_index;
     iDb = pTab->iDb;
   }
   pDb = &db->aDb[iDb];
