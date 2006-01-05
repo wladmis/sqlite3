@@ -3884,6 +3884,11 @@ case OP_Destroy: {
 ** See also: Destroy
 */
 case OP_Clear: {        /* no-push */
+
+  /* For consistency with the way other features of SQLite operate
+  ** with a truncate, we will also skip the update callback.
+  */
+#if 0
   Btree *pBt = db->aDb[pOp->p2].pBt;
   if( db->xUpdateCallback && pOp->p3 ){
     const char *zDb = db->aDb[pOp->p2].zName;
@@ -3913,6 +3918,7 @@ case OP_Clear: {        /* no-push */
       goto abort_due_to_error;
     }
   }
+#endif
   rc = sqlite3BtreeClearTable(db->aDb[pOp->p2].pBt, pOp->p1);
   break;
 }
