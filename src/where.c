@@ -1554,8 +1554,9 @@ WhereInfo *sqlite3WhereBegin(
   sqlite3CodeVerifySchema(pParse, -1); /* Insert the cookie verifier Goto */
   pLevel = pWInfo->a;
   for(i=0, pLevel=pWInfo->a; i<pTabList->nSrc; i++, pLevel++){
-    Table *pTab;
-    Index *pIx;
+    Table *pTab;     /* Table to open */
+    Index *pIx;      /* Index used to access pTab (if any) */
+    int iDb;         /* Index of database containing table/index */
     int iIdxCur = pLevel->iIdxCur;
 
 #ifndef SQLITE_OMIT_EXPLAIN
@@ -1576,13 +1577,15 @@ WhereInfo *sqlite3WhereBegin(
 #endif /* SQLITE_OMIT_EXPLAIN */
     pTabItem = &pTabList->a[pLevel->iFrom];
     pTab = pTabItem->pTab;
+    iDb = sqlite3SchemaToIndex(pParse->db, pTab->pSchema);
     if( pTab->isTransient || pTab->pSelect ) continue;
     if( (pLevel->flags & WHERE_IDX_ONLY)==0 ){
-      sqlite3OpenTableForReading(v, pTabItem->iCursor, pTab);
+      sqlite3OpenTableForReading(v, pTabItem->iCursor, iDb, pTab);
     }
     pLevel->iTabCur = pTabItem->iCursor;
     if( (pIx = pLevel->pIdx)!=0 ){
-      sqlite3VdbeAddOp(v, OP_Integer, pIx->iDb, 0);
+      assert( pIx->pSchema==pTab->pSchema );
+      sqlite3VdbeAddOp(v, OP_Integer, iDb, 0);
       VdbeComment((v, "# %s", pIx->zName));
       sqlite3VdbeOp3(v, OP_OpenRead, iIdxCur, pIx->tnum,
                      (char*)&pIx->keyInfo, P3_KEYINFO);
@@ -1590,7 +1593,7 @@ WhereInfo *sqlite3WhereBegin(
     if( (pLevel->flags & WHERE_IDX_ONLY)!=0 ){
       sqlite3VdbeAddOp(v, OP_SetNumColumns, iIdxCur, pIx->nColumn+1);
     }
-    sqlite3CodeVerifySchema(pParse, pTab->iDb);
+    sqlite3CodeVerifySchema(pParse, iDb);
   }
   pWInfo->iTop = sqlite3VdbeCurrentAddr(v);
 

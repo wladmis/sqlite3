@@ -449,7 +449,7 @@ proc check_for_leaks {} {
 
     # The first command in this block will probably fail on windows. This
     # means there will be no stack dump available.
-    if {$cnt < 25} {
+    if {$cnt < 25 && $backtrace!=""} {
       catch {
         set stuff [eval "exec addr2line -e ./testfixture -f $backtrace"]
         foreach {func line} $stuff {

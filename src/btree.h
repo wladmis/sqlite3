@@ -76,6 +76,7 @@ int sqlite3BtreeCreateTable(Btree*, int*, int flags);
 int sqlite3BtreeIsInTrans(Btree*);
 int sqlite3BtreeIsInStmt(Btree*);
 int sqlite3BtreeSync(Btree*, const char *zMaster);
+void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
 
 const char *sqlite3BtreeGetFilename(Btree *);
 const char *sqlite3BtreeGetDirname(Btree *);

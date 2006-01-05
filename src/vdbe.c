@@ -2422,11 +2422,11 @@ case OP_SetCookie: {       /* no-push */
   rc = sqlite3BtreeUpdateMeta(pDb->pBt, 1+pOp->p2, (int)pTos->i);
   if( pOp->p2==0 ){
     /* When the schema cookie changes, record the new cookie internally */
-    pDb->schema_cookie = pTos->i;
+    pDb->pSchema->schema_cookie = pTos->i;
     db->flags |= SQLITE_InternChanges;
   }else if( pOp->p2==1 ){
     /* Record changes in the file format */
-    pDb->file_format = pTos->i;
+    pDb->pSchema->file_format = pTos->i;
   }
   assert( (pTos->flags & MEM_Dyn)==0 );
   pTos--;
@@ -2530,8 +2530,8 @@ case OP_OpenWrite: {       /* no-push */
   assert( pX!=0 );
   if( pOp->opcode==OP_OpenWrite ){
     wrFlag = 1;
-    if( pDb->file_format < p->minWriteFileFormat ){
-      p->minWriteFileFormat = pDb->file_format;
+    if( pDb->pSchema->file_format < p->minWriteFileFormat ){
+      p->minWriteFileFormat = pDb->pSchema->file_format;
     }
   }else{
     wrFlag = 0;

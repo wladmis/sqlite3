@@ -157,6 +157,10 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     /* The following is VERY experimental */
     { "writable_schema",          SQLITE_WriteSchema   },
     { "omit_readlock",            SQLITE_NoReadlock    },
+
+    /* TODO: Maybe it shouldn't be possible to change the ReadUncommitted
+    ** flag if there are any active statements. */
+    { "read_uncommitted",         SQLITE_ReadUncommitted },
   };
   int i;
   const struct sPragmaType *p;
@@ -650,6 +654,7 @@ void sqlite3Pragma(
     /* Do an integrity check on each database file */
     for(i=0; i<db->nDb; i++){
       HashElem *x;
+      Hash *pTbls;
       int cnt = 0;
 
       if( OMIT_TEMPDB && i==1 ) continue;
@@ -658,7 +663,8 @@ void sqlite3Pragma(
 
       /* Do an integrity check of the B-Tree
       */
-      for(x=sqliteHashFirst(&db->aDb[i].tblHash); x; x=sqliteHashNext(x)){
+      pTbls = &db->aDb[i].pSchema->tblHash;
+      for(x=sqliteHashFirst(pTbls); x; x=sqliteHashNext(x)){
         Table *pTab = sqliteHashData(x);
         Index *pIdx;
         sqlite3VdbeAddOp(v, OP_Integer, pTab->tnum, 0);
@@ -685,7 +691,7 @@ void sqlite3Pragma(
       /* Make sure all the indices are constructed correctly.
       */
       sqlite3CodeVerifySchema(pParse, i);
-      for(x=sqliteHashFirst(&db->aDb[i].tblHash); x; x=sqliteHashNext(x)){
+      for(x=sqliteHashFirst(pTbls); x; x=sqliteHashNext(x)){
         Table *pTab = sqliteHashData(x);
         Index *pIdx;
         int loopTop;

@@ -843,6 +843,7 @@ static int lookupName(
     if( pSrcList ){
       for(i=0, pItem=pSrcList->a; i<pSrcList->nSrc; i++, pItem++){
         Table *pTab = pItem->pTab;
+        int iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
         Column *pCol;
   
         if( pTab==0 ) continue;
@@ -854,14 +855,14 @@ static int lookupName(
           }else{
             char *zTabName = pTab->zName;
             if( zTabName==0 || sqlite3StrICmp(zTabName, zTab)!=0 ) continue;
-            if( zDb!=0 && sqlite3StrICmp(db->aDb[pTab->iDb].zName, zDb)!=0 ){
+            if( zDb!=0 && sqlite3StrICmp(db->aDb[iDb].zName, zDb)!=0 ){
               continue;
             }
           }
         }
         if( 0==(cntTab++) ){
           pExpr->iTable = pItem->iCursor;
-          pExpr->iDb = pTab->iDb;
+          pExpr->pSchema = pTab->pSchema;
           pMatch = pItem;
         }
         for(j=0, pCol=pTab->aCol; j<pTab->nCol; j++, pCol++){
@@ -870,7 +871,7 @@ static int lookupName(
             cnt++;
             pExpr->iTable = pItem->iCursor;
             pMatch = pItem;
-            pExpr->iDb = pTab->iDb;
+            pExpr->pSchema = pTab->pSchema;
             /* Substitute the rowid (column -1) for the INTEGER PRIMARY KEY */
             pExpr->iColumn = j==pTab->iPKey ? -1 : j;
             pExpr->affinity = pTab->aCol[j].affinity;
@@ -921,7 +922,7 @@ static int lookupName(
         int j;
         Column *pCol = pTab->aCol;
 
-        pExpr->iDb = pTab->iDb;
+        pExpr->pSchema = pTab->pSchema;
         cntTab++;
         for(j=0; j < pTab->nCol; j++, pCol++) {
           if( sqlite3StrICmp(pCol->zName, zCol)==0 ){
