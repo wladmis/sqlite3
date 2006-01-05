@@ -502,5 +502,32 @@ do_test misc5-5.4 {
   execsql {SELECT .4e+1}
 } 4.0
 
+# Ticket #1582.  Ensure that an unknown table in a LIMIT clause applied to
+# a UNION ALL query causes an error, not a crash.
+#
+db close
+file delete -force test.db
+sqlite3 db test.db
+ifcapable subquery {
+  do_test misc5-6.1 {
+    catchsql {
+      SELECT * FROM sqlite_master 
+      UNION ALL 
+      SELECT * FROM sqlite_master
+      LIMIT (SELECT count(*) FROM blah);
+    }
+  } {1 {no such table: blah}}
+  do_test misc5-6.2 {
+    execsql {
+      CREATE TABLE logs(msg TEXT, timestamp INTEGER, dbtime TEXT);
+    }
+    catchsql {
+      SELECT * FROM logs WHERE logs.id >= (SELECT head FROM logs_base) 
+      UNION ALL 
+      SELECT * FROM logs 
+      LIMIT (SELECT lmt FROM logs_base) ;
+    }
+  } {1 {no such column: logs.id}}
+}
 
 finish_test

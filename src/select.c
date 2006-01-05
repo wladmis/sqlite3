@@ -1548,14 +1548,14 @@ static int multiSelect(
         pPrior->pLimit = p->pLimit;
         pPrior->pOffset = p->pOffset;
         rc = sqlite3Select(pParse, pPrior, eDest, iParm, 0, 0, 0, aff);
+        p->pLimit = 0;
+        p->pOffset = 0;
         if( rc ){
           goto multi_select_end;
         }
         p->pPrior = 0;
         p->iLimit = pPrior->iLimit;
         p->iOffset = pPrior->iOffset;
-        p->pLimit = 0;
-        p->pOffset = 0;
         if( p->iLimit>=0 ){
           addr = sqlite3VdbeAddOp(v, OP_IfMemZero, p->iLimit, 0);
           VdbeComment((v, "# Jump ahead if LIMIT reached"));
