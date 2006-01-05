@@ -282,6 +282,7 @@ extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 struct SqliteTsd {
   u8 isInit;               /* True if structure has been initialised */
   u8 mallocFailed;         /* True after a malloc() has failed */
+  u8 disableReleaseMemory; /* True to make sqlite3_release_memory() a no-op */
 
 #ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
   i64 nSoftHeapLimit;      /* -ve for unlimited */

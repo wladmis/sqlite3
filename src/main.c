@@ -211,26 +211,6 @@ int sqlite3_close(sqlite3 *db){
     sqlite3ValueFree(db->pErr);
   }
 
-#if 0 
-#ifndef SQLITE_OMIT_GLOBALRECOVER
-  {
-    sqlite3 *pPrev;
-    sqlite3Os.xEnterMutex();
-    pPrev = pDbList;
-    while( pPrev && pPrev->pNext!=db ){
-      pPrev = pPrev->pNext;
-    }
-    if( pPrev ){
-      pPrev->pNext = db->pNext;
-    }else{
-      assert( pDbList==db );
-      pDbList = db->pNext;
-    }
-    sqlite3Os.xLeaveMutex();
-  }
-#endif
-#endif
-
   db->magic = SQLITE_MAGIC_ERROR;
   sqliteFree(db->aDb[1].pSchema);
   sqliteFree(db);

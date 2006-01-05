@@ -2460,6 +2460,16 @@ int sqlite3pager_release_memory(int nReq){
   int nReleased = 0;
   int i;
 
+  /* If the disableReleaseMemory memory flag is set, this operation is
+  ** a no-op; zero bytes of memory are freed. The flag is set before
+  ** malloc() is called while the global mutex (see sqlite3Os.xEnterMutex) 
+  ** is held. Because some of the code invoked by this function may also
+  ** try to obtain the mutex, proceding may cause a deadlock. 
+  */
+  if( pTsd->disableReleaseMemory ){
+    return 0;
+  }
+
   /* Outermost loop runs for at most two iterations. First iteration we
   ** try to find memory that can be released without calling fsync(). Second
   ** iteration (which only runs if the first failed to free nReq bytes of
