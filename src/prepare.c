@@ -436,8 +436,9 @@ int sqlite3_prepare(
   Parse sParse;
   char *zErrMsg = 0;
   int rc = SQLITE_OK;
+  int i;
 
-  assert(!sqlite3Tsd()->mallocFailed);
+  assert( !sqlite3Tsd()->mallocFailed );
 
   assert( ppStmt );
   *ppStmt = 0;
@@ -445,6 +446,19 @@ int sqlite3_prepare(
     return SQLITE_MISUSE;
   }
 
+  /* If any attached database schemas are locked, do not proceed with
+  ** compilation. Instead return SQLITE_LOCKED immediately.
+  */
+  for(i=0; i<db->nDb; i++) {
+    Btree *pBt = db->aDb[i].pBt;
+    if( pBt && sqlite3BtreeSchemaLocked(pBt) ){
+      const char *zDb = db->aDb[i].zName;
+      sqlite3Error(db, SQLITE_LOCKED, "database schema is locked: %s", zDb);
+      sqlite3SafetyOff(db);
+      return SQLITE_LOCKED;
+    }
+  }
+  
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
   sqlite3RunParser(&sParse, zSql, &zErrMsg);
@@ -524,7 +538,7 @@ int sqlite3_prepare16(
   ** tricky bit is figuring out the pointer to return in *pzTail.
   */
   char *zSql8 = 0;
-  char *zTail8 = 0;
+  const char *zTail8 = 0;
   int rc;
 
   if( sqlite3SafetyCheck(db) ){
