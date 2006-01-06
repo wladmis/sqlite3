@@ -66,7 +66,7 @@
 
 #define MAX(x,y) ((x)>(y)?(x):(y))
 
-#ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
+#if !defined(SQLITE_OMIT_MEMORY_MANAGEMENT) && !defined(SQLITE_OMIT_DISKIO)
 /*
 ** Set the soft heap-size limit for the current thread. Passing a negative
 ** value indicates no limit.

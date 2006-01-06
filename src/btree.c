@@ -1569,7 +1569,7 @@ int sqlite3BtreeOpen(
   p->pSqlite = pSqlite;
 
   /* Try to find an existing Btree structure opened on zFilename. */
-#ifndef SQLITE_OMIT_SHARED_CACHE
+#if !defined(SQLITE_OMIT_SHARED_CACHE) && !defined(SQLITE_OMIT_DISKIO)
   if( pTsd->useSharedData && zFilename && !isMemdb ){
     char *zFullPathname = sqlite3OsFullPathname(zFilename);
     if( !zFullPathname ){

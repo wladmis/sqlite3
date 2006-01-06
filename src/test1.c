@@ -2951,7 +2951,7 @@ static int test_release_memory(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
-#ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
+#if !defined(SQLITE_OMIT_MEMORY_MANAGEMENT) && !defined(SQLITE_OMIT_DISKIO)
   int N;
   int amt;
   if( objc!=1 && objc!=2 ){
@@ -2982,7 +2982,7 @@ static int test_soft_heap_limit(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
-#ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
+#if !defined(SQLITE_OMIT_MEMORY_MANAGEMENT) && !defined(SQLITE_OMIT_DISKIO)
   int amt;
   if( objc!=1 && objc!=2 ){
     Tcl_WrongNumArgs(interp, 1, objv, "?N?");

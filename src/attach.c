@@ -335,8 +335,10 @@ void sqlite3Attach(Parse *pParse, Expr *p, Expr *pDbname, Expr *pKey){
   codeAttach(pParse, SQLITE_ATTACH, "sqlite_attach", 3, p, p, pDbname, pKey);
 }
 
-void sqlite3AttachFunctions(sqlite3 *db)
-{
+/*
+** Register the functions sqlite_attach and sqlite_detach.
+*/
+void sqlite3AttachFunctions(sqlite3 *db){
   static const int enc = SQLITE_UTF8;
   sqlite3_create_function(db, "sqlite_attach", 3, enc, db, attachFunc, 0, 0);
   sqlite3_create_function(db, "sqlite_detach", 1, enc, db, detachFunc, 0, 0);
