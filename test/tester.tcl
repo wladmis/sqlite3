@@ -336,7 +336,7 @@ proc do_ioerr_test {testname args} {
       catch {file delete -force test.db-journal}
       catch {file delete -force test2.db}
       catch {file delete -force test2.db-journal}
-      set ::DB [sqlite3 db test.db]
+      set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
       if {[info exists ::ioerropts(-tclprep)]} {
         eval $::ioerropts(-tclprep)
       }
@@ -383,7 +383,7 @@ proc do_ioerr_test {testname args} {
     if {$::go && $::ioerropts(-cksum)} {
       do_test $testname.$n.4 {
         catch {db close}
-        set ::DB [sqlite3 db test.db]
+        set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
         cksum
       } $checksum
     }

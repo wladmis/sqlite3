@@ -39,7 +39,7 @@ source $testdir/tester.tcl
 
 # Disable encryption on the database for this test.
 db close
-set DB [sqlite3 db test.db]
+set DB [sqlite3 db test.db; sqlite3_connection_pointer db]
 sqlite3_rekey $DB {}
 
 # Create a table with one column for each type of affinity
