@@ -17,6 +17,13 @@
 #define _SQLITEINT_H_
 
 /*
+** Extra interface definitions for those who need them
+*/
+#ifdef SQLITE_EXTRA
+# include "sqliteExtra.h"
+#endif
+
+/*
 ** Many people are failing to set -DNDEBUG=1 when compiling SQLite.
 ** Setting NDEBUG makes the code smaller and run faster.  So the following
 ** lines are added to automatically set NDEBUG unless the -DSQLITE_DEBUG=1
