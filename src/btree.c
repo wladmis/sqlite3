@@ -1722,6 +1722,7 @@ int sqlite3BtreeClose(Btree *p){
   if( pBt->xFreeSchema && pBt->pSchema ){
     pBt->xFreeSchema(pBt->pSchema);
   }
+  sqliteFree(pBt->pSchema);
   sqliteFree(pBt);
   return SQLITE_OK;
 }

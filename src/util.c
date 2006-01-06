@@ -289,6 +289,10 @@ static void applyGuards(u32 *p)
   checkGuards(p);
 }
 
+/*
+** The argument is a malloc()ed pointer as returned by the test-wrapper.
+** Return a pointer to the Os level allocation.
+*/
 static void *getOsPointer(void *p)
 {
   char *z = (char *)p;
