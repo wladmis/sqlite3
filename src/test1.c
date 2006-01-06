@@ -2599,7 +2599,7 @@ static int test_sqlite3OsOpenReadWrite(
     return TCL_ERROR;
   }
 
-  rc = sqlite3Os.xOpenReadWrite(Tcl_GetString(objv[1]), &pFile, &dummy);
+  rc = sqlite3OsOpenReadWrite(Tcl_GetString(objv[1]), &pFile, &dummy);
   if( rc!=SQLITE_OK ){
     Tcl_SetResult(interp, (char *)errorName(rc), TCL_STATIC);
     return TCL_ERROR;
@@ -2727,7 +2727,7 @@ static int test_sqlite3OsTempFileName(
   char zFile[SQLITE_TEMPNAME_SIZE];
   int rc;
 
-  rc = sqlite3Os.xTempFileName(zFile);
+  rc = sqlite3OsTempFileName(zFile);
   if( rc!=SQLITE_OK ){
     Tcl_SetResult(interp, (char *)errorName(rc), TCL_STATIC);
     return TCL_ERROR;
@@ -3104,6 +3104,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "conflict", "0", TCL_GLOBAL_ONLY);
 #else
   Tcl_SetVar2(interp, "sqlite_options", "conflict", "1", TCL_GLOBAL_ONLY);
+#endif
+
+#if OS_UNIX
+  Tcl_SetVar2(interp, "sqlite_options", "crashtest", "1", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "crashtest", "0", TCL_GLOBAL_ONLY);
 #endif
 
 #ifdef SQLITE_OMIT_DATETIME_FUNCS

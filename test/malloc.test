@@ -340,8 +340,8 @@ do_malloc_test 12 -tclbody {
 } 
 
 # Test malloc errors when replaying two hot journals from a 2-file 
-# transaction. This test only runs on UNIX.
-if {$tcl_platform(platform)=="unix"} {
+# transaction.
+ifcapable crashtest {
   do_malloc_test 13 -tclprep {
     set rc [crashsql 1 test2.db {
       ATTACH 'test2.db' as aux;

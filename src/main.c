@@ -336,14 +336,14 @@ static int sqliteDefaultBusyCallback(
     delay = timeout - prior;
     if( delay<=0 ) return 0;
   }
-  sqlite3Os.xSleep(delay);
+  sqlite3OsSleep(delay);
   return 1;
 #else
   int timeout = ((sqlite3 *)ptr)->busyTimeout;
   if( (count+1)*1000 > timeout ){
     return 0;
   }
-  sqlite3Os.xSleep(1000);
+  sqlite3OsSleep(1000);
   return 1;
 #endif
 }

@@ -1571,7 +1571,7 @@ int sqlite3BtreeOpen(
   /* Try to find an existing Btree structure opened on zFilename. */
 #ifndef SQLITE_OMIT_SHARED_CACHE
   if( pTsd->useSharedData && zFilename && !isMemdb ){
-    char *zFullPathname = sqlite3Os.xFullPathname(zFilename);
+    char *zFullPathname = sqlite3OsFullPathname(zFilename);
     if( !zFullPathname ){
       sqliteFree(p);
       return SQLITE_NOMEM;

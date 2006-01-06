@@ -22,6 +22,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !crashtest {
+  finish_test
+  return
+}
+
 # set repeats 100
 set repeats 10
 
