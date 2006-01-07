@@ -2686,13 +2686,6 @@ int sqlite3BtreeCursor(
     }
   }
 
-#ifndef SQLITE_OMIT_SHARED_CACHE
-  rc = queryTableLock(p, iTable, wrFlag?WRITE_LOCK:READ_LOCK);
-  if( rc!=SQLITE_OK ){
-    return rc;
-  }
-#endif
-
   if( pBt->pPage1==0 ){
     rc = lockBtreeWithRetry(p);
     if( rc!=SQLITE_OK ){
@@ -2712,13 +2705,6 @@ int sqlite3BtreeCursor(
   }
   rc = getAndInitPage(pBt, pCur->pgnoRoot, &pCur->pPage, 0);
   if( rc!=SQLITE_OK ){
-    goto create_cursor_exception;
-  }
-
-  /* Obtain the table-lock on the shared-btree. */
-  rc = lockTable(p, iTable, wrFlag?WRITE_LOCK:READ_LOCK);
-  if( rc!=SQLITE_OK ){
-    assert( rc==SQLITE_NOMEM );
     goto create_cursor_exception;
   }
 
@@ -6490,6 +6476,15 @@ void *sqlite3BtreeSchema(Btree *p, int nBytes, void(*xFree)(void *)){
 */
 int sqlite3BtreeSchemaLocked(Btree *p){
   return (queryTableLock(p, MASTER_ROOT, READ_LOCK)!=SQLITE_OK);
+}
+
+int sqlite3BtreeLockTable(Btree *p, int iTab, u8 isWriteLock){
+  u8 lockType = (isWriteLock?WRITE_LOCK:READ_LOCK);
+  int rc = queryTableLock(p, iTab, lockType);
+  if( rc==SQLITE_OK ){
+    rc = lockTable(p, iTab, lockType);
+  }
+  return rc;
 }
 
 #ifndef SQLITE_OMIT_SHARED_CACHE
