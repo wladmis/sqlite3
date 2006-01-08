@@ -152,7 +152,7 @@ static void analyzeOneTable(
     endOfLoop = sqlite3VdbeMakeLabel(v);
     sqlite3VdbeAddOp(v, OP_Rewind, iIdxCur, endOfLoop);
     topOfLoop = sqlite3VdbeCurrentAddr(v);
-    sqlite3VdbeAddOp(v, OP_MemIncr, iMem, 0);
+    sqlite3VdbeAddOp(v, OP_MemIncr, 1, iMem);
     for(i=0; i<nCol; i++){
       sqlite3VdbeAddOp(v, OP_Column, iIdxCur, i);
       sqlite3VdbeAddOp(v, OP_MemLoad, iMem+nCol+i+1, 0);
@@ -160,7 +160,7 @@ static void analyzeOneTable(
     }
     sqlite3VdbeAddOp(v, OP_Goto, 0, endOfLoop);
     for(i=0; i<nCol; i++){
-      addr = sqlite3VdbeAddOp(v, OP_MemIncr, iMem+i+1, 0);
+      addr = sqlite3VdbeAddOp(v, OP_MemIncr, 1, iMem+i+1);
       sqlite3VdbeChangeP2(v, topOfLoop + 3*i + 3, addr);
       sqlite3VdbeAddOp(v, OP_Column, iIdxCur, i);
       sqlite3VdbeAddOp(v, OP_MemStore, iMem+nCol+i+1, 1);

@@ -636,7 +636,7 @@ void sqlite3Insert(
   /* Update the count of rows that are inserted
   */
   if( (db->flags & SQLITE_CountRows)!=0 ){
-    sqlite3VdbeAddOp(v, OP_MemIncr, iCntMem, 0);
+    sqlite3VdbeAddOp(v, OP_MemIncr, 1, iCntMem);
   }
 
   if( triggers_exist ){
