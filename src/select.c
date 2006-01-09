@@ -872,7 +872,7 @@ static void generateColumnNames(
 #endif
 
   assert( v!=0 );
-  if( pParse->colNamesSet || v==0 || sqlite3Tsd()->mallocFailed ) return;
+  if( pParse->colNamesSet || v==0 || sqlite3ThreadData()->mallocFailed ) return;
   pParse->colNamesSet = 1;
   fullNames = (db->flags & SQLITE_FullColNames)!=0;
   shortNames = (db->flags & SQLITE_ShortColNames)!=0;
@@ -1000,7 +1000,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
       zName = sqlite3MPrintf("column%d", i+1);
     }
     sqlite3Dequote(zName);
-    if( sqlite3Tsd()->mallocFailed ){
+    if( sqlite3ThreadData()->mallocFailed ){
       sqliteFree(zName);
       sqlite3DeleteTable(0, pTab);
       return 0;
@@ -1072,7 +1072,7 @@ static int prepSelectStmt(Parse *pParse, Select *p){
   Table *pTab;
   struct SrcList_item *pFrom;
 
-  if( p==0 || p->pSrc==0 || sqlite3Tsd()->mallocFailed ) return 1;
+  if( p==0 || p->pSrc==0 || sqlite3ThreadData()->mallocFailed ) return 1;
   pTabList = p->pSrc;
   pEList = p->pEList;
 
@@ -2684,7 +2684,7 @@ int sqlite3Select(
   AggInfo sAggInfo;      /* Information used by aggregate queries */
   int iEnd;              /* Address of the end of the query */
 
-  if( sqlite3Tsd()->mallocFailed || pParse->nErr || p==0 ) return 1;
+  if( sqlite3ThreadData()->mallocFailed || pParse->nErr || p==0 ) return 1;
   if( sqlite3AuthCheck(pParse, SQLITE_SELECT, 0, 0, 0) ) return 1;
   memset(&sAggInfo, 0, sizeof(sAggInfo));
 
@@ -2938,7 +2938,7 @@ int sqlite3Select(
         goto select_end;
       }
     }
-    if( sqlite3Tsd()->mallocFailed ) goto select_end;
+    if( sqlite3ThreadData()->mallocFailed ) goto select_end;
 
     /* Processing for aggregates with GROUP BY is very different and
     ** much more complex tha aggregates without a GROUP BY.

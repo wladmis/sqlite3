@@ -412,7 +412,7 @@ int sqlite3VdbeExec(
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
     assert( pTos<=&p->aStack[pc] );
-    if( sqlite3Tsd()->mallocFailed ) goto no_mem;
+    if( sqlite3ThreadData()->mallocFailed ) goto no_mem;
 #ifdef VDBE_PROFILE
     origPc = pc;
     start = hwtime();
@@ -1167,7 +1167,7 @@ case OP_Function: {
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
   (*ctx.pFunc->xFunc)(&ctx, n, apVal);
   if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
-  if( sqlite3Tsd()->mallocFailed ) goto no_mem;
+  if( sqlite3ThreadData()->mallocFailed ) goto no_mem;
   popStack(&pTos, n);
 
   /* If any auxilary data functions have been called by this user function,
@@ -4019,13 +4019,13 @@ case OP_ParseSchema: {        /* no-push */
   sqlite3SafetyOff(db);
   assert( db->init.busy==0 );
   db->init.busy = 1;
-  assert(0==sqlite3Tsd()->mallocFailed);
+  assert(0==sqlite3ThreadData()->mallocFailed);
   rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
   sqliteFree(zSql);
   db->init.busy = 0;
   sqlite3SafetyOn(db);
   if( rc==SQLITE_NOMEM ){
-    sqlite3Tsd()->mallocFailed = 1;
+    sqlite3ThreadData()->mallocFailed = 1;
     goto no_mem;
   }
   break;  
@@ -4615,7 +4615,7 @@ abort_due_to_misuse:
   */
 abort_due_to_error:
   if( p->zErrMsg==0 ){
-    if( sqlite3Tsd()->mallocFailed ) rc = SQLITE_NOMEM;
+    if( sqlite3ThreadData()->mallocFailed ) rc = SQLITE_NOMEM;
     sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
   }
   goto vdbe_halt;

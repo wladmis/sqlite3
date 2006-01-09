@@ -311,8 +311,8 @@ end_of_vacuum:
   db->autoCommit = 1;
 
   if( pDetach ){
-    int mf = sqlite3Tsd()->mallocFailed;
-    sqlite3Tsd()->mallocFailed = 0;
+    int mf = sqlite3ThreadData()->mallocFailed;
+    sqlite3ThreadData()->mallocFailed = 0;
     sqlite3MallocDisallow();
     ((Vdbe *)pDetach)->expired = 0;
     sqlite3_step(pDetach);
@@ -321,7 +321,7 @@ end_of_vacuum:
       rc = rc2;
     }
     sqlite3MallocAllow();
-    sqlite3Tsd()->mallocFailed = mf;
+    sqlite3ThreadData()->mallocFailed = mf;
   }
 
   /* If one of the execSql() calls above returned SQLITE_NOMEM, then the
@@ -329,7 +329,7 @@ end_of_vacuum:
   ** Fix this so the flag and return code match.
   */
   if( rc==SQLITE_NOMEM ){
-    sqlite3Tsd()->mallocFailed = 1;
+    sqlite3ThreadData()->mallocFailed = 1;
   }
 
   if( zTemp ){
