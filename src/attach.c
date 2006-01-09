@@ -127,6 +127,11 @@ static void attachFunc(
     if( !aNew->pSchema ){
       rc = SQLITE_NOMEM;
     }
+    if( aNew->pSchema->file_format && aNew->pSchema->enc!=ENC(db) ){
+      strcpy(zErr, 
+        "attached databases must use the same text encoding as main database");
+      goto attach_error;
+    }
   }
   aNew->zName = sqliteStrDup(zName);
   aNew->safety_level = 3;

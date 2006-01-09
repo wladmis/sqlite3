@@ -1149,7 +1149,7 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
       int nId;                    /* Number of characters in function name */
       const char *zId;            /* The function name. */
       FuncDef *pDef;              /* Information about the function */
-      int enc = pParse->db->enc;  /* The database encoding */
+      int enc = ENC(pParse->db);  /* The database encoding */
 
       zId = (char*)pExpr->token.z;
       nId = pExpr->token.n;
@@ -1666,7 +1666,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       const char *zId;
       int constMask = 0;
       int i;
-      u8 enc = pParse->db->enc;
+      u8 enc = ENC(pParse->db);
       CollSeq *pColl = 0;
       zId = (char*)pExpr->token.z;
       nId = pExpr->token.n;
@@ -2233,7 +2233,7 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
         if( i>=pAggInfo->nFunc ){
           /* pExpr is original.  Make a new entry in pAggInfo->aFunc[]
           */
-          u8 enc = pParse->db->enc;
+          u8 enc = ENC(pParse->db);
           i = addAggInfoFunc(pAggInfo);
           if( i>=0 ){
             pItem = &pAggInfo->aFunc[i];

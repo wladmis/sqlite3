@@ -1389,7 +1389,7 @@ static void test_collate_needed_cb(
   int eTextRep,
   const void *pName
 ){
-  int enc = db->enc;
+  int enc = ENC(db);
   int i;
   char *z;
   for(z = (char*)pName, i=0; *z || z[1]; z++){
@@ -1397,7 +1397,7 @@ static void test_collate_needed_cb(
   }
   zNeededCollation[i] = 0;
   sqlite3_create_collation(
-      db, "test_collate", db->enc, (void *)enc, test_collate_func);
+      db, "test_collate", ENC(db), (void *)enc, test_collate_func);
 }
 
 /*

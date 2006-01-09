@@ -29,7 +29,7 @@ static void callCollNeeded(sqlite3 *db, const char *zName, int nName){
   if( db->xCollNeeded ){
     char *zExternal = sqliteStrNDup(zName, nName);
     if( !zExternal ) return;
-    db->xCollNeeded(db->pCollNeededArg, db, (int)db->enc, zExternal);
+    db->xCollNeeded(db->pCollNeededArg, db, (int)ENC(db), zExternal);
     sqliteFree(zExternal);
   }
 #ifndef SQLITE_OMIT_UTF16
@@ -39,7 +39,7 @@ static void callCollNeeded(sqlite3 *db, const char *zName, int nName){
     sqlite3ValueSetStr(pTmp, nName, zName, SQLITE_UTF8, SQLITE_STATIC);
     zExternal = sqlite3ValueText(pTmp, SQLITE_UTF16NATIVE);
     if( zExternal ){
-      db->xCollNeeded16(db->pCollNeededArg, db, (int)db->enc, zExternal);
+      db->xCollNeeded16(db->pCollNeededArg, db, (int)ENC(db), zExternal);
     }
     sqlite3ValueFree(pTmp);
   }
@@ -92,14 +92,14 @@ CollSeq *sqlite3GetCollSeq(
 
   p = pColl;
   if( !p ){
-    p = sqlite3FindCollSeq(db, db->enc, zName, nName, 0);
+    p = sqlite3FindCollSeq(db, ENC(db), zName, nName, 0);
   }
   if( !p || !p->xCmp ){
     /* No collation sequence of this type for this encoding is registered.
     ** Call the collation factory to see if it can supply us with one.
     */
     callCollNeeded(db, zName, nName);
-    p = sqlite3FindCollSeq(db, db->enc, zName, nName, 0);
+    p = sqlite3FindCollSeq(db, ENC(db), zName, nName, 0);
   }
   if( p && !p->xCmp && synthCollSeq(db, p) ){
     p = 0;

@@ -49,6 +49,8 @@ set EXCLUDE {
   memleak.test
   misuse.test
   quick.test
+
+  attachmalloc.test
   utf16.test
   autovacuum_crash.test
   btree8.test

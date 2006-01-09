@@ -44,7 +44,7 @@
 void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
   if( pTab && !pTab->pSelect ){
     sqlite3_value *pValue;
-    u8 enc = sqlite3VdbeDb(v)->enc;
+    u8 enc = ENC(sqlite3VdbeDb(v));
     Column *pCol = &pTab->aCol[i];
     sqlite3ValueFromExpr(pCol->pDflt, enc, pCol->affinity, &pValue);
     if( pValue ){
