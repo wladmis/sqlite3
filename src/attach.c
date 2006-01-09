@@ -126,8 +126,7 @@ static void attachFunc(
     aNew->pSchema = sqlite3SchemaGet(aNew->pBt);
     if( !aNew->pSchema ){
       rc = SQLITE_NOMEM;
-    }
-    if( aNew->pSchema->file_format && aNew->pSchema->enc!=ENC(db) ){
+    }else if( aNew->pSchema->file_format && aNew->pSchema->enc!=ENC(db) ){
       strcpy(zErr, 
         "attached databases must use the same text encoding as main database");
       goto attach_error;

@@ -1799,9 +1799,10 @@ static void destroyRootPage(Parse *pParse, int iTable, int iDb){
 static void destroyTable(Parse *pParse, Table *pTab){
 #ifdef SQLITE_OMIT_AUTOVACUUM
   Index *pIdx;
-  destroyRootPage(pParse, pTab->tnum, pTab->iDb);
+  int iDb = sqlite3SchemaToIndex(pParse->db, pTab->pSchema);
+  destroyRootPage(pParse, pTab->tnum, iDb);
   for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-    destroyRootPage(pParse, pIdx->tnum, pIdx->iDb);
+    destroyRootPage(pParse, pIdx->tnum, iDb);
   }
 #else
   /* If the database may be auto-vacuum capable (if SQLITE_OMIT_AUTOVACUUM

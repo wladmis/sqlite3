@@ -73,4 +73,3 @@ rename really_finish_test2 finish_test
 rename do_test ""
 rename really_do_test do_test
 finish_test
-
