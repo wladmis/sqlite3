@@ -294,6 +294,7 @@ struct ThreadData {
   u8 disableReleaseMemory; /* True to make sqlite3_release_memory() a no-op */
 
 #ifndef SQLITE_OMIT_MEMORY_MANAGEMENT
+  u8 useMemoryManagement;  /* True if memory-management is enabled */
   i64 nSoftHeapLimit;      /* Suggested max mem allocation.  No limit if <0 */
   i64 nAlloc;              /* Number of bytes currently allocated */
   Pager *pPager;           /* Linked list of all pagers in this thread */
