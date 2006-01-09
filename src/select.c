@@ -387,7 +387,7 @@ static void codeOffset(
   if( p->iOffset>=0 && iContinue!=0 ){
     int addr;
     sqlite3VdbeAddOp(v, OP_MemIncr, -1, p->iOffset);
-    addr = sqlite3VdbeAddOp(v, OP_IfMemNeg, p->iOffset, addr);
+    addr = sqlite3VdbeAddOp(v, OP_IfMemNeg, p->iOffset, 0);
     if( nPop>0 ){
       sqlite3VdbeAddOp(v, OP_Pop, nPop, 0);
     }
