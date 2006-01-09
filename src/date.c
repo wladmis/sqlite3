@@ -236,7 +236,7 @@ static void computeJD(DateTime *p){
   if( p->validHMS ){
     p->rJD += (p->h*3600.0 + p->m*60.0 + p->s)/86400.0;
     if( p->validTZ ){
-      p->rJD += p->tz*60/86400.0;
+      p->rJD -= p->tz*60/86400.0;
       p->validHMS = 0;
       p->validTZ = 0;
     }
