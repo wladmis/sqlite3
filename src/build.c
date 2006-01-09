@@ -154,7 +154,6 @@ void sqlite3FinishCoding(Parse *pParse){
     ** transaction on each used database and to verify the schema cookie
     ** on each used database.
     */
-    assert( pParse->cookieGoto>0 || pParse->nTableLock==0 );
     if( pParse->cookieGoto>0 ){
       u32 mask;
       int iDb;
