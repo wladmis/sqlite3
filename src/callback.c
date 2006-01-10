@@ -130,6 +130,7 @@ int sqlite3CheckCollSeq(Parse *pParse, CollSeq *pColl){
       pParse->nErr++;
       return SQLITE_ERROR;
     }
+    assert( p==pColl );
   }
   return SQLITE_OK;
 }
@@ -199,7 +200,12 @@ CollSeq *sqlite3FindCollSeq(
   int nName,
   int create
 ){
-  CollSeq *pColl = findCollSeqEntry(db, zName, nName, create);
+  CollSeq *pColl;
+  if( zName ){
+    pColl = findCollSeqEntry(db, zName, nName, create);
+  }else{
+    pColl = db->pDfltColl;
+  }
   assert( SQLITE_UTF8==1 && SQLITE_UTF16LE==2 && SQLITE_UTF16BE==3 );
   assert( enc>=SQLITE_UTF8 && enc<=SQLITE_UTF16BE );
   if( pColl ) pColl += enc-1;

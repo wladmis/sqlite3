@@ -233,7 +233,6 @@ void sqlite3Update(
       }
     }
     if( i<pIdx->nColumn ){
-      if( sqlite3CheckIndexCollSeq(pParse, pIdx) ) goto update_cleanup;
       apIdx[nIdx++] = pIdx;
       aIdxUsed[j] = 1;
     }else{
@@ -378,9 +377,10 @@ void sqlite3Update(
     }
     for(i=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
       if( openAll || aIdxUsed[i] ){
+        KeyInfo *pKey = sqlite3IndexKeyinfo(pParse, pIdx);
         sqlite3VdbeAddOp(v, OP_Integer, iDb, 0);
         sqlite3VdbeOp3(v, OP_OpenWrite, iCur+i+1, pIdx->tnum,
-                       (char*)&pIdx->keyInfo, P3_KEYINFO);
+                       (char*)pKey, P3_KEYINFO_HANDOFF);
         assert( pParse->nTab>iCur+i+1 );
       }
     }

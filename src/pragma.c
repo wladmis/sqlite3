@@ -670,7 +670,6 @@ void sqlite3Pragma(
         sqlite3VdbeAddOp(v, OP_Integer, pTab->tnum, 0);
         cnt++;
         for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-          if( sqlite3CheckIndexCollSeq(pParse, pIdx) ) goto pragma_out;
           sqlite3VdbeAddOp(v, OP_Integer, pIdx->tnum, 0);
           cnt++;
         }

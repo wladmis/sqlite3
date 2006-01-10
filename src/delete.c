@@ -236,13 +236,6 @@ void sqlite3DeleteFrom(
   ** the table and pick which records to delete.
   */
   else{
-    /* Ensure all required collation sequences are available. */
-    for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
-      if( sqlite3CheckIndexCollSeq(pParse, pIdx) ){
-        goto delete_from_cleanup;
-      }
-    }
-
     /* Begin the database scan
     */
     pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0);
