@@ -139,6 +139,9 @@ int sqlite3_close(sqlite3 *db){
     if( pDb->pBt ){
       sqlite3BtreeClose(pDb->pBt);
       pDb->pBt = 0;
+      if( j!=1 ){
+        pDb->pSchema = 0;
+      }
     }
   }
   sqlite3ResetInternalSchema(db, 0);
@@ -165,7 +168,15 @@ int sqlite3_close(sqlite3 *db){
   }
 
   db->magic = SQLITE_MAGIC_ERROR;
+
+  /* The temp-database schema is allocated differently from the other schema
+  ** objects (using sqliteMalloc() directly, instead of sqlite3BtreeSchema()).
+  ** So it needs to be freed here. Todo: Why not roll the temp schema into
+  ** the same sqliteMalloc() as the one that allocates the database 
+  ** structure?
+  */
   sqliteFree(db->aDb[1].pSchema);
+
   sqliteFree(db);
   sqlite3MallocAllow();
   return SQLITE_OK;

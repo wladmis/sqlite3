@@ -182,6 +182,7 @@ static void attachFunc(
     if( db->aDb[i].pBt ){
       sqlite3BtreeClose(db->aDb[i].pBt);
       db->aDb[i].pBt = 0;
+      db->aDb[i].pSchema = 0;
     }
     sqlite3ResetInternalSchema(db, 0);
     db->nDb = i;
@@ -243,6 +244,7 @@ static void detachFunc(
 
   sqlite3BtreeClose(pDb->pBt);
   pDb->pBt = 0;
+  pDb->pSchema = 0;
   sqlite3ResetInternalSchema(db, 0);
   return;
 
