@@ -1361,7 +1361,7 @@ int sqlite3_release_memory(int);
 ** SQLITE_OMIT_MEMORY_MANAGEMENT option set. It is a no-op unless 
 ** memory-management has been enabled.
 */
-void sqlite3_soft_heap_limit(sqlite_int64);
+void sqlite3_soft_heap_limit(int);
 
 /*
 ** Undo the hack that converts floating point types to integer for
