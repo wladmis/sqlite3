@@ -3653,9 +3653,9 @@ case OP_Next: {        /* no-push */
 
 /* Opcode: IdxInsert P1 * *
 **
-** The top of the stack holds a SQL index key made using the
-** MakeIdxRec instruction.  This opcode writes that key into the
-** index P1.  Data for the entry is nil.
+** The top of the stack holds a SQL index key made using either the
+** MakeIdxRec or MakeRecord instructions.  This opcode writes that key
+** into the index P1.  Data for the entry is nil.
 **
 ** This instruction only works for indices.  The equivalent instruction
 ** for tables is OP_Insert.
@@ -3684,7 +3684,8 @@ case OP_IdxInsert: {        /* no-push */
 
 /* Opcode: IdxDelete P1 * *
 **
-** The top of the stack is an index key built using the MakeIdxRec opcode.
+** The top of the stack is an index key built using the either the
+** MakeIdxRec or MakeRecord opcodes.
 ** This opcode removes that entry from the index.
 */
 case OP_IdxDelete: {        /* no-push */
