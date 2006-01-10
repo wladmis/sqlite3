@@ -318,7 +318,7 @@ faq {
 faq {
   Does SQLite support a BLOB type?
 } {
-  <p>SQLite versions 3.0 and leter let you puts BLOB data into any column, even
+  <p>SQLite versions 3.0 and later let you puts BLOB data into any column, even
   columns that are declared to hold some other type.</p>
 }
 
