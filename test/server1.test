@@ -139,6 +139,7 @@ do_test server1-2.4 {
 } SQLITE_LOCKED
 do_test server1-2.5 {
   client_finalize B
+  client_wait B
   client_compile C {INSERT INTO t1 VALUES(98,99)}
   client_step C
   client_result C
@@ -149,6 +150,7 @@ do_test server1-2.5 {
 # Insert into t1 is successful after finishing the other two threads.
 do_test server1-2.6 {
   client_finalize A
+  client_wait A
   client_compile C {INSERT INTO t1 VALUES(98,99)}
   client_step C
   client_result C
