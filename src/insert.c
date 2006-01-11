@@ -225,7 +225,9 @@ void sqlite3Insert(
   int counterRowid;     /* Memory cell holding rowid of autoinc counter */
 #endif
 
-  if( pParse->nErr || sqlite3ThreadData()->mallocFailed ) goto insert_cleanup;
+  if( pParse->nErr || sqlite3ThreadDataReadOnly()->mallocFailed ){
+    goto insert_cleanup;
+  }
   db = pParse->db;
 
   /* Locate the table into which we will be inserting new information.
@@ -331,7 +333,9 @@ void sqlite3Insert(
 
     /* Resolve the expressions in the SELECT statement and execute it. */
     rc = sqlite3Select(pParse, pSelect, SRT_Subroutine, iInsertBlock,0,0,0,0);
-    if( rc || pParse->nErr || sqlite3ThreadData()->mallocFailed ) goto insert_cleanup;
+    if( rc || pParse->nErr || sqlite3ThreadDataReadOnly()->mallocFailed ){
+      goto insert_cleanup;
+    }
 
     iCleanup = sqlite3VdbeMakeLabel(v);
     sqlite3VdbeAddOp(v, OP_Goto, 0, iCleanup);

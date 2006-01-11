@@ -121,7 +121,7 @@ exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
   if( azCols ) sqliteFree(azCols);
 
-  if( sqlite3ThreadData()->mallocFailed ){
+  if( sqlite3ThreadDataReadOnly()->mallocFailed ){
     rc = SQLITE_NOMEM;
     sqlite3MallocClearFailed();
   }
