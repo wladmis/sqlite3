@@ -23,6 +23,7 @@ set N 300
 # First test how many file descriptors are available for use. To open a
 # database for writing SQLite requires 3 file descriptors (the database, the
 # journal and the directory).
+set filehandles {}
 catch {
   for {set i 0} {$i<($N * 3)} {incr i} {
     lappend filehandles [open testfile.1 w]
