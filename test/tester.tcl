@@ -149,7 +149,16 @@ proc finalize_testing {} {
   catch {
     pp_check_for_leaks
   }
-
+  sqlite3 db {}
+  sqlite3_clear_tsd_memdebug
+  db close
+  if {$::sqlite3_tsd_count} {
+     puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
+     incr nErr
+  } else {
+     puts "Thread-specific data deallocated properly"
+  }
+  incr nTest
   puts "$nErr errors out of $nTest tests"
   puts "Failures on these tests: $::failList"
   if {$nProb>0} {

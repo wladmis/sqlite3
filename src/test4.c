@@ -97,6 +97,7 @@ static void *thread_main(void *pArg){
     p->zErr = 0;
   }
   p->completed++;
+  sqlite3_thread_cleanup();
   return 0;
 }
 
