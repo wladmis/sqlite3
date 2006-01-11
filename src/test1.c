@@ -3523,5 +3523,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_fullsync_count, TCL_LINK_INT);
 #endif /* OS_UNIX */
   set_options(interp);
+
+  int sqlite3_shared_cache_report(void *, Tcl_Interp *, int, Tcl_Obj *CONST[]);
+  Tcl_CreateObjCommand(interp, "sqlite_shared_cache_report", 
+      sqlite3_shared_cache_report, 0, 0);
   return TCL_OK;
 }

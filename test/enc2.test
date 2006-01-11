@@ -473,4 +473,45 @@ ifcapable {complete} {
   } {0}
 }
 
+# Test that the encoding of an empty database may still be set after the
+# (empty) schema has been initialized.
+file delete -force test.db
+do_test enc2-9.1 {
+  sqlite3 db test.db
+  execsql {
+    PRAGMA encoding = 'UTF-8';
+    PRAGMA encoding;
+  }
+} {UTF-8}
+do_test enc2-9.2 {
+  sqlite3 db test.db
+  execsql {
+    PRAGMA encoding = 'UTF-16le';
+    PRAGMA encoding;
+  }
+} {UTF-16le}
+do_test enc2-9.3 {
+  sqlite3 db test.db
+  execsql {
+    SELECT * FROM sqlite_master;
+    PRAGMA encoding = 'UTF-8';
+    PRAGMA encoding;
+  }
+} {UTF-8}
+do_test enc2-9.4 {
+  sqlite3 db test.db
+  execsql {
+    PRAGMA encoding = 'UTF-16le';
+    CREATE TABLE abc(a, b, c);
+    PRAGMA encoding;
+  }
+} {UTF-16le}
+do_test enc2-9.5 {
+  sqlite3 db test.db
+  execsql {
+    PRAGMA encoding = 'UTF-8';
+    PRAGMA encoding;
+  }
+} {UTF-16le}
+
 finish_test

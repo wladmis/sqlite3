@@ -608,26 +608,6 @@ catch {db close}
 catch {db2 close}
 file delete -force test.db test2.db
 
-if 0 {
-
-do_test shared-9.1 {
-  sqlite3 db test.db
-} {}
-do_test shared-9.2 {
-  execsql {CREATE TABLE t1(a);}
-} {}
-
-file delete -force test.db
-sqlite3 db test.db; set DB [sqlite3_connection_pointer db]
-do_test shared-9.3 {
-  execsql {
-    CREATE TABLE t5(a);
-    INSERT INTO t5 VALUES('one');
-  } db
-} {}
-
-}
-
 #---------------------------------------------------------------------------
 # The following tests - shared-9.* - test interactions between TEMP triggers
 # and shared-schemas.

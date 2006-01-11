@@ -171,7 +171,6 @@ static void attachFunc(
   ** we found it.
   */
   if( rc==SQLITE_OK ){
-    db->flags &= ~SQLITE_Initialized;
     sqlite3SafetyOn(db);
     rc = sqlite3Init(db, &zErrDyn);
     sqlite3SafetyOff(db);
