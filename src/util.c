@@ -438,6 +438,7 @@ static void * OSMALLOC(int n){
   ThreadData *pTsd = sqlite3ThreadData();
   pTsd->nMaxAlloc = MAX(pTsd->nMaxAlloc, pTsd->nAlloc);
 #endif
+  assert( sqlite3ThreadData()->mallocAllowed );
   if( !failMalloc() ){
     u32 *p;
     p = (u32 *)sqlite3OsMalloc(n + TESTALLOC_OVERHEAD);
@@ -479,6 +480,7 @@ static void * OSREALLOC(void *pRealloc, int n){
   ThreadData *pTsd = sqlite3ThreadData();
   pTsd->nMaxAlloc = MAX(pTsd->nMaxAlloc, pTsd->nAlloc);
 #endif
+  assert( sqlite3ThreadData()->mallocAllowed );
   if( !failMalloc() ){
     u32 *p = (u32 *)getOsPointer(pRealloc);
     checkGuards(p);
