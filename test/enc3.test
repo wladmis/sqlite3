@@ -52,6 +52,20 @@ ifcapable {bloblit} {
     }
   } {{X'616263646566' NULL}}
 }
+ifcapable {bloblit && utf16} {
+  do_test enc3-2.1 {
+    execsql {
+      PRAGMA encoding
+    }
+  } {UTF-16le}
+  do_test enc3-2.2 {
+    execsql {
+      CREATE TABLE t2(a);
+      INSERT INTO t2 VALUES(x'61006200630064006500');
+      SELECT CAST(a AS text) FROM t2 WHERE a LIKE 'abc%';
+    }
+  } {abcde}
+}
 
 
 finish_test
