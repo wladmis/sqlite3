@@ -1257,6 +1257,7 @@ struct Parse {
   int ckOffset;        /* Stack offset to data used by CHECK constraints */
   u32 writeMask;       /* Start a write transaction on these databases */
   u32 cookieMask;      /* Bitmask of schema verified databases */
+  ThreadData *pTsd;    /* Thread specific data for this thread */
   int cookieGoto;      /* Address of OP_Goto to cookie verifier subroutine */
   int cookieValue[MAX_ATTACHED+2];  /* Values of cookies to verify */
 #ifndef SQLITE_OMIT_SHARED_CACHE
