@@ -151,6 +151,7 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
     { "short_column_names",       SQLITE_ShortColNames },
     { "count_changes",            SQLITE_CountRows     },
     { "empty_result_callbacks",   SQLITE_NullCallback  },
+    { "legacy_file_format",       SQLITE_LegacyFileFmt },
 #ifndef SQLITE_OMIT_CHECK
     { "ignore_check_constraints", SQLITE_IgnoreChecks  },
 #endif

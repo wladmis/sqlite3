@@ -833,6 +833,7 @@ void sqlite3StartTable(
   */
   if( !db->init.busy && (v = sqlite3GetVdbe(pParse))!=0 ){
     int lbl;
+    int fileFormat;
     sqlite3BeginWriteOperation(pParse, 0, iDb);
 
     /* If the file format and encoding in the database have not been set, 
@@ -841,7 +842,9 @@ void sqlite3StartTable(
     sqlite3VdbeAddOp(v, OP_ReadCookie, iDb, 1);   /* file_format */
     lbl = sqlite3VdbeMakeLabel(v);
     sqlite3VdbeAddOp(v, OP_If, 0, lbl);
-    sqlite3VdbeAddOp(v, OP_Integer, SQLITE_DEFAULT_FILE_FORMAT, 0);
+    fileFormat = (db->flags & SQLITE_LegacyFileFmt)!=0 ?
+                  1 : SQLITE_DEFAULT_FILE_FORMAT;
+    sqlite3VdbeAddOp(v, OP_Integer, fileFormat, 0);
     sqlite3VdbeAddOp(v, OP_SetCookie, iDb, 1);
     sqlite3VdbeAddOp(v, OP_Integer, ENC(db), 0);
     sqlite3VdbeAddOp(v, OP_SetCookie, iDb, 4);

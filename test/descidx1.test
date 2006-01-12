@@ -287,4 +287,25 @@ do_test descidx1-5.9 {
   }
 } {110 111 100 101 010 011 000 001 sort}
 
+# Test the legacy_file_format pragma here because we have access to
+# the get_file_format command.
+#
+do_test descidx1-6.1 {
+  db close
+  file delete -force test.db test.db-journal
+  sqlite3 db test.db
+  execsql {PRAGMA legacy_file_format}
+} {0}
+do_test descidx1-6.2 {
+  execsql {PRAGMA legacy_file_format=YES}
+  execsql {PRAGMA legacy_file_format}
+} {1}
+do_test descidx1-6.3 {
+  execsql {
+    CREATE TABLE t1(a,b,c);
+  }
+  get_file_format
+} {1}
+
+
 finish_test
