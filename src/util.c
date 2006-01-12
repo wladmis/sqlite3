@@ -509,7 +509,7 @@ static void OSMALLOC_FAILED(){
 #define OSSIZEOF(x)        sqlite3OsAllocationSize(x)
 #define OSMALLOC_FAILED()
 
-#endif
+#endif  /* SQLITE_MEMDEBUG */
 /*
 ** End code for memory allocation system test layer.
 **--------------------------------------------------------------------------*/
@@ -1332,7 +1332,7 @@ const ThreadData *sqlite3ThreadDataReadOnly(){
 ** is, then deallocate it. 
 */
 void sqlite3ReleaseThreadData(){
-  sqlite3OsThreadSpecificData(0);
+  sqlite3OsThreadSpecificData(-1);
 }
 
 /*

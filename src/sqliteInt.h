@@ -294,7 +294,8 @@ extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 ** is deallocated.
 */
 struct ThreadData {
-  u8 mallocFailed;         /* True after a malloc() has failed */
+  int mallocFailed;        /* True after a malloc() has failed */
+  int nRef;                /* Number of users */
 
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
   int nSoftHeapLimit;      /* Suggested max mem allocation.  No limit if <0 */
