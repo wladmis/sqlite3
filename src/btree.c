@@ -3326,8 +3326,8 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
       void *pCellKey;
       i64 nCellKey;
       pCur->idx = (lwr+upr)/2;
-      pCur->info.nSize = 0;
-      sqlite3BtreeKeySize(pCur, &nCellKey);
+      parseCell(pPage, pCur->idx, &pCur->info);
+      nCellKey = pCur->info.nKey;
       if( pPage->intKey ){
         if( nCellKey<nKey ){
           c = -1;
