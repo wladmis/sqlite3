@@ -1547,9 +1547,10 @@ void sqlite3EndTable(
 
 #ifndef SQLITE_OMIT_ALTERTABLE
     if( !p->pSelect ){
+      const unsigned char *zName = pParse->sNameToken.z;
       assert( !pSelect && pCons && pEnd );
       if( pCons->z==0 ) pCons = pEnd;
-      p->addColOffset = 13 + (pCons->z - pParse->sNameToken.z);
+      p->addColOffset = 13 + sqlite3utf8CharLen(zName, pCons->z - zName);
     }
 #endif
   }
