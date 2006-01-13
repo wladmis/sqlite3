@@ -117,6 +117,7 @@ static int getDigits(const char *zDate, ...){
     zDate++;
     cnt++;
   }while( nextC );
+  va_end(ap);
   return cnt;
 }
 
