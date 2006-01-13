@@ -101,7 +101,6 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   Btree *pMain;           /* The database being vacuumed */
   Btree *pTemp;
   char *zSql = 0;
-  int rc2;  
   int saved_flags;       /* Saved value of the db->flags */
   Db *pDb = 0;           /* Database to detach at end of vacuum */
 
