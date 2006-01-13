@@ -1592,6 +1592,13 @@ WhereInfo *sqlite3WhereBegin(
     if( pTab->isTransient || pTab->pSelect ) continue;
     if( (pLevel->flags & WHERE_IDX_ONLY)==0 ){
       sqlite3OpenTable(pParse, pTabItem->iCursor, iDb, pTab, OP_OpenRead);
+      if( pTab->nCol<(sizeof(Bitmask)*8) ){
+        Bitmask b = pTabItem->colUsed;
+        int n = 0;
+        for(; b; b=b>>1, n++);
+        sqlite3VdbeChangeP2(v, sqlite3VdbeCurrentAddr(v)-1, n);
+        assert( n<=pTab->nCol );
+      }
     }else{
       sqlite3TableLock(pParse, iDb, pTab->tnum, 0, pTab->zName);
     }
