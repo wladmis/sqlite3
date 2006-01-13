@@ -464,7 +464,7 @@ char *sqlite3utf16to8(const void *z, int nByte){
   sqlite3VdbeChangeEncoding(&m, SQLITE_UTF8);
   assert( m.flags & MEM_Term );
   assert( m.flags & MEM_Str );
-  return (m.flags & MEM_Dyn)!=0 ? m.z : sqlite3StrDup(m.z);
+  return (m.flags & MEM_Dyn)!=0 ? m.z : sqliteStrDup(m.z);
 }
 
 /*

@@ -581,23 +581,25 @@ static int saveAllCursors(BtShared *pBt, Pgno iRoot, BtCursor *pExcept){
 ** returning the cursor to it's saved position, any saved position is deleted
 ** and the cursor state set to CURSOR_INVALID.
 */
-static int restoreOrClearCursorPosition(BtCursor *pCur, int doSeek){
+static int restoreOrClearCursorPositionX(BtCursor *pCur, int doSeek){
   int rc = SQLITE_OK;
-  if( pCur->eState==CURSOR_REQUIRESEEK ){
-    assert( sqlite3ThreadDataReadOnly()->useSharedData );
-    if( doSeek ){
-      rc = sqlite3BtreeMoveto(pCur, pCur->pKey, pCur->nKey, &pCur->skip);
-    }else{
-      pCur->eState = CURSOR_INVALID;
-    }
-    if( rc==SQLITE_OK ){
-      sqliteFree(pCur->pKey);
-      pCur->pKey = 0;
-      assert( CURSOR_VALID==pCur->eState || CURSOR_INVALID==pCur->eState );
-    }
+  assert( sqlite3ThreadDataReadOnly()->useSharedData );
+  assert( pCur->eState==CURSOR_REQUIRESEEK );
+  if( doSeek ){
+    rc = sqlite3BtreeMoveto(pCur, pCur->pKey, pCur->nKey, &pCur->skip);
+  }else{
+    pCur->eState = CURSOR_INVALID;
+  }
+  if( rc==SQLITE_OK ){
+    sqliteFree(pCur->pKey);
+    pCur->pKey = 0;
+    assert( CURSOR_VALID==pCur->eState || CURSOR_INVALID==pCur->eState );
   }
   return rc;
 }
+
+#define restoreOrClearCursorPosition(p,x) \
+  (p->eState==CURSOR_REQUIRESEEK?restoreOrClearCursorPositionX(p,x):SQLITE_OK)
 
 /*
 ** Query to see if btree handle p may obtain a lock of type eLock 

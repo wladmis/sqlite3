@@ -285,6 +285,7 @@ extern int sqlite3_iMallocReset; /* Set iMallocFail to this when it reaches 0 */
 #define sqliteFree(x)          sqlite3FreeX(x)
 #define sqliteAllocSize(x)     sqlite3AllocSize(x)
 
+
 /*
 ** An instance of this structure might be allocated to store information
 ** specific to a single thread.

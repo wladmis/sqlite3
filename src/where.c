@@ -1210,7 +1210,7 @@ static void codeEqualityTerm(
     sqlite3VdbeAddOp(v, OP_Rewind, iTab, brk);
     VdbeComment((v, "# %.*s", pX->span.n, pX->span.z));
     pLevel->nIn++;
-    sqlite3ReallocOrFree((void**)&pLevel->aInLoop,
+    sqliteReallocOrFree((void**)&pLevel->aInLoop,
                                  sizeof(pLevel->aInLoop[0])*3*pLevel->nIn);
     aIn = pLevel->aInLoop;
     if( aIn ){

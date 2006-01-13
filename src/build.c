@@ -1173,7 +1173,7 @@ void sqlite3AddCollateType(Parse *pParse, const char *zType, int nType){
 
   if( sqlite3LocateCollSeq(pParse, zType, nType) ){
     Index *pIdx;
-    p->aCol[i].zColl = sqlite3StrNDup(zType, nType);
+    p->aCol[i].zColl = sqliteStrNDup(zType, nType);
   
     /* If the column is declared as "<name> PRIMARY KEY COLLATE <type>",
     ** then an index may have been created on this column before the
@@ -3153,7 +3153,7 @@ void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
     assert( pName1->z );
     pColl = sqlite3FindCollSeq(db, ENC(db), (char*)pName1->z, pName1->n, 0);
     if( pColl ){
-      char *z = sqlite3StrNDup(pName1->z, pName1->n);
+      char *z = sqliteStrNDup(pName1->z, pName1->n);
       if( z ){
         reindexDatabases(pParse, z);
         sqliteFree(z);
