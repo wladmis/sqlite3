@@ -801,4 +801,29 @@ ifcapable {compound && subquery} {
 } ;# ifcapable compound
 
 
+# Check for a VDBE stack growth problem that existed at one point.
+#
+do_test select1-13.1 {
+  execsql {
+    BEGIN;
+    create TABLE abc(a, b, c, PRIMARY KEY(a, b));
+    INSERT INTO abc VALUES(1, 1, 1);
+  }
+  for {set i 0} {$i<10} {incr i} {
+    execsql {
+      INSERT INTO abc SELECT a+(select max(a) FROM abc), 
+          b+(select max(a) FROM abc), c+(select max(a) FROM abc) FROM abc;
+    }
+  }
+  execsql {COMMIT}
+
+  # This used to seg-fault when the problem existed.
+  execsql {
+    SELECT count(
+      (SELECT a FROM abc WHERE a = NULL AND b >= upper.c) 
+    ) FROM abc AS upper;
+  }
+} {0}
+
 finish_test
+
