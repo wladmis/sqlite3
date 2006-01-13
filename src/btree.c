@@ -2901,8 +2901,7 @@ static int getPayload(
   pageIntegrity(pPage);
   assert( pCur->idx>=0 && pCur->idx<pPage->nCell );
   getCellInfo(pCur);
-  aPayload = pCur->info.pCell;
-  aPayload += pCur->info.nHeader;
+  aPayload = pCur->info.pCell + pCur->info.nHeader;
   if( pPage->intKey ){
     nKey = 0;
   }else{
@@ -3326,6 +3325,7 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
       void *pCellKey;
       i64 nCellKey;
       pCur->idx = (lwr+upr)/2;
+      pCur->info.nSize = 0;
       if( pPage->intKey ){
         u8 *pCell = findCell(pPage, pCur->idx);
         pCell += pPage->childPtrSize;
@@ -3334,7 +3334,6 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
           pCell += getVarint32(pCell, &dummy);
         }
         getVarint(pCell, &nCellKey);
-        pCur->info.nSize = 0;
         if( nCellKey<nKey ){
           c = -1;
         }else if( nCellKey>nKey ){
@@ -3344,9 +3343,8 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
         }
       }else{
         int available;
-        parseCell(pPage, pCur->idx, &pCur->info);
-        nCellKey = pCur->info.nKey;
         pCellKey = (void *)fetchPayload(pCur, &available, 0);
+        nCellKey = pCur->info.nKey;
         if( available>=nCellKey ){
           c = pCur->xCompare(pCur->pArg, nCellKey, pCellKey, nKey, pKey);
         }else{
