@@ -2711,7 +2711,6 @@ int sqlite3BtreeCursor(
     goto create_cursor_exception;
   }
   pCur->pgnoRoot = (Pgno)iTable;
-  pCur->pPage = 0;  /* For exit-handler, in case getAndInitPage() fails. */
   if( iTable==1 && sqlite3pager_pagecount(pBt->pPager)==0 ){
     rc = SQLITE_EMPTY;
     goto create_cursor_exception;
@@ -2729,13 +2728,10 @@ int sqlite3BtreeCursor(
   pCur->pArg = pArg;
   pCur->pBtree = p;
   pCur->wrFlag = wrFlag;
-  pCur->idx = 0;
-  memset(&pCur->info, 0, sizeof(pCur->info));
   pCur->pNext = pBt->pCursor;
   if( pCur->pNext ){
     pCur->pNext->pPrev = pCur;
   }
-  pCur->pPrev = 0;
   pBt->pCursor = pCur;
   pCur->eState = CURSOR_INVALID;
   *ppCur = pCur;
