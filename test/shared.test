@@ -191,8 +191,9 @@ do_test shared-3.1.1 {
   set ret [list]
   db2 eval {SELECT i FROM seq} {
     if {$i < 4} {
-      execsql {
-        INSERT INTO seq SELECT i + (SELECT max(i) FROM seq), x FROM seq;
+      set max [execsql {SELECT max(i) FROM seq}]
+      db eval {
+        INSERT INTO seq SELECT i + $max, x FROM seq;
       }
     }
     lappend ret $i

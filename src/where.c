@@ -643,7 +643,7 @@ static void exprAnalyze(
   }
 #endif /* SQLITE_OMIT_BETWEEN_OPTIMIZATION */
 
-#ifndef SQLITE_OMIT_OR_OPTIMIZATION
+#if !defined(SQLITE_OMIT_OR_OPTIMIZATION) && !defined(SQLITE_OMIT_SUBQUERY)
   /* Attempt to convert OR-connected terms into an IN operator so that
   ** they can make use of indices.  Example:
   **
@@ -652,6 +652,9 @@ static void exprAnalyze(
   ** is converted into
   **
   **      x IN (expr1,expr2,expr3)
+  **
+  ** This optimization must be omitted if OMIT_SUBQUERY is defined because
+  ** the compiler for the the IN operator is part of sub-queries.
   */
   else if( pExpr->op==TK_OR ){
     int ok;
