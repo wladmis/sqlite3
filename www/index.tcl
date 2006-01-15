@@ -66,6 +66,20 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2006-Jan-16} {Version 3.3.1 alpha} {
+  Many bugs found in last week's alpha release have now been fixed and
+  the library is running much faster again.
+
+  Database connections can now be moved between threads as long as the
+  connection holds no locks at the time it is moved.  Thus the common
+  paradigm of maintaining a pool of database connections and handing
+  them off to transient worker threads is now supported.
+  Please help test this new feature.
+  See <a href="http://www.sqlite.org/cvstrac/wiki?p=MultiThreading">
+  the MultiThreading wiki page</a> for additional
+  information.
+}
+
 newsitem {2006-Jan-10} {Version 3.3.0 alpha} {
   Version 3.3.0 adds support for CHECK constraints, DESC indices,
   separate REAL and INTEGER column affinities, a new OS interface layer
