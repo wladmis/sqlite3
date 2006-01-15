@@ -26,6 +26,14 @@ if {[llength [info command client_step]]==0 || [sqlite3 -has-codec]} {
   return
 }
 
+# The sample server implementation does not work right when memory
+# management is enabled.
+#
+ifcapable memorymanage {
+  finish_test
+  return
+}
+
 # Create some data to work with
 #
 do_test server1-1.1 {
