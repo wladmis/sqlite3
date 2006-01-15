@@ -1355,8 +1355,8 @@ void sqlite3MallocClearFailed(){
 ** cause an assert to fail if sqliteMalloc() or sqliteRealloc() is called.
 */
 void sqlite3MallocDisallow(){
-  assert(!sqlite3ThreadData()->mallocDisallowed);
-  sqlite3ThreadData()->mallocDisallowed = 1;
+  assert( sqlite3ThreadData()->mallocDisallowed>=0 );
+  sqlite3ThreadData()->mallocDisallowed++;
 }
 
 /*
@@ -1364,7 +1364,7 @@ void sqlite3MallocDisallow(){
 ** by sqlite3MallocDisallow().
 */
 void sqlite3MallocAllow(){
-  assert(sqlite3ThreadData()->mallocDisallowed);
-  sqlite3ThreadData()->mallocDisallowed = 0;
+  assert( sqlite3ThreadData()->mallocDisallowed>0 );
+  sqlite3ThreadData()->mallocDisallowed--;
 }
 #endif

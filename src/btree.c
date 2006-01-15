@@ -1697,6 +1697,8 @@ int sqlite3BtreeClose(Btree *p){
     }
   }
 
+  /* Rollback any active transaction and free the handle structure */
+  sqlite3BtreeRollback(p);
   sqliteFree(p);
 
 #ifndef SQLITE_OMIT_SHARED_CACHE
