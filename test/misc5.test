@@ -510,7 +510,7 @@ do_test misc5-5.4 {
 db close
 file delete -force test.db
 sqlite3 db test.db
-ifcapable subquery {
+ifcapable subquery&&compound {
   do_test misc5-6.1 {
     catchsql {
       SELECT * FROM sqlite_master 

@@ -18,7 +18,7 @@ source $testdir/tester.tcl
 
 # If this build of the library does not support auto-vacuum, omit this
 # whole file.
-ifcapable {!autovacuum} {
+ifcapable {!autovacuum || !pragma} {
   finish_test
   return
 }

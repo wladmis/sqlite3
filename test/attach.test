@@ -728,13 +728,6 @@ do_test attach-6.3 {
     CREATE TABLE no_such_db.t1(a, b, c);
   }
 } {1 {unknown database no_such_db}}
-ifcapable !compound {
-  do_test attach-6.4 {
-    catchsql {
-      CREATE TEMP TABLE db2.temp1(a, b, c);
-    }
-  } {1 {temporary table name must be unqualified}}
-}
 for {set i 2} {$i<=15} {incr i} {
   catch {db$i close}
 }

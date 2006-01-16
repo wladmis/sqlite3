@@ -2210,14 +2210,16 @@ do_test auth-5.1 {
 
 # Ticket #1607
 #
-do_test auth-5.2 {
-  execsql {
-    SELECT name FROM (
-      SELECT * FROM sqlite_master UNION ALL SELECT * FROM sqlite_temp_master)
-    WHERE type='table'
-    ORDER BY name
-  }
-} {sqlite_stat1 t1 t2 t3 t4 tx v1chng}
+ifcapable compound {
+  do_test auth-5.2 {
+    execsql {
+      SELECT name FROM (
+        SELECT * FROM sqlite_master UNION ALL SELECT * FROM sqlite_temp_master)
+      WHERE type='table'
+      ORDER BY name
+    }
+  } {sqlite_stat1 t1 t2 t3 t4 tx v1chng}
+}
 
 
 rename proc {}

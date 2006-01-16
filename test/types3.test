@@ -56,10 +56,12 @@ do_test types3-1.6 {
 
 # Check to make sure return values are of the right types.
 #
-do_test types3-2.1 {
-  set V [db one {SELECT x'616263'}]
-  tcl_variable_type V
-} bytearray
+ifcapable bloblit {
+  do_test types3-2.1 {
+    set V [db one {SELECT x'616263'}]
+    tcl_variable_type V
+  } bytearray
+}
 do_test types3-2.2 {
   set V [db one {SELECT 123}]
   tcl_variable_type V

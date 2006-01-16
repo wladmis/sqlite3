@@ -19,7 +19,7 @@ source $testdir/tester.tcl
 # If the VACUUM statement is disabled in the current build, skip all
 # the tests in this file.
 #
-ifcapable {!vacuum} {
+ifcapable {!vacuum||!autoinc} {
   finish_test
   return
 }
