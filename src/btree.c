@@ -3347,10 +3347,10 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
         }
         pCell = findCell(pPage, pCur->idx) + pPage->childPtrSize;
         if( pPage->hasData ){
-          int dummy;
+          u32 dummy;
           pCell += getVarint32(pCell, &dummy);
         }
-        getVarint(pCell, &nCellKey);
+        getVarint(pCell, (u64 *)&nCellKey);
         if( nCellKey<nKey ){
           c = -1;
         }else if( nCellKey>nKey ){

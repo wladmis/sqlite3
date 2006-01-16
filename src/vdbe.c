@@ -2022,7 +2022,7 @@ case OP_Column: {
       zData = sMem.z;
     }
     zEndHdr = (u8 *)zData + offset;
-    zIdx = zData + (int)zIdx;
+    zIdx = (u8 *)zData + (int)zIdx;
 
     /* Scan the header and use it to fill in the aType[] and aOffset[]
     ** arrays.  aType[i] will contain the type integer for the i-th

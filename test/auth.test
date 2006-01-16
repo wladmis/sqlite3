@@ -1768,11 +1768,12 @@ ifcapable tempdb {
     do_test auth-1.270 {
       execsql {SELECT name FROM sqlite_temp_master WHERE type='table'}
     } {t1x}
+
+    do_test auth-1.271 {
+      set authargs
+    } {temp t1x {} {}}
   } ;# ifcapable altertable
 
-  do_test auth-1.271 {
-    set authargs
-  } {temp t1x {} {}}
 } else {
   db authorizer {}
   db eval {
