@@ -383,6 +383,7 @@ proc do_ioerr_test {testname args} {
       set ::go [expr {$::sqlite_io_error_pending<=0}]
       set s [expr $::sqlite_io_error_hit==0]
       # puts "$::sqlite_io_error_pending $r $msg"
+      # puts "r=$r s=$s msg=\"$msg\""
       expr { ($s && !$r) || (!$s && $r) }
       # expr {$::sqlite_io_error_pending>0 || $r!=0}
     } {1}

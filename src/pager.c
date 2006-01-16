@@ -457,7 +457,13 @@ static u32 retrieve32bits(PgHdr *p, int offset){
 
 /*
 ** This function should be called when an error occurs within the pager
-** code to set Pager.errCode.
+** code. The first argument is a pointer to the pager structure, the
+** second the error-code about to be returned by a pager API function. 
+** The value returned is a copy of the second argument to this function. 
+**
+** If the second argument is SQLITE_IOERR, SQLITE_CORRUPT or SQLITE_PROTOCOL,
+** the error becomes persistent. All subsequent API calls on this Pager
+** will immediately return the same error code.
 */
 static int pager_error(Pager *pPager, int rc){
   assert( pPager->errCode==SQLITE_FULL || pPager->errCode==SQLITE_OK );

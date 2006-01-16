@@ -9,7 +9,7 @@
 #
 #***********************************************************************
 #
-# This file runs the tests in the file crash.test with auto-vacuum enabled
+# This file runs the tests in the file ioerr.test with auto-vacuum enabled
 # databases.
 #
 # $Id$
