@@ -1754,7 +1754,7 @@ KeyInfo *sqlite3IndexKeyinfo(Parse *, Index *);
 #endif
 
 void sqlite3MallocClearFailed();
-#ifdef NDEBUG
+#ifndef SQLITE_MEMDEBUG
   #define sqlite3MallocDisallow()
   #define sqlite3MallocAllow()
 #else

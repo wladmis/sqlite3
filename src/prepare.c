@@ -495,6 +495,7 @@ int sqlite3_prepare(
   int rc = SQLITE_OK;
   int i;
 
+  /* Assert that malloc() has not failed */
   assert( !sqlite3ThreadDataReadOnly()->mallocFailed );
 
   assert( ppStmt );
