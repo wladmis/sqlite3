@@ -133,7 +133,7 @@ if {$::tcl_platform(platform)=="unix"} {
 #
 catch {source $testdir/misuse.test}
 set sqlite_open_file_count 0
-# catch {source $testdir/malloc.test}
+catch {source $testdir/malloc.test}
 
 catch {db close}
 set sqlite_open_file_count 0

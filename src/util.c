@@ -1347,7 +1347,7 @@ void sqlite3MallocClearFailed(){
   }
 }
 
-#ifndef NDEBUG
+#ifdef SQLITE_MEMDEBUG
 /*
 ** This function sets a flag in the thread-specific-data structure that will
 ** cause an assert to fail if sqliteMalloc() or sqliteRealloc() is called.

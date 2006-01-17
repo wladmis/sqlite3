@@ -1757,12 +1757,12 @@ int sqlite3CreateFunc(sqlite3 *, const char *, int, int, void *,
 #endif
 
 void sqlite3MallocClearFailed();
-#ifdef NDEBUG
-  #define sqlite3MallocDisallow()
-  #define sqlite3MallocAllow()
-#else
+#ifdef SQLITE_MEMDEBUG
   void sqlite3MallocDisallow();
   void sqlite3MallocAllow();
+#else
+  #define sqlite3MallocDisallow()
+  #define sqlite3MallocAllow()
 #endif
 
 #ifdef SQLITE_SSE
