@@ -18,6 +18,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !conflict {
+  finish_test
+  return
+}
+
 # Create tables for the first group of tests.
 #
 do_test conflict-1.0 {

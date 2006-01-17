@@ -29,7 +29,11 @@ do_test where2-1.0 {
     set x [expr {int(log($i)/log(2))}]
     set y [expr {$i*$i + 2*$i + 1}]
     set z [expr {$x+$y}]
-    execsql {INSERT INTO t1 VALUES($::w,$::x,$::y,$::z)}
+    ifcapable tclvar {
+      execsql {INSERT INTO t1 VALUES($::w,$::x,$::y,$::z)}
+    } else {
+      execsql {INSERT INTO t1 VALUES(:w,:x,:y,:z)}
+    }
   }
   execsql {
     CREATE UNIQUE INDEX i1w ON t1(w);

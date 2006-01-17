@@ -364,18 +364,20 @@ do_test misc1-12.4 {
     SELECT * FROM t6;
   }
 } {0 0.0}
-do_test misc1-12.5 {
-  execsql {
-    INSERT OR IGNORE INTO t6 VALUES(0.0,'x');
-    SELECT * FROM t6;
-  }
-} {0 0.0}
-do_test misc1-12.6 {
-  execsql {
-    INSERT OR IGNORE INTO t6 VALUES('y',0);
-    SELECT * FROM t6;
-  }
-} {0 0.0 y 0}
+ifcapable conflict {
+  do_test misc1-12.5 {
+    execsql {
+      INSERT OR IGNORE INTO t6 VALUES(0.0,'x');
+      SELECT * FROM t6;
+    }
+  } {0 0.0}
+  do_test misc1-12.6 {
+    execsql {
+      INSERT OR IGNORE INTO t6 VALUES('y',0);
+      SELECT * FROM t6;
+    }
+  } {0 0.0 y 0}
+}
 do_test misc1-12.7 {
   execsql {
     CREATE TABLE t7(x INTEGER, y TEXT, z);

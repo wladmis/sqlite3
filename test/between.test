@@ -29,7 +29,14 @@ do_test between-1.0 {
     set x [expr {int(log($i)/log(2))}]
     set y [expr {$i*$i + 2*$i + 1}]
     set z [expr {$x+$y}]
-    execsql {INSERT INTO t1 VALUES($::w,$::x,$::y,$::z)}
+    ifcapable tclvar {
+      # Random unplanned test of the $varname variable syntax.
+      execsql {INSERT INTO t1 VALUES($::w,$::x,$::y,$::z)}
+    } else {
+      # If the $varname syntax is not available, use the regular variable
+      # declaration syntax.
+      execsql {INSERT INTO t1 VALUES(:w,:x,:y,:z)}
+    }
   }
   execsql {
     CREATE UNIQUE INDEX i1w ON t1(w);

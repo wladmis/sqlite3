@@ -40,7 +40,7 @@ do_test like-1.0 {
     CDE
     {ABC abc xyz}
   } {
-    db eval {INSERT INTO t1 VALUES($str)}
+    db eval {INSERT INTO t1 VALUES(:str)}
   }
   execsql {
     SELECT count(*) FROM t1;

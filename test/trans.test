@@ -896,9 +896,15 @@ for {set i 2} {$i<=$limit} {incr i} {
       do_test trans-9.$i.4-$cnt {
          expr {$sqlite_sync_count>0}
       } 1
-      do_test trans-9.$i.5-$cnt {
-         expr {$sqlite_fullsync_count>0}
-      } [expr {$i%2==0}]
+      ifcapable pager_pragmas {
+        do_test trans-9.$i.5-$cnt {
+           expr {$sqlite_fullsync_count>0}
+        } [expr {$i%2==0}]
+      } else {
+        do_test trans-9.$i.5-$cnt {
+           expr {$sqlite_fullsync_count>0}
+        } {1}
+      }
     }
   }
   set ::pager_old_format 0

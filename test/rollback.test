@@ -31,33 +31,37 @@ do_test rollback-1.1 {
   }
 } {1 2 3 4}
 
-do_test rollback-1.2 {
-  execsql {
-    CREATE TABLE t3(a unique on conflict rollback);
-    INSERT INTO t3 SELECT a FROM t1;
-    BEGIN;
-    INSERT INTO t1 SELECT * FROM t1;
-  }
-} {}
+ifcapable conflict {
+  do_test rollback-1.2 {
+    execsql {
+      CREATE TABLE t3(a unique on conflict rollback);
+      INSERT INTO t3 SELECT a FROM t1;
+      BEGIN;
+      INSERT INTO t1 SELECT * FROM t1;
+    }
+  } {}
+}
 do_test rollback-1.3 {
   set STMT [sqlite3_prepare $DB "SELECT a FROM t1" -1 TAIL]
   sqlite3_step $STMT
 } {SQLITE_ROW}
 
-# This causes a ROLLBACK, which deletes the table out from underneath the
-# SELECT statement.
-#
-do_test rollback-1.4 {
-  catchsql {
-    INSERT INTO t3 SELECT a FROM t1;
-  }
-} {1 {column a is not unique}}
-
-# Try to continue with the SELECT statement
-#
-do_test rollback-1.5 {
-  sqlite3_step $STMT
-} {SQLITE_ABORT}
+ifcapable conflict {
+  # This causes a ROLLBACK, which deletes the table out from underneath the
+  # SELECT statement.
+  #
+  do_test rollback-1.4 {
+    catchsql {
+      INSERT INTO t3 SELECT a FROM t1;
+    }
+  } {1 {column a is not unique}}
+  
+  # Try to continue with the SELECT statement
+  #
+  do_test rollback-1.5 {
+    sqlite3_step $STMT
+  } {SQLITE_ABORT}
+}
 
 # Restart the SELECT statement
 #

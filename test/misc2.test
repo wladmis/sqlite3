@@ -257,7 +257,7 @@ ifcapable tempdb {
 #
 # The SQL code below was causing a segfault.
 #
-ifcapable subquery {
+ifcapable subquery&&trigger {
   do_test misc2-10.1 {
     execsql {
       CREATE TABLE t1229(x);

@@ -111,18 +111,22 @@ ifcapable {utf16} {
   do_test capi3-2.5 {
     sqlite3_errmsg $DB
   } {no such column: namex}
-  do_test capi3-2.6 {
-    execsql {CREATE TABLE tablename(x)}
-    set sql16 [utf16 {PRAGMA table_info("TableName")}]
-    set STMT [sqlite3_prepare16 $DB $sql16 -1 TAIL]
-    sqlite3_step $STMT
-  } SQLITE_ROW
-  do_test capi3-2.7 {
-    sqlite3_step $STMT
-  } SQLITE_DONE
-  do_test capi3-2.8 {
-    sqlite3_finalize $STMT
-  } SQLITE_OK
+
+  ifcapable schema_pragmas {
+    do_test capi3-2.6 {
+      execsql {CREATE TABLE tablename(x)}
+      set sql16 [utf16 {PRAGMA table_info("TableName")}]
+      set STMT [sqlite3_prepare16 $DB $sql16 -1 TAIL]
+      sqlite3_step $STMT
+    } SQLITE_ROW
+    do_test capi3-2.7 {
+      sqlite3_step $STMT
+    } SQLITE_DONE
+    do_test capi3-2.8 {
+      sqlite3_finalize $STMT
+    } SQLITE_OK
+  }
+
 } ;# endif utf16
 
 # rename sqlite3_open sqlite3_open_old

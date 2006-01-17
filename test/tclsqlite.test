@@ -335,18 +335,20 @@ do_test tcl-9.3 {
 
 # Recursive calls to the same user-defined function
 #
-do_test tcl-9.10 {
-  proc userfunc_r1 {n} {
-    if {$n<=0} {return 0}
-    set nm1 [expr {$n-1}]
-    return [expr {[db eval {SELECT r1($nm1)}]+$n}]
-  }
-  db function r1 userfunc_r1
-  execsql {SELECT r1(10)}
-} {55}
-do_test tcl-9.11 {
-  execsql {SELECT r1(100)}
-} {5050}
+ifcapable tclvar {
+  do_test tcl-9.10 {
+    proc userfunc_r1 {n} {
+      if {$n<=0} {return 0}
+      set nm1 [expr {$n-1}]
+      return [expr {[db eval {SELECT r1($nm1)}]+$n}]
+    }
+    db function r1 userfunc_r1
+    execsql {SELECT r1(10)}
+  } {55}
+  do_test tcl-9.11 {
+    execsql {SELECT r1(100)}
+  } {5050}
+}
 
 # Tests for the new transaction method
 #

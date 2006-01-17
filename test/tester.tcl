@@ -178,7 +178,7 @@ proc finalize_testing {} {
 #
 proc execsql {sql {db db}} {
   # puts "SQL = $sql"
-  return [$db eval $sql]
+  uplevel [list $db eval $sql]
 }
 
 # Execute SQL and catch exceptions.

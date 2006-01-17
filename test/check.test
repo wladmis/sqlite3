@@ -272,11 +272,13 @@ do_test check-4.8 {
     UPDATE t4 SET x=0, y=2;
   }
 } {1 {constraint failed}}
-do_test check_4.9 {
-  catchsql {
-    VACUUM
-  }
-} {0 {}}
+ifcapable vacuum {
+  do_test check_4.9 {
+    catchsql {
+      VACUUM
+    }
+  } {0 {}}
+}
 
 do_test check-5.1 {
   catchsql {
