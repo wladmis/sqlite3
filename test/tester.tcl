@@ -150,7 +150,7 @@ proc finalize_testing {} {
     pp_check_for_leaks
   }
   sqlite3 db {}
-  sqlite3_clear_tsd_memdebug
+  # sqlite3_clear_tsd_memdebug
   db close
   if {$::sqlite3_tsd_count} {
      puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
