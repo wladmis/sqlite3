@@ -345,8 +345,8 @@ void sqlite3Attach(Parse *pParse, Expr *p, Expr *pDbname, Expr *pKey){
 */
 void sqlite3AttachFunctions(sqlite3 *db){
   static const int enc = SQLITE_UTF8;
-  sqlite3_create_function(db, "sqlite_attach", 3, enc, db, attachFunc, 0, 0);
-  sqlite3_create_function(db, "sqlite_detach", 1, enc, db, detachFunc, 0, 0);
+  sqlite3CreateFunc(db, "sqlite_attach", 3, enc, db, attachFunc, 0, 0);
+  sqlite3CreateFunc(db, "sqlite_detach", 1, enc, db, detachFunc, 0, 0);
 }
 
 /*

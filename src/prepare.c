@@ -608,6 +608,7 @@ int sqlite3_prepare16(
   }
   zSql8 = sqlite3utf16to8(zSql, nBytes);
   if( !zSql8 ){
+    sqlite3MallocClearFailed();
     sqlite3Error(db, SQLITE_NOMEM, 0);
     return SQLITE_NOMEM;
   }

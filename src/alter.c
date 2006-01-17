@@ -162,7 +162,7 @@ void sqlite3AlterFunctions(sqlite3 *db){
   int i;
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg,
+    sqlite3CreateFunc(db, aFuncs[i].zName, aFuncs[i].nArg,
         SQLITE_UTF8, 0, aFuncs[i].xFunc, 0, 0);
   }
 }

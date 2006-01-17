@@ -976,7 +976,7 @@ void sqlite3RegisterDateTimeFunctions(sqlite3 *db){
   int i;
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg,
+    sqlite3CreateFunc(db, aFuncs[i].zName, aFuncs[i].nArg,
         SQLITE_UTF8, 0, aFuncs[i].xFunc, 0, 0);
   }
 #else
@@ -991,7 +991,7 @@ void sqlite3RegisterDateTimeFunctions(sqlite3 *db){
   int i;
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3_create_function(db, aFuncs[i].zName, 0, SQLITE_UTF8, 
+    sqlite3CreateFunc(db, aFuncs[i].zName, 0, SQLITE_UTF8, 
         aFuncs[i].zFormat, currentTimeFunc, 0, 0);
   }
 #endif

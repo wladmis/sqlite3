@@ -534,6 +534,11 @@ static int test_create_function(
   ** because it is not tested anywhere else. */
   if( rc==SQLITE_OK ){
     sqlite3_value *pVal;
+#ifdef SQLITE_MEMDEBUG
+    if( sqlite3_iMallocFail>0 ){
+      sqlite3_iMallocFail++;
+    }
+#endif 
     pVal = sqlite3ValueNew();
     sqlite3ValueSetStr(pVal, -1, "x_sqlite_exec", SQLITE_UTF8, SQLITE_STATIC);
     rc = sqlite3_create_function16(db, 
