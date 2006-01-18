@@ -647,9 +647,11 @@ void sqlite3ReallocOrFree(void **pp, int n){
 ** is the number of bytes that were available to SQLite using pointer p, 
 ** regardless of how much memory was actually allocated.
 */
+#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 int sqlite3AllocSize(void *p){
   return OSSIZEOF(p);
 }
+#endif
 
 /*
 ** Make a copy of a string in memory obtained from sqliteMalloc(). These 
