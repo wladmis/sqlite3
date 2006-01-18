@@ -1999,6 +1999,7 @@ int sqlite3pager_close(Pager *pPager){
   ** so that ThreadData.nAlloc can be set.
   */
   ThreadData *pTsd = sqlite3ThreadData();
+  assert( pPager );
   assert( pTsd && pTsd->nAlloc );
 #endif
 

@@ -1759,7 +1759,9 @@ void sqlite3FailedMalloc();
 #ifdef SQLITE_MEMDEBUG
   void sqlite3MallocDisallow();
   void sqlite3MallocAllow();
+  int sqlite3TestMallocFail();
 #else
+  #define sqlite3TestMallocFail() 0
   #define sqlite3MallocDisallow()
   #define sqlite3MallocAllow()
 #endif

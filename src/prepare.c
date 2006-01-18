@@ -520,6 +520,9 @@ int sqlite3_prepare(
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
   sParse.pTsd = sqlite3ThreadData();
+  if( !sParse.pTsd ){
+    goto prepare_out;
+  }
   sParse.pTsd->nRef++;
   sqlite3RunParser(&sParse, zSql, &zErrMsg);
 
@@ -554,6 +557,7 @@ int sqlite3_prepare(
   } 
 #endif
 
+prepare_out:
   if( sqlite3SafetyOff(db) ){
     rc = SQLITE_MISUSE;
   }
@@ -570,7 +574,9 @@ int sqlite3_prepare(
     sqlite3Error(db, rc, 0);
   }
 
-  sParse.pTsd->nRef--;
+  if( sParse.pTsd ){
+    sParse.pTsd->nRef--;
+  }
   rc = sqlite3ApiExit(db, rc);
   sqlite3ReleaseThreadData();
   return rc;

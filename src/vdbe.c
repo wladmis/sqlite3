@@ -408,6 +408,9 @@ int sqlite3VdbeExec(
   Mem *pStackLimit;
 #endif
   ThreadData *pTsd = sqlite3ThreadData();
+  if( !pTsd ){
+    goto no_mem;
+  }
 
   if( p->magic!=VDBE_MAGIC_RUN ) return SQLITE_MISUSE;
   pTsd->nRef++;
@@ -4615,7 +4618,9 @@ vdbe_halt:
   }
   sqlite3VdbeHalt(p);
   p->pTos = pTos;
-  pTsd->nRef--;
+  if( pTsd ){
+    pTsd->nRef--;
+  }
   return rc;
 
   /* Jump to here if a malloc() fails.  It's hard to get a malloc()

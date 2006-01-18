@@ -911,7 +911,7 @@ static int sqlite_malloc_outstanding(
 
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
   if( objc==2 ){
-    ThreadData *pTd = sqlite3ThreadData();
+    ThreadData const *pTd = sqlite3ThreadDataReadOnly();
     const char *zArg = Tcl_GetString(objv[1]);
     if( 0==strcmp(zArg, "-bytes") ){
       Tcl_SetObjResult(interp, Tcl_NewIntObj(pTd->nAlloc));
