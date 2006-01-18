@@ -121,11 +121,7 @@ exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
   if( azCols ) sqliteFree(azCols);
 
-  if( sqlite3ThreadDataReadOnly()->mallocFailed ){
-    rc = SQLITE_NOMEM;
-    sqlite3MallocClearFailed();
-  }
-
+  rc = sqlite3ApiExit(0, rc);
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){
     *pzErrMsg = malloc(1+strlen(sqlite3_errmsg(db)));
     if( *pzErrMsg ){

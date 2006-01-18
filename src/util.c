@@ -1336,15 +1336,28 @@ void sqlite3ReleaseThreadData(){
 }
 
 /*
-** Clear the "mallocFailed" flag. This should be invoked before exiting any
-** entry points that may have called sqliteMalloc().
+** This function must be called before exiting any API function (i.e. 
+** returning control to the user) that has called sqlite3Malloc or
+** sqlite3Realloc.
+**
+** The returned value is normally a copy of the second argument to this
+** function. However, if a malloc() failure has occured since the previous
+** invocation SQLITE_NOMEM is returned instead. 
+**
+** If the first argument, db, is not NULL and a malloc() error has occured,
+** then the connection error-code (the value returned by sqlite3_errcode())
+** is set to SQLITE_NOMEM.
 */
-void sqlite3MallocClearFailed(){
+int sqlite3ApiExit(sqlite3* db, int rc){
   ThreadData *pTd = sqlite3OsThreadSpecificData(0);
   if( pTd && pTd->mallocFailed ){
     pTd->mallocFailed = 0;
-    sqlite3OsThreadSpecificData(0);
+    if( db ){
+      sqlite3Error(db, SQLITE_NOMEM, 0);
+    }
+    return SQLITE_NOMEM;
   }
+  return rc;
 }
 
 #ifdef SQLITE_MEMDEBUG
