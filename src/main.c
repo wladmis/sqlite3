@@ -727,6 +727,7 @@ const void *sqlite3_errmsg16(sqlite3 *db){
          SQLITE_UTF8, SQLITE_STATIC);
     z = sqlite3_value_text16(db->pErr);
   }
+  sqlite3MallocClearFailed();
   return z;
 }
 #endif /* SQLITE_OMIT_UTF16 */
@@ -930,6 +931,10 @@ int sqlite3_open16(
     rc = openDatabase(zFilename8, ppDb);
     if( rc==SQLITE_OK && *ppDb ){
       rc = sqlite3_exec(*ppDb, "PRAGMA encoding = 'UTF-16'", 0, 0, 0);
+      if( rc!=SQLITE_OK ){
+        sqlite3_close(*ppDb);
+        *ppDb = 0;
+      }
     }
   }else{
     assert( sqlite3ThreadDataReadOnly()->mallocFailed );

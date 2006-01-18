@@ -2049,7 +2049,7 @@ static int test_errmsg16(
 #ifndef SQLITE_OMIT_UTF16
   sqlite3 *db;
   const void *zErr;
-  int bytes;
+  int bytes = 0;
 
   if( objc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", 
@@ -2059,7 +2059,9 @@ static int test_errmsg16(
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
 
   zErr = sqlite3_errmsg16(db);
-  bytes = sqlite3utf16ByteLen(zErr, -1);
+  if( zErr ){
+    bytes = sqlite3utf16ByteLen(zErr, -1);
+  }
   Tcl_SetObjResult(interp, Tcl_NewByteArrayObj(zErr, bytes));
 #endif /* SQLITE_OMIT_UTF16 */
   return TCL_OK;
