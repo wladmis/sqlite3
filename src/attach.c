@@ -272,7 +272,7 @@ static void codeAttach(
   sqlite3* db = pParse->db;
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
-  assert( sqlite3ThreadDataReadOnly()->mallocFailed || pAuthArg );
+  assert( sqlite3MallocFailed() || pAuthArg );
   if( pAuthArg ){
     char *zAuthArg = sqlite3NameFromToken(&pAuthArg->span);
     if( !zAuthArg ){
@@ -303,7 +303,7 @@ static void codeAttach(
   sqlite3ExprCode(pParse, pDbname);
   sqlite3ExprCode(pParse, pKey);
 
-  assert(v || sqlite3ThreadDataReadOnly()->mallocFailed);
+  assert( v || sqlite3MallocFailed() );
   if( v ){
     sqlite3VdbeAddOp(v, OP_Function, 0, nFunc);
     pFunc = sqlite3FindFunction(db, zFunc, strlen(zFunc), nFunc, SQLITE_UTF8,0);

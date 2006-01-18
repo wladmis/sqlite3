@@ -1593,7 +1593,7 @@ int sqlite3pager_open(
   ** structure was never allocated. 
   */
   *ppPager = 0;
-  if( sqlite3ThreadDataReadOnly()->mallocFailed ){
+  if( sqlite3MallocFailed() ){
     return SQLITE_NOMEM;
   }
   memset(&fd, 0, sizeof(fd));

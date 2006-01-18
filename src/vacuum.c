@@ -314,7 +314,7 @@ end_of_vacuum:
   ** Fix this so the flag and return code match.
   */
   if( rc==SQLITE_NOMEM ){
-    sqlite3ThreadData()->mallocFailed = 1;
+    sqlite3MallocFailed();
   }
 
   if( zTemp ){

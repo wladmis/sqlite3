@@ -179,7 +179,7 @@ static CollSeq *findCollSeqEntry(
       ** to the hash table).
       */
       assert( !pDel ||
-              (sqlite3ThreadDataReadOnly()->mallocFailed && pDel==pColl) );
+              (sqlite3MallocFailed() && pDel==pColl) );
       sqliteFree(pDel);
     }
   }

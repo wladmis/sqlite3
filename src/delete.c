@@ -108,7 +108,7 @@ void sqlite3DeleteFrom(
 #endif
 
   sContext.pParse = 0;
-  if( pParse->nErr || sqlite3ThreadDataReadOnly()->mallocFailed ){
+  if( pParse->nErr || sqlite3MallocFailed() ){
     goto delete_from_cleanup;
   }
   db = pParse->db;
