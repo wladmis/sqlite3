@@ -1373,7 +1373,7 @@ int sqlite3ApiExit(sqlite3* db, int rc){
 ** to sqlite3ApiExit(), or false otherwise.
 */
 int sqlite3MallocFailed(){
-  return (mallocHasFailed && sqlite3OsInMutex());
+  return (mallocHasFailed && sqlite3OsInMutex(1));
 }
 
 /* 

@@ -2437,7 +2437,7 @@ int sqlite3pager_release_memory(int nReq){
   ** some of the code invoked by this function may also
   ** try to obtain the mutex, resulting in a deadlock.
   */
-  if( sqlite3OsInMutex() ){
+  if( sqlite3OsInMutex(0) ){
     return 0;
   }
 
