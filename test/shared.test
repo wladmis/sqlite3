@@ -60,6 +60,9 @@ incr av
 #             are attached in different orders to different handles.
 # shared-6.*: Locking, UNION ALL queries and sub-queries.
 # shared-7.*: Autovacuum and shared-cache.
+# shared-8.*: Tests related to the text encoding of shared-cache databases.
+# shared-9.*: TEMP triggers and shared-cache databases.
+# shared-10.*: Tests of sqlite3_close().
 #
 
 do_test shared-$av.1.1 {
