@@ -1113,9 +1113,9 @@ int sqlite3_enable_shared_cache(int enable){
 ** data for this thread has been deallocated.
 */
 void sqlite3_thread_cleanup(void){
-  ThreadData *pTd = sqlite3ThreadData();
+  ThreadData *pTd = sqlite3OsThreadSpecificData(0);
   if( pTd ){
     memset(pTd, 0, sizeof(*pTd));
+    sqlite3OsThreadSpecificData(-1);
   }
-  sqlite3ReleaseThreadData();
 }
