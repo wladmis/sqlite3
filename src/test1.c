@@ -909,7 +909,7 @@ static int sqlite_malloc_outstanding(
 ){
   extern int sqlite3OutstandingMallocs(Tcl_Interp *interp);
 
-#if defined(SQLITE_DEBUG) && defined(SQLITE_MEMDEBUG)
+#if defined(SQLITE_DEBUG) && defined(SQLITE_MEMDEBUG) && SQLITE_MEMDEBUG>1
   if( objc==2 ){
     const char *zArg = Tcl_GetString(objv[1]);
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
