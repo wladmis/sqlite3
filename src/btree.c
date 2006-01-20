@@ -2498,7 +2498,7 @@ static int countWriteCursors(BtShared *pBt){
 }
 #endif
 
-#ifdef SQLITE_TEST
+#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
 /*
 ** Print debugging information about all cursors to standard output.
 */
@@ -4433,8 +4433,10 @@ static int balance_nonroot(MemPage *pPage){
   assert( sqlite3pager_iswriteable(pPage->aData) );
   pBt = pPage->pBt;
   pParent = pPage->pParent;
-  sqlite3pager_write(pParent->aData);
   assert( pParent );
+  if( SQLITE_OK!=(rc = sqlite3pager_write(pParent->aData)) ){
+    return rc;
+  }
   TRACE(("BALANCE: begin page %d child of %d\n", pPage->pgno, pParent->pgno));
 
 #ifndef SQLITE_OMIT_QUICKBALANCE
@@ -5873,7 +5875,7 @@ int sqlite3BtreePageDump(Btree *p, int pgno, int recursive){
 }
 #endif
 
-#ifdef SQLITE_TEST
+#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
 /*
 ** Fill aResult[] with information about the entry and page that the
 ** cursor is pointing to.
@@ -6546,7 +6548,7 @@ int sqlite3BtreeLockTable(Btree *p, int iTab, u8 isWriteLock){
 ** than in, for example, test1.c) so that it can get access to
 ** the definition of BtShared.
 */
-#if defined(SQLITE_TEST) && defined(TCLSH)
+#if defined(SQLITE_DEBUG) && defined(TCLSH)
 #include <tcl.h>
 int sqlite3_shared_cache_report(
   void * clientData,
