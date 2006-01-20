@@ -526,7 +526,7 @@ static void do_step(Thread *p){
   if( p->rc==SQLITE_ROW ){
     p->argc = sqlite3_column_count(p->pStmt);
     for(i=0; i<sqlite3_data_count(p->pStmt); i++){
-      p->argv[i] = sqlite3_column_text(p->pStmt, i);
+      p->argv[i] = (char*)sqlite3_column_text(p->pStmt, i);
     }
     for(i=0; i<p->argc; i++){
       p->colv[i] = sqlite3_column_name(p->pStmt, i);

@@ -339,7 +339,6 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   int tokenType;
   int lastTokenParsed = -1;
   sqlite3 *db = pParse->db;
-  ThreadData *pTsd = pParse->pTsd;
   extern void *sqlite3ParserAlloc(void*(*)(int));
   extern void sqlite3ParserFree(void*, void(*)(void*));
   extern int sqlite3Parser(void*, int, Token, Parse*);
