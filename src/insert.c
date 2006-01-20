@@ -222,7 +222,7 @@ void sqlite3Insert(
 #endif
 
 #ifndef SQLITE_OMIT_AUTOINCREMENT
-  int counterRowid;     /* Memory cell holding rowid of autoinc counter */
+  int counterRowid = 0;  /* Memory cell holding rowid of autoinc counter */
 #endif
 
   if( pParse->nErr || sqlite3MallocFailed() ){

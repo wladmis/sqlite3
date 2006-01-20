@@ -5307,7 +5307,9 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     */
     BtCursor leafCur;
     unsigned char *pNext;
-    int szNext;
+    int szNext;  /* The compiler warning is wrong: szNext is always 
+                 ** initialized before use.  Adding an extra initialization
+                 ** to silence the compiler slows down the code. */
     int notUsed;
     unsigned char *tempCell = 0;
     assert( !pPage->leafData );

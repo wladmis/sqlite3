@@ -1508,7 +1508,7 @@ WhereInfo *sqlite3WhereBegin(
     int bestFlags = 0;          /* Flags associated with pBest */
     int bestNEq = 0;            /* nEq associated with pBest */
     double lowestCost;          /* Cost of the pBest */
-    int bestJ;                  /* The value of j */
+    int bestJ = 0;              /* The value of j */
     Bitmask m;                  /* Bitmask value for j or bestJ */
 
     lowestCost = SQLITE_BIG_DBL;

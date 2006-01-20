@@ -1388,8 +1388,8 @@ Vdbe *sqlite3GetVdbe(Parse *pParse){
 ** SELECT statements.
 */
 static void computeLimitRegisters(Parse *pParse, Select *p, int iBreak){
-  Vdbe *v;
-  int iLimit;
+  Vdbe *v = 0;
+  int iLimit = 0;
   int iOffset;
   int addr1, addr2;
 

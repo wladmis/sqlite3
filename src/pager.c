@@ -1566,7 +1566,7 @@ int sqlite3pager_open(
 ){
   Pager *pPager = 0;
   char *zFullPathname = 0;
-  int nameLen;
+  int nameLen;  /* Compiler is wrong. This is always initialized before use */
   OsFile *fd;
   int rc = SQLITE_OK;
   int i;
