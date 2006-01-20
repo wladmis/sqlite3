@@ -467,7 +467,7 @@ do_test func-15.1 {
   catchsql {
     select test_error(NULL);
   }
-} {1 {user function error}}
+} {1 {}}
 
 # Test the quote function for BLOB and NULL values.
 do_test func-16.1 {
