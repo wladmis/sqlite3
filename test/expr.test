@@ -458,6 +458,13 @@ test_expr expr-6.64 {t1='ac', t2=NULL} {t1 GLOB t2} {{}}
 test_expr expr-6.65 {t1=NULL, t2='a*?c'} {t1 NOT GLOB t2} {{}}
 test_expr expr-6.66 {t1='ac', t2=NULL} {t1 NOT GLOB t2} {{}}
 
+# Check that the affinity of a CAST expression is calculated correctly.
+ifcapable cast {
+  test_expr expr-6.67 {t1='01', t2=1} {t1 = t2} 0
+  test_expr expr-6.68 {t1='1', t2=1} {t1 = t2} 1
+  test_expr expr-6.69 {t1='01', t2=1} {CAST(t1 AS INTEGER) = t2} 1
+}
+
 test_expr expr-case.1 {i1=1, i2=2} \
 	{CASE WHEN i1 = i2 THEN 'eq' ELSE 'ne' END} ne
 test_expr expr-case.2 {i1=2, i2=2} \

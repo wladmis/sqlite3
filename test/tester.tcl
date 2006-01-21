@@ -398,6 +398,7 @@ proc do_ioerr_test {testname args} {
       } $checksum
     }
 
+    set ::sqlite_io_error_pending 0
     if {[info exists ::ioerropts(-cleanup)]} {
       catch $::ioerropts(-cleanup)
     }

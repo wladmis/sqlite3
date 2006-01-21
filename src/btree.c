@@ -541,11 +541,9 @@ static int saveCursorPosition(BtCursor *pCur){
   }
   assert( !pCur->pPage->intKey || !pCur->pKey );
 
-  /* Todo: Should we drop the reference to pCur->pPage here? */
-  releasePage(pCur->pPage);
-  pCur->pPage = 0;
-
   if( rc==SQLITE_OK ){
+    releasePage(pCur->pPage);
+    pCur->pPage = 0;
     pCur->eState = CURSOR_REQUIRESEEK;
   }
 

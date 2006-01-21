@@ -909,6 +909,8 @@ static int pager_unwritelock(Pager *pPager){
   pPager->state = PAGER_SHARED;
   pPager->origDbSize = 0;
   pPager->setMaster = 0;
+  pPager->needSync = 0;
+  pPager->pFirstSynced = pPager->pFirst;
   return rc;
 }
 
