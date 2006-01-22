@@ -462,7 +462,8 @@ static void put4byte(unsigned char *p, u32 v){
 ** file.
 */
 #define getVarint    sqlite3GetVarint
-#define getVarint32  sqlite3GetVarint32
+/* #define getVarint32  sqlite3GetVarint32 */
+#define getVarint32(A,B)  ((*B=*(A))<=0x7f?1:sqlite3GetVarint32(A,B))
 #define putVarint    sqlite3PutVarint
 
 /* The database page the PENDING_BYTE occupies. This page is never used.
@@ -920,12 +921,16 @@ static void parseCellPtr(
   }else{
     nPayload = 0;
   }
-  n += getVarint(&pCell[n], (u64 *)&pInfo->nKey);
-  pInfo->nHeader = n;
   pInfo->nData = nPayload;
-  if( !pPage->intKey ){
-    nPayload += pInfo->nKey;
+  if( pPage->intKey ){
+    n += getVarint(&pCell[n], (u64 *)&pInfo->nKey);
+  }else{
+    u32 x;
+    n += getVarint32(&pCell[n], &x);
+    pInfo->nKey = x;
+    nPayload += x;
   }
+  pInfo->nHeader = n;
   if( nPayload<=pPage->maxLocal ){
     /* This is the (easy) common case where the entire payload fits
     ** on the local page.  No overflow is required.

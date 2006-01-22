@@ -566,7 +566,7 @@ static int selectInnerLoop(
       break;
     }
 
-    /* If any row exists in the result set, record that fact and abort.
+    /* If any row exist in the result set, record that fact and abort.
     */
     case SRT_Exists: {
       sqlite3VdbeAddOp(v, OP_MemInt, 1, iParm);
