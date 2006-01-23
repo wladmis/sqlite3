@@ -33,6 +33,11 @@ if {[info command sqlite_malloc_stat]==""} {
    return
 }
 
+ifcapable !utf16 {
+  finish_test
+  return
+}
+
 proc do_stmt_test {id sql} {
   set ::sql $sql
   set go 1

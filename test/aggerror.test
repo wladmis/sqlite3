@@ -50,14 +50,16 @@ do_test aggfunc-1.3 {
     SELECT x_count(a) FROM t1;
   }
 } {1 {value of 40 handed to x_count}}
-do_test aggfunc-1.4 {
-  execsql {
-    UPDATE t1 SET a=41 WHERE a=40
-  }
-  catchsql {
-    SELECT x_count(a) FROM t1;
-  }
-} {1 abc}
+ifcapable utf16 {
+  do_test aggfunc-1.4 {
+    execsql {
+      UPDATE t1 SET a=41 WHERE a=40
+    }
+    catchsql {
+      SELECT x_count(a) FROM t1;
+    }
+  } {1 abc}
+}
 do_test aggfunc-1.5 {
   execsql {
     SELECT x_count(*) FROM t1

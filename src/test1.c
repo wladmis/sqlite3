@@ -578,9 +578,11 @@ static void countStep(sqlite3_context *context, int argc, sqlite3_value **argv){
     int v = sqlite3_value_int(argv[0]);
     if( v==40 ){
       sqlite3_result_error(context, "value of 40 handed to x_count", -1);
+#ifndef SQLITE_OMIT_UTF16
     }else if( v==41 ){
       const char zUtf16ErrMsg[] = { 0, 0x61, 0, 0x62, 0, 0x63, 0, 0, 0};
       sqlite3_result_error16(context, &zUtf16ErrMsg[1-SQLITE_BIGENDIAN], -1);
+#endif
     }
   }
 }   
