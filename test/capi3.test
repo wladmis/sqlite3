@@ -432,6 +432,11 @@ do_test $test.13 {
 
 }
 
+ifcapable !floatingpoint {
+  finish_test
+  return
+}
+
 do_test capi3-5.0 {
   execsql {
     CREATE TABLE t1(a VARINT, b BLOB, c VARCHAR(16));

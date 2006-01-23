@@ -662,6 +662,11 @@ do_test avtrans-6.39 {
 } {1 -2 -3 4 -5 -6}
 integrity_check avtrans-6.40
 
+ifcapable !floatingpoint {
+  finish_test
+  return
+}
+
 # Test to make sure rollback restores the database back to its original
 # state.
 #
