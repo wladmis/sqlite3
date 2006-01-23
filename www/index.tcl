@@ -66,6 +66,11 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2006-Jan-23} {Version 3.3.2 beta} {
+  More bug fixes and performance improvements as we move closer to
+  a production-ready version 3.3.x.
+}
+
 newsitem {2006-Jan-16} {Version 3.3.1 alpha} {
   Many bugs found in last week's alpha release have now been fixed and
   the library is running much faster again.

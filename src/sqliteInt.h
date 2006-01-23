@@ -296,13 +296,9 @@ extern int sqlite3_iLine;            /* Line number for debug info */
 /*
 ** An instance of this structure might be allocated to store information
 ** specific to a single thread.
-**
-** To avoid a memory leak on windows, the content of this structure is
-** checked at the conclusion of each API call.  If it is all zero, it
-** is deallocated.
 */
 struct ThreadData {
-  int nRef;                /* Number of users */
+  int dummy;               /* So that this structure is never empty */
 
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
   int nSoftHeapLimit;      /* Suggested max mem allocation.  No limit if <0 */
@@ -1255,7 +1251,6 @@ struct Parse {
   int ckOffset;        /* Stack offset to data used by CHECK constraints */
   u32 writeMask;       /* Start a write transaction on these databases */
   u32 cookieMask;      /* Bitmask of schema verified databases */
-  ThreadData *pTsd;    /* Thread specific data for this thread */
   int cookieGoto;      /* Address of OP_Goto to cookie verifier subroutine */
   int cookieValue[MAX_ATTACHED+2];  /* Values of cookies to verify */
 #ifndef SQLITE_OMIT_SHARED_CACHE
