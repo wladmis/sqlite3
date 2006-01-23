@@ -3280,7 +3280,7 @@ case OP_Insert: {         /* no-push */
 
     if( pOp->p2 & OPFLAG_NCHANGE ) p->nChange++;
     if( pOp->p2 & OPFLAG_LASTROWID ) db->lastRowid = pNos->i;
-    if( pC->nextRowidValid && pTos->i>=pC->nextRowid ){
+    if( pC->nextRowidValid && pNos->i>=pC->nextRowid ){
       pC->nextRowidValid = 0;
     }
     if( pTos->flags & MEM_Null ){
