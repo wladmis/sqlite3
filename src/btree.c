@@ -5282,9 +5282,9 @@ int sqlite3BtreeDelete(BtCursor *pCur){
   ** that the entry will be deleted from.
   */
   if( 
-    (rc = restoreOrClearCursorPosition(pCur, 1)) ||
-    (rc = saveAllCursors(pBt, pCur->pgnoRoot, pCur)) ||
-    (rc = sqlite3pager_write(pPage->aData))
+    (rc = restoreOrClearCursorPosition(pCur, 1))!=0 ||
+    (rc = saveAllCursors(pBt, pCur->pgnoRoot, pCur))!=0 ||
+    (rc = sqlite3pager_write(pPage->aData))!=0
   ){
     return rc;
   }

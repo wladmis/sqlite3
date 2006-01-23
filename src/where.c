@@ -40,16 +40,6 @@ int sqlite3_where_trace = 0;
 # define TRACE(X)
 #endif
 
-/*
-** A large value which is the maximum cost of using an index.
-** By default this is a large floating point value.  When compiling
-** SQLite for a processor that lacks floating point support, simply
-** redefine this constant to a large integer.
-*/
-#ifndef SQLITE_BIG_DBL
-# define SQLITE_BIG_DBL (1.0e+99)
-#endif
-
 /* Forward reference
 */
 typedef struct WhereClause WhereClause;
