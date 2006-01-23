@@ -315,6 +315,7 @@ proc test_function {enc arg} {
   return "$enc $arg"
 }
 
+db close
 file delete -force test.db
 sqlite3 db test.db; set DB [sqlite3_connection_pointer db]
 execsql {pragma encoding = 'UTF-8'}
