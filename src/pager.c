@@ -3249,16 +3249,8 @@ int sqlite3pager_commit(Pager *pPager){
   int rc;
   PgHdr *pPg;
 
-  if( pPager->errCode==SQLITE_FULL ){
-    rc = sqlite3pager_rollback(pPager);
-    if( rc==SQLITE_OK ){
-      rc = SQLITE_FULL;
-    }
-    return rc;
-  }
   if( pPager->errCode ){
-    rc = pPager->errCode;
-    return rc;
+    return pPager->errCode;
   }
   if( pPager->state<PAGER_RESERVED ){
     return SQLITE_ERROR;
@@ -3296,17 +3288,10 @@ int sqlite3pager_commit(Pager *pPager){
   }
   assert( pPager->journalOpen );
   rc = sqlite3pager_sync(pPager, 0, 0);
-  if( rc!=SQLITE_OK ){
-    goto commit_abort;
+  if( rc==SQLITE_OK ){
+    rc = pager_unwritelock(pPager);
+    pPager->dbSize = -1;
   }
-  rc = pager_unwritelock(pPager);
-  pPager->dbSize = -1;
-  return rc;
-
-  /* Jump here if anything goes wrong during the commit process.
-  */
-commit_abort:
-  sqlite3pager_rollback(pPager);
   return rc;
 }
 
