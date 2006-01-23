@@ -66,7 +66,7 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
-newsitem {2006-Jan-23} {Version 3.3.2 beta} {
+newsitem {2006-Jan-24} {Version 3.3.2 beta} {
   More bug fixes and performance improvements as we move closer to
   a production-ready version 3.3.x.
 }
