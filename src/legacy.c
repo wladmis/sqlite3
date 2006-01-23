@@ -68,8 +68,8 @@ int sqlite3_exec(
     nCallback = 0;
 
     nCol = sqlite3_column_count(pStmt);
-    azCols = sqliteMalloc(2*nCol*sizeof(const char *));
-    if( nCol && !azCols ){
+    azCols = sqliteMalloc(2*nCol*sizeof(const char *) + 1);
+    if( azCols==0 ){
       goto exec_out;
     }
 
