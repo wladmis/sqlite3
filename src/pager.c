@@ -1464,9 +1464,7 @@ static int pager_stmt_playback(Pager *pPager){
   pPager->journalOff = szJ;
   
 end_stmt_playback:
-  if( rc!=SQLITE_OK ){
-    rc = pager_error(pPager, SQLITE_CORRUPT);
-  }else{
+  if( rc==SQLITE_OK) {
     pPager->journalOff = szJ;
     /* pager_reload_cache(pPager); */
   }
