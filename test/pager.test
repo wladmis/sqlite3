@@ -518,8 +518,28 @@ do_test pager-6.3 {
   }
 } {{CREATE TABLE abc(a, b, c)}}
 
-do_test pager-6.4 {
+do_test pager-6.4.1 {
+  execsql {
+    BEGIN;
+    SELECT sql FROM sqlite_master;
+  }
+  copy_file test2.db-journal test.db-journal;
+  sqlite3 db3 test.db
+  catchsql {
+    BEGIN;
+    SELECT sql FROM sqlite_master;
+  } db3;
+} {1 {database is locked}}
+do_test pager-6.4.2 {
+  file delete -force test.db-journal
+  catchsql {
+    SELECT sql FROM sqlite_master;
+  } db3;
+} {0 {{CREATE TABLE abc(a, b, c)}}}
+
+do_test pager-6.5 {
   db2 close
+  db3 close
 } {}
 }
 finish_test

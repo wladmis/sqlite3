@@ -3705,9 +3705,9 @@ case OP_IdxDelete: {        /* no-push */
   assert( i>=0 && i<p->nCursor );
   assert( p->apCsr[i]!=0 );
   if( (pCrsr = (pC = p->apCsr[i])->pCursor)!=0 ){
-    int rx, res;
-    rx = sqlite3BtreeMoveto(pCrsr, pTos->z, pTos->n, &res);
-    if( rx==SQLITE_OK && res==0 ){
+    int res;
+    rc = sqlite3BtreeMoveto(pCrsr, pTos->z, pTos->n, &res);
+    if( rc==SQLITE_OK && res==0 ){
       rc = sqlite3BtreeDelete(pCrsr);
     }
     assert( pC->deferredMoveto==0 );
