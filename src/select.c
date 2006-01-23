@@ -1869,7 +1869,7 @@ static int multiSelect(
       int addr;
       u8 *pSortOrder;
 
-      aCopy = (CollSeq**)&pKeyInfo[1];
+      aCopy = &pKeyInfo->aColl[nCol];
       pSortOrder = pKeyInfo->aSortOrder = (u8*)&aCopy[nCol];
       memcpy(aCopy, pKeyInfo->aColl, nCol*sizeof(CollSeq*));
       apColl = pKeyInfo->aColl;
