@@ -310,6 +310,16 @@ do_malloc_test 4 -tclprep {
   db2 close
 }
 
+do_malloc_test 5 -tclbody {
+  sqlite3 dbX test.db
+  sqlite3 dbY test.db
+  dbX close
+  dbY close
+} -cleanup {
+  catch {dbX close}
+  catch {dbY close}
+}
+
 catch {db close}
 sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test

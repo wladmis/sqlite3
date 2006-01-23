@@ -280,6 +280,7 @@ void sqlite3ExprSpan(Expr *pExpr, Token *pLeft, Token *pRight){
 */
 Expr *sqlite3ExprFunction(ExprList *pList, Token *pToken){
   Expr *pNew;
+  assert( pToken );
   pNew = sqliteMalloc( sizeof(Expr) );
   if( pNew==0 ){
     sqlite3ExprListDelete(pList); /* Avoid leaking memory when malloc fails */
@@ -287,12 +288,8 @@ Expr *sqlite3ExprFunction(ExprList *pList, Token *pToken){
   }
   pNew->op = TK_FUNCTION;
   pNew->pList = pList;
-  if( pToken ){
-    assert( pToken->dyn==0 );
-    pNew->token = *pToken;
-  }else{
-    pNew->token.z = 0;
-  }
+  assert( pToken->dyn==0 );
+  pNew->token = *pToken;
   pNew->span = pNew->token;
   return pNew;
 }
@@ -2085,10 +2082,8 @@ void sqlite3ExprIfFalse(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
 */
 int sqlite3ExprCompare(Expr *pA, Expr *pB){
   int i;
-  if( pA==0 ){
-    return pB==0;
-  }else if( pB==0 ){
-    return 0;
+  if( pA==0||pB==0 ){
+    return pB==pA;
   }
   if( pA->op!=pB->op ) return 0;
   if( (pA->flags & EP_Distinct)!=(pB->flags & EP_Distinct) ) return 0;
