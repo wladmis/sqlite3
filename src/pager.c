@@ -2695,6 +2695,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
         if( rc2!=SQLITE_OK || fileSize>=pgno*pPager->pageSize ){
 	  /* An IO error occured in one of the the sqlite3OsSeek() or
           ** sqlite3OsRead() calls above. */
+          pPg->pgno = 0;
           sqlite3pager_unref(PGHDR_TO_DATA(pPg));
           return rc;
         }else{
@@ -3111,10 +3112,12 @@ int sqlite3pager_write(void *pData){
 ** to sqlite3pager_write().  In other words, return TRUE if it is ok
 ** to change the content of the page.
 */
+#ifndef NDEBUG
 int sqlite3pager_iswriteable(void *pData){
   PgHdr *pPg = DATA_TO_PGHDR(pData);
   return pPg->dirty;
 }
+#endif
 
 #ifndef SQLITE_OMIT_VACUUM
 /*
