@@ -1088,23 +1088,21 @@ int sqlite3Corrupt(void){
 */
 int sqlite3_enable_shared_cache(int enable){
   ThreadData *pTd = sqlite3ThreadData();
-  if( !pTd ){
-    return SQLITE_NOMEM;
-  }
-  
-  /* It is only legal to call sqlite3_enable_shared_cache() when there
-  ** are no currently open b-trees that were opened by the calling thread.
-  ** This condition is only easy to detect if the shared-cache were 
-  ** previously enabled (and is being disabled). 
-  */
-  if( pTd->pBtree && !enable ){
-    assert( pTd->useSharedData );
-    return SQLITE_MISUSE;
-  }
+  if( pTd ){
+    /* It is only legal to call sqlite3_enable_shared_cache() when there
+    ** are no currently open b-trees that were opened by the calling thread.
+    ** This condition is only easy to detect if the shared-cache were 
+    ** previously enabled (and is being disabled). 
+    */
+    if( pTd->pBtree && !enable ){
+      assert( pTd->useSharedData );
+      return SQLITE_MISUSE;
+    }
 
-  pTd->useSharedData = enable;
-  sqlite3ReleaseThreadData();
-  return SQLITE_OK;
+    pTd->useSharedData = enable;
+    sqlite3ReleaseThreadData();
+  }
+  return sqlite3ApiExit(0, SQLITE_OK);
 }
 #endif
 

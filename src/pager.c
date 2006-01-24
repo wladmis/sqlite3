@@ -1778,9 +1778,10 @@ void enable_simulated_io_errors(void){
 void sqlite3pager_read_fileheader(Pager *pPager, int N, unsigned char *pDest){
   memset(pDest, 0, N);
   if( MEMDB==0 ){
+    disable_simulated_io_errors();
     sqlite3OsSeek(pPager->fd, 0);
     sqlite3OsRead(pPager->fd, pDest, N);
-    clear_simulated_io_error();
+    enable_simulated_io_errors();
   }
 }
 

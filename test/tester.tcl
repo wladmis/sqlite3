@@ -382,9 +382,10 @@ proc do_ioerr_test {testname args} {
       set r [catch $::ioerrorbody msg]
       set ::go [expr {$::sqlite_io_error_pending<=0}]
       set s [expr $::sqlite_io_error_hit==0]
+      set ::sqlite_io_error_hit 0
       # puts "$::sqlite_io_error_pending $r $msg"
-      # puts "r=$r s=$s msg=\"$msg\""
-      expr { ($s && !$r) || (!$s && $r) }
+      # puts "r=$r s=$s go=$::go msg=\"$msg\""
+      expr { ($s && !$r && !$::go) || (!$s && $r && $::go) }
       # expr {$::sqlite_io_error_pending>0 || $r!=0}
     } {1}
 
