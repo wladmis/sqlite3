@@ -403,6 +403,7 @@ do_test temptable-6.8 {
   }
 } {1 {no such table: t9}}
 
+file delete -force test2.db test2.db-journal
 do_test temptable-7.1 {
   catchsql {
     ATTACH 'test2.db' AS two;
