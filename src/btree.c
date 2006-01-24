@@ -560,7 +560,8 @@ static int saveAllCursors(BtShared *pBt, Pgno iRoot, BtCursor *pExcept){
   BtCursor *p;
   if( sqlite3ThreadDataReadOnly()->useSharedData ){
     for(p=pBt->pCursor; p; p=p->pNext){
-      if( p!=pExcept && p->pgnoRoot==iRoot && p->eState==CURSOR_VALID ){
+      if( p!=pExcept && (0==iRoot || p->pgnoRoot==iRoot) && 
+          p->eState==CURSOR_VALID ){
         int rc = saveCursorPosition(p);
         if( SQLITE_OK!=rc ){
           return rc;
@@ -2541,6 +2542,10 @@ int sqlite3BtreeRollback(Btree *p){
   BtShared *pBt = p->pBt;
   MemPage *pPage1;
 
+  rc = saveAllCursors(pBt, 0, 0);
+  if( rc!=SQLITE_OK ){
+    return rc;
+  }
   btreeIntegrity(p);
   unlockAllTables(p);
 
