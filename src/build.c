@@ -3157,10 +3157,10 @@ void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
     assert( pName1->z );
     pColl = sqlite3FindCollSeq(db, ENC(db), (char*)pName1->z, pName1->n, 0);
     if( pColl ){
-      char *z = sqliteStrNDup((const char *)pName1->z, pName1->n);
-      if( z ){
-        reindexDatabases(pParse, z);
-        sqliteFree(z);
+      char *zColl = sqliteStrNDup((const char *)pName1->z, pName1->n);
+      if( zColl ){
+        reindexDatabases(pParse, zColl);
+        sqliteFree(zColl);
       }
       return;
     }

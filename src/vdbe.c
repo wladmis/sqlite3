@@ -2993,7 +2993,9 @@ case OP_IsUnique: {        /* no-push */
     assert( pCx->deferredMoveto==0 );
     pCx->cacheStatus = CACHE_STALE;
     rc = sqlite3BtreeMoveto(pCrsr, zKey, len, &res);
-    if( rc!=SQLITE_OK ) goto abort_due_to_error;
+    if( rc!=SQLITE_OK ){
+      goto abort_due_to_error;
+    }
     if( res<0 ){
       rc = sqlite3BtreeNext(pCrsr, &res);
       if( res ){
