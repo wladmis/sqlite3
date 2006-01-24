@@ -131,9 +131,6 @@ int sqlite3_close(sqlite3 *db){
     return SQLITE_ERROR;
   }
 
-  /* sqlite3_close() may not invoke sqliteMalloc(). */
-  sqlite3MallocDisallow();
-
   for(j=0; j<db->nDb; j++){
     struct Db *pDb = &db->aDb[j];
     if( pDb->pBt ){
@@ -177,7 +174,6 @@ int sqlite3_close(sqlite3 *db){
   */
   sqliteFree(db->aDb[1].pSchema);
   sqliteFree(db);
-  sqlite3MallocAllow();
   sqlite3ReleaseThreadData();
   return SQLITE_OK;
 }

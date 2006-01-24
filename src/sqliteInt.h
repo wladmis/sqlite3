@@ -1747,6 +1747,7 @@ int sqlite3CreateFunc(sqlite3 *, const char *, int, int, void *,
 int sqlite3ApiExit(sqlite3 *db, int);
 int sqlite3MallocFailed(void);
 void sqlite3FailedMalloc(void);
+void sqlite3AbortOtherActiveVdbes(sqlite3 *, Vdbe *);
 
 #ifndef SQLITE_OMIT_SHARED_CACHE
   void sqlite3TableLock(Parse *, int, int, u8, const char *);
