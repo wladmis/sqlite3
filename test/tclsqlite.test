@@ -447,4 +447,11 @@ do_test tcl-11.3 {
   db exists {SELECT 1 FROM t4 WHERE x==8}
 } {0}
 
+do_test tcl-12.1 {
+  unset -nocomplain a b c version
+  set version [db version]
+  scan $version "%d.%d.%d" a b c
+  expr $a*1000000 + $b*1000 + $c
+} [sqlite3_libversion_number]
+
 finish_test
