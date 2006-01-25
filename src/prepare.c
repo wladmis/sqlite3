@@ -217,7 +217,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   **    meta[8]
   **    meta[9]
   **
-  ** Note: The hash defined SQLITE_UTF* symbols in sqliteInt.h correspond to
+  ** Note: The #defined SQLITE_UTF* symbols in sqliteInt.h correspond to
   ** the possible values of meta[4].
   */
   if( rc==SQLITE_OK ){
@@ -440,6 +440,10 @@ void sqlite3SchemaFree(void *p){
   pSchema->flags &= ~DB_SchemaLoaded;
 }
 
+/*
+** Find and return the schema associated with a BTree.  Create
+** a new one if necessary.
+*/
 Schema *sqlite3SchemaGet(Btree *pBt){
   Schema * p;
   if( pBt ){
@@ -456,6 +460,13 @@ Schema *sqlite3SchemaGet(Btree *pBt){
   return p;
 }
 
+/*
+** Convert a schema pointer into the iDb index that indicates
+** which database file in db->aDb[] the schema refers to.
+**
+** If the same database is attached more than once, the first
+** attached database is returned.
+*/
 int sqlite3SchemaToIndex(sqlite3 *db, Schema *pSchema){
   int i = -1000000;
 
