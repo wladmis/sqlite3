@@ -388,10 +388,10 @@ CREATE TABLE t1(
 SELECT (a = b) FROM t1;
 
 -- Text comparison is performed using the NOCASE collation sequence.
-SELECT (a = d) FROM t1;
+SELECT (d = a) FROM t1;
 
 -- Text comparison is performed using the BINARY collation sequence.
-SELECT (d = a) FROM t1;
+SELECT (a = d) FROM t1;
 
 -- Text comparison is performed using the REVERSE collation sequence.
 SELECT ('abc' = c) FROM t1;
