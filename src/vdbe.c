@@ -2463,6 +2463,11 @@ case OP_SetCookie: {       /* no-push */
   }
   assert( (pTos->flags & MEM_Dyn)==0 );
   pTos--;
+  if( pOp->p1==1 ){
+    /* Invalidate all prepared statements whenever the TEMP database
+    ** schema is changed.  Ticket #1644 */
+    sqlite3ExpirePreparedStatements(db);
+  }
   break;
 }
 
