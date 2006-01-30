@@ -304,4 +304,23 @@ do_test in-9.4 {
   }
 } {1 {only a single result allowed for a SELECT that is part of an expression}}
 
+# IN clauses in CHECK constraints.  Ticket #1645
+#
+do_test in-10.1 {
+  execsql {
+    CREATE TABLE t5(
+      a INTEGER,
+      CHECK( a IN (111,222,333) )
+    );
+    INSERT INTO t5 VALUES(111);
+    SELECT * FROM t5;
+  }
+} {111}
+do_test in-10.2 {
+  catchsql {
+    INSERT INTO t5 VALUES(4);
+  }
+} {1 {constraint failed}}
+
+
 finish_test
