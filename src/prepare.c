@@ -530,7 +530,14 @@ int sqlite3_prepare(
   
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
-  sqlite3RunParser(&sParse, zSql, &zErrMsg);
+  if( nBytes>=0 && zSql[nBytes]!=0 ){
+    char *zSqlCopy = sqlite3StrNDup(zSql, nBytes);
+    sqlite3RunParser(&sParse, zSqlCopy, &zErrMsg);
+    sParse.zTail += zSql - zSqlCopy;
+    sqliteFree(zSqlCopy);
+  }else{
+    sqlite3RunParser(&sParse, zSql, &zErrMsg);
+  }
 
   if( sqlite3MallocFailed() ){
     sParse.rc = SQLITE_NOMEM;
