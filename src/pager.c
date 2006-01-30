@@ -2676,7 +2676,7 @@ int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage){
     /* Populate the page with data, either by reading from the database
     ** file, or by setting the entire page to zero.
     */
-    if( sqlite3pager_pagecount(pPager)<(int)pgno ){
+    if( sqlite3pager_pagecount(pPager)<(int)pgno || MEMDB ){
       memset(PGHDR_TO_DATA(pPg), 0, pPager->pageSize);
     }else{
       assert( MEMDB==0 );

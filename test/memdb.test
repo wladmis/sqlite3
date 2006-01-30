@@ -388,6 +388,30 @@ ifcapable subquery {
   }
 }
 
+# Ticket #1524
+#
+do_test memdb-8.1 {
+  db close
+  sqlite3 db {:memory:}
+  execsql {
+    PRAGMA auto_vacuum=TRUE;
+    CREATE TABLE t1(a);
+    INSERT INTO t1 VALUES(randstr(5000,6000));
+    INSERT INTO t1 VALUES(randstr(5000,6000));
+    INSERT INTO t1 VALUES(randstr(5000,6000));
+    INSERT INTO t1 VALUES(randstr(5000,6000));
+    INSERT INTO t1 VALUES(randstr(5000,6000));
+    SELECT count(*) FROM t1;
+  }
+} 5
+do_test memdb-8.2 {
+  execsql {
+    DELETE FROM t1;
+    SELECT count(*) FROM t1;
+  }
+} 0
+
+
 } ;# ifcapable memorydb
 
 finish_test
