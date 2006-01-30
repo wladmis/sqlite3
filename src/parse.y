@@ -840,9 +840,7 @@ expritem(A) ::= .                       {A = 0;}
 ///////////////////////////// The CREATE INDEX command ///////////////////////
 //
 cmd ::= CREATE(S) uniqueflag(U) INDEX ifnotexists(NE) nm(X) dbnm(D)
-        ON nm(Y) LP idxlist(Z) RP(E) onconf(R). {
-  if( U!=OE_None ) U = R;
-  if( U==OE_Default) U = OE_Abort;
+        ON nm(Y) LP idxlist(Z) RP(E). {
   sqlite3CreateIndex(pParse, &X, &D, sqlite3SrcListAppend(0,&Y,0), Z, U,
                       &S, &E, SQLITE_SO_ASC, NE);
 }
