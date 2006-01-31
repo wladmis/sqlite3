@@ -24,9 +24,11 @@ source $testdir/tester.tcl
 #
 if {$::tcl_platform(platform)!="unix"} {
   finish_test
+  return
 }
 ifcapable !pager_pragmas {
   finish_test
+  return
 }
 
 do_test sync-1.1 {
