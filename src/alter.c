@@ -407,6 +407,13 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   pTab = sqlite3FindTable(pParse->db, zTab, zDb);
   assert( pTab );
 
+#ifndef SQLITE_OMIT_AUTHORIZATION
+  /* Invoke the authorization callback. */
+  if( sqlite3AuthCheck(pParse, SQLITE_ALTER_TABLE, zDb, pTab->zName, 0) ){
+    return;
+  }
+#endif
+
   /* If the default value for the new column was specified with a 
   ** literal NULL, then set pDflt to 0. This simplifies checking
   ** for an SQL NULL default below.
