@@ -731,6 +731,10 @@ int sqlite3_errcode(sqlite3 *db){
   return db->errCode;
 }
 
+/*
+** Create a new collating function for database "db".  The name is zName
+** and the encoding is enc.
+*/
 static int createCollation(
   sqlite3* db, 
   const char *zName, 
@@ -816,8 +820,9 @@ static int openDatabase(
   ** and UTF-16, so add a version for each to avoid any unnecessary
   ** conversions. The only error that can occur here is a malloc() failure.
   */
-  if( createCollation(db, "BINARY", SQLITE_UTF8, 0,binCollFunc) ||
-      createCollation(db, "BINARY", SQLITE_UTF16, 0,binCollFunc) ||
+  if( createCollation(db, "BINARY", SQLITE_UTF8, 0, binCollFunc) ||
+      createCollation(db, "BINARY", SQLITE_UTF16BE, 0, binCollFunc) ||
+      createCollation(db, "BINARY", SQLITE_UTF16LE, 0, binCollFunc) ||
       (db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0))==0 
   ){
     assert( sqlite3MallocFailed() );
