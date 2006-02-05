@@ -459,4 +459,13 @@ do_test view-13.1 {
   }
 } {1 {view v13 cannot reference objects in database two}}
 
+# Ticket #1658
+#
+do_test view-14.1 {
+  catchsql {
+    CREATE TEMP VIEW t1 AS SELECT a,b FROM t1;
+    SELECT * FROM temp.t1;
+  }
+} {1 {view t1 is circularly defined}}
+
 finish_test
