@@ -469,15 +469,13 @@ void sqlite3Pragma(
     if( pTab ){
       int i;
       Column *pCol;
-      sqlite3VdbeSetNumCols(v, 8);
+      sqlite3VdbeSetNumCols(v, 6);
       sqlite3VdbeSetColName(v, 0, "cid", P3_STATIC);
       sqlite3VdbeSetColName(v, 1, "name", P3_STATIC);
       sqlite3VdbeSetColName(v, 2, "type", P3_STATIC);
       sqlite3VdbeSetColName(v, 3, "notnull", P3_STATIC);
       sqlite3VdbeSetColName(v, 4, "dflt_value", P3_STATIC);
       sqlite3VdbeSetColName(v, 5, "pk", P3_STATIC);
-      sqlite3VdbeSetColName(v, 6, "autoinc", P3_STATIC);
-      sqlite3VdbeSetColName(v, 7, "collseq", P3_STATIC);
       sqlite3ViewGetColumnNames(pParse, pTab);
       for(i=0, pCol=pTab->aCol; i<pTab->nCol; i++, pCol++){
         sqlite3VdbeAddOp(v, OP_Integer, i, 0);
@@ -487,10 +485,7 @@ void sqlite3Pragma(
         sqlite3VdbeAddOp(v, OP_Integer, pCol->notNull, 0);
         sqlite3ExprCode(pParse, pCol->pDflt);
         sqlite3VdbeAddOp(v, OP_Integer, pCol->isPrimKey, 0);
-        sqlite3VdbeAddOp(v, OP_Integer, pCol->isPrimKey && pTab->autoInc, 0);
-        sqlite3VdbeOp3(v, OP_String8, 0, 0,
-           pCol->zColl ? pCol->zColl : "binary", 0);
-        sqlite3VdbeAddOp(v, OP_Callback, 8, 0);
+        sqlite3VdbeAddOp(v, OP_Callback, 6, 0);
       }
     }
   }else
