@@ -817,8 +817,8 @@ static void test_error(
 */
 typedef struct SumCtx SumCtx;
 struct SumCtx {
-  double sum;     /* Sum of terms */
-  int cnt;        /* Number of elements summed */
+  LONGDOUBLE_TYPE sum;    /* Sum of terms */
+  u32 cnt;                /* Number of elements summed */
   u8 seenFloat;   /* True if there has been any floating point value */
 };
 
@@ -886,7 +886,7 @@ struct StdDevCtx {
 */
 typedef struct CountCtx CountCtx;
 struct CountCtx {
-  int n;
+  i64 n;
 };
 
 /*
@@ -902,7 +902,7 @@ static void countStep(sqlite3_context *context, int argc, sqlite3_value **argv){
 static void countFinalize(sqlite3_context *context){
   CountCtx *p;
   p = sqlite3_aggregate_context(context, 0);
-  sqlite3_result_int(context, p ? p->n : 0);
+  sqlite3_result_int64(context, p ? p->n : 0);
 }
 
 /*
