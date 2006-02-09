@@ -211,7 +211,7 @@ do_test select1-2.17 {
 } {0 45}
 do_test select1-2.17.1 {
   execsql {SELECT sum(a) FROM t3}
-} {44}
+} {44.0}
 do_test select1-2.18 {
   set v [catch {execsql {SELECT XYZZY(f1) FROM test1}} msg]
   lappend v $msg
@@ -828,4 +828,3 @@ ifcapable subquery {
 }
 
 finish_test
-
