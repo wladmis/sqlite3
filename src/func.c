@@ -849,10 +849,13 @@ static void sumFinalize(sqlite3_context *context){
   SumCtx *p;
   p = sqlite3_aggregate_context(context, 0);
   if( p && p->cnt>0 ){
+    i64 iVal = (i64)p->sum;
     if( p->seenFloat ){
       sqlite3_result_double(context, p->sum);
+    }else if( p->sum==(LONGDOUBLE_TYPE)iVal ){
+      sqlite3_result_int64(context, iVal);
     }else{
-      sqlite3_result_int64(context, (i64)p->sum);
+      sqlite3_result_error(context, "integer overflow", -1);
     }
   }
 }
