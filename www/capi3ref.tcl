@@ -72,9 +72,12 @@ api {} {
 api {} {
   int sqlite3_aggregate_count(sqlite3_context*);
 } {
-  The next routine returns the number of calls to xStep for a particular
-  aggregate function instance.  The current call to xStep counts so this
-  routine always returns at least 1.
+  This function is deprecated.   It continues to exist so as not to
+  break any legacy code that might happen to use it.  But it should not
+  be used in any new code.
+
+  In order to encourage people to not use this function, we are not going
+  to tell you what it does.
 }
 
 api {} {
