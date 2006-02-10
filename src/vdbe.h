@@ -69,6 +69,7 @@ typedef struct VdbeOpList VdbeOpList;
 #define P3_KEYINFO  (-6)  /* P3 is a pointer to a KeyInfo structure */
 #define P3_VDBEFUNC (-7)  /* P3 is a pointer to a VdbeFunc structure */
 #define P3_MEM      (-8)  /* P3 is a pointer to a Mem*    structure */
+#define P3_TRANSIENT (-9)  /* P3 is a pointer to a transient string */
 
 /* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
 ** is made.  That copy is freed when the Vdbe is finalized.  But if the

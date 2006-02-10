@@ -3571,19 +3571,23 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_column_name",       test_stmt_utf8,  sqlite3_column_name      },
      { "sqlite3_column_int",        test_stmt_int,   sqlite3_column_int       },
      { "sqlite3_column_bytes",      test_stmt_int,   sqlite3_column_bytes     },
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
 { "sqlite3_column_database_name", test_stmt_utf8, sqlite3_column_database_name},
 { "sqlite3_column_table_name", test_stmt_utf8, sqlite3_column_table_name},
 { "sqlite3_column_origin_name", test_stmt_utf8, sqlite3_column_origin_name},
+#endif
 
 #ifndef SQLITE_OMIT_UTF16
      { "sqlite3_column_bytes16",    test_stmt_int,   sqlite3_column_bytes16   },
      { "sqlite3_column_text16",     test_stmt_utf16, sqlite3_column_text16    },
      { "sqlite3_column_decltype16", test_stmt_utf16, sqlite3_column_decltype16},
      { "sqlite3_column_name16",     test_stmt_utf16, sqlite3_column_name16    },
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
 {"sqlite3_column_database_name16",
   test_stmt_utf16, sqlite3_column_database_name16},
 {"sqlite3_column_table_name16", test_stmt_utf16, sqlite3_column_table_name16},
 {"sqlite3_column_origin_name16", test_stmt_utf16, sqlite3_column_origin_name16},
+#endif
 #endif
      { "sqlite3_global_recover",    test_global_recover, 0   },
 
