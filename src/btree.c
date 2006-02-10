@@ -411,8 +411,8 @@ struct BtCursor {
 **   The table that this cursor was opened on still exists, but has been 
 **   modified since the cursor was last used. The cursor position is saved
 **   in variables BtCursor.pKey and BtCursor.nKey. When a cursor is in 
-**   this state, restoreOrClearCursorPosition() can be called to attempt to seek 
-**   the cursor to the saved position.
+**   this state, restoreOrClearCursorPosition() can be called to attempt to
+**   seek the cursor to the saved position.
 */
 #define CURSOR_INVALID           0
 #define CURSOR_VALID             1

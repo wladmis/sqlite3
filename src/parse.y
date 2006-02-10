@@ -476,7 +476,7 @@ seltablist(A) ::= stl_prefix(X) nm(Y) dbnm(D) as(Z) on_opt(N) using_opt(U). {
     }
   }
   
- // A seltablist_paren nonterminal represents anything in a FROM that
+  // A seltablist_paren nonterminal represents anything in a FROM that
   // is contained inside parentheses.  This can be either a subquery or
   // a grouping of table and subqueries.
   //
