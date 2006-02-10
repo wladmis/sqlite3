@@ -2847,6 +2847,7 @@ SrcList *sqlite3SrcListAppend(SrcList *pList, Token *pTable, Token *pDatabase){
   pItem->zName = sqlite3NameFromToken(pTable);
   pItem->zDatabase = sqlite3NameFromToken(pDatabase);
   pItem->iCursor = -1;
+  pItem->isPopulated = 0;
   pList->nSrc++;
   return pList;
 }

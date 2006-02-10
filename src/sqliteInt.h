@@ -1069,6 +1069,7 @@ struct SrcList {
     char *zAlias;     /* The "B" part of a "A AS B" phrase.  zName is the "A" */
     Table *pTab;      /* An SQL table corresponding to zName */
     Select *pSelect;  /* A SELECT statement used in place of a table name */
+    u8 isPopulated;   /* Temporary table associated with SELECT is populated */
     u8 jointype;      /* Type of join between this table and the next */
     i16 iCursor;      /* The VDBE cursor number used to access this table */
     Expr *pOn;        /* The ON clause of a join */
