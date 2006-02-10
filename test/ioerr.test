@@ -236,7 +236,7 @@ do_ioerr_test ioerr-10 -tclprep {
     CREATE TABLE t1(a PRIMARY KEY, b);
   }
   for {set i 0} {$i < 500} {incr i} {
-    execsql {INSERT INTO t1 VALUES($i, 'hello world');}
+    execsql {INSERT INTO t1 VALUES(:i, 'hello world');}
   }
   execsql {
     COMMIT;
