@@ -1405,12 +1405,15 @@ if all values in the group are NULL.</td>
    in the SQL language.</p>
 
    <p>The result of total() is always a floating point value.
-   The result of sum() is an integer value if all non-NULL inputs are integers
-   and the sum is exact.  If any input to sum() is neither an integer or
-   a NULL or if the
-   an integer overflow occurs at any point during the computation,
+   The result of sum() is an integer value if all non-NULL inputs are integers.
+   If any input to sum() is neither an integer or a NULL
    then sum() returns a floating point value
-   which might be an approximation to the true sum.</td>
+   which might be an approximation to the true sum.</p>
+
+   <p>Sum() will throw an "integer overflow" exception if all inputs
+   are integers or NULL
+   and an integer overflow occurs at any point during the computation.
+   Total() never throws an exception.</p>
 </tr>
 </table>
 }
