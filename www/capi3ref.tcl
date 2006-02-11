@@ -1369,26 +1369,20 @@ api {} {
 
   Sharing must be disabled prior to shutting down a thread or else
   the thread will leak memory.  Call this routine with an argument of
-  0 to turn of sharing.  Or use the sqlite3_thread_cleanup() API.
+  0 to turn off sharing.  Or use the sqlite3_thread_cleanup() API.
 
   This routine must not be called when any database connections
   are active in the current thread.  Enabling or disabling shared
   cache while there are active database connections will result
   in memory corruption.
 
-  For any given database connection, SQLite requires that the
-  following routines always be called from the same thread:
+  When the shared cache is enabled, the
+  following routines must always be called from the same thread:
   sqlite3_open(), sqlite3_prepare(), sqlite3_step(), sqlite3_reset(),
-  sqlite3_finalize(), and sqlite3_close().  On some operating systems
-  (ex: windows and linux 2.6) you can get away with calling these routines
-  from different threads as long as their executions never overlap in time
-  and the shared cache is disabled.
-  But when the shared cache is enabled, some information about the
-  database connection is stored in thread-specific storage so that it
-  will be available for sharing with other connections.  Consequently,
-  the previously enumerated routines must always be called from the
-  same thread when shared cache is enabled, regardless of what operating
-  system is used.
+  sqlite3_finalize(), and sqlite3_close().
+  This is due to the fact that the shared cache makes use of
+  thread-specific storage so that it will be available for sharing
+  with other connections.
 
   This routine returns SQLITE_OK if shared cache was
   enabled or disabled successfully.  An error code is returned

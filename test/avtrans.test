@@ -864,9 +864,9 @@ for {set i 2} {$i<=$limit} {incr i} {
   set ::sig [signature]
   set cnt [lindex $::sig 0]
   if {$i%2==0} {
-    execsql {PRAGMA synchronous=FULL}
+    execsql {PRAGMA fullfsync=ON}
   } else {
-    execsql {PRAGMA synchronous=NORMAL}
+    execsql {PRAGMA fullfsync=OFF}
   }
   set sqlite_sync_count 0
   set sqlite_fullsync_count 0

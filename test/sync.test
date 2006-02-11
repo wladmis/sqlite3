@@ -36,6 +36,7 @@ do_test sync-1.1 {
   file delete -force test2.db
   file delete -force test2.db-journal
   execsql {
+    PRAGMA fullfsync=OFF;
     CREATE TABLE t1(a,b);
     ATTACH DATABASE 'test2.db' AS db2;
     CREATE TABLE db2.t2(x,y);

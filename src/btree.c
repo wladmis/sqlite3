@@ -1803,9 +1803,9 @@ int sqlite3BtreeSetCacheSize(Btree *p, int mxPage){
 ** probability of damage to near zero but with a write performance reduction.
 */
 #ifndef SQLITE_OMIT_PAGER_PRAGMAS
-int sqlite3BtreeSetSafetyLevel(Btree *p, int level){
+int sqlite3BtreeSetSafetyLevel(Btree *p, int level, int fullSync){
   BtShared *pBt = p->pBt;
-  sqlite3pager_set_safety_level(pBt->pPager, level);
+  sqlite3pager_set_safety_level(pBt->pPager, level, fullSync);
   return SQLITE_OK;
 }
 #endif
