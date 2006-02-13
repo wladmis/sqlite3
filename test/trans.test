@@ -793,8 +793,11 @@ puts $fd {
   sqlite_abort
 }
 close $fd
+exec cp -f test.db test.db-bu1
 do_test trans-8.1 {
   catch {exec [info nameofexec] test.tcl}
+  exec cp -f test.db test.db-bu2
+  exec cp -f test.db-journal test.db-bu2-journal
   execsql {SELECT md5sum(x,y,z) FROM t2}
 } $checksum
 do_test trans-8.2 {
