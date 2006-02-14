@@ -59,7 +59,6 @@ for {set n 3} {$::go} {incr n} {
   sqlite3async_start
   sqlite3async_wait
 
-  sqlite3async_enable 0
   set ::sqlite_io_error_pending 0
   sqlite3 db test.db
   set c [db eval {SELECT c FROM counter LIMIT 1}]
