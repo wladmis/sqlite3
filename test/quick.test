@@ -35,6 +35,7 @@ set ISQUICK 1
 set EXCLUDE {
   all.test
   async.test
+  async2.test
   btree2.test
   btree3.test
   btree4.test
