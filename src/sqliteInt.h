@@ -284,8 +284,8 @@ extern int sqlite3_iLine;            /* Line number for debug info */
 
 #else
 
-#define sqliteMalloc(x)          sqlite3Malloc(x)
-#define sqliteMallocRaw(x)       sqlite3MallocRaw(x)
+#define sqliteMalloc(x)          sqlite3Malloc(x,1)
+#define sqliteMallocRaw(x)       sqlite3MallocRaw(x,1)
 #define sqliteRealloc(x,y)       sqlite3Realloc(x,y)
 #define sqliteStrDup(x)          sqlite3StrDup(x)
 #define sqliteStrNDup(x,y)       sqlite3StrNDup(x,y)
