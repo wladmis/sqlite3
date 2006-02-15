@@ -988,7 +988,7 @@ OR</font>
 <p>Supported unary operators are these:</p>
 
 <blockquote><pre>
-<font color="#2c2cf0"><big>-    +    !    ~</big></font>
+<font color="#2c2cf0"><big>-    +    !    ~    NOT</big></font>
 </pre></blockquote>
 
 <p>Note that there are two variations of the equals and not equals
