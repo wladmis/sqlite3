@@ -251,12 +251,6 @@ struct BusyHandler {
 #include "btree.h"
 #include "pager.h"
 
-/*
-** This macro casts a pointer to an integer.  Useful for doing
-** pointer arithmetic.
-*/
-#define Addr(X)  ((uptr)X)
-
 #ifdef SQLITE_MEMDEBUG
 /*
 ** The following global variables are used for testing and debugging
