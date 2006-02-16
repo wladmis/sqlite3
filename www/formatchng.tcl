@@ -214,7 +214,7 @@ occurred since version 1.0.0:
 <tr>
   <td valign="top">3.2.8 to 3.3.0</td>
   <td valign="top">2006-Jan-10</td>
-  <td><p>Version 3.3.0 uses a new encoding for binary values that
+  <td><p>Version 3.3.0 uses a new encoding for boolean values that
   uses less disk space.  Version 3.3.0 can read and write database
   files created by prior versions of SQLite.  But prior versions
   of SQLite will not be able to read or write databases created
