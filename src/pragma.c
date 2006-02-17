@@ -227,6 +227,13 @@ void sqlite3Pragma(
   if( iDb<0 ) return;
   pDb = &db->aDb[iDb];
 
+  /* If the temp database has been explicitly named as part of the 
+  ** pragma, make sure it is open. 
+  */
+  if( iDb==1 && sqlite3OpenTempDatabase(pParse) ){
+    return;
+  }
+
   zLeft = sqlite3NameFromToken(pId);
   if( !zLeft ) return;
   if( minusFlag ){
@@ -948,10 +955,12 @@ void sqlite3Pragma(
     ** Reset the safety level, in case the fullfsync flag or synchronous
     ** setting changed.
     */
+#ifndef SQLITE_OMIT_PAGER_PRAGMAS
     if( db->autoCommit ){
       sqlite3BtreeSetSafetyLevel(pDb->pBt, pDb->safety_level,
                  (db->flags&SQLITE_FullFSync)!=0);
     }
+#endif
   }
 pragma_out:
   sqliteFree(zLeft);
