@@ -999,4 +999,37 @@ do_test capi3-15.3 {
   sqlite3_finalize $STMT
 } {SQLITE_OK}
 
+# Make sure code is always generated even if an IF EXISTS or 
+# IF NOT EXISTS clause is present that the table does not or
+# does exists.  That way we will always have a prepared statement
+# to expire when the schema changes.
+#
+do_test capi3-16.1 {
+  set sql {DROP TABLE IF EXISTS t3}
+  set STMT [sqlite3_prepare $DB $sql -1 TAIL]
+  sqlite3_finalize $STMT
+  expr {$STMT!=""}
+} {1}
+do_test capi3-16.2 {
+  set sql {CREATE TABLE IF NOT EXISTS t1(x,y)}
+  set STMT [sqlite3_prepare $DB $sql -1 TAIL]
+  sqlite3_finalize $STMT
+  expr {$STMT!=""}
+} {1}
+
+# But still we do not generate code if there is no SQL
+#
+do_test capi3-16.3 {
+  set STMT [sqlite3_prepare $DB {} -1 TAIL]
+  sqlite3_finalize $STMT
+  expr {$STMT==""}
+} {1}
+do_test capi3-16.4 {
+  set STMT [sqlite3_prepare $DB {;} -1 TAIL]
+  sqlite3_finalize $STMT
+  expr {$STMT==""}
+} {1}
+
+
+
 finish_test

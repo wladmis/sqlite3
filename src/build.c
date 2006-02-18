@@ -135,8 +135,8 @@ void sqlite3FinishCoding(Parse *pParse){
   if( !pParse->pVdbe ){
     if( pParse->rc==SQLITE_OK && pParse->nErr ){
       pParse->rc = SQLITE_ERROR;
+      return;
     }
-    return;
   }
 
   /* Begin by generating some termination code at the end of the
@@ -185,7 +185,7 @@ void sqlite3FinishCoding(Parse *pParse){
 
   /* Get the VDBE program ready for execution
   */
-  if( v && pParse->nErr==0 ){
+  if( v && pParse->nErr==0 && !sqlite3MallocFailed() ){
     FILE *trace = (db->flags & SQLITE_VdbeTrace)!=0 ? stdout : 0;
     sqlite3VdbeTrace(v, trace);
     sqlite3VdbeMakeReady(v, pParse->nVar, pParse->nMem+3,
