@@ -1273,6 +1273,12 @@ static void freeSpace(MemPage *pPage, int start, int size){
   assert( (start + size)<=pPage->pBt->usableSize );
   if( size<4 ) size = 4;
 
+#ifdef SQLITE_SECURE_DELETE
+  /* Overwrite deleted information with zeros when the SECURE_DELETE 
+  ** option is enabled at compile-time */
+  memset(&data[start], 0, size);
+#endif
+
   /* Add the space back into the linked list of freeblocks */
   hdr = pPage->hdrOffset;
   addr = hdr + 1;
@@ -3879,6 +3885,15 @@ static int freePage(MemPage *pPage){
   n = get4byte(&pPage1->aData[36]);
   put4byte(&pPage1->aData[36], n+1);
 
+#ifdef SQLITE_SECURE_DELETE
+  /* If the SQLITE_SECURE_DELETE compile-time option is enabled, then
+  ** always fully overwrite deleted information with zeros.
+  */
+  rc = sqlite3pager_write(pPage->aData);
+  if( rc ) return rc;
+  memset(pPage->aData, 0, pPage->pBt->pageSize);
+#endif
+
 #ifndef SQLITE_OMIT_AUTOVACUUM
   /* If the database supports auto-vacuum, write an entry in the pointer-map
   ** to indicate that the page is free.
@@ -3919,7 +3934,9 @@ static int freePage(MemPage *pPage){
       if( rc ) return rc;
       put4byte(&pTrunk->aData[4], k+1);
       put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
+#ifndef SQLITE_SECURE_DELETE
       sqlite3pager_dont_write(pBt->pPager, pPage->pgno);
+#endif
       TRACE(("FREE-PAGE: %d leaf on trunk page %d\n",pPage->pgno,pTrunk->pgno));
     }
     releasePage(pTrunk);
