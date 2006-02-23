@@ -266,6 +266,8 @@ static void randomFunc(
 ){
   sqlite_int64 r;
   sqlite3Randomness(sizeof(r), &r);
+  if( (r<<1)==0 ) r = 0;  /* Prevent 0x8000.... as the result so that we */
+                          /* can always do abs() of the result */
   sqlite3_result_int64(context, r);
 }
 
