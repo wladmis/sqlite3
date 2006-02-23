@@ -645,7 +645,7 @@ static int tcl_thread_db_get(
   thread_wait(&threadset[i]);
   sqlite3TestMakePointerStr(interp, zBuf, threadset[i].db);
   threadset[i].db = 0;
-  Tcl_SetResult(interp, zBuf, 0);
+  Tcl_AppendResult(interp, zBuf, (char*)0);
   return TCL_OK;
 }
 
@@ -678,7 +678,7 @@ static int tcl_thread_stmt_get(
   thread_wait(&threadset[i]);
   sqlite3TestMakePointerStr(interp, zBuf, threadset[i].pStmt);
   threadset[i].pStmt = 0;
-  Tcl_SetResult(interp, zBuf, 0);
+  Tcl_AppendResult(interp, zBuf, (char*)0);
   return TCL_OK;
 }
 

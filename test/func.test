@@ -622,5 +622,19 @@ do_test func-18.22 {
   }
 } {0 1}
 
+# Integer overflow on abs()
+#
+do_test func-18.31 {
+  catchsql {
+    SELECT abs(-9223372036854775807);
+  }
+} {0 9223372036854775807}
+do_test func-18.32 {
+  catchsql {
+    SELECT abs(-9223372036854775807-1);
+  }
+} {1 {integer overflow}}
+
+
 
 finish_test
