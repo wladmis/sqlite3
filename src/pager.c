@@ -1328,13 +1328,8 @@ static int pager_playback(Pager *pPager){
       }
     }
   }
-
-  /* Pages that have been written to the journal but never synced
-  ** where not restored by the loop above.  We have to restore those
-  ** pages by reading them back from the original database.
-  */
-  assert( rc==SQLITE_OK );
-  pager_reload_cache(pPager);
+  /*NOTREACHED*/
+  assert( 0 );
 
 end_playback:
   if( rc==SQLITE_OK ){
