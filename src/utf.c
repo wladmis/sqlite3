@@ -255,7 +255,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
 #if defined(TRANSLATE_TRACE) && defined(SQLITE_DEBUG)
   {
     char zBuf[100];
-    sqlite3VdbeMemPrettyPrint(pMem, zBuf, 100);
+    sqlite3VdbeMemPrettyPrint(pMem, zBuf);
     fprintf(stderr, "INPUT:  %s\n", zBuf);
   }
 #endif
@@ -371,7 +371,7 @@ translate_out:
 #if defined(TRANSLATE_TRACE) && defined(SQLITE_DEBUG)
   {
     char zBuf[100];
-    sqlite3VdbeMemPrettyPrint(pMem, zBuf, 100);
+    sqlite3VdbeMemPrettyPrint(pMem, zBuf);
     fprintf(stderr, "OUTPUT: %s\n", zBuf);
   }
 #endif

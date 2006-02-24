@@ -1750,7 +1750,7 @@ int sqlite3BtreeClose(Btree *p){
     pTsd->pBtree = pBt->pNext;
   }else{
     BtShared *pPrev;
-    for(pPrev=pTsd->pBtree; pPrev && pPrev->pNext!=pBt; pPrev=pPrev->pNext);
+    for(pPrev=pTsd->pBtree; pPrev && pPrev->pNext!=pBt; pPrev=pPrev->pNext){}
     if( pPrev ){
       assert( pTsd==sqlite3ThreadData() );
       pPrev->pNext = pBt->pNext;
@@ -6221,11 +6221,7 @@ static int checkTreePage(
   IntegrityCk *pCheck,  /* Context for the sanity check */
   int iPage,            /* Page number of the page to check */
   MemPage *pParent,     /* Parent page */
-  char *zParentContext, /* Parent context */
-  char *zLowerBound,    /* All keys should be greater than this, if not NULL */
-  int nLower,           /* Number of characters in zLowerBound */
-  char *zUpperBound,    /* All keys should be less than this, if not NULL */
-  int nUpper            /* Number of characters in zUpperBound */
+  char *zParentContext  /* Parent context */
 ){
   MemPage *pPage;
   int i, rc, depth, d2, pgno, cnt;
@@ -6291,7 +6287,7 @@ static int checkTreePage(
         checkPtrmap(pCheck, pgno, PTRMAP_BTREE, iPage, zContext);
       }
 #endif
-      d2 = checkTreePage(pCheck,pgno,pPage,zContext,0,0,0,0);
+      d2 = checkTreePage(pCheck,pgno,pPage,zContext);
       if( i>0 && d2!=depth ){
         checkAppendMsg(pCheck, zContext, "Child page depth differs");
       }
@@ -6306,7 +6302,7 @@ static int checkTreePage(
       checkPtrmap(pCheck, pgno, PTRMAP_BTREE, iPage, 0);
     }
 #endif
-    checkTreePage(pCheck, pgno, pPage, zContext,0,0,0,0);
+    checkTreePage(pCheck, pgno, pPage, zContext);
   }
  
   /* Check for complete coverage of the page
@@ -6418,7 +6414,7 @@ char *sqlite3BtreeIntegrityCheck(Btree *p, int *aRoot, int nRoot){
       checkPtrmap(&sCheck, aRoot[i], PTRMAP_ROOTPAGE, 0, 0);
     }
 #endif
-    checkTreePage(&sCheck, aRoot[i], 0, "List of tree roots: ", 0,0,0,0);
+    checkTreePage(&sCheck, aRoot[i], 0, "List of tree roots: ");
   }
 
   /* Make sure every page in the file is referenced

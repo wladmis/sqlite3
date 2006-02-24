@@ -120,8 +120,8 @@ cmd ::= ROLLBACK trans_opt.    {sqlite3RollbackTransaction(pParse);}
 ///////////////////// The CREATE TABLE statement ////////////////////////////
 //
 cmd ::= create_table create_table_args.
-create_table ::= CREATE(X) temp(T) TABLE ifnotexists(E) nm(Y) dbnm(Z). {
-   sqlite3StartTable(pParse,&X,&Y,&Z,T,0,E);
+create_table ::= CREATE temp(T) TABLE ifnotexists(E) nm(Y) dbnm(Z). {
+   sqlite3StartTable(pParse,&Y,&Z,T,0,E);
 }
 %type ifnotexists {int}
 ifnotexists(A) ::= .              {A = 0;}
@@ -884,8 +884,8 @@ cmd ::= DROP INDEX ifexists(E) fullname(X).   {sqlite3DropIndex(pParse, X, E);}
 
 ///////////////////////////// The VACUUM command /////////////////////////////
 //
-cmd ::= VACUUM.                {sqlite3Vacuum(pParse,0);}
-cmd ::= VACUUM nm.             {sqlite3Vacuum(pParse,0);}
+cmd ::= VACUUM.                {sqlite3Vacuum(pParse);}
+cmd ::= VACUUM nm.             {sqlite3Vacuum(pParse);}
 
 ///////////////////////////// The PRAGMA command /////////////////////////////
 //

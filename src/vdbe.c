@@ -280,7 +280,7 @@ void sqlite3ValueApplyAffinity(sqlite3_value *pVal, u8 affinity, u8 enc){
 ** Write a nice string representation of the contents of cell pMem
 ** into buffer zBuf, length nBuf.
 */
-void sqlite3VdbeMemPrettyPrint(Mem *pMem, char *zBuf, int nBuf){
+void sqlite3VdbeMemPrettyPrint(Mem *pMem, char *zBuf){
   char *zCsr = zBuf;
   int f = pMem->flags;
 
@@ -3013,7 +3013,7 @@ case OP_IsUnique: {        /* no-push */
     zKey = pNos->z;
     nKey = pNos->n;
 
-    szRowid = sqlite3VdbeIdxRowidLen(nKey, (u8*)zKey);
+    szRowid = sqlite3VdbeIdxRowidLen((u8*)zKey);
     len = nKey-szRowid;
 
     /* Search for an entry in P1 where all but the last four bytes match K.
@@ -4600,7 +4600,7 @@ default: {
 #ifndef NDEBUG
     /* Sanity checking on the top element of the stack */
     if( pTos>=p->aStack ){
-      sqlite3VdbeMemSanity(pTos, encoding);
+      sqlite3VdbeMemSanity(pTos);
     }
     assert( pc>=-1 && pc<p->nOp );
 #ifdef SQLITE_DEBUG
@@ -4619,7 +4619,7 @@ default: {
           fprintf(p->trace, " r:%g", pTos[i].r);
         }else{
           char zBuf[100];
-          sqlite3VdbeMemPrettyPrint(&pTos[i], zBuf, 100);
+          sqlite3VdbeMemPrettyPrint(&pTos[i], zBuf);
           fprintf(p->trace, " ");
           fprintf(p->trace, "%s", zBuf);
         }
