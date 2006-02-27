@@ -556,4 +556,19 @@ ifcapable subquery&&compound {
   } {1 {no such column: logs.id}}
 }
 
+# Overflow the lemon parser stack by providing an overly complex
+# expression.  Make sure that the overflow is detected and reported.
+#
+do_test misc5-7.1 {
+  execsql {CREATE TABLE t1(x)}
+  set sql "INSERT INTO t1 VALUES("
+  set tail ""
+  for {set i 0} {$i<200} {incr i} {
+    append sql "(1+"
+    append tail ")"
+  }
+  append sql 2$tail
+  catchsql $sql
+} {1 {parser stack overflow}}
+
 finish_test
