@@ -40,6 +40,9 @@
     }
   }
 }
+%stack_overflow {
+  sqlite3ErrorMsg(pParse, "parser stack overflow");
+}
 
 // The name of the generated procedure that implements the parser
 // is as follows:
