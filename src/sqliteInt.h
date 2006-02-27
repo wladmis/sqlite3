@@ -1383,8 +1383,8 @@ struct TriggerStep {
   ExprList *pExprList; /* Valid for UPDATE statements and sometimes 
 			   INSERT steps (when pSelect == 0)         */
   IdList *pIdList;     /* Valid for INSERT statements only */
-
-  TriggerStep * pNext; /* Next in the link-list */
+  TriggerStep *pNext;  /* Next in the link-list */
+  TriggerStep *pLast;  /* Last element in link-list. Valid for 1st elem only */
 };
 
 /*

@@ -950,9 +950,14 @@ when_clause(A) ::= WHEN expr(X). { A = X; }
 
 %type trigger_cmd_list {TriggerStep*}
 %destructor trigger_cmd_list {sqlite3DeleteTriggerStep($$);}
-trigger_cmd_list(A) ::= trigger_cmd(X) SEMI trigger_cmd_list(Y). {
-  X->pNext = Y;
-  A = X;
+trigger_cmd_list(A) ::= trigger_cmd_list(Y) trigger_cmd(X) SEMI. {
+  if( Y ){
+    Y->pLast->pNext = X;
+  }else{
+    Y = X;
+  }
+  Y->pLast = X;
+  A = Y;
 }
 trigger_cmd_list(A) ::= . { A = 0; }
 
