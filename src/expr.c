@@ -1692,7 +1692,9 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
 #ifndef SQLITE_OMIT_SUBQUERY
     case TK_EXISTS:
     case TK_SELECT: {
-      sqlite3CodeSubselect(pParse, pExpr);
+      if( pExpr->iColumn==0 ){
+        sqlite3CodeSubselect(pParse, pExpr);
+      }
       sqlite3VdbeAddOp(v, OP_MemLoad, pExpr->iColumn, 0);
       VdbeComment((v, "# load subquery result"));
       break;
