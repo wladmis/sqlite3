@@ -201,10 +201,10 @@ static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
     if( n>30 ) n = 30;
     if( n<0 ) n = 0;
   }
-  if( SQLITE_NULL==sqlite3_value_type(argv[0]) ) return;
+  if( sqlite3_value_type(argv[0])==SQLITE_NULL ) return;
   r = sqlite3_value_double(argv[0]);
   sqlite3_snprintf(sizeof(zBuf),zBuf,"%.*f",n,r);
-  sqlite3_result_text(context, zBuf, -1, SQLITE_TRANSIENT);
+  sqlite3_result_double(context, atof(zBuf));
 }
 
 /*
