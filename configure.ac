@@ -644,7 +644,7 @@ AC_SUBST(TARGET_HAVE_READLINE)
 AC_ARG_ENABLE(debug, AC_HELP_STRING([--enable-debug],[enable debugging & verbose explain]),
       [use_debug=$enableval],[use_debug=no])
 if test "${use_debug}" = "yes" ; then
-  TARGET_DEBUG=""
+  TARGET_DEBUG="-DSQLITE_DEBUG=1"
 else
   TARGET_DEBUG="-DNDEBUG"
 fi

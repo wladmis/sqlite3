@@ -20471,7 +20471,7 @@ else
   use_debug=no
 fi;
 if test "${use_debug}" = "yes" ; then
-  TARGET_DEBUG=""
+  TARGET_DEBUG="-DSQLITE_DEBUG=1"
 else
   TARGET_DEBUG="-DNDEBUG"
 fi
