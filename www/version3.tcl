@@ -216,7 +216,7 @@ or BLOBs, only text.
 A collating sequence is implemented as a function that takes the
 two strings being compared as inputs and returns negative, zero, or
 positive if the first string is less than, equal to, or greater than
-the first.
+the second.
 SQLite 3.0 comes with a single built-in collating sequence named "BINARY"
 which is implemented using the memcmp() routine from the standard C library.
 The BINARY collating sequence works well for English text.  For other
