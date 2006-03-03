@@ -183,4 +183,14 @@ do_test cast-1.53 {
   execsql {SELECT CAST('123.5abc' AS integer)}
 } 123
 
+# Ticket #1662.  Ignore leading spaces in numbers when casting.
+#
+do_test cast-2.1 {
+  execsql {SELECT CAST('   123' AS integer)}
+} 123
+do_test cast-2.2 {
+  execsql {SELECT CAST('   -123.456' AS real)}
+} -123.456
+
+
 finish_test

@@ -52,7 +52,7 @@ do_test index2-1.4 {
 } 101
 do_test index2-1.5 {
   execsql {SELECT round(sum(c1000)) FROM t1}
-} {50601000}
+} {50601000.0}
 
 # Create indices with many columns
 #
