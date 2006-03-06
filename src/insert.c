@@ -269,7 +269,7 @@ void sqlite3Insert(
   if( sqlite3IsReadOnly(pParse, pTab, triggers_exist) ){
     goto insert_cleanup;
   }
-  if( pTab==0 ) goto insert_cleanup;
+  assert( pTab!=0 );
 
   /* If pTab is really a view, make sure it has been initialized.
   */

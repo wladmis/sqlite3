@@ -167,8 +167,8 @@ do_test printf-9.5 {
   sqlite3_mprintf_int {%d %*c} 1 -201 67
 } "1 C$fifty$fifty$fifty$fifty"
 do_test printf-9.6 {
-  sqlite3_mprintf_int {%yhello} 0 0 0
-} {%}
+  sqlite3_mprintf_int {hi%12345.12346yhello} 0 0 0
+} {hi}
 
 # Ticket #812
 #

@@ -1085,6 +1085,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     azCol = malloc( sizeof(azCol[0])*(nCol+1) );
     if( azCol==0 ) {
       Tcl_AppendResult(interp, "Error: can't malloc()", 0);
+      fclose(in);
       return TCL_ERROR;
     }
     sqlite3_exec(pDb->db, "BEGIN", 0, 0, 0);

@@ -2687,7 +2687,8 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
       CollSeq *pColl = 0;
       struct ExprList_item *pItem;
       int j;
-      for(j=0, pItem=pList->a; !pColl && j<pList->nExpr; j++, pItem++){
+      assert( pList!=0 );  /* pList!=0 if pF->pFunc->needCollSeq is true */
+      for(j=0, pItem=pList->a; !pColl && j<nArg; j++, pItem++){
         pColl = sqlite3ExprCollSeq(pParse, pItem->pExpr);
       }
       if( !pColl ){

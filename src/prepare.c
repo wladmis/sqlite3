@@ -74,6 +74,7 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
     db->init.newTnum = atoi(argv[1]);
     rc = sqlite3_exec(db, argv[2], 0, 0, &zErr);
     db->init.iDb = 0;
+    assert( rc!=SQLITE_OK || zErr==0 );
     if( SQLITE_OK!=rc ){
       if( rc==SQLITE_NOMEM ){
         sqlite3FailedMalloc();

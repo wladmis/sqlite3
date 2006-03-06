@@ -841,11 +841,13 @@ static int lookupName(
 
     if( pSrcList ){
       for(i=0, pItem=pSrcList->a; i<pSrcList->nSrc; i++, pItem++){
-        Table *pTab = pItem->pTab;
-        int iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
+        Table *pTab;
+        int iDb;
         Column *pCol;
   
-        if( pTab==0 ) continue;
+        pTab = pItem->pTab;
+        assert( pTab!=0 );
+        iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
         assert( pTab->nCol>0 );
         if( zTab ){
           if( pItem->zAlias ){
