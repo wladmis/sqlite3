@@ -2070,10 +2070,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 ** used to open a new SQLite database.  See the DbMain() routine above
 ** for additional information.
 */
-#ifndef EXTERN
-# define EXTERN extern
-#endif
-EXTERN int Sqlite3_Init(Tcl_Interp *interp){
+extern int Sqlite3_Init(Tcl_Interp *interp){
   Tcl_InitStubs(interp, "8.4", 0);
   Tcl_CreateObjCommand(interp, "sqlite3", (Tcl_ObjCmdProc*)DbMain, 0, 0);
   Tcl_PkgProvide(interp, "sqlite3", PACKAGE_VERSION);
@@ -2081,15 +2078,15 @@ EXTERN int Sqlite3_Init(Tcl_Interp *interp){
   Tcl_PkgProvide(interp, "sqlite", PACKAGE_VERSION);
   return TCL_OK;
 }
-EXTERN int Tclsqlite3_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
-EXTERN int Sqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
-EXTERN int Tclsqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+extern int Tclsqlite3_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+extern int Sqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+extern int Tclsqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
 
 #ifndef SQLITE_3_SUFFIX_ONLY
-EXTERN int Sqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
-EXTERN int Tclsqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
-EXTERN int Sqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
-EXTERN int Tclsqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+extern int Sqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+extern int Tclsqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
+extern int Sqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+extern int Tclsqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
 #endif
 
 #ifdef TCLSH
