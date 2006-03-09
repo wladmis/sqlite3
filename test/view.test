@@ -468,4 +468,19 @@ do_test view-14.1 {
   }
 } {1 {view t1 is circularly defined}}
 
+# Tickets #1688, #1709
+#
+do_test view-15.1 {
+  execsql2 {
+    CREATE VIEW v15 AS SELECT a AS x, b AS y FROM t1;
+    SELECT * FROM v15 LIMIT 1;
+  }
+} {x 2 y 3}
+do_test view-15.2 {
+  execsql2 {
+    SELECT x, y FROM v15 LIMIT 1
+  }
+} {x 2 y 3}
+
+
 finish_test

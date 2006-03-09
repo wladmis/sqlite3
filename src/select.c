@@ -2243,7 +2243,6 @@ static int flattenSubquery(
   ** We look at every expression in the outer query and every place we see
   ** "a" we substitute "x*3" and every place we see "b" we substitute "y+10".
   */
-  substExprList(p->pEList, iParent, pSub->pEList);
   pList = p->pEList;
   for(i=0; i<pList->nExpr; i++){
     Expr *pExpr;
@@ -2251,6 +2250,7 @@ static int flattenSubquery(
       pList->a[i].zName = sqliteStrNDup((char*)pExpr->span.z, pExpr->span.n);
     }
   }
+  substExprList(p->pEList, iParent, pSub->pEList);
   if( isAgg ){
     substExprList(p->pGroupBy, iParent, pSub->pEList);
     substExpr(p->pHaving, iParent, pSub->pEList);
