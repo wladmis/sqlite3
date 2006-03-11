@@ -4069,6 +4069,7 @@ static int fillInCell(
     n = nPayload;
     if( n>spaceLeft ) n = spaceLeft;
     if( n>nSrc ) n = nSrc;
+    assert( pSrc );
     memcpy(pPayload, pSrc, n);
     nPayload -= n;
     pPayload += n;
