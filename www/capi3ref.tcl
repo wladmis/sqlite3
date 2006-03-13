@@ -1296,7 +1296,7 @@ api {} {
 }
 
 api {} {
-  int sqlite3_db_handle(sqlite3_stmt*);
+  sqlite3 *sqlite3_db_handle(sqlite3_stmt*);
 } {
  Return the sqlite3* database handle to which the prepared statement given
  in the argument belongs.  This is the same database handle that was
