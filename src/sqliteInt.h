@@ -510,6 +510,9 @@ struct sqlite3 {
 #endif
 };
 
+/*
+** A macro to discover the encoding of a database.
+*/
 #define ENC(db) ((db)->aDb[0].pSchema->enc)
 
 /*
