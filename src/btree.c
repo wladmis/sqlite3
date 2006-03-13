@@ -1686,7 +1686,7 @@ int sqlite3BtreeOpen(
   assert( (pBt->pageSize & 7)==0 );  /* 8-byte alignment of pageSize */
   sqlite3pager_set_pagesize(pBt->pPager, pBt->pageSize);
 
-#ifndef SQLITE_OMIT_SHARED_CACHE
+#if !defined(SQLITE_OMIT_SHARED_CACHE) && !defined(SQLITE_OMIT_DISKIO)
   /* Add the new btree to the linked list starting at ThreadData.pBtree.
   ** There is no chance that a malloc() may fail inside of the 
   ** sqlite3ThreadData() call, as the ThreadData structure must have already

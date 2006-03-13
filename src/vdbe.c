@@ -4071,7 +4071,7 @@ case OP_ParseSchema: {        /* no-push */
   break;  
 }
 
-#ifndef SQLITE_OMIT_ANALYZE
+#if !defined(SQLITE_OMIT_ANALYZE) && !defined(SQLITE_OMIT_PARSER)
 /* Opcode: LoadAnalysis P1 * *
 **
 ** Read the sqlite_stat1 table for database P1 and load the content
@@ -4084,7 +4084,7 @@ case OP_LoadAnalysis: {        /* no-push */
   sqlite3AnalysisLoad(db, iDb);
   break;  
 }
-#endif /* SQLITE_OMIT_ANALYZE */
+#endif /* !defined(SQLITE_OMIT_ANALYZE) && !defined(SQLITE_OMIT_PARSER)  */
 
 /* Opcode: DropTable P1 * P3
 **
