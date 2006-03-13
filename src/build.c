@@ -3016,7 +3016,7 @@ void sqlite3CodeVerifySchema(Parse *pParse, int iDb){
   if( iDb>=0 ){
     assert( iDb<db->nDb );
     assert( db->aDb[iDb].pBt!=0 || iDb==1 );
-    assert( iDb<32 );
+    assert( iDb<MAX_ATTACHED+2 );
     mask = 1<<iDb;
     if( (pParse->cookieMask & mask)==0 ){
       pParse->cookieMask |= mask;
