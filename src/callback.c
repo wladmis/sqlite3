@@ -178,9 +178,11 @@ static CollSeq *findCollSeqEntry(
       ** return the pColl pointer to be deleted (because it wasn't added
       ** to the hash table).
       */
-      assert( !pDel ||
-              (sqlite3MallocFailed() && pDel==pColl) );
-      sqliteFree(pDel);
+      assert( !pDel || (sqlite3MallocFailed() && pDel==pColl) );
+      if( pDel ){
+        sqliteFree(pDel);
+        pColl = 0;
+      }
     }
   }
   return pColl;
