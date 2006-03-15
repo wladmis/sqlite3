@@ -874,7 +874,13 @@ void sqlite3GenerateConstraintChecks(
     sqlite3ExprIfTrue(pParse, pTab->pCheck, allOk, 1);
     assert( pParse->ckOffset==nCol );
     pParse->ckOffset = 0;
-    sqlite3VdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort);
+    onError = overrideError!=OE_Default ? overrideError : OE_Abort;
+    if( onError==OE_Ignore || onError==OE_Replace ){
+      sqlite3VdbeAddOp(v, OP_Pop, nCol+1+hasTwoRowids, 0);
+      sqlite3VdbeAddOp(v, OP_Goto, 0, ignoreDest);
+    }else{
+      sqlite3VdbeAddOp(v, OP_Halt, SQLITE_CONSTRAINT, onError);
+    }
     sqlite3VdbeResolveLabel(v, allOk);
   }
 #endif /* !defined(SQLITE_OMIT_CHECK) */
