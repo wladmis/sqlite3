@@ -3005,7 +3005,7 @@ int sqlite3pager_write(void *pData){
           ** that we do not. */
           assert( pPg->pgno!=PAGER_MJ_PGNO(pPager) );
           pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
-          cksum = pager_cksum(pPager, pData2);
+          cksum = pager_cksum(pPager, (u8*)pData2);
           pEnd = pData2 + pPager->pageSize;
           pData2 -= 4;
           saved = *(u32*)pEnd;
