@@ -109,7 +109,7 @@ int sqlite3_close(sqlite3 *db){
   }
 
 #ifdef SQLITE_SSE
-  sqlite3_finalize(db->pFetch);
+  sqlite3SseCleanup(db);
 #endif 
 
   /* If there are any outstanding VMs, return SQLITE_BUSY. */
