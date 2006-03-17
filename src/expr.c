@@ -1381,11 +1381,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
           ** expression we need to rerun this code each time.
           */
           if( testAddr>0 && !sqlite3ExprIsConstant(pE2) ){
-            VdbeOp *aOp = sqlite3VdbeGetOp(v, testAddr-1);
-            int j;
-            for(j=0; j<3; j++){
-              aOp[j].opcode = OP_Noop;
-            }
+            sqlite3VdbeChangeToNoop(v, testAddr-1, 3);
             testAddr = 0;
           }
 

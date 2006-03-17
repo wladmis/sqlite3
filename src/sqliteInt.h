@@ -114,18 +114,6 @@
 
 /*
 ** If the following macro is set to 1, then NULL values are considered
-** distinct for the SELECT DISTINCT statement and for UNION or EXCEPT
-** compound queries.  No other SQL database engine (among those tested) 
-** works this way except for OCELOT.  But the SQL92 spec implies that
-** this is how things should work.
-**
-** If the following macro is set to 0, then NULLs are indistinct for
-** SELECT DISTINCT and for UNION.
-*/
-#define NULL_ALWAYS_DISTINCT 0
-
-/*
-** If the following macro is set to 1, then NULL values are considered
 ** distinct when determining whether or not two entries are the same
 ** in a UNIQUE index.  This is the way PostgreSQL, Oracle, DB2, MySQL,
 ** OCELOT, and Firebird all work.  The SQL92 spec explicitly says this
