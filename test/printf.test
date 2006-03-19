@@ -231,5 +231,12 @@ do_test printf-13.3 {
   sqlite3_mprintf_hexdouble %.20f 4693b8b5b5056e17
 } {100000000000000000000000000000000.00000000000000000000}
 
+do_test printf-14.1 {
+  sqlite3_mprintf_str {abc-%y-123} 0 0 {not used}
+} {abc-}
+do_test printf-14.2 {
+  sqlite3_mprintf_n_test {xyzzy}
+} 5
+
 
 finish_test

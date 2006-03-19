@@ -1490,7 +1490,7 @@ static void process_input(struct callback_data *p, FILE *in){
       open_db(p);
       rc = sqlite3_exec(p->db, zSql, callback, p, &zErrMsg);
       if( rc || zErrMsg ){
-        if( in!=0 && !p->echoOn ) printf("%s\n",zSql);
+        /* if( in!=0 && !p->echoOn ) printf("%s\n",zSql); */
         if( zErrMsg!=0 ){
           printf("SQL error: %s\n", zErrMsg);
           sqlite3_free(zErrMsg);

@@ -53,10 +53,12 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
 
 # Flush the write-queue and disable asynchronous IO. This should ensure
 # all allocated memory is cleaned up.
+set sqlite3async_trace 1
 sqlite3async_halt idle
 sqlite3async_start
 sqlite3async_wait
 sqlite3async_enable 0
+set sqlite3async_trace 0
 
 really_finish_test
 rename really_do_test do_test

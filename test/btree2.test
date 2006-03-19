@@ -370,6 +370,11 @@ foreach {N L} {
     lindex [btree_pager_stats $::b] 1
   } {6}
   do_test btree2-$testno.6  {
+    btree_cursor_info $::c2
+    btree_cursor_info $::c3
+    btree_cursor_info $::c4
+    btree_cursor_info $::c5
+    btree_cursor_info $::c6
     btree_close_cursor $::c2
     btree_close_cursor $::c3
     btree_close_cursor $::c4
