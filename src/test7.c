@@ -22,7 +22,8 @@
 ** This test only works on UNIX with a THREADSAFE build that includes
 ** the SQLITE_SERVER option.
 */
-#if OS_UNIX && defined(THREADSAFE) && THREADSAFE==1 && defined(SQLITE_SERVER)
+#if OS_UNIX && defined(THREADSAFE) && THREADSAFE==1 && \
+    defined(SQLITE_SERVER) && !defined(SQLITE_OMIT_SHARED_CACHE)
 
 #include <stdlib.h>
 #include <string.h>
