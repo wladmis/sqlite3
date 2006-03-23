@@ -388,8 +388,8 @@ struct BtCursor {
   u8 wrFlag;                /* True if writable */
   u8 eState;                /* One of the CURSOR_XXX constants (see below) */
 #ifndef SQLITE_OMIT_SHARED_CACHE
-  void *pKey;
-  i64 nKey;
+  void *pKey;      /* Saved key that was cursor's last known position */
+  i64 nKey;        /* Size of pKey, or last integer key */
   int skip;        /* (skip<0) -> Prev() is a no-op. (skip>0) -> Next() is */
 #endif
 };
