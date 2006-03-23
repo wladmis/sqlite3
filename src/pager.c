@@ -1833,7 +1833,10 @@ static void unlinkHashChain(Pager *pPager, PgHdr *pPg){
     assert( pPager->aHash[h]==pPg );
     pPager->aHash[h] = pPg->pNextHash;
   }
-
+  if( MEMDB ){
+    static void clearHistory(PgHistory*);  /* Forward reference */
+    clearHistory(PGHDR_TO_HIST(pPg, pPager));
+  }
   pPg->pgno = 0;
   pPg->pNextHash = pPg->pPrevHash = 0;
 }
@@ -3242,6 +3245,7 @@ int sqlite3pager_commit(Pager *pPager){
       pPg->dirty = 0;
       pPg->inJournal = 0;
       pPg->inStmt = 0;
+      pPg->needSync = 0;
       pPg->pPrevStmt = pPg->pNextStmt = 0;
       pPg = pPg->pDirty;
     }
@@ -3656,6 +3660,8 @@ int sqlite3pager_sync(Pager *pPager, const char *zMaster, Pgno nTrunc){
     }
 
     pPager->state = PAGER_SYNCED;
+  }else if( MEMDB && nTrunc!=0 ){
+    rc = sqlite3pager_truncate(pPager, nTrunc);
   }
 
 sync_exit:

@@ -525,4 +525,17 @@ do_test autovacuum-4.4 {
   }
 } {}
 
+# Ticket #1727
+do_test autovacuum-5.1 {
+  db close
+  sqlite3 db :memory:
+  db eval {
+    PRAGMA auto_vacuum=1;
+    CREATE TABLE t1(a);
+    CREATE TABLE t2(a);
+    DROP TABLE t1;
+    PRAGMA integrity_check;
+  }
+} ok
+
 finish_test
