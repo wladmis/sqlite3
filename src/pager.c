@@ -1809,6 +1809,7 @@ int sqlite3pager_pagecount(Pager *pPager){
 ** Forward declaration
 */
 static int syncJournal(Pager*);
+static void clearHistory(PgHistory*);
 
 
 /*
@@ -1834,7 +1835,6 @@ static void unlinkHashChain(Pager *pPager, PgHdr *pPg){
     pPager->aHash[h] = pPg->pNextHash;
   }
   if( MEMDB ){
-    static void clearHistory(PgHistory*);  /* Forward reference */
     clearHistory(PGHDR_TO_HIST(pPg, pPager));
   }
   pPg->pgno = 0;
