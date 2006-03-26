@@ -1047,6 +1047,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
   ExprList *pEList;
   Column *aCol, *pCol;
 
+  while( pSelect->pPrior ) pSelect = pSelect->pPrior;
   if( prepSelectStmt(pParse, pSelect) ){
     return 0;
   }
@@ -1765,7 +1766,9 @@ static int multiSelect(
         int iCont, iBreak, iStart;
         assert( p->pEList );
         if( eDest==SRT_Callback ){
-          generateColumnNames(pParse, 0, p->pEList);
+          Select *pFirst = p;
+          while( pFirst->pPrior ) pFirst = pFirst->pPrior;
+          generateColumnNames(pParse, 0, pFirst->pEList);
         }
         iBreak = sqlite3VdbeMakeLabel(v);
         iCont = sqlite3VdbeMakeLabel(v);
@@ -1841,7 +1844,9 @@ static int multiSelect(
       */
       assert( p->pEList );
       if( eDest==SRT_Callback ){
-        generateColumnNames(pParse, 0, p->pEList);
+        Select *pFirst = p;
+        while( pFirst->pPrior ) pFirst = pFirst->pPrior;
+        generateColumnNames(pParse, 0, pFirst->pEList);
       }
       iBreak = sqlite3VdbeMakeLabel(v);
       iCont = sqlite3VdbeMakeLabel(v);

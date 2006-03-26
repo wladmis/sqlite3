@@ -411,6 +411,7 @@ do_test func-12.7 {
 # Test that the auxdata API for scalar functions works. This test uses
 # a special user-defined function only available in test builds,
 # test_auxdata(). Function test_auxdata() takes any number of arguments.
+btree_breakpoint
 do_test func-13.1 {
   execsql {
     SELECT test_auxdata('hello world');
