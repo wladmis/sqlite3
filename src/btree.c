@@ -4825,6 +4825,7 @@ static int balance_nonroot(MemPage *pPage){
       rc = sqlite3pager_write(pNew->aData);
       if( rc ) goto balance_cleanup;
     }else{
+      assert( i>0 );
       rc = allocatePage(pBt, &pNew, &pgnoNew[i], pgnoNew[i-1], 0);
       if( rc ) goto balance_cleanup;
       apNew[i] = pNew;
@@ -4976,6 +4977,8 @@ static int balance_nonroot(MemPage *pPage){
     }
   }
   assert( j==nCell );
+  assert( nOld>0 );
+  assert( nNew>0 );
   if( (pageFlags & PTF_LEAF)==0 ){
     memcpy(&apNew[nNew-1]->aData[8], &apCopy[nOld-1]->aData[8], 4);
   }
