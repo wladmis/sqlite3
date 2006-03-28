@@ -174,13 +174,6 @@
 **
 **         cc '-DUINTPTR_TYPE=long long int' ...
 */
-#ifndef UINT64_TYPE
-# if defined(_MSC_VER) || defined(__BORLANDC__)
-#   define UINT64_TYPE unsigned __int64
-# else
-#   define UINT64_TYPE unsigned long long int
-# endif
-#endif
 #ifndef UINT32_TYPE
 # define UINT32_TYPE unsigned int
 #endif
@@ -200,7 +193,7 @@
 # define LONGDOUBLE_TYPE long double
 #endif
 typedef sqlite_int64 i64;          /* 8-byte signed integer */
-typedef UINT64_TYPE u64;           /* 8-byte unsigned integer */
+typedef sqlite_uint64 u64;         /* 8-byte unsigned integer */
 typedef UINT32_TYPE u32;           /* 4-byte unsigned integer */
 typedef UINT16_TYPE u16;           /* 2-byte unsigned integer */
 typedef INT16_TYPE i16;            /* 2-byte signed integer */
