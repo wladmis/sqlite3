@@ -926,6 +926,22 @@ static double bestIndex(
 
   TRACE(("bestIndex: tbl=%s notReady=%x\n", pSrc->pTab->zName, notReady));
   lowestCost = SQLITE_BIG_DBL;
+  pProbe = pSrc->pTab->pIndex;
+
+  /* If the table has no indices and there are no terms in the where
+  ** clause that refer to the ROWID, then we will never be able to do
+  ** anything other than a full table scan on this table.  We might as
+  ** well put it first in the join order.  That way, perhaps it can be
+  ** referenced by other tables in the join.
+  */
+  if( pProbe==0 &&
+     findTerm(pWC, iCur, -1, 0, WO_EQ|WO_IN|WO_LT|WO_LE|WO_GT|WO_GE,0)==0 &&
+     (pOrderBy==0 || !sortableByRowid(iCur, pOrderBy, &rev)) ){
+    *pFlags = 0;
+    *ppIndex = 0;
+    *pnEq = 0;
+    return 0.0;
+  }
 
   /* Check for a rowid=EXPR or rowid IN (...) constraints
   */
@@ -958,7 +974,6 @@ static double bestIndex(
   /* Estimate the cost of a table scan.  If we do not know how many
   ** entries are in the table, use 1 million as a guess.
   */
-  pProbe = pSrc->pTab->pIndex;
   cost = pProbe ? pProbe->aiRowEst[0] : 1000000;
   TRACE(("... table scan base cost: %.9g\n", cost));
   flags = WHERE_ROWID_RANGE;
