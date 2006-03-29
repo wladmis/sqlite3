@@ -182,6 +182,9 @@ do_test index-6.1 {
   set v [catch {execsql {CREATE INDEX index1 ON test2(g1)}} msg]
   lappend v $msg
 } {1 {index index1 already exists}}
+do_test index-6.1.1 {
+  catchsql {CREATE INDEX [index1] ON test2(g1)}
+} {1 {index index1 already exists}}
 do_test index-6.1b {
   execsql {SELECT name FROM sqlite_master WHERE type!='meta' ORDER BY name}
 } {index1 test1 test2}
