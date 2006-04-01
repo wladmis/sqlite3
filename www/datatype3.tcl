@@ -312,13 +312,12 @@ instead of memcmp().
 </p>  
 <p>
 Aside from the default collation sequence BINARY, implemented using
-memcmp(), SQLite features two extra built-in collation sequences 
-intended for testing purposes, NOCASE and REVERSE:
+memcmp(), SQLite features one extra built-in collation sequences 
+intended for testing purposes, the NOCASE collation:
 </p>  
 <UL>
 	<LI><b>BINARY</b> - Compares string data using memcmp(), regardless
                             of text encoding.</LI>
-	<LI><b>REVERSE</b> - Collate in the reverse order to BINARY. </LI>
 	<LI><b>NOCASE</b> - The same as binary, except the 26 upper case
 			    characters used by the English language are
 			    folded to their lower case equivalents before
