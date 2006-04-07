@@ -805,6 +805,7 @@ static const char *columnType(
   assert( pExpr->op!=TK_AS );
 
   switch( pExpr->op ){
+    case TK_AGG_COLUMN:
     case TK_COLUMN: {
       /* The expression is a column. Locate the table the column is being
       ** extracted from in NameContext.pSrcList. This table may be real
