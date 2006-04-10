@@ -186,7 +186,7 @@ static void attachFunc(
     sqlite3ResetInternalSchema(db, 0);
     db->nDb = iDb;
     if( rc==SQLITE_NOMEM ){
-      sqlite3MallocFailed();
+      if( !sqlite3MallocFailed() ) sqlite3FailedMalloc();
       sqlite3_snprintf(127, zErr, "out of memory");
     }else{
       sqlite3_snprintf(127, zErr, "unable to open database: %s", zFile);
