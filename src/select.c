@@ -2486,11 +2486,6 @@ static int processOrderGroupBy(
     if( sqlite3ExprResolveNames(pNC, pE) ){
       return 1;
     }
-    if( sqlite3ExprIsConstant(pE) ){
-      sqlite3ErrorMsg(pParse,
-          "%s BY terms must not be non-integer constants", zType);
-      return 1;
-    }
   }
   return 0;
 }
