@@ -1593,6 +1593,9 @@ WhereInfo *sqlite3WhereBegin(
       }else if( pLevel->flags & (WHERE_ROWID_EQ|WHERE_ROWID_RANGE) ){
         zMsg = sqlite3MPrintf("%z USING PRIMARY KEY", zMsg);
       }
+      if( pLevel->flags & WHERE_ORDERBY ){
+        zMsg = sqlite3MPrintf("%z ORDER BY", zMsg);
+      }
       sqlite3VdbeOp3(v, OP_Explain, i, pLevel->iFrom, zMsg, P3_DYNAMIC);
     }
 #endif /* SQLITE_OMIT_EXPLAIN */
