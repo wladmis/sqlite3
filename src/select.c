@@ -2932,16 +2932,16 @@ int sqlite3Select(
     addrSortIndex = -1;
   }
 
-  /* Set the limiter.
-  */
-  iEnd = sqlite3VdbeMakeLabel(v);
-  computeLimitRegisters(pParse, p, iEnd);
-
   /* If the output is destined for a temporary table, open that table.
   */
   if( eDest==SRT_VirtualTab ){
     sqlite3VdbeAddOp(v, OP_OpenVirtual, iParm, pEList->nExpr);
   }
+
+  /* Set the limiter.
+  */
+  iEnd = sqlite3VdbeMakeLabel(v);
+  computeLimitRegisters(pParse, p, iEnd);
 
   /* Open a virtual index to use for the distinct set.
   */
