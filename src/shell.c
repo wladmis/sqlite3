@@ -1471,6 +1471,10 @@ static void process_input(struct callback_data *p, FILE *in){
       if( zLine[i]!=0 ){
         nSql = strlen(zLine);
         zSql = malloc( nSql+1 );
+        if( zSql==0 ){
+          fprintf(stderr, "out of memory\n");
+          exit(1);
+        }
         strcpy(zSql, zLine);
       }
     }else{
