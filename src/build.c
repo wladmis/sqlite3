@@ -2638,8 +2638,12 @@ void sqlite3DefaultRowEst(Index *pIdx){
   int i;
   assert( a!=0 );
   a[0] = 1000000;
-  for(i=pIdx->nColumn; i>=1; i--){
-    a[i] = 10;
+  for(i=pIdx->nColumn; i>=5; i--){
+    a[i] = 5;
+  }
+  while( i>=1 ){
+    a[i] = 11 - i;
+    i--;
   }
   if( pIdx->onError!=OE_None ){
     a[pIdx->nColumn] = 1;
