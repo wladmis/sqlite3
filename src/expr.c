@@ -1367,7 +1367,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
         struct ExprList_item *pItem;
 
         if( !affinity ){
-          affinity = SQLITE_AFF_NUMERIC;
+          affinity = SQLITE_AFF_NONE;
         }
         keyInfo.aColl[0] = pExpr->pLeft->pColl;
 
