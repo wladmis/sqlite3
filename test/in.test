@@ -346,5 +346,22 @@ do_test in-11.3 {
     SELECT * FROM t6 WHERE +b IN ('2');
   }
 } {}
+do_test in-11.4 {
+  # No coercion because column a as affinity NONE
+  execsql {
+    SELECT * FROM t6 WHERE a IN ('2');
+  }
+} {}
+do_test in-11.5 {
+  execsql {
+    SELECT * FROM t6 WHERE a IN (2);
+  }
+} {2 3}
+do_test in-11.6 {
+  # No coercion because column a as affinity NONE
+  execsql {
+    SELECT * FROM t6 WHERE +a IN ('2');
+  }
+} {}
 
 finish_test
