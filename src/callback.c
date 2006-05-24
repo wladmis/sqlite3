@@ -362,6 +362,7 @@ Schema *sqlite3SchemaGet(Btree *pBt){
     sqlite3HashInit(&p->idxHash, SQLITE_HASH_STRING, 0);
     sqlite3HashInit(&p->trigHash, SQLITE_HASH_STRING, 0);
     sqlite3HashInit(&p->aFKey, SQLITE_HASH_STRING, 1);
+    p->enc = SQLITE_UTF8;
   }
   return p;
 }

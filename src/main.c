@@ -851,9 +851,6 @@ static int openDatabase(
   }
   db->aDb[0].pSchema = sqlite3SchemaGet(db->aDb[0].pBt);
   db->aDb[1].pSchema = sqlite3SchemaGet(0);
-  if( db->aDb[0].pSchema ){
-    ENC(db) = SQLITE_UTF8;
-  }
 
 
   /* The default safety_level for the main database is 'full'; for the temp
