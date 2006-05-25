@@ -618,7 +618,7 @@ do_test attach-5.1 {
   sqlite3 db2 test2.db
   catchsql {
     ATTACH DATABASE 'test.db' AS orig;
-    CREATE TRIGGER r1 AFTER INSERT ON orig.t1 BEGIN;
+    CREATE TRIGGER r1 AFTER INSERT ON orig.t1 BEGIN
       SELECT 'no-op';
     END;
   } db2

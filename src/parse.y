@@ -32,16 +32,18 @@
 // This code runs whenever there is a syntax error
 //
 %syntax_error {
-  if( pParse->zErrMsg==0 ){
+  if( !pParse->parseError ){
     if( TOKEN.z[0] ){
       sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", &TOKEN);
     }else{
       sqlite3ErrorMsg(pParse, "incomplete SQL statement");
     }
+    pParse->parseError = 1;
   }
 }
 %stack_overflow {
   sqlite3ErrorMsg(pParse, "parser stack overflow");
+  pParse->parseError = 1;
 }
 
 // The name of the generated procedure that implements the parser
