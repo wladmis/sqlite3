@@ -495,11 +495,15 @@ int sqlite3VdbeExec(
     */
     if( db->xProgress ){
       if( db->nProgressOps==nProgressOps ){
+        int rc1, rc2;
+        if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
         if( db->xProgress(db->pProgressArg)!=0 ){
+          sqlite3SafetyOn(db);
           rc = SQLITE_ABORT;
           continue; /* skip to the next iteration of the for loop */
         }
         nProgressOps = 0;
+        if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
       }
       nProgressOps++;
     }
