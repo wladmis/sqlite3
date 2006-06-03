@@ -197,7 +197,7 @@ static char *one_input_line(const char *zPrior, FILE *in){
   }
   zResult = readline(zPrompt);
 #if defined(HAVE_READLINE) && HAVE_READLINE==1
-  if( zResult ) add_history(zResult);
+  if( zResult && *zResult ) add_history(zResult);
 #endif
   return zResult;
 }
