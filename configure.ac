@@ -407,13 +407,26 @@ else
   TARGET_EXEEXT=$config_TARGET_EXEEXT
 fi
 if test "$TARGET_EXEEXT" = ".exe"; then
-  OS_UNIX=0
-  OS_WIN=1
-  tclsubdir=win
-  TARGET_CFLAGS="$TARGET_CFLAGS -DOS_WIN=1"
+  if test $OS2_SHELL ; then
+    OS_UNIX=0
+    OS_WIN=0
+    OS_OS2=1
+    TARGET_CFLAGS="$TARGET_CFLAGS -DOS_OS2=1"
+    if test "$ac_compiler_gnu" == "yes" ; then
+      TARGET_CFLAGS="$TARGET_CFLAGS -Zomf -Zexe -Zmap"
+      BUILD_CFLAGS="$BUILD_CFLAGS -Zomf -Zexe"
+    fi
+  else
+    OS_UNIX=0
+    OS_WIN=1
+    OS_OS2=0
+    tclsubdir=win
+    TARGET_CFLAGS="$TARGET_CFLAGS -DOS_WIN=1"
+  fi
 else
   OS_UNIX=1
   OS_WIN=0
+  OS_OS2=0
   tclsubdir=unix
   TARGET_CFLAGS="$TARGET_CFLAGS -DOS_UNIX=1"
 fi
@@ -421,6 +434,7 @@ fi
 AC_SUBST(BUILD_EXEEXT)
 AC_SUBST(OS_UNIX)
 AC_SUBST(OS_WIN)
+AC_SUBST(OS_OS2)
 AC_SUBST(TARGET_EXEEXT)
 
 ##########
