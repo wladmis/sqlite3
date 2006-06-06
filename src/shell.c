@@ -1740,7 +1740,7 @@ int main(int argc, char **argv){
       data.echoOn = 1;
     }else if( strcmp(z,"-version")==0 ){
       printf("%s\n", sqlite3_libversion());
-      return 1;
+      return 0;
     }else if( strcmp(z,"-help")==0 ){
       usage(1);
     }else{
