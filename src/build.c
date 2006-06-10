@@ -533,6 +533,12 @@ void sqlite3DeleteTable(sqlite3 *db, Table *pTable){
 #ifndef SQLITE_OMIT_CHECK
   sqlite3ExprDelete(pTable->pCheck);
 #endif
+#ifndef SQLITE_OMIT_MODULE
+  sqliteFree(pTable->zModuleName);
+  if( pTable->pMod && pTable->pVTab ){
+    pTable->pMod->xDisconnect(pTable->pVTab);
+  }
+#endif SQLITE_OMIT_MODULE
   sqliteFree(pTable);
 }
 

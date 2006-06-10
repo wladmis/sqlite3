@@ -703,6 +703,12 @@ struct Table {
 #ifndef SQLITE_OMIT_ALTERTABLE
   int addColOffset;  /* Offset in CREATE TABLE statement to add a new column */
 #endif
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  char *zModuleName;     /* Name of module implementing this virtual table */
+  sqlite3_module *pMod;  /* Pointer to the implementation of the module */
+  sqlite3_vtab *pVTab;   /* Pointer to the module instance */
+  u8 needCreate;         /* Need to call pMod->xCreate() */
+#endif
   Schema *pSchema;
 };
 
