@@ -547,12 +547,12 @@ Select *sqlite3SelectDup(Select *p){
   pNew->iOffset = -1;
   pNew->isResolved = p->isResolved;
   pNew->isAgg = p->isAgg;
-  pNew->usesVirt = 0;
+  pNew->usesEphm = 0;
   pNew->disallowOrderBy = 0;
   pNew->pRightmost = 0;
-  pNew->addrOpenVirt[0] = -1;
-  pNew->addrOpenVirt[1] = -1;
-  pNew->addrOpenVirt[2] = -1;
+  pNew->addrOpenEphm[0] = -1;
+  pNew->addrOpenEphm[1] = -1;
+  pNew->addrOpenEphm[2] = -1;
   return pNew;
 }
 #else
@@ -1316,7 +1316,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
     case TK_IN: {
       char affinity;
       KeyInfo keyInfo;
-      int addr;        /* Address of OP_OpenVirtual instruction */
+      int addr;        /* Address of OP_OpenEphemeral instruction */
 
       affinity = sqlite3ExprAffinity(pExpr->pLeft);
 
@@ -1334,7 +1334,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
       ** is used.
       */
       pExpr->iTable = pParse->nTab++;
-      addr = sqlite3VdbeAddOp(v, OP_OpenVirtual, pExpr->iTable, 0);
+      addr = sqlite3VdbeAddOp(v, OP_OpenEphemeral, pExpr->iTable, 0);
       memset(&keyInfo, 0, sizeof(keyInfo));
       keyInfo.nField = 1;
       sqlite3VdbeAddOp(v, OP_SetNumColumns, pExpr->iTable, 1);

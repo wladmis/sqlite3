@@ -382,7 +382,7 @@ ifcapable {!explain} {
 # sqliteFlattenSubquery() routine in select.c is doing its job.
 #
 proc is_flat {sql} {
-  return [expr 0>[lsearch [execsql "EXPLAIN $sql"] OpenVirtual]]
+  return [expr 0>[lsearch [execsql "EXPLAIN $sql"] OpenEphemeral]]
 }
 
 # Check that the flattener works correctly for deeply nested subqueries

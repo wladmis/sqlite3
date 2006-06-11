@@ -483,6 +483,9 @@ abort_parse:
     pParse->nTableLock = 0;
   }
 #endif
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  sqliteFree(pParse->zArg);
+#endif
   sqlite3DeleteTable(pParse->db, pParse->pNewTable);
   sqlite3DeleteTrigger(pParse->pNewTrigger);
   sqliteFree(pParse->apVarExpr);

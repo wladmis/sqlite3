@@ -247,7 +247,7 @@ ifcapable tempdb {
       set x [execsql {
         EXPLAIN INSERT INTO t4 SELECT x+2 FROM t4;
       }]
-      expr {[lsearch $x OpenVirtual]>0}
+      expr {[lsearch $x OpenEphemeral]>0}
     } {1}
   }
   
