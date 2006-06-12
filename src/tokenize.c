@@ -483,10 +483,19 @@ abort_parse:
     pParse->nTableLock = 0;
   }
 #endif
+
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   sqliteFree(pParse->zArg);
 #endif
-  sqlite3DeleteTable(pParse->db, pParse->pNewTable);
+
+  if( !IN_DECLARE_VTAB ){
+    /* If the pParse->declareVtab flag is set, do not delete any table 
+    ** structure built up in pParse->pNewTable. The calling code (see vtab.c)
+    ** will take responsibility for freeing the Table structure.
+    */
+    sqlite3DeleteTable(pParse->db, pParse->pNewTable);
+  }
+
   sqlite3DeleteTrigger(pParse->pNewTrigger);
   sqliteFree(pParse->apVarExpr);
   if( nErr>0 && (pParse->rc==SQLITE_OK || pParse->rc==SQLITE_DONE) ){

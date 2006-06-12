@@ -1575,6 +1575,7 @@ int sqlite3_create_module(
   const sqlite3_module *
 );
 
+int sqlite3_declare_vtab(sqlite3*, const char *zCreateTable);
 
 /*
 ** Undo the hack that converts floating point types to integer for
