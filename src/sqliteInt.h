@@ -1110,6 +1110,7 @@ struct WhereLevel {
   int nEq;              /* Number of == or IN constraints on this loop */
   int nIn;              /* Number of IN operators constraining this loop */
   int *aInLoop;         /* Loop terminators for IN operators */
+  sqlite3_index_info *pIdxInfo;  /* Index information for virtual tables */
 };
 
 /*
