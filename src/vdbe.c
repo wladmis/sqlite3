@@ -4546,12 +4546,13 @@ case OP_VCreate: {
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-/* Opcode: VDestroy * * P3
+/* Opcode: VDestroy P1 * P3
 **
-** P3 is the name of a virtual table.  Call the xDestroy method for
-** that table.
+** P3 is the name of a virtual table in database P1.  Call the xDestroy method
+** of that table.
 */
 case OP_VDestroy: {
+  rc = sqlite3VtabCallDestroy(db, pOp->p1, pOp->p3);
   break;
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */

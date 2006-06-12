@@ -373,4 +373,33 @@ int sqlite3VtabCallCreate(sqlite3 *db, int iDb, const char *zTab, char **pzErr){
   return rc;
 }
 
+/*
+** This function is invoked by the vdbe to call the xDestroy method
+** of the virtual table named zTab in database iDb. This occurs
+** when a DROP TABLE is mentioned.
+**
+** This call is a no-op if zTab is not a virtual table.
+*/
+int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
+{
+  int rc = SQLITE_OK;
+  Table *pTab;
+  sqlite3_module *pModule;
+
+  pTab = sqlite3FindTable(db, zTab, db->aDb[iDb].zName);
+  pModule = pTab->pModule;
+  assert(pTab);
+  if( pTab->pVtab ){
+    rc = sqlite3SafetyOff(db);
+    assert( rc==SQLITE_OK );
+    rc = pModule->xDestroy(pTab->pVtab);
+    sqlite3SafetyOn(db);
+    if( rc==SQLITE_OK ){
+      pTab->pVtab = 0;
+    }
+  }
+
+  return rc;
+}
+
 #endif /* SQLITE_OMIT_VIRTUALTABLE */

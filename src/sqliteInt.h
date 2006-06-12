@@ -1801,6 +1801,7 @@ void sqlite3VtabArgInit(Parse*);
 void sqlite3VtabArgExtend(Parse*, Token*);
 int sqlite3VtabCallCreate(sqlite3*, int, const char *, char **);
 int sqlite3VtabCallConnect(Parse*, Table*);
+int sqlite3VtabCallDestroy(sqlite3*, int, const char *);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"

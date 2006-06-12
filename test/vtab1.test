@@ -99,4 +99,26 @@ do_test vtab1-2.4 {
   2 c {} 0 {} 0 \
 ]
 
+# Drop the table t2. This should cause the xDestroy (but not xDisconnect)
+# method to be invoked.
+do_test vtab1-2.5 {
+  set echo_module [list]
+  execsql { 
+    DROP TABLE t2;
+  }
+  set echo_module
+} [list xDestroy]
+do_test vtab1-2.6 {
+  execsql { 
+    PRAGMA table_info(t2); 
+  }
+} {}
+do_test vtab1-2.7 {
+  execsql {
+    SELECT sql FROM sqlite_master;
+  }
+} [list {CREATE VIRTUAL TABLE t1 USING echo} \
+        {CREATE TABLE template(a, b, c)}     \
+]
+
 finish_test
