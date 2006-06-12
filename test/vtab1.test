@@ -74,5 +74,25 @@ do_test vtab1-2.2 {
   2 c {} 0 {} 0 \
 ]
 
+# Test that the database can be unloaded. This should invoke 
+# the xDisconnect() callback each of the two virtual tables - t1 and t2.
+do_test vtab1-2.3 {
+  set echo_module [list]
+  db close
+  set echo_module
+} [list xDisconnect xDisconnect]
+
+# Re-open the database. Check that the schema of the virtual
+# table is still correct.
+do_test vtab1-2.4 {
+  sqlite3 db test.db
+  register_echo_module [sqlite3_connection_pointer db]
+  execsql { PRAGMA table_info(t2); }
+} [list         \
+  0 a {} 0 {} 0 \
+  1 b {} 0 {} 0 \
+  2 c {} 0 {} 0 \
+]
+
 finish_test
 
