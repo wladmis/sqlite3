@@ -4534,12 +4534,13 @@ case OP_TableLock: {        /* no-push */
 #endif /* SQLITE_OMIT_SHARED_CACHE */
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-/* Opcode: VCreate * * P3
+/* Opcode: VCreate P1 * P3
 **
-** P3 is the name of a virtual table.  Call the xCreate method for
-** that table.
+** P3 is the name of a virtual table in database P1. Call the xCreate method
+** for that table.
 */
 case OP_VCreate: {
+  rc = sqlite3VtabCallCreate(db, pOp->p1, pOp->p3, &p->zErrMsg);
   break;
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
@@ -4547,7 +4548,7 @@ case OP_VCreate: {
 #ifndef SQLITE_OMIT_VIRTUALTABLE
 /* Opcode: VDestroy * * P3
 **
-** P3 is the name of a virtual table.  Call the xCreate method for
+** P3 is the name of a virtual table.  Call the xDestroy method for
 ** that table.
 */
 case OP_VDestroy: {

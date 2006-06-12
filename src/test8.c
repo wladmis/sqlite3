@@ -21,6 +21,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+** Global Tcl variable $echo_module is a list. This routine appends
+** the string element zArg to that list in interpreter interp.
+*/
+static void appendToEchoModule(const sqlite3_module *pModule, const char *zArg){
+  int flags = (TCL_APPEND_VALUE | TCL_LIST_ELEMENT | TCL_GLOBAL_ONLY);
+  Tcl_SetVar((Tcl_Interp *)(pModule->pAux), "echo_module", zArg, flags);
+}
+
 /* Methods for the echo module */
 static int echoCreate(
   sqlite3 *db,
@@ -32,11 +41,11 @@ static int echoCreate(
   Tcl_Interp *interp = pModule->pAux;
   *ppVtab = pModule->pAux;
 
-  Tcl_SetVar(interp, "echo_module", "xCreate", TCL_GLOBAL_ONLY);
+  appendToEchoModule(pModule, "xCreate");
   for(i=0; i<argc; i++){
-    Tcl_SetVar(interp, "echo_module", argv[i],
-                TCL_APPEND_VALUE | TCL_LIST_ELEMENT | TCL_GLOBAL_ONLY);
+    appendToEchoModule(pModule, argv[i]);
   }
+
   return 0;
 }
 static int echoConnect(
@@ -74,12 +83,12 @@ static int echoDestroy(sqlite3_vtab *pVtab){
 ** variables.
 */
 static sqlite3_module echoModule = {
-  0,
-  "echo",
-  0,
+  0,                         /* iVersion */
+  "echo",                    /* zName */
+  0,                         /* pAux */
   echoCreate,
   echoConnect,
-  0,
+  0,                         /* xBestIndex */
   echoDisconnect, 
   echoDestroy,
 };

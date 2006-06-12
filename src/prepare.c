@@ -38,7 +38,7 @@ static void corruptSchema(InitData *pData, const char *zExtra){
 ** Each callback contains the following information:
 **
 **     argv[0] = name of thing being created
-**     argv[1] = root page number for table or index.  NULL for trigger or view.
+**     argv[1] = root page number for table or index. 0 for trigger or view.
 **     argv[2] = SQL text for the CREATE statement.
 **     argv[3] = "1" for temporary files, "0" for main database, "2" or more
 **               for auxiliary database files.

@@ -1790,6 +1790,7 @@ void sqlite3VtabBeginParse(Parse*, Token*, Token*, Token*);
 void sqlite3VtabFinishParse(Parse*, Token*);
 void sqlite3VtabArgInit(Parse*);
 void sqlite3VtabArgExtend(Parse*, Token*);
+int sqlite3VtabCallCreate(sqlite3*, int, const char *, char **);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
