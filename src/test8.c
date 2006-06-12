@@ -63,7 +63,9 @@ static int echoDeclareVtab(sqlite3 *db, int argc, char **argv){
     sqlite3_bind_text(pStmt, 1, argv[1], -1, 0);
     if( sqlite3_step(pStmt)==SQLITE_ROW ){
       const char *zCreateTable = sqlite3_column_text(pStmt, 0);
+#ifndef SQLITE_OMIT_VIRTUALTABLE
       sqlite3_declare_vtab(db, zCreateTable);
+#endif
     } else {
       rc = SQLITE_ERROR;
     }
