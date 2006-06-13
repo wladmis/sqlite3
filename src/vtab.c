@@ -367,9 +367,6 @@ int sqlite3VtabCallCreate(sqlite3 *db, int iDb, const char *zTab, char **pzErr){
     }
   }
 
-  if( SQLITE_OK==rc ){
-    pTab->needCreate = 0;
-  }
   return rc;
 }
 

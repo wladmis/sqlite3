@@ -709,7 +709,6 @@ struct Table {
   sqlite3_vtab *pVtab;      /* Pointer to the module instance */
   int nModuleArg;           /* Number of arguments to the module */
   char **azModuleArg;       /* Text of all module args. [0] is module name */
-  u8 needCreate;            /* Need to call pMod->xCreate() */
   u8 isVirtual;             /* True if this is a virtual table */
 #endif
   Schema *pSchema;
