@@ -694,6 +694,7 @@ struct Table {
   u8 hasPrimKey;   /* True if there exists a primary key */
   u8 keyConf;      /* What to do in case of uniqueness conflict on iPKey */
   u8 autoInc;      /* True if the integer primary key is autoincrement */
+  u8 isVirtual;    /* True if this is a virtual table */
   int nRef;          /* Number of pointers to this Table */
   Trigger *pTrigger; /* List of SQL triggers on this table */
   FKey *pFKey;       /* Linked list of all foreign keys in this table */
@@ -709,7 +710,6 @@ struct Table {
   sqlite3_vtab *pVtab;      /* Pointer to the module instance */
   int nModuleArg;           /* Number of arguments to the module */
   char **azModuleArg;       /* Text of all module args. [0] is module name */
-  u8 isVirtual;             /* True if this is a virtual table */
 #endif
   Schema *pSchema;
 };
