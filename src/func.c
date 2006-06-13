@@ -655,6 +655,7 @@ static void soundexFunc(sqlite3_context *context, int argc, sqlite3_value **argv
   };
   assert( argc==1 );
   zIn = (u8*)sqlite3_value_text(argv[0]);
+  if( zIn==0 ) zIn = "";
   for(i=0; zIn[i] && !isalpha(zIn[i]); i++){}
   if( zIn[i] ){
     zResult[0] = toupper(zIn[i]);
