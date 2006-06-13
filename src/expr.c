@@ -1489,8 +1489,8 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       }else if( pExpr->iColumn>=0 ){
         Table *pTab = pExpr->pTab;
         int iCol = pExpr->iColumn;
-        sqlite3VdbeAddOp(v, pTab->isVirtual ? OP_VColumn : OP_Column,
-                            pExpr->iTable, iCol);
+        int op = (pTab && pTab->isVirtual) ? OP_VColumn : OP_Column;
+        sqlite3VdbeAddOp(v, op, pExpr->iTable, iCol);
         sqlite3ColumnDefault(v, pTab, iCol);
 #ifndef SQLITE_OMIT_FLOATING_POINT
         if( pTab && pTab->aCol[iCol].affinity==SQLITE_AFF_REAL ){
@@ -1498,8 +1498,9 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
         }
 #endif
       }else{
-        sqlite3VdbeAddOp(v, pExpr->pTab->isVirtual ? OP_VRowid : OP_Rowid,
-                         pExpr->iTable, 0);
+        Table *pTab = pExpr->pTab;
+        int op = (pTab && pTab->isVirtual) ? OP_VRowid : OP_Rowid;
+        sqlite3VdbeAddOp(v, op, pExpr->iTable, 0);
       }
       break;
     }
