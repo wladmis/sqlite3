@@ -278,6 +278,17 @@ int sqlite3VtabCallConnect(Parse *pParse, Table *pTab){
 }
 
 /*
+** Resize pInfo->zPlan to nBytes bytes using realloc(). Set pInfo->nPlan
+** to nBytes and return a pointer to the allocated memory.
+*/
+char *sqlite3_allocate_queryplan(sqlite3_index_info *pInfo, int nBytes){
+  pInfo->nPlan = nBytes;
+  sqlite3ReallocOrFree(&pInfo->zPlan, nBytes);
+  return pInfo->zPlan;
+}
+
+
+/*
 ** This function is used to set the schema of a virtual table.  It is only
 ** valid to call this function from within the xCreate() or xConnect() of a
 ** virtual table module.

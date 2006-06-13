@@ -344,21 +344,19 @@ static int echoRowid(sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid){
 
 static int echoFilter(
   sqlite3_vtab_cursor *pVtabCursor, 
-  int idx,
+  char *zPlan, int nPlan,
   int argc, 
   sqlite3_value **argv
 ){
   int rc;
-  char zBuf[32];
   int ii;
 
   echo_cursor *pCur = (echo_cursor *)pVtabCursor;
   echo_vtab *pVtab = (echo_vtab *)pVtabCursor->pVtab;
   sqlite3 *db = pVtab->db;
 
-  sprintf(zBuf, "%d", idx);
   appendToEchoModule(pVtab->interp, "xFilter");
-  appendToEchoModule(pVtab->interp, zBuf);
+  appendToEchoModule(pVtab->interp, zPlan);
   for(ii=0; ii<argc; ii++){
     appendToEchoModule(pVtab->interp, sqlite3_value_text(argv[ii]));
   }
@@ -390,6 +388,8 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   int ii;
   char *zWhere = 0;
   char *zOrder = 0;
+  char *zPlan = 0;
+  int nPlan = 0;
   int nArg = 0;
   echo_vtab *pVtab = (echo_vtab *)tab;
 
@@ -435,10 +435,22 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   appendToEchoModule(pVtab->interp, zWhere);
   appendToEchoModule(pVtab->interp, zOrder);
 
+  nPlan = 2;
+  if( zWhere ){
+    nPlan += strlen(zWhere);
+  }
+  if( zOrder ){
+    nPlan += strlen(zWhere);
+  }
+  zPlan = sqlite3_allocate_queryplan(pIdxInfo, nPlan);
+  if( zPlan ){
+    sprintf(zPlan, "%s%s%s", 
+        zWhere?zWhere:"", (zOrder&&zWhere)?" ":"", zOrder?zOrder:"");
+  }
+
   sqliteFree(zWhere);
   sqliteFree(zOrder);
 
-  pIdxInfo->idxNum = 123;
   return SQLITE_OK;
 }
 

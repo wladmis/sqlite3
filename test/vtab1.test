@@ -182,28 +182,28 @@ do_test vtab1-3.6 {
     SELECT * FROM t1;
   }
   set echo_module
-} {xBestIndex {} {} xFilter 123}
+} {xBestIndex {} {} xFilter {}}
 do_test vtab1-3.7 {
   set echo_module ""
   execsql {
     SELECT * FROM t1 WHERE b = 10;
   }
   set echo_module
-} {xBestIndex {WHERE b = ?} {} xFilter 123 10}
+} {xBestIndex {WHERE b = ?} {} xFilter {WHERE b = ?} 10}
 do_test vtab1-3.8 {
   set echo_module ""
   execsql {
     SELECT * FROM t1 WHERE b >= 5 AND b <= 10;
   }
   set echo_module
-} {xBestIndex {WHERE b >= ? AND b <= ?} {} xFilter 123 5 10}
+} {xBestIndex {WHERE b >= ? AND b <= ?} {} xFilter {WHERE b >= ? AND b <= ?} 5 10}
 do_test vtab1-3.9 {
   set echo_module ""
   execsql {
     SELECT * FROM t1 WHERE b BETWEEN 5 AND 10;
   }
   set echo_module
-} {xBestIndex {WHERE b >= ? AND b <= ?} {} xFilter 123 5 10}
+} {xBestIndex {WHERE b >= ? AND b <= ?} {} xFilter {WHERE b >= ? AND b <= ?} 5 10}
 
 finish_test
 
