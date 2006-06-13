@@ -98,6 +98,7 @@ int main(int argc, char **argv){
   rc = <b>sqlite3_exec</b>(db, argv[2], callback, 0, &zErrMsg);
   if( rc!=SQLITE_OK ){
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
   }
   <b>sqlite3_close</b>(db);
   return 0;
