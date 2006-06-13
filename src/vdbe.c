@@ -4588,10 +4588,12 @@ case OP_VOpen: {
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-/* Opcode: VFilter P1 P2 *
+/* Opcode: VFilter P1 P2 P3
 **
 ** P1 is a cursor opened using VOpen.  P2 is an address to jump to if
 ** the filtered result set is empty.
+**
+** P3 points to enough free space to use to marshall the arguments.
 **
 ** This opcode invokes the xFilter method on the virtual table specified
 ** by P1.  The index number parameter to xFilter is the top of the stack.
@@ -4625,11 +4627,14 @@ case OP_VFilter: {
   /* Invoke the xFilter method if one is defined. */
   if( pModule->xFilter ){
     int res;
-    Mem *apArg;
-    apArg = &pTos[1-2-nArg];
+    int ii;
+    Mem **apArg = pOp->p3;
+    for(ii = 0; ii<nArg; ii++){
+      apArg[ii] = &pTos[ii+1-2-nArg];
+    }
 
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
-    res = pModule->xFilter(pCur->pVtabCursor, iIndex, nArg, &apArg);
+    res = pModule->xFilter(pCur->pVtabCursor, iIndex, nArg, apArg);
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
 
     if( res==0 ){
