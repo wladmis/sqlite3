@@ -1657,7 +1657,7 @@ int sqlite3_create_module(
 ** to all module implementations.
 */
 struct sqlite3_vtab {
-  sqlite3_module *pModule;  /* The module for this virtual table */
+  const sqlite3_module *pModule;  /* The module for this virtual table */
   /* Virtual table implementations will typically add additional fields */
 };
 
