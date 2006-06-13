@@ -198,7 +198,7 @@ id(A) ::= ID(X).         {A = X;}
 %left OR.
 %left AND.
 %right NOT.
-%left IS LIKE_KW BETWEEN IN ISNULL NOTNULL NE EQ.
+%left IS MATCH LIKE_KW BETWEEN IN ISNULL NOTNULL NE EQ.
 %left GT LE LT GE.
 %right ESCAPE.
 %left BITAND BITOR LSHIFT RSHIFT.
@@ -690,6 +690,8 @@ expr(A) ::= expr(X) CONCAT(OP) expr(Y).         {A = sqlite3Expr(@OP, X, Y, 0);}
 %type likeop {struct LikeOp}
 likeop(A) ::= LIKE_KW(X).     {A.eOperator = X; A.not = 0;}
 likeop(A) ::= NOT LIKE_KW(X). {A.eOperator = X; A.not = 1;}
+likeop(A) ::= MATCH(X).       {A.eOperator = X; A.not = 0;}
+likeop(A) ::= NOT MATCH(X).   {A.eOperator = X; A.not = 1;}
 %type escape {Expr*}
 %destructor escape {sqlite3ExprDelete($$);}
 escape(X) ::= ESCAPE expr(A). [ESCAPE] {X = A;}
