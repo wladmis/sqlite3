@@ -322,6 +322,24 @@ static int echoRowid(sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid){
   return SQLITE_OK;
 }
 
+/*
+** Compute a simple hash of the null terminated string zString.
+**
+** This module uses only sqlite3_index_info.idxStr, not 
+** sqlite3_index_info.idxNum. So to test idxNum, when idxStr is set
+** in echoBestIndex(), idxNum is set to the corresponding hash value.
+** In echoFilter(), code assert()s that the supplied idxNum value is
+** indeed the hash of the supplied idxStr.
+*/
+static int hashString(const char *zString){
+  int val = 0;
+  int ii;
+  for(ii=0; zString[ii]; ii++){
+    val = (val << 3) + (int)zString[ii];
+  }
+  return val;
+}
+
 
 static int echoFilter(
   sqlite3_vtab_cursor *pVtabCursor, 
@@ -335,6 +353,7 @@ static int echoFilter(
   echo_vtab *pVtab = (echo_vtab *)pVtabCursor->pVtab;
   sqlite3 *db = pVtab->db;
 
+  assert( idxNum==hashString(idxStr) );
   sqlite3_finalize(pCur->pStmt);
   pCur->pStmt = 0;
   rc = sqlite3_prepare(db, idxStr, -1, &pCur->pStmt, 0);
@@ -448,6 +467,7 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   appendToEchoModule(pVtab->interp, "xBestIndex");;
   appendToEchoModule(pVtab->interp, zQuery);
 
+  pIdxInfo->idxNum = hashString(zQuery);
   pIdxInfo->idxStr = zQuery;
   pIdxInfo->needToFreeIdxStr = 1;
   pIdxInfo->estimatedCost = 1.0;
