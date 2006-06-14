@@ -445,12 +445,6 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
     pIdxInfo->orderByConsumed = 1;
   }
 
-  const int nOrderBy;        /* Number of terms in the ORDER BY clause */
-  const struct sqlite3_index_orderby {
-     int iColumn;              /* Column number */
-     unsigned char desc;       /* True for DESC.  False for ASC. */
-  } *const aOrderBy;         /* The ORDER BY clause */
-
   appendToEchoModule(pVtab->interp, "xBestIndex");;
   appendToEchoModule(pVtab->interp, zQuery);
 
