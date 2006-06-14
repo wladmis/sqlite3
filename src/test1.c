@@ -1095,6 +1095,57 @@ static int test_table_column_metadata(
 #endif
 
 /*
+** Usage: sqlite3_load_extension DB-HANDLE FILE ?PROC?
+*/
+static int test_load_extension(
+  ClientData clientData, /* Not used */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  Tcl_CmdInfo cmdInfo;
+  sqlite3 *db;
+  int rc;
+  char *zDb;
+  char *zFile;
+  char *zProc = 0;
+  char *zErr = 0;
+
+  if( objc!=4 && objc!=3 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "DB-HANDLE FILE ?PROC?");
+    return TCL_ERROR;
+  }
+  zDb = Tcl_GetString(objv[1]);
+  zFile = Tcl_GetString(objv[2]);
+  if( objc==4 ){
+    zProc = Tcl_GetString(objv[3]);
+  }
+
+  /* Extract the C database handle from the Tcl command name */
+  if( !Tcl_GetCommandInfo(interp, zDb, &cmdInfo) ){
+    Tcl_AppendResult(interp, "command not found: ", zDb, (char*)0);
+    return TCL_ERROR;
+  }
+  db = ((struct SqliteDb*)cmdInfo.objClientData)->db;
+  assert(db);
+
+  /* Call the underlying C function. If an error occurs, set rc to 
+  ** TCL_ERROR and load any error string into the interpreter. If no 
+  ** error occurs, set rc to TCL_OK.
+  */
+  rc = sqlite3_load_extension(db, zFile, zProc, &zErr);
+  if( rc!=SQLITE_OK ){
+    Tcl_SetResult(interp, zErr ? zErr : "", TCL_VOLATILE);
+    rc = TCL_ERROR;
+  }else{
+    rc = TCL_OK;
+  }
+  sqlite3_free(zErr);
+
+  return rc;
+}
+
+/*
 ** Usage:  sqlite_abort
 **
 ** Shutdown the process immediately.  This is not a clean shutdown.
@@ -3694,6 +3745,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_libversion_number", test_libversion_number, 0  },
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
      { "sqlite3_table_column_metadata", test_table_column_metadata, 0  },
+#endif
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
+     { "sqlite3_load_extension", test_load_extension, 0  },
 #endif
   };
   static int bitmask_size = sizeof(Bitmask)*8;

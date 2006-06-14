@@ -43,6 +43,7 @@ set EXCLUDE {
   btree6.test
   corrupt.test
   crash.test
+  loadext.test
   malloc.test
   malloc2.test
   malloc3.test
