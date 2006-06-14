@@ -29,7 +29,6 @@ int sqlite3_create_module(
   return SQLITE_OK;
 }
 
-
 /*
 ** Clear any and all virtual-table information from the Table record.
 ** This routine is called, for example, just before deleting the Table
