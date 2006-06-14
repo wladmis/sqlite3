@@ -415,6 +415,7 @@ int sqlite3CreateFunc(
       (!xFunc && (!xFinal && xStep)) ||
       (nArg<-1 || nArg>127) ||
       (255<(nName = strlen(zFunctionName))) ){
+    sqlite3Error(db, SQLITE_ERROR, "bad parameters");
     return SQLITE_ERROR;
   }
   
