@@ -45,7 +45,7 @@ struct tclvar_cursor {
 /* Methods for the tclvar module */
 static int tclvarConnect(
   sqlite3 *db,
-  const sqlite3_module *pModule,
+  void *pAux,
   int argc, char **argv,
   sqlite3_vtab **ppVtab
 ){
@@ -55,8 +55,7 @@ static int tclvarConnect(
   pVtab = sqliteMalloc( sizeof(*pVtab) );
   if( pVtab==0 ) return SQLITE_NOMEM;
   *ppVtab = &pVtab->base;
-  pVtab->base.pModule = pModule;
-  pVtab->interp = pModule->pAux;
+  pVtab->interp = (Tcl_Interp *)pAux;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   sqlite3_declare_vtab(db, zSchema);
 #endif

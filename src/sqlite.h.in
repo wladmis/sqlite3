@@ -1537,10 +1537,10 @@ struct sqlite3_module {
   int iVersion;
   const char *zName;
   void *pAux;
-  int (*xCreate)(sqlite3*, const sqlite3_module *pModule,
+  int (*xCreate)(sqlite3*, void *pAux,
                int argc, char **argv,
                sqlite3_vtab **ppVTab);
-  int (*xConnect)(sqlite3*, const sqlite3_module *pModule,
+  int (*xConnect)(sqlite3*, void *pAux,
                int argc, char **argv,
                sqlite3_vtab **ppVTab);
   int (*xBestIndex)(sqlite3_vtab *pVTab, sqlite3_index_info*);
