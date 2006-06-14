@@ -114,6 +114,23 @@ do_test like-2.2 {
   }
 } {abc abcd}
 
+# Tests of the MATCH operator
+#
+do_test like-2.3 {
+  proc test_match {a b} {
+    return [string match $a $b]
+  }
+  db function match test_match
+  execsql {
+    SELECT x FROM t1 WHERE x MATCH '*abc*' ORDER BY 1;
+  }
+} {{ABC abc xyz} abc abcd}
+do_test like-2.4 {
+  execsql {
+    SELECT x FROM t1 WHERE x MATCH 'abc*' ORDER BY 1;
+  }
+} {abc abcd}
+
 # For the remaining tests, we need to have the like optimizations
 # enabled.
 #
