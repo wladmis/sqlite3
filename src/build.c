@@ -1655,7 +1655,7 @@ int sqlite3ViewGetColumnNames(Parse *pParse, Table *pTable){
   if( sqlite3VtabCallConnect(pParse, pTable) ){
     return SQLITE_ERROR;
   }
-  if( pTable->isVirtual ) return 0;
+  if( IsVirtual(pTable) ) return 0;
 #endif
 
 #ifndef SQLITE_OMIT_VIEW
@@ -1981,11 +1981,9 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
     /* Remove the table entry from SQLite's internal schema and modify
     ** the schema cookie.
     */
-#ifndef SQLITE_OMIT_VIRTUALTABLE
-    if( pTab->isVirtual ){
+    if( IsVirtual(pTab) ){
       sqlite3VdbeOp3(v, OP_VDestroy, iDb, 0, pTab->zName, 0);
     }
-#endif
     sqlite3VdbeOp3(v, OP_DropTable, iDb, 0, pTab->zName, 0);
     sqlite3ChangeCookie(db, v, iDb);
   }

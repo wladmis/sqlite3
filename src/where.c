@@ -1790,7 +1790,7 @@ WhereInfo *sqlite3WhereBegin(
       }
       assert( pTabItem->pTab );
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-      if( pTabItem->pTab->isVirtual ){
+      if( IsVirtual(pTabItem->pTab) ){
         cost = bestVirtualIndex(pParse, &wc, pTabItem, notReady,
                                 ppOrderBy ? *ppOrderBy : 0, i==0,
                                 &pLevel->pIdxInfo);

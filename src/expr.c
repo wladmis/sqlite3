@@ -1489,7 +1489,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       }else if( pExpr->iColumn>=0 ){
         Table *pTab = pExpr->pTab;
         int iCol = pExpr->iColumn;
-        int op = (pTab && pTab->isVirtual) ? OP_VColumn : OP_Column;
+        int op = (pTab && IsVirtual(pTab)) ? OP_VColumn : OP_Column;
         sqlite3VdbeAddOp(v, op, pExpr->iTable, iCol);
         sqlite3ColumnDefault(v, pTab, iCol);
 #ifndef SQLITE_OMIT_FLOATING_POINT
@@ -1499,7 +1499,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
 #endif
       }else{
         Table *pTab = pExpr->pTab;
-        int op = (pTab && pTab->isVirtual) ? OP_VRowid : OP_Rowid;
+        int op = (pTab && IsVirtual(pTab)) ? OP_VRowid : OP_Rowid;
         sqlite3VdbeAddOp(v, op, pExpr->iTable, 0);
       }
       break;
