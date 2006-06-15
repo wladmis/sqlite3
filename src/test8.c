@@ -622,7 +622,6 @@ int echoUpdate(sqlite3_vtab *tab, int nData, sqlite3_value **apData){
 static sqlite3_module echoModule = {
   0,                         /* iVersion */
   "echo",                    /* zName */
-  0,                         /* pAux */
   echoCreate,
   echoConnect,
   echoBestIndex,
@@ -661,9 +660,8 @@ static int register_echo_module(
     return TCL_ERROR;
   }
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
-  echoModule.pAux = interp;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-  sqlite3_create_module(db, "echo", &echoModule);
+  sqlite3_create_module(db, "echo", &echoModule, (void *)interp);
 #endif
   return TCL_OK;
 }

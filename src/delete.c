@@ -45,7 +45,7 @@ int sqlite3IsReadOnly(Parse *pParse, Table *pTab, int viewOk){
   if( (pTab->readOnly && (pParse->db->flags & SQLITE_WriteSchema)==0
         && pParse->nested==0) 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-      || (pTab->pModule && pTab->pModule->xUpdate==0)
+      || (pTab->pMod && pTab->pMod->pModule->xUpdate==0)
 #endif
   ){
     sqlite3ErrorMsg(pParse, "table %s may not be modified", pTab->zName);

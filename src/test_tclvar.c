@@ -65,6 +65,7 @@ static int tclvarConnect(
 ** methods are identical. */
 static int tclvarDisconnect(sqlite3_vtab *pVtab){
   free(pVtab);
+  return SQLITE_OK;
 }
 /* The xDisconnect and xDestroy methods are also the same */
 
@@ -126,7 +127,6 @@ static int tclvarBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 static sqlite3_module tclvarModule = {
   0,                         /* iVersion */
   "tclvar",                  /* zName */
-  0,                         /* pAux */
   tclvarConnect,
   tclvarConnect,
   tclvarBestIndex,
@@ -164,9 +164,8 @@ static int register_tclvar_module(
     return TCL_ERROR;
   }
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
-  tclvarModule.pAux = interp;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-  sqlite3_create_module(db, "tclvar", &tclvarModule);
+  sqlite3_create_module(db, "tclvar", &tclvarModule, (void *)interp);
 #endif
   return TCL_OK;
 }

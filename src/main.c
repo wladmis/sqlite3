@@ -160,6 +160,10 @@ int sqlite3_close(sqlite3 *db){
   }
   sqlite3HashClear(&db->aCollSeq);
 #ifndef SQLITE_OMIT_VIRTUALTABLE
+  for(i=sqliteHashFirst(&db->aModule); i; i=sqliteHashNext(i)){
+    Module *pMod = (Module *)sqliteHashData(i);
+    sqliteFree(pMod);
+  }
   sqlite3HashClear(&db->aModule);
 #endif
 
