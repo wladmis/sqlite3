@@ -632,7 +632,7 @@ void sqlite3Insert(
     */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     if( IsVirtual(pTab) ){
-      sqlite3VdbeOp3(v, OP_VUpdate, 0, pTab->nCol+1,
+      sqlite3VdbeOp3(v, OP_VUpdate, 0, pTab->nCol+2,
                      (const char*)pTab->pVtab, P3_VTAB);
     }else
 #endif

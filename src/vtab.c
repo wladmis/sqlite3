@@ -194,12 +194,8 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
   }
 
   /* If we are rereading the sqlite_master table create the in-memory
-  ** record of the table. 
-  **
-  ** TODO: If the module is already registered, should we call xConnect()
-  ** here, or should it wait until the table is first referenced? Maybe
-  ** it's better to be lazy here, in case xConnect() is expensive to call
-  ** and the schema is reparsed a number of times.
+  ** record of the table. If the module has already been registered,
+  ** also call the xConnect method here.
   */
   else {
     Table *pOld;
