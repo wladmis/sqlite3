@@ -25,11 +25,14 @@ typedef struct echo_vtab echo_vtab;
 typedef struct echo_cursor echo_cursor;
 
 /* 
-** An echo virtual-table object 
+** An echo virtual-table object.
 **
-** If it is not NULL, the aHasIndex array is allocated so that it has
-** the same number of entries as there are columns in the underlying
-** real table.
+** echo.vtab.aIndex is an array of booleans. The nth entry is true if 
+** the nth column of the real table is the left-most column of an index
+** (implicit or otherwise). In other words, if SQLite can optimize
+** a query like "SELECT * FROM real_table WHERE col = ?".
+**
+** Member variable contains copies of the column names of the real table.
 */
 struct echo_vtab {
   sqlite3_vtab base;
