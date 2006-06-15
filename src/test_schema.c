@@ -39,7 +39,7 @@
 #ifdef SQLITE_TEST
   #include "sqliteInt.h"
   #include "tcl.h"
-  #define MALLOC(x) sqliteRawMalloc(x) 
+  #define MALLOC(x) sqliteMallocRaw(x) 
   #define FREE(x)   sqliteFree(x)
 #else
   #include "sqlite3ext.h"
