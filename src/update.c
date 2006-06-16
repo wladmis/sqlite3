@@ -475,6 +475,7 @@ void sqlite3Update(
     }
 
     /* Make the update */
+    pParse->pVirtualLock = pTab;
     sqlite3VdbeOp3(v, OP_VUpdate, 0, pTab->nCol+2, 
                       (const char*)pTab->pVtab, P3_VTAB);
   }

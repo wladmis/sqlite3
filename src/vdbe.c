@@ -4543,6 +4543,18 @@ case OP_TableLock: {        /* no-push */
 ** P3 is the name of a virtual table in database P1. Call the xCreate method
 ** for that table.
 */
+case OP_VBegin: {   /* no-push */
+  rc = sqlite3VtabBegin(db, (sqlite3_vtab *)pOp->p3);
+  break;
+}
+#endif /* SQLITE_OMIT_VIRTUALTABLE */
+
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+/* Opcode: VCreate P1 * P3
+**
+** P3 is the name of a virtual table in database P1. Call the xCreate method
+** for that table.
+*/
 case OP_VCreate: {   /* no-push */
   rc = sqlite3VtabCallCreate(db, pOp->p1, pOp->p3, &p->zErrMsg);
   break;

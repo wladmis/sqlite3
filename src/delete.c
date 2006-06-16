@@ -236,8 +236,7 @@ void sqlite3DeleteFrom(
         sqlite3VdbeAddOp(v, OP_Clear, pIdx->tnum, iDb);
       }
     }
-  }
-
+  } 
   /* The usual case: There is a WHERE clause so we have to scan through
   ** the table and pick which records to delete.
   */
@@ -312,6 +311,7 @@ void sqlite3DeleteFrom(
       /* Delete the row */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       if( IsVirtual(pTab) ){
+        pParse->pVirtualLock = pTab;
         sqlite3VdbeOp3(v, OP_VUpdate, 0, 1, (const char*)pTab->pVtab, P3_VTAB);
       }else
 #endif
