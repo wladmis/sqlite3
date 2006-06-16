@@ -301,6 +301,7 @@ static int register_schema_module(
     Tcl_WrongNumArgs(interp, 1, objv, "DB");
     return TCL_ERROR;
   }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   sqlite3_create_module(db, "schema", &schemaModule, 0);
 #endif

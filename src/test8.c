@@ -512,7 +512,12 @@ static void string_concat(char **pzStr, char *zAppend, int doFree){
 **    NULL       INTEGER    (nCol args)    INSERT (incl. rowid value)
 **
 */
-int echoUpdate(sqlite3_vtab *tab, int nData, sqlite3_value **apData){
+int echoUpdate(
+  sqlite3_vtab *tab, 
+  int nData, 
+  sqlite3_value **apData, 
+  sqlite_int64 *pRowid
+){
   echo_vtab *pVtab = (echo_vtab *)tab;
   sqlite3 *db = pVtab->db;
   int rc = SQLITE_OK;
@@ -557,7 +562,7 @@ int echoUpdate(sqlite3_vtab *tab, int nData, sqlite3_value **apData){
     int ii;
     char *zInsert = 0;
     char *zValues = 0;
-
+  
     zInsert = sqlite3_mprintf("INSERT OR REPLACE INTO %Q (", pVtab->zTableName);
     if( sqlite3_value_type(apData[1])==SQLITE_INTEGER ){
       bindArgOne = 1;
@@ -600,6 +605,10 @@ int echoUpdate(sqlite3_vtab *tab, int nData, sqlite3_value **apData){
     }
     sqlite3_step(pStmt);
     rc = sqlite3_finalize(pStmt);
+  }
+
+  if( pRowid && rc==SQLITE_OK ){
+    *pRowid = sqlite3_last_insert_rowid(db);
   }
 
   return rc;
