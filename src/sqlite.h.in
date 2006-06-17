@@ -1558,7 +1558,6 @@ struct sqlite3_module {
   int (*xSync)(sqlite3_vtab *pVTab);
   int (*xCommit)(sqlite3_vtab *pVTab);
   int (*xRollback)(sqlite3_vtab *pVTab);
-  int (*xIsInTrans)(sqlite3_vtab *pVTab);
 };
 
 /*

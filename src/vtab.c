@@ -447,7 +447,7 @@ static int callFinaliser(sqlite3 *db, int offset, int doDelete){
   for(i=0; rc==SQLITE_OK && i<db->nVTrans && db->aVTrans[i]; i++){
     sqlite3_vtab *pVtab = db->aVTrans[i];
     int (*x)(sqlite3_vtab *);
-    x = (int (*)(sqlite3_vtab *))((char *)pVtab->pModule + offset);
+    x = *(int (**)(sqlite3_vtab *))((char *)pVtab->pModule + offset);
     if( x ){
       rc = x(pVtab);
     }
