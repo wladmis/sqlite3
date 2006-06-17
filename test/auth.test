@@ -2225,6 +2225,7 @@ do_test auth-4.2 {
 } {115 117}
 do_test auth-4.3 {
   set authargs {}
+breakpoint
   execsql {
     UPDATE v1 SET x=1 WHERE x=117
   }

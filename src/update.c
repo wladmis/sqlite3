@@ -253,12 +253,6 @@ void sqlite3Update(
     }
   }
 
-  /* Start the view context
-  */
-  if( isView ){
-    sqlite3AuthContextPush(pParse, &sContext, pTab->zName);
-  }
-
   /* Begin generating code.
   */
   v = sqlite3GetVdbe(pParse);
@@ -282,6 +276,12 @@ void sqlite3Update(
   */
   if( sqlite3ExprResolveNames(&sNC, pWhere) ){
     goto update_cleanup;
+  }
+
+  /* Start the view context
+  */
+  if( isView ){
+    sqlite3AuthContextPush(pParse, &sContext, pTab->zName);
   }
 
   /* If we are trying to update a view, realize that view into
