@@ -16,9 +16,9 @@
 ** $Id$
 */
 
-/* The code in this file defines a sqlite3 module that provides
-** a read-only view of the current database schema. There is one
-** row in the schema table for each column in the database.
+/* The code in this file defines a sqlite3 virtual-table module that
+** provides a read-only view of the current database schema. There is one
+** row in the schema table for each column in the database schema.
 */
 #define SCHEMA \
 "CREATE TABLE x("                                                            \
@@ -332,7 +332,7 @@ int Sqlitetestschema_Init(Tcl_Interp *interp){
 /*
 ** Extension load function.
 */
-int schema_init(
+int sqlite3_extension_init(
   sqlite3 *db, 
   char **pzErrMsg, 
   const sqlite3_api_routines *pApi
