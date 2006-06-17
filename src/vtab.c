@@ -522,7 +522,7 @@ int sqlite3VtabBegin(sqlite3 *db, sqlite3_vtab *pVtab){
 
     /* Grow the sqlite3.aVTrans array if required */
     if( (db->nVTrans%ARRAY_INCR)==0 ){
-      sqlite3_vtab *aVTrans;
+      sqlite3_vtab **aVTrans;
       int nBytes = sizeof(sqlite3_vtab *) * (db->nVTrans + ARRAY_INCR);
       aVTrans = sqliteRealloc((void *)db->aVTrans, nBytes);
       if( !aVTrans ){
