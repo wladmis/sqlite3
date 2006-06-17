@@ -234,7 +234,10 @@ do_test vtab1-3.1 {
     CREATE VIRTUAL TABLE t1 USING echo(treal);
   }
   set echo_module
-} [list xCreate echo treal]
+} [list xCreate echo treal   \
+        xSync   echo(treal)  \
+        xCommit echo(treal)  \
+]
 
 # Test that a SELECT on t1 doesn't crash. No rows are returned
 # because the underlying real table is currently empty.
