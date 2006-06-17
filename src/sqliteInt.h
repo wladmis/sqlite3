@@ -1825,6 +1825,7 @@ void sqlite3CloseExtensions(sqlite3*);
 #  define sqlite3VtabRollback(X)
 #  define sqlite3VtabCommit(X)
 #else
+   void sqlite3VtabClear(Table*);
    void sqlite3VtabCodeLock(Parse *pParse, Table *pTab);
    int sqlite3VtabSync(sqlite3 *db, int rc);
    int sqlite3VtabRollback(sqlite3 *db);
