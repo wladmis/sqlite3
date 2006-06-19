@@ -983,6 +983,7 @@ static double bestVirtualIndex(
   WhereTerm *pTerm;
   int i, j;
   int nOrderBy;
+  int rc;
 
   /* If the sqlite3_index_info structure has not been previously
   ** allocated and initialized for this virtual table, then allocate
@@ -1122,7 +1123,14 @@ static double bestVirtualIndex(
   if( pIdxInfo->nOrderBy && !orderByUsable ){
     *(int*)&pIdxInfo->nOrderBy = 0;
   }
+
+  sqlite3SafetyOff(pParse->db);
   pTab->pVtab->pModule->xBestIndex(pTab->pVtab, pIdxInfo);
+  rc = sqlite3SafetyOn(pParse->db);
+  if( rc!=SQLITE_OK ){
+    sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
+  }
+
   *(int*)&pIdxInfo->nOrderBy = nOrderBy;
   return pIdxInfo->estimatedCost;
 }
