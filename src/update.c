@@ -141,10 +141,8 @@ void sqlite3Update(
   if( sqlite3IsReadOnly(pParse, pTab, triggers_exist) ){
     goto update_cleanup;
   }
-  if( isView ){
-    if( sqlite3ViewGetColumnNames(pParse, pTab) ){
-      goto update_cleanup;
-    }
+  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
+    goto update_cleanup;
   }
   aXRef = sqliteMallocRaw( sizeof(int) * pTab->nCol );
   if( aXRef==0 ) goto update_cleanup;

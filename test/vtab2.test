@@ -36,6 +36,5 @@ do_test vtab2-1.1 {
   main schema 6 dflt_value {} 0 {} 0 \
   main schema 7 pk         {} 0 {} 0 \
 ]
-
 finish_test
 

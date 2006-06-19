@@ -155,7 +155,7 @@ void sqlite3DeleteFrom(
 
   /* If pTab is really a view, make sure it has been initialized.
   */
-  if( isView && sqlite3ViewGetColumnNames(pParse, pTab) ){
+  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
     goto delete_from_cleanup;
   }
 
