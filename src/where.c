@@ -1720,6 +1720,7 @@ WhereInfo *sqlite3WhereBegin(
   if( sqlite3MallocFailed() ){
     goto whereBeginNoMem;
   }
+  pWInfo->nLevel = pTabList->nSrc;
   pWInfo->pParse = pParse;
   pWInfo->pTabList = pTabList;
   pWInfo->iBreak = sqlite3VdbeMakeLabel(v);
