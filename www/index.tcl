@@ -66,6 +66,16 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2006-Jun-19} {New Book About SQLite} {
+  <a href="http://www.apress.com/book/bookDisplay.html?bID=10130">
+  <i>The Definitive Guide to SQLite</i></a>, a new book by
+  <a href="http://www.mikesclutter.com">Mike Owens</a>.
+  is now available from <a href="http://www.apress.com">Apress</a>.
+  The books covers the latest SQLite internals as well as
+  the native C interface and bindings for PHP, Python,
+  Pearl, Ruby, Tcl, and Java.  Recommended.
+}
+
 newsitem {2006-Jun-6} {Version 3.3.6} {
   Changes include improved tolerance for windows virus scanners
   and faster :memory: databases.  There are also fixes for several
