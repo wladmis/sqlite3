@@ -253,6 +253,12 @@ proc db_list {} {
   return $y
 }
 
+ifcapable schema_pragmas&&tempdb {
+
+ifcapable !trigger {
+  execsql {create temp table dummy(dummy)}
+}
+
 # Ticket #1825
 #
 do_test attach3-12.1 {
@@ -332,5 +338,7 @@ do_test attach3-12.14 {
   }
   db_list
 } {main temp}
+
+} ;# ifcapable pragma
 
 finish_test

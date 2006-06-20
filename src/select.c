@@ -841,7 +841,6 @@ static const char *columnType(
       }
 
       assert( pTab );
-#ifndef SQLITE_OMIT_SUBQUERY
       if( pS ){
         /* The "table" is actually a sub-select or a view in the FROM clause
         ** of the SELECT statement. Return the declaration type and origin
@@ -859,9 +858,7 @@ static const char *columnType(
           sNC.pParse = pNC->pParse;
           zType = columnType(&sNC, p, &zOriginDb, &zOriginTab, &zOriginCol); 
         }
-      }else
-#endif
-      if( pTab->pSchema ){
+      }else if( pTab->pSchema ){
         /* A real table */
         assert( !pS );
         if( iCol<0 ) iCol = pTab->iPKey;

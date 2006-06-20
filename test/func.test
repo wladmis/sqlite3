@@ -581,6 +581,9 @@ do_test func-18.14 {
     SELECT sum(-9223372036854775805);
   }
 } -9223372036854775805
+
+ifcapable compound&&subquery {
+
 do_test func-18.15 {
   catchsql {
     SELECT sum(x) FROM 
@@ -629,6 +632,8 @@ do_test func-18.22 {
     SELECT sum(x) FROM (SELECT 10 AS x UNION ALL SELECT -9 AS x);
   }
 } {0 1}
+
+} ;# ifcapable compound&&subquery
 
 # Integer overflow on abs()
 #

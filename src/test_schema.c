@@ -92,7 +92,9 @@ static int schemaCreate(
   if( pVtab ){
     memset(pVtab, 0, sizeof(schema_vtab));
     pVtab->db = db;
+#ifndef SQLITE_OMIT_VIRTUALTABLE
     rc = sqlite3_declare_vtab(db, SCHEMA);
+#endif
   }
   *ppVtab = (sqlite3_vtab *)pVtab;
   return rc;
@@ -338,7 +340,9 @@ int sqlite3_extension_init(
   const sqlite3_api_routines *pApi
 ){
   SQLITE_EXTENSION_INIT2(pApi);
+#ifndef SQLITE_OMIT_VIRTUALTABLE
   sqlite3_create_module(db, "schema", &schemaModule, 0);
+#endif
   return 0;
 }
 

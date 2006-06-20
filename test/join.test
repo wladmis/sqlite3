@@ -446,6 +446,7 @@ ifcapable view {
 # Ticket #1697:  Left Join WHERE clause terms that contain an
 # aggregate subquery.
 #
+ifcapable subquery {
 do_test join-10.1 {
   execsql {
     CREATE TABLE t21(a,b,c);
@@ -455,5 +456,6 @@ do_test join-10.1 {
        (SELECT max(m.q) FROM t22 m JOIN t21 n ON n.b=m.p WHERE n.c=1);
   }  
 } {}
+} ;# ifcapable subquery
 
 finish_test

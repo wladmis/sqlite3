@@ -437,10 +437,12 @@ do_test limit-10.5 {
   list $rc $msg
 } {1 {datatype mismatch}}
 
+ifcapable subquery {
 do_test limit-11.1 {
   db eval {
      SELECT x FROM (SELECT x FROM t1 ORDER BY x LIMIT 0) ORDER BY x
   }
 } {}
+} ;# ifcapable subquery
 
 finish_test

@@ -1718,8 +1718,8 @@ int sqlite3ViewGetColumnNames(Parse *pParse, Table *pTable){
   } else {
     nErr++;
   }
-  return nErr;  
 #endif /* SQLITE_OMIT_VIEW */
+  return nErr;  
 }
 #endif /* !defined(SQLITE_OMIT_VIEW) || !defined(SQLITE_OMIT_VIRTUALTABLE) */
 
@@ -1903,9 +1903,11 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
       }else{
         code = SQLITE_DROP_VIEW;
       }
+#ifndef SQLITE_OMIT_VIRTUALTABLE
     }else if( IsVirtual(pTab) ){
       code = SQLITE_DROP_VTABLE;
       zArg2 = pTab->pMod->zName;
+#endif
     }else{
       if( !OMIT_TEMPDB && iDb==1 ){
         code = SQLITE_DROP_TEMP_TABLE;
@@ -1985,7 +1987,7 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
     sqlite3NestedParse(pParse, 
         "DELETE FROM %Q.%s WHERE tbl_name=%Q and type!='trigger'",
         pDb->zName, SCHEMA_TABLE(iDb), pTab->zName);
-    if( !isView ){
+    if( !isView && !IsVirtual(pTab) ){
       destroyTable(pParse, pTab);
     }
 

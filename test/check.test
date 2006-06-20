@@ -295,6 +295,8 @@ do_test check-5.2 {
   }
 } {1 {parameters prohibited in CHECK constraints}}
 
+ifcapable conflict {
+
 do_test check-6.1 {
   execsql {SELECT * FROM t1}
 } {4 11.0}
@@ -344,6 +346,6 @@ do_test check-6.9 {
   }
 } {3 12.0 2 20.0}
 
-
+}
 
 finish_test

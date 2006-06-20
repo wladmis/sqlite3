@@ -102,27 +102,29 @@ do_test vtab5.2.3 {
 
 # Test that it is impossible to create a triggger on a virtual table.
 #
-do_test vtab5.3.1 {
-  catchsql {
-    CREATE TRIGGER trig INSTEAD OF INSERT ON echo_strings BEGIN
-      SELECT 1, 2, 3;
-    END;
-  }
-} {1 {cannot create triggers on virtual tables}}
-do_test vtab5.3.2 {
-  catchsql {
-    CREATE TRIGGER trig AFTER INSERT ON echo_strings BEGIN
-      SELECT 1, 2, 3;
-    END;
-  }
-} {1 {cannot create triggers on virtual tables}}
-do_test vtab5.3.2 {
-  catchsql {
-    CREATE TRIGGER trig BEFORE INSERT ON echo_strings BEGIN
-      SELECT 1, 2, 3;
-    END;
-  }
-} {1 {cannot create triggers on virtual tables}}
+ifcapable trigger {
+  do_test vtab5.3.1 {
+    catchsql {
+      CREATE TRIGGER trig INSTEAD OF INSERT ON echo_strings BEGIN
+        SELECT 1, 2, 3;
+      END;
+    }
+  } {1 {cannot create triggers on virtual tables}}
+  do_test vtab5.3.2 {
+    catchsql {
+      CREATE TRIGGER trig AFTER INSERT ON echo_strings BEGIN
+        SELECT 1, 2, 3;
+      END;
+    }
+  } {1 {cannot create triggers on virtual tables}}
+  do_test vtab5.3.2 {
+    catchsql {
+      CREATE TRIGGER trig BEFORE INSERT ON echo_strings BEGIN
+        SELECT 1, 2, 3;
+      END;
+    }
+  } {1 {cannot create triggers on virtual tables}}
+}
 
 finish_test
 
