@@ -1213,8 +1213,8 @@ static int prepSelectStmt(Parse *pParse, Select *p){
         return 1;
       }
       pTab->nRef++;
-#ifndef SQLITE_OMIT_VIEW
-      if( pTab->pSelect ){
+#if !defined(SQLITE_OMIT_VIEW) || !defined (SQLITE_OMIT_VIRTUALTABLE)
+      if( pTab->pSelect || IsVirtual(pTab) ){
         /* We reach here if the named table is a really a view */
         if( sqlite3ViewGetColumnNames(pParse, pTab) ){
           return 1;
