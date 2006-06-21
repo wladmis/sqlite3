@@ -92,6 +92,7 @@ void sqlite3VtabBeginParse(
   int iDb;              /* The database the table is being created in */
   Table *pTable;        /* The new virtual table */
   Token *pDummy;        /* Dummy arg for sqlite3TwoPartName() */
+  char *zTab;
 
   sqlite3StartTable(pParse, pName1, pName2, 0, 0, 1, 0);
   pTable = pParse->pNewTable;
@@ -101,6 +102,8 @@ void sqlite3VtabBeginParse(
   pTable->isVirtual = 1;
   pTable->nModuleArg = 0;
   addModuleArgument(pTable, sqlite3NameFromToken(pModuleName));
+  zTab = sqlite3NameFromToken((pName2&&pName2->z)?pName2:pName1);
+  addModuleArgument(pTable, zTab);
   pParse->sNameToken.n = pModuleName->z + pModuleName->n - pName1->z;
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
