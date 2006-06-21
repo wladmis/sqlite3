@@ -1905,6 +1905,9 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
       }
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     }else if( IsVirtual(pTab) ){
+      if( sqlite3ViewGetColumnNames(pParse, pTab) ){
+        goto exit_drop_table;
+      }
       code = SQLITE_DROP_VTABLE;
       zArg2 = pTab->pMod->zName;
 #endif
