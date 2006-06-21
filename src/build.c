@@ -2304,6 +2304,12 @@ void sqlite3CreateIndex(
     goto exit_create_index;
   }
 #endif
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  if( IsVirtual(pTab) ){
+    sqlite3ErrorMsg(pParse, "virtual tables may not be indexed");
+    goto exit_create_index;
+  }
+#endif
 
   /*
   ** Find the name of the index.  Make sure there is not already another
