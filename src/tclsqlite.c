@@ -1618,14 +1618,14 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   */
   case DB_LAST_INSERT_ROWID: {
     Tcl_Obj *pResult;
-    int rowid;
+    Tcl_WideInt rowid;
     if( objc!=2 ){
       Tcl_WrongNumArgs(interp, 2, objv, "");
       return TCL_ERROR;
     }
     rowid = sqlite3_last_insert_rowid(pDb->db);
     pResult = Tcl_GetObjResult(interp);
-    Tcl_SetIntObj(pResult, rowid);
+    Tcl_SetWideIntObj(pResult, rowid);
     break;
   }
 
