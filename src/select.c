@@ -2008,6 +2008,7 @@ static void substExpr(Expr *pExpr, int iTable, ExprList *pEList){
       assert( pExpr->pList==0 );
       pExpr->pList = sqlite3ExprListDup(pNew->pList);
       pExpr->iTable = pNew->iTable;
+      pExpr->pTab = pNew->pTab;
       pExpr->iColumn = pNew->iColumn;
       pExpr->iAgg = pNew->iAgg;
       sqlite3TokenCopy(&pExpr->token, &pNew->token);

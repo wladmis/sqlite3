@@ -280,6 +280,11 @@ do_test vtab1-3.7 {
     SELECT rowid, * FROM t1;
   }
 } {1 1 2 3 2 4 5 6}
+do_test vtab1-3.8 {
+  execsql {
+    SELECT a AS d, b AS e, c AS f FROM t1;
+  }
+} {1 2 3 4 5 6}
 
 # Execute some SELECT statements with WHERE clauses on the t1 table.
 # Then check the echo_module variable (written to by the module methods
