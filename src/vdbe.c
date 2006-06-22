@@ -4651,10 +4651,13 @@ case OP_VFilter: {   /* no-push */
     }
 
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
-    res = pModule->xFilter(pCur->pVtabCursor, pTos->i, pOp->p3, nArg, apArg);
+    rc = pModule->xFilter(pCur->pVtabCursor, pTos->i, pOp->p3, nArg, apArg);
+    if( rc==SQLITE_OK ){
+      res = pModule->xEof(pCur->pVtabCursor);
+    }
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
 
-    if( res==0 ){
+    if( res ){
       pc = pOp->p2 - 1;
     }
   }
@@ -4759,11 +4762,14 @@ case OP_VNext: {   /* no-push */
     ** some other method is next invoked on the save virtual table cursor.
     */
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
-    res = pModule->xNext(pCur->pVtabCursor);
+    rc = pModule->xNext(pCur->pVtabCursor);
+    if( rc==SQLITE_OK ){
+      res = pModule->xEof(pCur->pVtabCursor);
+    }
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
 
-    if( res ){
-      /* If there is data (or an error), jump to P2 */
+    if( !res ){
+      /* If there is data, jump to P2 */
       pc = pOp->p2 - 1;
     }
   }

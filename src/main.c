@@ -203,10 +203,10 @@ void sqlite3RollbackAll(sqlite3 *db){
       db->aDb[i].inTrans = 0;
     }
   }
+  sqlite3VtabRollback(db);
   if( db->flags&SQLITE_InternChanges ){
     sqlite3ResetInternalSchema(db, 0);
   }
-  sqlite3VtabRollback(db);
 
   /* If one has been configured, invoke the rollback-hook callback */
   if( db->xRollbackCallback && (inTrans || !db->autoCommit) ){
