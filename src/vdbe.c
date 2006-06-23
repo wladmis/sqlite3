@@ -4600,6 +4600,8 @@ case OP_VOpen: {   /* no-push */
     if( pCur ){
       pCur->pVtabCursor = pVtabCursor;
       pCur->pModule = pVtabCursor->pVtab->pModule;
+    }else{
+      pModule->xClose(pVtabCursor);
     }
   }
   break;

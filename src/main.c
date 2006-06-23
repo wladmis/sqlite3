@@ -133,6 +133,8 @@ int sqlite3_close(sqlite3 *db){
     return SQLITE_ERROR;
   }
 
+  sqlite3VtabRollback(db);
+
   for(j=0; j<db->nDb; j++){
     struct Db *pDb = &db->aDb[j];
     if( pDb->pBt ){

@@ -259,6 +259,7 @@ static int echoConstructor(
   pVtab->db = db;
   pVtab->zTableName = sqlite3MPrintf("%s", argv[3]);
   if( !pVtab->zTableName ){
+    echoDestructor((sqlite3_vtab *)pVtab);
     return SQLITE_NOMEM;
   }
 
