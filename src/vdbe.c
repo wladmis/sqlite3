@@ -3894,10 +3894,20 @@ case OP_IdxIsNull: {        /* no-push */
 */
 case OP_Destroy: {
   int iMoved;
-  if( db->activeVdbeCnt>1 ){
+  Vdbe *pVdbe;
+  int iCnt = db->activeVdbeCnt;
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  iCnt = 0;
+  for(pVdbe=db->pVdbe; pVdbe; pVdbe=pVdbe->pNext){
+    if( pVdbe->magic==VDBE_MAGIC_RUN && pVdbe->inVtabMethod<2 && pVdbe->pc>=0 ){
+      iCnt++;
+    }
+  }
+#endif
+  if( iCnt>1 ){
     rc = SQLITE_LOCKED;
   }else{
-    assert( db->activeVdbeCnt==1 );
+    assert( iCnt==1 );
     rc = sqlite3BtreeDropTable(db->aDb[pOp->p2].pBt, pOp->p1, &iMoved);
     pTos++;
     pTos->flags = MEM_Int;
@@ -4568,7 +4578,9 @@ case OP_VCreate: {   /* no-push */
 ** of that table.
 */
 case OP_VDestroy: {   /* no-push */
+  p->inVtabMethod = 2;
   rc = sqlite3VtabCallDestroy(db, pOp->p1, pOp->p3);
+  p->inVtabMethod = 0;
   break;
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
