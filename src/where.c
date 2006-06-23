@@ -1125,10 +1125,16 @@ static double bestVirtualIndex(
   }
 
   sqlite3SafetyOff(pParse->db);
-  pTab->pVtab->pModule->xBestIndex(pTab->pVtab, pIdxInfo);
-  rc = sqlite3SafetyOn(pParse->db);
+  rc = pTab->pVtab->pModule->xBestIndex(pTab->pVtab, pIdxInfo);
   if( rc!=SQLITE_OK ){
-    sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
+    if( rc==SQLITE_NOMEM ){
+      sqlite3FailedMalloc();
+    }else {
+      sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
+    }
+    sqlite3SafetyOn(pParse->db);
+  }else{
+    rc = sqlite3SafetyOn(pParse->db);
   }
 
   *(int*)&pIdxInfo->nOrderBy = nOrderBy;

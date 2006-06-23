@@ -149,6 +149,7 @@ proc finalize_testing {} {
   catch {
     pp_check_for_leaks
   }
+breakpoint
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close

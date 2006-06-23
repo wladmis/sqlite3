@@ -1820,13 +1820,11 @@ void sqlite3CloseExtensions(sqlite3*);
 
 #ifdef SQLITE_OMIT_VIRTUALTABLE
 #  define sqlite3VtabClear(X)
-#  define sqlite3VtabCodeLock(X,Y)
 #  define sqlite3VtabSync(X,Y) (Y)
 #  define sqlite3VtabRollback(X)
 #  define sqlite3VtabCommit(X)
 #else
    void sqlite3VtabClear(Table*);
-   void sqlite3VtabCodeLock(Parse *pParse, Table *pTab);
    int sqlite3VtabSync(sqlite3 *db, int rc);
    int sqlite3VtabRollback(sqlite3 *db);
    int sqlite3VtabCommit(sqlite3 *db);

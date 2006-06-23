@@ -55,6 +55,7 @@ set EXCLUDE {
   btree8.test
   utf16.test
   shared_err.test
+  vtab_err.test
 }
 
 if {[sqlite3 -has-codec]} {
