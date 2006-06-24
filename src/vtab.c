@@ -178,9 +178,6 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
     char *zWhere;
     int iDb;
     Vdbe *v;
-    if( !pMod ){
-      sqlite3ErrorMsg(pParse, "no such module: %s", zModule);
-    }
 
     /* Compute the complete text of the CREATE VIRTUAL TABLE statement */
     if( pEnd ){

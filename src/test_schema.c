@@ -170,7 +170,7 @@ static int schemaEof(sqlite3_vtab_cursor *cur){
 ** Advance the cursor to the next row.
 */
 static int schemaNext(sqlite3_vtab_cursor *cur){
-  int rc;
+  int rc = SQLITE_OK;
   schema_cursor *pCur = (schema_cursor *)cur;
   schema_vtab *pVtab = (schema_vtab *)(cur->pVtab);
   char *zSql = 0;
