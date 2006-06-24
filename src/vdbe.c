@@ -4548,9 +4548,9 @@ case OP_TableLock: {        /* no-push */
 #endif /* SQLITE_OMIT_SHARED_CACHE */
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-/* Opcode: VCreate P1 * P3
+/* Opcode: VBegin * * P3
 **
-** P3 is the name of a virtual table in database P1. Call the xCreate method
+** P3 a pointer to an sqlite3_vtab structure. Call the xBegin method 
 ** for that table.
 */
 case OP_VBegin: {   /* no-push */

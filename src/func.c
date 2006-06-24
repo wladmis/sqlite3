@@ -681,13 +681,13 @@ static void soundexFunc(sqlite3_context *context, int argc, sqlite3_value **argv
 ** A function that loads a shared-library extension then returns NULL.
 */
 static void loadExt(sqlite3_context *context, int argc, sqlite3_value **argv){
-  const char *zFile = sqlite3_value_text(argv[0]);
+  const char *zFile = (const char *)sqlite3_value_text(argv[0]);
   const char *zProc = 0;
   sqlite3 *db = sqlite3_user_data(context);
   char *zErrMsg = 0;
 
   if( argc==2 ){
-    zProc = sqlite3_value_text(argv[1]);
+    zProc = (const char *)sqlite3_value_text(argv[1]);
   }
   if( sqlite3_load_extension(db, zFile, zProc, &zErrMsg) ){
     sqlite3_result_error(context, zErrMsg, -1);

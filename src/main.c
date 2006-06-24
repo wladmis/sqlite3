@@ -474,6 +474,7 @@ int sqlite3CreateFunc(
     p->xStep = xStep;
     p->xFinalize = xFinal;
     p->pUserData = pUserData;
+    p->nArg = nArg;
   }
   return SQLITE_OK;
 }

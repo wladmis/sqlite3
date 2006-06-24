@@ -1900,7 +1900,7 @@ WhereInfo *sqlite3WhereBegin(
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       else if( pLevel->pIdxInfo ){
         sqlite3_index_info *pIdxInfo = pLevel->pIdxInfo;
-        zMsg = sqlite3MPrintf("%z VIRTUAL TABLE INDEX %d:%s",
+        zMsg = sqlite3MPrintf("%z VIRTUAL TABLE INDEX %d:%s", zMsg,
                     pIdxInfo->idxNum, pIdxInfo->idxStr);
       }
 #endif

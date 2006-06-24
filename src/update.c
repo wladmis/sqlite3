@@ -571,10 +571,9 @@ static void updateVirtualTable(
   if( pRowid ){
     pEList = sqlite3ExprListAppend(pEList, sqlite3ExprDup(pRowid), 0);
   }
+  assert( pTab->iPKey<0 );
   for(i=0; i<pTab->nCol; i++){
-    if( i==pTab->iPKey ){
-      pExpr = sqlite3Expr(TK_NULL, 0, 0, 0);
-    }else if( aXRef[i]>=0 ){
+    if( aXRef[i]>=0 ){
       pExpr = sqlite3ExprDup(pChanges->a[aXRef[i]].pExpr);
     }else{
       pExpr = sqlite3CreateIdExpr(pTab->aCol[i].zName);
