@@ -763,5 +763,17 @@ do_test vtab1.9-2 {
   }
 } {r}
 
+do_test vtab1.9-3 {
+  set echo_module ""
+  execsql {
+    CREATE VIRTUAL TABLE e USING echo(r, e_log, virtual 1 2 3 varchar(32));
+  }
+  set echo_module
+} [list                                                        \
+  xCreate echo main e r e_log {virtual 1 2 3 varchar(32)}      \
+  xSync echo(r)                                                \
+  xCommit echo(r)                                              \
+]
+
 finish_test
 

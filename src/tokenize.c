@@ -484,10 +484,6 @@ abort_parse:
   }
 #endif
 
-#ifndef SQLITE_OMIT_VIRTUALTABLE
-  sqliteFree(pParse->zArg);
-#endif
-
   if( !IN_DECLARE_VTAB ){
     /* If the pParse->declareVtab flag is set, do not delete any table 
     ** structure built up in pParse->pNewTable. The calling code (see vtab.c)

@@ -1307,9 +1307,7 @@ struct Parse {
   TriggerStack *trigStack;  /* Trigger actions being coded */
   const char *zAuthContext; /* The 6th parameter to db->xAuth callbacks */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-  int nArgAlloc;             /* Number of bytes allocated for zArg[] */
-  int nArgUsed;              /* Number of bytes of zArg[] used so far */
-  char *zArg;                /* Complete text of a module argument */
+  Token sArg;                /* Complete text of a module argument */
   u8 declareVtab;            /* True if inside sqlite3_declare_vtab() */
   Table *pVirtualLock;       /* Require virtual table lock on this table */
 #endif
