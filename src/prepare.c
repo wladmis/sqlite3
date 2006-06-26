@@ -499,6 +499,9 @@ int sqlite3_prepare(
   if( sParse.rc==SQLITE_SCHEMA ){
     sqlite3ResetInternalSchema(db, 0);
   }
+  if( sqlite3MallocFailed() ){
+    sParse.rc = SQLITE_NOMEM;
+  }
   if( pzTail ) *pzTail = sParse.zTail;
   rc = sParse.rc;
 
