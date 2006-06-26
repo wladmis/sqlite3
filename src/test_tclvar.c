@@ -136,6 +136,7 @@ static sqlite3_module tclvarModule = {
   tclvarClose,                 /* xClose - close a cursor */
   tclvarFilter,                /* xFilter - configure scan constraints */
   tclvarNext,                  /* xNext - advance a cursor */
+  0,                           /* xEof - check for end of scan */
   tclvarColumn,                /* xColumn - read data */
   tclvarRowid                  /* xRowid - read data */
 };
