@@ -32,7 +32,7 @@ if {![file exists $testextension]} {
   set srcdir [file dir $testdir]/src
   set testextsrc $srcdir/test_loadext.c
   if {[catch {
-    exec gcc -shared $testextsrc -o $testextension
+    exec gcc -Wall -g -shared $testextsrc -o $testextension
   } msg]} {
     puts "Skipping loadext tests: Test extension not built..."
     puts $msg

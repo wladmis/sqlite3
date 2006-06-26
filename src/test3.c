@@ -585,6 +585,7 @@ static int btree_integrity_check(
 #else
   zResult = 0;
 #endif
+  free(aRoot);
   if( zResult ){
     Tcl_AppendResult(interp, zResult, 0);
     sqliteFree(zResult); 
