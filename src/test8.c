@@ -902,7 +902,6 @@ static int echoRollback(sqlite3_vtab *tab){
 */
 static sqlite3_module echoModule = {
   0,                         /* iVersion */
-  "echo",                    /* zName */
   echoCreate,
   echoConnect,
   echoBestIndex,

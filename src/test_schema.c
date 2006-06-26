@@ -269,7 +269,6 @@ static int schemaBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 */
 static sqlite3_module schemaModule = {
   0,                           /* iVersion */
-  "schema",                    /* zName */
   schemaCreate,
   schemaCreate,
   schemaBestIndex,

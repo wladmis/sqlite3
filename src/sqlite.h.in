@@ -1536,7 +1536,6 @@ typedef struct sqlite3_module sqlite3_module;
 */
 struct sqlite3_module {
   int iVersion;
-  const char *zName;
   int (*xCreate)(sqlite3*, void *pAux,
                int argc, char **argv,
                sqlite3_vtab **ppVTab);

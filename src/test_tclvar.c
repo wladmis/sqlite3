@@ -126,7 +126,6 @@ static int tclvarBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 */
 static sqlite3_module tclvarModule = {
   0,                         /* iVersion */
-  "tclvar",                  /* zName */
   tclvarConnect,
   tclvarConnect,
   tclvarBestIndex,
