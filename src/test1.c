@@ -222,7 +222,7 @@ static int test_exec_printf(
   Tcl_AppendElement(interp, zBuf);
   Tcl_AppendElement(interp, rc==SQLITE_OK ? Tcl_DStringValue(&str) : zErr);
   Tcl_DStringFree(&str);
-  if( zErr ) free(zErr);
+  if( zErr ) sqlite3_free(zErr);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   return TCL_OK;
 }
@@ -317,7 +317,7 @@ static int test_get_table_printf(
     Tcl_AppendElement(interp, zErr);
   }
   sqlite3_free_table(aResult);
-  if( zErr ) free(zErr);
+  if( zErr ) sqlite3_free(zErr);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   return TCL_OK;
 }
