@@ -16,6 +16,7 @@
 */
 #include "sqliteInt.h"
 
+#ifndef SQLITE_OMIT_VIRTUALTABLE
 /* Forward declaration */
 static void updateVirtualTable(
   Parse *pParse,       /* The parsing context */
@@ -26,6 +27,7 @@ static void updateVirtualTable(
   int *aXRef,          /* Mapping from columns of pTab to entries in pChanges */
   Expr *pWhere         /* WHERE clause of the UPDATE statement */
 );
+#endif /* SQLITE_OMIT_VIRTUALTABLE */
 
 /*
 ** The most recently coded instruction was an OP_Column to retrieve the

@@ -684,11 +684,11 @@ void sqlite3ReallocOrFree(void **pp, int n){
 */
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 void *sqlite3ThreadSafeMalloc(int n){
-  ENTER_MALLOC;
+  (void)ENTER_MALLOC;
   return sqlite3Malloc(n, 0);
 }
 void sqlite3ThreadSafeFree(void *p){
-  ENTER_MALLOC;
+  (void)ENTER_MALLOC;
   if( p ){
     OSFREE(p);
   }
