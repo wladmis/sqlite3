@@ -1810,7 +1810,12 @@ int sqlite3MallocFailed(void);
 void sqlite3FailedMalloc(void);
 void sqlite3AbortOtherActiveVdbes(sqlite3 *, Vdbe *);
 int sqlite3OpenTempDatabase(Parse *);
-void sqlite3CloseExtensions(sqlite3*);
+
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
+  void sqlite3CloseExtensions(sqlite3*);
+#else
+# define sqlite3CloseExtensions(X)
+#endif
 
 #ifndef SQLITE_OMIT_SHARED_CACHE
   void sqlite3TableLock(Parse *, int, int, u8, const char *);
