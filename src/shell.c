@@ -807,6 +807,9 @@ static void open_db(struct callback_data *p){
           p->zDbFilename, sqlite3_errmsg(db));
       exit(1);
     }
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
+    sqlite3_enable_load_extension(p->db, 1);
+#endif
   }
 }
 

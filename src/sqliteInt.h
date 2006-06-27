@@ -536,9 +536,10 @@ struct sqlite3 {
 #define SQLITE_NoReadlock     0x00001000  /* Readlocks are omitted when 
                                           ** accessing read-only databases */
 #define SQLITE_IgnoreChecks   0x00002000  /* Do not enforce check constraints */
-#define SQLITE_ReadUncommitted 0x00004000  /* For shared-cache mode */
+#define SQLITE_ReadUncommitted 0x00004000 /* For shared-cache mode */
 #define SQLITE_LegacyFileFmt  0x00008000  /* Create new databases in format 1 */
 #define SQLITE_FullFSync      0x00010000  /* Use full fsync on the backend */
+#define SQLITE_LoadExtension  0x00020000  /* Enable load_extension */
 
 /*
 ** Possible values for the sqlite.magic field.
