@@ -2045,7 +2045,7 @@ WhereInfo *sqlite3WhereBegin(
         int k;
         for(k=0; k<nConstraint; k++){
           if( aUsage[k].argvIndex==j ){
-            int iTerm = aConstraint[j-1].iTermOffset;
+            int iTerm = aConstraint[k].iTermOffset;
             sqlite3ExprCode(pParse, wc.a[iTerm].pExpr->pRight);
             break;
           }
