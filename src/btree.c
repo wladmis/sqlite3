@@ -6559,6 +6559,13 @@ int sqlite3BtreeIsInStmt(Btree *p){
 }
 
 /*
+** Return non-zero if a read (or write) transaction is active.
+*/
+int sqlite3BtreeIsInReadTrans(Btree *p){
+  return (p && (p->inTrans!=TRANS_NONE));
+}
+
+/*
 ** This call is a no-op if no write-transaction is currently active on pBt.
 **
 ** Otherwise, sync the database file for the btree pBt. zMaster points to
