@@ -804,7 +804,7 @@ or_not_possible:
       pNewTerm->leftColumn = pLeft->iColumn;
       pNewTerm->eOperator = WO_MATCH;
       pNewTerm->iParent = idxTerm;
-      pTerm = &pWC->a[idxNew];
+      pTerm = &pWC->a[idxTerm];
       pTerm->nChild = 1;
       pTerm->flags |= TERM_COPIED;
       pNewTerm->prereqAll = pTerm->prereqAll;
