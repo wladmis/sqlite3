@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable legacyformat {
+  finish_test
+  return
+}
+
 # This procedure sets the value of the file-format in file 'test.db'
 # to $newval. Also, the schema cookie is incremented.
 # 
