@@ -37,5 +37,34 @@ do_test vtab2-1.1 {
   main schema 7 pk         {} 0 {} 0 \
 ]
 
+register_tclvar_module [sqlite3_connection_pointer db]
+do_test vtab2-2.1 {
+  set ::abc 123
+  execsql {
+    CREATE VIRTUAL TABLE vars USING tclvar;
+    SELECT * FROM vars WHERE name='abc';
+  }
+} [list abc "" 123]
+do_test vtab2-2.2 {
+  set A(1) 1
+  set A(2) 4
+  set A(3) 9
+  execsql {
+    SELECT * FROM vars WHERE name='A';
+  }
+} [list A 1 1 A 2 4 A 3 9]
+do_test vtab2-2.3 {
+  execsql {
+    SELECT name, value FROM vars
+      WHERE name MATCH 'tcl_*' AND arrayname = '' 
+      ORDER BY name;
+  }
+} [list \
+  tcl_patchLevel $tcl_patchLevel            \
+  tcl_pkgPath $tcl_pkgPath                  \
+  tcl_precision $tcl_precision              \
+  tcl_version $tcl_version                  \
+]
+
 finish_test
 
