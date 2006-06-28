@@ -3895,7 +3895,7 @@ case OP_IdxIsNull: {        /* no-push */
 case OP_Destroy: {
   int iMoved;
   Vdbe *pVdbe;
-  int iCnt = db->activeVdbeCnt;
+  int iCnt;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   iCnt = 0;
   for(pVdbe=db->pVdbe; pVdbe; pVdbe=pVdbe->pNext){
@@ -3903,6 +3903,8 @@ case OP_Destroy: {
       iCnt++;
     }
   }
+#else
+  iCnt = db->activeVdbeCnt;
 #endif
   if( iCnt>1 ){
     rc = SQLITE_LOCKED;
@@ -3912,11 +3914,11 @@ case OP_Destroy: {
     pTos++;
     pTos->flags = MEM_Int;
     pTos->i = iMoved;
-  #ifndef SQLITE_OMIT_AUTOVACUUM
+#ifndef SQLITE_OMIT_AUTOVACUUM
     if( rc==SQLITE_OK && iMoved!=0 ){
       sqlite3RootPageMoved(&db->aDb[pOp->p2], iMoved, pOp->p1);
     }
-  #endif
+#endif
   }
   break;
 }

@@ -19,6 +19,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !vtab {
+  finish_test
+  return
+}
+
 register_echo_module [sqlite3_connection_pointer db]
 
 execsql {
