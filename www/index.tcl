@@ -73,7 +73,7 @@ newsitem {2006-Jun-19} {New Book About SQLite} {
   is now available from <a href="http://www.apress.com">Apress</a>.
   The books covers the latest SQLite internals as well as
   the native C interface and bindings for PHP, Python,
-  Pearl, Ruby, Tcl, and Java.  Recommended.
+  Perl, Ruby, Tcl, and Java.  Recommended.
 }
 
 newsitem {2006-Jun-6} {Version 3.3.6} {
