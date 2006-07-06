@@ -3231,6 +3231,33 @@ static int get_autocommit(
 }
 
 /*
+** Usage: sqlite3_busy_timeout DB MS
+**
+** Set the busy timeout.  This is more easily done using the timeout
+** method of the TCL interface.  But we need a way to test the case
+** where it returns SQLITE_MISUSE.
+*/
+static int test_busy_timeout(
+  void * clientData,
+  Tcl_Interp *interp,
+  int argc,
+  char **argv
+){
+  int rc, ms;
+  sqlite3 *db;
+  if( argc!=3 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0], 
+        " DB", 0);
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
+  if( Tcl_GetInt(interp, argv[2], &ms) ) return TCL_ERROR;
+  rc = sqlite3_busy_timeout(db, ms);
+  Tcl_AppendResult(interp, sqlite3TestErrorName(rc), 0);
+  return TCL_OK;
+}
+
+/*
 ** Usage:  tcl_variable_type VARIABLENAME
 **
 ** Return the name of the internal representation for the
@@ -3715,6 +3742,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite_delete_collation",       (Tcl_CmdProc*)delete_collation      },
      { "sqlite3_get_autocommit",        (Tcl_CmdProc*)get_autocommit        },
      { "sqlite3_stack_used",            (Tcl_CmdProc*)test_stack_used       },
+     { "sqlite3_busy_timeout",          (Tcl_CmdProc*)test_busy_timeout     },
   };
   static struct {
      char *zName;
