@@ -918,7 +918,8 @@ static sqlite3_module echoModule = {
   echoBegin,                 /* xBegin - begin transaction */
   echoSync,                  /* xSync - sync transaction */
   echoCommit,                /* xCommit - commit transaction */
-  echoRollback               /* xRollback - rollback transaction */
+  echoRollback,              /* xRollback - rollback transaction */
+  0,                         /* xFindMethod - function overloading */
 };
 
 /*

@@ -281,6 +281,12 @@ static sqlite3_module schemaModule = {
   schemaEof,                   /* xEof */
   schemaColumn,                /* xColumn - read data */
   schemaRowid,                 /* xRowid - read data */
+  0,                           /* xUpdate */
+  0,                           /* xBegin */
+  0,                           /* xSync */
+  0,                           /* xCommit */
+  0,                           /* xRollback */
+  0,                           /* xFindMethod */
 };
 
 
