@@ -1566,8 +1566,8 @@ struct sqlite3_module {
   int (*xCommit)(sqlite3_vtab *pVTab);
   int (*xRollback)(sqlite3_vtab *pVTab);
   int (*xFindFunction)(sqlite3_vtab *pVtab, int nArg, const char *zName,
-                       int (**pxFunc)(sqlite3_context*,int,sqlite3_value**),
-                       void **ppArg, int *piPrefEnc);
+                       void (**pxFunc)(sqlite3_context*,int,sqlite3_value**),
+                       void **ppArg);
 };
 
 /*

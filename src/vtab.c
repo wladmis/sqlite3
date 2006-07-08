@@ -594,9 +594,8 @@ FuncDef *sqlite3VtabOverloadFunction(
   Table *pTab;
   sqlite3_vtab *pVtab;
   sqlite3_module *pMod;
-  int (*xFunc)(sqlite3_context*,int,sqlite3_value**);
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value**);
   void *pArg;
-  int iEnc;
   int rc;
   FuncDef *pNew;
 
@@ -614,7 +613,7 @@ FuncDef *sqlite3VtabOverloadFunction(
  
   /* Call the xFuncFunction method on the virtual table implementation
   ** to see if the implementation wants to overload this function */
-  if( pMod->xFindFunction(pVtab, nArg, pDef->zName, &xFunc, &pArg, &iEnc)==0 ){
+  if( pMod->xFindFunction(pVtab, nArg, pDef->zName, &xFunc, &pArg)==0 ){
     return pDef;
   }
 
@@ -628,7 +627,6 @@ FuncDef *sqlite3VtabOverloadFunction(
   strcpy(pNew->zName, pDef->zName);
   pNew->xFunc = xFunc;
   pNew->pUserData = pArg;
-  pNew->iPrefEnc = iEnc;
   pNew->flags |= SQLITE_FUNC_EPHEM;
   return pNew;
 }

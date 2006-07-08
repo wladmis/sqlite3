@@ -833,5 +833,29 @@ do_test vtab1.10-6 {
   xFilter {SELECT rowid, * FROM 'r'}    \
 ]
 
-finish_test
 
+# Testing the xFindFunction interface
+#
+do_test vtab1.11-1 {
+  execsql {
+    INSERT INTO r(a,b,c) VALUES(1,'?',99);
+    INSERT INTO r(a,b,c) VALUES(2,3,99);
+    SELECT a GLOB b FROM e
+  }
+} {1 0}
+proc ::echo_glob_overload {a b} {
+ return [list $b $a]
+}
+do_test vtab1.11-2 {
+  execsql {
+    SELECT a like b FROM e
+  }
+} {0 0}
+do_test vtab1.11-3 {
+  execsql {
+    SELECT a glob b FROM e
+  }
+} {{1 ?} {2 3}}
+
+
+finish_test
