@@ -848,14 +848,23 @@ proc ::echo_glob_overload {a b} {
 }
 do_test vtab1.11-2 {
   execsql {
-    SELECT a like b FROM e
+    SELECT a like 'b' FROM e
   }
 } {0 0}
 do_test vtab1.11-3 {
   execsql {
-    SELECT a glob b FROM e
+    SELECT a glob '2' FROM e
   }
-} {{1 ?} {2 3}}
-
+} {{1 2} {2 2}}
+do_test vtab1.11-4 {
+  execsql {
+    SELECT  glob('2',a) FROM e
+  }
+} {0 1}
+do_test vtab1.11-5 {
+  execsql {
+    SELECT  glob(a,'2') FROM e
+  }
+} {{2 1} {2 2}}
 
 finish_test

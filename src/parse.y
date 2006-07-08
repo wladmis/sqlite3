@@ -706,6 +706,7 @@ expr(A) ::= expr(X) likeop(OP) expr(Y) escape(E).  [LIKE_KW]  {
   A = sqlite3ExprFunction(pList, &OP.eOperator);
   if( OP.not ) A = sqlite3Expr(TK_NOT, A, 0, 0);
   sqlite3ExprSpan(A, &X->span, &Y->span);
+  if( A ) A->flags |= EP_InfixFunc;
 }
 
 expr(A) ::= expr(X) ISNULL|NOTNULL(E). {

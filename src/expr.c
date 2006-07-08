@@ -1675,7 +1675,16 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       assert( pDef!=0 );
       nExpr = sqlite3ExprCodeExprList(pParse, pList);
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-      if( nExpr>0 ){
+      if( nExpr>=2 && (pExpr->flags & EP_InfixFunc) ){
+        /* For infix functions GLOB, LIKE, REGEXP, and MATCH, check
+        ** the second argument to the function which is operand to
+        ** left of the function name.  Users normally consider the
+        ** left operand to be the first argument, even though it is
+        ** really the second argument to the underlying function. */
+        pDef = sqlite3VtabOverloadFunction(pDef, nExpr, pList->a[1].pExpr);
+      }else if( nExpr>0 ){
+        /* For normal functions, go by the first argument - the first
+        ** argument after the "(" that follows the function name */
         pDef = sqlite3VtabOverloadFunction(pDef, nExpr, pList->a[0].pExpr);
       }
 #endif

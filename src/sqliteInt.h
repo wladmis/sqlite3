@@ -988,7 +988,7 @@ struct AggInfo {
 struct Expr {
   u8 op;                 /* Operation performed by this node */
   char affinity;         /* The affinity of the column or 0 if not a column */
-  u8 flags;              /* Various flags.  See below */
+  u16 flags;             /* Various flags.  See below */
   CollSeq *pColl;        /* The collation type of the column or 0 */
   Expr *pLeft, *pRight;  /* Left and right subnodes */
   ExprList *pList;       /* A list of expressions used as function arguments
@@ -1016,6 +1016,7 @@ struct Expr {
 #define EP_Distinct     0x10  /* Aggregate function with DISTINCT keyword */
 #define EP_VarSelect    0x20  /* pSelect is correlated, not constant */
 #define EP_Dequoted     0x40  /* True if the string has been dequoted */
+#define EP_InfixFunc    0x80  /* True for an infix function: LIKE, GLOB, etc */
 
 /*
 ** These macros can be used to test, set, or clear bits in the 
