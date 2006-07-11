@@ -854,7 +854,7 @@ void sqlite3StartTable(
     lbl = sqlite3VdbeMakeLabel(v);
     sqlite3VdbeAddOp(v, OP_If, 0, lbl);
     fileFormat = (db->flags & SQLITE_LegacyFileFmt)!=0 ?
-                  1 : SQLITE_DEFAULT_FILE_FORMAT;
+                  1 : SQLITE_MAX_FILE_FORMAT;
     sqlite3VdbeAddOp(v, OP_Integer, fileFormat, 0);
     sqlite3VdbeAddOp(v, OP_SetCookie, iDb, 1);
     sqlite3VdbeAddOp(v, OP_Integer, ENC(db), 0);
