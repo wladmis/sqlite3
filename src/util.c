@@ -1357,8 +1357,10 @@ void *sqlite3HexToBlob(const char *z){
   if( n%2 ) return 0;
 
   zBlob = (char *)sqliteMalloc(n/2);
-  for(i=0; i<n; i+=2){
-    zBlob[i/2] = (hexToInt(z[i])<<4) | hexToInt(z[i+1]);
+  if( zBlob ){
+    for(i=0; i<n; i+=2){
+      zBlob[i/2] = (hexToInt(z[i])<<4) | hexToInt(z[i+1]);
+    }
   }
   return zBlob;
 }

@@ -136,7 +136,7 @@ do_malloc_test 1 -tclprep {
      primary key(a,b,c)
   );
   CREATE INDEX i1 ON t1(a,b);
-  INSERT INTO t1 VALUES(1,2.3,4.5,'hi','there');
+  INSERT INTO t1 VALUES(1,2.3,4.5,'hi',x'746865726500');
   INSERT INTO t1 VALUES(6,7.0,0.8,'hello','out yonder');
   SELECT * FROM t1;
   SELECT avg(b) FROM t1 GROUP BY a HAVING b>20.0;
