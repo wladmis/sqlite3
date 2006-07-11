@@ -212,6 +212,19 @@ Expr *sqlite3Expr(int op, Expr *pLeft, Expr *pRight, const Token *pToken){
 }
 
 /*
+** Works like sqlite3Expr() but frees its pLeft and pRight arguments
+** if it fails due to a malloc problem.
+*/
+Expr *sqlite3ExprOrFree(int op, Expr *pLeft, Expr *pRight, const Token *pToken){
+  Expr *pNew = sqlite3Expr(op, pLeft, pRight, pToken);
+  if( pNew==0 ){
+    sqlite3ExprDelete(pLeft);
+    sqlite3ExprDelete(pRight);
+  }
+  return pNew;
+}
+
+/*
 ** When doing a nested parse, you can include terms in an expression
 ** that look like this:   #0 #1 #2 ...  These terms refer to elements
 ** on the stack.  "#0" means the top of the stack.
