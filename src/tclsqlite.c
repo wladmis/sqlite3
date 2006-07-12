@@ -1568,6 +1568,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
         Tcl_SetObjResult(interp, pRet);
       }
       Tcl_DecrRefCount(pRet);
+    }else if( rc==TCL_OK ){
+      Tcl_ResetResult(interp);
     }
     break;
   }
