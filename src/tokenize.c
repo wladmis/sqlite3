@@ -394,7 +394,9 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   extern void sqlite3ParserFree(void*, void(*)(void*));
   extern int sqlite3Parser(void*, int, Token, Parse*);
 
-  db->u1.isInterrupted = 0;
+  if( db->activeVdbeCnt==0 ){
+    db->u1.isInterrupted = 0;
+  }
   pParse->rc = SQLITE_OK;
   i = 0;
   pEngine = sqlite3ParserAlloc((void*(*)(int))sqlite3MallocX);

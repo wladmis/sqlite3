@@ -4048,6 +4048,7 @@ case OP_ParseSchema: {        /* no-push */
   db->init.busy = 1;
   assert( !sqlite3MallocFailed() );
   rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
+  if( rc==SQLITE_ABORT ) rc = initData.rc;
   sqliteFree(zSql);
   db->init.busy = 0;
   sqlite3SafetyOn(db);
@@ -4971,7 +4972,6 @@ abort_due_to_error:
   */
 abort_due_to_interrupt:
   assert( db->u1.isInterrupted );
-  db->u1.isInterrupted = 0;
   if( db->magic!=SQLITE_MAGIC_BUSY ){
     rc = SQLITE_MISUSE;
   }else{
