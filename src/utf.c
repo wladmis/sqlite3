@@ -462,8 +462,8 @@ char *sqlite3utf16to8(const void *z, int nByte){
   memset(&m, 0, sizeof(m));
   sqlite3VdbeMemSetStr(&m, z, nByte, SQLITE_UTF16NATIVE, SQLITE_STATIC);
   sqlite3VdbeChangeEncoding(&m, SQLITE_UTF8);
-  assert( m.flags & MEM_Term );
-  assert( m.flags & MEM_Str );
+  assert( (m.flags & MEM_Term)!=0 || sqlite3MallocFailed() );
+  assert( (m.flags & MEM_Str)!=0 || sqlite3MallocFailed() );
   return (m.flags & MEM_Dyn)!=0 ? m.z : sqliteStrDup(m.z);
 }
 
