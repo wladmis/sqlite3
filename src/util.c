@@ -1151,7 +1151,7 @@ int sqlite3SafetyOn(sqlite3 *db){
     return 0;
   }else if( db->magic==SQLITE_MAGIC_BUSY ){
     db->magic = SQLITE_MAGIC_ERROR;
-    db->flags |= SQLITE_Interrupt;
+    db->u1.isInterrupted = 1;
   }
   return 1;
 }
@@ -1167,7 +1167,7 @@ int sqlite3SafetyOff(sqlite3 *db){
     return 0;
   }else if( db->magic==SQLITE_MAGIC_OPEN ){
     db->magic = SQLITE_MAGIC_ERROR;
-    db->flags |= SQLITE_Interrupt;
+    db->u1.isInterrupted = 1;
   }
   return 1;
 }

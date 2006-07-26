@@ -394,7 +394,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   extern void sqlite3ParserFree(void*, void(*)(void*));
   extern int sqlite3Parser(void*, int, Token, Parse*);
 
-  db->flags &= ~SQLITE_Interrupt;
+  db->u1.isInterrupted = 0;
   pParse->rc = SQLITE_OK;
   i = 0;
   pEngine = sqlite3ParserAlloc((void*(*)(int))sqlite3MallocX);
@@ -418,7 +418,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     switch( tokenType ){
       case TK_SPACE:
       case TK_COMMENT: {
-        if( (db->flags & SQLITE_Interrupt)!=0 ){
+        if( db->u1.isInterrupted ){
           pParse->rc = SQLITE_INTERRUPT;
           sqlite3SetString(pzErrMsg, "interrupt", (char*)0);
           goto abort_parse;
