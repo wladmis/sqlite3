@@ -1814,12 +1814,18 @@ int main(int argc, char **argv){
       if( zHistory ){
         stifle_history(100);
         write_history(zHistory);
+        free(zHistory);
       }
+      free(zHome);
     }else{
       process_input(&data, stdin);
     }
   }
   set_table_name(&data, 0);
-  if( db ) sqlite3_close(db);
+  if( db ){
+    if( sqlite3_close(db)!=SQLITE_OK ){
+      fprintf(stderr,"error closing database: %s\n", sqlite3_errmsg(db));
+    }
+  }
   return 0;
 }
