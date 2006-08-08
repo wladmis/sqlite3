@@ -780,7 +780,7 @@ void sqlite3Pragma(
   ** useful if invoked immediately after the main database i
   */
   if( sqlite3StrICmp(zLeft, "encoding")==0 ){
-    static struct EncName {
+    static const struct EncName {
       char *zName;
       u8 enc;
     } encnames[] = {
@@ -790,12 +790,11 @@ void sqlite3Pragma(
       { "UTF16le",  SQLITE_UTF16LE     },
       { "UTF-16be", SQLITE_UTF16BE     },
       { "UTF16be",  SQLITE_UTF16BE     },
-      { "UTF-16",   0 /* Filled in at run-time */ },
-      { "UTF16",    0 /* Filled in at run-time */ },
+      { "UTF-16",   0                  }, /* SQLITE_UTF16NATIVE */
+      { "UTF16",    0                  }, /* SQLITE_UTF16NATIVE */
       { 0, 0 }
     };
-    struct EncName *pEnc;
-    encnames[6].enc = encnames[7].enc = SQLITE_UTF16NATIVE;
+    const struct EncName *pEnc;
     if( !zRight ){    /* "PRAGMA encoding" */
       if( sqlite3ReadSchema(pParse) ) goto pragma_out;
       sqlite3VdbeSetNumCols(v, 1);
@@ -820,7 +819,7 @@ void sqlite3Pragma(
       ){
         for(pEnc=&encnames[0]; pEnc->zName; pEnc++){
           if( 0==sqlite3StrICmp(zRight, pEnc->zName) ){
-            ENC(pParse->db) = pEnc->enc;
+            ENC(pParse->db) = pEnc->enc ? pEnc->enc : SQLITE_UTF16NATIVE;
             break;
           }
         }
