@@ -580,4 +580,23 @@ do_test misc5-8.1 {
 } SQLITE_MISUSE
 sqlite3 db test.db
 
+# Ticket #1911
+#
+do_test misc5-9.1 {
+  execsql {
+    SELECT name, type FROM sqlite_master WHERE name IS NULL
+    UNION
+    SELECT type, name FROM sqlite_master WHERE type IS NULL
+    ORDER BY 1, 2, 1, 2, 1, 2
+  }
+} {}
+do_test misc5-9.2 {
+  execsql {
+    SELECT name, type FROM sqlite_master WHERE name IS NULL
+    UNION
+    SELECT type, name FROM sqlite_master WHERE type IS NULL
+    ORDER BY 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2
+  }
+} {}
+
 finish_test
