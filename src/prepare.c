@@ -52,6 +52,7 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
 
   pData->rc = SQLITE_OK;
   if( sqlite3MallocFailed() ){
+    corruptSchema(pData, 0);
     return SQLITE_NOMEM;
   }
 
