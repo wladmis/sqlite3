@@ -285,6 +285,10 @@ static int getToken(const unsigned char *z, int *tokenType){
         *tokenType = TK_FLOAT;
       }
 #endif
+      while( IdChar(z[i]) ){
+        *tokenType = TK_ILLEGAL;
+        i++;
+      }
       return i;
     }
     case '[': {
