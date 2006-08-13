@@ -53,6 +53,8 @@ do_test vtab2-2.2 {
     SELECT * FROM vars WHERE name='A';
   }
 } [list A 1 1 A 2 4 A 3 9]
+unset -nocomplain result
+unset -nocomplain var
 set result {}
 foreach var [lsort [info vars tcl_*]] {
   catch {lappend result $var [set $var]}
@@ -64,5 +66,7 @@ do_test vtab2-2.3 {
       ORDER BY name;
   }
 } $result
+unset result
+unset var
 
 finish_test
