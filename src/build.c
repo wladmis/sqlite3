@@ -1077,8 +1077,12 @@ void sqlite3AddDefaultValue(Parse *pParse, Expr *pExpr){
       sqlite3ErrorMsg(pParse, "default value of column [%s] is not constant",
           pCol->zName);
     }else{
+      Expr *pCopy;
       sqlite3ExprDelete(pCol->pDflt);
-      pCol->pDflt = sqlite3ExprDup(pExpr);
+      pCol->pDflt = pCopy = sqlite3ExprDup(pExpr);
+      if( pCopy ){
+        sqlite3TokenCopy(&pCopy->span, &pExpr->span);
+      }
     }
   }
   sqlite3ExprDelete(pExpr);

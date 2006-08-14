@@ -676,7 +676,10 @@ term(A) ::= CTIME_KW(OP). {
   /* The CURRENT_TIME, CURRENT_DATE, and CURRENT_TIMESTAMP values are
   ** treated as functions that return constants */
   A = sqlite3ExprFunction(0,&OP);
-  if( A ) A->op = TK_CONST_FUNC;  
+  if( A ){
+    A->op = TK_CONST_FUNC;  
+    A->span = OP;
+  }
 }
 expr(A) ::= expr(X) AND(OP) expr(Y).            {A = sqlite3Expr(@OP, X, Y, 0);}
 expr(A) ::= expr(X) OR(OP) expr(Y).             {A = sqlite3Expr(@OP, X, Y, 0);}

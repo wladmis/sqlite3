@@ -351,6 +351,12 @@ do_test pragma-6.2 {
     pragma table_info(t2)
   }
 } {0 a {} 0 {} 0 1 b {} 0 {} 0 2 c {} 0 {} 0}
+do_test pragma-6.2.2 {
+  execsql {
+    CREATE TABLE t5(a TEXT DEFAULT CURRENT_TIMESTAMP, b DEFAULT (5+3));
+    PRAGMA table_info(t5);
+  }
+} {0 a TEXT 0 CURRENT_TIMESTAMP 0 1 b {} 0 5+3 0}
 ifcapable {foreignkey} {
   do_test pragma-6.3 {
     execsql {
