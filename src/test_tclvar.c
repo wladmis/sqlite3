@@ -163,7 +163,7 @@ static int tclvarFilter(
 
   assert( argc==0 || argc==1 );
   if( argc==1 ){
-    Tcl_Obj *pArg = Tcl_NewStringObj(sqlite3_value_text(argv[0]), -1);
+    Tcl_Obj *pArg = Tcl_NewStringObj((char*)sqlite3_value_text(argv[0]), -1);
     Tcl_ListObjAppendElement(0, p, pArg);
   }
   Tcl_EvalObjEx(interp, p, TCL_EVAL_GLOBAL);

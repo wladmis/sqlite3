@@ -396,7 +396,6 @@ do_test vtab1-3.13 {
         xFilter    {SELECT rowid, * FROM 'treal'}]
 do_test vtab1-3.14 {
   set echo_module ""
-btree_breakpoint
   execsql {
     SELECT * FROM t1 WHERE b MATCH 'string';
   }
@@ -867,4 +866,5 @@ do_test vtab1.11-5 {
   }
 } {{2 1} {2 2}}
 
+unset -nocomplain echo_module_begin_fail
 finish_test
