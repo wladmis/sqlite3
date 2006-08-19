@@ -671,4 +671,33 @@ do_test func-19.4 {
   }
 } {1 {wrong number of arguments to function match()}}
 
+# Soundex tests.
+#
+if {![catch {db eval {SELECT soundex('hello')}}]} {
+  set i 0
+  foreach {name sdx} {
+    euler        E460
+    EULER        E460
+    Euler        E460
+    ellery       E460
+    gauss        G200
+    ghosh        G200
+    hilbert      H416
+    Heilbronn    H416
+    knuth        K530
+    kant         K530
+    Lloyd        L300
+    LADD         L300
+    Lukasiewicz  L222
+    Lissajous    L222
+    A            A000
+    12345        ?000
+  } {
+    incr i
+    do_test func-20.$i {
+      execsql {SELECT soundex($name)}
+    } $sdx
+  }
+}
+
 finish_test

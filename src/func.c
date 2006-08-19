@@ -655,14 +655,20 @@ static void soundexFunc(sqlite3_context *context, int argc, sqlite3_value **argv
   };
   assert( argc==1 );
   zIn = (u8*)sqlite3_value_text(argv[0]);
-  if( zIn==0 ) zIn = "";
+  if( zIn==0 ) zIn = (u8*)"";
   for(i=0; zIn[i] && !isalpha(zIn[i]); i++){}
   if( zIn[i] ){
+    u8 prevcode = iCode[zIn[i]&0x7f];
     zResult[0] = toupper(zIn[i]);
     for(j=1; j<4 && zIn[i]; i++){
       int code = iCode[zIn[i]&0x7f];
       if( code>0 ){
-        zResult[j++] = code + '0';
+        if( code!=prevcode ){
+          prevcode = code;
+          zResult[j++] = code + '0';
+        }
+      }else{
+        prevcode = 0;
       }
     }
     while( j<4 ){
