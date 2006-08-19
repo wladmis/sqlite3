@@ -1563,16 +1563,30 @@ static char *find_home_dir(void){
   home_dir = getcwd(home_path, _MAX_PATH);
 #endif
 
+#if defined(_WIN32) || defined(WIN32) || defined(__OS2__)
+  if (!home_dir) {
+    home_dir = getenv("USERPROFILE");
+  }
+#endif
+
   if (!home_dir) {
     home_dir = getenv("HOME");
-    if (!home_dir) {
-      home_dir = getenv("HOMEPATH"); /* Windows? */
-    }
   }
 
 #if defined(_WIN32) || defined(WIN32) || defined(__OS2__)
   if (!home_dir) {
-    home_dir = "c:";
+    char *zDrive, *zPath;
+    int n;
+    zDrive = getenv("HOMEDRIVE");
+    zPath = getenv("HOMEPATH");
+    if( zDrive && zPath ){
+      n = strlen(zDrive) + strlen(zPath) + 1;
+      home_dir = malloc( n );
+      if( home_dir==0 ) return 0;
+      sqlite3_snprintf(n, home_dir, "%s%s", zDrive, zPath);
+      return home_dir;
+    }
+    home_dir = "c:\\";
   }
 #endif
 
