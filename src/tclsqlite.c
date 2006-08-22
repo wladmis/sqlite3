@@ -2220,6 +2220,9 @@ int TCLSH_MAIN(int argc, char **argv){
 #endif
   if( argc>=2 || TCLSH==2 ){
     int i;
+    char zArgc[32];
+    sqlite3_snprintf(sizeof(zArgc), zArgc, "%d", argc-(3-TCLSH));
+    Tcl_SetVar(interp,"argc", zArgc, TCL_GLOBAL_ONLY);
     Tcl_SetVar(interp,"argv0",argv[1],TCL_GLOBAL_ONLY);
     Tcl_SetVar(interp,"argv", "", TCL_GLOBAL_ONLY);
     for(i=3-TCLSH; i<argc; i++){
