@@ -9,7 +9,7 @@
 #
 #***********************************************************************
 # This file implements regression tests for SQLite library.  The
-# focus of this script is in-memory database backend.
+# focus of this script is extension loading.
 #
 # $Id$
 

@@ -912,6 +912,11 @@ static int openDatabase(
   }
   db->magic = SQLITE_MAGIC_OPEN;
 
+  /* Load automatic extensions - extensions that have been registered
+  ** using the sqlite3_automatic_extension() API.
+  */
+  sqlite3AutoLoadExtensions(db);
+
 opendb_out:
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
     sqlite3_close(db);
