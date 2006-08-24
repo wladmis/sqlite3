@@ -2001,6 +2001,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   const char *zArg;
   char *zErrMsg;
   const char *zFile;
+  Tcl_DString translatedFilename;
   if( objc==2 ){
     zArg = Tcl_GetStringFromObj(objv[1], 0);
     if( strcmp(zArg,"-version")==0 ){
@@ -2049,7 +2050,9 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   }
   memset(p, 0, sizeof(*p));
   zFile = Tcl_GetStringFromObj(objv[2], 0);
+  zFile = Tcl_TranslateFileName(interp, zFile, &translatedFilename);
   sqlite3_open(zFile, &p->db);
+  Tcl_DStringFree(&translatedFilename);
   if( SQLITE_OK!=sqlite3_errcode(p->db) ){
     zErrMsg = strdup(sqlite3_errmsg(p->db));
     sqlite3_close(p->db);
