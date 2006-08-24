@@ -553,6 +553,7 @@ static int auth_callback(
     case SQLITE_ANALYZE           : zCode="SQLITE_ANALYZE"; break;
     case SQLITE_CREATE_VTABLE     : zCode="SQLITE_CREATE_VTABLE"; break;
     case SQLITE_DROP_VTABLE       : zCode="SQLITE_DROP_VTABLE"; break;
+    case SQLITE_FUNCTION          : zCode="SQLITE_FUNCTION"; break;
     default                       : zCode="????"; break;
   }
   Tcl_DStringInit(&str);
@@ -2068,8 +2069,11 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     return TCL_ERROR;
   }
   p->maxStmt = NUM_PREPARED_STMTS;
+  p->interp = interp;
   zArg = Tcl_GetStringFromObj(objv[1], 0);
   Tcl_CreateObjCommand(interp, zArg, DbObjCmd, (char*)p, DbDeleteCmd);
+
+  /* If a TCL procedure named "::sqlite3_init
 
   /* If compiled with SQLITE_TEST turned on, then register the "md5sum"
   ** SQL function.
@@ -2087,7 +2091,6 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 #endif
   }
 #endif  
-  p->interp = interp;
   return TCL_OK;
 }
 
