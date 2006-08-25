@@ -600,6 +600,8 @@ cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F)
             {sqlite3Insert(pParse, X, Y, 0, F, R);}
 cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) select(S).
             {sqlite3Insert(pParse, X, 0, S, F, R);}
+cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) DEFAULT VALUES.
+            {sqlite3Insert(pParse, X, 0, 0, F, R);}
 
 %type insert_cmd {int}
 insert_cmd(A) ::= INSERT orconf(R).   {A = R;}

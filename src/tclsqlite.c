@@ -2073,8 +2073,6 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   zArg = Tcl_GetStringFromObj(objv[1], 0);
   Tcl_CreateObjCommand(interp, zArg, DbObjCmd, (char*)p, DbDeleteCmd);
 
-  /* If a TCL procedure named "::sqlite3_init
-
   /* If compiled with SQLITE_TEST turned on, then register the "md5sum"
   ** SQL function.
   */
