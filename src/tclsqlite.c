@@ -2073,6 +2073,13 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   zArg = Tcl_GetStringFromObj(objv[1], 0);
   Tcl_CreateObjCommand(interp, zArg, DbObjCmd, (char*)p, DbDeleteCmd);
 
+#ifdef SQLITE_ENABLE_FTS1
+  {
+    extern int fulltext_init(sqlite3*);
+    fulltext_init(p->db);
+  }
+#endif
+
   /* If compiled with SQLITE_TEST turned on, then register the "md5sum"
   ** SQL function.
   */
