@@ -621,7 +621,7 @@ void sqlite3Insert(
       }else if( useTempTable ){
         sqlite3VdbeAddOp(v, OP_Column, srcTab, j); 
       }else if( pSelect ){
-        sqlite3VdbeAddOp(v, OP_Dup, i+nColumn-j, 1);
+        sqlite3VdbeAddOp(v, OP_Dup, i+nColumn-j+IsVirtual(pTab), 1);
       }else{
         sqlite3ExprCode(pParse, pList->a[j].pExpr);
       }
