@@ -3,6 +3,17 @@
  * This is an SQLite module implementing full-text search.
  */
 
+/*
+** The code in this file is only compiled if:
+**
+**     * The FTS1 module is being built as an extension
+**       (in which case SQLITE_CORE is not defined), or
+**
+**     * The FTS1 module is being built into the core of
+**       SQLite (in which case SQLITE_ENABLE_FTS1 is defined).
+*/
+#if !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1)
+
 #include <assert.h>
 #if !defined(__APPLE__)
 #include <malloc.h>
@@ -13,9 +24,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "fulltext.h"
-#include "ft_hash.h"
-#include "tokenizer.h"
+#include "fts1.h"
+#include "fts1_hash.h"
+#include "fts1_tokenizer.h"
 #include "sqlite3.h"
 #include "sqlite3ext.h"
 SQLITE_EXTENSION_INIT1
@@ -866,11 +877,11 @@ static int fulltextConnect(sqlite3 *db, void *pAux, int argc, char **argv,
   v->pTokenizer = NULL;
 
   if( argc==3 ){
-    get_simple_tokenizer_module(&m);
+    sqlite3Fts1SimpleTokenizerModule(&m);
   } else {
     /* TODO(shess) For now, add new tokenizers as else if clauses. */
     if( !strcmp(argv[3], "simple") ){
-      get_simple_tokenizer_module(&m);
+      sqlite3Fts1SimpleTokenizerModule(&m);
     } else {
       assert( "unrecognized tokenizer"==NULL );
     }
@@ -1285,7 +1296,7 @@ static int fulltextRowid(sqlite3_vtab_cursor *pCursor, sqlite_int64 *pRowid){
 }
 
 /* Build a hash table containing all terms in zText. */
-static int build_terms(Hash *terms, sqlite3_tokenizer *pTokenizer,
+static int build_terms(fts1Hash *terms, sqlite3_tokenizer *pTokenizer,
                        const char *zText, sqlite_int64 iDocid){
   sqlite3_tokenizer_cursor *pCursor;
   const char *pToken;
@@ -1296,7 +1307,7 @@ static int build_terms(Hash *terms, sqlite3_tokenizer *pTokenizer,
   if( rc!=SQLITE_OK ) return rc;
 
   pCursor->pTokenizer = pTokenizer;
-  HashInit(terms, HASH_STRING, 1);
+  fts1HashInit(terms, FTS1_HASH_STRING, 1);
   while( SQLITE_OK==pTokenizer->pModule->xNext(pCursor,
                                                &pToken, &nTokenBytes,
                                                &iStartOffset, &iEndOffset,
@@ -1309,11 +1320,11 @@ static int build_terms(Hash *terms, sqlite3_tokenizer *pTokenizer,
       goto err;
     }
 
-    p = HashFind(terms, pToken, nTokenBytes);
+    p = fts1HashFind(terms, pToken, nTokenBytes);
     if( p==NULL ){
       p = docListNew(DL_POSITIONS_OFFSETS);
       docListAddDocid(p, iDocid);
-      HashInsert(terms, pToken, nTokenBytes, p);
+      fts1HashInsert(terms, pToken, nTokenBytes, p);
     }
     docListAddPosOffset(p, iPosition, iStartOffset, iEndOffset);
   }
@@ -1374,8 +1385,8 @@ err:
 static int index_insert(fulltext_vtab *v,
                         sqlite3_value *pRequestRowid, const char *zText,
                         sqlite_int64 *piRowid){
-  Hash terms;  /* maps term string -> PosList */
-  HashElem *e;
+  fts1Hash terms;  /* maps term string -> PosList */
+  fts1HashElem *e;
 
   int rc = content_insert(v, pRequestRowid, zText, -1);
   if( rc!=SQLITE_OK ) return rc;
@@ -1386,17 +1397,17 @@ static int index_insert(fulltext_vtab *v,
   rc = build_terms(&terms, v->pTokenizer, zText, *piRowid);
   if( rc!=SQLITE_OK ) return rc;
 
-  for(e=HashFirst(&terms); e; e=HashNext(e)){
-    DocList *p = HashData(e);
-    rc = index_insert_term(v, HashKey(e), HashKeysize(e), *piRowid, p);
+  for(e=fts1HashFirst(&terms); e; e=fts1HashNext(e)){
+    DocList *p = fts1HashData(e);
+    rc = index_insert_term(v, fts1HashKey(e), fts1HashKeysize(e), *piRowid, p);
     if( rc!=SQLITE_OK ) break;
   }
 
-  for(e=HashFirst(&terms); e; e=HashNext(e)){
-    DocList *p = HashData(e);
+  for(e=fts1HashFirst(&terms); e; e=fts1HashNext(e)){
+    DocList *p = fts1HashData(e);
     docListDelete(p);
   }
-  HashClear(&terms);
+  fts1HashClear(&terms);
   return rc;
 }
 
@@ -1426,8 +1437,8 @@ static int index_delete_term(fulltext_vtab *v, const char *zTerm, int nTerm,
 /* Delete a row from the full-text index. */
 static int index_delete(fulltext_vtab *v, sqlite_int64 iRow){
   char *zText;
-  Hash terms;
-  HashElem *e;
+  fts1Hash terms;
+  fts1HashElem *e;
 
   int rc = content_select(v, iRow, &zText);
   if( rc!=SQLITE_OK ) return rc;
@@ -1436,15 +1447,15 @@ static int index_delete(fulltext_vtab *v, sqlite_int64 iRow){
   free(zText);
   if( rc!=SQLITE_OK ) return rc;
 
-  for(e=HashFirst(&terms); e; e=HashNext(e)){
-    rc = index_delete_term(v, HashKey(e), HashKeysize(e), iRow);
+  for(e=fts1HashFirst(&terms); e; e=fts1HashNext(e)){
+    rc = index_delete_term(v, fts1HashKey(e), fts1HashKeysize(e), iRow);
     if( rc!=SQLITE_OK ) break;
   }
-  for(e=HashFirst(&terms); e; e=HashNext(e)){
-    DocList *p = HashData(e);
+  for(e=fts1HashFirst(&terms); e; e=fts1HashNext(e)){
+    DocList *p = fts1HashData(e);
     docListDelete(p);
   }
-  HashClear(&terms);
+  fts1HashClear(&terms);
 
   return content_delete(v, iRow);
 }
@@ -1483,14 +1494,16 @@ static sqlite3_module fulltextModule = {
   fulltextUpdate
 };
 
-int fulltext_init(sqlite3 *db){
- return sqlite3_create_module(db, "fulltext", &fulltextModule, 0);
+int sqlite3Fts1Init(sqlite3 *db){
+ return sqlite3_create_module(db, "fts1", &fulltextModule, 0);
 }
 
 #if !SQLITE_CORE
 int sqlite3_extension_init(sqlite3 *db, char **pzErrMsg,
                            const sqlite3_api_routines *pApi){
  SQLITE_EXTENSION_INIT2(pApi)
- return fulltext_init(db);
+ return sqlite3Fts1Init(db);
 }
 #endif
+
+#endif /* !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1) */

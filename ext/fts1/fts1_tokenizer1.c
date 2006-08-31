@@ -5,6 +5,18 @@
 ** Implementation of the "simple" full-text-search tokenizer.
 */
 
+/*
+** The code in this file is only compiled if:
+**
+**     * The FTS1 module is being built as an extension
+**       (in which case SQLITE_CORE is not defined), or
+**
+**     * The FTS1 module is being built into the core of
+**       SQLite (in which case SQLITE_ENABLE_FTS1 is defined).
+*/
+#if !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1)
+
+
 #include <assert.h>
 #if !defined(__APPLE__)
 #include <malloc.h>
@@ -15,7 +27,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "tokenizer.h"
+#include "fts1_tokenizer.h"
 
 /* Duplicate a string; the caller must free() the returned string.
  * (We don't use strdup() since it's not part of the standard C library and
@@ -167,8 +179,10 @@ static sqlite3_tokenizer_module simpleTokenizerModule = {
   simpleNext,
 };
 
-void get_simple_tokenizer_module(
+void sqlite3Fts1SimpleTokenizerModule(
   sqlite3_tokenizer_module **ppModule
 ){
   *ppModule = &simpleTokenizerModule;
 }
+
+#endif /* !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1) */

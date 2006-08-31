@@ -4,7 +4,7 @@
 extern "C" {
 #endif  /* __cplusplus */
 
-int fulltext_init(sqlite3 *db);
+int fts1_init(sqlite3 *db);
 
 #ifdef __cplusplus
 }  /* extern "C" */

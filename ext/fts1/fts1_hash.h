@@ -14,12 +14,12 @@
 ** hash table implementation for the full-text indexing module.
 **
 */
-#ifndef _HASH_H_
-#define _HASH_H_
+#ifndef _FTS1_HASH_H_
+#define _FTS1_HASH_H_
 
 /* Forward declarations of structures. */
-typedef struct Hash Hash;
-typedef struct HashElem HashElem;
+typedef struct fts1Hash fts1Hash;
+typedef struct fts1HashElem fts1HashElem;
 
 /* A complete hash table is an instance of the following structure.
 ** The internals of this structure are intended to be opaque -- client
@@ -29,17 +29,17 @@ typedef struct HashElem HashElem;
 ** accessing this structure are really macros, so we can't really make
 ** this structure opaque.
 */
-struct Hash {
+struct fts1Hash {
   char keyClass;          /* HASH_INT, _POINTER, _STRING, _BINARY */
   char copyKey;           /* True if copy of key made on insert */
   int count;              /* Number of entries in this table */
-  HashElem *first;        /* The first element of the array */
+  fts1HashElem *first;    /* The first element of the array */
   void *(*xMalloc)(int);  /* malloc() function to use */
   void (*xFree)(void *);  /* free() function to use */
   int htsize;             /* Number of buckets in the hash table */
-  struct _ht {            /* the hash table */
+  struct _fts1ht {        /* the hash table */
     int count;               /* Number of entries with this hash */
-    HashElem *chain;         /* Pointer to first entry with this hash */
+    fts1HashElem *chain;     /* Pointer to first entry with this hash */
   } *ht;
 };
 
@@ -49,63 +49,64 @@ struct Hash {
 ** Again, this structure is intended to be opaque, but it can't really
 ** be opaque because it is used by macros.
 */
-struct HashElem {
-  HashElem *next, *prev;   /* Next and previous elements in the table */
-  void *data;              /* Data associated with this element */
-  void *pKey; int nKey;    /* Key associated with this element */
+struct fts1HashElem {
+  fts1HashElem *next, *prev; /* Next and previous elements in the table */
+  void *data;                /* Data associated with this element */
+  void *pKey; int nKey;      /* Key associated with this element */
 };
 
 /*
-** There are 4 different modes of operation for a hash table:
+** There are 2 different modes of operation for a hash table:
 **
-**   HASH_INT         nKey is used as the key and pKey is ignored.
-**
-**   HASH_POINTER     pKey is used as the key and nKey is ignored.
-**
-**   HASH_STRING      pKey points to a string that is nKey bytes long
+**   FTS1_HASH_STRING        pKey points to a string that is nKey bytes long
 **                           (including the null-terminator, if any).  Case
 **                           is respected in comparisons.
 **
-**   HASH_BINARY      pKey points to binary data nKey bytes long. 
+**   FTS1_HASH_BINARY        pKey points to binary data nKey bytes long. 
 **                           memcmp() is used to compare keys.
 **
-** A copy of the key is made for HASH_STRING and HASH_BINARY
-** if the copyKey parameter to HashInit is 1.  
+** A copy of the key is made if the copyKey parameter to fts1HashInit is 1.  
 */
-/* #define HASH_INT       1 // NOT USED */
-/* #define HASH_POINTER   2 // NOT USED */
-#define HASH_STRING    3
-#define HASH_BINARY    4
+#define FTS1_HASH_STRING    1
+#define FTS1_HASH_BINARY    2
 
 /*
 ** Access routines.  To delete, insert a NULL pointer.
 */
-void HashInit(Hash*, int keytype, int copyKey);
-void *HashInsert(Hash*, const void *pKey, int nKey, void *pData);
-void *HashFind(const Hash*, const void *pKey, int nKey);
-void HashClear(Hash*);
+void sqlite3Fts1HashInit(fts1Hash*, int keytype, int copyKey);
+void *sqlite3Fts1HashInsert(fts1Hash*, const void *pKey, int nKey, void *pData);
+void *sqlite3Fts1HashFind(const fts1Hash*, const void *pKey, int nKey);
+void sqlite3Fts1HashClear(fts1Hash*);
+
+/*
+** Shorthand for the functions above
+*/
+#define fts1HashInit   sqlite3Fts1HashInit
+#define fts1HashInsert sqlite3Fts1HashInsert
+#define fts1HashFind   sqlite3Fts1HashFind
+#define fts1HashClear  sqlite3Fts1HashClear
 
 /*
 ** Macros for looping over all elements of a hash table.  The idiom is
 ** like this:
 **
-**   Hash h;
-**   HashElem *p;
+**   fts1Hash h;
+**   fts1HashElem *p;
 **   ...
-**   for(p=HashFirst(&h); p; p=HashNext(p)){
-**     SomeStructure *pData = HashData(p);
+**   for(p=fts1HashFirst(&h); p; p=fts1HashNext(p)){
+**     SomeStructure *pData = fts1HashData(p);
 **     // do something with pData
 **   }
 */
-#define HashFirst(H)  ((H)->first)
-#define HashNext(E)   ((E)->next)
-#define HashData(E)   ((E)->data)
-#define HashKey(E)    ((E)->pKey)
-#define HashKeysize(E) ((E)->nKey)
+#define fts1HashFirst(H)  ((H)->first)
+#define fts1HashNext(E)   ((E)->next)
+#define fts1HashData(E)   ((E)->data)
+#define fts1HashKey(E)    ((E)->pKey)
+#define fts1HashKeysize(E) ((E)->nKey)
 
 /*
 ** Number of entries in a hash table
 */
-#define HashCount(H)  ((H)->count)
+#define fts1HashCount(H)  ((H)->count)
 
-#endif /* _HASH_H_ */
+#endif /* _FTS1_HASH_H_ */

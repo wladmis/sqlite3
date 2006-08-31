@@ -2075,8 +2075,8 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 
 #ifdef SQLITE_ENABLE_FTS1
   {
-    extern int fulltext_init(sqlite3*);
-    fulltext_init(p->db);
+    extern int sqlite3Fts1Init(sqlite3*);
+    sqlite3Fts1Init(p->db);
   }
 #endif
 
