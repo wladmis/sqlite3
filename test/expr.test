@@ -593,18 +593,16 @@ test_expr2 expr-7.63 {GLOB('*1[456]',b)}              {4}
 
 # Test the CURRENT_TIME, CURRENT_DATE, and CURRENT_TIMESTAMP expressions.
 #
-set sqlite_current_time [clock seconds]
-set date [clock format $sqlite_current_time -format %Y-%m-%d -gmt 1]
-set time [clock format $sqlite_current_time -format %H:%M:%S -gmt 1]
+set sqlite_current_time 1157124849
 do_test expr-8.1 {
   execsql {SELECT CURRENT_TIME}
-} $time
+} {15:34:09}
 do_test expr-8.2 {
   execsql {SELECT CURRENT_DATE}
-} $date
+} {2006-09-01}
 do_test expr-8.3 {
   execsql {SELECT CURRENT_TIMESTAMP}
-} [list "$date $time"]
+} {{2006-09-01 15:34:09}}
 ifcapable datetime {
   do_test expr-8.4 {
     execsql {SELECT CURRENT_TIME==time('now');}
