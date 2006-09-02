@@ -1862,6 +1862,8 @@ int sqlite3OpenTempDatabase(Parse *);
    int sqlite3VtabRollback(sqlite3 *db);
    int sqlite3VtabCommit(sqlite3 *db);
 #endif
+void sqlite3VtabLock(sqlite3_vtab*);
+void sqlite3VtabUnlock(sqlite3_vtab*);
 void sqlite3VtabBeginParse(Parse*, Token*, Token*, Token*);
 void sqlite3VtabFinishParse(Parse*, Token*);
 void sqlite3VtabArgInit(Parse*);

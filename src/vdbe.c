@@ -4857,7 +4857,9 @@ case OP_VUpdate: {   /* no-push */
       apArg[i] = pX;
     }
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
+    sqlite3VtabLock(pVtab);
     rc = pModule->xUpdate(pVtab, nArg, apArg, &rowid);
+    sqlite3VtabUnlock(pVtab);
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
     if( pOp->p1 && rc==SQLITE_OK ){
       assert( nArg>1 && apArg[0] && (apArg[0]->flags&MEM_Null) );
