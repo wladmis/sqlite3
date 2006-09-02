@@ -917,6 +917,13 @@ static int openDatabase(
   */
   sqlite3AutoLoadExtensions(db);
 
+#ifdef SQLITE_ENABLE_FTS1
+  {
+    extern int sqlite3Fts1Init(sqlite3*);
+    sqlite3Fts1Init(db);
+  }
+#endif
+
 opendb_out:
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
     sqlite3_close(db);
