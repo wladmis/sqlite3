@@ -835,6 +835,7 @@ do_test vtab1.10-6 {
 
 # Testing the xFindFunction interface
 #
+catch {rename ::echo_glob_overload {}}
 do_test vtab1.11-1 {
   execsql {
     INSERT INTO r(a,b,c) VALUES(1,'?',99);

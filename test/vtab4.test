@@ -21,6 +21,9 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+unset -nocomplain echo_module
+unset -nocomplain echo_module_sync_fail
+
 ifcapable !vtab {
   finish_test
   return
@@ -189,4 +192,3 @@ do_test vtab4-3.3 {
 ]
 
 finish_test
-
