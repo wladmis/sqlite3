@@ -41,5 +41,6 @@ do_test misc6-1.3 {
 do_test misc6-1.4 {
   sqlite3_column_text $STMT 0
 } {00300031003200330034}
+sqlite3_finalize $STMT
 
 finish_test
