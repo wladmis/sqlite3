@@ -52,9 +52,13 @@
 # define stifle_history(X)
 #endif
 
+#if defined(_WIN32) || defined(WIN32)
+# include <io.h>
+#else
 /* Make sure isatty() has a prototype.
 */
 extern int isatty();
+#endif
 
 /*
 ** The following is the open SQLite database.  We make a pointer
