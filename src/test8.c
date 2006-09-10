@@ -312,7 +312,8 @@ static int echoConstructor(
   sqlite3 *db,
   void *pAux,
   int argc, char **argv,
-  sqlite3_vtab **ppVtab
+  sqlite3_vtab **ppVtab,
+  char **pzErr
 ){
   int i;
   echo_vtab *pVtab;
@@ -358,11 +359,12 @@ static int echoCreate(
   sqlite3 *db,
   void *pAux,
   int argc, char **argv,
-  sqlite3_vtab **ppVtab
+  sqlite3_vtab **ppVtab,
+  char **pzErr
 ){
   int rc = SQLITE_OK;
   appendToEchoModule((Tcl_Interp *)(pAux), "xCreate");
-  rc = echoConstructor(db, pAux, argc, argv, ppVtab);
+  rc = echoConstructor(db, pAux, argc, argv, ppVtab, pzErr);
 
   /* If there were two arguments passed to the module at the SQL level 
   ** (i.e. "CREATE VIRTUAL TABLE tbl USING echo(arg1, arg2)"), then 
@@ -393,10 +395,11 @@ static int echoConnect(
   sqlite3 *db,
   void *pAux,
   int argc, char **argv,
-  sqlite3_vtab **ppVtab
+  sqlite3_vtab **ppVtab,
+  char **pzErr
 ){
   appendToEchoModule((Tcl_Interp *)(pAux), "xConnect");
-  return echoConstructor(db, pAux, argc, argv, ppVtab);
+  return echoConstructor(db, pAux, argc, argv, ppVtab, pzErr);
 }
 
 /* 

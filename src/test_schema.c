@@ -85,7 +85,8 @@ static int schemaCreate(
   sqlite3 *db,
   void *pAux,
   int argc, char **argv,
-  sqlite3_vtab **ppVtab
+  sqlite3_vtab **ppVtab,
+  char **pzErr
 ){
   int rc = SQLITE_NOMEM;
   schema_vtab *pVtab = MALLOC(sizeof(schema_vtab));

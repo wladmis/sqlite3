@@ -52,7 +52,8 @@ static int tclvarConnect(
   sqlite3 *db,
   void *pAux,
   int argc, char **argv,
-  sqlite3_vtab **ppVtab
+  sqlite3_vtab **ppVtab,
+  char **pzErr
 ){
   tclvar_vtab *pVtab;
   static const char zSchema[] = 
