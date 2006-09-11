@@ -355,8 +355,8 @@ ifexists(A) ::= .            {A = 0;}
 ///////////////////// The CREATE VIEW statement /////////////////////////////
 //
 %ifndef SQLITE_OMIT_VIEW
-cmd ::= CREATE(X) temp(T) VIEW nm(Y) dbnm(Z) AS select(S). {
-  sqlite3CreateView(pParse, &X, &Y, &Z, S, T);
+cmd ::= CREATE(X) temp(T) VIEW ifnotexists(E) nm(Y) dbnm(Z) AS select(S). {
+  sqlite3CreateView(pParse, &X, &Y, &Z, S, T, E);
 }
 cmd ::= DROP VIEW ifexists(E) fullname(X). {
   sqlite3DropTable(pParse, X, 1, E);
@@ -931,10 +931,10 @@ cmd ::= CREATE trigger_decl(A) BEGIN trigger_cmd_list(S) END(Z). {
   sqlite3FinishTrigger(pParse, S, &all);
 }
 
-trigger_decl(A) ::= temp(T) TRIGGER nm(B) dbnm(Z) trigger_time(C)
-                    trigger_event(D)
+trigger_decl(A) ::= temp(T) TRIGGER ifnotexists(NOERR) nm(B) dbnm(Z) 
+                    trigger_time(C) trigger_event(D)
                     ON fullname(E) foreach_clause(F) when_clause(G). {
-  sqlite3BeginTrigger(pParse, &B, &Z, C, D.a, D.b, E, F, G, T);
+  sqlite3BeginTrigger(pParse, &B, &Z, C, D.a, D.b, E, F, G, T, NOERR);
   A = (Z.n==0?B:Z);
 }
 
@@ -1019,8 +1019,8 @@ raisetype(A) ::= FAIL.      {A = OE_Fail;}
 
 ////////////////////////  DROP TRIGGER statement //////////////////////////////
 %ifndef SQLITE_OMIT_TRIGGER
-cmd ::= DROP TRIGGER fullname(X). {
-  sqlite3DropTrigger(pParse,X);
+cmd ::= DROP TRIGGER ifexists(NOERR) fullname(X). {
+  sqlite3DropTrigger(pParse,X,NOERR);
 }
 %endif // !SQLITE_OMIT_TRIGGER
 
