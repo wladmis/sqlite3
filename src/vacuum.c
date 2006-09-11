@@ -188,9 +188,18 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   /* Query the schema of the main database. Create a mirror schema
   ** in the temporary database.
   */
+  rc = execSql(db,
+      "INSERT INTO vacuum_db.sqlite_master "
+      "  SELECT 'table', name, name, 0, sql"
+      "    FROM sqlite_master"
+      "   WHERE type='table' AND rootpage==0"
+  );
+  if( rc ) goto end_of_vacuum;
   rc = execExecSql(db, 
       "SELECT 'CREATE TABLE vacuum_db.' || substr(sql,14,100000000) "
-      "  FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence'");
+      "  FROM sqlite_master WHERE type='table' AND name!='sqlite_sequence'"
+      "   AND rootpage>0"
+  );
   if( rc!=SQLITE_OK ) goto end_of_vacuum;
   rc = execExecSql(db, 
       "SELECT 'CREATE INDEX vacuum_db.' || substr(sql,14,100000000)"
@@ -214,7 +223,9 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
       "SELECT 'INSERT INTO vacuum_db.' || quote(name) "
       "|| ' SELECT * FROM ' || quote(name) || ';'"
       "FROM sqlite_master "
-      "WHERE type = 'table' AND name!='sqlite_sequence';"
+      "WHERE type = 'table' AND name!='sqlite_sequence' "
+      "  AND rootpage>0"
+
   );
   if( rc!=SQLITE_OK ) goto end_of_vacuum;
 
