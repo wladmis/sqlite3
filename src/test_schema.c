@@ -84,7 +84,7 @@ static int schemaDestroy(sqlite3_vtab *pVtab){
 static int schemaCreate(
   sqlite3 *db,
   void *pAux,
-  int argc, char **argv,
+  int argc, const char *const*argv,
   sqlite3_vtab **ppVtab,
   char **pzErr
 ){

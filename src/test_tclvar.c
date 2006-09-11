@@ -51,7 +51,7 @@ struct tclvar_cursor {
 static int tclvarConnect(
   sqlite3 *db,
   void *pAux,
-  int argc, char **argv,
+  int argc, const char *const*argv,
   sqlite3_vtab **ppVtab,
   char **pzErr
 ){
