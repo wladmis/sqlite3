@@ -310,14 +310,6 @@ end_of_vacuum:
     pDb->pSchema = 0;
   }
 
-  /* If one of the execSql() calls above returned SQLITE_NOMEM, then the
-  ** mallocFailed flag will be clear (because execSql() calls sqlite3_exec()).
-  ** Fix this so the flag and return code match.
-  */
-  if( rc==SQLITE_NOMEM ){
-    sqlite3MallocFailed();
-  }
-
   if( zTemp ){
     sqlite3OsDelete(zTemp);
     sqliteFree(zTemp);

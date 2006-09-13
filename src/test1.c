@@ -576,10 +576,14 @@ static int test_create_function(
   if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
   rc = sqlite3_create_function(db, "x_coalesce", -1, SQLITE_ANY, 0, 
         ifnullFunc, 0, 0);
-  rc = sqlite3_create_function(db, "hex8", 1, SQLITE_ANY, 0, 
-        hex8Func, 0, 0);
-  rc = sqlite3_create_function(db, "hex16", 1, SQLITE_ANY, 0, 
-        hex16Func, 0, 0);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3_create_function(db, "hex8", 1, SQLITE_ANY, 0, 
+          hex8Func, 0, 0);
+  }
+  if( rc==SQLITE_OK ){
+    rc = sqlite3_create_function(db, "hex16", 1, SQLITE_ANY, 0, 
+          hex16Func, 0, 0);
+  }
 
 #ifndef SQLITE_OMIT_UTF16
   /* Use the sqlite3_create_function16() API here. Mainly for fun, but also 
