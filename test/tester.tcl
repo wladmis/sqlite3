@@ -384,6 +384,18 @@ proc do_ioerr_test {testname args} {
     do_test $testname.$n.3 {
       set r [catch $::ioerrorbody msg]
       # puts rc=[sqlite3_errcode $::DB]
+      set rc [sqlite3_errcode $::DB]
+      if {$::ioerropts(-erc)} {
+        # In extended result mode, all IOERRs are qualified 
+        if {[regexp {^SQLITE_IOERR} $rc] && ![regexp {IOERR\+\d} $rc]} {
+          return $rc
+        }
+      } else {
+        # Not in extended result mode, no errors are qualified
+        if {[regexp {\+\d} $rc]} {
+          return $rc
+        }
+      }
       set ::go [expr {$::sqlite_io_error_pending<=0}]
       set s [expr $::sqlite_io_error_hit==0]
       set ::sqlite_io_error_hit 0
