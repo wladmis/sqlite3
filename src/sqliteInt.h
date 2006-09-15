@@ -447,6 +447,7 @@ struct sqlite3 {
   Db *aDb;                      /* All backends */
   int flags;                    /* Miscellanous flags. See below */
   int errCode;                  /* Most recent error code (SQLITE_*) */
+  int errMask;                  /* & result codes with this before returning */
   u8 autoCommit;                /* The auto-commit flag. */
   u8 temp_store;                /* 1: file 2: memory 0: default */
   int nTable;                   /* Number of tables in the database */

@@ -471,6 +471,7 @@ int sqlite3_declare_vtab(sqlite3 *db, const char *zCreateTable){
   sParse.pNewTable = 0;
   db->pVTab = 0;
 
+  assert( (rc&0xff)==rc );
   return rc;
 }
 

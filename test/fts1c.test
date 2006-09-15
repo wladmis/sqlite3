@@ -1060,6 +1060,11 @@ do_test fts1c-1.8 {
     SELECT rowid FROM email WHERE _all MATCH '-mark susan'
   }
 } {24}
+do_test fts1c-1.9 {
+  execsql {
+    SELECT rowid FROM email WHERE _all MATCH 'mark OR susan'
+  }
+} {6 17 24 25 38 40 42 73 74}
 
 
 finish_test

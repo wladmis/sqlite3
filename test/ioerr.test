@@ -28,7 +28,7 @@ source $testdir/tester.tcl
 # file when the file on disk is only 1 page. The pager layer detects that
 # this has happened and suppresses the error returned by the OS layer.
 #
-do_ioerr_test ioerr-1 -sqlprep {
+do_ioerr_test ioerr-1 -erc 1 -sqlprep {
   SELECT * FROM sqlite_master;
 } -sqlbody {
   CREATE TABLE t1(a,b,c);

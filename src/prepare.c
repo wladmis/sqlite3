@@ -546,6 +546,7 @@ int sqlite3_prepare(
 
   rc = sqlite3ApiExit(db, rc);
   sqlite3ReleaseThreadData();
+  assert( (rc&db->errMask)==rc );
   return rc;
 }
 
