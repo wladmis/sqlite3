@@ -659,12 +659,12 @@ do_test func-19.2 {
   catchsql {
     SELECT 'abc' MATCH 'xyz';
   }
-} {1 {MATCH is not implemented}}
+} {1 {unable to use function MATCH in the requested context}}
 do_test func-19.3 {
   catchsql {
     SELECT 'abc' NOT MATCH 'xyz';
   }
-} {1 {MATCH is not implemented}}
+} {1 {unable to use function MATCH in the requested context}}
 do_test func-19.4 {
   catchsql {
     SELECT match(1,2,3);

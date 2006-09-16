@@ -389,7 +389,7 @@ do_test vtab1-3.12 {
   catchsql {
     SELECT * FROM t1 WHERE a MATCH 'string';
   }
-} {1 {MATCH is not implemented}}
+} {1 {unable to use function MATCH in the requested context}}
 do_test vtab1-3.13 {
   set echo_module
 } [list xBestIndex {SELECT rowid, * FROM 'treal'} \
