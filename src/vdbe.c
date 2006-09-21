@@ -4499,6 +4499,7 @@ case OP_AggFinal: {        /* no-push */
 }
 
 
+#ifndef SQLITE_OMIT_VACUUM
 /* Opcode: Vacuum * * *
 **
 ** Vacuum the entire database.  This opcode will cause other virtual
@@ -4511,6 +4512,7 @@ case OP_Vacuum: {        /* no-push */
   if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
   break;
 }
+#endif
 
 /* Opcode: Expire P1 * *
 **

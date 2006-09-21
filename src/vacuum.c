@@ -69,8 +69,6 @@ static int execExecSql(sqlite3 *db, const char *zSql){
   return sqlite3_finalize(pStmt);
 }
 
-#endif
-
 /*
 ** The non-standard VACUUM command is used to clean up the database,
 ** collapse free space, etc.  It is modelled after the VACUUM command
@@ -94,7 +92,6 @@ void sqlite3Vacuum(Parse *pParse){
 */
 int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   int rc = SQLITE_OK;     /* Return code from service routines */
-#ifndef SQLITE_OMIT_VACUUM
   const char *zFilename;  /* full pathname of the database file */
   int nFilename;          /* number of characters  in zFilename[] */
   char *zTemp = 0;        /* a temporary file in same directory as zFilename */
@@ -316,7 +313,7 @@ end_of_vacuum:
   }
   sqliteFree( zSql );
   sqlite3ResetInternalSchema(db, 0);
-#endif
 
   return rc;
 }
+#endif  /* SQLITE_OMIT_VACUUM */
