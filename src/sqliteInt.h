@@ -1513,6 +1513,7 @@ struct DbFixer {
 */
 typedef struct {
   sqlite3 *db;        /* The database being initialized */
+  int iDb;            /* 0 for main database.  1 for TEMP, 2.. for ATTACHed */
   char **pzErrMsg;    /* Error message stored here */
   int rc;             /* Result code stored here */
 } InitData;
