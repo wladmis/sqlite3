@@ -558,7 +558,7 @@ then the B-Tree key will be a automatically generated integer.  The
 B-Tree key for a row can always be accessed using one of the
 special names "<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>".
 This is true regardless of whether or not there is an INTEGER
-PRIMARY KEY.  An INTEGER PRIMARY KEY column man also include the
+PRIMARY KEY.  An INTEGER PRIMARY KEY column can also include the
 keyword AUTOINCREMENT.  The AUTOINCREMENT keyword modified the way
 that B-Tree keys are automatically generated.  Additional detail
 on automatic B-Tree key generation is available
