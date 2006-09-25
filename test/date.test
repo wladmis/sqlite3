@@ -277,4 +277,12 @@ datetest 11.10 {datetime('2004-02-28 20:00:00', '12:60')} NULL
 datetest 12.1 {datetime('2005-09-01')} {2005-09-01 00:00:00}
 datetest 12.2 {datetime('2005-09-01','+0 hours')} {2005-09-01 00:00:00}
 
+# Ticket #1991
+do_test date-13.1 {
+  execsql {
+    SELECT strftime('%Y-%m-%d %H:%M:%f', julianday('2006-09-24T10:50:26.047'))
+  }
+} {{2006-09-24 10:50:26.047}}
+
+
 finish_test
