@@ -947,6 +947,22 @@ void sqlite3Pragma(
     sqlite3_key(db, zRight, strlen(zRight));
   }else
 #endif
+#if SQLITE_HAS_CODEC || defined(SQLITE_ENABLE_CEROD)
+  if( sqlite3StrICmp(zLeft, "activate_extensions")==0 ){
+#if SQLITE_HAS_CODEC
+    if( sqlite3StrNICmp(zRight, "see-", 4)==0 ){
+      extern void sqlite3_activate_see(const char*);
+      sqlite3_activate_see(&zRight[4]);
+    }
+#endif
+#ifdef SQLITE_ENABLE_CEROD
+    if( sqlite3StrNICmp(zRight, "cerod-", 6)==0 ){
+      extern void sqlite3_activate_cerod(const char*);
+      sqlite3_activate_cerod(&zRight[6]);
+    }
+#endif
+  }
+#endif
 
   {}
 
