@@ -1071,7 +1071,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
     Expr *p, *pR;
     char *zType;
     char *zName;
-    char *zBasename;
+    int nName;
     CollSeq *pColl;
     int cnt;
     NameContext sNC;
@@ -1104,16 +1104,14 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
     /* Make sure the column name is unique.  If the name is not unique,
     ** append a integer to the name so that it becomes unique.
     */
-    zBasename = zName;
+    nName = strlen(zName);
     for(j=cnt=0; j<i; j++){
       if( sqlite3StrICmp(aCol[j].zName, zName)==0 ){
-        zName = sqlite3MPrintf("%s:%d", zBasename, ++cnt);
+        zName[nName] = 0;
+        zName = sqlite3MPrintf("%z:%d", zName, ++cnt);
         j = -1;
         if( zName==0 ) break;
       }
-    }
-    if( zBasename!=zName ){
-      sqliteFree(zBasename);
     }
     pCol->zName = zName;
 

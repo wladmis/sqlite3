@@ -48,14 +48,14 @@ do_test misc2-2.1 {
     INSERT INTO t2 VALUES(7,8,9);
   }
 } {}
+ifcapable subquery {
+  do_test misc2-2.2 {
+    execsql {
+      SELECT rowid, * FROM (SELECT * FROM t1, t2);
+    }
+  } {{} 1 2 3 7 8 9}
+}
 ifcapable view {
-  ifcapable subquery {
-    do_test misc2-2.2 {
-      execsql {
-        SELECT rowid, * FROM (SELECT * FROM t1, t2);
-      }
-    } {{} 1 2 3 7 8 9}
-  }
   do_test misc2-2.3 {
     execsql {
       CREATE VIEW v1 AS SELECT * FROM t1, t2;
@@ -63,6 +63,15 @@ ifcapable view {
     }
   } {{} 1 2 3 7 8 9}
 } ;# ifcapable view
+
+# Ticket #2002 and #1952.
+ifcapable subquery {
+  do_test misc2-2.4 {
+    execsql2 {
+      SELECT * FROM (SELECT a, b AS 'a', c AS 'a', 4 AS 'a' FROM t1)
+    }
+  } {a 1 a:1 2 a:2 3 a:3 4}
+}
 
 # Check name binding precedence.  Ticket #387
 #
