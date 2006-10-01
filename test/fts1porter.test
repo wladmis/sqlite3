@@ -27,6 +27,14 @@ ifcapable !fts1 {
 # Test data for the Porter stemmer.  The first word of each line
 # is the input.  The second word is the desired output.
 #
+# This test data is taken from http://www.tartarus.org/martin/PorterStemmer/
+# There is no claim of copyright made on that page, but you should
+# probably contain the author (Marin Porter - the inventor of the
+# Porter Stemmer algorithm) if you want to use this test data in a
+# commerical product of some kind.  The stemmer code in FTS1 is a
+# complete rewrite from scratch based on the algorithm specification
+# and does not contain any code under copyright.
+#
 set porter_test_data {
     a                    a
     aaron                aaron
@@ -10135,7 +10143,6 @@ set porter_test_data {
     honorable            honor
     honorably            honor
     honorato             honorato
-    honorificabilitudinitatibus honorificabilitudinitatibu
     honors               honor
     honour               honour
     honourable           honour
