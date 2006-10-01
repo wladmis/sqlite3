@@ -29,7 +29,7 @@ ifcapable !fts1 {
 #
 # This test data is taken from http://www.tartarus.org/martin/PorterStemmer/
 # There is no claim of copyright made on that page, but you should
-# probably contain the author (Martin Porter - the inventor of the
+# probably contact the author (Martin Porter - the inventor of the
 # Porter Stemmer algorithm) if you want to use this test data in a
 # commerical product of some kind.  The stemmer code in FTS1 is a
 # complete rewrite from scratch based on the algorithm specification
