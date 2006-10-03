@@ -23573,7 +23573,7 @@ set porter_test_data {
 db close
 sqlite3 db :memory:
 db eval {
-  CREATE VIRTUAL TABLE t1 USING fts1(word, tokenize porter);
+  CREATE VIRTUAL TABLE t1 USING fts1(word, tokenize Porter);
 }
 
 foreach {pfrom pto} $porter_test_data {
