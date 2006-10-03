@@ -1341,6 +1341,10 @@ static int pager_playback(Pager *pPager){
           pPager->journalOff = szJ;
           break;
         }else{
+          /* If we are unable to rollback a hot journal, then the database
+          ** is probably not recoverable.  Return CORRUPT.
+          */
+          rc = SQLITE_CORRUPT;
           goto end_playback;
         }
       }
