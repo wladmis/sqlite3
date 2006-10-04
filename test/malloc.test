@@ -443,7 +443,9 @@ do_malloc_test 17 -tclbody {
   set STMT 0
 
   # open database using sqlite3_open16()
-  set DB2 [sqlite3_open16 test.db -unused]
+  set filename [encoding convertto unicode test.db]
+  append filename "\x00\x00"
+  set DB2 [sqlite3_open16 $filename -unused]
   if {0==$DB2} {
     error "out of memory"
   }

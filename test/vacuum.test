@@ -39,7 +39,7 @@ proc cksum {{db db}} {
   foreach prag {default_cache_size} {
     append txt $prag-[$db eval "PRAGMA $prag"]\n
   }
-  if 1 {
+  if 0 {
     global fcnt
     set fd [open dump$fcnt.txt w]
     puts -nonewline $fd $txt
@@ -354,5 +354,6 @@ ifcapable {autoinc} {
   } $::cksum
 }
 
+file delete -force {a'z.db}
 
 finish_test

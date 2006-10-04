@@ -172,6 +172,12 @@ proc finalize_testing {} {
     puts "$sqlite_open_file_count files were left open"
     incr nErr
   }
+  foreach f [glob -nocomplain test.db-*-journal] {
+    file delete -force $f
+  }
+  foreach f [glob -nocomplain test.db-mj*] {
+    file delete -force $f
+  }
   exit [expr {$nErr>0}]
 }
 
