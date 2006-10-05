@@ -556,7 +556,7 @@ void sqlite3utf16Substr(
 ** characters in each encoding are inverses of each other.
 */
 void sqlite3utfSelfTest(){
-  int i;
+  unsigned int i;
   unsigned char zBuf[20];
   unsigned char *z;
   int n;
