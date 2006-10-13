@@ -2605,7 +2605,14 @@ int sqlite3SelectResolve(
     }
   }
 
-  return SQLITE_OK;
+  /* If this is one SELECT of a compound, be sure to resolve names
+  ** in the other SELECTs.
+  */
+  if( p->pPrior ){
+    return sqlite3SelectResolve(pParse, p->pPrior, pOuterNC);
+  }else{
+    return SQLITE_OK;
+  }
 }
 
 /*
