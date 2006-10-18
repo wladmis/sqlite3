@@ -622,6 +622,10 @@ static void exprAnalyze(
       if( pTerm->leftCursor>=0 ){
         int idxNew;
         pDup = sqlite3ExprDup(pExpr);
+        if( sqlite3MallocFailed() ){
+          sqliteFree(pDup);
+          return;
+        }
         idxNew = whereClauseInsert(pWC, pDup, TERM_VIRTUAL|TERM_DYNAMIC);
         if( idxNew==0 ) return;
         pNew = &pWC->a[idxNew];
