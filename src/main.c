@@ -951,6 +951,13 @@ static int openDatabase(
   }
 #endif
 
+#ifdef SQLITE_ENABLE_FTS2
+  {
+    extern int sqlite3Fts2Init(sqlite3*);
+    sqlite3Fts2Init(db);
+  }
+#endif
+
 opendb_out:
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
     sqlite3_close(db);
