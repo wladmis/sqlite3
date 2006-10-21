@@ -1,0 +1,1 @@
+tar: . name=sqlite3-@version@-@release@
