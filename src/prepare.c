@@ -481,7 +481,7 @@ int sqlite3_prepare(
   
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
-  if( nBytes>=0 && zSql[nBytes]!=0 ){
+  if( nBytes>0 && zSql[nBytes]!=0 ){
     char *zSqlCopy = sqlite3StrNDup(zSql, nBytes);
     sqlite3RunParser(&sParse, zSqlCopy, &zErrMsg);
     sParse.zTail += zSql - zSqlCopy;
