@@ -63,7 +63,8 @@
 # include <os2.h>
 # define SQLITE_TEMPNAME_SIZE (CCHMAXPATHCOMP)
 #else
-# define SQLITE_TEMPNAME_SIZE 200
+#include <limits.h>
+# define SQLITE_TEMPNAME_SIZE PATH_MAX
 #endif
 
 /* If the SET_FULLSYNC macro is not defined above, then make it

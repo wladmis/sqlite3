@@ -863,6 +863,9 @@ int sqlite3UnixOpenExclusive(const char *zFilename, OsFile **pId, int delFlag){
   CRASH_TEST_OVERRIDE(sqlite3CrashOpenExclusive, zFilename, pId, delFlag);
   assert( 0==*pId );
   h = open(zFilename,
+#ifdef O_NOATIME
+		(delFlag ? O_NOATIME : 0) |
+#endif
                 O_RDWR|O_CREAT|O_EXCL|O_NOFOLLOW|O_LARGEFILE|O_BINARY,
                 SQLITE_DEFAULT_FILE_PERMISSIONS);
   if( h<0 ){
@@ -943,12 +946,10 @@ char *sqlite3_temp_directory = 0;
 ** hold at least SQLITE_TEMPNAME_SIZE characters.
 */
 int sqlite3UnixTempFileName(char *zBuf){
-  static const char *azDirs[] = {
-     0,
-     "/var/tmp",
-     "/usr/tmp",
+  const char *azDirs[] = {
+    sqlite3_temp_directory,
+    getenv("TMPDIR"),
      "/tmp",
-     ".",
   };
   static const unsigned char zChars[] =
     "abcdefghijklmnopqrstuvwxyz"
@@ -957,7 +958,6 @@ int sqlite3UnixTempFileName(char *zBuf){
   int i, j;
   struct stat buf;
   const char *zDir = ".";
-  azDirs[0] = sqlite3_temp_directory;
   for(i=0; i<sizeof(azDirs)/sizeof(azDirs[0]); i++){
     if( azDirs[i]==0 ) continue;
     if( stat(azDirs[i], &buf) ) continue;
