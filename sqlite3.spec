@@ -150,6 +150,14 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
+* Sat Oct 21 2006 Alexey Tourbin <at@altlinux.ru> 3.3.8-alt1
+- imported cvs sources with git-cvsimport; applied my changes
+  to the source tree and built with gear
+- this release is based on sqlite version 3.3.8
+- changed documentation packaging: introduced sqlite3-doc package; moved
+  lemon.html to lemon package; added COPYING, which was compiled from
+  various sources; sqlite is still public domain, with a few minor issues
+
 * Sun Aug 13 2006 Alexey Tourbin <at@altlinux.ru> 3.3.7-alt1
 - 3.3.6 -> 3.3.7
 
