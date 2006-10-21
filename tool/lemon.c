@@ -1322,15 +1322,15 @@ void ErrorMsg(const char *filename, int lineno, const char *format, ...){
   va_start(ap, format);
   /* Prepare a prefix to be prepended to every output line */
   if( lineno>0 ){
-    sprintf(prefix,"%.*s:%d: ",PREFIXLIMIT-10,filename,lineno);
+    snprintf(prefix,sizeof prefix,"%.*s:%d: ",PREFIXLIMIT-10,filename,lineno);
   }else{
-    sprintf(prefix,"%.*s: ",PREFIXLIMIT-10,filename);
+    snprintf(prefix,sizeof prefix,"%.*s: ",PREFIXLIMIT-10,filename);
   }
   prefixsize = strlen(prefix);
   availablewidth = LINEWIDTH - prefixsize;
 
   /* Generate the error message */
-  vsprintf(errmsg,format,ap);
+  vsnprintf(errmsg,sizeof errmsg,format,ap);
   va_end(ap);
   errmsgsize = strlen(errmsg);
   /* Remove trailing '\n's from the error message. */
@@ -2863,7 +2863,7 @@ struct lemon *lemp;
     while( cfp ){
       char buf[20];
       if( cfp->dot==cfp->rp->nrhs ){
-        sprintf(buf,"(%d)",cfp->rp->index);
+        snprintf(buf,sizeof buf,"(%d)",cfp->rp->index);
         fprintf(fp,"    %5s ",buf);
       }else{
         fprintf(fp,"          ");
@@ -2909,7 +2909,7 @@ int modemask;
     c = *cp;
     *cp = 0;
     path = (char *)malloc( strlen(argv0) + strlen(name) + 2 );
-    if( path ) sprintf(path,"%s/%s",argv0,name);
+    if( path ) snprintf(path,sizeof path,"%s/%s",argv0,name);
     *cp = c;
   }else{
     extern char *getenv();
@@ -2922,7 +2922,7 @@ int modemask;
         if( cp==0 ) cp = &pathlist[strlen(pathlist)];
         c = *cp;
         *cp = 0;
-        sprintf(path,"%s/%s",pathlist,name);
+        snprintf(path,sizeof path,"%s/%s",pathlist,name);
         *cp = c;
         if( c==0 ) pathlist = "";
         else pathlist = &cp[1];
@@ -3002,14 +3002,16 @@ struct lemon *lemp;
 
   cp = strrchr(lemp->filename,'.');
   if( cp ){
-    sprintf(buf,"%.*s.lt",(int)(cp-lemp->filename),lemp->filename);
+    snprintf(buf,sizeof buf,"%.*s.lt",(int)(cp-lemp->filename),lemp->filename);
   }else{
-    sprintf(buf,"%s.lt",lemp->filename);
+    snprintf(buf,sizeof buf,"%s.lt",lemp->filename);
   }
   if( access(buf,004)==0 ){
     tpltname = buf;
   }else if( access(templatename,004)==0 ){
     tpltname = templatename;
+  }else if( access("/usr/share/lemon/lempar.c",004)==0 ){
+    tpltname = "/usr/share/lemon/lempar.c";
   }else{
     tpltname = pathsearch(lemp->argv0,templatename,0);
   }
@@ -3021,7 +3023,7 @@ struct lemon *lemp;
   }
   in = fopen(tpltname,"rb");
   if( in==0 ){
-    fprintf(stderr,"Can't open the template file \"%s\".\n",templatename);
+    fprintf(stderr,"Can't open the template file \"%s\".\n",tpltname);
     lemp->errorcnt++;
     return 0;
   }
@@ -3733,7 +3735,7 @@ int mhflag;     /* Output in makeheaders format if true */
   /* Generate a table containing the symbolic name of every symbol
   */
   for(i=0; i<lemp->nsymbol; i++){
-    sprintf(line,"\"%s\",",lemp->symbols[i]->name);
+    snprintf(line,sizeof line,"\"%s\",",lemp->symbols[i]->name);
     fprintf(out,"  %-15s",line);
     if( (i&3)==3 ){ fprintf(out,"\n"); lineno++; }
   }
@@ -3880,7 +3882,7 @@ struct lemon *lemp;
   in = file_open(lemp,".h","rb");
   if( in ){
     for(i=1; i<lemp->nterminal && fgets(line,LINESIZE,in); i++){
-      sprintf(pattern,"#define %s%-30s %2d\n",prefix,lemp->symbols[i]->name,i);
+      snprintf(pattern,sizeof pattern,"#define %s%-30s %2d\n",prefix,lemp->symbols[i]->name,i);
       if( strcmp(line,pattern) ) break;
     }
     fclose(in);
