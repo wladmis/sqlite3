@@ -106,7 +106,7 @@ install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
 %define pkgdocdir %_docdir/sqlite-3.3
 mkdir -p %buildroot%pkgdocdir
-install -p -m644 doc/*.* %buildroot%pkgdocdir/
+install -p -m644 COPYING doc/*.* %buildroot%pkgdocdir/
 mkdir -p %buildroot%_docdir/lemon
 mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 
@@ -116,6 +116,8 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %files
 %_bindir/%name
 %_man1dir/%name.*
+%dir %pkgdocdir
+%pkgdocdir/COPYING
 
 %files -n lib%name
 %_libdir/lib%name.so.?*
