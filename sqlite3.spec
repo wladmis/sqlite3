@@ -116,11 +116,11 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %files
 %_bindir/%name
 %_man1dir/%name.*
-%dir %pkgdocdir
-%pkgdocdir/COPYING
 
 %files -n lib%name
 %_libdir/lib%name.so.?*
+%dir %pkgdocdir
+%pkgdocdir/COPYING
 
 %files -n lib%name-devel
 %_includedir/%name.h
