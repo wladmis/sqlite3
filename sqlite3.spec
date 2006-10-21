@@ -33,6 +33,11 @@ Summary: An Embeddable SQL Database Engine (TCL bindings)
 Group: Development/Tcl
 Requires: lib%name = %version-%release
 
+%package doc
+Summary: An Embeddable SQL Database Engine (documentation)
+Group: Development/Documentation
+Requires: lib%name = %version-%release
+
 %package -n lemon
 Summary: The Lemon Parser Generator
 Group: Development/Other
@@ -59,6 +64,11 @@ Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description tcl
+SQLite is a C library that implements an SQL database engine. 
+Programs that link with the SQLite library can have SQL database 
+access without running a separate RDBMS process.
+
+%description doc
 SQLite is a C library that implements an SQL database engine. 
 Programs that link with the SQLite library can have SQL database 
 access without running a separate RDBMS process.
@@ -94,11 +104,16 @@ install -pD -m755 lemon %buildroot%_bindir/lemon
 install -pD -m644 lemon.1 %buildroot%_man1dir/lemon.1
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
+%define pkgdocdir %_docdir/sqlite-3.3
+mkdir -p %buildroot%pkgdocdir
+install -p -m644 doc/*.* %buildroot%pkgdocdir/
+mkdir -p %buildroot%_docdir/lemon
+mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
+
 %post -n lib%name -p %post_ldconfig
 %postun -n lib%name -p %postun_ldconfig
 
 %files
-%doc doc/*.*
 %_bindir/%name
 %_man1dir/%name.*
 
@@ -121,10 +136,16 @@ install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 %dir %_tcldatadir/sqlite3
 %_tcldatadir/sqlite3/pkgIndex.tcl
 
+%files doc
+%dir %pkgdocdir
+%pkgdocdir/*.*
+
 %files -n lemon
 %_bindir/lemon
 %_man1dir/lemon.*
 %_datadir/lemon/
+%dir %_docdir/lemon
+%_docdir/lemon/lemon.html
 
 %changelog
 * Sun Aug 13 2006 Alexey Tourbin <at@altlinux.ru> 3.3.7-alt1
