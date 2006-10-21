@@ -102,6 +102,8 @@ SHLIB_SUFFIX = @TCL_SHLIB_SUFFIX@
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 libdir = @libdir@
+tcllibdir = @libdir@/tcl
+tcldatadir = @prefix@/share/tcl
 INSTALL = @INSTALL@
 LIBTOOL = ./libtool
 ALLOWRELEASE = @ALLOWRELEASE@
@@ -276,13 +278,15 @@ last_change:	$(SRC)
 
 libsqlite3.la:	$(LIBOBJ)
 	$(LTLINK) -o libsqlite3.la $(LIBOBJ) $(LIBPTHREAD) \
+		-Wl,--version-script=libsqlite3.map -Wl,-z,defs \
 		${ALLOWRELEASE} -rpath $(libdir) -version-info "8:6:8"
 
 libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
-	$(LTLINK) -o libtclsqlite3.la tclsqlite.lo \
-		$(LIBOBJ) @TCL_STUB_LIB_SPEC@ $(LIBPTHREAD) \
-                -rpath $(libdir)/sqlite \
-		-version-info "8:6:8"
+	$(LTLINK) -o libtclsqlite3.la $^ \
+		@TCL_STUB_LIB_SPEC@ $(LIBPTHREAD) \
+		-rpath $(tcllibdir) \
+		-version-info "8:6:8" \
+		$(LIBTCL) -Wl,-z,defs
 
 sqlite3$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
 	$(LTLINK) $(READLINE_FLAGS) $(LIBPTHREAD) \
@@ -479,7 +483,7 @@ testfixture$(TEXE):	$(TOP)/src/tclsqlite.c libsqlite3.la $(TESTSRC)
 	$(LTLINK) -DTCLSH=1 -DSQLITE_TEST=1 -DSQLITE_CRASH_TEST=1 \
                 -DSQLITE_NO_SYNC=1 $(TEMP_STORE) \
 		-o testfixture $(TESTSRC) $(TOP)/src/tclsqlite.c \
-		libsqlite3.la $(LIBTCL)
+		libsqlite3.la $(LIBTCL) -static
 
 
 fulltest:	testfixture$(TEXE) sqlite3$(TEXE)
@@ -660,7 +664,7 @@ doc:	common.tcl $(DOC)
 	mkdir -p doc
 	mv $(DOC) doc
 
-install:	sqlite3 libsqlite3.la sqlite3.h ${HAVE_TCL:1=tcl_install}
+install:	sqlite3 libsqlite3.la sqlite3.h
 	$(INSTALL) -d $(DESTDIR)$(libdir)
 	$(LTINSTALL) libsqlite3.la $(DESTDIR)$(libdir)
 	$(INSTALL) -d $(DESTDIR)$(exec_prefix)/bin
@@ -671,7 +675,13 @@ install:	sqlite3 libsqlite3.la sqlite3.h ${HAVE_TCL:1=tcl_install}
 	$(INSTALL) -m 0644 sqlite3.pc $(DESTDIR)$(libdir)/pkgconfig; 
 
 tcl_install:	libtclsqlite3.la
-	tclsh $(TOP)/tclinstaller.tcl $(VERSION)
+	$(INSTALL) -d $(DESTDIR)$(tcllibdir)
+	$(LTINSTALL) $< $(DESTDIR)$(tcllibdir)
+	$(INSTALL) -d $(DESTDIR)$(tcldatadir)/sqlite3
+	dlname=`. libtclsqlite3.la; echo $$dlname`; \
+	loadpath=`relative $(tcllibdir)/$$dlname $(tcldatadir)/sqlite3/pkgIndex.tcl |tr / ' '`; \
+	echo "package ifneeded sqlite3 $(VERSION) [list load [file join \$$dir $$loadpath] sqlite3]" > \
+		$(DESTDIR)$(tcldatadir)/sqlite3/pkgIndex.tcl
 
 clean:	
 	rm -f *.lo *.la *.o sqlite3$(TEXE) libsqlite3.la

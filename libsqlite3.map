@@ -1,0 +1,41 @@
+SQLITE_3.2.2 {
+    global:
+	sqlite3_db_handle;
+	sqlite3_get_autocommit;
+	sqlite3_transfer_bindings;
+    local:
+	sqlite3[^_]*;
+	[^s]*;
+};
+SQLITE_3.2.6 {
+    global:
+	sqlite3_profile;
+};
+SQLITE_3.3.0 {
+    global:
+	sqlite3_enable_shared_cache;
+	sqlite3_rollback_hook;
+	sqlite3_update_hook;
+};
+SQLITE_3.3.1 {
+    global:
+	sqlite3_thread_cleanup;
+};
+SQLITE_3.3.4 {
+    global:
+	sqlite3_value_numeric_type;
+};
+SQLITE_3.3.7 {
+    global:
+	sqlite3_api;
+	sqlite3_bind_value;
+	sqlite3_clear_bindings;
+	sqlite3_column_value;
+	sqlite3_create_module;
+	sqlite3_declare_vtab;
+	sqlite3_enable_load_extension;
+	sqlite3_load_extension;
+	sqlite3_malloc;
+	sqlite3_realloc;
+	sqlite3_sleep;
+};
