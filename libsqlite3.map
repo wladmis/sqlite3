@@ -27,7 +27,6 @@ SQLITE_3.3.4 {
 };
 SQLITE_3.3.7 {
     global:
-	sqlite3_api;
 	sqlite3_bind_value;
 	sqlite3_clear_bindings;
 	sqlite3_column_value;
@@ -38,4 +37,12 @@ SQLITE_3.3.7 {
 	sqlite3_malloc;
 	sqlite3_realloc;
 	sqlite3_sleep;
+};
+SQLITE3_3.3.8 {
+    global:
+	sqlite3_apis;
+	sqlite3_auto_extension;
+	sqlite3_extended_result_codes;
+	sqlite3_overload_function;
+	sqlite3_reset_auto_extension;
 };
