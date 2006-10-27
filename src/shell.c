@@ -994,7 +994,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
       );
       run_table_dump_query(p->out, p->db,
         "SELECT sql FROM sqlite_master "
-        "WHERE sql NOT NULL AND rootpage==0 AND type='table'"
+        "WHERE sql NOT NULL AND rootpage==0"
       );
     }else{
       int i;
@@ -1010,7 +1010,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
           "  AND type!='meta' AND sql NOT NULL", 0);
         run_table_dump_query(p->out, p->db,
           "SELECT sql FROM sqlite_master "
-          "WHERE sql NOT NULL AND rootpage==0 AND type='table'"
+          "WHERE sql NOT NULL AND rootpage==0"
           "  AND tbl_name LIKE shellstatic()"
         );
         zShellStatic = 0;
