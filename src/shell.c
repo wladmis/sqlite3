@@ -768,9 +768,6 @@ static int dump_callback(void *pArg, int nArg, char **azArg, char **azCol){
       rc = run_table_dump_query(p->out, p->db, zSelect);
     }
     if( zSelect ) free(zSelect);
-    if( rc!=SQLITE_OK ){
-      return 1;
-    }
   }
   return 0;
 }
