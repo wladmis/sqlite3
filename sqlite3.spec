@@ -123,7 +123,8 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %pkgdocdir/COPYING
 
 %files -n lib%name-devel
-%_includedir/%name.h
+%_includedir/sqlite3.h
+%_includedir/sqlite3ext.h
 %_libdir/lib%name.so
 #_libdir/lib%name.la
 %_libdir/pkgconfig/%name.pc
