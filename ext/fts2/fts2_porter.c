@@ -16,13 +16,13 @@
 /*
 ** The code in this file is only compiled if:
 **
-**     * The FTS1 module is being built as an extension
+**     * The FTS2 module is being built as an extension
 **       (in which case SQLITE_CORE is not defined), or
 **
-**     * The FTS1 module is being built into the core of
-**       SQLite (in which case SQLITE_ENABLE_FTS1 is defined).
+**     * The FTS2 module is being built into the core of
+**       SQLite (in which case SQLITE_ENABLE_FTS2 is defined).
 */
-#if !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1)
+#if !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS2)
 
 
 #include <assert.h>
@@ -35,7 +35,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "fts1_tokenizer.h"
+#include "fts2_tokenizer.h"
 
 /*
 ** Class derived from sqlite3_tokenizer
@@ -633,10 +633,10 @@ static const sqlite3_tokenizer_module porterTokenizerModule = {
 ** Allocate a new porter tokenizer.  Return a pointer to the new
 ** tokenizer in *ppModule
 */
-void sqlite3Fts1PorterTokenizerModule(
+void sqlite3Fts2PorterTokenizerModule(
   sqlite3_tokenizer_module const**ppModule
 ){
   *ppModule = &porterTokenizerModule;
 }
 
-#endif /* !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS1) */
+#endif /* !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS2) */

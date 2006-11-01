@@ -1812,32 +1812,31 @@ case OP_IfNot: {            /* no-push */
 
 /* Opcode: IsNull P1 P2 *
 **
-** If any of the top abs(P1) values on the stack are NULL, then jump
-** to P2.  Pop the stack P1 times if P1>0.   If P1<0 leave the stack
-** unchanged.
+** Check the top of the stack and jump to P2 if the top of the stack
+** is NULL.  If P1 is positive, then pop P1 elements from the stack
+** regardless of whether or not the jump is taken.  If P1 is negative,
+** pop -P1 elements from the stack only if the jump is taken and leave
+** the stack unchanged if the jump is not taken.
 */
 case OP_IsNull: {            /* same as TK_ISNULL, no-push */
-  int i, cnt;
-  Mem *pTerm;
-  cnt = pOp->p1;
-  if( cnt<0 ) cnt = -cnt;
-  pTerm = &pTos[1-cnt];
-  assert( pTerm>=p->aStack );
-  for(i=0; i<cnt; i++, pTerm++){
-    if( pTerm->flags & MEM_Null ){
-      pc = pOp->p2-1;
-      break;
+  if( pTos->flags & MEM_Null ){
+    pc = pOp->p2-1;
+    if( pOp->p1<0 ){
+      popStack(&pTos, -pOp->p1);
     }
   }
-  if( pOp->p1>0 ) popStack(&pTos, cnt);
+  if( pOp->p1>0 ){
+    popStack(&pTos, pOp->p1);
+  }
   break;
 }
 
 /* Opcode: NotNull P1 P2 *
 **
-** Jump to P2 if the top P1 values on the stack are all not NULL.  Pop the
-** stack if P1 times if P1 is greater than zero.  If P1 is less than
-** zero then leave the stack unchanged.
+** Jump to P2 if the top abs(P1) values on the stack are all not NULL.  
+** Regardless of whether or not the jump is taken, pop the stack
+** P1 times if P1 is greater than zero.  But if P1 is negative,
+** leave the stack unchanged.
 */
 case OP_NotNull: {            /* same as TK_NOTNULL, no-push */
   int i, cnt;
@@ -3845,38 +3844,6 @@ case OP_IdxGE: {        /* no-push */
     }
     if( res>0 ){
       pc = pOp->p2 - 1 ;
-    }
-  }
-  Release(pTos);
-  pTos--;
-  break;
-}
-
-/* Opcode: IdxIsNull P1 P2 *
-**
-** The top of the stack contains an index entry such as might be generated
-** by the MakeIdxRec opcode.  This routine looks at the first P1 fields of
-** that key.  If any of the first P1 fields are NULL, then a jump is made
-** to address P2.  Otherwise we fall straight through.
-**
-** The index entry is always popped from the stack.
-*/
-case OP_IdxIsNull: {        /* no-push */
-  int i = pOp->p1;
-  int k, n;
-  const char *z;
-  u32 serial_type;
-
-  assert( pTos>=p->aStack );
-  assert( pTos->flags & MEM_Blob );
-  z = pTos->z;
-  n = pTos->n;
-  k = sqlite3GetVarint32((u8*)z, &serial_type);
-  for(; k<n && i>0; i--){
-    k += sqlite3GetVarint32((u8*)&z[k], &serial_type);
-    if( serial_type==0 ){   /* Serial type 0 is a NULL */
-      pc = pOp->p2-1;
-      break;
     }
   }
   Release(pTos);
