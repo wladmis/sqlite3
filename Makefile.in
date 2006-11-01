@@ -104,6 +104,7 @@ exec_prefix = @exec_prefix@
 libdir = @libdir@
 tcllibdir = @libdir@/tcl
 tcldatadir = @prefix@/share/tcl
+sqlite3extdir = @libdir@/sqlite3
 INSTALL = @INSTALL@
 LIBTOOL = ./libtool
 ALLOWRELEASE = @ALLOWRELEASE@
@@ -189,18 +190,6 @@ SRC = \
   $(TOP)/src/vtab.c \
   $(TOP)/src/where.c
 
-# Source code for extensions
-#
-SRC += \
-  $(TOP)/ext/fts1/fts1.c \
-  $(TOP)/ext/fts1/fts1.h \
-  $(TOP)/ext/fts1/fts1_hash.c \
-  $(TOP)/ext/fts1/fts1_hash.h \
-  $(TOP)/ext/fts1/fts1_porter.c \
-  $(TOP)/ext/fts1/fts1_tokenizer.h \
-  $(TOP)/ext/fts1/fts1_tokenizer1.c
-
-
 # Source code to the test files.
 #
 TESTSRC = \
@@ -248,12 +237,33 @@ HDR = \
    $(TOP)/src/vdbe.h \
    parse.h
 
-# Header files used by extensions
-#
-HDR += \
-  $(TOP)/ext/fts1/fts1.h \
-  $(TOP)/ext/fts1/fts1_hash.h \
-  $(TOP)/ext/fts1/fts1_tokenizer.h
+FTS2_HDR = \
+  $(TOP)/ext/fts2/fts2.h \
+  $(TOP)/ext/fts2/fts2_hash.h \
+  $(TOP)/ext/fts2/fts2_tokenizer.h
+
+FTS2_SRC = \
+  $(TOP)/ext/fts2/fts2.c \
+  $(TOP)/ext/fts2/fts2.h \
+  $(TOP)/ext/fts2/fts2_hash.c \
+  $(TOP)/ext/fts2/fts2_hash.h \
+  $(TOP)/ext/fts2/fts2_porter.c \
+  $(TOP)/ext/fts2/fts2_tokenizer.h \
+  $(TOP)/ext/fts2/fts2_tokenizer1.c
+
+fts2.lo: $(TOP)/ext/fts2/fts2.c $(HDR) $(FTS2_HDR)
+	$(LTCOMPILE) -c $<
+fts2_hash.lo: $(TOP)/ext/fts2/fts2_hash.c $(HDR) $(FTS2_HDR)
+	$(LTCOMPILE) -c $<
+fts2_porter.lo: $(TOP)/ext/fts2/fts2_porter.c $(HDR) $(FTS2_HDR)
+	$(LTCOMPILE) -c $<
+fts2_tokenizer1.lo: $(TOP)/ext/fts2/fts2_tokenizer1.c $(HDR) $(FTS2_HDR)
+	$(LTCOMPILE) -c $<
+fts2.la: fts2.lo fts2_hash.lo fts2_porter.lo fts2_tokenizer1.lo libsqlite3.la
+	$(LTLINK) -module -avoid-version -rpath $(sqlite3extdir) -o fts2.la $^ -Wl,-z,defs
+fts2_install: fts2.la
+	$(INSTALL) -d $(DESTDIR)$(sqlite3extdir)
+	$(LTINSTALL) $< $(DESTDIR)$(sqlite3extdir)
 
 # Header files used by the VDBE submodule
 #

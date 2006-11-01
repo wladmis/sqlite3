@@ -33,6 +33,11 @@ Summary: An Embeddable SQL Database Engine (TCL bindings)
 Group: Development/Tcl
 Requires: lib%name = %version-%release
 
+%package fts2
+Summary: Full Text Search backend for the SQLite database engine
+Group: Development/Databases
+Requires: lib%name = %version-%release
+
 %package doc
 Summary: An Embeddable SQL Database Engine (documentation)
 Group: Development/Documentation
@@ -68,6 +73,15 @@ SQLite is a C library that implements an SQL database engine.
 Programs that link with the SQLite library can have SQL database 
 access without running a separate RDBMS process.
 
+%description fts2
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
+
+The fts2 loadable module implements full text search, see
+http://www.sqlite.org/cvstrac/wiki?p=FtsOne
+http://www.sqlite.org/cvstrac/wiki?p=FtsTwo
+
 %description doc
 SQLite is a C library that implements an SQL database engine. 
 Programs that link with the SQLite library can have SQL database 
@@ -93,11 +107,11 @@ autoreconf -i
 # tweak configure; cf. [devel] libreadline add_history
 export config_TARGET_READLINE_LIBS=-lreadline
 %configure --enable-threadsafe
-%make_build all libtcl%name.la doc
+%make_build all libtcl%name.la fts2.la doc
 #make test
 
 %install
-%make_install install tcl_install DESTDIR=%buildroot
+%make_install install tcl_install fts2_install DESTDIR=%buildroot
 install -pD -m644 %name.1 %buildroot%_man1dir/%name.1
 
 install -pD -m755 lemon %buildroot%_bindir/lemon
@@ -138,6 +152,12 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 #_tcllibdir/libtcl%name.la
 %dir %_tcldatadir/sqlite3
 %_tcldatadir/sqlite3/pkgIndex.tcl
+
+%files fts2
+%dir %_libdir/sqlite3
+%_libdir/sqlite3/fts2.so
+#_libdir/sqlite3/fts2.a
+#_libdir/sqlite3/fts2.la
 
 %files doc
 %dir %pkgdocdir
