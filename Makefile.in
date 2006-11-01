@@ -371,7 +371,7 @@ legacy.lo:	$(TOP)/src/legacy.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/legacy.c
 
 loadext.lo:	$(TOP)/src/loadext.c $(HDR)
-	$(LTCOMPILE) -DHAVE_DLOPEN=1 -c $(TOP)/src/loadext.c
+	$(LTCOMPILE) -DHAVE_DLOPEN=1 -DSQLITE3EXTDIR=\"$(sqlite3extdir)\" -c $(TOP)/src/loadext.c
 
 main.lo:	$(TOP)/src/main.c $(HDR)
 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/main.c

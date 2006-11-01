@@ -233,8 +233,30 @@ const sqlite3_api_routines sqlite3_apis = {
 */
 #if defined(HAVE_DLOPEN) && !defined(SQLITE_LIBRARY_TYPE)
 # include <dlfcn.h>
+static
+void *dlopen1(const char *f) {
+  void *h;
+  char *path = NULL;
+  if (strchr(f, '/'))
+    sqlite3SetString(&path, f, NULL);
+  else {
+#ifndef SQLITE3EXTDIR
+#warning "Using default SQLITE3EXTDIR."
+#define SQLITE3EXTDIR "/usr/local/lib/sqlite3"
+#endif
+    const char prefix[] = SQLITE3EXTDIR "/";
+    const char suffix[] = ".so";
+    if (strchr(f, '.'))
+      sqlite3SetString(&path, prefix, f, NULL);
+    else
+      sqlite3SetString(&path, prefix, f, suffix, NULL);
+  }
+  h = dlopen(path, RTLD_NOW);
+  sqliteFree(path);
+  return h;
+}
 # define SQLITE_LIBRARY_TYPE     void*
-# define SQLITE_OPEN_LIBRARY(A)  dlopen(A, RTLD_NOW | RTLD_GLOBAL)
+# define SQLITE_OPEN_LIBRARY(A)  dlopen1(A)
 # define SQLITE_FIND_SYMBOL(A,B) dlsym(A,B)
 # define SQLITE_CLOSE_LIBRARY(A) dlclose(A)
 #endif
