@@ -287,7 +287,7 @@ last_change:	$(SRC)
           | $(NAWK) '{print $$5,$$6}' >last_change
 
 libsqlite3.la:	$(LIBOBJ)
-	$(LTLINK) -o libsqlite3.la $(LIBOBJ) $(LIBPTHREAD) \
+	$(LTLINK) -o libsqlite3.la $(LIBOBJ) $(LIBPTHREAD) -ldl \
 		-Wl,--version-script=libsqlite3.map -Wl,-z,defs \
 		${ALLOWRELEASE} -rpath $(libdir) -version-info "8:6:8"
 
@@ -371,7 +371,7 @@ legacy.lo:	$(TOP)/src/legacy.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/legacy.c
 
 loadext.lo:	$(TOP)/src/loadext.c $(HDR)
-	$(LTCOMPILE) -c $(TOP)/src/loadext.c
+	$(LTCOMPILE) -DHAVE_DLOPEN=1 -c $(TOP)/src/loadext.c
 
 main.lo:	$(TOP)/src/main.c $(HDR)
 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/main.c
