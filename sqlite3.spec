@@ -9,7 +9,7 @@ Group: Development/Databases
 URL: http://www.sqlite.org/
 Source: %name-%version-%release.tar
 
-Requires: lib%name-devel = %version-%release
+Requires: lib%name = %version-%release
 
 # Automatically added by buildreq on Sat Oct 21 2006
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
