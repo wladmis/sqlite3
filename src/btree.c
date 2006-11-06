@@ -1549,8 +1549,13 @@ int sqlite3BtreeOpen(
     return SQLITE_NOMEM;
   }
   rc = sqlite3pager_open(&pBt->pPager, zFilename, EXTRA_SIZE, flags);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3pager_read_fileheader(pBt->pPager,sizeof(zDbHeader),zDbHeader);
+  }
   if( rc!=SQLITE_OK ){
-    if( pBt->pPager ) sqlite3pager_close(pBt->pPager);
+    if( pBt->pPager ){
+      sqlite3pager_close(pBt->pPager);
+    }
     sqliteFree(pBt);
     sqliteFree(p);
     *ppBtree = 0;
@@ -1563,7 +1568,6 @@ int sqlite3BtreeOpen(
   pBt->pCursor = 0;
   pBt->pPage1 = 0;
   pBt->readOnly = sqlite3pager_isreadonly(pBt->pPager);
-  sqlite3pager_read_fileheader(pBt->pPager, sizeof(zDbHeader), zDbHeader);
   pBt->pageSize = get2byte(&zDbHeader[16]);
   if( pBt->pageSize<512 || pBt->pageSize>SQLITE_MAX_PAGE_SIZE
        || ((pBt->pageSize-1)&pBt->pageSize)!=0 ){
