@@ -727,16 +727,15 @@ static void exprAnalyze(
     if( ok ){
       ExprList *pList = 0;
       Expr *pNew, *pDup;
+      Expr *pLeft = 0;
       for(i=sOr.nTerm-1, pOrTerm=sOr.a; i>=0 && ok; i--, pOrTerm++){
         if( (pOrTerm->flags & TERM_OR_OK)==0 ) continue;
         pDup = sqlite3ExprDup(pOrTerm->pExpr->pRight);
         pList = sqlite3ExprListAppend(pList, pDup, 0);
+        pLeft = pOrTerm->pExpr->pLeft;
       }
-      pDup = sqlite3Expr(TK_COLUMN, 0, 0, 0);
-      if( pDup ){
-        pDup->iTable = iCursor;
-        pDup->iColumn = iColumn;
-      }
+      assert( pLeft!=0 );
+      pDup = sqlite3ExprDup(pLeft);
       pNew = sqlite3Expr(TK_IN, pDup, 0, 0);
       if( pNew ){
         int idxNew;
