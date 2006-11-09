@@ -63,9 +63,17 @@ if {[sqlite3 -has-codec]} {
   #  conflict.test
 }
 
+
+# Files to include in the test.  If this list is empty then everything
+# that is not in the EXCLUDE list is run.
+#
+set INCLUDE {
+}
+
 foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
   set tail [file tail $testfile]
   if {[lsearch -exact $EXCLUDE $tail]>=0} continue
+  if {[llength $INCLUDE]>0 && [lsearch -exact $INCLUDE $tail]<0} continue
   source $testfile
   catch {db close}
   if {$sqlite_open_file_count>0} {
