@@ -46,3 +46,8 @@ SQLITE3_3.3.8 {
 	sqlite3_overload_function;
 	sqlite3_reset_auto_extension;
 };
+SQLITE3_3.3.9 {
+    global:
+	sqlite3_prepare16_v2;
+	sqlite3_prepare_v2;
+};
