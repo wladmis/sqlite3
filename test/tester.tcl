@@ -78,6 +78,9 @@ set nTest 0
 set skip_test 0
 set failList {}
 set maxErr 1000
+if {![info exists speedTest]} {
+  set speedTest 0
+}
 
 # Invoke the do_test procedure to run a single test 
 #
@@ -116,6 +119,19 @@ proc do_test {name cmd expected} {
   } else {
     puts " Ok"
   }
+}
+
+# Run an SQL script.  
+# Return the number of microseconds per statement.
+#
+proc speed_trial {name numstmt sql} {
+  puts -nonewline [format {%-20.20s } $name...]
+  flush stdout
+  set speed [time {sqlite3_exec_nr db $sql}]
+  set tm [lindex $speed 0]
+  set per [expr {$tm/(1.0*$numstmt)}]
+  set rate [expr {1000000.0*$numstmt/$tm}]
+  puts [format {%20.1f us/stmt %20.5f stmt/s} $per $rate]
 }
 
 # The procedure uses the special "sqlite_malloc_stat" command
