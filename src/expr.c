@@ -1180,7 +1180,7 @@ static int nameResolverStep(void *pArg, Expr *pExpr){
       }else{
         is_agg = pDef->xFunc==0;
       }
-#ifndef SQLITE_OMIT_AUTHORIZER
+#ifndef SQLITE_OMIT_AUTHORIZATION
       if( pDef ){
         auth = sqlite3AuthCheck(pParse, SQLITE_FUNCTION, 0, pDef->zName, 0);
         if( auth!=SQLITE_OK ){
