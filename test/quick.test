@@ -50,6 +50,7 @@ set EXCLUDE {
   memleak.test
   misuse.test
   quick.test
+  speed1.test
 
   autovacuum_crash.test
   btree8.test
