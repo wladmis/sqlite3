@@ -350,7 +350,9 @@ static const unsigned char aJournalMagic[] = {
 /*
 ** The default size of a disk sector
 */
-#define PAGER_SECTOR_SIZE 512
+#ifndef PAGER_SECTOR_SIZE
+# define PAGER_SECTOR_SIZE 512
+#endif
 
 /*
 ** Page number PAGER_MJ_PGNO is never used in an SQLite database (it is
