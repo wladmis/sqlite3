@@ -1854,8 +1854,7 @@ WhereInfo *sqlite3WhereBegin(
     for(j=iFrom, pTabItem=&pTabList->a[j]; j<pTabList->nSrc; j++, pTabItem++){
       int doNotReorder;  /* True if this table should not be reordered */
 
-      doNotReorder =  (pTabItem->jointype & (JT_LEFT|JT_CROSS))!=0
-                   || (j>0 && (pTabItem[-1].jointype & (JT_LEFT|JT_CROSS))!=0);
+      doNotReorder =  (pTabItem->jointype & (JT_LEFT|JT_CROSS))!=0;
       if( once && doNotReorder ) break;
       m = getMask(&maskSet, pTabItem->iCursor);
       if( (m & notReady)==0 ){
@@ -2031,7 +2030,7 @@ WhereInfo *sqlite3WhereBegin(
     ** initialize a memory cell that records if this table matches any
     ** row of the left table of the join.
     */
-    if( pLevel->iFrom>0 && (pTabItem[-1].jointype & JT_LEFT)!=0 ){
+    if( pLevel->iFrom>0 && (pTabItem[0].jointype & JT_LEFT)!=0 ){
       if( !pParse->nMem ) pParse->nMem++;
       pLevel->iLeftJoin = pParse->nMem++;
       sqlite3VdbeAddOp(v, OP_MemInt, 0, pLevel->iLeftJoin);
