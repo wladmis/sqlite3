@@ -2055,7 +2055,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   sqlite3_open(zFile, &p->db);
   Tcl_DStringFree(&translatedFilename);
   if( SQLITE_OK!=sqlite3_errcode(p->db) ){
-    zErrMsg = strdup(sqlite3_errmsg(p->db));
+    zErrMsg = sqlite3_mprintf("%s", sqlite3_errmsg(p->db));
     sqlite3_close(p->db);
     p->db = 0;
   }
@@ -2065,7 +2065,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   if( p->db==0 ){
     Tcl_SetResult(interp, zErrMsg, TCL_VOLATILE);
     Tcl_Free((char*)p);
-    free(zErrMsg);
+    sqlite3_free(zErrMsg);
     return TCL_ERROR;
   }
   p->maxStmt = NUM_PREPARED_STMTS;
