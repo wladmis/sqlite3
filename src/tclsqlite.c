@@ -1173,6 +1173,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** default.
   */
   case DB_ENABLE_LOAD_EXTENSION: {
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
     int onoff;
     if( objc!=3 ){
       Tcl_WrongNumArgs(interp, 2, objv, "BOOLEAN");
@@ -1183,6 +1184,11 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     }
     sqlite3_enable_load_extension(pDb->db, onoff);
     break;
+#else
+    Tcl_AppendResult(interp, "extension loading is turned off at compile-time",
+                     0);
+    return TCL_ERROR;
+#endif
   }
 
   /*

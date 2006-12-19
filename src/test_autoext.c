@@ -13,8 +13,8 @@
 **
 ** $Id$
 */
-#ifndef SQLITE_OMIT_LOAD_EXTENSION
 #include "tcl.h"
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 #include "sqlite3ext.h"
 static SQLITE_EXTENSION_INIT1
 
