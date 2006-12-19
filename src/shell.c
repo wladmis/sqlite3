@@ -1265,7 +1265,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
         set_table_name(p, "table");
       }
     }else {
-      fprintf(stderr,"mode should be on of: "
+      fprintf(stderr,"mode should be one of: "
          "column csv html insert line list tabs tcl\n");
     }
   }else
