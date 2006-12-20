@@ -249,14 +249,14 @@ carglist ::= carglist carg.
 carglist ::= .
 carg ::= CONSTRAINT nm ccons.
 carg ::= ccons.
-carg ::= DEFAULT term(X).            {sqlite3AddDefaultValue(pParse,X);}
-carg ::= DEFAULT LP expr(X) RP.      {sqlite3AddDefaultValue(pParse,X);}
-carg ::= DEFAULT PLUS term(X).       {sqlite3AddDefaultValue(pParse,X);}
-carg ::= DEFAULT MINUS term(X).      {
+ccons ::= DEFAULT term(X).            {sqlite3AddDefaultValue(pParse,X);}
+ccons ::= DEFAULT LP expr(X) RP.      {sqlite3AddDefaultValue(pParse,X);}
+ccons ::= DEFAULT PLUS term(X).       {sqlite3AddDefaultValue(pParse,X);}
+ccons ::= DEFAULT MINUS term(X).      {
   Expr *p = sqlite3Expr(TK_UMINUS, X, 0, 0);
   sqlite3AddDefaultValue(pParse,p);
 }
-carg ::= DEFAULT id(X).              {
+ccons ::= DEFAULT id(X).              {
   Expr *p = sqlite3Expr(TK_STRING, 0, 0, &X);
   sqlite3AddDefaultValue(pParse,p);
 }
