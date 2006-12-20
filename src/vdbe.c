@@ -4644,7 +4644,7 @@ case OP_VFilter: {   /* no-push */
 
   /* Invoke the xFilter method if one is defined. */
   if( pModule->xFilter ){
-    int res;
+    int res = 0;
     int i;
     Mem **apArg = p->apArg;
     for(i = 0; i<nArg; i++){
