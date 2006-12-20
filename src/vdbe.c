@@ -4642,8 +4642,8 @@ case OP_VFilter: {   /* no-push */
   assert( (pTos[0].flags&MEM_Int)!=0 && pTos[-1].flags==MEM_Int );
   nArg = pTos[-1].i;
 
-  /* Invoke the xFilter method if one is defined. */
-  if( pModule->xFilter ){
+  /* Invoke the xFilter method */
+  {
     int res = 0;
     int i;
     Mem **apArg = p->apArg;
