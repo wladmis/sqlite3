@@ -463,7 +463,7 @@ struct sqlite3 {
     u8 busy;                    /* TRUE if currently initializing */
   } init;
   int nExtension;               /* Number of loaded extensions */
-  void *aExtension;             /* Array of shared libraray handles */
+  void **aExtension;            /* Array of shared libraray handles */
   struct Vdbe *pVdbe;           /* List of active virtual machines */
   int activeVdbeCnt;            /* Number of vdbes currently executing */
   void (*xTrace)(void*,const char*);        /* Trace function */
