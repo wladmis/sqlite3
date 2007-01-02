@@ -2009,7 +2009,9 @@ case OP_Column: {
         pC->aRow = 0;
       }
     }
-    assert( zRec!=0 || avail>=payloadSize || avail>=9 );
+    /* The following assert is true in all cases accept when
+    ** the database file has been corrupted externally.
+    **    assert( zRec!=0 || avail>=payloadSize || avail>=9 ); */
     szHdrSz = GetVarint((u8*)zData, offset);
 
     /* The KeyFetch() or DataFetch() above are fast and will get the entire

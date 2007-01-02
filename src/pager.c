@@ -930,6 +930,7 @@ static int pager_unwritelock(Pager *pPager){
   pPager->setMaster = 0;
   pPager->needSync = 0;
   pPager->pFirstSynced = pPager->pFirst;
+  pPager->dbSize = -1;
   return rc;
 }
 
@@ -3405,14 +3406,12 @@ int sqlite3pager_commit(Pager *pPager){
     ** if there have been no changes to the database file. */
     assert( pPager->needSync==0 );
     rc = pager_unwritelock(pPager);
-    pPager->dbSize = -1;
     return rc;
   }
   assert( pPager->journalOpen );
   rc = sqlite3pager_sync(pPager, 0, 0);
   if( rc==SQLITE_OK ){
     rc = pager_unwritelock(pPager);
-    pPager->dbSize = -1;
   }
   return rc;
 }
@@ -3470,7 +3469,6 @@ int sqlite3pager_rollback(Pager *pPager){
 
   if( !pPager->dirtyCache || !pPager->journalOpen ){
     rc = pager_unwritelock(pPager);
-    pPager->dbSize = -1;
     return rc;
   }
 
