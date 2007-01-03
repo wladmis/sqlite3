@@ -309,6 +309,7 @@ foreach {i conf1 cmd t0 t1 t2 t3} {
     if {$conf1!=""} {set conf1 "ON CONFLICT $conf1"}
     execsql {pragma temp_store=file}
     set ::sqlite_opentemp_count 0
+if {$i==2} btree_breakpoint
     set r0 [catch {execsql [subst {
       DROP TABLE t1;
       CREATE TABLE t1(a,b,c, UNIQUE(a) $conf1);

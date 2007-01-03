@@ -1415,7 +1415,7 @@ static int test_finalize(
 ){
   sqlite3_stmt *pStmt;
   int rc;
-  sqlite3 *db;
+  sqlite3 *db = 0;
 
   if( objc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"",

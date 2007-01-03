@@ -1051,6 +1051,7 @@ static int btree_data(
   rc = sqlite3BtreeData(pCur, 0, n, zBuf);
   if( rc ){
     Tcl_AppendResult(interp, errorName(rc), 0);
+    free(zBuf);
     return TCL_ERROR;
   }
   zBuf[n] = 0;

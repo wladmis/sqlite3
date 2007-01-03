@@ -548,7 +548,6 @@ do_test btree-8.1 {
 } {}
 btree_page_dump $::b1 1
 btree_page_dump $::b1 2
-btree_page_dump $::b1 3
 do_test btree-8.1.1 {
   lindex [btree_pager_stats $::b1] 1
 } {1}
