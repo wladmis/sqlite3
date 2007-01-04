@@ -10,6 +10,18 @@ proc newsitem {date title text} {
 }
 
 
+newsitem {2006-Jun-6} {Version 3.3.6} {
+  Changes include improved tolerance for windows virus scanners
+  and faster :memory: databases.  There are also fixes for several
+  obscure bugs.  Upgrade if you are having problems.
+}
+
+newsitem {2006-Apr-5} {Version 3.3.5} {
+  This release fixes many minor bugs and documentation typos and
+  provides some minor new features and performance enhancements.
+  Upgrade only if you are having problems or need one of the new features.
+}
+
 newsitem {2006-Feb-11} {Version 3.3.4} {
   This release fixes several bugs, including a 
   a blunder that might cause a deadlock on multithreaded systems.
