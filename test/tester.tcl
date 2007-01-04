@@ -352,10 +352,13 @@ proc do_ioerr_test {testname args} {
   set ::ioerropts(-start) 1
   set ::ioerropts(-cksum) 0
   set ::ioerropts(-erc) 0
+  set ::ioerropts(-count) 100000000
   array set ::ioerropts $args
 
   set ::go 1
   for {set n $::ioerropts(-start)} {$::go} {incr n} {
+    incr ::ioerropts(-count) -1
+    if {$::ioerropts(-count)<0} break
  
     # Skip this IO error if it was specified with the "-exclude" option.
     if {[info exists ::ioerropts(-exclude)]} {

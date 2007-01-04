@@ -2076,6 +2076,7 @@ int sqlite3pager_close(Pager *pPager){
 #endif
 
   disable_simulated_io_errors();
+  pPager->errCode = 0;
   pager_reset(pPager);
   enable_simulated_io_errors();
   TRACE2("CLOSE %d\n", PAGERID(pPager));

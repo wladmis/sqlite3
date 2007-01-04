@@ -46,6 +46,9 @@ do_ioerr_test ioerr-1 -erc 1 -sqlprep {
   DELETE FROM t1 WHERE a<100;
 } -exclude [expr [string match [execsql {pragma auto_vacuum}] 1] ? 4 : 0]
 
+finish_test
+return
+
 # Test for IO errors during a VACUUM. 
 #
 # The first IO call is excluded from the test. This call attempts to read
