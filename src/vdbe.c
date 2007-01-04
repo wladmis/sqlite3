@@ -3082,6 +3082,9 @@ case OP_NotExists: {        /* no-push */
     pC->rowidIsValid = res==0;
     pC->nullRow = 0;
     pC->cacheStatus = CACHE_STALE;
+    /* res might be uninitialized if rc!=SQLITE_OK.  But if rc!=SQLITE_OK
+    ** processing is about to abort so we really do not care whether or not
+    ** the following jump is taken. */
     if( res!=0 ){
       pc = pOp->p2 - 1;
       pC->rowidIsValid = 0;
