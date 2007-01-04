@@ -2208,6 +2208,7 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
   
 
   switch( pExpr->op ){
+    case TK_AGG_COLUMN:
     case TK_COLUMN: {
       /* Check to see if the column is in one of the tables in the FROM
       ** clause of the aggregate query */
