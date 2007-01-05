@@ -3878,9 +3878,9 @@ case OP_IdxGE: {        /* no-push */
 */
 case OP_Destroy: {
   int iMoved;
-  Vdbe *pVdbe;
   int iCnt;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
+  Vdbe *pVdbe;
   iCnt = 0;
   for(pVdbe=db->pVdbe; pVdbe; pVdbe=pVdbe->pNext){
     if( pVdbe->magic==VDBE_MAGIC_RUN && pVdbe->inVtabMethod<2 && pVdbe->pc>=0 ){
