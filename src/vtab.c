@@ -340,7 +340,6 @@ static int vtabCallConstructor(
 */
 int sqlite3VtabCallConnect(Parse *pParse, Table *pTab){
   Module *pMod;
-  const char *zModule;
   int rc = SQLITE_OK;
 
   if( !pTab || !pTab->isVirtual || pTab->pVtab ){
@@ -348,7 +347,6 @@ int sqlite3VtabCallConnect(Parse *pParse, Table *pTab){
   }
 
   pMod = pTab->pMod;
-  zModule = pTab->azModuleArg[0];
   if( !pMod ){
     const char *zModule = pTab->azModuleArg[0];
     sqlite3ErrorMsg(pParse, "no such module: %s", zModule);
