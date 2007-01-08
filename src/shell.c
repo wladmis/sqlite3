@@ -821,6 +821,7 @@ static int run_schema_dump_query(
 ** Text of a help message
 */
 static char zHelp[] =
+  ".bail ON|OFF           Stop after hitting an error.  Default OFF\n"
   ".databases             List names and files of attached databases\n"
   ".dump ?TABLE? ...      Dump the database in an SQL text format\n"
   ".echo ON|OFF           Turn command echo on or off\n"
