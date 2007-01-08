@@ -1128,5 +1128,30 @@ do_test capi3c-17.99 {
   sqlite3_finalize $STMT
 } SQLITE_OK
 
+# On the mailing list it has been reported that finalizing after
+# an SQLITE_BUSY return leads to a segfault.  Here we test that case.
+#
+do_test capi3c-18.1 {
+  sqlite3 db2 test.db
+  set STMT [sqlite3_prepare_v2 $DB {SELECT max(a) FROM t1} -1 TAIL]
+  sqlite3_step $STMT
+} SQLITE_ROW
+do_test capi3c-18.2 {
+  sqlite3_column_int $STMT 0
+} 4
+do_test capi3c-18.3 {
+  sqlite3_reset $STMT
+  db2 eval {BEGIN EXCLUSIVE}
+  sqlite3_step $STMT
+} SQLITE_BUSY
+do_test capi3c-18.4 {
+  sqlite3_finalize $STMT
+} SQLITE_BUSY
+do_test capi3c-18.5 {
+  db2 eval {COMMIT}
+  db2 close
+} {}
+
+
 
 finish_test
