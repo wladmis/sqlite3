@@ -96,6 +96,29 @@ do_test vtab1-1.6 {
   }
 } {}
 
+# Ticket #2156.  Using the sqlite3_prepare_v2() API, make sure that
+# a CREATE VIRTUAL TABLE statement can be used multiple times.
+#
+do_test vtab1-1.2152.1 {
+  set DB [sqlite3_connection_pointer db]
+  set sql {CREATE VIRTUAL TABLE t2152a USING echo(t2152b)}
+  set STMT [sqlite3_prepare_v2 $DB $sql -1 TAIL]
+  sqlite3_step $STMT
+} SQLITE_ERROR
+do_test vtab-1.2152.2 {
+  sqlite3_reset $STMT
+  sqlite3_step $STMT
+} SQLITE_ERROR
+do_test vtab-1.2152.3 {
+  sqlite3_reset $STMT
+  db eval {CREATE TABLE t2152b(x,y)}
+  sqlite3_step $STMT
+} SQLITE_DONE
+do_test vtab-1.2152.4 {
+  sqlite3_finalize $STMT
+  db eval {DROP TABLE t2152a; DROP TABLE t2152b}
+} {}
+
 # Test to make sure nothing goes wrong and no memory is leaked if we 
 # select an illegal table-name (i.e a reserved name or the name of a
 # table that already exists).

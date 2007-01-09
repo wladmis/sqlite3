@@ -577,7 +577,8 @@ int sqlite3Reprepare(Vdbe *p){
   }
   sqlite3VdbeSwap(pNew, p);
   sqlite3_transfer_bindings((sqlite3_stmt*)pNew, (sqlite3_stmt*)p);
-  sqlite3_finalize((sqlite3_stmt*)pNew);
+  sqlite3VdbeResetStepResult(pNew);
+  sqlite3VdbeFinalize(pNew);
   return 1;
 }
 

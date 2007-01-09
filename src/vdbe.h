@@ -129,6 +129,7 @@ int sqlite3VdbeFinalize(Vdbe*);
 void sqlite3VdbeResolveLabel(Vdbe*, int);
 int sqlite3VdbeCurrentAddr(Vdbe*);
 void sqlite3VdbeTrace(Vdbe*,FILE*);
+void sqlite3VdbeResetStepResult(Vdbe*);
 int sqlite3VdbeReset(Vdbe*);
 int sqliteVdbeSetVariables(Vdbe*,int,const char**);
 void sqlite3VdbeSetNumCols(Vdbe*,int);
