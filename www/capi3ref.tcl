@@ -1196,7 +1196,8 @@ int sqlite3_prepare16(
  that makes the statement no longer valid, sqlite3_step() will still
  return SQLITE_SCHEMA.  But unlike the legacy behavior, SQLITE_SCHEMA is
  now a fatal error.  Calling sqlite3_prepare_v2() again will not make the
- error go away.
+ error go away.  Note: use sqlite3_errmsg() to find the text of the parsing
+ error that results in an SQLITE_SCHEMA return.
  </li>
 
  <li>
