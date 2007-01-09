@@ -1152,6 +1152,42 @@ do_test capi3c-18.5 {
   db2 close
 } {}
 
-
+# Ticket #2158.  The sqlite3_step() will still return SQLITE_SCHEMA
+# if the database schema changes in a way that makes the statement
+# no longer valid.
+#
+do_test capi3c-19.1 {
+  db eval {
+     CREATE TABLE t3(x,y);
+     INSERT INTO t3 VALUES(1,2);
+  }
+  set STMT [sqlite3_prepare_v2 $DB {SELECT * FROM t3} -1 TAIL]
+  sqlite3_step $STMT
+} SQLITE_ROW
+do_test capi3c-19.2 {
+  sqlite3_column_int $STMT 0
+} 1
+do_test capi3c-19.3 {
+  sqlite3_step $STMT
+} SQLITE_DONE
+do_test capi3c-19.4 {
+  sqlite3_reset $STMT
+  db eval {DROP TABLE t3}
+  sqlite3_step $STMT
+} SQLITE_SCHEMA
+do_test capi3c-19.5 {
+  sqlite3_reset $STMT
+  db eval {
+     CREATE TABLE t3(x,y);
+     INSERT INTO t3 VALUES(1,2);
+  }
+  sqlite3_step $STMT
+} SQLITE_ROW
+do_test capi3c-19.6 {
+  sqlite3_column_int $STMT 1
+} 2
+do_test capi3c-19.99 {
+  sqlite3_finalize $STMT
+} SQLITE_OK
 
 finish_test
