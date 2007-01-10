@@ -369,7 +369,7 @@ legacy.lo:	$(TOP)/src/legacy.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/legacy.c
 
 loadext.lo:	$(TOP)/src/loadext.c $(HDR)
-	$(LTCOMPILE) -DHAVE_DLOPEN=1 -DSQLITE3EXTDIR=\"$(sqlite3extdir)\" -c $(TOP)/src/loadext.c
+	$(LTCOMPILE) -c $(TOP)/src/loadext.c
 
 main.lo:	$(TOP)/src/main.c $(HDR)
 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/main.c
@@ -390,7 +390,7 @@ os.lo:	$(TOP)/src/os.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/os.c
 
 os_unix.lo:	$(TOP)/src/os_unix.c $(HDR)
-	$(LTCOMPILE) -c $(TOP)/src/os_unix.c
+	$(LTCOMPILE) -DSQLITE3EXTDIR=\"$(sqlite3extdir)\" -c $(TOP)/src/os_unix.c
 
 os_win.lo:	$(TOP)/src/os_win.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/os_win.c
