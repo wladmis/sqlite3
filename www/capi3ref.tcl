@@ -861,7 +861,7 @@ int sqlite3_exec(
  value then the query is aborted, all subsequent SQL statements
  are skipped and the sqlite3_exec() function returns the SQLITE_ABORT.
 
- The 4th argument is an arbitrary pointer that is passed
+ The 1st argument is an arbitrary pointer that is passed
  to the callback function as its first argument.
 
  The 2nd argument to the callback function is the number of
