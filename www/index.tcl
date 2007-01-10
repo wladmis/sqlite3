@@ -68,7 +68,7 @@ proc newsitem {date title text} {
 }
 
 newsitem {2007-Jan-9} {Version 3.3.10} {
-  Version 3.3.10 fixes several bugs that were introduced by the
+  Version 3.3.10 fixes several bugs that were introduced by the previous
   release.  Upgrading is recommended.
 }
 
