@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.3.8
-Release: alt2
+Version: 3.3.10
+Release: alt1
 
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
@@ -11,7 +11,7 @@ Source: %name-%version-%release.tar
 
 Requires: lib%name = %version-%release
 
-# Automatically added by buildreq on Wed Nov 15 2006
+# Automatically added by buildreq on Thu Jan 11 2007
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
 
 %package -n lib%name
@@ -171,6 +171,9 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
+* Thu Jan 11 2007 Alexey Tourbin <at@altlinux.ru> 3.3.10-alt1
+- 3.3.8+ -> 3.3.10+
+
 * Wed Nov 15 2006 Alexey Tourbin <at@altlinux.ru> 3.3.8-alt2
 - 3.3.8+ cvs snapshot
 - enabled full text search backend (sqlite3-fts2 package)
