@@ -454,6 +454,21 @@ int sqlite3VdbeExec(
   p->resOnStack = 0;
   db->busyHandler.nBusy = 0;
   CHECK_FOR_INTERRUPT;
+#ifdef SQLITE_DEBUG
+  if( (p->db->flags & SQLITE_VdbeListing)!=0
+    || sqlite3OsFileExists("vdbe_explain")
+  ){
+    int i;
+    printf("VDBE Program Listing:\n");
+    sqlite3VdbePrintSql(p);
+    for(i=0; i<p->nOp; i++){
+      sqlite3VdbePrintOp(stdout, i, &p->aOp[i]);
+    }
+  }
+  if( sqlite3OsFileExists("vdbe_trace") ){
+    p->trace = stdout;
+  }
+#endif
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
     assert( pTos<=&p->aStack[pc] );
@@ -2009,7 +2024,9 @@ case OP_Column: {
         pC->aRow = 0;
       }
     }
-    assert( zRec!=0 || avail>=payloadSize || avail>=9 );
+    /* The following assert is true in all cases accept when
+    ** the database file has been corrupted externally.
+    **    assert( zRec!=0 || avail>=payloadSize || avail>=9 ); */
     szHdrSz = GetVarint((u8*)zData, offset);
 
     /* The KeyFetch() or DataFetch() above are fast and will get the entire
@@ -3080,6 +3097,9 @@ case OP_NotExists: {        /* no-push */
     pC->rowidIsValid = res==0;
     pC->nullRow = 0;
     pC->cacheStatus = CACHE_STALE;
+    /* res might be uninitialized if rc!=SQLITE_OK.  But if rc!=SQLITE_OK
+    ** processing is about to abort so we really do not care whether or not
+    ** the following jump is taken. */
     if( res!=0 ){
       pc = pOp->p2 - 1;
       pC->rowidIsValid = 0;
@@ -3873,9 +3893,9 @@ case OP_IdxGE: {        /* no-push */
 */
 case OP_Destroy: {
   int iMoved;
-  Vdbe *pVdbe;
   int iCnt;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
+  Vdbe *pVdbe;
   iCnt = 0;
   for(pVdbe=db->pVdbe; pVdbe; pVdbe=pVdbe->pNext){
     if( pVdbe->magic==VDBE_MAGIC_RUN && pVdbe->inVtabMethod<2 && pVdbe->pc>=0 ){
@@ -3999,10 +4019,14 @@ case OP_CreateTable: {
   break;
 }
 
-/* Opcode: ParseSchema P1 * P3
+/* Opcode: ParseSchema P1 P2 P3
 **
 ** Read and parse all entries from the SQLITE_MASTER table of database P1
-** that match the WHERE clause P3.
+** that match the WHERE clause P3.  P2 is the "force" flag.   Always do
+** the parsing if P2 is true.  If P2 is false, then this routine is a
+** no-op if the schema is not currently loaded.  In other words, if P2
+** is false, the SQLITE_MASTER table is only parsed if the rest of the
+** schema is already loaded into the symbol table.
 **
 ** This opcode invokes the parser to create a new virtual machine,
 ** then runs the new virtual machine.  It is thus a reentrant opcode.
@@ -4014,7 +4038,9 @@ case OP_ParseSchema: {        /* no-push */
   InitData initData;
 
   assert( iDb>=0 && iDb<db->nDb );
-  if( !DbHasProperty(db, iDb, DB_SchemaLoaded) ) break;
+  if( !pOp->p2 && !DbHasProperty(db, iDb, DB_SchemaLoaded) ){
+    break;
+  }
   zMaster = SCHEMA_TABLE(iDb);
   initData.db = db;
   initData.iDb = pOp->p1;
@@ -4642,9 +4668,9 @@ case OP_VFilter: {   /* no-push */
   assert( (pTos[0].flags&MEM_Int)!=0 && pTos[-1].flags==MEM_Int );
   nArg = pTos[-1].i;
 
-  /* Invoke the xFilter method if one is defined. */
-  if( pModule->xFilter ){
-    int res;
+  /* Invoke the xFilter method */
+  {
+    int res = 0;
     int i;
     Mem **apArg = p->apArg;
     for(i = 0; i<nArg; i++){

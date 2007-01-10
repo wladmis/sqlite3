@@ -82,10 +82,6 @@
 ** the type.  Due to how deletion is implemented in the segmentation
 ** system, on-disk doclists MUST store at least positions.
 **
-** TODO(shess) Delta-encode docids.  This provides a 10% win versus
-** DL_POSITIONS_OFFSETS on the first 100,000 documents of the Enron
-** corpus, greater versus DL_POSITIONS.
-**
 **
 **** Segment leaf nodes ****
 ** Segment leaf nodes store terms and doclists, ordered by term.  Leaf
@@ -142,13 +138,19 @@
 **
 ** varint iHeight;           (height from leaf level, always >0)
 ** varint iBlockid;          (block id of node's leftmost subtree)
-** array {
-**   varint nTerm;           (length of term)
-**   char pTerm[nTerm];      (content of term)
+** optional {
+**   varint nTerm;           (length of first term)
+**   char pTerm[nTerm];      (content of first term)
+**   array {
+**                                (further terms are delta-encoded)
+**     varint nPrefix;            (length of shared prefix with previous term)
+**     varint nSuffix;            (length of unshared suffix)
+**     char pTermSuffix[nSuffix]; (unshared suffix of next term)
+**   }
 ** }
 **
-** Here, array { X } means zero or more occurrences of X, adjacent in
-** memory.
+** Here, optional { X } means an optional element, while array { X }
+** means zero or more occurrences of X, adjacent in memory.
 **
 ** An interior node encodes n terms separating n+1 subtrees.  The
 ** subtree blocks are contiguous, so only the first subtree's blockid
@@ -156,7 +158,10 @@
 ** than the first term encoded (or all terms if no term is encoded).
 ** Otherwise, for terms greater than or equal to pTerm[i] but less
 ** than pTerm[i+1], the subtree for that term will be rooted at
-** iBlockid+i.
+** iBlockid+i.  Interior nodes only store enough term data to
+** distinguish adjacent children (if the rightmost term of the left
+** child is "something", and the leftmost term of the right child is
+** "wicked", only "w" is stored).
 **
 ** New data is spilled to a new interior node at the same height when
 ** the current node exceeds INTERIOR_MAX bytes (default 2048).
@@ -403,7 +408,6 @@ static int getVarint32(const char *p, int *pi){
 ** dataBufferExpand - expand capacity without adding data.
 ** dataBufferAppend - append data.
 ** dataBufferAppend2 - append two pieces of data at once.
-** dataBufferAppendLenData - append a varint-encoded length plus data.
 ** dataBufferReplace - replace buffer's data.
 */
 typedef struct DataBuffer {
@@ -452,12 +456,6 @@ static void dataBufferAppend2(DataBuffer *pBuffer,
   memcpy(pBuffer->pData+pBuffer->nData, pSource1, nSource1);
   memcpy(pBuffer->pData+pBuffer->nData+nSource1, pSource2, nSource2);
   pBuffer->nData += nSource1+nSource2;
-}
-static void dataBufferAppendLenData(DataBuffer *pBuffer,
-                                    const char *pSource, int nSource){
-  char c[VARINT_MAX];
-  int n = putVarint(c, nSource);
-  dataBufferAppend2(pBuffer, c, n, pSource, nSource);
 }
 static void dataBufferReplace(DataBuffer *pBuffer,
                               const char *pSource, int nSource){
@@ -649,11 +647,12 @@ static void dlrDestroy(DLReader *pReader){
 ** last docid found because it's convenient in other assertions for
 ** DLWriter.
 */
-static int docListValidate(DocListType iType, const char *pData, int nData,
-                           sqlite_int64 *pLastDocid){
+static void docListValidate(DocListType iType, const char *pData, int nData,
+                            sqlite_int64 *pLastDocid){
   sqlite_int64 iPrevDocid = 0;
+  assert( nData>0 );
   assert( pData!=0 );
-  assert( nData!=0 );
+  assert( pData+nData>pData );
   while( nData!=0 ){
     sqlite_int64 iDocidDelta;
     int n = getVarint(pData, &iDocidDelta);
@@ -677,8 +676,10 @@ static int docListValidate(DocListType iType, const char *pData, int nData,
     nData -= n;
   }
   if( pLastDocid ) *pLastDocid = iPrevDocid;
-  return 1;
 }
+#define ASSERT_VALID_DOCLIST(i, p, n, o) docListValidate(i, p, n, o)
+#else
+#define ASSERT_VALID_DOCLIST(i, p, n, o) assert( 1 )
 #endif
 
 /*******************************************************************/
@@ -736,7 +737,7 @@ static void dlwAppend(DLWriter *pWriter,
   ** the expected docid.  This is essential because we'll trust this
   ** docid in future delta-encoding.
   */
-  assert( docListValidate(pWriter->iType, pData, nData, &iLastDocidDelta) );
+  ASSERT_VALID_DOCLIST(pWriter->iType, pData, nData, &iLastDocidDelta);
   assert( iLastDocid==iFirstDocid-iDocid+iLastDocidDelta );
 
   /* Append recoded initial docid and everything else.  Rest of docids
@@ -2290,8 +2291,7 @@ static void tokenListToIdList(char **azIn){
 ** the result.
 */
 static char *firstToken(char *zIn, char **pzTail){
-  int i, n, ttype;
-  i = 0;
+  int n, ttype;
   while(1){
     n = getToken(zIn, &ttype);
     if( ttype==TOKEN_SPACE ){
@@ -2360,7 +2360,7 @@ static void clearTableSpec(TableSpec *p) {
  */
 static int parseSpec(TableSpec *pSpec, int argc, const char *const*argv,
                      char**pzErr){
-  int i, j, n;
+  int i, n;
   char *z, *zDummy;
   char **azArg;
   const char *zTokenizer = 0;    /* argv[] entry describing the tokenizer */
@@ -2400,7 +2400,7 @@ static int parseSpec(TableSpec *pSpec, int argc, const char *const*argv,
   pSpec->nColumn = 0;
   pSpec->azColumn = azArg;
   zTokenizer = "tokenize simple";
-  for(i=3, j=0; i<argc; ++i){
+  for(i=3; i<argc; ++i){
     if( startsWith(azArg[i],"tokenize") ){
       zTokenizer = azArg[i];
     }else{
@@ -2612,6 +2612,7 @@ out:
 /* Decide how to handle an SQL query. */
 static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
   int i;
+  TRACE(("FTS2 BestIndex\n"));
 
   for(i=0; i<pInfo->nConstraint; ++i){
     const struct sqlite3_index_constraint *pConstraint;
@@ -2620,10 +2621,12 @@ static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
       if( pConstraint->iColumn==-1 &&
           pConstraint->op==SQLITE_INDEX_CONSTRAINT_EQ ){
         pInfo->idxNum = QUERY_ROWID;      /* lookup by rowid */
+        TRACE(("FTS2 QUERY_ROWID\n"));
       } else if( pConstraint->iColumn>=0 &&
                  pConstraint->op==SQLITE_INDEX_CONSTRAINT_MATCH ){
         /* full-text search */
         pInfo->idxNum = QUERY_FULLTEXT + pConstraint->iColumn;
+        TRACE(("FTS2 QUERY_FULLTEXT %d\n", pConstraint->iColumn));
       } else continue;
 
       pInfo->aConstraintUsage[i].argvIndex = 1;
@@ -2638,7 +2641,6 @@ static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
     }
   }
   pInfo->idxNum = QUERY_GENERIC;
-  TRACE(("FTS2 BestIndex\n"));
   return SQLITE_OK;
 }
 
@@ -3033,10 +3035,8 @@ static int fulltextClose(sqlite3_vtab_cursor *pCursor){
   sqlite3_finalize(c->pStmt);
   queryClear(&c->q);
   snippetClear(&c->snippet);
-  if( c->result.nData!=0 ){
-    dlrDestroy(&c->reader);
-    dataBufferDestroy(&c->result);
-  }
+  if( c->result.nData!=0 ) dlrDestroy(&c->reader);
+  dataBufferDestroy(&c->result);
   free(c);
   return SQLITE_OK;
 }
@@ -3399,6 +3399,11 @@ static int fulltextQuery(
 ** number idxNum-QUERY_FULLTEXT, 0 indexed.  argv[0] is the right-hand
 ** side of the MATCH operator.
 */
+/* TODO(shess) Upgrade the cursor initialization and destruction to
+** account for fulltextFilter() being called multiple times on the
+** same cursor.  The current solution is very fragile.  Apply fix to
+** fts2 as appropriate.
+*/
 static int fulltextFilter(
   sqlite3_vtab_cursor *pCursor,     /* The cursor used for this query */
   int idxNum, const char *idxStr,   /* Which indexing scheme to use */
@@ -3413,9 +3418,10 @@ static int fulltextFilter(
 
   zSql = sqlite3_mprintf("select rowid, * from %%_content %s",
                           idxNum==QUERY_GENERIC ? "" : "where rowid=?");
+  sqlite3_finalize(c->pStmt);
   rc = sql_prepare(v->db, v->zName, &c->pStmt, zSql);
   sqlite3_free(zSql);
-  if( rc!=SQLITE_OK ) goto out;
+  if( rc!=SQLITE_OK ) return rc;
 
   c->iCursorType = idxNum;
   switch( idxNum ){
@@ -3424,7 +3430,7 @@ static int fulltextFilter(
 
     case QUERY_ROWID:
       rc = sqlite3_bind_int64(c->pStmt, 1, sqlite3_value_int64(argv[0]));
-      if( rc!=SQLITE_OK ) goto out;
+      if( rc!=SQLITE_OK ) return rc;
       break;
 
     default:   /* full-text search */
@@ -3433,7 +3439,13 @@ static int fulltextFilter(
       assert( idxNum<=QUERY_FULLTEXT+v->nColumn);
       assert( argc==1 );
       queryClear(&c->q);
-      dataBufferInit(&c->result, 0);
+      if( c->result.nData!=0 ){
+        /* This case happens if the same cursor is used repeatedly. */
+        dlrDestroy(&c->reader);
+        dataBufferReset(&c->result);
+      }else{
+        dataBufferInit(&c->result, 0);
+      }
       rc = fulltextQuery(v, idxNum-QUERY_FULLTEXT, zQuery, -1, &c->result, &c->q);
       if( rc!=SQLITE_OK ) return rc;
       if( c->result.nData!=0 ){
@@ -3443,10 +3455,7 @@ static int fulltextFilter(
     }
   }
 
-  rc = fulltextNext(pCursor);
-
-out:
-  return rc;
+  return fulltextNext(pCursor);
 }
 
 /* This is the xEof method of the virtual table.  The SQLite core
@@ -3667,11 +3676,76 @@ static InteriorBlock *interiorBlockNew(int iHeight, sqlite_int64 iChildBlock,
   return block;
 }
 
+#ifndef NDEBUG
+/* Verify that the data is readable as an interior node. */
+static void interiorBlockValidate(InteriorBlock *pBlock){
+  const char *pData = pBlock->data.pData;
+  int nData = pBlock->data.nData;
+  int n, iDummy;
+  sqlite_int64 iBlockid;
+
+  assert( nData>0 );
+  assert( pData!=0 );
+  assert( pData+nData>pData );
+
+  /* Must lead with height of node as a varint(n), n>0 */
+  n = getVarint32(pData, &iDummy);
+  assert( n>0 );
+  assert( iDummy>0 );
+  assert( n<nData );
+  pData += n;
+  nData -= n;
+
+  /* Must contain iBlockid. */
+  n = getVarint(pData, &iBlockid);
+  assert( n>0 );
+  assert( n<=nData );
+  pData += n;
+  nData -= n;
+
+  /* Zero or more terms of positive length */
+  if( nData!=0 ){
+    /* First term is not delta-encoded. */
+    n = getVarint32(pData, &iDummy);
+    assert( n>0 );
+    assert( iDummy>0 );
+    assert( n+iDummy>0);
+    assert( n+iDummy<=nData );
+    pData += n+iDummy;
+    nData -= n+iDummy;
+
+    /* Following terms delta-encoded. */
+    while( nData!=0 ){
+      /* Length of shared prefix. */
+      n = getVarint32(pData, &iDummy);
+      assert( n>0 );
+      assert( iDummy>=0 );
+      assert( n<nData );
+      pData += n;
+      nData -= n;
+
+      /* Length and data of distinct suffix. */
+      n = getVarint32(pData, &iDummy);
+      assert( n>0 );
+      assert( iDummy>0 );
+      assert( n+iDummy>0);
+      assert( n+iDummy<=nData );
+      pData += n+iDummy;
+      nData -= n+iDummy;
+    }
+  }
+}
+#define ASSERT_VALID_INTERIOR_BLOCK(x) interiorBlockValidate(x)
+#else
+#define ASSERT_VALID_INTERIOR_BLOCK(x) assert( 1 )
+#endif
+
 typedef struct InteriorWriter {
   int iHeight;                   /* from 0 at leaves. */
   InteriorBlock *first, *last;
   struct InteriorWriter *parentWriter;
 
+  DataBuffer term;               /* Last term written to block "last". */
   sqlite_int64 iOpeningChildBlock; /* First child block in block "last". */
 #ifndef NDEBUG
   sqlite_int64 iLastChildBlock;  /* for consistency checks. */
@@ -3696,6 +3770,8 @@ static void interiorWriterInit(int iHeight, const char *pTerm, int nTerm,
 #endif
   block = interiorBlockNew(iHeight, iChildBlock, pTerm, nTerm);
   pWriter->last = pWriter->first = block;
+  ASSERT_VALID_INTERIOR_BLOCK(pWriter->last);
+  dataBufferInit(&pWriter->term, 0);
 }
 
 /* Append the child node rooted at iChildBlock to the interior node,
@@ -3705,7 +3781,27 @@ static void interiorWriterAppend(InteriorWriter *pWriter,
                                  const char *pTerm, int nTerm,
                                  sqlite_int64 iChildBlock){
   char c[VARINT_MAX+VARINT_MAX];
-  int n = putVarint(c, nTerm);
+  int n, nPrefix = 0;
+
+  ASSERT_VALID_INTERIOR_BLOCK(pWriter->last);
+
+  /* The first term written into an interior node is actually
+  ** associated with the second child added (the first child was added
+  ** in interiorWriterInit, or in the if clause at the bottom of this
+  ** function).  That term gets encoded straight up, with nPrefix left
+  ** at 0.
+  */
+  if( pWriter->term.nData==0 ){
+    n = putVarint(c, nTerm);
+  }else{
+    while( nPrefix<pWriter->term.nData &&
+           pTerm[nPrefix]==pWriter->term.pData[nPrefix] ){
+      nPrefix++;
+    }
+
+    n = putVarint(c, nPrefix);
+    n += putVarint(c+n, nTerm-nPrefix);
+  }
 
 #ifndef NDEBUG
   pWriter->iLastChildBlock++;
@@ -3715,15 +3811,19 @@ static void interiorWriterAppend(InteriorWriter *pWriter,
   /* Overflow to a new block if the new term makes the current block
   ** too big, and the current block already has enough terms.
   */
-  if( pWriter->last->data.nData+n+nTerm>INTERIOR_MAX &&
+  if( pWriter->last->data.nData+n+nTerm-nPrefix>INTERIOR_MAX &&
       iChildBlock-pWriter->iOpeningChildBlock>INTERIOR_MIN_TERMS ){
     pWriter->last->next = interiorBlockNew(pWriter->iHeight, iChildBlock,
                                            pTerm, nTerm);
     pWriter->last = pWriter->last->next;
     pWriter->iOpeningChildBlock = iChildBlock;
+    dataBufferReset(&pWriter->term);
   }else{
-    dataBufferAppend2(&pWriter->last->data, c, n, pTerm, nTerm);
+    dataBufferAppend2(&pWriter->last->data, c, n,
+                      pTerm+nPrefix, nTerm-nPrefix);
+    dataBufferReplace(&pWriter->term, pTerm, nTerm);
   }
+  ASSERT_VALID_INTERIOR_BLOCK(pWriter->last);
 }
 
 /* Free the space used by pWriter, including the linked-list of
@@ -3743,6 +3843,7 @@ static int interiorWriterDestroy(InteriorWriter *pWriter){
     interiorWriterDestroy(pWriter->parentWriter);
     free(pWriter->parentWriter);
   }
+  dataBufferDestroy(&pWriter->term);
   SCRAMBLE(pWriter);
   return SQLITE_OK;
 }
@@ -3769,6 +3870,7 @@ static int interiorWriterRootInfo(fulltext_vtab *v, InteriorWriter *pWriter,
   /* Flush the first block to %_segments, and create a new level of
   ** interior node.
   */
+  ASSERT_VALID_INTERIOR_BLOCK(block);
   rc = block_insert(v, block->data.pData, block->data.nData, &iBlockid);
   if( rc!=SQLITE_OK ) return rc;
   *piEndBlockid = iBlockid;
@@ -3782,6 +3884,7 @@ static int interiorWriterRootInfo(fulltext_vtab *v, InteriorWriter *pWriter,
   ** node.
   */
   for(block=block->next; block!=NULL; block=block->next){
+    ASSERT_VALID_INTERIOR_BLOCK(block);
     rc = block_insert(v, block->data.pData, block->data.nData, &iBlockid);
     if( rc!=SQLITE_OK ) return rc;
     *piEndBlockid = iBlockid;
@@ -3797,12 +3900,13 @@ static int interiorWriterRootInfo(fulltext_vtab *v, InteriorWriter *pWriter,
 
 /****************************************************************/
 /* InteriorReader is used to read off the data from an interior node
-** (see comment at top of file for the format).  InteriorReader does
-** not own its data, so interiorReaderDestroy() is a formality.
+** (see comment at top of file for the format).
 */
 typedef struct InteriorReader {
   const char *pData;
   int nData;
+
+  DataBuffer term;          /* previous term, for decoding term delta. */
 
   sqlite_int64 iBlockid;
 } InteriorReader;
@@ -3813,7 +3917,7 @@ static void interiorReaderDestroy(InteriorReader *pReader){
 
 static void interiorReaderInit(const char *pData, int nData,
                                InteriorReader *pReader){
-  int n;
+  int n, nTerm;
 
   /* Require at least the leading flag byte */
   assert( nData>0 );
@@ -3826,10 +3930,25 @@ static void interiorReaderInit(const char *pData, int nData,
   assert( 1+n<=nData );
   pReader->pData = pData+1+n;
   pReader->nData = nData-(1+n);
+
+  /* A single-child interior node (such as when a leaf node was too
+  ** large for the segment directory) won't have any terms.
+  ** Otherwise, decode the first term.
+  */
+  if( pReader->nData==0 ){
+    dataBufferInit(&pReader->term, 0);
+  }else{
+    n = getVarint32(pReader->pData, &nTerm);
+    dataBufferInit(&pReader->term, nTerm);
+    dataBufferReplace(&pReader->term, pReader->pData+n, nTerm);
+    assert( n+nTerm<=pReader->nData );
+    pReader->pData += n+nTerm;
+    pReader->nData -= n+nTerm;
+  }
 }
 
 static int interiorReaderAtEnd(InteriorReader *pReader){
-  return pReader->nData<=0;
+  return pReader->term.nData==0;
 }
 
 static sqlite_int64 interiorReaderCurrentBlockid(InteriorReader *pReader){
@@ -3837,26 +3956,37 @@ static sqlite_int64 interiorReaderCurrentBlockid(InteriorReader *pReader){
 }
 
 static int interiorReaderTermBytes(InteriorReader *pReader){
-  int nTerm;
   assert( !interiorReaderAtEnd(pReader) );
-  getVarint32(pReader->pData, &nTerm);
-  return nTerm;
+  return pReader->term.nData;
 }
 static const char *interiorReaderTerm(InteriorReader *pReader){
-  int n, nTerm;
   assert( !interiorReaderAtEnd(pReader) );
-  n = getVarint32(pReader->pData, &nTerm);
-  return pReader->pData+n;
+  return pReader->term.pData;
 }
 
 /* Step forward to the next term in the node. */
 static void interiorReaderStep(InteriorReader *pReader){
-  int n, nTerm;
   assert( !interiorReaderAtEnd(pReader) );
-  n = getVarint32(pReader->pData, &nTerm);
-  assert( n+nTerm<=pReader->nData );
-  pReader->pData += n+nTerm;
-  pReader->nData -= n+nTerm;
+
+  /* If the last term has been read, signal eof, else construct the
+  ** next term.
+  */
+  if( pReader->nData==0 ){
+    dataBufferReset(&pReader->term);
+  }else{
+    int n, nPrefix, nSuffix;
+
+    n = getVarint32(pReader->pData, &nPrefix);
+    n += getVarint32(pReader->pData+n, &nSuffix);
+
+    /* Truncate the current term and append suffix data. */
+    pReader->term.nData = nPrefix;
+    dataBufferAppend(&pReader->term, pReader->pData+n, nSuffix);
+
+    assert( n+nSuffix<=pReader->nData );
+    pReader->pData += n+nSuffix;
+    pReader->nData -= n+nSuffix;
+  }
   pReader->iBlockid++;
 }
 
@@ -3920,14 +4050,16 @@ typedef struct LeafWriter {
   DataBuffer term;                /* previous encoded term */
   DataBuffer data;                /* encoding buffer */
 
+  /* bytes of first term in the current node which distinguishes that
+  ** term from the last term of the previous node.
+  */
+  int nTermDistinct;
+
   InteriorWriter parentWriter;    /* if we overflow */
   int has_parent;
 } LeafWriter;
 
 static void leafWriterInit(int iLevel, int idx, LeafWriter *pWriter){
-  char c[VARINT_MAX];
-  int n;
-
   CLEAR(pWriter);
   pWriter->iLevel = iLevel;
   pWriter->idx = idx;
@@ -3936,54 +4068,74 @@ static void leafWriterInit(int iLevel, int idx, LeafWriter *pWriter){
 
   /* Start out with a reasonably sized block, though it can grow. */
   dataBufferInit(&pWriter->data, LEAF_MAX);
-  n = putVarint(c, 0);
-  dataBufferReplace(&pWriter->data, c, n);
 }
 
 #ifndef NDEBUG
 /* Verify that the data is readable as a leaf node. */
-static int leafNodeValidate(const char *pData, int nData){
+static void leafNodeValidate(const char *pData, int nData){
   int n, iDummy;
 
+  if( nData==0 ) return;
+  assert( nData>0 );
   assert( pData!=0 );
-  assert( nData!=0 );
+  assert( pData+nData>pData );
 
   /* Must lead with a varint(0) */
   n = getVarint32(pData, &iDummy);
   assert( iDummy==0 );
-  if( nData==n ) return 1;
+  assert( n>0 );
+  assert( n<nData );
   pData += n;
   nData -= n;
 
   /* Leading term length and data must fit in buffer. */
   n = getVarint32(pData, &iDummy);
+  assert( n>0 );
+  assert( iDummy>0 );
+  assert( n+iDummy>0 );
   assert( n+iDummy<nData );
   pData += n+iDummy;
   nData -= n+iDummy;
 
   /* Leading term's doclist length and data must fit. */
   n = getVarint32(pData, &iDummy);
+  assert( n>0 );
+  assert( iDummy>0 );
+  assert( n+iDummy>0 );
   assert( n+iDummy<=nData );
-  assert( docListValidate(DL_DEFAULT, pData+n, iDummy, NULL) );
+  ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, NULL);
   pData += n+iDummy;
   nData -= n+iDummy;
 
   /* Verify that trailing terms and doclists also are readable. */
   while( nData!=0 ){
     n = getVarint32(pData, &iDummy);
-    n += getVarint32(pData+n, &iDummy);
+    assert( n>0 );
+    assert( iDummy>=0 );
+    assert( n<nData );
+    pData += n;
+    nData -= n;
+    n = getVarint32(pData, &iDummy);
+    assert( n>0 );
+    assert( iDummy>0 );
+    assert( n+iDummy>0 );
     assert( n+iDummy<nData );
     pData += n+iDummy;
     nData -= n+iDummy;
 
     n = getVarint32(pData, &iDummy);
+    assert( n>0 );
+    assert( iDummy>0 );
+    assert( n+iDummy>0 );
     assert( n+iDummy<=nData );
-    assert( docListValidate(DL_DEFAULT, pData+n, iDummy, NULL) );
+    ASSERT_VALID_DOCLIST(DL_DEFAULT, pData+n, iDummy, NULL);
     pData += n+iDummy;
     nData -= n+iDummy;
   }
-  return 1;
 }
+#define ASSERT_VALID_LEAF_NODE(p, n) leafNodeValidate(p, n)
+#else
+#define ASSERT_VALID_LEAF_NODE(p, n) assert( 1 )
 #endif
 
 /* Flush the current leaf node to %_segments, and adding the resulting
@@ -4002,7 +4154,7 @@ static int leafWriterInternalFlush(fulltext_vtab *v, LeafWriter *pWriter,
   assert( nData>2 );
   assert( iData>=0 );
   assert( iData+nData<=pWriter->data.nData );
-  assert( leafNodeValidate(pWriter->data.pData+iData, nData) );
+  ASSERT_VALID_LEAF_NODE(pWriter->data.pData+iData, nData);
 
   rc = block_insert(v, pWriter->data.pData+iData, nData, &iBlockid);
   if( rc!=SQLITE_OK ) return rc;
@@ -4014,6 +4166,9 @@ static int leafWriterInternalFlush(fulltext_vtab *v, LeafWriter *pWriter,
   n = getVarint32(pWriter->data.pData+iData+1, &nStartingTerm);
   pStartingTerm = pWriter->data.pData+iData+1+n;
   assert( pWriter->data.nData>iData+1+n+nStartingTerm );
+  assert( pWriter->nTermDistinct>0 );
+  assert( pWriter->nTermDistinct<=nStartingTerm );
+  nStartingTerm = pWriter->nTermDistinct;
 
   if( pWriter->has_parent ){
     interiorWriterAppend(&pWriter->parentWriter,
@@ -4039,8 +4194,7 @@ static int leafWriterFlush(fulltext_vtab *v, LeafWriter *pWriter){
   if( rc!=SQLITE_OK ) return rc;
 
   /* Re-initialize the output buffer. */
-  pWriter->data.nData = putVarint(pWriter->data.pData, 0);
-  dataBufferReset(&pWriter->term);
+  dataBufferReset(&pWriter->data);
 
   return SQLITE_OK;
 }
@@ -4064,7 +4218,7 @@ static int leafWriterRootInfo(fulltext_vtab *v, LeafWriter *pWriter,
   }
 
   /* Flush remaining leaf data. */
-  if( pWriter->data.nData>1 ){
+  if( pWriter->data.nData>0 ){
     int rc = leafWriterFlush(v, pWriter);
     if( rc!=SQLITE_OK ) return rc;
   }
@@ -4096,7 +4250,7 @@ static int leafWriterFinalize(fulltext_vtab *v, LeafWriter *pWriter){
   if( rc!=SQLITE_OK ) return rc;
 
   /* Don't bother storing an entirely empty segment. */
-  if( iEndBlockid==0 && nRootInfo==1 ) return SQLITE_OK;
+  if( iEndBlockid==0 && nRootInfo==0 ) return SQLITE_OK;
 
   return segdir_set(v, pWriter->iLevel, pWriter->idx,
                     pWriter->iStartBlockid, pWriter->iEndBlockid,
@@ -4109,73 +4263,46 @@ static void leafWriterDestroy(LeafWriter *pWriter){
   dataBufferDestroy(&pWriter->data);
 }
 
-/* Encode a term into the leafWriter, delta-encoding as appropriate. */
-static void leafWriterEncodeTerm(LeafWriter *pWriter,
-                                 const char *pTerm, int nTerm){
-  if( pWriter->term.nData==0 ){
-    /* Encode the entire leading term as:
+/* Encode a term into the leafWriter, delta-encoding as appropriate.
+** Returns the length of the new term which distinguishes it from the
+** previous term, which can be used to set nTermDistinct when a node
+** boundary is crossed.
+*/
+static int leafWriterEncodeTerm(LeafWriter *pWriter,
+                                const char *pTerm, int nTerm){
+  char c[VARINT_MAX+VARINT_MAX];
+  int n, nPrefix = 0;
+
+  assert( nTerm>0 );
+  while( nPrefix<pWriter->term.nData &&
+         pTerm[nPrefix]==pWriter->term.pData[nPrefix] ){
+    nPrefix++;
+    /* Failing this implies that the terms weren't in order. */
+    assert( nPrefix<nTerm );
+  }
+
+  if( pWriter->data.nData==0 ){
+    /* Encode the node header and leading term as:
+    **  varint(0)
     **  varint(nTerm)
     **  char pTerm[nTerm]
     */
-    assert( pWriter->data.nData==1 );
-    dataBufferAppendLenData(&pWriter->data, pTerm, nTerm);
+    n = putVarint(c, '\0');
+    n += putVarint(c+n, nTerm);
+    dataBufferAppend2(&pWriter->data, c, n, pTerm, nTerm);
   }else{
     /* Delta-encode the term as:
     **  varint(nPrefix)
     **  varint(nSuffix)
     **  char pTermSuffix[nSuffix]
     */
-    char c[VARINT_MAX+VARINT_MAX];
-    int n, nPrefix = 0;
-
-    while( nPrefix<nTerm && nPrefix<pWriter->term.nData &&
-           pTerm[nPrefix]==pWriter->term.pData[nPrefix] ){
-      nPrefix++;
-    }
-
     n = putVarint(c, nPrefix);
     n += putVarint(c+n, nTerm-nPrefix);
     dataBufferAppend2(&pWriter->data, c, n, pTerm+nPrefix, nTerm-nPrefix);
   }
   dataBufferReplace(&pWriter->term, pTerm, nTerm);
-}
 
-/* Push pTerm[nTerm] along with the doclist data to the leaf layer of
-** %_segments.
-*/
-/* TODO(shess) Revise writeZeroSegment() so that doclists are
-** constructed directly in pWriter->data.  That implies refactoring
-** leafWriterStep() and leafWriterStepMerge() to share more code.
-*/
-static int leafWriterStep(fulltext_vtab *v, LeafWriter *pWriter,
-                          const char *pTerm, int nTerm,
-                          const char *pData, int nData){
-  int rc;
-
-  /* Flush existing data if this item won't fit well. */
-  if( pWriter->data.nData>1 &&
-      (nData+nTerm>STANDALONE_MIN ||
-       pWriter->data.nData+nData+nTerm>LEAF_MAX) ){
-    rc = leafWriterFlush(v, pWriter);
-    if( rc!=SQLITE_OK ) return rc;
-  }
-
-  leafWriterEncodeTerm(pWriter, pTerm, nTerm);
-
-  /* Encode the doclist as:
-  **  varint(nDoclist)
-  **  char pDoclist[nDoclist]
-  */
-  dataBufferAppendLenData(&pWriter->data, pData, nData);
-
-  /* Flush standalone blocks right out */
-  if( nData+nTerm>STANDALONE_MIN ){
-    rc = leafWriterFlush(v, pWriter);
-    if( rc!=SQLITE_OK ) return rc;
-  }
-  assert( leafNodeValidate(pWriter->data.pData, pWriter->data.nData) );
-
-  return SQLITE_OK;
+  return nPrefix+1;
 }
 
 /* Used to avoid a memmove when a large amount of doclist data is in
@@ -4212,10 +4339,13 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
                                DLReader *pReaders, int nReaders){
   char c[VARINT_MAX+VARINT_MAX];
   int iTermData = pWriter->data.nData, iDoclistData;
-  int i, nData, n, nActualData, nActual, rc;
+  int i, nData, n, nActualData, nActual, rc, nTermDistinct;
 
-  assert( leafNodeValidate(pWriter->data.pData, pWriter->data.nData) );
-  leafWriterEncodeTerm(pWriter, pTerm, nTerm);
+  ASSERT_VALID_LEAF_NODE(pWriter->data.pData, pWriter->data.nData);
+  nTermDistinct = leafWriterEncodeTerm(pWriter, pTerm, nTerm);
+
+  /* Remember nTermDistinct if opening a new node. */
+  if( iTermData==0 ) pWriter->nTermDistinct = nTermDistinct;
 
   iDoclistData = pWriter->data.nData;
 
@@ -4229,9 +4359,9 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
   dataBufferAppend(&pWriter->data, c, n);
 
   docListMerge(&pWriter->data, pReaders, nReaders);
-  assert( docListValidate(DL_DEFAULT,
-                          pWriter->data.pData+iDoclistData+n,
-                          pWriter->data.nData-iDoclistData-n, NULL) );
+  ASSERT_VALID_DOCLIST(DL_DEFAULT,
+                       pWriter->data.pData+iDoclistData+n,
+                       pWriter->data.nData-iDoclistData-n, NULL);
 
   /* The actual amount of doclist data at this point could be smaller
   ** than the length we encoded.  Additionally, the space required to
@@ -4254,9 +4384,11 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
   */
   if( nTerm+nActualData>STANDALONE_MIN ){
     /* Push leaf node from before this term. */
-    if( iTermData>1 ){
+    if( iTermData>0 ){
       rc = leafWriterInternalFlush(v, pWriter, 0, iTermData);
       if( rc!=SQLITE_OK ) return rc;
+
+      pWriter->nTermDistinct = nTermDistinct;
     }
 
     /* Fix the encoded doclist length. */
@@ -4268,8 +4400,8 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
     if( rc!=SQLITE_OK ) return rc;
 
     /* Leave the node empty. */
-    pWriter->data.nData = putVarint(pWriter->data.pData, 0);
-    dataBufferReset(&pWriter->term);
+    dataBufferReset(&pWriter->data);
+
     return rc;
   }
 
@@ -4297,6 +4429,8 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
     rc = leafWriterInternalFlush(v, pWriter, 0, iTermData);
     if( rc!=SQLITE_OK ) return rc;
 
+    pWriter->nTermDistinct = nTermDistinct;
+
     /* Rebuild header using the current term */
     n = putVarint(pWriter->data.pData, 0);
     n += putVarint(pWriter->data.pData+n, nTerm);
@@ -4317,9 +4451,28 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
            pWriter->data.nData-iDoclistData);
     pWriter->data.nData -= iDoclistData-n;
   }
-  assert( leafNodeValidate(pWriter->data.pData, pWriter->data.nData) );
+  ASSERT_VALID_LEAF_NODE(pWriter->data.pData, pWriter->data.nData);
 
   return SQLITE_OK;
+}
+
+/* Push pTerm[nTerm] along with the doclist data to the leaf layer of
+** %_segments.
+*/
+/* TODO(shess) Revise writeZeroSegment() so that doclists are
+** constructed directly in pWriter->data.
+*/
+static int leafWriterStep(fulltext_vtab *v, LeafWriter *pWriter,
+                          const char *pTerm, int nTerm,
+                          const char *pData, int nData){
+  int rc;
+  DLReader reader;
+
+  dlrInit(&reader, DL_DEFAULT, pData, nData);
+  rc = leafWriterStepMerge(v, pWriter, pTerm, nTerm, &reader, 1);
+  dlrDestroy(&reader);
+
+  return rc;
 }
 
 

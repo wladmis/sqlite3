@@ -247,8 +247,10 @@ api {} {
  upon encountering the lock.
  If the busy callback is not NULL, then the
  callback will be invoked with two arguments.  The
- second argument is the number of prior calls to the busy callback
- for the same lock.  If the
+ first argument to the handler is a copy of the void* pointer which
+ is the third argument to this routine.  The second argument to
+ the handler is the number of times that the busy handler has
+ been invoked for this locking event. If the
  busy callback returns 0, then no additional attempts are made to
  access the database and SQLITE_BUSY is returned.
  If the callback returns non-zero, then another attempt is made to open the
@@ -859,7 +861,7 @@ int sqlite3_exec(
  value then the query is aborted, all subsequent SQL statements
  are skipped and the sqlite3_exec() function returns the SQLITE_ABORT.
 
- The 4th argument is an arbitrary pointer that is passed
+ The 1st argument is an arbitrary pointer that is passed
  to the callback function as its first argument.
 
  The 2nd argument to the callback function is the number of
@@ -1138,6 +1140,8 @@ int sqlite3_prepare16_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const void **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
+
+/* Legacy Interfaces */
 int sqlite3_prepare(
   sqlite3 *db,            /* Database handle */
   const char *zSql,       /* SQL statement, UTF-8 encoded */
@@ -1158,8 +1162,8 @@ int sqlite3_prepare16(
 
  The first argument "db" is an SQLite database handle. The second
  argument "zSql" is the statement to be compiled, encoded as either
- UTF-8 or UTF-16.  The sqlite3_prepare() and sqlite3_prepare_v2()
- interfaces uses UTF-8 and sqlite3_prepare16() and sqlite3_prepare16_v2()
+ UTF-8 or UTF-16.  The sqlite3_prepare_v2()
+ interfaces uses UTF-8 and sqlite3_prepare16_v2()
  use UTF-16. If the next argument, "nBytes", is less
  than zero, then zSql is read up to the first nul terminator.  If
  "nBytes" is not less than zero, then it is the length of the string zSql
@@ -1179,14 +1183,27 @@ int sqlite3_prepare16(
  On success, SQLITE_OK is returned.  Otherwise an error code is returned.
 
  The sqlite3_prepare_v2() and sqlite3_prepare16_v2() interfaces are
- recommended for all new programs. The other two interfaces are retained
- for backwards compatibility. In the "v2" interfaces, the prepared statement
+ recommended for all new programs. The two older interfaces are retained
+ for backwards compatibility, but their use is discouraged.
+ In the "v2" interfaces, the prepared statement
  that is returned (the sqlite3_stmt object) contains a copy of the original
- SQL. This causes the sqlite3_step() interface to behave a little differently.
+ SQL. This causes the sqlite3_step() interface to behave a differently in
+ two ways:
+
+ <ol>
+ <li>
  If the database schema changes, instead of returning SQLITE_SCHEMA as it
  always used to do, sqlite3_step() will automatically recompile the SQL
- statement and try to run it again. Only after 5 consecutive failures will
- an SQLITE_SCHEMA failure be reported back. The other change is that
+ statement and try to run it again.  If the schema has changed in a way
+ that makes the statement no longer valid, sqlite3_step() will still
+ return SQLITE_SCHEMA.  But unlike the legacy behavior, SQLITE_SCHEMA is
+ now a fatal error.  Calling sqlite3_prepare_v2() again will not make the
+ error go away.  Note: use sqlite3_errmsg() to find the text of the parsing
+ error that results in an SQLITE_SCHEMA return.
+ </li>
+
+ <li>
+ When an error occurs, 
  sqlite3_step() will return one of the detailed result-codes
  like SQLITE_IOERR or SQLITE_FULL or SQLITE_SCHEMA directly. The
  legacy behavior was that sqlite3_step() would only return a generic
@@ -1194,6 +1211,8 @@ int sqlite3_prepare16(
  sqlite3_reset() in order to find the underlying cause of the problem.
  With the "v2" prepare interfaces, the underlying reason for the error is
  returned directly.
+ </li>
+ </ol>
 }
 
 api {} {
@@ -1231,8 +1250,8 @@ api {} {
 int sqlite3_reset(sqlite3_stmt *pStmt);
 } {
  The sqlite3_reset() function is called to reset a prepared SQL
- statement obtained by a previous call to sqlite3_prepare(),
- sqlite3_prepare_v2(), sqlite3_prepare16() or
+ statement obtained by a previous call to 
+ sqlite3_prepare_v2() or
  sqlite3_prepare16_v2() back to it's initial state, ready to be re-executed.
  Any SQL statement variables that had values bound to them using
  the sqlite3_bind_*() API retain their values.
@@ -1352,8 +1371,9 @@ api {} {
 int sqlite3_step(sqlite3_stmt*);
 } {
  After an SQL query has been prepared with a call to either
- sqlite3_prepare(), sqlite3_prepare_v2(), sqlite3_prepare16(),
- or sqlite3_prepare16_v2(), then this function must be
+ sqlite3_prepare_v2() or sqlite3_prepare16_v2() or to one of
+ the legacy interfaces sqlite3_prepare() or sqlite3_prepare16(),
+ then this function must be
  called one or more times to execute the statement.
 
  The details of the behavior of this sqlite3_step() interface depend
@@ -1380,8 +1400,8 @@ int sqlite3_step(sqlite3_stmt*);
  If the SQL statement being executed returns any data, then 
  SQLITE_ROW is returned each time a new row of data is ready
  for processing by the caller. The values may be accessed using
- the sqlite3_column_*() functions. sqlite3_step()
- is called again to retrieve the next row of data.
+ the sqlite3_column_int(), sqlite3_column_text(), and similar functions.
+ sqlite3_step() is called again to retrieve the next row of data.
  
  SQLITE_ERROR means that a run-time error (such as a constraint
  violation) has occurred.  sqlite3_step() should not be called again on

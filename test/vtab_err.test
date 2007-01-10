@@ -14,6 +14,14 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Only run these tests if memory debugging is turned on.
+#
+if {[info command sqlite_malloc_stat]==""} {
+  puts "Skipping vtab_err tests: not compiled with -DSQLITE_MEMDEBUG=1"
+  finish_test
+  return
+}
+
 ifcapable !vtab {
   finish_test
   return

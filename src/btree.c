@@ -421,7 +421,8 @@ struct BtCursor {
 */
 #if SQLITE_TEST
 # define TRACE(X)   if( sqlite3_btree_trace )\
-                        { sqlite3DebugPrintf X; fflush(stdout); }
+/*                        { sqlite3DebugPrintf X; fflush(stdout); } */ \
+{ printf X; fflush(stdout); }
 int sqlite3_btree_trace=0;  /* True to enable tracing */
 #else
 # define TRACE(X)
@@ -1930,13 +1931,15 @@ static int lockBtreeWithRetry(Btree *pRef){
 */
 static void unlockBtreeIfUnused(BtShared *pBt){
   if( pBt->inTransaction==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
-    if( pBt->pPage1->aData==0 ){
-      MemPage *pPage = pBt->pPage1;
-      pPage->aData = &((u8*)pPage)[-pBt->pageSize];
-      pPage->pBt = pBt;
-      pPage->pgno = 1;
+    if( sqlite3pager_refcount(pBt->pPager)>=1 ){
+      if( pBt->pPage1->aData==0 ){
+        MemPage *pPage = pBt->pPage1;
+        pPage->aData = &((u8*)pPage)[-pBt->pageSize];
+        pPage->pBt = pBt;
+        pPage->pgno = 1;
+      }
+      releasePage(pBt->pPage1);
     }
-    releasePage(pBt->pPage1);
     pBt->pPage1 = 0;
     pBt->inStmt = 0;
   }
@@ -3307,7 +3310,7 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
     assert( pCur->pPage->nCell==0 );
     return SQLITE_OK;
   }
-   for(;;){
+  for(;;){
     int lwr, upr;
     Pgno chldPg;
     MemPage *pPage = pCur->pPage;
@@ -3569,14 +3572,14 @@ static int allocatePage(
   int rc;
   int n;     /* Number of pages on the freelist */
   int k;     /* Number of leaves on the trunk of the freelist */
+  MemPage *pTrunk = 0;
+  MemPage *pPrevTrunk = 0;
 
   pPage1 = pBt->pPage1;
   n = get4byte(&pPage1->aData[36]);
   if( n>0 ){
     /* There are pages on the freelist.  Reuse one of those pages. */
-    MemPage *pTrunk = 0;
     Pgno iTrunk;
-    MemPage *pPrevTrunk = 0;
     u8 searchList = 0; /* If the free-list must be searched for 'nearby' */
     
     /* If the 'exact' parameter was true and a query of the pointer-map
@@ -3617,16 +3620,8 @@ static int allocatePage(
       }
       rc = getPage(pBt, iTrunk, &pTrunk);
       if( rc ){
-        releasePage(pPrevTrunk);
-        return rc;
-      }
-
-      /* TODO: This should move to after the loop? */
-      rc = sqlite3pager_write(pTrunk->aData);
-      if( rc ){
-        releasePage(pTrunk);
-        releasePage(pPrevTrunk);
-        return rc;
+        pTrunk = 0;
+        goto end_allocate_page;
       }
 
       k = get4byte(&pTrunk->aData[4]);
@@ -3635,6 +3630,10 @@ static int allocatePage(
         ** So extract the trunk page itself and use it as the newly 
         ** allocated page */
         assert( pPrevTrunk==0 );
+        rc = sqlite3pager_write(pTrunk->aData);
+        if( rc ){
+          goto end_allocate_page;
+        }
         *pPgno = iTrunk;
         memcpy(&pPage1->aData[32], &pTrunk->aData[0], 4);
         *ppPage = pTrunk;
@@ -3642,7 +3641,8 @@ static int allocatePage(
         TRACE(("ALLOCATE: %d trunk - %d free pages left\n", *pPgno, n-1));
       }else if( k>pBt->usableSize/4 - 8 ){
         /* Value of k is out of range.  Database corruption */
-        return SQLITE_CORRUPT_BKPT;
+        rc = SQLITE_CORRUPT_BKPT;
+        goto end_allocate_page;
 #ifndef SQLITE_OMIT_AUTOVACUUM
       }else if( searchList && nearby==iTrunk ){
         /* The list is being searched and this trunk page is the page
@@ -3651,6 +3651,10 @@ static int allocatePage(
         assert( *pPgno==iTrunk );
         *ppPage = pTrunk;
         searchList = 0;
+        rc = sqlite3pager_write(pTrunk->aData);
+        if( rc ){
+          goto end_allocate_page;
+        }
         if( k==0 ){
           if( !pPrevTrunk ){
             memcpy(&pPage1->aData[32], &pTrunk->aData[0], 4);
@@ -3666,26 +3670,26 @@ static int allocatePage(
           Pgno iNewTrunk = get4byte(&pTrunk->aData[8]);
           rc = getPage(pBt, iNewTrunk, &pNewTrunk);
           if( rc!=SQLITE_OK ){
-            releasePage(pTrunk);
-            releasePage(pPrevTrunk);
-            return rc;
+            goto end_allocate_page;
           }
           rc = sqlite3pager_write(pNewTrunk->aData);
           if( rc!=SQLITE_OK ){
             releasePage(pNewTrunk);
-            releasePage(pTrunk);
-            releasePage(pPrevTrunk);
-            return rc;
+            goto end_allocate_page;
           }
           memcpy(&pNewTrunk->aData[0], &pTrunk->aData[0], 4);
           put4byte(&pNewTrunk->aData[4], k-1);
           memcpy(&pNewTrunk->aData[8], &pTrunk->aData[12], (k-1)*4);
+          releasePage(pNewTrunk);
           if( !pPrevTrunk ){
             put4byte(&pPage1->aData[32], iNewTrunk);
           }else{
+            rc = sqlite3pager_write(pPrevTrunk->aData);
+            if( rc ){
+              goto end_allocate_page;
+            }
             put4byte(&pPrevTrunk->aData[0], iNewTrunk);
           }
-          releasePage(pNewTrunk);
         }
         pTrunk = 0;
         TRACE(("ALLOCATE: %d trunk - %d free pages left\n", *pPgno, n-1));
@@ -3695,6 +3699,10 @@ static int allocatePage(
         int closest;
         Pgno iPage;
         unsigned char *aData = pTrunk->aData;
+        rc = sqlite3pager_write(aData);
+        if( rc ){
+          goto end_allocate_page;
+        }
         if( nearby>0 ){
           int i, dist;
           closest = 0;
@@ -3738,8 +3746,8 @@ static int allocatePage(
         }
       }
       releasePage(pPrevTrunk);
+      pPrevTrunk = 0;
     }while( searchList );
-    releasePage(pTrunk);
   }else{
     /* There are no pages on the freelist, so create a new page at the
     ** end of the file */
@@ -3768,6 +3776,10 @@ static int allocatePage(
   }
 
   assert( *pPgno!=PENDING_BYTE_PAGE(pBt) );
+
+end_allocate_page:
+  releasePage(pTrunk);
+  releasePage(pPrevTrunk);
   return rc;
 }
 
@@ -6414,7 +6426,6 @@ int sqlite3BtreeCopyFile(Btree *pTo, Btree *pFrom){
     rc = sqlite3pager_get(pBtFrom->pPager, i, &pPage);
     if( rc ) break;
     rc = sqlite3pager_overwrite(pBtTo->pPager, i, pPage);
-    if( rc ) break;
     sqlite3pager_unref(pPage);
   }
   for(i=nPage+1; rc==SQLITE_OK && i<=nToPage; i++){

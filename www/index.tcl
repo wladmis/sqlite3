@@ -27,9 +27,10 @@ Features include:
 <li>A complete database is stored in a single disk file.</li>
 <li>Database files can be freely shared between machines with
     different byte orders.</li>
-<li>Supports databases up to 2 terabytes
+<li>Supports databases up to 2 tebibytes
     (2<sup><small>41</small></sup> bytes) in size.</li>
-<li>Sizes of strings and BLOBs limited only by available memory.</li>
+<li>Strings and BLOBs up to 2 gibibytes (2<sup><small>31</small></sup> bytes)
+    in size.</li>
 <li>Small code footprint: less than 250KiB fully configured or less
     than 150KiB with optional features omitted.</li>
 <li><a href="speed.html">Faster</a> than popular client/server database
@@ -66,6 +67,24 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Jan-9} {Version 3.3.10} {
+  Version 3.3.10 fixes several bugs that were introduced by the previous
+  release.  Upgrading is recommended.
+}
+
+newsitem {2007-Jan-4} {Version 3.3.9} {
+  Version 3.3.9 fixes bugs that can lead to database corruption under
+  obscure and difficult to reproduce circumstances.  See
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
+  DatabaseCorruption</a> in the
+  <a href="http://www.sqlite.org/cvstrac/wiki">wiki</a> for details.
+  This release also adds the new
+  <a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a>
+  API and includes important bug fixes in the command-line
+  shell and enhancements to the query optimizer.  Upgrading is
+  recommended.
+}
+
 newsitem {2006-Oct-9} {Version 3.3.8} {
   Version 3.3.8 adds support for full-text search using the 
   <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1
@@ -92,18 +111,6 @@ newsitem {2006-Jun-19} {New Book About SQLite} {
   The books covers the latest SQLite internals as well as
   the native C interface and bindings for PHP, Python,
   Perl, Ruby, Tcl, and Java.  Recommended.
-}
-
-newsitem {2006-Jun-6} {Version 3.3.6} {
-  Changes include improved tolerance for windows virus scanners
-  and faster :memory: databases.  There are also fixes for several
-  obscure bugs.  Upgrade if you are having problems.
-}
-
-newsitem {2006-Apr-5} {Version 3.3.5} {
-  This release fixes many minor bugs and documentation typos and
-  provides some minor new features and performance enhancements.
-  Upgrade only if you are having problems or need one of the new features.
 }
 
 

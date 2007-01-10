@@ -639,6 +639,7 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   */
   zQuery = sqlite3_mprintf("SELECT count(*) FROM %Q", pVtab->zTableName);
   rc = sqlite3_prepare(pVtab->db, zQuery, -1, &pStmt, 0);
+  sqlite3_free(zQuery);
   if( rc!=SQLITE_OK ){
     return rc;
   }

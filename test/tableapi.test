@@ -208,7 +208,7 @@ do_test tableapi-5.2 {
 
 do_test tableapi-6.1 {
   sqlite3_get_table_printf $::dbx {PRAGMA user_version} {}
-} {0 1 1 {} 0}
+} {0 1 1 user_version 0}
 
 do_test tableapi-99.0 {
   sqlite3_close $::dbx
