@@ -1193,4 +1193,24 @@ do_test capi3c-19.99 {
   sqlite3_finalize $STMT
 } SQLITE_OK
 
+# Make sure a change in a separate database connection does not
+# cause an SQLITE_SCHEMA return.
+#
+do_test capi3c-20.1 {
+  set STMT [sqlite3_prepare_v2 $DB {SELECT * FROM t3} -1 TAIL]
+  sqlite3 db2 test.db
+  db2 eval {CREATE TABLE t4(x)}
+  sqlite3_step $STMT
+} SQLITE_ROW
+do_test capi3c-20.2 {
+  sqlite3_column_int $STMT 1
+} 2
+do_test capi3c-20.3 {
+  sqlite3_step $STMT
+} SQLITE_DONE
+do_test capi3c-20.4 {
+  db2 close
+  sqlite3_finalize $STMT
+} SQLITE_OK
+
 finish_test

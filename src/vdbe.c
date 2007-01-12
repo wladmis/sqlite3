@@ -2517,6 +2517,8 @@ case OP_VerifyCookie: {       /* no-push */
   }
   if( rc==SQLITE_OK && iMeta!=pOp->p2 ){
     sqlite3SetString(&p->zErrMsg, "database schema has changed", (char*)0);
+    sqlite3ResetInternalSchema(db, pOp->p1);
+    sqlite3ExpirePreparedStatements(db);
     rc = SQLITE_SCHEMA;
   }
   break;
