@@ -695,7 +695,7 @@ do_test pragma-9.6 {
   execsql { 
     PRAGMA temp_store_directory;
   }
-} [pwd]
+} [list [pwd]]
 do_test pragma-9.7 {
   catchsql { 
     PRAGMA temp_store_directory='/NON/EXISTENT/PATH/FOOBAR';

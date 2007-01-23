@@ -3200,7 +3200,7 @@ PRIVATE void translate_code(struct lemon *lemp, struct rule *rp){
   lhsused = 0;
 
   append_str(0,0,0,0);
-  for(cp=rp->code; *cp; cp++){
+  for(cp=(rp->code?rp->code:""); *cp; cp++){
     if( isalpha(*cp) && (cp==rp->code || (!isalnum(cp[-1]) && cp[-1]!='_')) ){
       char saved;
       for(xp= &cp[1]; isalnum(*xp) || *xp=='_'; xp++);
@@ -3263,8 +3263,10 @@ PRIVATE void translate_code(struct lemon *lemp, struct rule *rp){
       }
     }
   }
-  cp = append_str(0,0,0,0);
-  rp->code = Strsafe(cp);
+  if( rp->code ){
+    cp = append_str(0,0,0,0);
+    rp->code = Strsafe(cp?cp:"");
+  }
 }
 
 /* 
@@ -3627,7 +3629,7 @@ int mhflag;     /* Output in makeheaders format if true */
   n = acttab_size(pActtab);
   for(i=j=0; i<n; i++){
     int action = acttab_yyaction(pActtab, i);
-    if( action<0 ) action = lemp->nsymbol + lemp->nrule + 2;
+    if( action<0 ) action = lemp->nstate + lemp->nrule + 2;
     if( j==0 ) fprintf(out," /* %5d */ ", i);
     fprintf(out, " %4d,", action);
     if( j==9 || i==n-1 ){
@@ -3832,7 +3834,7 @@ int mhflag;     /* Output in makeheaders format if true */
 
   /* Generate code which execution during each REDUCE action */
   for(rp=lemp->rule; rp; rp=rp->next){
-    if( rp->code ) translate_code(lemp, rp);
+    translate_code(lemp, rp);
   }
   for(rp=lemp->rule; rp; rp=rp->next){
     struct rule *rp2;
