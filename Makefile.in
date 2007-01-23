@@ -560,6 +560,9 @@ datatypes.html:	$(TOP)/www/datatypes.tcl
 datatype3.html:	$(TOP)/www/datatype3.tcl
 	tclsh $(TOP)/www/datatype3.tcl >datatype3.html
 
+different.html:	$(TOP)/www/different.tcl
+	tclsh $(TOP)/www/different.tcl >different.html
+
 docs.html:	$(TOP)/www/docs.tcl
 	tclsh $(TOP)/www/docs.tcl >docs.html
 
@@ -597,6 +600,9 @@ omitted.html:	$(TOP)/www/omitted.tcl
 opcode.html:	$(TOP)/www/opcode.tcl $(TOP)/src/vdbe.c
 	tclsh $(TOP)/www/opcode.tcl $(TOP)/src/vdbe.c >opcode.html
 
+optoverview.html:	$(TOP)/www/optoverview.tcl
+	tclsh $(TOP)/www/optoverview.tcl $(TOP)/src/vdbe.c >optoverview.html
+
 mingw.html:	$(TOP)/www/mingw.tcl
 	tclsh $(TOP)/www/mingw.tcl >mingw.html
 
@@ -605,6 +611,9 @@ nulls.html:	$(TOP)/www/nulls.tcl
 
 quickstart.html:	$(TOP)/www/quickstart.tcl
 	tclsh $(TOP)/www/quickstart.tcl >quickstart.html
+
+sharedcache.html:	$(TOP)/www/sharedcache.tcl
+	tclsh $(TOP)/www/sharedcache.tcl >sharedcache.html
 
 speed.html:	$(TOP)/www/speed.tcl
 	tclsh $(TOP)/www/speed.tcl >speed.html
@@ -627,6 +636,9 @@ vdbe.html:	$(TOP)/www/vdbe.tcl
 version3.html:	$(TOP)/www/version3.tcl
 	tclsh $(TOP)/www/version3.tcl >version3.html
 
+whentouse.html:	$(TOP)/www/whentouse.tcl
+	tclsh $(TOP)/www/whentouse.tcl >whentouse.html
+
 
 # Files to be published on the website.
 #
@@ -645,6 +657,7 @@ DOC = \
   conflict.html \
   datatypes.html \
   datatype3.html \
+  different.html \
   docs.html \
   download.html \
   faq.html \
@@ -658,15 +671,18 @@ DOC = \
   oldnews.html \
   omitted.html \
   opcode.html \
+  optoverview.html \
   pragma.html \
   quickstart.html \
+  sharedcache.html \
   speed.html \
   sqlite.gif \
   sqlite.html \
   support.html \
   tclsqlite.html \
   vdbe.html \
-  version3.html 
+  version3.html \
+  whentouse.html
 
 doc:	common.tcl $(DOC)
 	mkdir -p doc
