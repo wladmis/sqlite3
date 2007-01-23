@@ -13,6 +13,12 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# If SQLITE_ENABLE_FTS1 is defined, omit this file.
+ifcapable !fts1 {
+  finish_test
+  return
+}
+
 # Return the UTF-16 representation of the supplied UTF-8 string $str.
 # If $nt is true, append two 0x00 bytes as a nul terminator.
 # NOTE(shess) Copied from capi3.test.
