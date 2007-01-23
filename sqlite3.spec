@@ -46,7 +46,6 @@ Requires: lib%name = %version-%release
 %package -n lemon
 Summary: The Lemon Parser Generator
 Group: Development/Other
-Conflicts: lib%name < %version-%release, lib%name > %version-%release
 
 %description
 SQLite is a C library that implements an SQL database engine. 
