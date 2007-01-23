@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.3.10
+Version: 3.3.11
 Release: alt1
 
 Summary: An Embeddable SQL Database Engine
@@ -11,7 +11,7 @@ Source: %name-%version-%release.tar
 
 Requires: lib%name = %version-%release
 
-# Automatically added by buildreq on Thu Jan 11 2007
+# Automatically added by buildreq on Tue Jan 23 2007
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
 
 %package -n lib%name
@@ -170,6 +170,10 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
+* Tue Jan 23 2007 Alexey Tourbin <at@altlinux.ru> 3.3.11-alt1
+- 3.3.10+ -> 3.3.11
+- sqlite3-doc: packaged missing html files
+
 * Thu Jan 11 2007 Alexey Tourbin <at@altlinux.ru> 3.3.10-alt1
 - 3.3.8+ -> 3.3.10+
 
