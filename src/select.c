@@ -1936,6 +1936,7 @@ static int multiSelect(
         }
         sqlite3VdbeChangeP2(v, addr, nCol);
         sqlite3VdbeChangeP3(v, addr, (char*)pKeyInfo, P3_KEYINFO);
+        pLoop->addrOpenEphm[i] = -1;
       }
     }
 
