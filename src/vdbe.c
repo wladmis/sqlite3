@@ -2925,7 +2925,7 @@ case OP_MoveGt: {       /* no-push */
 **
 ** The top of the stack holds a blob constructed by MakeRecord.  P1 is
 ** an index.  If no entry exists in P1 that matches the blob then jump
-** to P1.  If an entry does existing, fall through.  The cursor is left
+** to P2.  If an entry does existing, fall through.  The cursor is left
 ** pointing to the entry that matches.  The blob is popped from the stack.
 **
 ** The difference between this operation and Distinct is that
