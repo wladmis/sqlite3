@@ -567,6 +567,7 @@ static int btree_integrity_check(
   int nRoot;
   int *aRoot;
   int i;
+  int nErr;
   char *zResult;
 
   if( argc<3 ){
@@ -581,7 +582,7 @@ static int btree_integrity_check(
     if( Tcl_GetInt(interp, argv[i+2], &aRoot[i]) ) return TCL_ERROR;
   }
 #ifndef SQLITE_OMIT_INTEGRITY_CHECK
-  zResult = sqlite3BtreeIntegrityCheck(pBt, aRoot, nRoot);
+  zResult = sqlite3BtreeIntegrityCheck(pBt, aRoot, nRoot, 10000, &nErr);
 #else
   zResult = 0;
 #endif
