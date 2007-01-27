@@ -391,8 +391,8 @@ Page 6 is never used} {rowid 1 missing from index i2}}
 do_test pragma-3.99 {
   catchsql {DETACH t3}
   catchsql {DETACH t2}
-  catchsql {DROP INDEX i2}
   file delete -force testerr.db testerr.db-journal
+  catchsql {DROP INDEX i2}
 } {0 {}}
 
 # Test modifying the cache_size of an attached database.
