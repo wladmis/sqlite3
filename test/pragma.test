@@ -290,8 +290,10 @@ if {![sqlite3 -has-codec] && $sqlite_options(integrityck)} {
   do_test pragma-3.8 {
     execsql {DETACH t2}
     file delete -force testerr.db testerr.db-journal
-    set out [open testerr.db wb]
-    set in [open test.db rb]
+    set out [open testerr.db w]
+    fconfigure $out -translation binary
+    set in [open test.db r]
+    fconfigure $in -translation binary
     puts -nonewline $out [read $in]
     seek $in 0
     puts -nonewline $out [read $in]
