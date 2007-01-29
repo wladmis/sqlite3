@@ -1374,6 +1374,15 @@ between -9223372036854775808 and +9223372036854775807.</td>
 </tr>
 
 <tr>
+<td valign="top" align="right">randomhex(<i>N</i>)</td>
+<td valign="top">Return a pseudo-random hexadecimal string that is
+<i>N</i> characters in length.  <i>N</i> should be an even integer between
+2 and 1000.  The intended use of this function is to generate
+universally unique identifiers (UUID).  For that purpose, it is recommended
+that <i>N</i> be at least 32.</td>
+</tr>
+
+<tr>
 <td valign="top" align="right">round(<i>X</i>)<br>round(<i>X</i>,<i>Y</i>)</td>
 <td valign="top">Round off the number <i>X</i> to <i>Y</i> digits to the
 right of the decimal point.  If the <i>Y</i> argument is omitted, 0 is 
