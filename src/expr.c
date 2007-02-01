@@ -1046,7 +1046,7 @@ static int lookupName(
       n = sizeof(Bitmask)*8-1;
     }
     assert( pMatch->iCursor==pExpr->iTable );
-    pMatch->colUsed |= 1<<n;
+    pMatch->colUsed |= ((Bitmask)1)<<n;
   }
 
 lookupname_end:
