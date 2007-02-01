@@ -1007,7 +1007,8 @@ Syntax {expr} {
 <expr> [NOT] IN [<database-name> .] <table-name> |
 [EXISTS] ( <select-statement> ) |
 CASE [<expr>] LP WHEN <expr> THEN <expr> RPPLUS [ELSE <expr>] END |
-CAST ( <expr> AS <type> )
+CAST ( <expr> AS <type> ) |
+<expr> COLLATE <collation-name>
 } {like-op} {
 LIKE | GLOB | REGEXP | MATCH
 }
@@ -1032,11 +1033,16 @@ AND
 OR</font>
 </pre></blockquote>
 
-<p>Supported unary operators are these:</p>
+<p>Supported unary prefix operators are these:</p>
 
 <blockquote><pre>
 <font color="#2c2cf0"><big>-    +    !    ~    NOT</big></font>
 </pre></blockquote>
+
+<p>The COLLATE operator can be thought of as a unary postfix
+operator.  The COLLATE operator has the highest precedence.
+It always binds more tightly than any prefix unary operator or
+any binary operator.</p>
 
 <p>The unary operator [Operator +] is a no-op.  It can be applied
 to strings, numbers, or blobs and it always gives as its result the

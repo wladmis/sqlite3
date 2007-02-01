@@ -204,7 +204,7 @@ id(A) ::= ID(X).         {A = X;}
 %left BITAND BITOR LSHIFT RSHIFT.
 %left PLUS MINUS.
 %left STAR SLASH REM.
-%left CONCAT.
+%left CONCAT COLLATE.
 %right UMINUS UPLUS BITNOT.
 
 // And "ids" is an identifer-or-string.
@@ -515,12 +515,12 @@ using_opt(U) ::= .                        {U = 0;}
 
 orderby_opt(A) ::= .                          {A = 0;}
 orderby_opt(A) ::= ORDER BY sortlist(X).      {A = X;}
-sortlist(A) ::= sortlist(X) COMMA sortitem(Y) collate(C) sortorder(Z). {
-  A = sqlite3ExprListAppend(X,Y,C.n>0?&C:0);
+sortlist(A) ::= sortlist(X) COMMA sortitem(Y) sortorder(Z). {
+  A = sqlite3ExprListAppend(X,Y,0);
   if( A ) A->a[A->nExpr-1].sortOrder = Z;
 }
-sortlist(A) ::= sortitem(Y) collate(C) sortorder(Z). {
-  A = sqlite3ExprListAppend(0,Y,C.n>0?&C:0);
+sortlist(A) ::= sortitem(Y) sortorder(Z). {
+  A = sqlite3ExprListAppend(0,Y,0);
   if( A && A->a ) A->a[0].sortOrder = Z;
 }
 sortitem(A) ::= expr(X).   {A = X;}
@@ -641,6 +641,9 @@ expr(A) ::= VARIABLE(X).     {
   Token *pToken = &X;
   Expr *pExpr = A = sqlite3Expr(TK_VARIABLE, 0, 0, pToken);
   sqlite3ExprAssignVarNumber(pParse, pExpr);
+}
+expr(A) ::= expr(E) COLLATE id(C). {
+  A = sqlite3ExprSetColl(pParse, E, &C);
 }
 %ifndef SQLITE_OMIT_CAST
 expr(A) ::= CAST(X) LP expr(E) AS typetoken(T) RP(Y). {
