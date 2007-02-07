@@ -176,9 +176,20 @@ static int binaryCompareP1(Expr *pExpr1, Expr *pExpr2, int jumpIfNull){
 ** type.
 */
 static CollSeq* binaryCompareCollSeq(Parse *pParse, Expr *pLeft, Expr *pRight){
-  CollSeq *pColl = sqlite3ExprCollSeq(pParse, pLeft);
-  if( !pColl ){
-    pColl = sqlite3ExprCollSeq(pParse, pRight);
+  CollSeq *pColl;
+  assert( pLeft );
+  assert( pRight );
+  if( pLeft->flags & EP_ExpCollate ){
+    assert( pLeft->pColl );
+    pColl = pLeft->pColl;
+  }else if( pRight->flags & EP_ExpCollate ){
+    assert( pRight->pColl );
+    pColl = pRight->pColl;
+  }else{
+    pColl = sqlite3ExprCollSeq(pParse, pLeft);
+    if( !pColl ){
+      pColl = sqlite3ExprCollSeq(pParse, pRight);
+    }
   }
   return pColl;
 }
