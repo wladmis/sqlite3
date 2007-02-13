@@ -67,6 +67,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Feb-13} {Version 3.3.13} {
+  This version fixes a subtle bug in the ORDER BY optimizer that can 
+  occur when using joins.  There are also a few minor enhancements.
+  Upgrading is recommended.
+}
+
 newsitem {2007-Jan-27} {Version 3.3.12} {
   The first published build of the previous version used the wrong
   set of source files.  Consequently, many people downloaded a build
@@ -84,27 +90,6 @@ newsitem {2007-Jan-22} {Version 3.3.11} {
 newsitem {2007-Jan-9} {Version 3.3.10} {
   Version 3.3.10 fixes several bugs that were introduced by the previous
   release.  Upgrading is recommended.
-}
-
-newsitem {2007-Jan-4} {Version 3.3.9} {
-  Version 3.3.9 fixes bugs that can lead to database corruption under
-  obscure and difficult to reproduce circumstances.  See
-  <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
-  DatabaseCorruption</a> in the
-  <a href="http://www.sqlite.org/cvstrac/wiki">wiki</a> for details.
-  This release also adds the new
-  <a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a>
-  API and includes important bug fixes in the command-line
-  shell and enhancements to the query optimizer.  Upgrading is
-  recommended.
-}
-
-newsitem {2006-Oct-9} {Version 3.3.8} {
-  Version 3.3.8 adds support for full-text search using the 
-  <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1
-  module.</a>  There are also minor bug fixes.  Upgrade only if
-  you want to try out the new full-text search capabilities or if
-  you are having problems with 3.3.7.
 }
 
 puts {
