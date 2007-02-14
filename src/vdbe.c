@@ -1936,6 +1936,9 @@ case OP_Column: {
   ** which is the number of records.
   */
   pC = p->apCsr[p1];
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+  assert( pC->pVtabCursor==0 );
+#endif
   assert( pC!=0 );
   if( pC->pCursor!=0 ){
     /* The record is stored in a B-Tree */

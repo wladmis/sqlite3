@@ -3147,7 +3147,9 @@ int sqlite3Select(
           if( pCol->iColumn<0 ){
             sqlite3VdbeAddOp(v, OP_Rowid, pCol->iTable, 0);
           }else{
-            sqlite3VdbeAddOp(v, OP_Column, pCol->iTable, pCol->iColumn);
+            Table *pTab = pCol->pTab;
+            int op = (pTab && IsVirtual(pTab)) ? OP_VColumn : OP_Column;
+            sqlite3VdbeAddOp(v, op, pCol->iTable, pCol->iColumn);
           }
           j++;
         }

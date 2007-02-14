@@ -2275,6 +2275,7 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
             }
             if( i>=pAggInfo->nColumn && (i = addAggInfoColumn(pAggInfo))>=0 ){
               pCol = &pAggInfo->aCol[i];
+              pCol->pTab = pExpr->pTab;
               pCol->iTable = pExpr->iTable;
               pCol->iColumn = pExpr->iColumn;
               pCol->iMem = pParse->nMem++;

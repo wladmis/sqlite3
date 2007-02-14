@@ -922,6 +922,7 @@ struct AggInfo {
   ExprList *pGroupBy;     /* The group by clause */
   int nSortingColumn;     /* Number of columns in the sorting index */
   struct AggInfo_col {    /* For each column used in source tables */
+    Table *pTab;             /* Source table */
     int iTable;              /* Cursor number of the source table */
     int iColumn;             /* Column number within the source table */
     int iSorterColumn;       /* Column number in the sorting index */
