@@ -549,10 +549,7 @@ AC_SUBST(TARGET_HAVE_READLINE)
 # Figure out what C libraries are required to compile programs
 # that use "fdatasync()" function.
 #
-CC=$TARGET_CC
-LIBS=$TARGET_LIBS
 AC_SEARCH_LIBS(fdatasync, [rt])
-TARGET_LIBS="$LIBS"
 
 #########
 # check for debug enabled
