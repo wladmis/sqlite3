@@ -228,11 +228,11 @@ puts {
     flag.  When this flag is on, new SQLite databases are created in
     a file format that is readable and writable by all versions of
     SQLite going back to 3.0.0.  When the flag is off, new databases
-    are created using the latest file format which might to be
+    are created using the latest file format which might not be
     readable or writable by older versions of SQLite.</p>
 
-    <p>This flag only effects newly created databases.  It has no
-    effect on databases that already exists.</p>
+    <p>This flag only affects newly created databases.  It has no
+    effect on databases that already exist.</p>
 </li>
 
 

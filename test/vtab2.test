@@ -37,6 +37,24 @@ do_test vtab2-1.1 {
   main schema 7 pk         {} 0 {} 0 \
 ]
 
+# See ticket #2230.
+#
+do_test vtab2-1.2 {
+  execsql {
+    SELECT length(tablename) FROM schema GROUP by tablename;
+  }
+} {6}
+do_test vtab2-1.3 {
+  execsql {
+    SELECT tablename FROM schema GROUP by length(tablename);
+  }
+} {schema}
+do_test vtab2-1.4 {
+  execsql {
+    SELECT length(tablename) FROM schema GROUP by length(tablename);
+  }
+} {6}
+
 register_tclvar_module [sqlite3_connection_pointer db]
 do_test vtab2-2.1 {
   set ::abc 123

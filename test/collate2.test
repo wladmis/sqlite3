@@ -98,14 +98,65 @@ do_test collate2-1.1 {
     SELECT a FROM collate2t1 WHERE a > 'aa' ORDER BY 1;
   }
 } {ab bA bB ba bb}
+do_test collate2-1.1.1 {
+  execsql {
+    SELECT a FROM collate2t1 WHERE a COLLATE binary > 'aa' ORDER BY 1;
+  }
+} {ab bA bB ba bb}
+do_test collate2-1.1.2 {
+  execsql {
+    SELECT a FROM collate2t1 WHERE b COLLATE binary > 'aa' ORDER BY 1;
+  }
+} {ab bA bB ba bb}
+do_test collate2-1.1.3 {
+  execsql {
+    SELECT a FROM collate2t1 WHERE c COLLATE binary > 'aa' ORDER BY 1;
+  }
+} {ab bA bB ba bb}
 do_test collate2-1.2 {
   execsql {
     SELECT b FROM collate2t1 WHERE b > 'aa' ORDER BY 1, oid;
   }
 } {ab aB Ab AB ba bA Ba BA bb bB Bb BB}
+do_test collate2-1.2.1 {
+  execsql {
+    SELECT b FROM collate2t1 WHERE a COLLATE nocase > 'aa'
+     ORDER BY 1, oid;
+  }
+} {ab aB Ab AB ba bA Ba BA bb bB Bb BB}
+do_test collate2-1.2.2 {
+  execsql {
+    SELECT b FROM collate2t1 WHERE b COLLATE nocase > 'aa'
+     ORDER BY 1, oid;
+  }
+} {ab aB Ab AB ba bA Ba BA bb bB Bb BB}
+do_test collate2-1.2.3 {
+  execsql {
+    SELECT b FROM collate2t1 WHERE c COLLATE nocase > 'aa'
+     ORDER BY 1, oid;
+  }
+} {ab aB Ab AB ba bA Ba BA bb bB Bb BB}
 do_test collate2-1.3 {
   execsql {
     SELECT c FROM collate2t1 WHERE c > 'aa' ORDER BY 1;
+  }
+} {ba Ab Bb ab bb}
+do_test collate2-1.3.1 {
+  execsql {
+    SELECT c FROM collate2t1 WHERE a COLLATE backwards > 'aa'
+    ORDER BY 1;
+  }
+} {ba Ab Bb ab bb}
+do_test collate2-1.3.2 {
+  execsql {
+    SELECT c FROM collate2t1 WHERE b COLLATE backwards > 'aa'
+    ORDER BY 1;
+  }
+} {ba Ab Bb ab bb}
+do_test collate2-1.3.3 {
+  execsql {
+    SELECT c FROM collate2t1 WHERE c COLLATE backwards > 'aa'
+    ORDER BY 1;
   }
 } {ba Ab Bb ab bb}
 do_test collate2-1.4 {
