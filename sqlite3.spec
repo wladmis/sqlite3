@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.3.12
+Version: 3.3.13
 Release: alt1
 
 Summary: An Embeddable SQL Database Engine
@@ -169,6 +169,9 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
+* Tue Feb 20 2007 Alexey Tourbin <at@altlinux.ru> 3.3.13-alt1
+- 3.3.12 -> 3.3.13+
+
 * Sun Jan 28 2007 Alexey Tourbin <at@altlinux.ru> 3.3.12-alt1
 - 3.3.11 -> 3.3.12
 
