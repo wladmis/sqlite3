@@ -107,7 +107,7 @@ autoreconf -i
 export config_TARGET_READLINE_LIBS=-lreadline
 %configure --enable-threadsafe
 %make_build all libtcl%name.la fts2.la doc
-#make test
+make test
 
 %install
 %make_install install tcl_install fts2_install DESTDIR=%buildroot
