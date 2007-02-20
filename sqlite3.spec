@@ -11,7 +11,7 @@ Source: %name-%version-%release.tar
 
 Requires: lib%name = %version-%release
 
-# Automatically added by buildreq on Sun Jan 28 2007
+# Automatically added by buildreq on Tue Feb 20 2007
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
 
 %package -n lib%name
@@ -103,9 +103,8 @@ embedded controllers.
 %build
 autoreconf -i
 %add_optflags -fno-strict-aliasing
-# tweak configure; cf. [devel] libreadline add_history
-export config_TARGET_READLINE_LIBS=-lreadline
-%configure --enable-threadsafe
+# maybe add -lhistory; cf. [devel] libreadline add_history
+%configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts2.la doc
 make test
 
