@@ -1350,7 +1350,7 @@ int sqlite3_set_authorizer(
  the access attempt or NULL if this access attempt is directly from 
  input SQL code.
 
- The return value of the authorization function should be one of the
+ The return value of the authorization callback function should be one of the
  constants SQLITE_OK, SQLITE_DENY, or SQLITE_IGNORE.  A return of
  SQLITE_OK means that the operation is permitted and that 
  sqlite3_prepare_v2() can proceed as normal.
@@ -1365,6 +1365,12 @@ int sqlite3_set_authorizer(
  user-entered SQL.  An appropriate callback can deny the user-entered
  SQL access certain operations (ex: anything that changes the database)
  or to deny access to certain tables or columns within the database.
+
+ SQLite is not reentrant through the authorization callback function.
+ The authorization callback function should not attempt to invoke
+ any other SQLite APIs for the same database connection.  If the
+ authorization callback function invokes some other SQLite API, an
+ SQLITE_MISUSE error or a segmentation fault may result.
 }
 
 api {} {
