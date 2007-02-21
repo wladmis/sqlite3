@@ -568,6 +568,7 @@ static void updateVirtualTable(
   int ephemTab;             /* Table holding the result of the SELECT */
   int i;                    /* Loop counter */
   int addr;                 /* Address of top of loop */
+  int iLabel;               /* Vdbe label used by the OP_Rewind op */
 
   /* Construct the SELECT statement that will find the new values for
   ** all updated rows. 
@@ -602,7 +603,8 @@ static void updateVirtualTable(
   ** Generate code to scan the ephemeral table and call VDelete and
   ** VInsert
   */
-  sqlite3VdbeAddOp(v, OP_Rewind, ephemTab, 0);
+  iLabel = sqlite3VdbeMakeLabel(v);
+  sqlite3VdbeAddOp(v, OP_Rewind, ephemTab, iLabel);
   addr = sqlite3VdbeCurrentAddr(v);
   sqlite3VdbeAddOp(v, OP_Column,  ephemTab, 0);
   if( pRowid ){
@@ -617,6 +619,7 @@ static void updateVirtualTable(
   sqlite3VdbeOp3(v, OP_VUpdate, 0, pTab->nCol+2, 
                      (const char*)pTab->pVtab, P3_VTAB);
   sqlite3VdbeAddOp(v, OP_Next, ephemTab, addr);
+  sqlite3VdbeResolveLabel(v, iLabel);
   sqlite3VdbeAddOp(v, OP_Close, ephemTab, 0);
 
   /* Cleanup */
