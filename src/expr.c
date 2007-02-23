@@ -131,7 +131,7 @@ static char comparisonAffinity(Expr *pExpr){
     aff = sqlite3CompareAffinity(pExpr->pSelect->pEList->a[0].pExpr, aff);
   }
   else if( !aff ){
-    aff = SQLITE_AFF_NUMERIC;
+    aff = SQLITE_AFF_NONE;
   }
   return aff;
 }
