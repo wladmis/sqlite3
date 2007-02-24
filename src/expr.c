@@ -2210,7 +2210,7 @@ int sqlite3ExprCompare(Expr *pA, Expr *pB){
   }
   if( pA->pSelect || pB->pSelect ) return 0;
   if( pA->iTable!=pB->iTable || pA->iColumn!=pB->iColumn ) return 0;
-  if( pA->token.z ){
+  if( pA->op!=TK_COLUMN && pA->token.z ){
     if( pB->token.z==0 ) return 0;
     if( pB->token.n!=pA->token.n ) return 0;
     if( sqlite3StrNICmp((char*)pA->token.z,(char*)pB->token.z,pB->token.n)!=0 ){

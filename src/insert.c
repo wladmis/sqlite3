@@ -1297,6 +1297,16 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
   return 1;
 }
 
+#ifdef SQLITE_TEST
+/*
+** The following global variable is incremented whenever the
+** transfer optimization is used.  This is used for testing
+** purposes only - to make sure the transfer optimization really
+** is happening when it is suppose to.
+*/
+int sqlite3_xferopt_count;
+#endif /* SQLITE_TEST */
+
 /*
 ** Attempt the transfer optimization on INSERTs of the form
 **
@@ -1464,6 +1474,9 @@ static int xferOptimization(
   **    *   We can conditionally do the transfer if the destination
   **        table is empty.
   */
+#ifdef SQLITE_TEST
+  sqlite3_xferopt_count++;
+#endif
   iDbSrc = sqlite3SchemaToIndex(pParse->db, pSrc->pSchema);
   v = sqlite3GetVdbe(pParse);
   iSrc = pParse->nTab++;
