@@ -1462,7 +1462,7 @@ static int xferOptimization(
       return 0;    /* pDestIdx has no corresponding index in pSrc */
     }
   }
-  if( !sqlite3ExprCompare(pSrc->pCheck, pDest->pCheck) ){
+  if( pDest->pCheck && !sqlite3ExprCompare(pSrc->pCheck, pDest->pCheck) ){
     return 0;   /* Tables have different CHECK constraints.  Ticket #2252 */
   }
 
