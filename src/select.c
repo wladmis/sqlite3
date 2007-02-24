@@ -68,6 +68,7 @@ Select *sqlite3SelectNew(
   pNew->pOrderBy = pOrderBy;
   pNew->isDistinct = isDistinct;
   pNew->op = TK_SELECT;
+  assert( pOffset==0 || pLimit!=0 );
   pNew->pLimit = pLimit;
   pNew->pOffset = pOffset;
   pNew->iLimit = -1;
