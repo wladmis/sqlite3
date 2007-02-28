@@ -111,10 +111,13 @@ static FILE *iotrace = 0;
 */
 static void iotracePrintf(const char *zFormat, ...){
   va_list ap;
+  char *z;
   if( iotrace==0 ) return;
   va_start(ap, zFormat);
-  vfprintf(iotrace, zFormat, ap);
+  z = sqlite3_vmprintf(zFormat, ap);
   va_end(ap);
+  fprintf(iotrace, "%s", z);
+  sqlite3_free(z);
 }
 
 
