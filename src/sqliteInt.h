@@ -1897,4 +1897,16 @@ int sqlite3Reprepare(Vdbe*);
 #include "sseInt.h"
 #endif
 
+/*
+** If the SQLITE_ENABLE IOTRACE exists then the global variable
+** sqlite3_io_trace is a pointer to a printf-like routine used to
+** print I/O tracing messages. 
+*/
+#ifdef SQLITE_ENABLE_IOTRACE
+# define IOTRACE(A)  if( sqlite3_io_trace ){ sqlite3_io_trace A; }
+#else
+# define IOTRACE(A)
+#endif
+extern void (*sqlite3_io_trace)(const char*,...);
+
 #endif
