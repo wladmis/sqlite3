@@ -2507,6 +2507,7 @@ static int pager_recycle(Pager *pPager, int syncOk, PgHdr **ppPg){
   ** be marked as alwaysRollback from here on out.
   */
   if( pPg->alwaysRollback ){
+    IOTRACE(("ALWAYS_ROLLBACK %p\n", pPager))
     pPager->alwaysRollback = 1;
   }
 

@@ -454,6 +454,7 @@ int sqlite3VdbeExec(
   p->resOnStack = 0;
   db->busyHandler.nBusy = 0;
   CHECK_FOR_INTERRUPT;
+  sqlite3VdbeIOTraceSql(p);
 #ifdef SQLITE_DEBUG
   if( (p->db->flags & SQLITE_VdbeListing)!=0
     || sqlite3OsFileExists("vdbe_explain")
