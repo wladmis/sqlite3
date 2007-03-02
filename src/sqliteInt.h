@@ -1904,10 +1904,10 @@ int sqlite3Reprepare(Vdbe*);
 */
 #ifdef SQLITE_ENABLE_IOTRACE
 # define IOTRACE(A)  if( sqlite3_io_trace ){ sqlite3_io_trace A; }
-  void sqlite3VdbeIOTrace(Vdbe*);
+  void sqlite3VdbeIOTraceSql(Vdbe*);
 #else
 # define IOTRACE(A)
-# define sqlite3VdbeIOTrace(X)
+# define sqlite3VdbeIOTraceSql(X)
 #endif
 extern void (*sqlite3_io_trace)(const char*,...);
 
