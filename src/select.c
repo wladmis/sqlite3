@@ -2367,6 +2367,8 @@ static int simpleMinMaxQuery(Parse *pParse, Select *p, int eDest, int iParm){
   iCol = pExpr->iColumn;
   pTab = pSrc->a[0].pTab;
 
+  /* This optimization cannot be used with virtual tables. */
+  if( IsVirtual(pTab) ) return 0;
 
   /* If we get to here, it means the query is of the correct form.
   ** Check to make sure we have an index and make pIdx point to the
