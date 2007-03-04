@@ -78,7 +78,8 @@ int sqlite3pager_set_pagesize(Pager*, int);
 int sqlite3pager_read_fileheader(Pager*, int, unsigned char*);
 void sqlite3pager_set_cachesize(Pager*, int);
 int sqlite3pager_close(Pager *pPager);
-int sqlite3pager_get(Pager *pPager, Pgno pgno, void **ppPage);
+int sqlite3pager_acquire(Pager *pPager, Pgno pgno, void **ppPage, int clrFlag);
+#define sqlite3pager_get(A,B,C) sqlite3pager_acquire(A,B,C,0)
 void *sqlite3pager_lookup(Pager *pPager, Pgno pgno);
 int sqlite3pager_ref(void*);
 int sqlite3pager_unref(void*);
