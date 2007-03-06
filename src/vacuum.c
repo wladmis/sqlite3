@@ -120,6 +120,10 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   pTemp = db->aDb[db->nDb-1].pBt;
   sqlite3BtreeSetPageSize(pTemp, sqlite3BtreeGetPageSize(pMain),
      sqlite3BtreeGetReserve(pMain));
+  if( sqlite3MallocFailed() ){
+    rc = SQLITE_NOMEM;
+    goto end_of_vacuum;
+  }
   assert( sqlite3BtreeGetPageSize(pTemp)==sqlite3BtreeGetPageSize(pMain) );
   rc = execSql(db, "PRAGMA vacuum_db.synchronous=OFF");
   if( rc!=SQLITE_OK ){
