@@ -87,8 +87,6 @@ puts {</ul></p>
 
 <p>Details on the implementation of each command are provided in
 the sequel.</p>
-
-<h1 class="pdf_section">SQLite Commands</h1>
 }
 
 proc Operator {name} {
@@ -106,7 +104,6 @@ proc Example {text} {
 
 proc Section {name label} {
   global outputdir
-
 
   if {[string length $outputdir]!=0} {
     if {[llength [info commands puts_standard]]>0} {
