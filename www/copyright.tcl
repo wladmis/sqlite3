@@ -68,8 +68,8 @@ Hwaci - Applied Software Research <br />
 <h2>Contributed Code</h2>
 
 <p>
-In order to keep SQLite complete free and unencumbered by copyright,
-all new contributors to the SQLite code base are asked dedicate
+In order to keep SQLite completely free and unencumbered by copyright,
+all new contributors to the SQLite code base are asked to dedicate
 their contributions to the public domain.
 If you want to send a patch or enhancement for possible inclusion in the
 SQLite source tree, please accompany the patch with the following statement:
