@@ -69,7 +69,7 @@ for obtaining a license include:
 
 <p>
 If you feel like you really have to purchase a license for SQLite,
-<a href="http://www.hwaci.com/">Hwaci</a>, the company that employees 
+<a href="http://www.hwaci.com/">Hwaci</a>, the company that employs 
 the architect and principal developers of SQLite, will sell you
 one.
 Please contact:
