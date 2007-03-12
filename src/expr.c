@@ -2288,15 +2288,16 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
             ** Make an entry for the column in pAggInfo->aCol[] if there
             ** is not an entry there already.
             */
+            int k;
             pCol = pAggInfo->aCol;
-            for(i=0; i<pAggInfo->nColumn; i++, pCol++){
+            for(k=0; k<pAggInfo->nColumn; k++, pCol++){
               if( pCol->iTable==pExpr->iTable &&
                   pCol->iColumn==pExpr->iColumn ){
                 break;
               }
             }
-            if( i>=pAggInfo->nColumn && (i = addAggInfoColumn(pAggInfo))>=0 ){
-              pCol = &pAggInfo->aCol[i];
+            if( k>=pAggInfo->nColumn && (k = addAggInfoColumn(pAggInfo))>=0 ){
+              pCol = &pAggInfo->aCol[k];
               pCol->pTab = pExpr->pTab;
               pCol->iTable = pExpr->iTable;
               pCol->iColumn = pExpr->iColumn;
@@ -2328,7 +2329,7 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
             */
             pExpr->pAggInfo = pAggInfo;
             pExpr->op = TK_AGG_COLUMN;
-            pExpr->iAgg = i;
+            pExpr->iAgg = k;
             break;
           } /* endif pExpr->iTable==pItem->iCursor */
         } /* end loop over pSrcList */
