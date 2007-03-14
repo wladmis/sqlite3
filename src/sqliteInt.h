@@ -545,6 +545,8 @@ struct sqlite3 {
 #define SQLITE_FullFSync      0x00010000  /* Use full fsync on the backend */
 #define SQLITE_LoadExtension  0x00020000  /* Enable load_extension */
 
+#define SQLITE_RecoveryMode   0x00040000  /* Ignore schema errors */
+
 /*
 ** Possible values for the sqlite.magic field.
 ** The numbers are obtained at random and have no special meaning, other
