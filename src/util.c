@@ -1461,9 +1461,11 @@ int sqlite3MallocFailed(){
 ** Set the "malloc has failed" condition to true for this thread.
 */
 void sqlite3FailedMalloc(){
-  sqlite3OsEnterMutex();
-  assert( mallocHasFailed==0 );
-  mallocHasFailed = 1;
+  if( !sqlite3MallocFailed() ){
+    sqlite3OsEnterMutex();
+    assert( mallocHasFailed==0 );
+    mallocHasFailed = 1;
+  }
 }
 
 #ifdef SQLITE_MEMDEBUG
