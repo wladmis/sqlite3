@@ -3504,9 +3504,9 @@ case OP_RowData: {
       pTos->z = z;
     }
     if( pC->isIndex ){
-      sqlite3BtreeKey(pCrsr, 0, n, pTos->z);
+      rc = sqlite3BtreeKey(pCrsr, 0, n, pTos->z);
     }else{
-      sqlite3BtreeData(pCrsr, 0, n, pTos->z);
+      rc = sqlite3BtreeData(pCrsr, 0, n, pTos->z);
     }
   }else if( pC->pseudoTable ){
     pTos->n = pC->nData;
