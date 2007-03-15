@@ -1860,6 +1860,9 @@ int sqlite3pager_pagecount(Pager *pPager){
   i64 n;
   int rc;
   assert( pPager!=0 );
+  if( pPager->errCode ){
+    return 0;
+  }
   if( pPager->dbSize>=0 ){
     n = pPager->dbSize;
   } else {

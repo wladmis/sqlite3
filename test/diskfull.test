@@ -17,6 +17,9 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+set sqlite_io_error_persist 0
+set sqlite_io_error_hit 0
+set sqlite_io_error_pending 0
 do_test diskfull-1.1 {
   execsql {
     CREATE TABLE t1(x);
@@ -47,6 +50,7 @@ do_test diskfull-1.5 {
   }
 } {1 {database or disk is full}}
 set sqlite_diskfull_pending 0
+set sqlite_io_error_hit 0
 integrity_check diskfull-1.6
 
 set go 1
