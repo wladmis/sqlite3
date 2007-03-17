@@ -2362,12 +2362,12 @@ void sqlite3CreateIndex(
         goto exit_create_index;
       }
     }
-      if( sqlite3FindIndex(db, zName, pDb->zName)!=0 ){
-        if( !ifNotExist ){
-          sqlite3ErrorMsg(pParse, "index %s already exists", zName);
-        }
-        goto exit_create_index;
+    if( sqlite3FindIndex(db, zName, pDb->zName)!=0 ){
+      if( !ifNotExist ){
+        sqlite3ErrorMsg(pParse, "index %s already exists", zName);
       }
+      goto exit_create_index;
+    }
   }else{
     char zBuf[30];
     int n;

@@ -141,7 +141,7 @@ ifcapable crashtest {
         CREATE TABLE tx(a, b);
         CREATE TABLE aux.ty(a, b);
       }
-      set rc [crashsql 2 test2.db-journal {
+      set rc [crashsql -delay 2 -file test2.db-journal {
         ATTACH 'test2.db' as aux;
         PRAGMA cache_size = 10;
         BEGIN;

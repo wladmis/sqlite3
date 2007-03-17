@@ -51,6 +51,7 @@ set EXCLUDE {
   all.test
   async.test
   crash.test
+  crash2.test
   autovacuum_crash.test
   quick.test
   malloc.test
