@@ -4031,8 +4031,8 @@ static int reparentPage(BtShared *pBt, Pgno pgno, MemPage *pNewParent, int idx){
   aData = sqlite3pager_lookup(pBt->pPager, pgno);
   if( aData ){
     pThis = (MemPage*)&aData[pBt->pageSize];
-    assert( pThis->aData==aData );
     if( pThis->isInit ){
+      assert( pThis->aData==aData );
       if( pThis->pParent!=pNewParent ){
         if( pThis->pParent ) sqlite3pager_unref(pThis->pParent->aData);
         pThis->pParent = pNewParent;
