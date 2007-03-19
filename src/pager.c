@@ -880,6 +880,7 @@ static void pager_reset(Pager *pPager){
     pNext = pPg->pNextAll;
     sqliteFree(pPg);
   }
+  pPager->pStmt = 0;
   pPager->pFirst = 0;
   pPager->pFirstSynced = 0;
   pPager->pLast = 0;
