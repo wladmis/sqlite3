@@ -2649,25 +2649,16 @@ static int dfltCompare(
 **
 ** 1:  The cursor must have been opened with wrFlag==1
 **
-** 2:  No other cursors may be open with wrFlag==0 on the same table
+** 2:  Other database connections that share the same pager cache
+**     but which are not in the READ_UNCOMMITTED state may not have
+**     cursors open with wrFlag==0 on the same table.  Otherwise
+**     the changes made by this write cursor would be visible to
+**     the read cursors in the other database connection.
 **
 ** 3:  The database must be writable (not on read-only media)
 **
 ** 4:  There must be an active transaction.
 **
-** Condition 2 warrants further discussion.  If any cursor is opened
-** on a table with wrFlag==0, that prevents all other cursors from
-** writing to that table.  This is a kind of "read-lock".  When a cursor
-** is opened with wrFlag==0 it is guaranteed that the table will not
-** change as long as the cursor is open.  This allows the cursor to
-** do a sequential scan of the table without having to worry about
-** entries being inserted or deleted during the scan.  Cursors should
-** be opened with wrFlag==0 only if this read-lock property is needed.
-** That is to say, cursors should be opened with wrFlag==0 only if they
-** intend to use the sqlite3BtreeNext() system call.  All other cursors
-** should be opened with wrFlag==1 even if they never really intend
-** to write.
-** 
 ** No checking is done to make sure that page iTable really is the
 ** root page of a b-tree.  If it is not, then the cursor acquired
 ** will not work correctly.
