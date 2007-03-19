@@ -941,7 +941,7 @@ void sqlite3Pragma(
       if( pBt==0 || (pPager = sqlite3BtreePager(pBt))==0 ){
         sqlite3VdbeOp3(v, OP_String8, 0, 0, "closed", P3_STATIC);
       }else{
-        int j = sqlite3pager_lockstate(pPager);
+        int j = sqlite3PagerLockstate(pPager);
         sqlite3VdbeOp3(v, OP_String8, 0, 0, 
             (j>=0 && j<=4) ? azLockName[j] : "unknown", P3_STATIC);
       }

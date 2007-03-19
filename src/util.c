@@ -83,7 +83,7 @@ void sqlite3_soft_heap_limit(int n){
 ** Release memory held by SQLite instances created by the current thread.
 */
 int sqlite3_release_memory(int n){
-  return sqlite3pager_release_memory(n);
+  return sqlite3PagerReleaseMemory(n);
 }
 #else
 /* If SQLITE_ENABLE_MEMORY_MANAGEMENT is not defined, then define a version
