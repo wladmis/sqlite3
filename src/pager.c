@@ -350,13 +350,6 @@ static const unsigned char aJournalMagic[] = {
 #endif
 
 /*
-** The default size of a disk sector
-*/
-#ifndef PAGER_SECTOR_SIZE
-# define PAGER_SECTOR_SIZE 512
-#endif
-
-/*
 ** Page number PAGER_MJ_PGNO is never used in an SQLite database (it is
 ** reserved for working around a windows/posix incompatibility). It is
 ** used in the journal to signify that the remainder of the journal file 
@@ -1394,7 +1387,7 @@ end_playback:
   ** back a journal created by a process with a different PAGER_SECTOR_SIZE
   ** value. Reset it to the correct value for this process.
   */
-  pPager->sectorSize = PAGER_SECTOR_SIZE;
+  pPager->sectorSize = sqlite3OsSectorSize(pPager->fd);
   return rc;
 }
 
@@ -1738,7 +1731,10 @@ int sqlite3pager_open(
   /* pPager->pFirstSynced = 0; */
   /* pPager->pLast = 0; */
   pPager->nExtra = FORCE_ALIGNMENT(nExtra);
-  pPager->sectorSize = PAGER_SECTOR_SIZE;
+  assert(fd||memDb);
+  if( !memDb ){
+    pPager->sectorSize = sqlite3OsSectorSize(fd);
+  }
   /* pPager->pBusyHandler = 0; */
   /* memset(pPager->aHash, 0, sizeof(pPager->aHash)); */
   *ppPager = pPager;
