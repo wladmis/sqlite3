@@ -133,6 +133,7 @@ static void attachFunc(
         "attached databases must use the same text encoding as main database");
       goto attach_error;
     }
+    sqlite3PagerLockingMode(sqlite3BtreePager(aNew->pBt), db->dfltLockMode);
   }
   aNew->zName = sqliteStrDup(zName);
   aNew->safety_level = 3;

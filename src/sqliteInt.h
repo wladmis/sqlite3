@@ -510,6 +510,7 @@ struct sqlite3 {
 #ifdef SQLITE_SSE
   sqlite3_stmt *pFetch;         /* Used by SSE to fetch stored statements */
 #endif
+  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
 };
 
 /*
