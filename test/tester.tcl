@@ -482,6 +482,7 @@ proc do_ioerr_test {testname args} {
     }
   }
   set ::sqlite_io_error_pending 0
+  set ::sqlite_io_error_persist 0
   unset ::ioerropts
 }
 
