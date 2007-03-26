@@ -17,6 +17,9 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Set a uniform random seed
+expr srand(0)
+
 set sqlout [open speed1.txt w]
 proc tracesql {sql} {
   puts $::sqlout $sql\;
