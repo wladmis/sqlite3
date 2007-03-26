@@ -815,7 +815,6 @@ do_test trans-9.1 {
   }
   db close
   sqlite3 db test.db
-  # execsql { PRAGMA locking_mode = exclusive; }
   execsql {
     BEGIN;
     CREATE TABLE t3(x TEXT);
