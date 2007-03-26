@@ -8,7 +8,9 @@
 #    May you share freely, never taking more than you give.
 #
 #***********************************************************************
-# This file implements regression tests for SQLite library.
+# This file implements regression tests for SQLite library. The focus
+# of these tests is exclusive access mode (i.e. the thing activated by 
+# "PRAGMA locking_mode = EXCLUSIVE").
 #
 # $Id$
 
