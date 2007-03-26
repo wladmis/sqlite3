@@ -3014,7 +3014,7 @@ int sqlite3PagerUnref(DbPage *pPg){
     */
     pPager->nRef--;
     assert( pPager->nRef>=0 );
-    if( pPager->nRef==0 ){
+    if( pPager->nRef==0 && !pPager->exclusiveMode ){
       pagerUnlockAndRollback(pPager);
     }
   }
