@@ -404,7 +404,7 @@ void sqlite3ExprAssignVarNumber(Parse *pParse, Expr *pExpr){
       pExpr->iTable = ++pParse->nVar;
       if( pParse->nVarExpr>=pParse->nVarExprAlloc-1 ){
         pParse->nVarExprAlloc += pParse->nVarExprAlloc + 10;
-        sqliteReallocOrFree((void**)&pParse->apVarExpr,
+        sqliteReallocOrFree(&pParse->apVarExpr,
                        pParse->nVarExprAlloc*sizeof(pParse->apVarExpr[0]) );
       }
       if( !sqlite3MallocFailed() ){
@@ -2237,7 +2237,7 @@ int sqlite3ExprCompare(Expr *pA, Expr *pB){
 */
 static int addAggInfoColumn(AggInfo *pInfo){
   int i;
-  i = sqlite3ArrayAllocate((void**)&pInfo->aCol, sizeof(pInfo->aCol[0]), 3);
+  i = sqlite3ArrayAllocate(&pInfo->aCol, sizeof(pInfo->aCol[0]), 3);
   if( i<0 ){
     return -1;
   }
@@ -2250,7 +2250,7 @@ static int addAggInfoColumn(AggInfo *pInfo){
 */
 static int addAggInfoFunc(AggInfo *pInfo){
   int i;
-  i = sqlite3ArrayAllocate((void**)&pInfo->aFunc, sizeof(pInfo->aFunc[0]), 2);
+  i = sqlite3ArrayAllocate(&pInfo->aFunc, sizeof(pInfo->aFunc[0]), 2);
   if( i<0 ){
     return -1;
   }
