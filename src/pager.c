@@ -1825,7 +1825,8 @@ void sqlite3PagerSetReiniter(Pager *pPager, void (*xReinit)(DbPage*,int)){
 */
 int sqlite3PagerSetPagesize(Pager *pPager, int pageSize){
   assert( pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE );
-  if( !pPager->memDb ){
+  if( !pPager->memDb && pPager->nRef==0 ){
+    pager_reset(pPager);
     pPager->pageSize = pageSize;
     sqlite3ReallocOrFree((void **)&pPager->pTmpSpace, pageSize);
   }
