@@ -136,4 +136,12 @@ void sqlite3PagerRefdump(Pager*);
 int pager3_refinfo_enable;
 #endif
 
+#ifdef SQLITE_TEST
+void disable_simulated_io_errors(void);
+void enable_simulated_io_errors(void);
+#else
+# define disable_simulated_io_errors()
+# define enable_simulated_io_errors()
+#endif
+
 #endif /* _PAGER_H_ */
