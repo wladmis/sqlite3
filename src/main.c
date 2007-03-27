@@ -885,6 +885,9 @@ static int openDatabase(
 #if SQLITE_DEFAULT_FILE_FORMAT<4
                  | SQLITE_LegacyFileFmt
 #endif
+#ifdef SQLITE_ENABLE_LOAD_EXTENSION
+                 | SQLITE_LoadExtension
+#endif
       ;
   sqlite3HashInit(&db->aFunc, SQLITE_HASH_STRING, 0);
   sqlite3HashInit(&db->aCollSeq, SQLITE_HASH_STRING, 0);
