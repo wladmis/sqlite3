@@ -141,7 +141,7 @@ static void attachFunc(
 
 #if SQLITE_HAS_CODEC
   {
-    extern int sqlite3CodecAttach(sqlite3*, int, void*, int);
+    extern int sqlite3CodecAttach(sqlite3*, int, const void*, int);
     extern void sqlite3CodecGetKey(sqlite3*, int, void**, int*);
     int nKey;
     char *zKey;
