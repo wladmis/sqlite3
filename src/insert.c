@@ -1246,6 +1246,18 @@ void sqlite3OpenTableAndIndices(
   }
 }
 
+
+#ifdef SQLITE_TEST
+/*
+** The following global variable is incremented whenever the
+** transfer optimization is used.  This is used for testing
+** purposes only - to make sure the transfer optimization really
+** is happening when it is suppose to.
+*/
+int sqlite3_xferopt_count;
+#endif /* SQLITE_TEST */
+
+
 #ifndef SQLITE_OMIT_XFER_OPT
 /*
 ** Check to collation names to see if they are compatible.
@@ -1296,16 +1308,6 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
   /* If no test above fails then the indices must be compatible */
   return 1;
 }
-
-#ifdef SQLITE_TEST
-/*
-** The following global variable is incremented whenever the
-** transfer optimization is used.  This is used for testing
-** purposes only - to make sure the transfer optimization really
-** is happening when it is suppose to.
-*/
-int sqlite3_xferopt_count;
-#endif /* SQLITE_TEST */
 
 /*
 ** Attempt the transfer optimization on INSERTs of the form
