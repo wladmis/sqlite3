@@ -661,13 +661,13 @@ void *sqlite3Malloc(int n, int doMemManage){
   }
   return p;
 }
-void sqlite3ReallocOrFree(void *pp, int n){
-  char **x = (char**)pp;
-  void *p = sqlite3Realloc(*x, n);
-  if( !p ){
-    sqlite3FreeX(*x);
+void *sqlite3ReallocOrFree(void *p, int n){
+  void *pNew;
+  pNew = sqlite3Realloc(p, n);
+  if( !pNew ){
+    sqlite3FreeX(p);
   }
-  *x = p;
+  return pNew;
 }
 
 /*

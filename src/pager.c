@@ -1828,7 +1828,7 @@ int sqlite3PagerSetPagesize(Pager *pPager, int pageSize){
   if( !pPager->memDb && pPager->nRef==0 ){
     pager_reset(pPager);
     pPager->pageSize = pageSize;
-    sqlite3ReallocOrFree(&pPager->pTmpSpace, pageSize);
+    pPager->pTmpSpace = sqlite3ReallocOrFree(pPager->pTmpSpace, pageSize);
   }
   return pPager->pageSize;
 }
