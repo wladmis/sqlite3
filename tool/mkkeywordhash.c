@@ -114,7 +114,7 @@ struct Keyword {
 #else
 #  define TRIGGER    0x00002000
 #endif
-#ifdef SQLITE_OMIT_VACUUM
+#if defined(SQLITE_OMIT_VACUUM) || defined(SQLITE_OMIT_ATTACH)
 #  define VACUUM     0
 #else
 #  define VACUUM     0x00004000

@@ -15,6 +15,7 @@
 */
 #include "sqliteInt.h"
 
+#ifndef SQLITE_OMIT_ATTACH
 /*
 ** Resolve an expression that was part of an ATTACH or DETACH statement. This
 ** is slightly different from resolving a normal SQL expression, because simple
@@ -351,14 +352,17 @@ void sqlite3Detach(Parse *pParse, Expr *pDbname){
 void sqlite3Attach(Parse *pParse, Expr *p, Expr *pDbname, Expr *pKey){
   codeAttach(pParse, SQLITE_ATTACH, "sqlite_attach", 3, p, p, pDbname, pKey);
 }
+#endif /* SQLITE_OMIT_ATTACH */
 
 /*
 ** Register the functions sqlite_attach and sqlite_detach.
 */
 void sqlite3AttachFunctions(sqlite3 *db){
+#ifndef SQLITE_OMIT_ATTACH
   static const int enc = SQLITE_UTF8;
   sqlite3CreateFunc(db, "sqlite_attach", 3, enc, db, attachFunc, 0, 0);
   sqlite3CreateFunc(db, "sqlite_detach", 1, enc, db, detachFunc, 0, 0);
+#endif
 }
 
 /*

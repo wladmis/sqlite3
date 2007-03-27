@@ -20,7 +20,7 @@
 #include "vdbeInt.h"
 #include "os.h"
 
-#ifndef SQLITE_OMIT_VACUUM
+#if !defined(SQLITE_OMIT_VACUUM) && !defined(SQLITE_OMIT_ATTACH)
 /*
 ** Execute zSql on database db. Return an error code.
 */
@@ -271,4 +271,4 @@ end_of_vacuum:
 
   return rc;
 }
-#endif  /* SQLITE_OMIT_VACUUM */
+#endif  /* SQLITE_OMIT_VACUUM && SQLITE_OMIT_ATTACH */

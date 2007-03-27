@@ -4511,7 +4511,7 @@ case OP_AggFinal: {        /* no-push */
 }
 
 
-#ifndef SQLITE_OMIT_VACUUM
+#if !defined(SQLITE_OMIT_VACUUM) && !defined(SQLITE_OMIT_ATTACH)
 /* Opcode: Vacuum * * *
 **
 ** Vacuum the entire database.  This opcode will cause other virtual
