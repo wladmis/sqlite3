@@ -3677,7 +3677,9 @@ case OP_Next: {        /* no-push */
   CHECK_FOR_INTERRUPT;
   assert( pOp->p1>=0 && pOp->p1<p->nCursor );
   pC = p->apCsr[pOp->p1];
-  assert( pC!=0 );
+  if( pC==0 ){
+    break;  /* See ticket #2273 */
+  }
   if( (pCrsr = pC->pCursor)!=0 ){
     int res;
     if( pC->nullRow ){
