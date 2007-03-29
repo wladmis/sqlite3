@@ -31,7 +31,6 @@ static int c_collation_test(
   int objc,              /* Number of arguments */
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
-  void *p;
   const char *zErrFunction = "N/A";
   sqlite3 *db;
 
@@ -76,8 +75,6 @@ static int c_realloc_test(
   void *p;
   const char *zErrFunction = "N/A";
 
-  sqlite3 *db;
-  int rc;
   if( objc!=1 ){
     Tcl_WrongNumArgs(interp, 1, objv, "");
     return TCL_ERROR;
