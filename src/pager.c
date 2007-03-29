@@ -1436,7 +1436,7 @@ end_playback:
   }
 
   /* The Pager.sectorSize variable may have been updated while rolling
-  ** back a journal created by a process with a different PAGER_SECTOR_SIZE
+  ** back a journal created by a process with a different sector size
   ** value. Reset it to the correct value for this process.
   */
   pPager->sectorSize = sqlite3OsSectorSize(pPager->fd);
