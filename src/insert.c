@@ -1517,11 +1517,13 @@ static int xferOptimization(
   }
   sqlite3OpenTable(pParse, iSrc, iDbSrc, pSrc, OP_OpenRead);
   emptySrcTest = sqlite3VdbeAddOp(v, OP_Rewind, iSrc, 0);
-  if( pDest->iPKey>=0 ){
-    memRowid = pParse->nMem++;
+  if( pDest->pIndex!=0 ){
     sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
-    sqlite3VdbeAddOp(v, OP_MemStore, memRowid, 1);
-    addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+    memRowid = pParse->nMem++;
+    sqlite3VdbeAddOp(v, OP_MemStore, memRowid, pDest->iPKey>=0);
+  }
+  addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+  if( pDest->iPKey>=0 ){
     sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
     addr2 = sqlite3VdbeAddOp(v, OP_NotExists, iDest, 0);
     sqlite3VdbeOp3(v, OP_Halt, SQLITE_CONSTRAINT, onError, 
@@ -1529,7 +1531,7 @@ static int xferOptimization(
     sqlite3VdbeJumpHere(v, addr2);
     autoIncStep(pParse, counterMem);
   }else{
-    addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+    assert( pDest->autoInc==0 );
   }
   sqlite3VdbeAddOp(v, OP_RowData, iSrc, 0);
   sqlite3VdbeOp3(v, OP_Insert, iDest,
