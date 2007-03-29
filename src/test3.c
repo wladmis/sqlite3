@@ -706,9 +706,9 @@ static int btree_move_to(
   if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
     int iKey;
     if( Tcl_GetInt(interp, argv[2], &iKey) ) return TCL_ERROR;
-    rc = sqlite3BtreeMoveto(pCur, 0, iKey, &res);
+    rc = sqlite3BtreeMoveto(pCur, 0, iKey, 0, &res);
   }else{
-    rc = sqlite3BtreeMoveto(pCur, argv[2], strlen(argv[2]), &res);  
+    rc = sqlite3BtreeMoveto(pCur, argv[2], strlen(argv[2]), 0, &res);  
   }
   if( rc ){
     Tcl_AppendResult(interp, errorName(rc), 0);
@@ -775,7 +775,7 @@ static int btree_insert(
     unsigned char *pBuf;
     if( Tcl_GetWideIntFromObj(interp, objv[2], &iKey) ) return TCL_ERROR;
     pBuf = Tcl_GetByteArrayFromObj(objv[3], &len);
-    rc = sqlite3BtreeInsert(pCur, 0, iKey, pBuf, len);
+    rc = sqlite3BtreeInsert(pCur, 0, iKey, pBuf, len, 0);
   }else{
     int keylen;
     int dlen;
@@ -783,7 +783,7 @@ static int btree_insert(
     unsigned char *pDBuf;
     pKBuf = Tcl_GetByteArrayFromObj(objv[2], &keylen);
     pDBuf = Tcl_GetByteArrayFromObj(objv[3], &dlen);
-    rc = sqlite3BtreeInsert(pCur, pKBuf, keylen, pDBuf, dlen);
+    rc = sqlite3BtreeInsert(pCur, pKBuf, keylen, pDBuf, dlen, 0);
   }
   if( rc ){
     Tcl_AppendResult(interp, errorName(rc), 0);

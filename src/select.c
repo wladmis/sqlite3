@@ -535,7 +535,7 @@ static int selectInnerLoop(
       }else{
         sqlite3VdbeAddOp(v, OP_NewRowid, iParm, 0);
         sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
-        sqlite3VdbeAddOp(v, OP_Insert, iParm, 0);
+        sqlite3VdbeAddOp(v, OP_Insert, iParm, OPFLAG_APPEND);
       }
       break;
     }
@@ -714,7 +714,7 @@ static void generateSortTail(
     case SRT_EphemTab: {
       sqlite3VdbeAddOp(v, OP_NewRowid, iParm, 0);
       sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
-      sqlite3VdbeAddOp(v, OP_Insert, iParm, 0);
+      sqlite3VdbeAddOp(v, OP_Insert, iParm, OPFLAG_APPEND);
       break;
     }
 #ifndef SQLITE_OMIT_SUBQUERY

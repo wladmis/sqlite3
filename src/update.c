@@ -465,7 +465,7 @@ void sqlite3Update(
 
     /* Create the new index entries and the new record.
     */
-    sqlite3CompleteInsertion(pParse, pTab, iCur, aIdxUsed, chngRowid, 1, -1);
+    sqlite3CompleteInsertion(pParse, pTab, iCur, aIdxUsed, chngRowid, 1, -1, 0);
   }
 
   /* Increment the row counter 

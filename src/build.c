@@ -887,7 +887,7 @@ void sqlite3StartTable(
     sqlite3VdbeAddOp(v, OP_NewRowid, 0, 0);
     sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
     sqlite3VdbeAddOp(v, OP_Null, 0, 0);
-    sqlite3VdbeAddOp(v, OP_Insert, 0, 0);
+    sqlite3VdbeAddOp(v, OP_Insert, 0, OPFLAG_APPEND);
     sqlite3VdbeAddOp(v, OP_Close, 0, 0);
     sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
   }
