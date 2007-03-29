@@ -1464,9 +1464,11 @@ static int xferOptimization(
       return 0;    /* pDestIdx has no corresponding index in pSrc */
     }
   }
+#ifndef SQLITE_OMIT_CHECK
   if( pDest->pCheck && !sqlite3ExprCompare(pSrc->pCheck, pDest->pCheck) ){
     return 0;   /* Tables have different CHECK constraints.  Ticket #2252 */
   }
+#endif
 
   /* If we get this far, it means either:
   **
