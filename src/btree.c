@@ -3305,12 +3305,10 @@ int sqlite3BtreeLast(BtCursor *pCur, int *pRes){
 */
 int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
   int rc;
-  int tryRightmost;
   rc = moveToRoot(pCur);
   if( rc ) return rc;
   assert( pCur->pPage );
   assert( pCur->pPage->isInit );
-  tryRightmost = pCur->pPage->intKey;
   if( pCur->eState==CURSOR_INVALID ){
     *pRes = -1;
     assert( pCur->pPage->nCell==0 );
@@ -3326,16 +3324,13 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
     if( !pPage->intKey && pKey==0 ){
       return SQLITE_CORRUPT_BKPT;
     }
-    while( lwr<=upr ){
+    pCur->idx = upr;
+    if( lwr<=upr ) for(;;){
       void *pCellKey;
       i64 nCellKey;
-      pCur->idx = (lwr+upr)/2;
       pCur->info.nSize = 0;
       if( pPage->intKey ){
         u8 *pCell;
-        if( tryRightmost ){
-          pCur->idx = upr;
-        }
         pCell = findCell(pPage, pCur->idx) + pPage->childPtrSize;
         if( pPage->hasData ){
           u32 dummy;
@@ -3346,7 +3341,6 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
           c = -1;
         }else if( nCellKey>nKey ){
           c = +1;
-          tryRightmost = 0;
         }else{
           c = 0;
         }
@@ -3380,6 +3374,10 @@ int sqlite3BtreeMoveto(BtCursor *pCur, const void *pKey, i64 nKey, int *pRes){
       }else{
         upr = pCur->idx-1;
       }
+      if( lwr>upr ){
+        break;
+      }
+      pCur->idx = (lwr+upr)/2;
     }
     assert( lwr==upr+1 );
     assert( pPage->isInit );
