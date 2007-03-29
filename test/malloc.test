@@ -546,6 +546,12 @@ do_malloc_test 20 -tclprep {
   DETACH DATABASE t2;
 } 
 
+# Test malloc failure whilst installing a foriegn key.
+#
+do_malloc_test 21 -sqlbody {
+  CREATE TABLE abc(a, b, c, FOREIGN KEY(a) REFERENCES abc(b))
+} 
+
 
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
