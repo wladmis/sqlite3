@@ -2205,6 +2205,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetest6_Init(Tcl_Interp*);
     extern int Sqlitetest7_Init(Tcl_Interp*);
     extern int Sqlitetest8_Init(Tcl_Interp*);
+    extern int Sqlitetest9_Init(Tcl_Interp*);
     extern int Md5_Init(Tcl_Interp*);
     extern int Sqlitetestsse_Init(Tcl_Interp*);
     extern int Sqlitetestasync_Init(Tcl_Interp*);
@@ -2220,6 +2221,7 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest6_Init(interp);
     Sqlitetest7_Init(interp);
     Sqlitetest8_Init(interp);
+    Sqlitetest9_Init(interp);
     Sqlitetestasync_Init(interp);
     Sqlitetesttclvar_Init(interp);
     Sqlitetestschema_Init(interp);
