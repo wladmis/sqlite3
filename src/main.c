@@ -260,7 +260,6 @@ const char *sqlite3ErrStr(int rc){
     case SQLITE_CORRUPT:    z = "database disk image is malformed";      break;
     case SQLITE_FULL:       z = "database or disk is full";              break;
     case SQLITE_CANTOPEN:   z = "unable to open database file";          break;
-    case SQLITE_PROTOCOL:   z = "database locking protocol failure";     break;
     case SQLITE_EMPTY:      z = "table contains no data";                break;
     case SQLITE_SCHEMA:     z = "database schema has changed";           break;
     case SQLITE_CONSTRAINT: z = "constraint failed";                     break;

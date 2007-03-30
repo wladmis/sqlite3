@@ -1840,8 +1840,7 @@ int sqlite3BtreeGetAutoVacuum(Btree *p){
 ** SQLITE_OK is returned on success.  If the file is not a
 ** well-formed database file, then SQLITE_CORRUPT is returned.
 ** SQLITE_BUSY is returned if the database is locked.  SQLITE_NOMEM
-** is returned if we run out of memory.  SQLITE_PROTOCOL is returned
-** if there is a locking protocol violation.
+** is returned if we run out of memory. 
 */
 static int lockBtree(BtShared *pBt){
   int rc, pageSize;
