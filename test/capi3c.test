@@ -725,7 +725,6 @@ SQLITE_IOERR      {disk I/O error} \
 SQLITE_CORRUPT    {database disk image is malformed} \
 SQLITE_FULL       {database or disk is full} \
 SQLITE_CANTOPEN   {unable to open database file} \
-SQLITE_PROTOCOL   {database locking protocol failure} \
 SQLITE_EMPTY      {table contains no data} \
 SQLITE_SCHEMA     {database schema has changed} \
 SQLITE_CONSTRAINT {constraint failed} \
