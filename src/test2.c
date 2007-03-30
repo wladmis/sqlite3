@@ -163,7 +163,12 @@ static int pager_commit(
     return TCL_ERROR;
   }
   pPager = sqlite3TextToPtr(argv[1]);
-  rc = sqlite3PagerCommit(pPager);
+  rc = sqlite3PagerCommitPhaseOne(pPager, 0, 0);
+  if( rc!=SQLITE_OK ){
+    Tcl_AppendResult(interp, errorName(rc), 0);
+    return TCL_ERROR;
+  }
+  rc = sqlite3PagerCommitPhaseTwo(pPager);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
