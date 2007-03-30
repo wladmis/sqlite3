@@ -523,6 +523,10 @@ static int isLikeOrGlob(
   }
   pColl = pLeft->pColl;
   if( pColl==0 ){
+    /* TODO: Coverage testing doesn't get this case. Is it actually possible
+    ** for an expression of type TK_COLUMN to not have an assigned collation 
+    ** sequence at this point?
+    */
     pColl = db->pDfltColl;
   }
   if( (pColl->type!=SQLITE_COLL_BINARY || noCase) &&
@@ -1292,13 +1296,19 @@ static double bestVirtualIndex(
   ** xBestIndex.
   */
 
-  /* The module name must be defined */
+  /* The module name must be defined. Also, by this point there must
+  ** be a pointer to an sqlite3_vtab structure. Otherwise
+  ** sqlite3ViewGetColumnNames() would have picked up the error. 
+  */
   assert( pTab->azModuleArg && pTab->azModuleArg[0] );
+  assert( pTab->pVtab );
+#if 0
   if( pTab->pVtab==0 ){
     sqlite3ErrorMsg(pParse, "undefined module %s for table %s",
         pTab->azModuleArg[0], pTab->zName);
     return 0.0;
   }
+#endif
 
   /* Set the aConstraint[].usable fields and initialize all 
   ** output variables to zero.
