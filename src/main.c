@@ -136,6 +136,9 @@ int sqlite3_close(sqlite3 *db){
   ** cannot be opened for some reason. So this routine needs to run in
   ** that case. But maybe there should be an extra magic value for the
   ** "failed to open" state.
+  **
+  ** TODO: Coverage tests do not test the case where this condition is
+  ** true. It's hard to see how to cause it without messing with threads.
   */
   if( db->magic!=SQLITE_MAGIC_CLOSED && sqlite3SafetyOn(db) ){
     /* printf("DID NOT CLOSE\n"); fflush(stdout); */
