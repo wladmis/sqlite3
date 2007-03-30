@@ -1,4 +1,4 @@
-# 2001 September 15
+# 2007 March 26
 #
 # The author disclaims copyright to this source code.  In place of
 # a legal notice, here is a blessing:
@@ -9,8 +9,8 @@
 #
 #***********************************************************************
 #
-# This file runs the tests in the file ioerr.test with auto-vacuum enabled
-# databases.
+# This file runs the tests in the file ioerr.test with 
+# exclusive access mode enabled.
 #
 # $Id$
 
@@ -57,4 +57,3 @@ rename really_finish_test2 finish_test
 rename do_test ""
 rename really_do_test do_test
 finish_test
-
