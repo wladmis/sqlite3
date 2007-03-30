@@ -42,6 +42,16 @@ int sqlite3_libversion_number(void){ return SQLITE_VERSION_NUMBER; }
 void (*sqlite3_io_trace)(const char*, ...) = 0;
 
 /*
+** If the following global variable points to a string which is the
+** name of a directory, then that directory will be used to store
+** temporary files.
+**
+** See also the "PRAGMA temp_store_directory" SQL command.
+*/
+char *sqlite3_temp_directory = 0;
+
+
+/*
 ** This is the default collating function named "BINARY" which is always
 ** available.
 */
