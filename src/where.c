@@ -1832,6 +1832,10 @@ static void whereInfoFree(WhereInfo *pWInfo){
       sqlite3_index_info *pInfo = pWInfo->a[i].pIdxInfo;
       if( pInfo ){
         if( pInfo->needToFreeIdxStr ){
+          /* Coverage: Don't think this can be reached. By the time this
+          ** function is called, the index-strings have been passed
+          ** to the vdbe layer for deletion.
+          */
           sqlite3_free(pInfo->idxStr);
         }
         sqliteFree(pInfo);
