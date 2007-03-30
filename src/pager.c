@@ -956,9 +956,12 @@ static int pager_end_transaction(Pager *pPager){
       ** be in the file system. This pager still holds a RESERVED or greater
       ** lock on the database file, so there is no chance another process
       ** could create or remove a journal file.
+      **
+      ** These asserts are not valid for asynchronous I/O such as is found
+      ** in async.test
       */
-      assert( sqlite3OsFileExists(pPager->zJournal) || pPager->tempFile );
-      assert( !sqlite3OsFileExists(pPager->zJournal) || !pPager->tempFile );
+      /*assert( sqlite3OsFileExists(pPager->zJournal) || pPager->tempFile );*/
+      /*assert( !sqlite3OsFileExists(pPager->zJournal) || !pPager->tempFile );*/
       if( !pPager->tempFile ){
         rc = sqlite3OsDelete(pPager->zJournal);
       }
