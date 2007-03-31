@@ -21,12 +21,6 @@
 #include <ctype.h>
 
 /*
-** The following constant value is used by the SQLITE_BIGENDIAN and
-** SQLITE_LITTLEENDIAN macros.
-*/
-const int sqlite3one = 1;
-
-/*
 ** The version of the library
 */
 const char sqlite3_version[] = SQLITE_VERSION;
