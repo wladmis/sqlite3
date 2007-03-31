@@ -16,6 +16,7 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+speed_trial_init speed1
 
 # Set a uniform random seed
 expr srand(0)
@@ -283,5 +284,6 @@ speed_trial speed1-random-del2 20000 row {
 do_test speed1-1.2 {
   db one {SELECT count(*) FROM t1}
 } 10000
+speed_trial_summary speed1
 
 finish_test

@@ -125,15 +125,23 @@ proc do_test {name cmd expected} {
 # Return the number of microseconds per statement.
 #
 proc speed_trial {name numstmt units sql} {
-  puts -nonewline [format {%-20.20s } $name...]
+  puts -nonewline [format {%-21.21s } $name...]
   flush stdout
   set speed [time {sqlite3_exec_nr db $sql}]
   set tm [lindex $speed 0]
-  set per [expr {$tm/(1.0*$numstmt)}]
   set rate [expr {1000000.0*$numstmt/$tm}]
-  set u1 us/$units
   set u2 $units/s
-  puts [format {%20.3f %-7s %20.5f %s} $per $u1 $rate $u2]
+  puts [format {%12d uS %20.5f %s} $tm $rate $u2]
+  global total_time
+  set total_time [expr {$total_time+$tm}]
+}
+proc speed_trial_init {name} {
+  global total_time
+  set total_time 0
+}
+proc speed_trial_summary {name} {
+  global total_time
+  puts [format {%-21.21s %12d uS TOTAL} $name $total_time]
 }
 
 # The procedure uses the special "sqlite_malloc_stat" command
