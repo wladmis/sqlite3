@@ -66,7 +66,7 @@ do_test speed2-1.0 {
   execsql {
     PRAGMA page_size=1024;
     PRAGMA cache_size=8192;
-    PRAGMA locking_mode=EXCLUSIVE;
+--    PRAGMA locking_mode=EXCLUSIVE;
     CREATE TABLE t1(a INTEGER, b INTEGER, c TEXT);
     CREATE TABLE t2(a INTEGER, b INTEGER, c TEXT);
     CREATE INDEX i2a ON t2(a);
