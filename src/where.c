@@ -220,6 +220,9 @@ static void whereClauseClear(WhereClause *pWC){
 ** Add a new entries to the WhereClause structure.  Increase the allocated
 ** space as necessary.
 **
+** If the flags argument includes TERM_DYNAMIC, then responsibility
+** for freeing the expression p is assumed by the WhereClause object.
+**
 ** WARNING:  This routine might reallocate the space used to store
 ** WhereTerms.  All pointers to WhereTerms should be invalided after
 ** calling this routine.  Such pointers may be reinitialized by referencing
@@ -231,7 +234,12 @@ static int whereClauseInsert(WhereClause *pWC, Expr *p, int flags){
   if( pWC->nTerm>=pWC->nSlot ){
     WhereTerm *pOld = pWC->a;
     pWC->a = sqliteMalloc( sizeof(pWC->a[0])*pWC->nSlot*2 );
-    if( pWC->a==0 ) return 0;
+    if( pWC->a==0 ){
+      if( flags & TERM_DYNAMIC ){
+        sqlite3ExprDelete(p);
+      }
+      return 0;
+    }
     memcpy(pWC->a, pOld, sizeof(pWC->a[0])*pWC->nTerm);
     if( pOld!=pWC->aStatic ){
       sqliteFree(pOld);
@@ -734,7 +742,7 @@ static void exprAnalyze(
         int idxNew;
         pDup = sqlite3ExprDup(pExpr);
         if( sqlite3MallocFailed() ){
-          sqliteFree(pDup);
+          sqlite3ExprDelete(pDup);
           return;
         }
         idxNew = whereClauseInsert(pWC, pDup, TERM_VIRTUAL|TERM_DYNAMIC);
