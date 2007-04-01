@@ -606,7 +606,6 @@ static int readMasterJournal(OsFile *pJrnl, char **pzMaster){
 ** 
 */
 static int seekJournalHdr(Pager *pPager){
-  int rc;
   i64 offset = 0;
   i64 c = pPager->journalOff;
   if( c ){

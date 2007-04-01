@@ -1374,7 +1374,7 @@ static int xferOptimization(
   int addr1, addr2;                /* Loop addresses */
   int emptyDestTest;               /* Address of test for empty pDest */
   int emptySrcTest;                /* Address of test for empty pSrc */
-  int memRowid;                    /* A memcell containing a rowid from pSrc */
+  int memRowid = 0;                /* A memcell containing a rowid from pSrc */
   Vdbe *v;                         /* The VDBE we are building */
   KeyInfo *pKey;                   /* Key information for an index */
   int counterMem;                  /* Memory register used by AUTOINC */
