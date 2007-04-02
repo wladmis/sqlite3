@@ -121,6 +121,7 @@ if {$LeakList!=""} {
 #
 if {$::tcl_platform(platform)=="unix"} {
   source $testdir/crash.test
+  source $testdir/crash2.test
   ifcapable !default_autovacuum {
     source $testdir/autovacuum_crash.test
   }
