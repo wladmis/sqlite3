@@ -4073,6 +4073,13 @@ static void set_options(Tcl_Interp *interp){
 #else
   Tcl_SetVar2(interp, "sqlite_options", "vtab", "1", TCL_GLOBAL_ONLY);
 #endif
+
+#ifdef SQLITE_DEFAULT_FILE_FORMAT
+  Tcl_ObjSetVar2(interp, 
+      Tcl_NewStringObj("sqlite_default_file_format", -1), 0, 
+      Tcl_NewIntObj(SQLITE_DEFAULT_FILE_FORMAT), TCL_GLOBAL_ONLY
+  );
+#endif
 }
 
 /*
