@@ -570,6 +570,7 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   extern int sqlite3_io_error_hit;
   extern int sqlite3_diskfull_pending;
   extern int sqlite3_diskfull;
+  extern int sqlite3_pager_n_sort_bucket;
   static struct {
     char *zName;
     Tcl_CmdProc *xProc;
@@ -612,5 +613,7 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
      (char*)&sqlite3_pending_byte, TCL_LINK_INT);
   Tcl_LinkVar(interp, "pager_pagesize",
      (char*)&test_pagesize, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite_pager_n_sort_bucket",
+     (char*)&sqlite3_pager_n_sort_bucket, TCL_LINK_INT);
   return TCL_OK;
 }
