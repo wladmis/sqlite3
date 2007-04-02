@@ -140,8 +140,6 @@ Product {sqlite-source-V3.zip} {
   Unlike the tarballs below, all of the preprocessing and automatic
   code generation has already been done on these C source code, so they
   can be processed directly with any ordinary C compiler.
-  This file is provided as a service to
-  MS-Windows users who lack the build support infrastructure of Unix.
 }
 
 Product {sqlite-V3-tea.tar.gz} {
