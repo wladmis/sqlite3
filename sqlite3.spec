@@ -102,7 +102,6 @@ embedded controllers.
 
 %build
 autoreconf -i
-%add_optflags -fno-strict-aliasing
 # maybe add -lhistory; cf. [devel] libreadline add_history
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts2.la doc
