@@ -827,7 +827,7 @@ static void strftimeFunc(
         case 'f': {
           double s = x.s;
           if( s>59.999 ) s = 59.999;
-          sqlite3_snprintf(7, &z[j],"%02.3f", s);
+          sqlite3_snprintf(7, &z[j],"%06.3f", s);
           j += strlen(&z[j]);
           break;
         }

@@ -43,14 +43,18 @@ set EXCLUDE {
   btree6.test
   corrupt.test
   crash.test
+  crash2.test
+  exclusive3.test
   loadext.test
   malloc.test
   malloc2.test
   malloc3.test
   memleak.test
+  misc7.test
   misuse.test
   quick.test
   speed1.test
+  speed2.test
 
   autovacuum_crash.test
   btree8.test

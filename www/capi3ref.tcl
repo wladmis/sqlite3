@@ -2,7 +2,7 @@ set rcsid {$Id$}
 source common.tcl
 header {C/C++ Interface For SQLite Version 3}
 puts {
-<h2>C/C++ Interface For SQLite Version 3</h2>
+<h2 class=pdf_section>C/C++ Interface For SQLite Version 3</h2>
 }
 
 proc api {name prototype desc {notused x}} {
@@ -1350,7 +1350,7 @@ int sqlite3_set_authorizer(
  the access attempt or NULL if this access attempt is directly from 
  input SQL code.
 
- The return value of the authorization function should be one of the
+ The return value of the authorization callback function should be one of the
  constants SQLITE_OK, SQLITE_DENY, or SQLITE_IGNORE.  A return of
  SQLITE_OK means that the operation is permitted and that 
  sqlite3_prepare_v2() can proceed as normal.
@@ -1365,6 +1365,12 @@ int sqlite3_set_authorizer(
  user-entered SQL.  An appropriate callback can deny the user-entered
  SQL access certain operations (ex: anything that changes the database)
  or to deny access to certain tables or columns within the database.
+
+ SQLite is not reentrant through the authorization callback function.
+ The authorization callback function should not attempt to invoke
+ any other SQLite APIs for the same database connection.  If the
+ authorization callback function invokes some other SQLite API, an
+ SQLITE_MISUSE error or a segmentation fault may result.
 }
 
 api {} {
@@ -1716,6 +1722,7 @@ foreach name [lsort [array names name_to_idx]] {
 #parray name_to_idx
 #parray sname
 incr n -1
+puts "<DIV class=pdf_ignore>"
 puts {<table width="100%" cellpadding="5"><tr>}
 set nrow [expr {($n+2)/3}]
 set i 0
@@ -1734,6 +1741,7 @@ for {set j 0} {$j<3} {incr j} {
 }
 puts "</table>"
 puts "<!-- $n entries.  $nrow rows in 3 columns -->"
+puts "</DIV>"
 
 proc resolve_name {ignore_list name} {
   global name_to_idx
@@ -1750,7 +1758,7 @@ foreach name [lsort [array names name_to_idx]] {
   set done($i) 1
   foreach {namelist prototype desc} [lindex $apilist $i] break
   foreach name $namelist {
-    puts "<a name=\"$name\">"
+    puts "<a name=\"$name\"></a>"
   }
   puts "<p><hr></p>"
   puts "<blockquote><pre>"
@@ -1767,4 +1775,6 @@ foreach name [lsort [array names name_to_idx]] {
   puts "<p>$d3</p>"
 }
 
+puts "<DIV class=pdf_ignore>"
 footer $rcsid
+puts "</DIV>"

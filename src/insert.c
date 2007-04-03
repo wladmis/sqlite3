@@ -205,7 +205,7 @@ static void autoIncEnd(
     sqlite3VdbeOp3(v, OP_String8, 0, 0, pTab->zName, 0);
     sqlite3VdbeAddOp(v, OP_MemLoad, memId, 0);
     sqlite3VdbeAddOp(v, OP_MakeRecord, 2, 0);
-    sqlite3VdbeAddOp(v, OP_Insert, iCur, 0);
+    sqlite3VdbeAddOp(v, OP_Insert, iCur, OPFLAG_APPEND);
     sqlite3VdbeAddOp(v, OP_Close, iCur, 0);
   }
 }
@@ -346,6 +346,7 @@ void sqlite3Insert(
   int newIdx = -1;      /* Cursor for the NEW table */
   Db *pDb;              /* The database containing table being inserted into */
   int counterMem = 0;   /* Memory cell holding AUTOINCREMENT counter */
+  int appendFlag = 0;   /* True if the insert is likely to be an append */
   int iDb;
 
 #ifndef SQLITE_OMIT_TRIGGER
@@ -489,7 +490,7 @@ void sqlite3Insert(
       sqlite3VdbeAddOp(v, OP_MakeRecord, nColumn, 0);
       sqlite3VdbeAddOp(v, OP_NewRowid, srcTab, 0);
       sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
-      sqlite3VdbeAddOp(v, OP_Insert, srcTab, 0);
+      sqlite3VdbeAddOp(v, OP_Insert, srcTab, OPFLAG_APPEND);
       sqlite3VdbeAddOp(v, OP_Return, 0, 0);
 
       /* The following code runs first because the GOTO at the very top
@@ -701,19 +702,30 @@ void sqlite3Insert(
       }else if( pSelect ){
         sqlite3VdbeAddOp(v, OP_Dup, nColumn - keyColumn - 1, 1);
       }else{
+        VdbeOp *pOp;
         sqlite3ExprCode(pParse, pList->a[keyColumn].pExpr);
+        pOp = sqlite3VdbeGetOp(v, sqlite3VdbeCurrentAddr(v) - 1);
+        if( pOp->opcode==OP_Null ){
+          appendFlag = 1;
+          pOp->opcode = OP_NewRowid;
+          pOp->p1 = base;
+          pOp->p2 = counterMem;
+        }
       }
       /* If the PRIMARY KEY expression is NULL, then use OP_NewRowid
       ** to generate a unique primary key value.
       */
-      sqlite3VdbeAddOp(v, OP_NotNull, -1, sqlite3VdbeCurrentAddr(v)+3);
-      sqlite3VdbeAddOp(v, OP_Pop, 1, 0);
-      sqlite3VdbeAddOp(v, OP_NewRowid, base, counterMem);
-      sqlite3VdbeAddOp(v, OP_MustBeInt, 0, 0);
+      if( !appendFlag ){
+        sqlite3VdbeAddOp(v, OP_NotNull, -1, sqlite3VdbeCurrentAddr(v)+3);
+        sqlite3VdbeAddOp(v, OP_Pop, 1, 0);
+        sqlite3VdbeAddOp(v, OP_NewRowid, base, counterMem);
+        sqlite3VdbeAddOp(v, OP_MustBeInt, 0, 0);
+      }
     }else if( IsVirtual(pTab) ){
       sqlite3VdbeAddOp(v, OP_Null, 0, 0);
     }else{
       sqlite3VdbeAddOp(v, OP_NewRowid, base, counterMem);
+      appendFlag = 1;
     }
     autoIncStep(pParse, counterMem);
 
@@ -761,7 +773,8 @@ void sqlite3Insert(
       sqlite3GenerateConstraintChecks(pParse, pTab, base, 0, keyColumn>=0,
                                      0, onError, endOfLoop);
       sqlite3CompleteInsertion(pParse, pTab, base, 0,0,0,
-                            (triggers_exist & TRIGGER_AFTER)!=0 ? newIdx : -1);
+                            (triggers_exist & TRIGGER_AFTER)!=0 ? newIdx : -1,
+                            appendFlag);
     }
   }
 
@@ -1172,7 +1185,8 @@ void sqlite3CompleteInsertion(
   char *aIdxUsed,     /* Which indices are used.  NULL means all are used */
   int rowidChng,      /* True if the record number will change */
   int isUpdate,       /* True for UPDATE, False for INSERT */
-  int newIdx          /* Index of NEW table for triggers.  -1 if none */
+  int newIdx,         /* Index of NEW table for triggers.  -1 if none */
+  int appendBias      /* True if this is likely to be an append */
 ){
   int i;
   Vdbe *v;
@@ -1202,6 +1216,9 @@ void sqlite3CompleteInsertion(
   }else{
     pik_flags = OPFLAG_NCHANGE;
     pik_flags |= (isUpdate?OPFLAG_ISUPDATE:OPFLAG_LASTROWID);
+  }
+  if( appendBias ){
+    pik_flags |= OPFLAG_APPEND;
   }
   sqlite3VdbeAddOp(v, OP_Insert, base, pik_flags);
   if( !pParse->nested ){
@@ -1245,6 +1262,18 @@ void sqlite3OpenTableAndIndices(
     pParse->nTab = base+i;
   }
 }
+
+
+#ifdef SQLITE_TEST
+/*
+** The following global variable is incremented whenever the
+** transfer optimization is used.  This is used for testing
+** purposes only - to make sure the transfer optimization really
+** is happening when it is suppose to.
+*/
+int sqlite3_xferopt_count;
+#endif /* SQLITE_TEST */
+
 
 #ifndef SQLITE_OMIT_XFER_OPT
 /*
@@ -1305,7 +1334,7 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
 ** This optimization is only attempted if
 **
 **    (1)  tab1 and tab2 have identical schemas including all the
-**         same indices
+**         same indices and constraints
 **
 **    (2)  tab1 and tab2 are different tables
 **
@@ -1345,7 +1374,7 @@ static int xferOptimization(
   int addr1, addr2;                /* Loop addresses */
   int emptyDestTest;               /* Address of test for empty pDest */
   int emptySrcTest;                /* Address of test for empty pSrc */
-  int memRowid;                    /* A memcell containing a rowid from pSrc */
+  int memRowid = 0;                /* A memcell containing a rowid from pSrc */
   Vdbe *v;                         /* The VDBE we are building */
   KeyInfo *pKey;                   /* Key information for an index */
   int counterMem;                  /* Memory register used by AUTOINC */
@@ -1382,18 +1411,15 @@ static int xferOptimization(
   if( pSelect->pOrderBy ){
     return 0;   /* SELECT may not have an ORDER BY clause */
   }
-  if( pSelect->pHaving ){
-    return 0;   /* SELECT may not have a HAVING clause */
-  }
+  /* Do not need to test for a HAVING clause.  If HAVING is present but
+  ** there is no ORDER BY, we will get an error. */
   if( pSelect->pGroupBy ){
     return 0;   /* SELECT may not have a GROUP BY clause */
   }
   if( pSelect->pLimit ){
     return 0;   /* SELECT may not have a LIMIT clause */
   }
-  if( pSelect->pOffset ){
-    return 0;   /* SELECT may not have an OFFSET clause */
-  }
+  assert( pSelect->pOffset==0 );  /* Must be so if pLimit==0 */
   if( pSelect->pPrior ){
     return 0;   /* SELECT may not be a compound query */
   }
@@ -1455,6 +1481,11 @@ static int xferOptimization(
       return 0;    /* pDestIdx has no corresponding index in pSrc */
     }
   }
+#ifndef SQLITE_OMIT_CHECK
+  if( pDest->pCheck && !sqlite3ExprCompare(pSrc->pCheck, pDest->pCheck) ){
+    return 0;   /* Tables have different CHECK constraints.  Ticket #2252 */
+  }
+#endif
 
   /* If we get this far, it means either:
   **
@@ -1464,16 +1495,20 @@ static int xferOptimization(
   **    *   We can conditionally do the transfer if the destination
   **        table is empty.
   */
+#ifdef SQLITE_TEST
+  sqlite3_xferopt_count++;
+#endif
   iDbSrc = sqlite3SchemaToIndex(pParse->db, pSrc->pSchema);
   v = sqlite3GetVdbe(pParse);
   iSrc = pParse->nTab++;
   iDest = pParse->nTab++;
   counterMem = autoIncBegin(pParse, iDbDest, pDest);
   sqlite3OpenTable(pParse, iDest, iDbDest, pDest, OP_OpenWrite);
-  if( pDest->iPKey<0 ){
-    /* The tables do not have an INTEGER PRIMARY KEY so that
-    ** transfer optimization is only allowed if the destination
-    ** table is initially empty
+  if( pDest->iPKey<0 && pDest->pIndex!=0 ){
+    /* If tables do not have an INTEGER PRIMARY KEY and there
+    ** are indices to be copied and the destination is not empty,
+    ** we have to disallow the transfer optimization because the
+    ** the rowids might change which will mess up indexing.
     */
     addr1 = sqlite3VdbeAddOp(v, OP_Rewind, iDest, 0);
     emptyDestTest = sqlite3VdbeAddOp(v, OP_Goto, 0, 0);
@@ -1483,18 +1518,28 @@ static int xferOptimization(
   }
   sqlite3OpenTable(pParse, iSrc, iDbSrc, pSrc, OP_OpenRead);
   emptySrcTest = sqlite3VdbeAddOp(v, OP_Rewind, iSrc, 0);
-  memRowid = pParse->nMem++;
-  sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
-  sqlite3VdbeAddOp(v, OP_MemStore, memRowid, 1);
-  addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
-  sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
-  addr2 = sqlite3VdbeAddOp(v, OP_NotExists, iDest, 0);
-  sqlite3VdbeOp3(v, OP_Halt, SQLITE_CONSTRAINT, onError, 
-                    "PRIMARY KEY must be unique", P3_STATIC);
-  sqlite3VdbeJumpHere(v, addr2);
-  autoIncStep(pParse, counterMem);
+  if( pDest->pIndex!=0 ){
+    sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+    memRowid = pParse->nMem++;
+    sqlite3VdbeAddOp(v, OP_MemStore, memRowid, pDest->iPKey>=0);
+  }
+  if( pDest->iPKey>=0 ){
+    addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+    sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
+    addr2 = sqlite3VdbeAddOp(v, OP_NotExists, iDest, 0);
+    sqlite3VdbeOp3(v, OP_Halt, SQLITE_CONSTRAINT, onError, 
+                      "PRIMARY KEY must be unique", P3_STATIC);
+    sqlite3VdbeJumpHere(v, addr2);
+    autoIncStep(pParse, counterMem);
+  }else if( pDest->pIndex==0 ){
+    addr1 = sqlite3VdbeAddOp(v, OP_NewRowid, iDest, 0);
+  }else{
+    addr1 = sqlite3VdbeAddOp(v, OP_Rowid, iSrc, 0);
+    assert( pDest->autoInc==0 );
+  }
   sqlite3VdbeAddOp(v, OP_RowData, iSrc, 0);
-  sqlite3VdbeOp3(v, OP_Insert, iDest, OPFLAG_NCHANGE|OPFLAG_LASTROWID,
+  sqlite3VdbeOp3(v, OP_Insert, iDest,
+                    OPFLAG_NCHANGE|OPFLAG_LASTROWID|OPFLAG_APPEND,
                     pDest->zName, 0);
   sqlite3VdbeAddOp(v, OP_Next, iSrc, addr1);
   autoIncEnd(pParse, iDbDest, pDest, counterMem);
@@ -1524,7 +1569,7 @@ static int xferOptimization(
                     "UNIQUE constraint failed", P3_STATIC);
       sqlite3VdbeJumpHere(v, addr2);
     }
-    sqlite3VdbeAddOp(v, OP_IdxInsert, iDest, 0);
+    sqlite3VdbeAddOp(v, OP_IdxInsert, iDest, 1);
     sqlite3VdbeAddOp(v, OP_Next, iSrc, addr1+1);
     sqlite3VdbeJumpHere(v, addr1);
   }

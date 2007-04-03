@@ -194,6 +194,7 @@ TESTSRC = \
   $(TOP)/src/btree.c \
   $(TOP)/src/date.c \
   $(TOP)/src/func.c \
+  $(TOP)/src/insert.c \
   $(TOP)/src/os.c \
   $(TOP)/src/os_os2.c \
   $(TOP)/src/os_unix.c \
@@ -209,6 +210,7 @@ TESTSRC = \
   $(TOP)/src/test6.c \
   $(TOP)/src/test7.c \
   $(TOP)/src/test8.c \
+  $(TOP)/src/test9.c \
   $(TOP)/src/test_autoext.c \
   $(TOP)/src/test_async.c \
   $(TOP)/src/test_md5.c \
