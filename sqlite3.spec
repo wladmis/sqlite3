@@ -105,6 +105,8 @@ autoreconf -i
 # maybe add -lhistory; cf. [devel] libreadline add_history
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts2.la doc
+
+rm -fv test/exclusive2.test test/types3.test
 make test
 
 %install
