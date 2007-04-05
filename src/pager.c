@@ -3034,6 +3034,12 @@ int sqlite3PagerAcquire(Pager *pPager, Pgno pgno, DbPage **ppPage, int clrFlag){
       ** database file. Zero such pages before returning. Not doing this 
       ** was causing the problem reported in ticket #2285.
       */
+      if( pPager->errCode ){
+        /* This case catches an IO error in sqlite3PagerPagecount(). If
+        ** the error occured, PagerPagecount() returned 0.
+        */
+        return pPager->errCode;
+      }
       memset(PGHDR_TO_DATA(pPg), 0, pPager->pageSize);
     }
     TEST_INCR(pPager->nHit);
