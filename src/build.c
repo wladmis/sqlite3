@@ -443,17 +443,6 @@ void sqlite3ResetInternalSchema(sqlite3 *db, int iDb){
 }
 
 /*
-** This routine is called whenever a rollback occurs.  If there were
-** schema changes during the transaction, then we have to reset the
-** internal hash tables and reload them from disk.
-*/
-void sqlite3RollbackInternalChanges(sqlite3 *db){
-  if( db->flags & SQLITE_InternChanges ){
-    sqlite3ResetInternalSchema(db, 0);
-  }
-}
-
-/*
 ** This routine is called when a commit occurs.
 */
 void sqlite3CommitInternalChanges(sqlite3 *db){

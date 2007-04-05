@@ -77,6 +77,8 @@ do_test bindxfer-1.10 {
   set VM2 [sqlite3_prepare $DB {SELECT ?, ?, ?, ?} -1 TAIL]
   sqlite3_transfer_bindings $VM1 $VM2
 } 1  ;# SQLITE_ERROR
+catch {sqlite3_finalize $VM1}
+catch {sqlite3_finalize $VM2}
 
 
 finish_test
