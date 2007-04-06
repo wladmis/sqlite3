@@ -2508,8 +2508,12 @@ static PgHdr *pager_get_all_dirty_pages(Pager *pPager){
 */
 static int hasHotJournal(Pager *pPager){
   if( !pPager->useJournal ) return 0;
-  if( !sqlite3OsFileExists(pPager->zJournal) ) return 0;
-  if( sqlite3OsCheckReservedLock(pPager->fd) ) return 0;
+  if( !sqlite3OsFileExists(pPager->zJournal) ){
+    return 0;
+  }
+  if( sqlite3OsCheckReservedLock(pPager->fd) ){
+    return 0;
+  }
   if( sqlite3PagerPagecount(pPager)==0 ){
     sqlite3OsDelete(pPager->zJournal);
     return 0;
