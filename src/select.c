@@ -3297,7 +3297,7 @@ select_end:
   return rc;
 }
 
-#if defined(SQLITE_TEST) || defined(SQLITE_DEBUG)
+#if defined(SQLITE_DEBUG)
 /*
 *******************************************************************************
 ** The following code is used for testing and debugging only.  The code
