@@ -542,10 +542,18 @@ having_opt(A) ::= .                {A = 0;}
 having_opt(A) ::= HAVING expr(X).  {A = X;}
 
 %type limit_opt {struct LimitVal}
-%destructor limit_opt {
-  sqlite3ExprDelete($$.pLimit);
-  sqlite3ExprDelete($$.pOffset);
-}
+
+// The destructor for limit_opt will never fire in the current grammar.
+// The limit_opt non-terminal only occurs at the end of a single production
+// rule for SELECT statements.  As soon as the rule that create the 
+// limit_opt non-terminal reduces, the SELECT statement rule will also
+// reduce.  So there is never a limit_opt non-terminal on the stack 
+// except as a transient.  So there is never anything to destroy.
+//
+//%destructor limit_opt {
+//  sqlite3ExprDelete($$.pLimit);
+//  sqlite3ExprDelete($$.pOffset);
+//}
 limit_opt(A) ::= .                     {A.pLimit = 0; A.pOffset = 0;}
 limit_opt(A) ::= LIMIT expr(X).        {A.pLimit = X; A.pOffset = 0;}
 limit_opt(A) ::= LIMIT expr(X) OFFSET expr(Y). 

@@ -1870,7 +1870,7 @@ static int lockBtree(BtShared *pBt){
       goto page1_init_failed;
     }
     pageSize = get2byte(&page1[16]);
-    if( ((pageSize-1)&pageSize)!=0 ){
+    if( ((pageSize-1)&pageSize)!=0 || pageSize<512 ){
       goto page1_init_failed;
     }
     assert( (pageSize & 7)==0 );
