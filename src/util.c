@@ -751,7 +751,7 @@ void sqlite3SetString(char **pz, ...){
   const char *z;
   char *zResult;
 
-  if( pz==0 ) return;
+  assert( pz!=0 );
   nByte = 1;
   va_start(ap, pz);
   while( (z = va_arg(ap, const char*))!=0 ){

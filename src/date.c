@@ -577,7 +577,7 @@ static int parseModifier(const char *zMod, DateTime *p){
     case '8':
     case '9': {
       n = getValue(z, &r);
-      if( n<=0 ) break;
+      assert( n>=1 );
       if( z[n]==':' ){
         /* A modifier of the form (+|-)HH:MM:SS.FFF adds (or subtracts) the
         ** specified number of hours, minutes, seconds, and fractional seconds
