@@ -20,10 +20,16 @@ source $testdir/tester.tcl
 # Initialize the test.db database so that it is non-empty
 #
 do_test lock4-1.1 {
-  db eval {CREATE TABLE t1(x)}
+  db eval {
+     PRAGMA auto_vacuum=OFF;
+     CREATE TABLE t1(x);
+  }
   file delete -force test2.db test2.db-journal
   sqlite3 db2 test2.db
-  db2 eval {CREATE TABLE t2(x)}
+  db2 eval {
+     PRAGMA auto_vacuum=OFF;
+     CREATE TABLE t2(x)
+  }
   db2 close
   list [file size test.db] [file size test2.db]
 } {2048 2048}
