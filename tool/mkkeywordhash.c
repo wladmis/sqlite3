@@ -233,7 +233,6 @@ static Keyword aKeywordTable[] = {
   { "ROW",              "TK_ROW",          TRIGGER                },
   { "SELECT",           "TK_SELECT",       ALWAYS                 },
   { "SET",              "TK_SET",          ALWAYS                 },
-  { "STATEMENT",        "TK_STATEMENT",    TRIGGER                },
   { "TABLE",            "TK_TABLE",        ALWAYS                 },
   { "TEMP",             "TK_TEMP",         ALWAYS                 },
   { "TEMPORARY",        "TK_TEMP",         ALWAYS                 },

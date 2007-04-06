@@ -1407,7 +1407,6 @@ struct Trigger {
   Expr *pWhen;            /* The WHEN clause of the expresion (may be NULL) */
   IdList *pColumns;       /* If this is an UPDATE OF <column-list> trigger,
                              the <column-list> is stored here */
-  int foreach;            /* One of TK_ROW or TK_STATEMENT */
   Token nameToken;        /* Token containing zName. Use during parsing only */
   Schema *pSchema;        /* Schema containing the trigger */
   Schema *pTabSchema;     /* Schema containing the table */
@@ -1717,7 +1716,7 @@ void sqlite3ChangeCookie(sqlite3*, Vdbe*, int);
 
 #ifndef SQLITE_OMIT_TRIGGER
   void sqlite3BeginTrigger(Parse*, Token*,Token*,int,int,IdList*,SrcList*,
-                           int,Expr*,int, int);
+                           Expr*,int, int);
   void sqlite3FinishTrigger(Parse*, TriggerStep*, Token*);
   void sqlite3DropTrigger(Parse*, SrcList*, int);
   void sqlite3DropTriggerPtr(Parse*, Trigger*);
