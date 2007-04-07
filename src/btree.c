@@ -5530,10 +5530,18 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
     }
 
     if( pgnoMove!=pgnoRoot ){
+      /* pgnoRoot is the page that will be used for the root-page of
+      ** the new table (assuming an error did not occur). But we were
+      ** allocated pgnoMove. If required (i.e. if it was not allocated
+      ** by extending the file), the current page at position pgnoMove
+      ** is already journaled.
+      */
       u8 eType;
       Pgno iPtrPage;
 
       releasePage(pPageMove);
+
+      /* Move the page currently at pgnoRoot to pgnoMove. */
       rc = getPage(pBt, pgnoRoot, &pRoot, 0);
       if( rc!=SQLITE_OK ){
         return rc;
@@ -5552,6 +5560,8 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
       }
       rc = relocatePage(pBt, pRoot, eType, iPtrPage, pgnoMove);
       releasePage(pRoot);
+
+      /* Obtain the page at pgnoRoot */
       if( rc!=SQLITE_OK ){
         return rc;
       }
