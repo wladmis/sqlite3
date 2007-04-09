@@ -22,7 +22,11 @@ source $testdir/tester.tcl
 # 'testfixture' to execute a command. The child testfixture process is shut
 # down by closing the channel.
 proc launch_testfixture {} {
-  set chan [open "|[file join . testfixture] tf_main.tcl" r+]
+  set prg [info nameofexec]
+  if {$prg eq ""} {
+    set prg [file join . testfixture]
+  }
+  set chan [open "|$prg tf_main.tcl" r+]
   fconfigure $chan -buffering line
   return $chan
 }

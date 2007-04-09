@@ -1115,8 +1115,8 @@ static int pager_playback_one_page(Pager *pPager, OsFile *jfd, int useCksum){
     /* assert( pPg->nRef==0 || pPg->pgno==1 ); */
     pData = PGHDR_TO_DATA(pPg);
     memcpy(pData, aData, pPager->pageSize);
-    if( pPager->xDestructor ){  /*** FIX ME:  Should this be xReinit? ***/
-      pPager->xDestructor(pPg, pPager->pageSize);
+    if( pPager->xReiniter ){
+      pPager->xReiniter(pPg, pPager->pageSize);
     }
 #ifdef SQLITE_CHECK_PAGES
     pPg->pageHash = pager_pagehash(pPg);

@@ -51,7 +51,9 @@ proc check_db {testname} {
     db close
     sqlite3 db test.db
   } else {
-    if {$rc} {error $msg}
+    if {$rc || $msg ne "ok"} {
+      error $msg
+    }
     catch {execsql ROLLBACK}
   }
 
@@ -76,6 +78,7 @@ set sql {
   ROLLBACK;
 }
 
+breakpoint
 foreach bPersist [list 0 1] {
   set ::go 1
   for {set ::N 1} {$::go} {incr ::N} {
