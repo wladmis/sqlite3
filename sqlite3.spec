@@ -106,7 +106,7 @@ autoreconf -i
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts2.la doc
 
-rm -fv test/exclusive2.test test/types3.test
+rm -fv test/types3.test
 make test
 
 %install
