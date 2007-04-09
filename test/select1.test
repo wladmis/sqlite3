@@ -546,6 +546,11 @@ do_test select1-7.8 {
   }} msg]
   lappend v $msg
 } {1 {near ";": syntax error}}
+do_test select1-7.9 {
+  catchsql {
+     SELECT f1 FROM test1 LIMIT 5+3 OFFSET 11 ORDER BY f2;
+  }
+} {1 {near "ORDER": syntax error}}
 
 do_test select1-8.1 {
   execsql {SELECT f1 FROM test1 WHERE 4.3+2.4 OR 1 ORDER BY f1}

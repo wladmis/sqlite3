@@ -20,6 +20,10 @@ source $testdir/tester.tcl
 # Only run these tests if the approriate APIs are defined
 # in the system under test.
 #
+ifcapable !load_ext {
+  finish_test
+  return
+}
 if {[info command sqlite3_auto_extension_sqr]==""} {
   finish_test
   return

@@ -32,6 +32,7 @@ ifcapable !crashtest {
 #
 do_test crash2-1.1 {
   crashsql -delay 500 -file test.db -blocksize 2048 {
+    PRAGMA auto_vacuum=OFF;
     BEGIN;
     CREATE TABLE abc AS SELECT 1 AS a, 2 AS b, 3 AS c;
     CREATE TABLE def AS SELECT 1 AS d, 2 AS e, 3 AS f;
@@ -121,4 +122,3 @@ for {set i 1} {$i < 10} {incr i} {
 } 
 
 finish_test
-

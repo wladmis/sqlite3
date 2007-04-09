@@ -49,6 +49,7 @@ do_test malloc5-1.1 {
   # the sqlite_master root (page 1) is never freed because the btree layer
   # retains a reference to it for the entire transaction. 
   execsql {
+    PRAGMA auto_vacuum=OFF;
     BEGIN;
     CREATE TABLE abc(a, b, c);
   }
@@ -221,7 +222,39 @@ do_test malloc5-4.3 {
 
 # Restore the soft heap limit.
 sqlite3_soft_heap_limit $::soft_limit
+
+# Test that there are no problems calling sqlite3_release_memory when
+# there are open in-memory databases.
+#
+# At one point these tests would cause a seg-fault.
+#
+do_test malloc5-5.1 {
+  db close
+  sqlite3 db :memory:
+  execsql {
+    BEGIN;
+    CREATE TABLE abc(a, b, c);
+    INSERT INTO abc VALUES('abcdefghi', 1234567890, NULL);
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+    INSERT INTO abc SELECT * FROM abc;
+  }
+  sqlite3_release_memory
+} 0
+do_test malloc5-5.1 {
+  sqlite3_soft_heap_limit 5000
+  execsql {
+    COMMIT;
+    PRAGMA temp_store = memory;
+    SELECT * FROM abc ORDER BY a;
+  }
+  expr 1
+} {1}
+
+sqlite3_soft_heap_limit $::soft_limit
 finish_test
-
 catch {db close}
-

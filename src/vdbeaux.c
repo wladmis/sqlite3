@@ -757,11 +757,11 @@ int sqlite3VdbeList(
 }
 #endif /* SQLITE_OMIT_EXPLAIN */
 
+#ifdef SQLITE_DEBUG
 /*
 ** Print the SQL that was used to generate a VDBE program.
 */
 void sqlite3VdbePrintSql(Vdbe *p){
-#ifdef SQLITE_DEBUG
   int nOp = p->nOp;
   VdbeOp *pOp;
   if( nOp<1 ) return;
@@ -771,8 +771,8 @@ void sqlite3VdbePrintSql(Vdbe *p){
     while( isspace(*(u8*)z) ) z++;
     printf("SQL: [%s]\n", z);
   }
-#endif
 }
+#endif
 
 #if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
 /*
@@ -1508,10 +1508,6 @@ void sqlite3VdbeResetStepResult(Vdbe *p){
 */
 int sqlite3VdbeReset(Vdbe *p){
   sqlite3 *db;
-  if( p->magic!=VDBE_MAGIC_RUN && p->magic!=VDBE_MAGIC_HALT ){
-    sqlite3Error(p->db, SQLITE_MISUSE, 0);
-    return SQLITE_MISUSE;
-  }
   db = p->db;
 
   /* If the VM did not run to completion or if it encountered an
@@ -1662,12 +1658,7 @@ int sqlite3VdbeCursorMoveto(Cursor *p){
     extern int sqlite3_search_count;
 #endif
     assert( p->isTable );
-    if( p->isTable ){
-      rc = sqlite3BtreeMoveto(p->pCursor, 0, p->movetoTarget, 0, &res);
-    }else{
-      rc = sqlite3BtreeMoveto(p->pCursor,(char*)&p->movetoTarget,
-                              sizeof(i64), 0, &res);
-    }
+    rc = sqlite3BtreeMoveto(p->pCursor, 0, p->movetoTarget, 0, &res);
     if( rc ) return rc;
     *p->pIncrKey = 0;
     p->lastRowid = keyToInt(p->movetoTarget);
@@ -1760,10 +1751,8 @@ u32 sqlite3VdbeSerialType(Mem *pMem, int file_format){
     assert( n>=0 );
     return ((n*2) + 13);
   }
-  if( flags&MEM_Blob ){
-    return (pMem->n*2 + 12);
-  }
-  return 0;
+  assert( (flags & MEM_Blob)!=0 );
+  return (pMem->n*2 + 12);
 }
 
 /*

@@ -177,6 +177,7 @@ TESTSRC = \
   $(TOP)/src/test9.c \
   $(TOP)/src/test_autoext.c \
   $(TOP)/src/test_async.c \
+  $(TOP)/src/test_hexio.c \
   $(TOP)/src/test_md5.c \
   $(TOP)/src/test_schema.c \
   $(TOP)/src/test_server.c \
@@ -254,6 +255,9 @@ target_source:	$(SRC)
 
 sqlite3.c:	target_source $(TOP)/tool/mksqlite3c.tcl
 	tclsh $(TOP)/tool/mksqlite3c.tcl
+	cp sqlite3.c tclsqlite3.c
+	cat $(TOP)/src/tclsqlite.c >>tclsqlite3.c
+	tclsh $(TOP)/tool/mksqlite3internalh.tcl
 
 # Rules to build the LEMON compiler generator
 #

@@ -21,7 +21,7 @@ ifcapable {!pager_pragmas} {
 }
 
 proc pagerChangeCounter {filename {new ""}} {
-  set fd [open $filename a+]
+  set fd [open $filename RDWR]
   fconfigure $fd -translation binary -encoding binary
   if {$new ne ""} {
     seek $fd 24
@@ -29,7 +29,8 @@ proc pagerChangeCounter {filename {new ""}} {
     set b [expr {($new&0x00FF0000)>>16}]
     set c [expr {($new&0x0000FF00)>>8}]
     set d [expr {($new&0x000000FF)}]
-    puts $fd [binary format cccc $a $b $c $d]
+    puts -nonewline $fd [binary format cccc $a $b $c $d]
+    flush $fd
   }
 
   seek $fd 24
@@ -154,9 +155,10 @@ do_test exclusive2-2.3 {
 } $::sig
 
 do_test exclusive2-2.4 {
-  set fd [open test.db a]
+  set fd [open test.db RDWR]
   seek $fd 1024
   puts -nonewline $fd [string repeat [binary format c 0] 10000]
+  flush $fd
   t1sig
 } $::sig
 
@@ -239,4 +241,3 @@ do_test exclusive2-3.6 {
 } {5}
 
 finish_test
-

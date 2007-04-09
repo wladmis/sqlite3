@@ -658,7 +658,7 @@ UPDATE OF <column-list>
 }
 
 Syntax {trigger-action} {
-[ FOR EACH ROW | FOR EACH STATEMENT ] [ WHEN <expression> ] 
+[ FOR EACH ROW ] [ WHEN <expression> ] 
 BEGIN 
   <trigger-step> ; [ <trigger-step> ; ]*
 END
@@ -2008,7 +2008,6 @@ set keyword_list [lsort {
    ROW*
    SELECT
    SET
-   STATEMENT*
    TABLE
    TEMP*
    TEMPORARY*

@@ -3751,6 +3751,44 @@ static int test_thread_cleanup(
 
 
 /*
+** Usage:   sqlite3_pager_refcounts  DB
+**
+** Return a list of numbers which are the PagerRefcount for all
+** pagers on each database connection.
+*/
+static int test_pager_refcounts(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  sqlite3 *db;
+  int i;
+  int v, *a;
+  Tcl_Obj *pResult;
+
+  if( objc!=2 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"",
+        Tcl_GetStringFromObj(objv[0], 0), " DB", 0);
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  pResult = Tcl_NewObj();
+  for(i=0; i<db->nDb; i++){
+    if( db->aDb[i].pBt==0 ){
+      v = -1;
+    }else{
+      a = sqlite3PagerStats(sqlite3BtreePager(db->aDb[i].pBt));
+      v = a[0];
+    }
+    Tcl_ListObjAppendElement(0, pResult, Tcl_NewIntObj(v));
+  }
+  Tcl_SetObjResult(interp, pResult);
+  return TCL_OK;
+}
+
+
+/*
 ** This routine sets entries in the global ::sqlite_options() array variable
 ** according to the compile-time configuration of the database.  Test
 ** procedures use this to determine when tests should be omitted.
@@ -3941,6 +3979,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "like_opt", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_OMIT_LOAD_EXTENSION
+  Tcl_SetVar2(interp, "sqlite_options", "load_ext", "0", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "load_ext", "1", TCL_GLOBAL_ONLY);
+#endif
+
 #ifdef SQLITE_OMIT_MEMORYDB
   Tcl_SetVar2(interp, "sqlite_options", "memorydb", "0", TCL_GLOBAL_ONLY);
 #else
@@ -4080,6 +4124,18 @@ static void set_options(Tcl_Interp *interp){
       Tcl_NewIntObj(SQLITE_DEFAULT_FILE_FORMAT), TCL_GLOBAL_ONLY
   );
 #endif
+#ifdef SQLITE_MAX_PAGE_SIZE
+  Tcl_ObjSetVar2(interp, 
+      Tcl_NewStringObj("SQLITE_MAX_PAGE_SIZE", -1), 0, 
+      Tcl_NewIntObj(SQLITE_MAX_PAGE_SIZE), TCL_GLOBAL_ONLY
+  );
+#endif
+#ifdef TEMP_STORE
+  Tcl_ObjSetVar2(interp, 
+      Tcl_NewStringObj("TEMP_STORE", -1), 0, 
+      Tcl_NewIntObj(TEMP_STORE), TCL_GLOBAL_ONLY
+  );
+#endif
 }
 
 /*
@@ -4202,6 +4258,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_clear_tsd_memdebug",    test_clear_tsd_memdebug, 0},
      { "sqlite3_tsd_release",           test_tsd_release,        0},
      { "sqlite3_thread_cleanup",        test_thread_cleanup,     0},
+     { "sqlite3_pager_refcounts",       test_pager_refcounts,    0},
 
      { "sqlite3_load_extension",        test_load_extension,     0},
      { "sqlite3_enable_load_extension", test_enable_load,        0},

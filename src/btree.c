@@ -1870,7 +1870,7 @@ static int lockBtree(BtShared *pBt){
       goto page1_init_failed;
     }
     pageSize = get2byte(&page1[16]);
-    if( ((pageSize-1)&pageSize)!=0 ){
+    if( ((pageSize-1)&pageSize)!=0 || pageSize<512 ){
       goto page1_init_failed;
     }
     assert( (pageSize & 7)==0 );
@@ -3520,6 +3520,14 @@ int sqlite3BtreeNext(BtCursor *pCur, int *pRes){
   if( rc!=SQLITE_OK ){
     return rc;
   }
+#endif 
+  assert( pRes!=0 );
+  pPage = pCur->pPage;
+  if( CURSOR_INVALID==pCur->eState ){
+    *pRes = 1;
+    return SQLITE_OK;
+  }
+#ifndef SQLITE_OMIT_SHARED_CACHE
   if( pCur->skip>0 ){
     pCur->skip = 0;
     *pRes = 0;
@@ -3528,12 +3536,6 @@ int sqlite3BtreeNext(BtCursor *pCur, int *pRes){
   pCur->skip = 0;
 #endif 
 
-  assert( pRes!=0 );
-  pPage = pCur->pPage;
-  if( CURSOR_INVALID==pCur->eState ){
-    *pRes = 1;
-    return SQLITE_OK;
-  }
   assert( pPage->isInit );
   assert( pCur->idx<pPage->nCell );
 
@@ -3588,6 +3590,12 @@ int sqlite3BtreePrevious(BtCursor *pCur, int *pRes){
   if( rc!=SQLITE_OK ){
     return rc;
   }
+#endif
+  if( CURSOR_INVALID==pCur->eState ){
+    *pRes = 1;
+    return SQLITE_OK;
+  }
+#ifndef SQLITE_OMIT_SHARED_CACHE
   if( pCur->skip<0 ){
     pCur->skip = 0;
     *pRes = 0;
@@ -3595,11 +3603,6 @@ int sqlite3BtreePrevious(BtCursor *pCur, int *pRes){
   }
   pCur->skip = 0;
 #endif
-
-  if( CURSOR_INVALID==pCur->eState ){
-    *pRes = 1;
-    return SQLITE_OK;
-  }
 
   pPage = pCur->pPage;
   assert( pPage->isInit );
@@ -3941,12 +3944,13 @@ static int freePage(MemPage *pPage){
     }else{
       /* Add the newly freed page as a leaf on the current trunk */
       rc = sqlite3PagerWrite(pTrunk->pDbPage);
-      if( rc ) return rc;
-      put4byte(&pTrunk->aData[4], k+1);
-      put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
+      if( rc==SQLITE_OK ){
+        put4byte(&pTrunk->aData[4], k+1);
+        put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
 #ifndef SQLITE_SECURE_DELETE
-      sqlite3PagerDontWrite(pBt->pPager, pPage->pgno);
+        sqlite3PagerDontWrite(pBt->pPager, pPage->pgno);
 #endif
+      }
       TRACE(("FREE-PAGE: %d leaf on trunk page %d\n",pPage->pgno,pTrunk->pgno));
     }
     releasePage(pTrunk);
@@ -4832,14 +4836,15 @@ static int balance_nonroot(MemPage *pPage){
       pgnoNew[i] = pgnoOld[i];
       apOld[i] = 0;
       rc = sqlite3PagerWrite(pNew->pDbPage);
+      nNew++;
       if( rc ) goto balance_cleanup;
     }else{
       assert( i>0 );
       rc = allocateBtreePage(pBt, &pNew, &pgnoNew[i], pgnoNew[i-1], 0);
       if( rc ) goto balance_cleanup;
       apNew[i] = pNew;
+      nNew++;
     }
-    nNew++;
     zeroPage(pNew, pageFlags);
   }
 
@@ -5416,11 +5421,6 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     assert( !pPage->leafData );
     getTempCursor(pCur, &leafCur);
     rc = sqlite3BtreeNext(&leafCur, &notUsed);
-    if( rc!=SQLITE_OK ){
-      if( rc!=SQLITE_NOMEM ){
-        rc = SQLITE_CORRUPT_BKPT; 
-      }
-    }
     if( rc==SQLITE_OK ){
       rc = sqlite3PagerWrite(leafCur.pPage->pDbPage);
     }
@@ -5527,10 +5527,18 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
     }
 
     if( pgnoMove!=pgnoRoot ){
+      /* pgnoRoot is the page that will be used for the root-page of
+      ** the new table (assuming an error did not occur). But we were
+      ** allocated pgnoMove. If required (i.e. if it was not allocated
+      ** by extending the file), the current page at position pgnoMove
+      ** is already journaled.
+      */
       u8 eType;
       Pgno iPtrPage;
 
       releasePage(pPageMove);
+
+      /* Move the page currently at pgnoRoot to pgnoMove. */
       rc = getPage(pBt, pgnoRoot, &pRoot, 0);
       if( rc!=SQLITE_OK ){
         return rc;
@@ -5549,6 +5557,8 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
       }
       rc = relocatePage(pBt, pRoot, eType, iPtrPage, pgnoMove);
       releasePage(pRoot);
+
+      /* Obtain the page at pgnoRoot */
       if( rc!=SQLITE_OK ){
         return rc;
       }

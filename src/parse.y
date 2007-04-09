@@ -175,7 +175,7 @@ id(A) ::= ID(X).         {A = X;}
   ABORT AFTER ANALYZE ASC ATTACH BEFORE BEGIN CASCADE CAST CONFLICT
   DATABASE DEFERRED DESC DETACH EACH END EXCLUSIVE EXPLAIN FAIL FOR
   IGNORE IMMEDIATE INITIALLY INSTEAD LIKE_KW MATCH PLAN QUERY KEY
-  OF OFFSET PRAGMA RAISE REPLACE RESTRICT ROW STATEMENT
+  OF OFFSET PRAGMA RAISE REPLACE RESTRICT ROW
   TEMP TRIGGER VACUUM VIEW VIRTUAL
 %ifdef SQLITE_OMIT_COMPOUND_SELECT
   EXCEPT INTERSECT UNION
@@ -239,9 +239,8 @@ typetoken(A) ::= typename(X) LP signed COMMA signed RP(Y). {
 %type typename {Token}
 typename(A) ::= ids(X).             {A = X;}
 typename(A) ::= typename(X) ids(Y). {A.z=X.z; A.n=Y.n+(Y.z-X.z);}
-%type signed {int}
-signed(A) ::= plus_num(X).    { A = atoi((char*)X.z); }
-signed(A) ::= minus_num(X).   { A = -atoi((char*)X.z); }
+signed ::= plus_num.
+signed ::= minus_num.
 
 // "carglist" is a list of additional constraints that come after the
 // column name and column type in a CREATE TABLE statement.
@@ -543,10 +542,18 @@ having_opt(A) ::= .                {A = 0;}
 having_opt(A) ::= HAVING expr(X).  {A = X;}
 
 %type limit_opt {struct LimitVal}
-%destructor limit_opt {
-  sqlite3ExprDelete($$.pLimit);
-  sqlite3ExprDelete($$.pOffset);
-}
+
+// The destructor for limit_opt will never fire in the current grammar.
+// The limit_opt non-terminal only occurs at the end of a single production
+// rule for SELECT statements.  As soon as the rule that create the 
+// limit_opt non-terminal reduces, the SELECT statement rule will also
+// reduce.  So there is never a limit_opt non-terminal on the stack 
+// except as a transient.  So there is never anything to destroy.
+//
+//%destructor limit_opt {
+//  sqlite3ExprDelete($$.pLimit);
+//  sqlite3ExprDelete($$.pOffset);
+//}
 limit_opt(A) ::= .                     {A.pLimit = 0; A.pOffset = 0;}
 limit_opt(A) ::= LIMIT expr(X).        {A.pLimit = X; A.pOffset = 0;}
 limit_opt(A) ::= LIMIT expr(X) OFFSET expr(Y). 
@@ -928,8 +935,8 @@ cmd ::= CREATE trigger_decl(A) BEGIN trigger_cmd_list(S) END(Z). {
 
 trigger_decl(A) ::= temp(T) TRIGGER ifnotexists(NOERR) nm(B) dbnm(Z) 
                     trigger_time(C) trigger_event(D)
-                    ON fullname(E) foreach_clause(F) when_clause(G). {
-  sqlite3BeginTrigger(pParse, &B, &Z, C, D.a, D.b, E, F, G, T, NOERR);
+                    ON fullname(E) foreach_clause when_clause(G). {
+  sqlite3BeginTrigger(pParse, &B, &Z, C, D.a, D.b, E, G, T, NOERR);
   A = (Z.n==0?B:Z);
 }
 
@@ -945,10 +952,8 @@ trigger_event(A) ::= DELETE|INSERT(OP).       {A.a = @OP; A.b = 0;}
 trigger_event(A) ::= UPDATE(OP).              {A.a = @OP; A.b = 0;}
 trigger_event(A) ::= UPDATE OF inscollist(X). {A.a = TK_UPDATE; A.b = X;}
 
-%type foreach_clause {int}
-foreach_clause(A) ::= .                   { A = TK_ROW; }
-foreach_clause(A) ::= FOR EACH ROW.       { A = TK_ROW; }
-foreach_clause(A) ::= FOR EACH STATEMENT. { A = TK_STATEMENT; }
+foreach_clause ::= .
+foreach_clause ::= FOR EACH ROW.
 
 %type when_clause {Expr*}
 %destructor when_clause {sqlite3ExprDelete($$);}
