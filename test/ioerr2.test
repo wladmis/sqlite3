@@ -50,6 +50,7 @@ proc check_db {testname} {
   if {$rc && $msg eq "disk I/O error"} {
     db close
     sqlite3 db test.db
+    set refcnt 0
   } else {
     if {$rc || $msg ne "ok"} {
       error $msg
@@ -62,6 +63,9 @@ proc check_db {testname} {
   set ck [execsql {SELECT md5sum(a, b) FROM t1}]
   do_test ${testname}.cksum [list set ck $ck] $::cksum
   integrity_check ${testname}.integrity
+  do_test ${testname}.refcnt {
+    lindex [sqlite3_pager_refcounts db] 0
+  } 0
 }
 
 check_db ioerr2-2

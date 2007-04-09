@@ -3944,12 +3944,13 @@ static int freePage(MemPage *pPage){
     }else{
       /* Add the newly freed page as a leaf on the current trunk */
       rc = sqlite3PagerWrite(pTrunk->pDbPage);
-      if( rc ) return rc;
-      put4byte(&pTrunk->aData[4], k+1);
-      put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
+      if( rc==SQLITE_OK ){
+        put4byte(&pTrunk->aData[4], k+1);
+        put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
 #ifndef SQLITE_SECURE_DELETE
-      sqlite3PagerDontWrite(pBt->pPager, pPage->pgno);
+        sqlite3PagerDontWrite(pBt->pPager, pPage->pgno);
 #endif
+      }
       TRACE(("FREE-PAGE: %d leaf on trunk page %d\n",pPage->pgno,pTrunk->pgno));
     }
     releasePage(pTrunk);
@@ -4835,14 +4836,15 @@ static int balance_nonroot(MemPage *pPage){
       pgnoNew[i] = pgnoOld[i];
       apOld[i] = 0;
       rc = sqlite3PagerWrite(pNew->pDbPage);
+      nNew++;
       if( rc ) goto balance_cleanup;
     }else{
       assert( i>0 );
       rc = allocateBtreePage(pBt, &pNew, &pgnoNew[i], pgnoNew[i-1], 0);
       if( rc ) goto balance_cleanup;
       apNew[i] = pNew;
+      nNew++;
     }
-    nNew++;
     zeroPage(pNew, pageFlags);
   }
 
@@ -5419,11 +5421,6 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     assert( !pPage->leafData );
     getTempCursor(pCur, &leafCur);
     rc = sqlite3BtreeNext(&leafCur, &notUsed);
-    if( rc!=SQLITE_OK ){
-      if( rc!=SQLITE_NOMEM ){
-        rc = SQLITE_CORRUPT_BKPT; 
-      }
-    }
     if( rc==SQLITE_OK ){
       rc = sqlite3PagerWrite(leafCur.pPage->pDbPage);
     }
