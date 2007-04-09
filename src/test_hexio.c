@@ -223,7 +223,7 @@ static int hexio_get_int(
     memcpy(aNum, aOut, 4);
   }else{
     memset(aNum, 0, sizeof(aNum));
-    memcpy(&aNum[4-nOut], aOut, 4-nOut);
+    memcpy(&aNum[4-nOut], aOut, nOut);
   }
   free(aOut);
   val = (aNum[0]<<24) | (aNum[1]<<16) | (aNum[2]<<8) | aNum[3];
