@@ -227,4 +227,16 @@ xfer_check insert4-3.22 1 {1 9} \
     {x integer, b int}
 
 
+# Ticket #2291.
+#
+do_test insert4-4.1 {
+  execsql {
+    CREATE TABLE t4(a, b, PRIMARY KEY(a,b));
+    INSERT INTO t4 VALUES(NULL,0);
+    INSERT INTO t4 VALUES(NULL,1);
+    INSERT INTO t4 VALUES(NULL,1);
+    VACUUM;   
+  }
+} {}
+
 finish_test
