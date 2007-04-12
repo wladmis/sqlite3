@@ -231,7 +231,7 @@ xfer_check insert4-3.22 1 {1 9} \
 #
 do_test insert4-4.1 {
   execsql {
-    CREATE TABLE t4(a, b, PRIMARY KEY(a,b));
+    CREATE TABLE t4(a, b, UNIQUE(a,b));
     INSERT INTO t4 VALUES(NULL,0);
     INSERT INTO t4 VALUES(NULL,1);
     INSERT INTO t4 VALUES(NULL,1);

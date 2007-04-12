@@ -2591,11 +2591,14 @@ int sqlite3SelectResolve(
   */
   sNC.pEList = p->pEList;
   if( sqlite3ExprResolveNames(&sNC, p->pWhere) ||
-      sqlite3ExprResolveNames(&sNC, p->pHaving) ||
-      processOrderGroupBy(&sNC, p->pOrderBy, "ORDER") ||
-      processOrderGroupBy(&sNC, pGroupBy, "GROUP")
-  ){
+     sqlite3ExprResolveNames(&sNC, p->pHaving) ){
     return SQLITE_ERROR;
+  }
+  if( p->pPrior==0 ){
+    if( processOrderGroupBy(&sNC, p->pOrderBy, "ORDER") ||
+        processOrderGroupBy(&sNC, pGroupBy, "GROUP") ){
+      return SQLITE_ERROR;
+    }
   }
 
   /* Make sure the GROUP BY clause does not contain aggregate functions.
