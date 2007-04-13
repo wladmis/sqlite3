@@ -3017,9 +3017,9 @@ int sqlite3PagerAcquire(
     /* Populate the page with data, either by reading from the database
     ** file, or by setting the entire page to zero.
     */
-    if( nMax<(int)pgno || MEMDB || noContent ){
+    if( nMax<(int)pgno || MEMDB || (noContent && !pPager->alwaysRollback) ){
       memset(PGHDR_TO_DATA(pPg), 0, pPager->pageSize);
-      pPg->needRead = noContent;
+      pPg->needRead = noContent && !pPager->alwaysRollback;
       IOTRACE(("ZERO %p %d\n", pPager, pgno));
     }else{
       rc = readDbPage(pPager, pPg, pgno);
