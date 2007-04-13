@@ -119,6 +119,7 @@ proc do_test {name cmd expected} {
   } else {
     puts " Ok"
   }
+  flush stdout
 }
 
 # Run an SQL script.  
