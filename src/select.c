@@ -1421,16 +1421,18 @@ static int matchOrderbyToColumn(
     if( iCol<0 && (zLabel = sqlite3NameFromToken(&pE->token))!=0 ){
       for(j=0, pItem=pEList->a; j<pEList->nExpr; j++, pItem++){
         char *zName;
+        int isMatch;
         if( pItem->zName ){
           zName = sqlite3StrDup(pItem->zName);
         }else{
           zName = sqlite3NameFromToken(&pItem->pExpr->token);
         }
-        if( zName && sqlite3StrICmp(zName, zLabel)==0 ){
+        isMatch = zName && sqlite3StrICmp(zName, zLabel)==0;
+        sqliteFree(zName);
+        if( isMatch ){
           iCol = j;
           break;
         }
-        sqliteFree(zName);
       }
       sqliteFree(zLabel);
     }
