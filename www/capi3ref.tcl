@@ -1639,6 +1639,10 @@ api {} {
   thread-specific storage so that it will be available for sharing
   with other connections.
 
+  Virtual tables cannot be used with a shared cache.  When shared
+  cache is enabled, the sqlite3_create_module() API used to register
+  virtual tables will always return an error.
+
   This routine returns SQLITE_OK if shared cache was
   enabled or disabled successfully.  An error code is returned
   otherwise.
