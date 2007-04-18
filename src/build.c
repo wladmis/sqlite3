@@ -2203,7 +2203,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
     sqlite3VdbeAddOp(v, OP_IsUnique, iIdx, addr2);
     sqlite3VdbeOp3(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort,
                     "indexed columns are not unique", P3_STATIC);
-    assert( addr2==sqlite3VdbeCurrentAddr(v) );
+    assert( sqlite3MallocFailed() || addr2==sqlite3VdbeCurrentAddr(v) );
   }
   sqlite3VdbeAddOp(v, OP_IdxInsert, iIdx, 0);
   sqlite3VdbeAddOp(v, OP_Next, iTab, addr1+1);
