@@ -73,6 +73,12 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Apr-18} {Version 3.3.16} {
+  Performance improvements added in 3.3.14 but mistakenly turned off
+  in 3.3.15 have been reinstated.  A bug has been fixed that prevented 
+  VACUUM from running if a NULL value was in a UNIQUE column.
+}
+
 newsitem {2007-Apr-09} {Version 3.3.15} {
   An annoying bug introduced in 3.3.14 has been fixed.  There are
   also many enhancements to the test suite.  
