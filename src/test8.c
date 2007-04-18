@@ -269,9 +269,13 @@ static int echoDeclareVtab(
         -1, &pStmt, 0);
     sqlite3_bind_text(pStmt, 1, argv[3], -1, 0);
     if( sqlite3_step(pStmt)==SQLITE_ROW ){
+      int rc2;
       const char *zCreateTable = (const char *)sqlite3_column_text(pStmt, 0);
-      sqlite3_declare_vtab(db, zCreateTable);
-      rc = sqlite3_finalize(pStmt);
+      rc = sqlite3_declare_vtab(db, zCreateTable);
+      rc2 = sqlite3_finalize(pStmt);
+      if( rc==SQLITE_OK ){
+        rc = rc2;
+      }
     } else {
       rc = sqlite3_finalize(pStmt);
       if( rc==SQLITE_OK ){ 
