@@ -311,6 +311,10 @@ static int vtabCallConstructor(
   char *zErr = 0;
   char *zModuleName = sqlite3MPrintf("%s", pTab->zName);
 
+  if( !zModuleName ){
+    return SQLITE_NOMEM;
+  }
+
   assert( !db->pVTab );
   assert( xConstruct );
 
@@ -471,6 +475,7 @@ int sqlite3_declare_vtab(sqlite3 *db, const char *zCreateTable){
     pTab->nCol = sParse.pNewTable->nCol;
     sParse.pNewTable->nCol = 0;
     sParse.pNewTable->aCol = 0;
+    db->pVTab = 0;
   } else {
     sqlite3Error(db, SQLITE_ERROR, zErr);
     sqliteFree(zErr);
@@ -481,10 +486,9 @@ int sqlite3_declare_vtab(sqlite3 *db, const char *zCreateTable){
   sqlite3_finalize((sqlite3_stmt*)sParse.pVdbe);
   sqlite3DeleteTable(sParse.pNewTable);
   sParse.pNewTable = 0;
-  db->pVTab = 0;
 
   assert( (rc&0xff)==rc );
-  return rc;
+  return sqlite3ApiExit(db, rc);
 }
 
 /*

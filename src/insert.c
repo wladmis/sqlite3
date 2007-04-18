@@ -705,7 +705,7 @@ void sqlite3Insert(
         VdbeOp *pOp;
         sqlite3ExprCode(pParse, pList->a[keyColumn].pExpr);
         pOp = sqlite3VdbeGetOp(v, sqlite3VdbeCurrentAddr(v) - 1);
-        if( pOp->opcode==OP_Null ){
+        if( pOp && pOp->opcode==OP_Null ){
           appendFlag = 1;
           pOp->opcode = OP_NewRowid;
           pOp->p1 = base;
