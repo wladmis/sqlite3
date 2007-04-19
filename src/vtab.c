@@ -533,7 +533,7 @@ int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
 */
 static void callFinaliser(sqlite3 *db, int offset){
   int i;
-  for(i=0; i<db->nVTrans && db->aVTrans[i]; i++){
+  for(i=0; i<db->nVTrans && db->aVTrans && db->aVTrans[i]; i++){
     sqlite3_vtab *pVtab = db->aVTrans[i];
     int (*x)(sqlite3_vtab *);
     x = *(int (**)(sqlite3_vtab *))((char *)pVtab->pModule + offset);
