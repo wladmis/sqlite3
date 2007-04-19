@@ -552,6 +552,23 @@ do_malloc_test 21 -sqlbody {
   CREATE TABLE abc(a, b, c, FOREIGN KEY(a) REFERENCES abc(b))
 } 
 
+# Test malloc failure in an sqlite3_prepare_v2() call.
+#
+do_malloc_test 22 -tclbody {
+  set ::STMT ""
+  set r [catch {
+    set ::STMT [
+      sqlite3_prepare_v2 $::DB "SELECT * FROM sqlite_master" -1 DUMMY
+    ]
+  } msg]
+  if {$r} {error [string range $msg 4 end]}
+} -cleanup {
+  if {$::STMT ne ""} {
+    sqlite3_finalize $::STMT
+    set ::STMT ""
+  }
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}

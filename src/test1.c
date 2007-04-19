@@ -2748,6 +2748,7 @@ static int test_prepare_v2(
   if( Tcl_GetIntFromObj(interp, objv[3], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_prepare_v2(db, zSql, bytes, &pStmt, &zTail);
+  assert(rc==SQLITE_OK || pStmt==0);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   if( zTail ){
     if( bytes>=0 ){
