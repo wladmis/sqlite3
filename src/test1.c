@@ -580,6 +580,7 @@ static void hex8Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   zBuf[i*2] = 0;
   sqlite3_result_text(p, (char*)zBuf, -1, SQLITE_TRANSIENT);
 }
+#ifndef SQLITE_OMIT_UTF16
 static void hex16Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   const unsigned short int *z;
   int i;
@@ -591,6 +592,7 @@ static void hex16Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   zBuf[i*4] = 0;
   sqlite3_result_text(p, (char*)zBuf, -1, SQLITE_TRANSIENT);
 }
+#endif
 
 /*
 ** A structure into which to accumulate text.
@@ -742,10 +744,12 @@ static int test_create_function(
     rc = sqlite3_create_function(db, "hex8", 1, SQLITE_ANY, 0, 
           hex8Func, 0, 0);
   }
+#ifndef SQLITE_OMIT_UTF16
   if( rc==SQLITE_OK ){
     rc = sqlite3_create_function(db, "hex16", 1, SQLITE_ANY, 0, 
           hex16Func, 0, 0);
   }
+#endif
   if( rc==SQLITE_OK ){
     rc = sqlite3_create_function(db, "tkt2213func", 1, SQLITE_ANY, 0, 
           tkt2213Function, 0, 0);

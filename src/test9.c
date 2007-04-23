@@ -132,11 +132,13 @@ static int c_misuse_test(
   }
   sqlite3_close(db);
 
+#ifndef SQLITE_OMIT_UTF16
   rc = sqlite3_collation_needed16(db, 0, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_collation_needed16";
     goto error_out;
   }
+#endif
 
   rc = sqlite3_collation_needed(db, 0, 0);
   if( rc!=SQLITE_MISUSE ){
@@ -168,11 +170,13 @@ static int c_misuse_test(
     goto error_out;
   }
 
+#ifndef SQLITE_OMIT_UTF16
   rc = sqlite3_prepare16(db, 0, 0, 0, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare16";
     goto error_out;
   }
+#endif
 
   return TCL_OK;
 
@@ -202,4 +206,3 @@ int Sqlitetest9_Init(Tcl_Interp *interp){
   }
   return TCL_OK;
 }
-
