@@ -2789,6 +2789,9 @@ int sqlite3BtreeCursor(
     if( rc!=SQLITE_OK ){
       return rc;
     }
+    if( pBt->readOnly && wrFlag ){
+      return SQLITE_READONLY;
+    }
   }
   pCur = sqliteMalloc( sizeof(*pCur) );
   if( pCur==0 ){
