@@ -1870,7 +1870,10 @@ static int lockBtree(BtShared *pBt){
     if( memcmp(page1, zMagicHeader, 16)!=0 ){
       goto page1_init_failed;
     }
-    if( page1[18]>1 || page1[19]>1 ){
+    if( page1[18]>1 ){
+      pBt->readOnly = 1;
+    }
+    if( page1[19]>1 ){
       goto page1_init_failed;
     }
     pageSize = get2byte(&page1[16]);
@@ -2068,11 +2071,15 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
     if( pBt->pPage1==0 ){
       rc = lockBtree(pBt);
     }
-  
+
     if( rc==SQLITE_OK && wrflag ){
-      rc = sqlite3PagerBegin(pBt->pPage1->pDbPage, wrflag>1);
-      if( rc==SQLITE_OK ){
-        rc = newDatabase(pBt);
+      if( pBt->readOnly ){
+        rc = SQLITE_READONLY;
+      }else{
+        rc = sqlite3PagerBegin(pBt->pPage1->pDbPage, wrflag>1);
+        if( rc==SQLITE_OK ){
+          rc = newDatabase(pBt);
+        }
       }
     }
   
