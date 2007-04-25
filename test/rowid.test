@@ -80,7 +80,7 @@ do_test rowid-1.9 {
   set v2 [list 1 $x2rowid(1) 3 $x2rowid(3)]
   expr {$v==$v2}
 } {1}
-do_test rowid-1.9 {
+do_test rowid-1.10 {
   global x2rowid
   set v [execsql {SELECT x, _rowid_ FROM t1 order by x}]
   set v2 [list 1 $x2rowid(1) 3 $x2rowid(3)]
