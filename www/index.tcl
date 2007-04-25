@@ -73,6 +73,14 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Apr-25} {Version 3.3.17} {
+  This version fixes a bug in the forwards-compatibility logic of SQLite
+  that was causing a database to become unreadable when it should have
+  been read-only.  Upgrade from 3.3.16 only if you plan to deploy into
+  a product that might need to be upgraded in the future.  For day to day
+  use, it probably does not matter.
+}
+
 newsitem {2007-Apr-18} {Version 3.3.16} {
   Performance improvements added in 3.3.14 but mistakenly turned off
   in 3.3.15 have been reinstated.  A bug has been fixed that prevented 
