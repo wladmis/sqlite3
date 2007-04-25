@@ -161,6 +161,7 @@ do_test exclusive2-2.4 {
   seek $fd 1024
   puts -nonewline $fd [string repeat [binary format c 0] 10000]
   flush $fd
+  close $fd
   t1sig
 } $::sig
 
