@@ -903,6 +903,10 @@ cmd ::= VACUUM nm.             {sqlite3Vacuum(pParse);}
 %endif  SQLITE_OMIT_ATTACH
 %endif  SQLITE_OMIT_VACUUM
 
+%ifndef  SQLITE_OMIT_AUTOVACUUM
+cmd ::= INCREMENTAL VACUUM.    {sqlite3IncrVacuum(pParse);}
+%endif
+
 ///////////////////////////// The PRAGMA command /////////////////////////////
 //
 %ifndef SQLITE_OMIT_PRAGMA

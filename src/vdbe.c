@@ -4554,6 +4554,24 @@ case OP_Vacuum: {        /* no-push */
 }
 #endif
 
+#if !defined(SQLITE_OMIT_AUTOVACUUM)
+/* Opcode: IncrVacuum * P2 *
+**
+** Perform a single step of the incremental vacuum procedure on
+** the main database. If the vacuum has finished, jump to instruction
+** P2. Otherwise, fall through to the next instruction.
+*/
+case OP_IncrVacuum: {        /* no-push */
+  Btree *pBt = db->aDb[0].pBt;
+  rc = sqlite3BtreeIncrVacuum(pBt);
+  if( rc==SQLITE_DONE ){
+    pc = pOp->p2 - 1;
+    rc = SQLITE_OK;
+  }
+  break;
+}
+#endif
+
 /* Opcode: Expire P1 * *
 **
 ** Cause precompiled statements to become expired. An expired statement

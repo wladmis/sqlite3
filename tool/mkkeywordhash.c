@@ -114,7 +114,8 @@ struct Keyword {
 #else
 #  define TRIGGER    0x00002000
 #endif
-#if defined(SQLITE_OMIT_VACUUM) || defined(SQLITE_OMIT_ATTACH)
+#if defined(SQLITE_OMIT_AUTOVACUUM) && \
+    (defined(SQLITE_OMIT_VACUUM) || defined(SQLITE_OMIT_ATTACH))
 #  define VACUUM     0
 #else
 #  define VACUUM     0x00004000
@@ -128,6 +129,11 @@ struct Keyword {
 #  define VTAB       0
 #else
 #  define VTAB       0x00010000
+#endif
+#ifdef SQLITE_OMIT_AUTOVACUUM
+#  define AUTOVACUUM 0
+#else
+#  define AUTOVACUUM 0x00020000
 #endif
 
 /*
@@ -192,6 +198,7 @@ static Keyword aKeywordTable[] = {
   { "IGNORE",           "TK_IGNORE",       CONFLICT|TRIGGER       },
   { "IMMEDIATE",        "TK_IMMEDIATE",    ALWAYS                 },
   { "IN",               "TK_IN",           ALWAYS                 },
+  { "INCREMENTAL",      "TK_INCREMENTAL",  AUTOVACUUM             },
   { "INDEX",            "TK_INDEX",        ALWAYS                 },
   { "INITIALLY",        "TK_INITIALLY",    FKEY                   },
   { "INNER",            "TK_JOIN_KW",      ALWAYS                 },
