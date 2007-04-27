@@ -2369,7 +2369,11 @@ case OP_AutoCommit: {       /* no-push */
         return SQLITE_BUSY;
       }
     }
-    return SQLITE_DONE;
+    if( p->rc==SQLITE_OK ){
+      return SQLITE_DONE;
+    }else{
+      return SQLITE_ERROR;
+    }
   }else{
     sqlite3SetString(&p->zErrMsg,
         (!i)?"cannot start a transaction within a transaction":(
@@ -2521,7 +2525,23 @@ case OP_VerifyCookie: {       /* no-push */
   }
   if( rc==SQLITE_OK && iMeta!=pOp->p2 ){
     sqlite3SetString(&p->zErrMsg, "database schema has changed", (char*)0);
-    sqlite3ResetInternalSchema(db, pOp->p1);
+    /* If the schema-cookie from the database file matches the cookie 
+    ** stored with the in-memory representation of the schema, do
+    ** not reload the schema from the database file.
+    **
+    ** If virtual-tables are in use, this is not just an optimisation.
+    ** Often, v-tables store their data in other SQLite tables, which
+    ** are queried from within xNext() and other v-table methods using
+    ** prepared queries. If such a query is out-of-date, we do not want to
+    ** discard the database schema, as the user code implementing the
+    ** v-table would have to be ready for the sqlite3_vtab structure itself
+    ** to be invalidated whenever sqlite3_step() is called from within 
+    ** a v-table method.
+    */
+    if( db->aDb[pOp->p1].pSchema->schema_cookie!=iMeta ){
+      sqlite3ResetInternalSchema(db, pOp->p1);
+    }
+
     sqlite3ExpirePreparedStatements(db);
     rc = SQLITE_SCHEMA;
   }
@@ -4534,6 +4554,24 @@ case OP_Vacuum: {        /* no-push */
 }
 #endif
 
+#if !defined(SQLITE_OMIT_AUTOVACUUM)
+/* Opcode: IncrVacuum * P2 *
+**
+** Perform a single step of the incremental vacuum procedure on
+** the main database. If the vacuum has finished, jump to instruction
+** P2. Otherwise, fall through to the next instruction.
+*/
+case OP_IncrVacuum: {        /* no-push */
+  Btree *pBt = db->aDb[0].pBt;
+  rc = sqlite3BtreeIncrVacuum(pBt);
+  if( rc==SQLITE_DONE ){
+    pc = pOp->p2 - 1;
+    rc = SQLITE_OK;
+  }
+  break;
+}
+#endif
+
 /* Opcode: Expire P1 * *
 **
 ** Cause precompiled statements to become expired. An expired statement
@@ -4881,7 +4919,7 @@ case OP_VUpdate: {   /* no-push */
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
     sqlite3VtabLock(pVtab);
     rc = pModule->xUpdate(pVtab, nArg, apArg, &rowid);
-    sqlite3VtabUnlock(pVtab);
+    sqlite3VtabUnlock(db, pVtab);
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
     if( pOp->p1 && rc==SQLITE_OK ){
       assert( nArg>1 && apArg[0] && (apArg[0]->flags&MEM_Null) );

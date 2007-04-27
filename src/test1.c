@@ -198,6 +198,57 @@ static int exec_printf_cb(void *pArg, int argc, char **argv, char **name){
 }
 
 /*
+** The I/O tracing callback.
+*/
+static FILE *iotrace_file = 0;
+static void io_trace_callback(const char *zFormat, ...){
+  va_list ap;
+  va_start(ap, zFormat);
+  vfprintf(iotrace_file, zFormat, ap);
+  va_end(ap);
+  fflush(iotrace_file);
+}
+
+/*
+** Usage:  io_trace FILENAME
+**
+** Turn I/O tracing on or off.  If FILENAME is not an empty string,
+** I/O tracing begins going into FILENAME. If FILENAME is an empty
+** string, I/O tracing is turned off.
+*/
+static int test_io_trace(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  if( argc!=2 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+          " FILENAME\"", 0);
+    return TCL_ERROR;
+  }
+  if( iotrace_file ){
+    if( iotrace_file!=stdout && iotrace_file!=stderr ){
+      fclose(iotrace_file);
+    }
+    iotrace_file = 0;
+    sqlite3_io_trace = 0;
+  }
+  if( argv[1][0] ){
+    if( strcmp(argv[1],"stdout")==0 ){
+      iotrace_file = stdout;
+    }else if( strcmp(argv[1],"stderr")==0 ){
+      iotrace_file = stderr;
+    }else{
+      iotrace_file = fopen(argv[1], "w");
+    }
+    sqlite3_io_trace = io_trace_callback;
+  }
+  return SQLITE_OK;
+}
+
+
+/*
 ** Usage:  sqlite3_exec_printf  DB  FORMAT  STRING
 **
 ** Invoke the sqlite3_exec_printf() interface using the open database
@@ -529,6 +580,7 @@ static void hex8Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   zBuf[i*2] = 0;
   sqlite3_result_text(p, (char*)zBuf, -1, SQLITE_TRANSIENT);
 }
+#ifndef SQLITE_OMIT_UTF16
 static void hex16Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   const unsigned short int *z;
   int i;
@@ -540,6 +592,7 @@ static void hex16Func(sqlite3_context *p, int argc, sqlite3_value **argv){
   zBuf[i*4] = 0;
   sqlite3_result_text(p, (char*)zBuf, -1, SQLITE_TRANSIENT);
 }
+#endif
 
 /*
 ** A structure into which to accumulate text.
@@ -691,10 +744,12 @@ static int test_create_function(
     rc = sqlite3_create_function(db, "hex8", 1, SQLITE_ANY, 0, 
           hex8Func, 0, 0);
   }
+#ifndef SQLITE_OMIT_UTF16
   if( rc==SQLITE_OK ){
     rc = sqlite3_create_function(db, "hex16", 1, SQLITE_ANY, 0, 
           hex16Func, 0, 0);
   }
+#endif
   if( rc==SQLITE_OK ){
     rc = sqlite3_create_function(db, "tkt2213func", 1, SQLITE_ANY, 0, 
           tkt2213Function, 0, 0);
@@ -2697,6 +2752,7 @@ static int test_prepare_v2(
   if( Tcl_GetIntFromObj(interp, objv[3], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_prepare_v2(db, zSql, bytes, &pStmt, &zTail);
+  assert(rc==SQLITE_OK || pStmt==0);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   if( zTail ){
     if( bytes>=0 ){
@@ -4216,6 +4272,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_stack_used",            (Tcl_CmdProc*)test_stack_used       },
      { "sqlite3_busy_timeout",          (Tcl_CmdProc*)test_busy_timeout     },
      { "printf",                        (Tcl_CmdProc*)test_printf           },
+     { "sqlite3_io_trace",              (Tcl_CmdProc*)test_io_trace         },
   };
   static struct {
      char *zName;
@@ -4338,6 +4395,10 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_like_count;
   extern int sqlite3_tsd_count;
   extern int sqlite3_xferopt_count;
+  extern int sqlite3_pager_readdb_count;
+  extern int sqlite3_pager_writedb_count;
+  extern int sqlite3_pager_writej_count;
+  extern int sqlite3_pager_pgfree_count;
 #if OS_UNIX && defined(SQLITE_TEST) && defined(THREADSAFE) && THREADSAFE
   extern int threadsOverrideEachOthersLocks;
 #endif
@@ -4377,6 +4438,14 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_tsd_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite3_xferopt_count",
       (char*)&sqlite3_xferopt_count, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite3_pager_readdb_count",
+      (char*)&sqlite3_pager_readdb_count, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite3_pager_writedb_count",
+      (char*)&sqlite3_pager_writedb_count, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite3_pager_writej_count",
+      (char*)&sqlite3_pager_writej_count, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite3_pager_pgfree_count",
+      (char*)&sqlite3_pager_pgfree_count, TCL_LINK_INT);
 #ifndef SQLITE_OMIT_UTF16
   Tcl_LinkVar(interp, "unaligned_string_counter",
       (char*)&unaligned_string_counter, TCL_LINK_INT);

@@ -82,7 +82,19 @@ set sql {
   ROLLBACK;
 }
 
-breakpoint
+foreach bPersist [list 0 1] {
+  set ::go 1
+  for {set ::N 1} {$::go} {incr ::N} {
+    db close
+    sqlite3 db test.db
+    set ::sqlite_io_error_hit 0
+    set ::sqlite_io_error_persist $bPersist
+    set ::sqlite_io_error_pending $::N
+
+    foreach {::go res} [catchsql $sql] {}
+    check_db ioerr2-3.$bPersist.$::N
+  }
+}
 foreach bPersist [list 0 1] {
   set ::go 1
   for {set ::N 1} {$::go} {incr ::N} {
@@ -91,7 +103,7 @@ foreach bPersist [list 0 1] {
     set ::sqlite_io_error_pending $::N
 
     foreach {::go res} [catchsql $sql] {}
-    check_db ioerr2-3.$bPersist.$::N
+    check_db ioerr2-3.[expr {$bPersist+2}].$::N
   }
 }
 

@@ -1,4 +1,4 @@
-# 2006 June 10
+# 2006 July 26
 #
 # The author disclaims copyright to this source code.  In place of
 # a legal notice, here is a blessing:
@@ -8,6 +8,8 @@
 #    May you share freely, never taking more than you give.
 #
 #***********************************************************************
+# This file contains additional out-of-memory checks (see malloc.tcl)
+# added to expose a bug in out-of-memory handling for sqlite3_value_text()
 #
 # $Id$
 
@@ -17,14 +19,9 @@ source $testdir/tester.tcl
 # Only run these tests if memory debugging is turned on.
 #
 if {[info command sqlite_malloc_stat]==""} {
-  puts "Skipping vtab_err tests: not compiled with -DSQLITE_MEMDEBUG=1"
-  finish_test
-  return
-}
-
-ifcapable !vtab {
-  finish_test
-  return
+   puts "Skipping malloc tests: not compiled with -DSQLITE_MEMDEBUG..."
+   finish_test
+   return
 }
 
 # Usage: do_malloc_test <test number> <options...>
@@ -57,18 +54,11 @@ proc do_malloc_test {tn args} {
 
   set ::go 1
   for {set ::n 1} {$::go && $::n < 50000} {incr ::n} {
-    do_test $tn.$::n {
+    do_test malloc8-$tn.$::n {
 
-      # Remove all traces of database files test.db and test2.db from the files
-      # system. Then open (empty database) "test.db" with the handle [db].
-      # 
       sqlite_malloc_fail 0
-      catch {db close} 
-      catch {file delete -force test.db}
-      catch {file delete -force test.db-journal}
-      catch {file delete -force test2.db}
-      catch {file delete -force test2.db-journal}
-      catch {sqlite3 db test.db} 
+      catch {db close}
+      sqlite3 db test.db
       set ::DB [sqlite3_connection_pointer db]
 
       # Execute any -tclprep and -sqlprep scripts.
@@ -95,10 +85,9 @@ proc do_malloc_test {tn args} {
 
       # If the test fails (if $v!=0) and the database connection actually
       # exists, make sure the failure code is SQLITE_NOMEM.
-      if {$v&&[info command db]=="db"&&[info exists ::mallocopts(-sqlbody)]} {
-        if {[db errorcode]!=7 && $msg!="vtable constructor failed: e"} {
-          set v 999
-        }
+      if {$v && [info command db]=="db" && [info exists ::mallocopts(-sqlbody)]
+              && [db errorcode]!=7} {
+        set v 999
       }
 
       set leftover [lindex [sqlite_malloc_stat] 2]
@@ -111,10 +100,7 @@ proc do_malloc_test {tn args} {
           set v {1 1}
         }
       } else {
-        set v2 [expr {
-          $msg == "" || $msg == "out of memory" || 
-          $msg == "vtable constructor failed: e"
-        }]
+        set v2 [expr {$msg=="" || $msg=="out of memory"}]
         if {!$v2} {puts "\nError message returned: $msg"}
         lappend v $v2
       }
@@ -127,42 +113,46 @@ proc do_malloc_test {tn args} {
   unset ::mallocopts
 }
 
-unset -nocomplain echo_module_begin_fail
-do_ioerr_test vtab_err-1 -tclprep {
-  register_echo_module [sqlite3_connection_pointer db]
-} -sqlbody {
-  BEGIN;
-  CREATE TABLE r(a PRIMARY KEY, b, c);
-  CREATE VIRTUAL TABLE e USING echo(r);
-  INSERT INTO e VALUES(1, 2, 3);
-  INSERT INTO e VALUES('a', 'b', 'c');
-  UPDATE e SET c = 10;
-  DELETE FROM e WHERE a = 'a';
-  COMMIT;
-  BEGIN;
-    CREATE TABLE r2(a, b, c);
-    INSERT INTO r2 SELECT * FROM e;
-    INSERT INTO e SELECT a||'x', b, c FROM r2;
-  COMMIT;
+# The setup is a database with UTF-16 encoding that contains a single
+# large string.  We will be running lots of queries against this 
+# database.  Because we will be extracting the string as UTF-8, there
+# is a type conversion that occurs and thus an opportunity for malloc()
+# to fail and for sqlite3_value_text() to return 0 even though
+# sqlite3_value_type() returns SQLITE_TEXT.
+#
+db close
+file delete -force test.db test.db-journal
+sqlite3 db test.db
+db eval {
+  PRAGMA encoding='UTF-16';
+  CREATE TABLE t1(a);
+  INSERT INTO t1 
+  VALUES('0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ');
 }
 
-do_malloc_test vtab_err-2 -tclprep {
-  register_echo_module [sqlite3_connection_pointer db]
-} -sqlbody {
-  BEGIN;
-  CREATE TABLE r(a PRIMARY KEY, b, c);
-  CREATE VIRTUAL TABLE e USING echo(r);
-  INSERT INTO e VALUES(1, 2, 3);
-  INSERT INTO e VALUES('a', 'b', 'c');
-  UPDATE e SET c = 10;
-  DELETE FROM e WHERE a = 'a';
-  COMMIT;
-  BEGIN;
-    CREATE TABLE r2(a, b, c);
-    INSERT INTO r2 SELECT * FROM e;
-    INSERT INTO e SELECT a||'x', b, c FROM r2;
-  COMMIT;
-} 
+
+do_malloc_test 1 -sqlbody {
+  SELECT lower(a), upper(a), quote(a), trim(a), trim('x',a) FROM t1;
+}
+do_malloc_test 2 -sqlbody {
+  SELECT replace(a,'x','y'), replace('x',a,'y'), replace('x','y',a)
+    FROM t1;
+}
+do_malloc_test 3 -sqlbody {
+  SELECT length(a), substr(a, 4, 4) FROM t1;
+}
+do_malloc_test 4 -sqlbody {
+  SELECT julianday(a,a) FROM t1;
+}
+do_malloc_test 5 -sqlbody {
+  SELECT 1 FROM t1 WHERE a LIKE 'hello' ESCAPE NULL;
+}
+
+# Ensure that no file descriptors were leaked.
+do_test malloc-99.X {
+  catch {db close}
+  set sqlite_open_file_count
+} {0}
 
 sqlite_malloc_fail 0
 finish_test

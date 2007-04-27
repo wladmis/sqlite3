@@ -1374,10 +1374,16 @@ static void docListOrMerge(
   dlwInit(&writer, DL_DOCIDS, pOut);
 
   while( !dlrAtEnd(&left) || !dlrAtEnd(&right) ){
-    if( dlrAtEnd(&right) || dlrDocid(&left)<dlrDocid(&right) ){
+    if( dlrAtEnd(&right) ){
       dlwAdd(&writer, dlrDocid(&left));
       dlrStep(&left);
-    }else if( dlrAtEnd(&left) || dlrDocid(&right)<dlrDocid(&left) ){
+    }else if( dlrAtEnd(&left) ){
+      dlwAdd(&writer, dlrDocid(&right));
+      dlrStep(&right);
+    }else if( dlrDocid(&left)<dlrDocid(&right) ){
+      dlwAdd(&writer, dlrDocid(&left));
+      dlrStep(&left);
+    }else if( dlrDocid(&right)<dlrDocid(&left) ){
       dlwAdd(&writer, dlrDocid(&right));
       dlrStep(&right);
     }else{
@@ -1924,13 +1930,14 @@ static void freeStringArray(int nString, const char **pString){
   int i;
 
   for (i=0 ; i < nString ; ++i) {
-    free((void *) pString[i]);
+    if( pString[i]!=NULL ) free((void *) pString[i]);
   }
   free((void *) pString);
 }
 
 /* select * from %_content where rowid = [iRow]
  * The caller must delete the returned array and all strings in it.
+ * null fields will be NULL in the returned array.
  *
  * TODO: Perhaps we should return pointer/length strings here for consistency
  * with other code which uses pointer/length. */
@@ -1954,7 +1961,11 @@ static int content_select(fulltext_vtab *v, sqlite_int64 iRow,
 
   values = (const char **) malloc(v->nColumn * sizeof(const char *));
   for(i=0; i<v->nColumn; ++i){
-    values[i] = string_dup((char*)sqlite3_column_text(s, i));
+    if( sqlite3_column_type(s, i)==SQLITE_NULL ){
+      values[i] = NULL;
+    }else{
+      values[i] = string_dup((char*)sqlite3_column_text(s, i));
+    }
   }
 
   /* We expect only one row.  We must execute another sqlite3_step()

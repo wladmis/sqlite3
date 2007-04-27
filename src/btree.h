@@ -31,6 +31,10 @@
   #define SQLITE_DEFAULT_AUTOVACUUM 0
 #endif
 
+#define BTREE_AUTOVACUUM_NONE 0        /* Do not do auto-vacuum */
+#define BTREE_AUTOVACUUM_FULL 1        /* Do full auto-vacuum */
+#define BTREE_AUTOVACUUM_INCR 2        /* Incremental vacuum */
+
 /*
 ** Forward declarations of structure
 */
@@ -86,6 +90,8 @@ const char *sqlite3BtreeGetFilename(Btree *);
 const char *sqlite3BtreeGetDirname(Btree *);
 const char *sqlite3BtreeGetJournalname(Btree *);
 int sqlite3BtreeCopyFile(Btree *, Btree *);
+
+int sqlite3BtreeIncrVacuum(Btree *);
 
 /* The flags parameter to sqlite3BtreeCreateTable can be the bitwise OR
 ** of the following flags:
