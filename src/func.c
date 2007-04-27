@@ -707,7 +707,7 @@ static void replaceFunc(
   if( zStr==0 ) return;
   nStr = sqlite3_value_bytes(argv[0]);
   zPattern = sqlite3_value_text(argv[1]);
-  if( zPattern==0 ) return;
+  if( zPattern==0 || zPattern[0]==0 ) return;
   nPattern = sqlite3_value_bytes(argv[1]);
   zRep = sqlite3_value_text(argv[2]);
   if( zRep==0 ) return;
