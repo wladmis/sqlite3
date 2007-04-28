@@ -399,6 +399,7 @@ proc do_ioerr_test {testname args} {
 
   set ::go 1
   for {set n $::ioerropts(-start)} {$::go} {incr n} {
+set ::TN $n
     incr ::ioerropts(-count) -1
     if {$::ioerropts(-count)<0} break
  

@@ -3061,6 +3061,7 @@ int sqlite3PagerAcquire(
         sqlite3PagerUnref(pPg);
         return rc;
       }
+      pPg->needRead = 0;
     }
 
     /* Link the page into the page hash table */
@@ -4210,6 +4211,7 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno){
       PAGERID(pPager), pPg->pgno, pPg->needSync, pgno);
   IOTRACE(("MOVE %p %d %d\n", pPager, pPg->pgno, pgno))
 
+  pager_get_content(pPg);
   if( pPg->needSync ){
     needSyncPgno = pPg->pgno;
     assert( pPg->inJournal );

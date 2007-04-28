@@ -116,5 +116,18 @@ ifcapable subquery {
   }
 }
 
+do_ioerr_test autovacuum-ioerr2-1 -sqlprep {
+  PRAGMA auto_vacuum = 1;
+  CREATE TABLE abc(a);
+  INSERT INTO abc VALUES(randstr(1500,1500));
+} -sqlbody {
+  CREATE TABLE abc2(a);
+  BEGIN;
+  DELETE FROM abc;
+  INSERT INTO abc VALUES(randstr(1500,1500));
+  CREATE TABLE abc3(a);
+  COMMIT;
+}
+
 finish_test
 
