@@ -141,6 +141,7 @@ int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
 char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot, int, int*);
 struct Pager *sqlite3BtreePager(Btree*);
 
+int sqlite3BtreePutData(BtCursor*, u32 offset, u32 amt, const void*);
 
 #ifdef SQLITE_TEST
 int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
