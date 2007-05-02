@@ -822,11 +822,11 @@ do_test func-22.13 {
   execsql {SELECT trim('  hi  ','');}
 } {{  hi  }}
 do_test func-22.14 {
-  execsql {SELECT hex(trim(x'c280e1bfbff7bfbfbf6869',x'6162e1bfbfc280'))}
-} {F7BFBFBF6869}
+  execsql {SELECT hex(trim(x'c280e1bfbff48fbfbf6869',x'6162e1bfbfc280'))}
+} {F48FBFBF6869}
 do_test func-22.15 {
-  execsql {SELECT hex(trim(x'6869c280e1bfbff7bfbfbf61',
-                           x'6162e1bfbfc280f7bfbfbf'))}
+  execsql {SELECT hex(trim(x'6869c280e1bfbff48fbfbf61',
+                           x'6162e1bfbfc280f48fbfbf'))}
 } {6869}
 do_test func-22.16 {
   execsql {SELECT hex(trim(x'ceb1ceb2ceb3',x'ceb1'));}
