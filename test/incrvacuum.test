@@ -89,6 +89,13 @@ do_test incrvacuum-2.2 {
     pragma auto_vacuum;
   }
 } {1}
+do_test incrvacuum-2.2.1 {
+  db close
+  sqlite3 db test.db
+  execsql {
+    pragma auto_vacuum;
+  }
+} {1}
 do_test incrvacuum-2.3 {
   execsql {
     pragma auto_vacuum = 'incremental';
@@ -430,4 +437,3 @@ while 1 {
 }
 
 finish_test
-

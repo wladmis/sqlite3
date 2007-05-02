@@ -5755,15 +5755,6 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
   }
   assert( !pBt->readOnly );
 
-  /* It is illegal to create a table if any cursors are open on the
-  ** database. This is because in auto-vacuum mode the backend may
-  ** need to move a database page to make room for the new root-page.
-  ** If an open cursor was using the page a problem would occur.
-  */
-  if( pBt->pCursor ){
-    return SQLITE_LOCKED;
-  }
-
 #ifdef SQLITE_OMIT_AUTOVACUUM
   rc = allocateBtreePage(pBt, &pRoot, &pgnoRoot, 1, 0);
   if( rc ) return rc;
