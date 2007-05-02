@@ -173,6 +173,7 @@ int sqlite3_blob_open(
     }
     pBlob->flags = flags;
     pBlob->pCsr =  v->apCsr[0]->pCursor;
+    sqlite3BtreeCacheOverflow(pBlob->pCsr);
     pBlob->pStmt = (sqlite3_stmt *)v;
     pBlob->iOffset = v->apCsr[0]->aOffset[iCol];
     pBlob->nByte = sqlite3VdbeSerialTypeLen(type);
