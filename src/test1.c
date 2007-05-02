@@ -4349,6 +4349,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_open_file_count;
   extern int sqlite3_sort_count;
   extern int sqlite3_current_time;
+  extern int sqlite3_max_blobsize;
   static struct {
      char *zName;
      Tcl_CmdProc *xProc;
@@ -4542,6 +4543,8 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_search_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_sort_count", 
       (char*)&sqlite3_sort_count, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite3_max_blobsize", 
+      (char*)&sqlite3_max_blobsize, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_like_count", 
       (char*)&sqlite3_like_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_interrupt_count", 
