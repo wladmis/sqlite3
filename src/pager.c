@@ -2824,6 +2824,7 @@ static int pagerSharedLock(Pager *pPager){
         }
 
         if( pPager->dbSize>0 ){
+          IOTRACE(("CKVERS %p %d\n", pPager, sizeof(dbFileVers)));
           rc = sqlite3OsSeek(pPager->fd, 24);
           if( rc!=SQLITE_OK ){
             return rc;

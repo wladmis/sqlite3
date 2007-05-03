@@ -854,6 +854,9 @@ static char zHelp[] =
   ".help                  Show this message\n"
   ".import FILE TABLE     Import data from FILE into TABLE\n"
   ".indices TABLE         Show names of all indices on TABLE\n"
+#ifdef SQLITE_ENABLE_IOTRACE
+  ".iotrace FILE          Enable I/O diagnostic logging to FILE\n"
+#endif
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
   ".load FILE ?ENTRY?     Load an extension library\n"
 #endif
@@ -1242,6 +1245,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     }
   }else
 
+#ifdef SQLITE_ENABLE_IOTRACE
   if( c=='i' && strncmp(azArg[0], "iotrace", n)==0 ){
     extern void (*sqlite3_io_trace)(const char*, ...);
     if( iotrace && iotrace!=stdout ) fclose(iotrace);
@@ -1261,6 +1265,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
       }
     }
   }else
+#endif
 
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
   if( c=='l' && strncmp(azArg[0], "load", n)==0 && nArg>=2 ){
