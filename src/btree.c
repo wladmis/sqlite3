@@ -3266,7 +3266,7 @@ static int accessPayload(
         }
         if( eOp ){
           /* A write operation. */
-          rc = sqlite3PagerWrite(pPage->pDbPage);
+          rc = sqlite3PagerWrite(pDbPage);
           if( rc!=SQLITE_OK ){
             sqlite3PagerUnref(pDbPage);
             return rc;
