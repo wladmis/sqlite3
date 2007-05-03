@@ -3105,7 +3105,7 @@ static int getOverflowPage(
       iGuess++;
     }
 
-    if( iGuess<sqlite3PagerPagecount(pBt->pPager) ){
+    if( iGuess<=sqlite3PagerPagecount(pBt->pPager) ){
       rc = ptrmapGet(pBt, iGuess, &eType, &pgno);
       if( rc!=SQLITE_OK ){
         return rc;
@@ -5763,6 +5763,19 @@ int sqlite3BtreeCreateTable(Btree *p, int *piTable, int flags){
     Pgno pgnoMove;      /* Move a page here to make room for the root-page */
     MemPage *pPageMove; /* The page to move to. */
 
+#ifndef SQLITE_OMIT_INCRBLOB
+    /* Creating a new table may probably require moving an existing database
+    ** to make room for the new tables root page. In case this page turns
+    ** out to be an overflow page, delete all overflow page-map caches
+    ** held by open cursors.
+    */
+    BtCursor *pCur;
+    for(pCur=pBt->pCursor; pCur; pCur=pCur->pNext){
+      sqliteFree(pCur->aOverflow);
+      pCur->aOverflow = 0;
+    }
+#endif
+
     /* Read the value of meta[3] from the database to determine where the
     ** root page of the new table should go. meta[3] is the largest root-page
     ** created so far, so the new root-page is (meta[3]+1).
@@ -6943,17 +6956,6 @@ int sqlite3BtreeLockTable(Btree *p, int iTab, u8 isWriteLock){
 */
 int sqlite3BtreePutData(BtCursor *pCsr, u32 offset, u32 amt, const void *z){
   BtShared *pBt = pCsr->pBtree->pBt;
-  int rc;
-
-  u32 iRem = amt;        /* Remaining bytes to write */
-  u8 *zRem = (u8 *)z;    /* Pointer to data not yet written */
-  u32 iOffset = offset;  /* Offset from traversal point to start of write */
-
-  Pgno iIdx = 0;         /* Index of overflow page in pCsr->aOverflow */
-  Pgno iOvfl;            /* Page number for next overflow page */
-  int ovflSize;          /* Bytes of data per overflow page. */
-
-  CellInfo *pInfo;
 
   /* Check some preconditions: 
   **   (a) a write-transaction is open, 
