@@ -199,7 +199,6 @@ static Keyword aKeywordTable[] = {
   { "IGNORE",           "TK_IGNORE",       CONFLICT|TRIGGER       },
   { "IMMEDIATE",        "TK_IMMEDIATE",    ALWAYS                 },
   { "IN",               "TK_IN",           ALWAYS                 },
-  { "INCREMENTAL",      "TK_INCREMENTAL",  AUTOVACUUM             },
   { "INDEX",            "TK_INDEX",        ALWAYS                 },
   { "INITIALLY",        "TK_INITIALLY",    FKEY                   },
   { "INNER",            "TK_JOIN_KW",      ALWAYS                 },

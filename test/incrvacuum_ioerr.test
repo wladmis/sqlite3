@@ -35,7 +35,7 @@ do_ioerr_test incrvacuum-ioerr-1 -cksum 1 -sqlprep {
   BEGIN;
   CREATE TABLE abc2(a);
   DELETE FROM abc;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   COMMIT;
 }
 
@@ -74,17 +74,16 @@ do_ioerr_test incrvacuum-ioerr-2 -start 1 -cksum 1 -tclprep {
   db eval COMMIT
 } -sqlbody {
   BEGIN;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   DELETE FROM abc WHERE (oid%3)==0;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   INSERT INTO abc SELECT a || '1234567890' FROM abc WHERE oid%2;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   CREATE INDEX abc_i ON abc(a);
   DELETE FROM abc WHERE (oid%2)==0;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   DROP INDEX abc_i;
-  INCREMENTAL VACUUM;
+  PRAGMA incremental_vacuum;
   COMMIT;
 }
 finish_test
-
