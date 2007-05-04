@@ -2301,7 +2301,7 @@ static int syncJournal(Pager *pPager){
         if( rc ) return rc;
       }
       PAGERTRACE2("SYNC journal of %d\n", PAGERID(pPager));
-      IOTRACE(("JSYNC %d\n", pPager))
+      IOTRACE(("JSYNC %p\n", pPager))
       rc = sqlite3OsSync(pPager->jfd, pPager->full_fsync);
       if( rc!=0 ) return rc;
       pPager->journalStarted = 1;
