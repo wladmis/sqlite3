@@ -904,7 +904,8 @@ cmd ::= VACUUM nm.             {sqlite3Vacuum(pParse);}
 %endif  SQLITE_OMIT_VACUUM
 
 %ifndef  SQLITE_OMIT_AUTOVACUUM
-cmd ::= INCREMENTAL VACUUM.    {sqlite3IncrVacuum(pParse);}
+cmd ::= INCREMENTAL VACUUM.              {sqlite3IncrVacuum(pParse, 0);}
+cmd ::= INCREMENTAL VACUUM INTEGER(X).   {sqlite3IncrVacuum(pParse, &X);}
 %endif
 
 ///////////////////////////// The PRAGMA command /////////////////////////////
