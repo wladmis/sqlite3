@@ -399,7 +399,7 @@ proc do_ioerr_test {testname args} {
 
   set ::go 1
   for {set n $::ioerropts(-start)} {$::go} {incr n} {
-set ::TN $n
+    set ::TN $n
     incr ::ioerropts(-count) -1
     if {$::ioerropts(-count)<0} break
  
@@ -480,6 +480,7 @@ set ::TN $n
       #   1.  We never hit the IO error and the SQL returned OK
       #   2.  An IO error was hit and the SQL failed
       #
+#puts "$s $r $::go - $msg"
       expr { ($s && !$r && !$::go) || (!$s && $r && $::go) }
     } {1}
 

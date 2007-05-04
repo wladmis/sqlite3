@@ -153,7 +153,8 @@ static void closeIncrblobChannels(SqliteDb *pDb){
 */
 static int incrblobClose(ClientData instanceData, Tcl_Interp *interp){
   IncrblobChannel *p = (IncrblobChannel *)instanceData;
-  sqlite3_blob_close(p->pBlob);
+  int rc = sqlite3_blob_close(p->pBlob);
+  sqlite3 *db = p->pDb->db;
 
   /* Remove the channel from the SqliteDb.pIncrblob list. */
   if( p->pNext ){
@@ -166,7 +167,13 @@ static int incrblobClose(ClientData instanceData, Tcl_Interp *interp){
     p->pDb->pIncrblob = p->pNext;
   }
 
+  /* Free the IncrblobChannel structure */
   Tcl_Free((char *)p);
+
+  if( rc!=SQLITE_OK ){
+    Tcl_SetResult(interp, (char *)sqlite3_errmsg(db), TCL_VOLATILE);
+    return TCL_ERROR;
+  }
   return TCL_OK;
 }
 
