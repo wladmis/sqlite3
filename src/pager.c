@@ -1736,14 +1736,14 @@ int sqlite3PagerOpen(
   pPager->zFilename = (char*)&pPager[1];
   pPager->zDirectory = &pPager->zFilename[nameLen+1];
   pPager->zJournal = &pPager->zDirectory[nameLen+1];
-  strcpy(pPager->zFilename, zFullPathname);
-  strcpy(pPager->zDirectory, zFullPathname);
+  memcpy(pPager->zFilename, zFullPathname, nameLen+1);
+  memcpy(pPager->zDirectory, zFullPathname, nameLen+1);
 
   for(i=nameLen; i>0 && pPager->zDirectory[i-1]!='/'; i--){}
   if( i>0 ) pPager->zDirectory[i-1] = 0;
-  strcpy(pPager->zJournal, zFullPathname);
+  memcpy(pPager->zJournal, zFullPathname,nameLen);
   sqliteFree(zFullPathname);
-  strcpy(&pPager->zJournal[nameLen], "-journal");
+  memcpy(&pPager->zJournal[nameLen], "-journal",sizeof("-journal"));
   pPager->fd = fd;
   /* pPager->journalOpen = 0; */
   pPager->useJournal = useJournal && !memDb;

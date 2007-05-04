@@ -1012,7 +1012,7 @@ static void generateColumnNames(
     }else{
       char zName[30];
       assert( p->op!=TK_COLUMN || pTabList==0 );
-      sprintf(zName, "column%d", i+1);
+      sqlite3_snprintf(sizeof(zName), zName, "column%d", i+1);
       sqlite3VdbeSetColName(v, i, COLNAME_NAME, zName, 0);
     }
   }

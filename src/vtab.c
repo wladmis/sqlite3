@@ -29,7 +29,7 @@ int sqlite3_create_module(
   Module *pMod = (Module *)sqliteMallocRaw(sizeof(Module) + nName + 1);
   if( pMod ){
     char *zCopy = (char *)(&pMod[1]);
-    strcpy(zCopy, zName);
+    memcpy(zCopy, zName, nName+1);
     pMod->zName = zCopy;
     pMod->pModule = pModule;
     pMod->pAux = pAux;
@@ -705,7 +705,7 @@ FuncDef *sqlite3VtabOverloadFunction(
     return pDef;
   }
   *pNew = *pDef;
-  strcpy(pNew->zName, pDef->zName);
+  memcpy(pNew->zName, pDef->zName, strlen(pDef->zName)+1);
   pNew->xFunc = xFunc;
   pNew->pUserData = pArg;
   pNew->flags |= SQLITE_FUNC_EPHEM;

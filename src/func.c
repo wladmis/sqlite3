@@ -222,7 +222,7 @@ static void upperFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   if( z2 ){
     z1 = sqlite3_malloc(n+1);
     if( z1 ){
-      strcpy(z1, z2);
+      memcpy(z1, z2, n+1);
       for(i=0; z1[i]; i++){
         z1[i] = toupper(z1[i]);
       }
@@ -240,7 +240,7 @@ static void lowerFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   if( z2 ){
     z1 = sqlite3_malloc(n+1);
     if( z1 ){
-      strcpy(z1, z2);
+      memcpy(z1, z2, n+1);
       for(i=0; z1[i]; i++){
         z1[i] = tolower(z1[i]);
       }
