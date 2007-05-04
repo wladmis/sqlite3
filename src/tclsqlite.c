@@ -120,10 +120,9 @@ struct SqliteDb {
 };
 
 struct IncrblobChannel {
-  SqliteDb *pDb;            /* Associated database connection */
   sqlite3_blob *pBlob;      /* sqlite3 blob handle */
+  SqliteDb *pDb;            /* Associated database connection */
   int iSeek;                /* Current seek offset */
-
   Tcl_Channel channel;      /* Channel identifier */
   IncrblobChannel *pNext;   /* Linked list of all open incrblob channels */
   IncrblobChannel *pPrev;   /* Linked list of all open incrblob channels */
