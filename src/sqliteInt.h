@@ -75,6 +75,7 @@
 # endif
 # define SQLITE_OMIT_DATETIME_FUNCS 1
 # define SQLITE_OMIT_TRACE 1
+# undef SQLITE_MIXED_ENDIAN_64BIT_FLOAT
 #endif
 #ifndef SQLITE_BIG_DBL
 # define SQLITE_BIG_DBL (1e99)
