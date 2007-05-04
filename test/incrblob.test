@@ -15,6 +15,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable {!autovacuum || !pragma || !incrblob} {
+  finish_test
+  return
+}
+
 do_test incrblob-1.1 {
   execsql {
     CREATE TABLE blobs(k PRIMARY KEY, v BLOB);

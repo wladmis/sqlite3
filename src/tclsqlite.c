@@ -128,6 +128,7 @@ struct IncrblobChannel {
   IncrblobChannel *pPrev;   /* Linked list of all open incrblob channels */
 };
 
+#ifndef SQLITE_OMIT_INCRBLOB
 /*
 ** Close all incrblob channels opened using database connection pDb.
 ** This is called when shutting down the database connection.
@@ -344,6 +345,9 @@ static int createIncrblobChannel(
   Tcl_SetResult(interp, (char *)Tcl_GetChannelName(p->channel), TCL_VOLATILE);
   return TCL_OK;
 }
+#else  /* else clause for "#ifndef SQLITE_OMIT_INCRBLOB" */
+  #define closeIncrblobChannels(pDb)
+#endif
 
 /*
 ** Look at the script prefix in pCmd.  We will be executing this script
@@ -1861,6 +1865,10 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   **     $db incrblob ?-readonly? ?DB? TABLE COLUMN ROWID
   */
   case DB_INCRBLOB: {
+#ifdef SQLITE_OMIT_INCRBLOB
+    Tcl_AppendResult(interp, "incrblob not available in this build", 0);
+    return TCL_ERROR;
+#else
     int isReadonly = 0;
     const char *zDb = "main";
     const char *zTable;
@@ -1889,6 +1897,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
           interp, pDb, zDb, zTable, zColumn, iRow, isReadonly
       );
     }
+#endif
     break;
   }
 

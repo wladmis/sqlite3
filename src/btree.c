@@ -765,9 +765,11 @@ static void clearCursorPosition(BtCursor *pCur){
 static int restoreOrClearCursorPositionX(BtCursor *pCur){
   int rc;
   assert( pCur->eState==CURSOR_REQUIRESEEK );
+#ifndef SQLITE_OMIT_INCRBLOB
   if( pCur->isIncrblobHandle ){
     return SQLITE_ABORT;
   }
+#endif
   pCur->eState = CURSOR_INVALID;
   rc = sqlite3BtreeMoveto(pCur, pCur->pKey, pCur->nKey, 0, &pCur->skip);
   if( rc==SQLITE_OK ){

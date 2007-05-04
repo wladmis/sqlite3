@@ -15,6 +15,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable {!incrblob} {
+  finish_test
+  return
+}
+
 # Usage: do_malloc_test <test number> <options...>
 #
 # The first argument, <test number>, is an integer used to name the
