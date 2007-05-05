@@ -1410,6 +1410,8 @@ static int test_enable_shared(
 }
 #endif
 
+
+
 /*
 ** Usage: sqlite3_extended_result_codes   DB    BOOLEAN
 **
@@ -4486,6 +4488,8 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_sort_count;
   extern int sqlite3_current_time;
   extern int sqlite3_max_blobsize;
+  extern int sqlite3BtreeSharedCacheReport(void*,
+                                          Tcl_Interp*,int,Tcl_Obj*CONST*);
   static struct {
      char *zName;
      Tcl_CmdProc *xProc;
@@ -4632,6 +4636,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "tcl_variable_type",       tcl_variable_type, 0       },
 #ifndef SQLITE_OMIT_SHARED_CACHE
      { "sqlite3_enable_shared_cache", test_enable_shared, 0  },
+     { "sqlite3_shared_cache_report", sqlite3BtreeSharedCacheReport, 0},
 #endif
      { "sqlite3_libversion_number", test_libversion_number, 0  },
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
@@ -4763,13 +4768,5 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 #endif /* OS_UNIX */
   set_options(interp);
 
-  {
-#ifdef SQLITE_DEBUG
-    extern int sqlite3_shared_cache_report(void *, Tcl_Interp *,
-                                    int, Tcl_Obj *CONST[]);
-    Tcl_CreateObjCommand(interp, "sqlite_shared_cache_report", 
-        sqlite3_shared_cache_report, 0, 0);
-#endif
-  }
   return TCL_OK;
 }

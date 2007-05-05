@@ -574,3 +574,17 @@ struct IntegrityCk {
 #define get4byte sqlite3Get4byte
 #define put2byte sqlite3Put2byte
 #define put4byte sqlite3Put4byte
+
+/*
+** Internal routines that should be accessed by the btree layer only.
+*/
+int sqlite3BtreeGetPage(BtShared*, Pgno, MemPage**, int);
+int sqlite3BtreeInitPage(MemPage *pPage, MemPage *pParent);
+void sqlite3BtreeParseCellPtr(MemPage*, u8*, CellInfo*);
+void sqlite3BtreeParseCell(MemPage*, int, CellInfo*);
+u8 *sqlite3BtreeFindCell(MemPage *pPage, int iCell);
+int sqlite3BtreeRestoreOrClearCursorPosition(BtCursor *pCur);
+void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur);
+void sqlite3BtreeReleaseTempCursor(BtCursor *pCur);
+int sqlite3BtreeIsRootPage(MemPage *pPage);
+void sqlite3BtreeMoveToParent(BtCursor *pCur);
