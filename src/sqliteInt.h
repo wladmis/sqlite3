@@ -1915,6 +1915,11 @@ FuncDef *sqlite3VtabOverloadFunction(FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3Reprepare(Vdbe*);
 
+u32 sqlite3Get2byte(const u8*);
+u32 sqlite3Get4byte(const u8*);
+void sqlite3Put2byte(u8*, u32);
+void sqlite3Put4byte(u8*, u32);
+
 #ifdef SQLITE_SSE
 #include "sseInt.h"
 #endif
