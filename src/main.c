@@ -985,6 +985,13 @@ static int openDatabase(
   }
 #endif
 
+#ifdef SQLITE_ENABLE_ICU
+  {
+    extern int sqlite3IcuInit(sqlite3*);
+    sqlite3IcuInit(db);
+  }
+#endif
+
   /* -DSQLITE_DEFAULT_LOCKING_MODE=1 makes EXCLUSIVE the default locking
   ** mode.  -DSQLITE_DEFAULT_LOCKING_MODE=0 make NORMAL the default locking
   ** mode.  Doing nothing at all also makes NORMAL the default.
