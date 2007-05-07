@@ -646,11 +646,12 @@ struct Column {
 ** collating sequence may not be read or written.
 */
 struct CollSeq {
-  char *zName;         /* Name of the collating sequence, UTF-8 encoded */
-  u8 enc;              /* Text encoding handled by xCmp() */
-  u8 type;             /* One of the SQLITE_COLL_... values below */
-  void *pUser;         /* First argument to xCmp() */
+  char *zName;          /* Name of the collating sequence, UTF-8 encoded */
+  u8 enc;               /* Text encoding handled by xCmp() */
+  u8 type;              /* One of the SQLITE_COLL_... values below */
+  void *pUser;          /* First argument to xCmp() */
   int (*xCmp)(void*,int, const void*, int, const void*);
+  void (*xDel)(void*);  /* Destructor for pUser */
 };
 
 /*

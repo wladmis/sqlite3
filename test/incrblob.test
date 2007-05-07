@@ -551,7 +551,7 @@ do_test incrblob-7.3.2 {
 do_test incrblob-7.3.3 {
   execsql {
     DELETE FROM t1 WHERE a = 123;
-    INCREMENTAL VACUUM;
+    PRAGMA INCREMENTAL_VACUUM(0);
   }
   seek $::b 0
   read $::b

@@ -1280,6 +1280,18 @@ int sqlite3_create_collation16(
 );
 
 /*
+****** EXPERIMENTAL - subject to change without notice **************
+*/
+int sqlite3_create_collation_x(
+  sqlite3*, 
+  const char *zName, 
+  int eTextRep, 
+  void*,
+  int(*xCompare)(void*,int,const void*,int,const void*),
+  void(*xDel)(void*)
+);
+
+/*
 ** To avoid having to register all collation sequences before a database
 ** can be used, a single callback function may be registered with the
 ** database handle to be called whenever an undefined collation sequence is
