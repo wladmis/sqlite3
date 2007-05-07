@@ -297,9 +297,11 @@ static void randomBlob(
   assert( argc==1 );
   n = sqlite3_value_int(argv[0]);
   if( n<1 ) n = 1;
-  p = sqlite3_malloc(n);
-  sqlite3Randomness(n, p);
-  sqlite3_result_blob(context, (char*)p, n, sqlite3_free);
+  p = sqliteMalloc(n);
+  if( p ){
+    sqlite3Randomness(n, p);
+    sqlite3_result_blob(context, (char*)p, n, sqlite3FreeX);
+  }
 }
 
 /*

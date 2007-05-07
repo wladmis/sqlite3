@@ -147,6 +147,9 @@ do_malloc_test 4 -sqlbody {
 do_malloc_test 5 -sqlbody {
   SELECT 1 FROM t1 WHERE a LIKE 'hello' ESCAPE NULL;
 }
+do_malloc_test 6 -sqlbody {
+  SELECT hex(randomblob(100));
+}
 
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
