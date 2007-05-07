@@ -1135,6 +1135,33 @@ char *sqlite3_vmprintf(const char*, va_list);
 } {}
 
 api {} {
+char *sqlite3_snprintf(int bufSize, char *buf, const char *zFormat, ...);
+} {
+  This routine works like "sprintf()", writing a formatted string into
+  the buf[].  However, no more than bufSize characters will be written
+  into buf[].  This routine returns a pointer to buf[].  If bufSize is
+  greater than zero, then buf[] is guaranteed to be zero-terminated.
+
+  This routine uses the same extended formatting options as
+  sqlite3_mprintf() and sqlite3_vmprintf().
+
+  Note these differences with the snprintf() function found in many
+  standard libraries:  (1)  sqlite3_snprintf() returns a pointer to the
+  buffer rather than the number of characters written.  (It would,
+  arguably, be more useful to return the number of characters written,
+  but we discovered that after the interface had been published and
+  are unwilling to break backwards compatibility.)  (2)  The order
+  of the bufSize and buf parameter is reversed from snprintf().  
+  And (3) sqlite3_snprintf() always writes a zero-terminator if bufSize
+  is positive.  
+
+  Please do not use the return value of this routine.  We may
+  decide to make the minor compatibility break and change this routine
+  to return the number of characters written rather than a pointer to
+  the buffer in a future minor version increment.
+}
+
+api {} {
 int sqlite3_open(
   const char *filename,   /* Database filename (UTF-8) */
   sqlite3 **ppDb          /* OUT: SQLite db handle */

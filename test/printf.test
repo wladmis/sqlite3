@@ -268,5 +268,14 @@ do_test printf-14.3 {
   sqlite3_mprintf_str {abc-%T-123} 0 0 {not used}
 } {abc-}
 
+do_test printf-15.1 {
+  sqlite3_snprintf_int 5 {12345} 0
+} {1234}
+do_test printf-15.2 {
+  sqlite3_snprintf_int 5 {} 0
+} {}
+do_test printf-15.3 {
+  sqlite3_snprintf_int 0 {} 0
+} {abcdefghijklmnopqrstuvwxyz}
 
 finish_test

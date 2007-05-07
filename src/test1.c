@@ -427,6 +427,33 @@ static int test_mprintf_n(
 }
 
 /*
+** Usage:  sqlite3_snprintf_int  SIZE FORMAT  INT
+**
+** Test the of sqlite3_snprintf() routine.  SIZE is the size of the
+** output buffer in bytes.  The maximum size is 100.  FORMAT is the
+** format string.  INT is a single integer argument.  The FORMAT
+** string must require no more than this one integer argument.  If
+** You pass in a format string that requires more than one argument,
+** bad things will happen.
+*/
+static int test_snprintf_int(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  char zStr[100];
+  int n = atoi(argv[1]);
+  if( n>sizeof(zStr) ) n = sizeof(zStr);
+  const char *zFormat = argv[2];
+  int a1 = atoi(argv[3]);
+  strcpy(zStr, "abcdefghijklmnopqrstuvwxyz");
+  sqlite3_snprintf(n, zStr, zFormat, a1);
+  Tcl_AppendResult(interp, zStr, 0);
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite3_get_table_printf  DB  FORMAT  STRING
 **
 ** Invoke the sqlite3_get_table_printf() interface using the open database
@@ -4609,6 +4636,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_mprintf_hexdouble",   (Tcl_CmdProc*)sqlite3_mprintf_hexdouble},
      { "sqlite3_mprintf_z_test",        (Tcl_CmdProc*)test_mprintf_z        },
      { "sqlite3_mprintf_n_test",        (Tcl_CmdProc*)test_mprintf_n        },
+     { "sqlite3_snprintf_int",          (Tcl_CmdProc*)test_snprintf_int     },
      { "sqlite3_last_insert_rowid",     (Tcl_CmdProc*)test_last_rowid       },
      { "sqlite3_exec_printf",           (Tcl_CmdProc*)test_exec_printf      },
      { "sqlite3_exec",                  (Tcl_CmdProc*)test_exec             },
