@@ -1141,7 +1141,7 @@ int sqlite3_create_collation(
 /*
 ** Register a new collation sequence with the database handle db.
 */
-int sqlite3_create_collation_x(
+int sqlite3_create_collation_v2(
   sqlite3* db, 
   const char *zName, 
   int enc, 
