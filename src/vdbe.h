@@ -112,7 +112,6 @@ typedef struct VdbeOpList VdbeOpList;
 ** for a description of what each of these routines does.
 */
 Vdbe *sqlite3VdbeCreate(sqlite3*);
-void sqlite3VdbeCreateCallback(Vdbe*, int*);
 int sqlite3VdbeAddOp(Vdbe*,int,int,int);
 int sqlite3VdbeOp3(Vdbe*,int,int,int,const char *zP3,int);
 int sqlite3VdbeAddOpList(Vdbe*, int nOp, VdbeOpList const *aOp);
@@ -128,7 +127,9 @@ void sqlite3VdbeMakeReady(Vdbe*,int,int,int,int);
 int sqlite3VdbeFinalize(Vdbe*);
 void sqlite3VdbeResolveLabel(Vdbe*, int);
 int sqlite3VdbeCurrentAddr(Vdbe*);
-void sqlite3VdbeTrace(Vdbe*,FILE*);
+#ifdef SQLITE_DEBUG
+  void sqlite3VdbeTrace(Vdbe*,FILE*);
+#endif
 void sqlite3VdbeResetStepResult(Vdbe*);
 int sqlite3VdbeReset(Vdbe*);
 void sqlite3VdbeSetNumCols(Vdbe*,int);

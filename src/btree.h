@@ -115,12 +115,6 @@ int sqlite3BtreeCursor(
   BtCursor **ppCursor                  /* Returned cursor */
 );
 
-void sqlite3BtreeSetCompare(
-  BtCursor *,
-  int(*)(void*,int,const void*,int,const void*),
-  void*
-);
-
 int sqlite3BtreeCloseCursor(BtCursor*);
 int sqlite3BtreeMoveto(BtCursor*,const void *pKey,i64 nKey,int bias,int *pRes);
 int sqlite3BtreeDelete(BtCursor*);
