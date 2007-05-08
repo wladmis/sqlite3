@@ -562,7 +562,7 @@ int sqlite3_create_function16(
   char *zFunc8;
   assert( !sqlite3MallocFailed() );
 
-  zFunc8 = sqlite3utf16to8(zFunctionName, -1);
+  zFunc8 = sqlite3Utf16to8(zFunctionName, -1);
   rc = sqlite3CreateFunc(db, zFunc8, nArg, eTextRep, p, xFunc, xStep, xFinal);
   sqliteFree(zFunc8);
 
@@ -1171,7 +1171,7 @@ int sqlite3_create_collation16(
   int rc = SQLITE_OK;
   char *zName8; 
   assert( !sqlite3MallocFailed() );
-  zName8 = sqlite3utf16to8(zName, -1);
+  zName8 = sqlite3Utf16to8(zName, -1);
   if( zName8 ){
     rc = createCollation(db, zName8, enc, pCtx, xCompare, 0);
     sqliteFree(zName8);

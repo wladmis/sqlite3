@@ -247,7 +247,7 @@ int sqlite3_blob_close(sqlite3_blob *pBlob){
 }
 
 
-int blobReadWrite(
+static int blobReadWrite(
   sqlite3_blob *pBlob, 
   void *z, 
   int n, 
