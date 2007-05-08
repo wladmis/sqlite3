@@ -1171,9 +1171,9 @@ case OP_Remainder: {           /* same as TK_REM, no-push */
         break;
       }
       default: {
-        int ia = (int)a;
-        int ib = (int)b;
-        if( ia==0.0 ) goto divide_by_zero;
+        i64 ia = (i64)a;
+        i64 ib = (i64)b;
+        if( ia==0 ) goto divide_by_zero;
         b = ib % ia;
         break;
       }
