@@ -663,7 +663,7 @@ void sqlite3ExprListCheckLength(
   int iLimit,
   const char *zObject
 ){
-  if( pEList->nExpr>iLimit ){
+  if( pEList && pEList->nExpr>iLimit ){
     sqlite3ErrorMsg(pParse, "too many columns in %s", zObject);
   }
 }
