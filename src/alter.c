@@ -57,6 +57,11 @@ static void renameTableFunc(
   */
   if( zSql ){
     do {
+      if( !*zCsr ){
+        /* Ran out of input before finding an opening bracket. Return NULL. */
+        return;
+      }
+
       /* Store the token that zCsr points to in tname. */
       tname.z = zCsr;
       tname.n = len;
@@ -107,6 +112,12 @@ static void renameTriggerFunc(
   */
   if( zSql ){
     do {
+
+      if( !*zCsr ){
+        /* Ran out of input before finding the table name. Return NULL. */
+        return;
+      }
+
       /* Store the token that zCsr points to in tname. */
       tname.z = zCsr;
       tname.n = len;
