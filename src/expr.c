@@ -654,6 +654,21 @@ no_mem:
 }
 
 /*
+** If the expression list pEList contains more than iLimit elements,
+** leave an error message in pParse.
+*/
+void sqlite3ExprListCheckLength(
+  Parse *pParse,
+  ExprList *pEList,
+  int iLimit,
+  const char *zObject
+){
+  if( pEList->nExpr>iLimit ){
+    sqlite3ErrorMsg(pParse, "too many columns in %s", zObject);
+  }
+}
+
+/*
 ** Delete an entire expression list.
 */
 void sqlite3ExprListDelete(ExprList *pList){
