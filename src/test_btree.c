@@ -195,10 +195,13 @@ int sqlite3BtreeCursorInfo(BtCursor *pCur, int *aResult, int upCnt){
   int cnt, idx;
   MemPage *pPage = pCur->pPage;
   BtCursor tmpCur;
+  int rc;
 
-  int rc = sqlite3BtreeRestoreOrClearCursorPosition(pCur);
-  if( rc!=SQLITE_OK ){
-    return rc;
+  if( pCur->eState==CURSOR_REQUIRESEEK ){
+    rc = sqlite3BtreeRestoreOrClearCursorPosition(pCur);
+    if( rc!=SQLITE_OK ){
+      return rc;
+    }
   }
 
   assert( pPage->isInit );
