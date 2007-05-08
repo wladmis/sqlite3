@@ -5074,8 +5074,8 @@ default: {
       assert( !sqlite3VdbeMemTooBig(pTos) );
     }
     assert( pc>=-1 && pc<p->nOp );
-#ifdef SQLITE_DEBUG
 
+#ifdef SQLITE_DEBUG
     /* Code for tracing the vdbe stack. */
     if( p->trace && pTos>=p->aStack ){
       int i;
