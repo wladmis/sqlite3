@@ -134,3 +134,11 @@
 #ifndef SQLITE_MAX_PAGE_COUNT
 # define SQLITE_MAX_PAGE_COUNT 1073741823
 #endif
+
+/*
+** Maximum length (in bytes) of the pattern in a LIKE or GLOB
+** operator.
+*/
+#ifndef SQLITE_MAX_LIKE_PATTERN_LENGTH
+# define SQLITE_MAX_LIKE_PATTERN_LENGTH 50000
+#endif
