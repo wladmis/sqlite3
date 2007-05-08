@@ -774,7 +774,8 @@ static void strftimeFunc(
   sqlite3_value **argv
 ){
   DateTime x;
-  int n, i, j;
+  u64 n;
+  int i, j;
   char *z;
   const char *zFmt = (const char*)sqlite3_value_text(argv[0]);
   char zBuf[100];
@@ -814,6 +815,9 @@ static void strftimeFunc(
   }
   if( n<sizeof(zBuf) ){
     z = zBuf;
+  }else if( n>SQLITE_MAX_LENGTH ){
+    sqlite3_result_error_toobig(context);
+    return;
   }else{
     z = sqliteMalloc( n );
     if( z==0 ) return;
