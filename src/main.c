@@ -270,6 +270,7 @@ const char *sqlite3ErrStr(int rc){
     case SQLITE_CANTOPEN:   z = "unable to open database file";          break;
     case SQLITE_EMPTY:      z = "table contains no data";                break;
     case SQLITE_SCHEMA:     z = "database schema has changed";           break;
+    case SQLITE_TOOBIG:     z = "String or BLOB exceeded size limit";    break;
     case SQLITE_CONSTRAINT: z = "constraint failed";                     break;
     case SQLITE_MISMATCH:   z = "datatype mismatch";                     break;
     case SQLITE_MISUSE:     z = "library routine called out of sequence";break;
