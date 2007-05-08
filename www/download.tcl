@@ -136,10 +136,18 @@ Product {sqlite-V3.tar.gz} {
 }
 
 Product {sqlite-source-V3.zip} {
-  This ZIP archive contains pure C code for the SQLite library.
+  This ZIP archive contains preprocessed C code for the SQLite library as
+  individual source files.
   Unlike the tarballs below, all of the preprocessing and automatic
   code generation has already been done on these C code files, so they
   can be converted to object code directly with any ordinary C compiler.
+}
+
+Product {sqlite-amalgamation-V3.zip} {
+  This ZIP archive contains all preprocessed C code combined into a
+  single source file (the
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=TheAmalgamation">
+  amalgamation</a>).
 }
 
 Product {sqlite-V3-tea.tar.gz} {
