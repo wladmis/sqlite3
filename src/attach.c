@@ -83,9 +83,10 @@ static void attachFunc(
   **     * Transaction currently open
   **     * Specified database name already being used.
   */
-  if( db->nDb>=MAX_ATTACHED+2 ){
+  if( db->nDb>=SQLITE_MAX_ATTACHED+2 ){
     sqlite3_snprintf(
-      sizeof(zErr), zErr, "too many attached databases - max %d", MAX_ATTACHED
+      sizeof(zErr), zErr, "too many attached databases - max %d", 
+      SQLITE_MAX_ATTACHED
     );
     goto attach_error;
   }
@@ -125,7 +126,7 @@ static void attachFunc(
   ** it to obtain the database schema. At this point the schema may
   ** or may not be initialised.
   */
-  rc = sqlite3BtreeFactory(db, zFile, 0, MAX_PAGES, &aNew->pBt);
+  rc = sqlite3BtreeFactory(db, zFile, 0, SQLITE_DEFAULT_CACHE_SIZE, &aNew->pBt);
   if( rc==SQLITE_OK ){
     aNew->pSchema = sqlite3SchemaGet(aNew->pBt);
     if( !aNew->pSchema ){
