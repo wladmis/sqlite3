@@ -55,6 +55,7 @@ set EXCLUDE {
   quick.test
   speed1.test
   speed2.test
+  sqllimits1.test
 
   incrvacuum_ioerr.test
   autovacuum_crash.test
