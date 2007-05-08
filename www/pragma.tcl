@@ -339,6 +339,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
 </li>
 
+<a name="pragma_max_page_count"></a>
+<li><p><b>PRAGMA max_page_count;
+       <br>PRAGMA max_page_count = </b><i>N</i><b>;</b></p>
+    <p>Query or set the maximum number of pages in the database file.
+    Both forms of the pragma return the maximum page count.  The second
+    form attempts to modify the maximum page count.  The maximum page
+    count cannot be reduced below the current database size.
+    </p>
+</li>
+
 <a name="pragma_read_uncommitted"></a>
 <li><p><b>PRAGMA read_uncommitted;
        <br>PRAGMA read_uncommitted = </b><i>0 | 1</i><b>;</b></p>

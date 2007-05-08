@@ -345,6 +345,27 @@ void sqlite3Pragma(
   }else
 
   /*
+  **  PRAGMA [database.]max_page_count
+  **  PRAGMA [database.]max_page_count=N
+  **
+  ** The first form reports the current setting for the
+  ** maximum number of pages in the database file.  The 
+  ** second form attempts to change this setting.  Both
+  ** forms return the current setting.
+  */
+  if( sqlite3StrICmp(zLeft,"max_page_count")==0 ){
+    Btree *pBt = pDb->pBt;
+    int newMax = 0;
+    if( zRight ){
+      newMax = atoi(zRight);
+    }
+    if( pBt ){
+      newMax = sqlite3BtreeMaxPageCount(pBt, newMax);
+    }
+    returnSingleInt(pParse, "max_page_count", newMax);
+  }else
+
+  /*
   **  PRAGMA [database.]locking_mode
   **  PRAGMA [database.]locking_mode = (normal|exclusive)
   */

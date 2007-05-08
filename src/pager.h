@@ -60,6 +60,7 @@ void sqlite3PagerSetBusyhandler(Pager*, BusyHandler *pBusyHandler);
 void sqlite3PagerSetDestructor(Pager*, void(*)(DbPage*,int));
 void sqlite3PagerSetReiniter(Pager*, void(*)(DbPage*,int));
 int sqlite3PagerSetPagesize(Pager*, int);
+int sqlite3PagerMaxPageCount(Pager*, int);
 int sqlite3PagerReadFileheader(Pager*, int, unsigned char*);
 void sqlite3PagerSetCachesize(Pager*, int);
 int sqlite3PagerClose(Pager *pPager);
