@@ -18,8 +18,6 @@
 **
 ** $Id$
 **
-** NOTES:
-**
 ** SQLite processes all times and dates as Julian Day numbers.  The
 ** dates and times are stored as the number of days since noon
 ** in Greenwich on November 24, 4714 B.C. according to the Gregorian
