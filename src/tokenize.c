@@ -421,6 +421,10 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     assert( pParse->sLastToken.dyn==0 );
     pParse->sLastToken.n = getToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
+    if( i>SQLITE_MAX_SQL_LENGTH ){
+      pParse->rc = SQLITE_TOOBIG;
+      break;
+    }
     switch( tokenType ){
       case TK_SPACE:
       case TK_COMMENT: {

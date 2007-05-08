@@ -490,7 +490,11 @@ int sqlite3Prepare(
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
   if( nBytes>=0 && zSql[nBytes]!=0 ){
-    char *zSqlCopy = sqlite3StrNDup(zSql, nBytes);
+    char *zSqlCopy;
+    if( nBytes>SQLITE_MAX_SQL_LENGTH ){
+      return SQLITE_TOOBIG;
+    }
+    zSqlCopy = sqlite3StrNDup(zSql, nBytes);
     if( zSqlCopy ){
       sqlite3RunParser(&sParse, zSqlCopy, &zErrMsg);
       sqliteFree(zSqlCopy);

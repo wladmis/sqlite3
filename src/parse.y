@@ -657,10 +657,16 @@ expr(A) ::= CAST(X) LP expr(E) AS typetoken(T) RP(Y). {
 }
 %endif  SQLITE_OMIT_CAST
 expr(A) ::= ID(X) LP distinct(D) exprlist(Y) RP(E). {
-  A = sqlite3ExprFunction(Y, &X);
-  sqlite3ExprSpan(A,&X,&E);
-  if( D && A ){
-    A->flags |= EP_Distinct;
+  if( Y->nExpr>SQLITE_MAX_FUNCTION_ARG ){
+    sqlite3ErrorMsg(pParse, "too many arguments on function %T", &X);
+    sqlite3ExprListDelete(Y);
+    A = 0;
+  }else{
+    A = sqlite3ExprFunction(Y, &X);
+    sqlite3ExprSpan(A,&X,&E);
+    if( D && A ){
+      A->flags |= EP_Distinct;
+    }
   }
 }
 expr(A) ::= ID(X) LP STAR RP(E). {

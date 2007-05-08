@@ -44,7 +44,7 @@
 ** dozen values in any of the other situations described above.
 */
 #ifndef SQLITE_MAX_COLUMN
-# define SQLITE_MAX_COLUMN 1000
+# define SQLITE_MAX_COLUMN 2000
 #endif
 
 /*

@@ -910,6 +910,10 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   char *z;
   Column *pCol;
   if( (p = pParse->pNewTable)==0 ) return;
+  if( p->nCol+1>SQLITE_MAX_COLUMN ){
+    sqlite3ErrorMsg(pParse, "too many columns on %s", p->zName);
+    return;
+  }
   z = sqlite3NameFromToken(pName);
   if( z==0 ) return;
   for(i=0; i<p->nCol; i++){
