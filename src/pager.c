@@ -2828,7 +2828,7 @@ static int pagerSharedLock(Pager *pPager){
         ** a codec is in use.
         ** 
         ** There is a vanishingly small chance that a change will not be 
-        ** deteched.  The chance of an undetected change is so small that
+        ** detected.  The chance of an undetected change is so small that
         ** it can be neglected.
         */
         char dbFileVers[sizeof(pPager->dbFileVers)];
