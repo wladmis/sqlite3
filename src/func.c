@@ -540,14 +540,13 @@ static void likeFunc(
   /* Limit the length of the LIKE or GLOB pattern to avoid problems
   ** of deep recursion and N*N behavior in patternCompare().
   */
-  if( sqlite3_value_bytes(argv[1])>SQLITE_MAX_LIKE_PATTERN_LENGTH ){
+  if( sqlite3_value_bytes(argv[0])>SQLITE_MAX_LIKE_PATTERN_LENGTH ){
     sqlite3_result_error(context, "LIKE or GLOB pattern too complex", -1);
     return;
   }
 
-
-  zA = sqlite3_value_text(argv[0]);
-  zB = sqlite3_value_text(argv[1]);
+  zB = sqlite3_value_text(argv[0]);
+  zA = sqlite3_value_text(argv[1]);
   int escape = 0;
   if( argc==3 ){
     /* The escape character string must consist of a single UTF-8 character.
@@ -568,7 +567,7 @@ static void likeFunc(
     sqlite3_like_count++;
 #endif
     
-    sqlite3_result_int(context, patternCompare(zA, zB, pInfo, escape));
+    sqlite3_result_int(context, patternCompare(zB, zA, pInfo, escape));
   }
 }
 
