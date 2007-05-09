@@ -3077,6 +3077,7 @@ int sqlite3PagerAcquire(
     */
     if( nMax<(int)pgno || MEMDB || (noContent && !pPager->alwaysRollback) ){
       if( pgno>pPager->mxPgno ){
+        sqlite3PagerUnref(pPg);
         return SQLITE_FULL;
       }
       memset(PGHDR_TO_DATA(pPg), 0, pPager->pageSize);

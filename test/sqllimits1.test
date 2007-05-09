@@ -157,7 +157,6 @@ do_test sqllimits1-3.6 {
   }
 } {0 7}
 
-
 #--------------------------------------------------------------------
 # Test cases sqllimits1-4.* test the SQLITE_MAX_COLUMN limit.
 #
@@ -243,6 +242,20 @@ do_test sqllimits-1.4.9 {
 # the expression.
 #
 # TODO
+do_test sqllimits-1.5.1 {
+  execsql {
+    PRAGMA max_page_count = 1000000;  -- 1 GB
+    CREATE TABLE v0(a);
+  }
+  db transaction {
+    for {set i 1} {$i < 2000} {incr i} {
+      set expr "([string repeat {a AND } 50]a AND a) AS a"
+      execsql [subst {
+        CREATE VIEW v${i} AS SELECT $expr FROM v0
+      }]
+    }
+  }
+} {}
 
 #--------------------------------------------------------------------
 # Test cases sqllimits-6.* test that the SQLITE_MAX_VDBE_OP
