@@ -413,6 +413,9 @@ void sqlite3ExprAssignVarNumber(Parse *pParse, Expr *pExpr){
       }
     }
   } 
+  if( !pParse->nErr && pParse->nVar>SQLITE_MAX_VARIABLE_NUMBER ){
+    sqlite3ErrorMsg(pParse, "too many SQL variables");
+  }
 }
 
 /*

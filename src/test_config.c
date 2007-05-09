@@ -442,6 +442,11 @@ static void set_options(Tcl_Interp *interp){
     Tcl_LinkVar(interp, "SQLITE_MAX_LIKE_PATTERN_LENGTH",
            (char*)&sqlite_max_like_pattern, TCL_LINK_INT|TCL_LINK_READ_ONLY);
   }
+  {
+    static int sqlite_max_attached = SQLITE_MAX_ATTACHED;
+    Tcl_LinkVar(interp, "SQLITE_MAX_ATTACHED",
+           (char*)&sqlite_max_attached, TCL_LINK_INT|TCL_LINK_READ_ONLY);
+  }
 }
 
 
