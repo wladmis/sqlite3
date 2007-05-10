@@ -48,6 +48,7 @@
 #include "sqliteInt.h"
 #include "os.h"
 #include <ctype.h>
+#include <math.h>
 #include "vdbeInt.h"
 
 /*
@@ -1177,6 +1178,9 @@ case OP_Remainder: {           /* same as TK_REM, no-push */
         b = ib % ia;
         break;
       }
+    }
+    if( isnan(b) ){
+      goto divide_by_zero;
     }
     Release(pTos);
     pTos--;

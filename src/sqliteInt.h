@@ -1840,6 +1840,10 @@ int sqlite3OpenTempDatabase(Parse *);
   #define sqlite3TableLock(v,w,x,y,z)
 #endif
 
+#ifdef SQLITE_TEST
+  int sqlite3Utf8To8(unsigned char*);
+#endif
+
 #ifdef SQLITE_MEMDEBUG
   void sqlite3MallocDisallow(void);
   void sqlite3MallocAllow(void);
