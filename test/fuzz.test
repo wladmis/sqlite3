@@ -134,7 +134,11 @@ do_test fuzz-1.6 {
 
 do_test fuzz-1.7 {
   execsql {
-SELECT + (SELECT (SELECT 'fault' / + -2147483648 % - 123456789.1234567899 * (SELECT 'experiments' OR NOT 'first' / 'hardware' FROM (SELECT 2147483647, + (SELECT 'injection') FROM (SELECT 2147483649) ORDER BY + NULL AND (SELECT 'hardware') GLOB 2147483648))) FROM (SELECT * FROM (SELECT (SELECT (SELECT + (SELECT 456 * -2147483648)) LIKE (SELECT (SELECT (SELECT 'fault') - -56.1)) AND -2147483648) FROM (SELECT * FROM (SELECT 2147483648) ORDER BY (SELECT 56.1))) ORDER BY zeroblob(1))
+    SELECT (
+      SELECT zeroblob(1000) FROM (
+        SELECT * FROM (SELECT 'first') ORDER BY NOT 'in'
+      )
+    )
   }
 } {}
 
