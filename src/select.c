@@ -2940,8 +2940,21 @@ int sqlite3Select(
     }else{
       needRestoreContext = 0;
     }
+#if SQLITE_MAX_EXPR_DEPTH>0
+    /* Increment Parse.nHeight by the height of the largest expression
+    ** tree refered to by this, the parent select. The child select
+    ** may contain expression trees of at most
+    ** (SQLITE_MAX_EXPR_DEPTH-Parse.nHeight) height. This is a bit
+    ** more conservative than necessary, but much easier than enforcing
+    ** an exact limit.
+    */
+    pParse->nHeight += sqlite3SelectExprHeight(p);
+#endif
     sqlite3Select(pParse, pItem->pSelect, SRT_EphemTab, 
                  pItem->iCursor, p, i, &isAgg, 0);
+#if SQLITE_MAX_EXPR_DEPTH>0
+    pParse->nHeight -= sqlite3SelectExprHeight(p);
+#endif
     if( needRestoreContext ){
       pParse->zAuthContext = zSavedAuthContext;
     }
