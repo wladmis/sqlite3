@@ -60,6 +60,7 @@ set EXCLUDE {
   misuse.test
   memleak.test
   sqllimits1.test
+  fuzz.test
 }
 
 # Files to include in the test.  If this list is empty then everything
