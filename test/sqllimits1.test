@@ -423,6 +423,21 @@ do_test sqllimits-1.11.2 {
   }
 } {1 {LIKE or GLOB pattern too complex}}
 
+#--------------------------------------------------------------------
+# This test case doesn't really belong with the other limits tests.
+# It is in this file because it is taxing to run, like the limits tests.
+#
+do_test sqllimits-1.12.1 {
+  set ::N [expr int(([expr pow(2,32)]/50) + 1)]
+  expr (($::N*50) & 0xffffffff)<55
+} {1}
+do_test sqllimits-1.12.2 {
+  set ::format "[string repeat A 60][string repeat "%J" $::N]"
+  catchsql {
+    SELECT strftime($::format, 1);
+  }
+} {1 {string or blob too big}}
+
 finish_test
 
 
