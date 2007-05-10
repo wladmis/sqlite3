@@ -536,6 +536,7 @@ static void likeFunc(
   sqlite3_value **argv
 ){
   const unsigned char *zA, *zB;
+  int escape = 0;
 
   /* Limit the length of the LIKE or GLOB pattern to avoid problems
   ** of deep recursion and N*N behavior in patternCompare().
@@ -547,7 +548,6 @@ static void likeFunc(
 
   zB = sqlite3_value_text(argv[0]);
   zA = sqlite3_value_text(argv[1]);
-  int escape = 0;
   if( argc==3 ){
     /* The escape character string must consist of a single UTF-8 character.
     ** Otherwise, return an error.
