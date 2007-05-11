@@ -1470,6 +1470,7 @@ case OP_ToText: {                  /* same as TK_TO_TEXT, no-push */
   assert( MEM_Str==(MEM_Blob>>3) );
   pTos->flags |= (pTos->flags&MEM_Blob)>>3;
   applyAffinity(pTos, SQLITE_AFF_TEXT, encoding);
+  rc = sqlite3VdbeMemExpandBlob(pTos);
   assert( pTos->flags & MEM_Str );
   pTos->flags &= ~(MEM_Int|MEM_Real|MEM_Blob);
   break;
