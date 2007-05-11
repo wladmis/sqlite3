@@ -1543,7 +1543,7 @@ extern int sqlite3_always_code_trigger_setup;
 ** corruption is first detected.
 */
 #ifdef SQLITE_DEBUG
-  extern int sqlite3Corrupt(void);
+  int sqlite3Corrupt(void);
 # define SQLITE_CORRUPT_BKPT sqlite3Corrupt()
 #else
 # define SQLITE_CORRUPT_BKPT SQLITE_CORRUPT
@@ -1902,6 +1902,10 @@ void sqlite3Put4byte(u8*, u32);
 
 #ifdef SQLITE_SSE
 #include "sseInt.h"
+#endif
+
+#ifdef SQLITE_DEBUG
+  void sqlite3ParserTrace(FILE*, char *);
 #endif
 
 /*

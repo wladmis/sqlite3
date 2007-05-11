@@ -742,7 +742,6 @@ void sqlite3Pragma(
 
 #ifndef NDEBUG
   if( sqlite3StrICmp(zLeft, "parser_trace")==0 ){
-    extern void sqlite3ParserTrace(FILE*, char *);
     if( zRight ){
       if( getBoolean(zRight) ){
         sqlite3ParserTrace(stderr, "parser: ");
