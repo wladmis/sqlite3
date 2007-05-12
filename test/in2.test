@@ -22,15 +22,18 @@ do_test in2-1 {
   }
 } {}
 
+set ::N 2000
+
 do_test in2-2 {
   db transaction {
-    for {set ::ii 0} {$::ii < 1000} {incr ::ii} {
+    for {set ::ii 0} {$::ii < $::N} {incr ::ii} {
       execsql {INSERT INTO a VALUES($::ii, $::ii)}
     }
-    execsql {INSERT INTO a VALUES(1000, '')}
+    execsql {INSERT INTO a VALUES(4000, '')}
 
-    for {set ::ii 0} {$::ii < 1000} {incr ::ii} {
-      execsql {INSERT INTO a VALUES(NULL, 'x' || $::ii)}
+    for {set ::ii 0} {$::ii < $::N} {incr ::ii} {
+      set ::t [format "x%04d" $ii]
+      execsql {INSERT INTO a VALUES(NULL, $::t)}
     }
   }
 } {}
@@ -41,7 +44,7 @@ do_test in2-2 {
 #
 #     $::ii integers.
 #     a string of zero length.
-#     1000 short strings.
+#     $::N short strings.
 #
 # Records are inserted in sorted order.
 #
@@ -53,10 +56,10 @@ do_test in2-2 {
 # clauses, as it is impossible for persistent b-trees (SQL tables + 
 # indices) to contain cells smaller than 4 bytes.
 #
-for {set ::ii 3} {$::ii < 1000} {incr ::ii} {
+for {set ::ii 3} {$::ii < $::N} {incr ::ii} {
   do_test in2-$::ii {
     execsql {
-      SELECT 1 IN (SELECT a FROM a WHERE (i < $::ii) OR (i >= 1000))
+      SELECT 1 IN (SELECT a FROM a WHERE (i < $::ii) OR (i >= $::N))
     }
   } {1}
 }

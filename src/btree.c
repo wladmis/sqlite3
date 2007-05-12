@@ -4510,6 +4510,10 @@ static int balance_nonroot(MemPage *pPage){
           memcpy(apCell[nCell], &pOld->aData[pOld->hdrOffset+8], 4);
         }else{
           assert( leafCorrection==4 );
+          if( szCell[nCell]<4 ){
+            /* Do not allow any cells smaller than 4 bytes. */
+            szCell[nCell] = 4;
+          }
         }
         nCell++;
       }
