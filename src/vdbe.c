@@ -4196,7 +4196,7 @@ case OP_ParseSchema: {        /* no-push */
 case OP_LoadAnalysis: {        /* no-push */
   int iDb = pOp->p1;
   assert( iDb>=0 && iDb<db->nDb );
-  sqlite3AnalysisLoad(db, iDb);
+  rc = sqlite3AnalysisLoad(db, iDb);
   break;  
 }
 #endif /* !defined(SQLITE_OMIT_ANALYZE) && !defined(SQLITE_OMIT_PARSER)  */
