@@ -4731,6 +4731,21 @@ static int balance_nonroot(MemPage *pPage){
         pTemp = &aSpace[iSpace];
         iSpace += sz;
         assert( iSpace<=pBt->pageSize*5 );
+        /* Obscure case for non-leaf-data trees: If the cell at pCell was
+        ** previously stored on a leaf node, and it's reported size was 4
+        ** bytes, then it may actually be smaller than this 
+        ** (see sqlite3BtreeParseCellPtr(), 4 bytes is the minimum size of
+        ** any cell). But it's important to pass the correct size to 
+        ** insertCell(), so reparse the cell now.
+        **
+        ** Note that this can never happen in an SQLite data file, as all
+        ** cells are at least 4 bytes. It only happens in b-trees used
+        ** to evaluate "IN (SELECT ...)" and similar clauses.
+        */
+        if( szCell[j]==4 ){
+          assert(leafCorrection==4);
+          sz = cellSizePtr(pParent, pCell);
+        }
       }
       rc = insertCell(pParent, nxDiv, pCell, sz, pTemp, 4);
       if( rc!=SQLITE_OK ) goto balance_cleanup;
