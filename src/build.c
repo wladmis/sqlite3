@@ -3306,6 +3306,7 @@ void sqlite3Reindex(Parse *pParse, Token *pName1, Token *pName2){
   iDb = sqlite3TwoPartName(pParse, pName1, pName2, &pObjName);
   if( iDb<0 ) return;
   z = sqlite3NameFromToken(pObjName);
+  if( z==0 ) return;
   zDb = db->aDb[iDb].zName;
   pTab = sqlite3FindTable(db, z, zDb);
   if( pTab ){
