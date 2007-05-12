@@ -1926,7 +1926,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       affinity = comparisonAffinity(pExpr);
 
       sqlite3VdbeAddOp(v, OP_Integer, 1, 0);
-      pParse->ckOffset = ckOffset+1;
+      pParse->ckOffset = (ckOffset ? (ckOffset+1) : 0);
 
       /* Code the <expr> from "<expr> IN (...)". The temporary table
       ** pExpr->iTable contains the values that make up the (...) set.
