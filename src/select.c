@@ -1520,9 +1520,10 @@ static void computeLimitRegisters(Parse *pParse, Select *p, int iBreak){
     if( v==0 ) return;
     sqlite3ExprCode(pParse, p->pLimit);
     sqlite3VdbeAddOp(v, OP_MustBeInt, 0, 0);
-    sqlite3VdbeAddOp(v, OP_MemStore, iLimit, 0);
+    sqlite3VdbeAddOp(v, OP_MemStore, iLimit, 1);
     VdbeComment((v, "# LIMIT counter"));
     sqlite3VdbeAddOp(v, OP_IfMemZero, iLimit, iBreak);
+    sqlite3VdbeAddOp(v, OP_MemLoad, iLimit, 0);
   }
   if( p->pOffset ){
     p->iOffset = iOffset = pParse->nMem++;
