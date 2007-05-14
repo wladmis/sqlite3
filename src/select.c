@@ -822,12 +822,6 @@ static const char *columnType(
   int j;
   if( pExpr==0 || pNC->pSrcList==0 ) return 0;
 
-  /* The TK_AS operator can only occur in ORDER BY, GROUP BY, HAVING,
-  ** and LIMIT clauses.  But pExpr originates in the result set of a
-  ** SELECT.  So pExpr can never contain an AS operator.
-  */
-  assert( pExpr->op!=TK_AS );
-
   switch( pExpr->op ){
     case TK_AGG_COLUMN:
     case TK_COLUMN: {
