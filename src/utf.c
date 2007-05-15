@@ -434,54 +434,6 @@ int sqlite3Utf16ByteLen(const void *zIn, int nChar){
   return (z-(char const *)zIn)-((c==0)?2:0);
 }
 
-/*
-** UTF-16 implementation of the substr()
-*/
-void sqlite3Utf16Substr(
-  sqlite3_context *context,
-  int argc,
-  sqlite3_value **argv
-){
-  int y, z;
-  unsigned char const *zStr;
-  unsigned char const *zStrEnd;
-  unsigned char const *zStart;
-  unsigned char const *zEnd;
-  int i;
-
-  zStr = (unsigned char const *)sqlite3_value_text16(argv[0]);
-  zStrEnd = &zStr[sqlite3_value_bytes16(argv[0])];
-  y = sqlite3_value_int(argv[1]);
-  z = sqlite3_value_int(argv[2]);
-
-  if( y>0 ){
-    y = y-1;
-    zStart = zStr;
-    if( SQLITE_UTF16BE==SQLITE_UTF16NATIVE ){
-      for(i=0; i<y && zStart<zStrEnd; i++) SKIP_UTF16BE(zStart);
-    }else{
-      for(i=0; i<y && zStart<zStrEnd; i++) SKIP_UTF16LE(zStart);
-    }
-  }else{
-    zStart = zStrEnd;
-    if( SQLITE_UTF16BE==SQLITE_UTF16NATIVE ){
-      for(i=y; i<0 && zStart>zStr; i++) RSKIP_UTF16BE(zStart);
-    }else{
-      for(i=y; i<0 && zStart>zStr; i++) RSKIP_UTF16LE(zStart);
-    }
-    for(; i<0; i++) z -= 1;
-  }
-
-  zEnd = zStart;
-  if( SQLITE_UTF16BE==SQLITE_UTF16NATIVE ){
-    for(i=0; i<z && zEnd<zStrEnd; i++) SKIP_UTF16BE(zEnd);
-  }else{
-    for(i=0; i<z && zEnd<zStrEnd; i++) SKIP_UTF16LE(zEnd);
-  }
-
-  sqlite3_result_text16(context, zStart, zEnd-zStart, SQLITE_TRANSIENT);
-}
-
 #if defined(SQLITE_TEST)
 /*
 ** Translate UTF-8 to UTF-8.
