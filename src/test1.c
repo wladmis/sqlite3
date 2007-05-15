@@ -338,6 +338,8 @@ static int test_exec(
   Tcl_DString str;
   int rc;
   char *zErr = 0;
+  char *zSql;
+  int i, j;
   char zBuf[30];
   if( argc!=3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0], 
@@ -346,7 +348,18 @@ static int test_exec(
   }
   if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
   Tcl_DStringInit(&str);
-  rc = sqlite3_exec(db, argv[2], exec_printf_cb, &str, &zErr);
+  zSql = sqlite3_mprintf("%s", argv[2]);
+  for(i=j=0; zSql[i];){
+    if( zSql[i]=='%' ){
+      zSql[j++] = (testHexToInt(zSql[i+1])<<4) + testHexToInt(zSql[i+2]);
+      i += 3;
+    }else{
+      zSql[j++] = zSql[i++];
+    }
+  }
+  zSql[j] = 0;
+  rc = sqlite3_exec(db, zSql, exec_printf_cb, &str, &zErr);
+  sqlite3_free(zSql);
   sprintf(zBuf, "%d", rc);
   Tcl_AppendElement(interp, zBuf);
   Tcl_AppendElement(interp, rc==SQLITE_OK ? Tcl_DStringValue(&str) : zErr);
