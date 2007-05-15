@@ -804,6 +804,9 @@ static int walkSelectExpr(Select *p, int (*xFunc)(void *, Expr*), void *pArg){
   walkExprList(p->pGroupBy, xFunc, pArg);
   walkExprTree(p->pHaving, xFunc, pArg);
   walkExprList(p->pOrderBy, xFunc, pArg);
+  if( p->pPrior ){
+    walkSelectExpr(p->pPrior, xFunc, pArg);
+  }
   return 0;
 }
 
