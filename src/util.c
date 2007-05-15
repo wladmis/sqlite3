@@ -83,6 +83,9 @@ void sqlite3ErrorMsg(Parse *pParse, const char *zFormat, ...){
   va_start(ap, zFormat);
   pParse->zErrMsg = sqlite3VMPrintf(zFormat, ap);
   va_end(ap);
+  if( pParse->rc==SQLITE_OK ){
+    pParse->rc = SQLITE_ERROR;
+  }
 }
 
 /*

@@ -39,7 +39,6 @@
       sqlite3ErrorMsg(pParse, "incomplete SQL statement");
     }
     pParse->parseError = 1;
-    pParse->rc = SQLITE_ERROR;
   }
 }
 %stack_overflow {
