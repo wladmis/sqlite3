@@ -365,7 +365,7 @@ static int getToken(const unsigned char *z, int *tokenType){
     }
 #endif
     default: {
-      if( !IdChar(*z) ){
+      if( !IdChar(*z) || (*z & 0xc0)==0x80 ){
         break;
       }
       for(i=1; IdChar(z[i]); i++){}
