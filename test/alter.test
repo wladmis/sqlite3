@@ -300,6 +300,11 @@ do_test alter-2.5 {
     ALTER TABLE t3 RENAME TO sqlite_t3;
   }
 } {1 {object name reserved for internal use: sqlite_t3}}
+do_test alter-2.6 {
+  catchsql {
+    ALTER TABLE t3 ADD COLUMN (ALTER TABLE t3 ADD COLUMN);
+  }
+} {1 {near "(": syntax error}}
 
 # If this compilation does not include triggers, omit the alter-3.* tests.
 ifcapable trigger {
