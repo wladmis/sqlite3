@@ -254,9 +254,18 @@ extern int sqlite3_iLine;            /* Line number for debug info */
 
 #endif
 
+/* Variable sqlite3_mallocHasFailed is set to true after a malloc() 
+** failure occurs. 
+**
+** The sqlite3MallocFailed() macro returns true if a malloc has failed
+** in this thread since the last call to sqlite3ApiExit(), or false 
+** otherwise.
+*/
+extern int sqlite3_mallocHasFailed;
+#define sqlite3MallocFailed() (sqlite3_mallocHasFailed && sqlite3OsInMutex(1))
+
 #define sqliteFree(x)          sqlite3FreeX(x)
 #define sqliteAllocSize(x)     sqlite3AllocSize(x)
-
 
 /*
 ** An instance of this structure might be allocated to store information
@@ -332,6 +341,8 @@ typedef struct TriggerStep TriggerStep;
 typedef struct Trigger Trigger;
 typedef struct WhereInfo WhereInfo;
 typedef struct WhereLevel WhereLevel;
+
+#include "os.h"
 
 /*
 ** Each database file to be accessed by the system is an instance
@@ -1878,7 +1889,6 @@ int sqlite3CreateFunc(sqlite3 *, const char *, int, int, void *,
   void (*)(sqlite3_context*,int,sqlite3_value **),
   void (*)(sqlite3_context*,int,sqlite3_value **), void (*)(sqlite3_context*));
 int sqlite3ApiExit(sqlite3 *db, int);
-int sqlite3MallocFailed(void);
 void sqlite3FailedMalloc(void);
 void sqlite3AbortOtherActiveVdbes(sqlite3 *, Vdbe *);
 int sqlite3OpenTempDatabase(Parse *);
