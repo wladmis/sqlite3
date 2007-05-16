@@ -570,7 +570,7 @@ struct IntegrityCk {
 /*
 ** Read or write a two- and four-byte big-endian integer values.
 */
-#define get2byte sqlite3Get2byte
+#define get2byte(x) ((x)[0]<<8 | (x)[1])
 #define get4byte sqlite3Get4byte
 #define put2byte sqlite3Put2byte
 #define put4byte sqlite3Put4byte

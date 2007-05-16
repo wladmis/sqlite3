@@ -5056,7 +5056,7 @@ default: {
     }
 #endif
 
-#ifdef SQLITE_TEST
+#if defined(SQLITE_TEST) && !defined(NDEBUG)
     /* Keep track of the size of the largest BLOB or STR that has appeared
     ** on the top of the VDBE stack.
     */
