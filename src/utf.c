@@ -126,38 +126,6 @@ const unsigned char sqlite3UtfTrans1[] = {
   }                                                                   \
 }
 
-#define SKIP_UTF16BE(zIn){                                            \
-  if( *zIn>=0xD8 && (*zIn<0xE0 || (*zIn==0xE0 && *(zIn+1)==0x00)) ){  \
-    zIn += 4;                                                         \
-  }else{                                                              \
-    zIn += 2;                                                         \
-  }                                                                   \
-}
-#define SKIP_UTF16LE(zIn){                                            \
-  zIn++;                                                              \
-  if( *zIn>=0xD8 && (*zIn<0xE0 || (*zIn==0xE0 && *(zIn-1)==0x00)) ){  \
-    zIn += 3;                                                         \
-  }else{                                                              \
-    zIn += 1;                                                         \
-  }                                                                   \
-}
-
-#define RSKIP_UTF16LE(zIn){                                            \
-  if( *zIn>=0xD8 && (*zIn<0xE0 || (*zIn==0xE0 && *(zIn-1)==0x00)) ){  \
-    zIn -= 4;                                                         \
-  }else{                                                              \
-    zIn -= 2;                                                         \
-  }                                                                   \
-}
-#define RSKIP_UTF16BE(zIn){                                            \
-  zIn--;                                                              \
-  if( *zIn>=0xD8 && (*zIn<0xE0 || (*zIn==0xE0 && *(zIn+1)==0x00)) ){  \
-    zIn -= 3;                                                         \
-  }else{                                                              \
-    zIn -= 1;                                                         \
-  }                                                                   \
-}
-
 /*
 ** If the TRANSLATE_TRACE macro is defined, the value of each Mem is
 ** printed on stderr on the way into and out of sqlite3VdbeMemTranslate().
