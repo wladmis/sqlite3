@@ -107,7 +107,7 @@ const unsigned char sqlite3UtfTrans1[] = {
 #define READ_UTF16LE(zIn, c){                                         \
   c = (*zIn++);                                                       \
   c += ((*zIn++)<<8);                                                 \
-  if( c>=0xD800 && c<=0xE000 ){                                       \
+  if( c>=0xD800 && c<0xE000 ){                                       \
     int c2 = (*zIn++);                                                \
     c2 += ((*zIn++)<<8);                                              \
     c = (c2&0x03FF) + ((c&0x003F)<<10) + (((c&0x03C0)+0x0040)<<10);   \
@@ -118,7 +118,7 @@ const unsigned char sqlite3UtfTrans1[] = {
 #define READ_UTF16BE(zIn, c){                                         \
   c = ((*zIn++)<<8);                                                  \
   c += (*zIn++);                                                      \
-  if( c>=0xD800 && c<=0xE000 ){                                       \
+  if( c>=0xD800 && c<0xE000 ){                                       \
     int c2 = ((*zIn++)<<8);                                           \
     c2 += (*zIn++);                                                   \
     c = (c2&0x03FF) + ((c&0x003F)<<10) + (((c&0x03C0)+0x0040)<<10);   \
@@ -488,7 +488,7 @@ void sqlite3UtfSelfTest(){
     assert( (z-zBuf)==n );
   }
   for(i=0; i<0x00110000; i++){
-    if( i>=0xD800 && i<=0xE000 ) continue;
+    if( i>=0xD800 && i<0xE000 ) continue;
     z = zBuf;
     WRITE_UTF16LE(z, i);
     n = z-zBuf;
@@ -499,7 +499,7 @@ void sqlite3UtfSelfTest(){
     assert( (z-zBuf)==n );
   }
   for(i=0; i<0x00110000; i++){
-    if( i>=0xD800 && i<=0xE000 ) continue;
+    if( i>=0xD800 && i<0xE000 ) continue;
     z = zBuf;
     WRITE_UTF16BE(z, i);
     n = z-zBuf;
