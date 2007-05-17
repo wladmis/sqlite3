@@ -18,6 +18,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !incrblob {
+  finish_test
+  return
+}
+
 # When zeroblob() is used for the last field of a column, then the
 # content of the zeroblob is never instantiated on the VDBE stack.
 # But it does get inserted into the database correctly.
