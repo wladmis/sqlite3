@@ -3843,10 +3843,21 @@ static int fillInCell(
 
   while( nPayload>0 ){
     if( spaceLeft==0 ){
+      int isExact = 0;
 #ifndef SQLITE_OMIT_AUTOVACUUM
       Pgno pgnoPtrmap = pgnoOvfl; /* Overflow page pointer-map entry page */
+      if( pBt->autoVacuum ){
+        do{
+          pgnoOvfl++;
+        } while( 
+          PTRMAP_ISPAGE(pBt, pgnoOvfl) || pgnoOvfl==PENDING_BYTE_PAGE(pBt) 
+        );
+        if( pgnoOvfl>1 ){
+          /* isExact = 1; */
+        }
+      }
 #endif
-      rc = allocateBtreePage(pBt, &pOvfl, &pgnoOvfl, pgnoOvfl, 0);
+      rc = allocateBtreePage(pBt, &pOvfl, &pgnoOvfl, pgnoOvfl, isExact);
 #ifndef SQLITE_OMIT_AUTOVACUUM
       /* If the database supports auto-vacuum, and the second or subsequent
       ** overflow page is being allocated, add an entry to the pointer-map
