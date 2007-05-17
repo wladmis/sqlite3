@@ -1425,10 +1425,11 @@ static int btree_from_db(
   Tcl_CmdInfo info;
   sqlite3 *db;
   Btree *pBt;
+  int iDb = 0;
 
-  if( argc!=2 ){
+  if( argc!=2 && argc!=3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
-       " DB-HANDLE\"", 0);
+       " DB-HANDLE ?N?\"", 0);
     return TCL_ERROR;
   }
 
@@ -1436,10 +1437,14 @@ static int btree_from_db(
     Tcl_AppendResult(interp, "No such db-handle: \"", argv[1], "\"", 0);
     return TCL_ERROR;
   }
+  if( argc==3 ){
+    iDb = atoi(argv[2]);
+  }
+
   db = *((sqlite3 **)info.objClientData);
   assert( db );
 
-  pBt = db->aDb[0].pBt;
+  pBt = db->aDb[iDb].pBt;
   sqlite3_snprintf(sizeof(zBuf), zBuf, "%p", pBt);
   Tcl_SetResult(interp, zBuf, TCL_VOLATILE);
   return TCL_OK;
