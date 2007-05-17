@@ -180,18 +180,23 @@ do_test pragma-1.14 {
 
 # Test turning "flag" pragmas on and off.
 #
-do_test pragma-1.15 {
-  execsql {
-    PRAGMA vdbe_listing=YES;
-    PRAGMA vdbe_listing;
-  }
-} {1}
-do_test pragma-1.16 {
-  execsql {
-    PRAGMA vdbe_listing=NO;
-    PRAGMA vdbe_listing;
-  }
-} {0}
+ifcapable debug {
+  # Pragma "vdbe_listing" is only available if compiled with SQLITE_DEBUG
+  #
+  do_test pragma-1.15 {
+    execsql {
+      PRAGMA vdbe_listing=YES;
+      PRAGMA vdbe_listing;
+    }
+  } {1}
+  do_test pragma-1.16 {
+    execsql {
+      PRAGMA vdbe_listing=NO;
+      PRAGMA vdbe_listing;
+    }
+  } {0}
+}
+
 do_test pragma-1.17 {
   execsql {
     PRAGMA parser_trace=ON;

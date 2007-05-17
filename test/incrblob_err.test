@@ -20,6 +20,14 @@ ifcapable {!incrblob} {
   return
 }
 
+# Only run these tests if memory debugging is turned on.
+#
+if {[info command sqlite_malloc_stat]==""} {
+   puts "Skipping incrblob_err tests: not compiled with -DSQLITE_MEMDEBUG..."
+   finish_test
+   return
+}
+
 # Usage: do_malloc_test <test number> <options...>
 #
 # The first argument, <test number>, is an integer used to name the
