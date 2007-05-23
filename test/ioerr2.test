@@ -103,7 +103,7 @@ foreach bPersist [list 0 1] {
     set ::sqlite_io_error_pending $::N
 
     foreach {::go res} [catchsql $sql] {}
-    check_db ioerr2-3.[expr {$bPersist+2}].$::N
+    check_db ioerr2-4.[expr {$bPersist+2}].$::N
   }
 }
 
