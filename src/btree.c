@@ -3808,7 +3808,6 @@ static int fillInCell(
   Pgno pgnoOvfl = 0;
   int nHeader;
   CellInfo info;
-  Pgno pgnoFirstOvfl = 0;
 
   /* Fill in the header. */
   nHeader = 0;
@@ -3853,7 +3852,7 @@ static int fillInCell(
         } while( 
           PTRMAP_ISPAGE(pBt, pgnoOvfl) || pgnoOvfl==PENDING_BYTE_PAGE(pBt) 
         );
-        if( pgnoOvfl>1 && pgnoOvfl!=pgnoFirstOvfl ){
+        if( pgnoOvfl>1 ){
           /* isExact = 1; */
         }
       }
@@ -3873,8 +3872,9 @@ static int fillInCell(
       if( pBt->autoVacuum && rc==SQLITE_OK ){
         u8 eType = (pgnoPtrmap?PTRMAP_OVERFLOW2:PTRMAP_OVERFLOW1);
         rc = ptrmapPut(pBt, pgnoOvfl, eType, pgnoPtrmap);
-      }else{
-        pgnoFirstOvfl = pgnoOvfl;
+        if( rc ){
+          releasePage(pOvfl);
+        }
       }
 #endif
       if( rc ){

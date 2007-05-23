@@ -33,7 +33,7 @@ do_test incrvacuum-1.1 {
   execsql {
     pragma auto_vacuum;
   }
-} {0}
+} $sqlite_options(default_autovacuum)
 do_test incrvacuum-1.2 {
   execsql {
     pragma auto_vacuum = 'full';
