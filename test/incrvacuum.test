@@ -436,4 +436,20 @@ while 1 {
   incr ::iWrite
 }
 
+#---------------------------------------------------------------------
+# This test - incrvacuum-8.* - is to check that nothing goes wrong
+# with an incremental-vacuum if it is the first statement executed
+# after an existing database is opened.
+#
+# At one point, this would always return SQLITE_SCHEMA (which 
+# causes an infinite loop in tclsqlite.c if using the Tcl interface).
+#
+do_test incrvacuum-8.1 {
+  db close
+  sqlite3 db test.db
+  execsql {
+    PRAGMA incremental_vacuum(50);
+  }
+} {}
+
 finish_test
