@@ -119,6 +119,14 @@ do_test zeroblob-3.1 {
     )
   }
 } {1}
+
+# Concatentation works with zeroblob
+#
+do_test zeroblob-4.1 {
+  execsql {
+    SELECT hex(zeroblob(2) || x'61')
+  }
+} {000061}
   
 
 finish_test
