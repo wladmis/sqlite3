@@ -4244,11 +4244,11 @@ static int balance_quick(MemPage *pPage, MemPage *pParent){
   */
   if( pBt->autoVacuum ){
     rc = ptrmapPut(pBt, pgnoNew, PTRMAP_BTREE, pParent->pgno);
-    if( rc!=SQLITE_OK ){
-      return rc;
+    if( rc==SQLITE_OK ){
+      rc = ptrmapPutOvfl(pNew, 0);
     }
-    rc = ptrmapPutOvfl(pNew, 0);
     if( rc!=SQLITE_OK ){
+      releasePage(pNew);
       return rc;
     }
   }
