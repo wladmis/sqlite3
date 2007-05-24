@@ -1659,12 +1659,15 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
 static int setChildPtrmaps(MemPage *pPage){
   int i;                             /* Counter variable */
   int nCell;                         /* Number of cells in page pPage */
-  int rc = SQLITE_OK;                /* Return code */
+  int rc;                            /* Return code */
   BtShared *pBt = pPage->pBt;
   int isInitOrig = pPage->isInit;
   Pgno pgno = pPage->pgno;
 
-  sqlite3BtreeInitPage(pPage, 0);
+  rc = sqlite3BtreeInitPage(pPage, pPage->pParent);
+  if( rc!=SQLITE_OK ){
+    goto set_child_ptrmaps_out;
+  }
   nCell = pPage->nCell;
 
   for(i=0; i<nCell; i++){
