@@ -2783,7 +2783,6 @@ static int accessPayload(
         } else 
 #endif
           rc = getOverflowPage(pBt, nextPage, 0, &nextPage);
-        assert(rc==SQLITE_OK || nextPage==0);
         offset -= ovflSize;
       }else{
         /* Need to read this page properly. It contains some of the
