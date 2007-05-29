@@ -452,15 +452,17 @@ static WhereTerm *findTerm(
 
         idxaff = pIdx->pTable->aCol[iColumn].affinity;
         if( !sqlite3IndexAffinityOk(pX, idxaff) ) continue;
-        pColl = sqlite3ExprCollSeq(pParse, pX->pLeft);
+
+        /* Figure out the collation sequence required from an index for
+        ** it to be useful for optimising expression pX. Store this
+        ** value in variable pColl.
+        */
+        assert(pX->pLeft);
+        pColl = sqlite3BinaryCompareCollSeq(pParse, pX->pLeft, pX->pRight);
         if( !pColl ){
-          if( pX->pRight ){
-            pColl = sqlite3ExprCollSeq(pParse, pX->pRight);
-          }
-          if( !pColl ){
-            pColl = pParse->db->pDfltColl;
-          }
+          pColl = pParse->db->pDfltColl;
         }
+
         for(j=0; j<pIdx->nColumn && pIdx->aiColumn[j]!=iColumn; j++){}
         assert( j<pIdx->nColumn );
         if( sqlite3StrICmp(pColl->zName, pIdx->azColl[j]) ) continue;
