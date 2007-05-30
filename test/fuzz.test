@@ -25,6 +25,8 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
 set ::REPEATS 5000
+
+# If running quick.test, don't do so many iterations.
 if {[info exists ::ISQUICK]} {
   if {$::ISQUICK} { set ::REPEATS 20 }
 }

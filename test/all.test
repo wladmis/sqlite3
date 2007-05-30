@@ -61,6 +61,7 @@ set EXCLUDE {
   memleak.test
   sqllimits1.test
   fuzz.test
+  soak.test
 }
 
 # Files to include in the test.  If this list is empty then everything
