@@ -60,6 +60,7 @@ set argv [list]
 #
 set SOAKTESTS {
   fuzz.test
+  fuzz_malloc.test
   trans.test
 }
 
