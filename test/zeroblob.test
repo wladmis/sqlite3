@@ -127,6 +127,29 @@ do_test zeroblob-4.1 {
     SELECT hex(zeroblob(2) || x'61')
   }
 } {000061}
+
+# Check various CAST(...) operations on zeroblob.
+#
+do_test zeroblob-5.1 {
+  execsql {
+    SELECT CAST (zeroblob(100) AS REAL);
+  }
+} {0.0}
+do_test zeroblob-5.2 {
+  execsql {
+    SELECT CAST (zeroblob(100) AS INTEGER);
+  }
+} {0}
+do_test zeroblob-5.3 {
+  execsql {
+    SELECT CAST (zeroblob(100) AS TEXT);
+  }
+} {{}}
+do_test zeroblob-5.4 {
+  execsql {
+    SELECT CAST(zeroblob(100) AS BLOB);
+  }
+} [execsql {SELECT zeroblob(100)}]
   
 
 finish_test
