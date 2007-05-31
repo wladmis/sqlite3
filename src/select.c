@@ -2650,6 +2650,10 @@ int sqlite3SelectResolve(
     }
   }
 
+  if( sqlite3MallocFailed() ){
+    return SQLITE_NOMEM;
+  }
+
   /* Make sure the GROUP BY clause does not contain aggregate functions.
   */
   if( pGroupBy ){
