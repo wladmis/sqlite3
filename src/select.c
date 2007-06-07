@@ -2870,8 +2870,13 @@ int sqlite3Select(
   if( p->pPrior ){
     if( p->pRightmost==0 ){
       Select *pLoop;
-      for(pLoop=p; pLoop; pLoop=pLoop->pPrior){
+      int cnt = 0;
+      for(pLoop=p; pLoop; pLoop=pLoop->pPrior, cnt++){
         pLoop->pRightmost = p;
+      }
+      if( SQLITE_MAX_COMPOUND_SELECT>0 && cnt>SQLITE_MAX_COMPOUND_SELECT ){
+        sqlite3ErrorMsg(pParse, "too many terms in compound SELECT");
+        return 1;
       }
     }
     return multiSelect(pParse, p, eDest, iParm, aff);

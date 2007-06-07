@@ -393,6 +393,11 @@ static void set_options(Tcl_Interp *interp){
            (char*)&sqlite_max_expr_depth, TCL_LINK_INT|TCL_LINK_READ_ONLY);
   }
   {
+    static int sqlite_max_compound_select = SQLITE_MAX_COMPOUND_SELECT;
+    Tcl_LinkVar(interp, "SQLITE_MAX_COMPOUND_SELECT",
+           (char*)&sqlite_max_compound_select, TCL_LINK_INT|TCL_LINK_READ_ONLY);
+  }
+  {
     static int sqlite_max_vdbe_op = SQLITE_MAX_VDBE_OP;
     Tcl_LinkVar(interp, "SQLITE_MAX_VDBE_OP",
            (char*)&sqlite_max_vdbe_op, TCL_LINK_INT|TCL_LINK_READ_ONLY);

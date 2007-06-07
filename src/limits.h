@@ -67,6 +67,18 @@
 #endif
 
 /*
+** The maximum number of terms in a compound SELECT statement.
+** The code generator for compound SELECT statements does one
+** level of recursion for each term.  A stack overflow can result
+** if the number of terms is too large.  In practice, most SQL
+** never has more than 3 or 4 terms.  Use a value of 0 to disable
+** any limit on the number of terms in a compount SELECT.
+*/
+#ifndef SQLITE_MAX_COMPOUND_SELECT
+# define SQLITE_MAX_COMPOUND_SELECT 100
+#endif
+
+/*
 ** The maximum number of opcodes in a VDBE program.
 */
 #ifndef SQLITE_MAX_VDBE_OP
