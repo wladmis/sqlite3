@@ -80,6 +80,7 @@
 
 /*
 ** The maximum number of opcodes in a VDBE program.
+** Not currently enforced.
 */
 #ifndef SQLITE_MAX_VDBE_OP
 # define SQLITE_MAX_VDBE_OP 25000

@@ -5139,8 +5139,7 @@ too_big:
   rc = SQLITE_TOOBIG;
   goto vdbe_halt;
 
-  /* Jump to here if a malloc() fails.  It's hard to get a malloc()
-  ** to fail on a modern VM computer, so this code is untested.
+  /* Jump to here if a malloc() fails.
   */
 no_mem:
   sqlite3SetString(&p->zErrMsg, "out of memory", (char*)0);
