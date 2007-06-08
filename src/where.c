@@ -2348,7 +2348,7 @@ WhereInfo *sqlite3WhereBegin(
       if( testOp!=OP_Noop ){
         sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
         sqlite3VdbeAddOp(v, OP_MemLoad, pLevel->iMem, 0);
-        sqlite3VdbeAddOp(v, testOp, SQLITE_AFF_NUMERIC, brk);
+        sqlite3VdbeAddOp(v, testOp, SQLITE_AFF_NUMERIC|0x100, brk);
       }
     }else if( pLevel->flags & WHERE_COLUMN_RANGE ){
       /* Case 3: The WHERE clause term that refers to the right-most
