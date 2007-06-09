@@ -27,10 +27,8 @@ Features include:
 <li>A complete database is stored in a single disk file.</li>
 <li>Database files can be freely shared between machines with
     different byte orders.</li>
-<li>Supports databases up to 2 tebibytes
-    (2<sup><small>41</small></sup> bytes) in size.</li>
-<li>Strings and BLOBs up to 2 gibibytes (2<sup><small>31</small></sup> bytes)
-    in size.</li>
+<li>Supports terabyte-sized databases and gigabyte-sized strings
+    and blobs.  (See <a href="limits.html">limits.html</a>.)
 <li>Small code footprint: 
     <a href="http://www.sqlite.org/cvstrac/wiki?p=SizeOfSqlite">
     less than 250KiB</a> fully configured or less

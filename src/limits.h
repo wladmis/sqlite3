@@ -63,7 +63,7 @@
 ** any limitation on expression tree depth.
 */
 #ifndef SQLITE_MAX_EXPR_DEPTH
-# define SQLITE_MAX_EXPR_DEPTH 0
+# define SQLITE_MAX_EXPR_DEPTH 1000
 #endif
 
 /*
@@ -75,7 +75,7 @@
 ** any limit on the number of terms in a compount SELECT.
 */
 #ifndef SQLITE_MAX_COMPOUND_SELECT
-# define SQLITE_MAX_COMPOUND_SELECT 100
+# define SQLITE_MAX_COMPOUND_SELECT 500
 #endif
 
 /*
