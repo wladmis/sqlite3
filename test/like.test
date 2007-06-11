@@ -382,5 +382,18 @@ do_test like-5.8 {
   set sqlite_like_count
 } 12
 
+# ticket #2407
+#
+# Make sure the LIKE prefix optimization does not strip off leading
+# characters of the like pattern that happen to be quote characters.
+#
+do_test like-6.1 {
+  foreach x { 'abc 'bcd 'def 'ax } {
+    db eval {INSERT INTO t2 VALUES($x)}
+  }
+  execsql {
+    SELECT * FROM t2 WHERE x LIKE '''a%'
+  }
+} {'abc 'ax}
 
 finish_test

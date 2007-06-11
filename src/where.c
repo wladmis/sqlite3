@@ -878,6 +878,7 @@ or_not_possible:
     if( pStr1 ){
       sqlite3TokenCopy(&pStr1->token, &pRight->token);
       pStr1->token.n = nPattern;
+      pStr1->flags = EP_Dequoted;
     }
     pStr2 = sqlite3ExprDup(pStr1);
     if( pStr2 ){
