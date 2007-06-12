@@ -2193,7 +2193,9 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       } else {
         zEnd = "COMMIT";
       }
-      (void)sqlite3_exec(pDb->db, zEnd, 0, 0, 0);
+      if( sqlite3_exec(pDb->db, zEnd, 0, 0, 0) ){
+        sqlite3_exec(pDb->db, "ROLLBACK", 0, 0, 0);
+      }
     }
     break;
   }
