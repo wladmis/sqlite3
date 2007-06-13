@@ -231,6 +231,7 @@ int sqlite3_exec(
 #define SQLITE_IOERR_UNLOCK        (SQLITE_IOERR | (8<<8))
 #define SQLITE_IOERR_RDLOCK        (SQLITE_IOERR | (9<<8))
 #define SQLITE_IOERR_DELETE        (SQLITE_IOERR | (10<<8))
+#define SQLITE_IOERR_BLOCKED       (SQLITE_IOERR | (11<<8))
 
 /*
 ** Enable or disable the extended result codes.
