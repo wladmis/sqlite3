@@ -294,7 +294,6 @@ static Tcl_ChannelType IncrblobChannelType = {
   0,                                 /* flushProc                            */
   0,                                 /* handlerProc                          */
   0,                                 /* wideSeekProc                         */
-  0,                                 /* threadActionProc                     */
 };
 
 /*
