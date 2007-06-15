@@ -381,6 +381,8 @@ select(A) ::= select(X) multiselect_op(Y) oneselect(Z).  {
   if( Z ){
     Z->op = Y;
     Z->pPrior = X;
+  }else{
+    sqlite3SelectDelete(X);
   }
   A = Z;
 }

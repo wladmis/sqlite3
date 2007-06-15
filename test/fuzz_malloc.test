@@ -25,11 +25,10 @@ if {[info command sqlite_malloc_stat]==""} {
   return
 }
 
-
 source $testdir/fuzz_common.tcl
 source $testdir/malloc_common.tcl
 
-set ::REPEATS 20
+set ::REPEATS 40
 
 #
 # Usage: do_fuzzy_malloc_test <testname> ?<options>?
@@ -49,8 +48,10 @@ proc do_fuzzy_malloc_test {testname args} {
   sqlite3 db test.db
   set ::prep $::fuzzyopts(-sqlprep)
   execsql $::prep
-
+  set jj 0
   for {set ii 0} {$ii < $::fuzzyopts(-repeats)} {incr ii} {
+    expr srand($jj)
+    incr jj
     set ::sql [subst $::fuzzyopts(-template)]
     foreach {rc res} [catchsql "$::sql"] {}
     if {$rc==0} {
