@@ -4445,7 +4445,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_sync_count, sqlite3_fullsync_count;
   extern int sqlite3_opentemp_count;
   extern int sqlite3_memUsed;
-  extern char *sqlite3_malloc_id;
   extern int sqlite3_memMax;
   extern int sqlite3_like_count;
   extern int sqlite3_tsd_count;
@@ -4516,8 +4515,14 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&pzNeededCollation, TCL_LINK_STRING|TCL_LINK_READ_ONLY);
 #endif
 #ifdef SQLITE_MEMDEBUG
-  Tcl_LinkVar(interp, "sqlite_malloc_id",
-      (char*)&sqlite3_malloc_id, TCL_LINK_STRING);
+  {
+    extern char *sqlite3_malloc_id;
+    extern int sqlite3_mallocfail_trace;
+    Tcl_LinkVar(interp, "sqlite_malloc_id",
+        (char*)&sqlite3_malloc_id, TCL_LINK_STRING);
+    Tcl_LinkVar(interp, "sqlite3_mallocfail_trace",
+        (char*)&sqlite3_mallocfail_trace, TCL_LINK_INT);
+  }
 #endif
 #if OS_WIN
   Tcl_LinkVar(interp, "sqlite_os_type",
