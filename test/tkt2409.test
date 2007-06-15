@@ -209,5 +209,5 @@ do_test tkt2409-4.4 {
 
 unread_lock_db
 db2 close
+unset -nocomplain t1
 finish_test
-
