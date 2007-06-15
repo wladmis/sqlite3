@@ -30,7 +30,8 @@ do_test incrblob-1.1 {
 
 do_test incrblob-1.2.1 {
   set ::blob [db incrblob blobs v 1]
-} {incrblob_1}
+  string match incrblob_* $::blob
+} {1}
 do_test incrblob-1.2.2 {
   binary scan [read $::blob] c* data
   set data
