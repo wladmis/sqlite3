@@ -4346,7 +4346,7 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno){
   pager_get_content(pPg);
   if( pPg->needSync ){
     needSyncPgno = pPg->pgno;
-    assert( pPg->inJournal );
+    assert( pPg->inJournal || (int)pgno>pPager->origDbSize );
     assert( pPg->dirty );
     assert( pPager->needSync );
   }
