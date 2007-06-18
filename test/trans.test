@@ -852,6 +852,8 @@ proc signature {} {
 #
 if {[info exists ISQUICK]} {
   set limit 20
+} elseif {[info exists SOAKTEST]} {
+  set limit 100
 } else {
   set limit 40
 }

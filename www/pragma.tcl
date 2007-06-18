@@ -255,7 +255,7 @@ puts {
     or if there are no pages on the freelist.  If there are fewer than
     <i>N</i> pages on the freelist, then the entire freelist is cleared.</p>
 
-    <p>As of version 3.3.18 (the first version that supports
+    <p>As of version 3.4.0 (the first version that supports
     incremental_vacuum) this feature is still experimental.  Possible
     future changes include enhancing incremental vacuum to do
     defragmentation and node repacking just as the full-blown

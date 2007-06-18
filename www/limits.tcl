@@ -299,7 +299,7 @@ limit at run-time.
 Note that the transaction processing in SQLite requires two bits
 of heap memory for every page in the database file.  For databases
 of a few megabytes in size, this amounts to only a few hundred
-bytes of heap memory.  But for gigabyte-sized database the amount
+bytes of heap memory.  But for gigabyte-sized databases the amount
 of heap memory required is getting into the kilobyte range and
 for terabyte-sized databases, megabytes of heap memory must be
 allocated and zeroed at each transaction.  SQLite will
