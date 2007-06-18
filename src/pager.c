@@ -619,7 +619,7 @@ static void checkPage(PgHdr *pPg){
 }
 
 #else
-#define pager_datahash(X)  0
+#define pager_datahash(X,Y)  0
 #define pager_pagehash(X)  0
 #define CHECK_PAGE(x)
 #endif
