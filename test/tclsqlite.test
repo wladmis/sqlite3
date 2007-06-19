@@ -454,4 +454,32 @@ do_test tcl-12.1 {
   expr $a*1000000 + $b*1000 + $c
 } [sqlite3_libversion_number]
 
+
+# Check to see that when bindings of the form @aaa are used instead
+# of $aaa, that objects with a bytearray representation are inserted
+# as BLOBs even if they also have a string representation.
+#
+do_test tcl-13.1 {
+  db eval {CREATE TABLE t5(x BLOB)}
+  set x abc123
+  db eval {INSERT INTO t5 VALUES($x)}
+  db eval {SELECT typeof(x) FROM t5}
+} {text}
+do_test tcl-13.2 {
+  binary scan $x H notUsed
+  db eval {
+    DELETE FROM t5;
+    INSERT INTO t5 VALUES($x);
+    SELECT typeof(x) FROM t5;
+  }
+} {text}
+do_test tcl-13.3 {
+btree_breakpoint
+  db eval {
+    DELETE FROM t5;
+    INSERT INTO t5 VALUES(@x);
+    SELECT typeof(x) FROM t5;
+  }
+} {blob}
+
 finish_test
