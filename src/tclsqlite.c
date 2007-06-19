@@ -910,12 +910,12 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     "collation_needed",   "commit_hook",       "complete",
     "copy",               "enable_load_extension","errorcode",
     "eval",               "exists",            "function",
-    "incrblob",
-    "interrupt",          "last_insert_rowid", "nullvalue",
-    "onecolumn",          "profile",           "progress",
-    "rekey",              "rollback_hook",     "timeout",
-    "total_changes",      "trace",             "transaction",
-    "update_hook",        "version",           0
+    "incrblob",           "interrupt",         "last_insert_rowid",
+    "nullvalue",          "onecolumn",         "profile",
+    "progress",           "rekey",             "rollback_hook",
+    "timeout",            "total_changes",     "trace",
+    "transaction",        "update_hook",       "version",
+    0                    
   };
   enum DB_enum {
     DB_AUTHORIZER,        DB_BUSY,             DB_CACHE,
@@ -923,12 +923,11 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     DB_COLLATION_NEEDED,  DB_COMMIT_HOOK,      DB_COMPLETE,
     DB_COPY,              DB_ENABLE_LOAD_EXTENSION,DB_ERRORCODE,
     DB_EVAL,              DB_EXISTS,           DB_FUNCTION,
-    DB_INCRBLOB,
-    DB_INTERRUPT,         DB_LAST_INSERT_ROWID,DB_NULLVALUE,
-    DB_ONECOLUMN,         DB_PROFILE,          DB_PROGRESS,
-    DB_REKEY,             DB_ROLLBACK_HOOK,    DB_TIMEOUT,
-    DB_TOTAL_CHANGES,     DB_TRACE,            DB_TRANSACTION,
-    DB_UPDATE_HOOK,       DB_VERSION,          
+    DB_INCRBLOB,          DB_INTERRUPT,        DB_LAST_INSERT_ROWID,
+    DB_NULLVALUE,         DB_ONECOLUMN,        DB_PROFILE,
+    DB_PROGRESS,          DB_REKEY,            DB_ROLLBACK_HOOK,
+    DB_TIMEOUT,           DB_TOTAL_CHANGES,    DB_TRACE,
+    DB_TRANSACTION,       DB_UPDATE_HOOK,      DB_VERSION
   };
   /* don't leave trailing commas on DB_enum, it confuses the AIX xlc compiler */
 
