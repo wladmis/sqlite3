@@ -15,7 +15,7 @@
 */
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
-#include "limits.h"
+#include "sqliteLimit.h"
 
 
 #if defined(SQLITE_TCL) || defined(TCLSH)
