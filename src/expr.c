@@ -71,8 +71,10 @@ Expr *sqlite3ExprSetColl(Parse *pParse, Expr *pExpr, Token *pName){
 CollSeq *sqlite3ExprCollSeq(Parse *pParse, Expr *pExpr){
   CollSeq *pColl = 0;
   if( pExpr ){
+    int op;
     pColl = pExpr->pColl;
-    if( pExpr->op==TK_CAST && !pColl ){
+    op = pExpr->op;
+    if( (op==TK_CAST || op==TK_UPLUS) && !pColl ){
       return sqlite3ExprCollSeq(pParse, pExpr->pLeft);
     }
   }
