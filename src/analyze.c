@@ -174,7 +174,7 @@ static void analyzeOneTable(
 
     /* Store the results.  
     **
-    ** The result is a single row of the sqlite_stmt1 table.  The first
+    ** The result is a single row of the sqlite_stat1 table.  The first
     ** two columns are the names of the table and index.  The third column
     ** is a string composed of a list of integer statistics about the
     ** index.  The first integer in the list is the total number of entires
