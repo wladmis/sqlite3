@@ -1988,7 +1988,7 @@ int sqlite3_rekey(
 /*
 ** CAPI3REF:  Suspend Execution For A Short Time
 **
-** This function causes the current thread to suspect execution
+** This function causes the current thread to suspend execution
 ** a number of milliseconds specified in its parameter.
 **
 ** If the operating system does not support sleep requests with 

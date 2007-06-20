@@ -162,7 +162,7 @@ proc resolve_links {args} {
 foreach c [lsort $content] {
   foreach {key title type keywords body code} $c break
   foreach k $keywords {
-    puts "<a name=\"$k\">"
+    puts "<a name=\"$k\"></a>"
   }
   puts "<h2>$title</h2>"
   puts "<blockquote><pre>"
