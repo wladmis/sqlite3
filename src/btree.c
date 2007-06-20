@@ -422,9 +422,8 @@ static int ptrmapGet(BtShared *pBt, Pgno key, u8 *pEType, Pgno *pPgno){
 #define findCell(pPage, iCell) \
   ((pPage)->aData + get2byte(&(pPage)->aData[(pPage)->cellOffset+2*(iCell)]))
 u8 *sqlite3BtreeFindCell(MemPage *pPage, int iCell){
-  u8 *data = pPage->aData;
   assert( iCell>=0 );
-  assert( iCell<get2byte(&data[pPage->hdrOffset+3]) );
+  assert( iCell<get2byte(&pPage->aData[pPage->hdrOffset+3]) );
   return findCell(pPage, iCell);
 }
 
