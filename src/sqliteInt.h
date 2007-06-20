@@ -65,9 +65,7 @@
 #include <assert.h>
 #include <stddef.h>
 
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
-# define isnan(X)  ((X)!=(X))
-#endif
+#define sqlite3_isnan(X)  ((X)!=(X))
 
 /*
 ** If compiling for a processor that lacks floating point support,

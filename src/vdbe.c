@@ -1188,7 +1188,7 @@ case OP_Remainder: {           /* same as TK_REM, no-push */
         break;
       }
     }
-    if( isnan(b) ){
+    if( sqlite3_isnan(b) ){
       goto divide_by_zero;
     }
     Release(pTos);
