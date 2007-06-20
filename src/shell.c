@@ -1754,6 +1754,7 @@ static void process_sqliterc(
   const char *sqliterc = sqliterc_override;
   char *zBuf = 0;
   FILE *in = NULL;
+  int nBuf;
 
   if (sqliterc == NULL) {
     home_dir = find_home_dir();
@@ -1761,12 +1762,13 @@ static void process_sqliterc(
       fprintf(stderr,"%s: cannot locate your home directory!\n", Argv0);
       return;
     }
-    zBuf = malloc(strlen(home_dir) + 15);
+    nBuf = strlen(home_dir) + 16;
+    zBuf = malloc( nBuf );
     if( zBuf==0 ){
       fprintf(stderr,"%s: out of memory!\n", Argv0);
       exit(1);
     }
-    sqlite3_snprintf(sizeof(zBuf), zBuf,"%s/.sqliterc",home_dir);
+    sqlite3_snprintf(nBuf, zBuf,"%s/.sqliterc",home_dir);
     free(home_dir);
     sqliterc = (const char*)zBuf;
   }
