@@ -37,11 +37,12 @@
 #include <unicode/ucol.h>
 
 #include <assert.h>
-#include "sqlite3.h"
 
 #ifndef SQLITE_CORE
   #include "sqlite3ext.h"
   SQLITE_EXTENSION_INIT1
+#else
+  #include "sqlite3.h"
 #endif
 
 /*
@@ -342,7 +343,7 @@ static void icuCaseFunc16(sqlite3_context *p, int nArg, sqlite3_value **apArg){
   nInput = sqlite3_value_bytes16(apArg[0]);
 
   nOutput = nInput * 2 + 2;
-  zOutput = sqlite3_malloc(nInput*2+2);
+  zOutput = sqlite3_malloc(nOutput);
   if( !zOutput ){
     return;
   }

@@ -584,6 +584,7 @@ struct Module {
   const sqlite3_module *pModule;       /* Callback pointers */
   const char *zName;                   /* Name passed to create_module() */
   void *pAux;                          /* pAux passed to create_module() */
+  void (*xDestroy)(void *);            /* Module destructor function */
 };
 
 /*

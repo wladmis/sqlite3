@@ -1410,7 +1410,13 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
     }
   }
   sqlite3RegisterDateTimeFunctions(db);
-  sqlite3_overload_function(db, "MATCH", 2);
+  if( !sqlite3MallocFailed() ){
+    int rc = sqlite3_overload_function(db, "MATCH", 2);
+    assert( rc==SQLITE_NOMEM || rc==SQLITE_OK );
+    if( rc==SQLITE_NOMEM ){
+      sqlite3FailedMalloc();
+    }
+  }
 #ifdef SQLITE_SSE
   (void)sqlite3SseFunctions(db);
 #endif

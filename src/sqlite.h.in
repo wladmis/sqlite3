@@ -2498,6 +2498,19 @@ int sqlite3_create_module(
 );
 
 /*
+** This routine is identical to the sqlite3_create_module() method above,
+** except that it allows a destructor function to be specified. It is
+** even more experimental than the rest of the virtual tables API.
+*/
+int sqlite3_create_module_v2(
+  sqlite3 *db,               /* SQLite connection to register module with */
+  const char *zName,         /* Name of the module */
+  const sqlite3_module *,    /* Methods for the module */
+  void *,                    /* Client data for xCreate/xConnect */
+  void(*xDestroy)(void*)     /* Module destructor function */
+);
+
+/*
 ** Every module implementation uses a subclass of the following structure
 ** to describe a particular instance of the module.  Each subclass will
 ** be taylored to the specific needs of the module implementation.   The
