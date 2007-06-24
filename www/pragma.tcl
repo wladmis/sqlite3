@@ -526,6 +526,13 @@ puts {
     foreign key. The callback function will be invoked once for each
     column in each foreign key.</p></li>
 
+<a name="pragma_freelist_count"></a>
+<li><p><b>PRAGMA [database].freelist_count;</b></p>
+    <p>Return the number of unused pages in the database file. Running
+    a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
+    command with a large value of N will shrink the database file by this
+    number of pages. </p></li>
+
 <a name="pragma_index_info"></a>
 <li><p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
     <p>For each column that the named index references, invoke the 
