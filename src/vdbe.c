@@ -2509,6 +2509,11 @@ case OP_Transaction: {       /* no-push */
 ** the main database file and P1==1 is the database file used to store
 ** temporary tables.
 **
+** If P1 is negative, then this is a request to read the size of a
+** databases free-list. P2 must be set to 1 in this case. The actual
+** database accessed is ((P1+1)*-1). For example, a P1 parameter of -1
+** corresponds to database 0 ("main"), a P1 of -1 is database 1 ("temp").
+**
 ** There must be a read-lock on the database (either a transaction
 ** must be started or there must be an open cursor) before
 ** executing this instruction.

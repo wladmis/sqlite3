@@ -1138,6 +1138,7 @@ int sqlite3BtreeOpen(
     pBt->pageSizeFixed = 1;
 #ifndef SQLITE_OMIT_AUTOVACUUM
     pBt->autoVacuum = (get4byte(&zDbHeader[36 + 4*4])?1:0);
+    pBt->incrVacuum = (get4byte(&zDbHeader[36 + 7*4])?1:0);
 #endif
   }
   pBt->usableSize = pBt->pageSize - nReserve;
@@ -1543,7 +1544,9 @@ static int newDatabase(BtShared *pBt){
   pBt->pageSizeFixed = 1;
 #ifndef SQLITE_OMIT_AUTOVACUUM
   assert( pBt->autoVacuum==1 || pBt->autoVacuum==0 );
+  assert( pBt->incrVacuum==1 || pBt->incrVacuum==0 );
   put4byte(&data[36 + 4*4], pBt->autoVacuum);
+  put4byte(&data[36 + 7*4], pBt->incrVacuum);
 #endif
   return SQLITE_OK;
 }
