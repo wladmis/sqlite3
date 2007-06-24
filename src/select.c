@@ -186,6 +186,20 @@ static void setToken(Token *p, const char *z){
 }
 
 /*
+** Set the token to the double-quoted and escaped version of the string pointed
+** to by z. For example;
+**
+**    {a"bc}  ->  {"a""bc"}
+*/
+static void setQuotedToken(Token *p, const char *z){
+  p->z = (u8 *)sqlite3MPrintf("\"%w\"", z);
+  p->dyn = 1;
+  if( p->z ){
+    p->n = strlen((char *)p->z);
+  }
+}
+
+/*
 ** Create an expression node for an identifier with the name of zName
 */
 Expr *sqlite3CreateIdExpr(const char *zName){
@@ -1336,12 +1350,12 @@ static int prepSelectStmt(Parse *pParse, Select *p){
             }
             pRight = sqlite3Expr(TK_ID, 0, 0, 0);
             if( pRight==0 ) break;
-            setToken(&pRight->token, zName);
+            setQuotedToken(&pRight->token, zName);
             if( zTabName && (longNames || pTabList->nSrc>1) ){
               Expr *pLeft = sqlite3Expr(TK_ID, 0, 0, 0);
               pExpr = sqlite3Expr(TK_DOT, pLeft, pRight, 0);
               if( pExpr==0 ) break;
-              setToken(&pLeft->token, zTabName);
+              setQuotedToken(&pLeft->token, zTabName);
               setToken(&pExpr->span, sqlite3MPrintf("%s.%s", zTabName, zName));
               pExpr->span.dyn = 1;
               pExpr->token.z = 0;
@@ -1350,6 +1364,7 @@ static int prepSelectStmt(Parse *pParse, Select *p){
             }else{
               pExpr = pRight;
               pExpr->span = pExpr->token;
+              pExpr->span.dyn = 0;
             }
             if( longNames ){
               pNew = sqlite3ExprListAppend(pNew, pExpr, &pExpr->span);
@@ -1375,6 +1390,9 @@ static int prepSelectStmt(Parse *pParse, Select *p){
   if( p->pEList && p->pEList->nExpr>SQLITE_MAX_COLUMN ){
     sqlite3ErrorMsg(pParse, "too many columns in result set");
     rc = SQLITE_ERROR;
+  }
+  if( sqlite3MallocFailed() ){
+    rc = SQLITE_NOMEM;
   }
   return rc;
 }
