@@ -167,4 +167,8 @@ ifcapable icu {
   do_icu_test fts2token-4.8 en_US  $input $output
 }
 
+do_test fts2token-internal {
+  execsql { SELECT fts2_tokenizer_internal_test() }
+} {ok}
+
 finish_test
