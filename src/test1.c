@@ -1082,7 +1082,7 @@ static int sqlite3_mprintf_int(
 */
 static int sqlite3GetInt64(const char *zNum, i64 *pValue){
   if( sqlite3FitsIn64Bits(zNum) ){
-    sqlite3Atoi64(zNum, pValue);
+    sqlite3_atoi64(zNum, pValue);
     return 1;
   }
   return 0;

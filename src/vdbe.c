@@ -227,7 +227,7 @@ static void applyNumericAffinity(Mem *pRec){
          && sqlite3IsNumber(pRec->z, &realnum, pRec->enc) ){
       i64 value;
       sqlite3VdbeChangeEncoding(pRec, SQLITE_UTF8);
-      if( !realnum && sqlite3Atoi64(pRec->z, &value) ){
+      if( !realnum && sqlite3_atoi64(pRec->z, &value) ){
         sqlite3VdbeMemRelease(pRec);
         pRec->u.i = value;
         pRec->flags = MEM_Int;
