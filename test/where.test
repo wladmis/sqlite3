@@ -1137,6 +1137,19 @@ do_test where-14.12 {
   } 
 } {4/4 4/1 1/4 1/1 sort}
 
+# Ticket #2445.
+#
+# There was a crash that could occur when a where clause contains an
+# alias for an expression in the result set, and that expression retrieves
+# a column of the second or subsequent table in a join.
+#
+do_test where-15.1 {
+  execsql {
+    CREATE TEMP TABLE t1 (a, b, c, d, e);
+    CREATE TEMP TABLE t2 (f);
+    SELECT t1.e AS alias FROM t2, t1 WHERE alias = 1 ;
+  }
+} {}
 
 integrity_check {where-99.0}
 

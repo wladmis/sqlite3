@@ -1154,6 +1154,7 @@ static int lookupName(
           memcpy(pExpr, pDup, sizeof(*pExpr));
           sqliteFree(pDup);
           cnt = 1;
+          pMatch = 0;
           assert( zTab==0 && zDb==0 );
           goto lookupname_end_2;
         }
