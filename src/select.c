@@ -1334,6 +1334,15 @@ static int prepSelectStmt(Parse *pParse, Select *p){
             Expr *pExpr, *pRight;
             char *zName = pTab->aCol[j].zName;
 
+            /* If a column is marked as 'hidden' (currently only possible
+            ** for virtual tables), do not include it in the expanded
+            ** result-set list.
+            */
+            if( IsHiddenColumn(&pTab->aCol[j]) ){
+              assert(IsVirtual(pTab));
+              continue;
+            }
+
             if( i>0 ){
               struct SrcList_item *pLeft = &pTabList->a[i-1];
               if( (pLeft[1].jointype & JT_NATURAL)!=0 &&

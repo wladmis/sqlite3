@@ -376,6 +376,44 @@ static int vtabCallConstructor(
   }
   db->pVTab = 0;
   sqliteFree(zModuleName);
+
+  /* If everything went according to plan, loop through the columns
+  ** of the table to see if any of them contain the token "hidden".
+  ** If so, set the Column.isHidden flag and remove the token from
+  ** the type string.
+  */
+  if( rc==SQLITE_OK ){
+    int iCol;
+    for(iCol=0; iCol<pTab->nCol; iCol++){
+      char *zType = pTab->aCol[iCol].zType;
+      int nType;
+      int i = 0;
+      if( !zType ) continue;
+      nType = strlen(zType);
+      if( sqlite3StrNICmp("hidden", zType, 6) || (zType[6] && zType[6]!=' ') ){
+        for(i=0; i<nType; i++){
+          if( (0==sqlite3StrNICmp(" hidden", &zType[i], 7))
+           && (zType[i+7]=='\0' || zType[i+7]==' ')
+          ){
+            i++;
+            break;
+          }
+        }
+      }
+      if( i<nType ){
+        int j;
+        int nDel = 6 + (zType[i+6] ? 1 : 0);
+        for(j=i; (j+nDel)<=nType; j++){
+          zType[j] = zType[j+nDel];
+        }
+        if( zType[i]=='\0' && i>0 ){
+          assert(zType[i-1]==' ');
+          zType[i-1] = '\0';
+        }
+        pTab->aCol[iCol].isHidden = 1;
+      }
+    }
+  }
   return rc;
 }
 
