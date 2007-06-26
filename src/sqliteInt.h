@@ -1835,7 +1835,7 @@ void sqlite3TableAffinityStr(Vdbe *, Table *);
 char sqlite3CompareAffinity(Expr *pExpr, char aff2);
 int sqlite3IndexAffinityOk(Expr *pExpr, char idx_affinity);
 char sqlite3ExprAffinity(Expr *pExpr);
-int sqlite3_atoi64(const char*, i64*);
+int sqlite3Atoi64(const char*, i64*);
 void sqlite3Error(sqlite3*, int, const char*,...);
 void *sqlite3HexToBlob(const char *z);
 int sqlite3TwoPartName(Parse *, Token *, Token *, Token **);
