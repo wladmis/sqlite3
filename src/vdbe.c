@@ -1160,7 +1160,7 @@ case OP_Remainder: {           /* same as TK_REM, no-push */
         ** behaviour so that all architectures behave as if integer 
         ** overflow occured.
         */
-        if( a==-1 && b==(1<<63) ) a = 1;
+        if( a==-1 && b==(((i64)1)<<63) ) a = 1;
         b /= a;
         break;
       }
