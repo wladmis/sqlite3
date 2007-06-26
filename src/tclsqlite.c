@@ -721,15 +721,15 @@ static void tclSqlFunc(sqlite3_context *context, int argc, sqlite3_value**argv){
       ** has no string representation. */
       data = Tcl_GetByteArrayFromObj(pVar, &n);
       sqlite3_result_blob(context, data, n, SQLITE_TRANSIENT);
-    }else if( (c=='b' && strcmp(zType,"boolean")==0) ||
-          (c=='i' && strcmp(zType,"int")==0) ){
+    }else if( c=='b' && strcmp(zType,"boolean")==0 ){
       Tcl_GetIntFromObj(0, pVar, &n);
       sqlite3_result_int(context, n);
     }else if( c=='d' && strcmp(zType,"double")==0 ){
       double r;
       Tcl_GetDoubleFromObj(0, pVar, &r);
       sqlite3_result_double(context, r);
-    }else if( c=='w' && strcmp(zType,"wideInt")==0 ){
+    }else if( (c=='w' && strcmp(zType,"wideInt")==0) ||
+          (c=='i' && strcmp(zType,"int")==0) ){
       Tcl_WideInt v;
       Tcl_GetWideIntFromObj(0, pVar, &v);
       sqlite3_result_int64(context, v);
@@ -1602,15 +1602,15 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
               sqlite3_bind_blob(pStmt, i, data, n, SQLITE_STATIC);
               Tcl_IncrRefCount(pVar);
               apParm[nParm++] = pVar;
-            }else if( (c=='b' && strcmp(zType,"boolean")==0) ||
-                  (c=='i' && strcmp(zType,"int")==0) ){
+            }else if( c=='b' && strcmp(zType,"boolean")==0 ){
               Tcl_GetIntFromObj(interp, pVar, &n);
               sqlite3_bind_int(pStmt, i, n);
             }else if( c=='d' && strcmp(zType,"double")==0 ){
               double r;
               Tcl_GetDoubleFromObj(interp, pVar, &r);
               sqlite3_bind_double(pStmt, i, r);
-            }else if( c=='w' && strcmp(zType,"wideInt")==0 ){
+            }else if( (c=='w' && strcmp(zType,"wideInt")==0) ||
+                  (c=='i' && strcmp(zType,"int")==0) ){
               Tcl_WideInt v;
               Tcl_GetWideIntFromObj(interp, pVar, &v);
               sqlite3_bind_int64(pStmt, i, v);
