@@ -278,6 +278,7 @@ static int blobReadWrite(
     sqlite3VdbeFinalize(v);
     p->pStmt = 0;
   }else{
+    db->errCode = rc;
     v->rc = rc;
   }
 
