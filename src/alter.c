@@ -321,6 +321,9 @@ void sqlite3AlterRenameTable(
 #endif
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
+  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
+    goto exit_rename_table;
+  }
   if( IsVirtual(pTab) && pTab->pMod->pModule->xRename ){
     isVirtualRename = 1;
   }
