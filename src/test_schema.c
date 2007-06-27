@@ -288,6 +288,7 @@ static sqlite3_module schemaModule = {
   0,                           /* xCommit */
   0,                           /* xRollback */
   0,                           /* xFindMethod */
+  0,                           /* xRename */
 };
 
 
