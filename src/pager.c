@@ -3872,10 +3872,8 @@ static int pager_incr_changecounter(Pager *pPager){
     rc = sqlite3PagerWrite(pPgHdr);
     if( rc!=SQLITE_OK ) return rc;
   
-    /* Read the current value at byte 24. */
-    change_counter = retrieve32bits(pPgHdr, 24);
-  
     /* Increment the value just read and write it back to byte 24. */
+    change_counter = sqlite3Get4byte(pPager->dbFileVers);
     change_counter++;
     put32bits(((char*)PGHDR_TO_DATA(pPgHdr))+24, change_counter);
     /* Release the page reference. */
