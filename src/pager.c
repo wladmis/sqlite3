@@ -551,17 +551,6 @@ static int write32bits(OsFile *fd, u32 val){
 }
 
 /*
-** Read a 32-bit integer at offset 'offset' from the page identified by
-** page header 'p'.
-*/
-static u32 retrieve32bits(PgHdr *p, int offset){
-  unsigned char *ac;
-  ac = &((unsigned char*)PGHDR_TO_DATA(p))[offset];
-  return sqlite3Get4byte(ac);
-}
-
-
-/*
 ** This function should be called when an error occurs within the pager
 ** code. The first argument is a pointer to the pager structure, the
 ** second the error-code about to be returned by a pager API function. 
@@ -3873,7 +3862,7 @@ static int pager_incr_changecounter(Pager *pPager){
     if( rc!=SQLITE_OK ) return rc;
   
     /* Increment the value just read and write it back to byte 24. */
-    change_counter = sqlite3Get4byte(pPager->dbFileVers);
+    change_counter = sqlite3Get4byte((u8*)pPager->dbFileVers);
     change_counter++;
     put32bits(((char*)PGHDR_TO_DATA(pPgHdr))+24, change_counter);
     /* Release the page reference. */
