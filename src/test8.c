@@ -1041,6 +1041,7 @@ static int echoRename(sqlite3_vtab *vtab, const char *zNewName){
         p->zTableName, zNewName, &p->zTableName[nThis]
     );
     rc = sqlite3_exec(p->db, zSql, 0, 0, 0);
+    sqliteFree(zSql);
   }
 
   return rc;
