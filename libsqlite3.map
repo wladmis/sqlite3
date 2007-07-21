@@ -51,3 +51,18 @@ SQLITE3_3.3.9 {
 	sqlite3_prepare16_v2;
 	sqlite3_prepare_v2;
 };
+SQLITE3_3.4.0 {
+    global:
+	sqlite3_bind_zeroblob;
+	sqlite3_blob_bytes;
+	sqlite3_blob_close;
+	sqlite3_blob_open;
+	sqlite3_blob_read;
+	sqlite3_blob_write;
+	sqlite3_create_collation_v2;
+	sqlite3_result_error_toobig;
+	sqlite3_result_zeroblob;
+};
+SQLITE3_3.4.1 {
+	sqlite3_create_module_v2;
+};
