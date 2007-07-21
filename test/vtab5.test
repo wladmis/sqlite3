@@ -140,13 +140,14 @@ do_test vtab5.4.2 {
   }
 } {1 {virtual tables may not be altered}}
 
-# Test that it is impossible to add a column to a virtual table.
+# Test that it is impossible to rename a virtual table.
+# UPDATE: It is now possible.
 #
-do_test vtab5.4.3 {
-  catchsql {
-    ALTER TABLE echo_strings RENAME TO echo_strings2;
-  }
-} {1 {virtual tables may not be altered}}
+# do_test vtab5.4.3 {
+#   catchsql {
+#     ALTER TABLE echo_strings RENAME TO echo_strings2;
+#   }
+# } {1 {virtual tables may not be altered}}
 
 finish_test
 

@@ -54,6 +54,7 @@ puts $out [subst \
 #
 foreach hdr {
    btree.h
+   btreeInt.h
    hash.h
    keywordhash.h
    opcodes.h
@@ -65,6 +66,7 @@ foreach hdr {
    sqlite3ext.h
    sqlite3.h
    sqliteInt.h
+   sqliteLimit.h
    vdbe.h
    vdbeInt.h
 } {

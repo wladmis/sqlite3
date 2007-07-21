@@ -29,6 +29,7 @@ do_test trans-1.0 {
     SELECT b FROM one ORDER BY a;
   }
 } {one two three}
+integrity_check trans-1.0.1
 do_test trans-1.1 {
   execsql {
     CREATE TABLE two(a int PRIMARY KEY, b text);
@@ -852,6 +853,8 @@ proc signature {} {
 #
 if {[info exists ISQUICK]} {
   set limit 20
+} elseif {[info exists SOAKTEST]} {
+  set limit 100
 } else {
   set limit 40
 }

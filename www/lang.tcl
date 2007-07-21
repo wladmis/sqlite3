@@ -555,7 +555,8 @@ may only hold unique integer values.  (Except for this one case,
 SQLite ignores the datatype specification of columns and allows
 any kind of data to be put in a column regardless of its declared
 datatype.)  If a table does not have an INTEGER PRIMARY KEY column,
-then the B-Tree key will be a automatically generated integer.  The
+then the B-Tree key will be a automatically generated integer.
+<a name="rowid"> The
 B-Tree key for a row can always be accessed using one of the
 special names "<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>".
 This is true regardless of whether or not there is an INTEGER
@@ -1203,7 +1204,7 @@ helpful logic.</p>
 statement or one of the following special identifiers: "<b>ROWID</b>",
 "<b>OID</b>", or "<b>_ROWID_</b>".
 These special identifiers all describe the
-unique random integer key (the "row key") associated with every 
+unique integer key (the "row key") associated with every 
 row of every table.
 The special identifiers only refer to the row key if the CREATE TABLE
 statement does not define a real column with the same name.  Row keys
@@ -1300,7 +1301,8 @@ is a hexadecimal rendering of the content of that blob.</td>
 
 <tr>
 <td valign="top" align="right">last_insert_rowid()</td>
-<td valign="top">Return the ROWID of the last row insert from this
+<td valign="top">Return the <a href="lang_createtable.html#rowid">ROWID</a>
+of the last row insert from this
 connection to the database.  This is the same value that would be returned
 from the <b>sqlite_last_insert_rowid()</b> API function.</td>
 </tr>
@@ -1455,8 +1457,9 @@ that is running.  Example:  "2.8.0"</td>
 with the <i>Y</i>-th character and which is <i>Z</i> characters long.
 The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
 the the first character of the substring is found by counting from the
-right rather than the left.  If SQLite is configured to support UTF-8,
-then characters indices refer to actual UTF-8 characters, not bytes.</td>
+right rather than the left.  If <i>X</i> is string
+then characters indices refer to actual UTF-8 characters.  If
+<i>X</i> is a BLOB then the indices refer to bytes.</td>
 </tr>
 
 <tr>
@@ -1484,6 +1487,16 @@ upper-case letters.  The implementation of this function uses the C library
 routine <b>toupper()</b> which means it may not work correctly on 
 UTF-8 strings.</td>
 </tr>
+
+<tr>
+<td valign="top" align="right">zeroblob(<i>N</i>)</td>
+<td valign="top"><a name="zeroblob">
+Return a BLOB consisting of N bytes of 0x00.  SQLite
+manages these zeroblobs very efficiently.  Zeroblobs can be used to
+reserve space for a BLOB that is later written using 
+<a href="capi3ref.html#sqlite3_blob_open">incremental BLOB I/O</a>.</td>
+</tr>
+
 </table>
 
 <b>Date And Time Functions</b>
@@ -1890,6 +1903,10 @@ the main database by copying its contents to a temporary database file and
 reloading the original database file from the copy.  This eliminates 
 free pages,  aligns table data to be contiguous, and otherwise cleans 
 up the database file structure.</p>
+
+<p>The VACUUM command may change the 
+<a href="lang_createtable.html#rowid">ROWID</a> of entires in tables that do
+not have an explicit INTEGER PRIMARY KEY.</p>
 
 <p>VACUUM only works on the main database.
 It is not possible to VACUUM an attached database file.</p>

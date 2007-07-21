@@ -180,10 +180,10 @@ static int test_translate(
 /*
 ** Usage: translate_selftest
 **
-** Call sqlite3utfSelfTest() to run the internal tests for unicode
+** Call sqlite3UtfSelfTest() to run the internal tests for unicode
 ** translation. If there is a problem an assert() will fail.
 **/
-void sqlite3utfSelfTest();
+void sqlite3UtfSelfTest();
 static int test_translate_selftest(
   void * clientData,
   Tcl_Interp *interp,
@@ -191,7 +191,7 @@ static int test_translate_selftest(
   Tcl_Obj *CONST objv[]
 ){
 #ifndef SQLITE_OMIT_UTF16
-  sqlite3utfSelfTest();
+  sqlite3UtfSelfTest();
 #endif
   return SQLITE_OK;
 }

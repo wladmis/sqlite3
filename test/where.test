@@ -62,22 +62,40 @@ proc count sql {
 # and Next operators in the VDBE.  By verifing that the search count is
 # small we can be assured that indices are being used properly.
 #
-do_test where-1.1 {
-  count {SELECT x, y FROM t1 WHERE w=10}
-} {3 121 3}
+do_test where-1.1.1 {
+  count {SELECT x, y, w FROM t1 WHERE w=10}
+} {3 121 10 3}
 do_test where-1.1.2 {
   set sqlite_query_plan
 } {t1 i1w}
-do_test where-1.2 {
-  count {SELECT x, y FROM t1 WHERE w=11}
-} {3 144 3}
-do_test where-1.3 {
-  count {SELECT x, y FROM t1 WHERE 11=w}
-} {3 144 3}
-do_test where-1.4 {
-  count {SELECT x, y FROM t1 WHERE 11=w AND x>2}
-} {3 144 3}
+do_test where-1.1.3 {
+  count {SELECT x, y, w AS abc FROM t1 WHERE abc=10}
+} {3 121 10 3}
+do_test where-1.1.4 {
+  set sqlite_query_plan
+} {t1 i1w}
+do_test where-1.2.1 {
+  count {SELECT x, y, w FROM t1 WHERE w=11}
+} {3 144 11 3}
+do_test where-1.2.2 {
+  count {SELECT x, y, w AS abc FROM t1 WHERE abc=11}
+} {3 144 11 3}
+do_test where-1.3.1 {
+  count {SELECT x, y, w AS abc FROM t1 WHERE 11=w}
+} {3 144 11 3}
+do_test where-1.3.2 {
+  count {SELECT x, y, w AS abc FROM t1 WHERE 11=abc}
+} {3 144 11 3}
+do_test where-1.4.1 {
+  count {SELECT w, x, y FROM t1 WHERE 11=w AND x>2}
+} {11 3 144 3}
 do_test where-1.4.2 {
+  set sqlite_query_plan
+} {t1 i1w}
+do_test where-1.4.3 {
+  count {SELECT w AS a, x AS b, y FROM t1 WHERE 11=a AND b>2}
+} {11 3 144 3}
+do_test where-1.4.4 {
   set sqlite_query_plan
 } {t1 i1w}
 do_test where-1.5 {
@@ -1119,6 +1137,19 @@ do_test where-14.12 {
   } 
 } {4/4 4/1 1/4 1/1 sort}
 
+# Ticket #2445.
+#
+# There was a crash that could occur when a where clause contains an
+# alias for an expression in the result set, and that expression retrieves
+# a column of the second or subsequent table in a join.
+#
+do_test where-15.1 {
+  execsql {
+    CREATE TEMP TABLE t1 (a, b, c, d, e);
+    CREATE TEMP TABLE t2 (f);
+    SELECT t1.e AS alias FROM t2, t1 WHERE alias = 1 ;
+  }
+} {}
 
 integrity_check {where-99.0}
 

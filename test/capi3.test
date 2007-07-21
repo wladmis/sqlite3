@@ -587,6 +587,18 @@ do_test capi3-5.23 {
   sqlite3_finalize $STMT
 } SQLITE_OK
 
+do_test capi3-5.30 {
+  set sql "SELECT a AS x, sum(b) AS y, max(c) AS z FROM t1 AS m GROUP BY x"
+  set STMT [sqlite3_prepare $DB $sql -1 TAIL]
+  sqlite3_column_count $STMT
+} 3
+
+check_header $STMT capi3-5.31 {x y z} {VARINT {} {}}
+check_origin_header $STMT capi3-5.32 {main {} {}} {t1 {} {}} {a {} {}}
+do_test capi3-5.33 {
+  sqlite3_finalize $STMT
+} SQLITE_OK
+
 
 set ::ENC [execsql {pragma encoding}]
 db close
@@ -1044,6 +1056,20 @@ do_test capi3-16.4 {
   expr {$STMT==""}
 } {1}
 
-
+# Ticket #2426:  Misuse of sqlite3_column_* by calling it after
+# a sqlite3_reset should be harmless.
+#
+do_test capi3-17.1 {
+  set STMT [sqlite3_prepare $DB {SELECT * FROM t2} -1 TAIL]
+  sqlite3_step $STMT
+  sqlite3_column_int $STMT 0
+} {1}
+do_test capi3-17.2 {
+  sqlite3_reset $STMT
+  sqlite3_column_int $STMT 0
+} {0}
+do_test capi3-17.3 {
+  sqlite3_finalize $STMT
+} {SQLITE_OK}
 
 finish_test

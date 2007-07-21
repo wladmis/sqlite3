@@ -26,6 +26,11 @@
 # in this file and extract the version number.  That information will be
 # needed in order to generate the header of the amalgamation.
 #
+if {[lsearch $argv --nostatic]>=0} {
+  set addstatic 0
+} else {
+  set addstatic 1
+}
 set in [open tsrc/sqlite3.h]
 set cnt 0
 set VERSION ?????
@@ -65,6 +70,15 @@ puts $out [subst \
 ** This amalgamation was generated on $today.
 */
 #define SQLITE_AMALGAMATION 1}]
+if {$addstatic} {
+  puts $out \
+{#ifndef SQLITE_PRIVATE
+# define SQLITE_PRIVATE static
+#endif
+#ifndef SQLITE_API
+# define SQLITE_API
+#endif}
+}
 
 # These are the header files used by SQLite.  The first time any of these 
 # files are seen in a #include statement in the C code, include the complete
@@ -72,6 +86,7 @@ puts $out [subst \
 #
 foreach hdr {
    btree.h
+   btreeInt.h
    hash.h
    keywordhash.h
    opcodes.h
@@ -83,6 +98,7 @@ foreach hdr {
    sqlite3ext.h
    sqlite3.h
    sqliteInt.h
+   sqliteLimit.h
    vdbe.h
    vdbeInt.h
 } {
@@ -109,10 +125,15 @@ proc section_comment {text} {
 # process them approprately.
 #
 proc copy_file {filename} {
-  global seen_hdr available_hdr out
+  global seen_hdr available_hdr out addstatic
   set tail [file tail $filename]
   section_comment "Begin file $tail"
   set in [open $filename r]
+  if {[file extension $filename]==".h"} {
+    set declpattern {^ *[a-zA-Z][a-zA-Z_0-9 ]+ \*?(sqlite3[_A-Z][a-zA-Z0-9]+)\(}
+  } else {
+    set declpattern {^[a-zA-Z][a-zA-Z_0-9 ]+ \*?(sqlite3[_A-Z][a-zA-Z0-9]+)\(}
+  }
   while {![eof $in]} {
     set line [gets $in]
     if {[regexp {^#\s*include\s+["<]([^">]+)[">]} $line all hdr]} {
@@ -133,6 +154,15 @@ proc copy_file {filename} {
       puts $out "#if 0"
     } elseif {[regexp {^#line} $line]} {
       # Skip #line directives.
+    } elseif {$addstatic && [regexp $declpattern $line all funcname] 
+                  && ![regexp {^static} $line]} {
+      # Add the SQLITE_PRIVATE or SQLITE_API keyword before functions.
+      # so that linkage can be modified at compile-time.
+      if {[regexp {^sqlite3_} $funcname]} {
+        puts $out "SQLITE_API $line"
+      } else {
+        puts $out "SQLITE_PRIVATE $line"
+      }
     } else {
       puts $out $line
     }
@@ -152,6 +182,7 @@ foreach file {
    date.c
    os.c
 
+   malloc.c
    printf.c
    random.c
    utf.c
@@ -172,6 +203,7 @@ foreach file {
    vdbeaux.c
    vdbeapi.c
    vdbe.c
+   vdbeblob.c
 
    expr.c
    alter.c
@@ -203,33 +235,6 @@ foreach file {
    main.c
 } {
   copy_file tsrc/$file
-}
-
-if 0 {
-puts $out "#ifdef SQLITE_TEST"
-foreach file {
-   test1.c
-   test2.c
-   test3.c
-   test4.c
-   test5.c
-   test6.c
-   test7.c
-   test8.c
-   test_async.c
-   test_autoext.c
-   test_loadext.c
-   test_md5.c
-   test_schema.c
-   test_server.c
-   test_tclvar.c
-} {
-  copy_file ../sqlite/src/$file
-}
-puts $out "#endif /* SQLITE_TEST */"
-puts $out "#ifdef SQLITE_TCL"
-copy_file ../sqlite/src/tclsqlite.c
-puts $out "#endif /* SQLITE_TCL */"
 }
 
 close $out

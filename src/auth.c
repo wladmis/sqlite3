@@ -115,8 +115,7 @@ void sqlite3AuthRead(
   int iDb;              /* The index of the database the expression refers to */
 
   if( db->xAuth==0 ) return;
-  if( pExpr->op==TK_AS ) return;
-  assert( pExpr->op==TK_COLUMN );
+  if( pExpr->op!=TK_COLUMN ) return;
   iDb = sqlite3SchemaToIndex(pParse->db, pExpr->pSchema);
   if( iDb<0 ){
     /* An attempt to read a column out of a subquery or other

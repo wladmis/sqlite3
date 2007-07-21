@@ -735,4 +735,13 @@ db close
 file delete -force test2.db
 file delete -force no-such-file
 
+do_test attach-7.1 {
+  file delete -force test.db test.db-journal
+  sqlite3 db test.db
+  catchsql {
+    DETACH RAISE ( IGNORE ) IN ( SELECT "AAAAAA" . * ORDER BY 
+    REGISTER LIMIT "AAAAAA" . "AAAAAA" OFFSET RAISE ( IGNORE ) NOT NULL )
+  }
+} {1 {invalid name: "RAISE ( IGNORE ) IN ( SELECT "AAAAAA" . * ORDER BY 
+    REGISTER LIMIT "AAAAAA" . "AAAAAA" OFFSET RAISE ( IGNORE ) NOT NULL )"}}
 finish_test

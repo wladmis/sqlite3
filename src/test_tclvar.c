@@ -270,6 +270,7 @@ static sqlite3_module tclvarModule = {
   0,                           /* xCommit */
   0,                           /* xRollback */
   0,                           /* xFindMethod */
+  0,                           /* xRename */
 };
 
 /*

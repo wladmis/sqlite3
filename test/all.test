@@ -34,6 +34,9 @@ if {[llength $argv]>0} {
       -quick {
          set ISQUICK $value
       }
+      -soak {
+         set SOAKTEST $value
+      }
       default {
          puts stderr "Unknown option: $name"
          exit
@@ -59,6 +62,9 @@ set EXCLUDE {
   malloc.test
   misuse.test
   memleak.test
+  sqllimits1.test
+  fuzz.test
+  soak.test
 }
 
 # Files to include in the test.  If this list is empty then everything

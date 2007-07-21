@@ -230,4 +230,36 @@ do_test where4-7.1 {
 
 integrity_check {where4-99.0}
 
+do_test where4-7.1 {
+  execsql {
+    BEGIN;
+    CREATE TABLE t8(a, b, c, d);
+    CREATE INDEX t8_i ON t8(a, b, c);
+    CREATE TABLE t7(i);
+
+    INSERT INTO t7 VALUES(1);
+    INSERT INTO t7 SELECT i*2 FROM t7;
+    INSERT INTO t7 SELECT i*2 FROM t7;
+    INSERT INTO t7 SELECT i*2 FROM t7;
+    INSERT INTO t7 SELECT i*2 FROM t7;
+    INSERT INTO t7 SELECT i*2 FROM t7;
+    INSERT INTO t7 SELECT i*2 FROM t7;
+
+    COMMIT;
+  }
+} {}
+
+# At one point the sub-select inside the aggregate sum() function in the
+# following query was leaking a couple of stack entries. This query 
+# runs the SELECT in a loop enough times that an assert() fails. Or rather,
+# did fail before the bug was fixed.
+#
+do_test where4-7.2 {
+  execsql {
+    SELECT sum((
+      SELECT d FROM t8 WHERE a = i AND b = i AND c < NULL
+    )) FROM t7;
+  }
+} {{}}
+
 finish_test
