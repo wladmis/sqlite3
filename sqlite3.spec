@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.3.17
+Version: 3.4.1
 Release: alt1
 
 Summary: An Embeddable SQL Database Engine
@@ -7,11 +7,12 @@ License: Public Domain
 Group: Development/Databases
 
 URL: http://www.sqlite.org/
-Source: %name-%version-%release.tar
+Source: sqlite-3.4.1+cvs20070720.tar
+Patch: %name-%version-%release.patch
 
 Requires: lib%name = %version-%release
 
-# Automatically added by buildreq on Fri Apr 27 2007
+# Automatically added by buildreq on Sat Jul 21 2007
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
 
 %package -n lib%name
@@ -98,7 +99,8 @@ use in long-running programs such as graphical user interfaces or
 embedded controllers.
 
 %prep
-%setup -q -n %name-%version-%release
+%setup -q -n sqlite-3.4.1+cvs20070720
+%patch -p1
 
 %build
 autoreconf -i
@@ -169,6 +171,11 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
+* Sat Jul 21 2007 Alexey Tourbin <at@altlinux.ru> 3.4.1-alt1
+- 3.3.17+ -> 3.4.1+cvs20070720 (fixes multiple vulnerabilities
+  discovered by the Google Security team)
+- changed src.rpm packaging to keep separate tarball with cvs snapshot
+
 * Fri Apr 27 2007 Alexey Tourbin <at@altlinux.ru> 3.3.17-alt1
 - 3.3.15 -> 3.3.17+
 

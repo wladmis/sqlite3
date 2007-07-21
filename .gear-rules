@@ -1,1 +1,2 @@
-tar: . name=sqlite3-@version@-@release@
+tar: cvs20070720:. name=sqlite-3.4.1+cvs20070720
+diff: cvs20070720:. .
