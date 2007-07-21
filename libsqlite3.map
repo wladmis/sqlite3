@@ -38,7 +38,7 @@ SQLITE_3.3.7 {
 	sqlite3_realloc;
 	sqlite3_sleep;
 };
-SQLITE3_3.3.8 {
+SQLITE_3.3.8 {
     global:
 	sqlite3_apis;
 	sqlite3_auto_extension;
@@ -46,12 +46,12 @@ SQLITE3_3.3.8 {
 	sqlite3_overload_function;
 	sqlite3_reset_auto_extension;
 };
-SQLITE3_3.3.9 {
+SQLITE_3.3.9 {
     global:
 	sqlite3_prepare16_v2;
 	sqlite3_prepare_v2;
 };
-SQLITE3_3.4.0 {
+SQLITE_3.4.0 {
     global:
 	sqlite3_bind_zeroblob;
 	sqlite3_blob_bytes;
@@ -63,6 +63,7 @@ SQLITE3_3.4.0 {
 	sqlite3_result_error_toobig;
 	sqlite3_result_zeroblob;
 };
-SQLITE3_3.4.1 {
+SQLITE_3.4.1 {
 	sqlite3_create_module_v2;
 };
+/* the prefix is SQLITE_, not SQLITE3_ */
