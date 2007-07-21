@@ -257,6 +257,7 @@ FTS2_SRC = \
   $(TOP)/ext/fts2/fts2_hash.h \
   $(TOP)/ext/fts2/fts2_porter.c \
   $(TOP)/ext/fts2/fts2_tokenizer.h \
+  $(TOP)/ext/fts2/fts2_tokenizer.c \
   $(TOP)/ext/fts2/fts2_tokenizer1.c
 
 fts2.lo: $(TOP)/ext/fts2/fts2.c $(HDR) $(FTS2_HDR)
@@ -265,9 +266,11 @@ fts2_hash.lo: $(TOP)/ext/fts2/fts2_hash.c $(HDR) $(FTS2_HDR)
 	$(LTCOMPILE) -c $<
 fts2_porter.lo: $(TOP)/ext/fts2/fts2_porter.c $(HDR) $(FTS2_HDR)
 	$(LTCOMPILE) -c $<
+fts2_tokenizer.lo: $(TOP)/ext/fts2/fts2_tokenizer.c $(HDR) $(FTS2_HDR)
+	$(LTCOMPILE) -c $<
 fts2_tokenizer1.lo: $(TOP)/ext/fts2/fts2_tokenizer1.c $(HDR) $(FTS2_HDR)
 	$(LTCOMPILE) -c $<
-fts2.la: fts2.lo fts2_hash.lo fts2_porter.lo fts2_tokenizer1.lo libsqlite3.la
+fts2.la: fts2.lo fts2_hash.lo fts2_porter.lo fts2_tokenizer.lo fts2_tokenizer1.lo libsqlite3.la
 	$(LTLINK) -module -avoid-version -rpath $(sqlite3extdir) -o fts2.la $^ -Wl,-z,defs
 fts2_install: fts2.la
 	$(INSTALL) -d $(DESTDIR)$(sqlite3extdir)
