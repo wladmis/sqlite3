@@ -4299,7 +4299,7 @@ case OP_IntegrityCk: {
     if( (pTos[-nRoot].flags & MEM_Int)==0 ) break;
   }
   assert( nRoot>0 );
-  aRoot = sqliteMallocRaw( sizeof(int*)*(nRoot+1) );
+  aRoot = sqliteMallocRaw( sizeof(int)*(nRoot+1) );
   if( aRoot==0 ) goto no_mem;
   j = pOp->p1;
   assert( j>=0 && j<p->nMem );
