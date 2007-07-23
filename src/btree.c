@@ -2009,7 +2009,7 @@ static int autoVacuumCommit(BtShared *pBt, Pgno *pnTrunc){
       assert(nFin==0 || pBt->nTrunc==0 || nFin<=pBt->nTrunc);
       rc = SQLITE_OK;
       if( pBt->nTrunc ){
-        sqlite3PagerWrite(pBt->pPage1->pDbPage);
+        rc = sqlite3PagerWrite(pBt->pPage1->pDbPage);
         put4byte(&pBt->pPage1->aData[32], 0);
         put4byte(&pBt->pPage1->aData[36], 0);
         pBt->nTrunc = nFin;
