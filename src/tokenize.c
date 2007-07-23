@@ -381,13 +381,6 @@ int sqlite3GetToken(const unsigned char *z, int *tokenType){
 }
 
 /*
-** The interface to the LEMON-generated parser
-*/
-void *sqlite3ParserAlloc(void*(*)(size_t));
-void sqlite3ParserFree(void*, void(*)(void*));
-void sqlite3Parser(void*, int, Token, Parse*);
-
-/*
 ** Run the parser on the given SQL string.  The parser structure is
 ** passed in.  An SQLITE_ status code is returned.  If an error occurs
 ** and pzErrMsg!=NULL then an error message might be written into 
