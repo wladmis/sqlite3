@@ -101,7 +101,9 @@ static char continuePrompt[20]; /* Continuation prompt. default: "   ...> " */
 /*
 ** Write I/O traces to the following stream.
 */
+#ifdef SQLITE_ENABLE_IOTRACE
 static FILE *iotrace = 0;
+#endif
 
 /*
 ** This routine works like printf in that its first argument is a
@@ -109,6 +111,7 @@ static FILE *iotrace = 0;
 ** in place of % fields.  The result of formatting this string
 ** is written to iotrace.
 */
+#ifdef SQLITE_ENABLE_IOTRACE
 static void iotracePrintf(const char *zFormat, ...){
   va_list ap;
   char *z;
@@ -119,6 +122,7 @@ static void iotracePrintf(const char *zFormat, ...){
   fprintf(iotrace, "%s", z);
   sqlite3_free(z);
 }
+#endif
 
 
 /*
