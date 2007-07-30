@@ -79,7 +79,7 @@ possible.
 <p>
 During part of SQLite's INSERT and SELECT processing, the complete
 content of each row in the database is encoded as a single BLOB.
-So the SQLTIE_MAX_LENGTH parameter also determines the maximum
+So the SQLITE_MAX_LENGTH parameter also determines the maximum
 number of bytes in a row.
 </p>
 }
