@@ -383,10 +383,22 @@ static int allowedOp(int op){
 /*
 ** Commute a comparision operator.  Expressions of the form "X op Y"
 ** are converted into "Y op X".
+**
+** If a collation sequence is associated with either the left or right
+** side of the comparison, it remains associated with the same side after
+** the commutation. So "Y collate NOCASE op X" becomes 
+** "X collate NOCASE op Y". This is because any collation sequence on
+** the left hand side of a comparison overrides any collation sequence 
+** attached to the right. For the same reason the EP_ExpCollate flag
+** is not commuted.
 */
 static void exprCommute(Expr *pExpr){
+  u16 expRight = (pExpr->pRight->flags & EP_ExpCollate);
+  u16 expLeft = (pExpr->pLeft->flags & EP_ExpCollate);
   assert( allowedOp(pExpr->op) && pExpr->op!=TK_IN );
   SWAP(CollSeq*,pExpr->pRight->pColl,pExpr->pLeft->pColl);
+  pExpr->pRight->flags = (pExpr->pRight->flags & ~EP_ExpCollate) | expLeft;
+  pExpr->pLeft->flags = (pExpr->pLeft->flags & ~EP_ExpCollate) | expRight;
   SWAP(Expr*,pExpr->pRight,pExpr->pLeft);
   if( pExpr->op>=TK_GT ){
     assert( TK_LT==TK_GT+2 );

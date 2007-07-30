@@ -136,5 +136,18 @@ do_test collate6-2.3 {
   }
 } {}
 
+# At one point the 6-3.2 (but not 6-3.1) was causing an assert() to fail.
+#
+do_test collate6-3.1 {
+  execsql {
+    SELECT 1 FROM sqlite_master WHERE name COLLATE nocase = 'hello';
+  }
+} {}
+do_test collate6-3.2 {
+  execsql {
+    SELECT 1 FROM sqlite_master WHERE 'hello' = name COLLATE nocase;
+  }
+} {}
+
 
 finish_test
