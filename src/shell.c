@@ -1779,7 +1779,7 @@ static void process_sqliterc(
   in = fopen(sqliterc,"rb");
   if( in ){
     if( stdin_is_interactive ){
-      printf("Loading resources from %s\n",sqliterc);
+      printf("-- Loading resources from %s\n",sqliterc);
     }
     process_input(p,in);
     fclose(in);
