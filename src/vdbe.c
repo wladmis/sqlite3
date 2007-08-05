@@ -1289,7 +1289,19 @@ case OP_Function: {
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
   (*ctx.pFunc->xFunc)(&ctx, n, apVal);
   if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
-  if( sqlite3MallocFailed() ) goto no_mem;
+  if( sqlite3MallocFailed() ){
+    /* Even though a malloc() has failed, the implementation of the
+    ** user function may have called an sqlite3_result_XXX() function
+    ** to return a value. The following call releases any resources
+    ** associated with such a value.
+    **
+    ** Note: Maybe MemRelease() should be called if sqlite3SafetyOn()
+    ** fails also (the if(...) statement above). But if people are
+    ** misusing sqlite, they have bigger problems than a leaked value.
+    */
+    sqlite3VdbeMemRelease(&ctx.s);
+    goto no_mem;
+  }
   popStack(&pTos, n);
 
   /* If any auxilary data functions have been called by this user function,
@@ -4299,14 +4311,14 @@ case OP_IntegrityCk: {
     if( (pTos[-nRoot].flags & MEM_Int)==0 ) break;
   }
   assert( nRoot>0 );
-  aRoot = sqliteMallocRaw( sizeof(int*)*(nRoot+1) );
+  aRoot = sqliteMallocRaw( sizeof(int)*(nRoot+1) );
   if( aRoot==0 ) goto no_mem;
   j = pOp->p1;
   assert( j>=0 && j<p->nMem );
   pnErr = &p->aMem[j];
   assert( (pnErr->flags & MEM_Int)!=0 );
   for(j=0; j<nRoot; j++){
-    aRoot[j] = pTos[-j].u.i;
+    aRoot[j] = (pTos-j)->u.i;
   }
   aRoot[j] = 0;
   popStack(&pTos, nRoot);

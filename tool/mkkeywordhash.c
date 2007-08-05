@@ -350,8 +350,8 @@ int main(int argc, char **argv){
     Keyword *p = &aKeywordTable[i];
     p->len = strlen(p->zName);
     totalLen += p->len;
-    p->hash = (UpperToLower[p->zName[0]]*4) ^
-              (UpperToLower[p->zName[p->len-1]]*3) ^ p->len;
+    p->hash = (UpperToLower[(int)p->zName[0]]*4) ^
+              (UpperToLower[(int)p->zName[p->len-1]]*3) ^ p->len;
     p->id = i+1;
   }
 

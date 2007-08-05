@@ -346,6 +346,27 @@ do_test check-6.9 {
   }
 } {3 12.0 2 20.0}
 
+do_test check-6.11 {
+  execsql {SELECT * FROM t1}
+} {3 12.0 2 20.0}
+do_test check-6.12 {
+  catchsql {
+    REPLACE INTO t1 VALUES(6,7);
+  }
+} {1 {constraint failed}}
+do_test check-6.13 {
+  execsql {SELECT * FROM t1}
+} {3 12.0 2 20.0}
+do_test check-6.14 {
+  catchsql {
+    INSERT OR IGNORE INTO t1 VALUES(6,7);
+  }
+} {0 {}}
+do_test check-6.15 {
+  execsql {SELECT * FROM t1}
+} {3 12.0 2 20.0}
+
+
 }
 
 finish_test

@@ -1140,11 +1140,17 @@ static int lookupName(
       for(j=0; j<pEList->nExpr; j++){
         char *zAs = pEList->a[j].zName;
         if( zAs!=0 && sqlite3StrICmp(zAs, zCol)==0 ){
-          Expr *pDup;
+          Expr *pDup, *pOrig;
           assert( pExpr->pLeft==0 && pExpr->pRight==0 );
           assert( pExpr->pList==0 );
           assert( pExpr->pSelect==0 );
-          pDup = sqlite3ExprDup(pEList->a[j].pExpr);
+          pOrig = pEList->a[j].pExpr;
+          if( !pNC->allowAgg && ExprHasProperty(pOrig, EP_Agg) ){
+            sqlite3ErrorMsg(pParse, "misuse of aliased aggregate %s", zAs);
+            sqliteFree(zCol);
+            return 2;
+          }
+          pDup = sqlite3ExprDup(pOrig);
           if( pExpr->flags & EP_ExpCollate ){
             pDup->pColl = pExpr->pColl;
             pDup->flags |= EP_ExpCollate;

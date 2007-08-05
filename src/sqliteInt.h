@@ -1556,61 +1556,14 @@ typedef struct {
 extern int sqlite3_always_code_trigger_setup;
 
 /*
-** A lookup table used by the SQLITE_READ_UTF8 macro.  The definition
-** is in utf.c.
+** Assuming zIn points to the first byte of a UTF-8 character,
+** advance zIn to point to the first byte of the next UTF-8 character.
 */
-extern const unsigned char sqlite3UtfTrans1[];
-
-/*
-** Macros for reading UTF8 characters.
-**
-** SQLITE_READ_UTF8(x,c) reads a single UTF8 value out of x and writes
-** that value into c.  The type of x must be unsigned char*.  The type
-** of c must be unsigned int.
-**
-** SQLITE_SKIP_UTF8(x) advances x forward by one character.  The type of
-** x must be unsigned char*.
-**
-** Notes On Invalid UTF-8:
-**
-**  *  These macros never allow a 7-bit character (0x00 through 0x7f) to
-**     be encoded as a multi-byte character.  Any multi-byte character that
-**     attempts to encode a value between 0x00 and 0x7f is rendered as 0xfffd.
-**
-**  *  These macros never allow a UTF16 surrogate value to be encoded.
-**     If a multi-byte character attempts to encode a value between
-**     0xd800 and 0xe000 then it is rendered as 0xfffd.
-**
-**  *  Bytes in the range of 0x80 through 0xbf which occur as the first
-**     byte of a character are interpreted as single-byte characters
-**     and rendered as themselves even though they are technically
-**     invalid characters.
-**
-**  *  These routines accept an infinite number of different UTF8 encodings
-**     for unicode values 0x80 and greater.  They do not change over-length
-**     encodings to 0xfffd as some systems recommend.
-** 
-*/
-#define SQLITE_READ_UTF8(zIn, c) {                     \
-  c = *(zIn++);                                        \
-  if( c>=0xc0 ){                                       \
-    c = sqlite3UtfTrans1[c-0xc0];                      \
-    while( (*zIn & 0xc0)==0x80 ){                      \
-      c = (c<<6) + (0x3f & *(zIn++));                  \
-    }                                                  \
-    if( c<0x80                                         \
-        || (c&0xFFFFF800)==0xD800                      \
-        || (c&0xFFFFFFFE)==0xFFFE ){  c = 0xFFFD; }    \
-  }                                                    \
-}
 #define SQLITE_SKIP_UTF8(zIn) {                        \
   if( (*(zIn++))>=0xc0 ){                              \
     while( (*zIn & 0xc0)==0x80 ){ zIn++; }             \
   }                                                    \
 }
-
-
-
 
 /*
 ** The SQLITE_CORRUPT_BKPT macro can be either a constant (for production
@@ -1830,7 +1783,7 @@ int sqlite3GetInt32(const char *, int*);
 int sqlite3FitsIn64Bits(const char *);
 int sqlite3Utf16ByteLen(const void *pData, int nChar);
 int sqlite3Utf8CharLen(const char *pData, int nByte);
-u32 sqlite3ReadUtf8(const unsigned char *);
+int sqlite3Utf8Read(const u8*, const u8*, const u8**);
 int sqlite3PutVarint(unsigned char *, u64);
 int sqlite3GetVarint(const unsigned char *, u64 *);
 int sqlite3GetVarint32(const unsigned char *, u32 *);
@@ -1901,6 +1854,13 @@ int sqlite3ApiExit(sqlite3 *db, int);
 void sqlite3FailedMalloc(void);
 void sqlite3AbortOtherActiveVdbes(sqlite3 *, Vdbe *);
 int sqlite3OpenTempDatabase(Parse *);
+
+/*
+** The interface to the LEMON-generated parser
+*/
+void *sqlite3ParserAlloc(void*(*)(size_t));
+void sqlite3ParserFree(void*, void(*)(void*));
+void sqlite3Parser(void*, int, Token, Parse*);
 
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
   void sqlite3CloseExtensions(sqlite3*);
