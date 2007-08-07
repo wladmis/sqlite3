@@ -1578,7 +1578,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
       }else if( pExpr->pList ){
         /* Case 2:     expr IN (exprlist)
         **
-	** For each expression, build an index key from the evaluation and
+        ** For each expression, build an index key from the evaluation and
         ** store it in the temporary table. If <expr> is a column, then use
         ** that columns affinity when building index keys. If <expr> is not
         ** a column, use numeric affinity.
@@ -2058,7 +2058,7 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
       if( !pParse->trigStack ){
         sqlite3ErrorMsg(pParse,
                        "RAISE() may only be used within a trigger-program");
-	return;
+        return;
       }
       if( pExpr->iColumn!=OE_Ignore ){
          assert( pExpr->iColumn==OE_Rollback ||

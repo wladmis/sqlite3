@@ -2856,8 +2856,8 @@ static int pagerSharedLock(Pager *pPager){
         ** a write lock, so there is never any chance of two or more
         ** processes opening the journal at the same time.
         **
-	** Open the journal for read/write access. This is because in 
-	** exclusive-access mode the file descriptor will be kept open and
+        ** Open the journal for read/write access. This is because in 
+        ** exclusive-access mode the file descriptor will be kept open and
         ** possibly used for a transaction later on. On some systems, the
         ** OsTruncate() call used in exclusive-access mode also requires
         ** a read/write file handle.
@@ -3579,7 +3579,7 @@ static int pager_write(PgHdr *pPg){
                PAGERID(pPager), pPg->pgno, pPg->needSync, pager_pagehash(pPg));
           *(u32*)pEnd = saved;
 
-	  /* An error has occured writing to the journal file. The 
+          /* An error has occured writing to the journal file. The 
           ** transaction will be rolled back by the layer above.
           */
           if( rc!=SQLITE_OK ){
