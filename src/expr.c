@@ -177,7 +177,7 @@ static int binaryCompareP1(Expr *pExpr1, Expr *pExpr2, int jumpIfNull){
 ** Argument pRight (but not pLeft) may be a null pointer. In this case,
 ** it is not considered.
 */
-CollSeq* sqlite3BinaryCompareCollSeq(
+CollSeq *sqlite3BinaryCompareCollSeq(
   Parse *pParse, 
   Expr *pLeft, 
   Expr *pRight

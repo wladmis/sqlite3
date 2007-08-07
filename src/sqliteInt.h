@@ -1922,7 +1922,7 @@ FuncDef *sqlite3VtabOverloadFunction(FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, int, const char*);
-CollSeq* sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
+CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 
 #if SQLITE_MAX_EXPR_DEPTH>0
   void sqlite3ExprSetHeight(Expr *);
