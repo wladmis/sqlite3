@@ -256,15 +256,15 @@ extern int sqlite3_iLine;            /* Line number for debug info */
 
 #endif
 
-/* Variable sqlite3_mallocHasFailed is set to true after a malloc() 
+/* Variable sqlite3MallocHasFailed is set to true after a malloc() 
 ** failure occurs. 
 **
 ** The sqlite3MallocFailed() macro returns true if a malloc has failed
 ** in this thread since the last call to sqlite3ApiExit(), or false 
 ** otherwise.
 */
-extern int sqlite3_mallocHasFailed;
-#define sqlite3MallocFailed() (sqlite3_mallocHasFailed && sqlite3OsInMutex(1))
+extern int sqlite3MallocHasFailed;
+#define sqlite3MallocFailed() (sqlite3MallocHasFailed && sqlite3OsInMutex(1))
 
 #define sqliteFree(x)          sqlite3FreeX(x)
 #define sqliteAllocSize(x)     sqlite3AllocSize(x)
