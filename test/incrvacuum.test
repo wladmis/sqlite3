@@ -573,11 +573,19 @@ db close
 file delete -force test.db test.db-journal
 sqlite3 db test.db
 
-do_test incrvacuum-11.1 {
-  execsql {
-    PRAGMA auto_vacuum;
-  }
-} {0}
+ifcapable default_autovacuum {
+  do_test incrvacuum-11.1-av-dflt-on {
+    execsql {
+      PRAGMA auto_vacuum;
+    }
+  } {1}
+} else {
+  do_test incrvacuum-11.1-av-dflt-off {
+    execsql {
+      PRAGMA auto_vacuum;
+    }
+  } {0}
+}
 do_test incrvacuum-11.2 {
   execsql {
     PRAGMA auto_vacuum = incremental;
@@ -686,4 +694,3 @@ do_test incrvacuum-13.5 {
 
 db2 close
 finish_test
-
