@@ -2625,7 +2625,7 @@ static int pager_recycle(Pager *pPager, int syncOk, PgHdr **ppPg){
   ** very slow operation, so we work hard to avoid it.  But sometimes
   ** it can't be helped.
   */
-  if( pPg==0 && pPager->pFirst && syncOk && !MEMDB){
+  if( pPg==0 && pPager->pFirst && pPager->nRec && syncOk && !MEMDB){
     int rc = syncJournal(pPager);
     if( rc!=0 ){
       return rc;
