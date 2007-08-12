@@ -310,8 +310,7 @@ proc check_header {STMT test names decltypes} {
 proc check_origin_header {STMT test dbs tables cols} {
   # If sqlite3_column_origin_name() and friends are not compiled into
   # this build, this proc is a no-op.
-ifcapable columnmetadata {
-
+  ifcapable columnmetadata {
     # Use the return value of sqlite3_column_count() to build
     # a list of column indexes. i.e. If sqlite3_column_count
     # is 3, build the list {0 1 2}.

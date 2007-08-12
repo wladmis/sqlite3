@@ -24,10 +24,16 @@ do_test softheap1-1.1 {
   execsql {
     PRAGMA auto_vacuum=1;
     CREATE TABLE t1(x);
-    INSERT INTO t1 VALUES(hex(randomblob(5000)));
+    INSERT INTO t1 VALUES(hex(randomblob(1000)));
     BEGIN;
+  }
+  execsql {
     CREATE TABLE t2 AS SELECT * FROM t1;
+  }
+  execsql {
     ROLLBACK;
+  }
+  execsql {
     PRAGMA integrity_check;
   }
 } {ok}

@@ -51,6 +51,7 @@ proc pagercount_sql {sql {db db}} {
 # Setup the test database
 #
 do_test pageropt-1.1 {
+  sqlite3_soft_heap_limit 0
   execsql {
     PRAGMA auto_vacuum = OFF;
     PRAGMA page_size = 1024;
@@ -195,6 +196,6 @@ do_test pageroot-4.2 {
   }
 } {12 3 3 0}
 
-
+sqlite3_soft_heap_limit $soft_limit
 catch {db2 close}
 finish_test

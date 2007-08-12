@@ -37,6 +37,7 @@ ifcapable !memorymanage {
    return
 }
 
+sqlite3_soft_heap_limit 0
 sqlite3 db test.db
 
 do_test malloc5-1.1 {
