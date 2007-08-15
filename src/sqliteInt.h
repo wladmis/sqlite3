@@ -441,6 +441,7 @@ struct Schema {
 ** consistently.
 */
 struct sqlite3 {
+  sqlite3_vfs *pVfs;            /* OS Interface */
   int nDb;                      /* Number of backends currently in use */
   Db *aDb;                      /* All backends */
   int flags;                    /* Miscellanous flags. See below */
