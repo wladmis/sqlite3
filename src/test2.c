@@ -546,12 +546,7 @@ static int fake_big_file(
   }
   offset = n;
   offset *= 1024*1024;
-  rc = sqlite3OsSeek(fd, offset);
-  if( rc ){
-    Tcl_AppendResult(interp, "seek failed: ", errorName(rc), 0);
-    return TCL_ERROR;
-  }
-  rc = sqlite3OsWrite(fd, "Hello, World!", 14);
+  rc = sqlite3OsWrite(fd, "Hello, World!", 14, offset);
   sqlite3OsClose(&fd);
   if( rc ){
     Tcl_AppendResult(interp, "write failed: ", errorName(rc), 0);
