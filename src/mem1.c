@@ -16,6 +16,13 @@
 */
 
 /*
+** This version of the memory allocator is the default.  It is
+** used when no other memory allocator is specified using compile-time
+** macros.
+*/
+#if !defined(SQLITE_MEMDEBUG) && !defined(SQLITE_OMIT_MEMORY_ALLOCATION)
+
+/*
 ** We will eventually construct multiple memory allocation subsystems
 ** suitable for use in various contexts:
 **
@@ -202,3 +209,5 @@ void *sqlite3_realloc(void *pPrior, unsigned int nBytes){
   sqlite3_mutex_leave(memMutex);
   return (void*)p;
 }
+
+#endif /* !SQLITE_MEMDEBUG && !SQLITE_OMIT_MEMORY_ALLOCATION */
