@@ -66,7 +66,7 @@ int sqlite3_exec(
     nCallback = 0;
 
     nCol = sqlite3_column_count(pStmt);
-    azCols = sqliteMalloc(2*nCol*sizeof(const char *) + 1);
+    azCols = sqlite3DbMallocZero(db, 2*nCol*sizeof(const char *) + 1);
     if( azCols==0 ){
       goto exec_out;
     }
@@ -108,13 +108,13 @@ int sqlite3_exec(
       }
     }
 
-    sqliteFree(azCols);
+    sqlite3_free(azCols);
     azCols = 0;
   }
 
 exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
-  if( azCols ) sqliteFree(azCols);
+  if( azCols ) sqlite3_free(azCols);
 
   rc = sqlite3ApiExit(0, rc);
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){

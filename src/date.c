@@ -817,7 +817,7 @@ static void strftimeFunc(
     sqlite3_result_error_toobig(context);
     return;
   }else{
-    z = sqliteMalloc( n );
+    z = sqlite3_malloc( n );
     if( z==0 ) return;
   }
   computeJD(&x);
@@ -880,7 +880,7 @@ static void strftimeFunc(
   z[j] = 0;
   sqlite3_result_text(context, z, -1, SQLITE_TRANSIENT);
   if( z!=zBuf ){
-    sqliteFree(z);
+    sqlite3_free(z);
   }
 }
 

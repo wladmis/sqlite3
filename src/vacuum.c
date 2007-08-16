@@ -112,7 +112,7 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   pTemp = db->aDb[db->nDb-1].pBt;
   sqlite3BtreeSetPageSize(pTemp, sqlite3BtreeGetPageSize(pMain),
      sqlite3BtreeGetReserve(pMain));
-  if( sqlite3MallocFailed() ){
+  if( db->mallocFailed ){
     rc = SQLITE_NOMEM;
     goto end_of_vacuum;
   }

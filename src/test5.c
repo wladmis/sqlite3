@@ -155,14 +155,14 @@ static int test_translate(
   if( enc_from==SQLITE_UTF8 ){
     z = Tcl_GetString(objv[1]);
     if( objc==5 ){
-      z = sqliteStrDup(z);
+      z = sqlite3StrDup(z);
     }
     sqlite3ValueSetStr(pVal, -1, z, enc_from, xDel);
   }else{
     z = (char*)Tcl_GetByteArrayFromObj(objv[1], &len);
     if( objc==5 ){
       char *zTmp = z;
-      z = sqliteMalloc(len);
+      z = sqlite3_malloc(len);
       memcpy(z, zTmp, len);
     }
     sqlite3ValueSetStr(pVal, -1, z, enc_from, xDel);
