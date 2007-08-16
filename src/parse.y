@@ -419,7 +419,7 @@ selcollist(A) ::= sclp(P) expr(X) as(Y).     {
    A = sqlite3ExprListAppend(pParse,P,X,Y.n?&Y:0);
 }
 selcollist(A) ::= sclp(P) STAR. {
-  Expr *p = sqlite3Expr(pParse, TK_ALL, 0, 0, 0);
+  Expr *p = sqlite3PExpr(pParse, TK_ALL, 0, 0, 0);
   A = sqlite3ExprListAppend(pParse, P, p, 0);
 }
 selcollist(A) ::= sclp(P) nm(X) DOT STAR. {
@@ -806,7 +806,7 @@ expr(A) ::= expr(W) between_op(N) expr(X) AND expr(Y). [BETWEEN] {
     SrcList *pSrc = sqlite3SrcListAppend(pParse->db, 0,&Y,&Z);
     A = sqlite3PExpr(pParse, TK_IN, X, 0, 0);
     if( A ){
-      A->pSelect = sqlite3SelectNew(0,pSrc,0,0,0,0,0,0,0);
+      A->pSelect = sqlite3SelectNew(pParse, 0,pSrc,0,0,0,0,0,0,0);
       sqlite3ExprSetHeight(A);
     }else{
       sqlite3SrcListDelete(pSrc);

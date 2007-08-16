@@ -92,6 +92,7 @@ void sqlite3_mutex_leave(sqlite3_mutex *pNotUsed){
 */
 int sqlite3_mutex_serialize(void (*xCallback)(void*), void *pArg){
   xCallback(pArg);
+  return SQLITE_OK;
 }
 
 #if 0

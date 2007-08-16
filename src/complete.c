@@ -248,11 +248,11 @@ int sqlite3_complete(const char *zSql){
 int sqlite3_complete16(const void *zSql){
   sqlite3_value *pVal;
   char const *zSql8;
-  int rc = 0;
+  int rc = SQLITE_NOMEM;
 
-  pVal = sqlite3ValueNew();
-  sqlite3ValueSetStr(pVal, -1, zSql, SQLITE_UTF16NATIVE, SQLITE_STATIC);
-  zSql8 = sqlite3ValueText(pVal, SQLITE_UTF8);
+  pVal = sqlite3ValueNew(0);
+  sqlite3ValueSetStr(0, pVal, -1, zSql, SQLITE_UTF16NATIVE, SQLITE_STATIC);
+  zSql8 = sqlite3ValueText(0, pVal, SQLITE_UTF8);
   if( zSql8 ){
     rc = sqlite3_complete(zSql8);
   }

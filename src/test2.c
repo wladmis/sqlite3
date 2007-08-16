@@ -531,7 +531,7 @@ static int fake_big_file(
   int rc;
   int n;
   i64 offset;
-  OsFile *fd = 0;
+  sqlite3_file *fd = 0;
   int readOnly = 0;
   if( argc!=3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],

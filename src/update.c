@@ -60,7 +60,7 @@ void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
     u8 enc = ENC(sqlite3VdbeDb(v));
     Column *pCol = &pTab->aCol[i];
     assert( i<pTab->nCol );
-    sqlite3ValueFromExpr(pCol->pDflt, enc, pCol->affinity, &pValue);
+    sqlite3ValueFromExpr(sqlite3VdbeDb(v), pCol->pDflt, enc, pCol->affinity, &pValue);
     if( pValue ){
       sqlite3VdbeChangeP3(v, -1, (const char *)pValue, P3_MEM);
     }else{

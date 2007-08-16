@@ -5741,7 +5741,7 @@ static void checkAppendMsg(
   pCheck->mxErr--;
   pCheck->nErr++;
   va_start(ap, zFormat);
-  zMsg2 = sqlite3VMPrintf(zFormat, ap);
+  zMsg2 = sqlite3VMPrintf(0, zFormat, ap);
   va_end(ap);
   if( zMsg1==0 ) zMsg1 = "";
   if( pCheck->zErrMsg ){
@@ -6091,7 +6091,7 @@ char *sqlite3BtreeIntegrityCheck(
   if( !sCheck.anRef ){
     unlockBtreeIfUnused(pBt);
     *pnErr = 1;
-    return sqlite3MPrintf("Unable to malloc %d bytes", 
+    return sqlite3MPrintf(p->pSqlite, "Unable to malloc %d bytes", 
         (sCheck.nPage+1)*sizeof(sCheck.anRef[0]));
   }
   for(i=0; i<=sCheck.nPage; i++){ sCheck.anRef[i] = 0; }

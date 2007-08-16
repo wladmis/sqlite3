@@ -864,7 +864,7 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp(v, OP_IntegrityCk, 0, i);
       addr = sqlite3VdbeAddOp(v, OP_IsNull, -1, 0);
       sqlite3VdbeOp3(v, OP_String8, 0, 0,
-         sqlite3MPrintf("*** in database %s ***\n", db->aDb[i].zName),
+         sqlite3MPrintf(db, "*** in database %s ***\n", db->aDb[i].zName),
          P3_DYNAMIC);
       sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
       sqlite3VdbeAddOp(v, OP_Concat, 0, 0);

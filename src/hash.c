@@ -222,7 +222,7 @@ static void rehash(Hash *pH, int new_size){
   int (*xHash)(const void*,int); /* The hash function */
 
   assert( (new_size & (new_size-1))==0 );
-  new_ht = (struct _ht *)sqlite3_malloc( new_size*sizeof(struct _ht) );
+  new_ht = (struct _ht *)sqlite3MallocZero( new_size*sizeof(struct _ht) );
   if( new_ht==0 ) return;
   if( pH->ht ) sqlite3_free(pH->ht);
   pH->ht = new_ht;

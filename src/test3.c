@@ -589,7 +589,7 @@ static int btree_integrity_check(
   sqlite3_free((void*)aRoot);
   if( zResult ){
     Tcl_AppendResult(interp, zResult, 0);
-    sqliteFree(zResult); 
+    sqlite3_free(zResult); 
   }
   return TCL_OK;
 }
