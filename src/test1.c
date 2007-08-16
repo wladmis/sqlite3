@@ -4320,7 +4320,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_memUsed;
   extern int sqlite3_memMax;
   extern int sqlite3_like_count;
-  extern int sqlite3_tsd_count;
   extern int sqlite3_xferopt_count;
   extern int sqlite3_pager_readdb_count;
   extern int sqlite3_pager_writedb_count;
@@ -4362,8 +4361,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_open_file_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_current_time", 
       (char*)&sqlite3_current_time, TCL_LINK_INT);
-  Tcl_LinkVar(interp, "sqlite3_tsd_count",
-      (char*)&sqlite3_tsd_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite3_xferopt_count",
       (char*)&sqlite3_xferopt_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite3_pager_readdb_count",

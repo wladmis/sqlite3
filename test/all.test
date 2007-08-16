@@ -100,12 +100,6 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
       lappend ::failList $tail
       set sqlite_open_file_count 0
     }
-    if {$::sqlite3_tsd_count} {
-      puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
-      incr nErr
-      lappend ::failList $tail
-      set ::sqlite3_tsd_count 0
-    }
   }
   if {[info exists Leak]} {
     lappend LeakList $Leak

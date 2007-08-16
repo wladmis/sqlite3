@@ -1267,13 +1267,11 @@ int sqlite3_enable_shared_cache(int enable){
 /*
 ** This is a convenience routine that makes sure that all thread-specific
 ** data for this thread has been deallocated.
+**
+** SQLite no longer uses thread-specific data so this routine is now a
+** no-op.  It is retained for historical compatibility.
 */
 void sqlite3_thread_cleanup(void){
-  ThreadData *pTd = sqlite3OsThreadSpecificData(0);
-  if( pTd ){
-    memset(pTd, 0, sizeof(*pTd));
-    sqlite3OsThreadSpecificData(-1);
-  }
 }
 
 /*
