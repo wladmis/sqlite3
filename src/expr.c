@@ -528,6 +528,7 @@ ExprList *sqlite3ExprListDup(sqlite3 *db, ExprList *p){
   if( p==0 ) return 0;
   pNew = sqlite3DbMallocRaw(db, sizeof(*pNew) );
   if( pNew==0 ) return 0;
+  pNew->iECursor = 0;
   pNew->nExpr = pNew->nAlloc = p->nExpr;
   pNew->a = pItem = sqlite3DbMallocRaw(db,  p->nExpr*sizeof(p->a[0]) );
   if( pItem==0 ){

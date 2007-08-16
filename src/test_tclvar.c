@@ -58,7 +58,7 @@ static int tclvarConnect(
   tclvar_vtab *pVtab;
   static const char zSchema[] = 
      "CREATE TABLE whatever(name TEXT, arrayname TEXT, value TEXT)";
-  pVtab = sqlite3_malloc( sizeof(*pVtab) );
+  pVtab = sqlite3MallocZero( sizeof(*pVtab) );
   if( pVtab==0 ) return SQLITE_NOMEM;
   *ppVtab = &pVtab->base;
   pVtab->interp = (Tcl_Interp *)pAux;
@@ -79,7 +79,7 @@ static int tclvarDisconnect(sqlite3_vtab *pVtab){
 */
 static int tclvarOpen(sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor){
   tclvar_cursor *pCur;
-  pCur = sqlite3_malloc(sizeof(tclvar_cursor));
+  pCur = sqlite3MallocZero(sizeof(tclvar_cursor));
   *ppCursor = &pCur->base;
   return SQLITE_OK;
 }
