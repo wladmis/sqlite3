@@ -1691,7 +1691,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
 ** text z[0..n-1] on the stack.
 */
 static void codeInteger(Vdbe *v, const char *z, int n){
-  assert( z || v==0 || sqlite3DbOfVdbe(v)->mallocFailed );
+  assert( z || v==0 || sqlite3VdbeDb(v)->mallocFailed );
   if( z ){
     int i;
     if( sqlite3GetInt32(z, &i) ){

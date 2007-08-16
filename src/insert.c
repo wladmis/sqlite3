@@ -41,7 +41,7 @@ void sqlite3IndexAffinityStr(Vdbe *v, Index *pIdx){
     */
     int n;
     Table *pTab = pIdx->pTable;
-    sqlite3 *db = sqlite3DbOfVdbe(v);
+    sqlite3 *db = sqlite3VdbeDb(v);
     pIdx->zColAff = (char *)sqlite3DbMallocZero(db, pIdx->nColumn+1);
     if( !pIdx->zColAff ){
       return;
@@ -80,7 +80,7 @@ void sqlite3TableAffinityStr(Vdbe *v, Table *pTab){
   if( !pTab->zColAff ){
     char *zColAff;
     int i;
-    sqlite3 *db = sqlite3DbOfVdbe(v);
+    sqlite3 *db = sqlite3VdbeDb(v);
 
     zColAff = (char *)sqlite3DbMallocZero(db, pTab->nCol+1);
     if( !zColAff ){
