@@ -63,7 +63,7 @@ static int randomByte(void){
     char k[256];
     prng.j = 0;
     prng.i = 0;
-    sqlite3OsRandomSeed(k);
+    sqlite3OsRandomness(sqlite3_find_vfs(0), 256, k);
     for(i=0; i<256; i++){
       prng.s[i] = i;
     }
@@ -92,9 +92,9 @@ static int randomByte(void){
 */
 void sqlite3Randomness(int N, void *pBuf){
   unsigned char *zBuf = pBuf;
-  sqlite3OsEnterMutex();
+  sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_PRNG));
   while( N-- ){
     *(zBuf++) = randomByte();
   }
-  sqlite3OsLeaveMutex();
+  sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_PRNG));
 }

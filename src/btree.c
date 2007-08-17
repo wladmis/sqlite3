@@ -1063,6 +1063,7 @@ int sqlite3BtreeOpen(
   Btree **ppBtree,        /* Pointer to new Btree object written here */
   int flags               /* Options */
 ){
+  sqlite3_vfs *pVfs = (pSqlite?pSqlite->pVfs:sqlite3_find_vfs(0));
   BtShared *pBt = 0;      /* Shared part of btree structure */
   Btree *p;               /* Handle to return */
   int rc = SQLITE_OK;
@@ -1137,7 +1138,7 @@ int sqlite3BtreeOpen(
       rc = SQLITE_NOMEM;
       goto btree_open_out;
     }
-    rc = sqlite3PagerOpen(&pBt->pPager, zFilename, EXTRA_SIZE, flags);
+    rc = sqlite3PagerOpen(pVfs, &pBt->pPager, zFilename, EXTRA_SIZE, flags);
     if( rc==SQLITE_OK ){
       rc = sqlite3PagerReadFileheader(pBt->pPager,sizeof(zDbHeader),zDbHeader);
     }

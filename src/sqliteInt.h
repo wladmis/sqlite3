@@ -187,7 +187,7 @@ typedef UINT8_TYPE i8;             /* 1-byte signed integer */
 */
 #define SQLITE_MUTEX_MEM      1    /* Used by the memory allocator */
 #define SQLITE_MUTEX_PRNG     2    /* Used by pseudorandom generator */
-#define SQLITE_MUTEX_CACHE    3    /* Used by shared cache */
+#define SQLITE_MUTEX_GLOBAL   3    /* Used by global variables */
 #define SQLITE_MUTEX_STATIC_MAX 3
 
 /*

@@ -644,16 +644,20 @@ struct sqlite3_vfs {
   int (*xAccess)(void *pAppData, const char *zName, int flags);
   int (*xGetTempName)(void *pAppData, char *zOut);
   int (*xFullPathname)(void *pAppData, const char *zName, char *zOut);
-  void *(*xDlOpen)(void *pAppData, char *zFilename);
-  void (*xDlError)(void*, int nByte, char *zErrMsg);
+  void *(*xDlOpen)(void *pAppData, const char *zFilename);
+  void (*xDlError)(void *pAppData, int nByte, char *zErrMsg);
   void *(*xDlSym)(void*, const char *zSymbol);
-  void (*xDlclose)(void*);
+  void (*xDlClose)(void*);
   int (*xRandomness)(void *pAppData, int nByte, char *zOut);
   int (*xSleep)(void *pAppData, int microseconds);
   int (*xCurrentTime)(void *pAppData, double*);
   /* New fields may be appended in figure versions.  The iVersion
   ** value will increment whenever this happens. */
 };
+
+#define SQLITE_ACCESS_EXISTS    0
+#define SQLITE_ACCESS_READWRITE 1
+#define SQLITE_ACCESS_READONLY  2
 
 /*
 ** CAPI3REF: Enable Or Disable Extended Result Codes

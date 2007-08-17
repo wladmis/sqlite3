@@ -204,7 +204,7 @@ void *sqlite3_realloc(void *pPrior, unsigned int nBytes){
   }
   if( nBytes==0 ){
     sqlite3_free(pPrior);
-    return;
+    return 0;
   }
   p = pPrior;
   p--;
