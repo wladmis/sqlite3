@@ -228,17 +228,19 @@ void sqlite3_mutex_enter(sqlite3_mutex *pMutex){
     pthread_mutex_lock(&p->mutex);
   }else{
     struct RMutex *p = (struct RMutex*)pMutex;
-    pthread_mutex_lock(&p->auxMutex);
-    if( p->nRef==0 ){
-      p->nRef++;
-      p->owner = pthread_self();
-      pthread_mutex_lock(&p->mainMutex);
-      pthread_mutex_unlock(&p->auxMutex);
-    }else if( pthread_equal(p->owner, pthread_self()) ){
-      p->nRef++;
-      pthread_mutex_unlock(&p->auxMutex);
-    }else{
-      while( p->nRef ){
+    while(1){
+      pthread_mutex_lock(&p->auxMutex);
+      if( p->nRef==0 ){
+        p->nRef++;
+        p->owner = pthread_self();
+        pthread_mutex_lock(&p->mainMutex);
+        pthread_mutex_unlock(&p->auxMutex);
+        break;
+      }else if( pthread_equal(p->owner, pthread_self()) ){
+        p->nRef++;
+        pthread_mutex_unlock(&p->auxMutex);
+        break;
+      }else{
         pthread_mutex_unlock(&p->auxMutex);
         pthread_mutex_lock(&p->mainMutex);
         pthread_mutex_unlock(&p->mainMutex);

@@ -69,7 +69,7 @@ void sqlite3TableLock(
   int nBytes;
   TableLock *p;
 
-  if( 0==sqlite3ThreadDataReadOnly()->useSharedData || iDb<0 ){
+  if( iDb<0 ){
     return;
   }
 
@@ -100,7 +100,6 @@ void sqlite3TableLock(
 static void codeTableLocks(Parse *pParse){
   int i;
   Vdbe *pVdbe; 
-  assert( sqlite3ThreadDataReadOnly()->useSharedData || pParse->nTableLock==0 );
 
   if( 0==(pVdbe = sqlite3GetVdbe(pParse)) ){
     return;

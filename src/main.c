@@ -1235,35 +1235,6 @@ int sqlite3Corrupt(void){
 }
 #endif
 
-
-#ifndef SQLITE_OMIT_SHARED_CACHE
-/*
-** Enable or disable the shared pager and schema features for the
-** current thread.
-**
-** This routine should only be called when there are no open
-** database connections.
-*/
-int sqlite3_enable_shared_cache(int enable){
-  ThreadData *pTd = sqlite3ThreadData();
-  if( pTd ){
-    /* It is only legal to call sqlite3_enable_shared_cache() when there
-    ** are no currently open b-trees that were opened by the calling thread.
-    ** This condition is only easy to detect if the shared-cache were 
-    ** previously enabled (and is being disabled). 
-    */
-    if( pTd->pBtree && !enable ){
-      assert( pTd->useSharedData );
-      return SQLITE_MISUSE;
-    }
-
-    pTd->useSharedData = enable;
-    /* sqlite3ReleaseThreadData(); */
-  }
-  return sqlite3ApiExit(0, SQLITE_OK);
-}
-#endif
-
 /*
 ** This is a convenience routine that makes sure that all thread-specific
 ** data for this thread has been deallocated.
