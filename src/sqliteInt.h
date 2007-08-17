@@ -256,15 +256,15 @@ extern int sqlite3_iLine;            /* Line number for debug info */
 
 #endif
 
-/* Variable sqlite3_mallocHasFailed is set to true after a malloc() 
+/* Variable sqlite3MallocHasFailed is set to true after a malloc() 
 ** failure occurs. 
 **
 ** The sqlite3MallocFailed() macro returns true if a malloc has failed
 ** in this thread since the last call to sqlite3ApiExit(), or false 
 ** otherwise.
 */
-extern int sqlite3_mallocHasFailed;
-#define sqlite3MallocFailed() (sqlite3_mallocHasFailed && sqlite3OsInMutex(1))
+extern int sqlite3MallocHasFailed;
+#define sqlite3MallocFailed() (sqlite3MallocHasFailed && sqlite3OsInMutex(1))
 
 #define sqliteFree(x)          sqlite3FreeX(x)
 #define sqliteAllocSize(x)     sqlite3AllocSize(x)
@@ -1477,11 +1477,11 @@ struct TriggerStep {
   Trigger *pTrig;      /* The trigger that this step is a part of */
 
   Select *pSelect;     /* Valid for SELECT and sometimes 
-			  INSERT steps (when pExprList == 0) */
+                          INSERT steps (when pExprList == 0) */
   Token target;        /* Valid for DELETE, UPDATE, INSERT steps */
   Expr *pWhere;        /* Valid for DELETE, UPDATE steps */
   ExprList *pExprList; /* Valid for UPDATE statements and sometimes 
-			   INSERT steps (when pSelect == 0)         */
+                           INSERT steps (when pSelect == 0)         */
   IdList *pIdList;     /* Valid for INSERT statements only */
   TriggerStep *pNext;  /* Next in the link-list */
   TriggerStep *pLast;  /* Last element in link-list. Valid for 1st elem only */
@@ -1547,13 +1547,6 @@ typedef struct {
   char **pzErrMsg;    /* Error message stored here */
   int rc;             /* Result code stored here */
 } InitData;
-
-/*
- * This global flag is set for performance testing of triggers. When it is set
- * SQLite will perform the overhead of building new and old trigger references 
- * even when no triggers exist
- */
-extern int sqlite3_always_code_trigger_setup;
 
 /*
 ** Assuming zIn points to the first byte of a UTF-8 character,
@@ -1806,7 +1799,6 @@ Expr *sqlite3ExprSetColl(Parse *pParse, Expr *, Token *);
 int sqlite3CheckCollSeq(Parse *, CollSeq *);
 int sqlite3CheckObjectName(Parse *, const char *);
 void sqlite3VdbeSetChanges(sqlite3 *, int);
-void sqlite3Utf16Substr(sqlite3_context *,int,sqlite3_value **);
 
 const void *sqlite3ValueText(sqlite3_value*, u8);
 int sqlite3ValueBytes(sqlite3_value*, u8);
@@ -1923,7 +1915,7 @@ FuncDef *sqlite3VtabOverloadFunction(FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, int, const char*);
-CollSeq* sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
+CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 
 #if SQLITE_MAX_EXPR_DEPTH>0
   void sqlite3ExprSetHeight(Expr *);
@@ -1932,9 +1924,7 @@ CollSeq* sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
   #define sqlite3ExprSetHeight(x)
 #endif
 
-u32 sqlite3Get2byte(const u8*);
 u32 sqlite3Get4byte(const u8*);
-void sqlite3Put2byte(u8*, u32);
 void sqlite3Put4byte(u8*, u32);
 
 #ifdef SQLITE_SSE
@@ -1957,6 +1947,6 @@ void sqlite3Put4byte(u8*, u32);
 # define IOTRACE(A)
 # define sqlite3VdbeIOTraceSql(X)
 #endif
-extern void (*sqlite3_io_trace)(const char*,...);
+SQLITE_EXTERN void (*sqlite3_io_trace)(const char*,...);
 
 #endif

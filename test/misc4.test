@@ -40,6 +40,18 @@ ifcapable tempdb {
       ROLLBACK;
     }
   } {}
+
+  # Because the previous transaction included a DDL statement and
+  # was rolled back, statement $stmt was marked as expired. Executing it
+  # now returns SQLITE_SCHEMA.
+  do_test misc4-1.2.1 {
+    list [sqlite3_step $stmt] [sqlite3_finalize $stmt]
+  } {SQLITE_ERROR SQLITE_SCHEMA}
+  do_test misc4-1.2.2 {
+    set stmt [sqlite3_prepare $DB $sql -1 TAIL]
+    set TAIL
+  } {}
+
   do_test misc4-1.3 {
     sqlite3_step $stmt
   } SQLITE_DONE

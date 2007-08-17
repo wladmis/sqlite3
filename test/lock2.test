@@ -101,6 +101,7 @@ do_test lock2-1.1 {
 do_test lock2-1.1.1 {
   execsql {pragma lock_status}
 } {main unlocked temp closed}
+sqlite3_soft_heap_limit 0
 do_test lock2-1.2 {
   execsql {
     BEGIN;
@@ -163,5 +164,6 @@ do_test lock2-1.10 {
 
 catch {testfixture $::tf1 {db close}}
 catch {close $::tf1}
+sqlite3_soft_heap_limit $soft_limit
 
 finish_test

@@ -27,9 +27,9 @@ it should work.
 
 <p>
 Unfortunately, the no-limits policy has been shown to create
-problems.  Because the upper bounds where not well
+problems.  Because the upper bounds were not well
 defined, they were not tested, and bugs (including possible
-security exploits) where often found when pushing SQLite to
+security exploits) were often found when pushing SQLite to
 extremes.  For this reason, newer versions of SQLite have
 well-defined limits and those limits are tested as part of
 the test suite.

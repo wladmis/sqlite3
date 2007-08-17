@@ -240,6 +240,7 @@ void sqlite3RollbackAll(sqlite3 *db){
   }
   sqlite3VtabRollback(db);
   if( db->flags&SQLITE_InternChanges ){
+    sqlite3ExpirePreparedStatements(db);
     sqlite3ResetInternalSchema(db, 0);
   }
 
