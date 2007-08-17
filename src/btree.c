@@ -1100,13 +1100,14 @@ int sqlite3BtreeOpen(
    && zFilename && zFilename[0]
    && sqlite3SharedCacheEnabled
   ){
-    char *zFullPathname = sqlite3OsFullPathname(zFilename);
+    char *zFullPathname = (char *)sqlite3_malloc(pVfs->mxPathname);
     sqlite3_mutex *mutexShared;
     p->sharable = 1;
     if( !zFullPathname ){
       sqlite3_free(p);
       return SQLITE_NOMEM;
     }
+    sqlite3OsFullPathname(pVfs, zFilename, zFullPathname);
     mutexShared = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
     sqlite3_mutex_enter(mutexShared);
     for(pBt=sqlite3SharedCacheList; pBt; pBt=pBt->pNext){

@@ -496,6 +496,7 @@ struct sqlite3_io_methods {
   int (*xUnlock)(sqlite3_file*, int);
   int (*xCheckReservedLock)(sqlite3_file*);
   int (*xBreakLock)(sqlite3_file*);
+  int (*xLockState)(sqlite3_file *);
   int (*xSectorSize)(sqlite3_file*);
   int (*xDeviceCharacteristics)(sqlite3_file*);
   /* Additional methods may be added in future releases */
