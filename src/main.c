@@ -1378,7 +1378,11 @@ int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
 int sqlite3_sleep(int ms){
   sqlite3_vfs *pVfs;
   pVfs = sqlite3_find_vfs(0);
-  return sqlite3OsSleep(pVfs, 1000*ms);
+
+  /* This function works in milliseconds, but the underlying OsSleep() 
+  ** API uses microseconds. Hence the 1000's.
+  */
+  return (sqlite3OsSleep(pVfs, 1000*ms)/1000);
 }
 
 /*

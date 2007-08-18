@@ -641,7 +641,7 @@ struct sqlite3_vfs {
   void *pAppData;          /* Application context */
   int (*xOpen)(void *pAppData, const char *zName, sqlite3_file*,
                int flags, int *pOutFlags);
-  int (*xDelete)(void *pAppData, const char *zName);
+  int (*xDelete)(void *pAppData, const char *zName, int syncDir);
   int (*xAccess)(void *pAppData, const char *zName, int flags);
   int (*xGetTempName)(void *pAppData, char *zOut);
   int (*xFullPathname)(void *pAppData, const char *zName, char *zOut);

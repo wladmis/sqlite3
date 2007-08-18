@@ -64,8 +64,9 @@ do_test bigfile-1.1 {
 # large files.  So skip all of the remaining tests in this file.
 #
 db close
-if {[catch {fake_big_file 4096 test.db}]} {
+if {[catch {fake_big_file 4096 test.db} msg]} {
   puts "**** Unable to create a file larger than 4096 MB. *****"
+  puts "$msg"
   finish_test
   return
 }

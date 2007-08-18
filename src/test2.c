@@ -530,7 +530,6 @@ static int fake_big_file(
 ){
   sqlite3_vfs *pVfs;
   sqlite3_file *fd = 0;
-  int flags = SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE;
   int rc;
   int n;
   i64 offset;
@@ -542,7 +541,9 @@ static int fake_big_file(
   if( Tcl_GetInt(interp, argv[1], &n) ) return TCL_ERROR;
 
   pVfs = sqlite3_find_vfs(0);
-  rc = sqlite3OsOpenMalloc(pVfs, argv[2], &fd, flags);
+  rc = sqlite3OsOpenMalloc(pVfs, argv[2], &fd, 
+      (SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_MAIN_DB)
+  );
   if( rc ){
     Tcl_AppendResult(interp, "open failed: ", errorName(rc), 0);
     return TCL_ERROR;
