@@ -320,7 +320,7 @@ static int sqliteDefaultBusyCallback(
     delay = timeout - prior;
     if( delay<=0 ) return 0;
   }
-  sqlite3OsSleep(db->pVfs, delay);
+  sqlite3OsSleep(db->pVfs, delay*1000);
   return 1;
 #else
   sqlite3 *db = (sqlite3 *)ptr;

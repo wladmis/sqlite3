@@ -3031,7 +3031,7 @@ static int pagerAllocatePage(Pager *pPager, PgHdr **ppPg){
   PgHdr *pPg;
 
   /* Create a new PgHdr if any of the four conditions defined 
-  ** above is met: */
+  ** above are met: */
   if( pPager->nPage<pPager->mxPage
    || pPager->pFirst==0 
    || MEMDB
@@ -3376,10 +3376,6 @@ static int pager_open_journal(Pager *pPager){
     }
     goto failed_to_open_journal;
   }
-#if 0
-  sqlite3OsSetFullSync(pPager->jfd, pPager->full_fsync);
-  sqlite3OsSetFullSync(pPager->fd, pPager->full_fsync);
-#endif
   pPager->journalOpen = 1;
   pPager->journalStarted = 0;
   pPager->needSync = 0;
