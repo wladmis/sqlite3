@@ -1001,6 +1001,13 @@ static int openDatabase(
   }
 #endif
 
+#ifdef SQLITE_ENABLE_FTS3
+  if( !db->mallocFailed && rc==SQLITE_OK ){
+    extern int sqlite3Fts3Init(sqlite3*);
+    rc = sqlite3Fts3Init(db);
+  }
+#endif
+
 #ifdef SQLITE_ENABLE_ICU
   if( !db->mallocFailed && rc==SQLITE_OK ){
     extern int sqlite3IcuInit(sqlite3*);
