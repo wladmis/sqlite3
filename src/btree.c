@@ -1050,9 +1050,9 @@ static void pageDestructor(DbPage *pData, int pageSize){
   MemPage *pPage;
   assert( (pageSize & 7)==0 );
   pPage = (MemPage *)sqlite3PagerGetExtra(pData);
-  assert( sqlite3_mutex_held(pPage->pBt->mutex) );
   if( pPage->pParent ){
     MemPage *pParent = pPage->pParent;
+    assert( sqlite3_mutex_held(pPage->pBt->mutex) );
     pPage->pParent = 0;
     releasePage(pParent);
   }
@@ -1071,8 +1071,8 @@ static void pageReinit(DbPage *pData, int pageSize){
   MemPage *pPage;
   assert( (pageSize & 7)==0 );
   pPage = (MemPage *)sqlite3PagerGetExtra(pData);
-  assert( sqlite3_mutex_held(pPage->pBt->mutex) );
   if( pPage->isInit ){
+    assert( sqlite3_mutex_held(pPage->pBt->mutex) );
     pPage->isInit = 0;
     sqlite3BtreeInitPage(pPage, pPage->pParent);
   }
