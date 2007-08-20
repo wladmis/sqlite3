@@ -100,12 +100,12 @@ int sqlite3BtreeLockTable(Btree *, int, u8);
 ** use mutexes to access the BtShared structures.  So make the
 ** Enter and Leave procedures no-ops.
 */
-#ifdef SQLITE_OMIT_SHARED_CACHE
-# define sqlite3BtreeEnter(X)
-# define sqlite3BtreeLeave(X)
-#else
+#if SQLITE_THREADSAFE && !defined(SQLITE_OMIT_SHARED_CACHE)
   void sqlite3BtreeEnter(Btree*);
   void sqlite3BtreeLeave(Btree*);
+#else
+# define sqlite3BtreeEnter(X)
+# define sqlite3BtreeLeave(X)
 #endif
 
 const char *sqlite3BtreeGetFilename(Btree *);

@@ -19,10 +19,10 @@
 #include "os.h"
 
 /*
-** This test only works on UNIX with a THREADSAFE build that includes
+** This test only works on UNIX with a SQLITE_THREADSAFE build that includes
 ** the SQLITE_SERVER option.
 */
-#if OS_UNIX && defined(THREADSAFE) && THREADSAFE==1 && \
+#if OS_UNIX && SQLITE_THREADSAFE && \
     defined(SQLITE_SERVER) && !defined(SQLITE_OMIT_SHARED_CACHE)
 
 #include <stdlib.h>

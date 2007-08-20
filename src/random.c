@@ -63,7 +63,7 @@ static int randomByte(void){
     char k[256];
     prng.j = 0;
     prng.i = 0;
-    sqlite3OsRandomness(sqlite3_find_vfs(0), 256, k);
+    sqlite3OsRandomness(sqlite3_vfs_find(0), 256, k);
     for(i=0; i<256; i++){
       prng.s[i] = i;
     }
