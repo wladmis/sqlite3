@@ -542,7 +542,7 @@ static int fake_big_file(
 
   pVfs = sqlite3_find_vfs(0);
   rc = sqlite3OsOpenMalloc(pVfs, argv[2], &fd, 
-      (SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_MAIN_DB)
+      (SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE|SQLITE_OPEN_MAIN_DB), 0
   );
   if( rc ){
     Tcl_AppendResult(interp, "open failed: ", errorName(rc), 0);
