@@ -15,7 +15,6 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#include "os.h"
 #if defined(OS_UNIX) && OS_UNIX==1 && SQLITE_THREADSAFE
 #include <stdlib.h>
 #include <string.h>

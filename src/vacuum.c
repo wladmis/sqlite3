@@ -18,7 +18,6 @@
 */
 #include "sqliteInt.h"
 #include "vdbeInt.h"
-#include "os.h"
 
 #if !defined(SQLITE_OMIT_VACUUM) && !defined(SQLITE_OMIT_ATTACH)
 /*

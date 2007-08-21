@@ -22,8 +22,6 @@
 */
 #ifndef SQLITE_OMIT_DISKIO
 #include "sqliteInt.h"
-#include "os.h"
-#include "pager.h"
 #include <assert.h>
 #include <string.h>
 

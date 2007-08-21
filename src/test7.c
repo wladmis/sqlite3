@@ -16,7 +16,6 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#include "os.h"
 
 /*
 ** This test only works on UNIX with a SQLITE_THREADSAFE build that includes

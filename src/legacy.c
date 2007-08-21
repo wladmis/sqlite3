@@ -18,7 +18,6 @@
 */
 
 #include "sqliteInt.h"
-#include "os.h"
 #include <ctype.h>
 
 /*

@@ -15,7 +15,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include "os.h"
 #include <stdarg.h>
 #include <ctype.h>
 

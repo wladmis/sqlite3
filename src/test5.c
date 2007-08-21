@@ -19,7 +19,6 @@
 */
 #include "sqliteInt.h"
 #include "vdbeInt.h"
-#include "os.h"         /* to get SQLITE_BIGENDIAN */
 #include "tcl.h"
 #include <stdlib.h>
 #include <string.h>

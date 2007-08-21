@@ -14,17 +14,11 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include "os.h"
 #include <ctype.h>
 
 /* Ignore this whole file if pragmas are disabled
 */
 #if !defined(SQLITE_OMIT_PRAGMA) && !defined(SQLITE_OMIT_PARSER)
-
-#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
-# include "pager.h"
-# include "btree.h"
-#endif
 
 /*
 ** Interpret the given string as a safety level.  Return 0 for OFF,

@@ -23,7 +23,6 @@
 */
 #ifndef SQLITE_AMALGAMATION
 # include "sqliteInt.h"
-# include "hash.h"
 # include <stdlib.h>
 # include <string.h>
 # include <assert.h>

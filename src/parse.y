@@ -55,7 +55,6 @@
 //
 %include {
 #include "sqliteInt.h"
-#include "parse.h"
 
 /*
 ** An instance of this structure holds information about the

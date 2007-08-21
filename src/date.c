@@ -46,7 +46,6 @@
 **      Richmond, Virginia (USA)
 */
 #include "sqliteInt.h"
-#include "os.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>

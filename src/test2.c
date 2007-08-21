@@ -16,8 +16,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include "os.h"
-#include "pager.h"
 #include "tcl.h"
 #include <stdlib.h>
 #include <string.h>
