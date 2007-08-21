@@ -1619,6 +1619,10 @@ int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n);
 ** are used (where NNN is an integer) then there might be gaps in the
 ** numbering and the value returned by this interface is the index of the
 ** host parameter with the largest index value.
+**
+** The prepared statement must not not be [sqlite3_finalize | finalized]
+** prior to this routine returnning.  Otherwise the results are undefined
+** and probably undesirable.
 */
 int sqlite3_bind_parameter_count(sqlite3_stmt*);
 
@@ -2222,7 +2226,7 @@ int sqlite3_value_numeric_type(sqlite3_value*);
 ** function.
 **
 ** This routine must be called from the same thread in which
-** the aggregate SQL function was originally invoked.
+** the aggregate SQL function is running.
 */
 void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
 
@@ -2788,7 +2792,7 @@ int sqlite3_enable_load_extension(sqlite3 *db, int onoff);
 **
 ** Register an extension entry point that is automatically invoked
 ** whenever a new database connection is opened using
-** [sqlite3_open()] or [sqlite3_open16()].
+** [sqlite3_open()], [sqlite3_open16()], or [sqlite3_open_v2()].
 **
 ** This API can be invoked at program startup in order to register
 ** one or more statically linked extensions that will be available
