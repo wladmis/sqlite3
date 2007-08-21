@@ -74,9 +74,11 @@ int sqlite3_set_authorizer(
   int (*xAuth)(void*,int,const char*,const char*,const char*,const char*),
   void *pArg
 ){
+  sqlite3_mutex_enter(db->mutex);
   db->xAuth = xAuth;
   db->pAuthArg = pArg;
   sqlite3ExpirePreparedStatements(db);
+  sqlite3_mutex_leave(db->mutex);
   return SQLITE_OK;
 }
 

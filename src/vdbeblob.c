@@ -247,7 +247,6 @@ blob_open_out:
 */
 int sqlite3_blob_close(sqlite3_blob *pBlob){
   Incrblob *p = (Incrblob *)pBlob;
-  sqlite3_stmt *pStmt;
   sqlite3_mutex *mutex = p->db->mutex;
   int rc;
 

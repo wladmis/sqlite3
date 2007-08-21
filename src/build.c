@@ -3369,6 +3369,7 @@ KeyInfo *sqlite3IndexKeyinfo(Parse *pParse, Index *pIdx){
   KeyInfo *pKey = (KeyInfo *)sqlite3DbMallocZero(pParse->db, nBytes);
 
   if( pKey ){
+    pKey->db = pParse->db;
     pKey->aSortOrder = (u8 *)&(pKey->aColl[nCol]);
     assert( &pKey->aSortOrder[nCol]==&(((u8 *)pKey)[nBytes]) );
     for(i=0; i<nCol; i++){

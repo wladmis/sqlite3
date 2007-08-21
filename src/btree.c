@@ -3707,6 +3707,13 @@ int sqlite3BtreeEof(BtCursor *pCur){
 }
 
 /*
+** Return the database connection handle for a cursor.
+*/
+sqlite3 *sqlite3BtreeCursorDb(const BtCursor *pCur){
+  return pCur->pBtree->pSqlite;
+}
+
+/*
 ** Advance the cursor to the next entry in the database.  If
 ** successful then set *pRes=0.  If the cursor
 ** was already pointing to the last entry in the database before

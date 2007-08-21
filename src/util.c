@@ -51,9 +51,9 @@ void sqlite3Error(sqlite3 *db, int err_code, const char *zFormat, ...){
       va_start(ap, zFormat);
       z = sqlite3VMPrintf(db, zFormat, ap);
       va_end(ap);
-      sqlite3ValueSetStr(db, db->pErr, -1, z, SQLITE_UTF8, sqlite3_free);
+      sqlite3ValueSetStr(db->pErr, -1, z, SQLITE_UTF8, sqlite3_free);
     }else{
-      sqlite3ValueSetStr(db, db->pErr, 0, 0, SQLITE_UTF8, SQLITE_STATIC);
+      sqlite3ValueSetStr(db->pErr, 0, 0, SQLITE_UTF8, SQLITE_STATIC);
     }
   }
 }

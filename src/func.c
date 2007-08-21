@@ -1062,13 +1062,13 @@ static void test_destructor(
   test_destructor_count_var++;
   assert( nArg==1 );
   if( sqlite3_value_type(argv[0])==SQLITE_NULL ) return;
-  len = sqlite3ValueBytes(0, argv[0], ENC(db)); 
+  len = sqlite3ValueBytes(argv[0], ENC(db)); 
   zVal = sqlite3MallocZero(len+3);
   zVal[len] = 0;
   zVal[len-1] = 0;
   assert( zVal );
   zVal++;
-  memcpy(zVal, sqlite3ValueText(0, argv[0], ENC(db)), len);
+  memcpy(zVal, sqlite3ValueText(argv[0], ENC(db)), len);
   if( ENC(db)==SQLITE_UTF8 ){
     sqlite3_result_text(pCtx, zVal, -1, destructor);
 #ifndef SQLITE_OMIT_UTF16
@@ -1271,10 +1271,10 @@ static void minmaxStep(sqlite3_context *context, int argc, sqlite3_value **argv)
     max = sqlite3_user_data(context)!=0;
     cmp = sqlite3MemCompare(pBest, pArg, pColl);
     if( (max && cmp<0) || (!max && cmp>0) ){
-      sqlite3VdbeMemCopy(0, pBest, pArg);
+      sqlite3VdbeMemCopy(pBest, pArg);
     }
   }else{
-    sqlite3VdbeMemCopy(0, pBest, pArg);
+    sqlite3VdbeMemCopy(pBest, pArg);
   }
 }
 static void minMaxFinalize(sqlite3_context *context){

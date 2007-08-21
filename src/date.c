@@ -905,7 +905,7 @@ static void ctimeFunc(
 ){
   sqlite3_value *pVal = sqlite3ValueNew(0);
   if( pVal ){
-    sqlite3ValueSetStr(0, pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
+    sqlite3ValueSetStr(pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
     timeFunc(context, 1, &pVal);
     sqlite3ValueFree(pVal);
   }
@@ -923,7 +923,7 @@ static void cdateFunc(
 ){
   sqlite3_value *pVal = sqlite3ValueNew(0);
   if( pVal ){
-    sqlite3ValueSetStr(0, pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
+    sqlite3ValueSetStr(pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
     dateFunc(context, 1, &pVal);
     sqlite3ValueFree(pVal);
   }
@@ -941,7 +941,7 @@ static void ctimestampFunc(
 ){
   sqlite3_value *pVal = sqlite3ValueNew(0);
   if( pVal ){
-    sqlite3ValueSetStr(0, pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
+    sqlite3ValueSetStr(pVal, -1, "now", SQLITE_UTF8, SQLITE_STATIC);
     datetimeFunc(context, 1, &pVal);
     sqlite3ValueFree(pVal);
   }
