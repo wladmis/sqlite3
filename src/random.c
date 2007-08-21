@@ -91,9 +91,13 @@ static int randomByte(void){
 */
 void sqlite3Randomness(int N, void *pBuf){
   unsigned char *zBuf = pBuf;
-  sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_PRNG));
+  static sqlite3_mutex *mutex = 0;
+  if( mutex==0 ){
+    mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_PRNG);
+  }
+  sqlite3_mutex_enter(mutex);
   while( N-- ){
     *(zBuf++) = randomByte();
   }
-  sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_PRNG));
+  sqlite3_mutex_leave(mutex);
 }

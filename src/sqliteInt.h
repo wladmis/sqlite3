@@ -194,16 +194,6 @@ typedef UINT8_TYPE u8;             /* 1-byte unsigned integer */
 typedef UINT8_TYPE i8;             /* 1-byte signed integer */
 
 /*
-** The mutex subsystem provides a handfull of static mutexes
-** that are identified by small positive integers.  The following
-** macros give symbolic names to those integers.
-*/
-#define SQLITE_MUTEX_MEM      1    /* Used by the memory allocator */
-#define SQLITE_MUTEX_PRNG     2    /* Used by pseudorandom generator */
-#define SQLITE_MUTEX_GLOBAL   3    /* Used by global variables */
-#define SQLITE_MUTEX_STATIC_MAX 3
-
-/*
 ** Macros to determine whether the machine is big or little endian,
 ** evaluated at runtime.
 */
