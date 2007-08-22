@@ -814,7 +814,6 @@ do_test vtab1.10-1 {
 do_test vtab1.10-2 {
   set rc [catch {
     set ptr [sqlite3_connection_pointer db]
-btree_breakpoint
     sqlite3_declare_vtab $ptr {CREATE TABLE abc(a, b, c)}
   } msg]
   list $rc $msg
