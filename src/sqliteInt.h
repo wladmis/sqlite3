@@ -1862,6 +1862,13 @@ int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, int, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 
+#ifdef SQLITE_ENABLE_ATOMIC_WRITE
+  int sqlite3JournalOpen(sqlite3_vfs *, const char *, sqlite3_file *, int, int);
+  int sqlite3JournalSize(sqlite3_vfs *);
+#else
+  #define sqlite3JournalSize(pVfs) ((pVfs)->szOsFile)
+#endif
+
 #if SQLITE_MAX_EXPR_DEPTH>0
   void sqlite3ExprSetHeight(Expr *);
   int sqlite3SelectExprHeight(Select *);
