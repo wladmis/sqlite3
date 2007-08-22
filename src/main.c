@@ -771,10 +771,10 @@ const char *sqlite3_errmsg(sqlite3 *db){
     return sqlite3ErrStr(SQLITE_NOMEM);
   }
   sqlite3_mutex_enter(db->mutex);
-  assert( !db->mallocFailed );
   if( sqlite3SafetyCheck(db) || db->errCode==SQLITE_MISUSE ){
     return sqlite3ErrStr(SQLITE_MISUSE);
   }
+  assert( !db->mallocFailed );
   z = (char*)sqlite3_value_text(db->pErr);
   if( z==0 ){
     z = sqlite3ErrStr(db->errCode);

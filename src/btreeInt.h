@@ -382,10 +382,10 @@ struct BtShared {
   int nTransaction;     /* Number of open transactions (read + write) */
   void *pSchema;        /* Pointer to space allocated by sqlite3BtreeSchema() */
   void (*xFreeSchema)(void*);  /* Destructor for BtShared.pSchema */
+  sqlite3_mutex *mutex; /* Non-recursive mutex required to access this struct */
 #ifndef SQLITE_OMIT_SHARED_CACHE
   int nRef;             /* Number of references to this structure */
   BtShared *pNext;      /* Next on a list of sharable BtShared structs */
-  sqlite3_mutex *mutex; /* Non-recursive mutex required to access this struct */
   BtLock *pLock;        /* List of locks held on this shared-btree struct */
 #endif
 };

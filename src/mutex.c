@@ -126,7 +126,7 @@ struct sqlite3_mutex {
 ** that means that a mutex could not be allocated. 
 */
 sqlite3_mutex *sqlite3_mutex_alloc(int id){
-  static sqlite3_mutex aStatic[3];
+  static sqlite3_mutex aStatic[4];
   sqlite3_mutex *pNew = 0;
   switch( id ){
     case SQLITE_MUTEX_FAST:
@@ -139,6 +139,8 @@ sqlite3_mutex *sqlite3_mutex_alloc(int id){
       break;
     }
     default: {
+      assert( id-SQLITE_MUTEX_STATIC_MASTER >= 0 );
+      assert( id-SQLITE_MUTEX_STATIC_MASTER < count(aStatic) );
       pNew = &aStatic[id-SQLITE_MUTEX_STATIC_MASTER];
       pNew->id = id;
       break;
@@ -269,6 +271,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
     { PTHREAD_MUTEX_INITIALIZER, },
     { PTHREAD_MUTEX_INITIALIZER, },
     { PTHREAD_MUTEX_INITIALIZER, },
+    { PTHREAD_MUTEX_INITIALIZER, },
   };
   sqlite3_mutex *p;
   switch( iType ){
@@ -291,6 +294,8 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
       break;
     }
     default: {
+      assert( iType-2 >= 0 );
+      assert( iType-2 < count(staticMutexes) );
       p = &staticMutexes[iType-2];
       p->id = iType;
       break;

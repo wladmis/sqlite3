@@ -462,14 +462,12 @@ int sqlite3Prepare(
   int rc = SQLITE_OK;
   int i;
 
-  /* Assert that malloc() has not failed */
-  assert( !db->mallocFailed );
-
   assert( ppStmt );
   *ppStmt = 0;
   if( sqlite3SafetyOn(db) ){
     return SQLITE_MISUSE;
   }
+  assert( !db->mallocFailed );
   assert( sqlite3_mutex_held(db->mutex) );
 
   /* If any attached database schemas are locked, do not proceed with
