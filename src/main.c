@@ -142,6 +142,7 @@ int sqlite3_close(sqlite3 *db){
   if( db->pVdbe ){
     sqlite3Error(db, SQLITE_BUSY, 
         "Unable to close due to unfinalised statements");
+    sqlite3_mutex_leave(db->mutex);
     return SQLITE_BUSY;
   }
   assert( !sqlite3SafetyCheck(db) );
@@ -156,6 +157,7 @@ int sqlite3_close(sqlite3 *db){
   */
   if( db->magic!=SQLITE_MAGIC_CLOSED && sqlite3SafetyOn(db) ){
     /* printf("DID NOT CLOSE\n"); fflush(stdout); */
+    sqlite3_mutex_leave(db->mutex);
     return SQLITE_ERROR;
   }
 
@@ -770,10 +772,10 @@ const char *sqlite3_errmsg(sqlite3 *db){
   if( !db ){
     return sqlite3ErrStr(SQLITE_NOMEM);
   }
-  sqlite3_mutex_enter(db->mutex);
   if( sqlite3SafetyCheck(db) || db->errCode==SQLITE_MISUSE ){
     return sqlite3ErrStr(SQLITE_MISUSE);
   }
+  sqlite3_mutex_enter(db->mutex);
   assert( !db->mallocFailed );
   z = (char*)sqlite3_value_text(db->pErr);
   if( z==0 ){
@@ -946,6 +948,7 @@ static int openDatabase(
     db->mallocFailed = 1;
     goto opendb_out;
   }
+  sqlite3_mutex_enter(db->mutex);
   db->pVfs = sqlite3_vfs_find(zVfs);
   db->errMask = 0xff;
   db->priorNewRowid = 0;
@@ -1073,6 +1076,7 @@ static int openDatabase(
 #endif
 
 opendb_out:
+  sqlite3_mutex_leave(db->mutex);
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
     sqlite3_close(db);
     db = 0;

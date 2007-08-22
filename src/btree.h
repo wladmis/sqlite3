@@ -103,9 +103,11 @@ int sqlite3BtreeLockTable(Btree *, int, u8);
 #if SQLITE_THREADSAFE && !defined(SQLITE_OMIT_SHARED_CACHE)
   void sqlite3BtreeEnter(Btree*);
   void sqlite3BtreeLeave(Btree*);
+# define sqlite3BtreeMutexHeld(X) sqlite3_mutex_held(X)
 #else
 # define sqlite3BtreeEnter(X)
 # define sqlite3BtreeLeave(X)
+# define sqlite3BtreeMutexHeld(X) 1
 #endif
 
 const char *sqlite3BtreeGetFilename(Btree *);

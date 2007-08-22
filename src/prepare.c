@@ -571,6 +571,9 @@ static int sqlite3LockAndPrepare(
   const char **pzTail       /* OUT: End of parsed string */
 ){
   int rc;
+  if( sqlite3SafetyCheck(db) ){
+    return SQLITE_MISUSE;
+  }
   sqlite3_mutex_enter(db->mutex);
   rc = sqlite3Prepare(db, zSql, nBytes, saveSqlFlag, ppStmt, pzTail);
   sqlite3_mutex_leave(db->mutex);

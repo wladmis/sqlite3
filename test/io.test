@@ -21,8 +21,9 @@ source $testdir/tester.tcl
 set ::nWrite 0
 proc nWrite {db} {
   set bt [btree_from_db $db]
+  db_enter $db
   array set stats [btree_pager_stats $bt]
-
+  db_leave $db
   set res [expr $stats(write) - $::nWrite]
   set ::nWrite $stats(write)
   set res
@@ -88,4 +89,3 @@ do_test io-1.5 {
 #db eval {select * from sqlite_master} {btree_tree_dump [btree_from_db db] 2}
 
 finish_test
-
