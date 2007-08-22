@@ -955,12 +955,18 @@ static int test_create_function(
   ** because it is not tested anywhere else. */
   if( rc==SQLITE_OK ){
     sqlite3_value *pVal;
-    pVal = sqlite3ValueNew(0);
+    sqlite3_mutex_enter(db->mutex);
+    pVal = sqlite3ValueNew(db);
     sqlite3ValueSetStr(pVal, -1, "x_sqlite_exec", SQLITE_UTF8, SQLITE_STATIC);
-    rc = sqlite3_create_function16(db, 
+    if( db->mallocFailed ){
+      rc = SQLITE_NOMEM;
+    }else{
+      rc = sqlite3_create_function16(db, 
               sqlite3ValueText(pVal, SQLITE_UTF16NATIVE),
               1, SQLITE_UTF16, db, sqlite3ExecFunc, 0, 0);
+    }
     sqlite3ValueFree(pVal);
+    sqlite3_mutex_leave(db->mutex);
   }
 #endif
 
@@ -2134,12 +2140,18 @@ static int test_collate(
       sqlite3_iMallocFail++;
     }
 #endif
-    pVal = sqlite3ValueNew(0);
+    sqlite3_mutex_enter(db->mutex);
+    pVal = sqlite3ValueNew(db);
     sqlite3ValueSetStr(pVal, -1, "test_collate", SQLITE_UTF8, SQLITE_STATIC);
-    rc = sqlite3_create_collation16(db, 
+    if( db->mallocFailed ){
+      rc = SQLITE_NOMEM;
+    }else{
+      rc = sqlite3_create_collation16(db, 
           sqlite3ValueText(pVal, SQLITE_UTF16NATIVE), SQLITE_UTF16BE, 
           (void *)SQLITE_UTF16BE, val?test_collate_func:0);
+    }
     sqlite3ValueFree(pVal);
+    sqlite3_mutex_leave(db->mutex);
   }
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   

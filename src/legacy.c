@@ -115,7 +115,7 @@ exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
   if( azCols ) sqlite3_free(azCols);
 
-  rc = sqlite3ApiExit(0, rc);
+  rc = sqlite3ApiExit(db, rc);
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){
     int nErrMsg = 1 + strlen(sqlite3_errmsg(db));
     *pzErrMsg = sqlite3_malloc(nErrMsg);

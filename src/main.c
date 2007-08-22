@@ -1076,7 +1076,9 @@ static int openDatabase(
 #endif
 
 opendb_out:
-  sqlite3_mutex_leave(db->mutex);
+  if( db ){
+    sqlite3_mutex_leave(db->mutex);
+  }
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
     sqlite3_close(db);
     db = 0;

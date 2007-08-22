@@ -97,7 +97,7 @@ void *sqlite3DbMallocZero(sqlite3 *db, unsigned n){
 */
 void *sqlite3DbMallocRaw(sqlite3 *db, unsigned n){
   void *p = sqlite3_malloc(n);
-  if( !p ){
+  if( !p && db ){
     db->mallocFailed = 1;
   }
   return p;

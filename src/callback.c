@@ -179,8 +179,9 @@ static CollSeq *findCollSeqEntry(
       ** return the pColl pointer to be deleted (because it wasn't added
       ** to the hash table).
       */
-      assert( !pDel || (db->mallocFailed && pDel==pColl) );
-      if( pDel ){
+      assert( pDel==0 || pDel==pColl );
+      if( pDel!=0 ){
+        db->mallocFailed = 1;
         sqlite3_free(pDel);
         pColl = 0;
       }
@@ -310,6 +311,7 @@ FuncDef *sqlite3FindFunction(
     memcpy(pBest->zName, zName, nName);
     pBest->zName[nName] = 0;
     if( pBest==sqlite3HashInsert(&db->aFunc,pBest->zName,nName,(void*)pBest) ){
+      db->mallocFailed = 1;
       sqlite3_free(pBest);
       return 0;
     }

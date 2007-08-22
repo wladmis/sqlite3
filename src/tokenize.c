@@ -401,6 +401,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   i = 0;
   pEngine = sqlite3ParserAlloc((void*(*)(size_t))sqlite3_malloc);
   if( pEngine==0 ){
+    db->mallocFailed = 1;
     return SQLITE_NOMEM;
   }
   assert( pParse->sLastToken.dyn==0 );

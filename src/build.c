@@ -90,6 +90,9 @@ void sqlite3TableLock(
     p->iTab = iTab;
     p->isWriteLock = isWriteLock;
     p->zName = zName;
+  }else{
+    pParse->nTableLock = 0;
+    pParse->db->mallocFailed = 1;
   }
 }
 
