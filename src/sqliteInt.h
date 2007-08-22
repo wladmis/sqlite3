@@ -42,7 +42,7 @@
 #if defined(THREADSAFE)
 # define SQLITE_THREADSAFE THREADSAFE
 #else
-# define SQLTIE_THREADSAFE 1
+# define SQLITE_THREADSAFE 1
 #endif
 #endif
 
