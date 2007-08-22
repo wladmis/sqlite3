@@ -455,6 +455,15 @@ int sqlite3_memdebug_fail(int iFail, int iRepeat){
 }
 
 /*
+** This routine returns the number of successful mallocs remaining until
+** the next simulated malloc failure.  -1 is returned if no simulated
+** failure is currently scheduled.
+*/
+int sqlite3_memdebug_pending(void){
+  return mem.iFail-1;
+}
+
+/*
 ** The following two routines are used to assert that no memory
 ** allocations occur between one call and the next.  The use of
 ** these routines does not change the computed results in any way.
