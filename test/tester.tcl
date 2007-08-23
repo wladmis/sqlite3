@@ -350,7 +350,7 @@ proc ifcapable {expr code {else ""} {elsecode ""}} {
 # error message. This is "child process exited abnormally" if the crash
 # occured.
 #
-#   crashsql -delay CRASHDELAY -file CRASHFILE ?-blocksize BLOCKSIZE $sql
+#   crashsql -delay CRASHDELAY -file CRASHFILE ?-blocksize BLOCKSIZE? $sql
 #
 proc crashsql {args} {
   if {$::tcl_platform(platform)!="unix"} {
@@ -360,6 +360,7 @@ proc crashsql {args} {
   set blocksize ""
   set crashdelay 1
   set crashfile ""
+  set dc ""
   set sql [lindex $args end]
   
   for {set ii 0} {$ii < [llength $args]-1} {incr ii 2} {
@@ -370,6 +371,7 @@ proc crashsql {args} {
     if     {$n>1 && [string first $z -delay]==0}     {set crashdelay $z2} \
     elseif {$n>1 && [string first $z -file]==0}      {set crashfile $z2}  \
     elseif {$n>1 && [string first $z -blocksize]==0} {set blocksize "-s $z2" } \
+    elseif {$n>1 && [string first $z -characteristics]==0} {set dc "-c {$z2}" } \
     else   { error "Unrecognized option: $z" }
   }
 
@@ -380,7 +382,7 @@ proc crashsql {args} {
   set cfile [file join [pwd] $crashfile]
 
   set f [open crash.tcl w]
-  puts $f "sqlite3_crashparams $blocksize $crashdelay $cfile"
+  puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
   puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
   puts $f "sqlite3 db test.db"
 

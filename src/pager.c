@@ -634,7 +634,7 @@ static int jrnlBufferSize(Pager *pPager){
   assert(SQLITE_IOCAP_ATOMIC512==(512>>8));
   assert(SQLITE_IOCAP_ATOMIC64K==(65536>>8));
 
-  if( !fd->pMethods || (dc&(SQLITE_IOCAP_ATOMIC|(nPage<<8))&&nSector<=nPage) ){
+  if( !fd->pMethods || (dc&(SQLITE_IOCAP_ATOMIC|(nPage>>8))&&nSector<=nPage) ){
     return JOURNAL_HDR_SZ(pPager) + JOURNAL_PG_SZ(pPager);
   }
   return 0;
