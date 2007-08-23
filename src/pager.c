@@ -1798,7 +1798,10 @@ static int sqlite3PagerOpentemp(
 ){
   int cnt = 8;
   int rc;
-  int flags = (SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE|SQLITE_OPEN_EXCLUSIVE);
+  int flags = (
+     SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE|
+     SQLITE_OPEN_EXCLUSIVE|SQLITE_OPEN_DELETEONCLOSE
+  );
 
   char *zFree = 0;
   if( zNameOut==0 ){
