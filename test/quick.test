@@ -47,6 +47,7 @@ set EXCLUDE {
   corrupt.test
   crash.test
   crash2.test
+  crash3.test
   exclusive3.test
   fuzz.test
   fuzz_malloc.test
