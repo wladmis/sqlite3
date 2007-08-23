@@ -493,6 +493,8 @@ struct sqlite3 {
 #define SQLITE_LoadExtension  0x00020000  /* Enable load_extension */
 
 #define SQLITE_RecoveryMode   0x00040000  /* Ignore schema errors */
+#define SQLITE_SharedCache    0x00080000  /* Cache sharing is enabled */
+#define SQLITE_Vtab           0x00100000  /* There exists a virtual table */
 
 /*
 ** Possible values for the sqlite.magic field.

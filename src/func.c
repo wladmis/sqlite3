@@ -807,14 +807,17 @@ static void replaceFunc(
     if( zStr[i]!=zPattern[0] || memcmp(&zStr[i], zPattern, nPattern) ){
       zOut[j++] = zStr[i];
     }else{
+      u8 *zOld;
       nOut += nRep - nPattern;
       if( nOut>=SQLITE_MAX_LENGTH ){
         sqlite3_result_error_toobig(context);
         sqlite3_free(zOut);
         return;
       }
+      zOld = zOut;
       zOut = sqlite3_realloc(zOut, (int)nOut);
       if( zOut==0 ){
+        sqlite3_free(zOld);
         return;
       }
       memcpy(&zOut[j], zRep, nRep);

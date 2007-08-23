@@ -186,18 +186,6 @@ static int getStmtPointer(
 }
 
 /*
-** Decode a pointer to an sqlite3_stmt object.
-*/
-static int getFilePointer(
-  Tcl_Interp *interp, 
-  const char *zArg,  
-  sqlite3_file **ppFile
-){
-  *ppFile = (sqlite3_file*)sqlite3TextToPtr(zArg);
-  return TCL_OK;
-}
-
-/*
 ** Generate a text representation of a pointer that can be understood
 ** by the getDbPointer and getVmPointer routines above.
 **

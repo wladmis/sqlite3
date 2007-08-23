@@ -124,9 +124,8 @@ db1 close
 db2 close
 
 do_test shared2-3.2 {
-  sqlite3_thread_cleanup
   sqlite3_enable_shared_cache 1
-} {0}
+} {1}
 
 sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test

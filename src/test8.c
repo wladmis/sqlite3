@@ -852,7 +852,7 @@ int echoUpdate(
           "%s %Q=?%d", zSep, pVtab->aCol[i-2], i), 1);
       zSep = ",";
     }
-    string_concat(&z, sqlite3_mprintf(" WHERE rowid=?%d", nData), 0);
+    string_concat(&z, sqlite3_mprintf(" WHERE rowid=?%d", nData), 1);
   }
 
   /* If apData[0] is an integer and nData==1 then do a DELETE */

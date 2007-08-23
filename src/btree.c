@@ -1136,12 +1136,16 @@ int sqlite3BtreeOpen(
   */
   if( (flags & BTREE_PRIVATE)==0
    && isMemdb==0
+   && (pSqlite==0 || (pSqlite->flags &SQLITE_Vtab)==0)
    && zFilename && zFilename[0]
    && sqlite3SharedCacheEnabled
   ){
     char *zFullPathname = (char *)sqlite3_malloc(pVfs->mxPathname);
     sqlite3_mutex *mutexShared;
     p->sharable = 1;
+    if( pSqlite ){
+      pSqlite->flags |= SQLITE_SharedCache;
+    }
     if( !zFullPathname ){
       sqlite3_free(p);
       return SQLITE_NOMEM;

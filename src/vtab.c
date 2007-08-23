@@ -167,12 +167,10 @@ void sqlite3VtabBeginParse(
   Table *pTable;        /* The new virtual table */
   sqlite3 *db;          /* Database connection */
 
-#if 0 /* FIX ME */
-  if( sqlite3ThreadDataReadOnly()->useSharedData ){
+  if( pParse->db->flags & SQLITE_SharedCache ){
     sqlite3ErrorMsg(pParse, "Cannot use virtual tables in shared-cache mode");
     return;
   }
-#endif
 
   sqlite3StartTable(pParse, pName1, pName2, 0, 0, 1, 0);
   pTable = pParse->pNewTable;

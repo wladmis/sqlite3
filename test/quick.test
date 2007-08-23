@@ -55,6 +55,7 @@ set EXCLUDE {
   malloc.test
   malloc2.test
   malloc3.test
+  malloc4.test
   memleak.test
   misc7.test
   misuse.test
