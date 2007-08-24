@@ -1102,13 +1102,6 @@ int sqlite3BtreeOpen(
   int nReserve;
   unsigned char zDbHeader[100];
 
-  if( pSqlite ){
-    pVfs = pSqlite->pVfs;
-  }else{
-    pVfs = sqlite3_vfs_find(0);
-  }
-  assert( sqlite3BtreeMutexHeld(pSqlite->mutex) );
-
   /* Set the variable isMemdb to true for an in-memory database, or 
   ** false for a file-based database. This symbol is only required if
   ** either of the shared-data or autovacuum features are compiled 
@@ -1121,6 +1114,13 @@ int sqlite3BtreeOpen(
     const int isMemdb = zFilename && !strcmp(zFilename, ":memory:");
   #endif
 #endif
+
+  if( pSqlite ){
+    pVfs = pSqlite->pVfs;
+  }else{
+    pVfs = sqlite3_vfs_find(0);
+  }
+  assert( sqlite3BtreeMutexHeld(pSqlite->mutex) );
 
   p = sqlite3MallocZero(sizeof(Btree));
   if( !p ){

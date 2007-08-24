@@ -288,25 +288,6 @@ static int test_memdebug_fail(
 
 
 /*
-** Usage:    sqlite3_memdebug_pending
-**
-** Return the number of successful mallocs remaining before the
-** next simulated failure.  Return -1 if no simulated failure is
-** currently scheduled.
-*/
-static int test_memdebug_pending(
-  void * clientData,
-  Tcl_Interp *interp,
-  int objc,
-  Tcl_Obj *CONST objv[]
-){
-  extern int sqlite3_memdebug_pending(void);
-  Tcl_SetObjResult(interp, Tcl_NewIntObj(sqlite3_memdebug_pending()));
-  return TCL_OK;
-}
-
-
-/*
 ** Usage:    sqlite3_memdebug_settitle TITLE
 **
 ** Set a title string stored with each allocation.  The TITLE is
@@ -354,7 +335,6 @@ int Sqlitetest_malloc_Init(Tcl_Interp *interp){
      { "sqlite3_memdebug_backtrace", test_memdebug_backtrace       },
      { "sqlite3_memdebug_dump",      test_memdebug_dump            },
      { "sqlite3_memdebug_fail",      test_memdebug_fail            },
-     { "sqlite3_memdebug_pending",   test_memdebug_pending         },
      { "sqlite3_memdebug_settitle",  test_memdebug_settitle        },
   };
   int i;

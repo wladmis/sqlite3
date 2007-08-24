@@ -25,8 +25,8 @@
 */
 static void softHeapLimitEnforcer(
   void *NotUsed, 
-  sqlite3_uint64 inUse,
-  unsigned int allocSize
+  sqlite3_int64 inUse,
+  int allocSize
 ){
   sqlite3_release_memory(allocSize);
 }

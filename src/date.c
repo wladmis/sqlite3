@@ -426,7 +426,7 @@ static double localtimeOffset(DateTime *p){
 #else
   {
     struct tm *pTm;
-    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_GLOBAL));
+    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
     pTm = localtime(&t);
     y.Y = pTm->tm_year + 1900;
     y.M = pTm->tm_mon + 1;
@@ -434,7 +434,7 @@ static double localtimeOffset(DateTime *p){
     y.h = pTm->tm_hour;
     y.m = pTm->tm_min;
     y.s = pTm->tm_sec;
-    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_GLOBAL));
+    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
   }
 #endif
   y.validYMD = 1;

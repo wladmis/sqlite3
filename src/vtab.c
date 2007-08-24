@@ -24,10 +24,11 @@ static int createModule(
   void (*xDestroy)(void *)        /* Module destructor function */
 ) {
   int rc, nName;
+  Module *pMod;
 
   sqlite3_mutex_enter(db->mutex);
   nName = strlen(zName);
-  Module *pMod = (Module *)sqlite3DbMallocRaw(db, sizeof(Module) + nName + 1);
+  pMod = (Module *)sqlite3DbMallocRaw(db, sizeof(Module) + nName + 1);
   if( pMod ){
     char *zCopy = (char *)(&pMod[1]);
     memcpy(zCopy, zName, nName+1);
