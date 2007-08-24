@@ -447,7 +447,8 @@ void sqlite3_memdebug_dump(const char *zFilename){
   for(pHdr=mem.pFirst; pHdr; pHdr=pHdr->pNext){
     char *z = (char*)pHdr;
     z -= pHdr->nBacktraceSlots*sizeof(void*) + pHdr->nTitle;
-    fprintf(out, "**** %d bytes at %p from %s ****\n", pHdr->iSize,&pHdr[1],z);
+    fprintf(out, "**** %d bytes at %p from %s ****\n", 
+            pHdr->iSize, &pHdr[1], pHdr->nTitle ? z : "???");
     if( pHdr->nBacktrace ){
       fflush(out);
       pBt = (void**)pHdr;
