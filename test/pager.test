@@ -409,7 +409,6 @@ do_test pager-4.6.1 {
 # Test truncate on an in-memory database is Ok.
 ifcapable memorydb {
   do_test pager-4.6.2 {
-btree_breakpoint
     set ::p2 [pager_open :memory: 10]
     pager_truncate $::p2 5
   } {}
