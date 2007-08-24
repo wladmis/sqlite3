@@ -1199,7 +1199,7 @@ int sqlite3BtreeOpen(
     pBt->pageSize = get2byte(&zDbHeader[16]);
     if( pBt->pageSize<512 || pBt->pageSize>SQLITE_MAX_PAGE_SIZE
          || ((pBt->pageSize-1)&pBt->pageSize)!=0 ){
-      pBt->pageSize = SQLITE_DEFAULT_PAGE_SIZE;
+      pBt->pageSize = sqlite3PagerSetPagesize(pBt->pPager, 0);
       pBt->maxEmbedFrac = 64;   /* 25% */
       pBt->minEmbedFrac = 32;   /* 12.5% */
       pBt->minLeafFrac = 32;    /* 12.5% */
