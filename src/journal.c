@@ -220,6 +220,17 @@ int sqlite3JournalOpen(
   return SQLITE_OK;
 }
 
+/*
+** If the argument p points to a JournalFile structure, and the underlying
+** file has not yet been created, create it now.
+*/
+int sqlite3JournalCreate(sqlite3_file *p){
+  if( p->pMethods!=&JournalFileMethods ){
+    return SQLITE_OK;
+  }
+  return createFile((JournalFile *)p);
+}
+
 /* 
 ** Return the number of bytes required to store a JournalFile that uses vfs
 ** pVfs to create the underlying on-disk files.
