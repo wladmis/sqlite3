@@ -120,7 +120,6 @@ static int btree_close(
     sqlite3_mutex_leave(sDb.mutex);
     sqlite3_mutex_free(sDb.mutex);
     sDb.mutex = 0;
-    sqlite3_vfs_release(sDb.pVfs);
     sDb.pVfs = 0;
   }
   return TCL_OK;

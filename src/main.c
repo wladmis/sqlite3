@@ -220,7 +220,6 @@ int sqlite3_close(sqlite3 *db){
   ** structure?
   */
   sqlite3_free(db->aDb[1].pSchema);
-  sqlite3_vfs_release(db->pVfs);
   sqlite3_mutex_leave(db->mutex);
   sqlite3_mutex_free(db->mutex);
   sqlite3_free(db);
@@ -1420,7 +1419,6 @@ int sqlite3_sleep(int ms){
   ** API uses microseconds. Hence the 1000's.
   */
   rc = (sqlite3OsSleep(pVfs, 1000*ms)/1000);
-  sqlite3_vfs_release(pVfs);
   return rc;
 }
 
