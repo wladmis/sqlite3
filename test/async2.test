@@ -8,13 +8,18 @@
 # $Id$
 
 
-if {[info commands sqlite3async_enable]==""} {
-  # The async logic is not built into this system
-  return
-}
-
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+
+if {
+  [info commands sqlite3async_enable]=="" ||
+  [info command sqlite_malloc_stat]==""
+} {
+  # The async logic is not built into this system
+  puts "Skipping async2 tests: not compiled with required features"
+  finish_test
+  return
+}
 
 # Enable asynchronous IO.
 
