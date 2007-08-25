@@ -17,6 +17,7 @@
 #define _SQLITEINT_H_
 #include "sqliteLimit.h"
 
+#define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
 
 #if defined(SQLITE_TCL) || defined(TCLSH)
 # include <tcl.h>
