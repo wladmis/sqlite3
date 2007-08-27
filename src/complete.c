@@ -24,8 +24,16 @@
 /*
 ** This is defined in tokenize.c.  We just have to import the definition.
 */
-extern const char sqlite3IsIdChar[];
-#define IdChar(C)  (((c=C)&0x80)!=0 || (c>0x1f && sqlite3IsIdChar[c-0x20]))
+#ifndef SQLITE_AMALGAMATION
+#ifdef SQLITE_ASCII
+extern const char sqlite3IsAsciiIdChar[];
+#define IdChar(C)  (((c=C)&0x80)!=0 || (c>0x1f && sqlite3IsAsciiIdChar[c-0x20]))
+#endif
+#ifdef SQLITE_EBCDIC
+extern const char sqlite3IsEbcdicIdChar[];
+#define IdChar(C)  (((c=C)>=0x42 && sqlite3IsEbcdicIdChar[c-0x40]))
+#endif
+#endif /* SQLITE_AMALGAMATION */
 
 
 /*
