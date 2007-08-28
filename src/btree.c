@@ -2420,7 +2420,10 @@ int sqlite3BtreeRollback(Btree *p){
     while( pBt->pCursor ){
       sqlite3 *db = pBt->pCursor->pBtree->pSqlite;
       if( db ){
+        /**** FIX ME: This can deadlock ****/
+        sqlite3_mutex_enter(db->mutex);
         sqlite3AbortOtherActiveVdbes(db, 0);
+        sqlite3_mutex_leave(db->mutex);
       }
     }
   }

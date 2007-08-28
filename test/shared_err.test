@@ -156,7 +156,6 @@ do_ioerr_test shared_ioerr-3 -tclprep {
   sqlite3_step $::STMT       ;# Cursor points at 001.001.001.001
 
 } -tclbody {
-btree_breakpoint
   execsql {
     BEGIN;
     INSERT INTO t1 VALUES('201.201.201.201.201', NULL);

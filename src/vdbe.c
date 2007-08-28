@@ -465,7 +465,7 @@ int sqlite3VdbeExec(
   if( p->magic!=VDBE_MAGIC_RUN ) return SQLITE_MISUSE;
   assert( db->magic==SQLITE_MAGIC_BUSY );
   pTos = p->pTos;
-  sqlite3BtreeMutexSetEnter(&p->mtxSet);
+  sqlite3BtreeMutexArrayEnter(&p->aMutex);
   if( p->rc==SQLITE_NOMEM ){
     /* This happens if a malloc() inside a call to sqlite3_column_text() or
     ** sqlite3_column_text16() failed.  */
@@ -5202,7 +5202,7 @@ vdbe_halt:
   ** release the mutexes on btrees that were acquired at the
   ** top. */
 vdbe_return:
-  sqlite3BtreeMutexSetLeave(&p->mtxSet);
+  sqlite3BtreeMutexArrayLeave(&p->aMutex);
   return rc;
 
   /* Jump to here if a string or blob larger than SQLITE_MAX_LENGTH
