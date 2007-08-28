@@ -73,6 +73,7 @@
 #include "sqlite3.h"
 #include "hash.h"
 #include "parse.h"
+#include "mutex.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
