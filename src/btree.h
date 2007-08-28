@@ -41,6 +41,18 @@
 typedef struct Btree Btree;
 typedef struct BtCursor BtCursor;
 typedef struct BtShared BtShared;
+typedef struct BtreeMutexSet BtreeMutexSet;
+
+/*
+** This structure records all of the Btrees that need to hold
+** a mutex before we enter sqlite3VdbeExec().  The Btrees are
+** are placed in aBtree[] in order of aBtree[]->pBt.  That way,
+** we can always lock and unlock them all quickly.
+*/
+struct BtreeMutexSet {
+  int nMutex;
+  Btree *aBtree[SQLITE_MAX_ATTACHED+1];
+};
 
 
 int sqlite3BtreeOpen(
@@ -169,5 +181,17 @@ int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
 void sqlite3BtreeCursorList(Btree*);
 int sqlite3BtreePageDump(Btree*, int, int recursive);
 #endif
+
+#if !defined(SQLITE_OMIT_SHARED_CACHE) && SQLITE_THREADSAFE
+  void sqlite3BtreeMutexSetEnter(BtreeMutexSet*);
+  void sqlite3BtreeMutexSetLeave(BtreeMutexSet*);
+  void sqlite3BtreeMutexSetInsert(BtreeMutexSet*, Btree*);
+#else
+# define sqlite3BtreeMutexSetEnter(X)
+# define sqlite3BtreeMutexSetLeave(X)
+# define sqlite3BtreeMutexSetInsert(X,Y)
+#endif
+
+
 
 #endif /* _BTREE_H_ */

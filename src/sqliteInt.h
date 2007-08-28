@@ -233,8 +233,8 @@ struct BusyHandler {
 ** Defer sourcing vdbe.h and btree.h until after the "u8" and 
 ** "BusyHandler typedefs.
 */
-#include "vdbe.h"
 #include "btree.h"
+#include "vdbe.h"
 #include "pager.h"
 
 
