@@ -320,7 +320,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
    <p>The "temp" database (in which TEMP tables and indices are stored)
    always uses exclusive locking mode.  The locking mode of temp cannot
    be changed.  All other databases use the normal locking mode by default
-   and are effected by this pragma.</p>
+   and are affected by this pragma.</p>
 </li>
 
 <a name="pragma_page_size"></a>
