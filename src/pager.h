@@ -85,6 +85,7 @@ void sqlite3PagerDontWrite(DbPage*);
 int sqlite3PagerRefcount(Pager*);
 void sqlite3PagerSetSafetyLevel(Pager*,int,int);
 const char *sqlite3PagerFilename(Pager*);
+const sqlite3_vfs *sqlite3PagerVfs(Pager*);
 const char *sqlite3PagerDirname(Pager*);
 const char *sqlite3PagerJournalname(Pager*);
 int sqlite3PagerNosync(Pager*);

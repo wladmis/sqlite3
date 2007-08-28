@@ -4797,6 +4797,13 @@ const char *sqlite3PagerFilename(Pager *pPager){
 }
 
 /*
+** Return the VFS structure for the pager.
+*/
+const sqlite3_vfs *sqlite3PagerVfs(Pager *pPager){
+  return pPager->pVfs;
+}
+
+/*
 ** Return the directory of the database file.
 */
 const char *sqlite3PagerDirname(Pager *pPager){
