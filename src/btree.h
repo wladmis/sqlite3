@@ -107,21 +107,6 @@ void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
 int sqlite3BtreeSchemaLocked(Btree *);
 int sqlite3BtreeLockTable(Btree *, int, u8);
 
-/*
-** If we are not using shared cache, then there is no need to
-** use mutexes to access the BtShared structures.  So make the
-** Enter and Leave procedures no-ops.
-*/
-#if SQLITE_THREADSAFE && !defined(SQLITE_OMIT_SHARED_CACHE)
-  void sqlite3BtreeEnter(Btree*);
-  void sqlite3BtreeLeave(Btree*);
-# define sqlite3BtreeMutexHeld(X) sqlite3_mutex_held(X)
-#else
-# define sqlite3BtreeEnter(X)
-# define sqlite3BtreeLeave(X)
-# define sqlite3BtreeMutexHeld(X) 1
-#endif
-
 const char *sqlite3BtreeGetFilename(Btree *);
 const char *sqlite3BtreeGetDirname(Btree *);
 const char *sqlite3BtreeGetJournalname(Btree *);
@@ -182,11 +167,26 @@ void sqlite3BtreeCursorList(Btree*);
 int sqlite3BtreePageDump(Btree*, int, int recursive);
 #endif
 
+/*
+** If we are not using shared cache, then there is no need to
+** use mutexes to access the BtShared structures.  So make the
+** Enter and Leave procedures no-ops.
+*/
 #if !defined(SQLITE_OMIT_SHARED_CACHE) && SQLITE_THREADSAFE
+  void sqlite3BtreeEnter(Btree*);
+  void sqlite3BtreeLeave(Btree*);
+# define sqlite3BtreeMutexHeld(X) sqlite3_mutex_held(X)
+  void sqlite3BtreeEnterAll(sqlite3*);
+  void sqlite3BtreeLeaveAll(sqlite3*);
   void sqlite3BtreeMutexArrayEnter(BtreeMutexArray*);
   void sqlite3BtreeMutexArrayLeave(BtreeMutexArray*);
   void sqlite3BtreeMutexArrayInsert(BtreeMutexArray*, Btree*);
 #else
+# define sqlite3BtreeEnter(X)
+# define sqlite3BtreeLeave(X)
+# define sqlite3BtreeMutexHeld(X) 1
+# define sqlite3BtreeEnterAll(X)
+# define sqlite3BtreeLeaveAll(X)
 # define sqlite3BtreeMutexArrayEnter(X)
 # define sqlite3BtreeMutexArrayLeave(X)
 # define sqlite3BtreeMutexArrayInsert(X,Y)
