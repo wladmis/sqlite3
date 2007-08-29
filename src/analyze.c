@@ -386,7 +386,9 @@ int sqlite3AnalysisLoad(sqlite3 *db, int iDb){
   char *zSql;
   int rc;
 
-  assert( sqlite3BtreeHoldsAllMutexes(db) );
+  assert( iDb>=0 && iDb<db->nDb );
+  assert( db->aDb[iDb].pBt!=0 );
+  assert( sqlite3BtreeHoldsMutex(db->aDb[iDb].pBt) );
 
   /* Clear any prior statistics */
   for(i=sqliteHashFirst(&db->aDb[iDb].pSchema->idxHash);i;i=sqliteHashNext(i)){
