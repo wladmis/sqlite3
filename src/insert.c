@@ -1525,6 +1525,7 @@ static int xferOptimization(
 #endif
   iDbSrc = sqlite3SchemaToIndex(pParse->db, pSrc->pSchema);
   v = sqlite3GetVdbe(pParse);
+  sqlite3CodeVerifySchema(pParse, iDbSrc);
   iSrc = pParse->nTab++;
   iDest = pParse->nTab++;
   counterMem = autoIncBegin(pParse, iDbDest, pDest);
