@@ -754,7 +754,7 @@ if {[info command sqlite3_memdebug_fail]!=""} {
   do_test capi3-10-1 {
     sqlite3 db test.db
     set DB [sqlite3_connection_pointer db]
-    sqlite3_memdebug_fail 0 0
+    sqlite3_memdebug_fail 0
     catchsql {
       select * from sqlite_master;
     }
@@ -768,7 +768,7 @@ if {[info command sqlite3_memdebug_fail]!=""} {
     } {out of memory}
   }
   db close
-  sqlite3_memdebug_fail -1 0
+  sqlite3_memdebug_fail -1
 }
 
 # The following tests - capi3-11.* - test that a COMMIT or ROLLBACK

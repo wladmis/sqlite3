@@ -60,7 +60,7 @@ Select *sqlite3SelectNew(
     memset(pNew, 0, sizeof(*pNew));
   }
   if( pEList==0 ){
-    pEList = sqlite3ExprListAppend(pParse, 0, sqlite3Expr(TK_ALL,0,0,0), 0);
+    pEList = sqlite3ExprListAppend(pParse, 0, sqlite3Expr(db,TK_ALL,0,0,0), 0);
   }
   pNew->pEList = pEList;
   pNew->pSrc = pSrc;
@@ -1364,12 +1364,12 @@ static int prepSelectStmt(Parse *pParse, Select *p){
                 continue;
               }
             }
-            pRight = sqlite3Expr(TK_ID, 0, 0, 0);
+            pRight = sqlite3PExpr(pParse, TK_ID, 0, 0, 0);
             if( pRight==0 ) break;
             setQuotedToken(pParse, &pRight->token, zName);
             if( zTabName && (longNames || pTabList->nSrc>1) ){
-              Expr *pLeft = sqlite3Expr(TK_ID, 0, 0, 0);
-              pExpr = sqlite3Expr(TK_DOT, pLeft, pRight, 0);
+              Expr *pLeft = sqlite3PExpr(pParse, TK_ID, 0, 0, 0);
+              pExpr = sqlite3PExpr(pParse, TK_DOT, pLeft, pRight, 0);
               if( pExpr==0 ) break;
               setQuotedToken(pParse, &pLeft->token, zTabName);
               setToken(&pExpr->span, 

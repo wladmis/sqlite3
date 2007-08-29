@@ -66,6 +66,7 @@ static int pager_open(
   int argc,              /* Number of arguments */
   const char **argv      /* Text of each argument */
 ){
+  u16 pageSize;
   Pager *pPager;
   int nPage;
   int rc;
@@ -82,7 +83,8 @@ static int pager_open(
     return TCL_ERROR;
   }
   sqlite3PagerSetCachesize(pPager, nPage);
-  sqlite3PagerSetPagesize(pPager, test_pagesize);
+  pageSize = test_pagesize;
+  sqlite3PagerSetPagesize(pPager, &pageSize);
   sqlite3_snprintf(sizeof(zBuf),zBuf,"%p",pPager);
   Tcl_AppendResult(interp, zBuf, 0);
   return TCL_OK;

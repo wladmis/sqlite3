@@ -51,7 +51,7 @@ proc do_stmt_test {id sql} {
     } {1}
 
     # Set the Nth malloc() to fail.
-    sqlite3_memdebug_fail $n 1
+    sqlite3_memdebug_fail $n -repeat 1
 
     # Test malloc failure in the _name(), _name16(), decltype() and
     # decltype16() APIs. Calls that occur after the malloc() failure should

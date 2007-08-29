@@ -46,6 +46,8 @@ int sqlite3_exec(
   int nCallback;
 
   if( zSql==0 ) return SQLITE_OK;
+
+  sqlite3_mutex_enter(db->mutex);
   while( (rc==SQLITE_OK || (rc==SQLITE_SCHEMA && (++nRetry)<2)) && zSql[0] ){
     int nCol;
     char **azVals = 0;
@@ -127,5 +129,6 @@ exec_out:
   }
 
   assert( (rc&db->errMask)==rc );
+  sqlite3_mutex_leave(db->mutex);
   return rc;
 }

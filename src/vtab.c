@@ -296,6 +296,7 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
     int nName = strlen(zName) + 1;
     pOld = sqlite3HashInsert(&pSchema->tblHash, zName, nName, pTab);
     if( pOld ){
+      db->mallocFailed = 1;
       assert( pTab==pOld );  /* Malloc must have failed inside HashInsert() */
       return;
     }

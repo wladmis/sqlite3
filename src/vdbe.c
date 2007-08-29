@@ -2637,7 +2637,8 @@ case OP_VerifyCookie: {       /* no-push */
     iMeta = 0;
   }
   if( rc==SQLITE_OK && iMeta!=pOp->p2 ){
-    sqlite3SetString(&p->zErrMsg, "database schema has changed", (char*)0);
+    sqlite3_free(p->zErrMsg);
+    p->zErrMsg = sqlite3DbStrDup(db, "database schema has changed");
     /* If the schema-cookie from the database file matches the cookie 
     ** stored with the in-memory representation of the schema, do
     ** not reload the schema from the database file.

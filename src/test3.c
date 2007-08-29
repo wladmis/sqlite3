@@ -16,6 +16,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
+#include "btreeInt.h"
 #include "tcl.h"
 #include <stdlib.h>
 #include <string.h>
@@ -530,6 +531,7 @@ static int btree_pager_stats(
     return TCL_ERROR;
   }
   pBt = sqlite3TextToPtr(argv[1]);
+  sqlite3_mutex_enter(pBt->pSqlite->mutex);
   sqlite3BtreeEnter(pBt);
   a = sqlite3PagerStats(sqlite3BtreePager(pBt));
   for(i=0; i<11; i++){
@@ -543,6 +545,7 @@ static int btree_pager_stats(
     Tcl_AppendElement(interp, zBuf);
   }
   sqlite3BtreeLeave(pBt);
+  sqlite3_mutex_leave(pBt->pSqlite->mutex);
   return TCL_OK;
 }
 
@@ -1493,7 +1496,11 @@ static int btree_set_cache_size(
   }
   pBt = sqlite3TextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &nCache) ) return TCL_ERROR;
+
+  sqlite3_mutex_enter(pBt->pSqlite->mutex);
   sqlite3BtreeSetCacheSize(pBt, nCache);
+  sqlite3_mutex_leave(pBt->pSqlite->mutex);
+
   return TCL_OK;
 }
 

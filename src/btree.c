@@ -1212,7 +1212,8 @@ int sqlite3BtreeOpen(
     pBt->pageSize = get2byte(&zDbHeader[16]);
     if( pBt->pageSize<512 || pBt->pageSize>SQLITE_MAX_PAGE_SIZE
          || ((pBt->pageSize-1)&pBt->pageSize)!=0 ){
-      pBt->pageSize = sqlite3PagerSetPagesize(pBt->pPager, 0);
+      pBt->pageSize = 0;
+      sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
       pBt->maxEmbedFrac = 64;   /* 25% */
       pBt->minEmbedFrac = 32;   /* 12.5% */
       pBt->minLeafFrac = 32;    /* 12.5% */
@@ -1242,7 +1243,7 @@ int sqlite3BtreeOpen(
     }
     pBt->usableSize = pBt->pageSize - nReserve;
     assert( (pBt->pageSize & 7)==0 );  /* 8-byte alignment of pageSize */
-    sqlite3PagerSetPagesize(pBt->pPager, pBt->pageSize);
+    sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
    
 #if !defined(SQLITE_OMIT_SHARED_CACHE) && !defined(SQLITE_OMIT_DISKIO)
     /* Add the new BtShared object to the linked list sharable BtShareds.
@@ -1488,6 +1489,7 @@ int sqlite3BtreeSyncDisabled(Btree *p){
 ** bytes per page is left unchanged.
 */
 int sqlite3BtreeSetPageSize(Btree *p, int pageSize, int nReserve){
+  int rc = SQLITE_OK;
   BtShared *pBt = p->pBt;
   sqlite3BtreeEnter(p);
   if( pBt->pageSizeFixed ){
@@ -1501,11 +1503,12 @@ int sqlite3BtreeSetPageSize(Btree *p, int pageSize, int nReserve){
         ((pageSize-1)&pageSize)==0 ){
     assert( (pageSize & 7)==0 );
     assert( !pBt->pPage1 && !pBt->pCursor );
-    pBt->pageSize = sqlite3PagerSetPagesize(pBt->pPager, pageSize);
+    pBt->pageSize = pageSize;
+    rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
   }
   pBt->usableSize = pBt->pageSize - nReserve;
   sqlite3BtreeLeave(p);
-  return SQLITE_OK;
+  return rc;
 }
 
 /*
