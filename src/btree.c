@@ -1068,7 +1068,6 @@ static void pageDestructor(DbPage *pData, int pageSize){
   assert( pPage->isInit==0 || sqlite3_mutex_held(pPage->pBt->mutex) );
   if( pPage->pParent ){
     MemPage *pParent = pPage->pParent;
-    assert( pPage->isInit==1 );
     assert( pParent->pBt==pPage->pBt );
     pPage->pParent = 0;
     releasePage(pParent);
