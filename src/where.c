@@ -1260,11 +1260,10 @@ static double bestVirtualIndex(
 
     /* Allocate the sqlite3_index_info structure
     */
-    pIdxInfo = sqlite3MallocZero( sizeof(*pIdxInfo)
+    pIdxInfo = sqlite3DbMallocZero(pParse->db, sizeof(*pIdxInfo)
                              + (sizeof(*pIdxCons) + sizeof(*pUsage))*nTerm
                              + sizeof(*pIdxOrderBy)*nOrderBy );
     if( pIdxInfo==0 ){
-      pParse->db->mallocFailed = 1;
       sqlite3ErrorMsg(pParse, "out of memory");
       return 0.0;
     }
