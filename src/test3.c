@@ -557,6 +557,16 @@ static int btree_pager_stats(
     return TCL_ERROR;
   }
   pBt = sqlite3TextToPtr(argv[1]);
+ 
+  /* Normally in this file, with a b-tree handle opened using the 
+  ** [btree_open] command it is safe to call sqlite3BtreeEnter() directly.
+  ** But this function is sometimes called with a btree handle obtained
+  ** from an open SQLite connection (using [btree_from_db]). In this case
+  ** we need to obtain the mutex for the controlling SQLite handle before
+  ** it is safe to call sqlite3BtreeEnter().
+  */
+  sqlite3_mutex_enter(pBt->pSqlite->mutex);
+
   sqlite3BtreeEnter(pBt);
   a = sqlite3PagerStats(sqlite3BtreePager(pBt));
   for(i=0; i<11; i++){
@@ -570,6 +580,9 @@ static int btree_pager_stats(
     Tcl_AppendElement(interp, zBuf);
   }
   sqlite3BtreeLeave(pBt);
+
+  /* Release the mutex on the SQLite handle that controls this b-tree */
+  sqlite3_mutex_leave(pBt->pSqlite->mutex);
   return TCL_OK;
 }
 
