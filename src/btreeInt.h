@@ -466,10 +466,18 @@ struct BtCursor {
 **   in variables BtCursor.pKey and BtCursor.nKey. When a cursor is in 
 **   this state, restoreOrClearCursorPosition() can be called to attempt to
 **   seek the cursor to the saved position.
+**
+** CURSOR_FAULT:
+**   A unrecoverable error (an I/O error or a malloc failure) has occurred
+**   on a different connection that shares the BtShared cache with this
+**   cursor.  The error has left the cache in an inconsistent state.
+**   Do nothing else with this cursor.  Any attempt to use the cursor
+**   should return the error code stored in BtCursor.skip
 */
 #define CURSOR_INVALID           0
 #define CURSOR_VALID             1
 #define CURSOR_REQUIRESEEK       2
+#define CURSOR_FAULT             3
 
 /*
 ** The TRACE macro will print high-level status information about the

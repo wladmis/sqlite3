@@ -125,6 +125,7 @@ int sqlite3BtreeDropTable(Btree*, int, int*);
 int sqlite3BtreeClearTable(Btree*, int);
 int sqlite3BtreeGetMeta(Btree*, int idx, u32 *pValue);
 int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);
+void sqlite3BtreeTripAllCursors(Btree*, int);
 
 int sqlite3BtreeCursor(
   Btree*,                              /* BTree containing table to open */
