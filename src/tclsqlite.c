@@ -1648,7 +1648,6 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
         }
         Tcl_ObjSetVar2(interp, pArray, pStar, pColList,0);
         Tcl_DecrRefCount(pColList);
-        Tcl_DecrRefCount(pStar);
       }
 
       /* Execute the SQL
