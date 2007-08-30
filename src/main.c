@@ -1098,7 +1098,7 @@ int sqlite3_open(
                       SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
 }
 int sqlite3_open_v2(
-  const void *filename,   /* Database filename (UTF-8) */
+  const char *filename,   /* Database filename (UTF-8) */
   sqlite3 **ppDb,         /* OUT: SQLite db handle */
   int flags,              /* Flags */
   const char *zVfs        /* Name of VFS module to use */
