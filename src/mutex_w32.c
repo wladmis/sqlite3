@@ -19,7 +19,7 @@
 ** The code in this file is only used if we are compiling multithreaded
 ** on a win32 system.
 */
-#ifdef SQLITE_MUTEX_WIN32
+#ifdef SQLITE_MUTEX_W32
 
 /*
 ** Each recursive mutex is an instance of the following structure.
@@ -178,4 +178,4 @@ int sqlite3_mutex_held(sqlite3_mutex *p){
 int sqlite3_mutex_notheld(sqlite3_mutex *p){
   return p==0 || p->nRef==0 || p->owner!=GetCurrentThreadId();
 }
-#endif /* SQLITE_MUTEX_WIN */
+#endif /* SQLITE_MUTEX_W32 */

@@ -73,7 +73,6 @@
 #include "sqlite3.h"
 #include "hash.h"
 #include "parse.h"
-#include "mutex.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -295,6 +294,7 @@ typedef struct WhereInfo WhereInfo;
 typedef struct WhereLevel WhereLevel;
 
 #include "os.h"
+#include "mutex.h"
 
 /*
 ** Each database file to be accessed by the system is an instance
