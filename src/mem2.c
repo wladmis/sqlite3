@@ -497,6 +497,10 @@ int sqlite3_memdebug_fail(int iFail, int iRepeat, int *piBenign){
   return n;
 }
 
+int sqlite3_memdebug_pending(){
+  return (mem.iFail-1);
+}
+
 void sqlite3MallocBenignFailure(int isBenign){
   if( isBenign ){
     mem.iNextIsBenign = 1;
