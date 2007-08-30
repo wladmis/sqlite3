@@ -337,7 +337,12 @@ void sqlite3Pragma(
       int size = pBt ? sqlite3BtreeGetPageSize(pBt) : 0;
       returnSingleInt(pParse, "page_size", size);
     }else{
-      sqlite3BtreeSetPageSize(pBt, atoi(zRight), -1);
+      /* Malloc may fail when setting the page-size, as there is an internal
+      ** buffer that the pager module resizes using sqlite3_realloc().
+      */
+      if( SQLITE_NOMEM==sqlite3BtreeSetPageSize(pBt, atoi(zRight), -1) ){
+        db->mallocFailed = 1;
+      }
     }
   }else
 
