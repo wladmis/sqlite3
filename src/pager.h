@@ -108,10 +108,6 @@ int sqlite3PagerLockingMode(Pager *, int);
   int sqlite3PagerIswriteable(DbPage*);
 #endif
 
-#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
-  int sqlite3PagerLockstate(Pager*);
-#endif
-
 #ifdef SQLITE_TEST
   int *sqlite3PagerStats(Pager*);
   void sqlite3PagerRefdump(Pager*);

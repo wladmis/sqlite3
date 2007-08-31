@@ -5010,17 +5010,6 @@ int sqlite3PagerLockingMode(Pager *pPager, int eMode){
   return (int)pPager->exclusiveMode;
 }
 
-#if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
-/*
-** Return the current state of the file lock for the given pager.
-** The return value is one of NO_LOCK, SHARED_LOCK, RESERVED_LOCK,
-** PENDING_LOCK, or EXCLUSIVE_LOCK.
-*/
-int sqlite3PagerLockstate(Pager *pPager){
-  return sqlite3OsLockState(pPager->fd);
-}
-#endif
-
 #ifdef SQLITE_DEBUG
 /*
 ** Print a listing of all referenced pages and their ref count.
