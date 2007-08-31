@@ -4823,6 +4823,15 @@ const sqlite3_vfs *sqlite3PagerVfs(Pager *pPager){
 }
 
 /*
+** Return the file handle for the database file associated
+** with the pager.  This might return NULL if the file has
+** not yet been opened.
+*/
+sqlite3_file *sqlite3PagerFile(Pager *pPager){
+  return pPager->fd;
+}
+
+/*
 ** Return the directory of the database file.
 */
 const char *sqlite3PagerDirname(Pager *pPager){

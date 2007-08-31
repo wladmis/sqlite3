@@ -1432,3 +1432,36 @@ int sqlite3_extended_result_codes(sqlite3 *db, int onoff){
   sqlite3_mutex_leave(db->mutex);
   return SQLITE_OK;
 }
+
+/*
+** Invoke the xFileControl method on a particular database.
+*/
+int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
+  int rc = SQLITE_ERROR;
+  int iDb;
+  sqlite3_mutex_enter(db->mutex);
+  if( zDbName==0 ){
+    iDb = 0;
+  }else{
+    for(iDb=0; iDb<db->nDb; iDb++){
+      if( strcmp(db->aDb[iDb].zName, zDbName)==0 ) break;
+    }
+  }
+  if( iDb<db->nDb ){
+    Btree *pBtree = db->aDb[iDb].pBt;
+    if( pBtree ){
+      Pager *pPager;
+      sqlite3BtreeEnter(pBtree);
+      pPager = sqlite3BtreePager(pBtree);
+      if( pPager ){
+        sqlite3_file *fd = sqlite3PagerFile(pPager);
+        if( fd ){
+          rc = sqlite3OsFileControl(fd, op, pArg);
+        }
+      }
+      sqlite3BtreeLeave(pBtree);
+    }
+  }
+  sqlite3_mutex_leave(db->mutex);
+  return rc;   
+}
