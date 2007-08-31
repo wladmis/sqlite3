@@ -4353,7 +4353,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   };
   static int bitmask_size = sizeof(Bitmask)*8;
   int i;
-  extern int sqlite3_where_trace;
   extern int sqlite3_sync_count, sqlite3_fullsync_count;
   extern int sqlite3_opentemp_count;
   extern int sqlite3_like_count;
@@ -4369,6 +4368,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_os_type;
 #endif
 #ifdef SQLITE_DEBUG
+  extern int sqlite3_where_trace;
   extern int sqlite3_os_trace;
   extern int sqlite3_vdbe_addop_trace;
 #endif
