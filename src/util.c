@@ -420,10 +420,16 @@ int sqlite3GetInt32(const char *zNum, int *pValue){
     zNum++;
   }
   while( zNum[0]=='0' ) zNum++;
-  for(i=0; i<10 && (c = zNum[i] - '0')>=0 && c<=9; i++){
+  for(i=0; i<11 && (c = zNum[i] - '0')>=0 && c<=9; i++){
     v = v*10 + c;
   }
-  if( i>9 ){
+
+  /* The longest decimal representation of a 32 bit integer is 10 digits:
+  **
+  **             1234567890
+  **     2^31 -> 2147483648
+  */
+  if( i>10 ){
     return 0;
   }
   if( v-neg>2147483647 ){
