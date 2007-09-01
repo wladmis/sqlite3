@@ -358,7 +358,7 @@ proc crashsql {args} {
   set f [open crash.tcl w]
   puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
   puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
-  puts $f "sqlite3 db test.db"
+  puts $f "sqlite3 db test.db -vfs crash"
 
   # This block sets the cache size of the main database to 10
   # pages. This is done in case the build is configured to omit
