@@ -190,4 +190,14 @@ do_test zeroblob-7.3 {
   sqlite3_finalize $::STMT
 } {SQLITE_OK}
 
+# Test that MakeRecord can handle a value with some real content
+# and a zero-blob tail.
+#
+do_test zeroblob-8.1 {
+  llength [execsql {
+    SELECT 'hello' AS a, zeroblob(10) as b from t1 ORDER BY a, b;
+  }]
+} {8}
+
+
 finish_test
