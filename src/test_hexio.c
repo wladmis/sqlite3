@@ -291,6 +291,7 @@ static int utf8_to_utf8(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
+#ifdef SQLITE_DEBUG
   int n;
   int nOut;
   const unsigned char *zOrig;
@@ -307,6 +308,7 @@ static int utf8_to_utf8(
   binToHex(z,nOut);
   Tcl_AppendResult(interp, (char*)z, 0);
   sqlite3_free(z);
+#endif
   return TCL_OK;
 }
 

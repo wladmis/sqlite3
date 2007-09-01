@@ -456,7 +456,10 @@ int sqlite3Utf16ByteLen(const void *zIn, int nChar){
   return (z-(char const *)zIn)-((c==0)?2:0);
 }
 
-#if defined(SQLITE_TEST)
+/* This test function is not currently used by the automated test-suite. 
+** Hence it is only available in debug builds.
+*/
+#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
 /*
 ** Translate UTF-8 to UTF-8.
 **

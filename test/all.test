@@ -62,7 +62,6 @@ lappend EXCLUDE quick.test             ;# Alternate test driver script
 lappend EXCLUDE malloc.test            ;# Run seperately later.
 lappend EXCLUDE misuse.test            ;# Run seperately later.
 lappend EXCLUDE memleak.test           ;# Alternate test driver script
-lappend EXCLUDE sqllimits1.test        ;# Default values use too much memory
 lappend EXCLUDE fuzz.test
 lappend EXCLUDE soak.test              ;# Takes a very long time (default 1 hr)
 

@@ -2462,8 +2462,7 @@ static int test_bind_zeroblob(
   int rc;
 
   if( objc!=4 ){
-    Tcl_AppendResult(interp, "wrong # args: should be \"",
-        Tcl_GetStringFromObj(objv[0], 0), " STMT N VALUE", 0);
+    Tcl_WrongNumArgs(interp, 1, objv, "STMT IDX N");
     return TCL_ERROR;
   }
 
