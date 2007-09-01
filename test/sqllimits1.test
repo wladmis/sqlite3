@@ -107,6 +107,16 @@ do_test sqllimits-1.11 {
   catchsql { SELECT $::str1 || $::str2 }
 } {1 {string or blob too big}}
 
+do_test sqllimits-1.12 {
+  set ::str1 [string repeat ' [expr {$SQLITE_MAX_LENGTH - 10}]]
+  catchsql { SELECT quote($::str1) }
+} {1 {string or blob too big}}
+
+do_test sqllimits-1.13 {
+  set ::str1 [string repeat ' [expr {$SQLITE_MAX_LENGTH - 10}]]
+  catchsql { SELECT hex($::str1) }
+} {1 {string or blob too big}}
+
 #--------------------------------------------------------------------
 # Test cases sqllimits-2.* test that the SQLITE_MAX_SQL_LENGTH limit
 # is enforced.

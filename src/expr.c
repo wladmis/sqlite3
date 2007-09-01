@@ -318,11 +318,7 @@ Expr *sqlite3ExprAnd(sqlite3 *db, Expr *pLeft, Expr *pRight){
   }else if( pRight==0 ){
     return pLeft;
   }else{
-    Expr *p = sqlite3Expr(db, TK_AND, pLeft, pRight, 0);
-    if( p==0 ){
-      db->mallocFailed = 1;
-    }
-    return p;
+    return sqlite3Expr(db, TK_AND, pLeft, pRight, 0);
   }
 }
 

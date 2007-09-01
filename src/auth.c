@@ -109,7 +109,7 @@ void sqlite3AuthRead(
 ){
   sqlite3 *db = pParse->db;
   int rc;
-  Table *pTab;          /* The table being read */
+  Table *pTab = 0;      /* The table being read */
   const char *zCol;     /* Name of the column of the table */
   int iSrc;             /* Index in pTabList->a[] of table being read */
   const char *zDBase;   /* Name of database being accessed */
@@ -135,8 +135,6 @@ void sqlite3AuthRead(
     */
     assert( pExpr->iTable==pStack->newIdx || pExpr->iTable==pStack->oldIdx );
     pTab = pStack->pTab;
-  }else{
-    return;
   }
   if( pTab==0 ) return;
   if( pExpr->iColumn>=0 ){

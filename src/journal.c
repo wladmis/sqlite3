@@ -93,13 +93,8 @@ static int jrnlRead(
   if( p->pReal ){
     rc = sqlite3OsRead(p->pReal, zBuf, iAmt, iOfst);
   }else{
-    int n = iAmt;
-    memset(zBuf, 0, n);
-    if( n+iOfst>p->iSize ){
-      rc = SQLITE_IOERR_SHORT_READ;
-    }else{
-      memcpy(zBuf, &p->zBuf[iOfst], n);
-    }
+    assert( n+iOfst<=p->iSize );
+    memcpy(zBuf, &p->zBuf[iOfst], iAmt);
   }
   return rc;
 }
@@ -139,7 +134,7 @@ static int jrnlTruncate(sqlite3_file *pJfd, sqlite_int64 size){
   JournalFile *p = (JournalFile *)pJfd;
   if( p->pReal ){
     rc = sqlite3OsTruncate(p->pReal, size);
-  }else if( size>p->iSize ){
+  }else if( size<p->iSize ){
     p->iSize = size;
   }
   return rc;
