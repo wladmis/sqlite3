@@ -437,7 +437,7 @@ static int test_mprintf_z(
   char *zResult = 0;
   int i;
 
-  for(i=2; i<argc; i++){
+  for(i=2; i<argc && (i==2 || zResult); i++){
     zResult = sqlite3MPrintf(0, "%z%s%s", zResult, argv[1], argv[i]);
   }
   Tcl_AppendResult(interp, zResult, 0);

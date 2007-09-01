@@ -356,6 +356,7 @@ proc crashsql {args} {
   set cfile [file join [pwd] $crashfile]
 
   set f [open crash.tcl w]
+  puts $f "sqlite3_crash_enable 1"
   puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
   puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
   puts $f "sqlite3 db test.db -vfs crash"
