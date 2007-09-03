@@ -318,12 +318,6 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
   Tcl_SetVar2(interp, "sqlite_options", "progress", "1", TCL_GLOBAL_ONLY);
 #endif
 
-#ifdef SQLITE_ENABLE_REDEF_IO
-  Tcl_SetVar2(interp, "sqlite_options", "redefio", "1", TCL_GLOBAL_ONLY);
-#else
-  Tcl_SetVar2(interp, "sqlite_options", "redefio", "0", TCL_GLOBAL_ONLY);
-#endif
-
 #ifdef SQLITE_OMIT_REINDEX
   Tcl_SetVar2(interp, "sqlite_options", "reindex", "0", TCL_GLOBAL_ONLY);
 #else
