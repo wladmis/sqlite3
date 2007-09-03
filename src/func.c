@@ -1133,17 +1133,17 @@ static void test_auxdata(
       if( zAux ){
         zRet[i*2] = '1';
         if( strcmp(zAux, z) ){
-          free_test_auxdata((void *)zRet);
           sqlite3_result_error(pCtx, "Auxilary data corruption", -1);
           return;
         }
-      }else{
+      }else {
         zRet[i*2] = '0';
-        zAux = contextMalloc(pCtx, strlen(z)+1);
-        if( zAux ){
-          strcpy(zAux, z);
-          sqlite3_set_auxdata(pCtx, i, zAux, free_test_auxdata);
-        }
+      }
+
+      zAux = contextMalloc(pCtx, strlen(z)+1);
+      if( zAux ){
+        strcpy(zAux, z);
+        sqlite3_set_auxdata(pCtx, i, zAux, free_test_auxdata);
       }
       zRet[i*2+1] = ' ';
     }

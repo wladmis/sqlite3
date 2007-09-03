@@ -259,6 +259,9 @@ do_malloc_test 10 -sqlprep {
 # sqlite3_create_function().
 do_malloc_test 11 -tclbody {
   set rc [sqlite3_create_function db]
+  if {[string match $rc SQLITE_OK]} {
+    set rc [sqlite3_create_aggregate db]
+  }
   if {[string match $rc SQLITE_NOMEM]} {
     error "out of memory"
   }

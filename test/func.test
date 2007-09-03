@@ -870,4 +870,13 @@ do_test func-22.22 {
   execsql {SELECT typeof(trim('hello',NULL));}
 } {null}
 
+# This is to test the deprecated sqlite3_aggregate_count() API.
+#
+do_test func-23.1 {
+  sqlite3_create_aggregate db
+  execsql {
+    SELECT legacy_count() FROM t6;
+  }
+} {3}
+
 finish_test

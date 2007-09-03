@@ -511,14 +511,16 @@ int sqlite3CreateFunc(
   }
 
   p = sqlite3FindFunction(db, zFunctionName, nName, nArg, enc, 1);
-  if( p ){
-    p->flags = 0;
-    p->xFunc = xFunc;
-    p->xStep = xStep;
-    p->xFinalize = xFinal;
-    p->pUserData = pUserData;
-    p->nArg = nArg;
+  assert(p || db->mallocFailed);
+  if( !p ){
+    return SQLITE_NOMEM;
   }
+  p->flags = 0;
+  p->xFunc = xFunc;
+  p->xStep = xStep;
+  p->xFinalize = xFinal;
+  p->pUserData = pUserData;
+  p->nArg = nArg;
   return SQLITE_OK;
 }
 
