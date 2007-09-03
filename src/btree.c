@@ -1267,11 +1267,13 @@ int sqlite3BtreeOpen(
       sqlite3_mutex *mutexShared;
       pBt->nRef = 1;
       mutexShared = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
-      pBt->mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_FAST);
-      if( pBt->mutex==0 ){
-        rc = SQLITE_NOMEM;
-        pSqlite->mallocFailed = 0;
-        goto btree_open_out;
+      if( SQLITE_THREADSAFE ){
+        pBt->mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_FAST);
+        if( pBt->mutex==0 ){
+          rc = SQLITE_NOMEM;
+          pSqlite->mallocFailed = 0;
+          goto btree_open_out;
+        }
       }
       sqlite3_mutex_enter(mutexShared);
       pBt->pNext = sqlite3SharedCacheList;
@@ -1354,7 +1356,9 @@ static int removeFromSharingList(BtShared *pBt){
         pList->pNext = pBt->pNext;
       }
     }
-    sqlite3_mutex_free(pBt->mutex);
+    if( SQLITE_THREADSAFE ){
+      sqlite3_mutex_free(pBt->mutex);
+    }
     removed = 1;
   }
   sqlite3_mutex_leave(pMaster);
