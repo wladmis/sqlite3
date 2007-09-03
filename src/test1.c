@@ -4469,12 +4469,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_temp_directory, TCL_LINK_STRING);
   Tcl_LinkVar(interp, "bitmask_size",
       (char*)&bitmask_size, TCL_LINK_INT|TCL_LINK_READ_ONLY);
-#if OS_UNIX
   Tcl_LinkVar(interp, "sqlite_sync_count",
       (char*)&sqlite3_sync_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_fullsync_count",
       (char*)&sqlite3_fullsync_count, TCL_LINK_INT);
-#endif /* OS_UNIX */
-
   return TCL_OK;
 }
