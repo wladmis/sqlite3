@@ -93,7 +93,7 @@ static int jrnlRead(
   if( p->pReal ){
     rc = sqlite3OsRead(p->pReal, zBuf, iAmt, iOfst);
   }else{
-    assert( n+iOfst<=p->iSize );
+    assert( iAmt+iOfst<=p->iSize );
     memcpy(zBuf, &p->zBuf[iOfst], iAmt);
   }
   return rc;

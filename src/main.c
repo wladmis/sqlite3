@@ -727,18 +727,19 @@ int sqlite3BtreeFactory(
   const char *zFilename,    /* Name of the file containing the BTree database */
   int omitJournal,          /* if TRUE then do not journal this file */
   int nCache,               /* How many pages in the page cache */
+  int vfsFlags,             /* Flags passed through to vfsOpen */
   Btree **ppBtree           /* Pointer to new Btree object written here */
 ){
-  int btree_flags = 0;
+  int btFlags = 0;
   int rc;
   
   assert( sqlite3_mutex_held(db->mutex) );
   assert( ppBtree != 0);
   if( omitJournal ){
-    btree_flags |= BTREE_OMIT_JOURNAL;
+    btFlags |= BTREE_OMIT_JOURNAL;
   }
   if( db->flags & SQLITE_NoReadlock ){
-    btree_flags |= BTREE_NO_READLOCK;
+    btFlags |= BTREE_NO_READLOCK;
   }
   if( zFilename==0 ){
 #if TEMP_STORE==0
@@ -757,7 +758,10 @@ int sqlite3BtreeFactory(
 #endif /* SQLITE_OMIT_MEMORYDB */
   }
 
-  rc = sqlite3BtreeOpen(zFilename, (sqlite3 *)db, ppBtree, btree_flags);
+  if( (vfsFlags & SQLITE_OPEN_MAIN_DB)!=0 && (zFilename==0 || *zFilename==0) ){
+    vfsFlags = (vfsFlags & ~SQLITE_OPEN_MAIN_DB) | SQLITE_OPEN_TEMP_DB;
+  }
+  rc = sqlite3BtreeOpen(zFilename, (sqlite3 *)db, ppBtree, btFlags, vfsFlags);
   if( rc==SQLITE_OK ){
     sqlite3BtreeSetBusyHandler(*ppBtree, (void*)&db->busyHandler);
     sqlite3BtreeSetCacheSize(*ppBtree, nCache);
@@ -1005,7 +1009,9 @@ static int openDatabase(
   }
 
   /* Open the backend database driver */
-  rc = sqlite3BtreeFactory(db, zFilename, 0, SQLITE_DEFAULT_CACHE_SIZE,
+  db->openFlags = flags;
+  rc = sqlite3BtreeFactory(db, zFilename, 0, SQLITE_DEFAULT_CACHE_SIZE, 
+                           flags | SQLITE_OPEN_MAIN_DB,
                            &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
     sqlite3Error(db, rc, 0);

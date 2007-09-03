@@ -81,7 +81,8 @@ static int btree_open(
     sDb.mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_RECURSIVE);
     sqlite3_mutex_enter(sDb.mutex);
   }
-  rc = sqlite3BtreeOpen(argv[1], &sDb, &pBt, flags);
+  rc = sqlite3BtreeOpen(argv[1], &sDb, &pBt, flags,
+     SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_MAIN_DB);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;

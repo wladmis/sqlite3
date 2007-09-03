@@ -59,7 +59,8 @@ int sqlite3BtreeOpen(
   const char *zFilename,   /* Name of database file to open */
   sqlite3 *db,             /* Associated database connection */
   Btree **,                /* Return open Btree* here */
-  int flags                /* Flags */
+  int flags,               /* Flags */
+  int vfsFlags             /* Flags passed through to VFS open */
 );
 
 /* The flags parameter to sqlite3BtreeOpen can be the bitwise or of the

@@ -3138,7 +3138,15 @@ void sqlite3RollbackTransaction(Parse *pParse){
 int sqlite3OpenTempDatabase(Parse *pParse){
   sqlite3 *db = pParse->db;
   if( db->aDb[1].pBt==0 && !pParse->explain ){
-    int rc = sqlite3BtreeFactory(db, 0, 0, SQLITE_DEFAULT_CACHE_SIZE,
+    int rc;
+    static const int flags = 
+          SQLITE_OPEN_READWRITE |
+          SQLITE_OPEN_CREATE |
+          SQLITE_OPEN_EXCLUSIVE |
+          SQLITE_OPEN_DELETEONCLOSE |
+          SQLITE_OPEN_TEMP_DB;
+
+    rc = sqlite3BtreeFactory(db, 0, 0, SQLITE_DEFAULT_CACHE_SIZE, flags,
                                  &db->aDb[1].pBt);
     if( rc!=SQLITE_OK ){
       sqlite3ErrorMsg(pParse, "unable to open a temporary database "
