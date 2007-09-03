@@ -27,8 +27,8 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
 # Only run these tests if memory debugging is turned on.
-if {[info command sqlite3_memdebug_pending]==""} {
-   puts "Skipping malloc tests: not compiled with -DSQLITE_MEMDEBUG..."
+ifcapable !memdebug {
+   puts "Skipping malloc4 tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
 }
