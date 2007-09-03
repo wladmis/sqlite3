@@ -362,6 +362,10 @@ void *sqlite3HashInsert(Hash *pH, const void *pKey, int nKey, void *data){
       removeElementGivenHash(pH,elem,h);
     }else{
       elem->data = data;
+      if( !pH->copyKey ){
+        elem->pKey = (void *)pKey;
+      }
+      assert(nKey==elem->nKey);
     }
     return old_data;
   }
