@@ -745,7 +745,7 @@ foreach {code english} $code2english {
 }
 
 # Test the error message when a "real" out of memory occurs.
-if {[info command sqlite3_memdebug_fail]!=""} {
+ifcapable memdebug {
   do_test capi3c-10-1 {
     sqlite3 db test.db
     set DB [sqlite3_connection_pointer db]

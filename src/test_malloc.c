@@ -271,7 +271,6 @@ static int test_memdebug_fail(
   int ii;
   int iFail;
   int iRepeat = -1;
-  int iBenignCnt;
   Tcl_Obj *pBenignCnt = 0;
 
   int nFail = 0;
@@ -314,6 +313,7 @@ static int test_memdebug_fail(
 #ifdef SQLITE_MEMDEBUG
   {
     extern int sqlite3_memdebug_fail(int,int,int*);
+    int iBenignCnt;
     nFail = sqlite3_memdebug_fail(iFail, iRepeat, &iBenignCnt);
     if( pBenignCnt ){
       Tcl_ObjSetVar2(interp, pBenignCnt, 0, Tcl_NewIntObj(iBenignCnt), 0);

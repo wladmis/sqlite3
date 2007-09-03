@@ -13,7 +13,8 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
-source $testdir/malloc_common.tcl
+
+if {![source $testdir/malloc_common.tcl]} return
 
 sqlite3_simulate_device -char atomic
 
