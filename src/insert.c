@@ -1418,9 +1418,7 @@ static int xferOptimization(
   if( onError!=OE_Abort && onError!=OE_Rollback ){
     return 0;   /* Cannot do OR REPLACE or OR IGNORE or OR FAIL */
   }
-  if( pSelect->pSrc==0 ){
-    return 0;   /* SELECT must have a FROM clause */
-  }
+  assert(pSelect->pSrc);   /* allocated even if there is no FROM clause */
   if( pSelect->pSrc->nSrc!=1 ){
     return 0;   /* FROM clause must have exactly one term */
   }

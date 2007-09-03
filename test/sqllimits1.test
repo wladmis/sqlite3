@@ -117,6 +117,17 @@ do_test sqllimits-1.13 {
   catchsql { SELECT hex($::str1) }
 } {1 {string or blob too big}}
 
+do_test sqllimits-1.14.1 {
+  set ::STMT [sqlite3_prepare $::DB "SELECT ?" -1 TAIL]
+  sqlite3_bind_zeroblob $::STMT 1 [expr {$SQLITE_MAX_LENGTH + 1}]
+} {}
+do_test sqllimits-1.14.2 {
+  sqlite3_step $::STMT 
+} {SQLITE_ERROR}
+do_test sqllimits-1.14.3 {
+  sqlite3_finalize $::STMT 
+} {SQLITE_TOOBIG}
+
 #--------------------------------------------------------------------
 # Test cases sqllimits-2.* test that the SQLITE_MAX_SQL_LENGTH limit
 # is enforced.

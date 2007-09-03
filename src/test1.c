@@ -144,6 +144,7 @@ const char *sqlite3TestErrorName(int rc){
     case SQLITE_ROW:        zName = "SQLITE_ROW";         break;
     case SQLITE_DONE:       zName = "SQLITE_DONE";        break;
     case SQLITE_NOTADB:     zName = "SQLITE_NOTADB";      break;
+    case SQLITE_TOOBIG:     zName = "SQLITE_TOOBIG";      break;
     default:                zName = "SQLITE_Unknown";     break;
   }
   return zName;
