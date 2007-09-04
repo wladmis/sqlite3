@@ -141,6 +141,12 @@ void sqlite3_mutex_enter(sqlite3_mutex *p){
   p->nRef++;
 }
 int sqlite3_mutex_try(sqlite3_mutex *p){
+  /* The TryEnterCriticalSection() interface is not available on all
+  ** windows systems.  Since sqlite3_mutex_try() is only used as an
+  ** optimization, we can skip it on windows. */
+  return SQLITE_BUSY;
+
+#if 0  /* Not Available */
   int rc;
   assert( p );
   assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
@@ -152,6 +158,7 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
     rc = SQLITE_BUSY;
   }
   return rc;
+#endif
 }
 
 /*
