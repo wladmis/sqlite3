@@ -343,7 +343,7 @@ static int vtabCallConstructor(
 ){
   int rc;
   int rc2;
-  sqlite3_vtab *pVtab;
+  sqlite3_vtab *pVtab = 0;
   const char *const*azArg = (const char *const*)pTab->azModuleArg;
   int nArg = pTab->nModuleArg;
   char *zErr = 0;
@@ -359,12 +359,12 @@ static int vtabCallConstructor(
   db->pVTab = pTab;
   rc = sqlite3SafetyOff(db);
   assert( rc==SQLITE_OK );
-  rc = xConstruct(db, pMod->pAux, nArg, azArg, &pTab->pVtab, &zErr);
+  rc = xConstruct(db, pMod->pAux, nArg, azArg, &pVtab, &zErr);
   rc2 = sqlite3SafetyOn(db);
-  pVtab = pTab->pVtab;
   if( rc==SQLITE_OK && pVtab ){
     pVtab->pModule = pMod->pModule;
     pVtab->nRef = 1;
+    pTab->pVtab = pVtab;
   }
 
   if( SQLITE_OK!=rc ){
