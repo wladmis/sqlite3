@@ -32,7 +32,9 @@ set INCLUDE {
   trans.test
   lock.test
   lock3.test
+  lock2.test
 }
+# set INCLUDE lock4.test
 
 # Enable asynchronous IO.
 sqlite3async_enable 1
