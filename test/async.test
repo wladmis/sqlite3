@@ -30,8 +30,9 @@ set INCLUDE {
   insert2.test
   insert3.test
   trans.test
+  lock.test
+  lock3.test
 }
-# set INCLUDE {select4.test}
 
 # Enable asynchronous IO.
 sqlite3async_enable 1
