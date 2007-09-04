@@ -75,7 +75,7 @@ newsitem {2007-Sep-04} {Version 3.5.0 alpha} {
   The OS interface layer and the memory allocation subsystems in
   SQLite have been reimplemented.  The published API is largely unchanged
   but the (unpublished) OS interface has been modified extensively.  
-  Application that implement their own OS interface will require
+  Applications that implement their own OS interface will require
   modification.  See
   <a href="34to35.html">34to35.html</a> for details.<p>
 
