@@ -43,6 +43,7 @@ do_test async3-1.0 {
   file delete -force chocolate/banana/vanilla/file.db
   file delete -force chocolate/banana/vanilla/file.db-journal
 } {}
+
 do_test async3-1.1 {
   sqlite3 db chocolate/banana/vanilla/file.db
   execsql {
