@@ -1647,7 +1647,9 @@ static int lockBtree(BtShared *pBt){
       goto page1_init_failed;
     }
     pageSize = get2byte(&page1[16]);
-    if( ((pageSize-1)&pageSize)!=0 || pageSize<512 ){
+    if( ((pageSize-1)&pageSize)!=0 || pageSize<512 ||
+        (SQLITE_MAX_PAGE_SIZE<32768 && pageSize>SQLITE_MAX_PAGE_SIZE)
+    ){
       goto page1_init_failed;
     }
     assert( (pageSize & 7)==0 );
