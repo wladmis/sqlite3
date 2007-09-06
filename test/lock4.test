@@ -83,7 +83,6 @@ do_test lock4-1.3 {
   db eval {
      COMMIT;
   }
-breakpoint
   while {[file exists test2.db-journal]} {
     after 10
   }
