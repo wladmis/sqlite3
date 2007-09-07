@@ -2497,6 +2497,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetestschema_Init(Tcl_Interp*);
     extern int Sqlitetestsse_Init(Tcl_Interp*);
     extern int Sqlitetesttclvar_Init(Tcl_Interp*);
+    extern int SqlitetestThread_Init(Tcl_Interp*);
 
     Md5_Init(interp);
     Sqliteconfig_Init(interp);
@@ -2515,6 +2516,7 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest_malloc_Init(interp);
     Sqlitetestschema_Init(interp);
     Sqlitetesttclvar_Init(interp);
+    SqlitetestThread_Init(interp);
 #ifdef SQLITE_SSE
     Sqlitetestsse_Init(interp);
 #endif
