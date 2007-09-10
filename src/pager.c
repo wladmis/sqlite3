@@ -4010,7 +4010,7 @@ static int pager_write(PgHdr *pPg){
             pPager->journalOff += 4;
           }
           IOTRACE(("JOUT %p %d %lld %d\n", pPager, pPg->pgno, 
-                   pPager->journalOff, szPg));
+                   pPager->journalOff, pPager->pageSize));
           PAGER_INCR(sqlite3_pager_writej_count);
           PAGERTRACE5("JOURNAL %d page %d needSync=%d hash(%08x)\n",
                PAGERID(pPager), pPg->pgno, pPg->needSync, pager_pagehash(pPg));
