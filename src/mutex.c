@@ -44,7 +44,7 @@ struct sqlite3_mutex {
 ** that means that a mutex could not be allocated. 
 */
 sqlite3_mutex *sqlite3_mutex_alloc(int id){
-  static sqlite3_mutex aStatic[4];
+  static sqlite3_mutex aStatic[5];
   sqlite3_mutex *pNew = 0;
   switch( id ){
     case SQLITE_MUTEX_FAST:
