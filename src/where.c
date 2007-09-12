@@ -350,15 +350,14 @@ static Bitmask exprListTableUsage(ExprMaskSet *pMaskSet, ExprList *pList){
   return mask;
 }
 static Bitmask exprSelectTableUsage(ExprMaskSet *pMaskSet, Select *pS){
-  Bitmask mask;
-  if( pS==0 ){
-    mask = 0;
-  }else{
-    mask = exprListTableUsage(pMaskSet, pS->pEList);
+  Bitmask mask = 0;
+  while( pS ){
+    mask |= exprListTableUsage(pMaskSet, pS->pEList);
     mask |= exprListTableUsage(pMaskSet, pS->pGroupBy);
     mask |= exprListTableUsage(pMaskSet, pS->pOrderBy);
     mask |= exprTableUsage(pMaskSet, pS->pWhere);
     mask |= exprTableUsage(pMaskSet, pS->pHaving);
+    pS = pS->pPrior;
   }
   return mask;
 }
