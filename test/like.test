@@ -389,7 +389,8 @@ do_test like-5.8 {
 #
 do_test like-6.1 {
   foreach x { 'abc 'bcd 'def 'ax } {
-    db eval {INSERT INTO t2 VALUES($x)}
+    set x2 '[string map {' ''} $x]'
+    db eval "INSERT INTO t2 VALUES($x2)"
   }
   execsql {
     SELECT * FROM t2 WHERE x LIKE '''a%'

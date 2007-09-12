@@ -16,6 +16,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !view||!subquery {
+  finish_test
+  return
+}
+
 # The sqlite3_xferopt_count variable is incremented whenever the 
 # insert transfer optimization applies.
 #

@@ -1398,7 +1398,7 @@ static int btree_ovfl_info(
     sqlite3BtreeLeave(pBt);
     return TCL_ERROR;
   }
-  dataSize = sqlite3BtreeGetPageSize(pBt) - sqlite3BtreeGetReserve(pBt);
+  dataSize = pBt->pBt->usableSize;
   Tcl_DStringInit(&str);
   n = aResult[6] - aResult[8];
   n = (n + dataSize - 1)/dataSize;

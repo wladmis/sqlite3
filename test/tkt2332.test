@@ -15,7 +15,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-ifcapable {!incrblob} {
+ifcapable !incrblob||!tclvar {
   finish_test
   return
 }

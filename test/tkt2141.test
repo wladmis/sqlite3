@@ -19,6 +19,10 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !subquery {
+  finish_test
+  return
+}
 
 do_test tkt2141-1.1 {
   execsql {

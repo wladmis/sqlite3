@@ -45,9 +45,15 @@ for {set av 0} {$av<=$upperBound} {incr av} {
       SELECT count(*) FROM t1;
     }
   } {4}
+
+  set isUtf16 0
+  ifcapable utf16 { 
+    set isUtf16 [expr {[execsql {PRAGMA encoding}] != "UTF-8"}]
+  }
+
   do_test createtab-$av.2 {
     file size test.db
-  } [expr {1024*(4+($av!=0)+([execsql {PRAGMA encoding}]!="UTF-8")*2)}]
+  } [expr {1024*(4+($av!=0)+(${isUtf16}*2))}]
   
   # Start reading the table
   #

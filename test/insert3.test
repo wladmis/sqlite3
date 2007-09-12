@@ -156,13 +156,16 @@ do_test insert3-3.6 {
     SELECT * FROM t5;
   }
 } {1 xyz 2 xyz}
-do_test insert3-3.7 {
-  execsql {
-    CREATE TABLE t6(x,y DEFAULT 4.3, z DEFAULT x'6869');
-    INSERT INTO t6 DEFAULT VALUES;
-    SELECT * FROM t6;
-  }
-} {{} 4.3 hi}
+
+ifcapable bloblit {
+  do_test insert3-3.7 {
+    execsql {
+      CREATE TABLE t6(x,y DEFAULT 4.3, z DEFAULT x'6869');
+      INSERT INTO t6 DEFAULT VALUES;
+      SELECT * FROM t6;
+    }
+  } {{} 4.3 hi}
+}
 db close
 
 finish_test

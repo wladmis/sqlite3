@@ -15,6 +15,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !subquery||!compound {
+  finish_test
+  return
+}
+
 do_test tkt2339.1 {
   execsql {
     create table t1(num int);

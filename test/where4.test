@@ -20,6 +20,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !tclvar||!bloblit {
+  finish_test
+  return
+}
+
 # Build some test data
 #
 do_test where4-1.0 {

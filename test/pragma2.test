@@ -24,7 +24,7 @@ source $testdir/tester.tcl
 # pragma2-3.*: Test trying to write to the freelist_count is a no-op.
 #
 
-ifcapable !pragma {
+ifcapable !pragma||!schema_pragmas {
   finish_test
   return
 }

@@ -6166,11 +6166,13 @@ int sqlite3BtreeUpdateMeta(Btree *p, int idx, u32 iMeta){
     rc = sqlite3PagerWrite(pBt->pPage1->pDbPage);
     if( rc==SQLITE_OK ){
       put4byte(&pP1[36 + idx*4], iMeta);
+#ifndef SQLITE_OMIT_AUTOVACUUM
       if( idx==7 ){
         assert( pBt->autoVacuum || iMeta==0 );
         assert( iMeta==0 || iMeta==1 );
         pBt->incrVacuum = iMeta;
       }
+#endif
     }
   }
   sqlite3BtreeLeave(p);
