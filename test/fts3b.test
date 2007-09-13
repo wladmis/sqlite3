@@ -103,4 +103,37 @@ do_test fts3b-2.2 {
   }
 } $res
 
+# Since fts3 is already an API break, I've marked the table-named
+# column HIDDEN.
+
+db eval {
+  CREATE VIRTUAL TABLE t3 USING fts3(c);
+  INSERT INTO t3 (c) VALUES('this is a test');
+  INSERT INTO t3 (c) VALUES('that was a test');
+  INSERT INTO t3 (c) VALUES('this is fun');
+  DELETE FROM t3 WHERE c = 'that was a test';
+}
+
+# Test that the table-named column still works.
+do_test fts3b-3.1 {
+  execsql {
+    SELECT snippet(t3) FROM t3 WHERE t3 MATCH 'test';
+  }
+} {{this is a <b>test</b>}}
+
+# Test that the column doesn't appear when selecting all columns.
+do_test fts3b-3.2 {
+  execsql {
+    SELECT * FROM t3 WHERE rowid = 1;
+  }
+} {{this is a test}}
+
+# Test that the column doesn't conflict with inserts that don't name
+# columns.
+do_test fts3b-3.3 {
+  execsql {
+    INSERT INTO t3 VALUES ('another test');
+  }
+} {}
+
 finish_test
