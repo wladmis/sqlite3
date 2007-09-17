@@ -2039,7 +2039,8 @@ int sqlite3PagerOpen(
   *ppPager = 0;
 
   /* Compute the full pathname */
-  zPathname = sqlite3_malloc(pVfs->mxPathname+1);
+  nPathname = pVfs->mxPathname+1;
+  zPathname = sqlite3_malloc(nPathname);
   if( zPathname==0 ){
     return SQLITE_NOMEM;
   }
@@ -2051,10 +2052,10 @@ int sqlite3PagerOpen(
     }else
 #endif
     {
-      rc = sqlite3OsFullPathname(pVfs, zFilename, zPathname);
+      rc = sqlite3OsFullPathname(pVfs, zFilename, nPathname, zPathname);
     }
   }else{
-    rc = sqlite3OsGetTempname(pVfs, zPathname);
+    rc = sqlite3OsGetTempname(pVfs, nPathname, zPathname);
   }
   if( rc!=SQLITE_OK ){
     sqlite3_free(zPathname);
