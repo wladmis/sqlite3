@@ -2054,7 +2054,7 @@ int sqlite3PagerOpen(
       rc = sqlite3OsFullPathname(pVfs, zFilename, zPathname);
     }
   }else{
-    rc = sqlite3OsGetTempName(pVfs, zPathname);
+    rc = sqlite3OsGetTempname(pVfs, zPathname);
   }
   if( rc!=SQLITE_OK ){
     sqlite3_free(zPathname);
