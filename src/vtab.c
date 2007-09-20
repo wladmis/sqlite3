@@ -748,7 +748,7 @@ FuncDef *sqlite3VtabOverloadFunction(
   void (*xFunc)(sqlite3_context*,int,sqlite3_value**);
   void *pArg;
   FuncDef *pNew;
-  int rc;
+  int rc = 0;
   char *zLowerName;
   unsigned char *z;
 
