@@ -794,7 +794,7 @@ struct FKey {
 };
 
 /*
-** SQLite supports many different ways to resolve a contraint
+** SQLite supports many different ways to resolve a constraint
 ** error.  ROLLBACK processing means that a constraint violation
 ** causes the operation in process to fail and for the current transaction
 ** to be rolled back.  ABORT processing means the operation in process
