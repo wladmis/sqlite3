@@ -314,6 +314,10 @@ conflict resolution algorithm.
 </p>
 
 <p>
+END TRANSACTION is an alias for COMMIT.
+</p>
+
+<p>
 In SQLite version 3.0.8 and later, transactions can be deferred,
 immediate, or exclusive.  Deferred means that no locks are acquired
 on the database until the database is first accessed.  Thus with a
