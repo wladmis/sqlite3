@@ -78,8 +78,8 @@ struct sqlite3_mutex {
 ** the same type number.
 */
 sqlite3_mutex *sqlite3_mutex_alloc(int iType){
-#define MUTEX_NAME "\\SEM32\\SQLITE\\MUTEX"
-#define MUTEX_NAME_LEN 20 /* name length + null byte */
+  PSZ mutex_name = "\\SEM32\\SQLITE\\MUTEX";
+  int mutex_name_len = strlen(mutex_name) + 1; /* name length + null byte */
   sqlite3_mutex *p;
 
   switch( iType ){
@@ -87,8 +87,8 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
     case SQLITE_MUTEX_RECURSIVE: {
       p = sqlite3MallocZero( sizeof(*p) );
       if( p ){
-        p->mutexName = (PSZ)malloc(MUTEX_NAME_LEN);
-        sqlite3_snprintf(MUTEX_NAME_LEN, p->mutexName, "%s", MUTEX_NAME);
+        p->mutexName = (PSZ)malloc(mutex_name_len);
+        sqlite3_snprintf(mutex_name_len, p->mutexName, "%s", mutex_name);
         p->id = iType;
         DosCreateMutexSem(p->mutexName, &p->mutex, 0, FALSE);
         DosOpenMutexSem(p->mutexName, &p->mutex);
@@ -106,9 +106,9 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
           DosExitCritSec();
           int i;
           for(i = 0; i < sizeof(staticMutexes)/sizeof(staticMutexes[0]); i++) {
-            staticMutexes[i].mutexName = (PSZ)malloc(MUTEX_NAME_LEN + 1);
-            sqlite3_snprintf(MUTEX_NAME_LEN + 1,
-                             staticMutexes[i].mutexName, "%s%1d", MUTEX_NAME, i);
+            staticMutexes[i].mutexName = (PSZ)malloc(mutex_name_len + 1);
+            sqlite3_snprintf(mutex_name_len + 1, /* one more for the number */
+                             staticMutexes[i].mutexName, "%s%1d", mutex_name, i);
             DosCreateMutexSem(staticMutexes[i].mutexName,
                               &staticMutexes[i].mutex, 0, FALSE);
             DosOpenMutexSem(staticMutexes[i].mutexName,
