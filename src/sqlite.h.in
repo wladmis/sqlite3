@@ -2674,6 +2674,13 @@ SQLITE_EXTERN char *sqlite3_temp_directory;
 ** by default.  Autocommit is disabled by a BEGIN statement and reenabled
 ** by the next COMMIT or ROLLBACK.
 **
+** If certain kinds of errors occur on a statement within a multi-statement
+** transactions (errors including [SQLITE_FULL], [SQLITE_IOERR], 
+** [SQLITE_NOMEM], [SQLITE_BUSY], and [SQLITE_INTERRUPT]) then the
+** transaction might be rolled back automatically.  The only way to
+** find out if SQLite automatically rolled back the transaction after
+** an error is to use this function.
+**
 ** If another thread changes the autocommit status of the database
 ** connection while this routine is running, then the return value
 ** is undefined.
