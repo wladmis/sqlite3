@@ -1270,10 +1270,14 @@ static void pager_unlock(Pager *pPager){
         pager_reset(pPager);
         if( pPager->stmtOpen ){
           sqlite3OsClose(pPager->stfd);
+          sqlite3_free(pPager->aInStmt);
+          pPager->aInStmt = 0;
         }
         if( pPager->journalOpen ){
           sqlite3OsClose(pPager->jfd);
           pPager->journalOpen = 0;
+          sqlite3_free(pPager->aInJournal);
+          pPager->aInJournal = 0;
         }
         pPager->stmtOpen = 0;
         pPager->stmtInUse = 0;
@@ -4772,6 +4776,7 @@ static int pagerStmtBegin(Pager *pPager){
   }
   assert( pPager->journalOpen );
   pagerLeave(pPager);
+  assert( pPager->aInStmt==0 );
   pPager->aInStmt = sqlite3MallocZero( pPager->dbSize/8 + 1 );
   pagerEnter(pPager);
   if( pPager->aInStmt==0 ){
