@@ -245,7 +245,7 @@ void sqlite3RollbackAll(sqlite3 *db){
     }
   }
   sqlite3VtabRollback(db);
-  sqlite3MallocLeaveBenignBlock(0);                 /* Leave benign region */
+  sqlite3MallocLeaveBenignBlock();                 /* Leave benign region */
 
   if( db->flags&SQLITE_InternChanges ){
     sqlite3ExpirePreparedStatements(db);
