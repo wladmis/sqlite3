@@ -345,6 +345,7 @@ int sqlite3_exec(
 #define SQLITE_IOERR_RDLOCK        (SQLITE_IOERR | (9<<8))
 #define SQLITE_IOERR_DELETE        (SQLITE_IOERR | (10<<8))
 #define SQLITE_IOERR_BLOCKED       (SQLITE_IOERR | (11<<8))
+#define SQLITE_IOERR_NOMEM         (SQLITE_IOERR | (12<<8))
 
 /*
 ** CAPI3REF: Flags For File Open Operations

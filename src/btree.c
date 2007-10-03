@@ -2585,13 +2585,11 @@ int sqlite3BtreeRollbackStmt(Btree *p){
   int rc = SQLITE_OK;
   BtShared *pBt = p->pBt;
   sqlite3BtreeEnter(p);
-  sqlite3MallocDisallow();
   if( pBt->inStmt && !pBt->readOnly ){
     rc = sqlite3PagerStmtRollback(pBt->pPager);
     assert( countWriteCursors(pBt)==0 );
     pBt->inStmt = 0;
   }
-  sqlite3MallocAllow();
   sqlite3BtreeLeave(p);
   return rc;
 }

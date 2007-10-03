@@ -10,7 +10,7 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
-rename finish_test really_finish_test
+rename finish_test really_finish_test2
 proc finish_test {} {
   catch {db close}
   catch {db2 close}
@@ -50,6 +50,12 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
   source $testfile
 }
 
-really_finish_test
+file delete -force test.db test2.db test3.db test4.db
+
+really_finish_test2
+rename do_test {}
 rename really_do_test do_test
-rename really_finish_test finish_test
+rename finish_test {}
+rename really_finish_test2 finish_test
+rename sqlite3 {}
+rename really_sqlite3 sqlite3

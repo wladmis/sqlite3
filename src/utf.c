@@ -447,6 +447,10 @@ char *sqlite3Utf16to8(sqlite3 *db, const void *z, int nByte){
   m.db = db;
   sqlite3VdbeMemSetStr(&m, z, nByte, SQLITE_UTF16NATIVE, SQLITE_STATIC);
   sqlite3VdbeChangeEncoding(&m, SQLITE_UTF8);
+  if( db->mallocFailed ){
+    sqlite3VdbeMemRelease(&m);
+    m.z = 0;
+  }
   assert( (m.flags & MEM_Term)!=0 || db->mallocFailed );
   assert( (m.flags & MEM_Str)!=0 || db->mallocFailed );
   return (m.flags & MEM_Dyn)!=0 ? m.z : sqlite3DbStrDup(db, m.z);

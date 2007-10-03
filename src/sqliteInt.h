@@ -1891,10 +1891,14 @@ void sqlite3Parser(void*, int, Token, Parse*);
   void sqlite3MallocDisallow(void);
   void sqlite3MallocAllow(void);
   void sqlite3MallocBenignFailure(int);
+  void sqlite3MallocEnterBenignBlock(int isBenign);
+  void sqlite3MallocLeaveBenignBlock();
 #else
 # define sqlite3MallocDisallow()
 # define sqlite3MallocAllow()
 # define sqlite3MallocBenignFailure(x)
+# define sqlite3MallocEnterBenignBlock(x);
+# define sqlite3MallocLeaveBenignBlock();
 #endif
 
 
