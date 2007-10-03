@@ -71,6 +71,16 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Oct-04} {Version 3.5.1} {
+  Fix a long-standing bug that might cause database corruption if a
+  disk-full error occurs in the middle of a transaction and that
+  transaction is not rolled back.
+  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2686">Ticket #2686.</a>
+
+  The new VFS layer is stable.  However, we still reserve the right to
+  make tweaks to the interface definition of the VFS if necessary.
+}
+
 newsitem {2007-Sep-04} {Version 3.5.0 alpha} {
   The OS interface layer and the memory allocation subsystems in
   SQLite have been reimplemented.  The published API is largely unchanged
