@@ -47,7 +47,6 @@
 */
 #include "sqliteInt.h"
 #include <ctype.h>
-#include <math.h>
 #include "vdbeInt.h"
 
 /*
