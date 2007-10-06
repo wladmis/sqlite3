@@ -212,6 +212,8 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
   p = realloc(p, nBytes+8);
   if( p==0 ){
     sqlite3MemsysAlarm(nBytes);
+    p = pPrior;
+    p--;
     p = realloc(p, nBytes+8);
   }
   if( p ){
