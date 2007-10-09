@@ -141,26 +141,28 @@ do_test schema-4.4 {
 # Tests 5.1 to 5.4 check that prepared statements are invalidated when
 # a database is DETACHed (but not when one is ATTACHed).
 #
-do_test schema-5.1 {
-  set sql {SELECT * FROM abc;}
-  set ::STMT [sqlite3_prepare $::DB $sql -1 TAIL]
-  execsql {
-    ATTACH 'test2.db' AS aux;
-  }
-  sqlite3_step $::STMT
-} {SQLITE_DONE}
-do_test schema-5.2 {
-  sqlite3_reset $::STMT
-} {SQLITE_OK}
-do_test schema-5.3 {
-  execsql {
-    DETACH aux;
-  }
-  sqlite3_step $::STMT
-} {SQLITE_ERROR}
-do_test schema-5.4 {
-  sqlite3_finalize $::STMT
-} {SQLITE_SCHEMA}
+ifcapable attach {
+  do_test schema-5.1 {
+    set sql {SELECT * FROM abc;}
+    set ::STMT [sqlite3_prepare $::DB $sql -1 TAIL]
+    execsql {
+      ATTACH 'test2.db' AS aux;
+    }
+    sqlite3_step $::STMT
+  } {SQLITE_DONE}
+  do_test schema-5.2 {
+    sqlite3_reset $::STMT
+  } {SQLITE_OK}
+  do_test schema-5.3 {
+    execsql {
+      DETACH aux;
+    }
+    sqlite3_step $::STMT
+  } {SQLITE_ERROR}
+  do_test schema-5.4 {
+    sqlite3_finalize $::STMT
+  } {SQLITE_SCHEMA}
+}
 
 #---------------------------------------------------------------------
 # Tests 6.* check that prepared statements are invalidated when

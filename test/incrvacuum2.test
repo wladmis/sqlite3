@@ -76,49 +76,51 @@ do_test incrvacuum2-1.4 {
 
 # Make sure incremental vacuum works on attached databases.
 #
-do_test incrvacuum2-2.1 {
-  file delete -force test2.db test2.db-journal
-  execsql {
-    ATTACH DATABASE 'test2.db' AS aux;
-    PRAGMA aux.auto_vacuum=incremental;
-    CREATE TABLE aux.t2(x);
-    INSERT INTO t2 VALUES(zeroblob(30000));
-    INSERT INTO t1 SELECT * FROM t2;
-    DELETE FROM t2;
-    DELETE FROM t1;
-  }
-  list [file size test.db] [file size test2.db]
-} {32768 32768}
-do_test incrvacuum2-2.2 {
-  execsql {
-    PRAGMA aux.incremental_vacuum(1)
-  }
-  list [file size test.db] [file size test2.db]
-} {32768 31744}
-do_test incrvacuum2-2.3 {
-  execsql {
-    PRAGMA aux.incremental_vacuum(5)
-  }
-  list [file size test.db] [file size test2.db]
-} {32768 26624}
-do_test incrvacuum2-2.4 {
-  execsql {
-    PRAGMA main.incremental_vacuum(5)
-  }
-  list [file size test.db] [file size test2.db]
-} {27648 26624}
-do_test incrvacuum2-2.5 {
-  execsql {
-    PRAGMA aux.incremental_vacuum
-  }
-  list [file size test.db] [file size test2.db]
-} {27648 3072}
-do_test incrvacuum2-2.6 {
-  execsql {
-    PRAGMA incremental_vacuum(1)
-  }
-  list [file size test.db] [file size test2.db]
-} {26624 3072}
+ifcapable attach {
+  do_test incrvacuum2-2.1 {
+    file delete -force test2.db test2.db-journal
+    execsql {
+      ATTACH DATABASE 'test2.db' AS aux;
+      PRAGMA aux.auto_vacuum=incremental;
+      CREATE TABLE aux.t2(x);
+      INSERT INTO t2 VALUES(zeroblob(30000));
+      INSERT INTO t1 SELECT * FROM t2;
+      DELETE FROM t2;
+      DELETE FROM t1;
+    }
+    list [file size test.db] [file size test2.db]
+  } {32768 32768}
+  do_test incrvacuum2-2.2 {
+    execsql {
+      PRAGMA aux.incremental_vacuum(1)
+    }
+    list [file size test.db] [file size test2.db]
+  } {32768 31744}
+  do_test incrvacuum2-2.3 {
+    execsql {
+      PRAGMA aux.incremental_vacuum(5)
+    }
+    list [file size test.db] [file size test2.db]
+  } {32768 26624}
+  do_test incrvacuum2-2.4 {
+    execsql {
+      PRAGMA main.incremental_vacuum(5)
+    }
+    list [file size test.db] [file size test2.db]
+  } {27648 26624}
+  do_test incrvacuum2-2.5 {
+    execsql {
+      PRAGMA aux.incremental_vacuum
+    }
+    list [file size test.db] [file size test2.db]
+  } {27648 3072}
+  do_test incrvacuum2-2.6 {
+    execsql {
+      PRAGMA incremental_vacuum(1)
+    }
+    list [file size test.db] [file size test2.db]
+  } {26624 3072}
+}
 
  
 

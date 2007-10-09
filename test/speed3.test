@@ -35,7 +35,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-ifcapable !tclvar {
+ifcapable !tclvar||!attach {
   finish_test
   return
 }

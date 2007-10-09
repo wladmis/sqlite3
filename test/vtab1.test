@@ -762,20 +762,24 @@ do_test vtab1.7-13 {
   }
 } {}
 
-do_test vtab1.8-1 {
-  set echo_module ""
-  execsql {
-    ATTACH 'test2.db' AS aux;
-    CREATE VIRTUAL TABLE aux.e2 USING echo(real_abc);
-  }
-  set echo_module
-} [list xCreate echo aux e2 real_abc   \
-        xSync   echo(real_abc)         \
-        xCommit echo(real_abc)         \
-]
+ifcapable attach {
+  do_test vtab1.8-1 {
+    set echo_module ""
+    execsql {
+      ATTACH 'test2.db' AS aux;
+      CREATE VIRTUAL TABLE aux.e2 USING echo(real_abc);
+    }
+    set echo_module
+  } [list xCreate echo aux e2 real_abc   \
+          xSync   echo(real_abc)         \
+          xCommit echo(real_abc)         \
+  ]
+}
 do_test vtab1.8-2 {
-  execsql {
+  catchsql {
     DROP TABLE aux.e2;
+  }
+  execsql {
     DROP TABLE treal;
     DROP TABLE techo;
     DROP TABLE echo_abc;

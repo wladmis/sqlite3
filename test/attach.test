@@ -18,6 +18,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !attach {
+  finish_test
+  return
+}
+
 for {set i 2} {$i<=15} {incr i} {
   file delete -force test$i.db
   file delete -force test$i.db-journal

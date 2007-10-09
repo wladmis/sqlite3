@@ -20,13 +20,14 @@ source $testdir/tester.tcl
 
 #
 # These tests are only applicable on unix when pager pragma are
-# enabled.
+# enabled. Also, since every test uses an ATTACHed database, they
+# are only run when ATTACH is enabled.
 #
 if {$::tcl_platform(platform)!="unix"} {
   finish_test
   return
 }
-ifcapable !pager_pragmas {
+ifcapable !pager_pragmas||!attach {
   finish_test
   return
 }

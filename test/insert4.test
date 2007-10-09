@@ -234,15 +234,20 @@ xfer_check insert4-3.22 1 {1 9} \
 
 # Ticket #2291.
 #
-do_test insert4-4.1 {
-  execsql {
-    CREATE TABLE t4(a, b, UNIQUE(a,b));
-    INSERT INTO t4 VALUES(NULL,0);
-    INSERT INTO t4 VALUES(NULL,1);
-    INSERT INTO t4 VALUES(NULL,1);
-    VACUUM;   
-  }
+
+do_test insert4-4.1a {
+  execsql {CREATE TABLE t4(a, b, UNIQUE(a,b))}
 } {}
+ifcapable vacuum {
+  do_test insert4-4.1b {
+    execsql {
+      INSERT INTO t4 VALUES(NULL,0);
+      INSERT INTO t4 VALUES(NULL,1);
+      INSERT INTO t4 VALUES(NULL,1);
+      VACUUM;   
+    }
+  } {}
+}
 
 # Check some error conditions:
 #

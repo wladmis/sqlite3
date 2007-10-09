@@ -19,6 +19,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !attach {
+  finish_test
+  return
+}
+
 file delete -force test2.db test2.db-journal
 
 do_test tkt1873-1.1 {
