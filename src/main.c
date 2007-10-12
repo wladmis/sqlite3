@@ -1272,7 +1272,7 @@ int sqlite3_collation_needed16(
 ** This function is now an anachronism. It used to be used to recover from a
 ** malloc() failure, but SQLite now does this automatically.
 */
-int sqlite3_global_recover(){
+int sqlite3_global_recover(void){
   return SQLITE_OK;
 }
 #endif
