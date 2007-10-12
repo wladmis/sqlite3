@@ -301,7 +301,17 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
         "SELECT name, rootpage, sql FROM '%q'.%s",
         db->aDb[iDb].zName, zMasterName);
     sqlite3SafetyOff(db);
-    rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
+#ifndef SQLITE_OMIT_AUTHORIZATION
+    {
+      int (*xAuth)(void*,int,const char*,const char*,const char*,const char*);
+      xAuth = db->xAuth;
+      db->xAuth = 0;
+#endif
+      rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
+#ifndef SQLITE_OMIT_AUTHORIZATION
+      db->xAuth = xAuth;
+    }
+#endif
     if( rc==SQLITE_ABORT ) rc = initData.rc;
     sqlite3SafetyOn(db);
     sqlite3_free(zSql);

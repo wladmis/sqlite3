@@ -1679,6 +1679,7 @@ int sqlite3ViewGetColumnNames(Parse *pParse, Table *pTable){
   int nErr = 0;     /* Number of errors encountered */
   int n;            /* Temporarily holds the number of cursors assigned */
   sqlite3 *db = pParse->db;  /* Database connection for malloc errors */
+  int (*xAuth)(void*,int,const char*,const char*,const char*,const char*);
 
   assert( pTable );
 
@@ -1724,7 +1725,10 @@ int sqlite3ViewGetColumnNames(Parse *pParse, Table *pTable){
     n = pParse->nTab;
     sqlite3SrcListAssignCursors(pParse, pSel->pSrc);
     pTable->nCol = -1;
+    xAuth = db->xAuth;
+    db->xAuth = 0;
     pSelTab = sqlite3ResultSetOfSelect(pParse, 0, pSel);
+    db->xAuth = xAuth;
     pParse->nTab = n;
     if( pSelTab ){
       assert( pTable->aCol==0 );
