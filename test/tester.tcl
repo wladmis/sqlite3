@@ -203,6 +203,9 @@ proc finalize_testing {} {
     }
   } else {
     puts "All memory allocations freed - no leaks"
+    ifcapable memdebug {
+      sqlite3_memdebug_dump ./memusage.txt
+    }
   }
   puts "Maximum memory usage: [sqlite3_memory_highwater] bytes"
   foreach f [glob -nocomplain test.db-*-journal] {
