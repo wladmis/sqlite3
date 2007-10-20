@@ -274,7 +274,7 @@ static void memsys3OutOfMemory(int nByte){
 static int memsys3Size(void *p){
   Mem3Block *pBlock = (Mem3Block*)p;
   assert( pBlock[-1].u.hdr.size<0 );
-  return (1-pBlock[-1].u.hdr.size)*8;
+  return (-1-pBlock[-1].u.hdr.size)*8;
 }
 
 /*
@@ -517,11 +517,9 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
   }
   assert( mem.mutex!=0 );
   nOld = memsys3Size(pPrior);
-#if 0
   if( nBytes<=nOld && nBytes>=nOld-128 ){
     return pPrior;
   }
-#endif
   sqlite3_mutex_enter(mem.mutex);
   p = memsys3Malloc(nBytes);
   if( p ){
