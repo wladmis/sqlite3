@@ -547,6 +547,7 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
     sqlite3MemsysAlarm(nBytes);
     p = internal_malloc(nBytes);
     if( p==0 ){
+      sqlite3_mutex_leave(mem.mutex);
       return 0;
     }
   }
