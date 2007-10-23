@@ -705,34 +705,26 @@ case OP_Integer: {
 
 /* Opcode: Int64 * * P3
 **
-** P3 is a string representation of an integer.  Convert that integer
-** to a 64-bit value and push it onto the stack.
+** P3 is a pointer to a 64-bit integer value.
+** Push  that value onto  the stack.
 */
 case OP_Int64: {
   pTos++;
   assert( pOp->p3!=0 );
-  pTos->flags = MEM_Str|MEM_Static|MEM_Term;
-  pTos->z = pOp->p3;
-  pTos->n = strlen(pTos->z);
-  pTos->enc = SQLITE_UTF8;
-  pTos->u.i = sqlite3VdbeIntValue(pTos);
-  pTos->flags |= MEM_Int;
+  pTos->flags = MEM_Int;
+  memcpy(&pTos->u.i, pOp->p3, 8);
   break;
 }
 
 /* Opcode: Real * * P3
 **
-** The string value P3 is converted to a real and pushed on to the stack.
+** P3 is a pointer to a 64-bit floating point value.  Push that value
+** onto the stack.
 */
 case OP_Real: {            /* same as TK_FLOAT, */
   pTos++;
-  pTos->flags = MEM_Str|MEM_Static|MEM_Term;
-  pTos->z = pOp->p3;
-  pTos->n = strlen(pTos->z);
-  pTos->enc = SQLITE_UTF8;
-  pTos->r = sqlite3VdbeRealValue(pTos);
-  pTos->flags |= MEM_Real;
-  sqlite3VdbeChangeEncoding(pTos, encoding);
+  pTos->flags = MEM_Real;
+  memcpy(&pTos->r, pOp->p3, 8);
   break;
 }
 

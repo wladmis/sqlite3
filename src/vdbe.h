@@ -72,6 +72,8 @@ typedef struct VdbeOpList VdbeOpList;
 #define P3_TRANSIENT (-9) /* P3 is a pointer to a transient string */
 #define P3_VTAB     (-10) /* P3 is a pointer to an sqlite3_vtab structure */
 #define P3_MPRINTF  (-11) /* P3 is a string obtained from sqlite3_mprintf() */
+#define P3_REAL     (-12) /* P3 is a 64-bit floating point value */
+#define P3_INT64    (-13) /* P3 is a 64-bit signed integer */
 
 /* When adding a P3 argument using P3_KEYINFO, a copy of the KeyInfo structure
 ** is made.  That copy is freed when the Vdbe is finalized.  But if the

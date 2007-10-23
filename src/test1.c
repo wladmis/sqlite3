@@ -1131,7 +1131,7 @@ static int sqlite3_mprintf_int(
 ** *pValue to that integer and return true.  Otherwise return false.
 */
 static int sqlite3GetInt64(const char *zNum, i64 *pValue){
-  if( sqlite3FitsIn64Bits(zNum) ){
+  if( sqlite3FitsIn64Bits(zNum, 0) ){
     sqlite3Atoi64(zNum, pValue);
     return 1;
   }
