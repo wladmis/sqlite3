@@ -166,6 +166,7 @@ proc finalize_testing {} {
   catch {db2 close}
   catch {db3 close}
 
+  vfs_unlink_test
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close
