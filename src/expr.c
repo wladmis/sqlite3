@@ -1694,12 +1694,17 @@ static char *dup8bytes(Vdbe *v, const char *in){
 /*
 ** Generate an instruction that will put the floating point
 ** value described by z[0..n-1] on the stack.
+**
+** The z[] string will probably not be zero-terminated.  But the 
+** z[n] character is guaranteed to be something that does not look
+** like the continuation of the number.
 */
 static void codeReal(Vdbe *v, const char *z, int n, int negateFlag){
   assert( z || v==0 || sqlite3VdbeDb(v)->mallocFailed );
   if( z ){
     double value;
     char *zV;
+    assert( !isdigit(z[n]) );
     sqlite3AtoF(z, &value);
     if( negateFlag ) value = -value;
     zV = dup8bytes(v, (char*)&value);
@@ -1711,11 +1716,16 @@ static void codeReal(Vdbe *v, const char *z, int n, int negateFlag){
 /*
 ** Generate an instruction that will put the integer describe by
 ** text z[0..n-1] on the stack.
+**
+** The z[] string will probably not be zero-terminated.  But the 
+** z[n] character is guaranteed to be something that does not look
+** like the continuation of the number.
 */
 static void codeInteger(Vdbe *v, const char *z, int n, int negateFlag){
   assert( z || v==0 || sqlite3VdbeDb(v)->mallocFailed );
   if( z ){
     int i;
+    assert( !isdigit(z[n]) );
     if( sqlite3GetInt32(z, &i) ){
       if( negateFlag ) i = -i;
       sqlite3VdbeAddOp(v, OP_Integer, i, 0);
