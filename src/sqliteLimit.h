@@ -123,11 +123,24 @@
 # define SQLITE_MAX_VARIABLE_NUMBER 999
 #endif
 
+/* Maximum page size.  The upper bound on this value is 32768.  This a limit
+** imposed by the necessity of storing the value in a 2-byte unsigned integer
+** and the fact that the page size must be a power of 2.
+*/
+#ifndef SQLITE_MAX_PAGE_SIZE
+# define SQLITE_MAX_PAGE_SIZE 32768
+#endif
+
+
 /*
 ** The default size of a database page.
 */
 #ifndef SQLITE_DEFAULT_PAGE_SIZE
 # define SQLITE_DEFAULT_PAGE_SIZE 1024
+#endif
+#if SQLITE_DEFAULT_PAGE_SIZE>SQLITE_MAX_PAGE_SIZE
+# undef SQLITE_DEFAULT_PAGE_SIZE
+# define SQLITE_DEFAULT_PAGE_SIZE SQLITE_MAX_PAGE_SIZE
 #endif
 
 /*
@@ -140,14 +153,11 @@
 #ifndef SQLITE_MAX_DEFAULT_PAGE_SIZE
 # define SQLITE_MAX_DEFAULT_PAGE_SIZE 8192
 #endif
-
-/* Maximum page size.  The upper bound on this value is 32768.  This a limit
-** imposed by the necessity of storing the value in a 2-byte unsigned integer
-** and the fact that the page size must be a power of 2.
-*/
-#ifndef SQLITE_MAX_PAGE_SIZE
-# define SQLITE_MAX_PAGE_SIZE 32768
+#if SQLITE_MAX_DEFAULT_PAGE_SIZE>SQLITE_MAX_PAGE_SIZE
+# undef SQLITE_MAX_DEFAULT_PAGE_SIZE
+# define SQLITE_MAX_DEFAULT_PAGE_SIZE SQLITE_MAX_PAGE_SIZE
 #endif
+
 
 /*
 ** Maximum number of pages in one database file.
