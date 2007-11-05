@@ -71,6 +71,7 @@ foreach err [list ioerr malloc-transient malloc-persistent] {
     sqlite3async_halt idle
     sqlite3async_start
     sqlite3async_wait
+    sqlite3async_halt never
     sqlite3async_enable 0
 
     set ::sqlite_io_error_pending 0
@@ -123,5 +124,6 @@ catch {db close}
 sqlite3async_halt idle
 sqlite3async_start
 sqlite3async_wait
+sqlite3async_halt never
 
 finish_test
