@@ -2168,14 +2168,13 @@ static int incrVacuumStep(BtShared *pBt, Pgno nFin){
       assert( iFreePg<iLastPg );
       
       rc = sqlite3PagerWrite(pLastPg->pDbPage);
-      if( rc!=SQLITE_OK ){
-        return rc;
-      } 
-      rc = relocatePage(pBt, pLastPg, eType, iPtrPage, iFreePg);
+      if( rc==SQLITE_OK ){
+        rc = relocatePage(pBt, pLastPg, eType, iPtrPage, iFreePg);
+      }
       releasePage(pLastPg);
       if( rc!=SQLITE_OK ){
         return rc;
-      } 
+      }
     }
   }
 

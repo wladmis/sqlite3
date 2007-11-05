@@ -83,7 +83,8 @@ proc do_malloc2_test {tn args} {
 
     # If $::n is greater than the number of malloc() calls required to
     # execute the SQL, then this test is finished. Break out of the loop.
-    set nFail [sqlite3_memdebug_fail -1]
+    set nFail [sqlite3_memdebug_fail -1 -benigncnt nBenign]
+    incr nFail [expr {-1*$nBenign}]
     if {$nFail==0} break
 
     # Nothing should work now, because the allocator should refuse to
@@ -194,7 +195,9 @@ ifcapable tempdb {
     }
     for {set i 0} {$i<20} {incr i} {
       execsql {
-      INSERT INTO ghi VALUES(randstr(300,300),randstr(300,300),randstr(300,300));
+        INSERT INTO ghi VALUES(
+            randstr(300,300), randstr(300,300), randstr(300,300)
+        );
       }
     }
     execsql {

@@ -4051,9 +4051,10 @@ static int pager_write(PgHdr *pPg){
           PAGERTRACE3("JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno);
           assert( pHist->pOrig==0 );
           pHist->pOrig = sqlite3_malloc( pPager->pageSize );
-          if( pHist->pOrig ){
-            memcpy(pHist->pOrig, PGHDR_TO_DATA(pPg), pPager->pageSize);
+          if( !pHist->pOrig ){
+            return SQLITE_NOMEM;
           }
+          memcpy(pHist->pOrig, PGHDR_TO_DATA(pPg), pPager->pageSize);
         }else{
           u32 cksum;
           char *pData2;
