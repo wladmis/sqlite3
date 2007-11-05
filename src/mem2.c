@@ -20,8 +20,7 @@
 ** SQLITE_MEMDEBUG macro is defined and SQLITE_OMIT_MEMORY_ALLOCATION
 ** is not defined.
 */
-#if defined(SQLITE_MEMDEBUG) && !defined(SQLITE_OMIT_MEMORY_ALLOCATION) \
-           && !defined(SQLITE_MEMORY_SIZE)
+#if defined(SQLITE_MEMDEBUG) && !defined(SQLITE_MEMORY_SIZE)
 
 /*
 ** We will eventually construct multiple memory allocation subsystems

@@ -20,8 +20,7 @@
 ** used when no other memory allocator is specified using compile-time
 ** macros.
 */
-#if !defined(SQLITE_MEMDEBUG) && !defined(SQLITE_OMIT_MEMORY_ALLOCATION) \
-      && !defined(SQLITE_MEMORY_SIZE)
+#if !defined(SQLITE_MEMDEBUG) && !defined(SQLITE_MEMORY_SIZE)
 
 /*
 ** We will eventually construct multiple memory allocation subsystems
