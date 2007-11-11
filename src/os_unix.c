@@ -2632,25 +2632,7 @@ static int allocateUnixFile(
 */
 #include <dlfcn.h>
 void *sqlite3UnixDlopen(const char *zFilename){
-  void *h;
-  char *path = NULL;
-  if (strchr(zFilename, '/'))
-    sqlite3SetString(&path, zFilename, NULL);
-  else {
-#ifndef SQLITE3EXTDIR
-#warning "Using default SQLITE3EXTDIR."
-#define SQLITE3EXTDIR "/usr/local/lib/sqlite3"
-#endif
-    const char prefix[] = SQLITE3EXTDIR "/";
-    const char suffix[] = ".so";
-    if (strchr(zFilename, '.'))
-      sqlite3SetString(&path, prefix, zFilename, NULL);
-    else
-      sqlite3SetString(&path, prefix, zFilename, suffix, NULL);
-  }
-  h = dlopen(path, RTLD_NOW);
-  sqliteFree(path);
-  return h;
+  return dlopen(zFilename, RTLD_NOW | RTLD_GLOBAL);
 }
 void *sqlite3UnixDlsym(void *pHandle, const char *zSymbol){
   return dlsym(pHandle, zSymbol);
