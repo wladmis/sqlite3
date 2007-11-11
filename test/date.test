@@ -234,6 +234,13 @@ if {$tzoffset==4} {
   set sqlite_current_time 0
 }
 
+# These two are a bit of a scam. They are added to ensure that 100% of
+# the date.c file is covered by testing, even when the time-zone
+# is not -0400 (the condition for running of the block of tests above).
+#
+datetest 6.19 {datetime('2039-07-01 12:00:00','localtime',null)} NULL
+datetest 6.20 {datetime('2039-07-01 12:00:00','utc',null)} NULL
+
 # Date-time functions that contain NULL arguments return a NULL
 # result.
 #

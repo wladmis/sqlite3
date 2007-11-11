@@ -113,4 +113,3 @@ do_diskfull_test diskfull-2 VACUUM
 # }
 
 finish_test
-

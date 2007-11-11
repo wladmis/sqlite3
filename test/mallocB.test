@@ -21,11 +21,12 @@ source $testdir/malloc_common.tcl
 
 # Only run these tests if memory debugging is turned on.
 #
-if {[info command sqlite_malloc_stat]==""} {
-   puts "Skipping malloc tests: not compiled with -DSQLITE_MEMDEBUG..."
+ifcapable !memdebug {
+   puts "Skipping mallocB tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
 }
+source $testdir/malloc_common.tcl
 
 do_malloc_test mallocB-1 -sqlbody {SELECT - 456}
 do_malloc_test mallocB-2 -sqlbody {SELECT - 456.1}
@@ -41,5 +42,4 @@ do_malloc_test mallocB-5 -sqlbody {SELECT * FROM (SELECT 1) GROUP BY 1;}
 #
 do_malloc_test mallocB-6 -sqlbody { SELECT test_auxdata('hello world'); }
 
-sqlite_malloc_fail 0
 finish_test

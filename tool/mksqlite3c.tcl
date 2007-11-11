@@ -89,6 +89,7 @@ foreach hdr {
    btreeInt.h
    hash.h
    keywordhash.h
+   mutex.h
    opcodes.h
    os_common.h
    os.h
@@ -199,6 +200,12 @@ foreach file {
    date.c
    os.c
 
+   mem1.c
+   mem2.c
+   mutex.c
+   mutex_os2.c
+   mutex_unix.c
+   mutex_w32.c
    malloc.c
    printf.c
    random.c
@@ -212,7 +219,8 @@ foreach file {
    os_win.c
 
    pager.c
-   
+
+   btmutex.c   
    btree.c
 
    vdbefifo.c
@@ -221,6 +229,7 @@ foreach file {
    vdbeapi.c
    vdbe.c
    vdbeblob.c
+   journal.c
 
    expr.c
    alter.c
@@ -229,7 +238,6 @@ foreach file {
    auth.c
    build.c
    callback.c
-   complete.c
    delete.c
    func.c
    insert.c
@@ -248,6 +256,7 @@ foreach file {
    parse.c
 
    tokenize.c
+   complete.c
 
    main.c
 } {

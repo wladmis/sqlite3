@@ -16,7 +16,7 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 rename finish_test really_finish_test
 proc finish_test {} {
-  memleak_check
+  # no-op
 }
 
 if {[file exists ./sqlite_test_count]} {
@@ -52,20 +52,18 @@ set argv {}
 #
 set LeakList {}
 
-set EXCLUDE {
-  all.test
-  async.test
-  crash.test
-  crash2.test
-  autovacuum_crash.test
-  quick.test
-  malloc.test
-  misuse.test
-  memleak.test
-  sqllimits1.test
-  fuzz.test
-  soak.test
-}
+set EXCLUDE {}
+lappend EXCLUDE all.test               ;# This file
+lappend EXCLUDE async.test
+lappend EXCLUDE crash.test             ;# Run seperately later.
+lappend EXCLUDE crash2.test            ;# Run seperately later.
+lappend EXCLUDE autovacuum_crash.test  ;# Run seperately later.
+lappend EXCLUDE quick.test             ;# Alternate test driver script
+lappend EXCLUDE malloc.test            ;# Run seperately later.
+lappend EXCLUDE misuse.test            ;# Run seperately later.
+lappend EXCLUDE memleak.test           ;# Alternate test driver script
+lappend EXCLUDE fuzz.test
+lappend EXCLUDE soak.test              ;# Takes a very long time (default 1 hr)
 
 # Files to include in the test.  If this list is empty then everything
 # that is not in the EXCLUDE list is run.
@@ -99,12 +97,6 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
       incr nErr
       lappend ::failList $tail
       set sqlite_open_file_count 0
-    }
-    if {$::sqlite3_tsd_count} {
-      puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
-      incr nErr
-      lappend ::failList $tail
-      set ::sqlite3_tsd_count 0
     }
   }
   if {[info exists Leak]} {

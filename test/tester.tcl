@@ -13,32 +13,6 @@
 #
 # $Id$
 
-# Make sure tclsqlite3 was compiled correctly.  Abort now with an
-# error message if not.
-#
-if {[sqlite3 -tcl-uses-utf]} {
-  if {"\u1234"=="u1234"} {
-    puts stderr "***** BUILD PROBLEM *****"
-    puts stderr "$argv0 was linked against an older version"
-    puts stderr "of TCL that does not support Unicode, but uses a header"
-    puts stderr "file (\"tcl.h\") from a new TCL version that does support"
-    puts stderr "Unicode.  This combination causes internal errors."
-    puts stderr "Recompile using a TCL library and header file that match"
-    puts stderr "and try again.\n**************************"
-    exit 1
-  }
-} else {
-  if {"\u1234"!="u1234"} {
-    puts stderr "***** BUILD PROBLEM *****"
-    puts stderr "$argv0 was linked against an newer version"
-    puts stderr "of TCL that supports Unicode, but uses a header file"
-    puts stderr "(\"tcl.h\") from a old TCL version that does not support"
-    puts stderr "Unicode.  This combination causes internal errors."
-    puts stderr "Recompile using a TCL library and header file that match"
-    puts stderr "and try again.\n**************************"
-    exit 1
-  }
-}
 
 set tcl_precision 15
 set sqlite_pending_byte 0x0010000
@@ -62,6 +36,21 @@ if {![info exists soft_limit]} {
   }
 }
 sqlite3_soft_heap_limit $soft_limit
+
+# 
+# Check the command-line arguments to set the memory debugger
+# backtrace depth.
+#
+# See the sqlite3_memdebug_backtrace() function in mem2.c or
+# test_malloc.c for additional information.
+#
+for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[regexp {^--backtrace=(\d+)$} [lindex $argv $i] all value]} {
+    sqlite3_memdebug_backtrace $value
+    set argv [lreplace $argv $i $i]
+  }
+}
+
 
 # Use the pager codec if it is available
 #
@@ -106,7 +95,7 @@ if {![info exists speedTest]} {
 #
 proc do_test {name cmd expected} {
   global argv nErr nTest skip_test maxErr
-  set ::sqlite_malloc_id $name
+  sqlite3_memdebug_settitle $name
   if {$skip_test} {
     set skip_test 0
     return
@@ -165,20 +154,6 @@ proc speed_trial_summary {name} {
   puts [format {%-21.21s %12d uS TOTAL} $name $total_time]
 }
 
-# The procedure uses the special "sqlite_malloc_stat" command
-# (which is only available if SQLite is compiled with -DSQLITE_DEBUG=1)
-# to see how many malloc()s have not been free()ed.  The number
-# of surplus malloc()s is stored in the global variable $::Leak.
-# If the value in $::Leak grows, it may mean there is a memory leak
-# in the library.
-#
-proc memleak_check {} {
-  if {[info command sqlite_malloc_stat]!=""} {
-    set r [sqlite_malloc_stat]
-    set ::Leak [expr {[lindex $r 0]-[lindex $r 1]}]
-  }
-}
-
 # Run this routine last
 #
 proc finish_test {} {
@@ -186,15 +161,11 @@ proc finish_test {} {
 }
 proc finalize_testing {} {
   global nTest nErr sqlite_open_file_count
-  if {$nErr==0} memleak_check
 
   catch {db close}
   catch {db2 close}
   catch {db3 close}
 
-  catch {
-    pp_check_for_leaks
-  }
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close
@@ -206,15 +177,11 @@ proc finalize_testing {} {
     puts "soft-heap-limit set to $heaplimit"
   }
   sqlite3_soft_heap_limit 0
-  if {$::sqlite3_tsd_count} {
-     puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
-     incr nErr
-  } else {
-     puts "Thread-specific data deallocated properly"
-  }
   incr nTest
   puts "$nErr errors out of $nTest tests"
-  puts "Failures on these tests: $::failList"
+  if {$nErr>0} {
+    puts "Failures on these tests: $::failList"
+  }
   if {$nErr>0 && ![working_64bit_int]} {
     puts "******************************************************************"
     puts "N.B.:  The version of TCL that you used to build this test harness"
@@ -227,6 +194,17 @@ proc finalize_testing {} {
     puts "$sqlite_open_file_count files were left open"
     incr nErr
   }
+  if {[sqlite3_memory_used]>0} {
+    puts "Unfreed memory: [sqlite3_memory_used] bytes"
+    incr nErr
+    ifcapable memdebug {
+      puts "Writing unfreed memory log to \"./memleak.txt\""
+      sqlite3_memdebug_dump ./memleak.txt
+    }
+  } else {
+    puts "All memory allocations freed - no leaks"
+  }
+  puts "Maximum memory usage: [sqlite3_memory_highwater] bytes"
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
   }
@@ -346,7 +324,7 @@ proc ifcapable {expr code {else ""} {elsecode ""}} {
 # error message. This is "child process exited abnormally" if the crash
 # occured.
 #
-#   crashsql -delay CRASHDELAY -file CRASHFILE ?-blocksize BLOCKSIZE $sql
+#   crashsql -delay CRASHDELAY -file CRASHFILE ?-blocksize BLOCKSIZE? $sql
 #
 proc crashsql {args} {
   if {$::tcl_platform(platform)!="unix"} {
@@ -356,6 +334,7 @@ proc crashsql {args} {
   set blocksize ""
   set crashdelay 1
   set crashfile ""
+  set dc ""
   set sql [lindex $args end]
   
   for {set ii 0} {$ii < [llength $args]-1} {incr ii 2} {
@@ -365,7 +344,8 @@ proc crashsql {args} {
 
     if     {$n>1 && [string first $z -delay]==0}     {set crashdelay $z2} \
     elseif {$n>1 && [string first $z -file]==0}      {set crashfile $z2}  \
-    elseif {$n>1 && [string first $z -blocksize]==0} {set blocksize $z2}  \
+    elseif {$n>1 && [string first $z -blocksize]==0} {set blocksize "-s $z2" } \
+    elseif {$n>1 && [string first $z -characteristics]==0} {set dc "-c {$z2}" } \
     else   { error "Unrecognized option: $z" }
   }
 
@@ -376,9 +356,10 @@ proc crashsql {args} {
   set cfile [file join [pwd] $crashfile]
 
   set f [open crash.tcl w]
-  puts $f "sqlite3_crashparams $crashdelay $cfile $blocksize"
+  puts $f "sqlite3_crash_enable 1"
+  puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
   puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
-  puts $f "sqlite3 db test.db"
+  puts $f "sqlite3 db test.db -vfs crash"
 
   # This block sets the cache size of the main database to 10
   # pages. This is done in case the build is configured to omit
@@ -566,63 +547,6 @@ proc copy_file {from to} {
     close $t
     close $f
   }
-}
-
-# This command checks for outstanding calls to sqliteMalloc() from within
-# the current thread. A list is returned with one entry for each outstanding
-# malloc. Each list entry is itself a list of 5 items, as follows:
-#
-#     { <number-bytes> <file-name> <line-number> <test-case> <stack-dump> }
-#
-proc check_for_leaks {} {
-  set ret [list]
-  set cnt 0
-  foreach alloc [sqlite_malloc_outstanding] {
-    foreach {nBytes file iLine userstring backtrace} $alloc {}
-    set stack [list]
-    set skip 0
-
-    # The first command in this block will probably fail on windows. This
-    # means there will be no stack dump available.
-    if {$cnt < 25 && $backtrace!=""} {
-      catch {
-        set stuff [eval "exec addr2line -e ./testfixture -f $backtrace"]
-        foreach {func line} $stuff {
-          if {$func != "??" || $line != "??:0"} {
-            regexp {.*/(.*)} $line dummy line
-            lappend stack "${func}() $line"
-          } else {
-            if {[lindex $stack end] != "..."} {
-              lappend stack "..."
-            }
-          }
-        }
-      }
-      incr cnt
-    }
-
-    if {!$skip} {
-      lappend ret [list $nBytes $file $iLine $userstring $stack]
-    }
-  }
-  return $ret
-}
-
-# Pretty print a report based on the return value of [check_for_leaks] to
-# stdout.
-proc pp_check_for_leaks {} {
-  set l [check_for_leaks]
-  set n 0
-  foreach leak $l {
-    foreach {nBytes file iLine userstring stack} $leak {}
-    puts "$nBytes bytes leaked at $file:$iLine ($userstring)"
-    foreach frame $stack {
-      puts "        $frame"
-    }
-    incr n $nBytes
-  }
-  puts "Memory leaked: $n bytes in [llength $l] allocations"
-  puts ""
 }
 
 # If the library is compiled with the SQLITE_DEFAULT_AUTOVACUUM macro set

@@ -569,6 +569,3 @@ do_test pager-6.5 {
 } {}
 }
 finish_test
-
-
-

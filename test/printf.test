@@ -181,6 +181,9 @@ do_test printf-8.5 {
 do_test printf-8.6 {
   sqlite3_mprintf_int64 {%llx %llo %lld} -1 -1 -1
 } {ffffffffffffffff 1777777777777777777777 -1}
+do_test printf-8.7 {
+  sqlite3_mprintf_int64 {%llx %llx %llx} +2147483647 +2147483648 +4294967296
+} {7fffffff 80000000 100000000}
 
 do_test printf-9.1 {
   sqlite3_mprintf_int {%*.*c} 4 4 65
@@ -293,4 +296,29 @@ do_test printf-15.3 {
   sqlite3_snprintf_int 0 {} 0
 } {abcdefghijklmnopqrstuvwxyz}
 
+# Now test malloc() failure within a sqlite3_mprintf():
+#
+ifcapable memdebug {
+  foreach var {a b c d} {
+    set $var [string repeat $var 400]
+  }
+  set str1 "[string repeat A 360]%d%d%s"
+  set str2 [string repeat B 5000]
+  set zSuccess "[string repeat A 360]11[string repeat B 5000]"
+  foreach ::iRepeat {0 1} {
+    set nTestNum 1
+    while {1} {
+      sqlite3_memdebug_fail $nTestNum -repeat $::iRepeat
+      set z [sqlite3_mprintf_str $str1 1 1 $str2]
+      set nFail [sqlite3_memdebug_fail -1 -benign nBenign]
+      do_test printf-malloc-$::iRepeat.$nTestNum {
+        expr {($nFail>0 && $z eq "") || ($nFail==$nBenign && $z eq $zSuccess)}
+      } {1}
+      if {$nFail == 0} break
+      incr nTestNum
+    }
+  }
+}
+
 finish_test
+

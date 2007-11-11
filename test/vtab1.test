@@ -179,10 +179,24 @@ do_test vtab1-1.15 {
 } {1 {no such module: echo}}
 
 register_echo_module [sqlite3_connection_pointer db]
-do_test vtab1-1.X {
+register_echo_module [sqlite3_connection_pointer db]
+
+# Test an error message returned from a v-table constructor.
+#
+do_test vtab1-1.16 {
   execsql {
     DROP TABLE techo;
+    CREATE TABLE logmsg(log);
+  }
+  catchsql {
+    CREATE VIRTUAL TABLE techo USING echo(treal, logmsg);
+  }
+} {1 {table 'logmsg' already exists}}
+
+do_test vtab1-1.17 {
+  execsql {
     DROP TABLE treal;
+    DROP TABLE logmsg;
     SELECT sql FROM sqlite_master;
   }
 } {}

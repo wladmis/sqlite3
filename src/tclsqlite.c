@@ -23,7 +23,6 @@
 */
 #ifndef SQLITE_AMALGAMATION
 # include "sqliteInt.h"
-# include "hash.h"
 # include <stdlib.h>
 # include <string.h>
 # include <assert.h>
@@ -1652,7 +1651,6 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
         }
         Tcl_ObjSetVar2(interp, pArray, pStar, pColList,0);
         Tcl_DecrRefCount(pColList);
-        Tcl_DecrRefCount(pStar);
       }
 
       /* Execute the SQL
@@ -2260,7 +2258,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 }
 
 /*
-**   sqlite3 DBNAME FILENAME ?MODE? ?-key KEY?
+**   sqlite3 DBNAME FILENAME ?-vfs VFSNAME? ?-key KEY? ?-readonly BOOLEAN?
+**                           ?-create BOOLEAN?
 **
 ** This is the main Tcl command.  When the "sqlite" Tcl command is
 ** invoked, this routine runs to process that command.
@@ -2270,25 +2269,8 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 ** DBNAME that is used to control that connection.  The database
 ** connection is deleted when the DBNAME command is deleted.
 **
-** The second argument is the name of the directory that contains
-** the sqlite database that is to be accessed.
+** The second argument is the name of the database file.
 **
-** For testing purposes, we also support the following:
-**
-**  sqlite3 -encoding
-**
-**       Return the encoding used by LIKE and GLOB operators.  Choices
-**       are UTF-8 and iso8859.
-**
-**  sqlite3 -version
-**
-**       Return the version number of the SQLite library.
-**
-**  sqlite3 -tcl-uses-utf
-**
-**       Return "1" if compiled with a Tcl uses UTF-8.  Return "0" if
-**       not.  Used by tests to make sure the library was compiled 
-**       correctly.
 */
 static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   SqliteDb *p;
@@ -2296,7 +2278,10 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   int nKey = 0;
   const char *zArg;
   char *zErrMsg;
+  int i;
   const char *zFile;
+  const char *zVfs = 0;
+  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
   Tcl_DString translatedFilename;
   if( objc==2 ){
     zArg = Tcl_GetStringFromObj(objv[1], 0);
@@ -2312,28 +2297,42 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
 #endif
       return TCL_OK;
     }
-    if( strcmp(zArg,"-tcl-uses-utf")==0 ){
-#ifdef TCL_UTF_MAX
-      Tcl_AppendResult(interp,"1",0);
-#else
-      Tcl_AppendResult(interp,"0",0);
-#endif
-      return TCL_OK;
-    }
   }
-  if( objc==5 || objc==6 ){
-    zArg = Tcl_GetStringFromObj(objv[objc-2], 0);
+  for(i=3; i+1<objc; i+=2){
+    zArg = Tcl_GetString(objv[i]);
     if( strcmp(zArg,"-key")==0 ){
-      pKey = Tcl_GetByteArrayFromObj(objv[objc-1], &nKey);
-      objc -= 2;
+      pKey = Tcl_GetByteArrayFromObj(objv[i+1], &nKey);
+    }else if( strcmp(zArg, "-vfs")==0 ){
+      i++;
+      zVfs = Tcl_GetString(objv[i]);
+    }else if( strcmp(zArg, "-readonly")==0 ){
+      int b;
+      if( Tcl_GetBooleanFromObj(interp, objv[i+1], &b) ) return TCL_ERROR;
+      if( b ){
+        flags &= ~(SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE);
+        flags |= SQLITE_OPEN_READONLY;
+      }else{
+        flags &= ~SQLITE_OPEN_READONLY;
+        flags |= SQLITE_OPEN_READWRITE;
+      }
+    }else if( strcmp(zArg, "-create")==0 ){
+      int b;
+      if( Tcl_GetBooleanFromObj(interp, objv[i+1], &b) ) return TCL_ERROR;
+      if( b && (flags & SQLITE_OPEN_READONLY)==0 ){
+        flags |= SQLITE_OPEN_CREATE;
+      }else{
+        flags &= ~SQLITE_OPEN_CREATE;
+      }
+    }else{
+      Tcl_AppendResult(interp, "unknown option: ", zArg, (char*)0);
+      return TCL_ERROR;
     }
   }
-  if( objc!=3 && objc!=4 ){
+  if( objc<3 || (objc&1)!=1 ){
     Tcl_WrongNumArgs(interp, 1, objv, 
+      "HANDLE FILENAME ?-vfs VFSNAME? ?-readonly BOOLEAN? ?-create BOOLEAN?"
 #ifdef SQLITE_HAS_CODEC
-      "HANDLE FILENAME ?-key CODEC-KEY?"
-#else
-      "HANDLE FILENAME ?MODE?"
+      " ?-key CODECKEY?"
 #endif
     );
     return TCL_ERROR;
@@ -2347,15 +2346,27 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   memset(p, 0, sizeof(*p));
   zFile = Tcl_GetStringFromObj(objv[2], 0);
   zFile = Tcl_TranslateFileName(interp, zFile, &translatedFilename);
-  sqlite3_open(zFile, &p->db);
+  sqlite3_open_v2(zFile, &p->db, flags, zVfs);
   Tcl_DStringFree(&translatedFilename);
   if( SQLITE_OK!=sqlite3_errcode(p->db) ){
     zErrMsg = sqlite3_mprintf("%s", sqlite3_errmsg(p->db));
     sqlite3_close(p->db);
     p->db = 0;
   }
+#ifdef SQLITE_TEST
+  if( p->db ){
+    extern int Md5_Register(sqlite3*);
+    if( Md5_Register(p->db)==SQLITE_NOMEM ){
+      zErrMsg = sqlite3_mprintf("%s", sqlite3_errmsg(p->db));
+      sqlite3_close(p->db);
+      p->db = 0;
+    }
+  }
+#endif  
 #ifdef SQLITE_HAS_CODEC
-  sqlite3_key(p->db, pKey, nKey);
+  if( p->db ){
+    sqlite3_key(p->db, pKey, nKey);
+  }
 #endif
   if( p->db==0 ){
     Tcl_SetResult(interp, zErrMsg, TCL_VOLATILE);
@@ -2367,23 +2378,6 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   p->interp = interp;
   zArg = Tcl_GetStringFromObj(objv[1], 0);
   Tcl_CreateObjCommand(interp, zArg, DbObjCmd, (char*)p, DbDeleteCmd);
-
-  /* If compiled with SQLITE_TEST turned on, then register the "md5sum"
-  ** SQL function.
-  */
-#ifdef SQLITE_TEST
-  {
-    extern void Md5_Register(sqlite3*);
-#ifdef SQLITE_MEMDEBUG
-    int mallocfail = sqlite3_iMallocFail;
-    sqlite3_iMallocFail = 0;
-#endif
-    Md5_Register(p->db);
-#ifdef SQLITE_MEMDEBUG
-    sqlite3_iMallocFail = mallocfail;
-#endif
-  }
-#endif  
   return TCL_OK;
 }
 
@@ -2436,12 +2430,14 @@ EXTERN int Tclsqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
 #ifdef TCLSH
 /*****************************************************************************
 ** The code that follows is used to build standalone TCL interpreters
+** that are statically linked with SQLite.  
 */
 
 /*
 ** If the macro TCLSH is one, then put in code this for the
 ** "main" routine that will initialize Tcl and take input from
-** standard input.
+** standard input, or if a file is named on the command line
+** the TCL interpreter reads and evaluates that file.
 */
 #if TCLSH==1
 static char zMainloop[] =
@@ -2486,6 +2482,8 @@ int TCLSH_MAIN(int argc, char **argv){
   Sqlite3_Init(interp);
 #ifdef SQLITE_TEST
   {
+    extern int Md5_Init(Tcl_Interp*);
+    extern int Sqliteconfig_Init(Tcl_Interp*);
     extern int Sqlitetest1_Init(Tcl_Interp*);
     extern int Sqlitetest2_Init(Tcl_Interp*);
     extern int Sqlitetest3_Init(Tcl_Interp*);
@@ -2495,15 +2493,16 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetest7_Init(Tcl_Interp*);
     extern int Sqlitetest8_Init(Tcl_Interp*);
     extern int Sqlitetest9_Init(Tcl_Interp*);
-    extern int Md5_Init(Tcl_Interp*);
-    extern int Sqlitetestsse_Init(Tcl_Interp*);
     extern int Sqlitetestasync_Init(Tcl_Interp*);
-    extern int Sqlitetesttclvar_Init(Tcl_Interp*);
-    extern int Sqlitetestschema_Init(Tcl_Interp*);
     extern int Sqlitetest_autoext_Init(Tcl_Interp*);
     extern int Sqlitetest_hexio_Init(Tcl_Interp*);
-    extern int Sqliteconfig_Init(Tcl_Interp*);
+    extern int Sqlitetest_malloc_Init(Tcl_Interp*);
+    extern int Sqlitetestschema_Init(Tcl_Interp*);
+    extern int Sqlitetestsse_Init(Tcl_Interp*);
+    extern int Sqlitetesttclvar_Init(Tcl_Interp*);
 
+    Md5_Init(interp);
+    Sqliteconfig_Init(interp);
     Sqlitetest1_Init(interp);
     Sqlitetest2_Init(interp);
     Sqlitetest3_Init(interp);
@@ -2514,12 +2513,11 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest8_Init(interp);
     Sqlitetest9_Init(interp);
     Sqlitetestasync_Init(interp);
-    Sqlitetesttclvar_Init(interp);
-    Sqlitetestschema_Init(interp);
     Sqlitetest_autoext_Init(interp);
     Sqlitetest_hexio_Init(interp);
-    Sqliteconfig_Init(interp);
-    Md5_Init(interp);
+    Sqlitetest_malloc_Init(interp);
+    Sqlitetestschema_Init(interp);
+    Sqlitetesttclvar_Init(interp);
 #ifdef SQLITE_SSE
     Sqlitetestsse_Init(interp);
 #endif

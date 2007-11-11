@@ -47,6 +47,7 @@ set EXCLUDE {
   corrupt.test
   crash.test
   crash2.test
+  crash3.test
   exclusive3.test
   fuzz.test
   fuzz_malloc.test
@@ -55,6 +56,7 @@ set EXCLUDE {
   malloc.test
   malloc2.test
   malloc3.test
+  malloc4.test
   memleak.test
   misc7.test
   misuse.test
@@ -95,12 +97,6 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
     incr nErr
     lappend ::failList $tail
     set sqlite_open_file_count 0
-  }
-  if {$::sqlite3_tsd_count} {
-    puts "Thread-specific data leak: $::sqlite3_tsd_count instances"
-    incr nErr
-    lappend ::failList $tail
-    set ::sqlite3_tsd_count 0
   }
 }
 source $testdir/misuse.test

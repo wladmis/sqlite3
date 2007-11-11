@@ -58,16 +58,17 @@ ifcapable conflict {
   
   # Try to continue with the SELECT statement
   #
+btree_breakpoint
   do_test rollback-1.5 {
     sqlite3_step $STMT
-  } {SQLITE_ABORT}
+  } {SQLITE_ERROR}
 }
 
 # Restart the SELECT statement
 #
 do_test rollback-1.6 {
   sqlite3_reset $STMT
-} {SQLITE_OK}
+} {SQLITE_ABORT}
 do_test rollback-1.7 {
   sqlite3_step $STMT
 } {SQLITE_ROW}

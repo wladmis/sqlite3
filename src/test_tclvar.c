@@ -20,7 +20,6 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#include "os.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -58,7 +57,7 @@ static int tclvarConnect(
   tclvar_vtab *pVtab;
   static const char zSchema[] = 
      "CREATE TABLE whatever(name TEXT, arrayname TEXT, value TEXT)";
-  pVtab = sqliteMalloc( sizeof(*pVtab) );
+  pVtab = sqlite3MallocZero( sizeof(*pVtab) );
   if( pVtab==0 ) return SQLITE_NOMEM;
   *ppVtab = &pVtab->base;
   pVtab->interp = (Tcl_Interp *)pAux;
@@ -69,7 +68,7 @@ static int tclvarConnect(
 ** methods are identical. */
 
 static int tclvarDisconnect(sqlite3_vtab *pVtab){
-  sqliteFree(pVtab);
+  sqlite3_free(pVtab);
   return SQLITE_OK;
 }
 /* The xDisconnect and xDestroy methods are also the same */
@@ -79,7 +78,7 @@ static int tclvarDisconnect(sqlite3_vtab *pVtab){
 */
 static int tclvarOpen(sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor){
   tclvar_cursor *pCur;
-  pCur = sqliteMalloc(sizeof(tclvar_cursor));
+  pCur = sqlite3MallocZero(sizeof(tclvar_cursor));
   *ppCursor = &pCur->base;
   return SQLITE_OK;
 }
@@ -95,7 +94,7 @@ static int tclvarClose(sqlite3_vtab_cursor *cur){
   if( pCur->pList2 ){
     Tcl_DecrRefCount(pCur->pList2);
   }
-  sqliteFree(pCur);
+  sqlite3_free(pCur);
   return SQLITE_OK;
 }
 

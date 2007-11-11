@@ -74,9 +74,11 @@ int sqlite3_set_authorizer(
   int (*xAuth)(void*,int,const char*,const char*,const char*,const char*),
   void *pArg
 ){
+  sqlite3_mutex_enter(db->mutex);
   db->xAuth = xAuth;
   db->pAuthArg = pArg;
   sqlite3ExpirePreparedStatements(db);
+  sqlite3_mutex_leave(db->mutex);
   return SQLITE_OK;
 }
 
@@ -107,7 +109,7 @@ void sqlite3AuthRead(
 ){
   sqlite3 *db = pParse->db;
   int rc;
-  Table *pTab;          /* The table being read */
+  Table *pTab = 0;      /* The table being read */
   const char *zCol;     /* Name of the column of the table */
   int iSrc;             /* Index in pTabList->a[] of table being read */
   const char *zDBase;   /* Name of database being accessed */
@@ -133,8 +135,6 @@ void sqlite3AuthRead(
     */
     assert( pExpr->iTable==pStack->newIdx || pExpr->iTable==pStack->oldIdx );
     pTab = pStack->pTab;
-  }else{
-    return;
   }
   if( pTab==0 ) return;
   if( pExpr->iColumn>=0 ){

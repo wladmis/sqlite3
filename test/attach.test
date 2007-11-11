@@ -53,6 +53,7 @@ do_test attach-1.4 {
   }
 } {1 x 2 y}
 do_test attach-1.5 {
+btree_breakpoint
   execsql {
     DETACH DATABASE two;
     SELECT * FROM t1;

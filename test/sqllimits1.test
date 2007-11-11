@@ -21,7 +21,7 @@ source $testdir/tester.tcl
 #
 #     sqllimits-1.*:  SQLITE_MAX_LENGTH
 #     sqllimits-2.*:  SQLITE_MAX_SQL_LENGTH
-#     sqllimits-3.*:  SQLITE_MAX_PAGE_COUNT
+#     sqllimits-3.*:  SQLITE_MAX_PAGE_COUNT (and the max_page_count pragma)
 #     sqllimits-4.*:  SQLITE_MAX_COLUMN
 #
 #
@@ -35,7 +35,25 @@ source $testdir/tester.tcl
 #
 #     sqllimits-5.*:   SQLITE_MAX_EXPR_DEPTH            (sqlite todo)
 #     sqllimits-6.*:   SQLITE_MAX_VDBE_OP               (sqlite todo)
+#     sqllimits-12.*:  SQLITE_MAX_PAGE_COUNT            (sqlite todo)
 #
+
+unset -nocomplain saved
+foreach var [info vars SQLITE_MAX_*] {
+  set saved($var) [set $var]
+}
+
+set SQLITE_MAX_LENGTH                 100000
+set SQLITE_MAX_COLUMN
+set SQLITE_MAX_SQL_LENGTH              50000
+set SQLITE_MAX_EXPR_DEPTH               1000
+set SQLITE_MAX_COMPOUND_SELECT             5
+set SQLITE_MAX_VDBE_OP
+set SQLITE_MAX_FUNCTION_ARG
+set SQLITE_MAX_VARIABLE_NUMBER
+set SQLITE_MAX_PAGE_SIZE
+set SQLITE_MAX_PAGE_COUNT
+set SQLITE_MAX_LIKE_PATTERN_LENGTH      1000
 
 #--------------------------------------------------------------------
 # Test cases sqllimits-1.* test that the SQLITE_MAX_LENGTH limit
@@ -70,13 +88,45 @@ do_test sqllimits-1.5 {
 
 do_test sqllimits-1.6 {
   catchsql { SELECT zeroblob(-1) }
-} {0 {}}
+} {0 {{}}}
 
 do_test sqllimits-1.9 {
   set ::str [string repeat A 65537]
   set ::rep [string repeat B 65537]
   catchsql { SELECT replace($::str, 'A', $::rep) }
 } {1 {string or blob too big}}
+
+do_test sqllimits-1.10 {
+  set ::str [string repeat %J 2100]
+  catchsql { SELECT strftime($::str, '2003-10-31') }
+} {1 {string or blob too big}}
+
+do_test sqllimits-1.11 {
+  set ::str1 [string repeat A [expr {$SQLITE_MAX_LENGTH - 10}]]
+  set ::str2 [string repeat B [expr {$SQLITE_MAX_LENGTH - 10}]]
+  catchsql { SELECT $::str1 || $::str2 }
+} {1 {string or blob too big}}
+
+do_test sqllimits-1.12 {
+  set ::str1 [string repeat ' [expr {$SQLITE_MAX_LENGTH - 10}]]
+  catchsql { SELECT quote($::str1) }
+} {1 {string or blob too big}}
+
+do_test sqllimits-1.13 {
+  set ::str1 [string repeat ' [expr {$SQLITE_MAX_LENGTH - 10}]]
+  catchsql { SELECT hex($::str1) }
+} {1 {string or blob too big}}
+
+do_test sqllimits-1.14.1 {
+  set ::STMT [sqlite3_prepare $::DB "SELECT ?" -1 TAIL]
+  sqlite3_bind_zeroblob $::STMT 1 [expr {$SQLITE_MAX_LENGTH + 1}]
+} {}
+do_test sqllimits-1.14.2 {
+  sqlite3_step $::STMT 
+} {SQLITE_ERROR}
+do_test sqllimits-1.14.3 {
+  sqlite3_finalize $::STMT 
+} {SQLITE_TOOBIG}
 
 #--------------------------------------------------------------------
 # Test cases sqllimits-2.* test that the SQLITE_MAX_SQL_LENGTH limit
@@ -171,6 +221,49 @@ do_test sqllimits1-3.6 {
     SELECT COUNT(*) FROM trig;
   }
 } {0 7}
+
+# Now check the response of the library to opening a file larger than
+# the current max_page_count value. The response is to change the
+# internal max_page_count value to match the actual size of the file.
+do_test sqllimits1-3.7.1 {
+  execsql {
+    PRAGMA max_page_count = 1000000;
+    CREATE TABLE abc(a, b, c);
+    INSERT INTO abc VALUES(1, 2, 3);
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a||b||c, b||c||a, c||a||b FROM abc;
+    INSERT INTO abc SELECT a, b, c FROM abc;
+    INSERT INTO abc SELECT b, a, c FROM abc;
+    INSERT INTO abc SELECT c, b, a FROM abc;
+  }
+  expr [file size test.db] / 1024
+} {1691}
+do_test sqllimits1-3.7.2 {
+  db close
+  sqlite3 db test.db
+  execsql {
+    PRAGMA max_page_count = 1000;
+  }
+  execsql {
+    SELECT count(*) FROM sqlite_master;
+  }
+} {6}
+do_test sqllimits1-3.7.3 {
+  execsql {
+    PRAGMA max_page_count;
+  }
+} {1691}
+do_test sqllimits1-3.7.4 {
+  execsql {
+    DROP TABLE abc;
+  }
+} {}
 
 #--------------------------------------------------------------------
 # Test cases sqllimits1-4.* test the SQLITE_MAX_COLUMN limit.
@@ -351,6 +444,9 @@ do_test sqllimits-1.7.2 {
 do_test sqllimits-1.8.1 {
   set max $::SQLITE_MAX_ATTACHED
   for {set i 0} {$i < ($max)} {incr i} {
+    file delete -force test${i}.db test${i}.db-journal
+  }
+  for {set i 0} {$i < ($max)} {incr i} {
     execsql "ATTACH 'test${i}.db' AS aux${i}"
   }
   catchsql "ATTACH 'test${i}.db' AS aux${i}"
@@ -451,4 +547,8 @@ do_test sqllimits-1.12.2 {
   }
 } {1 {string or blob too big}}
 
+
+foreach {key value} [array get saved] {
+  catch {set $key $value}
+}
 finish_test

@@ -96,12 +96,16 @@ do_test incrblob-1.3.10 {
 #
 proc nRead {db} {
   set bt [btree_from_db $db]
+  db_enter $db
   array set stats [btree_pager_stats $bt]
+  db_leave $db
   return $stats(read)
 }
 proc nWrite {db} {
   set bt [btree_from_db $db]
+  db_enter $db
   array set stats [btree_pager_stats $bt]
+  db_leave $db
   return $stats(write)
 }
 
@@ -323,6 +327,15 @@ do_test incrblob-4.9.2 {
   set c
 } {1 2 3 4 5 6 7 8 9}
 
+do_test incrblob-4.10 {
+  set ::blob [db incrblob -readonly blobs k 3]
+  set rc [catch { sqlite3_blob_read $::blob 10 100 } msg]
+  list $rc $msg
+} {1 SQLITE_ERROR}
+do_test incrblob-4.11 {
+  close $::blob
+} {}
+
 #------------------------------------------------------------------------
 # incrblob-5.*: 
 #
@@ -337,7 +350,9 @@ do_test incrblob-5.1 {
     INSERT INTO aux.files VALUES('this one', zeroblob($::size));
   }
   set fd  [db incrblob aux files text 1]
+  fconfigure $fd -translation binary
   set fd2 [open [info script]]
+  fconfigure $fd2 -translation binary
   puts -nonewline $fd [read $fd2]
   close $fd
   close $fd2
@@ -346,6 +361,7 @@ do_test incrblob-5.1 {
 } [file size [info script]]
 do_test incrblob-5.2 {
   set fd2 [open [info script]]
+  fconfigure $fd2 -translation binary
   set ::data [read $fd2]
   close $fd2
   set ::data
@@ -513,7 +529,8 @@ foreach {tn arg} {1 "" 2 -readonly} {
 }
 
 set fd [open [info script]]
-set ::data [read $fd]
+fconfigure $fd -translation binary
+set ::data [read $fd 14000]
 close $fd
 
 db close

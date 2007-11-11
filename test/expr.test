@@ -272,6 +272,8 @@ test_expr expr-5.10b {t1='abxyzzyc', t2='A%_C'} {t1 LIKE t2} $NCSL
 test_expr expr-5.11 {t1='abc', t2='xyz'} {t1 NOT LIKE t2} 1
 test_expr expr-5.12a {t1='abc', t2='abc'} {t1 NOT LIKE t2} 0
 test_expr expr-5.12b {t1='abc', t2='ABC'} {t1 NOT LIKE t2} $CSL
+test_expr expr-5.13  {t1='A'}  {t1 LIKE 'A%_'} 0
+test_expr expr-5.14  {t1='AB'} {t1 LIKE 'A%b' ESCAPE 'b'} 0
 
 # The following tests only work on versions of TCL that support Unicode
 #
@@ -687,5 +689,11 @@ do_test expr-12.2 {
     SELECT (CASE WHEN a>4 THEN 1 ELSE 0) FROM test1;
   }
 } {1 {near ")": syntax error}}
+
+do_test expr-13.1 {
+  execsql {
+    SELECT 12345678901234567890;
+  }
+} {1.23456789012346e+19}
 
 finish_test
