@@ -66,4 +66,24 @@ SQLITE_3.4.0 {
 SQLITE_3.4.1 {
 	sqlite3_create_module_v2;
 };
+SQLITE_3.5.0 {
+    global:
+	sqlite3_file_control;
+	sqlite3_memory_alarm;
+	sqlite3_memory_highwater;
+	sqlite3_memory_used;
+	sqlite3_mutex_alloc;
+	sqlite3_mutex_enter;
+	sqlite3_mutex_free;
+	sqlite3_mutex_leave;
+	sqlite3_mutex_try;
+	sqlite3_open_v2;
+	sqlite3_release_memory;
+	sqlite3_result_error_nomem;
+	sqlite3_soft_heap_limit;
+	sqlite3_threadsafe;
+	sqlite3_vfs_find;
+	sqlite3_vfs_register;
+	sqlite3_vfs_unregister;
+};
 /* the prefix is SQLITE_, not SQLITE3_ */
