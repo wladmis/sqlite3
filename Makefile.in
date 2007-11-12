@@ -266,34 +266,34 @@ HDR = \
    $(TOP)/src/vdbe.h \
    parse.h
 
-FTS2_HDR = \
-  $(TOP)/ext/fts2/fts2.h \
-  $(TOP)/ext/fts2/fts2_hash.h \
-  $(TOP)/ext/fts2/fts2_tokenizer.h
+FTS3_HDR = \
+  $(TOP)/ext/fts3/fts3.h \
+  $(TOP)/ext/fts3/fts3_hash.h \
+  $(TOP)/ext/fts3/fts3_tokenizer.h
 
-FTS2_SRC = \
-  $(TOP)/ext/fts2/fts2.c \
-  $(TOP)/ext/fts2/fts2.h \
-  $(TOP)/ext/fts2/fts2_hash.c \
-  $(TOP)/ext/fts2/fts2_hash.h \
-  $(TOP)/ext/fts2/fts2_porter.c \
-  $(TOP)/ext/fts2/fts2_tokenizer.h \
-  $(TOP)/ext/fts2/fts2_tokenizer.c \
-  $(TOP)/ext/fts2/fts2_tokenizer1.c
+FTS3_SRC = \
+  $(TOP)/ext/fts3/fts3.c \
+  $(TOP)/ext/fts3/fts3.h \
+  $(TOP)/ext/fts3/fts3_hash.c \
+  $(TOP)/ext/fts3/fts3_hash.h \
+  $(TOP)/ext/fts3/fts3_porter.c \
+  $(TOP)/ext/fts3/fts3_tokenizer.h \
+  $(TOP)/ext/fts3/fts3_tokenizer.c \
+  $(TOP)/ext/fts3/fts3_tokenizer1.c
 
-fts2.lo: $(TOP)/ext/fts2/fts2.c $(HDR) $(FTS2_HDR)
+fts3.lo: $(TOP)/ext/fts3/fts3.c $(HDR) $(FTS3_HDR)
 	$(LTCOMPILE) -c $<
-fts2_hash.lo: $(TOP)/ext/fts2/fts2_hash.c $(HDR) $(FTS2_HDR)
+fts3_hash.lo: $(TOP)/ext/fts3/fts3_hash.c $(HDR) $(FTS3_HDR)
 	$(LTCOMPILE) -c $<
-fts2_porter.lo: $(TOP)/ext/fts2/fts2_porter.c $(HDR) $(FTS2_HDR)
+fts3_porter.lo: $(TOP)/ext/fts3/fts3_porter.c $(HDR) $(FTS3_HDR)
 	$(LTCOMPILE) -c $<
-fts2_tokenizer.lo: $(TOP)/ext/fts2/fts2_tokenizer.c $(HDR) $(FTS2_HDR)
+fts3_tokenizer.lo: $(TOP)/ext/fts3/fts3_tokenizer.c $(HDR) $(FTS3_HDR)
 	$(LTCOMPILE) -c $<
-fts2_tokenizer1.lo: $(TOP)/ext/fts2/fts2_tokenizer1.c $(HDR) $(FTS2_HDR)
+fts3_tokenizer1.lo: $(TOP)/ext/fts3/fts3_tokenizer1.c $(HDR) $(FTS3_HDR)
 	$(LTCOMPILE) -c $<
-fts2.la: fts2.lo fts2_hash.lo fts2_porter.lo fts2_tokenizer.lo fts2_tokenizer1.lo libsqlite3.la
-	$(LTLINK) -module -avoid-version -rpath $(sqlite3extdir) -o fts2.la $^ -Wl,-z,defs
-fts2_install: fts2.la
+fts3.la: fts3.lo fts3_hash.lo fts3_porter.lo fts3_tokenizer.lo fts3_tokenizer1.lo libsqlite3.la
+	$(LTLINK) -module -avoid-version -rpath $(sqlite3extdir) -o fts3.la $^ -Wl,-z,defs
+fts3_install: fts3.la
 	$(INSTALL) -d $(DESTDIR)$(sqlite3extdir)
 	$(LTINSTALL) $< $(DESTDIR)$(sqlite3extdir)
 
