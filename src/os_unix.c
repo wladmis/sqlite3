@@ -2393,6 +2393,11 @@ static int unixOpen(
   if( isReadonly )  oflags |= O_RDONLY;
   if( isReadWrite ) oflags |= O_RDWR;
   if( isCreate )    oflags |= O_CREAT;
+#ifdef O_NOATIME
+  if( isDelete )    oflags |= O_NOATIME;
+#else
+#warning "O_NOATIME not defined"
+#endif
   if( isExclusive ) oflags |= (O_EXCL|O_NOFOLLOW);
   oflags |= (O_LARGEFILE|O_BINARY);
 
@@ -2481,12 +2486,10 @@ static int unixAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
 ** pVfs->mxPathname bytes.
 */
 static int unixGetTempName(sqlite3_vfs *pVfs, char *zBuf){
-  static const char *azDirs[] = {
-     0,
-     "/var/tmp",
-     "/usr/tmp",
+  const char *azDirs[] = {
+     sqlite3_temp_directory,
+     __secure_getenv("TMPDIR"),
      "/tmp",
-     ".",
   };
   static const unsigned char zChars[] =
     "abcdefghijklmnopqrstuvwxyz"
@@ -2502,9 +2505,8 @@ static int unixGetTempName(sqlite3_vfs *pVfs, char *zBuf){
   */
   SimulateIOError( return SQLITE_ERROR );
 
-  azDirs[0] = sqlite3_temp_directory;
   for(i=0; i<sizeof(azDirs)/sizeof(azDirs[0]); i++){
-    if( azDirs[i]==0 ) continue;
+    if( !( azDirs[i] && *azDirs[i] ) ) continue;
     if( stat(azDirs[i], &buf) ) continue;
     if( !S_ISDIR(buf.st_mode) ) continue;
     if( access(azDirs[i], 07) ) continue;
