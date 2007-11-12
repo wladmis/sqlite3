@@ -200,7 +200,7 @@ static void attachFunc(
     }
     sqlite3ResetInternalSchema(db, 0);
     db->nDb = iDb;
-    if( rc==SQLITE_NOMEM ){
+    if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
       db->mallocFailed = 1;
       sqlite3_snprintf(sizeof(zErr),zErr, "out of memory");
     }else{

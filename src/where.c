@@ -350,15 +350,14 @@ static Bitmask exprListTableUsage(ExprMaskSet *pMaskSet, ExprList *pList){
   return mask;
 }
 static Bitmask exprSelectTableUsage(ExprMaskSet *pMaskSet, Select *pS){
-  Bitmask mask;
-  if( pS==0 ){
-    mask = 0;
-  }else{
-    mask = exprListTableUsage(pMaskSet, pS->pEList);
+  Bitmask mask = 0;
+  while( pS ){
+    mask |= exprListTableUsage(pMaskSet, pS->pEList);
     mask |= exprListTableUsage(pMaskSet, pS->pGroupBy);
     mask |= exprListTableUsage(pMaskSet, pS->pOrderBy);
     mask |= exprTableUsage(pMaskSet, pS->pWhere);
     mask |= exprTableUsage(pMaskSet, pS->pHaving);
+    pS = pS->pPrior;
   }
   return mask;
 }
@@ -1566,7 +1565,7 @@ static double bestIndex(
          && nEq==pProbe->nColumn ){
       flags |= WHERE_UNIQUE;
     }
-    WHERETRACE(("...... nEq=%d inMult=%.9g cost=%.9g\n", nEq, inMultiplier, cost));
+    WHERETRACE(("...... nEq=%d inMult=%.9g cost=%.9g\n",nEq,inMultiplier,cost));
 
     /* Look for range constraints
     */
@@ -1627,10 +1626,9 @@ static double bestIndex(
 
     /* If this index has achieved the lowest cost so far, then use it.
     */
-    if( cost < lowestCost ){
+    if( flags && cost < lowestCost ){
       bestIdx = pProbe;
       lowestCost = cost;
-      assert( flags!=0 );
       bestFlags = flags;
       bestNEq = nEq;
     }

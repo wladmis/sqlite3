@@ -29,6 +29,8 @@ ifcapable !memdebug {
    return
 }
 
+sqlite3_extended_result_codes db 1
+
 # Generate a checksum based on the contents of the database. If the
 # checksum of two databases is the same, and the integrity-check passes
 # for both, the two databases are identical.
@@ -70,6 +72,7 @@ proc do_malloc2_test {tn args} {
       set res [catchsql [string trim $::mallocopts(-sql)]]
       set rc [expr { 
         0==[string compare $res {1 {out of memory}}] ||
+        [db errorcode] == 3082 ||
         0==[lindex $res 0]
       }]
       if {$rc!=1} {
@@ -250,6 +253,12 @@ do_test malloc2-5 {
   sqlite3 db3 test.db
   sqlite3 db4 test.db
   sqlite3 db5 test.db
+
+  sqlite3_extended_result_codes db1 1
+  sqlite3_extended_result_codes db2 1
+  sqlite3_extended_result_codes db3 1
+  sqlite3_extended_result_codes db4 1
+  sqlite3_extended_result_codes db5 1
 
   # Close the head of the list:
   db5 close

@@ -59,7 +59,34 @@
   extern int sqlite3MAX_LIKE_PATTERN_LENGTH;
 #endif
 
-#define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
+
+/*
+** The SQLITE_THREADSAFE macro must be defined as either 0 or 1.
+** Older versions of SQLite used an optional THREADSAFE macro.
+** We support that for legacy
+*/
+#if !defined(SQLITE_THREADSAFE)
+#if defined(THREADSAFE)
+# define SQLITE_THREADSAFE THREADSAFE
+#else
+# define SQLITE_THREADSAFE 1
+#endif
+#endif
+
+/*
+** We need to define _XOPEN_SOURCE as follows in order to enable
+** recursive mutexes on most unix systems.  But Mac OS X is different.
+** The _XOPEN_SOURCE define causes problems for Mac OS X we are told,
+** so it is omitted there.  See ticket #2673.
+**
+** Later we learn that _XOPEN_SOURCE is poorly or incorrectly
+** implemented on some systems.  So we avoid defining it at all
+** if it is already defined or if it is unneeded because we are
+** not doing a threadsafe build.  Ticket #2681.
+*/
+#if !defined(_XOPEN_SOURCE) && !defined(__MACOS__) && SQLITE_THREADSAFE
+#  define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
+#endif
 
 #if defined(SQLITE_TCL) || defined(TCLSH)
 # include <tcl.h>
@@ -74,19 +101,6 @@
 */
 #if !defined(NDEBUG) && !defined(SQLITE_DEBUG) 
 # define NDEBUG 1
-#endif
-
-/*
-** The SQLITE_THREADSAFE macro must be defined as either 0 or 1.
-** Older versions of SQLite used an optional THREADSAFE macro.
-** We support that for legacy
-*/
-#if !defined(SQLITE_THREADSAFE)
-#if defined(THREADSAFE)
-# define SQLITE_THREADSAFE THREADSAFE
-#else
-# define SQLITE_THREADSAFE 1
-#endif
 #endif
 
 /*
@@ -736,7 +750,7 @@ struct Table {
   int nModuleArg;           /* Number of arguments to the module */
   char **azModuleArg;       /* Text of all module args. [0] is module name */
 #endif
-  Schema *pSchema;
+  Schema *pSchema;          /* Schema that contains this table */
 };
 
 /*
@@ -794,7 +808,7 @@ struct FKey {
 };
 
 /*
-** SQLite supports many different ways to resolve a contraint
+** SQLite supports many different ways to resolve a constraint
 ** error.  ROLLBACK processing means that a constraint violation
 ** causes the operation in process to fail and for the current transaction
 ** to be rolled back.  ABORT processing means the operation in process
@@ -1015,7 +1029,7 @@ struct Expr {
   Select *pSelect;       /* When the expression is a sub-select.  Also the
                          ** right side of "<expr> IN (<select>)" */
   Table *pTab;           /* Table for OP_Column expressions. */
-  Schema *pSchema;
+/*  Schema *pSchema; */
 #if defined(SQLITE_TEST) || SQLITE_MAX_EXPR_DEPTH>0
   int nHeight;           /* Height of the tree headed by this node */
 #endif
@@ -1746,7 +1760,7 @@ int sqlite3JoinType(Parse*, Token*, Token*, Token*);
 void sqlite3CreateForeignKey(Parse*, ExprList*, Token*, ExprList*, int);
 void sqlite3DeferForeignKey(Parse*, int);
 #ifndef SQLITE_OMIT_AUTHORIZATION
-  void sqlite3AuthRead(Parse*,Expr*,SrcList*);
+  void sqlite3AuthRead(Parse*,Expr*,Schema*,SrcList*);
   int sqlite3AuthCheck(Parse*,int, const char*, const char*, const char*);
   void sqlite3AuthContextPush(Parse*, AuthContext*, const char*);
   void sqlite3AuthContextPop(AuthContext*);
@@ -1877,10 +1891,14 @@ void sqlite3Parser(void*, int, Token, Parse*);
   void sqlite3MallocDisallow(void);
   void sqlite3MallocAllow(void);
   void sqlite3MallocBenignFailure(int);
+  void sqlite3MallocEnterBenignBlock(int isBenign);
+  void sqlite3MallocLeaveBenignBlock();
 #else
 # define sqlite3MallocDisallow()
 # define sqlite3MallocAllow()
 # define sqlite3MallocBenignFailure(x)
+# define sqlite3MallocEnterBenignBlock(x);
+# define sqlite3MallocLeaveBenignBlock();
 #endif
 
 

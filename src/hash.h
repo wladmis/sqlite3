@@ -81,6 +81,7 @@ struct HashElem {
 void sqlite3HashInit(Hash*, int keytype, int copyKey);
 void *sqlite3HashInsert(Hash*, const void *pKey, int nKey, void *pData);
 void *sqlite3HashFind(const Hash*, const void *pKey, int nKey);
+HashElem *sqlite3HashFindElem(const Hash*, const void *pKey, int nKey);
 void sqlite3HashClear(Hash*);
 
 /*

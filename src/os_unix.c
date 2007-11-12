@@ -96,7 +96,6 @@ struct unixFile {
 #endif /* SQLITE_ENABLE_LOCKING_STYLE */
   int h;                    /* The file descriptor */
   unsigned char locktype;   /* The type of lock held on this fd */
-  unsigned char isOpen;     /* True if needs to be closed */
   int dirfd;                /* File descriptor for the directory */
 #if SQLITE_THREADSAFE
   pthread_t tid;            /* The thread that "owns" this unixFile */
@@ -1434,7 +1433,6 @@ static int unixClose(sqlite3_file *id){
   releaseOpenCnt(pFile->pOpen);
 
   leaveMutex();
-  pFile->isOpen = 0;
   OSTRACE2("CLOSE   %-3d\n", pFile->h);
   OpenCounter(-1);
   memset(pFile, 0, sizeof(unixFile));
@@ -1755,7 +1753,6 @@ static int afpUnixClose(sqlite3_file *id) {
   if( pFile->dirfd>=0 ) close(pFile->dirfd);
   pFile->dirfd = -1;
   close(pFile->h);
-  pFile->isOpen = 0;
   OSTRACE2("CLOSE   %-3d\n", pFile->h);
   OpenCounter(-1);
   return SQLITE_OK;
@@ -1849,7 +1846,6 @@ static int flockUnixClose(sqlite3_file *pId) {
   
   close(pFile->h);  
   leaveMutex();
-  pFile->isOpen = 0;
   OSTRACE2("CLOSE   %-3d\n", pFile->h);
   OpenCounter(-1);
   return SQLITE_OK;
@@ -1966,7 +1962,6 @@ static int dotlockUnixClose(sqlite3_file *id) {
   close(pFile->h);
   
   leaveMutex();
-  pFile->isOpen = 0;
   OSTRACE2("CLOSE   %-3d\n", pFile->h);
   OpenCounter(-1);
   return SQLITE_OK;
@@ -2006,7 +2001,6 @@ static int nolockUnixClose(sqlite3_file *id) {
   close(pFile->h);
   
   leaveMutex();
-  pFile->isOpen = 0;
   OSTRACE2("CLOSE   %-3d\n", pFile->h);
   OpenCounter(-1);
   return SQLITE_OK;
@@ -2296,7 +2290,7 @@ static int fillInUnixFile(
 */
 static int openDirectory(const char *zFilename, int *pFd){
   int ii;
-  int fd;
+  int fd = -1;
   char zDirname[MAX_PATHNAME+1];
 
   sqlite3_snprintf(MAX_PATHNAME, zDirname, "%s", zFilename);
@@ -2304,7 +2298,7 @@ static int openDirectory(const char *zFilename, int *pFd){
   if( ii>0 ){
     zDirname[ii] = '\0';
     fd = open(zDirname, O_RDONLY|O_BINARY, 0);
-    if( fd>0 ){
+    if( fd>=0 ){
 #ifdef FD_CLOEXEC
       fcntl(fd, F_SETFD, fcntl(fd, F_GETFD, 0) | FD_CLOEXEC);
 #endif
@@ -2312,7 +2306,7 @@ static int openDirectory(const char *zFilename, int *pFd){
     }
   }
   *pFd = fd;
-  return (fd>0?SQLITE_OK:SQLITE_CANTOPEN);
+  return (fd>=0?SQLITE_OK:SQLITE_CANTOPEN);
 }
 
 /*
@@ -2462,7 +2456,7 @@ static int unixDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
 ** Otherwise return 0.
 */
 static int unixAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
-  int amode;
+  int amode = 0;
   switch( flags ){
     case SQLITE_ACCESS_EXISTS:
       amode = F_OK;
@@ -2485,7 +2479,7 @@ static int unixAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
 ** by the calling process and must be big enough to hold at least
 ** pVfs->mxPathname bytes.
 */
-static int unixGetTempName(sqlite3_vfs *pVfs, char *zBuf){
+static int unixGetTempname(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
   const char *azDirs[] = {
      sqlite3_temp_directory,
      __secure_getenv("TMPDIR"),
@@ -2515,6 +2509,7 @@ static int unixGetTempName(sqlite3_vfs *pVfs, char *zBuf){
   }
   do{
     assert( pVfs->mxPathname==MAX_PATHNAME );
+    assert( nBuf>=MAX_PATHNAME );
     sqlite3_snprintf(MAX_PATHNAME-17, zBuf, "%s/"SQLITE_TEMP_FILE_PREFIX, zDir);
     j = strlen(zBuf);
     sqlite3Randomness(15, &zBuf[j]);
@@ -2536,7 +2531,12 @@ static int unixGetTempName(sqlite3_vfs *pVfs, char *zBuf){
 ** (in this case, MAX_PATHNAME bytes). The full-path is written to
 ** this buffer before returning.
 */
-static int unixFullPathname(sqlite3_vfs *pVfs, const char *zPath, char *zOut){
+static int unixFullPathname(
+  sqlite3_vfs *pVfs,            /* Pointer to vfs object */
+  const char *zPath,            /* Possibly relative input path */
+  int nOut,                     /* Size of output buffer in bytes */
+  char *zOut                    /* Output buffer */
+){
 
   /* It's odd to simulate an io-error here, but really this is just
   ** using the io-error infrastructure to test that SQLite handles this
@@ -2752,7 +2752,7 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     unixOpen,           /* xOpen */
     unixDelete,         /* xDelete */
     unixAccess,         /* xAccess */
-    unixGetTempName,    /* xGetTempName */
+    unixGetTempname,    /* xGetTempName */
     unixFullPathname,   /* xFullPathname */
     unixDlOpen,         /* xDlOpen */
     unixDlError,        /* xDlError */

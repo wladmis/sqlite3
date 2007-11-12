@@ -19,7 +19,7 @@ source $testdir/tester.tcl
 
 # Only run these tests if memory debugging is turned on.
 #
-ifcapable !memdebug {
+ifcapable !memdebug||!compound {
    puts "Skipping mallocC tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
@@ -66,6 +66,7 @@ proc do_mallocC_test {tn args} {
       set res [catchsql [string trim $::mallocopts(-sql)]]
       set rc [expr { 
         0==[string compare $res {1 {out of memory}}] ||
+        [db errorcode] == 3082 ||
         0==[lindex $res 0]
       }]
       if {$rc!=1} {
@@ -106,6 +107,8 @@ proc do_mallocC_test {tn args} {
   }
   unset ::mallocopts
 }
+
+sqlite3_extended_result_codes db 1
 
 execsql {
   PRAGMA auto_vacuum=1;

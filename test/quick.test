@@ -60,11 +60,15 @@ set EXCLUDE {
   memleak.test
   misc7.test
   misuse.test
+  onefile.test
   quick.test
   soak.test
   speed1.test
   speed2.test
   sqllimits1.test
+
+  thread001.test
+  thread002.test
 
   incrvacuum_ioerr.test
   autovacuum_crash.test

@@ -110,23 +110,27 @@ do_test zeroblob-2.2 {
 
 # DISTINCT works for zeroblobs
 #
-do_test zeroblob-3.1 {
-  execsql {
-    SELECT count(DISTINCT a) FROM (
-      SELECT x'00000000000000000000' AS a
-      UNION ALL
-      SELECT zeroblob(10) AS a
-    )
-  }
-} {1}
+ifcapable bloblit&&subquery&&compound {
+  do_test zeroblob-3.1 {
+    execsql {
+      SELECT count(DISTINCT a) FROM (
+        SELECT x'00000000000000000000' AS a
+        UNION ALL
+        SELECT zeroblob(10) AS a
+      )
+    }
+  } {1}
+}
 
 # Concatentation works with zeroblob
 #
-do_test zeroblob-4.1 {
-  execsql {
-    SELECT hex(zeroblob(2) || x'61')
-  }
-} {000061}
+ifcapable bloblit {
+  do_test zeroblob-4.1 {
+    execsql {
+      SELECT hex(zeroblob(2) || x'61')
+    }
+  } {000061}
+}
 
 # Check various CAST(...) operations on zeroblob.
 #
@@ -174,7 +178,13 @@ do_test zeroblob-6.4 {
 } {1 {string or blob too big}} 
 do_test zeroblob-6.5 { 
   catchsql {select zeroblob(2147483648)} 
-} {1 {string or blob too big}} 
+} {1 {string or blob too big}}
+do_test zeroblob-6.6 {
+  execsql {select hex(zeroblob(-1))}
+} {{}}
+do_test zeroblob-6.7 {
+  execsql {select typeof(zeroblob(-1))}
+} {blob}
 
 # Test bind_zeroblob()
 #

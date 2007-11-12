@@ -19,6 +19,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !integrityck {
+  finish_test
+  return
+}
+
 sqlite3_soft_heap_limit 5000
 do_test softheap1-1.1 {
   execsql {

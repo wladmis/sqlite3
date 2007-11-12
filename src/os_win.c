@@ -290,7 +290,7 @@ struct tm *__cdecl localtime(const time_t *t)
   static struct tm y;
   FILETIME uTm, lTm;
   SYSTEMTIME pTm;
-  i64 t64;
+  sqlite3_int64 t64;
   t64 = *t;
   t64 = (t64 + 11644473600)*10000000;
   uTm.dwLowDateTime = t64 & 0xFFFFFFFF;
@@ -700,7 +700,7 @@ static int winWrite(
 /*
 ** Truncate an open file to a specified size
 */
-static int winTruncate(sqlite3_file *id, i64 nByte){
+static int winTruncate(sqlite3_file *id, sqlite3_int64 nByte){
   LONG upperBits = (nByte>>32) & 0x7fffffff;
   LONG lowerBits = nByte & 0xffffffff;
   winFile *pFile = (winFile*)id;
@@ -1162,13 +1162,13 @@ static int winOpen(
 #if OS_WINCE
   if( (flags & (SQLITE_OPEN_READWRITE|SQLITE_OPEN_MAIN_DB)) ==
                (SQLITE_OPEN_READWRITE|SQLITE_OPEN_MAIN_DB)
-       && !winceCreateLock(zFilename, &f)
+       && !winceCreateLock(zFilename, pFile)
   ){
     CloseHandle(h);
     free(zConverted);
     return SQLITE_CANTOPEN;
   }
-  if( dwFlagsAndAttributes & FILE_FLAG_DELETEONCLOSE ){
+  if( dwFlagsAndAttributes & FILE_FLAG_DELETE_ON_CLOSE ){
     pFile->zDeleteOnClose = zConverted;
   }else
 #endif
@@ -1267,7 +1267,7 @@ static int winAccess(
 ** Create a temporary file name in zBuf.  zBuf must be big enough to
 ** hold at pVfs->mxPathname characters.
 */
-static int winGetTempName(sqlite3_vfs *pVfs, char *zBuf){
+static int winGetTempname(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
   static char zChars[] =
     "abcdefghijklmnopqrstuvwxyz"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -1319,14 +1319,15 @@ static int winGetTempName(sqlite3_vfs *pVfs, char *zBuf){
 ** bytes in size.
 */
 static int winFullPathname(
-  sqlite3_vfs *pVfs,          
-  const char *zRelative,
-  char *zFull
+  sqlite3_vfs *pVfs,            /* Pointer to vfs object */
+  const char *zRelative,        /* Possibly relative input path */
+  int nFull,                    /* Size of output buffer in bytes */
+  char *zFull                   /* Output buffer */
 ){
 
 #if defined(__CYGWIN__)
   cygwin_conv_to_full_win32_path(zRelative, zFull);
-  return SQLITE_OK
+  return SQLITE_OK;
 #endif
 
 #if OS_WINCE
@@ -1438,7 +1439,7 @@ void winDlClose(sqlite3_vfs *pVfs, void *pHandle){
 */
 static int winRandomness(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
   int n = 0;
-  if( sizeof(LPSYSTEMTIME)<=nBuf-n ){
+  if( sizeof(SYSTEMTIME)<=nBuf-n ){
     SYSTEMTIME x;
     GetSystemTime(&x);
     memcpy(&zBuf[n], &x, sizeof(x));
@@ -1527,7 +1528,7 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     winOpen,           /* xOpen */
     winDelete,         /* xDelete */
     winAccess,         /* xAccess */
-    winGetTempName,    /* xGetTempName */
+    winGetTempname,    /* xGetTempName */
     winFullPathname,   /* xFullPathname */
     winDlOpen,         /* xDlOpen */
     winDlError,        /* xDlError */

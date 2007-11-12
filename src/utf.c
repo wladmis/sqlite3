@@ -403,6 +403,36 @@ int sqlite3Utf8CharLen(const char *zIn, int nByte){
   return r;
 }
 
+/* This test function is not currently used by the automated test-suite. 
+** Hence it is only available in debug builds.
+*/
+#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
+/*
+** Translate UTF-8 to UTF-8.
+**
+** This has the effect of making sure that the string is well-formed
+** UTF-8.  Miscoded characters are removed.
+**
+** The translation is done in-place (since it is impossible for the
+** correct UTF-8 encoding to be longer than a malformed encoding).
+*/
+int sqlite3Utf8To8(unsigned char *zIn){
+  unsigned char *zOut = zIn;
+  unsigned char *zStart = zIn;
+  unsigned char *zTerm;
+  u32 c;
+
+  while( zIn[0] ){
+    c = sqlite3Utf8Read(zIn, zTerm, (const u8**)&zIn);
+    if( c!=0xfffd ){
+      WRITE_UTF8(zOut, c);
+    }
+  }
+  *zOut = 0;
+  return zOut - zStart;
+}
+#endif
+
 #ifndef SQLITE_OMIT_UTF16
 /*
 ** Convert a UTF-16 string in the native encoding into a UTF-8 string.
@@ -417,6 +447,10 @@ char *sqlite3Utf16to8(sqlite3 *db, const void *z, int nByte){
   m.db = db;
   sqlite3VdbeMemSetStr(&m, z, nByte, SQLITE_UTF16NATIVE, SQLITE_STATIC);
   sqlite3VdbeChangeEncoding(&m, SQLITE_UTF8);
+  if( db->mallocFailed ){
+    sqlite3VdbeMemRelease(&m);
+    m.z = 0;
+  }
   assert( (m.flags & MEM_Term)!=0 || db->mallocFailed );
   assert( (m.flags & MEM_Str)!=0 || db->mallocFailed );
   return (m.flags & MEM_Dyn)!=0 ? m.z : sqlite3DbStrDup(db, m.z);
@@ -455,36 +489,6 @@ int sqlite3Utf16ByteLen(const void *zIn, int nChar){
   }
   return (z-(char const *)zIn)-((c==0)?2:0);
 }
-
-/* This test function is not currently used by the automated test-suite. 
-** Hence it is only available in debug builds.
-*/
-#if defined(SQLITE_TEST) && defined(SQLITE_DEBUG)
-/*
-** Translate UTF-8 to UTF-8.
-**
-** This has the effect of making sure that the string is well-formed
-** UTF-8.  Miscoded characters are removed.
-**
-** The translation is done in-place (since it is impossible for the
-** correct UTF-8 encoding to be longer than a malformed encoding).
-*/
-int sqlite3Utf8To8(unsigned char *zIn){
-  unsigned char *zOut = zIn;
-  unsigned char *zStart = zIn;
-  unsigned char *zTerm;
-  u32 c;
-
-  while( zIn[0] ){
-    c = sqlite3Utf8Read(zIn, zTerm, (const u8**)&zIn);
-    if( c!=0xfffd ){
-      WRITE_UTF8(zOut, c);
-    }
-  }
-  *zOut = 0;
-  return zOut - zStart;
-}
-#endif
 
 #if defined(SQLITE_TEST)
 /*

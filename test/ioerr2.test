@@ -20,6 +20,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !integrityck {
+  finish_test
+  return
+}
+
 do_test ioerr2-1.1 {
   execsql {
     PRAGMA cache_size = 10;

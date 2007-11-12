@@ -40,6 +40,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !pager_pragmas {
+  finish_test
+  return
+}
+
 sqlite3_extended_result_codes $::DB 1
 
 # Aquire a read-lock on the database using handle [db2].

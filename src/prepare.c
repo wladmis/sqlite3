@@ -332,7 +332,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   sqlite3BtreeLeave(pDb->pBt);
 
 error_out:
-  if( rc==SQLITE_NOMEM ){
+  if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
     db->mallocFailed = 1;
   }
   return rc;
@@ -428,7 +428,7 @@ static int schemaIsValid(sqlite3 *db){
       }
       sqlite3BtreeCloseCursor(curTemp);
     }
-    if( rc==SQLITE_NOMEM ){
+    if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
       db->mallocFailed = 1;
     }
   }

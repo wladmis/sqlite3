@@ -988,10 +988,10 @@ static void currentTimeFunc(
 #else
   {
     struct tm *pTm;
-    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_GLOBAL));
+    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
     pTm = gmtime(&t);
     strftime(zBuf, 20, zFormat, pTm);
-    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_GLOBAL));
+    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
   }
 #endif
 

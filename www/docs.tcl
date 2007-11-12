@@ -50,6 +50,16 @@ doc {Tcl API} {tclsqlite.html} {
   A description of the TCL interface bindings for SQLite.
 }
 
+doc {How SQLite Implements Atomic Commit} {ac/atomiccommit.html} {
+  A description of the logic within SQLite that implements
+  transactions with atomic commit, even in the face of power
+  failures.
+}
+doc {Moving From SQLite 3.4 to 3.5} {34to35.html} {
+  A document describing the differences between SQLite version 3.4.2
+  and 3.5.0.
+}
+
 doc {Pragma commands} {pragma.html} {
   This document describes SQLite performance tuning options and other 
   special purpose database commands.

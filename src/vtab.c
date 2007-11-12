@@ -343,7 +343,7 @@ static int vtabCallConstructor(
 ){
   int rc;
   int rc2;
-  sqlite3_vtab *pVtab;
+  sqlite3_vtab *pVtab = 0;
   const char *const*azArg = (const char *const*)pTab->azModuleArg;
   int nArg = pTab->nModuleArg;
   char *zErr = 0;
@@ -359,12 +359,12 @@ static int vtabCallConstructor(
   db->pVTab = pTab;
   rc = sqlite3SafetyOff(db);
   assert( rc==SQLITE_OK );
-  rc = xConstruct(db, pMod->pAux, nArg, azArg, &pTab->pVtab, &zErr);
+  rc = xConstruct(db, pMod->pAux, nArg, azArg, &pVtab, &zErr);
   rc2 = sqlite3SafetyOn(db);
-  pVtab = pTab->pVtab;
   if( rc==SQLITE_OK && pVtab ){
     pVtab->pModule = pMod->pModule;
     pVtab->nRef = 1;
+    pTab->pVtab = pVtab;
   }
 
   if( SQLITE_OK!=rc ){
@@ -748,7 +748,7 @@ FuncDef *sqlite3VtabOverloadFunction(
   void (*xFunc)(sqlite3_context*,int,sqlite3_value**);
   void *pArg;
   FuncDef *pNew;
-  int rc;
+  int rc = 0;
   char *zLowerName;
   unsigned char *z;
 
@@ -765,7 +765,7 @@ FuncDef *sqlite3VtabOverloadFunction(
   pMod = (sqlite3_module *)pVtab->pModule;
   if( pMod->xFindFunction==0 ) return pDef;
  
-  /* Call the xFuncFunction method on the virtual table implementation
+  /* Call the xFindFunction method on the virtual table implementation
   ** to see if the implementation wants to overload this function 
   */
   zLowerName = sqlite3DbStrDup(db, pDef->zName);

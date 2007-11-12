@@ -782,6 +782,7 @@ do_test btree-10.2 {
   lindex [btree_pager_stats $::b1] 1
 } {2}
 do_test btree-10.3 {
+btree_breakpoint
   for {set i 1} {$i<=30} {incr i} {
     set key [format %03d $i]
     set data "*** $key *** $key *** $key *** $key ***"

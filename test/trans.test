@@ -908,7 +908,7 @@ for {set i 2} {$i<=$limit} {incr i} {
         } [expr {$i%2==0}]
       } else {
         do_test trans-9.$i.5-$cnt {
-          expr {$sqlite_fullsync_count>0}
+          expr {$sqlite_fullsync_count==0}
         } {1}
       }
     }
