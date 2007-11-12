@@ -1,0 +1,41 @@
+<title>SQLite Home Page</title>
+
+<table border="0" cellspacing="20">
+<tr><td valign="top">
+<b>About&nbsp;Sqlite</b>
+</td><td valign="top">
+<li>SQLite is a C-library that implements a high-efficiency,
+   transactional SQL database engine using databases stored in
+   ordinary disk files.
+   <a href="about.html">More info...</a></li>
+</td></tr>
+
+<tr><td valign="top">
+<b>Current&nbsp;Status</b>
+</td><td valign="top">
+<li><a href="download.html">Version 3.5.2</a>
+of SQLite is stable and is recommended for all users.
+There are no known issues effecting database integrity or correctness.</li>
+</td></tr>
+
+
+<tr><td valign="top">
+<b>Recent&nbsp;News</b>
+</td><td valign="top">
+<li> 2007-Nov-05: <a href="news.html">Version 3.5.2 released</a>. </li>
+<li> 2007-Oct-04: <a href="news.html">Version 3.5.1 released</a>. </li>
+<li> 2007-Sep-04: <a href="news.html">Version 3.5.0 released</a>. </li>
+</td></tr>
+
+<tr><td valign="top">
+<b>Quick&nbsp;Links</b>
+</td><td valign="top">
+<li> More details <a href="about.html">about SQLite</a> - what it is and what
+     it is not.</li>
+<li> <a href="faq.html">Frequently Asked Questions</a> about SQLite. </li>
+<li> <a href="companiesusing.html">Well-known
+     companies using SQLite in their products.</li>
+<li> <a href="http://www.sqlite.org/cvstrac/timeline">Timeline</a> of recent
+     development activity. </li>
+</td></tr>
+</table>

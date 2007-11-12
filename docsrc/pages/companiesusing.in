@@ -1,0 +1,113 @@
+<title>Well-Known Users Of SQLite</title>
+
+<h2>Well-Known Users of SQLite:</h2>
+
+<p>
+There are many companies using SQLite in their products.  Exactly how
+many is unknown.  SQLite is in the public domain and so many companies use
+it in their products without ever telling us.  But here are a few 
+examples of well-known companies and/or software projects which we
+do know are using SQLite:
+</p>
+
+<table border="0" cellpadding="15">
+
+<tr><td valign="top"><img src="foreignlogos/adobe.gif"></td>
+<td valign="top">
+Adobe uses SQLite as the application file format for their Lightroom product.
+This is publically acknowledged on the Lightroom/About_Lightroom menu popup.
+Adobe has also announced that their AIR project will include SQLite.   It
+is reported that Acrobat Reader also uses SQLite.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/apple.gif"></td>
+<td valign="top">
+Apple SQLite for many functions within Mac OS-X, including 
+Apple Mail, Safari, and in Aperture.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/firefox.gif"></td>
+<td>
+The Firefox Web Browser from Mozilla has recently been updated 
+to use SQLite to store all kinds of history information. 
+SQLite is replacing Mork.
+</td></tr>
+
+
+<tr><td valign="top"><img src="foreignlogos/ge.gif"></td>
+<td>
+We believe that General Electric uses SQLite in some product or 
+another because they twice wrote the to SQLite developers requesting 
+the US Export Control Number for SQLite. So presumably GE is using
+SQLite in something that they are exporting. But nobody
+(outside of GE) seems to know what that might be.
+</td>
+
+
+<tr><td valign="top"><img src="foreignlogos/google.gif"></td>
+<td>
+Google use SQLite in their Desktop for Mac  and in, Google Gears.
+The Google Gears project allows web applications to work offline, 
+and uses SQLite for the offline data storage.
+</td>
+
+<tr><td valign="top"><img src="foreignlogos/mcaffee.gif"></td>
+<td>
+McAfee appears to use SQLite in its antivirus programs. 
+Mentioned here and implied here
+</td>
+
+
+<tr><td valign="top"><img src="foreignlogos/microsoft.gif"></td>
+<td>
+It can inferred from traffic on the SQLite mailing list that at least one group within Microsoft is using SQLite in the development of a game program. No word yet if this game has actually been released or if they are still using SQLite.
+</td>
+
+
+<tr><td valign="top"><img src="foreignlogos/monotone.gif"></td>
+<td>
+The Monotone configuration management system stores an entire project history in an SQLite database. Each file is a separate BLOB.
+</td>
+
+
+<tr><td valign="top"><img src="foreignlogos/philips.gif"></td>
+<td>
+It is reported that Philips MP3 Players use SQLite to store metadata about the music they hold. Apparently, if you plug a Philips MP3 player into your USB port, you can see the SQLite database file there in plain sight.
+</td>
+
+
+<tr><td valign="top"><img src="foreignlogos/php.gif"></td>
+<td>
+The popular PHP programming language comes with both SQLite2 and SQLite3 built in.
+</td></t>
+
+<tr><td valign="top"><img src="foreignlogos/python.gif"></td>
+<td>
+SQLite comes bundled with the Python programming langauge since Python 2.5.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/realbasic.gif"></td>
+<td>
+The REALbasic programming environment comes bundled with an enhanced version of SQLite that supports AES encryption.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/skype.gif"></td>
+<td>
+There are multiple sightings of SQLite in the Skype client for MacOSX and Windows.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/sunmicro.gif"></td>
+<td>
+Solaris 10 uses SQLite as the storage format for its Service Management Facility. Thus, Sun as essentially replaced the traditional unix /etc/inittab file with an SQLite database.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/symbian.gif"></td>
+<td>
+SQLite is an integral part of Symbian's operating system commonly found on high-end cellphones.
+</td></tr>
+
+<tr><td valign="top"><img src="foreignlogos/toshiba.gif"></td>
+<td>
+A representative of Toshiba wrote to the SQLite developers and requested the US Export Control Number for SQLite. We infer from this that Toshiba is exporting something from the US that uses SQLite, but we do not know what that something is.
+</td></tr>
+</table>
