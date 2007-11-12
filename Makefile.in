@@ -236,9 +236,11 @@ TESTSRC = \
   $(TOP)/src/test_hexio.c \
   $(TOP)/src/test_malloc.c \
   $(TOP)/src/test_md5.c \
+  $(TOP)/src/test_onefile.c \
   $(TOP)/src/test_schema.c \
   $(TOP)/src/test_server.c \
   $(TOP)/src/test_tclvar.c \
+  $(TOP)/src/test_thread.c \
   $(TOP)/src/tokenize.c \
   $(TOP)/src/utf.c \
   $(TOP)/src/util.c \
@@ -556,6 +558,7 @@ tclsqlite3:	tclsqlite-shell.lo libsqlite3.la
 
 testfixture$(TEXE):	$(TOP)/src/tclsqlite.c libsqlite3.la $(TESTSRC)
 	$(LTLINK) -DTCLSH=1 -DSQLITE_TEST=1 -DSQLITE_CRASH_TEST=1 \
+		-DSQLITE_SERVER=1 -DTCL_THREADS \
                 -DSQLITE_NO_SYNC=1 $(TEMP_STORE) \
 		-o testfixture $(TESTSRC) $(TOP)/src/tclsqlite.c \
 		libsqlite3.la $(LIBTCL) -static
