@@ -3067,7 +3067,8 @@ int sqlite3Select(
   }
 #endif
 
-  /* If possible, rewrite the query to use GROUP BY instead of 
+  /* If possible, rewrite the query to use GROUP BY instead of DISTINCT.
+  ** GROUP BY may use an index, DISTINCT never does.
   */
   if( p->isDistinct && !p->isAgg && !p->pGroupBy ){
     p->pGroupBy = sqlite3ExprListDup(db, p->pEList);
