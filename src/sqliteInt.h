@@ -59,11 +59,7 @@
   extern int sqlite3MAX_LIKE_PATTERN_LENGTH;
 #endif
 
-#if 0
 #define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
-#else
-#define _GNU_SOURCE        /* And also grab O_NOATIME flag */
-#endif
 
 #if defined(SQLITE_TCL) || defined(TCLSH)
 # include <tcl.h>
