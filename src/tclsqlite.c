@@ -1646,8 +1646,10 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
         for(i=0; i<nCol; i++){
           Tcl_ListObjAppendElement(interp, pColList, apColName[i]);
         }
+        Tcl_IncrRefCount(pStar);
         Tcl_ObjSetVar2(interp, pArray, pStar, pColList,0);
         Tcl_DecrRefCount(pColList);
+        Tcl_DecrRefCount(pStar);
       }
 
       /* Execute the SQL
