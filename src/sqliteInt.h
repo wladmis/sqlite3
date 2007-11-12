@@ -85,7 +85,11 @@
 ** not doing a threadsafe build.  Ticket #2681.
 */
 #if !defined(_XOPEN_SOURCE) && !defined(__MACOS__) && SQLITE_THREADSAFE
+#if 0
 #  define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
+#else
+#  define _GNU_SOURCE        /* ALT: also grab O_NOATIME flag */
+#endif
 #endif
 
 #if defined(SQLITE_TCL) || defined(TCLSH)
