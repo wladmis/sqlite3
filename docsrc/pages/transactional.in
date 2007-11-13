@@ -1,0 +1,12 @@
+<title>SQLite Is Transactional</title>
+
+<p>A transactional database is one in which all changes and queries
+appear to be
+Atomic, Consistent, Isolated, and Durable
+(<a href="http://en.wikipedia.org/wiki/ACID">ACID</a>).
+SQLite implements 
+<a href="http://en.wikipedia.org/wiki/Serializability">serializable</a>
+transactions that are atomic, consistent, isolated, and durable,
+even if the transaction is interrupted by a program crash, an
+operating system crash, or a power failure to the computer.
+</p>

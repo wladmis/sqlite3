@@ -33,8 +33,7 @@ There are no known issues effecting database integrity or correctness.</li>
 <li> More details <a href="about.html">about SQLite</a> - what it is and what
      it is not.</li>
 <li> <a href="faq.html">Frequently Asked Questions</a> about SQLite. </li>
-<li> <a href="companiesusing.html">Well-known
-     companies using SQLite in their products.</li>
+<li> <a href="famous.html">Well-known users</a> of SQLite.</li>
 <li> <a href="http://www.sqlite.org/cvstrac/timeline">Timeline</a> of recent
      development activity. </li>
 </td></tr>

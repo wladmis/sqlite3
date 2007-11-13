@@ -25,6 +25,8 @@ proc feature {name desc} {
 
 feature {FOREIGN KEY constraints} {
   FOREIGN KEY constraints are parsed but are not enforced.
+  However, the equivalent constraint enforcement can be achieved
+  using triggers.
 }
 
 feature {Complete trigger support} {

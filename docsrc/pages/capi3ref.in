@@ -49,11 +49,14 @@ while {![eof $in]} {
       if {[regexp {^#define (SQLITE_[A-Z0-9_]+)} $line all kx]} {
         set type constant
         set keyword($kx) 1
-      } elseif {[regexp {^typedef .* (sqlite[0-9a-z_]+);} $line all kx]} {
+      } elseif {[regexp {^typedef .*(sqlite[0-9a-z_]+);} $line all kx]} {
         set type datatype
         set keyword($kx) 1
       } elseif {[regexp {^[a-z].*[ *](sqlite3_[a-z0-9_]+)\(} $line all kx]} {
         set type function
+        set keyword($kx) 1
+      } elseif {[regexp {^SQLITE_EXTERN .*(sqlite[0-9a-z_]+);} $line all kx]} {
+        set type datatype
         set keyword($kx) 1
       }
       append code $line\n
@@ -61,9 +64,40 @@ while {![eof $in]} {
   }
 }
 
+
+# Convert a tag name into the filename used for the
+# multi-file version.
+#
+# Constants begin with SQLITE_.  The names are converted
+# to lower case and prefixed with "c_".  If we did not
+# do this, then the names "SQLITE_BLOB" and "sqlite3_blob"
+# would collide.
+#
+proc convert_tag_name {oldname} {
+  set oldname [string tolower $oldname]
+  regsub {^sqlite_} $oldname {c_} oldname
+  regsub {^sqlite3_} $oldname {} name
+  return $name.html
+}
+
+# Compute a mapping from keywords to filenames.
+#
+unset -nocomplain keyword_to_file
+foreach c [lsort $content] {
+  foreach {key title type keywords body code} $c break
+  set file [convert_tag_name [lindex $keywords 0]]
+  foreach k $keywords {
+    set keyword_to_file($k) $file
+  }
+}
+#foreach k [lsort [array names keyword_to_file]] {
+#  real_puts [format {%-30s %s} $k $keyword_to_file($k)]
+#}
+
 # Output HTML that displays the given list in N columns
 #
-proc output_list {N lx} {
+proc output_list {N lx multi} {
+  global keyword_to_file
   puts {<table width="100%" cellpadding="5"><tr>}
   set len [llength $lx]
   set n [expr {($len + $N - 1)/$N}]
@@ -75,13 +109,105 @@ proc output_list {N lx} {
       set entry [lindex $lx $j]
       if {$entry!=""} {
         foreach {link label} $entry break
-        puts "<li><a href=\"#$link\">$label</a></li>"
+        if {$multi} {
+          set link $keyword_to_file($link)
+        } else {
+          set link "#link"
+        }
+        puts "<li><a href=\"$link\">$label</a></li>"
       }
     }
     puts {</ul></td>}
   }
   puts {</tr></table>}
 }
+
+# Open a separate output file for a single interface
+#
+proc c3ref_open_file {filename title} {
+  global DEST OUT save_OUT
+  file mkdir $DEST/c3ref
+  set save_OUT $OUT
+  set OUT [open $DEST/c3ref/$filename w]
+  PutsHeader "SQLite C Interface: $title" ../
+  puts {<a href="intro.html"><h2>SQLite C Interface</h2></a>}
+  puts "<h3>$title</h3>"
+}
+proc c3ref_close_file {} {
+  global HOMEDIR OUT save_OUT
+  PutsFooter $HOMEDIR/sqlite3.h
+  close $OUT
+  set OUT $save_OUT
+}
+
+c3ref_open_file intro.html Introduction
+</tcl>
+
+<p>These pages defined the C-language interface to SQLite.
+These pages are intended as a reference to what SQLite
+is suppose to do.  This is not a tutorial.  These
+pages are designed to be precise, not easy to read.</p>
+
+<p>This version of the C-language interface reference is
+broken down into small pages for easy viewing.  The
+same content is also available as a
+<a href="../capi3ref.html">single large HTML file</a>
+for those who prefer that format.</p>
+
+<p>The content on these pages is extracted from comments
+in the source code.</p>
+
+<p>The interface is broken down into three catagories:</p>
+
+<ol>
+<li><p><a href="objlist.html"><b>List Of Objects.</b></a>
+    All abstract objects and datatypes used by the
+    SQLite library.  There are a handful of objects, but
+    only three which most users need to be aware of:
+    A database connection object
+    <a href="sqlite3.html">sqlite3</a>, a prepared statement
+    object <a href="stmt.html">sqlite3_stmt</a>, and the 64-bit integer
+    type <a href="int64.html">sqlite3_int64</a>.</p></li>
+
+<li><p><a href="constlist.html"><b>List Of Constants.</b></a>
+    Numeric constants just by SQLite and represented by
+    #defines in the sqlite3.h header file.  These constants
+    are things such as numeric return parameters from
+    various interfaces (ex: 
+    <a href="ABORT.html">SQLITE_OK</a>) or flags passed
+    into functions to control behavior
+    (ex: <a href="OPEN_CREATE.html">SQLITE_OPEN_READONLY</a>).</p></li>
+
+<li><p><a href="funclist.html"><b>List Of Functions.</b></a>
+    Functions and/or methods operating on the 
+    <a href="objlist.html">objects</a> and using and/or
+    returning <a href="constlist.html">constants</a>.  There
+    are many function, but most applications only use a handful.
+    </p></li>
+</ol>
+
+<tcl>
+c3ref_close_file
+
+</tcl>
+
+<p>This page defined the C-language interface to SQLite.
+This page is intended as a reference to what SQLite
+is suppose to do.  This is not a tutorial.  This
+page is designed to be precise, not easy to read.</p>
+
+<p>This page contains all C-language interface information
+in a single HTML file.  The same information is also
+available broken out into 
+<a href="c3ref/intro.html">lots of small pages</a>
+for easier viewing, if you prefer.</p>
+
+<p>The content on this document is extracted from comments
+in the source code.</p>
+
+<hr>
+
+<tcl>
 
 # Do a table of contents for objects
 #
@@ -95,9 +221,15 @@ foreach c $content {
     lappend objlist [list $k $kw]
   }
 }
-puts {<h2>Datatypes:</h2>}
-output_list 3 $objlist
+puts {<h2>Objects:</h2>}
+output_list 3 $objlist 0
 puts {<hr>}
+c3ref_open_file objlist.html Objects
+output_list 3 $objlist 1
+puts {<p>Other lists:
+<a href="constlist.html">Constants</a> and
+<a href="funclist.html">Functions</a>.}
+c3ref_close_file
 
 # Do a table of contents for constants
 #
@@ -113,8 +245,14 @@ foreach c $content {
 }
 puts {<h2>Constants:</h2>}
 set clist [lsort -index 1 $clist]
-output_list 3 $clist
+output_list 2 $clist 0
 puts {<hr>}
+c3ref_open_file constlist.html Constants
+output_list 2 $clist 1
+puts {<p>Other lists:
+<a href="objlist.html">Objects</a> and
+<a href="funclist.html">Functions</a>.</p>}
+c3ref_close_file
 
 
 # Do a table of contents for functions
@@ -131,10 +269,17 @@ foreach c $content {
 }
 puts {<h2>Functions:</h2>}
 set funclist [lsort -index 1 $funclist]
-output_list 3 $funclist
+output_list 3 $funclist 0
 puts {<hr>}
+c3ref_open_file funclist.html Functions
+output_list 3 $funclist 1
+puts {<p>Other lists:
+<a href="constlist.html">Constants</a> and
+<a href="objlist.html">Objects</a>.</p>}
+c3ref_close_file
 
-# Resolve links
+
+# Resolve links to anchors in the single-file spec.
 #
 proc resolve_links {args} {
   set tag [lindex $args 0]
@@ -144,6 +289,28 @@ proc resolve_links {args} {
     append x [lrange $args 2 end]</a>
   } else {
     append x [lindex $args 0]</a>
+  }
+  return $x
+}
+
+# Resolve links to anchors in the multi-file spec.
+#
+proc resolve_m_links {args} {
+  set tag [lindex $args 0]
+  regsub -all {[^a-zA-Z0-9_]} $tag {} tag
+  global keyword_to_file
+  if {[info exists keyword_to_file($tag)]} {
+    set tag $keyword_to_file($tag)
+    set begin "<a href=\"$tag\">"
+    set end "</a>"
+  } else {
+    set begin ""
+    set end ""
+  }
+  if {[llength $args]>2} {
+    append x $begin[lrange $args 2 end]$end
+  } else {
+    append x $begin[lindex $args 0]$end
   }
   return $x
 }
@@ -164,5 +331,25 @@ foreach c [lsort $content] {
   set body [subst -novar -noback $body]
   puts "$body"
   puts "<hr>"
+  set fkey [lindex $keywords 0]
+  if {![info exists keyword_to_file($fkey)]} {
+    real_puts fkey=$fkey
+    real_puts c=$c
+    exit
+  }
+  c3ref_open_file $::keyword_to_file($fkey) $title
+  puts "<blockquote><pre>"
+  puts "$code"
+  puts "</pre></blockquote>"
+  set body [lindex $c 4]
+  regsub -all "\n\n+" $body {</p>\1<p>} body
+  regsub -all {\[} <p>$body</p> {[resolve_m_links } body
+  set body [subst -novar -noback $body]
+  puts "$body"
+  puts {<p>See also lists of
+  <a href="objlist.html">Objects</a>,
+  <a href="constlist.html">Constants</a>, and
+  <a href="funclist.html">Functions</a>.</p>}
+  c3ref_close_file
 }
 </tcl>

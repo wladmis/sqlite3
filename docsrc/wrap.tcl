@@ -24,11 +24,125 @@
 set DOC [lindex $argv 0]
 set SRC [lindex $argv 1]
 set DEST [lindex $argv 2]
-set HOMEDIR [pwd]
+set HOMEDIR [pwd]            ;# Also remember our home directory.
+
+# We are going to overload the puts command, so remember the
+# original puts command using an alternative name.
 rename puts real_puts
 proc puts {text} {
   real_puts $::OUT $text
   flush $::OUT
+}
+
+# putsin4 is like puts except that it removes the first 4 indentation
+# characters from each line.  It also does variable substitution in
+# the namespace of its calling procedure.
+#
+proc putsin4 {text} {
+  regsub -all "\n    " $text \n text
+  real_puts $::OUT [uplevel 1 [list subst -noback -nocom $text]]
+  flush $::OUT
+}
+
+# A procedure to write the common header found on every HTML file on
+# the SQLite website.
+#
+proc PutsHeader {title {relpath {}}} {
+  puts {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">}
+  puts {<html><head>}
+  puts "<title>$title</title>"
+  putsin4 {<style type="text/css">
+    body {
+        max-width: 800px; /* not supported in IE 6 */
+        margin: auto;
+        font-family: "Verdana" "sans-serif";
+        padding: 8px 1%;
+    }
+    
+    a { color: #40534b }
+    a:visited { color: #587367 }
+    
+    .logo { position:absolute; margin:3px; }
+    .tagline {
+      float:right;
+      text-align:right;
+      font-style:italic;
+      width:240px;
+      margin:12px;
+      margin-top:58px;
+    }
+    
+    .toolbar {
+      background-color: #80a796;
+      position: relative;
+      font-variant: small-caps;
+      clear: both;
+      text-align: center;
+      line-height: 1.6em;
+      margin-bottom: 5px;
+      padding:1px 8px;
+      height:1%; /* IE hack to fix rounded corner positions */
+    }
+    .toolbar a { color: white; text-decoration: none; padding: 6px 4px; }
+    .toolbar a:visited { color: white; }
+    .toolbar a:hover { color: #80a796; background: white; }
+    
+    .content    { margin: 5%; }
+    .content dt { font-weight:bold; }
+    .content dd { margin-bottom: 25px; margin-left:20%; }
+    .content ul { padding:0px; padding-left: 15px; margin:0px; }
+    
+    /* rounded corners */
+    .se,.ne,.nw,.sw { position: absolute; width:8px; height:8px; 
+                      font-size:7px; /* IE hack to ensure height=8px */ }
+    .se  { background-image: url(${relpath}images/se.png);
+           bottom: 0px; right: 0px; }
+    .ne  { background-image: url(${relpath}images/ne.png);
+           top: 0px;    right: 0px; }
+    .sw  { background-image: url(${relpath}images/sw.png);
+           bottom: 0px; left: 0px; }
+    .nw  { background-image: url(${relpath}images/nw.png);
+           top: 0px;    left: 0px; }
+    </style>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  }
+  puts {</head>}
+  putsin4 {<body>
+    <div><!-- container div to satisfy validator -->
+    
+    <img class="logo" src="${relpath}images/SQLite.gif" alt="SQLite Logo">
+    <div><!-- IE hack to prevent disappearing logo--></div>
+    <div class="tagline">The World's Most Widely Used SQL Database.</div>
+    
+    <div class="toolbar">
+      <a href="${relpath}index.html">Home</a>
+      <a href="${relpath}about.html">About</a>
+      <a href="${relpath}docs.html">Documentation</a>
+      <a href="${relpath}download.html">Download</a>
+      <a href="${relpath}copyright.html">License</a>
+      <a href="${relpath}press.html">Advocacy</a>
+      <a href="${relpath}devhome.html">Developers</a>
+      <a href="${relpath}news.html">News</a>
+      <a href="${relpath}support.html">Support</a>
+      <!-- rounded corners -->
+      <div class="ne"></div><div class="se"></div><div class="nw">
+      </div><div class="sw"></div>
+    </div>
+  }
+}
+
+# A procedure to write the common footer found at the bottom of
+# every HTML file.  $srcfile is the name of the file that is the
+# source of the HTML content.  The modification time of this file
+# is used to add the "last modified on" line at the bottom of the
+# file.
+#
+proc PutsFooter {srcfile} {
+  puts {<hr><small><i>}
+  set mtime [file mtime $srcfile]
+  set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
+  puts "This page last modified $date"
+  puts {</i></small></div></body></html>}
 }
 
 # The following proc is used to ensure consistent formatting in the 
@@ -60,6 +174,8 @@ proc Syntax {args} {
   puts {</table>}
 }
 
+# Loop over all input files and process them one by one
+#
 foreach infile [lrange $argv 3 end] {
   cd $HOMEDIR
   real_puts "Processing $infile"
@@ -71,90 +187,11 @@ foreach infile [lrange $argv 3 end] {
   regsub {<title>[^\n]*</title>} $in {} in
   set outfile [file root [file tail $infile]].html
   set ::OUT [open $::DEST/$outfile w]
-  puts {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">}
-  puts {<html><head>}
-  puts "<title>$title</title>"
-  puts {<style type="text/css">
-    body {
-        max-width: 800px; /* not supported in IE 6 */
-        margin: auto;
-        font-family: "Verdana" "sans-serif";
-        padding: 8px 1%;
-    }
-    
-    a { color: #4F7263 }
-    a:visited { color: #80a796 }
-    
-    .logo { position:absolute; margin:3px; }
-    .tagline {
-      float:right;
-      text-align:right;
-      font-style:italic;
-      width:240px;
-      margin:12px;
-      margin-top:58px;
-    }
-    
-    .toolbar {
-      background-color: #80a796;
-      position: relative;
-      font-variant: small-caps;
-      clear: both;
-      text-align: center;
-      line-height: 1.6em;
-      margin-bottom: 50px;
-      padding:1px 8px;
-      height:1%; /* IE hack to fix rounded corner positions */
-    }
-    .toolbar a { color: white; text-decoration: none; padding: 6px 4px; }
-    .toolbar a:visited { color: white; }
-    .toolbar a:hover { color: #80a796; background: white; }
-    
-    .content    { margin: 5%; }
-    .content dt { font-weight:bold; }
-    .content dd { margin-bottom: 25px; margin-left:20%; }
-    .content ul { padding:0px; padding-left: 15px; margin:0px; }
-    
-    /* rounded corners */
-    .se,.ne,.nw,.sw { position: absolute; width:8px; height:8px; 
-                      font-size:7px; /* IE hack to ensure height=8px */ }
-    .se             { background-image: url(se.png); bottom: 0px; right: 0px; }
-    .ne             { background-image: url(ne.png); top: 0px;    right: 0px; }
-    .sw             { background-image: url(sw.png); bottom: 0px; left: 0px; }
-    .nw             { background-image: url(nw.png); top: 0px; left: 0px; }
-    </style>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  }
-  puts {</head>}
-  puts {<body>
-    <div><!-- container div to satisfy validator -->
-    
-    <img class="logo" src="http://www.sqlite.org/SQLite.gif" alt="SQLite Logo">
-    <div><!-- IE hack to prevent disappearing logo--></div>
-    <div class="tagline">The World's Most Used SQL Database.</div>
-    
-    <div class="toolbar">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="docs.html">Documentation</a>
-      <a href="download.html">Download</a>
-      <a href="copyright.html">License</a>
-      <a href="press.html">Advocacy</a>
-      <a href="devhome.html">Developers</a>
-      <a href="news.html">News</a>
-      <a href="support.html">Support</a>
-      <!-- rounded corners -->
-      <div class="ne"></div><div class="se"></div><div class="nw"></div><div class="sw"></div>
-    </div>
-  }
+  PutsHeader $title
   regsub -all {<tcl>} $in "\175; eval \173" in
   regsub -all {</tcl>} $in "\175; puts \173" in
   eval "puts \173$in\175"
   cd $::HOMEDIR
-  puts {<hr><small><i>}
-  set mtime [file mtime $infile]
-  set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
-  puts "This page last modified $date"
-  puts {</i></small></div></body></html>}
+  PutsFooter $infile
   close $::OUT
 }

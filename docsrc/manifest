@@ -1,12 +1,36 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-C Complete\sreorganization\sof\sthe\sdocumentation\ssources.
-D 2007-11-12T15:32:09
+C Fix\sthe\srounded\sedges\son\sthe\smenu\sbar.
+D 2007-11-13T12:57:04
 F Makefile 14e99084f2371e5f75c2b7649127fdc7b0158204
 F art/arch.fig d5f9752a4dbf242e9cfffffd3f5762b6c63b3bcf
 F art/arch2.fig ae2432145c26cfa148fa0116589517ad3cd5fc65
 F art/arch2b.fig d22a2c9642d584b89d4088b1e51e2bb0f7c04bed
+F images/ac/commit-0.gif 5220025f893460e80372b8f8e40452ecb998a0da
+F images/ac/commit-1.gif a702a435fed8bc7e979d1402ef96314ba69ae240
+F images/ac/commit-2.gif 15235a2006ab9d15fdd79d3dd2733f9f6dc1e04f
+F images/ac/commit-3.gif 5f4a0cae53178490b6831e283974ede2f5a5de81
+F images/ac/commit-4.gif 22e50d6df685fd58b6a0b002975a704eadf3261a
+F images/ac/commit-5.gif f2c55496a56be95d0db8c72c11516c93d0150584
+F images/ac/commit-6.gif 8987c51401a2ad910462bde390c883a7cea89ddf
+F images/ac/commit-7.gif 5848bc2f90e41c3c707d6ae4c8fde7b826489879
+F images/ac/commit-8.gif 9bfa59a558358740c00e07aa31ba7324083641de
+F images/ac/commit-9.gif bfdbbfee653d71bea4193b8218a70de8a6e891dd
+F images/ac/commit-A.gif 2e9df8f6888f63fad3d7a9da2e02f77b8bd9eb44
+F images/ac/commit-B.gif 7a0f1c930b53bd8c9896b497d2cb9df81b85ef3a
+F images/ac/multi-0.gif 753e0152a618b097a26ad13cbf5da6c8ce0c92fb
+F images/ac/multi-1.gif e2e2e2b6f41f275f448608b09f62dbfafe9d9ced
+F images/ac/multi-2.gif 3209fb30ccd9e1304a3be8a41b5e122385622827
+F images/ac/multi-3.gif 2d67bbc65caa7a0af373daa4e677f57a733f3122
+F images/ac/multi-4.gif d08a7ddef2fbf0168b91b544a8610fd6d178ae4b
+F images/ac/multi-5.gif 9728ad1092d1e75eabcbf229018dfb60967c54fd
+F images/ac/rollback-0.gif fd636213efd07f11438081cbbd0b34e324bb04cf
+F images/ac/rollback-1.gif 41890f1e7fcf021f6eb4f2644ec1f30149c35e7c
+F images/ac/rollback-2.gif 03154391964793e981a9a1059b5a3d993a082c2d
+F images/ac/rollback-3.gif 3c265e9339329bbb1055a8ef8afab56abbc6d1a7
+F images/ac/rollback-4.gif fa2c0bef7c9f2ded203d2ef6335c74a571b92826
+F images/ac/rollback-5.gif cd808f166ff70fd4b403294984012bff221702f5
 F images/arch.gif f845a64772062e82d17980a349f95f1f0b4c8054
 F images/arch.png 82ef36db1143828a7abc88b1e308a5f55d4336f4
 F images/arch2.gif 6f2d47c4e0c5842c0d6b5513fd8249393d7c7003
@@ -37,17 +61,17 @@ F images/se.png c759f60c5516d6b63d5f9321a6b2e57340986953
 F images/shared.gif 265bae80c5b311c5a86e47662821076ffaf5c6ea
 F images/sw.png ecbc26d3dd81437ae59e0ae4a1695cf3b620a4b4
 F images/table-ex1b2.gif a588d21a2d88bb2a2ef0431fcc5ed5aa48c0bbc5
-F main.mk 23480a66b1b9dfa60d1b9a04eb40c7c0cc61330d
+F main.mk 8eab47bd5b14282db4e5ea03fb3ac3f4780f907f
 F pages/34to35.in f52a5b59a893806ad5300f0fd268e93d6a633300
-F pages/about.in f64982d415e9e3319a099a33a3c46257e2e22629
+F pages/about.in cc7a3b274fea6234456c250633f49702f7c74b44
 F pages/arch.in b586617e3b3914a83f30be6a6a501f58d586d02a
+F pages/atomiccomit.in 0d50121d0ab8577e3b64534688800657cc4b52cc
 F pages/audit.in d000823e45b19e028624c543ff999576d81a23fd
 F pages/autoinc.in 38cbd1332f54a57281d4f15a419265b9429621fe
 F pages/c_interface.in ed8a907d8488789c4074ee9e39d41bca0f23c08b
 F pages/capi3.in 246a67bba09a380517f8b6513bec449fa662a5b7
-F pages/capi3ref.in cd8877a9065970928f6eed159d5ed77b7c2e35dc
+F pages/capi3ref.in 7375f3a3ddf9400ee2485b0f07c7909d020fec98
 F pages/changes.in a791ac011368bab722a7cdac61f833762abe2286
-F pages/companiesusing.in c2f322387d8d2af2d869a402191e6326166dfe76
 F pages/compile.in 1c0c8863daf858a65abafcbe9074c6b76879aede
 F pages/conflict.in 509ebc7d9124337cdc951215b2e4a6a80611dd8f
 F pages/copyright.in d32738ebf2afd3f1a0f8fcafe8a658dbd928517a
@@ -57,40 +81,45 @@ F pages/different.in 17f03c13eeba0151d8054b2319f8e2b7202fc7bc
 F pages/docs.in 9ab690f73546836925a8970d618387e3109f5ecb
 F pages/download.in a6d12fb090178c3b179d38b4b1973bf83b8db9ed
 F pages/dynload.in 30c47014de5336cde5a4407b3949633681340db7
+F pages/famous.in 4d2f07980bbac430e2fc2532481c743d5ee0558c
 F pages/faq.in fb6c3a1d7d42f0fac9532f09f54156ee6939371d
 F pages/fileformat.in 7078bdee7527a1360eba5b06196e0c39b2c949b2
 F pages/formatchng.in 2c122d5882c9ea0aa9ef607cabae2a49b87c9cc9
-F pages/index.in de20f02e4b927c7cd500b62747cbf8ea87330fc6
+F pages/index.in 0a78c0f8d3d0215b1e392041dd7fa3243df566b4
 F pages/lang.in a8e0d4a36d2f7f98b31249ff7938e4f58ae5918e
 F pages/limits.in 2f759cc455e8977a9674ca6401cbed70cf1afe4c
 F pages/lockingv3.in 6d2d81ce9ac8a840cb5a0cb4ccfc48d6ea20225a
 F pages/mingw.in d1e1564cbe5afe4f79e1de4909f4f2d3ea9dcee4
 F pages/nulls.in bb9341b54c8283db46bb12d3002db3270330df2e
 F pages/oldnews.in f88f629856e8dd45ac67c0262070e75ea570e3b6
-F pages/omitted.in cda0cca12b023abf3f1736ab83d5d792e690980f
+F pages/omitted.in 5cffbe7adcc4cdb460c226a6ec9a5d6a4758696d
 F pages/opcode.in 80c893697c5f1ba618214c8eb1df7229e55e6dd8
 F pages/optoverview.in b468ea60db569e7a25fd03ee0019c335cdb8e23c
 F pages/pragma.in 38ba8c81d7cbc81a6380d2fa0469a8e34eaf2f15
 F pages/quickstart.in 1a56b6c3c868d66902699dfaf6e13d0a7d3b3f88
+F pages/selfcontained.in e5911b1d1ef68a00867dd57804e48c64277cad9d
+F pages/serverless.in ed750663d4f4978f8ec77b0fcc0ca50c47cb8c66
 F pages/sharedcache.in 5bbc746d77855cab797a16b845af95a79c99a959
 F pages/speed.in 4cbccd8a64c9cc421152b92df930d46a6fe95c9f
 F pages/sqlite.in 2201d01111574a9a78896df4b4d3e8cfd59eac5d
 F pages/support.in 9f94a7a1e8a2ac6a82595836856c850b5a36119c
 F pages/tclsqlite.in cd8f36059bf90b113920005966d15cb88c8fab60
+F pages/transactional.in 4f11bb8c44aeaf722f4713e0ab46505fee8c21be
 F pages/vdbe.in f34290a62ea42f47834a22b76c3c204ec3243784
 F pages/version3.in 178e5c139581d01c38fc0631bab5336fe0c7da13
-F pages/whentouse.in 678d7b8e42e572358bbf7c2a4d629b222f63950d
+F pages/whentouse.in df6e45bfcf83158001a3d758031515a5b03be728
+F pages/zeroconf.in dcd83b87564ccd74782b7eb8cf3552e77ef8f861
 F rawpages/copyright-release.html 294e011760c439c44951a6bfecd4c81a1ae359e8
 F rawpages/copyright-release.pdf cfca3558fc97095e57c6117d08f1f5b80d95125a
-F wrap.tcl 86655f93d976d7ca97a5bca5585dd9c1075dfe21
-P 6dc1e6a1f3422b941ab4c87097d338e6d6dac259
-R 95bf2eaafa6d322149c80fbcb231a194
+F wrap.tcl 227b24267799c5d296c2a83718b8a349d49f39eb
+P 6d275a3ac362b5df85ca05c525a747803c4974f0
+R 8223836d623c44d9544f9171eb0bb124
 U drh
-Z 2107e6262e06cf8382c7234dfb22443d
+Z b298ce304c69a77ec6cd6136eb85720d
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD8DBQFHOHH8oxKgR168RlERAhYiAJ9d/ZrsZxzi7EejBhinE3ywyX2aAQCfZQSH
-nr98MeFzDDhUiJ2vjJ6ykMQ=
-=JbXQ
+iD8DBQFHOZ8koxKgR168RlERAnVKAJsHexICR1iVKoJug+w8xziMvSGE0ACeIXTl
+T0RSea46XU7HWKpaD1mvzmU=
+=R2O9
 -----END PGP SIGNATURE-----

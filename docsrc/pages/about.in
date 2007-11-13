@@ -13,7 +13,7 @@ SQL database engine.
 <p><ul>
 <li><a href="transactional.html">Transactions</a>
     are atomic, consistent, isolated, and durable (ACID)
-    even after system crashes and power failures.
+    even after system crashes and power failures.</li>
 <li><a href="zeroconf.html">Zero-configuration</a>
      - no setup or administration needed.</li>
 <li>Implements most of SQL92.
@@ -29,7 +29,7 @@ SQL database engine.
     than 150KiB with optional features omitted.</li>
 <li><a href="speed.html">Faster</a> than popular client/server database
     engines for most common operations.</li>
-<li>Simple, easy to use <a href="capi3.html">API</a>.</li>
+<li>Simple, easy to use <a href="c3ref/intro.html">API</a>.</li>
 <li><a href="tclsqlite.html">TCL bindings</a> included.
     Bindings for many other languages 
     <a href="http://www.sqlite.org/cvstrac/wiki?p=SqliteWrappers">

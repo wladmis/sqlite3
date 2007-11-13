@@ -37,9 +37,10 @@ capi3ref.html:	$(DOC)/mkapidoc.tcl sqlite3.h
 docdir:
 	mkdir -p doc 
 
-doc:	docdir always
+doc:	sqlite3.h docdir always
 	rm -rf doc/images
 	cp -r $(DOC)/images doc
+	cp $(SRC)/art/*.gif doc/images
 	cp $(DOC)/rawpages/* doc
 	tclsh $(DOC)/wrap.tcl $(DOC) $(SRC) doc $(DOC)/pages/*.in
 
@@ -47,4 +48,4 @@ always:
 
 
 clean:	
-	rm -f doc sqlite3.h
+	rm -rf doc sqlite3.h
