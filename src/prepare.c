@@ -637,6 +637,9 @@ int sqlite3Reprepare(Vdbe *p){
   assert( sqlite3_mutex_held(db->mutex) );
   rc = sqlite3LockAndPrepare(db, zSql, -1, 0, &pNew, 0);
   if( rc ){
+    if( rc==SQLITE_NOMEM ){
+      db->mallocFailed = 1;
+    }
     assert( pNew==0 );
     return 0;
   }else{
