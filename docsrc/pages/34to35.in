@@ -5,20 +5,6 @@ proc CODE {text} {
   puts $text
   puts "</pre></blockquote>"
 }
-proc SYNTAX {text} {
-  puts "<blockquote><pre>"
-  set t2 [string map {& &amp; < &lt; > &gt;} $text]
-  regsub -all "/(\[^\n/\]+)/" $t2 {</b><i>\1</i><b>} t3
-  puts "<b>$t3</b>"
-  puts "</pre></blockquote>"
-}
-proc IMAGE {name {caption {}}} {
-  puts "<center><img src=\"$name\">"
-  if {$caption!=""} {
-    puts "<br>$caption"
-  }
-  puts "</center>"
-}
 proc PARAGRAPH {text} {
   # regsub -all "/(\[a-zA-Z0-9\]+)/" $text {<i>\1</i>} t2
   #regsub -all "\\*(\[^\n*\]+)\\*" $text {<tt><b><big>\1</big></b></tt>} t3

@@ -296,7 +296,7 @@ METHOD cache {
 
 <p>
 The "eval" method described <a href="#eval">above</a> keeps a cache of
-<a href="capi3ref.html#sqlite3_prepare">prepared statements</a>
+<a href="c3ref/prepare.html">prepared statements</a>
 for recently evaluated SQL commands.  
 The "cache" method is used to control this cache.
 The first form of this command is:</p>
@@ -317,7 +317,7 @@ to 0, no caching is done.</p>
 </blockquote>
 
 <p>The cache-flush method 
-<a href="capi3ref.html#sqlite3_finalize">finalizes</a>
+<a href="c3ref/finalize.html">finalizes</a>
 all prepared statements currently
 in the cache.</p>
 
@@ -334,7 +334,7 @@ there is more to be entered.</p>
 <p>The "complete" method is useful when building interactive applications
 in order to know when the user has finished entering a line of SQL code.
 This is really just an interface to the 
-<a href="capi3ref.html#sqlite3_complete"><b>sqlite3_complete()</b></a> C
+<a href="c3ref/complete.html"><b>sqlite3_complete()</b></a> C
 function.
 }
 
@@ -533,7 +533,7 @@ current database connection was first opened.</p>
 METHOD authorizer {
 
 <p>The "authorizer" method provides access to the 
-<a href="capi3ref.html#sqlite3_set_authorizer">sqlite3_set_authorizer</a>
+<a href="c3ref/set_authorizer.html">sqlite3_set_authorizer</a>
 C/C++ interface.  The argument to authorizer is the name of a procedure that
 is called when SQL statements are being compiled in order to authorize
 certain operations.  The callback procedure takes 5 arguments which describe
@@ -636,7 +636,7 @@ into a preexisting BLOB in the database.  The syntax is like this:</p>
 <p>
 The command returns a new TCL channel for reading or writing to the BLOB.
 The channel is opened using the underlying 
-<a href="/capi3ref.html#sqlite3_blob_open">sqlite3_blob_open()</a> C-langauge
+<a href="c3ref/blob_open.html">sqlite3_blob_open()</a> C-langauge
 interface.  Close the channel using the <b>close</b> command of TCL.
 </p>
 }

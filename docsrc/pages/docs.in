@@ -33,8 +33,11 @@ doc {SQL Syntax} {lang.html} {
   This document describes the SQL language that is understood by
   SQLite.  
 }
-doc {Version 3 C/C++ API<br>Reference} {capi3ref.html} {
+doc {Version 3 C/C++ API<br>Reference} {c3ref/intro.html} {
   This document describes each API function separately.
+}
+doc {Frequently Asked Questions} {faq.html} {
+  The title of the document says all...
 }
 doc {Sharing Cache Mode} {sharedcache.html} {
   Version 3.3.0 and later supports the ability for two or more
@@ -45,7 +48,7 @@ doc {Tcl API} {tclsqlite.html} {
   A description of the TCL interface bindings for SQLite.
 }
 
-doc {How SQLite Implements Atomic Commit} {ac/atomiccommit.html} {
+doc {How SQLite Implements Atomic Commit} {atomiccommit.html} {
   A description of the logic within SQLite that implements
   transactions with atomic commit, even in the face of power
   failures.

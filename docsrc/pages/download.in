@@ -1,6 +1,6 @@
 <title>SQLite Download Page</title>
 
-<h2>SQLite Download Page</h1>
+<h2>SQLite Download Page</h2>
 <table width="100%" cellpadding="5">
 
 <tcl>
@@ -22,6 +22,11 @@ proc Product {pattern desc} {
       set size [format %.2f [expr {$size/(1024.0)}]]
       set units KiB
     }
+    global pending_heading
+    if {$pending_heading!=""} {
+      puts "<tr><td colspan=\"4\"><b>$pending_heading</b></td></tr>"
+      set pending_heading {}
+    }
     puts "<tr><td width=\"10\"></td>"
     puts "<td valign=\"top\" align=\"right\">"
     puts "<a href=\"$file\">$file</a><br>($size $units)</td>"
@@ -33,7 +38,8 @@ proc Product {pattern desc} {
 cd $::DEST
 
 proc Heading {title} {
-  puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
+  set ::pending_heading $title
+  # puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
 }
 
 Heading {Precompiled Binaries for Linux}

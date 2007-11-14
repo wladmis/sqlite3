@@ -42,7 +42,7 @@ within Mac OS-X, including
 <a href="http://www.apple.com/macosx/features/mail.html">Apple Mail</a>, 
 <a href="http://www.apple.com/macosx/features/safari.html">Safari</a>, 
 and in <a href="http://www.apple.com/aperature/">Aperture</a>.
-There are reports on the internet that Apple also uses SQLite in
+There are unconfirmed reports on the internet that Apple also uses SQLite in
 the <a href="http://www.apple.com/iphone/">iPhone</a> and in the
 <a href="http://www.apple.com/ipodtouch/">iPod touch</a>.
 </td></tr>
@@ -55,8 +55,8 @@ the <a href="http://www.apple.com/iphone/">iPhone</a> and in the
 <td>
 The <a href="http://www.mozilla.com/">Firefox Web Browser</a> from Mozilla 
 has been slowly replacing their legacy file format "mork" with SQLite
-for about two years.  At this point, SQLite is used to store most of
-the persistent metadata in SQLite.
+for about two years.  At this point, SQLite is used to store most
+persistent metadata in Firefox.
 </td></tr>
 
 

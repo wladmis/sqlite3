@@ -51,7 +51,7 @@ shared-caches or regular database users is described elsewhere.
 
 <table style="margin:auto">
 <tr><td>
-<img src="shared.gif">
+<img src="images/shared.gif">
 <!-- <pre>
             +--------------+      +--------------+
             | Connection 2 |      | Connection 3 |

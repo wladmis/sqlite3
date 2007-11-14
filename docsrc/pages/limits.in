@@ -111,7 +111,7 @@ that are O(N&sup2;) where N is the number of columns.
 So if you redefine SQLITE_MAX_COLUMN to be a
 really huge number and you generate SQL that uses a large number of
 columns, you may find that 
-<a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a>
+<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
 runs slowly.
 }
 
@@ -137,7 +137,7 @@ INSERT INTO tab1 VALUES(?,?,?);
 
 <p>
 Then use the
-<a href="capi3ref.html#sqlite3_bind_text">sqlite3_bind_XXXX()</a> functions
+<a href="c3ref/bind_blob.html">sqlite3_bind_XXXX()</a> functions
 to bind your large string values to the SQL statement.  The use of binding
 obviates the need to escape quote characters in the string, reducing the
 risk of SQL injection attacks.  It is also runs faster since the large
@@ -221,7 +221,7 @@ limititem {Maximum Number Of Host Parameters In A Single SQL Statement} {
 <p>
 A host parameter is a place-holder in an SQL statement that is filled
 in using one of the
-<a href="capi3ref.html#sqlite3_bind_blob">sqlite3_bind_XXXX()</a> interfaces.
+<a href="c3ref/bind_blob.html">sqlite3_bind_XXXX()</a> interfaces.
 Many SQL programmers are familiar with using a question mark ("?") as a
 host parameter.  SQLite also supports named host parameters prefaced
 by ":", "$", or "@" and numbered host parameters of the form "?123".

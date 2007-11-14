@@ -47,7 +47,7 @@ proc putsin4 {text} {
 # A procedure to write the common header found on every HTML file on
 # the SQLite website.
 #
-proc PutsHeader {title {relpath {}}} {
+proc PutsHeader {title {path {}}} {
   puts {<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">}
   puts {<html><head>}
   puts "<title>$title</title>"
@@ -73,17 +73,13 @@ proc PutsHeader {title {relpath {}}} {
     }
     
     .toolbar {
-      background-color: #80a796;
-      position: relative;
       font-variant: small-caps;
-      clear: both;
       text-align: center;
       line-height: 1.6em;
-      margin-bottom: 5px;
+      margin: 0;
       padding:1px 8px;
-      height:1%; /* IE hack to fix rounded corner positions */
     }
-    .toolbar a { color: white; text-decoration: none; padding: 6px 4px; }
+    .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
     .toolbar a:visited { color: white; }
     .toolbar a:hover { color: #80a796; background: white; }
     
@@ -93,16 +89,11 @@ proc PutsHeader {title {relpath {}}} {
     .content ul { padding:0px; padding-left: 15px; margin:0px; }
     
     /* rounded corners */
-    .se,.ne,.nw,.sw { position: absolute; width:8px; height:8px; 
-                      font-size:7px; /* IE hack to ensure height=8px */ }
-    .se  { background-image: url(${relpath}images/se.png);
-           bottom: 0px; right: 0px; }
-    .ne  { background-image: url(${relpath}images/ne.png);
-           top: 0px;    right: 0px; }
-    .sw  { background-image: url(${relpath}images/sw.png);
-           bottom: 0px; left: 0px; }
-    .nw  { background-image: url(${relpath}images/nw.png);
-           top: 0px;    left: 0px; }
+    .se  { background: url(${path}images/se.png) 100% 100% no-repeat #80a796}
+    .sw  { background: url(${path}images/sw.png) 0% 100% no-repeat }
+    .ne  { background: url(${path}images/ne.png) 100% 0% no-repeat }
+    .nw  { background: url(${path}images/nw.png) 0% 0% no-repeat }
+
     </style>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   }
@@ -110,24 +101,25 @@ proc PutsHeader {title {relpath {}}} {
   putsin4 {<body>
     <div><!-- container div to satisfy validator -->
     
-    <img class="logo" src="${relpath}images/SQLite.gif" alt="SQLite Logo">
+    <a href="${path}index.html">
+    <img class="logo" src="${path}images/SQLite.gif" alt="SQLite Logo"
+     border="0"></a>
     <div><!-- IE hack to prevent disappearing logo--></div>
     <div class="tagline">The World's Most Widely Used SQL Database.</div>
     
-    <div class="toolbar">
-      <a href="${relpath}index.html">Home</a>
-      <a href="${relpath}about.html">About</a>
-      <a href="${relpath}docs.html">Documentation</a>
-      <a href="${relpath}download.html">Download</a>
-      <a href="${relpath}copyright.html">License</a>
-      <a href="${relpath}press.html">Advocacy</a>
-      <a href="${relpath}devhome.html">Developers</a>
-      <a href="${relpath}news.html">News</a>
-      <a href="${relpath}support.html">Support</a>
-      <!-- rounded corners -->
-      <div class="ne"></div><div class="se"></div><div class="nw">
-      </div><div class="sw"></div>
-    </div>
+    <table width=100% style="clear:both"><tr><td>
+      <div class="se"><div class="sw"><div class="ne"><div class="nw">
+      <div class="toolbar">
+        <a href="${path}index.html">Home</a>
+        <a href="${path}sitemap.html">Sitemap</a>
+        <a href="${path}docs.html">Documentation</a>
+        <a href="${path}download.html">Download</a>
+        <a href="${path}copyright.html">License</a>
+        <a href="${path}news.html">News</a>
+        <a href="http://www.sqlite.org/cvstrac/index">Developers</a>
+        <a href="${path}support.html">Support</a>
+      </div></div></div></div></div>
+    </td></tr></table>
   }
 }
 

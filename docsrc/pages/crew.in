@@ -1,0 +1,29 @@
+<title>SQLite Developers</title>
+
+<h2>The SQLite Development Team</h2>
+
+<img src="images/drh1.jpg" align="left" hspace="25" vspace="0">
+<p>
+<b>D. Richard Hipp</b> began the SQLite project in on 2000-May-29
+and continues to serve as the project architect.  Richard was born,
+lives, and works in 
+<a href="http://en.wikipedia.org/wiki/Charlotte,_North_Carolina">Charlotte,
+North Carolina.</a>  He holds degrees from
+<a href="http://www.gatech.edu/">Georgia Tech</a> (MSEE, 1984) and
+<a href="http://www.duke.edu/">Duke University</a> (PhD, 1992) and is
+the founder of the consulting firm
+<a href="http://www.hwaci.com/">Hwaci</a>.</p>
+
+<br clear="both"></br>
+<hr>
+
+<img src="images/dan1.jpg" align="left" hspace="25" vspace="0">
+<p>
+<b>Dan Kennedy</b> is an Australian currently based in South-East Asia.
+He holds a degree in Computer System Engineering from the University of
+Queensland and has worked in a variety of fields, including industrial
+automation, computer graphics and embedded software development.
+Dan has been a key contributor to SQLite since 2002.
+</p>
+
+<br clear="both"></br>

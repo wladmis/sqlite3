@@ -41,7 +41,7 @@ INSERT INTO t1 VALUES((SELECT max(a) FROM t1)+1,123);
 </pre></blockquote>
 
   <p>There is a new API function named
-  <a href="capi3ref.html#sqlite3_last_insert_rowid">
+  <a href="c3ref/last_insert_rowid.html">
   sqlite3_last_insert_rowid()</a> which will return the integer key
   for the most recent insert operation.</p>
 
@@ -150,8 +150,8 @@ faq {
   <p>When SQLite tries to access a file that is locked by another
   process, the default behavior is to return SQLITE_BUSY.  You can
   adjust this behavior from C code using the 
-  <a href="capi3ref.html#sqlite3_busy_handler">sqlite3_busy_handler()</a> or
-  <a href="capi3ref.html#sqlite3_busy_timeout">sqlite3_busy_timeout()</a>
+  <a href="c3ref/busy_handler.html">sqlite3_busy_handler()</a> or
+  <a href="c3ref/busy_timeout.html">sqlite3_busy_timeout()</a>
   API functions.</p>
 }
 
@@ -163,13 +163,13 @@ faq {
   and linux precompiled binaries in the distribution are compiled this way.
   If you are unsure if the SQLite library you are linking against is compiled
   to be threadsafe you can call the
-  <a href="capi3ref.html#sqlite3_threadsafe">sqlite3_threadsafe()</a>
+  <a href="c3ref/threadsafe.html">sqlite3_threadsafe()</a>
   interface to find out.
   </p>
 
   <p>Prior to version 3.3.1,
   an <b>sqlite3</b> structure could only be used in the same thread
-  that called <a href="capi3ref.html#sqlite3_open">sqlite3_open</a>
+  that called <a href="c3ref/open.html">sqlite3_open</a>
   to create it.
   You could not open a
   database in one thread then pass the handle off to another thread for
@@ -354,14 +354,14 @@ faq {What is an SQLITE_SCHEMA error, and why am I getting one?} {
   prepared SQL statement is no longer valid and cannot be executed.
   When this occurs, the statement must be recompiled from SQL using 
   the 
-  <a href="capi3ref.html#sqlite3_prepare">sqlite3_prepare()</a> API.
+  <a href="c3ref/prepare.html">sqlite3_prepare()</a> API.
   In SQLite version 3, an SQLITE_SCHEMA error can
   only occur when using the 
-  <a href="capi3ref.html#sqlite3_prepare">sqlite3_prepare()</a>/<a
-  href="capi3ref.html#sqlite3_step">sqlite3_step()</a>/<a
-  href="capi3ref.html#sqlite3_finalize">sqlite3_finalize()</a>
+  <a href="c3ref/prepare.html">sqlite3_prepare()</a>/<a
+  href="c3ref/step.html">sqlite3_step()</a>/<a
+  href="c3ref/finalize.html">sqlite3_finalize()</a>
   API to execute SQL, not when using the
-  <a href="capi3ref.html#sqlite3_exec">sqlite3_exec()</a>. This was not
+  <a href="c3ref/exec.html">sqlite3_exec()</a>. This was not
   the case in version 2.</p>
 
   <p>The most common reason for a prepared statement to become invalid
@@ -380,9 +380,9 @@ faq {What is an SQLITE_SCHEMA error, and why am I getting one?} {
   and attempt to execute it again. Because a prepared statement can be
   invalidated by another process changing the database schema, all code
   that uses the
-  <a href="capi3ref.html#sqlite3_prepare">sqlite3_prepare()</a>/<a
-  href="capi3ref.html#sqlite3_step">sqlite3_step()</a>/<a
-  href="capi3ref.html#sqlite3_finalize">sqlite3_finalize()</a>
+  <a href="c3ref/prepare.html">sqlite3_prepare()</a>/<a
+  href="c3ref/step.html">sqlite3_step()</a>/<a
+  href="c3ref/finalize.html">sqlite3_finalize()</a>
   API should be prepared to handle SQLITE_SCHEMA errors. An example
   of one approach to this follows:</p>
 

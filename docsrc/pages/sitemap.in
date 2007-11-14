@@ -1,0 +1,29 @@
+<title>SQLite Site Map</title>
+
+<h2>Site Map</h2>
+
+<ul>
+<li> <a href="index.html">Home Page</a>.
+     <ul>
+     <li> <a href="about.html">Feature List</a>. </li>
+     <li> <a href="famous.html">Well-known Users</a>. </li>
+     <li> <a href="crew.html">Developer Vitas</a>. </li>
+     </ul></li>
+<li> <a href="docs.html">Documentation</a>.
+     <ul>
+     <li> <a href="faq.html">Frequently Asked Questions</a>.</li>
+     <li> <a href="quickstart.html">SQLite In 5 Minutes Or Less</a>.</li>
+     <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a>.</li>
+     <li> <a href="lang.html">SQL Syntax</a>.</li>
+     <li> <a href="whentouse.html">Appropriate Uses For SQLite</a>.</li>
+     <li> <a href="different.html">Distinctive Features</a>.</li>
+     </ul></li>
+<li> <a href="download.html">Download</a>. </li>
+<li> <a href="copyright.html">License</a>. </li>
+<li> <a href="news.html">News</a>.
+     <ul>
+     <li> <a href="oldnews.html">Older news</a>. </li>
+     </ul></li>
+<li> <a href="http://www.sqlite.org/cvstrac/index.html">Developers</a>. </li>
+<li> <a href="support.html">Support</a>. </li>
+</ul>

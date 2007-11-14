@@ -347,7 +347,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     READ UNCOMMITTED isolation, but SERIALIZABLE will still be used except
     between connections that share a common page and schema cache.
     Cache sharing is enabled using the
-    <a href="capi3ref.html#sqlite3_enable_shared_cache">
+    <a href="c3ref/enable_shared_cache.html">
     sqlite3_enable_shared_cache()</a> API and is only available between
     connections running the same thread.  Cache sharing is off by default.
     </p>

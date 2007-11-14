@@ -12,13 +12,35 @@ http://www.sqlite.org/cvstrac/timeline</a>.
 proc chng {date desc} {
   if {[regexp {\(([0-9.]+)\)} $date all vers]} {
     set label [string map {. _} $vers]
-    puts "<A NAME=\"version_$label\">"
+    puts "<A NAME=\"version_$label\"></a>"
   }
   puts "<DT><B>$date</B></DT>"
   regsub -all {[Tt]icket #(\d+)} $desc \
       {<a href="http://www.sqlite.org/cvstrac/tktview?tn=\1">\0</a>} desc
   puts "<DD><P><UL>$desc</UL></P>"
   puts "</DD>"
+  if {[regexp {\(3\.\d+\.\d+\)} $date tag]} {
+    set tag [string map {. _} [string range $tag 1 end-1]]
+    global OUT DEST DOC
+    set saved_OUT $OUT
+    file mkdir $DEST/releaselog
+    set filename $DEST/releaselog/$tag.html
+    set OUT [open $filename w]
+    PutsHeader "SQLite Release $date" ../
+    puts "<h2>SQLite Release of $date</h2>"
+    puts "<p>Changes associated with this release include the following:</p>"
+    puts "<p><ul>$desc</ul></p>"
+    putsin4 {
+      <p>A <a href="../changes.html">complete list of SQLite releases</a>
+      in a single pages is also available.  A detailed history of every
+      check-in is available at
+      <a href="http://www.sqlite.org/cvstrac/timeline">
+      http://www.sqlite.org/cvstrac/timeline</a>.</p>
+    }
+    PutsFooter $DOC/pages/changes.in
+    close $OUT
+    set OUT $saved_OUT
+  }
 }
 
 chng {2007 Nov 05 (3.5.2)} {
@@ -61,17 +83,17 @@ chng {2007 Sep 04 (3.5.0) alpha} {
 <li>Redesign the OS interface layer.  See
     <a href="34to35.html">34to35.html</a> for details.
     <font color="red">*** Potentially incompatible change ***</font>
-<li>The <a href="capi3ref.html#sqlite3_release_memory">
+<li>The <a href="c3ref/release_memory.html">
     sqlite3_release_memory()</a>,
-    <a href="capi3ref.html#sqlite3_soft_heap_limit">
+    <a href="c3ref/soft_heap_limit.html">
     sqlite3_soft_heap_limit()</a>,
-    and <a href="capi3ref.html#sqlite3_enable_shared_cache">
+    and <a href="c3ref/enable_shared_cache.html">
     sqlite3_enable_shared_cache()</a> interfaces now work cross all
     threads in the process, not just the single thread in which they
     are invoked.
     <font color="red">*** Potentially incompatible change ***</font>
 <li>Added the 
-    <a href="capi3ref.html#sqlite3_open_v2">sqlite3_open_v2()</a>
+    <a href="c3ref/open.html">sqlite3_open_v2()</a>
     interface.  
 <li>Reimplemented the memory allocation subsystem and made it 
     replacable at compile-time.
@@ -85,12 +107,12 @@ chng {2007 Sep 04 (3.5.0) alpha} {
 chng {2007 August 13 (3.4.2)} {
 <li>Fix a database corruption bug that might occur if a ROLLBACK command
 is executed in <a href="pragma.html#pragma_auto_vacuum">auto-vacuum mode</a>
-and a very small <a href="capi3ref.html#sqlite3_soft_heap_limit">
+and a very small <a href="c3ref/soft_heap_limit.html">
 soft_heap_limit</a> is set. 
 <a href="http://www.sqlite.org/cvstrac/tktview?tn=2565">Ticket #2565</a>.
 
 <li>Add the ability to run a full regression test with a small
-<a href="capi3ref.html#sqlite3_soft_heap_limit">soft_heap_limit</a>.
+<a href="c3ref/soft_heap_limit.html">soft_heap_limit</a>.
 
 <li>Fix other minor problems with using small soft heap limits.
 
@@ -151,9 +173,9 @@ chng {2007 June 18 (3.4.0)} {
     compatibility problems for
     applications that use SQLite in the extreme, which is why the current
     release is 3.4.0 instead of 3.3.18.</li>
-<li>Added support for <a href="capi3ref.html#sqlite3_blob_open">
+<li>Added support for <a href="c3ref/blob_open.html">
     Incremental BLOB I/O</a>.</li>
-<li>Added the <a href="capi3ref.html#sqlite3_bind_zeroblob">zeroblob API</a>
+<li>Added the <a href="c3ref/bind_blob.html">zeroblob API</a>
     and the <a href="lang_expr.html#zeroblob">zeroblob()</a> SQL function.</li>
 <li>Added support for <a href="pragma.html#pragma_incremental_vacuum">
     Incremental Vacuum</a>.</li>
@@ -170,14 +192,14 @@ chng {2007 June 18 (3.4.0)} {
 <li>Fix the REPLACE() function so that it returns NULL if the second argument
     is an empty string.  Ticket #2324.</li>
 <li>Document the hazards of type coversions in
-    <a href="capi3ref.html#sqlite3_column_blob">sqlite3_column_blob()</a>
+    <a href="c3ref/column_blob.html">sqlite3_column_blob()</a>
     and related APIs.  Fix unnecessary type conversions.  Ticket #2321.</li>
 <li>Internationalization of the TRIM() function.  Ticket #2323</li>
 <li>Use memmove() instead of memcpy() when moving between memory regions
     that might overlap.  Ticket #2334</li>
 <li>Fix an optimizer bug involving subqueries in a compound SELECT that has
     both an ORDER BY and a LIMIT clause.  Ticket #2339.</li>
-<li>Make sure the <a href="capi3ref.html#sqlite3_snprintf">sqlite3_snprintf()
+<li>Make sure the <a href="c3ref/mprintf.html">sqlite3_snprintf()
     </a> interface does not zero-terminate the buffer if the buffer size is
     less than 1.  Ticket #2341</li>
 <li>Fix the built-in printf logic so that it prints "NaN" not "Inf" for
@@ -303,7 +325,7 @@ generates.</li>
 
 chng {2007 January 22 (3.3.11)} {
 <li>Fix another bug in the implementation of the new 
-<a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a> API.
+<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> API.
 We'll get it right eventually...</li>
 <li>Fix a bug in the IS NULL optimization that was added in version 3.3.9 -
 the bug was causing incorrect results on certain LEFT JOINs that included
@@ -315,7 +337,7 @@ support this function.</li>
 
 chng {2007 January 9 (3.3.10)} {
 <li>Fix bugs in the implementation of the new 
-<a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a> API
+<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> API
 that can lead to segfaults.</li>
 <li>Fix 1-second round-off errors in the 
 <a href="http://www.sqlite.org/cvstrac/wiki?p=DateAndTimeFunctions">
@@ -333,7 +355,7 @@ correctly set their column names in the result set</li>
 chng {2007 January 4 (3.3.9)} {
 <li>Fix bugs in pager.c that could lead to database corruption if two
 processes both try to recover a hot journal at the same instant</li>
-<li>Added the <a href="capi3ref.html#sqlite3_prepare_v2">sqlite3_prepare_v2()</a>
+<li>Added the <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
 API.</li>
 <li>Fixed the ".dump" command in the command-line shell to show
 indices, triggers and views again.</li>
@@ -386,7 +408,7 @@ chng {2006 August 12 (3.3.7)} {
 <a href="http://www.sqlite.org/cvstrac/wiki?p=LoadableExtensions">
 dynamically loaded extensions</a> (beta)</li>
 <li>The 
-<a href="capi3ref.html#sqlite3_interrupt">sqlite3_interrupt()</a>
+<a href="c3ref/interrupt.html">sqlite3_interrupt()</a>
 routine can be called for a different thread</li>
 <li>Added the <a href="lang_expr.html#match">MATCH</a> operator.</li>
 <li>The default file format is now 1.  

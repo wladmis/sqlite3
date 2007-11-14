@@ -1,8 +1,8 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-C Fix\sthe\srounded\sedges\son\sthe\smenu\sbar.
-D 2007-11-13T12:57:04
+C Fix\sa\sword\shere\sand\sthere.\s\sNothing\smajor.
+D 2007-11-14T15:37:46
 F Makefile 14e99084f2371e5f75c2b7649127fdc7b0158204
 F art/arch.fig d5f9752a4dbf242e9cfffffd3f5762b6c63b3bcf
 F art/arch2.fig ae2432145c26cfa148fa0116589517ad3cd5fc65
@@ -34,7 +34,9 @@ F images/ac/rollback-5.gif cd808f166ff70fd4b403294984012bff221702f5
 F images/arch.gif f845a64772062e82d17980a349f95f1f0b4c8054
 F images/arch.png 82ef36db1143828a7abc88b1e308a5f55d4336f4
 F images/arch2.gif 6f2d47c4e0c5842c0d6b5513fd8249393d7c7003
+F images/dan1.jpg 2039d698cbf81e5d956728b64830778062c6c3c4
 F images/direct1b.gif 32b48b764244817b6b591898dc52a04299a7b8a7
+F images/drh1.jpg ecf4e33a3fb4a146ea6938fc588d3094f5365d24
 F images/foreignlogos/adobe.gif 22cda21254a2cdeb8a6255c9b0c7f45c04b2b8d6
 F images/foreignlogos/apple.gif 893fb4c38405a867b36c91db2356164a9addba4e
 F images/foreignlogos/firefox.gif c9aa7a663f232b49b0f628d82b345721eb0db486
@@ -62,64 +64,71 @@ F images/shared.gif 265bae80c5b311c5a86e47662821076ffaf5c6ea
 F images/sw.png ecbc26d3dd81437ae59e0ae4a1695cf3b620a4b4
 F images/table-ex1b2.gif a588d21a2d88bb2a2ef0431fcc5ed5aa48c0bbc5
 F main.mk 8eab47bd5b14282db4e5ea03fb3ac3f4780f907f
-F pages/34to35.in f52a5b59a893806ad5300f0fd268e93d6a633300
-F pages/about.in cc7a3b274fea6234456c250633f49702f7c74b44
-F pages/arch.in b586617e3b3914a83f30be6a6a501f58d586d02a
-F pages/atomiccomit.in 0d50121d0ab8577e3b64534688800657cc4b52cc
+F misc/althttpd.c 6ae4819e9055cf825ff295b9184224efff402764
+F pages/34to35.in c004f02864a4207ce2e0e6560bb3d7acc2dca4b1
+F pages/about.in 1828bc319884c5c9132ac65f8d04783c94f971d3
+F pages/amalgamation.in 4b61ba9f81291dcb1975dde9d65c9d8db01dc1b9
+F pages/arch.in a8a0df078ef88fcae2c17fc3fd3e07693a07026b
+F pages/atomiccommit.in 3f3fbcb168a438ffdf439d96f2f1bf06005c01ba
 F pages/audit.in d000823e45b19e028624c543ff999576d81a23fd
 F pages/autoinc.in 38cbd1332f54a57281d4f15a419265b9429621fe
 F pages/c_interface.in ed8a907d8488789c4074ee9e39d41bca0f23c08b
 F pages/capi3.in 246a67bba09a380517f8b6513bec449fa662a5b7
 F pages/capi3ref.in 7375f3a3ddf9400ee2485b0f07c7909d020fec98
-F pages/changes.in a791ac011368bab722a7cdac61f833762abe2286
-F pages/compile.in 1c0c8863daf858a65abafcbe9074c6b76879aede
+F pages/changes.in 7bd1653a7972a528cb588eb366fefd97907cdb55
+F pages/compile.in 4a33dc758cbb87f23616b640fd94c01ec8169959
 F pages/conflict.in 509ebc7d9124337cdc951215b2e4a6a80611dd8f
-F pages/copyright.in d32738ebf2afd3f1a0f8fcafe8a658dbd928517a
+F pages/copyright.in 0984569ea8619c5a54575c9e8c7959fc6fccae25
+F pages/crew.in b4454a475c7c2b14ebc2e42da65b9f6f5fd2c883
 F pages/datatype3.in adc47b58e96229a2582e2885419409d6c5a73c6a
 F pages/datatypes.in d699067fb0777aa8bceb4b37ac2d734aa9195c9b
-F pages/different.in 17f03c13eeba0151d8054b2319f8e2b7202fc7bc
-F pages/docs.in 9ab690f73546836925a8970d618387e3109f5ecb
-F pages/download.in a6d12fb090178c3b179d38b4b1973bf83b8db9ed
+F pages/different.in 6606d446eb7b5cd83bcab432c0f53f965c7c426a
+F pages/docs.in 84ea8e63895b1e20810affcc39fa8809fdc312a7
+F pages/download.in 446528f89a4694e2da9752eb11aaa11fb693a7fe
 F pages/dynload.in 30c47014de5336cde5a4407b3949633681340db7
-F pages/famous.in 4d2f07980bbac430e2fc2532481c743d5ee0558c
-F pages/faq.in fb6c3a1d7d42f0fac9532f09f54156ee6939371d
+F pages/famous.in 729b0082ef1c98df2ed264908c17bf44e381012f
+F pages/faq.in 28539bc42dd37de1e19d8e4b7ab57c8ef67784dd
 F pages/fileformat.in 7078bdee7527a1360eba5b06196e0c39b2c949b2
 F pages/formatchng.in 2c122d5882c9ea0aa9ef607cabae2a49b87c9cc9
-F pages/index.in 0a78c0f8d3d0215b1e392041dd7fa3243df566b4
-F pages/lang.in a8e0d4a36d2f7f98b31249ff7938e4f58ae5918e
-F pages/limits.in 2f759cc455e8977a9674ca6401cbed70cf1afe4c
+F pages/index.in 027648e769bfd8338f0312b733d31fcb3a671640
+F pages/lang.in 7383dec5e1d200efbba3f80f5d3d81925261b400
+F pages/limits.in b043ff4eb5d88cc33a4ec585b1f9e16e57b84645
 F pages/lockingv3.in 6d2d81ce9ac8a840cb5a0cb4ccfc48d6ea20225a
 F pages/mingw.in d1e1564cbe5afe4f79e1de4909f4f2d3ea9dcee4
+F pages/news.in 0709a0ae96f301e2c3f2aa6642678bbd9a2195b8
 F pages/nulls.in bb9341b54c8283db46bb12d3002db3270330df2e
-F pages/oldnews.in f88f629856e8dd45ac67c0262070e75ea570e3b6
+F pages/oldnews.in 2fc75f74bd8192b1253974bee752bce6226882cb
 F pages/omitted.in 5cffbe7adcc4cdb460c226a6ec9a5d6a4758696d
 F pages/opcode.in 80c893697c5f1ba618214c8eb1df7229e55e6dd8
-F pages/optoverview.in b468ea60db569e7a25fd03ee0019c335cdb8e23c
-F pages/pragma.in 38ba8c81d7cbc81a6380d2fa0469a8e34eaf2f15
+F pages/optoverview.in 402536bc7bac8c13ba567470ce9c81592af16348
+F pages/pragma.in 4248fe5bac8b70ffc2d3bf2d1508c79b28bd2abc
 F pages/quickstart.in 1a56b6c3c868d66902699dfaf6e13d0a7d3b3f88
 F pages/selfcontained.in e5911b1d1ef68a00867dd57804e48c64277cad9d
 F pages/serverless.in ed750663d4f4978f8ec77b0fcc0ca50c47cb8c66
-F pages/sharedcache.in 5bbc746d77855cab797a16b845af95a79c99a959
+F pages/sharedcache.in bec5da0d1bf94b1ca4917a3bff122522db7ed877
+F pages/sitemap.in a968157c4432eecec95170e1b1e907caf8ff52d9
 F pages/speed.in 4cbccd8a64c9cc421152b92df930d46a6fe95c9f
 F pages/sqlite.in 2201d01111574a9a78896df4b4d3e8cfd59eac5d
 F pages/support.in 9f94a7a1e8a2ac6a82595836856c850b5a36119c
-F pages/tclsqlite.in cd8f36059bf90b113920005966d15cb88c8fab60
+F pages/tclsqlite.in 89d4d193e22cf53cfdc9fa022b9be9570cadf3ba
 F pages/transactional.in 4f11bb8c44aeaf722f4713e0ab46505fee8c21be
 F pages/vdbe.in f34290a62ea42f47834a22b76c3c204ec3243784
 F pages/version3.in 178e5c139581d01c38fc0631bab5336fe0c7da13
-F pages/whentouse.in df6e45bfcf83158001a3d758031515a5b03be728
+F pages/whentouse.in 303ab69f23a704cdb6300a2f26bd6584a0795740
 F pages/zeroconf.in dcd83b87564ccd74782b7eb8cf3552e77ef8f861
 F rawpages/copyright-release.html 294e011760c439c44951a6bfecd4c81a1ae359e8
 F rawpages/copyright-release.pdf cfca3558fc97095e57c6117d08f1f5b80d95125a
-F wrap.tcl 227b24267799c5d296c2a83718b8a349d49f39eb
-P 6d275a3ac362b5df85ca05c525a747803c4974f0
-R 8223836d623c44d9544f9171eb0bb124
+F rawpages/favicon.ico 188d00cc15997fdc214990dac6c62825d7ffe818
+F rawpages/robots.txt 715230254e3239103278ed730be882807950e2ef
+F wrap.tcl dfa6cb083985cc5f9ec443d46c105ba10df94b69
+P 0f974e5b8a59b46dcc57966b772dccac7a9d14da
+R 2cefb8dddbedba1959d8a818a3eac41b
 U drh
-Z b298ce304c69a77ec6cd6136eb85720d
+Z b4e6335482a0870f3cad390ea8af3950
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD8DBQFHOZ8koxKgR168RlERAnVKAJsHexICR1iVKoJug+w8xziMvSGE0ACeIXTl
-T0RSea46XU7HWKpaD1mvzmU=
-=R2O9
+iD8DBQFHOxZNoxKgR168RlERAqiCAKCE26RLePzDezBgKS/v1losyNAB0ACeO71e
+dCPjAbf4HWd5RM/JGPchOuE=
+=TTfJ
 -----END PGP SIGNATURE-----

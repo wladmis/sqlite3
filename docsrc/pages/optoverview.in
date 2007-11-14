@@ -13,13 +13,6 @@ proc SYNTAX {text} {
   puts "<b>$t3</b>"
   puts "</pre></blockquote>"
 }
-proc IMAGE {name {caption {}}} {
-  puts "<center><img src=\"$name\">"
-  if {$caption!=""} {
-    puts "<br>$caption"
-  }
-  puts "</center>"
-}
 proc PARAGRAPH {text} {
   # regsub -all "/(\[a-zA-Z0-9\]+)/" $text {<i>\1</i>} t2
   regsub -all "\\*(\[^\n*\]+)\\*" $text {<tt><b><big>\1</big></b></tt>} t3

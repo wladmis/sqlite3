@@ -46,32 +46,16 @@ As it turns out, situations where simplicity is the better choice
 are more common than many people realize.
 </p>
 
+<p>
+Another way to look at SQLite is this:  SQLite is not designed
+to replacement <a href="http://www.oracle.com/database/index.html">Oracle</a>.
+It is designed to replacement
+<a href="http://man.he.net/man3/fopen">fopen()</a>.
+</p>
+
 <h2>Situations Where SQLite Works Well</h2>
 
 <ul>
-<li><p><b>Websites</b></p>
-
-<p>SQLite usually will work great as the database engine for low to
-medium traffic websites (which is to say, 99.9% of all websites).
-The amount of web traffic that SQLite can handle depends, of course,
-on how heavily the website uses its database.  Generally
-speaking, any site that gets fewer than a 100000 hits/day should work
-fine with SQLite.
-The 100000 hits/day figure is a conservative estimate, not a
-hard upper bound.
-SQLite has been demonstrated to work with 10 times that amount
-of traffic.</p>
-</li>
-
-<li><p><b>Embedded devices and applications</b></p>
-
-<p>Because an SQLite database requires little or no administration,
-SQLite is a good choice for devices or services that must work
-unattended and without human support.  SQLite is a good fit for
-use in cellphones, PDAs, set-top boxes, and/or appliances.  It also
-works well as an embedded database in downloadable consumer applications.
-</p>
-</li>
 
 <a name="appfileformat"></a>
 <li><p><b>Application File Format</b></p>
@@ -96,9 +80,36 @@ in surprising little code.
 </p>
 </li>
 
+<li><p><b>Embedded devices and applications</b></p>
+
+<p>Because an SQLite database requires little or no administration,
+SQLite is a good choice for devices or services that must work
+unattended and without human support.  SQLite is a good fit for
+use in cellphones, PDAs, set-top boxes, and/or appliances.  It also
+works well as an embedded database in downloadable consumer applications.
+</p>
+</li>
+
+<li><p><b>Websites</b></p>
+
+<p>SQLite usually will work great as the database engine for low to
+medium traffic websites (which is to say, 99.9% of all websites).
+The amount of web traffic that SQLite can handle depends, of course,
+on how heavily the website uses its database.  Generally
+speaking, any site that gets fewer than a 100000 hits/day should work
+fine with SQLite.
+The 100000 hits/day figure is a conservative estimate, not a
+hard upper bound.
+SQLite has been demonstrated to work with 10 times that amount
+of traffic.</p>
+</li>
+
 <li><p><b>Replacement for <i>ad hoc</i> disk files</b></p>
 
-<p>Many programs use fopen(), fread(), and fwrite() to create and
+<p>Many programs use 
+<a href="http://man.he.net/man3/fopen">fopen()</a>,
+<a href="http://man.he.net/man3/fread">fread()</a>, and 
+<a href="http://man.he.net/man3/fwrite">fwrite()</a> to create and
 manage files of data in home-grown formats.  SQLite works 
 particularly well as a
 replacement for these <i>ad hoc</i> data files.</p>

@@ -86,7 +86,7 @@ library. Executing an ALTER TABLE statement causes a parse error.
 
 <p><b>SQLITE_OMIT_AUTHORIZATION</b><br>
 Defining this option omits the authorization callback feature from the
-library. The <a href="capi3ref.html#sqlite3_set_authorizer">
+library. The <a href="c3ref/set_authorizer.html">
 sqlite3_set_authorizer()</a> API function is not present in the library.
 </p>
 
@@ -101,27 +101,20 @@ is automatically opened in read-only mode.
 </p>
 
 <p><b>SQLITE_OMIT_AUTOINCREMENT</b><br>
-This option is used to omit the AUTOINCREMENT functionality. When this 
+This option is used to omit the 
+<a href="autoinc.html">AUTOINCREMENT</a> functionality. When this 
 is macro is defined, columns declared as "INTEGER PRIMARY KEY AUTOINCREMENT"
 behave in the same way as columns declared as "INTEGER PRIMARY KEY" when a 
 NULL is inserted. The sqlite_sequence system table is neither created, nor
 respected if it already exists.
 </p>
-<p><i>TODO: Need a link here - AUTOINCREMENT is not yet documented</i><p>
 
 <p><b>SQLITE_OMIT_BLOB_LITERAL</b><br>
 When this option is defined, it is not possible to specify a blob in
 an SQL statement using the X'ABCD' syntax.</p> 
-}
-#<p>WARNING: The VACUUM command depends on this syntax for vacuuming databases
-#that contain blobs, so disabling this functionality may render a database
-#unvacuumable.
-#</p>
-#<p><i>TODO: Need a link here - is that syntax documented anywhere?</i><p>
-puts {
 
 <p><b>SQLITE_OMIT_COMPLETE</b><br>
-This option causes the <a href="capi3ref.html#sqlite3_complete">
+This option causes the <a href="c3ref/complete.html">
 sqlite3_complete</a> API to be omitted.
 </p>
 
@@ -196,7 +189,7 @@ in other sub-systems. This macro removes the PRAGMA command only.
 <p><b>SQLITE_OMIT_PROGRESS_CALLBACK</b><br>
 This option may be defined to omit the capability to issue "progress" 
 callbacks during long-running SQL statements. The 
-<a href="capi3ref.html#sqlite3_progress_handler">sqlite3_progress_handler()</a>
+<a href="c3ref/progress_handler.html">sqlite3_progress_handler()</a>
 API function is not present in the library.
 
 <p><b>SQLITE_OMIT_REINDEX</b><br>
@@ -223,11 +216,11 @@ database schema version and user version from the build. Specifically, the
 pragmas are omitted.
 
 <p><b>SQLITE_OMIT_SUBQUERY</b><br>
-<p>If defined, support for sub-selects and the IN() operator are omitted.
+If defined, support for sub-selects and the IN() operator are omitted.
 </p>
 
 <p><b>SQLITE_OMIT_TCL_VARIABLE</b><br>
-<p>If this macro is defined, then the special "$<variable-name>" syntax
+If this macro is defined, then the special "$<variable-name>" syntax
 used to automatically bind SQL variables to TCL variables is omitted.
 </p>
 

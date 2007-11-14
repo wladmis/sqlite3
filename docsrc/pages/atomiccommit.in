@@ -560,7 +560,7 @@ SQLite as if the aborted transaction had never begun.</p>
 <h2>5.0 Multi-file Commit</h2>
 
 <p>SQLite allows a single 
-<a href="/capi3ref.html#sqlite3">database connection</a> to talk to
+<a href="c3ref/sqlite3.html">database connection</a> to talk to
 two or more database files simultaneously through the use of
 the <a href="/lang_attach.html">ATTACH DATABASE</a> command.
 When multiple database files are modified within a single
@@ -606,7 +606,7 @@ any new information, so they are omitted here.</p>
 "master journal" file.  The name of the master journal file is
 the same name as the original database filename (the database
 that was opened using the 
-<a href="capi3ref.html#sqlite3_open">sqlite3_open()</a> interface,
+<a href="c3ref/open.html">sqlite3_open()</a> interface,
 not one of the <a href="lang_attach.html">ATTACHed</a> auxiliary
 databases) with the text "<b>-mj</b><i>HHHHHHHH</i>" appended where
 <i>HHHHHHHH</i> is a random 32-bit hexadecimal number.  The

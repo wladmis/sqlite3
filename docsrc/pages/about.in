@@ -1,6 +1,6 @@
 <h2>About SQLite</h2>
 <p>
-SQLite is a small C library that implements a
+SQLite is a in-process library that implements a
 <a href="selfcontained.html">self-contained</a>, 
 <a href="serverless.html">serverless</a>,
 <a href="zeroconf.html">zero-configuration</a>,
@@ -18,9 +18,8 @@ SQL database engine.
      - no setup or administration needed.</li>
 <li>Implements most of SQL92.
     (<a href="omitted.html">Features not supported</a>)</li>
-<li>A complete database is stored in a single disk file.</li>
-<li>Database files can be freely shared between machines with
-    different byte orders.</li>
+<li>A complete database is stored in a 
+    <a href="onefile.html">single cross-platform disk file</a>.</li>
 <li>Supports terabyte-sized databases and gigabyte-sized strings
     and blobs.  (See <a href="limits.html">limits.html</a>.)
 <li>Small code footprint: 
@@ -30,23 +29,22 @@ SQL database engine.
 <li><a href="speed.html">Faster</a> than popular client/server database
     engines for most common operations.</li>
 <li>Simple, easy to use <a href="c3ref/intro.html">API</a>.</li>
-<li><a href="tclsqlite.html">TCL bindings</a> included.
-    Bindings for many other languages 
+<li>Written in ANSI-C.  <a href="tclsqlite.html">TCL bindings</a> included.
+    Bindings for dozens of other languages 
     <a href="http://www.sqlite.org/cvstrac/wiki?p=SqliteWrappers">
     available separately.</a></li>
 <li>Well-commented source code with over 98% test coverage.</li>
 <li>Available as a 
-    <a href="http://www.sqlite.org/cvstrac/wiki?p=TheAmalgamation">
-    single ANSI-C source-code file</a> that you can easily drop into
-    another project.
+    <a href="amalgamation.html">single ANSI-C source-code file</a> 
+    that you can easily drop into another project.
 <li><a href="selfcontained.html">Self-contained</a>:
     no external dependencies.</li>
 <li>Cross-platform: Linux (unix), MacOSX, OS/2, Win32 and WinCE are supported
     out of the box.  Easy to port to other systems.
 <li>Sources are in the <a href="copyright.html">public domain</a>.
     Use for any purpose.</li>
-<li>Comes with a standalone command-line interface (CLI) client that
-    can be used to administer SQLite databases.</li>
+<li>Comes with a standalone <a href="sqlite.html">command-line interface</a>
+    (CLI) client that can be used to administer SQLite databases.</li>
 </ul>
 </p>
 
@@ -58,7 +56,7 @@ Rather than using fopen() to write XML or some proprietary format into
 disk files used by your application, use an SQLite database instead.
 You'll avoid having to write and troubleshoot a parser, your data
 will be more easily accessible and cross-platform, your updates
-will transactional.</p><li>
+will transactional.</p></li>
 
 <li><p><b>Database For Gadgets.</b>
 SQLite is popular choice for the database engine in cellphones,
