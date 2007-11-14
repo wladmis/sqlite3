@@ -1595,6 +1595,23 @@ int sqlite3_prepare16_v2(
 );
 
 /*
+** Retrieve the original SQL statement associated with a compiled statement
+** in UTF-8 encoding.
+**
+** If the compiled SQL statement passed as an argument was compiled using
+** either sqlite3_prepare_v2 or sqlite3_prepare16_v2, then this function
+** returns a pointer to a nul-terminated string containing a copy of
+** the original SQL statement. The pointer is valid until the statement
+** is deleted using sqlite3_finalize().
+**
+** If the statement was compiled using either of the legacy interfaces 
+** sqlite3_prepare() or sqlite3_prepare16(), this function returns NULL.
+** 
+****** EXPERIMENTAL - subject to change without notice **************
+*/
+const char *sqlite3_sql(sqlite3_stmt *pStmt);
+
+/*
 ** CAPI3REF:  Dynamically Typed Value Object
 **
 ** SQLite uses dynamic typing for the values it stores.  Values can 
