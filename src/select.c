@@ -248,10 +248,7 @@ static void addWhereTerm(
     ExprSetProperty(pE, EP_FromJoin);
     pE->iRightJoinTable = iRightJoinTable;
   }
-  pE = sqlite3ExprAnd(pParse->db,*ppExpr, pE);
-  if( pE ){
-    *ppExpr = pE;
-  }
+  *ppExpr = sqlite3ExprAnd(pParse->db,*ppExpr, pE);
 }
 
 /*
