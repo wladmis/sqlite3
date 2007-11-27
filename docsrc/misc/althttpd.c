@@ -420,6 +420,7 @@ static struct Suffix {
 } suffix[] = {
   {  5,     ".html",    "text/html" },
   {  4,     ".htm",     "text/html" },
+  {  4,     ".css",     "text/css"  },
   {  4,     ".gif",     "image/gif" },
   {  5,     ".jpeg",    "image/jpeg" },
   {  4,     ".jpg",     "image/jpeg" },
@@ -579,6 +580,7 @@ void ProcessOneRequest(int forceClose){
 
   /* Get all the optional fields that follow the first line.
   */
+  zCookie = 0;
   while( fgets(zLine,sizeof(zLine),stdin) ){
     char *zFieldName;
     char *zVal;

@@ -93,6 +93,18 @@ Product sqlite*_analyzer-V3.bin.gz {
   version VERSION and later.
 }
 
+Heading {Precompiled Binaries For Mac OSX}
+
+Product sqlite3-V3-osx-x86.bin.gz {
+  A command-line program for accessing and modifying SQLite version 3.*
+  databases.  For x86 Macs only.
+}
+
+Product sqlite*_analyzer-V3-osx-x86.bin.gz {
+  An analysis program for database files compatible with SQLite 
+  version VERSION and later.
+}
+
 Heading {Precompiled Binaries For Windows}
 
 Product sqlite-V3.zip {
@@ -166,6 +178,14 @@ Product {sqlite-V3.kit} {
   A <a href="http://www.equi4.com/starkit.html">starkit</a> containing
   precompiled SQLite binaries and Tcl bindings for Linux-x86, Windows,
   and Mac OS-X ppc and x86.
+}
+
+Heading {Documentation}
+
+Product {sqlite_docs_V3.zip} {
+  This ZIP archive contains most of the static HTML files that
+  comprise this website, including all of the SQL Syntax and the
+  C/C++ interface specs and other miscellaneous documentation.
 }
 
 Heading {Historical Binaries And Source Code}

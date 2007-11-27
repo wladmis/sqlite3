@@ -58,7 +58,12 @@ foreach {section} [lsort -index 0 -dictionary {
   {{ANALYZE} analyze}
 }] {
   foreach {s_title s_tag} $section {}
-  puts "<li><a href=\"lang_$s_tag.html\">$s_title</a></li>"
+  if {$s_tag=="pragma.html"} {
+    set url $s_tag
+  } else {
+    set url lang_$s_tag.html
+  }
+  puts "<li><a href=\"$url\">$s_title</a></li>"
   incr i
   if {$i==15} {
     puts "</ul></td><td valign=\"top\"><ul>"
@@ -169,8 +174,8 @@ then only indices associated with that one table are analyzed.</p>
 table named <b>sqlite_stat1</b>.  Future enhancements may create
 additional tables with the same name pattern except with the "1"
 changed to a different digit.  The <b>sqlite_stat1</b> table cannot
-be <a href="#droptable">DROP</a>ped,
-but all the content can be <a href="#delete">DELETE</a>d which has the
+be <a href="lang_droptable.html">DROP</a>ped,
+but all the content can be <a href="lang_delete.html">DELETE</a>d which has the
 same effect.</p>
 
 <tcl>
@@ -186,7 +191,7 @@ file to the current database connection.  If the filename contains
 punctuation characters it must be quoted.  The names 'main' and 
 'temp' refer to the main database and the database used for 
 temporary tables.  These cannot be detached.  Attached databases 
-are removed using the <a href="#detach">DETACH DATABASE</a> 
+are removed using the <a href="lang_detach.html">DETACH DATABASE</a> 
 statement.</p>
 
 <p>You can read from and write to an attached database and you
@@ -256,7 +261,7 @@ command.  Such transactions usually persist until the next
 COMMIT or ROLLBACK command.  But a transaction will also 
 ROLLBACK if the database is closed or if an error occurs
 and the ROLLBACK conflict resolution algorithm is specified.
-See the documentation on the <a href="#conflict">ON CONFLICT</a>
+See the documentation on the <a href="lang_conflict.html">ON CONFLICT</a>
 clause for additional information about the ROLLBACK
 conflict resolution algorithm.
 </p>
@@ -424,7 +429,7 @@ SQLite's internal representation of the index layout.</p>
 <p>If the optional IF NOT EXISTS clause is present and another index
 with the same name aleady exists, then this command becomes a no-op.</p>
 
-<p>Indexes are removed with the <a href="#dropindex">DROP INDEX</a> 
+<p>Indexes are removed with the <a href="lang_dropindex.html">DROP INDEX</a> 
 command.</p>
 
 
@@ -545,7 +550,7 @@ If an COPY, INSERT, or UPDATE command specifies a different conflict
 resolution algorithm, then that algorithm is used in place of the
 default algorithm specified in the CREATE TABLE statement.
 See the section titled
-<a href="#conflict">ON CONFLICT</a> for additional information.</p>
+<a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
 
 <p>CHECK constraints are supported as of version 3.3.0.  Prior
 to version 3.3.0, CHECK constraints were parsed but not enforced.</p>
@@ -576,7 +581,7 @@ The text of CREATE TEMPORARY TABLE statements are stored in the
 <p>If the optional IF NOT EXISTS clause is present and another table
 with the same name aleady exists, then this command becomes a no-op.</p>
 
-<p>Tables are removed using the <a href="#droptable">DROP TABLE</a> 
+<p>Tables are removed using the <a href="lang_droptable.html">DROP TABLE</a> 
 statement.  </p>
 
 <tcl>
@@ -731,8 +736,8 @@ the statement that caused the trigger program to execute and any subsequent
     resumes execution at the beginning of the next step.
 </p>
 
-<p>Triggers are removed using the <a href="#droptrigger">DROP TRIGGER</a>
-statement.</p>
+<p>Triggers are removed using the 
+<a href="lang_droptrigger.html">DROP TRIGGER</a> statement.</p>
 
 
 <tcl>
@@ -745,7 +750,7 @@ CREATE [TEMP | TEMPORARY] VIEW [IF NOT EXISTS] [<database-name>.] <view-name> AS
 </tcl>
 
 <p>The CREATE VIEW command assigns a name to a pre-packaged 
-<a href="#select">SELECT</a>
+<a href="lang_select.html">SELECT</a>
 statement.  Once the view is created, it can be used in the FROM clause
 of another SELECT in place of a table name.
 </p>
@@ -762,9 +767,10 @@ database name is specified, and the TEMP keyword is not present,
 the table is created in the main database.</p>
 
 <p>You cannot COPY, DELETE, INSERT or UPDATE a view.  Views are read-only 
-in SQLite.  However, in many cases you can use a <a href="#createtrigger">
-TRIGGER</a> on the view to accomplish the same thing.  Views are removed 
-with the <a href="#dropview">DROP VIEW</a> 
+in SQLite.  However, in many cases you can use a 
+<a href="lang_createtrigger.html">TRIGGER</a> on the view to accomplish 
+the same thing.  Views are removed 
+with the <a href="lang_dropview.html">DROP VIEW</a> 
 command.</p>
 
 <tcl>
@@ -794,13 +800,13 @@ The module takes zero or more comma-separated arguments.
 The arguments can be just about any text as long as it has balanced
 parentheses.  The argument syntax is sufficiently general that the
 arguments can be made to appear as column definitions in a traditional
-<a href="#createtable">CREATE TABLE</a> statement.  
+<a href="lang_createtable.html">CREATE TABLE</a> statement.  
 SQLite passes the module arguments directly
 to the module without any interpretation.  It is the responsibility
 of the module implementation to parse and interpret its own arguments.</p>
 
 <p>A virtual table is destroyed using the ordinary
-<a href="#droptable">DROP TABLE</a> statement.  There is no
+<a href="lang_droptable.html">DROP TABLE</a> statement.  There is no
 DROP VIRTUAL TABLE statement.</p>
 
 <tcl>
@@ -831,8 +837,8 @@ DETACH [DATABASE] <database-name>
 </tcl>
 
 <p>This statement detaches an additional database connection previously 
-attached using the <a href="#attach">ATTACH DATABASE</a> statement.  It
-is possible to have the same database file attached multiple times using 
+attached using the <a href="lang_attach.html">ATTACH DATABASE</a> statement.  
+It is possible to have the same database file attached multiple times using 
 different names, and detaching one connection to a file will leave the 
 others intact.</p>
 
@@ -849,7 +855,7 @@ DROP INDEX [IF EXISTS] [<database-name> .] <index-name>
 </tcl>
 
 <p>The DROP INDEX statement removes an index added
-with the <a href="#createindex">
+with the <a href="lang_createindex.html">
 CREATE INDEX</a> statement.  The index named is completely removed from
 the disk.  The only way to recover the index is to reenter the
 appropriate CREATE INDEX command.</p>
@@ -857,7 +863,8 @@ appropriate CREATE INDEX command.</p>
 <p>The DROP INDEX statement does not reduce the size of the database 
 file in the default mode.
 Empty space in the database is retained for later INSERTs.  To 
-remove free space in the database, use the <a href="#vacuum">VACUUM</a> 
+remove free space in the database, 
+use the <a href="lang_vacuum.html">VACUUM</a> 
 command.  If AUTOVACUUM mode is enabled for a database then space
 will be freed automatically by DROP INDEX.</p>
 
@@ -872,7 +879,7 @@ DROP TABLE [IF EXISTS] [<database-name>.] <table-name>
 </tcl>
 
 <p>The DROP TABLE statement removes a table added with the <a href=
-"#createtable">CREATE TABLE</a> statement.  The name specified is the
+"lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
 table name.  It is completely removed from the database schema and the 
 disk file.  The table can not be recovered.  All indices associated 
 with the table are also deleted.</p>
@@ -880,7 +887,8 @@ with the table are also deleted.</p>
 <p>The DROP TABLE statement does not reduce the size of the database 
 file in the default mode.  Empty space in the database is retained for
 later INSERTs.  To 
-remove free space in the database, use the <a href="#vacuum">VACUUM</a> 
+remove free space in the database, 
+use the <a href="lang_vacuum.html">VACUUM</a> 
 command.  If AUTOVACUUM mode is enabled for a database then space
 will be freed automatically by DROP TABLE.</p>
 
@@ -896,7 +904,7 @@ DROP TRIGGER [IF EXISTS] [<database-name> .] <trigger-name>
 </tcl>
 
 <p>The DROP TRIGGER statement removes a trigger created by the 
-<a href="#createtrigger">CREATE TRIGGER</a> statement.  The trigger is 
+<a href="lang_createtrigger.html">CREATE TRIGGER</a> statement.  The trigger is 
 deleted from the database schema. Note that triggers are automatically 
 dropped when the associated table is dropped.</p>
 
@@ -910,7 +918,7 @@ DROP VIEW [IF EXISTS] <view-name>
 </tcl>
 
 <p>The DROP VIEW statement removes a view created by the <a href=
-"#createview">CREATE VIEW</a> statement.  The name specified is the 
+"lang_createview.html">CREATE VIEW</a> statement.  The name specified is the 
 view name.  It is removed from the database schema, but no actual data 
 in the underlying base tables is modified.</p>
 
@@ -1569,9 +1577,10 @@ or compound.</p>
 <p>The optional conflict-clause allows the specification of an alternative
 constraint conflict resolution algorithm to use during this one command.
 See the section titled
-<a href="#conflict">ON CONFLICT</a> for additional information.
+<a href="lang_conflict.html">ON CONFLICT</a> for additional information.
 For compatibility with MySQL, the parser allows the use of the
-single keyword <a href="#replace">REPLACE</a> as an alias for "INSERT OR REPLACE".
+single keyword <a href="lange_replace.html">REPLACE</a> as an 
+alias for "INSERT OR REPLACE".
 </p>
 
 <tcl>
@@ -1693,9 +1702,10 @@ REPLACE INTO [<database-name> .] <table-name> [( <column-list> )] <select-statem
 </tcl>
 
 <p>The REPLACE command is an alias for the "INSERT OR REPLACE" variant
-of the <a href="#insert">INSERT</a> command.  This alias is provided for
+of the <a href="lang_insert.html">INSERT</a> command.  
+This alias is provided for
 compatibility with MySQL.  See the 
-<a href="#insert">INSERT</a> command documentation for additional
+<a href="lang_insert.html">INSERT</a> command documentation for additional
 information.</p>  
 
 <tcl>
@@ -1831,7 +1841,7 @@ A WHERE clause can be used to restrict which rows are updated.</p>
 <p>The optional conflict-clause allows the specification of an alternative
 constraint conflict resolution algorithm to use during this one command.
 See the section titled
-<a href="#conflict">ON CONFLICT</a> for additional information.</p>
+<a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
 
 
 <tcl>

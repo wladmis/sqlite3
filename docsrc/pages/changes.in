@@ -43,6 +43,28 @@ proc chng {date desc} {
   }
 }
 
+chng {2007 Nov 27 (3.5.3)} {
+<li>Move website and documentation files out of the source tree into
+a <a href="http://www.sqlite.org/docsrc/">separate CM system</a>.
+<li>Fix a long-standing bug in INSERT INTO ... SELECT ... statements
+where the SELECT is compound.
+<li>Fix a long-standing bug in RAISE(IGNORE) as used in BEFORE triggers.
+<li>Fixed the operator precedence for the ~ operator.
+<li>On win32, do not return an error when attempting to delete a file
+that does not exist.
+<li>Allow collating sequence names to be quoted.
+<li>Modify the TCL interfacde to use sqlite3_prepare_v2().
+<li>Fix multiple bugs that can occur following a malloc() failure.
+<li>sqlite3_step() returns SQLITE_MISUSE instead of crashing when
+called with a NULL parameter.
+<li>FTS3 now uses the SQLite memory allocator exclusively.  The
+FTS3 amalgamation can now be appended to the SQLite amalgamation to
+generate a super-amalgamation containing both.
+<li>The DISTINCT keyword now will sometimes use an INDEX if an
+appropriate index is available and the optimizer thinks its use
+might be advantageous.
+}
+
 chng {2007 Nov 05 (3.5.2)} {
 <li>Dropped support for the SQLITE_OMIT_MEMORY_ALLOCATION compile-time
 option.

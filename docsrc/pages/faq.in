@@ -158,7 +158,12 @@ faq {
 faq {
   Is SQLite threadsafe?
 } {
-  <p>Yes.  Sometimes.  In order to be thread-safe, SQLite must be compiled
+  <p><a href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2006/EECS-2006-1.pdf">
+  Threads are evil</a>.  Avoid them.
+
+  <p>SQLite is threadsafe.  We make this concession since many users choose
+  to ignore the advice given in the previous paragraph.
+  But in order to be thread-safe, SQLite must be compiled
   with the SQLITE_THREADSAFE preprocessor macro set to 1.  Both the windows
   and linux precompiled binaries in the distribution are compiled this way.
   If you are unsure if the SQLite library you are linking against is compiled

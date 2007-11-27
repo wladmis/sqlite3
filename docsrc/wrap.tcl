@@ -53,14 +53,13 @@ proc PutsHeader {title {path {}}} {
   puts "<title>$title</title>"
   putsin4 {<style type="text/css">
     body {
-        max-width: 800px; /* not supported in IE 6 */
         margin: auto;
         font-family: "Verdana" "sans-serif";
         padding: 8px 1%;
     }
     
-    a { color: #40534b }
-    a:visited { color: #587367 }
+    a { color: #45735f }
+    a:visited { color: #734559 }
     
     .logo { position:absolute; margin:3px; }
     .tagline {
@@ -105,12 +104,12 @@ proc PutsHeader {title {path {}}} {
     <img class="logo" src="${path}images/SQLite.gif" alt="SQLite Logo"
      border="0"></a>
     <div><!-- IE hack to prevent disappearing logo--></div>
-    <div class="tagline">The World's Most Widely Used SQL Database.</div>
+    <div class="tagline">Small, Fast, Reliable.<br>Choose any three.</div>
     
     <table width=100% style="clear:both"><tr><td>
       <div class="se"><div class="sw"><div class="ne"><div class="nw">
       <div class="toolbar">
-        <a href="${path}index.html">Home</a>
+        <a href="${path}about.html">About</a>
         <a href="${path}sitemap.html">Sitemap</a>
         <a href="${path}docs.html">Documentation</a>
         <a href="${path}download.html">Download</a>
