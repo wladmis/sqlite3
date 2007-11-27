@@ -127,11 +127,13 @@ static int readsTable(Vdbe *v, int iStartAddr, int iDb, Table *pTab){
         }
       }
     }
+#ifndef SQLITE_OMIT_VIRTUALTABLE
     if( pOp->opcode==OP_VOpen && pOp->p3==(const char*)pTab->pVtab ){
       assert( pOp->p3!=0 );
       assert( pOp->p3type==P3_VTAB );
       return 1;
     }
+#endif
   }
   return 0;
 }
