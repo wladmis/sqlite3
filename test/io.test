@@ -443,14 +443,8 @@ do_test io-4.2.1 {
 } {1}
 if {$::tcl_platform(platform)=="unix"} {
   do_test io-4.2.2 {
-    set fd [open test.db-journal]
-    fconfigure $fd -translation binary -encoding binary
-    seek $fd 8
-    set blob [read $fd 4]
-    close $fd
-    binary scan $blob i res
-    format 0x%X $res
-  } {0xFFFFFFFF}
+    hexio_read test.db-journal 8 4
+  } {FFFFFFFF}
 }
 do_test io-4.2.3 {
   execsql { COMMIT }
