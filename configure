@@ -18434,7 +18434,7 @@ if test "$enable_releasemode" = "no"; then
   echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6
 else
-  ALLOWRELEASE="-release `cat VERSION`"
+  ALLOWRELEASE="-release `cat $srcdir/VERSION`"
   echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 fi
