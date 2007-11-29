@@ -4433,6 +4433,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_vdbe_addop_trace;
 #endif
 #ifdef SQLITE_TEST
+  extern int sqlite3_enable_in_opt;
   extern char sqlite3_query_plan[];
   static char *query_plan = sqlite3_query_plan;
 #endif
@@ -4512,5 +4513,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_sync_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_fullsync_count",
       (char*)&sqlite3_fullsync_count, TCL_LINK_INT);
+#ifdef SQLITE_TEST
+  Tcl_LinkVar(interp, "sqlite_enable_in_opt",
+      (char*)&sqlite3_enable_in_opt, TCL_LINK_INT);
+#endif
   return TCL_OK;
 }

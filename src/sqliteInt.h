@@ -884,6 +884,7 @@ struct KeyInfo {
   sqlite3 *db;        /* The database connection */
   u8 enc;             /* Text encoding - one of the TEXT_Utf* values */
   u8 incrKey;         /* Increase 2nd key by epsilon before comparison */
+  u8 prefixIsEqual;   /* Treat a prefix as equal */
   int nField;         /* Number of entries in aColl[] */
   u8 *aSortOrder;     /* If defined an aSortOrder[i] is true, sort DESC */
   CollSeq *aColl[1];  /* Collating sequence for each term of the key */
@@ -1970,6 +1971,11 @@ void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, int, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
+
+#define IN_INDEX_ROWID           1
+#define IN_INDEX_EPH             2
+#define IN_INDEX_INDEX           3
+int sqlite3FindInIndex(Parse *, Expr *, int);
 
 #ifdef SQLITE_ENABLE_ATOMIC_WRITE
   int sqlite3JournalOpen(sqlite3_vfs *, const char *, sqlite3_file *, int, int);
