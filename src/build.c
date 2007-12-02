@@ -2320,11 +2320,14 @@ void sqlite3CreateIndex(
 
 #ifndef SQLITE_OMIT_TEMPDB
     /* If the index name was unqualified, check if the the table
-    ** is a temp table. If so, set the database to 1.
+    ** is a temp table. If so, set the database to 1. Do not do this
+    ** if initialising a database schema.
     */
-    pTab = sqlite3SrcListLookup(pParse, pTblName);
-    if( pName2 && pName2->n==0 && pTab && pTab->pSchema==db->aDb[1].pSchema ){
-      iDb = 1;
+    if( !db->init.busy ){
+      pTab = sqlite3SrcListLookup(pParse, pTblName);
+      if( pName2 && pName2->n==0 && pTab && pTab->pSchema==db->aDb[1].pSchema ){
+        iDb = 1;
+      }
     }
 #endif
 
