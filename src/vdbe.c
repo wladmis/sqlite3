@@ -2410,7 +2410,8 @@ case OP_MakeRecord: {
 case OP_Statement: {       /* no-push */
   int i = pOp->p1;
   Btree *pBt;
-  if( i>=0 && i<db->nDb && (pBt = db->aDb[i].pBt)!=0 && !(db->autoCommit) ){
+  if( i>=0 && i<db->nDb && (pBt = db->aDb[i].pBt)!=0
+        && (db->autoCommit==0 || db->activeVdbeCnt>1) ){
     assert( sqlite3BtreeIsInTrans(pBt) );
     assert( (p->btreeMask & (1<<i))!=0 );
     if( !sqlite3BtreeIsInStmt(pBt) ){
@@ -4088,6 +4089,7 @@ case OP_Destroy: {
 #endif
   if( iCnt>1 ){
     rc = SQLITE_LOCKED;
+    p->errorAction = OE_Abort;
   }else{
     assert( iCnt==1 );
     assert( (p->btreeMask & (1<<pOp->p2))!=0 );
