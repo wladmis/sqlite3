@@ -3309,6 +3309,16 @@ int sqlite3_blob_open(
 ** CAPI3REF:  Close A BLOB Handle
 **
 ** Close an open [sqlite3_blob | blob handle].
+**
+** Closing a BLOB might cause the current transaction to commit.
+** If any writes were made to the BLOB, they might be held in cache
+** until the close operation.  Closing the BLOB forces the changes
+** out to disk and so if any I/O errors occur, they will likely occur
+** at the time when the BLOB is closed.  Any errors that occur during
+** closing are reported as a non-zero return value.
+**
+** The BLOB is closed unconditionally.  Even if this routine returns
+** an error code, the BLOB is still closed.
 */
 int sqlite3_blob_close(sqlite3_blob *);
 
