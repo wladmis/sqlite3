@@ -965,6 +965,7 @@ static int openDatabase(
   db->magic = SQLITE_MAGIC_BUSY;
   db->aDb = db->aDbStatic;
   db->autoCommit = 1;
+  db->nextAutovac = -1;
   db->flags |= SQLITE_ShortColNames
 #if SQLITE_DEFAULT_FILE_FORMAT<4
                  | SQLITE_LegacyFileFmt

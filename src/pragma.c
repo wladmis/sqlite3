@@ -440,6 +440,7 @@ void sqlite3Pragma(
       returnSingleInt(pParse, "auto_vacuum", auto_vacuum);
     }else{
       int eAuto = getAutoVacuum(zRight);
+      db->nextAutovac = eAuto;
       if( eAuto>=0 ){
         /* Call SetAutoVacuum() to set initialize the internal auto and
         ** incr-vacuum flags. This is required in case this connection
