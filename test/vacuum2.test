@@ -139,4 +139,6 @@ do_test vacuum2-3.17 {
   execsql {PRAGMA integrity_check} db
 } {ok}
 
+db2 close
+
 finish_test
