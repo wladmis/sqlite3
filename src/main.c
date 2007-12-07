@@ -766,7 +766,6 @@ int sqlite3BtreeFactory(
   }
   rc = sqlite3BtreeOpen(zFilename, (sqlite3 *)db, ppBtree, btFlags, vfsFlags);
   if( rc==SQLITE_OK ){
-    sqlite3BtreeSetBusyHandler(*ppBtree, (void*)&db->busyHandler);
     sqlite3BtreeSetCacheSize(*ppBtree, nCache);
   }
   return rc;

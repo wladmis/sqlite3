@@ -1620,8 +1620,10 @@ typedef struct {
 #ifdef SQLITE_DEBUG
   int sqlite3Corrupt(void);
 # define SQLITE_CORRUPT_BKPT sqlite3Corrupt()
+# define DEBUGONLY(X)        X
 #else
 # define SQLITE_CORRUPT_BKPT SQLITE_CORRUPT
+# define DEBUGONLY(X)
 #endif
 
 /*
