@@ -517,7 +517,7 @@ do_test select1-6.10 {
 do_test select1-6.11 {
   set v [catch {execsql2 {
     SELECT f1 FROM test1 UNION SELECT f2+100 FROM test1
-    ORDER BY f2+100;
+    ORDER BY f2+101;
   }} msg]
   lappend v $msg
 } {1 {ORDER BY term number 1 does not match any result column}}
