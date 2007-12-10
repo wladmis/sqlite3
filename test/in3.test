@@ -18,6 +18,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !subquery {
+  finish_test
+  return
+}
+
 # Return the number of OpenEphemeral instructions used in the
 # implementation of the sql statement passed as a an argument.
 #

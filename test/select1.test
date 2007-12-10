@@ -523,6 +523,7 @@ do_test select1-6.11 {
 } {1 {ORDER BY term number 1 does not match any result column}}
 
 # Ticket #2296
+ifcapable subquery {
 do_test select1-6.20 {
    execsql {
      CREATE TABLE t6(a TEXT, b TEXT);
@@ -558,6 +559,7 @@ do_test select1-6.23 {
      ORDER BY a;
    }
 } {b d}
+}
 
 } ;#ifcapable compound
 

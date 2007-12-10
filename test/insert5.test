@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !subquery {
+  finish_test
+  return
+}
+
 # Return true if the compilation of the sql passed as an argument 
 # includes the opcode OpenEphemeral. An "INSERT INTO ... SELECT"
 # statement includes such an opcode if a temp-table is used

@@ -181,6 +181,7 @@ do_test where4-4.4 {
 
 # Ticket #2273.  Problems with IN operators and NULLs.
 #
+ifcapable subquery {
 do_test where4-5.1 {
   execsql {
     CREATE TABLE t4(x,y,z,PRIMARY KEY(x,y));
@@ -266,5 +267,7 @@ do_test where4-7.2 {
     )) FROM t7;
   }
 } {{}}
+
+}; #ifcapable subquery
 
 finish_test

@@ -1559,6 +1559,7 @@ struct QueryCoder {
 ** to be unique - either because it is an INTEGER PRIMARY KEY or it
 ** is unique by virtue of a constraint or implicit index.
 */
+#ifndef SQLITE_OMIT_SUBQUERY
 int sqlite3FindInIndex(Parse *pParse, Expr *pX, int mustBeUnique){
   Select *p;
   int eType = 0;
@@ -1659,6 +1660,7 @@ int sqlite3FindInIndex(Parse *pParse, Expr *pX, int mustBeUnique){
   }
   return eType;
 }
+#endif
 
 /*
 ** Generate code for scalar subqueries used as an expression
