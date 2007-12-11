@@ -49,7 +49,7 @@
 
 /*
 ** The maximum length of a single SQL statement in bytes.
-** The hard limit here is the same as SQLITE_MAX_LENGTH.
+** The hard limit is 1 million.
 */
 #ifndef SQLITE_MAX_SQL_LENGTH
 # define SQLITE_MAX_SQL_LENGTH 1000000
