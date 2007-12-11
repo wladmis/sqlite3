@@ -5106,7 +5106,7 @@ int sqlite3PagerLockingMode(Pager *pPager, int eMode){
   return (int)pPager->exclusiveMode;
 }
 
-#ifdef SQLITE_DEBUG
+#ifdef SQLITE_TEST
 /*
 ** Print a listing of all referenced pages and their ref count.
 */
