@@ -277,6 +277,7 @@ void sqlite3DeleteFrom(
     if( triggers_exist ){
       int mem1 = pParse->nMem++;
       addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, end);
+      sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       sqlite3VdbeAddOp(v, OP_MemStore, mem1, 0);
       if( !isView ){
         sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenRead);
@@ -310,6 +311,7 @@ void sqlite3DeleteFrom(
       ** row triggers */
       if( !triggers_exist ){ 
         addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, end);
+        sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       }
 
       /* Delete the row */
