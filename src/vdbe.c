@@ -705,10 +705,10 @@ case OP_StackDepth: {       /* no-push */
     pOp->p1 = pTos - p->aStack + 1;
   }else if( pOp->p1!=pTos - p->aStack + 1 ){
     p->pTos = pTos;
-    p->rc = SQLITE_ERROR;
+    p->rc = rc = SQLITE_INTERNAL;
     p->pc = pc;
     p->errorAction = OE_Rollback;
-    sqlite3SetString(&p->zErrMsg, "internal VDBE stack overflow", (char*)0);
+    sqlite3SetString(&p->zErrMsg, "internal error: VDBE stack leak", (char*)0);
     goto vdbe_return;
   }
   break;
