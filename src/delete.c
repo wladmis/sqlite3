@@ -283,7 +283,7 @@ void sqlite3DeleteFrom(
       if( !isView ){
         sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenRead);
       }
-      sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
+      sqlite3VdbeAddOp(v, OP_NotExists, iCur, addr);
       sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
       sqlite3VdbeAddOp(v, OP_RowData, iCur, 0);
       sqlite3VdbeAddOp(v, OP_Insert, oldIdx, 0);

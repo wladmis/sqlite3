@@ -340,7 +340,7 @@ void sqlite3Update(
       */
       sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenRead);
     }
-    sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
+    sqlite3VdbeAddOp(v, OP_NotExists, iCur, addr);
 
     /* Generate the OLD table
     */
