@@ -59,7 +59,6 @@ do_test tkt2832-3.1 {
   }
 } {}
 do_test tkt2832-3.2 {
-  explain { DELETE FROM t3 WHERE 1 }
   execsql { DELETE FROM t3 WHERE 1 }
 } {}
 
