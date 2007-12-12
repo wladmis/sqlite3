@@ -330,6 +330,7 @@ void sqlite3Update(
     /* The top of the update loop for when there are triggers.
     */
     addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, 0);
+    sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
     mem1 = pParse->nMem++;
     sqlite3VdbeAddOp(v, OP_MemStore, mem1, 0);
     
@@ -427,6 +428,7 @@ void sqlite3Update(
     */
     if( !triggers_exist ){
       addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, 0);
+      sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       sqlite3VdbeAddOp(v, OP_Dup, 0, 0);
     }
     sqlite3VdbeAddOp(v, OP_NotExists, iCur, addr);

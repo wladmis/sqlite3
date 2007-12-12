@@ -692,6 +692,28 @@ case OP_Halt: {            /* no-push */
   goto vdbe_return;
 }
 
+/* Opcode:  StackDepth P1 * *
+**
+** If P1 is less than zero, then store the current stack depth
+** in P1.  If P1 is zero or greater, verify that the current stack
+** depth is equal to P1 and throw an exception if it is not.
+**
+** This opcode is used for internal consistency checking.
+*/
+case OP_StackDepth: {       /* no-push */
+  if( pOp->p1<0 ){
+    pOp->p1 = pTos - p->aStack + 1;
+  }else if( pOp->p1!=pTos - p->aStack + 1 ){
+    p->pTos = pTos;
+    p->rc = SQLITE_ERROR;
+    p->pc = pc;
+    p->errorAction = OE_Rollback;
+    sqlite3SetString(&p->zErrMsg, "internal VDBE stack overflow", (char*)0);
+    goto vdbe_return;
+  }
+  break;
+}
+
 /* Opcode: Integer P1 * *
 **
 ** The 32-bit integer value P1 is pushed onto the stack.
