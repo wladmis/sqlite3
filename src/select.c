@@ -2825,7 +2825,7 @@ int sqlite3SelectResolve(
     return SQLITE_ERROR;
   }
   if( p->pPrior==0 ){
-    if( processOrderGroupBy(pParse, p, p->pOrderBy, 0, &sNC.hasAgg) ){
+    if( processOrderGroupBy(pParse, p, p->pOrderBy, 1, &sNC.hasAgg) ){
       return SQLITE_ERROR;
     }
   }
