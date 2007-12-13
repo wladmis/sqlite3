@@ -190,7 +190,7 @@ do_test fts3an-3.1 {
 # time.  Prefix hits can cross leaves, which the code above _should_
 # hit by virtue of size.  There are two variations on this.  If the
 # tree is 2 levels high, the code will find the leaf-node extent
-# directly, but if it's higher, the code will have to follow two
+# directly, but if it is higher, the code will have to follow two
 # separate interior branches down the tree.  Both should be tested.
 
 finish_test

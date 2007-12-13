@@ -298,7 +298,7 @@ static void icuRegexpFunc(sqlite3_context *p, int nArg, sqlite3_value **apArg){
 
 /*
 ** Implementations of scalar functions for case mapping - upper() and 
-** lower(). Function upper() converts it's input to upper-case (ABC).
+** lower(). Function upper() converts its input to upper-case (ABC).
 ** Function lower() converts to lower-case (abc).
 **
 ** ICU provides two types of case mapping, "general" case mapping and

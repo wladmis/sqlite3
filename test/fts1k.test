@@ -6,7 +6,7 @@
 # This file implements regression tests for SQLite library.  The focus
 # of this script is testing isspace/isalnum/tolower problems with the
 # FTS1 module.  Unfortunately, this code isn't a really principled set
-# of tests, because it's impossible to know where new uses of these
+# of tests, because it is impossible to know where new uses of these
 # functions might appear.
 #
 # $Id$

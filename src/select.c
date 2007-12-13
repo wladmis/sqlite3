@@ -960,7 +960,7 @@ static void generateColumnTypes(
     const char *zOrigCol = 0;
     const char *zType = columnType(&sNC, p, &zOrigDb, &zOrigTab, &zOrigCol);
 
-    /* The vdbe must make it's own copy of the column-type and other 
+    /* The vdbe must make its own copy of the column-type and other 
     ** column specific strings, in case the schema is reset before this
     ** virtual machine is deleted.
     */

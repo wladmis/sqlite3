@@ -298,7 +298,7 @@ set TestScriptList [list {
 }
 ]
 
-# If this build omit's subqueries, step 2 in the above list will not
+# If this build omits subqueries, step 2 in the above list will not
 # work. Replace it with "" in this case. 
 #
 ifcapable !subquery { lset TestScriptList 2 "" }

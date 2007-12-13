@@ -779,7 +779,7 @@ static void sqlite3ExecFunc(
 ** * It calls sqlite3_value_text() 3 times on the argument sqlite3_value*.
 **   If the three pointers returned are not the same an SQL error is raised.
 **
-** * Otherwise it returns a copy of the text representation of it's 
+** * Otherwise it returns a copy of the text representation of its 
 **   argument in such a way as the VDBE representation is a Mem* cell 
 **   with the MEM_Term flag clear. 
 **

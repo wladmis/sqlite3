@@ -131,7 +131,7 @@ static Tcl_ThreadCreateType tclScriptThread(ClientData pSqlThread){
 /*
 ** sqlthread spawn VARNAME SCRIPT
 **
-**     Spawn a new thread with it's own Tcl interpreter and run the
+**     Spawn a new thread with its own Tcl interpreter and run the
 **     specified SCRIPT(s) in it. The thread terminates after running
 **     the script. The result of the script is stored in the variable
 **     VARNAME.

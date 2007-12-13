@@ -956,7 +956,7 @@ void sqlite3Pragma(
   **   PRAGMA encoding
   **   PRAGMA encoding = "utf-8"|"utf-16"|"utf-16le"|"utf-16be"
   **
-  ** In it's first form, this pragma returns the encoding of the main
+  ** In its first form, this pragma returns the encoding of the main
   ** database. If the database is not initialized, it is initialized now.
   **
   ** The second form of this pragma is a no-op if the main database file

@@ -69,7 +69,7 @@ static void renameTableFunc(
       tname.n = len;
 
       /* Advance zCsr to the next token. Store that token type in 'token',
-      ** and it's length in 'len' (to be used next iteration of this loop).
+      ** and its length in 'len' (to be used next iteration of this loop).
       */
       do {
         zCsr += len;
@@ -127,7 +127,7 @@ static void renameTriggerFunc(
       tname.n = len;
 
       /* Advance zCsr to the next token. Store that token type in 'token',
-      ** and it's length in 'len' (to be used next iteration of this loop).
+      ** and its length in 'len' (to be used next iteration of this loop).
       */
       do {
         zCsr += len;

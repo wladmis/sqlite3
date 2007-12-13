@@ -697,7 +697,7 @@ static void string_concat(char **pzStr, char *zAppend, int doFree, int *pRc){
 **
 ** then the echo module handles WHERE or ORDER BY clauses that refer
 ** to the column "b", but not "a" or "c". If a multi-column index is
-** present, only it's left most column is considered. 
+** present, only its left most column is considered. 
 **
 ** This xBestIndex method encodes the proposed search strategy as
 ** an SQL query on the real table underlying the virtual echo module 

@@ -1172,7 +1172,7 @@ static void test_auxdata(
 #ifdef SQLITE_TEST
 /*
 ** A function to test error reporting from user functions. This function
-** returns a copy of it's first argument as an error.
+** returns a copy of its first argument as an error.
 */
 static void test_error(
   sqlite3_context *pCtx, 
