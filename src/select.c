@@ -1465,6 +1465,7 @@ static int matchOrderByTermToExprList(
     sqlite3 *db = pParse->db;
     char *zCol = sqlite3NameFromToken(db, &pE->token);
     if( db->mallocFailed ){
+      sqlite3_free(zCol);
       return -1;
     }
     for(i=0; i<pEList->nExpr; i++){
