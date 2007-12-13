@@ -1317,6 +1317,7 @@ struct Select {
   Expr *pHaving;         /* The HAVING clause */
   ExprList *pOrderBy;    /* The ORDER BY clause */
   Select *pPrior;        /* Prior select in a compound select statement */
+  Select *pNext;         /* Next select to the left in a compound */
   Select *pRightmost;    /* Right-most select in a compound select statement */
   Expr *pLimit;          /* LIMIT expression. NULL means not used. */
   Expr *pOffset;         /* OFFSET expression. NULL means not used. */
