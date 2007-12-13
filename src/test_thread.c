@@ -18,10 +18,10 @@
 */
 
 #include "sqliteInt.h"
+#include <tcl.h>
 
 #if SQLITE_THREADSAFE && defined(TCL_THREADS)
 
-#include <tcl.h>
 #include <errno.h>
 #include <unistd.h>
 
@@ -330,4 +330,3 @@ int SqlitetestThread_Init(Tcl_Interp *interp){
   return TCL_OK;
 }
 #endif
-
