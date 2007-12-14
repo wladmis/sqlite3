@@ -15,7 +15,7 @@ proc doc {name url desc} {
 }
 
 doc {Appropriate Uses For SQLite} {whentouse.html} {
-  This document describes situations where SQLite is an approriate
+  This document describes situations where SQLite is an appropriate
   database engine to use versus situations where a client/server
   database engine might be a better choice.
 }
@@ -78,7 +78,7 @@ doc {Version 3 DataTypes } {datatype3.html} {
 
 doc {Locking And Concurrency<br>In SQLite Version 3} {lockingv3.html} {
   A description of how the new locking code in version 3 increases
-  concurrancy and decreases the problem of writer starvation.
+  concurrency and decreases the problem of writer starvation.
 }
 
 doc {Overview Of The Optimizer} {optoverview.html} {
@@ -144,7 +144,7 @@ doc {VDBE Opcodes} {opcode.html} {
 
 doc {Compilation Options} {compile.html} {
   This document describes the compile time options that may be set to 
-  modify the default behaviour of the library or omit optional features
+  modify the default behavior of the library or omit optional features
   in order to reduce binary size.
 }
 

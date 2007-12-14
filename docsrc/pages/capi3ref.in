@@ -4,18 +4,26 @@
 
 <tcl>
 set in [open sqlite3.h]
-set title {}
-set type {}
-set body {}
-set code {}
-set phase 0
-set content {}
+set title {}       ;# title of a section of interface definition
+set type {}        ;# one of: constant datatype function
+set body {}        ;# human-readable description
+set code {}        ;# C code of the definition
+set phase 0        ;# Phase used by the parser 
+set content {}     ;# List of records, one record per definition
+set dcnt 0         ;# Number of individual declarations
+set lineno 0       ;# input file line number
+
+# Read sqlite3.h line by line and extract interface definition
+# information.
+#
 while {![eof $in]} {
   set line [gets $in]
+  incr lineno
   if {$phase==0} {
     # Looking for the CAPI3REF: keyword
     if {[regexp {^\*\* CAPI3REF: +(.*)} $line all tx]} {
       set title $tx
+      set title_lineno $lineno
       set phase 1
     }
   } elseif {$phase==1} {
@@ -38,6 +46,11 @@ while {![eof $in]} {
       set kwlist [lsort [array names keyword]]
       unset -nocomplain keyword
       set key $type:$kwlist
+      regsub { *\{[\w.]+\}} $title {} title
+      regsub -all { *\{[\w.]+\}} $body {} body
+      set body [string map \
+          {<todo> {<font color="red">(TODO: } </todo> )</font>} $body]
+      set code [string map {& &amp; < &lt; > &gt;} $code]
       lappend content [list $key $title $type $kwlist $body $code]
       set title {}
       set keywords {}
@@ -45,19 +58,24 @@ while {![eof $in]} {
       set body {}
       set code {}
       set phase 0
+      set dcnt 0
     } else {
       if {[regexp {^#define (SQLITE_[A-Z0-9_]+)} $line all kx]} {
         set type constant
         set keyword($kx) 1
+        incr dcnt
       } elseif {[regexp {^typedef .*(sqlite[0-9a-z_]+);} $line all kx]} {
         set type datatype
         set keyword($kx) 1
+        incr dcnt
       } elseif {[regexp {^[a-z].*[ *](sqlite3_[a-z0-9_]+)\(} $line all kx]} {
         set type function
         set keyword($kx) 1
+        incr dcnt
       } elseif {[regexp {^SQLITE_EXTERN .*(sqlite[0-9a-z_]+);} $line all kx]} {
         set type datatype
         set keyword($kx) 1
+        incr dcnt
       }
       append code $line\n
     }
@@ -326,7 +344,7 @@ foreach c [lsort $content] {
   puts "<blockquote><pre>"
   puts "$code"
   puts "</pre></blockquote>"
-  regsub -all "\n\n+" $body {</p>\1<p>} body
+  regsub -all "\n\n+" $body "</p>\n\n<p>" body
   regsub -all {\[} <p>$body</p> {[resolve_links } body
   set body [subst -novar -noback $body]
   puts "$body"
@@ -342,7 +360,7 @@ foreach c [lsort $content] {
   puts "$code"
   puts "</pre></blockquote>"
   set body [lindex $c 4]
-  regsub -all "\n\n+" $body {</p>\1<p>} body
+  regsub -all "\n\n+" $body "</p>\n\n<p>" body
   regsub -all {\[} <p>$body</p> {[resolve_m_links } body
   set body [subst -novar -noback $body]
   puts "$body"

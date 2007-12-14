@@ -2,6 +2,22 @@
 
 <h3>About SQLite</h3>
 
+<table align="right" border="1" cellpadding="10" hspace="20" cellspacing="0">
+<tr><td><small>
+<b>See Also...</b>
+<p><ul>
+<li> <a href="features.html">Features</a> </li>
+<li> <a href="faq.html">Frequently Asked Questions</a> </li>
+<li> <a href="famous.html">Well-known Users</a> </li>
+<li> <a href="quickstart.html">Getting Started</a> </li>
+<li> <a href="lang.html">SQL Syntax</a> </li>
+<li> <a href="c3ref/intro.html">C/C++ Interface Spec</a> </li>
+<li> <a href="http://www.sqlite.org/cvstrac/timeline">Timeline</a> </li>
+<li> <a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a> </li>
+</ul></p>
+</small></td></tr>
+</table>
+
 <p>SQLite is a in-process library that implements a
 <a href="selfcontained.html">self-contained</a>, 
 <a href="serverless.html">serverless</a>,

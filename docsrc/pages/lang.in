@@ -1509,6 +1509,15 @@ returns the total number of rows in the group.</td>
 </tr>
 
 <tr>
+<td valign="top" align="right">group_concat(<i>X</i>)<br>
+group_concat(<i>X</i>,<i>Y</i>)</td>
+<td valign="top">The result is a string which is the concatenation of
+all non-NULL values of <i>X</i>.  If parameter <i>Y</i> is the separator
+between instances of <i>X</i>.  A comma (",") is used as the separator
+if <i>Y</i> is omitted.</td>
+</tr>
+
+<tr>
 <td valign="top" align="right">max(<i>X</i>)</td>
 <td valign="top">Return the maximum value of all values in the group.
 The usual sort order is used to determine the maximum.</td>
@@ -1579,7 +1588,7 @@ constraint conflict resolution algorithm to use during this one command.
 See the section titled
 <a href="lang_conflict.html">ON CONFLICT</a> for additional information.
 For compatibility with MySQL, the parser allows the use of the
-single keyword <a href="lange_replace.html">REPLACE</a> as an 
+single keyword <a href="lang_replace.html">REPLACE</a> as an 
 alias for "INSERT OR REPLACE".
 </p>
 
@@ -1787,6 +1796,26 @@ expression must exactly match one of the result columns.  Each
 sort expression may be optionally followed by a COLLATE keyword and
 the name of a collating function used for ordering text and/or
 keywords ASC or DESC to specify the sort order.</p>
+
+<p>Each term of an ORDER BY expression is processed as follows:</p>
+
+<ol>
+<li><p>If the ORDER BY expression is a constant integer K then the
+output is ordered by the K-th column of the result set.</p></li>
+<li><p>If the ORDER BY expression is an identifier and one of the
+output columns as an alias by the same name, then the output is
+ordered by the identified column.</p></li>
+<li><p>Otherwise, the ORDER BY expression is evaluated and the output 
+is ordered by the value of that expression.</p></li>
+</ol>
+
+<p>In a compound SELECT statement, the third ORDER BY matching rule
+requires that the expression be identical to one of the columns in
+the result set.  The three rules are first applied to the left-most
+SELECT in the compound.  If a match is found, the search stops.  Otherwise,
+the next SELECT to the right is tried.  This continues until a match
+is found.  Each term of the ORDER BY clause is processed separately 
+and may come from different SELECT statements in the compound.</p>
 
 <p>The LIMIT clause places an upper bound on the number of rows
 returned in the result.  A negative LIMIT indicates no upper bound.

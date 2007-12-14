@@ -99,7 +99,7 @@ full-text search subsystem within SQLite.
 <a href="http://www.mcafee.com/">McAfee</a> uses SQLite in its antivirus 
 programs.  
 Mentioned <a href="http://www.mail-archive.com/sqlite-users@sqlite.org/msg16931.html">here</a> and implied 
-<a href="http://forums.mcafeehelp.com/viewtopic.php?t=115260">here</a>.
+<a href="http://forums.mcafeehelp.com/showthread.php?t=173519">here</a>.
 </td>
 
 
@@ -157,7 +157,7 @@ programming language comes with both SQLite2 and SQLite3 built in.
 </td><td>
 SQLite comes bundled with the 
 <a href="http://docs.python.org/lib/module-sqlite3.html">Python</a>
-programming langauge since Python 2.5.
+programming language since Python 2.5.
 </td></tr>
 
 <tr><td valign="top">
@@ -186,7 +186,7 @@ sightings</a> of SQLite in the Skype client for MacOSX and Windows.
 </td><td>
 <a href="http://www.sun.com/software/solaris/">Solaris 10</a>
 uses SQLite as the storage format for its Service Management Facility.
-Thus, Sun as essentially replaced the traditional unix /etc/inittab
+Thus, Sun has essentially replaced the traditional unix /etc/inittab
 file with an SQLite database.
 </td></tr>
 

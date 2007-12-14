@@ -562,7 +562,7 @@ SQLite as if the aborted transaction had never begun.</p>
 <p>SQLite allows a single 
 <a href="c3ref/sqlite3.html">database connection</a> to talk to
 two or more database files simultaneously through the use of
-the <a href="/lang_attach.html">ATTACH DATABASE</a> command.
+the <a href="lang_attach.html">ATTACH DATABASE</a> command.
 When multiple database files are modified within a single
 transaction, all files are updated atomically.  
 In other words, either all of the database files are updated or
@@ -1077,7 +1077,7 @@ dot-file locks or vice versa.</p>
 <p>SQLite uses the fsync() system call on unix and the FlushFileBuffers()
 system call on w32 in order to sync the file system buffers onto disk
 oxide as shown in  <a href="#section_3_7">step 3.7</a> and
-<a href="#section_3.10">step 3.10</a>.  Unfortunately, we have received
+<a href="#section_3_10">step 3.10</a>.  Unfortunately, we have received
 reports that neither of these interfaces works as advertised on many
 systems.  We hear that FlushFileBuffers() can be completely disabled
 using registry settings on some windows versions.  Some historical

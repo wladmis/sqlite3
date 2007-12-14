@@ -267,6 +267,11 @@ is returned it is as an integer.</p>
     are created using the latest file format which might not be
     readable or writable by older versions of SQLite.</p>
 
+    <p>When the pragma is issued with no argument, it returns the
+    setting of the flag.  This pragma does <u>not</u> tell which
+    file format the current database is using.  It tells what format
+    will be used by any newly created databases.</p>
+
     <p>This flag only affects newly created databases.  It has no
     effect on databases that already exist.</p>
 </li>

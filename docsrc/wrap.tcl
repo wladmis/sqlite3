@@ -104,7 +104,7 @@ proc PutsHeader {title {path {}}} {
     <img class="logo" src="${path}images/SQLite.gif" alt="SQLite Logo"
      border="0"></a>
     <div><!-- IE hack to prevent disappearing logo--></div>
-    <div class="tagline">Small, Fast, Reliable.<br>Choose any three.</div>
+    <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
     
     <table width=100% style="clear:both"><tr><td>
       <div class="se"><div class="sw"><div class="ne"><div class="nw">

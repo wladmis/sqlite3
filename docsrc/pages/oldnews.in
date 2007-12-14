@@ -10,6 +10,43 @@ proc newsitem {date title text} {
   puts "<hr width=\"50%\">"
 }
 
+newsitem {2007-Nov-05} {Version 3.5.2} {
+  This is an incremental release that fixes several minor problems,
+  adds some obscure features, and provides some performance tweaks.  
+  Upgrading is optional.
+
+  The experimental compile-time option
+  SQLITE_OMIT_MEMORY_ALLOCATION is no longer supported.  On the other
+  hand, it is now possible to compile SQLite so that it uses a static
+  array for all its dynamic memory allocation needs and never calls
+  malloc.  Expect to see additional radical changes to the memory 
+  allocation subsystem in future releases.
+}
+
+newsitem {2007-Oct-04} {Version 3.5.1} {
+  Fix a long-standing bug that might cause database corruption if a
+  disk-full error occurs in the middle of a transaction and that
+  transaction is not rolled back.
+  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2686">Ticket #2686.</a>
+
+  The new VFS layer is stable.  However, we still reserve the right to
+  make tweaks to the interface definition of the VFS if necessary.
+}
+
+newsitem {2007-Sep-04} {Version 3.5.0 alpha} {
+  The OS interface layer and the memory allocation subsystems in
+  SQLite have been reimplemented.  The published API is largely unchanged
+  but the (unpublished) OS interface has been modified extensively.  
+  Applications that implement their own OS interface will require
+  modification.  See
+  <a href="34to35.html">34to35.html</a> for details.<p>
+
+  This is a large change.  Approximately 10% of the source code was
+  modified.  We are calling this first release "alpha" in order to give
+  the user community time to test and evaluate the changes before we
+  freeze the new design.
+}
+
 newsitem {2007-Aug-13} {Version 3.4.2} {
   While stress-testing the 
   <a href="c3ref/soft_heap_limit.html">soft_heap_limit</a>

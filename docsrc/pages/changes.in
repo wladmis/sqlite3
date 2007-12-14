@@ -29,6 +29,7 @@ proc chng {date desc} {
     PutsHeader "SQLite Release $date" ../
     puts "<h2>SQLite Release of $date</h2>"
     puts "<p>Changes associated with this release include the following:</p>"
+    regsub -all {<a href="(?!http:)} $desc {<a href="../} desc
     puts "<p><ul>$desc</ul></p>"
     putsin4 {
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
@@ -43,6 +44,33 @@ proc chng {date desc} {
   }
 }
 
+chng {2007 Dec 14 (3.5.4)} {
+<li>Fix a critical bug in UPDATE or DELETE that occurs when an
+OR REPLACE clause or a trigger causes rows in the same table to
+be deleted as side effects.  (See ticket #2832.)  The most likely
+result of this bug is a segmentation fault, though database
+corruption is a possibility.</li>
+<li>Bring the processing of ORDER BY into compliance with the 
+SQL standard for case where a result alias and a table column name
+are in conflict.  Correct behavior is to prefer the result alias.
+Older versions of SQLite incorrectly picked the table column.
+(See ticket #2822.)</li>
+<li>The <a href="lang_vacuum.html">VACUUM</a> command preserves
+the setting of the 
+<a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a>.
+(Ticket #2804.)</li>
+<li>Productize and officially support the group_concat() SQL function.</li>
+<li>Better optimization of some IN operator expressions.</li>
+<li>Add the ability to change the 
+<a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> status of a
+database by setting the auto_vaccum pragma and VACUUMing the database.</li>
+<li>Prefix search in FTS3 is much more efficient.</li>
+<li>Relax the SQL statement length restriction in the CLI so that
+the ".dump" output of databases with very large BLOBs and strings can
+be played back to recreate the database.</li>
+<li>Other small bug fixes and optimizations.</li>
+}
+
 chng {2007 Nov 27 (3.5.3)} {
 <li>Move website and documentation files out of the source tree into
 a <a href="http://www.sqlite.org/docsrc/">separate CM system</a>.
@@ -53,7 +81,7 @@ where the SELECT is compound.
 <li>On win32, do not return an error when attempting to delete a file
 that does not exist.
 <li>Allow collating sequence names to be quoted.
-<li>Modify the TCL interfacde to use sqlite3_prepare_v2().
+<li>Modify the TCL interface to use sqlite3_prepare_v2().
 <li>Fix multiple bugs that can occur following a malloc() failure.
 <li>sqlite3_step() returns SQLITE_MISUSE instead of crashing when
 called with a NULL parameter.
