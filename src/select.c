@@ -1614,10 +1614,10 @@ static int processCompoundOrderBy(
     moreToDo = 0;
     for(i=0; i<pOrderBy->nExpr; i++){
       int iCol;
-      Expr *pE;
+      Expr *pE, *pDup;
       if( pOrderBy->a[i].done ) continue;
       pE = pOrderBy->a[i].pExpr;
-      Expr *pDup = sqlite3ExprDup(db, pE);
+      pDup = sqlite3ExprDup(db, pE);
       if( pDup==0 ){
         return 1;
       }
