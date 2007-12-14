@@ -110,7 +110,7 @@ static int readsTable(Vdbe *v, int iStartAddr, int iDb, Table *pTab){
   int iEnd = sqlite3VdbeCurrentAddr(v);
   for(i=iStartAddr; i<iEnd; i++){
     VdbeOp *pOp = sqlite3VdbeGetOp(v, i);
-    assert( pOp==0 );
+    assert( pOp!=0 );
     if( pOp->opcode==OP_OpenRead ){
       VdbeOp *pPrior = &pOp[-1];
       int tnum = pOp->p2;

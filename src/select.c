@@ -1464,8 +1464,7 @@ static int matchOrderByTermToExprList(
   if( pE->op==TK_ID || (pE->op==TK_STRING && pE->token.z[0]!='\'') ){
     sqlite3 *db = pParse->db;
     char *zCol = sqlite3NameFromToken(db, &pE->token);
-    if( db->mallocFailed ){
-      sqlite3_free(zCol);
+    if( zCol==0 ){
       return -1;
     }
     for(i=0; i<pEList->nExpr; i++){
