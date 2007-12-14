@@ -2322,13 +2322,15 @@ void sqlite3ExprCode(Parse *pParse, Expr *pExpr){
 */
 void sqlite3ExprCodeAndCache(Parse *pParse, Expr *pExpr){
   Vdbe *v = pParse->pVdbe;
+  VdbeOp *pOp;
   int iMem;
   int addr1, addr2;
   if( v==0 ) return;
   addr1 = sqlite3VdbeCurrentAddr(v);
   sqlite3ExprCode(pParse, pExpr);
   addr2 = sqlite3VdbeCurrentAddr(v);
-  if( addr2>addr1+1 || sqlite3VdbeGetOp(v, addr1)->opcode==OP_Function ){
+  if( addr2>addr1+1
+   || ((pOp = sqlite3VdbeGetOp(v, addr1))!=0 && pOp->opcode==OP_Function) ){
     iMem = pExpr->iTable = pParse->nMem++;
     sqlite3VdbeAddOp(v, OP_MemStore, iMem, 0);
     pExpr->op = TK_REGISTER;
