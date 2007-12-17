@@ -418,7 +418,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     assert( pParse->sLastToken.dyn==0 );
     pParse->sLastToken.n = getToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
-    if( i>SQLITE_MAX_SQL_LENGTH ){
+    if( SQLITE_MAX_SQL_LENGTH>0 && i>SQLITE_MAX_SQL_LENGTH ){
       pParse->rc = SQLITE_TOOBIG;
       break;
     }
