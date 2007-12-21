@@ -395,6 +395,7 @@ struct BtShared {
   int nRef;             /* Number of references to this structure */
   BtShared *pNext;      /* Next on a list of sharable BtShared structs */
   BtLock *pLock;        /* List of locks held on this shared-btree struct */
+  Btree *pExclusive;    /* Btree with an EXCLUSIVE lock on the whole db */
 #endif
 };
 
