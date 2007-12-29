@@ -315,6 +315,9 @@ ifcapable attach {
       execsql {REINDEX t2}
       execsql {PRAGMA integrity_check}
     } {ok}
+    do_test pragma-3.8.1 {
+      execsql {PRAGMA quick_check}
+    } {ok}
     do_test pragma-3.9 {
       execsql {
         ATTACH 'testerr.db' AS t2;
