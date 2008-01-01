@@ -5729,9 +5729,6 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     */
     BtCursor leafCur;
     unsigned char *pNext;
-    int szNext;  /* The compiler warning is wrong: szNext is always 
-                 ** initialized before use.  Adding an extra initialization
-                 ** to silence the compiler slows down the code. */
     int notUsed;
     unsigned char *tempCell = 0;
     assert( !pPage->leafData );
@@ -5741,6 +5738,7 @@ int sqlite3BtreeDelete(BtCursor *pCur){
       rc = sqlite3PagerWrite(leafCur.pPage->pDbPage);
     }
     if( rc==SQLITE_OK ){
+      int szNext;
       TRACE(("DELETE: table=%d delete internal from %d replace from leaf %d\n",
          pCur->pgnoRoot, pPage->pgno, leafCur.pPage->pgno));
       dropCell(pPage, pCur->idx, cellSizePtr(pPage, pCell));
@@ -5751,17 +5749,17 @@ int sqlite3BtreeDelete(BtCursor *pCur){
       if( tempCell==0 ){
         rc = SQLITE_NOMEM;
       }
-    }
-    if( rc==SQLITE_OK ){
-      rc = insertCell(pPage, pCur->idx, pNext-4, szNext+4, tempCell, 0);
-    }
-    if( rc==SQLITE_OK ){
-      put4byte(findOverflowCell(pPage, pCur->idx), pgnoChild);
-      rc = balance(pPage, 0);
-    }
-    if( rc==SQLITE_OK ){
-      dropCell(leafCur.pPage, leafCur.idx, szNext);
-      rc = balance(leafCur.pPage, 0);
+      if( rc==SQLITE_OK ){
+        rc = insertCell(pPage, pCur->idx, pNext-4, szNext+4, tempCell, 0);
+      }
+      if( rc==SQLITE_OK ){
+        put4byte(findOverflowCell(pPage, pCur->idx), pgnoChild);
+        rc = balance(pPage, 0);
+      }
+      if( rc==SQLITE_OK ){
+        dropCell(leafCur.pPage, leafCur.idx, szNext);
+        rc = balance(leafCur.pPage, 0);
+      }
     }
     sqlite3_free(tempCell);
     sqlite3BtreeReleaseTempCursor(&leafCur);
