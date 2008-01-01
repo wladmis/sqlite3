@@ -708,7 +708,7 @@ void sqlite3Insert(
 
     /* Fire BEFORE or INSTEAD OF triggers */
     if( sqlite3CodeRowTrigger(pParse, TK_INSERT, 0, TRIGGER_BEFORE, pTab, 
-        newIdx, -1, onError, endOfLoop) ){
+        newIdx, -1, onError, endOfLoop, 0, 0) ){
       goto insert_cleanup;
     }
   }
@@ -837,7 +837,7 @@ void sqlite3Insert(
 
     /* Code AFTER triggers */
     if( sqlite3CodeRowTrigger(pParse, TK_INSERT, 0, TRIGGER_AFTER, pTab,
-          newIdx, -1, onError, endOfLoop) ){
+          newIdx, -1, onError, endOfLoop, 0, 0) ){
       goto insert_cleanup;
     }
   }

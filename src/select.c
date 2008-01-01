@@ -2961,6 +2961,35 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
   pAggInfo->directMode = 0;
 }
 
+#ifndef SQLITE_OMIT_TRIGGER
+/*
+** This function is used when a SELECT statement is used to create a
+** temporary table for iterating through when running an INSTEAD OF
+** UPDATE or INSTEAD OF DELETE trigger. 
+**
+** If possible, the SELECT statement is modified so that NULL values
+** are stored in the temporary table for all columns for which the 
+** corresponding bit in argument mask is not set. If mask takes the
+** special value 0xffffffff, then all columns are populated.
+*/
+int sqlite3SelectMask(Parse *pParse, Select *p, u32 mask){
+  if( !p->pPrior && !p->isDistinct && mask!=0xffffffff ){
+    ExprList *pEList;
+    int i;
+    if( sqlite3SelectResolve(pParse, p, 0) ){
+      return SQLITE_ERROR;
+    }
+    pEList = p->pEList;
+    for(i=0; i<pEList->nExpr && i<32; i++){
+      if( !(mask&((u32)1<<i)) ){
+        sqlite3ExprDelete(pEList->a[i].pExpr);
+        pEList->a[i].pExpr = sqlite3Expr(pParse->db, TK_NULL, 0, 0, 0);
+      }
+    }
+  }
+  return SQLITE_OK;
+}
+#endif
 
 /*
 ** Generate code for the given SELECT statement.
