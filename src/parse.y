@@ -365,7 +365,8 @@ cmd ::= DROP VIEW ifexists(E) fullname(X). {
 //////////////////////// The SELECT statement /////////////////////////////////
 //
 cmd ::= select(X).  {
-  sqlite3Select(pParse, X, SRT_Callback, 0, 0, 0, 0, 0);
+  SelectDest dest = {SRT_Callback, 0, 0};
+  sqlite3Select(pParse, X, &dest, 0, 0, 0, 0);
   sqlite3SelectDelete(X);
 }
 

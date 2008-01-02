@@ -220,9 +220,11 @@ void sqlite3DeleteFrom(
   ** a ephemeral table.
   */
   if( isView ){
+    SelectDest dest = {SRT_EphemTab, 0, 0};
     Select *pView = sqlite3SelectDup(db, pTab->pSelect);
     sqlite3SelectMask(pParse, pView, old_col_mask);
-    sqlite3Select(pParse, pView, SRT_EphemTab, iCur, 0, 0, 0, 0);
+    dest.iParm = iCur;
+    sqlite3Select(pParse, pView, &dest, 0, 0, 0, 0);
     sqlite3SelectDelete(pView);
   }
 

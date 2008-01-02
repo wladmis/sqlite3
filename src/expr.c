@@ -1738,10 +1738,12 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
         ** Generate code to write the results of the select into the temporary
         ** table allocated and opened above.
         */
-        int iParm = pExpr->iTable +  (((int)affinity)<<16);
+        SelectDest dest = {SRT_Set, 0, 0};
+        dest.iParm = pExpr->iTable;
+        dest.affinity = (int)affinity;
         ExprList *pEList;
         assert( (pExpr->iTable&0x0000FFFF)==pExpr->iTable );
-        if( sqlite3Select(pParse, pExpr->pSelect, SRT_Set, iParm, 0, 0, 0, 0) ){
+        if( sqlite3Select(pParse, pExpr->pSelect, &dest, 0, 0, 0, 0) ){
           return;
         }
         pEList = pExpr->pSelect->pEList;
@@ -1798,26 +1800,25 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr){
       */
       static const Token one = { (u8*)"1", 0, 1 };
       Select *pSel;
-      int sop;
-      int iMem;
+      SelectDest dest;
 
       pSel = pExpr->pSelect;
-      iMem = pParse->nMem++;
+      dest.iParm = pParse->nMem++;
       if( pExpr->op==TK_SELECT ){
-        sop = SRT_Mem;
-        sqlite3VdbeAddOp(v, OP_MemNull, 0, iMem);
+        dest.eDest = SRT_Mem;
+        sqlite3VdbeAddOp(v, OP_MemNull, 0, dest.iParm);
         VdbeComment((v, "Init subquery result"));
       }else{
-        sop = SRT_Exists;
-        sqlite3VdbeAddOp(v, OP_MemInt, 0, iMem);
+        dest.eDest = SRT_Exists;
+        sqlite3VdbeAddOp(v, OP_MemInt, 0, dest.iParm);
         VdbeComment((v, "Init EXISTS result"));
       }
       sqlite3ExprDelete(pSel->pLimit);
       pSel->pLimit = sqlite3PExpr(pParse, TK_INTEGER, 0, 0, &one);
-      if( sqlite3Select(pParse, pSel, sop, iMem, 0, 0, 0, 0) ){
+      if( sqlite3Select(pParse, pSel, &dest, 0, 0, 0, 0) ){
         return;
       }
-      pExpr->iColumn = iMem;
+      pExpr->iColumn = dest.iParm;
       break;
     }
   }
