@@ -325,9 +325,6 @@ void sqlite3DeleteFrom(
         sqlite3VdbeAddOp(v, OP_Null, 0, 0);
       }
       sqlite3VdbeAddOp(v, OP_Insert, oldIdx, 0);
-      if( !isView ){
-        sqlite3VdbeAddOp(v, OP_Close, iCur, 0);
-      }
 
       /* Jump back and run the BEFORE triggers */
       sqlite3VdbeAddOp(v, OP_Goto, 0, iBeginBeforeTrigger);
