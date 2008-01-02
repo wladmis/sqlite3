@@ -548,7 +548,10 @@ static int selectInnerLoop(
     for(i=0; i<nColumn; i++){
       sqlite3VdbeOp3Int(v, OP_Column, srcTab, i, iMem+i+1);
     }
-  }else{
+  }else if( eDest!=SRT_Exists ){
+    /* If the destination is an EXISTS(...) expression, the actual
+    ** values returned by the SELECT are not required.
+    */
     for(i=0; i<n; i++){
       sqlite3ExprIntoReg(pParse, pEList->a[i].pExpr, iMem+i+1);
     }
@@ -3143,6 +3146,13 @@ int sqlite3Select(
   pOrderBy = p->pOrderBy;
   if( IgnorableOrderby(pDest) ){
     p->pOrderBy = 0;
+
+    /* In these cases the DISTINCT operator makes no difference to the
+    ** results, so remove it if it were specified.
+    */
+    assert(pDest->eDest==SRT_Exists || pDest->eDest==SRT_Union || 
+           pDest->eDest==SRT_Except || pDest->eDest==SRT_Discard);
+    p->isDistinct = 0;
   }
   if( sqlite3SelectResolve(pParse, p, 0) ){
     goto select_end;
