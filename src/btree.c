@@ -6229,7 +6229,9 @@ int sqlite3BtreeFlags(BtCursor *pCur){
   /* TODO: What about CURSOR_REQUIRESEEK state? Probably need to call
   ** restoreOrClearCursorPosition() here.
   */
-  MemPage *pPage = pCur->pPage;
+  MemPage *pPage;
+  restoreOrClearCursorPosition(pCur);
+  pPage = pCur->pPage;
   assert( cursorHoldsMutex(pCur) );
   assert( pPage->pBt==pCur->pBt );
   return pPage ? pPage->aData[pPage->hdrOffset] : 0;
