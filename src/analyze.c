@@ -123,7 +123,7 @@ static void analyzeOneTable(
     */
     assert( iDb==sqlite3SchemaToIndex(pParse->db, pIdx->pSchema) );
     sqlite3VdbeAddOp(v, OP_Integer, iDb, 0);
-    VdbeComment((v, "# %s", pIdx->zName));
+    VdbeComment((v, "%s", pIdx->zName));
     sqlite3VdbeOp3(v, OP_OpenRead, iIdxCur, pIdx->tnum,
         (char *)pKey, P3_KEYINFO_HANDOFF);
     nCol = pIdx->nColumn;

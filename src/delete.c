@@ -76,7 +76,7 @@ void sqlite3OpenTable(
   assert( opcode==OP_OpenWrite || opcode==OP_OpenRead );
   sqlite3TableLock(p, iDb, pTab->tnum, (opcode==OP_OpenWrite), pTab->zName);
   sqlite3VdbeAddOp(v, OP_Integer, iDb, 0);
-  VdbeComment((v, "# %s", pTab->zName));
+  VdbeComment((v, "%s", pTab->zName));
   sqlite3VdbeAddOp(v, opcode, iCur, pTab->tnum);
   sqlite3VdbeAddOp(v, OP_SetNumColumns, iCur, pTab->nCol);
 }
@@ -391,8 +391,7 @@ void sqlite3DeleteFrom(
   ** invoke the callback function.
   */
   if( db->flags & SQLITE_CountRows && pParse->nested==0 && !pParse->trigStack ){
-    sqlite3VdbeAddOp(v, OP_MemLoad, memCnt, 0);
-    sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+    sqlite3VdbeAddOp(v, OP_ResultRow, memCnt, 1);
     sqlite3VdbeSetNumCols(v, 1);
     sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "rows deleted", P3_STATIC);
   }

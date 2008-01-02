@@ -147,12 +147,13 @@ static int changeTempStorage(Parse *pParse, const char *zStorageType){
 */
 static void returnSingleInt(Parse *pParse, const char *zLabel, int value){
   Vdbe *v = sqlite3GetVdbe(pParse);
-  sqlite3VdbeAddOp(v, OP_Integer, value, 0);
+  int mem = pParse->nMem++;
+  sqlite3VdbeAddOp(v, OP_MemInt, value, mem);
   if( pParse->explain==0 ){
     sqlite3VdbeSetNumCols(v, 1);
     sqlite3VdbeSetColName(v, 0, COLNAME_NAME, zLabel, P3_STATIC);
   }
-  sqlite3VdbeAddOp(v, OP_Callback, 1, 0);
+  sqlite3VdbeAddOp(v, OP_ResultRow, mem, 1);
 }
 
 #ifndef SQLITE_OMIT_FLAG_PRAGMAS
