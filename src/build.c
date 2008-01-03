@@ -2628,7 +2628,7 @@ void sqlite3CreateIndex(
   else if( db->init.busy==0 ){
     Vdbe *v;
     char *zStmt;
-    int iMem = pParse->nMem++;
+    int iMem = ++pParse->nMem;
 
     v = sqlite3GetVdbe(pParse);
     if( v==0 ) goto exit_create_index;

@@ -268,7 +268,7 @@ void sqlite3Update(
   if( v==0 ) goto update_cleanup;
   if( pParse->nested==0 ) sqlite3VdbeCountChanges(v);
   sqlite3BeginWriteOperation(pParse, 1, iDb);
-  mem1 = pParse->nMem++;
+  mem1 = ++pParse->nMem;
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   /* Virtual tables must be handled separately */
@@ -353,7 +353,7 @@ void sqlite3Update(
   /* Initialize the count of updated rows
   */
   if( db->flags & SQLITE_CountRows && !pParse->trigStack ){
-    memCnt = pParse->nMem++;
+    memCnt = ++pParse->nMem;
     sqlite3VdbeAddOp2(v, OP_MemInt, 0, memCnt);
   }
 

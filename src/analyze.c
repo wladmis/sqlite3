@@ -241,7 +241,7 @@ static void analyzeDatabase(Parse *pParse, int iDb){
   sqlite3BeginWriteOperation(pParse, 0, iDb);
   iStatCur = pParse->nTab++;
   openStatTable(pParse, iDb, iStatCur, 0);
-  iMem = pParse->nMem;
+  iMem = pParse->nMem+1;
   for(k=sqliteHashFirst(&pSchema->tblHash); k; k=sqliteHashNext(k)){
     Table *pTab = (Table*)sqliteHashData(k);
     analyzeOneTable(pParse, pTab, iStatCur, iMem);
@@ -263,7 +263,7 @@ static void analyzeTable(Parse *pParse, Table *pTab){
   sqlite3BeginWriteOperation(pParse, 0, iDb);
   iStatCur = pParse->nTab++;
   openStatTable(pParse, iDb, iStatCur, pTab->zName);
-  analyzeOneTable(pParse, pTab, iStatCur, pParse->nMem);
+  analyzeOneTable(pParse, pTab, iStatCur, pParse->nMem+1);
   loadAnalysis(pParse, iDb);
 }
 
