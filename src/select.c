@@ -3524,7 +3524,7 @@ int sqlite3Select(
         for(i=0; i<sAggInfo.nColumn; i++){
           struct AggInfo_col *pCol = &sAggInfo.aCol[i];
           if( pCol->iSorterColumn<j ) continue;
-          sqlite3ExprCodeGetColumn(v, pCol->pTab, pCol->iColumn, pCol->iTable);
+          sqlite3ExprCodeGetColumn(v, pCol->pTab, pCol->iColumn,pCol->iTable,0);
           j++;
         }
         sqlite3VdbeAddOp2(v, OP_MakeRecord, j, 0);
