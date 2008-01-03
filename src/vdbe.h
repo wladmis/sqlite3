@@ -29,6 +29,13 @@
 typedef struct Vdbe Vdbe;
 
 /*
+** The names of the following types declared in vdbeInt.h are required
+** for the VdbeOp definition.
+*/
+typedef struct VdbeFunc VdbeFunc;
+typedef struct Mem Mem;
+
+/*
 ** A single instruction of the virtual machine has an opcode
 ** and as many as three operands.  The instruction is recorded
 ** as an instance of the following structure:
@@ -42,8 +49,17 @@ struct VdbeOp {
   int p2;             /* Second parameter (often the jump destination) */
   int p3;             /* The third parameter */
   union {             /* forth parameter */
-    int i;              /* Integer value if p3type==P4_INT32 */
-    char *p;            /* A pointer for all other value sof p3type */
+    int i;                 /* Integer value if p4type==P4_INT32 */
+    void *p;               /* Generic pointer */
+    char *z;               /* Pointer to data for string (char array) types */
+    i64 *pI64;             /* Used when p4type is P4_INT64 */
+    double *pReal;         /* Used when p4type is P4_REAL */
+    FuncDef *pFunc;        /* Used when p4type is P4_FUNCDEF */
+    VdbeFunc *pVdbeFunc;   /* Used when p4type is P4_VDBEFUNC */
+    CollSeq *pColl;        /* Used when p4type is P4_COLLSEQ */
+    Mem *pMem;             /* Used when p4type is P4_MEM */
+    sqlite3_vtab *pVtab;   /* Used when p4type is P4_VTAB */
+    KeyInfo *pKeyInfo;     /* Used when p4type is P4_KEYINFO */
   } p4;
 #ifdef SQLITE_DEBUG
   char *zComment;     /* Comment to improve readability */

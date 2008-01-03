@@ -124,8 +124,8 @@ static int readsTable(Vdbe *v, int iStartAddr, int iDb, Table *pTab){
       }
     }
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-    if( pOp->opcode==OP_VOpen && pOp->p4.p==(const char*)pTab->pVtab ){
-      assert( pOp->p4.p!=0 );
+    if( pOp->opcode==OP_VOpen && pOp->p4.pVtab==pTab->pVtab ){
+      assert( pOp->p4.pVtab!=0 );
       assert( pOp->p4type==P4_VTAB );
       return 1;
     }
