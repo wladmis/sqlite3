@@ -2037,7 +2037,8 @@ case OP_SetNumColumns: {       /* no-push */
 ** values in the record, extract a NULL.
 **
 ** The value extracted is pushed onto the stack.  Or if P3 is a positive
-** integer register number, then the value is written into that register.
+** non-zero integer register number, then the value is written into that
+** register.
 **
 ** If the KeyAsData opcode has previously executed on this cursor, then the
 ** field might be extracted from the key rather than the data.
