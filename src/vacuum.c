@@ -70,7 +70,7 @@ static int execExecSql(sqlite3 *db, const char *zSql){
 void sqlite3Vacuum(Parse *pParse){
   Vdbe *v = sqlite3GetVdbe(pParse);
   if( v ){
-    sqlite3VdbeAddOp(v, OP_Vacuum, 0, 0);
+    sqlite3VdbeAddOp2(v, OP_Vacuum, 0, 0);
   }
   return;
 }

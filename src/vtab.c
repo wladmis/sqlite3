@@ -278,10 +278,11 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
     v = sqlite3GetVdbe(pParse);
     sqlite3ChangeCookie(db, v, iDb);
 
-    sqlite3VdbeAddOp(v, OP_Expire, 0, 0);
+    sqlite3VdbeAddOp2(v, OP_Expire, 0, 0);
     zWhere = sqlite3MPrintf(db, "name='%q'", pTab->zName);
-    sqlite3VdbeOp3(v, OP_ParseSchema, iDb, 1, zWhere, P3_DYNAMIC);
-    sqlite3VdbeOp3(v, OP_VCreate, iDb, 0, pTab->zName, strlen(pTab->zName) + 1);
+    sqlite3VdbeAddOp4(v, OP_ParseSchema, iDb, 1, 0, zWhere, P4_DYNAMIC);
+    sqlite3VdbeAddOp4(v, OP_VCreate, iDb, 0, 0, 
+                         pTab->zName, strlen(pTab->zName) + 1);
   }
 
   /* If we are rereading the sqlite_master table create the in-memory
