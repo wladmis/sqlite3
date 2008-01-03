@@ -410,7 +410,7 @@ void sqlite3Update(
     }else{
       sqlite3VdbeAddOp2(v, OP_RowData, iCur, 0);
     }
-    sqlite3VdbeAddOp2(v, OP_Insert, oldIdx, 0);
+    sqlite3CodeInsert(pParse, oldIdx, 0);
 
     /* Generate the NEW table
     */
@@ -441,7 +441,7 @@ void sqlite3Update(
       sqlite3TableAffinityStr(v, pTab);
     }
     if( pParse->nErr ) goto update_cleanup;
-    sqlite3VdbeAddOp2(v, OP_Insert, newIdx, 0);
+    sqlite3CodeInsert(pParse, newIdx, 0);
 
     sqlite3VdbeAddOp2(v, OP_Goto, 0, iBeginBeforeTrigger);
     sqlite3VdbeJumpHere(v, iEndBeforeTrigger);

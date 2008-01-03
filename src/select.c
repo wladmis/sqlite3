@@ -613,7 +613,7 @@ static int selectInnerLoop(
       }else{
         sqlite3VdbeAddOp2(v, OP_NewRowid, iParm, 0);
         sqlite3VdbeAddOp2(v, OP_Pull, 1, 0);
-        sqlite3VdbeAddOp2(v, OP_Insert, iParm, OPFLAG_APPEND);
+        sqlite3CodeInsert(pParse, iParm, OPFLAG_APPEND);
       }
       break;
     }
@@ -791,7 +791,7 @@ static void generateSortTail(
     case SRT_EphemTab: {
       sqlite3VdbeAddOp2(v, OP_NewRowid, iParm, 0);
       sqlite3VdbeAddOp2(v, OP_Pull, 1, 0);
-      sqlite3VdbeAddOp2(v, OP_Insert, iParm, OPFLAG_APPEND);
+      sqlite3CodeInsert(pParse, iParm, OPFLAG_APPEND);
       break;
     }
 #ifndef SQLITE_OMIT_SUBQUERY
@@ -814,7 +814,7 @@ static void generateSortTail(
     case SRT_Callback:
     case SRT_Subroutine: {
       int i;
-      sqlite3VdbeAddOp2(v, OP_Insert, pseudoTab, 0);
+      sqlite3CodeInsert(pParse, pseudoTab, 0);
       for(i=0; i<nColumn; i++){
         sqlite3VdbeAddOp2(v, OP_Column, pseudoTab, i);
       }

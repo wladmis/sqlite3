@@ -212,7 +212,7 @@ static void analyzeOneTable(
       }
     }
     sqlite3VdbeAddOp4(v, OP_MakeRecord, 3, 0, 0, "aaa", 0);
-    sqlite3VdbeAddOp2(v, OP_Insert, iStatCur, OPFLAG_APPEND);
+    sqlite3CodeInsert(pParse, iStatCur, OPFLAG_APPEND);
     sqlite3VdbeJumpHere(v, addr);
   }
 }
