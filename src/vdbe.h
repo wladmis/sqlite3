@@ -62,8 +62,9 @@ typedef struct VdbeOp VdbeOp;
 struct VdbeOpList {
   u8 opcode;          /* What operation to perform */
   signed char p1;     /* First operand */
-  short int p2;       /* Second parameter (often the jump destination) */
-  char *p3;           /* Third parameter */
+  signed char p2;     /* Second parameter (often the jump destination) */
+  signed char p3;     /* Third parameter */
+  char *p4;           /* Fourth parameter */
 };
 typedef struct VdbeOpList VdbeOpList;
 
