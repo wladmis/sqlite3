@@ -133,6 +133,7 @@ int sqlite3VdbeAddOp4(Vdbe*,int,int,int,int,const char *zP4,int);
 int sqlite3VdbeAddOpList(Vdbe*, int nOp, VdbeOpList const *aOp);
 void sqlite3VdbeChangeP1(Vdbe*, int addr, int P1);
 void sqlite3VdbeChangeP2(Vdbe*, int addr, int P2);
+void sqlite3VdbeChangeP3(Vdbe*, int addr, int P2);
 void sqlite3VdbeJumpHere(Vdbe*, int addr);
 void sqlite3VdbeChangeToNoop(Vdbe*, int addr, int N);
 void sqlite3VdbeChangeP4(Vdbe*, int addr, const char *zP4, int N);

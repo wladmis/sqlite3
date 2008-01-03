@@ -380,8 +380,7 @@ void sqlite3Update(
     for(i=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, i++){
       if( openAll || aIdxUsed[i] ){
         KeyInfo *pKey = sqlite3IndexKeyinfo(pParse, pIdx);
-        sqlite3VdbeAddOp2(v, OP_Integer, iDb, 0);
-        sqlite3VdbeAddOp4(v, OP_OpenWrite, iCur+i+1, pIdx->tnum, 0,
+        sqlite3VdbeAddOp4(v, OP_OpenWrite, iCur+i+1, pIdx->tnum, iDb,
                        (char*)pKey, P4_KEYINFO_HANDOFF);
         assert( pParse->nTab>iCur+i+1 );
       }
