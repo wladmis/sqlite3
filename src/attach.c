@@ -326,9 +326,9 @@ static void codeAttach(
   }
 
   v = sqlite3GetVdbe(pParse);
-  sqlite3ExprCode(pParse, pFilename);
-  sqlite3ExprCode(pParse, pDbname);
-  sqlite3ExprCode(pParse, pKey);
+  sqlite3ExprCode(pParse, pFilename, 0);
+  sqlite3ExprCode(pParse, pDbname, 0);
+  sqlite3ExprCode(pParse, pKey, 0);
 
   assert( v || db->mallocFailed );
   if( v ){
