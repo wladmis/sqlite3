@@ -647,8 +647,10 @@ static void updateVirtualTable(
     sqlite3VdbeAddOp2(v, OP_Column, ephemTab, i+1+(pRowid!=0));
   }
   pParse->pVirtualLock = pTab;
-  sqlite3VdbeAddOp4(v, OP_VUpdate, 0, pTab->nCol+2, 0,
-                     (const char*)pTab->pVtab, P4_VTAB);
+  sqlite3VdbeAddOp4(v, OP_VUpdate, 0, pTab->nCol+2, 
+      sqlite3StackToReg(pParse, pTab->nCol+2), 
+      (const char*)pTab->pVtab, P4_VTAB
+  );
   sqlite3VdbeAddOp2(v, OP_Next, ephemTab, addr);
   sqlite3VdbeJumpHere(v, addr-1);
   sqlite3VdbeAddOp2(v, OP_Close, ephemTab, 0);

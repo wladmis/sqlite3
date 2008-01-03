@@ -75,6 +75,24 @@ void sqlite3CodeInsert(Parse *p, int iCur, u8 flags){
 }
 
 /*
+** Allocate nVal contiguous memory cells and return the index of the
+** first. Also pop nVal elements from the stack and store them in the 
+** registers. The element on the top of the stack is stored in the
+** register with the largest index.
+*/
+int sqlite3StackToReg(Parse *p, int nVal){
+  int i;
+  int iRet = p->nMem;
+  Vdbe *v = sqlite3GetVdbe(p);
+  assert(v);
+  p->nMem += nVal;
+  for(i=nVal-1; i>=0; i--){
+    sqlite3VdbeAddOp2(v, OP_MemStore, iRet+i, 1);
+  }
+  return iRet;
+}
+
+/*
 ** Generate code that will open a table for reading.
 */
 void sqlite3OpenTable(
@@ -354,8 +372,9 @@ void sqlite3DeleteFrom(
       /* Delete the row */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       if( IsVirtual(pTab) ){
+        int iReg = sqlite3StackToReg(pParse, 1);
         pParse->pVirtualLock = pTab;
-        sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, 0,
+        sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, iReg,
                           (const char*)pTab->pVtab, P4_VTAB);
       }else
 #endif
