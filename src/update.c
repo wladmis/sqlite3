@@ -64,7 +64,6 @@ void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
     sqlite3ValueFromExpr(sqlite3VdbeDb(v), pCol->pDflt, enc, 
                          pCol->affinity, &pValue);
     if( pValue ){
-      sqlite3VdbeAddOp2(v, OP_DfltValue, 0, 0);
       sqlite3VdbeChangeP4(v, -1, (const char *)pValue, P4_MEM);
     }
   }
