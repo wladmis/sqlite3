@@ -238,10 +238,12 @@ proc catchsql {sql {db db}} {
 #
 proc explain {sql {db db}} {
   puts ""
-  puts "addr  opcode        p1       p2     p3             "
-  puts "----  ------------  ------  ------  ---------------"
+  puts "addr  opcode        p1      p2      p3      p4               p5  #"
+  puts "----  ------------  ------  ------  ------  ---------------  --  -"
   $db eval "explain $sql" {} {
-    puts [format {%-4d  %-12.12s  %-6d  %-6d  %s} $addr $opcode $p1 $p2 $p3]
+    puts [format {%-4d  %-12.12s  %-6d  %-6d  %-6d  % -17s %s  %s} \
+      $addr $opcode $p1 $p2 $p3 $p4 $p5 $comment
+    ]
   }
 }
 

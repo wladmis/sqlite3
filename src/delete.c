@@ -91,6 +91,14 @@ int sqlite3StackToReg(Parse *p, int nVal){
   }
   return iRet;
 }
+void sqlite3RegToStack(Parse *p, int iReg, int nVal){
+  int i;
+  Vdbe *v = sqlite3GetVdbe(p);
+  assert(v);
+  for(i=0; i<nVal; i++){
+    sqlite3VdbeAddOp2(v, OP_MemLoad, iReg+i, 0);
+  }
+}
 
 /*
 ** Generate code that will open a table for reading.

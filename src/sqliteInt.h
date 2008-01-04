@@ -1919,6 +1919,7 @@ char *sqlite3StrAccumFinish(StrAccum*);
 void sqlite3StrAccumReset(StrAccum*);
 void sqlite3CodeInsert(Parse *, int, u8);
 int sqlite3StackToReg(Parse *, int);
+void sqlite3RegToStack(Parse *, int, int);
 
 /*
 ** The interface to the LEMON-generated parser
