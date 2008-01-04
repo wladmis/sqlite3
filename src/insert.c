@@ -1176,7 +1176,8 @@ void sqlite3GenerateConstraintChecks(
         break;
       }
       case OE_Replace: {
-        sqlite3GenerateRowDelete(pParse->db, v, pTab, base, 0);
+        int iRowid = sqlite3StackToReg(pParse, 1);
+        sqlite3GenerateRowDelete(pParse->db, v, pTab, base, iRowid, 0);
         if( isUpdate ){
           sqlite3VdbeAddOp2(v, OP_Dup, nCol+extra+1+hasTwoRowids, 1);
           sqlite3VdbeAddOp2(v, OP_MoveGe, base, 0);
