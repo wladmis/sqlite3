@@ -4766,6 +4766,18 @@ case OP_MemMove: {
   break;
 }
 
+/* Opcode: MemSet P1 * * P4
+**
+** The P4 should be set to contain a P4_MEM value. The value is copied
+** to memory cell P1.
+*/
+case OP_MemSet: {
+  assert( pOp->p1>0 && pOp->p1<=p->nMem );
+  assert( pOp->p4type==P4_MEM );
+  rc = sqlite3VdbeMemCopy(&p->aMem[pOp->p1], pOp->p4.pMem);
+  break;
+}
+
 /* Opcode: AggStep P1 P2 P4
 **
 ** Execute the step function for an aggregate.  The
