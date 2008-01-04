@@ -356,7 +356,7 @@ void sqlite3Update(
   */
   if( db->flags & SQLITE_CountRows && !pParse->trigStack ){
     memCnt = ++pParse->nMem;
-    sqlite3VdbeAddOp2(v, OP_MemInt, 0, memCnt);
+    sqlite3VdbeAddOp2(v, OP_Integer, 0, memCnt);
   }
 
   if( !isView && !IsVirtual(pTab) ){

@@ -363,9 +363,7 @@ void sqlite3AlterRenameTable(
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   if( isVirtualRename ){
     int i = ++pParse->nMem;
-    sqlite3_value *pVal = sqlite3ValueNew(db);
-    sqlite3ValueSetStr(pVal, -1, zName, SQLITE_UTF8, SQLITE_TRANSIENT);
-    sqlite3VdbeAddOp4(v, OP_MemSet, i, 0, 0, (char *)pVal, P4_MEM);
+    sqlite3VdbeAddOp4(v, OP_String8, 0, i, 0, zName, 0);
     sqlite3VdbeAddOp4(v, OP_VRename, i, 0, 0,(const char*)pTab->pVtab, P4_VTAB);
   }
 #endif
