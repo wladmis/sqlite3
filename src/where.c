@@ -2348,7 +2348,8 @@ WhereInfo *sqlite3WhereBegin(
         assert( pX!=0 );
         assert( pStart->leftCursor==iCur );
         sqlite3ExprCode(pParse, pX->pRight, 0);
-        sqlite3VdbeAddOp2(v, OP_ForceInt, pX->op==TK_LE || pX->op==TK_GT, brk);
+        sqlite3VdbeAddOp3(v, OP_ForceInt, 0, brk, 
+                             pX->op==TK_LE || pX->op==TK_GT);
         sqlite3VdbeAddOp2(v, bRev ? OP_MoveLt : OP_MoveGe, iCur, brk);
         VdbeComment((v, "pk"));
         disableTerm(pLevel, pStart);
