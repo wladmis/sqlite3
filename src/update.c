@@ -456,7 +456,7 @@ void sqlite3Update(
     ** So make the cursor point at the old record.
     */
     sqlite3VdbeAddOp3(v, OP_NotExists, iCur, addr, iRowid);
-    sqlite3VdbeAddOp2(v, OP_MemLoad, iRowid, 0);
+    sqlite3VdbeAddOp2(v, OP_SCopy, iRowid, 0);
 
     /* If the record number will change, push the record number as it
     ** will be after the update. (The old record number is currently

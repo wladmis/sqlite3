@@ -300,7 +300,7 @@ void sqlite3Pragma(
     static const VdbeOpList getCacheSize[] = {
       { OP_ReadCookie,  0, 0,        2},  /* 0 */
       { OP_AbsValue,    0, 0,        0},
-      { OP_Dup,         0, 0,        0},
+      { OP_Copy,        0, 0,        0},
       { OP_Integer,     0, 0,        0},
       { OP_Ne,          0, 6,        0},
       { OP_Integer,     0, 0,        0},  /* 5 */
@@ -830,7 +830,7 @@ void sqlite3Pragma(
     ** error message
     */
     static const VdbeOpList endCode[] = {
-      { OP_MemLoad,     1, 0,        0},
+      { OP_SCopy,       1, 0,        0},
       { OP_Integer,     0, 0,        0},
       { OP_Ne,          0, 0,        0},    /* 2 */
       { OP_String8,     0, 0,        0},    /* 3 */
@@ -933,8 +933,8 @@ void sqlite3Pragma(
              { OP_Rewind,       0,  0,  0},  /* 1 */
              { OP_MemIncr,      1,  3,  0},
              { OP_Next,         0,  0,  0},  /* 3 */
-             { OP_MemLoad,      2,  0,  0},
-             { OP_MemLoad,      3,  0,  0},
+             { OP_SCopy,        2,  0,  0},
+             { OP_SCopy,        3,  0,  0},
              { OP_Eq,           0,  0,  0},  /* 6 */
              { OP_MemIncr,     -1,  1,  0},
              { OP_String8,      0,  0,  0},  /* 8 */
