@@ -1353,9 +1353,9 @@ struct Select {
 */
 typedef struct SelectDest SelectDest;
 struct SelectDest {
-  int eDest;        /* How to dispose of the results */
+  u8 eDest;         /* How to dispose of the results */
+  u8 affinity;      /* Affinity used when eDest==SRT_Set */
   int iParm;        /* A parameter used by the eDest disposal method */
-  int affinity;     /* Affinity used when eDest==SRT_Set */
 };
 
 /*

@@ -1491,7 +1491,7 @@ void sqlite3EndTable(
     ** be redundant.
     */
     if( pSelect ){
-      SelectDest dest = {SRT_Table, 1, 0};
+      SelectDest dest = {SRT_Table, 0, 1};
       Table *pSelTab;
       sqlite3VdbeAddOp0(v, OP_Copy);
       sqlite3VdbeAddOp3(v, OP_OpenWrite, 1, 0, iDb);
