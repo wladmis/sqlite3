@@ -2127,7 +2127,7 @@ int sqlite3ExprCode(Parse *pParse, Expr *pExpr, int target){
       sqlite3ExprCode(pParse, pExpr->pLeft, 0);
       dest = sqlite3VdbeCurrentAddr(v) + 2;
       sqlite3VdbeAddOp2(v, op, 1, dest);
-      sqlite3VdbeAddOp1(v, OP_AddImm, -1);
+      sqlite3VdbeAddOp2(v, OP_AddImm, 0, -1);
       stackChng = 0;
       break;
     }
@@ -2242,7 +2242,7 @@ int sqlite3ExprCode(Parse *pParse, Expr *pExpr, int target){
                              &affinity, 1);   /* addr + 4 */
         sqlite3VdbeAddOp2(v, OP_Found, pExpr->iTable, iLabel);
       }
-      sqlite3VdbeAddOp1(v, OP_AddImm, -1);                     /* addr + 6 */
+      sqlite3VdbeAddOp2(v, OP_AddImm, 0, -1);                  /* addr + 6 */
       sqlite3VdbeResolveLabel(v, iLabel);
 
       break;

@@ -2252,7 +2252,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
     int addr2 = curaddr+4;
     sqlite3VdbeChangeP2(v, curaddr-1, addr2);
     sqlite3VdbeAddOp1(v, OP_Rowid, iTab);
-    sqlite3VdbeAddOp1(v, OP_AddImm, 1);
+    sqlite3VdbeAddOp2(v, OP_AddImm, 0, 1);
     sqlite3VdbeAddOp2(v, OP_IsUnique, iIdx, addr2);
     sqlite3VdbeAddOp4(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort, 0,
                     "indexed columns are not unique", P4_STATIC);

@@ -495,7 +495,7 @@ void sqlite3Pragma(
     sqlite3VdbeAddOp2(v, OP_Integer, iLimit, 1);
     addr = sqlite3VdbeAddOp2(v, OP_IncrVacuum, iDb, 0);
     sqlite3VdbeAddOp2(v, OP_Callback, 0, 0);
-    sqlite3VdbeAddOp2(v, OP_MemIncr, -1, 1);
+    sqlite3VdbeAddOp2(v, OP_AddImm, 1, -1);
     sqlite3VdbeAddOp2(v, OP_IfMemPos, 1, addr);
     sqlite3VdbeJumpHere(v, addr);
   }else
@@ -905,11 +905,11 @@ void sqlite3Pragma(
         sqlite3OpenTableAndIndices(pParse, pTab, 1, OP_OpenRead);
         sqlite3VdbeAddOp2(v, OP_Integer, 0, 2);
         loopTop = sqlite3VdbeAddOp2(v, OP_Rewind, 1, 0);
-        sqlite3VdbeAddOp2(v, OP_MemIncr, 1, 2);
+        sqlite3VdbeAddOp2(v, OP_AddImm, 2, 1);
         for(j=0, pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext, j++){
           int jmp2;
           static const VdbeOpList idxErr[] = {
-            { OP_MemIncr,    -1,  1,  0},
+            { OP_AddImm,      1, -1,  0},
             { OP_String8,     0,  0,  0},    /* 1 */
             { OP_Rowid,       1,  0,  0},
             { OP_String8,     0,  0,  0},    /* 3 */
@@ -931,12 +931,12 @@ void sqlite3Pragma(
           static const VdbeOpList cntIdx[] = {
              { OP_Integer,      0,  3,  0},
              { OP_Rewind,       0,  0,  0},  /* 1 */
-             { OP_MemIncr,      1,  3,  0},
+             { OP_AddImm,       3,  1,  0},
              { OP_Next,         0,  0,  0},  /* 3 */
              { OP_SCopy,        2,  0,  0},
              { OP_SCopy,        3,  0,  0},
              { OP_Eq,           0,  0,  0},  /* 6 */
-             { OP_MemIncr,     -1,  1,  0},
+             { OP_AddImm,       1, -1,  0},
              { OP_String8,      0,  0,  0},  /* 8 */
              { OP_String8,      0,  0,  0},  /* 9 */
              { OP_Concat,       0,  0,  0},

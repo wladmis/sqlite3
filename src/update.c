@@ -506,7 +506,7 @@ void sqlite3Update(
   /* Increment the row counter 
   */
   if( db->flags & SQLITE_CountRows && !pParse->trigStack){
-    sqlite3VdbeAddOp2(v, OP_MemIncr, 1, memCnt);
+    sqlite3VdbeAddOp2(v, OP_AddImm, memCnt, 1);
   }
 
   /* If there are triggers, close all the cursors after each iteration
