@@ -71,14 +71,14 @@ do_test minmax2-1.5 {
 } {1}
 do_test minmax2-1.6 {
   set sqlite_search_count
-} {2}
+} {1}
 do_test minmax2-1.7 {
   set sqlite_search_count 0
   execsql {SELECT max(x) FROM t1}
 } {20}
 do_test minmax2-1.8 {
   set sqlite_search_count
-} {1}
+} {0}
 do_test minmax2-1.9 {
   set sqlite_search_count 0
   execsql {SELECT max(y) FROM t1}
