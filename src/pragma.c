@@ -887,7 +887,7 @@ void sqlite3Pragma(
          sqlite3MPrintf(db, "*** in database %s ***\n", db->aDb[i].zName),
          P4_DYNAMIC);
       sqlite3VdbeAddOp2(v, OP_Pull, 1, 0);
-      sqlite3VdbeAddOp2(v, OP_Concat, 0, 0);
+      sqlite3VdbeAddOp0(v, OP_Concat);
       sqlite3VdbeAddOp2(v, OP_Callback, 1, 0);
       sqlite3VdbeJumpHere(v, addr);
 
@@ -914,7 +914,9 @@ void sqlite3Pragma(
             { OP_Rowid,       1,  0,  0},
             { OP_String8,     0,  0,  0},    /* 3 */
             { OP_String8,     0,  0,  0},    /* 4 */
-            { OP_Concat,      2,  0,  0},
+            { OP_Concat,      0,  0,  0},
+            { OP_Concat,      0,  0,  0},
+            { OP_Concat,      0,  0,  0},
             { OP_Callback,    1,  0,  0},
           };
           sqlite3GenerateIndexKey(v, pIdx, 1);
