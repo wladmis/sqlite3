@@ -1491,11 +1491,13 @@ void sqlite3EndTable(
     ** be redundant.
     */
     if( pSelect ){
-      SelectDest dest = {SRT_Table, 0, 1};
+      SelectDest dest;
       Table *pSelTab;
+
       sqlite3VdbeAddOp0(v, OP_Copy);
       sqlite3VdbeAddOp3(v, OP_OpenWrite, 1, 0, iDb);
       pParse->nTab = 2;
+      sqlite3SelectDestInit(&dest, SRT_Table, 1);
       sqlite3Select(pParse, pSelect, &dest, 0, 0, 0, 0);
       sqlite3VdbeAddOp1(v, OP_Close, 1);
       if( pParse->nErr==0 ){

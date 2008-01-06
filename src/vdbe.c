@@ -2670,6 +2670,7 @@ case OP_MakeRecord: {        /* jump */
     pOut->flags |= MEM_Zero;
   }
   pOut->enc = SQLITE_UTF8;  /* In case the blob is ever converted to text */
+  REGISTER_TRACE(pOp->p3, pOut);
 
   /* If a NULL was encountered and jumpIfNull is non-zero, take the jump. */
   if( jumpIfNull && containsNull ){
