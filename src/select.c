@@ -809,12 +809,16 @@ static void generateSortTail(
     }
 #ifndef SQLITE_OMIT_SUBQUERY
     case SRT_Set: {
+      int j1, j2;
       assert( nColumn==1 );
-      sqlite3VdbeAddOp2(v, OP_NotNull, -1, sqlite3VdbeCurrentAddr(v)+3);
-      sqlite3VdbeAddOp2(v, OP_Pop, 1, 0);
-      sqlite3VdbeAddOp2(v, OP_Goto, 0, sqlite3VdbeCurrentAddr(v)+3);
+      sqlite3VdbeAddOp0(v, OP_SCopy);
+      j1 = sqlite3VdbeAddOp0(v, OP_NotNull);
+      sqlite3VdbeAddOp1(v, OP_Pop, 1);
+      j2 = sqlite3VdbeAddOp0(v, OP_Goto);
+      sqlite3VdbeJumpHere(v, j1);
       sqlite3VdbeAddOp4(v, OP_MakeRecord, 1, 0, 0, &p->affinity, 1);
       sqlite3VdbeAddOp2(v, OP_IdxInsert, iParm, 0);
+      sqlite3VdbeJumpHere(v, j2);
       break;
     }
     case SRT_Mem: {
