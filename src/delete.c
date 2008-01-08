@@ -71,7 +71,7 @@ void sqlite3CodeInsert(Parse *p, int iCur, u8 flags){
   sqlite3VdbeAddOp2(v, OP_Move, 0, iData);
   sqlite3VdbeAddOp2(v, OP_Move, 0, iKey);
   sqlite3VdbeAddOp3(v, OP_Insert, iCur, iData, iKey);
-  sqlite3VdbeChangeP5(v, sqlite3VdbeCurrentAddr(v)-1, flags);
+  sqlite3VdbeChangeP5(v, flags);
 }
 
 /*

@@ -3525,7 +3525,7 @@ int sqlite3Select(
       sqlite3VdbeAddOp2(v, OP_Return, 0, 0);
       finalizeAggFunctions(pParse, &sAggInfo);
       if( pHaving ){
-        sqlite3ExprIfFalse(pParse, pHaving, addrOutputRow+1, 1);
+        sqlite3ExprIfFalse(pParse, pHaving, addrOutputRow+1, SQLITE_JUMPIFNULL);
       }
       rc = selectInnerLoop(pParse, p, p->pEList, 0, 0, pOrderBy,
                            distinct, pDest,
@@ -3603,11 +3603,12 @@ int sqlite3Select(
         }
         sqlite3VdbeAddOp2(v, OP_SCopy, iAMem+j, 0);
         if( j==0 ){
-          sqlite3VdbeAddOp2(v, OP_Eq, 0x200, addrProcessRow);
+          sqlite3VdbeAddOp2(v, OP_Eq, 0, addrProcessRow);
         }else{
-          sqlite3VdbeAddOp2(v, OP_Ne, 0x200, addrGroupByChange);
+          sqlite3VdbeAddOp2(v, OP_Ne, 0, addrGroupByChange);
         }
         sqlite3VdbeChangeP4(v, -1, (void*)pKeyInfo->aColl[j], P4_COLLSEQ);
+        sqlite3VdbeChangeP5(v, SQLITE_NULLEQUAL);
       }
 
       /* Generate code that runs whenever the GROUP BY changes.
@@ -3712,7 +3713,7 @@ int sqlite3Select(
       finalizeAggFunctions(pParse, &sAggInfo);
       pOrderBy = 0;
       if( pHaving ){
-        sqlite3ExprIfFalse(pParse, pHaving, addrEnd, 1);
+        sqlite3ExprIfFalse(pParse, pHaving, addrEnd, SQLITE_JUMPIFNULL);
       }
       selectInnerLoop(pParse, p, p->pEList, 0, 0, 0, -1, 
                       pDest, addrEnd, addrEnd, aff);

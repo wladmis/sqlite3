@@ -159,7 +159,8 @@ static void analyzeOneTable(
     for(i=0; i<nCol; i++){
       sqlite3VdbeAddOp2(v, OP_Column, iIdxCur, i);
       sqlite3VdbeAddOp1(v, OP_SCopy, iMem+nCol+i+1);
-      sqlite3VdbeAddOp1(v, OP_Ne, 0x100);  /* FIX ME: use collating sequence */
+      sqlite3VdbeAddOp0(v, OP_Ne );  /* Use Collating sequence */
+      sqlite3VdbeChangeP5(v, SQLITE_JUMPIFNULL);
     }
     sqlite3VdbeAddOp2(v, OP_Goto, 0, endOfLoop);
     for(i=0; i<nCol; i++){
