@@ -352,6 +352,7 @@ proc crashsql {args} {
 
   set blocksize ""
   set crashdelay 1
+  set prngseed 0
   set crashfile ""
   set dc ""
   set sql [lindex $args end]
@@ -362,6 +363,7 @@ proc crashsql {args} {
     set z2 [lindex $args [expr $ii+1]]
 
     if     {$n>1 && [string first $z -delay]==0}     {set crashdelay $z2} \
+    elseif {$n>1 && [string first $z -seed]==0}      {set prngseed $z2} \
     elseif {$n>1 && [string first $z -file]==0}      {set crashfile $z2}  \
     elseif {$n>1 && [string first $z -blocksize]==0} {set blocksize "-s $z2" } \
     elseif {$n>1 && [string first $z -characteristics]==0} {set dc "-c {$z2}" } \
@@ -386,6 +388,11 @@ proc crashsql {args} {
   puts $f {db eval {SELECT * FROM sqlite_master;}}
   puts $f {set bt [btree_from_db db]}
   puts $f {btree_set_cache_size $bt 10}
+  if {$prngseed} {
+    set seed [expr {$prngseed%10007+1}]
+    # puts seed=$seed
+    puts $f "db eval {SELECT randomblob($seed)}"
+  }
 
   puts $f "db eval {"
   puts $f   "$sql"
