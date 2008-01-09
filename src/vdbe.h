@@ -42,7 +42,7 @@ typedef struct Mem Mem;
 */
 struct VdbeOp {
   u8 opcode;          /* What operation to perform */
-  char p4type;        /* One of the P4_xxx constants for p4 */
+  signed char p4type; /* One of the P4_xxx constants for p4 */
   u8 flags;           /* Flags for internal use */
   u8 p5;              /* Fifth parameter is an unsigned character */
   int p1;             /* First operand */
