@@ -369,7 +369,7 @@ void sqlite3DeleteFrom(
 
       /* Populate the OLD.* pseudo-table */
       if( old_col_mask ){
-        sqlite3VdbeAddOp3(v, OP_RowData, iCur, 0, iData);
+        sqlite3VdbeAddOp2(v, OP_RowData, iCur, iData);
       }else{
         sqlite3VdbeAddOp2(v, OP_Null, 0, iData);
       }

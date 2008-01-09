@@ -2549,7 +2549,7 @@ WhereInfo *sqlite3WhereBegin(
         sqlite3VdbeAddOp2(v, OP_SCopy, pLevel->iMem, 0);
         sqlite3VdbeAddOp2(v, testOp, iIdxCur, nxt);
         if( (topEq && !bRev) || (!btmEq && bRev) ){
-          sqlite3VdbeChangeP4(v, -1, "+", P4_STATIC);
+          sqlite3VdbeChangeP5(v, 1);
         }
       }
       if( topLimit | btmLimit ){
@@ -2618,7 +2618,8 @@ WhereInfo *sqlite3WhereBegin(
         /* Scan in the forward order */
         sqlite3VdbeAddOp2(v, (isMinQuery?OP_MoveGt:OP_MoveGe), iIdxCur, nxt);
         start = sqlite3VdbeAddOp2(v, OP_SCopy, pLevel->iMem, 0);
-        sqlite3VdbeAddOp4(v, OP_IdxGE, iIdxCur, nxt, 0, "+", P4_STATIC);
+        sqlite3VdbeAddOp2(v, OP_IdxGE, iIdxCur, nxt);
+        sqlite3VdbeChangeP5(v, 1);
         pLevel->op = OP_Next;
       }
       if( !omitTable ){

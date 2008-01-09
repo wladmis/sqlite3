@@ -332,7 +332,8 @@ static void codeAttach(
 
   assert( v || db->mallocFailed );
   if( v ){
-    sqlite3VdbeAddOp2(v, OP_Function, 0, nFunc);
+    sqlite3VdbeAddOp0(v, OP_Function);
+    sqlite3VdbeChangeP5(v, nFunc);
     pFunc = sqlite3FindFunction(db, zFunc, strlen(zFunc), nFunc, SQLITE_UTF8,0);
     sqlite3VdbeChangeP4(v, -1, (char *)pFunc, P4_FUNCDEF);
 

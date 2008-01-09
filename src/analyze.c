@@ -73,6 +73,9 @@ static void openStatTable(
     sqlite3TableLock(pParse, iDb, iRootPage, 1, "sqlite_stat1");
   }
   sqlite3VdbeAddOp3(v, OP_OpenWrite, iStatCur, iRootPage, iDb);
+  if( iRootPage==0 ){
+    sqlite3VdbeChangeP5(v, 1);
+  }
   sqlite3VdbeAddOp2(v, OP_SetNumColumns, iStatCur, 3);
 }
 

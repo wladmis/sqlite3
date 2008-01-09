@@ -2210,8 +2210,9 @@ int sqlite3ExprCode(Parse *pParse, Expr *pExpr, int target){
         if( !pColl ) pColl = pParse->db->pDfltColl; 
         sqlite3VdbeAddOp4(v, OP_CollSeq, 0, 0, 0, (char *)pColl, P4_COLLSEQ);
       }
-      sqlite3VdbeAddOp4(v, OP_Function, constMask, nExpr, 0,
+      sqlite3VdbeAddOp4(v, OP_Function, constMask, 0, 0,
                         (char*)pDef, P4_FUNCDEF);
+      sqlite3VdbeChangeP5(v, nExpr);
       break;
     }
 #ifndef SQLITE_OMIT_SUBQUERY

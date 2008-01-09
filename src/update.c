@@ -414,7 +414,7 @@ void sqlite3Update(
     if( !old_col_mask ){
       sqlite3VdbeAddOp2(v, OP_Null, 0, 0);
     }else{
-      sqlite3VdbeAddOp2(v, OP_RowData, iCur, 0);
+      sqlite3VdbeAddOp1(v, OP_RowData, iCur);
     }
     sqlite3CodeInsert(pParse, oldIdx, 0);
 
