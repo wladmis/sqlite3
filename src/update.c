@@ -468,7 +468,7 @@ void sqlite3Update(
     */
     if( chngRowid ){
       sqlite3ExprCode(pParse, pRowidExpr, regNewRowid);
-      sqlite3VdbeAddOp3(v, OP_MustBeInt, 0, 0, regNewRowid);
+      sqlite3VdbeAddOp1(v, OP_MustBeInt, regNewRowid);
     }
 
     /* Compute new data for this record.  

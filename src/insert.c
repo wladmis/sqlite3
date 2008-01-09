@@ -779,10 +779,10 @@ void sqlite3Insert(
       ** to generate a unique primary key value.
       */
       if( !appendFlag ){
-        sqlite3VdbeAddOp2(v, OP_IfMemNull, regRowid, sqlite3VdbeCurrentAddr(v)+2);
+        sqlite3VdbeAddOp2(v, OP_IsNull, regRowid, sqlite3VdbeCurrentAddr(v)+2);
         sqlite3VdbeAddOp2(v, OP_Goto, -1, sqlite3VdbeCurrentAddr(v)+2);
         sqlite3VdbeAddOp3(v, OP_NewRowid, baseCur, regRowid, regAutoinc);
-        sqlite3VdbeAddOp3(v, OP_MustBeInt, 0, 0, regRowid);
+        sqlite3VdbeAddOp1(v, OP_MustBeInt, regRowid);
       }
     }else if( IsVirtual(pTab) ){
       sqlite3VdbeAddOp2(v, OP_Null, 0, regRowid);
