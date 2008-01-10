@@ -54,7 +54,7 @@ int sqlite3_blob_open(
   ** vdbe program will take advantage of the various transaction,
   ** locking and error handling infrastructure built into the vdbe.
   **
-  ** After seeking the cursor, the vdbe executes an OP_Callback.
+  ** After seeking the cursor, the vdbe executes an OP_ResultRow.
   ** Code external to the Vdbe then "borrows" the b-tree cursor and
   ** uses it to implement the blob_read(), blob_write() and 
   ** blob_bytes() functions.
@@ -74,10 +74,10 @@ int sqlite3_blob_open(
     {OP_OpenWrite, 0, 0, 0},       /* 3: Open cursor 0 for read/write */
     {OP_SetNumColumns, 0, 0, 0},   /* 4: Num cols for cursor */
 
-    {OP_Variable, 1, 0, 0},        /* 5: Push the rowid to the stack */
-    {OP_NotExists, 0, 10, 0},      /* 6: Seek the cursor */
-    {OP_Column, 0, 0, 0},          /* 7  */
-    {OP_Callback, 0, 0, 0},        /* 8  */
+    {OP_Variable, 1, 1, 0},        /* 5: Push the rowid to the stack */
+    {OP_NotExists, 0, 10, 1},      /* 6: Seek the cursor */
+    {OP_Column, 0, 0, 1},          /* 7  */
+    {OP_ResultRow, 1, 0, 0},       /* 8  */
     {OP_Close, 0, 0, 0},           /* 9  */
     {OP_Halt, 0, 0, 0},            /* 10 */
   };
@@ -181,7 +181,7 @@ int sqlite3_blob_open(
       */
       sqlite3VdbeChangeP2(v, 4, pTab->nCol+1);
       if( !db->mallocFailed ){
-        sqlite3VdbeMakeReady(v, 1, 0, 1, 0);
+        sqlite3VdbeMakeReady(v, 1, 1, 1, 0);
       }
     }
    
