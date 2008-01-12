@@ -289,9 +289,8 @@ Expr *sqlite3PExpr(
 
 /*
 ** When doing a nested parse, you can include terms in an expression
-** that look like this:   #0 #1 #2 ...  These terms refer to elements
-** on the stack.  "#0" means the top of the stack.
-** "#1" means the next down on the stack.  And so forth.
+** that look like this:   #1 #2 ...  These terms refer to registers
+** in the virtual machine.  #N is the N-th register.
 **
 ** This routine is called by the parser to deal with on of those terms.
 ** It immediately generates code to store the value in a memory location.
@@ -301,7 +300,6 @@ Expr *sqlite3PExpr(
 Expr *sqlite3RegisterExpr(Parse *pParse, Token *pToken){
   Vdbe *v = pParse->pVdbe;
   Expr *p;
-  int depth;
   if( pParse->nested==0 ){
     sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", pToken);
     return sqlite3PExpr(pParse, TK_NULL, 0, 0, 0);
@@ -311,9 +309,7 @@ Expr *sqlite3RegisterExpr(Parse *pParse, Token *pToken){
   if( p==0 ){
     return 0;  /* Malloc failed */
   }
-  depth = atoi((char*)&pToken->z[1]);
-  p->iTable = ++pParse->nMem;
-  sqlite3VdbeAddOp2(v, OP_Copy, -depth, p->iTable);
+  p->iTable = atoi((char*)&pToken->z[1]);
   return p;
 }
 
