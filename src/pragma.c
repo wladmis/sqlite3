@@ -250,7 +250,7 @@ void sqlite3Pragma(
   int iDb;               /* Database index for <database> */
   sqlite3 *db = pParse->db;
   Db *pDb;
-  Vdbe *v = sqlite3GetVdbe(pParse);
+  Vdbe *v = pParse->pVdbe = sqlite3VdbeCreate(db);
   if( v==0 ) return;
   pParse->nMem = 1;
 
