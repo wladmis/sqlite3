@@ -438,9 +438,9 @@ do_test func-12.2 {
 } {0}
 do_test func-12.3 {
   execsql {
-    SELECT test_destructor('hello')||' world', test_destructor_count();
+    SELECT test_destructor('hello')||' world'
   }
-} {{hello world} 0}
+} {{hello world}}
 do_test func-12.4 {
   execsql {
     SELECT test_destructor_count();

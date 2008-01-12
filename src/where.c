@@ -2591,8 +2591,7 @@ WhereInfo *sqlite3WhereBegin(
           sqlite3VdbeAddOp1(v, OP_Copy, 1-nEq);
         }
         buildIndexProbe(v, nEq, pIdx);
-        sqlite3VdbeAddOp2(v, OP_Copy, 0, pLevel->iMem);
-        sqlite3VdbeAddOp2(v, OP_Pop, 1, 0);
+        sqlite3VdbeAddOp2(v, OP_Move, 0, pLevel->iMem);
         sqlite3VdbeAddOp2(v, OP_Null, 0, 0);
         buildIndexProbe(v, nEq+1, pIdx);
       }else{

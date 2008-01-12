@@ -1400,6 +1400,7 @@ struct Parse {
   u8 nested;           /* Number of nested calls to the parser/code generator */
   u8 parseError;       /* True after a parsing error.  Ticket #1794 */
   u8 nTempReg;         /* Number of temporary registers in aTempReg[] */
+  u8 nTempInUse;       /* Number of aTempReg[] currently checked out */
   int aTempReg[8];     /* Holding area for temporary registers */
   int nRangeReg;       /* Size of the temporary register block */
   int iRangeReg;       /* First register in temporary register block */
@@ -1768,7 +1769,8 @@ WhereInfo *sqlite3WhereBegin(Parse*, SrcList*, Expr*, ExprList**, u8);
 void sqlite3WhereEnd(WhereInfo*);
 void sqlite3ExprCodeGetColumn(Vdbe*, Table*, int, int, int);
 int sqlite3ExprCode(Parse*, Expr*, int);
-void sqlite3ExprCodeAndCache(Parse*, Expr*, int);
+int sqlite3ExprCodeTemp(Parse*, Expr*, int*);
+int sqlite3ExprCodeAndCache(Parse*, Expr*, int);
 int sqlite3ExprCodeExprList(Parse*, ExprList*, int);
 void sqlite3ExprIfTrue(Parse*, Expr*, int, int);
 void sqlite3ExprIfFalse(Parse*, Expr*, int, int);
