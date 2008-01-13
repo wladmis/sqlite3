@@ -2418,7 +2418,8 @@ int sqlite3ExprCodeTemp(Parse *pParse, Expr *pExpr, int *pReg){
 */
 int sqlite3ExprCode(Parse *pParse, Expr *pExpr, int target){
   int inReg = sqlite3ExprCodeTarget(pParse, pExpr, target);
-  if( inReg!=target ){
+  assert( pParse->pVdbe || pParse->db->mallocFailed );
+  if( inReg!=target && pParse->pVdbe ){
     sqlite3VdbeAddOp2(pParse->pVdbe, (inReg>0 ? OP_SCopy : OP_Move), 
                       inReg, target);
   }
