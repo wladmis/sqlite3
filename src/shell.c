@@ -491,7 +491,7 @@ static void output_csv(struct callback_data *p, const char *z, int bSep){
     }
   }
   if( bSep ){
-    fprintf(p->out, p->separator);
+    fprintf(p->out, "%s", p->separator);
   }
 }
 
