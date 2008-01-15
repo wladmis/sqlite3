@@ -3539,11 +3539,10 @@ int sqlite3Select(
       */
       flag = minMaxQuery(pParse, p);
       if( flag ){
-        pMinMax = sqlite3ExprListDup(db, p->pEList->a[0].pExpr->pList);
+        pDel = pMinMax = sqlite3ExprListDup(db, p->pEList->a[0].pExpr->pList);
         if( pMinMax && !db->mallocFailed ){
           pMinMax->a[0].sortOrder = ((flag==ORDERBY_MIN)?0:1);
           pMinMax->a[0].pExpr->op = TK_COLUMN;
-          pDel = pMinMax;
         }
       }
 
