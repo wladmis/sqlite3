@@ -56,6 +56,7 @@ proc do_malloc_test {tn args} {
   } else {
     set start 0
   }
+  save_prng_state
 
   foreach ::iRepeat {0 1} {
     set ::go 1
@@ -68,6 +69,8 @@ proc do_malloc_test {tn args} {
       #
       set zRepeat "transient"
       if {$::iRepeat} {set zRepeat "persistent"}
+      restore_prng_state
+      foreach file [glob -nocomplain test.db-mj*] {file delete -force $file}
 
       do_test ${tn}.${zRepeat}.${::n} {
   

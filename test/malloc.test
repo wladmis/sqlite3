@@ -244,6 +244,7 @@ ifcapable utf16 {
 # This block tests that malloc() failures that occur whilst commiting
 # a multi-file transaction are handled correctly.
 #
+breakpoint
 do_malloc_test 9 -sqlprep {
   ATTACH 'test2.db' as test2;
   CREATE TABLE abc1(a, b, c);
@@ -270,7 +271,7 @@ do_malloc_test 10 -tclprep {
   sqlite3_extended_result_codes db2 1
   db2 eval {SELECT * FROM sqlite_master}
   db2 close
-} 
+}
 
 # This block tests malloc() failures that occur within calls to
 # sqlite3_create_function().

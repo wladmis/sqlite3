@@ -3548,6 +3548,12 @@ case OP_NewRowid: {           /* out2-prerelease */
 ** may be NULL. If it is not NULL, then the update-hook 
 ** (sqlite3.xUpdateCallback) is invoked following a successful insert.
 **
+** (WARNING/TODO: If P1 is a pseudo-cursor and P2 is dynamically
+** allocated, then ownership of P2 is transferred to the pseudo-cursor
+** and register P2 becomes ephemeral.  If the cursor is changed, the
+** value of register P2 will then change.  Make sure this does not
+** cause any problems.)
+**
 ** This instruction only works on tables.  The equivalent instruction
 ** for indices is OP_IdxInsert.
 */
@@ -3585,7 +3591,8 @@ case OP_Insert: {         /* no-push */
       pC->nData = pData->n;
       if( pData->flags & MEM_Dyn ){
         pC->pData = pData->z;
-        pData->flags = MEM_Null;
+        pData->flags &= ~MEM_Dyn;
+        pData->flags |= MEM_Ephem;
       }else{
         pC->pData = sqlite3_malloc( pC->nData+2 );
         if( !pC->pData ) goto no_mem;
