@@ -80,7 +80,6 @@ struct VdbeOpList {
   signed char p1;     /* First operand */
   signed char p2;     /* Second parameter (often the jump destination) */
   signed char p3;     /* Third parameter */
-  char *p4;           /* Fourth parameter */
 };
 typedef struct VdbeOpList VdbeOpList;
 
