@@ -2647,7 +2647,6 @@ WhereInfo *sqlite3WhereBegin(
       pLevel->p2 = 1 + sqlite3VdbeAddOp2(v, OP_Rewind, iCur, brk);
     }
     notReady &= ~getMask(&maskSet, iCur);
-    sqlite3VdbeAddOp2(v, OP_StackDepth, -1, 0);
 
     /* Insert code to test every subexpression that can be completely
     ** computed using the current set of tables.

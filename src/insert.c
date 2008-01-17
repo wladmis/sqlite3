@@ -667,7 +667,6 @@ void sqlite3Insert(
   }else if( pSelect ){
     sqlite3VdbeAddOp2(v, OP_Goto, 0, iSelectLoop);
     sqlite3VdbeResolveLabel(v, iInsertBlock);
-    sqlite3VdbeAddOp2(v, OP_StackDepth, -1, 0);
   }
 
   /* Allocate registers for holding the rowid of the new row,

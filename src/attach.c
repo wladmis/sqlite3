@@ -327,7 +327,7 @@ static void codeAttach(
   }
 
   v = sqlite3GetVdbe(pParse);
-  regArgs = sqlite3GetTempRange(pParse, nFunc);
+  regArgs = sqlite3GetTempRange(pParse, 3);
   sqlite3ExprCode(pParse, pFilename, regArgs);
   sqlite3ExprCode(pParse, pDbname, regArgs+1);
   sqlite3ExprCode(pParse, pKey, regArgs+2);

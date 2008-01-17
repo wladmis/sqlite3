@@ -401,7 +401,6 @@ void sqlite3Update(
 
   /* Top of the update loop */
   addr = sqlite3VdbeAddOp2(v, OP_FifoRead, regOldRowid, 0);
-  sqlite3VdbeAddOp2(v, OP_StackDepth, -1, 0);
 
   if( triggers_exist ){
     int regRowid;

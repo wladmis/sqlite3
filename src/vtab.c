@@ -276,7 +276,7 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
     );
     sqlite3_free(zStmt);
     v = sqlite3GetVdbe(pParse);
-    sqlite3ChangeCookie(db, v, iDb);
+    sqlite3ChangeCookie(pParse, iDb);
 
     sqlite3VdbeAddOp2(v, OP_Expire, 0, 0);
     zWhere = sqlite3MPrintf(db, "name='%q'", pTab->zName);
