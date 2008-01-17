@@ -1949,7 +1949,6 @@ int sqlite3OpenTempDatabase(Parse *);
 void sqlite3StrAccumAppend(StrAccum*,const char*,int);
 char *sqlite3StrAccumFinish(StrAccum*);
 void sqlite3StrAccumReset(StrAccum*);
-int sqlite3StackToReg(Parse *, int);
 void sqlite3SelectDestInit(SelectDest*,int,int);
 
 /*

@@ -449,7 +449,7 @@ void sqlite3Update(
         sqlite3VdbeAddOp2(v, OP_Null, 0, regCols+i);
       }
     }
-    sqlite3VdbeAddOp3(v, OP_RegMakeRec, regCols, pTab->nCol, regRow);
+    sqlite3VdbeAddOp3(v, OP_MakeRecord, regCols, pTab->nCol, regRow);
     if( !isView ){
       sqlite3TableAffinityStr(v, pTab);
     }

@@ -603,7 +603,7 @@ proc cksum {{db db}} {
 # database $db. If the checksum of two databases is the same, and the
 # integrity-check passes for both, the two databases are identical.
 #
-proc allcksum {db} {
+proc allcksum {{db db}} {
   set ret [list]
   ifcapable tempdb {
     set sql {
