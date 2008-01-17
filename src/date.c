@@ -827,7 +827,10 @@ static void strftimeFunc(
     return;
   }else{
     z = sqlite3_malloc( n );
-    if( z==0 ) return;
+    if( z==0 ){
+      sqlite3_result_error_nomem(context);
+      return;
+    }
   }
   computeJD(&x);
   computeYMD_HMS(&x);
@@ -887,10 +890,8 @@ static void strftimeFunc(
     }
   }
   z[j] = 0;
-  sqlite3_result_text(context, z, -1, SQLITE_TRANSIENT);
-  if( z!=zBuf ){
-    sqlite3_free(z);
-  }
+  sqlite3_result_text(context, z, -1,
+                      z==zBuf ? SQLITE_TRANSIENT : sqlite3_free);
 }
 
 /*

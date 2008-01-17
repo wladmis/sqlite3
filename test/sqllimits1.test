@@ -156,8 +156,18 @@ do_test sqllimits-1.18 {
 do_test sqllimits-1.19 {
   catchsql "SELECT '41$blobvalue'"
 } [list 1 {string or blob too big}]
-unset strvalue
 unset blobvalue
+
+ifcapable datetime {
+  set strvalue [string repeat D [expr {$SQLITE_MAX_LENGTH-12}]]
+  do_test sqllimits-1.20 {
+    catchsql {SELECT strftime('%Y ' || $::strvalue, '2008-01-02')}
+  } [list 0 [list "2008 $strvalue"]]
+  do_test sqllimits-1.21 {
+    catchsql {SELECT strftime('%Y-%m-%d ' || $::strvalue, '2008-01-02')}
+  } {1 {string or blob too big}}
+}
+unset strvalue
 
 #--------------------------------------------------------------------
 # Test cases sqllimits-2.* test that the SQLITE_MAX_SQL_LENGTH limit
