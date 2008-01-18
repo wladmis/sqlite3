@@ -56,11 +56,16 @@ proc do_malloc_test {tn args} {
   } else {
     set start 0
   }
+  if {[info exists ::mallocopts(-end)]} {
+    set end $::mallocopts(-end)
+  } else {
+    set end 50000
+  }
   save_prng_state
 
   foreach ::iRepeat {0 1} {
     set ::go 1
-    for {set ::n $start} {$::go && $::n < 50000} {incr ::n} {
+    for {set ::n $start} {$::go && $::n <= $end} {incr ::n} {
 
       # If $::iRepeat is 0, then the malloc() failure is transient - it
       # fails and then subsequent calls succeed. If $::iRepeat is 1, 
