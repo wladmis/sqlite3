@@ -637,17 +637,17 @@ static int hexToInt(int h){
 ** binary value has been obtained from malloc and must be freed by
 ** the calling routine.
 */
-void *sqlite3HexToBlob(sqlite3 *db, const char *z){
+void *sqlite3HexToBlob(sqlite3 *db, const char *z, int n){
   char *zBlob;
   int i;
-  int n = strlen(z);
-  if( n%2 ) return 0;
 
-  zBlob = (char *)sqlite3DbMallocRaw(db, n/2);
+  zBlob = (char *)sqlite3DbMallocRaw(db, n/2 + 1);
+  n--;
   if( zBlob ){
     for(i=0; i<n; i+=2){
       zBlob[i/2] = (hexToInt(z[i])<<4) | hexToInt(z[i+1]);
     }
+    zBlob[i/2] = 0;
   }
   return zBlob;
 }
