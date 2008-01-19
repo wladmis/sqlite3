@@ -102,6 +102,7 @@ void sqlite3Update(
   AuthContext sContext;  /* The authorization context */
   NameContext sNC;       /* The name-context to resolve expressions in */
   int iDb;               /* Database containing the table being updated */
+  int j1;                /* Addresses of jump instructions */
 
 #ifndef SQLITE_OMIT_TRIGGER
   int isView;                  /* Trying to update a view */
@@ -504,6 +505,7 @@ void sqlite3Update(
 
     /* Delete the old indices for the current record.
     */
+    j1 = sqlite3VdbeAddOp3(v, OP_NotExists, iCur, 0, regOldRowid);
     sqlite3GenerateRowIndexDelete(pParse, pTab, iCur, aRegIdx);
 
     /* If changing the record number, delete the old record.
@@ -511,6 +513,7 @@ void sqlite3Update(
     if( chngRowid ){
       sqlite3VdbeAddOp2(v, OP_Delete, iCur, 0);
     }
+    sqlite3VdbeJumpHere(v, j1);
 
     /* Create the new index entries and the new record.
     */
