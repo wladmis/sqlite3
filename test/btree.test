@@ -554,7 +554,7 @@ btree_page_dump $::b1 2
 do_test btree-8.1.1 {
   lindex [btree_pager_stats $::b1] 1
 } {1}
-#btree_pager_ref_dump $::b1
+btree_pager_ref_dump $::b1
 do_test btree-8.2 {
   btree_move_to $::c1 2020
   string length [btree_data $::c1]

@@ -606,7 +606,7 @@ static int btree_pager_ref_dump(
     return TCL_ERROR;
   }
   pBt = sqlite3TextToPtr(argv[1]);
-#ifdef SQLITE_DEBUG
+#ifdef SQLITE_TEST
   sqlite3BtreeEnter(pBt);
   sqlite3PagerRefdump(sqlite3BtreePager(pBt));
   sqlite3BtreeLeave(pBt);

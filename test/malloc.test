@@ -29,6 +29,14 @@ ifcapable !memdebug {
    return
 }
 
+# Do a couple of memory dumps just to exercise the memory dump logic
+# that that we can say that we have.
+#
+puts stderr "This is a test.  Ignore the error that follows:"
+sqlite3_memdebug_dump $testdir
+puts "Memory dump to file memdump.txt..."
+sqlite3_memdebug_dump memdump.txt
+
 source $testdir/malloc_common.tcl
 
 ifcapable bloblit&&subquery {

@@ -2374,6 +2374,10 @@ static void test_function_utf16be(
   pVal = sqlite3ValueNew(0);
   sqlite3ValueSetStr(pVal, -1, Tcl_GetStringResult(interp), 
       SQLITE_UTF8, SQLITE_STATIC);
+  sqlite3_result_text16(pCtx, sqlite3_value_text16le(pVal),
+      -1, SQLITE_TRANSIENT);
+  sqlite3_result_text16be(pCtx, sqlite3_value_text16le(pVal),
+      -1, SQLITE_TRANSIENT);
   sqlite3_result_text16le(pCtx, sqlite3_value_text16le(pVal),
       -1, SQLITE_TRANSIENT);
   sqlite3ValueFree(pVal);

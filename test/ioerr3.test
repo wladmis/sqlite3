@@ -33,6 +33,10 @@ do_ioerr_test ioerr3-1 -sqlprep {
   execsql COMMIT
 }
 
+do_ioerr_test ioerr3-2 -sqlbody {
+  CREATE TEMP TABLE t1(x,y);
+}
+
 sqlite3_soft_heap_limit 0
 
 finish_test

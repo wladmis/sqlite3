@@ -262,7 +262,11 @@ ifcapable {explain} {
   # Do some additional EXPLAIN operations to exercise the displayP4 logic.
   do_test misc3-6.10 {
     set x [execsql {
-      CREATE TABLE ex1(a INTEGER, b TEXT DEFAULT "hello", c);
+      CREATE TABLE ex1(
+        a INTEGER DEFAULT 54321,
+        b TEXT DEFAULT "hello",
+        c REAL DEFAULT 3.1415926
+      );
       CREATE UNIQUE INDEX ex1i1 ON ex1(a);
       EXPLAIN REINDEX;
     }]

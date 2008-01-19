@@ -1747,12 +1747,15 @@ static void unlockBtreeIfUnused(BtShared *pBt){
   assert( sqlite3_mutex_held(pBt->mutex) );
   if( pBt->inTransaction==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
     if( sqlite3PagerRefcount(pBt->pPager)>=1 ){
+      assert( pBt->pPage1->aData );
+#if 0
       if( pBt->pPage1->aData==0 ){
         MemPage *pPage = pBt->pPage1;
         pPage->aData = sqlite3PagerGetData(pPage->pDbPage);
         pPage->pBt = pBt;
         pPage->pgno = 1;
       }
+#endif
       releasePage(pBt->pPage1);
     }
     pBt->pPage1 = 0;
