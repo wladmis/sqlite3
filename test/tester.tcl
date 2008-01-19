@@ -221,7 +221,8 @@ proc finalize_testing {} {
       sqlite3_memdebug_dump ./memusage.txt
     }
   }
-  puts "Maximum memory usage: [sqlite3_memory_highwater] bytes"
+  puts "Maximum memory usage: [sqlite3_memory_highwater 1] bytes"
+  puts "Current memory usage: [sqlite3_memory_highwater] bytes"
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
   }

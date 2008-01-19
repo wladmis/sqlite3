@@ -2556,7 +2556,7 @@ WhereInfo *sqlite3WhereBegin(
       }
       if( !omitTable ){
         sqlite3VdbeAddOp2(v, OP_IdxRowid, iIdxCur, r1);
-        sqlite3VdbeAddOp3(v, OP_MoveGe, iCur, 0, r1);
+        sqlite3VdbeAddOp3(v, OP_MoveGe, iCur, 0, r1);  /* Deferred seek */
       }
       sqlite3ReleaseTempReg(pParse, r1);
 
@@ -2631,7 +2631,7 @@ WhereInfo *sqlite3WhereBegin(
       if( !omitTable ){
         r1 = sqlite3GetTempReg(pParse);
         sqlite3VdbeAddOp2(v, OP_IdxRowid, iIdxCur, r1);
-        sqlite3VdbeAddOp3(v, OP_MoveGe, iCur, 0, r1);
+        sqlite3VdbeAddOp3(v, OP_MoveGe, iCur, 0, r1);  /* Deferred seek */
         sqlite3ReleaseTempReg(pParse, r1);
       }
       pLevel->p1 = iIdxCur;
