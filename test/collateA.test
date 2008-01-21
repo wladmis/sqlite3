@@ -65,6 +65,19 @@ do_test collateA-1.11 {
 do_test collateA-1.12 {
   execsql {SELECT 'abc123                         '='abc123' COLLATE RTRIM;}
 } {1}
+do_test collateA-1.13 {
+  execsql {SELECT '  '='' COLLATE RTRIM, '  '='' COLLATE BINARY, '  '=''}
+} {1 0 0}
+do_test collateA-1.14 {
+  execsql {SELECT ''='  ' COLLATE RTRIM, ''='  ' COLLATE BINARY, ''='  '}
+} {1 0 0}
+do_test collateA-1.15 {
+  execsql {SELECT '  '='      ' COLLATE RTRIM, '  '='        '}
+} {1 0}
+do_test collateA-1.16 {
+  execsql {SELECT ''<>'  ' COLLATE RTRIM, ''<>'  ' COLLATE BINARY, ''<>'  '}
+} {0 1 1}
+
 
 do_test collateA-2.1 {
   execsql {
