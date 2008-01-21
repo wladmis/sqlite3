@@ -759,5 +759,34 @@ do_test conflict-11.5 {
 } {1 2 3 7 8 9}
 integrity_check conflict-11.6
 
+# Make sure UPDATE OR REPLACE works on tables that have only
+# an INTEGER PRIMARY KEY.
+#
+do_test conflict-12.1 {
+  execsql {
+    CREATE TABLE t5(a INTEGER PRIMARY KEY, b text);
+    INSERT INTO t5 VALUES(1,'one');
+    INSERT INTO t5 VALUES(2,'two');
+    SELECT * FROM t5
+  }
+} {1 one 2 two}
+do_test conflict-12.2 {
+  execsql {
+    UPDATE OR IGNORE t5 SET a=a+1 WHERE a=1;
+    SELECT * FROM t5;
+  }
+} {1 one 2 two}
+do_test conflict-12.3 {
+  catchsql {
+    UPDATE t5 SET a=a+1 WHERE a=1;
+  }
+} {1 {PRIMARY KEY must be unique}}
+do_test conflict-12.4 {
+  execsql {
+    UPDATE OR REPLACE t5 SET a=a+1 WHERE a=1;
+    SELECT * FROM t5;
+  }
+} {2 one}
+
 
 finish_test

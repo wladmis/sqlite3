@@ -1149,10 +1149,7 @@ static void test_auxdata(
       char *zAux = sqlite3_get_auxdata(pCtx, i);
       if( zAux ){
         zRet[i*2] = '1';
-        if( strcmp(zAux, z) ){
-          sqlite3_result_error(pCtx, "auxdata corruption", -1);
-          return;
-        }
+        assert( strcmp(zAux,z)==0 );
       }else {
         zRet[i*2] = '0';
       }

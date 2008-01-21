@@ -1113,9 +1113,7 @@ void sqlite3GenerateConstraintChecks(
       onError = OE_Abort;
     }
     
-    if( onError==OE_Replace && pTab->pIndex==0 ){
-      seenReplace = 1;
-    }else{
+    if( onError!=OE_Replace || pTab->pIndex ){
       if( isUpdate ){
         j2 = sqlite3VdbeAddOp3(v, OP_Eq, regRowid, 0, regRowid-1);
       }
@@ -1398,7 +1396,7 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
       return 0;   /* Different sort orders */
     }
     if( pSrc->azColl[i]!=pDest->azColl[i] ){
-      return 0;   /* Different sort orders */
+      return 0;   /* Different collating sequences */
     }
   }
 
