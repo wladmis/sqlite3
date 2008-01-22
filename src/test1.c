@@ -4096,35 +4096,6 @@ static int test_soft_heap_limit(
 }
 
 /*
-** Usage:   sqlite3_clear_tsd_memdebug
-**
-** Clear all of the MEMDEBUG information out of thread-specific data.
-** This will allow it to be deallocated.
-*/
-static int test_clear_tsd_memdebug(
-  void * clientData,
-  Tcl_Interp *interp,
-  int objc,
-  Tcl_Obj *CONST objv[]
-){
-  return TCL_OK;
-}
-
-/*
-** Usage:   sqlite3_tsd_release
-**
-** Call sqlite3ReleaseThreadData.
-*/
-static int test_tsd_release(
-  void * clientData,
-  Tcl_Interp *interp,
-  int objc,
-  Tcl_Obj *CONST objv[]
-){
-  return TCL_OK;
-}
-
-/*
 ** Usage:   sqlite3_thread_cleanup
 **
 ** Call the sqlite3_thread_cleanup API.
@@ -4469,8 +4440,6 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 
      { "sqlite3_release_memory",        test_release_memory,     0},
      { "sqlite3_soft_heap_limit",       test_soft_heap_limit,    0},
-     { "sqlite3_clear_tsd_memdebug",    test_clear_tsd_memdebug, 0},
-     { "sqlite3_tsd_release",           test_tsd_release,        0},
      { "sqlite3_thread_cleanup",        test_thread_cleanup,     0},
      { "sqlite3_pager_refcounts",       test_pager_refcounts,    0},
 

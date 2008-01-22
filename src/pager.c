@@ -699,8 +699,9 @@ static void pager_resize_hash_table(Pager *pPager, int N){
   PgHdr **aHash, *pPg;
   assert( N>0 && (N&(N-1))==0 );
   pagerLeave(pPager);
-  sqlite3MallocBenignFailure((int)pPager->aHash);
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, pPager->aHash!=0);
   aHash = sqlite3MallocZero( sizeof(aHash[0])*N );
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
   pagerEnter(pPager);
   if( aHash==0 ){
     /* Failure to rehash is not an error.  It is only a performance hit. */

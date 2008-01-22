@@ -948,7 +948,7 @@ case OP_SCopy: {
   pOut = &p->aMem[pOp->p2];
   assert( pOut!=pIn1 );
   if( pOp->opcode==OP_Move ){
-    rc = sqlite3VdbeMemMove(pOut, pIn1);
+    sqlite3VdbeMemMove(pOut, pIn1);
   }else{
     sqlite3VdbeMemShallowCopy(pOut, pIn1, MEM_Ephem);
     if( pOp->opcode==OP_Copy ){
