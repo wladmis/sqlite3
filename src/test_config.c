@@ -368,8 +368,10 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
 
 #if SQLITE_THREADSAFE
   Tcl_SetVar2(interp, "sqlite_options", "threadsafe", "1", TCL_GLOBAL_ONLY);
+  assert( sqlite3_threadsafe() );
 #else
   Tcl_SetVar2(interp, "sqlite_options", "threadsafe", "0", TCL_GLOBAL_ONLY);
+  assert( !sqlite3_threadsafe() );
 #endif
 
 #ifdef SQLITE_OMIT_TRACE
