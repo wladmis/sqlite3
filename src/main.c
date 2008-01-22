@@ -1488,13 +1488,14 @@ int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
     Btree *pBtree = db->aDb[iDb].pBt;
     if( pBtree ){
       Pager *pPager;
+      sqlite3_file *fd;
       sqlite3BtreeEnter(pBtree);
       pPager = sqlite3BtreePager(pBtree);
-      if( pPager ){
-        sqlite3_file *fd = sqlite3PagerFile(pPager);
-        if( fd ){
-          rc = sqlite3OsFileControl(fd, op, pArg);
-        }
+      assert( pPager!=0 );
+      fd = sqlite3PagerFile(pPager);
+      assert( fd!=0 );
+      if( fd->pMethods ){
+        rc = sqlite3OsFileControl(fd, op, pArg);
       }
       sqlite3BtreeLeave(pBtree);
     }
