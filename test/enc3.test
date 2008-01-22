@@ -79,9 +79,13 @@ ifcapable {bloblit && utf16} {
 
 # Try to attach a database with a different encoding.
 #
-ifcapable {utf16} {
+ifcapable {utf16 && shared_cache} {
+  db close
   file delete -force test8.db test8.db-journal
+  set ::enable_shared_cache [sqlite3_enable_shared_cache 1]
   sqlite3 dbaux test8.db
+  sqlite3 db test.db
+  db eval {SELECT 1 FROM sqlite_master LIMIT 1}
   do_test enc3-3.1 {
     dbaux eval {
       PRAGMA encoding='utf8';
@@ -95,8 +99,9 @@ ifcapable {utf16} {
       SELECT 1 FROM utf16.sqlite_master LIMIT 1;
     } dbaux
   } {1 {attached databases must use the same text encoding as main database}}
-  catch {dbaux close}
+  dbaux close
   file delete -force test8.db test8.db-journal
+  sqlite3_enable_shared_cache $::enable_shared_cache
 }
 
 finish_test

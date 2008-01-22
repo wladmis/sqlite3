@@ -644,9 +644,7 @@ int sqlite3Reprepare(Vdbe *p){
 
   assert( sqlite3_mutex_held(sqlite3VdbeDb(p)->mutex) );
   zSql = sqlite3_sql((sqlite3_stmt *)p);
-  if( zSql==0 ){
-    return 0;
-  }
+  assert( zSql!=0 );  /* Reprepare only called for prepare_v2() statements */
   db = sqlite3VdbeDb(p);
   assert( sqlite3_mutex_held(db->mutex) );
   rc = sqlite3LockAndPrepare(db, zSql, -1, 0, &pNew, 0);

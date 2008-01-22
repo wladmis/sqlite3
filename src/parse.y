@@ -971,7 +971,7 @@ trigger_decl(A) ::= temp(T) TRIGGER ifnotexists(NOERR) nm(B) dbnm(Z)
   A = (Z.n==0?B:Z);
 }
 
-%type trigger_time  {int}
+%type trigger_time {int}
 trigger_time(A) ::= BEFORE.      { A = TK_BEFORE; }
 trigger_time(A) ::= AFTER.       { A = TK_AFTER;  }
 trigger_time(A) ::= INSTEAD OF.  { A = TK_INSTEAD;}
@@ -1064,7 +1064,7 @@ cmd ::= DETACH database_kw_opt expr(D). {
   sqlite3Detach(pParse, D);
 }
 
-%type key_opt {Expr *}
+%type key_opt {Expr*}
 %destructor key_opt {sqlite3ExprDelete($$);}
 key_opt(A) ::= .                     { A = 0; }
 key_opt(A) ::= KEY expr(X).          { A = X; }
