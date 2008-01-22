@@ -86,6 +86,8 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
       sqlite3_free(zErr);
       return 1;
     }
+  }else if( argv[2]==0 ){
+    corruptSchema(pData, 0);
   }else{
     /* If the SQL column is blank it means this is an index that
     ** was created to be the PRIMARY KEY or to fulfill a UNIQUE
