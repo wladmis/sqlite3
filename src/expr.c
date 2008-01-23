@@ -2922,14 +2922,9 @@ static int analyzeAggregate(void *pArg, Expr *pExpr){
 **
 ** This routine should only be called after the expression has been
 ** analyzed by sqlite3ExprResolveNames().
-**
-** If errors are seen, leave an error message in zErrMsg and return
-** the number of errors.
 */
-int sqlite3ExprAnalyzeAggregates(NameContext *pNC, Expr *pExpr){
-  int nErr = pNC->pParse->nErr;
+void sqlite3ExprAnalyzeAggregates(NameContext *pNC, Expr *pExpr){
   walkExprTree(pExpr, analyzeAggregate, pNC);
-  return pNC->pParse->nErr - nErr;
 }
 
 /*
@@ -2938,16 +2933,14 @@ int sqlite3ExprAnalyzeAggregates(NameContext *pNC, Expr *pExpr){
 **
 ** If an error is found, the analysis is cut short.
 */
-int sqlite3ExprAnalyzeAggList(NameContext *pNC, ExprList *pList){
+void sqlite3ExprAnalyzeAggList(NameContext *pNC, ExprList *pList){
   struct ExprList_item *pItem;
   int i;
-  int nErr = 0;
   if( pList ){
-    for(pItem=pList->a, i=0; nErr==0 && i<pList->nExpr; i++, pItem++){
-      nErr += sqlite3ExprAnalyzeAggregates(pNC, pItem->pExpr);
+    for(pItem=pList->a, i=0; i<pList->nExpr; i++, pItem++){
+      sqlite3ExprAnalyzeAggregates(pNC, pItem->pExpr);
     }
   }
-  return nErr;
 }
 
 /*
