@@ -131,41 +131,22 @@ static int c_misuse_test(
   }
   sqlite3_close(db);
 
-#ifndef SQLITE_OMIT_UTF16
-  rc = sqlite3_collation_needed16(db, 0, 0);
-  if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_collation_needed16";
-    goto error_out;
-  }
-#endif
-
-  rc = sqlite3_collation_needed(db, 0, 0);
-  if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_collation_needed";
-    goto error_out;
-  }
-
-  rc = sqlite3_create_collation(db, 0, 0, 0, 0);
-  if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_create_collation";
-    goto error_out;
-  }
-
-  rc = sqlite3_create_function(db, 0, 0, 0, 0, 0, 0, 0);
-  if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_create_function";
-    goto error_out;
-  }
-
-  rc = sqlite3_busy_handler(db, 0, 0);
-  if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_busy_handler";
-    goto error_out;
-  }
 
   rc = sqlite3_errcode(db);
   if( rc!=SQLITE_MISUSE ){
-    zErrFunction = "sqlite3_busy_handler";
+    zErrFunction = "sqlite3_errcode";
+    goto error_out;
+  }
+
+  rc = sqlite3_prepare(db, 0, 0, 0, 0);
+  if( rc!=SQLITE_MISUSE ){
+    zErrFunction = "sqlite3_prepare";
+    goto error_out;
+  }
+
+  rc = sqlite3_prepare_v2(db, 0, 0, 0, 0);
+  if( rc!=SQLITE_MISUSE ){
+    zErrFunction = "sqlite3_prepare_v2";
     goto error_out;
   }
 
@@ -173,6 +154,11 @@ static int c_misuse_test(
   rc = sqlite3_prepare16(db, 0, 0, 0, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare16";
+    goto error_out;
+  }
+  rc = sqlite3_prepare16_v2(db, 0, 0, 0, 0);
+  if( rc!=SQLITE_MISUSE ){
+    zErrFunction = "sqlite3_prepare16_v2";
     goto error_out;
   }
 #endif

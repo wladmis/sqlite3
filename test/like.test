@@ -397,4 +397,10 @@ do_test like-6.1 {
   }
 } {'abc 'ax}
 
+do_test like-7.1 {
+  execsql {
+    SELECT * FROM t1 WHERE rowid GLOB '1*';
+  }
+} {a}
+
 finish_test
