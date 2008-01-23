@@ -1594,7 +1594,7 @@ static int processOrderGroupBy(
   sqlite3 *db = pParse->db;
   ExprList *pEList;
 
-  if( pOrderBy==0 ) return 0;
+  if( pOrderBy==0 || pParse->db->mallocFailed ) return 0;
   if( pOrderBy->nExpr>SQLITE_MAX_COLUMN ){
     const char *zType = isOrder ? "ORDER" : "GROUP";
     sqlite3ErrorMsg(pParse, "too many terms in %s BY clause", zType);
@@ -1624,7 +1624,7 @@ static int processOrderGroupBy(
       sqlite3ExprDelete(pE);
       pE = sqlite3ExprDup(db, pEList->a[iCol-1].pExpr);
       pOrderBy->a[i].pExpr = pE;
-      if( pColl && flags ){
+      if( pE && pColl && flags ){
         pE->pColl = pColl;
         pE->flags |= flags;
       }

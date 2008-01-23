@@ -60,6 +60,7 @@ ifcapable bloblit&&subquery {
     SELECT avg(b) FROM t1 GROUP BY a HAVING b>20.0;
     DELETE FROM t1 WHERE a IN (SELECT min(a) FROM t1);
     SELECT count(*), group_concat(e) FROM t1;
+    SELECT b FROM t1 ORDER BY 1 COLLATE nocase;
   } 
 }
 
