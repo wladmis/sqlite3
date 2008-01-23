@@ -1676,15 +1676,15 @@ static int processCompoundOrderBy(
   while( pSelect && moreToDo ){
     moreToDo = 0;
     for(i=0; i<pOrderBy->nExpr; i++){
-      int iCol;
+      int iCol = -1;
       Expr *pE, *pDup;
       if( pOrderBy->a[i].done ) continue;
       pE = pOrderBy->a[i].pExpr;
       pDup = sqlite3ExprDup(db, pE);
-      if( pDup==0 ){
-        return 1;
+      if( !db->mallocFailed ){
+        assert(pDup);
+        iCol = matchOrderByTermToExprList(pParse, pSelect, pDup, i+1, 1, 0);
       }
-      iCol = matchOrderByTermToExprList(pParse, pSelect, pDup, i+1, 1, 0);
       sqlite3ExprDelete(pDup);
       if( iCol<0 ){
         return 1;

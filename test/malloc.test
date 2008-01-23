@@ -573,6 +573,14 @@ ifcapable {pager_pragmas} {
   }
 }
 
+ifcapable compound {
+  do_malloc_test 24 -start 19 -sqlprep {
+    CREATE TABLE t1(a, b, c)
+  } -sqlbody {
+    SELECT 1 FROM t1 UNION SELECT 2 FROM t1 ORDER BY 1
+  }
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}
