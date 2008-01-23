@@ -1381,7 +1381,7 @@ static double bestVirtualIndex(
     *(int*)&pIdxInfo->nOrderBy = 0;
   }
 
-  sqlite3SafetyOff(pParse->db);
+  (void)sqlite3SafetyOff(pParse->db);
   WHERETRACE(("xBestIndex for %s\n", pTab->zName));
   TRACE_IDX_INPUTS(pIdxInfo);
   rc = pTab->pVtab->pModule->xBestIndex(pTab->pVtab, pIdxInfo);
@@ -1392,10 +1392,8 @@ static double bestVirtualIndex(
     }else {
       sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
     }
-    sqlite3SafetyOn(pParse->db);
-  }else{
-    rc = sqlite3SafetyOn(pParse->db);
   }
+  (void)sqlite3SafetyOn(pParse->db);
   *(int*)&pIdxInfo->nOrderBy = nOrderBy;
 
   return pIdxInfo->estimatedCost;

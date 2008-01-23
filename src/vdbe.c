@@ -3905,7 +3905,7 @@ case OP_ParseSchema: {
      "SELECT name, rootpage, sql FROM '%q'.%s WHERE %s",
      db->aDb[iDb].zName, zMaster, pOp->p4.z);
   if( zSql==0 ) goto no_mem;
-  sqlite3SafetyOff(db);
+  (void)sqlite3SafetyOff(db);
   assert( db->init.busy==0 );
   db->init.busy = 1;
   assert( !db->mallocFailed );
@@ -3913,7 +3913,7 @@ case OP_ParseSchema: {
   if( rc==SQLITE_ABORT ) rc = initData.rc;
   sqlite3_free(zSql);
   db->init.busy = 0;
-  sqlite3SafetyOn(db);
+  (void)sqlite3SafetyOn(db);
   if( rc==SQLITE_NOMEM ){
     goto no_mem;
   }
@@ -4798,11 +4798,7 @@ abort_due_to_error:
   */
 abort_due_to_interrupt:
   assert( db->u1.isInterrupted );
-  if( db->magic!=SQLITE_MAGIC_BUSY ){
-    rc = SQLITE_MISUSE;
-  }else{
-    rc = SQLITE_INTERRUPT;
-  }
+  rc = SQLITE_INTERRUPT;
   p->rc = rc;
   sqlite3SetString(&p->zErrMsg, sqlite3ErrStr(rc), (char*)0);
   goto vdbe_error_halt;

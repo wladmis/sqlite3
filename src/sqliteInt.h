@@ -590,6 +590,7 @@ struct sqlite3 {
 */
 #define SQLITE_MAGIC_OPEN     0xa029a697  /* Database is open */
 #define SQLITE_MAGIC_CLOSED   0x9f3c2d33  /* Database is closed */
+#define SQLITE_MAGIC_SICK     0x4b771290  /* Error and awaiting close */
 #define SQLITE_MAGIC_BUSY     0xf03b7906  /* Database currently in use */
 #define SQLITE_MAGIC_ERROR    0xb5357930  /* An SQLITE_MISUSE error occurred */
 
@@ -1816,9 +1817,15 @@ Select *sqlite3SelectDup(sqlite3*,Select*);
 FuncDef *sqlite3FindFunction(sqlite3*,const char*,int,int,u8,int);
 void sqlite3RegisterBuiltinFunctions(sqlite3*);
 void sqlite3RegisterDateTimeFunctions(sqlite3*);
-int sqlite3SafetyOn(sqlite3*);
-int sqlite3SafetyOff(sqlite3*);
-int sqlite3SafetyCheck(sqlite3*);
+#ifdef SQLITE_DEBUG
+  int sqlite3SafetyOn(sqlite3*);
+  int sqlite3SafetyOff(sqlite3*);
+#else
+# define sqlite3SafetyOn(A) 0
+# define sqlite3SafetyOff(A) 0
+#endif
+int sqlite3SafetyCheckOk(sqlite3*);
+int sqlite3SafetyCheckSickOrOk(sqlite3*);
 void sqlite3ChangeCookie(Parse*, int);
 
 #ifndef SQLITE_OMIT_TRIGGER
@@ -2008,8 +2015,7 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 ** Available fault injectors.  Should be numbered beginning with 0.
 */
 #define SQLITE_FAULTINJECTOR_MALLOC     0
-#define SQLITE_FAULTINJECTOR_SAFETY     1
-#define SQLITE_FAULTINJECTOR_COUNT      2
+#define SQLITE_FAULTINJECTOR_COUNT      1
 
 /*
 ** The interface to the fault injector subsystem.  If the fault injector

@@ -109,7 +109,7 @@ int sqlite3_blob_open(
       }
       sqlite3_free(sParse.zErrMsg);
       rc = SQLITE_ERROR;
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       sqlite3BtreeLeaveAll(db);
       goto blob_open_out;
     }
@@ -123,7 +123,7 @@ int sqlite3_blob_open(
     if( iCol==pTab->nCol ){
       sqlite3_snprintf(sizeof(zErr), zErr, "no such column: \"%s\"", zColumn);
       rc = SQLITE_ERROR;
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       sqlite3BtreeLeaveAll(db);
       goto blob_open_out;
     }
@@ -141,7 +141,7 @@ int sqlite3_blob_open(
             sqlite3_snprintf(sizeof(zErr), zErr,
                              "cannot open indexed column for writing");
             rc = SQLITE_ERROR;
-            sqlite3SafetyOff(db);
+            (void)sqlite3SafetyOff(db);
             sqlite3BtreeLeaveAll(db);
             goto blob_open_out;
           }

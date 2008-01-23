@@ -186,11 +186,11 @@ static void attachFunc(
   ** we found it.
   */
   if( rc==SQLITE_OK ){
-    sqlite3SafetyOn(db);
+    (void)sqlite3SafetyOn(db);
     sqlite3BtreeEnterAll(db);
     rc = sqlite3Init(db, &zErrDyn);
     sqlite3BtreeLeaveAll(db);
-    sqlite3SafetyOff(db);
+    (void)sqlite3SafetyOff(db);
   }
   if( rc ){
     int iDb = db->nDb - 1;

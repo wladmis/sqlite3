@@ -414,9 +414,9 @@ int sqlite3AnalysisLoad(sqlite3 *db, int iDb){
   /* Load new statistics out of the sqlite_stat1 table */
   zSql = sqlite3MPrintf(db, "SELECT idx, stat FROM %Q.sqlite_stat1",
                         sInfo.zDatabase);
-  sqlite3SafetyOff(db);
+  (void)sqlite3SafetyOff(db);
   rc = sqlite3_exec(db, zSql, analysisLoader, &sInfo, 0);
-  sqlite3SafetyOn(db);
+  (void)sqlite3SafetyOn(db);
   sqlite3_free(zSql);
   return rc;
 }

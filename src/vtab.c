@@ -93,12 +93,12 @@ void sqlite3VtabLock(sqlite3_vtab *pVtab){
 void sqlite3VtabUnlock(sqlite3 *db, sqlite3_vtab *pVtab){
   pVtab->nRef--;
   assert(db);
-  assert(!sqlite3SafetyCheck(db));
+  assert( sqlite3SafetyCheckOk(db) );
   if( pVtab->nRef==0 ){
     if( db->magic==SQLITE_MAGIC_BUSY ){
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       pVtab->pModule->xDisconnect(pVtab);
-      sqlite3SafetyOn(db);
+      (void)sqlite3SafetyOn(db);
     } else {
       pVtab->pModule->xDisconnect(pVtab);
     }
@@ -594,7 +594,7 @@ int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
     if( xDestroy ){
       rc = xDestroy(pTab->pVtab);
     }
-    sqlite3SafetyOn(db);
+    (void)sqlite3SafetyOn(db);
     if( rc==SQLITE_OK ){
       pTab->pVtab = 0;
     }
