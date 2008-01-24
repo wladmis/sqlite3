@@ -2911,12 +2911,12 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
 ** special value 0xffffffff, then all columns are populated.
 */
 void sqlite3SelectMask(Parse *pParse, Select *p, u32 mask){
-  if( !p->pPrior && !p->isDistinct && mask!=0xffffffff ){
+  if( p && !p->pPrior && !p->isDistinct && mask!=0xffffffff ){
     ExprList *pEList;
     int i;
     sqlite3SelectResolve(pParse, p, 0);
     pEList = p->pEList;
-    for(i=0; i<pEList->nExpr && i<32; i++){
+    for(i=0; pEList && i<pEList->nExpr && i<32; i++){
       if( !(mask&((u32)1<<i)) ){
         sqlite3ExprDelete(pEList->a[i].pExpr);
         pEList->a[i].pExpr = sqlite3Expr(pParse->db, TK_NULL, 0, 0, 0);
