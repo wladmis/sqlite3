@@ -315,7 +315,7 @@ void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
     }else{
       z = sqlite3NameFromToken(db, pName1);
       if( z ){
-        pTab = sqlite3LocateTable(pParse, z, 0);
+        pTab = sqlite3LocateTable(pParse, 0, z, 0);
         sqlite3_free(z);
         if( pTab ){
           analyzeTable(pParse, pTab);
@@ -329,7 +329,7 @@ void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
       zDb = db->aDb[iDb].zName;
       z = sqlite3NameFromToken(db, pTableName);
       if( z ){
-        pTab = sqlite3LocateTable(pParse, z, zDb);
+        pTab = sqlite3LocateTable(pParse, 0, z, zDb);
         sqlite3_free(z);
         if( pTab ){
           analyzeTable(pParse, pTab);

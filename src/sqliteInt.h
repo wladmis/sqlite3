@@ -1776,7 +1776,7 @@ int sqlite3ExprCodeExprList(Parse*, ExprList*, int);
 void sqlite3ExprIfTrue(Parse*, Expr*, int, int);
 void sqlite3ExprIfFalse(Parse*, Expr*, int, int);
 Table *sqlite3FindTable(sqlite3*,const char*, const char*);
-Table *sqlite3LocateTable(Parse*,const char*, const char*);
+Table *sqlite3LocateTable(Parse*,int isView,const char*, const char*);
 Index *sqlite3FindIndex(sqlite3*,const char*, const char*);
 void sqlite3UnlinkAndDeleteTable(sqlite3*,int,const char*);
 void sqlite3UnlinkAndDeleteIndex(sqlite3*,int,const char*);

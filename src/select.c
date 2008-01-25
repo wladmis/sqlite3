@@ -1306,7 +1306,7 @@ static int prepSelectStmt(Parse *pParse, Select *p){
       /* An ordinary table or view name in the FROM clause */
       assert( pFrom->pTab==0 );
       pFrom->pTab = pTab = 
-        sqlite3LocateTable(pParse,pFrom->zName,pFrom->zDatabase);
+        sqlite3LocateTable(pParse,0,pFrom->zName,pFrom->zDatabase);
       if( pTab==0 ){
         return 1;
       }

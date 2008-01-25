@@ -102,7 +102,7 @@ int sqlite3_blob_open(
     }
 
     sqlite3BtreeEnterAll(db);
-    pTab = sqlite3LocateTable(&sParse, zTable, zDb);
+    pTab = sqlite3LocateTable(&sParse, 0, zTable, zDb);
     if( !pTab ){
       if( sParse.zErrMsg ){
         sqlite3_snprintf(sizeof(zErr), zErr, "%s", sParse.zErrMsg);
