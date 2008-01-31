@@ -4476,6 +4476,7 @@ case OP_VFilter: {   /* jump */
       pc = pOp->p2 - 1;
     }
   }
+  pCur->nullRow = 0;
 
   break;
 }
