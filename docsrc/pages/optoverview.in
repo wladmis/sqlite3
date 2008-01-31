@@ -2,28 +2,26 @@
 
 <tcl>
 proc CODE {text} {
-  puts "<blockquote><pre>"
-  puts $text
-  puts "</pre></blockquote>"
+  hd_puts "<blockquote><pre>"
+  hd_puts $text
+  hd_puts "</pre></blockquote>"
 }
 proc SYNTAX {text} {
-  puts "<blockquote><pre>"
+  hd_puts "<blockquote><pre>"
   set t2 [string map {& &amp; < &lt; > &gt;} $text]
   regsub -all "/(\[^\n/\]+)/" $t2 {</b><i>\1</i><b>} t3
-  puts "<b>$t3</b>"
-  puts "</pre></blockquote>"
+  hd_puts "<b>$t3</b>"
+  hd_puts "</pre></blockquote>"
 }
 proc PARAGRAPH {text} {
   # regsub -all "/(\[a-zA-Z0-9\]+)/" $text {<i>\1</i>} t2
   regsub -all "\\*(\[^\n*\]+)\\*" $text {<tt><b><big>\1</big></b></tt>} t3
-  puts "<p>$t3</p>\n"
+  hd_resolve "<p>$t3</p>\n"
 }
 set level(0) 0
 set level(1) 0
 proc HEADING {n name {tag {}}} {
-  if {$tag!=""} {
-    puts "<a name=\"$tag\"></a>"
-  }
+  hd_fragment $tag
   global level
   incr level($n)
   for {set i [expr {$n+1}]} {$i<10} {incr i} {
@@ -40,7 +38,7 @@ proc HEADING {n name {tag {}}} {
     }
   }
   incr n 1
-  puts "<h$n>$num $name</h$n>"
+  hd_puts "<h$n>$num $name</h$n>"
 }
 
 HEADING 0 {The SQLite Query Optimizer Overview}

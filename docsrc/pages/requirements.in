@@ -1,0 +1,146 @@
+<title>SQLite Requirements</title>
+
+<p>
+This document contains the text of all requirements that define
+the operation of SQLite.
+</p>
+
+<p>This document is currently a work in progress.  It is incomplete
+and inaccurate.  Check back later for further updates.</p>
+
+<h2>Requirements</h2>
+
+<table border="0" cellpadding="5" cellspacing="0">
+<tcl>
+#############################################################################
+# Scan the sqlite3.h header file and extract requirements information.
+#
+set in [open sqlite3.h] 
+set type {}        ;# one of: constant datatype function
+set code {}        ;# C code of the definition
+set phase 0        ;# Phase used by the parser 
+set content {}     ;# List of records, one record per definition
+set dcnt 0         ;# Number of individual declarations
+set lineno 0       ;# input file line number
+set inreq 0        ;# True if in a requirement definition
+set reqbody {}     ;# Content of a requirement definition
+unset -nocomplain req
+
+# Record the end of a requirement stored in reqtag and reqbody
+#
+proc end_req {} {
+  global inreq reqtag reqbody req reqtype
+  if {$inreq} {
+    if {[info exists req($reqtag)]} {
+      puts stderr "duplicate requirement label: $reqtag"
+    }
+    set req($reqtag) [string trim $reqbody]
+    set reqtype($reqtag) text
+    set inreq 0
+    set rowbody {}
+  }
+}
+
+# Read sqlite3.h line by line and extract interface definition
+# information.
+#
+while {![eof $in]} {
+  set line [gets $in]
+  incr lineno
+  if {$phase==0} {
+    # Looking for the CAPI3REF: keyword
+    if {[regexp {^\*\* CAPI3REF: +(.*)} $line all tx]} {
+      set title $tx
+      set title_lineno $lineno
+      set phase 1
+    }
+  } elseif {$phase==1} {
+    if {[string range $line 0 1]=="**"} {
+      set lx [string trim [string range $line 3 end]]
+      if {[regexp {^INVARIANTS:$} $lx]} {
+        set phase 2
+      } elseif {[regexp {^LIMITATIONS:$} $lx]} {
+        set phase 2
+      }
+    } elseif {[string range $line 0 1]=="*/"} {
+      set phase 3
+    }
+  } elseif {$phase==2} {
+    if {[string range $line 0 1]=="**"} {
+      set lx [string trim [string range $line 3 end]]
+      if {[regexp {\{([\w.]+)\}\s+(.+)$} $lx all tag lxtail]} {
+        end_req
+        set reqtag $tag
+        set reqbody $lxtail\n
+        set inreq 1
+      } elseif {[regexp {^INVARIANTS:$} $lx]} {
+        end_req
+      } elseif {[regexp {^LIMITATIONS:$} $lx]} {
+        end_req
+      } else {
+        append reqbody $lx\n
+      }
+    } elseif {[string range $line 0 1]=="*/"} {
+      end_req
+      set phase 3
+    }
+  } elseif {$phase==3} {
+    if {$line==""} {
+      if {[regexp {\{(.+)\}} $title all reqtag]} {
+        if {[info exists req($reqtag)]} {
+          puts stderr "duplicate requirement label: $reqtag"
+        }
+        set req($reqtag) [string map {& &amp; < &lt; > &gt;} $code]
+        set reqtype($reqtag) code
+      }
+      set title {}
+      set type {}
+      set code {}
+      set phase 0
+      set dcnt 0
+    } else {
+      if {[regexp {^#define (SQLITE_[A-Z0-9_]+)} $line all kx]} {
+        set type constant
+        set keyword($kx) 1
+        incr dcnt
+      } elseif {[regexp {^typedef .*(sqlite[0-9a-z_]+);} $line all kx]} {
+        set type datatype
+        set keyword($kx) 1
+        incr dcnt
+      } elseif {[regexp {^[a-z].*[ *](sqlite3_[a-z0-9_]+)\(} $line all kx]} {
+        set type function
+        set keyword($kx) 1
+        incr dcnt
+      } elseif {[regexp {^SQLITE_EXTERN .*(sqlite[0-9a-z_]+);} $line all kx]} {
+        set type datatype
+        set keyword($kx) 1
+        incr dcnt
+      }
+      append code $line\n
+    }
+  }
+}
+close $in
+# End of requirements gathering from sqlite3.h
+##############################################################################
+
+# Todo:  add additional requirements gathering here.
+
+##############################################################################
+# Render the requirements
+#
+foreach reqtag [lsort [array names req]] {
+  set reqbody $req($reqtag)
+  hd_puts "<tr><td valign=\"top\">$reqtag</td><td valign=\"top\">"
+  if {$reqtype($reqtag)=="code"} {
+    hd_puts "The sqlite3.h header file defines the following interfaces:"
+    hd_puts "<blockquote><pre>"
+    hd_puts $reqbody
+    hd_puts "</pre></blockquote>"
+  } else {
+    hd_resolve $reqbody
+  }
+  hd_puts "</td></tr>"
+}
+</tcl>
+</table>

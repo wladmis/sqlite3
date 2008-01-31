@@ -1,6 +1,6 @@
 <title>The Virtual Database Engine of SQLite</title>
 <tcl>
-puts {
+hd_puts {
 <h2>The Virtual Database Engine of SQLite</h2>
 
 <blockquote><b>
@@ -13,7 +13,7 @@ how the virtual machine works.
 </b></blockquote>
 }
 
-puts {
+hd_puts {
 <p>If you want to know how the SQLite library works internally,
 you need to begin with a solid understanding of the Virtual Database
 Engine or VDBE.  The VDBE occurs right in the middle of the
@@ -98,7 +98,7 @@ will cause <b>sqlite</b> to print the VDBE program rather than
 execute it.  We have:</p>
 }
 proc Code {body} {
-  puts {<blockquote><tt>}
+  hd_puts {<blockquote><tt>}
   regsub -all {&} [string trim $body] {\&amp;} body
   regsub -all {>} $body {\&gt;} body
   regsub -all {<} $body {\&lt;} body
@@ -106,8 +106,8 @@ proc Code {body} {
   regsub -all {\)\)\)} $body {</b>} body
   regsub -all { } $body {\&nbsp;} body
   regsub -all \n $body <br>\n body
-  puts $body
-  puts {</tt></blockquote>}
+  hd_puts $body
+  hd_puts {</tt></blockquote>}
 }
 
 Code {
@@ -132,7 +132,7 @@ addr  opcode        p1     p2     p3
 12    Halt          0      0                                         
 }
 
-puts {<p>As you can see above, our simple insert statement is
+hd_puts {<p>As you can see above, our simple insert statement is
 implemented in 12 instructions.  The first 3 and last 2 instructions are 
 a standard prologue and epilogue, so the real work is done in the middle 
 7 instructions.  There are no jumps, so the program executes once through 
@@ -144,7 +144,7 @@ Code {
 1     VerifyCookie  0      81                                        
 2     Transaction   1      0                                         
 }
-puts {
+hd_puts {
 <p>The instruction <a href="opcode.html#Transaction">Transaction</a> 
 begins a transaction.  The transaction ends when a Commit or Rollback 
 opcode is encountered.  P1 is the index of the database file on which 
@@ -168,18 +168,18 @@ database 1, the database used for temporary tables.</p>
 }
 
 proc stack args {
-  puts "<blockquote><table border=2>"
+  hd_puts "<blockquote><table border=2>"
   foreach elem $args {
-    puts "<tr><td align=left>$elem</td></tr>"
+    hd_puts "<tr><td align=left>$elem</td></tr>"
   }
-  puts "</table></blockquote>"
+  hd_puts "</table></blockquote>"
 }
 
 Code {
 3     Integer       0      0                                    
 4     OpenWrite     0      3      examp                         
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#Integer">Integer</a> pushes 
 the integer value P1 (0) onto the stack.  Here 0 is the number of the 
 database to use in the following OpenWrite instruction.  If P3 is not 
@@ -188,7 +188,7 @@ the stack looks like this:</p>
 }
 stack {(integer) 0}
 
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#OpenWrite">OpenWrite</a> opens 
 a new read/write cursor with handle P1 (0 in this case) on table "examp", 
 whose root page is P2 (3, in this database file).  Cursor handles can be 
@@ -205,7 +205,7 @@ stack is empty again.</p>
 Code {
 5     NewRecno      0      0                                    
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#NewRecno">NewRecno</a> creates 
 a new integer record number for the table pointed to by cursor P1.  The 
 record number is one not currently used as a key in the table.  The new 
@@ -217,7 +217,7 @@ stack {(integer) new record key}
 Code {
 6     String        0      0      Hello, World!                 
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#String">String</a> pushes its 
 P3 operand onto the stack.  Afterwards the stack looks like this:</p>
 }
@@ -227,7 +227,7 @@ stack {(string) "Hello, World!"} \
 Code {
 7     Integer       99     0      99                            
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#Integer">Integer</a> pushes 
 its P1 operand (99) onto the stack.  Afterwards the stack looks like 
 this:</p>
@@ -239,7 +239,7 @@ stack {(integer) 99} \
 Code {
 8     MakeRecord    2      0                                    
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#MakeRecord">MakeRecord</a> pops 
 the top P1 elements off the stack (2 in this case) and converts them into 
 the binary format used for storing records in a database file.  
@@ -254,7 +254,7 @@ stack {(record) "Hello, World!", 99} \
 Code {
 9     PutIntKey     0      1                                    
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#PutIntKey">PutIntKey</a> uses 
 the top 2 stack entries to write an entry into the table pointed to by 
 cursor P1.  A new entry is created if it doesn't already exist or the 
@@ -269,7 +269,7 @@ unmodified.  This instruction is where the insert actually occurs.</p>
 Code {
 10    Close         0      0                                         
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#Close">Close</a> closes a 
 cursor previously opened as P1 (0, the only open cursor). If P1 is not 
 currently open, this instruction is a no-op.</p>
@@ -278,7 +278,7 @@ currently open, this instruction is a no-op.</p>
 Code {
 11    Commit        0      0                                         
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#Commit">Commit</a> causes all 
 modifications to the database that have been made since the last 
 Transaction to actually take effect.  No additional modifications are 
@@ -290,7 +290,7 @@ A read lock continues to be held if there are still cursors open.</p>
 Code {
 12    Halt          0      0                                         
 }
-puts {
+hd_puts {
 <p> The instruction <a href="opcode.html#Halt">Halt</a> causes the VDBE 
 engine to exit immediately.  All open cursors, Lists, Sorts, etc are 
 closed automatically.  P1 is the result code returned by sqlite_exec().  
@@ -337,7 +337,7 @@ Stack: s[...Hello,.World!.99] i:2
   12 Halt            0    0
 }
 
-puts {
+hd_puts {
 <p>With tracing mode on, the VDBE prints each instruction prior
 to executing it.  After the instruction is executed, the top few
 entries in the stack are displayed.  The stack display is omitted
@@ -396,7 +396,7 @@ addr  opcode        p1     p2     p3
 11    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>Before we begin looking at this problem, let's briefly review
 how queries work in SQLite so that we will know what we are trying
 to accomplish.  For each row in the result of a query,
@@ -423,7 +423,7 @@ Code {
 0     ColumnName    0      0      one                                
 1     ColumnName    1      0      two                                
 }
-puts {
+hd_puts {
 <p>The first two instructions in the VDBE program for our query are
 concerned with setting up values for <b>azColumn</b>.
 The <a href="opcode.html#ColumnName">ColumnName</a> instructions tell 
@@ -439,7 +439,7 @@ Code {
 3     OpenRead      0      3      examp                              
 4     VerifyCookie  0      81                                        
 }
-puts {
+hd_puts {
 <p>Instructions 2 and 3 open a read cursor on the database table that is 
 to be queried.  This works the same as the OpenWrite instruction in the 
 INSERT example except that the cursor is opened for reading this time 
@@ -450,7 +450,7 @@ in the INSERT example.</p>
 Code {
 5     Rewind        0      10                                        
 }
-puts {
+hd_puts {
 <p> The <a href="opcode.html#Rewind">Rewind</a> instruction initializes 
 a loop that iterates over the "examp" table. It rewinds the cursor P1 
 to the first entry in its table.  This is required by the the Column and 
@@ -465,7 +465,7 @@ Code {
 7     Column        0      1                                         
 8     Callback      2      0                                         
 }
-puts {
+hd_puts {
 <p> The instructions 6 through 8 form the body of the loop that will 
 execute once for each record in the database file.  
 
@@ -484,7 +484,7 @@ the stack and uses them to fill the <b>azData[]</b> array.</p>
 Code {
 9     Next          0      6                                              
 }
-puts {
+hd_puts {
 <p>The instruction at address 9 implements the branching part of the 
 loop.  Together with the Rewind at address 5 it forms the loop logic.  
 This is a key concept that you should pay close attention to.   
@@ -499,7 +499,7 @@ Code {
 10    Close         0      0                                         
 11    Halt          0      0                                         
 }
-puts {
+hd_puts {
 <p>The Close instruction at the end of the program closes the
 cursor that points into the table "examp".  It is not really necessary
 to call Close here since all cursors will be automatically closed
@@ -515,7 +515,7 @@ doesn't require a transaction.</p>
 }
 
 
-puts {
+hd_puts {
 <a name="query2"></a>
 <h2>A Slightly More Complex Query</h2>
 
@@ -571,7 +571,7 @@ addr  opcode        p1     p2     p3
 19    Halt          0      0
 }
 
-puts {
+hd_puts {
 <p>Except for the WHERE clause, the structure of the program for
 this example is very much like the prior example, just with an
 extra column.  There are now 3 columns, instead of 2 as before,
@@ -695,7 +695,7 @@ addr  opcode        p1     p2     p3
 23    Halt          0      0
 }
 
-puts {
+hd_puts {
 <p>Here is what the program must do.  First it has to locate all of
 the records in the table "examp" that are to be deleted.  This is
 done using a loop very much like the loop used in the SELECT examples
@@ -723,7 +723,7 @@ Code {
 3     Integer       0      0
 4     OpenRead      0      3      examp
 }
-puts {
+hd_puts {
 <p>Instructions 0 though 4 are as in the INSERT example.  They start 
 transactions for the main and temporary databases, verify the database 
 schema for the main database, and open a read cursor on the table 
@@ -736,7 +736,7 @@ instruction 15.</p>
 Code {
 5     Rewind        0      12
 }
-puts {
+hd_puts {
 <p>As in the SELECT example, the <a href="opcode.html#Rewind">Rewind</a> 
 instruction rewinds the cursor to the beginning of the table, readying 
 it for use in the loop body.</p>
@@ -747,7 +747,7 @@ Code {
 7     Integer       50     0      50
 8     Ge            1      11
 }
-puts {
+hd_puts {
 <p>The WHERE clause is implemented by instructions 6 through 8.
 The job of the where clause is to skip the ListWrite if the WHERE
 condition is false.  To this end, it jumps ahead to the Next instruction
@@ -762,7 +762,7 @@ two instructions the stack looks like:</p>
 stack {(integer) 50} \
   {(record) current record for column "two" }
 
-puts {
+hd_puts {
 <p>The <a href="opcode.html#Ge">Ge</a> operator compares the top two 
 elements on the stack, pops them, and then branches based on the result 
 of the comparison.  If the second element is >= the top element, then 
@@ -776,7 +776,7 @@ Code {
 9     Recno         0      0
 10    ListWrite     0      0
 }
-puts {
+hd_puts {
 <p>The <a href="opcode.html#Recno">Recno</a> instruction pushes onto the 
 stack an integer which is the first 4 bytes of the the key to the current 
 entry in a sequential scan of the table pointed to by cursor P1.
@@ -791,7 +791,7 @@ Code {
 11    Next          0      6
 12    Close         0      0
 }
-puts {
+hd_puts {
 <p> The Next instruction increments the cursor to point to the next 
 element in the table pointed to by cursor P0, and if it was successful 
 branches to P2 (6, the beginning of the loop body).  The Close 
@@ -803,7 +803,7 @@ working list (which can be saved with ListPush).</p>
 Code {
 13    ListRewind    0      0
 }
-puts {
+hd_puts {
 <p> The <a href="opcode.html#ListRewind">ListRewind</a> instruction 
 rewinds the temporary storage list to the beginning.  This prepares it 
 for use in the second loop.</p>
@@ -813,7 +813,7 @@ Code {
 14    Integer       0      0
 15    OpenWrite     0      3
 }
-puts {
+hd_puts {
 <p> As in the INSERT example, we push the database number P1 (0, the main 
 database) onto the stack and use OpenWrite to open the cursor P1 on table 
 P2 (base page 3, "examp") for modification.</p>
@@ -825,7 +825,7 @@ Code {
 18    Delete        0      1
 19    Goto          0      16
 }
-puts {
+hd_puts {
 <p>This loop does the actual deleting.  It is organized differently from 
 the one in the UPDATE example.  The ListRead instruction plays the role 
 that the Next did in the INSERT loop, but because it jumps to P2 on 
@@ -844,7 +844,7 @@ instruction just after the loop.  Afterwards the stack looks like:</p>
 }
 stack {(integer) key for current record}
 
-puts {
+hd_puts {
 <p>Notice the similarity between the ListRead and Next instructions.  
 Both operations work according to this rule:
 </p>
@@ -882,7 +882,7 @@ Code {
 22    Commit        0      0
 23    Halt          0      0
 }
-puts {
+hd_puts {
 <p>This block of instruction cleans up the VDBE program. Three of these 
 instructions aren't really required, but are generated by the SQLite 
 parser from its code templates, which are designed to handle more 
@@ -949,7 +949,7 @@ addr  opcode        p1     p2     p3
 31    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>This program is essentially the same as the DELETE program except 
 that the body of the second loop has been replace by a sequence of 
 instructions (at addresses 17 through 26) that update the record rather 
@@ -985,7 +985,7 @@ After instruction 25 executes, the stack looks like this:</p>
 
 stack {(record) new data record} {(integer) key}
 
-puts {
+hd_puts {
 <p>The PutIntKey instruction (also described
 during the discussion about INSERT) writes an entry into the
 database file whose data is the top of the stack and whose key
@@ -1007,7 +1007,7 @@ or so.  Surely a couple billion records will be enough for
 most applications!)</p>
 }
 
-puts {
+hd_puts {
 <h2>CREATE and DROP</h2>
 
 <p>Using CREATE or DROP to create or destroy a table or index is
@@ -1144,7 +1144,7 @@ addr  opcode        p1     p2     p3
 30    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>Remember that every table (except sqlite_master) and every named
 index has an entry in the sqlite_master table.  Since we are creating
 a new index, we have to add a new entry to sqlite_master.  This is
@@ -1159,7 +1159,7 @@ Code {
 16    Integer       0      0                                         
 17    OpenRead      2      3      examp                              
 }
-puts {
+hd_puts {
 <p>The first thing that happens is that we open the table being
 indexed for reading.  In order to construct an index for a table,
 we have to know what is in that table.  The index has already been 
@@ -1174,7 +1174,7 @@ Code {
 22    IdxPut        1      0      indexed columns are not unique     
 23    Next          2      19                                             
 }
-puts {
+hd_puts {
 <p>Instructions 18 through 23 implement a loop over every row of the 
 table being indexed.  For each table row, we first extract the integer 
 key for that row using Recno in instruction 19, then get the value of 
@@ -1233,7 +1233,7 @@ addr  opcode        p1     p2     p3
 21    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The SELECT begins in a familiar fashion.  First the column
 names are initialized and the table being queried is opened.
 Things become different beginning with instructions 5 and 6 where
@@ -1312,7 +1312,7 @@ addr  opcode        p1     p2     p3
 19    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>At this point, you should understand the VDBE well enough to
 figure out on your own how the above program works.  So we will
 not discuss it further in this text.</p>
@@ -1429,7 +1429,7 @@ addr  opcode        p1     p2     p3
 26    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The outer loop over table examp is implement by instructions
 7 through 23.  The inner loop is instructions 13 through 22.
 Notice that the "two<50" term of the WHERE expression involves
@@ -1489,7 +1489,7 @@ addr  opcode        p1     p2     p3
 20    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>There is only one sorter object, so there are no instructions to open 
 or close it.  It is opened automatically when needed, and it is closed 
 when the VDBE program halts.</p>
@@ -1583,7 +1583,7 @@ addr  opcode        p1     p2     p3
 32    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The first instruction of interest is the 
 <a href="opcode.html#AggReset">AggReset</a> at 2.
 The AggReset instruction initializes the set of buckets to be the
@@ -1689,7 +1689,7 @@ addr  opcode        p1     p2     p3
 38    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The code generated in this last example is the same as the
 previous except for the addition of two conditional jumps used
 to implement the extra WHERE and HAVING clauses.  The WHERE
@@ -1755,7 +1755,7 @@ addr  opcode        p1     p2     p3
 27    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The private memory cell is initialized to NULL by the first
 two instructions.  Instructions 2 through 13 implement the inner
 SELECT statement against the examp2 table.  Notice that instead of
@@ -1820,7 +1820,7 @@ addr  opcode        p1     p2     p3
 26    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The transient table in which the results of the inner SELECT are
 stored is created by the <a href="opcode.html#OpenTemp">OpenTemp</a> 
 instruction at 0.  This opcode is used for tables that exist for the 
@@ -1899,7 +1899,7 @@ addr  opcode        p1     p2     p3
 27    Halt          0      0                                         
 }
 
-puts {
+hd_puts {
 <p>The transient table in which the result is built is created by
 instruction 0.  Three loops then follow.  The loop at instructions
 5 through 10 implements the first SELECT statement.  The second

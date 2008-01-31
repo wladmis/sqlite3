@@ -1,19 +1,27 @@
 <title>Pragma statements supported by SQLite</title>
 
 <tcl>
-proc Section {name {label {}}} {
-  puts "\n<hr />"
+proc Section {name {label {}} {keywords {}}} {
+  hd_puts "\n<hr />"
   if {$label!=""} {
-    puts "<a name=\"$label\"></a>"
+    hd_fragment $label
+    if {$keywords!=""} {
+      eval hd_keywords $keywords
+    }
   }
-  puts "<h1>$name</h1>\n"
+  hd_puts "<h1>$name</h1>\n"
+}
+proc Subsection {args} {
+  set f [lindex $args 0]
+  hd_fragment pragma_$f
+  eval hd_keywords $args
 }
 </tcl>
 
-<p>The <a href="#syntax">PRAGMA command</a> is a special command used to 
+<p>The [PRAGMA] statement is a special SQL statement used to 
 modify the operation of the SQLite library or to query the library for 
-internal (non-table) data. The PRAGMA command is issued using the same
-interface as other SQLite commands (e.g. SELECT, INSERT) but is
+internal (non-table) data. The [PRAGMA] statement is issued using the same
+interface as other SQLite commands (e.g. [SELECT], [INSERT]) but is
 different in the following important respects:
 </p>
 <ul>
@@ -23,10 +31,10 @@ different in the following important respects:
     Unknown pragmas are simply ignored. This means if there is a typo in 
     a pragma statement the library does not inform the user of the fact.
 <li>Some pragmas take effect during the SQL compilation stage, not the
-    execution stage. This means if using the C-language sqlite3_prepare(), 
-    sqlite3_step(), sqlite3_finalize() API (or similar in a wrapper 
+    execution stage. This means if using the C-language [sqlite3_prepare()], 
+    [sqlite3_step()], [sqlite3_finalize()] API (or similar in a wrapper 
     interface), the pragma may be applied to the library during the 
-    sqlite3_prepare() call.
+    [sqlite3_prepare()] call.
 <li>The pragma command is unlikely to be compatible with any other SQL
     engine.
 </ul>
@@ -45,7 +53,7 @@ different in the following important respects:
 </ul>
 
 <tcl>
-Section {PRAGMA command syntax} syntax
+Section {PRAGMA command syntax} syntax {PRAGMA}
 
 Syntax {sql-statement} {
 PRAGMA <name> [= <value>] |
@@ -62,9 +70,10 @@ treated as <b>1</b>, and will not generate an error.  When the <i>value</i>
 is returned it is as an integer.</p>
 
 <tcl>Section {Pragmas to modify library operation} modify</tcl>
+</tcl>
 
 <ul>
-<a name="pragma_auto_vacuum"></a>
+<tcl>Subsection auto_vacuum</tcl>
 <li><p><b>PRAGMA auto_vacuum;<br>
           PRAGMA auto_vacuum = </b>
             <i>0 | none | 1 | full | 2 | incremental</i><b>;</b></p>
@@ -75,7 +84,7 @@ is returned it is as an integer.</p>
     committed, the database file remains the same size. Unused database file 
     pages are added to a "freelist" are reused for subsequent inserts.  The
     database file does not shrink.
-    In this mode the <a href="lang_vacuum.html">VACUUM</a>
+    In this mode the [VACUUM]
     command can be used to reclaim unused space.</p>
 
     <p>When the auto-vacuum flag is 1 (full), the freelist pages are
@@ -84,7 +93,7 @@ is returned it is as an integer.</p>
     Note, however, that auto-vacuum only truncates the freelist pages
     from the file.  Auto-vacuum does not defragment the database nor
     repack individual database pages the way that the
-    <a href="lang_vacuum.html">VACUUM</a> command does.  In fact, because
+    [VACUUM] command does.  In fact, because
     it moves pages around within the file, auto-vacuum can actually
     make fragmentation worse.</p>
 
@@ -98,7 +107,7 @@ is returned it is as an integer.</p>
     information needed to do autovacuuming is stored in the database file
     but autovacuuming does not occur automatically at each commit as it
     does with auto_vacuum==full.  In incremental mode, the separate
-    <a href="#pragma_incremental_vacuum">incremental_vacuum</a> pragma must
+    [incremental_vacuum] pragma must
     be invoked to cause the vacuum to occur.</p>
 
     <p>The database connection can be changed between full and incremental
@@ -107,78 +116,70 @@ is returned it is as an integer.</p>
     database.
     </p></li>
 
-<a name="pragma_cache_size"></a>
+<tcl>Subsection cache_size</tcl>
 <li><p><b>PRAGMA cache_size;
        <br>PRAGMA cache_size = </b><i>Number-of-pages</i><b>;</b></p>
     <p>Query or change the maximum number of database disk pages that SQLite
     will hold in memory at once.  Each page uses about 1.5K of memory.
-    The default cache size is 2000.  If you are doing UPDATEs or DELETEs
+    The default cache size is 2000.  If you are doing [UPDATEs] or [DELETEs]
     that change many rows of a database and you do not mind if SQLite
     uses more memory, you can increase the cache size for a possible speed
     improvement.</p>
     <p>When you change the cache size using the cache_size pragma, the
     change only endures for the current session.  The cache size reverts
     to the default value when the database is closed and reopened.  Use
-    the <a href="#pragma_default_cache_size"><b>default_cache_size</b></a> 
+    the [default_cache_size]
     pragma to check the cache size permanently.</p></li>
 
-<a name="pragma_case_sensitive_like"></a>
+<tcl>Subsection case_sensitive_like</tcl>
 <li><p><b>PRAGMA case_sensitive_like;
        <br>PRAGMA case_sensitive_like = </b><i>0 | 1</i><b>;</b></p>
-    <p>The default behavior of the LIKE operator is to ignore case
+    <p>The default behavior of the [LIKE] operator is to ignore case
     for latin1 characters. Hence, by default <b>'a' LIKE 'A'</b> is
     true.  The case_sensitive_like pragma can be turned on to change
     this behavior.  When case_sensitive_like is enabled,
     <b>'a' LIKE 'A'</b> is false but <b>'a' LIKE 'a'</b> is still true.</p>
     </li>
 
-<a name="pragma_count_changes"></a>
+<tcl>Subsection count_changes</tcl>
 <li><p><b>PRAGMA count_changes;
        <br>PRAGMA count_changes = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the count-changes flag. Normally, when the
-    count-changes flag is not set, INSERT, UPDATE and DELETE statements
+    count-changes flag is not set, [INSERT], [UPDATE] and [DELETE] statements
     return no data. When count-changes is set, each of these commands 
     returns a single row of data consisting of one integer value - the
     number of rows inserted, modified or deleted by the command. The 
     returned change count does not include any insertions, modifications
     or deletions performed by triggers.</p>
 
-<a name="pragma_default_cache_size"></a>
+<tcl>Subsection default_cache_size</tcl>
 <li><p><b>PRAGMA default_cache_size;
        <br>PRAGMA default_cache_size = </b><i>Number-of-pages</i><b>;</b></p>
     <p>Query or change the maximum number of database disk pages that SQLite
     will hold in memory at once.  Each page uses 1K on disk and about
     1.5K in memory.
-    This pragma works like the
-    <a href="#pragma_cache_size"><b>cache_size</b></a> 
+    This pragma works like the [cache_size]
     pragma with the additional
     feature that it changes the cache size persistently.  With this pragma,
     you can set the cache size once and that setting is retained and reused
     every time you reopen the database.</p></li>
 
-<a name="pragma_default_synchronous"></a>
-<li><p><b>PRAGMA default_synchronous;</b></p>
-    <p>This pragma was available in version 2.8 but was removed in version
-    3.0.  It is a dangerous pragma whose use is discouraged.  To help
-    dissuide users of version 2.8 from employing this pragma, the documentation
-    will not tell you what it does.</p></li>
 
-
-<a name="pragma_empty_result_callbacks"></a>
+<tcl>Subsection empty_result_callbacks</tcl>
 <li><p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the empty-result-callbacks flag.</p> 
-    <p>The empty-result-callbacks flag affects the sqlite3_exec API only.
+    <p>The empty-result-callbacks flag affects the [sqlite3_exec()] API only.
     Normally, when the empty-result-callbacks flag is cleared, the
-    callback function supplied to the sqlite3_exec() call is not invoked
+    callback function supplied to the [sqlite3_exec()] call is not invoked
     for commands that return zero rows of data. When empty-result-callbacks
     is set in this situation, the callback function is invoked exactly once,
     with the third parameter set to 0 (NULL). This is to enable programs  
-    that use the sqlite3_exec() API to retrieve column-names even when
+    that use the [sqlite3_exec()] API to retrieve column-names even when
     a query returns no data.
     </p>
 
-<a name="pragma_encoding"></a>
+<tcl>Subsection encoding</tcl>
 <li><p><b>PRAGMA encoding;
        <br>PRAGMA encoding = "UTF-8";
        <br>PRAGMA encoding = "UTF-16";
@@ -201,20 +202,20 @@ is returned it is as an integer.</p>
 
     <p>Once an encoding has been set for a database, it cannot be changed.</p>
 
-    <p>Databases created by the ATTACH command always use the same encoding
+    <p>Databases created by the [ATTACH] command always use the same encoding
     as the main database.</p>
 </li>
 
-<a name="pragma_full_column_names"></a>
+<tcl>Subsection full_column_names</tcl>
 <li><p><b>PRAGMA full_column_names;
        <br>PRAGMA full_column_names = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the full-column-names flag. This flag affects
-    the way SQLite names columns of data returned by SELECT statements
+    the way SQLite names columns of data returned by [SELECT] statements
     when the expression for the column is a table-column name or the
     wildcard "*".  Normally, such result columns are named
-    &lt;table-name/alias&gt;&lt;column-name&gt; if the SELECT statement joins 
+    &lt;table-name/alias&gt;&lt;column-name&gt; if the [SELECT] statement joins 
     two or
-    more tables together, or simply &lt;column-name&gt; if the SELECT
+    more tables together, or simply &lt;column-name&gt; if the [SELECT]
     statement queries a single table. When the full-column-names flag
     is set, such columns are always named &lt;table-name/alias&gt;
     &lt;column-name&gt; regardless of whether or not a join is performed.
@@ -225,7 +226,7 @@ is returned it is as an integer.</p>
     </p>
 </li>
 
-<a name="pragma_fullfsync"></a>
+<tcl>Subsection fullfsync</tcl>
 <li><p><b>PRAGMA fullfsync
        <br>PRAGMA fullfsync = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the fullfsync flag. This flag affects
@@ -235,7 +236,7 @@ is returned it is as an integer.</p>
     </p>
 </li>
 
-<a name="pragma_incremental_vacuum"></a>
+<tcl>Subsection incremental_vacuum</tcl>
 <li><p><b>PRAGMA incremental_vacuum</b><i>(N)</i><b>;</b></p>
     <p>The incremental_vacuum pragma causes up to <i>N</i> pages to
     be removed from the freelist.  The database file is truncated by
@@ -245,19 +246,19 @@ is returned it is as an integer.</p>
     or if there are no pages on the freelist.  If there are fewer than
     <i>N</i> pages on the freelist, then the entire freelist is cleared.</p>
 
-    <p>As of version 3.4.0 (the first version that supports
+    <p>As of [version 3.4.0] (the first version that supports
     incremental_vacuum) this feature is still experimental.  Possible
     future changes include enhancing incremental vacuum to do
     defragmentation and node repacking just as the full-blown
-    <a href="lang_vacuum.html">VACUUM</a> command does.  And
+    [VACUUM] command does.  And
     incremental vacuum may be promoted from a pragma to a separate
-    SQL command, or perhaps some variation on the VACUUM command.
+    SQL command, or perhaps some variation on the [VACUUM] command.
     Programmers are cautioned to not become enamored with the
     current syntax or functionality as it is likely to change.</p>
 </li>
 
 
-<a name="pragma_legacy_file_format"></a>
+<tcl>Subsection legacy_file_format</tcl>
 <li><p><b>PRAGMA legacy_file_format;
        <br>PRAGMA legacy_file_format = <i>ON | OFF</i></b></p>
     <p>This pragma sets or queries the value of the legacy_file_format
@@ -276,7 +277,7 @@ is returned it is as an integer.</p>
     effect on databases that already exist.</p>
 </li>
 
-<a name="pragma_locking_mode"></a>
+<tcl>Subsection locking_mode</tcl>
 <li><p><b>PRAGMA locking_mode;
        <br>PRAGMA locking_mode = <i>NORMAL | EXCLUSIVE</i></b></p>
     <p>This pragma sets or queries the database connection locking-mode. 
@@ -313,8 +314,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Then the locking mode applies only to the named database.  If no
     database name qualifier preceeds the "locking_mode" keyword then
     the locking mode is applied to all databases, including any new
-    databases added by subsequent <a href="lang_attach.html">ATTACH</a>
-    commands.</p>
+    databases added by subsequent [ATTACH] commands.</p>
 
    <p>The "temp" database (in which TEMP tables and indices are stored)
    always uses exclusive locking mode.  The locking mode of temp cannot
@@ -322,7 +322,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
    and are affected by this pragma.</p>
 </li>
 
-<a name="pragma_page_size"></a>
+<tcl>Subsection page_size</tcl>
 <li><p><b>PRAGMA page_size;
        <br>PRAGMA page_size = </b><i>bytes</i><b>;</b></p>
     <p>Query or set the page-size of the database. The page-size
@@ -334,7 +334,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
 </li>
 
-<a name="pragma_max_page_count"></a>
+<tcl>Subsection max_page_count</tcl>
 <li><p><b>PRAGMA max_page_count;
        <br>PRAGMA max_page_count = </b><i>N</i><b>;</b></p>
     <p>Query or set the maximum number of pages in the database file.
@@ -344,7 +344,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
 </li>
 
-<a name="pragma_read_uncommitted"></a>
+<tcl>Subsection read_uncommitted</tcl>
 <li><p><b>PRAGMA read_uncommitted;
        <br>PRAGMA read_uncommitted = </b><i>0 | 1</i><b>;</b></p>
     <p>Query, set, or clear READ UNCOMMITTED isolation.  The default isolation
@@ -352,22 +352,21 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     READ UNCOMMITTED isolation, but SERIALIZABLE will still be used except
     between connections that share a common page and schema cache.
     Cache sharing is enabled using the
-    <a href="c3ref/enable_shared_cache.html">
-    sqlite3_enable_shared_cache()</a> API and is only available between
+    [sqlite3_enable_shared_cache()] API and is only available between
     connections running the same thread.  Cache sharing is off by default.
     </p>
 </li>
 
-<a name="pragma_short_column_names"></a>
+<tcl>Subsection short_column_names</tcl>
 <li><p><b>PRAGMA short_column_names;
        <br>PRAGMA short_column_names = </b><i>0 | 1</i><b>;</b></p>
     <p>Query or change the short-column-names flag. This flag affects
-    the way SQLite names columns of data returned by SELECT statements
+    the way SQLite names columns of data returned by [SELECT] statements
     when the expression for the column is a table-column name or the
     wildcard "*".  Normally, such result columns are named
-    &lt;table-name/alias&gt;lt;column-name&gt; if the SELECT statement 
+    &lt;table-name/alias&gt;lt;column-name&gt; if the [SELECT] statement 
     joins two or more tables together, or simply &lt;column-name&gt; if 
-    the SELECT statement queries a single table. When the short-column-names 
+    the [SELECT] statement queries a single table. When the short-column-names 
     flag is set, such columns are always named &lt;column-name&gt; 
     regardless of whether or not a join is performed.
     </p>
@@ -377,7 +376,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
 </li>
 
-<a name="pragma_synchronous"></a>
+<tcl>Subsection synchronous</tcl>
 <li><p><b>PRAGMA synchronous;
        <br>PRAGMA synchronous = FULL; </b>(2)<b>
        <br>PRAGMA synchronous = NORMAL; </b>(1)<b>
@@ -411,7 +410,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 </li>
 
 
-<a name="pragma_temp_store"></a>
+<tcl>Subsection temp_store</tcl>
 <li><p><b>PRAGMA temp_store;
        <br>PRAGMA temp_store = DEFAULT;</b> (0)<b>
        <br>PRAGMA temp_store = FILE;</b> (1)<b>
@@ -468,7 +467,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </li>
     <br>
 
-<a name="pragma_temp_store_directory"></a>
+<tcl>Subsection temp_store_directory</tcl>
 <li><p><b>PRAGMA temp_store_directory;
        <br>PRAGMA temp_store_directory = 'directory-name';</b></p>
     <p>Query or change the setting of the "temp_store_directory" - the
@@ -504,7 +503,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <tcl>Section {Pragmas to query the database schema} schema</tcl>
 
 <ul>
-<a name="pragma_database_list"></a>
+<tcl>Subsection database_list</tcl>
 <li><p><b>PRAGMA database_list;</b></p>
     <p>For each open database, invoke the callback function once with
     information about that database.  Arguments include the index and 
@@ -512,35 +511,35 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     the main database.  The second row will be for the database used to 
     store temporary tables.</p></li>
 
-<a name="pragma_foreign_key_list"></a>
+<tcl>Subsection foreign_key_list</tcl>
 <li><p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
     <p>For each foreign key that references a column in the argument
     table, invoke the callback function with information about that
     foreign key. The callback function will be invoked once for each
     column in each foreign key.</p></li>
 
-<a name="pragma_freelist_count"></a>
-<li><p><b>PRAGMA [database].freelist_count;</b></p>
+<tcl>Subsection freelist_count</tcl>
+<li><p><b>PRAGMA &#91;database&#93;.freelist_count;</b></p>
     <p>Return the number of unused pages in the database file. Running
     a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
     command with a large value of N will shrink the database file by this
     number of pages. </p></li>
 
-<a name="pragma_index_info"></a>
+<tcl>Subsection index_info</tcl>
 <li><p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
     <p>For each column that the named index references, invoke the 
     callback function
     once with information about that column, including the column name,
     and the column number.</p></li>
 
-<a name="pragma_index_list"></a>
+<tcl>Subsection index_list</tcl>
 <li><p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
     <p>For each index on the named table, invoke the callback function
     once with information about that index.  Arguments include the
     index name and a flag to indicate whether or not the index must be
     unique.</p></li>
 
-<a name="pragma_table_info"></a>
+<tcl>Subsection table_info</tcl>
 <li><p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
     <p>For each column in the named table, invoke the callback function
     once with information about that column, including the column name,
@@ -551,12 +550,11 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <tcl>Section {Pragmas to query/modify version values} version</tcl>
 
 <ul>
-<a name="pragma_schema_version"></a>
-<a name="pragma_user_version"></a>
-<li><p><b>PRAGMA [database.]schema_version; 
-       <br>PRAGMA [database.]schema_version = </b><i>integer </i><b>;
-       <br>PRAGMA [database.]user_version;
-       <br>PRAGMA [database.]user_version = </b><i>integer </i><b>;</b>
+<tcl>Subsection schema_version; Subsection user_version</tcl>
+<li><p><b>PRAGMA &#91;database.&#93;schema_version; 
+       <br>PRAGMA &#91;database.&#93;schema_version = </b><i>integer </i><b>;
+       <br>PRAGMA &#91;database.&#93;user_version;
+       <br>PRAGMA &#91;database.&#93;user_version = </b><i>integer </i><b>;</b>
 
   
 <p>    The pragmas schema_version and user_version are used to set or get
@@ -582,7 +580,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <tcl>Section {Pragmas to debug the library} debug</tcl>
 
 <ul>
-<a name="pragma_integrity_check"></a>
+<tcl>Subsection integrity_check</tcl>
 <li><p><b>PRAGMA integrity_check;
     <br>PRAGMA integrity_check(</b><i>integer</i><b>)</b></p>
     <p>The command does an integrity check of the entire database.  It
@@ -595,7 +593,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     is 100.  If no errors are found, a single row with the value "ok" is
     returned.</p></li>
 
-<a name="pragma_parser_trace"></a>
+<tcl>Subsection parser_trace</tcl>
 <li><p><b>PRAGMA parser_trace = ON; </b>(1)<b>
     <br>PRAGMA parser_trace = OFF;</b> (0)</p>
     <p>Turn tracing of the SQL parser inside of the
@@ -603,7 +601,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     This only works if the library is compiled without the NDEBUG macro.
     </p></li>
 
-<a name="pragma_vdbe_trace"></a>
+<tcl>Subsection vdbe_trace</tcl>
 <li><p><b>PRAGMA vdbe_trace = ON; </b>(1)<b>
     <br>PRAGMA vdbe_trace = OFF;</b> (0)</p>
     <p>Turn tracing of the virtual database engine inside of the
@@ -611,13 +609,13 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p></li>
 
-<a name="pragma_vdbe_listing"></a>
+<tcl>Subsection vdbe_listing</tcl>
 <li><p><b>PRAGMA vdbe_listing = ON; </b>(1)<b>
     <br>PRAGMA vdbe_listing = OFF;</b> (0)</p>
     <p>Turn listings of virtual machine programs on and off.
     With listing is on, the entire content of a program is printed
     just prior to beginning execution.  This is like automatically
-    executing an EXPLAIN prior to each statement.  The statement
+    executing an [EXPLAIN] prior to each statement.  The statement
     executes normally after the listing is printed.
     This is used for debugging.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 

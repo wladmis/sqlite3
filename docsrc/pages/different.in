@@ -8,9 +8,9 @@ database engines.
 
 <tcl>
 proc feature {tag name text} {
-  puts "<a name=\"$tag\" /></a>"
-  puts "<p><b>$name</b></p>\n"
-  puts "<blockquote>$text</blockquote>\n"
+  hd_fragment $tag
+  hd_puts "<p><b>$name</b></p>\n"
+  hd_puts "<blockquote>$text</blockquote>\n"
 }
 
 feature zeroconfig {Zero-Configuration} {
@@ -76,6 +76,20 @@ feature onefile {Single Database File} {
   the option of writing directly to disk and bypassing the filesystem
   all together.  This provides added performance, but at the cost of
   considerable setup and maintenance complexity.
+}
+
+feature onefile {Stable Cross-Platform Database File} {
+  The SQLite file format is cross-platform.  A database file written
+  on one machine can be copied to and used on a different machine with
+  a different architecture.  Big-endian or little-endian, 32-bit or
+  64-bit does not matter.  All machines use the same file format.
+  Furthermore, the developers have pledged to keep the file format
+  stable and backwards compatible, so newer versions of SQLite can
+  read and write older database files.
+  <p>
+  Most other SQL database engines require you to dump and restore
+  the database when moving from one platform to another and often
+  when upgrading to a newer version of the software.
 }
 
 feature small {Compact} {

@@ -18,9 +18,9 @@ plans to add features near the bottom of the list.
 
 <tcl>
 proc feature {name desc} {
-  puts "<tr><td valign=\"top\"><b><nobr>$name</nobr></b></td>"
-  puts "<td width=\"10\">&nbsp;</th>"
-  puts "<td valign=\"top\">$desc</td></tr>"
+  hd_puts "<tr><td valign=\"top\"><b><nobr>$name</nobr></b></td>"
+  hd_puts "<td width=\"10\">&nbsp;</th>"
+  hd_puts "<td valign=\"top\">$desc</td></tr>"
 }
 
 feature {FOREIGN KEY constraints} {

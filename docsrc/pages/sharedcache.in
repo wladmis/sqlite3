@@ -13,7 +13,7 @@ proc HEADING {level title} {
   for {set i 3} {$i<=$level} {incr i} {
     append n .$pnum($i)
   }
-  puts "<h$h>$n $title</h$h>"
+  hd_puts "<h$h>$n $title</h$h>"
 }
 set pnum(1) 0
 set pnum(2) 0

@@ -41,11 +41,12 @@ limits to avoid excess resource utilization in the event of
 bug in higher-level SQL statement generators or to help thwart 
 attackers who inject malicious SQL statements.
 </p>
-}
+
+<tcl>
 proc limititem {title text} {
-  puts "<li><p><b>$title</b></p>\n$text</li>"
+  hd_resolve "<li><p><b>$title</b></p>\n$text</li>"
 }
-puts {
+hd_puts {
 <ol>
 }
 
@@ -110,8 +111,7 @@ There are places in the SQLite code generator that use algorithms
 that are O(N&sup2;) where N is the number of columns.  
 So if you redefine SQLITE_MAX_COLUMN to be a
 really huge number and you generate SQL that uses a large number of
-columns, you may find that 
-<a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
+columns, you may find that [sqlite3_prepare_v2()]
 runs slowly.
 }
 
@@ -136,8 +136,7 @@ INSERT INTO tab1 VALUES(?,?,?);
 </blockquote>
 
 <p>
-Then use the
-<a href="c3ref/bind_blob.html">sqlite3_bind_XXXX()</a> functions
+Then use the [sqlite3_bind_blob|sqlite3_bind_XXXX()] functions
 to bind your large string values to the SQL statement.  The use of binding
 obviates the need to escape quote characters in the string, reducing the
 risk of SQL injection attacks.  It is also runs faster since the large
@@ -307,3 +306,5 @@ work with databases that are hundreds of gigabytes or more
 in size, then you should perhaps consider using a different database 
 engine that is explicitly designed for such large data sets.
 </p>
+}
+</tcl>

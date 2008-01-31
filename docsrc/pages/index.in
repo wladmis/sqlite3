@@ -10,7 +10,8 @@
 <a href="transactional.html">transactional</a>
 SQL database engine.</p>
 
-<p>SQLite is the most widely deployed
+<p>SQLite is the 
+<a href="mostdeployed.html">most widely deployed</a>
 SQL database engine in the world.  It is used in countless
 desktop computer applications as well as consumer electronic
 devices including cellphones, PDAs, and MP3 players.  The
@@ -52,7 +53,7 @@ data-enabled smartphones.
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_5_4.html">Version 3.5.4</a>
+<li><a href="releaselog/3_5_5.html">Version 3.5.5</a>
 of SQLite is stable and is recommended for all users.</li>
 </ul></p>
 

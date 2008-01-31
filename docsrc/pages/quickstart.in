@@ -42,8 +42,8 @@ if {$argc!=2} {
   exit 1
 }
 load /usr/lib/tclsqlite3.so Sqlite3
-<b>sqlite3</b> db [lindex $argv 0]
-<b>db</b> eval [lindex $argv 1] x {
+<b>sqlite3</b> db &#91;lindex $argv 0]
+<b>db</b> eval &#91;lindex $argv 1] x {
   foreach v $x(*) {
     puts "$v = $x($v)"
   }

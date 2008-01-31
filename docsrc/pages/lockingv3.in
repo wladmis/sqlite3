@@ -14,9 +14,9 @@ proc HEADING {level title {label {}}} {
     append n .$pnum($i)
   }
   if {$label!=""} {
-    puts "<a name=\"$label\"></a>"
+    hd_puts "<a name=\"$label\"></a>"
   }
-  puts "<h$h>$n $title</h$h>"
+  hd_puts "<h$h>$n $title</h$h>"
 }
 set pnum(1) 0
 set pnum(2) 0
@@ -29,7 +29,7 @@ set pnum(8) 0
 
 HEADING 1 {File Locking And Concurrency In SQLite Version 3}
 
-puts {
+hd_puts {
 <p>Version 3 of SQLite introduces a more complex locking and journaling 
 mechanism designed to improve concurrency and reduce the writer starvation 
 problem.  The new mechanism also allows atomic commits of transactions
@@ -43,7 +43,7 @@ of SQLite version 3.
 
 HEADING 1 {Overview} overview
 
-puts {
+hd_puts {
 <p>
 Locking and concurrency control are handled by the the 
 <a href="http://www.sqlite.org/cvstrac/getfile/sqlite/src/pager.c">
@@ -82,7 +82,7 @@ changing the truth of the statement.</p>
 
 HEADING 1 {Locking} locking
 
-puts {
+hd_puts {
 <p>
 From the point of view of a single process, a database file
 can be in one of five locking states:
@@ -150,7 +150,7 @@ does not track PENDING locks.
 
 HEADING 1 {The Rollback Journal} rollback
 
-puts {
+hd_puts {
 <p>Any time a process wants to make a changes to a database file, it
 first records enough information in the <em>rollback journal</em> to
 restore the database file back to its initial condition.  Thus, before
@@ -214,7 +214,7 @@ preceding rules will be repeated in bullets:
 
 HEADING 2 {Dealing with hot journals} hot_journals
 
-puts {
+hd_puts {
 <p>
 Before reading from a a database file, SQLite always checks to see if that
 database file has a hot journal.  If the file does have a hot journal, then
@@ -258,7 +258,7 @@ SHARED lock is dropped.</p>
 
 HEADING 2 {Deleting stale master journals} stale_master_journals
 
-puts {
+hd_puts {
 <p>A stale master journal is a master journal that is no longer being
 used for anything.  There is no requirement that stale master journals
 be deleted.  The only reason for doing so is to free up disk space.</p>
@@ -275,7 +275,7 @@ master journal we are testing is stale and can be safely deleted.</p>
 
 HEADING 1 {Writing to a database file} writing
 
-puts {
+hd_puts {
 <p>To write to a database, a process must first acquire a SHARED lock
 as described above (possibly rolling back incomplete changes if there
 is a hot journal). 
@@ -402,7 +402,7 @@ commit sequence is used, as follows:</p>
 
 HEADING 2 {Writer starvation} writer_starvation
 
-puts {
+hd_puts {
 <p>In SQLite version 2, if many processes are reading from the database,
 it might be the case that there is never a time when there are
 no active readers.  And if there is always at least one read lock on the
@@ -421,7 +421,7 @@ writer will be given a chance to make its changes.</p>
 
 HEADING 1 {How To Corrupt Your Database Files} how_to_corrupt
 
-puts {
+hd_puts {
 <p>The pager module is robust but it is not completely failsafe.
 It can be subverted.  This section attempts to identify and explain
 the risks.</p>
@@ -516,7 +516,7 @@ after a power failure.
 
 HEADING 1 {Transaction Control At The SQL Level} transaction_control
 
-puts {
+hd_puts {
 <p>
 The changes to locking and concurrency control in SQLite version 3 also
 introduce some subtle changes in the way transactions work at the SQL

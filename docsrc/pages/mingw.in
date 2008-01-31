@@ -22,7 +22,7 @@ proc Link {path {file {}}} {
   } else {
     set file $path
   }
-  puts "<a href=\"$path\">$file</a>"
+  hd_puts "<a href=\"$path\">$file</a>"
 }
 </tcl>
 
@@ -46,9 +46,9 @@ The three files you will need are:</p>
 <li>
   <tcl>
   Link $ftpsite binutils-19990818-1-src.tar.gz
-  puts </li><li>
+  hd_puts </li><li>
   Link $ftpsite gcc-2.95.2-1-src.tar.gz
-  puts </li><li>
+  hd_puts </li><li>
   Link $ftpsite mingw-20000203.zip
 </tcl>
 </li>

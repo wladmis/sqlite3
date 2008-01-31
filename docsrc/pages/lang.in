@@ -1,5 +1,6 @@
 <title>Query Language Understood by SQLite</title>
-<h2 class="pdf_section">SQL As Understood By SQLite</h2>
+
+<h2>SQL As Understood By SQLite</h2>
 
 <p>SQLite understands most of the standard SQL
 language.  But it does <a href="omitted.html">omit some features</a>
@@ -18,7 +19,6 @@ by SQLite.  Many low-level productions are omitted.  For detailed information
 on the language that SQLite understands, refer to the source code and
 the grammar file "parse.y".</p>
 
-<div class="pdf_ignore">
 <p>SQLite implements the follow syntax:</p>
 
 <table width="100%" cellpadding="5" border="0">
@@ -63,10 +63,10 @@ foreach {section} [lsort -index 0 -dictionary {
   } else {
     set url lang_$s_tag.html
   }
-  puts "<li><a href=\"$url\">$s_title</a></li>"
+  hd_puts "<li><a href=\"$url\">$s_title</a></li>"
   incr i
   if {$i==15} {
-    puts "</ul></td><td valign=\"top\"><ul>"
+    hd_puts "</ul></td><td valign=\"top\"><ul>"
   }
 }
 </tcl>
@@ -83,21 +83,21 @@ proc Keyword {name} {
   return "<font color=\"#2c2cf0\">$name</font>"
 }
 proc Example {text} {
-  puts "<blockquote><pre>$text</pre></blockquote>"
+  hd_puts "<blockquote><pre>$text</pre></blockquote>"
 }
 
-proc Section {name label} {
-  global OUT DOC DEST
-  PutsFooter $DOC/pages/lang.in
-  close $OUT
-  set OUT [open $DEST/lang_$label.html w]
-  PutsHeader "SQLite Query Language: $name"
-  puts {<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>}
-  puts "<h3>$name</h3>"
+proc Section {name label keywords} {
+  global DOC
+  hd_close_main
+  hd_open_main lang_$label.html
+  hd_header "SQLite Query Language: $name" $DOC/pages/lang.in
+  eval hd_keywords $keywords
+  hd_puts {<a href="lang.html"><h2>SQL As Understood By SQLite</h2></a>}
+  hd_puts "<h3>$name</h3>"
 }
 
 ###############################################################################
-Section {ALTER TABLE} altertable
+Section {ALTER TABLE} altertable {{ALTER TABLE} {ALTER}}
 
 Syntax {sql-statement} {
 ALTER TABLE [<database-name> .] <table-name> <alteration>
@@ -114,7 +114,7 @@ to remove a column from a table.
 </p>
 
 <p>The RENAME TO syntax is used to rename the table identified by 
-<i>[database-name.]table-name</i> to <i>new-table-name</i>. This command 
+<i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>. This command 
 cannot be used to move a table between attached databases, only to rename 
 a table within the same database.</p>
 
@@ -126,9 +126,10 @@ table name. If this is required, the triggers or view definitions must be
 dropped and recreated to use the new table name by hand.
 </p>
 
-<p>The ADD [COLUMN] syntax is used to add a new column to an existing table.
+<p>The ADD &#91;COLUMN&#93; syntax
+is used to add a new column to an existing table.
 The new column is always appended to the end of the list of existing columns.
-<i>Column-def</i> may take any of the forms permissable in a CREATE TABLE 
+<i>Column-def</i> may take any of the forms permissable in a [CREATE TABLE]
 statement, with the following restrictions:
 <ul>
 <li>The column may not have a PRIMARY KEY or UNIQUE constraint.</li>
@@ -149,7 +150,7 @@ is <a href="lang_vacuum.html">VACUUM</a>ed.</p>
 
 <tcl>
 ##############################################################################
-Section {ANALYZE} analyze
+Section {ANALYZE} analyze ANALYZE
 
 Syntax {sql-statement} {
   ANALYZE
@@ -179,7 +180,7 @@ but all the content can be <a href="lang_delete.html">DELETE</a>d which has the
 same effect.</p>
 
 <tcl>
-Section {ATTACH DATABASE} attach
+Section {ATTACH DATABASE} attach ATTACH
 
 Syntax {sql-statement} {
 ATTACH [DATABASE] <database-filename> AS <database-name>
@@ -231,7 +232,7 @@ the main database were ":memory:".
 
 <tcl>
 ###############################################################################
-Section {BEGIN TRANSACTION} transaction
+Section {BEGIN TRANSACTION} transaction {BEGIN COMMIT ROLLBACK}
 
 Syntax {sql-statement} {
 BEGIN [ DEFERRED | IMMEDIATE | EXCLUSIVE ] [TRANSACTION [<name>]]
@@ -344,8 +345,7 @@ depending on the statement being evaluated and the point at which the
 error occurs, it might be necessary for SQLite to rollback and
 cancel the transaction.  An application can tell which
 course of action SQLite took by using the
-<a href="c3ref/get_autocommit.html">sqlite3_get_autocommit()</a>
-C-language interface.</p>
+[sqlite3_get_autocommit()] C-language interface.</p>
 
 <p>It is recommended that applications respond to the errors
 listed above by explicitly issuing a ROLLBACK command.  If the 
@@ -361,7 +361,7 @@ causing the errors above to force an unconditional rollback.</p>
 
 <tcl>
 ###############################################################################
-Section comment comment
+Section comment comment {comment comments}
 
 Syntax {comment} {<SQL-comment> | <C-comment>
 } {SQL-comment} {-- <single-line>
@@ -387,7 +387,7 @@ C comments do not nest.  SQL comments inside a C comment will be ignored.
 
 <tcl>
 ##############################################################################
-Section {CREATE INDEX} createindex
+Section {CREATE INDEX} createindex {{CREATE INDEX}}
 
 Syntax {sql-statement} {
 CREATE [UNIQUE] INDEX [IF NOT EXISTS] [<database-name> .] <index-name> 
@@ -435,7 +435,7 @@ command.</p>
 
 <tcl>
 ##############################################################################
-Section {CREATE TABLE} {createtable}
+Section {CREATE TABLE} {createtable} {{CREATE TABLE}}
 
 Syntax {sql-command} {
 CREATE [TEMP | TEMPORARY] TABLE [IF NOT EXISTS] [<database-name> .] <table-name> (
@@ -586,7 +586,7 @@ statement.  </p>
 
 <tcl>
 ##############################################################################
-Section {CREATE TRIGGER} createtrigger
+Section {CREATE TRIGGER} createtrigger {{CREATE TRIGGER}}
 
 Syntax {sql-statement} {
 CREATE [TEMP | TEMPORARY] TRIGGER [IF NOT EXISTS] <trigger-name> [ BEFORE | AFTER ]
@@ -742,7 +742,7 @@ the statement that caused the trigger program to execute and any subsequent
 
 <tcl>
 ###############################################################################
-Section {CREATE VIEW} {createview}
+Section {CREATE VIEW} {createview} {{CREATE VIEW}}
 
 Syntax {sql-command} {
 CREATE [TEMP | TEMPORARY] VIEW [IF NOT EXISTS] [<database-name>.] <view-name> AS <select-statement>
@@ -775,7 +775,7 @@ command.</p>
 
 <tcl>
 ##############################################################################
-Section {CREATE VIRTUAL TABLE} {createvtab}
+Section {CREATE VIRTUAL TABLE} {createvtab} {{CREATE VIRTUAL_TABLE}}
 
 Syntax {sql-command} {
 CREATE VIRTUAL TABLE [<database-name> .] <table-name> USING <module-name> [( <arguments> )]
@@ -811,7 +811,7 @@ DROP VIRTUAL TABLE statement.</p>
 
 <tcl>
 ##############################################################################
-Section DELETE delete
+Section DELETE delete {DELETE DELETEs}
 
 Syntax {sql-statement} {
 DELETE FROM [<database-name> .] <table-name> [WHERE <expr>]
@@ -829,7 +829,7 @@ the expression are removed.</p>
 
 <tcl>
 ###############################################################################
-Section {DETACH DATABASE} detach
+Section {DETACH DATABASE} detach DETACH
 
 Syntax {sql-command} {
 DETACH [DATABASE] <database-name>
@@ -847,7 +847,7 @@ others intact.</p>
 
 <tcl>
 ##############################################################################
-Section {DROP INDEX} dropindex
+Section {DROP INDEX} dropindex {{DROP INDEX}}
 
 Syntax {sql-command} {
 DROP INDEX [IF EXISTS] [<database-name> .] <index-name>
@@ -871,7 +871,7 @@ will be freed automatically by DROP INDEX.</p>
 
 <tcl>
 ##############################################################################
-Section {DROP TABLE} droptable
+Section {DROP TABLE} droptable {{DROP TABLE}}
 
 Syntax {sql-command} {
 DROP TABLE [IF EXISTS] [<database-name>.] <table-name>
@@ -897,7 +897,7 @@ result if the table does not exist.</p>
 
 <tcl>
 ##############################################################################
-Section {DROP TRIGGER} droptrigger
+Section {DROP TRIGGER} droptrigger {{DROP TRIGGER}}
 Syntax {sql-statement} {
 DROP TRIGGER [IF EXISTS] [<database-name> .] <trigger-name>
 }
@@ -910,7 +910,7 @@ dropped when the associated table is dropped.</p>
 
 <tcl>
 ##############################################################################
-Section {DROP VIEW} dropview
+Section {DROP VIEW} dropview {{DROP VIEW}}
 
 Syntax {sql-command} {
 DROP VIEW [IF EXISTS] <view-name>
@@ -924,7 +924,7 @@ in the underlying base tables is modified.</p>
 
 <tcl>
 ##############################################################################
-Section EXPLAIN explain
+Section EXPLAIN explain EXPLAIN
 
 Syntax {sql-statement} {
 EXPLAIN <sql-statement>
@@ -945,7 +945,7 @@ on <a href="opcode.html">available opcodes</a> for the virtual machine.</p>
 
 <tcl>
 ##############################################################################
-Section expression expr
+Section expression expr {expression {expression syntax}}
 
 Syntax {expr} {
 <expr> <binary-op> <expr> |
@@ -995,7 +995,7 @@ OR</font>
 <p>Supported unary prefix operators are these:</p>
 
 <blockquote><pre>
-<font color="#2c2cf0"><big>-    +    !    ~    NOT</big></font>
+<font color="#2c2cf0"><big>-    +    ~    NOT</big></font>
 </pre></blockquote>
 
 <p>The COLLATE operator can be thought of as a unary postfix
@@ -1003,15 +1003,16 @@ operator.  The COLLATE operator has the highest precedence.
 It always binds more tightly than any prefix unary operator or
 any binary operator.</p>
 
+<tcl>hd_puts "
 <p>The unary operator [Operator +] is a no-op.  It can be applied
 to strings, numbers, or blobs and it always gives as its result the
-value of the operand.</p>
+value of the operand.</p>"</tcl>
 
 <p>Note that there are two variations of the equals and not equals
 operators.  Equals can be either
 
 <tcl>
-puts "[Operator =] or [Operator ==].
+hd_puts "[Operator =] or [Operator ==].
 The non-equals operator can be either
 [Operator !=] or [Operator {&lt;&gt;}].
 The [Operator ||] operator is \"concatenate\" - it joins together
@@ -1048,7 +1049,7 @@ A literal value can also be the token "NULL".
 <p>
 A parameter specifies a placeholder in the expression for a literal
 value that is filled in at runtime using the
-<a href="c3ref/bind_blob.html">sqlite3_bind</a> API.
+[sqlite3_bind_blob() | sqlite3_bind()] APIs.
 Parameters can take several forms:
 </p
 
@@ -1087,15 +1088,15 @@ programming language.</td>
 </blockquote>
 
 <p>Parameters that are not assigned values using
-<a href="c3ref/bind_blob.html">sqlite3_bind</a> are treated
+[sqlite3_bind_blob() | sqlite3_bind()] are treated
 as NULL.</p>
 
-<a name="like"></a>
+<tcl>hd_fragment like LIKE ESCAPE</tcl>
 <p>The LIKE operator does a pattern matching comparison. The operand
 to the right contains the pattern, the left hand operand contains the
 string to match against the pattern. 
 
-<tcl>puts "A percent symbol [Operator %] in the pattern matches any
+<tcl>hd_puts "A percent symbol [Operator %] in the pattern matches any
 sequence of zero or more characters in the string.  An underscore
 [Operator _] in the pattern matches any single character in the
 string.  Any other character matches itself or it's lower/upper case
@@ -1130,7 +1131,7 @@ overridden by defining an alternative implementation of the
 like() SQL function.</p>
 </p>
 
-<a name="glob"></a>
+<tcl>hd_fragment glob GLOB</tcl>
 <p>The GLOB operator is similar to LIKE but uses the Unix
 file globbing syntax for its wildcards.  Also, GLOB is case
 sensitive, unlike LIKE.  Both GLOB and LIKE may be preceded by
@@ -1139,7 +1140,7 @@ operator is implemented by calling the user function <a href="#globFunc">
 glob(<i>X</i>,<i>Y</i>)</a> and can be modified by overriding
 that function.</p>
 
-<a name="regexp"></a>
+<tcl>hd_fragment regexp REGEXP</tcl>
 <p>The REGEXP operator is a special syntax for the regexp()
 user function.  No regexp() user function is defined by default
 and so use of the REGEXP operator will normally result in an
@@ -1147,40 +1148,40 @@ error message.  If a user-defined function named "regexp"
 is added at run-time, that function will be called in order
 to implement the REGEXP operator.</p>
 
-<a name="match"></a>
+<tcl>hd_fragment match MATCH</tcl>
 <p>The MATCH operator is a special syntax for the match()
 user function.  The default match() function implementation
 raises and exception and is not really useful for anything.
 But extensions can override the match() function with more
 helpful logic.</p>
 
-<p>A column name can be any of the names defined in the CREATE TABLE
+<p>A column name can be any of the names defined in the [CREATE TABLE]
 statement or one of the following special identifiers: "<b>ROWID</b>",
 "<b>OID</b>", or "<b>_ROWID_</b>".
 These special identifiers all describe the
 unique integer key (the "row key") associated with every 
 row of every table.
-The special identifiers only refer to the row key if the CREATE TABLE
+The special identifiers only refer to the row key if the [CREATE TABLE]
 statement does not define a real column with the same name.  Row keys
 act like read-only columns.  A row key can be used anywhere a regular
 column can be used, except that you cannot change the value
-of a row key in an UPDATE or INSERT statement.
+of a row key in an [UPDATE] or [INSERT] statement.
 "SELECT * ..." does not return the row key.</p>
 
-<p>SELECT statements can appear in expressions as either the
+<p>[SELECT] statements can appear in expressions as either the
 right-hand operand of the IN operator, as a scalar quantity, or
 as the operand of an EXISTS operator.
 As a scalar quantity or the operand of an IN operator,
 the SELECT should have only a single column in its
 result.  Compound SELECTs (connected with keywords like UNION or
 EXCEPT) are allowed.
-With the EXISTS operator, the columns in the result set of the SELECT are
+With the EXISTS operator, the columns in the result set of the [SELECT] are
 ignored and the expression returns TRUE if one or more rows exist
 and FALSE if the result set is empty.
-If no terms in the SELECT expression refer to value in the containing
+If no terms in the [SELECT] expression refer to value in the containing
 query, then the expression is evaluated once prior to any other
-processing and the result is reused as necessary.  If the SELECT expression
-does contain variables from the outer query, then the SELECT is reevaluated
+processing and the result is reused as necessary.  If the [SELECT] expression
+does contain variables from the outer query, then the [SELECT] is reevaluated
 every time it is needed.</p>
 
 <p>When a SELECT is the right operand of the IN operator, the IN
@@ -1210,8 +1211,7 @@ their result across all rows of the result set.</p>
 
 <p>The core functions shown below are available by default.  Additional
 functions may be written in C and added to the database engine using
-the <a href="c3ref/create_function.html">sqlite3_create_function()</a>
-API.</p>
+the [sqlite3_create_function()] API.</p>
 
 <table border=0 cellpadding=10 class="pdf_functions">
 <tr>
@@ -1231,11 +1231,10 @@ all arguments are NULL then NULL is returned.  There must be at least
 <a name="globFunc"></a>
 glob(<i>X</i>,<i>Y</i>)</td>
 <td valign="top">This function is used to implement the
-"<b>X GLOB Y</b>" syntax of SQLite.  The
-<a href="c3ref/create_function.html">sqlite3_create_function()</a> 
+"<b>X GLOB Y</b>" syntax of SQLite.  The [sqlite3_create_function()]
 interface can
 be used to override this function and thereby change the operation
-of the <a href="#globFunc">GLOB</a> operator.</td>
+of the [GLOB] operator.</td>
 </tr>
 
 <tr>
@@ -1274,7 +1273,7 @@ characters is returned, not the number of bytes.</td>
 like(<i>X</i>,<i>Y</i>)<br>
 like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
 <td valign="top">
-This function is used to implement the "<b>X LIKE Y [ESCAPE Z]</b>"
+This function is used to implement the "<b>X LIKE Y &#91;ESCAPE Z&#93;</b>"
 syntax of SQL. If the optional ESCAPE clause is present, then the
 user-function is invoked with three arguments. Otherwise, it is
 invoked with two arguments only. The 
@@ -1304,8 +1303,7 @@ modify or delete existing functions or collating sequences because
 those functions and/or collating sequences might be used elsewhere
 in the currently running SQL statement.  To load an extension that
 changes or deletes functions or collating sequences, use the
-<a href="c3ref/load_extension.html">sqlite3_load_extension()</a>
-C-language API.</p>
+[sqlite3_load_extension()] C-language API.</p>
 </tr>
 
 <tr>
@@ -1356,7 +1354,7 @@ otherwise return NULL.</td>
 its argument suitable for inclusion into another SQL statement.
 Strings are surrounded by single-quotes with escapes on interior quotes
 as needed.  BLOBs are encoded as hexadecimal literals.
-The current implementation of VACUUM uses this function.  The function
+The current implementation of [VACUUM] uses this function.  The function
 is also useful when writing triggers to implement undo/redo functionality.
 </td>
 </tr>
@@ -1462,7 +1460,7 @@ UTF-8 strings.</td>
 Return a BLOB consisting of N bytes of 0x00.  SQLite
 manages these zeroblobs very efficiently.  Zeroblobs can be used to
 reserve space for a BLOB that is later written using 
-<a href="c3ref/blob_open.html">incremental BLOB I/O</a>.</td>
+[sqlite3_blob_open() | incremental BLOB I/O].</td>
 </tr>
 
 </table>
@@ -1479,7 +1477,7 @@ SQLite Wiki</a>.</p>
 <p>
 The aggregate functions shown below are available by default.  Additional
 aggregate functions written in C may be added using the 
-<a href="c3ref/create_function.html">sqlite3_create_function()</a>
+[sqlite3_create_function()]</a>
 API.</p>
 
 <p>
@@ -1557,7 +1555,7 @@ if all values in the group are NULL.</td>
 
 <tcl>
 ##############################################################################
-Section INSERT insert
+Section INSERT insert {INSERT INSERTs}
 
 Syntax {sql-statement} {
 INSERT [OR <conflict-algorithm>] INTO [<database-name> .] <table-name> [(<column-list>)] VALUES(<value-list>) |
@@ -1594,7 +1592,7 @@ alias for "INSERT OR REPLACE".
 
 <tcl>
 ##############################################################################
-Section {ON CONFLICT clause} conflict
+Section {ON CONFLICT clause} conflict {{conflict clause}}
 
 Syntax {conflict-clause} {
 ON CONFLICT <conflict-algorithm>
@@ -1673,7 +1671,7 @@ If no algorithm is specified anywhere, the ABORT algorithm is used.</p>
 
 <tcl>
 ##############################################################################
-Section REINDEX reindex
+Section REINDEX reindex REINDEX
 
 Syntax {sql-statement} {
   REINDEX <collation name>
@@ -1689,7 +1687,8 @@ This is useful when the definition of a collation sequence has changed.
 
 <p>In the first form, all indices in all attached databases that use the
 named collation sequence are recreated. In the second form, if 
-<i>[database-name.]table/index-name</i> identifies a table, then all indices
+<i>&#91;database-name.&#93;table/index-name</i> identifies a table,
+then all indices
 associated with the table are rebuilt. If an index is identified, then only
 this specific index is deleted and recreated.
 </p>
@@ -1702,7 +1701,7 @@ specific table or index.
 
 <tcl>
 ###############################################################################
-Section REPLACE replace
+Section REPLACE replace REPLACE
 
 Syntax {sql-statement} {
 REPLACE INTO [<database-name> .] <table-name> [( <column-list> )] VALUES ( <value-list> ) |
@@ -1719,7 +1718,7 @@ information.</p>
 
 <tcl>
 ###############################################################################
-Section SELECT select
+Section SELECT select {SELECT query}
 
 Syntax {sql-statement} {
 SELECT [ALL | DISTINCT] <result> [FROM <table-list>]
@@ -1757,10 +1756,10 @@ has a fixed number of columns.  The number of columns in the
 result is specified by the expression list in between the
 SELECT and FROM keywords.  Any arbitrary expression can be used
 as a result.  If a result expression is }
-puts "[Operator *] then all columns of all tables are substituted"
-puts {for that one expression.  If the expression is the name of}
-puts "a table followed by [Operator .*] then the result is all columns"
-puts {in that one table.</p>
+hd_puts "[Operator *] then all columns of all tables are substituted"
+hd_puts {for that one expression.  If the expression is the name of}
+hd_puts "a table followed by [Operator .*] then the result is all columns"
+hd_puts {in that one table.</p>
 
 <p>The DISTINCT keyword causes a subset of result rows to be returned, 
 in which each result row is different.  NULL values are not treated as 
@@ -1849,7 +1848,7 @@ are connected into a compound, they group from left to right.</p>
 
 <tcl>
 ##############################################################################
-Section UPDATE update
+Section UPDATE update {UPDATE UPDATEs}
 
 Syntax {sql-statement} {
 UPDATE [ OR <conflict-algorithm> ] [<database-name> .] <table-name>
@@ -1875,7 +1874,7 @@ See the section titled
 
 <tcl>
 ##############################################################################
-Section VACUUM vacuum
+Section VACUUM vacuum VACUUM
 
 Syntax {sql-statement} {
 VACUUM
@@ -2047,9 +2046,9 @@ set keyword_list [lsort {
    WHERE
 }]
 
-puts {<DIV class="pdf_section">}
-Section {SQLite Keywords} keywords 
-puts {</DIV>}
+hd_puts {<DIV class="pdf_section">}
+Section {SQLite Keywords} keywords {{SQL keyword} {SQL keywords}}
+hd_puts {</DIV>}
 </tcl>
 
 <p>The SQL standard specifies a huge number of keywords which may not
@@ -2073,7 +2072,7 @@ are three ways of quoting keywords in SQLite:</p>
 	<td>A keyword in double-quotes is interpreted as an identifier if
         it matches a known identifier.  Otherwise it is interpreted as a
         string literal.</td></tr>
-<tr>	<td valign="top"><b>[keyword]</b></td><td></td>
+<tr>	<td valign="top"><b>&#91;keyword&#93;</b></td><td></td>
 	<td>A keyword enclosed in square brackets is always understood as
         an identifier.  This is not standard SQL.  This quoting mechanism
         is used by MS Access and SQL Server and is included in SQLite for
@@ -2120,12 +2119,12 @@ foreach word $keyword_list {
     set font b
   }
   if {$i==$nRow} {
-    puts "</td><td valign=\"top\" align=\"left\" width=\"20%\">"
+    hd_puts "</td><td valign=\"top\" align=\"left\" width=\"20%\">"
     set i 1
   } else {
     incr i
   }
-  puts "<$font>$word</$font><br>"
+  hd_puts "<$font>$word</$font><br>"
 }
 </tcl>
 </td></tr></table></blockquote>

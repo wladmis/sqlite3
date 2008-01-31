@@ -25,15 +25,6 @@ sqlite3.h:	$(SRC)/src/sqlite.h.in
 wrap.tcl:	$(DOC)/wrap.tcl
 	cp $(DOC)/wrap.tcl .
 
-lang.html: $(DOC)/lang.tcl
-	tclsh $(DOC)/lang.tcl doc >lang.html
-
-opcode.html:	$(DOC)/opcode.tcl $(SRC)/src/vdbe.c
-	tclsh $(DOC)/opcode.tcl $(SRC)/src/vdbe.c >opcode.html
-
-capi3ref.html:	$(DOC)/mkapidoc.tcl sqlite3.h
-	tclsh $(DOC)/mkapidoc.tcl <sqlite3.h >capi3ref.html
-
 docdir:
 	mkdir -p doc 
 

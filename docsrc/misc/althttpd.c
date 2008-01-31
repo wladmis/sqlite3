@@ -51,11 +51,12 @@
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <crypt.h>
 #include <stdarg.h>
 #include <time.h>
 #include <sys/times.h>
+#ifdef linux
 #include <sys/sendfile.h>
+#endif
 
 /*
 ** Configure the server by setting the following macros and recompiling.
@@ -178,7 +179,7 @@ static void MakeLogEntry(int a){
           rScale*sTms.tms_stime,
           rScale*sTms.tms_cutime,
           rScale*sTms.tms_cstime,
-          now - beginTime,
+          (int)(now - beginTime),
           nRequest, zAgent
       );
       fclose(log);
@@ -376,16 +377,23 @@ static void CgiScriptWritable(void){
 /*
 ** Tell the client that the server malfunctioned.
 */
-static void Malfunction(int linenum){
+static void Malfunction(int linenum, const char *zFormat, ...){
+  va_list ap;
+  va_start(ap, zFormat);
   StartResponse("500 Server Malfunction");
   nOut += printf(
     "Content-type: text/html\r\n"
     "\r\n"
     "<head><title>Server Malfunction</title></head>\n"
     "<body><h1>Server Malfunction</h1>\n"
-    "This web server has malfunctioned.\n"
-    "(Error number: %d)\n"
-    "</body>\n", linenum);
+    "<p>This web server has malfunctioned.\n\n"
+    "(Error number: %d)</p>\n", linenum);
+  if( zFormat ){
+    nOut += printf("<p>");
+    nOut += vprintf(zFormat, ap);
+    nOut += printf("</p>\n\n");
+  }
+  nOut += printf("</body>\n");
   MakeLogEntry(0);
   exit(0);       
 }
@@ -521,7 +529,9 @@ void ProcessOneRequest(int forceClose){
   /* Change directories to the root of the HTTP filesystem
   */
   if( chdir(zRoot[0] ? zRoot : "/")!=0 ){
-    Malfunction(__LINE__);
+    char zBuf[1000];
+    Malfunction(__LINE__, "cannot chdir to [%s] from [%s]",
+         zRoot, getcwd(zBuf,999));
   }
   nRequest++;
 
@@ -744,7 +754,9 @@ void ProcessOneRequest(int forceClose){
   /* Change directories to the root of the HTTP filesystem
   */
   if( chdir(zHome)!=0 ){
-    Malfunction(__LINE__);
+    char zBuf[1000];
+    Malfunction(__LINE__, "cannot chdir to [%s] from [%s]",
+         zHome, getcwd(zBuf,999));
   }
 
   /* Locate the file in the filesystem.  We might have to append
@@ -845,7 +857,9 @@ void ProcessOneRequest(int forceClose){
     ** changing directories to the directory holding the program.
     */
     if( chdir(zDir) ){
-      Malfunction(__LINE__);
+      char zBuf[1000];
+      Malfunction(__LINE__, "cannot chdir to [%s] from [%s]", 
+           zDir, getcwd(zBuf,999));
     }
 
     /* Setup the environment appropriately.
@@ -1002,7 +1016,6 @@ void ProcessOneRequest(int forceClose){
     ** must a simple file that needs to be copied to output.
     */
     char *zContentType = GetMimeType(zFile);
-    off_t offset;
 
     if( zTmpNam ) unlink(zTmpNam);
     in = fopen(zFile,"r");
@@ -1019,8 +1032,10 @@ void ProcessOneRequest(int forceClose){
     }
     alarm(30 + statbuf.st_size/1000);
 #ifdef linux
-    offset = 0;
-    nOut += sendfile(fileno(stdout), fileno(in), &offset, statbuf.st_size);
+    {
+      off_t offset = 0;
+      nOut += sendfile(fileno(stdout), fileno(in), &offset, statbuf.st_size);
+    }
 #else
     while( (c = getc(in))!=EOF ){
       putc(c,stdout);
@@ -1063,17 +1078,17 @@ int main(int argc, char **argv){
       argv += 2;
       argc -= 2;
     }else{
-      Malfunction(__LINE__);
+      Malfunction(__LINE__, "unknown argument: [%s]", argv[1]);
     }
   }
   if( zRoot==0 ){
-    Malfunction(__LINE__);
+    Malfunction(__LINE__, "no root directory specified");
   }
   
   /* Change directories to the root of the HTTP filesystem
   */
   if( chdir(zRoot)!=0 ){
-    Malfunction(__LINE__);
+    Malfunction(__LINE__, "cannot change to directory [%s]", zRoot);
   }
 
   /* Attempt to go into a chroot jail as user zPermUser
@@ -1081,16 +1096,18 @@ int main(int argc, char **argv){
   if( zPermUser ){
     struct passwd *pwd = getpwnam(zPermUser);
     if( pwd ){
-      if( chroot(".")<0 ) Malfunction(__LINE__);
+      if( chroot(".")<0 ){
+        Malfunction(__LINE__, "unable to create chroot jail");
+      }
       setgid(pwd->pw_gid);
       setuid(pwd->pw_uid);
       zRoot = "";
     }else{
-      Malfunction(__LINE__);
+      Malfunction(__LINE__, "no home directory for user [%s]", zPermUser);
     }
   }
   if( getuid()==0 ){
-    Malfunction(__LINE__);
+    Malfunction(__LINE__, "cannot run as root");
   }
 
   /* Get the IP address from when the request originates

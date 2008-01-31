@@ -9,6 +9,7 @@
 <li> <a href="features.html">Features</a> </li>
 <li> <a href="faq.html">Frequently Asked Questions</a> </li>
 <li> <a href="famous.html">Well-known Users</a> </li>
+<li> <a href="different.html">Distinctive Features</a>
 <li> <a href="quickstart.html">Getting Started</a> </li>
 <li> <a href="lang.html">SQL Syntax</a> </li>
 <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a> </li>
@@ -63,7 +64,7 @@ in low-memory environments.</p>
 Over two-thirds of the source code is devoted purely to testing and
 verification.  An automated test suite runs hundreds of thousands of
 tests involving millions of individual SQL statements and achieves
-over 98% test coverage.  SQLite responds gracefully to memory
+over 99% statement coverage.  SQLite responds gracefully to memory
 allocation failures and disk I/O errors.  Transactions are
 <a href="http://en.wikipedia.org/wiki/ACID">ACID</a>
 even if interrupted by system crashes or power failures.  

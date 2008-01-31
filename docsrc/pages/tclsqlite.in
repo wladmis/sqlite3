@@ -1,10 +1,11 @@
 <title>The Tcl interface to the SQLite library</title>
 <tcl>
 proc METHOD {name text} {
-  puts "<a name=\"$name\"></a>\n<h3>The \"$name\" method</h3>\n"
-  puts $text
+  hd_puts "<a name=\"$name\"></a>\n<h3>The \"$name\" method</h3>\n"
+  hd_puts $text
 }
-puts {
+</tcl>
+
 <h2>The Tcl interface to the SQLite library</h2>
 
 <p>The SQLite library is designed to be very easy to use from
@@ -49,7 +50,8 @@ defined.</p>
 
 <p>
 <ul>
-}
+
+<tcl>
 foreach m [lsort {
  authorizer
  busy
@@ -79,17 +81,16 @@ foreach m [lsort {
  update_hook
  version
 }] {
- puts "<li><a href=\"#$m\">$m</a></li>"
+ hd_puts "<li><a href=\"#$m\">$m</a></li>"
 }
-puts {
+</tcl>
 </ul>
 </p>
 
 <p>The use of each of these methods will be explained in the sequel, though
 not in the order shown above.</p>
 
-}
-
+<tcl>
 ##############################################################################
 METHOD eval {
 <p>

@@ -10,55 +10,59 @@ http://www.sqlite.org/cvstrac/timeline</a>.
 
 <tcl>
 proc chng {date desc} {
+  global DEST
   if {[regexp {\(([0-9.]+)\)} $date all vers]} {
     set label [string map {. _} $vers]
-    puts "<A NAME=\"version_$label\"></a>"
+    hd_fragment version_$label
   }
-  puts "<DT><B>$date</B></DT>"
-  regsub -all {[Tt]icket #(\d+)} $desc \
-      {<a href="http://www.sqlite.org/cvstrac/tktview?tn=\1">\0</a>} desc
-  puts "<DD><P><UL>$desc</UL></P>"
-  puts "</DD>"
-  if {[regexp {\(3\.\d+\.\d+\)} $date tag]} {
-    set tag [string map {. _} [string range $tag 1 end-1]]
-    global OUT DEST DOC
-    set saved_OUT $OUT
+  hd_puts "<h3>$date</h3>"
+  hd_resolve "<p><ul>$desc</ul></p>"
+  if {[regexp {\((3\.\d+\.\d+)[ a-z]*\)} $date all vers]} {
+    set tag [string map {. _} $vers]
     file mkdir $DEST/releaselog
-    set filename $DEST/releaselog/$tag.html
-    set OUT [open $filename w]
-    PutsHeader "SQLite Release $date" ../
-    puts "<h2>SQLite Release of $date</h2>"
-    puts "<p>Changes associated with this release include the following:</p>"
+    set filename releaselog/$tag.html
+    hd_open_aux $filename
+    hd_header "SQLite Release $vers On $date"
+    hd_keywords "Version $vers" "version $vers"
+    hd_enable_main 0
+    hd_puts "<h2>SQLite Release $vers On $date</h2>"
+    hd_puts "<p>Changes associated with this release include the following:</p>"
     regsub -all {<a href="(?!http:)} $desc {<a href="../} desc
-    puts "<p><ul>$desc</ul></p>"
-    putsin4 {
+    hd_resolve "<p><ul>$desc</ul></p>"
+    hd_puts {
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single pages is also available.  A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/cvstrac/timeline">
       http://www.sqlite.org/cvstrac/timeline</a>.</p>
     }
-    PutsFooter $DOC/pages/changes.in
-    close $OUT
-    set OUT $saved_OUT
+    hd_close_aux
+    hd_enable_main 1
   }
+}
+
+chng {2008 Jan 31 (3.5.5)} {
+<li>Convert the underlying virtual machine to be a register-based machine
+rather than a stack-based machine.  The only user-visible change
+is in the output of EXPLAIN.</li>
+<li>Add the build-in RTRIM collating sequence.</li>
 }
 
 chng {2007 Dec 14 (3.5.4)} {
 <li>Fix a critical bug in UPDATE or DELETE that occurs when an
 OR REPLACE clause or a trigger causes rows in the same table to
-be deleted as side effects.  (See ticket #2832.)  The most likely
+be deleted as side effects.  (See [ticket #2832].)  The most likely
 result of this bug is a segmentation fault, though database
 corruption is a possibility.</li>
 <li>Bring the processing of ORDER BY into compliance with the 
 SQL standard for case where a result alias and a table column name
 are in conflict.  Correct behavior is to prefer the result alias.
 Older versions of SQLite incorrectly picked the table column.
-(See ticket #2822.)</li>
+(See [ticket #2822].)</li>
 <li>The <a href="lang_vacuum.html">VACUUM</a> command preserves
 the setting of the 
 <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a>.
-(Ticket #2804.)</li>
+([Ticket #2804].)</li>
 <li>Productize and officially support the group_concat() SQL function.</li>
 <li>Better optimization of some IN operator expressions.</li>
 <li>Add the ability to change the 
@@ -81,9 +85,9 @@ where the SELECT is compound.
 <li>On win32, do not return an error when attempting to delete a file
 that does not exist.
 <li>Allow collating sequence names to be quoted.
-<li>Modify the TCL interface to use sqlite3_prepare_v2().
+<li>Modify the TCL interface to use [sqlite3_prepare_v2()].
 <li>Fix multiple bugs that can occur following a malloc() failure.
-<li>sqlite3_step() returns SQLITE_MISUSE instead of crashing when
+<li>[sqlite3_step()] returns [SQLITE_MISUSE] instead of crashing when
 called with a NULL parameter.
 <li>FTS3 now uses the SQLite memory allocator exclusively.  The
 FTS3 amalgamation can now be appended to the SQLite amalgamation to
@@ -113,18 +117,18 @@ chng {2007 Oct 04 (3.5.1)} {
     nobody will upgrade.  However, we still reserve the right to make
     incompatible changes to the new VFS interface in future releases.</i></li>
 
-<li>Fix a bug in the handling of SQLITE_FULL errors that could lead
-    to database corruption.  Ticket #2686.
+<li>Fix a bug in the handling of [SQLITE_FULL] errors that could lead
+    to database corruption.  [Ticket #2686].
 <li>The test_async.c drive now does full file locking and works correctly
     when used simultaneously by multiple processes on the same database.
 <li>The CLI ignores whitespace (including comments) at the end of lines
 <li>Make sure the query optimizer checks dependences on all terms of
-    a compound SELECT statement.  Ticket #2640.
+    a compound SELECT statement.  [Ticket #2640].
 <li>Add demonstration code showing how to build a VFS for a raw
     mass storage without a filesystem.
 <li>Added an output buffer size parameter to the xGetTempname() method
     of the VFS layer.
-<li>Sticky SQLITE_FULL or SQLITE_IOERR errors in the pager are reset
+<li>Sticky [SQLITE_FULL] or [SQLITE_IOERR] errors in the pager are reset
     when a new transaction is started.
 }
 
@@ -133,18 +137,12 @@ chng {2007 Sep 04 (3.5.0) alpha} {
 <li>Redesign the OS interface layer.  See
     <a href="34to35.html">34to35.html</a> for details.
     <font color="red">*** Potentially incompatible change ***</font>
-<li>The <a href="c3ref/release_memory.html">
-    sqlite3_release_memory()</a>,
-    <a href="c3ref/soft_heap_limit.html">
-    sqlite3_soft_heap_limit()</a>,
-    and <a href="c3ref/enable_shared_cache.html">
-    sqlite3_enable_shared_cache()</a> interfaces now work cross all
+<li>The [sqlite3_release_memory()], [sqlite3_soft_heap_limit()],
+    and [sqlite3_enable_shared_cache()] interfaces now work cross all
     threads in the process, not just the single thread in which they
     are invoked.
     <font color="red">*** Potentially incompatible change ***</font>
-<li>Added the 
-    <a href="c3ref/open.html">sqlite3_open_v2()</a>
-    interface.  
+<li>Added the [sqlite3_open_v2()] interface.  
 <li>Reimplemented the memory allocation subsystem and made it 
     replacable at compile-time.
 <li>Created a new mutex subsystem and made it replacable at
@@ -157,12 +155,11 @@ chng {2007 Sep 04 (3.5.0) alpha} {
 chng {2007 August 13 (3.4.2)} {
 <li>Fix a database corruption bug that might occur if a ROLLBACK command
 is executed in <a href="pragma.html#pragma_auto_vacuum">auto-vacuum mode</a>
-and a very small <a href="c3ref/soft_heap_limit.html">
-soft_heap_limit</a> is set. 
-<a href="http://www.sqlite.org/cvstrac/tktview?tn=2565">Ticket #2565</a>.
+and a very small [sqlite3_soft_heap_limit] is set. 
+[Ticket #2565].
 
 <li>Add the ability to run a full regression test with a small
-<a href="c3ref/soft_heap_limit.html">soft_heap_limit</a>.
+[sqlite3_soft_heap_limit].
 
 <li>Fix other minor problems with using small soft heap limits.
 
@@ -206,26 +203,24 @@ chng {2007 July 20 (3.4.1)} {
 }
 
 chng {2007 June 18 (3.4.0)} {
-<li>Fix a bug that can lead to database corruption if an SQLITE_BUSY error
+<li>Fix a bug that can lead to database corruption if an [SQLITE_BUSY] error
     occurs in the middle of an explicit transaction and that transaction
-    is later committed.  
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=2409">Ticket #2409.</a>
+    is later committed.  [Ticket #2409].
     See the
     <a href="http://www.sqlite.org/cvstrac/wiki?p=CorruptionFollowingBusyError">
     CorruptionFollowingBusyError</a> wiki page for details.</i>
 <li>Fix a bug that can lead to database corruption if autovacuum mode is
     on and a malloc() failure follows a CREATE TABLE or CREATE INDEX statement
     which itself follows a cache overflow inside a transaction.  See
-    <a href="http://www.sqlite.org/cvstrac/tktview?tn=2418">ticket #2418</a>. 
+    [ticket #2418]. 
     </li>
 <li>Added explicit <a href="limits.html">upper bounds</a> on the sizes and
     quantities of things SQLite can process.  This change might cause
     compatibility problems for
     applications that use SQLite in the extreme, which is why the current
     release is 3.4.0 instead of 3.3.18.</li>
-<li>Added support for <a href="c3ref/blob_open.html">
-    Incremental BLOB I/O</a>.</li>
-<li>Added the <a href="c3ref/bind_blob.html">zeroblob API</a>
+<li>Added support for [sqlite3_blob_open|Incremental BLOB I/O].</li>
+<li>Added the [sqlite3_bind_zeroblob()] API</a>
     and the <a href="lang_expr.html#zeroblob">zeroblob()</a> SQL function.</li>
 <li>Added support for <a href="pragma.html#pragma_incremental_vacuum">
     Incremental Vacuum</a>.</li>
@@ -238,33 +233,33 @@ chng {2007 June 18 (3.4.0)} {
 </ul><p>
 <ul type="circle">
 <li>In the windows OS driver, reacquire a SHARED lock if an attempt to
-    acquire an EXCLUSIVE lock fails.  Ticket #2354</li>
+    acquire an EXCLUSIVE lock fails.  [Ticket #2354]</li>
 <li>Fix the REPLACE() function so that it returns NULL if the second argument
-    is an empty string.  Ticket #2324.</li>
+    is an empty string.  [Ticket #2324].</li>
 <li>Document the hazards of type coversions in
-    <a href="c3ref/column_blob.html">sqlite3_column_blob()</a>
-    and related APIs.  Fix unnecessary type conversions.  Ticket #2321.</li>
-<li>Internationalization of the TRIM() function.  Ticket #2323</li>
+    [sqlite3_column_blob()]
+    and related APIs.  Fix unnecessary type conversions.  [Ticket #2321].</li>
+<li>Internationalization of the TRIM() function.  [Ticket #2323]</li>
 <li>Use memmove() instead of memcpy() when moving between memory regions
-    that might overlap.  Ticket #2334</li>
+    that might overlap.  [Ticket #2334]</li>
 <li>Fix an optimizer bug involving subqueries in a compound SELECT that has
-    both an ORDER BY and a LIMIT clause.  Ticket #2339.</li>
-<li>Make sure the <a href="c3ref/mprintf.html">sqlite3_snprintf()
-    </a> interface does not zero-terminate the buffer if the buffer size is
-    less than 1.  Ticket #2341</li>
+    both an ORDER BY and a LIMIT clause.  [Ticket #2339].</li>
+<li>Make sure the [sqlite3_snprintf()]
+    interface does not zero-terminate the buffer if the buffer size is
+    less than 1.  [Ticket #2341]</li>
 <li>Fix the built-in printf logic so that it prints "NaN" not "Inf" for
-    floating-point NaNs.  Ticket #2345</li>
+    floating-point NaNs.  [Ticket #2345]</li>
 <li>When converting BLOB to TEXT, use the text encoding of the main database.
-    Ticket #2349</li>
+    [Ticket #2349]</li>
 <li>Keep the full precision of integers (if possible) when casting to
-    NUMERIC.  Ticket #2364</li>
+    NUMERIC.  [Ticket #2364]</li>
 <li>Fix a bug in the handling of UTF16 codepoint 0xE000</li>
 <li>Consider explicit collate clauses when matching WHERE constraints
-    to indices in the query optimizer.  Ticket #2391</li>
+    to indices in the query optimizer.  [Ticket #2391]</li>
 <li>Fix the query optimizer to correctly handle constant expressions in 
-    the ON clause of a LEFT JOIN.  Ticket #2403</li>
+    the ON clause of a LEFT JOIN.  [Ticket #2403]</li>
 <li>Fix the query optimizer to handle rowid comparisions to NULL
-    correctly.  Ticket #2404</li>
+    correctly.  [Ticket #2404]</li>
 <li>Fix many potental segfaults that could be caused by malicious SQL
     statements.</li>
 }
@@ -279,8 +274,9 @@ chng {2007 April 25 (3.3.17)} {
 chng {2007 April 18 (3.3.16)} {
 <li>Fix a bug that caused VACUUM to fail if NULLs appeared in a
     UNIQUE column.</li>
-<li>Reinstate performance improvements that were added in 3.3.14
-    but regressed in 3.3.15.</li>
+<li>Reinstate performance improvements that were added in
+    [Version 3.3.14]
+    but regressed in [Version 3.3.15].</li>
 <li>Fix problems with the handling of ORDER BY expressions on
     compound SELECT statements in subqueries.</li>
 <li>Fix a potential segfault when destroying locks on WinCE in
@@ -301,8 +297,8 @@ chng {2007 April 9 (3.3.15)} {
 }
 
 chng {2007 April 2 (3.3.14)} {
-<li>Fix a <a href="http://www.sqlite.org/cvstrac/tktview?tn=2273">bug</a>
-    in 3.3.13 that could cause a segfault when the IN operator
+<li>Fix a bug ([ticket #2273])
+    that could cause a segfault when the IN operator
     is used one one term of a two-column index and the right-hand side of
     the IN operator contains a NULL.</li>
 <li>Added a new OS interface method for determining the sector size
@@ -1132,7 +1128,7 @@ chng {2002 Jly 7 (2.5.6)} {
 chng {2002 Jly 6 (2.5.5)} {
 <li>Fix a bug which could cause database corruption during a rollback.
     This bugs was introduced in version 2.4.0 by the freelist
-    optimization of checking [410].</li>
+    optimization of checkin &#91;410&#93;.</li>
 <li>Fix a bug in aggregate functions for VIEWs.</li>
 <li>Other minor changes and enhancements.</li>
 }
@@ -1149,7 +1145,7 @@ chng {2002 Jly 1 (2.5.4)} {
 
 chng {2002 Jun 24 (2.5.3)} {
 <li>Bug fix:  Database corruption can occur due to the optimization
-    that was introduced in version 2.4.0 (check-in [410]).  The problem
+    that was introduced in version 2.4.0 (check-in &#91;410&#93;).  The problem
     should now be fixed.  The use of versions 2.4.0 through 2.5.2 is
     not recommended.</li>
 }
@@ -1784,7 +1780,7 @@ chng {2000 Aug 22 (Version 1.0.3)} {
 <li>In the sqlite shell, print the "Database opened READ ONLY" message
     to stderr instead of stdout.</li>
 <li>In the sqlite shell, now print the version number on initial startup.</li>
-<li>Add the <b>sqlite_version[]</b> string constant to the library</li>
+<li>Add the <b>sqlite_version&#91;&#93;</b> string constant to the library</li>
 <li>Makefile updates</li>
 <li>Bug fix: incorrect VDBE code was being generated for the following
     circumstance: a query on an indexed table containing a WHERE clause with
@@ -1938,8 +1934,5 @@ files.</li>
 chng {2000 May 29} {
 <li>Initial Public Release of Alpha code</li>
 }
-
-puts {
-</DL>
-}
 </tcl>
+</dl>

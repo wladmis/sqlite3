@@ -5,13 +5,13 @@
 
 <tcl>
 proc doc {name url desc} {
-  puts {<tr><td valign="top" align="right">}
+  hd_puts {<tr><td valign="top" align="right">}
   regsub -all { +} $name {\&nbsp;} name
-  puts "<a href=\"$url\">$name</a></td>"
-  puts {<td width="10"></td>}
-  puts {<td valign="top" align="left">}
-  puts $desc
-  puts {</td></tr>}
+  hd_puts "<a href=\"$url\">$name</a></td>"
+  hd_puts {<td width="10"></td>}
+  hd_puts {<td valign="top" align="left">}
+  hd_resolve $desc
+  hd_puts {</td></tr>}
 }
 
 doc {Appropriate Uses For SQLite} {whentouse.html} {

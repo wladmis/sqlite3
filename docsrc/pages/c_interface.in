@@ -122,11 +122,11 @@ callback function reports a NULL value in the database as a NULL pointer,
 which is very different from an empty string.  If the i-th parameter
 is an empty string, we will get:</p>
 <blockquote><pre>
-argv[i][0] == 0
+argv&#91;i]&#91;0] == 0
 </pre></blockquote>
 <p>But if the i-th parameter is NULL we will get:</p>
 <blockquote><pre>
-argv[i] == 0
+argv&#91;i] == 0
 </pre></blockquote>
 
 <p>The names of the columns are contained in first <i>argc</i>
@@ -573,9 +573,9 @@ void sqlite_busy_handler(sqlite*, int (*)(void*,const char*,int), void*);
 
 void sqlite_busy_timeout(sqlite*, int ms);
 
-const char sqlite_version[];
+const char sqlite_version&#91;];
 
-const char sqlite_encoding[];
+const char sqlite_encoding&#91;];
 
 int sqlite_exec_printf(
   sqlite*,
@@ -701,19 +701,19 @@ look like this:</p>
 <blockquote>
 nrow = 2<br>
 ncolumn = 3<br>
-result[0] = "employee_name"<br>
-result[1] = "login"<br>
-result[2] = "host"<br>
-result[3] = "dummy"<br>
-result[4] = "No such user"<br>
-result[5] = 0<br>
-result[6] = "D. Richard Hipp"<br>
-result[7] = "drh"<br>
-result[8] = "zadok"
+result&#91;0] = "employee_name"<br>
+result&#91;1] = "login"<br>
+result&#91;2] = "host"<br>
+result&#91;3] = "dummy"<br>
+result&#91;4] = "No such user"<br>
+result&#91;5] = 0<br>
+result&#91;6] = "D. Richard Hipp"<br>
+result&#91;7] = "drh"<br>
+result&#91;8] = "zadok"
 </blockquote>
 
 <p>Notice that the "host" value for the "dummy" record is NULL so
-the result[] array contains a NULL pointer at that slot.</p>
+the result&#91;] array contains a NULL pointer at that slot.</p>
 
 <p>If the result set of a query is empty, then by default
 <b>sqlite_get_table</b> will set nrow to 0 and leave its
@@ -744,9 +744,9 @@ is returned:
 <blockquote>
 nrow = 0<br>
 ncolumn = 3<br>
-result[0] = "employee_name"<br>
-result[1] = "login"<br>
-result[2] = "host"<br>
+result&#91;0] = "employee_name"<br>
+result&#91;1] = "login"<br>
+result&#91;2] = "host"<br>
 </blockquote>
 
 <p>Memory to hold the information returned by <b>sqlite_get_table</b>

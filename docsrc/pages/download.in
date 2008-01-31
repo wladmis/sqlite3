@@ -24,22 +24,22 @@ proc Product {pattern desc} {
     }
     global pending_heading
     if {$pending_heading!=""} {
-      puts "<tr><td colspan=\"4\"><b>$pending_heading</b></td></tr>"
+      hd_puts "<tr><td colspan=\"4\"><b>$pending_heading</b></td></tr>"
       set pending_heading {}
     }
-    puts "<tr><td width=\"10\"></td>"
-    puts "<td valign=\"top\" align=\"right\">"
-    puts "<a href=\"$file\">$file</a><br>($size $units)</td>"
-    puts "<td width=\"5\"></td>"
+    hd_puts "<tr><td width=\"10\"></td>"
+    hd_puts "<td valign=\"top\" align=\"right\">"
+    hd_puts "<a href=\"$file\">$file</a><br>($size $units)</td>"
+    hd_puts "<td width=\"5\"></td>"
     regsub -all VERSION $desc $version d2
-    puts "<td valign=\"top\">[string trim $d2]</td></tr>"
+    hd_puts "<td valign=\"top\">[string trim $d2]</td></tr>"
   }
 }
 cd $::DEST
 
 proc Heading {title} {
   set ::pending_heading $title
-  # puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
+  # hd_puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
 }
 
 Heading {Precompiled Binaries for Linux}

@@ -34,7 +34,7 @@ This should produce the file sqlite.so in the bld directory</p></li>
 Create a pkgIndex.tcl file that contains this line
 
 <blockquote><pre>
-package ifneeded sqlite 1.0 [list load [file join $dir sqlite.so]]
+package ifneeded sqlite 1.0 &#91;list load &#91;file join $dir sqlite.so]]
 </pre></blockquote></p></li>
 
 <li><p>
@@ -47,7 +47,7 @@ From that directory start wish</p></li>
 Execute the following tcl command (tells tcl where to fine loadable
 modules)
 <blockquote><pre>
-lappend auto_path [exec pwd]
+lappend auto_path &#91;exec pwd]
 </pre></blockquote></p></li>
 
 <li><p>

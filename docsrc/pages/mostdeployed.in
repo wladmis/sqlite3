@@ -1,0 +1,77 @@
+<title>SQLite: Most Widely Deployed SQL Database</title>
+
+<h2>Most Widely Deployed Database</h2>
+
+<p>We <em>believe</em> that there are more copies of SQLite
+in use around the world than any other SQL database engine,
+and possibly all other database engines combined.  We cannot
+be certain of this since we have no way of measuring either
+the number of SQLite deployments nor the number of deployments
+of other databases.  But we beleave the claim is defensible.</p>
+
+<p>The belief that SQLite is the most widely deployed SQL
+database engine stems from its use as an embedded database.
+Other database engines, such as MySQL, PostgreSQL, or Oracle,
+are typically found one to a server.  And usually a single
+server can serve multiple users.  With SQLite, on the other
+hand, a single user will typically have exclusive use of
+multiple copies of SQLite.  SQLite is used on servers, but
+it is also used on desktop PC, and in cellphones, and PDAs,
+and MP3-players, and set-top boxes.</p>
+
+<h3>Estimates</h3>
+
+<p>At the end of 2006, there were 100 million websites on the internet.
+<a href="http://news.netcraft.com/archives/2006/11/01/november_2006_web_server_survey.html">&#91;1]</a>
+Let us use that number as a proxy for the number of deployed
+SQL database engines other than SQLite.  Not every website
+runs an SQL database engine.  Larger websites run multiple
+database engines.  But the vast majority of smaller websites
+(the long tail) share
+a database engine with several other websites,
+if they use database engine at all
+Hopefully these two factors cancel
+each other out and give 100 million as a reasonable estimate
+for the number of non-SQLite SQL database engines currently
+deployed.</p>
+
+<p>Now let's consider where SQLite is used:</p>
+
+<ul>
+<li>125 million copies of Mozilla Firefox 
+<a href="http://arstechnica.com/news.ars/post/20071202-mozilla-coo-over-125-million-people-use-firefox.html">&#91;2]</a></li>
+<li>20 million Mac computers, each of which contains multiple
+copies of SQLite</li>
+<li>20 million websites run PHP which has SQLite built in.  
+<a href="http://www.php.net/usage.php">&#91;3]</a>  We have no
+way of estimating what fraction of those sites actively use
+SQLite, but we think it is a significant fraction.<li>
+<li>300 million downloads of the <a href="http://www.skype.com/">Skype</a>
+client software and 100 million registered users
+<a href="http://skypejournal.com/blog/archives/2006/04/how_many_users_does_skype_have_today.php">&#91;4]</a>.  All recent versions of the Skype
+client use SQLite internally.</li>
+<li>20 million Symbian smartphones shipped in Q3 2007
+<a href="http://www.symbian.com/news/pr/2007/pr20079552.html">&#91;5]</a>
+Newer versions of the SymbianOS have SQLite built in.  It is unclear
+exactly how many Symbian phones actually contain SQLite, so we will
+use a single quarter's sales as a lower bound.</li>
+<li>Millions and millions of copies of
+<a href="http://www.mcafee.com/">McAfee</a> anti-virus software all
+use SQLite internally.</li>
+<li>Millions of iPhones use SQLite</li>
+<li>Millions and millions of other cellphones from other
+manufactures other Symbian and the iPhone use SQLite.
+This has not been publicly acknowledged by the manufactures
+but it is known to the SQLite developers.</li>
+<li>There are perhaps millions of additional deployments of
+SQLite that the SQLite developers do not know about.</li>
+</ul>
+
+<p>
+By these estimates, we see 200 or 300 million SQLite deployments
+and about 100 million deployments of other SQL database engines.  These
+estimates are obviously very rough and may be off significantly.  
+But there is a wide margin. So the SQLite
+developers think it is likely that SQLite is the most widely deployed
+SQL database engine in the world.
+</p>
