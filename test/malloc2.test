@@ -34,11 +34,13 @@ sqlite3_extended_result_codes db 1
 proc do_malloc2_test {tn args} {
   array set ::mallocopts $args
   set sum [allcksum db]
+  save_prng_state
 
-  for {set ::n 1} {true} {incr ::n} {
+  for {set ::n 784} {true} {incr ::n} {
 
     # Run the SQL. Malloc number $::n is set to fail. A malloc() failure
     # may or may not be reported.
+    restore_prng_state
     sqlite3_memdebug_fail $::n -repeat 1
     do_test malloc2-$tn.$::n.2 {
       set res [catchsql [string trim $::mallocopts(-sql)]]

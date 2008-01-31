@@ -18,6 +18,9 @@
 */
 #include "sqliteInt.h"
 #include <ctype.h>
+#ifdef SQLITE_ENABLE_FTS3
+# include "fts3.h"
+#endif
 
 /*
 ** The version of the library
@@ -1065,7 +1068,6 @@ static int openDatabase(
 
 #ifdef SQLITE_ENABLE_FTS3
   if( !db->mallocFailed && rc==SQLITE_OK ){
-    extern int sqlite3Fts3Init(sqlite3*);
     rc = sqlite3Fts3Init(db);
   }
 #endif
