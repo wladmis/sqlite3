@@ -1470,3 +1470,39 @@ int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
   sqlite3_mutex_leave(db->mutex);
   return rc;   
 }
+
+/*
+** Interface to the testing logic.
+*/
+int sqlite3_test_control(int op, ...){
+  va_list ap;
+  int rc = 0;
+  va_start(ap, op);
+  switch( op ){
+#ifndef SQLITE_OMIT_FAULTINJECTOR
+    case SQLITE_TESTCTRL_FAULT_CONFIG: {
+      int id = va_arg(ap, int);
+      int nDelay = va_arg(ap, int);
+      int nRepeat = va_arg(ap, int);
+      sqlite3FaultConfig(id, nDelay, nRepeat);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_FAILURES: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultFailures(id);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultBenignFailures(id);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_PENDING: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultPending(id);
+      break;
+    }
+#endif /* SQLITE_OMIT_FAULTINJECTOR */
+  }
+  va_end(ap);
+}
