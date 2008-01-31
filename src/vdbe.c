@@ -4493,6 +4493,9 @@ case OP_VRowid: {             /* out2-prerelease */
   Cursor *pCur = p->apCsr[pOp->p1];
 
   assert( pCur->pVtabCursor );
+  if( pCur->nullRow ){
+    break;
+  }
   pModule = pCur->pVtabCursor->pVtab->pModule;
   assert( pModule->xRowid );
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
@@ -4518,6 +4521,12 @@ case OP_VColumn: {
 
   Cursor *pCur = p->apCsr[pOp->p1];
   assert( pCur->pVtabCursor );
+  assert( pOp->p3>0 && pOp->p3<=p->nMem );
+  pDest = &p->aMem[pOp->p3];
+  if( pCur->nullRow ){
+    sqlite3VdbeMemSetNull(pDest);
+    break;
+  }
   pModule = pCur->pVtabCursor->pVtab->pModule;
   assert( pModule->xColumn );
   memset(&sContext, 0, sizeof(sContext));
@@ -4531,8 +4540,6 @@ case OP_VColumn: {
   ** dynamic allocation in sContext.s (a Mem struct) is  released.
   */
   sqlite3VdbeChangeEncoding(&sContext.s, encoding);
-  assert( pOp->p3>0 && pOp->p3<=p->nMem );
-  pDest = &p->aMem[pOp->p3];
   REGISTER_TRACE(pOp->p3, pDest);
   sqlite3VdbeMemMove(pDest, &sContext.s);
   UPDATE_MAX_BLOBSIZE(pDest);
@@ -4560,6 +4567,9 @@ case OP_VNext: {   /* jump */
 
   Cursor *pCur = p->apCsr[pOp->p1];
   assert( pCur->pVtabCursor );
+  if( pCur->nullRow ){
+    break;
+  }
   pModule = pCur->pVtabCursor->pVtab->pModule;
   assert( pModule->xNext );
 
