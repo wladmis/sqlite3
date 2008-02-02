@@ -533,25 +533,6 @@ static const unsigned char aJournalMagic[] = {
 #endif
 
 /*
-** Enable reference count tracking (for debugging) here:
-*/
-#ifdef SQLITE_DEBUG
-  int pager3_refinfo_enable = 0;
-  static void pager_refinfo(PgHdr *p){
-    static int cnt = 0;
-    if( !pager3_refinfo_enable ) return;
-    sqlite3DebugPrintf(
-       "REFCNT: %4d addr=%p nRef=%-3d total=%d\n",
-       p->pgno, PGHDR_TO_DATA(p), p->nRef, p->pPager->nRef
-    );
-    cnt++;   /* Something to set a breakpoint on */
-  }
-# define REFINFO(X)  pager_refinfo(X)
-#else
-# define REFINFO(X)
-#endif
-
-/*
 ** Add page pPg to the end of the linked list managed by structure
 ** pList (pPg becomes the last entry in the list - the most recently 
 ** used). Argument pLink should point to either pPg->free or pPg->gfree,
@@ -2720,7 +2701,6 @@ static void _page_ref(PgHdr *pPg){
     pPg->pPager->nRef++;
   }
   pPg->nRef++;
-  REFINFO(pPg);
 }
 #ifdef SQLITE_DEBUG
   static void page_ref(PgHdr *pPg){
@@ -2728,7 +2708,6 @@ static void _page_ref(PgHdr *pPg){
       _page_ref(pPg);
     }else{
       pPg->nRef++;
-      REFINFO(pPg);
     }
   }
 #else
@@ -3649,7 +3628,6 @@ static int pagerAcquire(
 
     makeClean(pPg);
     pPg->nRef = 1;
-    REFINFO(pPg);
 
     pPager->nRef++;
     if( pPager->nExtra>0 ){
@@ -3770,7 +3748,6 @@ int sqlite3PagerUnref(DbPage *pPg){
   assert( pPg->nRef>0 );
   pagerEnter(pPg->pPager);
   pPg->nRef--;
-  REFINFO(pPg);
 
   CHECK_PAGE(pPg);
 

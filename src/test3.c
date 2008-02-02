@@ -1656,8 +1656,6 @@ int Sqlitetest3_Init(Tcl_Interp *interp){
   for(i=0; i<sizeof(aCmd)/sizeof(aCmd[0]); i++){
     Tcl_CreateCommand(interp, aCmd[i].zName, aCmd[i].xProc, 0, 0);
   }
-  Tcl_LinkVar(interp, "pager_refinfo_enable", (char*)&pager3_refinfo_enable,
-     TCL_LINK_INT);
   Tcl_LinkVar(interp, "btree_trace", (char*)&sqlite3_btree_trace,
      TCL_LINK_INT);
 
