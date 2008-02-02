@@ -48,4 +48,34 @@ for {set i 1} {$i<2000} {incr i} {
   catch {db eval COMMIT}
 }
 
+db close
+file delete -force test.db test.db-journal
+sqlite3 db test.db
+
+db eval {
+  PRAGMA page_size=1024;
+  PRAGMA max_page_count=50;
+  PRAGMA auto_vacuum=1;
+  CREATE TABLE filler (fill);
+}
+for {set i 10000} {$i<12000} {incr i} {
+  do_test tkt2686-$i.1 {
+    db eval BEGIN
+    set rc [catch {
+      while 1 {
+        db eval {INSERT INTO filler (fill) VALUES (randstr(1000, 10000)) }
+      }
+    } msg]
+    lappend rc $msg
+  } {1 {database or disk is full}}
+  do_test tkt2686-$i.2 {
+    execsql {
+      DELETE FROM filler 
+       WHERE rowid <= (SELECT MAX(rowid) FROM filler LIMIT 20)
+    }
+  } {}
+  integrity_check tkt2686-$i.3
+  catch {db eval COMMIT}
+}
+
 finish_test
