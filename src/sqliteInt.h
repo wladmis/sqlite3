@@ -1760,7 +1760,6 @@ int sqlite3Select(Parse*, Select*, SelectDest*, Select*, int, int*, char *aff);
 Select *sqlite3SelectNew(Parse*,ExprList*,SrcList*,Expr*,ExprList*,
                          Expr*,ExprList*,int,Expr*,Expr*);
 void sqlite3SelectDelete(Select*);
-void sqlite3SelectMask(Parse *, Select *, u32);
 Table *sqlite3SrcListLookup(Parse*, SrcList*);
 int sqlite3IsReadOnly(Parse*, Table*, int);
 void sqlite3OpenTable(Parse*, int iCur, int iDb, Table*, int);
@@ -1846,12 +1845,14 @@ void sqlite3ChangeCookie(Parse*, int);
   TriggerStep *sqlite3TriggerDeleteStep(sqlite3*,Token*, Expr*);
   void sqlite3DeleteTrigger(Trigger*);
   void sqlite3UnlinkAndDeleteTrigger(sqlite3*,int,const char*);
+  void sqlite3SelectMask(Parse *, Select *, u32);
 #else
 # define sqlite3TriggersExist(A,B,C,D,E,F) 0
 # define sqlite3DeleteTrigger(A)
 # define sqlite3DropTriggerPtr(A,B)
 # define sqlite3UnlinkAndDeleteTrigger(A,B,C)
 # define sqlite3CodeRowTrigger(A,B,C,D,E,F,G,H,I,J,K) 0
+# define sqlite3SelectMask(A, B, C)
 #endif
 
 int sqlite3JoinType(Parse*, Token*, Token*, Token*);
