@@ -1245,7 +1245,7 @@ case OP_Function: {
   /* If the function returned an error, throw an exception */
   if( ctx.isError ){
     sqlite3SetString(&p->zErrMsg, sqlite3_value_text(&ctx.s), (char*)0);
-    rc = SQLITE_ERROR;
+    rc = ctx.isError;
   }
 
   /* Copy the result of the function into register P3 */
@@ -4218,7 +4218,7 @@ case OP_AggStep: {
   (ctx.pFunc->xStep)(&ctx, n, apVal);
   if( ctx.isError ){
     sqlite3SetString(&p->zErrMsg, sqlite3_value_text(&ctx.s), (char*)0);
-    rc = SQLITE_ERROR;
+    rc = ctx.isError;
   }
   sqlite3VdbeMemRelease(&ctx.s);
   break;

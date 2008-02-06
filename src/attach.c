@@ -222,6 +222,7 @@ attach_error:
     zErr[sizeof(zErr)-1] = 0;
     sqlite3_result_error(context, zErr, -1);
   }
+  if( rc ) sqlite3_result_error_code(context, rc);
 }
 
 /*
