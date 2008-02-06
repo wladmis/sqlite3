@@ -142,6 +142,22 @@ Product sqlite*_analyzer-V3.zip {
 
 Heading {Source Code}
 
+Product {sqlite-amalgamation-V3.zip} {
+  This ZIP archive contains all preprocessed C code combined into a
+  single source file (the <a href="amalgamation.html">amalgamation</a>).
+  This is the preferred way of acquiring the SQLite
+  source code.  It is suggested that you use this packing option
+  unless you have a compelling reason to use one
+  of the other packaging options below.
+}
+
+Product {sqlite-amalgamation-V3.tar.gz} {
+  A tarball containing the <a href="amalgamation.html">amalgamation</a>
+  together with an configure script and makefile
+  for building it.
+}
+
+
 Product {sqlite-V3.tar.gz} {
   A tarball of the complete source tree for SQLite version VERSION
   including all of the documentation.
@@ -153,13 +169,6 @@ Product {sqlite-source-V3.zip} {
   Unlike the tarballs below, all of the preprocessing and automatic
   code generation has already been done on these C code files, so they
   can be converted to object code directly with any ordinary C compiler.
-}
-
-Product {sqlite-amalgamation-V3.zip} {
-  This ZIP archive contains all preprocessed C code combined into a
-  single source file (the
-  <a href="http://www.sqlite.org/cvstrac/wiki?p=TheAmalgamation">
-  amalgamation</a>).
 }
 
 Product {sqlite-V3-tea.tar.gz} {

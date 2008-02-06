@@ -3,7 +3,7 @@
 <h2>The SQLite Amalgamation</h2>
 
 <p>The core SQLite library consists of about 74 files of C code
-(as of version 3.5.4) in the core library and 9 additional files
+(as of version 3.5.5) in the core with 9 additional files
 in the FTS3 extension.
 Most of these are "source" files in the sense that they are stored 
 in the configuration management system and are maintained directly. 
@@ -22,7 +22,7 @@ in size.</p>
 
 <p>The amalgamation contains everything you need to integrate SQLite 
 into a larger project.  Just copy the amalgamation into your source 
-directory and compile it together with your other source files. 
+directory and compile it along with the other C code files in your project.
 You may also want to make use of the "sqlite3.h" header file that 
 defines the programming API for SQLite. 
 The sqlite3.h header file is available separately. 

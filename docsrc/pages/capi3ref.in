@@ -250,6 +250,17 @@ in the source code files.</p>
 <hr>
 
 <tcl>
+# Find the preferred keyword for a page given a list of
+# acceptable keywords.
+#
+proc preferred_keyword {keyword_list} {
+  foreach kw $keyword_list {
+    if {[regexp -nocase {^sqlite} $kw]} break
+  }
+  return $kw
+}
+
+
 # Do a table of contents for objects
 #
 set objlist {}
@@ -257,7 +268,7 @@ foreach c $content {
   foreach {key title type keywords body code} $c break
   if {$type!="datatype"} continue
   set keywords [lsort $keywords]
-  set k [lindex $keywords 0]
+  set k [preferred_keyword $keywords]
   foreach kw $keywords {
     if {[regexp {^sqlite} $kw]} {
       lappend objlist [list $k $kw]
@@ -286,7 +297,7 @@ foreach c $content {
   foreach {key title type keywords body code} $c break
   if {$type!="constant"} continue
   set keywords [lsort $keywords]
-  set k [lindex $keywords 0]
+  set k [preferred_keyword $keywords]
   foreach kw $keywords {
     if {[regexp {^SQLITE_} $kw]} {
       lappend clist [list $k $kw]
@@ -317,7 +328,7 @@ foreach c $content {
   foreach {key title type keywords body code} $c break
   if {$type!="function"} continue
   set keywords [lsort $keywords]
-  set k [lindex $keywords 0]
+  set k [preferred_keyword $keywords]
   foreach kw $keywords {
     if {[regexp {^sqlite} $kw]} {
       lappend funclist [list $k $kw]
@@ -345,7 +356,7 @@ hd_puts {<hr>}
 #
 foreach c [lsort $content] {
   foreach {key title type keywords body code} $c break
-  set kw [lindex [lsort $keywords] 0]
+  set kw [preferred_keyword [lsort $keywords]]
   hd_fragment $kw
   hd_open_aux c3ref/[convert_keyword_to_filename $kw]
   hd_header $title

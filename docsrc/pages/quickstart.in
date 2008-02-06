@@ -69,7 +69,7 @@ that closes the database connection.</p>
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;
   for(i=0; i&lt;argc; i++){
-    printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    printf("%s = %s\n", azColName&#91;i], argv&#91;i] ? argv&#91;i] : "NULL");
   }
   printf("\n");
   return 0;

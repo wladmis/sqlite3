@@ -41,6 +41,16 @@ proc chng {date desc} {
   }
 }
 
+chng {2008 Feb 6 (3.5.6)} {
+<li>Fix a bug ([ticket #2913])
+that prevented virtual tables from working in a LEFT JOIN.
+The problem was introduced into shortly before the 3.5.5 release.</li>
+<li>Bring the OS/2 porting layer up-to-date.</li>
+<li>Add the new [sqlite3_result_error_code()] API and use it in the
+implementation of [ATTACH] so that proper error codes are returned
+when an [ATTACH] fails.</li>
+}
+
 chng {2008 Jan 31 (3.5.5)} {
 <li>Convert the underlying virtual machine to be a register-based machine
 rather than a stack-based machine.  The only user-visible change
