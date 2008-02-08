@@ -856,8 +856,8 @@ do_test shared-$av.11.8 {
 } {1 4 {} 7}
 if {[llength [info command sqlite3_shared_cache_report]]==1} {
   do_test shared-$av.11.9 {
-    sqlite3_shared_cache_report 
-  } [list [file normalize test.db] 2]
+    string tolower [sqlite3_shared_cache_report]
+  } [string tolower [list [file normalize test.db] 2]]
 }
 
 do_test shared-$av.11.11 {
