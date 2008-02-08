@@ -152,9 +152,13 @@ proc speed_trial {name numstmt units sql} {
   flush stdout
   set speed [time {sqlite3_exec_nr db $sql}]
   set tm [lindex $speed 0]
-  set rate [expr {1000000.0*$numstmt/$tm}]
+  if {$tm == 0} {
+    set rate [format %20s "many"]
+  } else {
+    set rate [format %20.5f [expr {1000000.0*$numstmt/$tm}]]
+  }
   set u2 $units/s
-  puts [format {%12d uS %20.5f %s} $tm $rate $u2]
+  puts [format {%12d uS %s %s} $tm $rate $u2]
   global total_time
   set total_time [expr {$total_time+$tm}]
 }
