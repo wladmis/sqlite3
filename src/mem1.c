@@ -190,6 +190,16 @@ void sqlite3_free(void *pPrior){
 }
 
 /*
+** Return the number of bytes allocated at p.
+*/
+int sqlite3MallocSize(void *p){
+  sqlite3_int64 *pInt;
+  if( !p ) return 0;
+  pInt = p;
+  return pInt[-1];
+}
+
+/*
 ** Change the size of an existing memory allocation
 */
 void *sqlite3_realloc(void *pPrior, int nBytes){

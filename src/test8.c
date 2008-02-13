@@ -160,7 +160,12 @@ static int getColumnNames(
     */
     nBytes = sizeof(char *) * nCol;
     for(ii=0; ii<nCol; ii++){
-      nBytes += (strlen(sqlite3_column_name(pStmt, ii)) + 1);
+      const char *zName = sqlite3_column_name(pStmt, ii);
+      if( !zName ){
+        rc = SQLITE_NOMEM;
+        goto out;
+      }
+      nBytes += strlen(zName)+1;
     }
     aCol = (char **)sqlite3MallocZero(nBytes);
     if( !aCol ){
@@ -952,11 +957,15 @@ int echoUpdate(
     if( bindArgOne ){
       sqlite3_bind_value(pStmt, 1, apData[1]);
     }
-    for(i=2; i<nData; i++){
-      if( apData[i] ) sqlite3_bind_value(pStmt, i, apData[i]);
+    for(i=2; i<nData && rc==SQLITE_OK; i++){
+      if( apData[i] ) rc = sqlite3_bind_value(pStmt, i, apData[i]);
     }
-    sqlite3_step(pStmt);
-    rc = sqlite3_finalize(pStmt);
+    if( rc==SQLITE_OK ){
+      sqlite3_step(pStmt);
+      rc = sqlite3_finalize(pStmt);
+    }else{
+      sqlite3_finalize(pStmt);
+    }
   }
 
   if( pRowid && rc==SQLITE_OK ){

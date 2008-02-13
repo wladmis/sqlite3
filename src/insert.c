@@ -218,14 +218,15 @@ static void autoIncEnd(
     Vdbe *v = pParse->pVdbe;
     Db *pDb = &pParse->db->aDb[iDb];
     int j1;
+    int iRec = ++pParse->nMem;    /* Memory cell used for record */
 
     assert( v );
     sqlite3OpenTable(pParse, iCur, iDb, pDb->pSchema->pSeqTab, OP_OpenWrite);
     j1 = sqlite3VdbeAddOp1(v, OP_NotNull, memId+1);
     sqlite3VdbeAddOp2(v, OP_NewRowid, iCur, memId+1);
     sqlite3VdbeJumpHere(v, j1);
-    sqlite3VdbeAddOp3(v, OP_MakeRecord, memId-1, 2, memId-1);
-    sqlite3VdbeAddOp3(v, OP_Insert, iCur, memId-1, memId+1);
+    sqlite3VdbeAddOp3(v, OP_MakeRecord, memId-1, 2, iRec);
+    sqlite3VdbeAddOp3(v, OP_Insert, iCur, iRec, memId+1);
     sqlite3VdbeChangeP5(v, OPFLAG_APPEND);
     sqlite3VdbeAddOp1(v, OP_Close, iCur);
   }

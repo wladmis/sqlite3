@@ -227,6 +227,9 @@ proc finalize_testing {} {
   }
   puts "Maximum memory usage: [sqlite3_memory_highwater 1] bytes"
   puts "Current memory usage: [sqlite3_memory_highwater] bytes"
+  if {[info commands sqlite3_memdebug_malloc_count] ne ""} {
+    puts "Number of malloc()  : [sqlite3_memdebug_malloc_count] calls"
+  }
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
   }

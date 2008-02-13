@@ -1702,7 +1702,9 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
           switch( sqlite3_column_type(pStmt, i) ){
             case SQLITE_BLOB: {
               int bytes = sqlite3_column_bytes(pStmt, i);
-              pVal = Tcl_NewByteArrayObj(sqlite3_column_blob(pStmt, i), bytes);
+              char *zBlob = sqlite3_column_blob(pStmt, i);
+              if( !zBlob ) bytes = 0;
+              pVal = Tcl_NewByteArrayObj(zBlob, bytes);
               break;
             }
             case SQLITE_INTEGER: {
