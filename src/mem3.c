@@ -292,9 +292,13 @@ static void memsys3OutOfMemory(int nByte){
 ** works for chunks that are currently checked out.
 */
 int sqlite3MallocSize(void *p){
-  Mem3Block *pBlock = (Mem3Block*)p;
-  assert( (pBlock[-1].u.hdr.size4x&1)!=0 );
-  return (pBlock[-1].u.hdr.size4x&~3)*2 - 4;
+  int iSize = 0;
+  if( p ){
+    Mem3Block *pBlock = (Mem3Block*)p;
+    assert( (pBlock[-1].u.hdr.size4x&1)!=0 );
+    iSize = (pBlock[-1].u.hdr.size4x&~3)*2 - 4;
+  }
+  return iSize;
 }
 
 /*
