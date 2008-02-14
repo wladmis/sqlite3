@@ -118,6 +118,32 @@
 #endif
 
 /*
+** Exactly one of the following macros must be defined in order to
+** specify which memory allocation subsystem to use.
+**
+**     SQLITE_SYSTEM_MALLOC          // Use normal system malloc()
+**     SQLITE_MEMDEBUG               // Debugging version of system malloc()
+**     SQLITE_MEMORY_SIZE            // internal allocator #1
+**     SQLITE_MMAP_HEAP_SIZE         // internal mmap() allocator
+**     SQLITE_POW2_MEMORY_SIZE       // internal power-of-two allocator
+**
+** If none of the above are defined, then set SQLITE_SYSTEM_MALLOC as
+** the default.
+*/
+#if defined(SQLITE_SYSTEM_MALLOC)+defined(SQLITE_MEMDEBUG)+\
+    defined(SQLITE_MEMORY_SIZE)+defined(SQLITE_MMAP_HEAP_SIZE)+\
+    defined(SQLITE_POW2_MEMORY_SIZE)>1
+# error "At most one of the following compile-time configuration options\
+ is allows: SQLITE_SYSTEM_MALLOC, SQLITE_MEMDEBUG, SQLITE_MEMORY_SIZE,\
+ SQLITE_MMAP_HEAP_SIZE, SQLITE_POW2_MEMORY_SIZE"
+#endif
+#if defined(SQLITE_SYSTEM_MALLOC)+defined(SQLITE_MEMDEBUG)+\
+    defined(SQLITE_MEMORY_SIZE)+defined(SQLITE_MMAP_HEAP_SIZE)+\
+    defined(SQLITE_POW2_MEMORY_SIZE)==0
+# define SQLITE_SYSTEM_MALLOC 1
+#endif
+
+/*
 ** We need to define _XOPEN_SOURCE as follows in order to enable
 ** recursive mutexes on most unix systems.  But Mac OS X is different.
 ** The _XOPEN_SOURCE define causes problems for Mac OS X we are told,

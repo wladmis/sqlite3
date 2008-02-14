@@ -14,29 +14,14 @@
 **
 ** $Id$
 */
+#include "sqliteInt.h"
 
 /*
 ** This version of the memory allocator is the default.  It is
 ** used when no other memory allocator is specified using compile-time
 ** macros.
 */
-#if !defined(SQLITE_MEMDEBUG) && !defined(SQLITE_MEMORY_SIZE) \
-     && !defined(SQLITE_MMAP_HEAP_SIZE)
-
-/*
-** We will eventually construct multiple memory allocation subsystems
-** suitable for use in various contexts:
-**
-**    *  Normal multi-threaded builds
-**    *  Normal single-threaded builds
-**    *  Debugging builds
-**
-** This initial version is suitable for use in normal multi-threaded
-** builds.  We envision that alternative versions will be stored in
-** separate source files.  #ifdefs will be used to select the code from
-** one of the various memN.c source files for use in any given build.
-*/
-#include "sqliteInt.h"
+#ifdef SQLITE_SYSTEM_MALLOC
 
 /*
 ** All of the static variables used by this module are collected
@@ -239,4 +224,4 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
   return (void*)p;
 }
 
-#endif /* !SQLITE_MEMDEBUG && !SQLITE_OMIT_MEMORY_ALLOCATION */
+#endif /* SQLITE_SYSTEM_MALLOC */
