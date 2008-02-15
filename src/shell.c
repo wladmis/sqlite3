@@ -336,10 +336,9 @@ struct callback_data {
 #define MODE_Insert   5  /* Generate SQL "insert" statements */
 #define MODE_Tcl      6  /* Generate ANSI-C or TCL quoted elements */
 #define MODE_Csv      7  /* Quote strings, numbers are plain */
-#define MODE_NUM_OF   8  /* The number of modes (not a mode itself) */
-#define MODE_Explain  9  /* Like MODE_Column, but do not truncate data */
+#define MODE_Explain  8  /* Like MODE_Column, but do not truncate data */
 
-static const char *modeDescr[MODE_NUM_OF] = {
+static const char *modeDescr[] = {
   "line",
   "column",
   "list",
@@ -348,6 +347,7 @@ static const char *modeDescr[MODE_NUM_OF] = {
   "insert",
   "tcl",
   "csv",
+  "explain",
 };
 
 /*
