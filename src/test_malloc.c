@@ -334,7 +334,8 @@ static int test_memdebug_dump(
     Tcl_WrongNumArgs(interp, 1, objv, "FILENAME");
     return TCL_ERROR;
   }
-#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_MEMORY_SIZE)
+#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_MEMORY_SIZE) \
+     || defined(SQLITE_POW2_MEMORY_SIZE)
   {
     extern void sqlite3_memdebug_dump(const char*);
     sqlite3_memdebug_dump(Tcl_GetString(objv[1]));

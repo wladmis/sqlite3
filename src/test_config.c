@@ -88,6 +88,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "mem3", "0", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_POW2_MEMORY_SIZE
+  Tcl_SetVar2(interp, "sqlite_options", "mem5", "1", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "mem5", "0", TCL_GLOBAL_ONLY);
+#endif
+
 #ifdef SQLITE_OMIT_ALTERTABLE
   Tcl_SetVar2(interp, "sqlite_options", "altertable", "0", TCL_GLOBAL_ONLY);
 #else
