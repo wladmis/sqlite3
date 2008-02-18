@@ -363,6 +363,7 @@ struct BusyHandler {
 */
 typedef struct AggInfo AggInfo;
 typedef struct AuthContext AuthContext;
+typedef struct Bitvec Bitvec;
 typedef struct CollSeq CollSeq;
 typedef struct Column Column;
 typedef struct Db Db;
@@ -1758,6 +1759,12 @@ void sqlite3AddColumnType(Parse*,Token*);
 void sqlite3AddDefaultValue(Parse*,Expr*);
 void sqlite3AddCollateType(Parse*, Token*);
 void sqlite3EndTable(Parse*,Token*,Token*,Select*);
+
+Bitvec *sqlite3BitvecCreate(u32);
+int sqlite3BitvecTest(Bitvec*, u32);
+int sqlite3BitvecSet(Bitvec*, u32);
+void sqlite3BitvecClear(Bitvec*, u32);
+void sqlite3BitvecDestroy(Bitvec*);
 
 void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int,int);
 
