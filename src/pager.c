@@ -677,6 +677,12 @@ static int pageInStatement(PgHdr *pPg){
 static void pager_resize_hash_table(Pager *pPager, int N){
   PgHdr **aHash, *pPg;
   assert( N>0 && (N&(N-1))==0 );
+#ifdef SQLITE_MALLOC_SOFT_LIMIT
+  if( N*sizeof(aHash[0])>SQLITE_MALLOC_SOFT_LIMIT ){
+    N = SQLITE_MALLOC_SOFT_LIMIT/sizeof(aHash[0]);
+  }
+  if( N==pPager->nHash ) return;
+#endif
   pagerLeave(pPager);
   sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, pPager->aHash!=0);
   aHash = sqlite3MallocZero( sizeof(aHash[0])*N );

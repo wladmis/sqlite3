@@ -16,15 +16,15 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+source $testdir/malloc_common.tcl
 
 # Only run these tests if memory debugging is turned on.
 #
-ifcapable !memdebug {
+if {!$MEMDEBUG} {
    puts "Skipping mallocF tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
 }
-source $testdir/malloc_common.tcl
 
 # tickets #2794 and #2795 and #2797
 #

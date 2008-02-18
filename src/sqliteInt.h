@@ -144,6 +144,14 @@
 #endif
 
 /*
+** If SQLITE_MALLOC_SOFT_LIMIT is defined, then try to keep the
+** sizes of memory allocations below this value where possible.
+*/
+#if defined(SQLITE_POW2_MEMORY_SIZE) && !defined(SQLITE_MALLOC_SOFT_LIMIT)
+# define SQLITE_MALLOC_SOFT_LIMIT 1024
+#endif
+
+/*
 ** We need to define _XOPEN_SOURCE as follows in order to enable
 ** recursive mutexes on most unix systems.  But Mac OS X is different.
 ** The _XOPEN_SOURCE define causes problems for Mac OS X we are told,
@@ -402,6 +410,7 @@ typedef struct WhereLevel WhereLevel;
 
 #include "os.h"
 #include "mutex.h"
+
 
 /*
 ** Each database file to be accessed by the system is an instance

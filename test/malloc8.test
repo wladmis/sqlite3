@@ -15,16 +15,16 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+source $testdir/malloc_common.tcl
 
 # Only run these tests if memory debugging is turned on.
 #
-ifcapable !memdebug {
+if {!$MEMDEBUG} {
    puts "Skipping malloc8 tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
 }
 
-source $testdir/malloc_common.tcl
 
 # The setup is a database with UTF-16 encoding that contains a single
 # large string.  We will be running lots of queries against this 

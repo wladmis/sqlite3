@@ -16,8 +16,11 @@
 
 # If we did not compile with malloc testing enabled, then do nothing.
 #
-ifcapable !memdebug {
+ifcapable !memdebug&&!mem5 {
+  set MEMDEBUG 0
   return 0
+} else {
+  set MEMDEBUG 1
 }
 
 # Usage: do_malloc_test <test number> <options...>
