@@ -944,6 +944,17 @@ static int openDatabase(
   int rc;
   CollSeq *pColl;
 
+  /* Remove harmful bits from the flags parameter */
+  flags &=  ~( SQLITE_OPEN_DELETEONCLOSE |
+               SQLITE_OPEN_MAIN_DB |
+               SQLITE_OPEN_TEMP_DB | 
+               SQLITE_OPEN_TRANSIENT_DB | 
+               SQLITE_OPEN_MAIN_JOURNAL | 
+               SQLITE_OPEN_TEMP_JOURNAL | 
+               SQLITE_OPEN_SUBJOURNAL | 
+               SQLITE_OPEN_MASTER_JOURNAL
+             );
+
   /* Allocate the sqlite data structure */
   db = sqlite3MallocZero( sizeof(sqlite3) );
   if( db==0 ) goto opendb_out;
