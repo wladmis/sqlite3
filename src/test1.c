@@ -487,7 +487,7 @@ static int test_snprintf_int(
   const char *zFormat = argv[2];
   int a1 = atoi(argv[3]);
   if( n>sizeof(zStr) ) n = sizeof(zStr);
-  strcpy(zStr, "abcdefghijklmnopqrstuvwxyz");
+  sqlite3_snprintf(sizeof(zStr), zStr, "abcdefghijklmnopqrstuvwxyz");
   sqlite3_snprintf(n, zStr, zFormat, a1);
   Tcl_AppendResult(interp, zStr, 0);
   return TCL_OK;
