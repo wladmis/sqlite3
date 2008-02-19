@@ -221,10 +221,11 @@
 #define MX_CELL_SIZE(pBt)  (pBt->pageSize-8)
 
 /* The maximum number of cells on a single page of the database.  This
-** assumes a minimum cell size of 3 bytes.  Such small cells will be
-** exceedingly rare, but they are possible.
+** assumes a minimum cell size of 6 bytes  (4 bytes for the cell itself
+** plus 2 bytes for the index to the cell in the page header).  Such
+** small cells will be rare, but they are possible.
 */
-#define MX_CELL(pBt) ((pBt->pageSize-8)/3)
+#define MX_CELL(pBt) ((pBt->pageSize-8)/6)
 
 /* Forward declarations */
 typedef struct MemPage MemPage;
