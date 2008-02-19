@@ -578,7 +578,7 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
 ** Open the file indicated and write a log of all unfreed memory 
 ** allocations into that log.
 */
-void sqlite3_memdebug_dump(const char *zFilename){
+void sqlite3MemdebugDump(const char *zFilename){
 #ifdef SQLITE_DEBUG
   FILE *out;
   int i, j;
