@@ -2421,7 +2421,7 @@ int sqlite3PagerPagecount(Pager *pPager){
   int rc;
   assert( pPager!=0 );
   if( pPager->errCode ){
-    return 0;
+    return -1;
   }
   if( pPager->dbSize>=0 ){
     n = pPager->dbSize;
@@ -2432,7 +2432,7 @@ int sqlite3PagerPagecount(Pager *pPager){
       pPager->nRef++;
       pager_error(pPager, rc);
       pPager->nRef--;
-      return 0;
+      return -1;
     }
     if( n>0 && n<pPager->pageSize ){
       n = 1;
