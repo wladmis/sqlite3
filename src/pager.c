@@ -3004,6 +3004,19 @@ static int pager_write_pagelist(PgHdr *pList){
 ** collected even if they are still in use.
 */
 static PgHdr *pager_get_all_dirty_pages(Pager *pPager){
+
+#ifndef NDEBUG
+  /* Verify the sanity of the dirty list when we are running
+  ** in debugging mode.  This is expensive, so do not
+  ** do this on a normal build. */
+  int n1 = 0;
+  int n2 = 0;
+  PgHdr *p;
+  for(p=pPager->pAll; p; p=p->pNextAll){ if( p->dirty ) n1++; }
+  for(p=pPager->pDirty; p; p=p->pDirty){ n2++; }
+  assert( n1==n2 );
+#endif
+
   return pPager->pDirty;
 }
 
