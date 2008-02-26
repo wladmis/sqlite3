@@ -4578,8 +4578,14 @@ int sqlite3PagerCommitPhaseOne(Pager *pPager, const char *zMaster, Pgno nTrunc){
     pPg = pager_get_all_dirty_pages(pPager);
     rc = pager_write_pagelist(pPg);
     if( rc!=SQLITE_OK ){
-      while( pPg && !pPg->dirty ){ pPg = pPg->pDirty; }
-      pPager->pDirty = pPg;
+      assert( rc!=SQLITE_IOERR_BLOCKED );
+      /* The error might have left the dirty list all fouled up here,
+      ** but that does not matter because if the if the dirty list did
+      ** get corrupted, then the transaction will roll back and
+      ** discard the dirty list.  There is an assert in
+      ** pager_get_all_dirty_pages() that verifies that no attempt
+      ** is made to use an invalid dirty list.
+      */
       goto sync_exit;
     }
     pPager->pDirty = 0;
