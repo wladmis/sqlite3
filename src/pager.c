@@ -2117,7 +2117,7 @@ int sqlite3PagerOpen(
   pPager = sqlite3MallocZero(
     sizeof(*pPager) +           /* Pager structure */
     journalFileSize +           /* The journal file structure */ 
-    pVfs->szOsFile * 2 +        /* The db and stmt journal files */ 
+    pVfs->szOsFile * 3 +        /* The main db and two journal files */ 
     4*nPathname + 40            /* zFilename, zDirectory, zJournal, zStmtJrnl */
   );
   if( !pPager ){
