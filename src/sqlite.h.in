@@ -2070,7 +2070,7 @@ int sqlite3_open_v2(
 ** text that describes the error, as either UTF8 or UTF16 respectively.
 ** Memory to hold the error message string is managed internally.
 ** The application does not need to worry with freeing the result.
-** However, the error string might be overwritten or deallocated b
+** However, the error string might be overwritten or deallocated by
 ** subsequent calls to other SQLite interface functions.
 **
 ** INVARIANTS:
