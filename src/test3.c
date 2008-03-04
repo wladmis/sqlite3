@@ -1605,7 +1605,7 @@ static int btree_set_cache_size(
 ** Register commands with the TCL interpreter.
 */
 int Sqlitetest3_Init(Tcl_Interp *interp){
-  extern int sqlite3_btree_trace;
+  extern int sqlite3BtreeTrace;
   static struct {
      char *zName;
      Tcl_CmdProc *xProc;
@@ -1656,7 +1656,7 @@ int Sqlitetest3_Init(Tcl_Interp *interp){
   for(i=0; i<sizeof(aCmd)/sizeof(aCmd[0]); i++){
     Tcl_CreateCommand(interp, aCmd[i].zName, aCmd[i].xProc, 0, 0);
   }
-  Tcl_LinkVar(interp, "btree_trace", (char*)&sqlite3_btree_trace,
+  Tcl_LinkVar(interp, "btree_trace", (char*)&sqlite3BtreeTrace,
      TCL_LINK_INT);
 
   /* The btree_insert command is implemented using the tcl 'object'

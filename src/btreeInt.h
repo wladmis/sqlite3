@@ -484,11 +484,11 @@ struct BtCursor {
 
 /*
 ** The TRACE macro will print high-level status information about the
-** btree operation when the global variable sqlite3_btree_trace is
+** btree operation when the global variable sqlite3BtreeTrace is
 ** enabled.
 */
 #if SQLITE_TEST
-# define TRACE(X)   if( sqlite3_btree_trace ){ printf X; fflush(stdout); }
+# define TRACE(X)   if( sqlite3BtreeTrace ){ printf X; fflush(stdout); }
 #else
 # define TRACE(X)
 #endif

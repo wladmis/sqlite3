@@ -28,7 +28,7 @@ static const char zMagicHeader[] = SQLITE_FILE_HEADER;
 ** macro.
 */
 #if SQLITE_TEST
-int sqlite3_btree_trace=0;  /* True to enable tracing */
+int sqlite3BtreeTrace=0;  /* True to enable tracing */
 #endif
 
 
