@@ -613,6 +613,7 @@ AC_CONFIG_HEADERS(src/config.h)
 #########
 # Generate the output files.
 #
+AC_SUBST(TARGET_CFLAGS)
 AC_OUTPUT([
 Makefile
 sqlite3.pc
