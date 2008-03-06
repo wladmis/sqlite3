@@ -21,7 +21,12 @@
 ** the SQLite source tree.
 */
 #ifdef SQLITE_STANDARD_BUILD
-#include "common.h"
+# include "common.h"
+#endif
+
+#ifndef __sqlite3_intptr_defined
+  /* Fallbacks if doing a standalone build... */
+  typedef int sqlite3_intptr_t;
 #endif
 
 /*

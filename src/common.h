@@ -47,11 +47,9 @@
 ** practically it's == sizeof(void *)).  We fall back to an int if this type
 ** isn't defined.
 */
-#ifndef HAVE_INTPTR_T
-  typedef int intptr_t;
-#endif
-#ifndef HAVE_UINTPTR_T
-  typedef unsigned int uintptr_t;
+#ifdef HAVE_INTPTR_T
+  typedef intptr_t sqlite3_intptr_t;
+# define __sqlite3_intptr_defined
 #endif
 
 #endif
