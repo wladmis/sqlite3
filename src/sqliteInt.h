@@ -16,7 +16,13 @@
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
 
+/*
+** Do not try to include this file when building the amalgamation outside of
+** the SQLite source tree.
+*/
+#ifdef SQLITE_STANDARD_BUILD
 #include "common.h"
+#endif
 
 /*
 ** The macro unlikely() is a hint that surrounds a boolean
