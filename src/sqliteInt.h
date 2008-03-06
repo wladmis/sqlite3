@@ -17,17 +17,42 @@
 #define _SQLITEINT_H_
 
 /*
-** Do not try to include this file when building the amalgamation outside of
-** the SQLite source tree.
+** Include the configuration header output by 'configure' if it was run
+** (otherwise we get an empty default).
 */
-#ifdef SQLITE_STANDARD_BUILD
-# include "common.h"
+#include "config.h"
+
+/* Needed for various definitions... */
+#define _GNU_SOURCE
+
+/*
+** Include standard header files as necessary
+*/
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
 #endif
 
-#ifndef __sqlite3_intptr_defined
-  /* Fallbacks if doing a standalone build... */
+/*
+** If possible, use the C99 intptr_t type to define an integral type of
+** equivalent size to a pointer.  (Technically it's >= sizeof(void *), but
+** practically it's == sizeof(void *)).  We fall back to an int if this type
+** isn't defined.
+*/
+#ifdef HAVE_INTPTR_T
+  typedef intptr_t sqlite3_intptr_t;
+#else
   typedef int sqlite3_intptr_t;
 #endif
+
 
 /*
 ** The macro unlikely() is a hint that surrounds a boolean
