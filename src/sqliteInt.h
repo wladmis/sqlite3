@@ -320,7 +320,7 @@ typedef UINT8_TYPE i8;             /* 1-byte signed integer */
 ** evaluated at runtime.
 */
 #ifdef SQLITE_AMALGAMATION
-const int sqlite3One;
+const int sqlite3one;
 #else
 extern const int sqlite3one;
 #endif
