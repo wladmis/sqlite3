@@ -16,6 +16,8 @@
 #ifndef _SQLITEINT_H_
 #define _SQLITEINT_H_
 
+#include "common.h"
+
 /*
 ** The macro unlikely() is a hint that surrounds a boolean
 ** expression that is usually false.  Macro likely() surrounds
