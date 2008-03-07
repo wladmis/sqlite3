@@ -1242,7 +1242,7 @@ static void pager_unlock(Pager *pPager){
   if( !pPager->exclusiveMode ){
     if( !MEMDB ){
       int rc = osUnlock(pPager->fd, NO_LOCK);
-      if( rc ) pager_error(pPager, rc);
+      if( rc ) pPager->errCode = rc;
       pPager->dbSize = -1;
       IOTRACE(("UNLOCK %p\n", pPager))
 
