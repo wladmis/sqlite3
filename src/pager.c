@@ -1241,9 +1241,8 @@ static void pager_reset(Pager *pPager){
 static void pager_unlock(Pager *pPager){
   if( !pPager->exclusiveMode ){
     if( !MEMDB ){
-      if( pPager->fd->pMethods ){
-        osUnlock(pPager->fd, NO_LOCK);
-      }
+      int rc = osUnlock(pPager->fd, NO_LOCK);
+      if( rc ) pager_error(pPager, rc);
       pPager->dbSize = -1;
       IOTRACE(("UNLOCK %p\n", pPager))
 
@@ -1252,7 +1251,7 @@ static void pager_unlock(Pager *pPager){
       ** cache can be discarded and the error code safely cleared.
       */
       if( pPager->errCode ){
-        pPager->errCode = SQLITE_OK;
+        if( rc==SQLITE_OK ) pPager->errCode = SQLITE_OK;
         pager_reset(pPager);
         if( pPager->stmtOpen ){
           sqlite3OsClose(pPager->stfd);
@@ -3384,7 +3383,14 @@ static int pagerSharedLock(Pager *pPager){
         }
         if( rc!=SQLITE_OK ){
           pager_unlock(pPager);
-          return ((rc==SQLITE_NOMEM||rc==SQLITE_IOERR_NOMEM)?rc:SQLITE_BUSY);
+          switch( rc ){
+            case SQLITE_NOMEM:
+            case SQLITE_IOERR_UNLOCK:
+            case SQLITE_IOERR_NOMEM:
+              return rc;
+            default:
+              return SQLITE_BUSY;
+          }
         }
         pPager->journalOpen = 1;
         pPager->journalStarted = 0;

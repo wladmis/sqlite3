@@ -666,6 +666,7 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
   extern int sqlite3_io_error_persist;
   extern int sqlite3_io_error_pending;
   extern int sqlite3_io_error_hit;
+  extern int sqlite3_io_error_hardhit;
   extern int sqlite3_diskfull_pending;
   extern int sqlite3_diskfull;
   extern int sqlite3_pager_n_sort_bucket;
@@ -708,6 +709,8 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
      (char*)&sqlite3_io_error_persist, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_io_error_hit",
      (char*)&sqlite3_io_error_hit, TCL_LINK_INT);
+  Tcl_LinkVar(interp, "sqlite_io_error_hardhit",
+     (char*)&sqlite3_io_error_hardhit, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_diskfull_pending",
      (char*)&sqlite3_diskfull_pending, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_diskfull",

@@ -52,7 +52,7 @@ proc check_db {testname} {
   # connection. Otherwise, try a ROLLBACK, in case a transaction 
   # is still active.
   set rc [catch {execsql {PRAGMA integrity_check}} msg]
-  if {$rc && $msg eq "disk I/O error"} {
+  if {$rc && ($msg eq "disk I/O error" || $msg eq "database is locked")} {
     db close
     sqlite3 db test.db
     set refcnt 0
