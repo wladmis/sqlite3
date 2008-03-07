@@ -1345,7 +1345,9 @@ int sqlite3_table_column_metadata(
   /* Ensure the database schema has been loaded */
   (void)sqlite3SafetyOn(db);
   sqlite3_mutex_enter(db->mutex);
+  sqlite3BtreeEnterAll(db);
   rc = sqlite3Init(db, &zErrMsg);
+  sqlite3BtreeLeaveAll(db);
   if( SQLITE_OK!=rc ){
     goto error_out;
   }
