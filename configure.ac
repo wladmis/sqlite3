@@ -115,6 +115,14 @@ AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h])
 #
 AC_CHECK_FUNCS([usleep fdatasync localtime_r gmtime_r])
 
+#########
+# See whether we can run specific tclsh versions known to work well;
+# if not, then we fall back to plain tclsh.
+# TODO: try other versions before falling back?
+# 
+AC_CHECK_PROGS(TCLSH_CMD, [tclsh8.4 tclsh], tclsh)
+AC_SUBST(TCLSH_CMD)
+
 
 #########
 # Set up an appropriate program prefix
@@ -446,7 +454,7 @@ if test "${use_tcl}" = "yes" ; then
     # installed and uninstalled version of Tcl.
     #
     
-   if test -f $TCL_BIN_DIR/Makefile ; then
+    if test -f $TCL_BIN_DIR/Makefile ; then
       TCL_LIB_SPEC=${TCL_BUILD_LIB_SPEC}
       TCL_STUB_LIB_SPEC=${TCL_BUILD_STUB_LIB_SPEC}
       TCL_STUB_LIB_PATH=${TCL_BUILD_STUB_LIB_PATH}
