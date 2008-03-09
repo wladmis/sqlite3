@@ -204,14 +204,8 @@ fi
 AC_SUBST(SQLITE_THREADSAFE)
 
 if test "$SQLITE_THREADSAFE" = "1"; then
-  LIBS=""
-  AC_CHECK_LIB(pthread, pthread_create)
-  TARGET_THREAD_LIB="$LIBS"
-  LIBS=""
-else
-  TARGET_THREAD_LIB=""
+  AC_SEARCH_LIBS(pthread_create, pthread)
 fi
-AC_SUBST(TARGET_THREAD_LIB)
 
 ##########
 # Do we want to allow a connection created in one thread to be used
