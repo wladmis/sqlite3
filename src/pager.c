@@ -4252,7 +4252,7 @@ int sqlite3PagerWrite(DbPage *pDbPage){
             sqlite3PagerUnref(pPage);
           }
         }
-      }else if( (pPage = pager_lookup(pPager, pg)) ){
+      }else if( (pPage = pager_lookup(pPager, pg))!=0 ){
         if( pPage->needSync ){
           needSync = 1;
         }
