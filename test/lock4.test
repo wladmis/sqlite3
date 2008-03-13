@@ -62,6 +62,7 @@ do_test lock4-1.2 {
      db eval {
         INSERT INTO t1 VALUES(2);
      }
+     db close
      db2 eval COMMIT
      exit
   }
