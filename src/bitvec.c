@@ -37,11 +37,14 @@
 #include "sqliteInt.h"
 
 #define BITVEC_SZ        512
-#define BITVEC_NCHAR     (BITVEC_SZ-12)
+/* Round the union size down to the nearest pointer boundary, since that's how 
+** it will be aligned within the Bitvec struct. */
+#define BITVEC_USIZE     (((BITVEC_SZ-12)/sizeof(Bitvec *))*sizeof(Bitvec *))
+#define BITVEC_NCHAR     BITVEC_USIZE
 #define BITVEC_NBIT      (BITVEC_NCHAR*8)
-#define BITVEC_NINT      ((BITVEC_SZ-12)/4)
+#define BITVEC_NINT      (BITVEC_USIZE/4)
 #define BITVEC_MXHASH    (BITVEC_NINT/2)
-#define BITVEC_NPTR      ((BITVEC_SZ-12)/8)
+#define BITVEC_NPTR      (BITVEC_USIZE/sizeof(Bitvec *))
 
 #define BITVEC_HASH(X)   (((X)*37)%BITVEC_NINT)
 
