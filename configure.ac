@@ -593,7 +593,7 @@ AC_SUBST(TARGET_DEBUG)
 #########
 # See whether we should use the amalgamation to build
 AC_ARG_ENABLE(amalgamation, AC_HELP_STRING([--disable-amalgamation],
-      [Disable the amalgamation and instead build all files separately (currently needed to build the test fixture)]),
+      [Disable the amalgamation and instead build all files separately]),
       [use_amalgamation=$enableval],[use_amalgamation=yes])
 if test "${use_amalgamation}" != "yes" ; then
   USE_AMALGAMATION=0
