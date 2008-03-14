@@ -2572,6 +2572,7 @@ static int pager_wait_on_lock(Pager *pPager, int locktype){
   if( pPager->state>=locktype ){
     rc = SQLITE_OK;
   }else{
+    if( pPager->pBusyHandler ) pPager->pBusyHandler->nBusy = 0;
     do {
       rc = sqlite3OsLock(pPager->fd, locktype);
     }while( rc==SQLITE_BUSY && sqlite3InvokeBusyHandler(pPager->pBusyHandler) );
