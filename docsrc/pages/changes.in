@@ -41,6 +41,30 @@ proc chng {date desc} {
   }
 }
 
+chng {2008 Mar 17 (3.5.7)} {
+<li>Fix a bug ([ticket #2927]) in the register allocation for
+compound selects - introduced by the new VM code in version 3.5.5.</li>
+<li>ALTER TABLE uses double-quotes instead of single-quotes for quoting
+filenames.</li>
+<li>Use the WHERE clause to reduce the size of a materialized VIEW in
+an UPDATE or DELETE statement. (Optimization)</li>
+<li>Do not apply the flattening optimization if the outer query is an
+aggregate and the inner query contains ORDER BY.  ([Ticket #2943])</li>
+<li>Additional OS/2 updates</li>
+<li>Added an experimental power-of-two, first-fit memory allocator.</li>
+<li>Remove all instances of sprintf() from the code</li>
+<li>Accept "Z" as the zulu timezone at the end of date strings</li>
+<li>Fix a bug in the LIKE optimizer that occurs when the last character
+before the first wildcard is an upper-case "Z"</li>
+<li>Added the "bitvec" object for keeping track of which pages have
+been journalled.  Improves speed and reduces memory consumption, especially
+for large database files.</li>
+<li>Get the SQLITE_ENABLE_LOCKING_STYLE macro working again on MacOSX.</li>
+<li>Store the statement journal in the temporary file directory instead of
+colocated with the database file.</li>
+<li>Many improvements and cleanups to the configure script</li>
+}
+
 chng {2008 Feb 6 (3.5.6)} {
 <li>Fix a bug ([ticket #2913])
 that prevented virtual tables from working in a LEFT JOIN.

@@ -34,9 +34,15 @@ to the same database, the connections share a single data and schema cache.
 This can significantly reduce the quantity of memory and IO required by
 the system.</p>
 
-<p>Using shared-cache mode imposes some extra restrictions on 
-passing database handles between threads and changes the semantics
-of the locking model in some cases. These details are described in full by
+<p>In version 3.5.0, shared-cache mode was modified so that the same
+cache can be shared across an entire process rather than just within
+a single thread.  Prior to this change, there were restrictions on
+passing database connections between threads.  Those restrictions were
+dropped in 3.5.0 update.  This document describes shared-cache mode
+as of version 3.5.0.</p>
+
+<p>Shared-cache mode changes the semantics
+of the locking model in some cases. The details are described by
 this document. A basic understanding of the normal SQLite locking model (see
 <a href="lockingv3.html">File Locking And Concurrency In SQLite Version 3</a>
 for details) is assumed.</p>
@@ -44,7 +50,7 @@ for details) is assumed.</p>
 <tcl>HEADING 1 {Shared-Cache Locking Model}</tcl>
 
 <p>Externally, from the point of view of another process or thread, two
-or more database connections using a shared-cache appear as a single 
+or more [sqlite3|database connections] using a shared-cache appear as a single 
 connection. The locking protocol used to arbitrate between multiple 
 shared-caches or regular database users is described elsewhere.
 </p>
@@ -72,8 +78,8 @@ shared-caches or regular database users is described elsewhere.
 
 <p>Figure 1 depicts an example runtime configuration where three 
 database connections have been established. Connection 1 is a normal
-SQLite database connection. Connections 2 and 3 share a cache (and so must
-have been established by the same process thread). The normal locking
+SQLite database connection. Connections 2 and 3 share a cache 
+The normal locking
 protocol is used to serialize database access between connection 1 and
 the shared cache. The internal protocol used to serialize (or not, see
 "Read-Uncommitted Isolation Mode" below) access to the shared-cache by
@@ -119,7 +125,7 @@ current transaction (read or write) is concluded.
 <tcl>HEADING 3 {Read-Uncommitted Isolation Mode}</tcl>
 
 <p>The behaviour described above may be modified slightly by using the 
-<i>read_uncommitted</i> pragma to change the isolation level from serialized 
+[read_uncommitted] pragma to change the isolation level from serialized 
 (the default), to read-uncommitted.</p>
 
 <p> A database connection in read-uncommitted mode does not attempt 
@@ -137,7 +143,7 @@ locks required by the rules enumerated below (see section
 "Schema (sqlite_master) Level Locking").
 </p>
 
-<pre>
+<blockquote><pre>
   /* Set the value of the read-uncommitted flag:
   **
   **   True  -> Set the connection to read-uncommitted mode.
@@ -147,7 +153,7 @@ locks required by the rules enumerated below (see section
 
   /* Retrieve the current value of the read-uncommitted flag */
   PRAGMA read_uncommitted;
-</pre>
+</pre></blockquote>
 
 <tcl>HEADING 2 {Schema (sqlite_master) Level Locking}</tcl>
 
@@ -171,29 +177,44 @@ database (including the default database, "main").
 
 <tcl>HEADING 1 {Thread Related Issues}</tcl>
 
-<p>When shared-cache mode is enabled, a database connection may only be
-used by the thread that called sqlite3_open() to create it. If another 
-thread attempts to use the database connection, in most cases an 
-SQLITE_MISUSE error is returned. However this is not guaranteed and 
-programs should not depend on this behaviour, in some cases a segfault 
-may result.
+<p>In SQLite versions 3.3.0 through 3.4.2 when shared-cache mode is enabled, 
+a database connection may only be
+used by the thread that called [sqlite3_open()] to create it.
+And a connection could only share cache with another connection in the
+same thread.
+These restrictions were dropped beginning with SQLite version
 </p>
+
+<tcl>HEADING 1 {Shared Cache And Virtual Tables}</tcl>
+
+<p>Shared cache mode cannot be used together with virtual tables.
+The reason for this is that virtual tables often make a copy of
+the ["sqlite3*"] database handle that was used to originally open
+the virtual table.  The virtual table might use this handle to 
+prepare statements for recursive access to the database.  But
+a prepared statement only works for the database connection on
+which it was originally created.  If a virtual table is part of
+a shared cache, it might be invoked by multiple database connections
+but its prepared statements will only work on one of those 
+connections.  To avoid problems sorting all of this out, and to
+simplify the implementation of virtual tables, SQLite includes
+checks that prohibit shared cache and virtual tables from being
+used at the same time.</p>
 
 <tcl>HEADING 1 {Enabling Shared-Cache Mode}</tcl>
 
-<p>Shared-cache mode is enabled on a thread-wide basis. Using the C 
+<p>Shared-cache mode is enabled on a per-process basis. Using the C 
 interface, the following API can be used to enable or disable shared-cache
 mode for the calling thread:
 </p>
 
-<pre>
+<blockquote><pre>
 int sqlite3_enable_shared_cache(int);
-</pre>
+</pre></blockquote>
 
-<p>It is illegal to call sqlite3_enable_shared_cache() if one or more 
-open database connections were opened by the calling thread. If the argument
-is non-zero, shared-cache mode is enabled. If the argument is zero,
-shared-cache mode is disabled. The return value is either SQLITE_OK (if the
-operation was successful), SQLITE_NOMEM (if a malloc() failed), or
-SQLITE_MISUSE (if the thread has open database connections).
+<p>Each call [sqlite3_enable_shared_cache()] effects subsequent database
+connections created using [sqlite3_open()], [sqlite3_open16()], or
+[sqlite3_open_v2()].  Database connections that already exist are
+uneffected.  Each call to [sqlite3_enable_shared_cache()] overrides
+all previous calls within the same process.
 </p>

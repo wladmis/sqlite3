@@ -288,23 +288,6 @@ The <a href="pragma.html#pragma_max_page_count">
 max_page_count PRAGMA</a> can be used to raise or lower this
 limit at run-time.
 </p>
-
-<p>
-Note that the transaction processing in SQLite requires two bits
-of heap memory for every page in the database file.  For databases
-of a few megabytes in size, this amounts to only a few hundred
-bytes of heap memory.  But for gigabyte-sized databases the amount
-of heap memory required is getting into the kilobyte range and
-for terabyte-sized databases, megabytes of heap memory must be
-allocated and zeroed at each transaction.  SQLite will
-support very large databases in theory, but the current implementation
-is optimized for the common SQLite use cases of embedded devices
-and persistent stores for desktop applications.  In other words,
-SQLite is designed for use with databases sized in kilobytes or 
-megabytes not gigabytes.  If you are building an application to
-work with databases that are hundreds of gigabytes or more 
-in size, then you should perhaps consider using a different database 
-engine that is explicitly designed for such large data sets.
-</p>
+</li></ol>
 }
 </tcl>

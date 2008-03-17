@@ -81,16 +81,16 @@ int main(int argc, char **argv){
   int rc;
 
   if( argc!=3 ){
-    fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv[0]);
+    fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv&#91;0]);
     exit(1);
   }
-  rc = <b>sqlite3_open</b>(argv[1], &db);
+  rc = <b>sqlite3_open</b>(argv&#91;1], &db);
   if( rc ){
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
     sqlite3_close(db);
     exit(1);
   }
-  rc = <b>sqlite3_exec</b>(db, argv[2], callback, 0, &zErrMsg);
+  rc = <b>sqlite3_exec</b>(db, argv&#91;2], callback, 0, &zErrMsg);
   if( rc!=SQLITE_OK ){
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);

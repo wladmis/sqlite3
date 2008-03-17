@@ -133,7 +133,7 @@ HEADING 2 {The Virtual File System Object}
 
 PARAGRAPH {
   The new OS interface for SQLite is built around an object named
-  [sqlite3_vfs].  The "vfs" standard for "Virtual File System".
+  [sqlite3_vfs].  The "vfs" stands for "Virtual File System".
   The sqlite3_vfs object is basically a structure containing pointers
   to functions that implement the primitive disk I/O operations that
   SQLite needs to perform in order to read and write databases.  

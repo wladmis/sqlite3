@@ -1779,7 +1779,7 @@ single row consisting of the values of the expression list.
 <p>The WHERE clause can be used to limit the number of rows over
 which the query operates.</p>
 
-<p>The GROUP BY clauses causes one or more rows of the result to
+<p>The GROUP BY clause causes one or more rows of the result to
 be combined into a single row of output.  This is especially useful
 when the result contains aggregate functions.  The expressions in
 the GROUP BY clause do <em>not</em> have to be expressions that

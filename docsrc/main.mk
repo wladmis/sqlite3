@@ -26,7 +26,7 @@ wrap.tcl:	$(DOC)/wrap.tcl
 	cp $(DOC)/wrap.tcl .
 
 docdir:
-	mkdir -p doc 
+	mkdir -p doc doc/c3ref
 
 doc:	sqlite3.h docdir always
 	rm -rf doc/images
