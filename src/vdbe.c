@@ -3575,7 +3575,6 @@ case OP_Prev:          /* jump */
 case OP_Next: {        /* jump */
   Cursor *pC;
   BtCursor *pCrsr;
-    int res;
 
   CHECK_FOR_INTERRUPT;
   assert( pOp->p1>=0 && pOp->p1<p->nCursor );
@@ -3585,9 +3584,8 @@ case OP_Next: {        /* jump */
   }
   pCrsr = pC->pCursor;
   assert( pCrsr );
-  if( pC->nullRow ){
-    res = 1;
-  }else{
+  if( pC->nullRow==0 ){
+    int res = 1;
     assert( pC->deferredMoveto==0 );
     rc = pOp->opcode==OP_Next ? sqlite3BtreeNext(pCrsr, &res) :
                                 sqlite3BtreePrevious(pCrsr, &res);
