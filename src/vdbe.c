@@ -985,6 +985,7 @@ case OP_ResultRow: {
     sqlite3VdbeMemNulTerminate(&pMem[i]);
     storeTypeInfo(&pMem[i], encoding);
   }
+  if( db->mallocFailed ) goto no_mem;
 
   /* Return SQLITE_ROW
   */
