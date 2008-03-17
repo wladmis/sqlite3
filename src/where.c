@@ -838,6 +838,7 @@ static void exprAnalyze(
     exprAnalyzeAll(pSrc, &sOr);
     assert( sOr.nTerm>=2 );
     j = 0;
+    if( db->mallocFailed ) goto or_not_possible;
     do{
       assert( j<sOr.nTerm );
       iColumn = sOr.a[j].leftColumn;
