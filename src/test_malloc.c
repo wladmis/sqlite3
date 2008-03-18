@@ -463,18 +463,14 @@ static int test_memdebug_pending(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
+  int nPending;
   if( objc!=1 ){
     Tcl_WrongNumArgs(interp, 1, objv, "");
     return TCL_ERROR;
   }
-
-#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_POW2_MEMORY_SIZE)
-  {
-    int nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
-                                        SQLITE_FAULTINJECTOR_MALLOC);
-    Tcl_SetObjResult(interp, Tcl_NewIntObj(nPending));
-  }
-#endif
+  nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
+                                  SQLITE_FAULTINJECTOR_MALLOC);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(nPending));
   return TCL_OK;
 }
 
