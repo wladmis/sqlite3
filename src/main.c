@@ -1002,13 +1002,12 @@ static int openDatabase(
   createCollation(db, "BINARY", SQLITE_UTF16BE, 0, binCollFunc, 0);
   createCollation(db, "BINARY", SQLITE_UTF16LE, 0, binCollFunc, 0);
   createCollation(db, "RTRIM", SQLITE_UTF8, (void*)1, binCollFunc, 0);
-  if( db->mallocFailed ||
-      (db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0))==0 
-  ){
-    assert( db->mallocFailed );
+  if( db->mallocFailed ){
     db->magic = SQLITE_MAGIC_SICK;
     goto opendb_out;
   }
+  db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0);
+  assert( db->pDfltColl!=0 );
 
   /* Also add a UTF-8 case-insensitive collation sequence. */
   createCollation(db, "NOCASE", SQLITE_UTF8, 0, nocaseCollatingFunc, 0);

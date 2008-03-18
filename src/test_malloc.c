@@ -437,6 +437,7 @@ static int test_memdebug_fail(
     }
   }
   
+  sqlite3_test_control(-12345); /* Just to stress the test_control interface */
   nBenign = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES,
                                  SQLITE_FAULTINJECTOR_MALLOC);
   nFail = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_FAILURES,
