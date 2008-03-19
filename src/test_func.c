@@ -215,11 +215,13 @@ static int registerTestFunctions(sqlite3 *db){
     { "test_error",            1, SQLITE_UTF8, test_error},
   };
   int i;
+  extern int Md5_Register(sqlite3*);
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
     sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg,
         aFuncs[i].eTextRep, 0, aFuncs[i].xFunc, 0, 0);
   }
+  Md5_Register(db);
   return SQLITE_OK;
 }
 
