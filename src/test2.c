@@ -717,8 +717,6 @@ int Sqlitetest2_Init(Tcl_Interp *interp){
      (char*)&sqlite3_diskfull, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_pending_byte",
      (char*)&sqlite3_pending_byte, TCL_LINK_INT);
-  Tcl_LinkVar(interp, "pager_pagesize",
-     (char*)&test_pagesize, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_pager_n_sort_bucket",
      (char*)&sqlite3_pager_n_sort_bucket, TCL_LINK_INT);
   return TCL_OK;
