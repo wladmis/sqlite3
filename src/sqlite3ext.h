@@ -182,6 +182,10 @@ struct sqlite3_api_routines {
   sqlite3_vfs *(*vfs_find)(const char*);
   int (*vfs_register)(sqlite3_vfs*,int);
   int (*vfs_unregister)(sqlite3_vfs*);
+  int (*xthreadsafe)(void);
+  void (*result_zeroblob)(sqlite3_context*,int);
+  void (*result_error_code)(sqlite3_context*,int);
+  int (*test_control)(int, ...);
   void (*randomness)(int,void*);
 };
 
@@ -343,6 +347,10 @@ struct sqlite3_api_routines {
 #define sqlite3_vfs_find               sqlite3_api->vfs_find
 #define sqlite3_vfs_register           sqlite3_api->vfs_register
 #define sqlite3_vfs_unregister         sqlite3_api->vfs_unregister
+#define sqlite3_threadsafe             sqlite3_api->xthreadsafe
+#define sqlite3_result_zeroblob        sqlite3_api->result_zeroblob
+#define sqlite3_result_error_code      sqlite3_api->result_error_code
+#define sqlite3_test_control           sqlite3_api->test_control
 #define sqlite3_randomness             sqlite3_api->randomness
 #endif /* SQLITE_CORE */
 
