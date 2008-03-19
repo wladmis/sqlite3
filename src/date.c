@@ -970,18 +970,13 @@ static void currentTimeFunc(
 ){
   time_t t;
   char *zFormat = (char *)sqlite3_user_data(context);
+  sqlite3_vfs *pVfs;
+  double rT;
   char zBuf[20];
 
-  time(&t);
-#ifdef SQLITE_TEST
-  {
-    extern int sqlite3_current_time;  /* See os_XXX.c */
-    if( sqlite3_current_time ){
-      t = sqlite3_current_time;
-    }
-  }
-#endif
-
+  pVfs = sqlite3_vfs_find(0);
+  sqlite3OsCurrentTime(pVfs, &rT);
+  t = 86400.0*(rT - 2440587.5) + 0.5;
 #ifdef HAVE_GMTIME_R
   {
     struct tm sNow;
