@@ -1212,7 +1212,7 @@ case OP_Function: {
   assert( pOp->p3>0 && pOp->p3<=p->nMem );
   pOut = &p->aMem[pOp->p3];
   ctx.s.flags = MEM_Null;
-  ctx.s.db = 0;
+  ctx.s.db = db;
 
   /* The output cell may already have a buffer allocated. Move
   ** the pointer to ctx.s so in case the user-function can use
