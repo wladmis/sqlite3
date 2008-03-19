@@ -53,6 +53,6 @@ do_test index3-99.1 {
   catchsql {
     DROP INDEX i1;
   }
-} {1 {malformed database schema - near "nonsense": syntax error}}
+} {1 {malformed database schema (t1) - near "nonsense": syntax error}}
 
 finish_test

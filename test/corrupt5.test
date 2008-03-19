@@ -39,6 +39,6 @@ do_test corrupt5-1.1 {
   catchsql {
     SELECT * FROM t1
   }
-} {1 {malformed database schema}}
+} {1 {malformed database schema (?)}}
 
 finish_test

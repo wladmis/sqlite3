@@ -128,7 +128,7 @@ do_test corrupt2-2.1 {
   catchsql {
     SELECT * FROM sqlite_master;
   } db2
-} {1 {malformed database schema - index a3 already exists}}
+} {1 {malformed database schema (a3) - index a3 already exists}}
 
 db2 close
 
