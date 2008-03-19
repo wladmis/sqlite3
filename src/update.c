@@ -661,3 +661,8 @@ static void updateVirtualTable(
   sqlite3SelectDelete(pSelect);  
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
+
+/* Make sure "isView" gets undefined in case this file becomes part of
+** the amalgamation - so that subsequent files do not see isView as a
+** macro. */
+#undef isView

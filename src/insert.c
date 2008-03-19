@@ -1663,3 +1663,8 @@ static int xferOptimization(
   }
 }
 #endif /* SQLITE_OMIT_XFER_OPT */
+
+/* Make sure "isView" gets undefined in case this file becomes part of
+** the amalgamation - so that subsequent files do not see isView as a
+** macro. */
+#undef isView
