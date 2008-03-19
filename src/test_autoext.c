@@ -14,8 +14,9 @@
 ** $Id$
 */
 #include "tcl.h"
-#ifndef SQLITE_OMIT_LOAD_EXTENSION
 #include "sqlite3ext.h"
+
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 static SQLITE_EXTENSION_INIT1
 
 /*
@@ -128,6 +129,9 @@ static int autoExtBrokenObjCmd(
   return SQLITE_OK;
 }
 
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
+
+
 /*
 ** tclcmd:   sqlite3_reset_auto_extension
 **
@@ -143,8 +147,6 @@ static int resetAutoExtObjCmd(
   return SQLITE_OK;
 }
 
-
-#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 
 /*
 ** This procedure registers the TCL procs defined in this file.
