@@ -187,6 +187,7 @@ proc finalize_testing {} {
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close
+  sqlite3_reset_auto_extension
   set heaplimit [sqlite3_soft_heap_limit]
   if {$heaplimit!=$::soft_limit} {
     puts "soft-heap-limit changed by this script\
