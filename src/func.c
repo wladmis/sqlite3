@@ -323,7 +323,7 @@ static void randomFunc(
   sqlite3_value **argv
 ){
   sqlite_int64 r;
-  sqlite3Randomness(sizeof(r), &r);
+  sqlite3_randomness(sizeof(r), &r);
   if( (r<<1)==0 ) r = 0;  /* Prevent 0x8000.... as the result so that we */
                           /* can always do abs() of the result */
   sqlite3_result_int64(context, r);
@@ -351,7 +351,7 @@ static void randomBlob(
   }
   p = contextMalloc(context, n);
   if( p ){
-    sqlite3Randomness(n, p);
+    sqlite3_randomness(n, p);
     sqlite3_result_blob(context, (char*)p, n, sqlite3_free);
   }
 }
@@ -1047,12 +1047,12 @@ static void randStr(sqlite3_context *context, int argc, sqlite3_value **argv){
   if( iMax>=sizeof(zBuf) ) iMax = sizeof(zBuf)-1;
   n = iMin;
   if( iMax>iMin ){
-    sqlite3Randomness(sizeof(r), &r);
+    sqlite3_randomness(sizeof(r), &r);
     r &= 0x7fffffff;
     n += r%(iMax + 1 - iMin);
   }
   assert( n<sizeof(zBuf) );
-  sqlite3Randomness(n, zBuf);
+  sqlite3_randomness(n, zBuf);
   for(i=0; i<n; i++){
     zBuf[i] = zSrc[zBuf[i]%(sizeof(zSrc)-1)];
   }

@@ -16,7 +16,7 @@
 
 # If we did not compile with malloc testing enabled, then do nothing.
 #
-ifcapable faultinjector {
+ifcapable testlogic {
   set MEMDEBUG 1
 } else {
   set MEMDEBUG 0

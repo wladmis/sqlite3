@@ -3157,7 +3157,7 @@ case OP_NewRowid: {           /* out2-prerelease */
         if( cnt==0 && (v&0xffffff)==v ){
           v++;
         }else{
-          sqlite3Randomness(sizeof(v), &v);
+          sqlite3_randomness(sizeof(v), &v);
           if( cnt<5 ) v &= 0xffffff;
         }
         if( v==0 ) continue;
