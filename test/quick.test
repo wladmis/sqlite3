@@ -50,6 +50,7 @@ set EXCLUDE {
   crash3.test
   crash4.test
   crash6.test
+  crash7.test
   exclusive3.test
   fts3.test
   fuzz.test
