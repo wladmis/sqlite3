@@ -696,10 +696,10 @@ no_mem:
 void sqlite3ExprListCheckLength(
   Parse *pParse,
   ExprList *pEList,
-  int iLimit,
   const char *zObject
 ){
-  if( pEList && pEList->nExpr>iLimit ){
+  int mx = pParse->db->aLimit[SQLITE_LIMIT_COLUMN];
+  if( pEList && pEList->nExpr>mx ){
     sqlite3ErrorMsg(pParse, "too many columns in %s", zObject);
   }
 }

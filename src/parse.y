@@ -573,7 +573,7 @@ where_opt(A) ::= WHERE expr(X).       {A = X;}
 ////////////////////////// The UPDATE command ////////////////////////////////
 //
 cmd ::= UPDATE orconf(R) fullname(X) SET setlist(Y) where_opt(Z).  {
-  sqlite3ExprListCheckLength(pParse,Y,SQLITE_MAX_COLUMN,"set list"); 
+  sqlite3ExprListCheckLength(pParse,Y,"set list"); 
   sqlite3Update(pParse,X,Y,Z,R);
 }
 
@@ -896,7 +896,7 @@ idxlist(A) ::= idxlist(X) COMMA idxitem(Y) collate(C) sortorder(Z).  {
     sqlite3ExprSetColl(pParse, p, &C);
   }
   A = sqlite3ExprListAppend(pParse,X, p, &Y);
-  sqlite3ExprListCheckLength(pParse, A, SQLITE_MAX_COLUMN, "index");
+  sqlite3ExprListCheckLength(pParse, A, "index");
   if( A ) A->a[A->nExpr-1].sortOrder = Z;
 }
 idxlist(A) ::= idxitem(Y) collate(C) sortorder(Z). {
@@ -906,7 +906,7 @@ idxlist(A) ::= idxitem(Y) collate(C) sortorder(Z). {
     sqlite3ExprSetColl(pParse, p, &C);
   }
   A = sqlite3ExprListAppend(pParse,0, p, &Y);
-  sqlite3ExprListCheckLength(pParse, A, SQLITE_MAX_COLUMN, "index");
+  sqlite3ExprListCheckLength(pParse, A, "index");
   if( A ) A->a[A->nExpr-1].sortOrder = Z;
 }
 idxitem(A) ::= nm(X).              {A = X;}
