@@ -1001,9 +1001,7 @@ int sqlite3_limit(sqlite3 *db, int limitId, int newLimit){
   }
   oldLimit = db->aLimit[limitId];
   if( newLimit>=0 ){
-    if( newLimit==0 ){
-      newLimit = aHardLimit[limitId];
-    }else if( aHardLimit[limitId]>0 && newLimit>aHardLimit[limitId] ){
+    if( newLimit>aHardLimit[limitId] ){
       newLimit = aHardLimit[limitId];
     }
     db->aLimit[limitId] = newLimit;
