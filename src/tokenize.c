@@ -388,6 +388,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   int tokenType;
   int lastTokenParsed = -1;
   sqlite3 *db = pParse->db;
+  int mxSqlLen = db->aLimit[SQLITE_LIMIT_SQL_LENGTH];
 
   if( db->activeVdbeCnt==0 ){
     db->u1.isInterrupted = 0;
@@ -413,7 +414,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     assert( pParse->sLastToken.dyn==0 );
     pParse->sLastToken.n = getToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
-    if( SQLITE_MAX_SQL_LENGTH>0 && i>SQLITE_MAX_SQL_LENGTH ){
+    if( i>mxSqlLen ){
       pParse->rc = SQLITE_TOOBIG;
       break;
     }

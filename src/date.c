@@ -840,7 +840,7 @@ static void strftimeFunc(
   }
   if( n<sizeof(zBuf) ){
     z = zBuf;
-  }else if( n>SQLITE_MAX_LENGTH ){
+  }else if( n>sqlite3_context_db_handle(context)->aLimit[SQLITE_LIMIT_LENGTH] ){
     sqlite3_result_error_toobig(context);
     return;
   }else{
