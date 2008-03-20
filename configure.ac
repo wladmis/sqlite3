@@ -615,7 +615,7 @@ AC_SUBST(LOADEXTENSION_FLAGS)
 
 #########
 # Output the config header
-AC_CONFIG_HEADERS(src/config.h)
+AC_CONFIG_HEADERS(config.h)
 
 #########
 # Generate the output files.
