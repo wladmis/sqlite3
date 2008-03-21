@@ -917,5 +917,10 @@ do_test func-24.5 {
     SELECT group_concat(t1,NULL) FROM tbl1
   }
 } {thisprogramisfreesoftware}
+do_test func-24.6 {
+  execsql {
+    SELECT 'BEGIN-'||group_concat(t1) FROM tbl1
+  }
+} {BEGIN-this,program,is,free,software}
 
 finish_test
