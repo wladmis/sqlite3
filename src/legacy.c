@@ -65,12 +65,7 @@ int sqlite3_exec(
     }
 
     nCallback = 0;
-
     nCol = sqlite3_column_count(pStmt);
-    azCols = sqlite3DbMallocZero(db, 2*nCol*sizeof(const char *) + 1);
-    if( azCols==0 ){
-      goto exec_out;
-    }
 
     while( 1 ){
       int i;
@@ -80,6 +75,12 @@ int sqlite3_exec(
       if( xCallback && (SQLITE_ROW==rc || 
           (SQLITE_DONE==rc && !nCallback && db->flags&SQLITE_NullCallback)) ){
         if( 0==nCallback ){
+          if( azCols==0 ){
+            azCols = sqlite3DbMallocZero(db, 2*nCol*sizeof(const char*) + 1);
+            if( azCols==0 ){
+              goto exec_out;
+            }
+          }
           for(i=0; i<nCol; i++){
             azCols[i] = (char *)sqlite3_column_name(pStmt, i);
             if( !azCols[i] ){
