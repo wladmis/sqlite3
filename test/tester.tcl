@@ -171,6 +171,21 @@ proc speed_trial {name numstmt units sql} {
   global total_time
   set total_time [expr {$total_time+$tm}]
 }
+proc speed_trial_tcl {name numstmt units script} {
+  puts -nonewline [format {%-21.21s } $name...]
+  flush stdout
+  set speed [time {eval $script}]
+  set tm [lindex $speed 0]
+  if {$tm == 0} {
+    set rate [format %20s "many"]
+  } else {
+    set rate [format %20.5f [expr {1000000.0*$numstmt/$tm}]]
+  }
+  set u2 $units/s
+  puts [format {%12d uS %s %s} $tm $rate $u2]
+  global total_time
+  set total_time [expr {$total_time+$tm}]
+}
 proc speed_trial_init {name} {
   global total_time
   set total_time 0
