@@ -4455,16 +4455,12 @@ static int reparentChildPages(MemPage *pPage){
 
   for(i=0; i<pPage->nCell; i++){
     u8 *pCell = findCell(pPage, i);
-    if( !pPage->leaf ){
-      rc = reparentPage(pBt, get4byte(pCell), pPage, i);
-      if( rc!=SQLITE_OK ) return rc;
-    }
+    rc = reparentPage(pBt, get4byte(pCell), pPage, i);
+    if( rc!=SQLITE_OK ) return rc;
   }
-  if( !pPage->leaf ){
-    rc = reparentPage(pBt, get4byte(&pPage->aData[pPage->hdrOffset+8]), 
-       pPage, i);
-    pPage->idxShift = 0;
-  }
+  rc = reparentPage(pBt, get4byte(&pPage->aData[pPage->hdrOffset+8]), 
+                    pPage, i);
+  pPage->idxShift = 0;
   return rc;
 }
 
