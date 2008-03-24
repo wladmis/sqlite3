@@ -141,7 +141,7 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_includedir/sqlite3ext.h
 %_libdir/lib%name.so
 #_libdir/lib%name.la
-%_libdir/pkgconfig/%name.pc
+%_pkgconfigdir/%name.pc
 
 %files -n lib%name-devel-static
 %_libdir/lib%name.a
