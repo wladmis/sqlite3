@@ -941,7 +941,7 @@ void sqlite3Pragma(
             { OP_IfPos,       1,  0,  0},    /* 9 */
             { OP_Halt,        0,  0,  0},
           };
-          sqlite3GenerateIndexKey(pParse, pIdx, 1, 3);
+          sqlite3GenerateIndexKey(pParse, pIdx, 1, 3, 1);
           jmp2 = sqlite3VdbeAddOp3(v, OP_Found, j+2, 0, 3);
           addr = sqlite3VdbeAddOpList(v, ArraySize(idxErr), idxErr);
           sqlite3VdbeChangeP4(v, addr+1, "rowid ", P4_STATIC);

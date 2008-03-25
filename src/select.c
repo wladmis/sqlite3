@@ -598,12 +598,7 @@ static void selectInnerLoop(
     ** the temporary table iParm.
     */
     case SRT_Except: {
-      int r1;
-      r1 = sqlite3GetTempReg(pParse);
-      sqlite3VdbeAddOp3(v, OP_MakeRecord, regResult, nColumn, r1);
-      sqlite3VdbeChangeP4(v, -1, aff, P4_STATIC);
-      sqlite3VdbeAddOp2(v, OP_IdxDelete, iParm, r1);
-      sqlite3ReleaseTempReg(pParse, r1);
+      sqlite3VdbeAddOp3(v, OP_IdxDelete, iParm, regResult, nColumn);
       break;
     }
 #endif
