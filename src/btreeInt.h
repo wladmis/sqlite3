@@ -398,6 +398,7 @@ struct BtShared {
   BtLock *pLock;        /* List of locks held on this shared-btree struct */
   Btree *pExclusive;    /* Btree with an EXCLUSIVE lock on the whole db */
 #endif
+  u8 *pTmpSpace;        /* BtShared.pageSize bytes of space for tmp use */
 };
 
 /*
