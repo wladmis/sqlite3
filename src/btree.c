@@ -3644,7 +3644,10 @@ int sqlite3BtreeMoveto(
           c = sqlite3VdbeRecordCompareParsed(nCellKey, pCellKey, pPKey);
         }else{
           pCellKey = sqlite3_malloc( nCellKey );
-          if( pCellKey==0 ) return SQLITE_NOMEM;
+          if( pCellKey==0 ){
+            rc = SQLITE_NOMEM;
+            goto moveto_finish;
+          }
           rc = sqlite3BtreeKey(pCur, 0, nCellKey, (void *)pCellKey);
           c = sqlite3VdbeRecordCompareParsed(nCellKey, pCellKey, pPKey);
           sqlite3_free(pCellKey);
