@@ -608,8 +608,8 @@ char *sqlite3NameFromToken(sqlite3 *db, Token *pName){
 void sqlite3OpenMasterTable(Parse *p, int iDb){
   Vdbe *v = sqlite3GetVdbe(p);
   sqlite3TableLock(p, iDb, MASTER_ROOT, 1, SCHEMA_TABLE(iDb));
+  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, 5);/* sqlite_master has 5 columns */
   sqlite3VdbeAddOp3(v, OP_OpenWrite, 0, MASTER_ROOT, iDb);
-  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, 5); /* sqlite_master has 5 columns */
 }
 
 /*

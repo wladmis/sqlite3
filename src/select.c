@@ -789,8 +789,8 @@ static void generateSortTail(
   iTab = pOrderBy->iECursor;
   if( eDest==SRT_Callback || eDest==SRT_Subroutine ){
     pseudoTab = pParse->nTab++;
+    sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, nColumn);
     sqlite3VdbeAddOp2(v, OP_OpenPseudo, pseudoTab, 0);
-    sqlite3VdbeAddOp2(v, OP_SetNumColumns, pseudoTab, nColumn);
   }
   addr = 1 + sqlite3VdbeAddOp2(v, OP_Sort, iTab, brk);
   codeOffset(v, p, cont);
@@ -3316,10 +3316,9 @@ int sqlite3Select(
       */
       sAggInfo.sortingIdx = pParse->nTab++;
       pKeyInfo = keyInfoFromExprList(pParse, pGroupBy);
-      addrSortingIdx =
-          sqlite3VdbeAddOp4(v, OP_OpenEphemeral, sAggInfo.sortingIdx,
-                         sAggInfo.nSortingColumn, 0,
-                         (char*)pKeyInfo, P4_KEYINFO_HANDOFF);
+      addrSortingIdx = sqlite3VdbeAddOp4(v, OP_OpenEphemeral, 
+          sAggInfo.sortingIdx, sAggInfo.nSortingColumn, 
+          0, (char*)pKeyInfo, P4_KEYINFO_HANDOFF);
 
       /* Initialize memory locations used by GROUP BY aggregate processing
       */

@@ -507,7 +507,7 @@ static int test_memdebug_settitle(
   return TCL_OK;
 }
 
-#define MALLOC_LOG_FRAMES 5
+#define MALLOC_LOG_FRAMES 10 
 static Tcl_HashTable aMallocLog;
 static int mallocLogEnabled = 0;
 
