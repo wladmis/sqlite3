@@ -712,7 +712,7 @@ static int btree_cursor(
   if( Tcl_GetInt(interp, argv[2], &iTable) ) return TCL_ERROR;
   if( Tcl_GetBoolean(interp, argv[3], &wrFlag) ) return TCL_ERROR;
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, 0, &pCur);
+  rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, &pCur);
   sqlite3BtreeLeave(pBt);
   if( rc ){
     Tcl_AppendResult(interp, errorName(rc), 0);

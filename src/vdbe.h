@@ -34,6 +34,7 @@ typedef struct Vdbe Vdbe;
 */
 typedef struct VdbeFunc VdbeFunc;
 typedef struct Mem Mem;
+typedef struct VdbeParsedRecord VdbeParsedRecord;
 
 /*
 ** A single instruction of the virtual machine has an opcode
@@ -180,6 +181,11 @@ void sqlite3VdbeCountChanges(Vdbe*);
 sqlite3 *sqlite3VdbeDb(Vdbe*);
 void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
 void sqlite3VdbeSwap(Vdbe*,Vdbe*);
+
+VdbeParsedRecord *sqlite3VdbeRecordParse(KeyInfo*,int,const void*,void*,int);
+void sqlite3VdbeRecordUnparse(VdbeParsedRecord*);
+int sqlite3VdbeRecordCompareParsed(int,const void*,VdbeParsedRecord*);
+
 
 #ifndef NDEBUG
   void sqlite3VdbeComment(Vdbe*, const char*, ...);

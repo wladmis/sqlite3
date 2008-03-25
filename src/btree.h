@@ -128,12 +128,11 @@ int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);
 void sqlite3BtreeTripAllCursors(Btree*, int);
 
 int sqlite3BtreeCursor(
-  Btree*,                              /* BTree containing table to open */
-  int iTable,                          /* Index of root page */
-  int wrFlag,                          /* 1 for writing.  0 for read-only */
-  int(*)(void*,int,const void*,int,const void*),  /* Key comparison function */
-  void*,                               /* First argument to compare function */
-  BtCursor **ppCursor                  /* Returned cursor */
+  Btree*,                  /* BTree containing table to open */
+  int iTable,              /* Index of root page */
+  int wrFlag,              /* 1 for writing.  0 for read-only */
+  struct KeyInfo*,         /* First argument to compare function */
+  BtCursor **ppCursor      /* Returned cursor */
 );
 
 int sqlite3BtreeCloseCursor(BtCursor*);
