@@ -111,11 +111,9 @@
 #endif
 
 /*
-** The maximum number of attached databases.  This must be at least 2
-** in order to support the main database file (0) and the file used to
-** hold temporary tables (1).  And it must be less than 32 because
-** we use a bitmask of databases with a u32 in places (for example
-** the Parse.cookieMask field).
+** The maximum number of attached databases.  This must be between 0
+** and 30.  The upper bound on 30 is because a 32-bit integer bitmap
+** is used internally to track attached databases.
 */
 #ifndef SQLITE_MAX_ATTACHED
 # define SQLITE_MAX_ATTACHED 10
