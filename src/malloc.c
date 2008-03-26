@@ -59,7 +59,9 @@ void sqlite3_soft_heap_limit(int n){
 */
 int sqlite3_release_memory(int n){
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
-  return sqlite3PagerReleaseMemory(n);
+  int nRet = sqlite3VdbeReleaseMemory(n);
+  nRet += sqlite3PagerReleaseMemory(n-nRet);
+  return nRet;
 #else
   return SQLITE_OK;
 #endif

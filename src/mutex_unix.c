@@ -88,6 +88,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
     { PTHREAD_MUTEX_INITIALIZER, },
     { PTHREAD_MUTEX_INITIALIZER, },
     { PTHREAD_MUTEX_INITIALIZER, },
+    { PTHREAD_MUTEX_INITIALIZER, },
   };
   sqlite3_mutex *p;
   switch( iType ){

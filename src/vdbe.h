@@ -174,7 +174,7 @@ int sqlite3VdbeCurrentAddr(Vdbe*);
   void sqlite3VdbeTrace(Vdbe*,FILE*);
 #endif
 void sqlite3VdbeResetStepResult(Vdbe*);
-int sqlite3VdbeReset(Vdbe*);
+int sqlite3VdbeReset(Vdbe*, int);
 void sqlite3VdbeSetNumCols(Vdbe*,int);
 int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, int);
 void sqlite3VdbeCountChanges(Vdbe*);
@@ -182,6 +182,7 @@ sqlite3 *sqlite3VdbeDb(Vdbe*);
 void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
 void sqlite3VdbeSwap(Vdbe*,Vdbe*);
 
+int sqlite3VdbeReleaseMemory(int);
 UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,void*,int);
 void sqlite3VdbeDeleteUnpackedRecord(UnpackedRecord*);
 int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
