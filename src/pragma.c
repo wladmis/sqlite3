@@ -571,7 +571,7 @@ void sqlite3Pragma(
       }
     }else{
       if( zRight[0] 
-       && !sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE) 
+       && sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE)==0 
       ){
         sqlite3ErrorMsg(pParse, "not a writable directory");
         goto pragma_out;
