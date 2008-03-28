@@ -410,6 +410,15 @@ void sqlite3MemdebugSettitle(const char *zTitle){
   sqlite3_mutex_leave(mem.mutex);
 }
 
+void sqlite3MemdebugSync(){
+  struct MemBlockHdr *pHdr;
+  for(pHdr=mem.pFirst; pHdr; pHdr=pHdr->pNext){
+    void **pBt = (void**)pHdr;
+    pBt -= pHdr->nBacktraceSlots;
+    mem.xBacktrace(pHdr->iSize, pHdr->nBacktrace-1, &pBt[1]);
+  }
+}
+
 /*
 ** Open the file indicated and write a log of all unfreed memory 
 ** allocations into that log.

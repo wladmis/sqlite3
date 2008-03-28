@@ -260,6 +260,12 @@ proc finalize_testing {} {
     memdebug_log_sql
     sqlite3_memdebug_log stop
     sqlite3_memdebug_log clear
+
+    if {[sqlite3_memory_used]>0} {
+      puts "Writing leaks.sql..."
+      sqlite3_memdebug_log sync
+      memdebug_log_sql leaks.sql
+    }
   }
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
