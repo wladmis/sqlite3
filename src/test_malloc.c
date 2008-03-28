@@ -636,10 +636,12 @@ static int test_memdebug_log(
     }
 
     case MB_LOG_SYNC: {
+#ifdef SQLITE_MEMDEBUG
       extern void sqlite3MemdebugSync();
       test_memdebug_log_clear();
       mallocLogEnabled = 1;
       sqlite3MemdebugSync();
+#endif
       break;
     }
   }
