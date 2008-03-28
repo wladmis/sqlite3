@@ -47,7 +47,7 @@ sqlite3_soft_heap_limit $soft_limit
 for {set i 0} {$i<[llength $argv]} {incr i} {
   if {[lindex $argv $i] eq "--malloctrace"} {
     set argv [lreplace $argv $i $i]
-    sqlite3_memdebug_backtrace 5
+    sqlite3_memdebug_backtrace 10
     sqlite3_memdebug_log start
     set argv [lreplace $argv $i $i]
     set tester_do_malloctrace 1

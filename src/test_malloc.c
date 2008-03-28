@@ -546,7 +546,7 @@ static void test_memdebug_callback(int nByte, int nFrame, void **aFrame){
   }
 }
 
-static int test_memdebug_log_clear(){
+static void test_memdebug_log_clear(){
   Tcl_HashSearch search;
   Tcl_HashEntry *pEntry;
   for(
