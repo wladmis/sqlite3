@@ -2517,7 +2517,7 @@ WhereInfo *sqlite3WhereBegin(
       }
       if( testOp!=OP_Noop || (isMinQuery&&bRev) ){
         int nCol = nEq + topLimit;
-        if( isMinQuery && !topLimit ){
+        if( isMinQuery && bRev && !topLimit ){
           sqlite3VdbeAddOp2(v, OP_Null, 0, regBase+nCol);
           nCol++;
           topEq = 0;
