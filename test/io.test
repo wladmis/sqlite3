@@ -505,7 +505,7 @@ do_test io-4.3.4 {
   # will not predict the size of the journal file.
   #
   file size test.db-journal
-} [expr 1024 + (1024+8)*41]
+} [expr 512 + (1024+8)*41]
 
 #----------------------------------------------------------------------
 # Test cases io-5.* test that the default page size is selected and
