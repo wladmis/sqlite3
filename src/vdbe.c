@@ -1290,7 +1290,10 @@ case OP_Function: {
   }
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
   (*ctx.pFunc->xFunc)(&ctx, n, apVal);
-  if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
+  if( sqlite3SafetyOn(db) ){
+    sqlite3VdbeMemRelease(&ctx.s);
+    goto abort_due_to_misuse;
+  }
   if( db->mallocFailed ){
     /* Even though a malloc() has failed, the implementation of the
     ** user function may have called an sqlite3_result_XXX() function
