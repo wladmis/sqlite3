@@ -2556,7 +2556,7 @@ WhereInfo *sqlite3WhereBegin(
       }
       if( nEq>0 || btmLimit || (isMinQuery&&!bRev) ){
         int nCol = nEq + btmLimit;
-        if( isMinQuery && !btmLimit ){
+        if( isMinQuery && !bRev && !btmLimit ){
           sqlite3VdbeAddOp2(v, OP_Null, 0, regBase+nCol);
           nCol++;
           btmEq = 0;
