@@ -13,6 +13,18 @@
 #
 # $Id$
 
+#
+# What for user input before continuing.  This gives an opportunity
+# to connect profiling tools to the process.
+#
+for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[regexp {^-+pause$} [lindex $argv $i] all value]} {
+    puts -nonewline "Press RETURN to begin..."
+    flush stdout
+    gets stdin
+    set argv [lreplace $argv $i $i]
+  }
+}
 
 set tcl_precision 15
 set sqlite_pending_byte 0x0010000
