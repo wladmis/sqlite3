@@ -534,6 +534,7 @@ int sqlite3GenerateIndexKey(
   if( doMakeRec ){
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regBase, nCol+1, regOut);
     sqlite3IndexAffinityStr(v, pIdx);
+    sqlite3ExprExpireColumnCacheLines(pParse, regBase, regBase+nCol);
   }
   sqlite3ReleaseTempRange(pParse, regBase, nCol+1);
   return regBase;

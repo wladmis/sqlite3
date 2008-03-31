@@ -446,6 +446,7 @@ void sqlite3Update(
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regCols, pTab->nCol, regRow);
     if( !isView ){
       sqlite3TableAffinityStr(v, pTab);
+      sqlite3ExprExpireColumnCacheLines(pParse, regCols, regCols+pTab->nCol-1);
     }
     sqlite3ReleaseTempRange(pParse, regCols, pTab->nCol);
     if( pParse->nErr ) goto update_cleanup;

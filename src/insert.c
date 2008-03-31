@@ -1171,6 +1171,7 @@ void sqlite3GenerateConstraintChecks(
     sqlite3VdbeAddOp2(v, OP_SCopy, regRowid, regIdx+i);
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regIdx, pIdx->nColumn+1, aRegIdx[iCur]);
     sqlite3IndexAffinityStr(v, pIdx);
+    sqlite3ExprExpireColumnCacheLines(pParse, regIdx, regIdx+pIdx->nColumn);
     sqlite3ReleaseTempRange(pParse, regIdx, pIdx->nColumn+1);
 
     /* Find out what action to take in case there is an indexing conflict */
@@ -1285,6 +1286,7 @@ void sqlite3CompleteInsertion(
   regRec = sqlite3GetTempReg(pParse);
   sqlite3VdbeAddOp3(v, OP_MakeRecord, regData, pTab->nCol, regRec);
   sqlite3TableAffinityStr(v, pTab);
+  sqlite3ExprExpireColumnCacheLines(pParse, regData, regData+pTab->nCol-1);
 #ifndef SQLITE_OMIT_TRIGGER
   if( newIdx>=0 ){
     sqlite3VdbeAddOp3(v, OP_Insert, newIdx, regRec, regRowid);
