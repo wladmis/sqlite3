@@ -612,6 +612,18 @@ else
 fi
 AC_SUBST(LOADEXTENSION_FLAGS)
 
+#########
+# See whether we should allow loadable extensions
+AC_ARG_ENABLE(gcov, AC_HELP_STRING([--enable-gcov],
+      [Enable coverage testing using gcov]),
+      [use_gcov=$enableval],[use_gcov=no])
+if test "${use_gcov}" = "yes" ; then
+  USE_GCOV=1
+else
+  USE_GCOV=0
+fi
+AC_SUBST(USE_GCOV)
+
 
 #########
 # Output the config header
