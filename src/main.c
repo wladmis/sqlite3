@@ -47,6 +47,16 @@ void (*sqlite3IoTrace)(const char*, ...) = 0;
 */
 char *sqlite3_temp_directory = 0;
 
+/*
+** Routine needed to support the testcase() macro.
+*/
+#ifdef SQLITE_COVERAGE_TEST
+void sqlite3Coverage(int x){
+  static int dummy = 0;
+  dummy += x;
+}
+#endif
+
 
 /*
 ** Return true if the buffer z[0..n-1] contains all spaces.
