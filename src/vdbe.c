@@ -971,6 +971,24 @@ case OP_Variable: {           /* out2-prerelease */
 ** is left holding a NULL.  It is an error for P1 and P2 to be the
 ** same register.
 */
+case OP_Move: {
+  char *zMalloc;
+  assert( pOp->p1>0 );
+  assert( pOp->p1<=p->nMem );
+  pIn1 = &p->aMem[pOp->p1];
+  REGISTER_TRACE(pOp->p1, pIn1);
+  assert( pOp->p2>0 );
+  assert( pOp->p2<=p->nMem );
+  pOut = &p->aMem[pOp->p2];
+  assert( pOut!=pIn1 );
+  zMalloc = pOut->zMalloc;
+  pOut->zMalloc = 0;
+  sqlite3VdbeMemMove(pOut, pIn1);
+  pIn1->zMalloc = zMalloc;
+  REGISTER_TRACE(pOp->p2, pOut);
+  break;
+}
+
 /* Opcode: Copy P1 P2 * * *
 **
 ** Make a copy of register P1 into register P2.
@@ -978,6 +996,21 @@ case OP_Variable: {           /* out2-prerelease */
 ** This instruction makes a deep copy of the value.  A duplicate
 ** is made of any string or blob constant.  See also OP_SCopy.
 */
+case OP_Copy: {
+  assert( pOp->p1>0 );
+  assert( pOp->p1<=p->nMem );
+  pIn1 = &p->aMem[pOp->p1];
+  REGISTER_TRACE(pOp->p1, pIn1);
+  assert( pOp->p2>0 );
+  assert( pOp->p2<=p->nMem );
+  pOut = &p->aMem[pOp->p2];
+  assert( pOut!=pIn1 );
+  sqlite3VdbeMemShallowCopy(pOut, pIn1, MEM_Ephem);
+  Deephemeralize(pOut);
+  REGISTER_TRACE(pOp->p2, pOut);
+  break;
+}
+
 /* Opcode: SCopy P1 P2 * * *
 **
 ** Make a shallow copy of register P1 into register P2.
@@ -990,8 +1023,6 @@ case OP_Variable: {           /* out2-prerelease */
 ** during the lifetime of the copy.  Use OP_Copy to make a complete
 ** copy.
 */
-case OP_Move:
-case OP_Copy:
 case OP_SCopy: {
   assert( pOp->p1>0 );
   assert( pOp->p1<=p->nMem );
@@ -1001,17 +1032,7 @@ case OP_SCopy: {
   assert( pOp->p2<=p->nMem );
   pOut = &p->aMem[pOp->p2];
   assert( pOut!=pIn1 );
-  if( pOp->opcode==OP_Move ){
-    char *zMalloc = pOut->zMalloc;
-    pOut->zMalloc = 0;
-    sqlite3VdbeMemMove(pOut, pIn1);
-    pIn1->zMalloc = zMalloc;
-  }else{
-    sqlite3VdbeMemShallowCopy(pOut, pIn1, MEM_Ephem);
-    if( pOp->opcode==OP_Copy ){
-      Deephemeralize(pOut);
-    }
-  }
+  sqlite3VdbeMemShallowCopy(pOut, pIn1, MEM_Ephem);
   REGISTER_TRACE(pOp->p2, pOut);
   break;
 }
