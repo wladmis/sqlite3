@@ -1741,7 +1741,7 @@ static void buildIndexProbe(
   assert( v!=0 );
   sqlite3VdbeAddOp3(v, OP_MakeRecord, regSrc, nColumn, regDest);
   sqlite3IndexAffinityStr(v, pIdx);
-  sqlite3ExprExpireColumnCacheLines(pParse, regSrc, regSrc+nColumn-1);
+  sqlite3ExprCacheAffinityChange(pParse, regSrc, nColumn);
 }
 
 
