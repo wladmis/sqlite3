@@ -2204,6 +2204,7 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       assert( to_op==OP_ToInt     || aff!=SQLITE_AFF_INTEGER );
       assert( to_op==OP_ToReal    || aff!=SQLITE_AFF_REAL    );
       sqlite3VdbeAddOp1(v, to_op, inReg);
+      sqlite3ExprCacheAffinityChange(pParse, inReg, 1);
       break;
     }
 #endif /* SQLITE_OMIT_CAST */
