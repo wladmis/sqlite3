@@ -1466,9 +1466,10 @@ struct Parse {
   int disableColCache; /* True to disable adding to column cache */
   int nColCache;       /* Number of entries in the column cache */
   int iColCache;       /* Next entry of the cache to replace */
-  struct {
+  struct yColCache {
     int iTable;           /* Table cursor number */
     int iColumn;          /* Table column number */
+    char aff;             /* Affinity.  Or 0 if none specified */
     int iReg;             /* Register holding value of this column */
   } aColCache[10];     /* One for each valid column cache entry */
   u32 writeMask;       /* Start a write transaction on these databases */
