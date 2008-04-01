@@ -1842,6 +1842,7 @@ void sqlite3ExprCodeMove(Parse*, int, int);
 void sqlite3ExprClearColumnCache(Parse*, int);
 void sqlite3ExprColumnCacheDisable(Parse*, int);
 void sqlite3ExprExpireColumnCacheLines(Parse*, int, int);
+int sqlite3ExprWritableRegister(Parse*,int,int);
 int sqlite3ExprCode(Parse*, Expr*, int);
 int sqlite3ExprCodeTemp(Parse*, Expr*, int*);
 int sqlite3ExprCodeTarget(Parse*, Expr*, int);
