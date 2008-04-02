@@ -7075,13 +7075,17 @@ int sqlite3BtreeSchemaLocked(Btree *p){
 */
 int sqlite3BtreeLockTable(Btree *p, int iTab, u8 isWriteLock){
   int rc = SQLITE_OK;
-  u8 lockType = (isWriteLock?WRITE_LOCK:READ_LOCK);
-  sqlite3BtreeEnter(p);
-  rc = queryTableLock(p, iTab, lockType);
-  if( rc==SQLITE_OK ){
-    rc = lockTable(p, iTab, lockType);
+  if( p->sharable ){
+    u8 lockType = READ_LOCK + isWriteLock;
+    assert( READ_LOCK+1==WRITE_LOCK );
+    assert( isWriteLock==0 || isWriteLock==1 );
+    sqlite3BtreeEnter(p);
+    rc = queryTableLock(p, iTab, lockType);
+    if( rc==SQLITE_OK ){
+      rc = lockTable(p, iTab, lockType);
+    }
+    sqlite3BtreeLeave(p);
   }
-  sqlite3BtreeLeave(p);
   return rc;
 }
 #endif
