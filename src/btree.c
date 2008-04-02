@@ -3671,12 +3671,13 @@ int sqlite3BtreeMoveto(
           pCell += getVarint32(pCell, &dummy);
         }
         getVarint(pCell, (u64*)&nCellKey);
-        if( nCellKey<nKey ){
-          c = -1;
-        }else if( nCellKey>nKey ){
-          c = +1;
-        }else{
+        if( nCellKey==nKey ){
           c = 0;
+        }else if( nCellKey<nKey ){
+          c = -1;
+        }else{
+          assert( nCellKey>nKey );
+          c = +1;
         }
       }else{
         int available;

@@ -53,7 +53,7 @@ void sqlite3HashClear(Hash *pH){
   assert( pH!=0 );
   elem = pH->first;
   pH->first = 0;
-  if( pH->ht ) sqlite3_free(pH->ht);
+  sqlite3_free(pH->ht);
   pH->ht = 0;
   pH->htsize = 0;
   while( elem ){
@@ -238,7 +238,7 @@ static void rehash(Hash *pH, int new_size){
   sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
 
   if( new_ht==0 ) return;
-  if( pH->ht ) sqlite3_free(pH->ht);
+  sqlite3_free(pH->ht);
   pH->ht = new_ht;
   pH->htsize = new_size;
   xHash = hashFunction(pH->keyClass);
