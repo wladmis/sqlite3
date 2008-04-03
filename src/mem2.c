@@ -212,13 +212,19 @@ static void sqlite3MemsysAlarm(int nByte){
 static struct MemBlockHdr *sqlite3MemsysGetHeader(void *pAllocation){
   struct MemBlockHdr *p;
   int *pInt;
+  u8 *pU8;
+  int nReserve;
 
   p = (struct MemBlockHdr*)pAllocation;
   p--;
   assert( p->iForeGuard==FOREGUARD );
-  assert( (p->iSize & 3)==0 );
+  nReserve = (p->iSize+3)&~3;
   pInt = (int*)pAllocation;
-  assert( pInt[p->iSize/sizeof(int)]==REARGUARD );
+  pU8 = (u8*)pAllocation;
+  assert( pInt[nReserve/sizeof(int)]==REARGUARD );
+  assert( (nReserve-0)<=p->iSize || pU8[nReserve-1]==0x65 );
+  assert( (nReserve-1)<=p->iSize || pU8[nReserve-2]==0x65 );
+  assert( (nReserve-2)<=p->iSize || pU8[nReserve-3]==0x65 );
   return p;
 }
 
@@ -246,18 +252,19 @@ void *sqlite3_malloc(int nByte){
   int totalSize;
 
   if( nByte>0 ){
+    int nReserve;
     enterMem();
     assert( mem.disallow==0 );
     if( mem.alarmCallback!=0 && mem.nowUsed+nByte>=mem.alarmThreshold ){
       sqlite3MemsysAlarm(nByte);
     }
-    nByte = (nByte+3)&~3;
-    if( nByte/8>NCSIZE-1 ){
+    nReserve = (nByte+3)&~3;
+    if( nReserve/8>NCSIZE-1 ){
       mem.sizeCnt[NCSIZE-1]++;
     }else{
-      mem.sizeCnt[nByte/8]++;
+      mem.sizeCnt[nReserve/8]++;
     }
-    totalSize = nByte + sizeof(*pHdr) + sizeof(int) +
+    totalSize = nReserve + sizeof(*pHdr) + sizeof(int) +
                  mem.nBacktrace*sizeof(void*) + mem.nTitle;
     if( sqlite3FaultStep(SQLITE_FAULTINJECTOR_MALLOC) ){
       p = 0;
@@ -298,8 +305,8 @@ void *sqlite3_malloc(int nByte){
       }
       pHdr->iSize = nByte;
       pInt = (int*)&pHdr[1];
-      pInt[nByte/sizeof(int)] = REARGUARD;
-      memset(pInt, 0x65, nByte);
+      pInt[nReserve/sizeof(int)] = REARGUARD;
+      memset(pInt, 0x65, nReserve);
       mem.nowUsed += nByte;
       if( mem.nowUsed>mem.mxUsed ){
         mem.mxUsed = mem.nowUsed;
