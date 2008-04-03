@@ -74,15 +74,28 @@ do_test capi3-1.4 {
   set TAIL
 } {SELECT 10}
 do_test capi3-1.5 {
+  set sql {SELECT name FROM sqlite_master;SELECT 10}
+  set STMT [sqlite3_prepare $DB $sql [string length $sql] TAIL]
+  sqlite3_finalize $STMT
+  set TAIL
+} {SELECT 10}
+do_test capi3-1.6 {
+  set sql {SELECT name FROM sqlite_master;SELECT 10}
+  set STMT [sqlite3_prepare $DB $sql [expr [string length $sql]+1] TAIL]
+  sqlite3_finalize $STMT
+  set TAIL
+} {SELECT 10}
+
+do_test capi3-1.7 {
   set sql {SELECT namex FROM sqlite_master}
   catch {
     set STMT [sqlite3_prepare $DB $sql -1 TAIL]
   }
 } {1}
-do_test capi3-1.6 {
+do_test capi3-1.8 {
   sqlite3_errcode $DB
 } {SQLITE_ERROR}
-do_test capi3-1.7 {
+do_test capi3-1.9 {
   sqlite3_errmsg $DB
 } {no such column: namex}
 

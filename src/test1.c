@@ -3052,6 +3052,9 @@ static int test_prepare(
     if( bytes>=0 ){
       bytes = bytes - (zTail-zSql);
     }
+    if( strlen(zTail)<bytes ){
+      bytes = strlen(zTail);
+    }
     Tcl_ObjSetVar2(interp, objv[4], 0, Tcl_NewStringObj(zTail, bytes), 0);
   }
   if( rc!=SQLITE_OK ){
