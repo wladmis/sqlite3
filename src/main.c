@@ -1249,7 +1249,7 @@ int sqlite3_open16(
                       SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
     assert( *ppDb || rc==SQLITE_NOMEM );
     if( rc==SQLITE_OK ){
-      rc = sqlite3_exec(*ppDb, "PRAGMA encoding = 'UTF-16'", 0, 0, 0);
+      ENC(*ppDb) = SQLITE_UTF16NATIVE;
       if( rc!=SQLITE_OK ){
         sqlite3_close(*ppDb);
         *ppDb = 0;
