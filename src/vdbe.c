@@ -2236,10 +2236,10 @@ case OP_MakeRecord: {
   zNewRecord = (u8 *)pOut->z;
 
   /* Write the record */
-  i = sqlite3PutVarint(zNewRecord, nHdr);
+  i = sqlite3PutVarint32(zNewRecord, nHdr);
   for(pRec=pData0; pRec<=pLast; pRec++){
     serial_type = sqlite3VdbeSerialType(pRec, file_format);
-    i += sqlite3PutVarint(&zNewRecord[i], serial_type);      /* serial type */
+    i += sqlite3PutVarint32(&zNewRecord[i], serial_type);      /* serial type */
   }
   for(pRec=pData0; pRec<=pLast; pRec++){  /* serial data */
     i += sqlite3VdbeSerialPut(&zNewRecord[i], nByte-i, pRec, file_format);

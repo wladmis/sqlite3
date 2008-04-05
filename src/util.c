@@ -498,6 +498,24 @@ int sqlite3PutVarint(unsigned char *p, u64 v){
 }
 
 /*
+** This routine is a faster version of sqlite3PutVarint() that only
+** works for 32-bit positive integers and which is optimized for
+** the common case of small integers.
+*/
+int sqlite3PutVarint32(unsigned char *p, u32 v){
+  if( (v & ~0x7f)==0 ){
+    p[0] = v;
+    return 1;
+  }else if( (v & ~0x3fff)==0 ){
+    p[0] = (v>>7) | 0x80;
+    p[1] = v & 0x7f;
+    return 2;
+  }else{
+    return sqlite3PutVarint(p, v);
+  }
+}
+
+/*
 ** Read a 64-bit variable-length integer from memory starting at p[0].
 ** Return the number of bytes read.  The value is stored in *v.
 */
