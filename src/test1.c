@@ -4263,6 +4263,16 @@ static int vfs_unlink_test(
     }
   }
   assert( 0==sqlite3_vfs_find(0) );
+  
+  /* Register the main VFS as non-default (will be made default, since
+  ** it'll be the only one in existence).
+  */
+  sqlite3_vfs_register(pMain, 0);
+  assert( sqlite3_vfs_find(0)==pMain );
+  
+  /* Un-register the main VFS again to restore an empty VFS list */
+  sqlite3_vfs_unregister(pMain);
+  assert( 0==sqlite3_vfs_find(0) );
 
   /* Relink all VFSes in reverse order. */  
   for(i=sizeof(apVfs)/sizeof(apVfs[0])-1; i>=0; i--){
