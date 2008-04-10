@@ -3946,7 +3946,8 @@ typedef void (*sqlite3_destructor_type)(void*);
 ** modify the text after they return without harm.
 ** The sqlite3_result_error_code() function changes the error code
 ** returned by SQLite as a result of an error in a function.  By default,
-** the error code is SQLITE_ERROR. 
+** the error code is SQLITE_ERROR.  A subsequent call to sqlite3_result_error()
+** or sqlite3_result_error16() resets the error code to SQLITE_ERROR.
 **
 ** The sqlite3_result_toobig() interface causes SQLite
 ** to throw an error indicating that a string or BLOB is to long

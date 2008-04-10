@@ -190,14 +190,18 @@ static void test_auxdata(
 
 /*
 ** A function to test error reporting from user functions. This function
-** returns a copy of its first argument as an error.
+** returns a copy of its first argument as the error message.  If the
+** second argument exists, it becomes the error code.
 */
 static void test_error(
   sqlite3_context *pCtx, 
   int nArg,
   sqlite3_value **argv
 ){
-  sqlite3_result_error(pCtx, (char*)sqlite3_value_text(argv[0]), 0);
+  sqlite3_result_error(pCtx, (char*)sqlite3_value_text(argv[0]), -1);
+  if( nArg==2 ){
+    sqlite3_result_error_code(pCtx, sqlite3_value_int(argv[1]));
+  }
 }
 
 static int registerTestFunctions(sqlite3 *db){
@@ -213,6 +217,7 @@ static int registerTestFunctions(sqlite3 *db){
     { "test_destructor_count", 0, SQLITE_UTF8, test_destructor_count},
     { "test_auxdata",         -1, SQLITE_UTF8, test_auxdata},
     { "test_error",            1, SQLITE_UTF8, test_error},
+    { "test_error",            2, SQLITE_UTF8, test_error},
   };
   int i;
   extern int Md5_Register(sqlite3*);

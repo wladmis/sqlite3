@@ -535,10 +535,17 @@ do_test func-14.2 {
 } {1}
 
 do_test func-15.1 {
-  catchsql {
-    select test_error(NULL);
-  }
+  catchsql {select test_error(NULL)}
 } {1 {}}
+do_test func-15.2 {
+  catchsql {select test_error('this is the error message')}
+} {1 {this is the error message}}
+do_test func-15.3 {
+  catchsql {select test_error('this is the error message',12)}
+} {1 {this is the error message}}
+do_test func-15.4 {
+  db errorcode
+} {12}
 
 # Test the quote function for BLOB and NULL values.
 do_test func-16.1 {
