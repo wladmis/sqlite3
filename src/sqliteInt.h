@@ -1311,9 +1311,13 @@ struct WhereLevel {
   sqlite3_index_info *pIdxInfo;  /* Index info for n-th source table */
 };
 
-#define ORDERBY_NORMAL 0
-#define ORDERBY_MIN    1
-#define ORDERBY_MAX    2
+/*
+** Flags appropriate for the wflags parameter of sqlite3WhereBegin().
+*/
+#define WHERE_ORDERBY_NORMAL     0   /* No-op */
+#define WHERE_ORDERBY_MIN        1   /* ORDER BY processing for min() func */
+#define WHERE_ORDERBY_MAX        2   /* ORDER BY processing for max() func */
+#define WHERE_ONEPASS_DESIRED    4   /* Want to do one-pass UPDATE/DELETE */
 
 /*
 ** The WHERE clause processing routine has two halves.  The
@@ -1323,7 +1327,8 @@ struct WhereLevel {
 ** into the second half to give some continuity.
 */
 struct WhereInfo {
-  Parse *pParse;
+  Parse *pParse;       /* Parsing and code generating context */
+  u8 okOnePass;        /* Ok to use one-pass algorithm for UPDATE or DELETE */
   SrcList *pTabList;   /* List of tables in the join */
   int iTop;            /* The very beginning of the WHERE loop */
   int iContinue;       /* Jump here to continue with next record */
