@@ -1984,6 +1984,9 @@ void sqlite3_progress_handler(sqlite3*, int, int(*)(void*), void*);
 ** The third options is behavior that is always used for [sqlite3_open()]
 ** and [sqlite3_open16()].
 **
+** If the 4th parameter to [sqlite3_open_v2()] is not one of the
+** combinations shown above then the behavior is undefined.
+**
 ** If the filename is ":memory:", then an private
 ** in-memory database is created for the connection.  This in-memory
 ** database will vanish when the database connection is closed.  Future
