@@ -4768,6 +4768,7 @@ case OP_VUpdate: {
       assert( nArg>1 && apArg[0] && (apArg[0]->flags&MEM_Null) );
       db->lastRowid = rowid;
     }
+    p->nChange++;
   }
   break;
 }
