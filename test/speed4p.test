@@ -117,12 +117,6 @@ execsql {
   COMMIT;
 }
 
-# Before running these tests, disable the compiled statement cache built into
-# the Tcl interface. This is because we want to test the speed of SQL
-# compilation as well as execution.
-#
-db cache size 0
-
 # Join t1, t2, t3 on IPK.
 set sql "SELECT * FROM t1, t2, t3 WHERE t1.oid = t2.oid AND t2.oid = t3.oid"
 speed_trial speed4p-join1 50000 row $sql
