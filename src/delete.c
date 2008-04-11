@@ -490,7 +490,7 @@ void sqlite3GenerateRowIndexDelete(
 
   for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
     if( aRegIdx!=0 && aRegIdx[i-1]==0 ) continue;
-    r1 = sqlite3GenerateIndexKey(pParse, pIdx, iCur, r1, 0);
+    r1 = sqlite3GenerateIndexKey(pParse, pIdx, iCur, 0, 0);
     sqlite3VdbeAddOp3(pParse->pVdbe, OP_IdxDelete, iCur+i, r1,pIdx->nColumn+1);
   }
 }
