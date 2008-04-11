@@ -69,8 +69,9 @@ set EXCLUDE {
   speed1.test
   speed1p.test
   speed2.test
+  speed3.test
   speed4.test
-  soeed4p.test
+  speed4p.test
   sqllimits1.test
 
   thread001.test
