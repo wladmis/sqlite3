@@ -620,9 +620,10 @@ void sqlite3Put4byte(unsigned char *p, u32 v){
 */
 static int hexToInt(int h){
   assert( (h>='0' && h<='9') ||  (h>='a' && h<='f') ||  (h>='A' && h<='F') );
-#if !defined(SQLITE_EBCDIC)
+#ifdef SQLITE_ASCII
   h += 9*(1&(h>>6));
-#else
+#endif
+#ifdef SQLITE_EBCDIC
   h += 9*(1&~(h>>4));
 #endif
   return h & 0xf;
