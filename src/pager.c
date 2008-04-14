@@ -3382,7 +3382,7 @@ static int pagerSharedLock(Pager *pPager){
       */
       rc = hasHotJournal(pPager);
       if( rc<0 ){
-        return pager_error(pPager, SQLITE_IOERR_NOMEM);
+        return SQLITE_IOERR_NOMEM;
       }
       if( rc==1 || isHot ){
         /* Get an EXCLUSIVE lock on the database file. At this point it is
