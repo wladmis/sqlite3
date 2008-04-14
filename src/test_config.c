@@ -419,6 +419,12 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
   Tcl_SetVar2(interp, "sqlite_options", "vtab", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_SECURE_DELETE
+  Tcl_SetVar2(interp, "sqlite_options", "secure_delete", "1", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "secure_delete", "0", TCL_GLOBAL_ONLY);
+#endif
+
 #define LINKVAR(x) { \
     static const int cv_ ## x = SQLITE_ ## x; \
     Tcl_LinkVar(interp, "SQLITE_" #x, (char *)&(cv_ ## x), \

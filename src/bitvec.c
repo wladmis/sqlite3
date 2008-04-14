@@ -130,6 +130,7 @@ int sqlite3BitvecSet(Bitvec *p, u32 i){
   u32 h;
   assert( p!=0 );
   assert( i>0 );
+  assert( i<=p->iSize );
   if( p->iSize<=BITVEC_NBIT ){
     i--;
     p->u.aBitmap[i/8] |= 1 << (i&7);
