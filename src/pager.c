@@ -1502,11 +1502,16 @@ static int pager_playback_one_page(
   ** locked.  (2) we know that the original page content is fully synced
   ** in the main journal either because the page is not in cache or else
   ** the page is marked as needSync==0.
+  **
+  ** 2008-04-14:  When attempting to vacuum a corrupt database file, it
+  ** is possible to fail a statement on a database that does not yet exist.
+  ** Do not attempt to write if database file has never been opened.
   */
   pPg = pager_lookup(pPager, pgno);
   PAGERTRACE4("PLAYBACK %d page %d hash(%08x)\n",
                PAGERID(pPager), pgno, pager_datahash(pPager->pageSize, aData));
-  if( pPager->state>=PAGER_EXCLUSIVE && (pPg==0 || pPg->needSync==0) ){
+  if( pPager->state>=PAGER_EXCLUSIVE && (pPg==0 || pPg->needSync==0)
+        && pPager->fd->pMethods ){
     i64 offset = (pgno-1)*(i64)pPager->pageSize;
     rc = sqlite3OsWrite(pPager->fd, aData, pPager->pageSize, offset);
     if( pPg ){
