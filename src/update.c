@@ -329,8 +329,7 @@ void sqlite3Update(
   ** a ephemeral table.
   */
   if( isView ){
-    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere,
-                           old_col_mask|new_col_mask, iCur);
+    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere, iCur);
   }
 
   /* Resolve the column names in all the expressions in the
