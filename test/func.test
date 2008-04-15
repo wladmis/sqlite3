@@ -930,4 +930,11 @@ do_test func-24.6 {
   }
 } {BEGIN-this,program,is,free,software}
 
+# Use the test_isolation function to make sure that type conversions
+# on function arguments do not effect subsequent arguments.
+#
+do_test func-25.1 {
+  execsql {SELECT test_isolation(t1,t1) FROM tbl1}
+} {this program is free software}
+
 finish_test

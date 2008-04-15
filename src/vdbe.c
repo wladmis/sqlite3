@@ -880,6 +880,7 @@ case OP_String8: {         /* same as TK_STRING, out2-prerelease */
     if( SQLITE_OK!=sqlite3VdbeMemDynamicify(pOut) ) goto no_mem;
     pOut->zMalloc = 0;
     pOut->flags |= MEM_Static;
+    pOut->flags &= ~MEM_Dyn;
     if( pOp->p4type==P4_DYNAMIC ){
       sqlite3_free(pOp->p4.z);
     }
