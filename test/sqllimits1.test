@@ -52,6 +52,22 @@ do_test sqllimits1-1.10 {
   sqlite3_limit db SQLITE_LIMIT_VARIABLE_NUMBER -1
 } $SQLITE_MAX_VARIABLE_NUMBER
 
+# Limit parameters out of range.
+#
+do_test sqllimits1-1.20 {
+  sqlite3_limit db SQLITE_LIMIT_TOOSMALL 123
+} {-1}
+do_test sqllimits1-1.21 {
+  sqlite3_limit db SQLITE_LIMIT_TOOSMALL 123
+} {-1}
+do_test sqllimits1-1.22 {
+  sqlite3_limit db SQLITE_LIMIT_TOOBIG 123
+} {-1}
+do_test sqllimits1-1.23 {
+  sqlite3_limit db SQLITE_LIMIT_TOOBIG 123
+} {-1}
+
+
 # Decrease all limits by half.  Verify that the new limits take.
 #
 if {$SQLITE_MAX_LENGTH>=2} {
