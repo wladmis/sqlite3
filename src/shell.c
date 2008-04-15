@@ -1944,7 +1944,11 @@ int main(int argc, char **argv){
     }
   }
   if( i<argc ){
+#ifdef OS_OS2
+    data.zDbFilename = (const char *)convertCpPathToUtf8( argv[i++] );
+#else
     data.zDbFilename = argv[i++];
+#endif
   }else{
 #ifndef SQLITE_OMIT_MEMORYDB
     data.zDbFilename = ":memory:";
