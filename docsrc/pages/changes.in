@@ -41,6 +41,34 @@ proc chng {date desc} {
   }
 }
 
+chng {2008 Apr 16 (3.5.8)} {
+<li>Expose SQLite's internal pseudo-random number generator (PRNG)
+    via the [sqlite3_randomness()] interface</li>
+<li>New interface [sqlite3_context_db_handle()] that returns the
+    [database connection] handle that has invoked an application-defined
+    SQL function.</li>
+<li>New interface [sqlite3_limit()] allows size and length limits to be
+    set on a per-connection basis and at run-time.</li>
+<li>Improved crash-robustness: write the database page size into the rollback
+    journal header.</li>
+<li>Allow the [VACUUM] command to change the page size of a database file.</li>
+<li>The xAccess() method of the VFS is allowed to return -1 to signal
+    a memory allocation error.</li>
+<li>Performance improvement: The OP_IdxDelete opcode uses unpacked records,
+    obviating the need for one OP_MakeRecord opcode call for each index
+    record deleted.</li>
+<li>Performance improvement: Constant subexpressions are factored out of
+    loops.</li>
+<li>Performance improvement: Results of OP_Column are reused rather than
+    issuing multiple OP_Column opcodes.</li>
+<li>Fix a bug in the RTRIM collating sequence.</li>
+<li>Fix a bug in the SQLITE_SECURE_DELETE option that was causing
+    Firefox crashes.  Make arrangements to always test SQLITE_SECURE_DELETE
+    prior to each release.</li>
+<li>Other miscellaneous performance enhancements.</li>
+<li>Other miscellaneous minor bug fixes.</li>
+}
+
 chng {2008 Mar 17 (3.5.7)} {
 <li>Fix a bug ([ticket #2927]) in the register allocation for
 compound selects - introduced by the new VM code in version 3.5.5.</li>

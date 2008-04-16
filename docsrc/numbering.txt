@@ -27,6 +27,7 @@ Requirements numbering:
   F125--       authorizer
   F126--       load extension
   F127--       sqlite3_open
+  F1276-       sqlite3_limit
   F128--       Error handling
   F129--       callback interfaces
   F13---     Prepared statements

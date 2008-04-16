@@ -14,6 +14,21 @@ proc newsitem {date title text} {
   hd_puts "<hr width=\"50%\">"
 }
 
+newsitem {2008-Apr-16} {Version 3.5.8} {
+  Version 3.5.8 includes some important new performance optimizations
+  in the virtual machine code generator, including constant subexpression
+  factoring and common subexpression elimination.  This release also
+  creates new public interfaces:
+  [sqlite3_randomness()] provides access to SQLite's internal
+  pseudo-random number generator, [sqlite3_limit()] allows size
+  limits to be set at run-time on a per-connection basis, and
+  [sqlite3_context_db_handle()] is a convenience routine that allows
+  an application-defined SQL function implementation to retrieve
+  its [database connection] handle.
+
+  This release of SQLite is considered stable and ready for production use.
+}
+
 newsitem {2008-Mar-17} {Version 3.5.7} {
   Version 3.5.7 fixes several minor and obscure bugs, especially 
   in the autoconf-generated makefile.  Upgrading is optional.

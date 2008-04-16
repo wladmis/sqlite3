@@ -1,8 +1,8 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-C Update\swebpage\sindex,\schange-log,\sand\snews\sfor\sthe\s3.5.7\srelease.
-D 2008-03-17T15:18:01
+C Fix\stypo\son\sdownload.html\spage.
+D 2008-04-16T18:13:22
 F Makefile 14e99084f2371e5f75c2b7649127fdc7b0158204
 F art/arch.fig d5f9752a4dbf242e9cfffffd3f5762b6c63b3bcf
 F art/arch2.fig ae2432145c26cfa148fa0116589517ad3cd5fc65
@@ -67,18 +67,18 @@ F images/sw.png ecbc26d3dd81437ae59e0ae4a1695cf3b620a4b4
 F images/table-ex1b2.gif a588d21a2d88bb2a2ef0431fcc5ed5aa48c0bbc5
 F main.mk 3849b4edb582be4eee2591977d86cc0fd83ec8ee
 F misc/althttpd.c 07cf72e075b1fe64aba7cad408bfb9768cd7202b
-F numbering.txt 02cec65d4eecf1848e9535ef60fb01d8724aff68
+F numbering.txt 76ceb3e461b3e303b688b1feadc439f4aa2afb3c
 F pages/34to35.in 39f2c8d46253d8d5c651bdfd3bc9aab9b107baf4
 F pages/about.in db2b136f8db5f63cb50bf1fc8f2a01a694c2cb2c
 F pages/amalgamation.in db07d0a1394748ab87a3970340e9c59bcf17685e
 F pages/arch.in a8a0df078ef88fcae2c17fc3fd3e07693a07026b
-F pages/atomiccommit.in 706012c61d6375ad40c1404a464deaa5171a64a8
+F pages/atomiccommit.in b7e39da33f3fbed90869d9c289c2b53ea02e4b10
 F pages/audit.in d000823e45b19e028624c543ff999576d81a23fd
 F pages/autoinc.in ada8c68eeea3c3164baa92752fad2fb2cc805605
 F pages/c_interface.in 66b4f6ec2e5135ca9e162c8b9e535dd1f79a6263
 F pages/capi3.in 0bc497cf4529e2a4cca038b02e617505f42aa2f8
 F pages/capi3ref.in 4f223c1b36cea4364a8c61d59d51541d5112059b
-F pages/changes.in d469935093e029e4256798221b3bf7aa621f9783
+F pages/changes.in 95555b8bca25e1b73567b4cda2696968126c313d
 F pages/compile.in 4a33dc758cbb87f23616b640fd94c01ec8169959
 F pages/conflict.in e610aa329a3ec1555fe80a206ab5a326242218b4
 F pages/consortium.in d66be7528d7905d2cacfbb600c24bac0a25036fc
@@ -88,20 +88,20 @@ F pages/datatype3.in adc47b58e96229a2582e2885419409d6c5a73c6a
 F pages/datatypes.in d699067fb0777aa8bceb4b37ac2d734aa9195c9b
 F pages/different.in 54d869c62bbc55a9e95eecd7f357e69174537e47
 F pages/docs.in 89b01f85d14681b04be126dffc6c7fc117d6f6fb
-F pages/download.in daa9abdd8b5eb548fbe84a850eac165ddc0b081d
+F pages/download.in 16355f730a84b7f58e794e233f34ba86a69842c7
 F pages/dynload.in d619597789edcf3a79e5210fd3b36078e39a06dd
 F pages/famous.in c4256f1239b0fdddc7ee4de05a3b8dc81fae4868
-F pages/faq.in e9f4d92c9c7feec481142ab2497d4d4a9b2b6ca4
+F pages/faq.in a8ef8c4ec3b639cc3812902aadc5fc6b51511b47
 F pages/features.in 5f3de3ba0429c8e993124c83f5a1e6dccc3e39b7
 F pages/fileformat.in 7078bdee7527a1360eba5b06196e0c39b2c949b2
 F pages/formatchng.in 2c122d5882c9ea0aa9ef607cabae2a49b87c9cc9
-F pages/index.in 5cb83fd3b596528dbca98b0b571eb90b410b8cb7
-F pages/lang.in b18f24ad50e1f3032d2fc1f7dc2a3ed5263ad4ef
+F pages/index.in c6ffcff7bc911efa3620a3338cd09631091a888e
+F pages/lang.in c1339d7d53febb13836e7181ef2a223e4c6c5588
 F pages/limits.in e2d12156c910be175a7efe3987ddb2cdd5e2ec5c
 F pages/lockingv3.in 3f1d67656385ed6e03881e0efddd7b702e065873
 F pages/mingw.in 2e3bd2f76b07a734480b4314bdb57bb008e1dd96
 F pages/mostdeployed.in c2e91f3db1ef6bf815cd207082aed0bfeb6db910
-F pages/news.in 97bb228922eb7f94387ec937905839971a5d9e5b
+F pages/news.in 03307b7ad9cc08335df9f70177981ced3bf2b9c8
 F pages/nulls.in bb9341b54c8283db46bb12d3002db3270330df2e
 F pages/oldnews.in 67edb5eb03f50496576ece14ff68a3dba9e6e58f
 F pages/omitted.in 633d372da4078986e8a8c2c27672b7de7a2efe04
@@ -132,15 +132,15 @@ F rawpages/cvstrac.css 6c0f96d1eb793e9584d9bc58adee4235d9d22a7e
 F rawpages/favicon.ico 188d00cc15997fdc214990dac6c62825d7ffe818
 F rawpages/pressrelease-20071212.html 844dd72d6c04a88759c5f9d302c67c5e210d6f2c
 F rawpages/robots.txt 715230254e3239103278ed730be882807950e2ef
-F wrap.tcl cbe166381c9c4247fa97c35871373aa94f676361
-P 67d9d1513659d56920b7eaff89c5cbbadbaa973a
-R e26343fd71585612aae8ec7a6ecf9d5f
+F wrap.tcl 5f32f84e46cc7944b8e0c2e2aba0ca83e6ce7e51
+P 744b84781863c69df4ad6dd1b80b1ed4f5a7764c
+R 7630529373d7c8dc48f3376123de9f61
 U drh
-Z e9c354ef07811067c2af59739e2e1585
+Z df98aeb2aa649315b1d69351727fd1fb
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD8DBQFH3outoxKgR168RlERAqc9AJ9HEb2wTSkGdhK7N5J9lodqRVdRGwCdGfdZ
-sjCfhXg7zpgixR8jcwhLoeU=
-=DeMh
+iD8DBQFIBkIDoxKgR168RlERAvaOAJ4kYN1zXgkIJZXeVlaMsOg7u1mK6gCfa4o9
+4Hb32Ptm1fKxLgWVdKjl9k8=
+=5Nmu
 -----END PGP SIGNATURE-----

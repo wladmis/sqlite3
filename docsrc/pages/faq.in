@@ -40,7 +40,7 @@ INSERT INTO t1 VALUES(NULL,123);
 INSERT INTO t1 VALUES((SELECT max(a) FROM t1)+1,123);
 </pre></blockquote>
 
-  <p>There is a new API function named
+  <p>There is a function named
   [sqlite3_last_insert_rowid()] which will return the integer key
   for the most recent insert operation.</p>
 
@@ -84,7 +84,7 @@ faq {
   that column, SQLite will attempt to convert the string into an
   integer.  If it can, it inserts the integer instead.  If not,
   it inserts the string.  This feature is sometimes
-  call <a href="datatype3.html#affinity">type or column affinity</a>.
+  call <a href="datatype3.html#affinity">type affinity</a>.
   </p>
 }
 
@@ -351,70 +351,31 @@ faq {
   </pre></blockquote>
 }
 
-faq {What is an SQLITE_SCHEMA error, and why am I getting one?} {
-  <p>An SQLITE_SCHEMA error is returned when a 
+faq {
+  What is an SQLITE_SCHEMA error, and why am I getting one?
+} {
+  <p>An [SQLITE_SCHEMA] error is returned when a 
   prepared SQL statement is no longer valid and cannot be executed.
   When this occurs, the statement must be recompiled from SQL using 
-  the 
-  <a href="c3ref/prepare.html">sqlite3_prepare()</a> API.
-  In SQLite version 3, an SQLITE_SCHEMA error can
-  only occur when using the 
-  <a href="c3ref/prepare.html">sqlite3_prepare()</a>/<a
-  href="c3ref/step.html">sqlite3_step()</a>/<a
-  href="c3ref/finalize.html">sqlite3_finalize()</a>
-  API to execute SQL, not when using the
-  <a href="c3ref/exec.html">sqlite3_exec()</a>. This was not
-  the case in version 2.</p>
+  the [sqlite3_prepare()] API.
+  An SQLITE_SCHEMA error can only occur when using the [sqlite3_prepare()],
+  and [sqlite3_step()] interfaces to run SQL.
+  You will never receive an [SQLITE_SCHEMA] error from
+  [sqlite3_exec()].  Nor will you receive a the error if you
+  prepare statements using [sqlite3_prepare_v2()] instead of
+  [sqlite3_prepare()].</p>
 
-  <p>The most common reason for a prepared statement to become invalid
-  is that the schema of the database was modified after the SQL was 
-  prepared (possibly by another process).  The other reasons this can 
-  happen are:</p> 
-  <ul>
-  <li>A database was <a href="lang_detach.html">DETACH</a>ed.
-  <li>The database was <a href="lang_vacuum.html">VACUUM</a>ed
-  <li>A user-function definition was deleted or changed.
-  <li>A collation sequence definition was deleted or changed.
-  <li>The authorization function was changed.
-  </ul>
-
-  <p>In all cases, the solution is to recompile the statement from SQL
-  and attempt to execute it again. Because a prepared statement can be
-  invalidated by another process changing the database schema, all code
-  that uses the
-  <a href="c3ref/prepare.html">sqlite3_prepare()</a>/<a
-  href="c3ref/step.html">sqlite3_step()</a>/<a
-  href="c3ref/finalize.html">sqlite3_finalize()</a>
-  API should be prepared to handle SQLITE_SCHEMA errors. An example
-  of one approach to this follows:</p>
-
-  <blockquote><pre>
-
-    int rc;
-    sqlite3_stmt *pStmt;
-    char zSql&#91;] = "SELECT .....";
-
-    do {
-      /* Compile the statement from SQL. Assume success. */
-      sqlite3_prepare(pDb, zSql, -1, &pStmt, 0);
-
-      while( SQLITE_ROW==sqlite3_step(pStmt) ){
-        /* Do something with the row of available data */
-      }
-
-      /* Finalize the statement. If an SQLITE_SCHEMA error has
-      ** occured, then the above call to sqlite3_step() will have
-      ** returned SQLITE_ERROR. sqlite3_finalize() will return
-      ** SQLITE_SCHEMA. In this case the loop will execute again.
-      */
-      rc = sqlite3_finalize(pStmt);
-    } while( rc==SQLITE_SCHEMA );
-    
-  </pre></blockquote>
+  <p>The [sqlite3_prepare_v2()] interface creates a
+  [prepared statement] that will automatically recompile itself if
+  the schema changes.  The easiest way to deal with
+  [SQLITE_SCHEMA] errors is to always use [sqlite3_prepare_v2()]
+  instead of [sqlite3_prepare()].
 }
 
-faq {Why does ROUND(9.95,1)  return 9.9 instead of 10.0?
-     Shouldn't 9.95 round up?} {
+faq {
+  Why does ROUND(9.95,1)  return 9.9 instead of 10.0?
+  Shouldn't 9.95 round up?
+} {
   <p>SQLite uses binary arithmetic and in binary, there is no
   way to write 9.95 in a finite number of bits.  The closest to
   you can get to 9.95 in a 64-bit IEEE float (which is what
@@ -432,6 +393,47 @@ faq {Why does ROUND(9.95,1)  return 9.9 instead of 10.0?
   approximation is usually very close, but it will be slightly off
   and in some cases can cause your results to be a little different
   from what you might expect.</p>
+}
+
+faq {
+  I get hundreds of compiler warnings when I compile SQLite.
+  Isn't this a problem?  Doesn't it indicate poor code quality?
+} {
+  <p>Quality assurance in SQLite is done using full-coverage
+  testing, not by compiler warnings or other static code analysis
+  tools.  In other words, we verify that SQLite actually gets the
+  correct answer, not that it merely satisfies stylistic constraints.
+  Over two-thirds of the SQLite code base is devoted purely to testing.
+  The SQLite test suite runs many thousands of separate test cases and
+  many of those test cases are parameterized so that hundreds of thousands
+  of tests involving millions of SQL statements are run and evaluated
+  for correctness prior to every release.  The developers use code
+  coverage tools to verify that all paths through the code are tested.
+  Whenever a bug is found in SQLite, new test cases are written to
+  exhibit the bug so that the bug cannot recur undetected in the future.</p>
+
+  <p>During testing, the SQLite library is compiled with special
+  instrumentation that allows the test scripts to simulate a wide
+  variety of failures in order to verify that SQLite recovers
+  correctly.  Memory allocation is carefully tracked and no memory
+  leaks occur, even following memory allocation failures.  A custom
+  VFS layer is used to simulate operating system crashes and power
+  failures in order to insure that transactions are atomic across
+  these events.  A mechanism for deliberately injecting I/O errors
+  shows that SQLite is resilient to such malfunctions.  (As an
+  experiment, try inducing these kinds of errors on other SQL database
+  engines and see what happens!)</p>
+
+  <p>We also run SQLite using <a href="http://valgrind.org">valgrind</a>
+  on Linux and verify that it detects no problems.</p>
+
+  <p>Some people say that we should eliminate all warnings because
+  benign warnings mask real warnings that might arise in future changes.
+  This is true enough.  But in reply, the developers observe that all
+  warnings have already been fixed in the
+  compilers used for SQLite development (various versions of GCC).
+  Compiler warnings only arise from compilers that the developers do
+  not have access to.</p>
 }
 
 # End of questions and answers.

@@ -1951,6 +1951,7 @@ set keyword_list [lsort {
    CAST*
    CHECK
    COLLATE
+   COLUMN
    COMMIT
    CONFLICT*
    CONSTRAINT
@@ -1974,6 +1975,7 @@ set keyword_list [lsort {
    ESCAPE
    EXCEPT
    EXCLUSIVE*
+   EXISTS
    EXPLAIN*
    FAIL*
    FOR*
@@ -2018,6 +2020,7 @@ set keyword_list [lsort {
    QUERY*
    RAISE*
    REFERENCES
+   REGEXP
    REINDEX*
    RENAME*
    REPLACE*

@@ -346,7 +346,7 @@ proc hd_header {title {srcfile {}}} {
     </td></tr></table>
   }
   if {$srcfile!=""} {
-    set hd(footer) "<hr><small<i>\n"
+    set hd(footer) "<hr><small><i>\n"
     set mtime [file mtime $srcfile]
     set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
     append hd(footer) "This page last modified $date\n"
