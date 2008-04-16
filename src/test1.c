@@ -2695,7 +2695,7 @@ static int test_bind_text(
 
   if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
   if( Tcl_GetIntFromObj(interp, objv[2], &idx) ) return TCL_ERROR;
-  value = Tcl_GetString(objv[3]);
+  value = (char*)Tcl_GetByteArrayFromObj(objv[3], &bytes);
   if( Tcl_GetIntFromObj(interp, objv[4], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_bind_text(pStmt, idx, value, bytes, SQLITE_TRANSIENT);

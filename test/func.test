@@ -514,7 +514,7 @@ do_test func-13.7 {
   set DB [sqlite3_connection_pointer db]
   set sql "SELECT test_auxdata( ? , a ) FROM t4;"
   set STMT [sqlite3_prepare $DB $sql -1 TAIL]
-  sqlite3_bind_text $STMT 1 hello -1
+  sqlite3_bind_text $STMT 1 hello\000 -1
   set res [list]
   while { "SQLITE_ROW"==[sqlite3_step $STMT] } {
     lappend res [sqlite3_column_text $STMT 0]
