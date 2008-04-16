@@ -1670,7 +1670,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
               sqlite3_bind_int64(pStmt, i, v);
             }else{
               data = (unsigned char *)Tcl_GetStringFromObj(pVar, &n);
-              sqlite3_bind_text(pStmt, i, (char *)data, n+1, SQLITE_STATIC);
+              sqlite3_bind_text(pStmt, i, (char *)data, n, SQLITE_STATIC);
               Tcl_IncrRefCount(pVar);
               apParm[nParm++] = pVar;
             }
