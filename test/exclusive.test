@@ -262,7 +262,9 @@ proc filestate {fname} {
   set content 0
   if {[file exists $fname]} {
     set exists 1
-    set content [expr {[file size $fname] > 0}]
+    set hdr [hexio_read $fname 0 28]
+    set content \
+      [expr {$hdr!="00000000000000000000000000000000000000000000000000000000"}]
   }
   list $exists $content
 }

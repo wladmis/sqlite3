@@ -42,10 +42,9 @@ proc do_test {args} {
   eval $sc
 }
 
-#source $testdir/rollback.test
-#source $testdir/select1.test
-#source $testdir/select2.test
-
+source $testdir/rollback.test
+source $testdir/select1.test
+source $testdir/select2.test
 source $testdir/malloc.test
 source $testdir/ioerr.test
 
