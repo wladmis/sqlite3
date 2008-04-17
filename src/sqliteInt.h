@@ -553,6 +553,8 @@ struct sqlite3 {
   u8 autoCommit;                /* The auto-commit flag. */
   u8 temp_store;                /* 1: file 2: memory 0: default */
   u8 mallocFailed;              /* True if we have seen a malloc failure */
+  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
+  u8 dfltJournalMode;           /* Default journal mode for attached dbs */
   signed char nextAutovac;      /* Autovac setting after VACUUM if >=0 */
   int nextPagesize;             /* Pagesize after VACUUM if >0 */
   int nTable;                   /* Number of tables in the database */
@@ -617,7 +619,6 @@ struct sqlite3 {
 #ifdef SQLITE_SSE
   sqlite3_stmt *pFetch;         /* Used by SSE to fetch stored statements */
 #endif
-  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
 };
 
 /*
