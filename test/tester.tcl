@@ -369,6 +369,15 @@ proc explain {sql {db db}} {
   }
 }
 
+# Show the VDBE program for an SQL statement but omit the Trace
+# opcode at the beginning.  This procedure can be used to prove
+# that different SQL statements generate exactly the same VDBE code.
+#
+proc explain_no_trace {sql} {
+  set tr [db eval "EXPLAIN $sql"]
+  return [lrange $tr 7 end]
+}
+
 # Another procedure to execute SQL.  This one includes the field
 # names in the returned list.
 #

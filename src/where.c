@@ -718,6 +718,7 @@ static void exprAnalyze(
   Expr *pExpr;
   Bitmask prereqLeft;
   Bitmask prereqAll;
+  Bitmask extraRight = 0;
   int nPattern;
   int isComplete;
   int noCase;
@@ -746,8 +747,8 @@ static void exprAnalyze(
   if( ExprHasProperty(pExpr, EP_FromJoin) ){
     Bitmask x = getMask(pMaskSet, pExpr->iRightJoinTable);
     prereqAll |= x;
-    pTerm->prereqRight |= x-1; /* ON clause terms may not be used with an index
-                               ** on left table of a LEFT JOIN.  Ticket #3015 */
+    extraRight = x-1;  /* ON clause terms may not be used with an index
+                       ** on left table of a LEFT JOIN.  Ticket #3015 */
   }
   pTerm->prereqAll = prereqAll;
   pTerm->leftCursor = -1;
@@ -976,6 +977,11 @@ or_not_possible:
     }
   }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
+
+  /* Prevent ON clause terms of a LEFT JOIN from being used to drive
+  ** an index for tables to the left of the join.
+  */
+  pTerm->prereqRight |= extraRight;
 }
 
 /*
