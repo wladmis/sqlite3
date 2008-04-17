@@ -461,9 +461,11 @@ void sqlite3Pragma(
         */
         int ii;
         assert(pDb==&db->aDb[0]);
-        for(ii=2; ii<db->nDb; ii++){
-          pPager = sqlite3BtreePager(db->aDb[ii].pBt);
-          sqlite3PagerJournalMode(pPager, eMode);
+        for(ii=1; ii<db->nDb; ii++){
+          if( db->aDb[ii].pBt ){
+            pPager = sqlite3BtreePager(db->aDb[ii].pBt);
+            sqlite3PagerJournalMode(pPager, eMode);
+          }
         }
         db->dfltJournalMode = eMode;
       }
