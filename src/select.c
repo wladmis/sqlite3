@@ -248,10 +248,7 @@ static void addWhereTerm(
     ExprSetProperty(pE, EP_FromJoin);
     pE->iRightJoinTable = iRightJoinTable;
   }
-  pE = sqlite3ExprAnd(pParse->db,*ppExpr, pE);
-  if( pE ){
-    *ppExpr = pE;
-  }
+  *ppExpr = sqlite3ExprAnd(pParse->db,*ppExpr, pE);
 }
 
 /*
@@ -2321,10 +2318,18 @@ static int flattenSubquery(
     sqlite3_free(pSubitem->zDatabase);
     sqlite3_free(pSubitem->zName);
     sqlite3_free(pSubitem->zAlias);
+    pSubitem->pTab = 0;
+    pSubitem->zDatabase = 0;
+    pSubitem->zName = 0;
+    pSubitem->zAlias = 0;
     if( nSubSrc>1 ){
       int extra = nSubSrc - 1;
       for(i=1; i<nSubSrc; i++){
         pSrc = sqlite3SrcListAppend(db, pSrc, 0, 0);
+        if( pSrc==0 ){
+          p->pSrc = 0;
+          return 1;
+        }
       }
       p->pSrc = pSrc;
       for(i=pSrc->nSrc-1; i-extra>=iFrom; i--){
@@ -3031,6 +3036,9 @@ int sqlite3Select(
 #endif
     sqlite3Select(pParse, pItem->pSelect, SRT_EphemTab, 
                  pItem->iCursor, p, i, &isAgg, 0);
+    if( db->mallocFailed ){
+      goto select_end;
+    }
 #if defined(SQLITE_TEST) || SQLITE_MAX_EXPR_DEPTH>0
     pParse->nHeight -= sqlite3SelectExprHeight(p);
 #endif
@@ -3067,6 +3075,16 @@ int sqlite3Select(
   }
 #endif
 
+  /* If possible, rewrite the query to use GROUP BY instead of DISTINCT.
+  ** GROUP BY may use an index, DISTINCT never does.
+  */
+  if( p->isDistinct && !p->isAgg && !p->pGroupBy ){
+    p->pGroupBy = sqlite3ExprListDup(db, p->pEList);
+    pGroupBy = p->pGroupBy;
+    p->isDistinct = 0;
+    isDistinct = 0;
+  }
+
   /* If there is an ORDER BY clause, then this sorting
   ** index might end up being unused if the data can be 
   ** extracted in pre-sorted order.  If that is the case, then the
@@ -3102,6 +3120,7 @@ int sqlite3Select(
   */
   if( isDistinct ){
     KeyInfo *pKeyInfo;
+    assert( isAgg || pGroupBy );
     distinct = pParse->nTab++;
     pKeyInfo = keyInfoFromExprList(pParse, p->pEList);
     sqlite3VdbeOp3(v, OP_OpenEphemeral, distinct, 0, 
@@ -3129,7 +3148,8 @@ int sqlite3Select(
 
     /* Use the standard inner loop
     */
-    if( selectInnerLoop(pParse, p, pEList, 0, 0, pOrderBy, distinct, eDest,
+    assert(!isDistinct);
+    if( selectInnerLoop(pParse, p, pEList, 0, 0, pOrderBy, -1, eDest,
                     iParm, pWInfo->iContinue, pWInfo->iBreak, aff) ){
        goto select_end;
     }
@@ -3191,7 +3211,7 @@ int sqlite3Select(
     if( db->mallocFailed ) goto select_end;
 
     /* Processing for aggregates with GROUP BY is very different and
-    ** much more complex tha aggregates without a GROUP BY.
+    ** much more complex than aggregates without a GROUP BY.
     */
     if( pGroupBy ){
       KeyInfo *pKeyInfo;  /* Keying information for the group by clause */

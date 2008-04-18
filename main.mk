@@ -55,7 +55,7 @@ LIBOBJ+= alter.o analyze.o attach.o auth.o btmutex.o btree.o build.o \
          mutex_unix.o mutex_w32.o \
          opcodes.o os.o os_os2.o os_unix.o os_win.o \
          pager.o parse.o pragma.o prepare.o printf.o random.o \
-         select.o table.o tclsqlite.o tokenize.o trigger.o \
+         select.o table.o $(TCLOBJ) tokenize.o trigger.o \
          update.o util.o vacuum.o \
          vdbe.o vdbeapi.o vdbeaux.o vdbeblob.o vdbefifo.o vdbemem.o \
          where.o utf.o legacy.o vtab.o
@@ -220,8 +220,8 @@ TESTSRC = \
   $(TOP)/src/test_tclvar.c \
   $(TOP)/src/test_thread.c \
 
-TESTSRC += $(TOP)/ext/fts2/fts2_tokenizer.c
-TESTSRC += $(TOP)/ext/fts3/fts3_tokenizer.c
+#TESTSRC += $(TOP)/ext/fts2/fts2_tokenizer.c
+#TESTSRC += $(TOP)/ext/fts3/fts3_tokenizer.c
 
 TESTSRC2 = \
   $(TOP)/src/attach.c $(TOP)/src/btree.c $(TOP)/src/build.c $(TOP)/src/date.c  \
@@ -271,13 +271,6 @@ EXTHDR += \
 # are what get build when you type just "make" with no arguments.
 #
 all:	sqlite3.h libsqlite3.a sqlite3$(EXE)
-
-# Generate the file "last_change" which contains the date of change
-# of the most recently modified source code file
-#
-last_change:	$(SRC)
-	cat $(SRC) | grep '$$Id: ' | sort -k 5 | tail -1 \
-          | $(NAWK) '{print $$5,$$6}' >last_change
 
 libsqlite3.a:	$(LIBOBJ)
 	$(AR) libsqlite3.a $(LIBOBJ)
@@ -433,6 +426,12 @@ amalgamation-testfixture$(EXE): sqlite3.c $(TESTSRC) $(TOP)/src/tclsqlite.c
 		$(TESTSRC) $(TOP)/src/tclsqlite.c sqlite3.c                  \
 		-o testfixture$(EXE) $(LIBTCL) $(THREADLIB)
 
+fts3-testfixture$(EXE): sqlite3.c fts3amal.c $(TESTSRC) $(TOP)/src/tclsqlite.c
+	$(TCCX) $(TCL_FLAGS) $(TESTFIXTURE_FLAGS)                            \
+	-DSQLITE_ENABLE_FTS3=1                                               \
+		$(TESTSRC) $(TOP)/src/tclsqlite.c sqlite3.c fts3amal.c       \
+		-o testfixture$(EXE) $(LIBTCL) $(THREADLIB)
+
 fulltest:	testfixture$(EXE) sqlite3$(EXE)
 	./testfixture$(EXE) $(TOP)/test/all.test
 
@@ -465,78 +464,6 @@ extensiontest: testfixture$(EXE) $(TEST_EXTENSION)
 	./testfixture$(EXE) $(TOP)/test/loadext.test
 
 
-# Rules used to build documentation
-#
-%.html: $(TOP)/www/%.tcl docdir last_change common.tcl
-	tclsh $< > $@
-
-lang.html: $(TOP)/www/lang.tcl docdir
-	tclsh $(TOP)/www/lang.tcl doc >lang.html
-
-opcode.html:	$(TOP)/www/opcode.tcl $(TOP)/src/vdbe.c
-	tclsh $(TOP)/www/opcode.tcl $(TOP)/src/vdbe.c >opcode.html
-
-capi3ref.html:	$(TOP)/www/mkapidoc.tcl sqlite3.h
-	tclsh $(TOP)/www/mkapidoc.tcl <sqlite3.h >capi3ref.html
-
-copyright-release.html:	$(TOP)/www/copyright-release.html
-	cp $(TOP)/www/copyright-release.html .
-
-%: $(TOP)/www/%
-	cp $< $@
-
-# Files to be published on the website.
-#
-DOC = \
-  arch.html \
-  autoinc.html \
-  c_interface.html \
-  capi3.html \
-  capi3ref.html \
-  changes.html \
-  compile.html \
-  copyright.html \
-  copyright-release.html \
-  copyright-release.pdf \
-  conflict.html \
-  datatypes.html \
-  datatype3.html \
-  different.html \
-  docs.html \
-  download.html \
-  faq.html \
-  fileformat.html \
-  formatchng.html \
-  index.html \
-  limits.html \
-  lang.html \
-  lockingv3.html \
-  mingw.html \
-  nulls.html \
-  oldnews.html \
-  omitted.html \
-  opcode.html \
-  optimizer.html \
-  optoverview.html \
-  pragma.html \
-  quickstart.html \
-  sharedcache.html \
-  speed.html \
-  sqlite.html \
-  support.html \
-  tclsqlite.html \
-  vdbe.html \
-  version3.html \
-  whentouse.html \
-  34to35.html
-
-docdir:
-	mkdir -p doc
-
-doc:	common.tcl $(DOC) docdir
-	mv $(DOC) doc
-	cp $(TOP)/www/*.gif $(TOP)/art/*.gif doc
-
 # Standard install and cleanup targets
 #
 install:	sqlite3 libsqlite3.a sqlite3.h
@@ -551,3 +478,4 @@ clean:
 	rm -f *.da *.bb *.bbg gmon.out
 	rm -rf tsrc
 	rm -f testloadext.dll libtestloadext.so
+	rm -f sqlite3.c fts?amal.c

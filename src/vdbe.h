@@ -140,7 +140,6 @@ int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, int);
 void sqlite3VdbeCountChanges(Vdbe*);
 sqlite3 *sqlite3VdbeDb(Vdbe*);
 void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
-const char *sqlite3VdbeGetSql(Vdbe*);
 void sqlite3VdbeSwap(Vdbe*,Vdbe*);
 
 #ifndef NDEBUG

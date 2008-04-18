@@ -17,6 +17,21 @@
 #define _SQLITEINT_H_
 
 /*
+** The macro unlikely() is a hint that surrounds a boolean
+** expression that is usually false.  Macro likely() surrounds
+** a boolean expression that is usually true.  GCC is able to
+** use these hints to generate better code, sometimes.
+*/
+#if defined(__GNUC__)
+# define likely(X)    __builtin_expect((X),1)
+# define unlikely(X)  __builtin_expect((X),0)
+#else
+# define likely(X)    !!(X)
+# define unlikely(X)  !!(X)
+#endif
+
+
+/*
 ** These #defines should enable >2GB file support on Posix if the
 ** underlying operating system supports it.  If the OS lacks
 ** large file support, or if the OS is windows, these should be no-ops.
@@ -115,7 +130,7 @@
 **
 ** See also ticket #2741.
 */
-#if !defined(_XOPEN_SOURCE) && !defined(__MACOS__) && SQLITE_THREADSAFE
+#if !defined(_XOPEN_SOURCE) && !defined(__DARWIN__) && SQLITE_THREADSAFE
 #if 0
 #  define _XOPEN_SOURCE 500  /* Needed to enable pthread recursive mutexes */
 #else
@@ -1652,7 +1667,7 @@ void sqlite3AddPrimaryKey(Parse*, ExprList*, int, int, int);
 void sqlite3AddCheckConstraint(Parse*, Expr*);
 void sqlite3AddColumnType(Parse*,Token*);
 void sqlite3AddDefaultValue(Parse*,Expr*);
-void sqlite3AddCollateType(Parse*, const char*, int);
+void sqlite3AddCollateType(Parse*, Token*);
 void sqlite3EndTable(Parse*,Token*,Token*,Select*);
 
 void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int,int);

@@ -287,7 +287,6 @@
 #include "fts3.h"
 #include "fts3_hash.h"
 #include "fts3_tokenizer.h"
-#include "sqlite3.h"
 #ifndef SQLITE_CORE 
   #include "sqlite3ext.h"
   SQLITE_EXTENSION_INIT1
@@ -308,9 +307,9 @@
 */
 
 #if 0
-# define TRACE(A)  printf A; fflush(stdout)
+# define FTSTRACE(A)  printf A; fflush(stdout)
 #else
-# define TRACE(A)
+# define FTSTRACE(A)
 #endif
 
 /*
@@ -391,7 +390,7 @@ enum {
 /* Write a 64-bit variable-length integer to memory starting at p[0].
  * The length of data written will be between 1 and VARINT_MAX bytes.
  * The number of bytes written is returned. */
-static int putVarint(char *p, sqlite_int64 v){
+static int fts3PutVarint(char *p, sqlite_int64 v){
   unsigned char *q = (unsigned char *) p;
   sqlite_uint64 vu = v;
   do{
@@ -406,7 +405,7 @@ static int putVarint(char *p, sqlite_int64 v){
 /* Read a 64-bit variable-length integer from memory starting at p[0].
  * Return the number of bytes read, or 0 on error.
  * The value is stored in *v. */
-static int getVarint(const char *p, sqlite_int64 *v){
+static int fts3GetVarint(const char *p, sqlite_int64 *v){
   const unsigned char *q = (const unsigned char *) p;
   sqlite_uint64 x = 0, y = 1;
   while( (*q & 0x80) == 0x80 ){
@@ -422,9 +421,9 @@ static int getVarint(const char *p, sqlite_int64 *v){
   return (int) (q - (unsigned char *)p);
 }
 
-static int getVarint32(const char *p, int *pi){
+static int fts3GetVarint32(const char *p, int *pi){
  sqlite_int64 i;
- int ret = getVarint(p, &i);
+ int ret = fts3GetVarint(p, &i);
  *pi = (int) i;
  assert( *pi==i );
  return ret;
@@ -453,13 +452,13 @@ static void dataBufferInit(DataBuffer *pBuffer, int nCapacity){
   assert( nCapacity>=0 );
   pBuffer->nData = 0;
   pBuffer->nCapacity = nCapacity;
-  pBuffer->pData = nCapacity==0 ? NULL : malloc(nCapacity);
+  pBuffer->pData = nCapacity==0 ? NULL : sqlite3_malloc(nCapacity);
 }
 static void dataBufferReset(DataBuffer *pBuffer){
   pBuffer->nData = 0;
 }
 static void dataBufferDestroy(DataBuffer *pBuffer){
-  if( pBuffer->pData!=NULL ) free(pBuffer->pData);
+  if( pBuffer->pData!=NULL ) sqlite3_free(pBuffer->pData);
   SCRAMBLE(pBuffer);
 }
 static void dataBufferExpand(DataBuffer *pBuffer, int nAddCapacity){
@@ -470,7 +469,7 @@ static void dataBufferExpand(DataBuffer *pBuffer, int nAddCapacity){
   */
   if( pBuffer->nData+nAddCapacity>pBuffer->nCapacity ){
     pBuffer->nCapacity = pBuffer->nData+nAddCapacity;
-    pBuffer->pData = realloc(pBuffer->pData, pBuffer->nCapacity);
+    pBuffer->pData = sqlite3_realloc(pBuffer->pData, pBuffer->nCapacity);
   }
 }
 static void dataBufferAppend(DataBuffer *pBuffer,
@@ -616,13 +615,13 @@ static int dlrAllDataBytes(DLReader *pReader){
 */
 static const char *dlrPosData(DLReader *pReader){
   sqlite_int64 iDummy;
-  int n = getVarint(pReader->pData, &iDummy);
+  int n = fts3GetVarint(pReader->pData, &iDummy);
   assert( !dlrAtEnd(pReader) );
   return pReader->pData+n;
 }
 static int dlrPosDataLen(DLReader *pReader){
   sqlite_int64 iDummy;
-  int n = getVarint(pReader->pData, &iDummy);
+  int n = fts3GetVarint(pReader->pData, &iDummy);
   assert( !dlrAtEnd(pReader) );
   return pReader->nElement-n;
 }
@@ -637,20 +636,20 @@ static void dlrStep(DLReader *pReader){
   /* If there is more data, read the next doclist element. */
   if( pReader->nData!=0 ){
     sqlite_int64 iDocidDelta;
-    int iDummy, n = getVarint(pReader->pData, &iDocidDelta);
+    int iDummy, n = fts3GetVarint(pReader->pData, &iDocidDelta);
     pReader->iDocid += iDocidDelta;
     if( pReader->iType>=DL_POSITIONS ){
       assert( n<pReader->nData );
       while( 1 ){
-        n += getVarint32(pReader->pData+n, &iDummy);
+        n += fts3GetVarint32(pReader->pData+n, &iDummy);
         assert( n<=pReader->nData );
         if( iDummy==POS_END ) break;
         if( iDummy==POS_COLUMN ){
-          n += getVarint32(pReader->pData+n, &iDummy);
+          n += fts3GetVarint32(pReader->pData+n, &iDummy);
           assert( n<pReader->nData );
         }else if( pReader->iType==DL_POSITIONS_OFFSETS ){
-          n += getVarint32(pReader->pData+n, &iDummy);
-          n += getVarint32(pReader->pData+n, &iDummy);
+          n += fts3GetVarint32(pReader->pData+n, &iDummy);
+          n += fts3GetVarint32(pReader->pData+n, &iDummy);
           assert( n<pReader->nData );
         }
       }
@@ -688,18 +687,18 @@ static void docListValidate(DocListType iType, const char *pData, int nData,
   assert( pData+nData>pData );
   while( nData!=0 ){
     sqlite_int64 iDocidDelta;
-    int n = getVarint(pData, &iDocidDelta);
+    int n = fts3GetVarint(pData, &iDocidDelta);
     iPrevDocid += iDocidDelta;
     if( iType>DL_DOCIDS ){
       int iDummy;
       while( 1 ){
-        n += getVarint32(pData+n, &iDummy);
+        n += fts3GetVarint32(pData+n, &iDummy);
         if( iDummy==POS_END ) break;
         if( iDummy==POS_COLUMN ){
-          n += getVarint32(pData+n, &iDummy);
+          n += fts3GetVarint32(pData+n, &iDummy);
         }else if( iType>DL_POSITIONS ){
-          n += getVarint32(pData+n, &iDummy);
-          n += getVarint32(pData+n, &iDummy);
+          n += fts3GetVarint32(pData+n, &iDummy);
+          n += fts3GetVarint32(pData+n, &iDummy);
         }
         assert( n<=nData );
       }
@@ -770,9 +769,9 @@ static void dlwAppend(DLWriter *pWriter,
 #endif
 
   /* Recode the initial docid as delta from iPrevDocid. */
-  nFirstOld = getVarint(pData, &iDocid);
+  nFirstOld = fts3GetVarint(pData, &iDocid);
   assert( nFirstOld<nData || (nFirstOld==nData && pWriter->iType==DL_DOCIDS) );
-  nFirstNew = putVarint(c, iFirstDocid-pWriter->iPrevDocid);
+  nFirstNew = fts3PutVarint(c, iFirstDocid-pWriter->iPrevDocid);
 
   /* Verify that the incoming doclist is valid AND that it ends with
   ** the expected docid.  This is essential because we'll trust this
@@ -798,7 +797,7 @@ static void dlwCopy(DLWriter *pWriter, DLReader *pReader){
 }
 static void dlwAdd(DLWriter *pWriter, sqlite_int64 iDocid){
   char c[VARINT_MAX];
-  int n = putVarint(c, iDocid-pWriter->iPrevDocid);
+  int n = fts3PutVarint(c, iDocid-pWriter->iPrevDocid);
 
   /* Docids must ascend. */
   assert( !pWriter->has_iPrevDocid || iDocid>pWriter->iPrevDocid );
@@ -865,12 +864,12 @@ static void plrStep(PLReader *pReader){
     return;
   }
 
-  n = getVarint32(pReader->pData, &i);
+  n = fts3GetVarint32(pReader->pData, &i);
   if( i==POS_COLUMN ){
-    n += getVarint32(pReader->pData+n, &pReader->iColumn);
+    n += fts3GetVarint32(pReader->pData+n, &pReader->iColumn);
     pReader->iPosition = 0;
     pReader->iStartOffset = 0;
-    n += getVarint32(pReader->pData+n, &i);
+    n += fts3GetVarint32(pReader->pData+n, &i);
   }
   /* Should never see adjacent column changes. */
   assert( i!=POS_COLUMN );
@@ -883,9 +882,9 @@ static void plrStep(PLReader *pReader){
 
   pReader->iPosition += i-POS_BASE;
   if( pReader->iType==DL_POSITIONS_OFFSETS ){
-    n += getVarint32(pReader->pData+n, &i);
+    n += fts3GetVarint32(pReader->pData+n, &i);
     pReader->iStartOffset += i;
-    n += getVarint32(pReader->pData+n, &i);
+    n += fts3GetVarint32(pReader->pData+n, &i);
     pReader->iEndOffset = pReader->iStartOffset+i;
   }
   assert( n<=pReader->nData );
@@ -957,21 +956,21 @@ static void plwAdd(PLWriter *pWriter, int iColumn, int iPos,
   if( pWriter->dlw->iType==DL_DOCIDS ) return;
 
   if( iColumn!=pWriter->iColumn ){
-    n += putVarint(c+n, POS_COLUMN);
-    n += putVarint(c+n, iColumn);
+    n += fts3PutVarint(c+n, POS_COLUMN);
+    n += fts3PutVarint(c+n, iColumn);
     pWriter->iColumn = iColumn;
     pWriter->iPos = 0;
     pWriter->iOffset = 0;
   }
   assert( iPos>=pWriter->iPos );
-  n += putVarint(c+n, POS_BASE+(iPos-pWriter->iPos));
+  n += fts3PutVarint(c+n, POS_BASE+(iPos-pWriter->iPos));
   pWriter->iPos = iPos;
   if( pWriter->dlw->iType==DL_POSITIONS_OFFSETS ){
     assert( iStartOffset>=pWriter->iOffset );
-    n += putVarint(c+n, iStartOffset-pWriter->iOffset);
+    n += fts3PutVarint(c+n, iStartOffset-pWriter->iOffset);
     pWriter->iOffset = iStartOffset;
     assert( iEndOffset>=iStartOffset );
-    n += putVarint(c+n, iEndOffset-iStartOffset);
+    n += fts3PutVarint(c+n, iEndOffset-iStartOffset);
   }
   dataBufferAppend(pWriter->dlw->b, c, n);
 }
@@ -987,7 +986,7 @@ static void plwInit(PLWriter *pWriter, DLWriter *dlw, sqlite_int64 iDocid){
 
   /* Docids must ascend. */
   assert( !pWriter->dlw->has_iPrevDocid || iDocid>pWriter->dlw->iPrevDocid );
-  n = putVarint(c, iDocid-pWriter->dlw->iPrevDocid);
+  n = fts3PutVarint(c, iDocid-pWriter->dlw->iPrevDocid);
   dataBufferAppend(pWriter->dlw->b, c, n);
   pWriter->dlw->iPrevDocid = iDocid;
 #ifndef NDEBUG
@@ -1009,7 +1008,7 @@ static void plwInit(PLWriter *pWriter, DLWriter *dlw, sqlite_int64 iDocid){
 static void plwTerminate(PLWriter *pWriter){
   if( pWriter->dlw->iType>DL_DOCIDS ){
     char c[VARINT_MAX];
-    int n = putVarint(c, POS_END);
+    int n = fts3PutVarint(c, POS_END);
     dataBufferAppend(pWriter->dlw->b, c, n);
   }
 #ifndef NDEBUG
@@ -1048,7 +1047,7 @@ typedef struct DLCollector {
 static void dlcAddDoclist(DLCollector *pCollector, DataBuffer *b){
   if( pCollector->dlw.iType>DL_DOCIDS ){
     char c[VARINT_MAX];
-    int n = putVarint(c, POS_END);
+    int n = fts3PutVarint(c, POS_END);
     dataBufferAppend2(b, pCollector->b.pData, pCollector->b.nData, c, n);
   }else{
     dataBufferAppend(b, pCollector->b.pData, pCollector->b.nData);
@@ -1065,7 +1064,7 @@ static void dlcAddPos(DLCollector *pCollector, int iColumn, int iPos,
 }
 
 static DLCollector *dlcNew(sqlite_int64 iDocid, DocListType iType){
-  DLCollector *pCollector = malloc(sizeof(DLCollector));
+  DLCollector *pCollector = sqlite3_malloc(sizeof(DLCollector));
   dataBufferInit(&pCollector->b, 0);
   dlwInit(&pCollector->dlw, iType, &pCollector->b);
   plwInit(&pCollector->plw, &pCollector->dlw, iDocid);
@@ -1076,7 +1075,7 @@ static void dlcDelete(DLCollector *pCollector){
   dlwDestroy(&pCollector->dlw);
   dataBufferDestroy(&pCollector->b);
   SCRAMBLE(pCollector);
-  free(pCollector);
+  sqlite3_free(pCollector);
 }
 
 
@@ -1335,7 +1334,7 @@ static void docListUnion(
   DLWriter writer;
 
   if( nLeft==0 ){
-    dataBufferAppend(pOut, pRight, nRight);
+    if( nRight!=0) dataBufferAppend(pOut, pRight, nRight);
     return;
   }
   if( nRight==0 ){
@@ -1633,7 +1632,7 @@ static void docListOrMerge(
   DLWriter writer;
 
   if( nLeft==0 ){
-    dataBufferAppend(pOut, pRight, nRight);
+    if( nRight!=0 ) dataBufferAppend(pOut, pRight, nRight);
     return;
   }
   if( nRight==0 ){
@@ -1708,7 +1707,7 @@ static void docListExceptMerge(
 }
 
 static char *string_dup_n(const char *s, int n){
-  char *str = malloc(n + 1);
+  char *str = sqlite3_malloc(n + 1);
   memcpy(str, s, n);
   str[n] = '\0';
   return str;
@@ -1741,7 +1740,7 @@ static char *string_format(const char *zFormat,
   }
   len += 1;  /* for null terminator */
 
-  r = result = malloc(len);
+  r = result = sqlite3_malloc(len);
   for(p = zFormat; *p; ++p){
     if( *p=='%' ){
       memcpy(r, zDb, nDb);
@@ -1762,9 +1761,9 @@ static int sql_exec(sqlite3 *db, const char *zDb, const char *zName,
                     const char *zFormat){
   char *zCommand = string_format(zFormat, zDb, zName);
   int rc;
-  TRACE(("FTS3 sql: %s\n", zCommand));
+  FTSTRACE(("FTS3 sql: %s\n", zCommand));
   rc = sqlite3_exec(db, zCommand, NULL, 0, NULL);
-  free(zCommand);
+  sqlite3_free(zCommand);
   return rc;
 }
 
@@ -1772,9 +1771,9 @@ static int sql_prepare(sqlite3 *db, const char *zDb, const char *zName,
                        sqlite3_stmt **ppStmt, const char *zFormat){
   char *zCommand = string_format(zFormat, zDb, zName);
   int rc;
-  TRACE(("FTS3 prepare: %s\n", zCommand));
+  FTSTRACE(("FTS3 prepare: %s\n", zCommand));
   rc = sqlite3_prepare_v2(db, zCommand, -1, ppStmt, NULL);
-  free(zCommand);
+  sqlite3_free(zCommand);
   return rc;
 }
 
@@ -2085,7 +2084,7 @@ static int sql_get_statement(fulltext_vtab *v, fulltext_statement iStmt,
     }
     rc = sql_prepare(v->db, v->zDb, v->zName, &v->pFulltextStatements[iStmt],
                          zStmt);
-    if( zStmt != fulltext_zStatement[iStmt]) free((void *) zStmt);
+    if( zStmt != fulltext_zStatement[iStmt]) sqlite3_free((void *) zStmt);
     if( rc!=SQLITE_OK ) return rc;
   } else {
     int rc = sqlite3_reset(v->pFulltextStatements[iStmt]);
@@ -2173,9 +2172,9 @@ static void freeStringArray(int nString, const char **pString){
   int i;
 
   for (i=0 ; i < nString ; ++i) {
-    if( pString[i]!=NULL ) free((void *) pString[i]);
+    if( pString[i]!=NULL ) sqlite3_free((void *) pString[i]);
   }
-  free((void *) pString);
+  sqlite3_free((void *) pString);
 }
 
 /* select * from %_content where docid = [iDocid]
@@ -2202,7 +2201,7 @@ static int content_select(fulltext_vtab *v, sqlite_int64 iDocid,
   rc = sqlite3_step(s);
   if( rc!=SQLITE_ROW ) return rc;
 
-  values = (const char **) malloc(v->nColumn * sizeof(const char *));
+  values = (const char **) sqlite3_malloc(v->nColumn * sizeof(const char *));
   for(i=0; i<v->nColumn; ++i){
     if( sqlite3_column_type(s, i)==SQLITE_NULL ){
       values[i] = NULL;
@@ -2423,7 +2422,7 @@ static int clearPendingTerms(fulltext_vtab *v);
 static void fulltext_vtab_destroy(fulltext_vtab *v){
   int iStmt, i;
 
-  TRACE(("FTS3 Destroy %p\n", v));
+  FTSTRACE(("FTS3 Destroy %p\n", v));
   for( iStmt=0; iStmt<MAX_STMT; iStmt++ ){
     if( v->pFulltextStatements[iStmt]!=NULL ){
       sqlite3_finalize(v->pFulltextStatements[iStmt]);
@@ -2445,12 +2444,12 @@ static void fulltext_vtab_destroy(fulltext_vtab *v){
 
   clearPendingTerms(v);
 
-  free(v->azColumn);
+  sqlite3_free(v->azColumn);
   for(i = 0; i < v->nColumn; ++i) {
     sqlite3_free(v->azContentColumn[i]);
   }
-  free(v->azContentColumn);
-  free(v);
+  sqlite3_free(v->azContentColumn);
+  sqlite3_free(v);
 }
 
 /*
@@ -2464,18 +2463,18 @@ static void fulltext_vtab_destroy(fulltext_vtab *v){
 
 /*
 ** If X is a character that can be used in an identifier then
-** IdChar(X) will be true.  Otherwise it is false.
+** ftsIdChar(X) will be true.  Otherwise it is false.
 **
 ** For ASCII, any character with the high-order bit set is
 ** allowed in an identifier.  For 7-bit characters, 
-** sqlite3IsIdChar[X] must be 1.
+** isFtsIdChar[X] must be 1.
 **
 ** Ticket #1066.  the SQL standard does not allow '$' in the
 ** middle of identfiers.  But many SQL implementations do. 
 ** SQLite will allow '$' in identifiers for compatibility.
 ** But the feature is undocumented.
 */
-static const char isIdChar[] = {
+static const char isFtsIdChar[] = {
 /* x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 xA xB xC xD xE xF */
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 2x */
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,  /* 3x */
@@ -2484,14 +2483,14 @@ static const char isIdChar[] = {
     0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  /* 6x */
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,  /* 7x */
 };
-#define IdChar(C)  (((c=C)&0x80)!=0 || (c>0x1f && isIdChar[c-0x20]))
+#define ftsIdChar(C)  (((c=C)&0x80)!=0 || (c>0x1f && isFtsIdChar[c-0x20]))
 
 
 /*
 ** Return the length of the token that begins at z[0]. 
 ** Store the token type in *tokenType before returning.
 */
-static int getToken(const char *z, int *tokenType){
+static int ftsGetToken(const char *z, int *tokenType){
   int i, c;
   switch( *z ){
     case 0: {
@@ -2525,10 +2524,10 @@ static int getToken(const char *z, int *tokenType){
       return i;
     }
     default: {
-      if( !IdChar(*z) ){
+      if( !ftsIdChar(*z) ){
         break;
       }
-      for(i=1; IdChar(z[i]); i++){}
+      for(i=1; ftsIdChar(z[i]); i++){}
       *tokenType = TOKEN_ID;
       return i;
     }
@@ -2541,10 +2540,10 @@ static int getToken(const char *z, int *tokenType){
 ** A token extracted from a string is an instance of the following
 ** structure.
 */
-typedef struct Token {
+typedef struct FtsToken {
   const char *z;       /* Pointer to token text.  Not '\000' terminated */
   short int n;         /* Length of the token text in bytes. */
-} Token;
+} FtsToken;
 
 /*
 ** Given a input string (which is really one of the argv[] parameters
@@ -2561,14 +2560,14 @@ typedef struct Token {
 */
 static char **tokenizeString(const char *z, int *pnToken){
   int nToken = 0;
-  Token *aToken = malloc( strlen(z) * sizeof(aToken[0]) );
+  FtsToken *aToken = sqlite3_malloc( strlen(z) * sizeof(aToken[0]) );
   int n = 1;
   int e, i;
   int totalSize = 0;
   char **azToken;
   char *zCopy;
   while( n>0 ){
-    n = getToken(z, &e);
+    n = ftsGetToken(z, &e);
     if( e!=TOKEN_SPACE ){
       aToken[nToken].z = z;
       aToken[nToken].n = n;
@@ -2577,7 +2576,7 @@ static char **tokenizeString(const char *z, int *pnToken){
     }
     z += n;
   }
-  azToken = (char**)malloc( nToken*sizeof(char*) + totalSize );
+  azToken = (char**)sqlite3_malloc( nToken*sizeof(char*) + totalSize );
   zCopy = (char*)&azToken[nToken];
   nToken--;
   for(i=0; i<nToken; i++){
@@ -2588,7 +2587,7 @@ static char **tokenizeString(const char *z, int *pnToken){
     zCopy += n+1;
   }
   azToken[nToken] = 0;
-  free(aToken);
+  sqlite3_free(aToken);
   *pnToken = nToken;
   return azToken;
 }
@@ -2673,7 +2672,7 @@ static void tokenListToIdList(char **azIn){
 static char *firstToken(char *zIn, char **pzTail){
   int n, ttype;
   while(1){
-    n = getToken(zIn, &ttype);
+    n = ftsGetToken(zIn, &ttype);
     if( ttype==TOKEN_SPACE ){
       zIn += n;
     }else if( ttype==TOKEN_EOF ){
@@ -2726,9 +2725,9 @@ typedef struct TableSpec {
 ** Reclaim all of the memory used by a TableSpec
 */
 static void clearTableSpec(TableSpec *p) {
-  free(p->azColumn);
-  free(p->azContentColumn);
-  free(p->azTokenizer);
+  sqlite3_free(p->azColumn);
+  sqlite3_free(p->azContentColumn);
+  sqlite3_free(p->azTokenizer);
 }
 
 /* Parse a CREATE VIRTUAL TABLE statement, which looks like this:
@@ -2763,7 +2762,7 @@ static int parseSpec(TableSpec *pSpec, int argc, const char *const*argv,
   for(i=n=0; i<argc; i++){
     n += strlen(argv[i]) + 1;
   }
-  azArg = malloc( sizeof(char*)*argc + n );
+  azArg = sqlite3_malloc( sizeof(char*)*argc + n );
   if( azArg==0 ){
     return SQLITE_NOMEM;
   }
@@ -2808,7 +2807,7 @@ static int parseSpec(TableSpec *pSpec, int argc, const char *const*argv,
   ** for the convenience of people who might examine the generated
   ** %_content table and wonder what the columns are used for.
   */
-  pSpec->azContentColumn = malloc( pSpec->nColumn * sizeof(char *) );
+  pSpec->azContentColumn = sqlite3_malloc( pSpec->nColumn * sizeof(char *) );
   if( pSpec->azContentColumn==0 ){
     clearTableSpec(pSpec);
     return SQLITE_NOMEM;
@@ -2880,7 +2879,7 @@ static int constructVtab(
   char const *zTok;         /* Name of tokenizer to use for this fts table */
   int nTok;                 /* Length of zTok, including nul terminator */
 
-  v = (fulltext_vtab *) malloc(sizeof(fulltext_vtab));
+  v = (fulltext_vtab *) sqlite3_malloc(sizeof(fulltext_vtab));
   if( v==0 ) return SQLITE_NOMEM;
   CLEAR(v);
   /* sqlite will initialize v->base */
@@ -2934,7 +2933,7 @@ static int constructVtab(
   v->nPendingData = -1;
 
   *ppVTab = &v->base;
-  TRACE(("FTS3 Connect %p\n", v));
+  FTSTRACE(("FTS3 Connect %p\n", v));
 
   return rc;
 
@@ -2971,7 +2970,7 @@ static int fulltextCreate(sqlite3 *db, void *pAux,
   int rc;
   TableSpec spec;
   StringBuffer schema;
-  TRACE(("FTS3 Create\n"));
+  FTSTRACE(("FTS3 Create\n"));
 
   rc = parseSpec(&spec, argc, argv, pzErr);
   if( rc!=SQLITE_OK ) return rc;
@@ -3016,7 +3015,7 @@ out:
 static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
   fulltext_vtab *v = (fulltext_vtab *)pVTab;
   int i;
-  TRACE(("FTS3 BestIndex\n"));
+  FTSTRACE(("FTS3 BestIndex\n"));
 
   for(i=0; i<pInfo->nConstraint; ++i){
     const struct sqlite3_index_constraint *pConstraint;
@@ -3025,12 +3024,12 @@ static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
       if( (pConstraint->iColumn==-1 || pConstraint->iColumn==v->nColumn+1) &&
           pConstraint->op==SQLITE_INDEX_CONSTRAINT_EQ ){
         pInfo->idxNum = QUERY_DOCID;      /* lookup by docid */
-        TRACE(("FTS3 QUERY_DOCID\n"));
+        FTSTRACE(("FTS3 QUERY_DOCID\n"));
       } else if( pConstraint->iColumn>=0 && pConstraint->iColumn<=v->nColumn &&
                  pConstraint->op==SQLITE_INDEX_CONSTRAINT_MATCH ){
         /* full-text search */
         pInfo->idxNum = QUERY_FULLTEXT + pConstraint->iColumn;
-        TRACE(("FTS3 QUERY_FULLTEXT %d\n", pConstraint->iColumn));
+        FTSTRACE(("FTS3 QUERY_FULLTEXT %d\n", pConstraint->iColumn));
       } else continue;
 
       pInfo->aConstraintUsage[i].argvIndex = 1;
@@ -3049,7 +3048,7 @@ static int fulltextBestIndex(sqlite3_vtab *pVTab, sqlite3_index_info *pInfo){
 }
 
 static int fulltextDisconnect(sqlite3_vtab *pVTab){
-  TRACE(("FTS3 Disconnect %p\n", pVTab));
+  FTSTRACE(("FTS3 Disconnect %p\n", pVTab));
   fulltext_vtab_destroy((fulltext_vtab *)pVTab);
   return SQLITE_OK;
 }
@@ -3058,7 +3057,7 @@ static int fulltextDestroy(sqlite3_vtab *pVTab){
   fulltext_vtab *v = (fulltext_vtab *)pVTab;
   int rc;
 
-  TRACE(("FTS3 Destroy %p\n", pVTab));
+  FTSTRACE(("FTS3 Destroy %p\n", pVTab));
   rc = sql_exec(v->db, v->zDb, v->zName,
                 "drop table if exists %_content;"
                 "drop table if exists %_segments;"
@@ -3073,12 +3072,16 @@ static int fulltextDestroy(sqlite3_vtab *pVTab){
 static int fulltextOpen(sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor){
   fulltext_cursor *c;
 
-  c = (fulltext_cursor *) calloc(sizeof(fulltext_cursor), 1);
-  /* sqlite will initialize c->base */
-  *ppCursor = &c->base;
-  TRACE(("FTS3 Open %p: %p\n", pVTab, c));
-
-  return SQLITE_OK;
+  c = (fulltext_cursor *) sqlite3_malloc(sizeof(fulltext_cursor));
+  if( c ){
+    memset(c, 0, sizeof(fulltext_cursor));
+    /* sqlite will initialize c->base */
+    *ppCursor = &c->base;
+    FTSTRACE(("FTS3 Open %p: %p\n", pVTab, c));
+    return SQLITE_OK;
+  }else{
+    return SQLITE_NOMEM;
+  }
 }
 
 
@@ -3087,9 +3090,9 @@ static int fulltextOpen(sqlite3_vtab *pVTab, sqlite3_vtab_cursor **ppCursor){
 static void queryClear(Query *q){
   int i;
   for(i = 0; i < q->nTerms; ++i){
-    free(q->pTerms[i].pTerm);
+    sqlite3_free(q->pTerms[i].pTerm);
   }
-  free(q->pTerms);
+  sqlite3_free(q->pTerms);
   CLEAR(q);
 }
 
@@ -3097,9 +3100,9 @@ static void queryClear(Query *q){
 ** Snippet
 */
 static void snippetClear(Snippet *p){
-  free(p->aMatch);
-  free(p->zOffset);
-  free(p->zSnippet);
+  sqlite3_free(p->aMatch);
+  sqlite3_free(p->zOffset);
+  sqlite3_free(p->zSnippet);
   CLEAR(p);
 }
 /*
@@ -3115,7 +3118,7 @@ static void snippetAppendMatch(
   struct snippetMatch *pMatch;
   if( p->nMatch+1>=p->nAlloc ){
     p->nAlloc = p->nAlloc*2 + 10;
-    p->aMatch = realloc(p->aMatch, p->nAlloc*sizeof(p->aMatch[0]) );
+    p->aMatch = sqlite3_realloc(p->aMatch, p->nAlloc*sizeof(p->aMatch[0]) );
     if( p->aMatch==0 ){
       p->nMatch = 0;
       p->nAlloc = 0;
@@ -3450,7 +3453,7 @@ static void snippetText(
   int iMatch;
   
 
-  free(pCursor->snippet.zSnippet);
+  sqlite3_free(pCursor->snippet.zSnippet);
   pCursor->snippet.zSnippet = 0;
   aMatch = pCursor->snippet.aMatch;
   nMatch = pCursor->snippet.nMatch;
@@ -3546,13 +3549,13 @@ static void snippetText(
 */
 static int fulltextClose(sqlite3_vtab_cursor *pCursor){
   fulltext_cursor *c = (fulltext_cursor *) pCursor;
-  TRACE(("FTS3 Close %p\n", c));
+  FTSTRACE(("FTS3 Close %p\n", c));
   sqlite3_finalize(c->pStmt);
   queryClear(&c->q);
   snippetClear(&c->snippet);
   if( c->result.nData!=0 ) dlrDestroy(&c->reader);
   dataBufferDestroy(&c->result);
-  free(c);
+  sqlite3_free(c);
   return SQLITE_OK;
 }
 
@@ -3560,7 +3563,7 @@ static int fulltextNext(sqlite3_vtab_cursor *pCursor){
   fulltext_cursor *c = (fulltext_cursor *) pCursor;
   int rc;
 
-  TRACE(("FTS3 Next %p\n", pCursor));
+  FTSTRACE(("FTS3 Next %p\n", pCursor));
   snippetClear(&c->snippet);
   if( c->iCursorType < QUERY_FULLTEXT ){
     /* TODO(shess) Handle SQLITE_SCHEMA AND SQLITE_BUSY. */
@@ -3670,14 +3673,14 @@ static int docListOfTerm(
 static void queryAdd(Query *q, const char *pTerm, int nTerm){
   QueryTerm *t;
   ++q->nTerms;
-  q->pTerms = realloc(q->pTerms, q->nTerms * sizeof(q->pTerms[0]));
+  q->pTerms = sqlite3_realloc(q->pTerms, q->nTerms * sizeof(q->pTerms[0]));
   if( q->pTerms==0 ){
     q->nTerms = 0;
     return;
   }
   t = &q->pTerms[q->nTerms - 1];
   CLEAR(t);
-  t->pTerm = malloc(nTerm+1);
+  t->pTerm = sqlite3_malloc(nTerm+1);
   memcpy(t->pTerm, pTerm, nTerm);
   t->pTerm[nTerm] = 0;
   t->nTerm = nTerm;
@@ -4008,7 +4011,7 @@ static int fulltextFilter(
   int rc;
   StringBuffer sb;
 
-  TRACE(("FTS3 Filter %p\n",pCursor));
+  FTSTRACE(("FTS3 Filter %p\n",pCursor));
 
   initStringBuffer(&sb);
   append(&sb, "SELECT docid, ");
@@ -4296,18 +4299,20 @@ typedef struct InteriorBlock {
 
 static InteriorBlock *interiorBlockNew(int iHeight, sqlite_int64 iChildBlock,
                                        const char *pTerm, int nTerm){
-  InteriorBlock *block = calloc(1, sizeof(InteriorBlock));
+  InteriorBlock *block = sqlite3_malloc(sizeof(InteriorBlock));
   char c[VARINT_MAX+VARINT_MAX];
   int n;
 
-  dataBufferInit(&block->term, 0);
-  dataBufferReplace(&block->term, pTerm, nTerm);
+  if( block ){
+    memset(block, 0, sizeof(*block));
+    dataBufferInit(&block->term, 0);
+    dataBufferReplace(&block->term, pTerm, nTerm);
 
-  n = putVarint(c, iHeight);
-  n += putVarint(c+n, iChildBlock);
-  dataBufferInit(&block->data, INTERIOR_MAX);
-  dataBufferReplace(&block->data, c, n);
-
+    n = fts3PutVarint(c, iHeight);
+    n += fts3PutVarint(c+n, iChildBlock);
+    dataBufferInit(&block->data, INTERIOR_MAX);
+    dataBufferReplace(&block->data, c, n);
+  }
   return block;
 }
 
@@ -4324,7 +4329,7 @@ static void interiorBlockValidate(InteriorBlock *pBlock){
   assert( pData+nData>pData );
 
   /* Must lead with height of node as a varint(n), n>0 */
-  n = getVarint32(pData, &iDummy);
+  n = fts3GetVarint32(pData, &iDummy);
   assert( n>0 );
   assert( iDummy>0 );
   assert( n<nData );
@@ -4332,7 +4337,7 @@ static void interiorBlockValidate(InteriorBlock *pBlock){
   nData -= n;
 
   /* Must contain iBlockid. */
-  n = getVarint(pData, &iBlockid);
+  n = fts3GetVarint(pData, &iBlockid);
   assert( n>0 );
   assert( n<=nData );
   pData += n;
@@ -4341,7 +4346,7 @@ static void interiorBlockValidate(InteriorBlock *pBlock){
   /* Zero or more terms of positive length */
   if( nData!=0 ){
     /* First term is not delta-encoded. */
-    n = getVarint32(pData, &iDummy);
+    n = fts3GetVarint32(pData, &iDummy);
     assert( n>0 );
     assert( iDummy>0 );
     assert( n+iDummy>0);
@@ -4352,7 +4357,7 @@ static void interiorBlockValidate(InteriorBlock *pBlock){
     /* Following terms delta-encoded. */
     while( nData!=0 ){
       /* Length of shared prefix. */
-      n = getVarint32(pData, &iDummy);
+      n = fts3GetVarint32(pData, &iDummy);
       assert( n>0 );
       assert( iDummy>=0 );
       assert( n<nData );
@@ -4360,7 +4365,7 @@ static void interiorBlockValidate(InteriorBlock *pBlock){
       nData -= n;
 
       /* Length and data of distinct suffix. */
-      n = getVarint32(pData, &iDummy);
+      n = fts3GetVarint32(pData, &iDummy);
       assert( n>0 );
       assert( iDummy>0 );
       assert( n+iDummy>0);
@@ -4427,15 +4432,15 @@ static void interiorWriterAppend(InteriorWriter *pWriter,
   ** at 0.
   */
   if( pWriter->term.nData==0 ){
-    n = putVarint(c, nTerm);
+    n = fts3PutVarint(c, nTerm);
   }else{
     while( nPrefix<pWriter->term.nData &&
            pTerm[nPrefix]==pWriter->term.pData[nPrefix] ){
       nPrefix++;
     }
 
-    n = putVarint(c, nPrefix);
-    n += putVarint(c+n, nTerm-nPrefix);
+    n = fts3PutVarint(c, nPrefix);
+    n += fts3PutVarint(c+n, nTerm-nPrefix);
   }
 
 #ifndef NDEBUG
@@ -4472,11 +4477,11 @@ static int interiorWriterDestroy(InteriorWriter *pWriter){
     block = block->next;
     dataBufferDestroy(&b->term);
     dataBufferDestroy(&b->data);
-    free(b);
+    sqlite3_free(b);
   }
   if( pWriter->parentWriter!=NULL ){
     interiorWriterDestroy(pWriter->parentWriter);
-    free(pWriter->parentWriter);
+    sqlite3_free(pWriter->parentWriter);
   }
   dataBufferDestroy(&pWriter->term);
   SCRAMBLE(pWriter);
@@ -4510,7 +4515,7 @@ static int interiorWriterRootInfo(fulltext_vtab *v, InteriorWriter *pWriter,
   if( rc!=SQLITE_OK ) return rc;
   *piEndBlockid = iBlockid;
 
-  pWriter->parentWriter = malloc(sizeof(*pWriter->parentWriter));
+  pWriter->parentWriter = sqlite3_malloc(sizeof(*pWriter->parentWriter));
   interiorWriterInit(pWriter->iHeight+1,
                      block->term.pData, block->term.nData,
                      iBlockid, pWriter->parentWriter);
@@ -4565,7 +4570,7 @@ static void interiorReaderInit(const char *pData, int nData,
   CLEAR(pReader);
 
   /* Decode the base blockid, and set the cursor to the first term. */
-  n = getVarint(pData+1, &pReader->iBlockid);
+  n = fts3GetVarint(pData+1, &pReader->iBlockid);
   assert( 1+n<=nData );
   pReader->pData = pData+1+n;
   pReader->nData = nData-(1+n);
@@ -4577,7 +4582,7 @@ static void interiorReaderInit(const char *pData, int nData,
   if( pReader->nData==0 ){
     dataBufferInit(&pReader->term, 0);
   }else{
-    n = getVarint32(pReader->pData, &nTerm);
+    n = fts3GetVarint32(pReader->pData, &nTerm);
     dataBufferInit(&pReader->term, nTerm);
     dataBufferReplace(&pReader->term, pReader->pData+n, nTerm);
     assert( n+nTerm<=pReader->nData );
@@ -4615,8 +4620,8 @@ static void interiorReaderStep(InteriorReader *pReader){
   }else{
     int n, nPrefix, nSuffix;
 
-    n = getVarint32(pReader->pData, &nPrefix);
-    n += getVarint32(pReader->pData+n, &nSuffix);
+    n = fts3GetVarint32(pReader->pData, &nPrefix);
+    n += fts3GetVarint32(pReader->pData+n, &nSuffix);
 
     /* Truncate the current term and append suffix data. */
     pReader->term.nData = nPrefix;
@@ -4721,7 +4726,7 @@ static void leafNodeValidate(const char *pData, int nData){
   assert( pData+nData>pData );
 
   /* Must lead with a varint(0) */
-  n = getVarint32(pData, &iDummy);
+  n = fts3GetVarint32(pData, &iDummy);
   assert( iDummy==0 );
   assert( n>0 );
   assert( n<nData );
@@ -4729,7 +4734,7 @@ static void leafNodeValidate(const char *pData, int nData){
   nData -= n;
 
   /* Leading term length and data must fit in buffer. */
-  n = getVarint32(pData, &iDummy);
+  n = fts3GetVarint32(pData, &iDummy);
   assert( n>0 );
   assert( iDummy>0 );
   assert( n+iDummy>0 );
@@ -4738,7 +4743,7 @@ static void leafNodeValidate(const char *pData, int nData){
   nData -= n+iDummy;
 
   /* Leading term's doclist length and data must fit. */
-  n = getVarint32(pData, &iDummy);
+  n = fts3GetVarint32(pData, &iDummy);
   assert( n>0 );
   assert( iDummy>0 );
   assert( n+iDummy>0 );
@@ -4749,13 +4754,13 @@ static void leafNodeValidate(const char *pData, int nData){
 
   /* Verify that trailing terms and doclists also are readable. */
   while( nData!=0 ){
-    n = getVarint32(pData, &iDummy);
+    n = fts3GetVarint32(pData, &iDummy);
     assert( n>0 );
     assert( iDummy>=0 );
     assert( n<nData );
     pData += n;
     nData -= n;
-    n = getVarint32(pData, &iDummy);
+    n = fts3GetVarint32(pData, &iDummy);
     assert( n>0 );
     assert( iDummy>0 );
     assert( n+iDummy>0 );
@@ -4763,7 +4768,7 @@ static void leafNodeValidate(const char *pData, int nData){
     pData += n+iDummy;
     nData -= n+iDummy;
 
-    n = getVarint32(pData, &iDummy);
+    n = fts3GetVarint32(pData, &iDummy);
     assert( n>0 );
     assert( iDummy>0 );
     assert( n+iDummy>0 );
@@ -4803,7 +4808,7 @@ static int leafWriterInternalFlush(fulltext_vtab *v, LeafWriter *pWriter,
   /* Reconstruct the first term in the leaf for purposes of building
   ** the interior node.
   */
-  n = getVarint32(pWriter->data.pData+iData+1, &nStartingTerm);
+  n = fts3GetVarint32(pWriter->data.pData+iData+1, &nStartingTerm);
   pStartingTerm = pWriter->data.pData+iData+1+n;
   assert( pWriter->data.nData>iData+1+n+nStartingTerm );
   assert( pWriter->nTermDistinct>0 );
@@ -4927,8 +4932,8 @@ static int leafWriterEncodeTerm(LeafWriter *pWriter,
     **  varint(nTerm)
     **  char pTerm[nTerm]
     */
-    n = putVarint(c, '\0');
-    n += putVarint(c+n, nTerm);
+    n = fts3PutVarint(c, '\0');
+    n += fts3PutVarint(c+n, nTerm);
     dataBufferAppend2(&pWriter->data, c, n, pTerm, nTerm);
   }else{
     /* Delta-encode the term as:
@@ -4936,8 +4941,8 @@ static int leafWriterEncodeTerm(LeafWriter *pWriter,
     **  varint(nSuffix)
     **  char pTermSuffix[nSuffix]
     */
-    n = putVarint(c, nPrefix);
-    n += putVarint(c+n, nTerm-nPrefix);
+    n = fts3PutVarint(c, nPrefix);
+    n += fts3PutVarint(c+n, nTerm-nPrefix);
     dataBufferAppend2(&pWriter->data, c, n, pTerm+nPrefix, nTerm-nPrefix);
   }
   dataBufferReplace(&pWriter->term, pTerm, nTerm);
@@ -4954,8 +4959,8 @@ static int leafWriterInlineFlush(fulltext_vtab *v, LeafWriter *pWriter,
                                  const char *pTerm, int nTerm,
                                  int iDoclistData){
   char c[VARINT_MAX+VARINT_MAX];
-  int iData, n = putVarint(c, 0);
-  n += putVarint(c+n, nTerm);
+  int iData, n = fts3PutVarint(c, 0);
+  n += fts3PutVarint(c+n, nTerm);
 
   /* There should always be room for the header.  Even if pTerm shared
   ** a substantial prefix with the previous term, the entire prefix
@@ -4995,7 +5000,7 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
   for(i=0, nData=0; i<nReaders; i++){
     nData += dlrAllDataBytes(&pReaders[i]);
   }
-  n = putVarint(c, nData);
+  n = fts3PutVarint(c, nData);
   dataBufferAppend(&pWriter->data, c, n);
 
   docListMerge(&pWriter->data, pReaders, nReaders);
@@ -5009,7 +5014,7 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
   ** not a big deal, we can just use memmove() to adjust things.
   */
   nActualData = pWriter->data.nData-(iDoclistData+n);
-  nActual = putVarint(c, nActualData);
+  nActual = fts3PutVarint(c, nActualData);
   assert( nActualData<=nData );
   assert( nActual<=n );
 
@@ -5072,8 +5077,8 @@ static int leafWriterStepMerge(fulltext_vtab *v, LeafWriter *pWriter,
     pWriter->nTermDistinct = nTermDistinct;
 
     /* Rebuild header using the current term */
-    n = putVarint(pWriter->data.pData, 0);
-    n += putVarint(pWriter->data.pData+n, nTerm);
+    n = fts3PutVarint(pWriter->data.pData, 0);
+    n += fts3PutVarint(pWriter->data.pData+n, nTerm);
     memcpy(pWriter->data.pData+n, pTerm, nTerm);
     n += nTerm;
 
@@ -5147,13 +5152,13 @@ static const char *leafReaderTerm(LeafReader *pReader){
 static int leafReaderDataBytes(LeafReader *pReader){
   int nData;
   assert( pReader->term.nData>0 );
-  getVarint32(pReader->pData, &nData);
+  fts3GetVarint32(pReader->pData, &nData);
   return nData;
 }
 static const char *leafReaderData(LeafReader *pReader){
   int n, nData;
   assert( pReader->term.nData>0 );
-  n = getVarint32(pReader->pData, &nData);
+  n = fts3GetVarint32(pReader->pData, &nData);
   return pReader->pData+n;
 }
 
@@ -5167,7 +5172,7 @@ static void leafReaderInit(const char *pData, int nData,
   CLEAR(pReader);
 
   /* Read the first term, skipping the header byte. */
-  n = getVarint32(pData+1, &nTerm);
+  n = fts3GetVarint32(pData+1, &nTerm);
   dataBufferInit(&pReader->term, nTerm);
   dataBufferReplace(&pReader->term, pData+1+n, nTerm);
 
@@ -5183,7 +5188,7 @@ static void leafReaderStep(LeafReader *pReader){
   assert( !leafReaderAtEnd(pReader) );
 
   /* Skip previous entry's data block. */
-  n = getVarint32(pReader->pData, &nData);
+  n = fts3GetVarint32(pReader->pData, &nData);
   assert( n+nData<=pReader->nData );
   pReader->pData += n+nData;
   pReader->nData -= n+nData;
@@ -5192,8 +5197,8 @@ static void leafReaderStep(LeafReader *pReader){
     /* Construct the new term using a prefix from the old term plus a
     ** suffix from the leaf data.
     */
-    n = getVarint32(pReader->pData, &nPrefix);
-    n += getVarint32(pReader->pData+n, &nSuffix);
+    n = fts3GetVarint32(pReader->pData, &nPrefix);
+    n += fts3GetVarint32(pReader->pData+n, &nSuffix);
     assert( n+nSuffix<pReader->nData );
     pReader->term.nData = nPrefix;
     dataBufferAppend(&pReader->term, pReader->pData+n, nSuffix);
@@ -5900,7 +5905,7 @@ static int writeZeroSegment(fulltext_vtab *v, fts3Hash *pTerms){
   if( rc!=SQLITE_OK ) return rc;
 
   n = fts3HashCount(pTerms);
-  pData = malloc(n*sizeof(TermData));
+  pData = sqlite3_malloc(n*sizeof(TermData));
 
   for(i = 0, e = fts3HashFirst(pTerms); e; i++, e = fts3HashNext(e)){
     assert( i<n );
@@ -5931,7 +5936,7 @@ static int writeZeroSegment(fulltext_vtab *v, fts3Hash *pTerms){
 
  err:
   dataBufferDestroy(&dl);
-  free(pData);
+  sqlite3_free(pData);
   leafWriterDestroy(&writer);
   return rc;
 }
@@ -5990,7 +5995,7 @@ static int fulltextUpdate(sqlite3_vtab *pVtab, int nArg, sqlite3_value **ppArg,
   fulltext_vtab *v = (fulltext_vtab *) pVtab;
   int rc;
 
-  TRACE(("FTS3 Update %p\n", pVtab));
+  FTSTRACE(("FTS3 Update %p\n", pVtab));
 
   if( nArg<2 ){
     rc = index_delete(v, sqlite3_value_int64(ppArg[0]));
@@ -6044,13 +6049,13 @@ static int fulltextUpdate(sqlite3_vtab *pVtab, int nArg, sqlite3_value **ppArg,
 }
 
 static int fulltextSync(sqlite3_vtab *pVtab){
-  TRACE(("FTS3 xSync()\n"));
+  FTSTRACE(("FTS3 xSync()\n"));
   return flushPendingTerms((fulltext_vtab *)pVtab);
 }
 
 static int fulltextBegin(sqlite3_vtab *pVtab){
   fulltext_vtab *v = (fulltext_vtab *) pVtab;
-  TRACE(("FTS3 xBegin()\n"));
+  FTSTRACE(("FTS3 xBegin()\n"));
 
   /* Any buffered updates should have been cleared by the previous
   ** transaction.
@@ -6061,7 +6066,7 @@ static int fulltextBegin(sqlite3_vtab *pVtab){
 
 static int fulltextCommit(sqlite3_vtab *pVtab){
   fulltext_vtab *v = (fulltext_vtab *) pVtab;
-  TRACE(("FTS3 xCommit()\n"));
+  FTSTRACE(("FTS3 xCommit()\n"));
 
   /* Buffered updates should have been cleared by fulltextSync(). */
   assert( v->nPendingData<0 );
@@ -6069,7 +6074,7 @@ static int fulltextCommit(sqlite3_vtab *pVtab){
 }
 
 static int fulltextRollback(sqlite3_vtab *pVtab){
-  TRACE(("FTS3 xRollback()\n"));
+  FTSTRACE(("FTS3 xRollback()\n"));
   return clearPendingTerms((fulltext_vtab *)pVtab);
 }
 

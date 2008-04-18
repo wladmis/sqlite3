@@ -60,8 +60,8 @@ void sqlite3VdbeSetSql(Vdbe *p, const char *z, int n){
 /*
 ** Return the SQL associated with a prepared statement
 */
-const char *sqlite3VdbeGetSql(Vdbe *p){
-  return p->zSql;
+const char *sqlite3_sql(sqlite3_stmt *pStmt){
+  return ((Vdbe *)pStmt)->zSql;
 }
 
 /*
@@ -1323,7 +1323,7 @@ static void checkActiveVdbeCnt(sqlite3 *db){
 ** the state of the cursor.  We have to invalidate the cursor
 ** so that it is never used again.
 */
-void invalidateCursorsOnModifiedBtrees(sqlite3 *db){
+static void invalidateCursorsOnModifiedBtrees(sqlite3 *db){
   int i;
   for(i=0; i<db->nDb; i++){
     Btree *p = db->aDb[i].pBt;
@@ -1586,6 +1586,8 @@ int sqlite3VdbeReset(Vdbe *p){
     ** called), set the database error in this case as well.
     */
     sqlite3Error(db, p->rc, 0);
+    sqlite3ValueSetStr(db->pErr, -1, p->zErrMsg, SQLITE_UTF8, sqlite3_free);
+    p->zErrMsg = 0;
   }
 
   /* Reclaim all memory used by the VDBE

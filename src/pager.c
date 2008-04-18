@@ -3007,6 +3007,7 @@ static PgHdr *pager_get_all_dirty_pages(Pager *pPager){
 static int hasHotJournal(Pager *pPager){
   sqlite3_vfs *pVfs = pPager->pVfs;
   if( !pPager->useJournal ) return 0;
+  if( !pPager->fd->pMethods ) return 0;
   if( !sqlite3OsAccess(pVfs, pPager->zJournal, SQLITE_ACCESS_EXISTS) ){
     return 0;
   }

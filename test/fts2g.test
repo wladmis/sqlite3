@@ -84,4 +84,10 @@ do_test fts2g-1.12 {
   execsql {SELECT rowid FROM t1 WHERE t1 MATCH 'also OR this'}
 } {1 2}
 
+# Empty left and right in docListOrMerge().  Each term matches neither
+# row, and when combined there was an assertion failure.
+do_test fts2g-1.13 {
+  execsql {SELECT rowid FROM t1 WHERE t1 MATCH 'something OR nothing'}
+} {}
+
 finish_test

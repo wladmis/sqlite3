@@ -22,20 +22,11 @@
 #include <ctype.h>
 #include <stdarg.h>
 
-#if !defined(_WIN32) && !defined(WIN32) && !defined(__MACOS__) && !defined(__OS2__)
+#if !defined(_WIN32) && !defined(WIN32) && !defined(__OS2__)
 # include <signal.h>
 # include <pwd.h>
 # include <unistd.h>
 # include <sys/types.h>
-#endif
-
-#ifdef __MACOS__
-# include <console.h>
-# include <signal.h>
-# include <unistd.h>
-# include <extras.h>
-# include <Files.h>
-# include <Folders.h>
 #endif
 
 #ifdef __OS2__
@@ -59,6 +50,14 @@
 /* Make sure isatty() has a prototype.
 */
 extern int isatty();
+#endif
+
+#if defined(_WIN32_WCE)
+/* Windows CE (arm-wince-mingw32ce-gcc) does not provide isatty()
+ * thus we always assume that we have a console. That can be
+ * overridden with the -batch command line option.
+ */
+#define isatty(x) 1
 #endif
 
 #if !defined(_WIN32) && !defined(WIN32) && !defined(__OS2__)
@@ -1759,7 +1758,7 @@ static int process_input(struct callback_data *p, FILE *in){
 static char *find_home_dir(void){
   char *home_dir = NULL;
 
-#if !defined(_WIN32) && !defined(WIN32) && !defined(__MACOS__) && !defined(__OS2__)
+#if !defined(_WIN32) && !defined(WIN32) && !defined(__OS2__) && !defined(_WIN32_WCE)
   struct passwd *pwent;
   uid_t uid = getuid();
   if( (pwent=getpwuid(uid)) != NULL) {
@@ -1767,10 +1766,11 @@ static char *find_home_dir(void){
   }
 #endif
 
-#ifdef __MACOS__
-  char home_path[_MAX_PATH+1];
-  home_dir = getcwd(home_path, _MAX_PATH);
-#endif
+#if defined(_WIN32_WCE)
+  /* Windows CE (arm-wince-mingw32ce-gcc) does not provide getenv()
+   */
+  home_dir = strdup("/");
+#else
 
 #if defined(_WIN32) || defined(WIN32) || defined(__OS2__)
   if (!home_dir) {
@@ -1798,6 +1798,8 @@ static char *find_home_dir(void){
     home_dir = "c:\\";
   }
 #endif
+
+#endif /* !_WIN32_WCE */
 
   if( home_dir ){
     int n = strlen(home_dir) + 1;
@@ -1902,10 +1904,6 @@ int main(int argc, char **argv){
   char *zFirstCmd = 0;
   int i;
   int rc = 0;
-
-#ifdef __MACOS__
-  argc = ccommand(&argv);
-#endif
 
   Argv0 = argv[0];
   main_init(&data);

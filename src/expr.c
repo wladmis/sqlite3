@@ -54,13 +54,17 @@ char sqlite3ExprAffinity(Expr *pExpr){
 ** collating sequences.
 */
 Expr *sqlite3ExprSetColl(Parse *pParse, Expr *pExpr, Token *pName){
+  char *zColl = 0;            /* Dequoted name of collation sequence */
   CollSeq *pColl;
-  if( pExpr==0 ) return 0;
-  pColl = sqlite3LocateCollSeq(pParse, (char*)pName->z, pName->n);
-  if( pColl ){
-    pExpr->pColl = pColl;
-    pExpr->flags |= EP_ExpCollate;
+  zColl = sqlite3NameFromToken(pParse->db, pName);
+  if( pExpr && zColl ){
+    pColl = sqlite3LocateCollSeq(pParse, zColl, -1);
+    if( pColl ){
+      pExpr->pColl = pColl;
+      pExpr->flags |= EP_ExpCollate;
+    }
   }
+  sqlite3_free(zColl);
   return pExpr;
 }
 

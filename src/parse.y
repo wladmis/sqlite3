@@ -272,7 +272,7 @@ ccons ::= CHECK LP expr(X) RP.       {sqlite3AddCheckConstraint(pParse,X);}
 ccons ::= REFERENCES nm(T) idxlist_opt(TA) refargs(R).
                                 {sqlite3CreateForeignKey(pParse,0,&T,TA,R);}
 ccons ::= defer_subclause(D).   {sqlite3DeferForeignKey(pParse,D);}
-ccons ::= COLLATE id(C).  {sqlite3AddCollateType(pParse, (char*)C.z, C.n);}
+ccons ::= COLLATE ids(C).  {sqlite3AddCollateType(pParse, &C);}
 
 // The optional AUTOINCREMENT keyword
 %type autoinc {int}
@@ -649,7 +649,7 @@ expr(A) ::= nm(X) DOT nm(Y) DOT nm(Z). {
   Expr *temp4 = sqlite3PExpr(pParse, TK_DOT, temp2, temp3, 0);
   A = sqlite3PExpr(pParse, TK_DOT, temp1, temp4, 0);
 }
-term(A) ::= INTEGER|FLOAT|BLOB(X).      {A = sqlite3PExpr(pParse, @X, 0, 0, &X);}
+term(A) ::= INTEGER|FLOAT|BLOB(X).  {A = sqlite3PExpr(pParse, @X, 0, 0, &X);}
 term(A) ::= STRING(X).       {A = sqlite3PExpr(pParse, @X, 0, 0, &X);}
 expr(A) ::= REGISTER(X).     {A = sqlite3RegisterExpr(pParse, &X);}
 expr(A) ::= VARIABLE(X).     {
@@ -657,7 +657,7 @@ expr(A) ::= VARIABLE(X).     {
   Expr *pExpr = A = sqlite3PExpr(pParse, TK_VARIABLE, 0, 0, pToken);
   sqlite3ExprAssignVarNumber(pParse, pExpr);
 }
-expr(A) ::= expr(E) COLLATE id(C). {
+expr(A) ::= expr(E) COLLATE ids(C). {
   A = sqlite3ExprSetColl(pParse, E, &C);
 }
 %ifndef SQLITE_OMIT_CAST
@@ -738,7 +738,11 @@ expr(A) ::= expr(X) IS NOT NULL(E). {
   A = sqlite3PExpr(pParse, TK_NOTNULL, X, 0, 0);
   sqlite3ExprSpan(A,&X->span,&E);
 }
-expr(A) ::= NOT|BITNOT(B) expr(X). {
+expr(A) ::= NOT(B) expr(X). {
+  A = sqlite3PExpr(pParse, @B, X, 0, 0);
+  sqlite3ExprSpan(A,&B,&X->span);
+}
+expr(A) ::= BITNOT(B) expr(X). {
   A = sqlite3PExpr(pParse, @B, X, 0, 0);
   sqlite3ExprSpan(A,&B,&X->span);
 }
@@ -893,7 +897,7 @@ idxlist(A) ::= idxlist(X) COMMA idxitem(Y) collate(C) sortorder(Z).  {
   Expr *p = 0;
   if( C.n>0 ){
     p = sqlite3PExpr(pParse, TK_COLUMN, 0, 0, 0);
-    if( p ) p->pColl = sqlite3LocateCollSeq(pParse, (char*)C.z, C.n);
+    sqlite3ExprSetColl(pParse, p, &C);
   }
   A = sqlite3ExprListAppend(pParse,X, p, &Y);
   sqlite3ExprListCheckLength(pParse, A, SQLITE_MAX_COLUMN, "index");
@@ -903,7 +907,7 @@ idxlist(A) ::= idxitem(Y) collate(C) sortorder(Z). {
   Expr *p = 0;
   if( C.n>0 ){
     p = sqlite3PExpr(pParse, TK_COLUMN, 0, 0, 0);
-    if( p ) p->pColl = sqlite3LocateCollSeq(pParse, (char*)C.z, C.n);
+    sqlite3ExprSetColl(pParse, p, &C);
   }
   A = sqlite3ExprListAppend(pParse,0, p, &Y);
   sqlite3ExprListCheckLength(pParse, A, SQLITE_MAX_COLUMN, "index");
@@ -913,7 +917,7 @@ idxitem(A) ::= nm(X).              {A = X;}
 
 %type collate {Token}
 collate(C) ::= .                {C.z = 0; C.n = 0;}
-collate(C) ::= COLLATE id(X).   {C = X;}
+collate(C) ::= COLLATE ids(X).   {C = X;}
 
 
 ///////////////////////////// The DROP INDEX command /////////////////////////

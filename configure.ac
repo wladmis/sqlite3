@@ -244,7 +244,7 @@ if test "$enable_releasemode" = "no"; then
   ALLOWRELEASE=""
   AC_MSG_RESULT([no])
 else
-  ALLOWRELEASE="-release `cat VERSION`"
+  ALLOWRELEASE="-release `cat $srcdir/VERSION`"
   AC_MSG_RESULT([yes])
 fi
 AC_SUBST(ALLOWRELEASE)
