@@ -86,4 +86,8 @@ SQLITE_3.5.0 {
 	sqlite3_vfs_register;
 	sqlite3_vfs_unregister;
 };
+SQLITE_3.5.3 {
+    global:
+	sqlite3_sql;
+};
 /* the prefix is SQLITE_, not SQLITE3_ */
