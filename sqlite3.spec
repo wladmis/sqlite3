@@ -100,8 +100,8 @@ embedded controllers.
 
 %prep
 %setup -q -n sqlite-%version
-rm aclocal.m4 config.guess config.sub configure ltmain.sh
 %patch -p1
+rm aclocal.m4 config.guess config.sub configure ltmain.sh
 
 %build
 autoreconf -i
