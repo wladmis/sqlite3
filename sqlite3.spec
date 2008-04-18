@@ -108,7 +108,10 @@ autoreconf -i
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts3.la doc
 
+%def_with test
+%if_with test
 make test
+%endif
 
 %install
 %make_install install tcl_install fts3_install DESTDIR=%buildroot
