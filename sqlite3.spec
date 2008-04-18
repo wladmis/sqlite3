@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.5.0
+Version: 3.5.1
 Release: alt0
 
 Summary: An Embeddable SQL Database Engine
@@ -7,12 +7,12 @@ License: Public Domain
 Group: Development/Databases
 
 URL: http://www.sqlite.org/
-Source: sqlite-3.5.0.tar
+Source: sqlite-%version.tar
 Patch: %name-%version-%release.patch
 
 Requires: lib%name = %version-%release
 
-# Automatically added by buildreq on Fri Aug 17 2007
+# Automatically added by buildreq on Sat Apr 19 2008
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
 
 %package -n lib%name
@@ -99,7 +99,7 @@ use in long-running programs such as graphical user interfaces or
 embedded controllers.
 
 %prep
-%setup -q -n sqlite-3.5.0
+%setup -q -n sqlite-%version
 rm aclocal.m4 config.guess config.sub configure ltmain.sh
 %patch -p1
 
@@ -175,8 +175,8 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 %_docdir/lemon/lemon.html
 
 %changelog
-* Mon Nov 12 2007 Alexey Tourbin <at@altlinux.ru> 3.5.0-alt0
-- 3.4.2 -> 3.5.0
+* Sat Apr 19 2008 Alexey Tourbin <at@altlinux.ru> 3.5.1-alt0
+- 3.4.2 -> 3.5.1
 
 * Fri Aug 17 2007 Alexey Tourbin <at@altlinux.ru> 3.4.2-alt1
 - 3.4.1+cvs20070803 -> 3.4.2

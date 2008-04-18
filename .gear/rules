@@ -1,0 +1,2 @@
+tar: @version@:. name=sqlite-@version@
+diff: @version@:. .
