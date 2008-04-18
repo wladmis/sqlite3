@@ -386,8 +386,12 @@ do_test misc7-17.1 {
   }
 } {1 {database is locked}}
 do_test misc7-17.2 {
-  catch {file attributes test.db-journal -permissions rw-------}
+  # Note that the -readonly flag must be cleared before the -permissions
+  # are set. Otherwise, when using tcl 8.5 on mac, the fact that the 
+  # -readonly flag is set causes the attempt to set the permissions
+  # to fail.
   catch {file attributes test.db-journal -readonly 0}
+  catch {file attributes test.db-journal -permissions rw-------}
   catchsql {
     SELECT count(*) FROM t3;
   }

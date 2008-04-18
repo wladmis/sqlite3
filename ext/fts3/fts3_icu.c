@@ -112,6 +112,7 @@ static int icuOpen(
 
   *ppCursor = 0;
 
+  if( -1 == nInput ) nInput = strlen(nInput);
   nChar = nInput+1;
   pCsr = (IcuCursor *)sqlite3_malloc(
       sizeof(IcuCursor) +                /* IcuCursor */

@@ -229,36 +229,38 @@ do_test io-2.6.4 {
 # use the same technique to check that it is created as in the above 
 # block.
 file delete -force test2.db test2.db-journal
-do_test io-2.7.1 {
-  execsql {
-    ATTACH 'test2.db' AS aux;
-    PRAGMA aux.page_size = 1024;
-    CREATE TABLE aux.abc2(a, b);
-    BEGIN;
-    INSERT INTO abc VALUES(9, 10);
-  }
-  file exists test.db-journal
-} {0}
-do_test io-2.7.2 {
-  execsql { INSERT INTO abc2 SELECT * FROM abc }
-  file exists test2.db-journal
-} {0}
-do_test io-2.7.3 {
-  execsql { SELECT * FROM abc UNION ALL SELECT * FROM abc2 }
-} {1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10}
-do_test io-2.7.4 {
-  set fd [open test2.db-journal w]
-  puts $fd "This is not a journal file"
-  close $fd
-  catchsql { COMMIT }
-} {1 {unable to open database file}}
-do_test io-2.7.5 {
-  file delete -force test2.db-journal
-  catchsql { COMMIT }
-} {1 {cannot commit - no transaction is active}}
-do_test io-2.7.6 {
-  execsql { SELECT * FROM abc UNION ALL SELECT * FROM abc2 }
-} {1 2 3 4 5 6 7 8}
+ifcapable attach {
+  do_test io-2.7.1 {
+    execsql {
+      ATTACH 'test2.db' AS aux;
+      PRAGMA aux.page_size = 1024;
+      CREATE TABLE aux.abc2(a, b);
+      BEGIN;
+      INSERT INTO abc VALUES(9, 10);
+    }
+    file exists test.db-journal
+  } {0}
+  do_test io-2.7.2 {
+    execsql { INSERT INTO abc2 SELECT * FROM abc }
+    file exists test2.db-journal
+  } {0}
+  do_test io-2.7.3 {
+    execsql { SELECT * FROM abc UNION ALL SELECT * FROM abc2 }
+  } {1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10}
+  do_test io-2.7.4 {
+    set fd [open test2.db-journal w]
+    puts $fd "This is not a journal file"
+    close $fd
+    catchsql { COMMIT }
+  } {1 {unable to open database file}}
+  do_test io-2.7.5 {
+    file delete -force test2.db-journal
+    catchsql { COMMIT }
+  } {1 {cannot commit - no transaction is active}}
+  do_test io-2.7.6 {
+    execsql { SELECT * FROM abc UNION ALL SELECT * FROM abc2 }
+  } {1 2 3 4 5 6 7 8}
+}
 
 # Try an explicit ROLLBACK before the journal file is created.
 #

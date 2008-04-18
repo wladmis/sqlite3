@@ -21,8 +21,8 @@
 ** This test only works on UNIX with a SQLITE_THREADSAFE build that includes
 ** the SQLITE_SERVER option.
 */
-#if defined(SQLITE_SERVER) && !defined(SQLITE_OMIT_SHARED_CACHE)
-#if defined(OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE
+#if defined(SQLITE_SERVER) && !defined(SQLITE_OMIT_SHARED_CACHE) && \
+    defined(OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE
 
 #include <stdlib.h>
 #include <string.h>
@@ -721,4 +721,3 @@ int Sqlitetest7_Init(Tcl_Interp *interp){
 #else
 int Sqlitetest7_Init(Tcl_Interp *interp){ return TCL_OK; }
 #endif /* OS_UNIX */
-#endif

@@ -166,6 +166,7 @@ proc finalize_testing {} {
   catch {db2 close}
   catch {db3 close}
 
+  vfs_unlink_test
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close
@@ -197,12 +198,15 @@ proc finalize_testing {} {
   if {[sqlite3_memory_used]>0} {
     puts "Unfreed memory: [sqlite3_memory_used] bytes"
     incr nErr
-    ifcapable memdebug {
+    ifcapable memdebug||(mem3&&debug) {
       puts "Writing unfreed memory log to \"./memleak.txt\""
       sqlite3_memdebug_dump ./memleak.txt
     }
   } else {
     puts "All memory allocations freed - no leaks"
+    ifcapable memdebug {
+      sqlite3_memdebug_dump ./memusage.txt
+    }
   }
   puts "Maximum memory usage: [sqlite3_memory_highwater] bytes"
   foreach f [glob -nocomplain test.db-*-journal] {

@@ -15,7 +15,9 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 db close
 
-ifcapable !shared_cache {
+# These tests cannot be run without the ATTACH command.
+#
+ifcapable !shared_cache||!attach {
   finish_test
   return
 }

@@ -105,4 +105,26 @@ subblob-test 4.4 61E188B462E28D8563E3919663 -2 1 96
 subblob-test 4.5 61E188B462E28D8563E3919663 -5 4 63E39196
 subblob-test 4.6 61E188B462E28D8563E3919663 -100 98 61E188B462E28D8563E391 
 
+# Two-argument SUBSTR
+#
+proc substr-2-test {id string idx result} {
+  db eval {
+    DELETE FROM t1;
+    INSERT INTO t1(t) VALUES($string)
+  }
+  do_test substr-$id.1 [subst {
+    execsql {
+      SELECT substr(t, $idx) FROM t1
+    }
+  }] [list $result]
+  set qstr '[string map {' ''} $string]'
+  do_test substr-$id.2 [subst {
+    execsql {
+      SELECT substr($qstr, $idx)
+    }
+  }] [list $result]
+}
+substr-2-test 5.1 abcdefghijklmnop 5 efghijklmnop
+substr-2-test 5.2 abcdef -5 bcdef
+
 finish_test

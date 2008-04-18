@@ -19,6 +19,11 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 source $testdir/thread_common.tcl
 if {[info commands sqlthread] eq ""} {
+  finish_test
+  return
+}
+ifcapable !attach { 
+  finish_test
   return
 }
 

@@ -2168,14 +2168,13 @@ static int incrVacuumStep(BtShared *pBt, Pgno nFin){
       assert( iFreePg<iLastPg );
       
       rc = sqlite3PagerWrite(pLastPg->pDbPage);
-      if( rc!=SQLITE_OK ){
-        return rc;
-      } 
-      rc = relocatePage(pBt, pLastPg, eType, iPtrPage, iFreePg);
+      if( rc==SQLITE_OK ){
+        rc = relocatePage(pBt, pLastPg, eType, iPtrPage, iFreePg);
+      }
       releasePage(pLastPg);
       if( rc!=SQLITE_OK ){
         return rc;
-      } 
+      }
     }
   }
 
@@ -3039,7 +3038,7 @@ static int accessPayload(
   u32 nKey;
   int iIdx = 0;
   MemPage *pPage = pCur->pPage;     /* Btree page of current cursor entry */
-  BtShared *pBt = pCur->pBt;        /* Btree this cursor belongs to */
+  BtShared *pBt;                   /* Btree this cursor belongs to */
 
   assert( pPage );
   assert( pCur->eState==CURSOR_VALID );
@@ -3073,6 +3072,7 @@ static int accessPayload(
     offset -= pCur->info.nLocal;
   }
 
+  pBt = pCur->pBt;
   if( rc==SQLITE_OK && amt>0 ){
     const int ovflSize = pBt->usableSize - 4;  /* Bytes content per ovfl page */
     Pgno nextPage;

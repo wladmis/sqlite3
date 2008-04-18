@@ -1499,9 +1499,13 @@ that is running.  Example:  "2.8.0"</td>
 </tr>
 
 <tr>
-<td valign="top" align="right">substr(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
+<td valign="top" align="right">
+  substr(<i>X</i>,<i>Y</i>,<i>Z</i>)<br>
+  substr(<i>X</i>,<i>Y</i>)</td>
 <td valign="top">Return a substring of input string <i>X</i> that begins
 with the <i>Y</i>-th character and which is <i>Z</i> characters long.
+If <i>Z</i> is omitted then all character through the end of the string
+are returned.
 The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
 the the first character of the substring is found by counting from the
 right rather than the left.  If <i>X</i> is string

@@ -65,6 +65,7 @@ set EXCLUDE {
   soak.test
   speed1.test
   speed2.test
+  speed4.test
   sqllimits1.test
 
   thread001.test

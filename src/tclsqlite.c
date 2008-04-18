@@ -1073,7 +1073,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       }
     }else{
       Tcl_AppendResult( interp, "bad option \"", 
-          Tcl_GetStringFromObj(objv[0],0), "\": must be flush or size", 0);
+          Tcl_GetStringFromObj(objv[2],0), "\": must be flush or size", 0);
       return TCL_ERROR;
     }
     break;

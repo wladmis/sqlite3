@@ -69,5 +69,6 @@ foreach p $paths {
 db close
 sqlite3async_halt idle
 sqlite3async_wait
+sqlite3async_halt never
 sqlite3async_enable 0
 finish_test

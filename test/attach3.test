@@ -15,9 +15,13 @@
 # $Id$
 #
 
-
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+
+ifcapable !attach {
+  finish_test
+  return
+}
 
 # Create tables t1 and t2 in the main database
 execsql {

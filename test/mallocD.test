@@ -48,12 +48,14 @@ do_malloc_test mallocD-3 -sqlprep $PREP -sqlbody {
   COMMIT;
 }
 
-do_malloc_test mallocD-4 -sqlprep $PREP -sqlbody {
-  ATTACH 'test2.db' AS aux;
-  BEGIN;
-  CREATE TABLE aux.def(d, e, f);
-  INSERT INTO abc VALUES(4, 5, 6);
-  COMMIT;
+ifcapable attach {
+  do_malloc_test mallocD-4 -sqlprep $PREP -sqlbody {
+    ATTACH 'test2.db' AS aux;
+    BEGIN;
+    CREATE TABLE aux.def(d, e, f);
+    INSERT INTO abc VALUES(4, 5, 6);
+    COMMIT;
+  }
 }
 
 sqlite3_simulate_device -char {}
