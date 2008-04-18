@@ -1,0 +1,13 @@
+object 5047c2f88b82bea09ddda55bbc162067ba9e260f
+type commit
+tag 3.5.3
+tagger Alexey Tourbin <at@altlinux.ru> 1198829544 +0300
+
+3.5.3
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+
+iD8DBQBHdK/ofBKgtDjnu0YRAtB+AJ4hsplsuR9bRgwGYO2J4lZseMEfPgCfagJI
+5QHKjDOnCoUT6KZadmCMuwk=
+=h1ce
+-----END PGP SIGNATURE-----
