@@ -7,7 +7,8 @@ License: Public Domain
 Group: Development/Databases
 
 URL: http://www.sqlite.org/
-Source: sqlite-%version.tar
+Source0: sqlite-%version.tar
+Source1: %name-doc.tar
 Patch: %name-%version-%release.patch
 
 Requires: lib%name = %version-%release
@@ -99,7 +100,7 @@ use in long-running programs such as graphical user interfaces or
 embedded controllers.
 
 %prep
-%setup -q -n sqlite-%version
+%setup -q -n sqlite-%version -a1
 %patch -p1
 rm aclocal.m4 config.guess config.sub configure ltmain.sh
 
