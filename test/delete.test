@@ -275,6 +275,7 @@ do_test delete-8.0 {
   }
 } {123}
 db close
+catch {file delete -force test.db-journal}
 catch {file attributes test.db -permissions 0444}
 catch {file attributes test.db -readonly 1}
 sqlite3 db test.db
