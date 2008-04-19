@@ -54,6 +54,7 @@ set EXCLUDE {
   fuzz.test
   fuzz_malloc.test
   in2.test
+  jrnlmode3.test
   loadext.test
   mallocAll.test
   malloc.test
