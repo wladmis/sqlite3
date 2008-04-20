@@ -186,9 +186,11 @@ static void attachFunc(
   ** we found it.
   */
   if( rc==SQLITE_OK ){
-    sqlite3SafetyOn(db);
+    (void)sqlite3SafetyOn(db);
+    sqlite3BtreeEnterAll(db);
     rc = sqlite3Init(db, &zErrDyn);
-    sqlite3SafetyOff(db);
+    sqlite3BtreeLeaveAll(db);
+    (void)sqlite3SafetyOff(db);
   }
   if( rc ){
     int iDb = db->nDb - 1;
@@ -295,6 +297,7 @@ static void codeAttach(
   Vdbe *v;
   FuncDef *pFunc;
   sqlite3* db = pParse->db;
+  int regArgs;
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
   assert( db->mallocFailed || pAuthArg );
@@ -324,21 +327,23 @@ static void codeAttach(
   }
 
   v = sqlite3GetVdbe(pParse);
-  sqlite3ExprCode(pParse, pFilename);
-  sqlite3ExprCode(pParse, pDbname);
-  sqlite3ExprCode(pParse, pKey);
+  regArgs = sqlite3GetTempRange(pParse, 3);
+  sqlite3ExprCode(pParse, pFilename, regArgs);
+  sqlite3ExprCode(pParse, pDbname, regArgs+1);
+  sqlite3ExprCode(pParse, pKey, regArgs+2);
 
   assert( v || db->mallocFailed );
   if( v ){
-    sqlite3VdbeAddOp(v, OP_Function, 0, nFunc);
+    sqlite3VdbeAddOp3(v, OP_Function, 0, regArgs+3-nFunc, regArgs);
+    sqlite3VdbeChangeP5(v, nFunc);
     pFunc = sqlite3FindFunction(db, zFunc, strlen(zFunc), nFunc, SQLITE_UTF8,0);
-    sqlite3VdbeChangeP3(v, -1, (char *)pFunc, P3_FUNCDEF);
+    sqlite3VdbeChangeP4(v, -1, (char *)pFunc, P4_FUNCDEF);
 
     /* Code an OP_Expire. For an ATTACH statement, set P1 to true (expire this
     ** statement only). For DETACH, set it to false (expire all existing
     ** statements).
     */
-    sqlite3VdbeAddOp(v, OP_Expire, (type==SQLITE_ATTACH), 0);
+    sqlite3VdbeAddOp1(v, OP_Expire, (type==SQLITE_ATTACH));
   }
   
 attach_end:

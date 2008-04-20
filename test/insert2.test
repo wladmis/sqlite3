@@ -22,7 +22,7 @@ source $testdir/tester.tcl
 do_test insert2-1.0 {
   execsql {CREATE TABLE d1(n int, log int);}
   for {set i 1} {$i<=20} {incr i} {
-    for {set j 0} {pow(2,$j)<$i} {incr j} {}
+    for {set j 0} {(1<<$j)<$i} {incr j} {}
     execsql "INSERT INTO d1 VALUES($i,$j)"
   }
   execsql {SELECT * FROM d1 ORDER BY n}

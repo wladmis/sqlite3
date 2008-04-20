@@ -289,6 +289,38 @@ void sqlite3VdbeMemRelease(Mem *p){
 }
 
 /*
+** Convert a 64-bit IEEE double into a 64-bit signed integer.
+** If the double is too large, return 0x8000000000000000.
+**
+** Most systems appear to do this simply by assigning
+** variables and without the extra range tests.  But
+** there are reports that windows throws an expection
+** if the floating point value is out of range. (See ticket #2880.)
+** Because we do not completely understand the problem, we will
+** take the conservative approach and always do range tests
+** before attempting the conversion.
+*/
+static i64 doubleToInt64(double r){
+  /*
+  ** Many compilers we encounter do not define constants for the
+  ** minimum and maximum 64-bit integers, or they define them
+  ** inconsistently.  And many do not understand the "LL" notation.
+  ** So we define our own static constants here using nothing
+  ** larger than a 32-bit integer constant.
+  */
+  static const i64 maxInt = (((i64)0x7fffffff)<<32)|0xffffffff;
+  static const i64 minInt = ((i64)0x80000000)<<32;
+
+  if( r<(double)minInt ){
+    return minInt;
+  }else if( r>(double)maxInt ){
+    return minInt;
+  }else{
+    return (i64)r;
+  }
+}
+
+/*
 ** Return some kind of integer value which is the best we can do
 ** at representing the value that *pMem describes as an integer.
 ** If pMem is an integer, then the value is exact.  If pMem is
@@ -305,7 +337,7 @@ i64 sqlite3VdbeIntValue(Mem *pMem){
   if( flags & MEM_Int ){
     return pMem->u.i;
   }else if( flags & MEM_Real ){
-    return (i64)pMem->r;
+    return doubleToInt64(pMem->r);
   }else if( flags & (MEM_Str|MEM_Blob) ){
     i64 value;
     pMem->flags |= MEM_Str;
@@ -355,8 +387,9 @@ double sqlite3VdbeRealValue(Mem *pMem){
 void sqlite3VdbeIntegerAffinity(Mem *pMem){
   assert( pMem->flags & MEM_Real );
   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
-  pMem->u.i = pMem->r;
-  if( ((double)pMem->u.i)==pMem->r ){
+
+  pMem->u.i = doubleToInt64(pMem->r);
+  if( pMem->r==(double)pMem->u.i ){
     pMem->flags |= MEM_Int;
   }
 }
@@ -395,7 +428,7 @@ int sqlite3VdbeMemNumerify(Mem *pMem){
   assert( (pMem->flags & (MEM_Blob|MEM_Str))!=0 );
   assert( pMem->db==0 || sqlite3_mutex_held(pMem->db->mutex) );
   r1 = sqlite3VdbeRealValue(pMem);
-  i = (i64)r1;
+  i = doubleToInt64(r1);
   r2 = (double)i;
   if( r1==r2 ){
     sqlite3VdbeMemIntegerify(pMem);
@@ -475,11 +508,12 @@ int sqlite3VdbeMemTooBig(Mem *p){
 
 /*
 ** Make an shallow copy of pFrom into pTo.  Prior contents of
-** pTo are overwritten.  The pFrom->z field is not duplicated.  If
+** pTo are freed.  The pFrom->z field is not duplicated.  If
 ** pFrom->z is used, then pTo->z points to the same thing as pFrom->z
 ** and flags gets srcType (either MEM_Ephem or MEM_Static).
 */
 void sqlite3VdbeMemShallowCopy(Mem *pTo, const Mem *pFrom, int srcType){
+  sqlite3VdbeMemRelease(pTo);
   memcpy(pTo, pFrom, sizeof(*pFrom)-sizeof(pFrom->zShort));
   pTo->xDel = 0;
   if( pTo->flags & (MEM_Str|MEM_Blob) ){
@@ -495,9 +529,6 @@ void sqlite3VdbeMemShallowCopy(Mem *pTo, const Mem *pFrom, int srcType){
 */
 int sqlite3VdbeMemCopy(Mem *pTo, const Mem *pFrom){
   int rc;
-  if( pTo->flags & MEM_Dyn ){
-    sqlite3VdbeMemRelease(pTo);
-  }
   sqlite3VdbeMemShallowCopy(pTo, pFrom, MEM_Ephem);
   if( pTo->flags & MEM_Ephem ){
     rc = sqlite3VdbeMemMakeWriteable(pTo);
@@ -511,12 +542,9 @@ int sqlite3VdbeMemCopy(Mem *pTo, const Mem *pFrom){
 ** Transfer the contents of pFrom to pTo. Any existing value in pTo is
 ** freed. If pFrom contains ephemeral data, a copy is made.
 **
-** pFrom contains an SQL NULL when this routine returns.  SQLITE_NOMEM
-** might be returned if pFrom held ephemeral data and we were unable
-** to allocate enough space to make a copy.
+** pFrom contains an SQL NULL when this routine returns.
 */
-int sqlite3VdbeMemMove(Mem *pTo, Mem *pFrom){
-  int rc;
+void sqlite3VdbeMemMove(Mem *pTo, Mem *pFrom){
   assert( pFrom->db==0 || sqlite3_mutex_held(pFrom->db->mutex) );
   assert( pTo->db==0 || sqlite3_mutex_held(pTo->db->mutex) );
   assert( pFrom->db==0 || pTo->db==0 || pFrom->db==pTo->db );
@@ -529,12 +557,6 @@ int sqlite3VdbeMemMove(Mem *pTo, Mem *pFrom){
   }
   pFrom->flags = MEM_Null;
   pFrom->xDel = 0;
-  if( pTo->flags & MEM_Ephem ){
-    rc = sqlite3VdbeMemMakeWriteable(pTo);
-  }else{
-    rc = SQLITE_OK;
-  }
-  return rc;
 }
 
 /*
@@ -802,7 +824,7 @@ int sqlite3VdbeMemFromBtree(
   return SQLITE_OK;
 }
 
-#ifndef NDEBUG
+#if 0
 /*
 ** Perform various checks on the memory cell pMem. An assert() will
 ** fail if pMem is internally inconsistent.
@@ -913,7 +935,7 @@ sqlite3_value *sqlite3ValueNew(sqlite3 *db){
 ** Create a new sqlite3_value object, containing the value of pExpr.
 **
 ** This only works for very simple expressions that consist of one constant
-** token (i.e. "5", "5.1", "NULL", "'a string'"). If the expression can
+** token (i.e. "5", "5.1", "'a string'"). If the expression can
 ** be converted directly into a value, then the value is allocated and
 ** a pointer written to *ppVal. The caller is responsible for deallocating
 ** the value by passing it to sqlite3ValueFree() later on. If the expression
@@ -956,13 +978,15 @@ int sqlite3ValueFromExpr(
 #ifndef SQLITE_OMIT_BLOB_LITERAL
   else if( op==TK_BLOB ){
     int nVal;
+    assert( pExpr->token.n>=3 );
+    assert( pExpr->token.z[0]=='x' || pExpr->token.z[0]=='X' );
+    assert( pExpr->token.z[1]=='\'' );
+    assert( pExpr->token.z[pExpr->token.n-1]=='\'' );
     pVal = sqlite3ValueNew(db);
-    zVal = sqlite3StrNDup((char*)pExpr->token.z+1, pExpr->token.n-1);
-    if( !zVal || !pVal ) goto no_mem;
-    sqlite3Dequote(zVal);
-    nVal = strlen(zVal)/2;
-    sqlite3VdbeMemSetStr(pVal, sqlite3HexToBlob(db, zVal), nVal,0,sqlite3_free);
-    sqlite3_free(zVal);
+    nVal = pExpr->token.n - 3;
+    zVal = (char*)pExpr->token.z + 2;
+    sqlite3VdbeMemSetStr(pVal, sqlite3HexToBlob(db, zVal, nVal), nVal/2,
+                         0, sqlite3_free);
   }
 #endif
 

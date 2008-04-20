@@ -349,12 +349,12 @@ static int test_memdebug_dump(
 **
 ** where options are:
 **
-**     -repeat    <boolean>
+**     -repeat    <count>
 **     -benigncnt <varname>
 **
 ** Arrange for a simulated malloc() failure after COUNTER successes.
-** If REPEAT is 1 then all subsequent malloc()s fail.   If REPEAT is
-** 0 then only a single failure occurs.
+** If a repeat count is specified, the fault is repeated that many
+** times.
 **
 ** Each call to this routine overrides the prior counter value.
 ** This routine returns the number of simulated failures that have
@@ -370,9 +370,9 @@ static int test_memdebug_fail(
 ){
   int ii;
   int iFail;
-  int iRepeat = -1;
+  int nRepeat = 1;
   Tcl_Obj *pBenignCnt = 0;
-
+  int nBenign;
   int nFail = 0;
 
   if( objc<2 ){
@@ -390,7 +390,7 @@ static int test_memdebug_fail(
       if( ii==(objc-1) ){
         zErr = "option requires an argument: ";
       }else{
-        if( Tcl_GetIntFromObj(interp, objv[ii+1], &iRepeat) ){
+        if( Tcl_GetIntFromObj(interp, objv[ii+1], &nRepeat) ){
           return TCL_ERROR;
         }
       }
@@ -410,16 +410,15 @@ static int test_memdebug_fail(
     }
   }
   
-#ifdef SQLITE_MEMDEBUG
-  {
-    extern int sqlite3_memdebug_fail(int,int,int*);
-    int iBenignCnt;
-    nFail = sqlite3_memdebug_fail(iFail, iRepeat, &iBenignCnt);
-    if( pBenignCnt ){
-      Tcl_ObjSetVar2(interp, pBenignCnt, 0, Tcl_NewIntObj(iBenignCnt), 0);
-    }
+  nBenign = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES,
+                                 SQLITE_FAULTINJECTOR_MALLOC);
+  nFail = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_FAILURES,
+                               SQLITE_FAULTINJECTOR_MALLOC);
+  sqlite3_test_control(SQLITE_TESTCTRL_FAULT_CONFIG,
+                       SQLITE_FAULTINJECTOR_MALLOC, iFail, nRepeat);
+  if( pBenignCnt ){
+    Tcl_ObjSetVar2(interp, pBenignCnt, 0, Tcl_NewIntObj(nBenign), 0);
   }
-#endif
   Tcl_SetObjResult(interp, Tcl_NewIntObj(nFail));
   return TCL_OK;
 }
@@ -444,8 +443,9 @@ static int test_memdebug_pending(
 
 #ifdef SQLITE_MEMDEBUG
   {
-    extern int sqlite3_memdebug_pending();
-    Tcl_SetObjResult(interp, Tcl_NewIntObj(sqlite3_memdebug_pending()));
+    int nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
+                                        SQLITE_FAULTINJECTOR_MALLOC);
+    Tcl_SetObjResult(interp, Tcl_NewIntObj(nPending));
   }
 #endif
   return TCL_OK;

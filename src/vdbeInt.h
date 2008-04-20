@@ -125,14 +125,13 @@ struct Mem {
   double r;           /* Real value */
   sqlite3 *db;        /* The associated database connection */
   char *z;            /* String or BLOB value */
-  int n;              /* Number of characters in string value, including '\0' */
+  int n;              /* Number of characters in string value, excluding '\0' */
   u16 flags;          /* Some combination of MEM_Null, MEM_Str, MEM_Dyn, etc. */
   u8  type;           /* One of SQLITE_NULL, SQLITE_TEXT, SQLITE_INTEGER, etc */
   u8  enc;            /* SQLITE_UTF8, SQLITE_UTF16BE, SQLITE_UTF16LE */
   void (*xDel)(void *);  /* If not null, call this function to delete Mem.z */
   char zShort[NBFS];  /* Space for short strings */
 };
-typedef struct Mem Mem;
 
 /* One or more of the following flags are set to indicate the validOK
 ** representations of the value stored in the Mem struct.
@@ -191,7 +190,6 @@ struct VdbeFunc {
     void (*xDelete)(void *);      /* Destructor for the aux data */
   } apAux[1];                   /* One slot for each function argument */
 };
-typedef struct VdbeFunc VdbeFunc;
 
 /*
 ** The "context" argument for a installable function.  A pointer to an
@@ -293,8 +291,6 @@ struct Vdbe {
   int nLabel;         /* Number of labels used */
   int nLabelAlloc;    /* Number of slots allocated in aLabel[] */
   int *aLabel;        /* Space to hold the labels */
-  Mem *aStack;        /* The operand stack, except string values */
-  Mem *pTos;          /* Top entry in the operand stack */
   Mem **apArg;        /* Arguments to currently executing user function */
   Mem *aColName;      /* Column names to return */
   int nCursor;        /* Number of slots in apCsr[] */
@@ -321,9 +317,8 @@ struct Vdbe {
   int returnDepth;        /* Next unused element in returnStack[] */
   int nResColumn;         /* Number of columns in one row of the result set */
   char **azResColumn;     /* Values for one row of result */ 
-  int popStack;           /* Pop the stack this much on entry to VdbeExec() */
   char *zErrMsg;          /* Error message written here */
-  u8 resOnStack;          /* True if there are result values on the stack */
+  Mem *pResultSet;        /* Pointer to an array of results */
   u8 explain;             /* True if EXPLAIN present on SQL command */
   u8 changeCntOn;         /* True to update the change-counter */
   u8 aborted;             /* True if ROLLBACK in another VM causes an abort */
@@ -382,7 +377,7 @@ int sqlite3VdbeChangeEncoding(Mem *, int);
 int sqlite3VdbeMemTooBig(Mem*);
 int sqlite3VdbeMemCopy(Mem*, const Mem*);
 void sqlite3VdbeMemShallowCopy(Mem*, const Mem*, int);
-int sqlite3VdbeMemMove(Mem*, Mem*);
+void sqlite3VdbeMemMove(Mem*, Mem*);
 int sqlite3VdbeMemNulTerminate(Mem*);
 int sqlite3VdbeMemSetStr(Mem*, const char*, int, u8, void(*)(void*));
 void sqlite3VdbeMemSetInt64(Mem*, i64);
@@ -402,10 +397,10 @@ int sqlite3VdbeMemFromBtree(BtCursor*,int,int,int,Mem*);
 void sqlite3VdbeMemRelease(Mem *p);
 int sqlite3VdbeMemFinalize(Mem*, FuncDef*);
 const char *sqlite3OpcodeName(int);
+int sqlite3VdbeOpcodeHasProperty(int, int);
 
 #ifndef NDEBUG
   void sqlite3VdbeMemSanity(Mem*);
-  int sqlite3VdbeOpcodeNoPush(u8);
 #endif
 int sqlite3VdbeMemTranslate(Mem*, u8);
 #ifdef SQLITE_DEBUG

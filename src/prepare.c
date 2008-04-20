@@ -86,6 +86,8 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
       sqlite3_free(zErr);
       return 1;
     }
+  }else if( argv[0]==0 ){
+    corruptSchema(pData, 0);
   }else{
     /* If the SQL column is blank it means this is an index that
     ** was created to be the PRIMARY KEY or to fulfill a UNIQUE
@@ -158,6 +160,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   assert( iDb>=0 && iDb<db->nDb );
   assert( db->aDb[iDb].pSchema );
   assert( sqlite3_mutex_held(db->mutex) );
+  assert( iDb==1 || sqlite3BtreeHoldsMutex(db->aDb[iDb].pBt) );
 
   /* zMasterSchema and zInitScript are set to point at the master schema
   ** and initialisation script appropriate for the database being
@@ -171,7 +174,6 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   zMasterName = SCHEMA_TABLE(iDb);
 
   /* Construct the schema tables.  */
-  sqlite3SafetyOff(db);
   azArg[0] = zMasterName;
   azArg[1] = "1";
   azArg[2] = zMasterSchema;
@@ -179,9 +181,10 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   initData.db = db;
   initData.iDb = iDb;
   initData.pzErrMsg = pzErrMsg;
+  (void)sqlite3SafetyOff(db);
   rc = sqlite3InitCallback(&initData, 3, (char **)azArg, 0);
+  (void)sqlite3SafetyOn(db);
   if( rc ){
-    sqlite3SafetyOn(db);
     rc = initData.rc;
     goto error_out;
   }
@@ -189,7 +192,6 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   if( pTab ){
     pTab->readOnly = 1;
   }
-  sqlite3SafetyOn(db);
 
   /* Create a cursor to hold the database open
   */
@@ -268,6 +270,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
 
   size = meta[2];
   if( size==0 ){ size = SQLITE_DEFAULT_CACHE_SIZE; }
+  if( size<0 ) size = -size;
   pDb->pSchema->cache_size = size;
   sqlite3BtreeSetCacheSize(pDb->pBt, pDb->pSchema->cache_size);
 
@@ -308,7 +311,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     zSql = sqlite3MPrintf(db, 
         "SELECT name, rootpage, sql FROM '%q'.%s",
         db->aDb[iDb].zName, zMasterName);
-    sqlite3SafetyOff(db);
+    (void)sqlite3SafetyOff(db);
 #ifndef SQLITE_OMIT_AUTHORIZATION
     {
       int (*xAuth)(void*,int,const char*,const char*,const char*,const char*);
@@ -321,7 +324,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     }
 #endif
     if( rc==SQLITE_ABORT ) rc = initData.rc;
-    sqlite3SafetyOn(db);
+    (void)sqlite3SafetyOn(db);
     sqlite3_free(zSql);
 #ifndef SQLITE_OMIT_ANALYZE
     if( rc==SQLITE_OK ){
@@ -520,7 +523,7 @@ int sqlite3Prepare(
       if( rc ){
         const char *zDb = db->aDb[i].zName;
         sqlite3Error(db, SQLITE_LOCKED, "database schema is locked: %s", zDb);
-        sqlite3SafetyOff(db);
+        (void)sqlite3SafetyOff(db);
         return SQLITE_LOCKED;
       }
     }
@@ -530,7 +533,9 @@ int sqlite3Prepare(
   sParse.db = db;
   if( nBytes>0 && zSql[nBytes]!=0 ){
     char *zSqlCopy;
-    if( nBytes>SQLITE_MAX_SQL_LENGTH ){
+    if( SQLITE_MAX_SQL_LENGTH>0 && nBytes>SQLITE_MAX_SQL_LENGTH ){
+      sqlite3Error(db, SQLITE_TOOBIG, "statement too long");
+      (void)sqlite3SafetyOff(db);
       return SQLITE_TOOBIG;
     }
     zSqlCopy = sqlite3DbStrNDup(db, zSql, nBytes);
@@ -565,16 +570,19 @@ int sqlite3Prepare(
   if( rc==SQLITE_OK && sParse.pVdbe && sParse.explain ){
     if( sParse.explain==2 ){
       sqlite3VdbeSetNumCols(sParse.pVdbe, 3);
-      sqlite3VdbeSetColName(sParse.pVdbe, 0, COLNAME_NAME, "order", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 1, COLNAME_NAME, "from", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 2, COLNAME_NAME, "detail", P3_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 0, COLNAME_NAME, "order", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 1, COLNAME_NAME, "from", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 2, COLNAME_NAME, "detail", P4_STATIC);
     }else{
-      sqlite3VdbeSetNumCols(sParse.pVdbe, 5);
-      sqlite3VdbeSetColName(sParse.pVdbe, 0, COLNAME_NAME, "addr", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 1, COLNAME_NAME, "opcode", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 2, COLNAME_NAME, "p1", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 3, COLNAME_NAME, "p2", P3_STATIC);
-      sqlite3VdbeSetColName(sParse.pVdbe, 4, COLNAME_NAME, "p3", P3_STATIC);
+      sqlite3VdbeSetNumCols(sParse.pVdbe, 8);
+      sqlite3VdbeSetColName(sParse.pVdbe, 0, COLNAME_NAME, "addr", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 1, COLNAME_NAME, "opcode", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 2, COLNAME_NAME, "p1", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 3, COLNAME_NAME, "p2", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 4, COLNAME_NAME, "p3", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 5, COLNAME_NAME, "p4", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 6, COLNAME_NAME, "p5", P4_STATIC);
+      sqlite3VdbeSetColName(sParse.pVdbe, 7, COLNAME_NAME, "comment",P4_STATIC);
     }
   }
 #endif
@@ -601,7 +609,6 @@ int sqlite3Prepare(
   }
 
   rc = sqlite3ApiExit(db, rc);
-  /* sqlite3ReleaseThreadData(); */
   assert( (rc&db->errMask)==rc );
   return rc;
 }
@@ -614,7 +621,7 @@ static int sqlite3LockAndPrepare(
   const char **pzTail       /* OUT: End of parsed string */
 ){
   int rc;
-  if( sqlite3SafetyCheck(db) ){
+  if( !sqlite3SafetyCheckOk(db) ){
     return SQLITE_MISUSE;
   }
   sqlite3_mutex_enter(db->mutex);
@@ -638,9 +645,7 @@ int sqlite3Reprepare(Vdbe *p){
 
   assert( sqlite3_mutex_held(sqlite3VdbeDb(p)->mutex) );
   zSql = sqlite3_sql((sqlite3_stmt *)p);
-  if( zSql==0 ){
-    return 0;
-  }
+  assert( zSql!=0 );  /* Reprepare only called for prepare_v2() statements */
   db = sqlite3VdbeDb(p);
   assert( sqlite3_mutex_held(db->mutex) );
   rc = sqlite3LockAndPrepare(db, zSql, -1, 0, &pNew, 0);
@@ -709,7 +714,7 @@ static int sqlite3Prepare16(
   const char *zTail8 = 0;
   int rc = SQLITE_OK;
 
-  if( sqlite3SafetyCheck(db) ){
+  if( !sqlite3SafetyCheckOk(db) ){
     return SQLITE_MISUSE;
   }
   sqlite3_mutex_enter(db->mutex);

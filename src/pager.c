@@ -699,8 +699,9 @@ static void pager_resize_hash_table(Pager *pPager, int N){
   PgHdr **aHash, *pPg;
   assert( N>0 && (N&(N-1))==0 );
   pagerLeave(pPager);
-  sqlite3MallocBenignFailure((int)pPager->aHash);
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, pPager->aHash!=0);
   aHash = sqlite3MallocZero( sizeof(aHash[0])*N );
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
   pagerEnter(pPager);
   if( aHash==0 ){
     /* Failure to rehash is not an error.  It is only a performance hit. */
@@ -4379,33 +4380,51 @@ void sqlite3PagerDontWrite(DbPage *pDbPage){
 ** the PgHdr.needRead flag is set) then this routine acts as a promise
 ** that we will never need to read the page content in the future.
 ** so the needRead flag can be cleared at this point.
+**
+** This routine is only called from a single place in the sqlite btree
+** code (when a leaf is removed from the free-list). This allows the
+** following assumptions to be made about pPg:
+**
+**   1. PagerDontWrite() has been called on the page, OR 
+**      PagerWrite() has not yet been called on the page.
+**
+**   2. The page existed when the transaction was started.
+**
+** Details: DontRollback() (this routine) is only called when a leaf is
+** removed from the free list. DontWrite() is called whenever a page 
+** becomes a free-list leaf.
 */
 void sqlite3PagerDontRollback(DbPage *pPg){
   Pager *pPager = pPg->pPager;
 
   pagerEnter(pPager);
   assert( pPager->state>=PAGER_RESERVED );
-  if( pPager->journalOpen==0 ) return;
-  if( pPg->alwaysRollback || pPager->alwaysRollback || MEMDB ) return;
-  if( !pPg->inJournal && (int)pPg->pgno <= pPager->origDbSize ){
-    assert( pPager->aInJournal!=0 );
-    pPager->aInJournal[pPg->pgno/8] |= 1<<(pPg->pgno&7);
-    pPg->inJournal = 1;
-    pPg->needRead = 0;
-    if( pPager->stmtInUse ){
-      pPager->aInStmt[pPg->pgno/8] |= 1<<(pPg->pgno&7);
-    }
-    PAGERTRACE3("DONT_ROLLBACK page %d of %d\n", pPg->pgno, PAGERID(pPager));
-    IOTRACE(("GARBAGE %p %d\n", pPager, pPg->pgno))
+
+  /* If the journal file is not open, or DontWrite() has been called on
+  ** this page (DontWrite() sets the alwaysRollback flag), then this
+  ** function is a no-op.
+  */
+  if( pPager->journalOpen==0 || pPg->alwaysRollback || pPager->alwaysRollback ){
+    pagerLeave(pPager);
+    return;
   }
-  if( pPager->stmtInUse 
-   && !pageInStatement(pPg) 
-   && (int)pPg->pgno<=pPager->stmtSize 
-  ){
-    assert( pPg->inJournal || (int)pPg->pgno>pPager->origDbSize );
-    assert( pPager->aInStmt!=0 );
+  assert( !MEMDB );    /* For a memdb, pPager->journalOpen is always 0 */
+
+  /* Check that PagerWrite() has not yet been called on this page, and
+  ** that the page existed when the transaction started.
+  */
+  assert( !pPg->inJournal && (int)pPg->pgno <= pPager->origDbSize );
+
+  assert( pPager->aInJournal!=0 );
+  pPager->aInJournal[pPg->pgno/8] |= 1<<(pPg->pgno&7);
+  pPg->inJournal = 1;
+  pPg->needRead = 0;
+  if( pPager->stmtInUse ){
+    assert( pPager->stmtSize <= pPager->origDbSize );
     pPager->aInStmt[pPg->pgno/8] |= 1<<(pPg->pgno&7);
   }
+  PAGERTRACE3("DONT_ROLLBACK page %d of %d\n", pPg->pgno, PAGERID(pPager));
+  IOTRACE(("GARBAGE %p %d\n", pPager, pPg->pgno))
   pagerLeave(pPager);
 }
 
@@ -4638,6 +4657,7 @@ int sqlite3PagerCommitPhaseTwo(Pager *pPager){
 #endif
     pPager->pStmt = 0;
     pPager->state = PAGER_SHARED;
+    pagerLeave(pPager);
     return SQLITE_OK;
   }
   assert( pPager->journalOpen || !pPager->dirtyCache );
@@ -4965,7 +4985,7 @@ void sqlite3PagerSetCodec(
 
 #ifndef SQLITE_OMIT_AUTOVACUUM
 /*
-** Move the page pPg to location pgno in the file. 
+** Move the page pPg to location pgno in the file.
 **
 ** There must be no references to the page previously located at
 ** pgno (which we call pPgOld) though that page is allowed to be
@@ -5048,6 +5068,13 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno){
     ** Pager.aInJournal bit has been set. This needs to be remedied by loading
     ** the page into the pager-cache and setting the PgHdr.needSync flag.
     **
+    ** If the attempt to load the page into the page-cache fails, (due
+    ** to a malloc() or IO failure), clear the bit in the aInJournal[]
+    ** array. Otherwise, if the page is loaded and written again in
+    ** this transaction, it may be written to the database file before
+    ** it is synced into the journal file. This way, it may end up in
+    ** the journal file twice, but that is not a problem.
+    **
     ** The sqlite3PagerGet() call may cause the journal to sync. So make
     ** sure the Pager.needSync flag is set too.
     */
@@ -5055,7 +5082,13 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno){
     PgHdr *pPgHdr;
     assert( pPager->needSync );
     rc = sqlite3PagerGet(pPager, needSyncPgno, &pPgHdr);
-    if( rc!=SQLITE_OK ) return rc;
+    if( rc!=SQLITE_OK ){
+      if( pPager->aInJournal && (int)needSyncPgno<=pPager->origDbSize ){
+        pPager->aInJournal[needSyncPgno/8] &= ~(1<<(needSyncPgno&7));
+      }
+      pagerLeave(pPager);
+      return rc;
+    }
     pPager->needSync = 1;
     pPgHdr->needSync = 1;
     pPgHdr->inJournal = 1;

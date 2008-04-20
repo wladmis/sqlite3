@@ -103,6 +103,13 @@ static int queryTableLock(Btree *p, Pgno iTab, u8 eLock){
     return SQLITE_OK;
   }
 
+  /* If some other connection is holding an exclusive lock, the
+  ** requested lock may not be obtained.
+  */
+  if( pBt->pExclusive && pBt->pExclusive!=p ){
+    return SQLITE_LOCKED;
+  }
+
   /* This (along with lockTable()) is where the ReadUncommitted flag is
   ** dealt with. If the caller is querying for a read-lock and the flag is
   ** set, it is unconditionally granted - even if there are write-locks
@@ -212,19 +219,25 @@ static int lockTable(Btree *p, Pgno iTable, u8 eLock){
 ** procedure) held by Btree handle p.
 */
 static void unlockAllTables(Btree *p){
-  BtLock **ppIter = &p->pBt->pLock;
+  BtShared *pBt = p->pBt;
+  BtLock **ppIter = &pBt->pLock;
 
   assert( sqlite3BtreeHoldsMutex(p) );
   assert( p->sharable || 0==*ppIter );
 
   while( *ppIter ){
     BtLock *pLock = *ppIter;
+    assert( pBt->pExclusive==0 || pBt->pExclusive==pLock->pBtree );
     if( pLock->pBtree==p ){
       *ppIter = pLock->pNext;
       sqlite3_free(pLock);
     }else{
       ppIter = &pLock->pNext;
     }
+  }
+
+  if( pBt->pExclusive==p ){
+    pBt->pExclusive = 0;
   }
 }
 #endif /* SQLITE_OMIT_SHARED_CACHE */
@@ -1734,12 +1747,15 @@ static void unlockBtreeIfUnused(BtShared *pBt){
   assert( sqlite3_mutex_held(pBt->mutex) );
   if( pBt->inTransaction==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
     if( sqlite3PagerRefcount(pBt->pPager)>=1 ){
+      assert( pBt->pPage1->aData );
+#if 0
       if( pBt->pPage1->aData==0 ){
         MemPage *pPage = pBt->pPage1;
         pPage->aData = sqlite3PagerGetData(pPage->pDbPage);
         pPage->pBt = pBt;
         pPage->pgno = 1;
       }
+#endif
       releasePage(pBt->pPage1);
     }
     pBt->pPage1 = 0;
@@ -1850,6 +1866,18 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
     goto trans_begun;
   }
 
+#ifndef SQLITE_OMIT_SHARED_CACHE
+  if( wrflag>1 ){
+    BtLock *pIter;
+    for(pIter=pBt->pLock; pIter; pIter=pIter->pNext){
+      if( pIter->pBtree!=p ){
+        rc = SQLITE_BUSY;
+        goto trans_begun;
+      }
+    }
+  }
+#endif
+
   do {
     if( pBt->pPage1==0 ){
       rc = lockBtree(pBt);
@@ -1882,6 +1910,12 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
     if( p->inTrans>pBt->inTransaction ){
       pBt->inTransaction = p->inTrans;
     }
+#ifndef SQLITE_OMIT_SHARED_CACHE
+    if( wrflag>1 ){
+      assert( !pBt->pExclusive );
+      pBt->pExclusive = p;
+    }
+#endif
   }
 
 
@@ -4064,6 +4098,7 @@ static int allocateBtreePage(
       TRACE(("ALLOCATE: %d from end of file (pointer-map page)\n", *pPgno));
       assert( *pPgno!=PENDING_BYTE_PAGE(pBt) );
       (*pPgno)++;
+      if( *pPgno==PENDING_BYTE_PAGE(pBt) ){ (*pPgno)++; }
     }
     if( pBt->nTrunc ){
       pBt->nTrunc = *pPgno;
@@ -5698,9 +5733,6 @@ int sqlite3BtreeDelete(BtCursor *pCur){
     */
     BtCursor leafCur;
     unsigned char *pNext;
-    int szNext;  /* The compiler warning is wrong: szNext is always 
-                 ** initialized before use.  Adding an extra initialization
-                 ** to silence the compiler slows down the code. */
     int notUsed;
     unsigned char *tempCell = 0;
     assert( !pPage->leafData );
@@ -5710,6 +5742,7 @@ int sqlite3BtreeDelete(BtCursor *pCur){
       rc = sqlite3PagerWrite(leafCur.pPage->pDbPage);
     }
     if( rc==SQLITE_OK ){
+      int szNext;
       TRACE(("DELETE: table=%d delete internal from %d replace from leaf %d\n",
          pCur->pgnoRoot, pPage->pgno, leafCur.pPage->pgno));
       dropCell(pPage, pCur->idx, cellSizePtr(pPage, pCell));
@@ -5720,17 +5753,17 @@ int sqlite3BtreeDelete(BtCursor *pCur){
       if( tempCell==0 ){
         rc = SQLITE_NOMEM;
       }
-    }
-    if( rc==SQLITE_OK ){
-      rc = insertCell(pPage, pCur->idx, pNext-4, szNext+4, tempCell, 0);
-    }
-    if( rc==SQLITE_OK ){
-      put4byte(findOverflowCell(pPage, pCur->idx), pgnoChild);
-      rc = balance(pPage, 0);
-    }
-    if( rc==SQLITE_OK ){
-      dropCell(leafCur.pPage, leafCur.idx, szNext);
-      rc = balance(leafCur.pPage, 0);
+      if( rc==SQLITE_OK ){
+        rc = insertCell(pPage, pCur->idx, pNext-4, szNext+4, tempCell, 0);
+      }
+      if( rc==SQLITE_OK ){
+        put4byte(findOverflowCell(pPage, pCur->idx), pgnoChild);
+        rc = balance(pPage, 0);
+      }
+      if( rc==SQLITE_OK ){
+        dropCell(leafCur.pPage, leafCur.idx, szNext);
+        rc = balance(leafCur.pPage, 0);
+      }
     }
     sqlite3_free(tempCell);
     sqlite3BtreeReleaseTempCursor(&leafCur);
@@ -5801,7 +5834,7 @@ static int btreeCreateTable(Btree *p, int *piTable, int flags){
     /* The new root-page may not be allocated on a pointer-map page, or the
     ** PENDING_BYTE page.
     */
-    if( pgnoRoot==PTRMAP_PAGENO(pBt, pgnoRoot) ||
+    while( pgnoRoot==PTRMAP_PAGENO(pBt, pgnoRoot) ||
         pgnoRoot==PENDING_BYTE_PAGE(pBt) ){
       pgnoRoot++;
     }
@@ -6200,7 +6233,9 @@ int sqlite3BtreeFlags(BtCursor *pCur){
   /* TODO: What about CURSOR_REQUIRESEEK state? Probably need to call
   ** restoreOrClearCursorPosition() here.
   */
-  MemPage *pPage = pCur->pPage;
+  MemPage *pPage;
+  restoreOrClearCursorPosition(pCur);
+  pPage = pCur->pPage;
   assert( cursorHoldsMutex(pCur) );
   assert( pPage->pBt==pCur->pBt );
   return pPage ? pPage->aData[pPage->hdrOffset] : 0;

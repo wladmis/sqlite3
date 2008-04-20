@@ -18,6 +18,9 @@
 */
 #include "sqliteInt.h"
 #include <ctype.h>
+#ifdef SQLITE_ENABLE_FTS3
+# include "fts3.h"
+#endif
 
 /*
 ** The version of the library
@@ -46,11 +49,22 @@ char *sqlite3_temp_directory = 0;
 
 
 /*
+** Return true if the buffer z[0..n-1] contains all spaces.
+*/
+static int allSpaces(const char *z, int n){
+  while( n>0 && z[--n]==' ' ){}
+  return n==0;
+}
+
+/*
 ** This is the default collating function named "BINARY" which is always
 ** available.
+**
+** If the padFlag argument is not NULL then space padding at the end
+** of strings is ignored.  This implements the RTRIM collation.
 */
 static int binCollFunc(
-  void *NotUsed,
+  void *padFlag,
   int nKey1, const void *pKey1,
   int nKey2, const void *pKey2
 ){
@@ -58,7 +72,14 @@ static int binCollFunc(
   n = nKey1<nKey2 ? nKey1 : nKey2;
   rc = memcmp(pKey1, pKey2, n);
   if( rc==0 ){
-    rc = nKey1 - nKey2;
+    if( padFlag
+     && allSpaces(((char*)pKey1)+n, nKey1-n)
+     && allSpaces(((char*)pKey2)+n, nKey2-n)
+    ){
+      /* Leave rc unchanged at 0 */
+    }else{
+      rc = nKey1 - nKey2;
+    }
   }
   return rc;
 }
@@ -116,7 +137,7 @@ int sqlite3_close(sqlite3 *db){
   if( !db ){
     return SQLITE_OK;
   }
-  if( sqlite3SafetyCheck(db) ){
+  if( !sqlite3SafetyCheckSickOrOk(db) ){
     return SQLITE_MISUSE;
   }
   sqlite3_mutex_enter(db->mutex);
@@ -146,21 +167,7 @@ int sqlite3_close(sqlite3 *db){
     sqlite3_mutex_leave(db->mutex);
     return SQLITE_BUSY;
   }
-  assert( !sqlite3SafetyCheck(db) );
-
-  /* FIX ME: db->magic may be set to SQLITE_MAGIC_CLOSED if the database
-  ** cannot be opened for some reason. So this routine needs to run in
-  ** that case. But maybe there should be an extra magic value for the
-  ** "failed to open" state.
-  **
-  ** TODO: Coverage tests do not test the case where this condition is
-  ** true. It's hard to see how to cause it without messing with threads.
-  */
-  if( db->magic!=SQLITE_MAGIC_CLOSED && sqlite3SafetyOn(db) ){
-    /* printf("DID NOT CLOSE\n"); fflush(stdout); */
-    sqlite3_mutex_leave(db->mutex);
-    return SQLITE_ERROR;
-  }
+  assert( sqlite3SafetyCheckSickOrOk(db) );
 
   for(j=0; j<db->nDb; j++){
     struct Db *pDb = &db->aDb[j];
@@ -222,6 +229,7 @@ int sqlite3_close(sqlite3 *db){
   */
   sqlite3_free(db->aDb[1].pSchema);
   sqlite3_mutex_leave(db->mutex);
+  db->magic = SQLITE_MAGIC_CLOSED;
   sqlite3_mutex_free(db->mutex);
   sqlite3_free(db);
   return SQLITE_OK;
@@ -234,7 +242,7 @@ void sqlite3RollbackAll(sqlite3 *db){
   int i;
   int inTrans = 0;
   assert( sqlite3_mutex_held(db->mutex) );
-  sqlite3MallocEnterBenignBlock(1);                 /* Enter benign region */
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 1);
   for(i=0; i<db->nDb; i++){
     if( db->aDb[i].pBt ){
       if( sqlite3BtreeIsInTrans(db->aDb[i].pBt) ){
@@ -245,7 +253,7 @@ void sqlite3RollbackAll(sqlite3 *db){
     }
   }
   sqlite3VtabRollback(db);
-  sqlite3MallocLeaveBenignBlock();                 /* Leave benign region */
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
 
   if( db->flags&SQLITE_InternChanges ){
     sqlite3ExpirePreparedStatements(db);
@@ -369,9 +377,6 @@ int sqlite3_busy_handler(
   int (*xBusy)(void*,int),
   void *pArg
 ){
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   sqlite3_mutex_enter(db->mutex);
   db->busyHandler.xFunc = xBusy;
   db->busyHandler.pArg = pArg;
@@ -392,7 +397,7 @@ void sqlite3_progress_handler(
   int (*xProgress)(void*), 
   void *pArg
 ){
-  if( !sqlite3SafetyCheck(db) ){
+  if( sqlite3SafetyCheckOk(db) ){
     sqlite3_mutex_enter(db->mutex);
     if( nOps>0 ){
       db->xProgress = xProgress;
@@ -414,9 +419,6 @@ void sqlite3_progress_handler(
 ** specified number of milliseconds before returning 0.
 */
 int sqlite3_busy_timeout(sqlite3 *db, int ms){
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   if( ms>0 ){
     db->busyTimeout = ms;
     sqlite3_busy_handler(db, sqliteDefaultBusyCallback, (void*)db);
@@ -430,7 +432,7 @@ int sqlite3_busy_timeout(sqlite3 *db, int ms){
 ** Cause any pending operation to stop at its earliest opportunity.
 */
 void sqlite3_interrupt(sqlite3 *db){
-  if( db && (db->magic==SQLITE_MAGIC_OPEN || db->magic==SQLITE_MAGIC_BUSY) ){
+  if( sqlite3SafetyCheckOk(db) ){
     db->u1.isInterrupted = 1;
   }
 }
@@ -456,9 +458,6 @@ int sqlite3CreateFunc(
   int nName;
 
   assert( sqlite3_mutex_held(db->mutex) );
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   if( zFunctionName==0 ||
       (xFunc && (xFinal || xStep)) || 
       (!xFunc && (xFinal && !xStep)) ||
@@ -780,7 +779,7 @@ const char *sqlite3_errmsg(sqlite3 *db){
   if( !db ){
     return sqlite3ErrStr(SQLITE_NOMEM);
   }
-  if( sqlite3SafetyCheck(db) || db->errCode==SQLITE_MISUSE ){
+  if( !sqlite3SafetyCheckSickOrOk(db) || db->errCode==SQLITE_MISUSE ){
     return sqlite3ErrStr(SQLITE_MISUSE);
   }
   sqlite3_mutex_enter(db->mutex);
@@ -822,7 +821,7 @@ const void *sqlite3_errmsg16(sqlite3 *db){
   if( !db ){
     return (void *)(&outOfMemBe[SQLITE_UTF16NATIVE==SQLITE_UTF16LE?1:0]);
   }
-  if( sqlite3SafetyCheck(db) || db->errCode==SQLITE_MISUSE ){
+  if( !sqlite3SafetyCheckSickOrOk(db) || db->errCode==SQLITE_MISUSE ){
     return (void *)(&misuseBe[SQLITE_UTF16NATIVE==SQLITE_UTF16LE?1:0]);
   }
   sqlite3_mutex_enter(db->mutex);
@@ -844,11 +843,11 @@ const void *sqlite3_errmsg16(sqlite3 *db){
 ** passed to this function, we assume a malloc() failed during sqlite3_open().
 */
 int sqlite3_errcode(sqlite3 *db){
+  if( db && !sqlite3SafetyCheckSickOrOk(db) ){
+    return SQLITE_MISUSE;
+  }
   if( !db || db->mallocFailed ){
     return SQLITE_NOMEM;
-  }
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
   }
   return db->errCode & db->errMask;
 }
@@ -868,9 +867,6 @@ static int createCollation(
   CollSeq *pColl;
   int enc2;
   
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   assert( sqlite3_mutex_held(db->mutex) );
 
   /* If SQLITE_UTF16 is specified as the encoding type, transform this
@@ -982,7 +978,7 @@ static int openDatabase(
   db->pVfs = sqlite3_vfs_find(zVfs);
   if( !db->pVfs ){
     rc = SQLITE_ERROR;
-    db->magic = SQLITE_MAGIC_CLOSED;
+    db->magic = SQLITE_MAGIC_SICK;
     sqlite3Error(db, rc, "no such vfs: %s", (zVfs?zVfs:"(null)"));
     goto opendb_out;
   }
@@ -994,10 +990,11 @@ static int openDatabase(
   if( createCollation(db, "BINARY", SQLITE_UTF8, 0, binCollFunc, 0) ||
       createCollation(db, "BINARY", SQLITE_UTF16BE, 0, binCollFunc, 0) ||
       createCollation(db, "BINARY", SQLITE_UTF16LE, 0, binCollFunc, 0) ||
+      createCollation(db, "RTRIM", SQLITE_UTF8, (void*)1, binCollFunc, 0) ||
       (db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0))==0 
   ){
     assert( db->mallocFailed );
-    db->magic = SQLITE_MAGIC_CLOSED;
+    db->magic = SQLITE_MAGIC_SICK;
     goto opendb_out;
   }
 
@@ -1018,7 +1015,7 @@ static int openDatabase(
                            &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
     sqlite3Error(db, rc, 0);
-    db->magic = SQLITE_MAGIC_CLOSED;
+    db->magic = SQLITE_MAGIC_SICK;
     goto opendb_out;
   }
   db->aDb[0].pSchema = sqlite3SchemaGet(db, db->aDb[0].pBt);
@@ -1071,7 +1068,6 @@ static int openDatabase(
 
 #ifdef SQLITE_ENABLE_FTS3
   if( !db->mallocFailed && rc==SQLITE_OK ){
-    extern int sqlite3Fts3Init(sqlite3*);
     rc = sqlite3Fts3Init(db);
   }
 #endif
@@ -1211,7 +1207,7 @@ int sqlite3_create_collation16(
   int(*xCompare)(void*,int,const void*,int,const void*)
 ){
   int rc = SQLITE_OK;
-  char *zName8; 
+  char *zName8;
   sqlite3_mutex_enter(db->mutex);
   assert( !db->mallocFailed );
   zName8 = sqlite3Utf16to8(db, zName, -1);
@@ -1234,9 +1230,6 @@ int sqlite3_collation_needed(
   void *pCollNeededArg, 
   void(*xCollNeeded)(void*,sqlite3*,int eTextRep,const char*)
 ){
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   sqlite3_mutex_enter(db->mutex);
   db->xCollNeeded = xCollNeeded;
   db->xCollNeeded16 = 0;
@@ -1255,9 +1248,6 @@ int sqlite3_collation_needed16(
   void *pCollNeededArg, 
   void(*xCollNeeded16)(void*,sqlite3*,int eTextRep,const void*)
 ){
-  if( sqlite3SafetyCheck(db) ){
-    return SQLITE_MISUSE;
-  }
   sqlite3_mutex_enter(db->mutex);
   db->xCollNeeded = 0;
   db->xCollNeeded16 = xCollNeeded16;
@@ -1339,9 +1329,7 @@ int sqlite3_table_column_metadata(
   int autoinc = 0;
 
   /* Ensure the database schema has been loaded */
-  if( sqlite3SafetyOn(db) ){
-    return SQLITE_MISUSE;
-  }
+  (void)sqlite3SafetyOn(db);
   sqlite3_mutex_enter(db->mutex);
   rc = sqlite3Init(db, &zErrMsg);
   if( SQLITE_OK!=rc ){
@@ -1399,9 +1387,7 @@ int sqlite3_table_column_metadata(
   }
 
 error_out:
-  if( sqlite3SafetyOff(db) ){
-    rc = SQLITE_MISUSE;
-  }
+  (void)sqlite3SafetyOff(db);
 
   /* Whether the function call succeeded or failed, set the output parameters
   ** to whatever their local counterparts contain. If an error did occur,
@@ -1469,17 +1455,55 @@ int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
     Btree *pBtree = db->aDb[iDb].pBt;
     if( pBtree ){
       Pager *pPager;
+      sqlite3_file *fd;
       sqlite3BtreeEnter(pBtree);
       pPager = sqlite3BtreePager(pBtree);
-      if( pPager ){
-        sqlite3_file *fd = sqlite3PagerFile(pPager);
-        if( fd ){
-          rc = sqlite3OsFileControl(fd, op, pArg);
-        }
+      assert( pPager!=0 );
+      fd = sqlite3PagerFile(pPager);
+      assert( fd!=0 );
+      if( fd->pMethods ){
+        rc = sqlite3OsFileControl(fd, op, pArg);
       }
       sqlite3BtreeLeave(pBtree);
     }
   }
   sqlite3_mutex_leave(db->mutex);
   return rc;   
+}
+
+/*
+** Interface to the testing logic.
+*/
+int sqlite3_test_control(int op, ...){
+  va_list ap;
+  int rc = 0;
+  va_start(ap, op);
+  switch( op ){
+#ifndef SQLITE_OMIT_FAULTINJECTOR
+    case SQLITE_TESTCTRL_FAULT_CONFIG: {
+      int id = va_arg(ap, int);
+      int nDelay = va_arg(ap, int);
+      int nRepeat = va_arg(ap, int);
+      sqlite3FaultConfig(id, nDelay, nRepeat);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_FAILURES: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultFailures(id);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultBenignFailures(id);
+      break;
+    }
+    case SQLITE_TESTCTRL_FAULT_PENDING: {
+      int id = va_arg(ap, int);
+      rc = sqlite3FaultPending(id);
+      break;
+    }
+#endif /* SQLITE_OMIT_FAULTINJECTOR */
+  }
+  va_end(ap);
+  return rc;
 }

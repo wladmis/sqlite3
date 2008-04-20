@@ -1021,8 +1021,11 @@ static int echoSync(sqlite3_vtab *tab){
   return rc;
 }
 static int echoCommit(sqlite3_vtab *tab){
-  sqlite3MallocBenignFailure(1);
-  return echoTransactionCall(tab, "xCommit");
+  int rc;
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 1);
+  rc = echoTransactionCall(tab, "xCommit");
+  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
+  return rc;
 }
 static int echoRollback(sqlite3_vtab *tab){
   return echoTransactionCall(tab, "xRollback");

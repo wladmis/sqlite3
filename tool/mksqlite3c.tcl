@@ -69,6 +69,7 @@ puts $out [subst \
 **
 ** This amalgamation was generated on $today.
 */
+#define SQLITE_CORE 1
 #define SQLITE_AMALGAMATION 1}]
 if {$addstatic} {
   puts $out \
@@ -87,6 +88,9 @@ if {$addstatic} {
 foreach hdr {
    btree.h
    btreeInt.h
+   fts3.h
+   fts3_hash.h
+   fts3_tokenizer.h
    hash.h
    keywordhash.h
    mutex.h
@@ -200,6 +204,7 @@ foreach file {
    date.c
    os.c
 
+   fault.c
    mem1.c
    mem2.c
    mem3.c
@@ -260,6 +265,12 @@ foreach file {
    complete.c
 
    main.c
+
+   fts3.c
+   fts3_hash.c
+   fts3_porter.c
+   fts3_tokenizer.c
+   fts3_tokenizer1.c
 } {
   copy_file tsrc/$file
 }

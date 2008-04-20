@@ -29,27 +29,6 @@ if $AUTOVACUUM {
 }
 
 set fcnt 1
-proc cksum {{db db}} {
-  set sql "SELECT name, type, sql FROM sqlite_master ORDER BY name, type"
-  set txt [$db eval $sql]\n
-  set sql "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name"
-  foreach tbl [$db eval $sql] {
-    append txt [$db eval "SELECT * FROM $tbl"]\n
-  }
-  foreach prag {default_cache_size} {
-    append txt $prag-[$db eval "PRAGMA $prag"]\n
-  }
-  if 0 {
-    global fcnt
-    set fd [open dump$fcnt.txt w]
-    puts -nonewline $fd $txt
-    close $fd
-    incr fcnt
-  }
-  set cksum [string length $txt]-[md5 $txt]
-  # puts $cksum-[file size test.db]
-  return $cksum
-}
 do_test vacuum-1.1 {
   execsql {
     BEGIN;

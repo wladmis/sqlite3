@@ -44,4 +44,8 @@ ifcapable subquery {
 #
 do_malloc_test mallocB-6 -sqlbody { SELECT test_auxdata('hello world'); }
 
+do_malloc_test mallocB-7 -sqlbody {
+  SELECT strftime(hex(randomblob(50)) || '%Y', 'now')
+}
+
 finish_test

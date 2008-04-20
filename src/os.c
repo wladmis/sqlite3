@@ -89,35 +89,13 @@ int sqlite3OsCheckReservedLock(sqlite3_file *id){
 int sqlite3OsFileControl(sqlite3_file *id, int op, void *pArg){
   return id->pMethods->xFileControl(id,op,pArg);
 }
-
-#ifdef SQLITE_TEST
-  /* The following two variables are used to override the values returned
-  ** by the xSectorSize() and xDeviceCharacteristics() vfs methods for
-  ** testing purposes. They are usually set by a test command implemented
-  ** in test6.c.
-  */
-  int sqlite3_test_sector_size = 0;
-  int sqlite3_test_device_characteristics = 0;
-  int sqlite3OsDeviceCharacteristics(sqlite3_file *id){
-    int dc = id->pMethods->xDeviceCharacteristics(id);
-    return dc | sqlite3_test_device_characteristics;
-  }
-  int sqlite3OsSectorSize(sqlite3_file *id){
-    if( sqlite3_test_sector_size==0 ){
-      int (*xSectorSize)(sqlite3_file*) = id->pMethods->xSectorSize;
-      return (xSectorSize ? xSectorSize(id) : SQLITE_DEFAULT_SECTOR_SIZE);
-    }
-    return sqlite3_test_sector_size;
-  }
-#else
-  int sqlite3OsSectorSize(sqlite3_file *id){
-    int (*xSectorSize)(sqlite3_file*) = id->pMethods->xSectorSize;
-    return (xSectorSize ? xSectorSize(id) : SQLITE_DEFAULT_SECTOR_SIZE);
-  }
-  int sqlite3OsDeviceCharacteristics(sqlite3_file *id){
-    return id->pMethods->xDeviceCharacteristics(id);
-  }
-#endif
+int sqlite3OsSectorSize(sqlite3_file *id){
+  int (*xSectorSize)(sqlite3_file*) = id->pMethods->xSectorSize;
+  return (xSectorSize ? xSectorSize(id) : SQLITE_DEFAULT_SECTOR_SIZE);
+}
+int sqlite3OsDeviceCharacteristics(sqlite3_file *id){
+  return id->pMethods->xDeviceCharacteristics(id);
+}
 
 /*
 ** The next group of routines are convenience wrappers around the
@@ -213,7 +191,9 @@ static sqlite3_vfs *vfsList = 0;
 ** first VFS on the list.
 */
 sqlite3_vfs *sqlite3_vfs_find(const char *zVfs){
+#ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+#endif
   sqlite3_vfs *pVfs = 0;
   static int isInit = 0;
   sqlite3_mutex_enter(mutex);
@@ -255,7 +235,9 @@ static void vfsUnlink(sqlite3_vfs *pVfs){
 ** true.
 */
 int sqlite3_vfs_register(sqlite3_vfs *pVfs, int makeDflt){
+#ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+#endif
   sqlite3_vfs_find(0);  /* Make sure we are initialized */
   sqlite3_mutex_enter(mutex);
   vfsUnlink(pVfs);
@@ -275,7 +257,9 @@ int sqlite3_vfs_register(sqlite3_vfs *pVfs, int makeDflt){
 ** Unregister a VFS so that it is no longer accessible.
 */
 int sqlite3_vfs_unregister(sqlite3_vfs *pVfs){
+#ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+#endif
   sqlite3_mutex_enter(mutex);
   vfsUnlink(pVfs);
   sqlite3_mutex_leave(mutex);

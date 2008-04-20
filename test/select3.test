@@ -25,7 +25,7 @@ do_test select3-1.0 {
     BEGIN;
   }
   for {set i 1} {$i<32} {incr i} {
-    for {set j 0} {pow(2,$j)<$i} {incr j} {}
+    for {set j 0} {(1<<$j)<$i} {incr j} {}
     execsql "INSERT INTO t1 VALUES($i,$j)"
   }
   execsql {

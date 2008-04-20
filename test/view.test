@@ -500,4 +500,19 @@ do_test view-16.3 {
   }
 } {0 {}}
 
+# correct error message when attempting to drop a view that does not
+# exist.
+#
+do_test view-17.1 {
+  catchsql {
+    DROP VIEW nosuchview
+  }
+} {1 {no such view: nosuchview}}
+do_test view-17.2 {
+  catchsql {
+    DROP VIEW main.nosuchview
+  }
+} {1 {no such view: main.nosuchview}}
+
+
 finish_test

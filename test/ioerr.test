@@ -167,7 +167,6 @@ ifcapable crashtest&&attach {
 # These tests can't be run on windows because the windows version of 
 # SQLite holds a mandatory exclusive lock on journal files it has open.
 #
-btree_breakpoint
 if {$tcl_platform(platform)!="windows"} {
   do_ioerr_test ioerr-7 -tclprep {
     db close

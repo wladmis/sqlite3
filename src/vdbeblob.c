@@ -54,7 +54,7 @@ int sqlite3_blob_open(
   ** vdbe program will take advantage of the various transaction,
   ** locking and error handling infrastructure built into the vdbe.
   **
-  ** After seeking the cursor, the vdbe executes an OP_Callback.
+  ** After seeking the cursor, the vdbe executes an OP_ResultRow.
   ** Code external to the Vdbe then "borrows" the b-tree cursor and
   ** uses it to implement the blob_read(), blob_write() and 
   ** blob_bytes() functions.
@@ -66,21 +66,20 @@ int sqlite3_blob_open(
   static const VdbeOpList openBlob[] = {
     {OP_Transaction, 0, 0, 0},     /* 0: Start a transaction */
     {OP_VerifyCookie, 0, 0, 0},    /* 1: Check the schema cookie */
-    {OP_Integer, 0, 0, 0},         /* 2: Database number */
 
     /* One of the following two instructions is replaced by an
     ** OP_Noop before exection.
     */
-    {OP_OpenRead, 0, 0, 0},        /* 3: Open cursor 0 for reading */
-    {OP_OpenWrite, 0, 0, 0},       /* 4: Open cursor 0 for read/write */
-    {OP_SetNumColumns, 0, 0, 0},   /* 5: Num cols for cursor */
+    {OP_OpenRead, 0, 0, 0},        /* 2: Open cursor 0 for reading */
+    {OP_OpenWrite, 0, 0, 0},       /* 3: Open cursor 0 for read/write */
+    {OP_SetNumColumns, 0, 0, 0},   /* 4: Num cols for cursor */
 
-    {OP_Variable, 1, 0, 0},        /* 6: Push the rowid to the stack */
-    {OP_NotExists, 0, 10, 0},      /* 7: Seek the cursor */
-    {OP_Column, 0, 0, 0},          /* 8  */
-    {OP_Callback, 0, 0, 0},        /* 9  */
-    {OP_Close, 0, 0, 0},           /* 10 */
-    {OP_Halt, 0, 0, 0},            /* 11 */
+    {OP_Variable, 1, 1, 0},        /* 5: Push the rowid to the stack */
+    {OP_NotExists, 0, 10, 1},      /* 6: Seek the cursor */
+    {OP_Column, 0, 0, 1},          /* 7  */
+    {OP_ResultRow, 1, 0, 0},       /* 8  */
+    {OP_Close, 0, 0, 0},           /* 9  */
+    {OP_Halt, 0, 0, 0},            /* 10 */
   };
 
   Vdbe *v = 0;
@@ -103,14 +102,14 @@ int sqlite3_blob_open(
     }
 
     sqlite3BtreeEnterAll(db);
-    pTab = sqlite3LocateTable(&sParse, zTable, zDb);
+    pTab = sqlite3LocateTable(&sParse, 0, zTable, zDb);
     if( !pTab ){
       if( sParse.zErrMsg ){
         sqlite3_snprintf(sizeof(zErr), zErr, "%s", sParse.zErrMsg);
       }
       sqlite3_free(sParse.zErrMsg);
       rc = SQLITE_ERROR;
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       sqlite3BtreeLeaveAll(db);
       goto blob_open_out;
     }
@@ -124,7 +123,7 @@ int sqlite3_blob_open(
     if( iCol==pTab->nCol ){
       sqlite3_snprintf(sizeof(zErr), zErr, "no such column: \"%s\"", zColumn);
       rc = SQLITE_ERROR;
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       sqlite3BtreeLeaveAll(db);
       goto blob_open_out;
     }
@@ -142,7 +141,7 @@ int sqlite3_blob_open(
             sqlite3_snprintf(sizeof(zErr), zErr,
                              "cannot open indexed column for writing");
             rc = SQLITE_ERROR;
-            sqlite3SafetyOff(db);
+            (void)sqlite3SafetyOff(db);
             sqlite3BtreeLeaveAll(db);
             goto blob_open_out;
           }
@@ -166,14 +165,12 @@ int sqlite3_blob_open(
       /* Make sure a mutex is held on the table to be accessed */
       sqlite3VdbeUsesBtree(v, iDb); 
 
-      /* Configure the db number pushed onto the stack */
-      sqlite3VdbeChangeP1(v, 2, iDb);
-
       /* Remove either the OP_OpenWrite or OpenRead. Set the P2 
       ** parameter of the other to pTab->tnum. 
       */
-      sqlite3VdbeChangeToNoop(v, (flags ? 3 : 4), 1);
-      sqlite3VdbeChangeP2(v, (flags ? 4 : 3), pTab->tnum);
+      sqlite3VdbeChangeToNoop(v, (flags ? 2 : 3), 1);
+      sqlite3VdbeChangeP2(v, (flags ? 3 : 2), pTab->tnum);
+      sqlite3VdbeChangeP3(v, (flags ? 3 : 2), iDb);
 
       /* Configure the OP_SetNumColumns. Configure the cursor to
       ** think that the table has one more column than it really
@@ -182,9 +179,9 @@ int sqlite3_blob_open(
       ** we can invoke OP_Column to fill in the vdbe cursors type 
       ** and offset cache without causing any IO.
       */
-      sqlite3VdbeChangeP2(v, 5, pTab->nCol+1);
+      sqlite3VdbeChangeP2(v, 4, pTab->nCol+1);
       if( !db->mallocFailed ){
-        sqlite3VdbeMakeReady(v, 1, 0, 1, 0);
+        sqlite3VdbeMakeReady(v, 1, 1, 1, 0);
       }
     }
    

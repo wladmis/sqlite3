@@ -315,6 +315,9 @@ ifcapable attach {
       execsql {REINDEX t2}
       execsql {PRAGMA integrity_check}
     } {ok}
+    do_test pragma-3.8.1 {
+      execsql {PRAGMA quick_check}
+    } {ok}
     do_test pragma-3.9 {
       execsql {
         ATTACH 'testerr.db' AS t2;
@@ -975,13 +978,13 @@ ifcapable schema_pragmas {
     execsql2 {
       pragma collation_list;
     }
-  } {seq 0 name NOCASE seq 1 name BINARY}
+  } {seq 0 name NOCASE seq 1 name RTRIM seq 2 name BINARY}
   do_test pragma-11.2 {
     db collate New_Collation blah...
     execsql {
       pragma collation_list;
     }
-  } {0 New_Collation 1 NOCASE 2 BINARY}
+  } {0 New_Collation 1 NOCASE 2 RTRIM 3 BINARY}
 }
 
 ifcapable schema_pragmas&&tempdb {

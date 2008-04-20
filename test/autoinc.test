@@ -240,6 +240,8 @@ ifcapable tempdb {
   do_test autoinc-2.52 {
     execsql {
       CREATE TEMP TABLE t2 AS SELECT y FROM t1;
+    }
+    execsql {
       INSERT INTO t1 SELECT NULL, y+4 FROM t2;
       SELECT * FROM t1;
     }

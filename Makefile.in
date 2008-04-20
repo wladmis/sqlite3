@@ -125,7 +125,8 @@ NAWK = @AWK@
 #
 LIBOBJ = alter.lo analyze.lo attach.lo auth.lo btmutex.lo btree.lo build.lo \
          callback.lo complete.lo date.lo \
-         delete.lo expr.lo func.lo hash.lo journal.lo insert.lo loadext.lo \
+         delete.lo expr.lo fault.lo func.lo \
+         hash.lo journal.lo insert.lo loadext.lo \
          main.lo malloc.lo mem1.lo mem2.lo mem3.lo mem4.lo mutex.lo \
          mutex_os2.lo mutex_unix.lo mutex_w32.lo \
          opcodes.lo os.lo os_unix.lo os_win.lo os_os2.lo \
@@ -151,6 +152,7 @@ SRC = \
   $(TOP)/src/date.c \
   $(TOP)/src/delete.c \
   $(TOP)/src/expr.c \
+  $(TOP)/src/fault.c \
   $(TOP)/src/func.c \
   $(TOP)/src/hash.c \
   $(TOP)/src/hash.h \
@@ -221,6 +223,7 @@ TESTSRC = \
   $(TOP)/src/pragma.c \
   $(TOP)/src/prepare.c \
   $(TOP)/src/printf.c \
+  $(TOP)/src/random.c \
   $(TOP)/src/select.c \
   $(TOP)/src/test1.c \
   $(TOP)/src/test2.c \
@@ -235,6 +238,7 @@ TESTSRC = \
   $(TOP)/src/test_async.c \
   $(TOP)/src/test_btree.c \
   $(TOP)/src/test_config.c \
+  $(TOP)/src/test_devsym.c \
   $(TOP)/src/test_hexio.c \
   $(TOP)/src/test_malloc.c \
   $(TOP)/src/test_md5.c \
@@ -332,11 +336,6 @@ libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 		-version-info "8:6:8" \
 		$(LIBTCL) -Wl,-z,defs
 
-testcli$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
-	$(LTLINK) $(READLINE_FLAGS) $(LIBPTHREAD) \
-		-o $@ $(TOP)/src/shell.c libsqlite3.la \
-		$(LIBREADLINE) $(TLIBS)
-
 sqlite3$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
 	$(LTLINK) $(READLINE_FLAGS) $(LIBPTHREAD) \
 		-o $@ $(TOP)/src/shell.c libsqlite3.la \
@@ -402,6 +401,9 @@ delete.lo:	$(TOP)/src/delete.c $(HDR)
 
 expr.lo:	$(TOP)/src/expr.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/expr.c
+
+fault.lo:	$(TOP)/src/fault.c $(HDR)
+	$(LTCOMPILE) -c $(TOP)/src/fault.c
 
 func.lo:	$(TOP)/src/func.c $(HDR)
 	$(LTCOMPILE) -c $(TOP)/src/func.c

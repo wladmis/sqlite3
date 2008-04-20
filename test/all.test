@@ -92,6 +92,7 @@ for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
     set tail [file tail $testfile]
     if {[lsearch -exact $EXCLUDE $tail]>=0} continue
     if {[llength $INCLUDE]>0 && [lsearch -exact $INCLUDE $tail]<0} continue
+    reset_prng_state
     source $testfile
     catch {db close}
     if {$sqlite_open_file_count>0} {

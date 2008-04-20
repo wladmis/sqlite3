@@ -48,6 +48,7 @@ set EXCLUDE {
   crash.test
   crash2.test
   crash3.test
+  crash4.test
   exclusive3.test
   fts3.test
   fuzz.test
@@ -110,3 +111,5 @@ source $testdir/misuse.test
 
 set sqlite_open_file_count 0
 really_finish_test
+
+

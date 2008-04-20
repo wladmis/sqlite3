@@ -50,7 +50,7 @@ TCCX = $(TCC) $(OPTS) -I. -I$(TOP)/src
 #
 LIBOBJ+= alter.o analyze.o attach.o auth.o btmutex.o btree.o build.o \
          callback.o complete.o date.o delete.o \
-         expr.o func.o hash.o insert.o journal.o loadext.o \
+         expr.o fault.o func.o hash.o insert.o journal.o loadext.o \
          main.o malloc.o mem1.o mem2.o mem3.o mem4.o mutex.o mutex_os2.o \
          mutex_unix.o mutex_w32.o \
          opcodes.o os.o os_os2.o os_unix.o os_win.o \
@@ -95,6 +95,7 @@ SRC = \
   $(TOP)/src/date.c \
   $(TOP)/src/delete.c \
   $(TOP)/src/expr.c \
+  $(TOP)/src/fault.c \
   $(TOP)/src/func.c \
   $(TOP)/src/hash.c \
   $(TOP)/src/hash.h \
@@ -212,6 +213,7 @@ TESTSRC = \
   $(TOP)/src/test_async.c \
   $(TOP)/src/test_btree.c \
   $(TOP)/src/test_config.c \
+  $(TOP)/src/test_devsym.c \
   $(TOP)/src/test_hexio.c \
   $(TOP)/src/test_malloc.c \
   $(TOP)/src/test_md5.c \
@@ -229,7 +231,8 @@ TESTSRC2 = \
   $(TOP)/src/expr.c $(TOP)/src/func.c $(TOP)/src/insert.c $(TOP)/src/os.c      \
   $(TOP)/src/os_os2.c $(TOP)/src/os_unix.c $(TOP)/src/os_win.c                 \
   $(TOP)/src/pager.c $(TOP)/src/pragma.c $(TOP)/src/prepare.c                  \
-  $(TOP)/src/printf.c $(TOP)/src/select.c $(TOP)/src/tokenize.c                \
+  $(TOP)/src/printf.c $(TOP)/src/random.c                                      \
+  $(TOP)/src/select.c $(TOP)/src/tokenize.c                                    \
   $(TOP)/src/utf.c $(TOP)/src/util.c $(TOP)/src/vdbeapi.c $(TOP)/src/vdbeaux.c \
   $(TOP)/src/vdbe.c $(TOP)/src/vdbemem.c $(TOP)/src/where.c parse.c
 
@@ -277,17 +280,10 @@ libsqlite3.a:	$(LIBOBJ)
 	$(AR) libsqlite3.a $(LIBOBJ)
 	$(RANLIB) libsqlite3.a
 
-testcli$(EXE):	$(TOP)/src/shell.c libsqlite3.a sqlite3.h
-	$(TCCX) $(READLINE_FLAGS) -o testcli$(EXE)                  \
+sqlite3$(EXE):	$(TOP)/src/shell.c libsqlite3.a sqlite3.h
+	$(TCCX) $(READLINE_FLAGS) -o sqlite3$(EXE)                  \
 		$(TOP)/src/shell.c                                  \
 		libsqlite3.a $(LIBREADLINE) $(TLIBS) $(THREADLIB)
-
-sqlite3$(EXE):	$(TOP)/src/shell.c sqlite3.c sqlite3.h
-	$(TCCX) $(READLINE_FLAGS) -o sqlite3$(EXE)                  \
-		-DSQLITE_MAX_SQL_LENGTH=1000000000                  \
-		-USQLITE_THREADSAFE -DSQLITE_THREADSAFE=0           \
-		$(TOP)/src/shell.c sqlite3.c                        \
-		$(LIBREADLINE) $(TLIBS) $(THREADLIB)
 
 objects: $(LIBOBJ_ORIG)
 

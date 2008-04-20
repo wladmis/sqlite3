@@ -93,12 +93,12 @@ void sqlite3VtabLock(sqlite3_vtab *pVtab){
 void sqlite3VtabUnlock(sqlite3 *db, sqlite3_vtab *pVtab){
   pVtab->nRef--;
   assert(db);
-  assert(!sqlite3SafetyCheck(db));
+  assert( sqlite3SafetyCheckOk(db) );
   if( pVtab->nRef==0 ){
     if( db->magic==SQLITE_MAGIC_BUSY ){
-      sqlite3SafetyOff(db);
+      (void)sqlite3SafetyOff(db);
       pVtab->pModule->xDisconnect(pVtab);
-      sqlite3SafetyOn(db);
+      (void)sqlite3SafetyOn(db);
     } else {
       pVtab->pModule->xDisconnect(pVtab);
     }
@@ -259,29 +259,30 @@ void sqlite3VtabFinishParse(Parse *pParse, Token *pEnd){
     ** SQLITE_MASTER table.  We just need to update that slot with all
     ** the information we've collected.  
     **
-    ** The top of the stack is the rootpage allocated by sqlite3StartTable().
-    ** This value is always 0 and is ignored, a virtual table does not have a
-    ** rootpage. The next entry on the stack is the rowid of the record
-    ** in the sqlite_master table.
+    ** The VM register number pParse->regRowid holds the rowid of an
+    ** entry in the sqlite_master table tht was created for this vtab
+    ** by sqlite3StartTable().
     */
     iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
     sqlite3NestedParse(pParse,
       "UPDATE %Q.%s "
          "SET type='table', name=%Q, tbl_name=%Q, rootpage=0, sql=%Q "
-       "WHERE rowid=#1",
+       "WHERE rowid=#%d",
       db->aDb[iDb].zName, SCHEMA_TABLE(iDb),
       pTab->zName,
       pTab->zName,
-      zStmt
+      zStmt,
+      pParse->regRowid
     );
     sqlite3_free(zStmt);
     v = sqlite3GetVdbe(pParse);
-    sqlite3ChangeCookie(db, v, iDb);
+    sqlite3ChangeCookie(pParse, iDb);
 
-    sqlite3VdbeAddOp(v, OP_Expire, 0, 0);
+    sqlite3VdbeAddOp2(v, OP_Expire, 0, 0);
     zWhere = sqlite3MPrintf(db, "name='%q'", pTab->zName);
-    sqlite3VdbeOp3(v, OP_ParseSchema, iDb, 1, zWhere, P3_DYNAMIC);
-    sqlite3VdbeOp3(v, OP_VCreate, iDb, 0, pTab->zName, strlen(pTab->zName) + 1);
+    sqlite3VdbeAddOp4(v, OP_ParseSchema, iDb, 1, 0, zWhere, P4_DYNAMIC);
+    sqlite3VdbeAddOp4(v, OP_VCreate, iDb, 0, 0, 
+                         pTab->zName, strlen(pTab->zName) + 1);
   }
 
   /* If we are rereading the sqlite_master table create the in-memory
@@ -593,7 +594,7 @@ int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
     if( xDestroy ){
       rc = xDestroy(pTab->pVtab);
     }
-    sqlite3SafetyOn(db);
+    (void)sqlite3SafetyOn(db);
     if( rc==SQLITE_OK ){
       pTab->pVtab = 0;
     }

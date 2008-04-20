@@ -44,7 +44,9 @@ int sqlite3_finalize(sqlite3_stmt *pStmt){
     rc = SQLITE_OK;
   }else{
     Vdbe *v = (Vdbe*)pStmt;
+#ifndef SQLITE_MUTEX_NOOP
     sqlite3_mutex *mutex = v->db->mutex;
+#endif
     sqlite3_mutex_enter(mutex);
     rc = sqlite3VdbeFinalize(v);
     sqlite3_mutex_leave(mutex);
@@ -81,12 +83,14 @@ int sqlite3_reset(sqlite3_stmt *pStmt){
 int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
   int i;
   int rc = SQLITE_OK;
-  Vdbe *v = (Vdbe*)pStmt;
-  sqlite3_mutex_enter(v->db->mutex);
+#ifndef SQLITE_MUTEX_NOOP
+  sqlite3_mutex *mutex = ((Vdbe*)pStmt)->db->mutex;
+#endif
+  sqlite3_mutex_enter(mutex);
   for(i=1; rc==SQLITE_OK && i<=sqlite3_bind_parameter_count(pStmt); i++){
     rc = sqlite3_bind_null(pStmt, i);
   }
-  sqlite3_mutex_leave(v->db->mutex);
+  sqlite3_mutex_leave(mutex);
   return rc;
 }
 
@@ -288,35 +292,12 @@ static int sqlite3Step(Vdbe *p){
     }
 
 #ifndef SQLITE_OMIT_TRACE
-    /* Invoke the trace callback if there is one
-    */
-    if( db->xTrace && !db->init.busy ){
-      assert( p->nOp>0 );
-      assert( p->aOp[p->nOp-1].opcode==OP_Noop );
-      assert( p->aOp[p->nOp-1].p3!=0 );
-      assert( p->aOp[p->nOp-1].p3type==P3_DYNAMIC );
-      sqlite3SafetyOff(db);
-      db->xTrace(db->pTraceArg, p->aOp[p->nOp-1].p3);
-      if( sqlite3SafetyOn(db) ){
-        p->rc = SQLITE_MISUSE;
-        return SQLITE_MISUSE;
-      }
-    }
     if( db->xProfile && !db->init.busy ){
       double rNow;
       sqlite3OsCurrentTime(db->pVfs, &rNow);
       p->startTime = (rNow - (int)rNow)*3600.0*24.0*1000000000.0;
     }
 #endif
-
-    /* Print a copy of SQL as it is executed if the SQL_TRACE pragma is turned
-    ** on in debugging mode.
-    */
-#ifdef SQLITE_DEBUG
-    if( (db->flags & SQLITE_SqlTrace)!=0 ){
-      sqlite3DebugPrintf("SQL-trace: %s\n", p->aOp[p->nOp-1].p3);
-    }
-#endif /* SQLITE_DEBUG */
 
     db->activeVdbeCnt++;
     p->pc = 0;
@@ -337,17 +318,14 @@ static int sqlite3Step(Vdbe *p){
 #ifndef SQLITE_OMIT_TRACE
   /* Invoke the profile callback if there is one
   */
-  if( rc!=SQLITE_ROW && db->xProfile && !db->init.busy ){
+  if( rc!=SQLITE_ROW && db->xProfile && !db->init.busy && p->nOp>0
+           && p->aOp[0].opcode==OP_Trace && p->aOp[0].p4.z!=0 ){
     double rNow;
     u64 elapseTime;
 
     sqlite3OsCurrentTime(db->pVfs, &rNow);
     elapseTime = (rNow - (int)rNow)*3600.0*24.0*1000000000.0 - p->startTime;
-    assert( p->nOp>0 );
-    assert( p->aOp[p->nOp-1].opcode==OP_Noop );
-    assert( p->aOp[p->nOp-1].p3!=0 );
-    assert( p->aOp[p->nOp-1].p3type==P3_DYNAMIC );
-    db->xProfile(db->pProfileArg, p->aOp[p->nOp-1].p3, elapseTime);
+    db->xProfile(db->pProfileArg, p->aOp[0].p4.z, elapseTime);
   }
 #endif
 
@@ -564,7 +542,7 @@ int sqlite3_column_count(sqlite3_stmt *pStmt){
 */
 int sqlite3_data_count(sqlite3_stmt *pStmt){
   Vdbe *pVm = (Vdbe *)pStmt;
-  if( pVm==0 || !pVm->resOnStack ) return 0;
+  if( pVm==0 || pVm->pResultSet==0 ) return 0;
   return pVm->nResColumn;
 }
 
@@ -581,10 +559,10 @@ static Mem *columnMem(sqlite3_stmt *pStmt, int i){
   Mem *pOut;
 
   pVm = (Vdbe *)pStmt;
-  if( pVm && pVm->resOnStack && i<pVm->nResColumn && i>=0 ){
+  if( pVm && pVm->pResultSet!=0 && i<pVm->nResColumn && i>=0 ){
     sqlite3_mutex_enter(pVm->db->mutex);
     vals = sqlite3_data_count(pStmt);
-    pOut = &pVm->pTos[(1-vals)+i];
+    pOut = &pVm->pResultSet[i];
   }else{
     static const Mem nullMem = {{0}, 0.0, 0, "", 0, MEM_Null, SQLITE_NULL };
     if( pVm->db ){
@@ -1001,7 +979,7 @@ static void createVarMap(Vdbe *p){
       for(j=0, pOp=p->aOp; j<p->nOp; j++, pOp++){
         if( pOp->opcode==OP_Variable ){
           assert( pOp->p1>0 && pOp->p1<=p->nVar );
-          p->azVar[pOp->p1-1] = pOp->p3;
+          p->azVar[pOp->p1-1] = pOp->p4.z;
         }
       }
       p->okVar = 1;
@@ -1067,9 +1045,7 @@ int sqlite3_transfer_bindings(sqlite3_stmt *pFromStmt, sqlite3_stmt *pToStmt){
   }
   sqlite3_mutex_enter(pTo->db->mutex);
   for(i=0; rc==SQLITE_OK && i<pFrom->nVar; i++){
-    sqlite3MallocDisallow();
-    rc = sqlite3VdbeMemMove(&pTo->aVar[i], &pFrom->aVar[i]);
-    sqlite3MallocAllow();
+    sqlite3VdbeMemMove(&pTo->aVar[i], &pFrom->aVar[i]);
   }
   sqlite3_mutex_leave(pTo->db->mutex);
   assert( rc==SQLITE_OK || rc==SQLITE_NOMEM );

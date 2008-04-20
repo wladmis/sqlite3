@@ -494,7 +494,7 @@ static int test_snprintf_int(
 }
 
 /*
-** Usage:  sqlite3_get_table_printf  DB  FORMAT  STRING
+** Usage:  sqlite3_get_table_printf  DB  FORMAT  STRING  ?--no-counts?
 **
 ** Invoke the sqlite3_get_table_printf() interface using the open database
 ** DB.  The SQL is the string FORMAT.  The format string should contain
@@ -515,24 +515,35 @@ static int test_get_table_printf(
   int i;
   char zBuf[30];
   char *zSql;
-  if( argc!=4 ){
+  int resCount = -1;
+  if( argc==5 ){
+    if( Tcl_GetInt(interp, argv[4], &resCount) ) return TCL_ERROR;
+  }
+  if( argc!=4 && argc!=5 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0], 
-       " DB FORMAT STRING", 0);
+       " DB FORMAT STRING ?COUNT?", 0);
     return TCL_ERROR;
   }
   if( getDbPointer(interp, argv[1], &db) ) return TCL_ERROR;
   Tcl_DStringInit(&str);
   zSql = sqlite3_mprintf(argv[2],argv[3]);
-  rc = sqlite3_get_table(db, zSql, &aResult, &nRow, &nCol, &zErr);
+  if( argc==5 ){
+    rc = sqlite3_get_table(db, zSql, &aResult, 0, 0, &zErr);
+  }else{
+    rc = sqlite3_get_table(db, zSql, &aResult, &nRow, &nCol, &zErr);
+    resCount = (nRow+1)*nCol;
+  }
   sqlite3_free(zSql);
   sprintf(zBuf, "%d", rc);
   Tcl_AppendElement(interp, zBuf);
   if( rc==SQLITE_OK ){
-    sprintf(zBuf, "%d", nRow);
-    Tcl_AppendElement(interp, zBuf);
-    sprintf(zBuf, "%d", nCol);
-    Tcl_AppendElement(interp, zBuf);
-    for(i=0; i<(nRow+1)*nCol; i++){
+    if( argc==4 ){
+      sprintf(zBuf, "%d", nRow);
+      Tcl_AppendElement(interp, zBuf);
+      sprintf(zBuf, "%d", nCol);
+      Tcl_AppendElement(interp, zBuf);
+    }
+    for(i=0; i<resCount; i++){
       Tcl_AppendElement(interp, aResult[i] ? aResult[i] : "NULL");
     }
   }else{
@@ -2374,6 +2385,10 @@ static void test_function_utf16be(
   pVal = sqlite3ValueNew(0);
   sqlite3ValueSetStr(pVal, -1, Tcl_GetStringResult(interp), 
       SQLITE_UTF8, SQLITE_STATIC);
+  sqlite3_result_text16(pCtx, sqlite3_value_text16le(pVal),
+      -1, SQLITE_TRANSIENT);
+  sqlite3_result_text16be(pCtx, sqlite3_value_text16le(pVal),
+      -1, SQLITE_TRANSIENT);
   sqlite3_result_text16le(pCtx, sqlite3_value_text16le(pVal),
       -1, SQLITE_TRANSIENT);
   sqlite3ValueFree(pVal);
@@ -4092,35 +4107,6 @@ static int test_soft_heap_limit(
 }
 
 /*
-** Usage:   sqlite3_clear_tsd_memdebug
-**
-** Clear all of the MEMDEBUG information out of thread-specific data.
-** This will allow it to be deallocated.
-*/
-static int test_clear_tsd_memdebug(
-  void * clientData,
-  Tcl_Interp *interp,
-  int objc,
-  Tcl_Obj *CONST objv[]
-){
-  return TCL_OK;
-}
-
-/*
-** Usage:   sqlite3_tsd_release
-**
-** Call sqlite3ReleaseThreadData.
-*/
-static int test_tsd_release(
-  void * clientData,
-  Tcl_Interp *interp,
-  int objc,
-  Tcl_Obj *CONST objv[]
-){
-  return TCL_OK;
-}
-
-/*
 ** Usage:   sqlite3_thread_cleanup
 **
 ** Call the sqlite3_thread_cleanup API.
@@ -4220,8 +4206,49 @@ static int vfs_unlink_test(
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
   int i;
+  sqlite3_vfs *pMain;
   sqlite3_vfs *apVfs[20];
+  sqlite3_vfs one, two;
 
+  sqlite3_vfs_unregister(0);   /* Unregister of NULL is harmless */
+  one.zName = "__one";
+  two.zName = "__two";
+
+  /* Calling sqlite3_vfs_register with 2nd argument of 0 does not
+  ** change the default VFS
+  */
+  pMain = sqlite3_vfs_find(0);
+  sqlite3_vfs_register(&one, 0);
+  assert( pMain==0 || pMain==sqlite3_vfs_find(0) );
+  sqlite3_vfs_register(&two, 0);
+  assert( pMain==0 || pMain==sqlite3_vfs_find(0) );
+
+  /* We can find a VFS by its name */
+  assert( sqlite3_vfs_find("__one")==&one );
+  assert( sqlite3_vfs_find("__two")==&two );
+
+  /* Calling sqlite_vfs_register with non-zero second parameter changes the
+  ** default VFS, even if the 1st parameter is an existig VFS that is
+  ** previously registered as the non-default.
+  */
+  sqlite3_vfs_register(&one, 1);
+  assert( sqlite3_vfs_find("__one")==&one );
+  assert( sqlite3_vfs_find("__two")==&two );
+  assert( sqlite3_vfs_find(0)==&one );
+  sqlite3_vfs_register(&two, 1);
+  assert( sqlite3_vfs_find("__one")==&one );
+  assert( sqlite3_vfs_find("__two")==&two );
+  assert( sqlite3_vfs_find(0)==&two );
+  if( pMain ){
+    sqlite3_vfs_register(pMain, 1);
+    assert( sqlite3_vfs_find("__one")==&one );
+    assert( sqlite3_vfs_find("__two")==&two );
+    assert( sqlite3_vfs_find(0)==pMain );
+  }
+  
+  /* Unlink the default VFS.  Repeat until there are no more VFSes
+  ** registered.
+  */
   for(i=0; i<sizeof(apVfs)/sizeof(apVfs[0]); i++){
     apVfs[i] = sqlite3_vfs_find(0);
     if( apVfs[i] ){
@@ -4231,6 +4258,8 @@ static int vfs_unlink_test(
     }
   }
   assert( 0==sqlite3_vfs_find(0) );
+
+  /* Relink all VFSes in reverse order. */  
   for(i=sizeof(apVfs)/sizeof(apVfs[0])-1; i>=0; i--){
     if( apVfs[i] ){
       sqlite3_vfs_register(apVfs[i], 1);
@@ -4238,6 +4267,94 @@ static int vfs_unlink_test(
       assert( apVfs[i]==sqlite3_vfs_find(apVfs[i]->zName) );
     }
   }
+
+  /* Unregister out sample VFSes. */
+  sqlite3_vfs_unregister(&one);
+  sqlite3_vfs_unregister(&two);
+
+  /* Unregistering a VFS that is not currently registered is harmless */
+  sqlite3_vfs_unregister(&one);
+  sqlite3_vfs_unregister(&two);
+  assert( sqlite3_vfs_find("__one")==0 );
+  assert( sqlite3_vfs_find("__two")==0 );
+
+  /* We should be left with the original default VFS back as the
+  ** original */
+  assert( sqlite3_vfs_find(0)==pMain );
+
+  return TCL_OK;
+}
+
+/*
+** tclcmd:   file_control_test DB
+**
+** This TCL command runs the sqlite3_file_control interface and
+** verifies correct operation of the same.
+*/
+static int file_control_test(
+  ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  int iArg = 0;
+  sqlite3 *db;
+  int rc;
+
+  if( objc!=2 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"",
+        Tcl_GetStringFromObj(objv[0], 0), " DB", 0);
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  rc = sqlite3_file_control(db, 0, 0, &iArg);
+  assert( rc==SQLITE_ERROR );
+  rc = sqlite3_file_control(db, "notadatabase", SQLITE_FCNTL_LOCKSTATE, &iArg);
+  assert( rc==SQLITE_ERROR );
+  rc = sqlite3_file_control(db, "main", -1, &iArg);
+  assert( rc==SQLITE_ERROR );
+  rc = sqlite3_file_control(db, "temp", -1, &iArg);
+  assert( rc==SQLITE_ERROR );
+  return TCL_OK;  
+}
+
+/*
+** tclcmd:  save_prng_state
+*/
+static int save_prng_state(
+  ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  extern void sqlite3SavePrngState(void);
+  sqlite3SavePrngState();
+  return TCL_OK;
+}
+/*
+** tclcmd:  restore_prng_state
+*/
+static int restore_prng_state(
+  ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  extern void sqlite3RestorePrngState(void);
+  sqlite3RestorePrngState();
+  return TCL_OK;
+}
+/*
+** tclcmd:  reset_prng_state
+*/
+static int reset_prng_state(
+  ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  extern void sqlite3ResetPrngState(void);
+  sqlite3ResetPrngState();
   return TCL_OK;
 }
 
@@ -4334,14 +4451,16 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 
      { "sqlite3_release_memory",        test_release_memory,     0},
      { "sqlite3_soft_heap_limit",       test_soft_heap_limit,    0},
-     { "sqlite3_clear_tsd_memdebug",    test_clear_tsd_memdebug, 0},
-     { "sqlite3_tsd_release",           test_tsd_release,        0},
      { "sqlite3_thread_cleanup",        test_thread_cleanup,     0},
      { "sqlite3_pager_refcounts",       test_pager_refcounts,    0},
 
      { "sqlite3_load_extension",        test_load_extension,     0},
      { "sqlite3_enable_load_extension", test_enable_load,        0},
      { "sqlite3_extended_result_codes", test_extended_result_codes, 0},
+
+     { "save_prng_state",               save_prng_state,    0 },
+     { "restore_prng_state",            restore_prng_state, 0 },
+     { "reset_prng_state",              reset_prng_state,   0 },
 
      /* sqlite3_column_*() API */
      { "sqlite3_column_count",          test_column_count  ,0 },
@@ -4378,6 +4497,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_global_recover",     test_global_recover, 0   },
      { "working_64bit_int",          working_64bit_int,   0   },
      { "vfs_unlink_test",            vfs_unlink_test,     0   },
+     { "file_control_test",          file_control_test,   0   },
 
      /* Functions from os.h */
 #ifndef SQLITE_OMIT_DISKIO

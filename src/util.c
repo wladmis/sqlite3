@@ -444,25 +444,6 @@ int sqlite3GetInt32(const char *zNum, int *pValue){
 }
 
 /*
-** Check to make sure we have a valid db pointer.  This test is not
-** foolproof but it does provide some measure of protection against
-** misuse of the interface such as passing in db pointers that are
-** NULL or which have been previously closed.  If this routine returns
-** TRUE it means that the db pointer is invalid and should not be
-** dereferenced for any reason.  The calling function should invoke
-** SQLITE_MISUSE immediately.
-*/
-int sqlite3SafetyCheck(sqlite3 *db){
-  int magic;
-  if( db==0 ) return 1;
-  magic = db->magic;
-  if( magic!=SQLITE_MAGIC_CLOSED &&
-         magic!=SQLITE_MAGIC_OPEN &&
-         magic!=SQLITE_MAGIC_BUSY ) return 1;
-  return 0;
-}
-
-/*
 ** The variable-length integer encoding is as follows:
 **
 ** KEY:
@@ -637,17 +618,17 @@ static int hexToInt(int h){
 ** binary value has been obtained from malloc and must be freed by
 ** the calling routine.
 */
-void *sqlite3HexToBlob(sqlite3 *db, const char *z){
+void *sqlite3HexToBlob(sqlite3 *db, const char *z, int n){
   char *zBlob;
   int i;
-  int n = strlen(z);
-  if( n%2 ) return 0;
 
-  zBlob = (char *)sqlite3DbMallocRaw(db, n/2);
+  zBlob = (char *)sqlite3DbMallocRaw(db, n/2 + 1);
+  n--;
   if( zBlob ){
     for(i=0; i<n; i+=2){
       zBlob[i/2] = (hexToInt(z[i])<<4) | hexToInt(z[i+1]);
     }
+    zBlob[i/2] = 0;
   }
   return zBlob;
 }
@@ -679,6 +660,7 @@ void *sqlite3HexToBlob(sqlite3 *db, const char *z){
 ** call to sqlite3_close(db) and db has been deallocated.  And we do
 ** not want to write into deallocated memory.
 */
+#ifdef SQLITE_DEBUG
 int sqlite3SafetyOn(sqlite3 *db){
   if( db->magic==SQLITE_MAGIC_OPEN ){
     db->magic = SQLITE_MAGIC_BUSY;
@@ -689,19 +671,54 @@ int sqlite3SafetyOn(sqlite3 *db){
   }
   return 1;
 }
+#endif
 
 /*
 ** Change the magic from SQLITE_MAGIC_BUSY to SQLITE_MAGIC_OPEN.
 ** Return an error (non-zero) if the magic was not SQLITE_MAGIC_BUSY
 ** when this routine is called.
 */
+#ifdef SQLITE_DEBUG
 int sqlite3SafetyOff(sqlite3 *db){
   if( db->magic==SQLITE_MAGIC_BUSY ){
     db->magic = SQLITE_MAGIC_OPEN;
     return 0;
-  }else {
+  }else{
     db->magic = SQLITE_MAGIC_ERROR;
     db->u1.isInterrupted = 1;
     return 1;
   }
+}
+#endif
+
+/*
+** Check to make sure we have a valid db pointer.  This test is not
+** foolproof but it does provide some measure of protection against
+** misuse of the interface such as passing in db pointers that are
+** NULL or which have been previously closed.  If this routine returns
+** 1 it means that the db pointer is valid and 0 if it should not be
+** dereferenced for any reason.  The calling function should invoke
+** SQLITE_MISUSE immediately.
+**
+** sqlite3SafetyCheckOk() requires that the db pointer be valid for
+** use.  sqlite3SafetyCheckSickOrOk() allows a db pointer that failed to
+** open properly and is not fit for general use but which can be
+** used as an argument to sqlite3_errmsg() or sqlite3_close().
+*/
+int sqlite3SafetyCheckOk(sqlite3 *db){
+  int magic;
+  if( db==0 ) return 0;
+  magic = db->magic;
+  if( magic!=SQLITE_MAGIC_OPEN &&
+      magic!=SQLITE_MAGIC_BUSY ) return 0;
+  return 1;
+}
+int sqlite3SafetyCheckSickOrOk(sqlite3 *db){
+  int magic;
+  if( db==0 ) return 0;
+  magic = db->magic;
+  if( magic!=SQLITE_MAGIC_SICK &&
+      magic!=SQLITE_MAGIC_OPEN &&
+      magic!=SQLITE_MAGIC_BUSY ) return 0;
+  return 1;
 }

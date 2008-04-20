@@ -20,7 +20,7 @@ source $testdir/tester.tcl
 # Only run these tests if memory debugging is turned on.
 #
 ifcapable !memdebug {
-   puts "Skipping mallocE tests: not compiled with -DSQLITE_MEMDEBUG..."
+   puts "Skipping mallocF tests: not compiled with -DSQLITE_MEMDEBUG..."
    finish_test
    return
 }

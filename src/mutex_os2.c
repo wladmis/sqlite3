@@ -103,8 +103,8 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
         DosEnterCritSec();
         lock++;
         if( lock == 1 ) {
-          DosExitCritSec();
           int i;
+          DosExitCritSec();
           for(i = 0; i < sizeof(staticMutexes)/sizeof(staticMutexes[0]); i++) {
             staticMutexes[i].mutexName = (PSZ)malloc(mutex_name_len + 1);
             sqlite3_snprintf(mutex_name_len + 1, /* one more for the number */

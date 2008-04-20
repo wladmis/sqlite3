@@ -23,7 +23,9 @@ ifcapable !memdebug {
 }
 source $testdir/malloc_common.tcl
 
+db close
 sqlite3_simulate_device -char atomic
+sqlite3 db test.db -vfs devsym
 
 set PREP { 
   PRAGMA page_size = 1024;

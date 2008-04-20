@@ -183,6 +183,38 @@ do_test cast-1.53 {
   execsql {SELECT CAST('123.5abc' AS integer)}
 } 123
 
+do_test case-1.60 {
+  execsql {SELECT CAST(null AS REAL)}
+} {{}}
+do_test case-1.61 {
+  execsql {SELECT typeof(CAST(null AS REAL))}
+} {null}
+do_test case-1.62 {
+  execsql {SELECT CAST(1 AS REAL)}
+} {1.0}
+do_test case-1.63 {
+  execsql {SELECT typeof(CAST(1 AS REAL))}
+} {real}
+do_test case-1.64 {
+  execsql {SELECT CAST('1' AS REAL)}
+} {1.0}
+do_test case-1.65 {
+  execsql {SELECT typeof(CAST('1' AS REAL))}
+} {real}
+do_test case-1.66 {
+  execsql {SELECT CAST('abc' AS REAL)}
+} {0.0}
+do_test case-1.67 {
+  execsql {SELECT typeof(CAST('abc' AS REAL))}
+} {real}
+do_test case-1.68 {
+  execsql {SELECT CAST(x'31' AS REAL)}
+} {1.0}
+do_test case-1.69 {
+  execsql {SELECT typeof(CAST(x'31' AS REAL))}
+} {real}
+
+
 # Ticket #1662.  Ignore leading spaces in numbers when casting.
 #
 do_test cast-2.1 {

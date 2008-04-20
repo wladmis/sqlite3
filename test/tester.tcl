@@ -51,6 +51,20 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
   }
 }
 
+# 
+# Check the command-line arguments to set the maximum number of
+# errors tolerated before halting.
+#
+if {![info exists maxErr]} {
+  set maxErr 1000
+}
+for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[regexp {^--maxerror=(\d+)$} [lindex $argv $i] all maxErr]} {
+    set argv [lreplace $argv $i $i]
+  }
+}
+#puts "Max error = $maxErr"
+
 
 # Use the pager codec if it is available
 #
@@ -86,7 +100,6 @@ set nErr 0
 set nTest 0
 set skip_test 0
 set failList {}
-set maxErr 1000
 if {![info exists speedTest]} {
   set speedTest 0
 }
@@ -208,7 +221,8 @@ proc finalize_testing {} {
       sqlite3_memdebug_dump ./memusage.txt
     }
   }
-  puts "Maximum memory usage: [sqlite3_memory_highwater] bytes"
+  puts "Maximum memory usage: [sqlite3_memory_highwater 1] bytes"
+  puts "Current memory usage: [sqlite3_memory_highwater] bytes"
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
   }
@@ -238,10 +252,12 @@ proc catchsql {sql {db db}} {
 #
 proc explain {sql {db db}} {
   puts ""
-  puts "addr  opcode        p1       p2     p3             "
-  puts "----  ------------  ------  ------  ---------------"
+  puts "addr  opcode        p1      p2      p3      p4               p5  #"
+  puts "----  ------------  ------  ------  ------  ---------------  --  -"
   $db eval "explain $sql" {} {
-    puts [format {%-4d  %-12.12s  %-6d  %-6d  %s} $addr $opcode $p1 $p2 $p3]
+    puts [format {%-4d  %-12.12s  %-6d  %-6d  %-6d  % -17s %s  %s} \
+      $addr $opcode $p1 $p2 $p3 $p4 $p5 $comment
+    ]
   }
 }
 
@@ -301,11 +317,31 @@ proc integrity_check {name} {
   }
 }
 
+proc fix_ifcapable_expr {expr} {
+  set ret ""
+  set state 0
+  for {set i 0} {$i < [string length $expr]} {incr i} {
+    set char [string range $expr $i $i]
+    set newstate [expr {[string is alnum $char] || $char eq "_"}]
+    if {$newstate && !$state} {
+      append ret {$::sqlite_options(}
+    }
+    if {!$newstate && $state} {
+      append ret )
+    }
+    append ret $char
+    set state $newstate
+  }
+  if {$state} {append ret )}
+  return $ret
+}
+
 # Evaluate a boolean expression of capabilities.  If true, execute the
 # code.  Omit the code if false.
 #
 proc ifcapable {expr code {else ""} {elsecode ""}} {
-  regsub -all {[a-z_0-9]+} $expr {$::sqlite_options(&)} e2
+  #regsub -all {[a-z_0-9]+} $expr {$::sqlite_options(&)} e2
+  set e2 [fix_ifcapable_expr $expr]
   if ($e2) {
     set c [catch {uplevel 1 $code} r]
   } else {
@@ -337,6 +373,8 @@ proc crashsql {args} {
 
   set blocksize ""
   set crashdelay 1
+  set prngseed 0
+  set tclbody {}
   set crashfile ""
   set dc ""
   set sql [lindex $args end]
@@ -347,7 +385,9 @@ proc crashsql {args} {
     set z2 [lindex $args [expr $ii+1]]
 
     if     {$n>1 && [string first $z -delay]==0}     {set crashdelay $z2} \
+    elseif {$n>1 && [string first $z -seed]==0}      {set prngseed $z2} \
     elseif {$n>1 && [string first $z -file]==0}      {set crashfile $z2}  \
+    elseif {$n>1 && [string first $z -tclbody]==0}   {set tclbody $z2}  \
     elseif {$n>1 && [string first $z -blocksize]==0} {set blocksize "-s $z2" } \
     elseif {$n>1 && [string first $z -characteristics]==0} {set dc "-c {$z2}" } \
     else   { error "Unrecognized option: $z" }
@@ -371,10 +411,20 @@ proc crashsql {args} {
   puts $f {db eval {SELECT * FROM sqlite_master;}}
   puts $f {set bt [btree_from_db db]}
   puts $f {btree_set_cache_size $bt 10}
+  if {$prngseed} {
+    set seed [expr {$prngseed%10007+1}]
+    # puts seed=$seed
+    puts $f "db eval {SELECT randomblob($seed)}"
+  }
 
-  puts $f "db eval {"
-  puts $f   "$sql"
-  puts $f "}"
+  if {[string length $tclbody]>0} {
+    puts $f $tclbody
+  }
+  if {[string length $sql]>0} {
+    puts $f "db eval {"
+    puts $f   "$sql"
+    puts $f "}"
+  }
   close $f
 
   set r [catch {
@@ -411,6 +461,8 @@ proc do_ioerr_test {testname args} {
   array set ::ioerropts $args
 
   set ::go 1
+  #reset_prng_state
+  save_prng_state
   for {set n $::ioerropts(-start)} {$::go} {incr n} {
     set ::TN $n
     incr ::ioerropts(-count) -1
@@ -420,6 +472,7 @@ proc do_ioerr_test {testname args} {
     if {[info exists ::ioerropts(-exclude)]} {
       if {[lsearch $::ioerropts(-exclude) $n]!=-1} continue
     }
+    restore_prng_state
 
     # Delete the files test.db and test2.db, then execute the TCL and 
     # SQL (in that order) to prepare for the test case.
@@ -445,7 +498,7 @@ proc do_ioerr_test {testname args} {
     if {$::ioerropts(-cksum)} {
       set checksum [cksum]
     }
-  
+
     # Set the Nth IO error to fail.
     do_test $testname.$n.2 [subst {
       set ::sqlite_io_error_persist $::ioerropts(-persist)
@@ -484,8 +537,19 @@ proc do_ioerr_test {testname args} {
           return $rc
         }
       }
-      # The test repeats as long as $::go is true.  
-      set ::go [expr {$::sqlite_io_error_pending<=0}]
+      # The test repeats as long as $::go is non-zero.  $::go starts out
+      # as 1.  When a test runs to completion without hitting an I/O
+      # error, that means there is no point in continuing with this test
+      # case so set $::go to zero.
+      #
+      if {$::sqlite_io_error_pending>0} {
+        set ::go 0
+        set q 0
+        set ::sqlite_io_error_pending 0
+      } else {
+        set q 1
+      }
+
       set s [expr $::sqlite_io_error_hit==0]
       set ::sqlite_io_error_hit 0
 
@@ -493,7 +557,7 @@ proc do_ioerr_test {testname args} {
       #   1.  We never hit the IO error and the SQL returned OK
       #   2.  An IO error was hit and the SQL failed
       #
-      expr { ($s && !$r && !$::go) || (!$s && $r && $::go) }
+      expr { ($s && !$r && !$q) || (!$s && $r && $q) }
     } {1}
 
     # If an IO error occured, then the checksum of the database should
@@ -516,7 +580,8 @@ proc do_ioerr_test {testname args} {
   unset ::ioerropts
 }
 
-# Return a checksum based on the contents of database 'db'.
+# Return a checksum based on the contents of the main database associated
+# with connection $db
 #
 proc cksum {{db db}} {
   set txt [$db eval {
@@ -534,6 +599,39 @@ proc cksum {{db db}} {
   # puts $cksum-[file size test.db]
   return $cksum
 }
+
+# Generate a checksum based on the contents of the main and temp tables
+# database $db. If the checksum of two databases is the same, and the
+# integrity-check passes for both, the two databases are identical.
+#
+proc allcksum {{db db}} {
+  set ret [list]
+  ifcapable tempdb {
+    set sql {
+      SELECT name FROM sqlite_master WHERE type = 'table' UNION
+      SELECT name FROM sqlite_temp_master WHERE type = 'table' UNION
+      SELECT 'sqlite_master' UNION
+      SELECT 'sqlite_temp_master' ORDER BY 1
+    }
+  } else {
+    set sql {
+      SELECT name FROM sqlite_master WHERE type = 'table' UNION
+      SELECT 'sqlite_master' ORDER BY 1
+    }
+  }
+  set tbllist [$db eval $sql]
+  set txt {}
+  foreach tbl $tbllist {
+    append txt [$db eval "SELECT * FROM $tbl"]
+  }
+  foreach prag {default_cache_size} {
+    append txt $prag-[$db eval "PRAGMA $prag"]\n
+  }
+  # puts txt=$txt
+  return [md5 $txt]
+}
+
+
 
 # Copy file $from into $to. This is used because some versions of
 # TCL for windows (notably the 8.4.1 binary package shipped with the

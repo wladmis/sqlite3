@@ -32,14 +32,9 @@
 // This code runs whenever there is a syntax error
 //
 %syntax_error {
-  if( !pParse->parseError ){
-    if( TOKEN.z[0] ){
-      sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", &TOKEN);
-    }else{
-      sqlite3ErrorMsg(pParse, "incomplete SQL statement");
-    }
-    pParse->parseError = 1;
-  }
+  assert( TOKEN.z[0] );  /* The tokenizer always gives us a token */
+  sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", &TOKEN);
+  pParse->parseError = 1;
 }
 %stack_overflow {
   sqlite3ErrorMsg(pParse, "parser stack overflow");
@@ -365,7 +360,8 @@ cmd ::= DROP VIEW ifexists(E) fullname(X). {
 //////////////////////// The SELECT statement /////////////////////////////////
 //
 cmd ::= select(X).  {
-  sqlite3Select(pParse, X, SRT_Callback, 0, 0, 0, 0, 0);
+  SelectDest dest = {SRT_Callback, 0, 0};
+  sqlite3Select(pParse, X, &dest, 0, 0, 0, 0);
   sqlite3SelectDelete(X);
 }
 
@@ -970,7 +966,7 @@ trigger_decl(A) ::= temp(T) TRIGGER ifnotexists(NOERR) nm(B) dbnm(Z)
   A = (Z.n==0?B:Z);
 }
 
-%type trigger_time  {int}
+%type trigger_time {int}
 trigger_time(A) ::= BEFORE.      { A = TK_BEFORE; }
 trigger_time(A) ::= AFTER.       { A = TK_AFTER;  }
 trigger_time(A) ::= INSTEAD OF.  { A = TK_INSTEAD;}
@@ -1063,7 +1059,7 @@ cmd ::= DETACH database_kw_opt expr(D). {
   sqlite3Detach(pParse, D);
 }
 
-%type key_opt {Expr *}
+%type key_opt {Expr*}
 %destructor key_opt {sqlite3ExprDelete($$);}
 key_opt(A) ::= .                     { A = 0; }
 key_opt(A) ::= KEY expr(X).          { A = X; }

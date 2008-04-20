@@ -87,4 +87,22 @@ do_test vtab2-2.3 {
 unset result
 unset var
 
+# Ticket #2894.
+#
+# Make sure we do call Column(), and Rowid() methods of
+# a virtual table when that table is in a LEFT JOIN.
+#
+do_test vtab2-3.1 {
+  execsql {
+    SELECT * FROM schema WHERE dflt_value IS NULL LIMIT 1
+  }
+} {main schema 0 database {} 0 {} 0}
+do_test vtab2-3.2 {
+  execsql {
+    SELECT *, b.rowid
+      FROM schema a LEFT JOIN schema b ON a.dflt_value=b.dflt_value
+     WHERE a.rowid=1
+  }
+} {main schema 0 database {} 0 {} 0 {} {} {} {} {} {} {} {} {}}
+
 finish_test

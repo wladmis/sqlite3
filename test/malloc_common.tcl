@@ -56,10 +56,16 @@ proc do_malloc_test {tn args} {
   } else {
     set start 0
   }
+  if {[info exists ::mallocopts(-end)]} {
+    set end $::mallocopts(-end)
+  } else {
+    set end 50000
+  }
+  save_prng_state
 
-  foreach ::iRepeat {0 1} {
+  foreach ::iRepeat {0 10000000} {
     set ::go 1
-    for {set ::n $start} {$::go && $::n < 50000} {incr ::n} {
+    for {set ::n $start} {$::go && $::n <= $end} {incr ::n} {
 
       # If $::iRepeat is 0, then the malloc() failure is transient - it
       # fails and then subsequent calls succeed. If $::iRepeat is 1, 
@@ -68,6 +74,8 @@ proc do_malloc_test {tn args} {
       #
       set zRepeat "transient"
       if {$::iRepeat} {set zRepeat "persistent"}
+      restore_prng_state
+      foreach file [glob -nocomplain test.db-mj*] {file delete -force $file}
 
       do_test ${tn}.${zRepeat}.${::n} {
   
@@ -117,6 +125,7 @@ proc do_malloc_test {tn args} {
         #
         set isFail [catch $::mallocbody msg]
         set nFail [sqlite3_memdebug_fail -1 -benigncnt nBenign]
+        # puts -nonewline " (isFail=$isFail nFail=$nFail nBenign=$nBenign) "
 
         # If one or more mallocs failed, run this loop body again.
         #

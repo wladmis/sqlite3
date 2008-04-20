@@ -747,7 +747,8 @@ static int os2GetTempname( sqlite3_vfs *pVfs, int nBuf, char *zBuf ){
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "0123456789";
   int i, j;
-  PSZ zTempPath = "";
+  char zTempPathBuf[3];
+  PSZ zTempPath = (PSZ)&zTempPathBuf;
   if( DosScanEnv( (PSZ)"TEMP", &zTempPath ) ){
     if( DosScanEnv( (PSZ)"TMP", &zTempPath ) ){
       if( DosScanEnv( (PSZ)"TMPDIR", &zTempPath ) ){
@@ -790,21 +791,19 @@ static int os2FullPathname(
   char *zFull                 /* Output buffer */
 ){
   if( strchr(zRelative, ':') ){
-    sqlite3SetString( &zFull, zRelative, (char*)0 );
+    sqlite3_snprintf( nFull, zFull, "%s", zRelative );
   }else{
     ULONG ulDriveNum = 0;
     ULONG ulDriveMap = 0;
     ULONG cbzBufLen = SQLITE_TEMPNAME_SIZE;
-    char zDrive[2];
     char *zBuff = (char*)malloc( cbzBufLen );
     if( zBuff == 0 ){
       return SQLITE_NOMEM;
     }
     DosQueryCurrentDisk( &ulDriveNum, &ulDriveMap );
     if( DosQueryCurrentDir( ulDriveNum, (PBYTE)zBuff, &cbzBufLen ) == NO_ERROR ){
-      sprintf( zDrive, "%c", (char)('A' + ulDriveNum - 1) );
-      sqlite3SetString( &zFull, zDrive, ":\\", zBuff,
-                        "\\", zRelative, (char*)0 );
+      sqlite3_snprintf( nFull, zFull, "%c:\\%s\\%s",
+                               (char)('A' + ulDriveNum - 1), zBuff, zRelative);
     }
     free( zBuff );
   }
