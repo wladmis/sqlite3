@@ -69,7 +69,7 @@ static void renameTableFunc(
       tname.n = len;
 
       /* Advance zCsr to the next token. Store that token type in 'token',
-      ** and it's length in 'len' (to be used next iteration of this loop).
+      ** and its length in 'len' (to be used next iteration of this loop).
       */
       do {
         zCsr += len;
@@ -127,7 +127,7 @@ static void renameTriggerFunc(
       tname.n = len;
 
       /* Advance zCsr to the next token. Store that token type in 'token',
-      ** and it's length in 'len' (to be used next iteration of this loop).
+      ** and its length in 'len' (to be used next iteration of this loop).
       */
       do {
         zCsr += len;
@@ -319,6 +319,13 @@ void sqlite3AlterRenameTable(
   if( SQLITE_OK!=sqlite3CheckObjectName(pParse, zName) ){
     goto exit_rename_table;
   }
+
+#ifndef SQLITE_OMIT_VIEW
+  if( pTab->pSelect ){
+    sqlite3ErrorMsg(pParse, "view %s may not be altered", pTab->zName);
+    goto exit_rename_table;
+  }
+#endif
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
   /* Invoke the authorization callback. */

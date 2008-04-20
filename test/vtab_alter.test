@@ -62,7 +62,7 @@ do_test vtab_alter-1.6 {
   catchsql { SELECT * FROM new }
 } {0 {}}
 
-# Try to rename an echo table that renames it's base table. Make 
+# Try to rename an echo table that renames its base table. Make 
 # sure nothing terrible happens.
 #
 do_test vtab_alter-2.1 {
@@ -89,7 +89,7 @@ do_test vtab_alter-2.5 {
   execsql { SELECT * FROM x_base; }
 } {1 2 3}
 
-# Cause an error to occur when the echo module renames it's
+# Cause an error to occur when the echo module renames its
 # backing store table.
 #
 do_test vtab_alter-3.1 {

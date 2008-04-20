@@ -912,8 +912,8 @@ do_test capi3c-11.21 {
   sqlite3_finalize $STMT
 } {SQLITE_OK}
 
-# The following tests - capi3c-12.* - check that it's Ok to start a
-# transaction while other VMs are active, and that it's Ok to execute
+# The following tests - capi3c-12.* - check that its Ok to start a
+# transaction while other VMs are active, and that its Ok to execute
 # atomic updates in the same situation 
 #
 do_test capi3c-12.1 {

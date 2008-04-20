@@ -126,7 +126,7 @@ NAWK = @AWK@
 LIBOBJ = alter.lo analyze.lo attach.lo auth.lo btmutex.lo btree.lo build.lo \
          callback.lo complete.lo date.lo \
          delete.lo expr.lo func.lo hash.lo journal.lo insert.lo loadext.lo \
-         main.lo malloc.lo mem1.lo mem2.lo mem3.lo mutex.lo \
+         main.lo malloc.lo mem1.lo mem2.lo mem3.lo mem4.lo mutex.lo \
          mutex_os2.lo mutex_unix.lo mutex_w32.lo \
          opcodes.lo os.lo os_unix.lo os_win.lo os_os2.lo \
          pager.lo parse.lo pragma.lo prepare.lo printf.lo random.lo \
@@ -163,6 +163,7 @@ SRC = \
   $(TOP)/src/mem1.c \
   $(TOP)/src/mem2.c \
   $(TOP)/src/mem3.c \
+  $(TOP)/src/mem4.c \
   $(TOP)/src/mutex.c \
   $(TOP)/src/mutex_os2.c \
   $(TOP)/src/mutex_unix.c \
@@ -331,10 +332,17 @@ libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 		-version-info "8:6:8" \
 		$(LIBTCL) -Wl,-z,defs
 
-sqlite3$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
+testcli$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
 	$(LTLINK) $(READLINE_FLAGS) $(LIBPTHREAD) \
 		-o $@ $(TOP)/src/shell.c libsqlite3.la \
 		$(LIBREADLINE) $(TLIBS)
+
+sqlite3$(EXE):	$(TOP)/src/shell.c sqlite3.c sqlite3.h
+	$(LTLINK) $(READLINE_FLAGS) -o $@                          \
+		-DSQLITE_MAX_SQL_LENGTH=1000000000                  \
+		-USQLITE_THREADSAFE -DSQLITE_THREADSAFE=0           \
+		$(TOP)/src/shell.c sqlite3.c                        \
+		$(LIBREADLINE) $(TLIBS) $(THREADLIB)
 
 # This target creates a directory named "tsrc" and fills it with
 # copies of all of the C source code and header files needed to
@@ -429,6 +437,9 @@ mem2.lo:	$(TOP)/src/mem2.c $(HDR)
 
 mem3.lo:	$(TOP)/src/mem3.c $(HDR)
 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/mem3.c
+
+mem4.lo:	$(TOP)/src/mem4.c $(HDR)
+	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/mem4.c
 
 mutex.lo:	$(TOP)/src/mutex.c $(HDR)
 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/mutex.c
@@ -587,11 +598,11 @@ sqlite3_analyzer$(TEXE):	$(TOP)/src/tclsqlite.c libtclsqlite3.la \
 		libtclsqlite3.la $(LIBTCL)
 
 
-install:	sqlite3 libsqlite3.la sqlite3.h
+install:	sqlite3$(BEXE) libsqlite3.la sqlite3.h
 	$(INSTALL) -d $(DESTDIR)$(libdir)
 	$(LTINSTALL) libsqlite3.la $(DESTDIR)$(libdir)
 	$(INSTALL) -d $(DESTDIR)$(exec_prefix)/bin
-	$(LTINSTALL) sqlite3 $(DESTDIR)$(exec_prefix)/bin
+	$(LTINSTALL) sqlite3$(BEXE) $(DESTDIR)$(exec_prefix)/bin
 	$(INSTALL) -d $(DESTDIR)$(prefix)/include
 	$(INSTALL) -m 0644 sqlite3.h $(DESTDIR)$(prefix)/include
 	$(INSTALL) -m 0644 $(TOP)/src/sqlite3ext.h $(DESTDIR)$(prefix)/include

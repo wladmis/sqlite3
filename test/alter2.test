@@ -275,10 +275,11 @@ set default_file_format [expr $SQLITE_DEFAULT_FILE_FORMAT==4 ? 4 : 1]
 ifcapable vacuum {
   do_test alter2-5.1 {
     set_file_format 2
+    execsql {SELECT 1 FROM sqlite_master LIMIT 1;}
     get_file_format
   } {2}
   do_test alter2-5.2 {
-    execsql {
+    execsql {    
       VACUUM;
     }
   } {}

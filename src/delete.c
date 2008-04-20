@@ -217,7 +217,6 @@ void sqlite3DeleteFrom(
     if( db->flags & SQLITE_CountRows ){
       /* If counting rows deleted, just count the total number of
       ** entries in the table. */
-      int endOfLoop = sqlite3VdbeMakeLabel(v);
       int addr2;
       if( !isView ){
         sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenRead);
@@ -225,7 +224,6 @@ void sqlite3DeleteFrom(
       sqlite3VdbeAddOp(v, OP_Rewind, iCur, sqlite3VdbeCurrentAddr(v)+2);
       addr2 = sqlite3VdbeAddOp(v, OP_MemIncr, 1, memCnt);
       sqlite3VdbeAddOp(v, OP_Next, iCur, addr2);
-      sqlite3VdbeResolveLabel(v, endOfLoop);
       sqlite3VdbeAddOp(v, OP_Close, iCur, 0);
     }
     if( !isView ){
@@ -279,11 +277,12 @@ void sqlite3DeleteFrom(
     if( triggers_exist ){
       int mem1 = pParse->nMem++;
       addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, end);
+      sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       sqlite3VdbeAddOp(v, OP_MemStore, mem1, 0);
       if( !isView ){
         sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenRead);
       }
-      sqlite3VdbeAddOp(v, OP_MoveGe, iCur, 0);
+      sqlite3VdbeAddOp(v, OP_NotExists, iCur, addr);
       sqlite3VdbeAddOp(v, OP_Rowid, iCur, 0);
       sqlite3VdbeAddOp(v, OP_RowData, iCur, 0);
       sqlite3VdbeAddOp(v, OP_Insert, oldIdx, 0);
@@ -312,6 +311,7 @@ void sqlite3DeleteFrom(
       ** row triggers */
       if( !triggers_exist ){ 
         addr = sqlite3VdbeAddOp(v, OP_FifoRead, 0, end);
+        sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       }
 
       /* Delete the row */

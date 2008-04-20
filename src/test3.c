@@ -566,7 +566,7 @@ static int btree_pager_stats(
   ** we need to obtain the mutex for the controlling SQLite handle before
   ** it is safe to call sqlite3BtreeEnter().
   */
-  sqlite3_mutex_enter(pBt->pSqlite->mutex);
+  sqlite3_mutex_enter(pBt->db->mutex);
 
   sqlite3BtreeEnter(pBt);
   a = sqlite3PagerStats(sqlite3BtreePager(pBt));
@@ -583,7 +583,7 @@ static int btree_pager_stats(
   sqlite3BtreeLeave(pBt);
 
   /* Release the mutex on the SQLite handle that controls this b-tree */
-  sqlite3_mutex_leave(pBt->pSqlite->mutex);
+  sqlite3_mutex_leave(pBt->db->mutex);
   return TCL_OK;
 }
 
@@ -1591,11 +1591,11 @@ static int btree_set_cache_size(
   pBt = sqlite3TextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &nCache) ) return TCL_ERROR;
 
-  sqlite3_mutex_enter(pBt->pSqlite->mutex);
+  sqlite3_mutex_enter(pBt->db->mutex);
   sqlite3BtreeEnter(pBt);
   sqlite3BtreeSetCacheSize(pBt, nCache);
   sqlite3BtreeLeave(pBt);
-  sqlite3_mutex_leave(pBt->pSqlite->mutex);
+  sqlite3_mutex_leave(pBt->db->mutex);
 
   return TCL_OK;
 }

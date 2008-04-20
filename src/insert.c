@@ -110,6 +110,7 @@ static int readsTable(Vdbe *v, int iStartAddr, int iDb, Table *pTab){
   int iEnd = sqlite3VdbeCurrentAddr(v);
   for(i=iStartAddr; i<iEnd; i++){
     VdbeOp *pOp = sqlite3VdbeGetOp(v, i);
+    assert( pOp!=0 );
     if( pOp->opcode==OP_OpenRead ){
       VdbeOp *pPrior = &pOp[-1];
       int tnum = pOp->p2;
@@ -509,6 +510,7 @@ void sqlite3Insert(
       */
       srcTab = pParse->nTab++;
       sqlite3VdbeResolveLabel(v, iInsertBlock);
+      sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
       sqlite3VdbeAddOp(v, OP_MakeRecord, nColumn, 0);
       sqlite3VdbeAddOp(v, OP_NewRowid, srcTab, 0);
       sqlite3VdbeAddOp(v, OP_Pull, 1, 0);
@@ -641,6 +643,7 @@ void sqlite3Insert(
   }else if( pSelect ){
     sqlite3VdbeAddOp(v, OP_Goto, 0, iSelectLoop);
     sqlite3VdbeResolveLabel(v, iInsertBlock);
+    sqlite3VdbeAddOp(v, OP_StackDepth, -1, 0);
   }
 
   /* Run the BEFORE and INSTEAD OF triggers, if there are any

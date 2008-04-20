@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !subquery {
+  finish_test
+  return
+}
+
 db eval {
   PRAGMA page_size=1024;
   PRAGMA max_page_count=50;

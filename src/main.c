@@ -766,7 +766,6 @@ int sqlite3BtreeFactory(
   }
   rc = sqlite3BtreeOpen(zFilename, (sqlite3 *)db, ppBtree, btFlags, vfsFlags);
   if( rc==SQLITE_OK ){
-    sqlite3BtreeSetBusyHandler(*ppBtree, (void*)&db->busyHandler);
     sqlite3BtreeSetCacheSize(*ppBtree, nCache);
   }
   return rc;
@@ -965,6 +964,7 @@ static int openDatabase(
   db->magic = SQLITE_MAGIC_BUSY;
   db->aDb = db->aDbStatic;
   db->autoCommit = 1;
+  db->nextAutovac = -1;
   db->flags |= SQLITE_ShortColNames
 #if SQLITE_DEFAULT_FILE_FORMAT<4
                  | SQLITE_LegacyFileFmt

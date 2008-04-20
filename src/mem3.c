@@ -30,6 +30,10 @@
 #if defined(SQLITE_MEMORY_SIZE)
 #include "sqliteInt.h"
 
+#ifdef SQLITE_MEMDEBUG
+# error  cannot define both SQLITE_MEMDEBUG and SQLITE_MEMORY_SIZE
+#endif
+
 /*
 ** Maximum size (in Mem3Blocks) of a "small" chunk.
 */

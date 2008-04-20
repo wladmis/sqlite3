@@ -51,7 +51,7 @@ TCCX = $(TCC) $(OPTS) -I. -I$(TOP)/src
 LIBOBJ+= alter.o analyze.o attach.o auth.o btmutex.o btree.o build.o \
          callback.o complete.o date.o delete.o \
          expr.o func.o hash.o insert.o journal.o loadext.o \
-         main.o malloc.o mem1.o mem2.o mem3.o mutex.o mutex_os2.o \
+         main.o malloc.o mem1.o mem2.o mem3.o mem4.o mutex.o mutex_os2.o \
          mutex_unix.o mutex_w32.o \
          opcodes.o os.o os_os2.o os_unix.o os_win.o \
          pager.o parse.o pragma.o prepare.o printf.o random.o \
@@ -107,6 +107,7 @@ SRC = \
   $(TOP)/src/mem1.c \
   $(TOP)/src/mem2.c \
   $(TOP)/src/mem3.c \
+  $(TOP)/src/mem4.c \
   $(TOP)/src/mutex.c \
   $(TOP)/src/mutex.h \
   $(TOP)/src/mutex_os2.c \
@@ -276,10 +277,17 @@ libsqlite3.a:	$(LIBOBJ)
 	$(AR) libsqlite3.a $(LIBOBJ)
 	$(RANLIB) libsqlite3.a
 
-sqlite3$(EXE):	$(TOP)/src/shell.c libsqlite3.a sqlite3.h
-	$(TCCX) $(READLINE_FLAGS) -o sqlite3$(EXE)                  \
+testcli$(EXE):	$(TOP)/src/shell.c libsqlite3.a sqlite3.h
+	$(TCCX) $(READLINE_FLAGS) -o testcli$(EXE)                  \
 		$(TOP)/src/shell.c                                  \
 		libsqlite3.a $(LIBREADLINE) $(TLIBS) $(THREADLIB)
+
+sqlite3$(EXE):	$(TOP)/src/shell.c sqlite3.c sqlite3.h
+	$(TCCX) $(READLINE_FLAGS) -o sqlite3$(EXE)                  \
+		-DSQLITE_MAX_SQL_LENGTH=1000000000                  \
+		-USQLITE_THREADSAFE -DSQLITE_THREADSAFE=0           \
+		$(TOP)/src/shell.c sqlite3.c                        \
+		$(LIBREADLINE) $(TLIBS) $(THREADLIB)
 
 objects: $(LIBOBJ_ORIG)
 
@@ -294,6 +302,7 @@ target_source:	$(SRC)
 	mkdir tsrc
 	cp -f $(SRC) tsrc
 	rm tsrc/sqlite.h.in tsrc/parse.y
+	touch target_source
 
 sqlite3.c:	target_source $(TOP)/tool/mksqlite3c.tcl
 	tclsh $(TOP)/tool/mksqlite3c.tcl
@@ -476,6 +485,6 @@ clean:
 	rm -f lemon lempar.c parse.* sqlite*.tar.gz mkkeywordhash keywordhash.h
 	rm -f $(PUBLISH)
 	rm -f *.da *.bb *.bbg gmon.out
-	rm -rf tsrc
+	rm -rf tsrc target_source
 	rm -f testloadext.dll libtestloadext.so
 	rm -f sqlite3.c fts?amal.c

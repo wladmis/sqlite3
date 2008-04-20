@@ -558,12 +558,12 @@ ifcapable subquery&&compound {
       CREATE TABLE logs(msg TEXT, timestamp INTEGER, dbtime TEXT);
     }
     catchsql {
-      SELECT * FROM logs WHERE logs.id >= (SELECT head FROM logs_base) 
+      SELECT * FROM logs WHERE logs.oid >= (SELECT head FROM logs_base) 
       UNION ALL 
       SELECT * FROM logs 
       LIMIT (SELECT lmt FROM logs_base) ;
     }
-  } {1 {no such column: logs.id}}
+  } {1 {no such table: logs_base}}
 }
 
 # Overflow the lemon parser stack by providing an overly complex

@@ -1009,7 +1009,7 @@ static int winFileControl(sqlite3_file *id, int op, void *pArg){
 **
 ** SQLite code assumes this function cannot fail. It also assumes that
 ** if two files are created in the same file-system directory (i.e.
-** a database and it's journal file) that the sector size will be the
+** a database and its journal file) that the sector size will be the
 ** same for both.
 */
 static int winSectorSize(sqlite3_file *id){
@@ -1103,8 +1103,7 @@ static int winOpen(
   }else{
     dwShareMode = 0;
   }
-  if( flags & (SQLITE_OPEN_TEMP_DB | SQLITE_OPEN_TEMP_JOURNAL
-                    | SQLITE_OPEN_SUBJOURNAL) ){
+  if( flags & SQLITE_OPEN_DELETEONCLOSE ){
 #if OS_WINCE
     dwFlagsAndAttributes = FILE_ATTRIBUTE_HIDDEN;
 #else
@@ -1304,7 +1303,7 @@ static int winGetTempname(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
   }
   for(i=strlen(zTempPath); i>0 && zTempPath[i-1]=='\\'; i--){}
   zTempPath[i] = 0;
-  sqlite3_snprintf(pVfs->mxPathname-30, zBuf,
+  sqlite3_snprintf(nBuf-30, zBuf,
                    "%s\\"SQLITE_TEMP_FILE_PREFIX, zTempPath);
   j = strlen(zBuf);
   sqlite3Randomness(20, &zBuf[j]);

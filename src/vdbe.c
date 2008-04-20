@@ -692,6 +692,29 @@ case OP_Halt: {            /* no-push */
   goto vdbe_return;
 }
 
+/* Opcode:  StackDepth P1 * *
+**
+** If P1 is less than zero, then store the current stack depth
+** in P1.  If P1 is zero or greater, verify that the current stack
+** depth is equal to P1 and throw an exception if it is not.
+**
+** This opcode is used for internal consistency checking.
+*/
+case OP_StackDepth: {       /* no-push */
+  int n = pTos - p->aStack + 1;
+  if( pOp->p1<0 ){
+    pOp->p1 = n;
+  }else if( pOp->p1!=n ){
+    p->pTos = pTos;
+    p->rc = rc = SQLITE_INTERNAL;
+    p->pc = pc;
+    p->errorAction = OE_Rollback;
+    sqlite3SetString(&p->zErrMsg, "internal error: VDBE stack leak", (char*)0);
+    goto vdbe_return;
+  }
+  break;
+}
+
 /* Opcode: Integer P1 * *
 **
 ** The 32-bit integer value P1 is pushed onto the stack.
@@ -1436,7 +1459,7 @@ case OP_ForceInt: {            /* no-push */
 ** 
 ** Force the top of the stack to be an integer.  If the top of the
 ** stack is not an integer and cannot be converted into an integer
-** with out data loss, then jump immediately to P2, or if P2==0
+** without data loss, then jump immediately to P2, or if P2==0
 ** raise an SQLITE_MISMATCH exception.
 **
 ** If the top of the stack is not an integer and P2 is not zero and
@@ -2410,7 +2433,8 @@ case OP_MakeRecord: {
 case OP_Statement: {       /* no-push */
   int i = pOp->p1;
   Btree *pBt;
-  if( i>=0 && i<db->nDb && (pBt = db->aDb[i].pBt)!=0 && !(db->autoCommit) ){
+  if( i>=0 && i<db->nDb && (pBt = db->aDb[i].pBt)!=0
+        && (db->autoCommit==0 || db->activeVdbeCnt>1) ){
     assert( sqlite3BtreeIsInTrans(pBt) );
     assert( (p->btreeMask & (1<<i))!=0 );
     if( !sqlite3BtreeIsInStmt(pBt) ){
@@ -3056,11 +3080,14 @@ case OP_MoveGt: {       /* no-push */
 ** if it exists.  The blob is popped off the top of the stack.
 **
 ** This instruction is used to implement the IN operator where the
-** left-hand side is a SELECT statement.  P1 is not a true index but
-** is instead a temporary index that holds the results of the SELECT
-** statement.  This instruction just checks to see if the left-hand side
-** of the IN operator (stored on the top of the stack) exists in the
-** result of the SELECT statement.
+** left-hand side is a SELECT statement.  P1 may be a true index, or it
+** may be a temporary index that holds the results of the SELECT
+** statement. 
+**
+** This instruction checks if index P1 contains a record for which 
+** the first N serialised values exactly match the N serialised values
+** in the record on the stack, where N is the total number of values in
+** the stack record (stack record is a prefix of the P1 record). 
 **
 ** See also: Distinct, NotFound, MoveTo, IsUnique, NotExists
 */
@@ -3090,7 +3117,11 @@ case OP_Found: {        /* no-push */
     assert( pC->isTable==0 );
     assert( pTos->flags & MEM_Blob );
     Stringify(pTos, encoding);
+    if( pOp->opcode==OP_Found ){
+      pC->pKeyInfo->prefixIsEqual = 1;
+    }
     rc = sqlite3BtreeMoveto(pC->pCursor, pTos->z, pTos->n, 0, &res);
+    pC->pKeyInfo->prefixIsEqual = 0;
     if( rc!=SQLITE_OK ){
       break;
     }
@@ -3446,7 +3477,7 @@ case OP_NewRowid: {
 ** If the OPFLAG_NCHANGE flag of P2 is set, then the row change count is
 ** incremented (otherwise not).  If the OPFLAG_LASTROWID flag of P2 is set,
 ** then rowid is stored for subsequent return by the
-** sqlite3_last_insert_rowid() function (otherwise it's unmodified).
+** sqlite3_last_insert_rowid() function (otherwise it is unmodified).
 **
 ** Parameter P3 may point to a string containing the table-name, or
 ** may be NULL. If it is not NULL, then the update-hook 
@@ -4081,6 +4112,7 @@ case OP_Destroy: {
 #endif
   if( iCnt>1 ){
     rc = SQLITE_LOCKED;
+    p->errorAction = OE_Abort;
   }else{
     assert( iCnt==1 );
     assert( (p->btreeMask & (1<<pOp->p2))!=0 );

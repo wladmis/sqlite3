@@ -779,7 +779,7 @@ static void sqlite3ExecFunc(
 ** * It calls sqlite3_value_text() 3 times on the argument sqlite3_value*.
 **   If the three pointers returned are not the same an SQL error is raised.
 **
-** * Otherwise it returns a copy of the text representation of it's 
+** * Otherwise it returns a copy of the text representation of its 
 **   argument in such a way as the VDBE representation is a Mem* cell 
 **   with the MEM_Term flag clear. 
 **
@@ -4433,6 +4433,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_vdbe_addop_trace;
 #endif
 #ifdef SQLITE_TEST
+  extern int sqlite3_enable_in_opt;
   extern char sqlite3_query_plan[];
   static char *query_plan = sqlite3_query_plan;
 #endif
@@ -4512,5 +4513,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_sync_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_fullsync_count",
       (char*)&sqlite3_fullsync_count, TCL_LINK_INT);
+#ifdef SQLITE_TEST
+  Tcl_LinkVar(interp, "sqlite_enable_in_opt",
+      (char*)&sqlite3_enable_in_opt, TCL_LINK_INT);
+#endif
   return TCL_OK;
 }
