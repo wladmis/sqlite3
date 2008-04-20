@@ -50,28 +50,28 @@ Summary: The Lemon Parser Generator
 Group: Development/Other
 
 %description
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description -n lib%name
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description -n lib%name-devel
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description -n lib%name-devel-static
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description tcl
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description fts3
@@ -84,8 +84,8 @@ http://www.sqlite.org/cvstrac/wiki?p=FtsOne
 http://www.sqlite.org/cvstrac/wiki?p=FtsTwo
 
 %description doc
-SQLite is a C library that implements an SQL database engine. 
-Programs that link with the SQLite library can have SQL database 
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
 
 %description -n lemon
