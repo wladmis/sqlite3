@@ -110,6 +110,8 @@ autoreconf -i
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
 %make_build all libtcl%name.la fts3.la
 
+make -C docsrc DOC=. SRC=..
+
 %def_with test
 %if_with test
 make test
@@ -124,10 +126,9 @@ install -pD -m644 lemon.1 %buildroot%_man1dir/lemon.1
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
 %define pkgdocdir %_docdir/sqlite-3.5
-mkdir -p %buildroot%pkgdocdir
-install -p -m644 COPYING doc/*.* %buildroot%pkgdocdir/
-mkdir -p %buildroot%_docdir/lemon
-mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
+install -pD -m644 COPYING %buildroot%pkgdocdir/COPYING
+cp -a docsrc/doc %buildroot%pkgdocdir/html
+install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 
 %post -n lib%name -p %post_ldconfig
 %postun -n lib%name -p %postun_ldconfig
@@ -166,7 +167,7 @@ mv %buildroot%pkgdocdir/lemon.html %buildroot%_docdir/lemon/
 
 %files doc
 %dir %pkgdocdir
-%pkgdocdir/*.*
+%pkgdocdir/html
 
 %files -n lemon
 %_bindir/lemon
