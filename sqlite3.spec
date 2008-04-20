@@ -8,7 +8,7 @@ Group: Development/Databases
 
 URL: http://www.sqlite.org/
 Source0: sqlite-%version.tar
-Source1: %name-doc.tar
+Source1: %name-docsrc.tar
 Patch: %name-%version-%release.patch
 
 Requires: lib%name = %version-%release
@@ -108,7 +108,7 @@ rm aclocal.m4 config.guess config.sub configure ltmain.sh
 autoreconf -i
 # maybe add -lhistory; cf. [devel] libreadline add_history
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
-%make_build all libtcl%name.la fts3.la doc
+%make_build all libtcl%name.la fts3.la
 
 %def_with test
 %if_with test
