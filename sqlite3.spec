@@ -177,7 +177,7 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_docdir/lemon/lemon.html
 
 %changelog
-* Sat Apr 19 2008 Alexey Tourbin <at@altlinux.ru> 3.5.3-alt0
+* Sun Apr 20 2008 Alexey Tourbin <at@altlinux.ru> 3.5.3-alt0
 - 3.4.2 -> 3.5.3
 
 * Fri Aug 17 2007 Alexey Tourbin <at@altlinux.ru> 3.4.2-alt1
