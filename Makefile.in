@@ -573,7 +573,7 @@ testfixture$(TEXE):	$(TOP)/src/tclsqlite.c libsqlite3.la $(TESTSRC) $(FTS3_SRC)
 	$(LTLINK) -DTCLSH=1 -DSQLITE_TEST=1 -DSQLITE_CRASH_TEST=1 \
 		-DSQLITE_SERVER=1 -DTCL_THREADS \
                 -DSQLITE_NO_SYNC=1 $(TEMP_STORE) \
-		-DSQLITE_CORE -DSQLITE_ENABLE_FTS3 $(FTS3_SRC) \
+		-DSQLITE_CORE -DSQLITE_ENABLE_FTS3 -I$(TOP)/ext/fts3 $(FTS3_SRC) \
 		-o testfixture $(TESTSRC) $(TOP)/src/tclsqlite.c \
 		libsqlite3.la $(LIBTCL) -static
 
