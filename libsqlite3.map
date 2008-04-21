@@ -90,4 +90,8 @@ SQLITE_3.5.3 {
     global:
 	sqlite3_sql;
 };
+SQLITE_3.5.5 {
+    global:
+	sqlite3_test_control;
+};
 /* the prefix is SQLITE_, not SQLITE3_ */
