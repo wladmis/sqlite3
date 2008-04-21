@@ -1,0 +1,13 @@
+object f8b5bdc5406a0d95789afb1b5c6cfdff5e8bd038
+type commit
+tag 3.5.5
+tagger Alexey Tourbin <at@altlinux.ru> 1208711020 +0400
+
+verified against http://sqlite.org/sqlite-3.5.5.tar.gz
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkgLd2wACgkQfBKgtDjnu0ayFgCdF6t20UN+pyLbTIg2tDG7DEMZ
+qecAoIrxQmqt9nl/NdOr8+cK6MqvhpqH
+=zSrH
+-----END PGP SIGNATURE-----
