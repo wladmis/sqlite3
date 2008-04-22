@@ -972,6 +972,9 @@ static int zeroJournalHdr(Pager *pPager){
 
   IOTRACE(("JZEROHDR %p\n", pPager))
   rc = sqlite3OsWrite(pPager->jfd, zeroHdr, sizeof(zeroHdr), 0);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3OsSync(pPager->jfd, SQLITE_SYNC_DATAONLY | pPager->sync_flags);
+  }
   return rc;
 }
 
