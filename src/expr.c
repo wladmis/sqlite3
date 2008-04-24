@@ -2116,7 +2116,8 @@ void sqlite3ExprHardCopy(Parse *pParse, int iReg, int nReg){
   v = pParse->pVdbe;
   addr = sqlite3VdbeCurrentAddr(v);
   pOp = sqlite3VdbeGetOp(v, addr-1);
-  if( pOp->opcode==OP_SCopy && pOp->p1>=iReg && pOp->p1<iReg+nReg ){
+  assert( pOp || pParse->db->mallocFailed );
+  if( pOp && pOp->opcode==OP_SCopy && pOp->p1>=iReg && pOp->p1<iReg+nReg ){
     pOp->opcode = OP_Copy;
   }
 }
