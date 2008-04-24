@@ -5276,10 +5276,11 @@ int sqlite3_blob_bytes(sqlite3_blob *);
 **          the [sqlite3_blob_read(P,Z,N,X)] interface returns an
 **          appropriate [error code] or [extended error code].
 **
-** {F17868} If an error occurs during evaluation of [sqlite3_blob_read(D,...)]
+** {F17868} If an error occurs during evaluation of [sqlite3_blob_read(P,...)]
 **          then subsequent calls to [sqlite3_errcode(D)],
 **          [sqlite3_errmsg(D)], and [sqlite3_errmsg16(D)] will return
-**          information approprate for that error.
+**          information approprate for that error, where D is the
+**          database handle that was used to open blob handle P.
 */
 int sqlite3_blob_read(sqlite3_blob *, void *Z, int N, int iOffset);
 
