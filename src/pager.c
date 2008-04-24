@@ -4595,10 +4595,12 @@ int sqlite3PagerCommitPhaseOne(
     */
     int useAtomicWrite = (
         !zMaster && 
+        pPager->journalOpen &&
         pPager->journalOff==jrnlBufferSize(pPager) && 
         nTrunc==0 && 
         (0==pPager->pDirty || 0==pPager->pDirty->pDirty)
     );
+    assert( pPager->journalOpen || pPager->journalMode==PAGER_JOURNALMODE_OFF );
     if( useAtomicWrite ){
       /* Update the nRec field in the journal file. */
       int offset = pPager->journalHdr + sizeof(aJournalMagic);
