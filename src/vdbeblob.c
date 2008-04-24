@@ -104,6 +104,16 @@ int sqlite3_blob_open(
 
     sqlite3BtreeEnterAll(db);
     pTab = sqlite3LocateTable(&sParse, 0, zTable, zDb);
+    if( pTab && IsVirtual(pTab) ){
+      pTab = 0;
+      sqlite3ErrorMsg(&sParse, "cannot open virtual table: %s", zTable);
+    }
+#ifndef SQLITE_OMIT_VIEW
+    if( pTab && pTab->pSelect ){
+      pTab = 0;
+      sqlite3ErrorMsg(&sParse, "cannot open view: %s", zTable);
+    }
+#endif
     if( !pTab ){
       if( sParse.zErrMsg ){
         sqlite3_snprintf(sizeof(zErr), zErr, "%s", sParse.zErrMsg);
