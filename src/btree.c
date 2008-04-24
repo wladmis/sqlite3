@@ -552,7 +552,7 @@ void sqlite3BtreeParseCellPtr(
   n = pPage->childPtrSize;
   assert( n==4-4*pPage->leaf );
   if( pPage->hasData ){
-    n += getVarint32(&pCell[n], &nPayload);
+    n += getVarint32(&pCell[n], nPayload);
   }else{
     nPayload = 0;
   }
@@ -561,7 +561,7 @@ void sqlite3BtreeParseCellPtr(
     n += getVarint(&pCell[n], (u64 *)&pInfo->nKey);
   }else{
     u32 x;
-    n += getVarint32(&pCell[n], &x);
+    n += getVarint32(&pCell[n], x);
     pInfo->nKey = x;
     nPayload += x;
   }
@@ -3668,7 +3668,7 @@ int sqlite3BtreeMoveto(
         pCell = findCell(pPage, pCur->idx) + pPage->childPtrSize;
         if( pPage->hasData ){
           u32 dummy;
-          pCell += getVarint32(pCell, &dummy);
+          pCell += getVarint32(pCell, dummy);
         }
         getVarint(pCell, (u64*)&nCellKey);
         if( nCellKey==nKey ){

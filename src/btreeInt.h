@@ -495,15 +495,6 @@ struct BtCursor {
 # define TRACE(X)
 #endif
 
-/*
-** Routines to read and write variable-length integers.  These used to
-** be defined locally, but now we use the varint routines in the util.c
-** file.
-*/
-#define getVarint    sqlite3GetVarint
-#define getVarint32(A,B)  ((*B=*(A))<=0x7f?1:sqlite3GetVarint32(A,B))
-#define putVarint    sqlite3PutVarint
-
 /* The database page the PENDING_BYTE occupies. This page is never used.
 ** TODO: This macro is very similary to PAGER_MJ_PGNO() in pager.c. They
 ** should possibly be consolidated (presumably in pager.h).
