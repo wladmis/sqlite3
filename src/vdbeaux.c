@@ -1656,7 +1656,6 @@ int sqlite3VdbeHalt(Vdbe *p){
   if( p->db->mallocFailed ){
     p->rc = SQLITE_NOMEM;
   }
-  checkActiveVdbeCnt(db);
 
   return SQLITE_OK;
 }
