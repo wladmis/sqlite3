@@ -55,6 +55,7 @@ do_test select2-1.2 {
   }
   set r
 } {4: 2 3 4}
+unset data
 
 # Create a largish table. Do this twice, once using the TCL cache and once
 # without.  Compare the performance to make sure things go faster with the
