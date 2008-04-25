@@ -3084,6 +3084,15 @@ static PgHdr *pager_get_all_dirty_pages(Pager *pPager){
 ** database with the same name.  Just delete the journal.
 **
 ** Return negative if unable to determine the status of the journal.
+**
+** This routine does not open the journal file to examine its
+** content.  Hence, the journal might contain the name of a master
+** journal file that has been deleted, and hence not be hot.  Or
+** the header of the journal might be zeroed out.  This routine
+** does not discover these cases of a non-hot journal - if the
+** journal file exists and is not empty this routine assumes it
+** is hot.  The pager_playback() routine will discover that the
+** journal file is not really hot and will no-op.
 */
 static int hasHotJournal(Pager *pPager){
   sqlite3_vfs *pVfs = pPager->pVfs;
