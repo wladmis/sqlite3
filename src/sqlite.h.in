@@ -2205,11 +2205,6 @@ typedef struct sqlite3_stmt sqlite3_stmt;
 **          to the lessor of V and the hard upper bound on the size
 **          of C that is set at compile-time.
 **
-** {F12764} A successful call to [sqlite3_limit(D,C,V)] where V is zero
-**          changes the limit on the size of construct C in
-**          [database connection] D to be the hard upper bound on the size
-**          of C that is set at compile-time.
-**
 ** {F12766} A successful call to [sqlite3_limit(D,C,V)] where V is negative
 **          leaves the state of [database connection] D unchanged.
 **
