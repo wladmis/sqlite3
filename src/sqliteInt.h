@@ -36,28 +36,6 @@
 #define _GNU_SOURCE
 
 /*
-** Include standard header files as necessary
-*/
-#ifdef HAVE_STDINT_H
-#include <stdint.h>
-#endif
-#ifdef HAVE_INTTYPES_H
-#include <inttypes.h>
-#endif
-
-/*
-** If possible, use the C99 intptr_t type to define an integral type of
-** equivalent size to a pointer.  (Technically it's >= sizeof(void *), but
-** practically it's == sizeof(void *)).  We fall back to an int if this type
-** isn't defined.
-*/
-#ifdef HAVE_INTPTR_T
-  typedef intptr_t sqlite3_intptr_t;
-#else
-  typedef int sqlite3_intptr_t;
-#endif
-
-/*
 ** A macro used to aid in coverage testing.  When doing coverage
 ** testing, the condition inside the argument must be evaluated 
 ** both true and false in order to get full branch coverage.
