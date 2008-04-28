@@ -36,6 +36,16 @@
 #define _GNU_SOURCE
 
 /*
+** Include standard header files as necessary
+*/
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+
+/*
 ** A macro used to aid in coverage testing.  When doing coverage
 ** testing, the condition inside the argument must be evaluated 
 ** both true and false in order to get full branch coverage.
