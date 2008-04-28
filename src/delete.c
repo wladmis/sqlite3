@@ -371,7 +371,7 @@ void sqlite3DeleteFrom(
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       if( IsVirtual(pTab) ){
         const char *pVtab = (const char *)pTab->pVtab;
-        pParse->pVirtualLock = pTab;
+        sqlite3VtabMakeWritable(pParse, pTab);
         sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, iRowid, pVtab, P4_VTAB);
       }else
 #endif

@@ -846,7 +846,7 @@ void sqlite3Insert(
     */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     if( IsVirtual(pTab) ){
-      pParse->pVirtualLock = pTab;
+      sqlite3VtabMakeWritable(pParse, pTab);
       sqlite3VdbeAddOp4(v, OP_VUpdate, 1, pTab->nCol+2, regIns,
                      (const char*)pTab->pVtab, P4_VTAB);
     }else
