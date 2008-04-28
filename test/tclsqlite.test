@@ -69,15 +69,15 @@ do_test tcl-1.5 {
   } msg]
   lappend v $msg
 } {0 {}}
+catch {expr x*} msg
 do_test tcl-1.6 {
   set v [catch {
     db eval {SELECT * FROM t1} data {
       expr x*
     }
   } msg]
-  regsub {:.*$} $msg {} msg
   lappend v $msg
-} {1 {syntax error in expression "x*"}}
+} [list 1 $msg]
 do_test tcl-1.7 {
   set v [catch {db} msg]
   lappend v $msg
