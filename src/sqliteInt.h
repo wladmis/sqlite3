@@ -1987,7 +1987,9 @@ int sqlite3Utf8Read(const u8*, const u8*, const u8**);
 /*
 ** Routines to read and write variable-length integers.  These used to
 ** be defined locally, but now we use the varint routines in the util.c
-** file.
+** file.  Code should use the MACRO forms below, as the Varint32 versions
+** are coded to assume the single byte case is already handled (which 
+** the MACRO form does).
 */
 int sqlite3PutVarint(unsigned char*, u64);
 int sqlite3PutVarint32(unsigned char*, u32);
