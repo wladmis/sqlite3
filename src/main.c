@@ -1248,12 +1248,8 @@ int sqlite3_open16(
     rc = openDatabase(zFilename8, ppDb,
                       SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
     assert( *ppDb || rc==SQLITE_NOMEM );
-    if( rc==SQLITE_OK ){
+    if( rc==SQLITE_OK && !DbHasProperty(*ppDb, 0, DB_SchemaLoaded) ){
       ENC(*ppDb) = SQLITE_UTF16NATIVE;
-      if( rc!=SQLITE_OK ){
-        sqlite3_close(*ppDb);
-        *ppDb = 0;
-      }
     }
   }
   sqlite3ValueFree(pVal);
