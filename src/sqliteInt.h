@@ -191,8 +191,6 @@
 #include <assert.h>
 #include <stddef.h>
 
-#define sqlite3_isnan(X)  ((X)!=(X))
-
 /*
 ** If compiling for a processor that lacks floating point support,
 ** substitute integer for floating-point
@@ -1765,6 +1763,8 @@ char *sqlite3DbStrNDup(sqlite3*,const char*, int);
 void *sqlite3DbReallocOrFree(sqlite3 *, void *, int);
 void *sqlite3DbRealloc(sqlite3 *, void *, int);
 int sqlite3MallocSize(void *);
+
+int sqlite3IsNaN(double);
 
 char *sqlite3MPrintf(sqlite3*,const char*, ...);
 char *sqlite3VMPrintf(sqlite3*,const char*, va_list);

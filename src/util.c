@@ -22,6 +22,14 @@
 
 
 /*
+** Return true if the floating point value is Not a Number.
+*/
+int sqlite3IsNaN(double x){
+  volatile double y = x;
+  return x!=y;
+}
+
+/*
 ** Set the most recent error code and error string for the sqlite
 ** handle "db". The error code is set to "err_code".
 **

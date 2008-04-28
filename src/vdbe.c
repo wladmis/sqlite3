@@ -1195,7 +1195,7 @@ case OP_Remainder: {           /* same as TK_REM, in1, in2, out3 */
         break;
       }
     }
-    if( sqlite3_isnan(b) ){
+    if( sqlite3IsNaN(b) ){
       goto arithmetic_result_is_null;
     }
     pOut->r = b;
