@@ -842,6 +842,7 @@ case OP_Int64: {           /* out2-prerelease */
 */
 case OP_Real: {            /* same as TK_FLOAT, out2-prerelease */
   pOut->flags = MEM_Real;
+  assert( !sqlite3IsNaN(*pOp->p4.pReal) );
   pOut->r = *pOp->p4.pReal;
   break;
 }

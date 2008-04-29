@@ -1938,9 +1938,13 @@ static void codeReal(Vdbe *v, const char *z, int n, int negateFlag, int iMem){
     char *zV;
     assert( !isdigit(z[n]) );
     sqlite3AtoF(z, &value);
-    if( negateFlag ) value = -value;
-    zV = dup8bytes(v, (char*)&value);
-    sqlite3VdbeAddOp4(v, OP_Real, 0, iMem, 0, zV, P4_REAL);
+    if( sqlite3IsNaN(value) ){
+      sqlite3VdbeAddOp2(v, OP_Null, 0, iMem);
+    }else{
+      if( negateFlag ) value = -value;
+      zV = dup8bytes(v, (char*)&value);
+      sqlite3VdbeAddOp4(v, OP_Real, 0, iMem, 0, zV, P4_REAL);
+    }
   }
 }
 

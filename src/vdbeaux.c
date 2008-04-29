@@ -2133,7 +2133,7 @@ int sqlite3VdbeSerialGet(
         assert( sizeof(x)==8 && sizeof(pMem->r)==8 );
         swapMixedEndianFloat(x);
         memcpy(&pMem->r, &x, sizeof(x));
-        pMem->flags = MEM_Real;
+        pMem->flags = sqlite3IsNaN(pMem->r) ? MEM_Null : MEM_Real;
       }
       return 8;
     }
