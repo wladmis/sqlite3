@@ -2256,7 +2256,7 @@ int sqlite3PagerOpen(
   }
 
   if( pPager && rc==SQLITE_OK ){
-    pPager->pTmpSpace = (char *)sqlite3_malloc(nDefaultPage);
+    pPager->pTmpSpace = sqlite3MallocZero(nDefaultPage);
   }
 
   /* If an error occured in either of the blocks above.
