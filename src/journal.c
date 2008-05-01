@@ -149,9 +149,10 @@ static int jrnlTruncate(sqlite3_file *pJfd, sqlite_int64 size){
 static int jrnlSync(sqlite3_file *pJfd, int flags){
   int rc;
   JournalFile *p = (JournalFile *)pJfd;
-  rc = createFile(p);
-  if( rc==SQLITE_OK ){
+  if( p->pReal ){
     rc = sqlite3OsSync(p->pReal, flags);
+  }else{
+    rc = SQLITE_OK;
   }
   return rc;
 }
