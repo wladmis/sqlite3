@@ -516,7 +516,9 @@ static const unsigned char aJournalMagic[] = {
     p->iInUseDB++;
     if( p->iInUseMM && p->iInUseDB==1 ){
       sqlite3_mutex *mutex;
+#ifndef SQLITE_MUTEX_NOOP
       mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM2);
+#endif
       p->iInUseDB = 0;
       sqlite3_mutex_enter(mutex);
       p->iInUseDB = 1;
@@ -2324,7 +2326,9 @@ int sqlite3PagerOpen(
   pPager->iInUseMM = 0;
   pPager->iInUseDB = 0;
   if( !memDb ){
+#ifndef SQLITE_MUTEX_NOOP
     sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM2);
+#endif
     sqlite3_mutex_enter(mutex);
     pPager->pNext = sqlite3PagerList;
     if( sqlite3PagerList ){
@@ -2706,7 +2710,9 @@ int sqlite3PagerTruncate(Pager *pPager, Pgno nPage){
 int sqlite3PagerClose(Pager *pPager){
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
   if( !MEMDB ){
+#ifndef SQLITE_MUTEX_NOOP
     sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM2);
+#endif
     sqlite3_mutex_enter(mutex);
     if( pPager->pPrev ){
       pPager->pPrev->pNext = pPager->pNext;
@@ -3223,7 +3229,9 @@ int sqlite3PagerReleaseMemory(int nReq){
 
   /* Acquire the memory-management mutex
   */
+#ifndef SQLITE_MUTEX_NOOP
   mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM2);
+#endif
   sqlite3_mutex_enter(mutex);
 
   /* Signal all database connections that memory management wants

@@ -67,6 +67,11 @@ struct schema_cursor {
 };
 
 /*
+** None of this works unless we have virtual tables.
+*/
+#ifndef SQLITE_OMIT_VIRTUALTABLE
+
+/*
 ** Table destructor for the schema module.
 */
 static int schemaDestroy(sqlite3_vtab *pVtab){
@@ -287,6 +292,7 @@ static sqlite3_module schemaModule = {
   0,                           /* xRename */
 };
 
+#endif /* !defined(SQLITE_OMIT_VIRTUALTABLE) */
 
 #ifdef SQLITE_TEST
 

@@ -266,8 +266,7 @@ Expr *sqlite3Expr(
   const Token *pToken     /* Argument token */
 ){
   Expr *pNew;
-  static const Expr zeroExpr;
-  pNew = sqlite3DbMallocRaw(db, sizeof(Expr));
+  pNew = sqlite3DbMallocZero(db, sizeof(Expr));
   if( pNew==0 ){
     /* When malloc fails, delete pLeft and pRight. Expressions passed to 
     ** this function must always be allocated with sqlite3Expr() for this 
@@ -277,7 +276,6 @@ Expr *sqlite3Expr(
     sqlite3ExprDelete(pRight);
     return 0;
   }
-  *pNew = zeroExpr;
   pNew->op = op;
   pNew->pLeft = pLeft;
   pNew->pRight = pRight;

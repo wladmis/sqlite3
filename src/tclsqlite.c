@@ -479,6 +479,7 @@ static int DbBusyHandler(void *cd, int nTries){
   return 1;
 }
 
+#ifndef SQLITE_OMIT_PROGRESS_CALLBACK
 /*
 ** This routine is invoked as the 'progress callback' for the database.
 */
@@ -493,6 +494,7 @@ static int DbProgressHandler(void *cd){
   }
   return 0;
 }
+#endif
 
 #ifndef SQLITE_OMIT_TRACE
 /*
