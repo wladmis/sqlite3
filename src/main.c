@@ -30,6 +30,7 @@ const char *sqlite3_libversion(void){ return sqlite3_version; }
 int sqlite3_libversion_number(void){ return SQLITE_VERSION_NUMBER; }
 int sqlite3_threadsafe(void){ return SQLITE_THREADSAFE; }
 
+#if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
 /*
 ** If the following function pointer is not NULL and if
 ** SQLITE_ENABLE_IOTRACE is enabled, then messages describing
@@ -37,6 +38,7 @@ int sqlite3_threadsafe(void){ return SQLITE_THREADSAFE; }
 ** are intended for debugging activity only.
 */
 void (*sqlite3IoTrace)(const char*, ...) = 0;
+#endif
 
 /*
 ** If the following global variable points to a string which is the

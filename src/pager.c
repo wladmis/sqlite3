@@ -4368,29 +4368,6 @@ int sqlite3PagerIswriteable(DbPage *pPg){
 }
 #endif
 
-#ifndef SQLITE_OMIT_VACUUM
-/*
-** Replace the content of a single page with the information in the third
-** argument.
-*/
-int sqlite3PagerOverwrite(Pager *pPager, Pgno pgno, void *pData){
-  PgHdr *pPg;
-  int rc;
-
-  pagerEnter(pPager);
-  rc = sqlite3PagerGet(pPager, pgno, &pPg);
-  if( rc==SQLITE_OK ){
-    rc = sqlite3PagerWrite(pPg);
-    if( rc==SQLITE_OK ){
-      memcpy(sqlite3PagerGetData(pPg), pData, pPager->pageSize);
-    }
-    sqlite3PagerUnref(pPg);
-  }
-  pagerLeave(pPager);
-  return rc;
-}
-#endif
-
 /*
 ** A call to this routine tells the pager that it is not necessary to
 ** write the information on page pPg back to the disk, even though
