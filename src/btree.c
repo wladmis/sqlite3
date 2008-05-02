@@ -1899,8 +1899,10 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
 #endif
 
   do {
-    while( rc==SQLITE_OK && pBt->pPage1==0 ){
-      rc = lockBtree(pBt);
+    if( pBt->pPage1==0 ){
+      do{
+        rc = lockBtree(pBt);
+      }while( pBt->pPage1==0 && rc==SQLITE_OK );
     }
 
     if( rc==SQLITE_OK && wrflag ){
