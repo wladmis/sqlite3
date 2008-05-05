@@ -102,6 +102,11 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 
 #########
+# Enable large file support (if special flags are necessary)
+#
+AC_SYS_LARGEFILE
+
+#########
 # Check for needed/wanted data types
 AC_CHECK_TYPES([int8_t, int16_t, int32_t, int64_t, intptr_t, uint8_t,
                 uint16_t, uint32_t, uint64_t, uintptr_t])
