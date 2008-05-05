@@ -306,7 +306,7 @@ const char *sqlite3ErrStr(int rc){
     case SQLITE_CONSTRAINT: z = "constraint failed";                     break;
     case SQLITE_MISMATCH:   z = "datatype mismatch";                     break;
     case SQLITE_MISUSE:     z = "library routine called out of sequence";break;
-    case SQLITE_NOLFS:      z = "kernel lacks large file support";       break;
+    case SQLITE_NOLFS:      z = "large file support is disabled";        break;
     case SQLITE_AUTH:       z = "authorization denied";                  break;
     case SQLITE_FORMAT:     z = "auxiliary database format error";       break;
     case SQLITE_RANGE:      z = "bind or column index out of range";     break;
