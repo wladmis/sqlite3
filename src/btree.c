@@ -1054,6 +1054,10 @@ static int getAndInitPage(
   rc = sqlite3BtreeGetPage(pBt, pgno, ppPage, 0);
   if( rc==SQLITE_OK && (*ppPage)->isInit==0 ){
     rc = sqlite3BtreeInitPage(*ppPage, pParent);
+    if( rc!=SQLITE_OK ){
+      releasePage(*ppPage);
+      *ppPage = 0;
+    }
   }
   return rc;
 }
@@ -4091,7 +4095,8 @@ static int allocateBtreePage(
           *pPgno = iPage;
           if( *pPgno>sqlite3PagerPagecount(pBt->pPager) ){
             /* Free page off the end of the file */
-            return SQLITE_CORRUPT_BKPT;
+            rc = SQLITE_CORRUPT_BKPT;
+            goto end_allocate_page;
           }
           TRACE(("ALLOCATE: %d was leaf %d of %d on trunk %d"
                  ": %d more free pages\n",
