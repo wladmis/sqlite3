@@ -247,6 +247,7 @@ static int test_io_trace(
   int argc,              /* Number of arguments */
   char **argv            /* Text of each argument */
 ){
+#if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
   if( argc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
           " FILENAME\"", 0);
@@ -269,7 +270,8 @@ static int test_io_trace(
     }
     sqlite3IoTrace = io_trace_callback;
   }
-  return SQLITE_OK;
+#endif
+  return TCL_OK;
 }
 
 
