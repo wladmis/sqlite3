@@ -706,6 +706,7 @@ proc do_ioerr_test {testname args} {
     #
     ifcapable pragma {
       if { [info commands db] ne ""
+        && $::ioerropts(-ckrefcount)
         && [db one {pragma locking_mode}] eq "normal"
         && [sqlite3_get_autocommit db]
       } {
@@ -723,7 +724,7 @@ proc do_ioerr_test {testname args} {
     # be the same as before the script that caused the IO error was run.
     #
     if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-cksum)} {
-      do_test $testname.$n.5 {
+      do_test $testname.$n.6 {
         catch {db close}
         set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
         cksum
