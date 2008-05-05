@@ -818,6 +818,8 @@ void sqlite3VtabMakeWritable(Parse *pParse, Table *pTab){
   pParse->apVtabLock = sqlite3_realloc(pParse->apVtabLock, n);
   if( pParse->apVtabLock ){
     pParse->apVtabLock[pParse->nVtabLock++] = pTab;
+  }else{
+    pParse->db->mallocFailed = 1;
   }
 }
 
