@@ -9,7 +9,7 @@
 #
 #***********************************************************************
 #
-# This file runs the tests in the file ioerr.test with 
+# This file runs a few of the other test files (select1.test etc.) with
 # persistent journal mode enabled.
 #
 # $Id$

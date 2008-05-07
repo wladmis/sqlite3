@@ -10,7 +10,7 @@
 #***********************************************************************
 #
 # This file runs a few of the other test files (select1.test etc.) with
-# persistent journal mode enabled.
+# persistent journal mode disabled.
 #
 # $Id$
 
