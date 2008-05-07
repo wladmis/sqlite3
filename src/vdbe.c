@@ -2047,9 +2047,11 @@ case OP_Column: {
 
     /* If we have read more header data than was contained in the header,
     ** or if the end of the last field appears to be past the end of the
-    ** record, then we must be dealing with a corrupt database.
+    ** record, or if the end of the last field appears to be before the end
+    ** of the record (when all fields present), then we must be dealing 
+    ** with a corrupt database.
     */
-    if( zIdx>zEndHdr || offset>payloadSize ){
+    if( zIdx>zEndHdr || offset>payloadSize || (zIdx==zEndHdr && offset!=payloadSize) ){
       rc = SQLITE_CORRUPT_BKPT;
       goto op_column_out;
     }
