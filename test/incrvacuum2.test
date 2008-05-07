@@ -33,6 +33,7 @@ ifcapable !incrblob {
   db function zeroblob zeroblob
 }
 
+
 # Create a database in incremental vacuum mode that has many
 # pages on the freelist.
 #
@@ -122,6 +123,24 @@ ifcapable attach {
   } {26624 3072}
 }
 
- 
+do_test incrvacuum2-3.1 {
+  execsql {
+    PRAGMA auto_vacuum = 'full';
+    BEGIN;
+    CREATE TABLE abc(a);
+    INSERT INTO abc VALUES(randstr(1500,1500));
+    COMMIT;
+  }
+} {}
+do_test incrvacuum2-3.2 {
+  execsql {
+    BEGIN;
+    DELETE FROM abc;
+    PRAGMA incremental_vacuum;
+    COMMIT;
+  }
+} {}
+
+integrity_check incremental2-3.3
 
 finish_test

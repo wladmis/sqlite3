@@ -2321,7 +2321,7 @@ static int autoVacuumCommit(BtShared *pBt, Pgno *pnTrunc){
     if( rc==SQLITE_DONE ){
       assert(nFin==0 || pBt->nTrunc==0 || nFin<=pBt->nTrunc);
       rc = SQLITE_OK;
-      if( pBt->nTrunc ){
+      if( pBt->nTrunc && nFin ){
         rc = sqlite3PagerWrite(pBt->pPage1->pDbPage);
         put4byte(&pBt->pPage1->aData[32], 0);
         put4byte(&pBt->pPage1->aData[36], 0);
