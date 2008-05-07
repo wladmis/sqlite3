@@ -3858,7 +3858,10 @@ DbPage *sqlite3PagerLookup(Pager *pPager, Pgno pgno){
 ** removed.
 */
 int sqlite3PagerUnref(DbPage *pPg){
-  Pager *pPager = pPg->pPager;
+  Pager *pPager;
+
+  if( pPg==0 ) return SQLITE_OK;
+  pPager = pPg->pPager;
 
   /* Decrement the reference count for this page
   */
