@@ -165,7 +165,7 @@ proc omit_test {name reason} {
 proc do_test {name cmd expected} {
   global argv nErr nTest skip_test maxErr
   sqlite3_memdebug_settitle $name
-  if {$::tester_do_binarylog} {
+  if {[info exists ::tester_do_binarylog]} {
     sqlite3_instvfs marker binarylog "Start of $name"
   }
   if {$skip_test} {
@@ -201,7 +201,7 @@ proc do_test {name cmd expected} {
     puts " Ok"
   }
   flush stdout
-  if {$::tester_do_binarylog} {
+  if {[info exists ::tester_do_binarylog]} {
     sqlite3_instvfs marker binarylog "End of $name"
   }
 }
