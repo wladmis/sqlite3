@@ -28,7 +28,7 @@ ifcapable {!shared_cache || !autovacuum} {
 #
 do_test ioerr4-1.1 {
   db close
-  sqlite3_enable_shared_cache 1
+  set ::enable_shared_cache [sqlite3_enable_shared_cache 1]
 } {0}
 do_test ioerr4-1.2 {
   file delete -force test.db test.db-journal
@@ -92,5 +92,9 @@ do_ioerr_test ioerr4-2 -tclprep {
 } -tclbody {
   db eval {PRAGMA incremental_vacuum(5)}
 }
+
+db2 close
+file delete -force test.db-bu
+sqlite3_enable_shared_cache $::enable_shared_cache
 
 finish_test
