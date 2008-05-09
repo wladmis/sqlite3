@@ -112,7 +112,6 @@ void *sqlite3PagerTempSpace(Pager*);
 #ifdef SQLITE_TEST
   int *sqlite3PagerStats(Pager*);
   void sqlite3PagerRefdump(Pager*);
-  int pager3_refinfo_enable;
 #endif
 
 #ifdef SQLITE_TEST
