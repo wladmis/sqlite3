@@ -107,7 +107,7 @@ rm aclocal.m4 config.guess config.sub configure ltmain.sh
 %build
 autoreconf -i
 # maybe add -lhistory; cf. [devel] libreadline add_history
-%configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline
+%configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline --disable-amalgamation
 %make_build all libtcl%name.la fts3.la
 
 mkdir -p docsrc/doc/c3ref
