@@ -1574,10 +1574,10 @@ int sqlite3FindInIndex(Parse *pParse, Expr *pX, int mustBeUnique){
   ** or index instead of generating an epheremal table.
   */
   if( sqlite3_enable_in_opt
-   && (p=pX->pSelect) && !p->pPrior
+   && (p=pX->pSelect)!=0 && !p->pPrior
    && !p->isDistinct && !p->isAgg && !p->pGroupBy
    && p->pSrc && p->pSrc->nSrc==1 && !p->pSrc->a[0].pSelect
-   && !p->pSrc->a[0].pTab->pSelect                                  
+   && p->pSrc->a[0].pTab && !p->pSrc->a[0].pTab->pSelect
    && p->pEList->nExpr==1 && p->pEList->a[0].pExpr->op==TK_COLUMN
    && !p->pLimit && !p->pOffset && !p->pWhere
   ){

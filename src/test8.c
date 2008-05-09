@@ -160,7 +160,12 @@ static int getColumnNames(
     */
     nBytes = sizeof(char *) * nCol;
     for(ii=0; ii<nCol; ii++){
-      nBytes += (strlen(sqlite3_column_name(pStmt, ii)) + 1);
+      const char *zName = sqlite3_column_name(pStmt, ii);
+      if( !zName ){
+        rc = SQLITE_NOMEM;
+        goto out;
+      }
+      nBytes += strlen(zName)+1;
     }
     aCol = (char **)sqlite3MallocZero(nBytes);
     if( !aCol ){
@@ -725,6 +730,11 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   int useCost = 0;
   double cost;
 
+  int isIgnoreUsable = 0;
+  if( Tcl_GetVar(interp, "echo_module_ignore_usable", TCL_GLOBAL_ONLY) ){
+    isIgnoreUsable = 1;
+  }
+
   /* Determine the number of rows in the table and store this value in local
   ** variable nRow. The 'estimated-cost' of the scan will be the number of
   ** rows in the table for a linear scan, or the log (base 2) of the 
@@ -762,6 +772,8 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 
     pConstraint = &pIdxInfo->aConstraint[ii];
     pUsage = &pIdxInfo->aConstraintUsage[ii];
+
+    if( !isIgnoreUsable && !pConstraint->usable ) continue;
 
     iCol = pConstraint->iColumn;
     if( pVtab->aIndex[iCol] ){
@@ -952,11 +964,15 @@ int echoUpdate(
     if( bindArgOne ){
       sqlite3_bind_value(pStmt, 1, apData[1]);
     }
-    for(i=2; i<nData; i++){
-      if( apData[i] ) sqlite3_bind_value(pStmt, i, apData[i]);
+    for(i=2; i<nData && rc==SQLITE_OK; i++){
+      if( apData[i] ) rc = sqlite3_bind_value(pStmt, i, apData[i]);
     }
-    sqlite3_step(pStmt);
-    rc = sqlite3_finalize(pStmt);
+    if( rc==SQLITE_OK ){
+      sqlite3_step(pStmt);
+      rc = sqlite3_finalize(pStmt);
+    }else{
+      sqlite3_finalize(pStmt);
+    }
   }
 
   if( pRowid && rc==SQLITE_OK ){

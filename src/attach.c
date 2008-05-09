@@ -328,14 +328,14 @@ static void codeAttach(
   }
 
   v = sqlite3GetVdbe(pParse);
-  regArgs = sqlite3GetTempRange(pParse, 3);
+  regArgs = sqlite3GetTempRange(pParse, 4);
   sqlite3ExprCode(pParse, pFilename, regArgs);
   sqlite3ExprCode(pParse, pDbname, regArgs+1);
   sqlite3ExprCode(pParse, pKey, regArgs+2);
 
   assert( v || db->mallocFailed );
   if( v ){
-    sqlite3VdbeAddOp3(v, OP_Function, 0, regArgs+3-nFunc, regArgs);
+    sqlite3VdbeAddOp3(v, OP_Function, 0, regArgs+3-nFunc, regArgs+3);
     sqlite3VdbeChangeP5(v, nFunc);
     pFunc = sqlite3FindFunction(db, zFunc, strlen(zFunc), nFunc, SQLITE_UTF8,0);
     sqlite3VdbeChangeP4(v, -1, (char *)pFunc, P4_FUNCDEF);

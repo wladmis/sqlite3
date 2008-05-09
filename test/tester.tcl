@@ -152,9 +152,13 @@ proc speed_trial {name numstmt units sql} {
   flush stdout
   set speed [time {sqlite3_exec_nr db $sql}]
   set tm [lindex $speed 0]
-  set rate [expr {1000000.0*$numstmt/$tm}]
+  if {$tm == 0} {
+    set rate [format %20s "many"]
+  } else {
+    set rate [format %20.5f [expr {1000000.0*$numstmt/$tm}]]
+  }
   set u2 $units/s
-  puts [format {%12d uS %20.5f %s} $tm $rate $u2]
+  puts [format {%12d uS %s %s} $tm $rate $u2]
   global total_time
   set total_time [expr {$total_time+$tm}]
 }
@@ -211,18 +215,21 @@ proc finalize_testing {} {
   if {[sqlite3_memory_used]>0} {
     puts "Unfreed memory: [sqlite3_memory_used] bytes"
     incr nErr
-    ifcapable memdebug||(mem3&&debug) {
+    ifcapable memdebug||mem5||(mem3&&debug) {
       puts "Writing unfreed memory log to \"./memleak.txt\""
       sqlite3_memdebug_dump ./memleak.txt
     }
   } else {
     puts "All memory allocations freed - no leaks"
-    ifcapable memdebug {
+    ifcapable memdebug||mem5 {
       sqlite3_memdebug_dump ./memusage.txt
     }
   }
   puts "Maximum memory usage: [sqlite3_memory_highwater 1] bytes"
   puts "Current memory usage: [sqlite3_memory_highwater] bytes"
+  if {[info commands sqlite3_memdebug_malloc_count] ne ""} {
+    puts "Number of malloc()  : [sqlite3_memdebug_malloc_count] calls"
+  }
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
   }
@@ -519,7 +526,10 @@ proc do_ioerr_test {testname args} {
     # there are at least N IO operations performed by SQLite as
     # a result of the script, the Nth will fail.
     do_test $testname.$n.3 {
+      set ::sqlite_io_error_hit 0
+      set ::sqlite_io_error_hardhit 0
       set r [catch $::ioerrorbody msg]
+      set ::errseen $r
       set rc [sqlite3_errcode $::DB]
       if {$::ioerropts(-erc)} {
         # If we are in extended result code mode, make sure all of the
@@ -551,6 +561,9 @@ proc do_ioerr_test {testname args} {
       }
 
       set s [expr $::sqlite_io_error_hit==0]
+      if {$::sqlite_io_error_hit>$::sqlite_io_error_hardhit && $r==0} {
+        set r 1
+      }
       set ::sqlite_io_error_hit 0
 
       # One of two things must have happened. either
@@ -562,7 +575,7 @@ proc do_ioerr_test {testname args} {
 
     # If an IO error occured, then the checksum of the database should
     # be the same as before the script that caused the IO error was run.
-    if {$::go && $::ioerropts(-cksum)} {
+    if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-cksum)} {
       do_test $testname.$n.4 {
         catch {db close}
         set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
@@ -570,6 +583,7 @@ proc do_ioerr_test {testname args} {
       } $checksum
     }
 
+    set ::sqlite_io_error_hardhit 0
     set ::sqlite_io_error_pending 0
     if {[info exists ::ioerropts(-cleanup)]} {
       catch $::ioerropts(-cleanup)

@@ -87,7 +87,7 @@
 # you don't need (for example BLT) by erasing or commenting out
 # the corresponding code.
 #
-AC_INIT(src/sqlite.h.in)
+AC_INIT(sqlite, m4_esyscmd([cat VERSION | tr -d '\n']))
 
 dnl Put the RCS revision string after AC_INIT so that it will also
 dnl show in in configure.
@@ -100,6 +100,41 @@ dnl show in in configure.
 AC_PROG_LIBTOOL
 AC_PROG_INSTALL
 AC_PROG_AWK
+
+#########
+# Check for needed/wanted data types
+AC_CHECK_TYPES([int8_t, int16_t, int32_t, int64_t, intptr_t, uint8_t,
+                uint16_t, uint32_t, uint64_t, uintptr_t])
+
+#########
+# Check for needed/wanted headers
+AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h])
+
+#########
+# Figure out whether or not we have these functions
+#
+AC_CHECK_FUNCS([usleep fdatasync localtime_r gmtime_r])
+
+#########
+# By default, we use the amalgamation (this may be changed below...)
+#
+USE_AMALGAMATION=1
+
+#########
+# See whether we can run specific tclsh versions known to work well;
+# if not, then we fall back to plain tclsh.
+# TODO: try other versions before falling back?
+# 
+AC_CHECK_PROGS(TCLSH_CMD, [tclsh8.4 tclsh], none)
+if test "$TCLSH_CMD" = "none"; then
+  # If we can't find a local tclsh, then building the amalgamation will fail.
+  # We act as though --disable-amalgamation has been used.
+  echo "Warning: can't find tclsh - defaulting to non-amalgamation build."
+  USE_AMALGAMATION=0
+  TCLSH_CMD="tclsh"
+fi
+AC_SUBST(TCLSH_CMD)
+
 
 #########
 # Set up an appropriate program prefix
@@ -172,7 +207,6 @@ else
 	fi
 fi
 AC_SUBST(BUILD_CC)
-AC_SUBST(BUILD_CFLAGS)
 
 ##########
 # Do we want to support multithreaded use of sqlite
@@ -190,14 +224,8 @@ fi
 AC_SUBST(SQLITE_THREADSAFE)
 
 if test "$SQLITE_THREADSAFE" = "1"; then
-  LIBS=""
-  AC_CHECK_LIB(pthread, pthread_create)
-  TARGET_THREAD_LIB="$LIBS"
-  LIBS=""
-else
-  TARGET_THREAD_LIB=""
+  AC_SEARCH_LIBS(pthread_create, pthread)
 fi
-AC_SUBST(TARGET_THREAD_LIB)
 
 ##########
 # Do we want to allow a connection created in one thread to be used
@@ -310,9 +338,9 @@ if test "$TARGET_EXEEXT" = ".exe"; then
     OS_UNIX=0
     OS_WIN=0
     OS_OS2=1
-    TARGET_CFLAGS="$TARGET_CFLAGS -DOS_OS2=1"
+    CFLAGS="$CFLAGS -DOS_OS2=1"
     if test "$ac_compiler_gnu" == "yes" ; then
-      TARGET_CFLAGS="$TARGET_CFLAGS -Zomf -Zexe -Zmap"
+      CFLAGS="$CFLAGS -Zomf -Zexe -Zmap"
       BUILD_CFLAGS="$BUILD_CFLAGS -Zomf -Zexe"
     fi
   else
@@ -320,14 +348,14 @@ if test "$TARGET_EXEEXT" = ".exe"; then
     OS_WIN=1
     OS_OS2=0
     tclsubdir=win
-    TARGET_CFLAGS="$TARGET_CFLAGS -DOS_WIN=1"
+    CFLAGS="$CFLAGS -DOS_WIN=1"
   fi
 else
   OS_UNIX=1
   OS_WIN=0
   OS_OS2=0
   tclsubdir=unix
-  TARGET_CFLAGS="$TARGET_CFLAGS -DOS_UNIX=1"
+  CFLAGS="$CFLAGS -DOS_UNIX=1"
 fi
 
 AC_SUBST(BUILD_EXEEXT)
@@ -438,7 +466,7 @@ if test "${use_tcl}" = "yes" ; then
     # installed and uninstalled version of Tcl.
     #
     
-   if test -f $TCL_BIN_DIR/Makefile ; then
+    if test -f $TCL_BIN_DIR/Makefile ; then
       TCL_LIB_SPEC=${TCL_BUILD_LIB_SPEC}
       TCL_STUB_LIB_SPEC=${TCL_BUILD_STUB_LIB_SPEC}
       TCL_STUB_LIB_PATH=${TCL_BUILD_STUB_LIB_PATH}
@@ -563,19 +591,36 @@ fi
 AC_SUBST(TARGET_DEBUG)
 
 #########
-# Figure out whether or not we have a "usleep()" function.
-#
-AC_CHECK_FUNC(usleep, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_USLEEP=1"])
+# See whether we should use the amalgamation to build
+AC_ARG_ENABLE(amalgamation, AC_HELP_STRING([--disable-amalgamation],
+      [Disable the amalgamation and instead build all files separately]),
+      [use_amalgamation=$enableval],[use_amalgamation=yes])
+if test "${use_amalgamation}" != "yes" ; then
+  USE_AMALGAMATION=0
+fi
+AC_SUBST(USE_AMALGAMATION)
 
-#--------------------------------------------------------------------
-# Redefine fdatasync as fsync on systems that lack fdatasync
-#--------------------------------------------------------------------
+#########
+# See whether we should allow loadable extensions
+AC_ARG_ENABLE(load-extension, AC_HELP_STRING([--enable-load-extension],
+      [Enable loading of external extensions]),
+      [use_loadextension=$enableval],[use_loadextension=no])
+if test "${use_loadextension}" = "yes" ; then
+  LOADEXTENSION_FLAGS=""
+else
+  LOADEXTENSION_FLAGS="-DSQLITE_OMIT_LOAD_EXTENSION=1"
+fi
+AC_SUBST(LOADEXTENSION_FLAGS)
 
-AC_CHECK_FUNC(fdatasync, [TARGET_CFLAGS="$TARGET_CFLAGS -DHAVE_FDATASYNC=1"])
+
+#########
+# Output the config header
+AC_CONFIG_HEADERS(src/config.h)
 
 #########
 # Generate the output files.
 #
+AC_SUBST(BUILD_CFLAGS)
 AC_OUTPUT([
 Makefile
 sqlite3.pc

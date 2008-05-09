@@ -312,8 +312,8 @@ static int test_memdebug_backtrace(
   if( Tcl_GetIntFromObj(interp, objv[1], &depth) ) return TCL_ERROR;
 #ifdef SQLITE_MEMDEBUG
   {
-    extern void sqlite3_memdebug_backtrace(int);
-    sqlite3_memdebug_backtrace(depth);
+    extern void sqlite3MemdebugBacktrace(int);
+    sqlite3MemdebugBacktrace(depth);
   }
 #endif
   return TCL_OK;
@@ -334,12 +334,39 @@ static int test_memdebug_dump(
     Tcl_WrongNumArgs(interp, 1, objv, "FILENAME");
     return TCL_ERROR;
   }
-#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_MEMORY_SIZE)
+#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_MEMORY_SIZE) \
+     || defined(SQLITE_POW2_MEMORY_SIZE)
   {
-    extern void sqlite3_memdebug_dump(const char*);
-    sqlite3_memdebug_dump(Tcl_GetString(objv[1]));
+    extern void sqlite3MemdebugDump(const char*);
+    sqlite3MemdebugDump(Tcl_GetString(objv[1]));
   }
 #endif
+  return TCL_OK;
+}
+
+/*
+** Usage:    sqlite3_memdebug_malloc_count
+**
+** Return the total number of times malloc() has been called.
+*/
+static int test_memdebug_malloc_count(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int nMalloc = -1;
+  if( objc!=1 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "");
+    return TCL_ERROR;
+  }
+#if defined(SQLITE_MEMDEBUG)
+  {
+    extern int sqlite3MemdebugMallocCount();
+    nMalloc = sqlite3MemdebugMallocCount();
+  }
+#endif
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(nMalloc));
   return TCL_OK;
 }
 
@@ -441,7 +468,7 @@ static int test_memdebug_pending(
     return TCL_ERROR;
   }
 
-#ifdef SQLITE_MEMDEBUG
+#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_POW2_MEMORY_SIZE)
   {
     int nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
                                         SQLITE_FAULTINJECTOR_MALLOC);
@@ -476,8 +503,8 @@ static int test_memdebug_settitle(
   zTitle = Tcl_GetString(objv[1]);
 #ifdef SQLITE_MEMDEBUG
   {
-    extern int sqlite3_memdebug_settitle(const char*);
-    sqlite3_memdebug_settitle(zTitle);
+    extern int sqlite3MemdebugSettitle(const char*);
+    sqlite3MemdebugSettitle(zTitle);
   }
 #endif
   return TCL_OK;
@@ -504,6 +531,7 @@ int Sqlitetest_malloc_Init(Tcl_Interp *interp){
      { "sqlite3_memdebug_fail",      test_memdebug_fail            },
      { "sqlite3_memdebug_pending",   test_memdebug_pending         },
      { "sqlite3_memdebug_settitle",  test_memdebug_settitle        },
+     { "sqlite3_memdebug_malloc_count", test_memdebug_malloc_count },
   };
   int i;
   for(i=0; i<sizeof(aObjCmd)/sizeof(aObjCmd[0]); i++){

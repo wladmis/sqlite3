@@ -14,6 +14,7 @@
 **
 ** $Id$
 */
+#include "sqliteInt.h"
 
 /*
 ** This version of the memory allocator attempts to obtain memory
@@ -28,12 +29,7 @@
 ** to support.   This module may choose to use less memory than requested.
 **
 */
-#if defined(SQLITE_MMAP_HEAP_SIZE)
-
-#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_MEMORY_SIZE)
-# error cannot use SQLITE_MMAP_HEAP_SIZE with either SQLITE_MEMDEBUG \
-        or SQLITE_MEMORY_SIZE
-#endif
+#ifdef SQLITE_MMAP_HEAP_SIZE
 
 /*
 ** This is a test version of the memory allocator that attempts to
@@ -43,7 +39,6 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>
-#include "sqliteInt.h"
 #include <unistd.h>
 
 
@@ -395,4 +390,4 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
   return (void*)p;
 }
 
-#endif /* !SQLITE_MEMDEBUG && !SQLITE_OMIT_MEMORY_ALLOCATION */
+#endif /* SQLITE_MMAP_HEAP_SIZE */

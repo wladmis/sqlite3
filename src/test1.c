@@ -257,7 +257,7 @@ static int test_io_trace(
       fclose(iotrace_file);
     }
     iotrace_file = 0;
-    sqlite3_io_trace = 0;
+    sqlite3IoTrace = 0;
   }
   if( argv[1][0] ){
     if( strcmp(argv[1],"stdout")==0 ){
@@ -267,7 +267,7 @@ static int test_io_trace(
     }else{
       iotrace_file = fopen(argv[1], "w");
     }
-    sqlite3_io_trace = io_trace_callback;
+    sqlite3IoTrace = io_trace_callback;
   }
   return SQLITE_OK;
 }
@@ -487,7 +487,7 @@ static int test_snprintf_int(
   const char *zFormat = argv[2];
   int a1 = atoi(argv[3]);
   if( n>sizeof(zStr) ) n = sizeof(zStr);
-  strcpy(zStr, "abcdefghijklmnopqrstuvwxyz");
+  sqlite3_snprintf(sizeof(zStr), zStr, "abcdefghijklmnopqrstuvwxyz");
   sqlite3_snprintf(n, zStr, zFormat, a1);
   Tcl_AppendResult(interp, zStr, 0);
   return TCL_OK;
@@ -954,16 +954,17 @@ static int test_create_function(
   /* Use the sqlite3_create_function16() API here. Mainly for fun, but also 
   ** because it is not tested anywhere else. */
   if( rc==SQLITE_OK ){
+    const void *zUtf16;
     sqlite3_value *pVal;
     sqlite3_mutex_enter(db->mutex);
     pVal = sqlite3ValueNew(db);
     sqlite3ValueSetStr(pVal, -1, "x_sqlite_exec", SQLITE_UTF8, SQLITE_STATIC);
+    zUtf16 = sqlite3ValueText(pVal, SQLITE_UTF16NATIVE);
     if( db->mallocFailed ){
       rc = SQLITE_NOMEM;
     }else{
-      rc = sqlite3_create_function16(db, 
-              sqlite3ValueText(pVal, SQLITE_UTF16NATIVE),
-              1, SQLITE_UTF16, db, sqlite3ExecFunc, 0, 0);
+      rc = sqlite3_create_function16(db, zUtf16, 
+                1, SQLITE_UTF16, db, sqlite3ExecFunc, 0, 0);
     }
     sqlite3ValueFree(pVal);
     sqlite3_mutex_leave(db->mutex);
@@ -2152,6 +2153,7 @@ static int test_collate(
   rc = sqlite3_create_collation(db, "test_collate", SQLITE_UTF8, 
           (void *)SQLITE_UTF8, val?test_collate_func:0);
   if( rc==SQLITE_OK ){
+    const void *zUtf16;
     if( TCL_OK!=Tcl_GetBooleanFromObj(interp, objv[3], &val) ) return TCL_ERROR;
     rc = sqlite3_create_collation(db, "test_collate", SQLITE_UTF16LE, 
             (void *)SQLITE_UTF16LE, val?test_collate_func:0);
@@ -2165,11 +2167,11 @@ static int test_collate(
     sqlite3_mutex_enter(db->mutex);
     pVal = sqlite3ValueNew(db);
     sqlite3ValueSetStr(pVal, -1, "test_collate", SQLITE_UTF8, SQLITE_STATIC);
+    zUtf16 = sqlite3ValueText(pVal, SQLITE_UTF16NATIVE);
     if( db->mallocFailed ){
       rc = SQLITE_NOMEM;
     }else{
-      rc = sqlite3_create_collation16(db, 
-          sqlite3ValueText(pVal, SQLITE_UTF16NATIVE), SQLITE_UTF16BE, 
+      rc = sqlite3_create_collation16(db, zUtf16, SQLITE_UTF16BE, 
           (void *)SQLITE_UTF16BE, val?test_collate_func:0);
     }
     sqlite3ValueFree(pVal);
@@ -3250,13 +3252,13 @@ static int test_open(
   int rc;
   char zBuf[100];
 
-  if( objc!=3 && objc!=2 ){
+  if( objc!=3 && objc!=2 && objc!=1 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", 
        Tcl_GetString(objv[0]), " filename options-list", 0);
     return TCL_ERROR;
   }
 
-  zFilename = Tcl_GetString(objv[1]);
+  zFilename = objc>1 ? Tcl_GetString(objv[1]) : 0;
   rc = sqlite3_open(zFilename, &db);
   
   if( sqlite3TestMakePointerStr(interp, zBuf, db) ) return TCL_ERROR;
@@ -4410,7 +4412,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_stack_used",            (Tcl_CmdProc*)test_stack_used       },
      { "sqlite3_busy_timeout",          (Tcl_CmdProc*)test_busy_timeout     },
      { "printf",                        (Tcl_CmdProc*)test_printf           },
-     { "sqlite3_io_trace",              (Tcl_CmdProc*)test_io_trace         },
+     { "sqlite3IoTrace",              (Tcl_CmdProc*)test_io_trace         },
   };
   static struct {
      char *zName;
@@ -4548,9 +4550,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_os_type;
 #endif
 #ifdef SQLITE_DEBUG
-  extern int sqlite3_where_trace;
-  extern int sqlite3_os_trace;
-  extern int sqlite3_vdbe_addop_trace;
+  extern int sqlite3WhereTrace;
+  extern int sqlite3OSTrace;
+  extern int sqlite3VdbeAddopTrace;
 #endif
 #ifdef SQLITE_TEST
   extern int sqlite3_enable_in_opt;
@@ -4611,11 +4613,11 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 #endif
 #ifdef SQLITE_DEBUG
   Tcl_LinkVar(interp, "sqlite_addop_trace",
-      (char*)&sqlite3_vdbe_addop_trace, TCL_LINK_INT);
+      (char*)&sqlite3VdbeAddopTrace, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_where_trace",
-      (char*)&sqlite3_where_trace, TCL_LINK_INT);
+      (char*)&sqlite3WhereTrace, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_os_trace",
-      (char*)&sqlite3_os_trace, TCL_LINK_INT);
+      (char*)&sqlite3OSTrace, TCL_LINK_INT);
 #endif
 #ifndef SQLITE_OMIT_DISKIO
   Tcl_LinkVar(interp, "sqlite_opentemp_count",

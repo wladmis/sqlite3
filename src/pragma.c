@@ -894,8 +894,8 @@ void sqlite3Pragma(
       if( cnt==0 ) continue;
 
       /* Make sure sufficient number of registers have been allocated */
-      if( pParse->nMem < cnt+3 ){
-        pParse->nMem = cnt+3;
+      if( pParse->nMem < cnt+4 ){
+        pParse->nMem = cnt+4;
       }
 
       /* Do the b-tree integrity checks */
@@ -905,7 +905,8 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp4(v, OP_String8, 0, 3, 0,
          sqlite3MPrintf(db, "*** in database %s ***\n", db->aDb[i].zName),
          P4_DYNAMIC);
-      sqlite3VdbeAddOp3(v, OP_Concat, 2, 3, 2);
+      sqlite3VdbeAddOp2(v, OP_Move, 2, 4);
+      sqlite3VdbeAddOp3(v, OP_Concat, 4, 3, 2);
       sqlite3VdbeAddOp2(v, OP_ResultRow, 2, 1);
       sqlite3VdbeJumpHere(v, addr);
 

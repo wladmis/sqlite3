@@ -164,6 +164,14 @@ ifcapable {utf16} {
   } {library routine called out of sequence}
 }
 
+do_test capi3-3.7 {
+  set db2 [sqlite3_open]
+  sqlite3_errcode $db2
+} {SQLITE_OK}
+do_test capi3-3.8 {
+  sqlite3_close $db2
+} {SQLITE_OK}
+
 # rename sqlite3_open ""
 # rename sqlite3_open_old sqlite3_open
 

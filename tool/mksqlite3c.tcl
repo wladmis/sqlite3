@@ -88,6 +88,7 @@ if {$addstatic} {
 foreach hdr {
    btree.h
    btreeInt.h
+   config.h
    fts3.h
    fts3_hash.h
    fts3_tokenizer.h
@@ -175,13 +176,13 @@ proc copy_file {filename} {
         if {![regexp {^sqlite3_} $varname]} {
           regsub {^extern } $line {} line
           puts $out "SQLITE_PRIVATE $line"
-        } elseif {![regexp {^SQLITE_EXTERN} $line]} {
-          puts $out "SQLITE_API $line"
         } else {
-          puts $out $line
+          regsub {^SQLITE_EXTERN } $line {} line
+          puts $out "SQLITE_API $line"
         }
-      } elseif {[regexp {^void \(\*sqlite3_io_trace\)} $line]} {
-        puts $out "SQLITE_API $line"
+      } elseif {[regexp {^(SQLITE_EXTERN )?void \(\*sqlite3IoTrace\)} $line]} {
+        regsub {^SQLITE_EXTERN } $line {} line
+        puts $out "SQLITE_PRIVATE $line"
       } else {
         puts $out $line
       }
@@ -208,6 +209,7 @@ foreach file {
    mem1.c
    mem2.c
    mem3.c
+   mem5.c
    mutex.c
    mutex_os2.c
    mutex_unix.c
@@ -224,6 +226,7 @@ foreach file {
    os_unix.c
    os_win.c
 
+   bitvec.c
    pager.c
 
    btmutex.c   
