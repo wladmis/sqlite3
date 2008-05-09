@@ -54,8 +54,8 @@ static void renameTableFunc(
   sqlite3 *db = sqlite3_context_db_handle(context);
 
   /* The principle used to locate the table name in the CREATE TABLE 
-  ** statement is that the table name is the first token that is immediatedly
-  ** followed by a left parenthesis - TK_LP - or "USING" TK_USING.
+  ** statement is that the table name is the first non-space token that
+  ** is immediately followed by a left parenthesis - TK_LP - or "USING" TK_USING.
   */
   if( zSql ){
     do {
@@ -74,7 +74,7 @@ static void renameTableFunc(
       do {
         zCsr += len;
         len = sqlite3GetToken(zCsr, &token);
-      } while( token==TK_SPACE );
+      } while( token==TK_SPACE || token==TK_COMMENT );
       assert( len>0 );
     } while( token!=TK_LP && token!=TK_USING );
 
