@@ -302,6 +302,7 @@ TESTSRC2 = \
   $(TOP)/src/vdbeaux.c \
   $(TOP)/src/vdbemem.c \
   $(TOP)/src/where.c \
+  $(TOP)/src/main.c \
   parse.c
 
 # Source code to the actual test files.
