@@ -1397,9 +1397,11 @@ static int pager_end_transaction(Pager *pPager, int hasMaster){
     pPager->stmtOpen = 0;
   }
   if( pPager->journalOpen ){
-    if( (pPager->exclusiveMode ||
-         pPager->journalMode==PAGER_JOURNALMODE_PERSIST) 
-       && (rc = zeroJournalHdr(pPager, hasMaster))==SQLITE_OK ){
+    if( pPager->exclusiveMode 
+     || pPager->journalMode==PAGER_JOURNALMODE_PERSIST
+    ){
+      rc = zeroJournalHdr(pPager, hasMaster);
+      pager_error(pPager, rc);
       pPager->journalOff = 0;
       pPager->journalStarted = 0;
     }else{
@@ -3412,8 +3414,8 @@ static int pagerSharedLock(Pager *pPager){
     if( pPager->journalOpen ){
       isHot = 1;
     }
-    pager_reset(pPager);
     pPager->errCode = SQLITE_OK;
+    pager_reset(pPager);
   }
 
   /* If the pager is still in an error state, do not proceed. The error 

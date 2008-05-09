@@ -1644,6 +1644,7 @@ int sqlite3BtreeGetAutoVacuum(Btree *p){
 static int lockBtree(BtShared *pBt){
   int rc;
   MemPage *pPage1;
+  int nPage;
 
   assert( sqlite3_mutex_held(pBt->mutex) );
   if( pBt->pPage1 ) return SQLITE_OK;
@@ -1654,7 +1655,11 @@ static int lockBtree(BtShared *pBt){
   ** a valid database file. 
   */
   rc = SQLITE_NOTADB;
-  if( sqlite3PagerPagecount(pBt->pPager)>0 ){
+  nPage = sqlite3PagerPagecount(pBt->pPager);
+  if( nPage<0 ){
+    rc = SQLITE_IOERR;
+    goto page1_init_failed;
+  }else if( nPage>0 ){
     int pageSize;
     int usableSize;
     u8 *page1 = pPage1->aData;
