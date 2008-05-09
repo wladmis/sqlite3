@@ -27,8 +27,6 @@ ifcapable {!autovacuum} {
   return
 }
 
-if 0 {
-
 do_ioerr_test incrvacuum-ioerr-1 -cksum 1 -sqlprep {
   PRAGMA auto_vacuum = 'incremental';
   CREATE TABLE abc(a);
@@ -104,8 +102,6 @@ do_ioerr_test incrvacuum-ioerr-3 -start 1 -cksum 1 -tclprep {
   sqlite3 db test.db
   integrity_check incrvacuum-ioerr-2.$n.integritycheck
   db close
-}
-
 }
 
 
