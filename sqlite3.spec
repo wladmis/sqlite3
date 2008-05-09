@@ -110,7 +110,6 @@ autoreconf -i
 %configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline --disable-amalgamation
 %make_build all libtcl%name.la fts3.la
 
-mkdir -p docsrc/doc/c3ref
 make -C docsrc DOC=. SRC=..
 
 %def_with test
