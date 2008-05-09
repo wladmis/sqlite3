@@ -94,4 +94,8 @@ SQLITE_3.5.5 {
     global:
 	sqlite3_test_control;
 };
+SQLITE_3.5.6 {
+    global:
+	sqlite3_result_error_code;
+};
 /* the prefix is SQLITE_, not SQLITE3_ */
