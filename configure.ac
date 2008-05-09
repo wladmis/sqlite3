@@ -607,6 +607,7 @@ AC_ARG_ENABLE(load-extension, AC_HELP_STRING([--enable-load-extension],
       [use_loadextension=$enableval],[use_loadextension=no])
 if test "${use_loadextension}" = "yes" ; then
   LOADEXTENSION_FLAGS=""
+  AC_SEARCH_LIBS(dlopen, dl)
 else
   LOADEXTENSION_FLAGS="-DSQLITE_OMIT_LOAD_EXTENSION=1"
 fi
