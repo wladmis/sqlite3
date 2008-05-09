@@ -1,0 +1,13 @@
+object 0dd40212fdbca8e55d8a545f34e2c7e1516e963a
+type commit
+tag 3.5.7
+tagger Alexey Tourbin <at@altlinux.ru> 1210348061 +0400
+
+verified against 3.5.7 tarball
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkgkch0ACgkQfBKgtDjnu0Y1VwCeKSRQlweqr5gmuJlG/K2GeIrl
+l4EAnRnYVXPRwvwxEnKgiEvkODFxBH/K
+=Ddv0
+-----END PGP SIGNATURE-----
