@@ -25,8 +25,19 @@
 ** Return true if the floating point value is Not a Number.
 */
 int sqlite3IsNaN(double x){
+#if 0
+  /* This reportedly fails when compiled with -ffinite-math-only */
   volatile double y = x;
   return x!=y;
+#endif
+  /* We have to look at bit patterns to accurately determine NaN.
+  ** See ticket #3101 and
+  ** https://mail.mozilla.org/pipermail/tamarin-devel/2008-February/000325.html
+  */
+  sqlite3_uint64 y = *(sqlite3_uint64*)&x;
+  assert( sizeof(x)==sizeof(y) );
+  y &= (((sqlite3_uint64)0x80000000)<<32)-1;
+  return y > (((sqlite3_uint64)0x7ff00000)<<32);
 }
 
 /*
