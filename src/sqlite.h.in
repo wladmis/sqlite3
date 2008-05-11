@@ -155,7 +155,7 @@ int sqlite3_threadsafe(void);
 
 /*
 ** CAPI3REF: Database Connection Handle {F12000}
-** KEYWORDS: {database connection}
+** KEYWORDS: {database connection} {database connections}
 **
 ** Each open SQLite database is represented by pointer to an instance of the
 ** opaque structure named "sqlite3".  It is useful to think of an sqlite3

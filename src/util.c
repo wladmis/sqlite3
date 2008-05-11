@@ -262,6 +262,7 @@ int sqlite3AtoF(const char *z, double *pResult){
   int sign = 1;
   const char *zBegin = z;
   LONGDOUBLE_TYPE v1 = 0.0;
+  int nSignificant = 0;
   while( isspace(*(u8*)z) ) z++;
   if( *z=='-' ){
     sign = -1;
@@ -269,16 +270,29 @@ int sqlite3AtoF(const char *z, double *pResult){
   }else if( *z=='+' ){
     z++;
   }
+  while( z[0]=='0' ){
+    z++;
+  }
   while( isdigit(*(u8*)z) ){
     v1 = v1*10.0 + (*z - '0');
     z++;
+    nSignificant++;
   }
   if( *z=='.' ){
     LONGDOUBLE_TYPE divisor = 1.0;
     z++;
+    if( nSignificant==0 ){
+      while( z[0]=='0' ){
+        divisor *= 10.0;
+        z++;
+      }
+    }
     while( isdigit(*(u8*)z) ){
-      v1 = v1*10.0 + (*z - '0');
-      divisor *= 10.0;
+      if( nSignificant<18 ){
+        v1 = v1*10.0 + (*z - '0');
+        divisor *= 10.0;
+        nSignificant++;
+      }
       z++;
     }
     v1 /= divisor;
