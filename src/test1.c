@@ -2654,7 +2654,9 @@ static int test_bind_double(
       x = aSpecialFp[i].iUpper;
       x <<= 32;
       x |= aSpecialFp[i].iLower;
-      value = *(double*)(char*)&x;
+      assert( sizeof(value)==8 );
+      assert( sizeof(x)==8 );
+      memcpy(&value, &x, 8);
       break;
     }
   }
