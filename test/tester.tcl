@@ -703,6 +703,9 @@ proc do_ioerr_test {testname args} {
       expr { ($s && !$r && !$q) || (!$s && $r && $q) }
     } {1}
 
+    set ::sqlite_io_error_hit 0
+    set ::sqlite_io_error_pending 0
+
     # Check that no page references were leaked. There should be 
     # a single reference if there is still an active transaction, 
     # or zero otherwise.
