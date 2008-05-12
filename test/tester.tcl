@@ -73,7 +73,7 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
 
 
 proc ostrace_call {zCall nClick zFile i32 i64} {
-  set s "INSERT INTO ostrace VALUES( '$zCall', $nClick, '$zFile', $i32, $i64);"
+  set s "INSERT INTO ostrace VALUES('$zCall', $nClick, '$zFile', $i32, $i64);"
   puts $::ostrace_fd $s
 }
 
@@ -94,8 +94,12 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
   }
   if {[lindex $argv $i] eq "--binarylog"} {
     set tester_do_binarylog 1
+
+    # sqlite3_simulate_device -char safe_append
+    # sqlite3_instvfs binarylog -default -parent devsym binarylog ostrace.bin
     sqlite3_instvfs binarylog -default binarylog ostrace.bin
     set argv [lreplace $argv $i $i]
+    sqlite3_instvfs marker binarylog "$argv0 $argv"
   }
 }
 
