@@ -233,9 +233,9 @@ static void rehash(Hash *pH, int new_size){
   ** is benign (since failing to resize a hash table is a performance
   ** hit only, not a fatal error).
   */
-  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, pH->htsize>0);
+  if( pH->htsize>0 ) sqlite3FaultBeginBenign(SQLITE_FAULTINJECTOR_MALLOC);
   new_ht = (struct _ht *)sqlite3MallocZero( new_size*sizeof(struct _ht) );
-  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
+  if( pH->htsize>0 ) sqlite3FaultEndBenign(SQLITE_FAULTINJECTOR_MALLOC);
 
   if( new_ht==0 ) return;
   sqlite3_free(pH->ht);

@@ -1065,9 +1065,9 @@ static int echoCommit(sqlite3_vtab *tab){
   ** a transaction */
   assert( pVtab->inTransaction );
 
-  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 1);
+  sqlite3FaultBeginBenign(SQLITE_FAULTINJECTOR_MALLOC);
   rc = echoTransactionCall(tab, "xCommit");
-  sqlite3FaultBenign(SQLITE_FAULTINJECTOR_MALLOC, 0);
+  sqlite3FaultEndBenign(SQLITE_FAULTINJECTOR_MALLOC);
   pVtab->inTransaction = 0;
   return rc;
 }

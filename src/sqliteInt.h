@@ -2170,14 +2170,16 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
   int sqlite3FaultFailures(int);
   int sqlite3FaultBenignFailures(int);
   int sqlite3FaultPending(int);
-  void sqlite3FaultBenign(int,int);
+  void sqlite3FaultBeginBenign(int);
+  void sqlite3FaultEndBenign(int);
   int sqlite3FaultStep(int);
 #else
 # define sqlite3FaultConfig(A,B,C)
 # define sqlite3FaultFailures(A)         0
 # define sqlite3FaultBenignFailures(A)   0
 # define sqlite3FaultPending(A)          (-1)
-# define sqlite3FaultBenign(A,B)
+# define sqlite3FaultBeginBenign(A)
+# define sqlite3FaultEndBenign(A)
 # define sqlite3FaultStep(A)             0
 #endif
   

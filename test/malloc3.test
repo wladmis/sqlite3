@@ -586,7 +586,7 @@ if {$iterid=="pc=4.iFail=44-sql"} breakpoint
             # Otherwise a malloc() failed and the error was not reported.
             # 
             if {$nFail!=$nBenign} {
-#              error "Unreported malloc() failure"
+              error "Unreported malloc() failure"
             }
 
             if {$ac && !$nac} {

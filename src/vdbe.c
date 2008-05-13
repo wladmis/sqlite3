@@ -559,7 +559,7 @@ int sqlite3VdbeExec(
   CHECK_FOR_INTERRUPT;
   sqlite3VdbeIOTraceSql(p);
 #ifdef SQLITE_DEBUG
-  sqlite3FaultBenign(-1, 1);
+  sqlite3FaultBeginBenign(-1);
   if( p->pc==0 && ((p->db->flags & SQLITE_VdbeListing)!=0
     || sqlite3OsAccess(db->pVfs, "vdbe_explain", SQLITE_ACCESS_EXISTS)==1 )
   ){
@@ -573,7 +573,7 @@ int sqlite3VdbeExec(
   if( sqlite3OsAccess(db->pVfs, "vdbe_trace", SQLITE_ACCESS_EXISTS)==1 ){
     p->trace = stdout;
   }
-  sqlite3FaultBenign(-1, 0);
+  sqlite3FaultEndBenign(-1);
 #endif
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
@@ -595,11 +595,11 @@ int sqlite3VdbeExec(
       sqlite3VdbePrintOp(p->trace, pc, pOp);
     }
     if( p->trace==0 && pc==0 ){
-      sqlite3FaultBenign(-1, 1);
+      sqlite3FaultBeginBenign(-1);
       if( sqlite3OsAccess(db->pVfs, "vdbe_sqltrace", SQLITE_ACCESS_EXISTS)==1 ){
         sqlite3VdbePrintSql(p);
       }
-      sqlite3FaultBenign(-1, 0);
+      sqlite3FaultEndBenign(-1);
     }
 #endif
       
