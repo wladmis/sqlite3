@@ -456,7 +456,7 @@ foreach infile [lrange $argv 3 end] {
 hd_open_main doc_keyword_crossref.html
 hd_header {Hyperlink Crossreference} $DOC/wrap.tcl
 hd_puts "<ul>"
-foreach x [lsort [array names glink]] {
+foreach x [lsort -dict [array names glink]] {
   set y $glink($x)
   hd_puts "<li>$x - <a href=\"$y\">$y</a></li>"
   lappend revglink($y) $x

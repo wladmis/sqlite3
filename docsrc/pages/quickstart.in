@@ -1,3 +1,4 @@
+<tcl>hd_keywords {quickstart}</tcl>
 <title>SQLite In 5 Minutes Or Less</title>
 
 <p>Here is what you do to start experimenting with SQLite without having
@@ -25,7 +26,8 @@ new database.</p></li>
 <h2>Write Programs That Use SQLite</h2>
 
 <ul>
-<li><p>Below is a simple TCL program that demonstrates how to use
+<li><p>Below is a simple 
+<a href="http://www.tcl.tk">TCL program</a> that demonstrates how to use
 the TCL interface to SQLite.  The program executes the SQL statements
 given as the second argument on the database defined by the first
 argument.  The commands to watch for are the <b>sqlite3</b> command
@@ -54,13 +56,17 @@ load /usr/lib/tclsqlite3.so Sqlite3
 </li>
 
 <li><p>Below is a simple C program that demonstrates how to use
-the C/C++ interface to SQLite.  The name of a database is given by
+the [capi3ref | C/C++ interface] to SQLite.  The name of a database is given by
 the first argument and the second argument is one or more SQL statements
 to execute against the database.  The function calls to pay attention
-to here are the call to <b>sqlite3_open()</b> on line 22 which opens
-the database, <b>sqlite3_exec()</b> on line 27 that executes SQL
-commands against the database, and <b>sqlite3_close()</b> on line 31
+to here are the call to [sqlite3_open()] on line 22 which opens
+the database, [sqlite3_exec()] on line 27 that executes SQL
+commands against the database, and [sqlite3_close()] on line 31
 that closes the database connection.</p>
+
+<p>See also the [cintro | Introduction To The SQLite C/C++ Interface] for
+an introductory overview and roadmap to the dozens of SQLite interface
+functions.</p>
 
 <blockquote><pre>
 #include &lt;stdio.h&gt;
@@ -76,7 +82,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
 }
 
 int main(int argc, char **argv){
-  sqlite3 *db;
+  <b>sqlite3</b> *db;
   char *zErrMsg = 0;
   int rc;
 
@@ -87,13 +93,13 @@ int main(int argc, char **argv){
   rc = <b>sqlite3_open</b>(argv&#91;1], &db);
   if( rc ){
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-    sqlite3_close(db);
+    <b>sqlite3_close</b>(db);
     exit(1);
   }
   rc = <b>sqlite3_exec</b>(db, argv&#91;2], callback, 0, &zErrMsg);
   if( rc!=SQLITE_OK ){
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
+    <b>sqlite3_free</b>(zErrMsg);
   }
   <b>sqlite3_close</b>(db);
   return 0;

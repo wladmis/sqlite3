@@ -257,6 +257,56 @@ is returned it is as an integer.</p>
     current syntax or functionality as it is likely to change.</p>
 </li>
 
+<tcl>Subsection journal_mode</tcl>
+<li><p><b>PRAGMA journal_mode;
+       <br>PRAGMA <i>database</i>.journal_mode;
+       <br>PRAGMA journal_mode
+              = <i>DELETE | PERSIST | OFF</i>
+       <br>PRAGMA <i>database</i>.journal_mode
+              = <i>DELETE | PERSIST | OFF</i></b></p>
+
+    <p>This pragma queries or sets the journal mode for databases
+    associated with the current [database connection].</p>
+
+    <p>The first two forms of this pragma query the current journaling
+    mode.  In the first form, the default journal_mode is returned.
+    The default journaling mode is the mode used by databases added
+    to the connection by subsequent [ATTACH] statements.  The second
+    form returns the current journaling mode for a specific database.</p>
+
+    <p>The last two forms change the journaling mode.  The 4th form
+    changes the journaling mode for a specific database connection.
+    Use "main" for the main database (the database that was opened by
+    the original [sqlite3_open()], [sqlite3_open16()], or
+    [sqlite3_open_v2()] interface call) and use "temp" for database
+    that holds TEMP tables.  The 3rd form changes the journaling mode
+    on all databases and it changes the default journaling mode that
+    will be used for new databases added by subsequent [ATTACH]
+    commands.</p>
+
+    <p>The DELETE journaling mode is the normal behavior.  In the DELETE
+    mode, the rollback journal is deleted at the conclusion of each
+    transaction.  Indeed, the delete operation is the action that causes
+    the transaction to commit.
+    (See the documented titled <a href="atomiccommit.html">
+    Atomic Commit In SQLite</a> for additional detail.)</p>
+
+    <p>The PERSIST journaling mode prevents the rollback journal from
+    being deleted at the end of each transaction.  Instead, the header
+    of the journal is overwritten with zeros.  This will prevent other
+    database connections from rolling the journal back.  The PERSIST
+    journaling mode is useful as an optimization on platforms where
+    deleting a file is much more expensive than overwriting the first
+    block of a file with zeros.</p>
+
+    <p>The OFF journaling mode disables the rollback journal completely.
+    No rollback journal is ever created and hence there is never a rollback
+    journal to delete.  The OFF journaling mode disables the atomic
+    commit and rollback capabilities of SQLite.  If a crash or power failure
+    occurs in the middle of a transaction when the OFF journaling mode is
+    set, then the database file will very likely go corrupt.</p>
+</li>
+
 
 <tcl>Subsection legacy_file_format</tcl>
 <li><p><b>PRAGMA legacy_file_format;
@@ -325,13 +375,43 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <tcl>Subsection page_size</tcl>
 <li><p><b>PRAGMA page_size;
        <br>PRAGMA page_size = </b><i>bytes</i><b>;</b></p>
-    <p>Query or set the page-size of the database. The page-size
+    <p>Query or set the page size of the database. The page size
     may only be set if the database has not yet been created. The page
     size must be a power of two greater than or equal to 512 and less
-    than or equal to 8192. The upper limit may be modified by setting
-    the value of macro SQLITE_MAX_PAGE_SIZE during compilation.  The
-    maximum upper bound is 32768.
+    than or equal to [SQLITE_MAX_PAGE_SIZE].
+    The maximum value for [SQLITE_MAX_PAGE_SIZE] is 32768.
     </p>
+
+    <p>When a new database is created, SQLite assigned a default page size
+    based on information received from the xSectorSize and 
+    xDeviceCharacteristics methods of the [sqlite3_io_methods] object
+    of the newly created database file.  The page_size pragma will only
+    cause an immediate change in the
+    page size if it is issued while the database is still empty, prior 
+    to the first CREATE TABLE statement.  As of [version 3.5.8], if
+    the page_size pragma is used to specify a new page size just prior to
+    running the [VACUUM] command then [VACUUM] will change the page
+    size to the new value.</p>
+
+    <p>If SQLite is compiled with the SQLITE_ENABLE_ATOMIC_WRITE option,
+    then the default page size is chosen to be the largest page size
+    less than or equal to SQLITE_MAX_DEFAULT_PAGE_SIZE for which atomic
+    write is enabled according to the
+    xDeviceCharacteristics method of the [sqlite3_io_methods] object for
+    the database file.  If the SQLITE_ENABLE_ATOMIC_WRITE option is
+    disabled or if xDeviceCharacteristics reports no suitable atomic
+    write page sizes, then the default page size is the larger of 
+    SQLITE_DEFALT_PAGE_SIZE
+    and the sector size as reported by the xSectorSize method of the
+    [sqlite3_io_methods] object, but not more than 
+    SQLITE_MAX_DEFAULT_PAGE_SIZE.  The normal configuration for SQLite
+    running on workstations is for atomic write to be
+    disabled, for the maximum page size to be set to 32768, for
+    SQLITE_DEFAULT_PAGE_SIZE to be 1024, and for the
+    maximum default page size to be set to 8192.  The default xSectorSize
+    method on workstation implementations always reports a sector size
+    of 512 bytes.  Hence, 
+    the default page size chosen by SQLite is usually 1024 bytes.</p>
 </li>
 
 <tcl>Subsection max_page_count</tcl>

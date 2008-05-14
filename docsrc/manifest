@@ -1,8 +1,8 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-C Fix\stypo\son\sdownload.html\spage.
-D 2008-04-16T18:13:22
+C Change\sthe\srelease\sdate\sof\s3.5.9\sto\sMay\s14.
+D 2008-05-14T16:16:44
 F Makefile 14e99084f2371e5f75c2b7649127fdc7b0158204
 F art/arch.fig d5f9752a4dbf242e9cfffffd3f5762b6c63b3bcf
 F art/arch2.fig ae2432145c26cfa148fa0116589517ad3cd5fc65
@@ -68,26 +68,27 @@ F images/table-ex1b2.gif a588d21a2d88bb2a2ef0431fcc5ed5aa48c0bbc5
 F main.mk 3849b4edb582be4eee2591977d86cc0fd83ec8ee
 F misc/althttpd.c 07cf72e075b1fe64aba7cad408bfb9768cd7202b
 F numbering.txt 76ceb3e461b3e303b688b1feadc439f4aa2afb3c
-F pages/34to35.in 39f2c8d46253d8d5c651bdfd3bc9aab9b107baf4
-F pages/about.in db2b136f8db5f63cb50bf1fc8f2a01a694c2cb2c
+F pages/34to35.in 46ecdb16ffdb7ccd46cb663142f380500b4b9668
+F pages/about.in 5f440e06f9db2df3696e6dd6951fd0aa2a7f99ef
 F pages/amalgamation.in db07d0a1394748ab87a3970340e9c59bcf17685e
 F pages/arch.in a8a0df078ef88fcae2c17fc3fd3e07693a07026b
-F pages/atomiccommit.in b7e39da33f3fbed90869d9c289c2b53ea02e4b10
+F pages/atomiccommit.in b9abadf8211af06b28df3a03fddf0de13862196e
 F pages/audit.in d000823e45b19e028624c543ff999576d81a23fd
-F pages/autoinc.in ada8c68eeea3c3164baa92752fad2fb2cc805605
+F pages/autoinc.in 1fdf87d8e2eee4fefadee21bf0511f0053dfd0e2
 F pages/c_interface.in 66b4f6ec2e5135ca9e162c8b9e535dd1f79a6263
 F pages/capi3.in 0bc497cf4529e2a4cca038b02e617505f42aa2f8
-F pages/capi3ref.in 4f223c1b36cea4364a8c61d59d51541d5112059b
-F pages/changes.in 95555b8bca25e1b73567b4cda2696968126c313d
+F pages/capi3ref.in bc8ce999def3d4416863d3a03b202a5591c15a1e
+F pages/changes.in 91b3714b5b4675f6149ca0caf4ce7b672c6c75ab
+F pages/cintro.in 10a56fe09a976115668f42f359125bc76ffd3a05
 F pages/compile.in 4a33dc758cbb87f23616b640fd94c01ec8169959
 F pages/conflict.in e610aa329a3ec1555fe80a206ab5a326242218b4
 F pages/consortium.in d66be7528d7905d2cacfbb600c24bac0a25036fc
 F pages/copyright.in 0984569ea8619c5a54575c9e8c7959fc6fccae25
 F pages/crew.in b4454a475c7c2b14ebc2e42da65b9f6f5fd2c883
-F pages/datatype3.in adc47b58e96229a2582e2885419409d6c5a73c6a
+F pages/datatype3.in 074603963b0c006f42d1617b9a76c050a4353439
 F pages/datatypes.in d699067fb0777aa8bceb4b37ac2d734aa9195c9b
 F pages/different.in 54d869c62bbc55a9e95eecd7f357e69174537e47
-F pages/docs.in 89b01f85d14681b04be126dffc6c7fc117d6f6fb
+F pages/docs.in 4c79c67f09e53ddee172a3859f418595cca5a14c
 F pages/download.in 16355f730a84b7f58e794e233f34ba86a69842c7
 F pages/dynload.in d619597789edcf3a79e5210fd3b36078e39a06dd
 F pages/famous.in c4256f1239b0fdddc7ee4de05a3b8dc81fae4868
@@ -95,21 +96,21 @@ F pages/faq.in a8ef8c4ec3b639cc3812902aadc5fc6b51511b47
 F pages/features.in 5f3de3ba0429c8e993124c83f5a1e6dccc3e39b7
 F pages/fileformat.in 7078bdee7527a1360eba5b06196e0c39b2c949b2
 F pages/formatchng.in 2c122d5882c9ea0aa9ef607cabae2a49b87c9cc9
-F pages/index.in c6ffcff7bc911efa3620a3338cd09631091a888e
-F pages/lang.in c1339d7d53febb13836e7181ef2a223e4c6c5588
-F pages/limits.in e2d12156c910be175a7efe3987ddb2cdd5e2ec5c
-F pages/lockingv3.in 3f1d67656385ed6e03881e0efddd7b702e065873
+F pages/index.in 83093f7fa5c26ed11ba17482d8d5fbdd3c683b72
+F pages/lang.in 589c1e9eacaa5b2f07249ed4471a73134639e3b9
+F pages/limits.in ee6b79c71f7493ec4ebbf0f8ae0d09b8eee23b06
+F pages/lockingv3.in 9fc4cb1f8729dc2b3c7877cd66c95a8eff923d75
 F pages/mingw.in 2e3bd2f76b07a734480b4314bdb57bb008e1dd96
 F pages/mostdeployed.in c2e91f3db1ef6bf815cd207082aed0bfeb6db910
-F pages/news.in 03307b7ad9cc08335df9f70177981ced3bf2b9c8
+F pages/news.in a44a733150ac00ab2b293da0738fa324e00deb58
 F pages/nulls.in bb9341b54c8283db46bb12d3002db3270330df2e
 F pages/oldnews.in 67edb5eb03f50496576ece14ff68a3dba9e6e58f
 F pages/omitted.in 633d372da4078986e8a8c2c27672b7de7a2efe04
 F pages/onefile.in f4f147949cc176575eef55cb8626c77d8ce1bf7e
 F pages/opcode.in 4b25c1793ffa51c9e52c4d17b6eacba0525b7340
 F pages/optoverview.in be90481399095a4ad499091673c08e01d47d3867
-F pages/pragma.in 8f4c5cd7dfb19397b6547f68450bb0eddfafbad6
-F pages/quickstart.in 89a00c348b2e5dbae05e2a1256beaffeb04bface
+F pages/pragma.in e883ed47b12c49de715c551468af179c51a06c1d
+F pages/quickstart.in 59ae6f6e7f0a9f9e97774f83fe8dd748a0bf375c
 F pages/requirements.in 10d27552004f022be63d05103b752fd6302a0b38
 F pages/selfcontained.in aac14796e0561910806f5581e3ca7958f043778c
 F pages/serverless.in 6b4e4ad63dcb12902e19cf551cbb41a0be9ae4c4
@@ -120,6 +121,7 @@ F pages/speed.in 4cbccd8a64c9cc421152b92df930d46a6fe95c9f
 F pages/sqlite.in 9ff952e3ed8f3d699e0e0703207ac1e23ca15697
 F pages/support.in 82da86ef22b89643630bba5fab2ba082f4e30cbd
 F pages/tclsqlite.in 4cce756dcd8ead6b8da3d3061a32d451d7cb6151
+F pages/tempfiles.in d45fb66f17f15af4297f39a931173936e7e6e4be
 F pages/transactional.in d1d382985ebccb4dc1db020e1f691cc54642bc67
 F pages/vdbe.in cebeeeab193c402d707e1dccf9724a4ee8a3efcf
 F pages/version3.in 178e5c139581d01c38fc0631bab5336fe0c7da13
@@ -132,15 +134,15 @@ F rawpages/cvstrac.css 6c0f96d1eb793e9584d9bc58adee4235d9d22a7e
 F rawpages/favicon.ico 188d00cc15997fdc214990dac6c62825d7ffe818
 F rawpages/pressrelease-20071212.html 844dd72d6c04a88759c5f9d302c67c5e210d6f2c
 F rawpages/robots.txt 715230254e3239103278ed730be882807950e2ef
-F wrap.tcl 5f32f84e46cc7944b8e0c2e2aba0ca83e6ce7e51
-P 744b84781863c69df4ad6dd1b80b1ed4f5a7764c
-R 7630529373d7c8dc48f3376123de9f61
+F wrap.tcl a95d8580fbf302cb2b3d5afe1159df97abd6e546
+P 32b6f9cdf7616ec78b847e0249100787ac78275c
+R 538aeac92ed52f15f2321b24bf9aecda
 U drh
-Z df98aeb2aa649315b1d69351727fd1fb
+Z b93f45b442d1661a95fdcd11b97e9e05
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD8DBQFIBkIDoxKgR168RlERAvaOAJ4kYN1zXgkIJZXeVlaMsOg7u1mK6gCfa4o9
-4Hb32Ptm1fKxLgWVdKjl9k8=
-=5Nmu
+iD8DBQFIKxBvoxKgR168RlERAmcSAJ9mZBP5qFOyvwBcatjupwNHe+ST8gCePasC
+QM7cAioSFiwqgBJ3YRkDfGc=
+=Ixgh
 -----END PGP SIGNATURE-----

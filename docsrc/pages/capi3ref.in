@@ -185,12 +185,17 @@ proc output_list {N lx} {
 hd_open_aux c3ref/intro.html
 hd_header Introduction
 hd_enable_main 0
+hd_keywords {capi3ref}
 </tcl>
 
-<p>These pages defined the C-language interface to SQLite.
-These pages are intended as a reference to what SQLite
-is suppose to do.  This is not a tutorial.  These
-pages are designed to be precise, not easy to read.</p>
+<p>These pages defined the C-language interface to SQLite.</p>
+
+<p>This is not a tutorial.  These
+pages are designed to be precise, not easy to read.
+For a tutorial introduction see
+[quickstart | SQLite In 3 Minutes Or Less] and/or
+the [cintro | Introduction To The SQLite C/C++ Interface].
+</p>
 
 <p>This version of the C-language interface reference is
 broken down into small pages for easy viewing.  The
@@ -233,10 +238,14 @@ hd_close_aux
 hd_enable_main 1
 </tcl>
 
-<p>This page defined the C-language interface to SQLite.
-This page is intended as a reference to what SQLite
-is suppose to do.  This is not a tutorial.  This
-page is designed to be precise, not easy to read.</p>
+<p>This page defined the C-language interface to SQLite.</p>
+
+<p>This is not a tutorial.  These
+pages are designed to be precise, not easy to read.
+For a tutorial introduction see
+[quickstart | SQLite In 3 Minutes Or Less] and/or
+the [cintro | Introduction To The SQLite C/C++ Interface].
+</p>
 
 <p>This page contains all C-language interface information
 in a single HTML file.  The same information is also
@@ -337,6 +346,7 @@ foreach c $content {
 }
 hd_open_aux c3ref/funclist.html
 hd_header {List Of SQLite Functions}
+hd_keywords {capi3ref_funclist}
 hd_enable_main 0
 hd_puts {<a href="intro.html"><h2>SQLite C Interface</h2></a>}
 hd_enable_main 1

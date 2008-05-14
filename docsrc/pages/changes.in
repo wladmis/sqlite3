@@ -17,7 +17,7 @@ proc chng {date desc} {
   }
   hd_puts "<h3>$date</h3>"
   hd_resolve "<p><ul>$desc</ul></p>"
-  if {[regexp {\((3\.\d+\.\d+)[ a-z]*\)} $date all vers]} {
+  if {[regexp {\((3\.\d+\.\d+)[ a-zA-Z]*\)} $date all vers]} {
     set tag [string map {. _} $vers]
     file mkdir $DEST/releaselog
     set filename releaselog/$tag.html
@@ -39,6 +39,28 @@ proc chng {date desc} {
     hd_close_aux
     hd_enable_main 1
   }
+}
+
+chng {2008 May 14 (3.5.9)} {
+<li>Added <em>experimental</em>
+    support for the [journal_mode] PRAGMA and persistent journal.</li>
+<li>[journal_mode | Journal mode PERSIST] is the default behavior in
+    [locking_mode | exclusive locking mode].</li>
+<li>Fix a performance regression on LEFT JOIN (see [ticket #3015])
+    that was mistakenly introduced in [version 3.5.8].</li>
+<li>Performance enhancement: Reengineer the internal routines used
+    to interpret and render variable-length integers.</li>
+<li>Fix a buffer-overrun problem in [sqlite3_mprintf()] which occurs
+    when a string without a zero-terminator is passed to "%.*s".</li>
+<li>Always convert IEEE floating point NaN values into NULL during
+    processing.  ([Ticket #3060])</li>
+<li>Make sure that when a connection blocks on a RESERVED lock that
+    it is able to continue after the lock is released.  ([Ticket #3093])</li>
+<li>The "configure" scripts should now automatically configure unix
+    systems for large file support.  Improved error messages for
+    when large files are encountered and large file support is disabled.</li>
+<li>Avoid cache pages leaks following disk-full or I/O errors</li>
+<li>And, many more minor bug fixes and performance enhancements....</li>
 }
 
 chng {2008 Apr 16 (3.5.8)} {

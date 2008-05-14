@@ -48,6 +48,14 @@ doc {Tcl API} {tclsqlite.html} {
   A description of the TCL interface bindings for SQLite.
 }
 
+doc {Temporary Files Used By SQLite} {tempfiles.html} {
+  SQLite can potentially use many different temporary files when
+  processing certain SQL statements.  This document describes the
+  many kinds of temporary files that SQLite uses and offers suggestions
+  for avoiding them on systems where creating a temporary file is an
+  expensive operation.
+}
+
 doc {How SQLite Implements Atomic Commit} {atomiccommit.html} {
   A description of the logic within SQLite that implements
   transactions with atomic commit, even in the face of power

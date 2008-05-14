@@ -56,6 +56,9 @@ foreach {section} [lsort -index 0 -dictionary {
   {REINDEX reindex}
   {{ALTER TABLE} altertable}
   {{ANALYZE} analyze}
+  {{aggregate functions} aggfunc}
+  {{core functions} corefunc}
+  {{date and time functions} datefunc}
 }] {
   foreach {s_title s_tag} $section {}
   if {$s_tag=="pragma.html"} {
@@ -108,13 +111,15 @@ ADD [COLUMN] <column-def>
 }
 </tcl>
 
-<p>SQLite's version of the ALTER TABLE command allows the user to 
-rename or add a new column to an existing table. It is not possible
-to remove a column from a table.
+<p>SQLite supports a limited subset of ALTER TABLE.
+The ALTER TABLE command in SQLite allows the user to rename a table
+or to add a new column to an existing table. It is not possible
+to rename a colum, remove a column, or add or remove constraints from a table.
 </p>
 
 <p>The RENAME TO syntax is used to rename the table identified by 
-<i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>. This command 
+<i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>.
+This command 
 cannot be used to move a table between attached databases, only to rename 
 a table within the same database.</p>
 
@@ -145,8 +150,7 @@ on a table with 10 million rows as it does on a table with 1 row.
 </p>
 
 <p>After ADD COLUMN has been run on a database, that database will not
-be readable by SQLite version 3.1.3 and earlier until the database
-is <a href="lang_vacuum.html">VACUUM</a>ed.</p>
+be readable by SQLite version 3.1.3 and earlier.</p>
 
 <tcl>
 ##############################################################################
@@ -174,10 +178,10 @@ then only indices associated with that one table are analyzed.</p>
 <p>The initial implementation stores all statistics in a single
 table named <b>sqlite_stat1</b>.  Future enhancements may create
 additional tables with the same name pattern except with the "1"
-changed to a different digit.  The <b>sqlite_stat1</b> table cannot
-be <a href="lang_droptable.html">DROP</a>ped,
-but all the content can be <a href="lang_delete.html">DELETE</a>d which has the
-same effect.</p>
+changed to a different digit.  The [DROP TABLE] command does
+not work on the <b>sqlite_stat1</b> table,
+but all the content can be removed using the [DELETE] command,
+which has the same effect.</p>
 
 <tcl>
 Section {ATTACH DATABASE} attach ATTACH
@@ -192,13 +196,7 @@ file to the current database connection.  If the filename contains
 punctuation characters it must be quoted.  The names 'main' and 
 'temp' refer to the main database and the database used for 
 temporary tables.  These cannot be detached.  Attached databases 
-are removed using the <a href="lang_detach.html">DETACH DATABASE</a> 
-statement.</p>
-
-<p>You can read from and write to an attached database and you
-can modify the schema of the attached database.  This is a new
-feature of SQLite version 3.0.  In SQLite 2.8, schema changes
-to attached databases were not allowed.</p>
+are removed using the [DETACH] statement.</p>
 
 <p>You cannot create a new table with the same name as a table in 
 an attached database, but you can attach a database which contains
@@ -220,15 +218,13 @@ assuming that the main database is not ":memory:".  If the main
 database is ":memory:" then 
 transactions continue to be atomic within each individual
 database file. But if the host computer crashes in the middle
-of a COMMIT where two or more database files are updated,
+of a [COMMIT] where two or more database files are updated,
 some of those files might get the changes where others
 might not.
-Atomic commit of attached databases is a new feature of SQLite version 3.0.
-In SQLite version 2.8, all commits to attached databases behaved as if
-the main database were ":memory:".
 </p>
 
-<p>There is a compile-time limit of 10 attached database files.</p>
+<p>There is a compile-time limit of [SQLITE_MAX_ATTACHED]
+attached database files.</p>
 
 <tcl>
 ###############################################################################
@@ -251,7 +247,7 @@ ROLLBACK [TRANSACTION [<name>]]
 <p>
 No changes can be made to the database except within a transaction.
 Any command that changes the database (basically, any SQL command
-other than SELECT) will automatically start a transaction if
+other than [SELECT]) will automatically start a transaction if
 one is not already in effect.  Automatically started transactions
 are committed at the conclusion of the command.
 </p>
@@ -262,7 +258,7 @@ command.  Such transactions usually persist until the next
 COMMIT or ROLLBACK command.  But a transaction will also 
 ROLLBACK if the database is closed or if an error occurs
 and the ROLLBACK conflict resolution algorithm is specified.
-See the documentation on the <a href="lang_conflict.html">ON CONFLICT</a>
+See the documentation on the [ON CONFLICT]
 clause for additional information about the ROLLBACK
 conflict resolution algorithm.
 </p>
@@ -271,7 +267,7 @@ conflict resolution algorithm.
 END TRANSACTION is an alias for COMMIT.
 </p>
 
-<p>The optional transaction name is current ignored. SQLite 
+<p>The optional transaction name is ignored. SQLite 
 does not recognize nested transactions at this time.
 However, future versions of SQLite may be enhanced to support nested
 transactions and the transaction name would then become significant.
@@ -285,39 +281,36 @@ Deferred means that no locks are acquired
 on the database until the database is first accessed.  Thus with a
 deferred transaction, the BEGIN statement itself does nothing.  Locks
 are not acquired until the first read or write operation.  The first read
-operation against a database creates a SHARED lock and the first
-write operation creates a RESERVED lock.   Because the acquisition of
+operation against a database creates a [SHARED] lock and the first
+write operation creates a [RESERVED] lock.   Because the acquisition of
 locks is deferred until they are needed, it is possible that another
 thread or process could create a separate transaction and write to
 the database after the BEGIN on the current thread has executed.
-If the transaction is immediate, then RESERVED locks
+If the transaction is immediate, then [RESERVED] locks
 are acquired on all databases as soon as the BEGIN command is
 executed, without waiting for the
 database to be used.  After a BEGIN IMMEDIATE, you are guaranteed that
 no other thread or process will be able to write to the database or
 do a BEGIN IMMEDIATE or BEGIN EXCLUSIVE.  Other processes can continue
 to read from the database, however.  An exclusive transaction causes
-EXCLUSIVE locks to be acquired on all databases.  After a BEGIN
+[EXCLUSIVE] locks to be acquired on all databases.  After a BEGIN
 EXCLUSIVE, you are guaranteed that no other thread or process will
 be able to read or write the database until the transaction is
 complete.
 </p>
 
 <p>
-A description of the meaning of SHARED, RESERVED, and EXCLUSIVE locks
-is available <a href="lockingv3.html">separately</a>.
-</p>
-
-<p>
 The COMMIT command does not actually perform a commit until all
-pending SQL commands finish.  Thus if two or more SELECT statements
+pending SQL commands finish.  Thus if one or more [SELECT] statements
 are in the middle of processing and a COMMIT is executed, the commit
-will not actually occur until all SELECT statements finish.
+will not actually occur until all [SELECT] statements have been
+[sqlite3_reset() | reset] or [sqlite3_finalize() | finalized].
 </p>
 
 <p>
-An attempt to execute COMMIT might result in an SQLITE_BUSY return code.
-This indicates that another thread or process had a read lock on the database
+An attempt to execute COMMIT might result in an [SQLITE_BUSY] return code.
+This indicates that another thread or process had a 
+[shared lock] on the database
 that prevented the database from being updated.  When COMMIT fails in this
 way, the transaction remains active and the COMMIT can be retried later
 after the reader has had a chance to clear.
@@ -330,11 +323,12 @@ transaction may or may not be rolled back automatically.  The
 errors that cause the behavior include:</p>
 
 <ul>
-<li> SQLITE_FULL: database or disk full
-<li> SQLITE_IOERR: disk I/O error
-<li> SQLITE_BUSY: database in use by another process
-<li> SQLITE_NOMEM: out or memory
-<li> SQLITE_INTERRUPT: processing interrupted by user request
+<li> [SQLITE_FULL]: database or disk full
+<li> [SQLITE_IOERR]: disk I/O error
+<li> [SQLITE_BUSY]: database in use by another process
+<li> [SQLITE_NOMEM]: out or memory
+<li> [SQLITE_INTERRUPT]: processing [sqlite3_interrupt|interrupted]
+     by application request
 </ul>
 
 <p>
@@ -400,25 +394,36 @@ ON <table-name> ( <column-name> [, <column-name>]* )
 <p>The CREATE INDEX command consists of the keywords "CREATE INDEX" followed
 by the name of the new index, the keyword "ON", the name of a previously
 created table that is to be indexed, and a parenthesized list of names of
-columns in the table that are used for the index key.
-Each column name can be followed by one of the "ASC" or "DESC" keywords
-to indicate sort order, but the sort order is ignored in the current
-implementation.  Sorting is always done in ascending order.</p>
+columns in the table that are used for the index key.</p>
+
+<p>Each column name can be followed by one of the "ASC" or "DESC" keywords
+to indicate sort order.  The sort order may or may not be ignored depending
+on the database file format.  The "legacy" file format ignores index
+sort order.  The descending index file format takes index sort order
+into account.  Only copies of SQLite newer than [version 3.3.0] 
+(released on 2006-01-10) are able to understand the newer descending
+index file format and so for compatibility with older versions of
+SQLite, the legacy file format is generated by default.  Use the
+[legacy_file_format] pragma to modify this behavior and generate
+databases that use the newer file format.  Future versions of SQLite
+may begin to generate the newer file format by default.</p>
 
 <p>The COLLATE clause following each column name defines a collating
 sequence used for text entires in that column.  The default collating
 sequence is the collating sequence defined for that column in the
-CREATE TABLE statement.  Or if no collating sequence is otherwise defined,
+[CREATE TABLE] statement.  Or if no collating sequence is otherwise defined,
 the built-in BINARY collating sequence is used.</p>
 
 <p>There are no arbitrary limits on the number of indices that can be
-attached to a single table, nor on the number of columns in an index.</p>
+attached to a single table.  The number of columns in an index is 
+limited to [SQLITE_MAX_COLUMN].</p>
 
 <p>If the UNIQUE keyword appears between CREATE and INDEX then duplicate
 index entries are not allowed.  Any attempt to insert a duplicate entry
-will result in an error.</p>
+will result in an error.  For the purposes of unique indices, all NULL values
+are considered to different from all other NULL values and are thus unique.</p>
 
-<p>The exact text
+<p>The text
 of each CREATE INDEX statement is stored in the <b>sqlite_master</b>
 or <b>sqlite_temp_master</b> table, depending on whether the table
 being indexed is temporary.  Every time the database is opened,
@@ -468,8 +473,8 @@ ON CONFLICT <conflict-algorithm>
 
 <p>A CREATE TABLE statement is basically the keywords "CREATE TABLE"
 followed by the name of a new table and a parenthesized list of column
-definitions and constraints.  The table name can be either an identifier
-or a string.  Tables names that begin with "<b>sqlite_</b>" are reserved
+definitions and constraints.  
+Tables names that begin with "<b>sqlite_</b>" are reserved
 for use by the engine.</p>
 
 <p>Each column definition is the name of the column followed by the
@@ -478,15 +483,18 @@ The datatype for the column does not restrict what data may be put
 in that column.
 See <a href="datatype3.html">Datatypes In SQLite Version 3</a> for
 additional information.
-The UNIQUE constraint causes an index to be created on the specified
-columns.  This index must contain unique keys.
-The COLLATE clause specifies what text <a href="datatype3.html#collation">
-collating function</a> to use when comparing text entries for the column.  
-The built-in BINARY collating function is used by default.
+The UNIQUE constraint causes an unique index to be created on the specified
+columns.  All NULL values are considered different from each other and from
+all other values for the purpose of determining uniqueness, hence a UNIQUE
+column may contain multiple entries with the value of NULL.
+The COLLATE clause specifies what text 
+[collating function] to use when comparing text entries for the column.  
+The built-in [BINARY] collating function is used by default.
 <p>
-The DEFAULT constraint specifies a default value to use when doing an INSERT.
-The value may be NULL, a string constant or a number. Starting with version
-3.1.0, the default value may also be one of the special case-independant
+The DEFAULT constraint specifies a default value to use when doing an [INSERT].
+The value may be NULL, a string constant or a number. Starting with
+[version 3.1.0],
+the default value may also be one of the special case-independant
 keywords CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP. If the value is
 NULL, a string constant or number, it is literally inserted into the column
 whenever an INSERT statement that does not specify a value for the column is
@@ -496,6 +504,7 @@ CURRENT_TIME, the format is HH:MM:SS. For CURRENT_DATE, YYYY-MM-DD. The format
 for CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS".
 </p>
 
+<tcl>hd_fragment rowid {INTEGER PRIMARY KEY} ROWID</tcl>
 <p>Specifying a PRIMARY KEY normally just creates a UNIQUE index
 on the corresponding columns.  However, if primary key is on a single column
 that has datatype INTEGER, then that column is used internally
@@ -505,12 +514,11 @@ SQLite ignores the datatype specification of columns and allows
 any kind of data to be put in a column regardless of its declared
 datatype.)  If a table does not have an INTEGER PRIMARY KEY column,
 then the B-Tree key will be a automatically generated integer.
-<a name="rowid"></a> The
-B-Tree key for a row can always be accessed using one of the
+The B-Tree key for a row can always be accessed using one of the
 special names "<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>".
 This is true regardless of whether or not there is an INTEGER
 PRIMARY KEY.  An INTEGER PRIMARY KEY column can also include the
-keyword AUTOINCREMENT.  The AUTOINCREMENT keyword modified the way
+keyword [AUTOINCREMENT].  The [AUTOINCREMENT] keyword modified the way
 that B-Tree keys are automatically generated.  Additional detail
 on automatic B-Tree key generation is available
 <a href="autoinc.html">separately</a>.</p>
@@ -522,7 +530,7 @@ in a PRIMARY KEY column.  We could change SQLite to conform to the
 standard (and we might do so in the future), but by the time the
 oversight was discovered, SQLite was in such wide use that we feared
 breaking legacy code if we fixed the problem.  So for now we have
-chosen to contain allowing NULLs in PRIMARY KEY columns.
+chosen to continue allowing NULLs in PRIMARY KEY columns.
 Developers should be aware, however, that we may change SQLite to
 conform to the SQL standard in future and should design new programs
 accordingly.</p>
@@ -541,32 +549,33 @@ and the TEMP keyword, unless the &lt;database-name&gt; is "temp". If no
 database name is specified, and the TEMP keyword is not present,
 the table is created in the main database.</p>
 
-<p>The optional conflict-clause following each constraint
+<p>The optional [conflict clause] following each constraint
 allows the specification of an alternative default
 constraint conflict resolution algorithm for that constraint.
 The default is abort ABORT.  Different constraints within the same
 table may have different default conflict resolution algorithms.
-If an COPY, INSERT, or UPDATE command specifies a different conflict
+If an [INSERT] or [UPDATE] statement specifies a different conflict
 resolution algorithm, then that algorithm is used in place of the
 default algorithm specified in the CREATE TABLE statement.
 See the section titled
-<a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
+[ON CONFLICT] for additional information.</p>
 
-<p>CHECK constraints are supported as of version 3.3.0.  Prior
+<p>CHECK constraints are supported as of [version 3.3.0].  Prior
 to version 3.3.0, CHECK constraints were parsed but not enforced.</p>
 
-<p>There are no arbitrary limits on the number
-of columns or on the number of constraints in a table.
-The total amount of data in a single row is limited to about
-1 megabytes in version 2.8.  In version 3.0 there is no arbitrary
-limit on the amount of data in a row.</p>
+<p>The number of columns in a table is limited by the
+[SQLITE_MAX_COLUMN] compile-time parameter.
+A single row of a table cannot store more than
+[SQLITE_MAX_LENGTH] bytes of data.
+Both of these limits can be lowered at runtime using the
+[sqlite3_limit()] C/C++ interface.</p>
 
 
 <p>The CREATE TABLE AS form defines the table to be
 the result set of a query.  The names of the table columns are
 the names of the columns in the result.</p>
 
-<p>The exact text
+<p>The text
 of each CREATE TABLE statement is stored in the <b>sqlite_master</b>
 table.  Every time the database is opened, all CREATE TABLE statements
 are read from the <b>sqlite_master</b> table and used to regenerate
@@ -625,8 +634,9 @@ database schema. Triggers are database operations (the <i>trigger-action</i>)
 that are automatically performed when a specified database event (the
 <i>database-event</i>) occurs.  </p>
 
-<p>A trigger may be specified to fire whenever a DELETE, INSERT or UPDATE of a
-particular database table occurs, or whenever an UPDATE of one or more
+<p>A trigger may be specified to fire whenever a [DELETE], [INSERT],
+or [UPDATE] of a
+particular database table occurs, or whenever an [UPDATE] of one or more
 specified columns of a table are updated.</p>
 
 <p>At this time SQLite supports only FOR EACH ROW triggers, not FOR EACH
@@ -658,27 +668,33 @@ is associated with. OLD and NEW references may only be used in triggers on
 </table>
 </p>
 
-<p>If a WHEN clause is supplied, the SQL statements specified as <i>trigger-steps</i> are only executed for rows for which the WHEN clause is true. If no WHEN clause is supplied, the SQL statements are executed for all rows.</p>
+<p>If a WHEN clause is supplied, the SQL statements specified as 
+<i>trigger-steps</i> are only executed for rows for which the WHEN
+clause is true. If no WHEN clause is supplied, the SQL statements
+are executed for all rows.</p>
 
 <p>The specified <i>trigger-time</i> determines when the <i>trigger-steps</i>
 will be executed relative to the insertion, modification or removal of the
 associated row.</p>
 
-<p>An ON CONFLICT clause may be specified as part of an UPDATE or INSERT
-<i>trigger-step</i>. However if an ON CONFLICT clause is specified as part of 
+<p>An [ON CONFLICT] clause may be specified as part of an [UPDATE] or [INSERT]
+<i>trigger-step</i>. However if an [ON CONFLICT] clause is specified as part of 
 the statement causing the trigger to fire, then this conflict handling
 policy is used instead.</p>
 
 <p>Triggers are automatically dropped when the table that they are 
 associated with is dropped.</p>
 
-<p>Triggers may be created on views, as well as ordinary tables, by specifying
-INSTEAD OF in the CREATE TRIGGER statement. If one or more ON INSERT, ON DELETE
-or ON UPDATE triggers are defined on a view, then it is not an error to execute
-an INSERT, DELETE or UPDATE statement on the view, respectively. Thereafter,
+<tcl>hd_fragment instead_of_trigger {INSTEAD OF} {INSTEAD OF trigger}</tcl>
+<p>Triggers may be created on [views], as well as ordinary tables, by
+specifying INSTEAD OF in the CREATE TRIGGER statement. 
+If one or more ON INSERT, ON DELETE
+or ON UPDATE triggers are defined on a view, then it is not an
+error to execute an INSERT, DELETE or UPDATE statement on the view, 
+respectively. Thereafter,
 executing an INSERT, DELETE or UPDATE on the view causes the associated
-  triggers to fire. The real tables underlying the view are not modified
-  (except possibly explicitly, by a trigger program).</p>
+triggers to fire. The real tables underlying the view are not modified
+(except possibly explicitly, by a trigger program).</p>
 
 <p><b>Example:</b></p>
 
@@ -707,13 +723,14 @@ UPDATE orders SET address = '1 Main St.' WHERE customer_name = 'Jack Jones';
 }</tcl>
 
 <p>Note that currently, triggers may behave oddly when created on tables
-  with INTEGER PRIMARY KEY fields. If a BEFORE trigger program modifies the 
-  INTEGER PRIMARY KEY field of a row that will be subsequently updated by the
+  with [INTEGER PRIMARY KEY] fields. If a BEFORE trigger program modifies the 
+  [INTEGER PRIMARY KEY] field of a row that will be subsequently updated by the
   statement that causes the trigger to fire, then the update may not occur. 
   The workaround is to declare the table with a PRIMARY KEY column instead
-  of an INTEGER PRIMARY KEY column.</p>
+  of an [INTEGER PRIMARY KEY] column.</p>
 
-<p>A special SQL function RAISE() may be used within a trigger-program, with the following syntax</p> 
+<p>A special SQL function RAISE() may be used within a trigger-program,
+with the following syntax</p> 
 
 <tcl>
 ###############################################################################
@@ -725,24 +742,26 @@ RAISE ( IGNORE )
 }
 </tcl>
 
-<p>When one of the first three forms is called during trigger-program execution, the specified ON CONFLICT processing is performed (either ABORT, FAIL or 
- ROLLBACK) and the current query terminates. An error code of SQLITE_CONSTRAINT is returned to the user, along with the specified error message.</p>
+<p>When one of the first three forms is called during trigger-program
+execution, the specified [ON CONFLICT] processing is performed
+(either ABORT, FAIL or ROLLBACK) and the current query terminates.
+An error code of [SQLITE_CONSTRAINT] is returned to the application,
+along with the specified error message.</p>
 
 <p>When RAISE(IGNORE) is called, the remainder of the current trigger program,
 the statement that caused the trigger program to execute and any subsequent
-    trigger programs that would of been executed are abandoned. No database
-    changes are rolled back.  If the statement that caused the trigger program
-    to execute is itself part of a trigger program, then that trigger program
-    resumes execution at the beginning of the next step.
+trigger programs that would of been executed are abandoned. No database
+changes are rolled back.  If the statement that caused the trigger program
+to execute is itself part of a trigger program, then that trigger program
+resumes execution at the beginning of the next step.
 </p>
 
-<p>Triggers are removed using the 
-<a href="lang_droptrigger.html">DROP TRIGGER</a> statement.</p>
+<p>Triggers are removed using the [DROP TRIGGER] statement.</p>
 
 
 <tcl>
 ###############################################################################
-Section {CREATE VIEW} {createview} {{CREATE VIEW}}
+Section {CREATE VIEW} {createview} {{CREATE VIEW} view views}
 
 Syntax {sql-command} {
 CREATE [TEMP | TEMPORARY] VIEW [IF NOT EXISTS] [<database-name>.] <view-name> AS <select-statement>
@@ -752,7 +771,7 @@ CREATE [TEMP | TEMPORARY] VIEW [IF NOT EXISTS] [<database-name>.] <view-name> AS
 <p>The CREATE VIEW command assigns a name to a pre-packaged 
 <a href="lang_select.html">SELECT</a>
 statement.  Once the view is created, it can be used in the FROM clause
-of another SELECT in place of a table name.
+of another [SELECT] in place of a table name.
 </p>
 
 <p>If the "TEMP" or "TEMPORARY" keyword occurs in between "CREATE"
@@ -766,12 +785,11 @@ and the TEMP keyword, unless the &lt;database-name&gt; is "temp". If no
 database name is specified, and the TEMP keyword is not present,
 the table is created in the main database.</p>
 
-<p>You cannot COPY, DELETE, INSERT or UPDATE a view.  Views are read-only 
-in SQLite.  However, in many cases you can use a 
-<a href="lang_createtrigger.html">TRIGGER</a> on the view to accomplish 
+<p>You cannot [DELETE], [INSERT], or [UPDATE] a view.  Views are read-only 
+in SQLite.  However, in many cases you can use an
+[INSTEAD OF trigger] on the view to accomplish 
 the same thing.  Views are removed 
-with the <a href="lang_dropview.html">DROP VIEW</a> 
-command.</p>
+with the [DROP VIEW] command.</p>
 
 <tcl>
 ##############################################################################
@@ -800,13 +818,13 @@ The module takes zero or more comma-separated arguments.
 The arguments can be just about any text as long as it has balanced
 parentheses.  The argument syntax is sufficiently general that the
 arguments can be made to appear as column definitions in a traditional
-<a href="lang_createtable.html">CREATE TABLE</a> statement.  
+[CREATE TABLE] statement.  
 SQLite passes the module arguments directly
 to the module without any interpretation.  It is the responsibility
 of the module implementation to parse and interpret its own arguments.</p>
 
 <p>A virtual table is destroyed using the ordinary
-<a href="lang_droptable.html">DROP TABLE</a> statement.  There is no
+[DROP TABLE] statement.  There is no
 DROP VIRTUAL TABLE statement.</p>
 
 <tcl>
@@ -827,6 +845,21 @@ the name of the table from which records are to be removed.
 If a WHERE clause is supplied, then only those rows that match
 the expression are removed.</p>
 
+<p>When the WHERE clause is omitted from a DELETE statement,
+SQLite uses an optimization to erase the entire table content
+without having to visit each row of the table individual.
+This "truncate" optimization makes the delete run much faster.
+However, it also means that the [sqlite3_changes()] interface
+and the [count_changes] PRAGMA
+will not actually return the number of deleted rows.  If you
+need to delete every row of a table and still have
+[sqlite3_changes()] and [count_changes] work correctly, then
+use WHERE clause that is always true:</p>
+
+<blockquote><pre>
+DELETE FROM sometable WHERE 1;
+</pre></blockquote>
+
 <tcl>
 ###############################################################################
 Section {DETACH DATABASE} detach DETACH
@@ -837,7 +870,7 @@ DETACH [DATABASE] <database-name>
 </tcl>
 
 <p>This statement detaches an additional database connection previously 
-attached using the <a href="lang_attach.html">ATTACH DATABASE</a> statement.  
+attached using the [ATTACH] statement.  
 It is possible to have the same database file attached multiple times using 
 different names, and detaching one connection to a file will leave the 
 others intact.</p>
@@ -855,17 +888,15 @@ DROP INDEX [IF EXISTS] [<database-name> .] <index-name>
 </tcl>
 
 <p>The DROP INDEX statement removes an index added
-with the <a href="lang_createindex.html">
-CREATE INDEX</a> statement.  The index named is completely removed from
+with the [CREATE INDEX] statement.  The index named is completely removed from
 the disk.  The only way to recover the index is to reenter the
-appropriate CREATE INDEX command.</p>
+appropriate [CREATE INDEX] command.</p>
 
 <p>The DROP INDEX statement does not reduce the size of the database 
 file in the default mode.
-Empty space in the database is retained for later INSERTs.  To 
-remove free space in the database, 
-use the <a href="lang_vacuum.html">VACUUM</a> 
-command.  If AUTOVACUUM mode is enabled for a database then space
+Empty space in the database is retained for later [INSERT] statements.  To 
+remove free space in the database, use the [VACUUM]
+command.  If [auto_vacuum] mode is enabled for a database then space
 will be freed automatically by DROP INDEX.</p>
 
 
@@ -878,18 +909,18 @@ DROP TABLE [IF EXISTS] [<database-name>.] <table-name>
 }
 </tcl>
 
-<p>The DROP TABLE statement removes a table added with the <a href=
-"lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
+<p>The DROP TABLE statement removes a table added with the
+[CREATE TABLE] statement.  The name specified is the
 table name.  It is completely removed from the database schema and the 
 disk file.  The table can not be recovered.  All indices associated 
 with the table are also deleted.</p>
 
 <p>The DROP TABLE statement does not reduce the size of the database 
 file in the default mode.  Empty space in the database is retained for
-later INSERTs.  To 
+later [INSERT] statements.  To 
 remove free space in the database, 
-use the <a href="lang_vacuum.html">VACUUM</a> 
-command.  If AUTOVACUUM mode is enabled for a database then space
+use the [VACUUM] statement.
+If [auto_vacuum] mode is enabled for a database then space
 will be freed automatically by DROP TABLE.</p>
 
 <p>The optional IF EXISTS clause suppresses the error that would normally
@@ -904,7 +935,7 @@ DROP TRIGGER [IF EXISTS] [<database-name> .] <trigger-name>
 </tcl>
 
 <p>The DROP TRIGGER statement removes a trigger created by the 
-<a href="lang_createtrigger.html">CREATE TRIGGER</a> statement.  The trigger is 
+[CREATE TRIGGER] statement.  The trigger is 
 deleted from the database schema. Note that triggers are automatically 
 dropped when the associated table is dropped.</p>
 
@@ -917,8 +948,8 @@ DROP VIEW [IF EXISTS] <view-name>
 }
 </tcl>
 
-<p>The DROP VIEW statement removes a view created by the <a href=
-"lang_createview.html">CREATE VIEW</a> statement.  The name specified is the 
+<p>The DROP VIEW statement removes a view created by the
+[CREATE VIEW] statement.  The name specified is the 
 view name.  It is removed from the database schema, but no actual data 
 in the underlying base tables is modified.</p>
 
@@ -1054,11 +1085,11 @@ Parameters can take several forms:
 </p
 
 <blockquote>
-<table class="pdf_functions">
+<table>
 <tr>
 <td align="right" valign="top"><b>?</b><i>NNN</i></td><td width="20"></td>
 <td>A question mark followed by a number <i>NNN</i> holds a spot for the
-NNN-th parameter.  NNN must be between 1 and 999.</td>
+NNN-th parameter.  NNN must be between 1 and [SQLITE_MAX_VARIABLE_NUMBER].</td>
 </tr>
 <tr>
 <td align="right" valign="top"><b>?</b></td><td width="20"></td>
@@ -1136,8 +1167,8 @@ like() SQL function.</p>
 file globbing syntax for its wildcards.  Also, GLOB is case
 sensitive, unlike LIKE.  Both GLOB and LIKE may be preceded by
 the NOT keyword to invert the sense of the test.  The infix GLOB 
-operator is implemented by calling the user function <a href="#globFunc">
-glob(<i>X</i>,<i>Y</i>)</a> and can be modified by overriding
+operator is implemented by calling the function
+[GLOB | glob(<i>X</i>,<i>Y</i>)] and can be modified by overriding
 that function.</p>
 
 <tcl>hd_fragment regexp REGEXP</tcl>
@@ -1198,7 +1229,7 @@ the SELECT yields no rows, then the value of the SELECT is NULL.</p>
 <p>A CAST expression changes the datatype of the <expr> into the
 type specified by &lt;type&gt;. 
 &lt;type&gt; can be any non-empty type name that is valid
-for the type in a column definition of a CREATE TABLE statement.</p>
+for the type in a column definition of a [CREATE TABLE] statement.</p>
 
 <p>Both simple and aggregate functions are supported.  A simple
 function can be used in any expression.  Simple functions return
@@ -1206,273 +1237,258 @@ a result immediately based on their inputs.  Aggregate functions
 may only be used in a SELECT statement.  Aggregate functions compute
 their result across all rows of the result set.</p>
 
-<a name="corefunctions"></a>
-<b>Core Functions</b>
+<tcl>
+##############################################################################
+Section {Core Functions} corefunc {}
+proc funcdef {syntax keywords desc} {
+  hd_puts {<tr>}
+  regsub -all {\s+} [string trim $syntax] {<br></br>} syntax
+  regsub -all {\(([^*)]+)\)} $syntax {(<i>\1</i>)} syntax
+  regsub -all {,} $syntax {</i>,<i>} syntax
+  regsub -all {<i>\.\.\.</i>} $syntax {...} syntax
+  hd_puts "<td valign=\"top\" align=\"right\" width=\"120\">$syntax</td>"
+  hd_puts {<td valign="top">}
+  if {[llength $keywords]==0} {
+    regexp {[a-z_]+} $syntax name
+    hd_fragment $name $name
+  } else {
+    eval hd_fragment $keywords
+  }
+  hd_resolve $desc
+  hd_puts {</td></tr>}
+}
+</tcl>
 
 <p>The core functions shown below are available by default.  Additional
 functions may be written in C and added to the database engine using
 the [sqlite3_create_function()] API.</p>
 
-<table border=0 cellpadding=10 class="pdf_functions">
-<tr>
-<td valign="top" align="right" width=120>abs(<i>X</i>)</td>
-<td valign="top">Return the absolute value of argument <i>X</i>.</td>
-</tr>
+<table border=0 cellpadding=10>
+<tcl>
+funcdef {abs(X)} {} {
+  Return the absolute value of the numeric
+  argument <i>X</i>.  Return NULL if <i>X</i> is NULL.  Return 0.0 if
+  <i>X</i> is not a numeric value.
+}
 
-<tr>
-<td valign="top" align="right">coalesce(<i>X</i>,<i>Y</i>,...)</td>
-<td valign="top">Return a copy of the first non-NULL argument.  If
-all arguments are NULL then NULL is returned.  There must be at least 
-2 arguments.</td>
-</tr>
+funcdef {coalesce(X,Y,...)} {} {
+  Return a copy of the first non-NULL argument.  If
+  all arguments are NULL then NULL is returned.  There must be at least 
+  2 arguments.
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="globFunc"></a>
-glob(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">This function is used to implement the
-"<b>X GLOB Y</b>" syntax of SQLite.  The [sqlite3_create_function()]
-interface can
-be used to override this function and thereby change the operation
-of the [GLOB] operator.</td>
-</tr>
+funcdef {glob(X,Y)} {} {
+  This function is used to implement the
+  "<b>X GLOB Y</b>" syntax of SQLite.
+  The [sqlite3_create_function()]
+  interface can
+  be used to override this function and thereby change the operation
+  of the [GLOB] operator.</td>
+}
 
-<tr>
-<td valign="top" align="right">ifnull(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return a copy of the first non-NULL argument.  If
-both arguments are NULL then NULL is returned. This behaves the same as 
-<b>coalesce()</b> above.</td>
-</tr>
+funcdef {ifnull(X,Y)} {} {
+  Return a copy of the first non-NULL argument.  If
+  both arguments are NULL then NULL is returned. This behaves the same as 
+  [coalesce()].</td>
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="hexFunc"></a>
-hex(<i>X</i>)</td>
-<td valign="top">The argument is interpreted as a BLOB.  The result
-is a hexadecimal rendering of the content of that blob.</td>
-</tr>
+funcdef {hex(X)} {} {
+  The argument is interpreted as a BLOB.  The result
+  is a hexadecimal rendering of the content of that blob.
+}
 
-<tr>
-<td valign="top" align="right">last_insert_rowid()</td>
-<td valign="top">Return the <a href="lang_createtable.html#rowid">ROWID</a>
-of the last row insert from this
-connection to the database.  This is the same value that would be returned
-from the <b>sqlite_last_insert_rowid()</b> API function.</td>
-</tr>
+funcdef {last_insert_rowid()} {} {
+  Return the [ROWID]
+  of the last row insert from this
+  connection to the database. 
+  This is the same value that would be returned
+  from the [sqlite3_last_insert_rowid()] API function.
+}
 
-<tr>
-<td valign="top" align="right">length(<i>X</i>)</td>
-<td valign="top">Return the string length of <i>X</i> in characters.
-If SQLite is configured to support UTF-8, then the number of UTF-8
-characters is returned, not the number of bytes.</td>
-</tr>
+funcdef {length(X)} {} {
+  Return the string length of <i>X</i> in characters.
+  If SQLite is configured to support UTF-8, then the number of UTF-8
+  characters is returned, not the number of bytes.
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="likeFunc"></a>
-like(<i>X</i>,<i>Y</i>)<br>
-like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
-<td valign="top">
-This function is used to implement the "<b>X LIKE Y &#91;ESCAPE Z&#93;</b>"
-syntax of SQL. If the optional ESCAPE clause is present, then the
-user-function is invoked with three arguments. Otherwise, it is
-invoked with two arguments only. The 
-<a href="c3ref/create_function.html">
-sqlite_create_function()</a> interface can be used to override this
-function and thereby change the operation of the <a
-href= "#like">LIKE</a> operator. When doing this, it may be important
-to override both the two and three argument versions of the like() 
-function. Otherwise, different code may be called to implement the
-LIKE operator depending on whether or not an ESCAPE clause was 
-specified.</td>
-</tr>
+funcdef {like(X,Y) like(X,Y,Z)} {} {
+  This function is used to implement the "<b>X LIKE Y &#91;ESCAPE Z&#93;</b>"
+  syntax of SQL. If the optional ESCAPE clause is present, then the
+  user-function is invoked with three arguments. Otherwise, it is
+  invoked with two arguments only. The 
+  [sqlite3_create_function()] interface can be used to override this
+  function and thereby change the operation of the
+  [LIKE] operator. When doing this, it may be important
+  to override both the two and three argument versions of the like() 
+  function. Otherwise, different code may be called to implement the
+  [LIKE] operator depending on whether or not an ESCAPE clause was 
+  specified.
+}
 
-<tr>
-<td valign="top" align="right">load_extension(<i>X</i>)<br>
-load_extension(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Load SQLite extensions out of the shared library
-file named <i>X</i> using the entry point <i>Y</i>.  The result
-is a NULL.  If <i>Y</i> is omitted then the default entry point
-of <b>sqlite3_extension_init</b> is used.  This function raises
-an exception if the extension fails to load or initialize correctly.
+funcdef {load_extension(X) load_extension(X,Y)} {load_extension} {
+  Load SQLite extensions out of the shared library
+  file named <i>X</i> using the entry point <i>Y</i>.  The result
+  is a NULL.  If <i>Y</i> is omitted then the default entry point
+  of <b>sqlite3_extension_init</b> is used.  This function raises
+  an exception if the extension fails to load or initialize correctly.
 
-<p>This function will fail if the extension attempts to modify
-or delete a SQL function or collating sequence.  The
-extension can add new functions or collating sequences, but cannot
-modify or delete existing functions or collating sequences because
-those functions and/or collating sequences might be used elsewhere
-in the currently running SQL statement.  To load an extension that
-changes or deletes functions or collating sequences, use the
-[sqlite3_load_extension()] C-language API.</p>
-</tr>
+  <p>This function will fail if the extension attempts to modify
+  or delete a SQL function or collating sequence.  The
+  extension can add new functions or collating sequences, but cannot
+  modify or delete existing functions or collating sequences because
+  those functions and/or collating sequences might be used elsewhere
+  in the currently running SQL statement.  To load an extension that
+  changes or deletes functions or collating sequences, use the
+  [sqlite3_load_extension()] C-language API.</p>
+}
 
-<tr>
-<td valign="top" align="right">lower(<i>X</i>)</td>
-<td valign="top">Return a copy of string <i>X</i> will all characters
-converted to lower case.  The C library <b>tolower()</b> routine is used
-for the conversion, which means that this function might not
-work correctly on UTF-8 characters.</td>
-</tr>
+funcdef {lower(X)} {} {
+  Return a copy of string <i>X</i> will all ASCII characters
+  converted to lower case.  The C library <b>tolower()</b> routine is used
+  for the conversion, which means that this function might not
+  work correctly on non-ASCII UTF-8 characters.
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="ltrimFunc"></a>
-ltrim(<i>X</i>)<br>ltrim(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return a string formed by removing any and all
-characters that appear in <i>Y</i> from the left side of <i>X</i>.
-If the <i>Y</i> argument is omitted, spaces are removed.</td>
-</tr>
+funcdef {ltrim(X) ltrim(X,Y)} {} {
+  Return a string formed by removing any and all
+  characters that appear in <i>Y</i> from the left side of <i>X</i>.
+  If the <i>Y</i> argument is omitted, spaces are removed.
+}
 
+funcdef {max(X,Y,...)} {maxCoreFunc max} {
+  Return the argument with the maximum value.  Arguments
+  may be strings in addition to numbers.  The maximum value is determined
+  by the usual sort order.  Note that <b>max()</b> is a simple function when
+  it has 2 or more arguments but converts to an aggregate function if given
+  only a single argument.
+}
 
-<tr>
-<td valign="top" align="right">max(<i>X</i>,<i>Y</i>,...)</td>
-<td valign="top">Return the argument with the maximum value.  Arguments
-may be strings in addition to numbers.  The maximum value is determined
-by the usual sort order.  Note that <b>max()</b> is a simple function when
-it has 2 or more arguments but converts to an aggregate function if given
-only a single argument.</td>
-</tr>
+funcdef {min(X,Y,...)} {minCoreFunc min} {
+  Return the argument with the minimum value.  Arguments
+  may be strings in addition to numbers.  The minimum value is determined
+  by the usual sort order.  Note that <b>min()</b> is a simple function when
+  it has 2 or more arguments but converts to an aggregate function if given
+  only a single argument.
+}
 
-<tr>
-<td valign="top" align="right">min(<i>X</i>,<i>Y</i>,...)</td>
-<td valign="top">Return the argument with the minimum value.  Arguments
-may be strings in addition to numbers.  The minimum value is determined
-by the usual sort order.  Note that <b>min()</b> is a simple function when
-it has 2 or more arguments but converts to an aggregate function if given
-only a single argument.</td>
-</tr>
+funcdef {nullif(X,Y)} {} {
+  Return the first argument if the arguments are different, 
+  otherwise return NULL.
+}
 
-<tr>
-<td valign="top" align="right">nullif(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return the first argument if the arguments are different, 
-otherwise return NULL.</td>
-</tr>
+funcdef {quote(X)} {} {
+  This routine returns a string which is the value of
+  its argument suitable for inclusion into another SQL statement.
+  Strings are surrounded by single-quotes with escapes on interior quotes
+  as needed.  BLOBs are encoded as hexadecimal literals.
+  The implementation of [VACUUM] uses this function. The function
+  is also useful when writing triggers to implement undo/redo functionality.
+}
 
-<tr>
-<td valign="top" align="right">quote(<i>X</i>)</td>
-<td valign="top">This routine returns a string which is the value of
-its argument suitable for inclusion into another SQL statement.
-Strings are surrounded by single-quotes with escapes on interior quotes
-as needed.  BLOBs are encoded as hexadecimal literals.
-The current implementation of [VACUUM] uses this function.  The function
-is also useful when writing triggers to implement undo/redo functionality.
-</td>
-</tr>
+funcdef {random()} {} {
+  Return a pseudo-random integer
+  between -9223372036854775808 and +9223372036854775807.
+}
 
-<tr>
-<td valign="top" align="right">random(*)</td>
-<td valign="top">Return a pseudo-random integer
-between -9223372036854775808 and +9223372036854775807.</td>
-</tr>
+funcdef {randomblob(N)} {} {
+  Return an <i>N</i>-byte blob containing pseudo-random bytes.
+  <i>N</i> should be a postive integer.
 
-<tr>
-<td valign="top" align="right">
-<a name="replaceFunc"></a>
-replace(<i>X</i>,<i>Y</i>,<i>Z</i>)</td>
-<td valign="top">Return a string formed by substituting string <i>Z</i> for
-every occurrance of string <i>Y</i> in string <i>X</i>.  The BINARY
-collating sequence is used for comparisons.</td>
-</tr>
+  <p>Hint:  applications can generate globally unique identifiers
+  using this function together with [hex()] and/or
+  [lower()] like this:</p>
 
-<tr>
-<td valign="top" align="right">
-<a name="randomblobFunc"></a>
-randomblob(<i>N</i>)</td>
-<td valign="top">Return a <i>N</i>-byte blob containing pseudo-random bytes.
-<i>N</i> should be a postive integer.</td>
-</tr>
+  <blockquote>
+  hex(randomblob(16))<br></br>
+  lower(hex(randomblob(16)))
+  </blockquote>
+}
 
-<tr>
-<td valign="top" align="right">round(<i>X</i>)<br>round(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Round off the number <i>X</i> to <i>Y</i> digits to the
-right of the decimal point.  If the <i>Y</i> argument is omitted, 0 is 
-assumed.</td>
-</tr>
+funcdef {replace(X,Y,Z)} {} {
+  Return a string formed by substituting string <i>Z</i> for
+  every occurrance of string <i>Y</i> in string <i>X</i>.  The [BINARY]
+  collating sequence is used for comparisons.
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="rtrimFunc"></a>
-rtrim(<i>X</i>)<br>rtrim(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return a string formed by removing any and all
-characters that appear in <i>Y</i> from the right side of <i>X</i>.
-If the <i>Y</i> argument is omitted, spaces are removed.</td>
-</tr>
+funcdef {round(X) round(X,Y)} {} {
+  Round off the number <i>X</i> to <i>Y</i> digits to the
+  right of the decimal point.  If the <i>Y</i> argument is omitted, 0 is 
+  assumed.
+}
 
-<tr>
-<td valign="top" align="right">soundex(<i>X</i>)</td>
-<td valign="top">Compute the soundex encoding of the string <i>X</i>.
-The string "?000" is returned if the argument is NULL.
-This function is omitted from SQLite by default.
-It is only available the -DSQLITE_SOUNDEX=1 compiler option
-is used when SQLite is built.</td>
-</tr>
+funcdef {rtrim(X) rtrim(X,Y)} {} {
+  Return a string formed by removing any and all
+  characters that appear in <i>Y</i> from the right side of <i>X</i>.
+  If the <i>Y</i> argument is omitted, spaces are removed.
+}
 
-<tr>
-<td valign="top" align="right">sqlite_version(*)</td>
-<td valign="top">Return the version string for the SQLite library
-that is running.  Example:  "2.8.0"</td>
-</tr>
+funcdef {soundex(X)} {} {
+  Compute the soundex encoding of the string <i>X</i>.
+  The string "?000" is returned if the argument is NULL.
+  This function is omitted from SQLite by default.
+  It is only available the -DSQLITE_SOUNDEX=1 compiler option
+  is used when SQLite is built.
+}
 
-<tr>
-<td valign="top" align="right">
-  substr(<i>X</i>,<i>Y</i>,<i>Z</i>)<br>
-  substr(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return a substring of input string <i>X</i> that begins
-with the <i>Y</i>-th character and which is <i>Z</i> characters long.
-If <i>Z</i> is omitted then all character through the end of the string
-are returned.
-The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
-the the first character of the substring is found by counting from the
-right rather than the left.  If <i>X</i> is string
-then characters indices refer to actual UTF-8 characters.  If
-<i>X</i> is a BLOB then the indices refer to bytes.</td>
-</tr>
+funcdef {sqlite_version(X)} {sqlite_version} {
+  Return the version string for the SQLite library
+  that is running.  Example:  "3.5.9"
+}
 
-<tr>
-<td valign="top" align="right">
-<a name="trimFunc"></a>
-trim(<i>X</i>)<br>trim(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">Return a string formed by removing any and all
-characters that appear in <i>Y</i> from both ends of <i>X</i>.
-If the <i>Y</i> argument is omitted, spaces are removed.</td>
-</tr>
+funcdef {substr(X,Y,Z) substr(X,Y)} {} {
+  Return a substring of input string <i>X</i> that begins
+  with the <i>Y</i>-th character and which is <i>Z</i> characters long.
+  If <i>Z</i> is omitted then all character through the end of the string
+  are returned.
+  The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
+  the the first character of the substring is found by counting from the
+  right rather than the left.  If <i>X</i> is string
+  then characters indices refer to actual UTF-8 characters.  If
+  <i>X</i> is a BLOB then the indices refer to bytes.
+}
 
+funcdef {trim(X) trim(X,Y)} {} {
+  Return a string formed by removing any and all
+  characters that appear in <i>Y</i> from both ends of <i>X</i>.
+  If the <i>Y</i> argument is omitted, spaces are removed.
+}
 
-<tr>
-<td valign="top" align="right">typeof(<i>X</i>)</td>
-<td valign="top">Return the type of the expression <i>X</i>.  The only 
-return values are "null", "integer", "real", "text", and "blob".
-SQLite's type handling is 
-explained in <a href="datatype3.html">Datatypes in SQLite Version 3</a>.</td>
-</tr>
+funcdef {typeof(X)} {} {
+  Return the type of the expression <i>X</i>.  The only 
+  return values are "null", "integer", "real", "text", and "blob".
+  SQLite's type handling is 
+  explained in <a href="datatype3.html">Datatypes in SQLite Version 3</a>.
+}
 
-<tr>
-<td valign="top" align="right">upper(<i>X</i>)</td>
-<td valign="top">Return a copy of input string <i>X</i> converted to all
-upper-case letters.  The implementation of this function uses the C library
-routine <b>toupper()</b> which means it may not work correctly on 
-UTF-8 strings.</td>
-</tr>
+funcdef {upper(X)} {} {
+  Return a copy of input string <i>X</i> converted to all
+  upper-case letters.  The implementation of this function uses the C library
+  routine <b>toupper()</b> which means it may not work correctly on 
+  non-ASCII UTF-8 strings.
+}
 
-<tr>
-<td valign="top" align="right">zeroblob(<i>N</i>)</td>
-<td valign="top"><a name="zeroblob"></a>
-Return a BLOB consisting of N bytes of 0x00.  SQLite
-manages these zeroblobs very efficiently.  Zeroblobs can be used to
-reserve space for a BLOB that is later written using 
-[sqlite3_blob_open() | incremental BLOB I/O].</td>
-</tr>
-
+funcdef {zeroblob(N)} {} {
+  Return a BLOB consisting of N bytes of 0x00.  SQLite
+  manages these zeroblobs very efficiently.  Zeroblobs can be used to
+  reserve space for a BLOB that is later written using 
+  [sqlite3_blob_open() | incremental BLOB I/O].
+}
+</tcl>
 </table>
 
-<b>Date And Time Functions</b>
+<tcl>
+##############################################################################
+Section {Date And Time Functions} datefunc {}
+</tcl>
 
 <p>Date and time functions are documented in the 
 <a href="http://www.sqlite.org/cvstrac/wiki?p=DateAndTimeFunctions">
 SQLite Wiki</a>.</p>
 
-<a name="aggregatefunctions"></a>
-<b>Aggregate Functions</b>
+<tcl>
+##############################################################################
+Section {Aggregate Functions} aggfunc {}
+</tcl>
 
 <p>
 The aggregate functions shown below are available by default.  Additional
@@ -1489,68 +1505,64 @@ of distinct values of column X instead of the total number of non-null
 values in column X.
 </p>
 
-<table border=0 cellpadding=10 class="pdf_functions">
-<tr>
-<td valign="top" align="right" width=120>avg(<i>X</i>)</td>
-<td valign="top">Return the average value of all non-NULL <i>X</i> within a
-group.  String and BLOB values that do not look like numbers are
-interpreted as 0.
-The result of avg() is always a floating point value even if all
-inputs are integers. </p></td>
-</tr>
+<table border=0 cellpadding=10>
+<tcl>
+funcdef {avg(X)} {} {
+  Return the average value of all non-NULL <i>X</i> within a
+  group.  String and BLOB values that do not look like numbers are
+  interpreted as 0.
+  The result of avg() is always a floating point value even if all
+  inputs are integers.
+}
 
-<tr>
-<td valign="top" align="right">count(<i>X</i>)<br>count(*)</td>
-<td valign="top">The first form return a count of the number of times
-that <i>X</i> is not NULL in a group.  The second form (with no argument)
-returns the total number of rows in the group.</td>
-</tr>
+funcdef {count(X) count(*)} {} {
+  The first form return a count of the number of times
+  that <i>X</i> is not NULL in a group.  The second form (with no argument)
+  returns the total number of rows in the group.
+}
 
-<tr>
-<td valign="top" align="right">group_concat(<i>X</i>)<br>
-group_concat(<i>X</i>,<i>Y</i>)</td>
-<td valign="top">The result is a string which is the concatenation of
-all non-NULL values of <i>X</i>.  If parameter <i>Y</i> is the separator
-between instances of <i>X</i>.  A comma (",") is used as the separator
-if <i>Y</i> is omitted.</td>
-</tr>
+funcdef {group_concat(X) group_concat(X,Y)} {} {
+  The result is a string which is the concatenation of
+  all non-NULL values of <i>X</i>.  If parameter <i>Y</i> is the separator
+  between instances of <i>X</i>.  A comma (",") is used as the separator
+  if <i>Y</i> is omitted.
+}
 
-<tr>
-<td valign="top" align="right">max(<i>X</i>)</td>
-<td valign="top">Return the maximum value of all values in the group.
-The usual sort order is used to determine the maximum.</td>
-</tr>
+funcdef {max(X)} {maxAggFunc agg_max} {
+  Return the maximum value of all values in the group.
+  The usual sort order is used to determine the maximum.
+}
 
-<tr>
-<td valign="top" align="right">min(<i>X</i>)</td>
-<td valign="top">Return the minimum non-NULL value of all values in the group.
-The usual sort order is used to determine the minimum.  NULL is only returned
-if all values in the group are NULL.</td>
-</tr>
+funcdef {min(X)} {minAggFunc agg_min} {
+  Return the minimum non-NULL value of all values in the group.
+  The usual sort order is used to determine the minimum.  
+  NULL is only returned
+  if all values in the group are NULL.
+}
 
-<tr>
-<td valign="top" align="right">sum(<i>X</i>)<br>total(<i>X</i>)</td>
-<td valign="top">Return the numeric sum of all non-NULL values in the group.
-   If there are no non-NULL input rows then sum() returns
-   NULL but total() returns 0.0.
-   NULL is not normally a helpful result for the sum of no rows
-   but the SQL standard requires it and most other
-   SQL database engines implement sum() that way so SQLite does it in the
-   same way in order to be compatible.   The non-standard total() function
-   is provided as a convenient way to work around this design problem
-   in the SQL language.</p>
+funcdef {sum(X) total(X)} {sumFunc sum total} {
+  Return the numeric sum of all non-NULL values in the group.
+  If there are no non-NULL input rows then sum() returns
+  NULL but total() returns 0.0.
+  NULL is not normally a helpful result for the sum of no rows
+  but the SQL standard requires it and most other
+  SQL database engines implement sum() that way so SQLite does it in the
+  same way in order to be compatible.   The non-standard total() function
+  is provided as a convenient way to work around this design problem
+  in the SQL language.</p>
 
-   <p>The result of total() is always a floating point value.
-   The result of sum() is an integer value if all non-NULL inputs are integers.
-   If any input to sum() is neither an integer or a NULL
-   then sum() returns a floating point value
-   which might be an approximation to the true sum.</p>
+  <p>The result of total() is always a floating point value.
+  The result of sum() is an integer value if all non-NULL inputs are integers.
+  If any input to sum() is neither an integer or a NULL
+  then sum() returns a floating point value
+  which might be an approximation to the true sum.</p>
 
-   <p>Sum() will throw an "integer overflow" exception if all inputs
-   are integers or NULL
-   and an integer overflow occurs at any point during the computation.
-   Total() never throws an exception.</p>
-</tr>
+  <p>Sum() will throw an "integer overflow" exception if all inputs
+  are integers or NULL
+  and an integer overflow occurs at any point during the computation.
+  Total() never throws an exception.
+}
+</tcl>
 </table>
 
 <tcl>
@@ -1584,7 +1596,7 @@ or compound.</p>
 <p>The optional conflict-clause allows the specification of an alternative
 constraint conflict resolution algorithm to use during this one command.
 See the section titled
-<a href="lang_conflict.html">ON CONFLICT</a> for additional information.
+[ON CONFLICT] for additional information.
 For compatibility with MySQL, the parser allows the use of the
 single keyword <a href="lang_replace.html">REPLACE</a> as an 
 alias for "INSERT OR REPLACE".
@@ -1592,7 +1604,7 @@ alias for "INSERT OR REPLACE".
 
 <tcl>
 ##############################################################################
-Section {ON CONFLICT clause} conflict {{conflict clause}}
+Section {ON CONFLICT clause} conflict {{conflict clause} {ON CONFLICT}}
 
 Syntax {conflict-clause} {
 ON CONFLICT <conflict-algorithm>
@@ -1869,7 +1881,7 @@ A WHERE clause can be used to restrict which rows are updated.</p>
 <p>The optional conflict-clause allows the specification of an alternative
 constraint conflict resolution algorithm to use during this one command.
 See the section titled
-<a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
+[ON CONFLICT] for additional information.</p>
 
 
 <tcl>
@@ -1881,25 +1893,13 @@ VACUUM
 }
 </tcl>
 
-<p>The VACUUM command is an SQLite extension modeled after a similar
-command found in PostgreSQL.  If VACUUM is invoked with the name of a
-table or index then it is suppose to clean up the named table or index.
-In version 1.0 of SQLite, the VACUUM command would invoke 
-<b>gdbm_reorganize()</b> to clean up the backend database file.</p>
-
-<p>
-VACUUM became a no-op when the GDBM backend was removed from
-SQLITE in version 2.0.0.
-VACUUM was reimplemented in version 2.8.1.
-</p>
-
 <p>When an object (table, index, or trigger) is dropped from the 
 database, it leaves behind empty space.  This makes the database 
 file larger than it needs to be, but can speed up inserts.  In time 
 inserts and deletes can leave the database file structure fragmented, 
-which slows down disk access to the database contents.
+which slows down disk access to the database contents.</p>
 
-The VACUUM command cleans
+<p>The VACUUM command cleans
 the main database by copying its contents to a temporary database file and 
 reloading the original database file from the copy.  This eliminates 
 free pages,  aligns table data to be contiguous, and otherwise cleans 
@@ -1917,10 +1917,10 @@ The VACUUM command is a no-op for in-memory databases.</p>
 
 <p>As of SQLite version 3.1, an alternative to using the VACUUM command
 is auto-vacuum mode, enabled using the 
-<a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a>.
-When auto-vacuum is enabled for a database, large deletes cause
-the size of the database file to shrink.  However, auto-vacuum
-also causes excess fragmentation of the database file.  And auto-vacuum
+[auto_vacuum] pragma.  When [auto_vacuum] is enabled for a database, 
+large deletes cause
+the size of the database file to shrink.  However, [auto_vacuum]
+also causes excess fragmentation of the database file.  And [auto_vacuum]
 does not compact partially filled pages of the database as VACUUM
 does.
 </p>
@@ -2066,7 +2066,7 @@ are three ways of quoting keywords in SQLite:</p>
 
 <p>
 <blockquote>
-<table class="pdf_functions">
+<table>
 <tr>	<td valign="top"><b>'keyword'</b></td><td width="20"></td>
 	<td>A keyword in single quotes is interpreted as a literal string
         if it occurs in a context where a string literal is allowed, otherwise

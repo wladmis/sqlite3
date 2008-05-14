@@ -1,5 +1,6 @@
 <title>SQLite Autoincrement</title>
 <h1>SQLite Autoincrement</h1>
+<tcl>hd_keywords AUTOINCREMENT</tcl>
 
 <p>
 In SQLite, every row of every table has an integer ROWID.

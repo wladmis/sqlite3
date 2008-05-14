@@ -43,14 +43,20 @@ attackers who inject malicious SQL statements.
 </p>
 
 <tcl>
-proc limititem {title text} {
+proc limititem {title keywords text} {
+  if {[llength $keywords]} {
+    set frag [string tolower [lindex $keywords 0]]
+    regsub {sqlite_} $frag {} frag
+    hd_fragment $frag
+    foreach kw $keywords {hd_keywords $kw}
+  }
   hd_resolve "<li><p><b>$title</b></p>\n$text</li>"
 }
 hd_puts {
 <ol>
 }
 
-limititem {Maximum length of a string or BLOB} {
+limititem {Maximum length of a string or BLOB} SQLITE_MAX_LENGTH {
 <p>
 The maximum number of bytes in a string or BLOB in SQLite is defined
 by the preprocessor macro SQLITE_MAX_LENGTH.  The default value
@@ -80,7 +86,7 @@ number of bytes in a row.
 </p>
 }
 
-limititem {Maximum Number Of Columns} {
+limititem {Maximum Number Of Columns} SQLITE_MAX_COLUMN {
 <p>
 The SQLITE_MAX_COLUMN compile-time parameter is used to set an upper
 bound on:
@@ -115,7 +121,7 @@ columns, you may find that [sqlite3_prepare_v2()]
 runs slowly.
 }
 
-limititem {Maximum Length Of An SQL Statement} {
+limititem {Maximum Length Of An SQL Statement} SQLITE_MAX_SQL_LENGTH {
 <p>
 The maximum number of bytes in the text of an SQL statement is 
 limited to SQLITE_MAX_SQL_LENGTH which defaults to 1000000.  You
@@ -144,7 +150,7 @@ string does not need to be parsed or copied as much.
 </p>
 }
 
-limititem {Maximum Number Of Tables In A Join} {
+limititem {Maximum Number Of Tables In A Join} {} {
 <p>
 SQLite does not support joins containing more than 64 tables.
 This limit arises from the fact that the SQLite code generator
@@ -152,7 +158,7 @@ uses bitmaps with one bit per join-table in the query optimizer.
 </p>
 }
 
-limititem {Maximum Depth Of An Expression Tree} {
+limititem {Maximum Depth Of An Expression Tree} SQLITE_MAX_EXPR_DEPTH {
 <p>
 SQLite parses expressions into a tree for processing.  During
 code generation, SQLite walks this tree recursively.  The depth
@@ -167,7 +173,7 @@ current implementation has a default value of 1000.
 </p>
 }
 
-limititem {Maximum Number Of Arguments On A Function} {
+limititem {Maximum Number Of Arguments On A Function} SQLITE_MAX_FUNCTION_ARG {
 <p>
 The SQLITE_MAX_FUNCTION_ARG parameter determines the maximum number
 of parameters that can be passed to an SQL function.  The default value
@@ -180,7 +186,8 @@ not do useful work,
 and so for that reason we have set this parameter relatively low.
 }
 
-limititem {Maximum Number Of Terms In A Compound SELECT Statement} {
+limititem {Maximum Number Of Terms In A Compound SELECT Statement} \
+          SQLITE_MAX_COMPOUND_SELECT {
 <p>
 A compound SELECT statement is two or more SELECT statements connected
 by operators UNION, UNION ALL, EXCEPT, or INTERSECT.  We call each
@@ -197,7 +204,8 @@ never see the number of terms in a compound select exceed single digits.
 </p>
 }
 
-limititem {Maximum Length Of A LIKE Or GLOB Pattern} {
+limititem {Maximum Length Of A LIKE Or GLOB Pattern} \
+          SQLITE_MAX_LIKE_PATTERN_LENGTH {
 <p>
 The pattern matching algorithm used in the default LIKE and GLOB
 implementation of SQLite can exhibit O(N&sup2) performance (where
@@ -216,7 +224,8 @@ external users are able to generate arbitrary patterns.
 </p>
 }
 
-limititem {Maximum Number Of Host Parameters In A Single SQL Statement} {
+limititem {Maximum Number Of Host Parameters In A Single SQL Statement} \
+          SQLITE_MAX_VARIABLE_NUMBER {
 <p>
 A host parameter is a place-holder in an SQL statement that is filled
 in using one of the
@@ -239,7 +248,7 @@ This setting defaults to 999.
 </p>
 }
 
-limititem {Maximum Number Of Attached Databases} {
+limititem {Maximum Number Of Attached Databases} SQLITE_MAX_ATTACHED {
 <p>
 The <a href="lang_attach.html">ATTACH</a> statement is an SQLite extension
 that allows two or more databases to be associated to the same database
@@ -252,7 +261,7 @@ attached databases cannot be increased above 30 on a 32-bit machine
 or 62 on a 64-bit machine.
 }
 
-limititem {Maximum Database Page Size} {
+limititem {Maximum Database Page Size} SQLITE_MAX_PAGE_SIZE {
 <p>
 An SQLite database file is organized as pages.  The size of each
 page is a power of 2 between 512 and SQLITE_MAX_PAGE_SIZE.
@@ -271,7 +280,8 @@ longer necessary on embedded devices.
 </p>
 }
 
-limititem {Maximum Number Of Pages In A Database File} {
+limititem {Maximum Number Of Pages In A Database File} \
+          SQLITE_MAX_PAGE_COUNT {
 <p>
 SQLite is able to limit the size of a database file to prevent
 the database file from growing too large and consuming too much

@@ -33,6 +33,7 @@ proc HEADING {n name {tag {}}} {
   hd_puts "<h$n>$num $name</h$n>"
 }
 
+hd_keywords 34to35
 HEADING 0 {Moving From SQLite 3.4.2 to 3.5.0}
 
 PARAGRAPH {
