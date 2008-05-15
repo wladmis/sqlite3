@@ -4614,6 +4614,10 @@ int sqlite3PagerCommitPhaseOne(
 ){
   int rc = SQLITE_OK;
 
+  if( pPager->errCode ){
+    return pPager->errCode;
+  }
+
   /* If no changes have been made, we can leave the transaction early.
   */
   if( pPager->dbModified==0 &&
