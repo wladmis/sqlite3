@@ -144,6 +144,14 @@ foreach locking_mode {normal exclusive} {
   }
 }
 
+# Make sure this test script doesn't leave any files open.
+#
+do_test ioerr5-2.X {
+  catch { db close }
+  catch { db2 close }
+  set sqlite_open_file_count
+} 0
+
 sqlite3_enable_shared_cache $::enable_shared_cache
 sqlite3_soft_heap_limit $::soft_limit
 
