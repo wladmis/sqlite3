@@ -10,6 +10,8 @@
 **
 *************************************************************************
 **
+** $Id$
+**
 ** OVERVIEW:
 **
 **   This file contains some example code demonstrating how the SQLite 

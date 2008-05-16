@@ -11,6 +11,8 @@
 ******************************************************************************
 **
 ** This file contains code that is specific to Unix systems.
+**
+** $Id$
 */
 #include "sqliteInt.h"
 #if OS_UNIX              /* This file is used on unix only */

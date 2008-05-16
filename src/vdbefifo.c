@@ -11,6 +11,8 @@
 *************************************************************************
 ** This file implements a FIFO queue of rowids used for processing
 ** UPDATE and DELETE statements.
+**
+** $Id$
 */
 #include "sqliteInt.h"
 #include "vdbeInt.h"

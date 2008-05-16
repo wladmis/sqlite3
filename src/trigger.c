@@ -8,7 +8,9 @@
 **    May you share freely, never taking more than you give.
 **
 *************************************************************************
-*
+**
+**
+** $Id$
 */
 #include "sqliteInt.h"
 

@@ -10,6 +10,8 @@
 **
 ******************************************************************************
 **
+** $Id$
+**
 ** This file contains demonstration code.  Nothing in this file gets compiled
 ** or linked into the SQLite library unless you use a non-standard option:
 **

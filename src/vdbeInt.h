@@ -14,6 +14,8 @@
 ** source code file "vdbe.c".  When that file became too big (over
 ** 6000 lines long) it was split up into several smaller files and
 ** this header information was factored out.
+**
+** $Id$
 */
 #ifndef _VDBEINT_H_
 #define _VDBEINT_H_

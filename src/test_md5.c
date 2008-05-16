@@ -11,6 +11,8 @@
 ** them.  Compute a second MD5-checksum of the file and verify that the
 ** two checksums are the same.  Such is the original use of this code.
 ** New uses may have been added since this comment was written.
+**
+** $Id$
 */
 /*
  * This code implements the MD5 message-digest algorithm.

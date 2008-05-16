@@ -10,6 +10,8 @@
 **
 *************************************************************************
 **
+** $Id$
+**
 ** This file contains an example implementation of an asynchronous IO 
 ** backend for SQLite.
 **

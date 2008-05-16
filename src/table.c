@@ -15,6 +15,8 @@
 **
 ** These routines are in a separate files so that they will not be linked
 ** if they are not used.
+**
+** $Id$
 */
 #include "sqliteInt.h"
 #include <stdlib.h>

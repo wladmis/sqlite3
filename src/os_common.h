@@ -16,6 +16,8 @@
 **
 ** This file should be #included by the os_*.c files only.  It is not a
 ** general purpose header file.
+**
+** $Id$
 */
 
 /*
