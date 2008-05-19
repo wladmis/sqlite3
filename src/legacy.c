@@ -102,6 +102,9 @@ int sqlite3_exec(
         }
         if( xCallback(pArg, nCol, azVals, azCols) ){
           rc = SQLITE_ABORT;
+          sqlite3_finalize(pStmt);
+          pStmt = 0;
+          sqlite3Error(db, SQLITE_ABORT, 0);
           goto exec_out;
         }
       }
