@@ -366,6 +366,7 @@ int sqlite3Atoi64(const char *zNum, i64 *pNum){
   i64 v = 0;
   int neg;
   int i, c;
+  const char *zStart;
   while( isspace(*(u8*)zNum) ) zNum++;
   if( *zNum=='-' ){
     neg = 1;
@@ -376,12 +377,13 @@ int sqlite3Atoi64(const char *zNum, i64 *pNum){
   }else{
     neg = 0;
   }
+  zStart = zNum;
   while( zNum[0]=='0' ){ zNum++; } /* Skip over leading zeros. Ticket #2454 */
   for(i=0; (c=zNum[i])>='0' && c<='9'; i++){
     v = v*10 + c - '0';
   }
   *pNum = neg ? -v : v;
-  if( c!=0 || i==0 || i>19 ){
+  if( c!=0 || (i==0 && zStart==zNum) || i>19 ){
     /* zNum is empty or contains non-numeric text or is longer
     ** than 19 digits (thus guaranting that it is too large) */
     return 0;
