@@ -649,6 +649,7 @@ static int os2Open(
   os2File *pFile = (os2File*)id;
   APIRET rc = NO_ERROR;
   ULONG ulAction;
+  char *zNameCp;
 
   memset( pFile, 0, sizeof(*pFile) );
 
@@ -700,7 +701,7 @@ static int os2Open(
   ulOpenMode |= OPEN_FLAGS_FAIL_ON_ERROR;
   ulOpenMode |= OPEN_FLAGS_NOINHERIT;
 
-  char *zNameCp = convertUtf8PathToCp( zName );
+  zNameCp = convertUtf8PathToCp( zName );
   rc = DosOpen( (PSZ)zNameCp,
                 &h,
                 &ulAction,
