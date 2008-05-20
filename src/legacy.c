@@ -45,9 +45,10 @@ int sqlite3_exec(
   int nRetry = 0;
   int nCallback;
 
-  if( zSql==0 ) return SQLITE_OK;
+  if( zSql==0 ) zSql = "";
 
   sqlite3_mutex_enter(db->mutex);
+  sqlite3Error(db, SQLITE_OK, 0);
   while( (rc==SQLITE_OK || (rc==SQLITE_SCHEMA && (++nRetry)<2)) && zSql[0] ){
     int nCol;
     char **azVals = 0;
