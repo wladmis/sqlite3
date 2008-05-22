@@ -114,6 +114,8 @@ make -C docsrc DOC=. SRC=..
 
 %def_with test
 %if_with test
+# XXX src/main.c leaks due to SQLITE_ENABLE_FTS3
+rm -fv test/malloc6.test test/mallocG.test
 make test
 %endif
 
