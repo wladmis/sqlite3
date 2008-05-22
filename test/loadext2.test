@@ -140,4 +140,5 @@ do_test loadext2-1.15 {
 
 
 sqlite3_reset_auto_extension
+autoinstall_test_functions
 finish_test

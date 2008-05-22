@@ -596,6 +596,13 @@ int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
     }
     (void)sqlite3SafetyOn(db);
     if( rc==SQLITE_OK ){
+      int i;
+      for(i=0; i<db->nVTrans; i++){
+        if( db->aVTrans[i]==pTab->pVtab ){
+          db->aVTrans[i] = db->aVTrans[--db->nVTrans];
+          break;
+        }
+      }
       pTab->pVtab = 0;
     }
   }

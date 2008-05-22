@@ -38,7 +38,6 @@ sqlite3_memdebug_dump $testdir
 puts "Memory dump to file memdump.txt..."
 sqlite3_memdebug_dump memdump.txt
 
-
 ifcapable bloblit&&subquery {
   do_malloc_test 1 -tclprep {
     db close

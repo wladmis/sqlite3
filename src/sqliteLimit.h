@@ -49,18 +49,24 @@
 
 /*
 ** The maximum length of a single SQL statement in bytes.
-** A value of zero means there is no limit.
+**
+** It used to be the case that setting this value to zero would
+** turn the limit off.  That is no longer true.  It is not possible
+** to turn this limit off.
 */
 #ifndef SQLITE_MAX_SQL_LENGTH
-# define SQLITE_MAX_SQL_LENGTH 0
+# define SQLITE_MAX_SQL_LENGTH 1000000000
 #endif
 
 /*
 ** The maximum depth of an expression tree. This is limited to 
 ** some extent by SQLITE_MAX_SQL_LENGTH. But sometime you might 
 ** want to place more severe limits on the complexity of an 
-** expression. A value of 0 (the default) means do not enforce
-** any limitation on expression tree depth.
+** expression.
+**
+** A value of 0 used to mean that the limit was not enforced.
+** But that is no longer true.  The limit is now strictly enforced
+** at all times.
 */
 #ifndef SQLITE_MAX_EXPR_DEPTH
 # define SQLITE_MAX_EXPR_DEPTH 1000
@@ -105,11 +111,9 @@
 #endif
 
 /*
-** The maximum number of attached databases.  This must be at least 2
-** in order to support the main database file (0) and the file used to
-** hold temporary tables (1).  And it must be less than 32 because
-** we use a bitmask of databases with a u32 in places (for example
-** the Parse.cookieMask field).
+** The maximum number of attached databases.  This must be between 0
+** and 30.  The upper bound on 30 is because a 32-bit integer bitmap
+** is used internally to track attached databases.
 */
 #ifndef SQLITE_MAX_ATTACHED
 # define SQLITE_MAX_ATTACHED 10

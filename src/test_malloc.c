@@ -437,6 +437,7 @@ static int test_memdebug_fail(
     }
   }
   
+  sqlite3_test_control(-12345); /* Just to stress the test_control interface */
   nBenign = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES,
                                  SQLITE_FAULTINJECTOR_MALLOC);
   nFail = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_FAILURES,
@@ -463,18 +464,14 @@ static int test_memdebug_pending(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
+  int nPending;
   if( objc!=1 ){
     Tcl_WrongNumArgs(interp, 1, objv, "");
     return TCL_ERROR;
   }
-
-#if defined(SQLITE_MEMDEBUG) || defined(SQLITE_POW2_MEMORY_SIZE)
-  {
-    int nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
-                                        SQLITE_FAULTINJECTOR_MALLOC);
-    Tcl_SetObjResult(interp, Tcl_NewIntObj(nPending));
-  }
-#endif
+  nPending = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_PENDING,
+                                  SQLITE_FAULTINJECTOR_MALLOC);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(nPending));
   return TCL_OK;
 }
 
@@ -510,6 +507,147 @@ static int test_memdebug_settitle(
   return TCL_OK;
 }
 
+#define MALLOC_LOG_FRAMES 10 
+static Tcl_HashTable aMallocLog;
+static int mallocLogEnabled = 0;
+
+typedef struct MallocLog MallocLog;
+struct MallocLog {
+  int nCall;
+  int nByte;
+};
+
+static void test_memdebug_callback(int nByte, int nFrame, void **aFrame){
+  if( mallocLogEnabled ){
+    MallocLog *pLog;
+    Tcl_HashEntry *pEntry;
+    int isNew;
+
+    int aKey[MALLOC_LOG_FRAMES];
+    int nKey = sizeof(int)*MALLOC_LOG_FRAMES;
+
+    memset(aKey, 0, nKey);
+    if( (sizeof(void*)*nFrame)<nKey ){
+      nKey = nFrame*sizeof(void*);
+    }
+    memcpy(aKey, aFrame, nKey);
+
+    pEntry = Tcl_CreateHashEntry(&aMallocLog, (const char *)aKey, &isNew);
+    if( isNew ){
+      pLog = (MallocLog *)Tcl_Alloc(sizeof(MallocLog));
+      memset(pLog, 0, sizeof(MallocLog));
+      Tcl_SetHashValue(pEntry, (ClientData)pLog);
+    }else{
+      pLog = (MallocLog *)Tcl_GetHashValue(pEntry);
+    }
+
+    pLog->nCall++;
+    pLog->nByte += nByte;
+  }
+}
+
+static void test_memdebug_log_clear(){
+  Tcl_HashSearch search;
+  Tcl_HashEntry *pEntry;
+  for(
+    pEntry=Tcl_FirstHashEntry(&aMallocLog, &search);
+    pEntry;
+    pEntry=Tcl_NextHashEntry(&search)
+  ){
+    MallocLog *pLog = (MallocLog *)Tcl_GetHashValue(pEntry);
+    Tcl_Free((char *)pLog);
+  }
+  Tcl_DeleteHashTable(&aMallocLog);
+  Tcl_InitHashTable(&aMallocLog, MALLOC_LOG_FRAMES);
+}
+
+static int test_memdebug_log(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  static int isInit = 0;
+  int iSub;
+
+  static const char *MB_strs[] = { "start", "stop", "dump", "clear", "sync" };
+  enum MB_enum { 
+      MB_LOG_START, MB_LOG_STOP, MB_LOG_DUMP, MB_LOG_CLEAR, MB_LOG_SYNC 
+  };
+
+  if( !isInit ){
+#ifdef SQLITE_MEMDEBUG
+    extern void sqlite3MemdebugBacktraceCallback(
+        void (*xBacktrace)(int, int, void **));
+    sqlite3MemdebugBacktraceCallback(test_memdebug_callback);
+#endif
+    Tcl_InitHashTable(&aMallocLog, MALLOC_LOG_FRAMES);
+    isInit = 1;
+  }
+
+  if( objc<2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "SUB-COMMAND ...");
+  }
+  if( Tcl_GetIndexFromObj(interp, objv[1], MB_strs, "sub-command", 0, &iSub) ){
+    return TCL_ERROR;
+  }
+
+  switch( (enum MB_enum)iSub ){
+    case MB_LOG_START:
+      mallocLogEnabled = 1;
+      break;
+    case MB_LOG_STOP:
+      mallocLogEnabled = 0;
+      break;
+    case MB_LOG_DUMP: {
+      Tcl_HashSearch search;
+      Tcl_HashEntry *pEntry;
+      Tcl_Obj *pRet = Tcl_NewObj();
+
+      assert(sizeof(int)==sizeof(void*));
+
+      for(
+        pEntry=Tcl_FirstHashEntry(&aMallocLog, &search);
+        pEntry;
+        pEntry=Tcl_NextHashEntry(&search)
+      ){
+        Tcl_Obj *apElem[MALLOC_LOG_FRAMES+2];
+        MallocLog *pLog = (MallocLog *)Tcl_GetHashValue(pEntry);
+        int *aKey = (int *)Tcl_GetHashKey(&aMallocLog, pEntry);
+        int ii;
+  
+        apElem[0] = Tcl_NewIntObj(pLog->nCall);
+        apElem[1] = Tcl_NewIntObj(pLog->nByte);
+        for(ii=0; ii<MALLOC_LOG_FRAMES; ii++){
+          apElem[ii+2] = Tcl_NewIntObj(aKey[ii]);
+        }
+
+        Tcl_ListObjAppendElement(interp, pRet,
+            Tcl_NewListObj(MALLOC_LOG_FRAMES+2, apElem)
+        );
+      }
+
+      Tcl_SetObjResult(interp, pRet);
+      break;
+    }
+    case MB_LOG_CLEAR: {
+      test_memdebug_log_clear();
+      break;
+    }
+
+    case MB_LOG_SYNC: {
+#ifdef SQLITE_MEMDEBUG
+      extern void sqlite3MemdebugSync();
+      test_memdebug_log_clear();
+      mallocLogEnabled = 1;
+      sqlite3MemdebugSync();
+#endif
+      break;
+    }
+  }
+
+  return TCL_OK;
+}
 
 /*
 ** Register commands with the TCL interpreter.
@@ -532,6 +670,7 @@ int Sqlitetest_malloc_Init(Tcl_Interp *interp){
      { "sqlite3_memdebug_pending",   test_memdebug_pending         },
      { "sqlite3_memdebug_settitle",  test_memdebug_settitle        },
      { "sqlite3_memdebug_malloc_count", test_memdebug_malloc_count },
+     { "sqlite3_memdebug_log",       test_memdebug_log },
   };
   int i;
   for(i=0; i<sizeof(aObjCmd)/sizeof(aObjCmd[0]); i++){

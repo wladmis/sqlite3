@@ -19,7 +19,7 @@
 ** allocation failures or I/O errors.
 **
 ** The fault injector is omitted from the code if SQLite is
-** compiled with -DSQLITE_OMIT_FAULTINJECTOR=1.  There is a very
+** compiled with -DSQLITE_OMIT_BUILTIN_TEST=1.  There is a very
 ** small performance hit for leaving the fault injector in the code.
 ** Commerical products will probably want to omit the fault injector
 ** from production builds.  But safety-critical systems who work
@@ -28,7 +28,7 @@
 */
 #include "sqliteInt.h"
 
-#ifndef SQLITE_OMIT_FAULTINJECTOR
+#ifndef SQLITE_OMIT_BUILTIN_TEST
 
 /*
 ** There can be various kinds of faults.  For example, there can be
@@ -42,7 +42,7 @@ static struct FaultInjector {
   int nBenign;      /* Number of benign failures seen since last config */
   int nFail;        /* Number of failures seen since last config */
   u8 enable;        /* True if enabled */
-  u8 benign;        /* Ture if next failure will be benign */
+  u8 benign;        /* True if next failure will be benign */
 } aFault[SQLITE_FAULTINJECTOR_COUNT];
 
 /*
@@ -105,8 +105,14 @@ int sqlite3FaultPending(int id){
 ** a hash table resize is a benign fault.  
 */
 void sqlite3FaultBenign(int id, int enable){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  aFault[id].benign = enable;
+  if( id<0 ){
+    for(id=0; id<SQLITE_FAULTINJECTOR_COUNT; id++){
+      aFault[id].benign = enable;
+    }
+  }else{
+    assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
+    aFault[id].benign = enable;
+  }
 }
 
 /*
@@ -144,4 +150,4 @@ int sqlite3FaultStep(int id){
   return 1;  
 }
 
-#endif /* SQLITE_OMIT_FAULTINJECTOR */
+#endif /* SQLITE_OMIT_BUILTIN_TEST */

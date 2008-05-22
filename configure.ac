@@ -339,7 +339,7 @@ if test "$TARGET_EXEEXT" = ".exe"; then
     OS_WIN=0
     OS_OS2=1
     CFLAGS="$CFLAGS -DOS_OS2=1"
-    if test "$ac_compiler_gnu" == "yes" ; then
+    if test "$ac_compiler_gnu" = "yes" ; then
       CFLAGS="$CFLAGS -Zomf -Zexe -Zmap"
       BUILD_CFLAGS="$BUILD_CFLAGS -Zomf -Zexe"
     fi
@@ -613,10 +613,22 @@ else
 fi
 AC_SUBST(LOADEXTENSION_FLAGS)
 
+#########
+# See whether we should allow loadable extensions
+AC_ARG_ENABLE(gcov, AC_HELP_STRING([--enable-gcov],
+      [Enable coverage testing using gcov]),
+      [use_gcov=$enableval],[use_gcov=no])
+if test "${use_gcov}" = "yes" ; then
+  USE_GCOV=1
+else
+  USE_GCOV=0
+fi
+AC_SUBST(USE_GCOV)
+
 
 #########
 # Output the config header
-AC_CONFIG_HEADERS(src/config.h)
+AC_CONFIG_HEADERS(config.h)
 
 #########
 # Generate the output files.

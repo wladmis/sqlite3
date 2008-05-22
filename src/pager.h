@@ -73,7 +73,7 @@ int sqlite3PagerOverwrite(Pager *pPager, Pgno pgno, void*);
 int sqlite3PagerPagecount(Pager*);
 int sqlite3PagerTruncate(Pager*,Pgno);
 int sqlite3PagerBegin(DbPage*, int exFlag);
-int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, Pgno);
+int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, Pgno, int);
 int sqlite3PagerCommitPhaseTwo(Pager*);
 int sqlite3PagerRollback(Pager*);
 int sqlite3PagerIsreadonly(Pager*);
@@ -95,6 +95,7 @@ void *sqlite3PagerGetData(DbPage *);
 void *sqlite3PagerGetExtra(DbPage *); 
 int sqlite3PagerLockingMode(Pager *, int);
 void *sqlite3PagerTempSpace(Pager*);
+int sqlite3PagerSync(Pager *pPager);
 
 #if defined(SQLITE_ENABLE_MEMORY_MANAGEMENT) && !defined(SQLITE_OMIT_DISKIO)
   int sqlite3PagerReleaseMemory(int);

@@ -34,6 +34,7 @@ typedef struct Vdbe Vdbe;
 */
 typedef struct VdbeFunc VdbeFunc;
 typedef struct Mem Mem;
+typedef struct UnpackedRecord UnpackedRecord;
 
 /*
 ** A single instruction of the virtual machine has an opcode
@@ -43,7 +44,7 @@ typedef struct Mem Mem;
 struct VdbeOp {
   u8 opcode;          /* What operation to perform */
   signed char p4type; /* One of the P4_xxx constants for p4 */
-  u8 flags;           /* Flags for internal use */
+  u8 opflags;         /* Not currently used */
   u8 p5;              /* Fifth parameter is an unsigned character */
   int p1;             /* First operand */
   int p2;             /* Second parameter (often the jump destination) */
@@ -119,7 +120,15 @@ typedef struct VdbeOpList VdbeOpList;
 #define COLNAME_DATABASE 2
 #define COLNAME_TABLE    3
 #define COLNAME_COLUMN   4
-#define COLNAME_N        5      /* Number of COLNAME_xxx symbols */
+#ifdef SQLITE_ENABLE_COLUMN_METADATA
+# define COLNAME_N        5      /* Number of COLNAME_xxx symbols */
+#else
+# ifdef SQLITE_OMIT_DECLTYPE
+#   define COLNAME_N      1      /* Store only the name */
+# else
+#   define COLNAME_N      2      /* Store the name and decltype */
+# endif
+#endif
 
 /*
 ** The following macro converts a relative address in the p2 field
@@ -165,13 +174,19 @@ int sqlite3VdbeCurrentAddr(Vdbe*);
   void sqlite3VdbeTrace(Vdbe*,FILE*);
 #endif
 void sqlite3VdbeResetStepResult(Vdbe*);
-int sqlite3VdbeReset(Vdbe*);
+int sqlite3VdbeReset(Vdbe*, int);
 void sqlite3VdbeSetNumCols(Vdbe*,int);
 int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, int);
 void sqlite3VdbeCountChanges(Vdbe*);
 sqlite3 *sqlite3VdbeDb(Vdbe*);
 void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
 void sqlite3VdbeSwap(Vdbe*,Vdbe*);
+
+int sqlite3VdbeReleaseMemory(int);
+UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,void*,int);
+void sqlite3VdbeDeleteUnpackedRecord(UnpackedRecord*);
+int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
+
 
 #ifndef NDEBUG
   void sqlite3VdbeComment(Vdbe*, const char*, ...);

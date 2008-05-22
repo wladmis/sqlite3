@@ -324,7 +324,8 @@ static int parseDateOrTime(
     return 0;
   }else if( sqlite3StrICmp(zDate,"now")==0){
     double r;
-    sqlite3OsCurrentTime((sqlite3_vfs *)sqlite3_user_data(context), &r);
+    sqlite3 *db = sqlite3_context_db_handle(context);
+    sqlite3OsCurrentTime(db->pVfs, &r);
     p->rJD = r;
     p->validJD = 1;
     return 0;
@@ -839,7 +840,7 @@ static void strftimeFunc(
   }
   if( n<sizeof(zBuf) ){
     z = zBuf;
-  }else if( n>SQLITE_MAX_LENGTH ){
+  }else if( n>sqlite3_context_db_handle(context)->aLimit[SQLITE_LIMIT_LENGTH] ){
     sqlite3_result_error_toobig(context);
     return;
   }else{
@@ -970,18 +971,13 @@ static void currentTimeFunc(
 ){
   time_t t;
   char *zFormat = (char *)sqlite3_user_data(context);
+  sqlite3 *db;
+  double rT;
   char zBuf[20];
 
-  time(&t);
-#ifdef SQLITE_TEST
-  {
-    extern int sqlite3_current_time;  /* See os_XXX.c */
-    if( sqlite3_current_time ){
-      t = sqlite3_current_time;
-    }
-  }
-#endif
-
+  db = sqlite3_context_db_handle(context);
+  sqlite3OsCurrentTime(db->pVfs, &rT);
+  t = 86400.0*(rT - 2440587.5) + 0.5;
 #ifdef HAVE_GMTIME_R
   {
     struct tm sNow;
@@ -1027,7 +1023,7 @@ void sqlite3RegisterDateTimeFunctions(sqlite3 *db){
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
     sqlite3CreateFunc(db, aFuncs[i].zName, aFuncs[i].nArg,
-        SQLITE_UTF8, (void *)(db->pVfs), aFuncs[i].xFunc, 0, 0);
+        SQLITE_UTF8, 0, aFuncs[i].xFunc, 0, 0);
   }
 #else
   static const struct {

@@ -337,7 +337,6 @@ if {$encoding=="UTF-16le"} {
   do_test func-9.12-utf16le {
     execsql {SELECT hex(replace('abcdefg','','12'))}
   } {{}}
-  breakpoint
   do_test func-9.13-utf16le {
     execsql {SELECT hex(replace('aabcdefg','a','aaa'))}
   } {610061006100610061006100620063006400650066006700}
@@ -348,7 +347,6 @@ if {$encoding=="UTF-16le"} {
   do_test func-9.12-utf8 {
     execsql {SELECT hex(replace('abcdefg','','12'))}
   } {{}}
-  breakpoint
   do_test func-9.13-utf8 {
     execsql {SELECT hex(replace('aabcdefg','a','aaa'))}
   } {616161616161626364656667}
@@ -426,11 +424,19 @@ do_test func-11.1 {
 # value. Function test_destructor_count() returns the number of outstanding
 # destructor calls for values returned by test_destructor().
 #
-do_test func-12.1 {
-  execsql {
-    SELECT test_destructor('hello world'), test_destructor_count();
-  }
-} {{hello world} 1}
+if {[db eval {PRAGMA encoding}]=="UTF-8"} {
+  do_test func-12.1-utf8 {
+    execsql {
+      SELECT test_destructor('hello world'), test_destructor_count();
+    }
+  } {{hello world} 1}
+} else {
+  do_test func-12.1-utf16 {
+    execsql {
+      SELECT test_destructor16('hello world'), test_destructor_count();
+    }
+  } {{hello world} 1}
+}
 do_test func-12.2 {
   execsql {
     SELECT test_destructor_count();
@@ -508,7 +514,7 @@ do_test func-13.7 {
   set DB [sqlite3_connection_pointer db]
   set sql "SELECT test_auxdata( ? , a ) FROM t4;"
   set STMT [sqlite3_prepare $DB $sql -1 TAIL]
-  sqlite3_bind_text $STMT 1 hello -1
+  sqlite3_bind_text $STMT 1 hello\000 -1
   set res [list]
   while { "SQLITE_ROW"==[sqlite3_step $STMT] } {
     lappend res [sqlite3_column_text $STMT 0]
@@ -529,10 +535,17 @@ do_test func-14.2 {
 } {1}
 
 do_test func-15.1 {
-  catchsql {
-    select test_error(NULL);
-  }
+  catchsql {select test_error(NULL)}
 } {1 {}}
+do_test func-15.2 {
+  catchsql {select test_error('this is the error message')}
+} {1 {this is the error message}}
+do_test func-15.3 {
+  catchsql {select test_error('this is the error message',12)}
+} {1 {this is the error message}}
+do_test func-15.4 {
+  db errorcode
+} {12}
 
 # Test the quote function for BLOB and NULL values.
 do_test func-16.1 {
@@ -911,5 +924,17 @@ do_test func-24.5 {
     SELECT group_concat(t1,NULL) FROM tbl1
   }
 } {thisprogramisfreesoftware}
+do_test func-24.6 {
+  execsql {
+    SELECT 'BEGIN-'||group_concat(t1) FROM tbl1
+  }
+} {BEGIN-this,program,is,free,software}
+
+# Use the test_isolation function to make sure that type conversions
+# on function arguments do not effect subsequent arguments.
+#
+do_test func-25.1 {
+  execsql {SELECT test_isolation(t1,t1) FROM tbl1}
+} {this program is free software}
 
 finish_test

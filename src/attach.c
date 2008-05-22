@@ -69,7 +69,7 @@ static void attachFunc(
 ){
   int i;
   int rc = 0;
-  sqlite3 *db = sqlite3_user_data(context);
+  sqlite3 *db = sqlite3_context_db_handle(context);
   const char *zName;
   const char *zFile;
   Db *aNew;
@@ -87,10 +87,10 @@ static void attachFunc(
   **     * Transaction currently open
   **     * Specified database name already being used.
   */
-  if( db->nDb>=SQLITE_MAX_ATTACHED+2 ){
+  if( db->nDb>=db->aLimit[SQLITE_LIMIT_ATTACHED]+2 ){
     sqlite3_snprintf(
       sizeof(zErr), zErr, "too many attached databases - max %d", 
-      SQLITE_MAX_ATTACHED
+      db->aLimit[SQLITE_LIMIT_ATTACHED]
     );
     goto attach_error;
   }
@@ -239,7 +239,7 @@ static void detachFunc(
   sqlite3_value **argv
 ){
   const char *zName = (const char *)sqlite3_value_text(argv[0]);
-  sqlite3 *db = sqlite3_user_data(context);
+  sqlite3 *db = sqlite3_context_db_handle(context);
   int i;
   Db *pDb = 0;
   char zErr[128];
@@ -378,8 +378,8 @@ void sqlite3Attach(Parse *pParse, Expr *p, Expr *pDbname, Expr *pKey){
 void sqlite3AttachFunctions(sqlite3 *db){
 #ifndef SQLITE_OMIT_ATTACH
   static const int enc = SQLITE_UTF8;
-  sqlite3CreateFunc(db, "sqlite_attach", 3, enc, db, attachFunc, 0, 0);
-  sqlite3CreateFunc(db, "sqlite_detach", 1, enc, db, detachFunc, 0, 0);
+  sqlite3CreateFunc(db, "sqlite_attach", 3, enc, 0, attachFunc, 0, 0);
+  sqlite3CreateFunc(db, "sqlite_detach", 1, enc, 0, detachFunc, 0, 0);
 #endif
 }
 

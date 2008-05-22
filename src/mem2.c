@@ -48,8 +48,8 @@
 ** MemBlockHdr.
 */
 struct MemBlockHdr {
+  i64 iSize;                          /* Size of this allocation */
   struct MemBlockHdr *pNext, *pPrev;  /* Linked list of all unfreed memory */
-  int iSize;                          /* Size of this allocation */
   char nBacktrace;                    /* Number of backtraces on this alloc */
   char nBacktraceSlots;               /* Available backtrace slots */
   short nTitle;                       /* Bytes of title; includes '\0' */
@@ -107,6 +107,7 @@ static struct {
   ** The number of levels of backtrace to save in new allocations.
   */
   int nBacktrace;
+  void (*xBacktrace)(int, int, void **);
 
   /*
   ** Title text to insert in front of each block
@@ -211,13 +212,19 @@ static void sqlite3MemsysAlarm(int nByte){
 static struct MemBlockHdr *sqlite3MemsysGetHeader(void *pAllocation){
   struct MemBlockHdr *p;
   int *pInt;
+  u8 *pU8;
+  int nReserve;
 
   p = (struct MemBlockHdr*)pAllocation;
   p--;
   assert( p->iForeGuard==FOREGUARD );
-  assert( (p->iSize & 3)==0 );
+  nReserve = (p->iSize+7)&~7;
   pInt = (int*)pAllocation;
-  assert( pInt[p->iSize/sizeof(int)]==REARGUARD );
+  pU8 = (u8*)pAllocation;
+  assert( pInt[nReserve/sizeof(int)]==REARGUARD );
+  assert( (nReserve-0)<=p->iSize || pU8[nReserve-1]==0x65 );
+  assert( (nReserve-1)<=p->iSize || pU8[nReserve-2]==0x65 );
+  assert( (nReserve-2)<=p->iSize || pU8[nReserve-3]==0x65 );
   return p;
 }
 
@@ -245,18 +252,19 @@ void *sqlite3_malloc(int nByte){
   int totalSize;
 
   if( nByte>0 ){
+    int nReserve;
     enterMem();
     assert( mem.disallow==0 );
     if( mem.alarmCallback!=0 && mem.nowUsed+nByte>=mem.alarmThreshold ){
       sqlite3MemsysAlarm(nByte);
     }
-    nByte = (nByte+3)&~3;
-    if( nByte/8>NCSIZE-1 ){
+    nReserve = (nByte+7)&~7;
+    if( nReserve/8>NCSIZE-1 ){
       mem.sizeCnt[NCSIZE-1]++;
     }else{
-      mem.sizeCnt[nByte/8]++;
+      mem.sizeCnt[nReserve/8]++;
     }
-    totalSize = nByte + sizeof(*pHdr) + sizeof(int) +
+    totalSize = nReserve + sizeof(*pHdr) + sizeof(int) +
                  mem.nBacktrace*sizeof(void*) + mem.nTitle;
     if( sqlite3FaultStep(SQLITE_FAULTINJECTOR_MALLOC) ){
       p = 0;
@@ -286,6 +294,9 @@ void *sqlite3_malloc(int nByte){
         void *aAddr[40];
         pHdr->nBacktrace = backtrace(aAddr, mem.nBacktrace+1)-1;
         memcpy(pBt, &aAddr[1], pHdr->nBacktrace*sizeof(void*));
+	if( mem.xBacktrace ){
+          mem.xBacktrace(nByte, pHdr->nBacktrace-1, &aAddr[1]);
+	}
       }else{
         pHdr->nBacktrace = 0;
       }
@@ -294,8 +305,8 @@ void *sqlite3_malloc(int nByte){
       }
       pHdr->iSize = nByte;
       pInt = (int*)&pHdr[1];
-      pInt[nByte/sizeof(int)] = REARGUARD;
-      memset(pInt, 0x65, nByte);
+      pInt[nReserve/sizeof(int)] = REARGUARD;
+      memset(pInt, 0x65, nReserve);
       mem.nowUsed += nByte;
       if( mem.nowUsed>mem.mxUsed ){
         mem.mxUsed = mem.nowUsed;
@@ -389,6 +400,10 @@ void sqlite3MemdebugBacktrace(int depth){
   mem.nBacktrace = depth;
 }
 
+void sqlite3MemdebugBacktraceCallback(void (*xBacktrace)(int, int, void **)){
+  mem.xBacktrace = xBacktrace;
+}
+
 /*
 ** Set the title string for subsequent allocations.
 */
@@ -398,8 +413,17 @@ void sqlite3MemdebugSettitle(const char *zTitle){
   if( n>=sizeof(mem.zTitle) ) n = sizeof(mem.zTitle)-1;
   memcpy(mem.zTitle, zTitle, n);
   mem.zTitle[n] = 0;
-  mem.nTitle = (n+3)&~3;
+  mem.nTitle = (n+7)&~7;
   sqlite3_mutex_leave(mem.mutex);
+}
+
+void sqlite3MemdebugSync(){
+  struct MemBlockHdr *pHdr;
+  for(pHdr=mem.pFirst; pHdr; pHdr=pHdr->pNext){
+    void **pBt = (void**)pHdr;
+    pBt -= pHdr->nBacktraceSlots;
+    mem.xBacktrace(pHdr->iSize, pHdr->nBacktrace-1, &pBt[1]);
+  }
 }
 
 /*
@@ -420,7 +444,7 @@ void sqlite3MemdebugDump(const char *zFilename){
   for(pHdr=mem.pFirst; pHdr; pHdr=pHdr->pNext){
     char *z = (char*)pHdr;
     z -= pHdr->nBacktraceSlots*sizeof(void*) + pHdr->nTitle;
-    fprintf(out, "**** %d bytes at %p from %s ****\n", 
+    fprintf(out, "**** %lld bytes at %p from %s ****\n", 
             pHdr->iSize, &pHdr[1], pHdr->nTitle ? z : "???");
     if( pHdr->nBacktrace ){
       fflush(out);

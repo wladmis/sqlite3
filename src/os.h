@@ -84,6 +84,7 @@
 # define INCL_DOSMODULEMGR
 # define INCL_DOSSEMAPHORES
 # include <os2.h>
+# include <uconv.h>
 # define SQLITE_TEMPNAME_SIZE (CCHMAXPATHCOMP)
 #else
 # include <limits.h>
@@ -267,10 +268,6 @@ int sqlite3OsCloseFree(sqlite3_file *);
 ** register one or more VFS structures using sqlite3_vfs_register()
 ** before attempting to use SQLite.
 */
-#if OS_UNIX || OS_WIN || OS_OS2
 sqlite3_vfs *sqlite3OsDefaultVfs(void);
-#else
-# define sqlite3OsDefaultVfs(X) 0
-#endif
 
 #endif /* _SQLITE_OS_H_ */

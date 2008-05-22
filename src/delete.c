@@ -75,9 +75,9 @@ void sqlite3OpenTable(
   v = sqlite3GetVdbe(p);
   assert( opcode==OP_OpenWrite || opcode==OP_OpenRead );
   sqlite3TableLock(p, iDb, pTab->tnum, (opcode==OP_OpenWrite), pTab->zName);
+  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, pTab->nCol);
   sqlite3VdbeAddOp3(v, opcode, iCur, pTab->tnum, iDb);
   VdbeComment((v, "%s", pTab->zName));
-  sqlite3VdbeAddOp2(v, OP_SetNumColumns, iCur, pTab->nCol);
 }
 
 
@@ -91,7 +91,6 @@ void sqlite3MaterializeView(
   Parse *pParse,       /* Parsing context */
   Select *pView,       /* View definition */
   Expr *pWhere,        /* Optional WHERE clause to be added */
-  u32 col_mask,        /* Render only the columns in this mask. */
   int iCur             /* Cursor number for ephemerial table */
 ){
   SelectDest dest;
@@ -106,7 +105,6 @@ void sqlite3MaterializeView(
     pFrom = sqlite3SrcListAppendFromTerm(pParse, 0, 0, 0, 0, pDup, 0, 0);
     pDup = sqlite3SelectNew(pParse, 0, pFrom, pWhere, 0, 0, 0, 0, 0, 0);
   }
-  sqlite3SelectMask(pParse, pDup, col_mask);
   sqlite3SelectDestInit(&dest, SRT_EphemTab, iCur);
   sqlite3Select(pParse, pDup, &dest, 0, 0, 0, 0);
   sqlite3SelectDelete(pDup);
@@ -248,7 +246,7 @@ void sqlite3DeleteFrom(
   ** a ephemeral table.
   */
   if( isView ){
-    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere, old_col_mask, iCur);
+    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere, iCur);
   }
 
   /* Resolve the column names in the WHERE clause.
@@ -322,8 +320,8 @@ void sqlite3DeleteFrom(
     /* Open the pseudo-table used to store OLD if there are triggers.
     */
     if( triggers_exist ){
+      sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, pTab->nCol);
       sqlite3VdbeAddOp1(v, OP_OpenPseudo, oldIdx);
-      sqlite3VdbeAddOp2(v, OP_SetNumColumns, oldIdx, pTab->nCol);
     }
 
     /* Delete every item whose key was written to the list during the
@@ -488,18 +486,16 @@ void sqlite3GenerateRowIndexDelete(
   Index *pIdx;
   int r1;
 
-  r1 = sqlite3GetTempReg(pParse);
   for(i=1, pIdx=pTab->pIndex; pIdx; i++, pIdx=pIdx->pNext){
     if( aRegIdx!=0 && aRegIdx[i-1]==0 ) continue;
-    sqlite3GenerateIndexKey(pParse, pIdx, iCur, r1);
-    sqlite3VdbeAddOp2(pParse->pVdbe, OP_IdxDelete, iCur+i, r1);
+    r1 = sqlite3GenerateIndexKey(pParse, pIdx, iCur, 0, 0);
+    sqlite3VdbeAddOp3(pParse->pVdbe, OP_IdxDelete, iCur+i, r1,pIdx->nColumn+1);
   }
-  sqlite3ReleaseTempReg(pParse, r1);
 }
 
 /*
-** Generate code that will assemble an index key and put it on the top
-** of the tack.  The key with be for index pIdx which is an index on pTab.
+** Generate code that will assemble an index key and put it in register
+** regOut.  The key with be for index pIdx which is an index on pTab.
 ** iCur is the index of a cursor open on the pTab table and pointing to
 ** the entry that needs indexing.
 **
@@ -512,7 +508,8 @@ int sqlite3GenerateIndexKey(
   Parse *pParse,     /* Parsing context */
   Index *pIdx,       /* The index for which to generate a key */
   int iCur,          /* Cursor number for the pIdx->pTable table */
-  int regOut         /* Write the new index key to this register */
+  int regOut,        /* Write the new index key to this register */
+  int doMakeRec      /* Run the OP_MakeRecord instruction if true */
 ){
   Vdbe *v = pParse->pVdbe;
   int j;
@@ -532,8 +529,16 @@ int sqlite3GenerateIndexKey(
       sqlite3ColumnDefault(v, pTab, idx);
     }
   }
-  sqlite3VdbeAddOp3(v, OP_MakeRecord, regBase, nCol+1, regOut);
-  sqlite3IndexAffinityStr(v, pIdx);
+  if( doMakeRec ){
+    sqlite3VdbeAddOp3(v, OP_MakeRecord, regBase, nCol+1, regOut);
+    sqlite3IndexAffinityStr(v, pIdx);
+    sqlite3ExprCacheAffinityChange(pParse, regBase, nCol+1);
+  }
   sqlite3ReleaseTempRange(pParse, regBase, nCol+1);
   return regBase;
 }
+
+/* Make sure "isView" gets undefined in case this file becomes part of
+** the amalgamation - so that subsequent files do not see isView as a
+** macro. */
+#undef isView

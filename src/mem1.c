@@ -137,10 +137,14 @@ void *sqlite3_malloc(int nBytes){
     if( mem.alarmCallback!=0 && mem.nowUsed+nBytes>=mem.alarmThreshold ){
       sqlite3MemsysAlarm(nBytes);
     }
-    p = malloc(nBytes+8);
-    if( p==0 ){
-      sqlite3MemsysAlarm(nBytes);
+    if( sqlite3FaultStep(SQLITE_FAULTINJECTOR_MALLOC) ){
+      p = 0;
+    }else{
       p = malloc(nBytes+8);
+      if( p==0 ){
+        sqlite3MemsysAlarm(nBytes);
+        p = malloc(nBytes+8);
+      }
     }
     if( p ){
       p[0] = nBytes;
@@ -205,12 +209,16 @@ void *sqlite3_realloc(void *pPrior, int nBytes){
   if( mem.nowUsed+nBytes-nOld>=mem.alarmThreshold ){
     sqlite3MemsysAlarm(nBytes-nOld);
   }
-  p = realloc(p, nBytes+8);
-  if( p==0 ){
-    sqlite3MemsysAlarm(nBytes);
-    p = pPrior;
-    p--;
+  if( sqlite3FaultStep(SQLITE_FAULTINJECTOR_MALLOC) ){
+    p = 0;
+  }else{
     p = realloc(p, nBytes+8);
+    if( p==0 ){
+      sqlite3MemsysAlarm(nBytes);
+      p = pPrior;
+      p--;
+      p = realloc(p, nBytes+8);
+    }
   }
   if( p ){
     p[0] = nBytes;

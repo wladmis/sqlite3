@@ -22,6 +22,9 @@ while {[set arg [lshift argv]] != ""} {
     -soak {
        set SOAKTEST 1
     }
+    -start {
+       set STARTAT "[lshift argv]*"
+    }
     default {
       set argv [linsert $argv 0 $arg]
       break
@@ -39,16 +42,13 @@ set EXCLUDE {
   all.test
   async.test
   async2.test
-  btree2.test
-  btree3.test
-  btree4.test
-  btree5.test
-  btree6.test
   corrupt.test
   crash.test
   crash2.test
   crash3.test
   crash4.test
+  crash6.test
+  crash7.test
   exclusive3.test
   fts3.test
   fuzz.test
@@ -67,8 +67,11 @@ set EXCLUDE {
   quick.test
   soak.test
   speed1.test
+  speed1p.test
   speed2.test
+  speed3.test
   speed4.test
+  speed4p.test
   sqllimits1.test
 
   thread001.test
@@ -80,6 +83,7 @@ set EXCLUDE {
   utf16.test
   shared_err.test
   vtab_err.test
+  veryquick.test
 }
 
 if {[sqlite3 -has-codec]} {
@@ -98,6 +102,8 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
   set tail [file tail $testfile]
   if {[lsearch -exact $EXCLUDE $tail]>=0} continue
   if {[llength $INCLUDE]>0 && [lsearch -exact $INCLUDE $tail]<0} continue
+  if {[info exists STARTAT] && [string match $STARTAT $tail]} {unset STARTAT}
+  if {[info exists STARTAT]} continue
   source $testfile
   catch {db close}
   if {$sqlite_open_file_count>0} {
@@ -111,5 +117,3 @@ source $testdir/misuse.test
 
 set sqlite_open_file_count 0
 really_finish_test
-
-

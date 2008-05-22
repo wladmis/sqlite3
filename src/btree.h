@@ -127,17 +127,26 @@ int sqlite3BtreeGetMeta(Btree*, int idx, u32 *pValue);
 int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);
 void sqlite3BtreeTripAllCursors(Btree*, int);
 
+struct UnpackedRecord;  /* Forward declaration.  Definition in vdbeaux.c. */
+
 int sqlite3BtreeCursor(
   Btree*,                              /* BTree containing table to open */
   int iTable,                          /* Index of root page */
   int wrFlag,                          /* 1 for writing.  0 for read-only */
-  int(*)(void*,int,const void*,int,const void*),  /* Key comparison function */
-  void*,                               /* First argument to compare function */
-  BtCursor **ppCursor                  /* Returned cursor */
+  struct KeyInfo*,                     /* First argument to compare function */
+  BtCursor *pCursor                    /* Space to write cursor structure */
 );
+int sqlite3BtreeCursorSize();
 
 int sqlite3BtreeCloseCursor(BtCursor*);
-int sqlite3BtreeMoveto(BtCursor*,const void *pKey,i64 nKey,int bias,int *pRes);
+int sqlite3BtreeMoveto(
+  BtCursor*,
+  const void *pKey,
+  struct UnpackedRecord *pUnKey,
+  i64 nKey,
+  int bias,
+  int *pRes
+);
 int sqlite3BtreeDelete(BtCursor*);
 int sqlite3BtreeInsert(BtCursor*, const void *pKey, i64 nKey,
                                   const void *pData, int nData,

@@ -65,6 +65,7 @@ struct Cursor {
   Bool nullRow;         /* True if pointing to a row with no data */
   Bool nextRowidValid;  /* True if the nextRowid field is valid */
   Bool pseudoTable;     /* This is a NEW or OLD pseudo-tables of a trigger */
+  Bool ephemPseudoTable;
   Bool deferredMoveto;  /* A call to sqlite3BtreeMoveto() is needed */
   Bool isTable;         /* True if a table requiring integer keys */
   Bool isIndex;         /* True if an index containing keys only - no data */
@@ -123,6 +124,7 @@ struct Mem {
   u8  type;           /* One of SQLITE_NULL, SQLITE_TEXT, SQLITE_INTEGER, etc */
   u8  enc;            /* SQLITE_UTF8, SQLITE_UTF16BE, SQLITE_UTF16LE */
   void (*xDel)(void *);  /* If not null, call this function to delete Mem.z */
+  char *zMalloc;      /* Dynamic buffer allocated by sqlite3_malloc() */
 };
 
 /* One or more of the following flags are set to indicate the validOK
@@ -333,6 +335,32 @@ struct Vdbe {
   int fetchId;          /* Statement number used by sqlite3_fetch_statement */
   int lru;              /* Counter used for LRU cache replacement */
 #endif
+#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
+  Vdbe *pLruPrev;
+  Vdbe *pLruNext;
+#endif
+};
+
+/*
+** An instance of the following structure holds information about a
+** single index record that has already been parsed out into individual
+** values.
+**
+** A record is an object that contains one or more fields of data.
+** Records are used to store the content of a table row and to store
+** the key of an index.  A blob encoding of a record is created by
+** the OP_MakeRecord opcode of the VDBE and is disassemblied by the
+** OP_Column opcode.
+**
+** This structure holds a record that has already been disassembled
+** into its constitutent fields.
+*/
+struct UnpackedRecord {
+  KeyInfo *pKeyInfo;  /* Collation and sort-order information */
+  u16 nField;         /* Number of entries in apMem[] */
+  u8 needFree;        /* True if memory obtained from sqlite3_malloc() */
+  u8 needDestroy;     /* True if apMem[]s should be destroyed on close */
+  Mem *aMem;          /* Values */
 };
 
 /*
@@ -362,7 +390,6 @@ int sqlite2BtreeKeyCompare(BtCursor *, const void *, int, int, int *);
 int sqlite3VdbeIdxKeyCompare(Cursor*,int,const unsigned char*,int*);
 int sqlite3VdbeIdxRowid(BtCursor *, i64 *);
 int sqlite3MemCompare(const Mem*, const Mem*, const CollSeq*);
-int sqlite3VdbeRecordCompare(void*,int,const void*,int, const void*);
 int sqlite3VdbeIdxRowidLen(const u8*);
 int sqlite3VdbeExec(Vdbe*);
 int sqlite3VdbeList(Vdbe*);
@@ -389,10 +416,12 @@ int sqlite3VdbeMemRealify(Mem*);
 int sqlite3VdbeMemNumerify(Mem*);
 int sqlite3VdbeMemFromBtree(BtCursor*,int,int,int,Mem*);
 void sqlite3VdbeMemRelease(Mem *p);
+void sqlite3VdbeMemReleaseExternal(Mem *p);
 int sqlite3VdbeMemFinalize(Mem*, FuncDef*);
 const char *sqlite3OpcodeName(int);
 int sqlite3VdbeOpcodeHasProperty(int, int);
 int sqlite3VdbeMemGrow(Mem *pMem, int n, int preserve);
+int sqlite3VdbeReleaseBuffers(Vdbe *p);
 
 #ifndef NDEBUG
   void sqlite3VdbeMemSanity(Mem*);

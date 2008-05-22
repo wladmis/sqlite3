@@ -1299,7 +1299,6 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     char *zFile;                /* The file from which to extract data */
     char *zConflict;            /* The conflict algorithm to use */
     sqlite3_stmt *pStmt;        /* A statement */
-    int rc;                     /* Result code */
     int nCol;                   /* Number of columns in the table */
     int nByte;                  /* Number of bytes in an SQL string */
     int i, j;                   /* Loop counters */
@@ -1340,14 +1339,11 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       Tcl_AppendResult(interp,"Error: non-null separator required for copy",0);
       return TCL_ERROR;
     }
-/* sqlite3StrICmp is not exported by the library */
-#define sqlite3StrICmp strcasecmp
-    if(sqlite3StrICmp(zConflict, "rollback") != 0 &&
-       sqlite3StrICmp(zConflict, "abort"   ) != 0 &&
-       sqlite3StrICmp(zConflict, "fail"    ) != 0 &&
-       sqlite3StrICmp(zConflict, "ignore"  ) != 0 &&
-       sqlite3StrICmp(zConflict, "replace" ) != 0 ) {
-#undef sqlite3StrICmp
+    if(strcasecmp(zConflict, "rollback") != 0 &&
+       strcasecmp(zConflict, "abort"   ) != 0 &&
+       strcasecmp(zConflict, "fail"    ) != 0 &&
+       strcasecmp(zConflict, "ignore"  ) != 0 &&
+       strcasecmp(zConflict, "replace" ) != 0 ) {
       Tcl_AppendResult(interp, "Error: \"", zConflict, 
             "\", conflict-algorithm must be one of: rollback, "
             "abort, fail, ignore, or replace", 0);
@@ -2395,16 +2391,6 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
     sqlite3_close(p->db);
     p->db = 0;
   }
-#ifdef SQLITE_TEST
-  if( p->db ){
-    extern int Md5_Register(sqlite3*);
-    if( Md5_Register(p->db)==SQLITE_NOMEM ){
-      zErrMsg = sqlite3_mprintf("%s", sqlite3_errmsg(p->db));
-      sqlite3_close(p->db);
-      p->db = 0;
-    }
-  }
-#endif  
 #ifdef SQLITE_HAS_CODEC
   if( p->db ){
     sqlite3_key(p->db, pKey, nKey);
@@ -2537,6 +2523,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetest9_Init(Tcl_Interp*);
     extern int Sqlitetestasync_Init(Tcl_Interp*);
     extern int Sqlitetest_autoext_Init(Tcl_Interp*);
+    extern int Sqlitetest_func_Init(Tcl_Interp*);
     extern int Sqlitetest_hexio_Init(Tcl_Interp*);
     extern int Sqlitetest_malloc_Init(Tcl_Interp*);
     extern int Sqlitetestschema_Init(Tcl_Interp*);
@@ -2544,6 +2531,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetesttclvar_Init(Tcl_Interp*);
     extern int SqlitetestThread_Init(Tcl_Interp*);
     extern int SqlitetestOnefile_Init();
+    extern int SqlitetestOsinst_Init(Tcl_Interp*);
 
     Md5_Init(interp);
     Sqliteconfig_Init(interp);
@@ -2558,12 +2546,14 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest9_Init(interp);
     Sqlitetestasync_Init(interp);
     Sqlitetest_autoext_Init(interp);
+    Sqlitetest_func_Init(interp);
     Sqlitetest_hexio_Init(interp);
     Sqlitetest_malloc_Init(interp);
     Sqlitetestschema_Init(interp);
     Sqlitetesttclvar_Init(interp);
     SqlitetestThread_Init(interp);
     SqlitetestOnefile_Init(interp);
+    SqlitetestOsinst_Init(interp);
 
 #ifdef SQLITE_SSE
     Sqlitetestsse_Init(interp);

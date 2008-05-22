@@ -100,6 +100,24 @@ TCLSH_CMD = @TCLSH_CMD@
 #
 SHLIB_SUFFIX = @TCL_SHLIB_SUFFIX@
 
+# If gcov support was enabled by the configure script, add the appropriate
+# flags here.  It's not always as easy as just having the user add the right
+# CFLAGS / LDFLAGS, because libtool wants to use CFLAGS when linking, which
+# causes build errors with -fprofile-arcs -ftest-coverage with some GCCs.  
+# Supposedly GCC does the right thing if you use --coverage, but in 
+# practice it still fails.  See:
+#
+# http://www.mail-archive.com/debian-gcc@lists.debian.org/msg26197.html
+#
+# for more info.
+#
+GCOV_CFLAGS1 = -fprofile-arcs -ftest-coverage
+GCOV_LDFLAGS1 = -lgcov
+USE_GCOV = @USE_GCOV@
+LTCOMPILE_EXTRAS += $(GCOV_CFLAGS$(USE_GCOV))
+LTLINK_EXTRAS += $(GCOV_LDFLAGS$(USE_GCOV))
+
+
 # The directory into which to store package information for
 
 # Some standard variables and programs
@@ -117,8 +135,8 @@ LIBTOOL = ./libtool
 ALLOWRELEASE = @ALLOWRELEASE@
 
 # libtool compile/link/install
-LTCOMPILE = $(LIBTOOL) --mode=compile --tag=CC $(TCC)
-LTLINK = $(LIBTOOL) --mode=link $(TCC) @LDFLAGS@
+LTCOMPILE = $(LIBTOOL) --mode=compile --tag=CC $(TCC) $(LTCOMPILE_EXTRAS)
+LTLINK = $(LIBTOOL) --mode=link $(TCC) @LDFLAGS@ $(LTLINK_EXTRAS)
 LTINSTALL = $(LIBTOOL) --mode=install $(INSTALL)
 
 # nawk compatible awk.
@@ -167,7 +185,6 @@ SRC = \
   $(TOP)/src/build.c \
   $(TOP)/src/callback.c \
   $(TOP)/src/complete.c \
-  $(TOP)/src/config.h \
   $(TOP)/src/date.c \
   $(TOP)/src/delete.c \
   $(TOP)/src/expr.c \
@@ -237,6 +254,7 @@ SRC += \
   opcodes.h \
   parse.c \
   parse.h \
+  config.h \
   sqlite3.h
 
 # Source code for extensions
@@ -322,10 +340,12 @@ TESTSRC = \
   $(TOP)/src/test_btree.c \
   $(TOP)/src/test_config.c \
   $(TOP)/src/test_devsym.c \
+  $(TOP)/src/test_func.c \
   $(TOP)/src/test_hexio.c \
   $(TOP)/src/test_malloc.c \
   $(TOP)/src/test_md5.c \
   $(TOP)/src/test_onefile.c \
+  $(TOP)/src/test_osinst.c \
   $(TOP)/src/test_schema.c \
   $(TOP)/src/test_server.c \
   $(TOP)/src/test_tclvar.c \
@@ -348,7 +368,7 @@ HDR = \
    $(TOP)/src/vdbe.h \
    $(TOP)/src/vdbeInt.h \
    parse.h \
-   $(TOP)/src/config.h
+   config.h
 
 # Header files used by extensions
 #
@@ -460,7 +480,7 @@ lemon$(BEXE):	$(TOP)/tool/lemon.c $(TOP)/tool/lempar.c
 # Rule to build the amalgamation
 #
 sqlite3.lo:	sqlite3.c
-	$(LTCOMPILE) -c $(TOP)/sqlite3.c
+	$(LTCOMPILE) -c sqlite3.c
 
 # Rules to build individual files
 #

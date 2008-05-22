@@ -101,6 +101,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
         { OS2_MUTEX_INITIALIZER, },
         { OS2_MUTEX_INITIALIZER, },
         { OS2_MUTEX_INITIALIZER, },
+        { OS2_MUTEX_INITIALIZER, },
       };
       if ( !isInit ){
         APIRET rc;

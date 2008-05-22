@@ -711,10 +711,13 @@ static int btree_cursor(
   pBt = sqlite3TextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &iTable) ) return TCL_ERROR;
   if( Tcl_GetBoolean(interp, argv[3], &wrFlag) ) return TCL_ERROR;
+  pCur = (BtCursor *)ckalloc(sqlite3BtreeCursorSize());
+  memset(pCur, 0, sqlite3BtreeCursorSize());
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, 0, &pCur);
+  rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, pCur);
   sqlite3BtreeLeave(pBt);
   if( rc ){
+    ckfree((char *)pCur);
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
   }
@@ -748,6 +751,7 @@ static int btree_close_cursor(
   sqlite3BtreeEnter(pBt);
   rc = sqlite3BtreeCloseCursor(pCur);
   sqlite3BtreeLeave(pBt);
+  ckfree((char *)pCur);
   if( rc ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
@@ -784,9 +788,9 @@ static int btree_move_to(
       sqlite3BtreeLeave(pCur->pBtree);
       return TCL_ERROR;
     }
-    rc = sqlite3BtreeMoveto(pCur, 0, iKey, 0, &res);
+    rc = sqlite3BtreeMoveto(pCur, 0, 0, iKey, 0, &res);
   }else{
-    rc = sqlite3BtreeMoveto(pCur, argv[2], strlen(argv[2]), 0, &res);  
+    rc = sqlite3BtreeMoveto(pCur, argv[2], 0, strlen(argv[2]), 0, &res);  
   }
   sqlite3BtreeLeave(pCur->pBtree);
   if( rc ){

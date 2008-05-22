@@ -498,6 +498,24 @@ int sqlite3PutVarint(unsigned char *p, u64 v){
 }
 
 /*
+** This routine is a faster version of sqlite3PutVarint() that only
+** works for 32-bit positive integers and which is optimized for
+** the common case of small integers.
+*/
+int sqlite3PutVarint32(unsigned char *p, u32 v){
+  if( (v & ~0x7f)==0 ){
+    p[0] = v;
+    return 1;
+  }else if( (v & ~0x3fff)==0 ){
+    p[0] = (v>>7) | 0x80;
+    p[1] = v & 0x7f;
+    return 2;
+  }else{
+    return sqlite3PutVarint(p, v);
+  }
+}
+
+/*
 ** Read a 64-bit variable-length integer from memory starting at p[0].
 ** Return the number of bytes read.  The value is stored in *v.
 */
@@ -594,22 +612,23 @@ void sqlite3Put4byte(unsigned char *p, u32 v){
 
 
 
-#if !defined(SQLITE_OMIT_BLOB_LITERAL) || defined(SQLITE_HAS_CODEC) \
-    || defined(SQLITE_TEST)
+#if !defined(SQLITE_OMIT_BLOB_LITERAL) || defined(SQLITE_HAS_CODEC)
 /*
 ** Translate a single byte of Hex into an integer.
+** This routinen only works if h really is a valid hexadecimal
+** character:  0..9a..fA..F
 */
 static int hexToInt(int h){
-  if( h>='0' && h<='9' ){
-    return h - '0';
-  }else if( h>='a' && h<='f' ){
-    return h - 'a' + 10;
-  }else{
-    assert( h>='A' && h<='F' );
-    return h - 'A' + 10;
-  }
+  assert( (h>='0' && h<='9') ||  (h>='a' && h<='f') ||  (h>='A' && h<='F') );
+#ifdef SQLITE_ASCII
+  h += 9*(1&(h>>6));
+#endif
+#ifdef SQLITE_EBCDIC
+  h += 9*(1&~(h>>4));
+#endif
+  return h & 0xf;
 }
-#endif /* !SQLITE_OMIT_BLOB_LITERAL || SQLITE_HAS_CODEC || SQLITE_TEST */
+#endif /* !SQLITE_OMIT_BLOB_LITERAL || SQLITE_HAS_CODEC */
 
 #if !defined(SQLITE_OMIT_BLOB_LITERAL) || defined(SQLITE_HAS_CODEC)
 /*
@@ -664,6 +683,7 @@ void *sqlite3HexToBlob(sqlite3 *db, const char *z, int n){
 int sqlite3SafetyOn(sqlite3 *db){
   if( db->magic==SQLITE_MAGIC_OPEN ){
     db->magic = SQLITE_MAGIC_BUSY;
+    assert( sqlite3_mutex_held(db->mutex) );
     return 0;
   }else if( db->magic==SQLITE_MAGIC_BUSY ){
     db->magic = SQLITE_MAGIC_ERROR;
@@ -682,6 +702,7 @@ int sqlite3SafetyOn(sqlite3 *db){
 int sqlite3SafetyOff(sqlite3 *db){
   if( db->magic==SQLITE_MAGIC_BUSY ){
     db->magic = SQLITE_MAGIC_OPEN;
+    assert( sqlite3_mutex_held(db->mutex) );
     return 0;
   }else{
     db->magic = SQLITE_MAGIC_ERROR;

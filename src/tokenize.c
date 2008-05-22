@@ -120,7 +120,7 @@ const char sqlite3IsEbcdicIdChar[] = {
 ** Return the length of the token that begins at z[0]. 
 ** Store the token type in *tokenType before returning.
 */
-static int getToken(const unsigned char *z, int *tokenType){
+int sqlite3GetToken(const unsigned char *z, int *tokenType){
   int i, c;
   switch( *z ){
     case ' ': case '\t': case '\n': case '\f': case '\r': {
@@ -370,9 +370,6 @@ static int getToken(const unsigned char *z, int *tokenType){
   *tokenType = TK_ILLEGAL;
   return 1;
 }
-int sqlite3GetToken(const unsigned char *z, int *tokenType){
-  return getToken(z, tokenType);
-}
 
 /*
 ** Run the parser on the given SQL string.  The parser structure is
@@ -388,11 +385,13 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   int tokenType;
   int lastTokenParsed = -1;
   sqlite3 *db = pParse->db;
+  int mxSqlLen = db->aLimit[SQLITE_LIMIT_SQL_LENGTH];
 
   if( db->activeVdbeCnt==0 ){
     db->u1.isInterrupted = 0;
   }
   pParse->rc = SQLITE_OK;
+  pParse->zTail = pParse->zSql = zSql;
   i = 0;
   pEngine = sqlite3ParserAlloc((void*(*)(size_t))sqlite3_malloc);
   if( pEngine==0 ){
@@ -406,14 +405,13 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   assert( pParse->nVarExpr==0 );
   assert( pParse->nVarExprAlloc==0 );
   assert( pParse->apVarExpr==0 );
-  pParse->zTail = pParse->zSql = zSql;
   while( !db->mallocFailed && zSql[i]!=0 ){
     assert( i>=0 );
     pParse->sLastToken.z = (u8*)&zSql[i];
     assert( pParse->sLastToken.dyn==0 );
-    pParse->sLastToken.n = getToken((unsigned char*)&zSql[i],&tokenType);
+    pParse->sLastToken.n = sqlite3GetToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
-    if( SQLITE_MAX_SQL_LENGTH>0 && i>SQLITE_MAX_SQL_LENGTH ){
+    if( i>mxSqlLen ){
       pParse->rc = SQLITE_TOOBIG;
       break;
     }

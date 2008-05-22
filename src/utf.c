@@ -306,6 +306,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
   pMem->enc = desiredEnc;
   pMem->flags |= (MEM_Term|MEM_Dyn);
   pMem->z = (char*)zOut;
+  pMem->zMalloc = pMem->z;
 
 translate_out:
 #if defined(TRANSLATE_TRACE) && defined(SQLITE_DEBUG)

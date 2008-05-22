@@ -22,9 +22,14 @@
 ** Fill the InitData structure with an error message that indicates
 ** that the database is corrupt.
 */
-static void corruptSchema(InitData *pData, const char *zExtra){
+static void corruptSchema(
+  InitData *pData,     /* Initialization context */
+  const char *zObj,    /* Object being parsed at the point of error */
+  const char *zExtra   /* Error information */
+){
   if( !pData->db->mallocFailed ){
-    sqlite3SetString(pData->pzErrMsg, "malformed database schema",
+    if( zObj==0 ) zObj = "?";
+    sqlite3SetString(pData->pzErrMsg, "malformed database schema (",  zObj, ")",
        zExtra!=0 && zExtra[0]!=0 ? " - " : (char*)0, zExtra, (char*)0);
   }
   pData->rc = SQLITE_CORRUPT;
@@ -51,14 +56,14 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
   pData->rc = SQLITE_OK;
   DbClearProperty(db, iDb, DB_Empty);
   if( db->mallocFailed ){
-    corruptSchema(pData, 0);
+    corruptSchema(pData, argv[0], 0);
     return SQLITE_NOMEM;
   }
 
   assert( argc==3 );
   if( argv==0 ) return 0;   /* Might happen if EMPTY_RESULT_CALLBACKS are on */
   if( argv[1]==0 ){
-    corruptSchema(pData, 0);
+    corruptSchema(pData, argv[0], 0);
     return 1;
   }
   assert( iDb>=0 && iDb<db->nDb );
@@ -81,13 +86,13 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **azColName){
       if( rc==SQLITE_NOMEM ){
         db->mallocFailed = 1;
       }else if( rc!=SQLITE_INTERRUPT ){
-        corruptSchema(pData, zErr);
+        corruptSchema(pData, argv[0], zErr);
       }
       sqlite3_free(zErr);
       return 1;
     }
   }else if( argv[0]==0 ){
-    corruptSchema(pData, 0);
+    corruptSchema(pData, 0, 0);
   }else{
     /* If the SQL column is blank it means this is an index that
     ** was created to be the PRIMARY KEY or to fulfill a UNIQUE
@@ -202,12 +207,16 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     }
     return SQLITE_OK;
   }
+  curMain = sqlite3MallocZero(sqlite3BtreeCursorSize());
+  if( !curMain ){
+    rc = SQLITE_NOMEM;
+    goto error_out;
+  }
   sqlite3BtreeEnter(pDb->pBt);
-  rc = sqlite3BtreeCursor(pDb->pBt, MASTER_ROOT, 0, 0, 0, &curMain);
+  rc = sqlite3BtreeCursor(pDb->pBt, MASTER_ROOT, 0, 0, curMain);
   if( rc!=SQLITE_OK && rc!=SQLITE_EMPTY ){
     sqlite3SetString(pzErrMsg, sqlite3ErrStr(rc), (char*)0);
-    sqlite3BtreeLeave(pDb->pBt);
-    goto error_out;
+    goto leave_error_out;
   }
 
   /* Get the database meta information.
@@ -234,9 +243,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     }
     if( rc ){
       sqlite3SetString(pzErrMsg, sqlite3ErrStr(rc), (char*)0);
-      sqlite3BtreeCloseCursor(curMain);
-      sqlite3BtreeLeave(pDb->pBt);
-      goto error_out;
+      goto leave_error_out;
     }
   }else{
     memset(meta, 0, sizeof(meta));
@@ -256,11 +263,10 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     }else{
       /* If opening an attached database, the encoding much match ENC(db) */
       if( meta[4]!=ENC(db) ){
-        sqlite3BtreeCloseCursor(curMain);
         sqlite3SetString(pzErrMsg, "attached databases must use the same"
             " text encoding as main database", (char*)0);
-        sqlite3BtreeLeave(pDb->pBt);
-        return SQLITE_ERROR;
+        rc = SQLITE_ERROR;
+        goto leave_error_out;
       }
     }
   }else{
@@ -285,10 +291,9 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     pDb->pSchema->file_format = 1;
   }
   if( pDb->pSchema->file_format>SQLITE_MAX_FILE_FORMAT ){
-    sqlite3BtreeCloseCursor(curMain);
     sqlite3SetString(pzErrMsg, "unsupported file format", (char*)0);
-    sqlite3BtreeLeave(pDb->pBt);
-    return SQLITE_ERROR;
+    rc = SQLITE_ERROR;
+    goto leave_error_out;
   }
 
   /* Ticket #2804:  When we open a database in the newer file format,
@@ -331,7 +336,6 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
       sqlite3AnalysisLoad(db, iDb);
     }
 #endif
-    sqlite3BtreeCloseCursor(curMain);
   }
   if( db->mallocFailed ){
     /* sqlite3SetString(pzErrMsg, "out of memory", (char*)0); */
@@ -350,6 +354,14 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     DbSetProperty(db, iDb, DB_SchemaLoaded);
     rc = SQLITE_OK;
   }
+
+  /* Jump here for an error that occurs after successfully allocating
+  ** curMain and calling sqlite3BtreeEnter(). For an error that occurs
+  ** before that point, jump to error_out.
+  */
+leave_error_out:
+  sqlite3BtreeCloseCursor(curMain);
+  sqlite3_free(curMain);
   sqlite3BtreeLeave(pDb->pBt);
 
 error_out:
@@ -436,23 +448,32 @@ static int schemaIsValid(sqlite3 *db){
   int cookie;
   int allOk = 1;
 
-  assert( sqlite3_mutex_held(db->mutex) );
-  for(iDb=0; allOk && iDb<db->nDb; iDb++){
-    Btree *pBt;
-    pBt = db->aDb[iDb].pBt;
-    if( pBt==0 ) continue;
-    rc = sqlite3BtreeCursor(pBt, MASTER_ROOT, 0, 0, 0, &curTemp);
-    if( rc==SQLITE_OK ){
-      rc = sqlite3BtreeGetMeta(pBt, 1, (u32 *)&cookie);
-      if( rc==SQLITE_OK && cookie!=db->aDb[iDb].pSchema->schema_cookie ){
-        allOk = 0;
+  curTemp = (BtCursor *)sqlite3_malloc(sqlite3BtreeCursorSize());
+  if( curTemp ){
+    assert( sqlite3_mutex_held(db->mutex) );
+    for(iDb=0; allOk && iDb<db->nDb; iDb++){
+      Btree *pBt;
+      pBt = db->aDb[iDb].pBt;
+      if( pBt==0 ) continue;
+      memset(curTemp, 0, sqlite3BtreeCursorSize());
+      rc = sqlite3BtreeCursor(pBt, MASTER_ROOT, 0, 0, curTemp);
+      if( rc==SQLITE_OK ){
+        rc = sqlite3BtreeGetMeta(pBt, 1, (u32 *)&cookie);
+        if( rc==SQLITE_OK && cookie!=db->aDb[iDb].pSchema->schema_cookie ){
+          allOk = 0;
+        }
+        sqlite3BtreeCloseCursor(curTemp);
       }
-      sqlite3BtreeCloseCursor(curTemp);
+      if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
+        db->mallocFailed = 1;
+      }
     }
-    if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
-      db->mallocFailed = 1;
-    }
+    sqlite3_free(curTemp);
+  }else{
+    allOk = 0;
+    db->mallocFailed = 1;
   }
+
   return allOk;
 }
 
@@ -531,9 +552,10 @@ static int sqlite3Prepare(
   
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
-  if( nBytes>0 && zSql[nBytes]!=0 ){
+  if( nBytes>0 && zSql[nBytes-1]!=0 ){
     char *zSqlCopy;
-    if( SQLITE_MAX_SQL_LENGTH>0 && nBytes>SQLITE_MAX_SQL_LENGTH ){
+    int mxLen = db->aLimit[SQLITE_LIMIT_SQL_LENGTH];
+    if( nBytes>mxLen ){
       sqlite3Error(db, SQLITE_TOOBIG, "statement too long");
       (void)sqlite3SafetyOff(db);
       return SQLITE_TOOBIG;
@@ -542,8 +564,10 @@ static int sqlite3Prepare(
     if( zSqlCopy ){
       sqlite3RunParser(&sParse, zSqlCopy, &zErrMsg);
       sqlite3_free(zSqlCopy);
+      sParse.zTail = &zSql[sParse.zTail-zSqlCopy];
+    }else{
+      sParse.zTail = &zSql[nBytes];
     }
-    sParse.zTail = &zSql[nBytes];
   }else{
     sqlite3RunParser(&sParse, zSql, &zErrMsg);
   }

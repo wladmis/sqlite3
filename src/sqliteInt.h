@@ -21,6 +21,16 @@
 ** (otherwise we get an empty default).
 */
 #include "config.h"
+#include "sqliteLimit.h"
+
+/* Disable nuisance warnings on Borland compilers */
+#if defined(__BORLANDC__)
+#pragma warn -rch /* unreachable code */
+#pragma warn -ccc /* Condition is always true or false */
+#pragma warn -aus /* Assigned value is never used */
+#pragma warn -csu /* Comparing signed and unsigned */
+#pragma warn -spa /* Suspicous pointer arithmetic */
+#endif
 
 /* Needed for various definitions... */
 #define _GNU_SOURCE
@@ -45,6 +55,20 @@
   typedef intptr_t sqlite3_intptr_t;
 #else
   typedef int sqlite3_intptr_t;
+#endif
+
+/*
+** A macro used to aid in coverage testing.  When doing coverage
+** testing, the condition inside the argument must be evaluated 
+** both true and false in order to get full branch coverage.
+** This macro can be inserted to ensure adequate test coverage
+** in places where simple condition/decision coverage is inadequate.
+*/
+#ifdef SQLITE_COVERAGE_TEST
+  void sqlite3Coverage(int);
+# define testcase(X)  if( X ){ sqlite3Coverage(__LINE__); }
+#else
+# define testcase(X)
 #endif
 
 
@@ -88,51 +112,6 @@
 #   define _FILE_OFFSET_BITS 64
 # endif
 # define _LARGEFILE_SOURCE 1
-#endif
-
-
-#include "sqliteLimit.h"
-
-/*
-** For testing purposes, the various size limit constants are really
-** variables that we can modify in the testfixture.
-*/
-#ifdef SQLITE_TEST
-  #undef SQLITE_MAX_LENGTH
-  #undef SQLITE_MAX_COLUMN
-  #undef SQLITE_MAX_SQL_LENGTH
-  #undef SQLITE_MAX_EXPR_DEPTH
-  #undef SQLITE_MAX_COMPOUND_SELECT
-  #undef SQLITE_MAX_VDBE_OP
-  #undef SQLITE_MAX_FUNCTION_ARG
-  #undef SQLITE_MAX_VARIABLE_NUMBER
-  #undef SQLITE_MAX_PAGE_SIZE
-  #undef SQLITE_MAX_PAGE_COUNT
-  #undef SQLITE_MAX_LIKE_PATTERN_LENGTH
-
-  #define SQLITE_MAX_LENGTH              sqlite3MAX_LENGTH
-  #define SQLITE_MAX_COLUMN              sqlite3MAX_COLUMN
-  #define SQLITE_MAX_SQL_LENGTH          sqlite3MAX_SQL_LENGTH
-  #define SQLITE_MAX_EXPR_DEPTH          sqlite3MAX_EXPR_DEPTH
-  #define SQLITE_MAX_COMPOUND_SELECT     sqlite3MAX_COMPOUND_SELECT
-  #define SQLITE_MAX_VDBE_OP             sqlite3MAX_VDBE_OP
-  #define SQLITE_MAX_FUNCTION_ARG        sqlite3MAX_FUNCTION_ARG
-  #define SQLITE_MAX_VARIABLE_NUMBER     sqlite3MAX_VARIABLE_NUMBER
-  #define SQLITE_MAX_PAGE_SIZE           sqlite3MAX_PAGE_SIZE
-  #define SQLITE_MAX_PAGE_COUNT          sqlite3MAX_PAGE_COUNT
-  #define SQLITE_MAX_LIKE_PATTERN_LENGTH sqlite3MAX_LIKE_PATTERN_LENGTH
-
-  extern int sqlite3MAX_LENGTH;
-  extern int sqlite3MAX_COLUMN;
-  extern int sqlite3MAX_SQL_LENGTH;
-  extern int sqlite3MAX_EXPR_DEPTH;
-  extern int sqlite3MAX_COMPOUND_SELECT;
-  extern int sqlite3MAX_VDBE_OP;
-  extern int sqlite3MAX_FUNCTION_ARG;
-  extern int sqlite3MAX_VARIABLE_NUMBER;
-  extern int sqlite3MAX_PAGE_SIZE;
-  extern int sqlite3MAX_PAGE_COUNT;
-  extern int sqlite3MAX_LIKE_PATTERN_LENGTH;
 #endif
 
 
@@ -539,6 +518,11 @@ struct Schema {
 #define DB_UnresetViews    0x0002  /* Some views have defined column names */
 #define DB_Empty           0x0004  /* The file is empty (length 0 bytes) */
 
+/*
+** The number of different kinds of things that can be limited
+** using the sqlite3_limit() interface.
+*/
+#define SQLITE_N_LIMIT (SQLITE_LIMIT_VARIABLE_NUMBER+1)
 
 /*
 ** Each database is an instance of the following structure.
@@ -578,6 +562,7 @@ struct sqlite3 {
   u8 temp_store;                /* 1: file 2: memory 0: default */
   u8 mallocFailed;              /* True if we have seen a malloc failure */
   signed char nextAutovac;      /* Autovac setting after VACUUM if >=0 */
+  int nextPagesize;             /* Pagesize after VACUUM if >0 */
   int nTable;                   /* Number of tables in the database */
   CollSeq *pDfltColl;           /* The default collating sequence (BINARY) */
   i64 lastRowid;                /* ROWID of most recent insert (see above) */
@@ -586,6 +571,7 @@ struct sqlite3 {
   int nChange;                  /* Value returned by sqlite3_changes() */
   int nTotalChange;             /* Value returned by sqlite3_total_changes() */
   sqlite3_mutex *mutex;         /* Connection mutex */
+  int aLimit[SQLITE_N_LIMIT];   /* Limits */
   struct sqlite3InitInfo {      /* Information used during initialization */
     int iDb;                    /* When back is being initialized */
     int newTnum;                /* Rootpage of table being initialized */
@@ -1175,15 +1161,17 @@ struct Expr {
 /*
 ** The following are the meanings of bits in the Expr.flags field.
 */
-#define EP_FromJoin     0x01  /* Originated in ON or USING clause of a join */
-#define EP_Agg          0x02  /* Contains one or more aggregate functions */
-#define EP_Resolved     0x04  /* IDs have been resolved to COLUMNs */
-#define EP_Error        0x08  /* Expression contains one or more errors */
-#define EP_Distinct     0x10  /* Aggregate function with DISTINCT keyword */
-#define EP_VarSelect    0x20  /* pSelect is correlated, not constant */
-#define EP_Dequoted     0x40  /* True if the string has been dequoted */
-#define EP_InfixFunc    0x80  /* True for an infix function: LIKE, GLOB, etc */
-#define EP_ExpCollate  0x100  /* Collating sequence specified explicitly */
+#define EP_FromJoin   0x0001  /* Originated in ON or USING clause of a join */
+#define EP_Agg        0x0002  /* Contains one or more aggregate functions */
+#define EP_Resolved   0x0004  /* IDs have been resolved to COLUMNs */
+#define EP_Error      0x0008  /* Expression contains one or more errors */
+#define EP_Distinct   0x0010  /* Aggregate function with DISTINCT keyword */
+#define EP_VarSelect  0x0020  /* pSelect is correlated, not constant */
+#define EP_Dequoted   0x0040  /* True if the string has been dequoted */
+#define EP_InfixFunc  0x0080  /* True for an infix function: LIKE, GLOB, etc */
+#define EP_ExpCollate 0x0100  /* Collating sequence specified explicitly */
+#define EP_AnyAff     0x0200  /* Can take a cached column of any affinity */
+#define EP_FixedDest  0x0400  /* Result needed in a specific register */
 
 /*
 ** These macros can be used to test, set, or clear bits in the 
@@ -1340,9 +1328,13 @@ struct WhereLevel {
   sqlite3_index_info *pIdxInfo;  /* Index info for n-th source table */
 };
 
-#define ORDERBY_NORMAL 0
-#define ORDERBY_MIN    1
-#define ORDERBY_MAX    2
+/*
+** Flags appropriate for the wflags parameter of sqlite3WhereBegin().
+*/
+#define WHERE_ORDERBY_NORMAL     0   /* No-op */
+#define WHERE_ORDERBY_MIN        1   /* ORDER BY processing for min() func */
+#define WHERE_ORDERBY_MAX        2   /* ORDER BY processing for max() func */
+#define WHERE_ONEPASS_DESIRED    4   /* Want to do one-pass UPDATE/DELETE */
 
 /*
 ** The WHERE clause processing routine has two halves.  The
@@ -1352,7 +1344,8 @@ struct WhereLevel {
 ** into the second half to give some continuity.
 */
 struct WhereInfo {
-  Parse *pParse;
+  Parse *pParse;       /* Parsing and code generating context */
+  u8 okOnePass;        /* Ok to use one-pass algorithm for UPDATE or DELETE */
   SrcList *pTabList;   /* List of tables in the join */
   int iTop;            /* The very beginning of the WHERE loop */
   int iContinue;       /* Jump here to continue with next record */
@@ -1468,6 +1461,7 @@ struct SelectDest {
   u8 affinity;      /* Affinity used when eDest==SRT_Set */
   int iParm;        /* A parameter used by the eDest disposal method */
   int iMem;         /* Base register where results are written */
+  int nMem;         /* Number of registers allocated */
 };
 
 /*
@@ -1506,6 +1500,15 @@ struct Parse {
   int nMem;            /* Number of memory cells used so far */
   int nSet;            /* Number of sets used so far */
   int ckBase;          /* Base register of data during check constraints */
+  int disableColCache; /* True to disable adding to column cache */
+  int nColCache;       /* Number of entries in the column cache */
+  int iColCache;       /* Next entry of the cache to replace */
+  struct yColCache {
+    int iTable;           /* Table cursor number */
+    int iColumn;          /* Table column number */
+    char affChange;       /* True if this register has had an affinity change */
+    int iReg;             /* Register holding value of this column */
+  } aColCache[10];     /* One for each valid column cache entry */
   u32 writeMask;       /* Start a write transaction on these databases */
   u32 cookieMask;      /* Bitmask of schema verified databases */
   int cookieGoto;      /* Address of OP_Goto to cookie verifier subroutine */
@@ -1722,6 +1725,7 @@ struct StrAccum {
   char *zText;     /* The string collected so far */
   int  nChar;      /* Length of the string so far */
   int  nAlloc;     /* Amount of space allocated in zText */
+  int  mxAlloc;        /* Maximum allowed string length */
   u8   mallocFailed;   /* Becomes true if any memory allocation fails */
   u8   useMalloc;      /* True if zText is enlargable using realloc */
   u8   tooBig;         /* Becomes true if string size exceeds limits */
@@ -1834,6 +1838,7 @@ int sqlite3BitvecTest(Bitvec*, u32);
 int sqlite3BitvecSet(Bitvec*, u32);
 void sqlite3BitvecClear(Bitvec*, u32);
 void sqlite3BitvecDestroy(Bitvec*);
+int sqlite3BitvecBuiltinTest(int,int*);
 
 void sqlite3CreateView(Parse*,Token*,Token*,Token*,Select*,int,int);
 
@@ -1870,11 +1875,18 @@ void sqlite3DeleteFrom(Parse*, SrcList*, Expr*);
 void sqlite3Update(Parse*, SrcList*, ExprList*, Expr*, int);
 WhereInfo *sqlite3WhereBegin(Parse*, SrcList*, Expr*, ExprList**, u8);
 void sqlite3WhereEnd(WhereInfo*);
-void sqlite3ExprCodeGetColumn(Vdbe*, Table*, int, int, int);
+int sqlite3ExprCodeGetColumn(Parse*, Table*, int, int, int, int);
+void sqlite3ExprCodeMove(Parse*, int, int);
+void sqlite3ExprClearColumnCache(Parse*, int);
+void sqlite3ExprCacheAffinityChange(Parse*, int, int);
+int sqlite3ExprWritableRegister(Parse*,int,int);
+void sqlite3ExprHardCopy(Parse*,int,int);
 int sqlite3ExprCode(Parse*, Expr*, int);
 int sqlite3ExprCodeTemp(Parse*, Expr*, int*);
+int sqlite3ExprCodeTarget(Parse*, Expr*, int);
 int sqlite3ExprCodeAndCache(Parse*, Expr*, int);
-int sqlite3ExprCodeExprList(Parse*, ExprList*, int);
+void sqlite3ExprCodeConstants(Parse*, Expr*);
+int sqlite3ExprCodeExprList(Parse*, ExprList*, int, int);
 void sqlite3ExprIfTrue(Parse*, Expr*, int, int);
 void sqlite3ExprIfFalse(Parse*, Expr*, int, int);
 Table *sqlite3FindTable(sqlite3*,const char*, const char*);
@@ -1891,7 +1903,9 @@ void sqlite3ExprAnalyzeAggregates(NameContext*, Expr*);
 void sqlite3ExprAnalyzeAggList(NameContext*,ExprList*);
 Vdbe *sqlite3GetVdbe(Parse*);
 Expr *sqlite3CreateIdExpr(Parse *, const char*);
-void sqlite3Randomness(int, void*);
+void sqlite3PrngSaveState(void);
+void sqlite3PrngRestoreState(void);
+void sqlite3PrngResetState(void);
 void sqlite3RollbackAll(sqlite3*);
 void sqlite3CodeVerifySchema(Parse*, int);
 void sqlite3BeginTransaction(Parse*, int);
@@ -1904,7 +1918,7 @@ int sqlite3ExprIsInteger(Expr*, int*);
 int sqlite3IsRowid(const char*);
 void sqlite3GenerateRowDelete(Parse*, Table*, int, int, int);
 void sqlite3GenerateRowIndexDelete(Parse*, Table*, int, int*);
-int sqlite3GenerateIndexKey(Parse*, Index*, int, int);
+int sqlite3GenerateIndexKey(Parse*, Index*, int, int, int);
 void sqlite3GenerateConstraintChecks(Parse*,Table*,int,int,
                                      int*,int,int,int,int);
 void sqlite3CompleteInsertion(Parse*, Table*, int, int, int*,int,int,int,int);
@@ -1929,7 +1943,7 @@ void sqlite3RegisterDateTimeFunctions(sqlite3*);
 int sqlite3SafetyCheckOk(sqlite3*);
 int sqlite3SafetyCheckSickOrOk(sqlite3*);
 void sqlite3ChangeCookie(Parse*, int);
-void sqlite3MaterializeView(Parse*, Select*, Expr*, u32, int);
+void sqlite3MaterializeView(Parse*, Select*, Expr*, int);
 
 #ifndef SQLITE_OMIT_TRIGGER
   void sqlite3BeginTrigger(Parse*, Token*,Token*,int,int,IdList*,SrcList*,
@@ -1949,14 +1963,12 @@ void sqlite3MaterializeView(Parse*, Select*, Expr*, u32, int);
   TriggerStep *sqlite3TriggerDeleteStep(sqlite3*,Token*, Expr*);
   void sqlite3DeleteTrigger(Trigger*);
   void sqlite3UnlinkAndDeleteTrigger(sqlite3*,int,const char*);
-  void sqlite3SelectMask(Parse *, Select *, u32);
 #else
 # define sqlite3TriggersExist(A,B,C,D,E,F) 0
 # define sqlite3DeleteTrigger(A)
 # define sqlite3DropTriggerPtr(A,B)
 # define sqlite3UnlinkAndDeleteTrigger(A,B,C)
 # define sqlite3CodeRowTrigger(A,B,C,D,E,F,G,H,I,J,K) 0
-# define sqlite3SelectMask(A, B, C)
 #endif
 
 int sqlite3JoinType(Parse*, Token*, Token*, Token*);
@@ -1990,7 +2002,8 @@ int sqlite3FitsIn64Bits(const char *, int);
 int sqlite3Utf16ByteLen(const void *pData, int nChar);
 int sqlite3Utf8CharLen(const char *pData, int nByte);
 int sqlite3Utf8Read(const u8*, const u8*, const u8**);
-int sqlite3PutVarint(unsigned char *, u64);
+int sqlite3PutVarint(unsigned char*, u64);
+int sqlite3PutVarint32(unsigned char*, u32);
 int sqlite3GetVarint(const unsigned char *, u64 *);
 int sqlite3GetVarint32(const unsigned char *, u32 *);
 int sqlite3VarintLen(u64 v);
@@ -2070,12 +2083,11 @@ void *sqlite3ParserAlloc(void*(*)(size_t));
 void sqlite3ParserFree(void*, void(*)(void*));
 void sqlite3Parser(void*, int, Token, Parse*);
 
+int sqlite3AutoLoadExtensions(sqlite3*);
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
   void sqlite3CloseExtensions(sqlite3*);
-  int sqlite3AutoLoadExtensions(sqlite3*);
 #else
 # define sqlite3CloseExtensions(X)
-# define sqlite3AutoLoadExtensions(X)  SQLITE_OK
 #endif
 
 #ifndef SQLITE_OMIT_SHARED_CACHE
@@ -2112,7 +2124,7 @@ int sqlite3VtabBegin(sqlite3 *, sqlite3_vtab *);
 FuncDef *sqlite3VtabOverloadFunction(sqlite3 *,FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3Reprepare(Vdbe*);
-void sqlite3ExprListCheckLength(Parse*, ExprList*, int, const char*);
+void sqlite3ExprListCheckLength(Parse*, ExprList*, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 
 
@@ -2127,7 +2139,7 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 ** mechanism is disabled at compile-time then set up macros so that no
 ** unnecessary code is generated.
 */
-#ifndef SQLITE_OMIT_FAULTINJECTOR
+#ifndef SQLITE_OMIT_BUILTIN_TEST
   void sqlite3FaultConfig(int,int,int);
   int sqlite3FaultFailures(int);
   int sqlite3FaultBenignFailures(int);

@@ -45,7 +45,7 @@ void sqlite3IndexAffinityStr(Vdbe *v, Index *pIdx){
     int n;
     Table *pTab = pIdx->pTable;
     sqlite3 *db = sqlite3VdbeDb(v);
-    pIdx->zColAff = (char *)sqlite3DbMallocZero(db, pIdx->nColumn+2);
+    pIdx->zColAff = (char *)sqlite3DbMallocRaw(db, pIdx->nColumn+2);
     if( !pIdx->zColAff ){
       return;
     }
@@ -86,7 +86,7 @@ void sqlite3TableAffinityStr(Vdbe *v, Table *pTab){
     int i;
     sqlite3 *db = sqlite3VdbeDb(v);
 
-    zColAff = (char *)sqlite3DbMallocZero(db, pTab->nCol+1);
+    zColAff = (char *)sqlite3DbMallocRaw(db, pTab->nCol+1);
     if( !zColAff ){
       return;
     }
@@ -537,8 +537,7 @@ void sqlite3Insert(
       ** back up and execute the SELECT code above.
       */
       sqlite3VdbeJumpHere(v, iInitCode);
-      sqlite3VdbeAddOp2(v, OP_OpenEphemeral, srcTab, 0);
-      sqlite3VdbeAddOp2(v, OP_SetNumColumns, srcTab, nColumn);
+      sqlite3VdbeAddOp2(v, OP_OpenEphemeral, srcTab, nColumn);
       sqlite3VdbeAddOp2(v, OP_Goto, 0, iSelectLoop);
       sqlite3VdbeResolveLabel(v, iCleanup);
     }else{
@@ -629,8 +628,8 @@ void sqlite3Insert(
   /* Open the temp table for FOR EACH ROW triggers
   */
   if( triggers_exist ){
+    sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, pTab->nCol);
     sqlite3VdbeAddOp2(v, OP_OpenPseudo, newIdx, 0);
-    sqlite3VdbeAddOp2(v, OP_SetNumColumns, newIdx, pTab->nCol);
   }
     
   /* Initialize the count of rows to be inserted
@@ -647,7 +646,7 @@ void sqlite3Insert(
 
     baseCur = pParse->nTab;
     nIdx = sqlite3OpenTableAndIndices(pParse, pTab, baseCur, OP_OpenWrite);
-    aRegIdx = sqlite3DbMallocZero(db, sizeof(int)*(nIdx+1));
+    aRegIdx = sqlite3DbMallocRaw(db, sizeof(int)*(nIdx+1));
     if( aRegIdx==0 ){
       goto insert_cleanup;
     }
@@ -1172,6 +1171,7 @@ void sqlite3GenerateConstraintChecks(
     sqlite3VdbeAddOp2(v, OP_SCopy, regRowid, regIdx+i);
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regIdx, pIdx->nColumn+1, aRegIdx[iCur]);
     sqlite3IndexAffinityStr(v, pIdx);
+    sqlite3ExprCacheAffinityChange(pParse, regIdx, pIdx->nColumn+1);
     sqlite3ReleaseTempRange(pParse, regIdx, pIdx->nColumn+1);
 
     /* Find out what action to take in case there is an indexing conflict */
@@ -1286,6 +1286,7 @@ void sqlite3CompleteInsertion(
   regRec = sqlite3GetTempReg(pParse);
   sqlite3VdbeAddOp3(v, OP_MakeRecord, regData, pTab->nCol, regRec);
   sqlite3TableAffinityStr(v, pTab);
+  sqlite3ExprCacheAffinityChange(pParse, regData, pTab->nCol);
 #ifndef SQLITE_OMIT_TRIGGER
   if( newIdx>=0 ){
     sqlite3VdbeAddOp3(v, OP_Insert, newIdx, regRec, regRowid);
@@ -1663,3 +1664,8 @@ static int xferOptimization(
   }
 }
 #endif /* SQLITE_OMIT_XFER_OPT */
+
+/* Make sure "isView" gets undefined in case this file becomes part of
+** the amalgamation - so that subsequent files do not see isView as a
+** macro. */
+#undef isView

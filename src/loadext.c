@@ -12,7 +12,6 @@
 ** This file contains code used to dynamically load extensions into
 ** the SQLite library.
 */
-#ifndef SQLITE_OMIT_LOAD_EXTENSION
 
 #ifndef SQLITE_CORE
   #define SQLITE_CORE 1  /* Disable the API redefinition in sqlite3ext.h */
@@ -21,6 +20,8 @@
 #include "sqliteInt.h"
 #include <string.h>
 #include <ctype.h>
+
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 
 /*
 ** Some API routines are omitted when various features are
@@ -119,7 +120,7 @@
 ** also check to make sure that the pointer to the function is
 ** not NULL before calling it.
 */
-const sqlite3_api_routines sqlite3Apis = {
+static const sqlite3_api_routines sqlite3Apis = {
   sqlite3_aggregate_context,
   sqlite3_aggregate_count,
   sqlite3_bind_blob,
@@ -292,6 +293,16 @@ const sqlite3_api_routines sqlite3Apis = {
   sqlite3_vfs_find,
   sqlite3_vfs_register,
   sqlite3_vfs_unregister,
+
+  /*
+  ** Added for 3.5.8
+  */
+  sqlite3_threadsafe,
+  sqlite3_result_zeroblob,
+  sqlite3_result_error_code,
+  sqlite3_test_control,
+  sqlite3_randomness,
+  sqlite3_context_db_handle,
 };
 
 /*
@@ -425,6 +436,19 @@ int sqlite3_enable_load_extension(sqlite3 *db, int onoff){
   return SQLITE_OK;
 }
 
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
+
+/*
+** The auto-extension code added regardless of whether or not extension
+** loading is supported.  We need a dummy sqlite3Apis pointer for that
+** code if regular extension loading is not available.  This is that
+** dummy pointer.
+*/
+#ifdef SQLITE_OMIT_LOAD_EXTENSION
+static const sqlite3_api_routines sqlite3Apis = { 0 };
+#endif
+
+
 /*
 ** The following object holds the list of automatically loaded
 ** extensions.
@@ -514,5 +538,3 @@ int sqlite3AutoLoadExtensions(sqlite3 *db){
   }
   return rc;
 }
-
-#endif /* SQLITE_OMIT_LOAD_EXTENSION */

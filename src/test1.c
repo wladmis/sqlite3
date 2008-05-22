@@ -2695,7 +2695,7 @@ static int test_bind_text(
 
   if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
   if( Tcl_GetIntFromObj(interp, objv[2], &idx) ) return TCL_ERROR;
-  value = Tcl_GetString(objv[3]);
+  value = (char*)Tcl_GetByteArrayFromObj(objv[3], &bytes);
   if( Tcl_GetIntFromObj(interp, objv[4], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_bind_text(pStmt, idx, value, bytes, SQLITE_TRANSIENT);
@@ -3051,6 +3051,9 @@ static int test_prepare(
   if( zTail ){
     if( bytes>=0 ){
       bytes = bytes - (zTail-zSql);
+    }
+    if( strlen(zTail)<bytes ){
+      bytes = strlen(zTail);
     }
     Tcl_ObjSetVar2(interp, objv[4], 0, Tcl_NewStringObj(zTail, bytes), 0);
   }
@@ -4260,6 +4263,16 @@ static int vfs_unlink_test(
     }
   }
   assert( 0==sqlite3_vfs_find(0) );
+  
+  /* Register the main VFS as non-default (will be made default, since
+  ** it'll be the only one in existence).
+  */
+  sqlite3_vfs_register(pMain, 0);
+  assert( sqlite3_vfs_find(0)==pMain );
+  
+  /* Un-register the main VFS again to restore an empty VFS list */
+  sqlite3_vfs_unregister(pMain);
+  assert( 0==sqlite3_vfs_find(0) );
 
   /* Relink all VFSes in reverse order. */  
   for(i=sizeof(apVfs)/sizeof(apVfs[0])-1; i>=0; i--){
@@ -4321,6 +4334,66 @@ static int file_control_test(
 }
 
 /*
+** tclcmd:   sqlite3_limit DB ID VALUE
+**
+** This TCL command runs the sqlite3_limit interface and
+** verifies correct operation of the same.
+*/
+static int test_limit(
+  ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int objc,              /* Number of arguments */
+  Tcl_Obj *CONST objv[]  /* Command arguments */
+){
+  sqlite3 *db;
+  int rc;
+  static const struct {
+     char *zName;
+     int id;
+  } aId[] = {
+    { "SQLITE_LIMIT_LENGTH",              SQLITE_LIMIT_LENGTH               },
+    { "SQLITE_LIMIT_SQL_LENGTH",          SQLITE_LIMIT_SQL_LENGTH           },
+    { "SQLITE_LIMIT_COLUMN",              SQLITE_LIMIT_COLUMN               },
+    { "SQLITE_LIMIT_EXPR_DEPTH",          SQLITE_LIMIT_EXPR_DEPTH           },
+    { "SQLITE_LIMIT_COMPOUND_SELECT",     SQLITE_LIMIT_COMPOUND_SELECT      },
+    { "SQLITE_LIMIT_VDBE_OP",             SQLITE_LIMIT_VDBE_OP              },
+    { "SQLITE_LIMIT_FUNCTION_ARG",        SQLITE_LIMIT_FUNCTION_ARG         },
+    { "SQLITE_LIMIT_ATTACHED",            SQLITE_LIMIT_ATTACHED             },
+    { "SQLITE_LIMIT_LIKE_PATTERN_LENGTH", SQLITE_LIMIT_LIKE_PATTERN_LENGTH  },
+    { "SQLITE_LIMIT_VARIABLE_NUMBER",     SQLITE_LIMIT_VARIABLE_NUMBER      },
+    
+    /* Out of range test cases */
+    { "SQLITE_LIMIT_TOOSMALL",            -1,                               },
+    { "SQLITE_LIMIT_TOOBIG",              SQLITE_LIMIT_VARIABLE_NUMBER+1    },
+  };
+  int i, id;
+  int val;
+  const char *zId;
+
+  if( objc!=4 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"",
+        Tcl_GetStringFromObj(objv[0], 0), " DB ID VALUE", 0);
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  zId = Tcl_GetString(objv[2]);
+  for(i=0; i<sizeof(aId)/sizeof(aId[0]); i++){
+    if( strcmp(zId, aId[i].zName)==0 ){
+      id = aId[i].id;
+      break;
+    }
+  }
+  if( i>=sizeof(aId)/sizeof(aId[0]) ){
+    Tcl_AppendResult(interp, "unknown limit type: ", zId, (char*)0);
+    return TCL_ERROR;
+  }
+  if( Tcl_GetIntFromObj(interp, objv[3], &val) ) return TCL_ERROR;
+  rc = sqlite3_limit(db, id, val);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(rc));
+  return TCL_OK;  
+}
+
+/*
 ** tclcmd:  save_prng_state
 */
 static int save_prng_state(
@@ -4329,8 +4402,7 @@ static int save_prng_state(
   int objc,              /* Number of arguments */
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
-  extern void sqlite3SavePrngState(void);
-  sqlite3SavePrngState();
+  sqlite3_test_control(SQLITE_TESTCTRL_PRNG_SAVE);
   return TCL_OK;
 }
 /*
@@ -4342,8 +4414,7 @@ static int restore_prng_state(
   int objc,              /* Number of arguments */
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
-  extern void sqlite3RestorePrngState(void);
-  sqlite3RestorePrngState();
+  sqlite3_test_control(SQLITE_TESTCTRL_PRNG_RESTORE);
   return TCL_OK;
 }
 /*
@@ -4355,8 +4426,7 @@ static int reset_prng_state(
   int objc,              /* Number of arguments */
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
-  extern void sqlite3ResetPrngState(void);
-  sqlite3ResetPrngState();
+  sqlite3_test_control(SQLITE_TESTCTRL_PRNG_RESET);
   return TCL_OK;
 }
 
@@ -4459,6 +4529,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_load_extension",        test_load_extension,     0},
      { "sqlite3_enable_load_extension", test_enable_load,        0},
      { "sqlite3_extended_result_codes", test_extended_result_codes, 0},
+     { "sqlite3_limit",                 test_limit,                 0},
 
      { "save_prng_state",               save_prng_state,    0 },
      { "restore_prng_state",            restore_prng_state, 0 },
@@ -4472,10 +4543,12 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_column_double",         test_column_double ,0 },
      { "sqlite3_column_int64",          test_column_int64  ,0 },
      { "sqlite3_column_text",       test_stmt_utf8,  sqlite3_column_text      },
-     { "sqlite3_column_decltype",   test_stmt_utf8,  sqlite3_column_decltype  },
      { "sqlite3_column_name",       test_stmt_utf8,  sqlite3_column_name      },
      { "sqlite3_column_int",        test_stmt_int,   sqlite3_column_int       },
      { "sqlite3_column_bytes",      test_stmt_int,   sqlite3_column_bytes     },
+#ifndef SQLITE_OMIT_DECLTYPE
+     { "sqlite3_column_decltype",   test_stmt_utf8,  sqlite3_column_decltype  },
+#endif
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
 { "sqlite3_column_database_name", test_stmt_utf8, sqlite3_column_database_name},
 { "sqlite3_column_table_name", test_stmt_utf8, sqlite3_column_table_name},
@@ -4485,9 +4558,11 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 #ifndef SQLITE_OMIT_UTF16
      { "sqlite3_column_bytes16",    test_stmt_int,   sqlite3_column_bytes16   },
      { "sqlite3_column_text16",     test_stmt_utf16, sqlite3_column_text16    },
-     { "sqlite3_column_decltype16", test_stmt_utf16, sqlite3_column_decltype16},
      { "sqlite3_column_name16",     test_stmt_utf16, sqlite3_column_name16    },
      { "add_alignment_test_collations", add_alignment_test_collations, 0      },
+#ifndef SQLITE_OMIT_DECLTYPE
+     { "sqlite3_column_decltype16", test_stmt_utf16, sqlite3_column_decltype16},
+#endif
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
 {"sqlite3_column_database_name16",
   test_stmt_utf16, sqlite3_column_database_name16},

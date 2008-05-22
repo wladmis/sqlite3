@@ -398,6 +398,7 @@ struct BtShared {
   BtLock *pLock;        /* List of locks held on this shared-btree struct */
   Btree *pExclusive;    /* Btree with an EXCLUSIVE lock on the whole db */
 #endif
+  u8 *pTmpSpace;        /* BtShared.pageSize bytes of space for tmp use */
 };
 
 /*
@@ -435,13 +436,14 @@ struct BtCursor {
   Btree *pBtree;            /* The Btree to which this cursor belongs */
   BtShared *pBt;            /* The BtShared this cursor points to */
   BtCursor *pNext, *pPrev;  /* Forms a linked list of all cursors */
-  int (*xCompare)(void*,int,const void*,int,const void*); /* Key comp func */
-  void *pArg;               /* First arg to xCompare() */
+  struct KeyInfo *pKeyInfo; /* Argument passed to comparison function */
   Pgno pgnoRoot;            /* The root page of this tree */
   MemPage *pPage;           /* Page that contains the entry */
   int idx;                  /* Index of the entry in pPage->aCell[] */
   CellInfo info;            /* A parse of the cell we are pointing at */
   u8 wrFlag;                /* True if writable */
+  u8 atLast;                /* Cursor pointing to the last entry */
+  u8 validNKey;             /* True if info.nKey is valid */
   u8 eState;                /* One of the CURSOR_XXX constants (see below) */
   void *pKey;      /* Saved key that was cursor's last known position */
   i64 nKey;        /* Size of pKey, or last integer key */

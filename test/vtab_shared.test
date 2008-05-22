@@ -54,9 +54,8 @@ do_test vtab_shared-1.2 {
     SELECT * FROM t1;
   }
 } [list 1 \
-  {malformed database schema - Cannot use virtual tables in shared-cache mode}]
+  {malformed database schema (t1) - Cannot use virtual tables in shared-cache mode}]
 
 db close
 sqlite3_enable_shared_cache 0
 finish_test
-

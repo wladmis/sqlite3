@@ -39,6 +39,11 @@ struct sqlite3_mutex {
   int trace;                 /* True to trace changes */
 #endif
 };
+#ifdef SQLITE_DEBUG
+#define SQLITE3_MUTEX_INITIALIZER { PTHREAD_MUTEX_INITIALIZER, 0, 0, (pthread_t)0, 0 }
+#else
+#define SQLITE3_MUTEX_INITIALIZER { PTHREAD_MUTEX_INITIALIZER, 0, 0, (pthread_t)0 }
+#endif
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
@@ -83,11 +88,12 @@ struct sqlite3_mutex {
 */
 sqlite3_mutex *sqlite3_mutex_alloc(int iType){
   static sqlite3_mutex staticMutexes[] = {
-    { PTHREAD_MUTEX_INITIALIZER, },
-    { PTHREAD_MUTEX_INITIALIZER, },
-    { PTHREAD_MUTEX_INITIALIZER, },
-    { PTHREAD_MUTEX_INITIALIZER, },
-    { PTHREAD_MUTEX_INITIALIZER, },
+    SQLITE3_MUTEX_INITIALIZER,
+    SQLITE3_MUTEX_INITIALIZER,
+    SQLITE3_MUTEX_INITIALIZER,
+    SQLITE3_MUTEX_INITIALIZER,
+    SQLITE3_MUTEX_INITIALIZER,
+    SQLITE3_MUTEX_INITIALIZER
   };
   sqlite3_mutex *p;
   switch( iType ){

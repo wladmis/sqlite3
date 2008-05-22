@@ -111,7 +111,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
       break;
     }
     default: {
-      static sqlite3_mutex staticMutexes[5];
+      static sqlite3_mutex staticMutexes[6];
       static int isInit = 0;
       while( !isInit ){
         static long lock = 0;

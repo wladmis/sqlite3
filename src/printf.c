@@ -735,14 +735,17 @@ void sqlite3StrAccumAppend(StrAccum *p, const char *z, int N){
         return;
       }
     }else{
-      p->nAlloc += p->nAlloc + N + 1;
-      if( p->nAlloc > SQLITE_MAX_LENGTH ){
-        p->nAlloc = SQLITE_MAX_LENGTH;
-        if( p->nChar+N >= p->nAlloc ){
+      i64 szNew = p->nAlloc;
+      szNew += N + 1;
+      if( szNew > p->mxAlloc ){
+        p->nAlloc = p->mxAlloc;
+        if( ((i64)p->nChar)+((i64)N) >= p->nAlloc ){
           sqlite3StrAccumReset(p);
           p->tooBig = 1;
           return;
         }
+      }else{
+        p->nAlloc = szNew;
       }
       zNew = sqlite3_malloc( p->nAlloc );
       if( zNew ){
@@ -793,10 +796,11 @@ void sqlite3StrAccumReset(StrAccum *p){
 /*
 ** Initialize a string accumulator
 */
-static void sqlite3StrAccumInit(StrAccum *p, char *zBase, int n){
+static void sqlite3StrAccumInit(StrAccum *p, char *zBase, int n, int mx){
   p->zText = p->zBase = zBase;
   p->nChar = 0;
   p->nAlloc = n;
+  p->mxAlloc = mx;
   p->useMalloc = 1;
   p->tooBig = 0;
   p->mallocFailed = 0;
@@ -810,7 +814,8 @@ char *sqlite3VMPrintf(sqlite3 *db, const char *zFormat, va_list ap){
   char *z;
   char zBase[SQLITE_PRINT_BUF_SIZE];
   StrAccum acc;
-  sqlite3StrAccumInit(&acc, zBase, sizeof(zBase));
+  sqlite3StrAccumInit(&acc, zBase, sizeof(zBase),
+                      db ? db->aLimit[SQLITE_LIMIT_LENGTH] : SQLITE_MAX_LENGTH);
   vxprintf(&acc, 1, zFormat, ap);
   z = sqlite3StrAccumFinish(&acc);
   if( acc.mallocFailed && db ){
@@ -840,7 +845,7 @@ char *sqlite3_vmprintf(const char *zFormat, va_list ap){
   char *z;
   char zBase[SQLITE_PRINT_BUF_SIZE];
   StrAccum acc;
-  sqlite3StrAccumInit(&acc, zBase, sizeof(zBase));
+  sqlite3StrAccumInit(&acc, zBase, sizeof(zBase), SQLITE_MAX_LENGTH);
   vxprintf(&acc, 0, zFormat, ap);
   z = sqlite3StrAccumFinish(&acc);
   return z;
@@ -873,7 +878,7 @@ char *sqlite3_snprintf(int n, char *zBuf, const char *zFormat, ...){
   if( n<=0 ){
     return zBuf;
   }
-  sqlite3StrAccumInit(&acc, zBuf, n);
+  sqlite3StrAccumInit(&acc, zBuf, n, 0);
   acc.useMalloc = 0;
   va_start(ap,zFormat);
   vxprintf(&acc, 0, zFormat, ap);
@@ -892,7 +897,7 @@ void sqlite3DebugPrintf(const char *zFormat, ...){
   va_list ap;
   StrAccum acc;
   char zBuf[500];
-  sqlite3StrAccumInit(&acc, zBuf, sizeof(zBuf));
+  sqlite3StrAccumInit(&acc, zBuf, sizeof(zBuf), 0);
   acc.useMalloc = 0;
   va_start(ap,zFormat);
   vxprintf(&acc, 0, zFormat, ap);

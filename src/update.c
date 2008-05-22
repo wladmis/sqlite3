@@ -103,6 +103,7 @@ void sqlite3Update(
   NameContext sNC;       /* The name-context to resolve expressions in */
   int iDb;               /* Database containing the table being updated */
   int j1;                /* Addresses of jump instructions */
+  int okOnePass;         /* True for one-pass algorithm without the FIFO */
 
 #ifndef SQLITE_OMIT_TRIGGER
   int isView;                  /* Trying to update a view */
@@ -302,10 +303,10 @@ void sqlite3Update(
 
     /* Create pseudo-tables for NEW and OLD
     */
+    sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, pTab->nCol);
     sqlite3VdbeAddOp2(v, OP_OpenPseudo, oldIdx, 0);
-    sqlite3VdbeAddOp2(v, OP_SetNumColumns, oldIdx, pTab->nCol);
+    sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, pTab->nCol);
     sqlite3VdbeAddOp2(v, OP_OpenPseudo, newIdx, 0);
-    sqlite3VdbeAddOp2(v, OP_SetNumColumns, newIdx, pTab->nCol);
 
     iGoto = sqlite3VdbeAddOp2(v, OP_Goto, 0, 0);
     addr = sqlite3VdbeMakeLabel(v);
@@ -328,8 +329,7 @@ void sqlite3Update(
   ** a ephemeral table.
   */
   if( isView ){
-    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere,
-                           old_col_mask|new_col_mask, iCur);
+    sqlite3MaterializeView(pParse, pTab->pSelect, pWhere, iCur);
   }
 
   /* Resolve the column names in all the expressions in the
@@ -341,13 +341,16 @@ void sqlite3Update(
 
   /* Begin the database scan
   */
-  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0, 0);
+  sqlite3VdbeAddOp2(v, OP_Null, 0, regOldRowid);
+  pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere, 0,
+                             WHERE_ONEPASS_DESIRED);
   if( pWInfo==0 ) goto update_cleanup;
+  okOnePass = pWInfo->okOnePass;
 
   /* Remember the rowid of every item to be updated.
   */
-  sqlite3VdbeAddOp2(v, IsVirtual(pTab) ? OP_VRowid : OP_Rowid,iCur,regOldRowid);
-  sqlite3VdbeAddOp2(v, OP_FifoWrite, regOldRowid, 0);
+  sqlite3VdbeAddOp2(v, IsVirtual(pTab)?OP_VRowid:OP_Rowid, iCur, regOldRowid);
+  if( !okOnePass ) sqlite3VdbeAddOp2(v, OP_FifoWrite, regOldRowid, 0);
 
   /* End the database scan loop.
   */
@@ -367,7 +370,7 @@ void sqlite3Update(
     ** action, then we need to open all indices because we might need
     ** to be deleting some records.
     */
-    sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenWrite); 
+    if( !okOnePass ) sqlite3OpenTable(pParse, iCur, iDb, pTab, OP_OpenWrite); 
     if( onError==OE_Replace ){
       openAll = 1;
     }else{
@@ -395,7 +398,13 @@ void sqlite3Update(
   }
 
   /* Top of the update loop */
-  addr = sqlite3VdbeAddOp2(v, OP_FifoRead, regOldRowid, 0);
+  if( okOnePass ){
+    int a1 = sqlite3VdbeAddOp1(v, OP_NotNull, regOldRowid);
+    addr = sqlite3VdbeAddOp0(v, OP_Goto);
+    sqlite3VdbeJumpHere(v, a1);
+  }else{
+    addr = sqlite3VdbeAddOp2(v, OP_FifoRead, regOldRowid, 0);
+  }
 
   if( triggers_exist ){
     int regRowid;
@@ -446,6 +455,7 @@ void sqlite3Update(
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regCols, pTab->nCol, regRow);
     if( !isView ){
       sqlite3TableAffinityStr(v, pTab);
+      sqlite3ExprCacheAffinityChange(pParse, regCols, pTab->nCol);
     }
     sqlite3ReleaseTempRange(pParse, regCols, pTab->nCol);
     if( pParse->nErr ) goto update_cleanup;
@@ -661,3 +671,8 @@ static void updateVirtualTable(
   sqlite3SelectDelete(pSelect);  
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
+
+/* Make sure "isView" gets undefined in case this file becomes part of
+** the amalgamation - so that subsequent files do not see isView as a
+** macro. */
+#undef isView

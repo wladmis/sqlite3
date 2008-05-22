@@ -13,6 +13,18 @@
 #
 # $Id$
 
+#
+# What for user input before continuing.  This gives an opportunity
+# to connect profiling tools to the process.
+#
+for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[regexp {^-+pause$} [lindex $argv $i] all value]} {
+    puts -nonewline "Press RETURN to begin..."
+    flush stdout
+    gets stdin
+    set argv [lreplace $argv $i $i]
+  }
+}
 
 set tcl_precision 15
 set sqlite_pending_byte 0x0010000
@@ -45,8 +57,38 @@ sqlite3_soft_heap_limit $soft_limit
 # test_malloc.c for additional information.
 #
 for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[lindex $argv $i] eq "--malloctrace"} {
+    set argv [lreplace $argv $i $i]
+    sqlite3_memdebug_backtrace 10
+    sqlite3_memdebug_log start
+    set tester_do_malloctrace 1
+  }
+}
+for {set i 0} {$i<[llength $argv]} {incr i} {
   if {[regexp {^--backtrace=(\d+)$} [lindex $argv $i] all value]} {
     sqlite3_memdebug_backtrace $value
+    set argv [lreplace $argv $i $i]
+  }
+}
+
+
+proc ostrace_call {zCall nClick zFile i32 i64} {
+  set s "INSERT INTO ostrace VALUES( '$zCall', $nClick, '$zFile', $i32, $i64);"
+  puts $::ostrace_fd $s
+}
+
+for {set i 0} {$i<[llength $argv]} {incr i} {
+  if {[lindex $argv $i] eq "--ossummary" || [lindex $argv $i] eq "--ostrace"} {
+    sqlite3_instvfs create -default ostrace
+    set tester_do_ostrace 1
+    set ostrace_fd [open ostrace.sql w]
+    puts $ostrace_fd "BEGIN;"
+    if {[lindex $argv $i] eq "--ostrace"} {
+      set    s "CREATE TABLE ostrace"
+      append s "(method TEXT, clicks INT, file TEXT, i32 INT, i64 INT);"
+      puts $ostrace_fd $s
+      sqlite3_instvfs configure ostrace ostrace_call
+    }
     set argv [lreplace $argv $i $i]
   }
 }
@@ -100,8 +142,16 @@ set nErr 0
 set nTest 0
 set skip_test 0
 set failList {}
+set omitList {}
 if {![info exists speedTest]} {
   set speedTest 0
+}
+
+# Record the fact that a sequence of tests were omitted.
+#
+proc omit_test {name reason} {
+  global omitList
+  lappend omitList [list $name $reason]
 }
 
 # Invoke the do_test procedure to run a single test 
@@ -162,6 +212,21 @@ proc speed_trial {name numstmt units sql} {
   global total_time
   set total_time [expr {$total_time+$tm}]
 }
+proc speed_trial_tcl {name numstmt units script} {
+  puts -nonewline [format {%-21.21s } $name...]
+  flush stdout
+  set speed [time {eval $script}]
+  set tm [lindex $speed 0]
+  if {$tm == 0} {
+    set rate [format %20s "many"]
+  } else {
+    set rate [format %20.5f [expr {1000000.0*$numstmt/$tm}]]
+  }
+  set u2 $units/s
+  puts [format {%12d uS %s %s} $tm $rate $u2]
+  global total_time
+  set total_time [expr {$total_time+$tm}]
+}
 proc speed_trial_init {name} {
   global total_time
   set total_time 0
@@ -177,7 +242,7 @@ proc finish_test {} {
   finalize_testing
 }
 proc finalize_testing {} {
-  global nTest nErr sqlite_open_file_count
+  global nTest nErr sqlite_open_file_count omitList
 
   catch {db close}
   catch {db2 close}
@@ -187,6 +252,7 @@ proc finalize_testing {} {
   sqlite3 db {}
   # sqlite3_clear_tsd_memdebug
   db close
+  sqlite3_reset_auto_extension
   set heaplimit [sqlite3_soft_heap_limit]
   if {$heaplimit!=$::soft_limit} {
     puts "soft-heap-limit changed by this script\
@@ -200,6 +266,15 @@ proc finalize_testing {} {
   if {$nErr>0} {
     puts "Failures on these tests: $::failList"
   }
+  if {[llength $omitList]>0} {
+    puts "Omitted test cases:"
+    set prec {}
+    foreach {rec} [lsort $omitList] {
+      if {$rec==$prec} continue
+      set prec $rec
+      puts [format {  %-12s %s} [lindex $rec 0] [lindex $rec 1]]
+    }
+  }
   if {$nErr>0 && ![working_64bit_int]} {
     puts "******************************************************************"
     puts "N.B.:  The version of TCL that you used to build this test harness"
@@ -211,6 +286,20 @@ proc finalize_testing {} {
   if {$sqlite_open_file_count} {
     puts "$sqlite_open_file_count files were left open"
     incr nErr
+  }
+  if {[info exists ::tester_do_ostrace]} {
+    puts "Writing ostrace.sql..."
+    set fd $::ostrace_fd
+
+    puts -nonewline $fd "CREATE TABLE ossummary"
+    puts $fd "(method TEXT, clicks INTEGER, count INTEGER);"
+    foreach row [sqlite3_instvfs report ostrace] {
+      foreach {method count clicks} $row break
+      puts $fd "INSERT INTO ossummary VALUES('$method', $clicks, $count);"
+    }
+    puts $fd "COMMIT;"
+    close $fd
+    sqlite3_instvfs destroy ostrace
   }
   if {[sqlite3_memory_used]>0} {
     puts "Unfreed memory: [sqlite3_memory_used] bytes"
@@ -229,6 +318,18 @@ proc finalize_testing {} {
   puts "Current memory usage: [sqlite3_memory_highwater] bytes"
   if {[info commands sqlite3_memdebug_malloc_count] ne ""} {
     puts "Number of malloc()  : [sqlite3_memdebug_malloc_count] calls"
+  }
+  if {[info exists ::tester_do_malloctrace]} {
+    puts "Writing mallocs.sql..."
+    memdebug_log_sql
+    sqlite3_memdebug_log stop
+    sqlite3_memdebug_log clear
+
+    if {[sqlite3_memory_used]>0} {
+      puts "Writing leaks.sql..."
+      sqlite3_memdebug_log sync
+      memdebug_log_sql leaks.sql
+    }
   }
   foreach f [glob -nocomplain test.db-*-journal] {
     file delete -force $f
@@ -645,7 +746,56 @@ proc allcksum {{db db}} {
   return [md5 $txt]
 }
 
+proc memdebug_log_sql {{filename mallocs.sql}} {
 
+  set data [sqlite3_memdebug_log dump]
+  set nFrame [expr [llength [lindex $data 0]]-2]
+  if {$nFrame < 0} { return "" }
+
+  set database temp
+
+  set tbl "CREATE TABLE ${database}.malloc(nCall, nByte"
+  for {set ii 1} {$ii <= $nFrame} {incr ii} {
+    append tbl ", f${ii}"
+  }
+  append tbl ");\n"
+
+  set sql ""
+  foreach e $data {
+    append sql "INSERT INTO ${database}.malloc VALUES([join $e ,]);\n"
+    foreach f [lrange $e 2 end] {
+      set frames($f) 1
+    }
+  }
+
+  set tbl2 "CREATE TABLE ${database}.frame(frame INTEGER PRIMARY KEY, line);\n"
+  set tbl3 "CREATE TABLE ${database}.file(name PRIMARY KEY, content);\n"
+
+  foreach f [array names frames] {
+    set addr [format %x $f]
+    set cmd "addr2line -e [info nameofexec] $addr"
+    set line [eval exec $cmd]
+    append sql "INSERT INTO ${database}.frame VALUES($f, '$line');\n"
+
+    set file [lindex [split $line :] 0]
+    set files($file) 1
+  }
+
+  foreach f [array names files] {
+    set contents ""
+    catch {
+      set fd [open $f]
+      set contents [read $fd]
+      close $fd
+    }
+    set contents [string map {' ''} $contents]
+    append sql "INSERT INTO ${database}.file VALUES('$f', '$contents');\n"
+  }
+
+  set fd [open $filename w]
+  puts $fd "BEGIN; ${tbl}${tbl2}${tbl3}${sql} ; COMMIT;"
+  close $fd
+}
 
 # Copy file $from into $to. This is used because some versions of
 # TCL for windows (notably the 8.4.1 binary package shipped with the

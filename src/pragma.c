@@ -350,7 +350,8 @@ void sqlite3Pragma(
       /* Malloc may fail when setting the page-size, as there is an internal
       ** buffer that the pager module resizes using sqlite3_realloc().
       */
-      if( SQLITE_NOMEM==sqlite3BtreeSetPageSize(pBt, atoi(zRight), -1) ){
+      db->nextPagesize = atoi(zRight);
+      if( SQLITE_NOMEM==sqlite3BtreeSetPageSize(pBt, db->nextPagesize, -1) ){
         db->mallocFailed = 1;
       }
     }
@@ -570,7 +571,7 @@ void sqlite3Pragma(
       }
     }else{
       if( zRight[0] 
-       && !sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE) 
+       && sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE)==0 
       ){
         sqlite3ErrorMsg(pParse, "not a writable directory");
         goto pragma_out;
@@ -937,13 +938,16 @@ void sqlite3Pragma(
             { OP_Concat,      5,  3,  3},
             { OP_Concat,      6,  3,  3},
             { OP_ResultRow,   3,  1,  0},
+            { OP_IfPos,       1,  0,  0},    /* 9 */
+            { OP_Halt,        0,  0,  0},
           };
-          sqlite3GenerateIndexKey(pParse, pIdx, 1, 3);
+          sqlite3GenerateIndexKey(pParse, pIdx, 1, 3, 1);
           jmp2 = sqlite3VdbeAddOp3(v, OP_Found, j+2, 0, 3);
           addr = sqlite3VdbeAddOpList(v, ArraySize(idxErr), idxErr);
           sqlite3VdbeChangeP4(v, addr+1, "rowid ", P4_STATIC);
           sqlite3VdbeChangeP4(v, addr+3, " missing from index ", P4_STATIC);
           sqlite3VdbeChangeP4(v, addr+4, pIdx->zName, P4_STATIC);
+          sqlite3VdbeJumpHere(v, addr+9);
           sqlite3VdbeJumpHere(v, jmp2);
         }
         sqlite3VdbeAddOp2(v, OP_Next, 1, loopTop+1);

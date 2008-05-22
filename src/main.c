@@ -47,12 +47,22 @@ void (*sqlite3IoTrace)(const char*, ...) = 0;
 */
 char *sqlite3_temp_directory = 0;
 
+/*
+** Routine needed to support the testcase() macro.
+*/
+#ifdef SQLITE_COVERAGE_TEST
+void sqlite3Coverage(int x){
+  static int dummy = 0;
+  dummy += x;
+}
+#endif
+
 
 /*
 ** Return true if the buffer z[0..n-1] contains all spaces.
 */
 static int allSpaces(const char *z, int n){
-  while( n>0 && z[--n]==' ' ){}
+  while( n>0 && z[n-1]==' ' ){ n--; }
   return n==0;
 }
 
@@ -541,7 +551,6 @@ int sqlite3_create_function(
 ){
   int rc;
   sqlite3_mutex_enter(db->mutex);
-  assert( !db->mallocFailed );
   rc = sqlite3CreateFunc(db, zFunctionName, nArg, enc, p, xFunc, xStep, xFinal);
   rc = sqlite3ApiExit(db, rc);
   sqlite3_mutex_leave(db->mutex);
@@ -930,6 +939,87 @@ static int createCollation(
 
 
 /*
+** This array defines hard upper bounds on limit values.  The
+** initializer must be kept in sync with the SQLITE_LIMIT_*
+** #defines in sqlite3.h.
+*/
+static const int aHardLimit[] = {
+  SQLITE_MAX_LENGTH,
+  SQLITE_MAX_SQL_LENGTH,
+  SQLITE_MAX_COLUMN,
+  SQLITE_MAX_EXPR_DEPTH,
+  SQLITE_MAX_COMPOUND_SELECT,
+  SQLITE_MAX_VDBE_OP,
+  SQLITE_MAX_FUNCTION_ARG,
+  SQLITE_MAX_ATTACHED,
+  SQLITE_MAX_LIKE_PATTERN_LENGTH,
+  SQLITE_MAX_VARIABLE_NUMBER,
+};
+
+/*
+** Make sure the hard limits are set to reasonable values
+*/
+#if SQLITE_MAX_LENGTH<100
+# error SQLITE_MAX_LENGTH must be at least 100
+#endif
+#if SQLITE_MAX_SQL_LENGTH<100
+# error SQLITE_MAX_SQL_LENGTH must be at least 100
+#endif
+#if SQLITE_MAX_SQL_LENGTH>SQLITE_MAX_LENGTH
+# error SQLITE_MAX_SQL_LENGTH must not be greater than SQLITE_MAX_LENGTH
+#endif
+#if SQLITE_MAX_COLUMN<1
+# error SQLITE_MAX_COLUMN must be at least 1
+#endif
+#if SQLITE_MAX_EXPR_DEPTH<1
+# error SQLITE_MAX_EXPR_DEPTH must be at least 1
+#endif
+#if SQLITE_MAX_COMPOUND_SELECT<2
+# error SQLITE_MAX_COMPOUND_SELECT must be at least 2
+#endif
+#if SQLITE_MAX_VDBE_OP<40
+# error SQLITE_MAX_VDBE_OP must be at least 40
+#endif
+#if SQLITE_MAX_FUNCTION_ARG<0 || SQLITE_MAX_FUNCTION_ARG>255
+# error SQLITE_MAX_FUNCTION_ARG must be between 0 and 255
+#endif
+#if SQLITE_MAX_ATTACH<0 || SQLITE_MAX_ATTACH>30
+# error SQLITE_MAX_ATTACH must be between 0 and 30
+#endif
+#if SQLITE_MAX_LIKE_PATTERN_LENGTH<1
+# error SQLITE_MAX_LIKE_PATTERN_LENGTH must be at least 1
+#endif
+#if SQLITE_MAX_VARIABLE_NUMBER<1
+# error SQLITE_MAX_VARIABLE_NUMBER must be at least 1
+#endif
+
+
+/*
+** Change the value of a limit.  Report the old value.
+** If an invalid limit index is supplied, report -1.
+** Make no changes but still report the old value if the
+** new limit is negative.
+**
+** A new lower limit does not shrink existing constructs.
+** It merely prevents new constructs that exceed the limit
+** from forming.
+*/
+int sqlite3_limit(sqlite3 *db, int limitId, int newLimit){
+  int oldLimit;
+  if( limitId<0 || limitId>=SQLITE_N_LIMIT ){
+    return -1;
+  }
+  oldLimit = db->aLimit[limitId];
+  if( newLimit>=0 ){
+    if( newLimit>aHardLimit[limitId] ){
+      newLimit = aHardLimit[limitId];
+    }
+    db->aLimit[limitId] = newLimit;
+  }
+  return oldLimit;
+}
+
+/*
 ** This routine does the work of opening a database on behalf of
 ** sqlite3_open() and sqlite3_open16(). The database filename "zFilename"  
 ** is UTF-8 encoded.
@@ -970,8 +1060,11 @@ static int openDatabase(
   db->nDb = 2;
   db->magic = SQLITE_MAGIC_BUSY;
   db->aDb = db->aDbStatic;
+  assert( sizeof(db->aLimit)==sizeof(aHardLimit) );
+  memcpy(db->aLimit, aHardLimit, sizeof(db->aLimit));
   db->autoCommit = 1;
   db->nextAutovac = -1;
+  db->nextPagesize = 0;
   db->flags |= SQLITE_ShortColNames
 #if SQLITE_DEFAULT_FILE_FORMAT<4
                  | SQLITE_LegacyFileFmt
@@ -1002,13 +1095,12 @@ static int openDatabase(
   createCollation(db, "BINARY", SQLITE_UTF16BE, 0, binCollFunc, 0);
   createCollation(db, "BINARY", SQLITE_UTF16LE, 0, binCollFunc, 0);
   createCollation(db, "RTRIM", SQLITE_UTF8, (void*)1, binCollFunc, 0);
-  if( db->mallocFailed ||
-      (db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0))==0 
-  ){
-    assert( db->mallocFailed );
+  if( db->mallocFailed ){
     db->magic = SQLITE_MAGIC_SICK;
     goto opendb_out;
   }
+  db->pDfltColl = sqlite3FindCollSeq(db, SQLITE_UTF8, "BINARY", 6, 0);
+  assert( db->pDfltColl!=0 );
 
   /* Also add a UTF-8 case-insensitive collation sequence. */
   createCollation(db, "NOCASE", SQLITE_UTF8, 0, nocaseCollatingFunc, 0);
@@ -1157,7 +1249,7 @@ int sqlite3_open16(
                       SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, 0);
     assert( *ppDb || rc==SQLITE_NOMEM );
     if( rc==SQLITE_OK ){
-      rc = sqlite3_exec(*ppDb, "PRAGMA encoding = 'UTF-16'", 0, 0, 0);
+      ENC(*ppDb) = SQLITE_UTF16NATIVE;
       if( rc!=SQLITE_OK ){
         sqlite3_close(*ppDb);
         *ppDb = 0;
@@ -1343,8 +1435,8 @@ int sqlite3_table_column_metadata(
   int autoinc = 0;
 
   /* Ensure the database schema has been loaded */
-  (void)sqlite3SafetyOn(db);
   sqlite3_mutex_enter(db->mutex);
+  (void)sqlite3SafetyOn(db);
   sqlite3BtreeEnterAll(db);
   rc = sqlite3Init(db, &zErrMsg);
   sqlite3BtreeLeaveAll(db);
@@ -1491,11 +1583,19 @@ int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
 ** Interface to the testing logic.
 */
 int sqlite3_test_control(int op, ...){
-  va_list ap;
   int rc = 0;
+#ifndef SQLITE_OMIT_BUILTIN_TEST
+  va_list ap;
   va_start(ap, op);
   switch( op ){
-#ifndef SQLITE_OMIT_FAULTINJECTOR
+    /*
+    ** sqlite3_test_control(FAULT_CONFIG, fault_id, nDelay, nRepeat)
+    **
+    ** Configure a fault injector.  The specific fault injector is
+    ** identified by the fault_id argument.  (ex: SQLITE_FAULTINJECTOR_MALLOC)
+    ** The fault will occur after a delay of nDelay calls.  The fault
+    ** will repeat nRepeat times.
+    */
     case SQLITE_TESTCTRL_FAULT_CONFIG: {
       int id = va_arg(ap, int);
       int nDelay = va_arg(ap, int);
@@ -1503,23 +1603,88 @@ int sqlite3_test_control(int op, ...){
       sqlite3FaultConfig(id, nDelay, nRepeat);
       break;
     }
+
+    /*
+    ** sqlite3_test_control(FAULT_FAILURES, fault_id)
+    **
+    ** Return the number of faults (both hard and benign faults) that have
+    ** occurred since the injector identified by fault_id) was last configured.
+    */
     case SQLITE_TESTCTRL_FAULT_FAILURES: {
       int id = va_arg(ap, int);
       rc = sqlite3FaultFailures(id);
       break;
     }
+
+    /*
+    ** sqlite3_test_control(FAULT_BENIGN_FAILURES, fault_id)
+    **
+    ** Return the number of benign faults that have occurred since the
+    ** injector identified by fault_id was last configured.
+    */
     case SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES: {
       int id = va_arg(ap, int);
       rc = sqlite3FaultBenignFailures(id);
       break;
     }
+
+    /*
+    ** sqlite3_test_control(FAULT_PENDING, fault_id)
+    **
+    ** Return the number of successes that will occur before the next
+    ** scheduled failure on fault injector fault_id.
+    ** If no failures are scheduled, return -1.
+    */
     case SQLITE_TESTCTRL_FAULT_PENDING: {
       int id = va_arg(ap, int);
       rc = sqlite3FaultPending(id);
       break;
     }
-#endif /* SQLITE_OMIT_FAULTINJECTOR */
+
+    /*
+    ** Save the current state of the PRNG.
+    */
+    case SQLITE_TESTCTRL_PRNG_SAVE: {
+      sqlite3PrngSaveState();
+      break;
+    }
+
+    /*
+    ** Restore the state of the PRNG to the last state saved using
+    ** PRNG_SAVE.  If PRNG_SAVE has never before been called, then
+    ** this verb acts like PRNG_RESET.
+    */
+    case SQLITE_TESTCTRL_PRNG_RESTORE: {
+      sqlite3PrngRestoreState();
+      break;
+    }
+
+    /*
+    ** Reset the PRNG back to its uninitialized state.  The next call
+    ** to sqlite3_randomness() will reseed the PRNG using a single call
+    ** to the xRandomness method of the default VFS.
+    */
+    case SQLITE_TESTCTRL_PRNG_RESET: {
+      sqlite3PrngResetState();
+      break;
+    }
+
+    /*
+    **  sqlite3_test_control(BITVEC_TEST, size, program)
+    **
+    ** Run a test against a Bitvec object of size.  The program argument
+    ** is an array of integers that defines the test.  Return -1 on a
+    ** memory allocation error, 0 on success, or non-zero for an error.
+    ** See the sqlite3BitvecBuiltinTest() for additional information.
+    */
+    case SQLITE_TESTCTRL_BITVEC_TEST: {
+      int sz = va_arg(ap, int);
+      int *aProg = va_arg(ap, int*);
+      rc = sqlite3BitvecBuiltinTest(sz, aProg);
+      break;
+    }
   }
   va_end(ap);
+#endif /* SQLITE_OMIT_BUILTIN_TEST */
   return rc;
 }

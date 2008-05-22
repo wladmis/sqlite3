@@ -62,6 +62,18 @@ do_test update-3.4 {
 do_test update-3.5 {
   execsql {UPDATE test1 SET f2=f2*3}
 } {}
+do_test update-3.5.1 {
+  db changes
+} {10}
+
+# verify that SELECT does not reset the change counter
+do_test update-3.5.2 {
+  db eval {SELECT count(*) FROM test1}
+} {10}
+do_test update-3.5.3 {
+  db changes
+} {10}
+
 do_test update-3.6 {
   execsql {SELECT * FROM test1 ORDER BY f1}
 } {1 6 2 12 3 24 4 48 5 96 6 192 7 384 8 768 9 1536 10 3072}

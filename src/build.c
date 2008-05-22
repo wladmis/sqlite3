@@ -111,10 +111,8 @@ static void codeTableLocks(Parse *pParse){
   for(i=0; i<pParse->nTableLock; i++){
     TableLock *p = &pParse->aTableLock[i];
     int p1 = p->iDb;
-    if( p->isWriteLock ){
-      p1 = -1*(p1+1);
-    }
-    sqlite3VdbeAddOp4(pVdbe, OP_TableLock, p1, p->iTab, 0, p->zName, P4_STATIC);
+    sqlite3VdbeAddOp4(pVdbe, OP_TableLock, p1, p->iTab, p->isWriteLock,
+                      p->zName, P4_STATIC);
   }
 }
 #else
@@ -205,6 +203,7 @@ void sqlite3FinishCoding(Parse *pParse){
     FILE *trace = (db->flags & SQLITE_VdbeTrace)!=0 ? stdout : 0;
     sqlite3VdbeTrace(v, trace);
 #endif
+    assert( pParse->disableColCache==0 );  /* Disables and re-enables match */
     sqlite3VdbeMakeReady(v, pParse->nVar, pParse->nMem+3,
                          pParse->nTab+3, pParse->explain);
     pParse->rc = SQLITE_DONE;
@@ -608,8 +607,8 @@ char *sqlite3NameFromToken(sqlite3 *db, Token *pName){
 void sqlite3OpenMasterTable(Parse *p, int iDb){
   Vdbe *v = sqlite3GetVdbe(p);
   sqlite3TableLock(p, iDb, MASTER_ROOT, 1, SCHEMA_TABLE(iDb));
+  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, 5);/* sqlite_master has 5 columns */
   sqlite3VdbeAddOp3(v, OP_OpenWrite, 0, MASTER_ROOT, iDb);
-  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, 5); /* sqlite_master has 5 columns */
 }
 
 /*
@@ -933,11 +932,14 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   int i;
   char *z;
   Column *pCol;
+  sqlite3 *db = pParse->db;
   if( (p = pParse->pNewTable)==0 ) return;
-  if( p->nCol+1>SQLITE_MAX_COLUMN ){
+#if SQLITE_MAX_COLUMN
+  if( p->nCol+1>db->aLimit[SQLITE_LIMIT_COLUMN] ){
     sqlite3ErrorMsg(pParse, "too many columns on %s", p->zName);
     return;
   }
+#endif
   z = sqlite3NameFromToken(pParse->db, pName);
   if( z==0 ) return;
   for(i=0; i<p->nCol; i++){
@@ -2070,6 +2072,14 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
     sqlite3NestedParse(pParse, 
         "DELETE FROM %Q.%s WHERE tbl_name=%Q and type!='trigger'",
         pDb->zName, SCHEMA_TABLE(iDb), pTab->zName);
+
+    /* Drop any statistics from the sqlite_stat1 table, if it exists */
+    if( sqlite3FindTable(db, "sqlite_stat1", db->aDb[iDb].zName) ){
+      sqlite3NestedParse(pParse,
+        "DELETE FROM %Q.sqlite_stat1 WHERE tbl=%Q", pDb->zName, pTab->zName
+      );
+    }
+
     if( !isView && !IsVirtual(pTab) ){
       destroyTable(pParse, pTab);
     }
@@ -2275,7 +2285,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
   sqlite3OpenTable(pParse, iTab, iDb, pTab, OP_OpenRead);
   addr1 = sqlite3VdbeAddOp2(v, OP_Rewind, iTab, 0);
   regRecord = sqlite3GetTempReg(pParse);
-  regIdxKey = sqlite3GenerateIndexKey(pParse, pIndex, iTab, regRecord);
+  regIdxKey = sqlite3GenerateIndexKey(pParse, pIndex, iTab, regRecord, 1);
   if( pIndex->onError!=OE_None ){
     int j1, j2;
     int regRowid;
@@ -2855,6 +2865,12 @@ void sqlite3DropIndex(Parse *pParse, SrcList *pName, int ifExists){
        db->aDb[iDb].zName, SCHEMA_TABLE(iDb),
        pIndex->zName
     );
+    if( sqlite3FindTable(db, "sqlite_stat1", db->aDb[iDb].zName) ){
+      sqlite3NestedParse(pParse,
+        "DELETE FROM %Q.sqlite_stat1 WHERE idx=%Q",
+        db->aDb[iDb].zName, pIndex->zName
+      );
+    }
     sqlite3ChangeCookie(pParse, iDb);
     destroyRootPage(pParse, pIndex->tnum, iDb);
     sqlite3VdbeAddOp4(v, OP_DropIndex, iDb, 0, 0, pIndex->zName, 0);
