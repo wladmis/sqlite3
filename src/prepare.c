@@ -545,7 +545,7 @@ static int sqlite3Prepare(
         const char *zDb = db->aDb[i].zName;
         sqlite3Error(db, SQLITE_LOCKED, "database schema is locked: %s", zDb);
         (void)sqlite3SafetyOff(db);
-        return SQLITE_LOCKED;
+        return sqlite3ApiExit(db, SQLITE_LOCKED);
       }
     }
   }
@@ -558,7 +558,7 @@ static int sqlite3Prepare(
     if( nBytes>mxLen ){
       sqlite3Error(db, SQLITE_TOOBIG, "statement too long");
       (void)sqlite3SafetyOff(db);
-      return SQLITE_TOOBIG;
+      return sqlite3ApiExit(db, SQLITE_TOOBIG);
     }
     zSqlCopy = sqlite3DbStrNDup(db, zSql, nBytes);
     if( zSqlCopy ){

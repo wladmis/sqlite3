@@ -796,6 +796,7 @@ const char *sqlite3_errmsg(sqlite3 *db){
   sqlite3_mutex_enter(db->mutex);
   assert( !db->mallocFailed );
   z = (char*)sqlite3_value_text(db->pErr);
+  assert( !db->mallocFailed );
   if( z==0 ){
     z = sqlite3ErrStr(db->errCode);
   }
@@ -843,7 +844,12 @@ const void *sqlite3_errmsg16(sqlite3 *db){
          SQLITE_UTF8, SQLITE_STATIC);
     z = sqlite3_value_text16(db->pErr);
   }
-  sqlite3ApiExit(0, 0);
+  /* A malloc() may have failed within the call to sqlite3_value_text16()
+  ** above. If this is the case, then the db->mallocFailed flag needs to
+  ** be cleared before returning. Do this directly, instead of via
+  ** sqlite3ApiExit(), to avoid setting the database handle error message.
+  */
+  db->mallocFailed = 0;
   sqlite3_mutex_leave(db->mutex);
   return z;
 }
