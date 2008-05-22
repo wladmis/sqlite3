@@ -13,6 +13,8 @@
 ** a VDBE (or an "sqlite3_stmt" as it is known to the outside world.)  Prior
 ** to version 2.8.7, all this code was combined into the vdbe.c source file.
 ** But that file was getting too big so this subroutines were split out.
+**
+** $Id$
 */
 #include "sqliteInt.h"
 #include <ctype.h>
@@ -534,7 +536,7 @@ void sqlite3VdbeChangeP4(Vdbe *p, int addr, const char *zP4, int n){
   if( n==P4_INT32 ){
     /* Note: this cast is safe, because the origin data point was an int
     ** that was cast to a (const char *). */
-    pOp->p4.i = (int)(sqlite3_intptr_t)zP4;
+    pOp->p4.i = (int)zP4;
     pOp->p4type = n;
   }else if( zP4==0 ){
     pOp->p4.p = 0;
@@ -1390,12 +1392,14 @@ static int vdbeCommit(sqlite3 *db){
     ** may be lying around. Returning an error code won't help matters.
     */
     disable_simulated_io_errors();
+    sqlite3FaultBeginBenign(SQLITE_FAULTINJECTOR_MALLOC);
     for(i=0; i<db->nDb; i++){ 
       Btree *pBt = db->aDb[i].pBt;
       if( pBt ){
         sqlite3BtreeCommitPhaseTwo(pBt);
       }
     }
+    sqlite3FaultEndBenign(SQLITE_FAULTINJECTOR_MALLOC);
     enable_simulated_io_errors();
 
     sqlite3VtabCommit(db);
@@ -1652,7 +1656,6 @@ int sqlite3VdbeHalt(Vdbe *p){
   if( p->db->mallocFailed ){
     p->rc = SQLITE_NOMEM;
   }
-  checkActiveVdbeCnt(db);
 
   return SQLITE_OK;
 }
@@ -1905,7 +1908,7 @@ u32 sqlite3VdbeSerialType(Mem *pMem, int file_format){
   }
   if( flags&MEM_Int ){
     /* Figure out whether to use 1, 2, 4, 6 or 8 bytes. */
-#   define MAX_6BYTE ((((i64)0x00001000)<<32)-1)
+#   define MAX_6BYTE ((((i64)0x00008000)<<32)-1)
     i64 i = pMem->u.i;
     u64 u;
     if( file_format>=4 && (i&1)==i ){
@@ -2130,7 +2133,7 @@ int sqlite3VdbeSerialGet(
         assert( sizeof(x)==8 && sizeof(pMem->r)==8 );
         swapMixedEndianFloat(x);
         memcpy(&pMem->r, &x, sizeof(x));
-        pMem->flags = MEM_Real;
+        pMem->flags = sqlite3IsNaN(pMem->r) ? MEM_Null : MEM_Real;
       }
       return 8;
     }
@@ -2156,22 +2159,6 @@ int sqlite3VdbeSerialGet(
   return 0;
 }
 
-/*
-** The header of a record consists of a sequence variable-length integers.
-** These integers are almost always small and are encoded as a single byte.
-** The following macro takes advantage this fact to provide a fast decode
-** of the integers in a record header.  It is faster for the common case
-** where the integer is a single byte.  It is a little slower when the
-** integer is two or more bytes.  But overall it is faster.
-**
-** The following expressions are equivalent:
-**
-**     x = sqlite3GetVarint32( A, &B );
-**
-**     x = GetVarint( A, B );
-**
-*/
-#define GetVarint(A,B)  ((B = *(A))<=0x7f ? 1 : sqlite3GetVarint32(A, &B))
 
 /*
 ** Given the nKey-byte encoding of a record in pKey[], parse the
@@ -2214,13 +2201,13 @@ UnpackedRecord *sqlite3VdbeRecordUnpack(
   p->nField = pKeyInfo->nField + 1;
   p->needDestroy = 1;
   p->aMem = pMem = &((Mem*)p)[1];
-  idx = GetVarint(aKey, szHdr);
+  idx = getVarint32(aKey, szHdr);
   d = szHdr;
   i = 0;
   while( idx<szHdr && i<p->nField ){
     u32 serial_type;
 
-    idx += GetVarint( aKey+idx, serial_type);
+    idx += getVarint32( aKey+idx, serial_type);
     if( d>=nKey && sqlite3VdbeSerialTypeLen(serial_type)>0 ) break;
     pMem->enc = pKeyInfo->enc;
     pMem->db = pKeyInfo->db;
@@ -2293,14 +2280,14 @@ int sqlite3VdbeRecordCompare(
   mem1.flags = 0;
   mem1.zMalloc = 0;
   
-  idx1 = GetVarint(aKey1, szHdr1);
+  idx1 = getVarint32(aKey1, szHdr1);
   d1 = szHdr1;
   nField = pKeyInfo->nField;
   while( idx1<szHdr1 && i<pPKey2->nField ){
     u32 serial_type1;
 
     /* Read the serial types for the next element in each key. */
-    idx1 += GetVarint( aKey1+idx1, serial_type1 );
+    idx1 += getVarint32( aKey1+idx1, serial_type1 );
     if( d1>=nKey1 && sqlite3VdbeSerialTypeLen(serial_type1)>0 ) break;
 
     /* Extract the values to be compared.
@@ -2348,8 +2335,8 @@ int sqlite3VdbeIdxRowidLen(const u8 *aKey){
   u32 szHdr;        /* Size of the header */
   u32 typeRowid;    /* Serial type of the rowid */
 
-  sqlite3GetVarint32(aKey, &szHdr);
-  sqlite3GetVarint32(&aKey[szHdr-1], &typeRowid);
+  (void)getVarint32(aKey, szHdr);
+  (void)getVarint32(&aKey[szHdr-1], typeRowid);
   return sqlite3VdbeSerialTypeLen(typeRowid);
 }
   
@@ -2378,8 +2365,8 @@ int sqlite3VdbeIdxRowid(BtCursor *pCur, i64 *rowid){
   if( rc ){
     return rc;
   }
-  sqlite3GetVarint32((u8*)m.z, &szHdr);
-  sqlite3GetVarint32((u8*)&m.z[szHdr-1], &typeRowid);
+  (void)getVarint32((u8*)m.z, szHdr);
+  (void)getVarint32((u8*)&m.z[szHdr-1], typeRowid);
   lenRowid = sqlite3VdbeSerialTypeLen(typeRowid);
   sqlite3VdbeSerialGet((u8*)&m.z[m.n-lenRowid], typeRowid, &v);
   *rowid = v.u.i;
@@ -2399,6 +2386,7 @@ int sqlite3VdbeIdxRowid(BtCursor *pCur, i64 *rowid){
 */
 int sqlite3VdbeIdxKeyCompare(
   Cursor *pC,                 /* The cursor to compare against */
+  UnpackedRecord *pUnpacked,
   int nKey, const u8 *pKey,   /* The key to compare */
   int *res                    /* Write the comparison result here */
 ){
@@ -2423,13 +2411,19 @@ int sqlite3VdbeIdxKeyCompare(
     return rc;
   }
   lenRowid = sqlite3VdbeIdxRowidLen((u8*)m.z);
-  pRec = sqlite3VdbeRecordUnpack(pC->pKeyInfo, nKey, pKey,
+  if( !pUnpacked ){
+    pRec = sqlite3VdbeRecordUnpack(pC->pKeyInfo, nKey, pKey,
                                 zSpace, sizeof(zSpace));
+  }else{
+    pRec = pUnpacked;
+  }
   if( pRec==0 ){
     return SQLITE_NOMEM;
   }
   *res = sqlite3VdbeRecordCompare(m.n-lenRowid, m.z, pRec);
-  sqlite3VdbeDeleteUnpackedRecord(pRec);
+  if( !pUnpacked ){
+    sqlite3VdbeDeleteUnpackedRecord(pRec);
+  }
   sqlite3VdbeMemRelease(&m);
   return SQLITE_OK;
 }

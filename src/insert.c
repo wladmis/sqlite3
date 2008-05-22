@@ -846,7 +846,7 @@ void sqlite3Insert(
     */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     if( IsVirtual(pTab) ){
-      pParse->pVirtualLock = pTab;
+      sqlite3VtabMakeWritable(pParse, pTab);
       sqlite3VdbeAddOp4(v, OP_VUpdate, 1, pTab->nCol+2, regIns,
                      (const char*)pTab->pVtab, P4_VTAB);
     }else
@@ -1193,7 +1193,7 @@ void sqlite3GenerateConstraintChecks(
     regR = sqlite3GetTempReg(pParse);
     sqlite3VdbeAddOp2(v, OP_SCopy, regRowid-hasTwoRowids, regR);
     j3 = sqlite3VdbeAddOp4(v, OP_IsUnique, baseCur+iCur+1, 0,
-                           regR, (char*)(sqlite3_intptr_t)aRegIdx[iCur],
+                           regR, (char*)aRegIdx[iCur],
                            P4_INT32);
 
     /* Generate code that executes if the new index entry is not unique */

@@ -124,23 +124,6 @@ static void updateMaxBlobsize(Mem *p){
      { goto no_mem; }
 
 /*
-** The header of a record consists of a sequence variable-length integers.
-** These integers are almost always small and are encoded as a single byte.
-** The following macro takes advantage this fact to provide a fast decode
-** of the integers in a record header.  It is faster for the common case
-** where the integer is a single byte.  It is a little slower when the
-** integer is two or more bytes.  But overall it is faster.
-**
-** The following expressions are equivalent:
-**
-**     x = sqlite3GetVarint32( A, &B );
-**
-**     x = GetVarint( A, B );
-**
-*/
-#define GetVarint(A,B)  ((B = *(A))<=0x7f ? 1 : sqlite3GetVarint32(A, &B))
-
-/*
 ** An ephemeral string value (signified by the MEM_Ephem flag) contains
 ** a pointer to a dynamically allocated string where some other entity
 ** is responsible for deallocating that string.  Because the register
@@ -576,7 +559,7 @@ int sqlite3VdbeExec(
   CHECK_FOR_INTERRUPT;
   sqlite3VdbeIOTraceSql(p);
 #ifdef SQLITE_DEBUG
-  sqlite3FaultBenign(-1, 1);
+  sqlite3FaultBeginBenign(-1);
   if( p->pc==0 && ((p->db->flags & SQLITE_VdbeListing)!=0
     || sqlite3OsAccess(db->pVfs, "vdbe_explain", SQLITE_ACCESS_EXISTS)==1 )
   ){
@@ -590,7 +573,7 @@ int sqlite3VdbeExec(
   if( sqlite3OsAccess(db->pVfs, "vdbe_trace", SQLITE_ACCESS_EXISTS)==1 ){
     p->trace = stdout;
   }
-  sqlite3FaultBenign(-1, 0);
+  sqlite3FaultEndBenign(-1);
 #endif
   for(pc=p->pc; rc==SQLITE_OK; pc++){
     assert( pc>=0 && pc<p->nOp );
@@ -612,11 +595,11 @@ int sqlite3VdbeExec(
       sqlite3VdbePrintOp(p->trace, pc, pOp);
     }
     if( p->trace==0 && pc==0 ){
-      sqlite3FaultBenign(-1, 1);
+      sqlite3FaultBeginBenign(-1);
       if( sqlite3OsAccess(db->pVfs, "vdbe_sqltrace", SQLITE_ACCESS_EXISTS)==1 ){
         sqlite3VdbePrintSql(p);
       }
-      sqlite3FaultBenign(-1, 0);
+      sqlite3FaultEndBenign(-1);
     }
 #endif
       
@@ -859,6 +842,7 @@ case OP_Int64: {           /* out2-prerelease */
 */
 case OP_Real: {            /* same as TK_FLOAT, out2-prerelease */
   pOut->flags = MEM_Real;
+  assert( !sqlite3IsNaN(*pOp->p4.pReal) );
   pOut->r = *pOp->p4.pReal;
   break;
 }
@@ -1171,13 +1155,13 @@ case OP_Remainder: {           /* same as TK_REM, in1, in2, out3 */
       case OP_Divide: {
         if( a==0 ) goto arithmetic_result_is_null;
         /* Dividing the largest possible negative 64-bit integer (1<<63) by 
-        ** -1 returns an integer to large to store in a 64-bit data-type. On
+        ** -1 returns an integer too large to store in a 64-bit data-type. On
         ** some architectures, the value overflows to (1<<63). On others,
         ** a SIGFPE is issued. The following statement normalizes this
         ** behaviour so that all architectures behave as if integer 
         ** overflow occured.
         */
-        if( a==-1 && b==(((i64)1)<<63) ) a = 1;
+        if( a==-1 && b==SMALLEST_INT64 ) a = 1;
         b /= a;
         break;
       }
@@ -1212,7 +1196,7 @@ case OP_Remainder: {           /* same as TK_REM, in1, in2, out3 */
         break;
       }
     }
-    if( sqlite3_isnan(b) ){
+    if( sqlite3IsNaN(b) ){
       goto arithmetic_result_is_null;
     }
     pOut->r = b;
@@ -2018,7 +2002,7 @@ case OP_Column: {
     /* The following assert is true in all cases accept when
     ** the database file has been corrupted externally.
     **    assert( zRec!=0 || avail>=payloadSize || avail>=9 ); */
-    szHdrSz = GetVarint((u8*)zData, offset);
+    szHdrSz = getVarint32((u8*)zData, offset);
 
     /* The KeyFetch() or DataFetch() above are fast and will get the entire
     ** record header in most cases.  But they will fail to get the complete
@@ -2046,7 +2030,7 @@ case OP_Column: {
     for(i=0; i<nField; i++){
       if( zIdx<zEndHdr ){
         aOffset[i] = offset;
-        zIdx += GetVarint(zIdx, aType[i]);
+        zIdx += getVarint32(zIdx, aType[i]);
         offset += sqlite3VdbeSerialTypeLen(aType[i]);
       }else{
         /* If i is less that nField, then there are less fields in this
@@ -2063,9 +2047,11 @@ case OP_Column: {
 
     /* If we have read more header data than was contained in the header,
     ** or if the end of the last field appears to be past the end of the
-    ** record, then we must be dealing with a corrupt database.
+    ** record, or if the end of the last field appears to be before the end
+    ** of the record (when all fields present), then we must be dealing 
+    ** with a corrupt database.
     */
-    if( zIdx>zEndHdr || offset>payloadSize ){
+    if( zIdx>zEndHdr || offset>payloadSize || (zIdx==zEndHdr && offset!=payloadSize) ){
       rc = SQLITE_CORRUPT_BKPT;
       goto op_column_out;
     }
@@ -2133,6 +2119,27 @@ op_column_out:
   break;
 }
 
+/* Opcode: Affinity P1 P2 * P4 *
+**
+** Apply affinities to a range of P2 registers starting with P1.
+**
+** P4 is a string that is P2 characters long. The nth character of the
+** string indicates the column affinity that should be used for the nth
+** memory cell in the range.
+*/
+case OP_Affinity: {
+  char *zAffinity = pOp->p4.z;
+  Mem *pData0 = &p->aMem[pOp->p1];
+  Mem *pLast = &pData0[pOp->p2-1];
+  Mem *pRec;
+
+  for(pRec=pData0; pRec<=pLast; pRec++){
+    ExpandBlob(pRec);
+    applyAffinity(pRec, zAffinity[pRec-pData0], encoding);
+  }
+  break;
+}
+
 /* Opcode: MakeRecord P1 P2 P3 P4 *
 **
 ** Convert P2 registers beginning with P1 into a single entry
@@ -2142,7 +2149,7 @@ op_column_out:
 ** Refer to source code comments for the details of the record
 ** format.
 **
-** P4 may be a string that is P1 characters long.  The nth character of the
+** P4 may be a string that is P2 characters long.  The nth character of the
 ** string indicates the column affinity that should be used for the nth
 ** field of the index key.
 **
@@ -2237,10 +2244,10 @@ case OP_MakeRecord: {
   zNewRecord = (u8 *)pOut->z;
 
   /* Write the record */
-  i = sqlite3PutVarint32(zNewRecord, nHdr);
+  i = putVarint32(zNewRecord, nHdr);
   for(pRec=pData0; pRec<=pLast; pRec++){
     serial_type = sqlite3VdbeSerialType(pRec, file_format);
-    i += sqlite3PutVarint32(&zNewRecord[i], serial_type);      /* serial type */
+    i += putVarint32(&zNewRecord[i], serial_type);      /* serial type */
   }
   for(pRec=pData0; pRec<=pLast; pRec++){  /* serial data */
     i += sqlite3VdbeSerialPut(&zNewRecord[i], nByte-i, pRec, file_format);
@@ -2264,10 +2271,20 @@ case OP_MakeRecord: {
 /* Opcode: Statement P1 * * * *
 **
 ** Begin an individual statement transaction which is part of a larger
-** BEGIN..COMMIT transaction.  This is needed so that the statement
+** transaction.  This is needed so that the statement
 ** can be rolled back after an error without having to roll back the
 ** entire transaction.  The statement transaction will automatically
 ** commit when the VDBE halts.
+**
+** If the database connection is currently in autocommit mode (that 
+** is to say, if it is in between BEGIN and COMMIT)
+** and if there are no other active statements on the same database
+** connection, then this operation is a no-op.  No statement transaction
+** is needed since any error can use the normal ROLLBACK process to
+** undo changes.
+**
+** If a statement transaction is started, then a statement journal file
+** will be allocated and initialized.
 **
 ** The statement is begun on the database file with index P1.  The main
 ** database file has an index of 0 and the file used for temporary tables
@@ -2770,13 +2787,16 @@ case OP_Close: {
   break;
 }
 
-/* Opcode: MoveGe P1 P2 P3 * *
+/* Opcode: MoveGe P1 P2 P3 P4 *
 **
-** Use the value in register P3 as a key.  Reposition
-** cursor P1 so that it points to the smallest entry that is greater
-** than or equal to the key in register P3.
-** If there are no records greater than or equal to the key and P2 
-** is not zero, then jump to P2.
+** If cursor P1 refers to an SQL table (B-Tree that uses integer keys), 
+** use the integer value in register P3 as a key. If cursor P1 refers 
+** to an SQL index, then P3 is the first in an array of P4 registers 
+** that are used as an unpacked index key. 
+**
+** Reposition cursor P1 so that  it points to the smallest entry that 
+** is greater than or equal to the key value. If there are no records 
+** greater than or equal to the key and P2 is not zero, then jump to P2.
 **
 ** A special feature of this opcode (and different from the
 ** related OP_MoveGt, OP_MoveLt, and OP_MoveLe) is that if P2 is
@@ -2787,33 +2807,42 @@ case OP_Close: {
 **
 ** See also: Found, NotFound, Distinct, MoveLt, MoveGt, MoveLe
 */
-/* Opcode: MoveGt P1 P2 P3 * *
+/* Opcode: MoveGt P1 P2 P3 P4 *
 **
-** Use the value in register P3 as a key.  Reposition
-** cursor P1 so that it points to the smallest entry that is greater
-** than the key in register P3.
-** If there are no records greater than the key 
-** then jump to P2.
+** If cursor P1 refers to an SQL table (B-Tree that uses integer keys), 
+** use the integer value in register P3 as a key. If cursor P1 refers 
+** to an SQL index, then P3 is the first in an array of P4 registers 
+** that are used as an unpacked index key. 
+**
+** Reposition cursor P1 so that  it points to the smallest entry that 
+** is greater than the key value. If there are no records greater than 
+** the key and P2 is not zero, then jump to P2.
 **
 ** See also: Found, NotFound, Distinct, MoveLt, MoveGe, MoveLe
 */
-/* Opcode: MoveLt P1 P2 P3 * * 
+/* Opcode: MoveLt P1 P2 P3 P4 * 
 **
-** Use the value in register P3 as a key.  Reposition
-** cursor P1 so that it points to the largest entry that is less
-** than the key in register P3.
-** If there are no records less than the key
-** then jump to P2.
+** If cursor P1 refers to an SQL table (B-Tree that uses integer keys), 
+** use the integer value in register P3 as a key. If cursor P1 refers 
+** to an SQL index, then P3 is the first in an array of P4 registers 
+** that are used as an unpacked index key. 
+**
+** Reposition cursor P1 so that  it points to the largest entry that 
+** is less than the key value. If there are no records less than 
+** the key and P2 is not zero, then jump to P2.
 **
 ** See also: Found, NotFound, Distinct, MoveGt, MoveGe, MoveLe
 */
-/* Opcode: MoveLe P1 P2 P3 * *
+/* Opcode: MoveLe P1 P2 P3 P4 *
 **
-** Use the value in register P3 as a key.  Reposition
-** cursor P1 so that it points to the largest entry that is less than
-** or equal to the key.
-** If there are no records less than or eqal to the key
-** then jump to P2.
+** If cursor P1 refers to an SQL table (B-Tree that uses integer keys), 
+** use the integer value in register P3 as a key. If cursor P1 refers 
+** to an SQL index, then P3 is the first in an array of P4 registers 
+** that are used as an unpacked index key. 
+**
+** Reposition cursor P1 so that it points to the largest entry that 
+** is less than or equal to the key value. If there are no records 
+** less than or equal to the key and P2 is not zero, then jump to P2.
 **
 ** See also: Found, NotFound, Distinct, MoveGt, MoveGe, MoveLt
 */
@@ -2848,9 +2877,16 @@ case OP_MoveGt: {       /* jump, in3 */
       pC->lastRowid = iKey;
       pC->rowidIsValid = res==0;
     }else{
-      assert( pIn3->flags & MEM_Blob );
-      ExpandBlob(pIn3);
-      rc = sqlite3BtreeMoveto(pC->pCursor, pIn3->z, 0, pIn3->n, 0, &res);
+      UnpackedRecord r;
+      int nField = pOp->p4.i;
+      assert( pOp->p4type==P4_INT32 );
+      assert( nField>0 );
+      r.pKeyInfo = pC->pKeyInfo;
+      r.nField = nField;
+      r.needFree = 0;
+      r.needDestroy = 0;
+      r.aMem = &p->aMem[pOp->p3];
+      rc = sqlite3BtreeMoveto(pC->pCursor, 0, &r, 0, 0, &res);
       if( rc!=SQLITE_OK ){
         goto abort_due_to_error;
       }
@@ -3023,7 +3059,7 @@ case OP_IsUnique: {        /* jump, in3 */
         break;
       }
     }
-    rc = sqlite3VdbeIdxKeyCompare(pCx, len, (u8*)zKey, &res); 
+    rc = sqlite3VdbeIdxKeyCompare(pCx, 0, len, (u8*)zKey, &res); 
     if( rc!=SQLITE_OK ) goto abort_due_to_error;
     if( res>0 ){
       pc = pOp->p2 - 1;
@@ -3792,35 +3828,31 @@ case OP_IdxRowid: {              /* out2-prerelease */
   break;
 }
 
-/* Opcode: IdxGE P1 P2 P3 * P5
+/* Opcode: IdxGE P1 P2 P3 P4 P5
 **
-** The value in register P3 is an index entry that omits the ROWID.  Compare
-** this value against the index that P1 is currently pointing to.
-** Ignore the ROWID on the P1 index.
+** The P4 register values beginning with P3 form an unpacked index 
+** key that omits the ROWID.  Compare this key value against the index 
+** that P1 is currently pointing to, ignoring the ROWID on the P1 index.
 **
-** If the P1 index entry is greater than or equal to the value in 
-** register P3 then jump to P2.  Otherwise fall through to the next 
-** instruction.
+** If the P1 index entry is greater than or equal to the key value
+** then jump to P2.  Otherwise fall through to the next instruction.
 **
-** If P5 is non-zero then the value in register P3 is temporarily
-** increased by an epsilon prior to the comparison.  This make the opcode work
-** like IdxGT except that if the key from register P3 is a prefix of
-** the key in the cursor, the result is false whereas it would be
-** true with IdxGT.
+** If P5 is non-zero then the key value is increased by an epsilon 
+** prior to the comparison.  This make the opcode work like IdxGT except
+** that if the key from register P3 is a prefix of the key in the cursor,
+** the result is false whereas it would be true with IdxGT.
 */
 /* Opcode: IdxLT P1 P2 P3 * P5
 **
-** The value in register P3 is an index entry that omits the ROWID.  Compare
-** the this value against the index that P1 is currently pointing to.
-** Ignore the ROWID on the P1 index.
+** The P4 register values beginning with P3 form an unpacked index 
+** key that omits the ROWID.  Compare this key value against the index 
+** that P1 is currently pointing to, ignoring the ROWID on the P1 index.
 **
-** If the P1 index entry is less than the register P3 value
-** then jump to P2.  Otherwise fall through to the next instruction.
+** If the P1 index entry is less than the key value then jump to P2.
+** Otherwise fall through to the next instruction.
 **
-** If P5 is non-zero then the
-** index taken from register P3 is temporarily increased by
-** an epsilon prior to the comparison.  This makes the opcode work
-** like IdxLE.
+** If P5 is non-zero then the key value is increased by an epsilon prior 
+** to the comparison.  This makes the opcode work like IdxLE.
 */
 case OP_IdxLT:          /* jump, in3 */
 case OP_IdxGE: {        /* jump, in3 */
@@ -3831,17 +3863,18 @@ case OP_IdxGE: {        /* jump, in3 */
   assert( p->apCsr[i]!=0 );
   if( (pC = p->apCsr[i])->pCursor!=0 ){
     int res;
- 
-    assert( pIn3->flags & MEM_Blob );  /* Created using OP_MakeRecord */
+    UnpackedRecord r;
     assert( pC->deferredMoveto==0 );
-    ExpandBlob(pIn3);
     assert( pOp->p5==0 || pOp->p5==1 );
+    assert( pOp->p4type==P4_INT32 );
+    r.pKeyInfo = pC->pKeyInfo;
+    r.nField = pOp->p4.i;
+    r.needFree = 0;
+    r.needDestroy = 0;
+    r.aMem = &p->aMem[pOp->p3];
     *pC->pIncrKey = pOp->p5;
-    rc = sqlite3VdbeIdxKeyCompare(pC, pIn3->n, (u8*)pIn3->z, &res);
+    rc = sqlite3VdbeIdxKeyCompare(pC, &r, 0, 0, &res);
     *pC->pIncrKey = 0;
-    if( rc!=SQLITE_OK ){
-      break;
-    }
     if( pOp->opcode==OP_IdxLT ){
       res = -res;
     }else{

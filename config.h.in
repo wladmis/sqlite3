@@ -86,5 +86,13 @@
 #undef HAVE_LOCALTIME_R
 
 
+/*****************************
+** Large file support
+*****************************/
+
+#undef _FILE_OFFSET_BITS
+#undef _LARGE_FILES
+
+
 /* End of header */
 #endif

@@ -47,6 +47,7 @@ static struct StatementLruList sqlite3LruStatements;
 **
 **   assert( stmtLruCheck() );
 */
+#ifndef NDEBUG
 static int stmtLruCheck(){
   Vdbe *p;
   for(p=sqlite3LruStatements.pFirst; p; p=p->pLruNext){
@@ -57,6 +58,7 @@ static int stmtLruCheck(){
   }
   return 1;
 }
+#endif
 
 /*
 ** Add vdbe p to the end of the statement lru list. It is assumed that
@@ -239,12 +241,14 @@ int sqlite3_reset(sqlite3_stmt *pStmt){
 int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
   int i;
   int rc = SQLITE_OK;
+  Vdbe *p = (Vdbe*)pStmt;
 #ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex = ((Vdbe*)pStmt)->db->mutex;
 #endif
   sqlite3_mutex_enter(mutex);
-  for(i=1; rc==SQLITE_OK && i<=sqlite3_bind_parameter_count(pStmt); i++){
-    rc = sqlite3_bind_null(pStmt, i);
+  for(i=0; i<p->nVar; i++){
+    sqlite3VdbeMemRelease(&p->aVar[i]);
+    p->aVar[i].flags = MEM_Null;
   }
   sqlite3_mutex_leave(mutex);
   return rc;

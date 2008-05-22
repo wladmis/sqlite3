@@ -136,7 +136,7 @@ int sqlite3BtreeCursor(
   struct KeyInfo*,                     /* First argument to compare function */
   BtCursor *pCursor                    /* Space to write cursor structure */
 );
-int sqlite3BtreeCursorSize();
+int sqlite3BtreeCursorSize(void);
 
 int sqlite3BtreeCloseCursor(BtCursor*);
 int sqlite3BtreeMoveto(

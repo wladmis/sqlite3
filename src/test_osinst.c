@@ -26,6 +26,7 @@
 **   sqlite3_instvfs_get()
 **
 **   sqlite3_instvfs_binarylog
+**   sqlite3_instvfs_binarylog_marker
 **
 ** Tcl interface (omitted if SQLITE_TEST is not set):
 ** 
@@ -117,17 +118,22 @@
 
 #define OS_NUMEVENTS         21
 
+#define BINARYLOG_STRING     30
+#define BINARYLOG_MARKER     31
+
 struct InstVfs {
   sqlite3_vfs base;
   sqlite3_vfs *pVfs;
-  
+
   void *pClient;
   void (*xDel)(void *);
-  void (*xCall)(void *, int, sqlite3_int64, const char *, int, int, sqlite3_int64);
+  void (*xCall)(void *, int, int, sqlite3_int64, int, const char *, int, int, sqlite3_int64);
 
   /* Counters */
   sqlite3_int64 aTime[OS_NUMEVENTS];
   int aCount[OS_NUMEVENTS];
+
+  int iNextFileId;
 };
 typedef struct InstVfs InstVfs;
 
@@ -139,6 +145,7 @@ struct inst_file {
   sqlite3_file *pReal;
   InstVfs *pInstVfs;
   const char *zName;
+  int iFileId;               /* File id number */
   int flags;
 };
 
@@ -173,6 +180,8 @@ static void instDlClose(sqlite3_vfs*, void*);
 static int instRandomness(sqlite3_vfs*, int nByte, char *zOut);
 static int instSleep(sqlite3_vfs*, int microseconds);
 static int instCurrentTime(sqlite3_vfs*, double*);
+
+static void binarylog_blob(sqlite3_vfs *, const char *, int, int); 
 
 static sqlite3_vfs inst_vfs = {
   1,                      /* iVersion */
@@ -238,7 +247,9 @@ __inline__ unsigned long long int osinst_hwtime(void){
   pInstVfs->aTime[eEvent] += t;              \
   pInstVfs->aCount[eEvent] += 1;             \
   if( pInstVfs->xCall ){                     \
-    pInstVfs->xCall(pInstVfs->pClient, eEvent, t, p->zName, p->flags, A, B); \
+    pInstVfs->xCall(                         \
+      pInstVfs->pClient,eEvent,p->iFileId,t,rc,p->zName,p->flags,A,B  \
+    );                                       \
   }                                          \
   return rc;                                 \
 }
@@ -252,7 +263,7 @@ __inline__ unsigned long long int osinst_hwtime(void){
   pInstVfs->aTime[eEvent] += t;          \
   pInstVfs->aCount[eEvent] += 1;         \
   if( pInstVfs->xCall ){                 \
-    pInstVfs->xCall(pInstVfs->pClient, eEvent, t, Z, flags, A, B); \
+    pInstVfs->xCall(pInstVfs->pClient,eEvent,0, t, rc, Z, flags, A, B); \
   }                                      \
   return rc;                             \
 }
@@ -273,7 +284,10 @@ static int instRead(
   int iAmt, 
   sqlite_int64 iOfst
 ){
-  OS_TIME_IO(OS_READ, iAmt, iOfst, p->pReal->pMethods->xRead(p->pReal, zBuf, iAmt, iOfst));
+  sqlite3_vfs *pVfs = (sqlite3_vfs *)(((inst_file *)pFile)->pInstVfs);
+  OS_TIME_IO(OS_READ, iAmt, (binarylog_blob(pVfs, zBuf, iAmt, 1), iOfst), 
+      p->pReal->pMethods->xRead(p->pReal, zBuf, iAmt, iOfst)
+  );
 }
 
 /*
@@ -285,14 +299,20 @@ static int instWrite(
   int iAmt,
   sqlite_int64 iOfst
 ){
-  OS_TIME_IO(OS_WRITE, iAmt, iOfst, p->pReal->pMethods->xWrite(p->pReal, z, iAmt, iOfst));
+  sqlite3_vfs *pVfs = (sqlite3_vfs *)(((inst_file *)pFile)->pInstVfs);
+  binarylog_blob(pVfs, z, iAmt, 1);
+  OS_TIME_IO(OS_WRITE, iAmt, iOfst, 
+      p->pReal->pMethods->xWrite(p->pReal, z, iAmt, iOfst)
+  );
 }
 
 /*
 ** Truncate an inst-file.
 */
 static int instTruncate(sqlite3_file *pFile, sqlite_int64 size){
-  OS_TIME_IO(OS_TRUNCATE, 0, size, p->pReal->pMethods->xTruncate(p->pReal, size));
+  OS_TIME_IO(OS_TRUNCATE, 0, (int)size, 
+    p->pReal->pMethods->xTruncate(p->pReal, size)
+  );
 }
 
 /*
@@ -306,7 +326,9 @@ static int instSync(sqlite3_file *pFile, int flags){
 ** Return the current file-size of an inst-file.
 */
 static int instFileSize(sqlite3_file *pFile, sqlite_int64 *pSize){
-  OS_TIME_IO(OS_FILESIZE, 0, 0, p->pReal->pMethods->xFileSize(p->pReal, pSize));
+  OS_TIME_IO(OS_FILESIZE, (int)(*pSize), 0, 
+    p->pReal->pMethods->xFileSize(p->pReal, pSize)
+  );
 }
 
 /*
@@ -367,8 +389,10 @@ static int instOpen(
   p->pInstVfs = (InstVfs *)pVfs;
   p->zName = zName;
   p->flags = flags;
+  p->iFileId = ++p->pInstVfs->iNextFileId;
 
-  OS_TIME_VFS(OS_OPEN, zName, flags, 0, 0,
+  binarylog_blob(pVfs, zName, -1, 0);
+  OS_TIME_VFS(OS_OPEN, zName, flags, p->iFileId, 0,
     REALVFS(pVfs)->xOpen(REALVFS(pVfs), zName, p->pReal, flags, pOutFlags)
   );
 }
@@ -379,6 +403,7 @@ static int instOpen(
 ** returning.
 */
 static int instDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
+  binarylog_blob(pVfs, zPath, -1, 0);
   OS_TIME_VFS(OS_DELETE, zPath, 0, dirSync, 0,
     REALVFS(pVfs)->xDelete(REALVFS(pVfs), zPath, dirSync) 
   );
@@ -389,6 +414,7 @@ static int instDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
 ** is available, or false otherwise.
 */
 static int instAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
+  binarylog_blob(pVfs, zPath, -1, 0);
   OS_TIME_VFS(OS_ACCESS, zPath, 0, flags, 0, 
     REALVFS(pVfs)->xAccess(REALVFS(pVfs), zPath, flags) 
   );
@@ -508,7 +534,17 @@ sqlite3_vfs *sqlite3_instvfs_create(const char *zName, const char *zParent){
 
 void sqlite3_instvfs_configure(
   sqlite3_vfs *pVfs,
-  void (*xCall)(void*, int, sqlite3_int64, const char*, int, int, sqlite3_int64),
+  void (*xCall)(
+      void*, 
+      int,                           /* File id */
+      int,                           /* Event code */
+      sqlite3_int64, 
+      int,                           /* Return code */
+      const char*,                   /* File name */
+      int, 
+      int, 
+      sqlite3_int64
+  ),
   void *pClient,
   void (*xDel)(void *)
 ){
@@ -587,12 +623,13 @@ void sqlite3_instvfs_get(
   *pnCall = p->aCount[eEvent];
 }
 
-#define BINARYLOG_BUFFERSIZE 1024
+#define BINARYLOG_BUFFERSIZE 8192
 
 struct InstVfsBinaryLog {
   int nBuf;
   char *zBuf;
   sqlite3_int64 iOffset;
+  int log_data;
   sqlite3_file *pOut;
   char *zOut;                       /* Log file name */
 };
@@ -605,10 +642,40 @@ static void put32bits(unsigned char *p, unsigned int v){
   p[3] = v;
 }
 
+static void binarylog_flush(InstVfsBinaryLog *pLog){
+  sqlite3_file *pFile = pLog->pOut;
+
+#ifdef SQLITE_TEST
+  extern int sqlite3_io_error_pending;
+  extern int sqlite3_io_error_persist;
+  extern int sqlite3_diskfull_pending;
+
+  int pending = sqlite3_io_error_pending;
+  int persist = sqlite3_io_error_persist;
+  int diskfull = sqlite3_diskfull_pending;
+
+  sqlite3_io_error_pending = 0;
+  sqlite3_io_error_persist = 0;
+  sqlite3_diskfull_pending = 0;
+#endif
+
+  pFile->pMethods->xWrite(pFile, pLog->zBuf, pLog->nBuf, pLog->iOffset);
+  pLog->iOffset += pLog->nBuf;
+  pLog->nBuf = 0;
+
+#ifdef SQLITE_TEST
+  sqlite3_io_error_pending = pending;
+  sqlite3_io_error_persist = persist;
+  sqlite3_diskfull_pending = diskfull;
+#endif
+}
+
 static void binarylog_xcall(
   void *p,
   int eEvent,
+  int iFileId,
   sqlite3_int64 nClick,
+  int return_code,
   const char *zName,
   int flags,
   int nByte,
@@ -616,19 +683,18 @@ static void binarylog_xcall(
 ){
   InstVfsBinaryLog *pLog = (InstVfsBinaryLog *)p;
   unsigned char *zRec;
-  if( (20+pLog->nBuf)>BINARYLOG_BUFFERSIZE ){
-    sqlite3_file *pFile = pLog->pOut;
-    pFile->pMethods->xWrite(pFile, pLog->zBuf, pLog->nBuf, pLog->iOffset);
-    pLog->iOffset += pLog->nBuf;
-    pLog->nBuf = 0;
+  if( (28+pLog->nBuf)>BINARYLOG_BUFFERSIZE ){
+    binarylog_flush(pLog);
   }
   zRec = (unsigned char *)&pLog->zBuf[pLog->nBuf];
   put32bits(&zRec[0], eEvent);
-  put32bits(&zRec[4], (int)nClick);
-  put32bits(&zRec[8], flags);
-  put32bits(&zRec[12], nByte);
-  put32bits(&zRec[16], (int)iOffset);
-  pLog->nBuf += 20;
+  put32bits(&zRec[4], (int)iFileId);
+  put32bits(&zRec[8], (int)nClick);
+  put32bits(&zRec[12], return_code);
+  put32bits(&zRec[16], flags);
+  put32bits(&zRec[20], nByte);
+  put32bits(&zRec[24], (int)iOffset);
+  pLog->nBuf += 28;
 }
 
 static void binarylog_xdel(void *p){
@@ -638,7 +704,7 @@ static void binarylog_xdel(void *p){
   InstVfsBinaryLog *pLog = (InstVfsBinaryLog *)p;
   sqlite3_file *pFile = pLog->pOut;
   if( pLog->nBuf ){
-    pFile->pMethods->xWrite(pFile, pLog->zBuf, pLog->nBuf, pLog->iOffset);
+    binarylog_flush(pLog);
   }
   pFile->pMethods->xClose(pFile);
   sqlite3_free(pLog->pOut);
@@ -646,10 +712,57 @@ static void binarylog_xdel(void *p){
   sqlite3_free(pLog);
 }
 
+static void binarylog_blob(
+  sqlite3_vfs *pVfs,
+  const char *zBlob,
+  int nBlob,
+  int isBinary
+){
+  InstVfsBinaryLog *pLog;
+  InstVfs *pInstVfs = (InstVfs *)pVfs;
+
+  if( pVfs->xOpen!=instOpen || pInstVfs->xCall!=binarylog_xcall ){
+    return;
+  }
+  pLog = (InstVfsBinaryLog *)pInstVfs->pClient;
+  if( !isBinary || pLog->log_data ){
+    unsigned char *zRec;
+    int nWrite;
+
+    if( nBlob<0 ){
+      nBlob = strlen(zBlob);
+    }
+    nWrite = nBlob + 28;
+  
+    if( (nWrite+pLog->nBuf)>BINARYLOG_BUFFERSIZE ){
+      binarylog_flush(pLog);
+    }
+  
+    zRec = (unsigned char *)&pLog->zBuf[pLog->nBuf];
+    memset(zRec, 0, nWrite);
+    put32bits(&zRec[0], BINARYLOG_STRING);
+    put32bits(&zRec[4], (int)nBlob);
+    put32bits(&zRec[8], (int)isBinary);
+    memcpy(&zRec[28], zBlob, nBlob);
+    pLog->nBuf += nWrite;
+  }
+}
+
+void sqlite3_instvfs_binarylog_marker(
+  sqlite3_vfs *pVfs,
+  const char *zMarker
+){
+  InstVfs *pInstVfs = (InstVfs *)pVfs;
+  InstVfsBinaryLog *pLog = (InstVfsBinaryLog *)pInstVfs->pClient;
+  binarylog_blob(pVfs, zMarker, -1, 0);
+  binarylog_xcall(pLog, BINARYLOG_MARKER, 0, 0, 0, 0, 0, 0, 0);
+}
+
 sqlite3_vfs *sqlite3_instvfs_binarylog(
   const char *zVfs,
   const char *zParentVfs, 
-  const char *zLog
+  const char *zLog,
+  int log_data
 ){
   InstVfsBinaryLog *p;
   sqlite3_vfs *pVfs;
@@ -669,13 +782,15 @@ sqlite3_vfs *sqlite3_instvfs_binarylog(
   p->zBuf = sqlite3_malloc(BINARYLOG_BUFFERSIZE);
   p->zOut = (char *)&p[1];
   p->pOut = (sqlite3_file *)sqlite3_malloc(pParent->szOsFile);
+  p->log_data = log_data;
   pParent->xFullPathname(pParent, zLog, pParent->mxPathname, p->zOut);
   flags = SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE|SQLITE_OPEN_MASTER_JOURNAL;
   pParent->xDelete(pParent, p->zOut, 0);
   rc = pParent->xOpen(pParent, p->zOut, p->pOut, flags, &flags);
   if( rc==SQLITE_OK ){
-    rc = p->pOut->pMethods->xWrite(p->pOut, "sqlite_ostrace1.....", 20, 0);
-    p->iOffset = 20;
+    memcpy(p->zBuf, "sqlite_ostrace1.....", 20);
+    p->iOffset = 0;
+    p->nBuf = 20;
   }
   if( rc ){
     binarylog_xdel(p);
@@ -707,7 +822,9 @@ typedef struct InstVfsCall InstVfsCall;
 static void test_instvfs_xcall(
   void *p,
   int eEvent,
+  int iFileId,
   sqlite3_int64 nClick,
+  int return_code,
   const char *zName,
   int flags,
   int nByte,
@@ -745,8 +862,8 @@ static int test_sqlite3_instvfs(
   Tcl_Obj *CONST objv[]
 ){
   static const char *IV_strs[] = 
-               { "create",  "destroy",  "reset",  "report", "configure", "binarylog", 0 };
-  enum IV_enum { IV_CREATE, IV_DESTROY, IV_RESET, IV_REPORT, IV_CONFIGURE, IV_BINARYLOG };
+               { "create",  "destroy",  "reset",  "report", "configure", "binarylog", "marker", 0 };
+  enum IV_enum { IV_CREATE, IV_DESTROY, IV_RESET, IV_REPORT, IV_CONFIGURE, IV_BINARYLOG, IV_MARKER };
   int iSub;
 
   if( objc<2 ){
@@ -785,18 +902,36 @@ static int test_sqlite3_instvfs(
     case IV_BINARYLOG: {
       char *zName = 0;
       char *zLog = 0;
+      char *zParent = 0;
       sqlite3_vfs *p;
       int isDefault = 0;
-      if( objc>2 && 0==strcmp("-default", Tcl_GetString(objv[2])) ){
-        isDefault = 1;
+      int isLogdata = 0;
+      int argbase = 2;
+
+      for(argbase=2; argbase<(objc-2); argbase++){
+        if( 0==strcmp("-default", Tcl_GetString(objv[argbase])) ){
+          isDefault = 1;
+        }
+        else if( 0==strcmp("-parent", Tcl_GetString(objv[argbase])) ){
+          argbase++;
+          zParent = Tcl_GetString(objv[argbase]);
+        }
+        else if( 0==strcmp("-logdata", Tcl_GetString(objv[argbase])) ){
+          isLogdata = 1;
+        }else{
+          break;
+        }
       }
-      if( (objc-isDefault)!=4 ){
-        Tcl_WrongNumArgs(interp, 2, objv, "?-default? NAME LOGFILE");
+
+      if( (objc-argbase)!=2 ){
+        Tcl_WrongNumArgs(
+            interp, 2, objv, "?-default? ?-parent VFS? ?-logdata? NAME LOGFILE"
+        );
         return TCL_ERROR;
       }
-      zName = Tcl_GetString(objv[2+isDefault]);
-      zLog = Tcl_GetString(objv[3+isDefault]);
-      p = sqlite3_instvfs_binarylog(zName, 0, zLog);
+      zName = Tcl_GetString(objv[argbase]);
+      zLog = Tcl_GetString(objv[argbase+1]);
+      p = sqlite3_instvfs_binarylog(zName, zParent, zLog, isLogdata);
       if( !p ){
         Tcl_AppendResult(interp, "error creating vfs ", 0);
         return TCL_ERROR;
@@ -805,6 +940,22 @@ static int test_sqlite3_instvfs(
         sqlite3_vfs_register(p, 1);
       }
       Tcl_SetObjResult(interp, objv[2]);
+      break;
+    }
+
+    case IV_MARKER: {
+      sqlite3_vfs *p;
+      if( objc!=4 ){
+        Tcl_WrongNumArgs(interp, 2, objv, "VFS MARKER");
+        return TCL_ERROR;
+      }
+      p = sqlite3_vfs_find(Tcl_GetString(objv[2]));
+      if( !p || p->xOpen!=instOpen ){
+        Tcl_AppendResult(interp, "no such vfs: ", Tcl_GetString(objv[2]), 0);
+        return TCL_ERROR;
+      }
+      sqlite3_instvfs_binarylog_marker(p, Tcl_GetString(objv[3]));
+      Tcl_ResetResult(interp);
       break;
     }
 

@@ -22,6 +22,23 @@
 
 
 /*
+** Return true if the floating point value is Not a Number.
+*/
+int sqlite3IsNaN(double x){
+  /* This NaN test sometimes fails if compiled on GCC with -ffast-math.
+  ** On the other hand, the use of -ffast-math comes with the following
+  ** warning:
+  **
+  **      This option [-ffast-math] should never be turned on by any
+  **      -O option since it can result in incorrect output for programs
+  **      which depend on an exact implementation of IEEE or ISO 
+  **      rules/specifications for math functions.
+  */
+  volatile double y = x;
+  return x!=y;
+}
+
+/*
 ** Set the most recent error code and error string for the sqlite
 ** handle "db". The error code is set to "err_code".
 **
@@ -245,6 +262,7 @@ int sqlite3AtoF(const char *z, double *pResult){
   int sign = 1;
   const char *zBegin = z;
   LONGDOUBLE_TYPE v1 = 0.0;
+  int nSignificant = 0;
   while( isspace(*(u8*)z) ) z++;
   if( *z=='-' ){
     sign = -1;
@@ -252,16 +270,29 @@ int sqlite3AtoF(const char *z, double *pResult){
   }else if( *z=='+' ){
     z++;
   }
+  while( z[0]=='0' ){
+    z++;
+  }
   while( isdigit(*(u8*)z) ){
     v1 = v1*10.0 + (*z - '0');
     z++;
+    nSignificant++;
   }
   if( *z=='.' ){
     LONGDOUBLE_TYPE divisor = 1.0;
     z++;
+    if( nSignificant==0 ){
+      while( z[0]=='0' ){
+        divisor *= 10.0;
+        z++;
+      }
+    }
     while( isdigit(*(u8*)z) ){
-      v1 = v1*10.0 + (*z - '0');
-      divisor *= 10.0;
+      if( nSignificant<18 ){
+        v1 = v1*10.0 + (*z - '0');
+        divisor *= 10.0;
+        nSignificant++;
+      }
       z++;
     }
     v1 /= divisor;
@@ -500,19 +531,24 @@ int sqlite3PutVarint(unsigned char *p, u64 v){
 /*
 ** This routine is a faster version of sqlite3PutVarint() that only
 ** works for 32-bit positive integers and which is optimized for
-** the common case of small integers.
+** the common case of small integers.  A MACRO version, putVarint32,
+** is provided which inlines the single-byte case.  All code should use
+** the MACRO version as this function assumes the single-byte case has
+** already been handled.
 */
 int sqlite3PutVarint32(unsigned char *p, u32 v){
+#ifndef putVarint32
   if( (v & ~0x7f)==0 ){
     p[0] = v;
     return 1;
-  }else if( (v & ~0x3fff)==0 ){
+  }
+#endif
+  if( (v & ~0x3fff)==0 ){
     p[0] = (v>>7) | 0x80;
     p[1] = v & 0x7f;
     return 2;
-  }else{
-    return sqlite3PutVarint(p, v);
   }
+  return sqlite3PutVarint(p, v);
 }
 
 /*
@@ -520,67 +556,244 @@ int sqlite3PutVarint32(unsigned char *p, u32 v){
 ** Return the number of bytes read.  The value is stored in *v.
 */
 int sqlite3GetVarint(const unsigned char *p, u64 *v){
-  u32 x;
-  u64 x64;
-  int n;
-  unsigned char c;
-  if( ((c = p[0]) & 0x80)==0 ){
-    *v = c;
+  u32 a,b,s;
+
+  a = *p;
+  // a: p0 (unmasked)
+  if (!(a&0x80))
+  {
+    *v = a;
     return 1;
   }
-  x = c & 0x7f;
-  if( ((c = p[1]) & 0x80)==0 ){
-    *v = (x<<7) | c;
+
+  p++;
+  b = *p;
+  // b: p1 (unmasked)
+  if (!(b&0x80))
+  {
+    a &= 0x7f;
+    a = a<<7;
+    a |= b;
+    *v = a;
     return 2;
   }
-  x = (x<<7) | (c&0x7f);
-  if( ((c = p[2]) & 0x80)==0 ){
-    *v = (x<<7) | c;
+
+  p++;
+  a = a<<14;
+  a |= *p;
+  // a: p0<<14 | p2 (unmasked)
+  if (!(a&0x80))
+  {
+    a &= (0x7f<<14)|(0x7f);
+    b &= 0x7f;
+    b = b<<7;
+    a |= b;
+    *v = a;
     return 3;
   }
-  x = (x<<7) | (c&0x7f);
-  if( ((c = p[3]) & 0x80)==0 ){
-    *v = (x<<7) | c;
+
+  // CSE1 from below
+  a &= (0x7f<<14)|(0x7f);
+  p++;
+  b = b<<14;
+  b |= *p;
+  // b: p1<<14 | p3 (unmasked)
+  if (!(b&0x80))
+  {
+    b &= (0x7f<<14)|(0x7f);
+    // moved CSE1 up
+    // a &= (0x7f<<14)|(0x7f);
+    a = a<<7;
+    a |= b;
+    *v = a;
     return 4;
   }
-  x64 = (x<<7) | (c&0x7f);
-  n = 4;
-  do{
-    c = p[n++];
-    if( n==9 ){
-      x64 = (x64<<8) | c;
-      break;
-    }
-    x64 = (x64<<7) | (c&0x7f);
-  }while( (c & 0x80)!=0 );
-  *v = x64;
-  return n;
+
+  // a: p0<<14 | p2 (masked)
+  // b: p1<<14 | p3 (unmasked)
+  // 1:save off p0<<21 | p1<<14 | p2<<7 | p3 (masked)
+  // moved CSE1 up
+  // a &= (0x7f<<14)|(0x7f);
+  b &= (0x7f<<14)|(0x7f);
+  s = a;
+  // s: p0<<14 | p2 (masked)
+
+  p++;
+  a = a<<14;
+  a |= *p;
+  // a: p0<<28 | p2<<14 | p4 (unmasked)
+  if (!(a&0x80))
+  {
+    // we can skip these cause they were (effectively) done above in calc'ing s
+    // a &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    // b &= (0x7f<<14)|(0x7f);
+    b = b<<7;
+    a |= b;
+    s = s>>18;
+    *v = ((u64)s)<<32 | a;
+    return 5;
+  }
+
+  // 2:save off p0<<21 | p1<<14 | p2<<7 | p3 (masked)
+  s = s<<7;
+  s |= b;
+  // s: p0<<21 | p1<<14 | p2<<7 | p3 (masked)
+
+  p++;
+  b = b<<14;
+  b |= *p;
+  // b: p1<<28 | p3<<14 | p5 (unmasked)
+  if (!(b&0x80))
+  {
+    // we can skip this cause it was (effectively) done above in calc'ing s
+    // b &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    a &= (0x7f<<14)|(0x7f);
+    a = a<<7;
+    a |= b;
+    s = s>>18;
+    *v = ((u64)s)<<32 | a;
+    return 6;
+  }
+
+  p++;
+  a = a<<14;
+  a |= *p;
+  // a: p2<<28 | p4<<14 | p6 (unmasked)
+  if (!(a&0x80))
+  {
+    a &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    b &= (0x7f<<14)|(0x7f);
+    b = b<<7;
+    a |= b;
+    s = s>>11;
+    *v = ((u64)s)<<32 | a;
+    return 7;
+  }
+
+  // CSE2 from below
+  a &= (0x7f<<14)|(0x7f);
+  p++;
+  b = b<<14;
+  b |= *p;
+  // b: p3<<28 | p5<<14 | p7 (unmasked)
+  if (!(b&0x80))
+  {
+    b &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    // moved CSE2 up
+    // a &= (0x7f<<14)|(0x7f);
+    a = a<<7;
+    a |= b;
+    s = s>>4;
+    *v = ((u64)s)<<32 | a;
+    return 8;
+  }
+
+  p++;
+  a = a<<15;
+  a |= *p;
+  // a: p4<<29 | p6<<15 | p8 (unmasked)
+
+  // moved CSE2 up
+  // a &= (0x7f<<29)|(0x7f<<15)|(0xff);
+  b &= (0x7f<<14)|(0x7f);
+  b = b<<8;
+  a |= b;
+
+  s = s<<4;
+  b = p[-4];
+  b &= 0x7f;
+  b = b>>3;
+  s |= b;
+
+  *v = ((u64)s)<<32 | a;
+
+  return 9;
 }
 
 /*
 ** Read a 32-bit variable-length integer from memory starting at p[0].
 ** Return the number of bytes read.  The value is stored in *v.
+** A MACRO version, getVarint32, is provided which inlines the 
+** single-byte case.  All code should use the MACRO version as 
+** this function assumes the single-byte case has already been handled.
 */
 int sqlite3GetVarint32(const unsigned char *p, u32 *v){
-  u32 x;
-  int n;
-  unsigned char c;
-  if( ((signed char*)p)[0]>=0 ){
-    *v = p[0];
+  u32 a,b;
+
+  a = *p;
+  // a: p0 (unmasked)
+#ifndef getVarint32
+  if (!(a&0x80))
+  {
+    *v = a;
     return 1;
   }
-  x = p[0] & 0x7f;
-  if( ((signed char*)p)[1]>=0 ){
-    *v = (x<<7) | p[1];
+#endif
+
+  p++;
+  b = *p;
+  // b: p1 (unmasked)
+  if (!(b&0x80))
+  {
+    a &= 0x7f;
+    a = a<<7;
+    *v = a | b;
     return 2;
   }
-  x = (x<<7) | (p[1] & 0x7f);
-  n = 2;
-  do{
-    x = (x<<7) | ((c = p[n++])&0x7f);
-  }while( (c & 0x80)!=0 && n<9 );
-  *v = x;
-  return n;
+
+  p++;
+  a = a<<14;
+  a |= *p;
+  // a: p0<<14 | p2 (unmasked)
+  if (!(a&0x80))
+  {
+    a &= (0x7f<<14)|(0x7f);
+    b &= 0x7f;
+    b = b<<7;
+    *v = a | b;
+    return 3;
+  }
+
+  p++;
+  b = b<<14;
+  b |= *p;
+  // b: p1<<14 | p3 (unmasked)
+  if (!(b&0x80))
+  {
+    b &= (0x7f<<14)|(0x7f);
+    a &= (0x7f<<14)|(0x7f);
+    a = a<<7;
+    *v = a | b;
+    return 4;
+  }
+
+  p++;
+  a = a<<14;
+  a |= *p;
+  // a: p0<<28 | p2<<14 | p4 (unmasked)
+  if (!(a&0x80))
+  {
+    a &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    b &= (0x7f<<28)|(0x7f<<14)|(0x7f);
+    b = b<<7;
+    *v = a | b;
+    return 5;
+  }
+
+  /* We can only reach this point when reading a corrupt database
+  ** file.  In that case we are not in any hurry.  Use the (relatively
+  ** slow) general-purpose sqlite3GetVarint() routine to extract the
+  ** value. */
+  {
+    u64 v64;
+    int n;
+
+    p -= 4;
+    n = sqlite3GetVarint(p, &v64);
+    assert( n>5 && n<=9 );
+    *v = (u32)v64;
+    return n;
+  }
 }
 
 /*

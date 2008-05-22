@@ -17,10 +17,13 @@
 #define _SQLITEINT_H_
 
 /*
-** Include the configuration header output by 'configure' if it was run
-** (otherwise we get an empty default).
+** Include the configuration header output by 'configure' if we're using the
+** autoconf-based build
 */
+#ifdef _HAVE_SQLITE_CONFIG_H
 #include "config.h"
+#endif
+
 #include "sqliteLimit.h"
 
 /* Disable nuisance warnings on Borland compilers */
@@ -43,18 +46,6 @@
 #endif
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
-#endif
-
-/*
-** If possible, use the C99 intptr_t type to define an integral type of
-** equivalent size to a pointer.  (Technically it's >= sizeof(void *), but
-** practically it's == sizeof(void *)).  We fall back to an int if this type
-** isn't defined.
-*/
-#ifdef HAVE_INTPTR_T
-  typedef intptr_t sqlite3_intptr_t;
-#else
-  typedef int sqlite3_intptr_t;
 #endif
 
 /*
@@ -211,8 +202,6 @@
 #include <assert.h>
 #include <stddef.h>
 
-#define sqlite3_isnan(X)  ((X)!=(X))
-
 /*
 ** If compiling for a processor that lacks floating point support,
 ** substitute integer for floating-point
@@ -364,6 +353,14 @@ extern const int sqlite3one;
 # define SQLITE_LITTLEENDIAN (*(char *)(&sqlite3one)==1)
 # define SQLITE_UTF16NATIVE (SQLITE_BIGENDIAN?SQLITE_UTF16BE:SQLITE_UTF16LE)
 #endif
+
+/*
+** Constants for the largest and smallest possible 64-bit signed integers.
+** These macros are designed to work correctly on both 32-bit and 64-bit
+** compilers.
+*/
+#define LARGEST_INT64  (0xffffffff|(((i64)0x7fffffff)<<32))
+#define SMALLEST_INT64 (((i64)-1) - LARGEST_INT64)
 
 /*
 ** An instance of the following structure is used to store the busy-handler
@@ -561,6 +558,8 @@ struct sqlite3 {
   u8 autoCommit;                /* The auto-commit flag. */
   u8 temp_store;                /* 1: file 2: memory 0: default */
   u8 mallocFailed;              /* True if we have seen a malloc failure */
+  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
+  u8 dfltJournalMode;           /* Default journal mode for attached dbs */
   signed char nextAutovac;      /* Autovac setting after VACUUM if >=0 */
   int nextPagesize;             /* Pagesize after VACUUM if >0 */
   int nTable;                   /* Number of tables in the database */
@@ -625,7 +624,6 @@ struct sqlite3 {
 #ifdef SQLITE_SSE
   sqlite3_stmt *pFetch;         /* Used by SSE to fetch stored statements */
 #endif
-  u8 dfltLockMode;              /* Default locking-mode for attached dbs */
 };
 
 /*
@@ -1540,7 +1538,8 @@ struct Parse {
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   Token sArg;                /* Complete text of a module argument */
   u8 declareVtab;            /* True if inside sqlite3_declare_vtab() */
-  Table *pVirtualLock;       /* Require virtual table lock on this table */
+  int nVtabLock;             /* Number of virtual tables to lock */
+  Table **apVtabLock;        /* Pointer to virtual tables needing locking */
 #endif
 #if defined(SQLITE_TEST) || SQLITE_MAX_EXPR_DEPTH>0
   int nHeight;            /* Expression tree height of current sub-select */
@@ -1785,6 +1784,8 @@ void *sqlite3DbReallocOrFree(sqlite3 *, void *, int);
 void *sqlite3DbRealloc(sqlite3 *, void *, int);
 int sqlite3MallocSize(void *);
 
+int sqlite3IsNaN(double);
+
 char *sqlite3MPrintf(sqlite3*,const char*, ...);
 char *sqlite3VMPrintf(sqlite3*,const char*, va_list);
 #if defined(SQLITE_TEST) || defined(SQLITE_DEBUG)
@@ -2002,11 +2003,43 @@ int sqlite3FitsIn64Bits(const char *, int);
 int sqlite3Utf16ByteLen(const void *pData, int nChar);
 int sqlite3Utf8CharLen(const char *pData, int nByte);
 int sqlite3Utf8Read(const u8*, const u8*, const u8**);
+
+/*
+** Routines to read and write variable-length integers.  These used to
+** be defined locally, but now we use the varint routines in the util.c
+** file.  Code should use the MACRO forms below, as the Varint32 versions
+** are coded to assume the single byte case is already handled (which 
+** the MACRO form does).
+*/
 int sqlite3PutVarint(unsigned char*, u64);
 int sqlite3PutVarint32(unsigned char*, u32);
 int sqlite3GetVarint(const unsigned char *, u64 *);
 int sqlite3GetVarint32(const unsigned char *, u32 *);
 int sqlite3VarintLen(u64 v);
+
+/*
+** The header of a record consists of a sequence variable-length integers.
+** These integers are almost always small and are encoded as a single byte.
+** The following macros take advantage this fact to provide a fast encode
+** and decode of the integers in a record header.  It is faster for the common
+** case where the integer is a single byte.  It is a little slower when the
+** integer is two or more bytes.  But overall it is faster.
+**
+** The following expressions are equivalent:
+**
+**     x = sqlite3GetVarint32( A, &B );
+**     x = sqlite3PutVarint32( A, B );
+**
+**     x = getVarint32( A, B );
+**     x = putVarint32( A, B );
+**
+*/
+#define getVarint32(A,B)  ((*(A)<(unsigned char)0x80) ? ((B) = (u32)*(A)),1 : sqlite3GetVarint32((A), &(B)))
+#define putVarint32(A,B)  (((B)<(u32)0x80) ? (*(A) = (unsigned char)(B)),1 : sqlite3PutVarint32((A), (B)))
+#define getVarint    sqlite3GetVarint
+#define putVarint    sqlite3PutVarint
+
+
 void sqlite3IndexAffinityStr(Vdbe *, Index *);
 void sqlite3TableAffinityStr(Vdbe *, Table *);
 char sqlite3CompareAffinity(Expr *pExpr, char aff2);
@@ -2111,6 +2144,7 @@ int sqlite3AutoLoadExtensions(sqlite3*);
    int sqlite3VtabRollback(sqlite3 *db);
    int sqlite3VtabCommit(sqlite3 *db);
 #endif
+void sqlite3VtabMakeWritable(Parse*,Table*);
 void sqlite3VtabLock(sqlite3_vtab*);
 void sqlite3VtabUnlock(sqlite3*, sqlite3_vtab*);
 void sqlite3VtabBeginParse(Parse*, Token*, Token*, Token*);
@@ -2144,14 +2178,16 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
   int sqlite3FaultFailures(int);
   int sqlite3FaultBenignFailures(int);
   int sqlite3FaultPending(int);
-  void sqlite3FaultBenign(int,int);
+  void sqlite3FaultBeginBenign(int);
+  void sqlite3FaultEndBenign(int);
   int sqlite3FaultStep(int);
 #else
 # define sqlite3FaultConfig(A,B,C)
 # define sqlite3FaultFailures(A)         0
 # define sqlite3FaultBenignFailures(A)   0
 # define sqlite3FaultPending(A)          (-1)
-# define sqlite3FaultBenign(A,B)
+# define sqlite3FaultBeginBenign(A)
+# define sqlite3FaultEndBenign(A)
 # define sqlite3FaultStep(A)             0
 #endif
   
@@ -2196,10 +2232,10 @@ void sqlite3Put4byte(u8*, u32);
 #ifdef SQLITE_ENABLE_IOTRACE
 # define IOTRACE(A)  if( sqlite3IoTrace ){ sqlite3IoTrace A; }
   void sqlite3VdbeIOTraceSql(Vdbe*);
+SQLITE_EXTERN void (*sqlite3IoTrace)(const char*,...);
 #else
 # define IOTRACE(A)
 # define sqlite3VdbeIOTraceSql(X)
 #endif
-SQLITE_EXTERN void (*sqlite3IoTrace)(const char*,...);
 
 #endif

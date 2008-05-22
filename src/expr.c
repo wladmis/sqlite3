@@ -266,8 +266,7 @@ Expr *sqlite3Expr(
   const Token *pToken     /* Argument token */
 ){
   Expr *pNew;
-  static const Expr zeroExpr;
-  pNew = sqlite3DbMallocRaw(db, sizeof(Expr));
+  pNew = sqlite3DbMallocZero(db, sizeof(Expr));
   if( pNew==0 ){
     /* When malloc fails, delete pLeft and pRight. Expressions passed to 
     ** this function must always be allocated with sqlite3Expr() for this 
@@ -277,7 +276,6 @@ Expr *sqlite3Expr(
     sqlite3ExprDelete(pRight);
     return 0;
   }
-  *pNew = zeroExpr;
   pNew->op = op;
   pNew->pLeft = pLeft;
   pNew->pRight = pRight;
@@ -1577,6 +1575,45 @@ struct QueryCoder {
 #endif
 
 /*
+** Return true if the IN operator optimization is enabled and
+** the SELECT statement p exists and is of the
+** simple form:
+**
+**     SELECT <column> FROM <table>
+**
+** If this is the case, it may be possible to use an existing table
+** or index instead of generating an epheremal table.
+*/
+#ifndef SQLITE_OMIT_SUBQUERY
+static int isCandidateForInOpt(Select *p){
+  SrcList *pSrc;
+  ExprList *pEList;
+  Table *pTab;
+  if( !sqlite3_enable_in_opt ) return 0; /* IN optimization must be enabled */
+  if( p==0 ) return 0;                   /* right-hand side of IN is SELECT */
+  if( p->pPrior ) return 0;              /* Not a compound SELECT */
+  if( p->isDistinct ) return 0;          /* No DISTINCT keyword */
+  if( p->isAgg ) return 0;               /* Contains no aggregate functions */
+  if( p->pGroupBy ) return 0;            /* Has no GROUP BY clause */
+  if( p->pLimit ) return 0;              /* Has no LIMIT clause */
+  if( p->pOffset ) return 0;
+  if( p->pWhere ) return 0;              /* Has no WHERE clause */
+  pSrc = p->pSrc;
+  if( pSrc==0 ) return 0;                /* A single table in the FROM clause */
+  if( pSrc->nSrc!=1 ) return 0;
+  if( pSrc->a[0].pSelect ) return 0;     /* FROM clause is not a subquery */
+  pTab = pSrc->a[0].pTab;
+  if( pTab==0 ) return 0;
+  if( pTab->pSelect ) return 0;          /* FROM clause is not a view */
+  if( IsVirtual(pTab) ) return 0;        /* FROM clause not a virtual table */
+  pEList = p->pEList;
+  if( pEList->nExpr!=1 ) return 0;       /* One column in the result set */
+  if( pEList->a[0].pExpr->op!=TK_COLUMN ) return 0; /* Result is a column */
+  return 1;
+}
+#endif /* SQLITE_OMIT_SUBQUERY */
+
+/*
 ** This function is used by the implementation of the IN (...) operator.
 ** It's job is to find or create a b-tree structure that may be used
 ** either to test for membership of the (...) set or to iterate through
@@ -1621,14 +1658,8 @@ int sqlite3FindInIndex(Parse *pParse, Expr *pX, int mustBeUnique){
   ** If this is the case, it may be possible to use an existing table
   ** or index instead of generating an epheremal table.
   */
-  if( sqlite3_enable_in_opt
-   && (p=pX->pSelect)!=0 && !p->pPrior
-   && !p->isDistinct && !p->isAgg && !p->pGroupBy
-   && p->pSrc && p->pSrc->nSrc==1 && !p->pSrc->a[0].pSelect
-   && p->pSrc->a[0].pTab && !p->pSrc->a[0].pTab->pSelect
-   && p->pEList->nExpr==1 && p->pEList->a[0].pExpr->op==TK_COLUMN
-   && !p->pLimit && !p->pOffset && !p->pWhere
-  ){
+  p = pX->pSelect;
+  if( isCandidateForInOpt(p) ){
     sqlite3 *db = pParse->db;
     Index *pIdx;
     Expr *pExpr = p->pEList->a[0].pExpr;
@@ -1905,9 +1936,13 @@ static void codeReal(Vdbe *v, const char *z, int n, int negateFlag, int iMem){
     char *zV;
     assert( !isdigit(z[n]) );
     sqlite3AtoF(z, &value);
-    if( negateFlag ) value = -value;
-    zV = dup8bytes(v, (char*)&value);
-    sqlite3VdbeAddOp4(v, OP_Real, 0, iMem, 0, zV, P4_REAL);
+    if( sqlite3IsNaN(value) ){
+      sqlite3VdbeAddOp2(v, OP_Null, 0, iMem);
+    }else{
+      if( negateFlag ) value = -value;
+      zV = dup8bytes(v, (char*)&value);
+      sqlite3VdbeAddOp4(v, OP_Real, 0, iMem, 0, zV, P4_REAL);
+    }
   }
 }
 
@@ -2116,7 +2151,8 @@ void sqlite3ExprHardCopy(Parse *pParse, int iReg, int nReg){
   v = pParse->pVdbe;
   addr = sqlite3VdbeCurrentAddr(v);
   pOp = sqlite3VdbeGetOp(v, addr-1);
-  if( pOp->opcode==OP_SCopy && pOp->p1>=iReg && pOp->p1<iReg+nReg ){
+  assert( pOp || pParse->db->mallocFailed );
+  if( pOp && pOp->opcode==OP_SCopy && pOp->p1>=iReg && pOp->p1<iReg+nReg ){
     pOp->opcode = OP_Copy;
   }
 }

@@ -617,7 +617,7 @@ static sqlite3LockingStyle sqlite3DetectLockingStyle(
 ** describes that file descriptor.  Create new ones if necessary.  The
 ** return values might be uninitialized if an error occurs.
 **
-** Return the number of errors.
+** Return an appropriate error code.
 */
 static int findLockInfo(
   int fd,                      /* The file descriptor used in the key */
@@ -631,7 +631,12 @@ static int findLockInfo(
   struct lockInfo *pLock;
   struct openCnt *pOpen;
   rc = fstat(fd, &statbuf);
-  if( rc!=0 ) return 1;
+  if( rc!=0 ){
+#ifdef EOVERFLOW
+    if( errno==EOVERFLOW ) return SQLITE_NOLFS;
+#endif
+    return SQLITE_IOERR;
+  }
 
   memset(&key1, 0, sizeof(key1));
   key1.dev = statbuf.st_dev;
@@ -650,7 +655,7 @@ static int findLockInfo(
     struct lockInfo *pOld;
     pLock = sqlite3_malloc( sizeof(*pLock) );
     if( pLock==0 ){
-      rc = 1;
+      rc = SQLITE_NOMEM;
       goto exit_findlockinfo;
     }
     pLock->key = key1;
@@ -661,7 +666,7 @@ static int findLockInfo(
     if( pOld!=0 ){
       assert( pOld==pLock );
       sqlite3_free(pLock);
-      rc = 1;
+      rc = SQLITE_NOMEM;
       goto exit_findlockinfo;
     }
   }else{
@@ -675,7 +680,7 @@ static int findLockInfo(
       pOpen = sqlite3_malloc( sizeof(*pOpen) );
       if( pOpen==0 ){
         releaseLockInfo(pLock);
-        rc = 1;
+        rc = SQLITE_NOMEM;
         goto exit_findlockinfo;
       }
       pOpen->key = key2;
@@ -688,7 +693,7 @@ static int findLockInfo(
         assert( pOld==pOpen );
         sqlite3_free(pOpen);
         releaseLockInfo(pLock);
-        rc = 1;
+        rc = SQLITE_NOMEM;
         goto exit_findlockinfo;
       }
     }else{
@@ -2189,7 +2194,7 @@ static int fillInUnixFile(
     if( rc ){
       if( dirfd>=0 ) close(dirfd);
       close(h);
-      return SQLITE_NOMEM;
+      return rc;
     }
   } else {
     /*  pLock and pOpen are only used for posix advisory locking */
@@ -2278,7 +2283,7 @@ static int fillInUnixFile(
   if( rc ){
     if( dirfd>=0 ) close(dirfd);
     close(h);
-    return SQLITE_NOMEM;
+    return rc;
   }
 
   OSTRACE3("OPEN    %-3d %s\n", h, zFilename);
@@ -2522,9 +2527,14 @@ static int unixGetTempname(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
     zDir = azDirs[i];
     break;
   }
-  if( strlen(zDir) - sizeof(SQLITE_TEMP_FILE_PREFIX) - 17 <=0 ){
+
+  /* Check that the output buffer is large enough for the temporary file 
+  ** name. If it is not, return SQLITE_ERROR.
+  */
+  if( (strlen(zDir) + strlen(SQLITE_TEMP_FILE_PREFIX) + 17) >= nBuf ){
     return SQLITE_ERROR;
   }
+
   do{
     assert( pVfs->mxPathname==MAX_PATHNAME );
     sqlite3_snprintf(nBuf-17, zBuf, "%s/"SQLITE_TEMP_FILE_PREFIX, zDir);

@@ -64,6 +64,7 @@ set EXCLUDE {
   interrupt.test
   ioerr.test
   ioerr2.test
+  jrnlmode3.test
   loadext.test
   mallocAll.test
   malloc.test

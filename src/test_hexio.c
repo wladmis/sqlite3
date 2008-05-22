@@ -119,7 +119,10 @@ static int hexio_read(
   if( zBuf==0 ){
     return TCL_ERROR;
   }
-  in = fopen(zFile, "r");
+  in = fopen(zFile, "rb");
+  if( in==0 ){
+    in = fopen(zFile, "r");
+  }
   if( in==0 ){
     Tcl_AppendResult(interp, "cannot open input file ", zFile, 0);
     return TCL_ERROR;
@@ -168,7 +171,10 @@ static int hexio_write(
     return TCL_ERROR;
   }
   nOut = sqlite3TestHexToBin(zIn, nIn, aOut);
-  out = fopen(zFile, "r+");
+  out = fopen(zFile, "r+b");
+  if( out==0 ){
+    out = fopen(zFile, "r+");
+  }
   if( out==0 ){
     Tcl_AppendResult(interp, "cannot open output file ", zFile, 0);
     return TCL_ERROR;

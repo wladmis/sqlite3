@@ -552,7 +552,7 @@ void sqlite3BtreeParseCellPtr(
   n = pPage->childPtrSize;
   assert( n==4-4*pPage->leaf );
   if( pPage->hasData ){
-    n += getVarint32(&pCell[n], &nPayload);
+    n += getVarint32(&pCell[n], nPayload);
   }else{
     nPayload = 0;
   }
@@ -561,7 +561,7 @@ void sqlite3BtreeParseCellPtr(
     n += getVarint(&pCell[n], (u64 *)&pInfo->nKey);
   }else{
     u32 x;
-    n += getVarint32(&pCell[n], &x);
+    n += getVarint32(&pCell[n], x);
     pInfo->nKey = x;
     nPayload += x;
   }
@@ -1054,6 +1054,10 @@ static int getAndInitPage(
   rc = sqlite3BtreeGetPage(pBt, pgno, ppPage, 0);
   if( rc==SQLITE_OK && (*ppPage)->isInit==0 ){
     rc = sqlite3BtreeInitPage(*ppPage, pParent);
+    if( rc!=SQLITE_OK ){
+      releasePage(*ppPage);
+      *ppPage = 0;
+    }
   }
   return rc;
 }
@@ -1640,6 +1644,7 @@ int sqlite3BtreeGetAutoVacuum(Btree *p){
 static int lockBtree(BtShared *pBt){
   int rc;
   MemPage *pPage1;
+  int nPage;
 
   assert( sqlite3_mutex_held(pBt->mutex) );
   if( pBt->pPage1 ) return SQLITE_OK;
@@ -1650,7 +1655,11 @@ static int lockBtree(BtShared *pBt){
   ** a valid database file. 
   */
   rc = SQLITE_NOTADB;
-  if( sqlite3PagerPagecount(pBt->pPager)>0 ){
+  nPage = sqlite3PagerPagecount(pBt->pPager);
+  if( nPage<0 ){
+    rc = SQLITE_IOERR;
+    goto page1_init_failed;
+  }else if( nPage>0 ){
     int pageSize;
     int usableSize;
     u8 *page1 = pPage1->aData;
@@ -1899,8 +1908,10 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
 #endif
 
   do {
-    while( rc==SQLITE_OK && pBt->pPage1==0 ){
-      rc = lockBtree(pBt);
+    if( pBt->pPage1==0 ){
+      do{
+        rc = lockBtree(pBt);
+      }while( pBt->pPage1==0 && rc==SQLITE_OK );
     }
 
     if( rc==SQLITE_OK && wrflag ){
@@ -2315,7 +2326,7 @@ static int autoVacuumCommit(BtShared *pBt, Pgno *pnTrunc){
     if( rc==SQLITE_DONE ){
       assert(nFin==0 || pBt->nTrunc==0 || nFin<=pBt->nTrunc);
       rc = SQLITE_OK;
-      if( pBt->nTrunc ){
+      if( pBt->nTrunc && nFin ){
         rc = sqlite3PagerWrite(pBt->pPage1->pDbPage);
         put4byte(&pBt->pPage1->aData[32], 0);
         put4byte(&pBt->pPage1->aData[36], 0);
@@ -3668,7 +3679,7 @@ int sqlite3BtreeMoveto(
         pCell = findCell(pPage, pCur->idx) + pPage->childPtrSize;
         if( pPage->hasData ){
           u32 dummy;
-          pCell += getVarint32(pCell, &dummy);
+          pCell += getVarint32(pCell, dummy);
         }
         getVarint(pCell, (u64*)&nCellKey);
         if( nCellKey==nKey ){
@@ -4089,7 +4100,8 @@ static int allocateBtreePage(
           *pPgno = iPage;
           if( *pPgno>sqlite3PagerPagecount(pBt->pPager) ){
             /* Free page off the end of the file */
-            return SQLITE_CORRUPT_BKPT;
+            rc = SQLITE_CORRUPT_BKPT;
+            goto end_allocate_page;
           }
           TRACE(("ALLOCATE: %d was leaf %d of %d on trunk %d"
                  ": %d more free pages\n",
@@ -6828,28 +6840,24 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
     ** present in pTo before the copy operation, journal page i from pTo.
     */
     if( i!=iSkip && i<=nToPage ){
-      DbPage *pDbPage;
+      DbPage *pDbPage = 0;
       rc = sqlite3PagerGet(pBtTo->pPager, i, &pDbPage);
-      if( rc ){
-        break;
+      if( rc==SQLITE_OK ){
+        rc = sqlite3PagerWrite(pDbPage);
+        if( rc==SQLITE_OK && i>nFromPage ){
+          /* Yeah.  It seems wierd to call DontWrite() right after Write(). But
+          ** that is because the names of those procedures do not exactly 
+          ** represent what they do.  Write() really means "put this page in the
+          ** rollback journal and mark it as dirty so that it will be written
+          ** to the database file later."  DontWrite() undoes the second part of
+          ** that and prevents the page from being written to the database. The
+          ** page is still on the rollback journal, though.  And that is the 
+          ** whole point of this block: to put pages on the rollback journal. 
+          */
+          sqlite3PagerDontWrite(pDbPage);
+        }
+        sqlite3PagerUnref(pDbPage);
       }
-      rc = sqlite3PagerWrite(pDbPage);
-      if( rc ){
-        break;
-      }
-      if( i>nFromPage ){
-        /* Yeah.  It seems wierd to call DontWrite() right after Write(). But
-        ** that is because the names of those procedures do not exactly 
-        ** represent what they do.  Write() really means "put this page in the
-        ** rollback journal and mark it as dirty so that it will be written
-        ** to the database file later."  DontWrite() undoes the second part of
-        ** that and prevents the page from being written to the database. The
-        ** page is still on the rollback journal, though.  And that is the 
-        ** whole point of this block: to put pages on the rollback journal. 
-        */
-        sqlite3PagerDontWrite(pDbPage);
-      }
-      sqlite3PagerUnref(pDbPage);
     }
 
     /* Overwrite the data in page i of the target database */

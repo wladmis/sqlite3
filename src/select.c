@@ -2938,7 +2938,7 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
   pAggInfo->directMode = 0;
 }
 
-#ifndef SQLITE_OMIT_TRIGGER
+#if 0
 /*
 ** This function is used when a SELECT statement is used to create a
 ** temporary table for iterating through when running an INSTEAD OF
@@ -3653,7 +3653,7 @@ select_end:
 ** code base.  Then are intended to be called from within the debugger
 ** or from temporary "printf" statements inserted for debugging.
 */
-static void sqlite3PrintExpr(Expr *p){
+void sqlite3PrintExpr(Expr *p){
   if( p->token.z && p->token.n>0 ){
     sqlite3DebugPrintf("(%.*s", p->token.n, p->token.z);
   }else{
@@ -3669,7 +3669,7 @@ static void sqlite3PrintExpr(Expr *p){
   }
   sqlite3DebugPrintf(")");
 }
-static void sqlite3PrintExprList(ExprList *pList){
+void sqlite3PrintExprList(ExprList *pList){
   int i;
   for(i=0; i<pList->nExpr; i++){
     sqlite3PrintExpr(pList->a[i].pExpr);
@@ -3678,7 +3678,7 @@ static void sqlite3PrintExprList(ExprList *pList){
     }
   }
 }
-static void sqlite3PrintSelect(Select *p, int indent){
+void sqlite3PrintSelect(Select *p, int indent){
   sqlite3DebugPrintf("%*sSELECT(%p) ", indent, "", p);
   sqlite3PrintExprList(p->pEList);
   sqlite3DebugPrintf("\n");

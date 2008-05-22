@@ -168,9 +168,13 @@ void sqlite3FinishCoding(Parse *pParse){
         sqlite3VdbeAddOp2(v,OP_VerifyCookie, iDb, pParse->cookieValue[iDb]);
       }
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-      if( pParse->pVirtualLock ){
-        char *vtab = (char *)pParse->pVirtualLock->pVtab;
-        sqlite3VdbeAddOp4(v, OP_VBegin, 0, 0, 0, vtab, P4_VTAB);
+      {
+        int i;
+        for(i=0; i<pParse->nVtabLock; i++){
+          char *vtab = (char *)pParse->apVtabLock[i]->pVtab;
+          sqlite3VdbeAddOp4(v, OP_VBegin, 0, 0, 0, vtab, P4_VTAB);
+        }
+        pParse->nVtabLock = 0;
       }
 #endif
 
@@ -2293,7 +2297,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
     regRowid = regIdxKey + pIndex->nColumn;
     j1 = sqlite3VdbeAddOp3(v, OP_IsNull, regIdxKey, 0, pIndex->nColumn);
     j2 = sqlite3VdbeAddOp4(v, OP_IsUnique, iIdx,
-                           0, regRowid, (char*)(sqlite3_intptr_t)regRecord, P4_INT32);
+                           0, regRowid, (char*)regRecord, P4_INT32);
     sqlite3VdbeAddOp4(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort, 0,
                     "indexed columns are not unique", P4_STATIC);
     sqlite3VdbeJumpHere(v, j1);
@@ -3235,6 +3239,8 @@ int sqlite3OpenTempDatabase(Parse *pParse){
     }
     assert( (db->flags & SQLITE_InTrans)==0 || db->autoCommit );
     assert( db->aDb[1].pSchema );
+    sqlite3PagerJournalMode(sqlite3BtreePager(db->aDb[1].pBt),
+                            db->dfltJournalMode);
   }
   return 0;
 }

@@ -34,7 +34,7 @@
 **     sqlite3OsLock()
 **
 */
-#ifdef SQLITE_TEST
+#if defined(SQLITE_TEST) && (OS_WIN==0)
   #define DO_OS_MALLOC_TEST if (1) {            \
     void *pTstAlloc = sqlite3_malloc(10);       \
     if (!pTstAlloc) return SQLITE_IOERR_NOMEM;  \
@@ -122,7 +122,6 @@ int sqlite3OsAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
   sqlite3_free(pTstAlloc);
 #endif
   rc = pVfs->xAccess(pVfs, zPath, flags);
-  assert( rc==0 || rc==1 );
   return rc;
 }
 int sqlite3OsGetTempname(sqlite3_vfs *pVfs, int nBufOut, char *zBufOut){

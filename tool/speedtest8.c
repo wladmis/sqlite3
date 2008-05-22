@@ -26,8 +26,11 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
-#include "sqlite3.h"
+#include <sys/times.h>
+#include <time.h>
+#include <sched.h>
 
+#include "sqlite3.h"
 
 /*
 ** The following routine only works on pentium-class processors.
@@ -52,33 +55,124 @@ static unsigned long long int finalizeTime = 0;
 /*
 ** Prepare and run a single statement of SQL.
 */
-static void prepareAndRun(sqlite3 *db, const char *zSql){
+static void prepareAndRun(sqlite3 *db, const char *zSql, int bQuiet){
   sqlite3_stmt *pStmt;
   const char *stmtTail;
   unsigned long long int iStart, iElapse;
   int rc;
   
-  printf("****************************************************************\n");
-  printf("SQL statement: [%s]\n", zSql);
+  if (!bQuiet){
+    printf("***************************************************************\n");
+  }
+  if (!bQuiet) printf("SQL statement: [%s]\n", zSql);
   iStart = hwtime();
   rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, &stmtTail);
   iElapse = hwtime() - iStart;
   prepTime += iElapse;
-  printf("sqlite3_prepare_v2() returns %d in %llu cycles\n", rc, iElapse);
+  if (!bQuiet){
+    printf("sqlite3_prepare_v2() returns %d in %llu cycles\n", rc, iElapse);
+  }
   if( rc==SQLITE_OK ){
     int nRow = 0;
     iStart = hwtime();
     while( (rc=sqlite3_step(pStmt))==SQLITE_ROW ){ nRow++; }
     iElapse = hwtime() - iStart;
     runTime += iElapse;
-    printf("sqlite3_step() returns %d after %d rows in %llu cycles\n",
-           rc, nRow, iElapse);
+    if (!bQuiet){
+      printf("sqlite3_step() returns %d after %d rows in %llu cycles\n",
+             rc, nRow, iElapse);
+    }
     iStart = hwtime();
     rc = sqlite3_finalize(pStmt);
     iElapse = hwtime() - iStart;
     finalizeTime += iElapse;
-    printf("sqlite3_finalize() returns %d in %llu cycles\n", rc, iElapse);
+    if (!bQuiet){
+      printf("sqlite3_finalize() returns %d in %llu cycles\n", rc, iElapse);
+    }
   }
+}
+
+/***************************************************************************
+** The "overwrite" VFS is an overlay over the default VFS.  It modifies
+** the xTruncate operation on journal files so that xTruncate merely
+** writes zeros into the first 50 bytes of the file rather than truely
+** truncating the file.
+**
+** The following variables are initialized to be the virtual function
+** tables for the overwrite VFS.
+*/
+static sqlite3_vfs overwrite_vfs;
+static sqlite3_io_methods overwrite_methods;
+
+/*
+** The truncate method for journal files in the overwrite VFS.
+*/
+static int overwriteTruncate(sqlite3_file *pFile, sqlite_int64 size){
+  int rc;
+  static const char buf[50];
+  if( size ){
+    return SQLITE_IOERR;
+  }
+  rc = pFile->pMethods->xWrite(pFile, buf, sizeof(buf), 0);
+  if( rc==SQLITE_OK ){
+    rc = pFile->pMethods->xSync(pFile, SQLITE_SYNC_NORMAL);
+  }
+  return rc;
+}
+
+/*
+** The delete method for journal files in the overwrite VFS.
+*/
+static int overwriteDelete(sqlite3_file *pFile){
+  return overwriteTruncate(pFile, 0);
+}
+
+/*
+** The open method for overwrite VFS.  If the file being opened is
+** a journal file then substitute the alternative xTruncate method.
+*/
+static int overwriteOpen(
+  sqlite3_vfs *pVfs,
+  const char *zName,
+  sqlite3_file *pFile,
+  int flags,
+  int *pOutFlags
+){
+  int rc;
+  sqlite3_vfs *pRealVfs;
+  int isJournal;
+
+  isJournal = (flags & (SQLITE_OPEN_MAIN_JOURNAL|SQLITE_OPEN_TEMP_JOURNAL))!=0;
+  pRealVfs = (sqlite3_vfs*)pVfs->pAppData;
+  rc = pRealVfs->xOpen(pRealVfs, zName, pFile, flags, pOutFlags);
+  if( rc==SQLITE_OK && isJournal ){
+    if( overwrite_methods.xTruncate==0 ){
+      sqlite3_io_methods temp;
+      memcpy(&temp, pFile->pMethods, sizeof(temp));
+      temp.xTruncate = overwriteTruncate;
+      memcpy(&overwrite_methods, &temp, sizeof(temp));
+    }
+    pFile->pMethods = &overwrite_methods;
+  }
+  return rc;
+}
+
+/*
+** Overlay the overwrite VFS over top of the current default VFS
+** and make the overlay VFS the new default.
+**
+** This routine can only be evaluated once.  On second and subsequent
+** executions it becomes a no-op.
+*/
+static void registerOverwriteVfs(void){
+  sqlite3_vfs *pBase;
+  if( overwrite_vfs.iVersion ) return;
+  pBase = sqlite3_vfs_find(0);
+  memcpy(&overwrite_vfs, pBase, sizeof(overwrite_vfs));
+  overwrite_vfs.pAppData = pBase;
+  overwrite_vfs.xOpen = overwriteOpen;
+  overwrite_vfs.zName = "overwriteVfs";
+  sqlite3_vfs_register(&overwrite_vfs, 1);
 }
 
 int main(int argc, char **argv){
@@ -92,31 +186,80 @@ int main(int argc, char **argv){
   unsigned long long int iSetup = 0;
   int nStmt = 0;
   int nByte = 0;
+  const char *zArgv0 = argv[0];
+  int bQuiet = 0;
+  struct tms tmsStart, tmsEnd;
+  clock_t clkStart, clkEnd;
 
 #ifdef HAVE_OSINST
   extern sqlite3_vfs *sqlite3_instvfs_binarylog(char *, char *, char *);
   extern void sqlite3_instvfs_destroy(sqlite3_vfs *);
-
   sqlite3_vfs *pVfs = 0;
-  if( argc!=3 && (argc!=5 || strcmp("-log", argv[1])) ){
-    fprintf(stderr, "Usage: %s ?-log LOGFILE? FILENAME SQL-SCRIPT\n"
-                    "Runs SQL-SCRIPT against a UTF8 database\n",
-                    argv[0]);
-    exit(1);
-  }
-  if( argc==5 ){
-    pVfs = sqlite3_instvfs_binarylog("oslog", 0, argv[2]);
-    sqlite3_vfs_register(pVfs, 1);
-    argv += 2;
-  }
-#else
-  if( argc!=3 ){
-    fprintf(stderr, "Usage: %s FILENAME SQL-SCRIPT\n"
-                    "Runs SQL-SCRIPT against a UTF8 database\n",
-                    argv[0]);
-    exit(1);
-  }
 #endif
+
+  while (argc>3)
+  {
+    if( argc>3 && strcmp(argv[1], "-overwrite")==0 ){
+     registerOverwriteVfs();
+     argv++;
+     argc--;
+     continue;
+    }
+
+#ifdef HAVE_OSINST
+    if( argc>4 && (strcmp(argv[1], "-log")==0) ){
+     pVfs = sqlite3_instvfs_binarylog("oslog", 0, argv[2]);
+     sqlite3_vfs_register(pVfs, 1);
+     argv += 2;
+     argc -= 2;
+     continue;
+    }
+#endif
+
+    /*
+    ** Increasing the priority slightly above normal can help with
+    ** repeatability of testing.  Note that with Cygwin, -5 equates
+    ** to "High", +5 equates to "Low", and anything in between
+    ** equates to "Normal".
+    */
+    if( argc>4 && (strcmp(argv[1], "-priority")==0) ){
+      struct sched_param myParam;
+      sched_getparam(0, &myParam);
+      printf ("Current process priority is %d.\n", (int)myParam.sched_priority); 
+      myParam.sched_priority = atoi(argv[2]);
+      printf ("Setting process priority to %d.\n", (int)myParam.sched_priority); 
+      if (sched_setparam (0, &myParam) != 0){
+        printf ("error setting priority\n"); 
+        exit(2); 
+      }
+      argv += 2;
+      argc -= 2;
+      continue;
+    }
+
+    if( argc>3 && strcmp(argv[1], "-quiet")==0 ){
+     bQuiet = -1;
+     argv++;
+     argc--;
+     continue;
+    }
+
+    break;
+  }
+
+  if( argc!=3 ){
+   fprintf(stderr, "Usage: %s [options] FILENAME SQL-SCRIPT\n"
+              "Runs SQL-SCRIPT against a UTF8 database\n"
+              "\toptions:\n"
+              "\t-overwrite\n"
+#ifdef HAVE_OSINST
+              "\t-log <log>\n"
+#endif
+              "\t-priority <value> : set priority of task\n"
+              "\t-quiet : only display summary results\n",
+              zArgv0);
+   exit(1);
+  }
 
   in = fopen(argv[2], "r");
   fseek(in, 0L, SEEK_END);
@@ -128,11 +271,12 @@ int main(int argc, char **argv){
 
   printf("SQLite version: %d\n", sqlite3_libversion_number());
   unlink(argv[1]);
+  clkStart = times(&tmsStart);
   iStart = hwtime();
   rc = sqlite3_open(argv[1], &db);
   iElapse = hwtime() - iStart;
   iSetup = iElapse;
-  printf("sqlite3_open() returns %d in %llu cycles\n", rc, iElapse);
+  if (!bQuiet) printf("sqlite3_open() returns %d in %llu cycles\n", rc, iElapse);
   for(i=j=0; j<nSql; j++){
     if( zSql[j]==';' ){
       int isComplete;
@@ -144,9 +288,11 @@ int main(int argc, char **argv){
         zSql[j] = 0;
         while( i<j && isspace(zSql[i]) ){ i++; }
         if( i<j ){
+          int n = j - i;
+          if( n>=6 && memcmp(&zSql[i], ".crash",6)==0 ) exit(1);
           nStmt++;
-          nByte += j-i;
-          prepareAndRun(db, &zSql[i]);
+          nByte += n;
+          prepareAndRun(db, &zSql[i], bQuiet);
         }
         zSql[j] = ';';
         i = j+1;
@@ -156,17 +302,24 @@ int main(int argc, char **argv){
   iStart = hwtime();
   sqlite3_close(db);
   iElapse = hwtime() - iStart;
+  clkEnd = times(&tmsEnd);
   iSetup += iElapse;
-  printf("sqlite3_close() returns in %llu cycles\n", iElapse);
+  if (!bQuiet) printf("sqlite3_close() returns in %llu cycles\n", iElapse);
+
   printf("\n");
-  printf("Statements run:       %15d\n", nStmt);
-  printf("Bytes of SQL text:    %15d\n", nByte);
-  printf("Total prepare time:   %15llu cycles\n", prepTime);
-  printf("Total run time:       %15llu cycles\n", runTime);
-  printf("Total finalize time:  %15llu cycles\n", finalizeTime);
-  printf("Open/Close time:      %15llu cycles\n", iSetup);
-  printf("Total Time:           %15llu cycles\n",
+  printf("Statements run:        %15d stmts\n", nStmt);
+  printf("Bytes of SQL text:     %15d bytes\n", nByte);
+  printf("Total prepare time:    %15llu cycles\n", prepTime);
+  printf("Total run time:        %15llu cycles\n", runTime);
+  printf("Total finalize time:   %15llu cycles\n", finalizeTime);
+  printf("Open/Close time:       %15llu cycles\n", iSetup);
+  printf("Total time:            %15llu cycles\n",
       prepTime + runTime + finalizeTime + iSetup);
+
+  printf("\n");
+  printf("Total user CPU time:   %15.3g secs\n", (tmsEnd.tms_utime - tmsStart.tms_utime)/(double)CLOCKS_PER_SEC );
+  printf("Total system CPU time: %15.3g secs\n", (tmsEnd.tms_stime - tmsStart.tms_stime)/(double)CLOCKS_PER_SEC );
+  printf("Total real time:       %15.3g secs\n", (clkEnd -clkStart)/(double)CLOCKS_PER_SEC );
 
 #ifdef HAVE_OSINST
   if( pVfs ){

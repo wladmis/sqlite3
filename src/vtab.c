@@ -618,7 +618,7 @@ int sqlite3VtabCallDestroy(sqlite3 *db, int iDb, const char *zTab)
 **
 ** The array is cleared after invoking the callbacks. 
 */
-static void callFinaliser(sqlite3 *db, sqlite3_intptr_t offset){
+static void callFinaliser(sqlite3 *db, int offset){
   int i;
   if( db->aVTrans ){
     for(i=0; i<db->nVTrans && db->aVTrans[i]; i++){
@@ -671,7 +671,7 @@ int sqlite3VtabSync(sqlite3 *db, int rc2){
 ** sqlite3.aVTrans array. Then clear the array itself.
 */
 int sqlite3VtabRollback(sqlite3 *db){
-  callFinaliser(db, (sqlite3_intptr_t)(&((sqlite3_module *)0)->xRollback));
+  callFinaliser(db, offsetof(sqlite3_module,xRollback));
   return SQLITE_OK;
 }
 
@@ -680,7 +680,7 @@ int sqlite3VtabRollback(sqlite3 *db){
 ** sqlite3.aVTrans array. Then clear the array itself.
 */
 int sqlite3VtabCommit(sqlite3 *db){
-  callFinaliser(db, (sqlite3_intptr_t)(&((sqlite3_module *)0)->xCommit));
+  callFinaliser(db, offsetof(sqlite3_module,xCommit));
   return SQLITE_OK;
 }
 
@@ -800,6 +800,27 @@ FuncDef *sqlite3VtabOverloadFunction(
   pNew->pUserData = pArg;
   pNew->flags |= SQLITE_FUNC_EPHEM;
   return pNew;
+}
+
+/*
+** Make sure virtual table pTab is contained in the pParse->apVirtualLock[]
+** array so that an OP_VBegin will get generated for it.  Add pTab to the
+** array if it is missing.  If pTab is already in the array, this routine
+** is a no-op.
+*/
+void sqlite3VtabMakeWritable(Parse *pParse, Table *pTab){
+  int i, n;
+  assert( IsVirtual(pTab) );
+  for(i=0; i<pParse->nVtabLock; i++){
+    if( pTab==pParse->apVtabLock[i] ) return;
+  }
+  n = (pParse->nVtabLock+1)*sizeof(pParse->apVtabLock[0]);
+  pParse->apVtabLock = sqlite3_realloc(pParse->apVtabLock, n);
+  if( pParse->apVtabLock ){
+    pParse->apVtabLock[pParse->nVtabLock++] = pTab;
+  }else{
+    pParse->db->mallocFailed = 1;
+  }
 }
 
 #endif /* SQLITE_OMIT_VIRTUALTABLE */

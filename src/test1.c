@@ -247,6 +247,7 @@ static int test_io_trace(
   int argc,              /* Number of arguments */
   char **argv            /* Text of each argument */
 ){
+#if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
   if( argc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
           " FILENAME\"", 0);
@@ -269,7 +270,8 @@ static int test_io_trace(
     }
     sqlite3IoTrace = io_trace_callback;
   }
-  return SQLITE_OK;
+#endif
+  return TCL_OK;
 }
 
 
@@ -2612,6 +2614,24 @@ static int test_bind_double(
   int idx;
   double value;
   int rc;
+  const char *zVal;
+  int i;
+  static const struct {
+    const char *zName;     /* Name of the special floating point value */
+    unsigned int iUpper;   /* Upper 32 bits */
+    unsigned int iLower;   /* Lower 32 bits */
+  } aSpecialFp[] = {
+    {  "NaN",      0x7fffffff, 0xffffffff },
+    {  "SNaN",     0x7ff7ffff, 0xffffffff },
+    {  "-NaN",     0xffffffff, 0xffffffff },
+    {  "-SNaN",    0xfff7ffff, 0xffffffff },
+    {  "+Inf",     0x7ff00000, 0x00000000 },
+    {  "-Inf",     0xfff00000, 0x00000000 },
+    {  "Epsilon",  0x00000000, 0x00000001 },
+    {  "-Epsilon", 0x80000000, 0x00000001 },
+    {  "NaN0",     0x7ff80000, 0x00000000 },
+    {  "-NaN0",    0xfff80000, 0x00000000 },
+  };
 
   if( objc!=4 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -2621,8 +2641,29 @@ static int test_bind_double(
 
   if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
   if( Tcl_GetIntFromObj(interp, objv[2], &idx) ) return TCL_ERROR;
-  if( Tcl_GetDoubleFromObj(interp, objv[3], &value) ) return TCL_ERROR;
 
+  /* Intercept the string "NaN" and generate a NaN value for it.
+  ** All other strings are passed through to Tcl_GetDoubleFromObj().
+  ** Tcl_GetDoubleFromObj() should understand "NaN" but some versions
+  ** contain a bug.
+  */
+  zVal = Tcl_GetString(objv[3]);
+  for(i=0; i<sizeof(aSpecialFp)/sizeof(aSpecialFp[0]); i++){
+    if( strcmp(aSpecialFp[i].zName, zVal)==0 ){
+      sqlite3_uint64 x;
+      x = aSpecialFp[i].iUpper;
+      x <<= 32;
+      x |= aSpecialFp[i].iLower;
+      assert( sizeof(value)==8 );
+      assert( sizeof(x)==8 );
+      memcpy(&value, &x, 8);
+      break;
+    }
+  }
+  if( i>=sizeof(aSpecialFp)/sizeof(aSpecialFp[0]) &&
+         Tcl_GetDoubleFromObj(interp, objv[3], &value) ){
+    return TCL_ERROR;
+  }
   rc = sqlite3_bind_double(pStmt, idx, value);
   if( sqlite3TestErrCode(interp, StmtToDb(pStmt), rc) ) return TCL_ERROR;
   if( rc!=SQLITE_OK ){

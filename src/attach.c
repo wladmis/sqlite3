@@ -137,6 +137,7 @@ static void attachFunc(
                            db->openFlags | SQLITE_OPEN_MAIN_DB,
                            &aNew->pBt);
   if( rc==SQLITE_OK ){
+    Pager *pPager;
     aNew->pSchema = sqlite3SchemaGet(db, aNew->pBt);
     if( !aNew->pSchema ){
       rc = SQLITE_NOMEM;
@@ -145,7 +146,9 @@ static void attachFunc(
         "attached databases must use the same text encoding as main database");
       goto attach_error;
     }
-    sqlite3PagerLockingMode(sqlite3BtreePager(aNew->pBt), db->dfltLockMode);
+    pPager = sqlite3BtreePager(aNew->pBt);
+    sqlite3PagerLockingMode(pPager, db->dfltLockMode);
+    sqlite3PagerJournalMode(pPager, db->dfltJournalMode);
   }
   aNew->zName = sqlite3DbStrDup(db, zName);
   aNew->safety_level = 3;

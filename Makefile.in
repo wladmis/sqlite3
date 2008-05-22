@@ -28,6 +28,11 @@ BCC = @BUILD_CC@ @BUILD_CFLAGS@
 #
 TCC = @CC@ @CPPFLAGS@ @CFLAGS@ -I. -I${TOP}/src
 
+# Define this for the autoconf-based build, so that the code knows it can
+# include the generated config.h
+# 
+TCC += -D_HAVE_SQLITE_CONFIG_H
+
 # Define -DNDEBUG to compile without debugging (i.e., for production usage)
 # Omitting the define will cause extra debugging code to be inserted and
 # includes extra comments when "EXPLAIN stmt" is used.
@@ -694,10 +699,11 @@ tclsqlite3$(TEXE):	tclsqlite-shell.lo libsqlite3.la
 		 libsqlite3.la $(LIBTCL)
 
 testfixture$(TEXE):	$(TESTFIXTURE_SRC)
-	$(LTLINK) -DTCLSH=1 -DSQLITE_TEST=1 -DSQLITE_CRASH_TEST=1 \
+	$(LTLINK) -DTCLSH=1 -DSQLITE_TEST=1 -DSQLITE_NO_SYNC=1\
+		-DSQLITE_CRASH_TEST=1 \
                 -DSQLITE_SERVER=1 -DSQLITE_PRIVATE="" -DSQLITE_CORE $(TEMP_STORE) \
 		-DSQLITE_ENABLE_FTS3 -I$(TOP)/ext/fts3 $(FTS3_SRC) \
-		-o $@ $(TESTFIXTURE_SRC) -static $(LIBTCL)
+		-o $@ $(TESTFIXTURE_SRC) -static $(LIBTCL) $(TLIBS)
 
 
 fulltest:	testfixture$(TEXE) sqlite3$(TEXE)

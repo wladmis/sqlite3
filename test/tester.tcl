@@ -73,7 +73,7 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
 
 
 proc ostrace_call {zCall nClick zFile i32 i64} {
-  set s "INSERT INTO ostrace VALUES( '$zCall', $nClick, '$zFile', $i32, $i64);"
+  set s "INSERT INTO ostrace VALUES('$zCall', $nClick, '$zFile', $i32, $i64);"
   puts $::ostrace_fd $s
 }
 
@@ -88,8 +88,18 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
       append s "(method TEXT, clicks INT, file TEXT, i32 INT, i64 INT);"
       puts $ostrace_fd $s
       sqlite3_instvfs configure ostrace ostrace_call
+      sqlite3_instvfs configure ostrace ostrace_call
     }
     set argv [lreplace $argv $i $i]
+  }
+  if {[lindex $argv $i] eq "--binarylog"} {
+    set tester_do_binarylog 1
+
+    # sqlite3_simulate_device -char safe_append
+    # sqlite3_instvfs binarylog -default -parent devsym binarylog ostrace.bin
+    sqlite3_instvfs binarylog -default binarylog ostrace.bin
+    set argv [lreplace $argv $i $i]
+    sqlite3_instvfs marker binarylog "$argv0 $argv"
   }
 }
 
@@ -159,6 +169,9 @@ proc omit_test {name reason} {
 proc do_test {name cmd expected} {
   global argv nErr nTest skip_test maxErr
   sqlite3_memdebug_settitle $name
+  if {[info exists ::tester_do_binarylog]} {
+    sqlite3_instvfs marker binarylog "Start of $name"
+  }
   if {$skip_test} {
     set skip_test 0
     return
@@ -192,6 +205,9 @@ proc do_test {name cmd expected} {
     puts " Ok"
   }
   flush stdout
+  if {[info exists ::tester_do_binarylog]} {
+    sqlite3_instvfs marker binarylog "End of $name"
+  }
 }
 
 # Run an SQL script.  
@@ -283,6 +299,9 @@ proc finalize_testing {} {
     puts "in your TCL build."
     puts "******************************************************************"
   }
+  if {[info exists ::tester_do_binarylog]} {
+    sqlite3_instvfs destroy binarylog
+  }
   if {$sqlite_open_file_count} {
     puts "$sqlite_open_file_count files were left open"
     incr nErr
@@ -367,6 +386,15 @@ proc explain {sql {db db}} {
       $addr $opcode $p1 $p2 $p3 $p4 $p5 $comment
     ]
   }
+}
+
+# Show the VDBE program for an SQL statement but omit the Trace
+# opcode at the beginning.  This procedure can be used to prove
+# that different SQL statements generate exactly the same VDBE code.
+#
+proc explain_no_trace {sql} {
+  set tr [db eval "EXPLAIN $sql"]
+  return [lrange $tr 7 end]
 }
 
 # Another procedure to execute SQL.  This one includes the field
@@ -566,7 +594,12 @@ proc do_ioerr_test {testname args} {
   set ::ioerropts(-erc) 0
   set ::ioerropts(-count) 100000000
   set ::ioerropts(-persist) 1
+  set ::ioerropts(-ckrefcount) 0
   array set ::ioerropts $args
+
+  # TEMPORARY: For 3.5.9, disable testing of extended result codes. There are
+  # a couple of obscure IO errors that do not return them.
+  set ::ioerropts(-erc) 0
 
   set ::go 1
   #reset_prng_state
@@ -674,10 +707,50 @@ proc do_ioerr_test {testname args} {
       expr { ($s && !$r && !$q) || (!$s && $r && $q) }
     } {1}
 
+    set ::sqlite_io_error_hit 0
+    set ::sqlite_io_error_pending 0
+
+    # Check that no page references were leaked. There should be 
+    # a single reference if there is still an active transaction, 
+    # or zero otherwise.
+    #
+    if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-ckrefcount)} {
+      do_test $testname.$n.4 {
+        set bt [btree_from_db db]
+        db_enter db
+        array set stats [btree_pager_stats $bt]
+        db_leave db
+        set stats(ref)
+      } [expr {[sqlite3_get_autocommit db]?0:1}]
+    }
+
+    # If there is an open database handle and no open transaction, 
+    # and the pager is not running in exclusive-locking mode,
+    # check that the pager is in "unlocked" state. Theoretically,
+    # if a call to xUnlock() failed due to an IO error the underlying
+    # file may still be locked.
+    #
+    ifcapable pragma {
+      if { [info commands db] ne ""
+        && $::ioerropts(-ckrefcount)
+        && [db one {pragma locking_mode}] eq "normal"
+        && [sqlite3_get_autocommit db]
+      } {
+        do_test $testname.$n.5 {
+          set bt [btree_from_db db]
+          db_enter db
+          array set stats [btree_pager_stats $bt]
+          db_leave db
+          set stats(state)
+        } 0
+      }
+    }
+
     # If an IO error occured, then the checksum of the database should
     # be the same as before the script that caused the IO error was run.
+    #
     if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-cksum)} {
-      do_test $testname.$n.4 {
+      do_test $testname.$n.6 {
         catch {db close}
         set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
         cksum

@@ -310,8 +310,8 @@ static i64 doubleToInt64(double r){
   ** So we define our own static constants here using nothing
   ** larger than a 32-bit integer constant.
   */
-  static const i64 maxInt = (((i64)0x7fffffff)<<32)|0xffffffff;
-  static const i64 minInt = ((i64)0x80000000)<<32;
+  static const i64 maxInt = LARGEST_INT64;
+  static const i64 minInt = SMALLEST_INT64;
 
   if( r<(double)minInt ){
     return minInt;
@@ -482,7 +482,7 @@ void sqlite3VdbeMemSetInt64(Mem *pMem, i64 val){
 ** manifest type REAL.
 */
 void sqlite3VdbeMemSetDouble(Mem *pMem, double val){
-  if( sqlite3_isnan(val) ){
+  if( sqlite3IsNaN(val) ){
     sqlite3VdbeMemSetNull(pMem);
   }else{
     sqlite3VdbeMemRelease(pMem);
@@ -893,7 +893,7 @@ const void *sqlite3ValueText(sqlite3_value* pVal, u8 enc){
   expandBlob(pVal);
   if( pVal->flags&MEM_Str ){
     sqlite3VdbeChangeEncoding(pVal, enc & ~SQLITE_UTF16_ALIGNED);
-    if( (enc & SQLITE_UTF16_ALIGNED)!=0 && 1==(1&(sqlite3_intptr_t)pVal->z) ){
+    if( (enc & SQLITE_UTF16_ALIGNED)!=0 && 1==(1&(int)pVal->z) ){
       assert( (pVal->flags & (MEM_Ephem|MEM_Static))!=0 );
       if( sqlite3VdbeMemMakeWriteable(pVal)!=SQLITE_OK ){
         return 0;
@@ -903,7 +903,7 @@ const void *sqlite3ValueText(sqlite3_value* pVal, u8 enc){
   }else{
     assert( (pVal->flags&MEM_Blob)==0 );
     sqlite3VdbeMemStringify(pVal, enc);
-    assert( 0==(1&(sqlite3_intptr_t)pVal->z) );
+    assert( 0==(1&(int)pVal->z) );
   }
   assert(pVal->enc==(enc & ~SQLITE_UTF16_ALIGNED) || pVal->db==0
               || pVal->db->mallocFailed );
