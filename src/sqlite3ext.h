@@ -298,7 +298,7 @@ struct sqlite3_api_routines {
 #define sqlite3_rollback_hook          sqlite3_api->rollback_hook
 #define sqlite3_set_authorizer         sqlite3_api->set_authorizer
 #define sqlite3_set_auxdata            sqlite3_api->set_auxdata
-#define sqlite3_snprintf               sqlite3_api->snprintf
+#define sqlite3_snprintf               (sqlite3_api->snprintf)
 #define sqlite3_step                   sqlite3_api->step
 #define sqlite3_table_column_metadata  sqlite3_api->table_column_metadata
 #define sqlite3_thread_cleanup         sqlite3_api->thread_cleanup
