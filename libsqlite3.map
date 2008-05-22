@@ -98,4 +98,10 @@ SQLITE_3.5.6 {
     global:
 	sqlite3_result_error_code;
 };
+SQLITE_3.5.8 {
+    global:
+	sqlite3_context_db_handle;
+	sqlite3_limit;
+	sqlite3_randomness;
+};
 /* the prefix is SQLITE_, not SQLITE3_ */
