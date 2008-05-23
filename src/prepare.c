@@ -552,7 +552,7 @@ static int sqlite3Prepare(
   
   memset(&sParse, 0, sizeof(sParse));
   sParse.db = db;
-  if( nBytes>=0 && zSql[nBytes-1]!=0 ){
+  if( nBytes>=0 && (nBytes==0 || zSql[nBytes-1]!=0) ){
     char *zSqlCopy;
     int mxLen = db->aLimit[SQLITE_LIMIT_SQL_LENGTH];
     if( nBytes>mxLen ){
