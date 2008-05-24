@@ -449,10 +449,10 @@ libsqlite3.la:	$(LIBOBJ)
 		${ALLOWRELEASE} -rpath "$(libdir)" -version-info "8:6:8"
 
 libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
-	$(LTLINK) -o $@ tclsqlite.lo \
-		$(LIBOBJ) @TCL_STUB_LIB_SPEC@ $(TLIBS) \
+	$(LTLINK) -o $@ tclsqlite.lo libsqlite3.la \
+		@TCL_STUB_LIB_SPEC@ $(LIBTCL) $(TLIBS) \
 		-rpath $(tcllibdir) \
-		-version-info "8:6:8"
+		-version-info "8:6:8" -Wl,-z,defs
 
 sqlite3$(TEXE):	$(TOP)/src/shell.c libsqlite3.la sqlite3.h
 	$(LTLINK) $(READLINE_FLAGS) \
