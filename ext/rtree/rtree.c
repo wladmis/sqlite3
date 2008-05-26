@@ -2411,9 +2411,9 @@ static int rtreeRename(sqlite3_vtab *pVtab, const char *zNewName){
   Rtree *pRtree = (Rtree *)pVtab;
   int rc = SQLITE_NOMEM;
   char *zSql = sqlite3_mprintf(
-    "ALTER TABLE %Q.'%q_node'   RENAME TO '%q_node';"
-    "ALTER TABLE %Q.'%q_parent' RENAME TO '%q_parent';"
-    "ALTER TABLE %Q.'%q_rowid'  RENAME TO '%q_rowid';"
+    "ALTER TABLE %Q.'%q_node'   RENAME TO \"%w_node\";"
+    "ALTER TABLE %Q.'%q_parent' RENAME TO \"%w_parent\";"
+    "ALTER TABLE %Q.'%q_rowid'  RENAME TO \"%w_rowid\";"
     , pRtree->zDb, pRtree->zName, zNewName 
     , pRtree->zDb, pRtree->zName, zNewName 
     , pRtree->zDb, pRtree->zName, zNewName
@@ -2481,9 +2481,9 @@ static int rtreeSqlInit(
 
   if( isCreate ){
     char *zCreate = sqlite3_mprintf(
-"CREATE TABLE '%q'.'%q_node'(nodeno INTEGER PRIMARY KEY, data BLOB);"
-"CREATE TABLE '%q'.'%q_rowid'(rowid INTEGER PRIMARY KEY, nodeno INTEGER);"
-"CREATE TABLE '%q'.'%q_parent'(nodeno INTEGER PRIMARY KEY, parentnode INTEGER);"
+"CREATE TABLE \"%w\".\"%w_node\"(nodeno INTEGER PRIMARY KEY, data BLOB);"
+"CREATE TABLE \"%w\".\"%w_rowid\"(rowid INTEGER PRIMARY KEY, nodeno INTEGER);"
+"CREATE TABLE \"%w\".\"%w_parent\"(nodeno INTEGER PRIMARY KEY, parentnode INTEGER);"
 "INSERT INTO '%q'.'%q_node' VALUES(1, zeroblob(%d))",
       zDb, zPrefix, zDb, zPrefix, zDb, zPrefix, zDb, zPrefix, pRtree->iNodeSize
     );
