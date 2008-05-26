@@ -902,8 +902,7 @@ or_not_possible:
   **          x>='abc' AND x<'abd' AND x LIKE 'abc%'
   **
   ** The last character of the prefix "abc" is incremented to form the
-  ** termination condidtion "abd".  This trick of incrementing the last
-  ** is not 255 and if the character set is not EBCDIC.  
+  ** termination condidtion "abd".
   */
   if( isLikeOrGlob(db, pExpr, &nPattern, &isComplete, &noCase) ){
     Expr *pLeft, *pRight;
@@ -925,7 +924,10 @@ or_not_possible:
       assert( pStr2->token.dyn );
       pC = (u8*)&pStr2->token.z[nPattern-1];
       c = *pC;
-      if( noCase ) c = sqlite3UpperToLower[c];
+      if( noCase ){
+        if( c=='@' ) isComplete = 0;
+        c = sqlite3UpperToLower[c];
+      }
       *pC = c + 1;
     }
     pNewExpr1 = sqlite3PExpr(pParse, TK_GE, sqlite3ExprDup(db,pLeft), pStr1, 0);
