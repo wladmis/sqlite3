@@ -1184,6 +1184,14 @@ static int openDatabase(
     rc = sqlite3IcuInit(db);
   }
 #endif
+
+#ifdef SQLITE_ENABLE_RTREE
+  if( !db->mallocFailed && rc==SQLITE_OK){
+    extern int sqlite3RtreeInit(sqlite3*);
+    rc = sqlite3RtreeInit(db);
+  }
+#endif
+
   sqlite3Error(db, rc, 0);
 
   /* -DSQLITE_DEFAULT_LOCKING_MODE=1 makes EXCLUSIVE the default locking
