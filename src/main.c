@@ -18,8 +18,12 @@
 */
 #include "sqliteInt.h"
 #include <ctype.h>
+
 #ifdef SQLITE_ENABLE_FTS3
 # include "fts3.h"
+#endif
+#ifdef SQLITE_ENABLE_RTREE
+# include "rtree.h"
 #endif
 
 /*
@@ -1187,7 +1191,6 @@ static int openDatabase(
 
 #ifdef SQLITE_ENABLE_RTREE
   if( !db->mallocFailed && rc==SQLITE_OK){
-    extern int sqlite3RtreeInit(sqlite3*);
     rc = sqlite3RtreeInit(db);
   }
 #endif
