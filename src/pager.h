@@ -23,7 +23,7 @@
 ** The type used to represent a page number.  The first page in a file
 ** is called page 1.  0 is used to represent "not a page".
 */
-typedef unsigned int Pgno;
+typedef u32 Pgno;
 
 /*
 ** Each open file is managed by a separate instance of the "Pager" structure.
