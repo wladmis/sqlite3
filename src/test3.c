@@ -420,7 +420,7 @@ static int btree_get_meta(
   pBt = sqlite3TextToPtr(argv[1]);
   for(i=0; i<SQLITE_N_BTREE_META; i++){
     char zBuf[30];
-    unsigned int v;
+    u32 v;
     sqlite3BtreeEnter(pBt);
     rc = sqlite3BtreeGetMeta(pBt, i, &v);
     sqlite3BtreeLeave(pBt);
