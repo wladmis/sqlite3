@@ -222,7 +222,6 @@ for {set nDim 1} {$nDim<=5} {incr nDim} {
     do_test rtree-$nDim.2.$i.8 {
       list $where [db eval "SELECT id FROM rx $where ORDER BY id"]
     } [list $where [db eval "SELECT id FROM bx $where ORDER BY id"]]
-
   }
 
 }
