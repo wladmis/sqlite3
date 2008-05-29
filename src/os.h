@@ -246,10 +246,12 @@ int sqlite3OsDelete(sqlite3_vfs *, const char *, int);
 int sqlite3OsAccess(sqlite3_vfs *, const char *, int);
 int sqlite3OsGetTempname(sqlite3_vfs *, int, char *);
 int sqlite3OsFullPathname(sqlite3_vfs *, const char *, int, char *);
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 void *sqlite3OsDlOpen(sqlite3_vfs *, const char *);
 void sqlite3OsDlError(sqlite3_vfs *, int, char *);
 void *sqlite3OsDlSym(sqlite3_vfs *, void *, const char *);
 void sqlite3OsDlClose(sqlite3_vfs *, void *);
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 int sqlite3OsRandomness(sqlite3_vfs *, int, char *);
 int sqlite3OsSleep(sqlite3_vfs *, int);
 int sqlite3OsCurrentTime(sqlite3_vfs *, double*);
