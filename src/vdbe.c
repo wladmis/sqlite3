@@ -3551,7 +3551,7 @@ case OP_RowData: {
 /* Opcode: Rowid P1 P2 * * *
 **
 ** Store in register P2 an integer which is the key of the table entry that
-** P1 is currently point to.  If p2==0 then push the integer.
+** P1 is currently point to.
 */
 case OP_Rowid: {                 /* out2-prerelease */
   int i = pOp->p1;
