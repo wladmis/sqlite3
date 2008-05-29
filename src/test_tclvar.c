@@ -222,7 +222,8 @@ static int tclvarBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 
   for(ii=0; ii<pIdxInfo->nConstraint; ii++){
     struct sqlite3_index_constraint const *pCons = &pIdxInfo->aConstraint[ii];
-    if( pCons->iColumn==0 && pCons->op==SQLITE_INDEX_CONSTRAINT_EQ ){
+    if( pCons->iColumn==0 && pCons->usable
+           && pCons->op==SQLITE_INDEX_CONSTRAINT_EQ ){
       struct sqlite3_index_constraint_usage *pUsage;
       pUsage = &pIdxInfo->aConstraintUsage[ii];
       pUsage->omit = 0;
@@ -233,7 +234,8 @@ static int tclvarBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
 
   for(ii=0; ii<pIdxInfo->nConstraint; ii++){
     struct sqlite3_index_constraint const *pCons = &pIdxInfo->aConstraint[ii];
-    if( pCons->iColumn==0 && pCons->op==SQLITE_INDEX_CONSTRAINT_MATCH ){
+    if( pCons->iColumn==0 && pCons->usable
+           && pCons->op==SQLITE_INDEX_CONSTRAINT_MATCH ){
       struct sqlite3_index_constraint_usage *pUsage;
       pUsage = &pIdxInfo->aConstraintUsage[ii];
       pUsage->omit = 1;

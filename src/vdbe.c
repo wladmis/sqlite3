@@ -4551,8 +4551,8 @@ case OP_VOpen: {
 ** This opcode invokes the xFilter method on the virtual table specified
 ** by P1.  The integer query plan parameter to xFilter is stored in register
 ** P3. Register P3+1 stores the argc parameter to be passed to the
-** xFilter method. Registers P3+2..P3+1+argc are the argc additional
-** parametersneath additional parameters which are passed to
+** xFilter method. Registers P3+2..P3+1+argc are the argc
+** additional parameters which are passed to
 ** xFilter as argv. Register P3+2 becomes argv[0] when passed to xFilter.
 **
 ** A jump is made to P2 if the result set after filtering would be empty.
