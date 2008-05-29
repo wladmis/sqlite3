@@ -66,6 +66,15 @@
 # endif
 #endif
 
+/*
+** Determine if we are dealing with WindowsCE - which has a much
+** reduced API.
+*/
+#if defined(_WIN32_WCE)
+# define OS_WINCE 1
+#else
+# define OS_WINCE 0
+#endif
 
 
 /*
