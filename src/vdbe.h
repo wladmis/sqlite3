@@ -63,11 +63,11 @@ struct VdbeOp {
     KeyInfo *pKeyInfo;     /* Used when p4type is P4_KEYINFO */
   } p4;
 #ifdef SQLITE_DEBUG
-  char *zComment;     /* Comment to improve readability */
+  char *zComment;          /* Comment to improve readability */
 #endif
 #ifdef VDBE_PROFILE
-  int cnt;            /* Number of times this instruction was executed */
-  long long cycles;   /* Total time spend executing this instruction */
+  int cnt;                 /* Number of times this instruction was executed */
+  u64 cycles;              /* Total time spent executing this instruction */
 #endif
 };
 typedef struct VdbeOp VdbeOp;
