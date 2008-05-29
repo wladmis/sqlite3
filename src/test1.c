@@ -225,6 +225,7 @@ static int exec_printf_cb(void *pArg, int argc, char **argv, char **name){
 /*
 ** The I/O tracing callback.
 */
+#if !defined(SQLITE_OMIT_TRACE) && defined(SQLITE_ENABLE_IOTRACE)
 static FILE *iotrace_file = 0;
 static void io_trace_callback(const char *zFormat, ...){
   va_list ap;
@@ -233,6 +234,7 @@ static void io_trace_callback(const char *zFormat, ...){
   va_end(ap);
   fflush(iotrace_file);
 }
+#endif
 
 /*
 ** Usage:  io_trace FILENAME

@@ -517,6 +517,7 @@ struct MallocLog {
   int nByte;
 };
 
+#ifdef SQLITE_MEMDEBUG
 static void test_memdebug_callback(int nByte, int nFrame, void **aFrame){
   if( mallocLogEnabled ){
     MallocLog *pLog;
@@ -545,6 +546,7 @@ static void test_memdebug_callback(int nByte, int nFrame, void **aFrame){
     pLog->nByte += nByte;
   }
 }
+#endif /* SQLITE_MEMDEBUG */
 
 static void test_memdebug_log_clear(){
   Tcl_HashSearch search;
