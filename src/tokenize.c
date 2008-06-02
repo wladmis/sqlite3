@@ -420,7 +420,9 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
       case TK_COMMENT: {
         if( db->u1.isInterrupted ){
           pParse->rc = SQLITE_INTERRUPT;
-          sqlite3SetString(pzErrMsg, "interrupt", (char*)0);
+          if( pzErrMsg ){
+            sqlite3SetString(pzErrMsg, "interrupt", (char*)0);
+          }
           goto abort_parse;
         }
         break;
