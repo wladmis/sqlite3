@@ -20,6 +20,14 @@
 #define _PAGER_H_
 
 /*
+** If defined as non-zero, auto-vacuum is enabled by default. Otherwise
+** it must be turned on for each database using "PRAGMA auto_vacuum = 1".
+*/
+#ifndef SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT
+  #define SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT -1
+#endif
+
+/*
 ** The type used to represent a page number.  The first page in a file
 ** is called page 1.  0 is used to represent "not a page".
 */
@@ -102,6 +110,7 @@ void *sqlite3PagerGetData(DbPage *);
 void *sqlite3PagerGetExtra(DbPage *); 
 int sqlite3PagerLockingMode(Pager *, int);
 int sqlite3PagerJournalMode(Pager *, int);
+i64 sqlite3PagerJournalSizeLimit(Pager *, i64);
 void *sqlite3PagerTempSpace(Pager*);
 int sqlite3PagerSync(Pager *pPager);
 
