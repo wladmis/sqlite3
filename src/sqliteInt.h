@@ -2196,10 +2196,10 @@ int sqlite3FindInIndex(Parse *, Expr *, int);
 #endif
 
 #if SQLITE_MAX_EXPR_DEPTH>0
-  void sqlite3ExprSetHeight(Expr *);
+  void sqlite3ExprSetHeight(Parse *pParse, Expr *p);
   int sqlite3SelectExprHeight(Select *);
 #else
-  #define sqlite3ExprSetHeight(x)
+  #define sqlite3ExprSetHeight(x,y)
   #define sqlite3SelectExprHeight(x) 0
 #endif
 
