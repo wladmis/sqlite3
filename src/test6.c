@@ -486,8 +486,8 @@ static int cfLock(sqlite3_file *pFile, int eLock){
 static int cfUnlock(sqlite3_file *pFile, int eLock){
   return sqlite3OsUnlock(((CrashFile *)pFile)->pRealFile, eLock);
 }
-static int cfCheckReservedLock(sqlite3_file *pFile){
-  return sqlite3OsCheckReservedLock(((CrashFile *)pFile)->pRealFile);
+static int cfCheckReservedLock(sqlite3_file *pFile, int *pResOut){
+  return sqlite3OsCheckReservedLock(((CrashFile *)pFile)->pRealFile, pResOut);
 }
 static int cfFileControl(sqlite3_file *pFile, int op, void *pArg){
   return sqlite3OsFileControl(((CrashFile *)pFile)->pRealFile, op, pArg);
@@ -580,9 +580,14 @@ static int cfDelete(sqlite3_vfs *pCfVfs, const char *zPath, int dirSync){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
   return pVfs->xDelete(pVfs, zPath, dirSync);
 }
-static int cfAccess(sqlite3_vfs *pCfVfs, const char *zPath, int flags){
+static int cfAccess(
+  sqlite3_vfs *pCfVfs, 
+  const char *zPath, 
+  int flags, 
+  int *pResOut
+){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
-  return pVfs->xAccess(pVfs, zPath, flags);
+  return pVfs->xAccess(pVfs, zPath, flags, pResOut);
 }
 static int cfGetTempname(sqlite3_vfs *pCfVfs, int nBufOut, char *zBufOut){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;

@@ -666,11 +666,13 @@ void sqlite3Pragma(
         sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 1);
       }
     }else{
-      if( zRight[0] 
-       && sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE)==0 
-      ){
-        sqlite3ErrorMsg(pParse, "not a writable directory");
-        goto pragma_out;
+      if( zRight[0] ){
+        int res;
+        sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
+        if( res==0 ){
+          sqlite3ErrorMsg(pParse, "not a writable directory");
+          goto pragma_out;
+        }
       }
       if( TEMP_STORE==0
        || (TEMP_STORE==1 && db->temp_store<=1)

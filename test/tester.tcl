@@ -595,6 +595,7 @@ proc do_ioerr_test {testname args} {
   set ::ioerropts(-count) 100000000
   set ::ioerropts(-persist) 1
   set ::ioerropts(-ckrefcount) 0
+  set ::ioerropts(-restoreprng) 1
   array set ::ioerropts $args
 
   # TEMPORARY: For 3.5.9, disable testing of extended result codes. There are
@@ -604,7 +605,7 @@ proc do_ioerr_test {testname args} {
   set ::go 1
   #reset_prng_state
   save_prng_state
-  for {set n $::ioerropts(-start)} {$::go} {incr n} {
+  for {set n $::ioerropts(-start)} {$::go && $n<200} {incr n} {
     set ::TN $n
     incr ::ioerropts(-count) -1
     if {$::ioerropts(-count)<0} break
@@ -613,7 +614,9 @@ proc do_ioerr_test {testname args} {
     if {[info exists ::ioerropts(-exclude)]} {
       if {[lsearch $::ioerropts(-exclude) $n]!=-1} continue
     }
-    restore_prng_state
+    if {$::ioerropts(-restoreprng)} {
+      restore_prng_state
+    }
 
     # Delete the files test.db and test2.db, then execute the TCL and 
     # SQL (in that order) to prepare for the test case.
