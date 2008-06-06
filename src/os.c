@@ -127,9 +127,6 @@ int sqlite3OsAccess(
   DO_OS_MALLOC_TEST;
   return pVfs->xAccess(pVfs, zPath, flags, pResOut);
 }
-int sqlite3OsGetTempname(sqlite3_vfs *pVfs, int nBufOut, char *zBufOut){
-  return pVfs->xGetTempname(pVfs, nBufOut, zBufOut);
-}
 int sqlite3OsFullPathname(
   sqlite3_vfs *pVfs, 
   const char *zPath, 

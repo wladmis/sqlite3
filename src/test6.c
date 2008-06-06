@@ -589,10 +589,6 @@ static int cfAccess(
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
   return pVfs->xAccess(pVfs, zPath, flags, pResOut);
 }
-static int cfGetTempname(sqlite3_vfs *pCfVfs, int nBufOut, char *zBufOut){
-  sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
-  return pVfs->xGetTempname(pVfs, nBufOut, zBufOut);
-}
 static int cfFullPathname(
   sqlite3_vfs *pCfVfs, 
   const char *zPath, 
@@ -747,7 +743,6 @@ static int crashEnableCmd(
     cfOpen,               /* xOpen */
     cfDelete,             /* xDelete */
     cfAccess,             /* xAccess */
-    cfGetTempname,        /* xGetTempName */
     cfFullPathname,       /* xFullPathname */
     cfDlOpen,             /* xDlOpen */
     cfDlError,            /* xDlError */

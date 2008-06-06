@@ -822,11 +822,11 @@ proc check_temp_store {} {
   db eval {CREATE TEMP TABLE IF NOT EXISTS a(b)}
   db eval {PRAGMA database_list} {
     if {$name=="temp"} {
-      if {$file==""} {
+      set bt [btree_from_db db 1]
+      if {[btree_ismemdb $bt]} {
         return "memory"
-      } else {
-        return "disk"
       }
+      return "disk"
     }
   }
   return "unknown"

@@ -130,6 +130,7 @@ int sqlite3PagerSync(Pager *pPager);
 #ifdef SQLITE_TEST
   int *sqlite3PagerStats(Pager*);
   void sqlite3PagerRefdump(Pager*);
+  int sqlite3PagerIsMemdb(Pager*);
 #endif
 
 #ifdef SQLITE_TEST

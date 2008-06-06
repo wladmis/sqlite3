@@ -1167,11 +1167,6 @@ static int asyncAccess(
   return rc;
 }
 
-static int asyncGetTempname(sqlite3_vfs *pAsyncVfs, int nBufOut, char *zBufOut){
-  sqlite3_vfs *pVfs = (sqlite3_vfs *)pAsyncVfs->pAppData;
-  return pVfs->xGetTempname(pVfs, nBufOut, zBufOut);
-}
-
 /*
 ** Fill in zPathOut with the full path to the file identified by zPath.
 */
@@ -1271,7 +1266,6 @@ static sqlite3_vfs async_vfs = {
   asyncOpen,            /* xOpen */
   asyncDelete,          /* xDelete */
   asyncAccess,          /* xAccess */
-  asyncGetTempname,     /* xGetTempName */
   asyncFullPathname,    /* xFullPathname */
   asyncDlOpen,          /* xDlOpen */
   asyncDlError,         /* xDlError */
