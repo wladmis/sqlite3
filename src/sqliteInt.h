@@ -1449,6 +1449,7 @@ struct SelectDest {
   u8 eDest;         /* How to dispose of the results */
   u8 affinity;      /* Affinity used when eDest==SRT_Set */
   int iParm;        /* A parameter used by the eDest disposal method */
+  int regReturn;    /* Return address register for SRT_Subroutine */
   int iMem;         /* Base register where results are written */
   int nMem;         /* Number of registers allocated */
 };

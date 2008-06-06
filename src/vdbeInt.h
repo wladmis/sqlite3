@@ -311,8 +311,6 @@ struct Vdbe {
   unsigned uniqueCnt;     /* Used by OP_MakeRecord when P2!=0 */
   int errorAction;        /* Recovery action to do in case of an error */
   int inTempTrans;        /* True if temp database is transactioned */
-  int returnStack[25];    /* Return address stack for OP_Gosub & OP_Return */
-  int returnDepth;        /* Next unused element in returnStack[] */
   int nResColumn;         /* Number of columns in one row of the result set */
   char **azResColumn;     /* Values for one row of result */ 
   char *zErrMsg;          /* Error message written here */

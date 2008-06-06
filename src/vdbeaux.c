@@ -1043,7 +1043,6 @@ void sqlite3VdbeMakeReady(
   p->pc = -1;
   p->rc = SQLITE_OK;
   p->uniqueCnt = 0;
-  p->returnDepth = 0;
   p->errorAction = OE_Abort;
   p->explain |= isExplain;
   p->magic = VDBE_MAGIC_RUN;
