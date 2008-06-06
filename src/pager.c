@@ -1426,7 +1426,7 @@ static int pager_end_transaction(Pager *pPager, int hasMaster){
     }else{
       sqlite3OsClose(pPager->jfd);
       pPager->journalOpen = 0;
-      if( rc==SQLITE_OK ){
+      if( rc==SQLITE_OK && !pPager->tempFile ){
         rc = sqlite3OsDelete(pPager->pVfs, pPager->zJournal, 0);
       }
     }
