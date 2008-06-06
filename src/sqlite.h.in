@@ -819,6 +819,7 @@ struct sqlite3_vfs {
   int (*xRandomness)(sqlite3_vfs*, int nByte, char *zOut);
   int (*xSleep)(sqlite3_vfs*, int microseconds);
   int (*xCurrentTime)(sqlite3_vfs*, double*);
+  int (*xGetLastError)(sqlite3_vfs*, int, char *);
   /* New fields may be appended in figure versions.  The iVersion
   ** value will increment whenever this happens. */
 };

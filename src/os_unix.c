@@ -2775,6 +2775,10 @@ static int unixCurrentTime(sqlite3_vfs *pVfs, double *prNow){
   return 0;
 }
 
+static int unixGetLastError(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
+  return 0;
+}
+
 /*
 ** Return a pointer to the sqlite3DefaultVfs structure.   We use
 ** a function rather than give the structure global scope because
@@ -2800,7 +2804,8 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     unixDlClose,        /* xDlClose */
     unixRandomness,     /* xRandomness */
     unixSleep,          /* xSleep */
-    unixCurrentTime     /* xCurrentTime */
+    unixCurrentTime,    /* xCurrentTime */
+    unixGetLastError    /* xGetLastError */
   };
   
   return &unixVfs;

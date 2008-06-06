@@ -1548,6 +1548,9 @@ int winCurrentTime(sqlite3_vfs *pVfs, double *prNow){
   return 0;
 }
 
+static int winGetLastError(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
+  return 0;
+}
 
 /*
 ** Return a pointer to the sqlite3DefaultVfs structure.   We use
@@ -1563,7 +1566,7 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     0,                 /* pNext */
     "win32",           /* zName */
     0,                 /* pAppData */
-  
+ 
     winOpen,           /* xOpen */
     winDelete,         /* xDelete */
     winAccess,         /* xAccess */
@@ -1574,9 +1577,10 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     winDlClose,        /* xDlClose */
     winRandomness,     /* xRandomness */
     winSleep,          /* xSleep */
-    winCurrentTime     /* xCurrentTime */
+    winCurrentTime,    /* xCurrentTime */
+    winGetLastError    /* xGetLastError */
   };
-  
+
   return &winVfs;
 }
 
