@@ -20,7 +20,6 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-
 # If SQLITE_DEFAULT_AUTOVACUUM is set to true, then a simulated IO error
 # on the 8th IO operation in the SQL script below doesn't report an error.
 #

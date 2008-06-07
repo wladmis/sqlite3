@@ -305,13 +305,15 @@ static int pager_pagecount(
 ){
   Pager *pPager;
   char zBuf[100];
+  int nPage;
   if( argc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
        " ID\"", 0);
     return TCL_ERROR;
   }
   pPager = sqlite3TextToPtr(argv[1]);
-  sqlite3_snprintf(sizeof(zBuf),zBuf,"%d",sqlite3PagerPagecount(pPager));
+  sqlite3PagerPagecount(pPager, &nPage);
+  sqlite3_snprintf(sizeof(zBuf), zBuf, "%d", nPage);
   Tcl_AppendResult(interp, zBuf, 0);
   return TCL_OK;
 }
