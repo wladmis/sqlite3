@@ -4107,8 +4107,8 @@ static int allocateBtreePage(
 
         iPage = get4byte(&aData[8+closest*4]);
         if( !searchList || iPage==nearby ){
-          *pPgno = iPage;
           int nPage;
+          *pPgno = iPage;
           nPage = pagerPagecount(pBt->pPager);
           if( *pPgno>nPage ){
             /* Free page off the end of the file */
