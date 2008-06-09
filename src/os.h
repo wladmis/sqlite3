@@ -253,7 +253,6 @@ int sqlite3OsDeviceCharacteristics(sqlite3_file *id);
 int sqlite3OsOpen(sqlite3_vfs *, const char *, sqlite3_file*, int, int *);
 int sqlite3OsDelete(sqlite3_vfs *, const char *, int);
 int sqlite3OsAccess(sqlite3_vfs *, const char *, int, int *pResOut);
-int sqlite3OsGetTempname(sqlite3_vfs *, int, char *);
 int sqlite3OsFullPathname(sqlite3_vfs *, const char *, int, char *);
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
 void *sqlite3OsDlOpen(sqlite3_vfs *, const char *);
