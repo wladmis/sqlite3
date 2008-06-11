@@ -965,7 +965,7 @@ int sqlite3BtreeInitPage(
   }
 
   /* Check that all the offsets in the cell offset array are within range. */
-  mask = ~(((u8)(pBt->pageSize>>7))-1);
+  mask = ~(((u8)(pBt->pageSize>>8))-1);
   pEnd = &data[cellOffset + pPage->nCell*2];
   for(pOff=&data[cellOffset]; pOff!=pEnd && !((*pOff)&mask); pOff+=2);
   if( pOff!=pEnd ){
