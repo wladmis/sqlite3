@@ -31,7 +31,6 @@
 
   __inline__ sqlite_uint64 sqlite3Hwtime(void){
      unsigned int lo, hi;
-     /* We cannot use "=A", since this would use %rax on x86_64 */
      __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
      return (sqlite_uint64)hi << 32 | lo;
   }
@@ -47,6 +46,14 @@
 
   #endif
 
+#elif (defined(__GNUC__) && defined(__x86_64__))
+
+  __inline__ sqlite_uint64 sqlite3Hwtime(void){
+      unsigned long val;
+      __asm__ __volatile__ ("rdtsc" : "=A" (val));
+      return val;
+  }
+ 
 #else
 
   #error Need implementation of sqlite3Hwtime() for your platform.
