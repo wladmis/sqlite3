@@ -2186,7 +2186,7 @@ WhereInfo *sqlite3WhereBegin(
       }
       if( doNotReorder ) break;
     }
-    WHERETRACE(("*** Optimizer choose table %d for loop %d\n", bestJ,
+    WHERETRACE(("*** Optimizer selects table %d for loop %d\n", bestJ,
            pLevel-pWInfo->a));
     if( (bestFlags & WHERE_ORDERBY)!=0 ){
       *ppOrderBy = 0;
