@@ -416,6 +416,7 @@ static void clearYMD_HMS_TZ(DateTime *p){
   p->validTZ = 0;
 }
 
+#ifndef SQLITE_OMIT_LOCALTIME
 /*
 ** Compute the difference (in days) between localtime and UTC (a.k.a. GMT)
 ** for the time value p where p is in UTC.
@@ -483,6 +484,7 @@ static double localtimeOffset(DateTime *p){
   computeJD(&y);
   return y.rJD - x.rJD;
 }
+#endif /* SQLITE_OMIT_LOCALTIME */
 
 /*
 ** Process a modifier to a date-time stamp.  The modifiers are
@@ -516,6 +518,7 @@ static int parseModifier(const char *zMod, DateTime *p){
   }
   z[n] = 0;
   switch( z[0] ){
+#ifndef SQLITE_OMIT_LOCALTIME
     case 'l': {
       /*    localtime
       **
@@ -530,6 +533,7 @@ static int parseModifier(const char *zMod, DateTime *p){
       }
       break;
     }
+#endif
     case 'u': {
       /*
       **    unixepoch

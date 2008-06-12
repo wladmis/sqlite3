@@ -285,6 +285,12 @@ static void set_options(Tcl_Interp *interp){
   Tcl_SetVar2(interp, "sqlite_options", "load_ext", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_OMIT_LOCALTIME
+  Tcl_SetVar2(interp, "sqlite_options", "localtime", "0", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "localtime", "1", TCL_GLOBAL_ONLY);
+#endif
+
 Tcl_SetVar2(interp, "sqlite_options", "long_double",
               sizeof(LONGDOUBLE_TYPE)>sizeof(double) ? "1" : "0",
               TCL_GLOBAL_ONLY);
