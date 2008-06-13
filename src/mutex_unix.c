@@ -46,6 +46,12 @@ struct sqlite3_mutex {
 #endif
 
 /*
+** Initialize and deinitialize the mutex subsystem.
+*/
+int sqlite3_mutex_init(void){ return SQLITE_OK; }
+int sqlite3_mutex_end(void){ return SQLITE_OK; }
+
+/*
 ** The sqlite3_mutex_alloc() routine allocates a new
 ** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated.  SQLite
@@ -142,11 +148,12 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
 ** mutex that it allocates.
 */
 void sqlite3_mutex_free(sqlite3_mutex *p){
-  assert( p );
-  assert( p->nRef==0 );
-  assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
-  pthread_mutex_destroy(&p->mutex);
-  sqlite3_free(p);
+  if( p ){
+    assert( p->nRef==0 );
+    assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
+    pthread_mutex_destroy(&p->mutex);
+    sqlite3_free(p);
+  }
 }
 
 /*
@@ -161,7 +168,7 @@ void sqlite3_mutex_free(sqlite3_mutex *p){
 ** more than once, the behavior is undefined.
 */
 void sqlite3_mutex_enter(sqlite3_mutex *p){
-  assert( p );
+  if( p==0 ) return;
   assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
 
 #ifdef SQLITE_HOMEGROWN_RECURSIVE_MUTEX
@@ -202,7 +209,7 @@ void sqlite3_mutex_enter(sqlite3_mutex *p){
 }
 int sqlite3_mutex_try(sqlite3_mutex *p){
   int rc;
-  assert( p );
+  if( p==0 ) return SQLITE_OK;
   assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
 
 #ifdef SQLITE_HOMEGROWN_RECURSIVE_MUTEX
@@ -257,7 +264,7 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
 ** is not currently allocated.  SQLite will never do either.
 */
 void sqlite3_mutex_leave(sqlite3_mutex *p){
-  assert( p );
+  if( p==0 ) return;
   assert( sqlite3_mutex_held(p) );
   p->nRef--;
   assert( p->nRef==0 || p->id==SQLITE_MUTEX_RECURSIVE );

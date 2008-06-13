@@ -189,6 +189,13 @@ int sqlite3MallocSize(void *p){
 }
 
 /*
+** Initialize the memmory allocation subsystem.
+*/
+int sqlite3MallocInit(void){
+  return SQLITE_OK;
+}
+
+/*
 ** Change the size of an existing memory allocation
 */
 void *sqlite3_realloc(void *pPrior, int nBytes){

@@ -284,6 +284,13 @@ int sqlite3MallocSize(void *p){
 }
 
 /*
+** Initialize the memmory allocation subsystem.
+*/
+int sqlite3MallocInit(void){
+  return SQLITE_OK;
+}
+
+/*
 ** Find the first entry on the freelist iLogsize.  Unlink that
 ** entry and return its index. 
 */

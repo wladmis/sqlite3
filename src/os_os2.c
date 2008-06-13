@@ -1073,4 +1073,11 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
   return &os2Vfs;
 }
 
+/*
+** Initialize and deinitialize the operating system interface.
+** These are stubs for now - populate with real code later...
+*/
+int sqlite3_os_init(void){ return SQLITE_OK; }
+int sqlite3_os_end(void){ return SQLITE_OK; }
+
 #endif /* OS_OS2 */

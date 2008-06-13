@@ -298,6 +298,13 @@ int sqlite3MallocSize(void *p){
 }
 
 /*
+** Initialize the memmory allocation subsystem.
+*/
+int sqlite3MallocInit(void){
+  return SQLITE_OK;
+}
+
+/*
 ** Chunk i is a free chunk that has been unlinked.  Adjust its 
 ** size parameters for check-out and return a pointer to the 
 ** user portion of the chunk.

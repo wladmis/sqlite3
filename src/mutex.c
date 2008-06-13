@@ -39,6 +39,12 @@ struct sqlite3_mutex {
 };
 
 /*
+** Initialize and deinitialize the mutex subsystem.
+*/
+int sqlite3_mutex_init(void){ return SQLITE_OK; }
+int sqlite3_mutex_end(void){ return SQLITE_OK; }
+
+/*
 ** The sqlite3_mutex_alloc() routine allocates a new
 ** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated. 

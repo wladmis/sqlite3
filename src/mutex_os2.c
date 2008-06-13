@@ -40,6 +40,12 @@ struct sqlite3_mutex {
 #define OS2_MUTEX_INITIALIZER   0,0,0,0
 
 /*
+** Initialize and deinitialize the mutex subsystem.
+*/
+int sqlite3_mutex_init(void){ return SQLITE_OK; }
+int sqlite3_mutex_end(void){ return SQLITE_OK; }
+
+/*
 ** The sqlite3_mutex_alloc() routine allocates a new
 ** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated. 
@@ -147,7 +153,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
 ** SQLite is careful to deallocate every mutex that it allocates.
 */
 void sqlite3_mutex_free(sqlite3_mutex *p){
-  assert( p );
+  if( p==0 ) return;
   assert( p->nRef==0 );
   assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
   DosCloseMutexSem( p->mutex );
@@ -169,7 +175,7 @@ void sqlite3_mutex_enter(sqlite3_mutex *p){
   TID tid;
   PID holder1;
   ULONG holder2;
-  assert( p );
+  if( p==0 ) return;
   assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
   DosRequestMutexSem(p->mutex, SEM_INDEFINITE_WAIT);
   DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
@@ -181,7 +187,7 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
   TID tid;
   PID holder1;
   ULONG holder2;
-  assert( p );
+  if( p==0 ) return SQLITE_OK;
   assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
   if( DosRequestMutexSem(p->mutex, SEM_IMMEDIATE_RETURN) == NO_ERROR) {
     DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
@@ -205,6 +211,7 @@ void sqlite3_mutex_leave(sqlite3_mutex *p){
   TID tid;
   PID holder1;
   ULONG holder2;
+  if( p==0 ) return;
   assert( p->nRef>0 );
   DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
   assert( p->owner==tid );
