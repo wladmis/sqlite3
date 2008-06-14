@@ -66,4 +66,4 @@ const unsigned char sqlite3UpperToLower[] = {
 ** The following singleton contains the global configuration for
 ** the SQLite library.
 */
-struct Sqlite3Config sqlite3Config;
+struct Sqlite3Config sqlite3Config = { 1, 1, 1, };

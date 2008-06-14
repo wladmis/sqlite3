@@ -1735,18 +1735,14 @@ typedef struct {
 ** Structure containing global configuration data for the SQLite library.
 */
 struct Sqlite3Config {
-  void *(*xMalloc)(int);            /* Low-level malloc() */
-  void *(*xRealloc)(void*,int);     /* Low-level realloc() */
-  void (*xFree)(void*);             /* Low-level free() */
-  int (*xMemsize)(void*);           /* Return size of an allocation */
-  int (*xRoundup)(int);             /* Size of allocation given request */
+  int bMemstat;                     /* True to enable memory status */
+  int bCoreMutex;                   /* True to enable core mutexing */
+  int bFullMutex;                   /* True to enable full mutexing */
+  sqlite3_mem_methods m;            /* Low-level memory allocation interface */
   void *pHeap;                      /* Heap storage space */
   sqlite3_int64 nHeap;              /* Size of pHeap[] */
   int mnReq, mxReq;                 /* Min and max memory request sizes */
   int nTemp;                        /* Part of pHeap for temporary allos */
-  int bMemstat;                     /* True to enable memory status */
-  int bCoreMutex;                   /* True to enable core mutexing */
-  int bFullMutex;                   /* True to enable full mutexing */
 };
 
 /*
@@ -1782,16 +1778,20 @@ int sqlite3StrNICmp(const char *, const char *, int);
 int sqlite3IsNumber(const char*, int*, u8);
 
 int sqlite3MallocInit(void);
-void *sqlite3MallocZero(unsigned);
-void *sqlite3DbMallocZero(sqlite3*, unsigned);
-void *sqlite3DbMallocRaw(sqlite3*, unsigned);
+void sqlite3MallocEnd(void);
+void *sqlite3Malloc(int);
+void *sqlite3MallocZero(int);
+void *sqlite3DbMallocZero(sqlite3*, int);
+void *sqlite3DbMallocRaw(sqlite3*, int);
 char *sqlite3StrDup(const char*);
 char *sqlite3StrNDup(const char*, int);
 char *sqlite3DbStrDup(sqlite3*,const char*);
 char *sqlite3DbStrNDup(sqlite3*,const char*, int);
+void *sqlite3Realloc(void*, int);
 void *sqlite3DbReallocOrFree(sqlite3 *, void *, int);
 void *sqlite3DbRealloc(sqlite3 *, void *, int);
 int sqlite3MallocSize(void *);
+void sqlite3MemSetDefault(void);
 
 int sqlite3IsNaN(double);
 

@@ -77,7 +77,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int id){
 ** This routine deallocates a previously allocated mutex.
 */
 void sqlite3_mutex_free(sqlite3_mutex *p){
-  assert( p );
+  if( p==0 ) return;
   assert( p->cnt==0 );
   assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
   sqlite3_free(p);
@@ -95,14 +95,16 @@ void sqlite3_mutex_free(sqlite3_mutex *p){
 ** more than once, the behavior is undefined.
 */
 void sqlite3_mutex_enter(sqlite3_mutex *p){
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
-  p->cnt++;
+  if( p ){
+    assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+    p->cnt++;
+  }
 }
 int sqlite3_mutex_try(sqlite3_mutex *p){
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
-  p->cnt++;
+  if( p ){
+    assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+    p->cnt++;
+  }
   return SQLITE_OK;
 }
 
@@ -113,10 +115,11 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
 ** is not currently allocated.  SQLite will never do either.
 */
 void sqlite3_mutex_leave(sqlite3_mutex *p){
-  assert( p );
-  assert( sqlite3_mutex_held(p) );
-  p->cnt--;
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+  if( p ){
+    assert( sqlite3_mutex_held(p) );
+    p->cnt--;
+    assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+  }
 }
 
 /*
