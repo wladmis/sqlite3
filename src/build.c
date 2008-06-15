@@ -1367,7 +1367,7 @@ static char *createTableStmt(sqlite3 *db, Table *p, int isTemp){
     zEnd = "\n)";
   }
   n += 35 + 6*p->nCol;
-  zStmt = sqlite3_malloc( n );
+  zStmt = sqlite3Malloc( n );
   if( zStmt==0 ){
     db->mallocFailed = 1;
     return 0;

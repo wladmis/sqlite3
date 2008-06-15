@@ -888,7 +888,7 @@ static void strftimeFunc(
     sqlite3_result_error_toobig(context);
     return;
   }else{
-    z = sqlite3_malloc( n );
+    z = sqlite3Malloc( n );
     if( z==0 ){
       sqlite3_result_error_nomem(context);
       return;

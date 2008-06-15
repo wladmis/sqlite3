@@ -112,18 +112,12 @@ static void attachFunc(
   ** hash tables.
   */
   if( db->aDb==db->aDbStatic ){
-    aNew = sqlite3_malloc( sizeof(db->aDb[0])*3 );
-    if( aNew==0 ){
-      db->mallocFailed = 1;
-      return;
-    }
+    aNew = sqlite3DbMallocRaw(db, sizeof(db->aDb[0])*3 );
+    if( aNew==0 ) return;
     memcpy(aNew, db->aDb, sizeof(db->aDb[0])*2);
   }else{
-    aNew = sqlite3_realloc(db->aDb, sizeof(db->aDb[0])*(db->nDb+1) );
-    if( aNew==0 ){
-      db->mallocFailed = 1;
-      return;
-    } 
+    aNew = sqlite3DbRealloc(db, db->aDb, sizeof(db->aDb[0])*(db->nDb+1) );
+    if( aNew==0 ) return;
   }
   db->aDb = aNew;
   aNew = &db->aDb[db->nDb++];

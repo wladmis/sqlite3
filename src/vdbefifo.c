@@ -38,7 +38,7 @@ static FifoPage *allocateFifoPage(int nEntry){
   if( nEntry>FIFOSIZE_MAX ){
     nEntry = FIFOSIZE_MAX;
   }
-  pPage = sqlite3_malloc( sizeof(FifoPage) + sizeof(i64)*(nEntry-1) );
+  pPage = sqlite3Malloc( sizeof(FifoPage) + sizeof(i64)*(nEntry-1) );
   if( pPage ){
     pPage->nSlot = nEntry;
     pPage->iWrite = 0;

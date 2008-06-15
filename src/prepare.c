@@ -448,7 +448,7 @@ static int schemaIsValid(sqlite3 *db){
   int cookie;
   int allOk = 1;
 
-  curTemp = (BtCursor *)sqlite3_malloc(sqlite3BtreeCursorSize());
+  curTemp = (BtCursor *)sqlite3Malloc(sqlite3BtreeCursorSize());
   if( curTemp ){
     assert( sqlite3_mutex_held(db->mutex) );
     for(iDb=0; allOk && iDb<db->nDb; iDb++){

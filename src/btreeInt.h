@@ -371,9 +371,6 @@ struct BtShared {
   MemPage *pPage1;      /* First page of the database */
   u8 inStmt;            /* True if we are in a statement subtransaction */
   u8 readOnly;          /* True if the underlying file is readonly */
-  u8 maxEmbedFrac;      /* Maximum payload as % of total page size */
-  u8 minEmbedFrac;      /* Minimum payload as % of total page size */
-  u8 minLeafFrac;       /* Minimum leaf payload as % of total page size */
   u8 pageSizeFixed;     /* True if the page size can no longer be changed */
 #ifndef SQLITE_OMIT_AUTOVACUUM
   u8 autoVacuum;        /* True if auto-vacuum is enabled */

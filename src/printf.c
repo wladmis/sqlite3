@@ -650,7 +650,7 @@ static void vxprintf(
         needQuote = !isnull && xtype==etSQLESCAPE2;
         n += i + 1 + needQuote*2;
         if( n>etBUFSIZE ){
-          bufpt = zExtra = sqlite3_malloc( n );
+          bufpt = zExtra = sqlite3Malloc( n );
           if( bufpt==0 ) return;
         }else{
           bufpt = buf;
@@ -752,7 +752,7 @@ void sqlite3StrAccumAppend(StrAccum *p, const char *z, int N){
       }else{
         p->nAlloc = szNew;
       }
-      zNew = sqlite3_malloc( p->nAlloc );
+      zNew = sqlite3Malloc( p->nAlloc );
       if( zNew ){
         memcpy(zNew, p->zText, p->nChar);
         sqlite3StrAccumReset(p);
@@ -777,7 +777,7 @@ char *sqlite3StrAccumFinish(StrAccum *p){
   if( p->zText ){
     p->zText[p->nChar] = 0;
     if( p->useMalloc && p->zText==p->zBase ){
-      p->zText = sqlite3_malloc( p->nChar+1 );
+      p->zText = sqlite3Malloc( p->nChar+1 );
       if( p->zText ){
         memcpy(p->zText, p->zBase, p->nChar+1);
       }else{

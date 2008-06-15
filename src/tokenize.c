@@ -393,7 +393,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   pParse->rc = SQLITE_OK;
   pParse->zTail = pParse->zSql = zSql;
   i = 0;
-  pEngine = sqlite3ParserAlloc((void*(*)(size_t))sqlite3_malloc);
+  pEngine = sqlite3ParserAlloc((void*(*)(size_t))sqlite3Malloc);
   if( pEngine==0 ){
     db->mallocFailed = 1;
     return SQLITE_NOMEM;

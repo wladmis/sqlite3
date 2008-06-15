@@ -1791,6 +1791,8 @@ void *sqlite3Realloc(void*, int);
 void *sqlite3DbReallocOrFree(sqlite3 *, void *, int);
 void *sqlite3DbRealloc(sqlite3 *, void *, int);
 int sqlite3MallocSize(void *);
+void *sqlite3TempMalloc(int);
+void sqlite3TempFree(void*);
 void sqlite3MemSetDefault(void);
 
 int sqlite3IsNaN(double);

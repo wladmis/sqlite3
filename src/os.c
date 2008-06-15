@@ -38,7 +38,7 @@
 */
 #if defined(SQLITE_TEST) && (OS_WIN==0)
   #define DO_OS_MALLOC_TEST if (1) {            \
-    void *pTstAlloc = sqlite3_malloc(10);       \
+    void *pTstAlloc = sqlite3Malloc(10);       \
     if (!pTstAlloc) return SQLITE_IOERR_NOMEM;  \
     sqlite3_free(pTstAlloc);                    \
   }
@@ -168,7 +168,7 @@ int sqlite3OsOpenMalloc(
 ){
   int rc = SQLITE_NOMEM;
   sqlite3_file *pFile;
-  pFile = (sqlite3_file *)sqlite3_malloc(pVfs->szOsFile);
+  pFile = (sqlite3_file *)sqlite3Malloc(pVfs->szOsFile);
   if( pFile ){
     rc = sqlite3OsOpen(pVfs, zFile, pFile, flags, pOutFlags);
     if( rc!=SQLITE_OK ){

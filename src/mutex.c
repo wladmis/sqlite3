@@ -55,7 +55,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int id){
   switch( id ){
     case SQLITE_MUTEX_FAST:
     case SQLITE_MUTEX_RECURSIVE: {
-      pNew = sqlite3_malloc(sizeof(*pNew));
+      pNew = sqlite3Malloc(sizeof(*pNew));
       if( pNew ){
         pNew->id = id;
         pNew->cnt = 0;

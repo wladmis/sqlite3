@@ -249,7 +249,7 @@ static void *contextMalloc(sqlite3_context *context, i64 nByte){
     sqlite3_result_error_toobig(context);
     z = 0;
   }else{
-    z = sqlite3_malloc(nByte);
+    z = sqlite3Malloc(nByte);
     if( !z && nByte>0 ){
       sqlite3_result_error_nomem(context);
     }

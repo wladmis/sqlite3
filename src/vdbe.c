@@ -3380,7 +3380,7 @@ case OP_Insert: {
         pData->zMalloc = 0;
       }
     }else{
-      pC->pData = sqlite3_malloc( pC->nData+2 );
+      pC->pData = sqlite3Malloc( pC->nData+2 );
       if( !pC->pData ) goto no_mem;
       memcpy(pC->pData, pData->z, pC->nData);
       pC->pData[pC->nData] = 0;
@@ -4140,7 +4140,7 @@ case OP_IntegrityCk: {
   
   nRoot = pOp->p2;
   assert( nRoot>0 );
-  aRoot = sqlite3_malloc( sizeof(int)*(nRoot+1) );
+  aRoot = sqlite3Malloc( sizeof(int)*(nRoot+1) );
   if( aRoot==0 ) goto no_mem;
   assert( pOp->p3>0 && pOp->p3<=p->nMem );
   pnErr = &p->aMem[pOp->p3];

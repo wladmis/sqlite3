@@ -228,7 +228,7 @@ static int whereClauseInsert(WhereClause *pWC, Expr *p, int flags){
   int idx;
   if( pWC->nTerm>=pWC->nSlot ){
     WhereTerm *pOld = pWC->a;
-    pWC->a = sqlite3_malloc( sizeof(pWC->a[0])*pWC->nSlot*2 );
+    pWC->a = sqlite3Malloc( sizeof(pWC->a[0])*pWC->nSlot*2 );
     if( pWC->a==0 ){
       pWC->pParse->db->mallocFailed = 1;
       if( flags & TERM_DYNAMIC ){
