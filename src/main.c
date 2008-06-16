@@ -1554,7 +1554,7 @@ int sqlite3_table_column_metadata(
   char const **pzCollSeq,     /* OUTPUT: Collation sequence name */
   int *pNotNull,              /* OUTPUT: True if NOT NULL constraint exists */
   int *pPrimaryKey,           /* OUTPUT: True if column part of PK */
-  int *pAutoinc               /* OUTPUT: True if colums is auto-increment */
+  int *pAutoinc               /* OUTPUT: True if column is auto-increment */
 ){
   int rc;
   char *zErrMsg = 0;
@@ -1617,9 +1617,9 @@ int sqlite3_table_column_metadata(
   if( pCol ){
     zDataType = pCol->zType;
     zCollSeq = pCol->zColl;
-    notnull = (pCol->notNull?1:0);
-    primarykey  = (pCol->isPrimKey?1:0);
-    autoinc = ((pTab->iPKey==iCol && pTab->autoInc)?1:0);
+    notnull = pCol->notNull!=0;
+    primarykey  = pCol->isPrimKey!=0;
+    autoinc = pTab->iPKey==iCol && pTab->autoInc;
   }else{
     zDataType = "INTEGER";
     primarykey = 1;
