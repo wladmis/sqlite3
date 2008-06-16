@@ -348,5 +348,9 @@ do_test incrblob2-7.4 {
   expr {[sqlite3_memory_highwater]<(5 * 1024 * 1024)}
 } {1}
 
+do_test incrblob2-7.5 {
+  close $h
+} {}
+
 finish_test
 
