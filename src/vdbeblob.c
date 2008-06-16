@@ -191,6 +191,7 @@ int sqlite3_blob_open(
       ** and offset cache without causing any IO.
       */
       sqlite3VdbeChangeP2(v, flags ? 4 : 2, pTab->nCol+1);
+      sqlite3VdbeChangeP2(v, 8, pTab->nCol);
       if( !db->mallocFailed ){
         sqlite3VdbeMakeReady(v, 1, 1, 1, 0);
       }
