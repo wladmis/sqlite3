@@ -312,8 +312,6 @@ void sqlite3MemSetDefault(void){
      sqlite3MemRealloc,
      sqlite3MemSize,
      sqlite3MemRoundup,
-     sqlite3MemMalloc,
-     sqlite3MemFree,
      sqlite3MemInit,
      sqlite3MemShutdown,
      0
