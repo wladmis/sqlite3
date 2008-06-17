@@ -321,7 +321,7 @@ void sqlite3MemSetDefault(void){
 
 /*
 ** Set the number of backtrace levels kept for each allocation.
-** A value of zero turns of backtracing.  The number is always rounded
+** A value of zero turns off backtracing.  The number is always rounded
 ** up to a multiple of 2.
 */
 void sqlite3MemdebugBacktrace(int depth){

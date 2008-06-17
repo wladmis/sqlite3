@@ -5784,6 +5784,20 @@ int sqlite3_mutex_try(sqlite3_mutex*);
 void sqlite3_mutex_leave(sqlite3_mutex*);
 int sqlite3_mutex_end(void);
 
+typedef struct sqlite3_mutex_methods sqlite3_mutex_methods;
+struct sqlite3_mutex_methods {
+  int (*xMutexInit)(void);
+  sqlite3_mutex *(*xMutexAlloc)(int);
+  void (*xMutexFree)(sqlite3_mutex *);
+  void (*xMutexEnter)(sqlite3_mutex *);
+  int (*xMutexTry)(sqlite3_mutex *);
+  void (*xMutexLeave)(sqlite3_mutex *);
+  int (*xMutexEnd)(void);
+  int (*xMutexHeld)(sqlite3_mutex *);
+  int (*xMutexNotheld)(sqlite3_mutex *);
+};
+
+
 /*
 ** CAPI3REF: Mutex Verifcation Routines {F17080}
 **
