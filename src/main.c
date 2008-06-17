@@ -76,9 +76,7 @@ int sqlite3_initialize(void){
   if( sqlite3IsInit ) return SQLITE_OK;
   rc = sqlite3_mutex_init();
   if( rc==SQLITE_OK ){
-#ifndef SQLITE_MUTEX_NOOP
     sqlite3_mutex *pMutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
-#endif
     sqlite3_mutex_enter(pMutex);
     if( sqlite3IsInit==0 ){
       sqlite3IsInit = 1;
@@ -151,6 +149,11 @@ int sqlite3_config(int op, ...){
     case SQLITE_CONFIG_MALLOC: {
       /* Specify an alternative malloc implementation */
       sqlite3Config.m = *va_arg(ap, sqlite3_mem_methods*);
+      break;
+    }
+    case SQLITE_CONFIG_MUTEX: {
+      /* Specify an alternative mutex implementation */
+      sqlite3Config.mutex = *va_arg(ap, sqlite3_mutex_methods*);
       break;
     }
     case SQLITE_CONFIG_MEMSTATUS: {
