@@ -2528,6 +2528,7 @@ int TCLSH_MAIN(int argc, char **argv){
     extern int Sqlitetest_func_Init(Tcl_Interp*);
     extern int Sqlitetest_hexio_Init(Tcl_Interp*);
     extern int Sqlitetest_malloc_Init(Tcl_Interp*);
+    extern int Sqlitetest_mutex_Init(Tcl_Interp*);
     extern int Sqlitetestschema_Init(Tcl_Interp*);
     extern int Sqlitetestsse_Init(Tcl_Interp*);
     extern int Sqlitetesttclvar_Init(Tcl_Interp*);
@@ -2551,6 +2552,7 @@ int TCLSH_MAIN(int argc, char **argv){
     Sqlitetest_func_Init(interp);
     Sqlitetest_hexio_Init(interp);
     Sqlitetest_malloc_Init(interp);
+    Sqlitetest_mutex_Init(interp);
     Sqlitetestschema_Init(interp);
     Sqlitetesttclvar_Init(interp);
     SqlitetestThread_Init(interp);

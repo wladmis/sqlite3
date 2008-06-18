@@ -285,7 +285,7 @@ static int pthreadMutexTry(sqlite3_mutex *p){
 ** is not currently allocated.  SQLite will never do either.
 */
 static void pthreadMutexLeave(sqlite3_mutex *p){
-  assert( sqlite3_mutex_held(p) );
+  assert( pthreadMutexHeld(p) );
   p->nRef--;
   assert( p->nRef==0 || p->id==SQLITE_MUTEX_RECURSIVE );
 

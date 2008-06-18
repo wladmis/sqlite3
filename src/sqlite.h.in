@@ -1051,9 +1051,10 @@ struct sqlite3_mem_methods {
 #define SQLITE_CONFIG_MALLOC        4  /* sqlite3_mem_methods* */
 #define SQLITE_CONFIG_MEMSTATUS     5  /* boolean */
 #define SQLITE_CONFIG_MUTEX         6  /* sqlite3_mutex_methods* */
+#define SQLITE_CONFIG_GETMUTEX      7  /* sqlite3_mutex_methods* */
 
 /* These options are to be added later.  Currently unused and undocumented. */
-#define SQLITE_CONFIG_HEAP          6  /* void*, int64, min, max, tmp */
+#define SQLITE_CONFIG_HEAP          8  /* void*, int64, min, max, tmp */
 
 
 /*

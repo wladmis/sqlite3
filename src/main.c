@@ -156,6 +156,11 @@ int sqlite3_config(int op, ...){
       sqlite3Config.mutex = *va_arg(ap, sqlite3_mutex_methods*);
       break;
     }
+    case SQLITE_CONFIG_GETMUTEX: {
+      /* Retrieve the current mutex implementation */
+      *va_arg(ap, sqlite3_mutex_methods*) = sqlite3Config.mutex;
+      break;
+    }
     case SQLITE_CONFIG_MEMSTATUS: {
       /* Enable or disable the malloc status collection */
       sqlite3Config.bMemstat = va_arg(ap, int);
