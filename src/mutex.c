@@ -27,7 +27,7 @@
 /*
 ** Initialize the mutex system.
 */
-int sqlite3_mutex_init(void){ 
+int sqlite3MutexInit(void){ 
   int rc = SQLITE_OK;
   if( sqlite3Config.bCoreMutex ){
     if( !sqlite3Config.mutex.xMutexAlloc ){
@@ -68,9 +68,9 @@ int sqlite3_mutex_init(void){
 
 /*
 ** Shutdown the mutex system. This call frees resources allocated by
-** sqlite3_mutex_init().
+** sqlite3MutexInit().
 */
-int sqlite3_mutex_end(void){
+int sqlite3MutexEnd(void){
   int rc = SQLITE_OK;
   rc = sqlite3Config.mutex.xMutexEnd();
   return rc;
