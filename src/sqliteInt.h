@@ -1733,6 +1733,8 @@ typedef struct {
 
 /*
 ** Structure containing global configuration data for the SQLite library.
+**
+** This structure also contains some state information.
 */
 struct Sqlite3Config {
   int bMemstat;                     /* True to enable memory status */
@@ -1741,9 +1743,14 @@ struct Sqlite3Config {
   sqlite3_mem_methods m;            /* Low-level memory allocation interface */
   sqlite3_mutex_methods mutex;      /* Low-level mutex interface */
   void *pHeap;                      /* Heap storage space */
-  sqlite3_int64 nHeap;              /* Size of pHeap[] */
-  int mnReq, mxReq;                 /* Min and max memory request sizes */
-  int nTemp;                        /* Part of pHeap for temporary allos */
+  int nHeap;                        /* Size of pHeap[] */
+  int mnReq, mxReq;                 /* Min and max heap requests sizes */
+  void *pScratch;                   /* Scratch memory */
+  int szScratch;                    /* Size of each scratch buffer */
+  int nScratch;                     /* Number of scratch buffers */
+  void *pPage;                      /* Page cache memory */
+  int szPage;                       /* Size of each page in pPage[] */
+  int nPage;                        /* Number of pages in pPage[] */
 };
 
 /*

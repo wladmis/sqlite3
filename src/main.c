@@ -151,6 +151,12 @@ int sqlite3_config(int op, ...){
       sqlite3Config.m = *va_arg(ap, sqlite3_mem_methods*);
       break;
     }
+    case SQLITE_CONFIG_GETMALLOC: {
+      /* Specify an alternative malloc implementation */
+      if( sqlite3Config.m.xMalloc==0 ) sqlite3MemSetDefault();
+      *va_arg(ap, sqlite3_mem_methods*) = sqlite3Config.m;
+      break;
+    }
     case SQLITE_CONFIG_MUTEX: {
       /* Specify an alternative mutex implementation */
       sqlite3Config.mutex = *va_arg(ap, sqlite3_mutex_methods*);
@@ -164,6 +170,27 @@ int sqlite3_config(int op, ...){
     case SQLITE_CONFIG_MEMSTATUS: {
       /* Enable or disable the malloc status collection */
       sqlite3Config.bMemstat = va_arg(ap, int);
+      break;
+    }
+    case SQLITE_CONFIG_SCRATCH: {
+      /* Designate a buffer for scratch memory space */
+      sqlite3Config.pScratch = va_arg(ap, void*);
+      sqlite3Config.szScratch = va_arg(ap, int);
+      sqlite3Config.nScratch = va_arg(ap, int);
+      break;
+    }
+    case SQLITE_CONFIG_PAGECACHE: {
+      /* Designate a buffer for scratch memory space */
+      sqlite3Config.pPage = va_arg(ap, void*);
+      sqlite3Config.szPage = va_arg(ap, int);
+      sqlite3Config.nPage = va_arg(ap, int);
+      break;
+    }
+    case SQLITE_CONFIG_HEAP: {
+      /* Designate a buffer for scratch memory space */
+      sqlite3Config.pHeap = va_arg(ap, void*);
+      sqlite3Config.nHeap = va_arg(ap, int);
+      sqlite3Config.mnReq = va_arg(ap, int);
       break;
     }
     default: {
