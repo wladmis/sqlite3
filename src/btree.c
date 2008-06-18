@@ -1201,7 +1201,7 @@ int sqlite3BtreeOpen(
         return SQLITE_NOMEM;
       }
       sqlite3OsFullPathname(pVfs, zFilename, nFullPathname, zFullPathname);
-      mutexShared = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+      mutexShared = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
       sqlite3_mutex_enter(mutexShared);
       for(pBt=sqlite3SharedCacheList; pBt; pBt=pBt->pNext){
         assert( pBt->nRef>0 );
@@ -1298,9 +1298,9 @@ int sqlite3BtreeOpen(
     if( p->sharable ){
       sqlite3_mutex *mutexShared;
       pBt->nRef = 1;
-      mutexShared = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
-      if( SQLITE_THREADSAFE ){
-        pBt->mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_FAST);
+      mutexShared = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
+      if( SQLITE_THREADSAFE && sqlite3Config.bCoreMutex ){
+        pBt->mutex = sqlite3MutexAlloc(SQLITE_MUTEX_FAST);
         if( pBt->mutex==0 ){
           rc = SQLITE_NOMEM;
           db->mallocFailed = 0;
@@ -1373,7 +1373,7 @@ static int removeFromSharingList(BtShared *pBt){
   int removed = 0;
 
   assert( sqlite3_mutex_notheld(pBt->mutex) );
-  pMaster = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+  pMaster = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
   sqlite3_mutex_enter(pMaster);
   pBt->nRef--;
   if( pBt->nRef<=0 ){

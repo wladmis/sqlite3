@@ -193,7 +193,7 @@ static void memsys5Enter(void){
     assert( sizeof(Mem5Block)==POW2_MIN );
     assert( (SQLITE_POW2_MEMORY_SIZE % POW2_MAX)==0 );
     assert( SQLITE_POW2_MEMORY_SIZE>=POW2_MAX );
-    mem.mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM);
+    mem.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
     sqlite3_mutex_enter(mem.mutex);
     for(i=0; i<NSIZE; i++) mem.aiFreelist[i] = -1;
     for(i=0; i<=NBLOCK-SZ_MAX; i += SZ_MAX){

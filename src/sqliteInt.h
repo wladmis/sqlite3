@@ -1806,6 +1806,7 @@ void sqlite3PageFree(void*);
 void sqlite3MemSetDefault(void);
 
 sqlite3_mutex_methods *sqlite3DefaultMutex(void);
+sqlite3_mutex *sqlite3MutexAlloc(int);
 
 int sqlite3IsNaN(double);
 

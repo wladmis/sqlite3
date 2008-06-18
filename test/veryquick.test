@@ -86,6 +86,7 @@ set EXCLUDE {
   memleak.test
   misc7.test
   misuse.test
+  mutex2.test
   onefile.test
   quick.test
   soak.test

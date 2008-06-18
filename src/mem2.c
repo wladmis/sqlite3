@@ -162,7 +162,7 @@ static int sqlite3MemSize(void *p){
 ** Initialize the memory allocation subsystem.
 */
 static int sqlite3MemInit(void *NotUsed){
-  mem.mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_FAST);
+  mem.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
   return SQLITE_OK;
 }
 

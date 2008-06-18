@@ -78,7 +78,7 @@ static int btree_open(
   nRefSqlite3++;
   if( nRefSqlite3==1 ){
     sDb.pVfs = sqlite3_vfs_find(0);
-    sDb.mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_RECURSIVE);
+    sDb.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_RECURSIVE);
     sqlite3_mutex_enter(sDb.mutex);
   }
   rc = sqlite3BtreeOpen(argv[1], &sDb, &pBt, flags,

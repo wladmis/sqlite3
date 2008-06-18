@@ -102,8 +102,8 @@ int sqlite3MallocInit(void){
     sqlite3MemSetDefault();
   }
   memset(&mem0, 0, sizeof(mem0));
-  if( sqlite3Config.bMemstat && sqlite3Config.bCoreMutex ){
-    mem0.mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MEM);
+  if( sqlite3Config.bMemstat ){
+    mem0.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
   }
   return sqlite3Config.m.xInit(sqlite3Config.m.pAppData);
 }
