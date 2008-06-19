@@ -1817,6 +1817,18 @@ int sqlite3_test_control(int op, ...){
     }
 
     /*
+    ** sqlite3_test_control(FAULT_INSTALL, isInstall)
+    **
+    ** If the argument is non-zero, install the fault-simulation malloc layer
+    ** as a wrapper around the currently installed implementation.
+    */
+    case SQLITE_TESTCTRL_FAULT_INSTALL: {
+      int isInstall = va_arg(ap, int);
+      rc = sqlite3FaultsimInstall(isInstall);
+      break;
+    }
+
+    /*
     ** Save the current state of the PRNG.
     */
     case SQLITE_TESTCTRL_PRNG_SAVE: {

@@ -21,6 +21,8 @@
 #include <string.h>
 #include <assert.h>
 
+const char *sqlite3TestErrorName(int);
+
 /*
 ** Transform pointers to text and back again
 */
@@ -781,6 +783,30 @@ static int test_status(
 }
 
 /*
+** install_malloc_faultsim BOOLEAN
+*/
+static int test_install_malloc_faultsim(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int rc;
+  int isInstall;
+
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "BOOLEAN");
+    return TCL_ERROR;
+  }
+  if( TCL_OK!=Tcl_GetBooleanFromObj(interp, objv[1], &isInstall) ){
+    return TCL_ERROR;
+  }
+  rc = sqlite3_test_control(SQLITE_TESTCTRL_FAULT_INSTALL, isInstall);
+  Tcl_SetResult(interp, (char *)sqlite3TestErrorName(rc), TCL_VOLATILE);
+  return TCL_OK;
+}
+
+/*
 ** Register commands with the TCL interpreter.
 */
 int Sqlitetest_malloc_Init(Tcl_Interp *interp){
@@ -805,6 +831,8 @@ int Sqlitetest_malloc_Init(Tcl_Interp *interp){
      { "sqlite3_config_scratch",     test_config_scratch           },
      { "sqlite3_config_pagecache",   test_config_pagecache         },
      { "sqlite3_status",             test_status                   },
+
+     { "install_malloc_faultsim",    test_install_malloc_faultsim  },
   };
   int i;
   for(i=0; i<sizeof(aObjCmd)/sizeof(aObjCmd[0]); i++){

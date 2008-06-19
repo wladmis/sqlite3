@@ -23,6 +23,11 @@ ifcapable builtin_test {
   return 0
 }
 
+catch {db close}
+sqlite3_shutdown
+catch {install_malloc_faultsim 1} msg
+sqlite3 db test.db
+
 # Usage: do_malloc_test <test number> <options...>
 #
 # The first argument, <test number>, is an integer used to name the
