@@ -929,8 +929,11 @@ do_test func-24.6 {
     SELECT 'BEGIN-'||group_concat(t1) FROM tbl1
   }
 } {BEGIN-this,program,is,free,software}
+unset -nocomplain midargs
 set midargs {}
+unset -nocomplain midres
 set midres {}
+unset -nocomplain result
 for {set i 1} {$i<[sqlite3_limit db SQLITE_LIMIT_FUNCTION_ARG -1]-1} {incr i} {
   append midargs ,'/$i'
   append midres /$i
