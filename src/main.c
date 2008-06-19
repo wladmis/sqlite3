@@ -76,7 +76,9 @@ int sqlite3_initialize(void){
   if( sqlite3IsInit ) return SQLITE_OK;
   rc = sqlite3MutexInit();
   if( rc==SQLITE_OK ){
+#ifndef SQLITE_MUTEX_NOOP
     sqlite3_mutex *pMutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
+#endif
     sqlite3_mutex_enter(pMutex);
     if( sqlite3IsInit==0 ){
       sqlite3IsInit = 1;

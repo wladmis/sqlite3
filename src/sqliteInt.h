@@ -1805,10 +1805,12 @@ void *sqlite3PageMalloc(int);
 void sqlite3PageFree(void*);
 void sqlite3MemSetDefault(void);
 
-sqlite3_mutex_methods *sqlite3DefaultMutex(void);
-sqlite3_mutex *sqlite3MutexAlloc(int);
-int sqlite3MutexInit(void);
-int sqlite3MutexEnd(void);
+#ifndef SQLITE_MUTEX_NOOP
+  sqlite3_mutex_methods *sqlite3DefaultMutex(void);
+  sqlite3_mutex *sqlite3MutexAlloc(int);
+  int sqlite3MutexInit(void);
+  int sqlite3MutexEnd(void);
+#endif
 
 void sqlite3StatusReset(void);
 int sqlite3StatusValue(int);

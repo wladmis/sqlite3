@@ -1463,6 +1463,7 @@ int sqlite3BtreeClose(Btree *p){
     }
     sqlite3_free(pBt->pSchema);
     freeTempSpace(pBt);
+    sqlite3_free(pBt);
   }
 
 #ifndef SQLITE_OMIT_SHARED_CACHE

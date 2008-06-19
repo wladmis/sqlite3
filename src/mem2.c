@@ -162,7 +162,11 @@ static int sqlite3MemSize(void *p){
 ** Initialize the memory allocation subsystem.
 */
 static int sqlite3MemInit(void *NotUsed){
-  mem.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
+  if( !sqlite3Config.bMemstat ){
+    /* If memory status is enabled, then the malloc.c wrapper will already
+    ** hold the STATIC_MEM mutex when the routines here are invoked. */
+    mem.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
+  }
   return SQLITE_OK;
 }
 
@@ -248,7 +252,7 @@ static void sqlite3MemFree(void *pPrior){
   struct MemBlockHdr *pHdr;
   void **pBt;
   char *z;
-  assert( mem.mutex!=0 );
+  assert( sqlite3Config.bMemstat || mem.mutex!=0 );
   pHdr = sqlite3MemsysGetHeader(pPrior);
   pBt = (void**)pHdr;
   pBt -= pHdr->nBacktraceSlots;

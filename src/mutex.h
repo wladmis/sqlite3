@@ -77,6 +77,7 @@
 #define sqlite3_mutex_leave(X)
 #define sqlite3_mutex_held(X)     1
 #define sqlite3_mutex_notheld(X)  1
+#define sqlite3MutexAlloc(X)      0
 #define sqlite3MutexInit()        SQLITE_OK
 #define sqlite3MutexEnd()
 #endif
