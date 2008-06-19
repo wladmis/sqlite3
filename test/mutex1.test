@@ -13,6 +13,7 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+sqlite3_reset_auto_extension
 
 proc mutex_counters {varname} {
   upvar $varname var
@@ -127,5 +128,5 @@ do_test mutex1-X {
   sqlite3_initialize
 } {SQLITE_OK}
 
+autoinstall_test_functions
 finish_test
-
