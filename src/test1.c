@@ -1899,6 +1899,38 @@ static int test_finalize(
 }
 
 /*
+** Usage:  sqlite3_next_stmt  DB  STMT
+**
+** Return the next statment in sequence after STMT.
+*/
+static int test_next_stmt(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  sqlite3_stmt *pStmt;
+  sqlite3 *db = 0;
+  char zBuf[50];
+
+  if( objc!=3 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"",
+        Tcl_GetStringFromObj(objv[0], 0), " DB STMT", 0);
+    return TCL_ERROR;
+  }
+
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  if( getStmtPointer(interp, Tcl_GetString(objv[2]), &pStmt) ) return TCL_ERROR;
+  pStmt = sqlite3_next_stmt(db, pStmt);
+  if( pStmt ){
+    if( sqlite3TestMakePointerStr(interp, zBuf, pStmt) ) return TCL_ERROR;
+    Tcl_AppendResult(interp, zBuf, 0);
+  }
+  return TCL_OK;
+}
+
+
+/*
 ** Usage:  sqlite3_reset  STMT 
 **
 ** Reset a statement handle.
@@ -4605,6 +4637,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_transfer_bindings",     test_transfer_bind ,0 },
      { "sqlite3_changes",               test_changes       ,0 },
      { "sqlite3_step",                  test_step          ,0 },
+     { "sqlite3_next_stmt",             test_next_stmt     ,0 },
 
      { "sqlite3_release_memory",        test_release_memory,     0},
      { "sqlite3_soft_heap_limit",       test_soft_heap_limit,    0},
