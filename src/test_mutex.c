@@ -146,12 +146,12 @@ static int test_install_mutex_counters(
 
   sqlite3_mutex_methods counter_methods = {
     counterMutexInit,
+    counterMutexEnd,
     counterMutexAlloc,
     counterMutexFree,
     counterMutexEnter,
     counterMutexTry,
     counterMutexLeave,
-    counterMutexEnd,
     counterMutexHeld,
     counterMutexNotheld
   };

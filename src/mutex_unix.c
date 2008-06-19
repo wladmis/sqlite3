@@ -307,12 +307,12 @@ static void pthreadMutexLeave(sqlite3_mutex *p){
 sqlite3_mutex_methods *sqlite3DefaultMutex(void){
   static sqlite3_mutex_methods sMutex = {
     pthreadMutexInit,
+    pthreadMutexEnd,
     pthreadMutexAlloc,
     pthreadMutexFree,
     pthreadMutexEnter,
     pthreadMutexTry,
     pthreadMutexLeave,
-    pthreadMutexEnd,
 
     pthreadMutexHeld,
     pthreadMutexNotheld

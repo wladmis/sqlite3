@@ -254,12 +254,12 @@ int os2MutexNotheld(sqlite3_mutex *p){
 sqlite3_mutex_methods *sqlite3DefaultMutex(void){
   static sqlite3_mutex_methods sMutex = {
     os2MutexInit,
+    os2MutexEnd,
     os2MutexAlloc,
     os2MutexFree,
     os2MutexEnter,
     os2MutexTry,
     os2MutexLeave,
-    os2MutexEnd,
 
     os2MutexHeld,
     os2MutexNotheld
