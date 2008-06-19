@@ -313,9 +313,10 @@ sqlite3_mutex_methods *sqlite3DefaultMutex(void){
     pthreadMutexEnter,
     pthreadMutexTry,
     pthreadMutexLeave,
-
+#ifdef SQLITE_DEBUG
     pthreadMutexHeld,
     pthreadMutexNotheld
+#endif
   };
 
   return &sMutex;

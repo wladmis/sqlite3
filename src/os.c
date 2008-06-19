@@ -199,6 +199,8 @@ static sqlite3_vfs *vfsList = 0;
 ** first VFS on the list.
 */
 sqlite3_vfs *sqlite3_vfs_find(const char *zVfs){
+  sqlite3_vfs *pVfs = 0;
+  static int isInit = 0;
 #ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex;
 #endif
@@ -209,8 +211,6 @@ sqlite3_vfs *sqlite3_vfs_find(const char *zVfs){
 #ifndef SQLITE_MUTEX_NOOP
   mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
 #endif
-  sqlite3_vfs *pVfs = 0;
-  static int isInit = 0;
   sqlite3_mutex_enter(mutex);
   if( !isInit ){
     vfsList = sqlite3OsDefaultVfs();
