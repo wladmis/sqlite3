@@ -305,6 +305,15 @@ static const sqlite3_api_routines sqlite3Apis = {
   sqlite3_test_control,
   sqlite3_randomness,
   sqlite3_context_db_handle,
+
+  /*
+  ** Added for 3.6.0
+  */
+  sqlite3_extended_result_codes,
+  sqlite3_limit,
+  sqlite3_next_stmt,
+  sqlite3_sql,
+  sqlite3_status,
 };
 
 /*
