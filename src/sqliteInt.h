@@ -1810,6 +1810,11 @@ sqlite3_mutex *sqlite3MutexAlloc(int);
 int sqlite3MutexInit(void);
 int sqlite3MutexEnd(void);
 
+void sqlite3StatusReset(void);
+int sqlite3StatusValue(int);
+void sqlite3StatusAdd(int, int);
+void sqlite3StatusSet(int, int);
+
 int sqlite3IsNaN(double);
 
 char *sqlite3MPrintf(sqlite3*,const char*, ...);

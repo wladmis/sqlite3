@@ -80,6 +80,7 @@ int sqlite3_initialize(void){
     sqlite3_mutex_enter(pMutex);
     if( sqlite3IsInit==0 ){
       sqlite3IsInit = 1;
+      sqlite3StatusReset();
       if( rc==SQLITE_OK ) rc = sqlite3MallocInit();
       if( rc==SQLITE_OK ) rc = sqlite3_os_init();
       if( rc!=SQLITE_OK ){
