@@ -140,9 +140,9 @@ int sqlite3BitvecSet(Bitvec *p, u32 i){
     u32 bin = (i-1)/p->iDivisor;
     i = (i-1)%p->iDivisor + 1;
     if( p->u.apSub[bin]==0 ){
-      sqlite3FaultBeginBenign(SQLITE_FAULTINJECTOR_MALLOC);
+      sqlite3BeginBenignMalloc();
       p->u.apSub[bin] = sqlite3BitvecCreate( p->iDivisor );
-      sqlite3FaultEndBenign(SQLITE_FAULTINJECTOR_MALLOC);
+      sqlite3EndBenignMalloc();
       if( p->u.apSub[bin]==0 ) return SQLITE_NOMEM;
     }
     return sqlite3BitvecSet(p->u.apSub[bin], i);

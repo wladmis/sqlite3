@@ -6052,15 +6052,12 @@ int sqlite3_test_control(int op, ...);
 ** Applications should not use any of these parameters or the
 ** [sqlite3_test_control()] interface.
 */
-#define SQLITE_TESTCTRL_FAULT_CONFIG             1
-#define SQLITE_TESTCTRL_FAULT_FAILURES           2
-#define SQLITE_TESTCTRL_FAULT_BENIGN_FAILURES    3
-#define SQLITE_TESTCTRL_FAULT_PENDING            4
 #define SQLITE_TESTCTRL_PRNG_SAVE                5
 #define SQLITE_TESTCTRL_PRNG_RESTORE             6
 #define SQLITE_TESTCTRL_PRNG_RESET               7
 #define SQLITE_TESTCTRL_BITVEC_TEST              8
 #define SQLITE_TESTCTRL_FAULT_INSTALL            9
+#define SQLITE_TESTCTRL_BENIGN_MALLOC_HOOKS     10
 
 /*
 ** CAPI3REF: SQLite Runtime Status {F17200}

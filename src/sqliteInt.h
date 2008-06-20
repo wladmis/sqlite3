@@ -2208,11 +2208,10 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 ** is not defined.
 */
 #ifndef SQLITE_OMIT_BUILTIN_TEST
-  void sqlite3FaultBeginBenign(int);
-  void sqlite3FaultEndBenign(int);
-  int sqlite3FaultIsBenign(void);
+  void sqlite3BeginBenignMalloc(void);
+  void sqlite3EndBenignMalloc(void);
 #else
-  #define sqlite3FaultBeginBenign()
+  #define sqlite3BeginBenignMalloc()
   #define sqlite3FaultEndBenign()
 #endif
 
