@@ -1731,6 +1731,53 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
   break;
 }
 
+/* Opcode: Compare P1 P2 P3 P4 *
+**
+** Compare to vectors of registers in reg(P1)..reg(P1+P3-1) (all this
+** one "A") and in reg(P2)..reg(P2+P3-1) ("B").  Save the result of
+** the comparison for use by the next OP_Jump instruct.
+**
+** P4 is a KeyInfo structure that defines collating sequences usedused for affinity purposes.  The
+** comparison is done for sorting purposes, so NULLs compare
+** equal, NULLs are less than numbers, numbers are less than strings,
+** and strings are less than blobs.
+*/
+case OP_Compare: {
+  int n = pOp->p3;
+  int i, p1, p2;
+  const KeyInfo *pKeyInfo = pOp->p4.pKeyInfo;
+  assert( n>0 );
+  p1 = pOp->p1;
+  assert( p1>0 && p1+n-1<p->nMem );
+  p2 = pOp->p2;
+  assert( p2>0 && p2+n-1<p->nMem );
+  for(i=0; i<n; i++, p1++, p2++){
+    REGISTER_TRACE(p1, &p->aMem[p1]);
+    REGISTER_TRACE(p2, &p->aMem[p2]);
+    p->iCompare = sqlite3MemCompare(&p->aMem[p1], &p->aMem[p2],
+                   pKeyInfo && i<pKeyInfo->nField ? pKeyInfo->aColl[i] : 0);
+    if( p->iCompare ) break;
+  }
+  break;
+}
+
+/* Opcode: Jump P1 P2 P3 * *
+**
+** Jump to the instruction at address P1, P2, or P3 depending on whether
+** in the most recent OP_Compare instruction the P1 vector was less than
+** equal to, or greater than the P2 vector, respectively.
+*/
+case OP_Jump: {
+  if( p->iCompare<0 ){
+    pc = pOp->p1 - 1;
+  }else if( p->iCompare==0 ){
+    pc = pOp->p2 - 1;
+  }else{
+    pc = pOp->p3 - 1;
+  }
+  break;
+}
+
 /* Opcode: And P1 P2 P3 * *
 **
 ** Take the logical AND of the values in registers P1 and P2 and

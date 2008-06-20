@@ -109,7 +109,8 @@ typedef struct VdbeOpList VdbeOpList;
 ** from a single sqliteMalloc().  But no copy is made and the calling
 ** function should *not* try to free the KeyInfo.
 */
-#define P4_KEYINFO_HANDOFF (-9)
+#define P4_KEYINFO_HANDOFF (-15)
+#define P4_KEYINFO_STATIC  (-16)
 
 /*
 ** The Vdbe.aColName array contains 5n Mem structures, where n is the 
@@ -193,8 +194,11 @@ int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
 #ifndef NDEBUG
   void sqlite3VdbeComment(Vdbe*, const char*, ...);
 # define VdbeComment(X)  sqlite3VdbeComment X
+  void sqlite3VdbeNoopComment(Vdbe*, const char*, ...);
+# define VdbeNoopComment(X)  sqlite3VdbeNoopComment X
 #else
 # define VdbeComment(X)
+# define VdbeNoopComment(X)
 #endif
 
 #endif
