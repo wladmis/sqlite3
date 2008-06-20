@@ -221,5 +221,10 @@ do_test memsubsys1-7.7 {
   set s_ovfl [lindex [sqlite3_status SQLITE_STATUS_SCRATCH_OVERFLOW 0] 2]
 } 0
 
+db close
+sqlite3_shutdown
+sqlite3_config_pagecache 0 0
+sqlite3_config_scratch 0 0
+sqlite3_initialize
 autoinstall_test_functions
 finish_test
