@@ -785,6 +785,25 @@ case OP_Return: {           /* in1 */
   break;
 }
 
+/* Opcode:  Yield P1 * * * *
+**
+** Swap the program counter with the value in register P1.
+*/
+case OP_Yield: {
+  int pcDest;
+  assert( pOp->p1>0 );
+  assert( pOp->p1<=p->nMem );
+  pIn1 = &p->aMem[pOp->p1];
+  assert( (pIn1->flags & MEM_Dyn)==0 );
+  pIn1->flags = MEM_Int;
+  pcDest = pIn1->u.i;
+  pIn1->u.i = pc;
+  REGISTER_TRACE(pOp->p1, pIn1);
+  pc = pcDest;
+  break;
+}
+
+
 /* Opcode:  Halt P1 P2 * P4 *
 **
 ** Exit immediately.  All open cursors, Fifos, etc are closed
