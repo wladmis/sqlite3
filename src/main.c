@@ -1763,6 +1763,7 @@ int sqlite3_test_control(int op, ...){
   va_list ap;
   va_start(ap, op);
   switch( op ){
+#if 0
     /*
     ** sqlite3_test_control(FAULT_CONFIG, fault_id, nDelay, nRepeat)
     **
@@ -1827,6 +1828,7 @@ int sqlite3_test_control(int op, ...){
       rc = sqlite3FaultsimInstall(isInstall);
       break;
     }
+#endif
 
     /*
     ** Save the current state of the PRNG.
