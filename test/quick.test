@@ -116,6 +116,9 @@ foreach testfile [lsort -dictionary [glob $testdir/*.test]] {
     set sqlite_open_file_count 0
   }
 }
+set argv quick
+source $testdir/permutations.test
+set argv ""
 source $testdir/misuse.test
 
 set sqlite_open_file_count 0
