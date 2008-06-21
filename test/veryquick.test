@@ -88,6 +88,7 @@ set EXCLUDE {
   misuse.test
   mutex2.test
   onefile.test
+  permutations.test
   quick.test
   soak.test
   speed1.test
