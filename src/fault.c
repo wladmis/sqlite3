@@ -69,4 +69,3 @@ void sqlite3EndBenignMalloc(void){
 }
 
 #endif   /* #ifndef SQLITE_OMIT_BUILTIN_TEST */
-

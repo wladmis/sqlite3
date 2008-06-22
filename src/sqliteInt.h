@@ -1911,7 +1911,7 @@ void sqlite3Update(Parse*, SrcList*, ExprList*, Expr*, int);
 WhereInfo *sqlite3WhereBegin(Parse*, SrcList*, Expr*, ExprList**, u8);
 void sqlite3WhereEnd(WhereInfo*);
 int sqlite3ExprCodeGetColumn(Parse*, Table*, int, int, int, int);
-void sqlite3ExprCodeMove(Parse*, int, int);
+void sqlite3ExprCodeMove(Parse*, int, int, int);
 void sqlite3ExprClearColumnCache(Parse*, int);
 void sqlite3ExprCacheAffinityChange(Parse*, int, int);
 int sqlite3ExprWritableRegister(Parse*,int,int);

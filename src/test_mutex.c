@@ -303,4 +303,3 @@ int Sqlitetest_mutex_Init(Tcl_Interp *interp){
   memset(&g, 0, sizeof(g));
   return SQLITE_OK;
 }
-
