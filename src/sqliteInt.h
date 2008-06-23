@@ -1805,6 +1805,7 @@ void sqlite3ScratchFree(void*);
 void *sqlite3PageMalloc(int);
 void sqlite3PageFree(void*);
 void sqlite3MemSetDefault(void);
+void sqlite3BenignMallocHooks(void (*)(void), void (*)(void));
 
 #ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex_methods *sqlite3DefaultMutex(void);

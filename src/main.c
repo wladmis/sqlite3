@@ -931,7 +931,13 @@ int sqlite3BtreeFactory(
     vfsFlags = (vfsFlags & ~SQLITE_OPEN_MAIN_DB) | SQLITE_OPEN_TEMP_DB;
   }
   rc = sqlite3BtreeOpen(zFilename, (sqlite3 *)db, ppBtree, btFlags, vfsFlags);
-  if( rc==SQLITE_OK ){
+
+  /* If the B-Tree was successfully opened, set the pager-cache size to the
+  ** default value. Except, if the call to BtreeOpen() returned a handle
+  ** open on an existing shared pager-cache, do not change the pager-cache 
+  ** size.
+  */
+  if( rc==SQLITE_OK && 0==sqlite3BtreeSchema(*ppBtree, 0, 0) ){
     sqlite3BtreeSetCacheSize(*ppBtree, nCache);
   }
   return rc;

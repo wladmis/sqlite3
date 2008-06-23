@@ -7107,6 +7107,10 @@ int sqlite3BtreeIsInReadTrans(Btree *p){
 ** call the nBytes parameter is ignored and a pointer to the same blob
 ** of memory returned. 
 **
+** If the nBytes parameter is 0 and the blob of memory has not yet been
+** allocated, a null pointer is returned. If the blob has already been
+** allocated, it is returned as normal.
+**
 ** Just before the shared-btree is closed, the function passed as the 
 ** xFree argument when the memory allocation was made is invoked on the 
 ** blob of allocated memory. This function should not call sqlite3_free()
@@ -7115,7 +7119,7 @@ int sqlite3BtreeIsInReadTrans(Btree *p){
 void *sqlite3BtreeSchema(Btree *p, int nBytes, void(*xFree)(void *)){
   BtShared *pBt = p->pBt;
   sqlite3BtreeEnter(p);
-  if( !pBt->pSchema ){
+  if( !pBt->pSchema && nBytes ){
     pBt->pSchema = sqlite3MallocZero(nBytes);
     pBt->xFreeSchema = xFree;
   }
