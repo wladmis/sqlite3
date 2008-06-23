@@ -1820,10 +1820,11 @@ int sqlite3_test_control(int op, ...){
     ** are benign.
     */
     case SQLITE_TESTCTRL_BENIGN_MALLOC_HOOKS: {
-      void (*xBenignBegin)(void);
-      void (*xBenignEnd)(void);
-      xBenignBegin = va_arg(ap, void(*)(void));
-      xBenignEnd = va_arg(ap, void(*)(void));
+      typedef void (*void_function)(void);
+      void_function xBenignBegin;
+      void_function xBenignEnd;
+      xBenignBegin = va_arg(ap, void_function);
+      xBenignEnd = va_arg(ap, void_function);
       sqlite3BenignMallocHooks(xBenignBegin, xBenignEnd);
       break;
     }
