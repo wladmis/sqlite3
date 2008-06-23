@@ -41,8 +41,11 @@ static void *sqlite3MemMalloc(int nByte){
   assert( nByte>0 );
   nByte = (nByte+7)&~7;
   p = malloc( nByte+8 );
-  p[0] = nByte;
-  return (void*)&p[1];
+  if( p ){
+    p[0] = nByte;
+    p++;
+  }
+  return (void *)p;
 }
 
 /*
