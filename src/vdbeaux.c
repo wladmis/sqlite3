@@ -275,8 +275,8 @@ static void resolveP2Values(Vdbe *p, int *pMaxFuncArgs){
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     }else if( opcode==OP_VUpdate ){
       if( pOp->p2>nMaxArgs ) nMaxArgs = pOp->p2;
-    }
 #endif
+    }
     if( opcode==OP_Halt ){
       if( pOp->p1==SQLITE_CONSTRAINT && pOp->p2==OE_Abort ){
         doesStatementRollback = 1;
