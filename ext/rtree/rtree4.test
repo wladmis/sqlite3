@@ -14,12 +14,19 @@
 # $Id$
 #
 
-set testdir [file join [file dirname $argv0] .. .. test]
+if {![info exists testdir]} {
+  set testdir [file join [file dirname $argv0] .. .. test]
+} 
 source $testdir/tester.tcl
 
 ifcapable !rtree {
   finish_test
   return
+}
+
+set ::NROW 2500
+if {[info exists ISQUICK] && $ISQUICK} {
+  set ::NROW 250
 }
 
 # Return a floating point number between -X and X.
@@ -85,7 +92,7 @@ for {set nDim 1} {$nDim<=5} {incr nDim} {
   # is well.
   #
   unset -nocomplain where
-  for {set i 1} {$i<2500} {incr i} {
+  for {set i 1} {$i<$::NROW} {incr i} {
     # Do a random insert
     #
     do_test rtree-$nDim.2.$i.1 {

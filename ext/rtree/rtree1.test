@@ -14,7 +14,9 @@
 # $Id$
 #
 
-set testdir [file join [file dirname $argv0] .. .. test]
+if {![info exists testdir]} {
+  set testdir [file join [file dirname $argv0] .. .. test]
+}
 source $testdir/tester.tcl
 
 # Test plan:
