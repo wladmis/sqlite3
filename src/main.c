@@ -1487,7 +1487,7 @@ int sqlite3_create_collation_v2(
 */
 int sqlite3_create_collation16(
   sqlite3* db, 
-  const char *zName, 
+  const void *zName,
   int enc, 
   void* pCtx,
   int(*xCompare)(void*,int,const void*,int,const void*)

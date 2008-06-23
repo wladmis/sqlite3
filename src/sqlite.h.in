@@ -4436,7 +4436,7 @@ int sqlite3_create_collation_v2(
 );
 int sqlite3_create_collation16(
   sqlite3*, 
-  const char *zName, 
+  const void *zName,
   int eTextRep, 
   void*,
   int(*xCompare)(void*,int,const void*,int,const void*)
