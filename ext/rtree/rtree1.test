@@ -61,6 +61,7 @@ do_test rtree-1.1.3 {
 # an attached database.
 #
 do_test rtree-1.2.1 {
+  file delete -force test2.db
   execsql {
     ATTACH 'test2.db' AS aux;
     CREATE VIRTUAL TABLE aux.'a" "b' USING rtree(ii, x1, x2, y1, y2);
