@@ -912,4 +912,24 @@ ifcapable subquery {
   } {0}
 }
 
+db close
+file delete -force test.db
+sqlite3 db test.db
+do_test select1-14.1 {
+  execsql { 
+    SELECT * FROM sqlite_master WHERE rowid>10; 
+    SELECT * FROM sqlite_master WHERE rowid=10;
+    SELECT * FROM sqlite_master WHERE rowid<10;
+    SELECT * FROM sqlite_master WHERE rowid<=10;
+    SELECT * FROM sqlite_master WHERE rowid>=10;
+    SELECT * FROM sqlite_master;
+  }
+} {}
+do_test select1-14.2 {
+  execsql { 
+    SELECT 10 IN (SELECT rowid FROM sqlite_master);
+  }
+} {0}
+
 finish_test
+

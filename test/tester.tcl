@@ -133,6 +133,11 @@ if {[sqlite3 -has-codec] && [info command sqlite_orig]==""} {
 
 # Create a test database
 #
+if {![info exists nTest]} {
+  sqlite3_shutdown 
+  install_malloc_faultsim 1 
+  sqlite3_initialize
+}
 catch {db close}
 file delete -force test.db
 file delete -force test.db-journal

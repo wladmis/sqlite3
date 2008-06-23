@@ -3006,6 +3006,12 @@ case OP_MoveGt: {       /* jump, in3 */
     if( res ){
       pc = pOp->p2 - 1;
     }
+  }else if( !pC->pseudoTable ){
+    /* This happens when attempting to open the sqlite3_master table
+    ** for read access returns SQLITE_EMPTY. In this case always
+    ** take the jump (since there are no records in the table).
+    */
+    pc = pOp->p2 - 1;
   }
   break;
 }
@@ -3213,6 +3219,13 @@ case OP_NotExists: {        /* jump, in3 */
       pc = pOp->p2 - 1;
       assert( pC->rowidIsValid==0 );
     }
+  }else if( !pC->pseudoTable ){
+    /* This happens when an attempt to open a read cursor on the 
+    ** sqlite_master table returns SQLITE_EMPTY.
+    */
+    assert( pC->isTable );
+    pc = pOp->p2 - 1;
+    assert( pC->rowidIsValid==0 );
   }
   break;
 }
