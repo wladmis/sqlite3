@@ -54,8 +54,8 @@ static void *sqlite3MemMalloc(int nByte){
 ** by higher-level routines.
 */
 static void sqlite3MemFree(void *pPrior){
-  assert( pPrior!=0 );
   sqlite3_int64 *p = (sqlite3_int64*)pPrior;
+  assert( pPrior!=0 );
   p--;
   free(p);
 }
