@@ -2214,7 +2214,7 @@ CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
   void sqlite3EndBenignMalloc(void);
 #else
   #define sqlite3BeginBenignMalloc()
-  #define sqlite3FaultEndBenign()
+  #define sqlite3EndBenignMalloc()
 #endif
 
 #define IN_INDEX_ROWID           1
