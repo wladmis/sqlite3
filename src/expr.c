@@ -1030,6 +1030,7 @@ int sqlite3ExprIsInteger(Expr *p, int *pValue){
     }
     case TK_UPLUS: {
       rc = sqlite3ExprIsInteger(p->pLeft, pValue);
+      break;
     }
     case TK_UMINUS: {
       int v;

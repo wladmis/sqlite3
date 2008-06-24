@@ -932,4 +932,3 @@ do_test select1-14.2 {
 } {0}
 
 finish_test
-
