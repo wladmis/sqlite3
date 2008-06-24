@@ -329,6 +329,23 @@ run_tests "autovacuum_ioerr" -description {
   pragma auto_vacuum = 1
 } -include ioerr.test
 
+run_tests "mempool" -description {
+  Run tests using the allocator in mem3.c.
+} -initialize {
+  catch {db close}
+  sqlite3_reset_auto_extension
+  sqlite3_shutdown
+  sqlite3_config_mempool 1000000
+  sqlite3_initialize
+  autoinstall_test_functions
+} -shutdown {
+  catch {db close}
+  sqlite3_reset_auto_extension
+  sqlite3_shutdown
+  sqlite3_config_mempool 0
+  sqlite3_initialize
+}
+
 # run_tests "crash_safe_append" -description {
 #   Run crash.test with persistent journals on a SAFE_APPEND file-system.
 # } -initialize {

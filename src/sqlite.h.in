@@ -1115,6 +1115,7 @@ struct sqlite3_mem_methods {
 #define SQLITE_CONFIG_MEMSTATUS     9  /* boolean */
 #define SQLITE_CONFIG_MUTEX        10  /* sqlite3_mutex_methods* */
 #define SQLITE_CONFIG_GETMUTEX     11  /* sqlite3_mutex_methods* */
+#define SQLITE_CONFIG_MEMPOOL      12  /* u8*, int */
 
 /*
 ** CAPI3REF: Enable Or Disable Extended Result Codes {F12200}
