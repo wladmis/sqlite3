@@ -2777,7 +2777,7 @@ typedef struct sqlite3_context sqlite3_context;
 ** SQL parameter is used more than once, second and subsequent
 ** occurrences have the same index as the first occurrence.
 ** The index for named parameters can be looked up using the
-** [sqlite3_bind_parameter_name()] API if desired.  The index
+** [sqlite3_bind_parameter_index()] API if desired.  The index
 ** for "?NNN" parameters is the value of NNN.
 ** The NNN value must be between 1 and the compile-time
 ** parameter SQLITE_MAX_VARIABLE_NUMBER (default value: 999).
