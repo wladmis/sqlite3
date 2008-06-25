@@ -1803,6 +1803,7 @@ void sqlite3ScratchFree(void*);
 void *sqlite3PageMalloc(int);
 void sqlite3PageFree(void*);
 void sqlite3MemSetDefault(void);
+void sqlite3MemSetMemsys3(u8 *pBlock, int nBlock);
 void sqlite3BenignMallocHooks(void (*)(void), void (*)(void));
 
 #ifndef SQLITE_MUTEX_NOOP

@@ -149,11 +149,11 @@ int sqlite3_config(int op, ...){
       sqlite3Config.bFullMutex = 1;
       break;
     }
-#ifdef SQLITE_ENABLE_MEMPOOL
-    case SQLITE_CONFIG_MEMPOOL: {
+#ifdef SQLITE_ENABLE_MEMSYS3
+    case SQLITE_CONFIG_MEMSYS3: {
       u8 *pMem = va_arg(ap, u8*);
       int nMem = va_arg(ap, int);
-      rc = sqlite3MemSetMempool(pMem, nMem);
+      sqlite3MemSetMemsys3(pMem, nMem);
       break;
     }
 #endif
