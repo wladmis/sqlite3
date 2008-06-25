@@ -274,7 +274,7 @@ ifcapable {explain} {
   } {1}
   do_test misc3-6.11 {
     set x [execsql {
-      EXPLAIN SELECT a+123456789012, b*4.5678, c FROM ex1 ORDER BY a, b DESC
+      EXPLAIN SELECT a+123456789012, b*4.5678, c FROM ex1 ORDER BY +a, b DESC
     }]
     set y [regexp { 123456789012 } $x]
     lappend y [regexp { 4.5678 } $x]

@@ -1089,6 +1089,9 @@ static int isSortingIndex(
         ** ORDER BY term, that is OK.  Just ignore that column of the index
         */
         continue;
+      }else if( i==pIdx->nColumn ){
+        /* Index column i is the rowid.  All other terms match. */
+        break;
       }else{
         /* If an index column fails to match and is not constrained by ==
         ** then the index cannot satisfy the ORDER BY constraint.
