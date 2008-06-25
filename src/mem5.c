@@ -180,15 +180,18 @@ static void memsys5Link(int i, int iLogsize){
 }
 
 /*
-** Enter the mutex mem5.mutex. Allocate it if it is not already allocated.
-**
-** Also:  Initialize the memory allocation subsystem the first time
-** this routine is called.
+** If the STATIC_MEM mutex is not already held, obtain it now. The mutex
+** will already be held (obtained by code in malloc.c) if
+** sqlite3Config.bMemStat is true.
 */
 static void memsys5Enter(void){
+  if( sqlite3Config.bMemstat==0 && mem5.mutex==0 ){
+    mem5.mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MEM);
+  }
+  sqlite3_mutex_enter(mem5.mutex);
 }
-
 static void memsys5Leave(void){
+  sqlite3_mutex_leave(mem5.mutex);
 }
 
 /*
