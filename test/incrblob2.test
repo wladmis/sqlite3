@@ -132,6 +132,7 @@ do_test incrblob2-3.4 {
 # invalidated at the correct times.
 #
 do_test incrblob2-4.1 {
+  unset -nocomplain data
   db eval BEGIN
   db eval { CREATE TABLE t1(id INTEGER PRIMARY KEY, data BLOB); }
   for {set ii 1} {$ii < 100} {incr ii} {
@@ -353,4 +354,3 @@ do_test incrblob2-7.5 {
 } {}
 
 finish_test
-

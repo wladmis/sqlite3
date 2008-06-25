@@ -22,6 +22,7 @@ ifcapable {!incrblob  || !memdebug || !tclvar} {
 
 source $testdir/malloc_common.tcl
 
+unset -nocomplain ::fd ::data
 set ::fd [open [info script]]
 set ::data [read $::fd]
 close $::fd
