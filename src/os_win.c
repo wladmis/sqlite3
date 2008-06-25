@@ -1553,12 +1553,9 @@ static int winGetLastError(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
 }
 
 /*
-** Return a pointer to the sqlite3DefaultVfs structure.   We use
-** a function rather than give the structure global scope because
-** some compilers (MSVC) do not allow forward declarations of
-** initialized structures.
+** Initialize and deinitialize the operating system interface.
 */
-sqlite3_vfs *sqlite3OsDefaultVfs(void){
+int sqlite3_os_init(void){
   static sqlite3_vfs winVfs = {
     1,                 /* iVersion */
     sizeof(winFile),   /* szOsFile */
@@ -1580,15 +1577,11 @@ sqlite3_vfs *sqlite3OsDefaultVfs(void){
     winCurrentTime,    /* xCurrentTime */
     winGetLastError    /* xGetLastError */
   };
-
-  return &winVfs;
+  sqlite3_vfs_register(&winVfs, 1);
+  return SQLITE_OK; 
 }
-
-/*
-** Initialize and deinitialize the operating system interface.
-** These are stubs for now - populate with real code later...
-*/
-int sqlite3_os_init(void){ return SQLITE_OK; }
-int sqlite3_os_end(void){ return SQLITE_OK; }
+int sqlite3_os_end(void){ 
+  return SQLITE_OK;
+}
 
 #endif /* OS_WIN */
