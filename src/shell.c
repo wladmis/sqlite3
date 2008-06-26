@@ -1946,7 +1946,7 @@ int main(int argc, char **argv){
     }
   }
   if( i<argc ){
-#if defined(OS_OS2) && OS_OS2
+#if defined(SQLITE_OS_OS2) && SQLITE_OS_OS2
     data.zDbFilename = (const char *)convertCpPathToUtf8( argv[i++] );
 #else
     data.zDbFilename = argv[i++];

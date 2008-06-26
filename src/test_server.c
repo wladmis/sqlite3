@@ -208,7 +208,7 @@
 ** and only if the SQLITE_SERVER macro is defined.
 */
 #if defined(SQLITE_SERVER) && !defined(SQLITE_OMIT_SHARED_CACHE)
-#if defined(OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE
+#if defined(SQLITE_OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE
 
 /*
 ** We require only pthreads and the public interface of SQLite.
@@ -489,5 +489,5 @@ void sqlite3_server_stop(void){
   pthread_mutex_unlock(&g.serverMutex);
 }
 
-#endif /* defined(OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE */
+#endif /* defined(SQLITE_OS_UNIX) && OS_UNIX && SQLITE_THREADSAFE */
 #endif /* defined(SQLITE_SERVER) */

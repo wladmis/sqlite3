@@ -15,7 +15,7 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#if defined(OS_UNIX) && OS_UNIX==1 && SQLITE_THREADSAFE
+#if defined(SQLITE_OS_UNIX) && OS_UNIX==1 && SQLITE_THREADSAFE
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -713,4 +713,4 @@ int Sqlitetest4_Init(Tcl_Interp *interp){
 }
 #else
 int Sqlitetest4_Init(Tcl_Interp *interp){ return TCL_OK; }
-#endif /* OS_UNIX */
+#endif /* SQLITE_OS_UNIX */

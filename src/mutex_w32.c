@@ -42,7 +42,7 @@ struct sqlite3_mutex {
 ** WinNT/2K/XP so that we will know whether or not we can safely call
 ** the LockFileEx() API.
 */
-#if OS_WINCE
+#if SQLITE_OS_WINCE
 # define mutexIsNT()  (1)
 #else
   static int mutexIsNT(void){
@@ -55,7 +55,7 @@ struct sqlite3_mutex {
     }
     return osType==2;
   }
-#endif /* OS_WINCE */
+#endif /* SQLITE_OS_WINCE */
 
 
 #ifdef SQLITE_DEBUG

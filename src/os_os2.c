@@ -17,7 +17,7 @@
 
 #include "sqliteInt.h"
 
-#if OS_OS2
+#if SQLITE_OS_OS2
 
 /*
 ** A Note About Memory Allocation:
@@ -1077,4 +1077,4 @@ int sqlite3_os_end(void){
   return SQLITE_OK; 
 }
 
-#endif /* OS_OS2 */
+#endif /* SQLITE_OS_OS2 */

@@ -15,7 +15,7 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#if OS_UNIX              /* This file is used on unix only */
+#if SQLITE_OS_UNIX              /* This file is used on unix only */
 
 /* #define SQLITE_ENABLE_LOCKING_STYLE 0 */
 
@@ -2811,4 +2811,4 @@ int sqlite3_os_end(void){
   return SQLITE_OK; 
 }
  
-#endif /* OS_UNIX */
+#endif /* SQLITE_OS_UNIX */

@@ -36,7 +36,7 @@
 **     sqlite3OsLock()
 **
 */
-#if defined(SQLITE_TEST) && (OS_WIN==0)
+#if defined(SQLITE_TEST) && (SQLITE_OS_WIN==0)
   #define DO_OS_MALLOC_TEST if (1) {            \
     void *pTstAlloc = sqlite3Malloc(10);       \
     if (!pTstAlloc) return SQLITE_IOERR_NOMEM;  \

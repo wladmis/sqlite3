@@ -47,7 +47,7 @@ they do not respect the OPTS variable.
 #
 proc run_quick_test {dir omit_symbol_list} {
   # Compile the value of the OPTS Makefile variable.
-  set opts "-DSQLITE_MEMDEBUG=2 -DSQLITE_DEBUG -DOS_UNIX" 
+  set opts "-DSQLITE_MEMDEBUG=2 -DSQLITE_DEBUG -DSQLITE_OS_UNIX" 
   foreach sym $omit_symbol_list {
     append opts " -D${sym}=1"
   }
