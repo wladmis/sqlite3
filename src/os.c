@@ -243,18 +243,12 @@ static void vfsUnlink(sqlite3_vfs *pVfs){
 ** true.
 */
 int sqlite3_vfs_register(sqlite3_vfs *pVfs, int makeDflt){
-#ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex *mutex = 0;
-#endif
 #ifndef SQLITE_OMIT_AUTOINIT
   int rc = sqlite3_initialize();
   if( rc ) return rc;
 #endif
-#ifndef SQLITE_MUTEX_NOOP
-  if( sqlite3Config.isInit!=1 ){
-    mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
-  }
-#endif
+  mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
   sqlite3_mutex_enter(mutex);
   vfsUnlink(pVfs);
   if( makeDflt || vfsList==0 ){

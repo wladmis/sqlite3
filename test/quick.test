@@ -42,6 +42,7 @@ set EXCLUDE {
   all.test
   async.test
   async2.test
+  async3.test
   corrupt.test
   crash.test
   crash2.test
