@@ -249,11 +249,11 @@
 #endif
 
 /*
-** Provide a default value for TEMP_STORE in case it is not specified
+** Provide a default value for SQLITE_TEMP_STORE in case it is not specified
 ** on the command-line
 */
-#ifndef TEMP_STORE
-# define TEMP_STORE 1
+#ifndef SQLITE_TEMP_STORE
+# define SQLITE_TEMP_STORE 1
 #endif
 
 /*

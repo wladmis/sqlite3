@@ -28,8 +28,8 @@
 **   from sqlite3_malloc(). Any attempt to create a temporary database file 
 **   will fail (SQLITE_IOERR). To prevent SQLite from attempting this,
 **   it should be configured to store all temporary database files in 
-**   main memory (see pragma "temp_store" or the TEMP_STORE compile time
-**   option).
+**   main memory (see pragma "temp_store" or the SQLITE_TEMP_STORE compile 
+**   time option).
 **
 ** ASSUMPTIONS:
 **

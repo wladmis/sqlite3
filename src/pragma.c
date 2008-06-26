@@ -127,7 +127,7 @@ static int invalidateTempStorage(Parse *pParse){
 #ifndef SQLITE_OMIT_PAGER_PRAGMAS
 /*
 ** If the TEMP database is open, close it and mark the database schema
-** as needing reloading.  This must be done when using the TEMP_STORE
+** as needing reloading.  This must be done when using the SQLITE_TEMP_STORE
 ** or DEFAULT_TEMP_STORE pragmas.
 */
 static int changeTempStorage(Parse *pParse, const char *zStorageType){
@@ -674,9 +674,9 @@ void sqlite3Pragma(
           goto pragma_out;
         }
       }
-      if( TEMP_STORE==0
-       || (TEMP_STORE==1 && db->temp_store<=1)
-       || (TEMP_STORE==2 && db->temp_store==1)
+      if( SQLITE_TEMP_STORE==0
+       || (SQLITE_TEMP_STORE==1 && db->temp_store<=1)
+       || (SQLITE_TEMP_STORE==2 && db->temp_store==1)
       ){
         invalidateTempStorage(pParse);
       }
