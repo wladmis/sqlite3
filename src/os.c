@@ -275,4 +275,3 @@ int sqlite3_vfs_unregister(sqlite3_vfs *pVfs){
   sqlite3_mutex_leave(mutex);
   return SQLITE_OK;
 }
-
