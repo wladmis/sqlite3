@@ -353,4 +353,11 @@ do_test incrblob2-7.5 {
   close $h
 } {}
 
+#do_test incrblob2-8.5 {
+  #execsql BEGIN
+  #db eval {SELECT * FROM t2} {
+  #execsql "DROP TABLE t2"
+  #}
+#} {}
+
 finish_test

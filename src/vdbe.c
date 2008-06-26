@@ -1428,7 +1428,7 @@ case OP_ShiftRight: {           /* same as TK_RSHIFT, in1, in2, out3 */
 
 /* Opcode: AddImm  P1 P2 * * *
 ** 
-** Add the constant P2 the value in register P1.
+** Add the constant P2 to the value in register P1.
 ** The result is always an integer.
 **
 ** To force any register to be an integer, just add 0.

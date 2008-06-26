@@ -1787,7 +1787,7 @@ static int codeEqualityTerm(
 
     assert( pX->op==TK_IN );
     iReg = iTarget;
-    eType = sqlite3FindInIndex(pParse, pX, 1);
+    eType = sqlite3FindInIndex(pParse, pX, 0);
     iTab = pX->iTable;
     sqlite3VdbeAddOp2(v, OP_Rewind, iTab, 0);
     VdbeComment((v, "%.*s", pX->span.n, pX->span.z));
