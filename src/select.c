@@ -2340,7 +2340,7 @@ static int generateOutputSubroutine(
   Vdbe *v = pParse->pVdbe;
   int iContinue;
   int addr;
-  if( v==0 ) return 0;
+  if( pParse->db->mallocFailed ) return 0;
 
   addr = sqlite3VdbeCurrentAddr(v);
   iContinue = sqlite3VdbeMakeLabel(v);
