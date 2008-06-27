@@ -2578,7 +2578,7 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
     case TK_IN: {
       int rNotFound = 0;
       int rMayHaveNull = 0;
-      int j1, j2, j3, j4, j5;
+      int j2, j3, j4, j5;
       char affinity;
       int eType;
 
