@@ -411,6 +411,10 @@ static int memsys5Init(void *NotUsed){
   int nMinLog;                 /* Log of minimum allocation size in bytes*/
   int iOffset;
 
+  if( !zByte ){
+    return SQLITE_ERROR;
+  }
+
   nMinLog = memsys5Log(sqlite3Config.mnReq);
   mem5.nAtom = (1<<nMinLog);
   while( sizeof(Mem5Link)>mem5.nAtom ){
