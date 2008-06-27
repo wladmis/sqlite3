@@ -290,7 +290,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
         WRITE_UTF8(z, c);
       }
     }else{
-      /* UTF-16 Little-endian -> UTF-8 */
+      /* UTF-16 Big-endian -> UTF-8 */
       while( zIn<zTerm ){
         READ_UTF16BE(zIn, c); 
         WRITE_UTF8(z, c);
