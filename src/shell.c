@@ -2062,7 +2062,8 @@ int main(int argc, char **argv){
       int nHistory;
       printf(
         "SQLite version %s\n"
-        "Enter \".help\" for instructions\n",
+        "Enter \".help\" for instructions\n"
+        "Enter SQL statements terminated with a \";\"\n",
         sqlite3_libversion()
       );
       zHome = find_home_dir();
