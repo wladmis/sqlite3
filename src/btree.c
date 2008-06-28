@@ -2690,7 +2690,6 @@ int sqlite3BtreeRollbackStmt(Btree *p){
   pBt->db = p->db;
   if( pBt->inStmt && !pBt->readOnly ){
     rc = sqlite3PagerStmtRollback(pBt->pPager);
-    assert( countWriteCursors(pBt)==0 );
     pBt->inStmt = 0;
   }
   sqlite3BtreeLeave(p);
