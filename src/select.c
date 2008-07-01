@@ -2895,6 +2895,9 @@ static int multiSelectOrderBy(
 
   /* Reassembly the compound query so that it will be freed correctly
   ** by the calling function */
+  if( p->pPrior ){
+    sqlite3SelectDelete(p->pPrior);
+  }
   p->pPrior = pPrior;
 
   /*** TBD:  Insert subroutine calls to close cursors on incomplete
