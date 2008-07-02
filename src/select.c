@@ -2347,7 +2347,6 @@ static int generateOutputSubroutine(
   Vdbe *v = pParse->pVdbe;
   int iContinue;
   int addr;
-  if( pParse->db->mallocFailed ) return 0;
 
   addr = sqlite3VdbeCurrentAddr(v);
   iContinue = sqlite3VdbeMakeLabel(v);
@@ -2364,6 +2363,7 @@ static int generateOutputSubroutine(
     sqlite3ExprCodeCopy(pParse, pIn->iMem, regPrev+1, pIn->nMem);
     sqlite3VdbeAddOp2(v, OP_Integer, 1, regPrev);
   }
+  if( pParse->db->mallocFailed ) return 0;
 
   /* Suppress the the first OFFSET entries if there is an OFFSET clause
   */
