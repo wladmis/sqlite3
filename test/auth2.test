@@ -131,11 +131,11 @@ do_test auth2-2.3 {
 } {SQLITE_SELECT {} {} {} {}
 SQLITE_READ v2 a main {}
 SQLITE_READ v2 b main {}
-SQLITE_SELECT {} {} {} v2
 SQLITE_READ t2 x main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 z main v2
+SQLITE_SELECT {} {} {} v2
 }
 do_test auth2-2.4 {
   db2 eval {
@@ -149,19 +149,19 @@ do_test auth2-2.4 {
 } {SQLITE_SELECT {} {} {} {}
 SQLITE_READ v2 b main {}
 SQLITE_READ v2 a main {}
-SQLITE_SELECT {} {} {} v2
 SQLITE_READ t2 x main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 z main v2
+SQLITE_SELECT {} {} {} v2
 SQLITE_SELECT {} {} {} {}
 SQLITE_READ v2 b main {}
 SQLITE_READ v2 a main {}
-SQLITE_SELECT {} {} {} v2
 SQLITE_READ t2 x main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 y main v2
 SQLITE_READ t2 z main v2
+SQLITE_SELECT {} {} {} v2
 }
 db2 close
 
