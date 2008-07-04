@@ -1,6 +1,6 @@
 Name: sqlite3
 Version: 3.5.9
-Release: alt1
+Release: alt2
 
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
@@ -180,6 +180,10 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_docdir/lemon/lemon.html
 
 %changelog
+* Fri Jul 04 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt2
+- sqlite3.pc: provide full version (#16268)
+- made sqlite3-doc package noarch
+
 * Sat May 24 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt1
 - 3.4.2 -> 3.5.9
 - upgraded fts2 subpackage to fts2
