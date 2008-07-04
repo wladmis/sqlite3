@@ -3568,6 +3568,7 @@ int sqlite3GetTempReg(Parse *pParse){
 }
 void sqlite3ReleaseTempReg(Parse *pParse, int iReg){
   if( iReg && pParse->nTempReg<ArraySize(pParse->aTempReg) ){
+    sqlite3ExprWritableRegister(pParse, iReg, iReg);
     pParse->aTempReg[pParse->nTempReg++] = iReg;
   }
 }
