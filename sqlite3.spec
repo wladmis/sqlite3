@@ -44,6 +44,7 @@ Requires: lib%name = %version-%release
 Summary: An Embeddable SQL Database Engine (documentation)
 Group: Development/Documentation
 Conflicts: %name < 3.3.8-alt1
+BuildArch: noarch
 
 %package -n lemon
 Summary: The Lemon Parser Generator
