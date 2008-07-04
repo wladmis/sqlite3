@@ -1081,5 +1081,30 @@ do_test vtab1-14.4 {
   set echo_module
 } [list xBestIndex {SELECT rowid, * FROM 'c'} xFilter {SELECT rowid, * FROM 'c'}]
 
+do_test vtab1-15.1 {
+  execsql {
+    CREATE TABLE t1(a, b, c);
+    CREATE VIRTUAL TABLE echo_t1 USING echo(t1);
+  }
+} {}
+do_test vtab1-15.2 {
+  execsql {
+    INSERT INTO echo_t1(rowid) VALUES(45);
+    SELECT rowid, * FROM echo_t1;
+  }
+} {45 {} {} {}}
+do_test vtab1-15.3 {
+  execsql {
+    INSERT INTO echo_t1(rowid) VALUES(NULL);
+    SELECT rowid, * FROM echo_t1;
+  }
+} {45 {} {} {} 46 {} {} {}}
+do_test vtab1-15.4 {
+  catchsql {
+    INSERT INTO echo_t1(rowid) VALUES('new rowid');
+  }
+} {1 {datatype mismatch}}
+
+
 unset -nocomplain echo_module_begin_fail
 finish_test

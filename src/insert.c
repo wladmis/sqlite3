@@ -836,7 +836,7 @@ void sqlite3Insert(
         VdbeOp *pOp;
         sqlite3ExprCode(pParse, pList->a[keyColumn].pExpr, regRowid);
         pOp = sqlite3VdbeGetOp(v, sqlite3VdbeCurrentAddr(v) - 1);
-        if( pOp && pOp->opcode==OP_Null ){
+        if( pOp && pOp->opcode==OP_Null && !IsVirtual(pTab) ){
           appendFlag = 1;
           pOp->opcode = OP_NewRowid;
           pOp->p1 = baseCur;
@@ -849,9 +849,14 @@ void sqlite3Insert(
       */
       if( !appendFlag ){
         int j1;
-        j1 = sqlite3VdbeAddOp1(v, OP_NotNull, regRowid);
-        sqlite3VdbeAddOp3(v, OP_NewRowid, baseCur, regRowid, regAutoinc);
-        sqlite3VdbeJumpHere(v, j1);
+        if( !IsVirtual(pTab) ){
+          j1 = sqlite3VdbeAddOp1(v, OP_NotNull, regRowid);
+          sqlite3VdbeAddOp3(v, OP_NewRowid, baseCur, regRowid, regAutoinc);
+          sqlite3VdbeJumpHere(v, j1);
+        }else{
+          j1 = sqlite3VdbeCurrentAddr(v);
+          sqlite3VdbeAddOp2(v, OP_IsNull, regRowid, j1+2);
+        }
         sqlite3VdbeAddOp1(v, OP_MustBeInt, regRowid);
       }
     }else if( IsVirtual(pTab) ){
