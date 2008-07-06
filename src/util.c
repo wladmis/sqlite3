@@ -34,6 +34,9 @@ int sqlite3IsNaN(double x){
   **      which depend on an exact implementation of IEEE or ISO 
   **      rules/specifications for math functions.
   */
+#ifdef __FAST_MATH__
+# error SQLite will not work correctly with the -ffast-math option of GCC.
+#endif
   volatile double y = x;
   return x!=y;
 }
