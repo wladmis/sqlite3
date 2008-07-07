@@ -102,7 +102,7 @@ static int get_sqlite_pointer(
 /*
 ** Decode a pointer to an sqlite3 object.
 */
-static int getDbPointer(Tcl_Interp *interp, const char *zA, sqlite3 **ppDb){
+int getDbPointer(Tcl_Interp *interp, const char *zA, sqlite3 **ppDb){
   struct SqliteDb *p;
   Tcl_CmdInfo cmdInfo;
   if( Tcl_GetCommandInfo(interp, zA, &cmdInfo) ){

@@ -1189,10 +1189,7 @@ static sqlite3_module echoModule = {
 /*
 ** Decode a pointer to an sqlite3 object.
 */
-static int getDbPointer(Tcl_Interp *interp, const char *zA, sqlite3 **ppDb){
-  *ppDb = (sqlite3*)sqlite3TextToPtr(zA);
-  return TCL_OK;
-}
+extern int getDbPointer(Tcl_Interp *interp, const char *zA, sqlite3 **ppDb);
 
 static void moduleDestroy(void *p){
   sqlite3_free(p);
