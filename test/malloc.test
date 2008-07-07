@@ -594,6 +594,22 @@ ifcapable view&&trigger {
   }
 }
 
+do_malloc_test 25 -sqlprep {
+  CREATE TABLE abc(a, b, c);
+  CREATE INDEX i1 ON abc(a, b);
+  INSERT INTO abc VALUES(1, 2, 3);
+  INSERT INTO abc VALUES(4, 5, 6);
+} -tclbody {
+  # For each UPDATE executed, the cursor used for the SELECT statement
+  # must be "saved". Because the cursor is open on an index, this requires
+  # a malloc() to allocate space to save the index key. This test case is
+  # aimed at testing the response of the library to a failure in that
+  # particular malloc() call.
+  db eval {SELECT a FROM abc ORDER BY a} {
+    db eval {UPDATE abc SET b = b - 1 WHERE a = $a}
+  }
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}
