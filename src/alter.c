@@ -55,7 +55,7 @@ static void renameTableFunc(
 
   /* The principle used to locate the table name in the CREATE TABLE 
   ** statement is that the table name is the first non-space token that
-  ** is immediately followed by a left parenthesis - TK_LP - or "USING" TK_USING.
+  ** is immediately followed by a TK_LP or TK_USING token.
   */
   if( zSql ){
     do {
