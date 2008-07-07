@@ -612,19 +612,17 @@ void sqlite3_progress_handler(
   int (*xProgress)(void*), 
   void *pArg
 ){
-  if( sqlite3SafetyCheckOk(db) ){
-    sqlite3_mutex_enter(db->mutex);
-    if( nOps>0 ){
-      db->xProgress = xProgress;
-      db->nProgressOps = nOps;
-      db->pProgressArg = pArg;
-    }else{
-      db->xProgress = 0;
-      db->nProgressOps = 0;
-      db->pProgressArg = 0;
-    }
-    sqlite3_mutex_leave(db->mutex);
+  sqlite3_mutex_enter(db->mutex);
+  if( nOps>0 ){
+    db->xProgress = xProgress;
+    db->nProgressOps = nOps;
+    db->pProgressArg = pArg;
+  }else{
+    db->xProgress = 0;
+    db->nProgressOps = 0;
+    db->pProgressArg = 0;
   }
+  sqlite3_mutex_leave(db->mutex);
 }
 #endif
 
@@ -647,9 +645,7 @@ int sqlite3_busy_timeout(sqlite3 *db, int ms){
 ** Cause any pending operation to stop at its earliest opportunity.
 */
 void sqlite3_interrupt(sqlite3 *db){
-  if( sqlite3SafetyCheckOk(db) ){
-    db->u1.isInterrupted = 1;
-  }
+  db->u1.isInterrupted = 1;
 }
 
 

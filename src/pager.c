@@ -2651,9 +2651,11 @@ static void pager_truncate_cache(Pager *pPager){
       ppPg = &pPg->pNextAll;
     }else{
       *ppPg = pPg->pNextAll;
+#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
       if( *ppPg ){
         (*ppPg)->pPrevAll = pPg->pPrevAll;
       }
+#endif
       IOTRACE(("PGFREE %p %d\n", pPager, pPg->pgno));
       PAGER_INCR(sqlite3_pager_pgfree_count);
       unlinkPage(pPg);
