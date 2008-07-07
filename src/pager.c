@@ -2651,6 +2651,9 @@ static void pager_truncate_cache(Pager *pPager){
       ppPg = &pPg->pNextAll;
     }else{
       *ppPg = pPg->pNextAll;
+      if( *ppPg ){
+        (*ppPg)->pPrevAll = pPg->pPrevAll;
+      }
       IOTRACE(("PGFREE %p %d\n", pPager, pPg->pgno));
       PAGER_INCR(sqlite3_pager_pgfree_count);
       unlinkPage(pPg);
