@@ -1665,6 +1665,7 @@ static int test_create_collation_v2(
 ){
   TestCollationX *p;
   sqlite3 *db;
+  int rc;
 
   if( objc!=5 ){
     Tcl_WrongNumArgs(interp, 1, objv, "DB-HANDLE NAME CMP-PROC DEL-PROC");
@@ -1679,7 +1680,15 @@ static int test_create_collation_v2(
   Tcl_IncrRefCount(p->pCmp);
   Tcl_IncrRefCount(p->pDel);
 
-  sqlite3_create_collation_v2(db, Tcl_GetString(objv[2]), SQLITE_UTF8, 
+  rc = sqlite3_create_collation_v2(db, Tcl_GetString(objv[2]), 16, 
+      (void *)p, testCreateCollationCmp, testCreateCollationDel
+  );
+  if( rc!=SQLITE_MISUSE ){
+    Tcl_AppendResult(interp, "sqlite3_create_collate_v2() failed to detect "
+      "an invalid encoding", (char*)0);
+    return TCL_ERROR;
+  }
+  rc = sqlite3_create_collation_v2(db, Tcl_GetString(objv[2]), SQLITE_UTF8, 
       (void *)p, testCreateCollationCmp, testCreateCollationDel
   );
   return TCL_OK;

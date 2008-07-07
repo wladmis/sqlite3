@@ -2433,6 +2433,10 @@ int sqlite3_open_v2(
 ** However, the error string might be overwritten or deallocated by
 ** subsequent calls to other SQLite interface functions.
 **
+** If an interface fails with SQLITE_MISUSE, that means the interface
+** was invoked incorrectly by the application.  In that case, the
+** error code and message may or may not be set.
+**
 ** INVARIANTS:
 **
 ** {F12801} The [sqlite3_errcode(D)] interface returns the numeric
