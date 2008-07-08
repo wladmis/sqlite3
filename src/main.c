@@ -130,9 +130,15 @@ int sqlite3_shutdown(void){
   sqlite3_mutex_free(sqlite3Config.pInitMutex);
   sqlite3Config.pInitMutex = 0;
   sqlite3Config.isMallocInit = 0;
-  sqlite3_os_end();
-  sqlite3MallocEnd();
-  sqlite3MutexEnd();
+  if( sqlite3Config.isInit ){
+    sqlite3_os_end();
+  }
+  if( sqlite3Config.m.xShutdown ){
+    sqlite3MallocEnd();
+  }
+  if( sqlite3Config.mutex.xMutexEnd ){
+    sqlite3MutexEnd();
+  }
   sqlite3Config.isInit = 0;
   return SQLITE_OK;
 }
