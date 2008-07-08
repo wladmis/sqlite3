@@ -2833,6 +2833,7 @@ static int test_bind_text16(
   rc = sqlite3_bind_text16(pStmt, idx, (void *)value, bytes, xDel);
   if( sqlite3TestErrCode(interp, StmtToDb(pStmt), rc) ) return TCL_ERROR;
   if( rc!=SQLITE_OK ){
+    Tcl_AppendResult(interp, sqlite3TestErrorName(rc), 0);
     return TCL_ERROR;
   }
 
