@@ -96,8 +96,7 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
   db->flags |= SQLITE_WriteSchema | SQLITE_IgnoreChecks;
 
   if( !db->autoCommit ){
-    sqlite3SetString(pzErrMsg, "cannot VACUUM from within a transaction", 
-       (char*)0);
+    sqlite3SetString(pzErrMsg, db, "cannot VACUUM from within a transaction");
     rc = SQLITE_ERROR;
     goto end_of_vacuum;
   }

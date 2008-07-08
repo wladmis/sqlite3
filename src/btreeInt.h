@@ -612,8 +612,8 @@ struct IntegrityCk {
   int nPage;        /* Number of pages in the database */
   int *anRef;       /* Number of times each page is referenced */
   int mxErr;        /* Stop accumulating errors when this reaches zero */
-  char *zErrMsg;    /* An error message.  NULL if no errors seen. */
   int nErr;         /* Number of messages written to zErrMsg so far */
+  StrAccum errMsg;  /* Accumulate the error message text here */
 };
 
 /*

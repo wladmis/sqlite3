@@ -1737,8 +1737,9 @@ error_out:
   if( pAutoinc ) *pAutoinc = autoinc;
 
   if( SQLITE_OK==rc && !pTab ){
-    sqlite3SetString(&zErrMsg, "no such table column: ", zTableName, ".", 
-        zColumnName, 0);
+    sqlite3_free(zErrMsg);
+    zErrMsg = sqlite3MPrintf("no such table column: %s.%s", zTableName,
+        zColumnName);
     rc = SQLITE_ERROR;
   }
   sqlite3Error(db, rc, (zErrMsg?"%s":0), zErrMsg);
