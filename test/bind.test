@@ -91,6 +91,19 @@ do_test bind-1.9 {
   execsql {SELECT rowid, * FROM t1}
 } {1 123 abcdefg {} 2 456 abcdefg {}}
 
+do_test bind-1.10 {
+   set rc [catch {
+     sqlite3_prepare db {INSERT INTO t1 VALUES($abc:123,?,:abc)} -1 TAIL
+   } msg]
+   lappend rc $msg
+} {1 {(1) near ":123": syntax error}}
+do_test bind-1.11 {
+   set rc [catch {
+     sqlite3_prepare db {INSERT INTO t1 VALUES(@abc:xyz,?,:abc)} -1 TAIL
+   } msg]
+   lappend rc $msg
+} {1 {(1) near ":xyz": syntax error}}
+
 do_test bind-1.99 {
   sqlite3_finalize $VM
 } SQLITE_OK
