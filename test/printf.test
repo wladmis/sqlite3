@@ -3612,6 +3612,16 @@ do_test printf-14.2 {
 do_test printf-14.3 {
   sqlite3_mprintf_str {abc-%T-123} 0 0 {not used}
 } {abc-}
+do_test printf-14.4 {
+  sqlite3_mprintf_str {abc-%#} 0 0 {not used}
+} {abc-}
+
+for {set i 2} {$i<200} {incr i} {
+  set res [string repeat { } [expr {$i-1}]]x
+  do_test printf-14.10.$i "
+    sqlite3_mprintf_str {%*.*s} $i 500 x
+  " $res
+}
 
 do_test printf-15.1 {
   sqlite3_snprintf_int 5 {12345} 0
