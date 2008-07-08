@@ -478,8 +478,9 @@ static struct {
 ** loaded by every new database connection.
 */
 int sqlite3_auto_extension(void *xInit){
+  int rc = SQLITE_OK;
 #ifndef SQLITE_OMIT_AUTOINIT
-  int rc = sqlite3_initialize();
+  rc = sqlite3_initialize();
   if( rc ){
     return rc;
   }else

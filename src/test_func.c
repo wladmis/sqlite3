@@ -387,6 +387,7 @@ int Sqlitetest_func_Init(Tcl_Interp *interp){
   for(i=0; i<sizeof(aObjCmd)/sizeof(aObjCmd[0]); i++){
     Tcl_CreateObjCommand(interp, aObjCmd[i].zName, aObjCmd[i].xProc, 0, 0);
   }
+  sqlite3_initialize();
   sqlite3_auto_extension((void*)registerTestFunctions);
   return TCL_OK;
 }
