@@ -2157,7 +2157,8 @@ WhereInfo *sqlite3WhereBegin(
                                 ppIdxInfo);
         flags = WHERE_VIRTUALTABLE;
         pIndex = *ppIdxInfo;
-        if( pIndex && pIndex->orderByConsumed ){
+        assert( pIndex!=0 );
+        if( pIndex->orderByConsumed ){
           flags = WHERE_VIRTUALTABLE | WHERE_ORDERBY;
         }
         pIdx = 0;
@@ -2546,8 +2547,9 @@ WhereInfo *sqlite3WhereBegin(
       if( (wflags&WHERE_ORDERBY_MIN)!=0
        && (pLevel->flags&WHERE_ORDERBY)
        && (pIdx->nColumn>nEq)
-       && (pOrderBy->a[0].pExpr->iColumn==pIdx->aiColumn[nEq])
       ){
+        assert( pOrderBy->nExpr==1 );
+        assert( pOrderBy->a[0].pExpr->iColumn==pIdx->aiColumn[nEq] );
         isMinQuery = 1;
       }
 

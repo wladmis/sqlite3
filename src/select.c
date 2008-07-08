@@ -4241,7 +4241,7 @@ int sqlite3Select(
       if( flag ){
         pDel = pMinMax = sqlite3ExprListDup(db, p->pEList->a[0].pExpr->pList);
         if( pMinMax && !db->mallocFailed ){
-          pMinMax->a[0].sortOrder = ((flag==WHERE_ORDERBY_MIN)?0:1);
+          pMinMax->a[0].sortOrder = flag!=WHERE_ORDERBY_MIN;
           pMinMax->a[0].pExpr->op = TK_COLUMN;
         }
       }
