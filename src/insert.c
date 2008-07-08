@@ -1258,7 +1258,7 @@ void sqlite3GenerateConstraintChecks(
     regR = sqlite3GetTempReg(pParse);
     sqlite3VdbeAddOp2(v, OP_SCopy, regRowid-hasTwoRowids, regR);
     j3 = sqlite3VdbeAddOp4(v, OP_IsUnique, baseCur+iCur+1, 0,
-                           regR, (char*)aRegIdx[iCur],
+                           regR, SQLITE_INT_TO_PTR(aRegIdx[iCur]),
                            P4_INT32);
 
     /* Generate code that executes if the new index entry is not unique */

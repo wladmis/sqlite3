@@ -2605,7 +2605,7 @@ WhereInfo *sqlite3WhereBegin(
       testcase( op==OP_MoveLe );
       testcase( op==OP_MoveLt );
       sqlite3VdbeAddOp4(v, op, iIdxCur, nxt, regBase, 
-                        (char*)nConstraint, P4_INT32);
+                        SQLITE_INT_TO_PTR(nConstraint), P4_INT32);
 
       /* Load the value for the inequality constraint at the end of the
       ** range (if any).
@@ -2627,7 +2627,7 @@ WhereInfo *sqlite3WhereBegin(
       testcase( op==OP_IdxGE );
       testcase( op==OP_IdxLT );
       sqlite3VdbeAddOp4(v, op, iIdxCur, nxt, regBase,
-                        (char*)nConstraint, P4_INT32);
+                        SQLITE_INT_TO_PTR(nConstraint), P4_INT32);
       sqlite3VdbeChangeP5(v, endEq!=bRev);
 
       /* If there are inequality constraints, check that the value

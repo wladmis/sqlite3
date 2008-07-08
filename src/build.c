@@ -2302,7 +2302,7 @@ static void sqlite3RefillIndex(Parse *pParse, Index *pIndex, int memRootPage){
     regRowid = regIdxKey + pIndex->nColumn;
     j1 = sqlite3VdbeAddOp3(v, OP_IsNull, regIdxKey, 0, pIndex->nColumn);
     j2 = sqlite3VdbeAddOp4(v, OP_IsUnique, iIdx,
-                           0, regRowid, (char*)regRecord, P4_INT32);
+                           0, regRowid, SQLITE_INT_TO_PTR(regRecord), P4_INT32);
     sqlite3VdbeAddOp4(v, OP_Halt, SQLITE_CONSTRAINT, OE_Abort, 0,
                     "indexed columns are not unique", P4_STATIC);
     sqlite3VdbeJumpHere(v, j1);
