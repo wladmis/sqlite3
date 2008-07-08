@@ -530,7 +530,7 @@ void sqlite3Insert(
     VdbeComment((v, "Jump over SELECT coroutine"));
 
     /* Resolve the expressions in the SELECT statement and execute it. */
-    rc = sqlite3Select(pParse, pSelect, &dest, 0, 0, 0, 0);
+    rc = sqlite3Select(pParse, pSelect, &dest, 0, 0, 0);
     if( rc || pParse->nErr || db->mallocFailed ){
       goto insert_cleanup;
     }

@@ -106,7 +106,7 @@ void sqlite3MaterializeView(
     pDup = sqlite3SelectNew(pParse, 0, pFrom, pWhere, 0, 0, 0, 0, 0, 0);
   }
   sqlite3SelectDestInit(&dest, SRT_EphemTab, iCur);
-  sqlite3Select(pParse, pDup, &dest, 0, 0, 0, 0);
+  sqlite3Select(pParse, pDup, &dest, 0, 0, 0);
   sqlite3SelectDelete(pDup);
 }
 #endif /* !defined(SQLITE_OMIT_VIEW) && !defined(SQLITE_OMIT_TRIGGER) */

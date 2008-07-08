@@ -649,7 +649,7 @@ static void updateVirtualTable(
   /* fill the ephemeral table 
   */
   sqlite3SelectDestInit(&dest, SRT_Table, ephemTab);
-  sqlite3Select(pParse, pSelect, &dest, 0, 0, 0, 0);
+  sqlite3Select(pParse, pSelect, &dest, 0, 0, 0);
 
   /* Generate code to scan the ephemeral table and call VUpdate. */
   iReg = ++pParse->nMem;

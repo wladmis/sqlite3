@@ -1888,7 +1888,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr, int rMayHaveNull){
         sqlite3SelectDestInit(&dest, SRT_Set, pExpr->iTable);
         dest.affinity = (int)affinity;
         assert( (pExpr->iTable&0x0000FFFF)==pExpr->iTable );
-        if( sqlite3Select(pParse, pExpr->pSelect, &dest, 0, 0, 0, 0) ){
+        if( sqlite3Select(pParse, pExpr->pSelect, &dest, 0, 0, 0) ){
           return;
         }
         pEList = pExpr->pSelect->pEList;
@@ -1969,7 +1969,7 @@ void sqlite3CodeSubselect(Parse *pParse, Expr *pExpr, int rMayHaveNull){
       }
       sqlite3ExprDelete(pSel->pLimit);
       pSel->pLimit = sqlite3PExpr(pParse, TK_INTEGER, 0, 0, &one);
-      if( sqlite3Select(pParse, pSel, &dest, 0, 0, 0, 0) ){
+      if( sqlite3Select(pParse, pSel, &dest, 0, 0, 0) ){
         return;
       }
       pExpr->iColumn = dest.iParm;
