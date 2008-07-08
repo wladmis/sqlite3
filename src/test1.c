@@ -1344,8 +1344,8 @@ static int sqlite3_mprintf_hexdouble(
 ){
   char *z;
   double r;
-  unsigned  x1, x2;
-  long long unsigned d;
+  unsigned int x1, x2;
+  sqlite_uint64 d;
   if( argc!=3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
        " FORMAT STRING\"", 0);
