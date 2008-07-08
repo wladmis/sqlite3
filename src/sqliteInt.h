@@ -1739,6 +1739,7 @@ struct Sqlite3Config {
   int bMemstat;                     /* True to enable memory status */
   int bCoreMutex;                   /* True to enable core mutexing */
   int bFullMutex;                   /* True to enable full mutexing */
+  int mxStrlen;                     /* Maximum string length */
   sqlite3_mem_methods m;            /* Low-level memory allocation interface */
   sqlite3_mutex_methods mutex;      /* Low-level mutex interface */
   void *pHeap;                      /* Heap storage space */
@@ -1786,6 +1787,7 @@ struct Sqlite3Config {
 int sqlite3StrICmp(const char *, const char *);
 int sqlite3StrNICmp(const char *, const char *, int);
 int sqlite3IsNumber(const char*, int*, u8);
+int sqlite3Strlen(sqlite3*, const char*);
 
 int sqlite3MallocInit(void);
 void sqlite3MallocEnd(void);

@@ -42,6 +42,20 @@ int sqlite3IsNaN(double x){
 }
 
 /*
+** Return the length of a string, except do not allow the string length
+** to exceed the SQLITE_LIMIT_LENGTH setting.
+*/
+int sqlite3Strlen(sqlite3 *db, const char *z){
+  const char *z2 = z;
+  while( *z2 ){ z2++; }
+  if( z2 > &z[db->aLimit[SQLITE_LIMIT_LENGTH]] ){
+    return db->aLimit[SQLITE_LIMIT_LENGTH];
+  }else{
+    return (int)(z2 - z);
+  }
+}
+
+/*
 ** Set the most recent error code and error string for the sqlite
 ** handle "db". The error code is set to "err_code".
 **
