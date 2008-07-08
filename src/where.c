@@ -2157,8 +2157,7 @@ WhereInfo *sqlite3WhereBegin(
                                 ppIdxInfo);
         flags = WHERE_VIRTUALTABLE;
         pIndex = *ppIdxInfo;
-        assert( pIndex!=0 );
-        if( pIndex->orderByConsumed ){
+        if( pIndex && pIndex->orderByConsumed ){
           flags = WHERE_VIRTUALTABLE | WHERE_ORDERBY;
         }
         pIdx = 0;
