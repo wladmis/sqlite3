@@ -790,6 +790,7 @@ proc do_ioerr_test {testname args} {
     if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-cksum)} {
       do_test $testname.$n.6 {
         catch {db close}
+        catch {db2 close}
         set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
         cksum
       } $checksum
