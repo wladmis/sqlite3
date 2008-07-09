@@ -438,7 +438,7 @@ do_test bind-9.2 {
   } msg]
   lappend rc $msg
 } {1 {(1) variable number must be between ?1 and ?999}}
-do_test bind-9.3 {
+do_test bind-9.3.1 {
   set VM [
     sqlite3_prepare $DB {
       INSERT INTO t2(a,b) VALUES(?1,?999)
@@ -446,6 +446,15 @@ do_test bind-9.3 {
   ]
   sqlite3_bind_parameter_count $VM
 } {999}
+catch {sqlite3_finalize $VM}
+do_test bind-9.3.2 {
+  set VM [
+    sqlite3_prepare $DB {
+      INSERT INTO t2(a,b) VALUES(?2,?998)
+    } -1 TAIL
+  ]
+  sqlite3_bind_parameter_count $VM
+} {998}
 catch {sqlite3_finalize $VM}
 do_test bind-9.4 {
   set VM [
