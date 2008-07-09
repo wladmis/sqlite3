@@ -458,7 +458,7 @@ void sqlite3Update(
       sqlite3ExprCacheAffinityChange(pParse, regCols, pTab->nCol);
     }
     sqlite3ReleaseTempRange(pParse, regCols, pTab->nCol);
-    if( pParse->nErr ) goto update_cleanup;
+    /* if( pParse->nErr ) goto update_cleanup; */
     sqlite3VdbeAddOp3(v, OP_Insert, newIdx, regRow, regRowid);
     sqlite3ReleaseTempReg(pParse, regRowid);
     sqlite3ReleaseTempReg(pParse, regRow);

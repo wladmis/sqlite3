@@ -287,6 +287,16 @@ proc finalize_testing {} {
   if {$nErr>0} {
     puts "Failures on these tests: $::failList"
   }
+  set failsafe [lindex [sqlite3_status SQLITE_STATUS_FAILSAFE 1] 1]
+  if {$failsafe} {
+    puts "Failsafe error code [format 0x%08x $failsafe]"
+    incr nErr
+  }
+  set fs2 [lindex [sqlite3_status SQLITE_STATUS_FAILSAFE 0] 1]
+  if {$fs2} {
+    puts "Failsafe failed to reset"
+    incr nErr
+  }
   if {[llength $omitList]>0} {
     puts "Omitted test cases:"
     set prec {}

@@ -446,6 +446,17 @@ do_test misc7-18.1 {
   }
 } {}
 
+# Testing boundary conditions on sqlite3_status()
+#
+do_test misc7-19.1 {
+  sqlite3_status -1 0
+} {21 0 0}
+do_test misc7-19.2 {
+  sqlite3_status 1000 0
+} {21 0 0}
+
+
+
 db close
 file delete -force test.db
 
