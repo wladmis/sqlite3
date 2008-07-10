@@ -18,7 +18,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include "mutex.h"
 
 /* defined in test1.c */
 const char *sqlite3TestErrorName(int);
@@ -121,7 +120,7 @@ static void counterMutexEnter(sqlite3_mutex *p){
 static int counterMutexTry(sqlite3_mutex *p){
   assert( g.isInit );
   g.aCounter[p->eType]++;
-  if( g.disableTry ) return 0;
+  if( g.disableTry ) return SQLITE_BUSY;
   return g.m.xMutexTry(p->pReal);
 }
 
