@@ -84,4 +84,14 @@ do_test mutex2-2.10 {
 install_mutex_counters 0
 set disable_mutex_init 0
 autoinstall_test_functions
+
+# Mutex allocation works now.
+#
+
+do_test mutex2-3.1 {
+  set ptr [alloc_dealloc_mutex]
+  expr {$ptr!=0}
+} {1}
+
+
 finish_test

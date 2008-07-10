@@ -174,7 +174,6 @@ static int sqlite3MemInit(void *NotUsed){
 ** Deinitialize the memory allocation subsystem.
 */
 static void sqlite3MemShutdown(void *NotUsed){
-  sqlite3_mutex_free(mem.mutex);
   mem.mutex = 0;
 }
 
