@@ -937,6 +937,7 @@ int sqlite3SafetyCheckSickOrOk(sqlite3 *db){
   return 1;
 }
 
+#ifndef SQLITE_COVERAGE_TEST
 /*
 ** Report a failsafe() macro failure
 */
@@ -950,3 +951,4 @@ void sqlite3Failsafe(int iCode){
   */
   assert( iCode==0 );   /* Always fails if assert() is enabled */
 }
+#endif

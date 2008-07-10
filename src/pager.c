@@ -1848,7 +1848,7 @@ static int pager_playback(Pager *pPager, int isHot){
   sqlite3_vfs *pVfs = pPager->pVfs;
   i64 szJ;                 /* Size of the journal file in bytes */
   u32 nRec;                /* Number of Records in the journal */
-  int i;                   /* Loop counter */
+  u32 i;                   /* Loop counter */
   Pgno mxPg = 0;           /* Size of the original file in pages */
   int rc;                  /* Result code of a subroutine */
   int res = 1;             /* Value returned by sqlite3OsAccess() */
@@ -5347,19 +5347,5 @@ i64 sqlite3PagerJournalSizeLimit(Pager *pPager, i64 iLimit){
   }
   return pPager->journalSizeLimit;
 }
-
-#ifdef SQLITE_TEST
-/*
-** Print a listing of all referenced pages and their ref count.
-*/
-void sqlite3PagerRefdump(Pager *pPager){
-  PgHdr *pPg;
-  for(pPg=pPager->pAll; pPg; pPg=pPg->pNextAll){
-    if( pPg->nRef<=0 ) continue;
-    sqlite3DebugPrintf("PAGE %3d addr=%p nRef=%d\n", 
-       pPg->pgno, PGHDR_TO_DATA(pPg), pPg->nRef);
-  }
-}
-#endif
 
 #endif /* SQLITE_OMIT_DISKIO */

@@ -834,8 +834,7 @@ struct CollSeq {
 ** changing the affinity.
 */
 #define SQLITE_JUMPIFNULL   0x08  /* jumps if either operand is NULL */
-#define SQLITE_NULLEQUAL    0x10  /* compare NULLs equal */
-#define SQLITE_STOREP2      0x80  /* Store result in reg[P2] rather than jump */
+#define SQLITE_STOREP2      0x10  /* Store result in reg[P2] rather than jump */
 
 /*
 ** Each SQL table is represented in memory by an instance of the

@@ -96,10 +96,9 @@ int sqlite3_blob_open(
     memset(&sParse, 0, sizeof(Parse));
     sParse.db = db;
 
-    rc = sqlite3SafetyOn(db);
-    if( rc!=SQLITE_OK ){
+    if( sqlite3SafetyOn(db) ){
       sqlite3_mutex_leave(db->mutex);
-      return rc;
+      return SQLITE_MISUSE;
     }
 
     sqlite3BtreeEnterAll(db);

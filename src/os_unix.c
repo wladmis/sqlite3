@@ -543,6 +543,7 @@ static void releaseOpenCnt(struct openCnt *pOpen){
   }
 }
 
+#ifdef SQLITE_ENABLE_LOCKING_STYLE
 /*
 ** Tests a byte-range locking query to see if byte range locks are 
 ** supported, if not we fall back to dotlockLockingStyle.
@@ -566,6 +567,7 @@ static int testLockingStyle(int fd){
   */  
   return LOCKING_STYLE_DOTFILE;
 }
+#endif
 
 /* 
 ** If SQLITE_ENABLE_LOCKING_STYLE is defined, this function Examines the 
