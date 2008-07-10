@@ -3061,7 +3061,9 @@ static int flattenSubquery(
     }
     for(pSub1=pSub; pSub1; pSub1=pSub1->pPrior){
       if( pSub1->isAgg || pSub1->isDistinct 
-       || (pSub1->pPrior && pSub1->op!=TK_ALL) ){
+       || (pSub1->pPrior && pSub1->op!=TK_ALL) 
+       || !pSub1->pSrc || pSub1->pSrc->nSrc!=1
+      ){
         return 0;
       }
     }
