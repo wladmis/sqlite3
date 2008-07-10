@@ -194,6 +194,25 @@ run_tests "singlethread" -description {
   } SQLITE_OK
 }
 
+run_tests "nomutex" -description {
+  Tests run with the SQLITE_OPEN_SINGLETHREADED flag passed to sqlite3_open().
+} -initialize {
+  rename sqlite3 sqlite3_nomutex
+  proc sqlite3 {args} {
+    if {[string range [lindex $args 0] 0 0] ne "-"} {
+      lappend args -nomutex 1
+    }
+    uplevel [concat sqlite3_nomutex $args]
+  }
+} -include {
+  delete.test   delete2.test  insert.test  rollback.test  select1.test
+  select2.test  trans.test    update.test  vacuum.test    types.test
+  types2.test   types3.test
+} -shutdown {
+  rename sqlite3 {}
+  rename sqlite3_nomutex sqlite3
+}
+
 # Run some tests in SQLITE_CONFIG_MULTITHREAD mode.
 #
 run_tests "multithread" -description {

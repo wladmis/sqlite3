@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "mutex.h"
 
 /* defined in test1.c */
 const char *sqlite3TestErrorName(int);

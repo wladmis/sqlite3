@@ -1247,11 +1247,16 @@ static int openDatabase(
   sqlite3 *db;
   int rc;
   CollSeq *pColl;
+  int isThreadsafe = 1;
 
 #ifndef SQLITE_OMIT_AUTOINIT
   rc = sqlite3_initialize();
   if( rc ) return rc;
 #endif
+
+  if( flags&SQLITE_OPEN_NOMUTEX ){
+    isThreadsafe = 0;
+  }
 
   /* Remove harmful bits from the flags parameter */
   flags &=  ~( SQLITE_OPEN_DELETEONCLOSE |
@@ -1261,13 +1266,14 @@ static int openDatabase(
                SQLITE_OPEN_MAIN_JOURNAL | 
                SQLITE_OPEN_TEMP_JOURNAL | 
                SQLITE_OPEN_SUBJOURNAL | 
-               SQLITE_OPEN_MASTER_JOURNAL
+               SQLITE_OPEN_MASTER_JOURNAL |
+               SQLITE_OPEN_NOMUTEX
              );
 
   /* Allocate the sqlite data structure */
   db = sqlite3MallocZero( sizeof(sqlite3) );
   if( db==0 ) goto opendb_out;
-  if( sqlite3Config.bFullMutex ){
+  if( sqlite3Config.bFullMutex && isThreadsafe ){
     db->mutex = sqlite3MutexAlloc(SQLITE_MUTEX_RECURSIVE);
     if( db->mutex==0 ){
       sqlite3_free(db);
@@ -1424,7 +1430,7 @@ static int openDatabase(
 
 opendb_out:
   if( db ){
-    assert( db->mutex!=0 || sqlite3Config.bFullMutex==0 );
+    assert( db->mutex!=0 || isThreadsafe==0 || sqlite3Config.bFullMutex==0 );
     sqlite3_mutex_leave(db->mutex);
   }
   if( SQLITE_NOMEM==(rc = sqlite3_errcode(db)) ){
