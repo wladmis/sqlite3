@@ -79,10 +79,10 @@ static void beginTimer(void){
   }
 }
 
-/* Return the difference of two time_structs in microseconds */
-static int timeDiff(struct timeval *pStart, struct timeval *pEnd){
-  return (pEnd->tv_usec - pStart->tv_usec) + 
-         1000000*(pEnd->tv_sec - pStart->tv_sec);
+/* Return the difference of two time_structs in seconds */
+static double timeDiff(struct timeval *pStart, struct timeval *pEnd){
+  return (pEnd->tv_usec - pStart->tv_usec)*0.000001 + 
+         (double)(pEnd->tv_sec - pStart->tv_sec);
 }
 
 /*
@@ -93,8 +93,8 @@ static void endTimer(void){
     struct rusage sEnd;
     getrusage(RUSAGE_SELF, &sEnd);
     printf("CPU Time: user %f sys %f\n",
-       0.000001*timeDiff(&sBegin.ru_utime, &sEnd.ru_utime),
-       0.000001*timeDiff(&sBegin.ru_stime, &sEnd.ru_stime));
+       timeDiff(&sBegin.ru_utime, &sEnd.ru_utime),
+       timeDiff(&sBegin.ru_stime, &sEnd.ru_stime));
   }
 }
 #define BEGIN_TIMER beginTimer()
