@@ -76,11 +76,6 @@ int sqlite3BtreeOpen(
 #define BTREE_READWRITE    16  /* Open for both reading and writing */
 #define BTREE_CREATE       32  /* Create the database if it does not exist */
 
-/* Additional values for the 4th argument of sqlite3BtreeOpen that
-** are not associated with PAGER_ values.
-*/
-#define BTREE_PRIVATE      64  /* Never share with other connections */
-
 int sqlite3BtreeClose(Btree*);
 int sqlite3BtreeSetCacheSize(Btree*,int);
 int sqlite3BtreeSetSafetyLevel(Btree*,int,int);

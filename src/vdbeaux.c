@@ -1083,11 +1083,12 @@ void sqlite3VdbeFreeCursor(Vdbe *p, Cursor *pCx){
   if( pCx==0 ){
     return;
   }
-  if( pCx->pCursor ){
-    sqlite3BtreeCloseCursor(pCx->pCursor);
-  }
   if( pCx->pBt ){
     sqlite3BtreeClose(pCx->pBt);
+    /* The pCx->pCursor will be close automatically, if it exists, by
+    ** the call above. */
+  }else if( pCx->pCursor ){
+    sqlite3BtreeCloseCursor(pCx->pCursor);
   }
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   if( pCx->pVtabCursor ){

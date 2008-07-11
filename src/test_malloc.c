@@ -1058,7 +1058,6 @@ static int test_status(
     { "SQLITE_STATUS_SCRATCH_USED",        SQLITE_STATUS_SCRATCH_USED        },
     { "SQLITE_STATUS_SCRATCH_OVERFLOW",    SQLITE_STATUS_SCRATCH_OVERFLOW    },
     { "SQLITE_STATUS_MALLOC_SIZE",         SQLITE_STATUS_MALLOC_SIZE         },
-    { "SQLITE_STATUS_FAILSAFE",            SQLITE_STATUS_FAILSAFE            },
   };
   Tcl_Obj *pResult;
   if( objc!=3 ){

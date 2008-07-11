@@ -73,11 +73,6 @@ void sqlite3StatusSet(int op, int X){
 ** then this routine is not threadsafe.
 */
 int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag){
-  if( op==SQLITE_STATUS_FAILSAFE ){
-    *pCurrent = *pHighwater = sqlite3Config.iFailsafe;
-    if( resetFlag ) sqlite3Config.iFailsafe = 0;
-    return SQLITE_OK;
-  }
   if( op<0 || op>=ArraySize(sqlite3Stat.nowValue) ){
     return SQLITE_MISUSE;
   }
