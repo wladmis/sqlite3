@@ -35,7 +35,8 @@ int sqlite3IsNaN(double x){
   **      rules/specifications for math functions.
   */
   volatile double y = x;
-  return x!=y;
+  volatile double z = y;
+  return y!=z;
 }
 
 /*
