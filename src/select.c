@@ -1165,7 +1165,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, char *zTabName, Select *pSelect){
   assert( pTab->nCol>0 );
   pTab->aCol = aCol = sqlite3DbMallocZero(db, sizeof(pTab->aCol[0])*pTab->nCol);
   for(i=0, pCol=aCol; i<pTab->nCol; i++, pCol++){
-    Expr *p, *pR;
+    Expr *p;
     char *zType;
     char *zName;
     int nName;

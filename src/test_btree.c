@@ -87,7 +87,7 @@ int sqlite3BtreeCursorInfo(BtCursor *pCur, int *aResult, int upCnt){
   int rc;
 
   if( pCur->eState==CURSOR_REQUIRESEEK ){
-    rc = sqlite3BtreeRestoreOrClearCursorPosition(pCur);
+    rc = sqlite3BtreeRestoreCursorPosition(pCur);
     if( rc!=SQLITE_OK ){
       return rc;
     }

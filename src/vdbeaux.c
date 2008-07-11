@@ -1864,6 +1864,14 @@ int sqlite3VdbeCursorMoveto(Cursor *p){
 #endif
     p->deferredMoveto = 0;
     p->cacheStatus = CACHE_STALE;
+  }else if( p->pCursor ){
+    int hasMoved;
+    int rc = sqlite3BtreeCursorHasMoved(p->pCursor, &hasMoved);
+    if( rc ) return rc;
+    if( hasMoved ){
+      p->cacheStatus = CACHE_STALE;
+      p->nullRow = 1;
+    }
   }
   return SQLITE_OK;
 }
