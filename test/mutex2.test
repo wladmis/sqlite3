@@ -68,10 +68,10 @@ do_test mutex2-2.6 {
 } {}
 do_test mutex2-2.7 {
   sqlite3_malloc 10000
-} {00000000}
+} {0}
 do_test mutex2-2.8 {
   sqlite3_realloc 0 10000
-} {00000000}
+} {0}
 do_test mutex2-2.9 {
   alloc_dealloc_mutex
 } {0}

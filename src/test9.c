@@ -47,7 +47,7 @@ static int c_collation_test(
   }
 
   rc = sqlite3_create_collation(db, "collate", 456, 0, 0);
-  if( rc!=SQLITE_ERROR ){
+  if( rc!=SQLITE_MISUSE ){
     sqlite3_close(db);
     zErrFunction = "sqlite3_create_collation";
     goto error_out;
