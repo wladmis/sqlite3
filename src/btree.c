@@ -5302,6 +5302,7 @@ static int balance_nonroot(MemPage *pPage){
     MemPage *pNew = apNew[i];
     assert( j<nMaxCells );
     assert( pNew->pgno==pgnoNew[i] );
+    zeroPage(pNew, pageFlags);
     assemblePage(pNew, cntNew[i]-j, &apCell[j], &szCell[j]);
     assert( pNew->nCell>0 || (nNew==1 && cntNew[0]==0) );
     assert( pNew->nOverflow==0 );
@@ -5578,7 +5579,7 @@ static int balance_deeper(MemPage *pPage){
   cdata = pChild->aData;
   memcpy(cdata, &data[hdr], pPage->cellOffset+2*pPage->nCell-hdr);
   memcpy(&cdata[brk], &data[brk], usableSize-brk);
-  assert( pChild->isInit==0 );
+  if( pChild->isInit ) return SQLITE_CORRUPT;
   rc = sqlite3BtreeInitPage(pChild, pPage);
   if( rc ) goto balancedeeper_out;
   memcpy(pChild->aOvfl, pPage->aOvfl, pPage->nOverflow*sizeof(pPage->aOvfl[0]));

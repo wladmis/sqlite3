@@ -4547,8 +4547,12 @@ void sqlite3PagerDontRollback(DbPage *pPg){
   ** has not been previously called during the same transaction.
   ** And if DontWrite() has previously been called, the following
   ** conditions must be met.
+  **
+  ** (Later:)  Not true.  If the database is corrupted by having duplicate
+  ** pages on the freelist (ex: corrupt9.test) then the following is not
+  ** necessarily true:
   */
-  assert( !pPg->inJournal && (int)pPg->pgno <= pPager->origDbSize );
+  /* assert( !pPg->inJournal && (int)pPg->pgno <= pPager->origDbSize ); */
 
   assert( pPager->pInJournal!=0 );
   sqlite3BitvecSet(pPager->pInJournal, pPg->pgno);
