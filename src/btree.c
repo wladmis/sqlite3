@@ -1738,9 +1738,6 @@ static int lockBtree(BtShared *pBt){
   pBt->minLocal = (pBt->usableSize-12)*32/255 - 23;
   pBt->maxLeaf = pBt->usableSize - 35;
   pBt->minLeaf = (pBt->usableSize-12)*32/255 - 23;
-  if( pBt->minLocal>pBt->maxLocal || pBt->maxLocal<0 ){
-    goto page1_init_failed;
-  }
   assert( pBt->maxLeaf + 23 <= MX_CELL_SIZE(pBt) );
   pBt->pPage1 = pPage1;
   return SQLITE_OK;
