@@ -5235,7 +5235,6 @@ static int balance_nonroot(MemPage *pPage){
       apNew[i] = pNew;
       nNew++;
     }
-    zeroPage(pNew, pageFlags);
   }
 
   /* Free any old pages that were not reused as new pages.
