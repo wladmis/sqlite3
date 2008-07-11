@@ -38,7 +38,8 @@ int sqlite3IsNaN(double x){
 # error SQLite will not work correctly with the -ffast-math option of GCC.
 #endif
   volatile double y = x;
-  return x!=y;
+  volatile double z = y;
+  return y!=z;
 }
 
 /*
