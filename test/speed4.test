@@ -229,4 +229,3 @@ execsql {COMMIT}
 
 speed_trial_summary speed4
 finish_test
-

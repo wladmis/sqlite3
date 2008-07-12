@@ -962,7 +962,6 @@ do_test pragma-9.14 {
     PRAGMA temp_store;
   }
 } {0}
-breakpoint
 do_test pragma-9.15 {
   catchsql {
     BEGIN EXCLUSIVE;

@@ -130,4 +130,3 @@ do_ioerr_test autovacuum-ioerr2-1 -sqlprep {
 }
 
 finish_test
-

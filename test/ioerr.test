@@ -405,4 +405,3 @@ do_ioerr_test ioerr-14 -ckrefcount true -erc 1 -sqlprep {
 }
 
 finish_test
-

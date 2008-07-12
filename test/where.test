@@ -1085,7 +1085,6 @@ do_test where-14.4 {
     SELECT x.a || '/' || y.a FROM t8 x, t8 y ORDER BY x.a, x.b DESC
   } 
 } {1/1 1/4 4/1 4/4 nosort}
-btree_breakpoint
 do_test where-14.5 {
   cksort {
     SELECT x.a || '/' || y.a FROM t8 x, t8 y ORDER BY x.b, x.a||x.b

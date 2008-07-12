@@ -196,7 +196,6 @@ sqlite3_shutdown
 sqlite3_config_pagecache 4096 24
 sqlite3_config_scratch 25000 1
 sqlite3_initialize
-breakpoint
 build_test_db memsubsys1-7 {
   PRAGMA page_size=4096;
   PRAGMA cache_size=10;

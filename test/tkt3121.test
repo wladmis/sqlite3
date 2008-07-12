@@ -48,4 +48,3 @@ do_test vtabD-1.2 {
 } {abcd {A nice description}}
 
 finish_test
-

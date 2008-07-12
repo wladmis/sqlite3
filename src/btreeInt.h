@@ -481,17 +481,6 @@ struct BtCursor {
 #define CURSOR_REQUIRESEEK       2
 #define CURSOR_FAULT             3
 
-/*
-** The TRACE macro will print high-level status information about the
-** btree operation when the global variable sqlite3BtreeTrace is
-** enabled.
-*/
-#if SQLITE_TEST
-# define TRACE(X)   if( sqlite3BtreeTrace ){ printf X; fflush(stdout); }
-#else
-# define TRACE(X)
-#endif
-
 /* The database page the PENDING_BYTE occupies. This page is never used.
 ** TODO: This macro is very similary to PAGER_MJ_PGNO() in pager.c. They
 ** should possibly be consolidated (presumably in pager.h).

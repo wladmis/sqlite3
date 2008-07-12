@@ -54,4 +54,3 @@ ifcapable tempdb {
 }
 
 finish_test
-

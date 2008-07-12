@@ -215,4 +215,3 @@ do_test minmax3-2.8 {
 } {{}}
 
 finish_test
-

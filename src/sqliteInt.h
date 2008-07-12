@@ -1866,7 +1866,7 @@ char *sqlite3VMPrintf(sqlite3*,const char*, va_list);
   void sqlite3DebugPrintf(const char*, ...);
 #endif
 #if defined(SQLITE_TEST)
-  void *sqlite3TextToPtr(const char*);
+  void *sqlite3TestTextToPtr(const char*);
 #endif
 void sqlite3SetString(char **, sqlite3*, const char*, ...);
 void sqlite3ErrorMsg(Parse*, const char*, ...);

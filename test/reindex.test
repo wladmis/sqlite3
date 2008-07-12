@@ -169,4 +169,3 @@ do_test reindex-3.99 {
 } {}
 
 finish_test
-

@@ -205,4 +205,3 @@ sqlite3_enable_shared_cache $::enable_shared_cache
 sqlite3_soft_heap_limit $::soft_limit
 
 finish_test
-

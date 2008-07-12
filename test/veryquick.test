@@ -13,4 +13,3 @@
 set testdir [file dirname $argv0]
 set ISVERYQUICK 1
 source $testdir/quick.test
-

@@ -175,4 +175,3 @@ do_test lock5-flock.X {
 } {}
 
 finish_test
-

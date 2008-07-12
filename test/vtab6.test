@@ -157,7 +157,6 @@ do_test vtab6-1.12 {
 } {1 2 3 4 2 3 4 5}
 
 ifcapable subquery {
-breakpoint
   do_test vtab6-1.13 {
     execsql2 {
       SELECT * FROM t1 NATURAL JOIN 

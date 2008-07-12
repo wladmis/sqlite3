@@ -104,7 +104,7 @@ do_diskfull_test diskfull-2 VACUUM
 #     PRAGMA cache_size;
 #   }
 # } {10}
-# breakpoint
+# 
 # do_diskfull_test diskfull-3.2 {
 #   BEGIN;
 #     INSERT INTO t3 VALUES( randstr(100, 100), randstr(100, 100) );

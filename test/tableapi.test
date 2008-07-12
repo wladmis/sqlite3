@@ -71,7 +71,6 @@ do_test tableapi-2.3.3 {
   } {}
 } {1 {near "invalid": syntax error}}
 do_test tableapi-2.3.4 {
-breakpoint
   sqlite3_get_table_printf $::dbx {
     SELECT * FROM xyz WHERE a>47 ORDER BY a
   } {} 8

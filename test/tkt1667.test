@@ -81,5 +81,3 @@ do_test tkt1667-4.1 {
 integrity_check tkt1667-4.2
 
 finish_test
-
-

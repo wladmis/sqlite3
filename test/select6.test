@@ -194,7 +194,6 @@ do_test select6-3.6 {
   }
 } {10.5 3.7 14.2}
 do_test select6-3.7 {
-btree_breakpoint
   execsql {
     SELECT a,b,a+b FROM (SELECT avg(x) as 'a', avg(y) as 'b' FROM t1)
     WHERE a<10

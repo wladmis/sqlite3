@@ -87,4 +87,3 @@ for {set iRun 0} {[clock seconds] < $soak_finishtime && $nErr==0} {incr iRun} {
 }
 
 really_finish_test
-

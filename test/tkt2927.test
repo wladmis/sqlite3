@@ -40,7 +40,6 @@ do_test tkt2927-2.1 {
   }
 } {1 11 2 22 3 33 4 44 5 55 1 11 2 22 3 33 4 44 5 55}
 do_test tkt2927-2.2 {
-breakpoint
 #set sqlite_addop_trace 1
   db eval {
     SELECT a, b FROM t1

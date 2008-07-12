@@ -38,4 +38,3 @@ set sqlite_open_file_count 0
 rtree_finish_test
 rename finish_test {}
 rename rtree_finish_test finish_test
-

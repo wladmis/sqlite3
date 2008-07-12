@@ -147,4 +147,3 @@ db3 close
 db4 close
 sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test
-

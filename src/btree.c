@@ -27,8 +27,11 @@ static const char zMagicHeader[] = SQLITE_FILE_HEADER;
 ** Set this global variable to 1 to enable tracing using the TRACE
 ** macro.
 */
-#if SQLITE_TEST
+#if 0
 int sqlite3BtreeTrace=0;  /* True to enable tracing */
+# define TRACE(X)  if(sqlite3BtreeTrace){printf X;fflush(stdout);}
+#else
+# define TRACE(X)
 #endif
 
 

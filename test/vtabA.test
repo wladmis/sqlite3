@@ -132,4 +132,3 @@ do_test vtabA-2.4 {
 } {{} {whatelse can i test} hidden}
 
 finish_test
-

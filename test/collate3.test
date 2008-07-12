@@ -152,7 +152,6 @@ ifcapable compound {
     }
   } {0 {}}
   do_test collate3-2.13 {
-btree_breakpoint
     catchsql {
       SELECT 10 UNION ALL SELECT 20 ORDER BY 1 COLLATE string_compare;
     }

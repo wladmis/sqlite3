@@ -27,4 +27,3 @@ do_test tkt2213-1 {
 } {0 abcd}
 
 finish_test
-

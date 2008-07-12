@@ -874,7 +874,6 @@ do_test shared-$av.11.7 {
 } {}
 do_test shared-$av.11.8 {
   set res [list]
-  breakpoint
   db2 eval {
     SELECT abc.a as I, abc2.a as II FROM abc, abc2;
   } {

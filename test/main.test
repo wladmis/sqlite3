@@ -337,7 +337,6 @@ do_test main-3.2.12 {
 do_test main-3.2.13 {
   catchsql {select $(abc)}
 } {1 {unrecognized token: "$"}}
-breakpoint
 do_test main-3.2.14 {
   set hi\u1234x 987
   db eval "select \$hi\u1234x"
