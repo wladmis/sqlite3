@@ -714,7 +714,7 @@ static void binarylog_blob(
     return;
   }
   pLog = (InstVfsBinaryLog *)pInstVfs->pClient;
-  if( !isBinary || pLog->log_data ){
+  if( zBlob && (!isBinary || pLog->log_data) ){
     unsigned char *zRec;
     int nWrite;
 

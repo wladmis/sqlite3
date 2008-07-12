@@ -1186,11 +1186,13 @@ do_test capi3-19.1 {
 
 # Tests of the interface when no VFS is registered.
 #
-db close
-vfs_unregister_all
-do_test capi3-20.1 {
-  sqlite3_sleep 100
-} {0}
-vfs_reregister_all
+if {![info exists tester_do_binarylog]} {
+  db close
+  vfs_unregister_all
+  do_test capi3-20.1 {
+    sqlite3_sleep 100
+  } {0}
+  vfs_reregister_all
+}
 
 finish_test
