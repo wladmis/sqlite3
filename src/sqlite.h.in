@@ -6100,7 +6100,7 @@ int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag);
 ** outstanding at time, this parameter also reports the number of threads
 ** using scratch memory at the same time.</dd>
 **
-** <dt>SQLITE_STATUS_PAGECACHE_OVERFLOW</dt>
+** <dt>SQLITE_STATUS_SCRATCH_OVERFLOW</dt>
 ** <dd>This parameter returns the number of bytes of scratch memory
 ** allocation which could not be statisfied by the [SQLITE_CONFIG_SCRATCH]
 ** buffer and where forced to overflow to [sqlite3_malloc()].</dd>
