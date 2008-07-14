@@ -165,7 +165,7 @@ sqlite3_int64 sqlite3_memory_highwater(int resetFlag){
   int n, mx;
   sqlite3_int64 res;
   sqlite3_status(SQLITE_STATUS_MEMORY_USED, &n, &mx, resetFlag);
-  res = (sqlite3_int64)n;  /* Work around bug in Borland C. Ticket #3216 */
+  res = (sqlite3_int64)mx;  /* Work around bug in Borland C. Ticket #3216 */
   return res;
 }
 
