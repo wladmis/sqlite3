@@ -226,11 +226,11 @@ int sqlite3BtreeHoldsAllMutexes(sqlite3 *db){
 #endif /* NDEBUG */
 
 /*
-** Potentially dd a new Btree pointer to a BtreeMutexArray.
-** Really only add the Btree if it can possibly be shared with
+** Add a new Btree pointer to a BtreeMutexArray. 
+** if the pointer can possibly be shared with
 ** another database connection.
 **
-** The Btrees are kept in sorted order by pBtree->pBt.  That
+** The pointers are kept in sorted order by pBtree->pBt.  That
 ** way when we go to enter all the mutexes, we can enter them
 ** in order without every having to backup and retry and without
 ** worrying about deadlock.

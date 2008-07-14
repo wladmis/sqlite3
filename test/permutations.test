@@ -119,7 +119,6 @@ proc run_tests {name args} {
   }
   if {$::testmode ne "" && [lsearch $::testmode $name]<0} return
 
-
   uplevel $options(-initialize)
   set ::permutations_presql $options(-presql)
 
