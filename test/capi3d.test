@@ -64,6 +64,7 @@ proc scramble {inlist} {
 # Database initially has no prepared statements.
 #
 do_test capi3d-1.1 {
+  db cache flush
   sqlite3_next_stmt db 0
 } {}
 

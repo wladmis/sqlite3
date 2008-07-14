@@ -74,15 +74,6 @@ lappend EXCLUDE mallocAll.test         ;# Wrapper for running all malloc tests
 set INCLUDE {
 }
 
-# Test files btree2.test and btree4.test don't work if the 
-# SQLITE_DEFAULT_AUTOVACUUM macro is defined to true (because they depend
-# on tables being allocated starting at page 2).
-#
-ifcapable default_autovacuum {
-  lappend EXCLUDE btree2.test
-  lappend EXCLUDE btree4.test
-}
-
 for {set Counter 0} {$Counter<$COUNT && $nErr==0} {incr Counter} {
   if {$Counter%2} {
     set ::SETUP_SQL {PRAGMA default_synchronous=off;}
