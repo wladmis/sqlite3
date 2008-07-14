@@ -1126,7 +1126,7 @@ struct sqlite3_mem_methods {
 ** alternative low-level mutex routines to be used in place
 ** the mutex routines built into SQLite.</dd>
 **
-** <dt>SQLITE_CONFIG_GETMALLOC</dt>
+** <dt>SQLITE_CONFIG_GETMUTEX</dt>
 ** <dd>This option takes a single argument which is a pointer to an
 ** instance of the [sqlite3_mutex_methods] structure.  The
 ** [sqlite3_mutex_methods]
