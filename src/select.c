@@ -2281,6 +2281,7 @@ static int generateOutputSubroutine(
       break;
     }
 
+#if 0  /* Never occurs on an ORDER BY query */
     /* If any row exist in the result set, record that fact and abort.
     */
     case SRT_Exists: {
@@ -2288,6 +2289,7 @@ static int generateOutputSubroutine(
       /* The LIMIT clause will terminate the loop for us */
       break;
     }
+#endif
 
     /* If this is a scalar select that is part of an expression, then
     ** store the results in the appropriate memory cell and break out

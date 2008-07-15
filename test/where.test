@@ -344,6 +344,11 @@ do_test where-4.6 {
     SELECT 99 WHERE 0.0
   }
 } {}
+do_test where-4.7 {
+  execsql {
+    SELECT count(*) FROM t1 WHERE t1.w
+  }
+} {100}
 
 # Verify that IN operators in a WHERE clause are handled correctly.
 # Omit these tests if the build is not capable of sub-queries.

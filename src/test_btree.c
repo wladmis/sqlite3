@@ -48,6 +48,7 @@ int sqlite3BtreeSharedCacheReport(
 ** Print debugging information about all cursors to standard output.
 */
 void sqlite3BtreeCursorList(Btree *p){
+#ifdef SQLITE_DEBUG
   BtCursor *pCur;
   BtShared *pBt = p->pBt;
   for(pCur=pBt->pCursor; pCur; pCur=pCur->pNext){
@@ -59,6 +60,7 @@ void sqlite3BtreeCursorList(Btree *p){
        (pCur->eState==CURSOR_VALID) ? "" : " eof"
     );
   }
+#endif
 }
 
 
