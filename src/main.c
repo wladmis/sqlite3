@@ -222,6 +222,7 @@ int sqlite3_config(int op, ...){
       break;
     }
 
+#if defined(SQLITE_ENABLE_MEMSYS3) || defined(SQLITE_ENABLE_MEMSYS5)
     case SQLITE_CONFIG_HEAP: {
       /* Designate a buffer for heap memory space */
       sqlite3Config.pHeap = va_arg(ap, void*);
@@ -247,12 +248,10 @@ int sqlite3_config(int op, ...){
 #ifdef SQLITE_ENABLE_MEMSYS5
         sqlite3Config.m = sqlite3MemGetMemsys5();
 #endif
-#if !defined(SQLITE_ENABLE_MEMSYS3) && !defined(SQLITE_ENABLE_MEMSYS5)
-        rc = SQLITE_ERROR;
-#endif
       }
       break;
     }
+#endif
 
     default: {
       rc = SQLITE_ERROR;
