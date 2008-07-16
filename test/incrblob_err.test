@@ -115,6 +115,7 @@ do_ioerr_test incrblob_err-7 -cksum 1 -sqlprep {
   sqlite3_blob_read $::blob [expr 500*1020-20] 20
   close $::blob
 }
+catch {db2 close}
 
 do_ioerr_test incrblob_err-8 -cksum 1 -sqlprep {
   PRAGMA auto_vacuum = 1;
