@@ -105,7 +105,7 @@ sqlite3_file *sqlite3PagerFile(Pager*);
 const char *sqlite3PagerDirname(Pager*);
 const char *sqlite3PagerJournalname(Pager*);
 int sqlite3PagerNosync(Pager*);
-int sqlite3PagerMovepage(Pager*,DbPage*,Pgno);
+int sqlite3PagerMovepage(Pager*,DbPage*,Pgno,int);
 void *sqlite3PagerGetData(DbPage *); 
 void *sqlite3PagerGetExtra(DbPage *); 
 int sqlite3PagerLockingMode(Pager *, int);
