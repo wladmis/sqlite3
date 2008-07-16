@@ -66,9 +66,11 @@
 #include <string.h>
 #include <assert.h>
 
+#ifndef SQLITE_AMALGAMATION
 typedef sqlite3_int64 i64;
 typedef unsigned char u8;
 typedef unsigned int u32;
+#endif
 
 typedef struct Rtree Rtree;
 typedef struct RtreeCursor RtreeCursor;
