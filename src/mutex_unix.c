@@ -249,7 +249,7 @@ static int pthreadMutexTry(sqlite3_mutex *p){
     if( p->nRef>0 && pthread_equal(p->owner, self) ){
       p->nRef++;
       rc = SQLITE_OK;
-    }else if( pthread_mutex_lock(&p->mutex)==0 ){
+    }else if( pthread_mutex_trylock(&p->mutex)==0 ){
       assert( p->nRef==0 );
       p->owner = self;
       p->nRef = 1;
