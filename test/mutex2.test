@@ -60,9 +60,11 @@ ifcapable utf16 {
 do_test mutex2-2.4 {
   sqlite3_mprintf_int {This is a test %d,%d,%d} 1 2 3
 } {}
-do_test mutex2-2.5 {
-  sqlite3_auto_extension_sqr
-} {7}
+ifcapable load_ext {
+  do_test mutex2-2.5 {
+    sqlite3_auto_extension_sqr
+  } {7}
+}
 do_test mutex2-2.6 {
   sqlite3_reset_auto_extension
 } {}

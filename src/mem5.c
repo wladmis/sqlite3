@@ -46,7 +46,7 @@
 ** Log2 of the maximum size of an allocation.
 */
 #ifndef SQLITE_POW2_LOGMAX
-# define SQLITE_POW2_LOGMAX 18
+# define SQLITE_POW2_LOGMAX 20
 #endif
 #define POW2_MAX (((unsigned int)1)<<SQLITE_POW2_LOGMAX)
 

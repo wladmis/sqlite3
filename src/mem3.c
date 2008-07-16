@@ -498,8 +498,9 @@ void memsys3Free(void *pPrior){
 ** works for chunks that are currently checked out.
 */
 static int memsys3Size(void *p){
-  Mem3Block *pBlock = (Mem3Block*)p;
-  assert( pBlock );
+  Mem3Block *pBlock;
+  if( p==0 ) return 0;
+  pBlock = (Mem3Block*)p;
   assert( (pBlock[-1].u.hdr.size4x&1)!=0 );
   return (pBlock[-1].u.hdr.size4x&~3)*2 - 4;
 }

@@ -243,10 +243,10 @@ int sqlite3_config(int op, ...){
         ** the default case and return an error.
         */
 #ifdef SQLITE_ENABLE_MEMSYS3
-        sqlite3Config.m = sqlite3MemGetMemsys3();
+        sqlite3Config.m = *sqlite3MemGetMemsys3();
 #endif
 #ifdef SQLITE_ENABLE_MEMSYS5
-        sqlite3Config.m = sqlite3MemGetMemsys5();
+        sqlite3Config.m = *sqlite3MemGetMemsys5();
 #endif
       }
       break;
