@@ -1748,7 +1748,7 @@ error_out:
 
   if( SQLITE_OK==rc && !pTab ){
     sqlite3_free(zErrMsg);
-    zErrMsg = sqlite3MPrintf("no such table column: %s.%s", zTableName,
+    zErrMsg = sqlite3MPrintf(db, "no such table column: %s.%s", zTableName,
         zColumnName);
     rc = SQLITE_ERROR;
   }
