@@ -1423,11 +1423,7 @@ static void *winDlOpen(sqlite3_vfs *pVfs, const char *zFilename){
   if( isNT() ){
     h = LoadLibraryW((WCHAR*)zConverted);
   }else{
-#if SQLITE_OS_WINCE
-    return 0;
-#else
     h = LoadLibraryA((char*)zConverted);
-#endif
   }
   free(zConverted);
   return (void*)h;
