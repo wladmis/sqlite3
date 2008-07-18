@@ -1029,7 +1029,7 @@ static void zeroPage(MemPage *pPage, int flags){
   assert( sqlite3PagerGetData(pPage->pDbPage) == data );
   assert( sqlite3PagerIswriteable(pPage->pDbPage) );
   assert( sqlite3_mutex_held(pBt->mutex) );
-  memset(&data[hdr], 0, pBt->usableSize - hdr);
+  /*memset(&data[hdr], 0, pBt->usableSize - hdr);*/
   data[hdr] = flags;
   first = hdr + 8 + 4*((flags&PTF_LEAF)==0);
   memset(&data[hdr+1], 0, 4);
