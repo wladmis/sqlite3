@@ -132,6 +132,6 @@ do_ioerr_test incrblob_err-8 -cksum 1 -sqlprep {
   close $::blob
 }
 
-db2 close
+catch {db2 close}
 
 finish_test

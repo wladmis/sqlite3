@@ -2015,6 +2015,18 @@ trans_begun:
   return rc;
 }
 
+/*
+** Return the size of the database file in pages.  Or return -1 if
+** there is any kind of error.
+*/
+static int pagerPagecount(Pager *pPager){
+  int rc;
+  int nPage;
+  rc = sqlite3PagerPagecount(pPager, &nPage);
+  return (rc==SQLITE_OK?nPage:-1);
+}
+
+
 #ifndef SQLITE_OMIT_AUTOVACUUM
 
 /*
@@ -2201,13 +2213,6 @@ static int relocatePage(
     }
   }
   return rc;
-}
-
-static int pagerPagecount(Pager *pPager){
-  int rc;
-  int nPage;
-  rc = sqlite3PagerPagecount(pPager, &nPage);
-  return (rc==SQLITE_OK?nPage:-1);
 }
 
 /* Forward declaration required by incrVacuumStep(). */
