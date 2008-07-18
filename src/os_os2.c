@@ -896,7 +896,7 @@ static int os2FullPathname(
   char *zFull                 /* Output buffer */
 ){
   char *zRelativeCp = convertUtf8PathToCp( zRelative );
-  char zFullCp[CCHMAXPATH];
+  char zFullCp[CCHMAXPATH] = "\0";
   char *zFullUTF;
   APIRET rc = DosQueryPathInfo( zRelativeCp, FIL_QUERYFULLNAME, zFullCp,
                                 CCHMAXPATH );
