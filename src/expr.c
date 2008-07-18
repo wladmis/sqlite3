@@ -465,7 +465,7 @@ Expr *sqlite3ExprAnd(sqlite3 *db, Expr *pLeft, Expr *pRight){
 void sqlite3ExprSpan(Expr *pExpr, Token *pLeft, Token *pRight){
   assert( pRight!=0 );
   assert( pLeft!=0 );
-  if( pExpr && pRight->z && pLeft->z ){
+  if( pExpr ){
     pExpr->span.z = pLeft->z;
     pExpr->span.n = pRight->n + (pRight->z - pLeft->z);
   }
