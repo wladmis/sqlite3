@@ -15,6 +15,7 @@
 
 #include "tcl.h"
 #include "sqlite3.h"
+#include "sqliteInt.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>

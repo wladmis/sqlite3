@@ -74,9 +74,11 @@ do_test mutex2-2.7 {
 do_test mutex2-2.8 {
   sqlite3_realloc 0 10000
 } {0}
-do_test mutex2-2.9 {
-  alloc_dealloc_mutex
-} {0}
+ifcapable threadsafe {
+  do_test mutex2-2.9 {
+    alloc_dealloc_mutex
+  } {0}
+}
 do_test mutex2-2.10 {
   vfs_initfail_test
 } {}
