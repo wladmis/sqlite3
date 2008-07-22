@@ -22,7 +22,7 @@
 
 
 /*
-** Return true if the floating point value is Not a Number.
+** Return true if the floating point value is Not a Number (NaN).
 */
 int sqlite3IsNaN(double x){
   /* This NaN test sometimes fails if compiled on GCC with -ffast-math.
@@ -33,6 +33,14 @@ int sqlite3IsNaN(double x){
   **      -O option since it can result in incorrect output for programs
   **      which depend on an exact implementation of IEEE or ISO 
   **      rules/specifications for math functions.
+  **
+  ** Under MSVC, this NaN test may fail if compiled with a floating-
+  ** point precision mode other than /fp:precise.  From the MSDN 
+  ** documentation:
+  **
+  **      The compiler [with /fp:precise] will properly handle comparisons 
+  **      involving NaN. For example, x != x evaluates to true if x is NaN 
+  **      ...
   */
 #ifdef __FAST_MATH__
 # error SQLite will not work correctly with the -ffast-math option of GCC.
