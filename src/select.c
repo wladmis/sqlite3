@@ -2792,7 +2792,7 @@ static int multiSelectOrderBy(
   return SQLITE_OK;
 }
 
-#ifndef SQLITE_OMIT_VIEW
+#if !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW)
 /* Forward Declarations */
 static void substExprList(sqlite3*, ExprList*, int, ExprList*);
 static void substSelect(sqlite3*, Select *, int, ExprList *);
@@ -2875,9 +2875,9 @@ static void substSelect(
   substExpr(db, p->pWhere, iTable, pEList);
   substSelect(db, p->pPrior, iTable, pEList);
 }
-#endif /* !defined(SQLITE_OMIT_VIEW) */
+#endif /* !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW) */
 
-#ifndef SQLITE_OMIT_VIEW
+#if !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW)
 /*
 ** This routine attempts to flatten subqueries in order to speed
 ** execution.  It returns 1 if it makes changes and 0 if no flattening
@@ -3255,7 +3255,7 @@ static int flattenSubquery(
 
   return 1;
 }
-#endif /* SQLITE_OMIT_VIEW */
+#endif /* !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW) */
 
 /*
 ** Analyze the SELECT statement passed as an argument to see if it
