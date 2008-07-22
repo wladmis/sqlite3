@@ -33,9 +33,6 @@
 /* Define as 1 if you have the int64_t type */
 #undef HAVE_INT64_T
 
-/* Define as 1 if you have the intptr_t type */
-#undef HAVE_INTPTR_T
-
 /* Define as 1 if you have the uint8_t type */
 #undef HAVE_UINT8_T
 
@@ -47,9 +44,6 @@
 
 /* Define as 1 if you have the uint64_t type */
 #undef HAVE_UINT64_T
-
-/* Define as 1 if you have the uintptr_t type */
-#undef HAVE_UINTPTR_T
 
 
 /*****************************
@@ -84,6 +78,9 @@
 
 /* Define as 1 if you have the localtime_r() function */
 #undef HAVE_LOCALTIME_R
+
+/* Define as 1 if you have the localtime_s() function */
+#undef HAVE_LOCALTIME_S
 
 
 /*****************************
