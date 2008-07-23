@@ -987,6 +987,9 @@ int echoUpdate(
   if( pRowid && rc==SQLITE_OK ){
     *pRowid = sqlite3_last_insert_rowid(db);
   }
+  if( rc!=SQLITE_OK ){
+    tab->zErrMsg = sqlite3_mprintf("echo-vtab-error: %s", sqlite3_errmsg(db));
+  }
 
   return rc;
 }
