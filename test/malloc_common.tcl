@@ -152,7 +152,6 @@ proc do_malloc_test {tn args} {
           set v2 1
         } else {
           set v2 $msg
-          breakpoint
           puts [db errorcode]
         }
         lappend isFail $v2
