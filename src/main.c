@@ -267,6 +267,13 @@ int sqlite3_config(int op, ...){
     }
 #endif
 
+#if defined(SQLITE_ENABLE_MEMSYS6)
+    case SQLITE_CONFIG_CHUNKALLOC: {
+      sqlite3Config.m = *sqlite3MemGetMemsys6();
+      break;
+    }
+#endif
+
     default: {
       rc = SQLITE_ERROR;
       break;

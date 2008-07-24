@@ -439,6 +439,27 @@ ifcapable threadsafe {
   }
 }
 
+  run_tests "memsys6" -description {
+    Run tests using the allocator in mem6.c.
+  } -include {
+    select1.test 
+  } -initialize {
+    catch {db close}
+    sqlite3_reset_auto_extension
+    sqlite3_shutdown
+    sqlite3_config_chunkalloc
+    install_malloc_faultsim 1 
+    sqlite3_initialize
+    autoinstall_test_functions
+  } -shutdown {
+    catch {db close}
+    sqlite3_reset_auto_extension
+    sqlite3_shutdown
+    sqlite3_config_heap 0 0
+    install_malloc_faultsim 1 
+    sqlite3_initialize
+  }
+
 # run_tests "crash_safe_append" -description {
 #   Run crash.test with persistent journals on a SAFE_APPEND file-system.
 # } -initialize {

@@ -120,13 +120,7 @@ static void sqlite3MemShutdown(void *NotUsed){
   return;
 }
 
-/*
-** This routine is the only routine in this file with external linkage.
-**
-** Populate the low-level memory allocation function pointers in
-** sqlite3Config.m with pointers to the routines in this file.
-*/
-void sqlite3MemSetDefault(void){
+sqlite3_mem_methods *sqlite3MemGetDefault(void){
   static const sqlite3_mem_methods defaultMethods = {
      sqlite3MemMalloc,
      sqlite3MemFree,
@@ -137,7 +131,17 @@ void sqlite3MemSetDefault(void){
      sqlite3MemShutdown,
      0
   };
-  sqlite3_config(SQLITE_CONFIG_MALLOC, &defaultMethods);
+  return &defaultMethods;
+}
+
+/*
+** This routine is the only routine in this file with external linkage.
+**
+** Populate the low-level memory allocation function pointers in
+** sqlite3Config.m with pointers to the routines in this file.
+*/
+void sqlite3MemSetDefault(void){
+  sqlite3_config(SQLITE_CONFIG_MALLOC, sqlite3MemGetDefault());
 }
 
 #endif /* SQLITE_SYSTEM_MALLOC */
