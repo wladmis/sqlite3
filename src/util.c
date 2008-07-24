@@ -56,11 +56,15 @@ int sqlite3IsNaN(double x){
 */
 int sqlite3Strlen(sqlite3 *db, const char *z){
   const char *z2 = z;
+  int len;
+  size_t x;
   while( *z2 ){ z2++; }
-  if( z2 > &z[db->aLimit[SQLITE_LIMIT_LENGTH]] ){
+  x = z2 - z;
+  len = 0x7fffffff & x;
+  if( len!=x || len > db->aLimit[SQLITE_LIMIT_LENGTH] ){
     return db->aLimit[SQLITE_LIMIT_LENGTH];
   }else{
-    return (int)(z2 - z);
+    return len;
   }
 }
 
