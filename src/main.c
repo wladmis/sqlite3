@@ -269,6 +269,7 @@ int sqlite3_config(int op, ...){
 
 #if defined(SQLITE_ENABLE_MEMSYS6)
     case SQLITE_CONFIG_CHUNKALLOC: {
+      sqlite3Config.nSmall = va_arg(ap, int);
       sqlite3Config.m = *sqlite3MemGetMemsys6();
       break;
     }

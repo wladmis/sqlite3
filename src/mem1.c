@@ -120,7 +120,7 @@ static void sqlite3MemShutdown(void *NotUsed){
   return;
 }
 
-sqlite3_mem_methods *sqlite3MemGetDefault(void){
+const sqlite3_mem_methods *sqlite3MemGetDefault(void){
   static const sqlite3_mem_methods defaultMethods = {
      sqlite3MemMalloc,
      sqlite3MemFree,

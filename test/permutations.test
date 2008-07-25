@@ -447,7 +447,7 @@ run_tests "memsys6" -description {
   catch {db close}
   sqlite3_reset_auto_extension
   sqlite3_shutdown
-  sqlite3_config_chunkalloc
+  sqlite3_config_chunkalloc 0
   install_malloc_faultsim 1 
   sqlite3_initialize
   autoinstall_test_functions

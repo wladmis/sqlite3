@@ -1789,6 +1789,7 @@ struct Sqlite3Config {
   int isInit;                       /* True after initialization has finished */
   int isMallocInit;                 /* True after malloc is initialized */
   sqlite3_mutex *pInitMutex;        /* Mutex used by sqlite3_initialize() */
+  int nSmall;                       /* alloc size threshold used by mem6.c */
 };
 
 /*
@@ -1841,7 +1842,7 @@ void sqlite3ScratchFree(void*);
 void *sqlite3PageMalloc(int);
 void sqlite3PageFree(void*);
 void sqlite3MemSetDefault(void);
-sqlite3_mem_methods *sqlite3MemGetDefault(void);
+const sqlite3_mem_methods *sqlite3MemGetDefault(void);
 const sqlite3_mem_methods *sqlite3MemGetMemsys5(void);
 const sqlite3_mem_methods *sqlite3MemGetMemsys3(void);
 const sqlite3_mem_methods *sqlite3MemGetMemsys6(void);

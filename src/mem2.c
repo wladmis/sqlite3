@@ -324,7 +324,7 @@ static void *sqlite3MemRealloc(void *pPrior, int nByte){
 }
 
 
-sqlite3_mem_methods *sqlite3MemGetDefault(void){
+const sqlite3_mem_methods *sqlite3MemGetDefault(void){
   static const sqlite3_mem_methods defaultMethods = {
      sqlite3MemMalloc,
      sqlite3MemFree,
