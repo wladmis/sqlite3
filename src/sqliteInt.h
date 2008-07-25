@@ -1790,6 +1790,7 @@ struct Sqlite3Config {
   int isMallocInit;                 /* True after malloc is initialized */
   sqlite3_mutex *pInitMutex;        /* Mutex used by sqlite3_initialize() */
   int nSmall;                       /* alloc size threshold used by mem6.c */
+  int mxParserStack;                /* maximum depth of the parser stack */
 };
 
 /*
@@ -2195,6 +2196,9 @@ void sqlite3SelectDestInit(SelectDest*,int,int);
 void *sqlite3ParserAlloc(void*(*)(size_t));
 void sqlite3ParserFree(void*, void(*)(void*));
 void sqlite3Parser(void*, int, Token, Parse*);
+#ifdef YYTRACKMAXSTACKDEPTH
+  int sqlite3ParserStackPeak(void*);
+#endif
 
 int sqlite3AutoLoadExtensions(sqlite3*);
 #ifndef SQLITE_OMIT_LOAD_EXTENSION

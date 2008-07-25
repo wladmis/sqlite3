@@ -21,8 +21,8 @@
 ** Variables in which to record status information.
 */
 static struct {
-  int nowValue[6];         /* Current value */
-  int mxValue[6];          /* Maximum value */
+  int nowValue[7];         /* Current value */
+  int mxValue[7];          /* Maximum value */
 } sqlite3Stat;
 
 

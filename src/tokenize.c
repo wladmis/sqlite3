@@ -455,6 +455,11 @@ abort_parse:
     }
     sqlite3Parser(pEngine, 0, pParse->sLastToken, pParse);
   }
+#ifdef YYTRACKMAXSTACKDEPTH
+  sqlite3StatusSet(SQLITE_STATUS_PARSER_STACK,
+      sqlite3ParserStackPeak(pEngine)
+  );
+#endif /* YYDEBUG */
   sqlite3ParserFree(pEngine, sqlite3_free);
   if( db->mallocFailed ){
     pParse->rc = SQLITE_NOMEM;
