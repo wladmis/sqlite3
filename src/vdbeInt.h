@@ -390,7 +390,7 @@ int sqlite2BtreeKeyCompare(BtCursor *, const void *, int, int, int *);
 int sqlite3VdbeIdxKeyCompare(Cursor*,UnpackedRecord *,int,const unsigned char*,int*);
 int sqlite3VdbeIdxRowid(BtCursor *, i64 *);
 int sqlite3MemCompare(const Mem*, const Mem*, const CollSeq*);
-int sqlite3VdbeIdxRowidLen(const u8*);
+int sqlite3VdbeIdxRowidLen(const u8*, int, int*);
 int sqlite3VdbeExec(Vdbe*);
 int sqlite3VdbeList(Vdbe*);
 int sqlite3VdbeHalt(Vdbe*);

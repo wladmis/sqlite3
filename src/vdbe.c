@@ -3136,7 +3136,10 @@ case OP_IsUnique: {        /* jump, in3 */
     zKey = pK->z;
     nKey = pK->n;
 
-    szRowid = sqlite3VdbeIdxRowidLen((u8*)zKey);
+    rc = sqlite3VdbeIdxRowidLen((u8*)zKey, nKey, &szRowid);
+    if( rc!=SQLITE_OK ){
+      goto abort_due_to_error;
+    }
     len = nKey-szRowid;
 
     /* Search for an entry in P1 where all but the last four bytes match K.
