@@ -556,7 +556,7 @@ int sqlite3_step(sqlite3_stmt *pStmt){
       ** sqlite3_errmsg() and sqlite3_errcode().
       */
       const char *zErr = (const char *)sqlite3_value_text(db->pErr); 
-      sqlite3_free(v->zErrMsg);
+      sqlite3DbFree(db, v->zErrMsg);
       if( !db->mallocFailed ){
         v->zErrMsg = sqlite3DbStrDup(db, zErr);
       } else {

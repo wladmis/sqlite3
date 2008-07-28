@@ -6814,7 +6814,7 @@ char *sqlite3BtreeIntegrityCheck(
   nRef = sqlite3PagerRefcount(pBt->pPager);
   if( lockBtreeWithRetry(p)!=SQLITE_OK ){
     sqlite3BtreeLeave(p);
-    return sqlite3StrDup("Unable to acquire a read lock on the database");
+    return sqlite3DbStrDup(0, "Unable to acquire a read lock on the database");
   }
   sCheck.pBt = pBt;
   sCheck.pPager = pBt->pPager;

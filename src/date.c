@@ -849,9 +849,11 @@ static void strftimeFunc(
   u64 n;
   int i, j;
   char *z;
+  sqlite3 *db;
   const char *zFmt = (const char*)sqlite3_value_text(argv[0]);
   char zBuf[100];
   if( zFmt==0 || isDate(context, argc-1, argv+1, &x) ) return;
+  db = sqlite3_context_db_handle(context);
   for(i=0, n=1; zFmt[i]; i++, n++){
     if( zFmt[i]=='%' ){
       switch( zFmt[i+1] ){
@@ -887,11 +889,11 @@ static void strftimeFunc(
   }
   if( n<sizeof(zBuf) ){
     z = zBuf;
-  }else if( n>sqlite3_context_db_handle(context)->aLimit[SQLITE_LIMIT_LENGTH] ){
+  }else if( n>db->aLimit[SQLITE_LIMIT_LENGTH] ){
     sqlite3_result_error_toobig(context);
     return;
   }else{
-    z = sqlite3Malloc( n );
+    z = sqlite3DbMallocRaw(db, n);
     if( z==0 ){
       sqlite3_result_error_nomem(context);
       return;
@@ -956,7 +958,7 @@ static void strftimeFunc(
   }
   z[j] = 0;
   sqlite3_result_text(context, z, -1,
-                      z==zBuf ? SQLITE_TRANSIENT : sqlite3_free);
+                      z==zBuf ? SQLITE_TRANSIENT : SQLITE_DYNAMIC);
 }
 
 /*

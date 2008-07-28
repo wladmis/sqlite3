@@ -682,8 +682,7 @@ void sqlite3Pragma(
       }
       sqlite3_free(sqlite3_temp_directory);
       if( zRight[0] ){
-        sqlite3_temp_directory = zRight;
-        zRight = 0;
+        sqlite3_temp_directory = sqlite3DbStrDup(0, zRight);
       }else{
         sqlite3_temp_directory = 0;
       }
@@ -1323,8 +1322,8 @@ void sqlite3Pragma(
 #endif
   }
 pragma_out:
-  sqlite3_free(zLeft);
-  sqlite3_free(zRight);
+  sqlite3DbFree(db, zLeft);
+  sqlite3DbFree(db, zRight);
 }
 
 #endif /* SQLITE_OMIT_PRAGMA || SQLITE_OMIT_PARSER */

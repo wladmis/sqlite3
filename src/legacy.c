@@ -122,13 +122,13 @@ int sqlite3_exec(
       }
     }
 
-    sqlite3_free(azCols);
+    sqlite3DbFree(db, azCols);
     azCols = 0;
   }
 
 exec_out:
   if( pStmt ) sqlite3_finalize(pStmt);
-  if( azCols ) sqlite3_free(azCols);
+  sqlite3DbFree(db, azCols);
 
   rc = sqlite3ApiExit(db, rc);
   if( rc!=SQLITE_OK && rc==sqlite3_errcode(db) && pzErrMsg ){

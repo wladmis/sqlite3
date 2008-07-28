@@ -45,8 +45,9 @@ void sqlite3IndexAffinityStr(Vdbe *v, Index *pIdx){
     int n;
     Table *pTab = pIdx->pTable;
     sqlite3 *db = sqlite3VdbeDb(v);
-    pIdx->zColAff = (char *)sqlite3DbMallocRaw(db, pIdx->nColumn+2);
+    pIdx->zColAff = (char *)sqlite3Malloc(pIdx->nColumn+2);
     if( !pIdx->zColAff ){
+      db->mallocFailed = 1;
       return;
     }
     for(n=0; n<pIdx->nColumn; n++){
@@ -86,8 +87,9 @@ void sqlite3TableAffinityStr(Vdbe *v, Table *pTab){
     int i;
     sqlite3 *db = sqlite3VdbeDb(v);
 
-    zColAff = (char *)sqlite3DbMallocRaw(db, pTab->nCol+1);
+    zColAff = (char *)sqlite3Malloc(pTab->nCol+1);
     if( !zColAff ){
+      db->mallocFailed = 1;
       return;
     }
 
@@ -994,11 +996,11 @@ void sqlite3Insert(
   }
 
 insert_cleanup:
-  sqlite3SrcListDelete(pTabList);
-  sqlite3ExprListDelete(pList);
-  sqlite3SelectDelete(pSelect);
-  sqlite3IdListDelete(pColumn);
-  sqlite3_free(aRegIdx);
+  sqlite3SrcListDelete(db, pTabList);
+  sqlite3ExprListDelete(db, pList);
+  sqlite3SelectDelete(db, pSelect);
+  sqlite3IdListDelete(db, pColumn);
+  sqlite3DbFree(db, aRegIdx);
 }
 
 /*

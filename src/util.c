@@ -98,7 +98,7 @@ void sqlite3Error(sqlite3 *db, int err_code, const char *zFormat, ...){
       va_start(ap, zFormat);
       z = sqlite3VMPrintf(db, zFormat, ap);
       va_end(ap);
-      sqlite3ValueSetStr(db->pErr, -1, z, SQLITE_UTF8, sqlite3_free);
+      sqlite3ValueSetStr(db->pErr, -1, z, SQLITE_UTF8, SQLITE_DYNAMIC);
     }else{
       sqlite3ValueSetStr(db->pErr, 0, 0, SQLITE_UTF8, SQLITE_STATIC);
     }
@@ -124,10 +124,11 @@ void sqlite3Error(sqlite3 *db, int err_code, const char *zFormat, ...){
 */
 void sqlite3ErrorMsg(Parse *pParse, const char *zFormat, ...){
   va_list ap;
+  sqlite3 *db = pParse->db;
   pParse->nErr++;
-  sqlite3_free(pParse->zErrMsg);
+  sqlite3DbFree(db, pParse->zErrMsg);
   va_start(ap, zFormat);
-  pParse->zErrMsg = sqlite3VMPrintf(pParse->db, zFormat, ap);
+  pParse->zErrMsg = sqlite3VMPrintf(db, zFormat, ap);
   va_end(ap);
   if( pParse->rc==SQLITE_OK ){
     pParse->rc = SQLITE_ERROR;
@@ -138,7 +139,7 @@ void sqlite3ErrorMsg(Parse *pParse, const char *zFormat, ...){
 ** Clear the error message in pParse, if any
 */
 void sqlite3ErrorClear(Parse *pParse){
-  sqlite3_free(pParse->zErrMsg);
+  sqlite3DbFree(pParse->db, pParse->zErrMsg);
   pParse->zErrMsg = 0;
   pParse->nErr = 0;
 }

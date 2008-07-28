@@ -83,3 +83,26 @@ int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag){
   }
   return SQLITE_OK;
 }
+
+/*
+** Query status information for a single database connection
+*/
+int sqlite3_db_status(
+  sqlite3 *db,          /* The database connection whose status is desired */
+  int op,               /* Status verb */
+  int *pCurrent,        /* Write current value here */
+  int *pHighwater,      /* Write high-water mark here */
+  int resetFlag         /* Reset high-water mark if true */
+){
+  switch( op ){
+    case SQLITE_DBSTATUS_LOOKASIDE_USED: {
+      *pCurrent = db->lookaside.nOut;
+      *pHighwater = db->lookaside.mxOut;
+      if( resetFlag ){
+        db->lookaside.mxOut = db->lookaside.nOut;
+      }
+      break;
+    }
+  }
+  return SQLITE_OK;
+}
