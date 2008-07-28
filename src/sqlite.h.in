@@ -1082,9 +1082,10 @@ struct sqlite3_mem_methods {
 ** tracks memory usage, for example.</dd>
 **
 ** <dt>SQLITE_CONFIG_MEMSTATUS</dt>
-** <dd>This option takes single boolean argument which enables or disables
-** the collection of memory allocation statistics.  When disabled, the
-** following SQLite interfaces become non-operational:
+** <dd>This option takes single argument of type int, interpreted as a 
+** boolean, which enables or disables the collection of memory allocation 
+** statistics. When disabled, the following SQLite interfaces become 
+** non-operational:
 **   <ul>
 **   <li> [sqlite3_memory_used()]
 **   <li> [sqlite3_memory_highwater()]
