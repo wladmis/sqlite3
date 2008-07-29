@@ -835,7 +835,7 @@ static int os2Open(
     pFile->pathToDel = NULL;
     if( flags & SQLITE_OPEN_READWRITE ){
       OSTRACE2( "OPEN %d Invalid handle\n", ((flags | SQLITE_OPEN_READONLY) & ~SQLITE_OPEN_READWRITE) );
-      return os2Open( 0, zName, id,
+      return os2Open( pVfs, zName, id,
                       ((flags | SQLITE_OPEN_READONLY) & ~SQLITE_OPEN_READWRITE),
                       pOutFlags );
     }else{
