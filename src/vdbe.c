@@ -2155,17 +2155,8 @@ case OP_Column: {
   if( aOffset[p2] ){
     assert( rc==SQLITE_OK );
     if( zRec ){
-      if( pDest->flags&MEM_Dyn ){
-        sqlite3VdbeSerialGet((u8 *)&zRec[aOffset[p2]], aType[p2], &sMem);
-        sMem.db = db; 
-        rc = sqlite3VdbeMemCopy(pDest, &sMem);
-        assert( !(sMem.flags&MEM_Dyn) );
-        if( rc!=SQLITE_OK ){
-          goto op_column_out;
-        }
-      }else{
-        sqlite3VdbeSerialGet((u8 *)&zRec[aOffset[p2]], aType[p2], pDest);
-      }
+      sqlite3VdbeMemReleaseExternal(pDest);
+      sqlite3VdbeSerialGet((u8 *)&zRec[aOffset[p2]], aType[p2], pDest);
     }else{
       len = sqlite3VdbeSerialTypeLen(aType[p2]);
       sqlite3VdbeMemMove(&sMem, pDest);
