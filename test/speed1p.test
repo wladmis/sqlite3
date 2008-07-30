@@ -17,9 +17,9 @@
 #
 
 sqlite3_shutdown
-sqlite3_config_scratch 29000 1
+#sqlite3_config_scratch 29000 1
 sqlite3_config_lookaside 2048 300
-sqlite3_config_pagecache 1024 11000
+#sqlite3_config_pagecache 1024 11000
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 speed_trial_init speed1
