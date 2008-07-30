@@ -703,4 +703,45 @@ do_test expr-13.1 {
   }
 } {1.23456789012346e+19}
 
+# Implicit String->Integer conversion is used when possible.
+#
+do_test expr-13.2 {
+  execsql {
+    SELECT 0+'9223372036854775807'
+  }
+} {9223372036854775807}
+do_test expr-13.3 {
+  execsql {
+    SELECT '9223372036854775807'+0
+  }
+} {9223372036854775807}
+
+# If the value is too large, use String->Float conversion.
+#
+do_test expr-13.4 {
+  execsql {
+    SELECT 0+'9223372036854775808'
+  }
+} {9.22337203685478e+18}
+do_test expr-13.5 {
+  execsql {
+    SELECT '9223372036854775808'+0
+  }
+} {9.22337203685478e+18}
+
+# Use String->float conversion if the value is explicitly a floating
+# point value.
+#
+do_test expr-13.6 {
+  execsql {
+    SELECT 0+'9223372036854775807.0'
+  }
+} {9.22337203685478e+18}
+do_test expr-13.7 {
+  execsql {
+    SELECT '9223372036854775807.0'+0
+  }
+} {9.22337203685478e+18}
+
+
 finish_test
