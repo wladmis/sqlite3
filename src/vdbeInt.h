@@ -407,7 +407,6 @@ void sqlite3VdbeMemSetDouble(Mem*, double);
 void sqlite3VdbeMemSetNull(Mem*);
 void sqlite3VdbeMemSetZeroBlob(Mem*,int);
 int sqlite3VdbeMemMakeWriteable(Mem*);
-int sqlite3VdbeMemDynamicify(Mem*);
 int sqlite3VdbeMemStringify(Mem*, int);
 i64 sqlite3VdbeIntValue(Mem*);
 int sqlite3VdbeMemIntegerify(Mem*);

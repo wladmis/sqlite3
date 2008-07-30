@@ -890,7 +890,7 @@ case OP_String8: {         /* same as TK_STRING, out2-prerelease */
   if( encoding!=SQLITE_UTF8 ){
     sqlite3VdbeMemSetStr(pOut, pOp->p4.z, -1, SQLITE_UTF8, SQLITE_STATIC);
     if( SQLITE_OK!=sqlite3VdbeChangeEncoding(pOut, encoding) ) goto no_mem;
-    if( SQLITE_OK!=sqlite3VdbeMemDynamicify(pOut) ) goto no_mem;
+    if( SQLITE_OK!=sqlite3VdbeMemMakeWriteable(pOut) ) goto no_mem;
     pOut->zMalloc = 0;
     pOut->flags |= MEM_Static;
     pOut->flags &= ~MEM_Dyn;
