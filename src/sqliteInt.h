@@ -36,7 +36,9 @@
 #endif
 
 /* Needed for various definitions... */
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+#endif
 
 /*
 ** Include standard header files as necessary
