@@ -1887,9 +1887,9 @@ int sqlite3VdbeCursorMoveto(Cursor *p){
 **
 ** sqlite3VdbeSerialType()
 ** sqlite3VdbeSerialTypeLen()
-** sqlite3VdbeSerialRead()
 ** sqlite3VdbeSerialLen()
-** sqlite3VdbeSerialWrite()
+** sqlite3VdbeSerialPut()
+** sqlite3VdbeSerialGet()
 **
 ** encapsulate the code that serializes values for storage in SQLite
 ** data and index records. Each serialized value consists of a
