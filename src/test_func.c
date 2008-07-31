@@ -114,6 +114,7 @@ static void test_destructor(
   memcpy(zVal, sqlite3_value_text(argv[0]), len);
   sqlite3_result_text(pCtx, zVal, -1, destructor);
 }
+#ifndef SQLITE_OMIT_UTF16
 static void test_destructor16(
   sqlite3_context *pCtx, 
   int nArg,
@@ -136,6 +137,7 @@ static void test_destructor16(
   memcpy(zVal, sqlite3_value_text16(argv[0]), len);
   sqlite3_result_text16(pCtx, zVal, -1, destructor);
 }
+#endif
 static void test_destructor_count(
   sqlite3_context *pCtx, 
   int nArg,
@@ -272,7 +274,9 @@ static int registerTestFunctions(sqlite3 *db){
   } aFuncs[] = {
     { "randstr",               2, SQLITE_UTF8, randStr    },
     { "test_destructor",       1, SQLITE_UTF8, test_destructor},
+#ifndef SQLITE_OMIT_UTF16
     { "test_destructor16",     1, SQLITE_UTF8, test_destructor16},
+#endif
     { "test_destructor_count", 0, SQLITE_UTF8, test_destructor_count},
     { "test_auxdata",         -1, SQLITE_UTF8, test_auxdata},
     { "test_error",            1, SQLITE_UTF8, test_error},

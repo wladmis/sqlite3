@@ -455,11 +455,13 @@ if {[db eval {PRAGMA encoding}]=="UTF-8"} {
     }
   } {{hello world} 1}
 } else {
-  do_test func-12.1-utf16 {
-    execsql {
-      SELECT test_destructor16('hello world'), test_destructor_count();
+    ifcapable {utf16} {
+      do_test func-12.1-utf16 {
+        execsql {
+          SELECT test_destructor16('hello world'), test_destructor_count();
+        }
+      } {{hello world} 1}
     }
-  } {{hello world} 1}
 }
 do_test func-12.2 {
   execsql {
