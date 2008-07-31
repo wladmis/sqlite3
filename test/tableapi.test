@@ -35,6 +35,8 @@ do_test tableapi-1.2 {
   sqlite3_exec_printf $::dbx {SELECT * FROM xyz} {}
 } {0 {a b 1 {Hi Y'all}}}
 
+ifcapable gettable {
+
 do_test tableapi-2.1 {
   sqlite3_get_table_printf $::dbx {
     BEGIN TRANSACTION;
@@ -112,6 +114,9 @@ do_test tableapi-2.7 {
     SELECT * FROM xyz WHERE a>1000
   } {}
 } {0 0 0}
+
+}; # end ifcapable gettable
+
 
 # Repeat all tests with the empty_result_callbacks pragma turned on
 #

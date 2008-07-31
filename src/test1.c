@@ -497,6 +497,8 @@ static int test_snprintf_int(
   return TCL_OK;
 }
 
+#ifndef SQLITE_OMIT_GET_TABLE
+
 /*
 ** Usage:  sqlite3_get_table_printf  DB  FORMAT  STRING  ?--no-counts?
 **
@@ -558,6 +560,8 @@ static int test_get_table_printf(
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   return TCL_OK;
 }
+
+#endif /* SQLITE_OMIT_GET_TABLE */
 
 
 /*
@@ -4529,7 +4533,9 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_exec_printf",           (Tcl_CmdProc*)test_exec_printf      },
      { "sqlite3_exec",                  (Tcl_CmdProc*)test_exec             },
      { "sqlite3_exec_nr",               (Tcl_CmdProc*)test_exec_nr          },
+#ifndef SQLITE_OMIT_GET_TABLE
      { "sqlite3_get_table_printf",      (Tcl_CmdProc*)test_get_table_printf },
+#endif
      { "sqlite3_close",                 (Tcl_CmdProc*)sqlite_test_close     },
      { "sqlite3_create_function",       (Tcl_CmdProc*)test_create_function  },
      { "sqlite3_create_aggregate",      (Tcl_CmdProc*)test_create_aggregate },
