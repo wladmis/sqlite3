@@ -115,6 +115,7 @@ int sqlite3MallocInit(void){
   if( sqlite3Config.pScratch && sqlite3Config.szScratch>=3000
       && sqlite3Config.nScratch>0 ){
     int i;
+    sqlite3Config.szScratch -= 4;
     mem0.aScratchFree = (u32*)&((char*)sqlite3Config.pScratch)
                   [sqlite3Config.szScratch*sqlite3Config.nScratch];
     for(i=0; i<sqlite3Config.nScratch; i++){ mem0.aScratchFree[i] = i; }
@@ -124,8 +125,13 @@ int sqlite3MallocInit(void){
     sqlite3Config.szScratch = 0;
   }
   if( sqlite3Config.pPage && sqlite3Config.szPage>=512
-      && sqlite3Config.nPage>0 ){
+      && sqlite3Config.nPage>1 ){
     int i;
+    int overhead;
+    int sz = sqlite3Config.szPage;
+    int n = sqlite3Config.nPage;
+    overhead = (4*n + sz - 1)/sz;
+    sqlite3Config.nPage -= overhead;
     mem0.aPageFree = (u32*)&((char*)sqlite3Config.pPage)
                   [sqlite3Config.szPage*sqlite3Config.nPage];
     for(i=0; i<sqlite3Config.nPage; i++){ mem0.aPageFree[i] = i; }
