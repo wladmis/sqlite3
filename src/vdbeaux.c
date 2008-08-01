@@ -1216,7 +1216,7 @@ int sqlite3VdbeSetColName(Vdbe *p, int idx, int var, const char *zName, int N){
 ** write-transaction spanning more than one database file, this routine
 ** takes care of the master journal trickery.
 */
-static int vdbeCommit(sqlite3 *db){
+static int vdbeCommit(sqlite3 *db, Vdbe *p){
   int i;
   int nTrans = 0;  /* Number of databases with an active write-transaction */
   int rc = SQLITE_OK;
@@ -1228,7 +1228,7 @@ static int vdbeCommit(sqlite3 *db){
   ** required, as an xSync() callback may add an attached database
   ** to the transaction.
   */
-  rc = sqlite3VtabSync(db, rc);
+  rc = sqlite3VtabSync(db, &p->zErrMsg);
   if( rc!=SQLITE_OK ){
     return rc;
   }
@@ -1592,7 +1592,7 @@ int sqlite3VdbeHalt(Vdbe *p){
         ** successful or hit an 'OR FAIL' constraint. This means a commit 
         ** is required.
         */
-        int rc = vdbeCommit(db);
+        int rc = vdbeCommit(db, p);
         if( rc==SQLITE_BUSY ){
           sqlite3BtreeMutexArrayLeave(&p->aMutex);
           return SQLITE_BUSY;

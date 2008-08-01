@@ -1259,6 +1259,7 @@ static double bestVirtualIndex(
   sqlite3_index_info **ppIdxInfo /* Index information passed to xBestIndex */
 ){
   Table *pTab = pSrc->pTab;
+  sqlite3_vtab *pVtab = pTab->pVtab;
   sqlite3_index_info *pIdxInfo;
   struct sqlite3_index_constraint *pIdxCons;
   struct sqlite3_index_orderby *pIdxOrderBy;
@@ -1370,7 +1371,7 @@ static double bestVirtualIndex(
   ** sqlite3ViewGetColumnNames() would have picked up the error. 
   */
   assert( pTab->azModuleArg && pTab->azModuleArg[0] );
-  assert( pTab->pVtab );
+  assert( pVtab );
 #if 0
   if( pTab->pVtab==0 ){
     sqlite3ErrorMsg(pParse, "undefined module %s for table %s",
@@ -1423,9 +1424,21 @@ static double bestVirtualIndex(
   (void)sqlite3SafetyOff(pParse->db);
   WHERETRACE(("xBestIndex for %s\n", pTab->zName));
   TRACE_IDX_INPUTS(pIdxInfo);
-  rc = pTab->pVtab->pModule->xBestIndex(pTab->pVtab, pIdxInfo);
+  rc = pVtab->pModule->xBestIndex(pVtab, pIdxInfo);
   TRACE_IDX_OUTPUTS(pIdxInfo);
   (void)sqlite3SafetyOn(pParse->db);
+
+  if( rc!=SQLITE_OK ){
+    if( rc==SQLITE_NOMEM ){
+      pParse->db->mallocFailed = 1;
+    }else if( !pVtab->zErrMsg ){
+      sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
+    }else{
+      sqlite3ErrorMsg(pParse, "%s", pVtab->zErrMsg);
+    }
+  }
+  sqlite3DbFree(pParse->db, pVtab->zErrMsg);
+  pVtab->zErrMsg = 0;
 
   for(i=0; i<pIdxInfo->nConstraint; i++){
     if( !pIdxInfo->aConstraint[i].usable && pUsage[i].argvIndex>0 ){
@@ -1435,15 +1448,7 @@ static double bestVirtualIndex(
     }
   }
 
-  if( rc!=SQLITE_OK ){
-    if( rc==SQLITE_NOMEM ){
-      pParse->db->mallocFailed = 1;
-    }else {
-      sqlite3ErrorMsg(pParse, "%s", sqlite3ErrStr(rc));
-    }
-  }
   *(int*)&pIdxInfo->nOrderBy = nOrderBy;
-
   return pIdxInfo->estimatedCost;
 }
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
