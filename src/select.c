@@ -2017,10 +2017,11 @@ static int multiSelect(
 
       /* Code the current SELECT statement
       */
-      switch( p->op ){
-         case TK_EXCEPT:  op = SRT_Except;   break;
-         case TK_UNION:   op = SRT_Union;    break;
-         case TK_ALL:     op = SRT_Table;    break;
+      if( p->op==TK_EXCEPT ){
+        op = SRT_Except;
+      }else{
+        assert( p->op==TK_UNION );
+        op = SRT_Union;
       }
       p->pPrior = 0;
       p->disallowOrderBy = 0;

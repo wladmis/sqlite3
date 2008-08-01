@@ -266,6 +266,16 @@ do_test analyze-4.2 {
     SELECT * FROM t4 WHERE x=1234;
   }
 } {}
+do_test analyze-4.3 {
+  execsql {
+    INSERT INTO sqlite_stat1 VALUES('t4','xyzzy','0 1 2 3');
+  }
+  db close
+  sqlite3 db test.db
+  execsql {
+    SELECT * FROM t4 WHERE x=1234;
+  }
+} {}
 
 # This test corrupts the database file so it must be the last test
 # in the series.

@@ -66,6 +66,7 @@ set EXCLUDE {
   fts3.test                 misc7.test                utf16.test
   fuzz_malloc.test          misuse.test               veryquick.test
   fuzz.test                 mutex2.test               vtab_err.test
+  lookaside.test
 }
 set ALLTESTS [list]
 foreach filename [glob $testdir/*.test] {

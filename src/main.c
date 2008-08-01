@@ -306,12 +306,13 @@ static int setupLookaside(sqlite3 *db, int sz, int cnt){
   sqlite3BeginBenignMalloc();
   pStart = sqlite3Malloc( sz*cnt );
   sqlite3EndBenignMalloc();
+  sqlite3_free(db->lookaside.pStart);
+  db->lookaside.pStart = pStart;
+  db->lookaside.pFree = 0;
+  db->lookaside.sz = sz;
   if( pStart ){
     int i;
     LookasideSlot *p;
-    sqlite3_free(db->lookaside.pStart);
-    db->lookaside.pFree = 0;
-    db->lookaside.pStart = pStart;
     p = (LookasideSlot*)pStart;
     for(i=cnt-1; i>=0; i--){
       p->pNext = db->lookaside.pFree;
@@ -320,7 +321,9 @@ static int setupLookaside(sqlite3 *db, int sz, int cnt){
     }
     db->lookaside.pEnd = p;
     db->lookaside.bEnabled = 1;
-    db->lookaside.sz = sz;
+  }else{
+    db->lookaside.pEnd = 0;
+    db->lookaside.bEnabled = 0;
   }
   return SQLITE_OK;
 }

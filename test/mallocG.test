@@ -27,7 +27,7 @@ if {!$MEMDEBUG} {
 
 # Malloc failures while opening a database connection.
 #
-do_malloc_test malloeG-1 -tclbody {
+do_malloc_test mallocG-1 -tclbody {
   db close
   sqlite3 db test.db
 }
