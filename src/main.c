@@ -330,13 +330,17 @@ static int setupLookaside(sqlite3 *db, int sz, int cnt){
 */
 int sqlite3_db_config(sqlite3 *db, int op, ...){
   va_list ap;
-  int rc = SQLITE_OK;
+  int rc;
   va_start(ap, op);
   switch( op ){
     case SQLITE_CONFIG_LOOKASIDE: {
       int sz = va_arg(ap, int);
       int cnt = va_arg(ap, int);
       rc = setupLookaside(db, sz, cnt);
+      break;
+    }
+    default: {
+      rc = SQLITE_ERROR;
       break;
     }
   }

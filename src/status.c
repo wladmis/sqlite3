@@ -103,6 +103,9 @@ int sqlite3_db_status(
       }
       break;
     }
+    default: {
+      return SQLITE_ERROR;
+    }
   }
   return SQLITE_OK;
 }
