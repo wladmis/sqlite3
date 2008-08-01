@@ -456,6 +456,13 @@ do_test misc7-19.2 {
 } {21 0 0}
 
 
+# sqlite3_global_recover() is a no-op.  But we might as well test it
+# if only to get the test coverage.
+#
+do_test misc7-20.1 {
+  sqlite3_global_recover
+} {SQLITE_OK}
+
 
 db close
 file delete -force test.db
