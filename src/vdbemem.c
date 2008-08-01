@@ -631,14 +631,8 @@ int sqlite3VdbeMemSetStr(
   }else{
     sqlite3VdbeMemRelease(pMem);
     pMem->z = (char *)z;
-    if( xDel==SQLITE_DYNAMIC ){
-      pMem->zMalloc = pMem->z;
-      pMem->xDel = 0;
-      flags |= MEM_Dyn;
-    }else{
-      pMem->xDel = xDel;
-      flags |= ((xDel==SQLITE_STATIC)?MEM_Static:MEM_Dyn);
-    }
+    pMem->xDel = xDel;
+    flags |= ((xDel==SQLITE_STATIC)?MEM_Static:MEM_Dyn);
   }
 
   pMem->n = nByte;

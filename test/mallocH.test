@@ -48,4 +48,26 @@ do_malloc_test mallocH-3 -sqlbody {
    SELECT replace('ababa','a','xyzzy');
 }
 
+# Malloc failures during EXPLAIN.
+#
+ifcapable explain {
+  do_malloc_test mallocH-4 -sqlprep {
+     CREATE TABLE abc(a PRIMARY KEY, b, c);
+  } -sqlbody {
+     EXPLAIN SELECT * FROM abc AS t2 WHERE rowid=1;
+     EXPLAIN QUERY PLAN SELECT * FROM abc AS t2 WHERE rowid=1;
+  }
+}
+
+# Malloc failure during integrity_check pragma.
+#
+do_malloc_test mallocH-5 -sqlprep {
+   CREATE TABLE t1(a PRIMARY KEY, b UNIQUE);
+   CREATE TABLE t2(x,y);
+   INSERT INTO t1 VALUES(1,2);
+   INSERT INTO t2 SELECT * FROM t1;
+} -sqlbody {
+   PRAGMA integrity_check;
+}
+
 finish_test

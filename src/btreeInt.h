@@ -601,6 +601,7 @@ struct IntegrityCk {
   int *anRef;       /* Number of times each page is referenced */
   int mxErr;        /* Stop accumulating errors when this reaches zero */
   int nErr;         /* Number of messages written to zErrMsg so far */
+  int mallocFailed; /* A memory allocation error has occurred */
   StrAccum errMsg;  /* Accumulate the error message text here */
 };
 
