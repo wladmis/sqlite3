@@ -250,9 +250,9 @@ do_test colname-4.13 {
 
 # ticket #3229
 do_test colname-5.1 {
-  db eval {
+  lreplace [db eval {
     SELECT x.* FROM sqlite_master X LIMIT 1;
-  }
-} {table tabc tabc 2 {CREATE TABLE tabc(a,b,c)}}
+  }] 3 3 x
+} {table tabc tabc x {CREATE TABLE tabc(a,b,c)}}
 
 finish_test
