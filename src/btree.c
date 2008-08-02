@@ -4524,6 +4524,7 @@ static int fillInCell(
   return SQLITE_OK;
 }
 
+
 /*
 ** Change the MemPage.pParent pointer on the page whose number is
 ** given in the second argument so that MemPage.pParent holds the
@@ -4570,11 +4571,12 @@ static int reparentPage(
   /* If the updatePtrmap flag was clear, assert that the entry in the
   ** pointer-map is already correct.
   */
-  if( ISAUTOVACUUM ){
+  if( ISAUTOVACUUM && sqlite3PagerLookup(pBt->pPager,PTRMAP_PAGENO(pBt,pgno)) ){
     u8 eType;
     Pgno ii;
-    ptrmapGet(pBt, pgno, &eType, &ii);
-    assert( ii==pNewParent->pgno && eType==PTRMAP_BTREE );
+    int rc;
+    rc = ptrmapGet(pBt, pgno, &eType, &ii);
+    assert( rc==SQLITE_OK && ii==pNewParent->pgno && eType==PTRMAP_BTREE );
   }
 #endif
 
