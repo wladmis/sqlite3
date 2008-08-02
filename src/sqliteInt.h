@@ -2261,7 +2261,7 @@ int sqlite3AutoLoadExtensions(sqlite3*);
 
 #ifdef SQLITE_OMIT_VIRTUALTABLE
 #  define sqlite3VtabClear(X)
-#  define sqlite3VtabSync(X,Y) (Y)
+#  define sqlite3VtabSync(X,Y) SQLITE_OK
 #  define sqlite3VtabRollback(X)
 #  define sqlite3VtabCommit(X)
 #else
