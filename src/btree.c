@@ -4571,12 +4571,15 @@ static int reparentPage(
   /* If the updatePtrmap flag was clear, assert that the entry in the
   ** pointer-map is already correct.
   */
-  if( ISAUTOVACUUM && sqlite3PagerLookup(pBt->pPager,PTRMAP_PAGENO(pBt,pgno)) ){
-    u8 eType;
-    Pgno ii;
-    int rc;
-    rc = ptrmapGet(pBt, pgno, &eType, &ii);
-    assert( rc==SQLITE_OK && ii==pNewParent->pgno && eType==PTRMAP_BTREE );
+  if( ISAUTOVACUUM ){
+    pDbPage = sqlite3PagerLookup(pBt->pPager,PTRMAP_PAGENO(pBt,pgno));
+    if( pDbPage ){
+      u8 eType;
+      Pgno ii;
+      int rc = ptrmapGet(pBt, pgno, &eType, &ii);
+      assert( rc==SQLITE_OK && ii==pNewParent->pgno && eType==PTRMAP_BTREE );
+      sqlite3PagerUnref(pDbPage);
+    }
   }
 #endif
 
