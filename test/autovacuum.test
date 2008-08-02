@@ -643,4 +643,23 @@ do_test autovacuum-7.3 {
   expr {[file size test.db] / 1024}
 } {286}
 
+#------------------------------------------------------------------------
+# Additional tests.
+#
+# Try to determine the autovacuum setting for a database that is locked.
+#
+do_test autovacuum-8.1 {
+  db close
+  sqlite3 db test.db
+  sqlite3 db2 test.db
+  db eval {PRAGMA auto_vacuum}
+} {1}
+do_test autovacuum-8.2 {
+  db eval {BEGIN EXCLUSIVE}
+  catchsql {PRAGMA auto_vacuum} db2
+} {1 {database is locked}}
+catch {db2 close}
+catch {db eval {COMMIT}}
+    
+
 finish_test

@@ -435,9 +435,6 @@ static int sqlite3Step(Vdbe *p){
   db = p->db;
   assert( !db->mallocFailed );
 
-  if( p->aborted ){
-    return SQLITE_ABORT;
-  }
   if( p->pc<=0 && p->expired ){
     if( p->rc==SQLITE_OK ){
       p->rc = SQLITE_SCHEMA;

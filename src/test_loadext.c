@@ -98,13 +98,14 @@ int testloadext_init(
   char **pzErrMsg, 
   const sqlite3_api_routines *pApi
 ){
+  int nErr = 0;
   SQLITE_EXTENSION_INIT2(pApi);
-  sqlite3_create_function(db, "half", 1, SQLITE_ANY, 0, halfFunc, 0, 0);
-  sqlite3_create_function(db, "sqlite3_status", 1, SQLITE_ANY, 0,
+  nErr |= sqlite3_create_function(db, "half", 1, SQLITE_ANY, 0, halfFunc, 0, 0);
+  nErr |= sqlite3_create_function(db, "sqlite3_status", 1, SQLITE_ANY, 0,
                           statusFunc, 0, 0);
-  sqlite3_create_function(db, "sqlite3_status", 2, SQLITE_ANY, 0,
+  nErr |= sqlite3_create_function(db, "sqlite3_status", 2, SQLITE_ANY, 0,
                           statusFunc, 0, 0);
-  return 0;
+  return nErr ? SQLITE_ERROR : SQLITE_OK;
 }
 
 /*

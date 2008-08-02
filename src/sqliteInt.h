@@ -2264,13 +2264,11 @@ int sqlite3AutoLoadExtensions(sqlite3*);
 #  define sqlite3VtabSync(X,Y) (Y)
 #  define sqlite3VtabRollback(X)
 #  define sqlite3VtabCommit(X)
-#  define sqlite3VtabTransferError(A,B,C)
 #else
    void sqlite3VtabClear(Table*);
    int sqlite3VtabSync(sqlite3 *db, char **);
    int sqlite3VtabRollback(sqlite3 *db);
    int sqlite3VtabCommit(sqlite3 *db);
-   void sqlite3VtabTransferError(sqlite3 *db, int, sqlite3_vtab*);
 #endif
 void sqlite3VtabMakeWritable(Parse*,Table*);
 void sqlite3VtabLock(sqlite3_vtab*);

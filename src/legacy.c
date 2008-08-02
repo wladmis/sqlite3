@@ -84,10 +84,9 @@ int sqlite3_exec(
           }
           for(i=0; i<nCol; i++){
             azCols[i] = (char *)sqlite3_column_name(pStmt, i);
-            if( !azCols[i] ){
-              db->mallocFailed = 1;
-              goto exec_out;
-            }
+            /* sqlite3VdbeSetColName() installs column names as UTF8
+            ** strings so there is no way for sqlite3_column_name() to fail. */
+            assert( azCols[i]!=0 );
           }
           nCallback++;
         }

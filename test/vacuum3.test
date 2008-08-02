@@ -303,6 +303,15 @@ if {$MEMDEBUG} {
     PRAGMA page_size = 512;
     VACUUM;
   } 
+  do_malloc_test vacuum3-malloc-2 -sqlprep { 
+    PRAGMA encoding=UTF16;
+    CREATE TABLE t1(a, b, c);
+    INSERT INTO t1 VALUES(1, 2, 3);
+    CREATE TABLE t2(x,y,z);
+    INSERT INTO t2 SELECT * FROM t1;
+  } -sqlbody {
+    VACUUM;
+  } 
 }
 
 finish_test

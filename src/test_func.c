@@ -308,7 +308,8 @@ static int autoinstall_test_funcs(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
-  sqlite3_auto_extension((void*)registerTestFunctions);
+  int rc = sqlite3_auto_extension((void*)registerTestFunctions);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(rc));
   return TCL_OK;
 }
 
