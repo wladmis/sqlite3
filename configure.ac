@@ -619,7 +619,7 @@ fi
 for option in $CFLAGS $CPPFLAGS
 do
   case $option in
-    -DSQLITE_OMIT*) OPT_FEATURE_FLAGS+=" $option";;
+    -DSQLITE_OMIT*) OPT_FEATURE_FLAGS="$OPT_FEATURE_FLAGS $option";;
   esac
 done
 AC_SUBST(OPT_FEATURE_FLAGS)
@@ -631,7 +631,7 @@ for option in $CFLAGS
 do
   case $option in
     -DSQLITE_OMIT*) ;;
-    *) ac_temp_CFLAGS+=" $option";;
+    *) ac_temp_CFLAGS="$ac_temp_CFLAGS $option";;
   esac
 done
 CFLAGS=$ac_temp_CFLAGS
@@ -643,7 +643,7 @@ for option in $CPPFLAGS
 do
   case $option in
     -DSQLITE_OMIT*) ;;
-    *) ac_temp_CPPFLAGS+=" $option";;
+    *) ac_temp_CPPFLAGS="$ac_temp_CPPFLAGS $option";;
   esac
 done
 CPPFLAGS=$ac_temp_CPPFLAGS
@@ -655,7 +655,7 @@ for option in $BUILD_CFLAGS
 do
   case $option in
     -DSQLITE_OMIT*) ;;
-    *) ac_temp_BUILD_CFLAGS+=" $option";;
+    *) ac_temp_BUILD_CFLAGS="$ac_temp_BUILD_CFLAGS $option";;
   esac
 done
 BUILD_CFLAGS=$ac_temp_BUILD_CFLAGS
