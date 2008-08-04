@@ -575,6 +575,7 @@ struct Schema {
 struct Lookaside {
   u16 sz;                 /* Size of each buffer in bytes */
   u8 bEnabled;            /* True if use lookaside.  False to ignore it */
+  u8 bMalloced;           /* True if pStart obtained from sqlite3_malloc() */
   int nOut;               /* Number of buffers currently checked out */
   int mxOut;              /* Highwater mark for nOut */
   LookasideSlot *pFree;   /* List if available buffers */

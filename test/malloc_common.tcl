@@ -98,7 +98,7 @@ proc do_malloc_test {tn args} {
         if {[info commands db] ne ""} {
           sqlite3_extended_result_codes db 1
         }
-        sqlite3_db_config_lookaside db 0 0
+        sqlite3_db_config_lookaside db 0 0 0
   
         # Execute any -tclprep and -sqlprep scripts.
         #
