@@ -1524,6 +1524,7 @@ void sqlite3EndTable(
       SelectDest dest;
       Table *pSelTab;
 
+      assert(pParse->nTab==0);
       sqlite3VdbeAddOp3(v, OP_OpenWrite, 1, pParse->regRoot, iDb);
       sqlite3VdbeChangeP5(v, 1);
       pParse->nTab = 2;
