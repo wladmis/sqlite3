@@ -62,8 +62,10 @@ proc run_quick_test {dir omit_symbol_list} {
   file mkdir $dir
   puts -nonewline "Building $dir..."
   flush stdout
+catch {
   file copy -force ./config.h $dir
   file copy -force ./libtool $dir
+}
   set rc [catch {
     exec make -C $dir -f $::MAKEFILE testfixture OPTS=$opts >& $dir/build.log
   }]

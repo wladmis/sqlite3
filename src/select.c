@@ -2447,6 +2447,7 @@ static int generateOutputSubroutine(
 ** until all data is exhausted then jump to the "end" labe.  AltB, AeqB,
 ** and AgtB jump to either L2 or to one of EofA or EofB.
 */
+#ifndef SQLITE_OMIT_COMPOUND_SELECT
 static int multiSelectOrderBy(
   Parse *pParse,        /* Parsing context */
   Select *p,            /* The right-most of SELECTs to be coded */
@@ -2793,6 +2794,7 @@ static int multiSelectOrderBy(
   **** subqueries ****/
   return SQLITE_OK;
 }
+#endif
 
 #if !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW)
 /* Forward Declarations */

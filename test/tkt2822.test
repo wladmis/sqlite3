@@ -19,6 +19,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !compound {
+  finish_test
+  return
+}
+
 # The ORDER BY matching algorithm is three steps:
 # 
 #   (1)  If the ORDER BY term is an integer constant i, then

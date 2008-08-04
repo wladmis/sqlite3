@@ -290,30 +290,32 @@ do_test func-8.4 {
     SELECT max('z+'||a||'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP') FROM t3;
   }
 } {z+67890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP}
-do_test func-8.5 {
-  execsql {
-    SELECT sum(x) FROM (SELECT '9223372036' || '854775807' AS x
-                        UNION ALL SELECT -9223372036854775807)
-  }
-} {0}
-do_test func-8.6 {
-  execsql {
-    SELECT typeof(sum(x)) FROM (SELECT '9223372036' || '854775807' AS x
-                        UNION ALL SELECT -9223372036854775807)
-  }
-} {integer}
-do_test func-8.7 {
-  execsql {
-    SELECT typeof(sum(x)) FROM (SELECT '9223372036' || '854775808' AS x
-                        UNION ALL SELECT -9223372036854775807)
-  }
-} {real}
-do_test func-8.8 {
-  execsql {
-    SELECT sum(x)>0.0 FROM (SELECT '9223372036' || '854775808' AS x
-                        UNION ALL SELECT -9223372036850000000)
-  }
-} {1}
+ifcapable compound {
+  do_test func-8.5 {
+    execsql {
+      SELECT sum(x) FROM (SELECT '9223372036' || '854775807' AS x
+                          UNION ALL SELECT -9223372036854775807)
+    }
+  } {0}
+  do_test func-8.6 {
+    execsql {
+      SELECT typeof(sum(x)) FROM (SELECT '9223372036' || '854775807' AS x
+                          UNION ALL SELECT -9223372036854775807)
+    }
+  } {integer}
+  do_test func-8.7 {
+    execsql {
+      SELECT typeof(sum(x)) FROM (SELECT '9223372036' || '854775808' AS x
+                          UNION ALL SELECT -9223372036854775807)
+    }
+  } {real}
+  do_test func-8.8 {
+    execsql {
+      SELECT sum(x)>0.0 FROM (SELECT '9223372036' || '854775808' AS x
+                          UNION ALL SELECT -9223372036850000000)
+    }
+  } {1}
+}
 
 # How do you test the random() function in a meaningful, deterministic way?
 #

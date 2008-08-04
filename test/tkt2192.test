@@ -19,12 +19,12 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-ifcapable !datetime {
+ifcapable !datetime||!compound {
   finish_test
   return
 }
 
-do_test tkt2191-1.1 {
+do_test tkt2192-1.1 {
   execsql {
     -- Raw data (RBS) --------
     

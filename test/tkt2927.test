@@ -17,6 +17,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !compound {
+  finish_test
+  return
+}
+
 # Create a database.
 #
 do_test tkt2927-1.1 {

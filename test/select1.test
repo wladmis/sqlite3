@@ -628,7 +628,7 @@ do_test select1-6.11 {
 } {1 {1st ORDER BY term does not match any column in the result set}}
 
 # Ticket #2296
-ifcapable subquery {
+ifcapable subquery&&compound {
 do_test select1-6.20 {
    execsql {
      CREATE TABLE t6(a TEXT, b TEXT);

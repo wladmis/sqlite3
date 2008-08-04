@@ -47,14 +47,25 @@ do_test insert5-1.0 {
 
 # Run the query.
 #
-do_test insert5-1.1 {
-  execsql {
-    INSERT INTO B 
-      SELECT * FROM B UNION ALL 
-      SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id);
+ifcapable compound {
+  do_test insert5-1.1 {
+    execsql {
+      INSERT INTO B 
+        SELECT * FROM B UNION ALL 
+        SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id);
       SELECT * FROM B;
-  }
-} {2 3 2 3 2 3}
+    }
+  } {2 3 2 3 2 3}
+} else {
+  do_test insert5-1.1 {
+    execsql {
+      INSERT INTO B SELECT * FROM B;
+      INSERT INTO B
+        SELECT * FROM MAIN WHERE exists (select * FROM B WHERE B.Id = MAIN.Id);
+      SELECT * FROM B;
+    }
+  } {2 3 2 3 2 3}
+}
 do_test insert5-2.1 {
   uses_temp_table { INSERT INTO b SELECT * FROM main }
 } {0}

@@ -21,7 +21,7 @@ puts hello
 # This script is only valid if we are running shared-cache mode in a
 # threadsafe-capable database engine.
 #
-ifcapable !shared_cache {
+ifcapable !shared_cache||!compound {
   finish_test
   return
 }

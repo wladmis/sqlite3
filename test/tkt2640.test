@@ -28,7 +28,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-ifcapable !subquery {
+ifcapable !subquery||!compound {
   finish_test
   return
 }
