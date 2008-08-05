@@ -368,10 +368,14 @@ proc finalize_testing {} {
 #
 proc show_memstats {} {
   set x [sqlite3_status SQLITE_STATUS_MEMORY_USED 0]
-  set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
+  set y [sqlite3_status SQLITE_STATUS_MALLOC_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+              [lindex $x 1] [lindex $x 2] [lindex $y 2]]
   puts "Memory used:          $val"
   set x [sqlite3_status SQLITE_STATUS_PAGECACHE_USED 0]
-  set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
+  set y [sqlite3_status SQLITE_STATUS_PAGECACHE_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+              [lindex $x 1] [lindex $x 2] [lindex $y 2]]
   puts "Page-cache used:      $val"
   set x [sqlite3_status SQLITE_STATUS_PAGECACHE_OVERFLOW 0]
   set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
@@ -380,15 +384,15 @@ proc show_memstats {} {
   set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
   puts "Scratch memory used:  $val"
   set x [sqlite3_status SQLITE_STATUS_SCRATCH_OVERFLOW 0]
-  set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
+  set y [sqlite3_status SQLITE_STATUS_SCRATCH_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+               [lindex $x 1] [lindex $x 2] [lindex $y 2]]
   puts "Scratch overflow:     $val"
   ifcapable yytrackmaxstackdepth {
     set x [sqlite3_status SQLITE_STATUS_PARSER_STACK 0]
     set val [format {               max %10d} [lindex $x 2]]
     puts "Parser stack depth:    $val"
   }
-  set x [sqlite3_status SQLITE_STATUS_MALLOC_SIZE 0]
-  puts "Maximum alloc size:   [lindex $x 2]"
 }
 
 # A procedure to execute SQL

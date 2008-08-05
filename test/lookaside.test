@@ -93,3 +93,5 @@ do_test lookaside-4.1 {
   catch sqlite3_config_error
 } {0}
 sqlite3_initialize
+
+finish_test
