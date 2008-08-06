@@ -2136,6 +2136,7 @@ void sqlite3CreateForeignKey(
   ExprList *pToCol,    /* Columns in the other table */
   int flags            /* Conflict resolution algorithms. */
 ){
+  sqlite3 *db = pParse->db;
 #ifndef SQLITE_OMIT_FOREIGN_KEY
   FKey *pFKey = 0;
   Table *p = pParse->pNewTable;
@@ -2143,10 +2144,8 @@ void sqlite3CreateForeignKey(
   int i;
   int nCol;
   char *z;
-  sqlite3 *db;
 
   assert( pTo!=0 );
-  db = pParse->db;
   if( p==0 || pParse->nErr || IN_DECLARE_VTAB ) goto fk_end;
   if( pFromCol==0 ){
     int iCol = p->nCol-1;
