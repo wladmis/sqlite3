@@ -245,8 +245,11 @@ int sqlite3GetToken(const unsigned char *z, int *tokenType){
           }
         }
       }
-      if( c ){
+      if( c=='\'' ){
         *tokenType = TK_STRING;
+        return i+1;
+      }else if( c!=0 ){
+        *tokenType = TK_ID;
         return i+1;
       }else{
         *tokenType = TK_ILLEGAL;
