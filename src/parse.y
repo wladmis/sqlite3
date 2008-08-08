@@ -313,7 +313,7 @@ tcons ::= PRIMARY KEY LP idxlist(X) autoinc(I) RP onconf(R).
                                          {sqlite3AddPrimaryKey(pParse,X,R,I,0);}
 tcons ::= UNIQUE LP idxlist(X) RP onconf(R).
                                  {sqlite3CreateIndex(pParse,0,0,0,X,R,0,0,0,0);}
-tcons ::= CHECK LP expr(E) RP. {sqlite3AddCheckConstraint(pParse,E);}
+tcons ::= CHECK LP expr(E) RP onconf. {sqlite3AddCheckConstraint(pParse,E);}
 tcons ::= FOREIGN KEY LP idxlist(FA) RP
           REFERENCES nm(T) idxlist_opt(TA) refargs(R) defer_subclause_opt(D). {
     sqlite3CreateForeignKey(pParse, FA, &T, TA, R);
