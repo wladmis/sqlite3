@@ -308,12 +308,13 @@ static int setupLookaside(sqlite3 *db, void *pBuf, int sz, int cnt){
   }
   if( sz<0 ) sz = 0;
   if( cnt<0 ) cnt = 0;
-  sz = (sz+7)&~7;
   if( pBuf==0 ){
+    sz = (sz + 7)&~7;
     sqlite3BeginBenignMalloc();
     pStart = sqlite3Malloc( sz*cnt );
     sqlite3EndBenignMalloc();
   }else{
+    sz = sz&~7;
     pStart = pBuf;
   }
   if( db->lookaside.bMalloced ){
