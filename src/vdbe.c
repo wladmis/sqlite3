@@ -4139,9 +4139,10 @@ case OP_ParseSchema: {
   (void)sqlite3SafetyOff(db);
   assert( db->init.busy==0 );
   db->init.busy = 1;
+  initData.rc = SQLITE_OK;
   assert( !db->mallocFailed );
   rc = sqlite3_exec(db, zSql, sqlite3InitCallback, &initData, 0);
-  if( rc==SQLITE_ABORT ) rc = initData.rc;
+  if( rc==SQLITE_OK ) rc = initData.rc;
   sqlite3DbFree(db, zSql);
   db->init.busy = 0;
   (void)sqlite3SafetyOn(db);

@@ -433,7 +433,9 @@ static int sqlite3Step(Vdbe *p){
 
   /* Assert that malloc() has not failed */
   db = p->db;
-  assert( !db->mallocFailed );
+  if( db->mallocFailed ){
+    return SQLITE_NOMEM;
+  }
 
   if( p->pc<=0 && p->expired ){
     if( p->rc==SQLITE_OK ){
