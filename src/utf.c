@@ -404,7 +404,7 @@ int sqlite3Utf8CharLen(const char *zIn, int nByte){
 int sqlite3Utf8To8(unsigned char *zIn){
   unsigned char *zOut = zIn;
   unsigned char *zStart = zIn;
-  unsigned char *zTerm;
+  unsigned char *zTerm = &zIn[strlen((char *)zIn)];
   u32 c;
 
   while( zIn[0] ){
