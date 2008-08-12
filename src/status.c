@@ -27,14 +27,6 @@ static struct {
 
 
 /*
-** Reset the status records.  This routine is called by
-** sqlite3_initialize().
-*/
-void sqlite3StatusReset(void){
-  memset(&sqlite3Stat, 0, sizeof(sqlite3Stat));
-}
-
-/*
 ** Return the current value of a status parameter.
 */
 int sqlite3StatusValue(int op){

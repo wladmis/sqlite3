@@ -1831,6 +1831,7 @@ struct Sqlite3Config {
   int isInit;                       /* True after initialization has finished */
   int isMallocInit;                 /* True after malloc is initialized */
   sqlite3_mutex *pInitMutex;        /* Mutex used by sqlite3_initialize() */
+  int nRefInitMutex;                /* Number of users of pInitMutex */
   int nSmall;                       /* alloc size threshold used by mem6.c */
   int mxParserStack;                /* maximum depth of the parser stack */
 };
@@ -1898,7 +1899,6 @@ void sqlite3BenignMallocHooks(void (*)(void), void (*)(void));
   int sqlite3MutexEnd(void);
 #endif
 
-void sqlite3StatusReset(void);
 int sqlite3StatusValue(int);
 void sqlite3StatusAdd(int, int);
 void sqlite3StatusSet(int, int);
