@@ -190,7 +190,7 @@ int sqlite3VdbeReleaseMemory(int);
 #endif
 UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,void*,int);
 void sqlite3VdbeDeleteUnpackedRecord(UnpackedRecord*);
-int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
+int sqlite3VdbeRecordCompare(int,const void*,int,UnpackedRecord*);
 
 
 #ifndef NDEBUG

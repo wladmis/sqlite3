@@ -3058,10 +3058,10 @@ case OP_Found: {        /* jump, in3 */
     assert( pC->isTable==0 );
     assert( pIn3->flags & MEM_Blob );
     if( pOp->opcode==OP_Found ){
-      pC->pKeyInfo->prefixIsEqual = 1;
+      pC->pKeyInfo->ckPrefixOnly = 1;
     }
     rc = sqlite3BtreeMoveto(pC->pCursor, pIn3->z, 0, pIn3->n, 0, &res);
-    pC->pKeyInfo->prefixIsEqual = 0;
+    pC->pKeyInfo->ckPrefixOnly = 0;
     if( rc!=SQLITE_OK ){
       break;
     }

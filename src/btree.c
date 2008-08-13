@@ -3774,7 +3774,7 @@ int sqlite3BtreeMoveto(
         pCellKey = (void *)fetchPayload(pCur, &available, 0);
         nCellKey = pCur->info.nKey;
         if( available>=nCellKey ){
-          c = sqlite3VdbeRecordCompare(nCellKey, pCellKey, pUnKey);
+          c = sqlite3VdbeRecordCompare(nCellKey, pCellKey, 0, pUnKey);
         }else{
           pCellKey = sqlite3Malloc( nCellKey );
           if( pCellKey==0 ){
@@ -3782,7 +3782,7 @@ int sqlite3BtreeMoveto(
             goto moveto_finish;
           }
           rc = sqlite3BtreeKey(pCur, 0, nCellKey, (void *)pCellKey);
-          c = sqlite3VdbeRecordCompare(nCellKey, pCellKey, pUnKey);
+          c = sqlite3VdbeRecordCompare(nCellKey, pCellKey, 0, pUnKey);
           sqlite3_free(pCellKey);
           if( rc ) goto moveto_finish;
         }
