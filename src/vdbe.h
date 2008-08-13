@@ -34,7 +34,6 @@ typedef struct Vdbe Vdbe;
 */
 typedef struct VdbeFunc VdbeFunc;
 typedef struct Mem Mem;
-typedef struct UnpackedRecord UnpackedRecord;
 
 /*
 ** A single instruction of the virtual machine has an opcode
@@ -190,7 +189,7 @@ int sqlite3VdbeReleaseMemory(int);
 #endif
 UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,void*,int);
 void sqlite3VdbeDeleteUnpackedRecord(UnpackedRecord*);
-int sqlite3VdbeRecordCompare(int,const void*,int,UnpackedRecord*);
+int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
 
 
 #ifndef NDEBUG
