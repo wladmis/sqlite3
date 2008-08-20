@@ -203,7 +203,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   }
   pTab = sqlite3FindTable(db, zMasterName, db->aDb[iDb].zName);
   if( pTab ){
-    pTab->readOnly = 1;
+    pTab->tabFlags |= TF_Readonly;
   }
 
   /* Create a cursor to hold the database open

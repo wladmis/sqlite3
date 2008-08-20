@@ -292,19 +292,19 @@ do_test collate3-4.7 {
     SELECT * FROM collate3t1 ORDER BY a COLLATE user_defined;
   }
 } {1 {no such collation sequence: user_defined}}
-do_test collate3-4.8 {
+do_test collate3-4.8.1 {
   db collate user_defined "string compare"
   catchsql {
     SELECT * FROM collate3t1 ORDER BY a COLLATE user_defined;
   }
 } {0 {hello {}}}
-do_test collate3-4.8 {
+do_test collate3-4.8.2 {
   db close
   lindex [catch {
     sqlite3 db test.db
   }] 0
 } {0}
-do_test collate3-4.8 {
+do_test collate3-4.8.3 {
   execsql {
     DROP TABLE collate3t1;
   }

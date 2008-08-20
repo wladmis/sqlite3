@@ -300,7 +300,7 @@ do_test select6-5.2 {
 
 # Tests of compound sub-selects
 #
-do_test select5-6.1 {
+do_test select6-6.1 {
   execsql {
     DELETE FROM t1 WHERE x>4;
     SELECT * FROM t1

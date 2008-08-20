@@ -39,7 +39,7 @@ static int resolveAttachExpr(NameContext *pName, Expr *pExpr)
   int rc = SQLITE_OK;
   if( pExpr ){
     if( pExpr->op!=TK_ID ){
-      rc = sqlite3ExprResolveNames(pName, pExpr);
+      rc = sqlite3ResolveExprNames(pName, pExpr);
       if( rc==SQLITE_OK && !sqlite3ExprIsConstant(pExpr) ){
         sqlite3ErrorMsg(pName->pParse, "invalid name: \"%T\"", &pExpr->span);
         return SQLITE_ERROR;

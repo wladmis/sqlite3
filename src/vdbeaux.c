@@ -2238,6 +2238,7 @@ UnpackedRecord *sqlite3VdbeRecordUnpack(
     pMem++;
     u++;
   }
+  assert( u<=pKeyInfo->nField + 1 );
   p->nField = u;
   return (void*)p;
 }

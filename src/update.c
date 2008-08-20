@@ -194,7 +194,7 @@ void sqlite3Update(
   */
   chngRowid = 0;
   for(i=0; i<pChanges->nExpr; i++){
-    if( sqlite3ExprResolveNames(&sNC, pChanges->a[i].pExpr) ){
+    if( sqlite3ResolveExprNames(&sNC, pChanges->a[i].pExpr) ){
       goto update_cleanup;
     }
     for(j=0; j<pTab->nCol; j++){
@@ -335,7 +335,7 @@ void sqlite3Update(
   /* Resolve the column names in all the expressions in the
   ** WHERE clause.
   */
-  if( sqlite3ExprResolveNames(&sNC, pWhere) ){
+  if( sqlite3ResolveExprNames(&sNC, pWhere) ){
     goto update_cleanup;
   }
 
@@ -649,7 +649,7 @@ static void updateVirtualTable(
   /* fill the ephemeral table 
   */
   sqlite3SelectDestInit(&dest, SRT_Table, ephemTab);
-  sqlite3Select(pParse, pSelect, &dest, 0, 0, 0);
+  sqlite3Select(pParse, pSelect, &dest);
 
   /* Generate code to scan the ephemeral table and call VUpdate. */
   iReg = ++pParse->nMem;

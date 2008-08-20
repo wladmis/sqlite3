@@ -159,7 +159,6 @@ do_test select5-5.5 {
 # Test rendering of columns for the GROUP BY clause.
 #
 do_test select5-5.11 {
-breakpoint
   execsql {
     SELECT max(c), b*a, b, a FROM t2 GROUP BY b*a, b, a
   }
