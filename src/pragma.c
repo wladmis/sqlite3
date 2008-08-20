@@ -275,7 +275,7 @@ void sqlite3Pragma(
     zRight = sqlite3NameFromToken(db, pValue);
   }
 
-  zDb = ((iDb>0)?pDb->zName:0);
+  zDb = ((pId2 && pId2->n>0)?pDb->zName:0);
   if( sqlite3AuthCheck(pParse, SQLITE_PRAGMA, zLeft, zRight, zDb) ){
     goto pragma_out;
   }
