@@ -3831,11 +3831,11 @@ int sqlite3BtreeMoveto(
 ){
   int rc;                    /* Status code */
   UnpackedRecord *pIdxKey;   /* Unpacked index key */
-  char aSpace[200];          /* Temp space for pIdxKey - to avoid a malloc */
+  UnpackedRecord aSpace[16]; /* Temp space for pIdxKey - to avoid a malloc */
 
   if( pKey ){
     pIdxKey = sqlite3VdbeRecordUnpack(pCur->pKeyInfo, nKey, pKey,
-                                   aSpace, sizeof(aSpace));
+                                      aSpace, sizeof(aSpace));
     if( pIdxKey==0 ) return SQLITE_NOMEM;
   }else{
     pIdxKey = 0;
