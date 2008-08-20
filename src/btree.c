@@ -1132,18 +1132,19 @@ static void releasePage(MemPage *pPage){
 ** reaches zero.  We need to unref the pParent pointer when that
 ** happens.
 */
-static void pageDestructor(DbPage *pData, int pageSize){
+static void pageDestructor(DbPage *pData){
   MemPage *pPage;
-  assert( (pageSize & 7)==0 );
   pPage = (MemPage *)sqlite3PagerGetExtra(pData);
-  assert( pPage->isInit==0 || sqlite3_mutex_held(pPage->pBt->mutex) );
-  if( pPage->pParent ){
-    MemPage *pParent = pPage->pParent;
-    assert( pParent->pBt==pPage->pBt );
-    pPage->pParent = 0;
-    releasePage(pParent);
+  if( pPage ){
+    assert( pPage->isInit==0 || sqlite3_mutex_held(pPage->pBt->mutex) );
+    if( pPage->pParent ){
+      MemPage *pParent = pPage->pParent;
+      assert( pParent->pBt==pPage->pBt );
+      pPage->pParent = 0;
+      releasePage(pParent);
+    }
+    pPage->isInit = 0;
   }
-  pPage->isInit = 0;
 }
 
 /*
@@ -1287,7 +1288,7 @@ int sqlite3BtreeOpen(
     }
     pBt->busyHdr.xFunc = sqlite3BtreeInvokeBusyHandler;
     pBt->busyHdr.pArg = pBt;
-    rc = sqlite3PagerOpen(pVfs, &pBt->pPager, zFilename,
+    rc = sqlite3PagerOpen(pVfs, &pBt->pPager, zFilename, pageDestructor,
                           EXTRA_SIZE, flags, vfsFlags);
     if( rc==SQLITE_OK ){
       rc = sqlite3PagerReadFileheader(pBt->pPager,sizeof(zDbHeader),zDbHeader);
@@ -1298,7 +1299,7 @@ int sqlite3BtreeOpen(
     sqlite3PagerSetBusyhandler(pBt->pPager, &pBt->busyHdr);
     p->pBt = pBt;
   
-    sqlite3PagerSetDestructor(pBt->pPager, pageDestructor);
+    /* sqlite3PagerSetDestructor(pBt->pPager, pageDestructor); */
     sqlite3PagerSetReiniter(pBt->pPager, pageReinit);
     pBt->pCursor = 0;
     pBt->pPage1 = 0;
@@ -3488,6 +3489,7 @@ void sqlite3BtreeMoveToParent(BtCursor *pCur){
   assert( !sqlite3BtreeIsRootPage(pPage) );
   pParent = pPage->pParent;
   assert( pParent!=0 );
+  assert( pPage->pDbPage->nRef>0 );
   idxParent = pPage->idxParent;
   sqlite3PagerRef(pParent->pDbPage);
   releasePage(pPage);

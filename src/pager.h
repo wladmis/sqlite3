@@ -70,7 +70,7 @@ typedef struct PgHdr DbPage;
 ** See source code comments for a detailed description of the following
 ** routines:
 */
-int sqlite3PagerOpen(sqlite3_vfs *, Pager **ppPager, const char*, int,int,int);
+int sqlite3PagerOpen(sqlite3_vfs *, Pager **ppPager, const char*, void(*)(DbPage*), int,int,int);
 void sqlite3PagerSetBusyhandler(Pager*, BusyHandler *pBusyHandler);
 void sqlite3PagerSetDestructor(Pager*, void(*)(DbPage*,int));
 void sqlite3PagerSetReiniter(Pager*, void(*)(DbPage*,int));
@@ -113,6 +113,7 @@ int sqlite3PagerJournalMode(Pager *, int);
 i64 sqlite3PagerJournalSizeLimit(Pager *, i64);
 void *sqlite3PagerTempSpace(Pager*);
 int sqlite3PagerSync(Pager *pPager);
+void sqlite3PagerAlwaysRollback(Pager *pPager);
 
 #if defined(SQLITE_ENABLE_MEMORY_MANAGEMENT) && !defined(SQLITE_OMIT_DISKIO)
   int sqlite3PagerReleaseMemory(int);

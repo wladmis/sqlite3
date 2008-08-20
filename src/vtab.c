@@ -807,6 +807,7 @@ FuncDef *sqlite3VtabOverloadFunction(
     return pDef;
   }
   *pNew = *pDef;
+  pNew->zName = (char *)&pNew[1];
   memcpy(pNew->zName, pDef->zName, strlen(pDef->zName)+1);
   pNew->xFunc = xFunc;
   pNew->pUserData = pArg;

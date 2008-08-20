@@ -383,6 +383,7 @@ ifcapable pager_pragmas {
     execsql { CREATE TABLE abc(a, b) }
     nSync
     execsql {
+      PRAGMA temp_store = memory;
       PRAGMA cache_size = 10;
       BEGIN;
       INSERT INTO abc VALUES('hello', 'world');

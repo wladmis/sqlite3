@@ -382,6 +382,7 @@ void sqlite3ScratchFree(void *p){
 ** and that memory is of the right size and is not completely
 ** consumed.  Otherwise, failover to sqlite3Malloc().
 */
+#if 0
 void *sqlite3PageMalloc(int n){
   void *p;
   assert( n>0 );
@@ -462,6 +463,7 @@ void sqlite3PageFree(void *p){
     }
   }
 }
+#endif
 
 /*
 ** TRUE if p is a lookaside memory allocation from db

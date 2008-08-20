@@ -115,11 +115,12 @@ foreach bPersist [list 0 1] {
 do_test ioerr2-5 {
   execsql {
     CREATE TABLE t2 AS SELECT * FROM t1;
+    PRAGMA temp_store = memory;
   }
   set ::sqlite_io_error_persist 0
   set ::go 1
   set rc [catch {
-    for {set ::N 1} {$::N<200} {incr ::N} {
+    for {set ::N 2} {$::N<200} {incr ::N} {
       db eval {SELECT * FROM t1 WHERE rowid IN (1, 5, 10, 15, 20)} {
         set ::sqlite_io_error_hit 0
         set ::sqlite_io_error_pending $::N
