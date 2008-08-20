@@ -490,7 +490,7 @@ static void checkPage(PgHdr *pPg){
 #define pager_datahash(X,Y)  0
 #define pager_pagehash(X)  0
 #define CHECK_PAGE(x)
-#endif
+#endif  /* SQLITE_CHECK_PAGES */
 
 /*
 ** When this is called the journal file for pager pPager must be open.
@@ -1868,7 +1868,8 @@ int sqlite3PagerOpen(
     return ((rc==SQLITE_OK)?SQLITE_NOMEM:rc);
   }
   nExtra = FORCE_ALIGNMENT(nExtra);
-  sqlite3PcacheOpen(szPageDflt, nExtra, !memDb, xDesc, !memDb?pagerStress:0, (void *)pPager, pPager->pPCache);
+  sqlite3PcacheOpen(szPageDflt, nExtra, !memDb, xDesc, 
+                    !memDb?pagerStress:0, (void *)pPager, pPager->pPCache);
 
   PAGERTRACE3("OPEN %d %s\n", FILEHANDLEID(pPager->fd), pPager->zFilename);
   IOTRACE(("OPEN %p %s\n", pPager, pPager->zFilename))
