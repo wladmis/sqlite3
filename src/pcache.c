@@ -1058,6 +1058,7 @@ PgHdr *sqlite3PcacheDirtyPage(PCache *pCache){
 #if 1
   PgHdr *pIter;
   Pgno min_pgno;
+  assert( pCache->iInUseMM );
   for(pIter=pCache->pDirty; pIter; pIter=pIter->pNext){
     if( pIter->nRef==0 && (p==0 || pIter->pgno<min_pgno) ){
       p = pIter;
@@ -1065,6 +1066,7 @@ PgHdr *sqlite3PcacheDirtyPage(PCache *pCache){
     }
   }
 #else
+  assert( pCache->iInUseMM );
   for(p=pCache->pDirty; p && p->nRef; p=p->pNext);
 #endif
   assert( pCache->iInUseMM );
