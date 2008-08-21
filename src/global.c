@@ -82,4 +82,4 @@ struct Sqlite3Config sqlite3Config = {
 ** database connections.  After initialization, this table is
 ** read-only.
 */
-FuncDefHash sqlite3FuncBuiltins;
+FuncDefHash sqlite3GlobalFunctions;

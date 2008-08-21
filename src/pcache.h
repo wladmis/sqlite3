@@ -174,4 +174,3 @@ void sqlite3PcacheUnlock(PCache *);
 int sqlite3PcacheReleaseMemory(int);
 
 #endif /* _PCACHE_H_ */
-

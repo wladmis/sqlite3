@@ -147,7 +147,7 @@ int sqlite3_initialize(void){
   sqlite3_mutex_enter(sqlite3Config.pInitMutex);
   if( sqlite3Config.isInit==0 && inProgress==0 ){
     inProgress = 1;
-    memset(&sqlite3FuncBuiltins, 0, sizeof(sqlite3FuncBuiltins));
+    memset(&sqlite3GlobalFunctions, 0, sizeof(sqlite3GlobalFunctions));
     sqlite3RegisterGlobalFunctions();
     rc = sqlite3_os_init();
     if( rc==SQLITE_OK ){

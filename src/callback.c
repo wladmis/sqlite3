@@ -357,7 +357,7 @@ FuncDef *sqlite3FindFunction(
   ** function to use.
   */ 
   if( !createFlag && !pBest ){
-    p = functionSearch(&sqlite3FuncBuiltins, h, zName, nName);
+    p = functionSearch(&sqlite3GlobalFunctions, h, zName, nName);
     while( p ){
       int score = matchQuality(p, nArg, enc);
       if( score>bestScore ){
