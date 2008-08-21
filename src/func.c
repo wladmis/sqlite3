@@ -1422,3 +1422,13 @@ static FuncDef aBuiltinFunc[] = {
 #endif
 };
 
+/*
+** Build up the global built-in function table at initialization
+** time.
+*/
+void sqlite3RegisterGlobalFunctions(void){
+  int i;
+  for(i=0; i<ArraySize(aBuiltinFunc); i++){
+    sqlite3FuncDefInsert(&sqlite3FuncBuiltins, &aBuiltinFunc[i]);
+  }
+}

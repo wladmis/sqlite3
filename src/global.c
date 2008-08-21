@@ -75,3 +75,11 @@ struct Sqlite3Config sqlite3Config = {
    500,              /* nLookaside */
    /* Other fields all default to zero */
 };
+
+
+/*
+** Hash table for global functions - functions common to all
+** database connections.  After initialization, this table is
+** read-only.
+*/
+FuncDefHash sqlite3FuncBuiltins;
