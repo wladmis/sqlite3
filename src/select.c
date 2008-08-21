@@ -1167,12 +1167,14 @@ static int selectColumnsFromExprList(
       zName = sqlite3DbStrDup(db, zName);
     }else{
       Expr *pCol = p;
+      Table *pTab;
       while( pCol->op==TK_DOT ) pCol = pCol->pRight;
-      if( pCol->op==TK_COLUMN && pCol->pTab ){
+      if( pCol->op==TK_COLUMN && (pTab = pCol->pTab)!=0 ){
         /* For columns use the column name name */
         int iCol = pCol->iColumn;
-        if( iCol<0 ) iCol = pCol->pTab->iPKey;
-        zName = sqlite3MPrintf(db, "%s", pCol->pTab->aCol[iCol].zName);
+        if( iCol<0 ) iCol = pTab->iPKey;
+        zName = sqlite3MPrintf(db, "%s",
+                 iCol>=0 ? pTab->aCol[iCol].zName : "rowid");
       }else{
         /* Use the original text of the column expression as its name */
         zName = sqlite3MPrintf(db, "%T", &pCol->span);
