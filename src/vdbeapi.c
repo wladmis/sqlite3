@@ -18,7 +18,7 @@
 #include "sqliteInt.h"
 #include "vdbeInt.h"
 
-#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
+#if 0 && defined(SQLITE_ENABLE_MEMORY_MANAGEMENT)
 /*
 ** The following structure contains pointers to the end points of a
 ** doubly-linked list of all compiled SQL statements that may be holding
