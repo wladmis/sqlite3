@@ -2558,7 +2558,7 @@ static int readDbPage(Pager *pPager, PgHdr *pPg, Pgno pgno){
     memcpy(&pPager->dbFileVers, &((u8*)pPg->pData)[24],
                                               sizeof(pPager->dbFileVers));
   }
-  CODEC1(pPager, PGHDR_TO_DATA(pPg), pPg->pgno, 3);
+  CODEC1(pPager, pPg->pData, pPg->pgno, 3);
   PAGERTRACE4("FETCH %d page %d hash(%08x)\n",
                PAGERID(pPager), pPg->pgno, pager_pagehash(pPg));
   return rc;
