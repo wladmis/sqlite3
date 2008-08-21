@@ -141,6 +141,9 @@ proc run_tests {name args} {
 #
 run_tests "memsubsys1" -description {
   Tests using pre-allocated page and scratch blocks
+} -exclude {
+  ioerr5.test
+  malloc5.test
 } -initialize {
   catch {db close}
   sqlite3_shutdown
