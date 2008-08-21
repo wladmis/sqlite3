@@ -3773,20 +3773,14 @@ int sqlite3Select(
           struct AggInfo_col *pCol = &sAggInfo.aCol[i];
           if( pCol->iSorterColumn>=j ){
             int r1 = j + regBase;
-#ifndef NDEBUG
-            int r2 = 
-#endif
-                     sqlite3ExprCodeGetColumn(pParse, 
-                               pCol->pTab, pCol->iColumn, pCol->iTable, r1, 0);
-            j++;
+            int r2;
 
-            /* sAggInfo.aCol[] only contains one entry per column.  So
-            ** The reference to pCol->iColumn,pCol->iTable must have been
-            ** the first reference to that column.  Hence, 
-            ** sqliteExprCodeGetColumn is guaranteed to put the result in
-            ** the column requested. 
-            */
-            assert( r1==r2 );
+            r2 = sqlite3ExprCodeGetColumn(pParse, 
+                               pCol->pTab, pCol->iColumn, pCol->iTable, r1, 0);
+            if( r1!=r2 ){
+              sqlite3VdbeAddOp2(v, OP_SCopy, r2, r1);
+            }
+            j++;
           }
         }
         regRecord = sqlite3GetTempReg(pParse);
