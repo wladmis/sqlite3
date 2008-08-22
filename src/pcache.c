@@ -440,6 +440,7 @@ static void pcachePageFree(PgHdr *p){
   pcacheFree(p);
 }
 
+#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 /*
 ** Return the number of bytes that will be returned to the heap when
 ** the argument is passed to pcachePageFree().
@@ -452,6 +453,7 @@ static int pcachePageSize(PgHdr *p){
   assert( p && p->pCache );
   return sqlite3MallocSize(p);
 }
+#endif
 
 /*
 ** Recycle a page from the global LRU list. If no page can be recycled, 

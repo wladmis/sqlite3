@@ -1937,18 +1937,6 @@ void sqlite3PagerSetBusyhandler(Pager *pPager, BusyHandler *pBusyHandler){
 }
 
 /*
-** Set the destructor for this pager.  If not NULL, the destructor is called
-** when the reference count on each page reaches zero.  The destructor can
-** be used to clean up information in the extra segment appended to each page.
-**
-** The destructor is not called as a result sqlite3PagerClose().  
-** Destructors are only called by sqlite3PagerUnref().
-*/
-void sqlite3PagerSetDestructor(Pager *pPager, void (*xDesc)(DbPage*,int)){
-  pPager->xDestructor = xDesc;
-}
-
-/*
 ** Set the reinitializer for this pager.  If not NULL, the reinitializer
 ** is called when the content of a page in cache is restored to its original
 ** value as a result of a rollback.  The callback gives higher-level code

@@ -1082,18 +1082,6 @@ int sqlite3ResolveExprNames(
   }
   return ExprHasProperty(pExpr, EP_Error);
 }
-int sqlite3ResolveExprListNames( 
-  NameContext *pNC,       /* Namespace to resolve expressions in. */
-  ExprList *pList         /* List of expressions to be analyzed. */
-){
-  int i;
-  struct ExprList_item *pItem;
-  if( pList==0 ) return 0;
-  for(i=pList->nExpr, pItem=pList->a; i>0; i--, pItem++){
-    if( sqlite3ResolveExprNames(pNC, pItem->pExpr) ) return 1;
-  }
-  return 0;
-}
 
 
 /*

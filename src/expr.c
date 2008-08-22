@@ -920,11 +920,6 @@ static int exprNodeIsConstant(Walker *pWalker, Expr *pExpr){
       testcase( pExpr->op==TK_AGG_COLUMN );
       pWalker->u.i = 0;
       return WRC_Abort;
-    case TK_IN:
-      if( pExpr->pSelect ){
-        pWalker->u.i = 0;
-        return WRC_Abort;
-      }
     default:
       return WRC_Continue;
   }
