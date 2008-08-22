@@ -344,10 +344,6 @@ if test "$TARGET_EXEEXT" = ".exe"; then
     SQLITE_OS_WIN=0
     SQLITE_OS_OS2=1
     CFLAGS="$CFLAGS -DSQLITE_OS_OS2=1"
-    if test "$ac_compiler_gnu" = "yes" ; then
-      CFLAGS="$CFLAGS -Zomf -Zexe -Zmap"
-      BUILD_CFLAGS="$BUILD_CFLAGS -Zomf -Zexe"
-    fi
   else
     SQLITE_OS_UNIX=0
     SQLITE_OS_WIN=1
