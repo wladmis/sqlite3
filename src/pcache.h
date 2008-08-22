@@ -70,13 +70,13 @@ void sqlite3PCacheFree(void*);
 ** Only clean and unpinned pages can be reclaimed.
 */
 void sqlite3PcacheOpen(
-  int szPage,                  /* Size of every page */
-  int szExtra,                 /* Extra space associated with each page */
-  int bPurgeable,              /* True if pages are on backing store */
-  void (*xDestroy)(PgHdr *),   /* Called to destroy a page */
-  int (*xStress)(void*),       /* Call to try to make pages clean */
-  void *pStress,               /* Argument to xStress */
-  PCache *pToInit              /* Preallocated space for the PCache */
+  int szPage,                    /* Size of every page */
+  int szExtra,                   /* Extra space associated with each page */
+  int bPurgeable,                /* True if pages are on backing store */
+  void (*xDestroy)(PgHdr *),     /* Called to destroy a page */
+  int (*xStress)(void*, PgHdr*), /* Call to try to make pages clean */
+  void *pStress,                 /* Argument to xStress */
+  PCache *pToInit                /* Preallocated space for the PCache */
 );
 
 /* Modify the page-size after the cache has been created. */
@@ -117,9 +117,6 @@ void sqlite3PcacheRollback(PCache*, int);  /* Rollback to preserved copy */
 
 /* Get a list of all dirty pages in the cache, sorted by page number */
 PgHdr *sqlite3PcacheDirtyList(PCache*);
-
-/* Query the cache for a dirty page with a zero ref-count */
-PgHdr *sqlite3PcacheDirtyPage(PCache *);
 
 /* Reset and close the cache object */
 void sqlite3PcacheClose(PCache*);
