@@ -246,7 +246,6 @@ void sqlite3VXPrintf(
   const et_info *infop;      /* Pointer to the appropriate info structure */
   char buf[etBUFSIZE];       /* Conversion buffer */
   char prefix;               /* Prefix character.  "+" or "-" or " " or '\0'. */
-  etByte errorflag = 0;      /* True if an error is encountered */
   etByte xtype;              /* Conversion paradigm */
   char *zExtra;              /* Extra memory used for etTCLESCAPE conversions */
 #ifndef SQLITE_OMIT_FLOATING_POINT
@@ -270,7 +269,6 @@ void sqlite3VXPrintf(
       if( c==0 ) break;
     }
     if( (c=(*++fmt))==0 ){
-      errorflag = 1;
       sqlite3StrAccumAppend(pAccum, "%", 1);
       break;
     }
