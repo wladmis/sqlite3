@@ -1173,9 +1173,11 @@ static int sqliteErrorFromPosixError(int posixError, int sqliteIOErr) {
   case EDEADLK:
     return SQLITE_IOERR_BLOCKED;
     
+#if EOPNOTSUPP!=ENOTSUP
   case EOPNOTSUPP: 
     /* something went terribly awry, unless during file system support 
      * introspection, in which it actually means what it says */
+#endif
   case ENOTSUP: 
     /* invalid fd, unless during file system support introspection, in which 
      * it actually means what it says */
