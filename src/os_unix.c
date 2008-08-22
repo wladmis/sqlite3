@@ -639,7 +639,7 @@ static int detectLockingStyle(
     return LOCKING_STYLE_NONE;
   }
   if( pVfs->pAppData ){
-    return (int)pVfs->pAppData;
+    return SQLITE_PTR_TO_INT(pVfs->pAppData);
   }
 
   if( statfs(filePath, &fsInfo) != -1 ){
