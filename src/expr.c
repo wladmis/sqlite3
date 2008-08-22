@@ -2423,10 +2423,7 @@ int sqlite3ExprCodeExprList(
 ){
   struct ExprList_item *pItem;
   int i, n;
-  assert( pList!=0 || pParse->db->mallocFailed );
-  if( pList==0 ){
-    return 0;
-  }
+  assert( pList!=0 );
   assert( target>0 );
   n = pList->nExpr;
   for(pItem=pList->a, i=0; i<n; i++, pItem++){

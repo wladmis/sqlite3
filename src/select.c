@@ -3149,11 +3149,7 @@ static int selectAddSubqueryTypeInfo(Walker *pWalker, Select *p){
   SrcList *pTabList;
   struct SrcList_item *pFrom;
 
-  if( (p->selFlags & SF_Resolved)==0 ){
-    /* If the ORDER BY clause of a compound SELECT contains a subquery,
-    ** that subquery will not yet have been resolved. */
-    return WRC_Prune;
-  }
+  assert( p->selFlags & SF_Resolved );
   if( (p->selFlags & SF_HasTypeInfo)==0 ){
     p->selFlags |= SF_HasTypeInfo;
     pParse = pWalker->pParse;
