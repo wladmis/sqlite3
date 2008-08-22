@@ -23,7 +23,7 @@ ifcapable !load_ext {
 
 # The name of the test extension varies by operating system.
 #
-if {$::tcl_platform(platform) eq "windows"} {
+if {$::tcl_platform(platform) eq "windows" || $::tcl_platform(platform) eq "os2"} {
   set testextension ./testloadext.dll
 } else {
   set testextension ./libtestloadext.so
