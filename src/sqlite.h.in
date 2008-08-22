@@ -516,6 +516,7 @@ int sqlite3_exec(
 #define SQLITE_IOERR_NOMEM             (SQLITE_IOERR | (12<<8))
 #define SQLITE_IOERR_ACCESS            (SQLITE_IOERR | (13<<8))
 #define SQLITE_IOERR_CHECKRESERVEDLOCK (SQLITE_IOERR | (14<<8))
+#define SQLITE_IOERR_LOCK              (SQLITE_IOERR | (15<<8))
 
 /*
 ** CAPI3REF: Flags For File Open Operations {H10230} <H11120> <H12700>
