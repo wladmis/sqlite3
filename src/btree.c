@@ -7145,7 +7145,7 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
           rc = sqlite3PagerGet(pBtFrom->pPager, iFrom, &pFromPage);
           if( rc==SQLITE_OK ){
             char *zFrom = sqlite3PagerGetData(pFromPage);
-  	  rc = sqlite3OsWrite(pFile, zFrom, nFromPageSize, iOff);
+            rc = sqlite3OsWrite(pFile, zFrom, nFromPageSize, iOff);
             sqlite3PagerUnref(pFromPage);
           }
         }

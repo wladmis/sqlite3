@@ -125,4 +125,38 @@ do_test vacuum2-3.17 {
 
 db2 close
 
+ifcapable autovacuum {
+  do_test vacuum2-4.1 {
+    db close
+    file delete -force test.db
+    sqlite3 db test.db
+    execsql {
+      pragma auto_vacuum=1;
+      create table t(a, b);
+      insert into t values(1, 2);
+      insert into t values(1, 2);
+      pragma auto_vacuum=0;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {0}
+  do_test vacuum2-4.2 {
+    execsql {
+      pragma auto_vacuum=1;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {1}
+  do_test vacuum2-4.3 {
+    execsql {
+      pragma integrity_check
+    }
+  } {ok}
+  do_test vacuum2-4.4 {
+    execsql {
+      pragma auto_vacuum;
+    }
+  } {1}
+}
+
 finish_test
