@@ -52,7 +52,7 @@ struct PgHdr {
 #define PGHDR_NEED_READ         0x020  /* Content is unread */
 #define PGHDR_IS_INIT           0x040  /* pData is initialized */
 #define PGHDR_REUSE_UNLIKELY    0x080  /* Hint: Reuse is unlikely */
-
+#define PGHDR_DONT_WRITE        0x100  /* Do not write content to disk */
 
 /* Initialize and shutdown the page cache subsystem */
 int sqlite3PcacheInitialize(void);

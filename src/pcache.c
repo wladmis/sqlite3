@@ -739,6 +739,7 @@ void sqlite3PcacheDrop(PgHdr *p){
 void sqlite3PcacheMakeDirty(PgHdr *p){
   PCache *pCache;
   assert( p->pCache->iInUseDB );
+  p->flags &= ~PGHDR_DONT_WRITE;
   if( p->flags & PGHDR_DIRTY ) return;
   assert( (p->flags & PGHDR_DIRTY)==0 );
   assert( p->nRef>0 );
