@@ -2495,29 +2495,27 @@ static int pagerStress(void *p, PgHdr *pPg){
 static int hasHotJournal(Pager *pPager, int *pExists){
   sqlite3_vfs *pVfs = pPager->pVfs;
   int rc = SQLITE_OK;
+  int exists;
+  int locked;
+  assert( pPager!=0 );
+  assert( pPager->useJournal );
+  assert( pPager->fd->pMethods );
   *pExists = 0;
-  if( pPager->useJournal && pPager->fd->pMethods ){
-    int exists;
-    int locked;
-
-    rc = sqlite3OsAccess(pVfs, pPager->zJournal, SQLITE_ACCESS_EXISTS, &exists);
-    if( rc==SQLITE_OK && exists ){
-      rc = sqlite3OsCheckReservedLock(pPager->fd, &locked);
-    }
-
-    if( rc==SQLITE_OK && exists && !locked ){
-      int nPage;
-      rc = sqlite3PagerPagecount(pPager, &nPage);
-      if( rc==SQLITE_OK ){
-        if( nPage==0 ){
-          sqlite3OsDelete(pVfs, pPager->zJournal, 0);
-        }else{
-          *pExists = 1;
-        }
+  rc = sqlite3OsAccess(pVfs, pPager->zJournal, SQLITE_ACCESS_EXISTS, &exists);
+  if( rc==SQLITE_OK && exists ){
+    rc = sqlite3OsCheckReservedLock(pPager->fd, &locked);
+  }
+  if( rc==SQLITE_OK && exists && !locked ){
+    int nPage;
+    rc = sqlite3PagerPagecount(pPager, &nPage);
+    if( rc==SQLITE_OK ){
+     if( nPage==0 ){
+        sqlite3OsDelete(pVfs, pPager->zJournal, 0);
+      }else{
+        *pExists = 1;
       }
     }
   }
-
   return rc;
 }
 
