@@ -6758,8 +6758,11 @@ static int checkTreePage(
     cellStart = hdr + 12 - 4*pPage->leaf;
     for(i=0; i<nCell; i++){
       int pc = get2byte(&data[cellStart+i*2]);
-      u16 size = cellSizePtr(pPage, &data[pc]);
+      u16 size = 1024;
       int j;
+      if( pc<=usableSize ){
+        size = cellSizePtr(pPage, &data[pc]);
+      }
       if( (pc+size-1)>=usableSize || pc<0 ){
         checkAppendMsg(pCheck, 0, 
             "Corruption detected in cell %d on page %d",i,iPage,0);
