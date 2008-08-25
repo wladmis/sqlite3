@@ -2442,6 +2442,10 @@ static int pagerStress(void *p, PgHdr *pPg){
   Pager *pPager = (Pager *)p;
   int rc = SQLITE_OK;
 
+  if( pPager->doNotSync ){
+    return SQLITE_OK;
+  }
+
   assert( pPg->flags&PGHDR_DIRTY );
   if( pPager->errCode==SQLITE_OK ){
     if( pPg->flags&PGHDR_NEED_SYNC ){
