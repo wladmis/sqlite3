@@ -15,8 +15,7 @@
 #
 # $Id$
 
-catch {file delete -force test.db}
-catch {file delete -force test.db-journal}
+catch {file delete -force test.db test.db-journal test.bu}
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl

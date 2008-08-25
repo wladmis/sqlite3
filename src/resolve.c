@@ -93,7 +93,7 @@ static int lookupName(
         Column *pCol;
   
         pTab = pItem->pTab;
-        assert( pTab!=0 );
+        assert( pTab!=0 && pTab->zName!=0 );
         iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
         assert( pTab->nCol>0 );
         if( zTab ){
@@ -346,7 +346,6 @@ static int resolveExprStep(Walker *pWalker, Expr *pExpr){
   NameContext *pNC;
   Parse *pParse;
 
-  if( pExpr==0 ) return WRC_Continue;
   pNC = pWalker->u.pNC;
   assert( pNC!=0 );
   pParse = pNC->pParse;
