@@ -29,6 +29,7 @@ if {[sqlite3 -has-codec]} {
 }
 do_test tcl-1.1 {
   set v [catch {sqlite3 bogus} msg]
+  regsub {really_sqlite3} $msg {sqlite3} msg
   lappend v $msg
 } [list 1 "wrong # args: should be \"$r\""]
 do_test tcl-1.2 {
