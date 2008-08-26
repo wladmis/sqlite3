@@ -18,11 +18,11 @@ source $testdir/tester.tcl
 #
 #puts "PERM-DEBUG: argv=$argv"
 namespace eval ::perm {
-  set testmode [lindex $::argv 0]
-  set testfile [lindex $::argv 1]
+  variable testmode [lindex $::argv 0]
+  variable testfile [lindex $::argv 1]
 }
 set argv [lrange $argv 2 end]
-#puts "PERM-DEBUG: testmode=$::perm::testmode"
+#puts "PERM-DEBUG: testmode=$::perm::testmode tstfile=$::perm::testfile"
 
 set ::permutations_presql ""
 set ::permutations_test_prefix ""
