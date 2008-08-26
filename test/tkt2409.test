@@ -79,8 +79,6 @@ proc unread_lock_db {} {
   }
 }
 
-pcache_global_max 10
-
 # Open the db handle used by [read_lock_db].
 #
 sqlite3 db2 test.db
@@ -222,8 +220,6 @@ integrity_check tkt2409-4.3
 do_test tkt2409-4.4 {
   catchsql { ROLLBACK }
 } {0 {}}
-
-pcache_global_max 0
 
 unread_lock_db
 db2 close
