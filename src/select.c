@@ -2525,6 +2525,9 @@ static void substSelect(
 **        ORDER by clause of the parent must be simple references to 
 **        columns of the sub-query.
 **
+**  (19)  The subquery does not use LIMIT or the outer query does not
+**        have a WHERE clause.
+**
 ** In this routine, the "p" parameter is a pointer to the outer query.
 ** The subquery is p->pSrc->a[iFrom].  isAgg is true if the outer query
 ** uses aggregates and subqueryIsAgg is true if the subquery uses aggregates.
@@ -2590,6 +2593,7 @@ static int flattenSubquery(
      return 0;                                           /* Restriction (11) */
   }
   if( isAgg && pSub->pOrderBy ) return 0;                /* Restriction (16) */
+  if( pSub->pLimit && p->pWhere ) return 0;              /* Restriction (19) */
 
   /* OBSOLETE COMMENT 1:
   ** Restriction 3:  If the subquery is a join, make sure the subquery is 
