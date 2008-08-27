@@ -553,7 +553,7 @@ static int pcacheRecycleOrAlloc(PCache *pCache, PgHdr **ppPage){
   }
 
   /* If the global page limit has been reached, try to recycle a page. */
-  if( pcache.nCurrentPage>=pcache.nMaxPage ){
+  if( pCache->bPurgeable && pcache.nCurrentPage>=pcache.nMaxPage ){
     p = pcacheRecyclePage();
   }
 
@@ -620,7 +620,7 @@ void sqlite3PcacheOpen(
   p->xStress = xStress;
   p->pStress = pStress;
   p->nMax = 100;
-  p->nMin = 20;
+  p->nMin = 10;
 
   pcacheEnterGlobal();
   if( bPurgeable ){
