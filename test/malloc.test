@@ -409,6 +409,9 @@ ifcapable utf16 {
     if {[sqlite3_errcode $DB2] eq "SQLITE_IOERR+12"} {
       error "out of memory"
     }
+    if {[regexp ".*automatic extension loading.*" [sqlite3_errmsg $DB2]]} {
+      error "out of memory"
+    }
     if {$rc} {
       error [string range $msg 4 end]
     }
