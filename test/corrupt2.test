@@ -179,6 +179,7 @@ do_test corrupt2-4.1 {
   } db2
 } {1 {database disk image is malformed}}
 
+unset -nocomplain result
 do_test corrupt2-5.1 {
   file delete -force corrupt.db
   file delete -force corrupt.db-journal
