@@ -76,6 +76,7 @@ set EXCLUDE {
   tkt2686.test
   thread001.test
   thread002.test
+  trans2.test
   vacuum3.test
 
   incrvacuum_ioerr.test
