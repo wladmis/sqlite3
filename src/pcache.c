@@ -497,15 +497,6 @@ static PgHdr *pcacheRecyclePage(){
     pcacheRemoveFromLruList(p);
     pcacheRemoveFromHash(p);
     pcacheRemoveFromList(&p->pCache->pClean, p);
-
-    /* If the always-rollback flag is set on the page being recycled, set 
-    ** the always-rollback flag on the corresponding pager. TODO: This is
-    ** a thread-safety problem.
-    */
-    if( p->flags&PGHDR_ALWAYS_ROLLBACK ){
-      assert(p->pPager);
-      sqlite3PagerAlwaysRollback(p->pPager);
-    }
   }
 
   return p;

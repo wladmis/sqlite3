@@ -4347,7 +4347,7 @@ static int freePage(MemPage *pPage){
         put4byte(&pTrunk->aData[4], k+1);
         put4byte(&pTrunk->aData[8+k*4], pPage->pgno);
 #ifndef SQLITE_SECURE_DELETE
-        sqlite3PagerDontWrite(pPage->pDbPage);
+        rc = sqlite3PagerDontWrite(pPage->pDbPage);
 #endif
       }
       TRACE(("FREE-PAGE: %d leaf on trunk page %d\n",pPage->pgno,pTrunk->pgno));
@@ -7039,7 +7039,7 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
           ** page is still on the rollback journal, though.  And that is the 
           ** whole point of this block: to put pages on the rollback journal. 
           */
-          sqlite3PagerDontWrite(pDbPage);
+          rc = sqlite3PagerDontWrite(pDbPage);
         }
         sqlite3PagerUnref(pDbPage);
       }

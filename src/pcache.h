@@ -48,7 +48,6 @@ struct PgHdr {
 #define PGHDR_IN_STMTJRNL       0x002  /* Page is in the statement journal */
 #define PGHDR_DIRTY             0x004  /* Page has changed */
 #define PGHDR_NEED_SYNC         0x008  /* Peed to fsync this page */
-#define PGHDR_ALWAYS_ROLLBACK   0x010  /* Force writing to journal */
 #define PGHDR_NEED_READ         0x020  /* Content is unread */
 #define PGHDR_IS_INIT           0x040  /* pData is initialized */
 #define PGHDR_REUSE_UNLIKELY    0x080  /* Hint: Reuse is unlikely */
