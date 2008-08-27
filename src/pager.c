@@ -2825,10 +2825,6 @@ static int pagerAcquire(
   if( rc!=SQLITE_OK ){
     return rc;
   }
-  if( pPager->errCode && pPg->nRef==1 ){
-    sqlite3PcacheDrop(pPg);
-    return pPager->errCode;
-  }
   if( pPg->pPager==0 ){
     /* The pager cache has created a new page. Its content needs to 
     ** be initialized.
