@@ -182,8 +182,9 @@ do_test tkt2409-3.4 {
   unread_lock_db
   catchsql { ROLLBACK }
 } {0 {}}
+integrity_check tkt2409-3.5
 
-
+expr {srand(1)}
 do_test tkt2409-4.1 {
   execsql {
     PRAGMA cache_size=20;
@@ -220,6 +221,7 @@ integrity_check tkt2409-4.3
 do_test tkt2409-4.4 {
   catchsql { ROLLBACK }
 } {0 {}}
+integrity_check tkt2409-4.5
 
 unread_lock_db
 db2 close
