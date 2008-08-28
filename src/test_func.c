@@ -217,10 +217,7 @@ static void counterFunc(
   int nArg,                /* Number of function arguments */
   sqlite3_value **argv     /* Values for all function arguments */
 ){
-  int i;
-  int *pCounter;
-
-  pCounter = (int*)sqlite3_get_auxdata(pCtx, 0);
+  int *pCounter = (int*)sqlite3_get_auxdata(pCtx, 0);
   if( pCounter==0 ){
     pCounter = sqlite3_malloc( sizeof(*pCounter) );
     if( pCounter==0 ){

@@ -3271,15 +3271,14 @@ static int pager_write(PgHdr *pPg){
      && !pageInStatement(pPg) 
      && (int)pPg->pgno<=pPager->stmtSize 
     ){
-      assert( 
-        (pPg->flags&PGHDR_IN_JOURNAL) || (int)pPg->pgno>pPager->origDbSize );
+      assert( (pPg->flags&PGHDR_IN_JOURNAL) 
+                 || (int)pPg->pgno>pPager->origDbSize );
       if( MEMDB ){
         rc = sqlite3PcachePreserve(pPg, 1);
         if( rc!=SQLITE_OK ){
           return rc;
         }
         PAGERTRACE3("STMT-JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno);
-        /* page_add_to_stmt_list(pPg); */
       }else{
         i64 offset = pPager->stmtNRec*(4+pPager->pageSize);
         char *pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
@@ -3507,7 +3506,7 @@ void sqlite3PagerDontRollback(DbPage *pPg){
   assert( !MEMDB );    /* For a memdb, pPager->journalOpen is always 0 */
 
 #ifdef SQLITE_SECURE_DELETE
-  if( pPg->inJournal || (int)pPg->pgno>pPager->origDbSize ){
+  if( (pPg->flags & PGHDR_IN_JOURNAL)!=0 || (int)pPg->pgno>pPager->origDbSize ){
     return;
   }
 #endif
