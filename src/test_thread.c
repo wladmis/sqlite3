@@ -171,7 +171,7 @@ static int sqlthread_spawn(
   rc = Tcl_CreateThread(&x, tclScriptThread, (void *)pNew, nStack, flags);
   if( rc!=TCL_OK ){
     Tcl_AppendResult(interp, "Error in Tcl_CreateThread()", 0);
-    sqlite3_free(pNew);
+    ckfree(pNew);
     return TCL_ERROR;
   }
 
