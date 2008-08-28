@@ -572,10 +572,10 @@ static int pcacheRecycleOrAlloc(PCache *pCache, PgHdr **ppPage){
       int rc;
       pcacheExitMutex();
       rc = pCache->xStress(pCache->pStress, pPg);
+      pcacheEnterMutex();
       if( rc!=SQLITE_OK ){
         return rc;
       }
-      pcacheEnterMutex();
     }
   }
 
