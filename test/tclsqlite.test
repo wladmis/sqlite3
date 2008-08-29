@@ -233,13 +233,13 @@ ifcapable {tclvar} {
   do_test tcl-5.1 {
     execsql {CREATE TABLE t3(a,b,c)}
     catch {unset x}
-    set x(1) 5
-    set x(2) 7
+    set x(1) A
+    set x(2) B
     execsql {
       INSERT INTO t3 VALUES($::x(1),$::x(2),$::x(3));
       SELECT * FROM t3
     }
-  } {5 7 {}}
+  } {A B {}}
   do_test tcl-5.2 {
     execsql {
       SELECT typeof(a), typeof(b), typeof(c) FROM t3
