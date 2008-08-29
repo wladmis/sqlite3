@@ -312,10 +312,10 @@ void *sqlite3ScratchMalloc(int n){
     }else{
       int i;
       i = mem0.aScratchFree[--mem0.nScratchFree];
-      sqlite3_mutex_leave(mem0.mutex);
       i *= sqlite3Config.szScratch;
       sqlite3StatusAdd(SQLITE_STATUS_SCRATCH_USED, 1);
       sqlite3StatusSet(SQLITE_STATUS_SCRATCH_SIZE, n);
+      sqlite3_mutex_leave(mem0.mutex);
       p = (void*)&((char*)sqlite3Config.pScratch)[i];
     }
   }
