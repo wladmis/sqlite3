@@ -161,4 +161,6 @@ void sqlite3PcacheSetCachesize(PCache *, int);
 /* Try to return memory used by the pcache module to the main memory heap */
 int sqlite3PcacheReleaseMemory(int);
 
+void sqlite3PcacheStats(int*,int*,int*,int*);
+
 #endif /* _PCACHE_H_ */
