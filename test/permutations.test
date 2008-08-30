@@ -78,6 +78,7 @@ foreach filename [glob $testdir/*.test] {
   set filename [file tail $filename]
   if {[lsearch $EXCLUDE $filename] < 0} { lappend ALLTESTS $filename }
 }
+set ALLTESTS [lsort $ALLTESTS]
 
 rename finish_test really_finish_test2
 proc finish_test {} {}
