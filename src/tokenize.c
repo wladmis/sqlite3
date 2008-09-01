@@ -504,6 +504,11 @@ abort_parse:
   sqlite3DeleteTrigger(db, pParse->pNewTrigger);
   sqlite3DbFree(db, pParse->apVarExpr);
   sqlite3DbFree(db, pParse->aAlias);
+  while( pParse->pZombieTab ){
+    Table *p = pParse->pZombieTab;
+    pParse->pZombieTab = p->pNextZombie;
+    sqlite3DeleteTable(p);
+  }
   if( nErr>0 && (pParse->rc==SQLITE_OK || pParse->rc==SQLITE_DONE) ){
     pParse->rc = SQLITE_ERROR;
   }

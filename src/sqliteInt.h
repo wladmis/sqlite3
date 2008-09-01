@@ -983,6 +983,7 @@ struct Table {
   char **azModuleArg;  /* Text of all module args. [0] is module name */
 #endif
   Schema *pSchema;     /* Schema that contains this table */
+  Table *pNextZombie;  /* Next on the Parse.pZombieTab list */
 };
 
 /*
@@ -1701,6 +1702,7 @@ struct Parse {
   Table **apVtabLock;        /* Pointer to virtual tables needing locking */
 #endif
   int nHeight;            /* Expression tree height of current sub-select */
+  Table *pZombieTab;      /* List of Table objects to delete after code gen */
 };
 
 #ifdef SQLITE_OMIT_VIRTUALTABLE
