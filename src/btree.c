@@ -1340,7 +1340,7 @@ int sqlite3BtreeOpen(
       sqlite3_mutex *mutexShared;
       pBt->nRef = 1;
       mutexShared = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
-      if( SQLITE_THREADSAFE && sqlite3Config.bCoreMutex ){
+      if( SQLITE_THREADSAFE && sqlite3GlobalConfig.bCoreMutex ){
         pBt->mutex = sqlite3MutexAlloc(SQLITE_MUTEX_FAST);
         if( pBt->mutex==0 ){
           rc = SQLITE_NOMEM;

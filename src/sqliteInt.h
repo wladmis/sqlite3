@@ -441,6 +441,16 @@ struct BusyHandler {
 */
 #define SQLITE_DYNAMIC   ((sqlite3_destructor_type)sqlite3DbFree)
 
+#ifdef SQLITE_OMIT_WSD
+  #define SQLITE_WSD const
+  #define GLOBAL(t,v) (*(t*)sqlite3_wsd_find((void*)&(v), sizeof(v)))
+  #define sqlite3GlobalConfig GLOBAL(struct Sqlite3Config, sqlite3Config)
+#else
+  #define SQLITE_WSD 
+  #define GLOBAL(t,v) v
+  #define sqlite3GlobalConfig sqlite3Config
+#endif
+
 /*
 ** Forward references to structures
 */
@@ -2317,8 +2327,8 @@ int sqlite3ValueFromExpr(sqlite3 *, Expr *, u8, u8, sqlite3_value **);
 void sqlite3ValueApplyAffinity(sqlite3_value *, u8, u8);
 #ifndef SQLITE_AMALGAMATION
 extern const unsigned char sqlite3UpperToLower[];
-extern struct Sqlite3Config sqlite3Config;
-extern FuncDefHash sqlite3GlobalFunctions;
+extern SQLITE_WSD struct Sqlite3Config sqlite3Config;
+extern SQLITE_WSD FuncDefHash sqlite3GlobalFunctions;
 #endif
 void sqlite3RootPageMoved(Db*, int, int);
 void sqlite3Reindex(Parse*, Token*, Token*);

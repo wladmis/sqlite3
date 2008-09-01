@@ -66,7 +66,7 @@ const unsigned char sqlite3UpperToLower[] = {
 ** The following singleton contains the global configuration for
 ** the SQLite library.
 */
-struct Sqlite3Config sqlite3Config = {
+SQLITE_WSD struct Sqlite3Config sqlite3Config = {
    1,                /* bMemstat */
    1,                /* bCoreMutex */
    1,                /* bFullMutex */
@@ -82,4 +82,4 @@ struct Sqlite3Config sqlite3Config = {
 ** database connections.  After initialization, this table is
 ** read-only.
 */
-FuncDefHash sqlite3GlobalFunctions;
+SQLITE_WSD FuncDefHash sqlite3GlobalFunctions;

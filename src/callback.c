@@ -357,7 +357,8 @@ FuncDef *sqlite3FindFunction(
   ** function to use.
   */ 
   if( !createFlag && !pBest ){
-    p = functionSearch(&sqlite3GlobalFunctions, h, zName, nName);
+    FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
+    p = functionSearch(pHash, h, zName, nName);
     while( p ){
       int score = matchQuality(p, nArg, enc);
       if( score>bestScore ){

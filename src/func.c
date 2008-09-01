@@ -1375,7 +1375,8 @@ static FuncDef aBuiltinFunc[] = {
 void sqlite3RegisterGlobalFunctions(void){
   int i;
   for(i=0; i<ArraySize(aBuiltinFunc); i++){
-    sqlite3FuncDefInsert(&sqlite3GlobalFunctions, &aBuiltinFunc[i]);
+    FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
+    sqlite3FuncDefInsert(pHash, &aBuiltinFunc[i]);
   }
   sqlite3RegisterDateTimeFunctions();
 }

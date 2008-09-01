@@ -1053,7 +1053,7 @@ static void currentTimeFunc(
 ** external linkage.
 */
 void sqlite3RegisterDateTimeFunctions(void){
-  static FuncDef aDateTimeFuncs[] = {
+  static SQLITE_WSD FuncDef aDateTimeFuncs[] = {
 #ifndef SQLITE_OMIT_DATETIME_FUNCS
     FUNCTION(julianday,        -1, 0, 0, juliandayFunc ),
     FUNCTION(date,             -1, 0, 0, dateFunc      ),
@@ -1070,8 +1070,10 @@ void sqlite3RegisterDateTimeFunctions(void){
 #endif
   };
   int i;
+  FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
+  FuncDef *aFunc = &GLOBAL(FuncDef, aDateTimeFuncs);
 
   for(i=0; i<ArraySize(aDateTimeFuncs); i++){
-    sqlite3FuncDefInsert(&sqlite3GlobalFunctions, &aDateTimeFuncs[i]);
+    sqlite3FuncDefInsert(pHash, &aFunc[i]);
   }
 }

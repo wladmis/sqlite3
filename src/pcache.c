@@ -606,7 +606,7 @@ static int pcacheRecycleOrAlloc(PCache *pCache, PgHdr **ppPage){
 int sqlite3PcacheInitialize(void){
   assert( pcache.isInit==0 );
   memset(&pcache, 0, sizeof(pcache));
-  if( sqlite3Config.bCoreMutex ){
+  if( sqlite3GlobalConfig.bCoreMutex ){
     /* No need to check the return value of sqlite3_mutex_alloc(). 
     ** Allocating a static mutex cannot fail.
     */
