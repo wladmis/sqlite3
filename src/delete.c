@@ -249,9 +249,11 @@ void sqlite3DeleteFrom(
   /* If we are trying to delete from a view, realize that view into
   ** a ephemeral table.
   */
+#if !defined(SQLITE_OMIT_VIEW) && !defined(SQLITE_OMIT_TRIGGER)
   if( isView ){
     sqlite3MaterializeView(pParse, pTab, pWhere, iCur);
   }
+#endif
 
   /* Resolve the column names in the WHERE clause.
   */
