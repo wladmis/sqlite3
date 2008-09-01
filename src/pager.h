@@ -112,7 +112,6 @@ int sqlite3PagerJournalMode(Pager *, int);
 i64 sqlite3PagerJournalSizeLimit(Pager *, i64);
 void *sqlite3PagerTempSpace(Pager*);
 int sqlite3PagerSync(Pager *pPager);
-void sqlite3PagerAlwaysRollback(Pager *pPager);
 
 #ifdef SQLITE_HAS_CODEC
   void sqlite3PagerSetCodec(Pager*,void*(*)(void*,void*,Pgno,int),void*);
