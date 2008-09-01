@@ -63,6 +63,13 @@
 #include "os_common.h"
 
 /*
+** Some microsoft compilers lack this definition.
+*/
+#ifndef INVALID_FILE_ATTRIBUTES
+# define INVALID_FILE_ATTRIBUTES ((DWORD)-1) 
+#endif
+
+/*
 ** Determine if we are dealing with WindowsCE - which has a much
 ** reduced API.
 */
