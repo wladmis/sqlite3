@@ -89,7 +89,7 @@ int sqlite3_initialize(void){
   int rc;                                      /* Result code */
 
 #ifdef SQLITE_OMIT_WSD
-  rc = sqlite3_wsd_init(1024, 256);
+  rc = sqlite3_wsd_init(4096, 24);
   if( rc!=SQLITE_OK ){
     return rc;
   }
