@@ -85,7 +85,6 @@ char *sqlite3_temp_directory = 0;
 **       without blocking.
 */
 int sqlite3_initialize(void){
-  SQLITE_WSD static int inProgress = 0;        /* Prevent recursion */
   sqlite3_mutex *pMaster;                      /* The main static mutex */
   int rc;                                      /* Result code */
 
@@ -152,9 +151,9 @@ int sqlite3_initialize(void){
   ** recursive calls might also be possible.
   */
   sqlite3_mutex_enter(sqlite3GlobalConfig.pInitMutex);
-  if( sqlite3GlobalConfig.isInit==0 && GLOBAL(int, inProgress)==0 ){
+  if( sqlite3GlobalConfig.isInit==0 && sqlite3GlobalConfig.inProgress==0 ){
     FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
-    GLOBAL(int, inProgress) = 1;
+    sqlite3GlobalConfig.inProgress = 1;
     memset(pHash, 0, sizeof(sqlite3GlobalFunctions));
     sqlite3RegisterGlobalFunctions();
     rc = sqlite3_os_init();
@@ -163,7 +162,7 @@ int sqlite3_initialize(void){
       sqlite3PCacheBufferSetup( sqlite3GlobalConfig.pPage, 
           sqlite3GlobalConfig.szPage, sqlite3GlobalConfig.nPage);
     }
-    GLOBAL(int, inProgress) = 0;
+    sqlite3GlobalConfig.inProgress = 0;
     sqlite3GlobalConfig.isInit = (rc==SQLITE_OK ? 1 : 0);
   }
   sqlite3_mutex_leave(sqlite3GlobalConfig.pInitMutex);
