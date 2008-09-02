@@ -881,7 +881,7 @@ static void trimFunc(
   assert( zIn==sqlite3_value_text(argv[0]) );
   if( argc==1 ){
     static const unsigned char lenOne[] = { 1 };
-    static const unsigned char *azOne[] = { (u8*)" " };
+    static unsigned char * const azOne[] = { (u8*)" " };
     nChar = 1;
     aLen = (u8*)lenOne;
     azChar = (unsigned char **)azOne;
@@ -937,6 +937,7 @@ static void trimFunc(
   }
   sqlite3_result_text(context, (char*)zIn, nIn, SQLITE_TRANSIENT);
 }
+
 
 #ifdef SQLITE_SOUNDEX
 /*
@@ -1295,7 +1296,6 @@ int sqlite3IsLikeFunction(sqlite3 *db, Expr *pExpr, int *pIsNocase, char *aWc){
   *pIsNocase = (pDef->flags & SQLITE_FUNC_CASE)==0;
   return 1;
 }
-
 
 /*
 ** All all of the FuncDef structures in the aBuiltinFunc[] array above
