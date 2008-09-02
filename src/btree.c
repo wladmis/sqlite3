@@ -62,7 +62,7 @@ static SQLITE_WSD int sqlite3SharedCacheEnabled = 0;
 ** sqlite3_open(), sqlite3_open16(), or sqlite3_open_v2().
 */
 int sqlite3_enable_shared_cache(int enable){
-  GLOBAL(int,sqlite3SharedCacheEnabled) = enable;
+  GLOBAL(int, sqlite3SharedCacheEnabled) = enable;
   return SQLITE_OK;
 }
 #endif

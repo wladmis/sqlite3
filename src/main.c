@@ -160,8 +160,8 @@ int sqlite3_initialize(void){
     rc = sqlite3_os_init();
     if( rc==SQLITE_OK ){
       rc = sqlite3PcacheInitialize();
-      sqlite3PCacheBufferSetup(sqlite3GlobalConfig.pPage, sqlite3GlobalConfig.szPage, 
-          sqlite3GlobalConfig.nPage);
+      sqlite3PCacheBufferSetup( sqlite3GlobalConfig.pPage, 
+          sqlite3GlobalConfig.szPage, sqlite3GlobalConfig.nPage);
     }
     GLOBAL(int, inProgress) = 0;
     sqlite3GlobalConfig.isInit = (rc==SQLITE_OK ? 1 : 0);
