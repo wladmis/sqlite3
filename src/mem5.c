@@ -87,16 +87,11 @@ struct Mem5Link {
 */
 static SQLITE_WSD struct Mem5Global {
   /*
-  ** The alarm callback and its arguments.  The mem5.mutex lock will
-  ** be held while the callback is running.  Recursive calls into
-  ** the memory subsystem are allowed, but no new callbacks will be
-  ** issued.  The alarmBusy variable is set to prevent recursive
-  ** callbacks.
+  ** Memory available for allocation
   */
-  sqlite3_int64 alarmThreshold;
-  void (*alarmCallback)(void*, sqlite3_int64,int);
-  void *alarmArg;
-  int alarmBusy;
+  int nAtom;       /* Smallest possible allocation in bytes */
+  int nBlock;      /* Number of nAtom sized blocks in zPool */
+  u8 *zPool;
   
   /*
   ** Mutex to control access to the memory allocation subsystem.
@@ -126,13 +121,7 @@ static SQLITE_WSD struct Mem5Global {
   */
   u8 *aCtrl;
 
-  /*
-  ** Memory available for allocation
-  */
-  int nAtom;       /* Smallest possible allocation in bytes */
-  int nBlock;      /* Number of nAtom sized blocks in zPool */
-  u8 *zPool;
-} mem5 = {};
+} mem5 = { 19804167 };
 
 #define mem5 GLOBAL(struct Mem5Global, mem5)
 
