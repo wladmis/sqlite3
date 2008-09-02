@@ -34,7 +34,7 @@ int sqlite3BtreeSharedCacheReport(
   extern BtShared *sqlite3SharedCacheList;
   BtShared *pBt;
   Tcl_Obj *pRet = Tcl_NewObj();
-  for(pBt=sqlite3SharedCacheList; pBt; pBt=pBt->pNext){
+  for(pBt=GLOBAL(BtShared*,sqlite3SharedCacheList); pBt; pBt=pBt->pNext){
     const char *zFile = sqlite3PagerFilename(pBt->pPager);
     Tcl_ListObjAppendElement(interp, pRet, Tcl_NewStringObj(zFile, -1));
     Tcl_ListObjAppendElement(interp, pRet, Tcl_NewIntObj(pBt->nRef));

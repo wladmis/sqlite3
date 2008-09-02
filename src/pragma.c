@@ -666,6 +666,7 @@ void sqlite3Pragma(
         sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 1);
       }
     }else{
+#ifndef SQLITE_OMIT_WSD
       if( zRight[0] ){
         int res;
         sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
@@ -686,6 +687,7 @@ void sqlite3Pragma(
       }else{
         sqlite3_temp_directory = 0;
       }
+#endif /* SQLITE_OMIT_WSD */
     }
   }else
 

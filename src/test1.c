@@ -1387,7 +1387,7 @@ static int test_enable_shared(
     Tcl_WrongNumArgs(interp, 1, objv, "?BOOLEAN?");
     return TCL_ERROR;
   }
-  ret = sqlite3SharedCacheEnabled;
+  ret = GLOBAL(int, sqlite3SharedCacheEnabled);
 
   if( objc==2 ){
     if( Tcl_GetBooleanFromObj(interp, objv[1], &enable) ){

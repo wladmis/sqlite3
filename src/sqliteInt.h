@@ -441,6 +441,20 @@ struct BusyHandler {
 */
 #define SQLITE_DYNAMIC   ((sqlite3_destructor_type)sqlite3DbFree)
 
+/*
+** When SQLITE_OMIT_WSD is defined, it means that the target platform does
+** not support Writable Static Data (WSD) such as global and static variables.
+** All variables must either be on the stack or dynamically allocated from
+** the heap.  When WSD is unsupported, the variable declarations scattered
+** throughout the SQLite code must become constants instead.  The SQLITE_WSD
+** macro is used for this purpose.  And instead of referencing the variable
+** directly, we use its constant as a key to lookup the run-time allocated
+** buffer that holds real variable.  The constant is also the initializer
+** for the run-time allocated buffer.
+**
+** In the usually case where WSD is supported, the SQLITE_WSD and GLOBAL
+** macros become no-ops and have zero performance impact.
+*/
 #ifdef SQLITE_OMIT_WSD
   #define SQLITE_WSD const
   #define GLOBAL(t,v) (*(t*)sqlite3_wsd_find((void*)&(v), sizeof(v)))
