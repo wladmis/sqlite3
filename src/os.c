@@ -190,7 +190,8 @@ int sqlite3OsCloseFree(sqlite3_file *pFile){
 /*
 ** The list of all registered VFS implementations.
 */
-static sqlite3_vfs *vfsList = 0;
+static SQLITE_WSD sqlite3_vfs *vfsList = 0;
+#define vfsList GLOBAL(sqlite3_vfs *, vfsList)
 
 /*
 ** Locate a VFS by name.  If no name is given, simply return the

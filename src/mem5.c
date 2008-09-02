@@ -85,7 +85,7 @@ struct Mem5Link {
 ** static variables organized and to reduce namespace pollution
 ** when this module is combined with other in the amalgamation.
 */
-static struct {
+static SQLITE_WSD struct Mem5Global {
   /*
   ** The alarm callback and its arguments.  The mem5.mutex lock will
   ** be held while the callback is running.  Recursive calls into
@@ -132,7 +132,9 @@ static struct {
   int nAtom;       /* Smallest possible allocation in bytes */
   int nBlock;      /* Number of nAtom sized blocks in zPool */
   u8 *zPool;
-} mem5;
+} mem5 = {};
+
+#define mem5 GLOBAL(struct Mem5Global, mem5)
 
 #define MEM5LINK(idx) ((Mem5Link *)(&mem5.zPool[(idx)*mem5.nAtom]))
 

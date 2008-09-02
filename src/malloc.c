@@ -76,7 +76,7 @@ int sqlite3_release_memory(int n){
 /*
 ** State information local to the memory allocation subsystem.
 */
-static struct {
+static SQLITE_WSD struct Mem0Global {
   sqlite3_mutex *mutex;         /* Mutex to serialize access */
 
   /*
@@ -102,7 +102,9 @@ static struct {
   /* Number of free pages for scratch and page-cache memory */
   u32 nScratchFree;
   u32 nPageFree;
-} mem0;
+} mem0 = {};
+
+#define mem0 GLOBAL(struct Mem0Global, mem0)
 
 /*
 ** Initialize the memory allocation subsystem.

@@ -104,13 +104,15 @@ struct Mem6Chunk {
 
 #define MEM6LINK(idx) ((Mem6Link *)(&pChunk->zPool[(idx)*pChunk->nAtom]))
 
-struct Mem6Global {
+static SQLITE_WSD struct Mem6Global {
   int nMinAlloc;                  /* Minimum allowed allocation size */
   int nThreshold;                 /* Allocs larger than this go to malloc() */
   int nLogThreshold;              /* log2 of (nThreshold/nMinAlloc) */
   sqlite3_mutex *mutex;
   Mem6Chunk *pChunk;              /* Singly linked list of all memory chunks */
-} mem6;
+} mem6 = {};
+
+#define mem6 GLOBAL(struct Mem6Global, mem6)
 
 /*
 ** Unlink the chunk at pChunk->aPool[i] from list it is currently
