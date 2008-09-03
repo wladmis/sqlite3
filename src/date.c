@@ -1071,7 +1071,7 @@ void sqlite3RegisterDateTimeFunctions(void){
   };
   int i;
   FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
-  FuncDef *aFunc = &GLOBAL(FuncDef, aDateTimeFuncs);
+  FuncDef *aFunc = (FuncDef*)&GLOBAL(FuncDef, aDateTimeFuncs);
 
   for(i=0; i<ArraySize(aDateTimeFuncs); i++){
     sqlite3FuncDefInsert(pHash, &aFunc[i]);

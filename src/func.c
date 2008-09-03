@@ -1376,7 +1376,7 @@ void sqlite3RegisterGlobalFunctions(void){
 
   int i;
   FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
-  FuncDef *aFunc = &GLOBAL(FuncDef, aBuiltinFunc);
+  FuncDef *aFunc = (FuncDef*)&GLOBAL(FuncDef, aBuiltinFunc);
 
   for(i=0; i<ArraySize(aBuiltinFunc); i++){
     sqlite3FuncDefInsert(pHash, &aFunc[i]);
