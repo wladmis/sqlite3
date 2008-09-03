@@ -2327,7 +2327,7 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   int i;
   const char *zFile;
   const char *zVfs = 0;
-  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
+  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX;
   Tcl_DString translatedFilename;
   if( objc==2 ){
     zArg = Tcl_GetStringFromObj(objv[1], 0);
