@@ -2030,7 +2030,6 @@ static int flockCheckReservedLock(sqlite3_file *id, int *pResOut){
 
 static int flockLock(sqlite3_file *id, int locktype) {
   int rc = SQLITE_OK;
-  int lrc;
   unixFile *pFile = (unixFile*)id;
 
   assert( pFile );

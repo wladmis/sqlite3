@@ -67,12 +67,12 @@ const unsigned char sqlite3UpperToLower[] = {
 ** the SQLite library.
 */
 SQLITE_WSD struct Sqlite3Config sqlite3Config = {
-   1,                /* bMemstat */
-   1,                /* bCoreMutex */
-   1,                /* bFullMutex */
-   0x7ffffffe,       /* mxStrlen */
-   100,              /* szLookaside */
-   500,              /* nLookaside */
+   SQLITE_DEFAULT_MEMSTATUS,  /* bMemstat */
+   1,                         /* bCoreMutex */
+   SQLITE_THREADSAFE==1,      /* bFullMutex */
+   0x7ffffffe,                /* mxStrlen */
+   100,                       /* szLookaside */
+   500,                       /* nLookaside */
    /* Other fields all default to zero */
 };
 
