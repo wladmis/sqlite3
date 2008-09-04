@@ -2041,6 +2041,7 @@ const sqlite3_mem_methods *sqlite3MemGetMemsys5(void);
 const sqlite3_mem_methods *sqlite3MemGetMemsys3(void);
 const sqlite3_mem_methods *sqlite3MemGetMemsys6(void);
 void sqlite3BenignMallocHooks(void (*)(void), void (*)(void));
+int sqlite3MemoryAlarm(void (*)(void*, sqlite3_int64, int), void*, sqlite3_int64);
 
 #ifndef SQLITE_MUTEX_NOOP
   sqlite3_mutex_methods *sqlite3DefaultMutex(void);
@@ -2442,6 +2443,7 @@ int sqlite3VtabCallDestroy(sqlite3*, int, const char *);
 int sqlite3VtabBegin(sqlite3 *, sqlite3_vtab *);
 FuncDef *sqlite3VtabOverloadFunction(sqlite3 *,FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
+int sqlite3TransferBindings(sqlite3_stmt *, sqlite3_stmt *);
 int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
