@@ -613,6 +613,29 @@ do_malloc_test 25 -sqlprep {
   }
 }
 
+# This test is designed to test a specific juncture in the sqlite code.
+# The database set up by -sqlprep script contains a single table B-Tree
+# of height 2. In the -tclbody script, the existing database connection
+# is closed and a new one opened and used to insert a new row into the
+# table B-Tree. By using a new connection, the outcome of a malloc() 
+# failure while seeking to the right-hand side of the B-Tree to insert 
+# a new record can be tested.
+#
+do_malloc_test 26 -sqlprep {
+  BEGIN;
+  CREATE TABLE t1(a, b);
+  INSERT INTO t1 VALUES(1, randomblob(210));
+  INSERT INTO t1 VALUES(1, randomblob(210));
+  INSERT INTO t1 VALUES(1, randomblob(210));
+  INSERT INTO t1 VALUES(1, randomblob(210));
+  INSERT INTO t1 VALUES(1, randomblob(210));
+  COMMIT;
+} -tclbody {
+  db close
+  sqlite3 db test.db
+  db eval { INSERT INTO t1 VALUES(1, randomblob(210)) }
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}

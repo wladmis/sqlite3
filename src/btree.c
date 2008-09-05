@@ -3593,7 +3593,7 @@ static int moveToRightmost(BtCursor *pCur){
     pCur->info.nSize = 0;
     pCur->validNKey = 0;
   }
-  return SQLITE_OK;
+  return rc;
 }
 
 /* Move the cursor to the first entry in the table.  Return SQLITE_OK
