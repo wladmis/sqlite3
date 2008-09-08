@@ -3662,8 +3662,9 @@ int sqlite3PagerCommitPhaseOne(
     ** If the optimization can be used, then the journal file will never
     ** be created for this transaction.
     */
+    int useAtomicWrite;
     pPg = sqlite3PcacheDirtyList(pPager->pPCache);
-    int useAtomicWrite = (
+    useAtomicWrite = (
         !zMaster && 
         pPager->journalOpen &&
         pPager->journalOff==jrnlBufferSize(pPager) && 
