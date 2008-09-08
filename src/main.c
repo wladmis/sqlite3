@@ -25,6 +25,9 @@
 #ifdef SQLITE_ENABLE_RTREE
 # include "rtree.h"
 #endif
+#ifdef SQLITE_ENABLE_ICU
+# include "sqliteicu.h"
+#endif
 
 /*
 ** The version of the library
@@ -1588,7 +1591,6 @@ static int openDatabase(
 
 #ifdef SQLITE_ENABLE_ICU
   if( !db->mallocFailed && rc==SQLITE_OK ){
-    extern int sqlite3IcuInit(sqlite3*);
     rc = sqlite3IcuInit(db);
   }
 #endif
