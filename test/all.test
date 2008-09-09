@@ -64,6 +64,7 @@ lappend EXCLUDE misuse.test            ;# Run seperately later.
 lappend EXCLUDE memleak.test           ;# Alternate test driver script
 lappend EXCLUDE permutations.test      ;# Run seperately later.
 lappend EXCLUDE fuzz.test
+lappend EXCLUDE fuzz3.test
 lappend EXCLUDE soak.test              ;# Takes a very long time (default 1 hr)
 lappend EXCLUDE fts3.test              ;# Wrapper for muliple fts3*.tests
 lappend EXCLUDE mallocAll.test         ;# Wrapper for running all malloc tests

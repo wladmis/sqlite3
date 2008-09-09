@@ -54,6 +54,7 @@ set EXCLUDE {
   delete3.test
   fts3.test
   fuzz.test
+  fuzz3.test
   fuzz_malloc.test
   in2.test
   loadext.test
