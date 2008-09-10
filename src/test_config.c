@@ -130,10 +130,11 @@ static void set_options(Tcl_Interp *interp){
 #else
   Tcl_SetVar2(interp, "sqlite_options", "autovacuum", "1", TCL_GLOBAL_ONLY);
 #endif /* SQLITE_OMIT_AUTOVACUUM */
-#if !defined(SQLITE_DEFAULT_AUTOVACUUM) || SQLITE_DEFAULT_AUTOVACUUM==0
+#if !defined(SQLITE_DEFAULT_AUTOVACUUM)
   Tcl_SetVar2(interp,"sqlite_options","default_autovacuum","0",TCL_GLOBAL_ONLY);
 #else
-  Tcl_SetVar2(interp,"sqlite_options","default_autovacuum","1",TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(interp, "sqlite_options", "default_autovacuum", 
+      STRINGVALUE(SQLITE_DEFAULT_AUTOVACUUM), TCL_GLOBAL_ONLY);
 #endif
 
 #ifdef SQLITE_OMIT_BETWEEN_OPTIMIZATION

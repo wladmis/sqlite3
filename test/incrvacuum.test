@@ -601,7 +601,7 @@ ifcapable default_autovacuum {
     execsql {
       PRAGMA auto_vacuum;
     }
-  } {1}
+  } $AUTOVACUUM
 } else {
   do_test incrvacuum-11.1-av-dflt-off {
     execsql {

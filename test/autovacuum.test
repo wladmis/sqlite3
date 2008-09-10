@@ -484,7 +484,7 @@ do_test autovacuum-3.6 {
     PRAGMA auto_vacuum = 1;
     PRAGMA auto_vacuum;
   }
-} $AUTOVACUUM
+} [expr $AUTOVACUUM ? 1 : 0]
 do_test autovacuum-3.7 {
   execsql {
     DROP TABLE av1;
