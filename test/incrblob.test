@@ -566,6 +566,7 @@ do_test incrblob-7.2.1 {
     INSERT INTO t1 VALUES(123, $::data);
   }
   set ::b [db incrblob -readonly t1 b 123]
+  fconfigure $::b -translation binary
   read $::b
 } $::data
 do_test incrblob-7.2.2 {
@@ -588,6 +589,7 @@ do_test incrblob-7.3.1 {
     INSERT INTO t2 VALUES(456, $::otherdata);
   }
   set ::b [db incrblob -readonly t2 b 456]
+  fconfigure $::b -translation binary
   read $::b
 } $::otherdata
 do_test incrblob-7.3.2 {
