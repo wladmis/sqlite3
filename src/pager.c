@@ -578,7 +578,7 @@ static void seekJournalHdr(Pager *pPager){
 */
 static int zeroJournalHdr(Pager *pPager, int doTruncate){
   int rc = SQLITE_OK;
-  static const char zeroHdr[28] = {};
+  static const char zeroHdr[28] = {0};
 
   if( pPager->journalOff ){
     i64 iLimit = pPager->journalSizeLimit;

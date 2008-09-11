@@ -3781,7 +3781,7 @@ static int test_stmt_int(
   int col;
   int (*xFunc)(sqlite3_stmt*, int);
 
-  xFunc = (const void *(*)(sqlite3_stmt*, int))clientData;
+  xFunc = (int (*)(sqlite3_stmt*, int))clientData;
   if( objc!=3 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", 
        Tcl_GetString(objv[0]), " STMT column", 0);
