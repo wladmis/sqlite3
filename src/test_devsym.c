@@ -234,10 +234,14 @@ static int devsymOpen(
   int flags,
   int *pOutFlags
 ){
+  int rc;
   devsym_file *p = (devsym_file *)pFile;
-  pFile->pMethods = &devsym_io_methods;
   p->pReal = (sqlite3_file *)&p[1];
-  return sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
+  rc = sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
+  if( p->pReal->pMethods ){
+    pFile->pMethods = &devsym_io_methods;
+  }
+  return rc;
 }
 
 /*
