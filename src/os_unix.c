@@ -1178,9 +1178,11 @@ static int sqliteErrorFromPosixError(int posixError, int sqliteIOErr) {
     /* something went terribly awry, unless during file system support 
      * introspection, in which it actually means what it says */
 #endif
+#ifdef ENOTSUP
   case ENOTSUP: 
     /* invalid fd, unless during file system support introspection, in which 
      * it actually means what it says */
+#endif
   case EIO:
   case EBADF:
   case EINVAL:
@@ -1563,7 +1565,7 @@ static int unixUnlock(sqlite3_file *id, int locktype){
         pLock->locktype = NO_LOCK;
       }else{
         int tErrno = errno;
-				rc = sqliteErrorFromPosixError(tErrno, SQLITE_IOERR_UNLOCK);
+        rc = sqliteErrorFromPosixError(tErrno, SQLITE_IOERR_UNLOCK);
         if( IS_LOCK_ERROR(rc) ){
           pFile->lastErrno = tErrno;
         }
