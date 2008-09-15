@@ -8,14 +8,15 @@
 #
 # $Id$
 
+set testdir [file dirname $argv0]
+source $testdir/tester.tcl
 
 if {[catch {sqlite3async_enable}]} {
   # The async logic is not built into this system
+  finish_test
   return
 }
 
-set testdir [file dirname $argv0]
-source $testdir/tester.tcl
 rename finish_test really_finish_test
 proc finish_test {} {
   catch {db close}
