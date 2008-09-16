@@ -668,9 +668,10 @@ void sqlite3Pragma(
     }else{
 #ifndef SQLITE_OMIT_WSD
       if( zRight[0] ){
+        int rc;
         int res;
-        sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
-        if( res==0 ){
+        rc = sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
+        if( rc!=SQLITE_OK || res==0 ){
           sqlite3ErrorMsg(pParse, "not a writable directory");
           goto pragma_out;
         }

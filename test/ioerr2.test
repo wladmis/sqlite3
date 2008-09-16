@@ -132,4 +132,17 @@ do_test ioerr2-5 {
   list $rc $msg
 } {1 {callback requested query abort}}
 
+if {$::tcl_platform(platform) == "unix"} {
+  # Cause the call to xAccess used by [pragma temp_store_directory] to
+  # determine if the specified directory is writable to fail. This causes
+  # SQLite to report "not a writable directory", which is probably the
+  # right answer.
+  #
+  do_test ioerr2-6 {
+    set ::sqlite_io_error_hit 0
+    set ::sqlite_io_error_pending 1
+    catchsql {PRAGMA temp_store_directory = '/tmp/'}
+  } {1 {not a writable directory}}
+}
+
 finish_test
