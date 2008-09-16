@@ -901,6 +901,7 @@ int sqlite3VdbeList(
         pMem->z = pOp->zComment;
         pMem->n = strlen(pMem->z);
         pMem->enc = SQLITE_UTF8;
+        pMem->type = SQLITE_TEXT;
       }else
 #endif
       {
