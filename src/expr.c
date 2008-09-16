@@ -2464,11 +2464,14 @@ int sqlite3ExprCodeExprList(
   assert( target>0 );
   n = pList->nExpr;
   for(pItem=pList->a, i=0; i<n; i++, pItem++){
+#if 0  /* Remove temporarily for tickets #3378 and #3381 */
     if( pItem->iAlias ){
       int iReg = codeAlias(pParse, pItem->iAlias, pItem->pExpr);
       Vdbe *v = sqlite3GetVdbe(pParse);
       sqlite3VdbeAddOp2(v, OP_SCopy, iReg, target+i);
-    }else{
+    }else
+#endif
+    {
       sqlite3ExprCode(pParse, pItem->pExpr, target+i);
     }
     if( doHardCopy ) sqlite3ExprHardCopy(pParse, target, n);
