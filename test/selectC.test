@@ -117,6 +117,12 @@ do_test selectC-1.13 {
      ORDER BY x
   }
 } {AAA CCC}
-
+do_test selectC-1.14 {
+  execsql {
+    SELECT upper(b) AS x
+      FROM t1
+     ORDER BY x DESC
+  }
+} {CCC AAA AAA}
 
 finish_test
