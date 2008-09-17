@@ -434,7 +434,7 @@ void *pcacheMalloc(int sz, PCache *pCache){
     return p;
   }
 }
-void *sqlite3PageMalloc(sz){
+void *sqlite3PageMalloc(int sz){
   void *p;
   pcacheEnterMutex();
   p = pcacheMalloc(sz, 0);
