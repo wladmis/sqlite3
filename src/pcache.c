@@ -1019,7 +1019,11 @@ void sqlite3PcacheCommit(PCache *pCache, int idJournal){
 /*
 ** Rollback a change previously preserved.
 */
-void sqlite3PcacheRollback(PCache *pCache, int idJournal){
+void sqlite3PcacheRollback(
+  PCache *pCache,                  /* Pager cache */
+  int idJournal,                   /* Which copy to rollback to */
+  void (*xReiniter)(PgHdr*)        /* Called on each rolled back page */
+){
   PgHdr *p;
   int sz;
   int mask = idJournal==0 ? ~PGHDR_IN_JOURNAL : 0xffffff;
@@ -1030,6 +1034,9 @@ void sqlite3PcacheRollback(PCache *pCache, int idJournal){
       memcpy(p->pData, p->apSave[idJournal], sz);
       pcacheFree(p->apSave[idJournal]);
       p->apSave[idJournal] = 0;
+      if( xReiniter ){
+        xReiniter(p);
+      }
     }
     p->flags &= mask;
   }

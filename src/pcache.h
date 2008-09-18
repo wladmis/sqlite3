@@ -113,7 +113,7 @@ void sqlite3PcacheTruncate(PCache*, Pgno x);
 /* Routines used to implement transactions on memory-only databases. */
 int sqlite3PcachePreserve(PgHdr*, int);    /* Preserve current page content */
 void sqlite3PcacheCommit(PCache*, int);    /* Drop preserved copy */
-void sqlite3PcacheRollback(PCache*, int);  /* Rollback to preserved copy */
+void sqlite3PcacheRollback(PCache*, int, void (*xReiniter)(PgHdr*));
 
 /* Get a list of all dirty pages in the cache, sorted by page number */
 PgHdr *sqlite3PcacheDirtyList(PCache*);

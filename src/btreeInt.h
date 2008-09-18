@@ -297,6 +297,18 @@ struct MemPage {
 };
 
 /*
+** Possible values for the MemPage.isInit variable. When a page is first
+** loaded or if the data stored in the MemPage struct is invalidated, 
+** MemPage.isInit is set to PAGE_ISINIT_NONE. If the MemPage structure
+** is fully initialized, then MemPage.isInit is set to PAGE_ISINIT_FULL.
+** MemPage.isInit is set to PAGE_ISINIT_DATA when the MemPage struct is
+** populated, but the MemPage.pParent variable is not necessarily correct.
+*/
+#define PAGE_ISINIT_NONE 0
+#define PAGE_ISINIT_DATA 1
+#define PAGE_ISINIT_FULL 2
+
+/*
 ** The in-memory image of a disk page has the auxiliary information appended
 ** to the end.  EXTRA_SIZE is the number of bytes of space needed to hold
 ** that extra information.

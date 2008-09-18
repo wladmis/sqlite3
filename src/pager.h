@@ -72,7 +72,7 @@ typedef struct PgHdr DbPage;
 */
 int sqlite3PagerOpen(sqlite3_vfs *, Pager **ppPager, const char*, void(*)(DbPage*), int,int,int);
 void sqlite3PagerSetBusyhandler(Pager*, BusyHandler *pBusyHandler);
-void sqlite3PagerSetReiniter(Pager*, void(*)(DbPage*,int));
+void sqlite3PagerSetReiniter(Pager*, void(*)(DbPage*));
 int sqlite3PagerSetPagesize(Pager*, u16*);
 int sqlite3PagerMaxPageCount(Pager*, int);
 int sqlite3PagerReadFileheader(Pager*, int, unsigned char*);
