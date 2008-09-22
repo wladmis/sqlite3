@@ -135,6 +135,8 @@ int sqlite3_initialize(void){
         rc = SQLITE_NOMEM;
       }
     }
+  }
+  if( rc==SQLITE_OK ){
     sqlite3GlobalConfig.nRefInitMutex++;
   }
   sqlite3_mutex_leave(pMaster);
