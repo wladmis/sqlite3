@@ -110,12 +110,6 @@ static void updateMaxBlobsize(Mem *p){
 #endif
 
 /*
-** Release the memory associated with a register.  This
-** leaves the Mem.flags field in an inconsistent state.
-*/
-#define Release(P) if((P)->flags&MEM_Dyn){ sqlite3VdbeMemRelease(P); }
-
-/*
 ** Convert the given register into a string if it isn't one
 ** already. Return non-zero if a malloc() fails.
 */
@@ -2144,7 +2138,8 @@ case OP_Column: {
     ** of the record (when all fields present), then we must be dealing 
     ** with a corrupt database.
     */
-    if( zIdx>zEndHdr || offset>payloadSize || (zIdx==zEndHdr && offset!=payloadSize) ){
+    if( zIdx>zEndHdr || offset>payloadSize 
+     || (zIdx==zEndHdr && offset!=payloadSize) ){
       rc = SQLITE_CORRUPT_BKPT;
       goto op_column_out;
     }
