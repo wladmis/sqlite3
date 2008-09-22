@@ -1062,6 +1062,11 @@ static int unixSync(sqlite3_file *id, int flags){
       || (flags&0x0F)==SQLITE_SYNC_FULL
   );
 
+  /* Unix cannot, but some systems may return SQLITE_FULL from here. This
+  ** line is to test that doing so does not cause any problems.
+  */
+  SimulateDiskfullError( return SQLITE_FULL );
+
   assert( pFile );
   OSTRACE2("SYNC    %-3d\n", pFile->h);
   rc = full_fsync(pFile->h, isFullsync, isDataOnly);
