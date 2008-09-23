@@ -2488,12 +2488,21 @@ EXTERN int Sqlite3_Init(Tcl_Interp *interp){
 EXTERN int Tclsqlite3_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
 EXTERN int Sqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
 EXTERN int Tclsqlite3_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+EXTERN int Sqlite3_Unload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Tclsqlite3_Unload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Sqlite3_SafeUnload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Tclsqlite3_SafeUnload(Tcl_Interp *interp, int flags){ return TCL_OK;}
+
 
 #ifndef SQLITE_3_SUFFIX_ONLY
 EXTERN int Sqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
 EXTERN int Tclsqlite_Init(Tcl_Interp *interp){ return Sqlite3_Init(interp); }
 EXTERN int Sqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
 EXTERN int Tclsqlite_SafeInit(Tcl_Interp *interp){ return TCL_OK; }
+EXTERN int Sqlite_Unload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Tclsqlite_Unload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Sqlite_SafeUnload(Tcl_Interp *interp, int flags){ return TCL_OK; }
+EXTERN int Tclsqlite_SafeUnload(Tcl_Interp *interp, int flags){ return TCL_OK;}
 #endif
 
 #ifdef TCLSH
