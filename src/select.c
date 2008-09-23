@@ -2047,7 +2047,7 @@ static int multiSelectOrderBy(
   int labelEnd;         /* Label for the end of the overall SELECT stmt */
   int j1;               /* Jump instructions that get retargetted */
   int op;               /* One of TK_ALL, TK_UNION, TK_EXCEPT, TK_INTERSECT */
-  KeyInfo *pKeyDup;     /* Comparison information for duplicate removal */
+  KeyInfo *pKeyDup = 0; /* Comparison information for duplicate removal */
   KeyInfo *pKeyMerge;   /* Comparison information for merging rows */
   sqlite3 *db;          /* Database connection */
   ExprList *pOrderBy;   /* The ORDER BY clause */
@@ -2055,6 +2055,7 @@ static int multiSelectOrderBy(
   int *aPermute;        /* Mapping from ORDER BY terms to result set columns */
 
   assert( p->pOrderBy!=0 );
+  assert( pKeyDup==0 ); /* "Managed" code needs this.  Ticket #3382. */
   db = pParse->db;
   v = pParse->pVdbe;
   if( v==0 ) return SQLITE_NOMEM;
