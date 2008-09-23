@@ -1534,6 +1534,9 @@ static int openDatabase(
                            flags | SQLITE_OPEN_MAIN_DB,
                            &db->aDb[0].pBt);
   if( rc!=SQLITE_OK ){
+    if( rc==SQLITE_IOERR_NOMEM ){
+      rc = SQLITE_NOMEM;
+    }
     sqlite3Error(db, rc, 0);
     goto opendb_out;
   }
