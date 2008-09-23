@@ -147,7 +147,6 @@ proc do_malloc_test {tn args} {
         } elseif {
           [info command db]=="" || 
           [db errorcode]==7 ||
-          [db errorcode]==[expr 10+(12<<8)] ||
           $msg=="out of memory"
         } {
           set v2 1

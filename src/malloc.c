@@ -752,7 +752,7 @@ int sqlite3ApiExit(sqlite3* db, int rc){
   ** is unsafe, as is the call to sqlite3Error().
   */
   assert( !db || sqlite3_mutex_held(db->mutex) );
-  if( db && db->mallocFailed ){
+  if( db && (db->mallocFailed || rc==SQLITE_IOERR_NOMEM) ){
     sqlite3Error(db, SQLITE_NOMEM, 0);
     db->mallocFailed = 0;
     rc = SQLITE_NOMEM;

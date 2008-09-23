@@ -1495,7 +1495,7 @@ static int pager_playback(Pager *pPager, int isHot){
           ** going to end up being corrupt.  It is corrupt to us, anyhow.
           ** Perhaps the next process to come along can fix it....
           */
-          rc = SQLITE_CORRUPT;
+          rc = SQLITE_CORRUPT_BKPT;
           goto end_playback;
         }
       }
