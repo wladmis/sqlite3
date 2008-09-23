@@ -39,8 +39,6 @@
 ** procedures use this to determine when tests should be omitted.
 */
 static void set_options(Tcl_Interp *interp){
-  int rc = 0;
-
 #ifdef SQLITE_32BIT_ROWID
   Tcl_SetVar2(interp, "sqlite_options", "rowid32", "1", TCL_GLOBAL_ONLY);
 #else
