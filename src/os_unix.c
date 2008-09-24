@@ -389,10 +389,10 @@ static struct openCnt *openList = 0;
 /*
 ** Helper functions to obtain and relinquish the global mutex.
 */
-static void enterMutex(){
+static void enterMutex(void){
   sqlite3_mutex_enter(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
 }
-static void leaveMutex(){
+static void leaveMutex(void){
   sqlite3_mutex_leave(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
 }
 

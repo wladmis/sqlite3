@@ -20,7 +20,6 @@ source $testdir/tester.tcl
 # SQLITE_ENABLE_LOCKING_STYLE macro.
 db close
 if {[catch {sqlite3 db test.db -vfs unix-none} msg]} {
-puts $msg
   finish_test
   return
 }
