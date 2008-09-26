@@ -449,13 +449,13 @@ void sqlite3Pragma(
   */
   if( sqlite3StrICmp(zLeft,"journal_mode")==0 ){
     int eMode;
-    static char * const azModeName[] = {"delete", "persist", "off"};
+    static char * const azModeName[] = {"delete", "persist", "off", "truncate"};
 
     if( zRight==0 ){
       eMode = PAGER_JOURNALMODE_QUERY;
     }else{
       int n = strlen(zRight);
-      eMode = 2;
+      eMode = sizeof(azModeName)/sizeof(azModeName[0]) - 1;
       while( eMode>=0 && sqlite3StrNICmp(zRight, azModeName[eMode], n)!=0 ){
         eMode--;
       }
@@ -491,6 +491,7 @@ void sqlite3Pragma(
       eMode = sqlite3PagerJournalMode(pPager, eMode);
     }
     assert( eMode==PAGER_JOURNALMODE_DELETE
+              || eMode==PAGER_JOURNALMODE_TRUNCATE
               || eMode==PAGER_JOURNALMODE_PERSIST
               || eMode==PAGER_JOURNALMODE_OFF );
     sqlite3VdbeSetNumCols(v, 1);
