@@ -377,7 +377,6 @@ run_tests "exclusive" -description {
 } -presql {
   pragma locking_mode = 'exclusive'
 } -include {
-  vacuum.test
   rollback.test select1.test select2.test 
   malloc.test ioerr.test
 } 
