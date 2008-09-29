@@ -79,7 +79,6 @@ void sqlite3PcacheOpen(
   int szPage,                    /* Size of every page */
   int szExtra,                   /* Extra space associated with each page */
   int bPurgeable,                /* True if pages are on backing store */
-  void (*xDestroy)(PgHdr *),     /* Called to destroy a page */
   int (*xStress)(void*, PgHdr*), /* Call to try to make pages clean */
   void *pStress,                 /* Argument to xStress */
   PCache *pToInit                /* Preallocated space for the PCache */
@@ -142,6 +141,8 @@ int sqlite3PcacheRefCount(PCache*);
 
 /* Increment the reference count of an existing page */
 void sqlite3PcacheRef(PgHdr*);
+
+int sqlite3PcachePageRefcount(PgHdr*);
 
 /* Return the total number of pages stored in the cache */
 int sqlite3PcachePagecount(PCache*);
