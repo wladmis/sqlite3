@@ -5956,7 +5956,9 @@ int sqlite3BtreeDelete(BtCursor *pCur){
         ** calls restoreCursorPosition() to point the cursor to the copy
         ** stored on the internal node, then advances to the next entry,
         ** which happens to be the copy of the key on the internal node.
-        ** Net effect: leafCur is pointing back where
+        ** Net effect: leafCur is pointing back to the duplicate cell
+        ** that needs to be removed, and the leafCur.apPage[] and
+        ** leafCur.aiIdx[] arrays are correct.
         */
       #ifndef NDEBUG
         Pgno leafPgno = pLeafPage->pgno;
