@@ -244,7 +244,7 @@ do_test memsubsys1-7.4 {
 } 0
 do_test memsubsys1-7.5 {
   set maxreq [lindex [sqlite3_status SQLITE_STATUS_MALLOC_SIZE 0] 2]
-  expr {$maxreq<4000}
+  expr {$maxreq<4100}
 } 1
 do_test memsubsys1-7.6 {
   set s_used [lindex [sqlite3_status SQLITE_STATUS_SCRATCH_USED 0] 2]
