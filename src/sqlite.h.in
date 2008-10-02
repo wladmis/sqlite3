@@ -2844,7 +2844,7 @@ int sqlite3_prepare16_v2(
 );
 
 /*
-** CAPIREF: Retrieving Statement SQL {H13100} <H13000>
+** CAPI3REF: Retrieving Statement SQL {H13100} <H13000>
 **
 ** This interface can be used to retrieve a saved copy of the original
 ** SQL text used to create a [prepared statement] if that statement was
