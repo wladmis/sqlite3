@@ -363,7 +363,7 @@ do_test incrblob2-8.1 {
   execsql BEGIN
   set h [db incrblob t2 B 1]
   set rc [catch {
-    db eval {SELECT * FROM t2} { execsql "DROP TABLE t2" }
+    db eval {SELECT rowid FROM t2} { execsql "DROP TABLE t2" }
   } msg] 
   list $rc $msg
 } {1 {database table is locked}}
