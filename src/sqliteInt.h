@@ -2141,8 +2141,10 @@ void *sqlite3ArrayAllocate(sqlite3*,void*,int,int,int*,int*,int*);
 IdList *sqlite3IdListAppend(sqlite3*, IdList*, Token*);
 int sqlite3IdListIndex(IdList*,const char*);
 SrcList *sqlite3SrcListAppend(sqlite3*, SrcList*, Token*, Token*);
-SrcList *sqlite3SrcListAppendFromTerm(Parse*, SrcList*, Token*, Token*, Token*,
+SrcList *sqlite3SrcListAppendFromTerm(Parse*, SrcList*, Token*, Token*,
                                       Token*, Select*, Expr*, IdList*);
+void sqlite3SrcListIndexedBy(Parse *, SrcList *, Token *);
+int sqlite3IndexedByLookup(Parse *, struct SrcList_item *);
 void sqlite3SrcListShiftJoinType(SrcList*);
 void sqlite3SrcListAssignCursors(Parse*, SrcList*);
 void sqlite3IdListDelete(sqlite3*, IdList*);

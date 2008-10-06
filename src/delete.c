@@ -22,16 +22,17 @@
 ** are found, return a pointer to the last table.
 */
 Table *sqlite3SrcListLookup(Parse *pParse, SrcList *pSrc){
-  Table *pTab = 0;
-  int i;
-  struct SrcList_item *pItem;
-  for(i=0, pItem=pSrc->a; i<pSrc->nSrc; i++, pItem++){
-    pTab = sqlite3LocateTable(pParse, 0, pItem->zName, pItem->zDatabase);
-    sqlite3DeleteTable(pItem->pTab);
-    pItem->pTab = pTab;
-    if( pTab ){
-      pTab->nRef++;
-    }
+  struct SrcList_item *pItem = pSrc->a;
+  Table *pTab;
+  assert( pItem && pSrc->nSrc==1 );
+  pTab = sqlite3LocateTable(pParse, 0, pItem->zName, pItem->zDatabase);
+  sqlite3DeleteTable(pItem->pTab);
+  pItem->pTab = pTab;
+  if( pTab ){
+    pTab->nRef++;
+  }
+  if( sqlite3IndexedByLookup(pParse, pItem) ){
+    pTab = 0;
   }
   return pTab;
 }
@@ -106,7 +107,7 @@ void sqlite3MaterializeView(
     pWhere = sqlite3ExprDup(db, pWhere);
     viewName.z = (u8*)pView->zName;
     viewName.n = (unsigned int)strlen((const char*)viewName.z);
-    pFrom = sqlite3SrcListAppendFromTerm(pParse, 0, 0, 0, &viewName,0,pDup,0,0);
+    pFrom = sqlite3SrcListAppendFromTerm(pParse, 0, 0, 0, &viewName, pDup, 0,0);
     pDup = sqlite3SelectNew(pParse, 0, pFrom, pWhere, 0, 0, 0, 0, 0, 0);
   }
   sqlite3SelectDestInit(&dest, SRT_EphemTab, iCur);
