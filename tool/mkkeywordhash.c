@@ -200,6 +200,7 @@ static Keyword aKeywordTable[] = {
   { "IMMEDIATE",        "TK_IMMEDIATE",    ALWAYS                 },
   { "IN",               "TK_IN",           ALWAYS                 },
   { "INDEX",            "TK_INDEX",        ALWAYS                 },
+  { "INDEXED",          "TK_INDEXED",      ALWAYS                 },
   { "INITIALLY",        "TK_INITIALLY",    FKEY                   },
   { "INNER",            "TK_JOIN_KW",      ALWAYS                 },
   { "INSERT",           "TK_INSERT",       ALWAYS                 },

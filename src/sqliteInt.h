@@ -1448,6 +1448,9 @@ struct SrcList {
     Expr *pOn;        /* The ON clause of a join */
     IdList *pUsing;   /* The USING clause of a join */
     Bitmask colUsed;  /* Bit N (1<<N) set if column N or pTab is used */
+    u8 notIndexed;    /* True if there is a NOT INDEXED clause */
+    char *zIndex;     /* Identifier from "INDEXED BY <zIndex>" clause */
+    Index *pIndex;    /* Index structure corresponding to zIndex, if any */
   } a[1];             /* One entry for each identifier on the list */
 };
 
@@ -2139,7 +2142,7 @@ IdList *sqlite3IdListAppend(sqlite3*, IdList*, Token*);
 int sqlite3IdListIndex(IdList*,const char*);
 SrcList *sqlite3SrcListAppend(sqlite3*, SrcList*, Token*, Token*);
 SrcList *sqlite3SrcListAppendFromTerm(Parse*, SrcList*, Token*, Token*, Token*,
-                                      Select*, Expr*, IdList*);
+                                      Token*, Select*, Expr*, IdList*);
 void sqlite3SrcListShiftJoinType(SrcList*);
 void sqlite3SrcListAssignCursors(Parse*, SrcList*);
 void sqlite3IdListDelete(sqlite3*, IdList*);

@@ -106,7 +106,7 @@ void sqlite3MaterializeView(
     pWhere = sqlite3ExprDup(db, pWhere);
     viewName.z = (u8*)pView->zName;
     viewName.n = (unsigned int)strlen((const char*)viewName.z);
-    pFrom = sqlite3SrcListAppendFromTerm(pParse, 0, 0, 0, &viewName, pDup, 0,0);
+    pFrom = sqlite3SrcListAppendFromTerm(pParse, 0, 0, 0, &viewName,0,pDup,0,0);
     pDup = sqlite3SelectNew(pParse, 0, pFrom, pWhere, 0, 0, 0, 0, 0, 0);
   }
   sqlite3SelectDestInit(&dest, SRT_EphemTab, iCur);

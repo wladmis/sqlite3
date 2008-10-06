@@ -660,6 +660,17 @@ do_malloc_test 27 -tclprep {
   }
 }
 
+# Test that malloc failures that occur while processing INDEXED BY
+# clauses are handled correctly.
+do_malloc_test 28 -sqlprep {
+  CREATE TABLE t1(a, b);
+  CREATE INDEX i1 ON t1(a);
+  CREATE VIEW v1 AS SELECT * FROM t1 INDEXED BY i1 WHERE a = 10;
+} -sqlbody {
+  SELECT * FROM t1 INDEXED BY i1 ORDER BY a;
+  SELECT * FROM v1;
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}

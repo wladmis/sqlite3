@@ -2982,6 +2982,21 @@ static int selectExpander(Walker *pWalker, Select *p){
       }
 #endif
     }
+
+    /* Locate the index named by the INDEXED BY clause, if any. */
+    if( pFrom->zIndex ){
+      char *zIndex = pFrom->zIndex;
+      Index *pIdx;
+      for(pIdx=pTab->pIndex; 
+          pIdx && sqlite3StrICmp(pIdx->zName, zIndex); 
+          pIdx=pIdx->pNext
+      );
+      if( !pIdx ){
+        sqlite3ErrorMsg(pParse, "no such index: %s", zIndex, 0);
+        return WRC_Abort;
+      }
+      pFrom->pIndex = pIdx;
+    }
   }
 
   /* Process NATURAL keywords, and ON and USING clauses of joins.

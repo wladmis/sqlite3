@@ -733,6 +733,9 @@ SrcList *sqlite3SrcListDup(sqlite3 *db, SrcList *p){
     pNewItem->jointype = pOldItem->jointype;
     pNewItem->iCursor = pOldItem->iCursor;
     pNewItem->isPopulated = pOldItem->isPopulated;
+    pNewItem->zIndex = sqlite3DbStrDup(db, pOldItem->zIndex);
+    pNewItem->notIndexed = pOldItem->notIndexed;
+    pNewItem->pIndex = pOldItem->pIndex;
     pTab = pNewItem->pTab = pOldItem->pTab;
     if( pTab ){
       pTab->nRef++;
