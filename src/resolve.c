@@ -436,7 +436,7 @@ static int resolveExprStep(Walker *pWalker, Expr *pExpr){
       pExpr->affinity = SQLITE_AFF_INTEGER;
       break;
     }
-#endif /* SQLITE_OMIT_UPDATE_DELETE_LIMIT
+#endif /* SQLITE_OMIT_UPDATE_DELETE_LIMIT */
 
     /* A lone identifier is the name of a column.
     */
