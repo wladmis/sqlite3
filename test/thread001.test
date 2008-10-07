@@ -14,6 +14,9 @@
 set testdir [file dirname $argv0]
 
 source $testdir/tester.tcl
+ifcapable !mutex {
+  return
+}
 source $testdir/thread_common.tcl
 if {[info commands sqlthread] eq ""} {
   return

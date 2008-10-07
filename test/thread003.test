@@ -22,6 +22,10 @@ if {[info commands sqlthread] eq ""} {
   finish_test
   return
 }
+ifcapable !mutex {
+  finish_test
+  return
+}
 
 # Set up a couple of different databases full of pseudo-randomly 
 # generated data.
@@ -190,5 +194,3 @@ do_test thread003.4 {
 } {0}
 
 finish_test
-
-

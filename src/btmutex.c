@@ -61,7 +61,6 @@ void sqlite3BtreeEnter(Btree *p){
   p->wantToLock++;
   if( p->locked ) return;
 
-#ifndef SQLITE_MUTEX_NOOP
   /* In most cases, we should be able to acquire the lock we
   ** want without having to go throught the ascending lock
   ** procedure that follows.  Just be sure not to block.
@@ -93,7 +92,6 @@ void sqlite3BtreeEnter(Btree *p){
       pLater->locked = 1;
     }
   }
-#endif /* SQLITE_MUTEX_NOOP */
 }
 
 /*

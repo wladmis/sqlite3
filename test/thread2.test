@@ -17,10 +17,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-# This file swaps database connections between threads. This
-# is illegal if memory-management is enabled, so skip this file
-# in that case.
-ifcapable memorymanage {
+ifcapable !mutex {
   finish_test
   return
 }

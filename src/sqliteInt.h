@@ -2056,7 +2056,7 @@ const sqlite3_mem_methods *sqlite3MemGetMemsys6(void);
 void sqlite3BenignMallocHooks(void (*)(void), void (*)(void));
 int sqlite3MemoryAlarm(void (*)(void*, sqlite3_int64, int), void*, sqlite3_int64);
 
-#ifndef SQLITE_MUTEX_NOOP
+#ifndef SQLITE_MUTEX_OMIT
   sqlite3_mutex_methods *sqlite3DefaultMutex(void);
   sqlite3_mutex *sqlite3MutexAlloc(int);
   int sqlite3MutexInit(void);

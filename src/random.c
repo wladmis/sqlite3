@@ -106,7 +106,7 @@ static int randomByte(void){
 */
 void sqlite3_randomness(int N, void *pBuf){
   unsigned char *zBuf = pBuf;
-#ifndef SQLITE_MUTEX_NOOP
+#if SQLITE_THREADSAFE
   sqlite3_mutex *mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_PRNG);
 #endif
   sqlite3_mutex_enter(mutex);

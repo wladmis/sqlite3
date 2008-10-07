@@ -22,7 +22,7 @@ if {[info commands sqlthread] eq ""} {
   finish_test
   return
 }
-ifcapable !attach { 
+ifcapable !attach||!mutex { 
   finish_test
   return
 }
