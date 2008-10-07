@@ -79,7 +79,9 @@ do_test rollback-1.9 {
   sqlite3_finalize $STMT
 } {SQLITE_OK}
 
-if {$tcl_platform(platform) == "unix"} {
+set permutation ""
+catch {set permutation $::permutations_test_prefix}
+if {$tcl_platform(platform) == "unix" && $permutation ne "onefile"} {
   do_test rollback-2.1 {
     execsql {
       BEGIN;
@@ -123,11 +125,9 @@ if {$tcl_platform(platform) == "unix"} {
       SELECT distinct tbl_name FROM sqlite_master;
     } db2
   } {t1 t3}
-
   do_test rollback-2.3 {
     file exists testA.db-journal
   } 0
-
   do_test rollback-2.4 {
     execsql {
       SELECT distinct tbl_name FROM sqlite_master;

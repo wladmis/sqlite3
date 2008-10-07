@@ -151,6 +151,7 @@ proc run_tests {name args} {
   }
 
   uplevel $options(-shutdown)
+  set ::permutations_test_prefix ""
 }
 
 proc shared_cache_setting {} {
