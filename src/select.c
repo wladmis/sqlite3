@@ -81,7 +81,6 @@ Select *sqlite3SelectNew(
   pNew->pOrderBy = pOrderBy;
   pNew->selFlags = isDistinct ? SF_Distinct : 0;
   pNew->op = TK_SELECT;
-  assert( pOffset==0 || pLimit!=0 );
   pNew->pLimit = pLimit;
   pNew->pOffset = pOffset;
   pNew->addrOpenEphm[0] = -1;
