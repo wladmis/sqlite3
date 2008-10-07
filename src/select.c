@@ -3355,11 +3355,11 @@ static void updateAccumulator(Parse *pParse, AggInfo *pAggInfo){
       assert( nArg==1 );
       codeDistinct(pParse, pF->iDistinct, addrNext, 1, regAgg);
     }
-    if( pF->pFunc->needCollSeq ){
+    if( pF->pFunc->flags & SQLITE_FUNC_NEEDCOLL ){
       CollSeq *pColl = 0;
       struct ExprList_item *pItem;
       int j;
-      assert( pList!=0 );  /* pList!=0 if pF->pFunc->needCollSeq is true */
+      assert( pList!=0 );  /* pList!=0 if pF->pFunc has NEEDCOLL */
       for(j=0, pItem=pList->a; !pColl && j<nArg; j++, pItem++){
         pColl = sqlite3ExprCollSeq(pParse, pItem->pExpr);
       }
