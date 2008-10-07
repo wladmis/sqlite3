@@ -556,7 +556,7 @@ static int parseModifier(const char *zMod, DateTime *p){
       }
 #ifndef SQLITE_OMIT_LOCALTIME
       else if( strcmp(z, "utc")==0 ){
-        double c1;
+        int c1;
         computeJD(p);
         c1 = localtimeOffset(p);
         p->iJD -= c1;
