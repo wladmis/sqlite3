@@ -1517,7 +1517,7 @@ end_playback:
   if( rc==SQLITE_OK ){
     rc = pager_end_transaction(pPager, zMaster[0]!='\0');
   }
-  if( rc==SQLITE_OK && zMaster[0] ){
+  if( rc==SQLITE_OK && zMaster[0] && res ){
     /* If there was a master journal and this routine will return success,
     ** see if it is possible to delete the master journal.
     */
