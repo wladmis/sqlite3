@@ -1140,7 +1140,7 @@ int sqlite3_bind_value(sqlite3_stmt *pStmt, int i, const sqlite3_value *pValue){
     }
     sqlite3_mutex_leave(p->db->mutex);
   }
-  /* rc = sqlite3ApiExit(p->db, rc); */
+  rc = sqlite3ApiExit(p->db, rc);
   return rc;
 }
 int sqlite3_bind_zeroblob(sqlite3_stmt *pStmt, int i, int n){
