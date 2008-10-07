@@ -2710,6 +2710,7 @@ WhereInfo *sqlite3WhereBegin(
       pLevel->op = OP_Next;
       pLevel->p1 = iCur;
       pLevel->p2 = 1 + sqlite3VdbeAddOp2(v, OP_Rewind, iCur, brk);
+      pLevel->p5 = SQLITE_STMTSTATUS_FULLSCAN_STEP;
     }
     notReady &= ~getMask(&maskSet, iCur);
 
@@ -2835,6 +2836,7 @@ void sqlite3WhereEnd(WhereInfo *pWInfo){
     sqlite3VdbeResolveLabel(v, pLevel->cont);
     if( pLevel->op!=OP_Noop ){
       sqlite3VdbeAddOp2(v, pLevel->op, pLevel->p1, pLevel->p2);
+      sqlite3VdbeChangeP5(v, pLevel->p5);
     }
     if( pLevel->nIn ){
       struct InLoop *pIn;

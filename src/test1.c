@@ -1913,6 +1913,50 @@ static int test_finalize(
 }
 
 /*
+** Usage:  sqlite3_stmt_status  STMT  CODE  RESETFLAG
+**
+** Get the value of a status counter from a statement.
+*/
+static int test_stmt_status(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int iValue;
+  int i, op, resetFlag;
+  const char *zOpName;
+  sqlite3_stmt *pStmt;
+
+  static const struct {
+    const char *zName;
+    int op;
+  } aOp[] = {
+    { "SQLITE_STMTSTATUS_FULLSCAN_STEP",   SQLITE_STMTSTATUS_FULLSCAN_STEP   },
+    { "SQLITE_STMTSTATUS_SORT",            SQLITE_STMTSTATUS_SORT            },
+  };
+  if( objc!=4 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "STMT PARAMETER RESETFLAG");
+    return TCL_ERROR;
+  }
+  if( getStmtPointer(interp, Tcl_GetString(objv[1]), &pStmt) ) return TCL_ERROR;
+  zOpName = Tcl_GetString(objv[2]);
+  for(i=0; i<ArraySize(aOp); i++){
+    if( strcmp(aOp[i].zName, zOpName)==0 ){
+      op = aOp[i].op;
+      break;
+    }
+  }
+  if( i>=ArraySize(aOp) ){
+    if( Tcl_GetIntFromObj(interp, objv[2], &op) ) return TCL_ERROR;
+  }
+  if( Tcl_GetBooleanFromObj(interp, objv[3], &resetFlag) ) return TCL_ERROR;
+  iValue = sqlite3_stmt_status(pStmt, op, resetFlag);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(iValue));
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite3_next_stmt  DB  STMT
 **
 ** Return the next statment in sequence after STMT.
@@ -4623,6 +4667,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_prepare_tkt3134",       test_prepare_tkt3134, 0},
      { "sqlite3_prepare16_v2",          test_prepare16_v2  ,0 },
      { "sqlite3_finalize",              test_finalize      ,0 },
+     { "sqlite3_stmt_status",           test_stmt_status   ,0 },
      { "sqlite3_reset",                 test_reset         ,0 },
      { "sqlite3_expired",               test_expired       ,0 },
      { "sqlite3_transfer_bindings",     test_transfer_bind ,0 },

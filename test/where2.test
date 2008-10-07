@@ -58,9 +58,8 @@ proc count sql {
 # occurring as expected.
 #
 proc cksort {sql} {
-  set ::sqlite_sort_count 0
   set data [execsql $sql]
-  if {$::sqlite_sort_count} {set x sort} {set x nosort}
+  if {[db status sort]} {set x sort} {set x nosort}
   lappend data $x
   return $data
 }

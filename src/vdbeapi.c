@@ -1285,3 +1285,13 @@ sqlite3_stmt *sqlite3_next_stmt(sqlite3 *pDb, sqlite3_stmt *pStmt){
   sqlite3_mutex_leave(pDb->mutex);
   return pNext;
 }
+
+/*
+** Return the value of a status counter for a prepared statement
+*/
+int sqlite3_stmt_status(sqlite3_stmt *pStmt, int op, int resetFlag){
+  Vdbe *pVdbe = (Vdbe*)pStmt;
+  int v = pVdbe->aCounter[op-1];
+  if( resetFlag ) pVdbe->aCounter[op-1] = 0;
+  return v;
+}
