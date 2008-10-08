@@ -170,6 +170,7 @@ struct Pager *sqlite3BtreePager(Btree*);
 
 int sqlite3BtreePutData(BtCursor*, u32 offset, u32 amt, void*);
 void sqlite3BtreeCacheOverflow(BtCursor *);
+void sqlite3BtreeClearCursor(BtCursor *);
 
 #ifdef SQLITE_TEST
 int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
