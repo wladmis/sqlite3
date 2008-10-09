@@ -2143,7 +2143,6 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   ** SQLITE_STMTSTATUS_SORT for the most recent eval.
   */
   case DB_STATUS: {
-    int ms;
     int v;
     const char *zOp;
     if( objc!=3 ){
