@@ -303,4 +303,17 @@ do_test colname-6.19 {
   execsql2 {SELECT "`a`", max([`a`]) AS m FROM t6}
 } {`a` 5 m 5}
 
+
+# Ticket #3429
+# We cannot find anything wrong, but it never hurts to add another
+# test case.
+#
+do_test colname-7.1 {
+  db eval {
+    CREATE TABLE t7(x INTEGER PRIMARY KEY, y);
+    INSERT INTO t7 VALUES(1,2);
+  }
+  execsql2 {SELECT rowid, * FROM t7}
+} {x 1 x 1 y 2}
+
 finish_test
