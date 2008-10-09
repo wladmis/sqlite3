@@ -433,6 +433,7 @@ void sqlite3Update(
     */
     if( chngRowid ){
       sqlite3ExprCodeAndCache(pParse, pRowidExpr, regRowid);
+      sqlite3VdbeAddOp1(v, OP_MustBeInt, regRowid);
     }else{
       sqlite3VdbeAddOp2(v, OP_Rowid, iCur, regRowid);
     }
