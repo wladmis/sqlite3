@@ -525,7 +525,7 @@ ifcapable {foreignkey} {
       CREATE TABLE t3(a int references t2(b), b UNIQUE);
       pragma foreign_key_list(t3);
     }
-  } {0 0 t2 a b}
+  } {0 0 t2 a b RESTRICT RESTRICT NONE}
   do_test pragma-6.4 {
     execsql {
       pragma index_list(t3);
