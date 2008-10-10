@@ -578,7 +578,7 @@ limit_opt(A) ::= LIMIT expr(X) COMMA expr(Y).
 
 /////////////////////////// The DELETE statement /////////////////////////////
 //
-%ifndef SQLITE_OMIT_UPDATE_DELETE_LIMIT
+%ifdef SQLITE_ENABLE_UPDATE_DELETE_LIMIT
 cmd ::= DELETE FROM fullname(X) indexed_opt(I) where_opt(W) orderby_opt(O) limit_opt(L). {
   sqlite3SrcListIndexedBy(pParse, X, &I);
   if( O && !L.pLimit ){
@@ -594,7 +594,7 @@ cmd ::= DELETE FROM fullname(X) indexed_opt(I) where_opt(W) orderby_opt(O) limit
   }
 }
 %endif
-%ifdef SQLITE_OMIT_UPDATE_DELETE_LIMIT
+%ifndef SQLITE_ENABLE_UPDATE_DELETE_LIMIT
 cmd ::= DELETE FROM fullname(X) indexed_opt(I) where_opt(W). {
   sqlite3SrcListIndexedBy(pParse, X, &I);
   sqlite3DeleteFrom(pParse,X,W);
@@ -609,7 +609,7 @@ where_opt(A) ::= WHERE expr(X).       {A = X;}
 
 ////////////////////////// The UPDATE command ////////////////////////////////
 //
-%ifndef SQLITE_OMIT_UPDATE_DELETE_LIMIT
+%ifdef SQLITE_ENABLE_UPDATE_DELETE_LIMIT
 cmd ::= UPDATE orconf(R) fullname(X) indexed_opt(I) SET setlist(Y) where_opt(W) orderby_opt(O) limit_opt(L).  {
   sqlite3SrcListIndexedBy(pParse, X, &I);
   sqlite3ExprListCheckLength(pParse,Y,"set list"); 
@@ -626,7 +626,7 @@ cmd ::= UPDATE orconf(R) fullname(X) indexed_opt(I) SET setlist(Y) where_opt(W) 
   }
 }
 %endif
-%ifdef SQLITE_OMIT_UPDATE_DELETE_LIMIT
+%ifndef SQLITE_ENABLE_UPDATE_DELETE_LIMIT
 cmd ::= UPDATE orconf(R) fullname(X) indexed_opt(I) SET setlist(Y) where_opt(W).  {
   sqlite3SrcListIndexedBy(pParse, X, &I);
   sqlite3ExprListCheckLength(pParse,Y,"set list"); 

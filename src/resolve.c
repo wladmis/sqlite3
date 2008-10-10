@@ -419,7 +419,7 @@ static int resolveExprStep(Walker *pWalker, Expr *pExpr){
 #endif
   switch( pExpr->op ){
 
-#ifndef SQLITE_OMIT_UPDATE_DELETE_LIMIT
+#if defined(SQLITE_ENABLE_UPDATE_DELETE_LIMIT) && !defined(SQLITE_OMIT_SUBQUERY)
     /* The special operator TK_ROW means use the rowid for the first
     ** column in the FROM clause.  This is used by the LIMIT and ORDER BY
     ** clause processing on UPDATE and DELETE statements.
@@ -436,7 +436,7 @@ static int resolveExprStep(Walker *pWalker, Expr *pExpr){
       pExpr->affinity = SQLITE_AFF_INTEGER;
       break;
     }
-#endif /* SQLITE_OMIT_UPDATE_DELETE_LIMIT */
+#endif /* defined(SQLITE_ENABLE_UPDATE_DELETE_LIMIT) && !defined(SQLITE_OMIT_SUBQUERY) */
 
     /* A lone identifier is the name of a column.
     */

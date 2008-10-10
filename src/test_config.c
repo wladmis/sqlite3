@@ -450,6 +450,12 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
   Tcl_SetVar2(interp, "sqlite_options", "wsd", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#if defined(SQLITE_ENABLE_UPDATE_DELETE_LIMIT) && !defined(SQLITE_OMIT_SUBQUERY)
+  Tcl_SetVar2(interp, "sqlite_options", "update_delete_limit", "1", TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp, "sqlite_options", "update_delete_limit", "0", TCL_GLOBAL_ONLY);
+#endif
+
 #ifdef SQLITE_SECURE_DELETE
   Tcl_SetVar2(interp, "sqlite_options", "secure_delete", "1", TCL_GLOBAL_ONLY);
 #else
