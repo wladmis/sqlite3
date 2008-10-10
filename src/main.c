@@ -216,12 +216,10 @@ int sqlite3_shutdown(void){
   if( sqlite3GlobalConfig.isInit ){
     sqlite3_os_end();
   }
-  if( sqlite3GlobalConfig.m.xShutdown ){
-    sqlite3MallocEnd();
-  }
-  if( sqlite3GlobalConfig.mutex.xMutexEnd ){
-    sqlite3MutexEnd();
-  }
+  assert( sqlite3GlobalConfig.m.xShutdown!=0 );
+  sqlite3MallocEnd();
+  assert( sqlite3GlobalConfig.mutex.xMutexEnd!=0 );
+  sqlite3MutexEnd();
   sqlite3GlobalConfig.isInit = 0;
   return SQLITE_OK;
 }
@@ -1500,9 +1498,9 @@ static int openDatabase(
                  | SQLITE_LoadExtension
 #endif
       ;
-  sqlite3HashInit(&db->aCollSeq, SQLITE_HASH_STRING, 0);
+  sqlite3HashInit(&db->aCollSeq, 0);
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-  sqlite3HashInit(&db->aModule, SQLITE_HASH_STRING, 0);
+  sqlite3HashInit(&db->aModule, 0);
 #endif
 
   db->pVfs = sqlite3_vfs_find(zVfs);
@@ -1627,7 +1625,8 @@ static int openDatabase(
 #endif
 
   /* Enable the lookaside-malloc subsystem */
-  setupLookaside(db, 0, sqlite3GlobalConfig.szLookaside, sqlite3GlobalConfig.nLookaside);
+  setupLookaside(db, 0, sqlite3GlobalConfig.szLookaside,
+                        sqlite3GlobalConfig.nLookaside);
 
 opendb_out:
   if( db ){

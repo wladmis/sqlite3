@@ -204,7 +204,16 @@ static int faultsimInstall(int install){
         faultsimBeginBenign, faultsimEndBenign
     );
   }else{
+    sqlite3_mem_methods m;
     assert(memfault.m.xMalloc);
+
+    /* One should be able to reset the default memory allocator by storing
+    ** a zeroed allocator then calling GETMALLOC. */
+    memset(&m, 0, sizeof(m));
+    sqlite3_config(SQLITE_CONFIG_MALLOC, &m);
+    sqlite3_config(SQLITE_CONFIG_GETMALLOC, &m);
+    assert( memcmp(&m, &memfault.m, sizeof(m))==0 );
+
     rc = sqlite3_config(SQLITE_CONFIG_MALLOC, &memfault.m);
     sqlite3_test_control(SQLITE_TESTCTRL_BENIGN_MALLOC_HOOKS, 0, 0);
   }

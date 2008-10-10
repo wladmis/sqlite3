@@ -77,6 +77,12 @@ do_test lookaside-2.4 {
   db cache flush
   sqlite3_db_config_lookaside db 0 50 50
 } {0}  ;# SQLITE_OK
+do_test lookaside-2.5 {
+  sqlite3_db_config_lookaside db 0 -1 50
+} {0}  ;# SQLITE_OK
+do_test lookaside-2.6 {
+  sqlite3_db_config_lookaside db 0 50 -1
+} {0}  ;# SQLITE_OK
 
 # sqlite3_db_status() with an invalid verb returns an error.
 #
