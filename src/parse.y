@@ -579,17 +579,14 @@ limit_opt(A) ::= LIMIT expr(X) COMMA expr(Y).
 /////////////////////////// The DELETE statement /////////////////////////////
 //
 %ifdef SQLITE_ENABLE_UPDATE_DELETE_LIMIT
-cmd ::= DELETE FROM fullname(X) indexed_opt(I) where_opt(W) orderby_opt(O) limit_opt(L). {
+cmd ::= DELETE FROM fullname(X) indexed_opt(I) where_opt(W) 
+        orderby_opt(O) limit_opt(L). {
   sqlite3SrcListIndexedBy(pParse, X, &I);
   if( O && !L.pLimit ){
     sqlite3ErrorMsg(pParse, "ORDER BY without LIMIT on DELETE");
     pParse->parseError = 1;
-  } else if (L.pLimit) {
-    Expr *LW = sqlite3LimitWhere(pParse, X, W, O, L.pLimit, L.pOffset);
-    if( LW ) {
-      sqlite3DeleteFrom(pParse,X,LW);
-    }
-  } else {
+  }else{
+    W = sqlite3LimitWhere(pParse, X, W, O, L.pLimit, L.pOffset);
     sqlite3DeleteFrom(pParse,X,W);
   }
 }
@@ -616,12 +613,8 @@ cmd ::= UPDATE orconf(R) fullname(X) indexed_opt(I) SET setlist(Y) where_opt(W) 
   if( O && !L.pLimit ){
     sqlite3ErrorMsg(pParse, "ORDER BY without LIMIT on UPDATE");
     pParse->parseError = 1;
-  } else if (L.pLimit) {
-    Expr *LW = sqlite3LimitWhere(pParse, X, W, O, L.pLimit,L.pOffset);
-    if( LW ) {
-      sqlite3Update(pParse,X,Y,LW,R);
-    }
-  } else {
+  }else{
+    W = sqlite3LimitWhere(pParse, X, W, O, L.pLimit,L.pOffset);
     sqlite3Update(pParse,X,Y,W,R);
   }
 }
