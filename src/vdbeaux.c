@@ -1731,7 +1731,9 @@ int sqlite3VdbeReset(Vdbe *p){
   */
   if( p->pc>=0 ){
     if( p->zErrMsg ){
+      sqlite3BeginBenignMalloc();
       sqlite3ValueSetStr(db->pErr,-1,p->zErrMsg,SQLITE_UTF8,SQLITE_TRANSIENT);
+      sqlite3EndBenignMalloc();
       db->errCode = p->rc;
       sqlite3DbFree(db, p->zErrMsg);
       p->zErrMsg = 0;
