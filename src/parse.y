@@ -803,9 +803,7 @@ expr(A) ::= expr(W) between_op(N) expr(X) AND expr(Y). [BETWEEN] {
     sqlite3ExprListDelete(pParse->db, pList);
   } 
   if( N ) A = sqlite3PExpr(pParse, TK_NOT, A, 0, 0);
-  if( !pParse->db->mallocFailed ){
-    sqlite3ExprSpan(A,&W->span,&Y->span);
-  }
+  sqlite3ExprSpan(A,&W->span,&Y->span);
 }
 %ifndef SQLITE_OMIT_SUBQUERY
   %type in_op {int}
