@@ -16,6 +16,11 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !lookaside {
+  finish_test
+  return
+}
+
 catch {db close}
 sqlite3_shutdown
 sqlite3_config_pagecache 0 0
