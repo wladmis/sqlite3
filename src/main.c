@@ -216,9 +216,7 @@ int sqlite3_shutdown(void){
   if( sqlite3GlobalConfig.isInit ){
     sqlite3_os_end();
   }
-  assert( sqlite3GlobalConfig.m.xShutdown!=0 );
   sqlite3MallocEnd();
-  assert( sqlite3GlobalConfig.mutex.xMutexEnd!=0 );
   sqlite3MutexEnd();
   sqlite3GlobalConfig.isInit = 0;
   return SQLITE_OK;
