@@ -147,11 +147,13 @@ int sqlite3PcachePageRefcount(PgHdr*);
 /* Return the total number of pages stored in the cache */
 int sqlite3PcachePagecount(PCache*);
 
+#ifdef SQLITE_CHECK_PAGES
 /* Iterate through all pages currently stored in the cache. This interface
 ** is only available if SQLITE_CHECK_PAGES is defined when the library is 
 ** built.
 */
 void sqlite3PcacheIterate(PCache *pCache, void (*xIter)(PgHdr *));
+#endif
 
 /* Set and get the suggested cache-size for the specified pager-cache.
 **
@@ -162,9 +164,13 @@ void sqlite3PcacheIterate(PCache *pCache, void (*xIter)(PgHdr *));
 int sqlite3PcacheGetCachesize(PCache *);
 void sqlite3PcacheSetCachesize(PCache *, int);
 
+#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 /* Try to return memory used by the pcache module to the main memory heap */
 int sqlite3PcacheReleaseMemory(int);
+#endif
 
+#ifdef SQLITE_TEST
 void sqlite3PcacheStats(int*,int*,int*,int*);
+#endif
 
 #endif /* _PCACHE_H_ */
