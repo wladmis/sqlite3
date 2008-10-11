@@ -77,8 +77,7 @@ static void resolveAlias(
     pDup->pColl = pExpr->pColl;
     pDup->flags |= EP_ExpCollate;
   }
-  if( pExpr->span.dyn ) sqlite3DbFree(db, (char*)pExpr->span.z);
-  if( pExpr->token.dyn ) sqlite3DbFree(db, (char*)pExpr->token.z);
+  sqlite3ExprClear(db, pExpr);
   memcpy(pExpr, pDup, sizeof(*pExpr));
   sqlite3DbFree(db, pDup);
 }

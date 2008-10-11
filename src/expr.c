@@ -601,16 +601,24 @@ void sqlite3ExprAssignVarNumber(Parse *pParse, Expr *pExpr){
 }
 
 /*
-** Recursively delete an expression tree.
+** Clear an expression structure without deleting the structure itself.
+** Substructure is deleted.
 */
-void sqlite3ExprDelete(sqlite3 *db, Expr *p){
-  if( p==0 ) return;
+void sqlite3ExprClear(sqlite3 *db, Expr *p){
   if( p->span.dyn ) sqlite3DbFree(db, (char*)p->span.z);
   if( p->token.dyn ) sqlite3DbFree(db, (char*)p->token.z);
   sqlite3ExprDelete(db, p->pLeft);
   sqlite3ExprDelete(db, p->pRight);
   sqlite3ExprListDelete(db, p->pList);
   sqlite3SelectDelete(db, p->pSelect);
+}
+
+/*
+** Recursively delete an expression tree.
+*/
+void sqlite3ExprDelete(sqlite3 *db, Expr *p){
+  if( p==0 ) return;
+  sqlite3ExprClear(db, p);
   sqlite3DbFree(db, p);
 }
 
