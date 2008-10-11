@@ -387,7 +387,8 @@ const int sqlite3one;
 #else
 extern const int sqlite3one;
 #endif
-#if defined(i386) || defined(__i386__) || defined(_M_IX86)
+#if defined(i386) || defined(__i386__) || defined(_M_IX86)\
+                             || defined(__x86_64) || defined(__x86_64__)
 # define SQLITE_BIGENDIAN    0
 # define SQLITE_LITTLEENDIAN 1
 # define SQLITE_UTF16NATIVE  SQLITE_UTF16LE
