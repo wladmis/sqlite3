@@ -742,7 +742,7 @@ tcl_install:	libtclsqlite3.la
 	$(INSTALL) -d $(DESTDIR)$(tcldatadir)/sqlite3
 	dlname=`. libtclsqlite3.la; echo $$dlname`; \
 	loadpath=`relative $(tcllibdir)/$$dlname $(tcldatadir)/sqlite3/pkgIndex.tcl |tr / ' '`; \
-	echo "package ifneeded sqlite3 $(VERSION) [list load [file join \$$dir $$loadpath] sqlite3]" > \
+	echo "package ifneeded sqlite3 $(RELEASE) [list load [file join \$$dir $$loadpath] sqlite3]" > \
 		$(DESTDIR)$(tcldatadir)/sqlite3/pkgIndex.tcl
 
 clean:	
