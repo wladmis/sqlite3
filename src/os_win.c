@@ -713,14 +713,20 @@ static int winWrite(
 ** Truncate an open file to a specified size
 */
 static int winTruncate(sqlite3_file *id, sqlite3_int64 nByte){
+  DWORD rc;
   LONG upperBits = (nByte>>32) & 0x7fffffff;
   LONG lowerBits = nByte & 0xffffffff;
   winFile *pFile = (winFile*)id;
   OSTRACE3("TRUNCATE %d %lld\n", pFile->h, nByte);
   SimulateIOError(return SQLITE_IOERR_TRUNCATE);
-  SetFilePointer(pFile->h, lowerBits, &upperBits, FILE_BEGIN);
-  SetEndOfFile(pFile->h);
-  return SQLITE_OK;
+  rc = SetFilePointer(pFile->h, lowerBits, &upperBits, FILE_BEGIN);
+  if( INVALID_SET_FILE_POINTER != rc ){
+    /* SetEndOfFile will fail if nByte is negative */
+    if( SetEndOfFile(pFile->h) ){
+      return SQLITE_OK;
+    }
+  }
+  return SQLITE_IOERR_TRUNCATE;
 }
 
 #ifdef SQLITE_TEST
