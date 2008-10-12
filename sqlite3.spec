@@ -1,6 +1,6 @@
 Name: sqlite3
 Version: 3.5.9
-Release: alt2
+Release: alt3
 
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
@@ -180,6 +180,13 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_docdir/lemon/lemon.html
 
 %changelog
+* Sun Oct 12 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt3
+- backported from cvs:
+  + fix for DISTINCT on indexes (RH#463061, deb#500792)
+  + improved NaN testing for highly optimized GCC on x86 (deb#488864)
+  + tclsqlite.test works reliably with tcl 8.5.4
+- set correct version in pkgIndex.tcl (deb#483990)
+
 * Fri Jul 04 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt2
 - sqlite3.pc: provide full version (#16268)
 - made sqlite3-doc package noarch
