@@ -1168,15 +1168,19 @@ do_test capi3c-19.4 {
 do_test capi3c-19.4.1 {
   sqlite3_errmsg $DB
 } {no such table: t3}
-do_test capi3c-19.4.2 {
-  sqlite3_expired $STMT
-} 1
+ifcapable deprecated {
+  do_test capi3c-19.4.2 {
+    sqlite3_expired $STMT
+  } 1
+}
 do_test capi3c-19.4.3 {
   sqlite3_errmsg $DB
 } {no such table: t3}
-do_test capi3c-19.4.4 {
-  sqlite3_expired 0
-} 1
+ifcapable deprecated {
+  do_test capi3c-19.4.4 {
+    sqlite3_expired 0
+  } 1
+}
 do_test capi3c-19.5 {
   sqlite3_reset $STMT
   db eval {
@@ -1185,9 +1189,11 @@ do_test capi3c-19.5 {
   }
   sqlite3_step $STMT
 } SQLITE_ROW
-do_test capi3c-19.5.2 {
-  sqlite3_expired $STMT
-} 0
+ifcapable deprecated {
+  do_test capi3c-19.5.2 {
+    sqlite3_expired $STMT
+  } 0
+}
 do_test capi3c-19.6 {
   sqlite3_column_int $STMT 1
 } 2

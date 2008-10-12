@@ -918,12 +918,14 @@ do_test func-22.22 {
 
 # This is to test the deprecated sqlite3_aggregate_count() API.
 #
-do_test func-23.1 {
-  sqlite3_create_aggregate db
-  execsql {
-    SELECT legacy_count() FROM t6;
-  }
-} {3}
+ifcapable deprecated {
+  do_test func-23.1 {
+    sqlite3_create_aggregate db
+    execsql {
+      SELECT legacy_count() FROM t6;
+    }
+  } {3}
+}
 
 # The group_concat() function.
 #

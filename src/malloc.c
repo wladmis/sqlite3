@@ -196,6 +196,7 @@ int sqlite3MemoryAlarm(
   return SQLITE_OK;
 }
 
+#ifndef SQLITE_OMIT_DEPRECATED
 /*
 ** Deprecated external interface.  Internal/core SQLite code
 ** should call sqlite3MemoryAlarm.
@@ -207,6 +208,7 @@ int sqlite3_memory_alarm(
 ){
   return sqlite3MemoryAlarm(xCallback, pArg, iThreshold);
 }
+#endif
 
 /*
 ** Trigger the alarm 
