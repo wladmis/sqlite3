@@ -16,7 +16,8 @@ set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 rename finish_test really_finish_test
 proc finish_test {} {
-  # no-op
+  catch {db close}
+  show_memstats
 }
 
 if {[file exists ./sqlite_test_count]} {

@@ -35,7 +35,10 @@ while {[set arg [lshift argv]] != ""} {
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 rename finish_test really_finish_test
-proc finish_test {} {}
+proc finish_test {} {
+  catch {db close}
+  show_memstats
+}
 set ISQUICK 1
 
 set EXCLUDE {
