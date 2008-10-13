@@ -28,7 +28,7 @@ if {$::tcl_platform(platform) eq "windows" || $::tcl_platform(platform) eq "os2"
 } else {
   set testextension ./libtestloadext.so
 }
-set gcc_shared -shared
+set gcc_shared "-shared -fPIC"
 if {$::tcl_platform(os) eq "Darwin"} {
   set gcc_shared -dynamiclib
 }
@@ -75,7 +75,7 @@ if {![file exists $testextension]} {
   set srcdir [file dir $testdir]/src
   set testextsrc $srcdir/test_loadext.c
   if {[catch {
-    exec gcc $gcc_shared -Wall -I$srcdir -I. -g $testextsrc -o $testextension
+    exec gcc {*}[set gcc_shared] -Wall -I$srcdir -I. -g $testextsrc -o $testextension
   } msg]} {
     puts "Skipping loadext tests: Test extension not built..."
     puts $msg
