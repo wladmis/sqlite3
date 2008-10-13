@@ -171,7 +171,7 @@ static int os2Truncate( sqlite3_file *id, i64 nByte ){
   OSTRACE3( "TRUNCATE %d %lld\n", pFile->h, nByte );
   SimulateIOError( return SQLITE_IOERR_TRUNCATE );
   rc = DosSetFileSize( pFile->h, nByte );
-  return rc == NO_ERROR ? SQLITE_OK : SQLITE_IOERR;
+  return rc == NO_ERROR ? SQLITE_OK : SQLITE_IOERR_TRUNCATE;
 }
 
 #ifdef SQLITE_TEST
@@ -206,13 +206,13 @@ static int os2FileSize( sqlite3_file *id, sqlite3_int64 *pSize ){
   FILESTATUS3 fsts3FileInfo;
   memset(&fsts3FileInfo, 0, sizeof(fsts3FileInfo));
   assert( id!=0 );
-  SimulateIOError( return SQLITE_IOERR );
+  SimulateIOError( return SQLITE_IOERR_FSTAT );
   rc = DosQueryFileInfo( ((os2File*)id)->h, FIL_STANDARD, &fsts3FileInfo, sizeof(FILESTATUS3) );
   if( rc == NO_ERROR ){
     *pSize = fsts3FileInfo.cbFile;
     return SQLITE_OK;
   }else{
-    return SQLITE_IOERR;
+    return SQLITE_IOERR_FSTAT;
   }
 }
 
@@ -864,7 +864,7 @@ static int os2Delete(
   rc = DosDelete( (PSZ)zFilenameCp );
   free( zFilenameCp );
   OSTRACE2( "DELETE \"%s\"\n", zFilename );
-  return rc == NO_ERROR ? SQLITE_OK : SQLITE_IOERR;
+  return rc == NO_ERROR ? SQLITE_OK : SQLITE_IOERR_DELETE;
 }
 
 /*
