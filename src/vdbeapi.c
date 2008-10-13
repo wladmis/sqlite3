@@ -837,9 +837,13 @@ const unsigned char *sqlite3_column_text(sqlite3_stmt *pStmt, int i){
   return val;
 }
 sqlite3_value *sqlite3_column_value(sqlite3_stmt *pStmt, int i){
-  sqlite3_value *pOut = columnMem(pStmt, i);
+  Mem *pOut = columnMem(pStmt, i);
+  if( pOut->flags&MEM_Static ){
+    pOut->flags &= ~MEM_Static;
+    pOut->flags |= MEM_Ephem;
+  }
   columnMallocFailure(pStmt);
-  return pOut;
+  return (sqlite3_value *)pOut;
 }
 #ifndef SQLITE_OMIT_UTF16
 const void *sqlite3_column_text16(sqlite3_stmt *pStmt, int i){
