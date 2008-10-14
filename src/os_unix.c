@@ -2865,13 +2865,15 @@ static int unixRandomness(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
       memcpy(zBuf, &t, sizeof(t));
       pid = getpid();
       memcpy(&zBuf[sizeof(t)], &pid, sizeof(pid));
+      assert( sizeof(t)+sizeof(pid)<=nBuf );
+      nBuf = sizeof(t) + sizeof(pid);
     }else{
-      read(fd, zBuf, nBuf);
+      nBuf = read(fd, zBuf, nBuf);
       close(fd);
     }
   }
 #endif
-  return SQLITE_OK;
+  return nBuf;
 }
 
 
