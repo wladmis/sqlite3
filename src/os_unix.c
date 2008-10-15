@@ -2681,6 +2681,7 @@ static int unixDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
   int rc = SQLITE_OK;
   SimulateIOError(return SQLITE_IOERR_DELETE);
   unlink(zPath);
+#ifdef SQLITE_DISABLE_DIRSYNC
   if( dirSync ){
     int fd;
     rc = openDirectory(zPath, &fd);
@@ -2691,6 +2692,7 @@ static int unixDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
       close(fd);
     }
   }
+#endif
   return rc;
 }
 
