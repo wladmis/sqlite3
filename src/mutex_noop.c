@@ -44,7 +44,7 @@ static sqlite3_mutex *noopMutexAlloc(int id){ return (sqlite3_mutex*)8; }
 static void noopMutexFree(sqlite3_mutex *p){ return; }
 static void noopMutexEnter(sqlite3_mutex *p){ return; }
 static int noopMutexTry(sqlite3_mutex *p){ return SQLITE_OK; }
-static void debugMutexLeave(sqlite3_mutex *p){ return; }
+static void noopMutexLeave(sqlite3_mutex *p){ return; }
 
 sqlite3_mutex_methods *sqlite3DefaultMutex(void){
   static sqlite3_mutex_methods sMutex = {
