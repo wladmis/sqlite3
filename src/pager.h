@@ -66,6 +66,7 @@ typedef struct PgHdr DbPage;
 #define PAGER_JOURNALMODE_PERSIST     1   /* Commit by zeroing journal header */
 #define PAGER_JOURNALMODE_OFF         2   /* Journal omitted.  */
 #define PAGER_JOURNALMODE_TRUNCATE    3   /* Commit by truncating journal */
+#define PAGER_JOURNALMODE_MEMORY      4   /* In-memory journal file */
 
 /*
 ** See source code comments for a detailed description of the following

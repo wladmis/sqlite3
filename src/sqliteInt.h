@@ -2505,6 +2505,10 @@ int sqlite3FindInIndex(Parse *, Expr *, int*);
   #define sqlite3JournalSize(pVfs) ((pVfs)->szOsFile)
 #endif
 
+void sqlite3MemJournalOpen(sqlite3_file *);
+int sqlite3MemJournalSize();
+int sqlite3IsMemJournal(sqlite3_file *);
+
 #if SQLITE_MAX_EXPR_DEPTH>0
   void sqlite3ExprSetHeight(Parse *pParse, Expr *p);
   int sqlite3SelectExprHeight(Select *);
