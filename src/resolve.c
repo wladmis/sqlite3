@@ -320,6 +320,7 @@ static int lookupName(
   if( cnt==0 && zTab==0 && pColumnToken->z[0]=='"' ){
     sqlite3DbFree(db, zCol);
     pExpr->op = TK_STRING;
+    pExpr->pTab = 0;
     return 0;
   }
 
