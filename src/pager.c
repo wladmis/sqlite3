@@ -2582,8 +2582,8 @@ static int pagerSharedLock(Pager *pPager){
 
   if( pPager->state==PAGER_UNLOCK || isErrorReset ){
     sqlite3_vfs *pVfs = pPager->pVfs;
-    assert( !MEMDB );
     int isHotJournal;
+    assert( !MEMDB );
     assert( sqlite3PcacheRefCount(pPager->pPCache)==0 );
     if( !pPager->noReadlock ){
       rc = pager_wait_on_lock(pPager, SHARED_LOCK);
@@ -3267,10 +3267,10 @@ static int pager_write(PgHdr *pPg){
      && !pageInStatement(pPg) 
      && (int)pPg->pgno<=pPager->stmtSize 
     ){
-      assert( (pPg->flags&PGHDR_IN_JOURNAL) 
-                 || (int)pPg->pgno>pPager->origDbSize );
       i64 offset = pPager->stmtNRec*(4+pPager->pageSize);
       char *pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
+      assert( (pPg->flags&PGHDR_IN_JOURNAL) 
+                 || (int)pPg->pgno>pPager->origDbSize );
       rc = write32bits(pPager->stfd, offset, pPg->pgno);
       if( rc==SQLITE_OK ){
         rc = sqlite3OsWrite(pPager->stfd, pData2, pPager->pageSize, offset+4);
