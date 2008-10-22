@@ -2401,7 +2401,7 @@ void sqlite3CreateIndex(
     }
     pTab = sqlite3LocateTable(pParse, 0, pTblName->a[0].zName, 
         pTblName->a[0].zDatabase);
-    if( !pTab ) goto exit_create_index;
+    if( !pTab || db->mallocFailed ) goto exit_create_index;
     assert( db->aDb[iDb].pSchema==pTab->pSchema );
   }else{
     assert( pName==0 );
