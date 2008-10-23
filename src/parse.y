@@ -246,8 +246,9 @@ carg ::= ccons.
 ccons ::= DEFAULT term(X).            {sqlite3AddDefaultValue(pParse,X);}
 ccons ::= DEFAULT LP expr(X) RP.      {sqlite3AddDefaultValue(pParse,X);}
 ccons ::= DEFAULT PLUS term(X).       {sqlite3AddDefaultValue(pParse,X);}
-ccons ::= DEFAULT MINUS term(X).      {
+ccons ::= DEFAULT MINUS(A) term(X).      {
   Expr *p = sqlite3PExpr(pParse, TK_UMINUS, X, 0, 0);
+  sqlite3ExprSpan(p,&A,&X->span);
   sqlite3AddDefaultValue(pParse,p);
 }
 ccons ::= DEFAULT id(X).              {
