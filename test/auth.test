@@ -418,7 +418,10 @@ do_test auth-1.49 {
 } {0 {}}
 do_test auth-1.50 {
   execsql {SELECT * FROM t2}
-} {11 2 33}
+} {}
+do_test auth-1.50.2 {
+  execsql {INSERT INTO t2 VALUES(11, 2, 33)}
+} {}
 
 do_test auth-1.51 {
   proc auth {code arg1 arg2 arg3 arg4} {
