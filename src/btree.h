@@ -117,7 +117,7 @@ int sqlite3BtreeIncrVacuum(Btree *);
 #define BTREE_LEAFDATA   4    /* Data stored in leaves only.  Implies INTKEY */
 
 int sqlite3BtreeDropTable(Btree*, int, int*);
-int sqlite3BtreeClearTable(Btree*, int);
+int sqlite3BtreeClearTable(Btree*, int, int*);
 int sqlite3BtreeGetMeta(Btree*, int idx, u32 *pValue);
 int sqlite3BtreeUpdateMeta(Btree*, int idx, u32 value);
 void sqlite3BtreeTripAllCursors(Btree*, int);

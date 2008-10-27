@@ -389,7 +389,7 @@ static int btree_clear_table(
   pBt = sqlite3TestTextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &iTable) ) return TCL_ERROR;
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeClearTable(pBt, iTable);
+  rc = sqlite3BtreeClearTable(pBt, iTable, 0);
   sqlite3BtreeLeave(pBt);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
