@@ -1217,9 +1217,6 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
 #ifndef SQLITE_OMIT_ALTERTABLE
   sqlite3AlterFunctions(db);
 #endif
-#ifndef SQLITE_OMIT_PARSER
-  sqlite3AttachFunctions(db);
-#endif
   if( !db->mallocFailed ){
     int rc = sqlite3_overload_function(db, "MATCH", 2);
     assert( rc==SQLITE_NOMEM || rc==SQLITE_OK );

@@ -2398,7 +2398,6 @@ int sqlite3AnalysisLoad(sqlite3*,int iDB);
 void sqlite3DefaultRowEst(Index*);
 void sqlite3RegisterLikeFunctions(sqlite3*, int);
 int sqlite3IsLikeFunction(sqlite3*,Expr*,int*,char*);
-void sqlite3AttachFunctions(sqlite3 *);
 void sqlite3MinimumFileFormat(Parse*, int, int);
 void sqlite3SchemaFree(void *);
 Schema *sqlite3SchemaGet(sqlite3 *, Btree *);
