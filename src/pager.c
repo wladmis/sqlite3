@@ -2640,8 +2640,8 @@ static int pagerSharedLock(Pager *pPager){
             assert( !pPager->tempFile );
             rc = sqlite3OsOpen(pVfs, pPager->zJournal, pPager->jfd, f, &fout);
             assert( rc!=SQLITE_OK || pPager->jfd->pMethods );
-            if( fout&SQLITE_OPEN_READONLY ){
-              rc = SQLITE_BUSY;
+            if( rc==SQLITE_OK && fout&SQLITE_OPEN_READONLY ){
+              rc = SQLITE_CANTOPEN;
               sqlite3OsClose(pPager->jfd);
             }
           }else{
@@ -2652,11 +2652,6 @@ static int pagerSharedLock(Pager *pPager){
         }
       }
       if( rc!=SQLITE_OK ){
-        if( rc!=SQLITE_NOMEM && rc!=SQLITE_IOERR_UNLOCK 
-         && rc!=SQLITE_IOERR_NOMEM 
-        ){
-          rc = SQLITE_BUSY;
-        }
         goto failed;
       }
       pPager->journalOpen = 1;
