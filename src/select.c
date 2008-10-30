@@ -2144,7 +2144,7 @@ static int multiSelectOrderBy(
     regPrev = 0;
   }else{
     int nExpr = p->pEList->nExpr;
-    assert( nOrderBy>=nExpr );
+    assert( nOrderBy>=nExpr || db->mallocFailed );
     regPrev = sqlite3GetTempRange(pParse, nExpr+1);
     sqlite3VdbeAddOp2(v, OP_Integer, 0, regPrev);
     pKeyDup = sqlite3DbMallocZero(db,
