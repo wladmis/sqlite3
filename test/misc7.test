@@ -397,7 +397,7 @@ if {$tcl_platform(platform)!="windows" && $tcl_platform(platform)!="os2"} {
       catchsql {
         SELECT count(*) FROM t3;
       }
-    } {1 {database is locked}}
+    } {1 {unable to open database file}}
     do_test misc7-17.2 {
       # Note that the -readonly flag must be cleared before the -permissions
       # are set. Otherwise, when using tcl 8.5 on mac, the fact that the 

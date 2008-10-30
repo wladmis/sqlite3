@@ -1266,6 +1266,15 @@ int sqlite3_errcode(sqlite3 *db){
   }
   return db->errCode & db->errMask;
 }
+int sqlite3_extended_errcode(sqlite3 *db){
+  if( db && !sqlite3SafetyCheckSickOrOk(db) ){
+    return SQLITE_MISUSE;
+  }
+  if( !db || db->mallocFailed ){
+    return SQLITE_NOMEM;
+  }
+  return db->errCode;
+}
 
 /*
 ** Create a new collating function for database "db".  The name is zName

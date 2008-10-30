@@ -2411,7 +2411,7 @@ case OP_AutoCommit: {
     sqlite3SetString(&p->zErrMsg, db, "cannot %s transaction - "
         "SQL statements in progress",
         rollback ? "rollback" : "commit");
-    rc = SQLITE_ERROR;
+    rc = SQLITE_BUSY;
   }else if( i!=db->autoCommit ){
     if( pOp->p2 ){
       assert( i==1 );
