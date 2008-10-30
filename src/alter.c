@@ -441,11 +441,11 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   Expr *pDflt;              /* Default value for the new column */
   sqlite3 *db;              /* The database connection; */
 
-  if( pParse->nErr ) return;
+  db = pParse->db;
+  if( pParse->nErr || db->mallocFailed ) return;
   pNew = pParse->pNewTable;
   assert( pNew );
 
-  db = pParse->db;
   assert( sqlite3BtreeHoldsAllMutexes(db) );
   iDb = sqlite3SchemaToIndex(db, pNew->pSchema);
   zDb = db->aDb[iDb].zName;
