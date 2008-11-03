@@ -1215,4 +1215,46 @@ do_test where-16.4 {
 
 integrity_check {where-99.0}
 
+#---------------------------------------------------------------------
+# These tests test that a bug surrounding the use of ForceInt has been
+# fixed in where.c.
+#
+do_test where-17.1 {
+  execsql {
+    CREATE TABLE tbooking (
+      id INTEGER PRIMARY KEY,
+      eventtype INTEGER NOT NULL
+    );
+    INSERT INTO tbooking VALUES(42, 3);
+    INSERT INTO tbooking VALUES(43, 4);
+  }
+} {}
+do_test where-17.2 {
+  execsql {
+    SELECT a.id
+    FROM tbooking AS a
+    WHERE a.eventtype=3;
+  }
+} {42}
+do_test where-17.3 {
+  execsql {
+    SELECT a.id, (SELECT b.id FROM tbooking AS b WHERE b.id>a.id)
+    FROM tbooking AS a
+    WHERE a.eventtype=3;
+  }
+} {42 43}
+do_test where-17.4 {
+  execsql {
+    SELECT a.id, (SELECT b.id FROM tbooking AS b WHERE b.id>a.id)
+    FROM (SELECT 1.5 AS id) AS a
+  }
+} {1.5 42}
+do_test where-17.5 {
+  execsql {
+    CREATE TABLE tother(a, b);
+    INSERT INTO tother VALUES(1, 3.7);
+    SELECT id, a FROM tbooking, tother WHERE id>a;
+  }
+} {42 1 43 1}
+
 finish_test
