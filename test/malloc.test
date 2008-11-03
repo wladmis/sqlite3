@@ -671,6 +671,12 @@ do_malloc_test 28 -sqlprep {
   SELECT * FROM v1;
 }
 
+do_malloc_test 29 -sqlprep {
+  CREATE TABLE t1(a TEXT, b TEXT);
+} -sqlbody {
+  INSERT INTO t1 VALUES(1, -234);
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}
