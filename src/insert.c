@@ -1385,7 +1385,7 @@ void sqlite3CompleteInsertion(
 int sqlite3OpenTableAndIndices(
   Parse *pParse,   /* Parsing context */
   Table *pTab,     /* Table to be opened */
-  int baseCur,        /* Cursor number assigned to the table */
+  int baseCur,     /* Cursor number assigned to the table */
   int op           /* OP_OpenRead or OP_OpenWrite */
 ){
   int i;

@@ -406,7 +406,7 @@ int sqlite3BtreeRestoreCursorPosition(BtCursor *pCur){
 
 /*
 ** Determine whether or not a cursor has moved from the position it
-** was last placed at.  Cursor can move when the row they are pointing
+** was last placed at.  Cursors can move when the row they are pointing
 ** at is deleted out from under them.
 **
 ** This routine returns an error code if something goes wrong.  The

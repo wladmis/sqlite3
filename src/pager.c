@@ -3401,7 +3401,9 @@ int sqlite3PagerIswriteable(DbPage *pPg){
 /*
 ** A call to this routine tells the pager that it is not necessary to
 ** write the information on page pPg back to the disk, even though
-** that page might be marked as dirty.
+** that page might be marked as dirty.  This happens, for example, when
+** the page has been added as a leaf of the freelist and so its
+** content no longer matters.
 **
 ** The overlying software layer calls this routine when all of the data
 ** on the given page is unused.  The pager marks the page as clean so

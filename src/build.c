@@ -3057,7 +3057,7 @@ SrcList *sqlite3SrcListAppend(
 }
 
 /*
-** Assign cursors to all tables in a SrcList
+** Assign VdbeCursor index numbers to all tables in a SrcList
 */
 void sqlite3SrcListAssignCursors(Parse *pParse, SrcList *pList){
   int i;

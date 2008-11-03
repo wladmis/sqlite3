@@ -12,12 +12,14 @@
 ** This file implements an object that represents a fixed-length
 ** bitmap.  Bits are numbered starting with 1.
 **
-** A bitmap is used to record what pages a database file have been
-** journalled during a transaction.  Usually only a few pages are
-** journalled.  So the bitmap is usually sparse and has low cardinality.
+** A bitmap is used to record which pages of a database file have been
+** journalled during a transaction, or which pages have the "dont-write"
+** property.  Usually only a few pages are meet either condition.
+** So the bitmap is usually sparse and has low cardinality.
 ** But sometimes (for example when during a DROP of a large table) most
-** or all of the pages get journalled.  In those cases, the bitmap becomes
-** dense.  The algorithm needs to handle both cases well.
+** or all of the pages in a database can get journalled.  In those cases, 
+** the bitmap becomes dense with high cardinality.  The algorithm needs 
+** to handle both cases well.
 **
 ** The size of the bitmap is fixed when the object is created.
 **
@@ -125,6 +127,14 @@ int sqlite3BitvecTest(Bitvec *p, u32 i){
 /*
 ** Set the i-th bit.  Return 0 on success and an error code if
 ** anything goes wrong.
+**
+** This routine might cause sub-bitmaps to be allocated.  Failing
+** to get the memory needed to hold the sub-bitmap is the only
+** that can go wrong with an insert, assuming p and i are valid.
+**
+** The calling function must ensure that p is a valid Bitvec object
+** and that the value for "i" is within range of the Bitvec object.
+** Otherwise the behavior is undefined.
 */
 int sqlite3BitvecSet(Bitvec *p, u32 i){
   u32 h;

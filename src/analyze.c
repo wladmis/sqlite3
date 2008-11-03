@@ -86,11 +86,11 @@ static void openStatTable(
 static void analyzeOneTable(
   Parse *pParse,   /* Parser context */
   Table *pTab,     /* Table whose indices are to be analyzed */
-  int iStatCur,    /* Cursor that writes to the sqlite_stat1 table */
+  int iStatCur,    /* Index of VdbeCursor that writes the sqlite_stat1 table */
   int iMem         /* Available memory locations begin here */
 ){
   Index *pIdx;     /* An index to being analyzed */
-  int iIdxCur;     /* Cursor number for index being analyzed */
+  int iIdxCur;     /* Index of VdbeCursor for index being analyzed */
   int nCol;        /* Number of columns in the index */
   Vdbe *v;         /* The virtual machine being built up */
   int i;           /* Loop counter */
