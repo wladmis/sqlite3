@@ -49,4 +49,9 @@ do_malloc_test mallocJ-2 -sqlprep {
     ORDER BY 2, 3;
 }
 
+# ticket #3478
+do_malloc_test mallocJ-3 -sqlbody {
+  EXPLAIN COMMIT
+}
+
 finish_test

@@ -1038,7 +1038,7 @@ void sqlite3VdbeMakeReady(
     /*resizeOpArray(p, p->nOp);*/
     assert( nVar>=0 );
     if( isExplain && nMem<10 ){
-      p->nMem = nMem = 10;
+      nMem = 10;
     }
     p->aMem = sqlite3DbMallocZero(db,
         nMem*sizeof(Mem)               /* aMem */
