@@ -6260,6 +6260,17 @@ int sqlite3_mutex_notheld(sqlite3_mutex*);
 #define SQLITE_MUTEX_STATIC_LRU2      7  /* lru page list */
 
 /*
+** CAPI3REF: Retrieve the mutex for a database connection {H17002} <H17000>
+**
+** This interface returns a pointer the [sqlite3_mutex] object that 
+** serializes access to the [database connection] given in the argument
+** when the [threading mode] is Serialized.
+** If the [threading mode] is Single-thread or Multi-thread then this
+** routine returns a NULL pointer.
+*/
+sqlite3_mutex *sqlite3_db_mutex(sqlite3*);
+
+/*
 ** CAPI3REF: Low-Level Control Of Database Files {H11300} <S30800>
 **
 ** {H11301} The [sqlite3_file_control()] interface makes a direct call to the

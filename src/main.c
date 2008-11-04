@@ -416,6 +416,13 @@ static int setupLookaside(sqlite3 *db, void *pBuf, int sz, int cnt){
 }
 
 /*
+** Return the mutex associated with a database connection.
+*/
+sqlite3_mutex *sqlite3_db_mutex(sqlite3 *db){
+  return db->mutex;
+}
+
+/*
 ** Configuration settings for an individual database connection
 */
 int sqlite3_db_config(sqlite3 *db, int op, ...){
