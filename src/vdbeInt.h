@@ -319,6 +319,8 @@ struct Vdbe {
   u8 expired;             /* True if the VM needs to be recompiled */
   u8 minWriteFileFormat;  /* Minimum file format for writable database files */
   u8 inVtabMethod;        /* See comments above */
+  u8 usesStmtJournal;     /* True if uses a statement journal */
+  u8 readOnly;            /* True for read-only statements */
   int nChange;            /* Number of db changes made since last reset */
   i64 startTime;          /* Time when query started - used for profiling */
   int btreeMask;          /* Bitmask of db->aDb[] entries referenced */

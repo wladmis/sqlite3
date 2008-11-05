@@ -468,6 +468,7 @@ static int sqlite3Step(Vdbe *p){
 #endif
 
     db->activeVdbeCnt++;
+    if( p->readOnly==0 ) db->writeVdbeCnt++;
     p->pc = 0;
     stmtLruRemove(p);
   }
