@@ -1229,7 +1229,7 @@ int sqlite3VdbeSetColName(
   assert( p->aColName!=0 );
   pColName = &(p->aColName[idx+var*p->nResColumn]);
   rc = sqlite3VdbeMemSetStr(pColName, zName, -1, SQLITE_UTF8, xDel);
-  assert( p->db->mallocFailed || !zName || pColName->flags&MEM_Term );
+  assert( rc!=0 || !zName || (pColName->flags&MEM_Term)!=0 );
   return rc;
 }
 
