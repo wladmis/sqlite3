@@ -1864,6 +1864,10 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       testcase( to_op==OP_ToNumeric );
       testcase( to_op==OP_ToInt );
       testcase( to_op==OP_ToReal );
+      if( inReg!=target ){
+        sqlite3VdbeAddOp2(v, OP_SCopy, inReg, target);
+        inReg = target;
+      }
       sqlite3VdbeAddOp1(v, to_op, inReg);
       testcase( usedAsColumnCache(pParse, inReg, inReg) );
       sqlite3ExprCacheAffinityChange(pParse, inReg, 1);
