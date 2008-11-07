@@ -897,6 +897,7 @@ static int unixRead(
   }else if( got<0 ){
     return SQLITE_IOERR_READ;
   }else{
+    /* Unread parts of the buffer must be zero-filled */
     memset(&((char*)pBuf)[got], 0, amt-got);
     return SQLITE_IOERR_SHORT_READ;
   }

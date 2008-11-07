@@ -666,6 +666,7 @@ static int winRead(
   if( got==(DWORD)amt ){
     return SQLITE_OK;
   }else{
+    /* Unread parts of the buffer must be zero-filled */
     memset(&((char*)pBuf)[got], 0, amt-got);
     return SQLITE_IOERR_SHORT_READ;
   }
