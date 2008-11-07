@@ -226,7 +226,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
       return SQLITE_NOMEM;
     }
     zIn = (u8*)pMem->z;
-    zTerm = &zIn[pMem->n];
+    zTerm = &zIn[pMem->n&~1];
     while( zIn<zTerm ){
       temp = *zIn;
       *zIn = *(zIn+1);
@@ -244,6 +244,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
     ** A single byte is required for the output string
     ** nul-terminator.
     */
+    pMem->n &= ~1;
     len = pMem->n * 2 + 1;
   }else{
     /* When converting from UTF-8 to UTF-16 the maximum growth is caused
