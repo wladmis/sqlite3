@@ -455,7 +455,7 @@ void sqlite3Pragma(
 
   /*
   **  PRAGMA [database.]journal_mode
-  **  PRAGMA [database.]journal_mode = (delete|persist|memory|off)
+  **  PRAGMA [database.]journal_mode = (delete|persist|off|truncate|memory)
   */
   if( sqlite3StrICmp(zLeft,"journal_mode")==0 ){
     int eMode;
