@@ -82,13 +82,15 @@ do_test vacuum2-3.2 {
 } $cksum
 
 # Convert the database to an autovacuumed database.
-do_test vacuum2-3.3 {
-  execsql {
-    PRAGMA auto_vacuum=FULL;
-    VACUUM;
-  }
-  expr {[file size test.db]/$pageSize}
-} {4}
+ifcapable autovacuum {
+  do_test vacuum2-3.3 {
+    execsql {
+      PRAGMA auto_vacuum=FULL;
+      VACUUM;
+    }
+    expr {[file size test.db]/$pageSize}
+  } {4}
+}
 do_test vacuum2-3.4 {
   cksum db2
 } $cksum
