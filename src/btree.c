@@ -2037,7 +2037,6 @@ trans_begun:
   return rc;
 }
 
-
 #ifndef SQLITE_OMIT_AUTOVACUUM
 
 /*
@@ -2427,7 +2426,7 @@ static int autoVacuumCommit(BtShared *pBt, Pgno *pnTrunc){
   return rc;
 }
 
-#endif
+#endif /* ifndef SQLITE_OMIT_AUTOVACUUM */
 
 /*
 ** This routine does the first phase of a two-phase commit.  This routine
@@ -5545,9 +5544,11 @@ static int balance_shallower(BtCursor *pCur){
               pChild->pgno, pPage->pgno));
     }
     assert( pPage->nOverflow==0 );
+#ifndef SQLITE_OMIT_AUTOVACUUM
     if( ISAUTOVACUUM ){
       rc = setChildPtrmaps(pPage);
     }
+#endif
     releasePage(pChild);
   }
 end_shallow_balance:
@@ -5609,9 +5610,11 @@ static int balance_deeper(BtCursor *pCur){
     TRACE(("BALANCE: copy root %d into %d\n", pPage->pgno, pChild->pgno));
     if( ISAUTOVACUUM ){
       rc = ptrmapPut(pBt, pChild->pgno, PTRMAP_BTREE, pPage->pgno);
+#ifndef SQLITE_OMIT_AUTOVACUUM
       if( rc==SQLITE_OK ){
         rc = setChildPtrmaps(pChild);
       }
+#endif
     }
   }
 
