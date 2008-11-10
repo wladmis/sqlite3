@@ -463,7 +463,7 @@ struct BusyHandler {
 ** buffer that holds real variable.  The constant is also the initializer
 ** for the run-time allocated buffer.
 **
-** In the usually case where WSD is supported, the SQLITE_WSD and GLOBAL
+** In the usual case where WSD is supported, the SQLITE_WSD and GLOBAL
 ** macros become no-ops and have zero performance impact.
 */
 #ifdef SQLITE_OMIT_WSD
@@ -1972,7 +1972,6 @@ struct Sqlite3Config {
   int isMallocInit;                 /* True after malloc is initialized */
   sqlite3_mutex *pInitMutex;        /* Mutex used by sqlite3_initialize() */
   int nRefInitMutex;                /* Number of users of pInitMutex */
-  int nSmall;                       /* alloc size threshold used by mem6.c */
   int mxParserStack;                /* maximum depth of the parser stack */
   int sharedCacheEnabled;           /* true if shared-cache mode enabled */
 };

@@ -340,14 +340,6 @@ int sqlite3_config(int op, ...){
     }
 #endif
 
-#if defined(SQLITE_ENABLE_MEMSYS6)
-    case SQLITE_CONFIG_CHUNKALLOC: {
-      sqlite3GlobalConfig.nSmall = va_arg(ap, int);
-      sqlite3GlobalConfig.m = *sqlite3MemGetMemsys6();
-      break;
-    }
-#endif
-
     case SQLITE_CONFIG_LOOKASIDE: {
       sqlite3GlobalConfig.szLookaside = va_arg(ap, int);
       sqlite3GlobalConfig.nLookaside = va_arg(ap, int);
