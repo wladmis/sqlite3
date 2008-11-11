@@ -502,8 +502,6 @@ static void pcachePageFree(PgHdr *p){
 static int pcachePageSize(PgHdr *p){
   assert( sqlite3_mutex_held(pcache_g.mutex) );
   assert( !pcache_g.pStart );
-  assert( p->apSave[0]==0 );
-  assert( p->apSave[1]==0 );
   assert( p && p->pCache );
   return sqlite3MallocSize(p);
 }
