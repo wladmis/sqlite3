@@ -1699,7 +1699,7 @@ static int process_input(struct callback_data *p, FILE *in){
       }
       continue;
     }
-    if( _is_command_terminator(zLine) ){
+    if( _is_command_terminator(zLine) && sqlite3_complete(zSql) ){
       memcpy(zLine,";",2);
     }
     nSqlPrior = nSql;
