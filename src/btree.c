@@ -4651,6 +4651,8 @@ static int insertCell(
     idx = allocateSpace(pPage, sz);
     assert( idx>0 );
     assert( end <= get2byte(&data[hdr+5]) );
+    if (idx+sz > pPage->pBt->usableSize) 
+      return SQLITE_CORRUPT_BKPT;
     pPage->nCell++;
     pPage->nFree -= 2;
     memcpy(&data[idx+nSkip], pCell+nSkip, sz-nSkip);
