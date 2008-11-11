@@ -1757,7 +1757,7 @@ static int process_input(struct callback_data *p, FILE *in){
     }
   }
   if( zSql ){
-    if( !_all_whitespace(zSql) ) printf("Incomplete SQL: %s\n", zSql);
+    if( !_all_whitespace(zSql) ) fprintf(stderr, "Incomplete SQL: %s\n", zSql);
     free(zSql);
   }
   free(zLine);
