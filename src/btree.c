@@ -4570,7 +4570,8 @@ static void dropCell(MemPage *pPage, int idx, int sz){
   assert( sqlite3_mutex_held(pPage->pBt->mutex) );
   data = pPage->aData;
   ptr = &data[pPage->cellOffset + 2*idx];
-  pc = get2byte(ptr);
+  /* mask the cell offset to ensure a corrupt db does not result in a crash */
+  pc = pPage->maskPage & get2byte(ptr);
   assert( pc>10 && pc+sz<=pPage->pBt->usableSize );
   freeSpace(pPage, pc, sz);
   for(i=idx+1; i<pPage->nCell; i++, ptr+=2){
