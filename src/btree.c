@@ -6800,8 +6800,14 @@ static int checkTreePage(
   if( hit==0 ){
     pCheck->mallocFailed = 1;
   }else{
-    memset(hit, 0, usableSize );
-    memset(hit, 1, get2byte(&data[hdr+5]));
+    u16 contentOffset = get2byte(&data[hdr+5]);
+    if (contentOffset > usableSize) {
+      checkAppendMsg(pCheck, 0, 
+                     "Corruption detected in header on page %d",iPage,0);
+      contentOffset = usableSize; /* try to keep going */
+    }
+    memset(hit+contentOffset, 0, usableSize-contentOffset);
+    memset(hit, 1, contentOffset);
     nCell = get2byte(&data[hdr+3]);
     cellStart = hdr + 12 - 4*pPage->leaf;
     for(i=0; i<nCell; i++){
