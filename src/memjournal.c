@@ -30,7 +30,9 @@ typedef struct FileChunk FileChunk;
 
 /* Macro to find the minimum of two numeric values.
 */
-#define MIN(x,y) ((x)<(y)?(x):(y))
+#ifndef MIN
+# define MIN(x,y) ((x)<(y)?(x):(y))
+#endif
 
 /*
 ** The rollback journal is composed of a linked list of these structures.

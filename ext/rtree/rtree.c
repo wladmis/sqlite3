@@ -226,8 +226,12 @@ struct RtreeCell {
   RtreeCoord aCoord[RTREE_MAX_DIMENSIONS*2];
 };
 
-#define MAX(x,y) ((x) < (y) ? (y) : (x))
-#define MIN(x,y) ((x) > (y) ? (y) : (x))
+#ifndef MAX
+# define MAX(x,y) ((x) < (y) ? (y) : (x))
+#endif
+#ifndef MIN
+# define MIN(x,y) ((x) > (y) ? (y) : (x))
+#endif
 
 /*
 ** Functions to deserialize a 16 bit integer, 32 bit real number and
