@@ -65,7 +65,7 @@ Select *sqlite3SelectNew(
   Select standin;
   sqlite3 *db = pParse->db;
   pNew = sqlite3DbMallocZero(db, sizeof(*pNew) );
-  assert( !pOffset || pLimit );   /* Can't have OFFSET without LIMIT. */
+  assert( db->mallocFailed || !pOffset || pLimit ); /* OFFSET implies LIMIT */
   if( pNew==0 ){
     pNew = &standin;
     memset(pNew, 0, sizeof(*pNew));
