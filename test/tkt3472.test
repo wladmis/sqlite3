@@ -20,7 +20,7 @@ ifcapable {!threadsafe} {
 }
 if {$::tcl_platform(platform)!="unix"} {
   finish_test
-  rturn
+  return
 }
 
 set ::correctvalue $threadsOverrideEachOthersLocks
