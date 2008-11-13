@@ -751,11 +751,18 @@ static int winSync(sqlite3_file *id, int flags){
   }
   sqlite3_sync_count++;
 #endif
+  /* If we compiled with the SQLITE_NO_SYNC flag, then syncing is a
+  ** no-op
+  */
+#ifdef SQLITE_NO_SYNC
+    return SQLITE_OK;
+#else
   if( FlushFileBuffers(pFile->h) ){
     return SQLITE_OK;
   }else{
     return SQLITE_IOERR;
   }
+#endif
 }
 
 /*
