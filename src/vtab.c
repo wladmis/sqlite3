@@ -710,7 +710,7 @@ int sqlite3VtabBegin(sqlite3 *db, sqlite3_vtab *pVtab){
   ** virtual module xSync() callback. It is illegal to write to 
   ** virtual module tables in this case, so return SQLITE_LOCKED.
   */
-  if( 0==db->aVTrans && db->nVTrans>0 ){
+  if( sqlite3VtabInSync(db) ){
     return SQLITE_LOCKED;
   }
   if( !pVtab ){
