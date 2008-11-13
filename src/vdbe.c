@@ -2698,7 +2698,10 @@ case OP_OpenWrite: {
     pIn2 = &p->aMem[p2];
     sqlite3VdbeMemIntegerify(pIn2);
     p2 = pIn2->u.i;
-    assert( p2>=2 );
+    if( p2<2 ) {
+      rc = SQLITE_CORRUPT_BKPT;
+      goto abort_due_to_error;
+    }
   }
   assert( i>=0 );
   pCur = allocateCursor(p, i, &pOp[-1], iDb, 1);
