@@ -505,7 +505,7 @@ ifcapable mem5 {
     bitvec.test               index2.test               memsubsys1.test
     capi3c.test               ioerr.test                memsubsys2.test
     capi3.test                join3.test                pagesize.test
-    collate5.test             limit.test
+    collate5.test             limit.test                zeroblob.test
   } -initialize {
     catch {db close}
     sqlite3_reset_auto_extension
