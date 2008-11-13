@@ -46,6 +46,8 @@ static int createModule(
       db->mallocFailed = 1;
     }
     sqlite3ResetInternalSchema(db, 0);
+  }else if( xDestroy ){
+    xDestroy(pAux);
   }
   rc = sqlite3ApiExit(db, SQLITE_OK);
   sqlite3_mutex_leave(db->mutex);
