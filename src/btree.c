@@ -2603,9 +2603,14 @@ void sqlite3BtreeTripAllCursors(Btree *pBtree, int errCode){
   BtCursor *p;
   sqlite3BtreeEnter(pBtree);
   for(p=pBtree->pBt->pCursor; p; p=p->pNext){
+    int i;
     sqlite3BtreeClearCursor(p);
     p->eState = CURSOR_FAULT;
     p->skip = errCode;
+    for(i=0; i<=p->iPage; i++){
+      releasePage(p->apPage[i]);
+      p->apPage[i] = 0;
+    }
   }
   sqlite3BtreeLeave(pBtree);
 }
@@ -5615,7 +5620,8 @@ static int balance_deeper(BtCursor *pCur){
   cdata = pChild->aData;
   memcpy(cdata, &data[hdr], pPage->cellOffset+2*pPage->nCell-hdr);
   memcpy(&cdata[cbrk], &data[cbrk], usableSize-cbrk);
-  
+
+  assert( pChild->isInit==0 );
   rc = sqlite3BtreeInitPage(pChild);
   if( rc==SQLITE_OK ){
     int nCopy = pPage->nOverflow*sizeof(pPage->aOvfl[0]);

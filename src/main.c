@@ -309,6 +309,12 @@ int sqlite3_config(int op, ...){
       break;
     }
 
+    case SQLITE_CONFIG_PCACHE: {
+      /* Specify an alternative malloc implementation */
+      sqlite3GlobalConfig.pcache = *va_arg(ap, sqlite3_pcache_methods*);
+      break;
+    }
+
 #if defined(SQLITE_ENABLE_MEMSYS3) || defined(SQLITE_ENABLE_MEMSYS5)
     case SQLITE_CONFIG_HEAP: {
       /* Designate a buffer for heap memory space */
