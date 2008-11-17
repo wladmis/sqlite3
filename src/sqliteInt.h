@@ -444,7 +444,7 @@ struct BusyHandler {
 ** A convenience macro that returns the number of elements in
 ** an array.
 */
-#define ArraySize(X)    (sizeof(X)/sizeof(X[0]))
+#define ArraySize(X)    ((int)(sizeof(X)/sizeof(X[0])))
 
 /*
 ** The following value as a destructor means to use sqlite3DbFree().
