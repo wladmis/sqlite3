@@ -137,7 +137,6 @@ static const et_info fmtinfo[] = {
   {  'S',  0, 2, etSRCLIST,    0,  0 },
   {  'r', 10, 3, etORDINAL,    0,  0 },
 };
-#define etNINFO  (sizeof(fmtinfo)/sizeof(fmtinfo[0]))
 
 /*
 ** If SQLITE_OMIT_FLOATING_POINT is defined, then none of the floating point
@@ -174,7 +173,7 @@ static int et_getdigit(LONGDOUBLE_TYPE *val, int *cnt){
 */
 static void appendSpace(StrAccum *pAccum, int N){
   static const char zSpaces[] = "                             ";
-  while( N>=sizeof(zSpaces)-1 ){
+  while( N>=(int)sizeof(zSpaces)-1 ){
     sqlite3StrAccumAppend(pAccum, zSpaces, sizeof(zSpaces)-1);
     N -= sizeof(zSpaces)-1;
   }
@@ -337,7 +336,7 @@ void sqlite3VXPrintf(
     }
     /* Fetch the info entry for the field */
     infop = 0;
-    for(idx=0; idx<etNINFO; idx++){
+    for(idx=0; idx<ArraySize(fmtinfo); idx++){
       if( c==fmtinfo[idx].fmttype ){
         infop = &fmtinfo[idx];
         if( useExtended || (infop->flags & FLAG_INTERN)==0 ){

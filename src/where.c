@@ -21,11 +21,6 @@
 #include "sqliteInt.h"
 
 /*
-** The number of bits in a Bitmask.  "BMS" means "BitMask Size".
-*/
-#define BMS  ((int)(sizeof(Bitmask)*8))
-
-/*
 ** Trace output macros
 */
 #if defined(SQLITE_TEST) || defined(SQLITE_DEBUG)

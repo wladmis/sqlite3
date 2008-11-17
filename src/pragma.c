@@ -41,7 +41,7 @@ static int getSafetyLevel(const char *z){
     return atoi(z);
   }
   n = strlen(z);
-  for(i=0; i<sizeof(iLength); i++){
+  for(i=0; i<ArraySize(iLength); i++){
     if( iLength[i]==n && sqlite3StrNICmp(&zText[iOffset[i]],z,n)==0 ){
       return iValue[i];
     }
@@ -191,7 +191,7 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
   };
   int i;
   const struct sPragmaType *p;
-  for(i=0, p=aPragma; i<sizeof(aPragma)/sizeof(aPragma[0]); i++, p++){
+  for(i=0, p=aPragma; i<ArraySize(aPragma); i++, p++){
     if( sqlite3StrICmp(zLeft, p->zName)==0 ){
       sqlite3 *db = pParse->db;
       Vdbe *v;

@@ -349,9 +349,9 @@ static int lookupName(
   */
   if( pExpr->iColumn>=0 && pMatch!=0 ){
     int n = pExpr->iColumn;
-    testcase( n==sizeof(Bitmask)*8-1 );
-    if( n>=sizeof(Bitmask)*8 ){
-      n = sizeof(Bitmask)*8-1;
+    testcase( n==BMS-1 );
+    if( n>=BMS ){
+      n = BMS-1;
     }
     assert( pMatch->iCursor==pExpr->iTable );
     pMatch->colUsed |= ((Bitmask)1)<<n;

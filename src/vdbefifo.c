@@ -24,9 +24,9 @@
 */
 #define FIFOSIZE_FIRST (((128-sizeof(FifoPage))/8)+1)
 #ifdef SQLITE_MALLOC_SOFT_LIMIT
-# define FIFOSIZE_MAX   (((SQLITE_MALLOC_SOFT_LIMIT-sizeof(FifoPage))/8)+1)
+# define FIFOSIZE_MAX   (int)(((SQLITE_MALLOC_SOFT_LIMIT-sizeof(FifoPage))/8)+1)
 #else
-# define FIFOSIZE_MAX   (((262144-sizeof(FifoPage))/8)+1)
+# define FIFOSIZE_MAX   (int)(((262144-sizeof(FifoPage))/8)+1)
 #endif
 
 /*

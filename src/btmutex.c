@@ -248,7 +248,7 @@ void sqlite3BtreeMutexArrayInsert(BtreeMutexArray *pArray, Btree *pBtree){
   }
 #endif
   assert( pArray->nMutex>=0 );
-  assert( pArray->nMutex<sizeof(pArray->aBtree)/sizeof(pArray->aBtree[0])-1 );
+  assert( pArray->nMutex<ArraySize(pArray->aBtree)-1 );
   pBt = pBtree->pBt;
   for(i=0; i<pArray->nMutex; i++){
     assert( pArray->aBtree[i]!=pBtree );

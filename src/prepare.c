@@ -244,7 +244,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   */
   if( rc==SQLITE_OK ){
     int i;
-    for(i=0; i<sizeof(meta)/sizeof(meta[0]); i++){
+    for(i=0; i<ArraySize(meta); i++){
       rc = sqlite3BtreeGetMeta(pDb->pBt, i+1, (u32 *)&meta[i]);
       if( rc ){
         sqlite3SetString(pzErrMsg, db, "%s", sqlite3ErrStr(rc));
