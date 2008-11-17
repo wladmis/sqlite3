@@ -296,7 +296,7 @@ struct Vdbe {
   Mem *aVar;          /* Values for the OP_Variable opcode. */
   char **azVar;       /* Name of variables */
   int okVar;          /* True if azVar[] has been initialized */
-  int magic;              /* Magic number for sanity checking */
+  u32 magic;              /* Magic number for sanity checking */
   int nMem;               /* Number of memory locations currently allocated */
   Mem *aMem;              /* The memory locations */
   int nCallback;          /* Number of callbacks invoked so far */

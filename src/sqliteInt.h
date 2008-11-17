@@ -685,7 +685,7 @@ struct sqlite3 {
   CollSeq *pDfltColl;           /* The default collating sequence (BINARY) */
   i64 lastRowid;                /* ROWID of most recent insert (see above) */
   i64 priorNewRowid;            /* Last randomly generated ROWID */
-  int magic;                    /* Magic number for detect library misuse */
+  u32 magic;                    /* Magic number for detect library misuse */
   int nChange;                  /* Value returned by sqlite3_changes() */
   int nTotalChange;             /* Value returned by sqlite3_total_changes() */
   sqlite3_mutex *mutex;         /* Connection mutex */
@@ -2335,8 +2335,8 @@ int sqlite3VarintLen(u64 v);
 **     x = putVarint32( A, B );
 **
 */
-#define getVarint32(A,B)  ((*(A)<(unsigned char)0x80) ? ((B) = (u32)*(A)),1 : sqlite3GetVarint32((A), &(B)))
-#define putVarint32(A,B)  (((B)<(u32)0x80) ? (*(A) = (unsigned char)(B)),1 : sqlite3PutVarint32((A), (B)))
+#define getVarint32(A,B)  ((*(A)<(unsigned char)0x80) ? ((B) = (u32)*(A)),1 : sqlite3GetVarint32((A), (u32 *)&(B)))
+#define putVarint32(A,B)  (((u32)(B)<(u32)0x80) ? (*(A) = (unsigned char)(B)),1 : sqlite3PutVarint32((A), (B)))
 #define getVarint    sqlite3GetVarint
 #define putVarint    sqlite3PutVarint
 
