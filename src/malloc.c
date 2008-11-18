@@ -102,7 +102,7 @@ static SQLITE_WSD struct Mem0Global {
   */
   u32 *aScratchFree;
   u32 *aPageFree;
-} mem0 = { 62560955 };
+} mem0 = { 62560955, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 #define mem0 GLOBAL(struct Mem0Global, mem0)
 
