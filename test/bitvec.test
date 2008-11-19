@@ -185,7 +185,3 @@ for {set n 1} {$go} {incr n} {
 
 finish_test
 return
-
-
-
-finish_test
