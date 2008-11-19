@@ -6683,8 +6683,9 @@ typedef struct sqlite3_pcache sqlite3_pcache;
 **
 ** The xRekey() method is used to change the key value associated with the
 ** page passed as the second argument from oldKey to newKey. If the cache
-** contains an entry associated with oldKey, it should be discarded. Any
-** cache entry associated with oldKey is guaranteed not to be pinned.
+** previously contains an entry associated with newKey, it should be
+** discarded. Any prior cache entry associated with newKey is guaranteed not
+** to be pinned.
 **
 ** When SQLite calls the xTruncate() method, the cache must discard all
 ** existing cache entries with page numbers (keys) greater than or equal

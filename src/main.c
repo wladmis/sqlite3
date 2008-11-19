@@ -315,6 +315,14 @@ int sqlite3_config(int op, ...){
       break;
     }
 
+    case SQLITE_CONFIG_GETPCACHE: {
+      if( sqlite3GlobalConfig.pcache.xInit==0 ){
+        sqlite3PCacheSetDefault();
+      }
+      *va_arg(ap, sqlite3_pcache_methods*) = sqlite3GlobalConfig.pcache;
+      break;
+    }
+
 #if defined(SQLITE_ENABLE_MEMSYS3) || defined(SQLITE_ENABLE_MEMSYS5)
     case SQLITE_CONFIG_HEAP: {
       /* Designate a buffer for heap memory space */
