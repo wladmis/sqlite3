@@ -1201,9 +1201,9 @@ static int full_fsync(int fd, int fullSync, int dataOnly){
   UNUSED_PARAMETER(fullSync);
   UNUSED_PARAMETER(dataOnly);
 #elif HAVE_FULLFSYNC
-  UNUSED_PARAMETER(fullSync);
-#else
   UNUSED_PARAMETER(dataOnly);
+#else
+  UNUSED_PARAMETER(fullSync);
 #endif
 
   /* Record the number of times that we do a normal fsync() and 
@@ -2762,8 +2762,9 @@ static int fillInUnixFile(
   ** used if ENABLE_LOCKING_STYLE is defined. Express this explicitly 
   ** here to prevent compiler warnings about unused parameters.
   */
-  if( IS_VXWORKS ) UNUSED_PARAMETER(isDelete);
-  if( SQLITE_ENABLE_LOCKING_STYLE ) UNUSED_PARAMETER(pVfs);
+  if( !IS_VXWORKS ) UNUSED_PARAMETER(isDelete);
+  if( !SQLITE_ENABLE_LOCKING_STYLE ) UNUSED_PARAMETER(pVfs);
+  if( !IS_VXWORKS && !SQLITE_ENABLE_LOCKING_STYLE ) UNUSED_PARAMETER(zFilename);
 
   OSTRACE3("OPEN    %-3d %s\n", h, zFilename);    
   pNew->h = h;
@@ -3229,6 +3230,7 @@ static int unixFullPathname(
   SimulateIOError( return SQLITE_ERROR );
 
   assert( pVfs->mxPathname==MAX_PATHNAME );
+  UNUSED_PARAMETER(pVfs);
 
 #if IS_VXWORKS
   {

@@ -123,6 +123,7 @@ static int memjrnlWrite(
   ** access writes are not required by sqlite.
   */
   assert(iOfst==p->endpoint.iOffset);
+  UNUSED_PARAMETER(iOfst);
 
   while( nWrite>0 ){
     FileChunk *pChunk = p->endpoint.pChunk;
@@ -162,6 +163,7 @@ static int memjrnlTruncate(sqlite3_file *pJfd, sqlite_int64 size){
   MemJournal *p = (MemJournal *)pJfd;
   FileChunk *pChunk;
   assert(size==0);
+  UNUSED_PARAMETER(size);
   pChunk = p->pFirst;
   while( pChunk ){
     FileChunk *pTmp = pChunk;

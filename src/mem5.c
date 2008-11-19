@@ -461,6 +461,8 @@ void sqlite3Memsys5Dump(const char *zFilename){
   }else{
     fclose(out);
   }
+#else
+  UNUSED_PARAMETER(zFilename);
 #endif
 }
 

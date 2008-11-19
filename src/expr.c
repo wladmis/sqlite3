@@ -1460,10 +1460,11 @@ static char *dup8bytes(Vdbe *v, const char *in){
 */
 static void codeReal(Vdbe *v, const char *z, int n, int negateFlag, int iMem){
   assert( z || v==0 || sqlite3VdbeDb(v)->mallocFailed );
+  assert( !z || !isdigit(z[n]) );
+  UNUSED_PARAMETER(n);
   if( z ){
     double value;
     char *zV;
-    assert( !isdigit(z[n]) );
     sqlite3AtoF(z, &value);
     if( sqlite3IsNaN(value) ){
       sqlite3VdbeAddOp2(v, OP_Null, 0, iMem);
