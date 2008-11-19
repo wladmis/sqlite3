@@ -3488,7 +3488,8 @@ void sqlite3PagerDontRollback(DbPage *pPg){
   }
 
 #ifdef SQLITE_SECURE_DELETE
-  if( (pPg->flags & PGHDR_IN_JOURNAL)!=0 || pPg->pgno>pPager->origDbSize ){
+  if( sqlite3BitvecTest(pPager->pInJournal, pPg->pgno)!=0
+   || pPg->pgno>pPager->origDbSize ){
     return;
   }
 #endif
