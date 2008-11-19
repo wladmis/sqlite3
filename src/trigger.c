@@ -603,7 +603,6 @@ static int checkColumnOverLap(IdList *pIdList, ExprList *pEList){
 ** TRIGGER_AFTER.
 */
 int sqlite3TriggersExist(
-  Parse *pParse,          /* Used to check for recursive triggers */
   Table *pTab,            /* The table the contains the triggers */
   int op,                 /* one of TK_DELETE, TK_INSERT, TK_UPDATE */
   ExprList *pChanges      /* Columns that change in an UPDATE statement */

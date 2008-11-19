@@ -770,12 +770,12 @@ static int testLockingStyle(int fd){
 ** If SQLITE_ENABLE_LOCKING_STYLE is not defined, this function always
 ** returns LOCKING_STYLE_POSIX.
 */
+#if SQLITE_ENABLE_LOCKING_STYLE
 static int detectLockingStyle(
   sqlite3_vfs *pVfs,
   const char *filePath, 
   int fd
 ){
-#if SQLITE_ENABLE_LOCKING_STYLE
 #if defined(__RTP__) || defined(_WRS_KERNEL)
   if( !filePath ){
     return LOCKING_STYLE_NONE;
@@ -826,10 +826,12 @@ static int detectLockingStyle(
 
   /* Default case. Handles, amongst others, "nfs". */
   return testLockingStyle(fd);  
-#endif
-#endif
+#endif /* if defined(__RTP__) || defined(_WRS_KERNEL) */
   return LOCKING_STYLE_POSIX;
 }
+#else
+  #define detectLockingStyle(x,y,z) LOCKING_STYLE_POSIX
+#endif /* ifdef SQLITE_ENABLE_LOCKING_STYLE */
 
 /*
 ** Given a file descriptor, locate lockInfo and openCnt structures that

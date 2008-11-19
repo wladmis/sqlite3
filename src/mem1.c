@@ -110,6 +110,7 @@ static int sqlite3MemRoundup(int n){
 ** Initialize this module.
 */
 static int sqlite3MemInit(void *NotUsed){
+  UNUSED_PARAMETER(NotUsed);
   return SQLITE_OK;
 }
 
@@ -117,6 +118,7 @@ static int sqlite3MemInit(void *NotUsed){
 ** Deinitialize this module.
 */
 static void sqlite3MemShutdown(void *NotUsed){
+  UNUSED_PARAMETER(NotUsed);
   return;
 }
 

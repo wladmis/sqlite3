@@ -184,7 +184,8 @@ static int memjrnlClose(sqlite3_file *pJfd){
 /*
 ** Sync the file.
 */
-static int memjrnlSync(sqlite3_file *pJfd, int flags){
+static int memjrnlSync(sqlite3_file *NotUsed, int NotUsed2){
+  UNUSED_PARAMETER2(NotUsed, NotUsed2);
   return SQLITE_OK;
 }
 

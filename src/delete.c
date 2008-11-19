@@ -265,7 +265,7 @@ void sqlite3DeleteFrom(
   ** deleted from is a view
   */
 #ifndef SQLITE_OMIT_TRIGGER
-  triggers_exist = sqlite3TriggersExist(pParse, pTab, TK_DELETE, 0);
+  triggers_exist = sqlite3TriggersExist(pTab, TK_DELETE, 0);
   isView = pTab->pSelect!=0;
 #else
 # define triggers_exist 0

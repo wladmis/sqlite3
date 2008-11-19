@@ -356,12 +356,14 @@ struct analysisInfo {
 **     argv[0] = name of the index
 **     argv[1] = results of analysis - on integer for each column
 */
-static int analysisLoader(void *pData, int argc, char **argv, char **azNotUsed){
+static int analysisLoader(void *pData, int argc, char **argv, char **NotUsed){
   analysisInfo *pInfo = (analysisInfo*)pData;
   Index *pIndex;
   int i, c;
   unsigned int v;
   const char *z;
+
+  UNUSED_PARAMETER(NotUsed);
 
   assert( argc==2 );
   if( argv==0 || argv[0]==0 || argv[1]==0 ){

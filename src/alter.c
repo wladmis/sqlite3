@@ -39,7 +39,7 @@
 */
 static void renameTableFunc(
   sqlite3_context *context,
-  int argc,
+  int NotUsed,
   sqlite3_value **argv
 ){
   unsigned char const *zSql = sqlite3_value_text(argv[0]);
@@ -52,6 +52,8 @@ static void renameTableFunc(
   char *zRet;
 
   sqlite3 *db = sqlite3_context_db_handle(context);
+
+  UNUSED_PARAMETER(NotUsed);
 
   /* The principle used to locate the table name in the CREATE TABLE 
   ** statement is that the table name is the first non-space token that
@@ -94,7 +96,7 @@ static void renameTableFunc(
 */
 static void renameTriggerFunc(
   sqlite3_context *context,
-  int argc,
+  int NotUsed,
   sqlite3_value **argv
 ){
   unsigned char const *zSql = sqlite3_value_text(argv[0]);
@@ -106,8 +108,9 @@ static void renameTriggerFunc(
   unsigned char const *zCsr = zSql;
   int len = 0;
   char *zRet;
-
   sqlite3 *db = sqlite3_context_db_handle(context);
+
+  UNUSED_PARAMETER(NotUsed);
 
   /* The principle used to locate the table name in the CREATE TRIGGER 
   ** statement is that the table name is the first token that is immediatedly

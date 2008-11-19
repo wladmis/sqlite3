@@ -939,7 +939,8 @@ static int exprNodeIsConstant(Walker *pWalker, Expr *pExpr){
       return WRC_Continue;
   }
 }
-static int selectNodeIsConstant(Walker *pWalker, Select *pSelect){
+static int selectNodeIsConstant(Walker *pWalker, Select *NotUsed){
+  UNUSED_PARAMETER(NotUsed);
   pWalker->u.i = 0;
   return WRC_Abort;
 }

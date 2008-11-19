@@ -25,9 +25,10 @@
 */
 static void softHeapLimitEnforcer(
   void *NotUsed, 
-  sqlite3_int64 inUse,
+  sqlite3_int64 NotUsed2,
   int allocSize
 ){
+  UNUSED_PARAMETER2(NotUsed, NotUsed2);
   sqlite3_release_memory(allocSize);
 }
 
@@ -69,6 +70,7 @@ int sqlite3_release_memory(int n){
   nRet += sqlite3PcacheReleaseMemory(n-nRet);
   return nRet;
 #else
+  UNUSED_PARAMETER(n);
   return SQLITE_OK;
 #endif
 }
