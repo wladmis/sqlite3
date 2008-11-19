@@ -379,6 +379,8 @@ static int memsys5Init(void *NotUsed){
   int nMinLog;                 /* Log of minimum allocation size in bytes*/
   int iOffset;
 
+  UNUSED_PARAMETER(NotUsed);
+
   if( !zByte ){
     return SQLITE_ERROR;
   }
@@ -415,6 +417,7 @@ static int memsys5Init(void *NotUsed){
 ** Deinitialize this module.
 */
 static void memsys5Shutdown(void *NotUsed){
+  UNUSED_PARAMETER(NotUsed);
   return;
 }
 
