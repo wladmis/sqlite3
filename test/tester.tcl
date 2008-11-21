@@ -659,6 +659,7 @@ proc do_ioerr_test {testname args} {
     do_test $testname.$n.1 {
       set ::sqlite_io_error_pending 0
       catch {db close}
+      catch {db2 close}
       catch {file delete -force test.db}
       catch {file delete -force test.db-journal}
       catch {file delete -force test2.db}

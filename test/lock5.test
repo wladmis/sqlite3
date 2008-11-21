@@ -25,6 +25,16 @@ if {[catch {sqlite3 db test.db -vfs unix-none} msg]} {
 }
 db close
 
+ifcapable lock_proxy_pragmas {
+  set ::using_proxy 0
+  foreach {name value} [array get env SQLITE_FORCE_PROXY_LOCKING] {
+    set ::using_proxy $value
+  }
+  # Disable the proxy locking for these tests
+  set env(SQLITE_FORCE_PROXY_LOCKING) "0"
+}
+
+
 do_test lock5-dotfile.1 {
   sqlite3 db test.db -vfs unix-dotfile
   execsql {
@@ -172,5 +182,9 @@ do_test lock5-flock.X {
   db close
   db2 close
 } {}
+
+ifcapable lock_proxy_pragmas {
+  set env(SQLITE_FORCE_PROXY_LOCKING) $::using_proxy
+}
 
 finish_test

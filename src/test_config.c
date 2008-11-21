@@ -392,6 +392,13 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
   Tcl_SetVar2(interp, "sqlite_options", "schema_version", "1", TCL_GLOBAL_ONLY);
 #endif
 
+#ifdef SQLITE_ENABLE_LOCKING_STYLE
+    Tcl_SetVar2(interp, "sqlite_options", "lock_proxy_pragmas", "1", TCL_GLOBAL_ONLY);
+#else
+    Tcl_SetVar2(interp, "sqlite_options", "lock_proxy_pragmas", "0", TCL_GLOBAL_ONLY);
+#endif
+    
+    
 #ifdef SQLITE_OMIT_SHARED_CACHE
   Tcl_SetVar2(interp, "sqlite_options", "shared_cache", "0", TCL_GLOBAL_ONLY);
 #else
