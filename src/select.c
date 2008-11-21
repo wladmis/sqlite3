@@ -1181,7 +1181,8 @@ static int selectColumnsFromExprList(
                  iCol>=0 ? pTab->aCol[iCol].zName : "rowid");
       }else{
         /* Use the original text of the column expression as its name */
-        zName = sqlite3MPrintf(db, "%T", &pCol->span);
+        Token *pToken = (pCol->span.z?&pCol->span:&pCol->token);
+        zName = sqlite3MPrintf(db, "%T", pToken);
       }
     }
     if( db->mallocFailed ){
