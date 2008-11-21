@@ -1517,20 +1517,6 @@ static int pager_playback(Pager *pPager, int isHot){
   assert( 0 );
 
 end_playback:
-  /* There may be pages in cache that are dirty but which were not in
-  ** the rollback journal.  Such pages would have been taken out of the
-  ** freelist (and hence marked as DontRollback).  All such pages must
-  ** be reinitialized.
-  */
-  if( rc==SQLITE_OK && pPager->xReiniter ){
-    PgHdr *pDirty;     /* List of page that are still dirty */
-    pDirty = sqlite3PcacheDirtyList(pPager->pPCache);
-    while( pDirty ){
-      pPager->xReiniter(pDirty);
-      sqlite3PcacheMakeClean(pDirty);
-      pDirty = pDirty->pDirty;
-    }
-  }
   if( rc==SQLITE_OK ){
     zMaster = pPager->pTmpSpace;
     rc = readMasterJournal(pPager->jfd, zMaster, pPager->pVfs->mxPathname+1);
