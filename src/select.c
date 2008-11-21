@@ -3538,7 +3538,7 @@ int sqlite3Select(
     p->selFlags &= ~SF_Distinct;
   }
   sqlite3SelectPrep(pParse, p, 0);
-  if( pParse->nErr ){
+  if( pParse->nErr || db->mallocFailed ){
     goto select_end;
   }
   p->pOrderBy = pOrderBy;

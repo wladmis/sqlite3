@@ -675,7 +675,9 @@ do_malloc_test 29 -sqlprep {
   CREATE TABLE t1(a TEXT, b TEXT);
 } -sqlbody {
   INSERT INTO t1 VALUES(1, -234);
+  INSERT INTO t1 SELECT * FROM t1 UNION ALL SELECT * FROM t1;
 }
+
 
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
