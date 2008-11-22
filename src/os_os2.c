@@ -966,9 +966,9 @@ static void os2DlClose(sqlite3_vfs *pVfs, void *pHandle){
 ** Write up to nBuf bytes of randomness into zBuf.
 */
 static int os2Randomness(sqlite3_vfs *pVfs, int nBuf, char *zBuf ){
-  ULONG sizeofULong = sizeof(ULONG);
+  int sizeofULong = sizeof(ULONG);
   int n = 0;
-  if( sizeof(DATETIME) <= nBuf - n ){
+  if( (int)sizeof(DATETIME) <= nBuf - n ){
     DATETIME x;
     DosGetDateTime(&x);
     memcpy(&zBuf[n], &x, sizeof(x));
