@@ -725,7 +725,7 @@ void sqlite3StrAccumAppend(StrAccum *p, const char *z, int N){
   if( N<0 ){
     N = strlen(z);
   }
-  if( N==0 ){
+  if( N==0 || z==0 ){
     return;
   }
   if( p->nChar+N >= p->nAlloc ){
