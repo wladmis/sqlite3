@@ -108,7 +108,7 @@ static SQLITE_WSD struct PCacheGlobal {
 **   assert( PGHDR1_TO_PAGE(PAGE_TO_PGHDR1(X))==X );
 */
 #define PGHDR1_TO_PAGE(p) (void *)(&((unsigned char *)p)[sizeof(PgHdr1)])
-#define PAGE_TO_PGHDR1(p) (PgHdr1 *)(&((unsigned char *)p)[-1*sizeof(PgHdr1)])
+#define PAGE_TO_PGHDR1(p) (PgHdr1 *)(&((unsigned char *)p)[-1*(int)sizeof(PgHdr1)])
 
 /*
 ** Macros to enter and leave the global LRU mutex.
