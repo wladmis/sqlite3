@@ -33,6 +33,6 @@ do_test tkt3508-1.1 {
     select SUBSTRATE_HPRD_ID, count(substrate_refseq_id) as c
       from modificationsTmp where c > 1 group by SUBSTRATE_HPRD_ID;
   }
-} {1 {misuse of aggregate:}}
+} {1 {misuse of aggregate: }}
 
 finish_test
