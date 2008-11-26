@@ -2927,6 +2927,7 @@ void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur){
   for(i=0; i<=pTempCur->iPage; i++){
     sqlite3PagerRef(pTempCur->apPage[i]->pDbPage);
   }
+  assert( pTempCur->pKey==0 );
 }
 
 /*
@@ -2939,6 +2940,7 @@ void sqlite3BtreeReleaseTempCursor(BtCursor *pCur){
   for(i=0; i<=pCur->iPage; i++){
     sqlite3PagerUnref(pCur->apPage[i]->pDbPage);
   }
+  sqlite3_free(pCur->pKey);
 }
 
 /*
