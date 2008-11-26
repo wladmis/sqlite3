@@ -200,6 +200,7 @@ static int os2Sync( sqlite3_file *id, int flags ){
   ** no-op
   */
 #ifdef SQLITE_NO_SYNC
+  UNUSED_PARAMETER(pFile);
   return SQLITE_OK;
 #else
   return DosResetBuffer( pFile->h ) == NO_ERROR ? SQLITE_OK : SQLITE_IOERR;
