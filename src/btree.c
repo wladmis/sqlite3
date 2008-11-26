@@ -6058,7 +6058,9 @@ int sqlite3BtreeDelete(BtCursor *pCur){
         assert( leafCur.aiIdx[leafCur.iPage]==0 );
       }
 
-      if( rc==SQLITE_OK ){
+      if( SQLITE_OK==rc
+       && SQLITE_OK==(rc = sqlite3PagerWrite(pLeafPage->pDbPage)) 
+      ){
         dropCell(pLeafPage, 0, szNext);
         VVA_ONLY( leafCur.pagesShuffled = 0 );
         rc = balance(&leafCur, 0);

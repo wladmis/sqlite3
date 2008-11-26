@@ -4051,7 +4051,7 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno, int isCommit){
   */
   if( (pPg->flags&PGHDR_NEED_SYNC) && !isCommit ){
     needSyncPgno = pPg->pgno;
-    assert( pageInJournal(pPg) || pgno>pPager->origDbSize );
+    assert( pageInJournal(pPg) || pPg->pgno>pPager->origDbSize );
     assert( pPg->flags&PGHDR_DIRTY );
     assert( pPager->needSync );
   }
