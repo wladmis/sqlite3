@@ -179,6 +179,7 @@ do_test exclusive2-1.11 {
 # to prevent memory-induced cache spills.
 #
 do_test exclusive2-2.1 {
+  execsql {PRAGMA cache_size=1000;}
   execsql {PRAGMA locking_mode = exclusive;}
   execsql {
     BEGIN;
