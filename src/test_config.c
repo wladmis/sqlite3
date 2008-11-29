@@ -392,7 +392,14 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
   Tcl_SetVar2(interp, "sqlite_options", "schema_version", "1", TCL_GLOBAL_ONLY);
 #endif
 
-#if defined(SQLITE_ENABLE_LOCKING_STYLE) && defined(__DARWIN__)
+#if !defined(SQLITE_ENABLE_LOCKING_STYLE)
+#  if defined(__DARWIN__)
+#    define SQLITE_ENABLE_LOCKING_STYLE 1
+#  else
+#    define SQLITE_ENABLE_LOCKING_STYLE 0
+#  endif
+#endif
+#if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
   Tcl_SetVar2(interp,"sqlite_options","lock_proxy_pragmas","1",TCL_GLOBAL_ONLY);
 #else
   Tcl_SetVar2(interp,"sqlite_options","lock_proxy_pragmas","0",TCL_GLOBAL_ONLY);

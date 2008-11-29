@@ -4527,7 +4527,14 @@ static int file_control_lockproxy_test(
   }
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
   
-#if defined(SQLITE_ENABLE_LOCKING_STYLE) && defined(__DARWIN__)
+#if !defined(SQLITE_ENABLE_LOCKING_STYLE)
+#  if defined(__DARWIN__)
+#    define SQLITE_ENABLE_LOCKING_STYLE 1
+#  else
+#    define SQLITE_ENABLE_LOCKING_STYLE 0
+#  endif
+#endif
+#if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
   {
     char *proxyPath = "test.proxy";
     char *testPath;

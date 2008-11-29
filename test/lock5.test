@@ -24,6 +24,7 @@ if {[catch {sqlite3 db test.db -vfs unix-none} msg]} {
   return
 }
 db close
+file delete -force test.db.lock
 
 ifcapable lock_proxy_pragmas {
   set ::using_proxy 0
