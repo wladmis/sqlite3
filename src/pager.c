@@ -681,6 +681,15 @@ static int writeJournalHdr(Pager *pPager){
   put32bits(&zHeader[sizeof(aJournalMagic)+8], pPager->dbSize);
   /* The assumed sector size for this process */
   put32bits(&zHeader[sizeof(aJournalMagic)+12], pPager->sectorSize);
+
+  /* Initializing the tail of the buffer is not necessary.  Everything
+  ** works find if the following memset() is omitted.  But initializing
+  ** the memory prevents valgrind from complaining, so we are willing to
+  ** take the performance hit.
+  */
+  memset(&zHeader[sizeof(aJournalMagic)+16], 0,
+         nHeader-(sizeof(aJournalMagic)+16));
+
   if( pPager->journalHdr==0 ){
     /* The page size */
     put32bits(&zHeader[sizeof(aJournalMagic)+16], pPager->pageSize);
