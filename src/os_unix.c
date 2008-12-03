@@ -3437,6 +3437,13 @@ static int getTempname(int nBuf, char *zBuf){
   return SQLITE_OK;
 }
 
+/*
+** Routine to transform a unixFile into a proxy-locking unixFile.
+** Implementation in the proxy-lock division, but used by unixOpen()
+** if SQLITE_PREFER_PROXY_LOCKING is defined.
+*/
+static int proxyTransformUnixFile(unixFile*, const char*);
+
 
 /*
 ** Open the file zPath.
