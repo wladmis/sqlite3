@@ -2970,7 +2970,19 @@ end_create_proxy:
   sqlite3_free(pNew);
   return rc;
 }
-
+static const sqlite3_io_methods afpIoMethods;
+static int unixWrite(
+                     sqlite3_file *id, 
+                     const void *pBuf, 
+                     int amt,
+                     sqlite3_int64 offset 
+                     );
+static int unixRead(
+                    sqlite3_file *id, 
+                    void *pBuf, 
+                    int amt,
+                    sqlite3_int64 offset
+                    );
 /* takes the conch by taking a shared lock and read the contents conch, if 
 ** lockPath is non-NULL, the host ID and lock file path must match.  A NULL 
 ** lockPath means that the lockPath in the conch file will be used if the 
@@ -3225,6 +3237,7 @@ static int switchLockProxyPath(unixFile *pFile, const char *path) {
   return rc;
 }
 
+static const sqlite3_io_methods dotlockIoMethods;
 /*
 ** pFile is a file that has been opened by a prior xOpen call.  dbPath
 ** is a string buffer at least MAXPATHLEN+1 characters in size.
@@ -3238,7 +3251,7 @@ static int proxyGetDbPathForUnixFile(unixFile *pFile, char *dbPath){
     /* afp style keeps a reference to the db path in the filePath field 
     ** of the struct */
     assert( strlen((char*)pFile->lockingContext)<=MAXPATHLEN );
-    strcpy(dbPath, ((afpLockingContext *)pFile->lockingContext)->dbPath)
+    strcpy(dbPath, ((afpLockingContext *)pFile->lockingContext)->dbPath);
   }else
 #endif
   if( pFile->pMethod == &dotlockIoMethods ){
@@ -3253,7 +3266,7 @@ static int proxyGetDbPathForUnixFile(unixFile *pFile, char *dbPath){
   }
   return SQLITE_OK;
 }
-
+static const sqlite3_io_methods proxyIoMethods;
 /*
 ** Takes an already filled in unix file and alters it so all file locking 
 ** will be performed on the local proxy lock file.  The following fields
@@ -4172,7 +4185,7 @@ static int fillInUnixFile(
   }
 
 #if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
-  else if( pLockingStyle == &apfIoMethods ){
+  else if( pLockingStyle == &afpIoMethods ){
     /* AFP locking uses the file path so it needs to be included in
     ** the afpLockingContext.
     */
