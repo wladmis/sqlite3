@@ -14,11 +14,7 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
-ifcapable {!threadsafe} {
-  finish_test
-  return
-}
-if {$::tcl_platform(platform)!="unix"} {
+if {![info exists threadsOverrideEachOthersLocks]} {
   finish_test
   return
 }
