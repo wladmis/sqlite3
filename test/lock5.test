@@ -101,6 +101,10 @@ do_test lock5-dotfile.X {
 #####################################################################
 
 file delete -force test.db
+if {[catch {sqlite3 db test.db -vfs unix-flock} msg]} {
+  finish_test
+  return
+}
 
 do_test lock5-flock.1 {
   sqlite3 db test.db -vfs unix-flock
