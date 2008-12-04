@@ -932,7 +932,6 @@ case OP_Null: {           /* out2-prerelease */
 }
 
 
-#ifndef SQLITE_OMIT_BLOB_LITERAL
 /* Opcode: Blob P1 P2 * P4
 **
 ** P4 points to a blob of data P1 bytes long.  Store this
@@ -949,7 +948,6 @@ case OP_Blob: {                /* out2-prerelease */
   UPDATE_MAX_BLOBSIZE(pOut);
   break;
 }
-#endif /* SQLITE_OMIT_BLOB_LITERAL */
 
 /* Opcode: Variable P1 P2 * * *
 **
