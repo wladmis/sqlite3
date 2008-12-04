@@ -510,12 +510,14 @@ void sqlite3VdbeMemSetRowSet(Mem *pMem){
     sqlite3VdbeMemRelease(pMem);
     pMem->zMalloc = sqlite3DbMallocRaw(db, 32);
   }
-  if( !db->mallocFailed ){
+  if( db->mallocFailed ){
+    pMem->flags = MEM_Null;
+  }else{
     assert( pMem->zMalloc );
     pMem->u.pRowSet = sqlite3RowSetInit(db, pMem->zMalloc, 
                                        sqlite3DbMallocSize(db, pMem->zMalloc));
     assert( pMem->u.pRowSet!=0 );
-    pMem->flags = MEM_RowSet|MEM_Dyn;
+    pMem->flags = MEM_RowSet;
   }
 }
 

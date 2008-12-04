@@ -4302,6 +4302,7 @@ case OP_RowSetAdd: {       /* in2 */
   assert( (pVal->flags & MEM_Int)!=0 );
   if( (pIdx->flags & MEM_RowSet)==0 ){
     sqlite3VdbeMemSetRowSet(pIdx);
+    if( (pIdx->flags & MEM_RowSet)==0 ) goto no_mem;
   }
   sqlite3RowSetInsert(pIdx->u.pRowSet, pVal->u.i);
   break;
