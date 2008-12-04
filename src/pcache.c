@@ -578,4 +578,3 @@ void sqlite3PcacheIterateDirty(PCache *pCache, void (*xIter)(PgHdr *)){
   }
 }
 #endif
-
