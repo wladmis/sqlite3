@@ -3152,7 +3152,7 @@ static int selectExpander(Walker *pWalker, Select *p){
               continue;
             }
 
-            if( i>0 ){
+            if( i>0 && zTName==0 ){
               struct SrcList_item *pLeft = &pTabList->a[i-1];
               if( (pLeft[1].jointype & JT_NATURAL)!=0 &&
                         columnIndex(pLeft->pTab, zName)>=0 ){
