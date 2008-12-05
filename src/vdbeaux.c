@@ -213,9 +213,10 @@ int sqlite3VdbeMakeLabel(Vdbe *p){
   i = p->nLabel++;
   assert( p->magic==VDBE_MAGIC_INIT );
   if( i>=p->nLabelAlloc ){
-    p->nLabelAlloc = p->nLabelAlloc*2 + 10;
+    int n = p->nLabelAlloc*2 + 5;
     p->aLabel = sqlite3DbReallocOrFree(p->db, p->aLabel,
-                                    p->nLabelAlloc*sizeof(p->aLabel[0]));
+                                       n*sizeof(p->aLabel[0]));
+    p->nLabelAlloc = sqlite3DbMallocSize(p->db, p->aLabel)/sizeof(p->aLabel[0]);
   }
   if( p->aLabel ){
     p->aLabel[i] = -1;

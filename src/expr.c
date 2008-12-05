@@ -835,7 +835,7 @@ ExprList *sqlite3ExprListAppend(
       goto no_mem;
     }
     pList->a = a;
-    pList->nAlloc = n;
+    pList->nAlloc = sqlite3DbMallocSize(db, a)/sizeof(a[0]);
   }
   assert( pList->a!=0 );
   if( pExpr || pName ){
