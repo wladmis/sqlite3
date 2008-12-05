@@ -508,7 +508,7 @@ void sqlite3VdbeMemSetRowSet(Mem *pMem){
     sqlite3RowSetClear(pMem->u.pRowSet);
   }else{
     sqlite3VdbeMemRelease(pMem);
-    pMem->zMalloc = sqlite3DbMallocRaw(db, 32);
+    pMem->zMalloc = sqlite3DbMallocRaw(db, 64);
   }
   if( db->mallocFailed ){
     pMem->flags = MEM_Null;
