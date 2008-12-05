@@ -116,7 +116,7 @@ static sqlite3_mutex *debugMutexAlloc(int id){
     }
     default: {
       assert( id-2 >= 0 );
-      assert( id-2 < sizeof(aStatic)/sizeof(aStatic[0]) );
+      assert( id-2 < (int)(sizeof(aStatic)/sizeof(aStatic[0])) );
       pNew = &aStatic[id-2];
       pNew->id = id;
       break;

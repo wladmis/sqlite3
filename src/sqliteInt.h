@@ -1517,7 +1517,7 @@ struct SrcList {
 */
 struct WhereLevel {
   int iFrom;            /* Which entry in the FROM clause */
-  int wsFlags;          /* "Where-Scan Flags" associated with this level */
+  int wsFlags;          /* "Where-Scan" flags show the choosen scan strategy */
   int iMem;             /* First memory cell used by this level */
   int iLeftJoin;        /* Memory cell used to implement LEFT OUTER JOIN */
   Index *pIdx;          /* Index used.  NULL if no index */

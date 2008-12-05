@@ -280,7 +280,7 @@ static int whereClauseInsert(WhereClause *pWC, Expr *p, int wtFlags){
 ** does is make slot[] entries point to substructure within pExpr.
 **
 ** In the previous sentence and in the diagram, "slot[]" refers to
-** the WhereClause.a[] array.  This array grows as needed to contain
+** the WhereClause.a[] array.  The slot[] array grows as needed to contain
 ** all terms of the WHERE clause.
 */
 static void whereSplit(WhereClause *pWC, Expr *pExpr, int op){
@@ -391,7 +391,7 @@ static int allowedOp(int op){
 }
 
 /*
-** Swap two objects of type T.
+** Swap two objects of type TYPE.
 */
 #define SWAP(TYPE,A,B) {TYPE t=A; A=B; B=t;}
 
