@@ -758,6 +758,7 @@ static KeyInfo *keyInfoFromExprList(Parse *pParse, ExprList *pList){
     pInfo->aSortOrder = (u8*)&pInfo->aColl[nExpr];
     pInfo->nField = nExpr;
     pInfo->enc = ENC(db);
+    pInfo->db = db;
     for(i=0, pItem=pList->a; i<nExpr; i++, pItem++){
       CollSeq *pColl;
       pColl = sqlite3ExprCollSeq(pParse, pItem->pExpr);
