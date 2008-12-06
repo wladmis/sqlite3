@@ -263,7 +263,9 @@ static int pcache1ResizeHash(PCache1 *p){
   }
 
   pcache1LeaveMutex();
+  if( p->nHash ){ sqlite3BeginBenignMalloc(); }
   apNew = (PgHdr1 **)sqlite3_malloc(sizeof(PgHdr1 *)*nNew);
+  if( p->nHash ){ sqlite3EndBenignMalloc(); }
   pcache1EnterMutex();
   if( apNew ){
     memset(apNew, 0, sizeof(PgHdr1 *)*nNew);
