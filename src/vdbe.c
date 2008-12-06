@@ -1687,6 +1687,7 @@ case OP_Ge: {             /* same as TK_GE, jump, in1, in3 */
   if( affinity ){
     applyAffinity(pIn1, affinity, encoding);
     applyAffinity(pIn3, affinity, encoding);
+    if( db->mallocFailed ) goto no_mem;
   }
 
   assert( pOp->p4type==P4_COLLSEQ || pOp->p4.pColl==0 );
