@@ -66,12 +66,6 @@ extern int isatty();
 #include <sys/time.h>
 #include <sys/resource.h>
 
-/*
-** Used to prevent warnings about unused parameters
-*/
-#define UNUSED_PARAMETER(x) (void)(x)
-
-
 /* Saved resource information for the beginning of an operation */
 static struct rusage sBegin;
 
@@ -114,6 +108,10 @@ static void endTimer(void){
 #define HAS_TIMER 0
 #endif
 
+/*
+** Used to prevent warnings about unused parameters
+*/
+#define UNUSED_PARAMETER(x) (void)(x)
 
 /*
 ** If the following flag is set, then command execution stops
