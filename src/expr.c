@@ -1725,10 +1725,14 @@ void sqlite3ExprHardCopy(Parse *pParse, int iReg, int nReg){
 static int codeAlias(Parse *pParse, int iAlias, Expr *pExpr, int target){
   sqlite3 *db = pParse->db;
   int iReg;
-  if( pParse->aAlias==0 ){
-    pParse->aAlias = sqlite3DbMallocZero(db, 
+  if( pParse->nAliasAlloc<pParse->nAlias ){
+    pParse->aAlias = sqlite3DbReallocOrFree(db, pParse->aAlias,
                                  sizeof(pParse->aAlias[0])*pParse->nAlias );
+    testcase( db->mallocFailed && pParse->nAliasAlloc>0 );
     if( db->mallocFailed ) return 0;
+    memset(&pParse->aAlias[pParse->nAliasAlloc], 0,
+           (pParse->nAlias-pParse->nAliasAlloc)*sizeof(pParse->aAlias[0]));
+    pParse->nAliasAlloc = pParse->nAlias;
   }
   assert( iAlias>0 && iAlias<=pParse->nAlias );
   iReg = pParse->aAlias[iAlias-1];

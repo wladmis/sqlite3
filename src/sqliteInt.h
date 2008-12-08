@@ -1752,6 +1752,7 @@ struct Parse {
   int nVarExprAlloc;   /* Number of allocated slots in apVarExpr[] */
   Expr **apVarExpr;    /* Pointers to :aaa and $aaaa wildcard expressions */
   int nAlias;          /* Number of aliased result set columns */
+  int nAliasAlloc;     /* Number of allocated slots for aAlias[] */
   int *aAlias;         /* Register used to hold aliased result */
   u8 explain;          /* True if the EXPLAIN flag is found on the query */
   Token sErrToken;     /* The token at which the error occurred */
