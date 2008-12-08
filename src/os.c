@@ -142,8 +142,8 @@ void *sqlite3OsDlOpen(sqlite3_vfs *pVfs, const char *zPath){
 void sqlite3OsDlError(sqlite3_vfs *pVfs, int nByte, char *zBufOut){
   pVfs->xDlError(pVfs, nByte, zBufOut);
 }
-void *sqlite3OsDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
-  return pVfs->xDlSym(pVfs, pHandle, zSymbol);
+void (*sqlite3OsDlSym(sqlite3_vfs *pVfs, void *pHdle, const char *zSym))(void){
+  return pVfs->xDlSym(pVfs, pHdle, zSym);
 }
 void sqlite3OsDlClose(sqlite3_vfs *pVfs, void *pHandle){
   pVfs->xDlClose(pVfs, pHandle);

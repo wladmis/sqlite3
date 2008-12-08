@@ -335,6 +335,7 @@ int main(int argc, char **argv){
   int nChar;
   int totalLen = 0;
   int aHash[1000];  /* 1000 is much bigger than nKeyword */
+  char zText[2000];
 
   /* Remove entries from the list of keywords that have mask==0 */
   for(i=j=0; i<nKeyword; i++){
@@ -463,20 +464,43 @@ int main(int argc, char **argv){
   printf("static int keywordCode(const char *z, int n){\n");
   printf("  /* zText[] encodes %d bytes of keywords in %d bytes */\n",
           totalLen + nKeyword, nChar+1 );
-
-  printf("  static const char zText[%d] =\n", nChar+1);
-  for(i=j=0; i<nKeyword; i++){
+  for(i=j=k=0; i<nKeyword; i++){
     Keyword *p = &aKeywordTable[i];
     if( p->substrId ) continue;
-    if( j==0 ) printf("    \"");
+    memcpy(&zText[k], p->zName, p->len);
+    k += p->len;
+    if( j+p->len>70 ){
+      printf("%*s */\n", 74-j, "");
+      j = 0;
+    }
+    if( j==0 ){
+      printf("  /*   ");
+      j = 8;
+    }
     printf("%s", p->zName);
     j += p->len;
-    if( j>60 ){
-      printf("\"\n");
+  }
+  if( j>0 ){
+    printf("%*s */\n", 74-j, "");
+  }
+  printf("  static const char zText[%d] = {\n", nChar+1);
+  for(i=j=0; i<=k; i++){
+    if( j==0 ){
+      printf("    ");
+    }
+    if( zText[i]==0 ){
+      printf("0");
+    }else{
+      printf("'%c',", zText[i]);
+    }
+    j += 4;
+    if( j>68 ){
+      printf("\n");
       j = 0;
     }
   }
-  printf("%s;\n", j>0 ? "\"" : "  ");
+  if( j>0 ) printf("\n");
+  printf("  };\n");
 
   printf("  static const unsigned char aHash[%d] = {\n", bestSize);
   for(i=j=0; i<bestSize; i++){

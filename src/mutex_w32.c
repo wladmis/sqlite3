@@ -243,6 +243,9 @@ sqlite3_mutex_methods *sqlite3DefaultMutex(void){
 #ifdef SQLITE_DEBUG
     winMutexHeld,
     winMutexNotheld
+#else
+    0,
+    0
 #endif
   };
 

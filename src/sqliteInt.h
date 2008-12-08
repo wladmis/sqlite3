@@ -1994,13 +1994,15 @@ struct Sqlite3Config {
   void *pPage;                      /* Page cache memory */
   int szPage;                       /* Size of each page in pPage[] */
   int nPage;                        /* Number of pages in pPage[] */
+  int mxParserStack;                /* maximum depth of the parser stack */
+  int sharedCacheEnabled;           /* true if shared-cache mode enabled */
+  /* The above might be initialized to non-zero.  The following need to always
+  ** initially be zero, however. */
   int isInit;                       /* True after initialization has finished */
   int inProgress;                   /* True while initialization in progress */
   int isMallocInit;                 /* True after malloc is initialized */
   sqlite3_mutex *pInitMutex;        /* Mutex used by sqlite3_initialize() */
   int nRefInitMutex;                /* Number of users of pInitMutex */
-  int mxParserStack;                /* maximum depth of the parser stack */
-  int sharedCacheEnabled;           /* true if shared-cache mode enabled */
 };
 
 /*
