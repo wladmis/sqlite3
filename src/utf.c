@@ -39,11 +39,13 @@
 #include <assert.h>
 #include "vdbeInt.h"
 
+#ifndef SQLITE_AMALGAMATION
 /*
 ** The following constant value is used by the SQLITE_BIGENDIAN and
 ** SQLITE_LITTLEENDIAN macros.
 */
 const int sqlite3one = 1;
+#endif /* SQLITE_AMALGAMATION */
 
 /*
 ** This lookup table is used to help decode the first byte of

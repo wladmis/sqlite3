@@ -32,7 +32,9 @@
 /*
 ** The version of the library
 */
+#ifndef SQLITE_AMALGAMATION
 const char sqlite3_version[] = SQLITE_VERSION;
+#endif
 const char *sqlite3_libversion(void){ return sqlite3_version; }
 int sqlite3_libversion_number(void){ return SQLITE_VERSION_NUMBER; }
 int sqlite3_threadsafe(void){ return SQLITE_THREADSAFE; }
