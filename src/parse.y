@@ -32,11 +32,13 @@
 // This code runs whenever there is a syntax error
 //
 %syntax_error {
+  UNUSED_PARAMETER(yymajor);  /* Silence some compiler warnings */
   assert( TOKEN.z[0] );  /* The tokenizer always gives us a token */
   sqlite3ErrorMsg(pParse, "near \"%T\": syntax error", &TOKEN);
   pParse->parseError = 1;
 }
 %stack_overflow {
+  UNUSED_PARAMETER(yypMinor); /* Silence some compiler warnings */
   sqlite3ErrorMsg(pParse, "parser stack overflow");
   pParse->parseError = 1;
 }
