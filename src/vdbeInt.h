@@ -114,6 +114,7 @@ typedef struct VdbeCursor VdbeCursor;
 struct Mem {
   union {
     i64 i;              /* Integer value. */
+    int nZero;          /* Used when bit MEM_Zero is set in flags */
     FuncDef *pDef;      /* Used only when flags==MEM_Agg */
     RowSet *pRowSet;    /* Used only when flags==MEM_RowSet */
   } u;
