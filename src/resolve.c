@@ -963,7 +963,7 @@ static int resolveSelectStep(Walker *pWalker, Select *p){
       if( pItem->pSelect ){
         const char *zSavedContext = pParse->zAuthContext;
         if( pItem->zName ) pParse->zAuthContext = pItem->zName;
-        sqlite3ResolveSelectNames(pParse, pItem->pSelect, &sNC);
+        sqlite3ResolveSelectNames(pParse, pItem->pSelect, pOuterNC /*&sNC*/);
         pParse->zAuthContext = zSavedContext;
         if( pParse->nErr || db->mallocFailed ) return WRC_Abort;
       }
