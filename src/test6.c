@@ -606,9 +606,9 @@ static void cfDlError(sqlite3_vfs *pCfVfs, int nByte, char *zErrMsg){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
   pVfs->xDlError(pVfs, nByte, zErrMsg);
 }
-static void *cfDlSym(sqlite3_vfs *pCfVfs, void *pHandle, const char *zSymbol){
+static void (*cfDlSym(sqlite3_vfs *pCfVfs, void *pH, const char *zSym))(void){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
-  return pVfs->xDlSym(pVfs, pHandle, zSymbol);
+  return pVfs->xDlSym(pVfs, pH, zSym);
 }
 static void cfDlClose(sqlite3_vfs *pCfVfs, void *pHandle){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pCfVfs->pAppData;
