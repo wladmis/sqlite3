@@ -2064,6 +2064,7 @@ int sqlite3StrICmp(const char *, const char *);
 int sqlite3StrNICmp(const char *, const char *, int);
 int sqlite3IsNumber(const char*, int*, u8);
 int sqlite3Strlen(sqlite3*, const char*);
+int sqlite3Strlen30(const char*);
 
 int sqlite3MallocInit(void);
 void sqlite3MallocEnd(void);

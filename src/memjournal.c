@@ -99,7 +99,7 @@ static int memjrnlRead(
     zOut += nCopy;
     nRead -= iSpace;
     iChunkOffset = 0;
-  } while( nRead>=0 && (pChunk=pChunk->pNext) && nRead>0 );
+  } while( nRead>=0 && (pChunk=pChunk->pNext)!=0 && nRead>0 );
   p->readpoint.iOffset = iOfst+iAmt;
   p->readpoint.pChunk = pChunk;
 

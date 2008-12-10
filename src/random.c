@@ -45,7 +45,7 @@ static SQLITE_WSD struct sqlite3PrngType {
 ** (Later):  Actually, OP_NewRowid does not depend on a good source of
 ** randomness any more.  But we will leave this code in all the same.
 */
-static int randomByte(void){
+static u8 randomByte(void){
   unsigned char t;
 
 
@@ -79,7 +79,7 @@ static int randomByte(void){
     wsdPrng.i = 0;
     sqlite3OsRandomness(sqlite3_vfs_find(0), 256, k);
     for(i=0; i<256; i++){
-      wsdPrng.s[i] = i;
+      wsdPrng.s[i] = (u8)i;
     }
     for(i=0; i<256; i++){
       wsdPrng.j += wsdPrng.s[i] + k[i];

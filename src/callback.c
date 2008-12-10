@@ -56,7 +56,7 @@ static void callCollNeeded(sqlite3 *db, const char *zName, int nName){
 static int synthCollSeq(sqlite3 *db, CollSeq *pColl){
   CollSeq *pColl2;
   char *z = pColl->zName;
-  int n = strlen(z);
+  int n = sqlite3Strlen30(z);
   int i;
   static const u8 aEnc[] = { SQLITE_UTF16BE, SQLITE_UTF16LE, SQLITE_UTF8 };
   for(i=0; i<3; i++){
@@ -287,7 +287,7 @@ void sqlite3FuncDefInsert(
   FuncDef *pDef        /* The function definition to insert */
 ){
   FuncDef *pOther;
-  int nName = strlen(pDef->zName);
+  int nName = sqlite3Strlen30(pDef->zName);
   u8 c1 = (u8)pDef->zName[0];
   int h = (sqlite3UpperToLower[c1] + nName) % ArraySize(pHash->a);
   pOther = functionSearch(pHash, h, pDef->zName, nName);

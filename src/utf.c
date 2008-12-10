@@ -288,7 +288,7 @@ int sqlite3VdbeMemTranslate(Mem *pMem, u8 desiredEnc){
         WRITE_UTF16BE(z, c);
       }
     }
-    pMem->n = z - zOut;
+    pMem->n = (int)(z - zOut);
     *z++ = 0;
   }else{
     assert( desiredEnc==SQLITE_UTF8 );
@@ -407,7 +407,7 @@ int sqlite3Utf8CharLen(const char *zIn, int nByte){
 int sqlite3Utf8To8(unsigned char *zIn){
   unsigned char *zOut = zIn;
   unsigned char *zStart = zIn;
-  unsigned char *zTerm = &zIn[strlen((char *)zIn)];
+  unsigned char *zTerm = &zIn[sqlite3Strlen30((char *)zIn)];
   u32 c;
 
   while( zIn[0] ){

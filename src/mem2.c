@@ -363,7 +363,7 @@ void sqlite3MemdebugBacktraceCallback(void (*xBacktrace)(int, int, void **)){
 ** Set the title string for subsequent allocations.
 */
 void sqlite3MemdebugSettitle(const char *zTitle){
-  unsigned int n = strlen(zTitle) + 1;
+  unsigned int n = sqlite3Strlen30(zTitle) + 1;
   sqlite3_mutex_enter(mem.mutex);
   if( n>=sizeof(mem.zTitle) ) n = sizeof(mem.zTitle)-1;
   memcpy(mem.zTitle, zTitle, n);

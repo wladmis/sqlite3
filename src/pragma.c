@@ -40,7 +40,7 @@ static int getSafetyLevel(const char *z){
   if( isdigit(*z) ){
     return atoi(z);
   }
-  n = strlen(z);
+  n = sqlite3Strlen30(z);
   for(i=0; i<ArraySize(iLength); i++){
     if( iLength[i]==n && sqlite3StrNICmp(&zText[iOffset[i]],z,n)==0 ){
       return iValue[i];
@@ -464,7 +464,7 @@ void sqlite3Pragma(
     if( zRight==0 ){
       eMode = PAGER_JOURNALMODE_QUERY;
     }else{
-      int n = strlen(zRight);
+      int n = sqlite3Strlen30(zRight);
       eMode = sizeof(azModeName)/sizeof(azModeName[0]) - 1;
       while( eMode>=0 && sqlite3StrNICmp(zRight, azModeName[eMode], n)!=0 ){
         eMode--;
@@ -1345,7 +1345,7 @@ void sqlite3Pragma(
 
 #if SQLITE_HAS_CODEC
   if( sqlite3StrICmp(zLeft, "key")==0 ){
-    sqlite3_key(db, zRight, strlen(zRight));
+    sqlite3_key(db, zRight, sqlite3Strlen30(zRight));
   }else
 #endif
 #if SQLITE_HAS_CODEC || defined(SQLITE_ENABLE_CEROD)

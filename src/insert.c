@@ -1272,10 +1272,10 @@ void sqlite3GenerateConstraintChecks(
         char zErrMsg[200];
         sqlite3_snprintf(ArraySize(zErrMsg), zErrMsg,
                          pIdx->nColumn>1 ? "columns " : "column ");
-        n1 = strlen(zErrMsg);
+        n1 = sqlite3Strlen30(zErrMsg);
         for(j=0; j<pIdx->nColumn && n1<ArraySize(zErrMsg)-30; j++){
           char *zCol = pTab->aCol[pIdx->aiColumn[j]].zName;
-          n2 = strlen(zCol);
+          n2 = sqlite3Strlen30(zCol);
           if( j>0 ){
             sqlite3_snprintf(ArraySize(zErrMsg)-n1, &zErrMsg[n1], ", ");
             n1 += 2;

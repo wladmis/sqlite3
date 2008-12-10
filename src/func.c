@@ -1253,7 +1253,8 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
 */
 static void setLikeOptFlag(sqlite3 *db, const char *zName, int flagVal){
   FuncDef *pDef;
-  pDef = sqlite3FindFunction(db, zName, strlen(zName), 2, SQLITE_UTF8, 0);
+  pDef = sqlite3FindFunction(db, zName, sqlite3Strlen30(zName),
+                             2, SQLITE_UTF8, 0);
   if( pDef ){
     pDef->flags = flagVal;
   }
