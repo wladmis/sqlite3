@@ -335,7 +335,8 @@ static void codeAttach(
   assert( v || db->mallocFailed );
   if( v ){
     sqlite3VdbeAddOp3(v, OP_Function, 0, regArgs+3-pFunc->nArg, regArgs+3);
-    sqlite3VdbeChangeP5(v, pFunc->nArg);
+    assert( pFunc->nArg==-1 || (pFunc->nArg&0xff)==pFunc->nArg );
+    sqlite3VdbeChangeP5(v, (u8)(pFunc->nArg));
     sqlite3VdbeChangeP4(v, -1, (char *)pFunc, P4_FUNCDEF);
 
     /* Code an OP_Expire. For an ATTACH statement, set P1 to true (expire this

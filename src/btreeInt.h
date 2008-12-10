@@ -375,10 +375,10 @@ struct BtShared {
 #endif
   u16 pageSize;         /* Total number of bytes on a page */
   u16 usableSize;       /* Number of usable bytes on each page */
-  int maxLocal;         /* Maximum local payload in non-LEAFDATA tables */
-  int minLocal;         /* Minimum local payload in non-LEAFDATA tables */
-  int maxLeaf;          /* Maximum local payload in a LEAFDATA table */
-  int minLeaf;          /* Minimum local payload in a LEAFDATA table */
+  u16 maxLocal;         /* Maximum local payload in non-LEAFDATA tables */
+  u16 minLocal;         /* Minimum local payload in non-LEAFDATA tables */
+  u16 maxLeaf;          /* Maximum local payload in a LEAFDATA table */
+  u16 minLeaf;          /* Minimum local payload in a LEAFDATA table */
   u8 inTransaction;     /* Transaction state */
   int nTransaction;     /* Number of open transactions (read + write) */
   void *pSchema;        /* Pointer to space allocated by sqlite3BtreeSchema() */
@@ -620,7 +620,7 @@ struct IntegrityCk {
 ** Read or write a two- and four-byte big-endian integer values.
 */
 #define get2byte(x)   ((x)[0]<<8 | (x)[1])
-#define put2byte(p,v) ((p)[0] = (v)>>8, (p)[1] = (v))
+#define put2byte(p,v) ((p)[0] = (u8)((v)>>8), (p)[1] = (u8)(v))
 #define get4byte sqlite3Get4byte
 #define put4byte sqlite3Put4byte
 

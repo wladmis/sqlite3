@@ -33,7 +33,7 @@ static void openStatTable(
   sqlite3 *db = pParse->db;
   Db *pDb;
   int iRootPage;
-  int createStat1 = 0;
+  u8 createStat1 = 0;
   Table *pStat;
   Vdbe *v = sqlite3GetVdbe(pParse);
 

@@ -3825,7 +3825,7 @@ int sqlite3PagerRollback(Pager *pPager){
 ** Return TRUE if the database file is opened read-only.  Return FALSE
 ** if the database is (in theory) writable.
 */
-int sqlite3PagerIsreadonly(Pager *pPager){
+u8 sqlite3PagerIsreadonly(Pager *pPager){
   return pPager->readOnly;
 }
 

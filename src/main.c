@@ -1201,11 +1201,14 @@ int sqlite3BtreeFactory(
 */
 const char *sqlite3_errmsg(sqlite3 *db){
   const char *z;
-  if( !db || db->mallocFailed ){
+  if( !db ){
     return sqlite3ErrStr(SQLITE_NOMEM);
   }
   if( !sqlite3SafetyCheckSickOrOk(db) ){
     return sqlite3ErrStr(SQLITE_MISUSE);
+  }
+  if( db->mallocFailed ){
+    return sqlite3ErrStr(SQLITE_NOMEM);
   }
   sqlite3_mutex_enter(db->mutex);
   assert( !db->mallocFailed );

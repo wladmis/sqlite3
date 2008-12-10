@@ -93,7 +93,7 @@ int sqlite3PagerBegin(DbPage*, int exFlag);
 int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, Pgno, int);
 int sqlite3PagerCommitPhaseTwo(Pager*);
 int sqlite3PagerRollback(Pager*);
-int sqlite3PagerIsreadonly(Pager*);
+u8 sqlite3PagerIsreadonly(Pager*);
 int sqlite3PagerStmtBegin(Pager*);
 int sqlite3PagerStmtCommit(Pager*);
 int sqlite3PagerStmtRollback(Pager*);
