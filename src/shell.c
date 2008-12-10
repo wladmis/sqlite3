@@ -14,6 +14,11 @@
 **
 ** $Id$
 */
+#if defined(_WIN32) || defined(WIN32)
+/* This needs to come before any includes for MSVC compiler */
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -48,6 +53,8 @@
 
 #if defined(_WIN32) || defined(WIN32)
 # include <io.h>
+#define isatty(h) _isatty(h)
+#define access(f,m) _access((f),(m))
 #else
 /* Make sure isatty() has a prototype.
 */
