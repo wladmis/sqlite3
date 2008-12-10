@@ -51,6 +51,16 @@ int sqlite3IsNaN(double x){
 }
 
 /*
+** Compute a string length that is limited to what can be stored in
+** lower 30 bits of a 32-bit signed integer.
+*/
+int sqlite3Strlen30(const char *z){
+  const char *z2 = z;
+  while( *z2 ){ z2++; }
+  return 0x3fffffff & (int)(z2 - z);
+}
+
+/*
 ** Return the length of a string, except do not allow the string length
 ** to exceed the SQLITE_LIMIT_LENGTH setting.
 */

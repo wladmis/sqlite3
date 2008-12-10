@@ -124,7 +124,7 @@ void sqlite3Update(
   int regOldRowid;       /* The old rowid */
   int regNewRowid;       /* The new rowid */
   int regData;           /* New data for the row */
-  int regRowSet;         /* Rowset of rows to be updated */
+  int regRowSet = 0;     /* Rowset of rows to be updated */
 
   sContext.pParse = 0;
   db = pParse->db;

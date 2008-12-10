@@ -2922,7 +2922,7 @@ static int flattenSubquery(
 **   2. There is a single expression in the result set, and it is
 **      either min(x) or max(x), where x is a column reference.
 */
-static int minMaxQuery(Select *p){
+static u8 minMaxQuery(Select *p){
   Expr *pExpr;
   ExprList *pEList = p->pEList;
 
