@@ -245,7 +245,7 @@ void sqlite3VXPrintf(
   const et_info *infop;      /* Pointer to the appropriate info structure */
   char buf[etBUFSIZE];       /* Conversion buffer */
   char prefix;               /* Prefix character.  "+" or "-" or " " or '\0'. */
-  etByte xtype;              /* Conversion paradigm */
+  etByte xtype = 0;          /* Conversion paradigm */
   char *zExtra;              /* Extra memory used for etTCLESCAPE conversions */
 #ifndef SQLITE_OMIT_FLOATING_POINT
   int  exp, e2;              /* exponent of real numbers */

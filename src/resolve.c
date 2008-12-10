@@ -219,7 +219,7 @@ static int lookupName(
     if( zDb==0 && zTab!=0 && cnt==0 && pParse->trigStack!=0 ){
       TriggerStack *pTriggerStack = pParse->trigStack;
       Table *pTab = 0;
-      u32 *piColMask;
+      u32 *piColMask = 0;
       if( pTriggerStack->newIdx != -1 && sqlite3StrICmp("new", zTab) == 0 ){
         pExpr->iTable = pTriggerStack->newIdx;
         assert( pTriggerStack->pTab );

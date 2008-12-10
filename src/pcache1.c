@@ -272,7 +272,7 @@ static int pcache1ResizeHash(PCache1 *p){
     for(i=0; i<p->nHash; i++){
       PgHdr1 *pPage;
       PgHdr1 *pNext = p->apHash[i];
-      while( (pPage = pNext) ){
+      while( (pPage = pNext)!=0 ){
         unsigned int h = pPage->iKey % nNew;
         pNext = pPage->pNext;
         pPage->pNext = apNew[h];
@@ -364,7 +364,7 @@ static void pcache1TruncateUnsafe(
   for(h=0; h<pCache->nHash; h++){
     PgHdr1 **pp = &pCache->apHash[h]; 
     PgHdr1 *pPage;
-    while( (pPage = *pp) ){
+    while( (pPage = *pp)!=0 ){
       if( pPage->iKey>=iLimit ){
         pcache1PinPage(pPage);
         *pp = pPage->pNext;

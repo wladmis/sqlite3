@@ -2034,7 +2034,7 @@ static int multiSelectOrderBy(
   int regOutA;          /* Address register for the output-A subroutine */
   int regOutB;          /* Address register for the output-B subroutine */
   int addrOutA;         /* Address of the output-A subroutine */
-  int addrOutB;         /* Address of the output-B subroutine */
+  int addrOutB = 0;     /* Address of the output-B subroutine */
   int addrEofA;         /* Address of the select-A-exhausted subroutine */
   int addrEofB;         /* Address of the select-B-exhausted subroutine */
   int addrAltB;         /* Address of the A<B subroutine */
@@ -3539,17 +3539,13 @@ int sqlite3Select(
     p->selFlags &= ~SF_Distinct;
   }
   sqlite3SelectPrep(pParse, p, 0);
+  pTabList = p->pSrc;
+  pEList = p->pEList;
   if( pParse->nErr || db->mallocFailed ){
     goto select_end;
   }
   p->pOrderBy = pOrderBy;
-
-
-  /* Make local copies of the parameters for this query.
-  */
-  pTabList = p->pSrc;
   isAgg = (p->selFlags & SF_Aggregate)!=0;
-  pEList = p->pEList;
   if( pEList==0 ) goto select_end;
 
   /* 
