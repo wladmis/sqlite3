@@ -129,7 +129,6 @@ struct IncrblobChannel {
   IncrblobChannel *pPrev;   /* Linked list of all open incrblob channels */
 };
 
-#ifndef SQLITE_AMALGAMATION
 /*
 ** Compute a string length that is limited to what can be stored in
 ** lower 30 bits of a 32-bit signed integer.
@@ -139,7 +138,6 @@ static int strlen30(const char *z){
   while( *z2 ){ z2++; }
   return 0x3fffffff & (int)(z2 - z);
 }
-#endif
 
 
 #ifndef SQLITE_OMIT_INCRBLOB
