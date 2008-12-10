@@ -255,7 +255,7 @@ int sqlite3VdbeMemFinalize(Mem *pMem, FuncDef *pFunc){
     pFunc->xFinalize(&ctx);
     assert( 0==(pMem->flags&MEM_Dyn) && !pMem->xDel );
     sqlite3DbFree(pMem->db, pMem->zMalloc);
-    *pMem = ctx.s;
+    memcpy(pMem, &ctx.s, sizeof(ctx.s));
     rc = (ctx.isError?SQLITE_ERROR:SQLITE_OK);
   }
   return rc;
