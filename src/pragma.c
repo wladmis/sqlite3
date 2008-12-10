@@ -38,7 +38,7 @@ static u8 getSafetyLevel(const char *z){
   static const u8 iValue[] =  {1, 0, 0, 0, 1, 1, 2};
   int i, n;
   if( isdigit(*z) ){
-    return atoi(z);
+    return (u8)atoi(z);
   }
   n = sqlite3Strlen30(z);
   for(i=0; i<ArraySize(iLength); i++){

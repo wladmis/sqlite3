@@ -915,7 +915,7 @@ static void trimFunc(
       for(z=zCharSet, nChar=0; *z; nChar++){
         azChar[nChar] = (unsigned char *)z;
         SQLITE_SKIP_UTF8(z);
-        aLen[nChar] = (int)(z - azChar[nChar]);
+        aLen[nChar] = (u8)(z - azChar[nChar]);
       }
     }
   }

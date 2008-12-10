@@ -920,7 +920,7 @@ int sqlite3CreateFunc(
   ** is being overridden/deleted but there are no active VMs, allow the
   ** operation to continue but invalidate all precompiled statements.
   */
-  p = sqlite3FindFunction(db, zFunctionName, nName, (u16)nArg, enc, 0);
+  p = sqlite3FindFunction(db, zFunctionName, nName, nArg, (u8)enc, 0);
   if( p && p->iPrefEnc==enc && p->nArg==nArg ){
     if( db->activeVdbeCnt ){
       sqlite3Error(db, SQLITE_BUSY, 
@@ -932,7 +932,7 @@ int sqlite3CreateFunc(
     }
   }
 
-  p = sqlite3FindFunction(db, zFunctionName, nName, (u16)nArg, enc, 1);
+  p = sqlite3FindFunction(db, zFunctionName, nName, nArg, (u8)enc, 1);
   assert(p || db->mallocFailed);
   if( !p ){
     return SQLITE_NOMEM;
