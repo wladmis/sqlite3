@@ -96,7 +96,7 @@ static int sqlite3MemSize(void *pPrior){
   if( pPrior==0 ) return 0;
   p = (sqlite3_int64*)pPrior;
   p--;
-  return p[0];
+  return (int)p[0];
 }
 
 /*

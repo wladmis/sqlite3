@@ -522,7 +522,7 @@ static int parseModifier(const char *zMod, DateTime *p){
   char *z, zBuf[30];
   z = zBuf;
   for(n=0; n<ArraySize(zBuf)-1 && zMod[n]; n++){
-    z[n] = tolower(zMod[n]);
+    z[n] = (char)sqlite3UpperToLower[(u8)zMod[n]];
   }
   z[n] = 0;
   switch( z[0] ){

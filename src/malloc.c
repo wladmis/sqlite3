@@ -50,7 +50,7 @@ void sqlite3_soft_heap_limit(int n){
   }else{
     sqlite3MemoryAlarm(0, 0, 0);
   }
-  overage = sqlite3_memory_used() - n;
+  overage = (int)(sqlite3_memory_used() - (i64)n);
   if( overage>0 ){
     sqlite3_release_memory(overage);
   }
@@ -385,7 +385,7 @@ void sqlite3ScratchFree(void *p){
       }
     }else{
       int i;
-      i = (u8 *)p - (u8 *)sqlite3GlobalConfig.pScratch;
+      i = (int)((u8*)p - (u8*)sqlite3GlobalConfig.pScratch);
       i /= sqlite3GlobalConfig.szScratch;
       assert( i>=0 && i<sqlite3GlobalConfig.nScratch );
       sqlite3_mutex_enter(mem0.mutex);

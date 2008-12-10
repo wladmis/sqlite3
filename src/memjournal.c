@@ -91,7 +91,7 @@ static int memjrnlRead(
     pChunk = p->readpoint.pChunk;
   }
 
-  iChunkOffset = (iOfst%JOURNAL_CHUNKSIZE);
+  iChunkOffset = (int)(iOfst%JOURNAL_CHUNKSIZE);
   do {
     int iSpace = JOURNAL_CHUNKSIZE - iChunkOffset;
     int nCopy = MIN(nRead, (JOURNAL_CHUNKSIZE - iChunkOffset));
@@ -127,7 +127,7 @@ static int memjrnlWrite(
 
   while( nWrite>0 ){
     FileChunk *pChunk = p->endpoint.pChunk;
-    int iChunkOffset = p->endpoint.iOffset%JOURNAL_CHUNKSIZE;
+    int iChunkOffset = (int)(p->endpoint.iOffset%JOURNAL_CHUNKSIZE);
     int iSpace = MIN(nWrite, JOURNAL_CHUNKSIZE - iChunkOffset);
 
     if( iChunkOffset==0 ){

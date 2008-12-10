@@ -2354,8 +2354,8 @@ int sqlite3Utf8Read(const u8*, const u8*, const u8**);
 */
 int sqlite3PutVarint(unsigned char*, u64);
 int sqlite3PutVarint32(unsigned char*, u32);
-int sqlite3GetVarint(const unsigned char *, u64 *);
-int sqlite3GetVarint32(const unsigned char *, u32 *);
+u8 sqlite3GetVarint(const unsigned char *, u64 *);
+u8 sqlite3GetVarint32(const unsigned char *, u32 *);
 int sqlite3VarintLen(u64 v);
 
 /*
@@ -2375,8 +2375,8 @@ int sqlite3VarintLen(u64 v);
 **     x = putVarint32( A, B );
 **
 */
-#define getVarint32(A,B)  ((*(A)<(unsigned char)0x80) ? ((B) = (u32)*(A)),1 : sqlite3GetVarint32((A), (u32 *)&(B)))
-#define putVarint32(A,B)  (((u32)(B)<(u32)0x80) ? (*(A) = (unsigned char)(B)),1 : sqlite3PutVarint32((A), (B)))
+#define getVarint32(A,B)  (u8)((*(A)<(u8)0x80) ? ((B) = (u32)*(A)),1 : sqlite3GetVarint32((A), (u32 *)&(B)))
+#define putVarint32(A,B)  (u8)(((u32)(B)<(u32)0x80) ? (*(A) = (unsigned char)(B)),1 : sqlite3PutVarint32((A), (B)))
 #define getVarint    sqlite3GetVarint
 #define putVarint    sqlite3PutVarint
 

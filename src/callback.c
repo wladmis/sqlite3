@@ -381,7 +381,7 @@ FuncDef *sqlite3FindFunction(
   if( createFlag && (bestScore<6 || pBest->nArg!=nArg) && 
       (pBest = sqlite3DbMallocZero(db, sizeof(*pBest)+nName+1))!=0 ){
     pBest->zName = (char *)&pBest[1];
-    pBest->nArg = nArg;
+    pBest->nArg = (u16)nArg;
     pBest->iPrefEnc = enc;
     memcpy(pBest->zName, zName, nName);
     pBest->zName[nName] = 0;
