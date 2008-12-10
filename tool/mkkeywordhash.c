@@ -27,7 +27,7 @@ static const char zHdr[] =
 ;
 
 /*
-** All the keywords of the SQL language are stored as in a hash
+** All the keywords of the SQL language are stored in a hash
 ** table composed of instances of the following structure.
 */
 typedef struct Keyword Keyword;
