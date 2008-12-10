@@ -762,8 +762,8 @@ FuncDef *sqlite3VtabOverloadFunction(
   Table *pTab;
   sqlite3_vtab *pVtab;
   sqlite3_module *pMod;
-  void (*xFunc)(sqlite3_context*,int,sqlite3_value**);
-  void *pArg;
+  void (*xFunc)(sqlite3_context*,int,sqlite3_value**) = 0;
+  void *pArg = 0;
   FuncDef *pNew;
   int rc = 0;
   char *zLowerName;

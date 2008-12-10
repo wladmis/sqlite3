@@ -547,7 +547,6 @@ static int sqlite3Prepare(
   for(i=0; i<db->nDb; i++) {
     Btree *pBt = db->aDb[i].pBt;
     if( pBt ){
-      int rc;
       rc = sqlite3BtreeSchemaLocked(pBt);
       if( rc ){
         const char *zDb = db->aDb[i].zName;

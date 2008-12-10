@@ -394,9 +394,7 @@ void sqlite3Pragma(
   ** Return the number of pages in the specified database.
   */
   if( sqlite3StrICmp(zLeft,"page_count")==0 ){
-    Vdbe *v;
     int iReg;
-    v = sqlite3GetVdbe(pParse);
     if( !v || sqlite3ReadSchema(pParse) ) goto pragma_out;
     sqlite3CodeVerifySchema(pParse, iDb);
     iReg = ++pParse->nMem;
@@ -1309,7 +1307,6 @@ void sqlite3Pragma(
       "unlocked", "shared", "reserved", "pending", "exclusive"
     };
     int i;
-    Vdbe *v = sqlite3GetVdbe(pParse);
     sqlite3VdbeSetNumCols(v, 2);
     pParse->nMem = 2;
     sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "database", SQLITE_STATIC);

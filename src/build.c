@@ -2046,7 +2046,6 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
 
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     if( IsVirtual(pTab) ){
-      Vdbe *v = sqlite3GetVdbe(pParse);
       if( v ){
         sqlite3VdbeAddOp0(v, OP_VBegin);
       }
