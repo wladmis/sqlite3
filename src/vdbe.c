@@ -1466,9 +1466,7 @@ case OP_ForceInt: {            /* jump, in1 */
   }else{
     assert( pIn1->flags & MEM_Real );
     v = (sqlite3_int64)pIn1->r;
-    if( pIn1->r>(double)v ){
-      incrV = 1;
-    }
+    incrV = pIn1->r>(double)v ?1:0;
   }
   if( incrV ){
     if( v==LARGEST_INT64 ){
