@@ -4536,6 +4536,7 @@ static int file_control_lockproxy_test(
   {
     char *proxyPath = "test.proxy";
     char *testPath;
+    int rc;
     rc = sqlite3_file_control(db, NULL, SQLITE_SET_LOCKPROXYFILE, proxyPath);
     if( rc ){
       Tcl_SetObjResult(interp, Tcl_NewIntObj(rc)); return TCL_ERROR;

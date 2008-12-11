@@ -2936,7 +2936,7 @@ static int unixFileSize(sqlite3_file *id, i64 *pSize){
   return SQLITE_OK;
 }
 
-#if SQLITE_ENABLE_LOCKING_MODE && defined(__DARWIN__)
+#if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
 /*
 ** Handler for proxy-locking file-control verbs.  Defined below in the
 ** proxying locking division.
@@ -3451,7 +3451,7 @@ static int getTempname(int nBuf, char *zBuf){
   return SQLITE_OK;
 }
 
-#if SQLITE_ENABLE_LOCKING_MODE && defined(__DARWIN__)
+#if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
 /*
 ** Routine to transform a unixFile into a proxy-locking unixFile.
 ** Implementation in the proxy-lock division, but used by unixOpen()
