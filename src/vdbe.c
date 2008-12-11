@@ -2421,7 +2421,7 @@ case OP_AutoCommit: {
       sqlite3RollbackAll(db);
       db->autoCommit = 1;
     }else{
-      db->autoCommit = desiredAutoCommit;
+      db->autoCommit = (u8)desiredAutoCommit;
       if( sqlite3VdbeHalt(p)==SQLITE_BUSY ){
         p->pc = pc;
         db->autoCommit = (u8)(1-desiredAutoCommit);

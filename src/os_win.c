@@ -749,7 +749,9 @@ static int winSync(sqlite3_file *id, int flags){
   UNUSED_PARAMETER(id);
 #endif
   OSTRACE3("SYNC %d lock=%d\n", pFile->h, pFile->locktype);
-#ifdef SQLITE_TEST
+#ifndef SQLITE_TEST
+  UNUSED_PARAMETER(flags);
+#else
   if( flags & SQLITE_SYNC_FULL ){
     sqlite3_fullsync_count++;
   }
