@@ -65,7 +65,7 @@ proc scramble {inlist} {
   return $outlist
 }
 
-# A simple magnitude source.  Not trying to be efficient.
+# A simple selection sort.  Not trying to be efficient.
 #
 proc sort {inlist} {
   set outlist {}
