@@ -1975,11 +1975,10 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       assert( TK_NOT==OP_Not );
       testcase( op==TK_BITNOT );
       testcase( op==TK_NOT );
-      inReg = sqlite3ExprCodeTarget(pParse, pExpr->pLeft, target);
-      testcase( inReg==target );
-      testcase( usedAsColumnCache(pParse, inReg, inReg) );
-      inReg = sqlite3ExprWritableRegister(pParse, inReg, target);
-      sqlite3VdbeAddOp1(v, op, inReg);
+      r1 = sqlite3ExprCodeTemp(pParse, pExpr->pLeft, &regFree1);
+      testcase( regFree1==0 );
+      inReg = target;
+      sqlite3VdbeAddOp2(v, op, r1, inReg);
       break;
     }
     case TK_ISNULL:
