@@ -1050,7 +1050,7 @@ int sqlite3_os_end(void);
 **          S is a pointer to an aligned memory buffer not less than
 **          Z*N bytes in size shall cause S to be used by the
 **          [scratch memory allocator] for as many as N simulataneous
-**          allocations each of size Z.
+**          allocations each of size (Z & ~7).
 **
 ** {H14153} A successful call to [sqlite3_config]([SQLITE_CONFIG_SCRATCH],S,Z,N)
 **          where S is a NULL pointer shall disable the
@@ -1062,7 +1062,7 @@ int sqlite3_os_end(void);
 **          S is a pointer to an aligned memory buffer not less than
 **          Z*N bytes in size shall cause S to be used by the
 **          [pagecache memory allocator] for as many as N simulataneous
-**          allocations each of size Z.
+**          allocations each of size (Z & ~7).
 **
 ** {H14159} A successful call to
 **          [sqlite3_config]([SQLITE_CONFIG_PAGECACHE],S,Z,N)
