@@ -2416,7 +2416,7 @@ int sqlite3VdbeIdxRowid(BtCursor *pCur, i64 *rowid){
   (void)getVarint32((u8*)m.z, szHdr);
   testcase( szHdr==2 );
   testcase( szHdr==m.n );
-  if( unlikely(szHdr<2 || szHdr>m.n) ){
+  if( unlikely(szHdr<2 || (int)szHdr>m.n) ){
     goto idx_rowid_corruption;
   }
 
