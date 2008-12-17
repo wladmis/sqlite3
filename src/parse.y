@@ -118,6 +118,18 @@ cmd ::= COMMIT trans_opt.      {sqlite3CommitTransaction(pParse);}
 cmd ::= END trans_opt.         {sqlite3CommitTransaction(pParse);}
 cmd ::= ROLLBACK trans_opt.    {sqlite3RollbackTransaction(pParse);}
 
+savepoint_opt ::= SAVEPOINT.
+savepoint_opt ::= .
+cmd ::= SAVEPOINT nm(X). {
+  sqlite3Savepoint(pParse, SAVEPOINT_BEGIN, &X);
+}
+cmd ::= RELEASE savepoint_opt nm(X). {
+  sqlite3Savepoint(pParse, SAVEPOINT_RELEASE, &X);
+}
+cmd ::= ROLLBACK trans_opt TO savepoint_opt nm(X). {
+  sqlite3Savepoint(pParse, SAVEPOINT_ROLLBACK, &X);
+}
+
 ///////////////////// The CREATE TABLE statement ////////////////////////////
 //
 cmd ::= create_table create_table_args.

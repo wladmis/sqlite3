@@ -116,6 +116,9 @@ i64 sqlite3PagerJournalSizeLimit(Pager *, i64);
 void *sqlite3PagerTempSpace(Pager*);
 int sqlite3PagerSync(Pager *pPager);
 
+int sqlite3PagerOpenSavepoint(Pager *pPager, int n);
+int sqlite3PagerSavepoint(Pager *pPager, int op, int iSavepoint);
+
 #ifdef SQLITE_HAS_CODEC
   void sqlite3PagerSetCodec(Pager*,void*(*)(void*,void*,Pgno,int),void*);
 #endif

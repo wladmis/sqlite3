@@ -3312,6 +3312,23 @@ void sqlite3RollbackTransaction(Parse *pParse){
 }
 
 /*
+** This function is called by the parser when it parses a command to create,
+** release or rollback an SQL savepoint. 
+*/
+void sqlite3Savepoint(Parse *pParse, int op, Token *pName){
+  Vdbe *v;
+  if( pParse->nErr || pParse->db->mallocFailed ) return;
+
+  /* TODO: Invoke the authorization callback */
+
+  v = sqlite3GetVdbe(pParse);
+  if( v ){
+    const char *zName = (const char *)pName->z;
+    sqlite3VdbeAddOp4(v, OP_Savepoint, op, 0, 0, zName, pName->n);
+  }
+}
+
+/*
 ** Make sure the TEMP database is open and available for use.  Return
 ** the number of errors.  Leave any error messages in the pParse structure.
 */

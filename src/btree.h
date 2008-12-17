@@ -101,6 +101,7 @@ int sqlite3BtreeIsInReadTrans(Btree*);
 void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
 int sqlite3BtreeSchemaLocked(Btree *);
 int sqlite3BtreeLockTable(Btree *, int, u8);
+int sqlite3BtreeSavepoint(Btree *, int, int);
 
 const char *sqlite3BtreeGetFilename(Btree *);
 const char *sqlite3BtreeGetDirname(Btree *);
