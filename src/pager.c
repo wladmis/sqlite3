@@ -922,6 +922,11 @@ static void pager_reset(Pager *pPager){
   sqlite3PcacheClear(pPager->pPCache);
 }
 
+/*
+** Free all structures in the Pager.aSavepoint[] array and set both
+** Pager.aSavepoint and Pager.nSavepoint to zero. Close the sub-journal
+** if it is open and the pager is not in exclusive mode.
+*/
 static void releaseAllSavepoint(Pager *pPager){
   int ii;
   for(ii=0; ii<pPager->nSavepoint; ii++){
@@ -935,6 +940,10 @@ static void releaseAllSavepoint(Pager *pPager){
   pPager->nSavepoint = 0;
 }
 
+/*
+** Set the bit number pgno in the PagerSavepoint.pInSavepoint bitvecs of
+** all open savepoints.
+*/
 static int addToSavepointBitvecs(Pager *pPager, Pgno pgno){
   int ii;
   for(ii=0; ii<pPager->nSavepoint; ii++){
