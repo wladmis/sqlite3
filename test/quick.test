@@ -69,6 +69,7 @@ set EXCLUDE {
   onefile.test
   permutations.test
   quick.test
+  savepoint4.test
   select9.test
   soak.test
   speed1.test
