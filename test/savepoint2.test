@@ -18,6 +18,10 @@ source $testdir/tester.tcl
 # avtrans.test.
 #
 
+db close
+register_jt_vfs -default ""
+sqlite3 db test.db -vfs jt
+
 proc signature {} {
   return [db eval {SELECT count(*), md5sum(x) FROM t3}]
 }
@@ -144,6 +148,8 @@ for {set ii 2} {$ii < ($iterations+2)} {incr ii} {
 
 unset -nocomplain ::sig
 unset -nocomplain SQL
+
+unregister_jt_vfs
 
 finish_test
 
