@@ -240,6 +240,6 @@ int sqlite3IsMemJournal(sqlite3_file *pJfd){
 ** Return the number of bytes required to store a MemJournal that uses vfs
 ** pVfs to create the underlying on-disk files.
 */
-int sqlite3MemJournalSize(){
+int sqlite3MemJournalSize(void){
   return sizeof(MemJournal);
 }

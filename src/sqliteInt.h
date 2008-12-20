@@ -2572,7 +2572,7 @@ int sqlite3FindInIndex(Parse *, Expr *, int*);
 #endif
 
 void sqlite3MemJournalOpen(sqlite3_file *);
-int sqlite3MemJournalSize();
+int sqlite3MemJournalSize(void);
 int sqlite3IsMemJournal(sqlite3_file *);
 
 #if SQLITE_MAX_EXPR_DEPTH>0
