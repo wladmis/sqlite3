@@ -19,8 +19,7 @@ proc signature {} {
   return [db eval {SELECT count(*), md5sum(x) FROM t1}]
 }
 
-set ITERATIONS 3
-
+set ITERATIONS 25
 expr srand(0)
 
 do_test savepoint4-1 {
