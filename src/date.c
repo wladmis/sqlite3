@@ -448,7 +448,7 @@ static sqlite3_int64 localtimeOffset(DateTime *p){
   x.tz = 0;
   x.validJD = 0;
   computeJD(&x);
-  t = x.iJD/1000 - 210866760000LL;
+  t = x.iJD/1000 - 21086676*(i64)10000;
 #ifdef HAVE_LOCALTIME_R
   {
     struct tm sLocal;
@@ -550,7 +550,7 @@ static int parseModifier(const char *zMod, DateTime *p){
       ** seconds since 1970.  Convert to a real julian day number.
       */
       if( strcmp(z, "unixepoch")==0 && p->validJD ){
-        p->iJD = p->iJD/86400 + 210866760000000LL;
+        p->iJD = p->iJD/86400 + 21086676*(i64)10000000;
         clearYMD_HMS_TZ(p);
         rc = 0;
       }
