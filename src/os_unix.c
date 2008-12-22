@@ -3203,7 +3203,7 @@ static const sqlite3_io_methods *autolockIoFinderImpl(
     return &dotlockIoMethods;
   }
 }
-static const sqlite3_io_methods (*const autolockIoFinder)(const char*,int)
+static const sqlite3_io_methods *(*const autolockIoFinder)(const char*,int)
         = autolockIoFinderImpl;
 
 #endif /* defined(__DARWIN__) && SQLITE_ENABLE_LOCKING_STYLE */
