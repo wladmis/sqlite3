@@ -4008,7 +4008,7 @@ int sqlite3PagerSavepoint(Pager *pPager, int op, int iSavepoint){
     }
     pPager->nSavepoint = nNew;
 
-    if( op==SAVEPOINT_ROLLBACK ){
+    if( op==SAVEPOINT_ROLLBACK && pPager->jfd->pMethods ){
       PagerSavepoint *pSavepoint = (nNew==0)?0:&pPager->aSavepoint[nNew-1];
       rc = pagerPlaybackSavepoint(pPager, pSavepoint);
       assert(rc!=SQLITE_DONE);
