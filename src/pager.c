@@ -3289,6 +3289,7 @@ static int pager_write(PgHdr *pPg){
         */
         if( !pPager->noSync ){
           pPg->flags |= PGHDR_NEED_SYNC;
+          pPager->needSync = 1;
         }
 
         /* An error has occured writing to the journal file. The 
@@ -3305,13 +3306,11 @@ static int pager_write(PgHdr *pPg){
       }else{
         if( !pPager->journalStarted && !pPager->noSync ){
           pPg->flags |= PGHDR_NEED_SYNC;
+          pPager->needSync = 1;
         }
         PAGERTRACE4("APPEND %d page %d needSync=%d\n",
                 PAGERID(pPager), pPg->pgno,
                ((pPg->flags&PGHDR_NEED_SYNC)?1:0));
-      }
-      if( pPg->flags&PGHDR_NEED_SYNC ){
-        pPager->needSync = 1;
       }
     }
   
@@ -3409,6 +3408,7 @@ int sqlite3PagerWrite(DbPage *pDbPage){
             rc = pager_write(pPage);
             if( pPage->flags&PGHDR_NEED_SYNC ){
               needSync = 1;
+              assert(pPager->needSync);
             }
             sqlite3PagerUnref(pPage);
           }
