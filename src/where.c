@@ -3020,6 +3020,7 @@ WhereInfo *sqlite3WhereBegin(
     }
   }
   WHERETRACE(("*** Optimizer Finished ***\n"));
+  if( db->mallocFailed ) goto whereBeginError;
 
   /* If the total query only selects a single row, then the ORDER BY
   ** clause is irrelevant.
