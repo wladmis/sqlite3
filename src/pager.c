@@ -938,6 +938,7 @@ static void releaseAllSavepoint(Pager *pPager){
   sqlite3_free(pPager->aSavepoint);
   pPager->aSavepoint = 0;
   pPager->nSavepoint = 0;
+  pPager->stmtNRec = 0;
 }
 
 /*
@@ -3327,7 +3328,7 @@ static int pager_write(PgHdr *pPg){
       if( rc==SQLITE_OK ){
         rc = sqlite3OsWrite(pPager->sjfd, pData2, pPager->pageSize, offset+4);
       }
-      PAGERTRACE3("STMT-JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno);
+      PAGERTRACE3("STMT-JOURNAL %d page %d @ %d\n", PAGERID(pPager), pPg->pgno);
       if( rc!=SQLITE_OK ){
         return rc;
       }
@@ -3968,7 +3969,11 @@ int sqlite3PagerOpenSavepoint(Pager *pPager, int nSavepoint){
     for(/* no-op */; ii<nSavepoint; ii++){
       assert( pPager->dbSizeValid );
       aNew[ii].nOrig = pPager->dbSize;
-      aNew[ii].iOffset = (pPager->journalOpen ? pPager->journalOff : 0);
+      if( pPager->journalOpen && pPager->journalOff>0 ){
+        aNew[ii].iOffset = pPager->journalOff;
+      }else{
+        aNew[ii].iOffset = JOURNAL_HDR_SZ(pPager);
+      }
       aNew[ii].iSubRec = pPager->stmtNRec;
       aNew[ii].pInSavepoint = sqlite3BitvecCreate(pPager->dbSize);
       if( !aNew[ii].pInSavepoint ){
