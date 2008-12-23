@@ -1181,6 +1181,7 @@ static int getAndInitPage(
 */
 static void releasePage(MemPage *pPage){
   if( pPage ){
+    assert( pPage->nOverflow==0 || sqlite3PagerPageRefcount(pPage->pDbPage)>1 );
     assert( pPage->aData );
     assert( pPage->pBt );
     assert( sqlite3PagerGetExtra(pPage->pDbPage) == (void*)pPage );
@@ -5751,6 +5752,9 @@ static int balance_deeper(BtCursor *pCur){
 #ifndef SQLITE_OMIT_AUTOVACUUM
       if( rc==SQLITE_OK ){
         rc = setChildPtrmaps(pChild);
+      }
+      if( rc ){
+        pChild->nOverflow = 0;
       }
 #endif
     }
