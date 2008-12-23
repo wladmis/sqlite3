@@ -1499,11 +1499,11 @@ struct SrcList {
     Select *pSelect;  /* A SELECT statement used in place of a table name */
     u8 isPopulated;   /* Temporary table associated with SELECT is populated */
     u8 jointype;      /* Type of join between this able and the previous */
+    u8 notIndexed;    /* True if there is a NOT INDEXED clause */
     int iCursor;      /* The VDBE cursor number used to access this table */
     Expr *pOn;        /* The ON clause of a join */
     IdList *pUsing;   /* The USING clause of a join */
     Bitmask colUsed;  /* Bit N (1<<N) set if column N or pTab is used */
-    u8 notIndexed;    /* True if there is a NOT INDEXED clause */
     char *zIndex;     /* Identifier from "INDEXED BY <zIndex>" clause */
     Index *pIndex;    /* Index structure corresponding to zIndex, if any */
   } a[1];             /* One entry for each identifier on the list */
