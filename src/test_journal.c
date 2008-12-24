@@ -327,7 +327,9 @@ static int readJournalFile(jt_file *p, jt_file *pMain){
       if( rc==SQLITE_OK ){
         pgno = decodeUint32(zBuf);
         iOff += (8 + pMain->nPagesize);
-        sqlite3BitvecSet(pMain->pWritable, pgno);
+        if( pgno>0 && pgno<=pMain->nPage ){
+          sqlite3BitvecSet(pMain->pWritable, pgno);
+        }
       }
     }
 
@@ -446,8 +448,10 @@ static int jtOpen(
   int rc;
   jt_file *p = (jt_file *)pFile;
   p->pReal = (sqlite3_file *)&p[1];
+  p->pReal->pMethods = 0;
   rc = sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
-  if( p->pReal->pMethods ){
+  assert( rc==SQLITE_OK || p->pReal->pMethods==0 );
+  if( rc==SQLITE_OK ){
     pFile->pMethods = &jt_io_methods;
     p->eLock = 0;
     p->zName = zName;
