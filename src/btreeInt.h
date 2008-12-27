@@ -371,7 +371,6 @@ struct BtShared {
 #ifndef SQLITE_OMIT_AUTOVACUUM
   u8 autoVacuum;        /* True if auto-vacuum is enabled */
   u8 incrVacuum;        /* True if incr-vacuum is enabled */
-  Pgno nTrunc;          /* Non-zero if the db will be truncated (incr vacuum) */
 #endif
   u16 pageSize;         /* Total number of bytes on a page */
   u16 usableSize;       /* Number of usable bytes on each page */

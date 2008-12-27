@@ -119,6 +119,11 @@ int sqlite3PagerSync(Pager *pPager);
 int sqlite3PagerOpenSavepoint(Pager *pPager, int n);
 int sqlite3PagerSavepoint(Pager *pPager, int op, int iSavepoint);
 
+#ifndef SQLITE_OMIT_AUTOVACUUM
+  void sqlite3PagerTruncateImage(Pager*,Pgno);
+  Pgno sqlite3PagerImageSize(Pager *);
+#endif
+
 #ifdef SQLITE_HAS_CODEC
   void sqlite3PagerSetCodec(Pager*,void*(*)(void*,void*,Pgno,int),void*);
 #endif
