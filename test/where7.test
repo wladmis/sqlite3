@@ -89,6 +89,17 @@ do_test where7-1.10 {
     SELECT a FROM t1 WHERE (b=3 OR c>=10 OR c=4 OR b>10)
   }
 } {2 4 5 scan 0}
+do_test where7-1.11 {
+  count_steps {
+    SELECT a FROM t1 WHERE (d=5 AND b=3) OR c==100;
+  }
+} {2 5 scan 0}
+do_test where7-1.12 {
+breakpoint
+  count_steps {
+    SELECT a FROM t1 WHERE (b BETWEEN 2 AND 4) OR c=100
+  }
+} {1 2 3 5 scan 0}
 
 
 finish_test
