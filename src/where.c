@@ -1877,6 +1877,12 @@ static void bestIndex(
         pCost->nRow = nRow;
         pCost->plan.wsFlags = WHERE_MULTI_OR;
         pCost->plan.u.pTerm = pTerm;
+        if( pOrderBy!=0
+         && sortableByRowid(iCur, pOrderBy, pWC->pMaskSet, &rev)
+         && !rev
+        ){
+          pCost->plan.wsFlags = WHERE_ORDERBY|WHERE_MULTI_OR;
+        }
       }
     }
   }
@@ -2426,6 +2432,7 @@ static Bitmask codeOneLoopStart(
     pLevel->op = bRev ? OP_Prev : OP_Next;
     pLevel->p1 = iCur;
     pLevel->p2 = start;
+    pLevel->p5 = (pStart==0 && pEnd==0) ?1:0;
     codeRowSetEarly = regRowSet>=0 ? whereRowReadyForOutput(pWC) : 0;
     if( codeRowSetEarly || testOp!=OP_Noop ){
       int r1 = sqlite3GetTempReg(pParse);
