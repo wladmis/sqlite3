@@ -2943,7 +2943,6 @@ WhereInfo *sqlite3WhereBegin(
   Vdbe *v = pParse->pVdbe;   /* The virtual database engine */
   Bitmask notReady;          /* Cursors that are not yet positioned */
   WhereMaskSet *pMaskSet;    /* The expression mask set */
-  //WhereClause wc;          /* The WHERE clause is divided into these terms */
   WhereClause *pWC;               /* Decomposition of the WHERE clause */
   struct SrcList_item *pTabItem;  /* A single entry from pTabList */
   WhereLevel *pLevel;             /* A single level in the pWInfo list */
