@@ -3182,6 +3182,8 @@ WhereInfo *sqlite3WhereBegin(
       if( (pLevel->plan.wsFlags & WHERE_INDEXED)!=0 ){
         zMsg = sqlite3MAppendf(db, zMsg, "%s WITH INDEX %s",
            zMsg, pLevel->plan.u.pIdx->zName);
+      }else if( pLevel->plan.wsFlags & WHERE_MULTI_OR ){
+        zMsg = sqlite3MAppendf(db, zMsg, "%s VIA MULTI-INDEX UNION", zMsg);
       }else if( pLevel->plan.wsFlags & (WHERE_ROWID_EQ|WHERE_ROWID_RANGE) ){
         zMsg = sqlite3MAppendf(db, zMsg, "%s USING PRIMARY KEY", zMsg);
       }
