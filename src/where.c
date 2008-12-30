@@ -1840,7 +1840,6 @@ static void bestIndex(
   for(i=0, pTerm=pWC->a; i<pWC->nTerm; i++, pTerm++){
     WhereClause tempWC;
     tempWC = *pWC;
-    tempWC.nSlot = 1;
     if( pTerm->eOperator==WO_OR 
         && ((pTerm->prereqAll & ~maskSrc) & notReady)==0
         && (pTerm->u.pOrInfo->indexable & maskSrc)!=0 ){
@@ -1851,11 +1850,13 @@ static void bestIndex(
       double nRow = 0;
       for(j=0, pOrTerm=pOrWC->a; j<pOrWC->nTerm; j++, pOrTerm++){
         WhereCost sTermCost;
+        WHERETRACE(("... Multi-index OR testing for term %d of %d....\n", j,i));
         if( pOrTerm->eOperator==WO_AND ){
           WhereClause *pAndWC = &pOrTerm->u.pAndInfo->wc;
           bestIndex(pParse, pAndWC, pSrc, notReady, 0, &sTermCost);
         }else if( pOrTerm->leftCursor==iCur ){
           tempWC.a = pOrTerm;
+          tempWC.nTerm = 1;
           bestIndex(pParse, &tempWC, pSrc, notReady, 0, &sTermCost);
         }else{
           continue;
@@ -1867,6 +1868,8 @@ static void bestIndex(
         rTotal += sTermCost.rCost;
         nRow += sTermCost.nRow;
       }
+      WHERETRACE(("... multi-index OR cost=%.9g nrow=%.9g\n",
+                  rTotal, nRow));
       if( rTotal<pCost->rCost ){
         pCost->rCost = rTotal;
         pCost->nRow = nRow;

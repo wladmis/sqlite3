@@ -106,6 +106,17 @@ do_test where7-1.13 {
   }
 } {5 4 1 scan 0 sort 1}
 
+do_test where7-1.14 {
+  count_steps {
+    SELECT a FROM t1 WHERE (d=8 OR c=6 OR b=4) AND +a>0
+  }
+} {3 scan 4 sort 0}
+do_test where7-1.15 {
+  count_steps {
+    SELECT a FROM t1 WHERE +a>=0 AND (d=8 OR c=6 OR b=4)
+  }
+} {3 scan 4 sort 0}
+
 do_test where7-1.20 {
   set sql "SELECT a FROM t1 WHERE a=11 OR b=11"
   for {set i 12} {$i<400} {incr i} {

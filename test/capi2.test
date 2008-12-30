@@ -722,7 +722,6 @@ ifcapable view&&subquery {
     check_origins {SELECT b, a FROM (SELECT col1 AS a, col2 AS b FROM view1)}
   } [list {main tab1 col2} {main tab1 col1}]
   do_test capi2-12.5 {
-breakpoint
     check_origins {SELECT (SELECT col2 FROM view1), (SELECT col1 FROM view1)}
   } [list {main tab1 col2} {main tab1 col1}]
   do_test capi2-12.6 {

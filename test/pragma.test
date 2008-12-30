@@ -570,7 +570,6 @@ ifcapable tempdb {
   } {0 col_main {} 0 {} 0}
 }
 
-breakpoint
 do_test pragma-6.7 {
   execsql {
     CREATE TABLE test_table(
