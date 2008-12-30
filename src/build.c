@@ -3316,15 +3316,18 @@ void sqlite3RollbackTransaction(Parse *pParse){
 ** release or rollback an SQL savepoint. 
 */
 void sqlite3Savepoint(Parse *pParse, int op, Token *pName){
-  Vdbe *v;
-  if( pParse->nErr || pParse->db->mallocFailed ) return;
-
-  /* TODO: Invoke the authorization callback */
-
-  v = sqlite3GetVdbe(pParse);
-  if( v ){
-    const char *zName = (const char *)pName->z;
-    sqlite3VdbeAddOp4(v, OP_Savepoint, op, 0, 0, zName, pName->n);
+  char *zName = sqlite3NameFromToken(pParse->db, pName);
+  if( zName ){
+    Vdbe *v = sqlite3GetVdbe(pParse);
+#ifndef SQLITE_OMIT_AUTHORIZATION
+    static const char *az[] = { "BEGIN", "RELEASE", "ROLLBACK" };
+    assert( !SAVEPOINT_BEGIN && SAVEPOINT_RELEASE==1 && SAVEPOINT_ROLLBACK==2 );
+#endif
+    if( !v || sqlite3AuthCheck(pParse, SQLITE_SAVEPOINT, az[op], zName, 0) ){
+      sqlite3DbFree(pParse->db, zName);
+      return;
+    }
+    sqlite3VdbeAddOp4(v, OP_Savepoint, op, 0, 0, zName, P4_DYNAMIC);
   }
 }
 

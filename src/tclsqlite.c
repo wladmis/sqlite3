@@ -809,6 +809,7 @@ static int auth_callback(
     case SQLITE_CREATE_VTABLE     : zCode="SQLITE_CREATE_VTABLE"; break;
     case SQLITE_DROP_VTABLE       : zCode="SQLITE_DROP_VTABLE"; break;
     case SQLITE_FUNCTION          : zCode="SQLITE_FUNCTION"; break;
+    case SQLITE_SAVEPOINT         : zCode="SQLITE_SAVEPOINT"; break;
     default                       : zCode="????"; break;
   }
   Tcl_DStringInit(&str);
