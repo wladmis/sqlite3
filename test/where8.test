@@ -404,6 +404,9 @@ do_test where8-4.1 {
 } {}
 
 catch {unset results}
+catch {unset A}
+catch {unset B}
+
 set A 2
 foreach idxsql {
   { 
@@ -472,6 +475,10 @@ foreach idxsql {
   }
   incr A
 }
+
+catch {unset results}
+catch {unset A}
+catch {unset B}
 
 finish_test
 
