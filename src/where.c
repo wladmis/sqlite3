@@ -576,14 +576,12 @@ static WhereTerm *findTerm(
         */
         assert(pX->pLeft);
         pColl = sqlite3BinaryCompareCollSeq(pParse, pX->pLeft, pX->pRight);
-        if( !pColl ){
-          pColl = pParse->db->pDfltColl;
-        }
+        assert(pColl || pParse->nErr);
 
         for(j=0; pIdx->aiColumn[j]!=iColumn; j++){
           if( NEVER(j>=pIdx->nColumn) ) return 0;
         }
-        if( sqlite3StrICmp(pColl->zName, pIdx->azColl[j]) ) continue;
+        if( pColl && sqlite3StrICmp(pColl->zName, pIdx->azColl[j]) ) continue;
       }
       return pTerm;
     }
