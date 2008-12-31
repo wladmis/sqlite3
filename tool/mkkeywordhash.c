@@ -485,8 +485,9 @@ int main(int argc, char **argv){
   if( j>0 ){
     printf("%*s */\n", 74-j, "");
   }
-  printf("  static const char zText[%d] = {\n", nChar+1);
-  for(i=j=0; i<=k; i++){
+  printf("  static const char zText[%d] = {\n", nChar);
+  zText[nChar] = 0;
+  for(i=j=0; i<k; i++){
     if( j==0 ){
       printf("    ");
     }
@@ -573,6 +574,10 @@ int main(int argc, char **argv){
   printf("  for(i=((int)aHash[h])-1; i>=0; i=((int)aNext[i])-1){\n");
   printf("    if( aLen[i]==n &&"
                    " sqlite3StrNICmp(&zText[aOffset[i]],z,n)==0 ){\n");
+  for(i=0; i<nKeyword; i++){
+    printf("      testcase( i==%d ); /* %s */\n",
+           i, aKeywordTable[i].zTokenType);
+  }
   printf("      return aCode[i];\n");
   printf("    }\n");
   printf("  }\n");
