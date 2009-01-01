@@ -119,6 +119,10 @@ do_test fts3expr-3.4 {
   test_fts3expr2 "(((ab OR cd)))"
 } {OR ab cd}
 
+do_test fts3expr-3.5 {
+  test_fts3expr2 "one AND (two NEAR three)"
+} {AND one {NEAR/10 two three}}
+
 #------------------------------------------------------------------------
 # The following tests, fts3expr-4.*, test the parsers response to syntax
 # errors in query expressions. This is done using a real fts3 table and
