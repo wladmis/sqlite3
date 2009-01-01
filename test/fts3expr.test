@@ -122,6 +122,28 @@ do_test fts3expr-3.4 {
 do_test fts3expr-3.5 {
   test_fts3expr2 "one AND (two NEAR three)"
 } {AND one {NEAR/10 two three}}
+do_test fts3expr-3.6 {
+  test_fts3expr2 "one (two NEAR three)"
+} {AND one {NEAR/10 two three}}
+do_test fts3expr-3.7 {
+  test_fts3expr2 "(two NEAR three) one"
+} {AND {NEAR/10 two three} one}
+do_test fts3expr-3.8 {
+  test_fts3expr2 "(two NEAR three) AND one"
+} {AND {NEAR/10 two three} one}
+do_test fts3expr-3.9 {
+  test_fts3expr2 "(two NEAR three) (four five)"
+} {AND {NEAR/10 two three} {AND four five}}
+do_test fts3expr-3.10 {
+  test_fts3expr2 "(two NEAR three) AND (four five)"
+} {AND {NEAR/10 two three} {AND four five}}
+do_test fts3expr-3.11 {
+  test_fts3expr2 "(two NEAR three) (four NEAR five)"
+} {AND {NEAR/10 two three} {NEAR/10 four five}}
+do_test fts3expr-3.12 {
+  test_fts3expr2 "(two NEAR three) OR (four NEAR five)"
+} {OR {NEAR/10 two three} {NEAR/10 four five}}
+
 
 #------------------------------------------------------------------------
 # The following tests, fts3expr-4.*, test the parsers response to syntax
