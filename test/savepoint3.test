@@ -28,7 +28,7 @@ do_malloc_test savepoint3-1 -sqlprep {
   RELEASE one;
 }
 
-do_malloc_test savepoint3-1 -sqlprep {
+do_malloc_test savepoint3-2 -sqlprep {
   PRAGMA cache_size = 10;
   CREATE TABLE t1(a, b, c);
   INSERT INTO t1 VALUES(randstr(400,400), randstr(400,400), randstr(400,400));
