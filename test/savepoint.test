@@ -524,7 +524,6 @@ ifcapable auth {
     set res [catchsql { RELEASE sp1 }]
     concat $::authdata $res
   } {SQLITE_SAVEPOINT RELEASE sp1 {} {} 1 {not authorized}}
-
 }
 
 

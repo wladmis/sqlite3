@@ -337,6 +337,19 @@ do_test fts3expr-4.2.1 {
 do_test fts3expr-4.2.2 {
   catchsql { SELECT * FROM t1 WHERE t1 MATCH 'example AND (hello OR world' }
 } {1 {SQL logic error or missing database}}
+do_test fts3expr-4.2.3 {
+  catchsql { SELECT * FROM t1 WHERE t1 MATCH '(hello' }
+} {1 {SQL logic error or missing database}}
+do_test fts3expr-4.2.4 {
+  catchsql { SELECT * FROM t1 WHERE t1 MATCH '(' }
+} {1 {SQL logic error or missing database}}
+do_test fts3expr-4.2.5 {
+  catchsql { SELECT * FROM t1 WHERE t1 MATCH ')' }
+} {1 {SQL logic error or missing database}}
+
+do_test fts3expr-4.2.6 {
+  catchsql { SELECT * FROM t1 WHERE t1 MATCH 'example (hello world' }
+} {1 {SQL logic error or missing database}}
 
 # Unterminated quotation marks:
 do_test fts3expr-4.3.1 {
