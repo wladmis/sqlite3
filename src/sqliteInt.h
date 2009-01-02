@@ -60,8 +60,10 @@
 #ifdef SQLITE_COVERAGE_TEST
   void sqlite3Coverage(int);
 # define testcase(X)  if( X ){ sqlite3Coverage(__LINE__); }
+# define TESTONLY(X)  X
 #else
 # define testcase(X)
+# define TESTONLY(X)
 #endif
 
 /*

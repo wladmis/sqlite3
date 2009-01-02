@@ -174,9 +174,7 @@ int sqlite3BitvecSet(Bitvec *p, u32 i){
     u32 bin = i/p->iDivisor;
     i = i%p->iDivisor;
     if( p->u.apSub[bin]==0 ){
-      sqlite3BeginBenignMalloc();
       p->u.apSub[bin] = sqlite3BitvecCreate( p->iDivisor );
-      sqlite3EndBenignMalloc();
       if( p->u.apSub[bin]==0 ) return SQLITE_NOMEM;
     }
     p = p->u.apSub[bin];
