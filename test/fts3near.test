@@ -69,6 +69,13 @@ do_test fts3near-1.13 {
   execsql {SELECT docid FROM t1 WHERE content MATCH 'one NEAR five'}
 } {1 3} 
 
+do_test fts3near-1.14 {
+  execsql {SELECT docid FROM t1 WHERE content MATCH 'four NEAR four'}
+} {} 
+do_test fts3near-1.15 {
+  execsql {SELECT docid FROM t1 WHERE content MATCH 'one NEAR two NEAR one'}
+} {3} 
+
 
 # Output format of the offsets() function:
 #
