@@ -2484,7 +2484,6 @@ int sqlite3BtreeCommitPhaseOne(Btree *p, const char *zMaster){
   int rc = SQLITE_OK;
   if( p->inTrans==TRANS_WRITE ){
     BtShared *pBt = p->pBt;
-    Pgno nTrunc = 0;
     sqlite3BtreeEnter(p);
     pBt->db = p->db;
 #ifndef SQLITE_OMIT_AUTOVACUUM
@@ -2496,7 +2495,7 @@ int sqlite3BtreeCommitPhaseOne(Btree *p, const char *zMaster){
       }
     }
 #endif
-    rc = sqlite3PagerCommitPhaseOne(pBt->pPager, zMaster, nTrunc, 0);
+    rc = sqlite3PagerCommitPhaseOne(pBt->pPager, zMaster, 0);
     sqlite3BtreeLeave(p);
   }
   return rc;
@@ -7302,7 +7301,7 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
       ** file APIs on the database file directly.
       */
       pBtTo->db = pTo->db;
-      rc = sqlite3PagerCommitPhaseOne(pBtTo->pPager, 0, 0, 1);
+      rc = sqlite3PagerCommitPhaseOne(pBtTo->pPager, 0, 1);
       if( iSize<iNow && rc==SQLITE_OK ){
         rc = sqlite3OsTruncate(pFile, iSize);
       }
