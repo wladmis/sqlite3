@@ -18,6 +18,9 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+# Many of the boundary tests depend on a working 64-bit implementation.
+if {![working_64bit_int]} { finish_test; return }
+
 do_test boundary4-1.1 {
   db eval {
     CREATE TABLE t1(a,x);
