@@ -246,9 +246,8 @@ struct Pager {
   char dbFileVers[16];        /* Changes whenever database file changes */
   i64 journalSizeLimit;       /* Size limit for persistent journal files */
   PCache *pPCache;            /* Pointer to page cache object */
-
-  PagerSavepoint *aSavepoint;
-  int nSavepoint;
+  PagerSavepoint *aSavepoint; /* Array of active savepoints */
+  int nSavepoint;             /* Number of elements in aSavepoint[] */
 };
 
 /*

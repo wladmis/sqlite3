@@ -2471,7 +2471,7 @@ case OP_Savepoint: {
             goto abort_due_to_error;
 	  }
         }
-        if( p1==SAVEPOINT_ROLLBACK && db->flags&SQLITE_InternChanges ){
+        if( p1==SAVEPOINT_ROLLBACK && (db->flags&SQLITE_InternChanges)!=0 ){
           sqlite3ExpirePreparedStatements(db);
           sqlite3ResetInternalSchema(db, 0);
         }
