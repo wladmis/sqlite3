@@ -70,6 +70,7 @@ set EXCLUDE {
   permutations.test
   quick.test
   savepoint4.test
+  savepoint6.test
   select9.test
   soak.test
   speed1.test
