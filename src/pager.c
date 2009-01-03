@@ -3645,7 +3645,7 @@ void sqlite3PagerDontRollback(DbPage *pPg){
 
   /* Failure to set the bits in the InJournal bit-vectors is benign.
   ** It merely means that we might do some extra work to journal a page
-  ** that does not need to be journal.  Nevertheless, be sure to test the
+  ** that does not need to be journaled.  Nevertheless, be sure to test the
   ** case where a malloc error occurs while trying to set a bit in a 
   ** bit vector.
   */
