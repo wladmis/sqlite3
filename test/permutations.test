@@ -72,6 +72,7 @@ set EXCLUDE {
   fuzz_malloc.test          misuse.test               veryquick.test
   fuzz.test                 mutex2.test               vtab_err.test
   lookaside.test            fuzz3.test                savepoint4.test
+  savepoint6.test
 }
 set ALLTESTS [list]
 foreach filename [glob $testdir/*.test] {
@@ -713,12 +714,13 @@ run_tests "journaltest" -description {
   register_jt_vfs -default ""
 } -shutdown {
   unregister_jt_vfs
-} -exclude [concat $EXCLUDE {
+} -include [concat $::ALLTESTS savepoint6.test
+] -exclude {
   incrvacuum.test
   ioerr.test
   corrupt4.test 
   io.test 
-}]
+}
 
 # End of tests
 #############################################################################
