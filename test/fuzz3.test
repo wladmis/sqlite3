@@ -145,6 +145,7 @@ for {set ii 0} {$ii < 5000} {incr ii} {
     do_test fuzz3-$ii.$iNew.[incr iTest] {
       foreach {rc msg} [catchsql $sql] {}
       if {$rc == 0 
+       || $msg eq "database or disk is full"
        || $msg eq "database disk image is malformed"
        || $msg eq "file is encrypted or is not a database"
        || [string match "malformed database schema*" $msg]
@@ -166,4 +167,3 @@ for {set ii 0} {$ii < 5000} {incr ii} {
 }
 
 finish_test
-
