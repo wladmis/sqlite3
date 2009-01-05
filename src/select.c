@@ -2406,6 +2406,8 @@ static void substExpr(
       sqlite3TokenCopy(db, &pExpr->span, &pNew->span);
       pExpr->pSelect = sqlite3SelectDup(db, pNew->pSelect);
       pExpr->flags = pNew->flags;
+      pExpr->pAggInfo = pNew->pAggInfo;
+      pNew->pAggInfo = 0;
     }
   }else{
     substExpr(db, pExpr->pLeft, iTable, pEList);
