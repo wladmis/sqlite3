@@ -173,7 +173,8 @@ struct Mem {
 /*
 ** Clear any existing type flags from a Mem and replace them with f
 */
-#define MemSetTypeFlag(p, f) ((p)->flags = ((p)->flags&~(MEM_TypeMask))|f)
+#define MemSetTypeFlag(p, f) \
+   ((p)->flags = ((p)->flags&~(MEM_TypeMask|MEM_Zero))|f)
 
 
 /* A VdbeFunc is just a FuncDef (defined in sqliteInt.h) that contains
