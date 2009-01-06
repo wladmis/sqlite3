@@ -2580,7 +2580,7 @@ static int subjournalPage(PgHdr *pPg){
   i64 offset = pPager->stmtNRec*(4+pPager->pageSize);
   char *pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
 
-  PAGERTRACE3("STMT-JOURNAL %d page %d @ %d\n", PAGERID(pPager), pPg->pgno);
+  PAGERTRACE3("STMT-JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno);
 
   assert( pageInJournal(pPg) || pPg->pgno>pPager->dbOrigSize );
   rc = write32bits(pPager->sjfd, offset, pPg->pgno);
@@ -3860,6 +3860,7 @@ int sqlite3PagerCommitPhaseOne(
           Pgno i;
           Pgno iSkip = PAGER_MJ_PGNO(pPager);
           Pgno dbSize = pPager->dbSize;
+          pPager->dbSize = pPager->dbOrigSize;
           for( i=pPager->dbSize+1; i<=pPager->dbOrigSize; i++ ){
             if( !sqlite3BitvecTest(pPager->pInJournal, i) && i!=iSkip ){
               rc = sqlite3PagerGet(pPager, i, &pPg);
