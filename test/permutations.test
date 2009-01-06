@@ -712,7 +712,9 @@ run_tests "journaltest" -description {
   set ISQUICK 1
   catch {db close}
   register_jt_vfs -default ""
+  #sqlite3_instvfs binarylog -default binarylog ostrace.bin
 } -shutdown {
+  #sqlite3_instvfs destroy binarylog
   unregister_jt_vfs
 } -include [concat $::ALLTESTS savepoint6.test
 ] -exclude {
