@@ -3251,8 +3251,8 @@ WhereInfo *sqlite3WhereBegin(
   notReady = ~(Bitmask)0;
   for(i=0; i<pTabList->nSrc; i++){
     notReady = codeOneLoopStart(pWInfo, i, wctrlFlags, notReady);
+    pWInfo->iContinue = pWInfo->a[i].addrCont;
   }
-  pWInfo->iContinue = pWInfo->a[i-1].addrCont;
 
 #ifdef SQLITE_TEST  /* For testing and debugging use only */
   /* Record in the query plan information about the current table
