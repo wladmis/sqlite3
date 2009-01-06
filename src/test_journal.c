@@ -146,6 +146,7 @@ static int jtClose(sqlite3_file *pFile){
   jt_file **pp;
   jt_file *p = (jt_file *)pFile;
 
+  closeTransaction(p);
   if( p->zName ){
     for(pp=&g.pList; *pp!=p; pp=&(*pp)->pNext);
     *pp = p->pNext;
