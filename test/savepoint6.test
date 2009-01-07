@@ -225,6 +225,13 @@ foreach zSetup [list {
   set testname tempdb
   sqlite3 db ""
 } {
+  if {[catch {set ::permutations_test_prefix} z] == 0 && $z eq "journaltest"} {
+    continue
+  }
+  set testname nosync
+  sqlite3 db test.db
+  sql { PRAGMA synchronous = off }
+} {
   set testname smallcache
   sqlite3 db test.db
   sql { PRAGMA cache_size = 10 }
@@ -233,7 +240,7 @@ foreach zSetup [list {
   unset -nocomplain ::lSavepoint
   unset -nocomplain ::aEntry
 
-  db close
+  catch { db close }
   file delete -force test.db
   eval $zSetup
   sql $DATABASE_SCHEMA
