@@ -843,8 +843,10 @@ static void exprAnalyzeOrTerm(
         whereClauseInit(pAndWC, pWC->pParse, pMaskSet);
         whereSplit(pAndWC, pOrTerm->pExpr, TK_AND);
         exprAnalyzeAll(pSrc, pAndWC);
+        testcase( db->mallocFailed );
         for(j=0, pAndTerm=pAndWC->a; j<pAndWC->nTerm; j++, pAndTerm++){
-          if( pAndTerm->pExpr && allowedOp(pAndTerm->pExpr->op) ){
+          assert( pAndTerm->pExpr );
+          if( allowedOp(pAndTerm->pExpr->op) ){
             b |= getMask(pMaskSet, pAndTerm->leftCursor);
           }
         }
