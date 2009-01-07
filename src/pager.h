@@ -88,7 +88,6 @@ int sqlite3PagerRef(DbPage*);
 int sqlite3PagerUnref(DbPage*);
 int sqlite3PagerWrite(DbPage*);
 int sqlite3PagerPagecount(Pager*, int*);
-int sqlite3PagerTruncate(Pager*,Pgno);
 int sqlite3PagerBegin(DbPage*, int exFlag);
 int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, int);
 int sqlite3PagerCommitPhaseTwo(Pager*);

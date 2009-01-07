@@ -413,7 +413,7 @@ do_test pager-4.6.1 {
 ifcapable memorydb {
   do_test pager-4.6.2 {
     set ::p2 [pager_open :memory: 10]
-    pager_truncate $::p2 5
+    pager_truncate $::p2 0
   } {}
   do_test pager-4.6.3 {
     set page1 [page_get $::p2 1]
@@ -424,7 +424,7 @@ ifcapable memorydb {
       page_unref $p
     }
     page_unref $page1
-    # pager_truncate $::p2 3
+    pager_truncate $::p2 3
   } {}
   do_test pager-4.6.4 {
     pager_close $::p2
