@@ -3926,7 +3926,7 @@ int sqlite3PagerCommitPhaseOne(
           Pgno iSkip = PAGER_MJ_PGNO(pPager);
           Pgno dbSize = pPager->dbSize;
           pPager->dbSize = pPager->dbOrigSize;
-          for( i=pPager->dbSize+1; i<=pPager->dbOrigSize; i++ ){
+          for( i=dbSize+1; i<=pPager->dbOrigSize; i++ ){
             if( !sqlite3BitvecTest(pPager->pInJournal, i) && i!=iSkip ){
               rc = sqlite3PagerGet(pPager, i, &pPg);
               if( rc!=SQLITE_OK ) goto sync_exit;
