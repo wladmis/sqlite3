@@ -59,5 +59,22 @@ do_malloc_test savepoint3-2 -sqlprep {
   RELEASE one;
 }
 
+do_ioerr_test savepoint3.3 -sqlprep {
+  CREATE TABLE t1(a, b, c);
+  INSERT INTO t1 VALUES(1, randstr(1000,1000), randstr(1000,1000));
+  INSERT INTO t1 VALUES(2, randstr(1000,1000), randstr(1000,1000));
+} -sqlbody {
+  BEGIN;
+    UPDATE t1 SET a = 3 WHERE a = 1;
+    SAVEPOINT one;
+      UPDATE t1 SET a = 4 WHERE a = 2;
+  COMMIT;
+} -cleanup {
+  db eval {
+    SAVEPOINT one;
+    RELEASE one;
+  }
+}
+
 finish_test
 

@@ -1583,6 +1583,7 @@ int sqlite3VdbeHalt(Vdbe *p){
           */
           invalidateCursorsOnModifiedBtrees(db);
           sqlite3RollbackAll(db);
+          sqlite3CloseSavepoints(db);
           db->autoCommit = 1;
         }
       }
@@ -1627,6 +1628,7 @@ int sqlite3VdbeHalt(Vdbe *p){
       }else{
         invalidateCursorsOnModifiedBtrees(db);
         sqlite3RollbackAll(db);
+        sqlite3CloseSavepoints(db);
         db->autoCommit = 1;
       }
     }
