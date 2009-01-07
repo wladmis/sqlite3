@@ -96,7 +96,7 @@
 ** The maximum number of arguments to an SQL function.
 */
 #ifndef SQLITE_MAX_FUNCTION_ARG
-# define SQLITE_MAX_FUNCTION_ARG 100
+# define SQLITE_MAX_FUNCTION_ARG 127
 #endif
 
 /*
