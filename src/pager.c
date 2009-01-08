@@ -2912,6 +2912,7 @@ static int pagerSharedLock(Pager *pPager){
       /* Playback and delete the journal.  Drop the database write
       ** lock and reacquire the read lock. Purge the cache before
       ** playing back the hot-journal so that we don't end up with
+      ** an inconsistent cache.
       */
       sqlite3PcacheClear(pPager->pPCache);
       rc = pager_playback(pPager, 1);
