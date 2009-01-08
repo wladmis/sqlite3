@@ -1859,12 +1859,9 @@ static void bestIndex(
         }else{
           continue;
         }
-        if( sTermCost.plan.wsFlags==0 ){
-          rTotal = pCost->rCost;
-          break;
-        }
         rTotal += sTermCost.rCost;
         nRow += sTermCost.nRow;
+        if( rTotal>=pCost->rCost ) break;
       }
       WHERETRACE(("... multi-index OR cost=%.9g nrow=%.9g\n",
                   rTotal, nRow));
