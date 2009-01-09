@@ -500,6 +500,16 @@ do_test select6-9.9 {
     SELECT x FROM (SELECT x FROM t1 LIMIT -1 OFFSET 1);
   }
 } {2 3 4}
+do_test select6-9.10 {
+  execsql {
+    SELECT x, y FROM (SELECT x, (SELECT 10+x) y FROM t1 LIMIT -1 OFFSET 1);
+  }
+} {2 12 3 13 4 14}
+do_test select6-9.11 {
+  execsql {
+    SELECT x, y FROM (SELECT x, (SELECT 10)+x y FROM t1 LIMIT -1 OFFSET 1);
+  }
+} {2 12 3 13 4 14}
 
 
 

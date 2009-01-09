@@ -48,7 +48,7 @@ void sqlite3HashClear(Hash *pH){
   pH->htsize = 0;
   while( elem ){
     HashElem *next_elem = elem->next;
-    if( pH->copyKey && elem->pKey ){
+    if( pH->copyKey ){
       sqlite3_free(elem->pKey);
     }
     sqlite3_free(elem);

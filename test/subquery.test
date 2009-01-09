@@ -269,6 +269,11 @@ ifcapable view {
       SELECT * FROM v1 WHERE EXISTS(SELECT * FROM t2 WHERE p=v1.b);
     }
   } {2}
+  do_test subquery-3.1.1 {
+    execsql {
+      SELECT * FROM v1 WHERE EXISTS(SELECT 1);
+    }
+  } {2}
 } else {
   catchsql { DROP TABLE t1; }
   catchsql { DROP TABLE t2; }
