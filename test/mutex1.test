@@ -24,6 +24,7 @@ if {[info exists tester_do_binarylog]} {
 }
 
 sqlite3_reset_auto_extension
+clear_mutex_counters
 
 proc mutex_counters {varname} {
   upvar $varname var
