@@ -2840,8 +2840,10 @@ static int pagerSharedLock(Pager *pPager){
         assert( pPager->state==PAGER_UNLOCK );
         return pager_error(pPager, rc);
       }
-      assert( pPager->state>=SHARED_LOCK );
+    }else if( pPager->state==PAGER_UNLOCK ){
+      pPager->state = PAGER_SHARED;
     }
+    assert( pPager->state>=SHARED_LOCK );
 
     /* If a journal file exists, and there is no RESERVED lock on the
     ** database file, then it either needs to be played back or deleted.
@@ -2965,10 +2967,7 @@ static int pagerSharedLock(Pager *pPager){
         pager_reset(pPager);
       }
     }
-    assert( pPager->exclusiveMode || pPager->state<=PAGER_SHARED );
-    if( pPager->state==PAGER_UNLOCK ){
-      pPager->state = PAGER_SHARED;
-    }
+    assert( pPager->exclusiveMode || pPager->state==PAGER_SHARED );
   }
 
  failed:
