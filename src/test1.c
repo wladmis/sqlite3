@@ -4577,13 +4577,13 @@ static int file_control_lockproxy_test(
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
   
 #if !defined(SQLITE_ENABLE_LOCKING_STYLE)
-#  if defined(__DARWIN__)
+#  if defined(__APPLE__)
 #    define SQLITE_ENABLE_LOCKING_STYLE 1
 #  else
 #    define SQLITE_ENABLE_LOCKING_STYLE 0
 #  endif
 #endif
-#if SQLITE_ENABLE_LOCKING_STYLE && defined(__DARWIN__)
+#if SQLITE_ENABLE_LOCKING_STYLE && defined(__APPLE__)
   {
     char *proxyPath = "test.proxy";
     char *testPath;
@@ -4784,7 +4784,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
   extern int sqlite3_open_file_count;
   extern int sqlite3_sort_count;
   extern int sqlite3_current_time;
-#if SQLITE_OS_UNIX && defined(__DARWIN__)
+#if SQLITE_OS_UNIX && defined(__APPLE__)
   extern int sqlite3_hostid_num;
 #endif
   extern int sqlite3_max_blobsize;
@@ -5008,7 +5008,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_open_file_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_current_time", 
       (char*)&sqlite3_current_time, TCL_LINK_INT);
-#if SQLITE_OS_UNIX && defined(__DARWIN__)
+#if SQLITE_OS_UNIX && defined(__APPLE__)
   Tcl_LinkVar(interp, "sqlite_hostid_num", 
       (char*)&sqlite3_hostid_num, TCL_LINK_INT);
 #endif
