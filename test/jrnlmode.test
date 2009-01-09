@@ -421,4 +421,45 @@ ifcapable pragma {
   } {1}
 }
 
+ifcapable pragma {
+  do_test jrnlmode-6.1 {
+    execsql {
+      PRAGMA journal_mode = truncate;
+      CREATE TABLE t4(a, b);
+      BEGIN;
+        INSERT INTO t4 VALUES(1, 2);
+        PRAGMA journal_mode = memory;
+    }
+  } {truncate memory}
+  do_test jrnlmode-6.2 {
+    file exists test.db-journal
+  } {1}
+  do_test jrnlmode-6.3 {
+    execsql {
+      COMMIT;
+      SELECT * FROM t4;
+    }
+  } {1 2}
+  do_test jrnlmode-6.4 {
+    file exists test.db-journal
+  } {0}
+  do_test jrnlmode-6.5 {
+    execsql {
+      BEGIN;
+        INSERT INTO t4 VALUES(3, 4);
+    }
+    file exists test.db-journal
+  } {0}
+  do_test jrnlmode-6.7 {
+    execsql {
+      COMMIT;
+      SELECT * FROM t4;
+    }
+  } {1 2 3 4}
+  do_test jrnlmode-6.8 {
+    file exists test.db-journal
+  } {0}
+}
+
 finish_test
+

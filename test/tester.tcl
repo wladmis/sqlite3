@@ -137,14 +137,18 @@ if {![info exists nTest]} {
     sqlite3_instvfs marker binarylog "$argv0 $argv"
   }
 }
-catch {db close}
-file delete -force test.db
-file delete -force test.db-journal
-sqlite3 db ./test.db
-set ::DB [sqlite3_connection_pointer db]
-if {[info exists ::SETUP_SQL]} {
-  db eval $::SETUP_SQL
+
+proc reset_db {} {
+  catch {db close}
+  file delete -force test.db
+  file delete -force test.db-journal
+  sqlite3 db ./test.db
+  set ::DB [sqlite3_connection_pointer db]
+  if {[info exists ::SETUP_SQL]} {
+    db eval $::SETUP_SQL
+  }
 }
+reset_db
 
 # Abort early if this script has been run before.
 #
