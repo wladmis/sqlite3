@@ -678,6 +678,36 @@ do_malloc_test 29 -sqlprep {
   INSERT INTO t1 SELECT * FROM t1 UNION ALL SELECT * FROM t1;
 }
 
+do_malloc_test 29 -tclprep {
+  db eval {
+    CREATE TABLE t1(x PRIMARY KEY);
+    INSERT INTO t1 VALUES(randstr(500,500));
+    INSERT INTO t1 VALUES(randstr(500,500));
+    INSERT INTO t1 VALUES(randstr(500,500));
+  }
+  db close
+  sqlite3 db test.db
+
+  # The DELETE command in the following block moves the overflow pages that
+  # are part of the primary key index to the free-list. But it does not
+  # actually load the content of the pages. This leads to the peculiar
+  # situation where cache entries exist, but are not populated with data.
+  # They are populated next time they are requested by the b-tree layer.
+  #
+  db eval {
+    BEGIN;
+      DELETE FROM t1;
+    ROLLBACK;
+  }
+} -sqlbody {
+  # This statement requires the 'no-content' pages loaded by the DELETE
+  # statement above. When requesting the pages, the content is loaded
+  # from the database file. The point of this test case is to test handling
+  # of malloc errors (including SQLITE_IOERR_NOMEM errors) when loading
+  # the content.
+  SELECT * FROM t1 ORDER BY x;
+}
+
 
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
