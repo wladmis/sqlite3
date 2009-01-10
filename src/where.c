@@ -844,10 +844,12 @@ static void exprAnalyzeOrTerm(
         whereSplit(pAndWC, pOrTerm->pExpr, TK_AND);
         exprAnalyzeAll(pSrc, pAndWC);
         testcase( db->mallocFailed );
-        for(j=0, pAndTerm=pAndWC->a; j<pAndWC->nTerm; j++, pAndTerm++){
-          assert( pAndTerm->pExpr );
-          if( allowedOp(pAndTerm->pExpr->op) ){
-            b |= getMask(pMaskSet, pAndTerm->leftCursor);
+        if( !db->mallocFailed ){
+          for(j=0, pAndTerm=pAndWC->a; j<pAndWC->nTerm; j++, pAndTerm++){
+            assert( pAndTerm->pExpr );
+            if( allowedOp(pAndTerm->pExpr->op) ){
+              b |= getMask(pMaskSet, pAndTerm->leftCursor);
+            }
           }
         }
         indexable &= b;
