@@ -454,16 +454,6 @@ int sqlite3_db_config(sqlite3 *db, int op, ...){
   return rc;
 }
 
-/*
-** Routine needed to support the testcase() macro.
-*/
-#ifdef SQLITE_COVERAGE_TEST
-void sqlite3Coverage(int x){
-  static int dummy = 0;
-  dummy += x;
-}
-#endif
-
 
 /*
 ** Return true if the buffer z[0..n-1] contains all spaces.

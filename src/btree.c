@@ -7346,7 +7346,6 @@ int sqlite3BtreeIsInTrans(Btree *p){
 */
 int sqlite3BtreeIsInStmt(Btree *p){
   assert( sqlite3BtreeHoldsMutex(p) );
-  assert( p->pBt );
   return ALWAYS(p->pBt) && p->pBt->inStmt;
 }
 
