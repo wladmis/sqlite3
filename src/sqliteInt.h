@@ -863,6 +863,7 @@ struct FuncDef {
 #define SQLITE_FUNC_CASE     0x02 /* Case-sensitive LIKE-type function */
 #define SQLITE_FUNC_EPHEM    0x04 /* Ephemeral.  Delete with VDBE */
 #define SQLITE_FUNC_NEEDCOLL 0x08 /* sqlite3GetFuncCollSeq() might be called */
+#define SQLITE_FUNC_PRIVATE  0x10 /* Allowed for internal use only */
 
 /*
 ** The following three macros, FUNCTION(), LIKEFUNC() and AGGREGATE() are
@@ -2288,7 +2289,7 @@ void sqlite3ExprCodeMove(Parse*, int, int, int);
 void sqlite3ExprCodeCopy(Parse*, int, int, int);
 void sqlite3ExprClearColumnCache(Parse*, int);
 void sqlite3ExprCacheAffinityChange(Parse*, int, int);
-int sqlite3ExprWritableRegister(Parse*,int,int);
+void sqlite3ExprWritableRegister(Parse*,int);
 void sqlite3ExprHardCopy(Parse*,int,int);
 int sqlite3ExprCode(Parse*, Expr*, int);
 int sqlite3ExprCodeTemp(Parse*, Expr*, int*);
