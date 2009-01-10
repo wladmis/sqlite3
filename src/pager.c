@@ -3637,19 +3637,12 @@ int sqlite3PagerWrite(DbPage *pDbPage){
     ** writing to any of these nPage pages may damage the others, the
     ** journal file must contain sync()ed copies of all of them
     ** before any of them can be written out to the database file.
-    **
-    ** 2009-01-07:  This block of code appears to be a no-op.  I do not
-    ** believe it is possible for any page on the sector to not have
-    ** the PGHDR_NEED_SYNC flag set.  The "pPage->flags |= PGHDR_NEED_SYNC"
-    ** line below does nothing, I think.  But it does no harm to leave
-    ** this code in place until we can definitively prove this is the case.
     */
     if( needSync ){
       assert( !MEMDB && pPager->noSync==0 );
       for(ii=0; ii<nPage && needSync; ii++){
         PgHdr *pPage = pager_lookup(pPager, pg1+ii);
         if( pPage ){
-          assert( pPage->flags & PGHDR_NEED_SYNC ); /* 2009-01-07 conjecture */
           pPage->flags |= PGHDR_NEED_SYNC;
           sqlite3PagerUnref(pPage);
         }
