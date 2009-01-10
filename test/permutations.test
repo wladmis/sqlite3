@@ -714,6 +714,7 @@ run_tests "journaltest" -description {
   ioerr.test
   corrupt4.test 
   io.test 
+  crash8.test 
 }
 
 # End of tests
