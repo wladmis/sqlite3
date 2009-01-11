@@ -4168,8 +4168,10 @@ int sqlite3PagerOpenSavepoint(Pager *pPager, int nSavepoint){
     int ii;
     PagerSavepoint *aNew;
 
-    /* Either the sub-journal is open or there are no active savepoints. */
-    assert( pPager->nSavepoint==0 || pPager->sjfd->pMethods );
+    /* Either there is no active journal or the sub-journal is open or 
+    ** the journal is always stored in memory */
+    assert( pPager->nSavepoint==0 || pPager->sjfd->pMethods ||
+            pPager->journalMode==PAGER_JOURNALMODE_MEMORY );
 
     /* Grow the Pager.aSavepoint array using realloc(). Return SQLITE_NOMEM
     ** if the allocation fails. Otherwise, zero the new portion in case a 
