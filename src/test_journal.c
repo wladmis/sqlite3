@@ -413,7 +413,7 @@ static int jtWrite(
   if( p->flags&SQLITE_OPEN_MAIN_DB && p->pWritable ){
     u32 pgno = iOfst/p->nPagesize + 1;
 
-    assert( iAmt==p->nPagesize && (iOfst%p->nPagesize)==0 );
+    assert( (iAmt==1 || iAmt==p->nPagesize) && ((iOfst+iAmt)%p->nPagesize)==0 );
     assert( pgno<=p->nPage || p->nSync>0 );
     assert( pgno>p->nPage || sqlite3BitvecTest(p->pWritable, pgno) );
   }
