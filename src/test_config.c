@@ -404,6 +404,11 @@ Tcl_SetVar2(interp, "sqlite_options", "long_double",
 #else
   Tcl_SetVar2(interp,"sqlite_options","lock_proxy_pragmas","0",TCL_GLOBAL_ONLY);
 #endif
+#if defined(SQLITE_PREFER_PROXY_LOCKING) && defined(__APPLE__)
+  Tcl_SetVar2(interp,"sqlite_options","prefer_proxy_locking","1",TCL_GLOBAL_ONLY);
+#else
+  Tcl_SetVar2(interp,"sqlite_options","prefer_proxy_locking","0",TCL_GLOBAL_ONLY);
+#endif
     
     
 #ifdef SQLITE_OMIT_SHARED_CACHE

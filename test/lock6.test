@@ -78,7 +78,7 @@ puts $f {
 close $f
 
 
-ifcapable lock_proxy_pragmas {
+ifcapable lock_proxy_pragmas&&prefer_proxy_locking {
   set sqlite_hostid_num 1
 
   set using_proxy 0
