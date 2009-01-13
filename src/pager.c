@@ -985,10 +985,7 @@ static int addToSavepointBitvecs(Pager *pPager, Pgno pgno){
 */
 static void pager_unlock(Pager *pPager){
   if( !pPager->exclusiveMode ){
-    int rc = osUnlock(pPager->fd, NO_LOCK);
-    if( rc ) pPager->errCode = rc;
-    pPager->dbSizeValid = 0;
-    IOTRACE(("UNLOCK %p\n", pPager))
+    int rc;
 
     /* Always close the journal file when dropping the database lock.
     ** Otherwise, another connection with journal_mode=delete might
@@ -1002,6 +999,11 @@ static void pager_unlock(Pager *pPager){
       sqlite3BitvecDestroy(pPager->pAlwaysRollback);
       pPager->pAlwaysRollback = 0;
     }
+
+    rc = osUnlock(pPager->fd, NO_LOCK);
+    if( rc ) pPager->errCode = rc;
+    pPager->dbSizeValid = 0;
+    IOTRACE(("UNLOCK %p\n", pPager))
 
     /* If Pager.errCode is set, the contents of the pager cache cannot be
     ** trusted. Now that the pager file is unlocked, the contents of the
