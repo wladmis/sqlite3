@@ -200,16 +200,22 @@
 ** where multiple cases go to the same block of code, testcase()
 ** can insure that all cases are evaluated.
 **
-** The TESTONLY macro is used to enclose variable declarations or
-** other bits of code that are needed to support the arguments
-** within testcase() macros.
 */
 #ifdef SQLITE_COVERAGE_TEST
   void sqlite3Coverage(int);
 # define testcase(X)  if( X ){ sqlite3Coverage(__LINE__); }
-# define TESTONLY(X)  X
 #else
 # define testcase(X)
+#endif
+
+/*
+** The TESTONLY macro is used to enclose variable declarations or
+** other bits of code that are needed to support the arguments
+** within testcase() and assert() macros.
+*/
+#if !defined(NDEBUG) || defined(SQLITE_COVERAGE_TEST)
+# define TESTONLY(X)  X
+#else
 # define TESTONLY(X)
 #endif
 

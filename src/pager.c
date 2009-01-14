@@ -1723,6 +1723,16 @@ static int pager_playback(Pager *pPager, int isHot){
   assert( 0 );
 
 end_playback:
+  /* Following a rollback, the database file should be back in its original
+  ** state prior to the start of the transaction, so invoke the
+  ** SQLITE_FCNTL_DB_UNCHANGED file-control method to disable the
+  ** assertion that the transaction counter was modified.
+  */
+  assert(
+    pPager->fd->pMethods==0 ||
+    sqlite3OsFileControl(pPager->fd,SQLITE_FCNTL_DB_UNCHANGED,0)>=SQLITE_OK
+  );
+
   if( rc==SQLITE_OK ){
     zMaster = pPager->pTmpSpace;
     rc = readMasterJournal(pPager->jfd, zMaster, pPager->pVfs->mxPathname+1);
