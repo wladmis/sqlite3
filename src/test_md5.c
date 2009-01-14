@@ -299,6 +299,7 @@ static void DigestToBase16(unsigned char *digest, char *zBuf){
 static int md5_cmd(void*cd, Tcl_Interp *interp, int argc, const char **argv){
   MD5Context ctx;
   unsigned char digest[16];
+  char zBuf[30];
 
   if( argc!=2 ){
     Tcl_AppendResult(interp,"wrong # args: should be \"", argv[0], 
@@ -308,7 +309,8 @@ static int md5_cmd(void*cd, Tcl_Interp *interp, int argc, const char **argv){
   MD5Init(&ctx);
   MD5Update(&ctx, (unsigned char*)argv[1], (unsigned)strlen(argv[1]));
   MD5Final(digest, &ctx);
-  DigestToBase16(digest, interp->result);
+  DigestToBase16(digest, zBuf);
+  Tcl_AppendResult(interp, zBuf, (char*)0);
   return TCL_OK;
 }
 
@@ -342,7 +344,8 @@ static int md5file_cmd(void*cd, Tcl_Interp*interp, int argc, const char **argv){
   }
   fclose(in);
   MD5Final(digest, &ctx);
-  DigestToBase16(digest, interp->result);
+  DigestToBase16(digest, zBuf);
+  Tcl_AppendResult(interp, zBuf, (char*)0);
   return TCL_OK;
 }
 

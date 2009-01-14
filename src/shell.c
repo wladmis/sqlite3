@@ -1207,7 +1207,7 @@ static int do_meta_command(char *zLine, struct callback_data *p){
   }else
 
   if( c=='h' && strncmp(azArg[0], "help", n)==0 ){
-    fprintf(stderr,zHelp);
+    fprintf(stderr,"%s",zHelp);
   }else
 
   if( c=='i' && strncmp(azArg[0], "import", n)==0 && nArg>=3 ){
