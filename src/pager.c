@@ -1105,6 +1105,7 @@ static int pager_end_transaction(Pager *pPager, int hasMaster){
   if( !pPager->exclusiveMode ){
     rc2 = osUnlock(pPager->fd, SHARED_LOCK);
     pPager->state = PAGER_SHARED;
+    pPager->changeCountDone = 0;
   }else if( pPager->state==PAGER_SYNCED ){
     pPager->state = PAGER_EXCLUSIVE;
   }
