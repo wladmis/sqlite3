@@ -1618,9 +1618,6 @@ struct WhereLevel {
         int addrInTop;         /* Top of the IN loop */
       } *aInLoop;           /* Information about each nested IN operator */
     } in;                 /* Used when plan.wsFlags&WHERE_IN_ABLE */
-    struct {
-      WherePlan *aPlan;     /* Plans for each term of the WHERE clause */
-    } or;                 /* Used when plan.wsFlags&WHERE_MULTI_OR */
   } u;
 
   /* The following field is really not part of the current level.  But
