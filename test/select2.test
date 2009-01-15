@@ -90,11 +90,11 @@ do_test select2-2.0.2 {
   list
 } {}
 puts "time without cache: $t2"
-ifcapable tclvar {
-  do_test select2-2.0.3 {
-    expr {[lindex $t1 0]<[lindex $t2 0]}
-  } 1
-}
+#ifcapable tclvar {
+#  do_test select2-2.0.3 {
+#    expr {[lindex $t1 0]<[lindex $t2 0]}
+#  } 1
+#}
 
 do_test select2-2.1 {
   execsql {SELECT count(*) FROM tbl2}
