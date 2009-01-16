@@ -431,8 +431,9 @@ void sqlite3PcacheClose(PCache *pCache){
 /* 
 ** Discard the contents of the cache.
 */
-void sqlite3PcacheClear(PCache *pCache){
+int sqlite3PcacheClear(PCache *pCache){
   sqlite3PcacheTruncate(pCache, 0);
+  return SQLITE_OK;
 }
 
 /*

@@ -418,13 +418,18 @@ static int page_unref(
   const char **argv      /* Text of each argument */
 ){
   DbPage *pPage;
+  int rc;
   if( argc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
        " PAGE\"", 0);
     return TCL_ERROR;
   }
   pPage = (DbPage *)sqlite3TestTextToPtr(argv[1]);
-  sqlite3PagerUnref(pPage);
+  rc = sqlite3PagerUnref(pPage);
+  if( rc!=SQLITE_OK ){
+    Tcl_AppendResult(interp, errorName(rc), 0);
+    return TCL_ERROR;
+  }
   return TCL_OK;
 }
 
