@@ -275,6 +275,14 @@ void sqlite3BitvecDestroy(Bitvec *p){
   sqlite3_free(p);
 }
 
+/*
+** Return the value of the iSize parameter specified when Bitvec *p
+** was created.
+*/
+u32 sqlite3BitvecSize(Bitvec *p){
+  return p->iSize;
+}
+
 #ifndef SQLITE_OMIT_BUILTIN_TEST
 /*
 ** Let V[] be an array of unsigned characters sufficient to hold
