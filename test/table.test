@@ -314,6 +314,14 @@ do_test table-7.3 {
     SELECT * FROM weird;
   }
 } {desc a asc b key 9 14_vac 0 fuzzy_dog_12 xyz begin hi end y'all}
+do_test table-7.3 {
+  execsql {
+    CREATE TABLE savepoint(release);
+    INSERT INTO savepoint(release) VALUES(10);
+    UPDATE savepoint SET release = 5;
+    SELECT release FROM savepoint;
+  }
+} {5}
 
 # Try out the CREATE TABLE AS syntax
 #
