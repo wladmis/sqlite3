@@ -1733,6 +1733,17 @@ end_playback:
     sqlite3OsFileControl(pPager->fd,SQLITE_FCNTL_DB_UNCHANGED,0)>=SQLITE_OK
   );
 
+  /* If this playback is happening automatically as a result of an IO or 
+  ** malloc error that occured after the change-counter was updated but 
+  ** before the transaction was committed, then the change-counter 
+  ** modification may just have been reverted. If this happens in exclusive 
+  ** mode, then subsequent transactions performed by the connection will not
+  ** update the change-counter at all. This may lead to cache inconsistency
+  ** problems for other processes at some point in the future. So, just
+  ** in case this has happened, clear the changeCountDone flag now.
+  */
+  pPager->changeCountDone = 0;
+
   if( rc==SQLITE_OK ){
     zMaster = pPager->pTmpSpace;
     rc = readMasterJournal(pPager->jfd, zMaster, pPager->pVfs->mxPathname+1);
