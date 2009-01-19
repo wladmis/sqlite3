@@ -180,7 +180,8 @@ const char *sqlite3TestErrorName(int rc){
 ** from sqlite3_errcode.
 */
 int sqlite3TestErrCode(Tcl_Interp *interp, sqlite3 *db, int rc){
-  if( rc!=SQLITE_MISUSE && rc!=SQLITE_OK && sqlite3_errcode(db)!=rc ){
+  if( sqlite3_threadsafe()==0 && rc!=SQLITE_MISUSE && rc!=SQLITE_OK
+   && sqlite3_errcode(db)!=rc ){
     char zBuf[200];
     int r2 = sqlite3_errcode(db);
     sprintf(zBuf, "error code %s (%d) does not match sqlite3_errcode %s (%d)",
