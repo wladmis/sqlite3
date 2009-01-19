@@ -132,6 +132,7 @@ int sqlite3_get_table(
   *pazResult = 0;
   if( pnColumn ) *pnColumn = 0;
   if( pnRow ) *pnRow = 0;
+  if( pzErrMsg ) *pzErrMsg = 0;
   res.zErrMsg = 0;
   res.nResult = 0;
   res.nRow = 0;
