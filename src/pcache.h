@@ -111,7 +111,7 @@ void sqlite3PcacheClose(PCache*);
 void sqlite3PcacheClearSyncFlags(PCache *);
 
 /* Discard the contents of the cache */
-int sqlite3PcacheClear(PCache*);
+void sqlite3PcacheClear(PCache*);
 
 /* Return the total number of outstanding page references */
 int sqlite3PcacheRefCount(PCache*);

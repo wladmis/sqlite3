@@ -2277,6 +2277,7 @@ int sqlite3BitvecTest(Bitvec*, u32);
 int sqlite3BitvecSet(Bitvec*, u32);
 void sqlite3BitvecClear(Bitvec*, u32);
 void sqlite3BitvecDestroy(Bitvec*);
+u32 sqlite3BitvecSize(Bitvec*);
 int sqlite3BitvecBuiltinTest(int,int*);
 
 RowSet *sqlite3RowSetInit(sqlite3*, void*, unsigned int);
