@@ -17,7 +17,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 #include "vdbeInt.h"
 
 
@@ -963,7 +962,7 @@ void sqlite3VdbePrintSql(Vdbe *p){
   pOp = &p->aOp[0];
   if( pOp->opcode==OP_Trace && pOp->p4.z!=0 ){
     const char *z = pOp->p4.z;
-    while( isspace(*(u8*)z) ) z++;
+    while( sqlite3Isspace(*z) ) z++;
     printf("SQL: [%s]\n", z);
   }
 }
@@ -983,9 +982,9 @@ void sqlite3VdbeIOTraceSql(Vdbe *p){
     int i, j;
     char z[1000];
     sqlite3_snprintf(sizeof(z), z, "%s", pOp->p4.z);
-    for(i=0; isspace((unsigned char)z[i]); i++){}
+    for(i=0; sqlite3Isspace(z[i]); i++){}
     for(j=0; z[i]; i++){
-      if( isspace((unsigned char)z[i]) ){
+      if( sqlite3Isspace(z[i]) ){
         if( z[i-1]!=' ' ){
           z[j++] = ' ';
         }

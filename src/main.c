@@ -17,7 +17,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 
 #ifdef SQLITE_ENABLE_FTS3
 # include "fts3.h"

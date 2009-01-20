@@ -16,7 +16,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 
 /*
 ** Fill the InitData structure with an error message that indicates

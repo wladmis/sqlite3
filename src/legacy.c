@@ -18,7 +18,6 @@
 */
 
 #include "sqliteInt.h"
-#include <ctype.h>
 
 /*
 ** Execute SQL code.  Return one of the SQLITE_ success/failure
@@ -115,7 +114,7 @@ int sqlite3_exec(
         if( rc!=SQLITE_SCHEMA ){
           nRetry = 0;
           zSql = zLeftover;
-          while( isspace((unsigned char)zSql[0]) ) zSql++;
+          while( sqlite3Isspace(zSql[0]) ) zSql++;
         }
         break;
       }

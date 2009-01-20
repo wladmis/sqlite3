@@ -15,7 +15,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 
 /*
 ** The code in this file only exists if we are not omitting the
@@ -513,7 +512,7 @@ void sqlite3AlterFinishAddColumn(Parse *pParse, Token *pColDef){
   zCol = sqlite3DbStrNDup(db, (char*)pColDef->z, pColDef->n);
   if( zCol ){
     char *zEnd = &zCol[pColDef->n-1];
-    while( (zEnd>zCol && *zEnd==';') || isspace(*(unsigned char *)zEnd) ){
+    while( (zEnd>zCol && *zEnd==';') || sqlite3Isspace(*zEnd) ){
       *zEnd-- = '\0';
     }
     sqlite3NestedParse(pParse, 

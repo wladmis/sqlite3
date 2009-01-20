@@ -16,7 +16,6 @@
 */
 #include "sqliteInt.h"
 #include <stdarg.h>
-#include <ctype.h>
 
 /*
 ** This routine runs when the memory allocator sees that the

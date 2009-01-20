@@ -46,7 +46,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 #include "vdbeInt.h"
 
 /*

@@ -14,7 +14,6 @@
 ** $Id$
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 
 /* Ignore this whole file if pragmas are disabled
 */
@@ -37,7 +36,7 @@ static u8 getSafetyLevel(const char *z){
   static const u8 iLength[] = {2, 2, 3, 5, 3, 4, 4};
   static const u8 iValue[] =  {1, 0, 0, 0, 1, 1, 2};
   int i, n;
-  if( isdigit(*z) ){
+  if( sqlite3Isdigit(*z) ){
     return (u8)atoi(z);
   }
   n = sqlite3Strlen30(z);
