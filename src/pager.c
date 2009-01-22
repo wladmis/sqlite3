@@ -1461,7 +1461,7 @@ static int pager_playback_one_page(
     }
   }
 
-  if( pDone && (rc = sqlite3BitvecSet(pDone, pgno)) ){
+  if( pDone && (rc = sqlite3BitvecSet(pDone, pgno))!=SQLITE_OK ){
     return rc;
   }
 
@@ -1531,7 +1531,7 @@ static int pager_playback_one_page(
     ** requiring a journal-sync before it is written.
     */
     assert( isSavepnt );
-    if( (rc = sqlite3PagerAcquire(pPager, pgno, &pPg, 1)) ){
+    if( (rc = sqlite3PagerAcquire(pPager, pgno, &pPg, 1))!=SQLITE_OK ){
       return rc;
     }
     pPg->flags &= ~PGHDR_NEED_READ;
