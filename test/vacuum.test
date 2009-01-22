@@ -102,14 +102,18 @@ ifcapable vacuum {
   } {1}
 }
 ifcapable vacuum {
-  do_test vacuum-2.1 {
+  do_test vacuum-2.1.1 {
     catchsql {
       BEGIN;
       VACUUM;
-      COMMIT;
     }
   } {1 {cannot VACUUM from within a transaction}}
-  catch {db eval COMMIT}
+  do_test vacuum-2.1.2 {
+    sqlite3_get_autocommit db
+  } {0}
+  do_test vacuum-2.1.3 {
+    db eval {COMMIT}
+  } {}
 }
 do_test vacuum-2.2 {
   sqlite3 db2 test.db
