@@ -261,14 +261,21 @@ int sqlite3PcacheFetch(
   }
 
   if( pPage ){
+    if( !pPage->pData ){
+      memset(pPage, 0, sizeof(PgHdr) + pCache->szExtra);
+      pPage->pExtra = (void*)&pPage[1];
+      pPage->pData = (void *)&((char *)pPage)[sizeof(PgHdr) + pCache->szExtra];
+      pPage->pCache = pCache;
+      pPage->pgno = pgno;
+    }
+    assert( pPage->pCache==pCache );
+    assert( pPage->pgno==pgno );
+    assert( pPage->pExtra==(void *)&pPage[1] );
+
     if( 0==pPage->nRef ){
       pCache->nRef++;
     }
     pPage->nRef++;
-    pPage->pData = (void*)&pPage[1];
-    pPage->pExtra = (void*)&((char*)pPage->pData)[pCache->szPage];
-    pPage->pCache = pCache;
-    pPage->pgno = pgno;
     if( pgno==1 ){
       pCache->pPage1 = pPage;
     }
