@@ -976,7 +976,7 @@ static void soundexFunc(
   assert( argc==1 );
   zIn = (u8*)sqlite3_value_text(argv[0]);
   if( zIn==0 ) zIn = (u8*)"";
-  for(i=0; zIn[i] && !isalpha(zIn[i]); i++){}
+  for(i=0; zIn[i] && !sqlite3Isalpha(zIn[i]); i++){}
   if( zIn[i] ){
     u8 prevcode = iCode[zIn[i]&0x7f];
     zResult[0] = sqlite3Toupper(zIn[i]);

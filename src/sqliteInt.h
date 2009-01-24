@@ -2155,7 +2155,8 @@ int sqlite3WalkSelectFrom(Walker*, Select*);
 #ifdef SQLITE_ASCII
 # define sqlite3Toupper(x)  ((x)&~(sqlite3CtypeMap[(unsigned char)(x)]&0x20))
 # define sqlite3Isspace(x)   (sqlite3CtypeMap[(unsigned char)(x)]&0x01)
-# define sqlite3Isalnum(x)   (sqlite3CtypeMap[(unsigned char)(x)]&0x02)
+# define sqlite3Isalnum(x)   (sqlite3CtypeMap[(unsigned char)(x)]&0x06)
+# define sqlite3Isalpha(x)   (sqlite3CtypeMap[(unsigned char)(x)]&0x02)
 # define sqlite3Isdigit(x)   (sqlite3CtypeMap[(unsigned char)(x)]&0x04)
 # define sqlite3Isxdigit(x)  (sqlite3CtypeMap[(unsigned char)(x)]&0x08)
 # define sqlite3Tolower(x)   (sqlite3UpperToLower[(unsigned char)(x)])
@@ -2164,6 +2165,7 @@ int sqlite3WalkSelectFrom(Walker*, Select*);
 # define sqlite3Toupper(x)   toupper((unsigned char)(x))
 # define sqlite3Isspace(x)   isspace((unsigned char)(x))
 # define sqlite3Isalnum(x)   isalnum((unsigned char)(x))
+# define sqlite3Isalpha(x)   isalpha((unsigned char)(x))
 # define sqlite3Isdigit(x)   isdigit((unsigned char)(x))
 # define sqlite3Isxdigit(x)  isxdigit((unsigned char)(x))
 # define sqlite3Tolower(x)   tolower((unsigned char)(x))

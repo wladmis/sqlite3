@@ -4328,6 +4328,7 @@ static int pager_incr_changecounter(Pager *pPager, int isDirectMode){
 #ifndef SQLITE_ENABLE_ATOMIC_WRITE
   const int isDirect = 0;
   assert( isDirectMode==0 );
+  UNUSED_PARAMETER(isDirectMode);
 #else
   const int isDirect = isDirectMode;
 #endif
