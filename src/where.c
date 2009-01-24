@@ -1924,7 +1924,7 @@ static void bestIndex(
         wsFlags |= WHERE_COLUMN_IN;
         if( pExpr->pSelect!=0 ){
           inMultiplier *= 25;
-        }else if( ALWAYS(pExpr->pList) ){
+        }else if( pExpr->pList ){
           inMultiplier *= pExpr->pList->nExpr + 1;
         }
       }
