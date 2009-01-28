@@ -140,6 +140,16 @@ if test "$TCLSH_CMD" = "none"; then
 fi
 AC_SUBST(TCLSH_CMD)
 
+AC_ARG_VAR([TCLLIBDIR], [Where to install tcl plugin])
+if test "x${TCLLIBDIR+set}" != "xset" ; then
+  TCLLIBDIR='$(libdir)'
+  for i in `echo 'puts stdout $auto_path' | ${TCLSH_CMD}` ; do
+    TCLLIBDIR=$i
+    break
+  done
+  TCLLIBDIR="${TCLLIBDIR}/sqlite3"
+fi
+
 
 #########
 # Set up an appropriate program prefix
