@@ -886,6 +886,10 @@ static void strftimeFunc(
       i++;
     }
   }
+  testcase( n==sizeof(zBuf)-1 );
+  testcase( n==sizeof(zBuf) );
+  testcase( n==(u64)db->aLimit[SQLITE_LIMIT_LENGTH]+1 );
+  testcase( n==(u64)db->aLimit[SQLITE_LIMIT_LENGTH] );
   if( n<sizeof(zBuf) ){
     z = zBuf;
   }else if( n>(u64)db->aLimit[SQLITE_LIMIT_LENGTH] ){
