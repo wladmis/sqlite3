@@ -734,6 +734,7 @@ do_test incrvacuum-14.1 {
 
 do_test incrvacuum-15.1 {
   db close
+  db2 close
   file delete -force test.db
   sqlite3 db test.db
 
@@ -774,6 +775,5 @@ do_test incrvacuum-15.1 {
   }
 } {ok}
 
-db2 close
 db3 close
 finish_test
