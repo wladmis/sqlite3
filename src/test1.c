@@ -4544,9 +4544,14 @@ static int file_control_lasterrno_test(
         Tcl_GetStringFromObj(objv[0], 0), " DB", 0);
     return TCL_ERROR;
   }
-  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ){
+    return TCL_ERROR;
+  }
   rc = sqlite3_file_control(db, NULL, SQLITE_LAST_ERRNO, &iArg);
-  if( rc ) { Tcl_SetObjResult(interp, Tcl_NewIntObj(rc)); return TCL_ERROR; }
+  if( rc ){ 
+    Tcl_SetObjResult(interp, Tcl_NewIntObj(rc)); 
+    return TCL_ERROR; 
+  }
   if( iArg!=0 ) {
     Tcl_AppendResult(interp, "Unexpected non-zero errno: ",
                      Tcl_GetStringFromObj(Tcl_NewIntObj(iArg), 0), " ", 0);
@@ -4575,7 +4580,9 @@ static int file_control_lockproxy_test(
                      Tcl_GetStringFromObj(objv[0], 0), " DB", 0);
     return TCL_ERROR;
   }
-  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ){
+   return TCL_ERROR;
+  }
   
 #if !defined(SQLITE_ENABLE_LOCKING_STYLE)
 #  if defined(__APPLE__)
@@ -4591,10 +4598,11 @@ static int file_control_lockproxy_test(
     int rc;
     rc = sqlite3_file_control(db, NULL, SQLITE_SET_LOCKPROXYFILE, proxyPath);
     if( rc ){
-      Tcl_SetObjResult(interp, Tcl_NewIntObj(rc)); return TCL_ERROR;
+      Tcl_SetObjResult(interp, Tcl_NewIntObj(rc)); 
+      return TCL_ERROR;
     }
     rc = sqlite3_file_control(db, NULL, SQLITE_GET_LOCKPROXYFILE, &testPath);
-    if( strncmp(proxyPath,testPath,11) ) {
+    if( strncmp(proxyPath,testPath,11) ){
       Tcl_AppendResult(interp, "Lock proxy file did not match the "
                                "previously assigned value", 0);
       return TCL_ERROR;
