@@ -3127,7 +3127,7 @@ WhereInfo *sqlite3WhereBegin(
       pLevel->iIdxCur = -1;
     }
     notReady &= ~getMask(pMaskSet, pTabList->a[bestJ].iCursor);
-    pLevel->iFrom = bestJ;
+    pLevel->iFrom = (u8)bestJ;
 
     /* Check that if the table scanned by this loop iteration had an
     ** INDEXED BY clause attached to it, that the named index is being

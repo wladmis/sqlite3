@@ -227,6 +227,7 @@ static void shellstaticFunc(
 ){
   assert( 0==argc );
   assert( zShellStatic );
+  UNUSED_PARAMETER(argc);
   UNUSED_PARAMETER(argv);
   sqlite3_result_text(context, zShellStatic, -1, SQLITE_STATIC);
 }

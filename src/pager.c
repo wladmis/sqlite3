@@ -2174,7 +2174,7 @@ static int pagerPlaybackSavepoint(Pager *pPager, PagerSavepoint *pSavepoint){
     if( nJRec==0 
      && pPager->journalHdr+JOURNAL_HDR_SZ(pPager)==pPager->journalOff
     ){
-      nJRec = (szJ - pPager->journalOff)/JOURNAL_PG_SZ(pPager);
+      nJRec = (u32)((szJ - pPager->journalOff)/JOURNAL_PG_SZ(pPager));
     }
     for(ii=0; rc==SQLITE_OK && ii<nJRec && pPager->journalOff<szJ; ii++){
       rc = pager_playback_one_page(pPager, 1, &pPager->journalOff, 1, pDone);
@@ -2501,11 +2501,11 @@ int sqlite3PagerPagecount(Pager *pPager, int *pnPage){
     if( n>0 && n<pPager->pageSize ){
       nPage = 1;
     }else{
-      nPage = n / pPager->pageSize;
+      nPage = (Pgno)(n / pPager->pageSize);
     }
     if( pPager->state!=PAGER_UNLOCK ){
-      pPager->dbSize = (Pgno)nPage;
-      pPager->dbFileSize = (Pgno)nPage;
+      pPager->dbSize = nPage;
+      pPager->dbFileSize = nPage;
       pPager->dbSizeValid = 1;
     }
   }
@@ -3197,8 +3197,13 @@ int sqlite3PagerOpen(
     */
     if( rc==SQLITE_OK && !readOnly ){
       setSectorSize(pPager);
+      assert(SQLITE_DEFAULT_PAGE_SIZE<=SQLITE_MAX_DEFAULT_PAGE_SIZE);
       if( szPageDflt<pPager->sectorSize ){
-        szPageDflt = pPager->sectorSize;
+        if( pPager->sectorSize>SQLITE_MAX_DEFAULT_PAGE_SIZE ){
+          szPageDflt = SQLITE_MAX_DEFAULT_PAGE_SIZE;
+        }else{
+          szPageDflt = (u16)pPager->sectorSize;
+        }
       }
 #ifdef SQLITE_ENABLE_ATOMIC_WRITE
       {
@@ -3214,9 +3219,6 @@ int sqlite3PagerOpen(
         }
       }
 #endif
-      if( szPageDflt>SQLITE_MAX_DEFAULT_PAGE_SIZE ){
-        szPageDflt = SQLITE_MAX_DEFAULT_PAGE_SIZE;
-      }
     }
   }else{
     /* If a temporary file is requested, it is not opened immediately.
