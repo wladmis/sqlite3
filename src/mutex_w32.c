@@ -195,7 +195,6 @@ static void winMutexEnter(sqlite3_mutex *p){
 }
 static int winMutexTry(sqlite3_mutex *p){
   int rc = SQLITE_BUSY;
-  UNUSED_PARAMETER(p);
   assert( p->id==SQLITE_MUTEX_RECURSIVE || winMutexNotheld(p) );
   /*
   ** The sqlite3_mutex_try() routine is very rarely used, and when it
@@ -214,6 +213,8 @@ static int winMutexTry(sqlite3_mutex *p){
     p->nRef++;
     rc = SQLITE_OK;
   }
+#else
+  UNUSED_PARAMETER(p);
 #endif
   return rc;
 }
