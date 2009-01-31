@@ -136,10 +136,8 @@ const char *sqlite3PagerJournalname(Pager*);
 int sqlite3PagerNosync(Pager*);
 void *sqlite3PagerTempSpace(Pager*);
 
-/* Functions used in auto-vacuum mode to truncate the database file. */
-#ifndef SQLITE_OMIT_AUTOVACUUM
-  void sqlite3PagerTruncateImage(Pager*,Pgno);
-#endif
+/* Functions used to truncate the database file. */
+void sqlite3PagerTruncateImage(Pager*,Pgno);
 
 /* Used by encryption extensions. */
 #ifdef SQLITE_HAS_CODEC

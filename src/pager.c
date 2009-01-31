@@ -2575,7 +2575,6 @@ static int pager_wait_on_lock(Pager *pPager, int locktype){
   return rc;
 }
 
-#ifndef SQLITE_OMIT_AUTOVACUUM
 /*
 ** Truncate the in-memory database file image to nPage pages. This 
 ** function does not actually modify the database file on disk. It 
@@ -2588,7 +2587,6 @@ void sqlite3PagerTruncateImage(Pager *pPager, Pgno nPage){
   assert( pPager->state>=PAGER_RESERVED );
   pPager->dbSize = nPage;
 }
-#endif  /* ifndef SQLITE_OMIT_AUTOVACUUM */
 
 /*
 ** Shutdown the page cache.  Free all memory and close all files.

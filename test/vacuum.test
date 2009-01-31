@@ -287,7 +287,14 @@ do_test vacuum-7.0 {
     CREATE TABLE t1(t);
     VACUUM;
   } db2
-} {}
+  execsql {
+    CREATE TABLE t2(t);
+    CREATE TABLE t3(t);
+    DROP TABLE t2;
+    VACUUM;
+    pragma integrity_check;
+  } db2
+} {ok}
 db2 close
 
 # Ticket #873.  VACUUM a database that has ' in its name.

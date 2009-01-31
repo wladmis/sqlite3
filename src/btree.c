@@ -7390,6 +7390,10 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
     ** file APIs on the database file directly.
     */
     pBtTo->db = pTo->db;
+    if( nFromPageSize==nToPageSize ){
+      sqlite3PagerTruncateImage(pBtTo->pPager, nFromPage);
+      iNow = iSize;
+    }
     rc = sqlite3PagerCommitPhaseOne(pBtTo->pPager, 0, 1);
     if( iSize<iNow && rc==SQLITE_OK ){
       rc = sqlite3OsTruncate(pFile, iSize);
