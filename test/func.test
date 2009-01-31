@@ -1031,4 +1031,14 @@ do_test func-26.6 {
   "
 } {1 {no such function: nullx_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789_123456789a}}
 
+do_test func-27.1 {
+  catchsql {SELECT coalesce()}
+} {1 {wrong number of arguments to function coalesce()}}
+do_test func-27.2 {
+  catchsql {SELECT coalesce(1)}
+} {1 {wrong number of arguments to function coalesce()}}
+do_test func-27.3 {
+  catchsql {SELECT coalesce(1,2)}
+} {0 1}
+
 finish_test

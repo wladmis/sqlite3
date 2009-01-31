@@ -228,8 +228,9 @@ CollSeq *sqlite3FindCollSeq(
 ** that uses encoding enc. The value returned indicates how well the
 ** request is matched. A higher value indicates a better match.
 **
-** The returned value is always between 1 and 6, as follows:
+** The returned value is always between 0 and 6, as follows:
 **
+** 0: Not a match, or if nArg<0 and the function is has no implementation.
 ** 1: A variable arguments function that prefers UTF-8 when a UTF-16
 **    encoding is requested, or vice versa.
 ** 2: A variable arguments function that uses UTF-16BE when UTF-16LE is
@@ -244,7 +245,9 @@ CollSeq *sqlite3FindCollSeq(
 */
 static int matchQuality(FuncDef *p, int nArg, u8 enc){
   int match = 0;
-  if( p->nArg==-1 || p->nArg==nArg || nArg==-1 ){
+  if( p->nArg==-1 || p->nArg==nArg 
+   || (nArg==-1 && (p->xFunc!=0 || p->xStep!=0))
+  ){
     match = 1;
     if( p->nArg==nArg || nArg==-1 ){
       match = 4;
