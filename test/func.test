@@ -362,7 +362,7 @@ if {$encoding=="UTF-16le"} {
   } {6100620063006400310032006700}
   do_test func-9.12-utf16le {
     execsql {SELECT hex(replace('abcdefg','','12'))}
-  } {{}}
+  } {6100620063006400650066006700}
   do_test func-9.13-utf16le {
     execsql {SELECT hex(replace('aabcdefg','a','aaa'))}
   } {610061006100610061006100620063006400650066006700}
@@ -372,7 +372,7 @@ if {$encoding=="UTF-16le"} {
   } {61626364313267}
   do_test func-9.12-utf8 {
     execsql {SELECT hex(replace('abcdefg','','12'))}
-  } {{}}
+  } {61626364656667}
   do_test func-9.13-utf8 {
     execsql {SELECT hex(replace('aabcdefg','a','aaa'))}
   } {616161616161626364656667}
