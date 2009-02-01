@@ -1260,6 +1260,38 @@ static int sqlite3_mprintf_int64(
 }
 
 /*
+** Usage:  sqlite3_mprintf_long FORMAT INTEGER INTEGER INTEGER
+**
+** Call mprintf with three long integer arguments.   This might be the
+** same as sqlite3_mprintf_int or sqlite3_mprintf_int64, depending on
+** platform.
+*/
+static int sqlite3_mprintf_long(
+  void *NotUsed,
+  Tcl_Interp *interp,    /* The TCL interpreter that invoked this command */
+  int argc,              /* Number of arguments */
+  char **argv            /* Text of each argument */
+){
+  int i;
+  long int a[3];
+  int b[3];
+  char *z;
+  if( argc!=5 ){
+    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
+       " FORMAT INT INT INT\"", 0);
+    return TCL_ERROR;
+  }
+  for(i=2; i<5; i++){
+    if( Tcl_GetInt(interp, argv[i], &b[i-2]) ) return TCL_ERROR;
+    a[i-2] = (long int)b[i-2];
+  }
+  z = sqlite3_mprintf(argv[1], a[0], a[1], a[2]);
+  Tcl_AppendResult(interp, z, 0);
+  sqlite3_free(z);
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite3_mprintf_str FORMAT INTEGER INTEGER STRING
 **
 ** Call mprintf with two integer arguments and one string argument
@@ -4807,6 +4839,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "db_leave",                      (Tcl_CmdProc*)db_leave               },
      { "sqlite3_mprintf_int",           (Tcl_CmdProc*)sqlite3_mprintf_int    },
      { "sqlite3_mprintf_int64",         (Tcl_CmdProc*)sqlite3_mprintf_int64  },
+     { "sqlite3_mprintf_long",          (Tcl_CmdProc*)sqlite3_mprintf_long   },
      { "sqlite3_mprintf_str",           (Tcl_CmdProc*)sqlite3_mprintf_str    },
      { "sqlite3_snprintf_str",          (Tcl_CmdProc*)sqlite3_snprintf_str   },
      { "sqlite3_mprintf_stronly",       (Tcl_CmdProc*)sqlite3_mprintf_stronly},
