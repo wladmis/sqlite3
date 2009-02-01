@@ -171,6 +171,11 @@ static void substrFunc(
   i64 p1, p2;
 
   assert( argc==3 || argc==2 );
+  if( sqlite3_value_type(argv[1])==SQLITE_NULL
+   || (argc==3 && sqlite3_value_type(argv[2])==SQLITE_NULL)
+  ){
+    return;
+  }
   p0type = sqlite3_value_type(argv[0]);
   if( p0type==SQLITE_BLOB ){
     len = sqlite3_value_bytes(argv[0]);

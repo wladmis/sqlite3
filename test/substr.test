@@ -79,6 +79,24 @@ substr-test 1.14 abcdefg -5 -1 b
 substr-test 1.15 abcdefg -5 -2 ab
 substr-test 1.16 abcdefg -5 -3 ab
 
+# Make sure NULL is returned if any parameter is NULL
+#
+do_test substr-1.90 {
+  db eval {SELECT ifnull(substr(NULL,1,1),'nil')}
+} nil
+do_test substr-1.91 {
+  db eval {SELECT ifnull(substr(NULL,1),'nil')}
+} nil
+do_test substr-1.92 {
+  db eval {SELECT ifnull(substr('abcdefg',NULL,1),'nil')}
+} nil
+do_test substr-1.93 {
+  db eval {SELECT ifnull(substr('abcdefg',NULL),'nil')}
+} nil
+do_test substr-1.94 {
+  db eval {SELECT ifnull(substr('abcdefg',1,NULL),'nil')}
+} nil
+
 # Make sure everything works with long unicode characters
 #
 substr-test 2.1 \u1234\u2345\u3456 1 1 \u1234
