@@ -1377,7 +1377,7 @@ void sqlite3RegisterGlobalFunctions(void){
     FUNCTION(coalesce,           0, 0, 0, 0                ),
     FUNCTION(hex,                1, 0, 0, hexFunc          ),
     FUNCTION(ifnull,             2, 0, 1, ifnullFunc       ),
-    FUNCTION(random,            -1, 0, 0, randomFunc       ),
+    FUNCTION(random,             0, 0, 0, randomFunc       ),
     FUNCTION(randomblob,         1, 0, 0, randomBlob       ),
     FUNCTION(nullif,             2, 0, 1, nullifFunc       ),
     FUNCTION(sqlite_version,     0, 0, 0, versionFunc      ),
