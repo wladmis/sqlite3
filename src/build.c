@@ -1386,8 +1386,7 @@ static char *createTableStmt(sqlite3 *db, Table *p, int isTemp){
     db->mallocFailed = 1;
     return 0;
   }
-  sqlite3_snprintf(n, zStmt,
-                  !OMIT_TEMPDB&&isTemp ? "CREATE TEMP TABLE ":"CREATE TABLE ");
+  sqlite3_snprintf(n, zStmt, "CREATE TABLE ");
   k = sqlite3Strlen30(zStmt);
   identPut(zStmt, &k, p->zName);
   zStmt[k++] = '(';
