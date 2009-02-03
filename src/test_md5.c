@@ -299,7 +299,7 @@ static void DigestToBase16(unsigned char *digest, char *zBuf){
 static int md5_cmd(void*cd, Tcl_Interp *interp, int argc, const char **argv){
   MD5Context ctx;
   unsigned char digest[16];
-  char zBuf[30];
+  char zBuf[33];
 
   if( argc!=2 ){
     Tcl_AppendResult(interp,"wrong # args: should be \"", argv[0], 
