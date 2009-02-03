@@ -6884,7 +6884,9 @@ typedef struct sqlite3_backup sqlite3_backup;
 ** sqlite3_backup_finish(). Unfortunately SQLite does not currently check
 ** for this, if the application does use the destination [database connection]
 ** for some other purpose during a backup operation, things may appear to
-** work correctly but in fact be subtly malfunctioning.
+** work correctly but in fact be subtly malfunctioning.  Use of the
+** destination database connection while a backup is in progress might
+** also cause a mutex deadlock.
 **
 ** Furthermore, if running in [shared cache mode], the application must
 ** guarantee that the shared cache used by the destination database
