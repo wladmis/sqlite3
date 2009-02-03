@@ -1284,6 +1284,7 @@ static int sqlite3_mprintf_long(
   for(i=2; i<5; i++){
     if( Tcl_GetInt(interp, argv[i], &b[i-2]) ) return TCL_ERROR;
     a[i-2] = (long int)b[i-2];
+    a[i-2] &= (((u64)1)<<(sizeof(int)*8))-1;
   }
   z = sqlite3_mprintf(argv[1], a[0], a[1], a[2]);
   Tcl_AppendResult(interp, z, 0);
