@@ -382,9 +382,6 @@ int sqlite3VdbeMemGrow(Mem *pMem, int n, int preserve);
 int sqlite3VdbeReleaseBuffers(Vdbe *p);
 #endif
 
-#ifndef NDEBUG
-  void sqlite3VdbeMemSanity(Mem*);
-#endif
 int sqlite3VdbeMemTranslate(Mem*, u8);
 #ifdef SQLITE_DEBUG
   void sqlite3VdbePrintSql(Vdbe*);
