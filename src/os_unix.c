@@ -920,6 +920,7 @@ static int findLockInfo(
     return SQLITE_IOERR;
   }
 
+#ifdef __APPLE__
   /* On OS X on an msdos filesystem, the inode number is reported
   ** incorrectly for zero-size files.  See ticket #3260.  To work
   ** around this problem (we consider it a bug in OS X, not SQLite)
@@ -931,13 +932,17 @@ static int findLockInfo(
   ** the first page of the database, no damage is done.
   */
   if( statbuf.st_size==0 ){
-    write(fd, "S", 1);
+    rc = write(fd, "S", 1);
+    if( rc!=1 ){
+      return SQLITE_IOERR;
+    }
     rc = fstat(fd, &statbuf);
     if( rc!=0 ){
       pFile->lastErrno = errno;
       return SQLITE_IOERR;
     }
   }
+#endif
 
   memset(&lockKey, 0, sizeof(lockKey));
   lockKey.fid.dev = statbuf.st_dev;
