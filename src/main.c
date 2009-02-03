@@ -603,6 +603,16 @@ int sqlite3_close(sqlite3 *db){
   }
   assert( sqlite3SafetyCheckSickOrOk(db) );
 
+  for(j=0; j<db->nDb; j++){
+    Btree *pBt = db->aDb[j].pBt;
+    if( pBt && sqlite3BtreeIsInBackup(pBt) ){
+      sqlite3Error(db, SQLITE_BUSY, 
+          "Unable to close due to unfinished backup operation");
+      sqlite3_mutex_leave(db->mutex);
+      return SQLITE_BUSY;
+    }
+  }
+
   /* Free any outstanding Savepoint structures. */
   sqlite3CloseSavepoints(db);
 

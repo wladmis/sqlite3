@@ -46,6 +46,7 @@ set EXCLUDE {
   async.test
   async2.test
   async3.test
+  backup_ioerr.test
   corrupt.test
   corruptC.test
   crash.test

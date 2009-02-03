@@ -3217,7 +3217,7 @@ static int test_errcode(
 }
 
 /*
-** Usage:   test_errmsg DB
+** Usage:   sqlite3_errmsg DB
 **
 ** Returns the UTF-8 representation of the error message string for the
 ** most recent sqlite3_* API call.

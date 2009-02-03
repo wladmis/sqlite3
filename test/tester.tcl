@@ -485,11 +485,9 @@ proc forcedelete {filename} {
 
 # Do an integrity check of the entire database
 #
-proc integrity_check {name} {
+proc integrity_check {name {db db}} {
   ifcapable integrityck {
-    do_test $name {
-      execsql {PRAGMA integrity_check}
-    } {ok}
+    do_test $name [list execsql {PRAGMA integrity_check} $db] {ok}
   }
 }
 

@@ -265,7 +265,6 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
 #ifndef SQLITE_OMIT_AUTOVACUUM
     sqlite3BtreeSetAutoVacuum(pMain, sqlite3BtreeGetAutoVacuum(pTemp));
 #endif
-    rc = sqlite3BtreeCommit(pMain);
   }
 
   if( rc==SQLITE_OK ){
