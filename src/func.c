@@ -843,7 +843,8 @@ static void replaceFunc(
   assert( zStr==sqlite3_value_text(argv[0]) );  /* No encoding change */
   zPattern = sqlite3_value_text(argv[1]);
   if( zPattern==0 ){
-    assert( sqlite3_value_type(argv[1])==SQLITE_NULL );
+    assert( sqlite3_value_type(argv[1])==SQLITE_NULL
+            || sqlite3_context_db_handle(context)->mallocFailed );
     return;
   }
   if( zPattern[0]==0 ){
