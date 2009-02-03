@@ -224,6 +224,7 @@ static void substrFunc(
   assert( p1>=0 && p2>=0 );
   if( p1+p2>len ){
     p2 = len-p1;
+    if( p2<0 ) p2 = 0;
   }
   if( p0type!=SQLITE_BLOB ){
     while( *z && p1 ){
