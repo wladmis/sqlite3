@@ -324,6 +324,7 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
       ** same schema version.
       */
       sqlite3BtreeUpdateMeta(p->pDest, 1, p->iDestSchema+1);
+      sqlite3ResetInternalSchema(p->pDestDb, 0);
 
       /* Set nDestTruncate to the final number of pages in the destination
       ** database. The complication here is that the destination page
