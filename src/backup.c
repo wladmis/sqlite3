@@ -134,6 +134,7 @@ sqlite3_backup *sqlite3_backup_init(
   ** a malfunction or a deadlock.
   */
   sqlite3_mutex_enter(pSrcDb->mutex);
+  sqlite3_mutex_enter(pDestDb->mutex);
 
   if( pSrcDb==pDestDb ){
     sqlite3Error(
@@ -181,6 +182,7 @@ sqlite3_backup *sqlite3_backup_init(
     p->pSrc->nBackup++;
   }
 
+  sqlite3_mutex_leave(pDestDb->mutex);
   sqlite3_mutex_leave(pSrcDb->mutex);
   return p;
 }
