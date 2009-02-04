@@ -191,6 +191,7 @@ int sqlite3_initialize(void){
   ** reason.  So we run it once during initialization.
   */
 #ifndef NDEBUG
+#ifndef SQLITE_OMIT_FLOATING_POINT
   /* This section of code's only "output" is via assert() statements. */
   if ( rc==SQLITE_OK ){
     u64 x = (((u64)1)<<63)-1;
@@ -200,6 +201,7 @@ int sqlite3_initialize(void){
     memcpy(&y, &x, 8);
     assert( sqlite3IsNaN(y) );
   }
+#endif
 #endif
 
   return rc;

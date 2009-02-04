@@ -1042,9 +1042,19 @@ static void currentTimeFunc(
   double rT;
   char zBuf[20];
 
+  UNUSED_PARAMETER(argc);
+  UNUSED_PARAMETER(argv);
+
   db = sqlite3_context_db_handle(context);
   sqlite3OsCurrentTime(db->pVfs, &rT);
+#ifndef SQLITE_OMIT_FLOATING_POINT
   t = 86400.0*(rT - 2440587.5) + 0.5;
+#else
+  /* without floating point support, rT will have
+  ** already lost fractional day precision.
+  */
+  t = 86400 * (rT - 2440587) - 43200;
+#endif
 #ifdef HAVE_GMTIME_R
   {
     struct tm sNow;

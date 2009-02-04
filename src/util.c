@@ -19,7 +19,6 @@
 #include "sqliteInt.h"
 #include <stdarg.h>
 
-
 /*
 ** Routine needed to support the testcase() macro.
 */

@@ -1932,12 +1932,10 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
     case TK_UMINUS: {
       Expr *pLeft = pExpr->pLeft;
       assert( pLeft );
-      if( pLeft->op==TK_FLOAT || pLeft->op==TK_INTEGER ){
-        if( pLeft->op==TK_FLOAT ){
-          codeReal(v, (char*)pLeft->token.z, pLeft->token.n, 1, target);
-        }else{
-          codeInteger(v, pLeft, 1, target);
-        }
+      if( pLeft->op==TK_FLOAT ){
+        codeReal(v, (char*)pLeft->token.z, pLeft->token.n, 1, target);
+      }else if( pLeft->op==TK_INTEGER ){
+        codeInteger(v, pLeft, 1, target);
       }else{
         regFree1 = r1 = sqlite3GetTempReg(pParse);
         sqlite3VdbeAddOp2(v, OP_Integer, 0, r1);
