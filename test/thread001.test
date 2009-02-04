@@ -22,6 +22,8 @@ if {[info commands sqlthread] eq ""} {
   return
 }
 
+set ::enable_shared_cache [sqlite3_enable_shared_cache]
+
 set ::NTHREAD 10
 
 # Run this test three times: 
@@ -144,4 +146,5 @@ foreach {tn same_db shared_cache} [list \
   } {ok}
 }
 
+sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test

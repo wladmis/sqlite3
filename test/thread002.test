@@ -28,7 +28,7 @@ ifcapable !attach||!mutex {
 }
 
 db close
-sqlite3_enable_shared_cache 1
+set ::enable_shared_cache [sqlite3_enable_shared_cache 1]
 
 set ::NTHREAD 10
 
@@ -106,4 +106,5 @@ for {set ii 0} {$ii < 3} {incr ii} {
   } [list [expr 1 + $::NTHREAD*100] ok]
 }
 
+sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test
