@@ -869,6 +869,24 @@ proc allcksum {{db db}} {
   return [md5 $txt]
 }
 
+# Generate a checksum based on the contents of a single database with
+# a database connection.  The name of the database is $dbname.  
+# Examples of $dbname are "temp" or "main".
+#
+proc dbcksum {db dbname} {
+  if {$dbname=="temp"} {
+    set master sqlite_temp_master
+  } else {
+    set master $dbname.sqlite_master
+  }
+  set alltab [$db eval "SELECT name FROM $master WHERE type='table'"]
+  set txt [$db eval "SELECT * FROM $master"]\n
+  foreach tab $alltab {
+    append txt [$db eval "SELECT * FROM $dbname.$tab"]\n
+  }
+  return [md5 $txt]
+}
+
 proc memdebug_log_sql {{filename mallocs.sql}} {
 
   set data [sqlite3_memdebug_log dump]

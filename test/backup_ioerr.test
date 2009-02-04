@@ -1,4 +1,4 @@
-# 2008 January 30
+# 2009 January 30
 #
 # The author disclaims copyright to this source code.  In place of
 # a legal notice, here is a blessing:
@@ -284,4 +284,3 @@ for {set iError 1} {$bStop == 0} {incr iError} {
 catch { sdb close }
 catch { ddb close }
 finish_test
-
