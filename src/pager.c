@@ -993,11 +993,11 @@ static int writeMasterJournal(Pager *pPager, const char *zMaster){
   /* Write the master journal data to the end of the journal file. If
   ** an error occurs, return the error code to the caller.
   */
-  if( (rc = write32bits(pPager->jfd, iHdrOff, PAGER_MJ_PGNO(pPager)))
-   || (rc = sqlite3OsWrite(pPager->jfd, zMaster, nMaster, iHdrOff+4))
-   || (rc = write32bits(pPager->jfd, iHdrOff+4+nMaster, nMaster))
-   || (rc = write32bits(pPager->jfd, iHdrOff+4+nMaster+4, cksum))
-   || (rc = sqlite3OsWrite(pPager->jfd, aJournalMagic, 8, iHdrOff+4+nMaster+8))
+  if( (0 != (rc = write32bits(pPager->jfd, iHdrOff, PAGER_MJ_PGNO(pPager))))
+   || (0 != (rc = sqlite3OsWrite(pPager->jfd, zMaster, nMaster, iHdrOff+4)))
+   || (0 != (rc = write32bits(pPager->jfd, iHdrOff+4+nMaster, nMaster)))
+   || (0 != (rc = write32bits(pPager->jfd, iHdrOff+4+nMaster+4, cksum)))
+   || (0 != (rc = sqlite3OsWrite(pPager->jfd, aJournalMagic, 8, iHdrOff+4+nMaster+8)))
   ){
     return rc;
   }
@@ -2512,7 +2512,7 @@ int sqlite3PagerPagecount(Pager *pPager, int *pnPage){
     i64 n = 0;              /* File size in bytes returned by OsFileSize() */
 
     assert( isOpen(pPager->fd) || pPager->tempFile );
-    if( isOpen(pPager->fd) && (rc = sqlite3OsFileSize(pPager->fd, &n)) ){
+    if( isOpen(pPager->fd) && (0 != (rc = sqlite3OsFileSize(pPager->fd, &n))) ){
       pager_error(pPager, rc);
       return rc;
     }

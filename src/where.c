@@ -888,7 +888,7 @@ static void exprAnalyzeOrTerm(
   if( chngToIN ){
     int okToChngToIN = 0;     /* True if the conversion to IN is valid */
     int iColumn = -1;         /* Column index on lhs of IN operator */
-    int iCursor;              /* Table cursor common to all terms */
+    int iCursor = -1;         /* Table cursor common to all terms */
     int j = 0;                /* Loop counter */
 
     /* Search for a table and column that appears on one side or the
