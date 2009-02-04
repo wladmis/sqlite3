@@ -599,7 +599,7 @@ int sqlite3_close(sqlite3 *db){
   /* If there are any outstanding VMs, return SQLITE_BUSY. */
   if( db->pVdbe ){
     sqlite3Error(db, SQLITE_BUSY, 
-        "Unable to close due to unfinalised statements");
+        "unable to close due to unfinalised statements");
     sqlite3_mutex_leave(db->mutex);
     return SQLITE_BUSY;
   }
@@ -609,7 +609,7 @@ int sqlite3_close(sqlite3 *db){
     Btree *pBt = db->aDb[j].pBt;
     if( pBt && sqlite3BtreeIsInBackup(pBt) ){
       sqlite3Error(db, SQLITE_BUSY, 
-          "Unable to close due to unfinished backup operation");
+          "unable to close due to unfinished backup operation");
       sqlite3_mutex_leave(db->mutex);
       return SQLITE_BUSY;
     }
@@ -955,7 +955,7 @@ int sqlite3CreateFunc(
   if( p && p->iPrefEnc==enc && p->nArg==nArg ){
     if( db->activeVdbeCnt ){
       sqlite3Error(db, SQLITE_BUSY, 
-        "Unable to delete/modify user-function due to active statements");
+        "unable to delete/modify user-function due to active statements");
       assert( !db->mallocFailed );
       return SQLITE_BUSY;
     }else{
@@ -1365,7 +1365,7 @@ static int createCollation(
   if( pColl && pColl->xCmp ){
     if( db->activeVdbeCnt ){
       sqlite3Error(db, SQLITE_BUSY, 
-        "Unable to delete/modify collation sequence due to active statements");
+        "unable to delete/modify collation sequence due to active statements");
       return SQLITE_BUSY;
     }
     sqlite3ExpirePreparedStatements(db);

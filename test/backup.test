@@ -365,7 +365,7 @@ do_test backup-4.3.2 {
 } {SQLITE_BUSY}
 do_test backup-4.3.3 {
   sqlite3_errmsg db2
-} {Unable to close due to unfinished backup operation}
+} {unable to close due to unfinished backup operation}
 do_test backup-4.3.4 {
   B step 50
 } {SQLITE_DONE}
@@ -376,7 +376,7 @@ do_test backup-4.3.5 {
 do_test backup-4.4.1 {
   set rc [catch {sqlite3_backup B db main db aux1}]
   list $rc [sqlite3_errcode db] [sqlite3_errmsg db]
-} {1 SQLITE_ERROR {Source and destination handles must be distinct}}
+} {1 SQLITE_ERROR {source and destination must be distinct}}
 db close
 db2 close
 

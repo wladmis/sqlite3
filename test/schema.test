@@ -313,7 +313,7 @@ do_test schema-11.3 {
     db function tstfunc {}
   } msg]
   list $rc $msg
-} {1 {Unable to delete/modify user-function due to active statements}}
+} {1 {unable to delete/modify user-function due to active statements}}
 do_test schema-11.4 {
   sqlite3_finalize $::STMT
 } {SQLITE_OK}
@@ -331,7 +331,7 @@ do_test schema-11.7 {
     db collate tstcollate {}
   } msg]
   list $rc $msg
-} {1 {Unable to delete/modify collation sequence due to active statements}}
+} {1 {unable to delete/modify collation sequence due to active statements}}
 do_test schema-11.8 {
   sqlite3_finalize $::STMT
 } {SQLITE_OK}

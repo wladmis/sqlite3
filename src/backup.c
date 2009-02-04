@@ -138,7 +138,7 @@ sqlite3_backup *sqlite3_backup_init(
 
   if( pSrcDb==pDestDb ){
     sqlite3Error(
-        pDestDb, SQLITE_ERROR, "Source and destination handles must be distinct"
+        pDestDb, SQLITE_ERROR, "source and destination must be distinct"
     );
     p = 0;
   }else {
