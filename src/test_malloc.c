@@ -132,6 +132,15 @@ static void faultsimConfig(int nDelay, int nRepeat){
   memfault.nBenign = 0;
   memfault.nFail = 0;
   memfault.enable = nDelay>=0;
+
+  /* Sometimes, when running multi-threaded tests, the isBenignMode 
+  ** variable is not properly incremented/decremented so that it is
+  ** 0 when not inside a benign malloc block. This doesn't affect
+  ** the multi-threaded tests, as they do not use this system. But
+  ** it does affect OOM tests run later in the same process. So
+  ** zero the variable here, just to be sure.
+  */
+  memfault.isBenignMode = 0;
 }
 
 /*
