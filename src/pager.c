@@ -1295,8 +1295,8 @@ static int pager_end_transaction(Pager *pPager, int hasMaster){
       if( !isMemoryJournal ){
         rc = sqlite3OsDelete(pPager->pVfs, pPager->zJournal, 0);
       }
-    }else if( pPager->journalMode==PAGER_JOURNALMODE_TRUNCATE
-         && (rc = sqlite3OsTruncate(pPager->jfd, 0))==SQLITE_OK ){
+    }else if( pPager->journalMode==PAGER_JOURNALMODE_TRUNCATE ){
+      rc = sqlite3OsTruncate(pPager->jfd, 0);
       pPager->journalOff = 0;
       pPager->journalStarted = 0;
     }else if( pPager->exclusiveMode 
