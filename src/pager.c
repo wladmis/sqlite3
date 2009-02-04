@@ -2927,18 +2927,20 @@ static int pager_write_pagelist(PgHdr *pList){
 ** bitvec.
 */
 static int subjournalPage(PgHdr *pPg){
-  int rc;
-  void *pData = pPg->pData;
+  int rc = SQLITE_OK;
   Pager *pPager = pPg->pPager;
-  i64 offset = pPager->nSubRec*(4+pPager->pageSize);
-  char *pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
-
-  PAGERTRACE(("STMT-JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno));
-
-  assert( pageInJournal(pPg) || pPg->pgno>pPager->dbOrigSize );
-  rc = write32bits(pPager->sjfd, offset, pPg->pgno);
-  if( rc==SQLITE_OK ){
-    rc = sqlite3OsWrite(pPager->sjfd, pData2, pPager->pageSize, offset+4);
+  if( isOpen(pPager->sjfd) ){
+    void *pData = pPg->pData;
+    i64 offset = pPager->nSubRec*(4+pPager->pageSize);
+    char *pData2 = CODEC2(pPager, pData, pPg->pgno, 7);
+  
+    PAGERTRACE(("STMT-JOURNAL %d page %d\n", PAGERID(pPager), pPg->pgno));
+  
+    assert( pageInJournal(pPg) || pPg->pgno>pPager->dbOrigSize );
+    rc = write32bits(pPager->sjfd, offset, pPg->pgno);
+    if( rc==SQLITE_OK ){
+      rc = sqlite3OsWrite(pPager->sjfd, pData2, pPager->pageSize, offset+4);
+    }
   }
   if( rc==SQLITE_OK ){
     pPager->nSubRec++;
