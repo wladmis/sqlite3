@@ -510,12 +510,10 @@ struct BusyHandler {
   #define sqlite3GlobalConfig GLOBAL(struct Sqlite3Config, sqlite3Config)
   int sqlite3_wsd_init(int N, int J);
   void *sqlite3_wsd_find(void *K, int L);
-  int sqlite3PendingByte;
 #else
   #define SQLITE_WSD 
   #define GLOBAL(t,v) v
   #define sqlite3GlobalConfig sqlite3Config
-  int sqlite3PendingByte;
 #endif
 
 /*
@@ -2533,6 +2531,7 @@ extern const unsigned char sqlite3UpperToLower[];
 extern const unsigned char sqlite3CtypeMap[];
 extern SQLITE_WSD struct Sqlite3Config sqlite3Config;
 extern SQLITE_WSD FuncDefHash sqlite3GlobalFunctions;
+extern int sqlite3PendingByte;
 #endif
 void sqlite3RootPageMoved(Db*, int, int);
 void sqlite3Reindex(Parse*, Token*, Token*);
