@@ -426,7 +426,7 @@ if {$tcl_platform(platform)!="windows" && $tcl_platform(platform)!="os2"} {
       }
     } {0 32}
     
-    set ::pending_byte_page [expr ($::sqlite_pending_byte / 1024) + 1]
+    sqlite3_test_control_pending_page [expr ($::sqlite_pending_byte / 1024) + 1]
     do_test misc7-17.3 {
       db eval {
         pragma writable_schema = true;

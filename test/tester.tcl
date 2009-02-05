@@ -27,7 +27,7 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
 }
 
 set tcl_precision 15
-set sqlite_pending_byte 0x0010000
+sqlite3_test_control_pending_byte 0x0010000
 
 # 
 # Check the command-line arguments for a default soft-heap-limit.
@@ -576,7 +576,7 @@ proc crashsql {args} {
   set f [open crash.tcl w]
   puts $f "sqlite3_crash_enable 1"
   puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
-  puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
+  puts $f "sqlite3_test_control_pending_byte $::sqlite_pending_byte"
   puts $f "sqlite3 db test.db -vfs crash"
 
   # This block sets the cache size of the main database to 10
