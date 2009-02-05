@@ -163,9 +163,11 @@ static struct MemBlockHdr *sqlite3MemsysGetHeader(void *pAllocation){
   pInt = (int*)pAllocation;
   pU8 = (u8*)pAllocation;
   assert( pInt[nReserve/sizeof(int)]==(int)REARGUARD );
-  assert( (nReserve-0)<=p->iSize || pU8[nReserve-1]==0x65 );
-  assert( (nReserve-1)<=p->iSize || pU8[nReserve-2]==0x65 );
-  assert( (nReserve-2)<=p->iSize || pU8[nReserve-3]==0x65 );
+  /* This checks any of the "extra" bytes allocated due
+  ** to rounding up to an 8 byte boundary to ensure 
+  ** they haven't been overwritten.
+  */
+  while( nReserve-- > p->iSize ) assert( pU8[nReserve]==0x65 );
   return p;
 }
 
@@ -186,6 +188,7 @@ static int sqlite3MemSize(void *p){
 */
 static int sqlite3MemInit(void *NotUsed){
   UNUSED_PARAMETER(NotUsed);
+  assert( (sizeof(struct MemBlockHdr)&7) == 0 );
   if( !sqlite3GlobalConfig.bMemstat ){
     /* If memory status is enabled, then the malloc.c wrapper will already
     ** hold the STATIC_MEM mutex when the routines here are invoked. */
