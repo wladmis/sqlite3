@@ -727,16 +727,21 @@ static int winTruncate(sqlite3_file *id, sqlite3_int64 nByte){
   LONG upperBits = (LONG)((nByte>>32) & 0x7fffffff);
   LONG lowerBits = (LONG)(nByte & 0xffffffff);
   winFile *pFile = (winFile*)id;
+  DWORD error = NO_ERROR;
   OSTRACE3("TRUNCATE %d %lld\n", pFile->h, nByte);
   SimulateIOError(return SQLITE_IOERR_TRUNCATE);
   rc = SetFilePointer(pFile->h, lowerBits, &upperBits, FILE_BEGIN);
-  if( INVALID_SET_FILE_POINTER != rc ){
+  if( INVALID_SET_FILE_POINTER == rc ){
+    error = GetLastError();
+  }
+  if( error == NO_ERROR ){
     /* SetEndOfFile will fail if nByte is negative */
     if( SetEndOfFile(pFile->h) ){
       return SQLITE_OK;
     }
+    error = GetLastError();
   }
-  pFile->lastErrno = GetLastError();
+  pFile->lastErrno = error;
   return SQLITE_IOERR_TRUNCATE;
 }
 
