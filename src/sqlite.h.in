@@ -6787,7 +6787,8 @@ typedef struct sqlite3_backup sqlite3_backup;
 **
 ** Function [sqlite3_backup_step()] is used to copy up to nPage pages between 
 ** the source and destination databases, where nPage is the value of the 
-** second parameter passed to sqlite3_backup_step(). If nPage pages are 
+** second parameter passed to sqlite3_backup_step(). If nPage is a negative
+** value, all remaining source pages are copied. If the required pages are 
 ** succesfully copied, but there are still more pages to copy before the 
 ** backup is complete, it returns [SQLITE_OK]. If no error occured and there 
 ** are no more pages to copy, then [SQLITE_DONE] is returned. If an error 
