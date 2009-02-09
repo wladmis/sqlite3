@@ -482,6 +482,9 @@ static void registerTrace(FILE *out, int iReg, Mem *p){
    if( db->u1.isInterrupted ) goto abort_due_to_interrupt;
 
 #ifdef SQLITE_DEBUG
+# define fileExists(A,B) 0
+#endif
+#if 0
 static int fileExists(sqlite3 *db, const char *zFile){
   int res = 0;
   int rc = SQLITE_OK;
