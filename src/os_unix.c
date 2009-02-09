@@ -1089,6 +1089,7 @@ static int unixCheckReservedLock(sqlite3_file *id, int *pResOut){
 
   /* Otherwise see if some other process holds it.
   */
+#ifndef __DJGPP__
   if( !reserved ){
     struct flock lock;
     lock.l_whence = SEEK_SET;
@@ -1103,6 +1104,7 @@ static int unixCheckReservedLock(sqlite3_file *id, int *pResOut){
       reserved = 1;
     }
   }
+#endif
   
   unixLeaveMutex();
   OSTRACE4("TEST WR-LOCK %d %d %d\n", pFile->h, rc, reserved);
@@ -1430,7 +1432,7 @@ static int unixUnlock(sqlite3_file *id, int locktype){
         if( IS_LOCK_ERROR(rc) ){
           pFile->lastErrno = tErrno;
         }
-				goto end_unlock;
+        goto end_unlock;
       }
     }
     lock.l_type = F_UNLCK;
