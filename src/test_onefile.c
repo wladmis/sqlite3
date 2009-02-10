@@ -604,6 +604,7 @@ static int fsOpen(
   for(; pReal && strncmp(pReal->zName, zName, nName); pReal=pReal->pNext);
 
   if( !pReal ){
+    int real_flags = (flags&~(SQLITE_OPEN_MAIN_DB))|SQLITE_OPEN_TEMP_DB;
     sqlite3_int64 size;
     sqlite3_file *pRealFile;
     sqlite3_vfs *pParent = pFsVfs->pParent;
@@ -618,7 +619,7 @@ static int fsOpen(
     pReal->zName = zName;
     pReal->pFile = (sqlite3_file *)(&pReal[1]);
 
-    rc = pParent->xOpen(pParent, zName, pReal->pFile, flags, pOutFlags);
+    rc = pParent->xOpen(pParent, zName, pReal->pFile, real_flags, pOutFlags);
     if( rc!=SQLITE_OK ){
       goto open_out;
     }
