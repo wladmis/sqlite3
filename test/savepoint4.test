@@ -19,7 +19,8 @@ proc signature {} {
   return [db eval {SELECT count(*), md5sum(x) FROM t1}]
 }
 
-set ITERATIONS 25
+set ITERATIONS 25                   ;# Number of iterations for savepoint4-1
+set ITERATIONS2 13                  ;# Number of iterations for savepoint4-2
 expr srand(0)
 
 do_test savepoint4-1 {
@@ -100,7 +101,7 @@ do_test savepoint4-2 {
   }
 } {256}
 
-for {set ii 1} {$ii<=$ITERATIONS} {incr ii} {
+for {set ii 1} {$ii<=$ITERATIONS2} {incr ii} {
   set ::sig [signature]
   set file test.db-journal
 
