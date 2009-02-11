@@ -129,6 +129,7 @@ struct CrashFile {
   const sqlite3_io_methods *pMethod;   /* Must be first */
   sqlite3_file *pRealFile;             /* Underlying "real" file handle */
   char *zName;
+  int flags;                           /* Flags the file was opened with */
 
   /* Cache of the entire file. This is used to speed up OsRead() and 
   ** OsFileSize() calls. Although both could be done by traversing the
@@ -165,6 +166,22 @@ static void crash_free(void *p){
 }
 static void *crash_realloc(void *p, int n){
   return (void *)Tcl_Realloc(p, (size_t)n);
+}
+
+/*
+** Wrapper around the sqlite3OsWrite() function that avoids writing to the
+** 512 byte block begining at offset PENDING_BYTE.
+*/
+static int writeDbFile(CrashFile *p, u8 *z, i64 iAmt, i64 iOff){
+  int rc;
+  int iSkip = 0;
+  if( iOff==PENDING_BYTE && (p->flags&SQLITE_OPEN_MAIN_DB) ){
+    iSkip = 512;
+  }
+  if( (iAmt-iSkip)>0 ){
+    rc = sqlite3OsWrite(p->pRealFile, &z[iSkip], iAmt-iSkip, iOff+iSkip);
+  }
+  return rc;
 }
 
 /*
@@ -261,8 +278,8 @@ static int writeListSync(CrashFile *pFile, int isCrash){
     switch( eAction ){
       case 1: {               /* Write out correctly */
         if( pWrite->zBuf ){
-          rc = sqlite3OsWrite(
-              pRealFile, pWrite->zBuf, pWrite->nBuf, pWrite->iOffset
+          rc = writeDbFile(
+              pWrite->pFile, pWrite->zBuf, pWrite->nBuf, pWrite->iOffset
           );
         }else{
           rc = sqlite3OsTruncate(pRealFile, pWrite->iOffset);
@@ -307,8 +324,8 @@ static int writeListSync(CrashFile *pFile, int isCrash){
           sqlite3_int64 i;
           for(i=iFirst; rc==SQLITE_OK && i<=iLast; i++){
             sqlite3_randomness(g.iSectorSize, zGarbage); 
-            rc = sqlite3OsWrite(
-              pRealFile, zGarbage, g.iSectorSize, i*g.iSectorSize
+            rc = writeDbFile(
+              pWrite->pFile, zGarbage, g.iSectorSize, i*g.iSectorSize
             );
           }
           crash_free(zGarbage);
@@ -559,6 +576,7 @@ static int cfOpen(
     pWrapper->pRealFile = pReal;
     rc = sqlite3OsFileSize(pReal, &iSize);
     pWrapper->iSize = (int)iSize;
+    pWrapper->flags = flags;
   }
   if( rc==SQLITE_OK ){
     pWrapper->nData = (4096 + pWrapper->iSize);
