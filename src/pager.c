@@ -4176,9 +4176,6 @@ static int pager_write(PgHdr *pPg){
   assert( pPager->state>=PAGER_SHARED );
   if( pPager->dbSize<pPg->pgno ){
     pPager->dbSize = pPg->pgno;
-    if( pPager->dbSize==(PAGER_MJ_PGNO(pPager)-1) ){
-      pPager->dbSize++;
-    }
   }
   return rc;
 }

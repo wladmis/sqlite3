@@ -320,6 +320,35 @@ foreach nDestPgsz {512 1024 2048 4096} {
 }
 }
 }
+
+#--------------------------------------------------------------------
+do_test backup-3.$iTest.1 {
+  catch { file delete -force test.db }
+  catch { file delete -force test2.db }
+  sqlite3 db test.db
+  set iTab 1
+
+  db eval { PRAGMA page_size = 512 }
+  while {[file size test.db] <= $::sqlite_pending_byte} {
+    db eval "CREATE TABLE t${iTab}(a, b, c)"
+    incr iTab
+  }
+
+  sqlite3 db2 test2.db
+  db2 eval { PRAGMA page_size = 4096 }
+  while {[file size test2.db] < $::sqlite_pending_byte} {
+    db2 eval "CREATE TABLE t${iTab}(a, b, c)"
+    incr iTab
+  }
+
+  sqlite3_backup B db2 main db main
+  B step -1
+} {SQLITE_DONE}
+
+do_test backup-3.$iTest.2 {
+  B finish
+} {SQLITE_OK}
+
 #
 # End of backup-3.* tests.
 #---------------------------------------------------------------------

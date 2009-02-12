@@ -373,6 +373,9 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
       if( nSrcPagesize<nDestPagesize ){
         int ratio = nDestPagesize/nSrcPagesize;
         nDestTruncate = (nSrcPage+ratio-1)/ratio;
+        if( nDestTruncate==PENDING_BYTE_PAGE(p->pDest->pBt) ){
+          nDestTruncate--;
+        }
       }else{
         nDestTruncate = nSrcPage * (nSrcPagesize/nDestPagesize);
       }
@@ -392,7 +395,10 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
         sqlite3_file * const pFile = sqlite3PagerFile(pDestPager);
 
         assert( pFile );
-        assert( (i64)nDestTruncate*(i64)nDestPagesize >= iSize );
+        assert( (i64)nDestTruncate*(i64)nDestPagesize >= iSize || (
+              nDestTruncate==(PENDING_BYTE_PAGE(p->pDest->pBt)-1)
+           && iSize>=PENDING_BYTE && iSize<=PENDING_BYTE+nDestPagesize
+        ));
         if( SQLITE_OK==(rc = sqlite3PagerCommitPhaseOne(pDestPager, 0, 1))
          && SQLITE_OK==(rc = backupTruncateFile(pFile, iSize))
          && SQLITE_OK==(rc = sqlite3PagerSync(pDestPager))
