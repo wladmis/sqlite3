@@ -206,6 +206,15 @@ struct JtGlobal {
 };
 static struct JtGlobal g = {0, 0};
 
+extern int sqlite3_io_error_pending;
+static void stop_ioerr_simulation(int *piSave){
+  *piSave = sqlite3_io_error_pending;
+  sqlite3_io_error_pending = -1;
+}
+static void start_ioerr_simulation(int iSave){
+  sqlite3_io_error_pending = iSave;
+}
+
 /*
 ** The jt_file pointed to by the argument may or may not be a file-handle
 ** open on a main database file. If it is, and a transaction is currently
@@ -343,6 +352,9 @@ static int openTransaction(jt_file *pMain, jt_file *pJournal){
     rc = SQLITE_IOERR_NOMEM;
   }else if( pMain->nPage>0 ){
     u32 iTrunk;
+    int iSave;
+
+    stop_ioerr_simulation(&iSave);
 
     /* Read the database free-list. Add the page-number for each free-list
     ** leaf to the jt_file.pWritable bitvec.
@@ -372,6 +384,8 @@ static int openTransaction(jt_file *pMain, jt_file *pJournal){
         pMain->aCksum[ii] = genCksum(aData, pMain->nPagesize);
       }
     }
+
+    start_ioerr_simulation(iSave);
   }
 
   sqlite3_free(aData);
@@ -465,11 +479,14 @@ static int readJournalFile(jt_file *p, jt_file *pMain){
   sqlite3_int64 iOff = 0;
   sqlite3_int64 iSize = p->iMaxOff;
   unsigned char *aPage;
+  int iSave;
 
   aPage = sqlite3_malloc(pMain->nPagesize);
   if( !aPage ){
     return SQLITE_IOERR_NOMEM;
   }
+
+  stop_ioerr_simulation(&iSave);
 
   while( rc==SQLITE_OK && iOff<iSize ){
     u32 nRec, nPage, nSector, nPagesize;
@@ -522,6 +539,7 @@ static int readJournalFile(jt_file *p, jt_file *pMain){
   }
 
 finish_rjf:
+  start_ioerr_simulation(iSave);
   sqlite3_free(aPage);
   if( rc==SQLITE_IOERR_SHORT_READ ){
     rc = SQLITE_OK;
