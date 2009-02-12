@@ -107,4 +107,5 @@ for {set ii 0} {$ii < 3} {incr ii} {
 }
 
 sqlite3_enable_shared_cache $::enable_shared_cache
+set sqlite_open_file_count 0
 finish_test

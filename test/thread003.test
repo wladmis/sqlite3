@@ -193,4 +193,5 @@ do_test thread003.4 {
   expr 0
 } {0}
 
+set sqlite_open_file_count 0
 finish_test
