@@ -416,10 +416,15 @@ int sqlite3AnalysisLoad(sqlite3 *db, int iDb){
   /* Load new statistics out of the sqlite_stat1 table */
   zSql = sqlite3MPrintf(db, "SELECT idx, stat FROM %Q.sqlite_stat1",
                         sInfo.zDatabase);
-  (void)sqlite3SafetyOff(db);
-  rc = sqlite3_exec(db, zSql, analysisLoader, &sInfo, 0);
-  (void)sqlite3SafetyOn(db);
-  sqlite3DbFree(db, zSql);
+  if( zSql==0 ){
+    rc = SQLITE_NOMEM;
+  }else{
+    (void)sqlite3SafetyOff(db);
+    rc = sqlite3_exec(db, zSql, analysisLoader, &sInfo, 0);
+    (void)sqlite3SafetyOn(db);
+    sqlite3DbFree(db, zSql);
+    if( rc==SQLITE_NOMEM ) db->mallocFailed = 1;
+  }
   return rc;
 }
 
