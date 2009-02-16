@@ -373,7 +373,7 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
       if( nSrcPagesize<nDestPagesize ){
         int ratio = nDestPagesize/nSrcPagesize;
         nDestTruncate = (nSrcPage+ratio-1)/ratio;
-        if( nDestTruncate==PENDING_BYTE_PAGE(p->pDest->pBt) ){
+        if( nDestTruncate==(int)PENDING_BYTE_PAGE(p->pDest->pBt) ){
           nDestTruncate--;
         }
       }else{
