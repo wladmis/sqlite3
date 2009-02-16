@@ -3490,7 +3490,7 @@ case OP_NewRowid: {           /* out2-prerelease */
     ** larger than the previous rowid.  This has been shown experimentally
     ** to double the speed of the COPY operation.
     */
-    int res, rx=SQLITE_OK, cnt;
+    int res=0, rx=SQLITE_OK, cnt;
     i64 x;
     cnt = 0;
     if( (sqlite3BtreeFlags(pC->pCursor)&(BTREE_INTKEY|BTREE_ZERODATA)) !=
@@ -3714,7 +3714,7 @@ case OP_Insert: {
 */
 case OP_Delete: {
   int i = pOp->p1;
-  i64 iKey;
+  i64 iKey = 0;
   VdbeCursor *pC;
 
   assert( i>=0 && i<p->nCursor );

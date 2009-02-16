@@ -396,7 +396,7 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
 
         assert( pFile );
         assert( (i64)nDestTruncate*(i64)nDestPagesize >= iSize || (
-              nDestTruncate==(PENDING_BYTE_PAGE(p->pDest->pBt)-1)
+              nDestTruncate==(int)(PENDING_BYTE_PAGE(p->pDest->pBt)-1)
            && iSize>=PENDING_BYTE && iSize<=PENDING_BYTE+nDestPagesize
         ));
         if( SQLITE_OK==(rc = sqlite3PagerCommitPhaseOne(pDestPager, 0, 1))
