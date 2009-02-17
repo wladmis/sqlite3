@@ -3144,6 +3144,7 @@ int sqlite3PagerOpen(
     }else
 #endif
     {
+      zPathname[0] = 0; /* Make sure initialized even if FullPathname() fails */
       rc = sqlite3OsFullPathname(pVfs, zFilename, nPathname, zPathname);
     }
 
