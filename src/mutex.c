@@ -67,7 +67,9 @@ int sqlite3MutexInit(void){
 */
 int sqlite3MutexEnd(void){
   int rc = SQLITE_OK;
-  rc = sqlite3GlobalConfig.mutex.xMutexEnd();
+  if( sqlite3GlobalConfig.mutex.xMutexEnd ){
+    rc = sqlite3GlobalConfig.mutex.xMutexEnd();
+  }
   return rc;
 }
 

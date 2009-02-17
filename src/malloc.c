@@ -153,7 +153,9 @@ int sqlite3MallocInit(void){
 ** Deinitialize the memory allocation subsystem.
 */
 void sqlite3MallocEnd(void){
-  sqlite3GlobalConfig.m.xShutdown(sqlite3GlobalConfig.m.pAppData);
+  if( sqlite3GlobalConfig.m.xShutdown ){
+    sqlite3GlobalConfig.m.xShutdown(sqlite3GlobalConfig.m.pAppData);
+  }
   memset(&mem0, 0, sizeof(mem0));
 }
 

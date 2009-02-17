@@ -2744,6 +2744,12 @@ static char zMainloop[] =
 #define TCLSH_MAIN main   /* Needed to fake out mktclapp */
 int TCLSH_MAIN(int argc, char **argv){
   Tcl_Interp *interp;
+  
+  /* Call sqlite3_shutdown() once before doing anything else. This is to
+  ** test that sqlite3_shutdown() can be safely called by a process before
+  ** sqlite3_initialize() is. */
+  sqlite3_shutdown();
+
   Tcl_FindExecutable(argv[0]);
   interp = Tcl_CreateInterp();
   Sqlite3_Init(interp);
