@@ -3412,6 +3412,7 @@ static int readDbPage(PgHdr *pPg){
 
   if( !isOpen(pPager->fd) ){
     assert( pPager->tempFile );
+    memset(pPg->pData, 0, pPager->pageSize);
     return SQLITE_IOERR_SHORT_READ;
   }
   iOffset = (pgno-1)*(i64)pPager->pageSize;
