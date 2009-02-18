@@ -155,10 +155,31 @@ ifcapable autovacuum {
     }
   } {ok}
   do_test vacuum2-4.4 {
+    db close
+    sqlite3 db test.db
     execsql {
       pragma auto_vacuum;
     }
   } {1}
+  do_test vacuum2-4.5 {  # Ticket #3663
+    execsql {
+      pragma auto_vacuum=2;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {2}
+  do_test vacuum2-4.6 {
+    execsql {
+      pragma integrity_check
+    }
+  } {ok}
+  do_test vacuum2-4.7 {
+    db close
+    sqlite3 db test.db
+    execsql {
+      pragma auto_vacuum;
+    }
+  } {2}
 }
 
 finish_test
