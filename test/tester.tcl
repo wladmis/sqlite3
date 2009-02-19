@@ -895,16 +895,16 @@ proc memdebug_log_sql {{filename mallocs.sql}} {
 
   set database temp
 
-  set tbl "CREATE TABLE ${database}.malloc(nCall, nByte"
-  for {set ii 1} {$ii <= $nFrame} {incr ii} {
-    append tbl ", f${ii}"
-  }
-  append tbl ");\n"
+  set tbl "CREATE TABLE ${database}.malloc(zTest, nCall, nByte, lStack);"
 
   set sql ""
   foreach e $data {
-    append sql "INSERT INTO ${database}.malloc VALUES([join $e ,]);\n"
-    foreach f [lrange $e 2 end] {
+    set nCall [lindex $e 0]
+    set nByte [lindex $e 1]
+    set lStack [lrange $e 2 end]
+    append sql "INSERT INTO ${database}.malloc VALUES"
+    append sql "('test', $nCall, $nByte, '$lStack');\n"
+    foreach f $lStack {
       set frames($f) 1
     }
   }
