@@ -304,6 +304,7 @@ struct Vdbe {
   BtreeMutexArray aMutex; /* An array of Btree used here and needing locks */
   int aCounter[2];        /* Counters used by sqlite3_stmt_status() */
   char *zSql;           /* Text of the SQL statement that generated this */
+  void *pFree;            /* Free this when deleting the vdbe */
 #ifdef SQLITE_DEBUG
   FILE *trace;          /* Write an execution trace here, if not NULL */
 #endif
