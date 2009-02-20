@@ -819,6 +819,16 @@ case OP_Yield: {            /* in1 */
   break;
 }
 
+/* Opcode:  HaltIfNull  P1 P2 P3 P4 *
+**
+** Check the value in register P3.  If is is NULL then Halt using
+** parameter P1, P2, and P4 as if this were a Halt instruction.  If the
+** value in register P3 is not NULL, then this routine is a no-op.
+*/
+case OP_HaltIfNull: {      /* in3 */
+  if( (pIn3->flags & MEM_Null)==0 ) break;
+  /* Fall through into OP_Halt */
+}
 
 /* Opcode:  Halt P1 P2 * P4 *
 **
