@@ -1837,7 +1837,15 @@ static void bestIndex(
         cost += cost*estLog(cost);
         WHERETRACE(("... sorting increases cost to %.9g\n", cost));
       }
+    }else if( pParse->db->flags & SQLITE_ReverseOrder ){
+      /* For application testing, randomly reverse the output order for
+      ** SELECT statements that omit the ORDER BY clause.  This will help
+      ** to find cases where
+      */
+      wsFlags |= WHERE_REVERSE;
     }
+
+    /* Remember this case if it is the best so far */
     if( cost<pCost->rCost ){
       pCost->rCost = cost;
       pCost->nRow = nRow;
@@ -1987,6 +1995,12 @@ static void bestIndex(
         cost += cost*estLog(cost);
         WHERETRACE(("...... orderby increases cost to %.9g\n", cost));
       }
+    }else if( pParse->db->flags & SQLITE_ReverseOrder ){
+      /* For application testing, randomly reverse the output order for
+      ** SELECT statements that omit the ORDER BY clause.  This will help
+      ** to find cases where
+      */
+      wsFlags |= WHERE_REVERSE;
     }
 
     /* Check to see if we can get away with using just the index without
@@ -2747,11 +2761,13 @@ static Bitmask codeOneLoopStart(
     /* Case 5:  There is no usable index.  We must do a complete
     **          scan of the entire table.
     */
+    static const u8 aStep[] = { OP_Next, OP_Prev };
+    static const u8 aStart[] = { OP_Rewind, OP_Last };
+    assert( bRev==0 || bRev==1 );
     assert( omitTable==0 );
-    assert( bRev==0 );
-    pLevel->op = OP_Next;
+    pLevel->op = aStep[bRev];
     pLevel->p1 = iCur;
-    pLevel->p2 = 1 + sqlite3VdbeAddOp2(v, OP_Rewind, iCur, addrBrk);
+    pLevel->p2 = 1 + sqlite3VdbeAddOp2(v, aStart[bRev], iCur, addrBrk);
     pLevel->p5 = SQLITE_STMTSTATUS_FULLSCAN_STEP;
     codeRowSetEarly = 0;
   }
