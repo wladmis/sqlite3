@@ -2532,7 +2532,8 @@ case OP_Savepoint: {
 **
 ** Set the database auto-commit flag to P1 (1 or 0). If P2 is true, roll
 ** back any currently active btree transactions. If there are any active
-** VMs (apart from this one), then the COMMIT or ROLLBACK statement fails.
+** VMs (apart from this one), then a ROLLBACK fails.  A COMMIT fails if
+** there are active writing VMs or active VMs that use shared cache.
 **
 ** This instruction causes the VM to halt.
 */
