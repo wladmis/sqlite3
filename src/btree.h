@@ -173,6 +173,10 @@ int sqlite3BtreePutData(BtCursor*, u32 offset, u32 amt, void*);
 void sqlite3BtreeCacheOverflow(BtCursor *);
 void sqlite3BtreeClearCursor(BtCursor *);
 
+#ifndef SQLITE_OMIT_BTREECOUNT
+int sqlite3BtreeCount(BtCursor *, i64 *);
+#endif
+
 #ifdef SQLITE_TEST
 int sqlite3BtreeCursorInfo(BtCursor*, int*, int);
 void sqlite3BtreeCursorList(Btree*);

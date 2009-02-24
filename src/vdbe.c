@@ -2339,6 +2339,22 @@ case OP_MakeRecord: {
   break;
 }
 
+/* Opcode: Count P1 P2 * * *
+**
+** Store the number of entries (an integer value) in the table or index 
+** opened by cursor P1 in register P2
+*/
+#ifndef SQLITE_OMIT_BTREECOUNT
+case OP_Count: {         /* out2-prerelease */
+  i64 nEntry;
+  BtCursor *pCrsr = p->apCsr[pOp->p1]->pCursor;
+  rc = sqlite3BtreeCount(pCrsr, &nEntry);
+  pOut->flags = MEM_Int;
+  pOut->u.i = nEntry;
+  break;
+}
+#endif
+
 /* Opcode: Statement P1 * * * *
 **
 ** Begin an individual statement transaction which is part of a larger
