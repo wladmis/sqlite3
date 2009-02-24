@@ -31,15 +31,6 @@
 # error "The MEMORY_DEBUG macro is obsolete.  Use SQLITE_DEBUG instead."
 #endif
 
-
-/*
- * When testing, this global variable stores the location of the
- * pending-byte in the database file.
- */
-#ifdef SQLITE_TEST
-unsigned int sqlite3_pending_byte = 0x40000000;
-#endif
-
 #ifdef SQLITE_DEBUG
 int sqlite3OSTrace = 0;
 #define OSTRACE1(X)         if( sqlite3OSTrace ) sqlite3DebugPrintf(X)
