@@ -2035,21 +2035,6 @@ static void bestIndex(
     }
   }
 
-  if( pCost->plan.wsFlags==0 && pSrc->colUsed==0 && pSrc->usesRowid==0 ){
-    Index *pSmallest = 0;
-    assert( pSrc->pIndex==0 );
-    for(pProbe=pSrc->pTab->pIndex; pProbe; pProbe=pProbe->pNext){
-      if( !pSmallest || pProbe->nColumn<pSmallest->nColumn ){
-        pSmallest = pProbe;
-      }
-    }
-    if( pSmallest && pSmallest->nColumn<pSrc->pTab->nCol ){
-      assert( pCost->plan.nEq==0 );
-      pCost->plan.u.pIdx = pSmallest;
-      pCost->plan.wsFlags = WHERE_COLUMN_RANGE|WHERE_IDX_ONLY;
-    }
-  }
-
   /* Report the best result
   */
   pCost->plan.wsFlags |= eqTermMask;
