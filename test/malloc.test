@@ -791,6 +791,32 @@ do_malloc_test 32 -tclprep {
   db2 close
 }
 
+# The following two OOM tests verify that OOM handling works in the
+# code used to optimize "SELECT count(*) FROM <tbl>".
+#
+do_malloc_test 33 -tclprep {
+  db eval { PRAGMA cache_size = 10 }
+  db transaction {
+    db eval { CREATE TABLE abc(a, b) }
+    for {set i 0} {$i<500} {incr i} {
+      db eval {INSERT INTO abc VALUES(randstr(100,100), randstr(1000,1000))}
+    }
+  }
+} -sqlbody {
+  SELECT count(*) FROM abc;
+}
+do_malloc_test 34 -tclprep {
+  db eval { PRAGMA cache_size = 10 }
+  db transaction {
+    db eval { CREATE TABLE abc(a PRIMARY KEY, b) }
+    for {set i 0} {$i<500} {incr i} {
+      db eval {INSERT INTO abc VALUES(randstr(100,100), randstr(1000,1000))}
+    }
+  }
+} -sqlbody {
+  SELECT count(*) FROM abc;
+}
+
 # Ensure that no file descriptors were leaked.
 do_test malloc-99.X {
   catch {db close}
