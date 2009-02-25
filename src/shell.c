@@ -1839,7 +1839,8 @@ static char zHelp[] =
   "                         --no-drop: Do not drop old fkey triggers.\n"
   "                         --ignore-errors: Ignore tables with fkey errors\n"
   "                         --exec: Execute generated SQL immediately\n"
-  "                         --help: Print help message for .genfkey\n"
+  "                       See file tool/genfkey.README in the source \n"
+  "                       distribution for further information.\n"
 #endif
   ".header(s) ON|OFF      Turn display of headers on or off\n"
   ".help                  Show this message\n"
