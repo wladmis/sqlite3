@@ -1933,7 +1933,6 @@ int sqlite3_table_column_metadata(
   (void)sqlite3SafetyOn(db);
   sqlite3BtreeEnterAll(db);
   rc = sqlite3Init(db, &zErrMsg);
-  sqlite3BtreeLeaveAll(db);
   if( SQLITE_OK!=rc ){
     goto error_out;
   }
@@ -1989,6 +1988,7 @@ int sqlite3_table_column_metadata(
   }
 
 error_out:
+  sqlite3BtreeLeaveAll(db);
   (void)sqlite3SafetyOff(db);
 
   /* Whether the function call succeeded or failed, set the output parameters
