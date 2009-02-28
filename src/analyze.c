@@ -188,7 +188,7 @@ static void analyzeOneTable(
     ** The result is a single row of the sqlite_stat1 table.  The first
     ** two columns are the names of the table and index.  The third column
     ** is a string composed of a list of integer statistics about the
-    ** index.  The first integer in the list is the total number of entires
+    ** index.  The first integer in the list is the total number of entries
     ** in the index.  There is one additional integer in the list for each
     ** column of the table.  This additional integer is a guess of how many
     ** rows of the table the index will select.  If D is the count of distinct
