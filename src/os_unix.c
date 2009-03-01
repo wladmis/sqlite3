@@ -3984,16 +3984,18 @@ static int unixSleep(sqlite3_vfs *NotUsed, int microseconds){
   sp.tv_sec = microseconds / 1000000;
   sp.tv_nsec = (microseconds % 1000000) * 1000;
   nanosleep(&sp, NULL);
+  UNUSED_PARAMETER(NotUsed);
   return microseconds;
 #elif defined(HAVE_USLEEP) && HAVE_USLEEP
   usleep(microseconds);
+  UNUSED_PARAMETER(NotUsed);
   return microseconds;
 #else
   int seconds = (microseconds+999999)/1000000;
   sleep(seconds);
+  UNUSED_PARAMETER(NotUsed);
   return seconds*1000000;
 #endif
-  UNUSED_PARAMETER(NotUsed);
 }
 
 /*
