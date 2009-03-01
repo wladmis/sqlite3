@@ -114,7 +114,7 @@ static int growOpArray(Vdbe *p){
   int nNew = (p->nOpAlloc ? p->nOpAlloc*2 : (int)(1024/sizeof(Op)));
   pNew = sqlite3DbRealloc(p->db, p->aOp, nNew*sizeof(Op));
   if( pNew ){
-    p->nOpAlloc = sqlite3MallocSize(pNew)/sizeof(Op);
+    p->nOpAlloc = sqlite3DbMallocSize(p->db, pNew)/sizeof(Op);
     p->aOp = pNew;
   }
   return (pNew ? SQLITE_OK : SQLITE_NOMEM);
