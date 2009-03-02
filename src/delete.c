@@ -181,7 +181,8 @@ Expr *sqlite3LimitWhere(
   }
 
   /* generate the SELECT expression tree. */
-  pSelect = sqlite3SelectNew(pParse,pEList,pSelectSrc,pWhere,0,0,pOrderBy,0,pLimit,pOffset);
+  pSelect = sqlite3SelectNew(pParse,pEList,pSelectSrc,pWhere,0,0,
+                             pOrderBy,0,pLimit,pOffset);
   if( pSelect == 0 ) return 0;
 
   /* now generate the new WHERE rowid IN clause for the DELETE/UDPATE */
@@ -190,7 +191,8 @@ Expr *sqlite3LimitWhere(
   pInClause = sqlite3PExpr(pParse, TK_IN, pWhereRowid, 0, 0);
   if( pInClause == 0 ) goto limit_where_cleanup_1;
 
-  pInClause->pSelect = pSelect;
+  pInClause->x.pSelect = pSelect;
+  pInClause->flags |= EP_xIsSelect;
   sqlite3ExprSetHeight(pParse, pInClause);
   return pInClause;
 
