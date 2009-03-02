@@ -1503,9 +1503,9 @@ struct Expr {
 ** and an Expr struct with the EP_TokenOnly flag set.
 */
 #define EXPR_FULLSIZE           sizeof(Expr)
-#define EXPR_REDUCEDSIZE        ((int)(&((Expr*)(0))->iTable))
-#define EXPR_TOKENONLYSIZE      ((int)(&((Expr*)(0))->span))
-#define EXPR_SPANONLYSIZE       ((int)(&((Expr*)(0))->pLeft))
+#define EXPR_REDUCEDSIZE        offsetof(Expr,iTable)
+#define EXPR_TOKENONLYSIZE      offsetof(Expr,span)
+#define EXPR_SPANONLYSIZE       offsetof(Expr,pLeft)
 
 /*
 ** Flags passed to the sqlite3ExprDup() function. See the header comment 
