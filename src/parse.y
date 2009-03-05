@@ -1111,7 +1111,7 @@ expr(A) ::= RAISE(X) LP IGNORE RP(Y).  {
 expr(A) ::= RAISE(X) LP raisetype(T) COMMA nm(Z) RP(Y).  {
   A = sqlite3PExpr(pParse, TK_RAISE, 0, 0, &Z); 
   if( A ) {
-    A->affinity = T;
+    A->affinity = (char)T;
     sqlite3ExprSpan(A, &X, &Y);
   }
 }

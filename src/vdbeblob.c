@@ -187,7 +187,7 @@ int sqlite3_blob_open(
       ** we can invoke OP_Column to fill in the vdbe cursors type 
       ** and offset cache without causing any IO.
       */
-      sqlite3VdbeChangeP4(v, flags ? 3 : 2, (char *)(pTab->nCol+1), P4_INT32);
+      sqlite3VdbeChangeP4(v, flags ? 3 : 2, SQLITE_INT_TO_PTR(pTab->nCol+1), P4_INT32);
       sqlite3VdbeChangeP2(v, 6, pTab->nCol);
       if( !db->mallocFailed ){
         sqlite3VdbeMakeReady(v, 1, 1, 1, 0);

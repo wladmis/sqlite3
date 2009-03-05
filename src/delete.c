@@ -78,7 +78,7 @@ void sqlite3OpenTable(
   assert( opcode==OP_OpenWrite || opcode==OP_OpenRead );
   sqlite3TableLock(p, iDb, pTab->tnum, (opcode==OP_OpenWrite)?1:0, pTab->zName);
   sqlite3VdbeAddOp3(v, opcode, iCur, pTab->tnum, iDb);
-  sqlite3VdbeChangeP4(v, -1, (const char *)pTab->nCol, P4_INT32);
+  sqlite3VdbeChangeP4(v, -1, SQLITE_INT_TO_PTR(pTab->nCol), P4_INT32);
   VdbeComment((v, "%s", pTab->zName));
 }
 

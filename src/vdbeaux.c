@@ -59,7 +59,7 @@ void sqlite3VdbeSetSql(Vdbe *p, const char *z, int n, int isPrepareV2){
 #endif
   assert( p->zSql==0 );
   p->zSql = sqlite3DbStrNDup(p->db, z, n);
-  p->isPrepareV2 = isPrepareV2;
+  p->isPrepareV2 = isPrepareV2 ? 1 : 0;
 }
 
 /*

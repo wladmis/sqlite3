@@ -494,7 +494,8 @@ void sqlite3ExprSpan(Expr *pExpr, Token *pLeft, Token *pRight){
   assert( pLeft!=0 );
   if( pExpr ){
     pExpr->span.z = pLeft->z;
-    pExpr->span.n = pRight->n + (pRight->z - pLeft->z);
+    assert(pRight->z >= pLeft->z);
+    pExpr->span.n = pRight->n + (unsigned)(pRight->z - pLeft->z);
   }
 }
 
