@@ -130,6 +130,7 @@ static int lookupName(
   NameContext *pTopNC = pNC;        /* First namecontext in the list */
   Schema *pSchema = 0;              /* Schema of the expression */
 
+  assert( pNC ); /* the name context cannot be NULL. */
   assert( pColumnToken && pColumnToken->z ); /* The Z in X.Y.Z cannot be NULL */
 
   /* Dequote and zero-terminate the names */
