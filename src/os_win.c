@@ -1723,7 +1723,7 @@ int winCurrentTime(sqlite3_vfs *pVfs, double *prNow){
 ** function, SQLite calls this function with zBuf pointing to
 ** a buffer of nBuf bytes. The OS layer should populate the
 ** buffer with a nul-terminated UTF-8 encoded error message
-** describing the last IO error to have occured within the calling
+** describing the last IO error to have occurred within the calling
 ** thread.
 **
 ** If the error message is too large for the supplied buffer,

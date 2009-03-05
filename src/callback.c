@@ -175,7 +175,7 @@ static CollSeq *findCollSeqEntry(
       pColl[0].zName[nName] = 0;
       pDel = sqlite3HashInsert(&db->aCollSeq, pColl[0].zName, nName, pColl);
 
-      /* If a malloc() failure occured in sqlite3HashInsert(), it will 
+      /* If a malloc() failure occurred in sqlite3HashInsert(), it will 
       ** return the pColl pointer to be deleted (because it wasn't added
       ** to the hash table).
       */

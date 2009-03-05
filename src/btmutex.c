@@ -113,7 +113,7 @@ void sqlite3BtreeLeave(Btree *p){
 /*
 ** Return true if the BtShared mutex is held on the btree.  
 **
-** This routine makes no determination one why or another if the
+** This routine makes no determination one way or another if the
 ** database connection mutex is held.
 **
 ** This routine is used only from within assert() statements.

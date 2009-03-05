@@ -50,7 +50,7 @@
 **     c) The set of page numbers corresponding to free-list leaf pages.
 **     d) A check-sum for every page in the database file.
 **
-**   The start of a write-transaction is deemed to have occured when a 
+**   The start of a write-transaction is deemed to have occurred when a 
 **   28-byte journal header is written to byte offset 0 of the journal 
 **   file.
 **

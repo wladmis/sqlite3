@@ -2450,7 +2450,7 @@ static int incrVacuumStep(BtShared *pBt, Pgno nFin, Pgno iLastPg){
 ** It performs a single unit of work towards an incremental vacuum.
 **
 ** If the incremental vacuum is finished after this function has run,
-** SQLITE_DONE is returned. If it is not finished, but no error occured,
+** SQLITE_DONE is returned. If it is not finished, but no error occurred,
 ** SQLITE_OK is returned. Otherwise an SQLite error code. 
 */
 int sqlite3BtreeIncrVacuum(Btree *p){
@@ -2728,7 +2728,7 @@ int sqlite3BtreeRollback(Btree *p){
   rc = saveAllCursors(pBt, 0, 0);
 #ifndef SQLITE_OMIT_SHARED_CACHE
   if( rc!=SQLITE_OK ){
-    /* This is a horrible situation. An IO or malloc() error occured whilst
+    /* This is a horrible situation. An IO or malloc() error occurred whilst
     ** trying to save cursor positions. If this is an automatic rollback (as
     ** the result of a constraint, malloc() failure or IO error) then 
     ** the cache may be internally inconsistent (not contain valid trees) so
@@ -6823,7 +6823,7 @@ int sqlite3BtreeCount(BtCursor *pCur, i64 *pnEntry){
     }
   }
 
-  /* An error has occured. Return an error code. */
+  /* An error has occurred. Return an error code. */
   return rc;
 }
 #endif

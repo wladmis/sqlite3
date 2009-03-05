@@ -351,10 +351,10 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   }
   if( rc==SQLITE_OK || (db->flags&SQLITE_RecoveryMode)){
     /* Black magic: If the SQLITE_RecoveryMode flag is set, then consider
-    ** the schema loaded, even if errors occured. In this situation the 
+    ** the schema loaded, even if errors occurred. In this situation the 
     ** current sqlite3_prepare() operation will fail, but the following one
     ** will attempt to compile the supplied statement against whatever subset
-    ** of the schema was loaded before the error occured. The primary
+    ** of the schema was loaded before the error occurred. The primary
     ** purpose of this is to allow access to the sqlite_master table
     ** even when its contents have been corrupted.
     */

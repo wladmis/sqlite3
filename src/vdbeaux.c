@@ -1459,7 +1459,7 @@ static int vdbeCommit(sqlite3 *db, Vdbe *p){
     ** sqlite3BtreeCommitPhaseOne(), then there is a chance that the
     ** master journal file will be orphaned. But we cannot delete it,
     ** in case the master journal file name was written into the journal
-    ** file before the failure occured.
+    ** file before the failure occurred.
     */
     for(i=0; rc==SQLITE_OK && i<db->nDb; i++){ 
       Btree *pBt = db->aDb[i].pBt;
