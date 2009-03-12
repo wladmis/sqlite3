@@ -468,5 +468,13 @@ foreach {id expr res} {
   } $res
 }
 
+do_test fts3expr-7.1 {
+  execsql {
+    CREATE VIRTUAL TABLE test USING fts3 (keyword);
+    INSERT INTO test VALUES ('abc');
+    SELECT * FROM test WHERE keyword MATCH '""';
+  }
+} {}
+
 set sqlite_fts3_enable_parentheses 0
 finish_test
