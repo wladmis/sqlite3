@@ -2822,18 +2822,16 @@ int sqlite3BtreeBeginStmt(Btree *p){
 ** subtransaction is active, this is a no-op.
 */
 int sqlite3BtreeCommitStmt(Btree *p){
-  int rc;
+  int rc = SQLITE_OK;
   BtShared *pBt = p->pBt;
   sqlite3BtreeEnter(p);
   pBt->db = p->db;
-  assert( pBt->readOnly==0 );
-  if( pBt->inStmt ){
+  if( p->inTrans==TRANS_WRITE && pBt->inStmt ){
     int iStmtpoint = p->db->nSavepoint;
+    assert( pBt->readOnly==0 );
     rc = sqlite3PagerSavepoint(pBt->pPager, SAVEPOINT_RELEASE, iStmtpoint);
-  }else{
-    rc = SQLITE_OK;
+    pBt->inStmt = 0;
   }
-  pBt->inStmt = 0;
   sqlite3BtreeLeave(p);
   return rc;
 }
@@ -2851,9 +2849,9 @@ int sqlite3BtreeRollbackStmt(Btree *p){
   BtShared *pBt = p->pBt;
   sqlite3BtreeEnter(p);
   pBt->db = p->db;
-  assert( pBt->readOnly==0 );
-  if( pBt->inStmt ){
+  if( p->inTrans==TRANS_WRITE && pBt->inStmt ){
     int iStmtpoint = p->db->nSavepoint;
+    assert( pBt->readOnly==0 );
     rc = sqlite3PagerSavepoint(pBt->pPager, SAVEPOINT_ROLLBACK, iStmtpoint);
     if( rc==SQLITE_OK ){
       rc = sqlite3PagerSavepoint(pBt->pPager, SAVEPOINT_RELEASE, iStmtpoint);
