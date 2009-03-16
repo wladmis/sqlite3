@@ -292,10 +292,10 @@ int sqlite3_backup_step(sqlite3_backup *p, int nPage){
     int bCloseTrans = 0;               /* True if src db requires unlocking */
 
     /* If the source pager is currently in a write-transaction, return
-    ** SQLITE_LOCKED immediately.
+    ** SQLITE_BUSY immediately.
     */
     if( p->pDestDb && p->pSrc->pBt->inTransaction==TRANS_WRITE ){
-      rc = SQLITE_LOCKED;
+      rc = SQLITE_BUSY;
     }else{
       rc = SQLITE_OK;
     }

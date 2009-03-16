@@ -570,10 +570,10 @@ static int sqlite3Prepare(
       rc = sqlite3BtreeSchemaLocked(pBt);
       if( rc ){
         const char *zDb = db->aDb[i].zName;
-        sqlite3Error(db, SQLITE_LOCKED, "database schema is locked: %s", zDb);
+        sqlite3Error(db, rc, "database schema is locked: %s", zDb);
         (void)sqlite3SafetyOff(db);
         testcase( db->flags & SQLITE_ReadUncommitted );
-        return sqlite3ApiExit(db, SQLITE_LOCKED);
+        return sqlite3ApiExit(db, rc);
       }
     }
   }

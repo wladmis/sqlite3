@@ -1744,6 +1744,14 @@ int sqlite3VdbeHalt(Vdbe *p){
     p->rc = SQLITE_NOMEM;
   }
 
+  /* If the auto-commit flag is set to true, then any locks that were held
+  ** by connection db have now been released. Call sqlite3ConnectionUnlocked() 
+  ** to invoke any required unlock-notify callbacks.
+  */
+  if( db->autoCommit ){
+    sqlite3ConnectionUnlocked(db);
+  }
+
   return SQLITE_OK;
 }
 

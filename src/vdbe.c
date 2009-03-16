@@ -4819,7 +4819,7 @@ case OP_TableLock: {
   assert( (p->btreeMask & (1<<p1))!=0 );
   assert( isWriteLock==0 || isWriteLock==1 );
   rc = sqlite3BtreeLockTable(db->aDb[p1].pBt, pOp->p2, isWriteLock);
-  if( rc==SQLITE_LOCKED ){
+  if( (rc&0xFF)==SQLITE_LOCKED ){
     const char *z = pOp->p4.z;
     sqlite3SetString(&p->zErrMsg, db, "database table is locked: %s", z);
   }
@@ -4834,8 +4834,8 @@ case OP_TableLock: {
 ** xBegin method for that table.
 **
 ** Also, whether or not P4 is set, check that this is not being called from
-** within a callback to a virtual table xSync() method. If it is, set the
-** error code to SQLITE_LOCKED.
+** within a callback to a virtual table xSync() method. If it is, the error
+** code will be set to SQLITE_LOCKED.
 */
 case OP_VBegin: {
   sqlite3_vtab *pVtab = pOp->p4.pVtab;

@@ -629,6 +629,12 @@ int sqlite3_close(sqlite3 *db){
     }
   }
   sqlite3ResetInternalSchema(db, 0);
+
+  /* Tell the code in notify.c that the connection no longer holds any
+  ** locks and does not require any further unlock-notify callbacks.
+  */
+  sqlite3ConnectionClosed(db);
+
   assert( db->nDb<=2 );
   assert( db->aDb==db->aDbStatic );
   for(j=0; j<ArraySize(db->aFunc.a); j++){

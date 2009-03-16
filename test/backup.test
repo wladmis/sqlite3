@@ -736,7 +736,7 @@ do_test backup-7.2.1 {
 } {}
 do_test backup-7.2.2 {
   B step 5000
-} {SQLITE_LOCKED}
+} {SQLITE_BUSY}
 do_test backup-7.2.3 {
   execsql { ROLLBACK }
   B step 5000
