@@ -165,6 +165,8 @@ const void *sqlite3BtreeKeyFetch(BtCursor*, int *pAmt);
 const void *sqlite3BtreeDataFetch(BtCursor*, int *pAmt);
 int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
 int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);
+void sqlite3BtreeSetCachedRowid(BtCursor*, sqlite3_int64);
+sqlite3_int64 sqlite3BtreeGetCachedRowid(BtCursor*);
 
 char *sqlite3BtreeIntegrityCheck(Btree*, int *aRoot, int nRoot, int, int*);
 struct Pager *sqlite3BtreePager(Btree*);
