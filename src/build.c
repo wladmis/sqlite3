@@ -1111,7 +1111,9 @@ void sqlite3AddDefaultValue(Parse *pParse, Expr *pExpr){
       ** is required by pragma table_info.
       */
       sqlite3ExprDelete(db, pCol->pDflt);
-      pCol->pDflt = sqlite3ExprDup(db, pExpr, EXPRDUP_REDUCE|EXPRDUP_SPAN);
+      pCol->pDflt = sqlite3ExprDup(
+          db, pExpr, EXPRDUP_REDUCE|EXPRDUP_DISTINCTSPAN
+      );
     }
   }
   sqlite3ExprDelete(db, pExpr);

@@ -1522,8 +1522,9 @@ struct Expr {
 ** Flags passed to the sqlite3ExprDup() function. See the header comment 
 ** above sqlite3ExprDup() for details.
 */
-#define EXPRDUP_REDUCE 0x0001
-#define EXPRDUP_SPAN   0x0002
+#define EXPRDUP_REDUCE         0x0001
+#define EXPRDUP_SPAN           0x0002
+#define EXPRDUP_DISTINCTSPAN   0x0004
 
 /*
 ** A list of expressions.  Each expression may optionally have a
