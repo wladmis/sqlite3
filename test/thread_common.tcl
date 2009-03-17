@@ -50,7 +50,7 @@ set thread_procs {
         }
         set rc [sqlite3_finalize $::STMT]
       } else {
-        if {[string first (6) $msg]} {
+        if {[lindex $msg 0]=="(6)"} {
           set rc SQLITE_LOCKED
         } else {
           set rc SQLITE_ERROR
