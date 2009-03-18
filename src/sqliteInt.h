@@ -807,6 +807,7 @@ struct sqlite3 {
 #endif
   Savepoint *pSavepoint;        /* List of active savepoints */
   int nSavepoint;               /* Number of non-transaction savepoints */
+  int nStatement;               /* Number of nested statement-transactions  */
   u8 isTransactionSavepoint;    /* True if the outermost savepoint is a TS */
 
 #ifdef SQLITE_ENABLE_UNLOCK_NOTIFY

@@ -306,7 +306,7 @@ struct Vdbe {
 #ifdef SQLITE_DEBUG
   FILE *trace;          /* Write an execution trace here, if not NULL */
 #endif
-  int openedStatement;  /* True if this VM has opened a statement journal */
+  int iStatement;         /* Statement number (or 0 if has not opened stmt) */
 #ifdef SQLITE_SSE
   int fetchId;          /* Statement number used by sqlite3_fetch_statement */
   int lru;              /* Counter used for LRU cache replacement */
@@ -374,6 +374,7 @@ int sqlite3VdbeMemFinalize(Mem*, FuncDef*);
 const char *sqlite3OpcodeName(int);
 int sqlite3VdbeOpcodeHasProperty(int, int);
 int sqlite3VdbeMemGrow(Mem *pMem, int n, int preserve);
+int sqlite3VdbeCloseStatement(Vdbe *, int);
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 int sqlite3VdbeReleaseBuffers(Vdbe *p);
 #endif

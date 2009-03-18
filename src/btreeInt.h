@@ -380,7 +380,6 @@ struct BtShared {
   sqlite3 *db;          /* Database connection currently using this Btree */
   BtCursor *pCursor;    /* A list of all open cursors */
   MemPage *pPage1;      /* First page of the database */
-  u8 inStmt;            /* True if we are in a statement subtransaction */
   u8 readOnly;          /* True if the underlying file is readonly */
   u8 pageSizeFixed;     /* True if the page size can no longer be changed */
 #ifndef SQLITE_OMIT_AUTOVACUUM

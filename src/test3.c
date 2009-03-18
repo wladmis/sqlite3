@@ -235,7 +235,7 @@ static int btree_begin_statement(
   }
   pBt = sqlite3TestTextToPtr(argv[1]);
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeBeginStmt(pBt);
+  rc = sqlite3BtreeBeginStmt(pBt, 1);
   sqlite3BtreeLeave(pBt);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
@@ -264,7 +264,10 @@ static int btree_rollback_statement(
   }
   pBt = sqlite3TestTextToPtr(argv[1]);
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeRollbackStmt(pBt);
+  rc = sqlite3BtreeSavepoint(pBt, SAVEPOINT_ROLLBACK, 0);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3BtreeSavepoint(pBt, SAVEPOINT_RELEASE, 0);
+  }
   sqlite3BtreeLeave(pBt);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
@@ -293,7 +296,7 @@ static int btree_commit_statement(
   }
   pBt = sqlite3TestTextToPtr(argv[1]);
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeCommitStmt(pBt);
+  rc = sqlite3BtreeSavepoint(pBt, SAVEPOINT_RELEASE, 0);
   sqlite3BtreeLeave(pBt);
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);

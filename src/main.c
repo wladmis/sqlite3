@@ -560,6 +560,7 @@ void sqlite3CloseSavepoints(sqlite3 *db){
     sqlite3DbFree(db, pTmp);
   }
   db->nSavepoint = 0;
+  db->nStatement = 0;
   db->isTransactionSavepoint = 0;
 }
 
