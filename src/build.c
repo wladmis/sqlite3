@@ -2846,7 +2846,8 @@ void sqlite3CreateIndex(
   /* Clean up before exiting */
 exit_create_index:
   if( pIndex ){
-    freeIndex(pIndex);
+    sqlite3_free(pIndex->zColAff);
+    sqlite3DbFree(db, pIndex);
   }
   sqlite3ExprListDelete(db, pList);
   sqlite3SrcListDelete(db, pTblName);
