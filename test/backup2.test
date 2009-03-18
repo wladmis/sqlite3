@@ -111,8 +111,8 @@ do_test backup2-6 {
 # Try to backup to something that is not a database file.
 #
 do_test backup2-7 {
-  catch {file attributes bu2.db -permissions rw-------}
   catch {file attributes bu2.db -readonly 0}
+  catch {file attributes bu2.db -permissions rw-------}
   set out [open bu2.db w]
   puts $out "This is not a valid database file"
   close $out
