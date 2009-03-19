@@ -204,12 +204,14 @@ int sqlite3_finalize(sqlite3_stmt *pStmt){
     rc = SQLITE_OK;
   }else{
     Vdbe *v = (Vdbe*)pStmt;
+    sqlite3 *db = v->db;
 #if SQLITE_THREADSAFE
     sqlite3_mutex *mutex = v->db->mutex;
 #endif
     sqlite3_mutex_enter(mutex);
     stmtLruRemove(v);
     rc = sqlite3VdbeFinalize(v);
+    rc = sqlite3ApiExit(db, rc);
     sqlite3_mutex_leave(mutex);
   }
   return rc;
@@ -234,6 +236,7 @@ int sqlite3_reset(sqlite3_stmt *pStmt){
     stmtLruAdd(v);
     sqlite3VdbeMakeReady(v, -1, 0, 0, 0);
     assert( (rc & (v->db->errMask))==rc );
+    rc = sqlite3ApiExit(v->db, rc);
     sqlite3_mutex_leave(v->db->mutex);
   }
   return rc;

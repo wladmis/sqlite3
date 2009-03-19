@@ -248,8 +248,8 @@ int sqlite3_blob_open(
 
 blob_open_out:
   zErr[sizeof(zErr)-1] = '\0';
-  if( rc!=SQLITE_OK || db->mallocFailed ){
-    sqlite3_finalize((sqlite3_stmt *)v);
+  if( v && (rc!=SQLITE_OK || db->mallocFailed) ){
+    sqlite3VdbeFinalize(v);
   }
   sqlite3Error(db, rc, (rc==SQLITE_OK?0:zErr));
   rc = sqlite3ApiExit(db, rc);

@@ -648,8 +648,8 @@ static int sqlite3Prepare(
     Vdbe *pVdbe = sParse.pVdbe;
     sqlite3VdbeSetSql(pVdbe, zSql, (int)(sParse.zTail-zSql), saveSqlFlag);
   }
-  if( rc!=SQLITE_OK || db->mallocFailed ){
-    sqlite3_finalize((sqlite3_stmt*)sParse.pVdbe);
+  if( sParse.pVdbe && (rc!=SQLITE_OK || db->mallocFailed) ){
+    sqlite3VdbeFinalize(sParse.pVdbe);
     assert(!(*ppStmt));
   }else{
     *ppStmt = (sqlite3_stmt*)sParse.pVdbe;
