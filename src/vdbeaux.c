@@ -1575,11 +1575,11 @@ static void invalidateCursorsOnModifiedBtrees(sqlite3 *db){
 ** Otherwise SQLITE_OK.
 */
 int sqlite3VdbeCloseStatement(Vdbe *p, int eOp){
+  sqlite3 *const db = p->db;
   int rc = SQLITE_OK;
-  if( p->iStatement ){
+  if( p->iStatement && db->nStatement ){
     int i;
     const int iSavepoint = p->iStatement-1;
-    sqlite3 *const db = p->db;
 
     assert( eOp==SAVEPOINT_ROLLBACK || eOp==SAVEPOINT_RELEASE);
     assert( db->nStatement>0 );
