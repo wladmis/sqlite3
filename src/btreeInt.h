@@ -205,11 +205,6 @@
 */
 #include "sqliteInt.h"
 
-/* Round up a number to the next larger multiple of 8.  This is used
-** to force 8-byte alignment on 64-bit architectures.
-*/
-#define ROUND8(x)   ((x+7)&~7)
-
 
 /* The following value is the maximum cell size assuming a maximum page
 ** size give above.
