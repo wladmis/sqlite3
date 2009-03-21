@@ -2824,10 +2824,10 @@ int sqlite3_fullsync_count = 0;
 #endif
 
 /*
-** Use the fdatasync() API only if the HAVE_FDATASYNC macro is defined.
-** Otherwise use fsync() in its place.
+** We assume that most systems these days support fdatasync().  Those
+** machines that do not can define -Dfdatasync=fsync.
 */
-#ifndef HAVE_FDATASYNC
+#if 0
 # define fdatasync fsync
 #endif
 
