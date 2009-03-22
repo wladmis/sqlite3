@@ -1717,8 +1717,8 @@ static double bestVirtualIndex(
 **
 ** If there was an INDEXED BY clause (pSrc->pIndex) attached to the table in
 ** the SQL statement, then this function only considers plans using the 
-** named index. If one cannot be found, then the returned cost is
-** SQLITE_BIG_DBL. If a plan can be found that uses the named index, 
+** named index. If no such plan is found, then the returned cost is
+** SQLITE_BIG_DBL. If a plan is found that uses the named index, 
 ** then the cost is calculated in the usual way.
 **
 ** If a NOT INDEXED clause (pSrc->notIndexed!=0) was attached to the table 

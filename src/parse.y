@@ -174,6 +174,7 @@ columnid(A) ::= nm(X). {
 //
 %type id {Token}
 id(A) ::= ID(X).         {A = X;}
+id(A) ::= INDEXED(X).    {A = X;}
 
 // The following directive causes tokens ABORT, AFTER, ASC, etc. to
 // fallback to ID if they will not parse as their original value.
@@ -224,7 +225,7 @@ ids(A) ::= ID|STRING(X).   {A = X;}
 // The name of a column or table can be any of the following:
 //
 %type nm {Token}
-nm(A) ::= ID(X).         {A = X;}
+nm(A) ::= id(X).         {A = X;}
 nm(A) ::= STRING(X).     {A = X;}
 nm(A) ::= JOIN_KW(X).    {A = X;}
 
@@ -697,7 +698,7 @@ inscollist(A) ::= nm(Y).
 expr(A) ::= term(X).             {A = X;}
 expr(A) ::= LP(B) expr(X) RP(E). {A = X; sqlite3ExprSpan(A,&B,&E); }
 term(A) ::= NULL(X).             {A = sqlite3PExpr(pParse, @X, 0, 0, &X);}
-expr(A) ::= ID(X).               {A = sqlite3PExpr(pParse, TK_ID, 0, 0, &X);}
+expr(A) ::= id(X).               {A = sqlite3PExpr(pParse, TK_ID, 0, 0, &X);}
 expr(A) ::= JOIN_KW(X).          {A = sqlite3PExpr(pParse, TK_ID, 0, 0, &X);}
 expr(A) ::= nm(X) DOT nm(Y). {
   Expr *temp1 = sqlite3PExpr(pParse, TK_ID, 0, 0, &X);
