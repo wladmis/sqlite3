@@ -2167,7 +2167,7 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
     if( wrflag ){
       assert( !pBt->pWriter );
       pBt->pWriter = p;
-      pBt->isExclusive = (wrflag>1);
+      pBt->isExclusive = (u8)(wrflag>1);
     }
 #endif
   }
