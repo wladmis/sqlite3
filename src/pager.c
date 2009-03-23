@@ -100,12 +100,6 @@ int sqlite3PagerTrace=1;  /* True to enable tracing */
 #define PAGER_SYNCED      5
 
 /*
-** This macro rounds values up so that if the value is an address it
-** is guaranteed to be an address that is aligned to an 8-byte boundary.
-*/
-#define FORCE_ALIGNMENT(X)   (((X)+7)&~7)
-
-/*
 ** A macro used for invoking the codec if there is one
 */
 #ifdef SQLITE_HAS_CODEC
@@ -3279,7 +3273,7 @@ int sqlite3PagerOpen(
   }
 
   /* Initialize the PCache object. */
-  nExtra = FORCE_ALIGNMENT(nExtra);
+  nExtra = ROUND8(nExtra);
   sqlite3PcacheOpen(szPageDflt, nExtra, !memDb,
                     !memDb?pagerStress:0, (void *)pPager, pPager->pPCache);
 

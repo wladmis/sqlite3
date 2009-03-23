@@ -39,7 +39,7 @@
 static void *sqlite3MemMalloc(int nByte){
   sqlite3_int64 *p;
   assert( nByte>0 );
-  nByte = (nByte+7)&~7;
+  nByte = ROUND8(nByte);
   p = malloc( nByte+8 );
   if( p ){
     p[0] = nByte;
@@ -76,7 +76,7 @@ static void sqlite3MemFree(void *pPrior){
 static void *sqlite3MemRealloc(void *pPrior, int nByte){
   sqlite3_int64 *p = (sqlite3_int64*)pPrior;
   assert( pPrior!=0 && nByte>0 );
-  nByte = (nByte+7)&~7;
+  nByte = ROUND8(nByte);
   p = (sqlite3_int64*)pPrior;
   p--;
   p = realloc(p, nByte+8 );
@@ -103,7 +103,7 @@ static int sqlite3MemSize(void *pPrior){
 ** Round up a request size to the next valid allocation size.
 */
 static int sqlite3MemRoundup(int n){
-  return (n+7) & ~7;
+  return ROUND8(n);
 }
 
 /*

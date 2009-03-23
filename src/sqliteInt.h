@@ -448,7 +448,12 @@ extern const int sqlite3one;
 ** Round up a number to the next larger multiple of 8.  This is used
 ** to force 8-byte alignment on 64-bit architectures.
 */
-#define ROUND8(x)    ((x+7)&~7)
+#define ROUND8(x)     (((x)+7)&~7)
+
+/*
+** Round down to the nearest multiple of 8
+*/
+#define ROUNDDOWN8(x) ((x)&~7)
 
 /*
 ** An instance of the following structure is used to store the busy-handler

@@ -69,7 +69,7 @@ void *sqlite3_wsd_find(void *K, int L){
 
   /* If no entry for K was found, create and populate a new one. */
   if( !pVar ){
-    int nByte = (sizeof(ProcessLocalVar) + L + 7)&~7;
+    int nByte = ROUND8(sizeof(ProcessLocalVar) + L);
     assert( pGlobal->nFree>=nByte );
     pVar = (ProcessLocalVar *)pGlobal->pFree;
     pVar->pKey = K;

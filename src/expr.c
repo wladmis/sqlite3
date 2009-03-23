@@ -714,7 +714,7 @@ static int dupedExprNodeSize(Expr *p, int flags){
   ){
     nByte += p->span.n;
   }
-  return (nByte+7)&~7;
+  return ROUND8(nByte);
 }
 
 /*

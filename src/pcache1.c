@@ -129,7 +129,7 @@ static SQLITE_WSD struct PCacheGlobal {
 */
 void sqlite3PCacheBufferSetup(void *pBuf, int sz, int n){
   PgFreeslot *p;
-  sz &= ~7;
+  sz = ROUNDDOWN8(sz);
   pcache1.szSlot = sz;
   pcache1.pStart = pBuf;
   pcache1.pFree = 0;

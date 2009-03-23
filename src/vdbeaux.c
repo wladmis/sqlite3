@@ -1024,7 +1024,7 @@ static void allocSpace(
   int *pnByte          /* If allocation cannot be made, increment *pnByte */
 ){
   if( (*(void**)pp)==0 ){
-    nByte = (nByte+7)&~7;
+    nByte = ROUND8(nByte);
     if( (pEnd - *ppFrom)>=nByte ){
       *(void**)pp = (void *)*ppFrom;
       *ppFrom += nByte;

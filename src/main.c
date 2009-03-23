@@ -404,12 +404,12 @@ static int setupLookaside(sqlite3 *db, void *pBuf, int sz, int cnt){
     sz = 0;
     pStart = 0;
   }else if( pBuf==0 ){
-    sz = (sz + 7)&~7;
+    sz = ROUND8(sz);
     sqlite3BeginBenignMalloc();
     pStart = sqlite3Malloc( sz*cnt );
     sqlite3EndBenignMalloc();
   }else{
-    sz = sz&~7;
+    sz = ROUNDDOWN8(sz);
     pStart = pBuf;
   }
   db->lookaside.pStart = pStart;
