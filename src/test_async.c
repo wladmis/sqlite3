@@ -109,7 +109,7 @@
 #define ENABLE_FILE_LOCKING
 
 #ifndef SQLITE_AMALGAMATION
-# include "sqlite3.h"
+# include "sqliteInt.h"
 # include <assert.h>
 # include <string.h>
 #endif
