@@ -408,17 +408,19 @@ Expr *sqlite3Expr(
     assert( pToken->dyn==0 );
     pNew->span = *pToken;
  
-    /* The pToken->z value is constant and must not change.  But
-    ** this expression might be passed to sqlite3DequoteExpr() which
+    /* The pToken->z value is read-only.  But the new expression
+    ** node created here might be passed to sqlite3DequoteExpr() which
     ** will attempt to modify pNew->token.z.  Hence, if the token
     ** is quoted, make a copy now so that DequoteExpr() will change
-    ** the copy rather than the original (read-only) text.
+    ** the copy rather than the original text.
     */
     if( pToken->n>=2 
          && ((c = pToken->z[0])=='\'' || c=='"' || c=='[' || c=='`') ){
       sqlite3TokenCopy(db, &pNew->token, pToken);
     }else{
       pNew->token = *pToken;
+      pNew->flags |= EP_Dequoted;
+      VVA_ONLY( pNew->vvaFlags |= EVVA_ReadOnlyToken; )
     }
   }else if( pLeft ){
     if( pRight ){
@@ -660,6 +662,7 @@ void sqlite3ExprDelete(sqlite3 *db, Expr *p){
 void sqlite3DequoteExpr(sqlite3 *db, Expr *p){
   if( !ExprHasAnyProperty(p, EP_Dequoted) ){
     ExprSetProperty(p, EP_Dequoted);
+    assert( (p->vvaFlags & EVVA_ReadOnlyToken)==0 );
     sqlite3Dequote((char*)p->token.z);
   }
 }
