@@ -20,10 +20,14 @@ source $testdir/tester.tcl
 # Create an alternative connection to the database
 #
 do_test lock-1.0 {
-  # Give a complex pathnme to stress the path simplification logic in
-  # the vxworks driver.
-  file mkdir tempdir/t1/t2
-  sqlite3 db2 ./tempdir/../tempdir/t1/.//t2/../../..//test.db
+  if {[info exists ::ASYNC]} {
+    sqlite3 db2 test.db
+  } else {
+    # Give a complex pathnme to stress the path simplification logic in
+    # the vxworks driver.
+    file mkdir tempdir/t1/t2
+    sqlite3 db2 ./tempdir/../tempdir/t1/.//t2/../../..//test.db
+  }
   set dummy {}
 } {}
 do_test lock-1.1 {
