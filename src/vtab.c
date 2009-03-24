@@ -118,7 +118,8 @@ void sqlite3VtabUnlock(sqlite3 *db, sqlite3_vtab *pVtab){
 */
 void sqlite3VtabClear(Table *p){
   sqlite3_vtab *pVtab = p->pVtab;
-  sqlite3 *db = p->db;
+  Schema *pSchema = p->pSchema;
+  sqlite3 *db = pSchema ? pSchema->db : 0;
   if( pVtab ){
     assert( p->pMod && p->pMod->pModule );
     sqlite3VtabUnlock(db, pVtab);

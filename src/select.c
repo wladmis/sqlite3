@@ -1284,7 +1284,7 @@ Table *sqlite3ResultSetOfSelect(Parse *pParse, Select *pSelect){
   if( pTab==0 ){
     return 0;
   }
-  pTab->db = db;
+  pTab->dbMem = db->lookaside.bEnabled ? db : 0;
   pTab->nRef = 1;
   pTab->zName = 0;
   selectColumnsFromExprList(pParse, pSelect->pEList, &pTab->nCol, &pTab->aCol);
@@ -3080,7 +3080,7 @@ static int selectExpander(Walker *pWalker, Select *p){
       sqlite3WalkSelect(pWalker, pSel);
       pFrom->pTab = pTab = sqlite3DbMallocZero(db, sizeof(Table));
       if( pTab==0 ) return WRC_Abort;
-      pTab->db = db;
+      pTab->dbMem = db->lookaside.bEnabled ? db : 0;
       pTab->nRef = 1;
       pTab->zName = sqlite3MPrintf(db, "sqlite_subquery_%p_", (void*)pTab);
       while( pSel->pPrior ){ pSel = pSel->pPrior; }

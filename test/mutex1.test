@@ -114,7 +114,7 @@ ifcapable threadsafe {
     do_test mutex1.2.$mode.2 {
       sqlite3_initialize
       clear_mutex_counters
-      sqlite3 db test.db -nomutex 0
+      sqlite3 db test.db -nomutex 0 -fullmutex 0
       catchsql { CREATE TABLE abc(a, b, c) }
       db eval {
         INSERT INTO abc VALUES(1, 2, 3);

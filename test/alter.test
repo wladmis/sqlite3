@@ -677,7 +677,7 @@ do_test alter-9.2 {
   execsql {
     SELECT SQLITE_RENAME_TABLE(0,0);
     SELECT SQLITE_RENAME_TABLE(10,20);
-    SELECT SQLITE_RENAME_TABLE("foo", "foo");
+    SELECT SQLITE_RENAME_TABLE('foo', 'foo');
   }
 } {{} {} {}}
 

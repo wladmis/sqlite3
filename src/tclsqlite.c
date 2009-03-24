@@ -2593,8 +2593,21 @@ static int DbMain(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
   int i;
   const char *zFile;
   const char *zVfs = 0;
-  int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX;
+  int flags;
   Tcl_DString translatedFilename;
+
+  /* In normal use, each TCL interpreter runs in a single thread.  So
+  ** by default, we can turn of mutexing on SQLite database connections.
+  ** However, for testing purposes it is useful to have mutexes turned
+  ** on.  So, by default, mutexes default off.  But if compiled with
+  ** SQLITE_TCL_DEFAULT_FULLMUTEX then mutexes default on.
+  */
+#ifdef SQLITE_TCL_DEFAULT_FULLMUTEX
+  flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
+#else
+  flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX;
+#endif
+
   if( objc==2 ){
     zArg = Tcl_GetStringFromObj(objv[1], 0);
     if( strcmp(zArg,"-version")==0 ){

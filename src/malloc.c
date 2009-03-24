@@ -565,10 +565,10 @@ void *sqlite3DbMallocZero(sqlite3 *db, int n){
 */
 void *sqlite3DbMallocRaw(sqlite3 *db, int n){
   void *p;
+  assert( db==0 || sqlite3_mutex_held(db->mutex) );
 #ifndef SQLITE_OMIT_LOOKASIDE
   if( db ){
     LookasideSlot *pBuf;
-    assert( sqlite3_mutex_held(db->mutex) );
     if( db->mallocFailed ){
       return 0;
     }
@@ -600,6 +600,7 @@ void *sqlite3DbMallocRaw(sqlite3 *db, int n){
 */
 void *sqlite3DbRealloc(sqlite3 *db, void *p, int n){
   void *pNew = 0;
+  assert( db!=0 );
   assert( sqlite3_mutex_held(db->mutex) );
   if( db->mallocFailed==0 ){
     if( p==0 ){
