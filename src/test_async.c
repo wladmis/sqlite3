@@ -1308,11 +1308,11 @@ static void asyncDlError(sqlite3_vfs *pAsyncVfs, int nByte, char *zErrMsg){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pAsyncVfs->pAppData;
   pVfs->xDlError(pVfs, nByte, zErrMsg);
 }
-static void *asyncDlSym(
+static void (*asyncDlSym(
   sqlite3_vfs *pAsyncVfs, 
   void *pHandle, 
   const char *zSymbol
-){
+))(void){
   sqlite3_vfs *pVfs = (sqlite3_vfs *)pAsyncVfs->pAppData;
   return pVfs->xDlSym(pVfs, pHandle, zSymbol);
 }

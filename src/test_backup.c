@@ -145,4 +145,3 @@ int Sqlitetestbackup_Init(Tcl_Interp *interp){
   Tcl_CreateObjCommand(interp, "sqlite3_backup", backupTestInit, 0, 0);
   return TCL_OK;
 }
-

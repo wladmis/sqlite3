@@ -2340,7 +2340,7 @@ void sqlite3SetString(char **, sqlite3*, const char*, ...);
 void sqlite3ErrorMsg(Parse*, const char*, ...);
 void sqlite3ErrorClear(Parse*);
 void sqlite3Dequote(char*);
-void sqlite3DequoteExpr(sqlite3*, Expr*);
+void sqlite3DequoteExpr(Expr*);
 int sqlite3KeywordCode(const unsigned char*, int);
 int sqlite3RunParser(Parse*, const char*, char **);
 void sqlite3FinishCoding(Parse*);

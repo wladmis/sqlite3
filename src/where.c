@@ -656,7 +656,7 @@ static int isLikeOrGlob(
       (pColl->type!=SQLITE_COLL_NOCASE || !*pnoCase) ){
     return 0;
   }
-  sqlite3DequoteExpr(db, pRight);
+  sqlite3DequoteExpr(pRight);
   z = (char *)pRight->token.z;
   cnt = 0;
   if( z ){
