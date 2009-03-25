@@ -856,7 +856,7 @@ static int defragmentPage(MemPage *pPage){
 **
 ** If the page contains nBytes of free space but does not contain
 ** nBytes of contiguous free space, then this routine automatically
-** calls defragementPage() to consolidate all free space before 
+** calls defragmentPage() to consolidate all free space before 
 ** allocating the new chunk.
 */
 static int allocateSpace(MemPage *pPage, int nByte){

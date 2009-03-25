@@ -903,8 +903,8 @@ int sqlite3VdbeList(
     }
 
     if( sqlite3VdbeMemGrow(pMem, 32, 0) ){            /* P4 */
-      p->db->mallocFailed = 1;
-      return SQLITE_NOMEM;
+      assert( p->db->mallocFailed );
+      return SQLITE_ERROR;
     }
     pMem->flags = MEM_Dyn|MEM_Str|MEM_Term;
     z = displayP4(pOp, pMem->z, 32);
@@ -920,8 +920,8 @@ int sqlite3VdbeList(
 
     if( p->explain==1 ){
       if( sqlite3VdbeMemGrow(pMem, 4, 0) ){
-        p->db->mallocFailed = 1;
-        return SQLITE_NOMEM;
+        assert( p->db->mallocFailed );
+        return SQLITE_ERROR;
       }
       pMem->flags = MEM_Dyn|MEM_Str|MEM_Term;
       pMem->n = 2;
