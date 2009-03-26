@@ -656,6 +656,7 @@ static int jtOpen(
 ){
   int rc;
   jt_file *p = (jt_file *)pFile;
+  pFile->pMethods = 0;
   p->pReal = (sqlite3_file *)&p[1];
   p->pReal->pMethods = 0;
   rc = sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
