@@ -17,15 +17,7 @@
 set testdir [file dirname $argv0]
 
 source $testdir/tester.tcl
-source $testdir/thread_common.tcl
-if {[info commands sqlthread] eq ""} {
-  finish_test
-  return
-}
-ifcapable !mutex {
-  finish_test
-  return
-}
+if {[run_thread_tests]==0} { finish_test ; return }
 
 # Set up a couple of different databases full of pseudo-randomly 
 # generated data.

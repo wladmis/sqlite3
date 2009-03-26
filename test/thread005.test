@@ -16,13 +16,12 @@
 set testdir [file dirname $argv0]
 
 source $testdir/tester.tcl
-ifcapable !mutex||!shared_cache {
+if {[run_thread_tests]==0} { finish_test ; return }
+ifcapable !shared_cache {
+  finish_test
   return
 }
-source $testdir/thread_common.tcl
-if {[info commands sqlthread] eq ""} {
-  return
-}
+
 db close
 
 # Use shared-cache mode for these tests.
