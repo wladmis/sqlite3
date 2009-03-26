@@ -290,6 +290,7 @@ proc finalize_testing {} {
   if {$nErr>0} {
     puts "Failures on these tests: $::failList"
   }
+  run_thread_tests 1
   if {[llength $omitList]>0} {
     puts "Omitted test cases:"
     set prec {}
@@ -959,3 +960,5 @@ proc copy_file {from to} {
 # If the library is compiled with the SQLITE_DEFAULT_AUTOVACUUM macro set
 # to non-zero, then set the global variable $AUTOVACUUM to 1.
 set AUTOVACUUM $sqlite_options(default_autovacuum)
+
+source $testdir/thread_common.tcl
