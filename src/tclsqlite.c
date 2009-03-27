@@ -587,6 +587,7 @@ static void setTestUnlockNotifyVars(Tcl_Interp *interp, int iArg, int nArg){
   #define setTestUnlockNotifyVars(x,y,z)
 #endif
 
+#ifdef SQLITE_ENABLE_UNLOCK_NOTIFY
 static void DbUnlockNotify(void **apArg, int nArg){
   int i;
   for(i=0; i<nArg; i++){
@@ -599,6 +600,7 @@ static void DbUnlockNotify(void **apArg, int nArg){
     pDb->pUnlockNotify = 0;
   }
 }
+#endif
 
 static void DbUpdateHandler(
   void *p, 

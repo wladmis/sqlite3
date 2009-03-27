@@ -4835,12 +4835,14 @@ static int test_pcache_stats(
   return TCL_OK;
 }
 
+#ifdef SQLITE_ENABLE_UNLOCK_NOTIFY
 static void test_unlock_notify_cb(void **aArg, int nArg){
   int ii;
   for(ii=0; ii<nArg; ii++){
     Tcl_EvalEx((Tcl_Interp *)aArg[ii], "unlock_notify", -1, TCL_EVAL_GLOBAL);
   }
 }
+#endif /* SQLITE_ENABLE_UNLOCK_NOTIFY */
 
 /*
 ** tclcmd:  sqlite3_unlock_notify db
