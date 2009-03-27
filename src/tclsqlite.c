@@ -575,7 +575,7 @@ static void DbRollbackHandler(void *clientData){
   }
 }
 
-#ifdef SQLITE_TEST
+#if defined(SQLITE_TEST) && defined(SQLITE_ENABLE_UNLOCK_NOTIFY)
 static void setTestUnlockNotifyVars(Tcl_Interp *interp, int iArg, int nArg){
   char zBuf[64];
   sprintf(zBuf, "%d", iArg);
@@ -584,7 +584,7 @@ static void setTestUnlockNotifyVars(Tcl_Interp *interp, int iArg, int nArg){
   Tcl_SetVar(interp, "sqlite_unlock_notify_argcount", zBuf, TCL_GLOBAL_ONLY);
 }
 #else
-  #define setTestUnlockNotifyVars(x,y,z)
+# define setTestUnlockNotifyVars(x,y,z)
 #endif
 
 #ifdef SQLITE_ENABLE_UNLOCK_NOTIFY
