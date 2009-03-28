@@ -1481,7 +1481,8 @@ static int unixUnlock(sqlite3_file *id, int locktype){
           pFile->lastErrno = tErrno;
         }
         pLock->cnt = 1;
-        pLock->locktype = locktype;
+        pLock->locktype = NO_LOCK;
+        pFile->locktype = NO_LOCK;
         goto end_unlock;
       }
     }
