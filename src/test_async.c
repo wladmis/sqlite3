@@ -1133,9 +1133,9 @@ static int asyncOpen(
 
   if( !isAsyncOpen ){
     int flagsout;
-    rc = pVfs->xOpen(pVfs, zName, pData->pBaseRead, flags, &flagsout);
+    rc = pVfs->xOpen(pVfs, pData->zName, pData->pBaseRead, flags, &flagsout);
     if( rc==SQLITE_OK && (flagsout&SQLITE_OPEN_READWRITE) ){
-      rc = pVfs->xOpen(pVfs, zName, pData->pBaseWrite, flags, 0);
+      rc = pVfs->xOpen(pVfs, pData->zName, pData->pBaseWrite, flags, 0);
     }
     if( pOutFlags ){
       *pOutFlags = flagsout;
@@ -1154,7 +1154,7 @@ static int asyncOpen(
 #ifdef ENABLE_FILE_LOCKING
         if( flags&SQLITE_OPEN_MAIN_DB ){
           pLock->pFile = (sqlite3_file *)&pLock[1];
-          rc = pVfs->xOpen(pVfs, zName, pLock->pFile, flags, 0);
+          rc = pVfs->xOpen(pVfs, pData->zName, pLock->pFile, flags, 0);
           if( rc!=SQLITE_OK ){
             sqlite3_free(pLock);
             pLock = 0;
