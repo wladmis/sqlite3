@@ -3431,11 +3431,9 @@ static int readDbPage(PgHdr *pPg){
     memset(pPg->pData, 0, pPager->pageSize);
     return SQLITE_OK;
   }
-
   iOffset = (pgno-1)*(i64)pPager->pageSize;
   rc = sqlite3OsRead(pPager->fd, pPg->pData, pPager->pageSize, iOffset);
   if( rc==SQLITE_IOERR_SHORT_READ ){
-    memset(pPg->pData, 0, pPager->pageSize);
     rc = SQLITE_OK;
   }
   if( pgno==1 ){

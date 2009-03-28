@@ -4427,8 +4427,15 @@ static int allocateBtreePage(
       ** at the end of the file instead of one. The first allocated page
       ** becomes a new pointer-map page, the second is used by the caller.
       */
+      MemPage *pPg = 0;
       TRACE(("ALLOCATE: %d from end of file (pointer-map page)\n", *pPgno));
       assert( *pPgno!=PENDING_BYTE_PAGE(pBt) );
+      rc = sqlite3BtreeGetPage(pBt, *pPgno, &pPg, 0);
+      if( rc==SQLITE_OK ){
+        rc = sqlite3PagerWrite(pPg->pDbPage);
+        releasePage(pPg);
+      }
+      if( rc ) return rc;
       (*pPgno)++;
       if( *pPgno==PENDING_BYTE_PAGE(pBt) ){ (*pPgno)++; }
     }
