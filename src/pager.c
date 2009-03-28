@@ -3429,10 +3429,15 @@ static int readDbPage(PgHdr *pPg){
   if( !isOpen(pPager->fd) ){
     assert( pPager->tempFile );
     memset(pPg->pData, 0, pPager->pageSize);
-    return SQLITE_IOERR_SHORT_READ;
+    return SQLITE_OK;
   }
+
   iOffset = (pgno-1)*(i64)pPager->pageSize;
   rc = sqlite3OsRead(pPager->fd, pPg->pData, pPager->pageSize, iOffset);
+  if( rc==SQLITE_IOERR_SHORT_READ ){
+    memset(pPg->pData, 0, pPager->pageSize);
+    rc = SQLITE_OK;
+  }
   if( pgno==1 ){
     u8 *dbFileVers = &((u8*)pPg->pData)[24];
     memcpy(&pPager->dbFileVers, dbFileVers, sizeof(pPager->dbFileVers));
@@ -3816,7 +3821,7 @@ int sqlite3PagerAcquire(
     }else{
       assert( pPg->pPager==pPager );
       rc = readDbPage(pPg);
-      if( rc!=SQLITE_OK && rc!=SQLITE_IOERR_SHORT_READ ){
+      if( rc!=SQLITE_OK ){
         pagerDropPage(pPg);
         return rc;
       }
