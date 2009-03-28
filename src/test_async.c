@@ -1285,40 +1285,27 @@ static int asyncFullPathname(
   ** file-system uses unix style paths. 
   */
   if( rc==SQLITE_OK ){
-    int iIn;
-    int iOut = 0;
-    int nPathOut = strlen(zPathOut);
-
-    for(iIn=0; iIn<nPathOut; iIn++){
-
-      /* Replace any occurences of "//" with "/" */
-      if( iIn<=(nPathOut-2) && zPathOut[iIn]=='/' && zPathOut[iIn+1]=='/'
-      ){
-        continue;
+    int i, j;
+    int n = nPathOut;
+    char *z = zPathOut;
+    while( n>1 && z[n-1]=='/' ){ n--; }
+    for(i=j=0; i<n; i++){
+      if( z[i]=='/' ){
+        if( z[i+1]=='/' ) continue;
+        if( z[i+1]=='.' && i+2<n && z[i+2]=='/' ){
+          i += 1;
+          continue;
+        }
+        if( z[i+1]=='.' && i+3<n && z[i+2]=='.' && z[i+3]=='/' ){
+          while( j>0 && z[j-1]!='/' ){ j--; }
+          if( j>0 ){ j--; }
+          i += 2;
+          continue;
+        }
       }
-
-      /* Replace any occurences of "/./" with "/" */
-      if( iIn<=(nPathOut-3) 
-       && zPathOut[iIn]=='/' && zPathOut[iIn+1]=='.' && zPathOut[iIn+2]=='/'
-      ){
-        iIn++;
-        continue;
-      }
-
-      /* Replace any occurences of "<path-component>/../" with "" */
-      if( iOut>0 && iIn<=(nPathOut-4) 
-       && zPathOut[iIn]=='/' && zPathOut[iIn+1]=='.' 
-       && zPathOut[iIn+2]=='.' && zPathOut[iIn+3]=='/'
-      ){
-        iIn += 3;
-        iOut--;
-        for( ; iOut>0 && zPathOut[iOut-1]!='/'; iOut--);
-        continue;
-      }
-
-      zPathOut[iOut++] = zPathOut[iIn];
+      z[j++] = z[i];
     }
-    zPathOut[iOut] = '\0';
+    z[j] = 0;
   }
 
   return rc;
