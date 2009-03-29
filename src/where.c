@@ -26,7 +26,7 @@
 #if defined(SQLITE_TEST) || defined(SQLITE_DEBUG)
 int sqlite3WhereTrace = 0;
 #endif
-#if 1
+#if 0
 # define WHERETRACE(X)  if(sqlite3WhereTrace) sqlite3DebugPrintf X
 #else
 # define WHERETRACE(X)
