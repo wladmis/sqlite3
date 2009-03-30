@@ -1305,6 +1305,12 @@ static void pageReinit(DbPage *pData){
     assert( sqlite3_mutex_held(pPage->pBt->mutex) );
     pPage->isInit = 0;
     if( sqlite3PagerPageRefcount(pData)>0 ){
+      /* pPage might not be a btree page;  it might be an overflow page
+      ** or ptrmap page or a free page.  In those cases, the following
+      ** call to sqlite3BtreeInitPage() will likely return SQLITE_CORRUPT.
+      ** But no harm is done by this.  And it is very important that
+      ** sqlite3BtreeInitPage() be called on every btree page so we make
+      ** the call for every page that comes in for re-initing. */
       sqlite3BtreeInitPage(pPage);
     }
   }
