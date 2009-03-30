@@ -7107,7 +7107,9 @@ static int checkTreePage(
     sz = info.nData;
     if( !pPage->intKey ) sz += (int)info.nKey;
     assert( sz==info.nPayload );
-    if( sz>info.nLocal ){
+    if( (sz>info.nLocal) 
+     && (&pCell[info.iOverflow]<=&pPage->aData[pBt->usableSize])
+    ){
       int nPage = (sz - info.nLocal + usableSize - 5)/(usableSize - 4);
       Pgno pgnoOvfl = get4byte(&pCell[info.iOverflow]);
 #ifndef SQLITE_OMIT_AUTOVACUUM
