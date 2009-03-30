@@ -2480,6 +2480,18 @@ static int incrVacuumStep(BtShared *pBt, Pgno nFin, Pgno iLastPg){
   if( nFin==0 ){
     iLastPg--;
     while( iLastPg==PENDING_BYTE_PAGE(pBt)||PTRMAP_ISPAGE(pBt, iLastPg) ){
+      if( PTRMAP_ISPAGE(pBt, iLastPg) ){
+        MemPage *pPg;
+        int rc = sqlite3BtreeGetPage(pBt, iLastPg, &pPg, 0);
+        if( rc!=SQLITE_OK ){
+          return rc;
+        }
+        rc = sqlite3PagerWrite(pPg->pDbPage);
+        releasePage(pPg);
+        if( rc!=SQLITE_OK ){
+          return rc;
+        }
+      }
       iLastPg--;
     }
     sqlite3PagerTruncateImage(pBt->pPager, iLastPg);
