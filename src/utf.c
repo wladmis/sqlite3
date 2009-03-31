@@ -417,7 +417,7 @@ int sqlite3Utf8To8(unsigned char *zIn){
     }
   }
   *zOut = 0;
-  return zOut - zStart;
+  return (int)(zOut - zStart);
 }
 #endif
 

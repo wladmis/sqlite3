@@ -386,7 +386,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   void *pEngine;                  /* The LEMON-generated LALR(1) parser */
   int tokenType;                  /* type of the next token */
   int lastTokenParsed = -1;       /* type of the previous token */
-  int enableLookaside;            /* Saved value of db->lookaside.bEnabled */
+  u8 enableLookaside;             /* Saved value of db->lookaside.bEnabled */
   sqlite3 *db = pParse->db;       /* The database connection */
   int mxSqlLen;                   /* Max length of an SQL string */
 

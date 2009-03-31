@@ -1775,6 +1775,9 @@ int winCurrentTime(sqlite3_vfs *pVfs, double *prNow){
   static const sqlite3_int64 ntuPerHalfDay = 
       10000000*(sqlite3_int64)43200;
 
+  /* 2^32 - to avoid use of LL and warnings in gcc */
+  static const sqlite3_int64 max32BitValue = 
+      (sqlite3_int64)2000000000 + (sqlite3_int64)2000000000 + (sqlite3_int64)294967296;
 
 #if SQLITE_OS_WINCE
   SYSTEMTIME time;
@@ -1787,7 +1790,7 @@ int winCurrentTime(sqlite3_vfs *pVfs, double *prNow){
   GetSystemTimeAsFileTime( &ft );
 #endif
   UNUSED_PARAMETER(pVfs);
-  timeW = (((sqlite3_int64)ft.dwHighDateTime)*4294967296) + ft.dwLowDateTime;
+  timeW = (((sqlite3_int64)ft.dwHighDateTime)*max32BitValue) + (sqlite3_int64)ft.dwLowDateTime;
   timeF = timeW % ntuPerDay;          /* fractional days (100-nanoseconds) */
   timeW = timeW / ntuPerDay;          /* whole days */
   timeW = timeW + 2305813;            /* add whole days (from 2305813.5) */

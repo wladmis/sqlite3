@@ -1229,7 +1229,7 @@ static int selectColumnsFromExprList(
 ** The column list has only names, not types or collations.  This
 ** routine goes through and adds the types and collations.
 **
-** This routine requires that all indentifiers in the SELECT
+** This routine requires that all identifiers in the SELECT
 ** statement be resolved.
 */
 static void selectAddColumnTypeAndCollation(
