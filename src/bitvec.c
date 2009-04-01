@@ -94,8 +94,9 @@
 */
 struct Bitvec {
   u32 iSize;      /* Maximum bit index.  Max iSize is 4,294,967,296. */
-  u32 nSet;       /* Number of bits that are set - only valid for aHash element */
-                  /* Max nSet is BITVEC_NINT.  For BITVEC_SZ of 512, this would be 125. */
+  u32 nSet;       /* Number of bits that are set - only valid for aHash
+                  ** element.  Max is BITVEC_NINT.  For BITVEC_SZ of 512,
+                  ** this would be 125. */
   u32 iDivisor;   /* Number of bits handled by each apSub[] entry. */
                   /* Should >=0 for apSub element. */
                   /* Max iDivisor is max(u32) / BITVEC_NPTR + 1.  */
@@ -377,7 +378,8 @@ int sqlite3BitvecBuiltinTest(int sz, int *aOp){
   ** is found.
   */
   rc = sqlite3BitvecTest(0,0) + sqlite3BitvecTest(pBitvec, sz+1)
-          + sqlite3BitvecTest(pBitvec, 0);
+          + sqlite3BitvecTest(pBitvec, 0)
+          + (sqlite3BitvecSize(pBitvec) - sz);
   for(i=1; i<=sz; i++){
     if(  (TESTBIT(pV,i))!=sqlite3BitvecTest(pBitvec,i) ){
       rc = i;
