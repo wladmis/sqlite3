@@ -1399,10 +1399,7 @@ int sqlite3BtreeOpen(
   ** If this Btree is a candidate for shared cache, try to find an
   ** existing BtShared object that we can share with
   */
-  if( isMemdb==0
-   && (db->flags & SQLITE_Vtab)==0
-   && zFilename && zFilename[0]
-  ){
+  if( isMemdb==0 && zFilename && zFilename[0] ){
     if( sqlite3GlobalConfig.sharedCacheEnabled ){
       int nFullPathname = pVfs->mxPathname+1;
       char *zFullPathname = sqlite3Malloc(nFullPathname);
