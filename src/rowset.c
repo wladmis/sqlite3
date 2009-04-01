@@ -120,7 +120,7 @@ void sqlite3RowSetClear(RowSet *p){
 void sqlite3RowSetInsert(RowSet *p, i64 rowid){
   struct RowSetEntry *pEntry;
   struct RowSetEntry *pLast;
-  if( p==0 ) return;  /* Must have been a malloc failure */
+  assert( p!=0 );
   if( p->nFresh==0 ){
     struct RowSetChunk *pNew;
     pNew = sqlite3DbMallocRaw(p->db, sizeof(*pNew));
