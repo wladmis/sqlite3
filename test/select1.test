@@ -1041,4 +1041,24 @@ do_test select1-14.2 {
   }
 } {0}
 
+# Check that ticket #3771 has been fixed.
+#
+do_test select1-15.1 {
+  execsql {
+    CREATE TABLE t1(a);
+    CREATE INDEX i1 ON t1(a);
+    INSERT INTO t1 VALUES(1);
+    INSERT INTO t1 VALUES(2);
+    INSERT INTO t1 VALUES(3);
+  }
+} {}
+do_test select1-15.2 {
+  sqlite3 db2 test.db
+  execsql { DROP INDEX i1 } db2
+  db2 close
+} {}
+do_test select1-15.3 {
+  execsql { SELECT 2 IN (SELECT a FROM t1) }
+} {1}
+
 finish_test
