@@ -18,6 +18,8 @@ source $testdir/tester.tcl
 
 # Test plan:
 #
+#  count-0.*: Make sure count(*) works on an empty database.  (Ticket #3774)
+#
 #  count-1.*: Test that the OP_Count instruction appears to work on both
 #             tables and indexes. Test both when they contain 0 entries,
 #             when all entries are on the root page, and when the b-tree
@@ -26,6 +28,12 @@ source $testdir/tester.tcl
 #  count-2.*: Test that 
 #
 #
+
+do_test count-0.1 {
+  db eval {
+     SELECT count(*) FROM sqlite_master;
+  }
+} {0}
 
 set iTest 0
 foreach zIndex [list {
@@ -182,4 +190,3 @@ do_test count-4.3 {
 
 
 finish_test
-

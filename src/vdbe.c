@@ -2365,7 +2365,11 @@ case OP_MakeRecord: {
 case OP_Count: {         /* out2-prerelease */
   i64 nEntry;
   BtCursor *pCrsr = p->apCsr[pOp->p1]->pCursor;
-  rc = sqlite3BtreeCount(pCrsr, &nEntry);
+  if( pCrsr ){
+    rc = sqlite3BtreeCount(pCrsr, &nEntry);
+  }else{
+    nEntry = 0;
+  }
   pOut->flags = MEM_Int;
   pOut->u.i = nEntry;
   break;
