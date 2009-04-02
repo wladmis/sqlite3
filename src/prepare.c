@@ -528,11 +528,8 @@ static int sqlite3Prepare(
   int rc = SQLITE_OK;
   int i;
 
-  assert( ppStmt );
-  *ppStmt = 0;
-  if( sqlite3SafetyOn(db) ){
-    return SQLITE_MISUSE;
-  }
+  if( sqlite3SafetyOn(db) ) return SQLITE_MISUSE;
+  assert( ppStmt && *ppStmt==0 );
   assert( !db->mallocFailed );
   assert( sqlite3_mutex_held(db->mutex) );
 
@@ -671,6 +668,8 @@ static int sqlite3LockAndPrepare(
   const char **pzTail       /* OUT: End of parsed string */
 ){
   int rc;
+  assert( ppStmt!=0 );
+  *ppStmt = 0;
   if( !sqlite3SafetyCheckOk(db) ){
     return SQLITE_MISUSE;
   }
@@ -773,6 +772,7 @@ static int sqlite3Prepare16(
   const char *zTail8 = 0;
   int rc = SQLITE_OK;
 
+  assert( ppStmt );
   *ppStmt = 0;
   if( !sqlite3SafetyCheckOk(db) ){
     return SQLITE_MISUSE;
