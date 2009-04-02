@@ -80,7 +80,7 @@ int sqlite3BtreeClose(Btree*);
 int sqlite3BtreeSetCacheSize(Btree*,int);
 int sqlite3BtreeSetSafetyLevel(Btree*,int,int);
 int sqlite3BtreeSyncDisabled(Btree*);
-int sqlite3BtreeSetPageSize(Btree*,int,int);
+int sqlite3BtreeSetPageSize(Btree*,int,int,int);
 int sqlite3BtreeGetPageSize(Btree*);
 int sqlite3BtreeMaxPageCount(Btree*,int);
 int sqlite3BtreeGetReserve(Btree*);
