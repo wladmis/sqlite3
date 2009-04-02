@@ -31,7 +31,7 @@ typedef struct FileChunk FileChunk;
 ** a power-of-two allocation.  This mimimizes wasted space in power-of-two
 ** memory allocators.
 */
-#define JOURNAL_CHUNKSIZE (1024-sizeof(FileChunk*))
+#define JOURNAL_CHUNKSIZE ((int)(1024-sizeof(FileChunk*)))
 
 /* Macro to find the minimum of two numeric values.
 */
