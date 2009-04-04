@@ -5186,30 +5186,33 @@ int sqlite3PagerLockingMode(Pager *pPager, int eMode){
 **    PAGER_JOURNALMODE_MEMORY
 **
 ** If the parameter is not _QUERY, then the journal-mode is set to the
-** value specified.
+** value specified.  Except, an in-memory database can only have its
+** journal mode set to _OFF or _MEMORY.  Attempts to change the journal
+** mode of an in-memory database to something other than _OFF or _MEMORY
+** are silently ignored.
 **
 ** The returned indicate the current (possibly updated) journal-mode.
 */
 int sqlite3PagerJournalMode(Pager *pPager, int eMode){
-  if( !MEMDB ){
-    assert( eMode==PAGER_JOURNALMODE_QUERY
-              || eMode==PAGER_JOURNALMODE_DELETE
-              || eMode==PAGER_JOURNALMODE_TRUNCATE
-              || eMode==PAGER_JOURNALMODE_PERSIST
-              || eMode==PAGER_JOURNALMODE_OFF 
-              || eMode==PAGER_JOURNALMODE_MEMORY );
-    assert( PAGER_JOURNALMODE_QUERY<0 );
-    if( eMode>=0 ){
-      pPager->journalMode = (u8)eMode;
-    }else{
-      assert( eMode==PAGER_JOURNALMODE_QUERY );
-    }
+  assert( eMode==PAGER_JOURNALMODE_QUERY
+            || eMode==PAGER_JOURNALMODE_DELETE
+            || eMode==PAGER_JOURNALMODE_TRUNCATE
+            || eMode==PAGER_JOURNALMODE_PERSIST
+            || eMode==PAGER_JOURNALMODE_OFF 
+            || eMode==PAGER_JOURNALMODE_MEMORY );
+  assert( PAGER_JOURNALMODE_QUERY<0 );
+  if( eMode>=0 && (!MEMDB || eMode==PAGER_JOURNALMODE_MEMORY 
+                          || eMode==PAGER_JOURNALMODE_OFF) ){
+    pPager->journalMode = (u8)eMode;
   }
   return (int)pPager->journalMode;
 }
 
 /*
 ** Get/set the size-limit used for persistent journal files.
+**
+** Setting the size limit to -1 means no limit is enforced.
+** An attempt to set a limit smaller than -1 is a no-op.
 */
 i64 sqlite3PagerJournalSizeLimit(Pager *pPager, i64 iLimit){
   if( iLimit>=-1 ){
