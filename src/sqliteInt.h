@@ -456,6 +456,11 @@ extern const int sqlite3one;
 #define ROUNDDOWN8(x) ((x)&~7)
 
 /*
+** Assert that the pointer X is aligned to an 8-byte boundary.
+*/
+#define EIGHT_BYTE_ALIGNMENT(X)   ((((char*)(X) - (char*)0)&7)==0)
+
+/*
 ** An instance of the following structure is used to store the busy-handler
 ** callback for a given sqlite handle. 
 **

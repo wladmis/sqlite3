@@ -5357,13 +5357,13 @@ static int balance_nonroot(BtCursor *pCur){
   }
   szCell = (u16*)&apCell[nMaxCells];
   aCopy[0] = (u8*)&szCell[nMaxCells];
-  assert( ((aCopy[0] - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
+  assert( EIGHT_BYTE_ALIGNMENT(aCopy[0]) );
   for(i=1; i<NB; i++){
     aCopy[i] = &aCopy[i-1][pBt->pageSize+ROUND8(sizeof(MemPage))];
     assert( ((aCopy[i] - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
   }
   aSpace1 = &aCopy[NB-1][pBt->pageSize+ROUND8(sizeof(MemPage))];
-  assert( ((aSpace1 - (u8*)0) & 7)==0 ); /* 8-byte alignment required */
+  assert( EIGHT_BYTE_ALIGNMENT(aSpace1) );
   if( ISAUTOVACUUM ){
     aFrom = &aSpace1[pBt->pageSize];
   }

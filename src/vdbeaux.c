@@ -1023,6 +1023,7 @@ static void allocSpace(
   u8 *pEnd,            /* Pointer to 1 byte past the end of *ppFrom buffer */
   int *pnByte          /* If allocation cannot be made, increment *pnByte */
 ){
+  assert( EIGHT_BYTE_ALIGNMENT(*ppFrom) );
   if( (*(void**)pp)==0 ){
     nByte = ROUND8(nByte);
     if( (pEnd - *ppFrom)>=nByte ){
@@ -1096,6 +1097,8 @@ void sqlite3VdbeMakeReady(
     if( isExplain && nMem<10 ){
       nMem = 10;
     }
+    zCsr += (zCsr - (u8*)0)&7;
+    assert( EIGHT_BYTE_ALIGNMENT(zCsr) );
 
     do {
       memset(zCsr, 0, zEnd-zCsr);

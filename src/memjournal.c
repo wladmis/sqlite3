@@ -237,6 +237,7 @@ static struct sqlite3_io_methods MemJournalMethods = {
 */
 void sqlite3MemJournalOpen(sqlite3_file *pJfd){
   MemJournal *p = (MemJournal *)pJfd;
+  assert( EIGHT_BYTE_ALIGNMENT(p) );
   memset(p, 0, sqlite3MemJournalSize());
   p->pMethod = &MemJournalMethods;
 }
