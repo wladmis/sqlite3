@@ -427,4 +427,34 @@ do_ioerr_test ioerr-15 -tclprep {
   COMMIT;
 } 
 
+# This test verifies that IO errors that occur within the obscure branch
+# of code executed by tkt3762.test are correctly reported.
+#
+ifcapable vacuum&&autovacuum&&pragma {
+  do_ioerr_test ioerr-16 -erc 1 -ckrefcount 1 -sqlprep {
+    PRAGMA auto_vacuum=INCREMENTAL;
+    PRAGMA page_size=1024;
+    BEGIN;
+    CREATE TABLE t1(x);
+    INSERT INTO t1 VALUES(zeroblob(900));
+    INSERT INTO t1 VALUES(zeroblob(900));
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    INSERT INTO t1 SELECT x FROM t1;
+    DELETE FROM t1 WHERE rowid>202;
+    COMMIT;
+    VACUUM;
+    PRAGMA cache_size = 10;
+    BEGIN;
+    DELETE FROM t1 WHERE rowid IN (10,11,12) ;
+  } -sqlbody {
+    PRAGMA incremental_vacuum(10);
+    COMMIT;
+  }
+}
+
 finish_test

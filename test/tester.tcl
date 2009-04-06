@@ -644,7 +644,7 @@ proc do_ioerr_test {testname args} {
   set ::go 1
   #reset_prng_state
   save_prng_state
-  for {set n $::ioerropts(-start)} {$::go && $n<200} {incr n} {
+  for {set n $::ioerropts(-start)} {$::go} {incr n} {
     set ::TN $n
     incr ::ioerropts(-count) -1
     if {$::ioerropts(-count)<0} break
