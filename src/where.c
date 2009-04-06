@@ -1762,6 +1762,13 @@ static void bestIndex(
   if( pProbe==0 &&
      findTerm(pWC, iCur, -1, 0, WO_EQ|WO_IN|WO_LT|WO_LE|WO_GT|WO_GE,0)==0 &&
      (pOrderBy==0 || !sortableByRowid(iCur, pOrderBy, pWC->pMaskSet, &rev)) ){
+     if( pParse->db->flags & SQLITE_ReverseOrder ){
+      /* For application testing, randomly reverse the output order for
+      ** SELECT statements that omit the ORDER BY clause.  This will help
+      ** to find cases where
+      */
+      pCost->plan.wsFlags |= WHERE_REVERSE;
+    }
     return;
   }
   pCost->rCost = SQLITE_BIG_DBL;
