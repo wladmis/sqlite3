@@ -6351,8 +6351,8 @@ int sqlite3BtreeDelete(BtCursor *pCur){
           rc = sqlite3BtreeNext(&leafCur, &notUsed);
         }
         pLeafPage = leafCur.apPage[leafCur.iPage];
-        assert( pLeafPage->pgno==leafPgno );
-        assert( leafCur.aiIdx[leafCur.iPage]==0 );
+        assert( rc!=SQLITE_OK || pLeafPage->pgno==leafPgno );
+        assert( rc!=SQLITE_OK || leafCur.aiIdx[leafCur.iPage]==0 );
       }
 
       if( SQLITE_OK==rc
