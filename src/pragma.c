@@ -1078,7 +1078,6 @@ void sqlite3Pragma(
           cnt++;
         }
       }
-      if( cnt==0 ) continue;
 
       /* Make sure sufficient number of registers have been allocated */
       if( pParse->nMem < cnt+4 ){
@@ -1151,7 +1150,6 @@ void sqlite3Pragma(
              { OP_Concat,       3,  2,  2},
              { OP_ResultRow,    2,  1,  0},
           };
-          if( pIdx->tnum==0 ) continue;
           addr = sqlite3VdbeAddOp1(v, OP_IfPos, 1);
           sqlite3VdbeAddOp2(v, OP_Halt, 0, 0);
           sqlite3VdbeJumpHere(v, addr);
