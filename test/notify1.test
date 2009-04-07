@@ -56,6 +56,38 @@ do_test notify1-1.5 {
 } {1 2 3 4}
 
 #-------------------------------------------------------------------------
+# Verify that invoking the "unlock_notify" method with no arguments
+# (which is the equivalent of invoking sqlite3_unlock_notify() with
+# a NULL xNotify argument) cancels a pending notify callback.
+#
+do_test notify1-1.11 {
+  execsql { DROP TABLE t1; CREATE TABLE t1(a, b) }
+} {}
+do_test notify1-1.12 {
+  execsql {
+    BEGIN;
+    INSERT INTO t1 VALUES(1, 2);
+  }
+  catchsql { INSERT INTO t1 VALUES(3, 4) } db2
+} {1 {database table is locked}}
+do_test notify1-1.13 {
+  set zScript ""
+  db2 unlock_notify {
+    set zScript "db2 eval { INSERT INTO t1 VALUES(3, 4) }"
+  }
+  execsql { SELECT * FROM t1 }
+} {1 2}
+do_test notify1-1.14 {
+  set zScript
+} {}
+do_test notify1-1.15 {
+  db2 unlock_notify
+  execsql { COMMIT }
+  eval $zScript
+  execsql { SELECT * FROM t1 }
+} {1 2}
+
+#-------------------------------------------------------------------------
 # The following tests, notify1-2.*, test that deadlock is detected 
 # correctly.
 # 
