@@ -14,6 +14,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !trigger { finish_test ; return }
+
 # Test cases:
 #
 #   temptrigger-1.*: Shared cache problem.

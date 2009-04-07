@@ -17,6 +17,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !trigger { finish_test ; return }
+
 do_test tkt2832-1.1 {
   execsql {
     CREATE TABLE t1(a PRIMARY KEY);

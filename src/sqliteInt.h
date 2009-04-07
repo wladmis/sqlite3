@@ -2537,6 +2537,7 @@ void sqlite3MaterializeView(Parse*, Table*, Expr*, int);
 # define sqlite3DropTriggerPtr(A,B)
 # define sqlite3UnlinkAndDeleteTrigger(A,B,C)
 # define sqlite3CodeRowTrigger(A,B,C,D,E,F,G,H,I,J,K,L) 0
+# define sqlite3TriggerList(X, Y) 0
 #endif
 
 int sqlite3JoinType(Parse*, Token*, Token*, Token*);

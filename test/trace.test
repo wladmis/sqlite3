@@ -147,23 +147,25 @@ catch {sqlite3_finalize $STMT}
 
 # Trigger tracing.
 #
-do_test trace-5.1 {
-  db eval {
-    CREATE TRIGGER r1t1 AFTER UPDATE ON t1 BEGIN
-      UPDATE t2 SET a=new.a WHERE rowid=new.rowid;
-    END;
-    CREATE TRIGGER r1t2 AFTER UPDATE ON t2 BEGIN
-      SELECT 'hello';
-    END;
-  }
-  set TRACE_OUT {}
-  proc trace_proc cmd {
-    lappend ::TRACE_OUT [string trim $cmd]
-  }
-  db eval {
-    UPDATE t1 SET a=a+1;
-  }
-  set TRACE_OUT
-} {{UPDATE t1 SET a=a+1;} {-- TRIGGER r1t1} {-- TRIGGER r1t2} {-- TRIGGER r1t1} {-- TRIGGER r1t2} {-- TRIGGER r1t1} {-- TRIGGER r1t2}}
+ifcapable trigger {
+  do_test trace-5.1 {
+    db eval {
+      CREATE TRIGGER r1t1 AFTER UPDATE ON t1 BEGIN
+        UPDATE t2 SET a=new.a WHERE rowid=new.rowid;
+      END;
+      CREATE TRIGGER r1t2 AFTER UPDATE ON t2 BEGIN
+        SELECT 'hello';
+      END;
+    }
+    set TRACE_OUT {}
+    proc trace_proc cmd {
+      lappend ::TRACE_OUT [string trim $cmd]
+    }
+    db eval {
+      UPDATE t1 SET a=a+1;
+    }
+    set TRACE_OUT
+  } {{UPDATE t1 SET a=a+1;} {-- TRIGGER r1t1} {-- TRIGGER r1t2} {-- TRIGGER r1t1} {-- TRIGGER r1t2} {-- TRIGGER r1t1} {-- TRIGGER r1t2}}
+}
 
 finish_test

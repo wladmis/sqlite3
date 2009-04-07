@@ -19,6 +19,8 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !trigger { finish_test ; return }
+
 do_test tkt2767-1.1 {
   execsql {
     -- Construct a table with many rows of data
