@@ -814,7 +814,7 @@ int jt_register(char *zWrap, int isDefault){
 /*
 ** Uninstall the jt VFS, if it is installed.
 */
-void jt_unregister(){
+void jt_unregister(void){
   sqlite3_vfs_unregister(&jt_vfs);
 }
 

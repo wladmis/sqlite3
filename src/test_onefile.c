@@ -810,7 +810,7 @@ static int fsCurrentTime(sqlite3_vfs *pVfs, double *pTimeOut){
 ** true, the fs vfs becomes the new default vfs. It is the only publicly
 ** available function in this file.
 */
-int fs_register(){
+int fs_register(void){
   if( fs_vfs.pParent ) return SQLITE_OK;
   fs_vfs.pParent = sqlite3_vfs_find(0);
   fs_vfs.base.mxPathname = fs_vfs.pParent->mxPathname;

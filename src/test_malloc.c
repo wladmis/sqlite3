@@ -49,7 +49,7 @@ static void sqlite3Fault(void){
 ** Check to see if a fault should be simulated.  Return true to simulate
 ** the fault.  Return false if the fault should not be simulated.
 */
-static int faultsimStep(){
+static int faultsimStep(void){
   if( likely(!memfault.enable) ){
     return 0;
   }
@@ -771,7 +771,7 @@ static void test_memdebug_callback(int nByte, int nFrame, void **aFrame){
 }
 #endif /* SQLITE_MEMDEBUG */
 
-static void test_memdebug_log_clear(){
+static void test_memdebug_log_clear(void){
   Tcl_HashSearch search;
   Tcl_HashEntry *pEntry;
   for(

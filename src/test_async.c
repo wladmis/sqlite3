@@ -642,7 +642,7 @@ static void addAsyncWrite(AsyncWrite *pWrite){
 /*
 ** Increment async.nFile in a thread-safe manner.
 */
-static void incrOpenFileCount(){
+static void incrOpenFileCount(void){
   /* We must hold the queue mutex in order to modify async.nFile */
   pthread_mutex_lock(&async.queueMutex);
   if( async.nFile==0 ){
