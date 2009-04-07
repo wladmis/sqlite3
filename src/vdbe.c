@@ -4153,11 +4153,13 @@ case OP_IdxRowid: {              /* out2-prerelease */
   BtCursor *pCrsr;
   VdbeCursor *pC;
 
+
   assert( i>=0 && i<p->nCursor );
   assert( p->apCsr[i]!=0 );
   if( (pCrsr = (pC = p->apCsr[i])->pCursor)!=0 ){
     i64 rowid;
-
+    rc = sqlite3VdbeCursorMoveto(pC);
+    if( rc ) goto abort_due_to_error;
     assert( pC->deferredMoveto==0 );
     assert( pC->isTable==0 );
     if( !pC->nullRow ){
