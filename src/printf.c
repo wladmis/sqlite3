@@ -133,6 +133,9 @@ static const et_info fmtinfo[] = {
   {  'n',  0, 0, etSIZE,       0,  0 },
   {  '%',  0, 0, etPERCENT,    0,  0 },
   {  'p', 16, 0, etPOINTER,    0,  1 },
+
+/* All the rest have the FLAG_INTERN bit set and are thus for internal
+** use only */
   {  'T',  0, 2, etTOKEN,      0,  0 },
   {  'S',  0, 2, etSRCLIST,    0,  0 },
   {  'r', 10, 3, etORDINAL,    0,  0 },
