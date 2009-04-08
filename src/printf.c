@@ -77,6 +77,8 @@
 #define etSQLESCAPE3 15 /* %w -> Strings with '\"' doubled */
 #define etORDINAL    16 /* %r -> 1st, 2nd, 3rd, 4th, etc.  English only */
 
+#define etINVALID     0 /* Any unrecognized conversion type */
+
 
 /*
 ** An "etByte" is an 8-bit unsigned value.
@@ -338,7 +340,8 @@ void sqlite3VXPrintf(
       flag_long = flag_longlong = 0;
     }
     /* Fetch the info entry for the field */
-    infop = 0;
+    infop = &fmtinfo[0];
+    xtype = etINVALID;
     for(idx=0; idx<ArraySize(fmtinfo); idx++){
       if( c==fmtinfo[idx].fmttype ){
         infop = &fmtinfo[idx];
@@ -351,9 +354,6 @@ void sqlite3VXPrintf(
       }
     }
     zExtra = 0;
-    if( infop==0 ){
-      return;
-    }
 
 
     /* Limit the precision to prevent overflowing buf[] during conversion */
@@ -690,6 +690,10 @@ void sqlite3VXPrintf(
         sqlite3StrAccumAppend(pAccum, pItem->zName, -1);
         length = width = 0;
         break;
+      }
+      default: {
+        assert( xtype==etINVALID );
+        return;
       }
     }/* End switch over the format type */
     /*
