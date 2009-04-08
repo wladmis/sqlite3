@@ -904,23 +904,26 @@ static const void *columnName(
   const void *ret = 0;
   Vdbe *p = (Vdbe *)pStmt;
   int n;
+  sqlite3 *db = p->db;
   
 
   if( p!=0 ){
+    assert( db!=0 );
     n = sqlite3_column_count(pStmt);
     if( N<n && N>=0 ){
       N += useType*n;
-      sqlite3_mutex_enter(p->db->mutex);
+      sqlite3_mutex_enter(db->mutex);
+      assert( db->mallocFailed==0 );
       ret = xFunc(&p->aColName[N]);
 
       /* A malloc may have failed inside of the xFunc() call. If this
       ** is the case, clear the mallocFailed flag and return NULL.
       */
-      if( p->db && p->db->mallocFailed ){
-        p->db->mallocFailed = 0;
+      if( db->mallocFailed ){
+        db->mallocFailed = 0;
         ret = 0;
       }
-      sqlite3_mutex_leave(p->db->mutex);
+      sqlite3_mutex_leave(db->mutex);
     }
   }
   return ret;
