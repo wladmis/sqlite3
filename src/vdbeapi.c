@@ -618,7 +618,7 @@ void sqlite3InvalidFunction(
   const char *zName = context->pFunc->zName;
   char *zErr;
   UNUSED_PARAMETER2(NotUsed, NotUsed2);
-  zErr = sqlite3MPrintf(0,
+  zErr = sqlite3_mprintf(
       "unable to use function %s in the requested context", zName);
   sqlite3_result_error(context, zErr, -1);
   sqlite3_free(zErr);
