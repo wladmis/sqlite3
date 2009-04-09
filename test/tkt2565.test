@@ -86,5 +86,7 @@ do_test tkt2565-1.X {
 #
 sqlite3_shutdown
 sqlite3_config_alt_pcache 0
+sqlite3_initialize
+autoinstall_test_functions
 
 finish_test

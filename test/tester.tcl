@@ -132,6 +132,7 @@ if {![info exists nTest]} {
   sqlite3_shutdown 
   install_malloc_faultsim 1 
   sqlite3_initialize
+  autoinstall_test_functions
   if {[info exists tester_do_binarylog]} {
     sqlite3_instvfs binarylog -default binarylog ostrace.bin
     sqlite3_instvfs marker binarylog "$argv0 $argv"

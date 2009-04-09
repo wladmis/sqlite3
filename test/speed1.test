@@ -293,4 +293,6 @@ speed_trial_summary speed1
 db close
 sqlite3_shutdown
 eval sqlite3_config_lookaside $old_lookaside
+sqlite3_initialize
+autoinstall_test_functions
 finish_test
