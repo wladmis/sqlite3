@@ -68,11 +68,8 @@ ifcapable deprecated {
   do_test bindxfer-1.8 {
     set VALUES
   } {one two {}}
-  do_test bindxfer-1.9-misuse {
-    catch {sqlite3_finalize $VM1}
-    catch {sqlite3_finalize $VM2}
-    sqlite3_transfer_bindings $VM1 $VM2
-  } 21 ;# SQLITE_MISUSE
+  catch {sqlite3_finalize $VM1}
+  catch {sqlite3_finalize $VM2}
   do_test bindxfer-1.10 {
     set VM1 [sqlite3_prepare $DB {SELECT ?, ?, ?} -1 TAIL]
     set VM2 [sqlite3_prepare $DB {SELECT ?, ?, ?, ?} -1 TAIL]
