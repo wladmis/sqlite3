@@ -1587,7 +1587,7 @@ static int getSectorSize(
   DWORD bytesPerSector = SQLITE_DEFAULT_SECTOR_SIZE;
   char zFullpath[MAX_PATH+1];
   int rc;
-  DWORD dwRet = 0;
+  DWORD dwRet = 0, dwDummy;
 
   /*
   ** We need to get the full path name of the file
@@ -1611,10 +1611,10 @@ static int getSectorSize(
           }
         }
         dwRet = GetDiskFreeSpaceW((WCHAR*)zConverted,
-                                  NULL,
+                                  &dwDummy,
                                   &bytesPerSector,
-                                  NULL,
-                                  NULL);
+                                  &dwDummy,
+                                  &dwDummy);
 #if SQLITE_OS_WINCE==0
       }else{
         int i;
@@ -1628,10 +1628,10 @@ static int getSectorSize(
           }
         }
         dwRet = GetDiskFreeSpaceA((CHAR*)zConverted,
-                                  NULL,
+                                  &dwDummy,
                                   &bytesPerSector,
-                                  NULL,
-                                  NULL);
+                                  &dwDummy,
+                                  &dwDummy);
 #endif
       }
       free(zConverted);
