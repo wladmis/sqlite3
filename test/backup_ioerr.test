@@ -53,7 +53,7 @@ proc populate_database {db {xtra_large 0}} {
 do_test backup_ioerr-1.1 {
   populate_database db
   set nPage [expr {[file size test.db] / 1024}]
-  expr {$nPage>140 && $nPage<150}
+  expr {$nPage>130 && $nPage<160}
 } {1}
 do_test backup_ioerr-1.2 {
   expr {[file size test.db] > $sqlite_pending_byte}
