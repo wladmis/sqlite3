@@ -17,7 +17,7 @@ if {[catch {sqlite3async_enable}]} {
   return
 }
 
-rename finish_test really_finish_test
+rename finish_test async_really_finish_test
 proc finish_test {} {
   catch {db close}
   catch {db2 close}
@@ -81,4 +81,4 @@ really_finish_test
 rename do_test {}
 rename async_really_do_test do_test
 rename finish_test {}
-rename really_finish_test finish_test
+rename async_really_finish_test finish_test
