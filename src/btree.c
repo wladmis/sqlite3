@@ -4079,7 +4079,8 @@ int sqlite3BtreeMoveto(
 ){
   int rc;                    /* Status code */
   UnpackedRecord *pIdxKey;   /* Unpacked index key */
-  UnpackedRecord aSpace[16]; /* Temp space for pIdxKey - to avoid a malloc */
+  char aSpace[150];          /* Temp space for pIdxKey - to avoid a malloc */
+
 
   if( pKey ){
     assert( nKey==(i64)(int)nKey );
