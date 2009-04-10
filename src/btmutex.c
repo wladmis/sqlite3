@@ -18,7 +18,8 @@
 ** a good breakout.
 */
 #include "btreeInt.h"
-#if SQLITE_THREADSAFE && !defined(SQLITE_OMIT_SHARED_CACHE)
+#ifndef SQLITE_OMIT_SHARED_CACHE
+#if SQLITE_THREADSAFE
 
 /*
 ** Obtain the BtShared mutex associated with B-Tree handle p. Also,
@@ -336,5 +337,18 @@ void sqlite3BtreeMutexArrayLeave(BtreeMutexArray *pArray){
   }
 }
 
-
-#endif  /* SQLITE_THREADSAFE && !SQLITE_OMIT_SHARED_CACHE */
+#else
+void sqlite3BtreeEnter(Btree *p){
+  p->pBt->db = p->db;
+}
+void sqlite3BtreeEnterAll(sqlite3 *db){
+  int i;
+  for(i=0; i<db->nDb; i++){
+    Btree *p = db->aDb[i].pBt;
+    if( p ){
+      p->pBt->db = p->db;
+    }
+  }
+}
+#endif /* if SQLITE_THREADSAFE */
+#endif /* ifndef SQLITE_OMIT_SHARED_CACHE */

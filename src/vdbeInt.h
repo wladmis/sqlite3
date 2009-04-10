@@ -379,6 +379,12 @@ int sqlite3VdbeCloseStatement(Vdbe *, int);
 int sqlite3VdbeReleaseBuffers(Vdbe *p);
 #endif
 
+#ifndef SQLITE_OMIT_SHARED_CACHE
+void sqlite3VdbeMutexArrayEnter(Vdbe *p);
+#else
+# define sqlite3VdbeMutexArrayEnter(p)
+#endif
+
 int sqlite3VdbeMemTranslate(Mem*, u8);
 #ifdef SQLITE_DEBUG
   void sqlite3VdbePrintSql(Vdbe*);
