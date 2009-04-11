@@ -16,6 +16,11 @@
 #ifndef SQLITE_OMIT_VIRTUALTABLE
 #include "sqliteInt.h"
 
+/*
+** The actual function that does the work of creating a new module.
+** This function implements the sqlite3_create_module() and
+** sqlite3_create_module_v2() interfaces.
+*/
 static int createModule(
   sqlite3 *db,                    /* Database in which module is registered */
   const char *zName,              /* Name assigned to this module */
@@ -97,6 +102,7 @@ void sqlite3VtabLock(sqlite3_vtab *pVtab){
 ** disconnect the virtual table.
 */
 void sqlite3VtabUnlock(sqlite3 *db, sqlite3_vtab *pVtab){
+  assert( pVtab->nRef>0 );
   pVtab->nRef--;
   assert(db);
   assert( sqlite3SafetyCheckOk(db) );
