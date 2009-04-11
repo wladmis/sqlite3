@@ -365,7 +365,11 @@ do_test malloc5-6.3.4 {
   # Now release 9900 more (about 9 pages worth). This should expunge
   # the rest of the db cache. But the db2 cache remains intact, because
   # SQLite tries to avoid calling sync().
-  sqlite3_release_memory 9900
+  if {$::tcl_platform(wordSize)==8} {
+    sqlite3_release_memory 10177
+  } else {
+    sqlite3_release_memory 9900
+  }
   list [nPage db] [nPage db2]
 } {0 3}
 do_test malloc5-6.3.5 {
