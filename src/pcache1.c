@@ -527,7 +527,7 @@ static void *pcache1Fetch(sqlite3_pcache *p, unsigned int iKey, int createFlag){
 
   /* Step 4. Try to recycle a page buffer if appropriate. */
   if( pCache->bPurgeable && pcache1.pLruTail && (
-      pCache->nPage>=pCache->nMax-1 || pcache1.nCurrentPage>=pcache1.nMaxPage
+     (pCache->nPage+1>=pCache->nMax) || pcache1.nCurrentPage>=pcache1.nMaxPage
   )){
     pPage = pcache1.pLruTail;
     pcache1RemoveFromHash(pPage);
