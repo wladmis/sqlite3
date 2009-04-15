@@ -225,7 +225,7 @@ static void reloadTableSchema(Parse *pParse, Table *pTab, const char *zName){
 #endif
 
   v = sqlite3GetVdbe(pParse);
-  if( !v ) return;
+  if( NEVER(v==0) ) return;
   assert( sqlite3BtreeHoldsAllMutexes(pParse->db) );
   iDb = sqlite3SchemaToIndex(pParse->db, pTab->pSchema);
   assert( iDb>=0 );
