@@ -1056,6 +1056,20 @@ for {set i 1} {$i<[sqlite3_limit db SQLITE_LIMIT_FUNCTION_ARG -1]} {incr i} {
   } $result
 }
 
+# Ticket #3806.  If the initial string in a group_concat is an empty
+# string, the separate that follows should still be present.
+#
+do_test func-24.8 {
+  execsql {
+    SELECT group_concat(CASE t1 WHEN 'this' THEN '' ELSE t1 END) FROM tbl1
+  }
+} {,program,is,free,software}
+do_test func-24.9 {
+  execsql {
+    SELECT group_concat(CASE WHEN t1!='software' THEN '' ELSE t1 END) FROM tbl1
+  }
+} {,,,,software}
+
 # Use the test_isolation function to make sure that type conversions
 # on function arguments do not effect subsequent arguments.
 #
