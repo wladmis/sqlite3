@@ -1600,13 +1600,11 @@ static int getSectorSize(
     void *zConverted = convertUtf8Filename(zFullpath);
     if( zConverted ){
       if( isNT() ){
-        int i;
         /* trim path to just drive reference */
         WCHAR *p = zConverted;
-        for(i=0;i<MAX_PATH;i++){
-          if( p[i] == '\\' ){
-            i++;
-            p[i] = '\0';
+        for(;*p;p++){
+          if( *p == '\\' ){
+            *p = '\0';
             break;
           }
         }
@@ -1617,13 +1615,11 @@ static int getSectorSize(
                                   &dwDummy);
 #if SQLITE_OS_WINCE==0
       }else{
-        int i;
         /* trim path to just drive reference */
         CHAR *p = (CHAR *)zConverted;
-        for(i=0;i<MAX_PATH;i++){
-          if( p[i] == '\\' ){
-            i++;
-            p[i] = '\0';
+        for(;*p;p++){
+          if( *p == '\\' ){
+            *p = '\0';
             break;
           }
         }
