@@ -549,7 +549,7 @@ static int parseModifier(const char *zMod, DateTime *p){
       ** seconds since 1970.  Convert to a real julian day number.
       */
       if( strcmp(z, "unixepoch")==0 && p->validJD ){
-        p->iJD = p->iJD/86400 + 21086676*(i64)10000000;
+        p->iJD = (p->iJD + 43200)/86400 + 21086676*(i64)10000000;
         clearYMD_HMS_TZ(p);
         rc = 0;
       }
