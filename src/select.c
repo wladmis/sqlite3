@@ -1394,7 +1394,8 @@ static CollSeq *multiSelectCollSeq(Parse *pParse, Select *p, int iCol){
   }else{
     pRet = 0;
   }
-  if( pRet==0 ){
+  assert( iCol>=0 );
+  if( pRet==0 && iCol<p->pEList->nExpr ){
     pRet = sqlite3ExprCollSeq(pParse, p->pEList->a[iCol].pExpr);
   }
   return pRet;
@@ -2101,7 +2102,7 @@ static int multiSelectOrderBy(
   }
 
   /* Compute the comparison permutation and keyinfo that is used with
-  ** the permutation in order to comparisons to determine if the next
+  ** the permutation used to determine if the next
   ** row of results comes from selectA or selectB.  Also add explicit
   ** collations to the ORDER BY clause terms so that when the subqueries
   ** to the right and the left are evaluated, they use the correct
