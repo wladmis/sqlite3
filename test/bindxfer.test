@@ -68,8 +68,6 @@ ifcapable deprecated {
   do_test bindxfer-1.8 {
     set VALUES
   } {one two {}}
-  catch {sqlite3_finalize $VM1}
-  catch {sqlite3_finalize $VM2}
 }
 catch {sqlite3_finalize $VM1}
 catch {sqlite3_finalize $VM2}
