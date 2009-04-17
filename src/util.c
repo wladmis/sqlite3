@@ -58,7 +58,7 @@ int sqlite3Assert(void){
 ** Otherwise, we have our own implementation that works on most systems.
 */
 int sqlite3IsNaN(double x){
-#if defined(SQLITE_HAVE_ISNAN)
+#if !defined(SQLITE_HAVE_ISNAN)
   /*
   ** Systems that support the isnan() library function should probably
   ** make use of it by compiling with -DSQLITE_HAVE_ISNAN.  But we have
