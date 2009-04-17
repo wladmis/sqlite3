@@ -162,14 +162,16 @@ int sqlite3_initialize(void){
     sqlite3GlobalConfig.inProgress = 1;
     memset(pHash, 0, sizeof(sqlite3GlobalFunctions));
     sqlite3RegisterGlobalFunctions();
-    rc = sqlite3_os_init();
+    rc = sqlite3PcacheInitialize();
     if( rc==SQLITE_OK ){
-      rc = sqlite3PcacheInitialize();
+      rc = sqlite3_os_init();
+    }
+    if( rc==SQLITE_OK ){
       sqlite3PCacheBufferSetup( sqlite3GlobalConfig.pPage, 
           sqlite3GlobalConfig.szPage, sqlite3GlobalConfig.nPage);
+      sqlite3GlobalConfig.isInit = 1;
     }
     sqlite3GlobalConfig.inProgress = 0;
-    sqlite3GlobalConfig.isInit = (rc==SQLITE_OK ? 1 : 0);
   }
   sqlite3_mutex_leave(sqlite3GlobalConfig.pInitMutex);
 
