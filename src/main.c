@@ -213,18 +213,22 @@ int sqlite3_initialize(void){
 ** Undo the effects of sqlite3_initialize().  Must not be called while
 ** there are outstanding database connections or memory allocations or
 ** while any part of SQLite is otherwise in use in any thread.  This
-** routine is not threadsafe.  Not by a long shot.
+** routine is not threadsafe.  But it is safe to invoke this routine
+** on when SQLite is already shut down.  If SQLite is already shut down
+** when this routine is invoked, then this routine is a harmless no-op.
 */
 int sqlite3_shutdown(void){
-  sqlite3GlobalConfig.isMallocInit = 0;
-  sqlite3PcacheShutdown();
   if( sqlite3GlobalConfig.isInit ){
-    sqlite3_os_end();
+    sqlite3GlobalConfig.isMallocInit = 0;
+    sqlite3PcacheShutdown();
+    if( sqlite3GlobalConfig.isInit ){
+      sqlite3_os_end();
+    }
+    sqlite3_reset_auto_extension();
+    sqlite3MallocEnd();
+    sqlite3MutexEnd();
+    sqlite3GlobalConfig.isInit = 0;
   }
-  sqlite3_reset_auto_extension();
-  sqlite3MallocEnd();
-  sqlite3MutexEnd();
-  sqlite3GlobalConfig.isInit = 0;
   return SQLITE_OK;
 }
 

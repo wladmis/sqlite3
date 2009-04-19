@@ -791,6 +791,11 @@ struct sqlite3_vfs {
 ** of sqlite3_initialize() does any initialization.  All other calls
 ** are harmless no-ops.
 **
+** A call to sqlite3_shutdown() is an "effective" call if it is the first
+** call to sqlite3_shutdown() since the last sqlite3_initialize().  Only
+** an effective call to sqlite3_shutdown() does any deinitialization.
+** All other calls to sqlite3_shutdown() are harmless no-ops.
+**
 ** Among other things, sqlite3_initialize() shall invoke
 ** sqlite3_os_init().  Similarly, sqlite3_shutdown()
 ** shall invoke sqlite3_os_end().
