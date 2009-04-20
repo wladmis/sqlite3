@@ -158,7 +158,9 @@ void sqlite3FinishCoding(Parse *pParse){
         if( (mask & pParse->cookieMask)==0 ) continue;
         sqlite3VdbeUsesBtree(v, iDb);
         sqlite3VdbeAddOp2(v,OP_Transaction, iDb, (mask & pParse->writeMask)!=0);
-        sqlite3VdbeAddOp2(v,OP_VerifyCookie, iDb, pParse->cookieValue[iDb]);
+        if( db->init.busy==0 ){
+          sqlite3VdbeAddOp2(v,OP_VerifyCookie, iDb, pParse->cookieValue[iDb]);
+        }
       }
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       {
