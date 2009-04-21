@@ -893,16 +893,16 @@ static int echoBestIndex(sqlite3_vtab *tab, sqlite3_index_info *pIdxInfo){
   pIdxInfo->idxNum = hashString(zQuery);
   pIdxInfo->idxStr = zQuery;
   pIdxInfo->needToFreeIdxStr = 1;
-  if (useCost) {
+  if( useCost ){
     pIdxInfo->estimatedCost = cost;
-  } else if( useIdx ){
+  }else if( useIdx ){
     /* Approximation of log2(nRow). */
     for( ii=0; ii<(sizeof(int)*8); ii++ ){
       if( nRow & (1<<ii) ){
         pIdxInfo->estimatedCost = (double)ii;
       }
     }
-  } else {
+  }else{
     pIdxInfo->estimatedCost = (double)nRow;
   }
   return rc;
