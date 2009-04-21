@@ -73,7 +73,7 @@
 ** between the concurrency offered by "normal" SQLite and SQLite
 ** using the asynchronous backend.
 **
-** If connections from within multiple database files may access the
+** If connections from within multiple processes may access the
 ** database file, the ENABLE_FILE_LOCKING symbol (see below) must be
 ** defined. If it is not defined, then no locks are established on 
 ** the database file. In this case, if multiple processes access 
