@@ -1755,6 +1755,9 @@ static void bestVirtualIndex(
   if( pIdxInfo==0 ){
     *ppIdxInfo = pIdxInfo = allocateIndexInfo(pParse, pWC, pSrc, pOrderBy);
   }
+  if( pIdxInfo==0 ){
+    return;
+  }
 
   /* At this point, the sqlite3_index_info structure that pIdxInfo points
   ** to will have been initialized, either during the current invocation or
