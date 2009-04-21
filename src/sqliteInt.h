@@ -2402,7 +2402,7 @@ void sqlite3RowSetClear(RowSet*);
 void sqlite3RowSetInsert(RowSet*, i64);
 int sqlite3RowSetNext(RowSet*, i64*);
 
-int sqlite3RowhashInsert(RowHash **pp, i64 iVal);
+int sqlite3RowhashInsert(sqlite3*, RowHash **pp, i64 iVal);
 int sqlite3RowhashTest(RowHash *p, int iSet, i64 iVal, int *pExists);
 void sqlite3RowhashDestroy(RowHash *p);
 

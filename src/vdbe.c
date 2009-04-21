@@ -4647,7 +4647,7 @@ case OP_RowHash: {                     /* jump, in1, in3 */
     }
   }
   if( iSet>=0 ){
-    rc = sqlite3RowhashInsert(&pIn1->u.pRowHash, pIn3->u.i);
+    rc = sqlite3RowhashInsert(db, &pIn1->u.pRowHash, pIn3->u.i);
   }
   break;
 }
