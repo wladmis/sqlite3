@@ -221,9 +221,7 @@ int sqlite3_shutdown(void){
   if( sqlite3GlobalConfig.isInit ){
     sqlite3GlobalConfig.isMallocInit = 0;
     sqlite3PcacheShutdown();
-    if( sqlite3GlobalConfig.isInit ){
-      sqlite3_os_end();
-    }
+    sqlite3_os_end();
     sqlite3_reset_auto_extension();
     sqlite3MallocEnd();
     sqlite3MutexEnd();
