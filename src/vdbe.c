@@ -4604,10 +4604,11 @@ case OP_RowSetRead: {       /* jump, out3 */
 
 /* Opcode: RowHash P1 P2 P3 P4
 **
-** Register P3 is assumed to hold an integer value. If register P1
+** Register P3 is assumed to hold a 64-bit integer value. If register P1
 ** contains a rowid-hash object and the rowid-hash object contains
 ** the value held in P3, jump to register P2. Otherwise, insert the
-** integer in P3 into the rowid-hash container.
+** integer in P3 into the rowid-hash container and continue on to the
+** next opcode.
 **
 ** The rowid-hash is optimized for the case where successive sets
 ** of integers, where each set contains no duplicates. Each set
