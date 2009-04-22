@@ -135,9 +135,9 @@ struct RowHashBlock {
 ** around and used as opaque handles by code in other modules.
 */
 struct RowHash {
-  int nUsed;              /* Number of used entries in first RowHashBlock */
-  int nEntry;             /* Number of used entries over all RowHashBlocks */
+  unsigned int nEntry;    /* Number of used entries over all RowHashBlocks */
   int iBatch;             /* The current insert batch number */
+  u16 nUsed;              /* Number of used entries in first RowHashBlock */
   u8 nHeight;             /* Height of tree of hash pages */
   u8 nLinearLimit;        /* Linear search limit (used if pHash==0) */
   int nBucket;            /* Number of buckets in hash table */
