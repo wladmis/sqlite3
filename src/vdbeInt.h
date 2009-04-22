@@ -115,7 +115,6 @@ struct Mem {
     int nZero;          /* Used when bit MEM_Zero is set in flags */
     FuncDef *pDef;      /* Used only when flags==MEM_Agg */
     RowSet *pRowSet;    /* Used only when flags==MEM_RowSet */
-    RowHash *pRowHash;  /* Used only when flags==MEM_RowHash */
   } u;
   double r;           /* Real value */
   sqlite3 *db;        /* The associated database connection */
@@ -149,7 +148,6 @@ struct Mem {
 #define MEM_Real      0x0008   /* Value is a real number */
 #define MEM_Blob      0x0010   /* Value is a BLOB */
 #define MEM_RowSet    0x0020   /* Value is a RowSet object */
-#define MEM_RowHash   0x0040   /* Value is a RowHash object */
 #define MEM_TypeMask  0x00ff   /* Mask of type bits */
 
 /* Whenever Mem contains a valid string or blob representation, one of

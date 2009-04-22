@@ -1224,9 +1224,6 @@ static void Cleanup(Vdbe *p){
     if( pMem->flags & MEM_RowSet ){
       sqlite3RowSetClear(pMem->u.pRowSet);
     }
-    if( pMem->flags & MEM_RowHash ){
-      sqlite3RowhashDestroy(pMem->u.pRowHash);
-    }
     MemSetTypeFlag(pMem, MEM_Null);
   }
   releaseMemArray(&p->aMem[1], p->nMem);
