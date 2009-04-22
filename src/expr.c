@@ -1745,8 +1745,7 @@ int sqlite3ExprCodeGetColumn(
   }  
   assert( v!=0 );
   if( iColumn<0 ){
-    int op = (pTab && IsVirtual(pTab)) ? OP_VRowid : OP_Rowid;
-    sqlite3VdbeAddOp2(v, op, iTable, iReg);
+    sqlite3VdbeAddOp2(v, OP_Rowid, iTable, iReg);
   }else if( pTab==0 ){
     sqlite3VdbeAddOp3(v, OP_Column, iTable, iColumn, iReg);
   }else{

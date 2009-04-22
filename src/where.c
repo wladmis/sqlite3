@@ -2975,14 +2975,7 @@ static Bitmask codeOneLoopStart(
       */
       assert( iReleaseReg==0 );
       iReleaseReg = iRowidReg = sqlite3GetTempReg(pParse);
-#ifndef SQLITE_OMIT_VIRTUALTABLE
-      if( (pLevel->plan.wsFlags & WHERE_VIRTUALTABLE)!=0 ){
-        sqlite3VdbeAddOp2(v, OP_VRowid, iCur, iRowidReg);
-      }else
-#endif
-      {
-        sqlite3VdbeAddOp2(v, OP_Rowid, iCur, iRowidReg);
-      }
+      sqlite3VdbeAddOp2(v, OP_Rowid, iCur, iRowidReg);
     }
     
     if( pWInfo->wctrlFlags&WHERE_FILL_ROWSET ){

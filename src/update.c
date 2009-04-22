@@ -352,7 +352,7 @@ void sqlite3Update(
 
   /* Remember the rowid of every item to be updated.
   */
-  sqlite3VdbeAddOp2(v, IsVirtual(pTab)?OP_VRowid:OP_Rowid, iCur, regOldRowid);
+  sqlite3VdbeAddOp2(v, OP_Rowid, iCur, regOldRowid);
   if( !okOnePass ){
     regRowSet = ++pParse->nMem;
     sqlite3VdbeAddOp2(v, OP_RowSetAdd, regRowSet, regOldRowid);
