@@ -14,6 +14,10 @@
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 
+ifcapable !crashtest {
+  finish_test
+  return
+}
 
 proc signature {} {
   return [db eval {SELECT count(*), md5sum(x) FROM t1}]

@@ -62,9 +62,11 @@ do_test vtabD-1.7 {
   SELECT * FROM t1 WHERE b = 8100000000 AND NOT (a < 90000)
 }]
 
+if {[working_64bit_int]} {
 do_test vtabD-1.8 {
   execsql { SELECT * FROM tv1 WHERE a = 90001 OR b = 810000 }
 } {90001 8100180001 900 810000}
+}
 
 finish_test
 

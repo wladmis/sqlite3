@@ -43,12 +43,14 @@ proc do_keyset_test {name lKey} {
 do_keyset_test rowhash-2.1 {1 2 3}
 do_keyset_test rowhash-2.2 {0 1 2 3}
 do_keyset_test rowhash-2.3 {62 125 188}
-expr srand(1)
-for {set i 4} {$i < 10} {incr i} {
-  for {set j 0} {$j < 5000} {incr j} {
-    lappend L [expr int(rand()*10000000000)]
+if {[working_64bit_int]} {
+  expr srand(1)
+  for {set i 4} {$i < 10} {incr i} {
+    for {set j 0} {$j < 5000} {incr j} {
+        lappend L [expr int(rand()*10000000000)]
+    }
+    do_keyset_test rowhash-2.$i $L
   }
-  do_keyset_test rowhash-2.$i $L
 }
 
 finish_test
