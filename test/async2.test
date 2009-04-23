@@ -122,9 +122,5 @@ foreach err [list ioerr malloc-transient malloc-persistent] {
 }
 
 catch {db close}
-sqlite3async_halt idle
-sqlite3async_start
-sqlite3async_wait
-sqlite3async_halt never
 
 finish_test
