@@ -166,9 +166,11 @@ ifcapable bloblit {
     }
   } {{} 4.3 hi}
 }
-db close
 
-file delete -force test.db
+foreach tab [db eval {SELECT name FROM sqlite_master WHERE type = 'table'}] {
+  db eval "DROP TABLE $tab"
+}
+db close
 sqlite3 db test.db
 
 #-------------------------------------------------------------------------

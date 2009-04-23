@@ -97,8 +97,8 @@ do_test mutex1-1.9 {
 #   * Multi-threaded mode,
 #   * Single-threaded mode.
 #
-set enable_shared_cache [sqlite3_enable_shared_cache 1]
-ifcapable threadsafe {
+ifcapable threadsafe&&shared_cache {
+  set enable_shared_cache [sqlite3_enable_shared_cache 1]
   foreach {mode mutexes} {
     singlethread {}
     multithread  {fast static_lru static_master static_mem static_open static_prng }
@@ -133,12 +133,10 @@ ifcapable threadsafe {
       lsort $res
     } [lsort $mutexes]
   }
-}
-sqlite3_enable_shared_cache $enable_shared_cache
+  sqlite3_enable_shared_cache $enable_shared_cache
 
-# Open and use a connection in "nomutex" mode. Test that no recursive
-# mutexes are obtained.
-ifcapable threadsafe {
+  # Open and use a connection in "nomutex" mode. Test that no recursive
+  # mutexes are obtained.
   do_test mutex1.3.1 {
     catch {db close}
     clear_mutex_counters
