@@ -2272,6 +2272,7 @@ void sqlite3CreateForeignKey(
   pFKey->zTo = z;
   memcpy(z, pTo->z, pTo->n);
   z[pTo->n] = 0;
+  sqlite3Dequote(z);
   z += pTo->n+1;
   pFKey->pNextTo = 0;
   pFKey->nCol = nCol;
