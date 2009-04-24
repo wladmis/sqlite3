@@ -160,13 +160,11 @@ static int testAsyncStart(
 
   rc = Tcl_CreateThread(&x, tclWriterThread, threadData, nStack, flags);
   if( rc!=TCL_OK ){
+    Tcl_AppendResult(interp, "Tcl_CreateThread() failed", 0);
     return TCL_ERROR;
   }
-  while( isStarted==0 ){
-#if 0
-    sched_yield();
-#endif
-  }
+
+  while( isStarted==0 ) { /* Busy loop */ }
   return TCL_OK;
 }
 
