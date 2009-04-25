@@ -90,7 +90,7 @@
 AC_INIT(sqlite, m4_esyscmd([cat VERSION | tr -d '\n']))
 
 dnl Make sure the local VERSION file matches this configure script
-sqlite_version_sanity_check=`cat VERSION | tr -d '\n'`
+sqlite_version_sanity_check=`cat $srcdir/VERSION | tr -d '\n'`
 if test "$PACKAGE_VERSION" != "$sqlite_version_sanity_check" ; then
 AC_MSG_ERROR([configure script is out of date:
  configure \$PACKAGE_VERSION = $PACKAGE_VERSION

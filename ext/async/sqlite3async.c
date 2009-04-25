@@ -1550,7 +1550,7 @@ static void asyncWriterThread(void){
       async_mutex_leave(ASYNC_MUTEX_QUEUE);
       holdingMutex = 0;
       if( async.ioDelay>0 ){
-        pVfs->xSleep(pVfs, async.ioDelay);
+        pVfs->xSleep(pVfs, async.ioDelay*1000);
       }else{
         async_sched_yield();
       }
