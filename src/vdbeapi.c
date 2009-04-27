@@ -400,6 +400,10 @@ void sqlite3_result_zeroblob(sqlite3_context *pCtx, int n){
 }
 void sqlite3_result_error_code(sqlite3_context *pCtx, int errCode){
   pCtx->isError = errCode;
+  if( pCtx->s.flags & MEM_Null ){
+    sqlite3VdbeMemSetStr(&pCtx->s, sqlite3ErrStr(errCode), -1, 
+                         SQLITE_UTF8, SQLITE_STATIC);
+  }
 }
 
 /* Force an SQLITE_TOOBIG error. */
