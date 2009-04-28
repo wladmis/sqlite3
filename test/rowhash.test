@@ -37,7 +37,7 @@ proc do_keyset_test {name lKey} {
     lsort -integer [execsql {
       SELECT id FROM t1 WHERE a = 'a' OR b = 'b' OR c = 'c';
     }]
-  } [lsort -integer $lKey]
+  } [lsort -integer -unique $lKey]
 }
 
 do_keyset_test rowhash-2.1 {1 2 3}
