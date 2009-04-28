@@ -5218,6 +5218,7 @@ int sqlite3PagerJournalMode(Pager *pPager, int eMode){
    && (!MEMDB || eMode==PAGER_JOURNALMODE_MEMORY 
               || eMode==PAGER_JOURNALMODE_OFF)
    && !pPager->dbModified
+   && (!isOpen(pPager->jfd) || 0==pPager->journalOff)
   ){
     if( isOpen(pPager->jfd) ){
       sqlite3OsClose(pPager->jfd);
