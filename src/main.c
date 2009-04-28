@@ -1511,6 +1511,7 @@ static int openDatabase(
   CollSeq *pColl;
   int isThreadsafe;
 
+  *ppDb = 0;
 #ifndef SQLITE_OMIT_AUTOINIT
   rc = sqlite3_initialize();
   if( rc ) return rc;
