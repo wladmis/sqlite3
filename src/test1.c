@@ -2488,11 +2488,9 @@ static int add_alignment_test_collations(
   sqlite3 *db;
   if( objc>=2 ){
     if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
-    sqlite3_create_collation(db, "utf16_unaligned",
-        SQLITE_UTF16, 
+    sqlite3_create_collation(db, "utf16_unaligned", SQLITE_UTF16, 
         0, alignmentCollFunc);
-    sqlite3_create_collation(db, "utf16_aligned",
-        SQLITE_UTF16 | SQLITE_UTF16_ALIGNED, 
+    sqlite3_create_collation(db, "utf16_aligned", SQLITE_UTF16_ALIGNED, 
         0, alignmentCollFunc);
   }
   return SQLITE_OK;

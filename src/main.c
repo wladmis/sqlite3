@@ -1361,9 +1361,9 @@ static int createCollation(
   ** SQLITE_UTF16NATIVE macro. SQLITE_UTF16 is not used internally.
   */
   enc2 = enc;
-  testcase( enc2 & SQLITE_UTF16 );
-  testcase( enc2 & SQLITE_UTF16_ALIGNED );
-  if( enc2 & (SQLITE_UTF16|SQLITE_UTF16_ALIGNED) ){
+  testcase( enc2==SQLITE_UTF16 );
+  testcase( enc2==SQLITE_UTF16_ALIGNED );
+  if( enc2==SQLITE_UTF16 || enc2==SQLITE_UTF16_ALIGNED ){
     enc2 = SQLITE_UTF16NATIVE;
   }
   if( enc2<SQLITE_UTF8 || enc2>SQLITE_UTF16BE ){
