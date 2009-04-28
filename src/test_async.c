@@ -240,4 +240,3 @@ int Sqlitetestasync_Init(Tcl_Interp *interp){
 #endif  /* SQLITE_ENABLE_ASYNCIO */
   return TCL_OK;
 }
-

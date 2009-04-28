@@ -285,7 +285,7 @@ void sqlite3FinishTrigger(
       db->mallocFailed = 1;
     }else if( pLink->pSchema==pLink->pTabSchema ){
       Table *pTab;
-      int n = sqlite3Strlen30(pLink->table) + 1;
+      int n = sqlite3Strlen30(pLink->table);
       pTab = sqlite3HashFind(&pLink->pTabSchema->tblHash, pLink->table, n);
       assert( pTab!=0 );
       pLink->pNext = pTab->pTrigger;
@@ -512,7 +512,7 @@ drop_trigger_cleanup:
 ** is set on.
 */
 static Table *tableOfTrigger(Trigger *pTrigger){
-  int n = sqlite3Strlen30(pTrigger->table) + 1;
+  int n = sqlite3Strlen30(pTrigger->table);
   return sqlite3HashFind(&pTrigger->pTabSchema->tblHash, pTrigger->table, n);
 }
 
