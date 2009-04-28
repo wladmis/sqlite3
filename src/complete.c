@@ -112,7 +112,7 @@ int sqlite3_complete(const char *zSql){
      /* State:       **  SEMI  WS  OTHER EXPLAIN  CREATE  TEMP  TRIGGER  END  */
      /* 0   START: */ {    0,  0,     1,      2,      3,    1,       1,   1,  },
      /* 1  NORMAL: */ {    0,  1,     1,      1,      1,    1,       1,   1,  },
-     /* 2 EXPLAIN: */ {    0,  2,     1,      1,      3,    1,       1,   1,  },
+     /* 2 EXPLAIN: */ {    0,  2,     2,      1,      3,    1,       1,   1,  },
      /* 3  CREATE: */ {    0,  3,     1,      1,      1,    3,       4,   1,  },
      /* 4 TRIGGER: */ {    5,  4,     4,      4,      4,    4,       4,   4,  },
      /* 5    SEMI: */ {    5,  5,     4,      4,      4,    4,       4,   6,  },
