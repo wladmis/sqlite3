@@ -695,7 +695,7 @@ static int echoFilter(
   rc = sqlite3_prepare(db, idxStr, -1, &pCur->pStmt, 0);
   assert( pCur->pStmt || rc!=SQLITE_OK );
   for(i=0; rc==SQLITE_OK && i<argc; i++){
-    sqlite3_bind_value(pCur->pStmt, i+1, argv[i]);
+    rc = sqlite3_bind_value(pCur->pStmt, i+1, argv[i]);
   }
 
   /* If everything was successful, advance to the first row of the scan */
