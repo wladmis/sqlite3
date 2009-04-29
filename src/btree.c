@@ -4980,7 +4980,7 @@ static int insertCell(
       CellInfo info;
       sqlite3BtreeParseCellPtr(pPage, pCell, &info);
       assert( (info.nData+(pPage->intKey?0:info.nKey))==info.nPayload );
-      if( (info.nData+(pPage->intKey?0:info.nKey))>info.nLocal ){
+      if( info.iOverflow ){
         Pgno pgnoOvfl = get4byte(&pCell[info.iOverflow]);
         rc = ptrmapPut(pPage->pBt, pgnoOvfl, PTRMAP_OVERFLOW1, pPage->pgno);
         if( rc!=SQLITE_OK ) return rc;
