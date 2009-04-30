@@ -119,7 +119,7 @@ static void attachFunc(
     if( aNew==0 ) return;
   }
   db->aDb = aNew;
-  aNew = &db->aDb[db->nDb++];
+  aNew = &db->aDb[db->nDb];
   memset(aNew, 0, sizeof(*aNew));
 
   /* Open the database file. If the btree is successfully opened, use
@@ -129,7 +129,11 @@ static void attachFunc(
   rc = sqlite3BtreeFactory(db, zFile, 0, SQLITE_DEFAULT_CACHE_SIZE,
                            db->openFlags | SQLITE_OPEN_MAIN_DB,
                            &aNew->pBt);
-  if( rc==SQLITE_OK ){
+  db->nDb++;
+  if( rc==SQLITE_CONSTRAINT ){
+    rc = SQLITE_ERROR;
+    zErrDyn = sqlite3MPrintf(db, "database is already attached");
+  }else if( rc==SQLITE_OK ){
     Pager *pPager;
     aNew->pSchema = sqlite3SchemaGet(db, aNew->pBt);
     if( !aNew->pSchema ){
