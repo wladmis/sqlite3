@@ -2213,7 +2213,7 @@ int sqlite3BtreeBeginTrans(Btree *p, int wrflag){
       if( pBt->readOnly ){
         rc = SQLITE_READONLY;
       }else{
-        rc = sqlite3PagerBegin(pBt->pPager, wrflag>1);
+        rc = sqlite3PagerBegin(pBt->pPager,wrflag>1,sqlite3TempInMemory(p->db));
         if( rc==SQLITE_OK ){
           rc = newDatabase(pBt);
         }

@@ -119,7 +119,7 @@ void *sqlite3PagerGetExtra(DbPage *);
 
 /* Functions used to manage pager transactions and savepoints. */
 int sqlite3PagerPagecount(Pager*, int*);
-int sqlite3PagerBegin(Pager*, int exFlag);
+int sqlite3PagerBegin(Pager*, int exFlag, int);
 int sqlite3PagerCommitPhaseOne(Pager*,const char *zMaster, int);
 int sqlite3PagerSync(Pager *pPager);
 int sqlite3PagerCommitPhaseTwo(Pager*);

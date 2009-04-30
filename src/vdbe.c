@@ -2464,7 +2464,7 @@ case OP_Savepoint: {
           db->isTransactionSavepoint = 1;
         }else{
           db->nSavepoint++;
-	}
+        }
     
         /* Link the new savepoint into the database handle's list. */
         pNew->pNext = db->pSavepoint;
