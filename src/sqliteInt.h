@@ -2765,7 +2765,7 @@ int sqlite3TransferBindings(sqlite3_stmt *, sqlite3_stmt *);
 int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
-int sqlite3TempInMemory(sqlite3 *);
+int sqlite3TempInMemory(const sqlite3*);
 
 
 

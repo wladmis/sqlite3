@@ -1184,7 +1184,7 @@ void *sqlite3_rollback_hook(
 **   2                     0                  memory    (return 1)
 **   3                     any                memory    (return 1)
 */
-int sqlite3TempInMemory(sqlite3 *db){
+int sqlite3TempInMemory(const sqlite3 *db){
 #if SQLITE_TEMP_STORE==1
   return ( db->temp_store==2 );
 #endif
