@@ -103,7 +103,8 @@ static void attachFunc(
   }
   for(i=0; i<db->nDb; i++){
     char *z = db->aDb[i].zName;
-    if( z && zName && sqlite3StrICmp(z, zName)==0 ){
+    assert( z && zName );
+    if( sqlite3StrICmp(z, zName)==0 ){
       sqlite3_snprintf(sizeof(zErr), zErr, 
                        "database %s is already in use", zName);
       goto attach_error;
