@@ -42,6 +42,9 @@ proc testfixture {chan cmd} {
     if { $line == "OVER" } { 
       return $r
     }
+    if {[eof $chan]} {
+      return "ERROR: Child process hung up"
+    }
     append r $line
   }
 }
