@@ -166,6 +166,8 @@ columnlist ::= column.
 column(A) ::= columnid(X) type carglist. {
   A.z = X.z;
   A.n = (int)(pParse->sLastToken.z-X.z) + pParse->sLastToken.n;
+  A.quoted = 0;
+  A.dyn = 0;
 }
 columnid(A) ::= nm(X). {
   sqlite3AddColumn(pParse,&X);

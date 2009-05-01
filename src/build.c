@@ -579,9 +579,12 @@ void sqlite3UnlinkAndDeleteTable(sqlite3 *db, int iDb, const char *zTabName){
 
 /*
 ** Given a token, return a string that consists of the text of that
-** token with any quotations removed.  Space to hold the returned string
+** token.  Space to hold the returned string
 ** is obtained from sqliteMalloc() and must be freed by the calling
 ** function.
+**
+** Any quotation marks (ex:  "name", 'name', [name], or `name`) that
+** surround the body of the token are removed.
 **
 ** Tokens are often just pointers into the original SQL text and so
 ** are not \000 terminated and are not persistent.  The returned string
@@ -591,7 +594,7 @@ char *sqlite3NameFromToken(sqlite3 *db, Token *pName){
   char *zName;
   if( pName ){
     zName = sqlite3DbStrNDup(db, (char*)pName->z, pName->n);
-    sqlite3Dequote(zName);
+    if( pName->quoted ) sqlite3Dequote(zName);
   }else{
     zName = 0;
   }
