@@ -1489,7 +1489,7 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
     if( pSrc->aSortOrder[i]!=pDest->aSortOrder[i] ){
       return 0;   /* Different sort orders */
     }
-    if( pSrc->azColl[i]!=pDest->azColl[i] ){
+    if( !xferCompatibleCollation(pSrc->azColl[i],pDest->azColl[i]) ){
       return 0;   /* Different collating sequences */
     }
   }
