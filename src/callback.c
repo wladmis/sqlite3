@@ -25,7 +25,7 @@
 */
 static void callCollNeeded(sqlite3 *db, const char *zName, int nName){
   assert( !db->xCollNeeded || !db->xCollNeeded16 );
-  if( nName<0 ) nName = sqlite3Strlen(db, zName);
+  if( nName<0 ) nName = sqlite3Strlen30(zName);
   if( db->xCollNeeded ){
     char *zExternal = sqlite3DbStrNDup(db, zName, nName);
     if( !zExternal ) return;
@@ -158,7 +158,7 @@ static CollSeq *findCollSeqEntry(
   int create
 ){
   CollSeq *pColl;
-  if( nName<0 ) nName = sqlite3Strlen(db, zName);
+  if( nName<0 ) nName = sqlite3Strlen30(zName);
   pColl = sqlite3HashFind(&db->aCollSeq, zName, nName);
 
   if( 0==pColl && create ){

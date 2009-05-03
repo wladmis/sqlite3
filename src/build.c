@@ -261,7 +261,7 @@ Table *sqlite3FindTable(sqlite3 *db, const char *zName, const char *zDatabase){
   int i;
   int nName;
   assert( zName!=0 );
-  nName = sqlite3Strlen(db, zName);
+  nName = sqlite3Strlen30(zName);
   for(i=OMIT_TEMPDB; i<db->nDb; i++){
     int j = (i<2) ? i^1 : i;   /* Search TEMP before MAIN */
     if( zDatabase!=0 && sqlite3StrICmp(zDatabase, db->aDb[j].zName) ) continue;
@@ -323,7 +323,7 @@ Table *sqlite3LocateTable(
 Index *sqlite3FindIndex(sqlite3 *db, const char *zName, const char *zDb){
   Index *p = 0;
   int i;
-  int nName = sqlite3Strlen(db, zName);
+  int nName = sqlite3Strlen30(zName);
   for(i=OMIT_TEMPDB; i<db->nDb; i++){
     int j = (i<2) ? i^1 : i;  /* Search TEMP before MAIN */
     Schema *pSchema = db->aDb[j].pSchema;
@@ -375,7 +375,7 @@ void sqlite3UnlinkAndDeleteIndex(sqlite3 *db, int iDb, const char *zIdxName){
   int len;
   Hash *pHash = &db->aDb[iDb].pSchema->idxHash;
 
-  len = sqlite3Strlen(db, zIdxName);
+  len = sqlite3Strlen30(zIdxName);
   pIndex = sqlite3HashInsert(pHash, zIdxName, len, 0);
   if( pIndex ){
     if( pIndex->pTable->pIndex==pIndex ){
@@ -1261,7 +1261,7 @@ CollSeq *sqlite3LocateCollSeq(Parse *pParse, const char *zName, int nName){
     pColl = sqlite3GetCollSeq(db, pColl, zName, nName);
     if( !pColl ){
       if( nName<0 ){
-        nName = sqlite3Strlen(db, zName);
+        nName = sqlite3Strlen30(zName);
       }
       sqlite3ErrorMsg(pParse, "no such collation sequence: %.*s", nName, zName);
       pColl = 0;

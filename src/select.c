@@ -1157,7 +1157,6 @@ static int selectColumnsFromExprList(
       sqlite3DbFree(db, zName);
       break;
     }
-    sqlite3Dequote(zName);
 
     /* Make sure the column name is unique.  If the name is not unique,
     ** append a integer to the name so that it becomes unique.

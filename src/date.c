@@ -344,6 +344,7 @@ static int parseDateOrTime(
   const char *zDate, 
   DateTime *p
 ){
+  int isRealNum;    /* Return from sqlite3IsNumber().  Not used */
   if( parseYyyyMmDd(zDate,p)==0 ){
     return 0;
   }else if( parseHhMmSs(zDate, p)==0 ){
@@ -351,7 +352,7 @@ static int parseDateOrTime(
   }else if( sqlite3StrICmp(zDate,"now")==0){
     setDateTimeToCurrent(context, p);
     return 0;
-  }else if( sqlite3IsNumber(zDate, 0, SQLITE_UTF8) ){
+  }else if( sqlite3IsNumber(zDate, &isRealNum, SQLITE_UTF8) ){
     double r;
     getValue(zDate, &r);
     p->iJD = (sqlite3_int64)(r*86400000.0 + 0.5);

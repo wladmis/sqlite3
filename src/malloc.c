@@ -651,7 +651,7 @@ char *sqlite3DbStrDup(sqlite3 *db, const char *z){
   if( z==0 ){
     return 0;
   }
-  n = (db ? sqlite3Strlen(db, z) : sqlite3Strlen30(z))+1;
+  n = sqlite3Strlen30(z) + 1;
   assert( (n&0x7fffffff)==n );
   zNew = sqlite3DbMallocRaw(db, (int)n);
   if( zNew ){
