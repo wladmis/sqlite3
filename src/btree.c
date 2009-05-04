@@ -6134,16 +6134,28 @@ static int checkForReadConflicts(
 **
 ** For an INTKEY table, only the nKey value of the key is used.  pKey is
 ** ignored.  For a ZERODATA table, the pData and nData are both ignored.
+**
+** If the seekResult parameter is non-zero, then a successful call to
+** sqlite3BtreeMoveto() to seek cursor pCur to (pKey, nKey) has already
+** been performed. seekResult is the search result returned (a negative
+** number if pCur points at an entry that is smaller than (pKey, nKey), or
+** a positive value if pCur points at an etry that is larger than 
+** (pKey, nKey)). 
+**
+** If the seekResult parameter is 0, then cursor pCur may point to any 
+** entry or to no entry at all. In this case this function has to seek
+** the cursor before the new key can be inserted.
 */
 int sqlite3BtreeInsert(
   BtCursor *pCur,                /* Insert data into the table of this cursor */
   const void *pKey, i64 nKey,    /* The key of the new record */
   const void *pData, int nData,  /* The data of the new record */
   int nZero,                     /* Number of extra 0 bytes to append to data */
-  int appendBias                 /* True if this is likely an append */
+  int appendBias,                /* True if this is likely an append */
+  int seekResult                 /* Result of prior sqlite3BtreeMoveto() call */
 ){
   int rc;
-  int loc;
+  int loc = seekResult;
   int szNew;
   int idx;
   MemPage *pPage;
@@ -6177,10 +6189,10 @@ int sqlite3BtreeInsert(
   ** doing any work. To avoid thwarting these optimizations, it is important
   ** not to clear the cursor here.
   */
-  if( 
-    SQLITE_OK!=(rc = saveAllCursors(pBt, pCur->pgnoRoot, pCur)) ||
+  if(
+    SQLITE_OK!=(rc = saveAllCursors(pBt, pCur->pgnoRoot, pCur)) || (!loc &&
     SQLITE_OK!=(rc = sqlite3BtreeMoveto(pCur, pKey, nKey, appendBias, &loc))
-  ){
+  )){
     return rc;
   }
 

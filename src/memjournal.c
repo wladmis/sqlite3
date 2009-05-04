@@ -129,7 +129,7 @@ static int memjrnlWrite(
   /* An in-memory journal file should only ever be appended to. Random
   ** access writes are not required by sqlite.
   */
-  assert(iOfst==p->endpoint.iOffset);
+  assert( iOfst==p->endpoint.iOffset );
   UNUSED_PARAMETER(iOfst);
 
   while( nWrite>0 ){

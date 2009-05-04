@@ -782,7 +782,7 @@ static int btree_insert(
       return TCL_ERROR;
     }
     pBuf = Tcl_GetByteArrayFromObj(objv[3], &len);
-    rc = sqlite3BtreeInsert(pCur, 0, iKey, pBuf, len, nZero, 0);
+    rc = sqlite3BtreeInsert(pCur, 0, iKey, pBuf, len, nZero, 0, 0);
   }else{
     int keylen;
     int dlen;
@@ -790,7 +790,7 @@ static int btree_insert(
     unsigned char *pDBuf;
     pKBuf = Tcl_GetByteArrayFromObj(objv[2], &keylen);
     pDBuf = Tcl_GetByteArrayFromObj(objv[3], &dlen);
-    rc = sqlite3BtreeInsert(pCur, pKBuf, keylen, pDBuf, dlen, nZero, 0);
+    rc = sqlite3BtreeInsert(pCur, pKBuf, keylen, pDBuf, dlen, nZero, 0, 0);
   }
   sqlite3BtreeLeave(pCur->pBtree);
   if( rc ){

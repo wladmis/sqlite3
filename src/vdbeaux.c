@@ -2496,6 +2496,18 @@ int sqlite3VdbeRecordCompare(
   }
   if( mem1.zMalloc ) sqlite3VdbeMemRelease(&mem1);
 
+  /* If the PREFIX_SEARCH flag is set and all fields except the final
+  ** rowid field were equal, then clear the PREFIX_SEARCH flag and set 
+  ** pPKey2->rowid to the value of the rowid field in (pKey1, nKey1).
+  ** This is used by the OP_IsUnique opcode.
+  */
+  if( (pPKey2->flags & UNPACKED_PREFIX_SEARCH) && i==(pPKey2->nField-1) ){
+    assert( idx1==szHdr1 && rc );
+    assert( mem1.flags & MEM_Int );
+    pPKey2->flags &= ~UNPACKED_PREFIX_SEARCH;
+    pPKey2->rowid = mem1.u.i;
+  }
+
   if( rc==0 ){
     /* rc==0 here means that one of the keys ran out of fields and
     ** all the fields up to that point were equal. If the UNPACKED_INCRKEY
