@@ -123,19 +123,23 @@ void sqlite3AuthRead(
     ** temporary table. */
     return;
   }
-  for(iSrc=0; pTabList && iSrc<pTabList->nSrc; iSrc++){
-    if( pExpr->iTable==pTabList->a[iSrc].iCursor ) break;
-  }
-  if( pTabList && iSrc<pTabList->nSrc ){
+  if( pTabList ){
+    for(iSrc=0; ALWAYS(iSrc<pTabList->nSrc); iSrc++){
+      if( pExpr->iTable==pTabList->a[iSrc].iCursor ) break;
+    }
+    assert( iSrc<pTabList->nSrc );
     pTab = pTabList->a[iSrc].pTab;
-  }else if( (pStack = pParse->trigStack)!=0 ){
-    /* This must be an attempt to read the NEW or OLD pseudo-tables
-    ** of a trigger.
-    */
-    assert( pExpr->iTable==pStack->newIdx || pExpr->iTable==pStack->oldIdx );
-    pTab = pStack->pTab;
+  }else{
+    pStack = pParse->trigStack;
+    if( ALWAYS(pStack) ){
+      /* This must be an attempt to read the NEW or OLD pseudo-tables
+      ** of a trigger.
+      */
+      assert( pExpr->iTable==pStack->newIdx || pExpr->iTable==pStack->oldIdx );
+      pTab = pStack->pTab;
+    }
   }
-  if( pTab==0 ) return;
+  if( NEVER(pTab==0) ) return;
   if( pExpr->iColumn>=0 ){
     assert( pExpr->iColumn<pTab->nCol );
     zCol = pTab->aCol[pExpr->iColumn].zName;
@@ -211,11 +215,10 @@ void sqlite3AuthContextPush(
   AuthContext *pContext, 
   const char *zContext
 ){
+  assert( pParse );
   pContext->pParse = pParse;
-  if( pParse ){
-    pContext->zAuthContext = pParse->zAuthContext;
-    pParse->zAuthContext = zContext;
-  }
+  pContext->zAuthContext = pParse->zAuthContext;
+  pParse->zAuthContext = zContext;
 }
 
 /*
