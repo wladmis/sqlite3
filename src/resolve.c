@@ -248,7 +248,11 @@ static int lookupName(
             if( iCol>=0 ){
               testcase( iCol==31 );
               testcase( iCol==32 );
-              *piColMask |= ((u32)1<<iCol) | (iCol>=32?0xffffffff:0);
+              if( iCol>=32 ){
+                *piColMask = 0xffffffff;
+              }else{
+                *piColMask |= ((u32)1)<<iCol;
+              }
             }
             break;
           }
