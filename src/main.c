@@ -1193,8 +1193,9 @@ int sqlite3TempInMemory(const sqlite3 *db){
 #endif
 #if SQLITE_TEMP_STORE==3
   return 1;
-#endif
+#else
   return 0;
+#endif
 }
 
 /*

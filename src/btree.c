@@ -808,7 +808,7 @@ static u16 cellSizePtr(MemPage *pPage, u8 *pCell){
   }
 
   assert( nSize==debuginfo.nSize );
-  return nSize;
+  return (u16)nSize;
 }
 #ifndef NDEBUG
 static u16 cellSize(MemPage *pPage, int iCell){
@@ -4087,7 +4087,7 @@ int sqlite3BtreeMovetoUnpacked(
           void *pCellKey;
           u8 * const pCellBody = pCell - pPage->childPtrSize;
           sqlite3BtreeParseCellPtr(pPage, pCellBody, &pCur->info);
-          nCell = pCur->info.nKey;
+          nCell = (int)pCur->info.nKey;
           pCellKey = sqlite3Malloc( nCell );
           if( pCellKey==0 ){
             rc = SQLITE_NOMEM;

@@ -3191,7 +3191,7 @@ int sqlite3PagerOpen(
     nPathname + 1 +                /* zFilename */
     nPathname + 8 + 1              /* zJournal */
   );
-  assert( EIGHT_BYTE_ALIGNMENT(journalFileSize) );
+  assert( EIGHT_BYTE_ALIGNMENT(SQLITE_INT_TO_PTR(journalFileSize)) );
   if( !pPtr ){
     sqlite3_free(zPathname);
     return SQLITE_NOMEM;
@@ -4043,7 +4043,7 @@ static int pager_open_journal(Pager *pPager){
 int sqlite3PagerBegin(Pager *pPager, int exFlag, int subjInMemory){
   int rc = SQLITE_OK;
   assert( pPager->state!=PAGER_UNLOCK );
-  pPager->subjInMemory = subjInMemory;
+  pPager->subjInMemory = (u8)subjInMemory;
   if( pPager->state==PAGER_SHARED ){
     assert( pPager->pInJournal==0 );
     assert( !MEMDB && !pPager->tempFile );

@@ -2885,8 +2885,8 @@ static Bitmask codeOneLoopStart(
             r = sqlite3ExprCodeGetColumn(pParse, pTabItem->pTab, -1, iCur, 
                                          regRowid, 0);
             sqlite3VdbeAddOp4(v, OP_RowSetTest, regRowset, 
-                             sqlite3VdbeCurrentAddr(v)+2,
-                             r, (char*)iSet, P4_INT32);
+                              sqlite3VdbeCurrentAddr(v)+2,
+                              r, SQLITE_INT_TO_PTR(iSet), P4_INT32);
           }
           sqlite3VdbeAddOp2(v, OP_Gosub, regReturn, iLoopBody);
 

@@ -3362,10 +3362,10 @@ case OP_Found: {        /* jump, in3 */
 ** See also: NotFound, NotExists, Found
 */
 case OP_IsUnique: {        /* jump, in3 */
-  int ii;
+  u16 ii;
   VdbeCursor *pCx;
   BtCursor *pCrsr;
-  int nField;
+  u16 nField;
   Mem *aMem = &p->aMem[pOp->p4.i];
 
   /* Assert that the values of parameters P1 and P4 are in range. */
@@ -4650,7 +4650,8 @@ case OP_RowSetTest: {                     /* jump, in1, in3 */
   assert( iSet==-1 || iSet>=0 );
   if( iSet ){
     int exists;
-    exists = sqlite3RowSetTest(pIn1->u.pRowSet, iSet>=0 ? iSet & 0xf : 0xff,
+    exists = sqlite3RowSetTest(pIn1->u.pRowSet, 
+                               (u8)(iSet>=0 ? iSet & 0xf : 0xff),
                                pIn3->u.i);
     if( exists ){
       pc = pOp->p2 - 1;

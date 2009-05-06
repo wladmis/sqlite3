@@ -2466,6 +2466,7 @@ int sqlite3VdbeRecordCompare(
   mem1.enc = pKeyInfo->enc;
   mem1.db = pKeyInfo->db;
   mem1.flags = 0;
+  mem1.u.i = 0;  /* not needed, here to silence compiler warning */
   mem1.zMalloc = 0;
   
   idx1 = getVarint32(aKey1, szHdr1);
