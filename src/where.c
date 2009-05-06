@@ -1754,6 +1754,7 @@ static void bestVirtualIndex(
   ** malloc in allocateIndexInfo() fails and this function returns leaving
   ** wsFlags in an uninitialized state, the caller may behave unpredictably.
   */
+  memset(pCost, 0, sizeof(*pCost));
   pCost->plan.wsFlags = WHERE_VIRTUALTABLE;
 
   /* If the sqlite3_index_info structure has not been previously

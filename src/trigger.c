@@ -663,6 +663,7 @@ static SrcList *targetSrcList(
     assert( iDb<pParse->db->nDb );
     sDb.z = (u8*)pParse->db->aDb[iDb].zName;
     sDb.n = sqlite3Strlen30((char*)sDb.z);
+    sDb.quoted = 0;
     pSrc = sqlite3SrcListAppend(pParse->db, 0, &sDb, &pStep->target);
   } else {
     pSrc = sqlite3SrcListAppend(pParse->db, 0, &pStep->target, 0);

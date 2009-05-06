@@ -2556,6 +2556,7 @@ void sqlite3CreateIndex(
   if( pList==0 ){
     nullId.z = (u8*)pTab->aCol[pTab->nCol-1].zName;
     nullId.n = sqlite3Strlen30((char*)nullId.z);
+    nullId.quoted = 0;
     pList = sqlite3ExprListAppend(pParse, 0, 0, &nullId);
     if( pList==0 ) goto exit_create_index;
     pList->a[0].sortOrder = (u8)sortOrder;
