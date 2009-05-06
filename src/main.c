@@ -768,7 +768,7 @@ const char *sqlite3ErrStr(int rc){
     /* SQLITE_NOTADB      */ "file is encrypted or is not a database",
   };
   rc &= 0xff;
-  if( ALWAYS(rc>=0) && rc<sizeof(aMsg)/sizeof(aMsg[0]) && aMsg[rc]!=0 ){
+  if( ALWAYS(rc>=0) && rc<(int)(sizeof(aMsg)/sizeof(aMsg[0])) && aMsg[rc]!=0 ){
     return aMsg[rc];
   }else{
     return "unknown error";
