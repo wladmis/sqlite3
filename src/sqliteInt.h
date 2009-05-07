@@ -2268,6 +2268,15 @@ int sqlite3WalkSelectFrom(Walker*, Select*);
 #endif
 
 /*
+** The ctype.h header is needed for non-ASCII systems.  It is also
+** needed by FTS3 when FTS3 is included in the amalgamation.
+*/
+#if !defined(SQLITE_ASCII) || \
+    (defined(SQLITE_ENABLE_FTS3) && defined(SQLITE_AMALGAMATION))
+# include <ctype.h>
+#endif
+
+/*
 ** The following macros mimic the standard library functions toupper(),
 ** isspace(), isalnum(), isdigit() and isxdigit(), respectively. The
 ** sqlite versions only work for ASCII characters, regardless of locale.
@@ -2281,7 +2290,6 @@ int sqlite3WalkSelectFrom(Walker*, Select*);
 # define sqlite3Isxdigit(x)  (sqlite3CtypeMap[(unsigned char)(x)]&0x08)
 # define sqlite3Tolower(x)   (sqlite3UpperToLower[(unsigned char)(x)])
 #else
-# include <ctype.h>
 # define sqlite3Toupper(x)   toupper((unsigned char)(x))
 # define sqlite3Isspace(x)   isspace((unsigned char)(x))
 # define sqlite3Isalnum(x)   isalnum((unsigned char)(x))
