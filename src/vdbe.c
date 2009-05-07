@@ -676,6 +676,7 @@ int sqlite3VdbeExec(
       pOut = &p->aMem[pOp->p2];
       sqlite3VdbeMemReleaseExternal(pOut);
       pOut->flags = MEM_Null;
+      pOut->n = 0;
     }else
  
     /* Do common setup for opcodes marked with one of the following
