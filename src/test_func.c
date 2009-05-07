@@ -393,39 +393,25 @@ static int abuse_create_function(
   if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
 
   rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep,tStep,tFinal);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep, tStep, 0);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep, 0, tFinal);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, 0, 0, tFinal);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, 0, tStep, 0);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", -2, SQLITE_UTF8, 0, tStep, 0, 0);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "tx", 128, SQLITE_UTF8, 0, tStep, 0, 0);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   rc = sqlite3_create_function(db, "funcxx"
        "_123456789_123456789_123456789_123456789_123456789"
@@ -434,9 +420,7 @@ static int abuse_create_function(
        "_123456789_123456789_123456789_123456789_123456789"
        "_123456789_123456789_123456789_123456789_123456789",
        1, SQLITE_UTF8, 0, tStep, 0, 0);
-  if( rc!=SQLITE_ERROR ) goto abuse_err;
-  if( sqlite3_errcode(db)!=SQLITE_ERROR ) goto abuse_err;
-  if( strcmp(sqlite3_errmsg(db), "bad parameters")!=0 ) goto abuse_err;
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
 
   /* This last function registration should actually work.  Generate
   ** a no-op function (that always returns NULL) and which has the
