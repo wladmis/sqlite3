@@ -4427,8 +4427,8 @@ static int proxyGetLockPath(const char *dbPath, char *lPath, size_t maxLen){
     len = strlcat(lPath, "sqliteplocks", maxLen);
     if( mkdir(lPath, SQLITE_DEFAULT_PROXYDIR_PERMISSIONS) ){
       /* if mkdir fails, handle as lock file creation failure */
-      int err = errno;
 #  ifdef SQLITE_DEBUG
+      int err = errno;
       if( err!=EEXIST ){
         fprintf(stderr, "proxyGetLockPath: mkdir(%s,0%o) error %d %s\n", lPath,
                 SQLITE_DEFAULT_PROXYDIR_PERMISSIONS, err, strerror(err));
