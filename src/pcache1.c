@@ -360,6 +360,7 @@ static void pcache1TruncateUnsafe(
   PCache1 *pCache, 
   unsigned int iLimit 
 ){
+  TESTONLY( int nPage = 0; )      /* Used to assert pCache->nPage is correct */
   unsigned int h;
   assert( sqlite3_mutex_held(pcache1.mutex) );
   for(h=0; h<pCache->nHash; h++){
@@ -367,14 +368,17 @@ static void pcache1TruncateUnsafe(
     PgHdr1 *pPage;
     while( (pPage = *pp)!=0 ){
       if( pPage->iKey>=iLimit ){
-        pcache1PinPage(pPage);
+        pCache->nPage--;
         *pp = pPage->pNext;
+        pcache1PinPage(pPage);
         pcache1FreePage(pPage);
       }else{
         pp = &pPage->pNext;
+        TESTONLY( nPage++; )
       }
     }
   }
+  assert( pCache->nPage==nPage );
 }
 
 /******************************************************************************/
