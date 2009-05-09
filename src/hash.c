@@ -265,7 +265,8 @@ void *sqlite3HashInsert(Hash *pH, const char *pKey, int nKey, void *data){
   new_elem->data = data;
   pH->count++;
   if( pH->count>=10 && pH->count > 2*pH->htsize ){
-    if( rehash(pH, pH->count*2) && pH->htsize ){
+    if( rehash(pH, pH->count*2) ){
+      assert( pH->htsize>0 );
       h = strHash(pKey, nKey) % pH->htsize;
     }
   }
