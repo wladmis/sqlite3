@@ -866,6 +866,7 @@ void sqlite3TokenCopy(sqlite3 *db, Token *pTo, const Token *pFrom){
     pTo->n = pFrom->n;
     pTo->z = (u8*)sqlite3DbStrNDup(db, (char*)pFrom->z, pFrom->n);
     pTo->dyn = 1;
+    pTo->quoted = pFrom->quoted;
   }else{
     pTo->z = 0;
   }
