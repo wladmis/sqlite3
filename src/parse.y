@@ -1201,5 +1201,6 @@ vtabargtoken ::= ANY(X).            {sqlite3VtabArgExtend(pParse,&X);}
 vtabargtoken ::= lp anylist RP(X).  {sqlite3VtabArgExtend(pParse,&X);}
 lp ::= LP(X).                       {sqlite3VtabArgExtend(pParse,&X);}
 anylist ::= .
-anylist ::= anylist ANY(X).         {sqlite3VtabArgExtend(pParse,&X);}
+anylist ::= anylist LP anylist RP.
+anylist ::= anylist ANY.
 %endif  SQLITE_OMIT_VIRTUALTABLE
