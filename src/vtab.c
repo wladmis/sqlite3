@@ -377,6 +377,7 @@ static int vtabCallConstructor(
   assert( rc==SQLITE_OK );
   rc = xConstruct(db, pMod->pAux, nArg, azArg, &pVtab, &zErr);
   rc2 = sqlite3SafetyOn(db);
+  if( rc==SQLITE_NOMEM ) db->mallocFailed = 1;
   if( rc==SQLITE_OK && pVtab ){
     pVtab->pModule = pMod->pModule;
     pVtab->nRef = 1;
