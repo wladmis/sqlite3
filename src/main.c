@@ -1535,8 +1535,16 @@ static int openDatabase(
     isThreadsafe = sqlite3GlobalConfig.bFullMutex;
   }
 
-  /* Remove harmful bits from the flags parameter */
+  /* Remove harmful bits from the flags parameter
+  **
+  ** The SQLITE_OPEN_NOMUTEX and SQLITE_OPEN_FULLMUTEX flags were
+  ** dealt with in the previous code block.  Besides these, the only
+  ** valid input flags for sqlite3_open_v2() are SQLITE_OPEN_READONLY,
+  ** SQLITE_OPEN_READWRITE, and SQLITE_OPEN_CREATE.  Silently mask
+  ** off all other flags.
+  */
   flags &=  ~( SQLITE_OPEN_DELETEONCLOSE |
+               SQLITE_OPEN_EXCLUSIVE |
                SQLITE_OPEN_MAIN_DB |
                SQLITE_OPEN_TEMP_DB | 
                SQLITE_OPEN_TRANSIENT_DB | 
