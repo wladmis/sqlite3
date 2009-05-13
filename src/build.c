@@ -2610,7 +2610,7 @@ void sqlite3CreateIndex(
         zColl = db->pDfltColl->zName;
       }
     }
-    if( NEVER(!db->init.busy && !sqlite3LocateCollSeq(pParse, zColl)) ){
+    if( !db->init.busy && !sqlite3LocateCollSeq(pParse, zColl) ){
       goto exit_create_index;
     }
     pIndex->azColl[i] = zColl;
