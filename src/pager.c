@@ -3622,7 +3622,7 @@ static int pagerSharedLock(Pager *pPager){
       );
     }
 
-    if( sqlite3PcachePagecount(pPager->pPCache)>0 ){
+    if( pPager->pBackup || sqlite3PcachePagecount(pPager->pPCache)>0 ){
       /* The shared-lock has just been acquired on the database file
       ** and there are already pages in the cache (from a previous
       ** read or write transaction).  Check to see if the database
