@@ -92,6 +92,9 @@ do_test async4.1.16 {
   sqlite3async_start
   sqlite3async_wait
 } {}
+do_test async4.1.17 {
+  sqlite3async_control lockfiles true
+} {1}
 
 do_test async4.2.1 {
   sqlite3async_control delay
