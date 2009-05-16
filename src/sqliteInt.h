@@ -51,21 +51,31 @@
 #endif
 
 /*
- * This macro is used to "hide" some ugliness in casting an int
- * value to a ptr value under the MSVC 64-bit compiler.   Casting
- * non 64-bit values to ptr types results in a "hard" error with 
- * the MSVC 64-bit compiler which this attempts to avoid.  
- *
- * A simple compiler pragma or casting sequence could not be found
- * to correct this in all situations, so this macro was introduced.
- *
- * It could be argued that the intptr_t type could be used in this
- * case, but that type is not available on all compilers, or 
- * requires the #include of specific headers which differs between
- * platforms.
- */
-#define SQLITE_INT_TO_PTR(X)   ((void*)&((char*)0)[X])
-#define SQLITE_PTR_TO_INT(X)   ((int)(((char*)X)-(char*)0))
+** This macro is used to "hide" some ugliness in casting an int
+** value to a ptr value under the MSVC 64-bit compiler.   Casting
+** non 64-bit values to ptr types results in a "hard" error with 
+** the MSVC 64-bit compiler which this attempts to avoid.  
+**
+** A simple compiler pragma or casting sequence could not be found
+** to correct this in all situations, so this macro was introduced.
+**
+** It could be argued that the intptr_t type could be used in this
+** case, but that type is not available on all compilers, or 
+** requires the #include of specific headers which differs between
+** platforms.
+**
+** Ticket #3860:  The llvm-gcc-4.2 compiler from Apple chokes on
+** the ((void*)&((char*)0)[X]) construct.  But MSVC chokes on ((void*)(X)).
+** We we have to define the macros in different ways depending on the
+** compiler.
+*/
+#if defined(__GNUC__)
+# define SQLITE_INT_TO_PTR(X)  ((void*)(X))
+# define SQLITE_PTR_TO_INT(X)  ((int)(X))
+#else
+# define SQLITE_INT_TO_PTR(X)   ((void*)&((char*)0)[X])
+# define SQLITE_PTR_TO_INT(X)   ((int)(((char*)X)-(char*)0))
+#endif
 
 /*
 ** These #defines should enable >2GB file support on POSIX if the
