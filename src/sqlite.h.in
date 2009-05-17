@@ -4402,7 +4402,7 @@ typedef struct sqlite3_blob sqlite3_blob;
 **     SELECT zColumn FROM zDb.zTable WHERE [rowid] = iRow;
 ** </pre> {END}
 **
-** If the flags parameter is non-zero, the the BLOB is opened for read
+** If the flags parameter is non-zero, then the BLOB is opened for read
 ** and write access. If it is zero, the BLOB is opened for read access.
 **
 ** Note that the database name is not the filename that contains
