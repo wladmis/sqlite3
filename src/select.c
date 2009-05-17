@@ -563,8 +563,6 @@ static void selectInnerLoop(
   }
 
   if( checkForMultiColumnSelectError(pParse, pDest, pEList->nExpr) ){
-static int cnt = 0;
-cnt++;
     return;
   }
 
