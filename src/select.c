@@ -3575,12 +3575,12 @@ int sqlite3Select(
     p->selFlags &= ~SF_Distinct;
   }
   sqlite3SelectPrep(pParse, p, 0);
+  p->pOrderBy = pOrderBy;
   pTabList = p->pSrc;
   pEList = p->pEList;
   if( pParse->nErr || db->mallocFailed ){
     goto select_end;
   }
-  p->pOrderBy = pOrderBy;
   isAgg = (p->selFlags & SF_Aggregate)!=0;
   if( pEList==0 ) goto select_end;
 
