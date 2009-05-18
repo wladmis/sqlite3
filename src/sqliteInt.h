@@ -66,7 +66,7 @@
 **
 ** Ticket #3860:  The llvm-gcc-4.2 compiler from Apple chokes on
 ** the ((void*)&((char*)0)[X]) construct.  But MSVC chokes on ((void*)(X)).
-** We we have to define the macros in different ways depending on the
+** So we have to define the macros in different ways depending on the
 ** compiler.
 */
 #if defined(__GNUC__)
