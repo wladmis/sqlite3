@@ -70,8 +70,13 @@
 ** compiler.
 */
 #if defined(__GNUC__)
-# define SQLITE_INT_TO_PTR(X)  ((void*)(X))
-# define SQLITE_PTR_TO_INT(X)  ((int)(X))
+# if defined(HAVE_STDINT_H)
+#   define SQLITE_INT_TO_PTR(X)  ((void*)(intptr_t)(X))
+#   define SQLITE_PTR_TO_INT(X)  ((int)(intptr_t)(X))
+# else
+#   define SQLITE_INT_TO_PTR(X)  ((void*)(X))
+#   define SQLITE_PTR_TO_INT(X)  ((int)(X))
+# endif
 #else
 # define SQLITE_INT_TO_PTR(X)   ((void*)&((char*)0)[X])
 # define SQLITE_PTR_TO_INT(X)   ((int)(((char*)X)-(char*)0))
