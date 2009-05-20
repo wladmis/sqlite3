@@ -803,11 +803,6 @@ FuncDef *sqlite3VtabOverloadFunction(
     }
     rc = pMod->xFindFunction(pVtab, nArg, zLowerName, &xFunc, &pArg);
     sqlite3DbFree(db, zLowerName);
-    if( pVtab->zErrMsg ){
-      sqlite3Error(db, rc, "%s", pVtab->zErrMsg);
-      sqlite3DbFree(db, pVtab->zErrMsg);
-      pVtab->zErrMsg = 0;
-    }
   }
   if( rc==0 ){
     return pDef;
