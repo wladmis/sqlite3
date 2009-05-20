@@ -294,6 +294,7 @@ void sqlite3FuncDefInsert(
   int h = (sqlite3UpperToLower[c1] + nName) % ArraySize(pHash->a);
   pOther = functionSearch(pHash, h, pDef->zName, nName);
   if( pOther ){
+    assert( pOther!=pDef && pOther->pNext!=pDef );
     pDef->pNext = pOther->pNext;
     pOther->pNext = pDef;
   }else{

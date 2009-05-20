@@ -2733,7 +2733,7 @@ void sqlite3Parser(void*, int, Token, Parse*);
   int sqlite3ParserStackPeak(void*);
 #endif
 
-int sqlite3AutoLoadExtensions(sqlite3*);
+void sqlite3AutoLoadExtensions(sqlite3*);
 #ifndef SQLITE_OMIT_LOAD_EXTENSION
   void sqlite3CloseExtensions(sqlite3*);
 #else
