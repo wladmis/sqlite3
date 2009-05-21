@@ -2080,7 +2080,11 @@ static int do_meta_command(char *zLine, struct callback_data *p){
     if( nArg==1 ){
       run_schema_dump_query(p, 
         "SELECT name, type, sql FROM sqlite_master "
-        "WHERE sql NOT NULL AND type=='table'", 0
+        "WHERE sql NOT NULL AND type=='table' AND name!='sqlite_sequence'", 0
+      );
+      run_schema_dump_query(p, 
+        "SELECT name, type, sql FROM sqlite_master "
+        "WHERE name=='sqlite_sequence'", 0
       );
       run_table_dump_query(p->out, p->db,
         "SELECT sql FROM sqlite_master "
