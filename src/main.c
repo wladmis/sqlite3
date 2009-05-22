@@ -310,7 +310,7 @@ int sqlite3_config(int op, ...){
       break;
     }
     case SQLITE_CONFIG_PAGECACHE: {
-      /* Designate a buffer for scratch memory space */
+      /* Designate a buffer for page cache memory space */
       sqlite3GlobalConfig.pPage = va_arg(ap, void*);
       sqlite3GlobalConfig.szPage = va_arg(ap, int);
       sqlite3GlobalConfig.nPage = va_arg(ap, int);
@@ -318,7 +318,7 @@ int sqlite3_config(int op, ...){
     }
 
     case SQLITE_CONFIG_PCACHE: {
-      /* Specify an alternative malloc implementation */
+      /* Specify an alternative page cache implementation */
       sqlite3GlobalConfig.pcache = *va_arg(ap, sqlite3_pcache_methods*);
       break;
     }

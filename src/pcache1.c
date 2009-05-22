@@ -401,7 +401,7 @@ static int pcache1Init(void *NotUsed){
 */
 static void pcache1Shutdown(void *NotUsed){
   UNUSED_PARAMETER(NotUsed);
-  /* no-op */
+  memset(&pcache1, 0, sizeof(pcache1));
 }
 
 /*
