@@ -127,15 +127,15 @@ struct RowSet {
 */
 RowSet *sqlite3RowSetInit(sqlite3 *db, void *pSpace, unsigned int N){
   RowSet *p;
-  assert( N >= sizeof(*p) );
+  assert( N >= ROUND8(sizeof(*p)) );
   p = pSpace;
   p->pChunk = 0;
   p->db = db;
   p->pEntry = 0;
   p->pLast = 0;
   p->pTree = 0;
-  p->pFresh = (struct RowSetEntry*)&p[1];
-  p->nFresh = (u16)((N - sizeof(*p))/sizeof(struct RowSetEntry));
+  p->pFresh = (struct RowSetEntry*)(ROUND8(sizeof(*p)) + (char*)p);
+  p->nFresh = (u16)((N - ROUND8(sizeof(*p)))/sizeof(struct RowSetEntry));
   p->isSorted = 1;
   p->iBatch = 0;
   return p;
