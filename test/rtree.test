@@ -21,7 +21,7 @@ if {[info exists ISQUICK] && $ISQUICK} {
 
 set rtreedir [file join $testdir .. ext rtree]
 
-foreach testfile [lsort -dictionary [glob $rtreedir/*.test]] {
+foreach testfile [lsort -dictionary [glob -nocomplain $rtreedir/*.test]] {
   set tail [file tail $testfile]
   if {[lsearch -exact $RTREE_EXCLUDE $tail]>=0} continue
   source $testfile
