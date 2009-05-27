@@ -756,8 +756,7 @@ ifcapable subquery {
       DETACH RAISE ( IGNORE ) IN ( SELECT "AAAAAA" . * ORDER BY 
       REGISTER LIMIT "AAAAAA" . "AAAAAA" OFFSET RAISE ( IGNORE ) NOT NULL )
     }
-  } {1 {invalid name: "RAISE ( IGNORE ) IN ( SELECT "AAAAAA" . * ORDER BY 
-      REGISTER LIMIT "AAAAAA" . "AAAAAA" OFFSET RAISE ( IGNORE ) NOT NULL )"}}
+  } {1 {invalid name: ""}}
 }
 
 # Create a malformed file (a file that is not a valid database)

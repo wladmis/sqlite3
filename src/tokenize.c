@@ -404,7 +404,6 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     db->mallocFailed = 1;
     return SQLITE_NOMEM;
   }
-  assert( pParse->sLastToken.dyn==0 );
   assert( pParse->pNewTable==0 );
   assert( pParse->pNewTrigger==0 );
   assert( pParse->nVar==0 );
@@ -413,12 +412,9 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   assert( pParse->apVarExpr==0 );
   enableLookaside = db->lookaside.bEnabled;
   if( db->lookaside.pStart ) db->lookaside.bEnabled = 1;
-  pParse->sLastToken.quoted = 1;
   while( !db->mallocFailed && zSql[i]!=0 ){
     assert( i>=0 );
-    pParse->sLastToken.z = (u8*)&zSql[i];
-    assert( pParse->sLastToken.dyn==0 );
-    assert( pParse->sLastToken.quoted );
+    pParse->sLastToken.z = &zSql[i];
     pParse->sLastToken.n = sqlite3GetToken((unsigned char*)&zSql[i],&tokenType);
     i += pParse->sLastToken.n;
     if( i>mxSqlLen ){

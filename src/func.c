@@ -1368,8 +1368,8 @@ int sqlite3IsLikeFunction(sqlite3 *db, Expr *pExpr, int *pIsNocase, char *aWc){
     return 0;
   }
   assert( !ExprHasProperty(pExpr, EP_xIsSelect) );
-  pDef = sqlite3FindFunction(db, (char*)pExpr->token.z, pExpr->token.n, 2,
-                             SQLITE_UTF8, 0);
+  pDef = sqlite3FindFunction(db, pExpr->zToken, sqlite3Strlen30(pExpr->zToken),
+                             2, SQLITE_UTF8, 0);
   if( NEVER(pDef==0) || (pDef->flags & SQLITE_FUNC_LIKE)==0 ){
     return 0;
   }

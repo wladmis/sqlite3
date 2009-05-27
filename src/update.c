@@ -630,10 +630,10 @@ static void updateVirtualTable(
   ** all updated rows. 
   */
   pEList = sqlite3ExprListAppend(pParse, 0, 
-                                 sqlite3CreateIdExpr(pParse, "_rowid_"), 0);
+                                 sqlite3CreateIdExpr(pParse, "_rowid_"));
   if( pRowid ){
     pEList = sqlite3ExprListAppend(pParse, pEList,
-                                   sqlite3ExprDup(db, pRowid, 0), 0);
+                                   sqlite3ExprDup(db, pRowid, 0));
   }
   assert( pTab->iPKey<0 );
   for(i=0; i<pTab->nCol; i++){
@@ -642,7 +642,7 @@ static void updateVirtualTable(
     }else{
       pExpr = sqlite3CreateIdExpr(pParse, pTab->aCol[i].zName);
     }
-    pEList = sqlite3ExprListAppend(pParse, pEList, pExpr, 0);
+    pEList = sqlite3ExprListAppend(pParse, pEList, pExpr);
   }
   pSelect = sqlite3SelectNew(pParse, pEList, pSrc, pWhere, 0, 0, 0, 0, 0, 0);
   
