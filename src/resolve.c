@@ -73,6 +73,7 @@ static void resolveAlias(
     pDup->iTable = pEList->a[iCol].iAlias;
   }else if( ExprHasProperty(pOrig, EP_IntValue) || pOrig->u.zToken==0 ){
     pDup = sqlite3ExprDup(db, pOrig, 0);
+    if( pDup==0 ) return;
   }else{
     char *zToken = pOrig->u.zToken;
     pOrig->u.zToken = 0;
