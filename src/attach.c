@@ -41,7 +41,7 @@ static int resolveAttachExpr(NameContext *pName, Expr *pExpr)
     if( pExpr->op!=TK_ID ){
       rc = sqlite3ResolveExprNames(pName, pExpr);
       if( rc==SQLITE_OK && !sqlite3ExprIsConstant(pExpr) ){
-        sqlite3ErrorMsg(pName->pParse, "invalid name: \"%s\"", pExpr->zToken);
+        sqlite3ErrorMsg(pName->pParse, "invalid name: \"%s\"", pExpr->u.zToken);
         return SQLITE_ERROR;
       }
     }else{
@@ -312,7 +312,7 @@ static void codeAttach(
 
 #ifndef SQLITE_OMIT_AUTHORIZATION
   if( pAuthArg ){
-    char *zAuthArg = pAuthArg->zToken;
+    char *zAuthArg = pAuthArg->u.zToken;
     if( zAuthArg==0 ){
       goto attach_end;
     }

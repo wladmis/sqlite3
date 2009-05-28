@@ -1181,14 +1181,12 @@ void sqlite3AddCheckConstraint(
 #ifndef SQLITE_OMIT_CHECK
   Table *pTab = pParse->pNewTable;
   if( pTab && !IN_DECLARE_VTAB ){
-    /* The CHECK expression must be duplicated so that tokens refer
-    ** to malloced space and not the (ephemeral) text of the CREATE TABLE
-    ** statement */
-    pTab->pCheck = sqlite3ExprAnd(db, pTab->pCheck, 
-                                  sqlite3ExprDup(db, pCheckExpr, 0));
-  }
+    pTab->pCheck = sqlite3ExprAnd(db, pTab->pCheck, pCheckExpr);
+  }else
 #endif
-  sqlite3ExprDelete(db, pCheckExpr);
+  {
+    sqlite3ExprDelete(db, pCheckExpr);
+  }
 }
 
 /*
