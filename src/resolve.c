@@ -1127,7 +1127,7 @@ int sqlite3ResolveExprNames(
 #if SQLITE_MAX_EXPR_DEPTH>0
   pNC->pParse->nHeight -= pExpr->nHeight;
 #endif
-  if( pNC->nErr>0 ){
+  if( pNC->nErr>0 || w.pParse->nErr>0 ){
     ExprSetProperty(pExpr, EP_Error);
   }
   if( pNC->hasAgg ){
