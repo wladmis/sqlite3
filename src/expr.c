@@ -2403,8 +2403,8 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
         pDef = sqlite3VtabOverloadFunction(db, pDef, nFarg, pFarg->a[0].pExpr);
       }
 #endif
-      for(i=0; i<nFarg && i<32; i++){
-        if( sqlite3ExprIsConstant(pFarg->a[i].pExpr) ){
+      for(i=0; i<nFarg; i++){
+        if( i<32 && sqlite3ExprIsConstant(pFarg->a[i].pExpr) ){
           constMask |= (1<<i);
         }
         if( (pDef->flags & SQLITE_FUNC_NEEDCOLL)!=0 && !pColl ){
@@ -2429,9 +2429,7 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
     case TK_SELECT: {
       testcase( op==TK_EXISTS );
       testcase( op==TK_SELECT );
-      if( pExpr->iColumn==0 ){
-        sqlite3CodeSubselect(pParse, pExpr, 0, 0);
-      }
+      sqlite3CodeSubselect(pParse, pExpr, 0, 0);
       inReg = pExpr->iColumn;
       break;
     }
