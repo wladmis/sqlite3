@@ -3959,9 +3959,7 @@ int sqlite3Select(
       VdbeComment((v, "Groupby result generator entry point"));
       sqlite3VdbeAddOp1(v, OP_Return, regOutputRow);
       finalizeAggFunctions(pParse, &sAggInfo);
-      if( pHaving ){
-        sqlite3ExprIfFalse(pParse, pHaving, addrOutputRow+1, SQLITE_JUMPIFNULL);
-      }
+      sqlite3ExprIfFalse(pParse, pHaving, addrOutputRow+1, SQLITE_JUMPIFNULL);
       selectInnerLoop(pParse, p, p->pEList, 0, 0, pOrderBy,
                       distinct, pDest,
                       addrOutputRow+1, addrSetAbort);
@@ -4092,9 +4090,7 @@ int sqlite3Select(
       }
 
       pOrderBy = 0;
-      if( pHaving ){
-        sqlite3ExprIfFalse(pParse, pHaving, addrEnd, SQLITE_JUMPIFNULL);
-      }
+      sqlite3ExprIfFalse(pParse, pHaving, addrEnd, SQLITE_JUMPIFNULL);
       selectInnerLoop(pParse, p, p->pEList, 0, 0, 0, -1, 
                       pDest, addrEnd, addrEnd);
       sqlite3ExprListDelete(db, pDel);
