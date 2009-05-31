@@ -623,8 +623,15 @@ static void multireplace(
       }
     }
     if( (nOut+nCopy)>nMalloc ){
+      char *zNew;
       nMalloc = 16 + (nOut+nCopy)*2;
-      zOut = (char *)sqlite3_realloc(zOut, nMalloc);
+      zNew = (char*)sqlite3_realloc(zOut, nMalloc);
+      if( zNew==0 ){
+        sqlite3_result_error_nomem(context);
+        return;
+      }else{
+        zOut = zNew;
+      }
     }
     assert( nMalloc>=(nOut+nCopy) );
     memcpy(&zOut[nOut], zCopy, nCopy);
