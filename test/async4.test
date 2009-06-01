@@ -13,6 +13,17 @@
 
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
+
+# These tests only work for Tcl version 8.5 and later on Windows (for now)
+#
+if {$tcl_platform(platform)=="windows"} {
+  scan $::tcl_version %f vx
+  if {$vx<8.5} {
+    finish_test
+    return
+  }
+}
+
 if {[info commands sqlite3async_initialize] eq ""} {
   # The async logic is not built into this system
   finish_test
