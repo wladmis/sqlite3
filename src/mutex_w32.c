@@ -175,6 +175,7 @@ static sqlite3_mutex *winMutexAlloc(int iType){
       break;
     }
     default: {
+      assert( winMutex_isInit==1 );
       assert( iType-2 >= 0 );
       assert( iType-2 < sizeof(winMutex_staticMutexes)/sizeof(winMutex_staticMutexes[0]) );
       p = &winMutex_staticMutexes[iType-2];
