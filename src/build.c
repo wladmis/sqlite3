@@ -1089,7 +1089,7 @@ void sqlite3AddDefaultValue(Parse *pParse, ExprSpan *pSpan){
       pCol->pDflt = sqlite3ExprDup(db, pSpan->pExpr, EXPRDUP_REDUCE);
       sqlite3DbFree(db, pCol->zDflt);
       pCol->zDflt = sqlite3DbStrNDup(db, (char*)pSpan->zStart,
-                                     pSpan->zEnd - pSpan->zStart);
+                                     (int)(pSpan->zEnd - pSpan->zStart));
     }
   }
   sqlite3ExprDelete(db, pSpan->pExpr);

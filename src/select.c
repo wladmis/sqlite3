@@ -234,7 +234,7 @@ static void addWhereTerm(
     ExprSetProperty(pE, EP_FromJoin);
     assert( !ExprHasAnyProperty(pE, EP_TokenOnly|EP_Reduced) );
     ExprSetIrreducible(pE);
-    pE->iRightJoinTable = iRightJoinTable;
+    pE->iRightJoinTable = (i16)iRightJoinTable;
   }
   *ppExpr = sqlite3ExprAnd(pParse->db,*ppExpr, pE);
 }
@@ -270,7 +270,7 @@ static void setJoinExpr(Expr *p, int iTable){
     ExprSetProperty(p, EP_FromJoin);
     assert( !ExprHasAnyProperty(p, EP_TokenOnly|EP_Reduced) );
     ExprSetIrreducible(p);
-    p->iRightJoinTable = iTable;
+    p->iRightJoinTable = (i16)iTable;
     setJoinExpr(p->pLeft, iTable);
     p = p->pRight;
   } 
