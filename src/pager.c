@@ -5166,7 +5166,8 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno, int isCommit){
     rc = sqlite3PagerGet(pPager, needSyncPgno, &pPgHdr);
     if( rc!=SQLITE_OK ){
       if( pPager->pInJournal && needSyncPgno<=pPager->dbOrigSize ){
-        sqlite3BitvecClear(pPager->pInJournal, needSyncPgno);
+        assert( pPager->pTmpSpace!=0 );
+        sqlite3BitvecClear(pPager->pInJournal, needSyncPgno, pPager->pTmpSpace);
       }
       return rc;
     }
