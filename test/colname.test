@@ -316,4 +316,14 @@ do_test colname-7.1 {
   execsql2 {SELECT rowid, * FROM t7}
 } {x 1 x 1 y 2}
 
+# Tickets #3893 and #3984.  (Same problem; independently reported)
+#
+do_test colname-8.1 {
+  db eval {
+    CREATE TABLE "t3893"("x");
+    INSERT INTO t3893 VALUES(123);
+    SELECT "y"."x" FROM (SELECT "x" FROM "t3893") AS "y";
+  }
+} {123}
+
 finish_test
