@@ -247,7 +247,7 @@ static void substrFunc(
 static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   int n = 0;
   double r;
-  char zBuf[500];  /* larger than the %f representation of the largest double */
+  char *zBuf;
   assert( argc==1 || argc==2 );
   if( argc==2 ){
     if( SQLITE_NULL==sqlite3_value_type(argv[1]) ) return;
@@ -257,9 +257,14 @@ static void roundFunc(sqlite3_context *context, int argc, sqlite3_value **argv){
   }
   if( sqlite3_value_type(argv[0])==SQLITE_NULL ) return;
   r = sqlite3_value_double(argv[0]);
-  sqlite3_snprintf(sizeof(zBuf),zBuf,"%.*f",n,r);
-  sqlite3AtoF(zBuf, &r);
-  sqlite3_result_double(context, r);
+  zBuf = sqlite3_mprintf("%.*f",n,r);
+  if( zBuf==0 ){
+    sqlite3_result_error_nomem(context);
+  }else{
+    sqlite3AtoF(zBuf, &r);
+    sqlite3_free(zBuf);
+    sqlite3_result_double(context, r);
+  }
 }
 #endif
 
