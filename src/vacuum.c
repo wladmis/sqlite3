@@ -241,10 +241,10 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
     ** connections to the same database will know to reread the schema.
     */
     static const unsigned char aCopy[] = {
-       1, 1,    /* Add one to the old schema cookie */
-       3, 0,    /* Preserve the default page cache size */
-       5, 0,    /* Preserve the default text encoding */
-       6, 0,    /* Preserve the user version */
+       BTREE_SCHEMA_VERSION,     1,  /* Add one to the old schema cookie */
+       BTREE_DEFAULT_CACHE_SIZE, 0,  /* Preserve the default page cache size */
+       BTREE_TEXT_ENCODING,      0,  /* Preserve the text encoding */
+       BTREE_USER_VERSION,       0,  /* Preserve the user version */
     };
 
     assert( 1==sqlite3BtreeIsInTrans(pTemp) );
