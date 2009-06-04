@@ -3865,6 +3865,7 @@ static int moveToRoot(BtCursor *pCur){
 
   if( pRoot->nCell==0 && !pRoot->leaf ){
     Pgno subpage;
+    if( pRoot->pgno!=1 ) return SQLITE_CORRUPT_BKPT;
     assert( pRoot->pgno==1 );
     subpage = get4byte(&pRoot->aData[pRoot->hdrOffset+8]);
     assert( subpage>0 );
