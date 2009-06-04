@@ -12,7 +12,7 @@
 #
 # This file implements tests to make sure SQLite does not crash or
 # segfault if it sees a corrupt database file.  It specifically focuses
-# on corruption in the form of duplicate entries no the freelist.
+# on corruption in the form of duplicate entries on the freelist.
 #
 # $Id$
 

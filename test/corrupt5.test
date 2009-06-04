@@ -11,7 +11,8 @@
 # This file implements regression tests for SQLite library.
 #
 # This file implements tests to make sure SQLite does not crash or
-# segfault if it sees a corrupt database file.
+# segfault if it sees a corrupt database file.  Checks for 
+# malformed schema.
 #
 # $Id$
 
