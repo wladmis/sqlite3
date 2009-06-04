@@ -2686,6 +2686,7 @@ static int autoVacuumCommit(BtShared *pBt){
     while( PTRMAP_ISPAGE(pBt, nFin) || nFin==PENDING_BYTE_PAGE(pBt) ){
       nFin--;
     }
+    if( nFin>nOrig ) return SQLITE_CORRUPT_BKPT;
 
     for(iFree=nOrig; iFree>nFin && rc==SQLITE_OK; iFree--){
       rc = incrVacuumStep(pBt, nFin, iFree);
