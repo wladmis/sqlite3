@@ -5205,7 +5205,7 @@ static int balance_quick(BtCursor *pCur){
   Pgno pgnoNew;                        /* Page number of pNew */
 
   assert( sqlite3_mutex_held(pPage->pBt->mutex) );
-  assert( pPage->nCell>0 );
+  if( pPage->nCell<=0 ) return SQLITE_CORRUPT_BKPT;
 
   /* Allocate a new page. This page will become the right-sibling of pPage */
   rc = allocateBtreePage(pBt, &pNew, &pgnoNew, 0, 0);
