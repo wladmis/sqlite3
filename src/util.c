@@ -766,6 +766,10 @@ u8 sqlite3GetVarint(const unsigned char *p, u64 *v){
 /*
 ** Read a 32-bit variable-length integer from memory starting at p[0].
 ** Return the number of bytes read.  The value is stored in *v.
+**
+** If the varint stored in p[0] is larger than can fit in a 32-bit unsigned
+** integer, then set *v to 0xffffffff.
+**
 ** A MACRO version, getVarint32, is provided which inlines the 
 ** single-byte case.  All code should use the MACRO version as 
 ** this function assumes the single-byte case has already been handled.
@@ -831,7 +835,11 @@ u8 sqlite3GetVarint32(const unsigned char *p, u32 *v){
     p -= 2;
     n = sqlite3GetVarint(p, &v64);
     assert( n>3 && n<=9 );
-    *v = (u32)v64;
+    if( (v64 & SQLITE_MAX_U32)!=v64 ){
+      *v = 0xffffffff;
+    }else{
+      *v = (u32)v64;
+    }
     return n;
   }
 
