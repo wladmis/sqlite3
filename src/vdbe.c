@@ -3959,10 +3959,10 @@ case OP_RowData: {
     if( n64>db->aLimit[SQLITE_LIMIT_LENGTH] ){
       goto too_big;
     }
-    n = (int)n64;
+    n = (u32)n64;
   }else{
     sqlite3BtreeDataSize(pCrsr, &n);
-    if( (int)n>db->aLimit[SQLITE_LIMIT_LENGTH] ){
+    if( n>db->aLimit[SQLITE_LIMIT_LENGTH] ){
       goto too_big;
     }
   }
