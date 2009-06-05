@@ -584,6 +584,9 @@ static int ptrmapPut(BtShared *pBt, Pgno key, u8 eType, Pgno parent){
     return rc;
   }
   offset = PTRMAP_PTROFFSET(iPtrmap, key);
+  if( offset<0 ){
+    return SQLITE_CORRUPT_BKPT;
+  }
   pPtrmap = (u8 *)sqlite3PagerGetData(pDbPage);
 
   if( eType!=pPtrmap[offset] || get4byte(&pPtrmap[offset+1])!=parent ){
