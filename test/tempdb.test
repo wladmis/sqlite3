@@ -93,4 +93,3 @@ do_test tempdb-2.3 {
 } [expr 1 + (0==$jrnl_in_memory)]
 
 finish_test
-

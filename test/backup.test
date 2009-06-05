@@ -404,7 +404,6 @@ do_test backup-4.2.2 {
   catchsql { DETACH aux2 } db2
 } {1 {database aux2 is locked}}
 do_test backup-4.2.3 {
-breakpoint
   B step 50
 } {SQLITE_DONE}
 do_test backup-4.2.4 {
@@ -906,4 +905,3 @@ ifcapable memorymanage {
 }
 
 finish_test
-

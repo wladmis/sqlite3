@@ -100,4 +100,3 @@ do_test tkt35xx-1.2.6 {
 integrity_check tkt35xx-1.2.7
 
 finish_test
-

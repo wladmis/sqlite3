@@ -85,4 +85,3 @@ rename async_really_finish_test finish_test
 
 if {[info exists ASYNC_SAVE_ISQUICK]} { set ISQUICK $ASYNC_SAVE_ISQUICK }
 finish_test
-

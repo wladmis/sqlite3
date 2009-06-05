@@ -133,4 +133,3 @@ do_test corruptD-1.2.2 {
 #
 
 finish_test
-

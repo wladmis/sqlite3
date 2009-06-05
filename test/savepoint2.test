@@ -146,4 +146,3 @@ unset -nocomplain ::sig
 unset -nocomplain SQL
 
 finish_test
-

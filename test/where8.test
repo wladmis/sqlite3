@@ -659,4 +659,3 @@ catch {unset A}
 catch {unset B}
 
 finish_test
-

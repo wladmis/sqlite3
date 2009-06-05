@@ -70,4 +70,3 @@ do_test tkt3442-1.5 {
 } {1 {no such column: 5000}}
 
 finish_test
-

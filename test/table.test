@@ -112,7 +112,6 @@ do_test table-2.1e {
   catchsql {CREATE TABLE IF NOT EXISTS test2(x UNIQUE, y TEXT PRIMARY KEY)}
 } {0 {}}
 do_test table-2.1f {
-breakpoint
   execsql {DROP TABLE test2; SELECT name FROM sqlite_master WHERE type!='meta'}
 } {}
 

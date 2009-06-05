@@ -195,7 +195,6 @@ do_test where9-1.2.4 {
   }
 } {90 91 92 96 97 99 scan 98 sort 0}
 do_test where9-1.2.5 {
-breakpoint
   count_steps {
     SELECT a FROM t4
      WHERE b IS NULL

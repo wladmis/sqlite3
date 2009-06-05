@@ -242,7 +242,6 @@ db close
 # is handled correctly.
 # 
 source $testdir/malloc_common.tcl
-breakpoint
 do_malloc_test notify1-5 -tclprep {
   set ::lUnlock [list]
   execsql {

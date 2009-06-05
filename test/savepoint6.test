@@ -270,4 +270,3 @@ unset -nocomplain ::lSavepoint
 unset -nocomplain ::aEntry
 
 finish_test
-

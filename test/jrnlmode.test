@@ -282,7 +282,6 @@ ifcapable autovacuum&&pragma {
   } {3}
 
   do_test jrnlmode-4.2 {
-breakpoint
     execsql { PRAGMA journal_mode = off }
   } {off}
 

@@ -77,4 +77,3 @@ do_test thread004-1.2 {
 } {0}
 sqlite3_enable_shared_cache $::enable_shared_cache
 finish_test
-

@@ -160,4 +160,3 @@ do_test async4.2.8 {
 } {}
 
 finish_test
-

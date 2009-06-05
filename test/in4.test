@@ -160,4 +160,3 @@ do_test in4-3.12 {
 } {}
 
 finish_test
-

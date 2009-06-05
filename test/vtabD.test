@@ -69,4 +69,3 @@ do_test vtabD-1.8 {
 }
 
 finish_test
-

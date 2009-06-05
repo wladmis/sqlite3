@@ -164,4 +164,3 @@ for {set iTest 1} {$iTest<500} {incr iTest} {
 
 set sqlite_fts3_enable_parentheses 0
 finish_test
-

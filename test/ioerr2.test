@@ -168,4 +168,3 @@ do_ioerr_test ioerr2-7 -persist 0 -sqlprep {
 }
 
 finish_test
-

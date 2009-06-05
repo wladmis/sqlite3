@@ -115,7 +115,6 @@ do_test check-1.17 {
 } {4 11.0}
 
 do_test check-2.1 {
-breakpoint
   execsql {
     CREATE TABLE t2(
       x INTEGER CHECK( typeof(coalesce(x,0))=="integer" ),

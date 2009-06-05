@@ -97,4 +97,3 @@ do_test jrnlmode2-2.6 {
 
 catch { db2 close }
 finish_test
-

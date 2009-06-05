@@ -214,7 +214,6 @@ do_test pager-3.5 {
     page_write $gx "Page-$i"
     page_unref $gx
   }
-breakpoint
   pager_commit $::p1
   page_unref $::g(1)
 } {}
