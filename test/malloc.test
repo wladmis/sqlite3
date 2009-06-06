@@ -230,7 +230,7 @@ ifcapable utf16 {
     } else {
       set ::bomstr "\xFE\xFF"
     }
-    append ::bomstr [encoding convertto unicode "123456789_123456789_12345678"]
+    append ::bomstr [encoding convertto unicode "123456789_123456789_123456789"]
   } -tclbody {
     sqlite3_column_text16 $::STMT 0
     sqlite3_column_int $::STMT 0
