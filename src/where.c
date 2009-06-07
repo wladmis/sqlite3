@@ -654,17 +654,15 @@ static int isLikeOrGlob(
   }
   pColl = sqlite3ExprCollSeq(pParse, pLeft);
   assert( pColl!=0 || pLeft->iColumn==-1 );
-  if( pColl==0 ){
-    /* No collation is defined for the ROWID.  Use the default. */
-    pColl = db->pDfltColl;
-  }
+  if( pColl==0 ) return 0;
   if( (pColl->type!=SQLITE_COLL_BINARY || *pnoCase) &&
       (pColl->type!=SQLITE_COLL_NOCASE || !*pnoCase) ){
     return 0;
   }
+  if( sqlite3ExprAffinity(pLeft)!=SQLITE_AFF_TEXT ) return 0;
   z = pRight->u.zToken;
   cnt = 0;
-  if( z ){
+  if( ALWAYS(z) ){
     while( (c=z[cnt])!=0 && c!=wc[0] && c!=wc[1] && c!=wc[2] ){
       cnt++;
     }

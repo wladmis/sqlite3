@@ -40,7 +40,7 @@ proc execsql_status2 {sql {db db}} {
 
 do_test where8-1.1 {
   execsql {
-    CREATE TABLE t1(a, b, c);
+    CREATE TABLE t1(a, b TEXT, c);
     CREATE INDEX i1 ON t1(a);
     CREATE INDEX i2 ON t1(b);
 
