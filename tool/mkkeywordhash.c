@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 /*
 ** A header comment placed at the beginning of generated code.
@@ -44,6 +45,7 @@ struct Keyword {
   int iNext;           /* Index in aKeywordTable[] of next with same hash */
   int substrId;        /* Id to another keyword this keyword is embedded in */
   int substrOffset;    /* Offset into substrId for start of this keyword */
+  char zOrigName[20];  /* Original keyword name before processing */
 };
 
 /*
@@ -353,6 +355,8 @@ int main(int argc, char **argv){
   for(i=0; i<nKeyword; i++){
     Keyword *p = &aKeywordTable[i];
     p->len = strlen(p->zName);
+    assert( p->len<sizeof(p->zOrigName) );
+    strcpy(p->zOrigName, p->zName);
     totalLen += p->len;
     p->hash = (UpperToLower[(int)p->zName[0]]*4) ^
               (UpperToLower[(int)p->zName[p->len-1]]*3) ^ p->len;
@@ -576,7 +580,7 @@ int main(int argc, char **argv){
                    " sqlite3StrNICmp(&zText[aOffset[i]],z,n)==0 ){\n");
   for(i=0; i<nKeyword; i++){
     printf("      testcase( i==%d ); /* %s */\n",
-           i, aKeywordTable[i].zTokenType);
+           i, aKeywordTable[i].zOrigName);
   }
   printf("      return aCode[i];\n");
   printf("    }\n");
