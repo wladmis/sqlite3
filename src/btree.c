@@ -1153,7 +1153,7 @@ int sqlite3BtreeInitPage(MemPage *pPage){
     ** past the end of a page boundary and causes SQLITE_CORRUPT to be 
     ** returned if it does.
     */
-#if defined(SQLITE_OVERREAD_CHECK)
+#if defined(SQLITE_ENABLE_OVERSIZE_CELL_CHECK)
     {
       int iCellFirst;   /* First allowable cell index */
       int iCellLast;    /* Last possible cell index */
