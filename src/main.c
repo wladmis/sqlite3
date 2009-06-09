@@ -338,11 +338,6 @@ int sqlite3_config(int op, ...){
       sqlite3GlobalConfig.nHeap = va_arg(ap, int);
       sqlite3GlobalConfig.mnReq = va_arg(ap, int);
 
-      /* Must have 8-byte alignment */
-      if( ((sqlite3GlobalConfig.pHeap - (char*)0)&7)!=0 ){
-        return SQLITE_MISUSE;
-      }
-
       if( sqlite3GlobalConfig.pHeap==0 ){
         /* If the heap pointer is NULL, then restore the malloc implementation
         ** back to NULL pointers too.  This will cause the malloc to go
