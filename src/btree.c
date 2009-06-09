@@ -5734,10 +5734,7 @@ static int balance_nonroot(MemPage *pParent, int iParentIdx, u8 *aOvflSpace){
         j--;
         sqlite3BtreeParseCellPtr(pNew, apCell[j], &info);
         pCell = pTemp;
-        rc = fillInCell(pParent, pCell, 0, info.nKey, 0, 0, 0, &sz);
-        if( rc!=SQLITE_OK ){
-          goto balance_cleanup;
-        }
+	sz = 4 + putVarint(&pCell[4], info.nKey);
         pTemp = 0;
       }else{
         pCell -= 4;
