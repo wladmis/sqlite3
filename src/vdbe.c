@@ -1272,8 +1272,8 @@ case OP_Remainder: {           /* same as TK_REM, in1, in2, out3 */
         break;
       }
       default: {
-        iA = rA;
-        iB = rB;
+        iA = (i64)rA;
+        iB = (i64)rB;
         if( iA==0 ) goto arithmetic_result_is_null;
         if( iA==-1 ) iA = 1;
         rB = (double)(iB % iA);
@@ -2164,7 +2164,7 @@ case OP_Column: {
     ** not exceeded even for corrupt database files.
     */
     len = nField*5 + 3;
-    if( len > offset ) len = offset;
+    if( len > (int)offset ) len = (int)offset;
 
     /* The KeyFetch() or DataFetch() above are fast and will get the entire
     ** record header in most cases.  But they will fail to get the complete
@@ -3962,7 +3962,7 @@ case OP_RowData: {
     n = (u32)n64;
   }else{
     sqlite3BtreeDataSize(pCrsr, &n);
-    if( n>db->aLimit[SQLITE_LIMIT_LENGTH] ){
+    if( n>(u32)db->aLimit[SQLITE_LIMIT_LENGTH] ){
       goto too_big;
     }
   }

@@ -368,7 +368,7 @@ static void pcache1TruncateUnsafe(
   PCache1 *pCache, 
   unsigned int iLimit 
 ){
-  TESTONLY( int nPage = 0; )      /* Used to assert pCache->nPage is correct */
+  TESTONLY( unsigned int nPage = 0; )      /* Used to assert pCache->nPage is correct */
   unsigned int h;
   assert( sqlite3_mutex_held(pcache1.mutex) );
   for(h=0; h<pCache->nHash; h++){

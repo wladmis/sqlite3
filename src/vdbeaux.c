@@ -2216,7 +2216,7 @@ u32 sqlite3VdbeSerialPut(u8 *buf, int nBuf, Mem *pMem, int file_format){
       v = pMem->u.i;
     }
     len = i = sqlite3VdbeSerialTypeLen(serial_type);
-    assert( len<=nBuf );
+    assert( len<=(u32)nBuf );
     while( i-- ){
       buf[i] = (u8)(v&0xFF);
       v >>= 8;
@@ -2227,7 +2227,7 @@ u32 sqlite3VdbeSerialPut(u8 *buf, int nBuf, Mem *pMem, int file_format){
   /* String or blob */
   if( serial_type>=12 ){
     assert( pMem->n + ((pMem->flags & MEM_Zero)?pMem->u.nZero:0)
-             == sqlite3VdbeSerialTypeLen(serial_type) );
+             == (int)sqlite3VdbeSerialTypeLen(serial_type) );
     assert( pMem->n<=nBuf );
     len = pMem->n;
     memcpy(buf, pMem->z, len);
