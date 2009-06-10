@@ -86,6 +86,41 @@ do_test whereA-4.1 {
     SELECT x FROM t2;
   }
 } {2 1}
+# Do an SQL statement.  Append the search count to the end of the result.
+#
+proc count sql {
+  set ::sqlite_sort_count 0
+  return [concat [execsql $sql] $::sqlite_sort_count]
+}
+do_test whereA-4.2 {   ;# Ticket #3904
+  db eval {
+    CREATE INDEX t2x ON t2(x);
+  }
+  count {
+    SELECT x FROM t2;
+  }
+} {2 1 0}
+do_test whereA-4.3 {
+  count {
+    SELECT x FROM t2 ORDER BY x;
+  }
+} {1 2 0}
+do_test whereA-4.4 {
+  count {
+    SELECT x FROM t2 ORDER BY x DESC;
+  }
+} {2 1 0}
+do_test whereA-4.5 {
+  db eval {DROP INDEX t2x;}
+  count {
+    SELECT x FROM t2 ORDER BY x;
+  }
+} {1 2 1}
+do_test whereA-4.6 {
+  count {
+    SELECT x FROM t2 ORDER BY x DESC;
+  }
+} {2 1 1}
 
 
 finish_test

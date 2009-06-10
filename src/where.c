@@ -1884,7 +1884,7 @@ static void bestVirtualIndex(
     pCost->rCost = pIdxInfo->estimatedCost;
   }
   pCost->plan.u.pVtabIdx = pIdxInfo;
-  if( pIdxInfo && pIdxInfo->orderByConsumed ){
+  if( pIdxInfo->orderByConsumed ){
     pCost->plan.wsFlags |= WHERE_ORDERBY;
   }
   pCost->plan.nEq = 0;
@@ -2170,7 +2170,7 @@ static void bestBtreeIndex(
         cost += cost*estLog(cost);
         WHERETRACE(("...... orderby increases cost to %.9g\n", cost));
       }
-    }else if( pParse->db->flags & SQLITE_ReverseOrder ){
+    }else if( wsFlags!=0 && (pParse->db->flags & SQLITE_ReverseOrder)!=0 ){
       /* For application testing, randomly reverse the output order for
       ** SELECT statements that omit the ORDER BY clause.  This will help
       ** to find cases where
