@@ -3273,6 +3273,7 @@ int sqlite3PagerOpen(
     */ 
     tempFile = 1;
     pPager->state = PAGER_EXCLUSIVE;
+    readOnly = (vfsFlags&SQLITE_OPEN_READONLY);
   }
 
   /* The following call to PagerSetPagesize() serves to set the value of 
