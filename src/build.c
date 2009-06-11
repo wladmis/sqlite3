@@ -429,6 +429,15 @@ void sqlite3ResetInternalSchema(sqlite3 *db, int iDb){
   ** schema hash tables and therefore do not have to make any changes
   ** to any of those tables.
   */
+#ifdef SQLITE_HAS_CODEC
+  for(i=0; i<db->nDb; i++){
+    struct Db *pDb = &db->aDb[i];
+    if( pDb->pBt==0 ){
+      if( pDb->pAux && pDb->xFreeAux ) pDb->xFreeAux(pDb->pAux);
+      pDb->pAux = 0;
+    }
+  }
+#endif
   for(i=j=2; i<db->nDb; i++){
     struct Db *pDb = &db->aDb[i];
     if( pDb->pBt==0 ){
