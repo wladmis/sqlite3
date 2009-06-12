@@ -499,7 +499,9 @@ seltablist(A) ::= stl_prefix(X) nm(Y) dbnm(D) as(Z) indexed_opt(I) on_opt(N) usi
   }
   seltablist(A) ::= stl_prefix(X) LP seltablist(F) RP
                     as(Z) on_opt(N) using_opt(U). {
-    if( X==0 && Z.n==0 && N==0 && U==0 ){
+    if( X==0 ){
+      sqlite3ExprDelete(pParse->db, N);
+      sqlite3IdListDelete(pParse->db, U);
       A = F;
     }else{
       Select *pSubquery;
