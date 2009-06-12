@@ -330,8 +330,8 @@ int sqlite3GetToken(const unsigned char *z, int *tokenType){
 #endif
     case '@':  /* For compatibility with MS SQL Server */
     case ':': {
-      testcase( z[0]=='$' );  testcase( z[0]=='@' );  testcase( z[0]==':' );
       int n = 0;
+      testcase( z[0]=='$' );  testcase( z[0]=='@' );  testcase( z[0]==':' );
       *tokenType = TK_VARIABLE;
       for(i=1; (c=z[i])!=0; i++){
         if( IdChar(c) ){
