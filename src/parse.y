@@ -60,6 +60,11 @@
 #define YYNOERRORRECOVERY 1
 
 /*
+** Make yytestcase() the same as testcase()
+*/
+#define yytestcase(X) testcase(X)
+
+/*
 ** An instance of this structure holds information about the
 ** LIMIT clause of a SELECT statement.
 */
