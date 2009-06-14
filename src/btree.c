@@ -5546,6 +5546,7 @@ static int balance_nonroot(MemPage *pParent, int iParentIdx, u8 *aOvflSpace){
       if( leafData ){ i--; }
       subtotal = 0;
       k++;
+      if( k>NB+1 ){ rc = SQLITE_CORRUPT; goto balance_cleanup; }
     }
   }
   szNew[k] = subtotal;
@@ -5592,7 +5593,10 @@ static int balance_nonroot(MemPage *pParent, int iParentIdx, u8 *aOvflSpace){
   /*
   ** Allocate k new pages.  Reuse old pages where possible.
   */
-  assert( apOld[0]->pgno>1 );
+  if( apOld[0]->pgno<=1 ){
+    rc = SQLITE_CORRUPT;
+    goto balance_cleanup;
+  }
   pageFlags = apOld[0]->aData[0];
   for(i=0; i<k; i++){
     MemPage *pNew;
