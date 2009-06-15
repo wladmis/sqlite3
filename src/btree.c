@@ -1191,7 +1191,7 @@ int sqlite3BtreeInitPage(MemPage *pPage){
         /* Free blocks must be in accending order */
         return SQLITE_CORRUPT_BKPT; 
       }
-      nFree += size;
+      nFree = nFree + size;
       pc = next;
     }
 
@@ -5335,7 +5335,7 @@ static int balance_nonroot(MemPage *pParent, int iParentIdx, u8 *aOvflSpace){
   int nNew = 0;                /* Number of pages in apNew[] */
   int i, j, k;                 /* Loop counters */
   int nxDiv;                   /* Next divider slot in pParent->aCell[] */
-  int rc;                      /* The return code */
+  int rc = SQLITE_OK;          /* The return code */
   int leafCorrection;          /* 4 if pPage is a leaf.  0 if not */
   int leafData;                /* True if pPage is a leaf of a LEAFDATA tree */
   int usableSpace;             /* Bytes in pPage beyond the header */

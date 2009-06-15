@@ -102,6 +102,9 @@ void sqlite3VtabLock(sqlite3_vtab *pVtab){
 ** disconnect the virtual table.
 */
 void sqlite3VtabUnlock(sqlite3 *db, sqlite3_vtab *pVtab){
+#ifndef SQLITE_DEBUG
+  UNUSED_PARAMETER(db);
+#endif
   assert( pVtab->nRef>0 );
   pVtab->nRef--;
   assert(db);
