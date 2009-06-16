@@ -180,7 +180,7 @@ do_test temptable-4.4.2 {
   catchsql {
     SELECT * FROM main.t2;
   } db2
-} {1 {no such table: main.t2}}
+} {0 {9 8 7}}
 #do_test temptable-4.4.3 {
 #  catchsql {
 #    SELECT name FROM main.sqlite_master WHERE type='table';
