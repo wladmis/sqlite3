@@ -1264,7 +1264,6 @@ CollSeq *sqlite3LocateCollSeq(Parse *pParse, const char *zName){
     pColl = sqlite3GetCollSeq(db, pColl, zName);
     if( !pColl ){
       sqlite3ErrorMsg(pParse, "no such collation sequence: %s", zName);
-      pColl = 0;
     }
   }
 
