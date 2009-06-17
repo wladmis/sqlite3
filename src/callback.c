@@ -124,9 +124,7 @@ int sqlite3CheckCollSeq(Parse *pParse, CollSeq *pColl){
     const char *zName = pColl->zName;
     CollSeq *p = sqlite3GetCollSeq(pParse->db, pColl, zName);
     if( !p ){
-      if( pParse->nErr==0 ){
-        sqlite3ErrorMsg(pParse, "no such collation sequence: %s", zName);
-      }
+      sqlite3ErrorMsg(pParse, "no such collation sequence: %s", zName);
       pParse->nErr++;
       return SQLITE_ERROR;
     }
@@ -341,7 +339,6 @@ FuncDef *sqlite3FindFunction(
 
 
   assert( enc==SQLITE_UTF8 || enc==SQLITE_UTF16LE || enc==SQLITE_UTF16BE );
-  if( nArg<-1 ) nArg = -1;
   h = (sqlite3UpperToLower[(u8)zName[0]] + nName) % ArraySize(db->aFunc.a);
 
   /* First search for a match amongst the application-defined functions.
