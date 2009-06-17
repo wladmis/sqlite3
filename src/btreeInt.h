@@ -636,6 +636,9 @@ int sqlite3BtreeInitPage(MemPage *pPage);
 void sqlite3BtreeParseCellPtr(MemPage*, u8*, CellInfo*);
 void sqlite3BtreeParseCell(MemPage*, int, CellInfo*);
 int sqlite3BtreeRestoreCursorPosition(BtCursor *pCur);
+void sqlite3BtreeMoveToParent(BtCursor *pCur);
+
+#ifdef SQLITE_TEST
 void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur);
 void sqlite3BtreeReleaseTempCursor(BtCursor *pCur);
-void sqlite3BtreeMoveToParent(BtCursor *pCur);
+#endif

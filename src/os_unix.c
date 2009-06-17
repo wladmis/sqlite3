@@ -911,7 +911,7 @@ static int findLockInfo(
   struct unixLockKey lockKey;    /* Lookup key for the unixLockInfo structure */
   struct unixFileId fileId;      /* Lookup key for the unixOpenCnt struct */
   struct stat statbuf;           /* Low-level file information */
-  struct unixLockInfo *pLock;    /* Candidate unixLockInfo object */
+  struct unixLockInfo *pLock = 0;/* Candidate unixLockInfo object */
   struct unixOpenCnt *pOpen;     /* Candidate unixOpenCnt object */
 
   /* Get low-level information about the file that we can used to
@@ -1815,7 +1815,8 @@ static int dotlockUnlock(sqlite3_file *id, int locktype) {
   /* To fully unlock the database, delete the lock file */
   assert( locktype==NO_LOCK );
   if( unlink(zLockFile) ){
-    int rc, tErrno = errno;
+    int rc = 0;
+    int tErrno = errno;
     if( ENOENT != tErrno ){
       rc = sqliteErrorFromPosixError(tErrno, SQLITE_IOERR_UNLOCK);
     }

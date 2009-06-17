@@ -3196,6 +3196,7 @@ int sqlite3BtreeCloseCursor(BtCursor *pCur){
   return SQLITE_OK;
 }
 
+#ifdef SQLITE_TEST
 /*
 ** Make a temporary cursor by filling in the fields of pTempCur.
 ** The temporary cursor is not on the cursor list for the Btree.
@@ -3211,7 +3212,9 @@ void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur){
   }
   assert( pTempCur->pKey==0 );
 }
+#endif /* SQLITE_TEST */
 
+#ifdef SQLITE_TEST
 /*
 ** Delete a temporary cursor such as was made by the CreateTemporaryCursor()
 ** function above.
@@ -3224,8 +3227,7 @@ void sqlite3BtreeReleaseTempCursor(BtCursor *pCur){
   }
   sqlite3_free(pCur->pKey);
 }
-
-
+#endif /* SQLITE_TEST */
 
 /*
 ** Make sure the BtCursor* given in the argument has a valid
