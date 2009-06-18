@@ -86,7 +86,7 @@ static int pager_open(
   }
   sqlite3PagerSetCachesize(pPager, nPage);
   pageSize = test_pagesize;
-  sqlite3PagerSetPagesize(pPager, &pageSize);
+  sqlite3PagerSetPagesize(pPager, &pageSize, -1);
   sqlite3_snprintf(sizeof(zBuf),zBuf,"%p",pPager);
   Tcl_AppendResult(interp, zBuf, 0);
   return TCL_OK;

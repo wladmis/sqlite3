@@ -1589,7 +1589,7 @@ int sqlite3BtreeOpen(
       pBt->incrVacuum = (get4byte(&zDbHeader[36 + 7*4])?1:0);
 #endif
     }
-    rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
+    rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize, nReserve);
     if( rc ) goto btree_open_out;
     pBt->usableSize = pBt->pageSize - nReserve;
     assert( (pBt->pageSize & 7)==0 );  /* 8-byte alignment of pageSize */
@@ -1880,8 +1880,8 @@ int sqlite3BtreeSetPageSize(Btree *p, int pageSize, int nReserve, int iFix){
     assert( !pBt->pPage1 && !pBt->pCursor );
     pBt->pageSize = (u16)pageSize;
     freeTempSpace(pBt);
-    rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
   }
+  rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize, nReserve);
   pBt->usableSize = pBt->pageSize - (u16)nReserve;
   if( iFix ) pBt->pageSizeFixed = 1;
   sqlite3BtreeLeave(p);
@@ -2036,7 +2036,8 @@ static int lockBtree(BtShared *pBt){
       pBt->usableSize = (u16)usableSize;
       pBt->pageSize = (u16)pageSize;
       freeTempSpace(pBt);
-      rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize);
+      rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize,
+                                   pageSize-usableSize);
       if( rc ) goto page1_init_failed;
       return SQLITE_OK;
     }
