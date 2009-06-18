@@ -2040,7 +2040,7 @@ static int lockBtree(BtShared *pBt){
       if( rc ) goto page1_init_failed;
       return SQLITE_OK;
     }
-    if( usableSize<500 ){
+    if( usableSize<480 ){
       goto page1_init_failed;
     }
     pBt->pageSize = (u16)pageSize;
