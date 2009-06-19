@@ -1265,15 +1265,10 @@ static void groupConcatStep(
 
   if( pAccum ){
     sqlite3 *db = sqlite3_context_db_handle(context);
-    int n;
+    int firstTerm = pAccum->useMalloc==0;
     pAccum->useMalloc = 1;
     pAccum->mxAlloc = db->aLimit[SQLITE_LIMIT_LENGTH];
-#ifdef SQLITE_OMIT_DEPRECATED
-    n = context->pMem->n;
-#else
-    n = sqlite3_aggregate_count(context);
-#endif
-    if( n>1 ){
+    if( !firstTerm ){
       if( argc==2 ){
         zSep = (char*)sqlite3_value_text(argv[1]);
         nSep = sqlite3_value_bytes(argv[1]);
