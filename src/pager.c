@@ -3576,7 +3576,7 @@ static int pagerSharedLock(Pager *pPager){
   ** the error. Discard the contents of the pager-cache and treat any
   ** open journal file as a hot-journal.
   */
-  if( !MEMDB && pPager->exclusiveMode 
+  if( !MEMDB 
    && sqlite3PcacheRefCount(pPager->pPCache)==0 && pPager->errCode 
   ){
     if( isOpen(pPager->jfd) ){
