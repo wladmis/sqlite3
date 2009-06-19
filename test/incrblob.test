@@ -451,8 +451,8 @@ do_test incrblob-6.9 {
 } {}
 
 # At this point rollback should be illegal (because 
-# there is an open blob channel).  But commit is allowed because
-# the blob is read-only.
+# there is an open blob channel).  But commit is also illegal because
+# the open blob is read-write.
 #
 do_test incrblob-6.10 {
   catchsql {
@@ -463,7 +463,7 @@ do_test incrblob-6.11 {
   catchsql {
     COMMIT;
   } db2
-} {0 {}}
+} {1 {cannot commit transaction - SQL statements in progress}}
 
 do_test incrblob-6.12 {
   execsql {
@@ -474,6 +474,11 @@ do_test incrblob-6.13 {
   close $::blob
 } {}
 do_test incrblob-6.14 {
+  catchsql {
+    COMMIT;
+  } db2
+} {0 {}}
+do_test incrblob-6.15 {
   execsql {
     SELECT * FROM blobs WHERE rowid = 4;
   }
