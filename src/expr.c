@@ -490,11 +490,11 @@ void sqlite3ExprAttachSubtrees(
 }
 
 /*
-** Allocate a Expr node which joins up to two subtrees.
+** Allocate a Expr node which joins as many as two subtrees.
 **
-** The 
-** Works like sqlite3Expr() except that it takes an extra Parse*
-** argument and notifies the associated connection object if malloc fails.
+** One or both of the subtrees can be NULL.  Return a pointer to the new
+** Expr node.  Or, if an OOM error occurs, set pParse->db->mallocFailed,
+** free the subtrees and return NULL.
 */
 Expr *sqlite3PExpr(
   Parse *pParse,          /* Parsing context */
