@@ -1319,9 +1319,6 @@ void sqlite3RegisterBuiltinFunctions(sqlite3 *db){
       db->mallocFailed = 1;
     }
   }
-#ifdef SQLITE_SSE
-  (void)sqlite3SseFunctions(db);
-#endif
 }
 
 /*

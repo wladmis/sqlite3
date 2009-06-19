@@ -17,7 +17,7 @@
 
 /* Ignore this whole file if pragmas are disabled
 */
-#if !defined(SQLITE_OMIT_PRAGMA) && !defined(SQLITE_OMIT_PARSER)
+#if !defined(SQLITE_OMIT_PRAGMA)
 
 /*
 ** Interpret the given string as a safety level.  Return 0 for OFF,
@@ -1348,17 +1348,6 @@ void sqlite3Pragma(
   }else
 #endif
 
-#ifdef SQLITE_SSE
-  /*
-  ** Check to see if the sqlite_statements table exists.  Create it
-  ** if it does not.
-  */
-  if( sqlite3StrICmp(zLeft, "create_sqlite_statement_table")==0 ){
-    extern int sqlite3CreateStatementsTable(Parse*);
-    sqlite3CreateStatementsTable(pParse);
-  }else
-#endif
-
 #if SQLITE_HAS_CODEC
   if( sqlite3StrICmp(zLeft, "key")==0 && zRight ){
     sqlite3_key(db, zRight, sqlite3Strlen30(zRight));
@@ -1423,4 +1412,4 @@ pragma_out:
   sqlite3DbFree(db, zRight);
 }
 
-#endif /* SQLITE_OMIT_PRAGMA || SQLITE_OMIT_PARSER */
+#endif /* SQLITE_OMIT_PRAGMA */
