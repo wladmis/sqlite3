@@ -1533,9 +1533,9 @@ static int pager_playback_one_page(
       pPager->dbFileSize = pgno;
     }
     if( pPager->pBackup ){
-      CODEC1(pPager, aData, pPg->pgno, 3, rc=SQLITE_NOMEM);
+      CODEC1(pPager, aData, pgno, 3, rc=SQLITE_NOMEM);
       sqlite3BackupUpdate(pPager->pBackup, pgno, aData);
-      CODEC1(pPager, aData, pPg->pgno, 0, rc=SQLITE_NOMEM);
+      CODEC1(pPager, aData, pgno, 0, rc=SQLITE_NOMEM);
     }
   }else if( !isMainJrnl && pPg==0 ){
     /* If this is a rollback of a savepoint and data was not written to
