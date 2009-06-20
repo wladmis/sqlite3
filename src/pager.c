@@ -3577,7 +3577,9 @@ static int pagerSharedLock(Pager *pPager){
   ** file-system.
   */
   if( !MEMDB && sqlite3PcacheRefCount(pPager->pPCache)==0 && pPager->errCode ){
-    isErrorReset = 1;
+    if( isOpen(pPager->jfd) || pPager->zJournal ){
+      isErrorReset = 1;
+    }
     pPager->errCode = SQLITE_OK;
     pager_reset(pPager);
   }
