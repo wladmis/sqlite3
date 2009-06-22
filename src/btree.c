@@ -6678,7 +6678,10 @@ static int btreeCreateTable(Btree *p, int *piTable, int flags){
         return rc;
       }
       rc = ptrmapGet(pBt, pgnoRoot, &eType, &iPtrPage);
-      if( rc!=SQLITE_OK || eType==PTRMAP_ROOTPAGE || eType==PTRMAP_FREEPAGE ){
+      if( eType==PTRMAP_ROOTPAGE || eType==PTRMAP_FREEPAGE ){
+        rc = SQLITE_CORRUPT_BKPT;
+      }
+      if( rc!=SQLITE_OK ){
         releasePage(pRoot);
         return rc;
       }

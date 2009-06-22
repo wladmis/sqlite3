@@ -71,6 +71,17 @@
 **     36       4     Number of freelist pages in the file
 **     40      60     15 4-byte meta values passed to higher layers
 **
+**     40       4     Schema cookie
+**     44       4     File format of schema layer
+**     48       4     Size of page cache
+**     52       4     Largest root-page (auto/incr_vacuum)
+**     56       4     1=UTF-8 2=UTF16le 3=UTF16be
+**     60       4     User version
+**     64       4     Incremental vacuum mode
+**     68       4     unused
+**     72       4     unused
+**     76       4     unused
+**
 ** All of the integer values are big-endian (most significant byte first).
 **
 ** The file change counter is incremented when the database is changed

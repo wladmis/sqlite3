@@ -2939,7 +2939,7 @@ case OP_OpenWrite: {
     pIn2 = &p->aMem[p2];
     sqlite3VdbeMemIntegerify(pIn2);
     p2 = (int)pIn2->u.i;
-    if( p2<2 ) {
+    if( NEVER(p2<2) ) {
       rc = SQLITE_CORRUPT_BKPT;
       goto abort_due_to_error;
     }
@@ -3733,7 +3733,7 @@ case OP_Insert: {
     }
     pC->iKey = iKey;
     pC->nData = pData->n;
-    if( pData->z==pData->zMalloc || pC->ephemPseudoTable ){
+    if( pC->ephemPseudoTable || pData->z==pData->zMalloc ){
       pC->pData = pData->z;
       if( !pC->ephemPseudoTable ){
         pData->flags &= ~MEM_Dyn;
