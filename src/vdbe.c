@@ -4248,7 +4248,7 @@ case OP_IdxRowid: {              /* out2-prerelease */
     assert( pC->deferredMoveto==0 );
     assert( pC->isTable==0 );
     if( !pC->nullRow ){
-      rc = sqlite3VdbeIdxRowid(pCrsr, &rowid);
+      rc = sqlite3VdbeIdxRowid(db, pCrsr, &rowid);
       if( rc!=SQLITE_OK ){
         goto abort_due_to_error;
       }
@@ -5319,9 +5319,7 @@ case OP_VRename: {
   pName = &p->aMem[pOp->p1];
   assert( pVtab->pModule->xRename );
   REGISTER_TRACE(pOp->p1, pName);
-
-  Stringify(pName, encoding);
-
+  assert( pName->flags & MEM_Str );
   if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
   sqlite3VtabLock(pVtab);
   rc = pVtab->pModule->xRename(pVtab, pName->z);
@@ -5372,10 +5370,7 @@ case OP_VUpdate: {
   pModule = (sqlite3_module *)pVtab->pModule;
   nArg = pOp->p2;
   assert( pOp->p4type==P4_VTAB );
-  if( pModule->xUpdate==0 ){
-    sqlite3SetString(&p->zErrMsg, db, "read-only table");
-    rc = SQLITE_ERROR;
-  }else{
+  if( ALWAYS(pModule->xUpdate) ){
     apArg = p->apArg;
     pX = &p->aMem[pOp->p3];
     for(i=0; i<nArg; i++){
@@ -5391,7 +5386,7 @@ case OP_VUpdate: {
     pVtab->zErrMsg = 0;
     sqlite3VtabUnlock(db, pVtab);
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
-    if( pOp->p1 && rc==SQLITE_OK ){
+    if( rc==SQLITE_OK && pOp->p1 ){
       assert( nArg>1 && apArg[0] && (apArg[0]->flags&MEM_Null) );
       db->lastRowid = rowid;
     }
@@ -5414,7 +5409,10 @@ case OP_Pagecount: {            /* out2-prerelease */
   p1 = pOp->p1; 
   pPager = sqlite3BtreePager(db->aDb[p1].pBt);
   rc = sqlite3PagerPagecount(pPager, &nPage);
-  if( rc==SQLITE_OK ){
+  /* OP_Pagecount is always called from within a read transaction.  The
+  ** page count has already been successfully read and cached.  So the
+  ** sqlite3PagerPagecount() call above cannot fail. */
+  if( ALWAYS(rc==SQLITE_OK) ){
     pOut->flags = MEM_Int;
     pOut->u.i = nPage;
   }
