@@ -5861,7 +5861,8 @@ static int balance_nonroot(
     /* If the sibling page assembled above was not the right-most sibling,
     ** insert a divider cell into the parent page.
     */
-    if( i<nNew-1 && j<nCell ){
+    assert( i<nNew-1 || j==nCell );
+    if( j<nCell ){
       u8 *pCell;
       u8 *pTemp;
       int sz;
