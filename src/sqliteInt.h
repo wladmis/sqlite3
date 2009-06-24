@@ -267,7 +267,6 @@
 # define ALWAYS(X)      (1)
 # define NEVER(X)       (0)
 #elif !defined(NDEBUG)
-  int sqlite3Assert(void);
 # define ALWAYS(X)      ((X)?1:(assert(0),0))
 # define NEVER(X)       ((X)?(assert(0),1):0)
 #else
