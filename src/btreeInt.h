@@ -476,9 +476,6 @@ struct BtCursor {
   u8 isIncrblobHandle;      /* True if this cursor is an incr. io handle */
   Pgno *aOverflow;          /* Cache of overflow page locations */
 #endif
-#ifndef NDEBUG
-  u8 pagesShuffled;         /* True if Btree pages are rearranged by balance()*/
-#endif
   i16 iPage;                            /* Index of current page in apPage */
   MemPage *apPage[BTCURSOR_MAX_DEPTH];  /* Pages from root to current page */
   u16 aiIdx[BTCURSOR_MAX_DEPTH];        /* Current index in apPage[i] */
