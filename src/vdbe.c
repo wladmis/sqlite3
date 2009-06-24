@@ -4498,7 +4498,7 @@ case OP_ParseSchema: {
   */
   assert( sqlite3BtreeHoldsMutex(db->aDb[iDb].pBt) );
   sqlite3BtreeEnterAll(db);
-  if( pOp->p2 || ALWAYS(DbHasProperty(db, iDb, DB_SchemaLoaded)) ){
+  if( pOp->p2 || DbHasProperty(db, iDb, DB_SchemaLoaded) ){
     zMaster = SCHEMA_TABLE(iDb);
     initData.db = db;
     initData.iDb = pOp->p1;
