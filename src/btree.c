@@ -2115,10 +2115,10 @@ static int lockBtreeWithRetry(Btree *pRef){
 static void unlockBtreeIfUnused(BtShared *pBt){
   assert( sqlite3_mutex_held(pBt->mutex) );
   if( pBt->inTransaction==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
-    if( sqlite3PagerRefcount(pBt->pPager)>=1 ){
-      assert( pBt->pPage1->aData );
-      releasePage(pBt->pPage1);
-    }
+    assert( pBt->pPage1->aData );
+    assert( sqlite3PagerRefcount(pBt->pPager)==1 );
+    assert( pBt->pPage1->aData );
+    releasePage(pBt->pPage1);
     pBt->pPage1 = 0;
   }
 }
