@@ -378,10 +378,7 @@ void sqlite3UnlinkAndDeleteIndex(sqlite3 *db, int iDb, const char *zIdxName){
 
   len = sqlite3Strlen30(zIdxName);
   pIndex = sqlite3HashInsert(pHash, zIdxName, len, 0);
-  /* Justification of ALWAYS():  This routine is only called from the
-  ** OP_DropIndex opcode.  And there is no way that opcode will ever run
-  ** unless the corresponding index is in the symbol table. */
-  if( ALWAYS(pIndex) ){
+  if( pIndex ){
     if( pIndex->pTable->pIndex==pIndex ){
       pIndex->pTable->pIndex = pIndex->pNext;
     }else{
