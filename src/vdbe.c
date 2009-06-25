@@ -4924,7 +4924,7 @@ case OP_AggFinal: {
   pMem = &p->aMem[pOp->p1];
   assert( (pMem->flags & ~(MEM_Null|MEM_Agg))==0 );
   rc = sqlite3VdbeMemFinalize(pMem, pOp->p4.pFunc);
-  if( rc==SQLITE_ERROR ){
+  if( rc ){
     sqlite3SetString(&p->zErrMsg, db, "%s", sqlite3_value_text(pMem));
   }
   sqlite3VdbeChangeEncoding(pMem, encoding);
@@ -5233,6 +5233,9 @@ case OP_VColumn: {
   sqlite3DbFree(db, p->zErrMsg);
   p->zErrMsg = pVtab->zErrMsg;
   pVtab->zErrMsg = 0;
+  if( sContext.isError ){
+    rc = sContext.isError;
+  }
 
   /* Copy the result of the function to the P3 register. We
   ** do this regardless of whether or not an error occurred to ensure any
