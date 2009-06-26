@@ -1562,7 +1562,6 @@ static int openDatabase(
   }
   sqlite3_mutex_enter(db->mutex);
   db->errMask = 0xff;
-  db->priorNewRowid = 0;
   db->nDb = 2;
   db->magic = SQLITE_MAGIC_BUSY;
   db->aDb = db->aDbStatic;

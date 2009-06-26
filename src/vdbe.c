@@ -3649,7 +3649,7 @@ case OP_NewRowid: {           /* out2-prerelease */
     if( pC->useRandomRowid ){
       assert( pOp->p3==0 );  /* We cannot be in random rowid mode if this is
                              ** an AUTOINCREMENT table. */
-      v = db->priorNewRowid;
+      v = db->lastRowid;
       cnt = 0;
       do{
         if( cnt==0 && (v&0xffffff)==v ){
@@ -3661,7 +3661,6 @@ case OP_NewRowid: {           /* out2-prerelease */
         rc = sqlite3BtreeMovetoUnpacked(pC->pCursor, 0, (u64)v, 0, &res);
         cnt++;
       }while( cnt<100 && rc==SQLITE_OK && res==0 );
-      db->priorNewRowid = v;
       if( rc==SQLITE_OK && res==0 ){
         rc = SQLITE_FULL;
         goto abort_due_to_error;

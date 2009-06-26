@@ -790,7 +790,6 @@ struct sqlite3 {
   int nTable;                   /* Number of tables in the database */
   CollSeq *pDfltColl;           /* The default collating sequence (BINARY) */
   i64 lastRowid;                /* ROWID of most recent insert (see above) */
-  i64 priorNewRowid;            /* Last randomly generated ROWID */
   u32 magic;                    /* Magic number for detect library misuse */
   int nChange;                  /* Value returned by sqlite3_changes() */
   int nTotalChange;             /* Value returned by sqlite3_total_changes() */
