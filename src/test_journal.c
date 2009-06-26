@@ -420,14 +420,17 @@ static int jtWrite(
       jt_file *pMain = locateDatabaseHandle(p->zName);
       assert( pMain );
   
-      if( decodeJournalHdr(zBuf, 0, &pMain->nPage, 0, &pMain->nPagesize) ){
+      if( iAmt==28 ){
         /* Zeroing the first journal-file header. This is the end of a
         ** transaction. */
         closeTransaction(pMain);
-      }else{
+      }else if( iAmt!=12 ){
         /* Writing the first journal header to a journal file. This happens
         ** when a transaction is first started.  */
         int rc;
+        u8 *z = (u8 *)zBuf;
+        pMain->nPage = decodeUint32(&z[16]);
+        pMain->nPagesize = decodeUint32(&z[24]);
         if( SQLITE_OK!=(rc=openTransaction(pMain, p)) ){
           return rc;
         }
