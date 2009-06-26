@@ -848,7 +848,7 @@ case OP_HaltIfNull: {      /* in3 */
 case OP_Halt: {
   p->rc = pOp->p1;
   p->pc = pc;
-  p->errorAction = pOp->p2;
+  p->errorAction = (u8)pOp->p2;
   if( pOp->p4.z ){
     sqlite3SetString(&p->zErrMsg, db, "%s", pOp->p4.z);
   }
@@ -2025,6 +2025,7 @@ case OP_Column: {
   assert( pOp->p3>0 && pOp->p3<=p->nMem );
   pDest = &p->aMem[pOp->p3];
   MemSetTypeFlag(pDest, MEM_Null);
+  zRec = 0;
 
   /* This block sets the variable payloadSize to be the total number of
   ** bytes in the record.
@@ -2043,12 +2044,11 @@ case OP_Column: {
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   assert( pC->pVtabCursor==0 );
 #endif
-  if( pC->pCursor!=0 ){
+  pCrsr = pC->pCursor;
+  if( pCrsr!=0 ){
     /* The record is stored in a B-Tree */
     rc = sqlite3VdbeCursorMoveto(pC);
     if( rc ) goto abort_due_to_error;
-    zRec = 0;
-    pCrsr = pC->pCursor;
     if( pC->nullRow ){
       payloadSize = 0;
     }else if( pC->cacheStatus==p->cacheCtr ){
@@ -2064,15 +2064,12 @@ case OP_Column: {
     }else{
       sqlite3BtreeDataSize(pCrsr, &payloadSize);
     }
-    nField = pC->nField;
   }else if( pC->pseudoTable ){
     /* The record is the sole entry of a pseudo-table */
     payloadSize = pC->nData;
     zRec = pC->pData;
     pC->cacheStatus = CACHE_STALE;
     assert( payloadSize==0 || zRec!=0 );
-    nField = pC->nField;
-    pCrsr = 0;
   }else{
     /* Consider the row to be NULL */
     payloadSize = 0;
@@ -2088,6 +2085,7 @@ case OP_Column: {
     goto too_big;
   }
 
+  nField = pC->nField;
   assert( p2<nField );
 
   /* Read and parse the table header.  Store the results of the parse
