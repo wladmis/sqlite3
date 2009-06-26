@@ -259,8 +259,7 @@ if {$tcl_platform(platform) != "windows"} {
     if {[file exists $fname]} {
       set exists 1
       set hdr [hexio_read $fname 0 28]
-      set content \
-       [expr {$hdr!="00000000000000000000000000000000000000000000000000000000"}]
+      set content [expr {0==[string match $hdr [string repeat 0 56]]}]
     }
     list $exists $content
   }
