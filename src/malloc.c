@@ -473,9 +473,12 @@ void *sqlite3Realloc(void *pOld, int nBytes){
   if( pOld==0 ){
     return sqlite3Malloc(nBytes);
   }
-  if( nBytes<=0 || nBytes>=0x7fffff00 ){
-    /* The 0x7ffff00 limit term is explained in comments on sqlite3Malloc() */
+  if( nBytes<=0 ){
     sqlite3_free(pOld);
+    return 0;
+  }
+  if( nBytes>=0x7fffff00 ){
+    /* The 0x7ffff00 limit term is explained in comments on sqlite3Malloc() */
     return 0;
   }
   nOld = sqlite3MallocSize(pOld);
