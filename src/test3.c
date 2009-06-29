@@ -626,7 +626,10 @@ static int btree_cursor(
   pCur = (BtCursor *)ckalloc(sqlite3BtreeCursorSize());
   memset(pCur, 0, sqlite3BtreeCursorSize());
   sqlite3BtreeEnter(pBt);
-  rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, pCur);
+  rc = sqlite3BtreeLockTable(pBt, iTable, wrFlag);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3BtreeCursor(pBt, iTable, wrFlag, 0, pCur);
+  }
   sqlite3BtreeLeave(pBt);
   if( rc ){
     ckfree((char *)pCur);
