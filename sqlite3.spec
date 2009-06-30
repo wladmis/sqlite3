@@ -9,7 +9,7 @@ URL: http://www.sqlite.org/
 Requires: lib%name = %version-%release
 
 Source0: sqlite-%version.tar
-Source1: %name-docsrc.tar
+Source1: docsrc.tar
 Patch: %name-%version-%release.patch
 
 BuildRequires(Pre): tcl-devel
@@ -23,6 +23,8 @@ access without running a separate RDBMS process.
 %package -n lib%name
 Summary: An Embeddable SQL Database Engine (shared library)
 Group: System/Libraries
+Provides: %name-fts3 = %version-%release
+Obsoletes: %name-fts3 < %version-%release
 
 %description -n lib%name
 SQLite is a C library that implements an SQL database engine.
@@ -149,6 +151,7 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %changelog
 * Tue Jun 30 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.16-alt1
 - 3.6.16
+- full-text search extension compiled in library
 
 * Sun Oct 12 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt3
 - backported from cvs:

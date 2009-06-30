@@ -1,3 +1,3 @@
 tar: @version@:. name=sqlite-@version@
-tar: docsrc-5eeec98501:docsrc name=@name@-docsrc base=docsrc
+tar: docsrc-5eeec98501:docsrc name=docsrc
 diff: @version@:. .
