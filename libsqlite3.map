@@ -104,4 +104,25 @@ SQLITE_3.5.8 {
 	sqlite3_limit;
 	sqlite3_randomness;
 };
+SQLITE3_3.6.16 {
+    global:
+	sqlite3_backup_finish;
+	sqlite3_backup_init;
+	sqlite3_backup_pagecount;
+	sqlite3_backup_remaining;
+	sqlite3_backup_step;
+	sqlite3_config;
+	sqlite3_db_config;
+	sqlite3_db_mutex;
+	sqlite3_db_status;
+	sqlite3_extended_errcode;
+	sqlite3_initialize;
+	sqlite3_next_stmt;
+	sqlite3_os_end;
+	sqlite3_os_init;
+	sqlite3_shutdown;
+	sqlite3_status;
+	sqlite3_stmt_status;
+};
+
 /* the prefix is SQLITE_, not SQLITE3_ */
