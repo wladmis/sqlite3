@@ -12,7 +12,8 @@ Source0: sqlite-%version.tar
 Source1: %name-docsrc.tar
 Patch: %name-%version-%release.patch
 
-BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
+BuildRequires(Pre): tcl-devel
+BuildRequires: gcc-c++ libreadline-devel
 
 %description
 SQLite is a C library that implements an SQL database engine.
@@ -89,6 +90,7 @@ embedded controllers.
 %patch -p1
 
 %build
+export CFLAGS=" -DSQLITE_ENABLE_FTS3=1 "
 autoreconf -i
 %configure \
 	--enable-threadsafe \
