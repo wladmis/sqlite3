@@ -42,6 +42,73 @@ proc Heading {title} {
   # hd_puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
 }
 
+Heading {Source Code}
+
+Product {sqlite-amalgamation-V3.zip} {
+  This ZIP archive contains all preprocessed C code combined into a
+  single source file (the <a href="amalgamation.html">amalgamation</a>).
+  This is the <b>recommended</b> way of acquiring the SQLite
+  source code.  It is suggested that you use this packing option
+  unless you have a compelling reason to use one
+  of the other packaging options below.
+}
+
+Product {sqlite-amalgamation-V3.tar.gz} {
+  A tarball containing the <a href="amalgamation.html">amalgamation</a>
+  together with an configure script and makefile
+  for building it.  This is the <b>recommended</b> source distribution for all
+  Unix and Unix-like platforms.
+}
+
+
+Product {sqlite-V3-tea.tar.gz} {
+  A tarball of preprocessed source code together with a
+  <a href="http://www.tcl.tk/doc/tea/">Tcl Extension Architecture (TEA)</a>
+  compatible configure script and makefile.
+  This is the <b>recommended</b> source distribution for the TCL interface to
+  SQLite.
+}
+
+Product {sqlite-V3.tar.gz} {
+  A tarball of the complete source tree for SQLite version VERSION
+  as extracted from the version control system.  <i>The Makefile and
+  configure script in this tarball are not supported</i>.  Their use
+  is <b><u>not</u> recommended</b>. The SQLite developers do not use them.  
+  You should not use them either.  If you want a configure script and
+  an automated build, use either the amalgamation tarball or TEA tarball
+  instead of this one.
+  To build from this tarball, hand-edit one of the template Makefiles
+  in the root directory of the tarball and build using your own customized
+  Makefile.
+}
+
+Product {sqlite-source-V3.zip} {
+  This ZIP archive contains preprocessed C code for the SQLite library as
+  individual source files.  The use of this source distribution is
+  <b><u>not</u> recommended</b>.  Use one of the amalgamation packages above
+  unless you have a compelling reason not to.
+}
+
+Product {sqlite-V3.src.rpm} {
+  An RPM containing complete source code for SQLite version VERSION
+}
+
+Heading {Cross-Platform Binaries}
+
+Product {sqlite-V3.kit} {
+  A <a href="http://www.equi4.com/starkit.html">starkit</a> containing
+  precompiled SQLite binaries and Tcl bindings for Linux-x86, Windows,
+  and Mac OS X (ppc and x86).
+}
+
+Heading {Documentation}
+
+Product {sqlite_docs_V3.zip} {
+  This ZIP archive contains most of the static HTML files that
+  comprise this website, including all of the SQL Syntax and the
+  C/C++ interface specs and other miscellaneous documentation.
+}
+
 Heading {Precompiled Binaries for Linux}
 
 Product sqlite3-V3.bin.gz {
@@ -93,22 +160,22 @@ Product sqlite*_analyzer-V3.bin.gz {
   version VERSION and later.
 }
 
-Heading {Precompiled Binaries For Mac OSX}
+Heading {Precompiled Binaries For Mac OS X}
 
 Product sqlite3-V3-osx-x86.bin.gz {
   A command-line program for accessing and modifying SQLite version 3.*
-  databases.  For x86 Macs only.
+  databases.  For x86 Macs running Leopard (OS 10.5) only.
 }
 
 Product sqlite*_analyzer-V3-osx-x86.bin.gz {
   An analysis program for database files compatible with SQLite 
-  version VERSION and later.
+  version VERSION and later.  For x86 Macs running Leopard (OS 10.5) only.
 }
 
 Heading {Precompiled Binaries For Windows}
 
 Product sqlite-V3.zip {
-  A command-line program for accessing and modifing SQLite databases.
+  A command-line program for accessing and modifying SQLite databases.
   See <a href="sqlite.html">the documentation</a> for additional information.
 }
 Product tclsqlite-V3.zip {
@@ -125,13 +192,13 @@ Product sqlitedll-V3.zip {
 Product fts1dll-V3.zip {
   A precompiled 
   <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1 Module</a> 
-  for win32.
+  for Win32 platforms.
 }
 
 Product fts2dll-V3.zip {
   A precompiled 
   <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsTwo">FTS2 Module</a> 
-  for win32.
+  for Win32 platforms.
 }
 
 Product sqlite*_analyzer-V3.zip {
@@ -139,64 +206,6 @@ Product sqlite*_analyzer-V3.zip {
   VERSION and later.
 }
 
-
-Heading {Source Code}
-
-Product {sqlite-amalgamation-V3.zip} {
-  This ZIP archive contains all preprocessed C code combined into a
-  single source file (the <a href="amalgamation.html">amalgamation</a>).
-  This is the preferred way of acquiring the SQLite
-  source code.  It is suggested that you use this packing option
-  unless you have a compelling reason to use one
-  of the other packaging options below.
-}
-
-Product {sqlite-amalgamation-V3.tar.gz} {
-  A tarball containing the <a href="amalgamation.html">amalgamation</a>
-  together with an configure script and makefile
-  for building it.  This is the recommended source distribution for
-  Unix platforms.
-}
-
-
-Product {sqlite-V3-tea.tar.gz} {
-  A tarball of proprocessed source code together with a
-  <a href="http://www.tcl.tk/doc/tea/">Tcl Extension Architecture (TEA)</a>
-  compatible configure script and makefile.
-}
-
-Product {sqlite-V3.tar.gz} {
-  A tarball of the complete source tree for SQLite version VERSION
-  as extracted from the version control system.  The individual source
-  files require preprocessing (handled automatically by the Makefile)
-  before they are ready to be incorporated into a working library.
-}
-
-Product {sqlite-source-V3.zip} {
-  This ZIP archive contains preprocessed C code for the SQLite library as
-  individual source files.  It is strongly recommended that the
-  amalgamation above be used instead of this package.
-}
-
-Product {sqlite-V3.src.rpm} {
-  An RPM containing complete source code for SQLite version VERSION
-}
-
-Heading {Cross-Platform Binaries}
-
-Product {sqlite-V3.kit} {
-  A <a href="http://www.equi4.com/starkit.html">starkit</a> containing
-  precompiled SQLite binaries and Tcl bindings for Linux-x86, Windows,
-  and Mac OS-X ppc and x86.
-}
-
-Heading {Documentation}
-
-Product {sqlite_docs_V3.zip} {
-  This ZIP archive contains most of the static HTML files that
-  comprise this website, including all of the SQL Syntax and the
-  C/C++ interface specs and other miscellaneous documentation.
-}
 
 Heading {Historical Binaries And Source Code}
 
@@ -206,14 +215,14 @@ Product sqlite-V2.bin.gz {
 }
 Product sqlite-V2.zip {
   A command-line program for accessing and modifying 
-  SQLite version 2.* databases on win32.
+  SQLite version 2.* databases on Win32 platforms.
 }
 
 Product sqlite*_analyzer-V2.bin.gz {
   An analysis program for version 2.* database files on Linux-x86
 }
 Product sqlite*_analyzer-V2.zip {
-  An analysis program for version 2.* database files on win32.
+  An analysis program for version 2.* database files on Win32 platforms.
 }
 Product {sqlite-source-V2.zip} {
   This ZIP archive contains C source code for the SQLite library

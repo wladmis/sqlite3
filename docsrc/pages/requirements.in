@@ -1,146 +1,68 @@
 <title>SQLite Requirements</title>
+<tcl>hd_keywords {requirements}</tcl>
 
-<p>
-This document contains the text of all requirements that define
-the operation of SQLite.
-</p>
+<h1>SQLite Requirements</h1>
 
-<p>This document is currently a work in progress.  It is incomplete
-and inaccurate.  Check back later for further updates.</p>
+<h2>1.0 Introduction</h2>
 
-<h2>Requirements</h2>
+<p>These requirements strive to describe the interfaces and operation of 
+SQLite in sufficient detail that a compatible implementation of SQLite
+can be written solely from these requirements and without reference to
+the canonical SQLite source code.</p>
 
-<table border="0" cellpadding="5" cellspacing="0">
-<tcl>
-#############################################################################
-# Scan the sqlite3.h header file and extract requirements information.
-#
-set in [open sqlite3.h] 
-set type {}        ;# one of: constant datatype function
-set code {}        ;# C code of the definition
-set phase 0        ;# Phase used by the parser 
-set content {}     ;# List of records, one record per definition
-set dcnt 0         ;# Number of individual declarations
-set lineno 0       ;# input file line number
-set inreq 0        ;# True if in a requirement definition
-set reqbody {}     ;# Content of a requirement definition
-unset -nocomplain req
+<p>Software development processes typically recognize a hierarchy of
+requirements:</p>
 
-# Record the end of a requirement stored in reqtag and reqbody
-#
-proc end_req {} {
-  global inreq reqtag reqbody req reqtype
-  if {$inreq} {
-    if {[info exists req($reqtag)]} {
-      puts stderr "duplicate requirement label: $reqtag"
-    }
-    set req($reqtag) [string trim $reqbody]
-    set reqtype($reqtag) text
-    set inreq 0
-    set rowbody {}
-  }
-}
+<ul>
+<li>System requirements</li>
+<li>High-level requirements</li>
+<li>Derived high-level requirements</li>
+<li>Low-level requirements</li>
+<li>Derived low-level requirements</li>
+</ul>
 
-# Read sqlite3.h line by line and extract interface definition
-# information.
-#
-while {![eof $in]} {
-  set line [gets $in]
-  incr lineno
-  if {$phase==0} {
-    # Looking for the CAPI3REF: keyword
-    if {[regexp {^\*\* CAPI3REF: +(.*)} $line all tx]} {
-      set title $tx
-      set title_lineno $lineno
-      set phase 1
-    }
-  } elseif {$phase==1} {
-    if {[string range $line 0 1]=="**"} {
-      set lx [string trim [string range $line 3 end]]
-      if {[regexp {^INVARIANTS:$} $lx]} {
-        set phase 2
-      } elseif {[regexp {^LIMITATIONS:$} $lx]} {
-        set phase 2
-      }
-    } elseif {[string range $line 0 1]=="*/"} {
-      set phase 3
-    }
-  } elseif {$phase==2} {
-    if {[string range $line 0 1]=="**"} {
-      set lx [string trim [string range $line 3 end]]
-      if {[regexp {\{([\w.]+)\}\s+(.+)$} $lx all tag lxtail]} {
-        end_req
-        set reqtag $tag
-        set reqbody $lxtail\n
-        set inreq 1
-      } elseif {[regexp {^INVARIANTS:$} $lx]} {
-        end_req
-      } elseif {[regexp {^LIMITATIONS:$} $lx]} {
-        end_req
-      } else {
-        append reqbody $lx\n
-      }
-    } elseif {[string range $line 0 1]=="*/"} {
-      end_req
-      set phase 3
-    }
-  } elseif {$phase==3} {
-    if {$line==""} {
-      if {[regexp {\{(.+)\}} $title all reqtag]} {
-        if {[info exists req($reqtag)]} {
-          puts stderr "duplicate requirement label: $reqtag"
-        }
-        set req($reqtag) [string map {& &amp; < &lt; > &gt;} $code]
-        set reqtype($reqtag) code
-      }
-      set title {}
-      set type {}
-      set code {}
-      set phase 0
-      set dcnt 0
-    } else {
-      if {[regexp {^#define (SQLITE_[A-Z0-9_]+)} $line all kx]} {
-        set type constant
-        set keyword($kx) 1
-        incr dcnt
-      } elseif {[regexp {^typedef .*(sqlite[0-9a-z_]+);} $line all kx]} {
-        set type datatype
-        set keyword($kx) 1
-        incr dcnt
-      } elseif {[regexp {^[a-z].*[ *](sqlite3_[a-z0-9_]+)\(} $line all kx]} {
-        set type function
-        set keyword($kx) 1
-        incr dcnt
-      } elseif {[regexp {^SQLITE_EXTERN .*(sqlite[0-9a-z_]+);} $line all kx]} {
-        set type datatype
-        set keyword($kx) 1
-        incr dcnt
-      }
-      append code $line\n
-    }
-  }
-}
-close $in
-# End of requirements gathering from sqlite3.h
-##############################################################################
+<p>The usual distinction between high-level and low-level requirements is
+that high-level requirements describe "what" the system does and the
+low-level requirements describe "how" the system does it.  Since the
+the requirements denoted here describe the
+behavior of SQLite and not its implementation, they are best thought of
+as high-level requirements.  Consistent with that view, most of
+the requirements numbers begin with the letter "<b>H</b>" (for "high-level"). 
+A few of the requirements presented here specify broad objectives that
+SQLite strives to achieve.  These broad requirements can be thought of
+as system requirements and are number with an initial letter "<b>S</b>".</p>
 
-# Todo:  add additional requirements gathering here.
+<p>These requirements are hierarchical in the sense that the more
+specific requirements are derived from broader and more general
+requirements.  When requirement B is derived from requirement A, we say
+that A is the parent of B and that B is a child of A.  The parent/child
+relationships of all requirements are tracked.  All requirements presented
+here ultimately derive from a single very broad, very high-level, and
+very general system requirement called "S10000".</p>
 
-##############################################################################
-# Render the requirements
-#
-foreach reqtag [lsort [array names req]] {
-  set reqbody $req($reqtag)
-  hd_puts "<tr><td valign=\"top\">$reqtag</td><td valign=\"top\">"
-  if {$reqtype($reqtag)=="code"} {
-    hd_puts "The sqlite3.h header file defines the following interfaces:"
-    hd_puts "<blockquote><pre>"
-    hd_puts $reqbody
-    hd_puts "</pre></blockquote>"
-  } else {
-    hd_resolve $reqbody
-  }
-  hd_puts "</td></tr>"
-}
-</tcl>
-</table>
+<p>Some behaviors of SQLite are undefined.  For example, the order in
+which result rows are returned from a SELECT statement is undefined if
+there is no ORDER BY clause.  As another example, many of the C interfaces
+require a pointer to an open [database connection] as their first argument
+and the behavior of those interfaces is undefined (and probably undesirable)
+if a pointer to some other object is supplied instead.  Some, but not all
+undefined behaviors are explicitly stated and number in this document
+with numbers beginning with the "<b>U</b>" for "Undefined".  Applications
+that use SQLite should never depend on undefined behavior.  If a behavior
+is not explicitly defined by a requirement, then the behavior is undefined,
+and so explicitly stating undefined behaviors in this document is
+technically redundant.  Nevertheless, we find that explicitly stating
+some undefined behaviors helps application developers to better understand
+the boundaries of operation of SQLite and to generate safer and more
+accurate programs that use SQLite.</p>
+
+<h2><a href="sysreq.html">2.0 System Requirements</a></h2>
+
+<h2><a href="hlr10000.html">3.0 Application C-Language Interfaces</a></h2>
+
+<h2><a href="hlr20000.html">4.0 C-Language Interfaces For
+Extending SQLite</a></h2>
+
+<h2><a href="hlr30000.html">5.0 Database File Format</a></h2>
+
+<h2><a href="hlr40000.html">6.0 SQL Language Specification</a></h2>

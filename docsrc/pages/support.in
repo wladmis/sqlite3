@@ -2,6 +2,43 @@
 
 <h2>SQLite Support Options</h2>
 
+<h3>Professional Support</h3>
+
+<p>
+If you would like professional support for SQLite
+or if you want custom modifications performed by the
+original author or SQLite, these services are available for a modest fee.
+For additional information visit
+<a href="http://www.hwaci.com/sw/sqlite/prosupport.html">
+http://www.hwaci.com/sw/sqlite/prosupport.html</a> or contact:</p>
+
+<blockquote>
+D. Richard Hipp <br />
+Hwaci - Applied Software Research <br />
+704.948.4565 <br />
+<a href="mailto:drh@hwaci.com">drh@hwaci.com</a>
+</blockquote>
+
+<h3>Proprietary SQLite Extensions</h3>
+
+<p>The core SQLite library found on this website is in the
+<a href="copyright.html">public domain</a>.  But there also exist
+proprietary, licensed extensions to SQLite, written and maintained
+by the original developer.</p>
+
+<ul>
+<li><p>
+The <a href="http://www.hwaci.com/sw/sqlite/see.html">SQLite Encryption
+Extension (SEE)</a> will read and write database file encrypted using
+128-bit or 256-bit AES.</p></li>
+
+<li><p>
+The <a href="http://www.hwaci.com/sw/sqlite/cerod.html">
+SQLite Compressed and Encrypted Read-Only Database (CEROD)</a>
+Extension will read a database file that is both compressed
+and encrypted.</p></li>
+</ul>
+
 
 <h3>Mailing Lists</h3>
 <p>Three separate mailing lists have been established to help support
@@ -12,9 +49,10 @@ SQLite:</p>
 sqlite-announce</a> - announcements of new
 releases or significant developments.</li>
 <li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-users">
-sqlite-users</a> - general user discussion.</li>
+sqlite-users</a> - general user discussion; most postings belong here.</li>
 <li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-dev">
-sqlite-dev</a> - developer conversations.</li>
+sqlite-dev</a> - developer conversations; for people who have or aspire to
+have write permission on the SQLite CVS repository.</li>
 </ul>
 
 <p>
@@ -50,7 +88,7 @@ Please do <b>not</b> send email directly to the author of SQLite
 unless:
 <ul>
 <li>You have or intend to acquire a professional support contract
-as described below, or</li>
+as described above, or</li>
 <li>You are working on an open source project.</li>
 </ul>
 You are welcomed to use SQLite in closed source, proprietary, and/or
@@ -58,21 +96,3 @@ commerical projects and to ask questions about such use on the public
 mailing list.  But please do not ask to receive free direct technical
 support.  The software is free; direct technical support is not.
 </p>
-
-
-<h3>Professional Support</h3>
-
-<p>
-If you would like professional support for SQLite
-or if you want custom modifications to SQLite performed by the
-original author, these services are available for a modest fee.
-For additional information visit
-<a href="http://www.hwaci.com/sw/sqlite/prosupport.html">
-http://www.hwaci.com/sw/sqlite/prosupport.html</a> or contact:</p>
-
-<blockquote>
-D. Richard Hipp <br />
-Hwaci - Applied Software Research <br />
-704.948.4565 <br />
-<a href="mailto:drh@hwaci.com">drh@hwaci.com</a>
-</blockquote>

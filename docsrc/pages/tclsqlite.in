@@ -1,16 +1,23 @@
 <title>The Tcl interface to the SQLite library</title>
 <tcl>
+hd_keywords {Tcl extension}
 proc METHOD {name text} {
   hd_puts "<a name=\"$name\"></a>\n<h3>The \"$name\" method</h3>\n"
-  hd_puts $text
+  hd_resolve $text
 }
 </tcl>
 
 <h2>The Tcl interface to the SQLite library</h2>
 
 <p>The SQLite library is designed to be very easy to use from
-a Tcl or Tcl/Tk script.  This document gives an overview of the Tcl
-programming interface.</p>
+a <a href="http://www.tcl.tk">Tcl or Tcl/Tk</a> script.  SQLite
+began as a <a href="http://www.tcl.tk/doc/tea/">Tcl extension</a>
+and the primary [test suite] for SQLite is written in TCL.  SQLite
+can be used with any programming language, but its connections to
+TCL run deep.</p>
+
+<p>This document gives an overview of the Tcl
+programming interface for SQLite.</p>
 
 <h3>The API</h3>
 
@@ -38,9 +45,11 @@ way widgets are created in Tk.
 
 <p>
 The name of the database is just the name of a disk file in which
-the database is stored.  If the name of the database is an empty
-string or the special name ":memory:" then a new database is created
-in memory.
+the database is stored.  If the name of the database is 
+the special name "[:memory:]" then a new database is created
+in memory.  If the name of the database is an empty string, then
+the database is created in an empty file that is automatically deleted
+when the database connection closes.
 </p>
 
 <p>
@@ -54,6 +63,7 @@ defined.</p>
 <tcl>
 foreach m [lsort {
  authorizer
+ backup
  busy
  cache
  changes
@@ -73,7 +83,9 @@ foreach m [lsort {
  onecolumn
  profile
  progress
+ restore
  rollback_hook
+ status
  timeout
  total_changes
  trace
@@ -124,7 +136,7 @@ then the returned list will contain 6 elements.  For example:</p>
 <b>db1 eval {INSERT INTO t1 VALUES(1,'hello')}<br>
 db1 eval {INSERT INTO t1 VALUES(2,'goodbye')}<br>
 db1 eval {INSERT INTO t1 VALUES(3,'howdy!')}<br>
-set x [db1 eval {SELECT * FROM t1 ORDER BY a}]</b>
+set x &#91;db1 eval {SELECT * FROM t1 ORDER BY a}&#93;</b>
 </blockquote>
 
 <p>The variable <b>$x</b> is set by the above code to</p>
@@ -435,6 +447,22 @@ should return "1" if it wants SQLite to abandon the current operation.
 }
 
 ##############################################################################
+METHOD enable_load_extension {
+
+<p>The extension loading mechanism of SQLite (accessed using the
+[load_extension()] SQL function) is turned off by default.  This is
+a security precaution.  If an application wants to make use of the
+[load_extension()] function it must first turn the capability on using
+this method.</p>
+
+<p>This method takes a single boolean argument which will turn the
+extension loading functionality on or off.</p>
+
+<p>This method maps to the [sqlite3_enable_load_extension()] C/C++
+interface.</p>
+}
+
+##############################################################################
 METHOD exists {
 
 <p>The "exists" method is similar to "onecolumn" and "eval" in that
@@ -447,7 +475,7 @@ returns an empty set.</p>
 rows in a table.  For example:</p>
 
 <blockquote><b>
-if {[db exists {SELECT 1 FROM table1 WHERE user=$user}]} {<br>
+if {&#91;db exists {SELECT 1 FROM table1 WHERE user=$user}&#93;} {<br>
 &nbsp;&nbsp;&nbsp;# Processing if $user exists<br>
 } else {<br>
 &nbsp;&nbsp;&nbsp;# Processing if $user does not exist<br>
@@ -510,7 +538,7 @@ SQL query statement given as its argument.  The difference is that
 first row of the query result.</p>
 
 <p>This is a convenience method.  It saves the user from having to
-do a "<tt>[lindex&nbsp;...&nbsp;0]</tt>" on the results of an "eval"
+do a "<tt>&#91;lindex&nbsp;...&nbsp;0&#93;</tt>" on the results of an "eval"
 in order to extract a single column result.</p>
 }
 
@@ -576,7 +604,7 @@ sequence.
 
 <blockquote><b>
 proc nocase_compare {a b} {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return [string compare [string tolower $a] [string tolower $b]]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return &#91;string compare &#91;string tolower $a&#93; &#91;string tolower $b&#93;&#93;<br>
 }<br>
 db collate NOCASE nocase_compare<br>
 </b></blockquote>
@@ -607,6 +635,21 @@ METHOD rollback_hook {
 <p>This method registers a callback routine that is invoked just before
 SQLite tries to do a rollback.  The script argument is run without change.</p>
 }
+
+##############################################################################
+METHOD status {
+<p>This method returns status information from the most recently evaluated
+SQL statement.  The status method takes a single argument which should be
+either "steps" or "sorts".  If the argument is "steps", then the method
+returns the number of full table scan steps that the previous SQL statement
+evaluated.  If the argument is "sorts", the method returns the number of
+sort operations.  This information can be used to detect queries that are
+not using indices to speed search or sorting.</p>
+
+<p>The status method is basically a wrapper on the
+[sqlite3_stmt_status()] C-language interface.</p>
+}
+
 
 ##############################################################################
 METHOD update_hook {
@@ -657,5 +700,50 @@ statement is compiled.  The text of the SQL is appended as a single string
 to the command before it is invoked.  This can be used (for example) to
 keep a log of all SQL operations that an application performs.
 </p>
+}
+
+##############################################################################
+METHOD backup {
+
+<p>The "backup" method makes a backup copy of a live database.  The
+command syntax is like this:</p>
+
+<blockquote>
+<i>dbcmd</i>&nbsp;&nbsp;<b>backup</b>&nbsp;&nbsp;?<i>source-database</i>?&nbsp;&nbsp;<i>backup-filename</i>
+</blockquote>
+
+<p>The optional <i>source-database</i> argument tells which database in
+the current connection should be backed up.  The default value is <b>main</b>
+(or, in other words, the primary database file).  To back up TEMP tables
+use <b>temp</b>.  To backup an auxilary database added to the connection
+using the [ATTACH] command, use the name of that database as it was assigned
+in the [ATTACH] command.</p>
+
+<p>The <i>backup-filename</i> is the name of a file into which the backup is
+written.  <i>Backup-filename</i> does not have to exist ahead of time, but if
+it does, it must be a well-formed SQLite database.</p>
+}
+
+##############################################################################
+METHOD restore {
+
+<p>The "restore" method copies the content a separate database file 
+into the current database connection, overwriting any preexisting content.
+The command syntax is like this:</p>
+
+<blockquote>
+<i>dbcmd</i>&nbsp;&nbsp;<b>restore</b>&nbsp;&nbsp;?<i>target-database</i>?&nbsp;&nbsp;<i>source-filename</i>
+</blockquote>
+
+<p>The optional <i>target-database</i> argument tells which database in
+the current connection should be overwritten with new content.  
+The default value is <b>main</b> 
+(or, in other words, the primary database file).  To repopulate the TEMP tables
+use <b>temp</b>.  To overwrite an auxilary database added to the connection
+using the [ATTACH] command, use the name of that database as it was assigned
+in the [ATTACH] command.</p>
+
+<p>The <i>source-filename</i> is the name of a existing well-formed SQLite
+database file from which the content is extracted.</p>
 }
 </tcl>

@@ -45,11 +45,10 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <p>
   Early versions of SQLite were very easy to learn since they only
   supported 5 C/C++ interfaces.  But as SQLite has grown in capability
-  over the years, new C/C++ interfaces have been added so that now there
-  are over 150 distinct APIs.  This can be overwhelming to a programmer
-  new to SQLite.
+  new C/C++ interfaces have been added so that now there
+  are over 150 distinct APIs.  This can be overwhelming to a new programmer.
   Fortunately, most of the C/C++ interfaces in SQLite are very specialized
-  and never need to be used in most applications.  Despite having so many
+  and never need to be used.  Despite having so many
   entry points, the core API is still relatively simple and easy to code to.
   This article aims to provide all of the background information needed to
   easily understand how SQLite works.
@@ -69,8 +68,8 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <tcl>HEADING 1 {Core Objects And Interfaces}</tcl>
 
 <p>
-  The principal function of an SQL database engine is to evaluate statements
-  of SQL.  In order to accomplish this in SQLite, the developer needs
+  The principal task of an SQL database engine is to evaluate statements
+  of SQL.  In order to accomplish this purpose, the developer needs
   to know about two objects:
 </p>
 
@@ -82,8 +81,9 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <p>
   Strictly speaking, the [prepared statement] object is not required since
   the convenience wrapper interfaces, [sqlite3_exec] or
-  [sqlite3_get_table], that encapsulate and hide the prepared statement
-  can be used instead.  Nevertheless, and understanding of
+  [sqlite3_get_table], can be used and these convenience wrappers
+  encapsulate and hide the [prepared statement] object.
+  Nevertheless, an understanding of
   [prepared statements] is needed to make full use of SQLite.
 </p>
 
@@ -103,9 +103,8 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 
 <p>
   The six C/C++ interface routines and two objects listed above form the core
-  functionality of SQLite.  The developer who understands
-  what these APIs and objects
-  do will have a good foundation for using SQLite.
+  functionality of SQLite.  The developer who understands them
+  will have a good foundation for using SQLite.
 </p>
 
 <p>
@@ -131,16 +130,19 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <tr><td valign="top" align="right">[sqlite3_open()]</td>
 <td valign="top">
   This routine 
-  opens a connection to an SQLite database file and return a
+  opens a connection to an SQLite database file and returns a
   [database connection] object.  This is often the first SQLite API
   call that an application makes and is a prerequisite for most other
-  SQLite APIs.
+  SQLite APIs.  Many SQLite interfaces require a pointer to
+  the [database connection] object as their first parameter and can
+  be thought of as methods on the [database connection] object.
+  This routine is the constructor for the [database connection] object.
 </td>
 
 <tr><td valign="top" align="right">[sqlite3_prepare()]</td>
 <td valign="top">
   This routine
-  converts SQL text into a [prepared statement] object and return a pointer
+  converts SQL text into a [prepared statement] object and returns a pointer
   to that object.  This interface requires a [database connection] pointer
   created by a prior call to [sqlite3_open()] and a text string containing
   the SQL statement to be prepared.  This API does not actually evaluate
@@ -262,8 +264,8 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
   function passed into [sqlite3_exec()] is used to process each row of
   the result set.  The [sqlite3_get_table()] is another convenience wrapper
   that does all four of the above steps.  The [sqlite3_get_table()] interface
-  differs from [sqlite3_get_table()] in that it stores the results of queries
-  in help memory rather than invoking a callback.
+  differs from [sqlite3_exec()] in that it stores the results of queries
+  in heap memory rather than invoking a callback.
 </p>
 
 <p>
@@ -291,7 +293,7 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <p>
   After a [prepared statement] has been evaluated by one or more calls to
   [sqlite3_step()], it can be reset in order to be evaluted again by a
-  single call to [sqlite3_reset()].
+  call to [sqlite3_reset()].
   Using [sqlite3_reset()] on an existing [prepared statement] rather
   creating a new [prepared statement] avoids unnecessary calls to
   [sqlite3_prepare()].
@@ -306,7 +308,8 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
   statement more than once.  More often, one wants to evalute similar
   statements.  For example, you might want to evaluate an INSERT statement
   multiple times though with different values to insert.  To accommodate
-  this kind of flexibility, SQLite allows SQL statements to contain parameters
+  this kind of flexibility, SQLite allows SQL statements to contain
+  [parameter | parameters]
   which are "bound" to values prior to being evaluated.  These values can
   later be changed and the same [prepared statement] can be evaluated
   a second time using the new values.
@@ -314,7 +317,7 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 
 <p>
   In SQLite, whereever it is valid to include a string literal, one can use
-  a parameter in one of the following forms:
+  a [parameter] in one of the following forms:
 </p>
 
 <p><ul>
@@ -366,7 +369,7 @@ HEADING 0 {An Introduction To The SQLite C/C++ Interface}
 <p>
   The [sqlite3_create_function()] interface creates new SQL functions - 
   either scalar or aggregate.  The new function implementation typically
-  make use of the following additional interfaces:
+  makes use of the following additional interfaces:
 </p>
 
 <p><ul>

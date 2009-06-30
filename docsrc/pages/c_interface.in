@@ -1087,7 +1087,7 @@ or more threads to access the same <b>sqlite*</b> pointer at the same time.
 
 <p>
 In precompiled SQLite libraries available on the website, the Unix
-versions are compiled with THREADSAFE turned off but the windows
+versions are compiled with THREADSAFE turned off but the Windows
 versions are compiled with THREADSAFE turned on.  If you need something
 different that this you will have to recompile.
 </p>

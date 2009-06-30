@@ -47,7 +47,7 @@ Think of SQLite not as a replacement for
 as a replacement for <a href="http://man.he.net/man3/fopen">fopen()</a></p>
 
 <p>SQLite is a compact library.
-With all features enabled, the library size can be less than 250KiB,
+With all features enabled, the library size can be less than 300KiB,
 depending on compiler optimization settings.  (Some compiler optimizations
 such as aggressive function inlining and loop unrolling can cause the
 object code to be much larger.)  If optional features are omitted, the
@@ -60,10 +60,12 @@ SQLite generally runs faster the more memory
 you give it.  Nevertheless, performance is usually quite good even
 in low-memory environments.</p>
 
-<p>SQLite has a reputation for being very reliable.
-Nearly three-fourths of the source code is devoted purely to testing and
-verification.  An automated test suite runs hundreds of thousands of
-tests involving millions of individual SQL statements and achieves
+<p>SQLite is 
+<a href="testing.html">very carefully tested</a> prior to every
+release and has a reputation for being very reliable.
+Most of the SQLite source code is devoted purely to testing and
+verification.  An automated test suite runs millions of
+tests involving hundreds of millions of individual SQL statements and achieves
 over 99% statement coverage.  SQLite responds gracefully to memory
 allocation failures and disk I/O errors.  Transactions are
 <a href="http://en.wikipedia.org/wiki/ACID">ACID</a>

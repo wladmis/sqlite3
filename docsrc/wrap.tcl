@@ -1,6 +1,8 @@
 #!/usr/bin/tclsh
 #
-# This script processes raw page text into its final form for display.
+# This script processes raw documentation source text into its final form 
+# for display.  The processing actions are described below.
+#
 # Invoke this command as follows:
 #
 #       tclsh wrap.tcl $(DOC) $(SRC) $(DEST) source1.in source2.in ...
@@ -14,20 +16,32 @@
 # Changes made to the source files:
 #
 #     *  An appropriate header is prepended to the file.  
+#
 #     *  Any <title>...</title> in the input is moved into the prepended
 #        header.
+#
 #     *  An appropriate footer is appended.
+#
 #     *  Scripts within <tcl>...</tcl> are evaluated.  Output that
-#        is emitted from these scripts by "puts" appears in place of
-#        the original script.
+#        is emitted from these scripts by "hd_puts" or "hd_resolve"
+#        procedures appears in place of the original script.
+#
 #     *  Hyperlinks within [...] are resolved.
 #
-# 
+# A two-pass algorithm is used.  The first pass collects the names of
+# hyperlink targets, requirements text, and other global information.
+# The second pass uses the data gathered on the first pass to generate
+# the final output.
 #
 set DOC [lindex $argv 0]
 set SRC [lindex $argv 1]
 set DEST [lindex $argv 2]
 set HOMEDIR [pwd]            ;# Also remember our home directory.
+
+# Load the syntax diagram linkage data
+#
+source $DOC/art/syntax/syntax_linkage.tcl
+
 
 # This is the first-pass implementation of procedure that renders
 # hyperlinks.  Do not even bother trying to do anything during the
@@ -61,14 +75,20 @@ proc hd_resolve_one {x} {
   if {[llength $x2]==1} {
     set content $kw
     regsub {\([^)]*\)} $content {} kw
-    regsub -all {[^a-zA-Z0-9_.# -]} $kw {} kw
+    regsub {=.*} $kw {} kw
+    regsub -all {[^a-zA-Z0-9_.#/ -]} $kw {} kw
   } else {
-    regsub -all {[^a-zA-Z0-9_.# -]} $kw {} kw
+    regsub -all {[^a-zA-Z0-9_.#/ -]} $kw {} kw
     set content [string trim [lindex $x2 1]]
   }
-  global hd llink glink
+  global hd llink glink backlink
   if {$hd(enable-main)} {
     set fn $hd(fn-main)
+    if {$hd(fragment)!=""} {
+      set srcurl $fn#$hd(fragment)
+    } else {
+      set srcurl $fn
+    }
     if {[regexp {^[Tt]icket #(\d+)$} $kw all tktid]} {
       set url http://www.sqlite.org/cvstrac/tktview?tn=$tktid
       puts -nonewline $hd(main) \
@@ -79,10 +99,14 @@ proc hd_resolve_one {x} {
     } elseif {[info exists glink($kw)]} {
       puts -nonewline $hd(main) \
         "<a href=\"$hd(rootpath-main)$glink($kw)\">$content</a>"
+    } elseif {[regexp {\.gif$} $kw]} {
+      puts -nonewline $hd(main) \
+        "<img src=\"$hd(rootpath-main)images/$kw\">"
     } else {
       puts stderr "ERROR: unknown hyperlink target: $kw"
       puts -nonewline $hd(main) "<font color=\"red\">$content</font>"
     }
+    lappend backlink($kw) $srcurl
   }
   if {$hd(enable-aux)} {
     if {[regexp {^[Tt]icket #(\d+)$} $kw all tktid]} {
@@ -92,16 +116,20 @@ proc hd_resolve_one {x} {
     } elseif {[info exists glink($kw)]} {
       puts -nonewline $hd(aux) \
         "<a href=\"$hd(rootpath-aux)$glink($kw)\">$content</a>"
+    } elseif {[regexp {\.gif$} $kw]} {
+      puts -nonewline $hd(main) \
+        "<img src=\"$hd(rootpath-aux)images/$kw\">"
     } else {
       puts stderr "ERROR: unknown hyperlink target: $kw"
       puts -nonewline $hd(aux) "<font color=\"red\">$content</font>"
     }
+    lappend backlink($kw) $hd(fn-aux)
   }
 }
 
 
 
-# Record the fact that the keywords given in the argument list should
+# Record the fact that all keywords given in the argument list should
 # cause a jump to the current location in the current file.
 #
 # If only the main output file is open, then all references to the
@@ -131,7 +159,7 @@ proc hd_keywords {args} {
   }
   foreach a $args {
     if {[info exists glink($a)]} {
-      puts stderr "WARNING: duplicate keyword \"$a\""
+      puts stderr "WARNING: duplicate keyword \"$a\" - $glink($a) and $lurl"
     }
     if {$gurl==""} {
       set glink($a) $lurl
@@ -162,10 +190,30 @@ proc hd_fragment {name args} {
 proc hd_puts {text} {
   global hd
   if {$hd(enable-main)} {
-    puts $hd(main) $text
+    set fn $hd(fn-main)
+    puts -nonewline $hd(main) $text
   }
   if {$hd(enable-aux)} {
-    puts $hd(aux) $text
+    set fn $hd(fn-aux)
+    puts -nonewline $hd(aux) $text
+  }
+  
+  # Our pagelink processing based off the globals
+  # llink, glink, and backlink generated during hd_resolve
+  # processing doesn't catch links outputted directly
+  # with hd_puts.  This code attempts to add those links to
+  # our pagelink array.
+  global pagelink
+  set refs [regexp -all -inline {href=\"(.*?)\"} $text]
+  foreach {href ref} $refs {
+    regsub {#.*} $ref {} ref2
+    regsub {http:\/\/www\.sqlite\.org\/} $ref2 {} ref3
+    regsub {\.\.\/} $ref3 {} ref4
+    if {[regexp {^http} $ref4]} continue
+    if {$ref4==""} continue
+    if {[regexp {\.html$} $ref4]} {
+      lappend pagelink($ref4) $fn
+    }
   }
 }
 
@@ -194,6 +242,8 @@ proc hd_open_main {filename} {
   set hd(main) [open $DEST/$filename w]
   set hd(enable-main) 1
   set hd(fragment) {}
+  global pagelink
+  lappend pagelink($filename) $filename
 }
 
 # If $filename is a path from $::DEST to a file, return a path
@@ -224,7 +274,7 @@ proc hd_close_main {} {
 # Open the auxiliary output file.
 #
 # Most documents have only a main file and no auxiliary.  However, some
-# large documents are broken up into smaller pieces were each smaller piece
+# large documents are broken up into smaller pieces where each smaller piece
 # is an auxiliary file.  There will typically be either many auxiliary files
 # or no auxiliary files associated with each main file.
 #
@@ -235,6 +285,8 @@ proc hd_open_aux {filename} {
   set hd(rootpath-aux) [hd_rootpath $filename]
   set hd(aux) [open $DEST/$filename w]
   set hd(enable-aux) 1
+  global pagelink
+  lappend pagelink($filename) $filename
 }
 
 # Close the auxiliary output file
@@ -330,7 +382,7 @@ proc hd_header {title {srcfile {}}} {
      border="0"></a>
     <div><!-- IE hack to prevent disappearing logo--></div>
     <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-    
+
     <table width=100% style="clear:both"><tr><td>
       <div class="se"><div class="sw"><div class="ne"><div class="nw">
       <div class="toolbar">
@@ -345,8 +397,20 @@ proc hd_header {title {srcfile {}}} {
       </div></div></div></div></div>
     </td></tr></table>
   }
+  if {[file exists DRAFT]} {
+    putsin4 $fd {
+      <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+    }
+  }
   if {$srcfile!=""} {
-    set hd(footer) "<hr><small><i>\n"
+    if {[file exists DRAFT]} {
+      set hd(footer) {
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      }
+    } else {
+      set hd(footer) {}
+    }
+    append hd(footer) "<hr><small><i>\n"
     set mtime [file mtime $srcfile]
     set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
     append hd(footer) "This page last modified $date\n"
@@ -356,51 +420,101 @@ proc hd_header {title {srcfile {}}} {
   }
 }
 
-# A procedure to write the common footer found at the bottom of
-# every HTML file.  $srcfile is the name of the file that is the
-# source of the HTML content.  The modification time of this file
-# is used to add the "last modified on" line at the bottom of the
-# file.
+# Insert a bubble syntax diagram into the output.
 #
-proc hd_footer {} {
+proc BubbleDiagram {name {anonymous_flag 0}} {
   global hd
-  
-  hd_puts {<hr><small><i>}
-  set mtime [file mtime $srcfile]
-  set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
-  hd_puts "This page last modified $date"
-  hd_puts {</i></small></div></body></html>}
-}
 
-# The following proc is used to ensure consistent formatting in the 
-# HTML generated by lang.tcl and pragma.tcl.
-#
-proc Syntax {args} {
-  hd_puts {<table cellpadding="10">}
-  foreach {rule body} $args {
-    hd_puts "<tr><td align=\"right\" valign=\"top\">"
-    hd_puts "<i><font color=\"#ff3434\">$rule</font></i>&nbsp;::=</td>"
-    regsub -all < $body {%LT} body
-    regsub -all > $body {%GT} body
-    regsub -all %LT $body {</font></b><i><font color="#ff3434">} body
-    regsub -all %GT $body {</font></i><b><font color="#2c2cf0">} body
-    regsub -all {[]|[*?]} $body {</font></b>&<b><font color="#2c2cf0">} body
-    regsub -all "\n" [string trim $body] "<br>\n" body
-    regsub -all "\n  *" $body "\n\\&nbsp;\\&nbsp;\\&nbsp;\\&nbsp;" body
-    regsub -all {[|,.*()]} $body {<big>&</big>} body
-    regsub -all { = } $body { <big>=</big> } body
-    regsub -all {STAR} $body {<big>*</big>} body
-    ## These metacharacters must be handled to undo being
-    ## treated as SQL punctuation characters above.
-    regsub -all {RPPLUS} $body {</font></b>)+<b><font color="#2c2cf0">} body
-    regsub -all {LP} $body {</font></b>(<b><font color="#2c2cf0">} body
-    regsub -all {RP} $body {</font></b>)<b><font color="#2c2cf0">} body
-    ## Place the left-hand side of the rule in the 2nd table column.
-    hd_puts "<td><b><font color=\"#2c2cf0\">$body</font></b></td></tr>"
+  #if {!$anonymous_flag} {
+  #  hd_resolve "<h4>\[$name:\]</h4>"
+  #}
+  hd_resolve "<h4>\[$name:\]</h4>"
+  if {$hd(enable-main)} {
+    puts $hd(main) "<blockquote>\
+        <img src=\"$hd(rootpath-main)images/syntax/$name.gif\"></img>\
+        </blockquote>"
   }
-  hd_puts {</table>}
+  if {$hd(enable-aux)} {
+    puts $hd(aux) "<blockquote>\
+        <img src=\"$hd(rootpath-aux)images/syntax/$name.gif\"></img>\
+        </blockquote>"
+  }
 }
 
+# Record a requirement.  This procedure is active only for the first
+# pass.  This procedure becomes a no-op for the second pass.  During
+# the second pass, requirements listing report generators can use the
+# data accumulated during the first pass to construct their reports.
+#
+# If the "verbatim" argument is true, then the requirement text is
+# rendered as is.  In other words, the requirement text is assumed to
+# be valid HTML with all hyperlinks already resolved.  If the "verbatim"
+# argument is false (the default) then the requirement text is rendered
+# using hd_render which will find an expand hyperlinks within the text.
+#
+# The "comment" argument is non-binding commentary and explanation that
+# accompanies the requirement.
+#
+proc hd_requirement {id text derivedfrom comment} {
+  global ALLREQ ALLREQ_DERIVEDFROM ALLREQ_COM
+  if {[info exists ALLREQ($id)]} {
+    puts stderr "duplicate requirement label: $id"
+  }
+  set ALLREQ_DERIVEDFROM($id) $derivedfrom
+  set ALLREQ($id) $text
+  set ALLREQ_COM($id) $comment
+}
+
+# Read a block of requirements from an ASCII text file.  Store the
+# information obtained in a global variable named by the second parameter.
+#
+proc hd_read_requirement_file {filename varname} {
+  global hd_req_rdr
+  hd_reset_requirement_reader
+  set in [open $filename]
+  while {![eof $in]} {
+    set line [gets $in]
+    if {[regexp {^(HLR|UNDEF|SYSREQ) +([LHSU]\d+) *(.*)} $line all type rn df]} {
+      hd_add_one_requirement $varname
+      set hd_req_rdr(rn) $rn
+      set hd_req_rdr(derived) $df
+    } elseif {[string trim $line]==""} {
+      if {$hd_req_rdr(body)==""} {
+        set hd_req_rdr(body) $hd_req_rdr(comment)
+        set hd_req_rdr(comment) {}
+      } else {
+        append hd_req_rdr(comment) \n
+      }
+    } else {
+      append hd_req_rdr(comment) $line\n
+    }
+  }
+  hd_add_one_requirement $varname
+  close $in
+  
+}
+proc hd_reset_requirement_reader {} {
+  global hd_req_rdr
+  set hd_req_rdr(rn) {}
+  set hd_req_rdr(comment) {}
+  set hd_req_rdr(body) {}
+  set hd_req_rdr(derived) {}
+}
+proc hd_add_one_requirement {varname} {
+  global hd_req_rdr
+  set rn $hd_req_rdr(rn)
+  if {$rn!=""} {
+    if {$hd_req_rdr(body)==""} {
+      set hd_req_rdr(body) $hd_req_rdr(comment)
+      set hd_req_rdr(comment) {}
+    }
+    set b [string trim $hd_req_rdr(body)]
+    set c [string trim $hd_req_rdr(comment)]
+    set ::${varname}($rn) [list $hd_req_rdr(derived) $b $c]
+    lappend ::${varname}(*) $rn
+  }
+  hd_reset_requirement_reader
+}
 
 # First pass.  Process all files.  But do not render hyperlinks.
 # Merely collect keyword information so that hyperlinks can be
@@ -431,6 +545,7 @@ foreach infile [lrange $argv 3 end] {
 proc hd_keywords {args} {}
 rename hd_resolve {}
 rename hd_resolve_2ndpass hd_resolve
+proc hd_requirement {args} {}
 foreach infile [lrange $argv 3 end] {
   cd $HOMEDIR
   puts "Processing $infile"
@@ -454,16 +569,69 @@ foreach infile [lrange $argv 3 end] {
 # targets.
 #
 hd_open_main doc_keyword_crossref.html
-hd_header {Hyperlink Crossreference} $DOC/wrap.tcl
+hd_header {Keyword Crossreference} $DOC/wrap.tcl
 hd_puts "<ul>"
 foreach x [lsort -dict [array names glink]] {
   set y $glink($x)
   hd_puts "<li>$x - <a href=\"$y\">$y</a></li>"
   lappend revglink($y) $x
 }
-hd_puts "</ul><hr><ul>"
+hd_puts "</ul>"
+hd_close_main
+
+hd_open_main doc_target_crossref.html
+hd_header {Target Crossreference} $DOC/wrap.tcl
+hd_puts "<ul>"
 foreach y [lsort [array names revglink]] {
   hd_puts "<li><a href=\"$y\">$y</a> - [lsort $revglink($y)]</li>"
 }
 hd_puts "</ul>"
 hd_close_main
+
+hd_open_main doc_backlink_crossref.html
+hd_header {Backlink Crossreference} $DOC/wrap.tcl
+hd_puts "<ul>"
+foreach kw [lsort [array names backlink]] {
+  hd_puts "<li>$kw -"
+  set prev {}
+  foreach ref [lsort $backlink($kw)] {
+    if {$ref==$prev} continue
+    set prev $ref
+    hd_puts "  <a href=\"$ref\">$ref</a>"
+  }
+}
+hd_puts "</ul>"
+hd_close_main
+
+hd_open_main doc_pagelink_crossref.html
+hd_header {Pagelink Crossreference} $DOC/wrap.tcl
+hd_puts "<p>Target Page - Which pages reference it.</p>"
+hd_puts "<p>Pages matching (news|changes|releaselog|\[0-9]to\[0-9]|^doc_.*_crossref) are skipped.</p>"
+hd_puts "<ul>"
+foreach y [lsort [array names revglink]] {
+  regsub {#.*} $y {} y2
+  foreach kw [lsort $revglink($y)] {
+    if {[info exists backlink($kw)]} {
+      foreach ref [lsort $backlink($kw)] {
+        regsub {#.*} $ref {} ref2
+        lappend pagelink($y2) $ref2
+      }
+    }
+  }
+}
+foreach y [lsort [array names pagelink]] {
+  if {[regexp {(news|changes|releaselog|[0-9]to[0-9]|^doc_.*_crossref)} $y]} continue
+  hd_puts "<li><a href=\"$y\">$y</a> - "
+  set prev {}
+  foreach ref [lsort $pagelink($y)] {
+    if {$ref==$prev} continue
+    if {$ref==$y} continue
+    if {[regexp {(news|changes|releaselog|[0-9]to[0-9]|^doc_.*_crossref)} $ref]} continue
+    hd_puts "<a href=\"$ref\">$ref</a> "
+    set prev $ref
+  }
+  hd_puts "</li>"
+}
+hd_puts "</ul>"
+hd_close_main
+

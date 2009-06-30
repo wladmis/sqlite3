@@ -32,6 +32,8 @@ doc:	sqlite3.h docdir always
 	rm -rf doc/images
 	cp -r $(DOC)/images doc
 	cp $(SRC)/art/*.gif doc/images
+	mkdir doc/images/syntax
+	cp $(DOC)/art/syntax/*.gif doc/images/syntax
 	cp $(DOC)/rawpages/* doc
 	tclsh $(DOC)/wrap.tcl $(DOC) $(SRC) doc $(DOC)/pages/*.in
 

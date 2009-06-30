@@ -126,7 +126,7 @@ hold all intermediate results of a calculation.</p>
 
 <p>Every SQL statement that SQLite interprets results in a program
 for the virtual machine.  But if you precede the SQL statement with
-the keyword "EXPLAIN" the virtual machine will not execute the
+the keyword [EXPLAIN] the virtual machine will not execute the
 program.  Instead, the instructions of the program will be returned
 like a query result.  This feature is useful for debugging and
 for learning how the virtual machine operates.</p>
@@ -183,7 +183,7 @@ addr  opcode         p1    p2    p3    p4         p5  comment
 }
 </tcl>
 
-<p>All you have to do is add the "EXPLAIN" keyword to the front of the
+<p>All you have to do is add the [EXPLAIN] keyword to the front of the
 SQL statement.  But if you use the ".explain" command in the CLI,
 it will set up the output mode to make the program more easily
 viewable.</p>

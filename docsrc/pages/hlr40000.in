@@ -1,0 +1,31 @@
+<title>SQLite SQL Language Specification</title>
+
+<h1 align="center">
+6.0 SQL Language Specification
+</h1>
+
+<p>
+This document details the [requirements] for the SQL langauge understood
+by SQLite.
+</p>
+<hr>
+
+
+<tcl>
+# Actual requirements text is stored separately.  Read and render it.
+#
+unset -nocomplain REQ
+hd_read_requirement_file $::DOC/req/hlr40000.txt REQ
+foreach id $REQ(*) {
+  hd_fragment $id $id
+  hd_puts "<p><b>$id:</b>\n"
+  hd_resolve [lindex $REQ($id) 1]\n
+  set comment [lindex $REQ($id) 2]
+  if {$comment!=""} {
+    hd_puts "</p>\n<blockquote>\n"
+    hd_resolve $comment\n
+    hd_puts "</blockquote>\n"
+  }
+  hd_puts "\n"
+}
+</tcl>

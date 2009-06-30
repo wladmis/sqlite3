@@ -35,6 +35,9 @@
 **
 **    (5) Executable files are run as CGI.  All other files are delivered
 **        as is.
+**
+**    (6) For SSL support use stunnel and add the -https 1 option on the
+**        httpd command-line.
 */
 #include <stdio.h>
 #include <ctype.h>
@@ -115,6 +118,8 @@ static time_t beginTime;         /* Time when this process starts */
 static int closeConnection = 0;  /* True to send Connection: close in reply */
 static int nRequest = 0;         /* Number of requests processed */
 static int omitLog = 0;          /* Do not make logfile entries if true */
+static int useHttps = 0;         /* True to use HTTPS: instead of HTTP: */
+static char *zHttp = "http";     /* http or https */
 
 /*
 ** Change every space or unprintable character in the zAgent[] string
@@ -172,8 +177,8 @@ static void MakeLogEntry(int a){
     rScale = 1.0/(double)sysconf(_SC_CLK_TCK);
     chdir(zRoot[0] ? zRoot : "/");
     if( (log = fopen(zLogFile,"a"))!=0 ){
-      fprintf(log, "%s %s http://%s%s %s %s %d %d %g %g %g %g %d %d %s\n", 
-          zDate, zRemoteAddr, zHttpHost, zScript, zReferer,
+      fprintf(log, "%s %s %s://%s%s %s %s %d %d %g %g %g %g %d %d %s\n", 
+          zDate, zRemoteAddr, zHttp, zHttpHost, zScript, zReferer,
           zReplyStatus, nIn, nOut,
           rScale*sTms.tms_utime,
           rScale*sTms.tms_stime,
@@ -406,11 +411,11 @@ static void Malfunction(int linenum, const char *zFormat, ...){
 static void Redirect(const char *zPath, int finish){
   StartResponse("302 Temporary Redirect");
   if( zServerPort==0 || zServerPort[0]==0 || strcmp(zServerPort,"80")==0 ){
-    nOut += printf("Location: http://%s%s%s\r\n",
-                   zServerName, zPath, zQuerySuffix);
+    nOut += printf("Location: %s://%s%s%s\r\n",
+                   zHttp, zServerName, zPath, zQuerySuffix);
   }else{
-    nOut += printf("Location: http://%s:%s%s%s\r\n",
-                   zServerName, zServerPort, zPath, zQuerySuffix);
+    nOut += printf("Location: %s://%s:%s%s%s\r\n",
+                   zHttp, zServerName, zServerPort, zPath, zQuerySuffix);
   }
   if( finish ){
     nOut += printf("\r\n");
@@ -419,75 +424,236 @@ static void Redirect(const char *zPath, int finish){
 }
 
 /*
-** This array maps file suffixes into MIME-types
+** Guess the mime-type of a document based on its name.
 */
-static struct Suffix {
+const char *GetMimeType(const char *zName, int nName){
+  const char *z;
+  int i;
+  int first, last;
   int len;
-  char *zSuffix;
-  char *zContentType;
-} suffix[] = {
-  {  5,     ".html",    "text/html" },
-  {  4,     ".htm",     "text/html" },
-  {  4,     ".css",     "text/css"  },
-  {  4,     ".gif",     "image/gif" },
-  {  5,     ".jpeg",    "image/jpeg" },
-  {  4,     ".jpg",     "image/jpeg" },
-  {  4,     ".png",     "image/png"  },
-};
+  char zSuffix[20];
 
-/*
-** Deduce the mime-type of the document to be delivered from its
-** name suffix.  First check the suffix against the mime-types
-** in the suffix[] array defined above.  If no match is found,
-** then check the file named "mimetimes" in the home directory
-** of the server (named by the zHome global variable.)  If that
-** file doesn't exist, or there still is no match, then set the
-** mime-type to text/plain.
-*/
-static char *GetMimeType(
-  const char *z    /* The name of a file for which the mime type is sought */
-){
-  int i;                 /* Loop counter */
-  char *zTypeDbName;     /* Name of the mime-type database file */
-  FILE *in;              /* For reading the mime-type database file */
-  int suflen;            /* Length of a suffix */
-  char zSuffix[100];     /* Text of a suffix */
-  char zType[800];       /* Name of a mime-type in the database file */
-  char zLine[2000];      /* An input line of the mem-type database file */
-
-  /* First check the built-in suffix table
+  /* A table of mimetypes based on file suffixes. 
+  ** Suffixes must be in sorted order so that we can do a binary
+  ** search to find the mime-type
   */
-  for(i=0; i<sizeof(suffix)/sizeof(suffix[0]); i++){
-    suflen = suffix[i].len;
-    if( lenFile>suflen && strcmp(&zFile[lenFile-suflen],suffix[i].zSuffix)==0 ){
-      return suffix[i].zContentType;
-    }
-  }
+  static const struct {
+    const char *zSuffix;       /* The file suffix */
+    int size;                  /* Length of the suffix */
+    const char *zMimetype;     /* The corresponding mimetype */
+  } aMime[] = {
+    { "ai",         2, "application/postscript"            },
+    { "aif",        3, "audio/x-aiff"                      },
+    { "aifc",       4, "audio/x-aiff"                      },
+    { "aiff",       4, "audio/x-aiff"                      },
+    { "arj",        3, "application/x-arj-compressed"      },
+    { "asc",        3, "text/plain"                        },
+    { "asf",        3, "video/x-ms-asf"                    },
+    { "asx",        3, "video/x-ms-asx"                    },
+    { "au",         2, "audio/ulaw"                        },
+    { "avi",        3, "video/x-msvideo"                   },
+    { "bat",        3, "application/x-msdos-program"       },
+    { "bcpio",      5, "application/x-bcpio"               },
+    { "bin",        3, "application/octet-stream"          },
+    { "c",          1, "text/plain"                        },
+    { "cc",         2, "text/plain"                        },
+    { "ccad",       4, "application/clariscad"             },
+    { "cdf",        3, "application/x-netcdf"              },
+    { "class",      5, "application/octet-stream"          },
+    { "cod",        3, "application/vnd.rim.cod"           },
+    { "com",        3, "application/x-msdos-program"       },
+    { "cpio",       4, "application/x-cpio"                },
+    { "cpt",        3, "application/mac-compactpro"        },
+    { "csh",        3, "application/x-csh"                 },
+    { "css",        3, "text/css"                          },
+    { "dcr",        3, "application/x-director"            },
+    { "deb",        3, "application/x-debian-package"      },
+    { "dir",        3, "application/x-director"            },
+    { "dl",         2, "video/dl"                          },
+    { "dms",        3, "application/octet-stream"          },
+    { "doc",        3, "application/msword"                },
+    { "drw",        3, "application/drafting"              },
+    { "dvi",        3, "application/x-dvi"                 },
+    { "dwg",        3, "application/acad"                  },
+    { "dxf",        3, "application/dxf"                   },
+    { "dxr",        3, "application/x-director"            },
+    { "eps",        3, "application/postscript"            },
+    { "etx",        3, "text/x-setext"                     },
+    { "exe",        3, "application/octet-stream"          },
+    { "ez",         2, "application/andrew-inset"          },
+    { "f",          1, "text/plain"                        },
+    { "f90",        3, "text/plain"                        },
+    { "fli",        3, "video/fli"                         },
+    { "flv",        3, "video/flv"                         },
+    { "gif",        3, "image/gif"                         },
+    { "gl",         2, "video/gl"                          },
+    { "gtar",       4, "application/x-gtar"                },
+    { "gz",         2, "application/x-gzip"                },
+    { "hdf",        3, "application/x-hdf"                 },
+    { "hh",         2, "text/plain"                        },
+    { "hqx",        3, "application/mac-binhex40"          },
+    { "h",          1, "text/plain"                        },
+    { "htm",        3, "text/html"                         },
+    { "html",       4, "text/html"                         },
+    { "ice",        3, "x-conference/x-cooltalk"           },
+    { "ief",        3, "image/ief"                         },
+    { "iges",       4, "model/iges"                        },
+    { "igs",        3, "model/iges"                        },
+    { "ips",        3, "application/x-ipscript"            },
+    { "ipx",        3, "application/x-ipix"                },
+    { "jad",        3, "text/vnd.sun.j2me.app-descriptor"  },
+    { "jar",        3, "application/java-archive"          },
+    { "jpeg",       4, "image/jpeg"                        },
+    { "jpe",        3, "image/jpeg"                        },
+    { "jpg",        3, "image/jpeg"                        },
+    { "js",         2, "application/x-javascript"          },
+    { "kar",        3, "audio/midi"                        },
+    { "latex",      5, "application/x-latex"               },
+    { "lha",        3, "application/octet-stream"          },
+    { "lsp",        3, "application/x-lisp"                },
+    { "lzh",        3, "application/octet-stream"          },
+    { "m",          1, "text/plain"                        },
+    { "m3u",        3, "audio/x-mpegurl"                   },
+    { "man",        3, "application/x-troff-man"           },
+    { "me",         2, "application/x-troff-me"            },
+    { "mesh",       4, "model/mesh"                        },
+    { "mid",        3, "audio/midi"                        },
+    { "midi",       4, "audio/midi"                        },
+    { "mif",        3, "application/x-mif"                 },
+    { "mime",       4, "www/mime"                          },
+    { "movie",      5, "video/x-sgi-movie"                 },
+    { "mov",        3, "video/quicktime"                   },
+    { "mp2",        3, "audio/mpeg"                        },
+    { "mp2",        3, "video/mpeg"                        },
+    { "mp3",        3, "audio/mpeg"                        },
+    { "mpeg",       4, "video/mpeg"                        },
+    { "mpe",        3, "video/mpeg"                        },
+    { "mpga",       4, "audio/mpeg"                        },
+    { "mpg",        3, "video/mpeg"                        },
+    { "ms",         2, "application/x-troff-ms"            },
+    { "msh",        3, "model/mesh"                        },
+    { "nc",         2, "application/x-netcdf"              },
+    { "oda",        3, "application/oda"                   },
+    { "ogg",        3, "application/ogg"                   },
+    { "ogm",        3, "application/ogg"                   },
+    { "pbm",        3, "image/x-portable-bitmap"           },
+    { "pdb",        3, "chemical/x-pdb"                    },
+    { "pdf",        3, "application/pdf"                   },
+    { "pgm",        3, "image/x-portable-graymap"          },
+    { "pgn",        3, "application/x-chess-pgn"           },
+    { "pgp",        3, "application/pgp"                   },
+    { "pl",         2, "application/x-perl"                },
+    { "pm",         2, "application/x-perl"                },
+    { "png",        3, "image/png"                         },
+    { "pnm",        3, "image/x-portable-anymap"           },
+    { "pot",        3, "application/mspowerpoint"          },
+    { "ppm",        3, "image/x-portable-pixmap"           },
+    { "pps",        3, "application/mspowerpoint"          },
+    { "ppt",        3, "application/mspowerpoint"          },
+    { "ppz",        3, "application/mspowerpoint"          },
+    { "pre",        3, "application/x-freelance"           },
+    { "prt",        3, "application/pro_eng"               },
+    { "ps",         2, "application/postscript"            },
+    { "qt",         2, "video/quicktime"                   },
+    { "ra",         2, "audio/x-realaudio"                 },
+    { "ram",        3, "audio/x-pn-realaudio"              },
+    { "rar",        3, "application/x-rar-compressed"      },
+    { "ras",        3, "image/cmu-raster"                  },
+    { "ras",        3, "image/x-cmu-raster"                },
+    { "rgb",        3, "image/x-rgb"                       },
+    { "rm",         2, "audio/x-pn-realaudio"              },
+    { "roff",       4, "application/x-troff"               },
+    { "rpm",        3, "audio/x-pn-realaudio-plugin"       },
+    { "rtf",        3, "application/rtf"                   },
+    { "rtf",        3, "text/rtf"                          },
+    { "rtx",        3, "text/richtext"                     },
+    { "scm",        3, "application/x-lotusscreencam"      },
+    { "set",        3, "application/set"                   },
+    { "sgml",       4, "text/sgml"                         },
+    { "sgm",        3, "text/sgml"                         },
+    { "sh",         2, "application/x-sh"                  },
+    { "shar",       4, "application/x-shar"                },
+    { "silo",       4, "model/mesh"                        },
+    { "sit",        3, "application/x-stuffit"             },
+    { "skd",        3, "application/x-koan"                },
+    { "skm",        3, "application/x-koan"                },
+    { "skp",        3, "application/x-koan"                },
+    { "skt",        3, "application/x-koan"                },
+    { "smi",        3, "application/smil"                  },
+    { "smil",       4, "application/smil"                  },
+    { "snd",        3, "audio/basic"                       },
+    { "sol",        3, "application/solids"                },
+    { "spl",        3, "application/x-futuresplash"        },
+    { "src",        3, "application/x-wais-source"         },
+    { "step",       4, "application/STEP"                  },
+    { "stl",        3, "application/SLA"                   },
+    { "stp",        3, "application/STEP"                  },
+    { "sv4cpio",    7, "application/x-sv4cpio"             },
+    { "sv4crc",     6, "application/x-sv4crc"              },
+    { "swf",        3, "application/x-shockwave-flash"     },
+    { "t",          1, "application/x-troff"               },
+    { "tar",        3, "application/x-tar"                 },
+    { "tcl",        3, "application/x-tcl"                 },
+    { "tex",        3, "application/x-tex"                 },
+    { "texi",       4, "application/x-texinfo"             },
+    { "texinfo",    7, "application/x-texinfo"             },
+    { "tgz",        3, "application/x-tar-gz"              },
+    { "tiff",       4, "image/tiff"                        },
+    { "tif",        3, "image/tiff"                        },
+    { "tr",         2, "application/x-troff"               },
+    { "tsi",        3, "audio/TSP-audio"                   },
+    { "tsp",        3, "application/dsptype"               },
+    { "tsv",        3, "text/tab-separated-values"         },
+    { "txt",        3, "text/plain"                        },
+    { "unv",        3, "application/i-deas"                },
+    { "ustar",      5, "application/x-ustar"               },
+    { "vcd",        3, "application/x-cdlink"              },
+    { "vda",        3, "application/vda"                   },
+    { "viv",        3, "video/vnd.vivo"                    },
+    { "vivo",       4, "video/vnd.vivo"                    },
+    { "vrml",       4, "model/vrml"                        },
+    { "wav",        3, "audio/x-wav"                       },
+    { "wax",        3, "audio/x-ms-wax"                    },
+    { "wiki",       4, "application/x-fossil-wiki"         },
+    { "wma",        3, "audio/x-ms-wma"                    },
+    { "wmv",        3, "video/x-ms-wmv"                    },
+    { "wmx",        3, "video/x-ms-wmx"                    },
+    { "wrl",        3, "model/vrml"                        },
+    { "wvx",        3, "video/x-ms-wvx"                    },
+    { "xbm",        3, "image/x-xbitmap"                   },
+    { "xlc",        3, "application/vnd.ms-excel"          },
+    { "xll",        3, "application/vnd.ms-excel"          },
+    { "xlm",        3, "application/vnd.ms-excel"          },
+    { "xls",        3, "application/vnd.ms-excel"          },
+    { "xlw",        3, "application/vnd.ms-excel"          },
+    { "xml",        3, "text/xml"                          },
+    { "xpm",        3, "image/x-xpixmap"                   },
+    { "xwd",        3, "image/x-xwindowdump"               },
+    { "xyz",        3, "chemical/x-pdb"                    },
+    { "zip",        3, "application/zip"                   },
+  };
 
-  /* Next try the "mimetypes" file in the home directory.
-  */
-  zTypeDbName = malloc( strlen(zHome) + 20 );
-  if( zTypeDbName ){
-    sprintf(zTypeDbName,"%s/mimetypes",zHome);
-    in = fopen(zTypeDbName,"r");
-    if( in ){
-      while( fgets(zLine,sizeof(zLine),in) ){
-        if( zLine[0]=='#' ) continue;
-        if( isspace(zLine[0]) ) continue;
-        if( sscanf(zLine,"%98[^ ] %798[^ \n]",zSuffix,zType)!=2 ) continue;
-        suflen = strlen(zSuffix);
-        if( lenFile > suflen && strcmp(&zFile[lenFile-suflen],zSuffix)==0 ){
-          return StrDup(zType);
-        }
+  for(i=nName-1; i>0 && zName[i]!='.'; i--){}
+  z = &zName[i+1];
+  len = nName - i;
+  if( len<sizeof(zSuffix)-1 ){
+    strcpy(zSuffix, z);
+    for(i=0; zSuffix[i]; i++) zSuffix[i] = tolower(zSuffix[i]);
+    first = 0;
+    last = sizeof(aMime)/sizeof(aMime[0]);
+    while( first<=last ){
+      int c;
+      i = (first+last)/2;
+      c = strcmp(zSuffix, aMime[i].zSuffix);
+      if( c==0 ) return aMime[i].zMimetype;
+      if( c<0 ){
+        last = i-1;
+      }else{
+        first = i+1;
       }
-      fclose(in);
     }
-    free(zTypeDbName);
   }
-
-  /* When all else fails, assume a mime type of "text/plain"
-  */
-  return "text/plain";
+  return "application/octet-stream";
 }
 
 /*
@@ -869,6 +1035,9 @@ void ProcessOneRequest(int forceClose){
         SetEnv(cgienv[i].zEnvName,*cgienv[i].pzEnvValue);
       }
     }
+    if( useHttps ){
+      putenv("HTTPS=on");
+    }
 
     /*
     ** Abort with an error if the CGI script is writable by anyone other
@@ -942,7 +1111,7 @@ void ProcessOneRequest(int forceClose){
         if( z[0]=='/' && z[1]=='/' ){
           /* The scheme is missing.  Add it in before redirecting */
           StartResponse("302 Redirect");
-          nOut += printf("Location: http:%s%s\r\n",z,zQuerySuffix);
+          nOut += printf("Location: %s:%s%s\r\n",zHttp,z,zQuerySuffix);
           break; /* DK */
           MakeLogEntry(0);
           return;
@@ -979,7 +1148,7 @@ void ProcessOneRequest(int forceClose){
           }
         }
         StartResponse("302 Redirect");
-        nOut += printf("Location: http://%s",zServerName);
+        nOut += printf("Location: %s://%s",zHttp,zServerName);
         if( strcmp(zServerPort,"80") ){
           nOut += printf(":%s",zServerPort);
         }
@@ -1015,7 +1184,7 @@ void ProcessOneRequest(int forceClose){
     /* If it isn't executable then it
     ** must a simple file that needs to be copied to output.
     */
-    char *zContentType = GetMimeType(zFile);
+    const char *zContentType = GetMimeType(zFile, lenFile);
 
     if( zTmpNam ) unlink(zTmpNam);
     in = fopen(zFile,"r");
@@ -1075,6 +1244,11 @@ int main(int argc, char **argv){
       argc -= 2;
     }else if( strcmp(argv[1],"-logfile")==0 ){
       zLogFile = argv[2];
+      argv += 2;
+      argc -= 2;
+    }else if( strcmp(argv[1],"-https")==0 ){
+      useHttps = atoi(argv[2]);
+      zHttp = useHttps ? "http" : "https";
       argv += 2;
       argc -= 2;
     }else{

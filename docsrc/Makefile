@@ -5,7 +5,7 @@
 
 #### The toplevel directory of the documentation source.
 #
-DOC = ../website/site
+DOC = .
 
 #### The toplevel directory of the program source code.
 #

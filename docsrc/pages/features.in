@@ -18,8 +18,8 @@
     and blobs.  (See <a href="limits.html">limits.html</a>.)
 <li>Small code footprint: 
     <a href="http://www.sqlite.org/cvstrac/wiki?p=SizeOfSqlite">
-    less than 250KiB</a> fully configured or less
-    than 150KiB with optional features omitted.</li>
+    less than 300KiB</a> fully configured or less
+    than 180KiB with optional features omitted.</li>
 <li><a href="speed.html">Faster</a> than popular client/server database
     engines for most common operations.</li>
 <li>Simple, easy to use <a href="c3ref/intro.html">API</a>.</li>
@@ -33,8 +33,9 @@
     that you can easily drop into another project.
 <li><a href="selfcontained.html">Self-contained</a>:
     no external dependencies.</li>
-<li>Cross-platform: Linux (unix), MacOSX, OS/2, Win32 and WinCE are supported
-    out of the box.  Easy to port to other systems.
+<li>Cross-platform: Unix (Linux and Mac OS X), OS/2, and Windows
+    (Win32 and WinCE)
+    are supported out of the box.  Easy to port to other systems.
 <li>Sources are in the <a href="copyright.html">public domain</a>.
     Use for any purpose.</li>
 <li>Comes with a standalone <a href="sqlite.html">command-line interface</a>
@@ -49,7 +50,7 @@
 Rather than using fopen() to write XML or some proprietary format into
 disk files used by your application, use an SQLite database instead.
 You'll avoid having to write and troubleshoot a parser, your data
-will be more easily accessible and cross-platform, your updates
+will be more easily accessible and cross-platform, and your updates
 will be transactional.</p></li>
 
 <li><p><b>Database For Gadgets.</b>

@@ -1,4 +1,5 @@
 <title>SQLite Shared-Cache Mode</title>
+<tcl>hd_keywords {SQLite Shared-Cache Mode}</tcl>
 
 <tcl>
 proc HEADING {level title} {
@@ -182,7 +183,7 @@ a database connection may only be
 used by the thread that called [sqlite3_open()] to create it.
 And a connection could only share cache with another connection in the
 same thread.
-These restrictions were dropped beginning with SQLite version
+These restrictions were dropped beginning with SQLite version 3.5.0.
 </p>
 
 <tcl>HEADING 1 {Shared Cache And Virtual Tables}</tcl>

@@ -165,7 +165,7 @@ The page cache also provides the rollback and atomic commit abstraction
 and takes care of locking of the database file.  The
 B-tree driver requests particular pages from the page cache and notifies
 the page cache when it wants to modify pages or commit or rollback
-changes and the page cache handles all the messy details of making sure
+changes. The page cache handles all the messy details of making sure
 the requests are handled quickly, safely, and efficiently.</p>
 
 <p>The code to implement the page cache is contained in the single C
@@ -180,7 +180,7 @@ In order to provide portability between POSIX and Win32 operating systems,
 SQLite uses an abstraction layer to interface with the operating system.
 The interface to the OS abstraction layer is defined in
 <b>os.h</b>.  Each supported operating system has its own implementation:
-<b>os_unix.c</b> for Unix, <b>os_win.c</b> for windows, and so forth.
+<b>os_unix.c</b> for Unix, <b>os_win.c</b> for Windows, and so forth.
 Each of these operating-specific implements typically has its own
 header file: <b>os_unix.h</b>, <b>os_win.h</b>, etc.
 </p>

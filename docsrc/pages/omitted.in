@@ -26,7 +26,13 @@ proc feature {name desc} {
 feature {FOREIGN KEY constraints} {
   FOREIGN KEY constraints are parsed but are not enforced.
   However, the equivalent constraint enforcement can be achieved
-  using triggers.
+  using triggers.  The SQLite source tree contains 
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.c">
+  source code</a> and 
+  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.README">
+  documentation</a> for a C program that will read an SQLite database,
+  analyze the foreign key constraints, and generate appropriate triggers
+  automatically.
 }
 
 feature {Complete trigger support} {
@@ -42,10 +48,6 @@ feature {Complete ALTER TABLE support} {
   ALTER TABLE command are supported.  Other kinds of ALTER TABLE operations
   such as
   DROP COLUMN, ALTER COLUMN, ADD CONSTRAINT, and so forth are omitted.
-}
-
-feature {Nested transactions} {
-  The current implementation only allows a single active transaction.
 }
 
 feature {RIGHT and FULL OUTER JOIN} {

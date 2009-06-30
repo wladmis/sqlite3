@@ -54,7 +54,7 @@ happen all at once, that either all changes occur or none of them do,
 that two or more processes do not try to access the database
 in incompatible ways at the same time, and that once changes have been
 written they persist until explicitly deleted.  The pager also provides
-an memory cache of some of the contents of the disk file.</p>
+a memory cache of some of the contents of the disk file.</p>
 
 <p>The pager is unconcerned
 with the details of B-Trees, text encodings, indices, and so forth.
@@ -208,7 +208,7 @@ preceding rules will be repeated in bullets:
 <li>A journal is hot if...
     <ul>
     <li>It exists, and</li>
-    <li>It's master journal exists or the master journal name is an
+    <li>Its master journal exists or the master journal name is an
         empty string, and</li>
     <li>There is no RESERVED lock on the corresponding database file.</li>
     </ul>
@@ -320,7 +320,7 @@ The steps are as follows:</p>
     system's  or disk controllers cache) so that if a power failure occurs
     the data will still be there after power is restored.</li>
 <li>Obtain a PENDING lock and then an EXCLUSIVE lock on the database file.
-    If other processes are still have SHARED locks, the writer might have
+    If other processes still have SHARED locks, the writer might have
     to wait until those SHARED locks clear before it is able to obtain
     an EXCLUSIVE lock.</li>
 <li>Write all page modifications currently held in memory out to the
@@ -442,26 +442,26 @@ so they are given no further attention.
 
 <p>
 SQLite uses POSIX advisory locks to implement locking on Unix.  On
-windows it uses the LockFile(), LockFileEx(), and UnlockFile() system
+Windows it uses the LockFile(), LockFileEx(), and UnlockFile() system
 calls.  SQLite assumes that these system calls all work as advertised.  If
 that is not the case, then database corruption can result.  One should
 note that POSIX advisory locking is known to be buggy or even unimplemented
 on many NFS implementations (including recent versions of Mac OS X)
 and that there are reports of locking problems
-for network filesystems under windows.  Your best defense is to not
+for network filesystems under Windows.  Your best defense is to not
 use SQLite for files on a network filesystem.
 </p>
 
 <p>
 SQLite uses the fsync() system call to flush data to the disk under Unix and
-it uses the FlushFileBuffers() to do the same under windows.  Once again,
+it uses the FlushFileBuffers() to do the same under Windows.  Once again,
 SQLite assumes that these operating system services function as advertised.
 But it has been reported that fsync() and FlushFileBuffers() do not always
 work correctly, especially with inexpensive IDE disks.  Apparently some
 manufactures of IDE disks have defective controller chips that report
 that data has reached the disk surface when in fact the data is still
 in volatile cache memory in the disk drive electronics.  There are also
-reports that windows sometimes chooses to ignore FlushFileBuffers() for
+reports that Windows sometimes chooses to ignore FlushFileBuffers() for
 unspecified reasons.  The author cannot verify any of these reports.
 But if they are true, it means that database corruption is a possibility
 following an unexpected power loss.  These are hardware and/or operating

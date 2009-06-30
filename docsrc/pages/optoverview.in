@@ -91,6 +91,7 @@ SYNTAX {
   /expression/ <= /column/
   /column/ IN (/expression-list/)
   /column/ IN (/subquery/)
+  /column/ IS NULL
 }
 PARAGRAPH {
   If an index is created using a statement like this:
@@ -178,6 +179,33 @@ PARAGRAPH {
   although the column can occur on either the left or the right side of
   the *=* operator.
 }
+PARAGRAPH {
+  Suppose the OR clause consists of multiple subterms as follows:
+}
+SYNTAX {
+  /expr1/ OR /expr2/ OR /expr3/
+}
+PARAGRAPH {
+  If every subterm of an OR clause is separately indexable and the
+  transformation to an IN operator described above does not apply,
+  then the OR clause is coded so that it logically works the same as
+  the following:
+}
+SYNTAX {
+  rowid IN (SELECT rowid FROM /table/ WHERE /expr1/
+            UNION SELECT rowid FROM /table/ WHERE /expr2/
+            UNION SELECT rowid FROM /table/ WHERE /expr3/)
+}
+PARAGRAPH {
+  The implemention of the OR clause does not really use subqueries.
+  A more efficient internal mechanism is employed.  The implementation
+  also works even for tables where the "rowid" column name has been 
+  overloaded for other uses and no longer refers to the real rowid.
+  But the essence of the implementation is captured by the statement
+  above:  Separate indices are used to find rowids that satisfy each
+  subterm of the OR clause and then the union of those rowids is used
+  to find all matching rows in the database.
+}
 
 HEADING 1 {The LIKE optimization} like_opt
 
@@ -213,7 +241,7 @@ CODE {
   'a' LIKE 'A'
 }
 PARAGRAPH {
-  By turned on the case_sensitive_like pragma as follows:
+  By turning on the case_sensitive_like pragma as follows:
 }
 CODE {
   PRAGMA case_sensitive_like=ON;
@@ -225,7 +253,7 @@ PARAGRAPH {
   in the lower 127 byte codes of ASCII.  International character sets
   are case sensitive in SQLite unless a user-supplied collating
   sequence is used.  But if you employ a user-supplied collating sequence,
-  the LIKE optimization describe here will never be taken.
+  the LIKE optimization described here will never be taken.
 }
 PARAGRAPH {
   The LIKE operator is case insensitive by default because this is what
@@ -359,7 +387,7 @@ PARAGRAPH {
 }
 PARAGRAPH {
   To help the optimizer get a more accurate estimate of the work involved
-  in using various indices, the user may optional run the ANALYZE command.
+  in using various indices, the user may optionally run the ANALYZE command.
   The ANALYZE command scans all indices of database where there might
   be a choice between two or more indices and gathers statistics on the
   selectiveness of those indices.  The results of this scan are stored
@@ -391,8 +419,19 @@ CODE {
   SELECT z FROM ex2 WHERE +x=5 AND y=6;
 }
 PARAGRAPH {
-  The *+* operator on the *x* column would prevent that term from 
+  The *+* operator on the *x* column will prevent that term from 
   constraining an index.  This would force the use of the ex2i2 index.
+}
+PARAGRAPH {
+  Note that the unary *+* operator also removes 
+  <a href="datatype3.html#affinity">type affinity</a> from
+  an expression, and in some cases this can cause subtle changes in
+  the meaning of an expression.
+  In the example above,
+  if column *x* has <a href="datatype3.html#affinity">TEXT affinity</a>
+  then the comparison "x=5" will be done as text.  But the *+* operator
+  removes the affinity.  So the comparison "+x=5" will compare the text
+  in column *x* with the numeric value 5 and will always be false.
 }
 
 HEADING 1 {Avoidance of table lookups} index_only
@@ -400,7 +439,7 @@ HEADING 1 {Avoidance of table lookups} index_only
 PARAGRAPH {
   When doing an indexed lookup of a row, the usual procedure is to
   do a binary search on the index to find the index entry, then extract
-  the rowid from the index and use that rowid to do a binary search on
+  the [rowid] from the index and use that [rowid] to do a binary search on
   the original table.  Thus a typical indexed lookup involves two
   binary searches.
   If, however, all columns that were to be fetched from the table are

@@ -163,7 +163,7 @@ the type declaration contains one or more of the following strings:
 <blockquote>
 BLOB<br>
 CHAR<br>
-CLOB</br>
+CLOB<br>
 TEXT
 </blockquote>
 

@@ -1,0 +1,27 @@
+<title>SQLite SQL Language Syntax Diagrams</title>
+
+<h1>SQLite SQL Language Syntax Diagrams</h1>
+
+<tcl>
+
+foreach name $syntax_order {
+  hd_fragment $name $name
+  hd_puts "<h4>$name:</h4>"
+  hd_puts "<blockquote>\n"
+  hd_puts "<img src=\"images/syntax/$name.gif\"></img><br></br>"
+  foreach {cx px} $syntax_linkage($name) break
+  if {[llength $px]>0} {
+    hd_puts "\nUsed by:"
+    foreach c $px {
+      hd_puts "&nbsp;&nbsp; <a href=\"#$c\">$c</a>"
+    }
+  }
+  if {[llength $cx]>0} {
+    hd_puts "<br></br>\nReferences:"
+    foreach c $cx {
+      hd_puts "&nbsp;&nbsp; <a href=\"#$c\">$c</a>"
+    }
+  }
+  hd_puts "\n</blockquote>\n\n"
+}
+unset -nocomplain c cx px

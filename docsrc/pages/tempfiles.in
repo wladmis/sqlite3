@@ -98,7 +98,7 @@ atomic commit.
 
 <p>
 If an application puts SQLite in 
-<a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> using
+[PRAGMA locking_mode | exclusive locking mode] using
 the pragma:
 </p>
 
@@ -117,7 +117,7 @@ not deleted until exclusive access mode is exited.</p>
 
 <p>
 Rollback journal creation and deletion is also changed by the
-<a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>.
+[journal_mode pragma].
 The default journaling mode is DELETE, which is the default behavior
 of deleting the rollback journal file at the end of each transaction,
 as described above.  The PERSIST journal mode foregoes the deletion of
@@ -148,7 +148,7 @@ located in the same directory as the main database file
 (the main database file is the database that is identified
 in the original [sqlite3_open()], [sqlite3_open16()], or
 [sqlite3_open_v2()] call that created the [database connection])
-with a randomized suffix.  The master database file contains
+with a randomized suffix.  The master journal file contains
 the names of all of the various attached auxiliary databases
 that were changed during the transaction.  The multi-database
 transaction commits when the master journal file is deleted.
@@ -195,7 +195,7 @@ there are no other active statements on the same database connection then
 no statement journal is created since the ordinary
 rollback journal can be used instead.
 The statement journal is also omitted if an alternative
-<a href="lang_conflict.html">conflict resolution algorithm</a> is
+[ON CONFLICT | conflict resolution algorithm] is
 used.  For example:
 </p>
 
@@ -240,9 +240,8 @@ special properties.
 The TEMP database is always automatically deleted when the
 [database connection] is closed.
 The TEMP database always uses the
-<a href="pragma.html#pragma_synchronous">synchronous=OFF</a> and
-<a href="pragma.html#pragma_journal_mode">journal_mode=PERSIST</a>
-[PRAGMA] settings.
+[synchronous=OFF] and [journal_mode=PERSIST]
+PRAGMA settings.
 And, the TEMP database cannot be used with [DETACH] nor can
 another process [ATTACH] the TEMP database.
 </p>
@@ -467,7 +466,8 @@ for the duration of the command itself.  The size of the temporary
 file will be no larger than the original database.
 </p>
 
-<h2>3.0 The TEMP_STORE Compile-Time Parameter and Pragma</h2>
+<tcl>hd_fragment tempstore; hd_keywords tempstore</tcl>
+<h2>3.0 The SQLITE_TEMP_STORE Compile-Time Parameter and Pragma</h2>
 
 <p>
 The rollback journal, master journal,
@@ -477,45 +477,44 @@ But the other kinds of temporary files might be stored in memory
 only and never written to disk.
 Whether or not temporary files other than the rollback,
 master, and statement journals are written to disk or stored only in memory
-depends on the TEMP_STORE compile-time parameter, the
-<a href="pragma.html#pragma_temp_store">temp_store</a> [PRAGMA],
+depends on the [SQLITE_TEMP_STORE] compile-time parameter, the
+[temp_store pragma],
 and on the size of the temporary file.
 </p>
 
 <p>
-The TEMP_STORE compile-time parameter is a #define whose value is
+The [SQLITE_TEMP_STORE] compile-time parameter is a #define whose value is
 an integer between 0 and 3, inclusive.  The meaning of the
-TEMP_STORE compile-time parameter is as follows:
+[SQLITE_TEMP_STORE] compile-time parameter is as follows:
 </p>
 
 <ol type="1">
 <li value="0">
 Temporary files are always stored on disk regardless of the setting
-of the <a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+of the [temp_store pragma].
 </li>
 <li value="1">
 Temporary files are stored on disk by default but this can be
-overridden by the <a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+overridden by the [temp_store pragma].
 </li>
 <li value="2">
 Temporary files are stored in memory by default but this can be
-overridden by the <a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+overridden by the [temp_store pragma].
 </li>
 <li value="3">
 Temporary files are always stored in memory regardless of the setting
-of the <a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+of the [temp_store pragma].
 </li>
 </ol>
 
 <p>
-The default value of the TEMP_STORE compile-time parameter is 1,
+The default value of the [SQLITE_TEMP_STORE] compile-time parameter is 1,
 which means to store temporary files on disk but provide the option
-of overriding the behavior using the
-<a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+of overriding the behavior using the [temp_store pragma].
 </p>
 
 <p>
-The <a href="pragma.html#pragma_temp_store">temp_store pragma</a> has
+The [temp_store pragma] has
 an integer value which also influences the decision of where to store
 temporary files.  The values of the the temp_store pragma have the
 following meanings:
@@ -524,37 +523,36 @@ following meanings:
 <ol type="1">
 <li value="0">
 Use either disk or memory storage for temporary files as determined
-by the TEMP_STORE compile-time parameter.
+by the [SQLITE_TEMP_STORE] compile-time parameter.
 </li>
 <li value="1">
-If the TEMP_STORE compile-time parameter specifies memory storage for
+If the [SQLITE_TEMP_STORE] compile-time parameter specifies memory storage for
 temporary files, then override that decision and use disk storage instead.
-Otherwise follow the recommendation of the TEMP_STORE compile-time
+Otherwise follow the recommendation of the [SQLITE_TEMP_STORE] compile-time
 parameter.
 </li>
 <li value="2">
-If the TEMP_STORE compile-time parameter specifies disk storage for
+If the [SQLITE_TEMP_STORE] compile-time parameter specifies disk storage for
 temporary files, then override that decision and use memory storage instead.
-Otherwise follow the recommendation of the TEMP_STORE compile-time
+Otherwise follow the recommendation of the [SQLITE_TEMP_STORE] compile-time
 parameter.
 </li>
 </ol>
 
 <p>
-The default setting for the 
-<a href="pragma.html#pragma_temp_store">temp_store pragma</a> is 0,
-which means to following the recommendation of TEMP_STORE compile-time
+The default setting for the [temp_store pragma] is 0,
+which means to following the recommendation of [SQLITE_TEMP_STORE] compile-time
 parameter.
 </p>
 
 <p>
-To reiterate, the TEMP_STORE compile-time parameter an the 
-<a href="pragma.html#pragma_temp_store">temp_store pragma</a> only
+To reiterate, the [SQLITE_TEMP_STORE] compile-time parameter an the 
+[temp_store pragma] only
 influence the temporary files other than the rollback journal
 and the master journal.  The rollback journal and the master
 journal are always written to disk regardless of the settings of
-the TEMP_STORE compile-time parameter and the
-<a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
+the [SQLITE_TEMP_STORE] compile-time parameter and the
+[temp_store pragma].
 </p>
 
 <h2>4.0 Other Temporary File Optimizations</h2>
@@ -564,8 +562,8 @@ SQLite uses a page cache of recently read and written database
 pages.  This page cache is used not just for the main database
 file but also for transient indices and tables stored in temporary
 files.  If SQLite needs to use a temporary index or table and
-the TEMP_STORE compile-time parameter and the
-<a href="pragma.html#pragma_temp_store">temp_store pragma</a> are
+the [SQLITE_TEMP_STORE] compile-time parameter and the
+[temp_store pragma] are
 set to store temporary tables and index on disk, the information
 is still initially stored in memory in the page cache.  The 
 temporary file is not opened and the information is not truly

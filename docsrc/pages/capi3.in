@@ -1,5 +1,20 @@
 <title>C/C++ Interface For SQLite Version 3</title>
 
+
+<font color="#7f001f"><p>
+<b>Note:</b>
+This document was written in 2004 as a guide to helping programmers
+move from using SQLite version 2 to SQLite version 3.  The information
+in this document is still essentially correct, however there have been
+many changes and enhancements over the years.  We recommend that the
+following documents be used instead:
+<ul>
+<li><a href="cintro.html">An Introduction To The SQLite C/C++ Interface</a></li>
+<li><a href="c3ref/intro.html">SQLite C/C++ Reference Guide</a></li>
+</ul>
+</p>
+</font>
+
 <h2>C/C++ Interface For SQLite Version 3</h2>
 
 <h3>1.0 Overview</h3>
@@ -176,7 +191,7 @@ The SQL statement is a UTF-8 string for sqlite3_prepare().
 The sqlite3_prepare16() works the same way except
 that it expects a UTF-16 string as SQL input.
 Only the first SQL statement in the input string is compiled.
-The fourth parameter is filled in with a pointer to the next (uncompiled)
+The fifth parameter is filled in with a pointer to the next (uncompiled)
 SQLite statement in the input string, if any.
 The sqlite3_finalize() routine deallocates a prepared SQL statement.
 All prepared statements must be finalized before the database can be

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="Windows-1252"?>
 <title>SQLite Older News</title>
 
 <tcl>
@@ -9,6 +10,194 @@ proc newsitem {date title text} {
   hd_resolve "<p>$txt</p>"
   hd_puts "<hr width=\"50%\">"
 }
+newsitem {2008-Dec-16} {Version 3.6.7} {
+  SQLite [version 3.6.7] contains a major cleanup of the Unix driver,
+  and support for the new Proxy Locking mechanism on MacOSX.  Though
+  the Unix driver is reorganized, its functionality is the same and so
+  applications should not notice a difference.
+}
+
+newsitem {2008-Nov-26} {Version 3.6.6.2} {
+  This release fixes a bug that was introduced into SQLite [version 3.6.6]
+  and which seems like it might be able to cause database corruption.  This
+  bug was detected during stress testing.  It has not been seen in the wild.
+  An analysis of the problem suggests that the bug might be able to cause
+  database corruption, however focused efforts to find a real-world test
+  cases that actually causes database corruption have so far been unsuccessful.
+  Hence, the likelihood of this bug causing problems is low.  Nevertheless,
+  we have decided to do an emergency branch release out of an abundance of
+  caution.
+
+  The [version 3.6.6.2] release also fixes a obscure memory leak that
+  can occur following a disk I/O error.
+}
+
+newsitem {2008-Nov-22} {Version 3.6.6.1} {
+  This release fixes a bug that was introduced into SQLite [version 3.6.4]
+  and that can cause database corruption in obscure cases.  This bug has
+  never been seen in the wild; it was first detected by internal stress
+  tests and required substantial analysis before it could be shown to 
+  potentially lead to corruption.  So we feel that SQLite versions 3.6.4,
+  3.6.5, and 3.6.6 are safe to use for development work.  But upgrading
+  to this patch release or later is recommended prior to deploying
+  products that incorporate SQLite.
+
+  We have taken the unusual step of issuing a patch release in order to
+  get the fix for this bug into circulation quickly.  SQLite version 3.6.7
+  will continue on its normal path of development with an anticipated
+  release in mid December.  
+}
+  
+
+newsitem {2008-Nov-19} {Version 3.6.6} {
+  SQLite [version 3.6.5] is released.  This is a quick turn-around release
+  that fixes a bug in virtual tables and FTS3 that snuck into
+  [version 3.6.5].  This release also adds the new
+  [sqlite3_pcache_methods | application-defined page cache] mechanism.
+}
+
+newsitem {2008-Nov-12} {Version 3.6.5} {
+  SQLite [version 3.6.5] is released.  There are various minor feature
+  enhancements and numerous obscure bug fixes. 
+  The [version 3.6.5|change log] contains the details.  Upgrading is
+  optional.
+}
+
+newsitem {2008-Nov-01} {Bloomberg Joins SQLite Consortium} {
+  The SQLite developers are honored to announce that
+  <a href="http://www.bloomberg.com/">Bloomberg</a> has joined the
+  [SQLite Consortium].
+}
+
+newsitem {2008-Oct-15} {Version 3.6.4} {
+  SQLite version 3.6.4 adds new features designed to help applications
+  detect when indices are not being used on query.  There are also some
+  important performance improvements.  Upgrading is optional.
+}
+
+newsitem {2008-Sep-22} {Version 3.6.3} {
+  SQLite version 3.6.3 fixes a bug in SELECT DISTINCT that was introduced
+  by the previous version.  No new features are added.  Upgrading is
+  recommended for all applications that make use of DISTINCT.
+}
+
+newsitem {2008-Aug-30} {Version 3.6.2} {
+  SQLite version 3.6.2 contains rewrites of the page-cache subsystem and
+  the procedures for matching identifiers to table columns in SQL statements.
+  These changes are designed to better modularize the code and make it more
+  maintainable and reliable moving forward.  Nearly 5000 non-comment lines 
+  of core code (about 11.3%) have changed
+  from the previous release.  Nevertheless, there should be no
+  application-visible changes, other than bug fixes.
+}
+
+newsitem {2008-Aug-06} {Version 3.6.1} {
+  SQLite version 3.6.1 is a stabilization and performance enhancement
+  release.  
+}
+
+newsitem {2008-July-16} {Version 3.6.0 beta} {
+  Version 3.6.0 makes changes to the [sqlite3_vfs | VFS] object in order
+  to make SQLite more easily portable to a wider variety of platforms.
+  There are potential incompatibilities with some legacy applications.
+  See the [35to36 | 35to36.html] document for details.
+
+  Many new interfaces are introduced in version 3.6.0.  The code is
+  very well tested and is appropriate for use in stable systems.  We
+  have attached the "beta" designation only so that we can make tweaks to
+  the new interfaces in the next release without having to declare an
+  incompatibility.
+}
+
+newsitem {2008-May-12} {Version 3.5.9} {
+  Version 3.5.9 adds a new experimental [PRAGMA]: [journal_mode].
+  Setting the journal mode to PERSIST can provide performance improvement
+  on systems where deleting a file is expective.  The PERSIST journal
+  mode is still considered experimental and should be used with caution
+  pending further testing.
+
+  Version 3.5.9 is intended to be the last stable release prior to
+  version 3.6.0.  Version 3.6.0 will make incompatible changes to the
+  [sqlite3_vfs] VFS layer in order to address deficiencies in the original
+  design.  These incompatibilities will only effect programmers who
+  write their own custom VFS layers (typically embedded device builders).
+  The planned VFS changes will be much smaller
+  than the changes that occurred on the 
+  [34to35 | 3.4.2 to 3.5.0 transaction] that occurred last
+  September.
+
+  This release of SQLite is considered stable and ready for production use.
+}
+
+newsitem {2008-Apr-16} {Version 3.5.8} {
+  Version 3.5.8 includes some important new performance optimizations
+  in the virtual machine code generator, including constant subexpression
+  factoring and common subexpression elimination.  This release also
+  creates new public interfaces:
+  [sqlite3_randomness()] provides access to SQLite's internal
+  pseudo-random number generator, [sqlite3_limit()] allows size
+  limits to be set at run-time on a per-connection basis, and
+  [sqlite3_context_db_handle()] is a convenience routine that allows
+  an application-defined SQL function implementation to retrieve
+  its [database connection] handle.
+
+  This release of SQLite is considered stable and ready for production use.
+}
+
+newsitem {2008-Mar-17} {Version 3.5.7} {
+  Version 3.5.7 fixes several minor and obscure bugs, especially 
+  in the autoconf-generated makefile.  Upgrading is optional.
+  This release of SQLite is considered stable and ready for production use.
+}
+
+newsitem {2008-Feb-6} {Version 3.5.6} {
+  Version 3.5.6 fixes a minor regression in 3.5.5 - a regression that
+  had nothing to do with the massive change ove the virtual machine
+  to a register-based design.
+  No problems have been reported with the new virtual machine.  This
+  release of SQLite is considered stable and ready for production use.
+}
+
+newsitem {2008-Jan-31} {Version 3.5.5} {
+  Version 3.5.5 changes over 8% of the core source code of SQLite in order
+  to convert the internal virtual machine from a stack-based design into
+  a register-based design.  This change will allow future optimizations
+  and will avoid an entire class of stack overflow bugs that have caused
+  problems in the past.  Even though this change is large, extensive testing
+  has found zero errors in the new virtual machine and so we believe this
+  to be a very stable release.
+}
+
+newsitem {2007-Dec-14} {Version 3.5.4} {
+  Version 3.5.4 fixes an long-standing but obscure bug in UPDATE and
+  DELETE which might cause database corruption.  (See ticket #2832.)
+  Upgrading is recommended for all users.
+
+  This release also brings the processing of ORDER BY statements into
+  compliance with standard SQL.  This could, in theory, cause problems
+  for existing applications that depend on the older, buggy behavior.
+  See ticket #2822 for additional information.
+}
+
+newsitem {2007-Dec-12} {SQLite Consortium Announced} {
+  The <a href="consortium.html">SQLite Consortium</a> was launched
+  today with <a href="http://www.mozilla.org/">Mozilla</a> and
+  <a href="http://www.symbian.com/">Symbian</a> as charter members.
+  As noted in the <a href="pressrelease-20071212.html">press release</a>,
+  the Consortium's goal is to promote the continuing vitality and
+  independence of SQLite.  
+}
+newsitem {2007-Nov-27} {Version 3.5.3} {
+  This is an incremental release that fixes several minor problems.
+  Upgrading is optional.  If Version 3.5.2 or 3.5.1 is working fine
+  for you, then there is no pressing need to change to 3.5.3.
+
+  The prebuilt binaries and the amalgamation found on the 
+  <a href="download.html">download</a> page include the FTS3 fulltext
+  search extension module.  We are doing this on an experimental
+  basis and are not promising to provide prebuilt binaries with
+  FTS3 in the future.
+}
 
 newsitem {2007-Nov-05} {Version 3.5.2} {
   This is an incremental release that fixes several minor problems,
@@ -16,7 +205,7 @@ newsitem {2007-Nov-05} {Version 3.5.2} {
   Upgrading is optional.
 
   The experimental compile-time option
-  SQLITE_OMIT_MEMORY_ALLOCATION is no longer supported.  On the other
+  [omitfeatures | SQLITE_OMIT_MEMORY_ALLOCATION] is no longer supported.  On the other
   hand, it is now possible to compile SQLite so that it uses a static
   array for all its dynamic memory allocation needs and never calls
   malloc.  Expect to see additional radical changes to the memory 
@@ -195,7 +384,7 @@ newsitem {2006-Jun-19} {New Book About SQLite} {
 
 
 newsitem {2006-Jun-6} {Version 3.3.6} {
-  Changes include improved tolerance for windows virus scanners
+  Changes include improved tolerance for Windows virus scanners
   and faster :memory: databases.  There are also fixes for several
   obscure bugs.  Upgrade if you are having problems.
 }

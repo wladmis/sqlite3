@@ -202,7 +202,7 @@ engine instead of SQLite.  SQLite will work over a network filesystem,
 but because of the latency associated with most network filesystems,
 performance will not be great.  Also, the file locking logic of
 many network filesystems implementation contains bugs (on both Unix
-and windows).  If file locking does not work like it should,
+and Windows).  If file locking does not work like it should,
 it might be possible for two or more client programs to modify the
 same part of the same database at the same time, resulting in 
 database corruption.  Because this problem results from bugs in
@@ -225,17 +225,14 @@ engine instead of SQLite.</p>
 
 <li><p><b>Very large datasets</b></p>
 
-<p>When you start a transaction in SQLite (which happens automatically
-before any write operation that is not within an explicit BEGIN...COMMIT)
-the engine has to allocate a bitmap of dirty pages in the disk file to
-help it manage its rollback journal.  SQLite needs 256 bytes of RAM for
-every 1MiB of database (assuming a 1024-byte page size: less memory is
-used with larger page sizes, of course).  
-For smaller databases, the amount of memory
-required is not a problem, but when database begins to grow into the
-multi-gigabyte range, the size of the bitmap can get quite large.  If
-you need to store and modify more than a few dozen GB of data, you should
-consider using a different database engine.
+<p>With the default page size of 1024 bytes, an SQLite database is
+limited in size to 2 tebibytes (2<sup><small>41</small></sup> bytes).
+And even if it could handle larger databases, SQLite stores the entire
+database in a single disk file and many filesystems limit the maximum
+size of files to something less than this.  So if you are contemplating
+databases of this magnitude, you would do well to consider using a
+client/server database engine that spreads its content across multiple
+disk files, and prehaps across multiple volumes.
 </p>
 </li>
 

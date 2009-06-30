@@ -27,8 +27,9 @@ library.   The only required C library functions called are:
 </ul>
 
 <p>
-SQLite can be configured at compile-time to use a static
-buffer in place of calling malloc for the memory it needs.
+SQLite can be configured at start-time to 
+[memsys5 | use a static buffer in place of calling malloc()]
+for the memory it needs.
 The date and time SQL functions provided by SQLite require
 some additional C library support, but those functions can
 be also be omitted from the build using compile-time options.
@@ -36,15 +37,26 @@ be also be omitted from the build using compile-time options.
 
 <p>
 Communications between SQLite and the operating system and disk are
-mediated through an interchangable Virtual File System (VFS) layer.
-VFS modules for Unix (linux and MacOSX), OS/2, Win32, and WinCE are
-provided in the source tree.  It is a simple matter to devise an
-alternative VFS for embedded devices. 
+mediated through an interchangable 
+[sqlite3_vfs | Virtual File System (VFS)] layer.
+VFS modules for Unix (Linux and Mac OS X), OS/2, and Windows (Win32 and WinCE)
+are provided in the source tree.  It is a simple matter to devise an
+alternative VFS for embedded devices.
+</p>
+
+<p>
+For safe operation in multi-threaded environments, SQLite requires
+the use of mutexes.  Appropriate mutex libraries are linked automatically
+for Win32 and POSIX platforms.  For other systems, mutex primitives
+can be added at start-time using the 
+[sqlite3_config]([SQLITE_CONFIG_MUTEX],...) interface.
+Mutexes are only required if SQLite is
+used by more than one thread at a time.
 </p>
 
 <p>
 The SQLite source code is available as an
-"amalgamation" - a single large C source code file.
+"[amalgamation]" - a single large C source code file.
 Projects that want to include SQLite can do so simply
 by dropping this one source file (named "sqlite3.c") and
 its corresponding header ("sqlite3.h") into their source
