@@ -13,7 +13,7 @@ Source1: %name-docsrc.tar
 Patch: %name-%version-%release.patch
 
 BuildRequires(Pre): tcl-devel
-BuildRequires: gcc-c++ libreadline-devel
+BuildRequires: libreadline-devel
 
 %description
 SQLite is a C library that implements an SQL database engine.
@@ -90,6 +90,8 @@ embedded controllers.
 %patch -p1
 
 %build
+export TCLLIBDIR=%_tcllibdir
+export TCLDATADIR=%_tcldatadir/%name
 export CFLAGS=" -DSQLITE_ENABLE_FTS3=1 "
 autoreconf -i
 %configure \
@@ -110,6 +112,7 @@ install -pD -m755 lemon %buildroot%_bindir/lemon
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
 %define pkgdocdir %_docdir/sqlite-3.5
+mkdir -p %buildroot%pkgdocdir
 cp -a docsrc/doc %buildroot%pkgdocdir/html
 install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 
@@ -141,8 +144,7 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %dir %_docdir/lemon
 %_docdir/lemon/lemon.html
 %_bindir/lemon
-%_man1dir/lemon.*
-%_datadir/lemon/
+%_datadir/lemon
 
 %changelog
 * Tue Jun 30 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.16-alt1

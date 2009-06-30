@@ -113,6 +113,7 @@ TCLSH_CMD = @TCLSH_CMD@
 # Where do we want to install the tcl plugin
 #
 TCLLIBDIR = @TCLLIBDIR@
+TCLDATADIR = @TCLDATADIR@
 
 # The suffix used on shared libraries.  Ex:  ".dll", ".so", ".dylib"
 #
@@ -824,9 +825,10 @@ pkgIndex.tcl:
 	echo 'package ifneeded sqlite3 $(RELEASE) [list load $(TCLLIBDIR)/libtclsqlite3.so sqlite3]' > $@
 tcl_install:	lib_install libtclsqlite3.la pkgIndex.tcl
 	$(INSTALL) -d $(DESTDIR)$(TCLLIBDIR)
+	$(INSTALL) -d $(DESTDIR)$(TCLDATADIR)
 	$(LTINSTALL) libtclsqlite3.la $(DESTDIR)$(TCLLIBDIR)
 	rm -f $(DESTDIR)$(TCLLIBDIR)/libtclsqlite3.la $(DESTDIR)$(TCLLIBDIR)/libtclsqlite3.a
-	$(INSTALL) -m 0644 pkgIndex.tcl $(DESTDIR)$(TCLLIBDIR)
+	$(INSTALL) -m 0644 pkgIndex.tcl $(DESTDIR)$(TCLDATADIR)
 
 clean:	
 	rm -f *.lo *.la *.o sqlite3$(TEXE) libsqlite3.la

@@ -158,7 +158,15 @@ if test "x${TCLLIBDIR+set}" != "xset" ; then
   done
   TCLLIBDIR="${TCLLIBDIR}/sqlite3"
 fi
-
+AC_ARG_VAR([TCLDATADIR], [Where to install tcl plugin])
+if test "x${TCLDATADIR+set}" != "xset" ; then
+  TCLDATADIR='$(datadir)'
+  for i in `echo 'puts stdout $auto_path' | ${TCLSH_CMD}` ; do
+    TCLDATADIR=$i
+    break
+  done
+  TCLDATADIR="${TCLDATADIR}/sqlite3"
+fi
 
 #########
 # Set up an appropriate program prefix
