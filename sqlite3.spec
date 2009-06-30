@@ -1,44 +1,62 @@
 Name: sqlite3
-Version: 3.5.9
-Release: alt3
-
+Version: 3.6.16
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
-
 URL: http://www.sqlite.org/
+
+Requires: lib%name = %version-%release
+
 Source0: sqlite-%version.tar
 Source1: %name-docsrc.tar
 Patch: %name-%version-%release.patch
 
-Requires: lib%name = %version-%release
-
-# Automatically added by buildreq on Sat May 24 2008
 BuildRequires: gcc-c++ gcc-fortran libreadline-devel tcl-devel
+
+%description
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
 
 %package -n lib%name
 Summary: An Embeddable SQL Database Engine (shared library)
 Group: System/Libraries
+
+%description -n lib%name
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
 
 %package -n lib%name-devel
 Summary: An Embeddable SQL Database Engine (header files)
 Group: Development/Databases
 Requires: lib%name = %version-%release
 
+%description -n lib%name-devel
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
+
 %package -n lib%name-devel-static
 Summary: An Embeddable SQL Database Engine (static library)
 Group: Development/Databases
 Requires: lib%name-devel = %version-%release
+
+%description -n lib%name-devel-static
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
 
 %package tcl
 Summary: An Embeddable SQL Database Engine (TCL bindings)
 Group: Development/Tcl
 Requires: lib%name = %version-%release
 
-%package fts3
-Summary: Full Text Search backend for the SQLite database engine
-Group: Development/Databases
-Requires: lib%name = %version-%release
+%description tcl
+SQLite is a C library that implements an SQL database engine.
+Programs that link with the SQLite library can have SQL database
+access without running a separate RDBMS process.
 
 %package doc
 Summary: An Embeddable SQL Database Engine (documentation)
@@ -46,48 +64,14 @@ Group: Development/Documentation
 Conflicts: %name < 3.3.8-alt1
 BuildArch: noarch
 
-%package -n lemon
-Summary: The Lemon Parser Generator
-Group: Development/Other
-
-%description
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-%description -n lib%name
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-%description -n lib%name-devel
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-%description -n lib%name-devel-static
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-%description tcl
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-%description fts3
-SQLite is a C library that implements an SQL database engine.
-Programs that link with the SQLite library can have SQL database
-access without running a separate RDBMS process.
-
-The fts3 loadable module implements full text search, see
-http://www.sqlite.org/cvstrac/wiki?p=FtsOne
-http://www.sqlite.org/cvstrac/wiki?p=FtsTwo
-
 %description doc
 SQLite is a C library that implements an SQL database engine.
 Programs that link with the SQLite library can have SQL database
 access without running a separate RDBMS process.
+
+%package -n lemon
+Summary: The Lemon Parser Generator
+Group: Development/Other
 
 %description -n lemon
 Lemon is an LALR(1) parser generator for C or C++. It does the same
@@ -103,38 +87,29 @@ embedded controllers.
 %prep
 %setup -q -n sqlite-%version -a1
 %patch -p1
-rm aclocal.m4 config.guess config.sub configure ltmain.sh
 
 %build
 autoreconf -i
-# maybe add -lhistory; cf. [devel] libreadline add_history
-%configure --enable-threadsafe --enable-readline --with-readline-lib=-lreadline --disable-amalgamation --enable-load-extension
-%make_build all libtcl%name.la fts3.la
+%configure \
+	--enable-threadsafe \
+	--disable-amalgamation \
+	--enable-load-extension
+
+%make_build all
 
 make -C docsrc DOC=. SRC=..
 
-%def_with test
-%if_with test
-# XXX src/main.c leaks due to SQLITE_ENABLE_FTS3
-rm -fv test/malloc6.test test/mallocG.test
-make test
-%endif
-
 %install
-%make_install install tcl_install fts3_install DESTDIR=%buildroot
+%make_install install tcl_install DESTDIR=%buildroot
+
 install -pD -m644 %name.1 %buildroot%_man1dir/%name.1
 
 install -pD -m755 lemon %buildroot%_bindir/lemon
-install -pD -m644 lemon.1 %buildroot%_man1dir/lemon.1
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
 %define pkgdocdir %_docdir/sqlite-3.5
-install -pD -m644 COPYING %buildroot%pkgdocdir/COPYING
 cp -a docsrc/doc %buildroot%pkgdocdir/html
 install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
-
-%post -n lib%name -p %post_ldconfig
-%postun -n lib%name -p %postun_ldconfig
 
 %files
 %_bindir/%name
@@ -142,14 +117,11 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 
 %files -n lib%name
 %_libdir/lib%name.so.?*
-%dir %pkgdocdir
-%pkgdocdir/COPYING
 
 %files -n lib%name-devel
 %_includedir/sqlite3.h
 %_includedir/sqlite3ext.h
 %_libdir/lib%name.so
-#_libdir/lib%name.la
 %_pkgconfigdir/%name.pc
 
 %files -n lib%name-devel-static
@@ -157,29 +129,23 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 
 %files tcl
 %_tcllibdir/libtcl%name.so*
-#_tcllibdir/libtcl%name.a
-#_tcllibdir/libtcl%name.la
 %dir %_tcldatadir/sqlite3
 %_tcldatadir/sqlite3/pkgIndex.tcl
 
-%files fts3
-%dir %_libdir/sqlite3
-%_libdir/sqlite3/fts3.so
-#_libdir/sqlite3/fts3.a
-#_libdir/sqlite3/fts3.la
-
 %files doc
-%dir %pkgdocdir
-%pkgdocdir/html
+%pkgdocdir
 
 %files -n lemon
+%dir %_docdir/lemon
+%_docdir/lemon/lemon.html
 %_bindir/lemon
 %_man1dir/lemon.*
 %_datadir/lemon/
-%dir %_docdir/lemon
-%_docdir/lemon/lemon.html
 
 %changelog
+* Tue Jun 30 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.16-alt1
+- 3.6.16
+
 * Sun Oct 12 2008 Alexey Tourbin <at@altlinux.ru> 3.5.9-alt3
 - backported from cvs:
   + fix for DISTINCT on indexes (RH#463061, deb#500792)
