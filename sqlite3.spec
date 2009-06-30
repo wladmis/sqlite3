@@ -92,7 +92,7 @@ embedded controllers.
 %build
 export TCLLIBDIR=%_tcllibdir
 export TCLDATADIR=%_tcldatadir/%name
-export CFLAGS=" -DSQLITE_ENABLE_FTS3=1 "
+export CFLAGS=" -DSQLITE_CORE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_FTS3=1 "
 autoreconf -i
 %configure \
 	--enable-threadsafe \
