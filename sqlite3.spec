@@ -113,7 +113,7 @@ install -pD -m644 %name.1 %buildroot%_man1dir/%name.1
 install -pD -m755 lemon %buildroot%_bindir/lemon
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
-%define pkgdocdir %_docdir/sqlite-3.5
+%define pkgdocdir %_docdir/%name
 mkdir -p %buildroot%pkgdocdir
 cp -a docsrc/doc %buildroot%pkgdocdir/html
 install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
