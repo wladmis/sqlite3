@@ -96,4 +96,24 @@ do_test delete2-1.11 {
   }
 } {goodbye id.2 again id.3}
 
+do_test delete2-2.1 {
+  execsql {
+    CREATE TABLE t1(a, b);
+    CREATE TABLE t2(c, d);
+    INSERT INTO t1 VALUES(1, 2);
+    INSERT INTO t2 VALUES(3, 4);
+    INSERT INTO t2 VALUES(5, 6);
+  }
+} {}
+do_test delete2-2.2 {
+  set res [list]
+  db eval {
+    SELECT CASE WHEN c = 5 THEN b ELSE NULL END AS b, c, d FROM t1, t2
+  } {
+    db eval {DELETE FROM t1}
+    lappend res $b $c $d
+  }
+  set res
+} {{} 3 4 {} 5 6}
+
 finish_test

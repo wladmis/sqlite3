@@ -112,7 +112,7 @@ int sqlite3_complete(const char *zSql){
      /* State:       **  SEMI  WS  OTHER EXPLAIN  CREATE  TEMP  TRIGGER  END  */
      /* 0   START: */ {    0,  0,     1,      2,      3,    1,       1,   1,  },
      /* 1  NORMAL: */ {    0,  1,     1,      1,      1,    1,       1,   1,  },
-     /* 2 EXPLAIN: */ {    0,  2,     1,      1,      3,    1,       1,   1,  },
+     /* 2 EXPLAIN: */ {    0,  2,     2,      1,      3,    1,       1,   1,  },
      /* 3  CREATE: */ {    0,  3,     1,      1,      1,    3,       4,   1,  },
      /* 4 TRIGGER: */ {    5,  4,     4,      4,      4,    4,       4,   4,  },
      /* 5    SEMI: */ {    5,  5,     4,      4,      4,    4,       4,   6,  },
@@ -258,11 +258,17 @@ int sqlite3_complete16(const void *zSql){
   char const *zSql8;
   int rc = SQLITE_NOMEM;
 
+#ifndef SQLITE_OMIT_AUTOINIT
+  rc = sqlite3_initialize();
+  if( rc ) return rc;
+#endif
   pVal = sqlite3ValueNew(0);
   sqlite3ValueSetStr(pVal, -1, zSql, SQLITE_UTF16NATIVE, SQLITE_STATIC);
   zSql8 = sqlite3ValueText(pVal, SQLITE_UTF8);
   if( zSql8 ){
     rc = sqlite3_complete(zSql8);
+  }else{
+    rc = SQLITE_NOMEM;
   }
   sqlite3ValueFree(pVal);
   return sqlite3ApiExit(0, rc);

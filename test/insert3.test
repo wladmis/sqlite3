@@ -166,6 +166,40 @@ ifcapable bloblit {
     }
   } {{} 4.3 hi}
 }
+
+foreach tab [db eval {SELECT name FROM sqlite_master WHERE type = 'table'}] {
+  db eval "DROP TABLE $tab"
+}
 db close
+sqlite3 db test.db
+
+#-------------------------------------------------------------------------
+# While developing tests for a different feature (savepoint) the following
+# sequence was found to cause an assert() in btree.c to fail. These
+# tests are included to ensure that that bug is fixed.
+#
+do_test insert3-4.1 {
+  execsql { 
+    CREATE TABLE t1(a, b, c);
+    CREATE INDEX i1 ON t1(a, b);
+    BEGIN;
+    INSERT INTO t1 VALUES(randstr(10,400),randstr(10,400),randstr(10,400));
+  }
+  set r "randstr(10,400)"
+  for {set ii 0} {$ii < 10} {incr ii} {
+    execsql "INSERT INTO t1 SELECT $r, $r, $r FROM t1"
+  }
+  execsql { COMMIT }
+} {}
+do_test insert3-4.2 {
+  execsql {
+    PRAGMA cache_size = 10;
+    BEGIN;
+      UPDATE t1 SET a = randstr(10,10) WHERE (rowid%4)==0;
+      DELETE FROM t1 WHERE rowid%2;
+      INSERT INTO t1 SELECT randstr(10,400), randstr(10,400), c FROM t1;
+    COMMIT;
+  }
+} {}
 
 finish_test

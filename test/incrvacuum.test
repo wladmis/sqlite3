@@ -35,7 +35,10 @@ do_test incrvacuum-1.1 {
   }
 } $sqlite_options(default_autovacuum)
 do_test incrvacuum-1.2.0 {
-  expr {[file size test.db] > 0}
+  # File size is sometimes 1 instead of 0 due to the hack we put in
+  # to work around ticket #3260.  Search for comments on #3260 in
+  # os_unix.c.
+  expr {[file size test.db] > 1}
 } {0}
 do_test incrvacuum-1.2 {
   # This command will create the database.
@@ -598,7 +601,7 @@ ifcapable default_autovacuum {
     execsql {
       PRAGMA auto_vacuum;
     }
-  } {1}
+  } $AUTOVACUUM
 } else {
   do_test incrvacuum-11.1-av-dflt-off {
     execsql {
@@ -670,9 +673,14 @@ do_test incrvacuum-12.2 {
 do_test incrvacuum-12.3 {
   execsql { ROLLBACK; } db2
   execsql { PRAGMA auto_vacuum }
-} {1}
+} {2}   ;# Still 2 because PRAGMA auto_vacuum setting held in case of vacuum
+do_test incrvacuum-12.4 {
+  db close
+  sqlite3 db test.db
+  execsql { PRAGMA auto_vacuum }
+} {1}   ;# Revert to 1 because the database file did not change
 
-do_test incrvacuum-12.3 {
+do_test incrvacuum-12.5 {
   execsql { SELECT * FROM sqlite_master }
   execsql { PRAGMA auto_vacuum }
 } {1}
@@ -689,7 +697,10 @@ sqlite3 db test.db  ;  set ::DB [sqlite3_connection_pointer db]
 sqlite3 db2 test.db
 
 do_test incrvacuum-13.1 {
-  expr {[file size test.db]>0}
+  # File size is sometimes 1 instead of 0 due to the hack we put in
+  # to work around ticket #3260.  Search for comments on #3260 in
+  # os_unix.c.
+  expr {[file size test.db]>1}
 } {0}
 do_test incrvacuum-13.2 {
   set ::STMT [sqlite3_prepare $::DB {PRAGMA auto_vacuum = 2} -1 DUMMY]
@@ -726,6 +737,48 @@ do_test incrvacuum-14.1 {
   } db3
 } {1 {file is encrypted or is not a database}}
 
-db2 close
+do_test incrvacuum-15.1 {
+  db close
+  db2 close
+  file delete -force test.db
+  sqlite3 db test.db
+
+  set str [string repeat "abcdefghij" 500]
+
+  execsql {
+    PRAGMA cache_size = 10;
+    PRAGMA auto_vacuum = incremental;
+    CREATE TABLE t1(x, y);
+    INSERT INTO t1 VALUES('a', $str);
+    INSERT INTO t1 VALUES('b', $str);
+    INSERT INTO t1 VALUES('c', $str);
+    INSERT INTO t1 VALUES('d', $str);
+    INSERT INTO t1 VALUES('e', $str);
+    INSERT INTO t1 VALUES('f', $str);
+    INSERT INTO t1 VALUES('g', $str);
+    INSERT INTO t1 VALUES('h', $str);
+    INSERT INTO t1 VALUES('i', $str);
+    INSERT INTO t1 VALUES('j', $str);
+    INSERT INTO t1 VALUES('j', $str);
+
+    CREATE TABLE t2(x PRIMARY KEY, y);
+    INSERT INTO t2 VALUES('a', $str);
+    INSERT INTO t2 VALUES('b', $str);
+    INSERT INTO t2 VALUES('c', $str);
+    INSERT INTO t2 VALUES('d', $str);
+
+    BEGIN;
+      DELETE FROM t2;
+      PRAGMA incremental_vacuum;
+  }
+
+  catchsql {INSERT INTO t2 SELECT * FROM t1}
+
+  execsql { 
+    COMMIT;
+    PRAGMA integrity_check;
+  }
+} {ok}
+
 db3 close
 finish_test

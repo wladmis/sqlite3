@@ -62,4 +62,17 @@ do_test rdonly-1.5 {
   }
 } {0 {1 2}}
 
+# Now, after connection [db] has loaded the database schema, modify the
+# write-version of the file (and the change-counter, so that the 
+# write-version is reloaded). This way, SQLite does not discover that
+# the database is read-only until after it is locked.
+#
+do_test rdonly-1.6 {
+  hexio_write test.db 18 02              ; # write-version
+  hexio_write test.db 24 11223344        ; # change-counter
+  catchsql {
+    INSERT INTO t1 VALUES(2);
+  }
+} {1 {attempt to write a readonly database}}
+
 finish_test

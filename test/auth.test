@@ -418,7 +418,10 @@ do_test auth-1.49 {
 } {0 {}}
 do_test auth-1.50 {
   execsql {SELECT * FROM t2}
-} {11 2 33}
+} {}
+do_test auth-1.50.2 {
+  execsql {INSERT INTO t2 VALUES(11, 2, 33)}
+} {}
 
 do_test auth-1.51 {
   proc auth {code arg1 arg2 arg3 arg4} {
@@ -2138,7 +2141,7 @@ do_test auth-2.9.1 {
     return SQLITE_OK
   }
   catchsql {SELECT ROWID,b,c FROM t2}
-} {1 {illegal return value (999) from the authorization function - should be SQLITE_OK, SQLITE_IGNORE, or SQLITE_DENY}}
+} {1 {authorizer malfunction}}
 do_test auth-2.9.2 {
   db errorcode
 } {1}
@@ -2150,7 +2153,7 @@ do_test auth-2.10 {
     return SQLITE_OK
   }
   catchsql {SELECT ROWID,b,c FROM t2}
-} {1 {illegal return value (1) from the authorization function - should be SQLITE_OK, SQLITE_IGNORE, or SQLITE_DENY}}
+} {1 {authorizer malfunction}}
 do_test auth-2.11.1 {
   proc auth {code arg1 arg2 arg3 arg4} {
     if {$code=="SQLITE_READ" && $arg2=="a"} {
@@ -2251,7 +2254,7 @@ do_test auth-4.3 {
   SQLITE_SELECT {}     {} {}   v1 \
   SQLITE_READ   t2     a  main v1 \
   SQLITE_READ   t2     b  main v1 \
-  SQLITE_SELECT {}     {} {}   v1 \
+  SQLITE_SELECT {}     {} {}   {} \
   SQLITE_READ   v1     x  main v1 \
 ]
 do_test auth-4.4 {
@@ -2275,7 +2278,7 @@ do_test auth-4.5 {
   SQLITE_SELECT {}     {} {}   v1 \
   SQLITE_READ   t2     a  main v1 \
   SQLITE_READ   t2     b  main v1 \
-  SQLITE_SELECT {}     {} {}   v1 \
+  SQLITE_SELECT {}     {} {}   {} \
   SQLITE_READ   v1     x  main v1 \
 ]
 

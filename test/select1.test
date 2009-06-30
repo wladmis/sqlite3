@@ -306,7 +306,7 @@ do_test select1-4.3 {
 do_test select1-4.4 {
   set v [catch {execsql {SELECT f1 FROM test1 ORDER BY min(f1)}} msg]
   lappend v $msg
-} {1 {misuse of aggregate: min(f1)}}
+} {1 {misuse of aggregate: min()}}
 
 # The restriction not allowing constants in the ORDER BY clause
 # has been removed.  See ticket #1768
@@ -405,7 +405,7 @@ do_test select1-5.1 {
   lappend v $msg
 } {0 33}
 
-execsql {CREATE TABLE test2(t1 test, t2 text)}
+execsql {CREATE TABLE test2(t1 text, t2 text)}
 execsql {INSERT INTO test2 VALUES('abc','xyz')}
 
 # Check for column naming
@@ -506,6 +506,111 @@ do_test select1-6.9.2 {
   lappend v $msg
 } {0 {f1 11 f1 11 f1 33 f1 33 f1 11 f1 11 f1 33 f1 33}}
 
+do_test select1-6.9.3 {
+  db eval {
+     PRAGMA short_column_names=OFF;
+     PRAGMA full_column_names=OFF;
+  }
+  execsql2 {
+     SELECT test1 . f1, test1 . f2 FROM test1 LIMIT 1
+  }
+} {{test1 . f1} 11 {test1 . f2} 22}
+do_test select1-6.9.4 {
+  db eval {
+     PRAGMA short_column_names=OFF;
+     PRAGMA full_column_names=ON;
+  }
+  execsql2 {
+     SELECT test1 . f1, test1 . f2 FROM test1 LIMIT 1
+  }
+} {test1.f1 11 test1.f2 22}
+do_test select1-6.9.5 {
+  db eval {
+     PRAGMA short_column_names=OFF;
+     PRAGMA full_column_names=ON;
+  }
+  execsql2 {
+     SELECT 123.45;
+  }
+} {123.45 123.45}
+do_test select1-6.9.6 {
+  execsql2 {
+     SELECT * FROM test1 a, test1 b LIMIT 1
+  }
+} {a.f1 11 a.f2 22 b.f1 11 b.f2 22}
+do_test select1-6.9.7 {
+  set x [execsql2 {
+     SELECT * FROM test1 a, (select 5, 6) LIMIT 1
+  }]
+  regsub -all {subquery_[0-9a-fA-F]+_} $x {subquery} x
+  set x
+} {a.f1 11 a.f2 22 sqlite_subquery.5 5 sqlite_subquery.6 6}
+do_test select1-6.9.8 {
+  set x [execsql2 {
+     SELECT * FROM test1 a, (select 5 AS x, 6 AS y) AS b LIMIT 1
+  }]
+  regsub -all {subquery_[0-9a-fA-F]+_} $x {subquery} x
+  set x
+} {a.f1 11 a.f2 22 b.x 5 b.y 6}
+do_test select1-6.9.9 {
+  execsql2 {
+     SELECT a.f1, b.f2 FROM test1 a, test1 b LIMIT 1
+  }
+} {test1.f1 11 test1.f2 22}
+do_test select1-6.9.10 {
+  execsql2 {
+     SELECT f1, t1 FROM test1, test2 LIMIT 1
+  }
+} {test1.f1 11 test2.t1 abc}
+do_test select1-6.9.11 {
+  db eval {
+     PRAGMA short_column_names=ON;
+     PRAGMA full_column_names=ON;
+  }
+  execsql2 {
+     SELECT a.f1, b.f2 FROM test1 a, test1 b LIMIT 1
+  }
+} {test1.f1 11 test1.f2 22}
+do_test select1-6.9.12 {
+  execsql2 {
+     SELECT f1, t1 FROM test1, test2 LIMIT 1
+  }
+} {test1.f1 11 test2.t1 abc}
+do_test select1-6.9.13 {
+  db eval {
+     PRAGMA short_column_names=ON;
+     PRAGMA full_column_names=OFF;
+  }
+  execsql2 {
+     SELECT a.f1, b.f1 FROM test1 a, test1 b LIMIT 1
+  }
+} {f1 11 f1 11}
+do_test select1-6.9.14 {
+  execsql2 {
+     SELECT f1, t1 FROM test1, test2 LIMIT 1
+  }
+} {f1 11 t1 abc}
+do_test select1-6.9.15 {
+  db eval {
+     PRAGMA short_column_names=OFF;
+     PRAGMA full_column_names=ON;
+  }
+  execsql2 {
+     SELECT a.f1, b.f1 FROM test1 a, test1 b LIMIT 1
+  }
+} {test1.f1 11 test1.f1 11}
+do_test select1-6.9.16 {
+  execsql2 {
+     SELECT f1, t1 FROM test1, test2 LIMIT 1
+  }
+} {test1.f1 11 test2.t1 abc}
+
+
+db eval {
+  PRAGMA short_column_names=ON;
+  PRAGMA full_column_names=OFF;
+}
+
 ifcapable compound {
 do_test select1-6.10 {
   set v [catch {execsql2 {
@@ -523,7 +628,7 @@ do_test select1-6.11 {
 } {1 {1st ORDER BY term does not match any column in the result set}}
 
 # Ticket #2296
-ifcapable subquery {
+ifcapable subquery&&compound {
 do_test select1-6.20 {
    execsql {
      CREATE TABLE t6(a TEXT, b TEXT);
@@ -722,6 +827,11 @@ do_test select1-10.6 {
     SELECT f1-22 AS x, f2-22 as y FROM test1 WHERE x>0 AND y<50
   }
 } {11 22}
+do_test select1-10.7 {
+  execsql {
+    SELECT f1 COLLATE nocase AS x FROM test1 ORDER BY x
+  }
+} {11 33}
 
 # Check the ability to specify "TABLE.*" in the result set of a SELECT
 #
@@ -912,4 +1022,49 @@ ifcapable subquery {
   } {0}
 }
 
+foreach tab [db eval {SELECT name FROM sqlite_master WHERE type = 'table'}] {
+  db eval "DROP TABLE $tab"
+}
+db close
+sqlite3 db test.db
+
+do_test select1-14.1 {
+  execsql { 
+    SELECT * FROM sqlite_master WHERE rowid>10; 
+    SELECT * FROM sqlite_master WHERE rowid=10;
+    SELECT * FROM sqlite_master WHERE rowid<10;
+    SELECT * FROM sqlite_master WHERE rowid<=10;
+    SELECT * FROM sqlite_master WHERE rowid>=10;
+    SELECT * FROM sqlite_master;
+  }
+} {}
+do_test select1-14.2 {
+  execsql { 
+    SELECT 10 IN (SELECT rowid FROM sqlite_master);
+  }
+} {0}
+
+if {[db one {PRAGMA locking_mode}]=="normal"} {
+  # Check that ticket #3771 has been fixed.  This test does not
+  # work with locking_mode=EXCLUSIVE so disable in that case.
+  #
+  do_test select1-15.1 {
+    execsql {
+      CREATE TABLE t1(a);
+      CREATE INDEX i1 ON t1(a);
+      INSERT INTO t1 VALUES(1);
+      INSERT INTO t1 VALUES(2);
+      INSERT INTO t1 VALUES(3);
+    }
+  } {}
+  do_test select1-15.2 {
+    sqlite3 db2 test.db
+    execsql { DROP INDEX i1 } db2
+    db2 close
+  } {}
+  do_test select1-15.3 {
+    execsql { SELECT 2 IN (SELECT a FROM t1) }
+  } {1}
+}
+  
 finish_test

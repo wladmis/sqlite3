@@ -82,13 +82,15 @@ do_test vacuum2-3.2 {
 } $cksum
 
 # Convert the database to an autovacuumed database.
-do_test vacuum2-3.3 {
-  execsql {
-    PRAGMA auto_vacuum=FULL;
-    VACUUM;
-  }
-  expr {[file size test.db]/$pageSize}
-} {4}
+ifcapable autovacuum {
+  do_test vacuum2-3.3 {
+    execsql {
+      PRAGMA auto_vacuum=FULL;
+      VACUUM;
+    }
+    expr {[file size test.db]/$pageSize}
+  } {4}
+}
 do_test vacuum2-3.4 {
   cksum db2
 } $cksum
@@ -124,5 +126,60 @@ do_test vacuum2-3.17 {
 } {ok}
 
 db2 close
+
+ifcapable autovacuum {
+  do_test vacuum2-4.1 {
+    db close
+    file delete -force test.db
+    sqlite3 db test.db
+    execsql {
+      pragma auto_vacuum=1;
+      create table t(a, b);
+      insert into t values(1, 2);
+      insert into t values(1, 2);
+      pragma auto_vacuum=0;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {0}
+  do_test vacuum2-4.2 {
+    execsql {
+      pragma auto_vacuum=1;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {1}
+  do_test vacuum2-4.3 {
+    execsql {
+      pragma integrity_check
+    }
+  } {ok}
+  do_test vacuum2-4.4 {
+    db close
+    sqlite3 db test.db
+    execsql {
+      pragma auto_vacuum;
+    }
+  } {1}
+  do_test vacuum2-4.5 {  # Ticket #3663
+    execsql {
+      pragma auto_vacuum=2;
+      vacuum;
+      pragma auto_vacuum;
+    }
+  } {2}
+  do_test vacuum2-4.6 {
+    execsql {
+      pragma integrity_check
+    }
+  } {ok}
+  do_test vacuum2-4.7 {
+    db close
+    sqlite3 db test.db
+    execsql {
+      pragma auto_vacuum;
+    }
+  } {2}
+}
 
 finish_test

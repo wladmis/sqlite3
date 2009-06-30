@@ -12,6 +12,8 @@
 **
 ** This file contains OS interface code that is common to all
 ** architectures.
+**
+** $Id$
 */
 #define _SQLITE_OS_C_ 1
 #include "sqliteInt.h"
@@ -34,9 +36,9 @@
 **     sqlite3OsLock()
 **
 */
-#if defined(SQLITE_TEST) && (OS_WIN==0)
+#if defined(SQLITE_TEST) && (SQLITE_OS_WIN==0)
   #define DO_OS_MALLOC_TEST if (1) {            \
-    void *pTstAlloc = sqlite3_malloc(10);       \
+    void *pTstAlloc = sqlite3Malloc(10);       \
     if (!pTstAlloc) return SQLITE_IOERR_NOMEM;  \
     sqlite3_free(pTstAlloc);                    \
   }
@@ -74,6 +76,7 @@ int sqlite3OsSync(sqlite3_file *id, int flags){
   return id->pMethods->xSync(id, flags);
 }
 int sqlite3OsFileSize(sqlite3_file *id, i64 *pSize){
+  DO_OS_MALLOC_TEST;
   return id->pMethods->xFileSize(id, pSize);
 }
 int sqlite3OsLock(sqlite3_file *id, int lockType){
@@ -83,11 +86,12 @@ int sqlite3OsLock(sqlite3_file *id, int lockType){
 int sqlite3OsUnlock(sqlite3_file *id, int lockType){
   return id->pMethods->xUnlock(id, lockType);
 }
-int sqlite3OsCheckReservedLock(sqlite3_file *id){
-  return id->pMethods->xCheckReservedLock(id);
+int sqlite3OsCheckReservedLock(sqlite3_file *id, int *pResOut){
+  DO_OS_MALLOC_TEST;
+  return id->pMethods->xCheckReservedLock(id, pResOut);
 }
 int sqlite3OsFileControl(sqlite3_file *id, int op, void *pArg){
-  return id->pMethods->xFileControl(id,op,pArg);
+  return id->pMethods->xFileControl(id, op, pArg);
 }
 int sqlite3OsSectorSize(sqlite3_file *id){
   int (*xSectorSize)(sqlite3_file*) = id->pMethods->xSectorSize;
@@ -108,24 +112,23 @@ int sqlite3OsOpen(
   int flags, 
   int *pFlagsOut
 ){
+  int rc;
   DO_OS_MALLOC_TEST;
-  return pVfs->xOpen(pVfs, zPath, pFile, flags, pFlagsOut);
+  rc = pVfs->xOpen(pVfs, zPath, pFile, flags, pFlagsOut);
+  assert( rc==SQLITE_OK || pFile->pMethods==0 );
+  return rc;
 }
 int sqlite3OsDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
   return pVfs->xDelete(pVfs, zPath, dirSync);
 }
-int sqlite3OsAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
-  int rc;
-#ifdef SQLITE_TEST
-  void *pTstAlloc = sqlite3_malloc(10);
-  if (!pTstAlloc) return -1;
-  sqlite3_free(pTstAlloc);
-#endif
-  rc = pVfs->xAccess(pVfs, zPath, flags);
-  return rc;
-}
-int sqlite3OsGetTempname(sqlite3_vfs *pVfs, int nBufOut, char *zBufOut){
-  return pVfs->xGetTempname(pVfs, nBufOut, zBufOut);
+int sqlite3OsAccess(
+  sqlite3_vfs *pVfs, 
+  const char *zPath, 
+  int flags, 
+  int *pResOut
+){
+  DO_OS_MALLOC_TEST;
+  return pVfs->xAccess(pVfs, zPath, flags, pResOut);
 }
 int sqlite3OsFullPathname(
   sqlite3_vfs *pVfs, 
@@ -135,18 +138,20 @@ int sqlite3OsFullPathname(
 ){
   return pVfs->xFullPathname(pVfs, zPath, nPathOut, zPathOut);
 }
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 void *sqlite3OsDlOpen(sqlite3_vfs *pVfs, const char *zPath){
   return pVfs->xDlOpen(pVfs, zPath);
 }
 void sqlite3OsDlError(sqlite3_vfs *pVfs, int nByte, char *zBufOut){
   pVfs->xDlError(pVfs, nByte, zBufOut);
 }
-void *sqlite3OsDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
-  return pVfs->xDlSym(pVfs, pHandle, zSymbol);
+void (*sqlite3OsDlSym(sqlite3_vfs *pVfs, void *pHdle, const char *zSym))(void){
+  return pVfs->xDlSym(pVfs, pHdle, zSym);
 }
 void sqlite3OsDlClose(sqlite3_vfs *pVfs, void *pHandle){
   pVfs->xDlClose(pVfs, pHandle);
 }
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 int sqlite3OsRandomness(sqlite3_vfs *pVfs, int nByte, char *zBufOut){
   return pVfs->xRandomness(pVfs, nByte, zBufOut);
 }
@@ -166,7 +171,7 @@ int sqlite3OsOpenMalloc(
 ){
   int rc = SQLITE_NOMEM;
   sqlite3_file *pFile;
-  pFile = (sqlite3_file *)sqlite3_malloc(pVfs->szOsFile);
+  pFile = (sqlite3_file *)sqlite3Malloc(pVfs->szOsFile);
   if( pFile ){
     rc = sqlite3OsOpen(pVfs, zFile, pFile, flags, pOutFlags);
     if( rc!=SQLITE_OK ){
@@ -186,27 +191,28 @@ int sqlite3OsCloseFree(sqlite3_file *pFile){
 }
 
 /*
-** The list of all registered VFS implementations.  This list is
-** initialized to the single VFS returned by sqlite3OsDefaultVfs()
-** upon the first call to sqlite3_vfs_find().
+** The list of all registered VFS implementations.
 */
-static sqlite3_vfs *vfsList = 0;
+static sqlite3_vfs * SQLITE_WSD vfsList = 0;
+#define vfsList GLOBAL(sqlite3_vfs *, vfsList)
 
 /*
 ** Locate a VFS by name.  If no name is given, simply return the
 ** first VFS on the list.
 */
 sqlite3_vfs *sqlite3_vfs_find(const char *zVfs){
-#ifndef SQLITE_MUTEX_NOOP
-  sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
-#endif
   sqlite3_vfs *pVfs = 0;
-  static int isInit = 0;
+#if SQLITE_THREADSAFE
+  sqlite3_mutex *mutex;
+#endif
+#ifndef SQLITE_OMIT_AUTOINIT
+  int rc = sqlite3_initialize();
+  if( rc ) return 0;
+#endif
+#if SQLITE_THREADSAFE
+  mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
+#endif
   sqlite3_mutex_enter(mutex);
-  if( !isInit ){
-    vfsList = sqlite3OsDefaultVfs();
-    isInit = 1;
-  }
   for(pVfs = vfsList; pVfs; pVfs=pVfs->pNext){
     if( zVfs==0 ) break;
     if( strcmp(zVfs, pVfs->zName)==0 ) break;
@@ -219,7 +225,7 @@ sqlite3_vfs *sqlite3_vfs_find(const char *zVfs){
 ** Unlink a VFS from the linked list
 */
 static void vfsUnlink(sqlite3_vfs *pVfs){
-  assert( sqlite3_mutex_held(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER)) );
+  assert( sqlite3_mutex_held(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER)) );
   if( pVfs==0 ){
     /* No-op */
   }else if( vfsList==pVfs ){
@@ -241,10 +247,12 @@ static void vfsUnlink(sqlite3_vfs *pVfs){
 ** true.
 */
 int sqlite3_vfs_register(sqlite3_vfs *pVfs, int makeDflt){
-#ifndef SQLITE_MUTEX_NOOP
-  sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+  sqlite3_mutex *mutex = 0;
+#ifndef SQLITE_OMIT_AUTOINIT
+  int rc = sqlite3_initialize();
+  if( rc ) return rc;
 #endif
-  sqlite3_vfs_find(0);  /* Make sure we are initialized */
+  mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
   sqlite3_mutex_enter(mutex);
   vfsUnlink(pVfs);
   if( makeDflt || vfsList==0 ){
@@ -263,19 +271,11 @@ int sqlite3_vfs_register(sqlite3_vfs *pVfs, int makeDflt){
 ** Unregister a VFS so that it is no longer accessible.
 */
 int sqlite3_vfs_unregister(sqlite3_vfs *pVfs){
-#ifndef SQLITE_MUTEX_NOOP
-  sqlite3_mutex *mutex = sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER);
+#if SQLITE_THREADSAFE
+  sqlite3_mutex *mutex = sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER);
 #endif
   sqlite3_mutex_enter(mutex);
   vfsUnlink(pVfs);
   sqlite3_mutex_leave(mutex);
   return SQLITE_OK;
 }
-
-/*
-** Provide a default sqlite3OsDefaultVfs() implementation in the
-** cases where none of the standard backends are used.
-*/
-#if !OS_UNIX && !OS_WIN && !OS_OS2
-sqlite3_vfs *sqlite3OsDefaultVfs(void){ return 0; }
-#endif

@@ -13,8 +13,11 @@
 ** This file contains the implementation of an SQLite vfs wrapper that
 ** adds instrumentation to all vfs and file methods. C and Tcl interfaces
 ** are provided to control the instrumentation.
+**
+** $Id$
 */
 
+#ifdef SQLITE_ENABLE_INSTVFS
 /*
 ** C interface:
 **
@@ -51,8 +54,8 @@
 **
 **         * The name of the invoked method - i.e. "xRead".
 **
-**         * The time consumed by the method call as measured by hwtime() (an
-**           integer value)
+**         * The time consumed by the method call as measured by 
+**           sqlite3Hwtime() (an integer value)
 **
 **         * A string value with a different meaning for different calls. 
 **           For file methods, the name of the file being operated on. For
@@ -80,7 +83,7 @@
 **         * The name of the method call - i.e. "xWrite",
 **         * The total number of calls to the method (an integer).
 **         * The aggregate time consumed by all calls to the method as
-**           measured by hwtime() (an integer).
+**           measured by sqlite3Hwtime() (an integer).
 */
 
 #include "sqlite3.h"
@@ -104,7 +107,6 @@
 #define OS_FILECONTROL       7
 #define OS_FILESIZE          8
 #define OS_FULLPATHNAME      9
-#define OS_GETTEMPNAME       10
 #define OS_LOCK              11
 #define OS_OPEN              12
 #define OS_RANDOMNESS        13
@@ -120,6 +122,10 @@
 
 #define BINARYLOG_STRING     30
 #define BINARYLOG_MARKER     31
+
+#define BINARYLOG_PREPARE_V2 64
+#define BINARYLOG_STEP       65
+#define BINARYLOG_FINALIZE   66
 
 struct InstVfs {
   sqlite3_vfs base;
@@ -160,7 +166,7 @@ static int instSync(sqlite3_file*, int flags);
 static int instFileSize(sqlite3_file*, sqlite3_int64 *pSize);
 static int instLock(sqlite3_file*, int);
 static int instUnlock(sqlite3_file*, int);
-static int instCheckReservedLock(sqlite3_file*);
+static int instCheckReservedLock(sqlite3_file*, int *pResOut);
 static int instFileControl(sqlite3_file*, int op, void *pArg);
 static int instSectorSize(sqlite3_file*);
 static int instDeviceCharacteristics(sqlite3_file*);
@@ -170,12 +176,11 @@ static int instDeviceCharacteristics(sqlite3_file*);
 */
 static int instOpen(sqlite3_vfs*, const char *, sqlite3_file*, int , int *);
 static int instDelete(sqlite3_vfs*, const char *zName, int syncDir);
-static int instAccess(sqlite3_vfs*, const char *zName, int flags);
-static int instGetTempName(sqlite3_vfs*, int nOut, char *zOut);
+static int instAccess(sqlite3_vfs*, const char *zName, int flags, int *);
 static int instFullPathname(sqlite3_vfs*, const char *zName, int, char *zOut);
 static void *instDlOpen(sqlite3_vfs*, const char *zFilename);
 static void instDlError(sqlite3_vfs*, int nByte, char *zErrMsg);
-static void *instDlSym(sqlite3_vfs*,void*, const char *zSymbol);
+static void (*instDlSym(sqlite3_vfs *pVfs, void *p, const char*zSym))(void);
 static void instDlClose(sqlite3_vfs*, void*);
 static int instRandomness(sqlite3_vfs*, int nByte, char *zOut);
 static int instSleep(sqlite3_vfs*, int microseconds);
@@ -193,7 +198,6 @@ static sqlite3_vfs inst_vfs = {
   instOpen,               /* xOpen */
   instDelete,             /* xDelete */
   instAccess,             /* xAccess */
-  instGetTempName,        /* xGetTempName */
   instFullPathname,       /* xFullPathname */
   instDlOpen,             /* xDlOpen */
   instDlError,            /* xDlError */
@@ -220,30 +224,19 @@ static sqlite3_io_methods inst_io_methods = {
   instDeviceCharacteristics       /* xDeviceCharacteristics */
 };
 
-/*
-** The following routine only works on pentium-class processors.
-** It uses the RDTSC opcode to read the cycle count value out of the
-** processor and returns that value.  This can be used for high-res
-** profiling.
+/* 
+** hwtime.h contains inline assembler code for implementing 
+** high-performance timing routines.
 */
-#if defined(i386) || defined(__i386__) || defined(_M_IX86)
-__inline__ unsigned long long int osinst_hwtime(void){
-   unsigned int lo, hi;
-   /* We cannot use "=A", since this would use %rax on x86_64 */
-   __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-   return (unsigned long long int)hi << 32 | lo;
-}
-#else
-  static unsigned long long int osinst_hwtime(void){ return 0; }
-#endif
+#include "hwtime.h"
 
 #define OS_TIME_IO(eEvent, A, B, Call) {     \
   inst_file *p = (inst_file *)pFile;         \
   InstVfs *pInstVfs = p->pInstVfs;           \
   int rc;                                    \
-  sqlite3_int64 t = osinst_hwtime();         \
+  sqlite_uint64 t = sqlite3Hwtime();         \
   rc = Call;                                 \
-  t = osinst_hwtime() - t;                   \
+  t = sqlite3Hwtime() - t;                   \
   pInstVfs->aTime[eEvent] += t;              \
   pInstVfs->aCount[eEvent] += 1;             \
   if( pInstVfs->xCall ){                     \
@@ -257,9 +250,9 @@ __inline__ unsigned long long int osinst_hwtime(void){
 #define OS_TIME_VFS(eEvent, Z, flags, A, B, Call) {      \
   InstVfs *pInstVfs = (InstVfs *)pVfs;   \
   int rc;                                \
-  sqlite3_int64 t = osinst_hwtime();     \
+  sqlite_uint64 t = sqlite3Hwtime();     \
   rc = Call;                             \
-  t = osinst_hwtime() - t;               \
+  t = sqlite3Hwtime() - t;               \
   pInstVfs->aTime[eEvent] += t;          \
   pInstVfs->aCount[eEvent] += 1;         \
   if( pInstVfs->xCall ){                 \
@@ -272,7 +265,9 @@ __inline__ unsigned long long int osinst_hwtime(void){
 ** Close an inst-file.
 */
 static int instClose(sqlite3_file *pFile){
-  OS_TIME_IO(OS_CLOSE, 0, 0, p->pReal->pMethods->xClose(p->pReal));
+  OS_TIME_IO(OS_CLOSE, 0, 0, 
+    (p->pReal->pMethods ? p->pReal->pMethods->xClose(p->pReal) : SQLITE_OK)
+  );
 }
 
 /*
@@ -348,8 +343,10 @@ static int instUnlock(sqlite3_file *pFile, int eLock){
 /*
 ** Check if another file-handle holds a RESERVED lock on an inst-file.
 */
-static int instCheckReservedLock(sqlite3_file *pFile){
-  OS_TIME_IO(OS_CHECKRESERVEDLOCK, 0, 0, p->pReal->pMethods->xCheckReservedLock(p->pReal));
+static int instCheckReservedLock(sqlite3_file *pFile, int *pResOut){
+  OS_TIME_IO(OS_CHECKRESERVEDLOCK, 0, 0, 
+      p->pReal->pMethods->xCheckReservedLock(p->pReal, pResOut)
+  );
 }
 
 /*
@@ -413,21 +410,15 @@ static int instDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
 ** Test for access permissions. Return true if the requested permission
 ** is available, or false otherwise.
 */
-static int instAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
+static int instAccess(
+  sqlite3_vfs *pVfs, 
+  const char *zPath, 
+  int flags, 
+  int *pResOut
+){
   binarylog_blob(pVfs, zPath, -1, 0);
-  OS_TIME_VFS(OS_ACCESS, zPath, 0, flags, 0, 
-    REALVFS(pVfs)->xAccess(REALVFS(pVfs), zPath, flags) 
-  );
-}
-
-/*
-** Populate buffer zBufOut with a pathname suitable for use as a 
-** temporary file. zBufOut is guaranteed to point to a buffer of 
-** at least (INST_MAX_PATHNAME+1) bytes.
-*/
-static int instGetTempName(sqlite3_vfs *pVfs, int nOut, char *zBufOut){
-  OS_TIME_VFS( OS_GETTEMPNAME, 0, 0, 0, 0,
-    REALVFS(pVfs)->xGetTempname(REALVFS(pVfs), nOut, zBufOut);
+  OS_TIME_VFS(OS_ACCESS, zPath, 0, flags, *pResOut, 
+    REALVFS(pVfs)->xAccess(REALVFS(pVfs), zPath, flags, pResOut) 
   );
 }
 
@@ -466,8 +457,8 @@ static void instDlError(sqlite3_vfs *pVfs, int nByte, char *zErrMsg){
 /*
 ** Return a pointer to the symbol zSymbol in the dynamic library pHandle.
 */
-static void *instDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
-  return REALVFS(pVfs)->xDlSym(REALVFS(pVfs), pHandle, zSymbol);
+static void (*instDlSym(sqlite3_vfs *pVfs, void *p, const char *zSym))(void){
+  return REALVFS(pVfs)->xDlSym(REALVFS(pVfs), p, zSym);
 }
 
 /*
@@ -592,7 +583,6 @@ const char *sqlite3_instvfs_name(int eEvent){
     case OS_OPEN:              zEvent = "xOpen"; break;
     case OS_DELETE:            zEvent = "xDelete"; break;
     case OS_ACCESS:            zEvent = "xAccess"; break;
-    case OS_GETTEMPNAME:       zEvent = "xGetTempName"; break;
     case OS_FULLPATHNAME:      zEvent = "xFullPathname"; break;
     case OS_RANDOMNESS:        zEvent = "xRandomness"; break;
     case OS_SLEEP:             zEvent = "xSleep"; break;
@@ -725,7 +715,7 @@ static void binarylog_blob(
     return;
   }
   pLog = (InstVfsBinaryLog *)pInstVfs->pClient;
-  if( !isBinary || pLog->log_data ){
+  if( zBlob && (!isBinary || pLog->log_data) ){
     unsigned char *zRec;
     int nWrite;
 
@@ -746,6 +736,22 @@ static void binarylog_blob(
     memcpy(&zRec[28], zBlob, nBlob);
     pLog->nBuf += nWrite;
   }
+}
+
+void sqlite3_instvfs_binarylog_call(
+  sqlite3_vfs *pVfs,
+  int eEvent,
+  sqlite3_int64 nClick,
+  int return_code,
+  const char *zString
+){
+  InstVfs *pInstVfs = (InstVfs *)pVfs;
+  InstVfsBinaryLog *pLog = (InstVfsBinaryLog *)pInstVfs->pClient;
+
+  if( zString ){
+    binarylog_blob(pVfs, zString, -1, 0);
+  }
+  binarylog_xcall(pLog, eEvent, 0, nClick, return_code, 0, 0, 0, 0);
 }
 
 void sqlite3_instvfs_binarylog_marker(
@@ -804,6 +810,7 @@ sqlite3_vfs *sqlite3_instvfs_binarylog(
 
   return pVfs;
 }
+#endif /* SQLITE_ENABLE_INSTVFS */
 
 /**************************************************************************
 ***************************************************************************
@@ -813,6 +820,7 @@ sqlite3_vfs *sqlite3_instvfs_binarylog(
 
 #include <tcl.h>
 
+#ifdef SQLITE_ENABLE_INSTVFS
 struct InstVfsCall {
   Tcl_Interp *interp;
   Tcl_Obj *pScript;
@@ -1034,10 +1042,28 @@ static int test_sqlite3_instvfs(
 
   return TCL_OK;
 }
+#endif /* SQLITE_ENABLE_INSTVFS */
+
+/* Alternative implementation of sqlite3_instvfs when the real
+** implementation is unavailable. 
+*/
+#ifndef SQLITE_ENABLE_INSTVFS
+static int test_sqlite3_instvfs(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  Tcl_AppendResult(interp, 
+     "not compiled with -DSQLITE_ENABLE_INSTVFS; sqlite3_instvfs is "
+     "unavailable", (char*)0);
+  return TCL_ERROR;
+}
+#endif /* !defined(SQLITE_ENABLE_INSTVFS) */
 
 int SqlitetestOsinst_Init(Tcl_Interp *interp){
   Tcl_CreateObjCommand(interp, "sqlite3_instvfs", test_sqlite3_instvfs, 0, 0);
   return TCL_OK;
 }
 
-#endif
+#endif /* SQLITE_TEST */

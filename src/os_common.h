@@ -16,7 +16,11 @@
 **
 ** This file should be #included by the os_*.c files only.  It is not a
 ** general purpose header file.
+**
+** $Id$
 */
+#ifndef _OS_COMMON_H_
+#define _OS_COMMON_H_
 
 /*
 ** At least two bugs have slipped in because we changed the MEMORY_DEBUG
@@ -25,15 +29,6 @@
 */
 #ifdef MEMORY_DEBUG
 # error "The MEMORY_DEBUG macro is obsolete.  Use SQLITE_DEBUG instead."
-#endif
-
-
-/*
- * When testing, this global variable stores the location of the
- * pending-byte in the database file.
- */
-#ifdef SQLITE_TEST
-unsigned int sqlite3_pending_byte = 0x40000000;
 #endif
 
 #ifdef SQLITE_DEBUG
@@ -62,22 +57,22 @@ int sqlite3OSTrace = 0;
 ** on i486 hardware.
 */
 #ifdef SQLITE_PERFORMANCE_TRACE
-__inline__ unsigned long long int hwtime(void){
-  unsigned long long int x;
-  __asm__("rdtsc\n\t"
-          "mov %%edx, %%ecx\n\t"
-          :"=A" (x));
-  return x;
-}
-static unsigned long long int g_start;
-static unsigned int elapse;
-#define TIMER_START       g_start=hwtime()
-#define TIMER_END         elapse=hwtime()-g_start
-#define TIMER_ELAPSED     elapse
+
+/* 
+** hwtime.h contains inline assembler code for implementing 
+** high-performance timing routines.
+*/
+#include "hwtime.h"
+
+static sqlite_uint64 g_start;
+static sqlite_uint64 g_elapsed;
+#define TIMER_START       g_start=sqlite3Hwtime()
+#define TIMER_END         g_elapsed=sqlite3Hwtime()-g_start
+#define TIMER_ELAPSED     g_elapsed
 #else
 #define TIMER_START
 #define TIMER_END
-#define TIMER_ELAPSED     0
+#define TIMER_ELAPSED     ((sqlite_uint64)0)
 #endif
 
 /*
@@ -129,3 +124,5 @@ int sqlite3_open_file_count = 0;
 #else
 #define OpenCounter(X)
 #endif
+
+#endif /* !defined(_OS_COMMON_H_) */

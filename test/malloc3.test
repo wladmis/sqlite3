@@ -197,7 +197,7 @@ TEST 1 {
   } {}
 }
 SQL { 
-  CREATE TABLE abc(a, b, c); 
+  CREATE TABLE IF NOT EXISTS abc(a, b, c); 
 }
 TEST 2 {
   do_test $testid.1 {

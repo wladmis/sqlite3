@@ -16,6 +16,10 @@
 # $Id$
 #
 
+sqlite3_shutdown
+#sqlite3_config_scratch 29000 1
+set old_lookaside [sqlite3_config_lookaside 2048 300]
+#sqlite3_config_pagecache 1024 11000
 set testdir [file dirname $argv0]
 source $testdir/tester.tcl
 speed_trial_init speed1
@@ -62,7 +66,7 @@ proc number_name {n} {
 do_test speed1p-1.0 {
   execsql {
     PRAGMA page_size=1024;
-    PRAGMA cache_size=8192;
+    PRAGMA cache_size=500;
     PRAGMA locking_mode=EXCLUSIVE;
     CREATE TABLE t1(a INTEGER, b INTEGER, c TEXT);
     CREATE TABLE t2(a INTEGER, b INTEGER, c TEXT);
@@ -322,7 +326,6 @@ speed_trial speed1p-random-del1 20000 row {
 do_test speed1p-1.1 {
   db one {SELECT count(*) FROM t1}
 } 30000
-
     
 # Delete 20000 more rows at random from the table.
 #
@@ -335,4 +338,9 @@ do_test speed1p-1.2 {
 } 10000
 speed_trial_summary speed1
 
+db close
+sqlite3_shutdown
+eval sqlite3_config_lookaside $old_lookaside
+sqlite3_initialize
+autoinstall_test_functions
 finish_test

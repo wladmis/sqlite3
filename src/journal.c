@@ -28,7 +28,7 @@
 **
 **   1) The in-memory representation grows too large for the allocated 
 **      buffer, or
-**   2) The xSync() method is called.
+**   2) The sqlite3JournalCreate() function is called.
 */
 
 #include "sqliteInt.h"
@@ -95,8 +95,9 @@ static int jrnlRead(
   JournalFile *p = (JournalFile *)pJfd;
   if( p->pReal ){
     rc = sqlite3OsRead(p->pReal, zBuf, iAmt, iOfst);
+  }else if( (iAmt+iOfst)>p->iSize ){
+    rc = SQLITE_IOERR_SHORT_READ;
   }else{
-    assert( iAmt+iOfst<=p->iSize );
     memcpy(zBuf, &p->zBuf[iOfst], iAmt);
   }
   return rc;

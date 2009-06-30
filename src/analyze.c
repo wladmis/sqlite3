@@ -33,7 +33,7 @@ static void openStatTable(
   sqlite3 *db = pParse->db;
   Db *pDb;
   int iRootPage;
-  int createStat1 = 0;
+  u8 createStat1 = 0;
   Table *pStat;
   Vdbe *v = sqlite3GetVdbe(pParse);
 
@@ -74,8 +74,8 @@ static void openStatTable(
   if( !createStat1 ){
     sqlite3TableLock(pParse, iDb, iRootPage, 1, "sqlite_stat1");
   }
-  sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, 3);
   sqlite3VdbeAddOp3(v, OP_OpenWrite, iStatCur, iRootPage, iDb);
+  sqlite3VdbeChangeP4(v, -1, (char *)3, P4_INT32);
   sqlite3VdbeChangeP5(v, createStat1);
 }
 
@@ -86,11 +86,11 @@ static void openStatTable(
 static void analyzeOneTable(
   Parse *pParse,   /* Parser context */
   Table *pTab,     /* Table whose indices are to be analyzed */
-  int iStatCur,    /* Cursor that writes to the sqlite_stat1 table */
+  int iStatCur,    /* Index of VdbeCursor that writes the sqlite_stat1 table */
   int iMem         /* Available memory locations begin here */
 ){
   Index *pIdx;     /* An index to being analyzed */
-  int iIdxCur;     /* Cursor number for index being analyzed */
+  int iIdxCur;     /* Index of VdbeCursor for index being analyzed */
   int nCol;        /* Number of columns in the index */
   Vdbe *v;         /* The virtual machine being built up */
   int i;           /* Loop counter */
@@ -100,7 +100,7 @@ static void analyzeOneTable(
   int iDb;         /* Index of database containing pTab */
 
   v = sqlite3GetVdbe(pParse);
-  if( v==0 || pTab==0 || pTab->pIndex==0 ){
+  if( v==0 || NEVER(pTab==0) || pTab->pIndex==0 ){
     /* Do no analysis for tables that have no indices */
     return;
   }
@@ -117,7 +117,7 @@ static void analyzeOneTable(
   /* Establish a read-lock on the table at the shared-cache level. */
   sqlite3TableLock(pParse, iDb, pTab->tnum, 0, pTab->zName);
 
-  iIdxCur = pParse->nTab;
+  iIdxCur = pParse->nTab++;
   for(pIdx=pTab->pIndex; pIdx; pIdx=pIdx->pNext){
     KeyInfo *pKey = sqlite3IndexKeyinfo(pParse, pIdx);
     int regFields;    /* Register block for building records */
@@ -131,7 +131,6 @@ static void analyzeOneTable(
     */
     assert( iDb==sqlite3SchemaToIndex(pParse->db, pIdx->pSchema) );
     nCol = pIdx->nColumn;
-    sqlite3VdbeAddOp2(v, OP_SetNumColumns, 0, nCol+1);
     sqlite3VdbeAddOp4(v, OP_OpenRead, iIdxCur, pIdx->tnum, iDb,
         (char *)pKey, P4_KEYINFO_HANDOFF);
     VdbeComment((v, "%s", pIdx->zName));
@@ -189,7 +188,7 @@ static void analyzeOneTable(
     ** The result is a single row of the sqlite_stat1 table.  The first
     ** two columns are the names of the table and index.  The third column
     ** is a string composed of a list of integer statistics about the
-    ** index.  The first integer in the list is the total number of entires
+    ** index.  The first integer in the list is the total number of entries
     ** in the index.  There is one additional integer in the list for each
     ** column of the table.  This additional integer is a guess of how many
     ** rows of the table the index will select.  If D is the count of distinct
@@ -301,13 +300,14 @@ void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
     return;
   }
 
+  assert( pName2!=0 || pName1==0 );
   if( pName1==0 ){
     /* Form 1:  Analyze everything */
     for(i=0; i<db->nDb; i++){
       if( i==1 ) continue;  /* Do not analyze the TEMP database */
       analyzeDatabase(pParse, i);
     }
-  }else if( pName2==0 || pName2->n==0 ){
+  }else if( pName2->n==0 ){
     /* Form 2:  Analyze the database or table named */
     iDb = sqlite3FindDb(db, pName1);
     if( iDb>=0 ){
@@ -316,7 +316,7 @@ void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
       z = sqlite3NameFromToken(db, pName1);
       if( z ){
         pTab = sqlite3LocateTable(pParse, 0, z, 0);
-        sqlite3_free(z);
+        sqlite3DbFree(db, z);
         if( pTab ){
           analyzeTable(pParse, pTab);
         }
@@ -330,7 +330,7 @@ void sqlite3Analyze(Parse *pParse, Token *pName1, Token *pName2){
       z = sqlite3NameFromToken(db, pTableName);
       if( z ){
         pTab = sqlite3LocateTable(pParse, 0, z, zDb);
-        sqlite3_free(z);
+        sqlite3DbFree(db, z);
         if( pTab ){
           analyzeTable(pParse, pTab);
         }
@@ -356,7 +356,7 @@ struct analysisInfo {
 **     argv[0] = name of the index
 **     argv[1] = results of analysis - on integer for each column
 */
-static int analysisLoader(void *pData, int argc, char **argv, char **azNotUsed){
+static int analysisLoader(void *pData, int argc, char **argv, char **NotUsed){
   analysisInfo *pInfo = (analysisInfo*)pData;
   Index *pIndex;
   int i, c;
@@ -364,6 +364,8 @@ static int analysisLoader(void *pData, int argc, char **argv, char **azNotUsed){
   const char *z;
 
   assert( argc==2 );
+  UNUSED_PARAMETER2(NotUsed, argc);
+
   if( argv==0 || argv[0]==0 || argv[1]==0 ){
     return 0;
   }
@@ -414,10 +416,15 @@ int sqlite3AnalysisLoad(sqlite3 *db, int iDb){
   /* Load new statistics out of the sqlite_stat1 table */
   zSql = sqlite3MPrintf(db, "SELECT idx, stat FROM %Q.sqlite_stat1",
                         sInfo.zDatabase);
-  (void)sqlite3SafetyOff(db);
-  rc = sqlite3_exec(db, zSql, analysisLoader, &sInfo, 0);
-  (void)sqlite3SafetyOn(db);
-  sqlite3_free(zSql);
+  if( zSql==0 ){
+    rc = SQLITE_NOMEM;
+  }else{
+    (void)sqlite3SafetyOff(db);
+    rc = sqlite3_exec(db, zSql, analysisLoader, &sInfo, 0);
+    (void)sqlite3SafetyOn(db);
+    sqlite3DbFree(db, zSql);
+    if( rc==SQLITE_NOMEM ) db->mallocFailed = 1;
+  }
   return rc;
 }
 

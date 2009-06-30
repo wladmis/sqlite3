@@ -16,6 +16,8 @@
 **
 ** This header file is #include-ed by sqliteInt.h and thus ends up
 ** being included by every source file.
+**
+** $Id$
 */
 #ifndef _SQLITE_OS_H_
 #define _SQLITE_OS_H_
@@ -23,56 +25,66 @@
 /*
 ** Figure out if we are dealing with Unix, Windows, or some other
 ** operating system.  After the following block of preprocess macros,
-** all of OS_UNIX, OS_WIN, OS_OS2, and OS_OTHER will defined to either
-** 1 or 0.  One of the four will be 1.  The other three will be 0.
+** all of SQLITE_OS_UNIX, SQLITE_OS_WIN, SQLITE_OS_OS2, and SQLITE_OS_OTHER 
+** will defined to either 1 or 0.  One of the four will be 1.  The other 
+** three will be 0.
 */
-#if defined(OS_OTHER)
-# if OS_OTHER==1
-#   undef OS_UNIX
-#   define OS_UNIX 0
-#   undef OS_WIN
-#   define OS_WIN 0
-#   undef OS_OS2
-#   define OS_OS2 0
+#if defined(SQLITE_OS_OTHER)
+# if SQLITE_OS_OTHER==1
+#   undef SQLITE_OS_UNIX
+#   define SQLITE_OS_UNIX 0
+#   undef SQLITE_OS_WIN
+#   define SQLITE_OS_WIN 0
+#   undef SQLITE_OS_OS2
+#   define SQLITE_OS_OS2 0
 # else
-#   undef OS_OTHER
+#   undef SQLITE_OS_OTHER
 # endif
 #endif
-#if !defined(OS_UNIX) && !defined(OS_OTHER)
-# define OS_OTHER 0
-# ifndef OS_WIN
+#if !defined(SQLITE_OS_UNIX) && !defined(SQLITE_OS_OTHER)
+# define SQLITE_OS_OTHER 0
+# ifndef SQLITE_OS_WIN
 #   if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__BORLANDC__)
-#     define OS_WIN 1
-#     define OS_UNIX 0
-#     define OS_OS2 0
+#     define SQLITE_OS_WIN 1
+#     define SQLITE_OS_UNIX 0
+#     define SQLITE_OS_OS2 0
 #   elif defined(__EMX__) || defined(_OS2) || defined(OS2) || defined(_OS2_) || defined(__OS2__)
-#     define OS_WIN 0
-#     define OS_UNIX 0
-#     define OS_OS2 1
+#     define SQLITE_OS_WIN 0
+#     define SQLITE_OS_UNIX 0
+#     define SQLITE_OS_OS2 1
 #   else
-#     define OS_WIN 0
-#     define OS_UNIX 1
-#     define OS_OS2 0
+#     define SQLITE_OS_WIN 0
+#     define SQLITE_OS_UNIX 1
+#     define SQLITE_OS_OS2 0
 #  endif
 # else
-#  define OS_UNIX 0
-#  define OS_OS2 0
+#  define SQLITE_OS_UNIX 0
+#  define SQLITE_OS_OS2 0
 # endif
 #else
-# ifndef OS_WIN
-#  define OS_WIN 0
+# ifndef SQLITE_OS_WIN
+#  define SQLITE_OS_WIN 0
 # endif
 #endif
 
+/*
+** Determine if we are dealing with WindowsCE - which has a much
+** reduced API.
+*/
+#if defined(_WIN32_WCE)
+# define SQLITE_OS_WINCE 1
+#else
+# define SQLITE_OS_WINCE 0
+#endif
 
 
 /*
 ** Define the maximum size of a temporary filename
 */
-#if OS_WIN
+#if SQLITE_OS_WIN
 # include <windows.h>
 # define SQLITE_TEMPNAME_SIZE (MAX_PATH+50)
-#elif OS_OS2
+#elif SQLITE_OS_OS2
 # if (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ >= 3) && defined(OS2_HIGH_MEMORY)
 #  include <os2safe.h> /* has to be included before os2.h for linking to work */
 # endif
@@ -87,8 +99,7 @@
 # include <uconv.h>
 # define SQLITE_TEMPNAME_SIZE (CCHMAXPATHCOMP)
 #else
-# include <limits.h>
-# define SQLITE_TEMPNAME_SIZE PATH_MAX
+# define SQLITE_TEMPNAME_SIZE 200
 #endif
 
 /* If the SET_FULLSYNC macro is not defined above, then make it
@@ -184,9 +195,7 @@
 ** a random byte is selected for a shared lock.  The pool of bytes for
 ** shared locks begins at SHARED_FIRST. 
 **
-** These #defines are available in sqlite_aux.h so that adaptors for
-** connecting SQLite to other operating systems can use the same byte
-** ranges for locking.  In particular, the same locking strategy and
+** The same locking strategy and
 ** byte ranges are used for Unix.  This leaves open the possiblity of having
 ** clients on win95, winNT, and unix all talking to the same shared file
 ** and all locking correctly.  To do so would require that samba (or whatever
@@ -210,13 +219,7 @@
 ** 1GB boundary.
 **
 */
-#ifndef SQLITE_TEST
-#define PENDING_BYTE      0x40000000  /* First byte past the 1GB boundary */
-#else
-extern unsigned int sqlite3_pending_byte;
-#define PENDING_BYTE sqlite3_pending_byte
-#endif
-
+#define PENDING_BYTE      sqlite3PendingByte
 #define RESERVED_BYTE     (PENDING_BYTE+1)
 #define SHARED_FIRST      (PENDING_BYTE+2)
 #define SHARED_SIZE       510
@@ -232,8 +235,9 @@ int sqlite3OsSync(sqlite3_file*, int);
 int sqlite3OsFileSize(sqlite3_file*, i64 *pSize);
 int sqlite3OsLock(sqlite3_file*, int);
 int sqlite3OsUnlock(sqlite3_file*, int);
-int sqlite3OsCheckReservedLock(sqlite3_file *id);
+int sqlite3OsCheckReservedLock(sqlite3_file *id, int *pResOut);
 int sqlite3OsFileControl(sqlite3_file*,int,void*);
+#define SQLITE_FCNTL_DB_UNCHANGED 0xca093fa0
 int sqlite3OsSectorSize(sqlite3_file *id);
 int sqlite3OsDeviceCharacteristics(sqlite3_file *id);
 
@@ -242,13 +246,14 @@ int sqlite3OsDeviceCharacteristics(sqlite3_file *id);
 */
 int sqlite3OsOpen(sqlite3_vfs *, const char *, sqlite3_file*, int, int *);
 int sqlite3OsDelete(sqlite3_vfs *, const char *, int);
-int sqlite3OsAccess(sqlite3_vfs *, const char *, int);
-int sqlite3OsGetTempname(sqlite3_vfs *, int, char *);
+int sqlite3OsAccess(sqlite3_vfs *, const char *, int, int *pResOut);
 int sqlite3OsFullPathname(sqlite3_vfs *, const char *, int, char *);
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 void *sqlite3OsDlOpen(sqlite3_vfs *, const char *);
 void sqlite3OsDlError(sqlite3_vfs *, int, char *);
-void *sqlite3OsDlSym(sqlite3_vfs *, void *, const char *);
+void (*sqlite3OsDlSym(sqlite3_vfs *, void *, const char *))(void);
 void sqlite3OsDlClose(sqlite3_vfs *, void *);
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 int sqlite3OsRandomness(sqlite3_vfs *, int, char *);
 int sqlite3OsSleep(sqlite3_vfs *, int);
 int sqlite3OsCurrentTime(sqlite3_vfs *, double*);
@@ -259,15 +264,5 @@ int sqlite3OsCurrentTime(sqlite3_vfs *, double*);
 */
 int sqlite3OsOpenMalloc(sqlite3_vfs *, const char *, sqlite3_file **, int,int*);
 int sqlite3OsCloseFree(sqlite3_file *);
-
-/*
-** Each OS-specific backend defines an instance of the following
-** structure for returning a pointer to its sqlite3_vfs.  If OS_OTHER
-** is defined (meaning that the application-defined OS interface layer
-** is used) then there is no default VFS.   The application must
-** register one or more VFS structures using sqlite3_vfs_register()
-** before attempting to use SQLite.
-*/
-sqlite3_vfs *sqlite3OsDefaultVfs(void);
 
 #endif /* _SQLITE_OS_H_ */

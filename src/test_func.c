@@ -114,6 +114,7 @@ static void test_destructor(
   memcpy(zVal, sqlite3_value_text(argv[0]), len);
   sqlite3_result_text(pCtx, zVal, -1, destructor);
 }
+#ifndef SQLITE_OMIT_UTF16
 static void test_destructor16(
   sqlite3_context *pCtx, 
   int nArg,
@@ -136,12 +137,32 @@ static void test_destructor16(
   memcpy(zVal, sqlite3_value_text16(argv[0]), len);
   sqlite3_result_text16(pCtx, zVal, -1, destructor);
 }
+#endif
 static void test_destructor_count(
   sqlite3_context *pCtx, 
   int nArg,
   sqlite3_value **argv
 ){
   sqlite3_result_int(pCtx, test_destructor_count_var);
+}
+
+/*
+** The following aggregate function, test_agg_errmsg16(), takes zero 
+** arguments. It returns the text value returned by the sqlite3_errmsg16()
+** API function.
+*/
+void sqlite3BeginBenignMalloc(void);
+void sqlite3EndBenignMalloc(void);
+static void test_agg_errmsg16_step(sqlite3_context *a, int b,sqlite3_value **c){
+}
+static void test_agg_errmsg16_final(sqlite3_context *ctx){
+  const void *z;
+  sqlite3 * db = sqlite3_context_db_handle(ctx);
+  sqlite3_aggregate_context(ctx, 2048);
+  sqlite3BeginBenignMalloc();
+  z = sqlite3_errmsg16(db);
+  sqlite3EndBenignMalloc();
+  sqlite3_result_text16(ctx, z, -1, SQLITE_TRANSIENT);
 }
 
 /*
@@ -205,6 +226,33 @@ static void test_error(
 }
 
 /*
+** Implementation of the counter(X) function.  If X is an integer
+** constant, then the first invocation will return X.  The second X+1.
+** and so forth.  Can be used (for example) to provide a sequence number
+** in a result set.
+*/
+static void counterFunc(
+  sqlite3_context *pCtx,   /* Function context */
+  int nArg,                /* Number of function arguments */
+  sqlite3_value **argv     /* Values for all function arguments */
+){
+  int *pCounter = (int*)sqlite3_get_auxdata(pCtx, 0);
+  if( pCounter==0 ){
+    pCounter = sqlite3_malloc( sizeof(*pCounter) );
+    if( pCounter==0 ){
+      sqlite3_result_error_nomem(pCtx);
+      return;
+    }
+    *pCounter = sqlite3_value_int(argv[0]);
+    sqlite3_set_auxdata(pCtx, 0, pCounter, sqlite3_free);
+  }else{
+    ++*pCounter;
+  }
+  sqlite3_result_int(pCtx, *pCounter);
+}
+
+
+/*
 ** This function takes two arguments.  It performance UTF-8/16 type
 ** conversions on the first argument then returns a copy of the second
 ** argument.
@@ -230,6 +278,38 @@ static void test_isolation(
   sqlite3_result_value(pCtx, argv[1]);
 }
 
+/*
+** Invoke an SQL statement recursively.  The function result is the 
+** first column of the first row of the result set.
+*/
+static void test_eval(
+  sqlite3_context *pCtx, 
+  int nArg,
+  sqlite3_value **argv
+){
+  sqlite3_stmt *pStmt;
+  int rc;
+  sqlite3 *db = sqlite3_context_db_handle(pCtx);
+  const char *zSql;
+
+  zSql = (char*)sqlite3_value_text(argv[0]);
+  rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, 0);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3_step(pStmt);
+    if( rc==SQLITE_ROW ){
+      sqlite3_result_value(pCtx, sqlite3_column_value(pStmt, 0));
+    }
+    rc = sqlite3_finalize(pStmt);
+  }
+  if( rc ){
+    char *zErr;
+    assert( pStmt==0 );
+    zErr = sqlite3_mprintf("sqlite3_prepare_v2() error: %s",sqlite3_errmsg(db));
+    sqlite3_result_text(pCtx, zErr, -1, sqlite3_free);
+    sqlite3_result_error_code(pCtx, rc);
+  }
+}
+
 
 static int registerTestFunctions(sqlite3 *db){
   static const struct {
@@ -240,21 +320,27 @@ static int registerTestFunctions(sqlite3 *db){
   } aFuncs[] = {
     { "randstr",               2, SQLITE_UTF8, randStr    },
     { "test_destructor",       1, SQLITE_UTF8, test_destructor},
+#ifndef SQLITE_OMIT_UTF16
     { "test_destructor16",     1, SQLITE_UTF8, test_destructor16},
+#endif
     { "test_destructor_count", 0, SQLITE_UTF8, test_destructor_count},
     { "test_auxdata",         -1, SQLITE_UTF8, test_auxdata},
     { "test_error",            1, SQLITE_UTF8, test_error},
     { "test_error",            2, SQLITE_UTF8, test_error},
+    { "test_eval",             1, SQLITE_UTF8, test_eval},
     { "test_isolation",        2, SQLITE_UTF8, test_isolation},
+    { "test_counter",          1, SQLITE_UTF8, counterFunc},
   };
   int i;
-  extern int Md5_Register(sqlite3*);
 
   for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
     sqlite3_create_function(db, aFuncs[i].zName, aFuncs[i].nArg,
         aFuncs[i].eTextRep, 0, aFuncs[i].xFunc, 0, 0);
   }
-  Md5_Register(db);
+
+  sqlite3_create_function(db, "test_agg_errmsg16", 0, SQLITE_ANY, 0, 0, 
+      test_agg_errmsg16_step, test_agg_errmsg16_final);
+      
   return SQLITE_OK;
 }
 
@@ -271,8 +357,92 @@ static int autoinstall_test_funcs(
   int objc,
   Tcl_Obj *CONST objv[]
 ){
-  sqlite3_auto_extension((void*)registerTestFunctions);
+  extern int Md5_Register(sqlite3*);
+  int rc = sqlite3_auto_extension((void*)registerTestFunctions);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3_auto_extension((void*)Md5_Register);
+  }
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(rc));
   return TCL_OK;
+}
+
+/*
+** A bogus step function and finalizer function.
+*/
+static void tStep(sqlite3_context *a, int b, sqlite3_value **c){}
+static void tFinal(sqlite3_context *a){}
+
+
+/*
+** tclcmd:  abuse_create_function
+**
+** Make various calls to sqlite3_create_function that do not have valid
+** parameters.  Verify that the error condition is detected and reported.
+*/
+static int abuse_create_function(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  extern int getDbPointer(Tcl_Interp*, const char*, sqlite3**);
+  sqlite3 *db;
+  int rc;
+  int mxArg;
+
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+
+  rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep,tStep,tFinal);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep, tStep, 0);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, tStep, 0, tFinal);
+  if( rc!=SQLITE_MISUSE) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, 0, 0, tFinal);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", 1, SQLITE_UTF8, 0, 0, tStep, 0);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", -2, SQLITE_UTF8, 0, tStep, 0, 0);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "tx", 128, SQLITE_UTF8, 0, tStep, 0, 0);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  rc = sqlite3_create_function(db, "funcxx"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789",
+       1, SQLITE_UTF8, 0, tStep, 0, 0);
+  if( rc!=SQLITE_MISUSE ) goto abuse_err;
+
+  /* This last function registration should actually work.  Generate
+  ** a no-op function (that always returns NULL) and which has the
+  ** maximum-length function name and the maximum number of parameters.
+  */
+  sqlite3_limit(db, SQLITE_LIMIT_FUNCTION_ARG, 10000);
+  mxArg = sqlite3_limit(db, SQLITE_LIMIT_FUNCTION_ARG, -1);
+  rc = sqlite3_create_function(db, "nullx"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789"
+       "_123456789_123456789_123456789_123456789_123456789",
+       mxArg, SQLITE_UTF8, 0, tStep, 0, 0);
+  if( rc!=SQLITE_OK ) goto abuse_err;
+                                
+  return TCL_OK;
+
+abuse_err:
+  Tcl_AppendResult(interp, "sqlite3_create_function abused test failed", 
+                   (char*)0);
+  return TCL_ERROR;
 }
 
 
@@ -286,11 +456,16 @@ int Sqlitetest_func_Init(Tcl_Interp *interp){
      Tcl_ObjCmdProc *xProc;
   } aObjCmd[] = {
      { "autoinstall_test_functions",    autoinstall_test_funcs },
+     { "abuse_create_function",         abuse_create_function  },
   };
   int i;
+  extern int Md5_Register(sqlite3*);
+
   for(i=0; i<sizeof(aObjCmd)/sizeof(aObjCmd[0]); i++){
     Tcl_CreateObjCommand(interp, aObjCmd[i].zName, aObjCmd[i].xProc, 0, 0);
   }
+  sqlite3_initialize();
   sqlite3_auto_extension((void*)registerTestFunctions);
+  sqlite3_auto_extension((void*)Md5_Register);
   return TCL_OK;
 }

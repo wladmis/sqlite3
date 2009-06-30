@@ -24,7 +24,8 @@ echo "VERSIONS: $VERS $VERSW"
 #
 make clean
 make sqlite3.c
-CFLAGS="-Os -DSQLITE_ENABLE_FTS3=1 -DSQLITE_THREADSAFE=0"
+CFLAGS="-Os -DSQLITE_ENABLE_FTS3=0 -DSQLITE_ENABLE_RTREE=0"
+CFLAGS="$CFLAGS -DSQLITE_THREADSAFE=0"
 echo '***** '"COMPILING sqlite3-$VERS.bin..."
 gcc $CFLAGS -Itsrc sqlite3.c tsrc/shell.c -o sqlite3 -ldl
 strip sqlite3
@@ -51,7 +52,9 @@ zip doc/sqlite-amalgamation-$VERSW.zip sqlite3.c sqlite3.h sqlite3ext.h
 #
 TCLDIR=/home/drh/tcltk/846/linux/846linux
 TCLSTUBLIB=$TCLDIR/libtclstub8.4g.a
-CFLAGS="-Os -DSQLITE_ENABLE_FTS3=1 -DHAVE_LOCALTIME_R=1 -DHAVE_GMTIME_R=1"
+CFLAGS="-Os -DSQLITE_ENABLE_FTS3=3 -DSQLITE_ENABLE_RTREE=1"
+CFLAGS="$CFLAGS -DHAVE_LOCALTIME_R=1 -DHAVE_GMTIME_R=1"
+CFLAGS="$CFLAGS -DSQLITE_ENABLE_COLUMN_METADATA=1"
 echo '***** BUILDING shared libraries for linux'
 gcc $CFLAGS -shared tclsqlite3.c $TCLSTUBLIB -o tclsqlite3.so -lpthread
 strip tclsqlite3.so
@@ -79,7 +82,7 @@ zip doc/sqlitedll-$VERSW.zip sqlite3.dll sqlite3.def
 # Build the sqlite.exe executable for windows.
 #
 OPTS='-DSTATIC_BUILD=1 -DNDEBUG=1 -DSQLITE_THREADSAFE=0'
-OPTS="$OPTS -DSQLITE_ENABLE_FTS3=1"
+OPTS="$OPTS -DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_RTREE=1"
 i386-mingw32msvc-gcc -Os $OPTS -Itsrc -I$TCLDIR sqlite3.c tsrc/shell.c \
       -o sqlite3.exe
 zip doc/sqlite-$VERSW.zip sqlite3.exe
@@ -91,7 +94,8 @@ ORIGIN=`pwd`
 cd $srcdir
 cd ..
 mv sqlite sqlite-$VERS
-EXCLUDE=`find sqlite-$VERS -print | egrep (CVS|www/|art/|doc/|contrib/) | sed 's,^, --exclude ,'`
+EXCLUDE=`find sqlite-$VERS -print | egrep '(CVS|www/|art/|doc/|contrib/|_FOSSIL_|manifest)' | sed 's,^, --exclude ,'`
+echo "tar czf $ORIGIN/doc/sqlite-$VERS.tar.gz $EXCLUDE sqlite-$VERS"
 tar czf $ORIGIN/doc/sqlite-$VERS.tar.gz $EXCLUDE sqlite-$VERS
 mv sqlite-$VERS sqlite
 cd $ORIGIN

@@ -311,8 +311,36 @@ do_test sqllimits1-5.14.2 {
   sqlite3_step $::STMT 
 } {SQLITE_ERROR}
 do_test sqllimits1-5.14.3 {
-  sqlite3_finalize $::STMT 
+  sqlite3_reset $::STMT 
 } {SQLITE_TOOBIG}
+do_test sqllimits1-5.14.4 {
+  set np1 [expr {$SQLITE_LIMIT_LENGTH + 1}]
+  set ::str1 [string repeat A $np1]
+  catch {sqlite3_bind_text $::STMT 1 $::str1 -1} res
+  set res
+} {SQLITE_TOOBIG}
+do_test sqllimits1-5.14.5 {
+  catch {sqlite3_bind_text16 $::STMT 1 $::str1 -1} res
+  set res
+} {SQLITE_TOOBIG}
+do_test sqllimits1-5.14.6 {
+  catch {sqlite3_bind_text $::STMT 1 $::str1 $np1} res
+  set res
+} {SQLITE_TOOBIG}
+do_test sqllimits1-5.14.7 {
+  catch {sqlite3_bind_text16 $::STMT 1 $::str1 $np1} res
+  set res
+} {SQLITE_TOOBIG}
+do_test sqllimits1-5.14.8 {
+  set n [expr {$np1-1}]
+  catch {sqlite3_bind_text $::STMT 1 $::str1 $n} res
+  set res
+} {}
+do_test sqllimits1-5.14.9 {
+  catch {sqlite3_bind_text16 $::STMT 1 $::str1 $n} res
+  set res
+} {}
+sqlite3_finalize $::STMT 
 
 do_test sqllimits1-5.15 {
   execsql {
@@ -332,8 +360,16 @@ set strvalue [string repeat A $::SQLITE_LIMIT_LENGTH]
 do_test sqllimits1-5.16 {
   catchsql "SELECT '$strvalue'"
 } [list 0 $strvalue]
-do_test sqllimits1-5.17 {
+do_test sqllimits1-5.17.1 {
   catchsql "SELECT 'A$strvalue'"
+} [list 1 {string or blob too big}]
+do_test sqllimits1-5.17.2 {
+  sqlite3_limit db SQLITE_LIMIT_LENGTH 0x7fffffff
+  catchsql {SELECT 'A' || $::strvalue}
+} [list 0 A$strvalue]
+do_test sqllimits1-5.17.3 {
+  sqlite3_limit db SQLITE_LIMIT_LENGTH $SQLITE_LIMIT_LENGTH
+  catchsql {SELECT 'A' || $::strvalue}
 } [list 1 {string or blob too big}]
 set blobvalue [string repeat 41 $::SQLITE_LIMIT_LENGTH]
 do_test sqllimits1-5.18 {
@@ -368,7 +404,7 @@ do_test sqllimits1-6.1 {
   set N [expr {(50000 / [string length $tail])+1}]
   append sql [string repeat $tail $N]
   catchsql $sql
-} {1 {String or BLOB exceeded size limit}}
+} {1 {string or blob too big}}
 do_test sqllimits1-6.3 {
   sqlite3_limit db SQLITE_LIMIT_SQL_LENGTH 50000
   set sql "SELECT 1 WHERE 1==1"
@@ -597,6 +633,26 @@ do_test sqllimits1-8.9 {
   catchsql "CREATE TABLE t2([join $cols ,])"
   catchsql "CREATE VIEW v1 AS SELECT *, c1 AS o FROM t2;"
 } {1 {too many columns in result set}}
+do_test sqllimits1-8.10 {
+  # ORDER BY columns
+  set cols [list]
+  for {set i 0} {$i <= $SQLITE_LIMIT_COLUMN} {incr i} {
+    lappend cols c
+  }
+  set sql "SELECT c FROM t1 ORDER BY [join $cols ,]"
+  catchsql $sql
+} {1 {too many terms in ORDER BY clause}}
+do_test sqllimits1-8.11 {
+  # ORDER BY columns
+  set cols [list]
+  for {set i 0} {$i <= $SQLITE_LIMIT_COLUMN} {incr i} {
+    lappend cols [expr {$i%3 + 1}]
+  }
+  set sql "SELECT c, c+1, c+2 FROM t1 UNION SELECT c-1, c-2, c-3 FROM t1"
+  append sql " ORDER BY [join $cols ,]"
+  catchsql $sql
+} {1 {too many terms in ORDER BY clause}}
+
 
 #--------------------------------------------------------------------
 # These tests - sqllimits1-9.* - test that the SQLITE_LIMIT_EXPR_DEPTH
@@ -626,7 +682,7 @@ if {$SQLITE_MAX_EXPR_DEPTH==0} {
     catchsql [subst { $expr }]
   } "1 {parser stack overflow}"
   
-  
+if 0 {  
   do_test sqllimits1-9.3 {
     execsql {
       PRAGMA max_page_count = 1000000;  -- 1 GB
@@ -649,6 +705,7 @@ if {$SQLITE_MAX_EXPR_DEPTH==0} {
     }
   } "1 {Expression tree is too large (maximum depth $::SQLITE_MAX_EXPR_DEPTH)}"
 }
+}
 
 #--------------------------------------------------------------------
 # Test cases sqllimits1-10.* test that the SQLITE_MAX_VDBE_OP
@@ -661,36 +718,35 @@ if {$SQLITE_MAX_EXPR_DEPTH==0} {
 # Test the SQLITE_LIMIT_FUNCTION_ARG limit works. Test case names
 # match the pattern "sqllimits1-11.*".
 #
-do_test sqllimits1-11.1 {
-  set max $::SQLITE_MAX_FUNCTION_ARG
-  set vals [list]
-  for {set i 0} {$i < $SQLITE_MAX_FUNCTION_ARG} {incr i} {
-    lappend vals $i
-  }
-  catchsql "SELECT max([join $vals ,])"
-} "0 [expr {$::SQLITE_MAX_FUNCTION_ARG - 1}]"
-do_test sqllimits1-11.2 {
-  set max $::SQLITE_MAX_FUNCTION_ARG
-  set vals [list]
-  for {set i 0} {$i <= $SQLITE_MAX_FUNCTION_ARG} {incr i} {
-    lappend vals $i
-  }
-  catchsql "SELECT max([join $vals ,])"
-} {1 {too many arguments on function max}}
+for {set max 5} {$max<=$SQLITE_MAX_FUNCTION_ARG} {incr max} {
+  do_test sqllimits1-11.$max.1 {
+    set vals [list]
+    sqlite3_limit db SQLITE_LIMIT_FUNCTION_ARG $::max
+    for {set i 0} {$i < $::max} {incr i} {
+      lappend vals $i
+    }
+    catchsql "SELECT max([join $vals ,])"
+  } "0 [expr {$::max - 1}]"
+  do_test sqllimits1-11.$max.2 {
+    set vals [list]
+    for {set i 0} {$i <= $::max} {incr i} {
+      lappend vals $i
+    }
+    catchsql "SELECT max([join $vals ,])"
+  } {1 {too many arguments on function max}}
 
-# Test that it is SQLite, and not the implementation of the
-# user function that is throwing the error.
-proc myfunc {args} {error "I don't like to be called!"}
-do_test sqllimits1-11.2 {
-  db function myfunc myfunc
-  set max $::SQLITE_MAX_FUNCTION_ARG
-  set vals [list]
-  for {set i 0} {$i <= $SQLITE_MAX_FUNCTION_ARG} {incr i} {
-    lappend vals $i
-  }
-  catchsql "SELECT myfunc([join $vals ,])"
-} {1 {too many arguments on function myfunc}}
-
+  # Test that it is SQLite, and not the implementation of the
+  # user function that is throwing the error.
+  proc myfunc {args} {error "I don't like to be called!"}
+  do_test sqllimits1-11.$max.2 {
+    db function myfunc myfunc
+    set vals [list]
+    for {set i 0} {$i <= $::max} {incr i} {
+      lappend vals $i
+    }
+    catchsql "SELECT myfunc([join $vals ,])"
+  } {1 {too many arguments on function myfunc}}
+}
 
 #--------------------------------------------------------------------
 # Test cases sqllimits1-12.*: Test the SQLITE_MAX_ATTACHED limit.

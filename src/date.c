@@ -46,7 +46,6 @@
 **      Richmond, Virginia (USA)
 */
 #include "sqliteInt.h"
-#include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
@@ -54,19 +53,36 @@
 #ifndef SQLITE_OMIT_DATETIME_FUNCS
 
 /*
+** On recent Windows platforms, the localtime_s() function is available
+** as part of the "Secure CRT". It is essentially equivalent to 
+** localtime_r() available under most POSIX platforms, except that the 
+** order of the parameters is reversed.
+**
+** See http://msdn.microsoft.com/en-us/library/a442x3ye(VS.80).aspx.
+**
+** If the user has not indicated to use localtime_r() or localtime_s()
+** already, check for an MSVC build environment that provides 
+** localtime_s().
+*/
+#if !defined(HAVE_LOCALTIME_R) && !defined(HAVE_LOCALTIME_S) && \
+     defined(_MSC_VER) && defined(_CRT_INSECURE_DEPRECATE)
+#define HAVE_LOCALTIME_S 1
+#endif
+
+/*
 ** A structure for holding a single date and time.
 */
 typedef struct DateTime DateTime;
 struct DateTime {
-  double rJD;      /* The julian day number */
-  int Y, M, D;     /* Year, month, and day */
-  int h, m;        /* Hour and minutes */
-  int tz;          /* Timezone offset in minutes */
-  double s;        /* Seconds */
-  char validYMD;   /* True if Y,M,D are valid */
-  char validHMS;   /* True if h,m,s are valid */
-  char validJD;    /* True if rJD is valid */
-  char validTZ;    /* True if tz is valid */
+  sqlite3_int64 iJD; /* The julian day number times 86400000 */
+  int Y, M, D;       /* Year, month, and day */
+  int h, m;          /* Hour and minutes */
+  int tz;            /* Timezone offset in minutes */
+  double s;          /* Seconds */
+  char validYMD;     /* True (1) if Y,M,D are valid */
+  char validHMS;     /* True (1) if h,m,s are valid */
+  char validJD;      /* True (1) if iJD is valid */
+  char validTZ;      /* True (1) if tz is valid */
 };
 
 
@@ -101,7 +117,7 @@ static int getDigits(const char *zDate, ...){
     pVal = va_arg(ap, int*);
     val = 0;
     while( N-- ){
-      if( !isdigit(*(u8*)zDate) ){
+      if( !sqlite3Isdigit(*zDate) ){
         goto end_getDigits;
       }
       val = val*10 + *zDate - '0';
@@ -145,7 +161,7 @@ static int parseTimezone(const char *zDate, DateTime *p){
   int sgn = 0;
   int nHr, nMn;
   int c;
-  while( isspace(*(u8*)zDate) ){ zDate++; }
+  while( sqlite3Isspace(*zDate) ){ zDate++; }
   p->tz = 0;
   c = *zDate;
   if( c=='-' ){
@@ -165,7 +181,7 @@ static int parseTimezone(const char *zDate, DateTime *p){
   zDate += 5;
   p->tz = sgn*(nMn + nHr*60);
 zulu_time:
-  while( isspace(*(u8*)zDate) ){ zDate++; }
+  while( sqlite3Isspace(*zDate) ){ zDate++; }
   return *zDate!=0;
 }
 
@@ -189,10 +205,10 @@ static int parseHhMmSs(const char *zDate, DateTime *p){
       return 1;
     }
     zDate += 2;
-    if( *zDate=='.' && isdigit((u8)zDate[1]) ){
+    if( *zDate=='.' && sqlite3Isdigit(zDate[1]) ){
       double rScale = 1.0;
       zDate++;
-      while( isdigit(*(u8*)zDate) ){
+      while( sqlite3Isdigit(*zDate) ){
         ms = ms*10.0 + *zDate - '0';
         rScale *= 10.0;
         zDate++;
@@ -208,7 +224,7 @@ static int parseHhMmSs(const char *zDate, DateTime *p){
   p->m = m;
   p->s = s + ms;
   if( parseTimezone(zDate, p) ) return 1;
-  p->validTZ = p->tz!=0;
+  p->validTZ = (p->tz!=0)?1:0;
   return 0;
 }
 
@@ -237,14 +253,14 @@ static void computeJD(DateTime *p){
   }
   A = Y/100;
   B = 2 - A + (A/4);
-  X1 = 365.25*(Y+4716);
-  X2 = 30.6001*(M+1);
-  p->rJD = X1 + X2 + D + B - 1524.5;
+  X1 = 36525*(Y+4716)/100;
+  X2 = 306001*(M+1)/10000;
+  p->iJD = (sqlite3_int64)((X1 + X2 + D + B - 1524.5 ) * 86400000);
   p->validJD = 1;
   if( p->validHMS ){
-    p->rJD += (p->h*3600.0 + p->m*60.0 + p->s)/86400.0;
+    p->iJD += p->h*3600000 + p->m*60000 + (sqlite3_int64)(p->s*1000);
     if( p->validTZ ){
-      p->rJD -= p->tz*60/86400.0;
+      p->iJD -= p->tz*60000;
       p->validYMD = 0;
       p->validHMS = 0;
       p->validTZ = 0;
@@ -277,7 +293,7 @@ static int parseYyyyMmDd(const char *zDate, DateTime *p){
     return 1;
   }
   zDate += 10;
-  while( isspace(*(u8*)zDate) || 'T'==*(u8*)zDate ){ zDate++; }
+  while( sqlite3Isspace(*zDate) || 'T'==*(u8*)zDate ){ zDate++; }
   if( parseHhMmSs(zDate, p)==0 ){
     /* We got the time */
   }else if( *zDate==0 ){
@@ -294,6 +310,17 @@ static int parseYyyyMmDd(const char *zDate, DateTime *p){
     computeJD(p);
   }
   return 0;
+}
+
+/*
+** Set the time to the current time reported by the VFS
+*/
+static void setDateTimeToCurrent(sqlite3_context *context, DateTime *p){
+  double r;
+  sqlite3 *db = sqlite3_context_db_handle(context);
+  sqlite3OsCurrentTime(db->pVfs, &r);
+  p->iJD = (sqlite3_int64)(r*86400000.0 + 0.5);
+  p->validJD = 1;
 }
 
 /*
@@ -317,20 +344,18 @@ static int parseDateOrTime(
   const char *zDate, 
   DateTime *p
 ){
-  memset(p, 0, sizeof(*p));
+  int isRealNum;    /* Return from sqlite3IsNumber().  Not used */
   if( parseYyyyMmDd(zDate,p)==0 ){
     return 0;
   }else if( parseHhMmSs(zDate, p)==0 ){
     return 0;
   }else if( sqlite3StrICmp(zDate,"now")==0){
-    double r;
-    sqlite3 *db = sqlite3_context_db_handle(context);
-    sqlite3OsCurrentTime(db->pVfs, &r);
-    p->rJD = r;
-    p->validJD = 1;
+    setDateTimeToCurrent(context, p);
     return 0;
-  }else if( sqlite3IsNumber(zDate, 0, SQLITE_UTF8) ){
-    getValue(zDate, &p->rJD);
+  }else if( sqlite3IsNumber(zDate, &isRealNum, SQLITE_UTF8) ){
+    double r;
+    getValue(zDate, &r);
+    p->iJD = (sqlite3_int64)(r*86400000.0 + 0.5);
     p->validJD = 1;
     return 0;
   }
@@ -348,14 +373,14 @@ static void computeYMD(DateTime *p){
     p->M = 1;
     p->D = 1;
   }else{
-    Z = p->rJD + 0.5;
-    A = (Z - 1867216.25)/36524.25;
+    Z = (int)((p->iJD + 43200000)/86400000);
+    A = (int)((Z - 1867216.25)/36524.25);
     A = Z + 1 + A - (A/4);
     B = A + 1524;
-    C = (B - 122.1)/365.25;
-    D = 365.25*C;
-    E = (B-D)/30.6001;
-    X1 = 30.6001*E;
+    C = (int)((B - 122.1)/365.25);
+    D = (36525*C)/100;
+    E = (int)((B-D)/30.6001);
+    X1 = (int)(30.6001*E);
     p->D = B - D - X1;
     p->M = E<14 ? E-1 : E-13;
     p->Y = p->M>2 ? C - 4716 : C - 4715;
@@ -367,13 +392,12 @@ static void computeYMD(DateTime *p){
 ** Compute the Hour, Minute, and Seconds from the julian day number.
 */
 static void computeHMS(DateTime *p){
-  int Z, s;
+  int s;
   if( p->validHMS ) return;
   computeJD(p);
-  Z = p->rJD + 0.5;
-  s = (p->rJD + 0.5 - Z)*86400000.0 + 0.5;
-  p->s = 0.001*s;
-  s = p->s;
+  s = (int)((p->iJD + 43200000) % 86400000);
+  p->s = s/1000.0;
+  s = (int)p->s;
   p->s -= s;
   p->h = s/3600;
   s -= p->h*3600;
@@ -399,11 +423,13 @@ static void clearYMD_HMS_TZ(DateTime *p){
   p->validTZ = 0;
 }
 
+#ifndef SQLITE_OMIT_LOCALTIME
 /*
-** Compute the difference (in days) between localtime and UTC (a.k.a. GMT)
+** Compute the difference (in milliseconds)
+** between localtime and UTC (a.k.a. GMT)
 ** for the time value p where p is in UTC.
 */
-static double localtimeOffset(DateTime *p){
+static sqlite3_int64 localtimeOffset(DateTime *p){
   DateTime x, y;
   time_t t;
   x = *p;
@@ -416,13 +442,13 @@ static double localtimeOffset(DateTime *p){
     x.m = 0;
     x.s = 0.0;
   } else {
-    int s = x.s + 0.5;
+    int s = (int)(x.s + 0.5);
     x.s = s;
   }
   x.tz = 0;
   x.validJD = 0;
   computeJD(&x);
-  t = (x.rJD-2440587.5)*86400.0 + 0.5;
+  t = x.iJD/1000 - 21086676*(i64)10000;
 #ifdef HAVE_LOCALTIME_R
   {
     struct tm sLocal;
@@ -434,10 +460,21 @@ static double localtimeOffset(DateTime *p){
     y.m = sLocal.tm_min;
     y.s = sLocal.tm_sec;
   }
+#elif defined(HAVE_LOCALTIME_S)
+  {
+    struct tm sLocal;
+    localtime_s(&sLocal, &t);
+    y.Y = sLocal.tm_year + 1900;
+    y.M = sLocal.tm_mon + 1;
+    y.D = sLocal.tm_mday;
+    y.h = sLocal.tm_hour;
+    y.m = sLocal.tm_min;
+    y.s = sLocal.tm_sec;
+  }
 #else
   {
     struct tm *pTm;
-    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
+    sqlite3_mutex_enter(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
     pTm = localtime(&t);
     y.Y = pTm->tm_year + 1900;
     y.M = pTm->tm_mon + 1;
@@ -445,7 +482,7 @@ static double localtimeOffset(DateTime *p){
     y.h = pTm->tm_hour;
     y.m = pTm->tm_min;
     y.s = pTm->tm_sec;
-    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
+    sqlite3_mutex_leave(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
   }
 #endif
   y.validYMD = 1;
@@ -453,8 +490,9 @@ static double localtimeOffset(DateTime *p){
   y.validJD = 0;
   y.validTZ = 0;
   computeJD(&y);
-  return y.rJD - x.rJD;
+  return y.iJD - x.iJD;
 }
+#endif /* SQLITE_OMIT_LOCALTIME */
 
 /*
 ** Process a modifier to a date-time stamp.  The modifiers are
@@ -483,11 +521,12 @@ static int parseModifier(const char *zMod, DateTime *p){
   double r;
   char *z, zBuf[30];
   z = zBuf;
-  for(n=0; n<sizeof(zBuf)-1 && zMod[n]; n++){
-    z[n] = tolower(zMod[n]);
+  for(n=0; n<ArraySize(zBuf)-1 && zMod[n]; n++){
+    z[n] = (char)sqlite3UpperToLower[(u8)zMod[n]];
   }
   z[n] = 0;
   switch( z[0] ){
+#ifndef SQLITE_OMIT_LOCALTIME
     case 'l': {
       /*    localtime
       **
@@ -496,32 +535,36 @@ static int parseModifier(const char *zMod, DateTime *p){
       */
       if( strcmp(z, "localtime")==0 ){
         computeJD(p);
-        p->rJD += localtimeOffset(p);
+        p->iJD += localtimeOffset(p);
         clearYMD_HMS_TZ(p);
         rc = 0;
       }
       break;
     }
+#endif
     case 'u': {
       /*
       **    unixepoch
       **
-      ** Treat the current value of p->rJD as the number of
+      ** Treat the current value of p->iJD as the number of
       ** seconds since 1970.  Convert to a real julian day number.
       */
       if( strcmp(z, "unixepoch")==0 && p->validJD ){
-        p->rJD = p->rJD/86400.0 + 2440587.5;
+        p->iJD = (p->iJD + 43200)/86400 + 21086676*(i64)10000000;
         clearYMD_HMS_TZ(p);
-        rc = 0;
-      }else if( strcmp(z, "utc")==0 ){
-        double c1;
-        computeJD(p);
-        c1 = localtimeOffset(p);
-        p->rJD -= c1;
-        clearYMD_HMS_TZ(p);
-        p->rJD += c1 - localtimeOffset(p);
         rc = 0;
       }
+#ifndef SQLITE_OMIT_LOCALTIME
+      else if( strcmp(z, "utc")==0 ){
+        sqlite3_int64 c1;
+        computeJD(p);
+        c1 = localtimeOffset(p);
+        p->iJD -= c1;
+        clearYMD_HMS_TZ(p);
+        p->iJD += c1 - localtimeOffset(p);
+        rc = 0;
+      }
+#endif
       break;
     }
     case 'w': {
@@ -533,16 +576,15 @@ static int parseModifier(const char *zMod, DateTime *p){
       ** date is already on the appropriate weekday, this is a no-op.
       */
       if( strncmp(z, "weekday ", 8)==0 && getValue(&z[8],&r)>0
-                 && (n=r)==r && n>=0 && r<7 ){
-        int Z;
+                 && (n=(int)r)==r && n>=0 && r<7 ){
+        sqlite3_int64 Z;
         computeYMD_HMS(p);
         p->validTZ = 0;
         p->validJD = 0;
         computeJD(p);
-        Z = p->rJD + 1.5;
-        Z %= 7;
+        Z = ((p->iJD + 129600000)/86400000) % 7;
         if( Z>n ) Z -= 7;
-        p->rJD += n - Z;
+        p->iJD += (n - Z)*86400000;
         clearYMD_HMS_TZ(p);
         rc = 0;
       }
@@ -588,6 +630,7 @@ static int parseModifier(const char *zMod, DateTime *p){
     case '7':
     case '8':
     case '9': {
+      double rRounder;
       n = getValue(z, &r);
       assert( n>=1 );
       if( z[n]==':' ){
@@ -598,54 +641,59 @@ static int parseModifier(const char *zMod, DateTime *p){
         */
         const char *z2 = z;
         DateTime tx;
-        int day;
-        if( !isdigit(*(u8*)z2) ) z2++;
+        sqlite3_int64 day;
+        if( !sqlite3Isdigit(*z2) ) z2++;
         memset(&tx, 0, sizeof(tx));
         if( parseHhMmSs(z2, &tx) ) break;
         computeJD(&tx);
-        tx.rJD -= 0.5;
-        day = (int)tx.rJD;
-        tx.rJD -= day;
-        if( z[0]=='-' ) tx.rJD = -tx.rJD;
+        tx.iJD -= 43200000;
+        day = tx.iJD/86400000;
+        tx.iJD -= day*86400000;
+        if( z[0]=='-' ) tx.iJD = -tx.iJD;
         computeJD(p);
         clearYMD_HMS_TZ(p);
-        p->rJD += tx.rJD;
+        p->iJD += tx.iJD;
         rc = 0;
         break;
       }
       z += n;
-      while( isspace(*(u8*)z) ) z++;
-      n = strlen(z);
+      while( sqlite3Isspace(*z) ) z++;
+      n = sqlite3Strlen30(z);
       if( n>10 || n<3 ) break;
       if( z[n-1]=='s' ){ z[n-1] = 0; n--; }
       computeJD(p);
       rc = 0;
+      rRounder = r<0 ? -0.5 : +0.5;
       if( n==3 && strcmp(z,"day")==0 ){
-        p->rJD += r;
+        p->iJD += (sqlite3_int64)(r*86400000.0 + rRounder);
       }else if( n==4 && strcmp(z,"hour")==0 ){
-        p->rJD += r/24.0;
+        p->iJD += (sqlite3_int64)(r*(86400000.0/24.0) + rRounder);
       }else if( n==6 && strcmp(z,"minute")==0 ){
-        p->rJD += r/(24.0*60.0);
+        p->iJD += (sqlite3_int64)(r*(86400000.0/(24.0*60.0)) + rRounder);
       }else if( n==6 && strcmp(z,"second")==0 ){
-        p->rJD += r/(24.0*60.0*60.0);
+        p->iJD += (sqlite3_int64)(r*(86400000.0/(24.0*60.0*60.0)) + rRounder);
       }else if( n==5 && strcmp(z,"month")==0 ){
         int x, y;
         computeYMD_HMS(p);
-        p->M += r;
+        p->M += (int)r;
         x = p->M>0 ? (p->M-1)/12 : (p->M-12)/12;
         p->Y += x;
         p->M -= x*12;
         p->validJD = 0;
         computeJD(p);
-        y = r;
+        y = (int)r;
         if( y!=r ){
-          p->rJD += (r - y)*30.0;
+          p->iJD += (sqlite3_int64)((r - y)*30.0*86400000.0 + rRounder);
         }
       }else if( n==4 && strcmp(z,"year")==0 ){
+        int y = (int)r;
         computeYMD_HMS(p);
-        p->Y += r;
+        p->Y += y;
         p->validJD = 0;
         computeJD(p);
+        if( y!=r ){
+          p->iJD += (sqlite3_int64)((r - y)*365.0*86400000.0 + rRounder);
+        }
       }else{
         rc = 1;
       }
@@ -676,14 +724,19 @@ static int isDate(
 ){
   int i;
   const unsigned char *z;
-  static const unsigned char zDflt[] = "now";
+  int eType;
+  memset(p, 0, sizeof(*p));
   if( argc==0 ){
-    z = zDflt;
+    setDateTimeToCurrent(context, p);
+  }else if( (eType = sqlite3_value_type(argv[0]))==SQLITE_FLOAT
+                   || eType==SQLITE_INTEGER ){
+    p->iJD = (sqlite3_int64)(sqlite3_value_double(argv[0])*86400000.0 + 0.5);
+    p->validJD = 1;
   }else{
     z = sqlite3_value_text(argv[0]);
-  }
-  if( !z || parseDateOrTime(context, (char*)z, p) ){
-    return 1;
+    if( !z || parseDateOrTime(context, (char*)z, p) ){
+      return 1;
+    }
   }
   for(i=1; i<argc; i++){
     if( (z = sqlite3_value_text(argv[i]))==0 || parseModifier((char*)z, p) ){
@@ -712,7 +765,7 @@ static void juliandayFunc(
   DateTime x;
   if( isDate(context, argc, argv, &x)==0 ){
     computeJD(&x);
-    sqlite3_result_double(context, x.rJD);
+    sqlite3_result_double(context, x.iJD/86400000.0);
   }
 }
 
@@ -800,11 +853,13 @@ static void strftimeFunc(
 ){
   DateTime x;
   u64 n;
-  int i, j;
+  size_t i,j;
   char *z;
+  sqlite3 *db;
   const char *zFmt = (const char*)sqlite3_value_text(argv[0]);
   char zBuf[100];
   if( zFmt==0 || isDate(context, argc-1, argv+1, &x) ) return;
+  db = sqlite3_context_db_handle(context);
   for(i=0, n=1; zFmt[i]; i++, n++){
     if( zFmt[i]=='%' ){
       switch( zFmt[i+1] ){
@@ -838,13 +893,17 @@ static void strftimeFunc(
       i++;
     }
   }
+  testcase( n==sizeof(zBuf)-1 );
+  testcase( n==sizeof(zBuf) );
+  testcase( n==(u64)db->aLimit[SQLITE_LIMIT_LENGTH]+1 );
+  testcase( n==(u64)db->aLimit[SQLITE_LIMIT_LENGTH] );
   if( n<sizeof(zBuf) ){
     z = zBuf;
-  }else if( n>sqlite3_context_db_handle(context)->aLimit[SQLITE_LIMIT_LENGTH] ){
+  }else if( n>(u64)db->aLimit[SQLITE_LIMIT_LENGTH] ){
     sqlite3_result_error_toobig(context);
     return;
   }else{
-    z = sqlite3_malloc( n );
+    z = sqlite3DbMallocRaw(db, (int)n);
     if( z==0 ){
       sqlite3_result_error_nomem(context);
       return;
@@ -863,7 +922,7 @@ static void strftimeFunc(
           double s = x.s;
           if( s>59.999 ) s = 59.999;
           sqlite3_snprintf(7, &z[j],"%06.3f", s);
-          j += strlen(&z[j]);
+          j += sqlite3Strlen30(&z[j]);
           break;
         }
         case 'H':  sqlite3_snprintf(3, &z[j],"%02d",x.h); j+=2; break;
@@ -875,10 +934,10 @@ static void strftimeFunc(
           y.M = 1;
           y.D = 1;
           computeJD(&y);
-          nDay = x.rJD - y.rJD + 0.5;
+          nDay = (int)((x.iJD-y.iJD+43200000)/86400000);
           if( zFmt[i]=='W' ){
             int wd;   /* 0=Monday, 1=Tuesday, ... 6=Sunday */
-            wd = ((int)(x.rJD+0.5)) % 7;
+            wd = (int)(((x.iJD+43200000)/86400000)%7);
             sqlite3_snprintf(3, &z[j],"%02d",(nDay+7-wd)/7);
             j += 2;
           }else{
@@ -888,28 +947,34 @@ static void strftimeFunc(
           break;
         }
         case 'J': {
-          sqlite3_snprintf(20, &z[j],"%.16g",x.rJD);
-          j+=strlen(&z[j]);
+          sqlite3_snprintf(20, &z[j],"%.16g",x.iJD/86400000.0);
+          j+=sqlite3Strlen30(&z[j]);
           break;
         }
         case 'm':  sqlite3_snprintf(3, &z[j],"%02d",x.M); j+=2; break;
         case 'M':  sqlite3_snprintf(3, &z[j],"%02d",x.m); j+=2; break;
         case 's': {
-          sqlite3_snprintf(30,&z[j],"%d",
-                           (int)((x.rJD-2440587.5)*86400.0 + 0.5));
-          j += strlen(&z[j]);
+          sqlite3_snprintf(30,&z[j],"%lld",
+                           (i64)(x.iJD/1000 - 21086676*(i64)10000));
+          j += sqlite3Strlen30(&z[j]);
           break;
         }
         case 'S':  sqlite3_snprintf(3,&z[j],"%02d",(int)x.s); j+=2; break;
-        case 'w':  z[j++] = (((int)(x.rJD+1.5)) % 7) + '0'; break;
-        case 'Y':  sqlite3_snprintf(5,&z[j],"%04d",x.Y); j+=strlen(&z[j]);break;
+        case 'w': {
+          z[j++] = (char)(((x.iJD+129600000)/86400000) % 7) + '0';
+          break;
+        }
+        case 'Y': {
+          sqlite3_snprintf(5,&z[j],"%04d",x.Y); j+=sqlite3Strlen30(&z[j]);
+          break;
+        }
         default:   z[j++] = '%'; break;
       }
     }
   }
   z[j] = 0;
   sqlite3_result_text(context, z, -1,
-                      z==zBuf ? SQLITE_TRANSIENT : sqlite3_free);
+                      z==zBuf ? SQLITE_TRANSIENT : SQLITE_DYNAMIC);
 }
 
 /*
@@ -919,9 +984,10 @@ static void strftimeFunc(
 */
 static void ctimeFunc(
   sqlite3_context *context,
-  int argc,
-  sqlite3_value **argv
+  int NotUsed,
+  sqlite3_value **NotUsed2
 ){
+  UNUSED_PARAMETER2(NotUsed, NotUsed2);
   timeFunc(context, 0, 0);
 }
 
@@ -932,9 +998,10 @@ static void ctimeFunc(
 */
 static void cdateFunc(
   sqlite3_context *context,
-  int argc,
-  sqlite3_value **argv
+  int NotUsed,
+  sqlite3_value **NotUsed2
 ){
+  UNUSED_PARAMETER2(NotUsed, NotUsed2);
   dateFunc(context, 0, 0);
 }
 
@@ -945,9 +1012,10 @@ static void cdateFunc(
 */
 static void ctimestampFunc(
   sqlite3_context *context,
-  int argc,
-  sqlite3_value **argv
+  int NotUsed,
+  sqlite3_value **NotUsed2
 ){
+  UNUSED_PARAMETER2(NotUsed, NotUsed2);
   datetimeFunc(context, 0, 0);
 }
 #endif /* !defined(SQLITE_OMIT_DATETIME_FUNCS) */
@@ -975,9 +1043,19 @@ static void currentTimeFunc(
   double rT;
   char zBuf[20];
 
+  UNUSED_PARAMETER(argc);
+  UNUSED_PARAMETER(argv);
+
   db = sqlite3_context_db_handle(context);
   sqlite3OsCurrentTime(db->pVfs, &rT);
+#ifndef SQLITE_OMIT_FLOATING_POINT
   t = 86400.0*(rT - 2440587.5) + 0.5;
+#else
+  /* without floating point support, rT will have
+  ** already lost fractional day precision.
+  */
+  t = 86400 * (rT - 2440587) - 43200;
+#endif
 #ifdef HAVE_GMTIME_R
   {
     struct tm sNow;
@@ -987,10 +1065,10 @@ static void currentTimeFunc(
 #else
   {
     struct tm *pTm;
-    sqlite3_mutex_enter(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
+    sqlite3_mutex_enter(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
     pTm = gmtime(&t);
     strftime(zBuf, 20, zFormat, pTm);
-    sqlite3_mutex_leave(sqlite3_mutex_alloc(SQLITE_MUTEX_STATIC_MASTER));
+    sqlite3_mutex_leave(sqlite3MutexAlloc(SQLITE_MUTEX_STATIC_MASTER));
   }
 #endif
 
@@ -1003,42 +1081,28 @@ static void currentTimeFunc(
 ** functions.  This should be the only routine in this file with
 ** external linkage.
 */
-void sqlite3RegisterDateTimeFunctions(sqlite3 *db){
+void sqlite3RegisterDateTimeFunctions(void){
+  static SQLITE_WSD FuncDef aDateTimeFuncs[] = {
 #ifndef SQLITE_OMIT_DATETIME_FUNCS
-  static const struct {
-     char *zName;
-     int nArg;
-     void (*xFunc)(sqlite3_context*,int,sqlite3_value**);
-  } aFuncs[] = {
-    { "julianday", -1, juliandayFunc   },
-    { "date",      -1, dateFunc        },
-    { "time",      -1, timeFunc        },
-    { "datetime",  -1, datetimeFunc    },
-    { "strftime",  -1, strftimeFunc    },
-    { "current_time",       0, ctimeFunc      },
-    { "current_timestamp",  0, ctimestampFunc },
-    { "current_date",       0, cdateFunc      },
-  };
-  int i;
-
-  for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3CreateFunc(db, aFuncs[i].zName, aFuncs[i].nArg,
-        SQLITE_UTF8, 0, aFuncs[i].xFunc, 0, 0);
-  }
+    FUNCTION(julianday,        -1, 0, 0, juliandayFunc ),
+    FUNCTION(date,             -1, 0, 0, dateFunc      ),
+    FUNCTION(time,             -1, 0, 0, timeFunc      ),
+    FUNCTION(datetime,         -1, 0, 0, datetimeFunc  ),
+    FUNCTION(strftime,         -1, 0, 0, strftimeFunc  ),
+    FUNCTION(current_time,      0, 0, 0, ctimeFunc     ),
+    FUNCTION(current_timestamp, 0, 0, 0, ctimestampFunc),
+    FUNCTION(current_date,      0, 0, 0, cdateFunc     ),
 #else
-  static const struct {
-     char *zName;
-     char *zFormat;
-  } aFuncs[] = {
-    { "current_time", "%H:%M:%S" },
-    { "current_date", "%Y-%m-%d" },
-    { "current_timestamp", "%Y-%m-%d %H:%M:%S" }
+    STR_FUNCTION(current_time,      0, "%H:%M:%S",          0, currentTimeFunc),
+    STR_FUNCTION(current_timestamp, 0, "%Y-%m-%d",          0, currentTimeFunc),
+    STR_FUNCTION(current_date,      0, "%Y-%m-%d %H:%M:%S", 0, currentTimeFunc),
+#endif
   };
   int i;
+  FuncDefHash *pHash = &GLOBAL(FuncDefHash, sqlite3GlobalFunctions);
+  FuncDef *aFunc = (FuncDef*)&GLOBAL(FuncDef, aDateTimeFuncs);
 
-  for(i=0; i<sizeof(aFuncs)/sizeof(aFuncs[0]); i++){
-    sqlite3CreateFunc(db, aFuncs[i].zName, 0, SQLITE_UTF8, 
-        aFuncs[i].zFormat, currentTimeFunc, 0, 0);
+  for(i=0; i<ArraySize(aDateTimeFuncs); i++){
+    sqlite3FuncDefInsert(pHash, &aFunc[i]);
   }
-#endif
 }

@@ -89,6 +89,15 @@
 #
 AC_INIT(sqlite, m4_esyscmd([cat VERSION | tr -d '\n']))
 
+dnl Make sure the local VERSION file matches this configure script
+sqlite_version_sanity_check=`cat $srcdir/VERSION | tr -d '\n'`
+if test "$PACKAGE_VERSION" != "$sqlite_version_sanity_check" ; then
+AC_MSG_ERROR([configure script is out of date:
+ configure \$PACKAGE_VERSION = $PACKAGE_VERSION
+ top level VERSION file     = $sqlite_version_sanity_check
+please regen with autoconf])
+fi
+
 dnl Put the RCS revision string after AC_INIT so that it will also
 dnl show in in configure.
 # The following RCS revision string applies to configure.in
@@ -118,7 +127,7 @@ AC_CHECK_HEADERS([sys/types.h stdlib.h stdint.h inttypes.h])
 #########
 # Figure out whether or not we have these functions
 #
-AC_CHECK_FUNCS([usleep fdatasync localtime_r gmtime_r])
+AC_CHECK_FUNCS([usleep fdatasync localtime_r gmtime_r localtime_s])
 
 #########
 # By default, we use the amalgamation (this may be changed below...)
@@ -140,6 +149,16 @@ if test "$TCLSH_CMD" = "none"; then
 fi
 AC_SUBST(TCLSH_CMD)
 
+AC_ARG_VAR([TCLLIBDIR], [Where to install tcl plugin])
+if test "x${TCLLIBDIR+set}" != "xset" ; then
+  TCLLIBDIR='$(libdir)'
+  for i in `echo 'puts stdout $auto_path' | ${TCLSH_CMD}` ; do
+    TCLLIBDIR=$i
+    break
+  done
+  TCLLIBDIR="${TCLLIBDIR}/sqlite3"
+fi
+
 
 #########
 # Set up an appropriate program prefix
@@ -150,15 +169,15 @@ fi
 AC_SUBST(program_prefix)
 
 VERSION=[`cat $srcdir/VERSION | sed 's/^\([0-9]*\.*[0-9]*\).*/\1/'`]
-echo "Version set to $VERSION"
+AC_MSG_NOTICE(Version set to $VERSION)
 AC_SUBST(VERSION)
 RELEASE=`cat $srcdir/VERSION`
-echo "Release set to $RELEASE"
+AC_MSG_NOTICE(Release set to $RELEASE)
 AC_SUBST(RELEASE)
-VERSION_NUMBER=[`cat $srcdir/VERSION  \
+VERSION_NUMBER=[`cat $srcdir/VERSION \
                            | sed 's/[^0-9]/ /g' \
                 | awk '{printf "%d%03d%03d",$1,$2,$3}'`]
-echo "Version number set to $VERSION_NUMBER"
+AC_MSG_NOTICE(Version number set to $VERSION_NUMBER)
 AC_SUBST(VERSION_NUMBER)
 
 #########
@@ -297,17 +316,17 @@ case "$enable_tempstore" in
     TEMP_STORE=1
     AC_MSG_RESULT([no])
   ;;
-  always ) 
-     TEMP_STORE=3
-    AC_MSG_RESULT([always])
-  ;;
   yes ) 
+     TEMP_STORE=2
+    AC_MSG_RESULT([yes])
+  ;;
+  always ) 
      TEMP_STORE=3
     AC_MSG_RESULT([always])
   ;;
   * ) 
     TEMP_STORE=1
-    AC_MSG_RESULT([yes])
+    AC_MSG_RESULT([no])
   ;;
 esac
 
@@ -340,33 +359,27 @@ else
 fi
 if test "$TARGET_EXEEXT" = ".exe"; then
   if test $OS2_SHELL ; then
-    OS_UNIX=0
-    OS_WIN=0
-    OS_OS2=1
-    CFLAGS="$CFLAGS -DOS_OS2=1"
-    if test "$ac_compiler_gnu" = "yes" ; then
-      CFLAGS="$CFLAGS -Zomf -Zexe -Zmap"
-      BUILD_CFLAGS="$BUILD_CFLAGS -Zomf -Zexe"
-    fi
+    SQLITE_OS_UNIX=0
+    SQLITE_OS_WIN=0
+    SQLITE_OS_OS2=1
+    CFLAGS="$CFLAGS -DSQLITE_OS_OS2=1"
   else
-    OS_UNIX=0
-    OS_WIN=1
-    OS_OS2=0
-    tclsubdir=win
-    CFLAGS="$CFLAGS -DOS_WIN=1"
+    SQLITE_OS_UNIX=0
+    SQLITE_OS_WIN=1
+    SQLITE_OS_OS2=0
+    CFLAGS="$CFLAGS -DSQLITE_OS_WIN=1"
   fi
 else
-  OS_UNIX=1
-  OS_WIN=0
-  OS_OS2=0
-  tclsubdir=unix
-  CFLAGS="$CFLAGS -DOS_UNIX=1"
+  SQLITE_OS_UNIX=1
+  SQLITE_OS_WIN=0
+  SQLITE_OS_OS2=0
+  CFLAGS="$CFLAGS -DSQLITE_OS_UNIX=1"
 fi
 
 AC_SUBST(BUILD_EXEEXT)
-AC_SUBST(OS_UNIX)
-AC_SUBST(OS_WIN)
-AC_SUBST(OS_OS2)
+AC_SUBST(SQLITE_OS_UNIX)
+AC_SUBST(SQLITE_OS_WIN)
+AC_SUBST(SQLITE_OS_OS2)
 AC_SUBST(TARGET_EXEEXT)
 
 ##########
@@ -391,6 +404,18 @@ if test "${use_tcl}" = "yes" ; then
         AC_MSG_ERROR([${with_tclconfig} directory doesn't contain tclConfig.sh])
       fi
     fi
+
+    # Start autosearch by asking tclsh
+    if test x"$cross_compiling" = xno; then
+      for i in `echo 'puts stdout $auto_path' | ${TCLSH_CMD}`
+      do
+        if test -f "$i/tclConfig.sh" ; then
+          ac_cv_c_tclconfig="$i"
+          break
+        fi
+      done
+    fi
+
     # then check for a private Tcl installation
     if test x"${ac_cv_c_tclconfig}" = x ; then
       for i in \
@@ -611,15 +636,64 @@ AC_ARG_ENABLE(load-extension, AC_HELP_STRING([--enable-load-extension],
       [Enable loading of external extensions]),
       [use_loadextension=$enableval],[use_loadextension=no])
 if test "${use_loadextension}" = "yes" ; then
-  LOADEXTENSION_FLAGS=""
-  AC_SEARCH_LIBS(dlopen, dl)
+  OPT_FEATURE_FLAGS=""
 else
-  LOADEXTENSION_FLAGS="-DSQLITE_OMIT_LOAD_EXTENSION=1"
+  OPT_FEATURE_FLAGS="-DSQLITE_OMIT_LOAD_EXTENSION=1"
 fi
-AC_SUBST(LOADEXTENSION_FLAGS)
 
 #########
-# See whether we should allow loadable extensions
+# attempt to duplicate any OMITS and ENABLES into the $(OPT_FEATURE_FLAGS) parameter
+for option in $CFLAGS $CPPFLAGS
+do
+  case $option in
+    -DSQLITE_OMIT*) OPT_FEATURE_FLAGS="$OPT_FEATURE_FLAGS $option";;
+    -DSQLITE_ENABLE*) OPT_FEATURE_FLAGS="$OPT_FEATURE_FLAGS $option";;
+  esac
+done
+AC_SUBST(OPT_FEATURE_FLAGS)
+
+
+# attempt to remove any OMITS and ENABLES from the $(CFLAGS) parameter
+ac_temp_CFLAGS=""
+for option in $CFLAGS
+do
+  case $option in
+    -DSQLITE_OMIT*) ;;
+    -DSQLITE_ENABLE*) ;;
+    *) ac_temp_CFLAGS="$ac_temp_CFLAGS $option";;
+  esac
+done
+CFLAGS=$ac_temp_CFLAGS
+
+
+# attempt to remove any OMITS and ENABLES from the $(CPPFLAGS) parameter
+ac_temp_CPPFLAGS=""
+for option in $CPPFLAGS
+do
+  case $option in
+    -DSQLITE_OMIT*) ;;
+    -DSQLITE_ENABLE*) ;;
+    *) ac_temp_CPPFLAGS="$ac_temp_CPPFLAGS $option";;
+  esac
+done
+CPPFLAGS=$ac_temp_CPPFLAGS
+
+
+# attempt to remove any OMITS and ENABLES from the $(BUILD_CFLAGS) parameter
+ac_temp_BUILD_CFLAGS=""
+for option in $BUILD_CFLAGS
+do
+  case $option in
+    -DSQLITE_OMIT*) ;;
+    -DSQLITE_ENABLE*) ;;
+    *) ac_temp_BUILD_CFLAGS="$ac_temp_BUILD_CFLAGS $option";;
+  esac
+done
+BUILD_CFLAGS=$ac_temp_BUILD_CFLAGS
+
+
+#########
+# See whether we should use GCOV
 AC_ARG_ENABLE(gcov, AC_HELP_STRING([--enable-gcov],
       [Enable coverage testing using gcov]),
       [use_gcov=$enableval],[use_gcov=no])

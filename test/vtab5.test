@@ -150,4 +150,3 @@ do_test vtab5.4.2 {
 # } {1 {virtual tables may not be altered}}
 
 finish_test
-

@@ -248,6 +248,6 @@ do_test unique-5.2 {
   catchsql {
     INSERT INTO t5 VALUES(1,2,3,4,5,6);
   }
-} {1 {columns first_column_with_long_name, second_column_with_long_name, third_column_with_long_name, fourth_column_with_long_name, fifth_column_with_long_name, ... are not unique}}
+} {1 {columns first_column_with_long_name, second_column_with_long_name, third_column_with_long_name, fourth_column_with_long_name, fifth_column_with_long_name, sixth_column_with_long_name are not unique}}
 
 finish_test

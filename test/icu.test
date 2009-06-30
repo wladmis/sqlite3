@@ -115,4 +115,3 @@ do_test icu-4.3 {
 } {apricot cherry chokecherry yamot peach plum}
 
 finish_test
-

@@ -116,6 +116,6 @@ do_test trigger7-99.1 {
   catchsql {
     DROP TRIGGER t2r5
   }
-} {1 {malformed database schema (t1) - near "nonsense": syntax error}}
+} {1 {malformed database schema (t2r12) - near "nonsense": syntax error}}
 
 finish_test

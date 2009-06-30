@@ -319,4 +319,28 @@ do_test cast-3.32.3 {
   sqlite3_finalize $::STMT
 } {SQLITE_OK}
 
+
+do_test cast-4.1 {
+  db eval {
+    CREATE TABLE t1(a);
+    INSERT INTO t1 VALUES('abc');
+    SELECT a, CAST(a AS integer) FROM t1;
+  }
+} {abc 0}
+do_test cast-4.2 {
+  db eval {
+    SELECT CAST(a AS integer), a FROM t1;
+  }
+} {0 abc}
+do_test cast-4.3 {
+  db eval {
+    SELECT a, CAST(a AS integer), a FROM t1;
+  }
+} {abc 0 abc}
+do_test cast-4.4 {
+  db eval {
+    SELECT CAST(a AS integer), a, CAST(a AS real), a FROM t1;
+  }
+} {0 abc 0.0 abc}
+
 finish_test

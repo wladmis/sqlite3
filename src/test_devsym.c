@@ -13,6 +13,8 @@
 ** This file contains code that modified the OS layer in order to simulate
 ** different device types (by overriding the return values of the 
 ** xDeviceCharacteristics() and xSectorSize() methods).
+**
+** $Id$
 */
 #if SQLITE_TEST          /* This file is used for testing only */
 
@@ -46,7 +48,7 @@ static int devsymSync(sqlite3_file*, int flags);
 static int devsymFileSize(sqlite3_file*, sqlite3_int64 *pSize);
 static int devsymLock(sqlite3_file*, int);
 static int devsymUnlock(sqlite3_file*, int);
-static int devsymCheckReservedLock(sqlite3_file*);
+static int devsymCheckReservedLock(sqlite3_file*, int *);
 static int devsymFileControl(sqlite3_file*, int op, void *pArg);
 static int devsymSectorSize(sqlite3_file*);
 static int devsymDeviceCharacteristics(sqlite3_file*);
@@ -56,13 +58,14 @@ static int devsymDeviceCharacteristics(sqlite3_file*);
 */
 static int devsymOpen(sqlite3_vfs*, const char *, sqlite3_file*, int , int *);
 static int devsymDelete(sqlite3_vfs*, const char *zName, int syncDir);
-static int devsymAccess(sqlite3_vfs*, const char *zName, int flags);
-static int devsymGetTempName(sqlite3_vfs*, int nOut, char *zOut);
+static int devsymAccess(sqlite3_vfs*, const char *zName, int flags, int *);
 static int devsymFullPathname(sqlite3_vfs*, const char *zName, int, char *zOut);
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 static void *devsymDlOpen(sqlite3_vfs*, const char *zFilename);
 static void devsymDlError(sqlite3_vfs*, int nByte, char *zErrMsg);
-static void *devsymDlSym(sqlite3_vfs*,void*, const char *zSymbol);
+static void (*devsymDlSym(sqlite3_vfs*,void*, const char *zSymbol))(void);
 static void devsymDlClose(sqlite3_vfs*, void*);
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 static int devsymRandomness(sqlite3_vfs*, int nByte, char *zOut);
 static int devsymSleep(sqlite3_vfs*, int microseconds);
 static int devsymCurrentTime(sqlite3_vfs*, double*);
@@ -77,12 +80,18 @@ static sqlite3_vfs devsym_vfs = {
   devsymOpen,               /* xOpen */
   devsymDelete,             /* xDelete */
   devsymAccess,             /* xAccess */
-  devsymGetTempName,        /* xGetTempName */
   devsymFullPathname,       /* xFullPathname */
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
   devsymDlOpen,             /* xDlOpen */
   devsymDlError,            /* xDlError */
   devsymDlSym,              /* xDlSym */
   devsymDlClose,            /* xDlClose */
+#else
+  0,                        /* xDlOpen */
+  0,                        /* xDlError */
+  0,                        /* xDlSym */
+  0,                        /* xDlClose */
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
   devsymRandomness,         /* xRandomness */
   devsymSleep,              /* xSleep */
   devsymCurrentTime         /* xCurrentTime */
@@ -188,9 +197,9 @@ static int devsymUnlock(sqlite3_file *pFile, int eLock){
 /*
 ** Check if another file-handle holds a RESERVED lock on an devsym-file.
 */
-static int devsymCheckReservedLock(sqlite3_file *pFile){
+static int devsymCheckReservedLock(sqlite3_file *pFile, int *pResOut){
   devsym_file *p = (devsym_file *)pFile;
-  return sqlite3OsCheckReservedLock(p->pReal);
+  return sqlite3OsCheckReservedLock(p->pReal, pResOut);
 }
 
 /*
@@ -225,10 +234,14 @@ static int devsymOpen(
   int flags,
   int *pOutFlags
 ){
+  int rc;
   devsym_file *p = (devsym_file *)pFile;
-  pFile->pMethods = &devsym_io_methods;
   p->pReal = (sqlite3_file *)&p[1];
-  return sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
+  rc = sqlite3OsOpen(g.pVfs, zName, p->pReal, flags, pOutFlags);
+  if( p->pReal->pMethods ){
+    pFile->pMethods = &devsym_io_methods;
+  }
+  return rc;
 }
 
 /*
@@ -244,17 +257,13 @@ static int devsymDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
 ** Test for access permissions. Return true if the requested permission
 ** is available, or false otherwise.
 */
-static int devsymAccess(sqlite3_vfs *pVfs, const char *zPath, int flags){
-  return sqlite3OsAccess(g.pVfs, zPath, flags);
-}
-
-/*
-** Populate buffer zBufOut with a pathname suitable for use as a 
-** temporary file. zBufOut is guaranteed to point to a buffer of 
-** at least (DEVSYM_MAX_PATHNAME+1) bytes.
-*/
-static int devsymGetTempName(sqlite3_vfs *pVfs, int nOut, char *zBufOut){
-  return sqlite3OsGetTempname(g.pVfs, nOut, zBufOut);
+static int devsymAccess(
+  sqlite3_vfs *pVfs, 
+  const char *zPath, 
+  int flags, 
+  int *pResOut
+){
+  return sqlite3OsAccess(g.pVfs, zPath, flags, pResOut);
 }
 
 /*
@@ -271,6 +280,7 @@ static int devsymFullPathname(
   return sqlite3OsFullPathname(g.pVfs, zPath, nOut, zOut);
 }
 
+#ifndef SQLITE_OMIT_LOAD_EXTENSION
 /*
 ** Open the dynamic library located at zPath and return a handle.
 */
@@ -290,8 +300,8 @@ static void devsymDlError(sqlite3_vfs *pVfs, int nByte, char *zErrMsg){
 /*
 ** Return a pointer to the symbol zSymbol in the dynamic library pHandle.
 */
-static void *devsymDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
-  return sqlite3OsDlSym(g.pVfs, pHandle, zSymbol);
+static void (*devsymDlSym(sqlite3_vfs *pVfs, void *p, const char *zSym))(void){
+  return sqlite3OsDlSym(g.pVfs, p, zSym);
 }
 
 /*
@@ -300,6 +310,7 @@ static void *devsymDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
 static void devsymDlClose(sqlite3_vfs *pVfs, void *pHandle){
   sqlite3OsDlClose(g.pVfs, pHandle);
 }
+#endif /* SQLITE_OMIT_LOAD_EXTENSION */
 
 /*
 ** Populate the buffer pointed to by zBufOut with nByte bytes of 

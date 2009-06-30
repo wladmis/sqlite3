@@ -374,7 +374,7 @@ proc do_fuzzy_test {testname args} {
       if {$rc} {
         set e 0
         foreach error $::fuzzyopts(-errorlist) {
-          if {0 == [string first $error $msg]} {
+          if {[string first $error $msg]>=0} {
             set e 1
             break
           }
@@ -389,4 +389,3 @@ proc do_fuzzy_test {testname args} {
     } {1}
   }
 }
-

@@ -61,8 +61,11 @@ do_test capi3-1.1 {
   sqlite3_finalize $STMT
   set TAIL
 } {}
-do_test capi3-1.2 {
+do_test capi3-1.2.1 {
   sqlite3_errcode $DB
+} {SQLITE_OK}
+do_test capi3-1.2.2 {
+  sqlite3_extended_errcode $DB
 } {SQLITE_OK}
 do_test capi3-1.3 {
   sqlite3_errmsg $DB
@@ -92,8 +95,11 @@ do_test capi3-1.7 {
     set STMT [sqlite3_prepare $DB $sql -1 TAIL]
   }
 } {1}
-do_test capi3-1.8 {
+do_test capi3-1.8.1 {
   sqlite3_errcode $DB
+} {SQLITE_ERROR}
+do_test capi3-1.8.2 {
+  sqlite3_extended_errcode $DB
 } {SQLITE_ERROR}
 do_test capi3-1.9 {
   sqlite3_errmsg $DB
@@ -115,11 +121,14 @@ ifcapable {utf16} {
   do_test capi3-2.3 {
     set sql [utf16 {SELECT namex FROM sqlite_master}]
     catch {
-      set STMT [sqlite3_prepare16 $DB $sql -1 TAIL]
+      set STMT [sqlite3_prepare16 $DB $sql -1]
     }
   } {1}
-  do_test capi3-2.4 {
+  do_test capi3-2.4.1 {
     sqlite3_errcode $DB
+  } {SQLITE_ERROR}
+  do_test capi3-2.4.2 {
+    sqlite3_extended_errcode $DB
   } {SQLITE_ERROR}
   do_test capi3-2.5 {
     sqlite3_errmsg $DB
@@ -128,8 +137,8 @@ ifcapable {utf16} {
   ifcapable schema_pragmas {
     do_test capi3-2.6 {
       execsql {CREATE TABLE tablename(x)}
-      set sql16 [utf16 {PRAGMA table_info("TableName")}]
-      set STMT [sqlite3_prepare16 $DB $sql16 -1 TAIL]
+      set sql16 [utf16 {PRAGMA table_info("TableName"); --excess text}]
+      set STMT [sqlite3_prepare16 $DB $sql16 -1]
       sqlite3_step $STMT
     } SQLITE_ROW
     do_test capi3-2.7 {
@@ -157,7 +166,7 @@ do_test capi3-3.3 {
   catch {
     set db2 [sqlite3_open /bogus/path/test.db {}]
   }
-  sqlite3_errcode $db2
+  sqlite3_extended_errcode $db2
 } {SQLITE_CANTOPEN}
 do_test capi3-3.4 {
   sqlite3_errmsg $db2
@@ -783,6 +792,24 @@ ifcapable memdebug {
   }
   db close
   sqlite3_memdebug_fail -1
+  do_test capi3-10-4 {
+    sqlite3 db test.db
+    set DB [sqlite3_connection_pointer db]
+    sqlite3_memdebug_fail 1
+    catchsql {
+      select * from sqlite_master where rowid>5;
+    }
+  } {1 {out of memory}}
+  do_test capi3-10-5 {
+    sqlite3_errmsg $::DB
+  } {out of memory}
+  ifcapable {utf16} {
+    do_test capi3-10-6 {
+      utf8 [sqlite3_errmsg16 $::DB]
+    } {out of memory}
+  }
+  db close
+  sqlite3_memdebug_fail -1
 }
 
 # The following tests - capi3-11.* - test that a COMMIT or ROLLBACK
@@ -806,14 +833,25 @@ do_test capi3-11.2 {
   set STMT [sqlite3_prepare $DB "SELECT func(b, a) FROM t1" -1 TAIL]
   sqlite3_step $STMT
 } {SQLITE_ROW}
-do_test capi3-11.3 {
+
+# As of 3.6.5 a COMMIT is OK during while a query is still running -
+# as long as it is a read-only query and not an incremental BLOB write.
+#
+do_test capi3-11.3.1 {
   catchsql {
     COMMIT;
   }
-} {1 {cannot commit transaction - SQL statements in progress}}
-do_test capi3-11.3.1 {
+} {0 {}}
+do_test capi3-11.3.2 {
+  sqlite3_extended_errcode $DB
+} {SQLITE_OK}
+do_test capi3-11.3.3 {
   sqlite3_get_autocommit $DB
-} 0
+} 1
+do_test capi3-11.3.4 {
+  db eval {PRAGMA lock_status}
+} {main shared temp closed}
+
 do_test capi3-11.4 {
   sqlite3_step $STMT
 } {SQLITE_ERROR}
@@ -825,15 +863,7 @@ do_test capi3-11.6 {
     SELECT * FROM t1;
   }
 } {0 {1 int 2 notatype}}
-do_test capi3-11.6.1 {
-  sqlite3_get_autocommit $DB
-} 0
 do_test capi3-11.7 {
-  catchsql {
-    COMMIT;
-  }
-} {0 {}}
-do_test capi3-11.7.1 {
   sqlite3_get_autocommit $DB
 } 1
 do_test capi3-11.8 {
@@ -920,13 +950,13 @@ do_test capi3-11.20 {
     BEGIN;
     COMMIT;
   }
-} {1 {cannot commit transaction - SQL statements in progress}}
+} {0 {}}
 do_test capi3-11.20 {
   sqlite3_reset $STMT
   catchsql {
     COMMIT;
   }
-} {0 {}}
+} {1 {cannot commit - no transaction is active}}
 do_test capi3-11.21 {
   sqlite3_finalize $STMT
 } {SQLITE_OK}
@@ -1136,7 +1166,6 @@ do_test capi3-18.1 {
   sqlite3 db2 test.db
   db2 eval {CREATE TABLE t3(x)}
   db2 close
-breakpoint
   sqlite3_step $STMT
 } {SQLITE_ERROR}
 do_test capi3-18.2 {
@@ -1159,5 +1188,23 @@ do_test capi3-18.6 {
 } {database schema has changed}
 sqlite3_finalize $STMT
 
+# Ticket #3134.  Prepare a statement with an nBytes parameter of 0.
+# Make sure this works correctly and does not reference memory out of
+# range.
+#
+do_test capi3-19.1 {
+  sqlite3_prepare_tkt3134 db
+} {}
+
+# Tests of the interface when no VFS is registered.
+#
+if {![info exists tester_do_binarylog]} {
+  db close
+  vfs_unregister_all
+  do_test capi3-20.1 {
+    sqlite3_sleep 100
+  } {0}
+  vfs_reregister_all
+}
 
 finish_test

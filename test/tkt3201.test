@@ -67,10 +67,8 @@ do_test tkt3201-6 {
 } {1 one 2 two}
 
 do_test tkt3201-7 {
-  explain { SELECT a, b, c, d FROM t1, t3 WHERE a < c }
   execsql { SELECT a, b, c, d FROM t1, t3 WHERE a < c }
 } {1 one 2 two}
 
+
 finish_test
-
-

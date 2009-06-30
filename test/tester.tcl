@@ -27,7 +27,7 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
 }
 
 set tcl_precision 15
-set sqlite_pending_byte 0x0010000
+sqlite3_test_control_pending_byte 0x0010000
 
 # 
 # Check the command-line arguments for a default soft-heap-limit.
@@ -94,12 +94,7 @@ for {set i 0} {$i<[llength $argv]} {incr i} {
   }
   if {[lindex $argv $i] eq "--binarylog"} {
     set tester_do_binarylog 1
-
-    # sqlite3_simulate_device -char safe_append
-    # sqlite3_instvfs binarylog -default -parent devsym binarylog ostrace.bin
-    sqlite3_instvfs binarylog -default binarylog ostrace.bin
     set argv [lreplace $argv $i $i]
-    sqlite3_instvfs marker binarylog "$argv0 $argv"
   }
 }
 
@@ -133,14 +128,28 @@ if {[sqlite3 -has-codec] && [info command sqlite_orig]==""} {
 
 # Create a test database
 #
-catch {db close}
-file delete -force test.db
-file delete -force test.db-journal
-sqlite3 db ./test.db
-set ::DB [sqlite3_connection_pointer db]
-if {[info exists ::SETUP_SQL]} {
-  db eval $::SETUP_SQL
+if {![info exists nTest]} {
+  sqlite3_shutdown 
+  install_malloc_faultsim 1 
+  sqlite3_initialize
+  autoinstall_test_functions
+  if {[info exists tester_do_binarylog]} {
+    sqlite3_instvfs binarylog -default binarylog ostrace.bin
+    sqlite3_instvfs marker binarylog "$argv0 $argv"
+  }
 }
+
+proc reset_db {} {
+  catch {db close}
+  file delete -force test.db
+  file delete -force test.db-journal
+  sqlite3 db ./test.db
+  set ::DB [sqlite3_connection_pointer db]
+  if {[info exists ::SETUP_SQL]} {
+    db eval $::SETUP_SQL
+  }
+}
+reset_db
 
 # Abort early if this script has been run before.
 #
@@ -282,6 +291,7 @@ proc finalize_testing {} {
   if {$nErr>0} {
     puts "Failures on these tests: $::failList"
   }
+  run_thread_tests 1
   if {[llength $omitList]>0} {
     puts "Omitted test cases:"
     set prec {}
@@ -333,6 +343,7 @@ proc finalize_testing {} {
       sqlite3_memdebug_dump ./memusage.txt
     }
   }
+  show_memstats
   puts "Maximum memory usage: [sqlite3_memory_highwater 1] bytes"
   puts "Current memory usage: [sqlite3_memory_highwater] bytes"
   if {[info commands sqlite3_memdebug_malloc_count] ne ""} {
@@ -357,6 +368,37 @@ proc finalize_testing {} {
     file delete -force $f
   }
   exit [expr {$nErr>0}]
+}
+
+# Display memory statistics for analysis and debugging purposes.
+#
+proc show_memstats {} {
+  set x [sqlite3_status SQLITE_STATUS_MEMORY_USED 0]
+  set y [sqlite3_status SQLITE_STATUS_MALLOC_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+              [lindex $x 1] [lindex $x 2] [lindex $y 2]]
+  puts "Memory used:          $val"
+  set x [sqlite3_status SQLITE_STATUS_PAGECACHE_USED 0]
+  set y [sqlite3_status SQLITE_STATUS_PAGECACHE_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+              [lindex $x 1] [lindex $x 2] [lindex $y 2]]
+  puts "Page-cache used:      $val"
+  set x [sqlite3_status SQLITE_STATUS_PAGECACHE_OVERFLOW 0]
+  set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
+  puts "Page-cache overflow:  $val"
+  set x [sqlite3_status SQLITE_STATUS_SCRATCH_USED 0]
+  set val [format {now %10d  max %10d} [lindex $x 1] [lindex $x 2]]
+  puts "Scratch memory used:  $val"
+  set x [sqlite3_status SQLITE_STATUS_SCRATCH_OVERFLOW 0]
+  set y [sqlite3_status SQLITE_STATUS_SCRATCH_SIZE 0]
+  set val [format {now %10d  max %10d  max-size %10d} \
+               [lindex $x 1] [lindex $x 2] [lindex $y 2]]
+  puts "Scratch overflow:     $val"
+  ifcapable yytrackmaxstackdepth {
+    set x [sqlite3_status SQLITE_STATUS_PARSER_STACK 0]
+    set val [format {               max %10d} [lindex $x 2]]
+    puts "Parser stack depth:    $val"
+  }
 }
 
 # A procedure to execute SQL
@@ -445,11 +487,9 @@ proc forcedelete {filename} {
 
 # Do an integrity check of the entire database
 #
-proc integrity_check {name} {
+proc integrity_check {name {db db}} {
   ifcapable integrityck {
-    do_test $name {
-      execsql {PRAGMA integrity_check}
-    } {ok}
+    do_test $name [list execsql {PRAGMA integrity_check} $db] {ok}
   }
 }
 
@@ -538,7 +578,7 @@ proc crashsql {args} {
   set f [open crash.tcl w]
   puts $f "sqlite3_crash_enable 1"
   puts $f "sqlite3_crashparams $blocksize $dc $crashdelay $cfile"
-  puts $f "set sqlite_pending_byte $::sqlite_pending_byte"
+  puts $f "sqlite3_test_control_pending_byte $::sqlite_pending_byte"
   puts $f "sqlite3 db test.db -vfs crash"
 
   # This block sets the cache size of the main database to 10
@@ -595,6 +635,7 @@ proc do_ioerr_test {testname args} {
   set ::ioerropts(-count) 100000000
   set ::ioerropts(-persist) 1
   set ::ioerropts(-ckrefcount) 0
+  set ::ioerropts(-restoreprng) 1
   array set ::ioerropts $args
 
   # TEMPORARY: For 3.5.9, disable testing of extended result codes. There are
@@ -613,13 +654,16 @@ proc do_ioerr_test {testname args} {
     if {[info exists ::ioerropts(-exclude)]} {
       if {[lsearch $::ioerropts(-exclude) $n]!=-1} continue
     }
-    restore_prng_state
+    if {$::ioerropts(-restoreprng)} {
+      restore_prng_state
+    }
 
     # Delete the files test.db and test2.db, then execute the TCL and 
     # SQL (in that order) to prepare for the test case.
     do_test $testname.$n.1 {
       set ::sqlite_io_error_pending 0
       catch {db close}
+      catch {db2 close}
       catch {file delete -force test.db}
       catch {file delete -force test.db-journal}
       catch {file delete -force test2.db}
@@ -714,14 +758,21 @@ proc do_ioerr_test {testname args} {
     # a single reference if there is still an active transaction, 
     # or zero otherwise.
     #
+    # UPDATE: If the IO error occurs after a 'BEGIN' but before any
+    # locks are established on database files (i.e. if the error 
+    # occurs while attempting to detect a hot-journal file), then
+    # there may 0 page references and an active transaction according
+    # to [sqlite3_get_autocommit].
+    #
     if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-ckrefcount)} {
       do_test $testname.$n.4 {
         set bt [btree_from_db db]
         db_enter db
         array set stats [btree_pager_stats $bt]
         db_leave db
-        set stats(ref)
-      } [expr {[sqlite3_get_autocommit db]?0:1}]
+        set nRef $stats(ref)
+        expr {$nRef == 0 || ([sqlite3_get_autocommit db]==0 && $nRef == 1)}
+      } {1}
     }
 
     # If there is an open database handle and no open transaction, 
@@ -752,6 +803,7 @@ proc do_ioerr_test {testname args} {
     if {$::go && $::sqlite_io_error_hardhit && $::ioerropts(-cksum)} {
       do_test $testname.$n.6 {
         catch {db close}
+        catch {db2 close}
         set ::DB [sqlite3 db test.db; sqlite3_connection_pointer db]
         cksum
       } $checksum
@@ -819,6 +871,24 @@ proc allcksum {{db db}} {
   return [md5 $txt]
 }
 
+# Generate a checksum based on the contents of a single database with
+# a database connection.  The name of the database is $dbname.  
+# Examples of $dbname are "temp" or "main".
+#
+proc dbcksum {db dbname} {
+  if {$dbname=="temp"} {
+    set master sqlite_temp_master
+  } else {
+    set master $dbname.sqlite_master
+  }
+  set alltab [$db eval "SELECT name FROM $master WHERE type='table'"]
+  set txt [$db eval "SELECT * FROM $master"]\n
+  foreach tab $alltab {
+    append txt [$db eval "SELECT * FROM $dbname.$tab"]\n
+  }
+  return [md5 $txt]
+}
+
 proc memdebug_log_sql {{filename mallocs.sql}} {
 
   set data [sqlite3_memdebug_log dump]
@@ -827,16 +897,16 @@ proc memdebug_log_sql {{filename mallocs.sql}} {
 
   set database temp
 
-  set tbl "CREATE TABLE ${database}.malloc(nCall, nByte"
-  for {set ii 1} {$ii <= $nFrame} {incr ii} {
-    append tbl ", f${ii}"
-  }
-  append tbl ");\n"
+  set tbl "CREATE TABLE ${database}.malloc(zTest, nCall, nByte, lStack);"
 
   set sql ""
   foreach e $data {
-    append sql "INSERT INTO ${database}.malloc VALUES([join $e ,]);\n"
-    foreach f [lrange $e 2 end] {
+    set nCall [lindex $e 0]
+    set nByte [lindex $e 1]
+    set lStack [lrange $e 2 end]
+    append sql "INSERT INTO ${database}.malloc VALUES"
+    append sql "('test', $nCall, $nByte, '$lStack');\n"
+    foreach f $lStack {
       set frames($f) 1
     }
   }
@@ -891,3 +961,5 @@ proc copy_file {from to} {
 # If the library is compiled with the SQLITE_DEFAULT_AUTOVACUUM macro set
 # to non-zero, then set the global variable $AUTOVACUUM to 1.
 set AUTOVACUUM $sqlite_options(default_autovacuum)
+
+source $testdir/thread_common.tcl

@@ -34,7 +34,6 @@ typedef struct Vdbe Vdbe;
 */
 typedef struct VdbeFunc VdbeFunc;
 typedef struct Mem Mem;
-typedef struct UnpackedRecord UnpackedRecord;
 
 /*
 ** A single instruction of the virtual machine has an opcode
@@ -61,13 +60,14 @@ struct VdbeOp {
     Mem *pMem;             /* Used when p4type is P4_MEM */
     sqlite3_vtab *pVtab;   /* Used when p4type is P4_VTAB */
     KeyInfo *pKeyInfo;     /* Used when p4type is P4_KEYINFO */
+    int *ai;               /* Used when p4type is P4_INTARRAY */
   } p4;
 #ifdef SQLITE_DEBUG
-  char *zComment;     /* Comment to improve readability */
+  char *zComment;          /* Comment to improve readability */
 #endif
 #ifdef VDBE_PROFILE
-  int cnt;            /* Number of times this instruction was executed */
-  long long cycles;   /* Total time spend executing this instruction */
+  int cnt;                 /* Number of times this instruction was executed */
+  u64 cycles;              /* Total time spent executing this instruction */
 #endif
 };
 typedef struct VdbeOp VdbeOp;
@@ -101,6 +101,7 @@ typedef struct VdbeOpList VdbeOpList;
 #define P4_REAL     (-12) /* P4 is a 64-bit floating point value */
 #define P4_INT64    (-13) /* P4 is a 64-bit signed integer */
 #define P4_INT32    (-14) /* P4 is a 32-bit signed integer */
+#define P4_INTARRAY (-15) /* P4 is a vector of 32-bit integers */
 
 /* When adding a P4 argument using P4_KEYINFO, a copy of the KeyInfo structure
 ** is made.  That copy is freed when the Vdbe is finalized.  But if the
@@ -109,7 +110,8 @@ typedef struct VdbeOpList VdbeOpList;
 ** from a single sqliteMalloc().  But no copy is made and the calling
 ** function should *not* try to free the KeyInfo.
 */
-#define P4_KEYINFO_HANDOFF (-9)
+#define P4_KEYINFO_HANDOFF (-16)
+#define P4_KEYINFO_STATIC  (-17)
 
 /*
 ** The Vdbe.aColName array contains 5n Mem structures, where n is the 
@@ -174,18 +176,18 @@ int sqlite3VdbeCurrentAddr(Vdbe*);
   void sqlite3VdbeTrace(Vdbe*,FILE*);
 #endif
 void sqlite3VdbeResetStepResult(Vdbe*);
-int sqlite3VdbeReset(Vdbe*, int);
+int sqlite3VdbeReset(Vdbe*);
 void sqlite3VdbeSetNumCols(Vdbe*,int);
-int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, int);
+int sqlite3VdbeSetColName(Vdbe*, int, int, const char *, void(*)(void*));
 void sqlite3VdbeCountChanges(Vdbe*);
 sqlite3 *sqlite3VdbeDb(Vdbe*);
-void sqlite3VdbeSetSql(Vdbe*, const char *z, int n);
+void sqlite3VdbeSetSql(Vdbe*, const char *z, int n, int);
 void sqlite3VdbeSwap(Vdbe*,Vdbe*);
 
 #ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
 int sqlite3VdbeReleaseMemory(int);
 #endif
-UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,void*,int);
+UnpackedRecord *sqlite3VdbeRecordUnpack(KeyInfo*,int,const void*,char*,int);
 void sqlite3VdbeDeleteUnpackedRecord(UnpackedRecord*);
 int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
 
@@ -193,8 +195,11 @@ int sqlite3VdbeRecordCompare(int,const void*,UnpackedRecord*);
 #ifndef NDEBUG
   void sqlite3VdbeComment(Vdbe*, const char*, ...);
 # define VdbeComment(X)  sqlite3VdbeComment X
+  void sqlite3VdbeNoopComment(Vdbe*, const char*, ...);
+# define VdbeNoopComment(X)  sqlite3VdbeNoopComment X
 #else
 # define VdbeComment(X)
+# define VdbeNoopComment(X)
 #endif
 
 #endif

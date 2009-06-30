@@ -127,7 +127,7 @@ do_test subquery-1.10.4 {
     INSERT INTO t5 VALUES(25, '2003-3');
     INSERT INTO t5 VALUES(5, '2003-4');
 
-    SELECT "a.period", vsum
+    SELECT period, vsum
     FROM (SELECT 
       a.period,
       (select sum(val) from t5 where period between a.period and '2002-4') vsum
@@ -137,7 +137,7 @@ do_test subquery-1.10.4 {
 } {2002-2 30 2002-3 25 2002-4 15}
 do_test subquery-1.10.5 {
   execsql {
-    SELECT "a.period", vsum from
+    SELECT period, vsum from
       (select a.period,
       (select sum(val) from t5 where period between a.period and '2002-4') vsum
     FROM t5 a where a.period between '2002-1' and '2002-4') 
@@ -267,6 +267,11 @@ ifcapable view {
       CREATE TABLE t2(p,q);
       INSERT INTO t2 VALUES(2,9);
       SELECT * FROM v1 WHERE EXISTS(SELECT * FROM t2 WHERE p=v1.b);
+    }
+  } {2}
+  do_test subquery-3.1.1 {
+    execsql {
+      SELECT * FROM v1 WHERE EXISTS(SELECT 1);
     }
   } {2}
 } else {

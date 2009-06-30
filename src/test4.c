@@ -15,7 +15,7 @@
 */
 #include "sqliteInt.h"
 #include "tcl.h"
-#if defined(OS_UNIX) && OS_UNIX==1 && SQLITE_THREADSAFE
+#if defined(SQLITE_OS_UNIX) && OS_UNIX==1 && SQLITE_THREADSAFE
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
@@ -96,7 +96,9 @@ static void *thread_main(void *pArg){
     p->zErr = 0;
   }
   p->completed++;
+#ifndef SQLITE_OMIT_DEPRECATED
   sqlite3_thread_cleanup();
+#endif
   return 0;
 }
 
@@ -142,7 +144,7 @@ static int tcl_thread_create(
   }
   threadset[i].busy = 1;
   sqlite3_free(threadset[i].zFilename);
-  threadset[i].zFilename = sqlite3StrDup(argv[2]);
+  threadset[i].zFilename = sqlite3DbStrDup(0, argv[2]);
   threadset[i].opnum = 1;
   threadset[i].completed = 0;
   rc = pthread_create(&x, 0, thread_main, &threadset[i]);
@@ -476,7 +478,7 @@ static int tcl_thread_compile(
   thread_wait(&threadset[i]);
   threadset[i].xOp = do_compile;
   sqlite3_free(threadset[i].zArg);
-  threadset[i].zArg = sqlite3StrDup(argv[2]);
+  threadset[i].zArg = sqlite3DbStrDup(0, argv[2]);
   threadset[i].opnum++;
   return TCL_OK;
 }
@@ -713,4 +715,4 @@ int Sqlitetest4_Init(Tcl_Interp *interp){
 }
 #else
 int Sqlitetest4_Init(Tcl_Interp *interp){ return TCL_OK; }
-#endif /* OS_UNIX */
+#endif /* SQLITE_OS_UNIX */

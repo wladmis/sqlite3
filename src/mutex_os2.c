@@ -40,6 +40,12 @@ struct sqlite3_mutex {
 #define OS2_MUTEX_INITIALIZER   0,0,0,0
 
 /*
+** Initialize and deinitialize the mutex subsystem.
+*/
+static int os2MutexInit(void){ return SQLITE_OK; }
+static int os2MutexEnd(void){ return SQLITE_OK; }
+
+/*
 ** The sqlite3_mutex_alloc() routine allocates a new
 ** mutex and returns a pointer to it.  If it returns NULL
 ** that means that a mutex could not be allocated. 
@@ -78,7 +84,7 @@ struct sqlite3_mutex {
 ** mutex types, the same mutex is returned on every call that has
 ** the same type number.
 */
-sqlite3_mutex *sqlite3_mutex_alloc(int iType){
+static sqlite3_mutex *os2MutexAlloc(int iType){
   sqlite3_mutex *p = NULL;
   switch( iType ){
     case SQLITE_MUTEX_FAST:
@@ -116,7 +122,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
           mutex = 0;
           rc = DosCreateMutexSem( name, &mutex, 0, FALSE);
           if( rc == NO_ERROR ){
-            int i;
+            unsigned int i;
             if( !isInit ){
               for( i = 0; i < sizeof(staticMutexes)/sizeof(staticMutexes[0]); i++ ){
                 DosCreateMutexSem( 0, &staticMutexes[i].mutex, 0, FALSE );
@@ -146,8 +152,8 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
 ** This routine deallocates a previously allocated mutex.
 ** SQLite is careful to deallocate every mutex that it allocates.
 */
-void sqlite3_mutex_free(sqlite3_mutex *p){
-  assert( p );
+static void os2MutexFree(sqlite3_mutex *p){
+  if( p==0 ) return;
   assert( p->nRef==0 );
   assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
   DosCloseMutexSem( p->mutex );
@@ -165,24 +171,24 @@ void sqlite3_mutex_free(sqlite3_mutex *p){
 ** can enter.  If the same thread tries to enter any other kind of mutex
 ** more than once, the behavior is undefined.
 */
-void sqlite3_mutex_enter(sqlite3_mutex *p){
+static void os2MutexEnter(sqlite3_mutex *p){
   TID tid;
   PID holder1;
   ULONG holder2;
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+  if( p==0 ) return;
+  assert( p->id==SQLITE_MUTEX_RECURSIVE || os2MutexNotheld(p) );
   DosRequestMutexSem(p->mutex, SEM_INDEFINITE_WAIT);
   DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
   p->owner = tid;
   p->nRef++;
 }
-int sqlite3_mutex_try(sqlite3_mutex *p){
+static int os2MutexTry(sqlite3_mutex *p){
   int rc;
   TID tid;
   PID holder1;
   ULONG holder2;
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+  if( p==0 ) return SQLITE_OK;
+  assert( p->id==SQLITE_MUTEX_RECURSIVE || os2MutexNotheld(p) );
   if( DosRequestMutexSem(p->mutex, SEM_IMMEDIATE_RETURN) == NO_ERROR) {
     DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
     p->owner = tid;
@@ -201,10 +207,11 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
 ** is undefined if the mutex is not currently entered or
 ** is not currently allocated.  SQLite will never do either.
 */
-void sqlite3_mutex_leave(sqlite3_mutex *p){
+static void os2MutexLeave(sqlite3_mutex *p){
   TID tid;
   PID holder1;
   ULONG holder2;
+  if( p==0 ) return;
   assert( p->nRef>0 );
   DosQueryMutexSem(p->mutex, &holder1, &tid, &holder2);
   assert( p->owner==tid );
@@ -213,11 +220,12 @@ void sqlite3_mutex_leave(sqlite3_mutex *p){
   DosReleaseMutexSem(p->mutex);
 }
 
+#ifdef SQLITE_DEBUG
 /*
 ** The sqlite3_mutex_held() and sqlite3_mutex_notheld() routine are
 ** intended for use inside assert() statements.
 */
-int sqlite3_mutex_held(sqlite3_mutex *p){
+static int os2MutexHeld(sqlite3_mutex *p){
   TID tid;
   PID pid;
   ULONG ulCount;
@@ -230,7 +238,7 @@ int sqlite3_mutex_held(sqlite3_mutex *p){
   }
   return p==0 || (p->nRef!=0 && p->owner==tid);
 }
-int sqlite3_mutex_notheld(sqlite3_mutex *p){
+static int os2MutexNotheld(sqlite3_mutex *p){
   TID tid;
   PID pid;
   ULONG ulCount;
@@ -242,5 +250,24 @@ int sqlite3_mutex_notheld(sqlite3_mutex *p){
     tid = ptib->tib_ptib2->tib2_ultid;
   }
   return p==0 || p->nRef==0 || p->owner!=tid;
+}
+#endif
+
+sqlite3_mutex_methods *sqlite3DefaultMutex(void){
+  static sqlite3_mutex_methods sMutex = {
+    os2MutexInit,
+    os2MutexEnd,
+    os2MutexAlloc,
+    os2MutexFree,
+    os2MutexEnter,
+    os2MutexTry,
+    os2MutexLeave,
+#ifdef SQLITE_DEBUG
+    os2MutexHeld,
+    os2MutexNotheld
+#endif
+  };
+
+  return &sMutex;
 }
 #endif /* SQLITE_MUTEX_OS2 */

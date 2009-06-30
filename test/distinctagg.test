@@ -52,6 +52,11 @@ do_test distinctagg-2.1 {
   catchsql {
     SELECT count(distinct) FROM t1;
   }
-} {1 {DISTINCT in aggregate must be followed by an expression}}
+} {1 {DISTINCT aggregates must have exactly one argument}}
+do_test distinctagg-2.2 {
+  catchsql {
+    SELECT group_concat(distinct a,b) FROM t1;
+  }
+} {1 {DISTINCT aggregates must have exactly one argument}}
 
 finish_test

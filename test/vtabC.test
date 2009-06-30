@@ -23,6 +23,8 @@ ifcapable !vtab {
   return
 }
 
+ifcapable !trigger { finish_test ; return }
+
 
 # N will be the number of virtual tables we have defined.
 #

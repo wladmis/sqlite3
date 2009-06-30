@@ -35,6 +35,7 @@ do_malloc_test attachmalloc-1 -tclprep {
   if {[catch {sqlite3 db test.db}]} {
     error "out of memory"
   }
+  sqlite3_db_config_lookaside db 0 0 0
   sqlite3_extended_result_codes db 1
 } -sqlbody {
   ATTACH 'test2.db' AS two;
@@ -43,6 +44,20 @@ do_malloc_test attachmalloc-1 -tclprep {
   CREATE TABLE three.t1(x);
   ATTACH 'test4.db' AS four;
   CREATE TABLE four.t1(x);
+}
+
+do_malloc_test attachmalloc-2 -tclprep {
+  file delete -force test2.db
+  file delete -force test2.db-journal
+  sqlite3 db2 test2.db
+  db2 eval {
+    CREATE TABLE t1(a, b, c);
+    CREATE INDEX i1 ON t1(a, b);
+  }
+  db2 close
+} -sqlbody {
+  CREATE TABLE t1(d, e, f);
+  ATTACH 'test2.db' AS db1;
 }
 
 finish_test

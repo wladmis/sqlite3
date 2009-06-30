@@ -47,7 +47,7 @@ static int c_collation_test(
   }
 
   rc = sqlite3_create_collation(db, "collate", 456, 0, 0);
-  if( rc!=SQLITE_ERROR ){
+  if( rc!=SQLITE_MISUSE ){
     sqlite3_close(db);
     zErrFunction = "sqlite3_create_collation";
     goto error_out;
@@ -114,6 +114,7 @@ static int c_misuse_test(
 ){
   const char *zErrFunction = "N/A";
   sqlite3 *db = 0;
+  sqlite3_stmt *pStmt;
   int rc;
 
   if( objc!=1 ){
@@ -138,29 +139,37 @@ static int c_misuse_test(
     goto error_out;
   }
 
-  rc = sqlite3_prepare(db, 0, 0, 0, 0);
+  pStmt = (sqlite3_stmt*)1234;
+  rc = sqlite3_prepare(db, 0, 0, &pStmt, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare";
     goto error_out;
   }
+  assert( pStmt==0 ); /* Verify that pStmt is zeroed even on a MISUSE error */
 
-  rc = sqlite3_prepare_v2(db, 0, 0, 0, 0);
+  pStmt = (sqlite3_stmt*)1234;
+  rc = sqlite3_prepare_v2(db, 0, 0, &pStmt, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare_v2";
     goto error_out;
   }
+  assert( pStmt==0 );
 
 #ifndef SQLITE_OMIT_UTF16
-  rc = sqlite3_prepare16(db, 0, 0, 0, 0);
+  pStmt = (sqlite3_stmt*)1234;
+  rc = sqlite3_prepare16(db, 0, 0, &pStmt, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare16";
     goto error_out;
   }
-  rc = sqlite3_prepare16_v2(db, 0, 0, 0, 0);
+  assert( pStmt==0 );
+  pStmt = (sqlite3_stmt*)1234;
+  rc = sqlite3_prepare16_v2(db, 0, 0, &pStmt, 0);
   if( rc!=SQLITE_MISUSE ){
     zErrFunction = "sqlite3_prepare16_v2";
     goto error_out;
   }
+  assert( pStmt==0 );
 #endif
 
   return TCL_OK;

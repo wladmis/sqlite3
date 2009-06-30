@@ -98,6 +98,7 @@ proc do_malloc_test {tn args} {
         if {[info commands db] ne ""} {
           sqlite3_extended_result_codes db 1
         }
+        sqlite3_db_config_lookaside db 0 0 0
   
         # Execute any -tclprep and -sqlprep scripts.
         #
@@ -146,13 +147,11 @@ proc do_malloc_test {tn args} {
         } elseif {
           [info command db]=="" || 
           [db errorcode]==7 ||
-          [db errorcode]==[expr 10+(12<<8)] ||
           $msg=="out of memory"
         } {
           set v2 1
         } else {
           set v2 $msg
-          breakpoint
           puts [db errorcode]
         }
         lappend isFail $v2

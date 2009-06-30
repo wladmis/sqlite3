@@ -90,11 +90,11 @@ do_test select2-2.0.2 {
   list
 } {}
 puts "time without cache: $t2"
-ifcapable tclvar {
-  do_test select2-2.0.3 {
-    expr {[lindex $t1 0]<[lindex $t2 0]}
-  } 1
-}
+#ifcapable tclvar {
+#  do_test select2-2.0.3 {
+#    expr {[lindex $t1 0]<[lindex $t2 0]}
+#  } 1
+#}
 
 do_test select2-2.1 {
   execsql {SELECT count(*) FROM tbl2}
@@ -118,7 +118,6 @@ do_test select2-3.2c {
 } {500}
 do_test select2-3.2d {
   set sqlite_search_count 0
-btree_breakpoint
   execsql {SELECT * FROM tbl2 WHERE 1000=f2}
   set sqlite_search_count
 } {3}

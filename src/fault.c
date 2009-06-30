@@ -9,157 +9,83 @@
 **    May you share freely, never taking more than you give.
 **
 *************************************************************************
-** This file contains code to implement a fault-injector used for
-** testing and verification of SQLite.
 **
-** Subsystems within SQLite can call sqlite3FaultStep() to see if
-** they should simulate a fault.  sqlite3FaultStep() normally returns
-** zero but will return non-zero if a fault should be simulated.
-** Fault injectors can be used, for example, to simulate memory
-** allocation failures or I/O errors.
-**
-** The fault injector is omitted from the code if SQLite is
-** compiled with -DSQLITE_OMIT_BUILTIN_TEST=1.  There is a very
-** small performance hit for leaving the fault injector in the code.
-** Commerical products will probably want to omit the fault injector
-** from production builds.  But safety-critical systems who work
-** under the motto "fly what you test and test what you fly" may
-** choose to leave the fault injector enabled even in production.
+** $Id$
 */
+
+/*
+** This file contains code to support the concept of "benign" 
+** malloc failures (when the xMalloc() or xRealloc() method of the
+** sqlite3_mem_methods structure fails to allocate a block of memory
+** and returns 0). 
+**
+** Most malloc failures are non-benign. After they occur, SQLite
+** abandons the current operation and returns an error code (usually
+** SQLITE_NOMEM) to the user. However, sometimes a fault is not necessarily
+** fatal. For example, if a malloc fails while resizing a hash table, this 
+** is completely recoverable simply by not carrying out the resize. The 
+** hash table will continue to function normally.  So a malloc failure 
+** during a hash table resize is a benign fault.
+*/
+
 #include "sqliteInt.h"
 
 #ifndef SQLITE_OMIT_BUILTIN_TEST
 
 /*
-** There can be various kinds of faults.  For example, there can be
-** a memory allocation failure.  Or an I/O failure.  For each different
-** fault type, there is a separate FaultInjector structure to keep track
-** of the status of that fault.
+** Global variables.
 */
-static struct FaultInjector {
-  int iCountdown;   /* Number of pending successes before we hit a failure */
-  int nRepeat;      /* Number of times to repeat the failure */
-  int nBenign;      /* Number of benign failures seen since last config */
-  int nFail;        /* Number of failures seen since last config */
-  u8 enable;        /* True if enabled */
-  i16 benign;       /* Positive if next failure will be benign */
-} aFault[SQLITE_FAULTINJECTOR_COUNT];
+typedef struct BenignMallocHooks BenignMallocHooks;
+static SQLITE_WSD struct BenignMallocHooks {
+  void (*xBenignBegin)(void);
+  void (*xBenignEnd)(void);
+} sqlite3Hooks = { 0, 0 };
 
-/*
-** This routine configures and enables a fault injector.  After
-** calling this routine, aFaultStep() will return false (zero)
-** nDelay times, then it will return true nRepeat times,
-** then it will again begin returning false.
+/* The "wsdHooks" macro will resolve to the appropriate BenignMallocHooks
+** structure.  If writable static data is unsupported on the target,
+** we have to locate the state vector at run-time.  In the more common
+** case where writable static data is supported, wsdHooks can refer directly
+** to the "sqlite3Hooks" state vector declared above.
 */
-void sqlite3FaultConfig(int id, int nDelay, int nRepeat){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  aFault[id].iCountdown = nDelay;
-  aFault[id].nRepeat = nRepeat;
-  aFault[id].nBenign = 0;
-  aFault[id].nFail = 0;
-  aFault[id].enable = nDelay>=0;
-  aFault[id].benign = 0;
-}
-
-/*
-** Return the number of faults (both hard and benign faults) that have
-** occurred since the injector was last configured.
-*/
-int sqlite3FaultFailures(int id){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  return aFault[id].nFail;
-}
-
-/*
-** Return the number of benign faults that have occurred since the
-** injector was last configured.
-*/
-int sqlite3FaultBenignFailures(int id){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  return aFault[id].nBenign;
-}
-
-/*
-** Return the number of successes that will occur before the next failure.
-** If no failures are scheduled, return -1.
-*/
-int sqlite3FaultPending(int id){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  if( aFault[id].enable ){
-    return aFault[id].iCountdown;
-  }else{
-    return -1;
-  }
-}
-
-/* 
-** After this routine causes subsequent faults to be either benign
-** or hard (not benign), according to the "enable" parameter.
-**
-** Most faults are hard.  In other words, most faults cause
-** an error to be propagated back up to the application interface.
-** However, sometimes a fault is easily recoverable.  For example,
-** if a malloc fails while resizing a hash table, this is completely
-** recoverable simply by not carrying out the resize.  The hash table
-** will continue to function normally.  So a malloc failure during
-** a hash table resize is a benign fault.  
-*/
-void sqlite3FaultBeginBenign(int id){
-  if( id<0 ){
-    for(id=0; id<SQLITE_FAULTINJECTOR_COUNT; id++){
-      aFault[id].benign++;
-    }
-  }else{
-    assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-    aFault[id].benign++;
-  }
-}
-void sqlite3FaultEndBenign(int id){
-  if( id<0 ){
-    for(id=0; id<SQLITE_FAULTINJECTOR_COUNT; id++){
-      assert( aFault[id].benign>0 );
-      aFault[id].benign--;
-    }
-  }else{
-    assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-    assert( aFault[id].benign>0 );
-    aFault[id].benign--;
-  }
-}
-
-/*
-** This routine exists as a place to set a breakpoint that will
-** fire on any simulated fault.
-*/
-static void sqlite3Fault(void){
-  static int cnt = 0;
-  cnt++;
-}
+#ifdef SQLITE_OMIT_WSD
+# define wsdHooksInit \
+  BenignMallocHooks *x = &GLOBAL(BenignMallocHooks,sqlite3Hooks)
+# define wsdHooks x[0]
+#else
+# define wsdHooksInit
+# define wsdHooks sqlite3Hooks
+#endif
 
 
 /*
-** Check to see if a fault should be simulated.  Return true to simulate
-** the fault.  Return false if the fault should not be simulated.
+** Register hooks to call when sqlite3BeginBenignMalloc() and
+** sqlite3EndBenignMalloc() are called, respectively.
 */
-int sqlite3FaultStep(int id){
-  assert( id>=0 && id<SQLITE_FAULTINJECTOR_COUNT );
-  if( likely(!aFault[id].enable) ){
-    return 0;
-  }
-  if( aFault[id].iCountdown>0 ){
-    aFault[id].iCountdown--;
-    return 0;
-  }
-  sqlite3Fault();
-  aFault[id].nFail++;
-  if( aFault[id].benign>0 ){
-    aFault[id].nBenign++;
-  }
-  aFault[id].nRepeat--;
-  if( aFault[id].nRepeat<=0 ){
-    aFault[id].enable = 0;
-  }
-  return 1;  
+void sqlite3BenignMallocHooks(
+  void (*xBenignBegin)(void),
+  void (*xBenignEnd)(void)
+){
+  wsdHooksInit;
+  wsdHooks.xBenignBegin = xBenignBegin;
+  wsdHooks.xBenignEnd = xBenignEnd;
 }
 
-#endif /* SQLITE_OMIT_BUILTIN_TEST */
+/*
+** This (sqlite3EndBenignMalloc()) is called by SQLite code to indicate that
+** subsequent malloc failures are benign. A call to sqlite3EndBenignMalloc()
+** indicates that subsequent malloc failures are non-benign.
+*/
+void sqlite3BeginBenignMalloc(void){
+  wsdHooksInit;
+  if( wsdHooks.xBenignBegin ){
+    wsdHooks.xBenignBegin();
+  }
+}
+void sqlite3EndBenignMalloc(void){
+  wsdHooksInit;
+  if( wsdHooks.xBenignEnd ){
+    wsdHooks.xBenignEnd();
+  }
+}
+
+#endif   /* #ifndef SQLITE_OMIT_BUILTIN_TEST */

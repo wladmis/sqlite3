@@ -1,4 +1,4 @@
-# 2007 March 26
+# 2009 April 20
 #
 # The author disclaims copyright to this source code.  In place of
 # a legal notice, here is a blessing:
@@ -9,8 +9,9 @@
 #
 #***********************************************************************
 #
-# This file runs the tests in the file ioerr.test with 
-# persistent journal mode enabled.
+# Test cases inspired by ticket #3811.  Tests to make sure that
+# the journal_mode can only be changed at appropriate times and that
+# all reported changes are effective.
 #
 # $Id$
 
@@ -22,34 +23,128 @@ ifcapable {!pager_pragmas} {
   return
 }
 
-rename finish_test really_finish_test2
-proc finish_test {} {}
-set ISQUICK 1
-
-rename sqlite3 real_sqlite3
-proc sqlite3 {args} {
-  set r [eval "real_sqlite3 $args"]
-  if { [llength $args] == 2 } {
-    [lindex $args 0] eval {PRAGMA journal_mode = persist}
+#
+# Verify that journal_mode=OFF works as long as it occurs before the first
+# transaction, even if locking_mode=EXCLUSIVE is enabled.  The behavior if
+# journal_mode is changed after the first transaction is undefined and hence
+# untested.
+#
+do_test jrnlmode3-1.1 {
+  db eval {
+    PRAGMA journal_mode=OFF;
+    PRAGMA locking_mode=EXCLUSIVE;
+    CREATE TABLE t1(x);
+    INSERT INTO t1 VALUES(1);
+    SELECT * FROM t1;
   }
-  set r
+} {off exclusive 1}
+do_test jrnlmode3-1.2 {
+  db eval {
+    BEGIN;
+    INSERT INTO t1 VALUES(2);
+    ROLLBACK;
+    SELECT * FROM t1;
+  }
+} {1 2}
+
+db close
+file delete -force test.db test.db-journal
+sqlite3 db test.db
+
+do_test jrnlmode3-2.1 {
+  db eval {
+    PRAGMA locking_mode=EXCLUSIVE;
+    PRAGMA journal_mode=OFF;
+    CREATE TABLE t1(x);
+    INSERT INTO t1 VALUES(1);
+    SELECT * FROM t1;
+  }
+} {exclusive off 1}
+do_test jrnlmode3-2.2 {
+  db eval {
+    BEGIN;
+    INSERT INTO t1 VALUES(2);
+    ROLLBACK;
+    SELECT * FROM t1;
+  }
+} {1 2}
+
+# Test cases to verify that we can move from any journal_mode
+# to any other, as long as we are not in a transaction.  Verify
+# that we cannot change journal_mode while a transaction is active.
+#
+set all_journal_modes {delete persist truncate memory off}
+set cnt 0
+foreach fromjmode $all_journal_modes {
+  foreach tojmode $all_journal_modes {
+
+    # Skip the no-change cases
+    if {$fromjmode==$tojmode} continue
+    incr cnt
+
+    # Start with a fresh database connection an empty database file.
+    #
+    db close
+    file delete -force test.db test.db-journal
+    sqlite3 db test.db
+
+    # Initialize the journal mode.
+    #
+    do_test jrnlmode3-3.$cnt.1-($fromjmode-to-$tojmode) {
+      db eval "PRAGMA journal_mode = $fromjmode;"
+    } $fromjmode
+
+    # Verify that the initial journal mode takes.
+    #
+    do_test jrnlmode3-3.$cnt.2 {
+      db eval {PRAGMA main.journal_mode}
+    } $fromjmode
+
+    # Start a transaction and try to change the journal mode within
+    # the transaction.  This should fail.
+    #
+    do_test jrnlmode3-3.$cnt.3 {
+      db eval {
+        CREATE TABLE t1(x);
+        BEGIN;
+        INSERT INTO t1 VALUES($cnt);
+      }
+      db eval "PRAGMA journal_mode=$tojmode"
+    } $fromjmode
+
+    # Rollback the transaction.  Verify that the rollback occurred
+    # if journal_mode!=OFF.
+    #
+    do_test jrnlmode3-3.$cnt.4 {
+      db eval {
+        ROLLBACK;
+        SELECT * FROM t1;
+      }
+    } [expr {$fromjmode=="off"?$cnt:""}]
+
+    # Now change the journal mode again.  This time the new mode
+    # should take.
+    #
+    do_test jrnlmode3-3.$cnt.5 {
+      db eval "PRAGMA journal_mode=$tojmode"
+    } $tojmode
+
+    # Do a the transaction.  Verify that the rollback occurred
+    # if journal_mode!=OFF.
+    #
+    do_test jrnlmode3-3.$cnt.6 {
+      db eval {
+        DROP TABLE IF EXISTS t1;
+        CREATE TABLE t1(x);
+        BEGIN;
+        INSERT INTO t1 VALUES(1);
+      }
+      db eval ROLLBACK
+      db eval {
+        SELECT * FROM t1;
+      }
+    } [expr {$tojmode=="off"?"1":""}]
+  }
 }
 
-rename do_test really_do_test
-proc do_test {args} {
-  set sc [concat really_do_test "jrlnmode3-[lindex $args 0]" \
-      [lrange $args 1 end]]
-  eval $sc
-}
-
-source $testdir/malloc.test
-source $testdir/ioerr.test
-
-
-rename sqlite3 ""
-rename real_sqlite3 sqlite3
-rename finish_test ""
-rename really_finish_test2 finish_test
-rename do_test ""
-rename really_do_test do_test
 finish_test

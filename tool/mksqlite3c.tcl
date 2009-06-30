@@ -89,9 +89,11 @@ foreach hdr {
    btree.h
    btreeInt.h
    fts3.h
+   fts3_expr.h
    fts3_hash.h
    fts3_tokenizer.h
    hash.h
+   hwtime.h
    keywordhash.h
    mutex.h
    opcodes.h
@@ -100,8 +102,11 @@ foreach hdr {
    os_os2.h
    pager.h
    parse.h
+   pcache.h
+   rtree.h
    sqlite3ext.h
    sqlite3.h
+   sqliteicu.h
    sqliteInt.h
    sqliteLimit.h
    vdbe.h
@@ -135,17 +140,17 @@ proc copy_file {filename} {
   section_comment "Begin file $tail"
   set in [open $filename r]
   set varpattern {^[a-zA-Z][a-zA-Z_0-9 *]+(sqlite3[_a-zA-Z0-9]+)(\[|;| =)}
-  set declpattern {[a-zA-Z][a-zA-Z_0-9 ]+ \*?(sqlite3[_a-zA-Z0-9]+)\(}
+  set declpattern {[a-zA-Z][a-zA-Z_0-9 ]+ \**(sqlite3[_a-zA-Z0-9]+)\(}
   if {[file extension $filename]==".h"} {
     set declpattern " *$declpattern"
   }
   set declpattern ^$declpattern
   while {![eof $in]} {
     set line [gets $in]
-    if {[regexp {^#\s*include\s+["<]([^">]+)[">]} $line all hdr]} {
+    if {[regexp {^\s*#\s*include\s+["<]([^">]+)[">]} $line all hdr]} {
       if {[info exists available_hdr($hdr)]} {
         if {$available_hdr($hdr)} {
-          if {$hdr!="os_common.h"} {
+          if {$hdr!="os_common.h" && $hdr!="hwtime.h"} {
             set available_hdr($hdr) 0
           }
           section_comment "Include $hdr in the middle of $tail"
@@ -176,11 +181,16 @@ proc copy_file {filename} {
           regsub {^extern } $line {} line
           puts $out "SQLITE_PRIVATE $line"
         } else {
+          if {[regexp {const char sqlite3_version\[\];} $line]} {
+            set line {const char sqlite3_version[] = SQLITE_VERSION;}
+          }
           regsub {^SQLITE_EXTERN } $line {} line
           puts $out "SQLITE_API $line"
         }
       } elseif {[regexp {^(SQLITE_EXTERN )?void \(\*sqlite3IoTrace\)} $line]} {
         regsub {^SQLITE_EXTERN } $line {} line
+        puts $out "SQLITE_PRIVATE $line"
+      } elseif {[regexp {^void \(\*sqlite3Os} $line]} {
         puts $out "SQLITE_PRIVATE $line"
       } else {
         puts $out $line
@@ -201,15 +211,19 @@ proc copy_file {filename} {
 foreach file {
    sqliteInt.h
 
+   global.c
+   status.c
    date.c
    os.c
 
    fault.c
+   mem0.c
    mem1.c
    mem2.c
    mem3.c
    mem5.c
    mutex.c
+   mutex_noop.c
    mutex_os2.c
    mutex_unix.c
    mutex_w32.c
@@ -226,19 +240,25 @@ foreach file {
    os_win.c
 
    bitvec.c
+   pcache.c
+   pcache1.c
+   rowset.c
    pager.c
 
-   btmutex.c   
+   btmutex.c
    btree.c
+   backup.c
 
-   vdbefifo.c
    vdbemem.c
    vdbeaux.c
    vdbeapi.c
    vdbe.c
    vdbeblob.c
    journal.c
+   memjournal.c
 
+   walker.c
+   resolve.c
    expr.c
    alter.c
    analyze.c
@@ -267,12 +287,18 @@ foreach file {
    complete.c
 
    main.c
+   notify.c
 
    fts3.c
+   fts3_expr.c
    fts3_hash.c
    fts3_porter.c
    fts3_tokenizer.c
    fts3_tokenizer1.c
+
+   rtree.c
+   icu.c
+   fts3_icu.c
 } {
   copy_file tsrc/$file
 }

@@ -27,7 +27,7 @@ if {!$MEMDEBUG} {
 
 # Malloc failures while opening a database connection.
 #
-do_malloc_test malloeG-1 -tclbody {
+do_malloc_test mallocG-1 -tclbody {
   db close
   sqlite3 db test.db
 }
@@ -51,6 +51,18 @@ do_malloc_test mallocG-3 -sqlprep {
      AND x BETWEEN 'g' AND 'r'
      AND x BETWEEN 'i' AND 'q'
      AND x BETWEEN 'i' AND 'm'
+}
+
+proc utf16 {utf8} {
+  set utf16 [encoding convertto unicode $utf8]
+  append utf16 "\x00\x00"
+  return $utf16
+}
+
+do_malloc_test mallocG-4 -tclbody {
+  set rc [sqlite3_complete16 [utf16 "SELECT * FROM t1;"]]
+  if {$rc==1} {set rc 0} {error "out of memory"}
+  set rc
 }
 
 finish_test

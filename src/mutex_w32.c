@@ -41,8 +41,15 @@ struct sqlite3_mutex {
 ** this routine is used to determine if the host is Win95/98/ME or
 ** WinNT/2K/XP so that we will know whether or not we can safely call
 ** the LockFileEx() API.
+**
+** mutexIsNT() is only used for the TryEnterCriticalSection() API call,
+** which is only available if your application was compiled with 
+** _WIN32_WINNT defined to a value >= 0x0400.  Currently, the only
+** call to TryEnterCriticalSection() is #ifdef'ed out, so #ifdef 
+** this out as well.
 */
-#if OS_WINCE
+#if 0
+#if SQLITE_OS_WINCE
 # define mutexIsNT()  (1)
 #else
   static int mutexIsNT(void){
@@ -55,8 +62,65 @@ struct sqlite3_mutex {
     }
     return osType==2;
   }
-#endif /* OS_WINCE */
+#endif /* SQLITE_OS_WINCE */
+#endif
 
+#ifdef SQLITE_DEBUG
+/*
+** The sqlite3_mutex_held() and sqlite3_mutex_notheld() routine are
+** intended for use only inside assert() statements.
+*/
+static int winMutexHeld(sqlite3_mutex *p){
+  return p->nRef!=0 && p->owner==GetCurrentThreadId();
+}
+static int winMutexNotheld(sqlite3_mutex *p){
+  return p->nRef==0 || p->owner!=GetCurrentThreadId();
+}
+#endif
+
+
+/*
+** Initialize and deinitialize the mutex subsystem.
+*/
+static sqlite3_mutex winMutex_staticMutexes[6];
+static int winMutex_isInit = 0;
+/* As winMutexInit() and winMutexEnd() are called as part
+** of the sqlite3_initialize and sqlite3_shutdown()
+** processing, the "interlocked" magic is probably not
+** strictly necessary.
+*/
+static long winMutex_lock = 0;
+
+static int winMutexInit(void){ 
+  /* The first to increment to 1 does actual initialization */
+  if( InterlockedIncrement(&winMutex_lock)==1 ){
+    int i;
+    for(i=0; i<sizeof(winMutex_staticMutexes)/sizeof(winMutex_staticMutexes[0]); i++){
+      InitializeCriticalSection(&winMutex_staticMutexes[i].mutex);
+    }
+    winMutex_isInit = 1;
+  }else{
+    while( !winMutex_isInit ){
+      Sleep(1);
+    }
+  }
+  return SQLITE_OK; 
+}
+
+static int winMutexEnd(void){ 
+  /* The first to decrement to 0 does actual shutdown 
+  ** (which should be the last to shutdown.) */
+  if( InterlockedDecrement(&winMutex_lock)==0 ){
+    if( winMutex_isInit==1 ){
+      int i;
+      for(i=0; i<sizeof(winMutex_staticMutexes)/sizeof(winMutex_staticMutexes[0]); i++){
+        DeleteCriticalSection(&winMutex_staticMutexes[i].mutex);
+      }
+      winMutex_isInit = 0;
+    }
+  }
+  return SQLITE_OK; 
+}
 
 /*
 ** The sqlite3_mutex_alloc() routine allocates a new
@@ -97,37 +161,24 @@ struct sqlite3_mutex {
 ** mutex types, the same mutex is returned on every call that has
 ** the same type number.
 */
-sqlite3_mutex *sqlite3_mutex_alloc(int iType){
+static sqlite3_mutex *winMutexAlloc(int iType){
   sqlite3_mutex *p;
 
   switch( iType ){
     case SQLITE_MUTEX_FAST:
     case SQLITE_MUTEX_RECURSIVE: {
       p = sqlite3MallocZero( sizeof(*p) );
-      if( p ){
+      if( p ){  
         p->id = iType;
         InitializeCriticalSection(&p->mutex);
       }
       break;
     }
     default: {
-      static sqlite3_mutex staticMutexes[6];
-      static int isInit = 0;
-      while( !isInit ){
-        static long lock = 0;
-        if( InterlockedIncrement(&lock)==1 ){
-          int i;
-          for(i=0; i<sizeof(staticMutexes)/sizeof(staticMutexes[0]); i++){
-            InitializeCriticalSection(&staticMutexes[i].mutex);
-          }
-          isInit = 1;
-        }else{
-          Sleep(1);
-        }
-      }
+      assert( winMutex_isInit==1 );
       assert( iType-2 >= 0 );
-      assert( iType-2 < sizeof(staticMutexes)/sizeof(staticMutexes[0]) );
-      p = &staticMutexes[iType-2];
+      assert( iType-2 < sizeof(winMutex_staticMutexes)/sizeof(winMutex_staticMutexes[0]) );
+      p = &winMutex_staticMutexes[iType-2];
       p->id = iType;
       break;
     }
@@ -141,7 +192,7 @@ sqlite3_mutex *sqlite3_mutex_alloc(int iType){
 ** allocated mutex.  SQLite is careful to deallocate every
 ** mutex that it allocates.
 */
-void sqlite3_mutex_free(sqlite3_mutex *p){
+static void winMutexFree(sqlite3_mutex *p){
   assert( p );
   assert( p->nRef==0 );
   assert( p->id==SQLITE_MUTEX_FAST || p->id==SQLITE_MUTEX_RECURSIVE );
@@ -160,17 +211,15 @@ void sqlite3_mutex_free(sqlite3_mutex *p){
 ** can enter.  If the same thread tries to enter any other kind of mutex
 ** more than once, the behavior is undefined.
 */
-void sqlite3_mutex_enter(sqlite3_mutex *p){
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+static void winMutexEnter(sqlite3_mutex *p){
+  assert( p->id==SQLITE_MUTEX_RECURSIVE || winMutexNotheld(p) );
   EnterCriticalSection(&p->mutex);
   p->owner = GetCurrentThreadId(); 
   p->nRef++;
 }
-int sqlite3_mutex_try(sqlite3_mutex *p){
+static int winMutexTry(sqlite3_mutex *p){
   int rc = SQLITE_BUSY;
-  assert( p );
-  assert( p->id==SQLITE_MUTEX_RECURSIVE || sqlite3_mutex_notheld(p) );
+  assert( p->id==SQLITE_MUTEX_RECURSIVE || winMutexNotheld(p) );
   /*
   ** The sqlite3_mutex_try() routine is very rarely used, and when it
   ** is used it is merely an optimization.  So it is OK for it to always
@@ -188,6 +237,8 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
     p->nRef++;
     rc = SQLITE_OK;
   }
+#else
+  UNUSED_PARAMETER(p);
 #endif
   return rc;
 }
@@ -198,7 +249,7 @@ int sqlite3_mutex_try(sqlite3_mutex *p){
 ** is undefined if the mutex is not currently entered or
 ** is not currently allocated.  SQLite will never do either.
 */
-void sqlite3_mutex_leave(sqlite3_mutex *p){
+static void winMutexLeave(sqlite3_mutex *p){
   assert( p->nRef>0 );
   assert( p->owner==GetCurrentThreadId() );
   p->nRef--;
@@ -206,14 +257,24 @@ void sqlite3_mutex_leave(sqlite3_mutex *p){
   LeaveCriticalSection(&p->mutex);
 }
 
-/*
-** The sqlite3_mutex_held() and sqlite3_mutex_notheld() routine are
-** intended for use only inside assert() statements.
-*/
-int sqlite3_mutex_held(sqlite3_mutex *p){
-  return p==0 || (p->nRef!=0 && p->owner==GetCurrentThreadId());
-}
-int sqlite3_mutex_notheld(sqlite3_mutex *p){
-  return p==0 || p->nRef==0 || p->owner!=GetCurrentThreadId();
+sqlite3_mutex_methods *sqlite3DefaultMutex(void){
+  static sqlite3_mutex_methods sMutex = {
+    winMutexInit,
+    winMutexEnd,
+    winMutexAlloc,
+    winMutexFree,
+    winMutexEnter,
+    winMutexTry,
+    winMutexLeave,
+#ifdef SQLITE_DEBUG
+    winMutexHeld,
+    winMutexNotheld
+#else
+    0,
+    0
+#endif
+  };
+
+  return &sMutex;
 }
 #endif /* SQLITE_MUTEX_W32 */
