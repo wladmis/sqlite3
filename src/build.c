@@ -3221,8 +3221,13 @@ SrcList *sqlite3SrcListAppendFromTerm(
     pItem->zAlias = sqlite3NameFromToken(db, pAlias);
   }
   pItem->pSelect = pSubquery;
-  pItem->pOn = pOn;
-  pItem->pUsing = pUsing;
+  if( p->nSrc>1 ){
+    pItem->pOn = pOn;
+    pItem->pUsing = pUsing;
+  }else{
+    sqlite3ExprDelete(db, pOn);
+    sqlite3IdListDelete(db, pUsing);
+  }
   return p;
 }
 
