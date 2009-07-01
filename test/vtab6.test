@@ -265,10 +265,8 @@ do_test vtab6-3.4 {
   }
 } {1 {cannot join using column a - column not present in both tables}}
 do_test vtab6-3.5 {
-  catchsql {
-    SELECT * FROM t1 USING(a);
-  }
-} {0 {1 2 3 2 3 4 3 4 5}}
+  catchsql { SELECT * FROM t1 USING(a) }
+} {1 {a JOIN clause is required before USING}}
 do_test vtab6-3.6 {
   catchsql {
     SELECT * FROM t1 JOIN t2 ON t3.a=t2.b;

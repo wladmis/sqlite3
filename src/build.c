@@ -3208,12 +3208,15 @@ SrcList *sqlite3SrcListAppendFromTerm(
 ){
   struct SrcList_item *pItem;
   sqlite3 *db = pParse->db;
+  if( !p && (pOn || pUsing) ){
+    sqlite3ErrorMsg(pParse, "a JOIN clause is required before %s", 
+      (pOn ? "ON" : "USING")
+    );
+    goto append_from_error;
+  }
   p = sqlite3SrcListAppend(db, p, pTable, pDatabase);
   if( p==0 || NEVER(p->nSrc==0) ){
-    sqlite3ExprDelete(db, pOn);
-    sqlite3IdListDelete(db, pUsing);
-    sqlite3SelectDelete(db, pSubquery);
-    return p;
+    goto append_from_error;
   }
   pItem = &p->a[p->nSrc-1];
   assert( pAlias!=0 );
@@ -3221,14 +3224,16 @@ SrcList *sqlite3SrcListAppendFromTerm(
     pItem->zAlias = sqlite3NameFromToken(db, pAlias);
   }
   pItem->pSelect = pSubquery;
-  if( p->nSrc>1 ){
-    pItem->pOn = pOn;
-    pItem->pUsing = pUsing;
-  }else{
-    sqlite3ExprDelete(db, pOn);
-    sqlite3IdListDelete(db, pUsing);
-  }
+  pItem->pOn = pOn;
+  pItem->pUsing = pUsing;
   return p;
+
+ append_from_error:
+  assert( p==0 );
+  sqlite3ExprDelete(db, pOn);
+  sqlite3IdListDelete(db, pUsing);
+  sqlite3SelectDelete(db, pSubquery);
+  return 0;
 }
 
 /*

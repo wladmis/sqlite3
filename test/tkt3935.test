@@ -33,22 +33,25 @@ do_test tkt3935.3 {
 
 
 do_test tkt3935.4 {
-  execsql { SELECT a FROM (t1) AS t ON b USING(a) }
-} {}
+  catchsql { SELECT a FROM (t1) AS t ON b USING(a) }
+} {1 {a JOIN clause is required before ON}}
 do_test tkt3935.5 {
-  execsql { SELECT a FROM (t1) AS t ON b }
-} {}
+  catchsql { SELECT a FROM (t1) AS t ON b }
+} {1 {a JOIN clause is required before ON}}
 do_test tkt3935.6 {
-  execsql { SELECT a FROM (SELECT * FROM t1) AS t ON b USING(a) }
-} {}
+  catchsql { SELECT a FROM (SELECT * FROM t1) AS t ON b USING(a) }
+} {1 {a JOIN clause is required before ON}}
 do_test tkt3935.7 {
-  execsql { SELECT a FROM (SELECT * FROM t1) AS t ON b }
-} {}
+  catchsql { SELECT a FROM (SELECT * FROM t1) AS t ON b }
+} {1 {a JOIN clause is required before ON}}
 do_test tkt3935.8 {
-  execsql { SELECT a FROM t1 AS t ON b }
-} {}
+  catchsql { SELECT a FROM t1 AS t ON b }
+} {1 {a JOIN clause is required before ON}}
 do_test tkt3935.9 {
-  execsql { SELECT a FROM t1 AS t ON b USING(a) }
-} {}
+  catchsql { SELECT a FROM t1 AS t ON b USING(a) }
+} {1 {a JOIN clause is required before ON}}
+do_test tkt3935.10 {
+  catchsql { SELECT a FROM t1 AS t USING(a) }
+} {1 {a JOIN clause is required before USING}}
 
 finish_test
