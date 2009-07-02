@@ -425,12 +425,8 @@ static int btree_get_meta(
     char zBuf[30];
     u32 v;
     sqlite3BtreeEnter(pBt);
-    rc = sqlite3BtreeGetMeta(pBt, i, &v);
+    sqlite3BtreeGetMeta(pBt, i, &v);
     sqlite3BtreeLeave(pBt);
-    if( rc!=SQLITE_OK ){
-      Tcl_AppendResult(interp, errorName(rc), 0);
-      return TCL_ERROR;
-    }
     sqlite3_snprintf(sizeof(zBuf), zBuf,"%d",v);
     Tcl_AppendElement(interp, zBuf);
   }
