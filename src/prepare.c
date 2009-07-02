@@ -136,7 +136,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   InitData initData;
   char const *zMasterSchema;
   char const *zMasterName = SCHEMA_TABLE(iDb);
-  int openedTransaction;
+  int openedTransaction = 0;
 
   /*
   ** The master database table has a structure like this
@@ -222,8 +222,6 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
       goto initone_error_out;
     }
     openedTransaction = 1;
-  }else{
-    openedTransaction = 0;
   }
 
   /* Get the database meta information.
