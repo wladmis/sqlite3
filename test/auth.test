@@ -2319,6 +2319,34 @@ ifcapable compound&&subquery {
   } {sqlite_stat1 t1 t2 t3 t4}
 }
 
+# Ticket #3944
+#
+ifcapable trigger {
+  do_test auth-5.3.1 {
+    execsql {
+      CREATE TABLE t5 ( x );
+      CREATE TRIGGER t5_tr1 AFTER INSERT ON t5 BEGIN 
+        UPDATE t5 SET x = 1 WHERE NEW.x = 0;
+      END;
+    }
+  } {}
+  set ::authargs [list]
+  proc auth {args} {
+    eval lappend ::authargs $args
+    return SQLITE_OK
+  }
+  do_test auth-5.3.2 {
+    execsql { INSERT INTO t5 (x) values(0) }
+    set ::authargs
+  } [list SQLITE_INSERT t5 {} main {}    \
+          SQLITE_UPDATE t5 x main t5_tr1 \
+          SQLITE_READ t5 x main t5_tr1   \
+    ]
+  do_test auth-5.3.2 {
+    execsql { SELECT * FROM t5 }
+  } {1}
+}
+
 
 rename proc {}
 rename proc_real proc
