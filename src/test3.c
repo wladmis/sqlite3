@@ -413,7 +413,6 @@ static int btree_get_meta(
   const char **argv      /* Text of each argument */
 ){
   Btree *pBt;
-  int rc;
   int i;
   if( argc!=2 ){
     Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
