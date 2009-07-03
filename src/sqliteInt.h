@@ -2020,10 +2020,8 @@ struct Parse {
   int nAliasAlloc;     /* Number of allocated slots for aAlias[] */
   int *aAlias;         /* Register used to hold aliased result */
   u8 explain;          /* True if the EXPLAIN flag is found on the query */
-  Token sErrToken;     /* The token at which the error occurred */
   Token sNameToken;    /* Token with unqualified schema object name */
   Token sLastToken;    /* The last token parsed */
-  const char *zSql;    /* All SQL text */
   const char *zTail;   /* All SQL text past the last semicolon parsed */
   Table *pNewTable;    /* A table being constructed by CREATE TABLE */
   Trigger *pNewTrigger;     /* Trigger under construct by a CREATE TRIGGER */

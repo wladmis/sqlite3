@@ -410,7 +410,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
     db->u1.isInterrupted = 0;
   }
   pParse->rc = SQLITE_OK;
-  pParse->zTail = pParse->zSql = zSql;
+  pParse->zTail = zSql;
   i = 0;
   assert( pzErrMsg!=0 );
   pEngine = sqlite3ParserAlloc((void*(*)(size_t))sqlite3Malloc);
