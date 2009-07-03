@@ -132,6 +132,8 @@ exec_out:
     *pzErrMsg = sqlite3Malloc(nErrMsg);
     if( *pzErrMsg ){
       memcpy(*pzErrMsg, sqlite3_errmsg(db), nErrMsg);
+    }else{
+      rc = SQLITE_NOMEM;
     }
   }else if( pzErrMsg ){
     *pzErrMsg = 0;
