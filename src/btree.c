@@ -2236,13 +2236,12 @@ static int lockBtreeWithRetry(Btree *pRef){
 ** this routine unrefs the first page of the database file which 
 ** has the effect of releasing the read lock.
 **
-** If there are any outstanding cursors, this routine is a no-op.
-**
 ** If there is a transaction in progress, this routine is a no-op.
 */
 static void unlockBtreeIfUnused(BtShared *pBt){
   assert( sqlite3_mutex_held(pBt->mutex) );
-  if( pBt->inTransaction==TRANS_NONE && pBt->pCursor==0 && pBt->pPage1!=0 ){
+  assert( pBt->pCursor==0 || pBt->inTransaction>TRANS_NONE );
+  if( pBt->inTransaction==TRANS_NONE && pBt->pPage1!=0 ){
     assert( pBt->pPage1->aData );
     assert( sqlite3PagerRefcount(pBt->pPager)==1 );
     assert( pBt->pPage1->aData );
