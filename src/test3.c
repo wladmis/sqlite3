@@ -700,7 +700,9 @@ static int btree_move_to(
     }
     rc = sqlite3BtreeMovetoUnpacked(pCur, 0, iKey, 0, &res);
   }else{
+#if 0
     rc = sqlite3BtreeMoveto(pCur, argv[2], strlen(argv[2]), 0, &res);  
+#endif
   }
   sqlite3BtreeLeave(pCur->pBtree);
   if( rc ){

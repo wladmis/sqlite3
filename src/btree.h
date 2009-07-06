@@ -152,13 +152,6 @@ int sqlite3BtreeCursor(
 int sqlite3BtreeCursorSize(void);
 
 int sqlite3BtreeCloseCursor(BtCursor*);
-int sqlite3BtreeMoveto(
-  BtCursor*,
-  const void *pKey,
-  i64 nKey,
-  int bias,
-  int *pRes
-);
 int sqlite3BtreeMovetoUnpacked(
   BtCursor*,
   UnpackedRecord *pUnKey,
