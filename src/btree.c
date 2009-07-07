@@ -3496,8 +3496,8 @@ int sqlite3BtreeDataSize(BtCursor *pCur, u32 *pSize){
 ** *ppPage is set to zero.
 */
 static int getOverflowPage(
-  BtShared *pBt, 
-  Pgno ovfl,                   /* Overflow page */
+  BtShared *pBt,               /* The database file */
+  Pgno ovfl,                   /* Current overflow page number */
   MemPage **ppPage,            /* OUT: MemPage handle (may be NULL) */
   Pgno *pPgnoNext              /* OUT: Next overflow page number */
 ){
