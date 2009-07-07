@@ -3238,15 +3238,10 @@ static int btreeCursor(
     return SQLITE_EMPTY;
   }
 
-  pCur->pgnoRoot = (Pgno)iTable;
-  rc = getAndInitPage(pBt, pCur->pgnoRoot, &pCur->apPage[0]);
-  if( rc!=SQLITE_OK ){
-    assert( pCur->apPage[0]==0 );
-    return rc;
-  }
-
   /* Now that no other errors can occur, finish filling in the BtCursor
   ** variables and link the cursor into the BtShared list.  */
+  pCur->pgnoRoot = (Pgno)iTable;
+  pCur->iPage = -1;
   pCur->pKeyInfo = pKeyInfo;
   pCur->pBtree = p;
   pCur->pBt = pBt;
@@ -3991,6 +3986,7 @@ static int moveToRoot(BtCursor *pCur){
     for(i=1; i<=pCur->iPage; i++){
       releasePage(pCur->apPage[i]);
     }
+    pCur->iPage = 0;
   }else{
     if( 
       SQLITE_OK!=(rc = getAndInitPage(pBt, pCur->pgnoRoot, &pCur->apPage[0]))
@@ -3998,11 +3994,20 @@ static int moveToRoot(BtCursor *pCur){
       pCur->eState = CURSOR_INVALID;
       return rc;
     }
+    pCur->iPage = 0;
+
+    /* If pCur->pKeyInfo is not NULL, then the caller that opened this cursor
+    ** expected to open it on an index b-tree. Otherwise, if pKeyInfo is
+    ** NULL, the caller expects a table b-tree. If this is not the case,
+    ** return an SQLITE_CORRUPT error.  */
+    assert( pCur->apPage[0]->intKey==1 || pCur->apPage[0]->intKey==0 );
+    if( (pCur->pKeyInfo==0)!=pCur->apPage[0]->intKey ){
+      return SQLITE_CORRUPT_BKPT;
+    }
   }
 
   pRoot = pCur->apPage[0];
   assert( pRoot->pgno==pCur->pgnoRoot );
-  pCur->iPage = 0;
   pCur->aiIdx[0] = 0;
   pCur->info.nSize = 0;
   pCur->atLast = 0;
