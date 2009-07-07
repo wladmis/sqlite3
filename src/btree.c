@@ -740,7 +740,8 @@ static int ptrmapPut(BtShared *pBt, Pgno key, u8 eType, Pgno parent){
   }
   offset = PTRMAP_PTROFFSET(iPtrmap, key);
   if( offset<0 ){
-    return SQLITE_CORRUPT_BKPT;
+    rc = SQLITE_CORRUPT_BKPT;
+    goto ptrmap_exit;
   }
   pPtrmap = (u8 *)sqlite3PagerGetData(pDbPage);
 
@@ -753,6 +754,7 @@ static int ptrmapPut(BtShared *pBt, Pgno key, u8 eType, Pgno parent){
     }
   }
 
+ptrmap_exit:
   sqlite3PagerUnref(pDbPage);
   return rc;
 }
