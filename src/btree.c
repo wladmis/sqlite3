@@ -7047,7 +7047,7 @@ int sqlite3BtreeUpdateMeta(Btree *p, int idx, u32 iMeta){
   return rc;
 }
 
-#ifndef SQLITE_TEST
+#ifdef SQLITE_TEST
 /*
 ** Return the flag byte at the beginning of the page that the cursor
 ** is currently pointing to.
