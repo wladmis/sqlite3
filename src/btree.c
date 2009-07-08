@@ -1068,9 +1068,8 @@ static int defragmentPage(MemPage *pPage){
       return SQLITE_CORRUPT_BKPT;
     }
 #endif
-    assert( cbrk+size<=usableSize && cbrk>=iCellFirst );
+    assert( cbrk+size<=usableSize && cbrk>iCellFirst );
     testcase( cbrk+size==usableSize );
-    testcase( cbrk==iCellFirst );
     testcase( pc+size==usableSize );
     memcpy(&data[cbrk], &temp[pc], size);
     put2byte(pAddr, cbrk);
@@ -1215,8 +1214,9 @@ static int freeSpace(MemPage *pPage, int start, int size){
   hdr = pPage->hdrOffset;
   addr = hdr + 1;
   iLast = pPage->pBt->usableSize - 4;
+  assert( start<=iLast );
   while( (pbegin = get2byte(&data[addr]))<start && pbegin>0 ){
-    if( pbegin>iLast || pbegin<addr+4 ){
+    if( pbegin<addr+4 ){
       return SQLITE_CORRUPT_BKPT;
     }
     addr = pbegin;
@@ -7044,6 +7044,7 @@ int sqlite3BtreeUpdateMeta(Btree *p, int idx, u32 iMeta){
   return rc;
 }
 
+#ifndef SQLITE_TEST
 /*
 ** Return the flag byte at the beginning of the page that the cursor
 ** is currently pointing to.
@@ -7060,6 +7061,7 @@ int sqlite3BtreeFlags(BtCursor *pCur){
   assert( pPage->pBt==pCur->pBt );
   return pPage->aData[pPage->hdrOffset];
 }
+#endif
 
 #ifndef SQLITE_OMIT_BTREECOUNT
 /*
