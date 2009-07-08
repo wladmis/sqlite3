@@ -7724,31 +7724,32 @@ int sqlite3BtreeLockTable(Btree *p, int iTab, u8 isWriteLock){
 ** no modifications are made and SQLITE_CORRUPT is returned.
 */
 int sqlite3BtreePutData(BtCursor *pCsr, u32 offset, u32 amt, void *z){
+  int rc;
   assert( cursorHoldsMutex(pCsr) );
   assert( sqlite3_mutex_held(pCsr->pBtree->db->mutex) );
   assert( pCsr->isIncrblobHandle );
 
-  restoreCursorPosition(pCsr);
+  rc = restoreCursorPosition(pCsr);
+  if( rc!=SQLITE_OK ){
+    return rc;
+  }
   assert( pCsr->eState!=CURSOR_REQUIRESEEK );
   if( pCsr->eState!=CURSOR_VALID ){
     return SQLITE_ABORT;
   }
 
-  /* Check some preconditions: 
+  /* Check some assumptions: 
   **   (a) the cursor is open for writing,
-  **   (b) there is no read-lock on the table being modified and
-  **   (c) the cursor points at a valid row of an intKey table.
+  **   (b) there is a read/write transaction open,
+  **   (c) the connection holds a write-lock on the table (if required),
+  **   (d) there are no conflicting read-locks, and
+  **   (e) the cursor points at a valid row of an intKey table.
   */
-  if( !pCsr->wrFlag ){
-    return SQLITE_READONLY;
-  }
+  assert( pCsr->wrFlag );
   assert( !pCsr->pBt->readOnly && pCsr->pBt->inTransaction==TRANS_WRITE );
   assert( hasSharedCacheTableLock(pCsr->pBtree, pCsr->pgnoRoot, 0, 2) );
   assert( !hasReadConflicts(pCsr->pBtree, pCsr->pgnoRoot) );
-
-  if( pCsr->eState==CURSOR_INVALID || !pCsr->apPage[pCsr->iPage]->intKey ){
-    return SQLITE_ERROR;
-  }
+  assert( pCsr->apPage[pCsr->iPage]->intKey );
 
   return accessPayload(pCsr, offset, amt, (unsigned char *)z, 0, 1);
 }
