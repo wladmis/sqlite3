@@ -3381,39 +3381,6 @@ int sqlite3BtreeCloseCursor(BtCursor *pCur){
   return SQLITE_OK;
 }
 
-#ifdef SQLITE_TEST
-/*
-** Make a temporary cursor by filling in the fields of pTempCur.
-** The temporary cursor is not on the cursor list for the Btree.
-*/
-void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur){
-  int i;
-  assert( cursorHoldsMutex(pCur) );
-  memcpy(pTempCur, pCur, sizeof(BtCursor));
-  pTempCur->pNext = 0;
-  pTempCur->pPrev = 0;
-  for(i=0; i<=pTempCur->iPage; i++){
-    sqlite3PagerRef(pTempCur->apPage[i]->pDbPage);
-  }
-  assert( pTempCur->pKey==0 );
-}
-#endif /* SQLITE_TEST */
-
-#ifdef SQLITE_TEST
-/*
-** Delete a temporary cursor such as was made by the CreateTemporaryCursor()
-** function above.
-*/
-void sqlite3BtreeReleaseTempCursor(BtCursor *pCur){
-  int i;
-  assert( cursorHoldsMutex(pCur) );
-  for(i=0; i<=pCur->iPage; i++){
-    sqlite3PagerUnref(pCur->apPage[i]->pDbPage);
-  }
-  sqlite3_free(pCur->pKey);
-}
-#endif /* SQLITE_TEST */
-
 /*
 ** Make sure the BtCursor* given in the argument has a valid
 ** BtCursor.info structure.  If it is not already valid, call
