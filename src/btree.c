@@ -1075,7 +1075,7 @@ static int defragmentPage(MemPage *pPage){
       return SQLITE_CORRUPT_BKPT;
     }
 #endif
-    assert( cbrk+size<=usableSize && cbrk>iCellFirst );
+    assert( cbrk+size<=usableSize && cbrk>=iCellFirst );
     testcase( cbrk+size==usableSize );
     testcase( pc+size==usableSize );
     memcpy(&data[cbrk], &temp[pc], size);
@@ -1126,7 +1126,7 @@ static int allocateSpace(MemPage *pPage, int nByte, int *pIdx){
   assert( pPage->cellOffset == hdr + 12 - 4*pPage->leaf );
   gap = pPage->cellOffset + 2*pPage->nCell;
   top = get2byte(&data[hdr+5]);
-  assert( gap<=top );
+  if( gap>top ) return SQLITE_CORRUPT_BKPT;
   testcase( gap+2==top );
   testcase( gap+1==top );
   testcase( gap==top );
