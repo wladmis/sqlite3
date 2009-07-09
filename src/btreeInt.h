@@ -639,17 +639,3 @@ struct IntegrityCk {
 #define get4byte sqlite3Get4byte
 #define put4byte sqlite3Put4byte
 
-/*
-** Internal routines that should be accessed by the btree layer only.
-*/
-int sqlite3BtreeGetPage(BtShared*, Pgno, MemPage**, int);
-int sqlite3BtreeInitPage(MemPage *pPage);
-void sqlite3BtreeParseCellPtr(MemPage*, u8*, CellInfo*);
-void sqlite3BtreeParseCell(MemPage*, int, CellInfo*);
-int sqlite3BtreeRestoreCursorPosition(BtCursor *pCur);
-void sqlite3BtreeMoveToParent(BtCursor *pCur);
-
-#ifdef SQLITE_TEST
-void sqlite3BtreeGetTempCursor(BtCursor *pCur, BtCursor *pTempCur);
-void sqlite3BtreeReleaseTempCursor(BtCursor *pCur);
-#endif

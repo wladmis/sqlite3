@@ -168,7 +168,6 @@ int sqlite3BtreeFirst(BtCursor*, int *pRes);
 int sqlite3BtreeLast(BtCursor*, int *pRes);
 int sqlite3BtreeNext(BtCursor*, int *pRes);
 int sqlite3BtreeEof(BtCursor*);
-int sqlite3BtreeFlags(BtCursor*);
 int sqlite3BtreePrevious(BtCursor*, int *pRes);
 int sqlite3BtreeKeySize(BtCursor*, i64 *pSize);
 int sqlite3BtreeKey(BtCursor*, u32 offset, u32 amt, void*);
