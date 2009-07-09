@@ -4196,6 +4196,7 @@ int sqlite3BtreeMovetoUnpacked(
 
   assert( cursorHoldsMutex(pCur) );
   assert( sqlite3_mutex_held(pCur->pBtree->db->mutex) );
+  assert( pRes );
 
   /* If the cursor is already positioned at the point we are trying
   ** to move to, then just return without doing any work */
@@ -4336,7 +4337,7 @@ int sqlite3BtreeMovetoUnpacked(
     }
     if( chldPg==0 ){
       assert( pCur->aiIdx[pCur->iPage]<pCur->apPage[pCur->iPage]->nCell );
-      if( pRes ) *pRes = c;
+      *pRes = c;
       rc = SQLITE_OK;
       goto moveto_finish;
     }
