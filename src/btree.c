@@ -7013,25 +7013,6 @@ int sqlite3BtreeUpdateMeta(Btree *p, int idx, u32 iMeta){
   return rc;
 }
 
-#ifdef SQLITE_TEST
-/*
-** Return the flag byte at the beginning of the page that the cursor
-** is currently pointing to.
-*/
-int sqlite3BtreeFlags(BtCursor *pCur){
-  /* TODO: What about CURSOR_REQUIRESEEK state? Probably need to call
-  ** restoreCursorPosition() here.
-  */
-  MemPage *pPage;
-  restoreCursorPosition(pCur);
-  pPage = pCur->apPage[pCur->iPage];
-  assert( cursorHoldsMutex(pCur) );
-  assert( pPage!=0 );
-  assert( pPage->pBt==pCur->pBt );
-  return pPage->aData[pPage->hdrOffset];
-}
-#endif
-
 #ifndef SQLITE_OMIT_BTREECOUNT
 /*
 ** The first argument, pCur, is a cursor opened on some b-tree. Count the

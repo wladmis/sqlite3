@@ -408,7 +408,8 @@ static int btree_payload_size(
   }
   pCur = sqlite3TestTextToPtr(argv[1]);
   sqlite3BtreeEnter(pCur->pBtree);
-  if( sqlite3BtreeFlags(pCur) & BTREE_INTKEY ){
+  if (pCur->eState>=CURSOR_REQUIRESEEK) sqlite3BtreeRestoreCursorPosition(pCur);
+  if( pCur->apPage[pCur->iPage]->intKey ){
     n1 = 0;
   }else{
     sqlite3BtreeKeySize(pCur, (i64*)&n1);
