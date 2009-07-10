@@ -2248,8 +2248,7 @@ static int lockBtree(BtShared *pBt){
       freeTempSpace(pBt);
       rc = sqlite3PagerSetPagesize(pBt->pPager, &pBt->pageSize,
                                    pageSize-usableSize);
-      if( rc ) goto page1_init_failed;
-      return SQLITE_OK;
+      return rc;
     }
     if( usableSize<480 ){
       goto page1_init_failed;
