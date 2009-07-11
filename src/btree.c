@@ -3544,10 +3544,11 @@ static int getOverflowPage(
   }
 #endif
 
+  assert( next==0 || rc==SQLITE_DONE );
   if( rc==SQLITE_OK ){
     rc = btreeGetPage(pBt, ovfl, &pPage, 0);
-    assert(rc==SQLITE_OK || pPage==0);
-    if( next==0 && rc==SQLITE_OK ){
+    assert( rc==SQLITE_OK || pPage==0 );
+    if( rc==SQLITE_OK ){
       next = get4byte(pPage->aData);
     }
   }
