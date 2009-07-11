@@ -7307,6 +7307,10 @@ static int checkTreePage(
        "unable to get the page. error code=%d", rc);
     return 0;
   }
+
+  /* Clear MemPage.isInit to make sure the corruption detection code in
+  ** btreeInitPage() is executed.  */
+  pPage->isInit = 0;
   if( (rc = btreeInitPage(pPage))!=0 ){
     assert( rc==SQLITE_CORRUPT );  /* The only possible error from InitPage */
     checkAppendMsg(pCheck, zContext, 
