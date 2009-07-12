@@ -5255,7 +5255,10 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno, int isCommit){
   if( MEMDB ){
     DbPage *pNew;
     rc = sqlite3PagerAcquire(pPager, origPgno, &pNew, 1);
-    if( rc!=SQLITE_OK ) return rc;
+    if( rc!=SQLITE_OK ){
+      sqlite3PcacheMove(pPg, origPgno);
+      return rc;
+    }
     sqlite3PagerUnref(pNew);
   }
 
