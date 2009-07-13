@@ -1624,7 +1624,7 @@ static int pager_playback_one_page(
 ** by a valid checksum.
 **
 ** The pager never needs to know this in order to do its job.   This
-** routine is only used from with assert() and testcase() macros.
+** routine is only used from within assert() and testcase() macros.
 */
 static int pagerNextJournalPageIsValid(Pager *pPager){
   Pgno pgno;           /* The page number of the page */
