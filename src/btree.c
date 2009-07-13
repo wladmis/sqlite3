@@ -4195,6 +4195,7 @@ int sqlite3BtreeMovetoUnpacked(
   assert( cursorHoldsMutex(pCur) );
   assert( sqlite3_mutex_held(pCur->pBtree->db->mutex) );
   assert( pRes );
+  assert( (pIdxKey==0)==(pCur->pKeyInfo==0) );
 
   /* If the cursor is already positioned at the point we are trying
   ** to move to, then just return without doing any work */
@@ -4233,14 +4234,13 @@ int sqlite3BtreeMovetoUnpacked(
     /* pPage->nCell must be greater than zero. If this is the root-page
     ** the cursor would have been INVALID above and this for(;;) loop
     ** not run. If this is not the root-page, then the moveToChild() routine
-    ** would have already detected db corruption.  */
+    ** would have already detected db corruption. Similarly, pPage must
+    ** be the right kind (index or table) of b-tree page. Otherwise
+    ** a moveToChild() or moveToRoot() call would have detected corruption.  */
     assert( pPage->nCell>0 );
+    assert( pPage->intKey==(pIdxKey==0) );
     lwr = 0;
     upr = pPage->nCell-1;
-    if( (!pPage->intKey && pIdxKey==0) ){
-      rc = SQLITE_CORRUPT_BKPT;
-      goto moveto_finish;
-    }
     if( biasRight ){
       pCur->aiIdx[pCur->iPage] = (u16)upr;
     }else{
