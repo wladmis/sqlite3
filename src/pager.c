@@ -4404,7 +4404,7 @@ int sqlite3PagerWrite(DbPage *pDbPage){
     ** journal file must contain sync()ed copies of all of them
     ** before any of them can be written out to the database file.
     */
-    if( needSync ){
+    if( rc==SQLITE_OK && needSync ){
       assert( !MEMDB && pPager->noSync==0 );
       for(ii=0; ii<nPage && needSync; ii++){
         PgHdr *pPage = pager_lookup(pPager, pg1+ii);

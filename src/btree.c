@@ -3902,6 +3902,11 @@ const void *sqlite3BtreeDataFetch(BtCursor *pCur, int *pAmt){
 /*
 ** Move the cursor down to a new child page.  The newPgno argument is the
 ** page number of the child page to move to.
+**
+** This function returns SQLITE_CORRUPT if the page-header flags field of
+** the new child page does not match the flags field of the parent (i.e.
+** if an intkey page appears to be the parent of a non-intkey page, or
+** vice-versa).
 */
 static int moveToChild(BtCursor *pCur, u32 newPgno){
   int rc;
