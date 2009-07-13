@@ -206,4 +206,24 @@ do_test corrupt-4.2 {
   catchsql { DELETE FROM t1 WHERE rowid = 3 }
 } {1 {database disk image is malformed}}
 
+do_test corrupt-5.1 {
+  db close
+  file delete -force test.db test.db-journal
+  sqlite3 db test.db
+
+  execsql { PRAGMA page_size = 1024 }
+  set ct "CREATE TABLE t1(c0 "
+  set i 0
+  while {[string length $ct] < 950} { append ct ", c[incr i]" }
+  append ct ")"
+  execsql $ct
+} {}
+
+do_test corrupt-5.2 {
+  db close
+  hexio_write test.db 108 00000000 
+  sqlite3 db test.db
+  catchsql { SELECT * FROM sqlite_master }
+} {1 {database disk image is malformed}}
+
 finish_test
