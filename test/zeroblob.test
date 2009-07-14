@@ -227,4 +227,33 @@ do_test zeroblob-8.1 {
 } {8}
 
 
+# Ticket #3965
+# zeroblobs on either size of an IN operator
+#
+do_test zeroblob-9.1 {
+  db eval {SELECT x'0000' IN (x'000000')}
+} {0}
+do_test zeroblob-9.2 {
+  db eval {SELECT x'0000' IN (x'0000')}
+} {1}
+do_test zeroblob-9.3 {
+  db eval {SELECT zeroblob(2) IN (x'000000')}
+} {0}
+do_test zeroblob-9.4 {
+  db eval {SELECT zeroblob(2) IN (x'0000')}
+} {1}
+do_test zeroblob-9.5 {
+  db eval {SELECT x'0000' IN (zeroblob(3))}
+} {0}
+do_test zeroblob-9.6 {
+  db eval {SELECT x'0000' IN (zeroblob(2))}
+} {1}
+do_test zeroblob-9.7 {
+  db eval {SELECT zeroblob(2) IN (zeroblob(3))}
+} {0}
+do_test zeroblob-9.8 {
+  db eval {SELECT zeroblob(2) IN (zeroblob(2))}
+} {1}
+
+
 finish_test

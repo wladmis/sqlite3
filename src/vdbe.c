@@ -3349,6 +3349,7 @@ case OP_Found: {        /* jump, in3 */
 
     assert( pC->isTable==0 );
     assert( pIn3->flags & MEM_Blob );
+    ExpandBlob(pIn3);
     pIdxKey = sqlite3VdbeRecordUnpack(pC->pKeyInfo, pIn3->n, pIn3->z,
                                       aTempRec, sizeof(aTempRec));
     if( pIdxKey==0 ){
@@ -3951,12 +3952,12 @@ case OP_Rowid: {                 /* out2-prerelease */
     if( sqlite3SafetyOn(db) ) goto abort_due_to_misuse;
 #endif /* SQLITE_OMIT_VIRTUALTABLE */
   }else{
+    assert( pC->pCursor!=0 );
     rc = sqlite3VdbeCursorMoveto(pC);
     if( rc ) goto abort_due_to_error;
     if( pC->rowidIsValid ){
       v = pC->lastRowid;
     }else{
-      assert( pC->pCursor!=0 );
       sqlite3BtreeKeySize(pC->pCursor, &v);
     }
   }
