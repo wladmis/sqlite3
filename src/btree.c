@@ -6976,10 +6976,8 @@ static int btreeDropTable(Btree *p, Pgno iTable, int *piMoved){
       ** PENDING_BYTE_PAGE.
       */
       maxRootPgno--;
-      if( maxRootPgno==PENDING_BYTE_PAGE(pBt) ){
-        maxRootPgno--;
-      }
-      if( maxRootPgno==PTRMAP_PAGENO(pBt, maxRootPgno) ){
+      while( maxRootPgno==PENDING_BYTE_PAGE(pBt)
+             || PTRMAP_ISPAGE(pBt, maxRootPgno) ){
         maxRootPgno--;
       }
       assert( maxRootPgno!=PENDING_BYTE_PAGE(pBt) );
