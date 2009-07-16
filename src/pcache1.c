@@ -655,7 +655,14 @@ static void pcache1Rekey(
   pPage->pNext = pCache->apHash[h];
   pCache->apHash[h] = pPage;
 
-  if( iNew>pCache->iMaxKey ){
+  /* The xRekey() interface is only used to move pages earlier in the
+  ** database file (in order to move all free pages to the end of the
+  ** file where they can be truncated off.)  Hence, it is not possible
+  ** for the new page number to be greater than the largest previously
+  ** fetched page.  But we retain the following test in case xRekey()
+  ** begins to be used in different ways in the future.
+  */
+  if( NEVER(iNew>pCache->iMaxKey) ){
     pCache->iMaxKey = iNew;
   }
 

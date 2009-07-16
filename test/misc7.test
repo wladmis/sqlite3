@@ -366,16 +366,6 @@ do_test misc7-16.X {
   }
 } {32}
 
-set sqlite_pager_n_sort_bucket 4
-do_test misc7-17 {
-  execsql {
-    PRAGMA integrity_check;
-    VACUUM;
-    PRAGMA integrity_check;
-  }
-} {ok ok}
-set sqlite_pager_n_sort_bucket 0
-
 #----------------------------------------------------------------------
 # Test the situation where a hot-journal is discovered but write-access
 # to it is denied. This should return SQLITE_BUSY.
