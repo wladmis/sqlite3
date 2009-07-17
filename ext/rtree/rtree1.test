@@ -393,4 +393,12 @@ do_test rtree-9.3 {
   }
 } {1600}
 
+#-------------------------------------------------------------------------
+# Ticket #3970: Check that the error message is meaningful when a 
+# keyword is used as a column name.
+#
+do_test rtree-10.1 {
+  catchsql { CREATE VIRTUAL TABLE t7 USING rtree(index, x1, y1, x2, y2) }
+} {1 {near "index": syntax error}}
+
 finish_test
