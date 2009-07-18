@@ -270,9 +270,6 @@ do_test memsubsys1-8.2 {
 } 0
 do_test memsubsys1-8.3 {
   sqlite3 db :memory:
-  ifcapable !incrblob {
-    db function zeroblob [list string repeat [binary format c 0]]
-  }
   db eval {
     CREATE TABLE t1(x);
     INSERT INTO t1 VALUES(zeroblob(400));
