@@ -6160,7 +6160,6 @@ static int balance_nonroot(
         pNew = apNew[++k];
         if( !leafData ) continue;
       }
-      assert( rc==SQLITE_OK );
       assert( j<nOld );
       assert( k<nNew );
 
