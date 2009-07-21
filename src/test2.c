@@ -342,7 +342,10 @@ static int page_get(
   }
   pPager = sqlite3TestTextToPtr(argv[1]);
   if( Tcl_GetInt(interp, argv[2], &pgno) ) return TCL_ERROR;
-  rc = sqlite3PagerGet(pPager, pgno, &pPage);
+  rc = sqlite3PagerSharedLock(pPager);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3PagerGet(pPager, pgno, &pPage);
+  }
   if( rc!=SQLITE_OK ){
     Tcl_AppendResult(interp, errorName(rc), 0);
     return TCL_ERROR;
