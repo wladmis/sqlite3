@@ -5205,7 +5205,7 @@ int sqlite3PagerMovepage(Pager *pPager, DbPage *pPg, Pgno pgno, int isCommit){
   pPg->flags &= ~PGHDR_NEED_SYNC;
   pPgOld = pager_lookup(pPager, pgno);
   assert( !pPgOld || pPgOld->nRef==1 );
-  if( ALWAYS(pPgOld) ){
+  if( pPgOld ){
     pPg->flags |= (pPgOld->flags&PGHDR_NEED_SYNC);
     sqlite3PcacheDrop(pPgOld);
   }
