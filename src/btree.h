@@ -185,6 +185,10 @@ int sqlite3BtreePutData(BtCursor*, u32 offset, u32 amt, void*);
 void sqlite3BtreeCacheOverflow(BtCursor *);
 void sqlite3BtreeClearCursor(BtCursor *);
 
+#ifndef NDEBUG
+int sqlite3BtreeCursorIsValid(BtCursor*);
+#endif
+
 #ifndef SQLITE_OMIT_BTREECOUNT
 int sqlite3BtreeCount(BtCursor *, i64 *);
 #endif
