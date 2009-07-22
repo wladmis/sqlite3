@@ -156,6 +156,7 @@ void sqlite3EndBenignMalloc(void);
 static void test_agg_errmsg16_step(sqlite3_context *a, int b,sqlite3_value **c){
 }
 static void test_agg_errmsg16_final(sqlite3_context *ctx){
+#ifndef SQLITE_OMIT_UTF16
   const void *z;
   sqlite3 * db = sqlite3_context_db_handle(ctx);
   sqlite3_aggregate_context(ctx, 2048);
@@ -163,6 +164,7 @@ static void test_agg_errmsg16_final(sqlite3_context *ctx){
   z = sqlite3_errmsg16(db);
   sqlite3EndBenignMalloc();
   sqlite3_result_text16(ctx, z, -1, SQLITE_TRANSIENT);
+#endif
 }
 
 /*

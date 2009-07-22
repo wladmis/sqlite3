@@ -291,7 +291,7 @@ do_test bind-6.4 {
   execsql {SELECT * FROM t1}
 } {hello hello hello}
 set enc [db eval {PRAGMA encoding}]
-if {$enc=="UTF-8"} {
+if {$enc=="UTF-8" || $enc==""} {
   do_test bind-6.5 {
     execsql {SELECT  hex(a), hex(b), hex(c) FROM t1}
   } {68656C6C6F00746865726500 68656C6C6F007468657265 68656C6C6F}
