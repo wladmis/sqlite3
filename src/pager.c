@@ -2883,7 +2883,7 @@ static int pager_write_pagelist(PgHdr *pList){
   Pager *pPager;                       /* Pager object */
   int rc;                              /* Return code */
 
-  if( pList==0 ) return SQLITE_OK;
+  if( NEVER(pList==0) ) return SQLITE_OK;
   pPager = pList->pPager;
 
   /* At this point there may be either a RESERVED or EXCLUSIVE lock on the
