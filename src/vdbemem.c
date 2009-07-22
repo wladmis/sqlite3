@@ -875,6 +875,8 @@ int sqlite3VdbeMemFromBtree(
   int available = 0;  /* Number of bytes available on the local btree page */
   int rc = SQLITE_OK; /* Return code */
 
+  assert( sqlite3BtreeCursorIsValid(pCur) );
+
   /* Note: the calls to BtreeKeyFetch() and DataFetch() below assert() 
   ** that both the BtShared and database handle mutexes are held. */
   assert( (pMem->flags & MEM_RowSet)==0 );
