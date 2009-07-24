@@ -162,7 +162,7 @@ void sqlite3FinishCoding(Parse *pParse){
       {
         int i;
         for(i=0; i<pParse->nVtabLock; i++){
-          char *vtab = (char *)pParse->apVtabLock[i]->pVtab;
+          char *vtab = (char *)sqlite3GetVTable(db, pParse->apVtabLock[i]);
           sqlite3VdbeAddOp4(v, OP_VBegin, 0, 0, 0, vtab, P4_VTAB);
         }
         pParse->nVtabLock = 0;
@@ -424,6 +424,7 @@ void sqlite3ResetInternalSchema(sqlite3 *db, int iDb){
   }
   assert( iDb==0 );
   db->flags &= ~SQLITE_InternChanges;
+  sqlite3VtabUnlockList(db);
   sqlite3BtreeLeaveAll(db);
 
   /* If one or more of the auxiliary database files has been closed,
@@ -2002,7 +2003,7 @@ void sqlite3DropTable(Parse *pParse, SrcList *pName, int isView, int noErr){
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     }else if( IsVirtual(pTab) ){
       code = SQLITE_DROP_VTABLE;
-      zArg2 = pTab->pMod->zName;
+      zArg2 = sqlite3GetVTable(db, pTab)->pMod->zName;
 #endif
     }else{
       if( !OMIT_TEMPDB && iDb==1 ){
