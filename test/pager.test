@@ -55,9 +55,9 @@ do_test pager-2.1 {
 #  } msg]
 #  lappend v $msg
 #} {1 SQLITE_ERROR}
-do_test pager-2.3.1 {
-  set ::gx [page_lookup $::p1 1]
-} {}
+#do_test pager-2.3.1 {
+#  set ::gx [page_lookup $::p1 1]
+#} {}
 do_test pager-2.3.2 {
   pager_stats $::p1
 } {ref 0 page 0 max 10 size -1 state 0 err 0 hit 0 miss 0 ovfl 0}
