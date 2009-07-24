@@ -3414,7 +3414,7 @@ static int hasHotJournal(Pager *pPager, int *pExists){
   int exists;                   /* True if a journal file is present */
 
   assert( pPager!=0 );
-  assert( useJournal );
+  assert( pPager->useJournal );
   assert( isOpen(pPager->fd) );
   assert( !isOpen(pPager->jfd) );
 
@@ -3512,7 +3512,7 @@ static int readDbPage(PgHdr *pPg){
   assert( pPager->state>=PAGER_SHARED && !MEMDB );
   assert( isOpen(pPager->fd) );
 
-  if( !isOpen(pPager->fd) ){
+  if( NEVER(!isOpen(pPager->fd)) ){
     assert( pPager->tempFile );
     memset(pPg->pData, 0, pPager->pageSize);
     return SQLITE_OK;
