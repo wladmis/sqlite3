@@ -3567,14 +3567,15 @@ int sqlite3PagerSharedLock(Pager *pPager){
     int isHotJournal = 0;
     assert( !MEMDB );
     assert( sqlite3PcacheRefCount(pPager->pPCache)==0 );
-    if( !pPager->noReadlock ){
+    if( pPager->noReadlock ){
+      assert( pPager->readOnly );
+      pPager->state = PAGER_SHARED;
+    }else{
       rc = pager_wait_on_lock(pPager, SHARED_LOCK);
       if( rc!=SQLITE_OK ){
         assert( pPager->state==PAGER_UNLOCK );
         return pager_error(pPager, rc);
       }
-    }else if( pPager->state==PAGER_UNLOCK ){
-      pPager->state = PAGER_SHARED;
     }
     assert( pPager->state>=SHARED_LOCK );
 
