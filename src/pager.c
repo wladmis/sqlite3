@@ -2406,8 +2406,7 @@ static void pagerReportSize(Pager *pPager){
 */
 int sqlite3PagerSetPagesize(Pager *pPager, u16 *pPageSize, int nReserve){
   int rc = pPager->errCode;
-  assert( pPager->dbSize==0 );
-  assert( sqlite3PcacheRefCount(pPager->pPCache)==0 );
+
   if( rc==SQLITE_OK ){
     u16 pageSize = *pPageSize;
     assert( pageSize==0 || (pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE) );
