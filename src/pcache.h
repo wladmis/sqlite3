@@ -124,7 +124,7 @@ int sqlite3PcachePageRefcount(PgHdr*);
 /* Return the total number of pages stored in the cache */
 int sqlite3PcachePagecount(PCache*);
 
-#ifdef SQLITE_CHECK_PAGES
+#if defined(SQLITE_CHECK_PAGES) || defined(SQLITE_DEBUG)
 /* Iterate through all dirty pages currently stored in the cache. This
 ** interface is only available if SQLITE_CHECK_PAGES is defined when the 
 ** library is built.

@@ -561,7 +561,7 @@ void sqlite3PcacheSetCachesize(PCache *pCache, int mxPage){
   }
 }
 
-#ifdef SQLITE_CHECK_PAGES
+#if defined(SQLITE_CHECK_PAGES) || defined(SQLITE_DEBUG)
 /*
 ** For all dirty pages currently in the cache, invoke the specified
 ** callback. This is only used if the SQLITE_CHECK_PAGES macro is
