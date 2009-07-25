@@ -146,8 +146,7 @@ int sqlite3BitvecTest(Bitvec *p, u32 i){
     u32 h = BITVEC_HASH(i++);
     while( p->u.aHash[h] ){
       if( p->u.aHash[h]==i ) return 1;
-      h++;
-      if( h>=BITVEC_NINT ) h = 0;
+      h = (h+1) % BITVEC_NINT;
     }
     return 0;
   }
