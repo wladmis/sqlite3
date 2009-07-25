@@ -2406,6 +2406,8 @@ static void pagerReportSize(Pager *pPager){
 */
 int sqlite3PagerSetPagesize(Pager *pPager, u16 *pPageSize, int nReserve){
   int rc = pPager->errCode;
+  assert( pPager->dbSize==0 );
+  assert( sqlite3PcacheRefCount(pPager->pPCache)==0 );
   if( rc==SQLITE_OK ){
     u16 pageSize = *pPageSize;
     assert( pageSize==0 || (pageSize>=512 && pageSize<=SQLITE_MAX_PAGE_SIZE) );
@@ -4109,7 +4111,6 @@ static int pager_open_journal(Pager *pPager){
 int sqlite3PagerBegin(Pager *pPager, int exFlag, int subjInMemory){
   int rc = SQLITE_OK;
   assert( pPager->state!=PAGER_UNLOCK );
-  assert( pPager->useJournal );
   pPager->subjInMemory = (u8)subjInMemory;
   if( pPager->state==PAGER_SHARED ){
     assert( pPager->pInJournal==0 );
