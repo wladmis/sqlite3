@@ -122,8 +122,11 @@ do_test fts3expr-1.11 {
 do_test fts3expr-1.14 {
   test_fts3expr {a:one two}
 } {AND {PHRASE 0 0 one} {PHRASE 3 0 two}}
-do_test fts3expr-1.15 {
+do_test fts3expr-1.15.1 {
   test_fts3expr {one b:two}
+} {AND {PHRASE 3 0 one} {PHRASE 1 0 two}}
+do_test fts3expr-1.15.2 {
+  test_fts3expr {one B:two}
 } {AND {PHRASE 3 0 one} {PHRASE 1 0 two}}
 
 do_test fts3expr-1.16 {

@@ -5613,6 +5613,18 @@ int sqlite3_unlock_notify(
   void *pNotifyArg                            /* Argument to pass to xNotify */
 );
 
+
+/*
+** CAPI3REF: String Comparison
+** EXPERIMENTAL
+**
+** The [sqlite3_strnicmp()] API allows applications and extensions to
+** compare the contents of two buffers containing UTF-8 strings in a
+** case-indendent fashion, using the same definition of case independence 
+** that SQLite uses internally when comparing identifiers.
+*/
+int sqlite3_strnicmp(const char *, const char *, int);
+
 /*
 ** Undo the hack that converts floating point types to integer for
 ** builds on processors without floating point support.
