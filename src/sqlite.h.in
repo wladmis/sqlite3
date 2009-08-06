@@ -3868,7 +3868,7 @@ void *sqlite3_update_hook(
 
 /*
 ** CAPI3REF: Enable Or Disable Shared Pager Cache {H10330} <S30900>
-** KEYWORDS: {shared cache} {shared cache mode}
+** KEYWORDS: {shared cache}
 **
 ** This routine enables or disables the sharing of the database cache
 ** and schema data structures between [database connection | connections]
