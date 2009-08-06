@@ -800,6 +800,7 @@ struct sqlite3 {
     int iDb;                    /* When back is being initialized */
     int newTnum;                /* Rootpage of table being initialized */
     u8 busy;                    /* TRUE if currently initializing */
+    u8 orphanTrigger;           /* Last statement is orphaned TEMP trigger */
   } init;
   int nExtension;               /* Number of loaded extensions */
   void **aExtension;            /* Array of shared library handles */

@@ -27,11 +27,6 @@ static void corruptSchema(
   const char *zExtra   /* Error information */
 ){
   sqlite3 *db = pData->db;
-  if( pData->iDb==1 && zObj && zExtra ){
-    *pData->pzErrMsg = sqlite3MPrintf(db, "in %s: %s", zObj, zExtra);
-    pData->rc = SQLITE_ERROR;
-    return;
-  }
   if( !db->mallocFailed && (db->flags & SQLITE_RecoveryMode)==0 ){
     if( zObj==0 ) zObj = "?";
     sqlite3SetString(pData->pzErrMsg, db,
@@ -85,15 +80,20 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **NotUsed){
     assert( db->init.busy );
     db->init.iDb = iDb;
     db->init.newTnum = atoi(argv[1]);
+    db->init.orphanTrigger = 0;
     rc = sqlite3_exec(db, argv[2], 0, 0, &zErr);
     db->init.iDb = 0;
     assert( rc!=SQLITE_OK || zErr==0 );
     if( SQLITE_OK!=rc ){
-      pData->rc = rc;
-      if( rc==SQLITE_NOMEM ){
-        db->mallocFailed = 1;
-      }else if( rc!=SQLITE_INTERRUPT && rc!=SQLITE_LOCKED ){
-        corruptSchema(pData, argv[0], zErr);
+      if( db->init.orphanTrigger ){
+        assert( iDb==1 );
+      }else{
+        pData->rc = rc;
+        if( rc==SQLITE_NOMEM ){
+          db->mallocFailed = 1;
+        }else if( rc!=SQLITE_INTERRUPT && rc!=SQLITE_LOCKED ){
+          corruptSchema(pData, argv[0], zErr);
+        }
       }
       sqlite3DbFree(db, zErr);
     }
