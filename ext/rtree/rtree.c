@@ -2342,7 +2342,7 @@ static int hashIsEmpty(Rtree *pRtree){
 /*
 ** The xUpdate method for rtree module virtual tables.
 */
-int rtreeUpdate(
+static int rtreeUpdate(
   sqlite3_vtab *pVtab, 
   int nData, 
   sqlite3_value **azData, 
