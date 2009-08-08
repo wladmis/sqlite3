@@ -137,7 +137,7 @@ void sqlite3Update(
   int regData;           /* New data for the row */
   int regRowSet = 0;     /* Rowset of rows to be updated */
 
-  sContext.pParse = 0;
+  memset(&sContext, 0, sizeof(sContext));
   db = pParse->db;
   if( pParse->nErr || db->mallocFailed ){
     goto update_cleanup;
