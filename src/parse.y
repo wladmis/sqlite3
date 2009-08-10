@@ -362,12 +362,12 @@ defer_subclause_opt(A) ::= defer_subclause(X).  {A = X;}
 // default behavior when there is a constraint conflict.
 //
 %type onconf {int}
-%type orconf {int}
+%type orconf {u8}
 %type resolvetype {int}
 onconf(A) ::= .                              {A = OE_Default;}
 onconf(A) ::= ON CONFLICT resolvetype(X).    {A = X;}
 orconf(A) ::= .                              {A = OE_Default;}
-orconf(A) ::= OR resolvetype(X).             {A = X;}
+orconf(A) ::= OR resolvetype(X).             {A = (u8)X;}
 resolvetype(A) ::= raisetype(X).             {A = X;}
 resolvetype(A) ::= IGNORE.                   {A = OE_Ignore;}
 resolvetype(A) ::= REPLACE.                  {A = OE_Replace;}
@@ -687,7 +687,7 @@ cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) select(S).
 cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) DEFAULT VALUES.
             {sqlite3Insert(pParse, X, 0, 0, F, R);}
 
-%type insert_cmd {int}
+%type insert_cmd {u8}
 insert_cmd(A) ::= INSERT orconf(R).   {A = R;}
 insert_cmd(A) ::= REPLACE.            {A = OE_Replace;}
 
