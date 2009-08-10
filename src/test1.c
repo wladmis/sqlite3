@@ -1099,6 +1099,7 @@ static void t1CountFinalize(sqlite3_context *context){
   }
 }
 
+#ifndef SQLITE_OMIT_DEPRECATED
 static void legacyCountStep(
   sqlite3_context *context,
   int argc,
@@ -1107,7 +1108,6 @@ static void legacyCountStep(
   /* no-op */
 }
 
-#ifndef SQLITE_OMIT_DEPRECATED
 static void legacyCountFinalize(sqlite3_context *context){
   sqlite3_result_int(context, sqlite3_aggregate_count(context));
 }
