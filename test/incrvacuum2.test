@@ -23,16 +23,6 @@ ifcapable {!autovacuum || !pragma} {
   return
 }
 
-# If the OMIT_INCRBLOB symbol was defined at compile time, there
-# is no zeroblob() function available. So create a similar
-# function here using Tcl. It doesn't return a blob, but it returns
-# data of the required length, which is good enough for this
-# test file.
-ifcapable !incrblob {
-  proc zeroblob {n} { string repeat 0 $n }
-  db function zeroblob zeroblob
-}
-
 
 # Create a database in incremental vacuum mode that has many
 # pages on the freelist.

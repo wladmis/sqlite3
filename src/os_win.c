@@ -483,9 +483,8 @@ static BOOL winceLockFile(
   }
 
   /* Want a read-only lock? */
-  else if ((dwFileOffsetLow >= SHARED_FIRST &&
-            dwFileOffsetLow < SHARED_FIRST + SHARED_SIZE) &&
-            nNumberOfBytesToLockLow == 1){
+  else if (dwFileOffsetLow == SHARED_FIRST &&
+           nNumberOfBytesToLockLow == 1){
     if (pFile->shared->bExclusive == 0){
       pFile->local.nReaders ++;
       if (pFile->local.nReaders == 1){
@@ -504,6 +503,7 @@ static BOOL winceLockFile(
       bReturn = TRUE;
     }
   }
+
   /* Want a reserved lock? */
   else if (dwFileOffsetLow == RESERVED_BYTE && nNumberOfBytesToLockLow == 1){
     if (pFile->shared->bReserved == 0) {

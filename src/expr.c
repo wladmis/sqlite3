@@ -886,9 +886,8 @@ ExprList *sqlite3ExprListDup(sqlite3 *db, ExprList *p, int flags){
   } 
   pOldItem = p->a;
   for(i=0; i<p->nExpr; i++, pItem++, pOldItem++){
-    Expr *pNewExpr;
     Expr *pOldExpr = pOldItem->pExpr;
-    pItem->pExpr = pNewExpr = sqlite3ExprDup(db, pOldExpr, flags);
+    pItem->pExpr = sqlite3ExprDup(db, pOldExpr, flags);
     pItem->zName = sqlite3DbStrDup(db, pOldItem->zName);
     pItem->zSpan = sqlite3DbStrDup(db, pOldItem->zSpan);
     pItem->sortOrder = pOldItem->sortOrder;
@@ -1925,12 +1924,7 @@ int sqlite3ExprCodeGetColumn(
   }else if( ALWAYS(pTab!=0) ){
     int op = IsVirtual(pTab) ? OP_VColumn : OP_Column;
     sqlite3VdbeAddOp3(v, op, iTable, iColumn, iReg);
-    sqlite3ColumnDefault(v, pTab, iColumn);
-#ifndef SQLITE_OMIT_FLOATING_POINT
-    if( pTab->aCol[iColumn].affinity==SQLITE_AFF_REAL ){
-      sqlite3VdbeAddOp1(v, OP_RealAffinity, iReg);
-    }
-#endif
+    sqlite3ColumnDefault(v, pTab, iColumn, iReg);
   }
   sqlite3ExprCacheStore(pParse, iTable, iColumn, iReg);
   return iReg;

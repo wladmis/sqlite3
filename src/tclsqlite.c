@@ -1674,6 +1674,7 @@ static int DbObjCmd(void *cd, Tcl_Interp *interp, int objc,Tcl_Obj *const*objv){
       ** which matches the next sequence of SQL.
       */
       pStmt = 0;
+      while( isspace(zSql[0]) ){ zSql++; }
       len = strlen30(zSql);
       for(pPreStmt = pDb->stmtList; pPreStmt; pPreStmt=pPreStmt->pNext){
         int n = pPreStmt->nSql;

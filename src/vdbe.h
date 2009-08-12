@@ -58,7 +58,7 @@ struct VdbeOp {
     VdbeFunc *pVdbeFunc;   /* Used when p4type is P4_VDBEFUNC */
     CollSeq *pColl;        /* Used when p4type is P4_COLLSEQ */
     Mem *pMem;             /* Used when p4type is P4_MEM */
-    sqlite3_vtab *pVtab;   /* Used when p4type is P4_VTAB */
+    VTable *pVtab;         /* Used when p4type is P4_VTAB */
     KeyInfo *pKeyInfo;     /* Used when p4type is P4_KEYINFO */
     int *ai;               /* Used when p4type is P4_INTARRAY */
   } p4;

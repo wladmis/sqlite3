@@ -46,6 +46,7 @@ do_test pcache2-1.3 {
   lindex [sqlite3_status SQLITE_STATUS_PAGECACHE_USED 0] 1
 } {4}
 
+
 # Make lots of changes on the first connection.  Verify that the
 # page cache usage does not grow to consume the page space set aside
 # for the second connection.

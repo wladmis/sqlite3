@@ -29,11 +29,11 @@ static void corruptSchema(
   sqlite3 *db = pData->db;
   if( !db->mallocFailed && (db->flags & SQLITE_RecoveryMode)==0 ){
     if( zObj==0 ) zObj = "?";
-    sqlite3SetString(pData->pzErrMsg, pData->db,
-       "malformed database schema (%s)", zObj);
+    sqlite3SetString(pData->pzErrMsg, db,
+      "malformed database schema (%s)", zObj);
     if( zExtra ){
-      *pData->pzErrMsg = sqlite3MAppendf(pData->db, *pData->pzErrMsg, "%s - %s",
-                                  *pData->pzErrMsg, zExtra);
+      *pData->pzErrMsg = sqlite3MAppendf(db, *pData->pzErrMsg, 
+                                 "%s - %s", *pData->pzErrMsg, zExtra);
     }
   }
   pData->rc = db->mallocFailed ? SQLITE_NOMEM : SQLITE_CORRUPT;
@@ -80,15 +80,20 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **NotUsed){
     assert( db->init.busy );
     db->init.iDb = iDb;
     db->init.newTnum = atoi(argv[1]);
+    db->init.orphanTrigger = 0;
     rc = sqlite3_exec(db, argv[2], 0, 0, &zErr);
     db->init.iDb = 0;
     assert( rc!=SQLITE_OK || zErr==0 );
     if( SQLITE_OK!=rc ){
-      pData->rc = rc;
-      if( rc==SQLITE_NOMEM ){
-        db->mallocFailed = 1;
-      }else if( rc!=SQLITE_INTERRUPT && rc!=SQLITE_LOCKED ){
-        corruptSchema(pData, argv[0], zErr);
+      if( db->init.orphanTrigger ){
+        assert( iDb==1 );
+      }else{
+        pData->rc = rc;
+        if( rc==SQLITE_NOMEM ){
+          db->mallocFailed = 1;
+        }else if( rc!=SQLITE_INTERRUPT && rc!=SQLITE_LOCKED ){
+          corruptSchema(pData, argv[0], zErr);
+        }
       }
       sqlite3DbFree(db, zErr);
     }
@@ -128,7 +133,6 @@ int sqlite3InitCallback(void *pInit, int argc, char **argv, char **NotUsed){
 static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   int rc;
   int i;
-  BtCursor *curMain;
   int size;
   Table *pTab;
   Db *pDb;
@@ -137,6 +141,7 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   InitData initData;
   char const *zMasterSchema;
   char const *zMasterName = SCHEMA_TABLE(iDb);
+  int openedTransaction = 0;
 
   /*
   ** The master database table has a structure like this
@@ -210,14 +215,19 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
     }
     return SQLITE_OK;
   }
-  curMain = sqlite3MallocZero(sqlite3BtreeCursorSize());
-  if( !curMain ){
-    rc = SQLITE_NOMEM;
-    goto error_out;
-  }
+
+  /* If there is not already a read-only (or read-write) transaction opened
+  ** on the b-tree database, open one now. If a transaction is opened, it 
+  ** will be closed before this function returns.  */
   sqlite3BtreeEnter(pDb->pBt);
-  rc = sqlite3BtreeCursor(pDb->pBt, MASTER_ROOT, 0, 0, curMain);
-  if( rc==SQLITE_EMPTY ) rc = SQLITE_OK;
+  if( !sqlite3BtreeIsInReadTrans(pDb->pBt) ){
+    rc = sqlite3BtreeBeginTrans(pDb->pBt, 0);
+    if( rc!=SQLITE_OK ){
+      sqlite3SetString(pzErrMsg, db, "%s", sqlite3ErrStr(rc));
+      goto initone_error_out;
+    }
+    openedTransaction = 1;
+  }
 
   /* Get the database meta information.
   **
@@ -236,12 +246,8 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   ** Note: The #defined SQLITE_UTF* symbols in sqliteInt.h correspond to
   ** the possible values of meta[4].
   */
-  for(i=0; rc==SQLITE_OK && i<ArraySize(meta); i++){
-    rc = sqlite3BtreeGetMeta(pDb->pBt, i+1, (u32 *)&meta[i]);
-  }
-  if( rc ){
-    sqlite3SetString(pzErrMsg, db, "%s", sqlite3ErrStr(rc));
-    goto initone_error_out;
+  for(i=0; i<ArraySize(meta); i++){
+    sqlite3BtreeGetMeta(pDb->pBt, i+1, (u32 *)&meta[i]);
   }
   pDb->pSchema->schema_cookie = meta[BTREE_SCHEMA_VERSION-1];
 
@@ -356,8 +362,9 @@ static int sqlite3InitOne(sqlite3 *db, int iDb, char **pzErrMsg){
   ** before that point, jump to error_out.
   */
 initone_error_out:
-  sqlite3BtreeCloseCursor(curMain);
-  sqlite3_free(curMain);
+  if( openedTransaction ){
+    sqlite3BtreeCommit(pDb->pBt);
+  }
   sqlite3BtreeLeave(pDb->pBt);
 
 error_out:
@@ -435,43 +442,47 @@ int sqlite3ReadSchema(Parse *pParse){
 
 /*
 ** Check schema cookies in all databases.  If any cookie is out
-** of date, return 0.  If all schema cookies are current, return 1.
+** of date set pParse->rc to SQLITE_SCHEMA.  If all schema cookies
+** make no changes to pParse->rc.
 */
-static int schemaIsValid(sqlite3 *db){
+static void schemaIsValid(Parse *pParse){
+  sqlite3 *db = pParse->db;
   int iDb;
   int rc;
-  BtCursor *curTemp;
   int cookie;
-  int allOk = 1;
 
-  curTemp = (BtCursor *)sqlite3Malloc(sqlite3BtreeCursorSize());
-  if( curTemp ){
-    assert( sqlite3_mutex_held(db->mutex) );
-    for(iDb=0; allOk && iDb<db->nDb; iDb++){
-      Btree *pBt;
-      pBt = db->aDb[iDb].pBt;
-      if( pBt==0 ) continue;
-      memset(curTemp, 0, sqlite3BtreeCursorSize());
-      rc = sqlite3BtreeCursor(pBt, MASTER_ROOT, 0, 0, curTemp);
-      if( rc==SQLITE_OK ){
-        rc = sqlite3BtreeGetMeta(pBt, BTREE_SCHEMA_VERSION, (u32 *)&cookie);
-        if( ALWAYS(rc==SQLITE_OK)
-                && cookie!=db->aDb[iDb].pSchema->schema_cookie ){
-          allOk = 0;
-        }
-        sqlite3BtreeCloseCursor(curTemp);
-      }
-      if( NEVER(rc==SQLITE_NOMEM) || rc==SQLITE_IOERR_NOMEM ){
+  assert( pParse->checkSchema );
+  assert( sqlite3_mutex_held(db->mutex) );
+  for(iDb=0; iDb<db->nDb; iDb++){
+    int openedTransaction = 0;         /* True if a transaction is opened */
+    Btree *pBt = db->aDb[iDb].pBt;     /* Btree database to read cookie from */
+    if( pBt==0 ) continue;
+
+    /* If there is not already a read-only (or read-write) transaction opened
+    ** on the b-tree database, open one now. If a transaction is opened, it 
+    ** will be closed immediately after reading the meta-value. */
+    if( !sqlite3BtreeIsInReadTrans(pBt) ){
+      rc = sqlite3BtreeBeginTrans(pBt, 0);
+      if( rc==SQLITE_NOMEM || rc==SQLITE_IOERR_NOMEM ){
         db->mallocFailed = 1;
       }
+      if( rc!=SQLITE_OK ) return;
+      openedTransaction = 1;
     }
-    sqlite3_free(curTemp);
-  }else{
-    allOk = 0;
-    db->mallocFailed = 1;
-  }
 
-  return allOk;
+    /* Read the schema cookie from the database. If it does not match the 
+    ** value stored as part of the in the in-memory schema representation,
+    ** set Parse.rc to SQLITE_SCHEMA. */
+    sqlite3BtreeGetMeta(pBt, BTREE_SCHEMA_VERSION, (u32 *)&cookie);
+    if( cookie!=db->aDb[iDb].pSchema->schema_cookie ){
+      pParse->rc = SQLITE_SCHEMA;
+    }
+
+    /* Close the transaction, if one was opened. */
+    if( openedTransaction ){
+      sqlite3BtreeCommit(pBt);
+    }
+  }
 }
 
 /*
@@ -575,6 +586,7 @@ static int sqlite3Prepare(
     }
   }
 
+  sqlite3VtabUnlockList(db);
 
   pParse->db = db;
   if( nBytes>=0 && (nBytes==0 || zSql[nBytes-1]!=0) ){
@@ -604,8 +616,8 @@ static int sqlite3Prepare(
     pParse->rc = SQLITE_NOMEM;
   }
   if( pParse->rc==SQLITE_DONE ) pParse->rc = SQLITE_OK;
-  if( pParse->checkSchema && !schemaIsValid(db) ){
-    pParse->rc = SQLITE_SCHEMA;
+  if( pParse->checkSchema ){
+    schemaIsValid(pParse);
   }
   if( pParse->rc==SQLITE_SCHEMA ){
     sqlite3ResetInternalSchema(db, 0);

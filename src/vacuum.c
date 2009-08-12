@@ -254,8 +254,7 @@ int sqlite3RunVacuum(char **pzErrMsg, sqlite3 *db){
     for(i=0; i<ArraySize(aCopy); i+=2){
       /* GetMeta() and UpdateMeta() cannot fail in this context because
       ** we already have page 1 loaded into cache and marked dirty. */
-      rc = sqlite3BtreeGetMeta(pMain, aCopy[i], &meta);
-      if( NEVER(rc!=SQLITE_OK) ) goto end_of_vacuum;
+      sqlite3BtreeGetMeta(pMain, aCopy[i], &meta);
       rc = sqlite3BtreeUpdateMeta(pTemp, aCopy[i], meta+aCopy[i+1]);
       if( NEVER(rc!=SQLITE_OK) ) goto end_of_vacuum;
     }

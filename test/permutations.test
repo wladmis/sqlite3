@@ -483,13 +483,21 @@ ifcapable mem3 {
     bitvec.test               index2.test               memsubsys1.test
     capi3c.test               ioerr.test                memsubsys2.test
     capi3.test                join3.test                pagesize.test
-    collate5.test             limit.test
+    collate5.test             limit.test                backup_ioerr.test
+    backup_malloc.test
   } -initialize {
     catch {db close}
     sqlite3_reset_auto_extension
     sqlite3_shutdown
     sqlite3_config_heap 25000000 0
     sqlite3_config_lookaside 0 0
+    ifcapable mem5 {
+      # If both memsys3 and memsys5 are enabled in the build, the call to
+      # [sqlite3_config_heap] will initialize the system to use memsys5.
+      # The following overrides this preference and installs the memsys3
+      # allocator.
+      sqlite3_install_memsys3
+    }
     install_malloc_faultsim 1 
     sqlite3_initialize
     autoinstall_test_functions

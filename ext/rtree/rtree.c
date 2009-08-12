@@ -2342,7 +2342,7 @@ static int hashIsEmpty(Rtree *pRtree){
 /*
 ** The xUpdate method for rtree module virtual tables.
 */
-int rtreeUpdate(
+static int rtreeUpdate(
   sqlite3_vtab *pVtab, 
   int nData, 
   sqlite3_value **azData, 
@@ -2737,8 +2737,10 @@ static int rtreeInit(
       zSql = sqlite3_mprintf("%s);", zTmp);
       sqlite3_free(zTmp);
     }
-    if( !zSql || sqlite3_declare_vtab(db, zSql) ){
+    if( !zSql ){
       rc = SQLITE_NOMEM;
+    }else if( SQLITE_OK!=(rc = sqlite3_declare_vtab(db, zSql)) ){
+      *pzErr = sqlite3_mprintf("%s", sqlite3_errmsg(db));
     }
     sqlite3_free(zSql);
   }

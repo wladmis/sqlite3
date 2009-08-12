@@ -1176,6 +1176,7 @@ static void exprAnalyze(
   else if( pExpr->op==TK_OR ){
     assert( pWC->op==TK_AND );
     exprAnalyzeOrTerm(pSrc, pWC, idxTerm);
+    pTerm = &pWC->a[idxTerm];
   }
 #endif /* SQLITE_OMIT_OR_OPTIMIZATION */
 
@@ -1726,7 +1727,7 @@ static sqlite3_index_info *allocateIndexInfo(
 ** that this is required.
 */
 static int vtabBestIndex(Parse *pParse, Table *pTab, sqlite3_index_info *p){
-  sqlite3_vtab *pVtab = pTab->pVtab;
+  sqlite3_vtab *pVtab = sqlite3GetVTable(pParse->db, pTab)->pVtab;
   int i;
   int rc;
 
@@ -1823,7 +1824,7 @@ static void bestVirtualIndex(
   ** sqlite3ViewGetColumnNames() would have picked up the error. 
   */
   assert( pTab->azModuleArg && pTab->azModuleArg[0] );
-  assert( pTab->pVtab );
+  assert( sqlite3GetVTable(pParse->db, pTab) );
 
   /* Set the aConstraint[].usable fields and initialize all 
   ** output variables to zero.
@@ -2213,7 +2214,7 @@ static void bestBtreeIndex(
   /* Report the best result
   */
   pCost->plan.wsFlags |= eqTermMask;
-  WHERETRACE(("best index is %s, cost=%.9g, nrow=%.9g, wsFlags=%x, nEq=%d\n",
+  WHERETRACE(("best index is %s, nrow=%.9g, cost=%.9g, wsFlags=%x, nEq=%d\n",
         (pCost->plan.wsFlags & WHERE_INDEXED)!=0 ?
              pCost->plan.u.pIdx->zName : "(none)", pCost->nRow,
         pCost->rCost, pCost->plan.wsFlags, pCost->plan.nEq));
@@ -3404,13 +3405,13 @@ WhereInfo *sqlite3WhereBegin(
 #endif /* SQLITE_OMIT_EXPLAIN */
     pTabItem = &pTabList->a[pLevel->iFrom];
     pTab = pTabItem->pTab;
-    iDb = sqlite3SchemaToIndex(pParse->db, pTab->pSchema);
+    iDb = sqlite3SchemaToIndex(db, pTab->pSchema);
     if( (pTab->tabFlags & TF_Ephemeral)!=0 || pTab->pSelect ) continue;
 #ifndef SQLITE_OMIT_VIRTUALTABLE
     if( (pLevel->plan.wsFlags & WHERE_VIRTUALTABLE)!=0 ){
+      const char *pVTab = (const char *)sqlite3GetVTable(db, pTab);
       int iCur = pTabItem->iCursor;
-      sqlite3VdbeAddOp4(v, OP_VOpen, iCur, 0, 0,
-                        (const char*)pTab->pVtab, P4_VTAB);
+      sqlite3VdbeAddOp4(v, OP_VOpen, iCur, 0, 0, pVTab, P4_VTAB);
     }else
 #endif
     if( (pLevel->plan.wsFlags & WHERE_IDX_ONLY)==0

@@ -86,14 +86,14 @@ void sqlite3BeginTrigger(
   int isTemp,         /* True if the TEMPORARY keyword is present */
   int noErr           /* Suppress errors if the trigger already exists */
 ){
-  Trigger *pTrigger = 0;
-  Table *pTab;
+  Trigger *pTrigger = 0;  /* The new trigger */
+  Table *pTab;            /* Table that the trigger fires off of */
   char *zName = 0;        /* Name of the trigger */
-  sqlite3 *db = pParse->db;
+  sqlite3 *db = pParse->db;  /* The database connection */
   int iDb;                /* The database to store the trigger in */
   Token *pName;           /* The unqualified db name */
-  DbFixer sFix;
-  int iTabDb;
+  DbFixer sFix;           /* State vector for the DB fixer */
+  int iTabDb;             /* Index of the database holding pTab */
 
   assert( pName1!=0 );   /* pName1->z might be NULL, but not pName1 itself */
   assert( pName2!=0 );
@@ -138,6 +138,17 @@ void sqlite3BeginTrigger(
   pTab = sqlite3SrcListLookup(pParse, pTableName);
   if( !pTab ){
     /* The table does not exist. */
+    if( db->init.iDb==1 ){
+      /* Ticket #3810.
+      ** Normally, whenever a table is dropped, all associated triggers are
+      ** dropped too.  But if a TEMP trigger is created on a non-TEMP table
+      ** and the table is dropped by a different database connection, the
+      ** trigger is not visible to the database connection that does the
+      ** drop so the trigger cannot be dropped.  This results in an
+      ** "orphaned trigger" - a trigger whose associated table is missing.
+      */
+      db->init.orphanTrigger = 1;
+    }
     goto trigger_cleanup;
   }
   if( IsVirtual(pTab) ){
@@ -337,7 +348,7 @@ TriggerStep *sqlite3TriggerSelectStep(sqlite3 *db, Select *pSelect){
 */
 static TriggerStep *triggerStepAllocate(
   sqlite3 *db,                /* Database connection */
-  int op,                     /* Trigger opcode */
+  u8 op,                      /* Trigger opcode */
   Token *pName                /* The target name */
 ){
   TriggerStep *pTriggerStep;
@@ -366,7 +377,7 @@ TriggerStep *sqlite3TriggerInsertStep(
   IdList *pColumn,    /* List of columns in pTableName to insert into */
   ExprList *pEList,   /* The VALUE clause: a list of values to be inserted */
   Select *pSelect,    /* A SELECT statement that supplies values */
-  int orconf          /* The conflict algorithm (OE_Abort, OE_Replace, etc.) */
+  u8 orconf           /* The conflict algorithm (OE_Abort, OE_Replace, etc.) */
 ){
   TriggerStep *pTriggerStep;
 
@@ -398,7 +409,7 @@ TriggerStep *sqlite3TriggerUpdateStep(
   Token *pTableName,   /* Name of the table to be updated */
   ExprList *pEList,    /* The SET clause: list of column and new values */
   Expr *pWhere,        /* The WHERE clause */
-  int orconf           /* The conflict algorithm. (OE_Abort, OE_Ignore, etc) */
+  u8 orconf            /* The conflict algorithm. (OE_Abort, OE_Ignore, etc) */
 ){
   TriggerStep *pTriggerStep;
 

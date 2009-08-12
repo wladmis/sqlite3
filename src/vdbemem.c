@@ -498,6 +498,14 @@ void sqlite3VdbeMemSetZeroBlob(Mem *pMem, int n){
   if( n<0 ) n = 0;
   pMem->u.nZero = n;
   pMem->enc = SQLITE_UTF8;
+
+#ifdef SQLITE_OMIT_INCRBLOB
+  sqlite3VdbeMemGrow(pMem, n, 0);
+  if( pMem->z ){
+    pMem->n = n;
+    memset(pMem->z, 0, n);
+  }
+#endif
 }
 
 /*
@@ -866,6 +874,8 @@ int sqlite3VdbeMemFromBtree(
   char *zData;        /* Data from the btree layer */
   int available = 0;  /* Number of bytes available on the local btree page */
   int rc = SQLITE_OK; /* Return code */
+
+  assert( sqlite3BtreeCursorIsValid(pCur) );
 
   /* Note: the calls to BtreeKeyFetch() and DataFetch() below assert() 
   ** that both the BtShared and database handle mutexes are held. */

@@ -1065,7 +1065,10 @@ static int asyncOpen(
   if( !isAsyncOpen ){
     int flagsout;
     rc = pVfs->xOpen(pVfs, pData->zName, pData->pBaseRead, flags, &flagsout);
-    if( rc==SQLITE_OK && (flagsout&SQLITE_OPEN_READWRITE) ){
+    if( rc==SQLITE_OK 
+     && (flagsout&SQLITE_OPEN_READWRITE) 
+     && (flags&SQLITE_OPEN_EXCLUSIVE)==0
+    ){
       rc = pVfs->xOpen(pVfs, pData->zName, pData->pBaseWrite, flags, 0);
     }
     if( pOutFlags ){

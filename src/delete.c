@@ -43,16 +43,26 @@ Table *sqlite3SrcListLookup(Parse *pParse, SrcList *pSrc){
 ** writable return 0;
 */
 int sqlite3IsReadOnly(Parse *pParse, Table *pTab, int viewOk){
-  if( ((pTab->tabFlags & TF_Readonly)!=0
-        && (pParse->db->flags & SQLITE_WriteSchema)==0
-        && pParse->nested==0) 
-#ifndef SQLITE_OMIT_VIRTUALTABLE
-      || (pTab->pMod && pTab->pMod->pModule->xUpdate==0)
-#endif
+  /* A table is not writable under the following circumstances:
+  **
+  **   1) It is a virtual table and no implementation of the xUpdate method
+  **      has been provided, or
+  **   2) It is a system table (i.e. sqlite_master), this call is not
+  **      part of a nested parse and writable_schema pragma has not 
+  **      been specified.
+  **
+  ** In either case leave an error message in pParse and return non-zero.
+  */
+  if( ( IsVirtual(pTab) 
+     && sqlite3GetVTable(pParse->db, pTab)->pMod->pModule->xUpdate==0 )
+   || ( (pTab->tabFlags & TF_Readonly)!=0
+     && (pParse->db->flags & SQLITE_WriteSchema)==0
+     && pParse->nested==0 )
   ){
     sqlite3ErrorMsg(pParse, "table %s may not be modified", pTab->zName);
     return 1;
   }
+
 #ifndef SQLITE_OMIT_VIEW
   if( !viewOk && pTab->pSelect ){
     sqlite3ErrorMsg(pParse,"cannot modify %s because it is a view",pTab->zName);
@@ -234,7 +244,7 @@ void sqlite3DeleteFrom(
   int iEndBeforeTrigger = 0;   /* Exit of before trigger program */
   u32 old_col_mask = 0;        /* Mask of OLD.* columns in use */
 
-  sContext.pParse = 0;
+  memset(&sContext, 0, sizeof(sContext));
   db = pParse->db;
   if( pParse->nErr || db->mallocFailed ){
     goto delete_from_cleanup;
@@ -264,6 +274,12 @@ void sqlite3DeleteFrom(
 # define isView 0
 #endif
 
+  /* If pTab is really a view, make sure it has been initialized.
+  */
+  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
+    goto delete_from_cleanup;
+  }
+
   if( sqlite3IsReadOnly(pParse, pTab, (pTrigger?1:0)) ){
     goto delete_from_cleanup;
   }
@@ -276,12 +292,6 @@ void sqlite3DeleteFrom(
     goto delete_from_cleanup;
   }
   assert(!isView || pTrigger);
-
-  /* If pTab is really a view, make sure it has been initialized.
-  */
-  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
-    goto delete_from_cleanup;
-  }
 
   /* Allocate a cursor used to store the old.* data for a trigger.
   */
@@ -443,9 +453,9 @@ void sqlite3DeleteFrom(
       /* Delete the row */
 #ifndef SQLITE_OMIT_VIRTUALTABLE
       if( IsVirtual(pTab) ){
-        const char *pVtab = (const char *)pTab->pVtab;
+        const char *pVTab = (const char *)sqlite3GetVTable(db, pTab);
         sqlite3VtabMakeWritable(pParse, pTab);
-        sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, iRowid, pVtab, P4_VTAB);
+        sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, iRowid, pVTab, P4_VTAB);
       }else
 #endif
       {
@@ -607,7 +617,7 @@ int sqlite3GenerateIndexKey(
       sqlite3VdbeAddOp2(v, OP_SCopy, regBase+nCol, regBase+j);
     }else{
       sqlite3VdbeAddOp3(v, OP_Column, iCur, idx, regBase+j);
-      sqlite3ColumnDefault(v, pTab, idx);
+      sqlite3ColumnDefault(v, pTab, idx, -1);
     }
   }
   if( doMakeRec ){

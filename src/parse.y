@@ -362,12 +362,12 @@ defer_subclause_opt(A) ::= defer_subclause(X).  {A = X;}
 // default behavior when there is a constraint conflict.
 //
 %type onconf {int}
-%type orconf {int}
+%type orconf {u8}
 %type resolvetype {int}
 onconf(A) ::= .                              {A = OE_Default;}
 onconf(A) ::= ON CONFLICT resolvetype(X).    {A = X;}
 orconf(A) ::= .                              {A = OE_Default;}
-orconf(A) ::= OR resolvetype(X).             {A = X;}
+orconf(A) ::= OR resolvetype(X).             {A = (u8)X;}
 resolvetype(A) ::= raisetype(X).             {A = X;}
 resolvetype(A) ::= IGNORE.                   {A = OE_Ignore;}
 resolvetype(A) ::= REPLACE.                  {A = OE_Replace;}
@@ -504,9 +504,7 @@ seltablist(A) ::= stl_prefix(X) nm(Y) dbnm(D) as(Z) indexed_opt(I) on_opt(N) usi
   }
   seltablist(A) ::= stl_prefix(X) LP seltablist(F) RP
                     as(Z) on_opt(N) using_opt(U). {
-    if( X==0 ){
-      sqlite3ExprDelete(pParse->db, N);
-      sqlite3IdListDelete(pParse->db, U);
+    if( X==0 && Z.n==0 && N==0 && U==0 ){
       A = F;
     }else{
       Select *pSubquery;
@@ -689,7 +687,7 @@ cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) select(S).
 cmd ::= insert_cmd(R) INTO fullname(X) inscollist_opt(F) DEFAULT VALUES.
             {sqlite3Insert(pParse, X, 0, 0, F, R);}
 
-%type insert_cmd {int}
+%type insert_cmd {u8}
 insert_cmd(A) ::= INSERT orconf(R).   {A = R;}
 insert_cmd(A) ::= REPLACE.            {A = OE_Replace;}
 
@@ -1181,22 +1179,54 @@ trigger_cmd_list(A) ::= trigger_cmd(X) SEMI. {
   A = X;
 }
 
+// Disallow qualified table names on INSERT, UPDATE, and DELETE statements
+// within a trigger.  The table to INSERT, UPDATE, or DELETE is always in 
+// the same database as the table that the trigger fires on.
+//
+%type trnm {Token}
+trnm(A) ::= nm(X).   {A = X;}
+trnm(A) ::= nm DOT nm(X). {
+  A = X;
+  sqlite3ErrorMsg(pParse, 
+        "qualified table names are not allowed on INSERT, UPDATE, and DELETE "
+        "statements within triggers");
+}
+
+// Disallow the INDEX BY and NOT INDEXED clauses on UPDATE and DELETE
+// statements within triggers.  We make a specific error message for this
+// since it is an exception to the default grammar rules.
+//
+tridxby ::= .
+tridxby ::= INDEXED BY nm. {
+  sqlite3ErrorMsg(pParse,
+        "the INDEXED BY clause is not allowed on UPDATE or DELETE statements "
+        "within triggers");
+}
+tridxby ::= NOT INDEXED. {
+  sqlite3ErrorMsg(pParse,
+        "the NOT INDEXED clause is not allowed on UPDATE or DELETE statements "
+        "within triggers");
+}
+
+
+
 %type trigger_cmd {TriggerStep*}
 %destructor trigger_cmd {sqlite3DeleteTriggerStep(pParse->db, $$);}
 // UPDATE 
-trigger_cmd(A) ::= UPDATE orconf(R) nm(X) SET setlist(Y) where_opt(Z).  
-               { A = sqlite3TriggerUpdateStep(pParse->db, &X, Y, Z, R); }
+trigger_cmd(A) ::=
+   UPDATE orconf(R) trnm(X) tridxby SET setlist(Y) where_opt(Z).  
+   { A = sqlite3TriggerUpdateStep(pParse->db, &X, Y, Z, R); }
 
 // INSERT
-trigger_cmd(A) ::= insert_cmd(R) INTO nm(X) inscollist_opt(F) 
-                   VALUES LP itemlist(Y) RP.  
-               {A = sqlite3TriggerInsertStep(pParse->db, &X, F, Y, 0, R);}
+trigger_cmd(A) ::=
+   insert_cmd(R) INTO trnm(X) inscollist_opt(F) VALUES LP itemlist(Y) RP.  
+   {A = sqlite3TriggerInsertStep(pParse->db, &X, F, Y, 0, R);}
 
-trigger_cmd(A) ::= insert_cmd(R) INTO nm(X) inscollist_opt(F) select(S).
+trigger_cmd(A) ::= insert_cmd(R) INTO trnm(X) inscollist_opt(F) select(S).
                {A = sqlite3TriggerInsertStep(pParse->db, &X, F, 0, S, R);}
 
 // DELETE
-trigger_cmd(A) ::= DELETE FROM nm(X) where_opt(Y).
+trigger_cmd(A) ::= DELETE FROM trnm(X) tridxby where_opt(Y).
                {A = sqlite3TriggerDeleteStep(pParse->db, &X, Y);}
 
 // SELECT

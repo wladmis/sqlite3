@@ -1636,10 +1636,8 @@ static int openDatabase(
   */
   db->aDb[0].zName = "main";
   db->aDb[0].safety_level = 3;
-#ifndef SQLITE_OMIT_TEMPDB
   db->aDb[1].zName = "temp";
   db->aDb[1].safety_level = 1;
-#endif
 
   db->magic = SQLITE_MAGIC_OPEN;
   if( db->mallocFailed ){
@@ -2245,6 +2243,21 @@ int sqlite3_test_control(int op, ...){
       rc = ALWAYS(x);
       break;
     }
+
+    /*   sqlite3_test_control(SQLITE_TESTCTRL_RESERVE, sqlite3 *db, int N)
+    **
+    ** Set the nReserve size to N for the main database on the database
+    ** connection db.
+    */
+    case SQLITE_TESTCTRL_RESERVE: {
+      sqlite3 *db = va_arg(ap, sqlite3*);
+      int x = va_arg(ap,int);
+      sqlite3_mutex_enter(db->mutex);
+      sqlite3BtreeSetPageSize(db->aDb[0].pBt, 0, x, 0);
+      sqlite3_mutex_leave(db->mutex);
+      break;
+    }
+
   }
   va_end(ap);
 #endif /* SQLITE_OMIT_BUILTIN_TEST */

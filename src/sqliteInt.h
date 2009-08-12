@@ -613,6 +613,7 @@ typedef struct TriggerStack TriggerStack;
 typedef struct TriggerStep TriggerStep;
 typedef struct Trigger Trigger;
 typedef struct UnpackedRecord UnpackedRecord;
+typedef struct VTable VTable;
 typedef struct Walker Walker;
 typedef struct WherePlan WherePlan;
 typedef struct WhereInfo WhereInfo;
@@ -799,6 +800,7 @@ struct sqlite3 {
     int iDb;                    /* When back is being initialized */
     int newTnum;                /* Rootpage of table being initialized */
     u8 busy;                    /* TRUE if currently initializing */
+    u8 orphanTrigger;           /* Last statement is orphaned TEMP trigger */
   } init;
   int nExtension;               /* Number of loaded extensions */
   void **aExtension;            /* Array of shared library handles */
@@ -839,8 +841,9 @@ struct sqlite3 {
 #ifndef SQLITE_OMIT_VIRTUALTABLE
   Hash aModule;                 /* populated by sqlite3_create_module() */
   Table *pVTab;                 /* vtab with active Connect/Create method */
-  sqlite3_vtab **aVTrans;       /* Virtual tables with open transactions */
+  VTable **aVTrans;             /* Virtual tables with open transactions */
   int nVTrans;                  /* Allocated size of aVTrans */
+  VTable *pDisconnect;    /* Disconnect these in next sqlite3_prepare() */
 #endif
   FuncDefHash aFunc;            /* Hash table of connection functions */
   Hash aCollSeq;                /* All collating sequences */
@@ -905,9 +908,7 @@ struct sqlite3 {
 #define SQLITE_LoadExtension  0x00020000  /* Enable load_extension */
 
 #define SQLITE_RecoveryMode   0x00040000  /* Ignore schema errors */
-#define SQLITE_SharedCache    0x00080000  /* Cache sharing is enabled */
-#define SQLITE_CommitBusy     0x00200000  /* In the process of committing */
-#define SQLITE_ReverseOrder   0x00400000  /* Reverse unordered SELECTs */
+#define SQLITE_ReverseOrder   0x00100000  /* Reverse unordered SELECTs */
 
 /*
 ** Possible values for the sqlite.magic field.
@@ -1116,6 +1117,56 @@ struct CollSeq {
 #define SQLITE_STOREP2      0x10  /* Store result in reg[P2] rather than jump */
 
 /*
+** An object of this type is created for each virtual table present in
+** the database schema. 
+**
+** If the database schema is shared, then there is one instance of this
+** structure for each database connection (sqlite3*) that uses the shared
+** schema. This is because each database connection requires its own unique
+** instance of the sqlite3_vtab* handle used to access the virtual table 
+** implementation. sqlite3_vtab* handles can not be shared between 
+** database connections, even when the rest of the in-memory database 
+** schema is shared, as the implementation often stores the database
+** connection handle passed to it via the xConnect() or xCreate() method
+** during initialization internally. This database connection handle may
+** then used by the virtual table implementation to access real tables 
+** within the database. So that they appear as part of the callers 
+** transaction, these accesses need to be made via the same database 
+** connection as that used to execute SQL operations on the virtual table.
+**
+** All VTable objects that correspond to a single table in a shared
+** database schema are initially stored in a linked-list pointed to by
+** the Table.pVTable member variable of the corresponding Table object.
+** When an sqlite3_prepare() operation is required to access the virtual
+** table, it searches the list for the VTable that corresponds to the
+** database connection doing the preparing so as to use the correct
+** sqlite3_vtab* handle in the compiled query.
+**
+** When an in-memory Table object is deleted (for example when the
+** schema is being reloaded for some reason), the VTable objects are not 
+** deleted and the sqlite3_vtab* handles are not xDisconnect()ed 
+** immediately. Instead, they are moved from the Table.pVTable list to
+** another linked list headed by the sqlite3.pDisconnect member of the
+** corresponding sqlite3 structure. They are then deleted/xDisconnected 
+** next time a statement is prepared using said sqlite3*. This is done
+** to avoid deadlock issues involving multiple sqlite3.mutex mutexes.
+** Refer to comments above function sqlite3VtabUnlockList() for an
+** explanation as to why it is safe to add an entry to an sqlite3.pDisconnect
+** list without holding the corresponding sqlite3.mutex mutex.
+**
+** The memory for objects of this type is always allocated by 
+** sqlite3DbMalloc(), using the connection handle stored in VTable.db as 
+** the first argument.
+*/
+struct VTable {
+  sqlite3 *db;              /* Database connection associated with this table */
+  Module *pMod;             /* Pointer to module implementation */
+  sqlite3_vtab *pVtab;      /* Pointer to vtab instance */
+  int nRef;                 /* Number of pointers to this structure */
+  VTable *pNext;            /* Next in linked list (see above) */
+};
+
+/*
 ** Each SQL table is represented in memory by an instance of the
 ** following structure.
 **
@@ -1166,8 +1217,7 @@ struct Table {
   int addColOffset;    /* Offset in CREATE TABLE stmt to add a new column */
 #endif
 #ifndef SQLITE_OMIT_VIRTUALTABLE
-  Module *pMod;        /* Pointer to the implementation of the module */
-  sqlite3_vtab *pVtab; /* Pointer to the module instance */
+  VTable *pVTable;     /* List of VTable objects. */
   int nModuleArg;      /* Number of arguments to the module */
   char **azModuleArg;  /* Text of all module args. [0] is module name */
 #endif
@@ -2020,10 +2070,8 @@ struct Parse {
   int nAliasAlloc;     /* Number of allocated slots for aAlias[] */
   int *aAlias;         /* Register used to hold aliased result */
   u8 explain;          /* True if the EXPLAIN flag is found on the query */
-  Token sErrToken;     /* The token at which the error occurred */
   Token sNameToken;    /* Token with unqualified schema object name */
   Token sLastToken;    /* The last token parsed */
-  const char *zSql;    /* All SQL text */
   const char *zTail;   /* All SQL text past the last semicolon parsed */
   Table *pNewTable;    /* A table being constructed by CREATE TABLE */
   Trigger *pNewTrigger;     /* Trigger under construct by a CREATE TRIGGER */
@@ -2141,17 +2189,14 @@ struct Trigger {
  * 
  */
 struct TriggerStep {
-  int op;              /* One of TK_DELETE, TK_UPDATE, TK_INSERT, TK_SELECT */
-  int orconf;          /* OE_Rollback etc. */
+  u8 op;               /* One of TK_DELETE, TK_UPDATE, TK_INSERT, TK_SELECT */
+  u8 orconf;           /* OE_Rollback etc. */
   Trigger *pTrig;      /* The trigger that this step is a part of */
-
-  Select *pSelect;     /* Valid for SELECT and sometimes 
-                          INSERT steps (when pExprList == 0) */
-  Token target;        /* Target table for DELETE, UPDATE, INSERT.  Quoted */
-  Expr *pWhere;        /* Valid for DELETE, UPDATE steps */
-  ExprList *pExprList; /* Valid for UPDATE statements and sometimes 
-                           INSERT steps (when pSelect == 0)         */
-  IdList *pIdList;     /* Valid for INSERT statements only */
+  Select *pSelect;     /* SELECT statment or RHS of INSERT INTO .. SELECT ... */
+  Token target;        /* Target table for DELETE, UPDATE, INSERT */
+  Expr *pWhere;        /* The WHERE clause for DELETE or UPDATE steps */
+  ExprList *pExprList; /* SET clause for UPDATE.  VALUES clause for INSERT */
+  IdList *pIdList;     /* Column names for INSERT */
   TriggerStep *pNext;  /* Next in the link-list */
   TriggerStep *pLast;  /* Last element in link-list. Valid for 1st elem only */
 };
@@ -2357,9 +2402,9 @@ int sqlite3WalkSelectFrom(Walker*, Select*);
 ** Internal function prototypes
 */
 int sqlite3StrICmp(const char *, const char *);
-int sqlite3StrNICmp(const char *, const char *, int);
 int sqlite3IsNumber(const char*, int*, u8);
 int sqlite3Strlen30(const char*);
+#define sqlite3StrNICmp sqlite3_strnicmp
 
 int sqlite3MallocInit(void);
 void sqlite3MallocEnd(void);
@@ -2629,8 +2674,8 @@ void sqlite3MaterializeView(Parse*, Table*, Expr*, int);
   void sqlite3DeleteTriggerStep(sqlite3*, TriggerStep*);
   TriggerStep *sqlite3TriggerSelectStep(sqlite3*,Select*);
   TriggerStep *sqlite3TriggerInsertStep(sqlite3*,Token*, IdList*,
-                                        ExprList*,Select*,int);
-  TriggerStep *sqlite3TriggerUpdateStep(sqlite3*,Token*,ExprList*, Expr*, int);
+                                        ExprList*,Select*,u8);
+  TriggerStep *sqlite3TriggerUpdateStep(sqlite3*,Token*,ExprList*, Expr*, u8);
   TriggerStep *sqlite3TriggerDeleteStep(sqlite3*,Token*, Expr*);
   void sqlite3DeleteTrigger(sqlite3*, Trigger*);
   void sqlite3UnlinkAndDeleteTrigger(sqlite3*,int,const char*);
@@ -2757,7 +2802,7 @@ void sqlite3SelectPrep(Parse*, Select*, NameContext*);
 int sqlite3ResolveExprNames(NameContext*, Expr*);
 void sqlite3ResolveSelectNames(Parse*, Select*, NameContext*);
 int sqlite3ResolveOrderGroupBy(Parse*, Select*, ExprList*, const char*);
-void sqlite3ColumnDefault(Vdbe *, Table *, int);
+void sqlite3ColumnDefault(Vdbe *, Table *, int, int);
 void sqlite3AlterFinishAddColumn(Parse *, Token *);
 void sqlite3AlterBeginAddColumn(Parse *, SrcList *);
 CollSeq *sqlite3GetCollSeq(sqlite3*, CollSeq *, const char*);
@@ -2818,21 +2863,25 @@ void sqlite3AutoLoadExtensions(sqlite3*);
 #endif
 
 #ifdef SQLITE_OMIT_VIRTUALTABLE
-#  define sqlite3VtabClear(X)
+#  define sqlite3VtabClear(Y)
 #  define sqlite3VtabSync(X,Y) SQLITE_OK
 #  define sqlite3VtabRollback(X)
 #  define sqlite3VtabCommit(X)
 #  define sqlite3VtabInSync(db) 0
+#  define sqlite3VtabLock(X) 
+#  define sqlite3VtabUnlock(X)
+#  define sqlite3VtabUnlockList(X)
 #else
    void sqlite3VtabClear(Table*);
    int sqlite3VtabSync(sqlite3 *db, char **);
    int sqlite3VtabRollback(sqlite3 *db);
    int sqlite3VtabCommit(sqlite3 *db);
+   void sqlite3VtabLock(VTable *);
+   void sqlite3VtabUnlock(VTable *);
+   void sqlite3VtabUnlockList(sqlite3*);
 #  define sqlite3VtabInSync(db) ((db)->nVTrans>0 && (db)->aVTrans==0)
 #endif
 void sqlite3VtabMakeWritable(Parse*,Table*);
-void sqlite3VtabLock(sqlite3_vtab*);
-void sqlite3VtabUnlock(sqlite3*, sqlite3_vtab*);
 void sqlite3VtabBeginParse(Parse*, Token*, Token*, Token*);
 void sqlite3VtabFinishParse(Parse*, Token*);
 void sqlite3VtabArgInit(Parse*);
@@ -2840,7 +2889,7 @@ void sqlite3VtabArgExtend(Parse*, Token*);
 int sqlite3VtabCallCreate(sqlite3*, int, const char *, char **);
 int sqlite3VtabCallConnect(Parse*, Table*);
 int sqlite3VtabCallDestroy(sqlite3*, int, const char *);
-int sqlite3VtabBegin(sqlite3 *, sqlite3_vtab *);
+int sqlite3VtabBegin(sqlite3 *, VTable *);
 FuncDef *sqlite3VtabOverloadFunction(sqlite3 *,FuncDef*, int nArg, Expr*);
 void sqlite3InvalidFunction(sqlite3_context*,int,sqlite3_value**);
 int sqlite3TransferBindings(sqlite3_stmt *, sqlite3_stmt *);
@@ -2848,6 +2897,7 @@ int sqlite3Reprepare(Vdbe*);
 void sqlite3ExprListCheckLength(Parse*, ExprList*, const char*);
 CollSeq *sqlite3BinaryCompareCollSeq(Parse *, Expr *, Expr *);
 int sqlite3TempInMemory(const sqlite3*);
+VTable *sqlite3GetVTable(sqlite3*, Table*);
 
 
 

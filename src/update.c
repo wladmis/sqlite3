@@ -53,8 +53,13 @@ static void updateVirtualTable(
 ** the column is a literal number, string or null. The sqlite3ValueFromExpr()
 ** function is capable of transforming these types of expressions into
 ** sqlite3_value objects.
+**
+** If parameter iReg is not negative, code an OP_RealAffinity instruction
+** on register iReg. This is used when an equivalent integer value is 
+** stored in place of an 8-byte floating point value in order to save 
+** space.
 */
-void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
+void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i, int iReg){
   assert( pTab!=0 );
   if( !pTab->pSelect ){
     sqlite3_value *pValue;
@@ -67,6 +72,11 @@ void sqlite3ColumnDefault(Vdbe *v, Table *pTab, int i){
     if( pValue ){
       sqlite3VdbeChangeP4(v, -1, (const char *)pValue, P4_MEM);
     }
+#ifndef SQLITE_OMIT_FLOATING_POINT
+    if( iReg>=0 && pTab->aCol[i].affinity==SQLITE_AFF_REAL ){
+      sqlite3VdbeAddOp1(v, OP_RealAffinity, iReg);
+    }
+#endif
   }
 }
 
@@ -127,7 +137,7 @@ void sqlite3Update(
   int regData;           /* New data for the row */
   int regRowSet = 0;     /* Rowset of rows to be updated */
 
-  sContext.pParse = 0;
+  memset(&sContext, 0, sizeof(sContext));
   db = pParse->db;
   if( pParse->nErr || db->mallocFailed ){
     goto update_cleanup;
@@ -155,10 +165,10 @@ void sqlite3Update(
 # define isView 0
 #endif
 
-  if( sqlite3IsReadOnly(pParse, pTab, (pTrigger?1:0)) ){
+  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
     goto update_cleanup;
   }
-  if( sqlite3ViewGetColumnNames(pParse, pTab) ){
+  if( sqlite3IsReadOnly(pParse, pTab, (pTrigger?1:0)) ){
     goto update_cleanup;
   }
   aXRef = sqlite3DbMallocRaw(db, sizeof(int) * pTab->nCol );
@@ -451,7 +461,7 @@ void sqlite3Update(
       if( (i<32 && (new_col_mask&((u32)1<<i))!=0) || new_col_mask==0xffffffff ){
         if( j<0 ){
           sqlite3VdbeAddOp3(v, OP_Column, iCur, i, regCols+i);
-          sqlite3ColumnDefault(v, pTab, i);
+          sqlite3ColumnDefault(v, pTab, i, -1);
         }else{
           sqlite3ExprCodeAndCache(pParse, pChanges->a[j].pExpr, regCols+i);
         }
@@ -502,7 +512,7 @@ void sqlite3Update(
       j = aXRef[i];
       if( j<0 ){
         sqlite3VdbeAddOp3(v, OP_Column, iCur, i, regData+i);
-        sqlite3ColumnDefault(v, pTab, i);
+        sqlite3ColumnDefault(v, pTab, i, regData+i);
       }else{
         sqlite3ExprCode(pParse, pChanges->a[j].pExpr, regData+i);
       }
@@ -631,7 +641,7 @@ static void updateVirtualTable(
   int addr;                 /* Address of top of loop */
   int iReg;                 /* First register in set passed to OP_VUpdate */
   sqlite3 *db = pParse->db; /* Database connection */
-  const char *pVtab = (const char*)pTab->pVtab;
+  const char *pVTab = (const char*)sqlite3GetVTable(db, pTab);
   SelectDest dest;
 
   /* Construct the SELECT statement that will find the new values for
@@ -676,7 +686,7 @@ static void updateVirtualTable(
     sqlite3VdbeAddOp3(v, OP_Column, ephemTab, i+1+(pRowid!=0), iReg+2+i);
   }
   sqlite3VtabMakeWritable(pParse, pTab);
-  sqlite3VdbeAddOp4(v, OP_VUpdate, 0, pTab->nCol+2, iReg, pVtab, P4_VTAB);
+  sqlite3VdbeAddOp4(v, OP_VUpdate, 0, pTab->nCol+2, iReg, pVTab, P4_VTAB);
   sqlite3VdbeAddOp2(v, OP_Next, ephemTab, addr+1);
   sqlite3VdbeJumpHere(v, addr);
   sqlite3VdbeAddOp2(v, OP_Close, ephemTab, 0);
