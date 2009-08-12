@@ -125,4 +125,9 @@ SQLITE3_3.6.16 {
 	sqlite3_stmt_status;
 };
 
+SQLITE3_3.6.17 {
+    global:
+	sqlite3_strnicmp;
+};
+
 /* the prefix is SQLITE_, not SQLITE3_ */
