@@ -266,8 +266,7 @@ for "sqlite3_create_module".
 
 <h2>2.0 Virtual Table Methods</h2>
 
-<tcl>############################################################### xCreate
-hd_fragment xcreate {sqlite3_module.xCreate} {xCreate}</tcl>
+<tcl>hd_fragment xcreate {sqlite3_module.xCreate} {xCreate}</tcl>
 <h3>2.1 The xCreate Method</h3>
 
 <blockquote><pre>
@@ -596,7 +595,7 @@ method it to figure out the best way to search the virtual table.
 information that communicates an indexing strategy to the [xFilter] 
 method. The information in idxNum and idxStr is arbitrary as far 
 as the SQLite core is concerned. The SQLite core just copies the 
-information through to the xFilter method. Any desired meaning can 
+information through to the [xFilter] method. Any desired meaning can 
 be assigned to idxNum and idxStr as long as xBestIndex and xFilter 
 agree on what that meaning is.
 
@@ -641,8 +640,7 @@ each row of the virtual table that it receives. If such a check
 is redundant, the xBestFilter method can suppress that double-check by 
 setting aConstraintUsage[].omit.
 
-<tcl>########################################################## xDisconnect
-hd_fragment xdisconnect {sqlite3_module.xDisconnect} {xDisconnect}</tcl>
+<tcl>hd_fragment xdisconnect {sqlite3_module.xDisconnect} {xDisconnect}</tcl>
 <h3>2.4 The xDisconnect Method</h3>
 
 <blockquote><pre>
@@ -653,6 +651,7 @@ hd_fragment xdisconnect {sqlite3_module.xDisconnect} {xDisconnect}</tcl>
 Only the [sqlite3_vtab] object is destroyed.
 The virtual table is not destroyed and any backing store 
 associated with the virtual table persists. 
+
 This method undoes the work of [xConnect].
 
 <p>This method is a destructor for a connection to the virtual table.

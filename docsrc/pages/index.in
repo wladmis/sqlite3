@@ -80,10 +80,10 @@ members, including:</p>
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_6_16.html">Version 3.6.16</a>
+<li><a href="releaselog/3_6_17.html">Version 3.6.17</a>
 of SQLite is recommended for all new development.  Upgrading from
-version 3.6.12, 3.6.13, and 3.6.14.2 is optional.
-Upgrading from other SQLite versions is recommended.</li>
+version 3.6.12, 3.6.13, 3.6.14.2, and 3.6.16 is optional.
+Upgrading from all other SQLite versions is recommended.</li>
 </ul></p>
 
 <h3>Common Links</h3>

@@ -22,6 +22,7 @@ proc header_api_defn {header args} {
       set re_tail {[^;A-Za-z][^;]*;}
     }
 
+    set api_defn {}
     regexp $re_head$api$re_tail $::headers($header) api_defn
     lappend ret [string trim $api_defn]
   }
@@ -521,6 +522,9 @@ fancyformat_document "SQLite B-Tree Module" {hlr50000.txt llr50000.txt} {
       [fancyformat_import_requirement H50130]
 
     [h3 "Multi-User Database Requirements"]
+
+      [fancyformat_import_requirement H50156]
+
   <ul>
     <li> Lock on schema memory object.
     <li> Locks on b-tree tables.
@@ -553,9 +557,16 @@ fancyformat_document "SQLite B-Tree Module" {hlr50000.txt llr50000.txt} {
     <li> Schema memory object allocation (destructor registration).
   </ul>
 
-    [h3 "Fault Tolerance Requirements"]
+    [h3 "Exception Handling Requirements"]
+
+  <p>
+    System failure. Do not corrupt the database image.
+  <p>
+    Three kinds of exception:
   <ul>
-    <li> Don't corrupt the database. Various modes and the expectations of them.
+    <li> IO Error.
+    <li> Malloc request failure.
+    <li> Database image corruption.
   </ul>
 
     [h3 "Well-Formedness Requirements"]
@@ -802,12 +813,19 @@ fancyformat_document "SQLite B-Tree Module" {hlr50000.txt llr50000.txt} {
       [btree_api_defn sqlite3BtreeGetMeta]
 
       [fancyformat_import_requirement H51015]
+      [fancyformat_import_requirement H51016]
+
+      <p>
+        The two requirements above imply that if sqlite3BtreeGetMeta is called with
+        anything other than a b-tree database connection handle with an open read-only
+        or read-write transaction as the first argument, or with anything other than
+        an integer between 0 and 7 (inclusive) as the second, the results are undefined.
 
       [btree_api_defn BTREE_FREE_PAGE_COUNT BTREE_SCHEMA_VERSION BTREE_FILE_FORMAT \
                       BTREE_DEFAULT_CACHE_SIZE BTREE_LARGEST_ROOT_PAGE BTREE_TEXT_ENCODING \
                       BTREE_USER_VERSION BTREE_INCR_VACUUM]
 
-      [fancyformat_import_requirement H51016]
+      [fancyformat_import_requirement H51017]
 
 
 
@@ -894,6 +912,84 @@ fancyformat_document "SQLite B-Tree Module" {hlr50000.txt llr50000.txt} {
 
       [h3 sqlite3BtreeIncrVacuum sqlite3BtreeIncrVacuum]
       [btree_api_defn sqlite3BtreeIncrVacuum]
+
+    [h2 "Advisory B-Tree Locks"] 
+
+      <p>
+	This section describes the b-tree module interfaces used for acquiring
+	and querying the advisory locks that can be placed on database image
+	pages. The locking mechanisms described in this section are only used
+	to arbitrate between multiple clients of the same in-memory page-cache.
+	The locking mechanism used to control access to a file-system
+	representation of the database when multiple in-memory page caches
+	(possibly located in different OS processes) are open on it is
+        described in <span class=todo>this</span>.
+
+      <p>
+        As well as obtaining advisory locks explicitly using the 
+        sqlite3BtreeLockTable API (see below), a read-lock on page 1 of the
+        database image is automatically obtained whenever a b-tree database 
+	connection opens a read-only or read-write transaction (see 
+        <span class=todo>requirement number</span>). Note that this means
+        that a write-lock on page 1 is effectively an exclusive lock on
+	the entire page-cache, as it prevents any other connection from opening
+        a transaction of any kind.
+
+      [h3 sqlite3BtreeLockTable]
+
+      [btree_api_defn sqlite3BtreeLockTable]
+
+      <p>
+        The sqlite3BtreeLockTable API allows database clients to place 
+        advisory read or write locks on a specified page of the database 
+        image. The specified page need not exist within the database image.
+        By convention, SQLite acquires read and write locks on the root
+        pages of table b-trees only, but this is not required to be enforced
+        by the b-tree module. Locks may only be obtained when a database
+        client has an open transaction. All locks are automatically released
+        when the open transaction is concluded.
+
+        [fancyformat_import_requirement L50016]
+        [fancyformat_import_requirement L50017]
+
+      <p>
+        The two requirements above imply that the results of calling 
+        sqlite3BtreeLockTable on a b-tree database connection handle that does
+        not currently have an open transaction, or attempting to obtain
+        a write-lock using a b-tree database connection handle that only has
+        a read-only transaction open are undefined.
+
+
+        [fancyformat_import_requirement L50019]
+        [fancyformat_import_requirement L50020]
+
+      <p>
+        Requirement L50020 is overly conservative. Because a write-lock may 
+        only be requested if the b-tree database connection has an open read-write 
+	transaction (L50017), and at most a single b-tree database connection
+        may have such an open transaction at one time, it is not possible for
+        a request for a write-lock to fail because another connection is holding
+        a write-lock on the same b-tree database image page. It may, however,
+        fail because another connection is holding a read-lock.
+
+      <p>
+        All locks are held until the current transaction is concluded.
+
+        [fancyformat_import_requirement L50018]
+
+      <p class=todo> Malloc failure?
+
+      <p class=todo> Read uncommitted flag. Maybe this should be handled
+        outside of the b-tree module. Is there anything to stop connections
+        with this flag set simply not obtaining read locks? There are assert()
+        statements in the b-tree module that need to take this flag into account,
+        but not actual functionality.
+
+      [h3 sqlite3BtreeSchemaLocked]
+      [btree_api_defn sqlite3BtreeSchemaLocked]
+
+        [fancyformat_import_requirement L50014]
+        [fancyformat_import_requirement L50015]
 
     [h2 "What do these do?"]
 

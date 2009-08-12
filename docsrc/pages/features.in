@@ -27,7 +27,8 @@
     Bindings for dozens of other languages 
     <a href="http://www.sqlite.org/cvstrac/wiki?p=SqliteWrappers">
     available separately.</a></li>
-<li>Well-commented source code with over 99% statement test coverage.</li>
+<li>Well-commented source code with
+    [test coverage |100% branch test coverage].</li>
 <li>Available as a 
     <a href="amalgamation.html">single ANSI-C source-code file</a> 
     that you can easily drop into another project.

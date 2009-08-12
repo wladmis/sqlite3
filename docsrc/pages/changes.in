@@ -42,6 +42,13 @@ proc chng {date desc} {
   }
 }
 
+chng {2009 Aug 12 (3.6.17)} {
+<li>Expose the [sqlite3_strnicmp()] interface for use by extensions and
+    applications.
+<li>Many code simplifications and obscure bug fixes in support of
+    providing [test coverage | 100% branch test coverage].
+}
+
 chng {2009 June 27 (3.6.16)} {
 <li>Fix a bug (ticket #3929) that occasionally causes INSERT or UPDATE
     operations to fail on an indexed table that has a self-modifying trigger.

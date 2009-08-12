@@ -1,8 +1,8 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-C Preparing\sfor\sthe\s3.6.16\srelease.
-D 2009-06-27T14:07:21
+C Updates\sin\spreparation\sfor\sversion\s3.6.17.
+D 2009-08-01T18:38:00
 F Makefile be3db6d8262c7b90ac984c1db43c99db07831981
 F art/arch.fig d5f9752a4dbf242e9cfffffd3f5762b6c63b3bcf
 F art/arch2.fig ae2432145c26cfa148fa0116589517ad3cd5fc65
@@ -169,11 +169,11 @@ F pages/atomiccommit.in 0b7161ca69ab7bf6b01e9ba89cc3e909cb222869
 F pages/audit.in d000823e45b19e028624c543ff999576d81a23fd
 F pages/autoinc.in 940f16e29427e66c0e7bbfd2ba8cca5b34d3a5a7
 F pages/backup.in 4a1f25ed6c0d7200e963ded332e64a70b440002f
-F pages/btreemodule.in e215709be546a4c9592edc5610f64919d5396268
+F pages/btreemodule.in b258b2e8147271a7e692bcea9bd47d381b3ef1f0
 F pages/c_interface.in b5a82cb5b0599f8f3e1300bcadd5d178bddcd433
 F pages/capi3.in 8ab0e5f78ba83249aab4324aa0eabc033e04ffee
-F pages/capi3ref.in 1af93b786f979c154c629d284ad64099d95930b5
-F pages/changes.in dd8abe1a08e6e046dbe9f28875a6fc872acdf52f
+F pages/capi3ref.in 5a0e70603042dccdb634f012d116330a3941831d
+F pages/changes.in 44dd231504173954b724f1cfd5c514796b3cd465
 F pages/cintro.in 908786b828a1bed58044bc62ac7675a2b5d8d568
 F pages/compile.in 44b949d356901b19c62fd5f2d0698d1cc2f7912f
 F pages/conflict.in e610aa329a3ec1555fe80a206ab5a326242218b4
@@ -191,7 +191,7 @@ F pages/errlist.in 5f87296c02e699bf09a1ba5f8d07ba568fbe7750
 F pages/famous.in 26a22f3db3ae9514c1d1705d2a89f3db25d6b298
 F pages/fancyformat.tcl 800a1e699c9c43b655f088eb03757225a455f758
 F pages/faq.in dc430197f84a14ad8300098cd6baeb588c867a95
-F pages/features.in a1192537218f619e9ee59d477f94db62f2f33004
+F pages/features.in 11b853bb2ce0b98e720c48447a54f4791fe4922a
 F pages/fileformat.in d019beb86546861cdc5a5bd0b395abaf33ef938d
 F pages/fileio.in 4041e07a43bf2e908058319155b300b3c7cb09d5
 F pages/formatchng.in 7c3c75c8a2267e875dea3e1bba3d2abd589eb7e9
@@ -199,15 +199,15 @@ F pages/hlr10000.in b8056afd1f73ab82b6046789a899ca0d51f33293
 F pages/hlr20000.in ea36369cb89a2ee445c2b8416ccce43716e3ea0a
 F pages/hlr30000.in 59c1191d9b663d9be6db0bf50016664cdd0e369a
 F pages/hlr40000.in 18805fb33dda8bbdf367adca4e94ab6306529a45
-F pages/index.in e4e1be18b1d44d07df8ac50fb97031e93baa987b
+F pages/index.in 6382a15b46f7fdb6963251fc779684b7c3a9444f
 F pages/inmemorydb.in f6a248f29112000dccfe7b4476de321745f9bae9
-F pages/lang.in a393f1ed2d0bf5d6c292a0bcea9294f93b018852
+F pages/lang.in 8f95fa3c5656750aa78ea47fa18d6d592498cd74
 F pages/limits.in dcd67edb2790a8126b85c8df9279e786f2ffa56a
 F pages/lockingv3.in fe5c38cbed1a88d86afa0158b738470dc804d75e
 F pages/malloc.in 27afa892995ed38defe52b48111e80fc27b46838
 F pages/mingw.in 2e3bd2f76b07a734480b4314bdb57bb008e1dd96
 F pages/mostdeployed.in c2e91f3db1ef6bf815cd207082aed0bfeb6db910
-F pages/news.in 7e1b728c8f4eeb2eb1746056694bb8e5d1f238f3
+F pages/news.in aea151233759b6df7645f31aa040eb63e714f43c
 F pages/nulls.in bb9341b54c8283db46bb12d3002db3270330df2e
 F pages/oldnews.in d9e3e29cf8b9d8fb00d5eeff083309c199a791b4
 F pages/omitted.in 217c2dd05af527176484b5c0ec721f0859b47ed5
@@ -232,13 +232,14 @@ F pages/syntaxdiagrams.in 5816d8b096186347c4a8aaac9d5f5dfd3ed640a4
 F pages/sysreq.in e89f891f34b59a3c5de528ec181fa596f804550c
 F pages/tclsqlite.in 6341a916c21af315498e9356a482ec0ec882ec16
 F pages/tempfiles.in f0abfcf9847ff0214c43d37846d866db6005836d
-F pages/testing.in a36c76433f210080b7f73f1688821640dcb6c2f0
+F pages/testing.in e0bd43d70cfa6810b09f10fba89d969b44c35d61
+F pages/th3.in b146c2b3bcffd2932fd516d50ebe9a3ffaee1c53
 F pages/threadsafe.in 29bc3ab89f239ebc519bb0e2fc80f520f90155a7
 F pages/transactional.in d1d382985ebccb4dc1db020e1f691cc54642bc67
 F pages/unlock_notify.in 0093e4f594c5b6d54807d0b36791a35728ada3c4
 F pages/vdbe.in 2858737795b6e2fded3ee3a9ff0dff52ed324887
 F pages/version3.in 5d6f197b1ac2d10ed8c889981361ded646c12ce8
-F pages/vtab.in 79514e25aea7d110661a0db4998286acb32b69c4
+F pages/vtab.in 39187f02fc9319d4db21849756226390e2f3fe3d
 F pages/whentouse.in 3c47731f10f06cbc6747fad40aa70a209f1a8d27
 F pages/zeroconf.in dcd83b87564ccd74782b7eb8cf3552e77ef8f861
 F rawpages/consortium_agreement-20071201.html 1cddfabb2fbf9eacb1a12e05d1decaff42c09abe
@@ -254,17 +255,17 @@ F req/hlr20000.txt da39a3ee5e6b4b0d3255bfef95601890afd80709
 F req/hlr30000.txt 82c3e4c58c0825b5fcd7ade3dbf306fb599e10f6
 F req/hlr35000.txt 349c4ab5b7d99ea4f6ba16d2c25dc64e18595eae
 F req/hlr40000.txt d9e7b280562e711abfb3a4fcb5785fb1878cc725
-F req/hlr50000.txt 2cf9489c852cbc2487a9f8294548b8232f2d6dfe
-F req/llr50000.txt 691cfc7b71def356304ff5bec5921a380c980d06
+F req/hlr50000.txt 788d25eeb69ca74eb682099c5dd0056d8eec75c3
+F req/llr50000.txt fc7dcdcee053ddefb6b9d4f89999dc5425b42842
 F wrap.tcl 387cf6783f17711722d250f37d0d0455cc1c8e28
-P 1793436b49004b5e2a8b10576fa33fe981337f5a
-R 059886ff107124949e7f43cbad4a288d
+P 6bac79211300fa524c879e970460718b2a88392f
+R b7605f2dec06c011f4cdefa5236880ce
 U drh
-Z 4cf0a5259ebea4ac0b2ce1a6eaa4e0d3
+Z 50521cb373d9004b7646f67f8508d7a0
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD4DBQFKRiecoxKgR168RlERAgiPAJ4z9QZHxbNzFGtjGaxUt4fTSsk0qQCXTX22
-qIa0v+tKJ0iH3chrloQWYQ==
-=+y88
+iD8DBQFKdIuLoxKgR168RlERAplqAJ4+Fp95eza43NWbAtgG9lsZgkmSdwCePfx7
+Iz4ExnDKz4dtfpylqxhyRW0=
+=uD0S
 -----END PGP SIGNATURE-----

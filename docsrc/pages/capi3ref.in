@@ -266,7 +266,7 @@ in the source code.</p>
     Functions and/or methods operating on the 
     <a href="objlist.html">objects</a> and using and/or
     returning <a href="constlist.html">constants</a>.  There
-    are many function, but most applications only use a handful.
+    are many functions, but most applications only use a handful.
     </p></li>
 </ol>
 

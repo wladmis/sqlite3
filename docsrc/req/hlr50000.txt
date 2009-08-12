@@ -306,6 +306,11 @@ HLR H50155
 The default value assigned to the safety-level configuration parameter of a
 page-cache shall be "full".
 
+HLR H50156
+The b-tree module shall provide an interface allowing database clients to
+acquire advisory read (shared) or write (exclusive) locks on a specific b-tree
+structure within the database.
+
 
 
 HLR H51001      H50010
@@ -397,15 +402,26 @@ return a pointer to a buffer to a nul-terminated string zero bytes in length
 
 
 
+
 HLR H51015       H50109
-If successful, a call to the sqlite3BtreeGetMeta function shall set the
-value of *pValue to the current value of the specified 32-bit unsigned 
-integer in the database image database header and return SQLITE_OK.
+If the first parameter is a b-tree database connection handle with an open
+read-only or read-write transaction, and the second parameter is an integer
+between 0 and 7 inclusive, and the database image consists of zero pages,
+a call to the sqlite3BtreeGetMeta function shall set the value of *pValue to 
+zero.
 
 HLR H51016       H50109
-The database header field read from the database image by a call to
-sqlite3BtreeGetMeta shall be the 32-bit unsigned integer header field stored at
-byte offset (36 + 4 * idx) of the database header, where idx is the value of
-the second parameter passed to sqlite3BtreeGetMeta.
+If the first parameter is a b-tree database connection handle with an open
+read-only or read-write transaction, and the second parameter is an integer
+between 0 and 7 inclusive, and the database image consists of one or more
+pages, a call to the sqlite3BtreeGetMeta function shall set the value of
+*pValue to the current value of the specified 32-bit unsigned integer in the
+database image database header.
 
+HLR H51017       H50109
+The database header field read from the database image by a call to
+sqlite3BtreeGetMeta in the situation specified by H51016 shall be the 32-bit 
+unsigned integer header field stored at byte offset (36 + 4 * idx) of the
+database header, where idx is the value of the second parameter passed to
+sqlite3BtreeGetMeta.
 

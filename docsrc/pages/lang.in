@@ -839,8 +839,8 @@ associated row.</p>
 <p>An [ON CONFLICT] clause may be specified as part of an [UPDATE] or [INSERT]
 action within the body of the trigger.
 However if an [ON CONFLICT] clause is specified as part of 
-the statement causing the trigger to fire, then this conflict handling
-policy is used instead.</p>
+the statement causing the trigger to fire, then conflict handling
+policy of the outer statement is used instead.</p>
 
 <p>Triggers are automatically [DROP TRIGGER | dropped]
 when the table that they are 
@@ -851,9 +851,44 @@ tables are [DROP TABLE | dropped] or [ALTER TABLE | modified].</p>
 
 <p>Triggers are removed using the [DROP TRIGGER] statement.</p>
 
+<h3>Syntax Restrictions On UPDATE, DELETE, and INSERT Statements Within
+    Triggers</h3>
+
+<p>The [UPDATE], [DELETE], and [INSERT]
+statements within triggers do not support
+the full syntax for [UPDATE], [DELETE], and [INSERT] statements.  The following
+restrictions apply:</p>
+
+<ul>
+<li><p>
+  The name of the table to be modified in an [UPDATE], [DELETE], or [INSERT]
+  statement must be an unqualified table name.  In other words, one must
+  use just "<i>tablename</i>" not "<i>database</i><b>.</b><i>tablename</i>"
+  when specifying the table.  The table to be modified must exist in the
+  same database as the table or view to which the trigger is attached.
+  </p></li>
+
+<li><p>
+  The "INSERT INTO <i>table</i> DEFAULT VALUES" form of the [INSERT] statement
+  is not supported.
+  </p></li>
+
+<li><p>
+  The INDEXED BY and NOT INDEXED clauses are not supported for [UPDATE] and
+  [DELETE] statements.
+  </p></li>
+
+<li><p>
+  The ORDER BY and LIMIT clauses on [UPDATE] and [DELETE] statements are not
+  supported.  ORDER BY and LIMIT are not normally supported for [UPDATE] or
+  [DELETE] in any context but can be enabled for top-level statements
+  using the [SQLITE_ENABLE_UPDATE_DELETE_LIMIT] compile-time option.  However,
+  that compile-time option only applies to top-level [UPDATE] and [DELETE]
+  statements, not [UPDATE] and [DELETE] statements within triggers.
+  </p></li>
+</ul>
 
 <tcl>hd_fragment instead_of_trigger {INSTEAD OF} {INSTEAD OF trigger}</tcl>
-
 <h3>INSTEAD OF trigger</h3>
 
 <p>Triggers may be created on [views], as well as ordinary tables, by
@@ -986,7 +1021,8 @@ parentheses.  The argument syntax is sufficiently general that the
 arguments can be made to appear as column definitions in a traditional
 [CREATE TABLE] statement.  
 SQLite passes the module arguments directly
-to the module without any interpretation.  It is the responsibility
+to the [xCreate] and [xConnect] methods of the module implementation
+without any interpretation.  It is the responsibility
 of the module implementation to parse and interpret its own arguments.</p>
 
 <p>A virtual table is destroyed using the ordinary
@@ -1009,6 +1045,21 @@ the name of the table from which records are to be removed.
 <p>Without a WHERE clause, all rows of the table are removed.
 If a WHERE clause is supplied, then only those rows that match
 the expression are removed.</p>
+
+<h3>Restrictions on DELETE Statements Within CREATE TRIGGER</h3>
+
+<p>There are additional syntax restrictions on DELETE statements that
+occur within the body of a [CREATE TRIGGER] statement.  The <i>table-name</i>
+must be unqualified. 
+In other words, the <i>database-name</i><b>.</b> prefix
+on the table name is not allowed within triggers. 
+The table from which to delete must be in the same
+database as the table to which the trigger is attached.</p>
+
+<p>The INDEXED BY and NOT INDEXED clauses are not allowed on DELETE
+statements within triggers.</p>
+
+<p>The LIMIT clause (described below) is unsupported within triggers.</p>
 
 <tcl>hd_fragment trucateopt {truncate optimization}</tcl>
 <h3>The Truncate Optimization</h3>
@@ -2066,6 +2117,14 @@ single keyword <a href="lang_replace.html">REPLACE</a> as an
 alias for "INSERT OR REPLACE".
 </p>
 
+<p>The optional "<i>database-name</i><b>.</b>" prefix on the <i>table-name</i>
+is support for top-level INSERT statements only.  The table name must be
+unqualified for INSERT statements that occur within [CREATE TRIGGER] statements.
+Likely, the "DEFAULT VALUES" form of the INSERT statement is support for
+top-level INSERT statements only and not for INSERT statements within
+triggers.
+<p>
+
 <tcl>
 ##############################################################################
 Section {ON CONFLICT clause} conflict {{conflict clause} {ON CONFLICT}}
@@ -2311,6 +2370,23 @@ A WHERE clause can be used to restrict which rows are updated.</p>
 constraint conflict resolution algorithm to use during this one command.
 See the section titled
 [ON CONFLICT] for additional information.</p>
+
+<h3>Restrictions on UPDATE Statements Within CREATE TRIGGER</h3>
+
+<p>There are additional syntax restrictions on UPDATE statements that
+occur within the body of a [CREATE TRIGGER] statement.  The <i>table-name</i>
+must be unqualified. 
+In other words, the <i>database-name</i><b>.</b> prefix
+on the table name is not allowed within triggers. 
+The table to be modified must be in the same
+database as the table to which the trigger is attached.</p>
+
+<p>The INDEXED BY and NOT INDEXED clauses are not allowed on UPDATE
+statements within triggers.</p>
+
+<p>The LIMIT clause (described below) is unsupported within triggers.</p>
+
+<h3>Optional LIMIT and ORDER BY Clauses</h3>
 
 <p>If SQLite is built with the [SQLITE_ENABLE_UPDATE_DELETE_LIMIT]
 compile-time option then the syntax of the UPDATE statement is extended

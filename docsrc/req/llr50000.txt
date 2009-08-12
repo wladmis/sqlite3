@@ -77,11 +77,54 @@ as the fifth parameter to sqlite3BtreeMovetoUnpacked) shall be set to -1.
 Otherwise, if the b-tree cursor is left pointing to an entry with a larger key
 than that requested, *pRes shall be set to 1.
 
-
 HLR L50013  H50127
 A successful call to the sqlite3BtreeDelete function made with a read/write
 b-tree cursor passed as the first argument shall remove the entry pointed to by
 the b-tree cursor from the b-tree structure. 
+
+
+
+HLR L50014
+A call to the sqlite3BtreeSchemaLocked function with a valid b-tree 
+database connection as the only argument shall return SQLITE_LOCKED_SHAREDCACHE
+if there exists another b-tree database connection connected to the
+same page-cache that currently holds a write-lock on database image
+page 1.
+
+HLR L50015
+A call to the sqlite3BtreeSchemaLocked function with a valid b-tree 
+database connection as the only argument shall return SQLITE_OK if
+H51017 does not apply.
+
+HLR L50016
+A call to sqlite3BtreeLockTable, specifying a b-tree database connection handle 
+with an open read-only or read-write transaction as the first parameter, and 
+zero as the third parameter, shall attempt to obtain a read-lock on the database
+page specified by the second parameter.
+
+HLR L50017
+A call to sqlite3BtreeLockTable, specifying a b-tree database connection handle 
+with an open read-write transaction as the first parameter, and a non-zero value as 
+the third parameter, shall attempt to obtain a write-lock on the database
+page specified by the second parameter.
+
+HLR L50018
+When a read-only or read-write transaction is concluded, all advisory b-tree locks
+held by the b-tree database connection shall be relinquished.
+
+HLR L50019
+If, when attempting to obtain a read-lock as described in L50016, there exists
+another b-tree database connection connected to the same page-cache that is
+holding a write-lock on the same database image page, the read-lock shall not
+be granted and the call to sqlite3BtreeLockTable shall return SQLITE_LOCKED_SHAREDCACHE.
+
+HLR L50020
+If, when attempting to obtain a write-lock as described in L50017, there exists
+another b-tree database connection connected to the same page-cache that is
+holding a read or write-lock on the same database image page, the write-lock 
+shall not be granted and the call to sqlite3BtreeLockTable shall return 
+SQLITE_LOCKED_SHAREDCACHE.
+
 
 
 

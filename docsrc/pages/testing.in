@@ -111,6 +111,7 @@ hd_puts "[expr {int($stat(totalSLOC)/$stat(coreSLOC))}] times as much"
 test code and test scripts - 
 <tcl>KB {$stat(totalSLOC)}</tcl> KSLOC.</p>
 
+<tcl>hd_fragment {harnesses} {test harness} {three test harnesses}</tcl>
 <h2>2.0 Test Harnesses</h2>
 
 <p>There are three independent test harnesses used for testing the 
@@ -121,14 +122,14 @@ from the others.
 
 <ol>
 <li><p>
-The <b>TCL Tests</b> are the oldest and most complete set of tests
-for SQLite.  The TCL tests are contained in the same source tree as the
+The <b>TCL Tests</b> are the oldest set of tests for SQLite.  
+The TCL tests are contained in the same source tree as the
 SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
 The TCL test harness itself consists of <tcl>KB {$stat(tclcSLOC)}</tcl> KSLOC 
-of C code use to create the TCL interface.  The test scripts are contained
+of C code used to create the TCL interface.  The test scripts are contained
 in <tcl>N {$stat(tclsNFile)}</tcl> files totaling 
 <tcl>MiB {$stat(tclsNByte)}</tcl>MB in size.  There are
 <tcl>N {$stat(tclNTest)}</tcl> distinct test cases, but many of the test
@@ -140,22 +141,25 @@ separate tests are performed.
 
 <li><p>
 The <b>TH3</b> test harness is a set of proprietary tests, written in
-C.  The impetus for TH3 was the need to have a set of tests that ran
+C that provide 100% branch test coverage (and 100% MC/DC test coverage) to
+the core SQLite library.  The TH3 tests are designed to run
 on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
-SQLite interfaces.  These tests are free to [SQLite Consortium] members 
-and are available by license to others.  TH3 consists of about
+SQLite interfaces.  TH3 is free to [SQLite Consortium] members 
+and is available by license to others.  TH3 consists of about
 <tcl>MB {$stat(th3NByte)}</tcl> MB or <tcl>KB {$stat(th3SLOC)}</tcl> KSLOC
 of C code implementing <tcl>N {$stat(th3NTest)}</tcl> distinct test cases.
 TH3 tests are heavily parameterized, though, so a full test runs
 about <tcl>MB {$stat(th3NEval)}</tcl> million different test
-instances.</p></li>
+instances.  Additional information on TH3 is
+[TH3 | available separately].</p></li>
 
 <li><p>
+<tcl>hd_fragment slt {SLT} {SQL Logic Tests}</tcl>
 The <b>SQL Logic Test</b> or SLT test harness is used to run huge numbers
 of SQL statements against both SQLite and several other SQL database engines
 and verify that they all get the same answers.  SLT currently compares
-SQLite against PostgreSQL, MySQL, and Microsoft SQL Server.
+SQLite against PostgreSQL, MySQL, Microsoft SQL Server, and Oracle 10g.
 SLT runs <tcl>MB {$stat(sltNTest)}</tcl> million queries comprising
 <tcl>GB {$stat(sltsNByte)}</tcl>GB of test data.
 </p></li>
@@ -192,7 +196,7 @@ behavior.</p>
 malloc()  (See the separate report on
 [memory allocation | dynamic memory allocation in SQLite] for
 additional detail.)
-On workstations, malloc() never fails in practice and so correct
+On servers and workstations, malloc() never fails in practice and so correct
 handling of out-of-memory (OOM) errors is not particularly important.
 But on embedded devices, OOM errors are frightenly common and since
 SQLite is frequently used on embedded devices, it is important that
@@ -291,6 +295,13 @@ transaction either ran to completion or was completely rolled back.
 The interior of the loop is repeated multiple times for each
 snapshot with different random damage each time.</p>
 
+<h3>3.3 Compound failure tests</h3>
+
+<p>The test suites for SQLite also explore the result of stacking
+multiple failures.  For example, tests are run to insure correct behavior
+when an I/O error or OOM fault occurs while trying to recover from a
+prior crash.
+
 <h2>4.0 Fuzz Testing</h2>
 
 <p><a href="http://en.wikipedia.org/wiki/Fuzz_testing">Fuzz testing</a>
@@ -319,10 +330,12 @@ deal with malformed database files.
 These tests first build a well-formed database file, then add
 corruption by changing one or more bytes in the file by some means
 other than SQLite.  Then SQLite is used to read the database.
-In some cases, the bytes changes are in the middle of data files.
-This causes the content to change, but does not otherwise impact
-the operation of SQLite.  In other cases, unused bytes of the file
-are modified.  The interesting cases are when bytes of the file that
+In some cases, the bytes changes are in the middle of data.
+This causes the content of the databse to change while keeping the
+database well-formed.
+In other cases, unused bytes of the file are modified, which as
+no effect on the integrity of the database.
+The interesting cases are when bytes of the file that
 define database structure get changed.  The malformed database tests
 verify that SQLite finds the file format errors and reports them
 using the SQLITE_CORRUPT return code without overflowing
@@ -366,28 +379,30 @@ quickly.  SQLite is designed to never leak memory, even after
 an exception such as an OOM error or disk I/O error.  The test
 harnesses are zealous to enforce this.</p>
 
+<tcl>hd_fragment coverage {test coverage}</tcl>
 <h2>7.0 Test Coverage</h2>
 
-<p>The <a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>
-utility is used to measure the "test coverage" of the SQLite test suite.
-SQLite strives for but does not yet obtain 100% test coverage.  A major
-goal of the SQLite project is to obtain 100% branch coverage
-during 2009.</P.
+<p>The SQLite core has 100% branch test coverage under [TH3] as of
+2009-07-25, in its default configuration as measured by
+<a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>
+utility on SuSE Linux 10.1 on x86 hardware with the GCC 4.0.1 compiler.</p>
 
-<p>Test coverage can be measured in several ways.  "Statement coverage"
-measures (as a percentage of the whole) how many lines of code are
-exercised by the test cases. Statement coverage for the SQLite core
-is <tcl>hd_puts $stat(allStmtCov)</tcl>% for the full TCL test suite,
-<tcl>hd_puts $stat(vqStmtCov)</tcl>% for the "veryquick.test" abbreviated
-TCL test suite and <tcl>hd_puts $stat(th3StmtCov)</tcl>% for the TH3
-test suite. (The SQLite core, in this case, excludes the operating-system
-dependent [sqlite3_vfs | VFS] backends.)
-"Branch" coverage measures (again, as a percentage of the
-whole) how many machine-code branch instructions are taken at least
-once in both directions.  Branch coverage
-is <tcl>hd_puts $stat(allBrCov)</tcl>% for the full TCL test suite,
-<tcl>hd_puts $stat(vqBrCov)</tcl>% for the abbreviated TCL test suite, and
-<tcl>hd_puts $stat(th3BrCov)</tcl>% for the TH3 test harness.</p>
+<p>The "SQLite core" in the previous paragraph excludes the
+operating-system dependent [sqlite3_vfs | VFS] backends, since it is
+not possible to write cross-platform tests for those modules.  Extensions
+such as FTS3 and RTree are also excluded from the analysis.</p>
+
+<h3>7.1 Statement versus branch coverage</h3>
+
+<p>There are many ways to measure test coverage.  The most popular
+metric is "statement coverage".  When you hear someone say that their
+program as "XX% test coverage" without further qualification, they usually
+mean statement coverage.  Statement coverage measures what percentage
+of lines of code are executed at least once by the test suite.</p>
+
+<p>Branch coverage is more rigorous than statement coverage.  Branch
+coverage measure the number of machine-code branch instructions that
+are evaluated at least once on both directions.</p>
 
 <p>To illustrate the difference between statement coverage and
 branch coverage, consider the following hypothetical
@@ -416,9 +431,22 @@ least three test cases:</p>
 <li> a>b && c!=25
 </ul></p>
 
-<p>Branch test coverage is normally less than statement coverage since
-a C program will typically contain some defensive tests which in practice
-are always true or always false.  
+<p>Any one of the above test cases would provide 100% statement coverage
+but all three are required for 100% branch coverage.  Generally speaking,
+100% branch coverage implies 100% statement coverage, but the converse is
+not true.  To reemphasize, the
+[TH3] test harness for SQLite provides the stronger form of
+test coverage - 100% branch test coverage.</p>
+
+
+<h3>7.2 Coverage testing of defensive code</h3>
+
+<p>A well-written C program will typically contain some defensive tests
+which in practice are always true or always false.  This leads to a 
+programming dilemma:  Does one remove defensive code in order to obtain
+100% branch coverage?</p>
+
+<p>In SQLite, the answer to the previous question is "no".
 For testing purposes, the SQLite source code defines
 macros called ALWAYS() and NEVER().   The ALWAYS() macro
 surrounds conditions
@@ -444,12 +472,21 @@ alerts the developers quickly to incorrect design assumptions.
 <p>When measuring test coverage, these macros are defined to be constant
 truth values so that they do not generate assembly language branch
 instructions, and hence do not come into play when calculating the
-branch coverage level:</p>
+branch coverage:</p>
 
 <blockquote><pre>
 #define ALWAYS(X)  (1)
 #define NEVER(X)   (0)
 </pre></blockquote>
+
+<p>The test suite is designed to be run three times, once for each of
+the ALWAYS() and NEVER() definitions shown above.  All three test runs
+should yield exactly the same result.  There is a run-time test using
+the [sqlite3_test_control]([SQLITE_TESTCTRL_ALWAYS], ...) interface that
+can be used to verify that the macros are correctly set to the first
+form (the pass-through form) for deployment.</p>
+
+<h3>7.3 Forcing coverage of boundary values and boolean vector tests</h3>
 
 <p>Another macro used in conjuction with test coverage measurement is
 the <tt>testcase()</tt> macro.  The argument is a condition for which
@@ -503,13 +540,48 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The developers of SQLite have found that coverage testing is an
-extremely productive method for finding bugs.  Because such a high
-percentage of SQLite core code is covered by test cases, the developers
-can have confident that changes they make in one part of the code
+<tcl>hd_fragment {mcdc} {MC/DC}</tcl>
+<h3>7.4 Branch coverage versus MC/DC</h3>
+
+<p>Two methods of measuring test coverage were described above:
+"statement" and "branch" coverage.  There are many other test coverage
+metrics besides these two.  Another popular metric is "Modified
+Condition/Decision Coverage" or MC/DC.  
+<a href="http://en.wikipedia.org/wiki/Modified_Condition/Decision_Coverage">
+Wikipedia</a> defines MC/DC as follows:</p>
+
+<ul>
+<li> Each decision tries every possible outcome.
+<li> Each condition in a decision takes on every possible outcome.
+<li> Each entry and exit point is invoked.
+<li> Each condition in a decision is shown to independently
+     affect the outcome of the decision.
+</ul>
+
+<p>In the C programming langauge 
+where the <tt>&amp;&amp;</tt> and <tt>||</tt> operator
+are "short-circuit" operators, MC/DC and branch coverage are very nearly
+the same thing.  The primary difference is in boolean vector tests.
+One can test for any of several bits in bit-vector and still obtain
+100% branch test coverage even though the second element of MC/DC - the
+requirement that each condition in a decision take on every possible outcome -
+might not be satisfied.</p>
+
+<p>SQLite uses <tt>testcase()</tt> macros as described in the previous
+subsection to make sure that every condition in a bit-vector decision takes
+on every possible outcome.  In this way, SQLite also achieves 100% MC/DC
+in addition to 100% branch coverage.</p>
+
+<h3>7.5 Experience with full test coverage</h3>
+
+<p>The developers of SQLite have found that full coverage testing is an
+extremely productive method for preventing the introduction of new bugs
+as the system evolves.  Because every single branch
+insteruction in SQLite core code is covered by test cases, the developers
+can be confident that changes they make in one part of the code
 do not have unintended consequences in other parts of the code.
-It would not be possible to maintain the quality of SQLite without
-coverage testing.</p>
+It would extremely difficult maintain the quality of SQLite without such
+assurances.</p>
 
 <h2>8.0 Dynamic Analysis</h2>
 

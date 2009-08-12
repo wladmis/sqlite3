@@ -19,6 +19,29 @@ proc newsitem {date title text} {
   hd_puts "<hr width=\"50%\">"
 }
 
+newsitem {2009-Aug-12} {Version 3.6.17} {
+  This is a monthly maintenance release with a focus of bug fixes,
+  performance improvements, and increased test coverage.  This is the
+  first release of SQLite since [test coverage | 100% branch test coverage]
+  was achieved on the SQLite core.  
+
+  In addition, a new interface [sqlite3_strnicmp()] is provided for the
+  convenience of extension writers.
+
+  None of the bugs fixed in this release are serious.  All bugs are
+  obscure.  Upgrading is optional.
+}
+
+newsitem {2009-July-25} {100% Branch Test Coverage} {
+  A subset of the [TH3] test suite was measured by gcov to provide
+  [test coverage | 100% branch test coverage] over the SQLite core
+  (exclusive of the VFS backend and of extensions such as FTS3 and RTREE)
+  when compiled for SuSE 10.1 Linux on x86.  The SQLite developers pledge
+  to maintain branch test coverage at 100% in all future releases.
+  Ongoing work will strive for 100% branch test coverage on the 
+  operating-system backends and extensions as well.
+}
+
 newsitem {2009-Jun-27} {Version 3.6.16} {
   SQLite [version 3.6.16] is another general maintenance relase containing
   performance and robustness enhancements.  A single notable bug was fixed
