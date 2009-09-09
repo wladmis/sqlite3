@@ -1,6 +1,6 @@
 Name: sqlite3
 Version: 3.6.17
-Release: alt1
+Release: alt2
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -105,6 +105,7 @@ autoreconf -i
 
 %make -C docsrc DOC=. SRC=..
 
+%check
 subst 's|-DSQLITE_ENABLE_FTS3=1||' Makefile
 %make test
 
@@ -152,6 +153,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Wed Sep 09 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.17-alt2
+- moved "make test" to %%check section
+
 * Wed Aug 12 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.17-alt1
 - 3.6.17
 - enabled tests
