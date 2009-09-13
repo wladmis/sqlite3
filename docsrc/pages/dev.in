@@ -1,0 +1,10 @@
+<title>SQLite Developer Links</title>
+<h1 align="center">Developer Resources</h1>
+
+<ul>
+<li> <a href="http://www.sqlite.org/src/tktnew">Report A Bug</a>
+<li> <a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a>
+<li> <a href="http://www.sqlite.org/src/timeline">Timeline</a>
+<li> <a href="http://www.sqlite.org/src/dir">Browse Historical Source Files</a>
+<li> <a href="http://www.sqlite.org/docsrc">Documentation Source Text</a>
+</ul>

@@ -1,0 +1,54 @@
+Requirements numbering:
+
+    A12345
+
+  A:  F  -  Functional requirements a.k.a "high-level"
+      D  -  Derived requirements
+      A  -  Advice. Target behavior. Non-binding objectives.
+      L  -  Limitations.  Requirements for using SQLite 
+
+
+
+  F1----     C interface
+  F10---       global state
+  F100--         version
+  F101--         threadsafe
+  F102--       constants
+  F11---     VFS
+  F12---     Database connection
+  F121--       sqlite3_exec
+  F1220-       enable extended result codes.
+  F1222-       sqlite3_last_insert_rowid
+  F1224-       sqlite3_changes & sqlite3_total_changes
+  F1227-       sqlite3_interrupt
+  F1228-       trace and profile callbacks
+  F1234-       busy handler
+  F1237-       sqlite3_get_table
+  F125--       authorizer
+  F126--       load extension
+  F127--       sqlite3_open
+  F1276-       sqlite3_limit
+  F128--       Error handling
+  F129--       callback interfaces
+  F13---     Prepared statements
+  F135--       binding values to prepared statements
+  F137--       sqlite3_column_xxx()
+  F14---
+  F15---     sqlite3_value
+  F151--       sqlite3_value_xxx()
+  F16---     Extension mechanisms
+  F161--       create function
+  F162--       aggregate context, etc.
+  F163--       soft heap limit
+  F164--       sqlite3_result_xxx()
+  F166--       Create collation
+  F167--       Collation needed
+  F17---
+  F170--       Mutexing
+  F173--       Memory allocation
+  F174--       Printf
+  F178--       Incremental blob I/O
+  F18---     Virtual tables
+  F19---
+
+  F2----     File Format

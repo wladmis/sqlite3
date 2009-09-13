@@ -1,0 +1,259 @@
+<title>SQLite Download Page</title>
+
+<h2>SQLite Download Page</h2>
+<table width="100%" cellpadding="5">
+
+<tcl>
+proc Product {pattern desc} {
+  regsub {V[23]} $pattern {*} p3
+  regsub V2 $pattern {(2[0-9a-z._]+)} pattern
+  regsub V3 $pattern {(3[0-9a-z._]+)} pattern
+  set p2 [string map {* .*} $pattern]
+  set flist [glob -nocomplain $p3]
+  foreach file [lsort -dict $flist] {
+    if {![regexp ^$p2\$ $file all version]} continue
+    regsub -all _ $version . version
+    set size [file size $file]
+    set units bytes
+    if {$size>1024*1024} {
+      set size [format %.2f [expr {$size/(1024.0*1024.0)}]]
+      set units MiB
+    } elseif {$size>1024} {
+      set size [format %.2f [expr {$size/(1024.0)}]]
+      set units KiB
+    }
+    global pending_heading
+    if {$pending_heading!=""} {
+      hd_puts "<tr><td colspan=\"4\"><b>$pending_heading</b></td></tr>"
+      set pending_heading {}
+    }
+    hd_puts "<tr><td width=\"10\"></td>"
+    hd_puts "<td valign=\"top\" align=\"right\">"
+    hd_puts "<a href=\"$file\">$file</a><br>($size $units)</td>"
+    hd_puts "<td width=\"5\"></td>"
+    regsub -all VERSION $desc $version d2
+    hd_puts "<td valign=\"top\">[string trim $d2]</td></tr>"
+  }
+}
+cd $::DEST
+
+proc Heading {title} {
+  set ::pending_heading $title
+  # hd_puts "<tr><td colspan=4><big><b>$title</b></big></td></tr>"
+}
+
+Heading {Source Code}
+
+Product {sqlite-amalgamation-V3.zip} {
+  This ZIP archive contains all preprocessed C code combined into a
+  single source file (the <a href="amalgamation.html">amalgamation</a>).
+  This is the <b>recommended</b> way of acquiring the SQLite
+  source code.  It is suggested that you use this packing option
+  unless you have a compelling reason to use one
+  of the other packaging options below.
+}
+
+Product {sqlite-amalgamation-V3.tar.gz} {
+  A tarball containing the <a href="amalgamation.html">amalgamation</a>
+  together with an configure script and makefile
+  for building it.  This is the <b>recommended</b> source distribution for all
+  Unix and Unix-like platforms.
+}
+
+
+Product {sqlite-V3-tea.tar.gz} {
+  A tarball of preprocessed source code together with a
+  <a href="http://www.tcl.tk/doc/tea/">Tcl Extension Architecture (TEA)</a>
+  compatible configure script and makefile.
+  This is the <b>recommended</b> source distribution for the TCL interface to
+  SQLite.
+}
+
+Product {sqlite-V3.tar.gz} {
+  A tarball of the complete source tree for SQLite version VERSION
+  as extracted from the version control system.  <i>The Makefile and
+  configure script in this tarball are not supported</i>.  Their use
+  is <b><u>not</u> recommended</b>. The SQLite developers do not use them.  
+  You should not use them either.  If you want a configure script and
+  an automated build, use either the amalgamation tarball or TEA tarball
+  instead of this one.
+  To build from this tarball, hand-edit one of the template Makefiles
+  in the root directory of the tarball and build using your own customized
+  Makefile.
+}
+
+Product {sqlite-source-V3.zip} {
+  This ZIP archive contains preprocessed C code for the SQLite library as
+  individual source files.  The use of this source distribution is
+  <b><u>not</u> recommended</b>.  Use one of the amalgamation packages above
+  unless you have a compelling reason not to.
+}
+
+Product {sqlite-V3.src.rpm} {
+  An RPM containing complete source code for SQLite version VERSION
+}
+
+Heading {Cross-Platform Binaries}
+
+Product {sqlite-V3.kit} {
+  A <a href="http://www.equi4.com/starkit.html">starkit</a> containing
+  precompiled SQLite binaries and Tcl bindings for Linux-x86, Windows,
+  and Mac OS X (ppc and x86).
+}
+
+Heading {Documentation}
+
+Product {sqlite_docs_V3.zip} {
+  This ZIP archive contains most of the static HTML files that
+  comprise this website, including all of the SQL Syntax and the
+  C/C++ interface specs and other miscellaneous documentation.
+}
+
+Heading {Precompiled Binaries for Linux}
+
+Product sqlite3-V3.bin.gz {
+  A command-line program for accessing and modifying
+  SQLite version 3.* databases.
+  See <a href="sqlite.html">the documentation</a> for additional information.
+}
+
+Product sqlite-V3.bin.gz {
+  A command-line program for accessing and modifying
+  SQLite databases.
+  See <a href="sqlite.html">the documentation</a> for additional information.
+}
+
+Product tclsqlite-V3.so.gz {
+  Bindings for <a href="http://www.tcl.tk/">Tcl/Tk</a>.
+  You can import this shared library into either
+  tclsh or wish to get SQLite database access from Tcl/Tk.
+  See <a href="tclsqlite.html">the documentation</a> for details.
+}
+
+Product sqlite-V3.so.gz {
+  A precompiled shared-library for Linux without the TCL bindings.
+}
+
+Product fts1-V3.so.gz {
+  A precompiled 
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1 Module</a> 
+  for Linux.
+}
+
+Product fts2-V3.so.gz {
+  A precompiled 
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsTwo">FTS2 Module</a> 
+  for Linux.
+}
+
+Product sqlite-devel-V3.i386.rpm {
+  RPM containing documentation, header files, and static library for
+  SQLite version VERSION.
+}
+Product sqlite-V3-1.i386.rpm {
+  RPM containing shared libraries and the <b>sqlite</b> command-line
+  program for SQLite version VERSION.
+}
+
+Product sqlite*_analyzer-V3.bin.gz {
+  An analysis program for database files compatible with SQLite 
+  version VERSION and later.
+}
+
+Heading {Precompiled Binaries For Mac OS X}
+
+Product sqlite3-V3-osx-x86.bin.gz {
+  A command-line program for accessing and modifying SQLite version 3.*
+  databases.  For x86 Macs running Leopard (OS 10.5) only.
+}
+
+Product sqlite*_analyzer-V3-osx-x86.bin.gz {
+  An analysis program for database files compatible with SQLite 
+  version VERSION and later.  For x86 Macs running Leopard (OS 10.5) only.
+}
+
+Heading {Precompiled Binaries For Windows}
+
+Product sqlite-V3.zip {
+  A command-line program for accessing and modifying SQLite databases.
+  See <a href="sqlite.html">the documentation</a> for additional information.
+}
+Product tclsqlite-V3.zip {
+  Bindings for <a href="http://www.tcl.tk/">Tcl/Tk</a>.
+  You can import this shared library into either
+  tclsh or wish to get SQLite database access from Tcl/Tk.
+  See <a href="tclsqlite.html">the documentation</a> for details.
+}
+Product sqlitedll-V3.zip {
+  This is a DLL of the SQLite library without the TCL bindings.
+  The only external dependency is MSVCRT.DLL.
+}
+
+Product fts1dll-V3.zip {
+  A precompiled 
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsOne">FTS1 Module</a> 
+  for Win32 platforms.
+}
+
+Product fts2dll-V3.zip {
+  A precompiled 
+  <a href="http://www.sqlite.org/cvstrac/wiki?p=FtsTwo">FTS2 Module</a> 
+  for Win32 platforms.
+}
+
+Product sqlite*_analyzer-V3.zip {
+  An analysis program for database files compatible with SQLite version
+  VERSION and later.
+}
+
+
+Heading {Historical Binaries And Source Code}
+
+Product sqlite-V2.bin.gz {
+  A command-line program for accessing and modifying
+  SQLite version 2.* databases on Linux-x86.
+}
+Product sqlite-V2.zip {
+  A command-line program for accessing and modifying 
+  SQLite version 2.* databases on Win32 platforms.
+}
+
+Product sqlite*_analyzer-V2.bin.gz {
+  An analysis program for version 2.* database files on Linux-x86
+}
+Product sqlite*_analyzer-V2.zip {
+  An analysis program for version 2.* database files on Win32 platforms.
+}
+Product {sqlite-source-V2.zip} {
+  This ZIP archive contains C source code for the SQLite library
+  version VERSION.
+}
+
+</tcl>
+</table>
+
+<a name="cvs"></a>
+<h3>Direct Access To The Sources</h3>
+
+<p>
+All SQLite source code is maintained in 
+<a href="http://www.fossil-scm.org/">Fossil</a> repository that is
+available for read-only access by anyone.  You can 
+interactively view the
+repository contents and download individual files or ZIP archives of
+complete check-ins by visiting</p>
+
+<blockquote>
+<a href="http://www.sqlite.org/src">http://www.sqlite.org/src</a> (Dallas)<br>
+<a href="http://www.hwaci.com/cgi-bin/sqlite">http://www.hwaci.com/cgi-bin/sqlite</a> (San Jose)<br>
+<a href="http://www2.sqlite.org/src">http://www2.sqlite.org/src</a> (Atlanta)<br>
+</blockquote>
+
+<p>The documentation is maintained in a separate
+<a href="http://www.fossil-scm.org/">Fossil</a> repository located
+at:</p>
+
+<blockquote>
+<a href="http://www.sqlite.org/docsrc">http://www.sqlite.org/docsrc</a> (Dallas)<br>
+<a href="http://www2.sqlite.org/docsrc">http://www2.sqlite.org/docsrc</a> (Atlanta)<br>
+</blockquote>

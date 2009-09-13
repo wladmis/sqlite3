@@ -1,0 +1,142 @@
+
+HLR L50001  H50128
+A successful call to the sqlite3BtreeInsert function made with a read/write
+b-tree cursor passed as the first argument shall insert a new entry into 
+the b-tree structure the b-tree cursor is open on.
+
+HLR L50012  H50128
+If a call to sqlite3BtreeInsert is made to insert an entry specifying a key
+value for which there already exists a matching key within the b-tree
+structure, the entry with the matching key shall be removed from the b-tree
+structure before the new entry is inserted.
+
+
+HLR L50002  H50128
+If the b-tree cursor passed to sqlite3BtreeInsert as the first argument is
+open on a table b-tree, then the values passed as the second parameter (pKey) 
+shall be ignored. The value passed as the third parameter (nKey) shall be
+used as the integer key for the new entry.
+
+HLR L50003  H50128
+If the b-tree cursor passed to sqlite3BtreeInsert as the first argument is
+open on a table b-tree, then the database record associated with the new entry
+shall consist of a copy of the first nData bytes of the buffer pointed to by pData 
+followed by nZero zero (0x00) bytes, where pData, nData and nZero are the
+fourth, fifth and sixth parameters passed to sqlite3BtreeInsert, respectively.
+
+HLR L50004  H50128
+If the b-tree cursor passed to sqlite3BtreeInsert as the first argument is
+open on an index b-tree, then the values passed as the fourth, fifth and sixth
+parameters shall be ignored. The key (a database record) used by the new entry 
+shall consist of the first nKey bytes of the buffer pointed to by pKey, where
+pKey and nKey are the second and third parameters passed to sqlite3BtreeInsert,
+respectively.
+
+HLR L50005
+If the value passed as the seventh parameter to a call to sqlite3BtreeInsert
+is non-zero, sqlite3BtreeInsert shall interpret this to mean that it is likely
+(but not certain) that the key belonging to the new entry is larger than the
+largest key currently stored in the b-tree structure, and optimize accordingly.
+
+HLR L50006
+If the value passed as the eighth parameter to a call to sqlite3BtreeInsert
+is non-zero, then the B-Tree module shall interpret this to mean that the
+the b-tree cursor has already been positioned by a successful call to 
+sqlite3BtreeMovetoUnpacked specifying the same key value as is being inserted,
+and that sqlite3BtreeMovetoUnpacked has set the output value required by L50011 to
+this value.
+
+
+
+HLR L50008
+If a call is made to sqlite3BtreeMovetoUnpacked specifying a key value for 
+which there exists an entry with a matching key value in the b-tree structure,
+the b-tree cursor shall be moved to point to this entry. In this case *pRes
+(the value of the "int" variable pointed to by the pointer passed as the
+fifth parameter to sqlite3BtreeMovetoUnpacked) shall be set to 0 before
+returning.
+
+HLR L50009
+If a call is made to sqlite3BtreeMovetoUnpacked specifying a key value for
+which there does not exist an entry with a matching key value in the b-tree
+structure, the b-tree cursor shall be moved to point to an entry located
+on the leaf page that would contain the requested entry, were it present.
+
+HLR L50010
+If the condition specified in L50009 is met and the b-tree structure 
+contains one or more entries (is not empty), the b-tree cursor shall be left
+pointing to an entry that would lie adjacent (immediately before or after in
+order by key) to the requested entry on the leaf page, were it present.
+
+HLR L50011
+If the condition specified in L50009 is met and the b-tree cursor is left
+pointing to an entry with a smaller key than that requested, or the cursor
+is left pointing a no entry at all because the b-tree structure is completely
+empty, *pRes (the value of the "int" variable pointed to by the pointer passed
+as the fifth parameter to sqlite3BtreeMovetoUnpacked) shall be set to -1.
+Otherwise, if the b-tree cursor is left pointing to an entry with a larger key
+than that requested, *pRes shall be set to 1.
+
+HLR L50013  H50127
+A successful call to the sqlite3BtreeDelete function made with a read/write
+b-tree cursor passed as the first argument shall remove the entry pointed to by
+the b-tree cursor from the b-tree structure. 
+
+
+
+HLR L50014
+A call to the sqlite3BtreeSchemaLocked function with a valid b-tree 
+database connection as the only argument shall return SQLITE_LOCKED_SHAREDCACHE
+if there exists another b-tree database connection connected to the
+same page-cache that currently holds a write-lock on database image
+page 1.
+
+HLR L50015
+A call to the sqlite3BtreeSchemaLocked function with a valid b-tree 
+database connection as the only argument shall return SQLITE_OK if
+H51017 does not apply.
+
+HLR L50016
+A call to sqlite3BtreeLockTable, specifying a b-tree database connection handle 
+with an open read-only or read-write transaction as the first parameter, and 
+zero as the third parameter, shall attempt to obtain a read-lock on the database
+page specified by the second parameter.
+
+HLR L50017
+A call to sqlite3BtreeLockTable, specifying a b-tree database connection handle 
+with an open read-write transaction as the first parameter, and a non-zero value as 
+the third parameter, shall attempt to obtain a write-lock on the database
+page specified by the second parameter.
+
+HLR L50018
+When a read-only or read-write transaction is concluded, all advisory b-tree locks
+held by the b-tree database connection shall be relinquished.
+
+HLR L50019
+If, when attempting to obtain a read-lock as described in L50016, there exists
+another b-tree database connection connected to the same page-cache that is
+holding a write-lock on the same database image page, the read-lock shall not
+be granted and the call to sqlite3BtreeLockTable shall return SQLITE_LOCKED_SHAREDCACHE.
+
+HLR L50020
+If, when attempting to obtain a write-lock as described in L50017, there exists
+another b-tree database connection connected to the same page-cache that is
+holding a read or write-lock on the same database image page, the write-lock 
+shall not be granted and the call to sqlite3BtreeLockTable shall return 
+SQLITE_LOCKED_SHAREDCACHE.
+
+HLR L50021
+When a read-write transaction is downgraded to a read-only transaction, all
+advisory b-tree write-locks held by the b-tree database connection shall be
+changed to read-locks.
+
+
+
+
+HLR L51001
+The balance-siblings algorithm shall redistribute the b-tree cells currently 
+stored on a overfull or underfull page and up to two sibling pages, adding
+or removing siblings as required, such that no sibling page is overfull and
+the minimum possible number of sibling pages is used to store the 
+redistributed b-tree cells.
+

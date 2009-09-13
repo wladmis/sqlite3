@@ -1,0 +1,827 @@
+HLR H41010 
+SQLite shall divide input SQL text into tokens working from left to
+right.
+
+HLR H41020 
+At each step in the SQL tokenization process, SQLite shall extract
+the longest possible token from the remaining input text.
+
+HLR H41030 
+The tokenizer shall pass each non-WHITESPACE token seen on to the
+parser in the order in which the tokens are seen.
+
+HLR H41040 
+When the tokenizer reaches the end of input where the last token sent
+to the parser was not a SEMI token, it shall
+send a SEMI token to the parser.
+
+HLR H41050 
+When the tokenizer encounters text that is not a valid token, it shall
+cause an error to be returned to the application.
+
+HLR H41100 
+SQLite shall recognize a sequence of one or more WHITESPACE characters
+as a WHITESPACE token.
+
+HLR H41110 
+SQLite shall recognize as a WHITESPACE token the two-character sequence "--"
+(u002d, u002d) followed by any sequence of non-zero characters up through and
+including the first u000a character or until end of input.
+
+HLR H41120 
+SQLite shall recognize as a WHITESPACE token the two-character sequence "/*"
+(u002f, u002a) followed by any sequence of zero or more
+non-zero characters through with the first "*/" (u002a, u002f) sequence or
+until end of input.
+
+HLR H41130 
+SQLite shall recognize as an ID token
+any sequence of characters that begins with
+an ALPHABETIC character and continue with zero or more
+ALPHANUMERIC characters and/or "$" (u0024) characters and which is
+not a keyword token.
+
+HLR H41140 
+SQLite shall recognize as an ID token
+any sequence of non-zero characters that begins with "&#91;" (u005b) and
+continuing through the first "&#93;" (u005d) character.
+
+HLR H41150 
+SQLite shall recognize as an ID token
+any sequence of characters
+that begins with a double-quote (u0022), is followed by zero or
+more non-zero characters and/or pairs of double-quotes (u0022)
+and terminates with a double-quote (u0022) that
+is not part of a pair.
+
+HLR H41160 
+SQLite shall recognize as an ID token
+any sequence of characters
+that begins with a grave accent (u0060), is followed by zero or
+more non-zero characters and/or pairs ofgrave accents (u0060)
+and terminates with a grave accent (u0022) that
+is not part of a pair.
+
+HLR H41200 
+SQLite shall recognize as a STRING token a sequence of characters
+that begins with a single-quote (u0027), is followed by zero or
+more non-zero characters and/or pairs of single-quotes (u0027)
+and terminates with a single-quote (u0027) that
+is not part of a pair.
+
+HLR H41210 
+SQLite shall recognize as a BLOB token an upper or lower-case "X"
+(u0058 or u0078) followed by a single-quote (u0027) followed by
+a number of HEXADECIMAL character that is a multiple of two and
+terminated by a single-quote (u0027).
+
+HLR H41220 
+SQLite shall recognize as an INTEGER token any squence of
+one or more NUMERIC characters.
+
+HLR H41230 
+SQLite shall recognize as a FLOAT token a sequence of one
+or more NUMERIC characters together with zero or one period
+(u002e) and followed by an exponentiation suffix.
+
+HLR H41240 
+SQLite shall recognize as a FLOAT token a sequence of one
+or more NUMERIC characters that includes exactly one period
+(u002e) character.
+
+HLR H41403 
+SQLite shall recognize the 1-character sequenence "-" (u002d) as token MINUS
+
+HLR H41406 
+SQLite shall recognize the 1-character sequenence "(" (u0028) as token LP
+
+HLR H41409 
+SQLite shall recognize the 1-character sequenence ")" (u0029) as token RP
+
+HLR H41412 
+SQLite shall recognize the 1-character sequenence ";" (u003b) as token SEMI
+
+HLR H41415 
+SQLite shall recognize the 1-character sequenence "+" (u002b) as token PLUS
+
+HLR H41418 
+SQLite shall recognize the 1-character sequenence "*" (u002a) as token STAR
+
+HLR H41421 
+SQLite shall recognize the 1-character sequenence "/" (u002f) as token SLASH
+
+HLR H41424 
+SQLite shall recognize the 1-character sequenence "%" (u0025) as token REM
+
+HLR H41427 
+SQLite shall recognize the 1-character sequenence "=" (u003d) as token EQ
+
+HLR H41430 
+SQLite shall recognize the 2-character sequenence "==" (u003d u003d) as token EQ
+
+HLR H41433 
+SQLite shall recognize the 2-character sequenence "<=" (u003c u003d) as token LE
+
+HLR H41436 
+SQLite shall recognize the 2-character sequenence "<>" (u003c u003e) as token NE
+
+HLR H41439 
+SQLite shall recognize the 2-character sequenence "<<" (u003c u003c) as token LSHIFT
+
+HLR H41442 
+SQLite shall recognize the 1-character sequenence "<" (u003c) as token LT
+
+HLR H41445 
+SQLite shall recognize the 2-character sequenence ">=" (u003e u003d) as token GE
+
+HLR H41448 
+SQLite shall recognize the 2-character sequenence ">>" (u003e u003e) as token RSHIFT
+
+HLR H41451 
+SQLite shall recognize the 1-character sequenence ">" (u003e) as token GT
+
+HLR H41454 
+SQLite shall recognize the 2-character sequenence "!=" (u0021 u003d) as token NE
+
+HLR H41457 
+SQLite shall recognize the 1-character sequenence "," (u002c) as token COMMA
+
+HLR H41460 
+SQLite shall recognize the 1-character sequenence "&" (u0026) as token BITAND
+
+HLR H41463 
+SQLite shall recognize the 1-character sequenence "~" (u007e) as token BITNOT
+
+HLR H41466 
+SQLite shall recognize the 1-character sequenence "|" (u007c) as token BITOR
+
+HLR H41469 
+SQLite shall recognize the 2-character sequenence "||" (u007c u007c) as token CONCAT
+
+HLR H41472 
+SQLite shall recognize the 1-character sequenence "." (u002e) as token DOT
+
+HLR H41503 
+SQLite shall recognize the 5-character sequenence "ABORT" in any combination of upper and lower case letters as the keyword token ABORT.
+
+HLR H41506 
+SQLite shall recognize the 3-character sequenence "ADD" in any combination of upper and lower case letters as the keyword token ADD.
+
+HLR H41509 
+SQLite shall recognize the 5-character sequenence "AFTER" in any combination of upper and lower case letters as the keyword token AFTER.
+
+HLR H41512 
+SQLite shall recognize the 3-character sequenence "ALL" in any combination of upper and lower case letters as the keyword token ALL.
+
+HLR H41515 
+SQLite shall recognize the 5-character sequenence "ALTER" in any combination of upper and lower case letters as the keyword token ALTER.
+
+HLR H41518 
+SQLite shall recognize the 7-character sequenence "ANALYZE" in any combination of upper and lower case letters as the keyword token ANALYZE.
+
+HLR H41521 
+SQLite shall recognize the 3-character sequenence "AND" in any combination of upper and lower case letters as the keyword token AND.
+
+HLR H41524 
+SQLite shall recognize the 2-character sequenence "AS" in any combination of upper and lower case letters as the keyword token AS.
+
+HLR H41527 
+SQLite shall recognize the 3-character sequenence "ASC" in any combination of upper and lower case letters as the keyword token ASC.
+
+HLR H41530 
+SQLite shall recognize the 6-character sequenence "ATTACH" in any combination of upper and lower case letters as the keyword token ATTACH.
+
+HLR H41533 
+SQLite shall recognize the 13-character sequenence "AUTOINCREMENT" in any combination of upper and lower case letters as the keyword token AUTOINCR.
+
+HLR H41536 
+SQLite shall recognize the 6-character sequenence "BEFORE" in any combination of upper and lower case letters as the keyword token BEFORE.
+
+HLR H41539 
+SQLite shall recognize the 5-character sequenence "BEGIN" in any combination of upper and lower case letters as the keyword token BEGIN.
+
+HLR H41542 
+SQLite shall recognize the 7-character sequenence "BETWEEN" in any combination of upper and lower case letters as the keyword token BETWEEN.
+
+HLR H41545 
+SQLite shall recognize the 2-character sequenence "BY" in any combination of upper and lower case letters as the keyword token BY.
+
+HLR H41548 
+SQLite shall recognize the 7-character sequenence "CASCADE" in any combination of upper and lower case letters as the keyword token CASCADE.
+
+HLR H41551 
+SQLite shall recognize the 4-character sequenence "CASE" in any combination of upper and lower case letters as the keyword token CASE.
+
+HLR H41554 
+SQLite shall recognize the 4-character sequenence "CAST" in any combination of upper and lower case letters as the keyword token CAST.
+
+HLR H41557 
+SQLite shall recognize the 5-character sequenence "CHECK" in any combination of upper and lower case letters as the keyword token CHECK.
+
+HLR H41560 
+SQLite shall recognize the 7-character sequenence "COLLATE" in any combination of upper and lower case letters as the keyword token COLLATE.
+
+HLR H41563 
+SQLite shall recognize the 6-character sequenence "COLUMN" in any combination of upper and lower case letters as the keyword token COLUMNKW.
+
+HLR H41566 
+SQLite shall recognize the 6-character sequenence "COMMIT" in any combination of upper and lower case letters as the keyword token COMMIT.
+
+HLR H41569 
+SQLite shall recognize the 8-character sequenence "CONFLICT" in any combination of upper and lower case letters as the keyword token CONFLICT.
+
+HLR H41572 
+SQLite shall recognize the 10-character sequenence "CONSTRAINT" in any combination of upper and lower case letters as the keyword token CONSTRAINT.
+
+HLR H41575 
+SQLite shall recognize the 6-character sequenence "CREATE" in any combination of upper and lower case letters as the keyword token CREATE.
+
+HLR H41578 
+SQLite shall recognize the 5-character sequenence "CROSS" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41581 
+SQLite shall recognize the 12-character sequenence "CURRENT_DATE" in any combination of upper and lower case letters as the keyword token CTIME_KW.
+
+HLR H41584 
+SQLite shall recognize the 12-character sequenence "CURRENT_TIME" in any combination of upper and lower case letters as the keyword token CTIME_KW.
+
+HLR H41587 
+SQLite shall recognize the 17-character sequenence "CURRENT_TIMESTAMP" in any combination of upper and lower case letters as the keyword token CTIME_KW.
+
+HLR H41590 
+SQLite shall recognize the 8-character sequenence "DATABASE" in any combination of upper and lower case letters as the keyword token DATABASE.
+
+HLR H41593 
+SQLite shall recognize the 7-character sequenence "DEFAULT" in any combination of upper and lower case letters as the keyword token DEFAULT.
+
+HLR H41596 
+SQLite shall recognize the 8-character sequenence "DEFERRED" in any combination of upper and lower case letters as the keyword token DEFERRED.
+
+HLR H41599 
+SQLite shall recognize the 10-character sequenence "DEFERRABLE" in any combination of upper and lower case letters as the keyword token DEFERRABLE.
+
+HLR H41602 
+SQLite shall recognize the 6-character sequenence "DELETE" in any combination of upper and lower case letters as the keyword token DELETE.
+
+HLR H41605 
+SQLite shall recognize the 4-character sequenence "DESC" in any combination of upper and lower case letters as the keyword token DESC.
+
+HLR H41608 
+SQLite shall recognize the 6-character sequenence "DETACH" in any combination of upper and lower case letters as the keyword token DETACH.
+
+HLR H41611 
+SQLite shall recognize the 8-character sequenence "DISTINCT" in any combination of upper and lower case letters as the keyword token DISTINCT.
+
+HLR H41614 
+SQLite shall recognize the 4-character sequenence "DROP" in any combination of upper and lower case letters as the keyword token DROP.
+
+HLR H41617 
+SQLite shall recognize the 3-character sequenence "END" in any combination of upper and lower case letters as the keyword token END.
+
+HLR H41620 
+SQLite shall recognize the 4-character sequenence "EACH" in any combination of upper and lower case letters as the keyword token EACH.
+
+HLR H41623 
+SQLite shall recognize the 4-character sequenence "ELSE" in any combination of upper and lower case letters as the keyword token ELSE.
+
+HLR H41626 
+SQLite shall recognize the 6-character sequenence "ESCAPE" in any combination of upper and lower case letters as the keyword token ESCAPE.
+
+HLR H41629 
+SQLite shall recognize the 6-character sequenence "EXCEPT" in any combination of upper and lower case letters as the keyword token EXCEPT.
+
+HLR H41632 
+SQLite shall recognize the 9-character sequenence "EXCLUSIVE" in any combination of upper and lower case letters as the keyword token EXCLUSIVE.
+
+HLR H41635 
+SQLite shall recognize the 6-character sequenence "EXISTS" in any combination of upper and lower case letters as the keyword token EXISTS.
+
+HLR H41638 
+SQLite shall recognize the 7-character sequenence "EXPLAIN" in any combination of upper and lower case letters as the keyword token EXPLAIN.
+
+HLR H41641 
+SQLite shall recognize the 4-character sequenence "FAIL" in any combination of upper and lower case letters as the keyword token FAIL.
+
+HLR H41644 
+SQLite shall recognize the 3-character sequenence "FOR" in any combination of upper and lower case letters as the keyword token FOR.
+
+HLR H41647 
+SQLite shall recognize the 7-character sequenence "FOREIGN" in any combination of upper and lower case letters as the keyword token FOREIGN.
+
+HLR H41650 
+SQLite shall recognize the 4-character sequenence "FROM" in any combination of upper and lower case letters as the keyword token FROM.
+
+HLR H41653 
+SQLite shall recognize the 4-character sequenence "FULL" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41656 
+SQLite shall recognize the 4-character sequenence "GLOB" in any combination of upper and lower case letters as the keyword token LIKE_KW.
+
+HLR H41659 
+SQLite shall recognize the 5-character sequenence "GROUP" in any combination of upper and lower case letters as the keyword token GROUP.
+
+HLR H41662 
+SQLite shall recognize the 6-character sequenence "HAVING" in any combination of upper and lower case letters as the keyword token HAVING.
+
+HLR H41665 
+SQLite shall recognize the 2-character sequenence "IF" in any combination of upper and lower case letters as the keyword token IF.
+
+HLR H41668 
+SQLite shall recognize the 6-character sequenence "IGNORE" in any combination of upper and lower case letters as the keyword token IGNORE.
+
+HLR H41671 
+SQLite shall recognize the 9-character sequenence "IMMEDIATE" in any combination of upper and lower case letters as the keyword token IMMEDIATE.
+
+HLR H41674 
+SQLite shall recognize the 2-character sequenence "IN" in any combination of upper and lower case letters as the keyword token IN.
+
+HLR H41677 
+SQLite shall recognize the 5-character sequenence "INDEX" in any combination of upper and lower case letters as the keyword token INDEX.
+
+HLR H41680 
+SQLite shall recognize the 9-character sequenence "INITIALLY" in any combination of upper and lower case letters as the keyword token INITIALLY.
+
+HLR H41683 
+SQLite shall recognize the 5-character sequenence "INNER" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41686 
+SQLite shall recognize the 6-character sequenence "INSERT" in any combination of upper and lower case letters as the keyword token INSERT.
+
+HLR H41689 
+SQLite shall recognize the 7-character sequenence "INSTEAD" in any combination of upper and lower case letters as the keyword token INSTEAD.
+
+HLR H41692 
+SQLite shall recognize the 9-character sequenence "INTERSECT" in any combination of upper and lower case letters as the keyword token INTERSECT.
+
+HLR H41695 
+SQLite shall recognize the 4-character sequenence "INTO" in any combination of upper and lower case letters as the keyword token INTO.
+
+HLR H41698 
+SQLite shall recognize the 2-character sequenence "IS" in any combination of upper and lower case letters as the keyword token IS.
+
+HLR H41701 
+SQLite shall recognize the 6-character sequenence "ISNULL" in any combination of upper and lower case letters as the keyword token ISNULL.
+
+HLR H41704 
+SQLite shall recognize the 4-character sequenence "JOIN" in any combination of upper and lower case letters as the keyword token JOIN.
+
+HLR H41707 
+SQLite shall recognize the 3-character sequenence "KEY" in any combination of upper and lower case letters as the keyword token KEY.
+
+HLR H41710 
+SQLite shall recognize the 4-character sequenence "LEFT" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41713 
+SQLite shall recognize the 4-character sequenence "LIKE" in any combination of upper and lower case letters as the keyword token LIKE_KW.
+
+HLR H41716 
+SQLite shall recognize the 5-character sequenence "LIMIT" in any combination of upper and lower case letters as the keyword token LIMIT.
+
+HLR H41719 
+SQLite shall recognize the 5-character sequenence "MATCH" in any combination of upper and lower case letters as the keyword token MATCH.
+
+HLR H41722 
+SQLite shall recognize the 7-character sequenence "NATURAL" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41725 
+SQLite shall recognize the 3-character sequenence "NOT" in any combination of upper and lower case letters as the keyword token NOT.
+
+HLR H41728 
+SQLite shall recognize the 7-character sequenence "NOTNULL" in any combination of upper and lower case letters as the keyword token NOTNULL.
+
+HLR H41731 
+SQLite shall recognize the 4-character sequenence "NULL" in any combination of upper and lower case letters as the keyword token NULL.
+
+HLR H41734 
+SQLite shall recognize the 2-character sequenence "OF" in any combination of upper and lower case letters as the keyword token OF.
+
+HLR H41737 
+SQLite shall recognize the 6-character sequenence "OFFSET" in any combination of upper and lower case letters as the keyword token OFFSET.
+
+HLR H41740 
+SQLite shall recognize the 2-character sequenence "ON" in any combination of upper and lower case letters as the keyword token ON.
+
+HLR H41743 
+SQLite shall recognize the 2-character sequenence "OR" in any combination of upper and lower case letters as the keyword token OR.
+
+HLR H41746 
+SQLite shall recognize the 5-character sequenence "ORDER" in any combination of upper and lower case letters as the keyword token ORDER.
+
+HLR H41749 
+SQLite shall recognize the 5-character sequenence "OUTER" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41752 
+SQLite shall recognize the 4-character sequenence "PLAN" in any combination of upper and lower case letters as the keyword token PLAN.
+
+HLR H41755 
+SQLite shall recognize the 6-character sequenence "PRAGMA" in any combination of upper and lower case letters as the keyword token PRAGMA.
+
+HLR H41758 
+SQLite shall recognize the 7-character sequenence "PRIMARY" in any combination of upper and lower case letters as the keyword token PRIMARY.
+
+HLR H41761 
+SQLite shall recognize the 5-character sequenence "QUERY" in any combination of upper and lower case letters as the keyword token QUERY.
+
+HLR H41764 
+SQLite shall recognize the 5-character sequenence "RAISE" in any combination of upper and lower case letters as the keyword token RAISE.
+
+HLR H41767 
+SQLite shall recognize the 10-character sequenence "REFERENCES" in any combination of upper and lower case letters as the keyword token REFERENCES.
+
+HLR H41770 
+SQLite shall recognize the 6-character sequenence "REGEXP" in any combination of upper and lower case letters as the keyword token LIKE_KW.
+
+HLR H41773 
+SQLite shall recognize the 7-character sequenence "REINDEX" in any combination of upper and lower case letters as the keyword token REINDEX.
+
+HLR H41776 
+SQLite shall recognize the 6-character sequenence "RENAME" in any combination of upper and lower case letters as the keyword token RENAME.
+
+HLR H41779 
+SQLite shall recognize the 7-character sequenence "REPLACE" in any combination of upper and lower case letters as the keyword token REPLACE.
+
+HLR H41782 
+SQLite shall recognize the 8-character sequenence "RESTRICT" in any combination of upper and lower case letters as the keyword token RESTRICT.
+
+HLR H41785 
+SQLite shall recognize the 5-character sequenence "RIGHT" in any combination of upper and lower case letters as the keyword token JOIN_KW.
+
+HLR H41788 
+SQLite shall recognize the 8-character sequenence "ROLLBACK" in any combination of upper and lower case letters as the keyword token ROLLBACK.
+
+HLR H41791 
+SQLite shall recognize the 3-character sequenence "ROW" in any combination of upper and lower case letters as the keyword token ROW.
+
+HLR H41794 
+SQLite shall recognize the 6-character sequenence "SELECT" in any combination of upper and lower case letters as the keyword token SELECT.
+
+HLR H41797 
+SQLite shall recognize the 3-character sequenence "SET" in any combination of upper and lower case letters as the keyword token SET.
+
+HLR H41800 
+SQLite shall recognize the 5-character sequenence "TABLE" in any combination of upper and lower case letters as the keyword token TABLE.
+
+HLR H41803 
+SQLite shall recognize the 4-character sequenence "TEMP" in any combination of upper and lower case letters as the keyword token TEMP.
+
+HLR H41806 
+SQLite shall recognize the 9-character sequenence "TEMPORARY" in any combination of upper and lower case letters as the keyword token TEMP.
+
+HLR H41809 
+SQLite shall recognize the 4-character sequenence "THEN" in any combination of upper and lower case letters as the keyword token THEN.
+
+HLR H41812 
+SQLite shall recognize the 2-character sequenence "TO" in any combination of upper and lower case letters as the keyword token TO.
+
+HLR H41815 
+SQLite shall recognize the 11-character sequenence "TRANSACTION" in any combination of upper and lower case letters as the keyword token TRANSACTION.
+
+HLR H41818 
+SQLite shall recognize the 7-character sequenence "TRIGGER" in any combination of upper and lower case letters as the keyword token TRIGGER.
+
+HLR H41821 
+SQLite shall recognize the 5-character sequenence "UNION" in any combination of upper and lower case letters as the keyword token UNION.
+
+HLR H41824 
+SQLite shall recognize the 6-character sequenence "UNIQUE" in any combination of upper and lower case letters as the keyword token UNIQUE.
+
+HLR H41827 
+SQLite shall recognize the 6-character sequenence "UPDATE" in any combination of upper and lower case letters as the keyword token UPDATE.
+
+HLR H41830 
+SQLite shall recognize the 5-character sequenence "USING" in any combination of upper and lower case letters as the keyword token USING.
+
+HLR H41833 
+SQLite shall recognize the 6-character sequenence "VACUUM" in any combination of upper and lower case letters as the keyword token VACUUM.
+
+HLR H41836 
+SQLite shall recognize the 6-character sequenence "VALUES" in any combination of upper and lower case letters as the keyword token VALUES.
+
+HLR H41839 
+SQLite shall recognize the 4-character sequenence "VIEW" in any combination of upper and lower case letters as the keyword token VIEW.
+
+HLR H41842 
+SQLite shall recognize the 7-character sequenence "VIRTUAL" in any combination of upper and lower case letters as the keyword token VIRTUAL.
+
+HLR H41845 
+SQLite shall recognize the 4-character sequenence "WHEN" in any combination of upper and lower case letters as the keyword token WHEN.
+
+HLR H41848 
+SQLite shall recognize the 5-character sequenence "WHERE" in any combination of upper and lower case letters as the keyword token WHERE.
+
+HLR H41900
+The preparation of an SQL statement that is not accepted by
+the SQLite parser shall fail with an error.
+
+HLR H41910
+SQLite shall use the built-in NOCASE collating sequence when comparing
+identifiers and datatype names within SQL statements during
+statement preparation.
+
+HLR H41920
+A token received by the parser shall be converted into an ID token
+if the original token value would have resulted in a syntax error,
+a token value of ID will allow the parse to continue,
+and if the original token value was one of:
+ABORT
+AFTER
+ANALYZE
+ASC
+ATTACH
+BEFORE
+BEGIN
+CASCADE
+CAST
+CONFLICT
+CTIME_KW
+DATABASE
+DEFERRED
+DESC
+DETACH
+EACH
+END
+EXCEPT
+EXCLUSIVE
+EXPLAIN
+FAIL
+FOR
+IF
+IGNORE
+IMMEDIATE
+INITIALLY
+INSTEAD
+INTERSECT
+KEY
+LIKE_KW
+MATCH
+OF
+OFFSET
+PLAN
+PRAGMA
+QUERY
+RAISE
+REINDEX
+RENAME
+REPLACE
+RESTRICT
+ROW
+TEMP
+TRIGGER
+UNION
+VACUUM
+VIEW
+VIRTUAL
+
+HLR H41930
+A token received by the parser shall be converted into an ANY token
+if the original token value would have resulted in a syntax error
+and if a token value of ANY will allow the parse to continue.
+
+HLR H42000
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "sql-stmt-list" that conforms to the following syntax:
+<center>[syntax/sql-stmt-list.gif]</center>
+
+HLR H42100
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "sql-stmt" that conforms to the following syntax:
+<center>[syntax/sql-stmt.gif]</center>
+
+HLR H42200
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "alter-table-stmt" that conforms to the following syntax:
+<center>[syntax/alter-table-stmt.gif]</center>
+
+HLR H42300
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "analyze-stmt" that conforms to the following syntax:
+<center>[syntax/analyze-stmt.gif]</center>
+
+HLR H42400
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "attach-stmt" that conforms to the following syntax:
+<center>[syntax/attach-stmt.gif]</center>
+
+HLR H42500
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "begin-stmt" that conforms to the following syntax:
+<center>[syntax/begin-stmt.gif]</center>
+
+HLR H42600
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "commit-stmt" that conforms to the following syntax:
+<center>[syntax/commit-stmt.gif]</center>
+
+HLR H42700
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "rollback-stmt" that conforms to the following syntax:
+<center>[syntax/rollback-stmt.gif]</center>
+
+HLR H42800
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "savepoint-stmt" that conforms to the following syntax:
+<center>[syntax/savepoint-stmt.gif]</center>
+
+HLR H42900
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "release-stmt" that conforms to the following syntax:
+<center>[syntax/release-stmt.gif]</center>
+
+HLR H43000
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "create-index-stmt" that conforms to the following syntax:
+<center>[syntax/create-index-stmt.gif]</center>
+
+HLR H43100
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "indexed-column" that conforms to the following syntax:
+<center>[syntax/indexed-column.gif]</center>
+
+HLR H43200
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "create-table-stmt" that conforms to the following syntax:
+<center>[syntax/create-table-stmt.gif]</center>
+
+HLR H43300
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "column-def" that conforms to the following syntax:
+<center>[syntax/column-def.gif]</center>
+
+HLR H43400
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "type-name" that conforms to the following syntax:
+<center>[syntax/type-name.gif]</center>
+
+HLR H43500
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "column-constraint" that conforms to the following syntax:
+<center>[syntax/column-constraint.gif]</center>
+
+HLR H43600
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "signed-number" that conforms to the following syntax:
+<center>[syntax/signed-number.gif]</center>
+
+HLR H43700
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "table-constraint" that conforms to the following syntax:
+<center>[syntax/table-constraint.gif]</center>
+
+HLR H43800
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "foreign-key-clause" that conforms to the following syntax:
+<center>[syntax/foreign-key-clause.gif]</center>
+
+HLR H43900
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "conflict-clause" that conforms to the following syntax:
+<center>[syntax/conflict-clause.gif]</center>
+
+HLR H44000
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "create-trigger-stmt" that conforms to the following syntax:
+<center>[syntax/create-trigger-stmt.gif]</center>
+
+HLR H44100
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "create-view-stmt" that conforms to the following syntax:
+<center>[syntax/create-view-stmt.gif]</center>
+
+HLR H44200
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "create-virtual-table-stmt" that conforms to the following syntax:
+<center>[syntax/create-virtual-table-stmt.gif]</center>
+
+HLR H44300
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "delete-stmt" that conforms to the following syntax:
+<center>[syntax/delete-stmt.gif]</center>
+
+HLR H44400
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "delete-stmt-limited" that conforms to the following syntax:
+<center>[syntax/delete-stmt-limited.gif]</center>
+
+HLR H44500
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "detach-stmt" that conforms to the following syntax:
+<center>[syntax/detach-stmt.gif]</center>
+
+HLR H44600
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "drop-index-stmt" that conforms to the following syntax:
+<center>[syntax/drop-index-stmt.gif]</center>
+
+HLR H44700
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "drop-table-stmt" that conforms to the following syntax:
+<center>[syntax/drop-table-stmt.gif]</center>
+
+HLR H44800
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "drop-trigger-stmt" that conforms to the following syntax:
+<center>[syntax/drop-trigger-stmt.gif]</center>
+
+HLR H44900
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "drop-view-stmt" that conforms to the following syntax:
+<center>[syntax/drop-view-stmt.gif]</center>
+
+HLR H45000
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "expr" that conforms to the following syntax:
+<center>[syntax/expr.gif]</center>
+
+HLR H45100
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "raise-function" that conforms to the following syntax:
+<center>[syntax/raise-function.gif]</center>
+
+HLR H45200
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "literal-value" that conforms to the following syntax:
+<center>[syntax/literal-value.gif]</center>
+
+HLR H45300
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "insert-stmt" that conforms to the following syntax:
+<center>[syntax/insert-stmt.gif]</center>
+
+HLR H45400
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "pragma-stmt" that conforms to the following syntax:
+<center>[syntax/pragma-stmt.gif]</center>
+
+HLR H45500
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "pragma-value" that conforms to the following syntax:
+<center>[syntax/pragma-value.gif]</center>
+
+HLR H45600
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "reindex-stmt" that conforms to the following syntax:
+<center>[syntax/reindex-stmt.gif]</center>
+
+HLR H45700
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "select-stmt" that conforms to the following syntax:
+<center>[syntax/select-stmt.gif]</center>
+
+HLR H45800
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "select-core" that conforms to the following syntax:
+<center>[syntax/select-core.gif]</center>
+
+HLR H45900
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "result-column" that conforms to the following syntax:
+<center>[syntax/result-column.gif]</center>
+
+HLR H46000
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "join-source" that conforms to the following syntax:
+<center>[syntax/join-source.gif]</center>
+
+HLR H46100
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "single-source" that conforms to the following syntax:
+<center>[syntax/single-source.gif]</center>
+
+HLR H46200
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "join-op" that conforms to the following syntax:
+<center>[syntax/join-op.gif]</center>
+
+HLR H46300
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "join-constraint" that conforms to the following syntax:
+<center>[syntax/join-constraint.gif]</center>
+
+HLR H46400
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "ordering-term" that conforms to the following syntax:
+<center>[syntax/ordering-term.gif]</center>
+
+HLR H46500
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "compound-operator" that conforms to the following syntax:
+<center>[syntax/compound-operator.gif]</center>
+
+HLR H46600
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "update-stmt" that conforms to the following syntax:
+<center>[syntax/update-stmt.gif]</center>
+
+HLR H46700
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "update-stmt-limited" that conforms to the following syntax:
+<center>[syntax/update-stmt-limited.gif]</center>
+HLR H46800
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "qualified-table-name" that conforms to the following syntax:
+<center>[syntax/qualified-table-name.gif]</center>
+
+HLR H46900
+In the absence of semantic or other errors, the SQLite parser shall
+accept a "vacuum-stmt" that conforms to the following syntax:
+<center>[syntax/vacuum-stmt.gif]</center>

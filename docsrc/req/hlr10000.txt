@@ -1,0 +1,1972 @@
+HLR H10011 S60100
+The [SQLITE_VERSION] #define in the sqlite3.h header file shall
+evaluate to a string literal that is the SQLite version
+with which the header file is associated.
+
+HLR H10014 S60100
+The [SQLITE_VERSION_NUMBER] #define shall resolve to an integer
+with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z
+are the major version, minor version, and release number.
+
+HLR H10021 S60100
+The [sqlite3_libversion_number()] interface shall return
+an integer equal to [SQLITE_VERSION_NUMBER].
+
+HLR H10022 S60100
+The [sqlite3_version] string constant shall contain
+the text of the [SQLITE_VERSION] string.
+
+HLR H10023 S60100
+The [sqlite3_libversion()] function shall return
+a pointer to the [sqlite3_version] string constant.
+
+HLR H10101 S60100
+The [sqlite3_threadsafe()] function shall return zero if
+and only if SQLite was compiled with mutexing code omitted.
+
+HLR H10102 S60100
+The value returned by [sqlite3_threadsafe()] shall remain the same
+across calls to [sqlite3_config()].
+
+HLR H10201 S10110
+The [sqlite_int64] and [sqlite3_int64] types shall specify
+a 64-bit signed integer.
+
+HLR H10202 S10110
+The [sqlite_uint64] and [sqlite3_uint64] types shall specify
+a 64-bit unsigned integer.
+
+
+HLR H10331 S30900
+A successful invocation of [sqlite3_enable_shared_cache(B)]
+will enable or disable shared cache mode for subsequently
+created [database connection] in the same process.
+
+HLR H10336 S30900
+When shared cache is enabled, the [sqlite3_create_module()]
+interface will always return an error.
+
+HLR H10337 S30900
+The [sqlite3_enable_shared_cache(B)] interface returns
+[SQLITE_OK] if shared cache was enabled or disabled successfully.
+
+HLR H10339 S30900
+Shared cache is disabled by default.
+
+HLR H10511 S70200
+A successful evaluation of [sqlite3_complete()] or
+[sqlite3_complete16()] functions shall
+return a numeric 1 if and only if the input string contains
+one or more non-whitespace tokens and the last non-whitespace
+token in is a semicolon that is not in the middle of
+a [CREATE TRIGGER] statement.
+
+HLR H10512 S70200
+If a memory allocation error occurs during an invocation
+of [sqlite3_complete()] or [sqlite3_complete16()] then the
+routine shall return [SQLITE_NOMEM].
+
+HLR H10533 S40410
+The [sqlite3_sleep(M)] interface invokes the xSleep
+method of the default [sqlite3_vfs|VFS] in order to
+suspend execution of the current thread for at least
+M milliseconds.
+
+HLR H10536 S40410
+The [sqlite3_sleep(M)] interface returns the number of
+milliseconds of sleep actually requested of the operating
+system, which might be larger than the parameter M.
+
+HLR H11203 S20100
+The [sqlite3_vfs_find(N)] interface returns a pointer to the
+registered [sqlite3_vfs] object whose name exactly matches
+the zero-terminated UTF-8 string N, or it returns NULL if
+there is no match.
+
+HLR H11206 S20100
+If the N parameter to [sqlite3_vfs_find(N)] is NULL then
+the function returns a pointer to the default [sqlite3_vfs]
+object if there is one, or NULL if there is no default
+[sqlite3_vfs] object.
+
+HLR H11209 S20100
+The [sqlite3_vfs_register(P,F)] interface registers the
+well-formed [sqlite3_vfs] object P using the name given
+by the zName field of the object P.
+
+HLR H11212 S20100
+Using the [sqlite3_vfs_register(P,F)] interface to register
+the same [sqlite3_vfs] object multiple times is a harmless no-op.
+
+HLR H11215 S20100
+The [sqlite3_vfs_register(P,F)] interface makes the [sqlite3_vfs]
+object P the default [sqlite3_vfs] object if F is non-zero.
+
+HLR H11218 S20100
+The [sqlite3_vfs_unregister(P)] interface unregisters the
+[sqlite3_vfs] object P so that it is no longer returned by
+subsequent calls to [sqlite3_vfs_find()].
+
+HLR H11302 S70300
+The [sqlite3_finalize(S)] interface destroys the
+[prepared statement] S and releases all
+memory and file resources held by that object.
+
+HLR H11304 S70300
+If the most recent call to [sqlite3_step(S)] for the
+[prepared statement] S returned an error,
+then [sqlite3_finalize(S)] returns that same error.
+
+HLR H12011 S30100
+A successful call to [sqlite3_close(C)] shall destroy the
+[database connection] object C.
+
+HLR H12012 S30100
+A successful call to [sqlite3_close(C)] shall return SQLITE_OK.
+
+HLR H12013 S30100
+A successful call to [sqlite3_close(C)] shall release all
+memory and system resources associated with [database connection] C.
+
+HLR H12014 S30100
+A call to [sqlite3_close(C)] on a [database connection] C that
+has one or more open [prepared statements] shall fail with
+an [SQLITE_BUSY] error code.
+
+HLR H12015 S30100
+A call to [sqlite3_close(C)] where C is a NULL pointer shall
+be a harmless no-op returning SQLITE_OK.
+
+HLR H12019 S30100
+When [sqlite3_close(C)] is invoked on a [database connection] C
+that has a pending transaction, the transaction shall be
+rolled back.
+
+HLR H12101 S10000
+A successful invocation of [sqlite3_exec(D,S,C,A,E)]
+shall sequentially evaluate all of the UTF-8 encoded,
+semicolon-separated SQL statements in the zero-terminated
+string S within the context of the [database connection] D.
+
+HLR H12102 S10000
+If the S parameter to [sqlite3_exec(D,S,C,A,E)] is NULL then
+the actions of the interface shall be the same as if the
+S parameter were an empty string.
+
+HLR H12104 S10000
+The return value of [sqlite3_exec()] shall be [SQLITE_OK] if all
+SQL statements run successfully and to completion.
+
+HLR H12105 S10000
+The return value of [sqlite3_exec()] shall be an appropriate
+non-zero [error code] if any SQL statement fails.
+
+HLR H12107 S10000
+If one or more of the SQL statements handed to [sqlite3_exec()]
+return results and the 3rd parameter is not NULL, then
+the callback function specified by the 3rd parameter shall be
+invoked once for each row of result.
+
+HLR H12110 S10000
+If the callback returns a non-zero value then [sqlite3_exec()]
+shall abort the SQL statement it is currently evaluating,
+skip all subsequent SQL statements, and return [SQLITE_ABORT].
+
+HLR H12113 S10000
+The [sqlite3_exec()] routine shall pass its 4th parameter through
+as the 1st parameter of the callback.
+
+HLR H12116 S10000
+The [sqlite3_exec()] routine shall set the 2nd parameter of its
+callback to be the number of columns in the current row of
+result.
+
+HLR H12119 S10000
+The [sqlite3_exec()] routine shall set the 3rd parameter of its
+callback to be an array of pointers to strings holding the
+values for each column in the current result set row as
+obtained from [sqlite3_column_text()].
+
+HLR H12122 S10000
+The [sqlite3_exec()] routine shall set the 4th parameter of its
+callback to be an array of pointers to strings holding the
+names of result columns as obtained from [sqlite3_column_name()].
+
+HLR H12125 S10000
+If the 3rd parameter to [sqlite3_exec()] is NULL then
+[sqlite3_exec()] shall silently discard query results.
+
+HLR H12131 S10000
+If an error occurs while parsing or evaluating any of the SQL
+statements in the S parameter of [sqlite3_exec(D,S,C,A,E)] and if
+the E parameter is not NULL, then [sqlite3_exec()] shall store
+in *E an appropriate error message written into memory obtained
+from [sqlite3_malloc()].
+
+HLR H12134 S10000
+The [sqlite3_exec(D,S,C,A,E)] routine shall set the value of
+*E to NULL if E is not NULL and there are no errors.
+
+HLR H12137 S10000
+The [sqlite3_exec(D,S,C,A,E)] function shall set the [error code]
+and message accessible via [sqlite3_errcode()],
+[sqlite3_extended_errcode()],
+[sqlite3_errmsg()], and [sqlite3_errmsg16()].
+
+HLR H12138 S10000
+If the S parameter to [sqlite3_exec(D,S,C,A,E)] is NULL or an
+empty string or contains nothing other than whitespace, comments,
+and/or semicolons, then results of [sqlite3_errcode()],
+[sqlite3_extended_errcode()],
+[sqlite3_errmsg()], and [sqlite3_errmsg16()]
+shall reset to indicate no errors.
+
+HLR H12201 S10700
+Each new [database connection] shall have the
+[extended result codes] feature disabled by default.
+
+HLR H12202 S10700
+The [sqlite3_extended_result_codes(D,F)] interface shall enable
+[extended result codes] for the  [database connection] D
+if the F parameter is true, or disable them if F is false.
+
+HLR H12221 S10700
+The [sqlite3_last_insert_rowid()] function shall return the rowid
+of the most recent successful [INSERT] performed on the same
+[database connection] and within the same or higher level
+trigger context, or zero if there have been no qualifying
+[INSERT] statements.
+
+HLR H12223 S10700
+The [sqlite3_last_insert_rowid()] function shall return the
+same value when called from the same trigger context
+immediately before and after a [ROLLBACK].
+
+HLR H12241 S10600
+The [sqlite3_changes()] function shall return the number of
+row changes caused by the most recent INSERT, UPDATE,
+or DELETE statement on the same database connection and
+within the same or higher trigger context, or zero if there have
+not been any qualifying row changes.
+
+HLR H12243 S10600
+Statements of the form "DELETE FROM tablename" with no
+WHERE clause shall cause subsequent calls to
+[sqlite3_changes()] to return zero, regardless of the
+number of rows originally in the table.
+
+HLR H12261 S10600
+The [sqlite3_total_changes()] returns the total number
+of row changes caused by INSERT, UPDATE, and/or DELETE
+statements on the same [database connection], in any
+trigger context, since the database connection was created.
+
+HLR H12263 S10600
+Statements of the form "DELETE FROM tablename" with no
+WHERE clause shall not change the value returned
+by [sqlite3_total_changes()].
+
+HLR H12271 S30500
+The [sqlite3_interrupt()] interface will force all running
+SQL statements associated with the same database connection
+to halt after processing at most one additional row of data.
+
+HLR H12272 S30500
+Any SQL statement that is interrupted by [sqlite3_interrupt()]
+will return [SQLITE_INTERRUPT].
+
+HLR H12281 S60400
+The callback function registered by [sqlite3_trace()]
+shall be invoked
+whenever an SQL statement first begins to execute and
+whenever a trigger subprogram first begins to run.
+
+HLR H12282 S60400
+Each call to [sqlite3_trace()] shall override the previously
+registered trace callback.
+
+HLR H12283 S60400
+A NULL trace callback shall disable tracing.
+
+HLR H12284 S60400
+The first argument to the trace callback shall be a copy of
+the pointer which was the 3rd argument to [sqlite3_trace()].
+
+HLR H12285 S60400
+The second argument to the trace callback is a
+zero-terminated UTF-8 string containing the original text
+of the SQL statement as it was passed into [sqlite3_prepare_v2()]
+or the equivalent, or an SQL comment indicating the beginning
+of a trigger subprogram.
+
+HLR H12287 S60400
+The callback function registered by [sqlite3_profile()] is invoked
+as each SQL statement finishes.
+
+HLR H12288 S60400
+The first parameter to the profile callback is a copy of
+the 3rd parameter to [sqlite3_profile()].
+
+HLR H12289 S60400
+The second parameter to the profile callback is a
+zero-terminated UTF-8 string that contains the complete text of
+the SQL statement as it was processed by [sqlite3_prepare_v2()]
+or the equivalent.
+
+HLR H12290 S60400
+The third parameter to the profile callback is an estimate
+of the number of nanoseconds of wall-clock time required to
+run the SQL statement from start to finish.
+
+HLR H12311 S40400
+The [sqlite3_busy_handler(D,C,A)] function shall replace
+busy callback in the [database connection] D with a new
+a new busy handler C and application data pointer A.
+
+HLR H12312 S40400
+Newly created [database connections] shall have a busy
+handler of NULL.
+
+HLR H12314 S40400
+When two or more [database connections] share a
+[sqlite3_enable_shared_cache | common cache],
+the busy handler for the database connection currently using
+the cache shall be invoked when the cache encounters a lock.
+
+HLR H12316 S40400
+If a busy handler callback returns zero, then the SQLite interface
+that provoked the locking event shall return [SQLITE_BUSY].
+
+HLR H12318 S40400
+SQLite shall invokes the busy handler with two arguments which
+are a copy of the pointer supplied by the 3rd parameter to
+[sqlite3_busy_handler()] and a count of the number of prior
+invocations of the busy handler for the same locking event.
+
+HLR H12341 S40410
+The [sqlite3_busy_timeout()] function shall override any prior
+[sqlite3_busy_timeout()] or [sqlite3_busy_handler()] setting
+on the same [database connection].
+
+HLR H12343 S40410
+If the 2nd parameter to [sqlite3_busy_timeout()] is less than
+or equal to zero, then the busy handler shall be cleared so that
+all subsequent locking events immediately return [SQLITE_BUSY].
+
+HLR H12344 S40410
+If the 2nd parameter to [sqlite3_busy_timeout()] is a positive
+number N, then a busy handler shall be set that repeatedly calls
+the xSleep() method in the [sqlite3_vfs | VFS interface] until
+either the lock clears or until the cumulative sleep time
+reported back by xSleep() exceeds N milliseconds.
+
+HLR H12371 S10000
+If a [sqlite3_get_table()] fails a memory allocation, then
+it shall free the result table under construction, abort the
+query in process, skip any subsequent queries, set the
+*pazResult output pointer to NULL and return [SQLITE_NOMEM].
+
+HLR H12373 S10000
+If the pnColumn parameter to [sqlite3_get_table()] is not NULL
+then a successful invocation of [sqlite3_get_table()] shall
+write the number of columns in the
+result set of the query into *pnColumn.
+
+HLR H12374 S10000
+If the pnRow parameter to [sqlite3_get_table()] is not NULL
+then a successful invocation of [sqlite3_get_table()] shall
+writes the number of rows in the
+result set of the query into *pnRow.
+
+HLR H12376 S10000
+A successful invocation of [sqlite3_get_table()] that computes
+N rows of result with C columns per row shall make *pazResult
+point to an array of pointers to (N+1)*C strings where the first
+C strings are column names as obtained from
+[sqlite3_column_name()] and the rest are column result values
+obtained from [sqlite3_column_text()].
+
+HLR H12379 S10000
+The values in the pazResult array returned by [sqlite3_get_table()]
+shall remain valid until cleared by [sqlite3_free_table()].
+
+HLR H12382 S10000
+When an error other than SQLITE_NOMEM occurs during evaluation 
+of [sqlite3_get_table()] the function shall set *pazResult to NULL,
+write an error message into memory obtained from [sqlite3_malloc()], make
+**pzErrmsg point to that error message, and return a
+appropriate [error code].
+
+HLR H12501 S70100
+The [sqlite3_set_authorizer(D,...)] interface registers a
+authorizer callback with database connection D.
+
+HLR H12502 S70100
+The authorizer callback is invoked as SQL statements are
+being parseed and compiled.
+
+HLR H12503 S70100
+If the authorizer callback returns any value other than
+[SQLITE_IGNORE], [SQLITE_OK], or [SQLITE_DENY], then
+the application interface call that caused
+the authorizer callback to run shall fail with an
+[SQLITE_ERROR] error code and an appropriate error message.
+
+HLR H12504 S70100
+When the authorizer callback returns [SQLITE_OK], the operation
+described is processed normally.
+
+HLR H12505 S70100
+When the authorizer callback returns [SQLITE_DENY], the
+application interface call that caused the
+authorizer callback to run shall fail
+with an [SQLITE_ERROR] error code and an error message
+explaining that access is denied.
+
+HLR H12506 S70100
+If the authorizer code (the 2nd parameter to the authorizer
+callback) is [SQLITE_READ] and the authorizer callback returns
+[SQLITE_IGNORE], then the prepared statement is constructed to
+insert a NULL value in place of the table column that would have
+been read if [SQLITE_OK] had been returned.
+
+HLR H12507 S70100
+If the authorizer code (the 2nd parameter to the authorizer
+callback) is anything other than [SQLITE_READ], then
+a return of [SQLITE_IGNORE] has the same effect as [SQLITE_DENY].
+
+HLR H12510 S70100
+The first parameter to the authorizer callback is a copy of
+the third parameter to the [sqlite3_set_authorizer()] interface.
+
+HLR H12511 S70100
+The second parameter to the callback is an integer
+[SQLITE_COPY | action code] that specifies the particular action
+to be authorized.
+
+HLR H12512 S70100
+The third through sixth parameters to the callback are
+zero-terminated strings that contain
+additional details about the action to be authorized.
+
+HLR H12520 S70100
+Each call to [sqlite3_set_authorizer()] overrides
+any previously installed authorizer.
+
+HLR H12521 S70100
+A NULL authorizer means that no authorization
+callback is invoked.
+
+HLR H12522 S70100
+The default authorizer is NULL.
+
+HLR H12551 H12500
+The second parameter to an
+[sqlite3_set_authorizer | authorizer callback] shall be an integer
+[SQLITE_COPY | authorizer code] that specifies what action
+is being authorized.
+
+HLR H12552 H12500
+The 3rd and 4th parameters to the
+[sqlite3_set_authorizer | authorization callback]
+shall be parameters or NULL depending on which
+[SQLITE_COPY | authorizer code] is used as the second parameter.
+
+HLR H12553 H12500
+The 5th parameter to the
+[sqlite3_set_authorizer | authorizer callback] shall be the name
+of the database (example: "main", "temp", etc.) if applicable.
+
+HLR H12554 H12500
+The 6th parameter to the
+[sqlite3_set_authorizer | authorizer callback] shall be the name
+of the inner-most trigger or view that is responsible for
+the access attempt or NULL if this access attempt is directly from
+top-level SQL code.
+
+HLR H12701 S40200
+The [sqlite3_open()], [sqlite3_open16()], and
+[sqlite3_open_v2()] interfaces create a new
+[database connection] associated with
+the database file given in their first parameter.
+
+HLR H12702 S40200
+The filename argument is interpreted as UTF-8
+for [sqlite3_open()] and [sqlite3_open_v2()] and as UTF-16
+in the native byte order for [sqlite3_open16()].
+
+HLR H12703 S40200
+A successful invocation of [sqlite3_open()], [sqlite3_open16()],
+or [sqlite3_open_v2()] writes a pointer to a new
+[database connection] into *ppDb.
+
+HLR H12704 S40200
+The [sqlite3_open()], [sqlite3_open16()], and
+[sqlite3_open_v2()] interfaces return [SQLITE_OK] upon success,
+or an appropriate [error code] on failure.
+
+HLR H12706 S40200
+The default text encoding for a new database created using
+[sqlite3_open()] or [sqlite3_open_v2()] will be UTF-8.
+
+HLR H12707 S40200
+The default text encoding for a new database created using
+[sqlite3_open16()] will be UTF-16.
+
+HLR H12709 S40200
+The [sqlite3_open(F,D)] interface is equivalent to
+[sqlite3_open_v2(F,D,G,0)] where the G parameter is
+[SQLITE_OPEN_READWRITE]|[SQLITE_OPEN_CREATE].
+
+HLR H12711 S40200
+If the G parameter to [sqlite3_open_v2(F,D,G,V)] contains the
+bit value [SQLITE_OPEN_READONLY] then the database is opened
+for reading only.
+
+HLR H12712 S40200
+If the G parameter to [sqlite3_open_v2(F,D,G,V)] contains the
+bit value [SQLITE_OPEN_READWRITE] then the database is opened
+reading and writing if possible, or for reading only if the
+file is write protected by the operating system.
+
+HLR H12713 S40200
+If the G parameter to [sqlite3_open_v2(F,D,G,V)] omits the
+bit value [SQLITE_OPEN_CREATE] and the database does not
+previously exist, an error is returned.
+
+HLR H12714 S40200
+If the G parameter to [sqlite3_open_v2(F,D,G,V)] contains the
+bit value [SQLITE_OPEN_CREATE] and the database does not
+previously exist, then an attempt is made to create and
+initialize the database.
+
+HLR H12717 S40200
+If the filename argument to [sqlite3_open()], [sqlite3_open16()],
+or [sqlite3_open_v2()] is ":memory:", then an private,
+ephemeral, in-memory database is created for the connection.
+<todo>Is SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE required
+in sqlite3_open_v2()?</todo>
+
+HLR H12719 S40200
+If the filename is NULL or an empty string, then a private,
+ephemeral on-disk database will be created.
+<todo>Is SQLITE_OPEN_CREATE|SQLITE_OPEN_READWRITE required
+in sqlite3_open_v2()?</todo>
+
+HLR H12721 S40200
+The [database connection] created by [sqlite3_open_v2(F,D,G,V)]
+will use the [sqlite3_vfs] object identified by the V parameter,
+or the default [sqlite3_vfs] object if V is a NULL pointer.
+
+HLR H12723 S40200
+Two [database connections] will share a common cache if both were
+opened with the same VFS while [shared cache mode] was enabled and
+if both filenames compare equal using memcmp() after having been
+processed by the [sqlite3_vfs | xFullPathname] method of the VFS.
+
+HLR H12762 S20600
+A successful call to [sqlite3_limit(D,C,V)] where V is
+positive changes the limit on the size of construct C in the
+[database connection] D to the lesser of V and the hard upper
+bound on the size of C that is set at compile-time.
+
+HLR H12766 S20600
+A successful call to [sqlite3_limit(D,C,V)] where V is negative
+leaves the state of the [database connection] D unchanged.
+
+HLR H12769 S20600
+A successful call to [sqlite3_limit(D,C,V)] returns the
+value of the limit on the size of construct C in the
+[database connection] D as it was prior to the call.
+
+HLR H12801 S60200
+The [sqlite3_errcode(D)] interface returns the numeric
+[result code] or [extended result code] for the most recently
+failed interface call associated with the [database connection] D.
+
+HLR H12802 S60200
+The [sqlite3_extended_errcode(D)] interface returns the numeric
+[extended result code] for the most recently
+failed interface call associated with the [database connection] D.
+
+HLR H12803 S60200
+The [sqlite3_errmsg(D)] and [sqlite3_errmsg16(D)]
+interfaces return English-language text that describes
+the error in the mostly recently failed interface call,
+encoded as either UTF-8 or UTF-16 respectively.
+
+HLR H12807 S60200
+The strings returned by [sqlite3_errmsg()] and [sqlite3_errmsg16()]
+are valid until the next SQLite interface call.
+
+HLR H12808 S60200
+Calls to API routines that do not return an error code
+(example: [sqlite3_data_count()]) do not
+change the error code or message returned by
+[sqlite3_errcode()], [sqlite3_extended_errcode()],
+[sqlite3_errmsg()], or [sqlite3_errmsg16()].
+
+HLR H12809 S60200
+Interfaces that are not associated with a specific
+[database connection] (examples:
+[sqlite3_mprintf()] or [sqlite3_enable_shared_cache()]
+do not change the values returned by
+[sqlite3_errcode()], [sqlite3_extended_errcode()],
+[sqlite3_errmsg()], or [sqlite3_errmsg16()].
+
+HLR H12911 S60400
+The callback function registered by sqlite3_progress_handler()
+is invoked periodically during long running calls to
+[sqlite3_step()].
+
+HLR H12912 S60400
+The progress callback is invoked once for every N virtual
+machine opcodes, where N is the second argument to
+the [sqlite3_progress_handler()] call that registered
+the callback.  If N is less than 1, sqlite3_progress_handler()
+acts as if a NULL progress handler had been specified.
+
+HLR H12913 S60400
+The progress callback itself is identified by the third
+argument to sqlite3_progress_handler().
+
+HLR H12914 S60400
+The fourth argument to sqlite3_progress_handler() is a
+void pointer passed to the progress callback
+function each time it is invoked.
+
+HLR H12915 S60400
+If a call to [sqlite3_step()] results in fewer than N opcodes
+being executed, then the progress callback is never invoked.
+
+HLR H12916 S60400
+Every call to [sqlite3_progress_handler()]
+overwrites any previously registered progress handler.
+
+HLR H12917 S60400
+If the progress handler callback is NULL then no progress
+handler is invoked.
+
+HLR H12918 S30500 S60400
+If the progress callback returns a result other than 0, then
+the behavior is a if [sqlite3_interrupt()] had been called.
+
+HLR H12931 S60200
+The [sqlite3_get_autocommit(D)] interface returns non-zero or
+zero if the [database connection] D is or is not in autocommit
+mode, respectively.
+
+HLR H12932 S60200
+Autocommit mode is on by default.
+
+HLR H12933 S60200
+Autocommit mode is disabled by a successful [BEGIN] statement.
+
+HLR H12934 S60200
+Autocommit mode is enabled by a successful [COMMIT] or [ROLLBACK]
+statement.
+
+HLR H12951 S60400
+The [sqlite3_commit_hook(D,F,P)] interface registers the
+callback function F to be invoked with argument P whenever
+a transaction commits on the [database connection] D.
+
+HLR H12952 S60400
+The [sqlite3_commit_hook(D,F,P)] interface returns the P argument
+from the previous call with the same [database connection] D,
+or NULL on the first call for a particular database connection D.
+
+HLR H12953 S60400
+Each call to [sqlite3_commit_hook()] overwrites the callback
+registered by prior calls.
+
+HLR H12954 S60400
+If the F argument to [sqlite3_commit_hook(D,F,P)] is NULL
+then the commit hook callback is canceled and no callback
+is invoked when a transaction commits.
+
+HLR H12955 S60400
+If the commit callback returns non-zero then the commit is
+converted into a rollback.
+
+HLR H12961 S60400
+The [sqlite3_rollback_hook(D,F,P)] interface registers the
+callback function F to be invoked with argument P whenever
+a transaction rolls back on the [database connection] D.
+
+HLR H12962 S60400
+The [sqlite3_rollback_hook(D,F,P)] interface returns the P
+argument from the previous call with the same
+[database connection] D, or NULL on the first call
+for a particular database connection D.
+
+HLR H12963 S60400
+Each call to [sqlite3_rollback_hook()] overwrites the callback
+registered by prior calls.
+
+HLR H12964 S60400
+If the F argument to [sqlite3_rollback_hook(D,F,P)] is NULL
+then the rollback hook callback is canceled and no callback
+is invoked when a transaction rolls back.
+
+HLR H12971 S60400
+The [sqlite3_update_hook(D,F,P)] interface causes the callback
+function F to be invoked with first parameter P whenever
+a table row is modified, inserted, or deleted on
+the [database connection] D.
+
+HLR H12973 S60400
+The [sqlite3_update_hook(D,F,P)] interface returns the value
+of P for the previous call on the same [database connection] D,
+or NULL for the first call.
+
+HLR H12975 S60400
+If the update hook callback F in [sqlite3_update_hook(D,F,P)]
+is NULL then the no update callbacks are made.
+
+HLR H12977 S60400
+Each call to [sqlite3_update_hook(D,F,P)] overrides prior calls
+to the same interface on the same [database connection] D.
+
+HLR H12979 S60400
+The update hook callback is not invoked when internal system
+tables such as sqlite_master and sqlite_sequence are modified.
+
+HLR H12981 S60400
+The second parameter to the update callback
+is one of [SQLITE_INSERT], [SQLITE_DELETE] or [SQLITE_UPDATE],
+depending on the operation that caused the callback to be invoked.
+
+HLR H12983 S60400
+The third and fourth arguments to the callback contain pointers
+to zero-terminated UTF-8 strings which are the names of the
+database and table that is being updated.
+
+HLR H12986 S60400
+The final callback parameter is the rowid of the row after
+the change occurs.
+
+HLR H13011 S10000
+The [sqlite3_prepare(db,zSql,...)] and
+[sqlite3_prepare_v2(db,zSql,...)] interfaces interpret the
+text in their zSql parameter as UTF-8.
+
+HLR H13012 S10000
+The [sqlite3_prepare16(db,zSql,...)] and
+[sqlite3_prepare16_v2(db,zSql,...)] interfaces interpret the
+text in their zSql parameter as UTF-16 in the native byte order.
+
+HLR H13013 S10000
+If the nByte argument to [sqlite3_prepare_v2(db,zSql,nByte,...)]
+and its variants is less than zero, the SQL text is
+read from zSql is read up to the first zero terminator.
+
+HLR H13014 S10000
+If the nByte argument to [sqlite3_prepare_v2(db,zSql,nByte,...)]
+and its variants is non-negative, then at most nBytes bytes of
+SQL text is read from zSql.
+
+HLR H13015 S10000
+In [sqlite3_prepare_v2(db,zSql,N,P,pzTail)] and its variants
+if the zSql input text contains more than one SQL statement
+and pzTail is not NULL, then *pzTail is made to point to the
+first byte past the end of the first SQL statement in zSql.
+<todo>What does *pzTail point to if there is one statement?</todo>
+
+HLR H13016 S10000
+A successful call to [sqlite3_prepare_v2(db,zSql,N,ppStmt,...)]
+or one of its variants writes into *ppStmt a pointer to a new
+[prepared statement] or a pointer to NULL if zSql contains
+nothing other than whitespace or comments.
+
+HLR H13019 S10000
+The [sqlite3_prepare_v2()] interface and its variants return
+[SQLITE_OK] or an appropriate [error code] upon failure.
+
+HLR H13021 S10000
+Before [sqlite3_prepare(db,zSql,nByte,ppStmt,pzTail)] or its
+variants returns an error (any value other than [SQLITE_OK]),
+they first set *ppStmt to NULL.
+
+HLR H13101 H13000
+If the [prepared statement] passed as the argument to
+[sqlite3_sql()] was compiled using either [sqlite3_prepare_v2()] or
+[sqlite3_prepare16_v2()], then [sqlite3_sql()] returns
+a pointer to a zero-terminated string containing a UTF-8 rendering
+of the original SQL statement.
+
+HLR H13102 H13000
+If the [prepared statement] passed as the argument to
+[sqlite3_sql()] was compiled using either [sqlite3_prepare()] or
+[sqlite3_prepare16()], then [sqlite3_sql()] returns a NULL pointer.
+
+HLR H13103 H13000
+The string returned by [sqlite3_sql(S)] is valid until the
+[prepared statement] S is deleted using [sqlite3_finalize(S)].
+
+HLR H13123 S60600
+The [sqlite3_db_handle(S)] interface returns a pointer
+to the [database connection] associated with the
+[prepared statement] S.
+
+HLR H13143 S60600
+If D is a [database connection] that holds one or more
+unfinalized [prepared statements] and S is a NULL pointer,
+then [sqlite3_next_stmt(D, S)] routine shall return a pointer
+to one of the prepared statements associated with D.
+
+HLR H13146 S60600
+If D is a [database connection] that holds no unfinalized
+[prepared statements] and S is a NULL pointer, then
+[sqlite3_next_stmt(D, S)] routine shall return a NULL pointer.
+
+HLR H13149 S60600
+If S is a [prepared statement] in the [database connection] D
+and S is not the last prepared statement in D, then
+[sqlite3_next_stmt(D, S)] routine shall return a pointer
+to the next prepared statement in D after S.
+
+HLR H13152 S60600
+If S is the last [prepared statement] in the
+[database connection] D then the [sqlite3_next_stmt(D, S)]
+routine shall return a NULL pointer.
+
+HLR H13202 S10000
+If the [prepared statement] S is ready to be run, then
+[sqlite3_step(S)] advances that prepared statement until
+completion or until it is ready to return another row of the
+result set, or until an [sqlite3_interrupt | interrupt]
+or a run-time error occurs.
+
+HLR H13506 S70300
+The [SQL statement compiler] recognizes tokens of the forms
+"?", "?NNN", "$VVV", ":VVV", and "@VVV" as SQL parameters,
+where NNN is any sequence of one or more digits
+and where VVV is any sequence of one or more alphanumeric
+characters or "::" optionally followed by a string containing
+no spaces and contained within parentheses.
+
+HLR H13509 S70300
+The initial value of an SQL parameter is NULL.
+
+HLR H13512 S70300
+The index of an "?" SQL parameter is one larger than the
+largest index of SQL parameter to the left, or 1 if
+the "?" is the leftmost SQL parameter.
+
+HLR H13515 S70300
+The index of an "?NNN" SQL parameter is the integer NNN.
+
+HLR H13518 S70300
+The index of an ":VVV", "$VVV", or "@VVV" SQL parameter is
+the same as the index of leftmost occurrences of the same
+parameter, or one more than the largest index over all
+parameters to the left if this is the first occurrence
+of this parameter, or 1 if this is the leftmost parameter.
+
+HLR H13521 S70300
+The [SQL statement compiler] fails with an [SQLITE_RANGE]
+error if the index of an SQL parameter is less than 1
+or greater than the compile-time SQLITE_MAX_VARIABLE_NUMBER
+parameter.
+
+HLR H13524 S70300
+Calls to [sqlite3_bind_text | sqlite3_bind(S,N,V,...)]
+associate the value V with all SQL parameters having an
+index of N in the [prepared statement] S.
+
+HLR H13527 S70300
+Calls to [sqlite3_bind_text | sqlite3_bind(S,N,...)]
+override prior calls with the same values of S and N.
+
+HLR H13530 S70300
+Bindings established by [sqlite3_bind_text | sqlite3_bind(S,...)]
+persist across calls to [sqlite3_reset(S)].
+
+HLR H13533 S70300
+In calls to [sqlite3_bind_blob(S,N,V,L,D)],
+[sqlite3_bind_text(S,N,V,L,D)], or
+[sqlite3_bind_text16(S,N,V,L,D)] SQLite binds the first L
+bytes of the BLOB or string pointed to by V, when L
+is non-negative.
+
+HLR H13536 S70300
+In calls to [sqlite3_bind_text(S,N,V,L,D)] or
+[sqlite3_bind_text16(S,N,V,L,D)] SQLite binds characters
+from V through the first zero character when L is negative.
+
+HLR H13539 S70300
+In calls to [sqlite3_bind_blob(S,N,V,L,D)],
+[sqlite3_bind_text(S,N,V,L,D)], or
+[sqlite3_bind_text16(S,N,V,L,D)] when D is the special
+constant [SQLITE_STATIC], SQLite assumes that the value V
+is held in static unmanaged space that will not change
+during the lifetime of the binding.
+
+HLR H13542 S70300
+In calls to [sqlite3_bind_blob(S,N,V,L,D)],
+[sqlite3_bind_text(S,N,V,L,D)], or
+[sqlite3_bind_text16(S,N,V,L,D)] when D is the special
+constant [SQLITE_TRANSIENT], the routine makes a
+private copy of the value V before it returns.
+
+HLR H13545 S70300
+In calls to [sqlite3_bind_blob(S,N,V,L,D)],
+[sqlite3_bind_text(S,N,V,L,D)], or
+[sqlite3_bind_text16(S,N,V,L,D)] when D is a pointer to
+a function, SQLite invokes that function to destroy the
+value V after it has finished using the value V.
+
+HLR H13548 S70300
+In calls to [sqlite3_bind_zeroblob(S,N,V,L)] the value bound
+is a BLOB of L bytes, or a zero-length BLOB if L is negative.
+
+HLR H13551 S70300
+In calls to [sqlite3_bind_value(S,N,V)] the V argument may
+be either a [protected sqlite3_value] object or an
+[unprotected sqlite3_value] object.
+
+HLR H13601 S70300
+The [sqlite3_bind_parameter_count(S)] interface returns
+the largest index of all SQL parameters in the
+[prepared statement] S, or 0 if S contains no SQL parameters.
+
+HLR H13621 S70300
+The [sqlite3_bind_parameter_name(S,N)] interface returns
+a UTF-8 rendering of the name of the SQL parameter in
+the [prepared statement] S having index N, or
+NULL if there is no SQL parameter with index N or if the
+parameter with index N is an anonymous parameter "?".
+
+HLR H13641 S70300
+The [sqlite3_bind_parameter_index(S,N)] interface returns
+the index of SQL parameter in the [prepared statement]
+S whose name matches the UTF-8 string N, or 0 if there is
+no match.
+
+HLR H13661 S70300
+The [sqlite3_clear_bindings(S)] interface resets all SQL
+parameter bindings in the [prepared statement] S back to NULL.
+
+HLR H13711 S10700
+The [sqlite3_column_count(S)] interface returns the number of
+columns in the result set generated by the [prepared statement] S,
+or 0 if S does not generate a result set.
+
+HLR H13721 S10700
+A successful invocation of the [sqlite3_column_name(S,N)]
+interface returns the name of the Nth column (where 0 is
+the leftmost column) for the result set of the
+[prepared statement] S as a zero-terminated UTF-8 string.
+
+HLR H13723 S10700
+A successful invocation of the [sqlite3_column_name16(S,N)]
+interface returns the name of the Nth column (where 0 is
+the leftmost column) for the result set of the
+[prepared statement] S as a zero-terminated UTF-16 string
+in the native byte order.
+
+HLR H13724 S10700
+The [sqlite3_column_name()] and [sqlite3_column_name16()]
+interfaces return a NULL pointer if they are unable to
+allocate memory to hold their normal return strings.
+
+HLR H13725 S10700
+If the N parameter to [sqlite3_column_name(S,N)] or
+[sqlite3_column_name16(S,N)] is out of range, then the
+interfaces return a NULL pointer.
+
+HLR H13726 S10700
+The strings returned by [sqlite3_column_name(S,N)] and
+[sqlite3_column_name16(S,N)] are valid until the next
+call to either routine with the same S and N parameters
+or until [sqlite3_finalize(S)] is called.
+
+HLR H13727 S10700
+When a result column of a [SELECT] statement contains
+an AS clause, the name of that column is the identifier
+to the right of the AS keyword.
+
+HLR H13741 S10700
+The [sqlite3_column_database_name(S,N)] interface returns either
+the UTF-8 zero-terminated name of the database from which the
+Nth result column of the [prepared statement] S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.
+
+HLR H13742 S10700
+The [sqlite3_column_database_name16(S,N)] interface returns either
+the UTF-16 native byte order zero-terminated name of the database
+from which the Nth result column of the [prepared statement] S is
+extracted, or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.
+
+HLR H13743 S10700
+The [sqlite3_column_table_name(S,N)] interface returns either
+the UTF-8 zero-terminated name of the table from which the
+Nth result column of the [prepared statement] S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.
+
+HLR H13744 S10700
+The [sqlite3_column_table_name16(S,N)] interface returns either
+the UTF-16 native byte order zero-terminated name of the table
+from which the Nth result column of the [prepared statement] S is
+extracted, or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.
+
+HLR H13745 S10700
+The [sqlite3_column_origin_name(S,N)] interface returns either
+the UTF-8 zero-terminated name of the table column from which the
+Nth result column of the [prepared statement] S is extracted,
+or NULL if the Nth column of S is a general expression
+or if unable to allocate memory to store the name.
+
+HLR H13746 S10700
+The [sqlite3_column_origin_name16(S,N)] interface returns either
+the UTF-16 native byte order zero-terminated name of the table
+column from which the Nth result column of the
+[prepared statement] S is extracted, or NULL if the Nth column
+of S is a general expression or if unable to allocate memory
+to store the name.
+
+HLR H13748 S10700
+The return values from
+[sqlite3_column_database_name | column metadata interfaces]
+are valid for the lifetime of the [prepared statement]
+or until the encoding is changed by another metadata
+interface call for the same prepared statement and column.
+
+HLR H13761 S10700
+A successful call to [sqlite3_column_decltype(S,N)] returns a
+zero-terminated UTF-8 string containing the declared datatype
+of the table column that appears as the Nth column (numbered
+from 0) of the result set to the [prepared statement] S.
+
+HLR H13762 S10700
+A successful call to [sqlite3_column_decltype16(S,N)]
+returns a zero-terminated UTF-16 native byte order string
+containing the declared datatype of the table column that appears
+as the Nth column (numbered from 0) of the result set to the
+[prepared statement] S.
+
+HLR H13763 S10700
+If N is less than 0 or N is greater than or equal to
+the number of columns in the [prepared statement] S,
+or if the Nth column of S is an expression or subquery rather
+than a table column, or if a memory allocation failure
+occurs during encoding conversions, then
+calls to [sqlite3_column_decltype(S,N)] or
+[sqlite3_column_decltype16(S,N)] return NULL.
+
+HLR H13771 S10700
+After a call to [sqlite3_step(S)] that returns [SQLITE_ROW],
+the [sqlite3_data_count(S)] routine will return the same value
+as the [sqlite3_column_count(S)] function.
+
+HLR H13772 S10700
+After [sqlite3_step(S)] has returned any value other than
+[SQLITE_ROW] or before [sqlite3_step(S)] has been called on the
+[prepared statement] for the first time since it was
+[sqlite3_prepare | prepared] or [sqlite3_reset | reset],
+the [sqlite3_data_count(S)] routine returns zero.
+
+HLR H13803 S10700
+The [sqlite3_column_blob(S,N)] interface converts the
+Nth column in the current row of the result set for
+the [prepared statement] S into a BLOB and then returns a
+pointer to the converted value.
+
+HLR H13806 S10700
+The [sqlite3_column_bytes(S,N)] interface returns the
+number of bytes in the BLOB or string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to [sqlite3_column_blob(S,N)] or
+[sqlite3_column_text(S,N)].
+
+HLR H13809 S10700
+The [sqlite3_column_bytes16(S,N)] interface returns the
+number of bytes in the string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to [sqlite3_column_text16(S,N)].
+
+HLR H13812 S10700
+The [sqlite3_column_double(S,N)] interface converts the
+Nth column in the current row of the result set for the
+[prepared statement] S into a floating point value and
+returns a copy of that value.
+
+HLR H13815 S10700
+The [sqlite3_column_int(S,N)] interface converts the
+Nth column in the current row of the result set for the
+[prepared statement] S into a 64-bit signed integer and
+returns the lower 32 bits of that integer.
+
+HLR H13818 S10700
+The [sqlite3_column_int64(S,N)] interface converts the
+Nth column in the current row of the result set for the
+[prepared statement] S into a 64-bit signed integer and
+returns a copy of that integer.
+
+HLR H13821 S10700
+The [sqlite3_column_text(S,N)] interface converts the
+Nth column in the current row of the result set for
+the [prepared statement] S into a zero-terminated UTF-8
+string and returns a pointer to that string.
+
+HLR H13824 S10700
+The [sqlite3_column_text16(S,N)] interface converts the
+Nth column in the current row of the result set for the
+[prepared statement] S into a zero-terminated 2-byte
+aligned UTF-16 native byte order string and returns
+a pointer to that string.
+
+HLR H13827 S10700
+The [sqlite3_column_type(S,N)] interface returns
+one of [SQLITE_NULL], [SQLITE_INTEGER], [SQLITE_FLOAT],
+[SQLITE_TEXT], or [SQLITE_BLOB] as appropriate for
+the Nth column in the current row of the result set for
+the [prepared statement] S.
+
+HLR H13830 S10700
+The [sqlite3_column_value(S,N)] interface returns a
+pointer to an [unprotected sqlite3_value] object for the
+Nth column in the current row of the result set for
+the [prepared statement] S.
+
+HLR H14103 S20000
+A successful invocation of [sqlite3_config()] shall return
+[SQLITE_OK].
+
+HLR H14106 S20000
+The [sqlite3_config()] interface shall return [SQLITE_MISUSE]
+if it is invoked in between calls to [sqlite3_initialize()] and
+[sqlite3_shutdown()].
+
+HLR H14120 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_SINGLETHREAD])
+shall set the default [threading mode] to Single-thread.
+
+HLR H14123 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_MULTITHREAD])
+shall set the default [threading mode] to Multi-thread.
+
+HLR H14126 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_SERIALIZED])
+shall set the default [threading mode] to Serialized.
+
+HLR H14129 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_MUTEX],X)
+where X is a pointer to an initialized [sqlite3_mutex_methods]
+object shall cause all subsequent mutex operations performed
+by SQLite to use the mutex methods that were present in X
+during the call to [sqlite3_config()].
+
+HLR H14132 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_GETMUTEX],X)
+where X is a pointer to an [sqlite3_mutex_methods] object
+shall overwrite the content of [sqlite3_mutex_methods] object
+with the mutex methods currently in use by SQLite.
+
+HLR H14135 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_MALLOC],M)
+where M is a pointer to an initialized [sqlite3_mem_methods]
+object shall cause all subsequent memory allocation operations
+performed by SQLite to use the methods that were present in
+M during the call to [sqlite3_config()].
+
+HLR H14138 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_GETMALLOC],M)
+where M is a pointer to an [sqlite3_mem_methods] object shall
+overwrite the content of [sqlite3_mem_methods] object with
+the memory allocation methods currently in use by
+SQLite.
+
+HLR H14141 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_MEMSTATUS],1)
+shall enable the memory allocation status collection logic.
+
+HLR H14144 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_MEMSTATUS],0)
+shall disable the memory allocation status collection logic.
+
+HLR H14147 S20000
+The memory allocation status collection logic shall be
+enabled by default.
+
+HLR H14150 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_SCRATCH],S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+[scratch memory allocator] for as many as N simulataneous
+allocations each of size Z.
+
+HLR H14153 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_SCRATCH],S,Z,N)
+where S is a NULL pointer shall disable the
+[scratch memory allocator].
+
+HLR H14156 S20000
+A successful call to
+[sqlite3_config]([SQLITE_CONFIG_PAGECACHE],S,Z,N)
+where Z and N are non-negative integers and
+S is a pointer to an aligned memory buffer not less than
+Z*N bytes in size shall cause S to be used by the
+[pagecache memory allocator] for as many as N simulataneous
+allocations each of size Z.
+
+HLR H14159 S20000
+A successful call to
+[sqlite3_config]([SQLITE_CONFIG_PAGECACHE],S,Z,N)
+where S is a NULL pointer shall disable the
+[pagecache memory allocator].
+
+HLR H14162 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_HEAP],H,Z,N)
+where Z and N are non-negative integers and
+H is a pointer to an aligned memory buffer not less than
+Z bytes in size shall enable the [memsys5] memory allocator
+and cause it to use buffer S as its memory source and to use
+a minimum allocation size of N.
+
+HLR H14165 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_HEAP],H,Z,N)
+where H is a NULL pointer shall disable the
+[memsys5] memory allocator.
+
+HLR H14168 S20000
+A successful call to [sqlite3_config]([SQLITE_CONFIG_LOOKASIDE],Z,N)
+shall cause the default [lookaside memory allocator] configuration
+for new [database connections] to be N slots of Z bytes each.
+
+HLR H14203 S20000
+A call to [sqlite3_db_config(D,V,...)] shall return [SQLITE_OK]
+if and only if the call is successful.
+
+HLR H14206 S20000
+If one or more slots of the [lookaside memory allocator] for
+[database connection] D are in use, then a call to
+[sqlite3_db_config](D,[SQLITE_DBCONFIG_LOOKASIDE],...) shall
+fail with an [SQLITE_BUSY] return code.
+
+HLR H14209 S20000
+A successful call to
+[sqlite3_db_config](D,[SQLITE_DBCONFIG_LOOKASIDE],B,Z,N) where
+D is an open [database connection] and Z and N are positive
+integers and B is an aligned buffer at least Z*N bytes in size
+shall cause the [lookaside memory allocator] for D to use buffer B
+with N slots of Z bytes each.
+
+HLR H14212 S20000
+A successful call to
+[sqlite3_db_config](D,[SQLITE_DBCONFIG_LOOKASIDE],B,Z,N) where
+D is an open [database connection] and Z and N are positive
+integers and B is NULL pointer shall cause the
+[lookaside memory allocator] for D to a obtain Z*N byte buffer
+from the primary memory allocator and use that buffer
+with N lookaside slots of Z bytes each.
+
+HLR H14215 S20000
+A successful call to
+[sqlite3_db_config](D,[SQLITE_DBCONFIG_LOOKASIDE],B,Z,N) where
+D is an open [database connection] and Z and N are zero shall
+disable the [lookaside memory allocator] for D.
+
+HLR H15103 S20200
+The [sqlite3_value_blob(V)] interface converts the
+[protected sqlite3_value] object V into a BLOB and then
+returns a pointer to the converted value.
+
+HLR H15106 S20200
+The [sqlite3_value_bytes(V)] interface returns the
+number of bytes in the BLOB or string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to [sqlite3_value_blob(V)] or
+[sqlite3_value_text(V)].
+
+HLR H15109 S20200
+The [sqlite3_value_bytes16(V)] interface returns the
+number of bytes in the string (exclusive of the
+zero terminator on the string) that was returned by the
+most recent call to [sqlite3_value_text16(V)],
+[sqlite3_value_text16be(V)], or [sqlite3_value_text16le(V)].
+
+HLR H15112 S20200
+The [sqlite3_value_double(V)] interface converts the
+[protected sqlite3_value] object V into a floating point value and
+returns a copy of that value.
+
+HLR H15115 S20200
+The [sqlite3_value_int(V)] interface converts the
+[protected sqlite3_value] object V into a 64-bit signed integer and
+returns the lower 32 bits of that integer.
+
+HLR H15118 S20200
+The [sqlite3_value_int64(V)] interface converts the
+[protected sqlite3_value] object V into a 64-bit signed integer and
+returns a copy of that integer.
+
+HLR H15121 S20200
+The [sqlite3_value_text(V)] interface converts the
+[protected sqlite3_value] object V into a zero-terminated UTF-8
+string and returns a pointer to that string.
+
+HLR H15124 S20200
+The [sqlite3_value_text16(V)] interface converts the
+[protected sqlite3_value] object V into a zero-terminated 2-byte
+aligned UTF-16 native byte order
+string and returns a pointer to that string.
+
+HLR H15127 S20200
+The [sqlite3_value_text16be(V)] interface converts the
+[protected sqlite3_value] object V into a zero-terminated 2-byte
+aligned UTF-16 big-endian
+string and returns a pointer to that string.
+
+HLR H15130 S20200
+The [sqlite3_value_text16le(V)] interface converts the
+[protected sqlite3_value] object V into a zero-terminated 2-byte
+aligned UTF-16 little-endian
+string and returns a pointer to that string.
+
+HLR H15133 S20200
+The [sqlite3_value_type(V)] interface returns
+one of [SQLITE_NULL], [SQLITE_INTEGER], [SQLITE_FLOAT],
+[SQLITE_TEXT], or [SQLITE_BLOB] as appropriate for
+the [sqlite3_value] object V.
+
+HLR H15136 S20200
+The [sqlite3_value_numeric_type(V)] interface converts
+the [protected sqlite3_value] object V into either an integer or
+a floating point value if it can do so without loss of
+information, and returns one of [SQLITE_NULL],
+[SQLITE_INTEGER], [SQLITE_FLOAT], [SQLITE_TEXT], or
+[SQLITE_BLOB] as appropriate for the
+[protected sqlite3_value] object V after the conversion attempt.
+
+HLR H15304 S10000
+When a call to [sqlite3_step(S)] causes the [prepared statement]
+S to run to completion, the function returns [SQLITE_DONE].
+
+HLR H15306 S10000
+When a call to [sqlite3_step(S)] stops because it is ready to
+return another row of the result set, it returns [SQLITE_ROW].
+
+HLR H15308 S10000
+If a call to [sqlite3_step(S)] encounters an
+[sqlite3_interrupt | interrupt] or a run-time error,
+it returns an appropriate error code that is not one of
+[SQLITE_OK], [SQLITE_ROW], or [SQLITE_DONE].
+
+HLR H15310 S10000
+If an [sqlite3_interrupt | interrupt] or a run-time error
+occurs during a call to [sqlite3_step(S)]
+for a [prepared statement] S created using
+legacy interfaces [sqlite3_prepare()] or
+[sqlite3_prepare16()], then the function returns either
+[SQLITE_ERROR], [SQLITE_BUSY], or [SQLITE_MISUSE].
+
+HLR H16103 S20200
+The [sqlite3_create_function16(D,X,...)] interface shall behave
+as [sqlite3_create_function(D,X,...)] in every way except that it
+interprets the X argument as zero-terminated UTF-16
+native byte order instead of as zero-terminated UTF-8.
+
+HLR H16106 S20200
+A successful invocation of the
+[sqlite3_create_function(D,X,N,E,...)] interface shall register
+or replaces callback functions in the [database connection] D
+used to implement the SQL function named X with N parameters
+and having a preferred text encoding of E.
+
+HLR H16109 S20200
+A successful call to [sqlite3_create_function(D,X,N,E,P,F,S,L)]
+shall replace the P, F, S, and L values from any prior calls with
+the same D, X, N, and E values.
+
+HLR H16112 S20200
+The [sqlite3_create_function(D,X,...)] interface shall fail
+if the SQL function name X is
+longer than 255 bytes exclusive of the zero terminator.
+
+HLR H16118 S20200
+The [sqlite3_create_function(D,X,N,E,P,F,S,L)] interface
+shall fail unless either F is NULL and S and L are non-NULL or
+F is non-NULL and S and L are NULL.
+
+HLR H16121 S20200
+The [sqlite3_create_function(D,...)] interface shall fails with an
+error code of [SQLITE_BUSY] if there exist [prepared statements]
+associated with the [database connection] D.
+
+HLR H16127 S20200
+When N is non-negative, the [sqlite3_create_function(D,X,N,...)]
+interface shall register callbacks to be invoked for the
+SQL function
+named X when the number of arguments to the SQL function is
+exactly N.
+
+HLR H16130 S20200
+When N is -1, the [sqlite3_create_function(D,X,N,...)]
+interface shall register callbacks to be invoked for the SQL
+function named X with any number of arguments.
+
+HLR H16133 S20200
+When calls to [sqlite3_create_function(D,X,N,...)]
+specify multiple implementations of the same function X
+and when one implementation has N>=0 and the other has N=(-1)
+the implementation with a non-zero N shall be preferred.
+
+HLR H16136 S20200
+When calls to [sqlite3_create_function(D,X,N,E,...)]
+specify multiple implementations of the same function X with
+the same number of arguments N but with different
+encodings E, then the implementation where E matches the
+database encoding shall preferred.
+
+HLR H16139 S20200
+For an aggregate SQL function created using
+[sqlite3_create_function(D,X,N,E,P,0,S,L)] the finalizer
+function L shall always be invoked exactly once if the
+step function S is called one or more times.
+
+HLR H16142 S20200
+When SQLite invokes either the xFunc or xStep function of
+an application-defined SQL function or aggregate created
+by [sqlite3_create_function()] or [sqlite3_create_function16()],
+then the array of [sqlite3_value] objects passed as the
+third parameter shall be [protected sqlite3_value] objects.
+
+HLR H16211 S20200
+The first invocation of [sqlite3_aggregate_context(C,N)] for
+a particular instance of an aggregate function (for a particular
+context C) causes SQLite to allocate N bytes of memory,
+zero that memory, and return a pointer to the allocated memory.
+
+HLR H16213 S20200
+If a memory allocation error occurs during
+[sqlite3_aggregate_context(C,N)] then the function returns 0.
+
+HLR H16215 S20200
+Second and subsequent invocations of
+[sqlite3_aggregate_context(C,N)] for the same context pointer C
+ignore the N parameter and return a pointer to the same
+block of memory returned by the first invocation.
+
+HLR H16217 S20200
+The memory allocated by [sqlite3_aggregate_context(C,N)] is
+automatically freed on the next call to [sqlite3_reset()]
+or [sqlite3_finalize()] for the [prepared statement] containing
+the aggregate function associated with context C.
+
+HLR H16243 S20200
+The [sqlite3_user_data(C)] interface returns a copy of the
+P pointer from the [sqlite3_create_function(D,X,N,E,P,F,S,L)]
+or [sqlite3_create_function16(D,X,N,E,P,F,S,L)] call that
+registered the SQL function associated with [sqlite3_context] C.
+
+HLR H16253 S60600
+The [sqlite3_context_db_handle(C)] interface returns a copy of the
+D pointer from the [sqlite3_create_function(D,X,N,E,P,F,S,L)]
+or [sqlite3_create_function16(D,X,N,E,P,F,S,L)] call that
+registered the SQL function associated with [sqlite3_context] C.
+
+HLR H16272 S20200
+The [sqlite3_get_auxdata(C,N)] interface returns a pointer
+to metadata associated with the Nth parameter of the SQL function
+whose context is C, or NULL if there is no metadata associated
+with that parameter.
+
+HLR H16274 S20200
+The [sqlite3_set_auxdata(C,N,P,D)] interface assigns a metadata
+pointer P to the Nth parameter of the SQL function with context C.
+
+HLR H16276 S20200
+SQLite will invoke the destructor D with a single argument
+which is the metadata pointer P following a call to
+[sqlite3_set_auxdata(C,N,P,D)] when SQLite ceases to hold
+the metadata.
+
+HLR H16277 S20200
+SQLite ceases to hold metadata for an SQL function parameter
+when the value of that parameter changes.
+
+HLR H16278 S20200
+When [sqlite3_set_auxdata(C,N,P,D)] is invoked, the destructor
+is called for any prior metadata associated with the same function
+context C and parameter N.
+
+HLR H16279 S20200
+SQLite will call destructors for any metadata it is holding
+in a particular [prepared statement] S when either
+[sqlite3_reset(S)] or [sqlite3_finalize(S)] is called.
+
+HLR H16351 S30220
+The [sqlite3_soft_heap_limit(N)] interface places a soft limit
+of N bytes on the amount of heap memory that may be allocated
+using [sqlite3_malloc()] or [sqlite3_realloc()] at any point
+in time.
+
+HLR H16352 S30220
+If a call to [sqlite3_malloc()] or [sqlite3_realloc()] would
+cause the total amount of allocated memory to exceed the
+soft heap limit, then [sqlite3_release_memory()] is invoked
+in an attempt to reduce the memory usage prior to proceeding
+with the memory allocation attempt.
+
+HLR H16353 S30220
+Calls to [sqlite3_malloc()] or [sqlite3_realloc()] that trigger
+attempts to reduce memory usage through the soft heap limit
+mechanism continue even if the attempt to reduce memory
+usage is unsuccessful.
+
+HLR H16354 S30220
+A negative or zero value for N in a call to
+[sqlite3_soft_heap_limit(N)] means that there is no soft
+heap limit and [sqlite3_release_memory()] will only be
+called when memory is completely exhausted.
+
+HLR H16355 S30220
+The default value for the soft heap limit is zero.
+
+HLR H16358 S30220
+Each call to [sqlite3_soft_heap_limit(N)] overrides the
+values set by all prior calls.
+
+HLR H16403 S20200
+The default return value from any SQL function is NULL.
+
+HLR H16406 S20200
+The [sqlite3_result_blob(C,V,N,D)] interface changes the
+return value of function C to be a BLOB that is N bytes
+in length and with content pointed to by V.
+
+HLR H16409 S20200
+The [sqlite3_result_double(C,V)] interface changes the
+return value of function C to be the floating point value V.
+
+HLR H16412 S20200
+The [sqlite3_result_error(C,V,N)] interface changes the return
+value of function C to be an exception with error code
+[SQLITE_ERROR] and a UTF-8 error message copied from V up to the
+first zero byte or until N bytes are read if N is positive.
+
+HLR H16415 S20200
+The [sqlite3_result_error16(C,V,N)] interface changes the return
+value of function C to be an exception with error code
+[SQLITE_ERROR] and a UTF-16 native byte order error message
+copied from V up to the first zero terminator or until N bytes
+are read if N is positive.
+
+HLR H16418 S20200
+The [sqlite3_result_error_toobig(C)] interface changes the return
+value of the function C to be an exception with error code
+[SQLITE_TOOBIG] and an appropriate error message.
+
+HLR H16421 S20200
+The [sqlite3_result_error_nomem(C)] interface changes the return
+value of the function C to be an exception with error code
+[SQLITE_NOMEM] and an appropriate error message.
+
+HLR H16424 S20200
+The [sqlite3_result_error_code(C,E)] interface changes the return
+value of the function C to be an exception with error code E.
+The error message text is unchanged.
+
+HLR H16427 S20200
+The [sqlite3_result_int(C,V)] interface changes the
+return value of function C to be the 32-bit integer value V.
+
+HLR H16430 S20200
+The [sqlite3_result_int64(C,V)] interface changes the
+return value of function C to be the 64-bit integer value V.
+
+HLR H16433 S20200
+The [sqlite3_result_null(C)] interface changes the
+return value of function C to be NULL.
+
+HLR H16436 S20200
+The [sqlite3_result_text(C,V,N,D)] interface changes the
+return value of function C to be the UTF-8 string
+V up to the first zero if N is negative
+or the first N bytes of V if N is non-negative.
+
+HLR H16439 S20200
+The [sqlite3_result_text16(C,V,N,D)] interface changes the
+return value of function C to be the UTF-16 native byte order
+string V up to the first zero if N is negative
+or the first N bytes of V if N is non-negative.
+
+HLR H16442 S20200
+The [sqlite3_result_text16be(C,V,N,D)] interface changes the
+return value of function C to be the UTF-16 big-endian
+string V up to the first zero if N is negative
+or the first N bytes or V if N is non-negative.
+
+HLR H16445 S20200
+The [sqlite3_result_text16le(C,V,N,D)] interface changes the
+return value of function C to be the UTF-16 little-endian
+string V up to the first zero if N is negative
+or the first N bytes of V if N is non-negative.
+
+HLR H16448 S20200
+The [sqlite3_result_value(C,V)] interface changes the
+return value of function C to be the [unprotected sqlite3_value]
+object V.
+
+HLR H16451 S20200
+The [sqlite3_result_zeroblob(C,N)] interface changes the
+return value of function C to be an N-byte BLOB of all zeros.
+
+HLR H16454 S20200
+The [sqlite3_result_error()] and [sqlite3_result_error16()]
+interfaces make a copy of their error message strings before
+returning.
+
+HLR H16457 S20200
+If the D destructor parameter to [sqlite3_result_blob(C,V,N,D)],
+[sqlite3_result_text(C,V,N,D)], [sqlite3_result_text16(C,V,N,D)],
+[sqlite3_result_text16be(C,V,N,D)], or
+[sqlite3_result_text16le(C,V,N,D)] is the constant [SQLITE_STATIC]
+then no destructor is ever called on the pointer V and SQLite
+assumes that V is immutable.
+
+HLR H16460 S20200
+If the D destructor parameter to [sqlite3_result_blob(C,V,N,D)],
+[sqlite3_result_text(C,V,N,D)], [sqlite3_result_text16(C,V,N,D)],
+[sqlite3_result_text16be(C,V,N,D)], or
+[sqlite3_result_text16le(C,V,N,D)] is the constant
+[SQLITE_TRANSIENT] then the interfaces makes a copy of the
+content of V and retains the copy.
+
+HLR H16463 S20200
+If the D destructor parameter to [sqlite3_result_blob(C,V,N,D)],
+[sqlite3_result_text(C,V,N,D)], [sqlite3_result_text16(C,V,N,D)],
+[sqlite3_result_text16be(C,V,N,D)], or
+[sqlite3_result_text16le(C,V,N,D)] is some value other than
+the constants [SQLITE_STATIC] and [SQLITE_TRANSIENT] then
+SQLite will invoke the destructor D with V as its only argument
+when it has finished with the V value.
+
+HLR H16603 S20300
+A successful call to the
+[sqlite3_create_collation_v2(B,X,E,P,F,D)] interface
+registers function F as the comparison function used to
+implement collation X on the [database connection] B for
+databases having encoding E.
+
+HLR H16604 S20300
+SQLite understands the X parameter to
+[sqlite3_create_collation_v2(B,X,E,P,F,D)] as a zero-terminated
+UTF-8 string in which case is ignored for ASCII characters and
+is significant for non-ASCII characters.
+
+HLR H16606 S20300
+Successive calls to [sqlite3_create_collation_v2(B,X,E,P,F,D)]
+with the same values for B, X, and E, override prior values
+of P, F, and D.
+
+HLR H16609 S20300
+If the destructor D in [sqlite3_create_collation_v2(B,X,E,P,F,D)]
+is not NULL then it is called with argument P when the
+collating function is dropped by SQLite.
+
+HLR H16612 S20300
+A collating function is dropped when it is overloaded.
+
+HLR H16615 S20300
+A collating function is dropped when the database connection
+is closed using [sqlite3_close()].
+
+HLR H16618 S20300
+The pointer P in [sqlite3_create_collation_v2(B,X,E,P,F,D)]
+is passed through as the first parameter to the comparison
+function F for all subsequent invocations of F.
+
+HLR H16621 S20300
+A call to [sqlite3_create_collation(B,X,E,P,F)] is exactly
+the same as a call to [sqlite3_create_collation_v2()] with
+the same parameters and a NULL destructor.
+
+HLR H16624 S20300
+Following a [sqlite3_create_collation_v2(B,X,E,P,F,D)],
+SQLite uses the comparison function F for all text comparison
+operations on the [database connection] B on text values that
+use the collating sequence named X.
+
+HLR H16627 S20300
+The [sqlite3_create_collation16(B,X,E,P,F)] works the same
+as [sqlite3_create_collation(B,X,E,P,F)] except that the
+collation name X is understood as UTF-16 in native byte order
+instead of UTF-8.
+
+HLR H16630 S20300
+When multiple comparison functions are available for the same
+collating sequence, SQLite chooses the one whose text encoding
+requires the least amount of conversion from the default
+text encoding of the database.
+
+HLR H16702 S20300
+A successful call to [sqlite3_collation_needed(D,P,F)]
+or [sqlite3_collation_needed16(D,P,F)] causes
+the [database connection] D to invoke callback F with first
+parameter P whenever it needs a comparison function for a
+collating sequence that it does not know about.
+
+HLR H16704 S20300
+Each successful call to [sqlite3_collation_needed()] or
+[sqlite3_collation_needed16()] overrides the callback registered
+on the same [database connection] by prior calls to either
+interface.
+
+HLR H16706 S20300
+The name of the requested collating function passed in the
+4th parameter to the callback is in UTF-8 if the callback
+was registered using [sqlite3_collation_needed()] and
+is in UTF-16 native byte order if the callback was
+registered using [sqlite3_collation_needed16()].
+
+HLR H17303 S20000
+The [sqlite3_malloc(N)] interface returns either a pointer to
+a newly checked-out block of at least N bytes of memory
+that is 8-byte aligned, or it returns NULL if it is unable
+to fulfill the request.
+
+HLR H17304 S20000
+The [sqlite3_malloc(N)] interface returns a NULL pointer if
+N is less than or equal to zero.
+
+HLR H17305 S20000
+The [sqlite3_free(P)] interface releases memory previously
+returned from [sqlite3_malloc()] or [sqlite3_realloc()],
+making it available for reuse.
+
+HLR H17306 S20000
+A call to [sqlite3_free(NULL)] is a harmless no-op.
+
+HLR H17310 S20000
+A call to [sqlite3_realloc(0,N)] is equivalent to a call
+to [sqlite3_malloc(N)].
+
+HLR H17312 S20000
+A call to [sqlite3_realloc(P,0)] is equivalent to a call
+to [sqlite3_free(P)].
+
+HLR H17315 S20000
+The SQLite core uses [sqlite3_malloc()], [sqlite3_realloc()],
+and [sqlite3_free()] for all of its memory allocation and
+deallocation needs.
+
+HLR H17318 S20000
+The [sqlite3_realloc(P,N)] interface returns either a pointer
+to a block of checked-out memory of at least N bytes in size
+that is 8-byte aligned, or a NULL pointer.
+
+HLR H17321 S20000
+When [sqlite3_realloc(P,N)] returns a non-NULL pointer, it first
+copies the first K bytes of content from P into the newly
+allocated block, where K is the lesser of N and the size of
+the buffer P.
+
+HLR H17322 S20000
+When [sqlite3_realloc(P,N)] returns a non-NULL pointer, it first
+releases the buffer P.
+
+HLR H17323 S20000
+When [sqlite3_realloc(P,N)] returns NULL, the buffer P is
+not modified or released.
+
+HLR H17341 S30220
+The [sqlite3_release_memory(N)] interface attempts to
+free N bytes of heap memory by deallocating non-essential
+memory allocations held by the database library.
+
+HLR H17342 S30220
+The [sqlite3_release_memory(N)] returns the number
+of bytes actually freed, which might be more or less
+than the amount requested.
+
+HLR H17371 S30210
+The [sqlite3_memory_used()] routine returns the number of bytes
+of memory currently outstanding (malloced but not freed).
+
+HLR H17373 S30210
+The [sqlite3_memory_highwater()] routine returns the maximum
+value of [sqlite3_memory_used()] since the high-water mark
+was last reset.
+
+HLR H17374 S30210
+The values returned by [sqlite3_memory_used()] and
+[sqlite3_memory_highwater()] include any overhead
+added by SQLite in its implementation of [sqlite3_malloc()],
+but not overhead added by the any underlying system library
+routines that [sqlite3_malloc()] may call.
+
+HLR H17375 S30210
+The memory high-water mark is reset to the current value of
+[sqlite3_memory_used()] if and only if the parameter to
+[sqlite3_memory_highwater()] is true.  The value returned
+by [sqlite3_memory_highwater(1)] is the high-water mark
+prior to the reset.
+
+HLR H17392 S20000
+The [sqlite3_randomness(N,P)] interface writes N bytes of
+high-quality pseudo-randomness into buffer P.
+
+HLR H17403 S70000
+The [sqlite3_mprintf()] and [sqlite3_vmprintf()] interfaces
+return either pointers to zero-terminated UTF-8 strings held in
+memory obtained from [sqlite3_malloc()] or NULL pointers if
+a call to [sqlite3_malloc()] fails.
+
+HLR H17406 S70000
+The [sqlite3_snprintf()] interface writes a zero-terminated
+UTF-8 string into the buffer pointed to by the second parameter
+provided that the first parameter is greater than zero.
+
+HLR H17407 S70000
+The [sqlite3_snprintf()] interface does not write slots of
+its output buffer (the second parameter) outside the range
+of 0 through N-1 (where N is the first parameter)
+regardless of the length of the string
+requested by the format specification.
+
+HLR H17813 S30230
+A successful invocation of the [sqlite3_blob_open(D,B,T,C,R,F,P)]
+interface shall open an [sqlite3_blob] object P on the BLOB
+in column C of the table T in the database B on
+the [database connection] D.
+
+HLR H17814 S30230
+A successful invocation of [sqlite3_blob_open(D,...)] shall start
+a new transaction on the [database connection] D if that
+connection is not already in a transaction.
+
+HLR H17816 S30230
+The [sqlite3_blob_open(D,B,T,C,R,F,P)] interface shall open
+the BLOB for read and write access if and only if the F
+parameter is non-zero.
+
+HLR H17819 S30230
+The [sqlite3_blob_open()] interface shall return [SQLITE_OK] on
+success and an appropriate [error code] on failure.
+
+HLR H17821 S30230
+If an error occurs during evaluation of [sqlite3_blob_open(D,...)]
+then subsequent calls to [sqlite3_errcode(D)],
+[sqlite3_extended_errcode()],
+[sqlite3_errmsg(D)], and [sqlite3_errmsg16(D)] shall return
+information appropriate for that error.
+
+HLR H17824 S30230
+If any column in the row that a [sqlite3_blob] has open is
+changed by a separate [UPDATE] or [DELETE] statement or by
+an [ON CONFLICT] side effect, then the [sqlite3_blob] shall
+be marked as invalid.
+
+HLR H17833 S30230
+The [sqlite3_blob_close(P)] interface closes an [sqlite3_blob]
+object P previously opened using [sqlite3_blob_open()].
+
+HLR H17836 S30230
+Closing an [sqlite3_blob] object using
+[sqlite3_blob_close()] shall cause the current transaction to
+commit if there are no other open [sqlite3_blob] objects
+or [prepared statements] on the same [database connection] and
+the database connection is in [autocommit mode].
+
+HLR H17839 S30230
+The [sqlite3_blob_close(P)] interfaces shall close the
+[sqlite3_blob] object P unconditionally, even if
+[sqlite3_blob_close(P)] returns something other than [SQLITE_OK].
+
+HLR H17843 S30230
+The [sqlite3_blob_bytes(P)] interface returns the size
+in bytes of the BLOB that the [sqlite3_blob] object P
+refers to.
+
+HLR H17853 S30230
+A successful invocation of [sqlite3_blob_read(P,Z,N,X)]
+shall reads N bytes of data out of the BLOB referenced by
+[BLOB handle] P beginning at offset X and store those bytes
+into buffer Z.
+
+HLR H17856 S30230
+In [sqlite3_blob_read(P,Z,N,X)] if the size of the BLOB
+is less than N+X bytes, then the function shall leave the
+Z buffer unchanged and return [SQLITE_ERROR].
+
+HLR H17859 S30230
+In [sqlite3_blob_read(P,Z,N,X)] if X or N is less than zero
+then the function shall leave the Z buffer unchanged
+and return [SQLITE_ERROR].
+
+HLR H17862 S30230
+The [sqlite3_blob_read(P,Z,N,X)] interface shall return [SQLITE_OK]
+if N bytes are successfully read into buffer Z.
+
+HLR H17863 S30230
+If the [BLOB handle] P is expired and X and N are within bounds
+then [sqlite3_blob_read(P,Z,N,X)] shall leave the Z buffer
+unchanged and return [SQLITE_ABORT].
+
+HLR H17865 S30230
+If the requested read could not be completed,
+the [sqlite3_blob_read(P,Z,N,X)] interface shall return an
+appropriate [error code] or [extended error code].
+
+HLR H17868 S30230
+If an error occurs during evaluation of [sqlite3_blob_read(P,...)]
+then subsequent calls to [sqlite3_errcode(D)],
+[sqlite3_extended_errcode()],
+[sqlite3_errmsg(D)], and [sqlite3_errmsg16(D)] shall return
+information appropriate for that error, where D is the
+[database connection] that was used to open the [BLOB handle] P.
+
+HLR H17873 S30230
+A successful invocation of [sqlite3_blob_write(P,Z,N,X)]
+shall write N bytes of data from buffer Z into the BLOB
+referenced by [BLOB handle] P beginning at offset X into
+the BLOB.
+
+HLR H17874 S30230
+In the absence of other overridding changes, the changes
+written to a BLOB by [sqlite3_blob_write()] shall
+remain in effect after the associated [BLOB handle] expires.
+
+HLR H17875 S30230
+If the [BLOB handle] P was opened for reading only then
+an invocation of [sqlite3_blob_write(P,Z,N,X)] shall leave
+the referenced BLOB unchanged and return [SQLITE_READONLY].
+
+HLR H17876 S30230
+If the size of the BLOB referenced by [BLOB handle] P is
+less than N+X bytes then [sqlite3_blob_write(P,Z,N,X)] shall
+leave the BLOB unchanged and return [SQLITE_ERROR].
+
+HLR H17877 S30230
+If the [BLOB handle] P is expired and X and N are within bounds
+then [sqlite3_blob_read(P,Z,N,X)] shall leave the BLOB
+unchanged and return [SQLITE_ABORT].
+
+HLR H17879 S30230
+If X or N are less than zero then [sqlite3_blob_write(P,Z,N,X)]
+shall leave the BLOB referenced by [BLOB handle] P unchanged
+and return [SQLITE_ERROR].
+
+HLR H17882 S30230
+The [sqlite3_blob_write(P,Z,N,X)] interface shall return
+[SQLITE_OK] if N bytes where successfully written into the BLOB.
+
+HLR H17885 S30230
+If the requested write could not be completed,
+the [sqlite3_blob_write(P,Z,N,X)] interface shall return an
+appropriate [error code] or [extended error code].
+
+HLR H17888 S30230
+If an error occurs during evaluation of [sqlite3_blob_write(D,...)]
+then subsequent calls to [sqlite3_errcode(D)],
+[sqlite3_extended_errcode()],
+[sqlite3_errmsg(D)], and [sqlite3_errmsg16(D)] shall return
+information appropriate for that error.

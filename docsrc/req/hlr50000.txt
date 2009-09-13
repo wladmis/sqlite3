@@ -1,0 +1,427 @@
+HLR H50010
+The B-Tree module shall provide an interface to open a connection 
+to either a named persistent database file, or an anonymous temporary 
+database.
+
+HLR H50020
+When opening a persistent database, the B-Tree module shall allow the user 
+to specify that the connection be opened for read-only access.
+
+HLR H50030
+When opening a persistent database, the B-Tree module shall allow the user 
+to specify that the connection only be opened if the specified file exists.
+
+HLR H50040
+If SQLite is configured to run in shared-cache mode, and a connection is opened
+to a persistent database file for which there exists already a page-cache within 
+the current processes address space, then the connection opened shall be a
+connection to the existing page-cache.
+
+HLR H50050
+If a new B-Tree database connection is opened and requirement H50040 does not apply,
+then a new page-cache shall be created within the processes address space. The
+opened connection shall be a connection to the new page-cache.
+
+HLR H50060
+The B-Tree module shall provide an interface to close a B-Tree database connection. 
+
+HLR H50070
+If a B-Tree database connection is closed and this causes the associated
+page-cache to have zero connections to it, then the page-cache shall be closed
+and all associated resources released.
+
+HLR H50080
+The B-Tree module shall provide an interface to configure the page-size of a
+new database image. 
+
+HLR H50090
+The B-Tree module shall provide an interface to configure whether or not a new
+database image is auto-vacuum capable.
+
+
+HLR H50100
+The B-Tree module shall provide an interface to open (start) a read-only transaction.
+
+HLR H50101
+The B-Tree module shall provide an interface to close (finish) a read-only transaction.
+
+HLR H50102
+The B-Tree module shall provide an interface to open a read/write transaction
+or to upgrade from a read-only transaction to a read/write transaction.
+
+HLR H50103
+The B-Tree module shall provide an interface to commit a read/write transaction.
+
+HLR H50104
+The B-Tree module shall provide an interface to rollback a read/write transaction.
+
+HLR H50105
+The B-Tree module shall provide an interface to open savepoint transactions.
+
+HLR H50106
+The B-Tree module shall provide an interface to commit savepoint transactions.
+
+HLR H50107
+The B-Tree module shall provide an interface to rollback savepoint transactions.
+
+HLR H50108
+The B-Tree module shall provide an interface to query a B-Tree database
+connection to determine if there is an open transaction, and if so if the open
+transaction is read-only or read/write.
+
+
+
+HLR H50109
+The B-Tree module shall provide an interface to read the value of any of the
+4-byte unsigned big-endian integer fields beginning at byte offset 36 of the
+database image.
+
+HLR H50110
+The B-Tree module shall provide an interface to open a B-Tree cursor on any table or
+index b-tree within the database image, given its root page number.
+
+HLR H50111
+The B-Tree module shall provide an interface to close a B-Tree cursor.
+
+HLR H50112
+The B-Tree module shall provide an interface to move an open B-Tree cursor to
+the entry associated with the largest key in the open b-tree structure.
+
+HLR H50113
+The B-Tree module shall provide an interface to move an open B-Tree cursor to
+the entry associated with the smallest key in the open b-tree structure.
+
+
+HLR H50114
+The B-Tree module shall provide an interface to move an open B-Tree cursor that
+currently points at a valid b-tree entry to the next entry in the b-tree
+structure, sorted in order of key value, if any.
+
+HLR H50115
+The B-Tree module shall provide an interface to move an open B-Tree cursor that
+currently points at a valid b-tree entry to the previous entry in the b-tree
+structure, sorted in order of key value, if any.
+
+HLR H50116
+The B-Tree module shall provide an interface to retrieve the key value 
+associated with the b-tree structure entry that a B-Tree cursor is pointing to,
+if any.
+
+HLR H50117
+The B-Tree module shall provide an interface to retrieve the blob of data (the
+database record) associated with the b-tree structure entry that a B-Tree
+cursor open on a table b-tree is pointing to, if any.
+
+HLR H50118
+The B-Tree module shall provide an interface to return the number of entries
+currently stored in the b-tree structure that a B-Tree cursor is open on.
+
+
+HLR H50119
+Given a key value, the B-Tree module shall provide an interface to move a
+B-Tree cursor open on a b-tree structure to the B-Tree entry with the matching
+key value, if such an entry exists.
+
+HLR H50120
+If the interface required by H50119 is used to search for a key value that is
+not present in the b-tree structure and the b-tree is not empty, the cursor shall
+be moved to an existing entry that would be adjacent to a hypothetical
+entry with the specified key value. 
+
+HLR H50121
+The interface required by H50119 shall provide an indication to the caller as
+to whether the cursor is left pointing at an entry with a key value that is
+smaller, larger or equal to the requested value, or if it is pointing to no
+entry at all (because the b-tree structure is empty).
+
+
+HLR H50122
+The B-Tree module shall provide an interface to write a value to any of the
+4-byte unsigned big-endian integer fields beginning at byte offset 36 of the
+database image.
+
+HLR H50123
+The B-Tree module shall provide an interface to create a new index or table
+b-tree structures within the database image. The interface shall automatically
+assign a root-page to the new b-tree structure.
+
+HLR H50124
+The B-Tree module shall provide an interface to remove an existing index or 
+table b-tree structure from the database image, given the root page number of
+the b-tree to remove.
+
+HLR H50125
+The B-Tree module shall provide an interface to remove all entries from (delete
+the contents of) an index or table b-tree, given the root page number of the
+b-tree to empty.
+
+HLR H50126
+When opening a B-Tree cursor using the interface required by H50110, it shall
+be possible to specify that the new cursor be a write cursor, or an ordinary
+read-only cursor.
+
+HLR H50127
+The B-Tree module shall provide an interface that allows the user to delete the
+b-tree entry that a write cursor points to, if any.
+
+HLR H50128
+The B-Tree module shall provide an interface to insert new entries into a table
+or index B-Tree, given a write cursor open on the table or index b-tree the new
+entry is to be inserted into.
+
+
+HLR H50129
+The B-Tree module shall provide an interface allowing the application to query
+a b-tree database connection open on a persistent database for the name of the
+underlying database file within the file-system.
+
+HLR H50130
+The B-Tree module shall provide an interface allowing the application to query
+a b-tree database connection open on a persistent database for the name of the
+underlying journal file within the file-system.
+
+HLR H50131
+The B-Tree module shall provide an interface to query an open b-tree database
+handle to determine if the underlying database is a persistent database or a
+temporary database.
+
+
+HLR H50132
+The B-Tree module shall provide an interface to query the current locking-mode
+of a page-cache, given an open b-tree database connection to that page-cache.
+
+HLR H50133
+The B-Tree module shall provide an interface to query the current journal-mode
+of a page-cache, given an open b-tree database connection to that page-cache.
+
+HLR H50134
+The B-Tree module shall provide an interface to query the current journal file
+size-limit of a page-cache, given an open b-tree database connection to that
+page-cache.
+
+HLR H50135
+The B-Tree module shall provide an interface to query the current database file
+size-limit of a page-cache, given an open b-tree database connection to that
+page-cache.
+
+HLR H50136
+The B-Tree module shall provide an interface to query the current cache-size
+of a page-cache, given an open b-tree database connection to that page-cache.
+
+HLR H50137
+The B-Tree module shall provide an interface to query the current safety-level
+of a page-cache, given an open b-tree database connection to that page-cache.
+
+
+HLR H50138
+The B-Tree module shall provide an interface allowing the application to set
+the locking-mode of a page-cache to either "normal" or "exclusive", given an
+open b-tree database connection to that page-cache.
+
+HLR H50139
+If the locking-mode of a page-cache is set to "normal" when a read/write 
+or read-only transaction is ended, any locks held on the database file-system
+representation by the page-cache shall be relinquished.
+
+HLR H50140
+If the locking-mode of a page-cache is set to "exclusive" when a read/write 
+or read-only transaction is ended, any locks held on the database file-system
+representation by the page-cache shall be retained.
+
+
+HLR H50141
+The B-Tree module shall provide an interface allowing the application to set
+the journal-mode of a page-cache to one of "off", "memory", "delete",
+"persist", or "truncate", given an open b-tree database connection to that
+page-cache.
+
+HLR H50142
+If the journal-mode of a page-cache is set to "off" when a read/write
+transaction is opened, then the transaction shall use no journal file.
+
+HLR H50143
+If the journal-mode of a page-cache is set to "memory" when a read/write
+transaction is opened, then instead of using the journal file located in the
+file-system, journal-file data shall be stored in main-memory.
+
+HLR H50144
+If the journal-mode of a page-cache is set to "delete" when a read/write
+transaction is opened, then any journal file used by the transaction shall
+be deleted at the conclusion of the transaction.
+
+HLR H50145
+If the journal-mode of a page-cache is set to "truncate" when a read/write
+transaction is opened, then any journal file used by the transaction shall
+be truncated to zero bytes in size at the conclusion of the transaction.
+
+HLR H50146
+If the journal-mode of a page-cache is set to "persist" when a read/write
+transaction is opened, then any journal file used by the transaction shall
+remain in the file-system at the conclusion of the transaction.
+
+
+HLR H50147
+The B-Tree module shall provide an interface to set the value of the
+journal-file size limit configuration parameter of a page-cache, given
+an open b-tree database connection to that page-cache.
+
+HLR H50148
+The default value assigned to the journal-file size limit configuration of a
+page-cache shall be -1.
+
+HLR H50149
+If the journal-file size limit parameter is set to a non-negative value, and
+the user executes a write operation that would otherwise require the journal
+file to be extended to a size greater than the configured value in bytes, then
+the operation shall fail and an error be returned to the user.
+
+
+HLR H50150
+The B-Tree module shall provide an interface to set the value of the
+database-image size limit configuration parameter of a page-cache, given
+an open b-tree database connection to that page-cache.
+
+HLR H50151
+The default value assigned to the database-image size limit configuration of a
+page-cache shall be the value of the compile time symbol SQLITE_MAX_PAGE_COUNT
+(1073741823 by default).
+
+HLR H50152
+If the database-image size limit parameter is set to a non-negative value, and
+the user executes a write operation that would otherwise require the journal
+file to be extended to a size greater than the configured value in bytes, then
+the operation shall fail and an error be returned to the user.
+
+HLR H50153
+The B-Tree module shall provide an interface to set the value of the
+cache-size configuration parameter of a page-cache, given an open b-tree
+database connection to that page-cache.
+
+HLR H50154
+The B-Tree module shall provide an interface allowing the application to set
+the safety-level of a page-cache to one of "off", "normal" or "full",
+given an open b-tree database connection to that page-cache.
+
+HLR H50155
+The default value assigned to the safety-level configuration parameter of a
+page-cache shall be "full".
+
+HLR H50156
+The b-tree module shall provide an interface allowing database clients to
+acquire advisory read (shared) or write (exclusive) locks on a specific b-tree
+structure within the database.
+
+
+
+HLR H51001      H50010
+If successful, a call to the sqlite3BtreeOpen function shall return SQLITE_OK
+and set the value of *ppBtree to contain a new B-Tree database connection
+handle.
+
+HLR H51002
+If unsuccessful, a call to the sqlite3BtreeOpen function shall return an SQLite
+error code other than SQLITE_OK indicating the reason for the failure. The
+value of *ppBtree shall not be modified in this case.
+
+HLR H51003
+If the zFilename parameter to a call to sqlite3BtreeOpen is NULL or a pointer
+to a buffer of which the first byte is a nul (0x00), then sqlite3BtreeOpen
+shall attempt to open a connection to a temporary database.
+
+HLR H51004
+If the zFilename parameter to a call to sqlite3BtreeOpen is a pointer to a
+buffer containing a nul-terminated UTF-8 encoded string, sqlite3BtreeOpen shall
+attempt to open a connection to a persistent database.
+
+HLR H51005
+If the BTREE_OMIT_JOURNAL bit is set in the flags parameter passed to a 
+successful call to sqlite3BtreeOpen to open a temporary database, then the
+page-cache created as a result shall not open or use a journal file for any
+purpose.
+
+HLR H51006
+If the BTREE_NO_READLOCK bit is set in the flags parameter passed to a 
+successful call to sqlite3BtreeOpen to open a persistent database and a
+new page-cache is created as a result of the call, then the new page-cache 
+shall only lock the database file-system representation when writing to
+it.
+
+HLR H51007
+If the sqlite3BtreeOpen function is called to open a connection to a persistent
+database, and the call causes a new page-cache to be created, when opening the
+database file using the VFS interface xOpen method the 4th parameter passed to
+xOpen (flags) shall be a copy of the vfsFlags value passed to sqlite3BtreeOpen.
+
+HLR H51008
+If the sqlite3BtreeOpen function is called to open a connection to a temporary
+database, if and when a temporary file is opened to use as secondary storage
+using the VFS interface xOpen method the 4th parameter passed to xOpen (flags) 
+shall be a copy of the vfsFlags value passed to sqlite3BtreeOpen with the 
+SQLITE_OPEN_READWRITE, SQLITE_OPEN_CREATE, SQLITE_OPEN_EXCLUSIVE and 
+SQLITE_OPEN_DELETEONCLOSE bits also set.
+
+HLR H51009
+A call to the sqlite3BtreeClose function with a valid b-tree database
+connection handle passed as the only argument shall invalidate the handle,
+close the b-tree database connection and release all associated resources.
+
+HLR H51010
+If a call to sqlite3BtreeClose is made to close a b-tree database connection
+while there exist open B-Tree cursors that were opened using the specified
+b-tree database connection, they shall be closed automatically from within
+sqlite3BtreeClose, just as if their handles were passed to
+sqlite3BtreeCloseCursor.
+
+
+
+
+
+HLR H51011
+A call to the sqlite3BtreeGetFilename function with a valid B-Tree database
+connection handle opened on a persistent database as the first argument shall
+return a pointer to a buffer containing the full-path of the database file
+formatted as a nul-terminated, UTF-8 string.
+
+HLR H51012
+A call to the sqlite3BtreeGetFilename function with a valid B-Tree database
+connection handle opened on a temporary database as the first argument shall
+return a pointer to a buffer to a nul-terminated string zero bytes in length
+(i.e. the first byte of the buffer shall be 0x00).
+
+HLR H51013
+A call to the sqlite3BtreeGetJournalname function with a valid B-Tree database
+connection handle opened on a persistent database as the first argument shall
+return a pointer to a buffer containing the full-path of the journal file
+formatted as a nul-terminated, UTF-8 string.
+
+HLR H51014
+A call to the sqlite3BtreeGetJournalname function with a valid B-Tree database
+connection handle opened on a temporary database as the first argument shall
+return a pointer to a buffer to a nul-terminated string zero bytes in length
+(i.e. the first byte of the buffer shall be 0x00).
+
+
+
+
+HLR H51015       H50109
+If the first parameter is a b-tree database connection handle with an open
+read-only or read-write transaction, and the second parameter is an integer
+between 0 and 7 inclusive, and the database image consists of zero pages,
+a call to the sqlite3BtreeGetMeta function shall set the value of *pValue to 
+zero.
+
+HLR H51016       H50109
+If the first parameter is a b-tree database connection handle with an open
+read-only or read-write transaction, and the second parameter is an integer
+between 0 and 7 inclusive, and the database image consists of one or more
+pages, a call to the sqlite3BtreeGetMeta function shall set the value of
+*pValue to the current value of the specified 32-bit unsigned integer in the
+database image database header.
+
+HLR H51017       H50109
+The database header field read from the database image by a call to
+sqlite3BtreeGetMeta in the situation specified by H51016 shall be the 32-bit 
+unsigned integer header field stored at byte offset (36 + 4 * idx) of the
+database header, where idx is the value of the second parameter passed to
+sqlite3BtreeGetMeta.
+

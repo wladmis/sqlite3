@@ -1,0 +1,68 @@
+<title>SQLite Requirements</title>
+<tcl>hd_keywords {requirements}</tcl>
+
+<h1>SQLite Requirements</h1>
+
+<h2>1.0 Introduction</h2>
+
+<p>These requirements strive to describe the interfaces and operation of 
+SQLite in sufficient detail that a compatible implementation of SQLite
+can be written solely from these requirements and without reference to
+the canonical SQLite source code.</p>
+
+<p>Software development processes typically recognize a hierarchy of
+requirements:</p>
+
+<ul>
+<li>System requirements</li>
+<li>High-level requirements</li>
+<li>Derived high-level requirements</li>
+<li>Low-level requirements</li>
+<li>Derived low-level requirements</li>
+</ul>
+
+<p>The usual distinction between high-level and low-level requirements is
+that high-level requirements describe "what" the system does and the
+low-level requirements describe "how" the system does it.  Since the
+the requirements denoted here describe the
+behavior of SQLite and not its implementation, they are best thought of
+as high-level requirements.  Consistent with that view, most of
+the requirements numbers begin with the letter "<b>H</b>" (for "high-level"). 
+A few of the requirements presented here specify broad objectives that
+SQLite strives to achieve.  These broad requirements can be thought of
+as system requirements and are number with an initial letter "<b>S</b>".</p>
+
+<p>These requirements are hierarchical in the sense that the more
+specific requirements are derived from broader and more general
+requirements.  When requirement B is derived from requirement A, we say
+that A is the parent of B and that B is a child of A.  The parent/child
+relationships of all requirements are tracked.  All requirements presented
+here ultimately derive from a single very broad, very high-level, and
+very general system requirement called "S10000".</p>
+
+<p>Some behaviors of SQLite are undefined.  For example, the order in
+which result rows are returned from a SELECT statement is undefined if
+there is no ORDER BY clause.  As another example, many of the C interfaces
+require a pointer to an open [database connection] as their first argument
+and the behavior of those interfaces is undefined (and probably undesirable)
+if a pointer to some other object is supplied instead.  Some, but not all
+undefined behaviors are explicitly stated and number in this document
+with numbers beginning with the "<b>U</b>" for "Undefined".  Applications
+that use SQLite should never depend on undefined behavior.  If a behavior
+is not explicitly defined by a requirement, then the behavior is undefined,
+and so explicitly stating undefined behaviors in this document is
+technically redundant.  Nevertheless, we find that explicitly stating
+some undefined behaviors helps application developers to better understand
+the boundaries of operation of SQLite and to generate safer and more
+accurate programs that use SQLite.</p>
+
+<h2><a href="sysreq.html">2.0 System Requirements</a></h2>
+
+<h2><a href="hlr10000.html">3.0 Application C-Language Interfaces</a></h2>
+
+<h2><a href="hlr20000.html">4.0 C-Language Interfaces For
+Extending SQLite</a></h2>
+
+<h2><a href="hlr30000.html">5.0 Database File Format</a></h2>
+
+<h2><a href="hlr40000.html">6.0 SQL Language Specification</a></h2>

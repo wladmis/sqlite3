@@ -1,0 +1,314 @@
+<title>SQLite Changes From Version 3.5.9 To 3.6.0</title>
+<tcl>
+proc CODE {text} {
+  hd_puts "<blockquote><pre>"
+  hd_puts $text
+  hd_puts "</pre></blockquote>"
+}
+proc PARAGRAPH {text} {
+  hd_resolve <p>$text</p>\n
+}
+proc INDENTED {text} {
+  hd_resolve <blockquote>$text</blockquote>\n
+}
+set level(0) 0
+set level(1) 0
+proc HEADING {n name {tag {}}} {
+  if {$tag!=""} {
+    hd_fragment $tag
+  }
+  global level
+  incr level($n)
+  for {set i [expr {$n+1}]} {$i<10} {incr i} {
+    set level($i) 0
+  }
+  if {$n==0} {
+    set num {}
+  } elseif {$n==1} {
+    set num $level(1).0
+  } else {
+    set num $level(1)
+    for {set i 2} {$i<=$n} {incr i} {
+      append num .$level($i)
+    }
+  }
+  incr n 1
+  hd_puts "<h$n>$num $name</h$n>"
+}
+
+hd_keywords 35to36
+HEADING 0 {Moving From SQLite 3.5.9 to 3.6.0}
+
+PARAGRAPH {
+  SQLite version 3.6.0 contains many changes.  As is the custom with
+  the SQLite project, most changes are fully backwards compatible.
+  However, a few of the changes in version 3.6.0 are incompatible and
+  might require modifications to application code and/or makefiles.
+  This document is a briefing on the changes in SQLite 3.6.0
+  with special attention to the incompatible changes.
+}
+
+INDENTED {
+  <strong>Key Points:</strong>
+  <ul>
+  <li> The database file format is unchanged. </li>
+  <li> All incompatibilities are on obscure interfaces and hence should
+       have zero impact on most applications. </li>
+  </ul>
+}
+
+HEADING 1 {Incompatible Changes}
+
+PARAGRAPH {
+  Incompatible changes are covered first since they are the most
+  important to maintainers and programmers.
+}
+HEADING 2 {Overview Of Incompatible Changes}
+
+PARAGRAPH {
+  <ol>
+  <li><p>Changes to the [sqlite3_vfs] object</p>
+
+      <ol type="a">
+      <li><p>The signature of the xAccess method has been modified to
+      return an [error code] and to store its output into an integer pointed
+      to by a parameter, rather than returning the output directly.
+      This change allows the xAccess() method to report failures.
+      In association with this signature change, a new 
+      extended error code [SQLITE_IOERR_ACCESS] has been added.
+      </p></li>
+
+      <li><p>The xGetTempname method has been removed from [sqlite3_vfs].
+      In its place, the xOpen method is enhanced to open a temporary file
+      of its own invention when the filename parameter is NULL.</p></li>
+
+      <li><p>Added the xGetLastError() method to [sqlite3_vfs] for returning
+      filesystem-specific error messages and error codes back to
+      SQLite.</p></li>
+      </ol>
+  </li>
+
+  <li><p>The signature of the xCheckReservedLock method on [sqlite3_io_methods]
+      has been modified so that it returns an [error code] and stores its
+      boolean result into an integer pointed to by a parameter.  In
+      association with this change, a new extended error code
+      [SQLITE_IOERR_CHECKRESERVEDLOCK] has been added.</p></li>
+
+  <li><p>When SQLite is ported to new operation systems (operating systems 
+      other than Unix, Windows, and OS/2 for which ports are provided together
+      with the core)
+      two new functions, [sqlite3_os_init()] and [sqlite3_os_end()], must
+      be provided as part of the port.</p></li>
+
+  <li><p>The way in which the IN and NOT IN operators handle NULL values
+      in their right-hand expressions has been brought into compliance with
+      the SQL standard and with other SQL database engines.</p></li>
+
+  <li><p>The column names for the result sets of [SELECT] statements have
+      been tweaked in some cases to work more like other SQL database
+      engines.</p></li>      
+
+  <li><p>Changes to compile-time options:</p>
+
+      <ol type="a">
+      <li><p>The SQLITE_MUTEX_APPDEF compile-time parameter is no longer
+      recognized.  As a replacement, alternative 
+      [sqlite3_mutex_enter | mutex implementations] may be created
+      at runtime using [sqlite3_config()] with the [SQLITE_CONFIG_MUTEX]
+      operator and the [sqlite3_mutex_methods] object.</p></li>
+
+      <li><p>Compile-time options OS_UNIX, OS_WIN, OS_OS2, OS_OTHER, and
+      TEMP_STORE have been renamed to include an "SQLITE_" prefix in order
+      to help avoid namespace collisions with application software.  The
+      new names of these options are respectively:
+      SQLITE_OS_UNIX, SQLITE_OS_WIN, SQLITE_OS_OS2, SQLITE_OS_OTHER,
+      and [SQLITE_TEMP_STORE].</p></li>
+      </ol>
+  </li>
+  </ol>
+}
+
+HEADING 2 {Changes To The VFS Layer}
+
+PARAGRAPH {
+  SQLite [version 3.5.0] introduced a [34to35 | new OS interface layer] that
+  provided an abstraction of the underlying operating system.
+  This was an important innovation and has proven to be helpful
+  in porting and maintaining SQLite.
+  However, the developers have discovered some minor flaws in the
+  original "virtual file system" design introduced in version 3.5.0
+  and so SQLite 3.6.0 includes some small incompatible changes
+  to address these flaws.
+}
+
+INDENTED {
+  <strong>Key Point:</strong>  The incompatible
+  changes in the SQLite operating-system interface for version 3.6.0
+  only affect the rare applications that make use of the 
+  [sqlite3_vfs | virtual file system] interface or that
+  supply a application-defined [sqlite3_mutex_enter | mutex implementation]
+  or that make use of other obscure compile-time options.  The
+  changes introduced by SQLite version 3.6.0 will have zero impact on the
+  vast majority of SQLite applications that use the built-in interfaces
+  to Unix, Windows, and OS/2 and that use the standard build configuration.
+}
+
+HEADING 2 {Changes In The Way The IN Operator Handles NULLs}
+
+PARAGRAPH {
+  All versions of SQLite up to and including version 3.5.9 have mishandled
+  NULL values on the right-hand side of IN and NOT IN operators.
+  Specifically, SQLite has previously ignored NULLs on the right-hand side
+  of IN and NOT IN.
+}
+
+PARAGRAPH {
+  Suppose we have a table X1 defined as follows:
+}
+
+CODE {
+  CREATE TABLE x1(x INTEGER);
+  INSERT INTO x1 VALUES(1);
+  INSERT INTO x1 VALUES(2);
+  INSERT INTO x1 VALUES(NULL);
+}
+
+PARAGRAPH {
+  Given the definition of X1 above, the following expressions have
+  historically evaluated to FALSE in SQLite, though the correct
+  answer is actually NULL:
+}
+
+CODE {
+  3 IN (1,2,NULL)
+  3 IN (SELECT * FROM x1)
+}
+
+PARAGRAPH {
+  Similarly, the following expressions have historically evaluated to
+  TRUE when in fact NULL is also the correct answer here:
+}
+
+CODE {
+  3 NOT IN (1,2,NULL)
+  3 NOT IN (SELECT * FROM x1)
+}
+
+PARAGRAPH {
+  The historical behavior of SQLite is incorrect according to the SQL:1999
+  standard and it is inconsistent with the behavior of MySQL and
+  PostgreSQL.  Version 3.6.0 changes the behavior of the IN and
+  NOT IN operators to conform to the standard and to give the same
+  results as other SQL database engines.
+}
+
+INDENTED {
+  <strong>Key Point:</strong> The change to the way NULL values are handled
+  by the IN and NOT IN operators is technically a bug fix, not a design
+  change.  However, maintainers should check to insure that applications
+  do not depend on the older, buggy behavior prior to upgrading to
+  version 3.6.0.
+}
+
+HEADING 2 {Changes To Column Naming Rules}
+
+PARAGRAPH {
+  The column names reported by join subqueries have been modified slightly
+  in order to work more like other database engines.  Consider the following
+  query:
+}
+
+CODE {
+  CREATE TABLE t1(a);
+  CREATE TABLE t2(x);
+  SELECT * FROM (SELECT t1.a FROM t1 JOIN t2 ORDER BY t2.x LIMIT 1) ORDER BY 1;
+}
+
+PARAGRAPH {
+  In version 3.5.9 the query above would return a single column named "t1.a".
+  In version 3.6.0 the column name is just "a".
+}
+
+PARAGRAPH {
+  SQLite has never made any promises about the names of columns in the
+  result set of [SELECT] statement unless the column contains an AS clause.
+  So this change to column name is technically not an incompatibility.
+  SQLite is merely changing from one undefined behavior to another.
+  Nevertheless, many applications depend on the unspecified column naming
+  behavior of SQLite and so this change is discussed under the
+  incompatible changes subheading.
+}
+  
+HEADING 2 {Changes To Compile-Time Options}
+
+PARAGRAPH {
+  Compile-time options to SQLite are controlled by C-preprocessor 
+  macros.  SQLite version 3.6.0 changes the names of some of these
+  macros so that all C-preprocessor macros that are specific to
+  SQLite begin with the "SQLITE_" prefix.  This is done to reduce the
+  risk of name collisions with other software modules.
+}
+
+INDENTED {
+  <strong>Key Point:</strong>  Changes to compile-time options have the
+  potential to affect makefiles in projects that do customized builds of
+  SQLite. These changes should have zero impact on application code and for
+  most projects which use a standard, default build of SQLite.
+}
+
+
+HEADING 1 {Fully Backwards-Compatible Enhancements}
+
+PARAGRAPH {
+  In addition to the incompatible changes listed above, SQLite
+  version 3.6.0 adds the following backwards compatible changes and
+  enhancements:
+}
+PARAGRAPH {
+  <ol>
+
+  <li value="7"><p>The new [sqlite3_config()] interface allows an application
+  to customize the behavior of SQLite at run-time.  Customizations possible
+  using [sqlite3_config()] include the following:</p>
+  <ol type="a">
+  <li><p>Specify an alternative mutex implementation using the
+  [SQLITE_CONFIG_MUTEX] verb with the [sqlite3_mutex_methods] object.</p></li>
+  <li><p>Specify an alternative malloc implementation using the
+  [SQLITE_CONFIG_MALLOC] verb with the [sqlite3_mem_methods] object.</p></li>
+  <li><p>Partially or fully disable the use of mutexes using
+  [SQLITE_CONFIG_SINGLETHREAD], [SQLITE_CONFIG_MULTITHREAD] and
+  [SQLITE_CONFIG_SERIALIZED].</p></li>
+  </ol>
+  </li>
+
+  <li><p>A new flag [SQLITE_OPEN_NOMUTEX] is made available to the
+  [sqlite3_open_v2()] interface.</p></li>
+
+  <li><p>The new [sqlite3_status()] interface allows an application to query
+  the performance status of SQLite at runtime.
+  </p></li>
+
+  <li><p>The [sqlite3_memory_used()] and [sqlite3_memory_highwater()]
+  interfaces are deprecated.  The equivalent functionality is now available
+  through [sqlite3_status()].</p></li>
+
+  <li><p>The [sqlite3_initialize()] interface can be called to explicitly
+  initialize the SQLite subsystem.  The [sqlite3_initialize()] interface is
+  called automatically when invoking certain interfaces so the use of
+  [sqlite3_initialize()] is not required, but it is recommended.</p></li>
+
+  <li><p>The [sqlite3_shutdown()] interface causes SQLite release any
+  system resources (memory allocations, mutexes, open file handles)
+  that it might have been allocated by [sqlite3_initialize()].</p></li>
+
+  <li><p>The [sqlite3_next_stmt()] interface allows an application to discover
+  all [prepared statements] associated with a [database connection].</p></li>
+
+  <li><p>Added the [page_count] PRAGMA for returning the size of the underlying
+  database file in pages.</p></li>
+
+  <li><p>Added a new [rtree | R*Tree index extension].</p></li>
+
+  </ol>
+}
+</tcl>

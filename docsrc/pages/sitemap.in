@@ -1,0 +1,70 @@
+<title>SQLite Site Map</title>
+
+<h2>Site Map</h2>
+
+<ul>
+<li> <a href="index.html">Home Page</a> </li>
+<li> <a href="about.html">About</a>
+     <ul>
+     <li> <a href="features.html">Feature List</a> </li>
+     <li> <a href="famous.html">Well-known Users</a> </li>
+     <li> <a href="lang.html">SQL Syntax</a> </li>
+     <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a> </li>
+     <li> <a href="crew.html">Developer Vitas</a> </li>
+     </ul></li>
+<li> <a href="docs.html">Documentation</a> (dozens of links...)
+     <ul>
+     <li> <a href="faq.html">Frequently Asked Questions</a></li>
+     <li> <a href="quickstart.html">SQLite In 5 Minutes Or Less</a></li>
+     <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a></li>
+     <li> <a href="lang.html">SQL Syntax</a></li>
+     <li> <a href="whentouse.html">Appropriate Uses For SQLite</a></li>
+     <li> <a href="different.html">Distinctive Features</a></li>
+     <li> <a href="testing.html">How SQLite Is Tested</a></li>
+     <li> <a href="atomiccommit.html">How SQLite Implements Atomic Commit</a>
+          </li>
+     </ul></li>
+<li> <a href="download.html">Download</a> </li>
+<li> <a href="copyright.html">License</a>
+     <ul>
+     <li> <a href="copyright-release.html">Copyright release form</a> </li>
+     <li> <a href="http://www.hwaci.com/cgi-bin/license-step1">
+          Purchase a license</a> </li>
+     </ul></li>
+<li> <a href="news.html">News</a>
+     <ul>
+     <li> <a href="oldnews.html">Older news</a> </li>
+     </ul></li>
+<li> <a href="dev.html">Developers</a> 
+     <ul>
+     <li> <a href="http://www.sqlite.org/src/timeline">Timeline</a></li>
+     <li><a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a></li>
+     <li><a href="http://www.sqlite.org/src/tktnew">Report a bug</a></li>
+     <li><a href="http://www.sqlite.org/src/rptview?rn=1">Browse
+            bug reports</a></li>
+     <li><a href="http://www.sqlite.org/src/dir">Browse historical
+          source files</a></li>
+     <li><a href="http://www.sqlite.org/docsrc/home">Website and documentation
+          sources</a></li>
+     </ul>
+     </li>
+<li> <a href="support.html">Support</a>
+     <ul>
+     <li> <a href="http://www.mail-archive.com/sqlite-users%40sqlite.org">
+         Mailing list archive</a>
+     <a href="http://marc.info/?l=sqlite-users&r=1&w=2">(alternate)</a>
+     <a href="http://news.gmane.org/gmane.comp.db.sqlite.general">
+        (alternate 2)</a> </li>
+     <li> <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">
+           Professional Support options</a>
+          <ul>
+          <li> <a href="http://www.hwaci.com/sw/sqlite/ams.html">
+               Annual Maintenance Subscription</a></li>
+          <li> <a href="http://www.hwaci.com/sw/sqlite/tech.html">
+               Technical Support Agreements</a></li>
+          <li> <a href="http://www.hwaci.com/sw/sqlite/member.html">
+               SQLite Consortium Membership</a></li>
+          </ul></li>
+
+     </ul></li>
+</ul>

@@ -1,0 +1,104 @@
+<title>SQLite Home Page</title>
+
+<table border="0" width="100%">
+<tr><td valign="top">
+<h3>Welcome.</h3>
+<p>SQLite is a software library that implements a
+<a href="selfcontained.html">self-contained</a>, 
+<a href="serverless.html">serverless</a>,
+<a href="zeroconf.html">zero-configuration</a>,
+<a href="transactional.html">transactional</a>
+SQL database engine.
+SQLite is the 
+<a href="mostdeployed.html">most widely deployed</a>
+SQL database engine in the world.
+The source code for SQLite is in the
+<a href="copyright.html">public domain</a>.</p>
+
+<hr style="color: #80a796" height="2">
+
+<h3>Sponsors</h3>
+<p>Ongoing development and maintenance of SQLite is
+sponsored in part by <a href="consortium.html">SQLite Consortium</a>
+members, including:</p>
+
+<center>
+<table border="0" cellpadding="15">
+
+<tcl>hd_puts {
+<script language="JavaScript">
+  var sponsor = new Array()
+  sponsor[0] = '<tr><td align="center">\
+    <a href="http://www.adobe.com/">\
+    <img src="images/foreignlogos/adobe-logo.gif" alt="adobe.com" border="0">\
+    </a></td><td>\
+    <a href="http://www.adobe.com/">Adobe</a> revolutionizes how the \
+    world engages with ideas and information - anywhere, anytime, and \
+    through any medium.</td></tr>'
+
+  sponsor[1] = '<tr><td align="center">\
+    <a href="http://www.mozilla.com/">\
+    <img src="images/foreignlogos/mozilla.gif" alt="mozilla.com" border="0">\
+    </a></td><td>\
+    <a href="http://www.mozilla.com/">Mozilla</a> - Working to preserve \
+    choice and innovation on the internet.</td></tr>'
+
+  sponsor[2] = '<tr><td align="center">\
+    <a href="http://www.symbian.com/">\
+    <img src="images/foreignlogos/symbian.gif" alt="symbian.com" border="0">\
+    </a></td><td>\
+    <a href="http://www.symbian.com/">Symbian</a> - \
+    The market-leading open operating system for advanced \
+    data-enabled smartphones.</td></tr>'
+
+  sponsor[3] = '<tr><td align="center">\
+    <a href="http://www.bloomberg.com/">\
+   <img src="images/foreignlogos/bloomberg.gif" alt="bloomberg.com" border="0">\
+    </a></td><td>\
+    <a href="http://www.bloomberg.com/">Bloomberg</a> - \
+    A world leader in financial-information technology.</td></tr>'
+
+  count = 4
+  while( count>0 ){
+    i = Math.floor(Math.random()*4)
+    if( sponsor[i]!=null ){
+      document.write(sponsor[i])
+      sponsor[i] = null
+      count--
+    }
+  }
+</script>
+}</tcl>
+
+</table>
+</center>
+
+
+</td>
+<td width="20"></td><td bgcolor="#80a796" width="1"></td><td width="20"></td>
+<td valign="top">
+<h3>Current Status</h3>
+
+<p><ul>
+<li><a href="releaselog/3_6_18.html">Version 3.6.18</a>
+of SQLite is recommended for all new development.  Upgrading from
+version 3.6.12, 3.6.13, 3.6.14.2, 3.6.16, or 3.6.17 is optional.
+Upgrading from all other SQLite versions is recommended.</li>
+</ul></p>
+
+<h3>Common Links</h3>
+
+<p><ul>
+<li> <a href="features.html">Features</a> </li>
+<li> <a href="faq.html">Frequently Asked Questions</a> </li>
+<li> <a href="famous.html">Well-known Users</a> </li>
+<li> <a href="quickstart.html">Getting Started</a> </li>
+<li> <a href="lang.html">SQL Syntax</a> </li>
+<li> <a href="c3ref/intro.html">C/C++ Interface Spec</a> </li>
+<li> <a href="http://www.sqlite.org/src/timeline">Timeline</a> </li>
+<li> <a href="http://www.sqlite.org/src/tktnew">Report a bug</a> </li>
+<li> <a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a> </li>
+</ul></p>
+
+</td></tr>
+</table>
