@@ -1,0 +1,59 @@
+diff --git a/Makefile.in b/Makefile.in
+index 5576de8..dc39016 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -26,7 +26,7 @@ BCC = @BUILD_CC@ @BUILD_CFLAGS@
+ # will run on the target platform.  (BCC and TCC are usually the
+ # same unless your are cross-compiling.)
+ #
+-TCC = @CC@ @CPPFLAGS@ @CFLAGS@ -I. -I${TOP}/src
++TCC = @CC@ @CPPFLAGS@ @CFLAGS@ -I. -I${TOP}/src -I${TOP}/ext/fts3
+ 
+ # Define this for the autoconf-based build, so that the code knows it can
+ # include the generated config.h
+@@ -319,6 +320,14 @@ SRC += \
+   $(TOP)/ext/fts3/fts3_tokenizer.h \
+   $(TOP)/ext/fts3/fts3_tokenizer.c \
+   $(TOP)/ext/fts3/fts3_tokenizer1.c
++OBJS0 += \
++  fts3.lo \
++  fts3_expr.lo \
++  fts3_hash.lo \
++  fts3_icu.lo \
++  fts3_porter.lo \
++  fts3_tokenizer.lo \
++  fts3_tokenizer1.lo
+ SRC += \
+   $(TOP)/ext/icu/sqliteicu.h \
+   $(TOP)/ext/icu/icu.c
+@@ -509,6 +519,30 @@ sqlite3.lo:	sqlite3.c
+ 
+ # Rules to build individual files
+ #
++%.lo: $(TOP)/src/%.c $(TOP)/ext/fts3/%.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3.lo:	$(TOP)/ext/fts3/fts3.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_expr.lo:	$(TOP)/ext/fts3/fts3_expr.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_hash.lo:	$(TOP)/ext/fts3/fts3_hash.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_icu.lo:	$(TOP)/ext/fts3/fts3_icu.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_porter.lo:	$(TOP)/ext/fts3/fts3_porter.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_tokenizer.lo:	$(TOP)/ext/fts3/fts3_tokenizer.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
++fts3_tokenizer1.lo:	$(TOP)/ext/fts3/fts3_tokenizer1.c $(HDR)
++	$(LTCOMPILE) $(TEMP_STORE) -c $<
++
+ alter.lo:	$(TOP)/src/alter.c $(HDR)
+ 	$(LTCOMPILE) $(TEMP_STORE) -c $(TOP)/src/alter.c
+ 
