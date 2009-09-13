@@ -15,7 +15,7 @@ new file mode 100644
 index 0000000..6eba05c
 --- /dev/null
 +++ b/libsqlite3.map
-@@ -0,0 +1,133 @@
+@@ -0,0 +1,138 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -146,6 +146,11 @@ index 0000000..6eba05c
 +SQLITE3_3.6.17 {
 +    global:
 +	sqlite3_strnicmp;
++};
++
++SQLITE3_3.6.18 {
++    global:
++	sqlite3_sourceid;
 +};
 +
 +/* the prefix is SQLITE_, not SQLITE3_ */

@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.6.17
-Release: alt2
+Version: 3.6.18
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -10,7 +10,12 @@ Requires: lib%name = %version-%release
 
 Source0: sqlite-%version.tar
 Source1: docsrc.tar
-Patch: %name-%version-%release.patch
+
+Patch0: sqlite3-alt-dl.patch
+Patch1: sqlite3-alt-fts3.patch
+Patch2: sqlite3-alt-tcl.patch
+Patch3: sqlite3-alt-test.patch
+Patch4: sqlite3-alt-version-script.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -89,7 +94,11 @@ embedded controllers.
 
 %prep
 %setup -q -n sqlite-%version -a1
-%patch -p1
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
@@ -153,6 +162,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Sun Sep 13 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.18-alt1
+- 3.6.18
+
 * Wed Sep 09 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.17-alt2
 - moved "make test" to %%check section
 
