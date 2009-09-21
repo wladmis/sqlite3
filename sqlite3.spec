@@ -1,6 +1,6 @@
 Name: sqlite3
 Version: 3.6.18
-Release: alt2
+Release: alt3
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -162,6 +162,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Mon Sep 21 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.18-alt3
+- don't hide "sqlite3[A-Z]*" symbols
+
 * Sun Sep 20 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.18-alt2
 - enabled column metadata
 
