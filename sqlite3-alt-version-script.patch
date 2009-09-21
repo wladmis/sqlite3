@@ -15,15 +15,14 @@ new file mode 100644
 index 0000000..6eba05c
 --- /dev/null
 +++ b/libsqlite3.map
-@@ -0,0 +1,149 @@
+@@ -0,0 +1,148 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
 +	sqlite3_get_autocommit;
 +	sqlite3_transfer_bindings;
 +    local:
-+	sqlite3[^_]*;
-+	[^s]*;
++	[^sqlite3]*;
 +};
 +SQLITE_3.2.6 {
 +    global:
