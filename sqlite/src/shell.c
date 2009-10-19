@@ -851,7 +851,7 @@ static int genfkey_create_triggers(
       "  /delete_action/\n"
       "END;\n"
 
-      /* The "BEFORE DELETE ON <referenced>" trigger. This trigger's job 
+      /* The "AFTER UPDATE ON <referenced>" trigger. This trigger's job 
       ** is to detect when the key columns of a row in the referenced table 
       ** to which one or more rows in the referencing table correspond are
       ** updated. The action taken depends on the value of the 'ON UPDATE' 
@@ -876,8 +876,8 @@ static int genfkey_create_triggers(
     ", '/ref/',    dq(to_tbl)"
     ", '/key_notnull/', sj('new.' || dq(from_col) || ' IS NOT NULL', ' AND ')"
 
-    ", '/fkey_list/', sj(to_col, ', ')"
-    ", '/rkey_list/', sj(from_col, ', ')"
+    ", '/fkey_list/', sj(dq(to_col), ', ')"
+    ", '/rkey_list/', sj(dq(from_col), ', ')"
 
     ", '/cond1/',  sj(multireplace('new./from/ == /to/'"
                    ", '/from/', dq(from_col)"
@@ -891,9 +891,9 @@ static int genfkey_create_triggers(
     ", '/update_action/', CASE on_update "
       "WHEN 'SET NULL' THEN "
         "multireplace('UPDATE /tbl/ SET /setlist/ WHERE /where/;' "
-        ", '/setlist/', sj(from_col||' = NULL',', ')"
+        ", '/setlist/', sj(dq(from_col)||' = NULL',', ')"
         ", '/tbl/',     dq(from_tbl)"
-        ", '/where/',   sj(from_col||' = old.'||dq(to_col),' AND ')"
+        ", '/where/',   sj(dq(from_col)||' = old.'||dq(to_col),' AND ')"
         ")"
       "WHEN 'CASCADE' THEN "
         "multireplace('UPDATE /tbl/ SET /setlist/ WHERE /where/;' "
@@ -908,9 +908,9 @@ static int genfkey_create_triggers(
     ", '/delete_action/', CASE on_delete "
       "WHEN 'SET NULL' THEN "
         "multireplace('UPDATE /tbl/ SET /setlist/ WHERE /where/;' "
-        ", '/setlist/', sj(from_col||' = NULL',', ')"
+        ", '/setlist/', sj(dq(from_col)||' = NULL',', ')"
         ", '/tbl/',     dq(from_tbl)"
-        ", '/where/',   sj(from_col||' = old.'||dq(to_col),' AND ')"
+        ", '/where/',   sj(dq(from_col)||' = old.'||dq(to_col),' AND ')"
         ")"
       "WHEN 'CASCADE' THEN "
         "multireplace('DELETE FROM /tbl/ WHERE /where/;' "
@@ -2093,6 +2093,10 @@ static int do_meta_command(char *zLine, struct callback_data *p){
   if( c=='d' && strncmp(azArg[0], "dump", n)==0 ){
     char *zErrMsg = 0;
     open_db(p);
+    /* When playing back a "dump", the content might appear in an order
+    ** which causes immediate foreign key constraints to be violated.
+    ** So disable foreign-key constraint enforcement to prevent problems. */
+    fprintf(p->out, "PRAGMA foreign_keys=OFF;\n");
     fprintf(p->out, "BEGIN TRANSACTION;\n");
     p->writableSchema = 0;
     sqlite3_exec(p->db, "PRAGMA writable_schema=ON", 0, 0, 0);

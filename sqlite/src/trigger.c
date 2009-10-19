@@ -50,6 +50,10 @@ Trigger *sqlite3TriggerList(Parse *pParse, Table *pTab){
   Schema * const pTmpSchema = pParse->db->aDb[1].pSchema;
   Trigger *pList = 0;                  /* List of triggers to return */
 
+  if( pParse->disableTriggers ){
+    return 0;
+  }
+
   if( pTmpSchema!=pTab->pSchema ){
     HashElem *p;
     for(p=sqliteHashFirst(&pTmpSchema->trigHash); p; p=sqliteHashNext(p)){
@@ -795,7 +799,7 @@ static TriggerPrg *codeRowTrigger(
   Parse *pSubParse;           /* Parse context for sub-vdbe */
   int iEndTrigger = 0;        /* Label to jump to if WHEN is false */
 
-  assert( pTab==tableOfTrigger(pTrigger) );
+  assert( pTrigger->zName==0 || pTab==tableOfTrigger(pTrigger) );
 
   /* Allocate the TriggerPrg and SubProgram objects. To ensure that they
   ** are freed if an error occurs, link them into the Parse.pTriggerPrg 
@@ -809,6 +813,7 @@ static TriggerPrg *codeRowTrigger(
   pProgram->nRef = 1;
   pPrg->pTrigger = pTrigger;
   pPrg->orconf = orconf;
+  pPrg->oldmask = 0xffffffff;
 
   /* Allocate and populate a new Parse context to use for coding the 
   ** trigger sub-program.  */
@@ -895,7 +900,7 @@ static TriggerPrg *getRowTrigger(
   Parse *pRoot = sqlite3ParseToplevel(pParse);
   TriggerPrg *pPrg;
 
-  assert( pTab==tableOfTrigger(pTrigger) );
+  assert( pTrigger->zName==0 || pTab==tableOfTrigger(pTrigger) );
 
   /* It may be that this trigger has already been coded (or is in the
   ** process of being coded). If this is the case, then an entry with
@@ -915,31 +920,81 @@ static TriggerPrg *getRowTrigger(
 }
 
 /*
-** This is called to code FOR EACH ROW triggers.
+** Generate code for the trigger program associated with trigger p on 
+** table pTab. The reg, orconf and ignoreJump parameters passed to this
+** function are the same as those described in the header function for
+** sqlite3CodeRowTrigger()
+*/
+void sqlite3CodeRowTriggerDirect(
+  Parse *pParse,       /* Parse context */
+  Trigger *p,          /* Trigger to code */
+  Table *pTab,         /* The table to code triggers from */
+  int reg,             /* Reg array containing OLD.* and NEW.* values */
+  int orconf,          /* ON CONFLICT policy */
+  int ignoreJump       /* Instruction to jump to for RAISE(IGNORE) */
+){
+  Vdbe *v = sqlite3GetVdbe(pParse); /* Main VM */
+  TriggerPrg *pPrg;
+  pPrg = getRowTrigger(pParse, p, pTab, orconf);
+  assert( pPrg || pParse->nErr || pParse->db->mallocFailed );
+
+  /* Code the OP_Program opcode in the parent VDBE. P4 of the OP_Program 
+  ** is a pointer to the sub-vdbe containing the trigger program.  */
+  if( pPrg ){
+    sqlite3VdbeAddOp3(v, OP_Program, reg, ignoreJump, ++pParse->nMem);
+    pPrg->pProgram->nRef++;
+    sqlite3VdbeChangeP4(v, -1, (const char *)pPrg->pProgram, P4_SUBPROGRAM);
+    VdbeComment(
+        (v, "Call: %s.%s", (p->zName?p->zName:"fkey"), onErrorText(orconf)));
+
+    /* Set the P5 operand of the OP_Program instruction to non-zero if
+    ** recursive invocation of this trigger program is disallowed. Recursive
+    ** invocation is disallowed if (a) the sub-program is really a trigger,
+    ** not a foreign key action, and (b) the flag to enable recursive triggers
+    ** is clear.  */
+    sqlite3VdbeChangeP5(v, (u8)(p->zName && !(pParse->db->flags&SQLITE_RecTriggers)));
+  }
+}
+
+/*
+** This is called to code the required FOR EACH ROW triggers for an operation
+** on table pTab. The operation to code triggers for (INSERT, UPDATE or DELETE)
+** is given by the op paramater. The tr_tm parameter determines whether the
+** BEFORE or AFTER triggers are coded. If the operation is an UPDATE, then
+** parameter pChanges is passed the list of columns being modified.
 **
-** When the code that this function generates is executed, the following 
-** must be true:
+** If there are no triggers that fire at the specified time for the specified
+** operation on pTab, this function is a no-op.
 **
-** 1. No cursors may be open in the main database.  (But newIdx and oldIdx
-**    can be indices of cursors in temporary tables.  See below.)
+** The reg argument is the address of the first in an array of registers 
+** that contain the values substituted for the new.* and old.* references
+** in the trigger program. If N is the number of columns in table pTab
+** (a copy of pTab->nCol), then registers are populated as follows:
 **
-** 2. If the triggers being coded are ON INSERT or ON UPDATE triggers, then
-**    a temporary vdbe cursor (index newIdx) must be open and pointing at
-**    a row containing values to be substituted for new.* expressions in the
-**    trigger program(s).
+**   Register       Contains
+**   ------------------------------------------------------
+**   reg+0          OLD.rowid
+**   reg+1          OLD.* value of left-most column of pTab
+**   ...            ...
+**   reg+N          OLD.* value of right-most column of pTab
+**   reg+N+1        NEW.rowid
+**   reg+N+2        OLD.* value of left-most column of pTab
+**   ...            ...
+**   reg+N+N+1      NEW.* value of right-most column of pTab
 **
-** 3. If the triggers being coded are ON DELETE or ON UPDATE triggers, then
-**    a temporary vdbe cursor (index oldIdx) must be open and pointing at
-**    a row containing values to be substituted for old.* expressions in the
-**    trigger program(s).
+** For ON DELETE triggers, the registers containing the NEW.* values will
+** never be accessed by the trigger program, so they are not allocated or 
+** populated by the caller (there is no data to populate them with anyway). 
+** Similarly, for ON INSERT triggers the values stored in the OLD.* registers
+** are never accessed, and so are not allocated by the caller. So, for an
+** ON INSERT trigger, the value passed to this function as parameter reg
+** is not a readable register, although registers (reg+N) through 
+** (reg+N+N+1) are.
 **
-** If they are not NULL, the piOldColMask and piNewColMask output variables
-** are set to values that describe the columns used by the trigger program
-** in the OLD.* and NEW.* tables respectively. If column N of the 
-** pseudo-table is read at least once, the corresponding bit of the output
-** mask is set. If a column with an index greater than 32 is read, the
-** output mask is set to the special value 0xffffffff.
-**
+** Parameter orconf is the default conflict resolution algorithm for the
+** trigger program to use (REPLACE, IGNORE etc.). Parameter ignoreJump
+** is the instruction that control should jump to if a trigger program
+** raises an IGNORE exception.
 */
 void sqlite3CodeRowTrigger(
   Parse *pParse,       /* Parse context */
@@ -948,17 +1003,15 @@ void sqlite3CodeRowTrigger(
   ExprList *pChanges,  /* Changes list for any UPDATE OF triggers */
   int tr_tm,           /* One of TRIGGER_BEFORE, TRIGGER_AFTER */
   Table *pTab,         /* The table to code triggers from */
-  int newIdx,          /* The indice of the "new" row to access */
-  int oldIdx,          /* The indice of the "old" row to access */
+  int reg,             /* The first in an array of registers (see above) */
   int orconf,          /* ON CONFLICT policy */
   int ignoreJump       /* Instruction to jump to for RAISE(IGNORE) */
 ){
-  Trigger *p;
+  Trigger *p;          /* Used to iterate through pTrigger list */
 
-  UNUSED_PARAMETER(newIdx);
-
-  assert(op == TK_UPDATE || op == TK_INSERT || op == TK_DELETE);
-  assert(tr_tm == TRIGGER_BEFORE || tr_tm == TRIGGER_AFTER );
+  assert( op==TK_UPDATE || op==TK_INSERT || op==TK_DELETE );
+  assert( tr_tm==TRIGGER_BEFORE || tr_tm==TRIGGER_AFTER );
+  assert( (op==TK_UPDATE)==(pChanges!=0) );
 
   for(p=pTrigger; p; p=p->pNext){
 
@@ -973,21 +1026,9 @@ void sqlite3CodeRowTrigger(
     /* Determine whether we should code this trigger */
     if( p->op==op 
      && p->tr_tm==tr_tm 
-     && checkColumnOverlap(p->pColumns,pChanges)
+     && checkColumnOverlap(p->pColumns, pChanges)
     ){
-      Vdbe *v = sqlite3GetVdbe(pParse); /* Main VM */
-      TriggerPrg *pPrg;
-      pPrg = getRowTrigger(pParse, p, pTab, orconf);
-      assert( pPrg || pParse->nErr || pParse->db->mallocFailed );
-
-      /* Code the OP_Program opcode in the parent VDBE. P4 of the OP_Program 
-      ** is a pointer to the sub-vdbe containing the trigger program.  */
-      if( pPrg ){
-        sqlite3VdbeAddOp3(v, OP_Program, oldIdx, ignoreJump, ++pParse->nMem);
-        pPrg->pProgram->nRef++;
-        sqlite3VdbeChangeP4(v, -1, (const char *)pPrg->pProgram, P4_SUBPROGRAM);
-        VdbeComment((v, "Call: %s.%s", p->zName, onErrorText(orconf)));
-      }
+      sqlite3CodeRowTriggerDirect(pParse, p, pTab, reg, orconf, ignoreJump);
     }
   }
 }
@@ -1014,15 +1055,14 @@ void sqlite3CodeRowTrigger(
 u32 sqlite3TriggerOldmask(
   Parse *pParse,       /* Parse context */
   Trigger *pTrigger,   /* List of triggers on table pTab */
-  int op,              /* Either TK_UPDATE or TK_DELETE */
   ExprList *pChanges,  /* Changes list for any UPDATE OF triggers */
   Table *pTab,         /* The table to code triggers from */
   int orconf           /* Default ON CONFLICT policy for trigger steps */
 ){
+  const int op = pChanges ? TK_UPDATE : TK_DELETE;
   u32 mask = 0;
   Trigger *p;
 
-  assert(op==TK_UPDATE || op==TK_DELETE);
   for(p=pTrigger; p; p=p->pNext){
     if( p->op==op && checkColumnOverlap(p->pColumns,pChanges) ){
       TriggerPrg *pPrg;
