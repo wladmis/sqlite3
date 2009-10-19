@@ -11,39 +11,39 @@
 #
 
 # sloc sqlite3.c
-set stat(coreSLOC)    64753  ;# Non-comment lines of amalgamation code 
+set stat(coreSLOC)    65745  ;# Non-comment lines of amalgamation code 
 # sloc test*.c
-set stat(tclcSLOC)    14544  ;# Non-comment lines of test C code
+set stat(tclcSLOC)    14572  ;# Non-comment lines of test C code
 # ls test*.c tclsqlite.c | wc
 set stat(tclcNfile)      32  ;# Number of files of TCL C testcode + tclsqlite.c
 # ls -l test*.c tclsqlite.c | awk '{sum+=$5}END{print sum}'
-set stat(tclcNByte)  692706  ;# Number of bytes of TCL C testcode + tclsqlite.c
+set stat(tclcNByte)  700287  ;# Number of bytes of TCL C testcode + tclsqlite.c
 # sloc *.test *.tcl
-set stat(tclsSLOC)   190331  ;# Non-comment lines of TCL test script
+set stat(tclsSLOC)   194071  ;# Non-comment lines of TCL test script
 # ls *.test *.tcl | wc
-set stat(tclsNFile)     505  ;# Number of files of TCL test script
+set stat(tclsNFile)     511  ;# Number of files of TCL test script
 # ls -l *.test *.tcl | awk '{sum+=$5}END{print sum}'
-set stat(tclsNByte) 8155409  ;# Number of bytes of TCL test script
+set stat(tclsNByte) 8298364  ;# Number of bytes of TCL test script
 # grep do_test *.test | wc
-set stat(tclNTest)    24380  ;# Number of test cases in the TCL test suite
-set stat(tclNEval)  2220162  ;# Number of test case evaluations
+set stat(tclNTest)    24866  ;# Number of test cases in the TCL test suite
+set stat(tclNEval)  2151154  ;# Number of test case evaluations
 set stat(nSqlFuzz)   107457  ;# Number of SQL fuzz tests
 set stat(vqNEval)     42102  ;# Number of test evaluations for veryquick.test
-set stat(vqStmtCov)   96.76  ;# veryquick statement coverage
-set stat(vqBrCov)     91.89  ;# veryquick branch coverage
-set stat(allStmtCov)  99.48  ;# all.test statement coverage
-set stat(allBrCov)    97.38  ;# all.test condition/decision coverage
+set stat(vqStmtCov)   97.23  ;# veryquick statement coverage
+set stat(vqBrCov)     92.57  ;# veryquick branch coverage
+set stat(allStmtCov)  99.50  ;# all.test statement coverage
+set stat(allBrCov)    97.41  ;# all.test condition/decision coverage
 # tclsh mkth3.tcl cfg/*.cfg */*.test >th3.c; sloc th3.c
-set stat(th3SLOC)    337370  ;# Non-comment lines in full th3.c
+set stat(th3SLOC)    340773  ;# Non-comment lines in full th3.c
 # ls -l th3.c
-set stat(th3NByte) 23457513  ;# Number of bytes in full th3.c
+set stat(th3NByte) 23689140  ;# Number of bytes in full th3.c
 # grep th3testBegin */*.test
 # grep th3oomBegin */*.test
 # grep th3ioerrBegin */*.test
 # grep '^--testcase' */*.test
-set stat(th3NTest)    11753  ;# Number of test cases
+set stat(th3NTest)    12287  ;# Number of test cases
 # from output of a full test run.
-set stat(th3NEval)  1334937  ;# Number of test case evaluations
+set stat(th3NEval)  1355348  ;# Number of test case evaluations
 set stat(th3StmtCov) 100.00  ;# TH3 statement coverage
 set stat(th3BrCov)   100.00  ;# TH3 branch coverage
 # wc `fossil ls | awk '/\.test$/{print $2}'`
@@ -57,9 +57,9 @@ set stat(sltcSLOC)        1307 ;# Non-comment lines of SLT C code
 # grep '^query' `fossil ls | awk '/\.test$/{print $2}'` | wc
 set stat(sltNTest)     7195024 ;# Number of test cases in SLT
 # grep 'assert(' sqlite3.c | wc
-set stat(nAssert)         2796 ;# Number of assert statements
+set stat(nAssert)         2831 ;# Number of assert statements
 # grep 'testcase(' sqlite3.c | grep -v define | wc
-set stat(nTestcase)        539 ;# Number of testcase statements
+set stat(nTestcase)        558 ;# Number of testcase statements
 
 set stat(totalSLOC) [expr {$stat(tclcSLOC)+$stat(tclsSLOC)+
                            $stat(th3SLOC)+$stat(sltcSLOC)+$stat(sltsSLOC)}]
@@ -100,7 +100,7 @@ proc version {} {
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of [version 3.6.18] (all statistics in the report are against that
+<p>As of [version 3.6.19] (all statistics in the report are against that
 release of SQLite),
 the SQLite library consists of approximately
 <tcl>KB {$stat(coreSLOC)}</tcl> KSLOC of C code.
@@ -112,6 +112,23 @@ hd_puts "[expr {int($stat(totalSLOC)/$stat(coreSLOC))}] times as much"
 </tcl>
 test code and test scripts - 
 <tcl>KB {$stat(totalSLOC)}</tcl> KSLOC.</p>
+
+<h3>1.1 Executive Summary</h3>
+
+<ul>
+<li> Three independently developed test harnesses
+<li> 100% branch test coverage in an as-deployed configuration
+<li> Millions and millions of test cases
+<li> Out-of-memory tests
+<li> I/O error tests
+<li> Crash and power loss tests
+<li> Fuzz tests
+<li> Boundary value tests
+<li> Regression tests
+<li> Malformed database tests
+<li> Extensive use of assert() and run-time checks
+<li> Valgrind analysis
+</ul>
 
 <tcl>hd_fragment {harnesses} {test harness} {three test harnesses}</tcl>
 <h2>2.0 Test Harnesses</h2>
@@ -138,7 +155,9 @@ in <tcl>N {$stat(tclsNFile)}</tcl> files totaling
 <tcl>N {$stat(tclNTest)}</tcl> distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run, about <tcl>MB {$stat(tclNEval)}</tcl> million 
-separate tests are performed.
+separate tests are performed and provide 
+<tcl>hd_puts $stat(allStmtCov)</tcl>% statement and
+<tcl>hd_puts $stat(allBrCov)</tcl>% branch test coverage.
 </p>
 </li>
 
@@ -178,7 +197,7 @@ typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
 <tcl>KB {$stat(vqNEval)}</tcl> thousand test cases
 and covering
-<tcl>hd_puts $stat(vqStmtCov)</tcl>% of the core SQLite source code.
+<tcl>hd_puts $stat(vqStmtCov)</tcl>% of the core SQLite source code statements.
 The veryquick tests covers everything except the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes

@@ -8,7 +8,7 @@ set ::SectionNumbers(fig) 0
 catch { set TOC "" }
 catch { array unset ::References }
 
-proc H {iLevel zTitle {zName ""}} {
+proc H {iLevel zTitle {zName ""} args} {
 
   set zNumber ""
   for {set i 1} {$i <= 4} {incr i} {
@@ -30,6 +30,12 @@ proc H {iLevel zTitle {zName ""}} {
     set ::References($zName) [list $zNumber $zTitle]
   }
 
+  if {$args != ""} {
+    #puts $args
+    set ::hd(fragment) $zName
+    eval hd_keywords $args
+  }
+
   append ::TOC [subst {
     <div style="margin-left:[expr $iLevel*6]ex">
     <a href="#$zName">${zNumber} $zTitle</a>
@@ -42,6 +48,13 @@ proc h1 {args} {uplevel H 1 $args}
 proc h2 {args} {uplevel H 2 $args}
 proc h3 {args} {uplevel H 3 $args}
 proc h4 {args} {uplevel H 4 $args}
+
+proc fancyformat_fragment {name args} {
+  global hd
+  set hd(fragment) $name
+  eval hd_keywords $args
+  return "<a name=\"$name\"></a>"
+}
 
 proc Figure {zImage zName zCaption} {
   incr ::SectionNumbers(fig)
@@ -158,6 +171,27 @@ proc fancyformat_import_requirement {reqid} {
 
 set ::Requirements [list]
 
+proc Code {txt} {
+  set txt [string trim $txt "\n"]
+  set out {<div class=codeblock><table width=100%><tr><td><pre>}
+  foreach line [split $txt "\n"] {
+    if {![string is space $line]} {
+      set nSpace [expr {
+        [string length $line] - [string length [string trimleft $line]]
+      }]
+      if {[info exists nMinSpace]==0 || $nSpace<$nMinSpace} {
+        set nMinSpace $nSpace
+      }
+    }
+  }
+  foreach line [split $txt "\n"] {
+    set line [string range $line $nMinSpace end]
+    append out "$line\n"
+  }
+  append out "</table></div>"
+  return $out
+}
+
 proc fancyformat_document {zTitle lReqfile zBody} {
   unset -nocomplain ::ffreq
   unset -nocomplain ::ffreq_children
@@ -172,7 +206,7 @@ proc fancyformat_document {zTitle lReqfile zBody} {
 
 
   set body [subst -novariables $zBody]
-  hd_puts [subst {
+  hd_resolve [subst {
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
     <html>
     <head>
@@ -189,6 +223,3 @@ proc fancyformat_document {zTitle lReqfile zBody} {
     [FixReferences $body]
   }]
 }
-
-
-

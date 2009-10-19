@@ -39,7 +39,7 @@
      <ul>
      <li> <a href="http://www.sqlite.org/src/timeline">Timeline</a></li>
      <li><a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a></li>
-     <li><a href="http://www.sqlite.org/src/tktnew">Report a bug</a></li>
+     <li><a href="http://www.sqlite.org/src/wiki?name=Bug+Reports">Report a bug</a></li>
      <li><a href="http://www.sqlite.org/src/rptview?rn=1">Browse
             bug reports</a></li>
      <li><a href="http://www.sqlite.org/src/dir">Browse historical

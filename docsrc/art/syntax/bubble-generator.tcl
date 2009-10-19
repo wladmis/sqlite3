@@ -152,9 +152,9 @@ set all_graphs {
         {optx 
           {loop
              {or 
-                {line ON {or DELETE UPDATE INSERT}
+                {line ON {or DELETE UPDATE}
                          {or {line SET NULL} {line SET DEFAULT}
-                             CASCADE RESTRICT
+                             CASCADE RESTRICT {line NO ACTION}
                          }
                 }
                 {line MATCH /name}
@@ -250,8 +250,8 @@ set all_graphs {
      {line expr COLLATE /collation-name}
      {line expr {optx NOT} {or LIKE GLOB REGEXP MATCH} expr
            {optx ESCAPE expr}}
-     {line expr {or ISNULL NOTNULL {line IS NULL} {line NOT NULL}
-                                   {line IS NOT NULL}}}
+     {line expr {or ISNULL NOTNULL {line NOT NULL}}}
+     {line expr IS {optx NOT} expr}
      {line expr {optx NOT} BETWEEN expr AND expr}
      {line expr {optx NOT} IN 
             {or

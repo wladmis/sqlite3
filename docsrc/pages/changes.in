@@ -42,6 +42,19 @@ proc chng {date desc} {
   }
 }
 
+chng {2009 Oct 14 (3.6.19)} {
+<li>Added support for [foreign key constraints].  Foreign key constraints
+    are disabled by default.  Use the [foreign_keys pragma] to turn them on.
+<li>Generalized the IS and IS NOT operators to take arbitrary expressions
+    on their right-hand side.
+<li>The [TCL Interface] has been enhanced to use the
+    <a href="http://www.tcl.tk/cgi-bin/tct/tip/322.html">Non-Recursive
+    Engine (NRE)</a>
+    interface to the TCL interpreter when linked against TCL 8.6 or later.
+<li>Fix a bug introduced in 3.6.18 that can lead to a segfault when an
+    attempt is made to write on a read-only database.
+}
+
 chng {2009 Sep 11 (3.6.18)} {
 <li>Versioning of the SQLite source code has transitioned from CVS to
     <a href="http://www.fossil-scm.org/">Fossil</a>.
@@ -1392,8 +1405,8 @@ chng {2002 Dec 27 (2.7.5)} {
 }
 
 chng {2002 Dec 17 (2.7.4)} {
-<li>Database files can now grow to be up to 2^41 bytes.  The old limit
-    was 2^31 bytes.</li>
+<li>Database files can now grow to be up to 2&#94;41 bytes.  The old limit
+    was 2&#94;31 bytes.</li>
 <li>The optimizer will now scan tables in the reverse if doing so will
     satisfy an ORDER BY ... DESC clause.</li>
 <li>The full pathname of the database file is now remembered even if

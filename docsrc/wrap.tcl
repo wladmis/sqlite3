@@ -318,6 +318,9 @@ proc putsin4 {fd text} {
 # A procedure to write the common header found on every HTML file on
 # the SQLite website.
 #
+# NOTE:  This code is copied and reused in matrix.tcl.  When making
+# changes to this implementation, be sure to also change matrix.tcl.
+#
 proc hd_header {title {srcfile {}}} {
   global hd
   set saved_enable $hd(enable-main)
@@ -413,11 +416,6 @@ proc hd_header {title {srcfile {}}} {
     } else {
       set hd(footer) {}
     }
-    append hd(footer) "<hr><small><i>\n"
-    set mtime [file mtime $srcfile]
-    set date [clock format $mtime -format {%Y/%m/%d %H:%M:%S UTC} -gmt 1]
-    append hd(footer) "This page last modified $date\n"
-    append hd(footer) "</i></small></div></body></html>"
   } else {
     set hd(enable-main) $saved_enable
   }
@@ -432,14 +430,15 @@ proc BubbleDiagram {name {anonymous_flag 0}} {
   #  hd_resolve "<h4>\[$name:\]</h4>"
   #}
   hd_resolve "<h4>\[$name:\]</h4>"
+  set alt "alt=\"syntax diagram $name\""
   if {$hd(enable-main)} {
     puts $hd(main) "<blockquote>\
-        <img src=\"$hd(rootpath-main)images/syntax/$name.gif\"></img>\
+        <img $alt src=\"$hd(rootpath-main)images/syntax/$name.gif\"></img>\
         </blockquote>"
   }
   if {$hd(enable-aux)} {
     puts $hd(aux) "<blockquote>\
-        <img src=\"$hd(rootpath-aux)images/syntax/$name.gif\"></img>\
+        <img $alt src=\"$hd(rootpath-aux)images/syntax/$name.gif\"></img>\
         </blockquote>"
   }
 }
@@ -609,7 +608,7 @@ hd_close_main
 hd_open_main doc_pagelink_crossref.html
 hd_header {Pagelink Crossreference} $DOC/wrap.tcl
 hd_puts "<p>Target Page - Which pages reference it.</p>"
-hd_puts "<p>Pages matching (news|changes|releaselog|\[0-9]to\[0-9]|^doc_.*_crossref) are skipped.</p>"
+hd_puts "<p>Pages matching (news|changes|releaselog|\[0-9]to\[0-9]|&#94;doc_.*_crossref) are skipped.</p>"
 hd_puts "<ul>"
 foreach y [lsort [array names revglink]] {
   regsub {#.*} $y {} y2

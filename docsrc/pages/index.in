@@ -80,9 +80,9 @@ members, including:</p>
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_6_18.html">Version 3.6.18</a>
+<li><a href="releaselog/3_6_19.html">Version 3.6.19</a>
 of SQLite is recommended for all new development.  Upgrading from
-version 3.6.12, 3.6.13, 3.6.14.2, 3.6.16, or 3.6.17 is optional.
+version 3.6.12, 3.6.13, 3.6.14.2, or 3.6.16 through 3.6.18 is optional.
 Upgrading from all other SQLite versions is recommended.</li>
 </ul></p>
 
@@ -96,7 +96,7 @@ Upgrading from all other SQLite versions is recommended.</li>
 <li> <a href="lang.html">SQL Syntax</a> </li>
 <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a> </li>
 <li> <a href="http://www.sqlite.org/src/timeline">Timeline</a> </li>
-<li> <a href="http://www.sqlite.org/src/tktnew">Report a bug</a> </li>
+<li> <a href="http://www.sqlite.org/src/wiki?name=Bug+Reports">Report a bug</a> </li>
 <li> <a href="http://www.sqlite.org/cvstrac/wiki">Wiki</a> </li>
 </ul></p>
 

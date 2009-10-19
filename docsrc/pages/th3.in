@@ -33,7 +33,7 @@ as the primary platform for development and debug testing.
 The reason that TH3 exists is that it meets other objectives that are
 difficult to achieve with the TCL-based tests.</p>
 
-<h2>2.0 Operation</h3>
+<h2>2.0 Operation</h2>
 
 <p>TH3 is a test program generator.  The output of TH3 is a program
 written in ANSI-C and intended to be

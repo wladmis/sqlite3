@@ -1,6 +1,6 @@
 <title>The Tcl interface to the SQLite library</title>
 <tcl>
-hd_keywords {Tcl extension}
+hd_keywords {Tcl extension} {TCL Interface}
 proc METHOD {name text} {
   hd_puts "<a name=\"$name\"></a>\n<h3>The \"$name\" method</h3>\n"
   hd_resolve $text

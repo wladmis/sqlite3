@@ -95,13 +95,16 @@ heading {SQLite Features and Extensions} {
   Pages describing specific features or extension modules of SQLite.
 }
 
-doc {Using The Online Backup Interface} {backup.html} {
-  The [sqlite3_backup_init | online-backup interface] can be used to
-  copy content from a disk file into an in-memory database or vice
-  versa and it can make a hot backup of a live database.  This application
-  note gives examples of how.
+doc {Asynchronous IO Mode} {asyncvfs.html} {
+  This page describes the asynchronous IO extension developed alongside
+  SQLite. Using asynchronous IO can cause SQLite to appear more responsive
+  by delegating database writes to a background thread.
 }
-doc {Sharing Cache Mode} {sharedcache.html} {
+doc {Foreign Key Support} {foreignkeys.html} {
+  This document describes the support for foreign key constraints introduced
+  in version 3.7.0.
+}
+doc {Shared Cache Mode} {sharedcache.html} {
   Version 3.3.0 and later supports the ability for two or more
   database connections to share the same page and schema cache.
   This feature is useful for certain specialized applications.
@@ -111,10 +114,11 @@ doc {Unlock Notify} {unlock_notify.html} {
   [shared cache mode] to more efficiently manage resource conflict (database
   table locks).
 }
-doc {Asynchronous IO Mode} {asyncvfs.html} {
-  This page describes the asynchronous IO extension developed alongside
-  SQLite. Using asynchronous IO can cause SQLite to appear more responsive
-  by delegating database writes to a background thread.
+doc {Using The Online Backup Interface} {backup.html} {
+  The [sqlite3_backup_init | online-backup interface] can be used to
+  copy content from a disk file into an in-memory database or vice
+  versa and it can make a hot backup of a live database.  This application
+  note gives examples of how.
 }
 doc {Virtual R-Tree Tables} {rtree.html} {
   A description of the SQLite R-Tree extension. An R-Tree is a specialized

@@ -117,7 +117,7 @@ fancyformat_document "SQLite Database File Format" hlr30000.txt {
         overflow page).
 
       <tr><td>(B-Tree) page header      <td>
-        The 8 (leaf pages) or 12 (internal node pages) byte header that
+        The 8-byte (leaf pages) or 12-byte (internal node pages) header that
         occurs at the start of each B-Tree page.
 
       <tr><td>Cell content area         <td>
@@ -272,8 +272,9 @@ fancyformat_document "SQLite Database File Format" hlr30000.txt {
 
       <tr><td>User cookie               <td>
         A 32-bit integer field stored at byte offset 60 of the database file
-        header (see section <cite>database_header</cite>). Normally, SQLite
-        increments this value each time it modifies the databas schema.
+        header (see section <cite>database_header</cite>). This value can be
+        set and queried using the user_version PRAGMA but is not otherwise
+        used by SQLite.
 
       <tr><td>Variable Length Integer   <td>
         A format used for storing 64-bit signed integer values in SQLite 
@@ -791,9 +792,9 @@ h1 "SQLite Database Files" sqlite_database_files
         always consist of an exact number of pages.
       <p>
         Pages are numbered beginning from 1, not 0. Page 1 consists of
-        the first <i>page-size</i> bytes of the database file. The database header
-        described in the previous section consumes the first 100 bytes of page
-        1.
+        the first <i>page-size</i> bytes of the database file. 
+        The database header described in the previous section consumes
+        the first 100 bytes of page 1.
       <p>
         Each page of the database file is one of the following:
       <ul>
@@ -1307,8 +1308,8 @@ h1 "SQLite Database Files" sqlite_database_files
           Each index B-Tree page is divided into four sections that occur
           in order on the page:
         <ul>
-          <li> The 8 (leaf node pages) or 12 (internal tree node pages) 
-               byte page-header.
+          <li> The 8-byte (leaf node pages) or 12-byte (internal tree
+               node pages) page-header.
           <li> The cell offset array. This is a series of N big-endian 2-byte
                integer values, where N is the number of records stored on 
                the page.
@@ -1317,8 +1318,9 @@ h1 "SQLite Database Files" sqlite_database_files
         </ul>
         [Figure indexpage.gif figure_indexpage "Index B-Tree Page Data"]
         <p>
-          The 8 (leaf node pages) or 12 (internal tree node pages) byte page
-          header that begins each index B-Tree page is made up of a series of 
+          The 8-byte (leaf node pages) or 12-byte (internal tree node pages)
+          page header that begins each index B-Tree page is made up
+          of a series of 
           1, 2 and 4 byte unsigned integer values as shown in the following
           table. All values are stored in big-endian byte order.
 

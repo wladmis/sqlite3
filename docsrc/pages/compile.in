@@ -488,59 +488,6 @@ The resulting "sqlite3.c" amalgamation code file (and its associated
 header file "sqlite3.h") can then be moved to a non-unix platform
 for final compilation using a native compiler.</p>
 
-<p>
-The following SQLITE_OMIT_* options are available:
-</p>
-
-<p><table>
-  <tr>
-    <td>
-      <ul>
-        <li> [SQLITE_OMIT_AUTHORIZATION] </li>
-        <li> [SQLITE_OMIT_AUTOINIT] </li>
-        <li> [SQLITE_OMIT_BETWEEN_OPTIMIZATION] </li>
-        <li> [SQLITE_OMIT_BLOB_LITERAL] </li>
-        <li> [SQLITE_OMIT_BUILTIN_TEST] </li>
-        <li> [SQLITE_OMIT_CHECK] </li>
-        <li> [SQLITE_OMIT_COMPLETE] </li>
-        <li> [SQLITE_OMIT_DATETIME_FUNCS] </li>
-        <li> [SQLITE_OMIT_DECLTYPE] </li>
-        <li> [SQLITE_OMIT_DEPRECATED] </li>
-        <li> [SQLITE_OMIT_DISKIO] </li>
-        <li> [SQLITE_OMIT_FLAG_PRAGMAS] </li>
-        <li> [SQLITE_OMIT_FLOATING_POINT] </li>
-        <li> [SQLITE_OMIT_GET_TABLE] </li>
-        <li> [SQLITE_OMIT_INCRBLOB] </li>
-        <li> [SQLITE_OMIT_INTEGRITY_CHECK] </li>
-        <li> [SQLITE_OMIT_LIKE_OPTIMIZATION] </li>
-      </ul>
-    </td>
-    <td>
-      <ul>
-        <li> [SQLITE_OMIT_LOAD_EXTENSION] </li>
-        <li> [SQLITE_OMIT_LOCALTIME] </li>
-        <li> [SQLITE_OMIT_MEMORYDB] </li>
-        <li> [SQLITE_OMIT_OR_OPTIMIZATION] </li>
-        <li> [SQLITE_OMIT_PAGER_PRAGMAS] </li>
-        <li> [SQLITE_OMIT_PROGRESS_CALLBACK] </li>
-        <li> [SQLITE_OMIT_QUICKBALANCE] </li>
-        <li> [SQLITE_OMIT_SCHEMA_PRAGMAS] </li>
-        <li> [SQLITE_OMIT_SCHEMA_VERSION_PRAGMAS] </li>
-        <li> [SQLITE_OMIT_SHARED_CACHE] </li>
-        <li> [SQLITE_OMIT_SUBQUERY] </li>
-        <li> [SQLITE_OMIT_TCL_VARIABLE] </li>
-        <li> [SQLITE_OMIT_TRACE] </li>
-        <li> [SQLITE_OMIT_TRUNCATE_OPTIMIZATION] </li>
-        <li> [SQLITE_OMIT_UTF16] </li>
-        <li> [SQLITE_OMIT_WSD] </li>
-        <li> [SQLITE_OMIT_XFER_OPT] </li>
-      </ul>
-    </td>
-  </tr>
-</table>
-</p>
-
-
 <p>All of the SQLITE_OMIT_* options are unsupported.</p>
 
 <blockquote>
@@ -709,8 +656,8 @@ COMPILE_OPTION {SQLITE_OMIT_FLOATING_POINT} {
 }
 
 COMPILE_OPTION {SQLITE_OMIT_FOREIGN_KEY} {
-  If this option is defined, FOREIGN KEY clauses in column declarations are
-  ignored.
+  If this option is defined, then [foreign key constraint] syntax is
+  not recognized.
 }
 
 COMPILE_OPTION {SQLITE_OMIT_GET_TABLE} {
@@ -831,9 +778,9 @@ COMPILE_OPTION {SQLITE_OMIT_TRIGGER} {
   [CREATE TRIGGER] or [DROP TRIGGER]
   commands are available in this case, and attempting to execute
   either will result in a parse error.
-
-  WARNING: If this macro is defined, it will not be possible to open a database
-  for which the schema contains TRIGGER objects. 
+  This option also disables enforcement of [foreign key constraints],
+  since the code that implements triggers and which is omitted by this
+  option is also used to implement [foreign key actions].
 }
 
 COMPILE_OPTION {SQLITE_OMIT_TRUNCATE_OPTIMIZATION} {

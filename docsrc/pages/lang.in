@@ -148,8 +148,15 @@ attached to the table after it has been renamed. However, if there are
 any view definitions, or statements executed by triggers that refer to
 the table being renamed, these are not automatically modified to use the new
 table name. If this is required, the triggers or view definitions must be
-dropped and recreated to use the new table name by hand.
+dropped and recreated to use the new table name by hand. 
 </p>
+
+<p>^If [foreign key constraints] are 
+[foreign_keys pragma | enabled] when a table is renamed, then any
+[foreign-key-clause | REFERENCES clauses] in any table (either the
+table being renamed or some other table)
+that refer to the table being renamed are modified to refer 
+to the renamed table by its new name.
 
 <p>The ADD COLUMN syntax
 is used to add a new column to an existing table.
@@ -163,6 +170,9 @@ statement, with the following restrictions:
     or CURRENT_TIMESTAMP.</li>
 <li>If a NOT NULL constraint is specified, then the column must have a
     default value other than NULL.
+<li>^If [foreign key constraints] are [foreign_keys pragma | enabled] and
+    a column with a [foreign-key-clause | REFERENCES clause]
+    is added, the column must have a default value of NULL.
 </ul>
 
 <p>Note also that when adding a CHECK constraint, the CHECK constraint
@@ -1167,6 +1177,21 @@ will be freed automatically by DROP TABLE.</p>
 <p>The optional IF EXISTS clause suppresses the error that would normally
 result if the table does not exist.</p>
 
+<p>^If [foreign key constraints] are enabled, a DROP TABLE command performs an
+implicit [DELETE | DELETE FROM &lt;tbl&gt;] command before removing the
+table from the database schema. ^Any triggers attached to the table are
+dropped from the database schema before the implicit DELETE FROM &lt;tbl&gt; 
+is executed, so this cannot cause any triggers to fire. By contrast, ^an
+implicit DELETE FROM &lt;tbl&gt; does cause any configured
+[foreign key actions] to take place. 
+^If the implicit DELETE FROM &lt;tbl&gt; executed
+as part of a DROP TABLE command violates any immediate foreign key constraints,
+an error is returned and the table is not dropped. ^If 
+the implicit DELETE FROM &lt;tbl&gt; causes any 
+deferred foreign key constraints to be violated, and the violations still
+exist when the transaction is committed, an error is returned at the time
+of commit.
+
 <tcl>
 ##############################################################################
 Section {DROP TRIGGER} droptrigger {{DROP TRIGGER}}
@@ -1243,7 +1268,7 @@ highest to lowest precedence:</p>
 +    -
 &lt;&lt;   &gt;&gt;   &amp;    |
 &lt;    &lt;=   &gt;    &gt;=
-=    ==   !=   &lt;&gt;   </big>IN  LIKE  GLOB  MATCH  REGEXP
+=    ==   !=   &lt;&gt;   </big>IS  IN  LIKE  GLOB  MATCH  REGEXP
 AND   
 OR</font>
 </pre></blockquote>
@@ -1278,7 +1303,14 @@ operand modulo its right operand.</p>
 
 <p>The result of any binary operator is a numeric value, except
 for the [Operator ||] concatenation operator which gives a string
-result.</p>"</tcl>
+result.</p>"
+
+hd_fragment {isisnot} {IS operator} {IS NOT operator}
+
+hd_puts "<p>The [Operator IS] and [Operator {IS NOT}] operators work
+like [Operator =] and [Operator !=] except that NULL values compare
+equal to one another.  [Operator IS] and [Operator {IS NOT}]
+have the same precedence as [Operator =]."
 
 <tcl>hd_fragment litvalue {literal value}</tcl>
 <h3>Literal Values</h3>
@@ -1769,7 +1801,7 @@ The strftime() function also takes a format string as its first argument.
 
 <p>
 The date and time functions use a subset of
-<a href="http://en.wikipedia.org/wiki/IOS_8601">IS0-8601</a> date and time
+<a href="http://en.wikipedia.org/wiki/ISO_8601">IS0-8601</a> date and time
 formats.
 The date() function returns the date in this format: YYYY-MM-DD. 
 The time() function returns the time as HH:MM:SS. 
@@ -1912,7 +1944,11 @@ number of seconds since 1970.  If the "unixepoch" modifier does not
 follow a timestring of the form DDDDDDDDDD which expresses the number
 of seconds since 1970 or if other modifiers
 separate the "unixepoch" modifier from prior DDDDDDDDDD then the
-behavior is undefined.</p>
+behavior is undefined.
+Due to precision limitations imposed by the implementations use
+of 64-bit integers, the "unixepoch" modifier only works for
+dates between 0000-01-01 00:00:00 and 5352-11-01 10:52:47 (unix times
+of -62167219200 through 10675199167).</p>
 
 <p>The "localtime" modifier (12) assumes the time string to its left is in
 Universal Coordinated Time (UTC) and adjusts the time
@@ -1995,8 +2031,10 @@ attempts to map the year into an equivalent year within
 this range, do the calculation, then map the year back.</p>
 
 
-<p>Date computations do not give correct results for dates 
-before Julian day number 0 (-4713-11-24 12:00:00).</p>
+<p>These functions only work for dates between 0000-01-01 00:00:00
+and 9999-12-31 23:59:59 (julidan day numbers 1721059.5 through 5373484.5).
+For dates outside that range, the results of these
+functions are undefined.</p>
 
 <p>Non-Vista Windows platforms only support one set of DST rules. 
 Vista only supports two. Therefore, on these platforms, 

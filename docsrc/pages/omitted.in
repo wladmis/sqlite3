@@ -23,24 +23,9 @@ proc feature {name desc} {
   hd_puts "<td valign=\"top\">$desc</td></tr>"
 }
 
-feature {FOREIGN KEY constraints} {
-  FOREIGN KEY constraints are parsed but are not enforced.
-  However, the equivalent constraint enforcement can be achieved
-  using triggers.  The SQLite source tree contains 
-  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.c">
-  source code</a> and 
-  <a href="http://www.sqlite.org/cvstrac/fileview?f=sqlite/tool/genfkey.README">
-  documentation</a> for a C program that will read an SQLite database,
-  analyze the foreign key constraints, and generate appropriate triggers
-  automatically.
-}
-
-feature {Complete trigger support} {
-  There is some support for triggers but it is not complete.  Missing
-  subfeatures include FOR EACH STATEMENT triggers (currently all triggers
-  must be FOR EACH ROW), INSTEAD OF triggers on tables (currently 
-  INSTEAD OF triggers are only allowed on views), and recursive
-  triggers - triggers that trigger themselves.
+feature {RIGHT and FULL OUTER JOIN} {
+  LEFT OUTER JOIN is implemented, but not RIGHT OUTER JOIN or
+  FULL OUTER JOIN.
 }
 
 feature {Complete ALTER TABLE support} {
@@ -50,9 +35,9 @@ feature {Complete ALTER TABLE support} {
   DROP COLUMN, ALTER COLUMN, ADD CONSTRAINT, and so forth are omitted.
 }
 
-feature {RIGHT and FULL OUTER JOIN} {
-  LEFT OUTER JOIN is implemented, but not RIGHT OUTER JOIN or
-  FULL OUTER JOIN.
+feature {Complete trigger support} {
+  FOR EACH ROW triggers are supported but not FOR EACH STATEMENT
+  triggers.
 }
 
 feature {Writing to VIEWs} {

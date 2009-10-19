@@ -68,7 +68,7 @@
 #define DEFAULT_PORT "80"
 #endif
 #ifndef MAX_CONTENT_LENGTH
-#define MAX_CONTENT_LENGTH 5000000
+#define MAX_CONTENT_LENGTH 9000000
 #endif
 
 
@@ -869,6 +869,9 @@ void ProcessOneRequest(int forceClose){
     unsigned char c = *(unsigned char*)z;
     if( (c&0x80)!=0 || !allowedInName[c] ){
       *z = '_';
+      if( c=='%' && z[1]!=0 && z[2]!=0 ){
+        for(i=3; (z[i-2] = z[i])!=0; i++){}
+      }
     }
   }
 

@@ -22,6 +22,19 @@ foreach name $syntax_order {
       hd_puts "&nbsp;&nbsp; <a href=\"#$c\">$c</a>"
     }
   }
+  if {[info exists ::backlink($name)]} {
+    unset -nocomplain bk
+    foreach c $::backlink($name) {
+      set bk($c) 1
+    }
+    set bklist [lsort [array names bk]]
+    if {[llength $bklist]>0} {
+      hd_puts "<br></br>\nSee also:"
+      foreach c $bklist {
+        hd_puts "&nbsp;&nbsp; <a href=\"$c\">$c</a>"
+      }
+    }
+  }
   hd_puts "\n</blockquote>\n\n"
 }
 unset -nocomplain c cx px

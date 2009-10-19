@@ -19,6 +19,22 @@ proc newsitem {date title text} {
   hd_puts "<hr width=\"50%\">"
 }
 
+newsitem {2009-Oct-14} {Version 3.6.19} {
+  SQLite [version 3.6.19] adds native support for
+  [foreign key constraints], including deferred constraints and
+  cascading deletes.  Enforcement of foreign keys is disabled by
+  default for backwards compatibility and must be turned on using
+  the [foreign_keys pragma].
+
+  Version 3.6.19 also adds support for the
+  [IS operator | IS and IS NOT operators].  Formerly, SQLite (as most
+  other SQL database engines) supported IS NULL and IS NOT NULL.  The
+  IS and IS NOT operators are generalizations that allow the right-hand
+  side to be an arbitrary expression.  IS and IS NOT work the same as
+  == (equals) and != (not equals) except that with IS and IS NOT the
+  NULL values compare equal to one another.
+}
+
 newsitem {2009-Sep-11} {Version 3.6.18} {
   Beginning with this release, the SQLite source code is tracked and
   managed using the <a href="http://www.fossil-scm.org/">Fossil</a>

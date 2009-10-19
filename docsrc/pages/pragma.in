@@ -79,7 +79,7 @@ In many pragmas, the argument is a boolean.  The boolean can be one of:
 </center>
 
 <p>Keyword arguments can optionally appear in quotes.  
-(Example:  <tt>'yes' &91;FALSE&93;</tt>.) Some pragmas
+(Example:  <tt>'yes' &#91;FALSE&#93;</tt>.) Some pragmas
 takes a string literal as their argument.  When pragma takes a keyword
 argument, it will usually also take a numeric equivalent as well.
 For example, "0" and "no" mean the same thing, as does "1" and "yes".
@@ -187,9 +187,10 @@ name is meaningless and is simply ignored.</p>
     count-changes flag is not set, [INSERT], [UPDATE] and [DELETE] statements
     return no data. When count-changes is set, each of these commands 
     returns a single row of data consisting of one integer value - the
-    number of rows inserted, modified or deleted by the command. The 
+    number of rows inserted, modified or deleted by the command. ^The 
     returned change count does not include any insertions, modifications
-    or deletions performed by triggers.</p>
+    or deletions performed by triggers, or any changes made automatically
+    by [foreign key actions].</p>
 
     <p>Another way to get the row change counts is to use the
     [sqlite3_changes()] or [sqlite3_total_changes()] interfaces.
@@ -256,6 +257,25 @@ name is meaningless and is simply ignored.</p>
     <p>Databases created by the [ATTACH] command always use the same encoding
     as the main database.</p>
 </li>
+
+<tcl>Subsection foreign_keys</tcl>
+<li><p><b>PRAGMA foreign_keys;
+       <br>PRAGMA foreign_keys = </b><i>boolean</i><b>;</b></p>
+    <p>Query, set, or clear the enforcement of [foreign key constraints].
+
+    <p>Changing this setting affects the execution of all statements prepared
+       using the database connection, including those prepared before the
+       setting was changed. Any existing statements prepared using the legacy 
+       [sqlite3_prepare()] interface may fail with an [SQLITE_SCHEMA] error
+       after this setting is changed.
+
+    <p>As of SQLite [version 3.6.19], the default setting for foreign
+       key enforcement is OFF.  However, that might change in a future
+       release of SQLite.  To minimize future problems, applications should
+       set the foreign key enforcement flag as required by the application
+       and not depend on the default setting.
+</li>
+
 
 <tcl>Subsection full_column_names</tcl>
 <li><p><b>PRAGMA full_column_names;
@@ -559,8 +579,12 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <li><p><b>PRAGMA recursive_triggers;
        <br>PRAGMA recursive_triggers = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear the recursive trigger capability.
-    Changes to the recursive trigger setting effect all statements that
-    are prepared after the PRAGMA statement is prepared.</p>
+
+    <p>Changing this setting affects the execution of all statements prepared
+       using the database connection, including those prepared before the
+       setting was changed. Any existing statements prepared using the legacy 
+       [sqlite3_prepare()] interface may fail with an [SQLITE_SCHEMA] error
+       after this setting is changed.
 
     <p>Prior to SQLite version 3.6.18, recursive triggers were not
     supported.  The behavior of SQLite was always as if this pragma was
