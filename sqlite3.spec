@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.6.18
-Release: alt3
+Version: 3.6.19
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -15,6 +15,7 @@ Patch0: sqlite3-alt-dl.patch
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
 Patch3: sqlite3-alt-version-script.patch
+Patch4: sqlite3-alt-doc-build.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -97,6 +98,7 @@ embedded controllers.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
@@ -160,6 +162,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Mon Oct 19 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.19-alt1
+- 3.6.19
+
 * Mon Sep 21 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.18-alt3
 - don't hide "sqlite3[A-Z]*" symbols
 
