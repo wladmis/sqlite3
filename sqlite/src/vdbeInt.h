@@ -290,7 +290,7 @@ struct Vdbe {
   VdbeCursor **apCsr;     /* One element of this array for each open cursor */
   u8 errorAction;         /* Recovery action to do in case of an error */
   u8 okVar;               /* True if azVar[] has been initialized */
-  u16 nVar;               /* Number of entries in aVar[] */
+  ynVar nVar;             /* Number of entries in aVar[] */
   Mem *aVar;              /* Values for the OP_Variable opcode. */
   char **azVar;           /* Name of variables */
   u32 magic;              /* Magic number for sanity checking */
@@ -323,6 +323,7 @@ struct Vdbe {
 #endif
   VdbeFrame *pFrame;      /* Parent frame */
   int nFrame;             /* Number of frames in pFrame list */
+  u32 expmask;            /* Binding to these vars invalidates VM */
 };
 
 /*
@@ -385,9 +386,7 @@ int sqlite3VdbeMemGrow(Mem *pMem, int n, int preserve);
 int sqlite3VdbeCloseStatement(Vdbe *, int);
 void sqlite3VdbeFrameDelete(VdbeFrame*);
 int sqlite3VdbeFrameRestore(VdbeFrame *);
-#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
-int sqlite3VdbeReleaseBuffers(Vdbe *p);
-#endif
+void sqlite3VdbeMemStoreType(Mem *pMem);
 
 #ifndef SQLITE_OMIT_FOREIGN_KEY
 int sqlite3VdbeCheckFk(Vdbe *, int);

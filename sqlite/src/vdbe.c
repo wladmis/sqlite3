@@ -151,12 +151,10 @@ int sqlite3_found_count = 0;
 /*
 ** Argument pMem points at a register that will be passed to a
 ** user-defined function or returned to the user as the result of a query.
-** The second argument, 'db_enc' is the text encoding used by the vdbe for
-** register variables.  This routine sets the pMem->enc and pMem->type
-** variables used by the sqlite3_value_*() routines.
+** This routine sets the pMem->type variable used by the sqlite3_value_*() 
+** routines.
 */
-#define storeTypeInfo(A,B) _storeTypeInfo(A)
-static void _storeTypeInfo(Mem *pMem){
+void sqlite3VdbeMemStoreType(Mem *pMem){
   int flags = pMem->flags;
   if( flags & MEM_Null ){
     pMem->type = SQLITE_NULL;
@@ -327,7 +325,7 @@ static void applyAffinity(
 int sqlite3_value_numeric_type(sqlite3_value *pVal){
   Mem *pMem = (Mem*)pVal;
   applyNumericAffinity(pMem);
-  storeTypeInfo(pMem, 0);
+  sqlite3VdbeMemStoreType(pMem);
   return pMem->type;
 }
 
@@ -1021,7 +1019,7 @@ case OP_Variable: {
   n = pOp->p3;
   assert( p1>=0 && p1+n<=p->nVar );
   assert( p2>=1 && p2+n-1<=p->nMem );
-  assert( pOp->p4.z==0 || pOp->p3==1 );
+  assert( pOp->p4.z==0 || pOp->p3==1 || pOp->p3==0 );
 
   while( n-- > 0 ){
     pVar = &p->aVar[p1++];
@@ -1168,7 +1166,7 @@ case OP_ResultRow: {
   pMem = p->pResultSet = &p->aMem[pOp->p1];
   for(i=0; i<pOp->p2; i++){
     sqlite3VdbeMemNulTerminate(&pMem[i]);
-    storeTypeInfo(&pMem[i], encoding);
+    sqlite3VdbeMemStoreType(&pMem[i]);
     REGISTER_TRACE(pOp->p1+i, &pMem[i]);
   }
   if( db->mallocFailed ) goto no_mem;
@@ -1387,7 +1385,7 @@ case OP_Function: {
   pArg = &p->aMem[pOp->p2];
   for(i=0; i<n; i++, pArg++){
     apVal[i] = pArg;
-    storeTypeInfo(pArg, encoding);
+    sqlite3VdbeMemStoreType(pArg);
     REGISTER_TRACE(pOp->p2, pArg);
   }
 
@@ -2855,6 +2853,7 @@ case OP_SetCookie: {       /* in3 */
     /* Invalidate all prepared statements whenever the TEMP database
     ** schema is changed.  Ticket #1644 */
     sqlite3ExpirePreparedStatements(db);
+    p->expired = 0;
   }
   break;
 }
@@ -2971,6 +2970,11 @@ case OP_OpenWrite: {
   Btree *pX;
   VdbeCursor *pCur;
   Db *pDb;
+
+  if( p->expired ){
+    rc = SQLITE_ABORT;
+    break;
+  }
 
   nField = 0;
   pKeyInfo = 0;
@@ -3754,7 +3758,13 @@ case OP_NewRowid: {           /* out2-prerelease */
 ** This instruction only works on tables.  The equivalent instruction
 ** for indices is OP_IdxInsert.
 */
-case OP_Insert: {
+/* Opcode: InsertInt P1 P2 P3 P4 P5
+**
+** This works exactly like OP_Insert except that the key is the
+** integer value P3, not the value of the integer stored in register P3.
+*/
+case OP_Insert: 
+case OP_InsertInt: {
   Mem *pData;       /* MEM cell holding data for the record to be inserted */
   Mem *pKey;        /* MEM cell holding key  for the record */
   i64 iKey;         /* The integer ROWID or key for the record to be inserted */
@@ -3766,20 +3776,26 @@ case OP_Insert: {
   int op;           /* Opcode for update hook: SQLITE_UPDATE or SQLITE_INSERT */
 
   pData = &p->aMem[pOp->p2];
-  pKey = &p->aMem[pOp->p3];
   assert( pOp->p1>=0 && pOp->p1<p->nCursor );
   pC = p->apCsr[pOp->p1];
   assert( pC!=0 );
   assert( pC->pCursor!=0 );
   assert( pC->pseudoTableReg==0 );
-  assert( pKey->flags & MEM_Int );
   assert( pC->isTable );
   REGISTER_TRACE(pOp->p2, pData);
-  REGISTER_TRACE(pOp->p3, pKey);
 
-  iKey = pKey->u.i;
+  if( pOp->opcode==OP_Insert ){
+    pKey = &p->aMem[pOp->p3];
+    assert( pKey->flags & MEM_Int );
+    REGISTER_TRACE(pOp->p3, pKey);
+    iKey = pKey->u.i;
+  }else{
+    assert( pOp->opcode==OP_InsertInt );
+    iKey = pOp->p3;
+  }
+
   if( pOp->p5 & OPFLAG_NCHANGE ) p->nChange++;
-  if( pOp->p5 & OPFLAG_LASTROWID ) db->lastRowid = pKey->u.i;
+  if( pOp->p5 & OPFLAG_LASTROWID ) db->lastRowid = iKey;
   if( pData->flags & MEM_Null ){
     pData->z = 0;
     pData->n = 0;
@@ -5051,7 +5067,7 @@ case OP_AggStep: {
   assert( apVal || n==0 );
   for(i=0; i<n; i++, pRec++){
     apVal[i] = pRec;
-    storeTypeInfo(pRec, encoding);
+    sqlite3VdbeMemStoreType(pRec);
   }
   ctx.pFunc = pOp->p4.pFunc;
   assert( pOp->p3>0 && pOp->p3<=p->nMem );
@@ -5339,7 +5355,7 @@ case OP_VFilter: {   /* jump */
     apArg = p->apArg;
     for(i = 0; i<nArg; i++){
       apArg[i] = &pArgc[i+1];
-      storeTypeInfo(apArg[i], 0);
+      sqlite3VdbeMemStoreType(apArg[i]);
     }
 
     if( sqlite3SafetyOff(db) ) goto abort_due_to_misuse;
@@ -5543,7 +5559,7 @@ case OP_VUpdate: {
     apArg = p->apArg;
     pX = &p->aMem[pOp->p3];
     for(i=0; i<nArg; i++){
-      storeTypeInfo(pX, 0);
+      sqlite3VdbeMemStoreType(pX);
       apArg[i] = pX;
       pX++;
     }

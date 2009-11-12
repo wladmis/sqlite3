@@ -3303,6 +3303,7 @@ static int test_prepare(
   if( Tcl_GetIntFromObj(interp, objv[3], &bytes) ) return TCL_ERROR;
 
   rc = sqlite3_prepare(db, zSql, bytes, &pStmt, objc>=5 ? &zTail : 0);
+  Tcl_ResetResult(interp);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   if( zTail && objc>=5 ){
     if( bytes>=0 ){
@@ -3360,6 +3361,7 @@ static int test_prepare_v2(
 
   rc = sqlite3_prepare_v2(db, zSql, bytes, &pStmt, objc>=5 ? &zTail : 0);
   assert(rc==SQLITE_OK || pStmt==0);
+  Tcl_ResetResult(interp);
   if( sqlite3TestErrCode(interp, db, rc) ) return TCL_ERROR;
   if( zTail && objc>=5 ){
     if( bytes>=0 ){

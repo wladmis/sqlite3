@@ -99,6 +99,9 @@ int sqlite3_clear_bindings(sqlite3_stmt *pStmt){
     sqlite3VdbeMemRelease(&p->aVar[i]);
     p->aVar[i].flags = MEM_Null;
   }
+  if( p->isPrepareV2 && p->expmask ){
+    p->expired = 1;
+  }
   sqlite3_mutex_leave(mutex);
   return rc;
 }
@@ -304,7 +307,7 @@ static int sqlite3Step(Vdbe *p){
   }
 
   if( p->pc<=0 && p->expired ){
-    if( ALWAYS(p->rc==SQLITE_OK) ){
+    if( ALWAYS(p->rc==SQLITE_OK || p->rc==SQLITE_SCHEMA) ){
       p->rc = SQLITE_SCHEMA;
     }
     rc = SQLITE_ERROR;
@@ -914,6 +917,15 @@ static int vdbeUnbind(Vdbe *p, int i){
   sqlite3VdbeMemRelease(pVar);
   pVar->flags = MEM_Null;
   sqlite3Error(p->db, SQLITE_OK, 0);
+
+  /* If the bit corresponding to this variable in Vdbe.expmask is set, then 
+  ** binding a new value to this variable invalidates the current query plan.
+  */
+  if( p->isPrepareV2 &&
+     ((i<32 && p->expmask & ((u32)1 << i)) || p->expmask==0xffffffff)
+  ){
+    p->expired = 1;
+  }
   return SQLITE_OK;
 }
 
@@ -1163,6 +1175,12 @@ int sqlite3_transfer_bindings(sqlite3_stmt *pFromStmt, sqlite3_stmt *pToStmt){
   Vdbe *pTo = (Vdbe*)pToStmt;
   if( pFrom->nVar!=pTo->nVar ){
     return SQLITE_ERROR;
+  }
+  if( pTo->isPrepareV2 && pTo->expmask ){
+    pTo->expired = 1;
+  }
+  if( pFrom->isPrepareV2 && pFrom->expmask ){
+    pFrom->expired = 1;
   }
   return sqlite3TransferBindings(pFromStmt, pToStmt);
 }

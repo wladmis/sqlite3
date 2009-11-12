@@ -1219,7 +1219,7 @@ int sqlite3TempInMemory(const sqlite3 *db){
 ** The sqlite3TempInMemory() function is used to determine which.
 */
 int sqlite3BtreeFactory(
-  const sqlite3 *db,        /* Main database when opening aux otherwise 0 */
+  sqlite3 *db,              /* Main database when opening aux otherwise 0 */
   const char *zFilename,    /* Name of the file containing the BTree database */
   int omitJournal,          /* if TRUE then do not journal this file */
   int nCache,               /* How many pages in the page cache */
@@ -1480,9 +1480,6 @@ static const int aHardLimit[] = {
 #endif
 #if SQLITE_MAX_LIKE_PATTERN_LENGTH<1
 # error SQLITE_MAX_LIKE_PATTERN_LENGTH must be at least 1
-#endif
-#if SQLITE_MAX_VARIABLE_NUMBER<1
-# error SQLITE_MAX_VARIABLE_NUMBER must be at least 1
 #endif
 #if SQLITE_MAX_COLUMN>32767
 # error SQLITE_MAX_COLUMN must not exceed 32767

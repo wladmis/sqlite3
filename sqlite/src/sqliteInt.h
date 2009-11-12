@@ -1498,6 +1498,22 @@ struct AggInfo {
 };
 
 /*
+** The datatype ynVar is a signed integer, either 16-bit or 32-bit.
+** Usually it is 16-bits.  But if SQLITE_MAX_VARIABLE_NUMBER is greater
+** than 32767 we have to make it 32-bit.  16-bit is preferred because
+** it uses less memory in the Expr object, which is a big memory user
+** in systems with lots of prepared statements.  And few applications
+** need more than about 10 or 20 variables.  But some extreme users want
+** to have prepared statements with over 32767 variables, and for them
+** the option is available (at compile-time).
+*/
+#if SQLITE_MAX_VARIABLE_NUMBER<=32767
+typedef i64 ynVar;
+#else
+typedef int ynVar;
+#endif
+
+/*
 ** Each node of an expression in the parse tree is an instance
 ** of this structure.
 **
@@ -1590,7 +1606,8 @@ struct Expr {
   int iTable;            /* TK_COLUMN: cursor number of table holding column
                          ** TK_REGISTER: register number
                          ** TK_TRIGGER: 1 -> new, 0 -> old */
-  i16 iColumn;           /* TK_COLUMN: column index.  -1 for rowid */
+  ynVar iColumn;         /* TK_COLUMN: column index.  -1 for rowid.
+                         ** TK_VARIABLE: variable number (always >= 1). */
   i16 iAgg;              /* Which entry in pAggInfo->aCol[] or ->aFunc[] */
   i16 iRightJoinTable;   /* If EP_FromJoin, the right table of the join */
   u8 flags2;             /* Second set of flags.  EP2_... */
@@ -2132,6 +2149,7 @@ struct Parse {
   int nVarExpr;        /* Number of used slots in apVarExpr[] */
   int nVarExprAlloc;   /* Number of allocated slots in apVarExpr[] */
   Expr **apVarExpr;    /* Pointers to :aaa and $aaaa wildcard expressions */
+  Vdbe *pReprepare;    /* VM being reprepared (sqlite3Reprepare()) */
   int nAlias;          /* Number of aliased result set columns */
   int nAliasAlloc;     /* Number of allocated slots for aAlias[] */
   int *aAlias;         /* Register used to hold aliased result */
@@ -2641,7 +2659,6 @@ int sqlite3ExprCompare(Expr*, Expr*);
 void sqlite3ExprAnalyzeAggregates(NameContext*, Expr*);
 void sqlite3ExprAnalyzeAggList(NameContext*,ExprList*);
 Vdbe *sqlite3GetVdbe(Parse*);
-Expr *sqlite3CreateIdExpr(Parse *, const char*);
 void sqlite3PrngSaveState(void);
 void sqlite3PrngRestoreState(void);
 void sqlite3PrngResetState(void);
@@ -2744,7 +2761,7 @@ void sqlite3DeferForeignKey(Parse*, int);
 #endif
 void sqlite3Attach(Parse*, Expr*, Expr*, Expr*);
 void sqlite3Detach(Parse*, Expr*);
-int sqlite3BtreeFactory(const sqlite3 *db, const char *zFilename,
+int sqlite3BtreeFactory(sqlite3 *db, const char *zFilename,
                        int omitJournal, int nCache, int flags, Btree **ppBtree);
 int sqlite3FixInit(DbFixer*, Parse*, int, const char*, const Token*);
 int sqlite3FixSrcList(DbFixer*, SrcList*);
@@ -2840,7 +2857,7 @@ void sqlite3AlterRenameTable(Parse*, SrcList*, Token*);
 int sqlite3GetToken(const unsigned char *, int *);
 void sqlite3NestedParse(Parse*, const char*, ...);
 void sqlite3ExpirePreparedStatements(sqlite3*);
-void sqlite3CodeSubselect(Parse *, Expr *, int, int);
+int sqlite3CodeSubselect(Parse *, Expr *, int, int);
 void sqlite3SelectPrep(Parse*, Select*, NameContext*);
 int sqlite3ResolveExprNames(NameContext*, Expr*);
 void sqlite3ResolveSelectNames(Parse*, Select*, NameContext*);
@@ -2875,6 +2892,7 @@ void sqlite3StrAccumAppend(StrAccum*,const char*,int);
 char *sqlite3StrAccumFinish(StrAccum*);
 void sqlite3StrAccumReset(StrAccum*);
 void sqlite3SelectDestInit(SelectDest*,int,int);
+Expr *sqlite3CreateColumnExpr(sqlite3 *, SrcList *, int, int);
 
 void sqlite3BackupRestart(sqlite3_backup *);
 void sqlite3BackupUpdate(sqlite3_backup *, Pgno, const u8 *);

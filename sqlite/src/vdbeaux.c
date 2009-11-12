@@ -53,13 +53,14 @@ Vdbe *sqlite3VdbeCreate(sqlite3 *db){
 ** Remember the SQL string for a prepared statement.
 */
 void sqlite3VdbeSetSql(Vdbe *p, const char *z, int n, int isPrepareV2){
+  assert( isPrepareV2==1 || isPrepareV2==0 );
   if( p==0 ) return;
 #ifdef SQLITE_OMIT_TRACE
   if( !isPrepareV2 ) return;
 #endif
   assert( p->zSql==0 );
   p->zSql = sqlite3DbStrNDup(p->db, z, n);
-  p->isPrepareV2 = isPrepareV2 ? 1 : 0;
+  p->isPrepareV2 = (u8)isPrepareV2;
 }
 
 /*
@@ -1013,27 +1014,6 @@ void sqlite3VdbeFrameDelete(VdbeFrame *p){
   sqlite3DbFree(p->v->db, p);
 }
 
-
-#ifdef SQLITE_ENABLE_MEMORY_MANAGEMENT
-int sqlite3VdbeReleaseBuffers(Vdbe *p){
-  int ii;
-  int nFree = 0;
-  assert( sqlite3_mutex_held(p->db->mutex) );
-  for(ii=1; ii<=p->nMem; ii++){
-    Mem *pMem = &p->aMem[ii];
-    if( pMem->flags & MEM_RowSet ){
-      sqlite3RowSetClear(pMem->u.pRowSet);
-    }
-    if( pMem->z && pMem->flags&MEM_Dyn ){
-      assert( !pMem->xDel );
-      nFree += sqlite3DbMallocSize(pMem->db, pMem->z);
-      sqlite3VdbeMemRelease(pMem);
-    }
-  }
-  return nFree;
-}
-#endif
-
 #ifndef SQLITE_OMIT_EXPLAIN
 /*
 ** Give a listing of the program in the virtual machine.
@@ -1379,7 +1359,7 @@ void sqlite3VdbeMakeReady(
 
     p->nCursor = (u16)nCursor;
     if( p->aVar ){
-      p->nVar = (u16)nVar;
+      p->nVar = (ynVar)nVar;
       for(n=0; n<nVar; n++){
         p->aVar[n].flags = MEM_Null;
         p->aVar[n].db = db;
@@ -3021,4 +3001,43 @@ void sqlite3ExpirePreparedStatements(sqlite3 *db){
 */
 sqlite3 *sqlite3VdbeDb(Vdbe *v){
   return v->db;
+}
+
+/*
+** Return a pointer to an sqlite3_value structure containing the value bound
+** parameter iVar of VM v. Except, if the value is an SQL NULL, return 
+** 0 instead. Unless it is NULL, apply affinity aff (one of the SQLITE_AFF_*
+** constants) to the value before returning it.
+**
+** The returned value must be freed by the caller using sqlite3ValueFree().
+*/
+sqlite3_value *sqlite3VdbeGetValue(Vdbe *v, int iVar, u8 aff){
+  assert( iVar>0 );
+  if( v ){
+    Mem *pMem = &v->aVar[iVar-1];
+    if( 0==(pMem->flags & MEM_Null) ){
+      sqlite3_value *pRet = sqlite3ValueNew(v->db);
+      if( pRet ){
+        sqlite3VdbeMemCopy((Mem *)pRet, pMem);
+        sqlite3ValueApplyAffinity(pRet, aff, SQLITE_UTF8);
+        sqlite3VdbeMemStoreType((Mem *)pRet);
+      }
+      return pRet;
+    }
+  }
+  return 0;
+}
+
+/*
+** Configure SQL variable iVar so that binding a new value to it signals
+** to sqlite3_reoptimize() that re-preparing the statement may result
+** in a better query plan.
+*/
+void sqlite3VdbeSetVarmask(Vdbe *v, int iVar){
+  assert( iVar>0 );
+  if( iVar>32 ){
+    v->expmask = 0xffffffff;
+  }else{
+    v->expmask |= ((u32)1 << (iVar-1));
+  }
 }
