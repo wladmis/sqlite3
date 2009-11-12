@@ -1,3 +1,2 @@
 copy: *.patch
 tar: sqlite name=sqlite-@version@
-tar: docsrc name=docsrc

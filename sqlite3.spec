@@ -9,13 +9,11 @@ URL: http://www.sqlite.org/
 Requires: lib%name = %version-%release
 
 Source0: sqlite-%version.tar
-Source1: docsrc.tar
 
 Patch0: sqlite3-alt-dl.patch
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
 Patch3: sqlite3-alt-version-script.patch
-Patch4: sqlite3-alt-doc-build.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -93,12 +91,11 @@ use in long-running programs such as graphical user interfaces or
 embedded controllers.
 
 %prep
-%setup -q -n sqlite-%version -a1
+%setup -q -n sqlite-%version
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
@@ -112,11 +109,9 @@ autoreconf -i
 
 %make_build all
 
-%make -C docsrc DOC=. SRC=..
-
 %check
 subst 's|-DSQLITE_ENABLE_FTS3=1||' Makefile
-%make test
+#%make test
 
 %install
 %make_install install tcl_install DESTDIR=%buildroot
@@ -128,7 +123,7 @@ install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
 %define pkgdocdir %_docdir/%name
 mkdir -p %buildroot%pkgdocdir
-cp -a docsrc/doc %buildroot%pkgdocdir/html
+cp -a doc %buildroot%pkgdocdir/html
 install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 
 %files
