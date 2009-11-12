@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.6.19
+Version: 3.6.20
 Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
@@ -111,7 +111,7 @@ autoreconf -i
 
 %check
 subst 's|-DSQLITE_ENABLE_FTS3=1||' Makefile
-#%make test
+%make test
 
 %install
 %make_install install tcl_install DESTDIR=%buildroot
@@ -157,6 +157,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Thu Nov 12 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.20-alt1
+- 3.6.20
+
 * Mon Oct 19 2009 Valery Inozemtsev <shrek@altlinux.ru> 3.6.19-alt1
 - 3.6.19
 

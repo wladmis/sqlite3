@@ -15,7 +15,7 @@ new file mode 100644
 index 0000000..6eba05c
 --- /dev/null
 +++ b/libsqlite3.map
-@@ -0,0 +1,163 @@
+@@ -0,0 +1,171 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -165,6 +165,14 @@ index 0000000..6eba05c
 +	sqlite3FkRequired;
 +	sqlite3MultiWrite;
 +	sqlite3VdbeCheckFk;
++};
++
++SQLITE3_3.6.20 {
++    global:
++    	sqlite3CreateColumnExpr;
++    	sqlite3VdbeGetValue;
++    	sqlite3VdbeMemStoreType;
++    	sqlite3VdbeSetVarmask;
 +};
 +
 +SQLITE3_COLUMN_METADATA {
