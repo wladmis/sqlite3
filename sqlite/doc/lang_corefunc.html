@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -253,9 +271,10 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
   are returned.
   The left-most character of <i>X</i> is number 1.  If <i>Y</i> is negative
   the the first character of the substring is found by counting from the
-  right rather than the left.  If <i>X</i> is string
-  then characters indices refer to actual UTF-8 characters.  If
-  <i>X</i> is a BLOB then the indices refer to bytes.
+  right rather than the left.  If <i>Z</i> is negative then return
+  the <i>Z</i> characters preceeding the <i>Y</i>-th character.
+  If <i>X</i> is string then characters indices refer to actual UTF-8 
+  characters.  If <i>X</i> is a BLOB then the indices refer to bytes.
 </td></tr><tr><td valign="top" align="right" width="120">total_changes()</td><td valign="top"><a name="total_changes"></a>
 
   Return the number of row changes caused by INSERT, UPDATE or DELETE

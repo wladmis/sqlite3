@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -91,6 +109,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_altertable.html">ALTER TABLE</a> </li>
 <li> <a href="syntaxdiagrams.html#alter-table-stmt">alter-table-stmt syntax diagram</a> </li>
 <li> <a href="amalgamation.html">amalgamation</a> </li>
+<li> <a href="download.html">amalgamation tarball</a> </li>
 <li> <a href="lang_analyze.html">ANALYZE</a> </li>
 <li> <a href="syntaxdiagrams.html#analyze-stmt">analyze-stmt syntax diagram</a> </li>
 <li> <a href="c3ref/create_function.html">application-defined SQL function</a> </li>
@@ -110,7 +129,9 @@ a:visited { color: #734559 }
 <li> <a href="lang_expr.html#binaryops">binary operators</a> </li>
 <li> <a href="c3ref/blob.html">BLOB handle</a> </li>
 <li> <a href="books.html">books about SQLite</a> </li>
+<li> <a href="lang_expr.html#varparam">bound parameter</a> </li>
 <li> <a href="btreemodule.html">btree design</a> </li>
+<li> <a href="howtocompile.html#amal">building the amalgamation</a> </li>
 <li> <a href="malloc.html#altalloc">built-in memory allocators</a> </li>
 <li> <a href="c3ref/funclist.html">C-API function list</a> </li>
 <li> <a href="c3ref/intro.html">C-language Interface</a> </li>
@@ -134,7 +155,10 @@ a:visited { color: #734559 }
 <li> <a href="syntaxdiagrams.html#comment-syntax">comment-syntax syntax diagram</a> </li>
 <li> <a href="lang_transaction.html">COMMIT</a> </li>
 <li> <a href="syntaxdiagrams.html#commit-stmt">commit-stmt syntax diagram</a> </li>
+<li> <a href="fts3.html#section_2">compile fts3</a> </li>
 <li> <a href="compile.html">compile-time options</a> </li>
+<li> <a href="howtocompile.html#cli">compiling the CLI</a> </li>
+<li> <a href="howtocompile.html#tcl">compiling the TCL interface</a> </li>
 <li> <a href="syntaxdiagrams.html#compound-operator">compound-operator syntax diagram</a> </li>
 <li> <a href="lang_conflict.html">conflict clause</a> </li>
 <li> <a href="syntaxdiagrams.html#conflict-clause">conflict-clause syntax diagram</a> </li>
@@ -168,6 +192,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/experimental.html">deprecated</a> </li>
 <li> <a href="lang_detach.html">DETACH DATABASE</a> </li>
 <li> <a href="syntaxdiagrams.html#detach-stmt">detach-stmt syntax diagram</a> </li>
+<li> <a href="download.html">download page</a> </li>
 <li> <a href="lang_dropindex.html">DROP INDEX</a> </li>
 <li> <a href="lang_droptable.html">DROP TABLE</a> </li>
 <li> <a href="lang_droptrigger.html">DROP TRIGGER</a> </li>
@@ -179,6 +204,7 @@ a:visited { color: #734559 }
 <li> <a href="datatype3.html">dynamic typing</a> </li>
 <li> <a href="pragma.html#pragma_empty_result_callbacks">empty_result_callbacks pragma</a> </li>
 <li> <a href="pragma.html#pragma_encoding">encoding pragma</a> </li>
+<li> <a href="fts3.html#section_3_1">enhanced query syntax</a> </li>
 <li> <a href="c3ref/c_abort.html">error code</a> </li>
 <li> <a href="lang_expr.html#like">ESCAPE</a> </li>
 <li> <a href="lockingv3.html#excl_lock">EXCLUSIVE lock</a> </li>
@@ -192,6 +218,8 @@ a:visited { color: #734559 }
 <li> <a href="fileformat.html">file format</a> </li>
 <li> <a href="fileformat2.html">file format redux</a> </li>
 <li> <a href="fileio.html">file I/O</a> </li>
+<li> <a href="lockingv3.html">file locking and concurrency control</a> </li>
+<li> <a href="lockingv3.html#locking">file locking states</a> </li>
 <li> <a href="foreignkeys.html#fk_actions">foreign key actions</a> </li>
 <li> <a href="foreignkeys.html">foreign key constraint</a> </li>
 <li> <a href="foreignkeys.html#fk_enable">foreign key constraints are enabled</a> </li>
@@ -199,6 +227,8 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_foreign_key_list">foreign_key_list pragma</a> </li>
 <li> <a href="pragma.html#pragma_foreign_keys">foreign_keys pragma</a> </li>
 <li> <a href="pragma.html#pragma_freelist_count">freelist_count pragma</a> </li>
+<li> <a href="fts3.html">FTS3</a> </li>
+<li> <a href="fts3.html#section_3">FTS3 MATCH</a> </li>
 <li> <a href="pragma.html#pragma_full_column_names">full_column_names pragma</a> </li>
 <li> <a href="pragma.html#pragma_fullfsync">fullfsync pragma</a> </li>
 <li> <a href="c3ref/create_function.html">function creation routines</a> </li>
@@ -208,6 +238,9 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#hex">hex() SQL function</a> </li>
 <li> <a href="c3ref/bind_blob.html">host parameter</a> </li>
 <li> <a href="c3ref/bind_blob.html">host parameter name</a> </li>
+<li> <a href="lockingv3.html#hotjrnl">hot journal</a> </li>
+<li> <a href="howtocompile.html">how to compile</a> </li>
+<li> <a href="lockingv3.html#how_to_corrupt">How To Corrupt Your Database Files</a> </li>
 <li> <a href="lang_corefunc.html#ifnull">ifnull() SQL function</a> </li>
 <li> <a href="inmemorydb.html">in-memory database</a> </li>
 <li> <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum pragma</a> </li>
@@ -259,6 +292,7 @@ a:visited { color: #734559 }
 <li> <a href="datatype3.html#collation">NOCASE collating function</a> </li>
 <li> <a href="lang_indexedby.html">NOT INDEXED</a> </li>
 <li> <a href="lang_corefunc.html#nullif">nullif() SQL function</a> </li>
+<li> <a href="fts3.html#section_4">offsets</a> </li>
 <li> <a href="compile.html#omitfeatures">omitfeatures</a> </li>
 <li> <a href="lang_conflict.html">ON CONFLICT</a> </li>
 <li> <a href="lang_conflict.html">ON CONFLICT clause</a> </li>
@@ -349,6 +383,7 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_reverse_unordered_selects">reverse_unordered_selects pragma</a> </li>
 <li> <a href="malloc.html#nofrag">Robson proof</a> </li>
 <li> <a href="lang_transaction.html">ROLLBACK</a> </li>
+<li> <a href="lockingv3.html#rollback">rollback journal</a> </li>
 <li> <a href="fileformat2.html#rollbackjournal">rollback journal format</a> </li>
 <li> <a href="syntaxdiagrams.html#rollback-stmt">rollback-stmt syntax diagram</a> </li>
 <li> <a href="lang_corefunc.html#round">round() SQL function</a> </li>
@@ -360,6 +395,7 @@ a:visited { color: #734559 }
 <li> <a href="syntaxdiagrams.html#savepoint-stmt">savepoint-stmt syntax diagram</a> </li>
 <li> <a href="pragma.html#pragma_schema_version">schema_version pragma</a> </li>
 <li> <a href="malloc.html#scratch">scratch memory allocator</a> </li>
+<li> <a href="fts3.html#section_6">segment btree</a> </li>
 <li> <a href="lang_select.html">SELECT</a> </li>
 <li> <a href="syntaxdiagrams.html#select-core">select-core syntax diagram</a> </li>
 <li> <a href="syntaxdiagrams.html#select-stmt">select-stmt syntax diagram</a> </li>
@@ -369,8 +405,10 @@ a:visited { color: #734559 }
 <li> <a href="lockingv3.html#shared_lock">SHARED lock</a> </li>
 <li> <a href="pragma.html#pragma_short_column_names">short_column_names pragma</a> </li>
 <li> <a href="syntaxdiagrams.html#signed-number">signed-number syntax diagram</a> </li>
+<li> <a href="fts3.html#section_1_3">simple fts3 queries</a> </li>
 <li> <a href="syntaxdiagrams.html#single-source">single-source syntax diagram</a> </li>
 <li> <a href="testing.html#slt">SLT</a> </li>
+<li> <a href="fts3.html#section_4">snippet</a> </li>
 <li> <a href="lang_corefunc.html#soundex">soundex() SQL function</a> </li>
 <li> <a href="testing.html#slt">SQL Logic Tests</a> </li>
 <li> <a href="c3ref/bind_blob.html">SQL parameter</a> </li>
@@ -911,6 +949,7 @@ a:visited { color: #734559 }
 <li> <a href="tclsqlite.html">Tcl extension</a> </li>
 <li> <a href="tclsqlite.html">TCL Interface</a> </li>
 <li> <a href="testing.html#tcl">TCL test suite</a> </li>
+<li> <a href="download.html">TEA tarball</a> </li>
 <li> <a href="pragma.html#pragma_temp_store">temp_store pragma</a> </li>
 <li> <a href="pragma.html#pragma_temp_store_directory">temp_store_directory pragma</a> </li>
 <li> <a href="inmemorydb.html#temp_db">temporary databases</a> </li>
@@ -922,9 +961,11 @@ a:visited { color: #734559 }
 <li> <a href="testing.html">testing</a> </li>
 <li> <a href="th3.html">TH3</a> </li>
 <li> <a href="amalgamation.html">the amalgamation</a> </li>
+<li> <a href="atomiccommit.html#sect_9_0">Things That Can Go Wrong</a> </li>
 <li> <a href="threadsafe.html">threading mode</a> </li>
 <li> <a href="testing.html#harnesses">three test harnesses</a> </li>
 <li> <a href="lang_datefunc.html">time() SQL function</a> </li>
+<li> <a href="fts3.html#tokenizer">tokenizer</a> </li>
 <li> <a href="lang_aggfunc.html#sumunc">total() aggregate function</a> </li>
 <li> <a href="lang_corefunc.html#total_changes">total_changes() SQL function</a> </li>
 <li> <a href="lang_corefunc.html#trim">trim() SQL function</a> </li>
@@ -1020,6 +1061,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_6_19.html">Version 3.6.19</a> </li>
 <li> <a href="releaselog/3_6_2.html">Version 3.6.2</a> </li>
 <li> <a href="releaselog/3_6_20.html">Version 3.6.20</a> </li>
+<li> <a href="releaselog/3_6_21.html">Version 3.6.21</a> </li>
 <li> <a href="releaselog/3_6_3.html">Version 3.6.3</a> </li>
 <li> <a href="releaselog/3_6_4.html">Version 3.6.4</a> </li>
 <li> <a href="releaselog/3_6_5.html">Version 3.6.5</a> </li>
@@ -1033,6 +1075,7 @@ a:visited { color: #734559 }
 <li> <a href="vtab.html">virtual table</a> </li>
 <li> <a href="c3ref/vtab_cursor.html">virtual table cursor</a> </li>
 <li> <a href="c3ref/module.html">virtual table module</a> </li>
+<li> <a href="lockingv3.html#writer_starvation">writer starvation</a> </li>
 <li> <a href="vtab.html#xBegin">xBegin</a> </li>
 <li> <a href="vtab.html#xbestindex">xBestIndex</a> </li>
 <li> <a href="vtab.html#xcolumn">xColumn</a> </li>

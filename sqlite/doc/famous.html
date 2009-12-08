@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -95,11 +113,9 @@ in their projects without ever telling us.
 file format</a> for their 
 <a href="http://www.adobe.com/products/photoshoplightroom/">Photoshop Lightroom</a>
 product.
-This is publically acknowledged on the Lightroom/About_Lightroom menu popup.
-Adobe has also announced that their 
-<a href="http://labs.adobe.com/technologies/air/">AIR project</a>
-will include SQLite.   It
-is reported that 
+SQLite is also a standard part of the
+<a href="http://labs.adobe.com/technologies/air/">Adobe Integrated Runtime (AIR)</a>.
+It is reported that 
 <a href="http://www.adobe.com/products/acrobat/readstep2.html">Acrobat Reader</a>
 also uses SQLite.
 </td></tr>
@@ -116,7 +132,19 @@ within Mac OS-X, including
 and in <a href="http://www.apple.com/aperature/">Aperture</a>.
 Apple uses SQLite in
 the <a href="http://www.apple.com/iphone/">iPhone</a> and in the
-<a href="http://www.apple.com/ipodtouch/">iPod touch</a>.
+<a href="http://www.apple.com/ipodtouch/">iPod touch</a> and in
+<a href="http://www.apple.com/itunes/">iTunes</a> software.
+</td></tr>
+
+<tr><td valign="top">
+<a href="http://www.dropbox.com/">
+<img src="images/foreignlogos/dropbox.gif" border="0">
+</a>
+</td>
+<td>
+The increasingly popular <a href="http://www.dropbox.com/">Dropbox</a> file
+archiving and synchronization service is reported to use SQLite as
+the primary data store on the client side.
 </td></tr>
 
 <tr><td valign="top">
@@ -125,10 +153,10 @@ the <a href="http://www.apple.com/iphone/">iPhone</a> and in the
 </a>
 </td>
 <td>
-The <a href="http://www.mozilla.com/">Firefox Web Browser</a> from Mozilla 
-has been slowly replacing their legacy file format "mork" with SQLite
-for about two years.  At this point, SQLite is used to store most
-persistent metadata in Firefox.
+SQLite is the primary meta-data storage format for
+the <a href="http://www.mozilla.com/">Firefox Web Browser</a> and the
+<a href="http://www.mozilla.com/thunderbird/">Thunderbird Email Reader</a> from
+Mozilla.
 </td></tr>
 
 
@@ -138,7 +166,7 @@ persistent metadata in Firefox.
 </td><td>
 We believe that <a href="http://www.ge.com/">General Electric</a>
 uses SQLite in some product or 
-another because they twice wrote the to SQLite developers requesting 
+another because they twice wrote to the SQLite developers requesting 
 the US Export Control Number for SQLite. So presumably GE is using
 SQLite in something that they are exporting. But nobody
 (outside of GE) seems to know what that might be.
@@ -155,8 +183,9 @@ It is known that
 uses SQLite in their 
 <a href="http://desktop.gooogle.com/mac/legal.html">Desktop for Mac</a>,
 in <a href="http://code.google.com/apis/gears/api_database.html">Google Gears</a>,
-and in the <a href="http://code.google.com/android/">Android</a> cell-phone 
-operating system.
+in the <a href="http://code.google.com/android/">Android</a> cell-phone 
+operating system, and in the 
+<a href="http://www.www.google.comm/chrome">Chrome Web Browser</a>.
 People are suspicious that Google uses SQLite for lots of other things
 that we do not know about yet.
 Engineers at Google have made extensive contributions to the
@@ -186,28 +215,6 @@ that at least one group within
 is using SQLite in the development of a 
 game program. No word yet if this game has actually been released or
 if they are still using SQLite.
-</td>
-
-
-<tr><td valign="top">
-<a href="http://monotone.ca">
-<img src="images/foreignlogos/monotone.gif" border="0"></a>
-</td><td>
-The <a href="http://monotone.ca">Monotone</a>
- configuration management system stores an entire project history in 
-an SQLite database. Each file is a separate BLOB.
-</td>
-
-
-<tr><td valign="top">
-<a href="http://www.philips.com/">
-<img src="images/foreignlogos/philips.gif" border="0"></a>
-</td><td>
-It is reported that 
-<a href="http://www.consumer.philips.com/portablemp3/">Philips MP3 Players</a>
-use SQLite to store metadata about the music they hold.
-Apparently, if you plug a Philips MP3 player into your USB port, you
-can see the SQLite database file there in plain sight.
 </td>
 
 

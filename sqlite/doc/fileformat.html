@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -72,16 +90,12 @@ a:visited { color: #734559 }
   
 
 
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    <html>
-    <head>
+
     <link type="text/css" rel="stylesheet" href="images/fileformat/rtdocs.css">
-    </head>
-    <body>
 
-    <div id=document_title>SQLite Database File Format</div>
-    <div id=toc_header>Table Of Contents</div>
-
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#80a796">SQLite Database File Format</div>
+    <div style="font-size:1.5em;margin:1em;color:#80a796">Table Of Contents</div>
     <div id=toc>
       
     <div style="margin-left:6ex">
@@ -808,14 +822,14 @@ single nul-terminator byte.</span></p>
         The 1, 2 and 4 byte unsigned integers that make up the rest of the
         <a class=defnlink href="#glossary_Database_header">database header</a> are described in the following table.
 
-      <table class=striped>
-        <tr><th>Byte Range <th>Byte Size <th width=100%>Description <th>Reqs
-	<tr style="background-color:#DDDDDD"><td>16..17 <td>2<td>
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Byte Range <th>Byte Size <th width=100%>Description <th>Reqs
+	<tr style="text-align:left;background-color:#DDDDDD"><td>16..17 <td>2<td>
             Database <a class=defnlink href="#glossary_Page_size">page size</a> in bytes. See section 
             <cite><a href="#pages_and_page_types" title="Pages and Page Types">2.2.2</a></cite> for details.
             <td><a class=reqlink href=#H30190>H30190</a>
 
-        <tr><td>18     <td>1<td>
+        <tr style="text-align:left"><td>18     <td>1<td>
             <p style="margin-top:0">
             File-format "write version". Currently, this field
             is always set to 1. If a value greater than 1 is read by SQLite,
@@ -831,7 +845,7 @@ single nul-terminator byte.</span></p>
             uses the new format. 
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr style="background-color:#DDDDDD"><td>19     <td>1<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>19     <td>1<td>
             <p style="margin-top:0">
              File-format "read version". Currently, this 
             field is always set to 1. If a value greater than 1 is read 
@@ -846,7 +860,7 @@ single nul-terminator byte.</span></p>
             than 1.
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr><td>20     <td>1<td>
+        <tr style="text-align:left"><td>20     <td>1<td>
             Number of bytes of unused space at the end of each database
             page. Usually this field is set to 0. If it is non-zero, then 
             it contains the number of bytes that are left unused at the
@@ -855,7 +869,7 @@ single nul-terminator byte.</span></p>
             database page).
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr style="background-color:#DDDDDD"><td>21     <td>1<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>21     <td>1<td>
              Maximum fraction of an index tree page to use for 
             embedded content. This value is used to determine the maximum
             size of a B-Tree cell to store as embedded content on a
@@ -863,7 +877,7 @@ single nul-terminator byte.</span></p>
             <cite><a href="#index_btree_cell_format" title="Index B-Tree Cell Format">2.3.3.4</a></cite> for details.
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr><td>22     <td>1<td>
+        <tr style="text-align:left"><td>22     <td>1<td>
             Minimum fraction of an index B-Tree page to use for
             embedded content when an entry uses one or more overflow pages.
             This value is used to determine the portion of a B-Tree cell 
@@ -872,7 +886,7 @@ single nul-terminator byte.</span></p>
             section <cite><a href="#index_btree_cell_format" title="Index B-Tree Cell Format">2.3.3.4</a></cite> for details.
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr style="background-color:#DDDDDD"><td>23     <td>1<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>23     <td>1<td>
             Minimum fraction of an table B-Tree leaf page to use for
             embedded content when an entry uses one or more overflow pages.
             This value is used to determine the portion of a B-Tree cell 
@@ -881,7 +895,7 @@ single nul-terminator byte.</span></p>
             section <cite><a href="#table_btree_cell_format" title="Table B-Tree Cell Format">2.3.4.3</a></cite> for details.
             <td><a class=reqlink href=#H30040>H30040</a>
 
-        <tr><td>24..27 <td>4<td>
+        <tr style="text-align:left"><td>24..27 <td>4<td>
             <p style="margin-top:0">
             The file change counter. Each time a database transaction is
             committed, the value of the 32-bit unsigned integer stored in
@@ -898,24 +912,24 @@ single nul-terminator byte.</span></p>
             cache may be assumed to be valid and may be reused.
             <td><a class=reqlink href=#H33040>H33040</a>
 
-        <tr style="background-color:#DDDDDD"><td>32..35 <td>4<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>32..35 <td>4<td>
             Page number of first freelist trunk page. 
             For more details, refer to section <cite><a href="#free_page_list" title="The Free Page List">2.4</a></cite>.
             <td><a class=reqlink href=#H31320>H31320</a>
 
-        <tr><td>36..39 <td>4<td>
+        <tr style="text-align:left"><td>36..39 <td>4<td>
             Number of free pages in the <a class=defnlink href="#glossary_Database_file">database file</a>.
             For more details, refer to section <cite><a href="#free_page_list" title="The Free Page List">2.4</a></cite>.
             <td><a class=reqlink href=#H31310>H31310</a>
 
-        <tr style="background-color:#DDDDDD"><td>40..43 <td>4<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>40..43 <td>4<td>
             The schema version. Each time the database schema is modified (by
             creating or deleting a database table, index, trigger or view)
             the value of the 32-bit unsigned integer stored in this field
             is incremented.
             <td><a class=reqlink href=#H33050>H33050</a>
 
-        <tr><td>44..47 <td>4<td>
+        <tr style="text-align:left"><td>44..47 <td>4<td>
             <p style="margin-top:0">
             Schema layer file-format. This value is similar to the
             "read-version" and "write-version" fields at offsets 18 and 19
@@ -944,12 +958,12 @@ single nul-terminator byte.</span></p>
               schema layer file-format field somehow gets set to 0.
             <td><a class=reqlink href=#H30120>H30120</a>
 
-        <tr style="background-color:#DDDDDD"><td>48..51 <td>4<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>48..51 <td>4<td>
             Default pager cache size. This field is used by SQLite to store
             the recommended pager cache size to use for the database.
             <td><a class=reqlink href=#H30130>H30130</a>
 
-        <tr><td>52..55 <td>4<td>
+        <tr style="text-align:left"><td>52..55 <td>4<td>
             For auto-vacuum capable databases, the numerically largest 
             root-page number in the database. Since page 1 is always the
             root-page of the schema table (section <cite><a href="#schema_table" title="The Schema Table">2.2.3</a></cite>),
@@ -957,19 +971,19 @@ single nul-terminator byte.</span></p>
             non-auto-vacuum databases, this value is always zero.
             <td><a class=reqlink href=#H30140>H30140</a>, <a class=reqlink href=#H30141>H30141</a>
 
-        <tr style="background-color:#DDDDDD"><td>56..59 <td>4<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>56..59 <td>4<td>
             (constant) Database text encoding. A value of 1 means all 
             text values are stored using UTF-8 encoding. 2 indicates
             little-endian UTF-16 text. A value of 3 means that the database
             contains big-endian UTF-16 text.  
             <td><a class=reqlink href=#H30150>H30150</a>
 
-        <tr><td>60..63 <td>4<td>
+        <tr style="text-align:left"><td>60..63 <td>4<td>
             The user-cookie value. A 32-bit integer value available to the
             user for read/write access.
             <td><a class=reqlink href=#H30160>H30160</a>
 
-        <tr style="background-color:#DDDDDD"><td>64..67 <td>4<td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>64..67 <td>4<td>
             The incremental-vacuum flag. In non-auto-vacuum databases this
             value is always zero. In auto-vacuum databases, this field is
             set to 1 if "incremental vacuum" mode is enabled. If incremental
@@ -1133,13 +1147,13 @@ multiple of the database <a class=defnlink href="#glossary_Page_size">page size<
         table. Each record in the schema table contains exactly 5 values, in
         the following order:
 
-      <table class=striped>
-        <tr><th>Field<th>Description
-        <tr style="background-color:#DDDDDD"><td>Schema item type.
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Field<th>Description
+        <tr style="text-align:left;background-color:#DDDDDD"><td>Schema item type.
             <td>A string value. One of "table", "index", "trigger" or "view",
                 according to the schema item type. Entries associated with
                 UNIQUE or PRIMARY KEY clauses have this field set to "index".
-        <tr><td>Schema item name.
+        <tr style="text-align:left"><td>Schema item name.
             <td>A string value. The name of the database schema item (table,
                 index, trigger or view) associated with this record, if any.
                 Entries associated with UNIQUE or PRIMARY KEY clauses have
@@ -1148,19 +1162,19 @@ multiple of the database <a class=defnlink href="#glossary_Page_size">page size<
                 is the name of the SQL table and &lt;idx&gt; is an integer
                 value.
 
-        <tr style="background-color:#DDDDDD"><td style="white-space:nowrap">Associated table name.
+        <tr style="text-align:left;background-color:#DDDDDD"><td style="white-space:nowrap">Associated table name.
             <td>A string value. For "table" 
             or "view" records this is a copy of the second (previous) value. 
             For "index" and "trigger" records, this field is set to the name 
             of the associated database table.
-        <tr><td style="white-space:nowrap">The "root page" number. 
+        <tr style="text-align:left"><td style="white-space:nowrap">The "root page" number. 
             <td>For "trigger" and "view" records, as well as "table" records
 	        associated with virtual tables, this is set to integer value 0. 
 		For other "table" and "index" records (including those associated 
 		with UNIQUE or PRIMARY KEY clauses), this field contains the root
                 page number (an integer) of the B-Tree structure that contains
                 the table or index data.
-        <tr style="background-color:#DDDDDD"><td>The SQL statement.
+        <tr style="text-align:left;background-color:#DDDDDD"><td>The SQL statement.
             <td>A string value. The SQL statement used to create the schema
                 item (i.e.  the complete text of an SQL "CREATE TABLE"
                 statement). This field contains an empty string for table
@@ -1206,14 +1220,14 @@ multiple of the database <a class=defnlink href="#glossary_Page_size">page size<
       <p>
         Then the schema table would contain a total of 7 records, as follows:
 
-      <table class=striped>
-        <tr><th>Field 1<th>Field 2<th>Field 3<th>Field 4<th>Field 5
-        <tr style="background-color:#DDDDDD"><td>table <td>abc <td>abc <td>2 <td>CREATE TABLE abc(a, b, c)
-        <tr><td>index <td>i1 <td>abc <td>3 <td>CREATE INDEX i1 ON abc(b, c)
-        <tr style="background-color:#DDDDDD"><td>table <td>def <td>def <td>4 <td>CREATE TABLE def(a PRIMARY KEY, b, c, UNIQUE(b, c))
-        <tr><td>index <td>sqlite_autoindex_def_1 <td>def <td>5 <td>
-        <tr style="background-color:#DDDDDD"><td>index <td>sqlite_autoindex_def_2 <td>def <td>6 <td>
-        <tr><td>view <td>v1 <td>v1 <td>0 <td>CREATE VIEW v1 AS SELECT * FROM abc
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Field 1<th>Field 2<th>Field 3<th>Field 4<th>Field 5
+        <tr style="text-align:left;background-color:#DDDDDD"><td>table <td>abc <td>abc <td>2 <td>CREATE TABLE abc(a, b, c)
+        <tr style="text-align:left"><td>index <td>i1 <td>abc <td>3 <td>CREATE INDEX i1 ON abc(b, c)
+        <tr style="text-align:left;background-color:#DDDDDD"><td>table <td>def <td>def <td>4 <td>CREATE TABLE def(a PRIMARY KEY, b, c, UNIQUE(b, c))
+        <tr style="text-align:left"><td>index <td>sqlite_autoindex_def_1 <td>def <td>5 <td>
+        <tr style="text-align:left;background-color:#DDDDDD"><td>index <td>sqlite_autoindex_def_2 <td>def <td>6 <td>
+        <tr style="text-align:left"><td>view <td>v1 <td>v1 <td>0 <td>CREATE VIEW v1 AS SELECT * FROM abc
       </table>
 
           <p class=req id=H30230><span>In a <i>well-formed <a class=defnlink href="#glossary_Database_file">database file</a></i>, the portion of the first
@@ -1392,17 +1406,17 @@ declaration of SQL tables.</span></p>
         length formats available for storing a variable length integer
         value.
 
-      <table class=striped>
-        <tr><th>Bytes<th>Value Range<th>Bit Pattern
-        <tr style="background-color:#DDDDDD"><td>1<td>7 bit<td>0xxxxxxx
-        <tr><td>2<td>14 bit<td>1xxxxxxx 0xxxxxxx
-        <tr style="background-color:#DDDDDD"><td>3<td>21 bit<td>1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr><td>4<td>28 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr style="background-color:#DDDDDD"><td>5<td>35 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr><td>6<td>42 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr style="background-color:#DDDDDD"><td>7<td>49 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr><td>8<td>56 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
-        <tr style="background-color:#DDDDDD"><td>9<td>64 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx xxxxxxxx
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Bytes<th>Value Range<th>Bit Pattern
+        <tr style="text-align:left;background-color:#DDDDDD"><td>1<td>7 bit<td>0xxxxxxx
+        <tr style="text-align:left"><td>2<td>14 bit<td>1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left;background-color:#DDDDDD"><td>3<td>21 bit<td>1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left"><td>4<td>28 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left;background-color:#DDDDDD"><td>5<td>35 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left"><td>6<td>42 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left;background-color:#DDDDDD"><td>7<td>49 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left"><td>8<td>56 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 0xxxxxxx
+        <tr style="text-align:left;background-color:#DDDDDD"><td>9<td>64 bit<td>1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx 1xxxxxxx xxxxxxxx
       </table>
       <p>
         When using the full 9 byte representation, the first byte contains
@@ -1420,13 +1434,13 @@ declaration of SQL tables.</span></p>
         however, using more bytes than is strictly necessary when encoding
         an integer is valid.
 
-      <table class=striped>
-        <tr><th>Decimal<th>Hexadecimal        <th>Variable Length Integer
-        <tr style="background-color:#DDDDDD"><td>43     <td>0x000000000000002B <td>0x2B
-        <tr><td>200815 <td>0x000000000003106F <td>0x8C 0xA0 0x6F
-        <tr style="background-color:#DDDDDD"><td>-1     <td>0xFFFFFFFFFFFFFFFF 
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Decimal<th>Hexadecimal        <th>Variable Length Integer
+        <tr style="text-align:left;background-color:#DDDDDD"><td>43     <td>0x000000000000002B <td>0x2B
+        <tr style="text-align:left"><td>200815 <td>0x000000000003106F <td>0x8C 0xA0 0x6F
+        <tr style="text-align:left;background-color:#DDDDDD"><td>-1     <td>0xFFFFFFFFFFFFFFFF 
             <td>0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF
-        <tr><td>-78506 <td>0xFFFFFFFFFFFECD56
+        <tr style="text-align:left"><td>-78506 <td>0xFFFFFFFFFFFECD56
             <td>0xFF 0xFF 0xFF 0xFF 0xFF 0xFF 0xFD 0xCD 0x56
       </table>
 
@@ -1473,52 +1487,52 @@ byte of the serial representation, from most to least significant.</span></p>
 	record header describes the first value in the record, etc.). The
 	second and subsequent integer values in a record header are interpreted
 	according to the following table:
-      <table class=striped>
-        <tr><th>Header Value <th>Data type and size
-        <tr style="background-color:#DDDDDD"><td>0 
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Header Value <th>Data type and size
+        <tr style="text-align:left;background-color:#DDDDDD"><td>0 
             <td>An SQL NULL value (type SQLITE_NULL). This value
                 consumes zero bytes of space in the record's data area.
-        <tr><td>1
+        <tr style="text-align:left"><td>1
             <td>An SQL integer value (type SQLITE_INTEGER), stored as a
                 big-endian 1-byte signed integer.
-        <tr style="background-color:#DDDDDD"><td>2
+        <tr style="text-align:left;background-color:#DDDDDD"><td>2
             <td>An SQL integer value (type SQLITE_INTEGER), stored as a
                 big-endian 2-byte signed integer.
-        <tr><td>3
+        <tr style="text-align:left"><td>3
             <td>An SQL integer value (type SQLITE_INTEGER), stored as a
                 big-endian 3-byte signed integer.
-        <tr style="background-color:#DDDDDD"><td>4
+        <tr style="text-align:left;background-color:#DDDDDD"><td>4
             <td>An SQL integer value (type SQLITE_INTEGER), stored as a
                 big-endian 4-byte signed integer.
-        <tr><td>5
+        <tr style="text-align:left"><td>5
             <td>An SQL integer value (type SQLITE_INTEGER), stored as a
                 big-endian 6-byte signed integer.
-        <tr style="background-color:#DDDDDD"><td>6
+        <tr style="text-align:left;background-color:#DDDDDD"><td>6
             <td>An SQL integer value (type SQLITE_INTEGER), stored as an
                 big-endian 8-byte signed integer.
-        <tr><td>7
+        <tr style="text-align:left"><td>7
             <td>An SQL real value (type SQLITE_FLOAT), stored as an
                 8-byte IEEE floating point value.
-        <tr style="background-color:#DDDDDD"><td>8
+        <tr style="text-align:left;background-color:#DDDDDD"><td>8
             <td>The literal SQL integer 0 (type SQLITE_INTEGER). The value 
                 consumes zero bytes of space in the record's data area.
                 Values of this type are only present in databases with
                 a schema file format (the 32-bit integer at byte offset 44
                 of the <a class=defnlink href="#glossary_Database_header">database header</a>) value of 4 or greater.
 
-        <tr><td>9
+        <tr style="text-align:left"><td>9
             <td>The literal SQL integer 1 (type SQLITE_INTEGER). The value
                 consumes zero bytes of space in the record's data area.
                 Values of this type are only present in databases with
                 a schema file format (the 32-bit integer at byte offset 44
                 of the <a class=defnlink href="#glossary_Database_header">database header</a>) value of 4 or greater.
 
-        <tr style="background-color:#DDDDDD"><td style="white-space:nowrap"><i>bytes</i> * 2 + 12
+        <tr style="text-align:left;background-color:#DDDDDD"><td style="white-space:nowrap"><i>bytes</i> * 2 + 12
 	    <td>Even values greater than or equal to 12 are used to signify a 
 	        blob of data (type SQLITE_BLOB) (<i>n</i>-12)/2 bytes in length, 
 	        where <i>n</i> is the integer value stored in the record header.
                 
-        <tr><td style="white-space:nowrap"><i>bytes</i> * 2 + 13
+        <tr style="text-align:left"><td style="white-space:nowrap"><i>bytes</i> * 2 + 13
             <td>Odd values greater than 12 are used to signify a string
                 (type SQLITE_TEXT) (<i>n</i>-13)/2 bytes in length, where
                 <i>n</i> is the integer value stored in the record header.
@@ -1815,21 +1829,21 @@ index.</span></p>
           1, 2 and 4 byte unsigned integer values as shown in the following
           table. All values are stored in big-endian byte order.
 
-      <table class=striped>
-        <tr><th>Byte Range <th>Byte Size <th width=100%>Description
-        <tr style="background-color:#DDDDDD"><td>0     <td>1<td>B-Tree page flags. For an index B-Tree internal 
+      <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"><th>Byte Range <th>Byte Size <th width=100%>Description
+        <tr style="text-align:left;background-color:#DDDDDD"><td>0     <td>1<td>B-Tree page flags. For an index B-Tree internal 
                                tree node page, this is set to 0x02. For a
                                leaf node page, 0x0A.
-        <tr><td>1..2  <td>2<td>Byte offset of first block of free space on 
+        <tr style="text-align:left"><td>1..2  <td>2<td>Byte offset of first block of free space on 
                                this page. If there are no free blocks on this
                                page, this field is set to 0.
-        <tr style="background-color:#DDDDDD"><td>3..4  <td>2<td>Number of cells (entries) on this page.
-        <tr><td>5..6  <td>2<td>Byte offset of the first byte of the cell
+        <tr style="text-align:left;background-color:#DDDDDD"><td>3..4  <td>2<td>Number of cells (entries) on this page.
+        <tr style="text-align:left"><td>5..6  <td>2<td>Byte offset of the first byte of the cell
                                content area (see figure 
                                <cite><a href="#figure_indexpage" title="Index B-Tree Page Data">4</a></cite>), relative to the 
                                start of the page.
-        <tr style="background-color:#DDDDDD"><td>7     <td>1<td>Number of fragmented free bytes on page.
-        <tr><td>8..11 <td>4<td>Page number of rightmost child-page (the
+        <tr style="text-align:left;background-color:#DDDDDD"><td>7     <td>1<td>Number of fragmented free bytes on page.
+        <tr style="text-align:left"><td>8..11 <td>4<td>Page number of rightmost child-page (the
                                child-page that heads the sub-tree in which all
                                records are larger than all records stored on
                                this page). This field is not present for leaf
@@ -2537,26 +2551,26 @@ offset 32 of the <a class=defnlink href="#glossary_Database_file">database file<
       table that can be used to determine the type and "parent page" of
       any page in the database, given its page number. The lookup table
       classifies pages into the following categories:
-    <table class=striped>
-      <tr><th>Page Type <th>Byte Value <th>Description
-      <tr style="background-color:#DDDDDD"><td style="white-space:nowrap">B-Tree Root Page<td>0x01
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"><th>Page Type <th>Byte Value <th>Description
+      <tr style="text-align:left;background-color:#DDDDDD"><td style="white-space:nowrap">B-Tree Root Page<td>0x01
           <td>The page is the root page of a table or index B-Tree structure.
               There is no parent page number in this case, the value stored
               in the pointer map lookup table is always zero.
-      <tr><td>Free Page<td>0x02
+      <tr style="text-align:left"><td>Free Page<td>0x02
           <td>The page is part of the free page list (section
               <cite><a href="#free_page_list" title="The Free Page List">2.4</a></cite>). There is no parent page in this
               case, zero is stored in the lookup table instead of a parent
               page number.
-      <tr style="background-color:#DDDDDD"><td>Overflow type 1<td>0x03
+      <tr style="text-align:left;background-color:#DDDDDD"><td>Overflow type 1<td>0x03
           <td>The page is the first page in an overflow chain. The parent
               page is the B-Tree page containing the B-Tree cell to which
               the overflow chain belongs.
-      <tr><td style="white-space:nowrap">Overflow type 2<td>0x04
+      <tr style="text-align:left"><td style="white-space:nowrap">Overflow type 2<td>0x04
           <td>The page is part of an overflow chain, but is not the first
               page in that chain. The parent page is the previous page in
               the overflow chain linked-list.
-      <tr style="background-color:#DDDDDD"><td>B-Tree Page<td>0x05
+      <tr style="text-align:left;background-color:#DDDDDD"><td>B-Tree Page<td>0x05
           <td>The page is part of a table or index B-Tree structure, and is 
               not an overflow page or root page. The parent page is the page
               containing the parent tree node in the B-Tree structure.
@@ -2833,30 +2847,30 @@ header</a>.</span></p>
       the following table. The offsets in the 'byte offset' column of the
       table are relative to the start of the <i><a class=defnlink href="#glossary_Journal_Header">journal header</a></i>.
 
-    <table class=striped>
-      <tr><th>Byte offset<th>Size in bytes<th width=100%>Description
-      <tr style="background-color:#DDDDDD"><td>0<td>8<td>The <b>journal magic</b> field always contains a
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"><th>Byte offset<th>Size in bytes<th width=100%>Description
+      <tr style="text-align:left;background-color:#DDDDDD"><td>0<td>8<td>The <b>journal magic</b> field always contains a
                         well-known 8-byte string value used to identify SQLite
                         <a class=defnlink href="#glossary_Journal_file">journal files</a>. The well-known sequence of byte values
                         is:
                         <pre>0xd9 0xd5 0x05 0xf9 0x20 0xa1 0x63 0xd7</pre>
-      <tr><td>8<td>4<td>This field, the <b>record count</b>, is set to the
+      <tr style="text-align:left"><td>8<td>4<td>This field, the <b>record count</b>, is set to the
                         number of <i><a class=defnlink href="#glossary_Journal_Record">journal records</a></i> that follow this
                         <i><a class=defnlink href="#glossary_Journal_Header">journal header</a></i> in the <a class=defnlink href="#glossary_Journal_file">journal file</a>.
-      <tr style="background-color:#DDDDDD"><td>12<td>4<td>The <b>checksum initializer</b> field is set to a 
+      <tr style="text-align:left;background-color:#DDDDDD"><td>12<td>4<td>The <b>checksum initializer</b> field is set to a 
                          pseudo-random value. It is used as part of the
                          algorithm to calculate the checksum for all <i><a class=defnlink href="#glossary_Journal_Record">journal
                          records</a></i> that follow this <i><a class=defnlink href="#glossary_Journal_Header">journal header</a></i>.
-      <tr><td>16<td>4<td>This field, the <b>database page count</b>, is set
+      <tr style="text-align:left"><td>16<td>4<td>This field, the <b>database page count</b>, is set
                          to the number of pages that the <a class=defnlink href="#glossary_Database_file">database file</a>
                          contained before any modifications associated with
                          <i>write transaction</i> are applied.
-      <tr style="background-color:#DDDDDD"><td>20<td>4<td>This field, the <b><a class=defnlink href="#glossary_Sector_size">sector size</a></b>, is set to the
+      <tr style="text-align:left;background-color:#DDDDDD"><td>20<td>4<td>This field, the <b><a class=defnlink href="#glossary_Sector_size">sector size</a></b>, is set to the
                          <i><a class=defnlink href="#glossary_Sector_size">sector size</a></i> of the device on which the 
                          <a class=defnlink href="#glossary_Journal_file">journal file</a> was created, in bytes. This value
                          is required when reading the <a class=defnlink href="#glossary_Journal_file">journal file</a> to determine
                          the size of each <i><a class=defnlink href="#glossary_Journal_Header">journal header</a></i>.
-      <tr><td>24<td>4<td>The <b><a class=defnlink href="#glossary_Page_size">page size</a></b> field contains the database <a class=defnlink href="#glossary_Page_size">page
+      <tr style="text-align:left"><td>24<td>4<td>The <b><a class=defnlink href="#glossary_Page_size">page size</a></b> field contains the database <a class=defnlink href="#glossary_Page_size">page
                          size</a> used by the corresponding <a class=defnlink href="#glossary_Database_file">database file</a>
                          when the <a class=defnlink href="#glossary_Journal_file">journal file</a> was created, in bytes.
     </table>
@@ -2913,16 +2927,16 @@ is an integer power of two greater than 512.</span></p>
       in the following table. Byte offsets are relative to the start of the
       <i><a class=defnlink href="#glossary_Journal_Record">journal record</a></i>.
 
-    <table class=striped>
-      <tr><th>Byte offset<th>Size in bytes<th width=100%>Description
-      <tr style="background-color:#DDDDDD"><td>0<td>4<td>The page number of the database page associated with
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"><th>Byte offset<th>Size in bytes<th width=100%>Description
+      <tr style="text-align:left;background-color:#DDDDDD"><td>0<td>4<td>The page number of the database page associated with
                         this <i><a class=defnlink href="#glossary_Journal_Record">journal record</a></i>, stored as a 4 byte
                         big-endian unsigned integer.
-      <tr><td>4<td><i><a class=defnlink href="#glossary_Page_size">page-size</a><td>
+      <tr style="text-align:left"><td>4<td><i><a class=defnlink href="#glossary_Page_size">page-size</a><td>
                         This field contains the original data for the page,
                         exactly as it appeared in the <a class=defnlink href="#glossary_Database_file">database file</a> before the
                         <i>write transaction</i> began.
-      <tr style="background-color:#DDDDDD"><td style="white-space: nowrap">4 + <i><a class=defnlink href="#glossary_Page_size">page-size</a></i><td>4<td>
+      <tr style="text-align:left;background-color:#DDDDDD"><td style="white-space: nowrap">4 + <i><a class=defnlink href="#glossary_Page_size">page-size</a></i><td>4<td>
                         This field contains a checksum value, calculated based
                         on the contents of the journaled database page data
                         (the previous field) and the values stored in the
@@ -3016,9 +3030,9 @@ ending with the byte at byte offset (<a class=defnlink href="#glossary_Page_size
       described in the following table. Byte offsets are relative to the 
       start of the <i><a class=defnlink href="#glossary_Master_Journal_Pointer">master journal pointer</a></i>.
 
-    <table class=striped>
-      <tr><th>Byte offset<th>Size in bytes<th width=100%>Description
-      <tr style="background-color:#DDDDDD"><td>0<td>4<td>This field, the <b>locking page number</b>, is always
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"><th>Byte offset<th>Size in bytes<th width=100%>Description
+      <tr style="text-align:left;background-color:#DDDDDD"><td>0<td>4<td>This field, the <b>locking page number</b>, is always
                set to the page number of the database <i>locking page</i>
                stored as a 4-byte big-endian integer. The <i>locking page</i>
                is the page that begins at byte offset 2<sup>30</sup> of the
@@ -3027,21 +3041,21 @@ ending with the byte at byte offset (<a class=defnlink href="#glossary_Page_size
                never used to store any data and so the first four bytes of of a
                valid <i><a class=defnlink href="#glossary_Journal_Record">journal record</a></i> will never contain this value.
 
-      <tr><td>4<td><i>name-length</i><td>
+      <tr style="text-align:left"><td>4<td><i>name-length</i><td>
                The <b>master journal name</b> field contains the name of the
                master <a class=defnlink href="#glossary_Journal_file">journal file</a>, encoded as a utf-8 string. There is no
                nul-terminator appended to the string.
-      <tr style="background-color:#DDDDDD"><td>4 + <i>name-length</i><td><i>4<td>
+      <tr style="text-align:left;background-color:#DDDDDD"><td>4 + <i>name-length</i><td><i>4<td>
                The <b>name-length</b> field contains the length of the 
                previous field in bytes, formatted as a 4-byte big-endian 
                unsigned integer.
-      <tr><td>8 + <i>name-length</i><td><i>4<td>
+      <tr style="text-align:left"><td>8 + <i>name-length</i><td><i>4<td>
                The <b>checksum</b> field contains a checksum value stored as
                a 4-byte big-endian signed integer. The checksum value is
                calculated as the sum of the bytes that make up the <i>
                master journal name</i> field, interpreting each byte as
                an 8-bit signed integer.
-      <tr style="background-color:#DDDDDD"><td style="white-space: nowrap">12 + <i>name-length</i><td><i>8<td>
+      <tr style="text-align:left;background-color:#DDDDDD"><td style="white-space: nowrap">12 + <i>name-length</i><td><i>8<td>
                Finally, the <b>journal magic</b> field always contains a
                well-known 8-byte string value; the same value stored in the
                first 8 bytes of a <i><a class=defnlink href="#glossary_Journal_Header">journal header</a></i>. The well-known
@@ -3724,28 +3738,28 @@ free-list leaf pages are not modified or made unstable.</span></p>
       use the same implementation. The following table summarizes the four 
       types of locks used by SQLite:
 
-    <table class=striped>
-      <tr> <th> Lock type <th> Description <th> Blocks <th> Blocked By
-      <tr style="background-color:#DDDDDD"> <td> SHARED    <td> 
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"> <th> Lock type <th> Description <th> Blocks <th> Blocked By
+      <tr style="text-align:left;background-color:#DDDDDD"> <td> SHARED    <td> 
           It is only possible to obtain a SHARED lock if no other client is
           holding a PENDING or EXCLUSIVE lock. Holding a SHARED lock prevents
           any other client from obtaining an EXCLUSIVE lock.
           <td> EXCLUSIVE <td> PENDING, EXCLUSIVE
 
-      <tr> <td> RESERVED  <td> 
+      <tr style="text-align:left"> <td> RESERVED  <td> 
           A RESERVED lock may only be obtained if no other client holds a 
           RESERVED, PENDING or EXCLUSIVE lock on the database. While a
           client holds a RESERVED lock, other clients may obtain new SHARED
           locks, but may not obtain new RESERVED, PENDING or EXCLUSIVE locks.
           <td> RESERVED, PENDING, EXCLUSIVE <td> RESERVED, PENDING, EXCLUSIVE
 
-      <tr style="background-color:#DDDDDD"> <td> PENDING <td>
+      <tr style="text-align:left;background-color:#DDDDDD"> <td> PENDING <td>
           It is only possible to obtain a PENDING lock if no other client holds
           a RESERVED, PENDING or EXCLUSIVE lock. While a database client is 
           holding a PENDING lock, no other client may obtain any new lock. 
           <td> All <td> RESERVED, PENDING, EXCLUSIVE
 
-      <tr> <td> EXCLUSIVE <td>
+      <tr style="text-align:left"> <td> EXCLUSIVE <td>
           An EXCLUSIVE lock may only be obtained if no other client holds any
           lock on the database. While an EXCLUSIVE lock is held, no other 
           client may obtain any kind of lock on the database.

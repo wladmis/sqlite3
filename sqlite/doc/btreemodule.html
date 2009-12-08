@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -72,16 +90,12 @@ a:visited { color: #734559 }
   
 <!-- title>SQLite B-Tree Module</title -->
 
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    <html>
-    <head>
-    <link type="text/css" rel="stylesheet" href="images/fileformat/rtdocs.css">
-    </head>
-    <body>
 
-    <div id=document_title>SQLite B-Tree Module</div>
-    <div id=toc_header>Table Of Contents</div>
+    
 
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#80a796">SQLite B-Tree Module</div>
+    <div style="font-size:1.5em;margin:1em;color:#80a796">Table Of Contents</div>
     <div id=toc>
       
     <div style="margin-left:6ex">
@@ -382,11 +396,11 @@ a:visited { color: #734559 }
        Change the following so that those requirements that describe the API
        are "low-level" requirements.
 
-     <table class=striped>
-        <tr> <th> Requirement ids <th> Contents
-        <tr style="background-color:#DDDDDD"> <td> H50**** <td> Requirement statements specifying the functionality required of the B-Tree module.
-        <tr> <td> H51**** <td> Requirement statements specifying the API provided by the B-Tree module.
-        <tr style="background-color:#DDDDDD"> <td> L****** <td> Requirement statements specifying some details of the internal workings of the B-Tree module.
+     <table style="margin:1em auto;width:80%;border-spacing:0">
+        <tr style="text-align:left"> <th> Requirement ids <th> Contents
+        <tr style="text-align:left;background-color:#DDDDDD"> <td> H50**** <td> Requirement statements specifying the functionality required of the B-Tree module.
+        <tr style="text-align:left"> <td> H51**** <td> Requirement statements specifying the API provided by the B-Tree module.
+        <tr style="text-align:left;background-color:#DDDDDD"> <td> L****** <td> Requirement statements specifying some details of the internal workings of the B-Tree module.
       </table>
 
   <h2 id="section_1_3">1.3 Glossary</h2>
@@ -784,15 +798,15 @@ entry is to be inserted into.</span> (C: <a class=reqlink href=#L50001>L50001</a
       one <a class=defnlink href="#glossary_B-Tree_Database_Connection">b-tree database connection</a> may overwrite the values set by another.
       The following table summarizes the available configuration parameters.
 
-    <table class=striped>
-      <tr> <th>Parameter <th>Description  <th>Requirements
-      <tr style="background-color:#DDDDDD"> <td>Locking-mode 
+    <table style="margin:1em auto;width:80%;border-spacing:0">
+      <tr style="text-align:left"> <th>Parameter <th>Description  <th>Requirements
+      <tr style="text-align:left;background-color:#DDDDDD"> <td>Locking-mode 
            <td><span class=todo>This!</span> 
            <td><a class=reqlink href=#H50138>H50138</a>, <a class=reqlink href=#H50139>H50139</a>, <a class=reqlink href=#H50140>H50140</a>
-      <tr> <td>Journal-mode 
+      <tr style="text-align:left"> <td>Journal-mode 
            <td><span class=todo>This!</span> 
            <td><a class=reqlink href=#H50141>H50141</a>, <a class=reqlink href=#H50142>H50142</a>, <a class=reqlink href=#H50143>H50143</a>, <a class=reqlink href=#H50144>H50144</a>, <a class=reqlink href=#H50145>H50145</a>, <a class=reqlink href=#H50146>H50146</a>
-      <tr style="background-color:#DDDDDD"> <td>Journal-file size limit
+      <tr style="text-align:left;background-color:#DDDDDD"> <td>Journal-file size limit
 	   <td>The journal-file size limit parameter may be set to any integer
 	       value within the range of a 64-bit signed integer. Any negative
 	       values is interpreted as "no limit". Otherwise, if the
@@ -804,7 +818,7 @@ entry is to be inserted into.</span> (C: <a class=reqlink href=#L50001>L50001</a
 	       to the user. The default value of this parameter is -1 (no
                limit).
            <td><a class=reqlink href=#H50147>H50147</a>, <a class=reqlink href=#H50148>H50148</a>, <a class=reqlink href=#H50149>H50149</a>
-      <tr> <td style="white-space:nowrap">Database-file size limit
+      <tr style="text-align:left"> <td style="white-space:nowrap">Database-file size limit
 	   <td>The database-image size limit parameter may be set to any integer
 	       value greater than zero within the range of a 32-bit signed
                integer. The configured value represents an upper limit on the size of
@@ -813,13 +827,13 @@ entry is to be inserted into.</span> (C: <a class=reqlink href=#L50001>L50001</a
 	       grow larger than this configured limit, the operation fails and
                an error is returned to the user.
            <td><a class=reqlink href=#H50150>H50150</a>, <a class=reqlink href=#H50151>H50151</a>, <a class=reqlink href=#H50152>H50152</a>
-      <tr style="background-color:#DDDDDD"> <td>Cache size
+      <tr style="text-align:left;background-color:#DDDDDD"> <td>Cache size
 	   <td>The cache-size parameter may be set to any integer value. How it
                affects operation depends on the specific P-Cache implementation used
 	       by the <a class=defnlink href="#glossary_Page_cache">page-cache</a>. <span class=todo>Refer to details for the
                behaviour of the built-in default P-Cache.</span>
            <td><a class=reqlink href=#H50153>H50153</a>
-      <tr> <td>Safety level
+      <tr style="text-align:left"> <td>Safety level
 	   <td>The safety-level parameter may be set to "none", "normal" or "full".
                <span class=todo> Where will the effect of this defined/required?</span>
            <td><a class=reqlink href=#H50154>H50154</a>, <a class=reqlink href=#H50155>H50155</a>

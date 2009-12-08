@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -81,7 +99,33 @@ CVS at
 http://www.sqlite.org/src/timeline</a>.
 </p>
 
-<a name="version_3_6_20"></a>
+<a name="version_3_6_21"></a>
+<h3>2009 Dec 07 (3.6.21)</h3><p><ul>
+<li>The SQL output resulting from <a href="c3ref/profile.html">sqlite3_trace()</a> is now modified to include
+the values of <a href="lang_expr.html#varparam">bound parameters</a>.
+<li>Performance optimizations targetting a specific use case from
+a single high-profile user of SQLite.  A 12% reduction in the number of
+CPU operations is achieved (as measured by valgrind).  Actual performance
+improvements in practice may vary depending on workload.  Changes
+include:
+<ul>
+<li>The <a href="lang_corefunc.html#ifnull">ifnull()</a> and <a href="lang_corefunc.html#coalesce">coalesce()</a> SQL functions are now implemented
+using in-line VDBE code rather than calling external functions, so that
+unused arguments need never be evaluated.
+<li>The <a href="lang_corefunc.html#substr">substr()</a> SQL function does not bother to measure the length
+its entire input string if it is only computing a prefix
+<li>Unnecessary OP_IsNull, OP_Affinity, and OP_MustBeInt VDBE opcodes
+are suppressed
+<li>Various code refactorizations for performance
+</ul>
+<li>The FTS3 extension has undergone a major rework and cleanup.
+New <a href="fts3.html">FTS3 documentation</a> is now available.
+<li>The <a href="compile.html#secure_delete">SQLITE_SECURE_DELETE</a> compile-time option fixed to make sure that
+content is deleted even when the <a href="lang_delete.html#trucateopt">truncate optimization</a> applies.
+<li>Improvements to "dot-command" handling in the
+<a href="sqlite.html">Command Line Interface</a>.
+<li>Other minor bug fixes and documentation enhancements.
+</ul></p><a name="version_3_6_20"></a>
 <h3>2009 Nov 4 (3.6.20)</h3><p><ul>
 <li>Optimizer enhancement: <a href="c3ref/stmt.html">prepared statements</a> are automatically 
 re-compiled when a binding on the RHS of a LIKE operator changes or

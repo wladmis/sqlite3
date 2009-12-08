@@ -15,19 +15,6 @@
   .req code {display: block; margin: 0.5em 5ex}
   code {white-space: pre}
 
-  .codeblock {
-    margin-left:15ex;
-    margin-right:15ex;
-  }
-  .codeblock table {
-    border:1px solid #80a796;
-    padding:1ex;
-    background-color:#EEEEEE;
-  }
-  .codeblock i {
-    color: darkblue;
-  }
-
   /* Style for content headings */
   h2           { margin-left: 10px }
   h3           { margin-left: 20px }

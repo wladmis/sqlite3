@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -72,16 +90,12 @@ a:visited { color: #734559 }
   
 
 
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    <html>
-    <head>
-    <link type="text/css" rel="stylesheet" href="images/fileformat/rtdocs.css">
-    </head>
-    <body>
 
-    <div id=document_title>SQLite Foreign Key Support</div>
-    <div id=toc_header>Table Of Contents</div>
+    
 
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#80a796">SQLite Foreign Key Support</div>
+    <div style="font-size:1.5em;margin:1em;color:#80a796">Table Of Contents</div>
     <div id=toc>
       
     <div style="margin-left:6ex">
@@ -153,7 +167,7 @@ a:visited { color: #734559 }
     between tables. For example, consider a database schema created using 
     the following SQL commands:
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE artist(
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE artist(
   artistid    INTEGER PRIMARY KEY, 
   artistname  TEXT
 );
@@ -183,7 +197,7 @@ CREATE TABLE track(
     <i>track</i> table. To do so, a foreign key definition may be added
     by modifying the declaration of the <i>track</i> table to the following:
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE track(
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE track(
   trackid     INTEGER, 
   trackname   TEXT, 
   trackartist INTEGER,
@@ -201,7 +215,7 @@ CREATE TABLE track(
     entry in the <i>artist</i> table is required. Expressed in SQL, this
     means that for every row in the <i>track</i> table, the following
     expression evaluates to true:
-<div class=codeblock><table width=100%><tr><td><pre>trackartist IS NULL OR EXISTS(SELECT 1 FROM artist WHERE artistid=trackartist)
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">trackartist IS NULL OR EXISTS(SELECT 1 FROM artist WHERE artistid=trackartist)
 </table></div>
 
   <p>Tip: If the application requires a stricter relationship between 
@@ -216,7 +230,7 @@ CREATE TABLE track(
   <p>The following SQLite command-line session illustrates the effect of the
      foreign key constraint added to the <i>track</i> table:
 
-<div class=codeblock><table width=100%><tr><td><pre>sqlite&gt; SELECT * FROM artist;
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; SELECT * FROM artist;
 artistid  artistname       
 --------  -----------------
 1         Dean Martin      
@@ -260,7 +274,7 @@ sqlite&gt; INSERT INTO track VALUES(15, 'Boogie Woogie', 3);
     As you would expect, it is not possible to manipulate the database to a state
     that violates the foreign key constraint by deleting or updating rows in the 
     <i>artist</i> table either:
-<div class=codeblock><table width=100%><tr><td><pre>sqlite&gt; <i>-- Attempting to delete the artist record for "Frank Sinatra" fails, since</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <i>-- Attempting to delete the artist record for "Frank Sinatra" fails, since</i>
 sqlite&gt; <i>-- the track table contains a row that refer to it.</i>
 sqlite&gt; DELETE FROM artist WHERE artistname = 'Frank Sinatra';
 <b>SQL error: foreign key constraint failed</b>
@@ -344,7 +358,7 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
     it must still be enabled by the application at runtime, using the
     <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> command. For example:
 
-<div class=codeblock><table width=100%><tr><td><pre>sqlite&gt; PRAGMA foreign_keys = ON;
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; PRAGMA foreign_keys = ON;
 </table></div>
 
   <p>
@@ -360,7 +374,7 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
     The application can can also use a <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> statement to
     determine if foreign keys are currently enabled. The following 
     command-line session demonstrates this:
-<div class=codeblock><table width=100%><tr><td><pre>sqlite> PRAGMA foreign_keys;
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite> PRAGMA foreign_keys;
 0
 sqlite> PRAGMA foreign_keys = ON;
 sqlite> PRAGMA foreign_keys;
@@ -395,7 +409,7 @@ sqlite> PRAGMA foreign_keys;
     in the CREATE TABLE statement for the parent table.
     For example,
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE parent(a PRIMARY KEY, b UNIQUE, c, d, e, f);
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE parent(a PRIMARY KEY, b UNIQUE, c, d, e, f);
 CREATE UNIQUE INDEX i1 ON parent(c, d);
 CREATE INDEX i2 ON parent(e);
 CREATE UNIQUE INDEX i3 ON parent(f COLLATE nocase);
@@ -451,7 +465,7 @@ CREATE TABLE child7(r REFERENCES parent(c));                           <i>-- Err
   <p>
     The last bullet above is illustrated by the following:
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE parent2(a, b, PRIMARY KEY(a,b));
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE parent2(a, b, PRIMARY KEY(a,b));
 
 CREATE TABLE child8(x, y, FOREIGN KEY(x,y) REFERENCES parent2);        <i>-- Ok</i>
 CREATE TABLE child9(x REFERENCES parent2);                             <i>-- Error!</i>
@@ -476,7 +490,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
     performs the equivalent of the following SELECT statement to search
     for referencing rows in the <i>track</i> table (the child table).
 
-<div class=codeblock><table width=100%><tr><td><pre>SELECT rowid FROM track WHERE trackartist = ?
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT rowid FROM track WHERE trackartist = ?
 </table></div>
 
  <p>
@@ -485,7 +499,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
    that the <i>trackartist</i> column is the child key and the <i>artistid</i>
    column is the parent key). Or, more generally:
 
-<div class=codeblock><table width=100%><tr><td><pre>SELECT rowid FROM &lt;child-table&gt; WHERE &lt;child-key&gt; = :parent_key_value
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT rowid FROM &lt;child-table&gt; WHERE &lt;child-key&gt; = :parent_key_value
 </table></div>
 
  <p>
@@ -506,7 +520,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
    complete database schema for efficient implementation of the foreign key 
    constraint might be:
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE artist(
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE artist(
   artistid    INTEGER PRIMARY KEY, 
   artistname  TEXT
 );
@@ -537,7 +551,7 @@ CREATE INDEX trackindex ON track(trackartist);
     are both composite keys. For example, consider
     the following database schema:
 
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TABLE album(
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE album(
   albumartist TEXT,
   albumname TEXT,
   albumcover BINARY,
@@ -598,7 +612,7 @@ CREATE TABLE song(
     To mark a foreign key constraint as deferred, its declaration must
     include the following clause:
 
-<div class=codeblock><table width=100%><tr><td><pre>DEFERRABLE INITIALLY DEFERRED                <i>-- A deferred foreign key constraint</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">DEFERRABLE INITIALLY DEFERRED                <i>-- A deferred foreign key constraint</i>
 </table></div>
 
   <p>
@@ -607,7 +621,7 @@ CREATE TABLE song(
     with any of the following 
     creates an immediate foreign key constraint.
 
-<div class=codeblock><table width=100%><tr><td><pre>NOT DEFERRABLE INITIALLY DEFERRED            <i>-- An immediate foreign key constraint</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">NOT DEFERRABLE INITIALLY DEFERRED            <i>-- An immediate foreign key constraint</i>
 NOT DEFERRABLE INITIALLY IMMEDIATE           <i>-- An immediate foreign key constraint</i>
 NOT DEFERRABLE                               <i>-- An immediate foreign key constraint</i>
 DEFERRABLE INITIALLY IMMEDIATE               <i>-- An immediate foreign key constraint</i>
@@ -618,7 +632,7 @@ DEFERRABLE                                   <i>-- An immediate foreign key cons
     The following example illustrates the effect of using a deferred foreign
     key constraint.
 
-<div class=codeblock><table width=100%><tr><td><pre><i>-- Database schema. Both tables are initially empty. </i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Database schema. Both tables are initially empty. </i>
 CREATE TABLE artist(
   artistid    INTEGER PRIMARY KEY, 
   artistname  TEXT
@@ -723,7 +737,7 @@ sqlite3&gt; COMMIT;
     shown below enhances the example schema from section 1 to allow the user
     to update the artistid (the parent key of the foreign key constraint) 
     column without breaking referential integrity:
-<div class=codeblock><table width=100%><tr><td><pre><i>-- Database schema</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Database schema</i>
 CREATE TABLE artist(
   artistid    INTEGER PRIMARY KEY, 
   artistname  TEXT
@@ -777,7 +791,7 @@ trackid  trackname          trackartist
     a parent key while dependent child keys exist still causes a foreign key
     violation. For example:
 
-<div class=codeblock><table width=100%><tr><td><pre><i>-- Database schema</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Database schema</i>
 CREATE TABLE artist(
   artistid    INTEGER PRIMARY KEY, 
   artistname  TEXT
@@ -827,7 +841,7 @@ trackid  trackname          trackartist
     will have noticed that the 
     "ON DELETE SET DEFAULT" action demonstrated in the example above is
     similar in effect to the following AFTER DELETE trigger:
-<div class=codeblock><table width=100%><tr><td><pre>CREATE TRIGGER on_delete_set_default AFTER DELETE ON artist BEGIN
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TRIGGER on_delete_set_default AFTER DELETE ON artist BEGIN
   UPDATE child SET trackartist = 0 WHERE trackartist = old.artistid;
 END;
 </table></div>
@@ -851,7 +865,7 @@ END;
     parent key are modified so that the new parent key values are 
     not equal to the old. For example:
 
-<div class=codeblock><table width=100%><tr><td><pre><i>-- Database schema</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Database schema</i>
 CREATE TABLE parent(x PRIMARY KEY);
 CREATE TABLE child(y REFERENCES parent ON UPDATE SET NULL);
 

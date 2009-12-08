@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(../images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(../images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -114,8 +132,8 @@ statement within the body of the same trigger.
 However, the number returned does not include changes
 caused by subtriggers since those have their own context.</p>
 
-<p>See also the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface and the
-<a href="../pragma.html#pragma_count_changes">count_changes pragma</a>.</p>
+<p>See also the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface, the
+<a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#changes">changes() SQL function</a>.</p>
 
 <p>Requirements:
 <a href="../hlr10000.html#H12241">H12241</a> <a href="../hlr10000.html#H12243">H12243</a></p>

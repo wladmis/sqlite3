@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -410,24 +428,13 @@ instruction.</p>
 <p>If P1 is non-zero, then the jump is taken if the database constraint-counter
 is zero (the one that counts deferred constraint violations). If P1 is
 zero, the jump is taken if the statement constraint-counter is zero
-(immediate foreign key constraint violations).</td></tr><tr><td valign="top" align="center"><a name="Found"></a><p>Found</p><td><p>Register P3 holds a blob constructed by MakeRecord.  P1 is an index.
-If an entry that matches the value in register p3 exists in P1 then
-jump to P2.  If the P3 value does not match any entry in P1
-then fall thru.  The P1 cursor is left pointing at the matching entry
-if it exists.</p>
+(immediate foreign key constraint violations).</td></tr><tr><td valign="top" align="center"><a name="Found"></a><p>Found</p><td><p>If P4==0 then register P3 holds a blob constructed by MakeRecord.  If
+P4&gt;0 then register P3 is the first of P4 registers that form an unpacked
+record.</p>
 
-<p>This instruction is used to implement the IN operator where the
-left-hand side is a SELECT statement.  P1 may be a true index, or it
-may be a temporary index that holds the results of the SELECT
-statement.   This instruction is also used to implement the
-DISTINCT keyword in SELECT statements.</p>
-
-<p>This instruction checks if index P1 contains a record for which
-the first N serialized values exactly match the N serialized values
-in the record in register P3, where N is the total number of values in
-the P3 record (the P3 record is a prefix of the P1 record).</p>
-
-<p>See also: NotFound, IsUnique, NotExists</td></tr><tr><td valign="top" align="center"><a name="Function"></a><p>Function</p><td><p>Invoke a user function (P4 is a pointer to a Function structure that
+<p>Cursor P1 is on an index btree.  If the record identified by P3 and P4
+is a prefix of any entry in P1 then a jump is made to P2 and
+P1 is left pointing at the matching entry.</td></tr><tr><td valign="top" align="center"><a name="Function"></a><p>Function</p><td><p>Invoke a user function (P4 is a pointer to a Function structure that
 defines the function) with P5 arguments taken from register P2 and
 successors.  The result of the function is stored in register P3.
 Register P3 must not be one of the function inputs.</p>
@@ -506,7 +513,8 @@ is considered true if it has a numeric value of zero.  If the value
 in P1 is NULL then take the jump if P3 is true.</td></tr><tr><td valign="top" align="center"><a name="IfPos"></a><p>IfPos</p><td><p>If the value of register P1 is 1 or greater, jump to P2.</p>
 
 <p>It is illegal to use this instruction on a register that does
-not contain an integer.  An assertion fault will result if you try.</td></tr><tr><td valign="top" align="center"><a name="IfZero"></a><p>IfZero</p><td><p>If the value of register P1 is exactly 0, jump to P2.</p>
+not contain an integer.  An assertion fault will result if you try.</td></tr><tr><td valign="top" align="center"><a name="IfZero"></a><p>IfZero</p><td><p>The register P1 must contain an integer.  Add literal P3 to the
+value in register P1.  If the result is exactly 0, jump to P2.</p>
 
 <p>It is illegal to use this instruction on a register that does
 not contain an integer.  An assertion fault will result if you try.</td></tr><tr><td valign="top" align="center"><a name="IncrVacuum"></a><p>IncrVacuum</p><td><p>Perform a single step of the incremental vacuum procedure on
@@ -564,9 +572,10 @@ total.</p>
 <p>If P5 is not zero, the check is done on the auxiliary database
 file, not the main database file.</p>
 
-<p>This opcode is used to implement the integrity_check pragma.</td></tr><tr><td valign="top" align="center"><a name="IsNull"></a><p>IsNull</p><td><p>Jump to P2 if the value in register P1 is NULL.</td></tr><tr><td valign="top" align="center"><a name="IsUnique"></a><p>IsUnique</p><td><p>Cursor P1 is open on an index.  So it has no data and its key consists
-of a record generated by OP_MakeRecord where the last field is the
-rowid of the entry that the index refers to.</p>
+<p>This opcode is used to implement the integrity_check pragma.</td></tr><tr><td valign="top" align="center"><a name="IsNull"></a><p>IsNull</p><td><p>Jump to P2 if the value in register P1 is NULL.</td></tr><tr><td valign="top" align="center"><a name="IsUnique"></a><p>IsUnique</p><td><p>Cursor P1 is open on an index b-tree - that is to say, a btree which
+no data and where the key are records generated by OP_MakeRecord with
+the list field being the integer ROWID of the entry that the index
+entry refers to.</p>
 
 <p>The P3 register contains an integer record number. Call this record
 number R. Register P4 is the first in a set of N contiguous registers
@@ -687,10 +696,15 @@ operation assumes the key is an integer and that P1 is a table whereas
 NotFound assumes key is a blob constructed from MakeRecord and
 P1 is an index.</p>
 
-<p>See also: Found, NotFound, IsUnique</td></tr><tr><td valign="top" align="center"><a name="NotFound"></a><p>NotFound</p><td><p>Register P3 holds a blob constructed by MakeRecord.  P1 is
-an index.  If no entry exists in P1 that matches the blob then jump
-to P2.  If an entry does existing, fall through.  The cursor is left
-pointing to the entry that matches.</p>
+<p>See also: Found, NotFound, IsUnique</td></tr><tr><td valign="top" align="center"><a name="NotFound"></a><p>NotFound</p><td><p>If P4==0 then register P3 holds a blob constructed by MakeRecord.  If
+P4&gt;0 then register P3 is the first of P4 registers that form an unpacked
+record.</p>
+
+<p>Cursor P1 is on an index btree.  If the record identified by P3 and P4
+is not the prefix of any entry in P1 then a jump is made to P2.  If P1
+does contain an entry whose prefix matches the P3/P4 record then control
+falls through to the next instruction and P1 is left pointing at the
+matching entry.</p>
 
 <p>See also: Found, NotExists, IsUnique</td></tr><tr><td valign="top" align="center"><a name="NotNull"></a><p>NotNull</p><td><p>Jump to P2 if the value in register P1 is not NULL.</td></tr><tr><td valign="top" align="center"><a name="Null"></a><p>Null</p><td><p>Write a NULL into register P2.</td></tr><tr><td valign="top" align="center"><a name="NullRow"></a><p>NullRow</p><td><p>Move the cursor P1 to a null row.  Any OP_Column operations
 that occur while the cursor is on the null row will always

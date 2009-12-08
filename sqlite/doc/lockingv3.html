@@ -43,6 +43,24 @@ a:visited { color: #734559 }
 .ne  { background: url(images/ne.png) 100% 0% no-repeat }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
+/* Things for "fancyformat" documents start here. */
+.fancy .codeblock i { color: darkblue; }
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h2 { margin-left: 10px }
+.fancy h3 { margin-left: 20px }
+.fancy h4 { margin-left: 30px }
+.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
+.fancy #toc a        { color: darkblue ; text-decoration: none }
+.fancy .todo         { color: #AA3333 ; font-style : italic }
+.fancy .todo:before  { content: 'TODO:' }
+.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
+.fancy img { display:block; }
+.fancy :link:hover, .fancy :visited:hover { background: wheat }
+.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy li p { margin: 1em 0 }
+/* End of "fancyformat" specific rules. */
+
 </style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
@@ -73,6 +91,7 @@ a:visited { color: #734559 }
 
 
 <h2>1.0 File Locking And Concurrency In SQLite Version 3</h2>
+
 <p>Version 3 of SQLite introduces a more complex locking and journaling 
 mechanism designed to improve concurrency and reduce the writer starvation 
 problem.  The new mechanism also allows atomic commits of transactions
@@ -82,7 +101,10 @@ The intended audience is programmers who want to understand and/or modify
 the pager code and reviewers working to verify the design
 of SQLite version 3.
 </p>
-<a name="overview"></a><h2>2.0 Overview</h2>
+
+<a name="overview"></a>
+<h2>2.0 Overview</h2>
+
 <p>
 Locking and concurrency control are handled by the the 
 <a href="http://www.sqlite.org/src/finfo?name=src/pager.c">
@@ -117,7 +139,10 @@ that provides a uniform abstraction for operating system services.
 separate processes, or both.  Throughout this document whenever the
 word "process" is written you may substitute the word "thread" without
 changing the truth of the statement.</p>
-<a name="locking"></a><h2>3.0 Locking</h2>
+
+<a name="locking"></a>
+<h2>3.0 Locking</h2>
+
 <p>
 From the point of view of a single process, a database file
 can be in one of five locking states:
@@ -189,7 +214,10 @@ A PENDING lock is always just a temporary
 stepping stone on the path to an EXCLUSIVE lock and so the pager module
 does not track PENDING locks.
 </p>
-<a name="rollback"></a><h2>4.0 The Rollback Journal</h2>
+
+<a name="rollback"></a>
+<h2>4.0 The Rollback Journal</h2>
+
 <p>Any time a process wants to make a changes to a database file, it
 first records enough information in the <em>rollback journal</em> to
 restore the database file back to its initial condition.  Thus, before
@@ -215,7 +243,9 @@ created and the normal rollback journal contains an empty string
 in the place normally reserved for recording the name of the master
 journal.</p>
 
-<p>A individual file journal is said to be <em>hot</em>
+<a name="hotjrnl"></a>
+
+<p>A individual rollback journal is said to be <em>hot</em>
 if it needs to be rolled back
 in order to restore the integrity of its database.  
 A hot journal is created when a process is in the middle of a database
@@ -249,7 +279,10 @@ preceding rules will be repeated in bullets:
     </ul>
 </li>
 </ul>
-<a name="hot_journals"></a><h3>4.1 Dealing with hot journals</h3>
+
+<a name="hot_journals"></a>
+<h3>4.1 Dealing with hot journals</h3>
+
 <p>
 Before reading from a a database file, SQLite always checks to see if that
 database file has a hot journal.  If the file does have a hot journal, then
@@ -289,7 +322,10 @@ the following sequence of steps:
 <p>After the algorithm above completes successfully, it is safe to 
 read from the database file.  Once all reading has completed, the
 SHARED lock is dropped.</p>
-<a name="stale_master_journals"></a><h3>4.2 Deleting stale master journals</h3>
+
+<a name="stale_master_journals"></a>
+<h3>4.2 Deleting stale master journals</h3>
+
 <p>A stale master journal is a master journal that is no longer being
 used for anything.  There is no requirement that stale master journals
 be deleted.  The only reason for doing so is to free up disk space.</p>
@@ -302,7 +338,10 @@ in the master journal exists and points back to the master journal, then
 the master journal is not stale.  If all file journals are either missing
 or refer to other master journals or no master journal at all, then the
 master journal we are testing is stale and can be safely deleted.</p>
-<a name="writing"></a><h2>5.0 Writing to a database file</h2>
+
+<a name="writing"></a>
+<h2>5.0 Writing to a database file</h2>
+
 <p>To write to a database, a process must first acquire a SHARED lock
 as described above (possibly rolling back incomplete changes if there
 is a hot journal). 
@@ -425,7 +464,10 @@ commit sequence is used, as follows:</p>
 <li>Drop the EXCLUSIVE and PENDING locks from all database files.
     </li>
 </ol>
-<a name="writer_starvation"></a><h3>5.1 Writer starvation</h3>
+
+<a name="writer_starvation"></a>
+<h3>5.1 Writer starvation</h3>
+
 <p>In SQLite version 2, if many processes are reading from the database,
 it might be the case that there is never a time when there are
 no active readers.  And if there is always at least one read lock on the
@@ -440,10 +482,15 @@ process wants to write a busy database, it can set a PENDING lock which
 will prevent new readers from coming in.  Assuming existing readers do
 eventually complete, all SHARED locks will eventually clear and the
 writer will be given a chance to make its changes.</p>
-<a name="how_to_corrupt"></a><h2>6.0 How To Corrupt Your Database Files</h2>
+
+<a name="how_to_corrupt"></a>
+<h2>6.0 How To Corrupt Your Database Files</h2>
+
 <p>The pager module is robust but it is not completely failsafe.
 It can be subverted.  This section attempts to identify and explain
-the risks.</p>
+the risks.
+(See also the <a href="atomiccommit.html#sect_9_0">Things That Can Go Wrong</a> section of the article
+on <a href="atomiccommit.html">Atomic Commit</a>.</p>
 
 <p>
 Clearly, a hardware or operating system fault that introduces incorrect data
@@ -531,7 +578,10 @@ To defend against this problem, keep all databases
 on the same disk volume and/or remount disks using exactly the same names
 after a power failure.
 </p>
-<a name="transaction_control"></a><h2>7.0 Transaction Control At The SQL Level</h2>
+
+<a name="transaction_control"></a>
+<h2>7.0 Transaction Control At The SQL Level</h2>
+
 <p>
 The changes to locking and concurrency control in SQLite version 3 also
 introduce some subtle changes in the way transactions work at the SQL
@@ -575,5 +625,4 @@ result is returned.  During this pause other INSERT, UPDATE, or DELETE
 commands can be executed against other tables in the database.  But none
 of these changes will commit until the original SELECT statement finishes.
 </p>
-
 
