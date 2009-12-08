@@ -1,8 +1,6 @@
-diff --git a/Makefile.in b/Makefile.in
-index 5576de8..dc39016 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -463,6 +472,7 @@ last_change:	$(SRC)
+--- sqlite/Makefile.in.alt-ver	2009-12-08 16:08:55 +0300
++++ sqlite/Makefile.in	2009-12-08 16:21:20 +0300
+@@ -463,6 +463,7 @@ sqlite3.pc: $(TOP)/sqlite3.pc.in
  
  libsqlite3.la:	$(LIBOBJ)
  	$(LTLINK) -o $@ $(LIBOBJ) $(TLIBS) \
@@ -10,12 +8,9 @@ index 5576de8..dc39016 100644
  		${ALLOWRELEASE} -rpath "$(libdir)" -version-info "8:6:8"
  
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
-diff --git a/libsqlite3.map b/libsqlite3.map
-new file mode 100644
-index 0000000..6eba05c
---- /dev/null
-+++ b/libsqlite3.map
-@@ -0,0 +1,171 @@
+--- sqlite/libsqlite3.map.alt-ver	2009-12-08 16:21:20 +0300
++++ sqlite/libsqlite3.map	2009-12-08 16:24:10 +0300
+@@ -0,0 +1,202 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -173,6 +168,37 @@ index 0000000..6eba05c
 +    	sqlite3VdbeGetValue;
 +    	sqlite3VdbeMemStoreType;
 +    	sqlite3VdbeSetVarmask;
++};
++
++SQLITE3_3.6.21 {
++    global:
++	sqlite3BtreeCursorZero;
++	sqlite3ExprCanBeNull;
++	sqlite3ExprCodeIsNullJump;
++	sqlite3ExprNeedsNoAffinityChange;
++	sqlite3Fts3AllSegdirs;
++	sqlite3Fts3Dequote;
++	sqlite3Fts3GetVarint;
++	sqlite3Fts3GetVarint32;
++	sqlite3Fts3InitTokenizer;
++	sqlite3Fts3NextToken;
++	sqlite3Fts3Offsets;
++	sqlite3Fts3Optimize;
++	sqlite3Fts3PendingTermsClear;
++	sqlite3Fts3PendingTermsFlush;
++	sqlite3Fts3PutVarint;
++	sqlite3Fts3ReadBlock;
++	sqlite3Fts3SegReaderFree;
++	sqlite3Fts3SegReaderIterate;
++	sqlite3Fts3SegReaderNew;
++	sqlite3Fts3Snippet;
++	sqlite3Fts3UpdateMethod;
++	sqlite3Fts3VarintLen;
++	sqlite3TriggerColmask;
++	sqlite3VdbeAddOp4Int;
++	sqlite3VdbeExpandSql;
++	sqlite3VdbeParameterIndex;
++	sqlite3XPrintf;
 +};
 +
 +SQLITE3_COLUMN_METADATA {
