@@ -123,9 +123,6 @@ be successful even if it is subsequently rolled back.</p>
 <p>This function is accessible to SQL statements via the
 <a href="../lang_corefunc.html#last_insert_rowid">last_insert_rowid() SQL function</a>.</p>
 
-<p>Requirements:
-<a href="../hlr10000.html#H12221">H12221</a> <a href="../hlr10000.html#H12223">H12223</a></p>
-
 <p>If a separate thread performs a new <a href="../lang_insert.html">INSERT</a> on the same
 database connection while the <a href="../c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function is running and thus changes the last insert <a href="../lang_createtable.html#rowid">rowid</a>,

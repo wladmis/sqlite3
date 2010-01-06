@@ -95,8 +95,9 @@ const void *sqlite3_column_table_name16(sqlite3_stmt*,int);
 const char *sqlite3_column_origin_name(sqlite3_stmt*,int);
 const void *sqlite3_column_origin_name16(sqlite3_stmt*,int);
 </pre></blockquote><p>
-These routines provide a means to determine what column of what
-table in which database a result of a <a href="../lang_select.html">SELECT</a> statement comes from.
+These routines provide a means to determine the database, table, and
+table column that is the origin of a particular result column in
+<a href="../lang_select.html">SELECT</a> statement.
 The name of the database or table or column can be returned as
 either a UTF-8 or UTF-16 string.  The _database_ routines return
 the database name, the _table_ routines return the table name, and
@@ -108,28 +109,26 @@ again in a different encoding.</p>
 <p>The names returned are the original un-aliased names of the
 database, table, and column.</p>
 
-<p>The first argument to the following calls is a <a href="../c3ref/stmt.html">prepared statement</a>.
-These functions return information about the Nth column returned by
-the statement, where N is the second function argument.</p>
+<p>The first argument to these interfaces is a <a href="../c3ref/stmt.html">prepared statement</a>.
+These functions return information about the Nth result column returned by
+the statement, where N is the second function argument.
+The left-most column is column 0 for these routines.</p>
 
 <p>If the Nth column returned by the statement is an expression or
 subquery and is not a column value, then all of these functions return
 NULL.  These routine might also return NULL if a memory allocation error
-occurs.  Otherwise, they return the name of the attached database, table
-and column that query result column was extracted from.</p>
+occurs.  Otherwise, they return the name of the attached database, table,
+or column that query result column was extracted from.</p>
 
-<p>As with all other SQLite APIs, those postfixed with "16" return
-UTF-16 encoded strings, the other functions return UTF-8.</p>
+<p>As with all other SQLite APIs, those whose names end with "16" return
+UTF-16 encoded strings and the other functions return UTF-8.</p>
 
 <p>These APIs are only available if the library was compiled with the
-<a href="../compile.html#enable_column_metadata">SQLITE_ENABLE_COLUMN_METADATA</a> C-preprocessor symbol defined.</p>
+<a href="../compile.html#enable_column_metadata">SQLITE_ENABLE_COLUMN_METADATA</a> C-preprocessor symbol.</p>
 
 <p>If two or more threads call one or more of these routines against the same
 prepared statement and column at the same time then the results are
 undefined.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H13741">H13741</a> <a href="../hlr10000.html#H13742">H13742</a> <a href="../hlr10000.html#H13743">H13743</a> <a href="../hlr10000.html#H13744">H13744</a> <a href="../hlr10000.html#H13745">H13745</a> <a href="../hlr10000.html#H13746">H13746</a> <a href="../hlr10000.html#H13748">H13748</a></p>
 
 <p>If two or more threads call one or more
 <a href="../c3ref/column_database_name.html">column metadata interfaces</a>

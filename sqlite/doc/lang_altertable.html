@@ -97,14 +97,14 @@ or to add a new column to an existing table. It is not possible
 to rename a column, remove a column, or add or remove constraints from a table.
 </p>
 
-<p>The RENAME TO syntax is used to rename the table identified by 
+<p> The RENAME TO syntax is used to rename the table identified by 
 <i>&#91;database-name.&#93;table-name</i> to <i>new-table-name</i>.
 This command 
 cannot be used to move a table between attached databases, only to rename 
 a table within the same database.</p>
 
-<p>If the table being renamed has triggers or indices, then these remain
-attached to the table after it has been renamed. However, if there are
+<p> If the table being renamed has triggers or indices, then these remain
+attached to the table after it has been renamed.  However, if there are
 any view definitions, or statements executed by triggers that refer to
 the table being renamed, these are not automatically modified to use the new
 table name. If this is required, the triggers or view definitions must be
@@ -118,7 +118,7 @@ table being renamed or some other table)
 that refer to the table being renamed are modified to refer 
 to the renamed table by its new name.
 
-<p>The ADD COLUMN syntax
+<p> The ADD COLUMN syntax
 is used to add a new column to an existing table.
 The new column is always appended to the end of the list of existing columns.
 The <a href="syntaxdiagrams.html#column-def">column-def</a> rule defines the characteristics of the new column.
@@ -141,7 +141,7 @@ This can result in a table that contains data that
 is in violation of the CHECK constraint.  Future versions of SQLite might
 change to validate CHECK constraints as they are added.</p>
 
-<p>The execution time of the ALTER TABLE command is independent of
+<p> The execution time of the ALTER TABLE command is independent of
 the amount of data in the table.  The ALTER TABLE command runs as quickly
 on a table with 10 million rows as it does on a table with 1 row.
 </p>

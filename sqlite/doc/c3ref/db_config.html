@@ -94,7 +94,7 @@ The sqlite3_db_config() interface is used to make configuration
 changes to a <a href="../c3ref/sqlite3.html">database connection</a>.  The interface is similar to
 <a href="../c3ref/config.html">sqlite3_config()</a> except that the changes apply to a single
 <a href="../c3ref/sqlite3.html">database connection</a> (specified in the first argument).  The
-sqlite3_db_config() interface can only be used immediately after
+sqlite3_db_config() interface should only be used immediately after
 the database connection is created using <a href="../c3ref/open.html">sqlite3_open()</a>,
 <a href="../c3ref/open.html">sqlite3_open16()</a>, or <a href="../c3ref/open.html">sqlite3_open_v2()</a>.</p>
 
@@ -105,8 +105,8 @@ The only choice for this value is <a href="../c3ref/c_dbconfig_lookaside.html">S
 New verbs are likely to be added in future releases of SQLite.
 Additional arguments depend on the verb.</p>
 
-<p>Requirements:
-<a href="../hlr10000.html#H14203">H14203</a> <a href="../hlr10000.html#H14206">H14206</a> <a href="../hlr10000.html#H14209">H14209</a> <a href="../hlr10000.html#H14212">H14212</a> <a href="../hlr10000.html#H14215">H14215</a>
+<p>Calls to sqlite3_db_config() return SQLITE_OK if and only if
+the call is considered successful.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

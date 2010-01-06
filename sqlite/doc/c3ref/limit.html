@@ -104,9 +104,9 @@ set by a compile-time C preprocessor macro named
 <a href="../limits.html">SQLITE_MAX_XYZ</a>.
 (The "_LIMIT_" in the name is changed to "_MAX_".)
 Attempts to increase a limit above its hard upper bound are
-silently truncated to the hard upper limit.</p>
+silently truncated to the hard upper bound.</p>
 
-<p>Run time limits are intended for use in applications that manage
+<p>Run-time limits are intended for use in applications that manage
 both their own internal database and also databases that are controlled
 by untrusted external sources.  An example application might be a
 web browser that has its own databases for storing history and
@@ -119,10 +119,7 @@ interface to further control untrusted SQL.  The size of the database
 created by an untrusted script can be contained using the
 <a href="../pragma.html#pragma_max_page_count">max_page_count</a> <a href="../pragma.html#syntax">PRAGMA</a>.</p>
 
-<p>New run-time limit categories may be added in future releases.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12762">H12762</a> <a href="../hlr10000.html#H12766">H12766</a> <a href="../hlr10000.html#H12769">H12769</a>
+<p>New run-time limit categories may be added in future releases.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

@@ -90,10 +90,8 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Number of columns in a result set</h2><blockquote><pre>int sqlite3_data_count(sqlite3_stmt *pStmt);
 </pre></blockquote><p>
-Returns the number of values in the current row of the result set.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H13771">H13771</a> <a href="../hlr10000.html#H13772">H13772</a>
+The sqlite3_data_count(P) the number of columns in the
+of the result set of <a href="../c3ref/stmt.html">prepared statement</a> P.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

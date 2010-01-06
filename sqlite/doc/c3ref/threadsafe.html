@@ -90,7 +90,11 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Test To See If The Library Is Threadsafe</h2><blockquote><pre>int sqlite3_threadsafe(void);
 </pre></blockquote><p>
-SQLite can be compiled with or without mutexes.  When
+The sqlite3_threadsafe() function returns zero if and only if
+SQLite was compiled mutexing code omitted due to the
+<a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> compile-time option being set to 0.</p>
+
+<p>SQLite can be compiled with or without mutexes.  When
 the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> C preprocessor macro is 1 or 2, mutexes
 are enabled and SQLite is threadsafe.  When the
 <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> macro is 0,
@@ -108,16 +112,16 @@ the desired setting of the <a href="../compile.html#threadsafe">SQLITE_THREADSAF
 
 <p>This interface only reports on the compile-time mutex setting
 of the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> flag.  If SQLite is compiled with
-SQLITE_THREADSAFE=1 then mutexes are enabled by default but
+SQLITE_THREADSAFE=1 or =2 then mutexes are enabled by default but
 can be fully or partially disabled using a call to <a href="../c3ref/config.html">sqlite3_config()</a>
 with the verbs <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MULTITHREAD</a>,
-or <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MUTEX</a>.  The return value of this function shows
-only the default compile-time setting, not any run-time changes
-to that setting.</p>
+or <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MUTEX</a>.  The return value of the
+sqlite3_threadsafe() function shows only the compile-time setting of
+thread safety, not any run-time changes to that setting made by
+sqlite3_config(). In other words, the return value from sqlite3_threadsafe()
+is unchanged by calls to sqlite3_config().</p>
 
-<p>See the <a href="../threadsafe.html">threading mode</a> documentation for additional information.</p>
-
-<p>Requirements: <a href="../hlr10000.html#H10101">H10101</a> <a href="../hlr10000.html#H10102">H10102</a>
+<p>See the <a href="../threadsafe.html">threading mode</a> documentation for additional information.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

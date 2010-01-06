@@ -210,7 +210,7 @@ a:visited { color: #734559 }
   ... WHERE b IN (1,2,3) AND c NOT NULL AND d='hello'
 </pre></blockquote><p>
   The index is not usable at all becaues the left-most column of the
-  index (column "a") is not constrained.  Assuming there are no other
+  index (column "a") is not constrained.)  Assuming there are no other
   indices, the query above would result in a full table scan.
 </p>
 <p>
@@ -265,14 +265,14 @@ a:visited { color: #734559 }
   </b><i>column</i><b> IN (</b><i>expr1</i><b>,</b><i>expr2</i><b>,</b><i>expr3</i><b>,</b><i>expr4</i><b>,...)
 </b></pre></blockquote><p>
   The rewritten term then might go on to constrain an index using the
-  normal rules for <tt><b><big>IN</big></b></tt> operators.
-  Note that <i>column</i> must be the same column in every OR-connected subterm,
+  normal rules for <tt><b><big>IN</big></b></tt> operators.  Note that <i>column</i> must be
+  the same column in every OR-connected subterm,
   although the column can occur on either the left or the right side of
   the <tt><b><big>=</big></b></tt> operator.
 </p>
 <p>
   If and only if the previously described conversion of OR to an IN operator
-  does not work, a second OR-clause optimization is attempted.
+  does not work, the second OR-clause optimization is attempted.
   Suppose the OR clause consists of multiple subterms as follows:
 </p>
 <blockquote><pre><b>
@@ -284,38 +284,43 @@ a:visited { color: #734559 }
   Each subterm is analyzed as if it were itself the entire WHERE clause
   in order to see if the subterm is indexable by itself.
   If <u>every</u> subterm of an OR clause is separately indexable
-  then the OR clause might be coded so that expression works something
-  like the following:
+  then the OR clause might be coded such that a separate index is used
+  to evaluate each term of the OR clause.  One way to think about how
+  SQLite uses separate indices foreach each OR clause term is to imagine
+  that the WHERE clause where rewritten as follows:
 </p>
 <blockquote><pre><b>
   rowid IN (SELECT rowid FROM </b><i>table</i><b> WHERE </b><i>expr1</i><b>
             UNION SELECT rowid FROM </b><i>table</i><b> WHERE </b><i>expr2</i><b>
             UNION SELECT rowid FROM </b><i>table</i><b> WHERE </b><i>expr3</i><b>)
 </b></pre></blockquote><p>
-  The expression above is conceptual.
+  The rewritten expression above is conceptual; WHERE clauses containing
+  OR are not really rewritten this way.
   The actual implemention of the OR clause uses a mechanism that is
   more efficient than subqueries and which works even 
   even for tables where the "rowid" column name has been 
   overloaded for other uses and no longer refers to the real rowid.
   But the essence of the implementation is captured by the statement
-  above:  Separate indices are used to find rowids that satisfy each
-  subterm of the OR clause and then the union of those rowids is used
-  to find all matching rows in the database.
+  above:  Separate indices are used to find candidate result rows
+  from each OR clause term and the final result is the union of
+  those rows.
 </p>
 <p>
   Note that in most cases, SQLite will only use a single index for each
   table in the FROM clause of a query.  The second OR-clause optimization
-  described here is the one exception to that rule.  With an OR-clause,
+  described here is the exception to that rule.  With an OR-clause,
   a different index might be used for each subterm in the OR-clause.
 </p>
 <p>
-  The transformation of an OR clause to use indices is not guaranteed.
-  SQLite uses a cost-based query planner.  It attempts to estimate the cost
-  of evaluating each subterm of the OR clause separately and weights the
-  total cost against the a full-table scan.  If there are many subterms
-  in the OR clause or if some of the indices on OR-clause subterms are
-  not very selective, then SQLite might decide that it is faster to do
-  a full-table scan.  Programmers can use the
+  For any given query, the fact that the OR-clause optimization described
+  here can be used does not guarantee that it will be used.
+  SQLite uses a cost-based query planner that estimates the CPU and
+  disk I/O costs of various competing query plans and chooses the plan
+  that it thinks will be the fastest.  If there are many OR terms in
+  the WHERE clause or if some of the indices on individual OR-clause 
+  subterms are not very selective, then SQLite might decide that it is
+  faster to use a different query algorithm, or even a full-table scan.
+  Application developers can use the
   <a href="lang_explain.html">EXPLAIN QUERY PLAN</a> prefix on a statement to get a
   high-level overview of the chosen query strategy.
 </p>
@@ -353,7 +358,7 @@ a:visited { color: #734559 }
 <blockquote><pre>
   'a' LIKE 'A'
 </pre></blockquote><p>
-  By turning on the case_sensitive_like pragma as follows:
+  But if the case_sensitive_like pragma is enabled as follows:
 </p>
 <blockquote><pre>
   PRAGMA case_sensitive_like=ON;
@@ -425,15 +430,16 @@ a:visited { color: #734559 }
   tested against each input row even if the virtual terms are used to
   constrain an index.  This is because we do not know what additional
   constraints may be imposed by characters to the right
-  of the <i>x</i> prefix.  However, if there is only a single global wildcard
-  to the right of <i>x</i>, then the original LIKE or GLOB test is disabled.
+  of the <i>x</i> prefix.  However, if there is only a single
+  global wildcard to the right of <i>x</i>, then the original LIKE or 
+  GLOB test is disabled.
   In other words, if the pattern is like this:
 </p>
 <blockquote><pre><b>
   </b><i>column</i><b> LIKE </b><i>x</i><b>%
   </b><i>column</i><b> GLOB </b><i>x</i><b>*
 </b></pre></blockquote><p>
-  Then the original LIKE or GLOB tests are disabled when the virtual
+  then the original LIKE or GLOB tests are disabled when the virtual
   terms constrain an index because in that case we know that all of the
   rows selected by the index will pass the LIKE or GLOB test.
 </p>
@@ -453,8 +459,8 @@ a:visited { color: #734559 }
 <h2>5.0 Joins</h2><p>
   The ON and USING clauses of a inner join are converted into additional
   terms of the WHERE clause prior to WHERE clause analysis described
-  above in paragraph 1.0.  Thus
-  with SQLite, there is no advantage to use the newer SQL92 join syntax
+  above in paragraph 1.0.  Thus with SQLite, there is no computational
+  advantage to use the newer SQL92 join syntax
   over the older SQL89 comma-join syntax.  They both end up accomplishing
   exactly the same thing on inner joins.
 </p>
@@ -470,8 +476,9 @@ a:visited { color: #734559 }
   special processing applies to the ON and USING clauses of an OUTER join:
   specifically, the constraints in an ON or USING clause do not apply if
   the right table of the join is on a null row, but the constraints do apply
-  in the WHERE clause.  The net effect is that putting the ON clause expressions
-  for a LEFT JOIN in the WHERE clause effectively converts the query to an
+  in the WHERE clause.  The net effect is that putting the ON or USING
+  clause expressions for a LEFT JOIN in the WHERE clause effectively converts
+  the query to an
   ordinary INNER JOIN - albeit an inner join that runs more slowly.
 </p>
 <a name="table_order"></a>
@@ -501,7 +508,7 @@ a:visited { color: #734559 }
 </p>
 <p>
   Join reordering is automatic and usually works well enough that
-  programmer do not have to think about it, especially if <a href="lang_analyze.html">ANALYZE</a>
+  programmers do not have to think about it, especially if <a href="lang_analyze.html">ANALYZE</a>
   has been used to gather statistics about the available indices.
   But occasionally some hints from the programmer are needed.
   Consider, for example, the following schema:
@@ -628,7 +635,7 @@ a:visited { color: #734559 }
 <p>
   If you really must take manual control of join loop nesting order,
   the preferred method is to use some peculiar (though valid) SQL syntax
-  to specify the join. If you use the keyword CROSS in a join, then 
+  to specify the join.  If you use the keyword CROSS in a join, then 
   the two tables connected by that join will not be reordered.
   So in the query, the optimizer is free to reorder the tables of
   the FROM clause anyway it sees fit:
@@ -657,9 +664,9 @@ a:visited { color: #734559 }
      AND e.orig = n1.id
      AND e.dest = n2.id;
 </pre></blockquote><p>
-  Hence, in the second form, the query plan must be option 2. Note that
+  Hence, in the second form, the query plan must be option 2.  Note that
   you must use the keyword CROSS in order to disable the table reordering
-  optimization. INNER JOIN, NATURAL JOIN, JOIN, and other similar
+  optimization; INNER JOIN, NATURAL JOIN, JOIN, and other similar
   combinations work just like a comma join in that the optimizer is
   free to reorder tables as it sees fit. (Table reordering is also
   disabled on an outer join, but that is because outer joins are not
@@ -766,15 +773,7 @@ a:visited { color: #734559 }
 </p>
 <p>
   The histogram data is only useful if the right-hand side of the constraint
-  is a compile-time constant.  Consider this query:
-</p>
-<blockquote><pre>
-  SELECT z FROM ex2 WHERE x BETWEEN ? AND ? AND y BETWEEN ? AND ?
-</pre></blockquote><p>
-  Because the bounds on columns x and y are <a href="lang_expr.html#varparam">parameters</a> and are unknown
-  to the query planner, SQLite has no way of using the histogram data in
-  <b>sqlite_stat2</b> and so the index choice falls back to being
-  arbitrary.
+  is a simple compile-time constant or <a href="lang_expr.html#varparam">parameter</a> and not an expression.
 </p>
 <p>
   Another limitation of the histogram data is that it only applies to the
@@ -810,16 +809,16 @@ a:visited { color: #734559 }
   query when possible.
   When faced with the choice of using an index to satisfy WHERE clause
   constraints or satisfying an ORDER BY clause, SQLite does the same
-  work analysis described in section 6.0
+  work analysis described above
   and chooses the index that it believes will result in the fastest answer.
 
 </p>
 <a name="flattening"></a>
 <h2>9.0 Subquery flattening</h2><p>
-  When a subquery occurs in the FROM clause of a SELECT, the default
+  When a subquery occurs in the FROM clause of a SELECT, the simplest
   behavior is to evaluate the subquery into a transient table, then run
-  the outer SELECT against the transient table. 
-  This is problematic since the transient table will not have any indices
+  the outer SELECT against the transient table.  But such a plan
+  can be suboptimal since the transient table will not have any indices
   and the outer query (which is likely a join) will be forced to do a
   full table scan on the transient table.
 </p>
@@ -870,9 +869,9 @@ a:visited { color: #734559 }
 
   <li>  The subquery and the outer query do not both have ORDER BY clauses.
 
-  <li>  The subquery and outer query do not both use LIMIT
+  <li>  The subquery and outer query do not both use LIMIT.
 
-  <li>  The subquery does not use OFFSET
+  <li>  The subquery does not use OFFSET.
 
   <li>  The outer query is not part of a compound select or the
         subquery does not have both an ORDER BY and a LIMIT clause.

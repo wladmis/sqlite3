@@ -129,14 +129,13 @@ completion of the <a href="../c3ref/step.html">sqlite3_step()</a> call that trig
 Note that <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and <a href="../c3ref/step.html">sqlite3_step()</a> both modify their
 database connections for the meaning of "modify" in this paragraph.</p>
 
-<p>If another function was previously registered, its pArg value
-is returned.  Otherwise NULL is returned.</p>
+<p>The sqlite3_update_hook(D,C,P) function
+returns the P argument from the previous call
+on the same <a href="../c3ref/sqlite3.html">database connection</a> D, or NULL for
+the first call on D.</p>
 
 <p>See also the <a href="../c3ref/commit_hook.html">sqlite3_commit_hook()</a> and <a href="../c3ref/commit_hook.html">sqlite3_rollback_hook()</a>
-interfaces.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12971">H12971</a> <a href="../hlr10000.html#H12973">H12973</a> <a href="../hlr10000.html#H12975">H12975</a> <a href="../hlr10000.html#H12977">H12977</a> <a href="../hlr10000.html#H12979">H12979</a> <a href="../hlr10000.html#H12981">H12981</a> <a href="../hlr10000.html#H12983">H12983</a> <a href="../hlr10000.html#H12986">H12986</a>
+interfaces.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

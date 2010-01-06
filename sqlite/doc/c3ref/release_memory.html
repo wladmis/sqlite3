@@ -92,12 +92,10 @@ a:visited { color: #734559 }
 </pre></blockquote><p>
 The sqlite3_release_memory() interface attempts to free N bytes
 of heap memory by deallocating non-essential memory allocations
-held by the database library.  Memory used to cache database
+held by the database library.   Memory used to cache database
 pages to improve performance is an example of non-essential memory.
 sqlite3_release_memory() returns the number of bytes actually freed,
-which might be more or less than the amount requested.</p>
-
-<p>Requirements: <a href="../hlr10000.html#H17341">H17341</a> <a href="../hlr10000.html#H17342">H17342</a>
+which might be more or less than the amount requested.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

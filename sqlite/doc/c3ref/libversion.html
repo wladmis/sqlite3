@@ -94,7 +94,7 @@ const char *sqlite3_sourceid(void);
 int sqlite3_libversion_number(void);
 </pre></blockquote><p>
 These interfaces provide the same information as the <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a>,
-<a href="../c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>, and <a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> #defines in the header,
+<a href="../c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>, and <a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> C preprocessor macros
 but are associated with the library instead of the header file.  Cautious
 programmers might include assert() statements in their application to
 verify that values returned by these interfaces match the macros in
@@ -104,19 +104,20 @@ compiled with matching library and header files.</p>
 <p><blockquote><pre>
 assert( sqlite3_libversion_number()==SQLITE_VERSION_NUMBER );
 assert( strcmp(sqlite3_sourceid(),SQLITE_SOURCE_ID)==0 );
-assert( strcmp(sqlite3_libversion,SQLITE_VERSION)==0 );
+assert( strcmp(sqlite3_libversion(),SQLITE_VERSION)==0 );
 </pre></blockquote></p>
 
-<p>The sqlite3_libversion() function returns the same information as is
-in the sqlite3_version[] string constant.  The function is provided
-for use in DLLs since DLL users usually do not have direct access to string
-constants within the DLL.  Similarly, the sqlite3_sourceid() function
-returns the same information as is in the <a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> #define of
-the header file.</p>
+<p>The sqlite3_version[] string constant contains the text of <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a>
+macro.  The sqlite3_libversion() function returns a pointer to the
+to the sqlite3_version[] string constant.  The sqlite3_libversion()
+function is provided for use in DLLs since DLL users usually do not have
+direct access to string constants within the DLL.  The
+sqlite3_libversion_number() function returns an integer equal to
+<a href="../c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>.  The sqlite3_sourceid() function a pointer
+to a string constant whose value is the same as the <a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a>
+C preprocessor macro.</p>
 
-<p>See also: <a href="../lang_corefunc.html#sqlite_version">sqlite_version()</a> and <a href="../lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a>.</p>
-
-<p>Requirements: <a href="../hlr10000.html#H10021">H10021</a> <a href="../hlr10000.html#H10022">H10022</a> <a href="../hlr10000.html#H10023">H10023</a>
+<p>See also: <a href="../lang_corefunc.html#sqlite_version">sqlite_version()</a> and <a href="../lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

@@ -150,7 +150,7 @@ the error code is SQLITE_ERROR.  A subsequent call to sqlite3_result_error()
 or sqlite3_result_error16() resets the error code to SQLITE_ERROR.</p>
 
 <p>The sqlite3_result_toobig() interface causes SQLite to throw an error
-indicating that a string or BLOB is to long to represent.</p>
+indicating that a string or BLOB is too long to represent.</p>
 
 <p>The sqlite3_result_nomem() interface causes SQLite to throw an error
 indicating that a memory allocation failed.</p>
@@ -205,12 +205,7 @@ kind of <a href="../c3ref/value.html">sqlite3_value</a> object can be used with 
 
 <p>If these routines are called from within the different thread
 than the one containing the application-defined function that received
-the <a href="../c3ref/context.html">sqlite3_context</a> pointer, the results are undefined.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H16403">H16403</a> <a href="../hlr10000.html#H16406">H16406</a> <a href="../hlr10000.html#H16409">H16409</a> <a href="../hlr10000.html#H16412">H16412</a> <a href="../hlr10000.html#H16415">H16415</a> <a href="../hlr10000.html#H16418">H16418</a> <a href="../hlr10000.html#H16421">H16421</a> <a href="../hlr10000.html#H16424">H16424</a>
-<a href="../hlr10000.html#H16427">H16427</a> <a href="../hlr10000.html#H16430">H16430</a> <a href="../hlr10000.html#H16433">H16433</a> <a href="../hlr10000.html#H16436">H16436</a> <a href="../hlr10000.html#H16439">H16439</a> <a href="../hlr10000.html#H16442">H16442</a> <a href="../hlr10000.html#H16445">H16445</a> <a href="../hlr10000.html#H16448">H16448</a>
-<a href="../hlr10000.html#H16451">H16451</a> <a href="../hlr10000.html#H16454">H16454</a> <a href="../hlr10000.html#H16457">H16457</a> <a href="../hlr10000.html#H16460">H16460</a> <a href="../hlr10000.html#H16463">H16463</a>
+the <a href="../c3ref/context.html">sqlite3_context</a> pointer, the results are undefined.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

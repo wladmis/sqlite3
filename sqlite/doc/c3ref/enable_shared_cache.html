@@ -104,10 +104,6 @@ calls to <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open
 Existing database connections continue use the sharing mode
 that was in effect at the time they were opened.</p>
 
-<p>Virtual tables cannot be used with a shared cache.  When shared
-cache is enabled, the <a href="../c3ref/create_module.html">sqlite3_create_module()</a> API used to register
-virtual tables will always return an error.</p>
-
 <p>This routine returns <a href="../c3ref/c_abort.html">SQLITE_OK</a> if shared cache was enabled or disabled
 successfully.  An <a href="../c3ref/c_abort.html">error code</a> is returned otherwise.</p>
 
@@ -115,9 +111,7 @@ successfully.  An <a href="../c3ref/c_abort.html">error code</a> is returned oth
 future releases of SQLite.  Applications that care about shared
 cache setting should set it explicitly.</p>
 
-<p>See Also:  <a href="../sharedcache.html">SQLite Shared-Cache Mode</a></p>
-
-<p>Requirements: <a href="../hlr10000.html#H10331">H10331</a> <a href="../hlr10000.html#H10336">H10336</a> <a href="../hlr10000.html#H10337">H10337</a> <a href="../hlr10000.html#H10339">H10339</a>
+<p>See Also:  <a href="../sharedcache.html">SQLite Shared-Cache Mode</a>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

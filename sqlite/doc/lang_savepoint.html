@@ -93,11 +93,11 @@ a:visited { color: #734559 }
 <h4><a href="syntaxdiagrams.html#rollback-stmt">rollback-stmt:</a></h4><blockquote> <img alt="syntax diagram rollback-stmt" src="images/syntax/rollback-stmt.gif"></img> </blockquote>
 
 
-<p>SAVEPOINTs are a method of creating transactions, similar to
+<p> SAVEPOINTs are a method of creating transactions, similar to
 <a href="lang_transaction.html">BEGIN</a> and <a href="lang_transaction.html">COMMIT</a>, except that the SAVEPOINT and RELEASE commands
 are named and may be nested.</p>
 
-<p>The SAVEPOINT command starts a new transaction with a name.
+<p> The SAVEPOINT command starts a new transaction with a name.
 The transaction names need not be unique.
 A SAVEPOINT can be started either within or outside of
 a <a href="lang_transaction.html">BEGIN</a>...<a href="lang_transaction.html">COMMIT</a>.  When a SAVEPOINT is the outer-most savepoint
@@ -111,17 +111,17 @@ does not cancel the transaction.  Instead of cancelling the transaction,
 the ROLLBACK TO command restarts the transaction again at the beginning.
 All intervening SAVEPOINTs are cancelled, however.</p>
 
-<p>The RELEASE is like a <a href="lang_transaction.html">COMMIT</a> for a SAVEPOINT.
-The RELEASE command causes all savepoints back to and including the first
-savepoint with a matching name to be removed from the transaction stack.  The
-RELEASE of an inner transaction
+<p>The RELEASE command is like a <a href="lang_transaction.html">COMMIT</a> for a SAVEPOINT.
+The RELEASE command causes all savepoints back to and including the 
+most recent savepoint with a matching name to be removed from the 
+transaction stack.  The RELEASE of an inner transaction
 does not cause any changes to be written to the database file; it merely
 removes savepoints from the transaction stack such that it is
 no longer possible to ROLLBACK TO those savepoints.
 If a RELEASE command releases the outermost savepoint, so
 that the transaction stack becomes empty, then RELEASE is the same
 as <a href="lang_transaction.html">COMMIT</a>.
-The <a href="lang_transaction.html">COMMIT</a> command may used to release all savepoints and
+The <a href="lang_transaction.html">COMMIT</a> command may be used to release all savepoints and
 commit the transaction even if the transaction was originally started
 by a SAVEPOINT command instead of a <a href="lang_transaction.html">BEGIN</a> command.</p>
 
@@ -168,7 +168,7 @@ changes to the database.
 
 <h3>Transaction Nesting Rules</h3>
 
-<p>Transactions stack.  The last transaction started will be the first
+<p>The last transaction started will be the first
 transaction committed or rolled back.</p>
 
 <p>The <a href="lang_transaction.html">BEGIN</a> command only works if the transaction stack is empty, or
@@ -181,7 +181,7 @@ the transaction stack empty.</p>
 
 <p>The RELEASE command starts with the most recent addition to the
 transaction stack and releases savepoints backwards 
-in time until it releases a savepoint mark with a matching savepoint-name.
+in time until it releases a savepoint with a matching savepoint-name.
 Prior savepoints, even savepoints with matching savepoint-names, are
 unchanged.
 If the RELEASE command causes the

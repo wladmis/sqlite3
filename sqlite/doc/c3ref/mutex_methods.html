@@ -116,15 +116,15 @@ implementation, using the <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONF
 
 <p>The xMutexInit method defined by this structure is invoked as
 part of system initialization by the sqlite3_initialize() function.
- The xMutexInit routine shall be called by SQLite once for each
+The xMutexInit routine is calle by SQLite exactly once for each
 effective call to <a href="../c3ref/initialize.html">sqlite3_initialize()</a>.</p>
 
 <p>The xMutexEnd method defined by this structure is invoked as
 part of system shutdown by the sqlite3_shutdown() function. The
 implementation of this method is expected to release all outstanding
 resources obtained by the mutex methods implementation, especially
-those obtained by the xMutexInit method. The xMutexEnd()
-interface shall be invoked once for each call to <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>.</p>
+those obtained by the xMutexInit method.  The xMutexEnd()
+interface is invoked exactly once for each call to <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>.</p>
 
 <p>The remaining seven methods defined by this structure (xMutexAlloc,
 xMutexFree, xMutexEnter, xMutexTry, xMutexLeave, xMutexHeld and

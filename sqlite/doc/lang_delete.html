@@ -123,7 +123,7 @@ statements within triggers.</p>
 <p>When the WHERE is omitted from a DELETE statement and the table
 being deleted has no triggers,
 SQLite uses an optimization to erase the entire table content
-without having to visit each row of the table individual.
+without having to visit each row of the table individually.
 This "truncate" optimization makes the delete run much faster.
 Prior to SQLite <a href="releaselog/3_6_5.html">version 3.6.5</a>, the truncate optimization
 also meant that the <a href="c3ref/changes.html">sqlite3_changes()</a> and
@@ -153,7 +153,8 @@ extended by the addition of optional ORDER BY and LIMIT clauses:</p>
 
 <p>The optional LIMIT clause can be used to limit the number of
 rows deleted, and thereby limit the size of the transaction.
-The ORDER BY clause is used only to determine which rows fall
+The ORDER BY clause on a DELETE statement
+is used only to determine which rows fall
 within the LIMIT.  The order in which rows are deleted is arbitrary
 and is not determined by the ORDER BY clause.</p>
 

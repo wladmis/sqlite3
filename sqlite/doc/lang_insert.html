@@ -91,7 +91,7 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>INSERT</h2><h4><a href="syntaxdiagrams.html#insert-stmt">insert-stmt:</a></h4><blockquote> <img alt="syntax diagram insert-stmt" src="images/syntax/insert-stmt.gif"></img> </blockquote>
 
 
-<p>The INSERT statement comes in two basic forms.  The first form
+<p>The INSERT statement comes in three basic forms.  The first form
 (with the "VALUES" keyword) creates a single new row in an existing table.
 If no column-list is specified then the number of values must
 be the same as the number of columns in the table.  If a column-list
@@ -105,12 +105,16 @@ default value is specified.
 SELECT statement.  The number of columns in the result of the
 SELECT must exactly match the number of columns in the table if
 no column list is specified, or it must match the number of columns
-name in the column list.  A new entry is made in the table
+named in the column list.  A new entry is made in the table
 for every row of the SELECT result.  The SELECT may be simple
 or compound.</p>
 
+<p>The third form of an INSERT statement is with DEFAULT VALUES.
+The INSERT ... DEFAULT VALUES statement simply creates a single new
+row in the table in which each column is filled with its default value.</p>
+
 <p>The optional conflict-clause allows the specification of an alternative
-constraint conflict resolution algorithm to use during this one command.
+constraint conflict resolution algorithm to use during this one INSERT command.
 See the section titled
 <a href="lang_conflict.html">ON CONFLICT</a> for additional information.
 For compatibility with MySQL, the parser allows the use of the
@@ -121,7 +125,7 @@ alias for "INSERT OR REPLACE".
 <p>The optional "<i>database-name</i><b>.</b>" prefix on the <i>table-name</i>
 is support for top-level INSERT statements only.  The table name must be
 unqualified for INSERT statements that occur within <a href="lang_createtrigger.html">CREATE TRIGGER</a> statements.
-Likely, the "DEFAULT VALUES" form of the INSERT statement is support for
+Similarly, the "DEFAULT VALUES" form of the INSERT statement is supported for
 top-level INSERT statements only and not for INSERT statements within
 triggers.
 <p>

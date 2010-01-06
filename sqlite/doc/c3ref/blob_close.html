@@ -106,11 +106,8 @@ closing are reported as a non-zero return value.</p>
 <p>The BLOB is closed unconditionally.  Even if this routine returns
 an error code, the BLOB is still closed.</p>
 
-<p>Calling this routine with a null pointer (which as would be returned
-by failed call to <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a>) is a harmless no-op.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H17833">H17833</a> <a href="../hlr10000.html#H17836">H17836</a> <a href="../hlr10000.html#H17839">H17839</a>
+<p>Calling this routine with a null pointer (such as would be returned
+by a failed call to <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a>) is a harmless no-op.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

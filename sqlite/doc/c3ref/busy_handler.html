@@ -95,12 +95,12 @@ an attempt is made to open a database table that another thread
 or process has locked.</p>
 
 <p>If the busy callback is NULL, then <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> or <a href="../c3ref/c_ioerr_access.html">SQLITE_IOERR_BLOCKED</a>
-is returned immediately upon encountering the lock. If the busy callback
-is not NULL, then the callback will be invoked with two arguments.</p>
+is returned immediately upon encountering the lock.  If the busy callback
+is not NULL, then the callback might be invoked with two arguments.</p>
 
-<p>The first argument to the handler is a copy of the void* pointer which
+<p>The first argument to the busy handler is a copy of the void* pointer which
 is the third argument to sqlite3_busy_handler().  The second argument to
-the handler callback is the number of times that the busy handler has
+the busy handler callback is the number of times that the busy handler has
 been invoked for this locking event.  If the
 busy callback returns 0, then no additional attempts are made to
 access the database and <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> or <a href="../c3ref/c_ioerr_access.html">SQLITE_IOERR_BLOCKED</a> is returned.
@@ -147,9 +147,6 @@ will also set or clear the busy handler.</p>
 <p>The busy callback should not take any actions which modify the
 database connection that invoked the busy handler.  Any such actions
 result in undefined behavior.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12311">H12311</a> <a href="../hlr10000.html#H12312">H12312</a> <a href="../hlr10000.html#H12314">H12314</a> <a href="../hlr10000.html#H12316">H12316</a> <a href="../hlr10000.html#H12318">H12318</a></p>
 
 <p>A busy handler must not close the database connection
 or <a href="../c3ref/stmt.html">prepared statement</a> that invoked the busy handler.

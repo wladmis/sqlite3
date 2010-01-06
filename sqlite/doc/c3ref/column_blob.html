@@ -99,14 +99,14 @@ const void *sqlite3_column_text16(sqlite3_stmt*, int iCol);
 int sqlite3_column_type(sqlite3_stmt*, int iCol);
 sqlite3_value *sqlite3_column_value(sqlite3_stmt*, int iCol);
 </pre></blockquote><p>
-These routines form the "result set query" interface.</p>
+These routines form the "result set" interface.</p>
 
 <p>These routines return information about a single column of the current
 result row of a query.  In every case the first argument is a pointer
 to the <a href="../c3ref/stmt.html">prepared statement</a> that is being evaluated (the <a href="../c3ref/stmt.html">sqlite3_stmt*</a>
 that was returned from <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or one of its variants)
 and the second argument is the index of the column for which information
-should be returned.  The leftmost column of the result set has the index 0.
+should be returned. The leftmost column of the result set has the index 0.
 The number of columns in the result can be determined using
 <a href="../c3ref/column_count.html">sqlite3_column_count()</a>.</p>
 
@@ -247,11 +247,7 @@ and BLOBs is freed automatically.  Do <b>not</b> pass the pointers returned
 of these routines, a default value is returned.  The default value
 is either the integer 0, the floating point number 0.0, or a NULL
 pointer.  Subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode()</a> will return
-<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H13803">H13803</a> <a href="../hlr10000.html#H13806">H13806</a> <a href="../hlr10000.html#H13809">H13809</a> <a href="../hlr10000.html#H13812">H13812</a> <a href="../hlr10000.html#H13815">H13815</a> <a href="../hlr10000.html#H13818">H13818</a> <a href="../hlr10000.html#H13821">H13821</a> <a href="../hlr10000.html#H13824">H13824</a>
-<a href="../hlr10000.html#H13827">H13827</a> <a href="../hlr10000.html#H13830">H13830</a>
+<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

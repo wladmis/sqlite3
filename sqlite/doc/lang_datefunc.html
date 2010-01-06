@@ -104,8 +104,8 @@ SQLite supports five date and time functions as follows:
 </ol>
 
 <p>
-All five functions take a time string as an argument. The time string
-is followed by zero or more modifiers. 
+All five date and time functions take a time string as an argument. 
+The time string is followed by zero or more modifiers. 
 The strftime() function also takes a format string as its first argument.
 </p>
 
@@ -119,7 +119,7 @@ The datetime() function returns "YYYY-MM-DD HH:MM:SS".
 The julianday() function returns the 
 <a href="http://en.wikipedia.org/wiki/Julian_day">Julian day</a> - the
 number of days since noon in Greenwich on November 24, 4714 B.C. 
-(<a href="http://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar">Proleptic Gregorian calendar</a>). 
+(<a href="http://en.wikipedia.org/wiki/Proleptic_Gregorian_calendar">Proleptic Gregorian calendar</a>).
 The strftime() routine returns the date formatted according to 
 the format string specified as the first argument.
 The format string supports the most common substitutions found in the 
@@ -204,8 +204,8 @@ expressed as a floating point value.
 <h3>Modifiers</h3>
 
 <p>The time string can be followed by zero or more modifiers that 
-alter the date and time string.  Each modifier
-is a transformation that is applied to the time string to its left.
+alter the date and time string. Each modifier
+is a transformation that is applied to the time value to its left.
 Modifiers are applied from left to right; order is important.
 The available modifiers are as follows.</p>
 
@@ -226,8 +226,8 @@ The available modifiers are as follows.</p>
 </ol>
 
 <p>The first six modifiers (1 through 6) 
-simply add the specified amount of time to the date 
-specified by the preceding timestring.
+simply add the specified amount of time to the date and time 
+specified by the preceding timestring and modifiers.
 Note that "&plusmn;NNN months" works by rendering the original date into
 the YYYY-MM-DD format, adding the &plusmn;NNN to the MM month value, then
 normalizing the result.  Thus, for example, the data 2001-03-31 modified

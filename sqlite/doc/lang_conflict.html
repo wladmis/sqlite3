@@ -105,8 +105,9 @@ The keywords change but the meaning of the clause is the same
 either way.</p>
 
 <p>The ON CONFLICT clause specifies an algorithm used to resolve
-constraint conflicts.  There are five choices: ROLLBACK, ABORT,
-FAIL, IGNORE, and REPLACE. The default algorithm is ABORT.  This
+constraint conflicts.  There are five conflict resolution algorithm choices:
+ROLLBACK, ABORT, FAIL, IGNORE, and REPLACE.
+The default conflict resolution algorithm is ABORT.  This
 is what they mean:</p>
 
 <dl>
@@ -138,13 +139,15 @@ but changes to rows 100 and beyond never occur.</p></dd>
 the constraint violation is not inserted or changed.  But the command
 continues executing normally.  Other rows before and after the row that
 contained the constraint violation continue to be inserted or updated
-normally.  No error is returned.</p></dd>
+normally.  No error is returned when the IGNORE conflict resolution
+algorithm is used.</p></dd>
 
 <dt><b>REPLACE</b></dt>
 <dd><p>When a UNIQUE constraint violation occurs, the pre-existing rows
 that are causing the constraint violation are removed prior to inserting
 or updating the current row.  Thus the insert or update always occurs.
-The command continues executing normally.  No error is returned.
+The command continues executing normally following REPLACE.  
+No error is returned by the REPLACE conflict resolution.
 If a NOT NULL constraint violation occurs, the NULL value is replaced
 by the default value for that column.  If the column has no default
 value, then the ABORT algorithm is used.  If a CHECK constraint violation

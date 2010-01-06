@@ -90,11 +90,16 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Closing A Database Connection</h2><blockquote><pre>int sqlite3_close(sqlite3 *);
 </pre></blockquote><p>
-This routine is the destructor for the <a href="../c3ref/sqlite3.html">sqlite3</a> object.</p>
+The sqlite3_close() routine is the destructor for the <a href="../c3ref/sqlite3.html">sqlite3</a> object.
+Calls to sqlite3_close() return SQLITE_OK if the <a href="../c3ref/sqlite3.html">sqlite3</a> object is
+successfullly destroyed and all associated resources are deallocated.</p>
 
 <p>Applications must <a href="../c3ref/finalize.html">finalize</a> all <a href="../c3ref/stmt.html">prepared statements</a>
 and <a href="../c3ref/blob_close.html">close</a> all <a href="../c3ref/blob.html">BLOB handles</a> associated with
-the <a href="../c3ref/sqlite3.html">sqlite3</a> object prior to attempting to close the object.</p>
+the <a href="../c3ref/sqlite3.html">sqlite3</a> object prior to attempting to close the object.  If
+sqlite3_close() is called on a <a href="../c3ref/sqlite3.html">database connection</a> that still has
+outstanding <a href="../c3ref/stmt.html">prepared statements</a> or <a href="../c3ref/blob.html">BLOB handles</a>, then it returns
+SQLITE_BUSY.</p>
 
 <p>If <a href="../c3ref/close.html">sqlite3_close()</a> is invoked while a transaction is open,
 the transaction is automatically rolled back.</p>
@@ -102,10 +107,9 @@ the transaction is automatically rolled back.</p>
 <p>The C parameter to <a href="../c3ref/close.html">sqlite3_close(C)</a> must be either a NULL
 pointer or an <a href="../c3ref/sqlite3.html">sqlite3</a> object pointer obtained
 from <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open16()</a>, or
-<a href="../c3ref/open.html">sqlite3_open_v2()</a>, and not previously closed.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12011">H12011</a> <a href="../hlr10000.html#H12012">H12012</a> <a href="../hlr10000.html#H12013">H12013</a> <a href="../hlr10000.html#H12014">H12014</a> <a href="../hlr10000.html#H12015">H12015</a> <a href="../hlr10000.html#H12019">H12019</a>
+<a href="../c3ref/open.html">sqlite3_open_v2()</a>, and not previously closed.
+Calling sqlite3_close() with a NULL pointer argument is a
+harmless no-op.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

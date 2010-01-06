@@ -92,16 +92,8 @@ a:visited { color: #734559 }
 
 
 <p>The DROP INDEX statement removes an index added
-with the <a href="lang_createindex.html">CREATE INDEX</a> statement.  The index named is completely removed from
+with the <a href="lang_createindex.html">CREATE INDEX</a> statement.  The index is completely removed from
 the disk.  The only way to recover the index is to reenter the
 appropriate <a href="lang_createindex.html">CREATE INDEX</a> command.</p>
-
-<p>The DROP INDEX statement does not reduce the size of the database 
-file in the default mode.
-Empty space in the database is retained for later <a href="lang_insert.html">INSERT</a> statements.  To 
-remove free space in the database, use the <a href="lang_vacuum.html">VACUUM</a>
-command.  If <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> mode is enabled for a database then space
-will be freed automatically by DROP INDEX.</p>
-
 
 

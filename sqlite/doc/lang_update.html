@@ -100,7 +100,7 @@ All expressions are evaluated before any assignments are made.
 A WHERE clause can be used to restrict which rows are updated.</p>
 
 <p>The optional conflict-clause allows the specification of an alternative
-constraint conflict resolution algorithm to use during this one command.
+constraint conflict resolution algorithm to use during this one UPDATE command.
 See the section titled
 <a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
 
@@ -108,16 +108,16 @@ See the section titled
 
 <p>There are additional syntax restrictions on UPDATE statements that
 occur within the body of a <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement.  The <i>table-name</i>
-must be unqualified. 
-In other words, the <i>database-name</i><b>.</b> prefix
-on the table name is not allowed within triggers. 
-The table to be modified must be in the same
+of the UPDATE must be unqualified. 
+In other words, the <i>database-name</i><b>.</b> prefix 
+on the table name of the UPDATE is not allowed within triggers.
+The table to be updated must be in the same
 database as the table to which the trigger is attached.</p>
 
 <p>The INDEXED BY and NOT INDEXED clauses are not allowed on UPDATE
 statements within triggers.</p>
 
-<p>The LIMIT clause (described below) is unsupported within triggers.</p>
+<p>The LIMIT clause for UPDATE is unsupported within triggers.</p>
 
 <h3>Optional LIMIT and ORDER BY Clauses</h3>
 
@@ -130,7 +130,8 @@ with optional ORDER BY and LIMIT clauses as follows:</p>
 
 <p>The optional LIMIT clause can be used to limit the number of
 rows modifed, and thereby limit the size of the transaction.
-The ORDER BY clause is used only to determine which rows fall
+The ORDER BY clause on an UPDATE statement
+is used only to determine which rows fall
 within the LIMIT.  The order in which rows are modified is arbitrary
 and is not determined by the ORDER BY clause.</p>
 

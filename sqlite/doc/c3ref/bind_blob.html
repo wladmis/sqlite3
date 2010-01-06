@@ -98,7 +98,7 @@ int sqlite3_bind_text16(sqlite3_stmt*, int, const void*, int, void(*)(void*));
 int sqlite3_bind_value(sqlite3_stmt*, int, const sqlite3_value*);
 int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n);
 </pre></blockquote><p>
-In the SQL strings input to <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and its variants,
+In the SQL statement text input to <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and its variants,
 literals may be replaced by a <a href="../lang_expr.html#varparam">parameter</a> that matches one of following
 templates:</p>
 
@@ -154,30 +154,24 @@ content is later written using
 <a href="../c3ref/blob_open.html">incremental BLOB I/O</a> routines.
 A negative value for the zeroblob results in a zero-length BLOB.</p>
 
-<p>The sqlite3_bind_*() routines must be called after
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> (and its variants) or <a href="../c3ref/reset.html">sqlite3_reset()</a> and
-before <a href="../c3ref/step.html">sqlite3_step()</a>.
-Bindings are not cleared by the <a href="../c3ref/reset.html">sqlite3_reset()</a> routine.
+<p>If any of the sqlite3_bind_*() routines are called with a NULL pointer
+for the <a href="../c3ref/stmt.html">prepared statement</a> or with a prepared statement for which
+<a href="../c3ref/step.html">sqlite3_step()</a> has been called more recently than <a href="../c3ref/reset.html">sqlite3_reset()</a>,
+then the call will return <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.  If any sqlite3_bind_()
+routine is passed a <a href="../c3ref/stmt.html">prepared statement</a> that has been finalized, the
+result is undefined and probably harmful.</p>
+
+<p>Bindings are not cleared by the <a href="../c3ref/reset.html">sqlite3_reset()</a> routine.
 Unbound parameters are interpreted as NULL.</p>
 
-<p>These routines return <a href="../c3ref/c_abort.html">SQLITE_OK</a> on success or an error code if
-anything goes wrong.  <a href="../c3ref/c_abort.html">SQLITE_RANGE</a> is returned if the parameter
-index is out of range.  <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a> is returned if malloc() fails.
-<a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> might be returned if these routines are called on a
-virtual machine that is the wrong state or which has already been finalized.
-Detection of misuse is unreliable.  Applications should not depend
-on SQLITE_MISUSE returns.  SQLITE_MISUSE is intended to indicate a
-a logic error in the application.  Future versions of SQLite might
-panic rather than return SQLITE_MISUSE.</p>
+<p>The sqlite3_bind_* routines return <a href="../c3ref/c_abort.html">SQLITE_OK</a> on success or an
+<a href="../c3ref/c_abort.html">error code</a> if anything goes wrong.
+<a href="../c3ref/c_abort.html">SQLITE_RANGE</a> is returned if the parameter
+index is out of range.  <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a> is returned if malloc() fails.</p>
 
 <p>See also: <a href="../c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count()</a>,
-<a href="../c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name()</a>, and <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index()</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H13506">H13506</a> <a href="../hlr10000.html#H13509">H13509</a> <a href="../hlr10000.html#H13512">H13512</a> <a href="../hlr10000.html#H13515">H13515</a> <a href="../hlr10000.html#H13518">H13518</a> <a href="../hlr10000.html#H13521">H13521</a> <a href="../hlr10000.html#H13524">H13524</a> <a href="../hlr10000.html#H13527">H13527</a>
-<a href="../hlr10000.html#H13530">H13530</a> <a href="../hlr10000.html#H13533">H13533</a> <a href="../hlr10000.html#H13536">H13536</a> <a href="../hlr10000.html#H13539">H13539</a> <a href="../hlr10000.html#H13542">H13542</a> <a href="../hlr10000.html#H13545">H13545</a> <a href="../hlr10000.html#H13548">H13548</a> <a href="../hlr10000.html#H13551">H13551</a></p>
-
-<p></p><p>See also lists of
+<a href="../c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name()</a>, and <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index()</a>.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>

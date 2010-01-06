@@ -120,10 +120,10 @@ the application may discard the parameter after the call to
 <a href="../c3ref/config.html">sqlite3_config()</a> returns.</p>
 
 <p>The xInit() method is called once for each call to <a href="../c3ref/initialize.html">sqlite3_initialize()</a>
-(usually only once during the lifetime of the process). It is passed
-a copy of the sqlite3_pcache_methods.pArg value. It can be used to set
-up global structures and mutexes required by the custom page cache
-implementation.</p>
+(usually only once during the lifetime of the process). The xInit()
+method is passed a copy of the sqlite3_pcache_methods.pArg value.
+The xInit() method can set up up global structures and/or any mutexes
+required by the custom page cache implementation.</p>
 
 <p>The xShutdown() method is called from within <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>,
 if the application invokes this API. It can be used to clean up
@@ -161,8 +161,8 @@ never contain any unpinned pages.</p>
 <p>The xCachesize() method may be called at any time by SQLite to set the
 suggested maximum cache-size (number of pages stored by) the cache
 instance passed as the first argument. This is the value configured using
-the SQLite "<a href="../pragma.html#pragma_cache_size">PRAGMA cache_size</a>" command. As with the bPurgeable parameter,
-the implementation is not required to do anything with this
+the SQLite "<a href="../pragma.html#pragma_cache_size">PRAGMA cache_size</a>" command.  As with the bPurgeable
+parameter, the implementation is not required to do anything with this
 value; it is advisory only.</p>
 
 <p>The xPagecount() method should return the number of pages currently

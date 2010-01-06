@@ -102,17 +102,19 @@ is invoked.</p>
 
 <p><dl>
 <dt>SQLITE_DBCONFIG_LOOKASIDE</dt>
-<dd>This option takes three additional arguments that determine the
+<dd> This option takes three additional arguments that determine the
 <a href="../malloc.html#lookaside">lookaside memory allocator</a> configuration for the <a href="../c3ref/sqlite3.html">database connection</a>.
 The first argument (the third parameter to <a href="../c3ref/db_config.html">sqlite3_db_config()</a> is a
 pointer to an memory buffer to use for lookaside memory.
-The first argument may be NULL in which case SQLite will allocate the
-lookaside buffer itself using <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The second argument is the
-size of each lookaside buffer slot and the third argument is the number of
+The first argument after the SQLITE_DBCONFIG_LOOKASIDE verb
+may be NULL in which case SQLite will allocate the
+lookaside buffer itself using <a href="../c3ref/free.html">sqlite3_malloc()</a>. The second argument is the
+size of each lookaside buffer slot.  The third argument is the number of
 slots.  The size of the buffer in the first argument must be greater than
 or equal to the product of the second and third arguments.  The buffer
-must be aligned to an 8-byte boundary.  If the second argument is not
-a multiple of 8, it is internally rounded down to the next smaller
+must be aligned to an 8-byte boundary.  If the second argument to
+SQLITE_DBCONFIG_LOOKASIDE is not a multiple of 8, it is internally
+rounded down to the next smaller
 multiple of 8.  See also: <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_LOOKASIDE</a></dd></p>
 
 <p></dl>

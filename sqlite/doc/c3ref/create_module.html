@@ -94,10 +94,17 @@ a:visited { color: #734559 }
   const sqlite3_module *p,   /* Methods for the module */
   void *pClientData          /* Client data for xCreate/xConnect */
 );
+int sqlite3_create_module_v2(
+  sqlite3 *db,               /* SQLite connection to register module with */
+  const char *zName,         /* Name of the module */
+  const sqlite3_module *p,   /* Methods for the module */
+  void *pClientData,         /* Client data for xCreate/xConnect */
+  void(*xDestroy)(void*)     /* Module destructor function */
+);
 </pre></blockquote><p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
-This routine is used to register a new <a href="../c3ref/module.html">virtual table module</a> name.
+These routines are used to register a new <a href="../c3ref/module.html">virtual table module</a> name.
 Module names must be registered before
-creating a new <a href="../vtab.html">virtual table</a> using the module, or before using a
+creating a new <a href="../vtab.html">virtual table</a> using the module and before using a
 preexisting <a href="../vtab.html">virtual table</a> for the module.</p>
 
 <p>The module name is registered on the <a href="../c3ref/sqlite3.html">database connection</a> specified
@@ -108,8 +115,12 @@ parameter is an arbitrary client data pointer that is passed through
 into the <a href="../vtab.html#xcreate">xCreate</a> and <a href="../vtab.html#xconnect">xConnect</a> methods of the virtual table module
 when a new virtual table is be being created or reinitialized.</p>
 
-<p>This interface has exactly the same effect as calling
-<a href="../c3ref/create_module_v2.html">sqlite3_create_module_v2()</a> with a NULL client data destructor.
+<p>The sqlite3_create_module_v2() interface has a fifth parameter which
+is a pointer to a destructor for the pClientData.  SQLite will
+invoke the destructor function (if it is not NULL) when SQLite
+no longer needs the pClientData pointer.  The sqlite3_create_module()
+interface is equivalent to sqlite3_create_module_v2() with a NULL
+destructor.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

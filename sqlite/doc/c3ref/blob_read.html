@@ -103,7 +103,7 @@ can be determined using the <a href="../c3ref/blob_bytes.html">sqlite3_blob_byte
 <p>An attempt to read from an expired <a href="../c3ref/blob.html">BLOB handle</a> fails with an
 error code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.</p>
 
-<p>On success, SQLITE_OK is returned.
+<p>On success, sqlite3_blob_read() returns SQLITE_OK.
 Otherwise, an <a href="../c3ref/c_abort.html">error code</a> or an <a href="../c3ref/c_ioerr_access.html">extended error code</a> is returned.</p>
 
 <p>This routine only works on a <a href="../c3ref/blob.html">BLOB handle</a> which has been created
@@ -111,10 +111,7 @@ by a prior successful call to <a href="../c3ref/blob_open.html">sqlite3_blob_ope
 been closed by <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.  Passing any other pointer in
 to this routine results in undefined and probably undesirable behavior.</p>
 
-<p>See also: <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H17853">H17853</a> <a href="../hlr10000.html#H17856">H17856</a> <a href="../hlr10000.html#H17859">H17859</a> <a href="../hlr10000.html#H17862">H17862</a> <a href="../hlr10000.html#H17863">H17863</a> <a href="../hlr10000.html#H17865">H17865</a> <a href="../hlr10000.html#H17868">H17868</a>
+<p>See also: <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

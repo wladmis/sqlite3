@@ -248,7 +248,7 @@ virtual table.
 <p>Before a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement can be run, the module 
 specified in that statement must be registered with the database 
 connection. This is accomplished using either of the <a href="c3ref/create_module.html">sqlite3_create_module()</a>
-or <a href="c3ref/create_module_v2.html">sqlite3_create_module_v2()</a> interfaces:
+or <a href="c3ref/create_module.html">sqlite3_create_module_v2()</a> interfaces:
 
 <blockquote><pre>
   int sqlite3_create_module(
@@ -266,7 +266,7 @@ or <a href="c3ref/create_module_v2.html">sqlite3_create_module_v2()</a> interfac
   );
 </pre></blockquote>
 
-<p>The <a href="c3ref/create_module.html">sqlite3_create_module()</a> and <a href="c3ref/create_module_v2.html">sqlite3_create_module_v2()</a>
+<p>The <a href="c3ref/create_module.html">sqlite3_create_module()</a> and <a href="c3ref/create_module.html">sqlite3_create_module_v2()</a>
 routines associates a module name with 
 an <a href="c3ref/module.html">sqlite3_module</a> structure and a separate client data that is specific 
 to each module.  The only difference between the two create_module methods
@@ -339,7 +339,7 @@ beginning with SQLite <a href="releaselog/3_6_17.html">version 3.6.17</a>.
 <li> Create an instance of the <a href="c3ref/module.html">sqlite3_module</a> structure containing pointers
      to all the methods from step 1.
 <li> Register your <a href="c3ref/module.html">sqlite3_module</a> structure using one of the
-     <a href="c3ref/create_module.html">sqlite3_create_module()</a> or <a href="c3ref/create_module_v2.html">sqlite3_create_module_v2()</a> interfaces.
+     <a href="c3ref/create_module.html">sqlite3_create_module()</a> or <a href="c3ref/create_module.html">sqlite3_create_module_v2()</a> interfaces.
 <li> Run a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> command that specifies the new module in 
      the USING clause. 
 </ol>
@@ -373,7 +373,7 @@ The db parameter is a pointer to the SQLite <a href="c3ref/sqlite3.html">databas
 is executing the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement. 
 The pAux argument is the copy of the client data pointer that was the 
 fourth argument to the <a href="c3ref/create_module.html">sqlite3_create_module()</a> or
-<a href="c3ref/create_module_v2.html">sqlite3_create_module_v2()</a> call that registered the 
+<a href="c3ref/create_module.html">sqlite3_create_module_v2()</a> call that registered the 
 <a href="c3ref/module.html">virtual table module</a>. 
 The argv parameter is an array of argc pointers to null terminated strings. 
 The first string, argv[0], is the name of the module being invoked.   The

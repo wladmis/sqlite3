@@ -135,9 +135,6 @@ caused by subtriggers since those have their own context.</p>
 <p>See also the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface, the
 <a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#changes">changes() SQL function</a>.</p>
 
-<p>Requirements:
-<a href="../hlr10000.html#H12241">H12241</a> <a href="../hlr10000.html#H12243">H12243</a></p>
-
 <p>If a separate thread makes changes on the same database connection
 while <a href="../c3ref/changes.html">sqlite3_changes()</a> is running then the value returned
 is unpredictable and not meaningful.

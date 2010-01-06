@@ -90,22 +90,24 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Low-Level Control Of Database Files</h2><blockquote><pre>int sqlite3_file_control(sqlite3*, const char *zDbName, int op, void*);
 </pre></blockquote><p>
- The <a href="../c3ref/file_control.html">sqlite3_file_control()</a> interface makes a direct call to the
+The <a href="../c3ref/file_control.html">sqlite3_file_control()</a> interface makes a direct call to the
 xFileControl method for the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object associated
 with a particular database identified by the second argument. The
-name of the database is the name assigned to the database by the
-<a href="lang_attach.html">ATTACH</a> SQL command that opened the
-database. To control the main database file, use the name "main"
-or a NULL pointer. The third and fourth parameters to this routine
+name of the database "main" for the main database or "temp" for the
+TEMP database, or the name that appears after the AS keyword for
+databases that are added using the <a href="../lang_attach.html">ATTACH</a> SQL command.
+A NULL pointer can be used in place of "main" to refer to the
+main database file.
+The third and fourth parameters to this routine
 are passed directly through to the second and third parameters of
-the xFileControl method. The return value of the xFileControl
+the xFileControl method.  The return value of the xFileControl
 method becomes the return value of this routine.</p>
 
-<p> If the second parameter (zDbName) does not match the name of any
-open database file, then SQLITE_ERROR is returned. This error
+<p>If the second parameter (zDbName) does not match the name of any
+open database file, then SQLITE_ERROR is returned.  This error
 code is not remembered and will not be recalled by <a href="../c3ref/errcode.html">sqlite3_errcode()</a>
-or <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>. The underlying xFileControl method might
-also return SQLITE_ERROR. There is no way to distinguish between
+or <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>.  The underlying xFileControl method might
+also return SQLITE_ERROR.  There is no way to distinguish between
 an incorrect zDbName and an SQLITE_ERROR return from the underlying
 xFileControl method.</p>
 

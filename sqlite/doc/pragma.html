@@ -158,7 +158,7 @@ When querying the value of a setting, many pragmas return the number
 rather than the keyword.</p>
 
 <p>A pragma may have an optional database name before the pragma name.
-The database name is the name of an <a href="lang_attach.html">ATTACH</a>-ed database.  Or it can be
+The database name is the name of an <a href="lang_attach.html">ATTACH</a>-ed database or it can be
 "main" or "temp" for the main and the TEMP databases.  If the optional
 database name is omitted, "main" is assumed.  In some pragmas, the database
 name is meaningless and is simply ignored.</p>
@@ -213,8 +213,8 @@ name is meaningless and is simply ignored.</p>
     be invoked to cause the auto-vacuum to occur.</p>
 
     <p>The database connection can be changed between full and incremental
-    autovacuum mode at any time.  However, the connection can only be changed
-    "none" to "full" or "incremental" when the database is empty (no tables
+    autovacuum mode at any time.  However, changing from
+    "none" to "full" or "incremental" when the database is new (no tables
     have yet been created) or by running the <a href="lang_vacuum.html">VACUUM</a> command.  To
     change auto-vacuum modes, first use the auto_vacuum pragma to set
     the new desired mode, then invoke the <a href="lang_vacuum.html">VACUUM</a> command to 
@@ -300,12 +300,12 @@ name is meaningless and is simply ignored.</p>
 <li><p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>boolean</i><b>;</b></p>
 
-    <p>Query or change the empty-result-callbacks flag.</p> 
+    <p>Query or change the empty-result-callbacks flag.</p>
 
     <p>The empty-result-callbacks flag affects the <a href="c3ref/exec.html">sqlite3_exec()</a> API only.
     Normally, when the empty-result-callbacks flag is cleared, the
-    callback function supplied to the <a href="c3ref/exec.html">sqlite3_exec()</a> call is not invoked
-    for commands that return zero rows of data. When empty-result-callbacks
+    callback function supplied to the <a href="c3ref/exec.html">sqlite3_exec()</a> is not invoked
+    for commands that return zero rows of data.  When empty-result-callbacks
     is set in this situation, the callback function is invoked exactly once,
     with the third parameter set to 0 (NULL). This is to enable programs  
     that use the <a href="c3ref/exec.html">sqlite3_exec()</a> API to retrieve column-names even when
@@ -332,7 +332,7 @@ name is meaningless and is simply ignored.</p>
     text encoding that will be used to create the main database, if 
     it is created by this session.</p>
     <p>The second and subsequent forms of this pragma are only useful if
-    the main database has not already been created. In this case the 
+    the main database has not already been created.  In this case the 
     pragma sets the encoding that the main database will be created with if
     it is created by this session. The string "UTF-16" is interpreted
     as "UTF-16 encoding using native machine byte-ordering".  If the second
@@ -351,15 +351,16 @@ name is meaningless and is simply ignored.</p>
        <br>PRAGMA foreign_keys = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear the enforcement of <a href="foreignkeys.html">foreign key constraints</a>.
 
-    <p>This pragma is a no-op within a transaction.  Foreign key constraint
+    <p>This pragma is a no-op within a transaction; foreign key constraint
        enforcement may only be enabled or disabled when there is no pending
        <a href="lang_transaction.html">BEGIN</a> or <a href="lang_savepoint.html">SAVEPOINT</a>.
 
-    <p>Changing this setting affects the execution of all statements prepared
+    <p>Changing the foreign_keys setting affects the execution of
+       all statements prepared
        using the database connection, including those prepared before the
        setting was changed. Any existing statements prepared using the legacy 
        <a href="c3ref/prepare.html">sqlite3_prepare()</a> interface may fail with an <a href="c3ref/c_abort.html">SQLITE_SCHEMA</a> error
-       after this setting is changed.
+       after the foreign_keys setting is changed.
 
     <p>As of SQLite <a href="releaselog/3_6_19.html">version 3.6.19</a>, the default setting for foreign
        key enforcement is OFF.  However, that might change in a future
@@ -375,7 +376,7 @@ name is meaningless and is simply ignored.</p>
        <br>PRAGMA full_column_names = </b><i>boolean</i><b>;</b></p>
     <p>Query or change the full_column_names flag. This flag together 
     with the <a href="pragma.html#pragma_short_column_names">short_column_names</a> flag determine
-    the way SQLite assigns names to results returned by <a href="lang_select.html">SELECT</a> statements.
+    the way SQLite assigns names to result columns of <a href="lang_select.html">SELECT</a> statements.
     Result columns are named by applying the following rules in order:
     <ol>
     <li><p>If there is an AS clause on the result, then the name of
@@ -400,8 +401,8 @@ name is meaningless and is simply ignored.</p>
        <br>PRAGMA fullfsync = </b><i>boolean</i><b>;</b></p>
     <p>Query or change the fullfsync flag. This flag affects
     determines whether or not the F_FULLFSYNC syncing method is used
-    on systems that support it.  The default value is off.  As of this
-    writing (2006-02-10) only Mac OS X supports F_FULLFSYNC.
+    on systems that support it.  The default value of the fullfsync flag
+    is off.  Only Mac OS X supports F_FULLFSYNC.
     </p>
 </li>
 
@@ -478,7 +479,7 @@ name is meaningless and is simply ignored.</p>
     the first block of a file with zeros.</p>
 
     <p>The MEMORY journaling mode stores the rollback journal in 
-    volatile RAM.  This saves disk I/O but that the expense of database
+    volatile RAM.  This saves disk I/O but at the expense of database
     safety and integrity.  If the application using SQLite crashes in
     the middle of a transaction when the MEMORY journaling mode is set,
     then the database file will very likely go corrupt.</p>
@@ -516,13 +517,13 @@ name is meaningless and is simply ignored.</p>
 
   <p>This pragma may be used to limit the size of journal files left
   in the file-system after transactions are committed on a per database
-  basis. Each time a transaction is committed, SQLite compares the
+  basis.  Each time a transaction is committed, SQLite compares the
   size of the journal file left in the file-system to the size limit
-  configured using this pragma. If the journal file is larger than the
+  configured using this pragma and if the journal file is larger than the
   limit allows for, it is truncated to the limit.
 
   <p>The second form of the pragma listed above is used to set a new limit
-  in bytes for the specified database. A negative number implies no limit.
+  in bytes for the specified database.  A negative number implies no limit.
   Both the first and second forms of the pragma listed above return a single
   result row containing a single integer column - the value of the journal
   size limit in bytes. The default limit value is -1 (no limit), which
@@ -548,9 +549,9 @@ name is meaningless and is simply ignored.</p>
     are created using the latest file format which might not be
     readable or writable by versions of SQLite prior to 3.3.0.</p>
 
-    <p>When the pragma is issued with no argument, it returns the
-    setting of the flag.  This pragma does <u>not</u> tell which
-    file format the current database is using.  It tells what format
+    <p>When the legacy_file_format pragma is issued with no argument,
+    it returns the setting of the flag.  This pragma does <u>not</u> tell
+    which file format the current database is using; it tells what format
     will be used by any newly created databases.</p>
 
     <p>This flag only affects newly created databases.  It has no
@@ -666,7 +667,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
 <li><p><b>PRAGMA read_uncommitted;
        <br>PRAGMA read_uncommitted = </b><i>boolean</i><b>;</b></p>
-    <p>Query, set, or clear READ UNCOMMITTED isolation.  The default isolation
+    <p>Query, set, or clear READ UNCOMMITTED isolation. The default isolation
     level for SQLite is SERIALIZABLE.  Any process or thread can select
     READ UNCOMMITTED isolation, but SERIALIZABLE will still be used except
     between connections that share a common page and schema cache.
@@ -683,17 +684,18 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        <br>PRAGMA recursive_triggers = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear the recursive trigger capability.
 
-    <p>Changing this setting affects the execution of all statements prepared
+    <p>Changing the recursive_triggers setting affects the execution of
+       all statements prepared
        using the database connection, including those prepared before the
        setting was changed. Any existing statements prepared using the legacy 
        <a href="c3ref/prepare.html">sqlite3_prepare()</a> interface may fail with an <a href="c3ref/c_abort.html">SQLITE_SCHEMA</a> error
-       after this setting is changed.
+       after the recursive_triggers setting is changed.
 
     <p>Prior to SQLite version 3.6.18, recursive triggers were not
     supported.  The behavior of SQLite was always as if this pragma was
     set to OFF.  Support for recursive triggers was added in version 3.6.18
-    but was initially turned OFF by default, for compatibility.  Beginning
-    with SQLite version 3.7.0, recursive triggers are turned ON by default.    
+    but was initially turned OFF by default, for compatibility.  Recursive
+    triggers may be turned on by default in future versions of SQLite.
     </p>
 
     <p>The depth of recursion for triggers has a hard upper limit set by
@@ -740,15 +742,15 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        <br>PRAGMA synchronous = </b>
           <i>0 | OFF | 1 | NORMAL | 2 | FULL</i><b>;</b></p>
 
-    <p>Query or change the setting of the "synchronous" flag.  
-    The first (query) form will return the setting as an 
+    <p>Query or change the setting of the "synchronous" flag.
+    The first (query) form will return the synchronous setting as an 
     integer.  When synchronous is FULL (2), the SQLite database engine will
     pause at critical moments to make sure that data has actually been 
     written to the disk surface before continuing.  This ensures that if
     the operating system crashes or if there is a power failure, the database
     will be uncorrupted after rebooting.  FULL synchronous is very 
     safe, but it is also slower. 
-    When synchronous is NORMAL, the SQLite database
+    When synchronous is NORMAL (1), the SQLite database
     engine will still pause at the most critical moments, but less often
     than in FULL mode.  There is a very small (though non-zero) chance that
     a power failure at just the wrong time could corrupt the database in
@@ -783,7 +785,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     When temp_store is FILE (1) <a href="inmemorydb.html#temp_db">temporary tables</a> and indices are stored
     in a file.  The <a href="pragma.html#pragma_temp_store_directory">temp_store_directory</a> pragma can be used to specify
     the directory containing temporary files when
-    <b>FILE</b> is specified. When the temp_store setting is changed,
+    <b>FILE</b> is specified.  When the temp_store setting is changed,
     all existing temporary tables, indices, triggers, and views are
     immediately deleted.</p>
 
@@ -875,8 +877,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <a name="pragma_database_list"></a>
 
 <li><p><b>PRAGMA database_list;</b></p>
-    <p>For each open database, invoke the callback function once with
-    information about that database.  Arguments include the index and 
+    <p>This pragma works like a query to return one row for each database
+    attached to the current database connection.
+    Columns of the result set include the index and 
     the name the database was attached with.  The first row will be for 
     the main database.  The second row will be for the database used to 
     store temporary tables.</p></li>
@@ -884,10 +887,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <a name="pragma_foreign_key_list"></a>
 
 <li><p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
-    <p>For each foreign key that references a column in the argument
-    table, invoke the callback function with information about that
-    foreign key. The callback function will be invoked once for each
-    column in each foreign key.</p></li>
+    <p>This pragma returns one rwo for each foreign key that references
+    a column in the argument table.</li>
 
 <a name="pragma_freelist_count"></a>
 
@@ -895,23 +896,20 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Return the number of unused pages in the database file. Running
     a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
     command with a large value of N will shrink the database file by this
-    number of pages. </p></li>
+    number of pages when incremental vacuum is enabled. </p></li>
 
 <a name="pragma_index_info"></a>
 
 <li><p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
-    <p>For each column that the named index references, invoke the 
-    callback function
-    once with information about that column, including the column name,
-    and the column number.</p></li>
+    <p>This program returns one row row each column in the named index.</p>
 
 <a name="pragma_index_list"></a>
 
 <li><p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
-    <p>For each index on the named table, invoke the callback function
-    once with information about that index.  Arguments include the
-    index name and a flag to indicate whether or not the index must be
-    unique.</p></li>
+    <p>This pragma returns one row for each index associated with the
+    given table.   Columns of the result set include the
+    index name and a flag to indicate whether or not the index is UNIQUE.
+    </p></li>
 
 <a name="pragma_page_count"></a>
 
@@ -921,8 +919,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <a name="pragma_table_info"></a>
 
 <li><p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
-    <p>For each column in the named table, invoke the callback function
-    once with information about that column, including the column name,
+    <p>This pragma returns one row for each column in the named table.
+    Columns in the result set include the column name,
     data type, whether or not the column can be NULL, and the default
     value for the column.</p></li>
 </ul>

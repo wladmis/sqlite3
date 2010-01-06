@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<title>Register A Virtual Table Implementation</title>
+<title>SQLite Release 3.6.22 On 2010 Jan 06 (3.6.22)</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -88,20 +88,15 @@ a:visited { color: #734559 }
   </div></div></div></div></div>
 </td></tr></table>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Register A Virtual Table Implementation</h2><blockquote><pre>int sqlite3_create_module_v2(
-  sqlite3 *db,               /* SQLite connection to register module with */
-  const char *zName,         /* Name of the module */
-  const sqlite3_module *p,   /* Methods for the module */
-  void *pClientData,         /* Client data for xCreate/xConnect */
-  void(*xDestroy)(void*)     /* Module destructor function */
-);
-</pre></blockquote><p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
-This routine is identical to the <a href="../c3ref/create_module.html">sqlite3_create_module()</a> method,
-except that it has an extra parameter to specify
-a destructor function for the client data pointer.  SQLite will
-invoke the destructor function (if it is not NULL) when SQLite
-no longer needs the pClientData pointer.
-</p><p>See also lists of
-  <a href="objlist.html">Objects</a>,
-  <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+<h2>SQLite Release 3.6.22 On 2010 Jan 06 (3.6.22)</h2><p>Changes associated with this release include the following:</p><p><ul>
+<li>Fix bugs that can (rarely) lead to incorrect query results when
+    the CAST or OR operators are used in the WHERE clause of a query.
+<li>Continuing enhancements and improvements to <a href="../fts3.html">FTS3</a>.
+<li>Other miscellanous bug fixes.
+</ul></p>
+      <p>A <a href="../changes.html">complete list of SQLite releases</a>
+      in a single pages is also available.  A detailed history of every
+      check-in is available at
+      <a href="http://www.sqlite.org/src/timeline">
+      http://www.sqlite.org/src/timeline</a>.</p>
+    

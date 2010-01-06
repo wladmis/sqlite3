@@ -108,7 +108,10 @@ SQLite includes typedefs for 64-bit signed and unsigned integers.</p>
 The sqlite_int64 and sqlite_uint64 types are supported for backwards
 compatibility only.</p>
 
-<p>Requirements: <a href="../hlr10000.html#H10201">H10201</a> <a href="../hlr10000.html#H10202">H10202</a>
+<p>The sqlite3_int64 and sqlite_int64 types can store integer values
+between -9223372036854775808 and +9223372036854775807 inclusive.  The
+sqlite3_uint64 and sqlite_uint64 types can store integer values
+between 0 and +18446744073709551615 inclusive.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

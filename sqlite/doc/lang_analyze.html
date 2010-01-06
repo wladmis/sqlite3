@@ -91,7 +91,7 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ANALYZE</h2><h4><a href="syntaxdiagrams.html#analyze-stmt">analyze-stmt:</a></h4><blockquote> <img alt="syntax diagram analyze-stmt" src="images/syntax/analyze-stmt.gif"></img> </blockquote>
 
 
-<p>The ANALYZE command gathers statistics about indices and stores them
+<p> The ANALYZE command gathers statistics about indices and stores them
 in a special tables in the database where the query optimizer can use
 them to help make better index choices.
 If no arguments are given, all indices in all attached databases are
@@ -99,7 +99,7 @@ analyzed.  If a database name is given as the argument, all indices
 in that one database are analyzed.  If the argument is a table name,
 then only indices associated with that one table are analyzed.</p>
 
-<p>The default implementation stores all statistics in a single
+<p> The default implementation stores all statistics in a single
 table named <b>sqlite_stat1</b>.  If SQLite is compiled with the
 <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> option, then additional histogram data is
 collected and stored in <b>sqlite_stat2</b>.
@@ -107,7 +107,7 @@ Future enhancements may create
 additional tables with the same name pattern except with the "1"
 or "2" changed to a different digit.</p>
 
-<p>The <a href="lang_droptable.html">DROP TABLE</a> command does
+<p> The <a href="lang_droptable.html">DROP TABLE</a> command does
 not work on the <b>sqlite_stat1</b> or <b>sqlite_stat2</b> tables,
 but all the content of those tables can be queried using <a href="lang_select.html">SELECT</a>
 and can be deleted, augmented, or modified using the <a href="lang_delete.html">DELETE</a>,
@@ -118,7 +118,7 @@ query plans.  Generally speaking, one should not modify the content of
 the statistics tables by any mechanism other than invoking the
 ANALYZE command.</p>
 
-<p>Statistics gathered by ANALYZE are <u>not</u> automatically updated as
+<p> Statistics gathered by ANALYZE are <u>not</u> automatically updated as
 the content of the database changes.  If the content of the database
 changes significantly, or if the database schema changes, then one should
 consider rerunning the ANALYZE command in order to update the statistics.</p>

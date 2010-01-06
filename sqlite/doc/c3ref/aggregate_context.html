@@ -90,28 +90,41 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Obtain Aggregate Function Context</h2><blockquote><pre>void *sqlite3_aggregate_context(sqlite3_context*, int nBytes);
 </pre></blockquote><p>
-The implementation of aggregate SQL functions use this routine to allocate
-a structure for storing their state.</p>
+Implementions of aggregate SQL functions use this
+routine to allocate memory for storing their state.</p>
 
-<p>The first time the sqlite3_aggregate_context() routine is called for a
-particular aggregate, SQLite allocates nBytes of memory, zeroes out that
-memory, and returns a pointer to it. On second and subsequent calls to
-sqlite3_aggregate_context() for the same aggregate function index,
-the same buffer is returned. The implementation of the aggregate can use
-the returned buffer to accumulate data.</p>
+<p>The first time the sqlite3_aggregate_context(C,N) routine is called
+for a particular aggregate function, SQLite
+allocates N of memory, zeroes out that memory, and returns a pointer
+to the new memory. On second and subsequent calls to
+sqlite3_aggregate_context() for the same aggregate function instance,
+the same buffer is returned.  Sqlite3_aggregate_context() is normally
+called once for each invocation of the xStep callback and then one
+last time when the xFinal callback is invoked.  When no rows match
+an aggregate query, the xStep() callback of the aggregate function
+implementation is never called and xFinal() is called exactly once.
+In those cases, sqlite3_aggregate_context() might be called for the
+first time from within xFinal().</p>
 
-<p>SQLite automatically frees the allocated buffer when the aggregate
-query concludes.</p>
+<p>The sqlite3_aggregate_context(C,N) routine returns a NULL pointer if N is
+less than or equal to zero or if a memory allocate error occurs.</p>
 
-<p>The first parameter should be a copy of the
+<p>The amount of space allocated by sqlite3_aggregate_context(C,N) is
+determined by the N parameter on first successful call.  Changing the
+value of N in subsequent call to sqlite3_aggregate_context() within
+the same aggregate function instance will not resize the memory
+allocation.</p>
+
+<p>SQLite automatically frees the memory allocated by
+sqlite3_aggregate_context() when the aggregate query concludes.</p>
+
+<p>The first parameter must be a copy of the
 <a href="../c3ref/context.html">SQL function context</a> that is the first parameter
-to the callback routine that implements the aggregate function.</p>
+to the xStep or xFinal callback routine that implements the aggregate
+function.</p>
 
 <p>This routine must be called from the same thread in which
-the aggregate SQL function is running.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H16211">H16211</a> <a href="../hlr10000.html#H16213">H16213</a> <a href="../hlr10000.html#H16215">H16215</a> <a href="../hlr10000.html#H16217">H16217</a>
+the aggregate SQL function is running.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

@@ -101,6 +101,8 @@ must insure that no other SQLite interfaces are invoked by other
 threads while sqlite3_config() is running.  Furthermore, sqlite3_config()
 may only be invoked prior to library initialization using
 <a href="../c3ref/initialize.html">sqlite3_initialize()</a> or after shutdown by <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>.
+If sqlite3_config() is called after <a href="../c3ref/initialize.html">sqlite3_initialize()</a> and before
+<a href="../c3ref/initialize.html">sqlite3_shutdown()</a> then it will return SQLITE_MISUSE.
 Note, however, that sqlite3_config() can be called as part of the
 implementation of an application-defined <a href="../c3ref/initialize.html">sqlite3_os_init()</a>.</p>
 
@@ -112,12 +114,7 @@ in the first argument.</p>
 
 <p>When a configuration option is set, sqlite3_config() returns <a href="../c3ref/c_abort.html">SQLITE_OK</a>.
 If the option is unknown or SQLite is unable to set the option
-then this routine returns a non-zero <a href="../c3ref/c_abort.html">error code</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H14103">H14103</a> <a href="../hlr10000.html#H14106">H14106</a> <a href="../hlr10000.html#H14120">H14120</a> <a href="../hlr10000.html#H14123">H14123</a> <a href="../hlr10000.html#H14126">H14126</a> <a href="../hlr10000.html#H14129">H14129</a> <a href="../hlr10000.html#H14132">H14132</a> <a href="../hlr10000.html#H14135">H14135</a>
-<a href="../hlr10000.html#H14138">H14138</a> <a href="../hlr10000.html#H14141">H14141</a> <a href="../hlr10000.html#H14144">H14144</a> <a href="../hlr10000.html#H14147">H14147</a> <a href="../hlr10000.html#H14150">H14150</a> <a href="../hlr10000.html#H14153">H14153</a> <a href="../hlr10000.html#H14156">H14156</a> <a href="../hlr10000.html#H14159">H14159</a>
-<a href="../hlr10000.html#H14162">H14162</a> <a href="../hlr10000.html#H14165">H14165</a> <a href="../hlr10000.html#H14168">H14168</a>
+then this routine returns a non-zero <a href="../c3ref/c_abort.html">error code</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

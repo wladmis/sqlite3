@@ -92,7 +92,7 @@ a:visited { color: #734559 }
 void *sqlite3_realloc(void*, int);
 void sqlite3_free(void*);
 </pre></blockquote><p>
-The SQLite core  uses these three routines for all of its own
+The SQLite core uses these three routines for all of its own
 internal memory allocation needs. "Core" in the previous sentence
 does not include operating-system specific VFS implementation.  The
 Windows VFS uses native malloc() and free() for some operations.</p>
@@ -135,15 +135,6 @@ is not freed.</p>
 <p>The memory returned by sqlite3_malloc() and sqlite3_realloc()
 is always aligned to at least an 8 byte boundary.</p>
 
-<p>The default implementation of the memory allocation subsystem uses
-the malloc(), realloc() and free() provided by the standard C library.
- However, if SQLite is compiled with the
-SQLITE_MEMORY_SIZE=<i>NNN</i> C preprocessor macro (where <i>NNN</i>
-is an integer), then SQLite create a static array of at least
-<i>NNN</i> bytes in size and uses that array for all of its dynamic
-memory allocation needs.  Additional memory allocator options
-may be added in future releases.</p>
-
 <p>In SQLite version 3.5.0 and 3.5.1, it was possible to define
 the SQLITE_OMIT_MEMORY_ALLOCATION which would cause the built-in
 implementation of these routines to be omitted.  That capability
@@ -156,10 +147,6 @@ and whatever filename encoding is used by the particular Windows
 installation.  Memory allocation errors are detected, but
 they are reported back as <a href="../c3ref/c_abort.html">SQLITE_CANTOPEN</a> or
 <a href="../c3ref/c_abort.html">SQLITE_IOERR</a> rather than <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H17303">H17303</a> <a href="../hlr10000.html#H17304">H17304</a> <a href="../hlr10000.html#H17305">H17305</a> <a href="../hlr10000.html#H17306">H17306</a> <a href="../hlr10000.html#H17310">H17310</a> <a href="../hlr10000.html#H17312">H17312</a> <a href="../hlr10000.html#H17315">H17315</a> <a href="../hlr10000.html#H17318">H17318</a>
-<a href="../hlr10000.html#H17321">H17321</a> <a href="../hlr10000.html#H17322">H17322</a> <a href="../hlr10000.html#H17323">H17323</a></p>
 
 <p>The pointer arguments to <a href="../c3ref/free.html">sqlite3_free()</a> and <a href="../c3ref/free.html">sqlite3_realloc()</a>
 must be either NULL or else pointers obtained from a prior

@@ -96,7 +96,7 @@ If an internal allocation is requested that would exceed the
 soft heap limit, <a href="../c3ref/release_memory.html">sqlite3_release_memory()</a> is invoked one or
 more times to free up some space before the allocation is performed.</p>
 
-<p>The limit is called "soft", because if <a href="../c3ref/release_memory.html">sqlite3_release_memory()</a>
+<p>The limit is called "soft" because if <a href="../c3ref/release_memory.html">sqlite3_release_memory()</a>
 cannot free sufficient memory to prevent the limit from being exceeded,
 the memory is allocated anyway and the current operation proceeds.</p>
 
@@ -115,10 +115,7 @@ runs.  Beginning with SQLite version 3.5.0, the soft heap limit is
 applied to all threads. The value specified for the soft heap limit
 is an upper bound on the total memory allocation for all threads. In
 version 3.5.0 there is no mechanism for limiting the heap usage for
-individual threads.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H16351">H16351</a> <a href="../hlr10000.html#H16352">H16352</a> <a href="../hlr10000.html#H16353">H16353</a> <a href="../hlr10000.html#H16354">H16354</a> <a href="../hlr10000.html#H16355">H16355</a> <a href="../hlr10000.html#H16358">H16358</a>
+individual threads.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

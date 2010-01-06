@@ -364,7 +364,7 @@ INSERT INTO pages(rowid, docid, title, body) VALUES(1, 2, 'A title', 'A document
     merged as rows are inserted, updated and deleted. This technique improves 
     performance when writing to an FTS3 table, but causes some overhead for
     full-text queries that use the index. Executing an SQL statement of the
-    form "SELECT optimize(&lt;fts3-table&gt;) FROM &lt;fts3-table&gt;" 
+    form "INSERT INTO &lt;fts3-table&gt;(&lt;fts3-table&gt;) VALUES('optimize')"
     causes FTS3 to merge all existing index b-trees into a single large
     b-tree containing the entire index. This can be an expensive operation,
     but may speed up future queries. 
@@ -374,7 +374,7 @@ INSERT INTO pages(rowid, docid, title, body) VALUES(1, 2, 'A title', 'A document
     "docs":
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Optimize the internal structure of FTS3 table "docs".</i>
-SELECT optimize(docs) FROM docs LIMIT 1;
+INSERT INTO docs(docs) VALUES('optimize');
 </table></div>
 
   <p>
@@ -382,10 +382,9 @@ SELECT optimize(docs) FROM docs LIMIT 1;
     the section describing the <a href="fts3.html#section_1_3">simple fts3 queries</a> for an explanation.
 
   <p>
-    The optimize() function returns a text value. If the index was already
-    optimized when it was called the text is "Index already optimal". 
-    Otherwise if the index was not already optimized, it is made so and
-    the text "Index optimized" returned.
+    There is another, deprecated, method for invoking the optimize 
+    operation using a SELECT statement. New code should use statements
+    similar to the INSERT above to optimize FTS3 structures.
 
 <h2 id="section_1_3">1.3 Querying FTS3 Tables</h2>
 

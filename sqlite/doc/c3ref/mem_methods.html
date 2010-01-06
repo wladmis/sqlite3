@@ -127,7 +127,7 @@ malloc() and free() functions from the standard C library.
 The xRealloc method must work like realloc() from the standard C library
 with the exception that if the second argument to xRealloc is zero,
 xRealloc must be a no-op - it must not perform any allocation or
-deallocation.  SQLite guaranteeds that the second argument to
+deallocation.  SQLite guarantees that the second argument to
 xRealloc is always a value returned by a prior call to xRoundup.
 And so in cases where xRoundup always returns a positive number,
 xRealloc can perform exactly as the standard library realloc() and

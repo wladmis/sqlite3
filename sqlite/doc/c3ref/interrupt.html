@@ -121,9 +121,6 @@ A call to sqlite3_interrupt(D) that occurs when there are no running
 SQL statements is a no-op and has no effect on SQL statements
 that are started after the sqlite3_interrupt() call returns.</p>
 
-<p>Requirements:
-<a href="../hlr10000.html#H12271">H12271</a> <a href="../hlr10000.html#H12272">H12272</a></p>
-
 <p>If the database connection closes while <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
 is running then bad things will likely happen.
 </p><p>See also lists of

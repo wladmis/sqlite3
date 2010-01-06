@@ -100,7 +100,8 @@ a:visited { color: #734559 }
 followed by the name of a new table and a parenthesized list of column
 definitions and constraints.  
 Tables names that begin with "<b>sqlite_</b>" are reserved
-for use by SQLite itself and cannot appear in a CREATE TABLE statement.</p>
+for use by SQLite itself and cannot normally
+appear in a CREATE TABLE statement.</p>
 
 <p>Each column definition is the name of the column optionally followed by the
 <a href="datatype3.html">datatype</a> for that column, then one or more optional column constraints.
@@ -119,13 +120,13 @@ The DEFAULT constraint specifies a default value to use when doing an <a href="l
 The value may be NULL, a string constant, a number, or a constant expression
 enclosed in parentheses.
 The default value may also be one of the special case-independant
-keywords CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP. If the value is
-NULL, a string constant or number, it is literally inserted into the column
+keywords CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP.  If the value is
+NULL, a string constant or number, it is inserted into the column
 whenever an INSERT statement that does not specify a value for the column is
 executed. If the value is CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP, then
 the current UTC date and/or time is inserted into the columns. For
-CURRENT_TIME, the format is HH:MM:SS. For CURRENT_DATE, YYYY-MM-DD. The format
-for CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS".
+CURRENT_TIME, the format is HH:MM:SS. For CURRENT_DATE, YYYY-MM-DD.
+The format for CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS".
 </p>
 
 <p>The PRIMARY KEY attribute normally creates a UNIQUE index on
@@ -162,7 +163,7 @@ separate file distinct from the main database file.</p>
 <p> If a &lt;database-name&gt; is specified, then the table is created in 
 the named database. It is an error to specify both a &lt;database-name&gt;
 and the TEMP keyword, unless the &lt;database-name&gt; is "temp". If no
-database name is specified, and the TEMP keyword is not present,
+database name is specified and the TEMP keyword is not present then
 the table is created in the main database.</p>
 
 <p>The optional <a href="lang_conflict.html">conflict clause</a> following each constraint
@@ -196,8 +197,7 @@ the names of the columns in the result.</p>
 <p>If the optional IF NOT EXISTS clause is present and another table
 with the same name aleady exists, then this command becomes a no-op.</p>
 
-<p>Tables are removed using the <a href="lang_droptable.html">DROP TABLE</a> 
-statement.  </p>
+<p>Tables are removed using the <a href="lang_droptable.html">DROP TABLE</a> statement.  </p>
 
 <a name="rowid"></a>
 
@@ -209,7 +209,8 @@ This integer is usually called the "rowid".  The rowid is the actual key used
 in the B-Tree that implements an SQLite table.  Rows are stored in
 rowid order. The
 rowid value can be accessed using one of the special names
-"<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>".</p>
+"<b>ROWID</b>", "<b>OID</b>", or "<b>_ROWID_</b>" assuming those names
+are no used by other conventional table columns.</p>
 
 <p>
 If a column is declared to be an INTEGER PRIMARY KEY, then that column is not
@@ -229,8 +230,8 @@ on automatic B-Tree key generation is available
 <a href="autoinc.html">separately</a>.</p>
 
 <p>The special behavior of INTEGER PRIMARY KEY
-is only available if the type name is exactly "INTEGER" (in any mixture
-of upper and lower case.)  Other integer type names
+is only available if the type name is exactly "INTEGER" in any mixture
+of upper and lower case.  Other integer type names
 like "INT" or "BIGINT" or "SHORT INTEGER" or "UNSIGNED INTEGER"
 causes the primary key column to behave as an ordinary table column with
 integer <a href="datatype3.html#affinity">affinity</a> and a unique index, not as an alias for the rowid.

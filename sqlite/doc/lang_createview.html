@@ -92,8 +92,8 @@ a:visited { color: #734559 }
 
 
 <p>The CREATE VIEW command assigns a name to a pre-packaged 
-<a href="lang_select.html">SELECT</a>
-statement.  Once the view is created, it can be used in the FROM clause
+<a href="lang_select.html">SELECT</a> statement. 
+Once the view is created, it can be used in the FROM clause
 of another <a href="lang_select.html">SELECT</a> in place of a table name.
 </p>
 
@@ -104,9 +104,9 @@ the database is closed.</p>
 
 <p> If a &lt;database-name&gt; is specified, then the view is created in 
 the named database. It is an error to specify both a &lt;database-name&gt;
-and the TEMP keyword, unless the &lt;database-name&gt; is "temp". If no
-database name is specified, and the TEMP keyword is not present,
-the table is created in the main database.</p>
+and the TEMP keyword on a VIEW, unless the &lt;database-name&gt; is "temp".
+If no database name is specified, and the TEMP keyword is not present,
+the VIEW is created in the main database.</p>
 
 <p>You cannot <a href="lang_delete.html">DELETE</a>, <a href="lang_insert.html">INSERT</a>, or <a href="lang_update.html">UPDATE</a> a view.  Views are read-only 
 in SQLite.  However, in many cases you can use an

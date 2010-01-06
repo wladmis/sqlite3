@@ -93,17 +93,10 @@ a:visited { color: #734559 }
 
 <p>The DROP TABLE statement removes a table added with the
 <a href="lang_createtable.html">CREATE TABLE</a> statement.  The name specified is the
-table name.  It is completely removed from the database schema and the 
-disk file.  The table can not be recovered.  All indices and triggers
+table name.  The dropped table is completely removed from the database 
+schema and the disk file.  The table can not be recovered.  
+All indices and triggers
 associated with the table are also deleted.</p>
-
-<p>The DROP TABLE statement does not reduce the size of the database 
-file in the default mode.  Empty space in the database is retained for
-later <a href="lang_insert.html">INSERT</a> statements.  To 
-remove free space in the database, 
-use the <a href="lang_vacuum.html">VACUUM</a> statement.
-If <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> mode is enabled for a database then space
-will be freed automatically by DROP TABLE.</p>
 
 <p>The optional IF EXISTS clause suppresses the error that would normally
 result if the table does not exist.</p>

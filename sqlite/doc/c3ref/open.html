@@ -111,9 +111,10 @@ returned in *ppDb, even if an error occurs.  The only exception is that
 if SQLite is unable to allocate memory to hold the <a href="../c3ref/sqlite3.html">sqlite3</a> object,
 a NULL will be written into *ppDb instead of a pointer to the <a href="../c3ref/sqlite3.html">sqlite3</a>
 object. If the database is opened (and/or created) successfully, then
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> is returned.  Otherwise an <a href="../c3ref/c_abort.html">error code</a> is returned.  The
+<a href="../c3ref/c_abort.html">SQLITE_OK</a> is returned.  Otherwise an <a href="../c3ref/c_abort.html">error code</a> is returned. The
 <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> or <a href="../c3ref/errcode.html">sqlite3_errmsg16()</a> routines can be used to obtain
-an English language description of the error.</p>
+an English language description of the error following a failure of any
+of the sqlite3_open() routines.</p>
 
 <p>The default encoding for the database will be UTF-8 if
 sqlite3_open() or sqlite3_open_v2() is called and
@@ -125,7 +126,8 @@ passing it to <a href="../c3ref/close.html">sqlite3_close()</a> when it is no lo
 
 <p>The sqlite3_open_v2() interface works like sqlite3_open()
 except that it accepts two additional parameters for additional control
-over the new database connection.  The flags parameter can take one of
+over the new database connection.  The flags parameter to
+sqlite3_open_v2() can take one of
 the following three values, optionally combined with the
 <a href="../c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a>, <a href="../c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a>, <a href="../c3ref/c_open_create.html">SQLITE_OPEN_SHAREDCACHE</a>,
 and/or <a href="../c3ref/c_open_create.html">SQLITE_OPEN_PRIVATECACHE</a> flags:</p>
@@ -185,11 +187,7 @@ a NULL pointer then the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> obje
 of sqlite3_open() and sqlite3_open_v2() must be UTF-8, not whatever
 codepage is currently defined.  Filenames containing international
 characters must be converted to UTF-8 prior to passing them into
-sqlite3_open() or sqlite3_open_v2().</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12701">H12701</a> <a href="../hlr10000.html#H12702">H12702</a> <a href="../hlr10000.html#H12703">H12703</a> <a href="../hlr10000.html#H12704">H12704</a> <a href="../hlr10000.html#H12706">H12706</a> <a href="../hlr10000.html#H12707">H12707</a> <a href="../hlr10000.html#H12709">H12709</a> <a href="../hlr10000.html#H12711">H12711</a>
-<a href="../hlr10000.html#H12712">H12712</a> <a href="../hlr10000.html#H12713">H12713</a> <a href="../hlr10000.html#H12714">H12714</a> <a href="../hlr10000.html#H12717">H12717</a> <a href="../hlr10000.html#H12719">H12719</a> <a href="../hlr10000.html#H12721">H12721</a> <a href="../hlr10000.html#H12723">H12723</a>
+sqlite3_open() or sqlite3_open_v2().
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

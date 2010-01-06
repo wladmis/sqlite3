@@ -97,19 +97,16 @@ tracing and profiling the execution of SQL statements.</p>
 
 <p>The callback function registered by sqlite3_trace() is invoked at
 various times when an SQL statement is being run by <a href="../c3ref/step.html">sqlite3_step()</a>.
-The callback returns a UTF-8 rendering of the SQL statement text
-as the statement first begins executing.  Additional callbacks occur
+The sqlite3_trace() callback is invoked with a UTF-8 rendering of the
+SQL statement text as the statement first begins executing.
+Additional sqlite3_trace() callbacks might occur
 as each triggered subprogram is entered.  The callbacks for triggers
 contain a UTF-8 SQL comment that identifies the trigger.</p>
 
 <p>The callback function registered by sqlite3_profile() is invoked
 as each SQL statement finishes.  The profile callback contains
 the original statement text and an estimate of wall-clock time
-of how long that statement took to run.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H12281">H12281</a> <a href="../hlr10000.html#H12282">H12282</a> <a href="../hlr10000.html#H12283">H12283</a> <a href="../hlr10000.html#H12284">H12284</a> <a href="../hlr10000.html#H12285">H12285</a> <a href="../hlr10000.html#H12287">H12287</a> <a href="../hlr10000.html#H12288">H12288</a> <a href="../hlr10000.html#H12289">H12289</a>
-<a href="../hlr10000.html#H12290">H12290</a>
+of how long that statement took to run.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

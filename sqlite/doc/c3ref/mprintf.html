@@ -166,7 +166,7 @@ always use %q instead of %s when inserting text into a string literal.</p>
 <p>The %Q option works like %q except it also adds single quotes around
 the outside of the total string.  Additionally, if the parameter in the
 argument list is a NULL pointer, %Q substitutes the text "NULL" (without
-single quotes) in place of the %Q option.  So, for example, one could say:</p>
+single quotes).  So, for example, one could say:</p>
 
 <p><blockquote><pre>
 char *zSQL = sqlite3_mprintf("INSERT INTO table VALUES(%Q)", zText);
@@ -177,12 +177,9 @@ sqlite3_free(zSQL);
 <p>The code above will render a correct SQL statement in the zSQL
 variable even if the zText variable is a NULL pointer.</p>
 
-<p>The "%z" formatting option works exactly like "%s" with the
+<p>The "%z" formatting option works like "%s" but with the
 addition that after the string has been read and copied into
-the result, <a href="../c3ref/free.html">sqlite3_free()</a> is called on the input string.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H17403">H17403</a> <a href="../hlr10000.html#H17406">H17406</a> <a href="../hlr10000.html#H17407">H17407</a>
+the result, <a href="../c3ref/free.html">sqlite3_free()</a> is called on the input string.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

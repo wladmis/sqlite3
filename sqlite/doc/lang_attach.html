@@ -91,24 +91,24 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ATTACH DATABASE</h2><h4><a href="syntaxdiagrams.html#attach-stmt">attach-stmt:</a></h4><blockquote> <img alt="syntax diagram attach-stmt" src="images/syntax/attach-stmt.gif"></img> </blockquote>
 
 
-<p>The ATTACH DATABASE statement adds another database 
-file to the current database connection.  If the filename contains 
-punctuation characters it must be quoted.  The database-names 'main' and 
+<p> The ATTACH DATABASE statement adds another database 
+file to the current <a href="c3ref/sqlite3.html">database connection</a>. 
+The database-names 'main' and 
 'temp' refer to the main database and the database used for 
-temporary tables.  These cannot be detached.  Attached databases 
-are removed using the <a href="lang_detach.html">DETACH</a> statement.</p>
+temporary tables.  The main and temp databases cannot be attached or
+detached.</p>
 
-<p>You cannot create a new table with the same name as a table in 
+<p> You cannot create a new table with the same name as a table in 
 an attached database, but you can attach a database which contains
-tables whose names are duplicates of tables in the main database. If
+tables whose names are duplicates of tables in the main database.  If
 the system is not running in <a href="sharedcache.html">shared cache mode</a>, it is also permissible 
 to attach the same database file multiple times.</p>
 
-<p>Tables in an attached database can be referred to using the syntax 
-<i>database-name.table-name</i>.  If an attached table doesn't have 
-a duplicate table name in the main database, it does not require a 
-<i>database-name</i> prefix.  When a database is attached, all of its 
-tables which don't have duplicate names become the default table
+<p> Tables in an attached database can be referred to using the syntax 
+<i>database-name.table-name</i>.  If the name of the table is unique
+across all attached databases and the main and temp databases, then the
+<i>database-name</i> prefix is not required.  When a database is attached, 
+all tables which don't have duplicate names become the default table
 of that name.  Any tables of that name attached afterwards require the
 database prefix. If the default table of a given name is detached, then
 the last table of that name attached becomes the new default.</p>
@@ -124,7 +124,7 @@ some of those files might get the changes where others
 might not.
 </p>
 
-<p>There is a compile-time limit of <a href="limits.html#max_attached">SQLITE_MAX_ATTACHED</a>
+<p> There is a compile-time limit of <a href="limits.html#max_attached">SQLITE_MAX_ATTACHED</a>
 attached database files.</p>
 
 

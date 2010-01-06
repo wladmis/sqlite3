@@ -92,7 +92,8 @@ a:visited { color: #734559 }
 </pre></blockquote><p>
 If this global variable is made to point to a string which is
 the name of a folder (a.k.a. directory), then all temporary files
-created by SQLite will be placed in that directory.  If this variable
+created by SQLite when using a built-in <a href="../c3ref/vfs.html">VFS</a>
+will be placed in that directory.  If this variable
 is a NULL pointer, then SQLite performs a search for an appropriate
 temporary file directory.</p>
 

@@ -129,7 +129,7 @@ be used as a template for designing processes best suited for the
 circumstances of each individual project.</p>
 
 <img src="images/private_branch.gif" align="right">
-<h1>2.0 The Basic Idea</h1>
+<h2>2.0 The Basic Idea</h2>
 
 
 <p>We propose to use the
@@ -182,7 +182,7 @@ another merge in order to incorporate the changes
 moving from (4) to (6) into the private branch, resulting
 in version (7).</p>
 
-<h1>3.0 The Procedure</h1>
+<h2>3.0 The Procedure</h2>
 
 <p>The remainder of this document will guide the reader through
 the steps needed to maintain a private branch.  The general idea
@@ -194,7 +194,7 @@ acceptable method for maintaining private branch.  This approach
 is one of many.  Use this document as a baseline for preparing
 project-specific procedures.  Do not be afraid to experiment.</p>
 
-<h2>3.1 Obtain The Software</h2>
+<h3>3.1 Obtain The Software</h3>
 
 <p><a href="http://www.fossil-scm.org/">Fossil</a> is a computer program
 that must be installed on your machine before you use it.
@@ -205,7 +205,7 @@ simply delete the exe file.
 fossil are available on the 
 <a href="http://www.fossil-scm.org">fossil website</a>.</p>
 
-<h2>3.2 Create A Project Repository</h2>
+<h3>3.2 Create A Project Repository</h3>
 
 <p>Create a fossil repository to host the private branch using the
 following command:</p>
@@ -246,9 +246,9 @@ fossil open private-project.fossil
 And you can "clone" the repository to different machines so that multiple
 developers can use it.  See the fossil website for further information.</p>
 
-<h2>3.3 Installing The SQLite Baseline In Fossil</h2>
+<h3>3.3 Installing The SQLite Baseline In Fossil</h3>
 
-<p>The repository created in the previous set is initially empty.  The
+<p>The repository created in the previous step is initially empty.  The
 next step is to load the baseline SQLite release - circle (1) in the diagram
 above.</p>
 
@@ -311,7 +311,7 @@ fossil info
 fossil status
 </pre></blockquote>
 
-<h2>3.4 Creating The Private Branch</h2>
+<h3>3.4 Creating The Private Branch</h3>
 
 <p>The previous step created circle (1) in the diagram above.
 This step will create circle (2).  Run the following command:</p>
@@ -352,7 +352,7 @@ fossil update trunk
 between the private and the public branches.  But at this point, the files
 are identical in both branches so not modifications need to be made.</p>
 
-<h2>3.5 Adding Customizations To The Code In The Private Branch</h2>
+<h3>3.5 Adding Customizations To The Code In The Private Branch</h3>
 
 <p>Now it is time to make the private, custom modifications to SQLite
 which are the whole point of this exercise.  Switch to the private branch
@@ -381,7 +381,7 @@ each separately.  In fact, making many small changes is the preferred way
 to work.  The only reason for doing all the changes in a single commit
 is that it makes the diagram easier to draw.</p>
 
-<h2>3.6 Incorporating New Public SQLite Releases</h2>
+<h3>3.6 Incorporating New Public SQLite Releases</h3>
 
 <p>Suppose that after a while (about a month, usually) a new version of
 SQLite is released: 3.6.16.  You will want to incorporate this new
@@ -402,7 +402,7 @@ to the new source file.</p>
 <p>Once everything is ready, run the "<tt>fossil commit</tt>" command to
 check in the changes.  This creates circle (4) in the diagram above.</p>
 
-<h2>3.7 Merging Public SQLite Updates Into The Private Branch</h2>
+<h3>3.7 Merging Public SQLite Updates Into The Private Branch</h3>
 
 <p>The next step is to move the changes in the public branch over into
 the private branch.  In other words, we want to create circle (5) in the
@@ -430,10 +430,39 @@ new version before committing it to the repository.  Or you can commit
 first and test later.  Either way, run the "<tt>fossil commit</tt>"
 command to check-in the circle (5) version.
 
-<h2>3.8 Further Updates</h2>
+<h3>3.8 Further Updates</h3>
 
 <p>As new versions of SQLite are released, repeat steps 3.6 and 3.7 to
 add changes in the new release to the private branch.
 Additional private changes can be
 made on the private branch in between releases if desired.</p>
+
+<h2>4.0 Variations</h2>
+
+<p>Since this document was first written, the canonical SQLite source code
+has been moved from the venerable CVS system into a Fossil repository at
+<a href="http://www.sqlite.org/src">http://www.sqlite.org/src</a>.  This means that if you are working with
+canonical SQLite source code (as opposed to the <a href="amalgamation.html">amalgamation</a> source code
+files, sqlite3.c and sqlite3.h) then you can create a private repository
+simply by cloning the official repository:</p>
+
+<blockquote><pre>
+fossil clone http://www.sqlite.org/src private-project.fossil
+</pre></blockquote>
+
+<p>This command both creates the new repository and populates it with
+all the latest SQLite could.  You can the create a private branch as
+described in section 3.4.</p>
+
+<p>When the private repository is created by cloning, incorporating new
+public SQLite releases becomes much easier too.  To pull in all of the
+latest changes from the public SQLite repository, simply move into
+the open check-out and do:</p>
+
+<blockquote><pre>
+fossil update
+</pre></blockquote>
+
+<p>Then continue to merge the changes in "trunk" with your "private"
+changes as described in section 3.7.</p>
 

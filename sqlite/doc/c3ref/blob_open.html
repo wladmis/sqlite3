@@ -114,7 +114,7 @@ not possible to open a column that is part of a <a href="../foreignkeys.html#par
 
 <p>Note that the database name is not the filename that contains
 the database but rather the symbolic name of the database that
-is assigned when the database is connected using <a href="../lang_attach.html">ATTACH</a>.
+appears after the AS keyword when the database is connected using <a href="../lang_attach.html">ATTACH</a>.
 For the main database file, the database name is "main".
 For TEMP tables, the database name is "temp".</p>
 
@@ -123,7 +123,7 @@ to *ppBlob. Otherwise an <a href="../c3ref/c_abort.html">error code</a> is retur
 to be a null pointer.
 This function sets the <a href="../c3ref/sqlite3.html">database connection</a> error code and message
 accessible via <a href="../c3ref/errcode.html">sqlite3_errcode()</a> and <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> and related
-functions.  Note that the *ppBlob variable is always initialized in a
+functions. Note that the *ppBlob variable is always initialized in a
 way that makes it safe to invoke <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a> on *ppBlob
 regardless of the success or failure of this routine.</p>
 
@@ -135,7 +135,7 @@ other than the one the BLOB handle is open on.
 Calls to <a href="../c3ref/blob_read.html">sqlite3_blob_read()</a> and <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a> for
 a expired BLOB handle fail with an return code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.
 Changes written into a BLOB prior to the BLOB expiring are not
-rollback by the expiration of the BLOB.  Such changes will eventually
+rolled back by the expiration of the BLOB.  Such changes will eventually
 commit if the transaction continues to completion.</p>
 
 <p>Use the <a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a> interface to determine the size of
@@ -149,10 +149,7 @@ to create an empty, zero-filled blob in which to read or write using
 this interface.</p>
 
 <p>To avoid a resource leak, every open <a href="../c3ref/blob.html">BLOB handle</a> should eventually
-be released by a call to <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H17813">H17813</a> <a href="../hlr10000.html#H17814">H17814</a> <a href="../hlr10000.html#H17816">H17816</a> <a href="../hlr10000.html#H17819">H17819</a> <a href="../hlr10000.html#H17821">H17821</a> <a href="../hlr10000.html#H17824">H17824</a>
+be released by a call to <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

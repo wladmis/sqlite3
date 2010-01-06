@@ -102,8 +102,8 @@ particular database table occurs, or whenever an <a href="lang_update.html">UPDA
 on one or more specified columns of a table.</p>
 
 <p>At this time SQLite supports only FOR EACH ROW triggers, not FOR EACH
-STATEMENT triggers. Hence explicitly specifying FOR EACH ROW is optional.  FOR
-EACH ROW implies that the SQL statements specified in the trigger
+STATEMENT triggers. Hence explicitly specifying FOR EACH ROW is optional.
+FOR EACH ROW implies that the SQL statements specified in the trigger
 may be executed (depending on the WHEN clause) for each database row being
 inserted, updated or deleted by the statement causing the trigger to fire.</p>
 
@@ -200,7 +200,7 @@ specifying INSTEAD OF in the CREATE TRIGGER statement.
 If one or more ON INSERT, ON DELETE
 or ON UPDATE triggers are defined on a view, then it is not an
 error to execute an INSERT, DELETE or UPDATE statement on the view, 
-respectively. Thereafter,
+respectively.  Instead,
 executing an INSERT, DELETE or UPDATE on the view causes the associated
 triggers to fire. The real tables underlying the view are not modified
 (except possibly explicitly, by a trigger program).</p>

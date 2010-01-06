@@ -117,9 +117,9 @@ aggregate, is encoded in UTF-8 for sqlite3_create_function() and UTF-16
 for sqlite3_create_function16().</p>
 
 <p>The first parameter is the <a href="../c3ref/sqlite3.html">database connection</a> to which the SQL
-function is to be added.  If a single program uses more than one database
-connection internally, then SQL functions must be added individually to
-each database connection.</p>
+function is to be added.  If an application uses more than one database
+connection then application-defined SQL functions must be added
+to each database connection separately.</p>
 
 <p>The second parameter is the name of the SQL function to be created or
 redefined.  The length of the name is limited to 255 bytes, exclusive of
@@ -153,7 +153,7 @@ function can gain access to this pointer using <a href="../c3ref/user_data.html"
 <p>The seventh, eighth and ninth parameters, xFunc, xStep and xFinal, are
 pointers to C-language functions that implement the SQL function or
 aggregate. A scalar SQL function requires an implementation of the xFunc
-callback only, NULL pointers should be passed as the xStep and xFinal
+callback only; NULL pointers should be passed as the xStep and xFinal
 parameters. An aggregate SQL function requires an implementation of xStep
 and xFinal and NULL should be passed for xFunc. To delete an existing
 SQL function or aggregate, pass NULL for all three function callbacks.</p>
@@ -181,11 +181,7 @@ number of parameters and preferred encoding.</p>
 <p>An application-defined function is permitted to call other
 SQLite interfaces.  However, such calls must not
 close the database connection nor finalize or reset the prepared
-statement in which the function is running.</p>
-
-<p>Requirements:
-<a href="../hlr10000.html#H16103">H16103</a> <a href="../hlr10000.html#H16106">H16106</a> <a href="../hlr10000.html#H16109">H16109</a> <a href="../hlr10000.html#H16112">H16112</a> <a href="../hlr10000.html#H16118">H16118</a> <a href="../hlr10000.html#H16121">H16121</a> <a href="../hlr10000.html#H16127">H16127</a>
-<a href="../hlr10000.html#H16130">H16130</a> <a href="../hlr10000.html#H16133">H16133</a> <a href="../hlr10000.html#H16136">H16136</a> <a href="../hlr10000.html#H16139">H16139</a> <a href="../hlr10000.html#H16142">H16142</a>
+statement in which the function is running.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

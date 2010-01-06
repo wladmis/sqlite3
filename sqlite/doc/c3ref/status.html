@@ -98,14 +98,14 @@ are of the form <a href="../c3ref/c_status_malloc_size.html">SQLITE_STATUS_...</
 The current value of the parameter is returned into *pCurrent.
 The highest recorded value is returned in *pHighwater.  If the
 resetFlag is true, then the highest record value is reset after
-*pHighwater is written. Some parameters do not record the highest
+*pHighwater is written.  Some parameters do not record the highest
 value.  For those parameters
 nothing is written into *pHighwater and the resetFlag is ignored.
 Other parameters record only the highwater mark and not the current
 value.  For these latter parameters nothing is written into *pCurrent.</p>
 
-<p>This routine returns SQLITE_OK on success and a non-zero
-<a href="../c3ref/c_abort.html">error code</a> on failure.</p>
+<p>The sqlite3_db_status() routine returns SQLITE_OK on success and a
+non-zero <a href="../c3ref/c_abort.html">error code</a> on failure.</p>
 
 <p>This routine is threadsafe but is not atomic.  This routine can be
 called while other threads are running the same or different SQLite

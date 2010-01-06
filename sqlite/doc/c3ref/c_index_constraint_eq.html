@@ -139,8 +139,8 @@ is usable) and false if it cannot.</p>
 <p>The optimizer automatically inverts terms of the form "expr OP column"
 and makes other simplifications to the WHERE clause in an attempt to
 get as many WHERE clause terms into the form shown above as possible.
-The aConstraint[] array only reports WHERE clause terms in the correct
-form that refer to the particular virtual table being queried.</p>
+The aConstraint[] array only reports WHERE clause terms that are
+relevant to the particular virtual table being queried.</p>
 
 <p>Information about the ORDER BY clause is stored in aOrderBy[].
 Each term of aOrderBy records a column of the ORDER BY clause.</p>
@@ -154,7 +154,7 @@ virtual table and is not checked again by SQLite.</p>
 
 <p>The idxNum and idxPtr values are recorded and passed into the
 <a href="../vtab.html#xfilter">xFilter</a> method.
-<a href="../c3ref/free.html">sqlite3_free()</a> is used to free idxPtr if and only iff
+<a href="../c3ref/free.html">sqlite3_free()</a> is used to free idxPtr if and only if
 needToFreeIdxPtr is true.</p>
 
 <p>The orderByConsumed means that output from <a href="../vtab.html#xfilter">xFilter</a>/<a href="../vtab.html#xnext">xNext</a> will occur in
