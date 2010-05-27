@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 
@@ -100,16 +137,16 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_6_19.html">version 3.6.19</a> (all statistics in the report are against that
+<p>As of <a href="releaselog/3_6_23.html">version 3.6.23</a> (all statistics in the report are against that
 release of SQLite),
 the SQLite library consists of approximately
-65.7 KSLOC of C code.
+67.2 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-690 times as much
+679 times as much
 test code and test scripts - 
-45409.7 KSLOC.</p>
+45678.3 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -143,21 +180,19 @@ from the others.
 <a name="tcl"></a>
 
 The <b>TCL Tests</b> are the oldest set of tests for SQLite.  
-The TCL tests are contained in the same source tree as the
+They are contained in the same source tree as the
 SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 14.6 KSLOC 
+The TCL test harness itself consists of 14.7 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 511 files totaling 
-7.9MB in size.  There are
-24866 distinct test cases, but many of the test
+in 536 files totaling 
+8.4MB in size.  There are
+25400 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run, about 2.2 million 
-separate tests are performed and provide 
-99.50% statement and
-97.41% branch test coverage.
+separate tests are performed.
 </p>
 </li>
 
@@ -169,11 +204,14 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-23.7 MB or 340.8 KSLOC
-of C code implementing 12287 distinct test cases.
-TH3 tests are heavily parameterized, though, so a full test runs
-about 1.4 million different test
-instances.  Additional information on TH3 is
+45.6 MB or 602.9 KSLOC
+of C code implementing 29644 distinct test cases.
+TH3 tests are heavily parameterized, though, so a full-coverage test runs
+about 1.5 million different test
+instances.  The cases that provide 100% branch test coverage constitute
+a subset of the total TH3 test suite.  A soak test
+prior to release does in excess of 2.50 billion
+tests.  Additional information on TH3 is
 <a href="th3.html">available separately</a>.</p></li>
 
 <li><p>
@@ -196,13 +234,13 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-42.1 thousand test cases
-and covering
-97.23% of the core SQLite source code statements.
-The veryquick tests covers everything except the anomaly, fuzz, and 
+98.2 thousand test cases.
+The veryquick tests include everything except the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
 instead of a few hours.</p>
+
+<a name="anomoly"></a>
 
 <h2>3.0 Anomaly Testing</h2>
 
@@ -213,6 +251,8 @@ on a fully functional computer.  It is more difficult to build a system
 that responses sanely to invalid inputs and continues to function following
 system malfunctions.  The anomaly tests are designed to verify the latter
 behavior.</p>
+
+<a name="oomtesting"></a>
 
 <h3>3.1 Out-Of-Memory Testing</h3>
 
@@ -245,6 +285,8 @@ Tests like this are run twice, once with the instrumented malloc
 set to fail only once, and again with the instrumented malloc set
 to fail continuously after the first failure.</p>
 
+<a name="ioerrtesting"></a>
+
 <h3>3.2 I/O Error Testing</h3>
 
 <p>I/O error testing seeks to verify that SQLite responds sanely
@@ -274,6 +316,8 @@ failure.</p>
 is disabled, the database is examined using
 <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> to make sure that the I/O error has not
 introduced database corruption.</p>
+
+<a name="crashtesting"></a>
 
 <h3>3.3 Crash Testing</h3>
 
@@ -319,12 +363,16 @@ transaction either ran to completion or was completely rolled back.
 The interior of the loop is repeated multiple times for each
 snapshot with different random damage each time.</p>
 
+<a name="multifail"></a>
+
 <h3>3.4 Compound failure tests</h3>
 
 <p>The test suites for SQLite also explore the result of stacking
 multiple failures.  For example, tests are run to insure correct behavior
 when an I/O error or OOM fault occurs while trying to recover from a
 prior crash.
+
+<a name="fuzztesting"></a>
 
 <h2>4.0 Fuzz Testing</h2>
 
@@ -378,6 +426,8 @@ and verify that SQLite correctly returns errors.  The source code
 contains <a href="testing.html#testcase">testcase macros</a> to verify that both sides of each boundary
 have been tested.</p>
 
+<a name="regressiontesting"></a>
+
 <h2>5.0 Regression Testing</h2>
 
 <p>Whenever a bug is reported against SQLite, that bug is not considered
@@ -387,6 +437,8 @@ this has resulted in thousands and thousands of new tests being added
 to the TCL test suite.  These regression tests insure that bugs that have
 been fixed in the past are not reintroduced into future versions of
 SQLite.</p>
+
+<a name="leakcheck"></a>
 
 <h2>6.0 Automatic Resource Leak Detection</h2>
 
@@ -418,6 +470,8 @@ utility on SuSE Linux 10.1 on x86 hardware with the GCC 4.0.1 compiler.</p>
 operating-system dependent <a href="c3ref/vfs.html">VFS</a> backends, since it is
 not possible to write cross-platform tests for those modules.  Extensions
 such as FTS3 and RTree are also excluded from the analysis.</p>
+
+<a name="stmtvbr"></a>
 
 <h3>7.1 Statement versus branch coverage</h3>
 
@@ -465,6 +519,7 @@ not true.  To reemphasize, the
 <a href="th3.html">TH3</a> test harness for SQLite provides the stronger form of
 test coverage - 100% branch test coverage.</p>
 
+<a name="defensivecode"></a>
 
 <h3>7.2 Coverage testing of defensive code</h3>
 
@@ -605,6 +660,8 @@ subsection to make sure that every condition in a bit-vector decision takes
 on every possible outcome.  In this way, SQLite also achieves 100% MC/DC
 in addition to 100% branch coverage.</p>
 
+<a name="thoughts1"></a>
+
 <h3>7.5 Experience with full test coverage</h3>
 
 <p>The developers of SQLite have found that full coverage testing is an
@@ -616,12 +673,16 @@ do not have unintended consequences in other parts of the code.
 It would be extremely difficult maintain the quality of SQLite without such
 assurances.</p>
 
+<a name="dynamicanalysis"></a>
+
 <h2>8.0 Dynamic Analysis</h2>
 
 <p>Dynamic analysis refers to internal and external checks on the
 SQLite code which are performed while the code is live and running.
 Dynamic analysis has proven to be a great help in maintaining the
 quality of SQLite.</p>
+
+<a name="asserts"></a>
 
 <h3>8.1 Assert</h3>
 
@@ -639,6 +700,8 @@ the database engine runs about three times slower when asserts are enabled.
 Hence, the default (production) build of SQLite disables asserts.  
 Assert statements are only enabled when SQLite is compiled with the
 SQLITE_DEBUG preprocessor macro defined.</p>
+
+<a name="valgrind"></a>
 
 <h3>8.2 Valgrind</h3>
 
@@ -661,6 +724,8 @@ running it on native hardware.  So it is impractical to run the full
 SQLite test suite through valgrind.  However, the veryquick tests and
 a subset of the TH3 tests are run through valgrind prior to every release.</p>
 
+<a name="memtesting"></a>
+
 <h3>8.3 Memsys2</h3>
 
 <p>SQLite contains a pluggable
@@ -676,6 +741,8 @@ are also done by valgrind (and, indeed, valgrind does them better)
 but memsys2 has the advantage of being much faster than valgrind, which
 means the checks can be done more often and for longer tests.</p>
 
+<a name="mutextesting"></a>
+
 <h3>8.4 Mutex Asserts</h3>
 
 <p>SQLite contains a pluggable mutex subsystem.  Depending on 
@@ -686,6 +753,8 @@ These two interfaces are used extensively within assert() statements
 in SQLite to verify mutexes are held and released at all the right
 moments, in order to double-check that SQLite does work correctly
 in multi-threaded applications.</p>
+
+<a name="journaltest"></a>
 
 <h3>8.5 Journal Tests</h3>
 
@@ -703,6 +772,8 @@ If any discrepancies are found, an assertion fault is raised.</p>
 <p>The journal tests are an additional double-check over and above
 the crash tests to make sure that SQLite transactions will be atomic
 across system crashes and power failures.</p>
+
+<a name="staticanalysis"></a>
 
 <h2>9.0 Static Analysis</h2>
 
@@ -729,6 +800,8 @@ willing to do this because the other tests described above do an
 excellent job of finding the bugs that are often introduced when
 removing compiler warnings, so that product quality is probably not
 decreased as a result.</p>
+
+<a name="summary"></a>
 
 <h2>10.0 Summary</h2>
 

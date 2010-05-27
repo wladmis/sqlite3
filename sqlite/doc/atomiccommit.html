@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 
@@ -118,6 +155,7 @@ operating system crash or power failure.</p>
 <p>This article describes the techniques used by SQLite to create the
 illusion of atomic commit.</p>
 
+<a name="hardware"></a>
 
 <h2>2.0 Hardware Assumptions</h2>
 
@@ -251,6 +289,8 @@ file.  The details of file formats used to guard against damage from
 power failures and techniques for performing an atomic commit across
 multiple databases are discussed in later sections.</p>
 
+<a name="initstate"></a>
+
 <h3>3.1 Initial State</h3>
 
 <img src="images/ac/commit-0.gif" align="right" hspace="15">
@@ -271,6 +311,8 @@ just been opened and no information has been read yet, so the
 user space is empty.
 </p>
 <br clear="both">
+
+<a name="rdlck"></a>
 
 <h3>3.2 Acquiring A Read Lock</h3>
 
@@ -327,6 +369,8 @@ database will have thousands of pages and a query will normally
 only touch a small percentage of those pages.</p>
 
 <br clear="both">
+
+<a name="rsvdlock"></a>
 
 <h3>3.4 Obtaining A Reserved Lock</h3>
 
@@ -553,6 +597,8 @@ commonly the case that no changes have been made and the user
 space cache can be reused for a significant performance savings.</p>
 
 <br clear="both">
+<a name="rollback"></a>
+
 <h2>4.0 Rollback</h2>
 
 <p>An atomic commit is supposed to happen instantaneously.  But the processing
@@ -562,6 +608,8 @@ part way through the commit operation described above.  In order
 to maintain the illusion that the changes were instantaneous, we
 have to "rollback" any partial changes and restore the database to
 the state it was in prior to the beginning of the transaction.</p>
+
+<a name="crisis"></a>
 
 <h3>4.1 When Something Goes Wrong...</h3>
 <img src="images/ac/rollback-0.gif" align="right" hspace="15">
@@ -619,6 +667,8 @@ the database file is in an inconsistent state and needs to
 be repaired (by rollback) prior to being used.</p>
 
 <br clear="both">
+<a name="exlock"></a>
+
 <h3>4.3 Obtaining An Exclusive Lock On The Database</h3>
 <img src="images/ac/rollback-2.gif" align="right" hspace="15">
 
@@ -646,6 +696,8 @@ contain the same information as it did before the start of
 the aborted transaction.</p>
 
 <br clear="both">
+<a name="delhotjrnl"></a>
+
 <h3>4.5 Deleting The Hot Journal</h3>
 <img src="images/ac/rollback-4.gif" align="right" hspace="15">
 
@@ -661,6 +713,8 @@ deleting a file is expense.  Either way, the journal is no
 long hot after this step.</p>
 
 <br clear="both">
+<a name="cont"></a>
+
 <h3>4.6 Continue As If The Uncompleted Writes Had Never Happened</h3>
 <img src="images/ac/rollback-5.gif" align="right" hspace="15">
 
@@ -672,6 +726,8 @@ automatically and transparently, it appears to the program using
 SQLite as if the aborted transaction had never begun.</p>
 
 <br clear="both">
+<a name="multicommit"></a>
+
 <h2>5.0 Multi-file Commit</h2>
 
 <p>SQLite allows a single 
@@ -685,6 +741,8 @@ else none of them are.
 Achieving an atomic commit across multiple database files is
 more complex that doing so for a single file.  This section
 describes how SQLite works that bit of magic.</p>
+
+<a name="multijrnl"></a>
 
 <h3>5.1 Separate Rollback Journals For Each Database</h3>
 <img src="images/ac/multi-0.gif" align="right" hspace="15">
@@ -714,6 +772,8 @@ just take up a lot of space in the diagrams and they do not add
 any new information, so they are omitted here.</p>
 
 <br clear="both">
+<a name="masterjrnl"></a>
+
 <h3>5.2 The Master Journal File</h3>
 <img src="images/ac/multi-1.gif" align="right" hspace="15">
 
@@ -744,6 +804,8 @@ the master journal file will appear in the directory following a
 power failure.</p>
 
 <br clear="both">
+<a name="multijrnlupdate"></a>
+
 <h3>5.3 Updating Rollback Journal Headers</h3>
 <img src="images/ac/multi-2.gif" align="right" hspace="15">
 
@@ -763,6 +825,8 @@ page of the journal file (the first page) has changed.</p>
 scenario described above.</p>
 
 <br clear="both">
+<a name="multidbupdate"></a>
+
 <h3>5.4 Updating The Database Files</h3>
 <img src="images/ac/multi-3.gif" align="right" hspace="15">
 
@@ -802,6 +866,8 @@ a single-file commit) or if the master journal file still
 exists on disk.</p>
 
 <br clear="both">
+<a name="cleanup"></a>
+
 <h3>5.6 Clean Up The Rollback Journals</h3>
 <img src="images/ac/multi-5.gif" align="right" hspace="15">
 
@@ -823,12 +889,16 @@ its corresponding database file is unlocked it does not matter in what
 order the rollback journals are deleted or the database files are
 unlocked.</p>
 
+<a name="moredetail"></a>
+
 <h2>6.0 Additional Details Of The Commit Process</h2>
 
 <p><a href="#section_3_0">Section 3.0</a> above provides an overview of
 how atomic commit works in SQLite.  But it glosses over a number of
 important details.  The following subsections will attempt to fill
 in the gaps.</p>
+
+<a name="completesectors"></a>
 
 <h3>6.1 Always Journal Complete Sectors</h3>
 
@@ -854,6 +924,8 @@ sector.  If this write operation is interrupted by a power outage,
 one or more of the pages 1, 3, or 4 might be left with incorrect data.
 Hence, to avoid lasting corruption to the database, the original content
 of all of those pages must be contained in the rollback journal.</p>
+
+<a name="journalgarbage"></a>
 
 <h3>6.2 Dealing With Garbage Written Into Journal Files</h3>
 
@@ -919,6 +991,8 @@ when synchronous is lowered to NORMAL.  Nevertheless, the checksums
 never hurt and so they are included in the rollback journal regardless
 of the synchronous setting.</p>
 
+<a name="cachespill"></a>
+
 <h3>6.3 Cache Spill Prior To Commit</h3>
 
 <p>The commit process shown in <a href="#section_3_0">section 3.0</a>
@@ -953,6 +1027,8 @@ occur and these operations are slow, hence a cache spill can
 seriously reduce performance.
 For these reasons a cache spill is avoided whenever possible.</p>
 
+<a name="opts"></a>
+
 <h2>7.0 Optimizations</h2>
 
 <p>Profiling indicates that for most systems and in most circumstances
@@ -961,6 +1037,8 @@ anything we can do to reduce the amount of disk I/O will likely have a
 large positive impact on the performance of SQLite.  This section
 describes some of the techniques used by SQLite to try to reduce the
 amount of disk I/O to a minimum while still preserving atomic commit.</p>
+
+<a name="keepcache"></a>
 
 <h3>7.1 Cache Retained Between Transactions</h3>
 
@@ -1031,6 +1109,8 @@ This optimization can be set independently of exclusive lock mode
 using the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>
 as described in <a href="#section_7_6">section 7.6</a> below.</p>
 
+<a name="freelistjrnl"></a>
+
 <h3>7.3 Do Not Journal Freelist Pages</h3>
 
 <p>When information is deleted from an SQLite database, the pages used
@@ -1054,6 +1134,8 @@ into the database at <a href="#section_3_9">step 3.9</a> nor
 read from the database at <a href="#section_3_3">step 3.3</a>.
 These optimizations can greatly reduce the amount of I/O that occurs
 when making changes to a database file that contains free space.</p>
+
+<a name="atomicsector"></a>
 
 <h3>7.4 Single Page Updates And Atomic Sector Writes</h3>
 
@@ -1091,6 +1173,8 @@ journaling and syncing process and simply writes the modified page
 directly into the database file.  The change counter in the first
 page of the database file is modified separately since no harm is
 done if power is lost before the change counter can be updated.</p>
+
+<a name="safeappend"></a>
 
 <h3>7.5 Filesystems With Safe Append Semantics</h3>
 
@@ -1195,6 +1279,8 @@ faster to overwrite existing content than to append to the end of a file.
 New journal file entries will always be appended following a TRUNCATE but
 will usually overwrite with PERSIST.</p>
 
+<a name="testing"></a>
+
 <h2>8.0 Testing Atomic Commit Behavior</h2>
 
 <p>The developers of SQLite are confident that it is robust
@@ -1236,6 +1322,8 @@ This section describes a few of the ways in which an SQLite database
 might be corrupted by a power failure or system crash.
 (See also: <a href="lockingv3.html#how_to_corrupt">How To Corrupt Your Database Files</a>.)</p>
 
+<a name="brokenlocks"></a>
+
 <h3>9.1 Broken Locking Implementations</h3>
 
 <p>SQLite uses filesystem locks to make sure that only one
@@ -1270,6 +1358,8 @@ process (perhaps on a different machine) is using dot-file locks,
 the two processes might collide because AFP locks do not exclude
 dot-file locks or vice versa.</p>
 
+<a name="fsync"></a>
+
 <h3>9.2 Incomplete Disk Flushes</h3>
 
 <p>SQLite uses the fsync() system call on Unix and the FlushFileBuffers()
@@ -1297,6 +1387,8 @@ of fullfsync involves resetting the disk controller.  And so not only
 is it profoundly slow, it also slows down other unrelated disk I/O.
 So its use is not recommended.</p>
 
+<a name="filedel"></a>
+
 <h3>9.3 Partial File Deletions</h3>
 
 <p>SQLite assumes that file deletion is an atomic operation from the
@@ -1305,6 +1397,8 @@ a file deletion, then after power is restored SQLite expects to see
 either the entire file with all of its original data intact, or it
 expects not to find the file at all.  Transactions may not be atomic
 on systems that do not work this way.</p>
+
+<a name="filegarbage"></a>
 
 <h3>9.4 Garbage Written Into Files</h3>
 
@@ -1315,6 +1409,8 @@ Corrupt data might also be introduced into an SQLite database
 by bugs in the operating system or disk controller; especially
 bugs triggered by a power failure.  There is nothing SQLite can
 do to defend against these kinds of problems.</p>
+
+<a name="mvhotjrnl"></a>
 
 <h3>9.5 Deleting Or Renaming A Hot Journal</h3>
 
@@ -1359,6 +1455,8 @@ is vulnerable to this kind of filesystem namespace corruption (most
 modern journalling filesystems are immune, we believe) then you might
 want to consider putting each SQLite database file in its own private
 subdirectory.</p>
+
+<a name="future"></a>
 
 <h2>10.0 Future Directions And Conclusion</h2>
 

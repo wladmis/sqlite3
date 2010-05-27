@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 <?xml version="1.0" encoding="Windows-1252"?>
 
 <h1> Moving From SQLite 3.4.2 to 3.5.0</h1><p>
@@ -352,20 +389,20 @@ struct sqlite3_vfs {
    filename if it needs to remember the filename for some reason.
    The flags argument to xOpen() is a copy of the flags argument
    to sqlite3_open_v2().  If sqlite3_open() or sqlite3_open16()
-   is used, then flags is <a href="c3ref/c_open_create.html">SQLITE_OPEN_READWRITE</a> | <a href="c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a>.
+   is used, then flags is <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_READWRITE</a> | <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_CREATE</a>.
    If xOpen() opens a file read-only then it sets *pOutFlags to
-   include <a href="c3ref/c_open_create.html">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be
+   include <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be
    set.
    SQLite will also add one of the following flags to the xOpen()
    call, depending on the object being opened:
    <ul>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_MAIN_DB</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_MAIN_JOURNAL</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_DB</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_JOURNAL</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_TRANSIENT_DB</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_SUBJOURNAL</a>
-   <li>  <a href="c3ref/c_open_create.html">SQLITE_OPEN_MASTER_JOURNAL</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_DB</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_JOURNAL</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_DB</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_JOURNAL</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_SUBJOURNAL</a>
+   <li>  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MASTER_JOURNAL</a>
    </ul>
    The file I/O implementation can use the object type flags to
    changes the way it deals with files.  For example, an application
@@ -378,13 +415,13 @@ struct sqlite3_vfs {
    SQLite might also add one of the following flags to the xOpen
    method:
    <ul>
-   <li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a>
-   <li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_EXCLUSIVE</a>
+   <li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>
+   <li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a>
    </ul>
-   The <a href="c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
+   The <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
    deleted when it is closed.  This will always be set for TEMP 
    databases and journals and for subjournals.  The 
-   <a href="c3ref/c_open_create.html">SQLITE_OPEN_EXCLUSIVE</a> flag means the file should be opened
+   <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a> flag means the file should be opened
    for exclusive access.  This flag is set for all files except
    for the main database file.
    The <a href="c3ref/file.html">sqlite3_file</a> structure passed as the third argument to
@@ -393,12 +430,12 @@ struct sqlite3_vfs {
    structure.
 </p>
 <p>
-  The differences between an <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_DB</a> database and an
-  <a href="c3ref/c_open_create.html">SQLITE_OPEN_TRANSIENT_DB</a> database is this:  The <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_DB</a>
+  The differences between an <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_DB</a> database and an
+  <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a> database is this:  The <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_DB</a>
   is used for explicitly declared and named TEMP tables (using the
   CREATE TEMP TABLE syntax) or for named tables in a temporary database
   that is created by opening a database with a filename that is an empty
-  string.  An <a href="c3ref/c_open_create.html">SQLITE_OPEN_TRANSIENT_DB</a> holds an database table that
+  string.  An <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a> holds an database table that
   SQLite creates automatically in order to evaluate a subquery or
   ORDER BY or GROUP BY clause.  Both TEMP_DB and TRANSIENT_DB databases
   are private and are deleted automatically.  TEMP_DB databases last

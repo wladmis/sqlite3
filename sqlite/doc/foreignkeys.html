@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,61 +85,65 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 
-    
 
     <div class=fancy>
-    <div style="font-size:2em;text-align:center;color:#80a796">SQLite Foreign Key Support</div>
-    <div style="font-size:1.5em;margin:1em;color:#80a796">Table Of Contents</div>
-    <div id=toc>
-      
-    <div style="margin-left:6ex">
-    <a href="#fk_basics">1 Introduction to Foreign Key Constraints</a>
-    </a></div>
+    <div style="font-size:2em;text-align:center;color:#80a796">
+      SQLite Foreign Key Support
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#80a796">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#fk_basics">1. Introduction to Foreign Key Constraints</a></div><div style="margin-left:6ex"><a href="#fk_enable">2. 
+  Enabling Foreign Key Support
+</a></div><div style="margin-left:6ex"><a href="#fk_indexes">3. Required and Suggested Database Indexes</a></div><div style="margin-left:6ex"><a href="#fk_advanced">4. Advanced Foreign Key Constraint Features</a></div><div style="margin-left:12ex"><a href="#fk_composite">4.1. Composite Foreign Key Constraints</a></div><div style="margin-left:12ex"><a href="#fk_deferred">4.2. Deferred Foreign Key Constraints</a></div><div style="margin-left:12ex"><a href="#fk_actions">4.3. 
+  ON DELETE and ON UPDATE Actions
+</a></div><div style="margin-left:6ex"><a href="#fk_schemacommands">5. CREATE, ALTER and DROP TABLE commands</a></div><div style="margin-left:6ex"><a href="#fk_unsupported">6. Limits and Unsupported Features</a></div> </div>
+    <div class=startsearch></div>
   
-    <div style="margin-left:6ex">
-    <a href="#fk_enable">2 Enabling Foreign Key Support</a>
-    </a></div>
-  
-    <div style="margin-left:6ex">
-    <a href="#fk_indexes">3 Required and Suggested Database Indexes</a>
-    </a></div>
-  
-    <div style="margin-left:6ex">
-    <a href="#fk_advanced">4 Advanced Foreign Key Constraint Features</a>
-    </a></div>
-  
-    <div style="margin-left:12ex">
-    <a href="#fk_composite">4.1 Composite Foreign Key Constraints</a>
-    </a></div>
-  
-    <div style="margin-left:12ex">
-    <a href="#fk_deferred">4.2 Deferred Foreign Key Constraints</a>
-    </a></div>
-  
-    <div style="margin-left:12ex">
-    <a href="#fk_actions">4.3 ON DELETE and ON UPDATE Actions</a>
-    </a></div>
-  
-    <div style="margin-left:6ex">
-    <a href="#fk_schemacommands">5 CREATE, ALTER and DROP TABLE commands</a>
-    </a></div>
-  
-    <div style="margin-left:6ex">
-    <a href="#fk_unsupported">6 Limits and Unsupported Features</a>
-    </a></div>
-  
-    </div id>
-    
 
-<h2 style="margin-left:1.0em"> Overview</h2>
+<h2 style="margin-left:1.0em">  Overview</h2>
 
 <p>This document describes the support for SQL foreign key constraints
    introduced in SQLite version 3.6.19. 
@@ -159,8 +165,7 @@ a:visited { color: #734559 }
    to create foreign key constraints in SQLite. This may be found as 
    part of the documentation for the <a href="lang_createtable.html">CREATE TABLE</a> statement.
 
-<h1 id="fk_basics">1 Introduction to Foreign Key Constraints</h1>
-
+<h1 id="fk_basics">1. Introduction to Foreign Key Constraints</h1>
 
   <p>
     SQL foreign key constraints are used to enforce "exists" relationships 
@@ -298,6 +303,7 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
   <p>
     SQLite uses the following terminology:
 <a name="parentchild"></a>
+
   <ul>
     <li><p>The <b>parent table</b> is the table that a foreign key constraint
         refers to. The parent table in the example in this section is the
@@ -339,8 +345,9 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
         comparison is performed.  
   </ul>
 
-<h1 id="fk_enable">2 Enabling Foreign Key Support</h1>
-
+<h1 id="fk_enable">2. 
+  Enabling Foreign Key Support
+</h1>
   <p>
     In order to use foreign key constraints in SQLite, the library must
     be compiled with neither <a href="compile.html#omit_foreign_key">SQLITE_OMIT_FOREIGN_KEY</a> or 
@@ -396,8 +403,7 @@ sqlite> PRAGMA foreign_keys;
     is not in <a href="c3ref/get_autocommit.html">autocommit mode</a>).  Attempting to do so does not return
     an error; it simply has no effect.
 
-<h1 id="fk_indexes">3 Required and Suggested Database Indexes</h1>
-
+<h1 id="fk_indexes">3. Required and Suggested Database Indexes</h1>
 
   <p>
     Usually, the parent key of a foreign key constraint is the primary key of
@@ -485,7 +491,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
   <p>
     Indices are not required for child key columns but they are almost
     always beneficial. Returning to
-    the example in <a href=#fk_basics>section 1</a>, each time an application
+    the example in <a href="#fk_basics">section 1</a>, each time an application
     deletes a row from the <i>artist</i> table (the parent table), it
     performs the equivalent of the following SELECT statement to search
     for referencing rows in the <i>track</i> table (the child table).
@@ -540,11 +546,9 @@ CREATE INDEX trackindex ON track(trackartist);
     documentation for further details.
 
 
-<h1 id="fk_advanced">4 Advanced Foreign Key Constraint Features</h1>
+<h1 id="fk_advanced">4. Advanced Foreign Key Constraint Features</h1>
 
-
-<h2 id="fk_composite">4.1 Composite Foreign Key Constraints</h2>
-
+<h2 id="fk_composite">4.1. Composite Foreign Key Constraints</h2>
 
   <p>
     A composite foreign key constraint is one where the child and parent keys
@@ -577,8 +581,7 @@ CREATE TABLE song(
     and songalbum) are NULL, then there is no requirement for a corresponding
     row in the parent table.
 
-<h2 id="fk_deferred">4.2 Deferred Foreign Key Constraints</h2>
-
+<h2 id="fk_deferred">4.2. Deferred Foreign Key Constraints</h2>
 
   <p>
     Each foreign key constraint in SQLite is classified as either immediate
@@ -677,8 +680,9 @@ sqlite3&gt; COMMIT;
     <a href="lang_savepoint.html">nested savepoints</a>, the nested savepoints remain open.
 
 
-<h2 id="fk_actions">4.3 ON DELETE and ON UPDATE Actions</h2>
-
+<h2 id="fk_actions">4.3. 
+  ON DELETE and ON UPDATE Actions
+</h2>
 
   <p>
     Foreign key ON DELETE and ON UPDATE clauses are used to configure actions
@@ -898,8 +902,7 @@ y
 null
 </table></div>
 
-<h1 id="fk_schemacommands">5 CREATE, ALTER and DROP TABLE commands</h1>
-
+<h1 id="fk_schemacommands">5. CREATE, ALTER and DROP TABLE commands</h1>
 
   <p>
     This section describes the way the <a href="lang_createtable.html">CREATE TABLE</a>, <a href="lang_altertable.html">ALTER TABLE</a>,
@@ -974,8 +977,7 @@ null
    
     
 
-<h1 id="fk_unsupported">6 Limits and Unsupported Features</h1>
-
+<h1 id="fk_unsupported">6. Limits and Unsupported Features</h1>
 
   <p>
     This section lists a few limitations and omitted features that are not
@@ -1002,7 +1004,7 @@ null
     <li> <p>
       <b>No support for switching constraints between deferred and immediate 
          mode.</b> Many systems allow the user to toggle individual foreign key
-         constraints between <a href=#fk_deferred>deferred</a> and immediate 
+         constraints between <a href="#fk_deferred">deferred</a> and immediate 
          mode at runtime (for example using the Oracle "SET CONSTRAINT" command).
          SQLite does not support this. In SQLite, a foreign key constraint is
          permanently marked as deferred or immediate when it is created.
@@ -1018,4 +1020,3 @@ null
          key actions.
    </ol>
 
-  

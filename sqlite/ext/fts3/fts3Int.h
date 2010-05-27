@@ -104,7 +104,7 @@ struct Fts3Table {
   /* Precompiled statements used by the implementation. Each of these 
   ** statements is run and reset within a single virtual table API call. 
   */
-  sqlite3_stmt *aStmt[18];
+  sqlite3_stmt *aStmt[25];
 
   /* Pointer to string containing the SQL:
   **
@@ -118,6 +118,8 @@ struct Fts3Table {
   sqlite3_stmt **aLeavesStmt;     /* Array of prepared zSelectLeaves stmts */
 
   int nNodeSize;                  /* Soft limit for node size */
+  u8 bHasContent;                 /* True if %_content table exists */
+  u8 bHasDocsize;                 /* True if %_docsize table exists */
 
   /* The following hash table is used to buffer pending index updates during
   ** transactions. Variable nPendingData estimates the memory size of the 
@@ -148,8 +150,8 @@ struct Fts3Cursor {
   char *pNextId;                  /* Pointer into the body of aDoclist */
   char *aDoclist;                 /* List of docids for full-text queries */
   int nDoclist;                   /* Size of buffer at aDoclist */
-  int isMatchinfoOk;              /* True when aMatchinfo[] matches iPrevId */
-  u32 *aMatchinfo;
+  int isMatchinfoNeeded;          /* True when aMatchinfo[] needs filling in */
+  u32 *aMatchinfo;                /* Information about most recent match */
 };
 
 /*
@@ -255,6 +257,8 @@ int sqlite3Fts3SegReaderIterate(
 );
 int sqlite3Fts3ReadBlock(Fts3Table*, sqlite3_int64, char const**, int*);
 int sqlite3Fts3AllSegdirs(Fts3Table*, sqlite3_stmt **);
+int sqlite3Fts3MatchinfoDocsizeLocal(Fts3Cursor*, u32*);
+int sqlite3Fts3MatchinfoDocsizeGlobal(Fts3Cursor*, u32*);
 
 /* Flags allowed as part of the 4th argument to SegmentReaderIterate() */
 #define FTS3_SEGMENT_REQUIRE_POS   0x00000001
@@ -279,6 +283,7 @@ void sqlite3Fts3Dequote(char *);
 
 char *sqlite3Fts3FindPositions(Fts3Expr *, sqlite3_int64, int);
 int sqlite3Fts3ExprLoadDoclist(Fts3Table *, Fts3Expr *);
+int sqlite3Fts3ExprNearTrim(Fts3Expr *, Fts3Expr *, int);
 
 /* fts3_tokenizer.c */
 const char *sqlite3Fts3NextToken(const char *, int *);
@@ -289,10 +294,7 @@ int sqlite3Fts3InitTokenizer(Fts3Hash *pHash,
 
 /* fts3_snippet.c */
 void sqlite3Fts3Offsets(sqlite3_context*, Fts3Cursor*);
-void sqlite3Fts3Snippet(sqlite3_context*, Fts3Cursor*, 
-  const char *, const char *, const char *
-);
-void sqlite3Fts3Snippet2(sqlite3_context *, Fts3Cursor *, const char *,
+void sqlite3Fts3Snippet(sqlite3_context *, Fts3Cursor *, const char *,
   const char *, const char *, int, int
 );
 void sqlite3Fts3Matchinfo(sqlite3_context *, Fts3Cursor *);

@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 
@@ -251,10 +288,10 @@ int sqlite3_blocking_prepare_v2(
   in order to compile SQL statements to <a href="c3ref/stmt.html">sqlite3_stmt*</a> objects.
 
 <p>
-  This page presents a technique using the SQLite <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a>
-  API to create a versions of <a href="c3ref/step.html">sqlite3_step()</a> and <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> that 
+  This article presents a technique using the SQLite <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a>
+  interface such that calls to <a href="c3ref/step.html">sqlite3_step()</a> and <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
   block until the required locks are available instead of returning 
-  SQLITE_LOCKED immediately, for use in multi-threaded applications. If the
+  SQLITE_LOCKED immediately. If the
   sqlite3_blocking_step() or sqlite3_blocking_prepare_v2() functions presented 
   to the left return SQLITE_LOCKED, this indicates that to block would 
   deadlock the system.
@@ -262,8 +299,8 @@ int sqlite3_blocking_prepare_v2(
 <p>
   The <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a> API, which is only available if the library is
   compiled with the pre-processor symbol <a href="compile.html#enable_unlock_notify">SQLITE_ENABLE_UNLOCK_NOTIFY</a> defined,
-  is <a href="c3ref/unlock_notify.html">documented here</a>. This page is no substitute for
-  reading the full API documentation!
+  is <a href="c3ref/unlock_notify.html">documented here</a>. This article is not a
+  substitute for reading the full API documentation!
 
 <p>
   The <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a> interface is designed for use in systems
@@ -294,7 +331,7 @@ int sqlite3_blocking_prepare_v2(
   If a call to sqlite3_step() that attempts to write to a database table
   returns SQLITE_LOCKED, then more than one other connection may be holding 
   a read-lock on the database table in question. In this case SQLite simply
-  selects one of those other connections at random and issues the 
+  selects one of those other connections arbitrarily and issues the 
   unlock-notify callback when that connection's transaction is finished.
   Whether the call to sqlite3_step() was blocked by one or many connections, 
   when the corresponding unlock-notify callback is issued it is not 
@@ -305,7 +342,7 @@ int sqlite3_blocking_prepare_v2(
   call to sqlite3_step() (or sqlite3_close()) associated with the blocking 
   connection. It is illegal to invoke any sqlite3_XXX() API functions from
   within an unlock-notify callback. The expected use is that the unlock-notify
-  callback will single some other waiting thread or schedule some action
+  callback will signal some other waiting thread or schedule some action
   to take place later.
 
 <p>
@@ -333,24 +370,24 @@ int sqlite3_blocking_prepare_v2(
        SQLITE_MISUSE.
 
   <li><p> Return to step 1.
+</ol>
 
 <p>
   The algorithm used by the sqlite3_blocking_prepare_v2() function is similar,
   except that step 4 (reseting the statement handle) is omitted.
 
-</ol>
 
 <p><b>Writer Starvation</b>
 
 <p>
-  Based on the description above, it could be concluded that if there are
-  sufficient database readers reading the same table often enough, it is
-  possible that the table will never become unlocked and that a connection
-  waiting for a write-lock on the table will wait indefinitely. This 
-  phenomena is known as writer-starvation.
+  Multiple connections may hold a read-lock simultaneously.  If many threads
+  are acquiring overlapping read-locks, it might be the case that at least
+  one thread is always holding a read lock.
+  Then a table waiting for a write-lock will wait forever.
+  This scenario is called "writer starvation."
 
 <p>
-  SQLite helps applications avoid this scenario. After any attempt to
+  SQLite helps applications avoid writer starvation. After any attempt to
   obtain a write-lock on a table fails (because one or more other 
   connections are holding read-locks), all attempts to open new transactions
   on the shared-cache fail until one of the following is true:
@@ -365,7 +402,7 @@ int sqlite3_blocking_prepare_v2(
   caller. If the caller then calls <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a> to register for
   an unlock-notify callback, the blocking connection is the connection that
   currently has an open write-transaction on the shared-cache. This prevents
-  writer-starvation as, if no new read-transactions may be opened and 
+  writer-starvation since if no new read-transactions may be opened and 
   assuming all existing read-transactions are eventually concluded, the 
   writer will eventually have an opportunity to obtain the required
   write-lock.
@@ -421,7 +458,7 @@ int sqlite3_blocking_prepare_v2(
 
 <p><b>Possible Enhancements</b>
 
-  <p> The code on this page could be improved in at least two ways:
+  <p> The code in this article could be improved in at least two ways:
 
   <ul>
     <li> It could manage thread priorities.
@@ -453,7 +490,7 @@ int sqlite3_blocking_prepare_v2(
 
   <p>
     The caller could distinguish between this special "DROP TABLE|INDEX" 
-    case and other cases by using extended error codes. When it is appropriate
+    case and other cases by using <a href="c3ref/c_ioerr_access.html">extended error codes</a>. When it is appropriate
     to call <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a>, the extended error code is
     SQLITE_LOCKED_SHAREDCACHE. Otherwise, in the "DROP TABLE|INDEX" case,
     it is just plain SQLITE_LOCKED. Another solution might be to limit

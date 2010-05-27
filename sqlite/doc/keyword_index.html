@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 <h1 align=center>Website Keyword Index</h1>
 
@@ -164,6 +201,7 @@ a:visited { color: #734559 }
 <li> <a href="datatype3.html#comparisons">comparison expressions</a> </li>
 <li> <a href="fts3.html#section_2">compile fts3</a> </li>
 <li> <a href="compile.html">compile-time options</a> </li>
+<li> <a href="pragma.html#pragma_compile_options">compile_options pragma</a> </li>
 <li> <a href="howtocompile.html#cli">compiling the CLI</a> </li>
 <li> <a href="howtocompile.html#tcl">compiling the TCL interface</a> </li>
 <li> <a href="syntaxdiagrams.html#compound-operator">compound-operator syntax diagram</a> </li>
@@ -289,6 +327,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#ltrim">ltrim() SQL function</a> </li>
 <li> <a href="support.html#mailinglists">mailing lists</a> </li>
 <li> <a href="lang_expr.html#match">MATCH</a> </li>
+<li> <a href="fts3.html#matchinfo">matchinfo</a> </li>
 <li> <a href="lang_aggfunc.html#maxggunc">max() aggregate function</a> </li>
 <li> <a href="lang_corefunc.html#maxoreunc">max() SQL function</a> </li>
 <li> <a href="pragma.html#pragma_max_page_count">max_page_count pragma</a> </li>
@@ -324,6 +363,7 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> </li>
 <li> <a href="pragma.html#pragma_case_sensitive_like">PRAGMA case_sensitive_like</a> </li>
 <li> <a href="pragma.html#pragma_collation_list">PRAGMA collation_list</a> </li>
+<li> <a href="pragma.html#pragma_compile_options">PRAGMA compile_options</a> </li>
 <li> <a href="pragma.html#pragma_count_changes">PRAGMA count_changes</a> </li>
 <li> <a href="pragma.html#pragma_database_list">PRAGMA database_list</a> </li>
 <li> <a href="pragma.html#pragma_default_cache_size">PRAGMA default_cache_size</a> </li>
@@ -351,6 +391,7 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> </li>
 <li> <a href="pragma.html#pragma_reverse_unordered_selects">PRAGMA reverse_unordered_selects</a> </li>
 <li> <a href="pragma.html#pragma_schema_version">PRAGMA schema_version</a> </li>
+<li> <a href="pragma.html#pragma_secure_delete">PRAGMA secure_delete</a> </li>
 <li> <a href="pragma.html#pragma_short_column_names">PRAGMA short_column_names</a> </li>
 <li> <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> </li>
 <li> <a href="pragma.html#pragma_table_info">PRAGMA table_info</a> </li>
@@ -405,6 +446,8 @@ a:visited { color: #734559 }
 <li> <a href="syntaxdiagrams.html#savepoint-stmt">savepoint-stmt syntax diagram</a> </li>
 <li> <a href="pragma.html#pragma_schema_version">schema_version pragma</a> </li>
 <li> <a href="malloc.html#scratch">scratch memory allocator</a> </li>
+<li> <a href="fts3.html#appendix_a">search application tips</a> </li>
+<li> <a href="pragma.html#pragma_secure_delete">secure_delete pragma</a> </li>
 <li> <a href="fts3.html#section_6">segment btree</a> </li>
 <li> <a href="lang_select.html">SELECT</a> </li>
 <li> <a href="syntaxdiagrams.html#select-core">select-core syntax diagram</a> </li>
@@ -485,6 +528,8 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/column_blob.html">sqlite3_column_type</a> </li>
 <li> <a href="c3ref/column_blob.html">sqlite3_column_value</a> </li>
 <li> <a href="c3ref/commit_hook.html">sqlite3_commit_hook</a> </li>
+<li> <a href="c3ref/compileoption_get.html">sqlite3_compileoption_get</a> </li>
+<li> <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used</a> </li>
 <li> <a href="c3ref/complete.html">sqlite3_complete</a> </li>
 <li> <a href="c3ref/complete.html">sqlite3_complete16</a> </li>
 <li> <a href="c3ref/config.html">sqlite3_config</a> </li>
@@ -531,6 +576,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/libversion.html">sqlite3_libversion_number</a> </li>
 <li> <a href="c3ref/limit.html">sqlite3_limit</a> </li>
 <li> <a href="c3ref/load_extension.html">sqlite3_load_extension</a> </li>
+<li> <a href="c3ref/log.html">sqlite3_log</a> </li>
 <li> <a href="c3ref/free.html">sqlite3_malloc</a> </li>
 <li> <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> </li>
 <li> <a href="c3ref/aggregate_count.html">sqlite3_memory_alarm</a> </li>
@@ -640,7 +686,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/value_blob.html">sqlite3_value_text16be</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_text16le</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_type</a> </li>
-<li> <a href="c3ref/libversion.html">sqlite3_version</a> </li>
+<li> <a href="c3ref/libversion.html">sqlite3_version,</a> </li>
 <li> <a href="c3ref/vfs.html">sqlite3_vfs</a> </li>
 <li> <a href="c3ref/vfs_find.html">sqlite3_vfs_find</a> </li>
 <li> <a href="c3ref/vfs_find.html">sqlite3_vfs_register</a> </li>
@@ -661,10 +707,13 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_abort.html">SQLITE_BUSY</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_CANTOPEN</a> </li>
 <li> <a href="compile.html#case_sensitive_like">SQLITE_CASE_SENSITIVE_LIKE</a> </li>
+<li> <a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get() SQL function</a> </li>
+<li> <a href="lang_corefunc.html#sqlite_compileoption_used">sqlite_compileoption_used() SQL function</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_GETMALLOC</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_GETMUTEX</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_GETPCACHE</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_HEAP</a> </li>
+<li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_LOG</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_LOOKASIDE</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MALLOC</a> </li>
 <li> <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MEMSTATUS</a> </li>
@@ -837,6 +886,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#omit_builtin_test">SQLITE_OMIT_BUILTIN_TEST</a> </li>
 <li> <a href="compile.html#omit_cast">SQLITE_OMIT_CAST</a> </li>
 <li> <a href="compile.html#omit_check">SQLITE_OMIT_CHECK</a> </li>
+<li> <a href="compile.html#omit_compileoption_diags">SQLITE_OMIT_COMPILEOPTION_DIAGS</a> </li>
 <li> <a href="compile.html#omit_complete">SQLITE_OMIT_COMPLETE</a> </li>
 <li> <a href="compile.html#omit_compound_select">SQLITE_OMIT_COMPOUND_SELECT</a> </li>
 <li> <a href="compile.html#omit_conflict_clause">SQLITE_OMIT_CONFLICT_CLAUSE</a> </li>
@@ -876,22 +926,23 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#omit_virtualtable">SQLITE_OMIT_VIRTUALTABLE</a> </li>
 <li> <a href="compile.html#omit_wsd">SQLITE_OMIT_WSD</a> </li>
 <li> <a href="compile.html#omit_xfer_opt">SQLITE_OMIT_XFER_OPT</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_EXCLUSIVE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_FULLMUTEX</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_MAIN_DB</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_MAIN_JOURNAL</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_MASTER_JOURNAL</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_NOMUTEX</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_PRIVATECACHE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_READONLY</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_READWRITE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_SHAREDCACHE</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_SUBJOURNAL</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_DB</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_TEMP_JOURNAL</a> </li>
-<li> <a href="c3ref/c_open_create.html">SQLITE_OPEN_TRANSIENT_DB</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_AUTOPROXY</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_CREATE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_FULLMUTEX</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_DB</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_JOURNAL</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_MASTER_JOURNAL</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_NOMUTEX</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_PRIVATECACHE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_READONLY</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_READWRITE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_SHAREDCACHE</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_SUBJOURNAL</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_DB</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_JOURNAL</a> </li>
+<li> <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a> </li>
 <li> <a href="compile.html#os_other">SQLITE_OS_OTHER</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_PERM</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_PRAGMA</a> </li>
@@ -1080,6 +1131,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_6_20.html">Version 3.6.20</a> </li>
 <li> <a href="releaselog/3_6_21.html">Version 3.6.21</a> </li>
 <li> <a href="releaselog/3_6_22.html">Version 3.6.22</a> </li>
+<li> <a href="releaselog/3_6_23.html">Version 3.6.23</a> </li>
 <li> <a href="releaselog/3_6_3.html">Version 3.6.3</a> </li>
 <li> <a href="releaselog/3_6_4.html">Version 3.6.4</a> </li>
 <li> <a href="releaselog/3_6_5.html">Version 3.6.5</a> </li>

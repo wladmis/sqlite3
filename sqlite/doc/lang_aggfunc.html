@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>Aggregate Functions</h2>
 
 <p>
@@ -106,8 +143,8 @@ values in column X.
 </p>
 
 <table border=0 cellpadding=10>
-<tr><td valign="top" align="right" width="120">avg(<i>X</i>)</td><td valign="top"><a name="avg"></a>
-
+<tr><td valign="top" align="right" width="120"><a name="avg"></a>
+avg(<i>X</i>)</td><td valign="top">
   The avg() function
   returns the average value of all non-NULL <i>X</i> within a
   group.  String and BLOB values that do not look like numbers are
@@ -116,14 +153,14 @@ values in column X.
   at there is at least one non-NULL input even if all
   inputs are integers.  The result of avg() is NULL if and only if
   there are no non-NULL inputs.  
-</td></tr><tr><td valign="top" align="right" width="120">count(<i>X</i>)<br></br>count(*)</td><td valign="top"><a name="count"></a>
-
+</td></tr><tr><td valign="top" align="right" width="120"><a name="count"></a>
+count(<i>X</i>)<br></br>count(*)</td><td valign="top">
   The count(X) function returns
   a count of the number of times
   that <i>X</i> is not NULL in a group.  The count(*) function
   (with no arguments) returns the total number of rows in the group.
-</td></tr><tr><td valign="top" align="right" width="120">group_concat(<i>X</i>)<br></br>group_concat(<i>X</i>,<i>Y</i>)</td><td valign="top"><a name="groupconcat"></a>
-
+</td></tr><tr><td valign="top" align="right" width="120"><a name="groupconcat"></a>
+group_concat(<i>X</i>)<br></br>group_concat(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The group_concat() function returns
   a string which is the concatenation of
   all non-NULL values of <i>X</i>.  If parameter <i>Y</i> is present then
@@ -131,25 +168,25 @@ values in column X.
   between instances of <i>X</i>.  A comma (",") is used as the separator
   if <i>Y</i> is omitted.  The order of the concatenated elements is
   arbitrary.
-</td></tr><tr><td valign="top" align="right" width="120">max(<i>X</i>)</td><td valign="top"><a name="maxggunc"></a>
-
+</td></tr><tr><td valign="top" align="right" width="120"><a name="maxggunc"></a>
+max(<i>X</i>)</td><td valign="top">
   The max() aggregate function
   returns the maximum value of all values in the group.
   The maximum value is the value that would be returned last in an
   ORDER BY on the same column.  Aggregate max() returns NULL 
   if and only if there are no non-NULL values in the group.
-</td></tr><tr><td valign="top" align="right" width="120">min(<i>X</i>)</td><td valign="top"><a name="minggunc"></a>
-
+</td></tr><tr><td valign="top" align="right" width="120"><a name="minggunc"></a>
+min(<i>X</i>)</td><td valign="top">
   The min() aggregate function
   returns the minimum non-NULL value of all values in the group.
   The minimum value is the first non-NULL value that would appear
   in an ORDER BY of the column.
   Aggregate min() returns NULL if and only if there are no non-NULL
   values in the group.
-</td></tr><tr><td valign="top" align="right" width="120">sum(<i>X</i>)<br></br>total(<i>X</i>)</td><td valign="top"><a name="sumunc"></a>
-
-  The sum() aggregate function
-  returns sum of all non-NULL values in the group.
+</td></tr><tr><td valign="top" align="right" width="120"><a name="sumunc"></a>
+sum(<i>X</i>)<br></br>total(<i>X</i>)</td><td valign="top">
+  The sum() and total() aggregate functions
+  return sum of all non-NULL values in the group.
   If there are no non-NULL input rows then sum() returns
   NULL but total() returns 0.0.
   NULL is not normally a helpful result for the sum of no rows

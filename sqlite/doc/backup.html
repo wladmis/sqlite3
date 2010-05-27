@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,26 +85,63 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 
 <style>
+  /* Formatting for the blocks containing the example code */
   pre a:visited, pre a:link { text-decoration: none ; color: #40534b }
-  pre {
-    background: #F3F3F3;
-    float: right;
-    padding: 1ex 2ex;
+  pre { 
+    background: #F3F3F3; 
+    float: right; 
+    padding: 1ex 2ex; 
     margin-left: 1em;
-    border: solid black 1px;
+    border: solid black 1px; 
   }
-  h1,h2 { clear: both ; text-align: center }
+  h1,h2 { clear: both }
 </style>
 
+<div class=fancy>
 <h1>Using the SQLite Online Backup API</h1>
 
 <p>
@@ -397,25 +436,31 @@ int backupDb(
   underlying database file. 
 
 <p>
-  If another thread writes to database connection pDb while this function is
-  sleeping, then the backup database (database connection pFile) is
-  automatically updated along with pDb. The backup process is continued after 
-  the xSleep() call returns as if nothing had happened. If the database file 
-  underlying connection pDb is written to by a different process or thread 
-  using a different database connection while this function is sleeping, then 
-  SQLite detects this within the next call made to sqlite3_backup_step() and 
-  restarts the backup from the beginning. Either way, 
-  the backup database is kept up to date during the backup process so that 
-  when the operation is complete the backup database contains a consistent 
-  snapshot of the original. However:
+  If another thread or process writes to the source database while this 
+  function is sleeping, then SQLite detects this and usually restarts the 
+  backup process when sqlite3_backup_step() is next called. There is one 
+  exception to this rule: If the source database is not an in-memory database,
+  and the write is performed from within the same process as the backup
+  operation and uses the same database handle (pDb), then the destination
+  database (the one opened using connection pFile) is automatically updated
+  along with the source. The backup process may then be continued after the 
+  xSleep() call returns as if nothing had happened. 
+
+<p>
+  Whether or not the backup process is restarted as a result of writes to
+  the source database mid-backup, the user can be sure that when the backup
+  operation is completed the backup database contains a consistent and 
+  up-to-date snapshot of the original. However:
 
   <ul>
-    <li> Accounting for writes to the database by an external process or thread
-         using a different database connection are significantly more expensive
-         than accounting for writes made using pDb.
-    <li> If the database is being written using a database connection other
-         than pDb sufficiently often while the backupDb() function is
-         running, it may never finish.
+    <li> Writes to an in-memory source database, or writes to a file-based 
+         source database by an external process or thread using a 
+         database connection other than pDb are signficantly more expensive 
+         than writes made to a file-based source database using pDb (as the
+         entire backup operation must be restarted in the former two cases).
+
+    <li> If the backup process is restarted frequently enough it may never
+         run to completion and the backupDb() function may never return.
   </ul>
  
 <p><b>backup_remaining() and backup_pagecount()</b>

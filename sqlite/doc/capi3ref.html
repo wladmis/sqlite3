@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 <h2 class=pdf_section>C/C++ Interface For SQLite Version 3</h2>
@@ -212,6 +249,7 @@ are <a href="capi3ref.html">experimental</a> and constants marked with
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_GETMUTEX</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_GETPCACHE</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_HEAP</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
+<li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_LOG</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_LOOKASIDE</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_MALLOC</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_MEMSTATUS</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
@@ -334,22 +372,23 @@ are <a href="capi3ref.html">experimental</a> and constants marked with
 <li><a href="#SQLITE_ABORT">SQLITE_NOTFOUND</a></li>
 <li><a href="#SQLITE_BLOB">SQLITE_NULL</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_OK</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_CREATE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_DELETEONCLOSE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_EXCLUSIVE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_FULLMUTEX</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MAIN_DB</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MAIN_JOURNAL</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MASTER_JOURNAL</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_NOMUTEX</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_PRIVATECACHE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READONLY</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READWRITE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SHAREDCACHE</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SUBJOURNAL</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TEMP_DB</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TEMP_JOURNAL</a></li>
-<li><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TRANSIENT_DB</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_AUTOPROXY</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_CREATE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_DELETEONCLOSE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_EXCLUSIVE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_FULLMUTEX</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MAIN_DB</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MAIN_JOURNAL</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MASTER_JOURNAL</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_NOMUTEX</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_PRIVATECACHE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READONLY</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READWRITE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SHAREDCACHE</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SUBJOURNAL</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TEMP_DB</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TEMP_JOURNAL</a></li>
+<li><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TRANSIENT_DB</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_PERM</a></li>
 <li><a href="#SQLITE_ALTER_TABLE">SQLITE_PRAGMA</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_PROTOCOL</a></li>
@@ -467,15 +506,17 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_column_blob">sqlite3_column_type</a></li>
 <li><a href="#sqlite3_column_blob">sqlite3_column_value</a></li>
 <li><a href="#sqlite3_commit_hook">sqlite3_commit_hook</a></li>
+<li><a href="#sqlite3_compileoption_get">sqlite3_compileoption_get</a></li>
+<li><a href="#sqlite3_compileoption_get">sqlite3_compileoption_used</a></li>
 <li><a href="#sqlite3_complete">sqlite3_complete</a></li>
 <li><a href="#sqlite3_complete">sqlite3_complete16</a></li>
-<li><a href="#sqlite3_config">sqlite3_config</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
+<li><a href="#sqlite3_config">sqlite3_config</a></li>
 <li><a href="#sqlite3_context_db_handle">sqlite3_context_db_handle</a></li>
 <li><a href="#sqlite3_create_collation">sqlite3_create_collation</a></li>
 <li><a href="#sqlite3_create_collation">sqlite3_create_collation16</a></li>
-<li><a href="#sqlite3_create_collation">sqlite3_create_collation_v2</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_create_function">sqlite3_create_function</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_create_collation">sqlite3_create_collation_v2</a></li>
+<li><a href="#sqlite3_create_function">sqlite3_create_function</a></li>
 <li><a href="#sqlite3_create_function">sqlite3_create_function16</a></li>
 <li><a href="#sqlite3_create_module">sqlite3_create_module</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
@@ -509,6 +550,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_libversion">sqlite3_libversion_number</a></li>
 <li><a href="#sqlite3_limit">sqlite3_limit</a></li>
 <li><a href="#sqlite3_load_extension">sqlite3_load_extension</a></li>
+<li><a href="#sqlite3_log">sqlite3_log</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_free">sqlite3_malloc</a></li>
 <li><a href="#sqlite3_aggregate_count">sqlite3_memory_alarm</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(obs)</i></small></a></li>
 <li><a href="#sqlite3_memory_highwater">sqlite3_memory_highwater</a></li>
@@ -535,9 +577,9 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_profile">sqlite3_profile</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_progress_handler">sqlite3_progress_handler</a></li>
 <li><a href="#sqlite3_randomness">sqlite3_randomness</a></li>
-<li><a href="#sqlite3_free">sqlite3_realloc</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_release_memory">sqlite3_release_memory</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_free">sqlite3_realloc</a></li>
+<li><a href="#sqlite3_release_memory">sqlite3_release_memory</a></li>
 <li><a href="#sqlite3_reset">sqlite3_reset</a></li>
 <li><a href="#sqlite3_reset_auto_extension">sqlite3_reset_auto_extension</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_blob</a></li>
@@ -591,7 +633,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16be</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16le</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_type</a></li>
-<li><a href="#sqlite3_libversion">sqlite3_version</a></li>
+<li><a href="#sqlite3_libversion">sqlite3_version,</a></li>
 <li><a href="#sqlite3_vfs_find">sqlite3_vfs_find</a></li>
 <li><a href="#sqlite3_vfs_find">sqlite3_vfs_register</a></li>
 <li><a href="#sqlite3_vfs_find">sqlite3_vfs_unregister</a></li>
@@ -1049,26 +1091,26 @@ filename if it needs to remember the filename for some reason.
 If the zFilename parameter is xOpen is a NULL pointer then xOpen
 must invent its own temporary name for the file.  Whenever the
 xFilename parameter is NULL it will also be the case that the
-flags parameter will include <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_DELETEONCLOSE</a>.</p>
+flags parameter will include <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_DELETEONCLOSE</a>.</p>
 
 <p>The flags argument to xOpen() includes all bits set in
 the flags argument to <a href="#sqlite3_open">sqlite3_open_v2()</a>.  Or if <a href="#sqlite3_open">sqlite3_open()</a>
 or <a href="#sqlite3_open">sqlite3_open16()</a> is used, then flags includes at least
-<a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READWRITE</a> | <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_CREATE</a>.
+<a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READWRITE</a> | <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_CREATE</a>.
 If xOpen() opens a file read-only then it sets *pOutFlags to
-include <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be set.</p>
+include <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be set.</p>
 
 <p>SQLite will also add one of the following flags to the xOpen()
 call, depending on the object being opened:</p>
 
 <p><ul>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MAIN_DB</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MAIN_JOURNAL</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TEMP_DB</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TEMP_JOURNAL</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_TRANSIENT_DB</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SUBJOURNAL</a>
-<li>  <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_MASTER_JOURNAL</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MAIN_DB</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MAIN_JOURNAL</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TEMP_DB</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TEMP_JOURNAL</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_TRANSIENT_DB</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SUBJOURNAL</a>
+<li>  <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_MASTER_JOURNAL</a>
 </ul></p>
 
 <p>The file I/O implementation can use the object type flags to
@@ -1083,16 +1125,16 @@ order and set up its I/O subsystem accordingly.</p>
 <p>SQLite might also add one of the following flags to the xOpen method:</p>
 
 <p><ul>
-<li> <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_DELETEONCLOSE</a>
-<li> <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_EXCLUSIVE</a>
+<li> <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_DELETEONCLOSE</a>
+<li> <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_EXCLUSIVE</a>
 </ul></p>
 
-<p>The <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
-deleted when it is closed.  The <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_DELETEONCLOSE</a>
+<p>The <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
+deleted when it is closed.  The <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_DELETEONCLOSE</a>
 will be set for TEMP  databases, journals and for subjournals.</p>
 
-<p>The <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_EXCLUSIVE</a> flag is always used in conjunction
-with the <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_CREATE</a> flag, which are both directly
+<p>The <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_EXCLUSIVE</a> flag is always used in conjunction
+with the <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_CREATE</a> flag, which are both directly
 analogous to the O_EXCL and O_CREAT flags of the POSIX open()
 API.  The SQLITE_OPEN_EXCLUSIVE flag, when paired with the
 SQLITE_OPEN_CREATE, is used to indicate that file should always
@@ -1588,7 +1630,7 @@ Return the number of columns in the result set returned by the
 statement that does not return data (for example an <a href="lang_update.html">UPDATE</a>).
 </p><hr><a name="sqlite3_config"></a>
 <h2>Configuring The SQLite Library</h2><blockquote><pre>int sqlite3_config(int, ...);
-</pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
+</pre></blockquote><p>
 The sqlite3_config() interface is used to make global configuration
 changes to SQLite in order to tune SQLite to the specific needs of
 the application.  The default configuration is recommended for most
@@ -1951,6 +1993,26 @@ should free this memory by calling <a href="#sqlite3_free">sqlite3_free()</a>.</
 otherwise an error will be returned.</p>
 
 <p>See also the <a href="lang_corefunc.html#load_extension">load_extension() SQL function</a>.
+</p><hr><a name="sqlite3_log"></a>
+<h2>Error Logging Interface</h2><blockquote><pre>void sqlite3_log(int iErrCode, const char *zFormat, ...);
+</pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
+The <a href="#sqlite3_log">sqlite3_log()</a> interface writes a message into the error log
+established by the <a href="#SQLITE_CONFIG_GETMALLOC">SQLITE_CONFIG_LOG</a> option to <a href="#sqlite3_config">sqlite3_config()</a>.
+If logging is enabled, the zFormat string and subsequent arguments are
+passed through to <a href="#sqlite3_mprintf">sqlite3_vmprintf()</a> to generate the final output string.</p>
+
+<p>The sqlite3_log() interface is intended for use by extensions such as
+virtual tables, collating functions, and SQL functions.  While there is
+nothing to prevent an application from calling sqlite3_log(), doing so
+is considered bad form.</p>
+
+<p>The zFormat string must not be NULL.</p>
+
+<p>To avoid deadlocks and other threading problems, the sqlite3_log() routine
+will not use dynamically allocated memory.  The log message is stored in
+a fixed-length buffer on the stack.  If the log message is longer than
+a few hundred characters, it will be truncated to the length of the
+buffer.
 </p><hr><a name="sqlite3_next_stmt"></a>
 <h2>Find the next prepared statement</h2><blockquote><pre>sqlite3_stmt *sqlite3_next_stmt(sqlite3 *pDb, sqlite3_stmt *pStmt);
 </pre></blockquote><p>
@@ -2785,6 +2847,7 @@ SQLITE_TEXT.
 #define SQLITE_CONFIG_LOOKASIDE    13  /* int int */
 #define SQLITE_CONFIG_PCACHE       14  /* sqlite3_pcache_methods* */
 #define SQLITE_CONFIG_GETPCACHE    15  /* sqlite3_pcache_methods* */
+#define SQLITE_CONFIG_LOG          16  /* xFunc, void* */
 </pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
 These constants are the available integer configuration options that
 can be passed as the first argument to the <a href="#sqlite3_config">sqlite3_config()</a> interface.</p>
@@ -3168,12 +3231,13 @@ which is one of these integer constants.</p>
 <p>The set of static mutexes may change from one SQLite release to the
 next.  Applications that override the built-in mutex logic must be
 prepared to accommodate additional static mutexes.
-</p><hr><a name="SQLITE_OPEN_CREATE"></a>
+</p><hr><a name="SQLITE_OPEN_AUTOPROXY"></a>
 <h2>Flags For File Open Operations</h2><blockquote><pre>#define SQLITE_OPEN_READONLY         0x00000001  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_READWRITE        0x00000002  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_CREATE           0x00000004  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_DELETEONCLOSE    0x00000008  /* VFS only */
 #define SQLITE_OPEN_EXCLUSIVE        0x00000010  /* VFS only */
+#define SQLITE_OPEN_AUTOPROXY        0x00000020  /* VFS only */
 #define SQLITE_OPEN_MAIN_DB          0x00000100  /* VFS only */
 #define SQLITE_OPEN_TEMP_DB          0x00000200  /* VFS only */
 #define SQLITE_OPEN_TRANSIENT_DB     0x00000400  /* VFS only */
@@ -3191,9 +3255,9 @@ These bit values are intended for use in the
 in the 4th parameter to the xOpen method of the
 <a href="#sqlite3_vfs">sqlite3_vfs</a> object.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.6.22"
-#define SQLITE_VERSION_NUMBER 3006022
-#define SQLITE_SOURCE_ID      "2010-01-05 15:30:36 28d0d7710761114a44a1a3a425a6883c661f06e7"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.6.23"
+#define SQLITE_VERSION_NUMBER 3006023
+#define SQLITE_SOURCE_ID      "2010-03-09 19:31:43 4ae453ea7be69018d8c16eb8dabe05617397dc4d"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the
@@ -4112,6 +4176,29 @@ The rollback callback is not invoked if a transaction is
 rolled back because a commit callback returned non-zero.</p>
 
 <p>See also the <a href="#sqlite3_update_hook">sqlite3_update_hook()</a> interface.
+</p><hr><a name="sqlite3_compileoption_get"></a>
+<h2>Run-Time Library Compilation Options Diagnostics</h2><blockquote><pre>int sqlite3_compileoption_used(const char *zOptName);
+const char *sqlite3_compileoption_get(int N);
+#endif /* SQLITE_OMIT_COMPILEOPTION_DIAGS */
+</pre></blockquote><p>
+The sqlite3_compileoption_used() function returns 0 or 1
+indicating whether the specified option was defined at
+compile time.  The SQLITE_ prefix may be omitted from the
+option name passed to sqlite3_compileoption_used().</p>
+
+<p>The sqlite3_compileoption_get() function allows interating
+over the list of options that were defined at compile time by
+returning the N-th compile time option string.  If N is out of range,
+sqlite3_compileoption_get() returns a NULL pointer.  The SQLITE_
+prefix is omitted from any strings returned by
+sqlite3_compileoption_get().</p>
+
+<p>Support for the diagnostic functions sqlite3_compileoption_used()
+and sqlite3_compileoption_get() may be omitted by specifing the
+<a href="compile.html#omit_compileoption_diags">SQLITE_OMIT_COMPILEOPTION_DIAGS</a> option at compile time.</p>
+
+<p>See also: SQL functions <a href="lang_corefunc.html#sqlite_compileoption_used">sqlite_compileoption_used()</a> and
+<a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get()</a> and the <a href="pragma.html#pragma_compile_options">compile_options pragma</a>.
 </p><hr><a name="sqlite3_complete"></a>
 <h2>Determine If An SQL Statement Is Complete</h2><blockquote><pre>int sqlite3_complete(const char *sql);
 int sqlite3_complete16(const void *sql);
@@ -4570,9 +4657,9 @@ to the sqlite3_version[] string constant.  The sqlite3_libversion()
 function is provided for use in DLLs since DLL users usually do not have
 direct access to string constants within the DLL.  The
 sqlite3_libversion_number() function returns an integer equal to
-<a href="#SQLITE_SOURCE_ID">SQLITE_VERSION_NUMBER</a>.  The sqlite3_sourceid() function a pointer
-to a string constant whose value is the same as the <a href="#SQLITE_SOURCE_ID">SQLITE_SOURCE_ID</a>
-C preprocessor macro.</p>
+<a href="#SQLITE_SOURCE_ID">SQLITE_VERSION_NUMBER</a>.  The sqlite3_sourceid() function returns
+a pointer to a string constant whose value is the same as the
+<a href="#SQLITE_SOURCE_ID">SQLITE_SOURCE_ID</a> C preprocessor macro.</p>
 
 <p>See also: <a href="lang_corefunc.html#sqlite_version">sqlite_version()</a> and <a href="lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a>.
 </p><hr><a name="sqlite3_memory_highwater"></a>
@@ -4881,20 +4968,20 @@ except that it accepts two additional parameters for additional control
 over the new database connection.  The flags parameter to
 sqlite3_open_v2() can take one of
 the following three values, optionally combined with the
-<a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_NOMUTEX</a>, <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_FULLMUTEX</a>, <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SHAREDCACHE</a>,
-and/or <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_PRIVATECACHE</a> flags:</p>
+<a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_NOMUTEX</a>, <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_FULLMUTEX</a>, <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SHAREDCACHE</a>,
+and/or <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_PRIVATECACHE</a> flags:</p>
 
 <p><dl>
-<dt><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READONLY</a></dt>
+<dt><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READONLY</a></dt>
 <dd>The database is opened in read-only mode.  If the database does not
 already exist, an error is returned.</dd></p>
 
-<p><dt><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READWRITE</a></dt>
+<p><dt><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READWRITE</a></dt>
 <dd>The database is opened for reading and writing if possible, or reading
 only if the file is write protected by the operating system.  In either
 case the database must already exist, otherwise an error is returned.</dd></p>
 
-<p><dt><a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_READWRITE</a> | <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_CREATE</a></dt>
+<p><dt><a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_READWRITE</a> | <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_CREATE</a></dt>
 <dd>The database is opened for reading and writing, and is creates it if
 it does not already exist. This is the behavior that is always used for
 sqlite3_open() and sqlite3_open16().</dd>
@@ -4902,20 +4989,20 @@ sqlite3_open() and sqlite3_open16().</dd>
 
 <p>If the 3rd parameter to sqlite3_open_v2() is not one of the
 combinations shown above or one of the combinations shown above combined
-with the <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_NOMUTEX</a>, <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_FULLMUTEX</a>,
-<a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SHAREDCACHE</a> and/or <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SHAREDCACHE</a> flags,
+with the <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_NOMUTEX</a>, <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_FULLMUTEX</a>,
+<a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SHAREDCACHE</a> and/or <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SHAREDCACHE</a> flags,
 then the behavior is undefined.</p>
 
-<p>If the <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_NOMUTEX</a> flag is set, then the database connection
+<p>If the <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_NOMUTEX</a> flag is set, then the database connection
 opens in the multi-thread <a href="threadsafe.html">threading mode</a> as long as the single-thread
 mode has not been set at compile-time or start-time.  If the
-<a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_FULLMUTEX</a> flag is set then the database connection opens
+<a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_FULLMUTEX</a> flag is set then the database connection opens
 in the serialized <a href="threadsafe.html">threading mode</a> unless single-thread was
 previously selected at compile-time or start-time.
-The <a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_SHAREDCACHE</a> flag causes the database connection to be
+The <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_SHAREDCACHE</a> flag causes the database connection to be
 eligible to use <a href="sharedcache.html">shared cache mode</a>, regardless of whether or not shared
 cache is enabled using <a href="#sqlite3_enable_shared_cache">sqlite3_enable_shared_cache()</a>.  The
-<a href="#SQLITE_OPEN_CREATE">SQLITE_OPEN_PRIVATECACHE</a> flag causes the database connection to not
+<a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_PRIVATECACHE</a> flag causes the database connection to not
 participate in <a href="sharedcache.html">shared cache mode</a> even if it is enabled.</p>
 
 <p>If the filename is ":memory:", then a private, temporary in-memory database

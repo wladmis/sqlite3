@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
     <a href="sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
     <a href="news.html">News</a>
-    <!-- <a href="dev.html">Developers</a> -->
     <a href="support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 
 
 <h1 align="center">SQLite's Use Of Temporary Disk Files</h1>
@@ -126,6 +163,8 @@ the current temporary file uses might be discontinued
 in future releases of SQLite.
 </p>
 
+<a name="seventypes"></a>
+
 <h2>2.0 Seven Kinds Of Temporary Files</h2>
 
 <p>
@@ -146,6 +185,8 @@ SQLite currently uses seven distinct types of temporary files:
 Additional information about each of these temporary file types
 is in the sequel.
 </p>
+
+<a name="rollbackjrnl"></a>
 
 <h3>2.1 Rollback Journals</h3>
 
@@ -226,6 +267,7 @@ mode, no recovery is possible and the database file will likely
 go corrupt.
 </p>
 
+<a name="masterjrnl"></a>
 
 <h3>2.2 Master Journal Files</h3>
 
@@ -261,6 +303,8 @@ the changes to one of the databases might complete while the changes
 to another database might roll back.  The master journal causes all
 changes in all databases to either rollback or commit together.
 </p>
+
+<a name="stmtjrnl"></a>
 
 <h3>2.3 Statement Journal Files</h3>
 
@@ -308,6 +352,8 @@ by the UPDATE or INSERT statement that caused the statement journal
 to be created.
 </p>
 
+<a name="tempdb"></a>
+
 <h3>2.4 TEMP Databases</h3>
 
 <p>Tables created using the "CREATE TEMP TABLE" syntax are only
@@ -341,6 +387,8 @@ The temporary files associated with the TEMP database and its
 rollback journal are only created if the application makes use
 of the "CREATE TEMP TABLE" statement.
 </p>
+
+<a name="views"></a>
 
 <h3>2.5 Materializations Of Views And Subqueries</h3>
 
@@ -447,6 +495,8 @@ The rules for when a query and an cannot be flattened are
 very complex and are beyond the scope of this document.
 </p>
 
+<a name="transidx"></a>
+
 <h3>2.6 Transient Indices</h3>
 
 <p>
@@ -539,6 +589,8 @@ Note that the UNION ALL operator for compound queries does not
 use transient indices by itself (though of course the right
 and left subqueries of the UNION ALL might use transient indices
 depending on how they are composed.)
+
+<a name="vacuumdb"></a>
 
 <h3>2.7 Transient Database Used By <a href="lang_vacuum.html">VACUUM</a></h3>
 
@@ -645,6 +697,8 @@ journal are always written to disk regardless of the settings of
 the <a href="compile.html#temp_store">SQLITE_TEMP_STORE</a> compile-time parameter and the
 <a href="pragma.html#pragma_temp_store">temp_store pragma</a>.
 </p>
+
+<a name="otheropt"></a>
 
 <h2>4.0 Other Temporary File Optimizations</h2>
 

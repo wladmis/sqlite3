@@ -22,11 +22,10 @@ a:visited { color: #734559 }
 }
 
 .toolbar {
-  font-variant: small-caps;
   text-align: center;
   line-height: 1.6em;
   margin: 0;
-  padding:1px 8px;
+  padding: 0px 8px;
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
@@ -44,6 +43,7 @@ a:visited { color: #734559 }
 .nw  { background: url(../images/nw.png) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
+.fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
 .fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
 .fancy h2 { margin-left: 10px }
@@ -76,6 +76,8 @@ a:visited { color: #734559 }
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
+  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+  <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
     <a href="../sitemap.html">Sitemap</a>
@@ -83,11 +85,46 @@ a:visited { color: #734559 }
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
     <a href="../news.html">News</a>
-    <!-- <a href="../dev.html">Developers</a> -->
     <a href="../support.html">Support</a>
-  </div></div></div></div></div>
+  </div>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text value=""
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
 </td></tr></table>
+<div class=startsearch></div>
   
+<script>
+  gMsg = "Search SQLite Docs..."
+  function entersearch() {
+    var q = document.getElementById("q");
+    if( q.value == gMsg ) { q.value = "" }
+    q.style.color = "black"
+    q.style.fontStyle = "normal"
+  }
+  function leavesearch() {
+    var q = document.getElementById("q");
+    if( q.value == "" ) { 
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+    }
+  }
+  function initsearch() {
+    var q = document.getElementById("q");
+    q.value = ""
+      q.value = gMsg
+      q.style.color = "#80a796"
+      q.style.fontStyle = "italic"
+  }
+  window.onload = initsearch
+</script>
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>OS Interface Object</h2><blockquote><pre>typedef struct sqlite3_vfs sqlite3_vfs;
 struct sqlite3_vfs {
   int iVersion;            /* Structure version number */
@@ -154,26 +191,26 @@ filename if it needs to remember the filename for some reason.
 If the zFilename parameter is xOpen is a NULL pointer then xOpen
 must invent its own temporary name for the file.  Whenever the
 xFilename parameter is NULL it will also be the case that the
-flags parameter will include <a href="../c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a>.</p>
+flags parameter will include <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>.</p>
 
 <p>The flags argument to xOpen() includes all bits set in
 the flags argument to <a href="../c3ref/open.html">sqlite3_open_v2()</a>.  Or if <a href="../c3ref/open.html">sqlite3_open()</a>
 or <a href="../c3ref/open.html">sqlite3_open16()</a> is used, then flags includes at least
-<a href="../c3ref/c_open_create.html">SQLITE_OPEN_READWRITE</a> | <a href="../c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a>.
+<a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_READWRITE</a> | <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_CREATE</a>.
 If xOpen() opens a file read-only then it sets *pOutFlags to
-include <a href="../c3ref/c_open_create.html">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be set.</p>
+include <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_READONLY</a>.  Other bits in *pOutFlags may be set.</p>
 
 <p>SQLite will also add one of the following flags to the xOpen()
 call, depending on the object being opened:</p>
 
 <p><ul>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_MAIN_DB</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_MAIN_JOURNAL</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_TEMP_DB</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_TEMP_JOURNAL</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_TRANSIENT_DB</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_SUBJOURNAL</a>
-<li>  <a href="../c3ref/c_open_create.html">SQLITE_OPEN_MASTER_JOURNAL</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_DB</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_MAIN_JOURNAL</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_DB</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_TEMP_JOURNAL</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_SUBJOURNAL</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_MASTER_JOURNAL</a>
 </ul></p>
 
 <p>The file I/O implementation can use the object type flags to
@@ -188,16 +225,16 @@ order and set up its I/O subsystem accordingly.</p>
 <p>SQLite might also add one of the following flags to the xOpen method:</p>
 
 <p><ul>
-<li> <a href="../c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a>
-<li> <a href="../c3ref/c_open_create.html">SQLITE_OPEN_EXCLUSIVE</a>
+<li> <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>
+<li> <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a>
 </ul></p>
 
-<p>The <a href="../c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
-deleted when it is closed.  The <a href="../c3ref/c_open_create.html">SQLITE_OPEN_DELETEONCLOSE</a>
+<p>The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
+deleted when it is closed.  The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>
 will be set for TEMP  databases, journals and for subjournals.</p>
 
-<p>The <a href="../c3ref/c_open_create.html">SQLITE_OPEN_EXCLUSIVE</a> flag is always used in conjunction
-with the <a href="../c3ref/c_open_create.html">SQLITE_OPEN_CREATE</a> flag, which are both directly
+<p>The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a> flag is always used in conjunction
+with the <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_CREATE</a> flag, which are both directly
 analogous to the O_EXCL and O_CREAT flags of the POSIX open()
 API.  The SQLITE_OPEN_EXCLUSIVE flag, when paired with the
 SQLITE_OPEN_CREATE, is used to indicate that file should always
