@@ -10,7 +10,7 @@
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 --- sqlite/libsqlite3.map.alt-ver	2009-12-08 16:21:20 +0300
 +++ sqlite/libsqlite3.map	2009-12-08 16:24:10 +0300
-@@ -0,0 +1,212 @@
+@@ -0,0 +1,228 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -209,6 +209,22 @@
 +	sqlite3Fts3Matchinfo;
 +	sqlite3Fts3SegReaderPending;
 +	sqlite3Fts3Snippet2;
++};
++
++SQLITE3_3.6.23.1 {
++    global:
++	sqlite3BtreeSecureDelete;
++	sqlite3CantopenError;
++	sqlite3CorruptError;
++	sqlite3Fts3ExprNearTrim;
++	sqlite3Fts3MatchinfoDocsizeGlobal;
++	sqlite3Fts3MatchinfoDocsizeLocal;
++	sqlite3MisuseError;
++	sqlite3PagerDontWrite;
++	sqlite3VdbeRunOnlyOnce;
++	sqlite3_compileoption_get;
++	sqlite3_compileoption_used;
++	sqlite3_log;
 +};
 +
 +SQLITE3_COLUMN_METADATA {
