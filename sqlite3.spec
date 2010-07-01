@@ -1,6 +1,6 @@
 Name: sqlite3
 Version: 3.6.23.1
-Release: alt2
+Release: alt3
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -26,6 +26,7 @@ access without running a separate RDBMS process.
 %package -n lib%name
 Summary: An Embeddable SQL Database Engine (shared library)
 Group: System/Libraries
+Provides: sqlite(SECURE_DELETE) sqlite(COLUMN_METADATA) sqlite(FTS3) sqlite(UNLOCK_NOTIFY)
 Provides: %name-fts3 = %version-%release
 Obsoletes: %name-fts3 < %version-%release
 
@@ -157,6 +158,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Thu Jul 01 2010 Valery Inozemtsev <shrek@altlinux.ru> 3.6.23.1-alt3
+- added provides sqlite(SECURE_DELETE), sqlite(COLUMN_METADATA), sqlite(FTS3), sqlite(UNLOCK_NOTIFY)
+
 * Wed Jun 23 2010 Valery Inozemtsev <shrek@altlinux.ru> 3.6.23.1-alt2
 - enabled unlock notify
 
