@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.6.23.1
-Release: alt3
+Version: 3.7.0.1
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -14,6 +14,7 @@ Patch0: sqlite3-alt-dl.patch
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
 Patch3: sqlite3-alt-version-script.patch
+Patch4: sqlite3-alt-makefile-fix.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -97,6 +98,7 @@ embedded controllers.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
@@ -158,6 +160,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Thu Aug 12 2010 Valery Inozemtsev <shrek@altlinux.ru> 3.7.0.1-alt1
+- 3.7.0.1
+
 * Thu Jul 01 2010 Valery Inozemtsev <shrek@altlinux.ru> 3.6.23.1-alt3
 - added provides sqlite(SECURE_DELETE), sqlite(COLUMN_METADATA), sqlite(FTS3), sqlite(UNLOCK_NOTIFY)
 

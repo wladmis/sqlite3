@@ -10,7 +10,7 @@
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 --- sqlite/libsqlite3.map.alt-ver	2009-12-08 16:21:20 +0300
 +++ sqlite/libsqlite3.map	2009-12-08 16:24:10 +0300
-@@ -0,0 +1,236 @@
+@@ -0,0 +1,281 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -233,6 +233,51 @@
 +	sqlite3ConnectionClosed;
 +	sqlite3ConnectionUnlocked;
 +	sqlite3_unlock_notify;
++};
++
++LIBSQLITE3_3.7.0.1 {
++    global:
++	sqlite3BtreeLastPage;
++	sqlite3BtreeSetVersion;
++	sqlite3Checkpoint;
++	sqlite3ExprCodeGetColumnOfTable;
++	sqlite3ExprListCompare;
++	sqlite3IntTokens;
++	sqlite3JournalModename;
++	sqlite3NoopMutex;
++	sqlite3OsCurrentTimeInt64;
++	sqlite3OsShmBarrier;
++	sqlite3OsShmLock;
++	sqlite3OsShmMap;
++	sqlite3OsShmUnmap;
++	sqlite3PagerCheckpoint;
++	sqlite3PagerCloseWal;
++	sqlite3PagerGetJournalMode;
++	sqlite3PagerMemUsed;
++	sqlite3PagerOkToChangeJournalMode;
++	sqlite3PagerOpenWal;
++	sqlite3PagerSetJournalMode;
++	sqlite3PagerWalCallback;
++	sqlite3PagerWalSupported;
++	sqlite3WalBeginReadTransaction;
++	sqlite3WalBeginWriteTransaction;
++	sqlite3WalCallback;
++	sqlite3WalCheckpoint;
++	sqlite3WalClose;
++	sqlite3WalDbsize;
++	sqlite3WalDefaultHook;
++	sqlite3WalEndReadTransaction;
++	sqlite3WalEndWriteTransaction;
++	sqlite3WalExclusiveMode;
++	sqlite3WalFrames;
++	sqlite3WalOpen;
++	sqlite3WalRead;
++	sqlite3WalSavepoint;
++	sqlite3WalSavepointUndo;
++	sqlite3WalUndo;
++	sqlite3_wal_autocheckpoint;
++	sqlite3_wal_checkpoint;
++	sqlite3_wal_hook;
 +};
 +
 +SQLITE3_COLUMN_METADATA {
