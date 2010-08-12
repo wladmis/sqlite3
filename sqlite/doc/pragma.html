@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,12 +120,13 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
 </script>
 
+<h1 align="center">PRAGMA Statements</h1>
 
 
 
@@ -154,23 +155,9 @@ different in the following important respects:
     to be compatible with any other SQL database engine.
 </ul>
 
-<p>The available pragmas fall into four basic categories:</p>
-<ul>
-<li>Pragmas used to <a href="#modify">modify the operation</a> of the 
-    SQLite library in some manner, or to query for the current mode of 
-    operation.
-<li>Pragmas used to <a href="#schema">query the schema</a> of the current 
-    database.
-<li>Pragmas used to <a href="#version">query or modify the two 
-    version counters stored in the database:</a>
-    the schema-version and the user-version.
-<li>Pragmas used to <a href="#debug">debug the library</a> and verify that
-    database files are not corrupted.
-</ul>
-
 
 <hr /><a name="syntax"></a>
-<h1>PRAGMA command syntax</h1>
+<h2>PRAGMA command syntax</h2>
 <h4><a href="syntaxdiagrams.html#pragma-stmt">pragma-stmt:</a></h4><blockquote> <img alt="syntax diagram pragma-stmt" src="images/syntax/pragma-stmt.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#pragma-value">pragma-value:</a></h4><blockquote> <img alt="syntax diagram pragma-value" src="images/syntax/pragma-value.gif"></img> </blockquote>
 
@@ -201,15 +188,63 @@ database name is omitted, "main" is assumed.  In some pragmas, the database
 name is meaningless and is simply ignored.</p>
 
 
-<hr /><a name="modify"></a>
-<h1>Pragmas to modify library operation</h1>
 
+<hr /><a name="toc"></a>
+<h2>List Of PRAGMAs</h2>
 
+<table border=0 width="100%" cellpadding=10>
+<tr><td valign="top" align="left"><ul>
+<li><a href="#pragma_auto_vacuum">auto_vacuum</a>
+<li><a href="#pragma_automatic_index">automatic_index</a>
+<li><a href="#pragma_cache_size">cache_size</a>
+<li><a href="#pragma_case_sensitive_like">case_sensitive_like</a>
+<li><a href="#pragma_collation_list">collation_list</a>
+<li><a href="#pragma_compile_options">compile_options</a>
+<li><a href="#pragma_count_changes">count_changes</a>
+<li><a href="#pragma_database_list">database_list</a>
+<li><a href="#pragma_default_cache_size">default_cache_size</a>
+<li><a href="#pragma_empty_result_callbacks">empty_result_callbacks</a>
+<li><a href="#pragma_encoding">encoding</a>
+<li><a href="#pragma_foreign_key_list">foreign_key_list</a>
+<li><a href="#pragma_foreign_keys">foreign_keys</a>
+<li><a href="#pragma_freelist_count">freelist_count</a>
+<li><a href="#pragma_full_column_names">full_column_names</a>
+</ul></td><td valign="top" align="left"><ul>
+<li><a href="#pragma_fullfsync">fullfsync</a>
+<li><a href="#pragma_incremental_vacuum">incremental_vacuum</a>
+<li><a href="#pragma_index_info">index_info</a>
+<li><a href="#pragma_index_list">index_list</a>
+<li><a href="#pragma_integrity_check">integrity_check</a>
+<li><a href="#pragma_journal_mode">journal_mode</a>
+<li><a href="#pragma_journal_size_limit">journal_size_limit</a>
+<li><a href="#pragma_legacy_file_format">legacy_file_format</a>
+<li><a href="#pragma_locking_mode">locking_mode</a>
+<li><a href="#pragma_max_page_count">max_page_count</a>
+<li><a href="#pragma_page_count">page_count</a>
+<li><a href="#pragma_page_size">page_size</a>
+<li><a href="#pragma_parser_trace">parser_trace</a>
+<li><a href="#pragma_quick_check">quick_check</a>
+<li><a href="#pragma_read_uncommitted">read_uncommitted</a>
+</ul></td><td valign="top" align="left"><ul>
+<li><a href="#pragma_recursive_triggers">recursive_triggers</a>
+<li><a href="#pragma_reverse_unordered_selects">reverse_unordered_selects</a>
+<li><a href="#pragma_schema_version">schema_version</a>
+<li><a href="#pragma_secure_delete">secure_delete</a>
+<li><a href="#pragma_short_column_names">short_column_names</a>
+<li><a href="#pragma_synchronous">synchronous</a>
+<li><a href="#pragma_table_info">table_info</a>
+<li><a href="#pragma_temp_store">temp_store</a>
+<li><a href="#pragma_temp_store_directory">temp_store_directory</a>
+<li><a href="#pragma_user_version">user_version</a>
+<li><a href="#pragma_vdbe_listing">vdbe_listing</a>
+<li><a href="#pragma_vdbe_trace">vdbe_trace</a>
+<li><a href="#pragma_wal_autocheckpoint">wal_autocheckpoint</a>
+<li><a href="#pragma_wal_checkpoint">wal_checkpoint</a>
 
-<ul>
+</ul></td></tr></table>
 <a name="pragma_auto_vacuum"></a>
-
-<li><p><b>PRAGMA auto_vacuum;<br>
+<hr>
+    <p><b>PRAGMA auto_vacuum;<br>
           PRAGMA auto_vacuum = </b>
            <i>0 | NONE | 1 | FULL | 2 | INCREMENTAL</i><b>;</b></p>
 
@@ -262,11 +297,20 @@ name is meaningless and is simply ignored.</p>
 
     <p>When the auto_vacuum pragma is invoked with no arguments, it
     returns the current auto_vacuum mode.</p>
-    </li>
+<a name="pragma_automatic_index"></a>
+<hr>
+    <p><b>PRAGMA automatic_index;
+     <br>PRAGMA automatic_index = </b><i>boolean</i><b>;</b></p>
 
+    <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
+    <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default.
+     This pragma only influences the query plan as statements are
+     prepared or reprepared.  Existing prepared statements must be
+     reprepared for a change in the automatic_index setting to affect
+     their operation.
 <a name="pragma_cache_size"></a>
-
-<li><p><b>PRAGMA cache_size;
+<hr>
+    <p><b>PRAGMA cache_size;
        <br>PRAGMA cache_size = </b><i>Number-of-pages</i><b>;</b></p>
     <p>Query or change the suggested maximum number of database disk pages
     that SQLite will hold in memory at once per open database file.  Whether
@@ -284,11 +328,10 @@ name is meaningless and is simply ignored.</p>
     change only endures for the current session.  The cache size reverts
     to the default value when the database is closed and reopened.  Use
     the <a href="pragma.html#pragma_default_cache_size">default_cache_size</a>
-    pragma to check the cache size permanently.</p></li>
-
+    pragma to check the cache size permanently.</p>
 <a name="pragma_case_sensitive_like"></a>
-
-<li><p><b>PRAGMA case_sensitive_like = </b><i>boolean</i><b>;</b></p>
+<hr>
+    <p><b>PRAGMA case_sensitive_like = </b><i>boolean</i><b>;</b></p>
     <p>The default behavior of the <a href="lang_expr.html#like">LIKE</a> operator is to ignore case
     for ASCII characters. Hence, by default <b>'a' LIKE 'A'</b> is
     true.  The case_sensitive_like pragma installs a new application-defined
@@ -298,11 +341,22 @@ name is meaningless and is simply ignored.</p>
 
     <p>This pragma only works if the <a href="lang_corefunc.html#like">built-in like() SQL function</a>
     has not been overloaded using <a href="c3ref/create_function.html">sqlite3_create_function()</a>.</p>
-    </li>
-
+<a name="pragma_collation_list"></a>
+<hr>
+    <p><b>PRAGMA collation_list;</b></p>
+    <p>Return a list of the collating sequences defined for the current
+    database connection.</p>
+<a name="pragma_compile_options"></a>
+<hr>
+    <p><b>PRAGMA compile_options;</b></p>
+    <p>This pragma returns the names of <a href="compile.html">compile-time options</a> used when
+    building SQLite, one option per row.  The "SQLITE_" prefix is omitted
+    from the returned option names.  See also the
+    <a href="c3ref/compileoption_get.html">sqlite3_compileoption_get()</a> C/C++ interface and the
+    <a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get()</a> SQL functions.</p>
 <a name="pragma_count_changes"></a>
-
-<li><p><b>PRAGMA count_changes;
+<hr>
+    <p><b>PRAGMA count_changes;
        <br>PRAGMA count_changes = </b>boolean</i><b>;</b></p>
     <p>Query or change the count-changes flag. Normally, when the
     count-changes flag is not set, <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a> and <a href="lang_delete.html">DELETE</a> statements
@@ -319,22 +373,28 @@ name is meaningless and is simply ignored.</p>
     DELETE is run against a view using an <a href="lang_createtrigger.html#instead_of_trigger">INSTEAD OF trigger</a>,
     the count_changes pragma reports the number of rows in the view
     that fired the trigger, whereas <a href="c3ref/changes.html">sqlite3_changes()</a> and
-    <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> do not.</p>
-
+    <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> do not.
+<a name="pragma_database_list"></a>
+<hr>
+    <p><b>PRAGMA database_list;</b></p>
+    <p>This pragma works like a query to return one row for each database
+    attached to the current database connection.
+    Columns of the result set include the index and 
+    the name the database was attached with.  The first row will be for 
+    the main database.  The second row will be for the database used to 
+    store temporary tables.</p>
 <a name="pragma_default_cache_size"></a>
-
-<li><p><b>PRAGMA default_cache_size;
+<hr>
+    <b>PRAGMA default_cache_size;
        <br>PRAGMA default_cache_size = </b><i>Number-of-pages</i><b>;</b></p>
     <p>This pragma queries or sets the suggested maximum number of pages
     of disk cache that will be allocated per open database file.
     The difference between this pragma and <a href="pragma.html#pragma_cache_size">cache_size</a> is that the
     value set here persists across database connections.
-    </p></li>
-
-
+    </p>
 <a name="pragma_empty_result_callbacks"></a>
-
-<li><p><b>PRAGMA empty_result_callbacks;
+<hr>
+    <p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>boolean</i><b>;</b></p>
 
     <p>Query or change the empty-result-callbacks flag.</p>
@@ -351,12 +411,9 @@ name is meaningless and is simply ignored.</p>
     <p>This pragma is legacy.  It was created long ago in the early
     days of SQLite before the prepared statement interface was available.
     Do not use this pragma.  It is likely to go away in a future release</p>
-   
-    
-
 <a name="pragma_encoding"></a>
-
-<li><p><b>PRAGMA encoding;
+<hr>
+   <p><b>PRAGMA encoding;
        <br>PRAGMA encoding = "UTF-8";
        <br>PRAGMA encoding = "UTF-16";
        <br>PRAGMA encoding = "UTF-16le";
@@ -380,11 +437,14 @@ name is meaningless and is simply ignored.</p>
 
     <p>Databases created by the <a href="lang_attach.html">ATTACH</a> command always use the same encoding
     as the main database.</p>
-</li>
-
+<a name="pragma_foreign_key_list"></a>
+<hr>
+    <p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
+    <p>This pragma returns one rwo for each foreign key that references
+    a column in the argument table.
 <a name="pragma_foreign_keys"></a>
-
-<li><p><b>PRAGMA foreign_keys;
+<hr>
+     <p><b>PRAGMA foreign_keys;
        <br>PRAGMA foreign_keys = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear the enforcement of <a href="foreignkeys.html">foreign key constraints</a>.
 
@@ -404,12 +464,16 @@ name is meaningless and is simply ignored.</p>
        release of SQLite.  To minimize future problems, applications should
        set the foreign key enforcement flag as required by the application
        and not depend on the default setting.
-</li>
-
-
+<a name="pragma_freelist_count"></a>
+<hr>
+    <p><b>PRAGMA freelist_count;</b></p>
+    <p>Return the number of unused pages in the database file. Running
+    a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
+    command with a large value of N will shrink the database file by this
+    number of pages when incremental vacuum is enabled. </p>
 <a name="pragma_full_column_names"></a>
-
-<li><p><b>PRAGMA full_column_names;
+<hr>
+    <p><b>PRAGMA full_column_names;
        <br>PRAGMA full_column_names = </b><i>boolean</i><b>;</b></p>
     <p>Query or change the full_column_names flag. This flag together 
     with the <a href="pragma.html#pragma_short_column_names">short_column_names</a> flag determine
@@ -430,22 +494,18 @@ name is meaningless and is simply ignored.</p>
     <li><p>The name of the result column is a combination of the source table
         and source column name:  TABLE.COLUMN</p></li>
     </ol>
-</li>
-
 <a name="pragma_fullfsync"></a>
-
-<li><p><b>PRAGMA fullfsync
+<hr>
+    <p><b>PRAGMA fullfsync
        <br>PRAGMA fullfsync = </b><i>boolean</i><b>;</b></p>
     <p>Query or change the fullfsync flag. This flag affects
     determines whether or not the F_FULLFSYNC syncing method is used
     on systems that support it.  The default value of the fullfsync flag
     is off.  Only Mac OS X supports F_FULLFSYNC.
     </p>
-</li>
-
 <a name="pragma_incremental_vacuum"></a>
-
-<li><p><b>PRAGMA incremental_vacuum</b><i>(N)</i><b>;</b></p>
+<hr>
+    <p><b>PRAGMA incremental_vacuum</b><i>(N)</i><b>;</b></p>
     <p>The incremental_vacuum pragma causes up to <i>N</i> pages to
     be removed from the freelist.  The database file is truncated by
     the same amount.  The incremental_vacuum pragma has no effect if
@@ -464,35 +524,54 @@ name is meaningless and is simply ignored.</p>
     SQL command, or perhaps some variation on the <a href="lang_vacuum.html">VACUUM</a> command.
     Programmers are cautioned to not become enamored with the
     current syntax or functionality as it is likely to change.</p>
-</li>
-
+<a name="pragma_index_info"></a>
+<hr>
+    <p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
+    <p>This program returns one row row each column in the named index.</p>
+<a name="pragma_index_list"></a>
+<hr>
+    <p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
+    <p>This pragma returns one row for each index associated with the
+    given table.   Columns of the result set include the
+    index name and a flag to indicate whether or not the index is UNIQUE.
+    </p>
+<a name="pragma_integrity_check"></a>
+<hr>
+    <p><b>PRAGMA integrity_check;
+    <br>PRAGMA integrity_check(</b><i>integer</i><b>)</b></p>
+    <p>This pragma does an integrity check of the entire database.  It
+    looks for out-of-order records, missing pages, malformed records, and
+    corrupt indices.
+    If any problems are found, then strings are returned (as multiple
+    rows with a single column per row) which describe
+    the problems.  At most <i>integer</i> errors will be reported
+    before the analysis quits.  The default value for <i>integer</i>
+    is 100.  If no errors are found, a single row with the value "ok" is
+    returned.</p>
 <a name="pragma_journal_mode"></a>
-
-<li><p><b>PRAGMA journal_mode;
+<hr>
+    <p><b>PRAGMA journal_mode;
        <br>PRAGMA </b><i>database</i><b>.journal_mode;
        <br>PRAGMA journal_mode
-              = <i>DELETE | TRUNCATE | PERSIST | MEMORY | OFF</i>
+              = <i>DELETE | TRUNCATE | PERSIST | MEMORY | WAL | OFF</i>
        <br>PRAGMA </b><i>database</i><b>.journal_mode
-              = <i>DELETE | TRUNCATE | PERSIST | MEMORY | OFF</i></b></p>
+              = <i>DELETE | TRUNCATE | PERSIST | MEMORY | WAL | OFF</i></b></p>
 
     <p>This pragma queries or sets the journal mode for databases
     associated with the current <a href="c3ref/sqlite3.html">database connection</a>.</p>
 
     <p>The first two forms of this pragma query the current journaling
-    mode.  In the first form, the default journal_mode is returned.
-    The default journaling mode is the mode used by databases added
-    to the connection by subsequent <a href="lang_attach.html">ATTACH</a> statements.  The second
-    form returns the current journaling mode for a specific database.</p>
+    mode for <i>database</i>.  When <i>database</i> is omitted, the
+    "main" database is queried.</p>
 
     <p>The last two forms change the journaling mode.  The 4th form
-    changes the journaling mode for a specific database connection.
+    changes the journaling mode for a specific database connection named.
     Use "main" for the main database (the database that was opened by
     the original <a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/open.html">sqlite3_open16()</a>, or
     <a href="c3ref/open.html">sqlite3_open_v2()</a> interface call) and use "temp" for database
     that holds TEMP tables.  The 3rd form changes the journaling mode
-    on all databases and it changes the default journaling mode that
-    will be used for new databases added by subsequent <a href="lang_attach.html">ATTACH</a>
-    commands.  The new journal mode is returned.  If the journal mode
+    on all databases attached to the connection.
+    The new journal mode is returned.  If the journal mode
     could not be changed, the original journal mode is returned.</p>
 
     <p>The DELETE journaling mode is the normal behavior.  In the DELETE
@@ -521,6 +600,13 @@ name is meaningless and is simply ignored.</p>
     the middle of a transaction when the MEMORY journaling mode is set,
     then the database file will very likely go corrupt.</p>
 
+    <p>The WAL journaling mode uses a <a href="wal.html">write-ahead log</a> instead of a
+    rollback journal to implement transactions.  The WAL journaling mode
+    is persistent; after being set it stays in effect
+    across multiple database connections and after closing and
+    reopening the database.  A database in WAL journaling mode
+    can only be accessed by SQLite version 3.7.0 or later.</p>
+
     <p>The OFF journaling mode disables the rollback journal completely.
     No rollback journal is ever created and hence there is never a rollback
     journal to delete.  The OFF journaling mode disables the atomic
@@ -536,11 +622,9 @@ name is meaningless and is simply ignored.</p>
     An attempt to change the journal_mode of an <a href="inmemorydb.html">in-memory database</a> to
     any setting other than MEMORY or OFF is ignored.  Note also that
     the journal_mode cannot be changed while a transaction is active.</p>
-</li>
-
 <a name="pragma_journal_size_limit"></a>
-
-<li><p><b>
+<hr>
+    <p><b>
     PRAGMA journal_size_limit<br>
     PRAGMA journal_size_limit = </b><i>N</i> <b>;</b>
 
@@ -572,12 +656,9 @@ name is meaningless and is simply ignored.</p>
   There is no way to operate on all attached databases using a single
   PRAGMA statement, nor is there a way to set the limit to use for databases
   that will be attached in the future.
-</li>
-
-
 <a name="pragma_legacy_file_format"></a>
-
-<li><p><b>PRAGMA legacy_file_format;
+<hr>
+   <p><b>PRAGMA legacy_file_format;
        <br>PRAGMA legacy_file_format = <i>boolean</i></b></p>
     <p>This pragma sets or queries the value of the legacy_file_format
     flag.  When this flag is on, new SQLite databases are created in
@@ -596,11 +677,9 @@ name is meaningless and is simply ignored.</p>
 
     <p>The default file format is set by the
     <a href="compile.html#default_file_format">SQLITE_DEFAULT_FILE_FORMAT</a> compile-time option.</p>
-</li>
-
 <a name="pragma_locking_mode"></a>
-
-<li><p><b>PRAGMA locking_mode;
+<hr>
+    <p><b>PRAGMA locking_mode;
        <br>PRAGMA locking_mode = <i>NORMAL | EXCLUSIVE</i></b></p>
     <p>This pragma sets or queries the database connection locking-mode. 
     The locking-mode is either NORMAL or EXCLUSIVE.
@@ -644,11 +723,22 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
    <a href="inmemorydb.html">in-memory databases</a> cannot
    be changed.  All other databases use the normal locking mode by default
    and are affected by this pragma.</p>
-</li>
-
+<a name="pragma_max_page_count"></a>
+<hr>
+    <p><b>PRAGMA max_page_count;
+       <br>PRAGMA max_page_count = </b><i>N</i><b>;</b></p>
+    <p>Query or set the maximum number of pages in the database file.
+    Both forms of the pragma return the maximum page count.  The second
+    form attempts to modify the maximum page count.  The maximum page
+    count cannot be reduced below the current database size.
+    </p>
+<a name="pragma_page_count"></a>
+<hr>
+    <p><b>PRAGMA page_count;</b></p>
+    <p>Return the total number of pages in the database file.</p>
 <a name="pragma_page_size"></a>
-
-<li><p><b>PRAGMA page_size;
+<hr>
+   <p><b>PRAGMA page_size;
        <br>PRAGMA page_size = </b><i>bytes</i><b>;</b></p>
     <p>Query or set the page size of the database. The page size
     may only be set if the database has not yet been created. The page
@@ -687,22 +777,30 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     method on workstation implementations always reports a sector size
     of 512 bytes.  Hence, 
     the default page size chosen by SQLite is usually 1024 bytes.</p>
-</li>
+<a name="pragma_parser_trace"></a>
+<hr>
+    <p><b>PRAGMA parser_trace = </b><i>boolean</i><b>; </b></p>
 
-<a name="pragma_max_page_count"></a>
+    <p>Turn tracing of the SQL parser inside of the
+    SQLite library on and off.  This is used for debugging.
+    This only works if the library is compiled with the SQLITE_DEBUG
+    compile-time option.</p>
 
-<li><p><b>PRAGMA max_page_count;
-       <br>PRAGMA max_page_count = </b><i>N</i><b>;</b></p>
-    <p>Query or set the maximum number of pages in the database file.
-    Both forms of the pragma return the maximum page count.  The second
-    form attempts to modify the maximum page count.  The maximum page
-    count cannot be reduced below the current database size.
+    <p>This PRAGMA is used to help test and debug the SQLite library
+    itself.  It is of little or not use to applications and is disabled
+    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
+<a name="pragma_quick_check"></a>
+<hr>
+    <p><b>PRAGMA quick_check;
+    <br>PRAGMA quick_check(</b><i>integer</i><b>)</b></p>
+    <p>The pragma is like <a href="pragma.html#pragma_integrity_check">integrity_check</a> except that it does not verify
+    that index content matches table content.  By skipping the verification
+    of index content, quick_check is able to run much faster than
+    integrity_check.  Otherwise the two pragmas are the same.
     </p>
-</li>
-
 <a name="pragma_read_uncommitted"></a>
-
-<li><p><b>PRAGMA read_uncommitted;
+<hr>
+    <p><b>PRAGMA read_uncommitted;
        <br>PRAGMA read_uncommitted = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear READ UNCOMMITTED isolation. The default isolation
     level for SQLite is SERIALIZABLE.  Any process or thread can select
@@ -713,11 +811,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
 
     <p>See <a href="sharedcache.html">SQLite Shared-Cache Mode</a> for additional information.</p>
-</li>
-
 <a name="pragma_recursive_triggers"></a>
-
-<li><p><b>PRAGMA recursive_triggers;
+<hr>
+    <p><b>PRAGMA recursive_triggers;
        <br>PRAGMA recursive_triggers = </b><i>boolean</i><b>;</b></p>
     <p>Query, set, or clear the recursive trigger capability.
 
@@ -738,11 +834,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>The depth of recursion for triggers has a hard upper limit set by
     the <a href="limits.html#max_trigger_depth">SQLITE_MAX_TRIGGER_DEPTH</a> compile-time option and a run-time
     limit set by <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_TRIGGER_DEPTH</a>,...).</p>
-</li>
-
 <a name="pragma_reverse_unordered_selects"></a>
-
-<li><p><b>PRAGMA reverse_unordered_selects;
+<hr>
+    <p><b>PRAGMA reverse_unordered_selects;
        <br>PRAGMA reverse_unordered_selects = </b><i>boolean</i><b>;</b></p>
     <p>When enabled, this PRAGMA causes <a href="lang_select.html">SELECT</a> statements without a
     an ORDER BY clause to emit their results in the reverse order of what
@@ -761,11 +855,34 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     identified and fixed early, reducing problems
     that might be caused by linking against a different version of SQLite.
     </p>
-</li>
+<a name="pragma_schema_version"></a>
+<hr>
+    <p><b>PRAGMA schema_version; 
+       <br>PRAGMA schema_version = </b><i>integer </i><b>;
+       <br>PRAGMA user_version;
+       <br>PRAGMA user_version = </b><i>integer </i><b>;</b>
 
+  
+<p>    The pragmas schema_version and user_version are used to set or get
+       the value of the schema-version and user-version, respectively. Both
+       the schema-version and the user-version are 32-bit signed integers
+       stored in the database header.</p>
+  
+<p>    The schema-version is usually only manipulated internally by SQLite.  
+       It is incremented by SQLite whenever the database schema is modified 
+       (by creating or dropping a table or index). The schema version is 
+       used by SQLite each time a query is executed to ensure that the 
+       internal cache of the schema used when compiling the SQL query matches 
+       the schema of the database against which the compiled query is actually 
+       executed.  Subverting this mechanism by using "PRAGMA schema_version" 
+       to modify the schema-version is potentially dangerous and may lead 
+       to program crashes or database corruption. Use with caution!</p>
+  
+<p>    The user-version is not used internally by SQLite. It may be used by
+       applications for any purpose.</p>
 <a name="pragma_secure_delete"></a>
-
-<li><p><b>PRAGMA secure_delete;
+<hr>
+    <p><b>PRAGMA secure_delete;
        <br>PRAGMA </b><i>database</i><b>.secure_delete;
        <br>PRAGMA secure_delete = </b><i>boolean</i><b>
        <br>PRAGMA </b><i>database</i><b>.secure_delete =
@@ -787,21 +904,17 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     the secure-delete flag on one database connection changes it for them
     all.
     </p>
-</li>
-
 <a name="pragma_short_column_names"></a>
-
-<li><p><b>PRAGMA short_column_names;
+<hr>
+    <p><b>PRAGMA short_column_names;
        <br>PRAGMA short_column_names = </b><i>boolean</i><b>;</b></p>
     <p>Query or change the short-column-names flag. This flag affects
     the way SQLite names columns of data returned by <a href="lang_select.html">SELECT</a> statements.
     See the <a href="pragma.html#pragma_full_column_names">full_column_names</a> pragma for full details.
     </p>
-</li>
-
 <a name="pragma_synchronous"></a>
-
-<li><p><b>PRAGMA synchronous;
+<hr>
+    <p><b>PRAGMA synchronous;
        <br>PRAGMA synchronous = </b>
           <i>0 | OFF | 1 | NORMAL | 2 | FULL</i><b>;</b></p>
 
@@ -830,12 +943,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     </p>
     <p>The default setting is synchronous=FULL.
     </p>
-</li>
-
-
+<a name="pragma_table_info"></a>
+<hr>
+    <p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
+    <p>This pragma returns one row for each column in the named table.
+    Columns in the result set include the column name,
+    data type, whether or not the column can be NULL, and the default
+    value for the column.</p>
 <a name="pragma_temp_store"></a>
-
-<li><p><b>PRAGMA temp_store;
+<hr>
+    <p><b>PRAGMA temp_store;
        <br>PRAGMA temp_store = </b>
             <i>0 | DEFAULT | 1 | FILE | 2 | MEMORY</i><b>;</b></p>
 
@@ -889,12 +1006,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
         <td align="center">memory</td></tr>
     </table>
     </blockquote>
-    </li>
-    <br>
-
 <a name="pragma_temp_store_directory"></a>
-
-<li><p><b>PRAGMA temp_store_directory;
+<hr>
+    <p><b>PRAGMA temp_store_directory;
        <br>PRAGMA temp_store_directory = '</b><i>directory-name</i><b>';</b></p>
     <p>Query or change the setting of the "temp_store_directory" - the
     directory where files used for storing <a href="inmemorydb.html#temp_db">temporary tables</a> and indices
@@ -919,170 +1033,12 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     writable. </p>
 
     <p>The default directory for temporary files depends on the OS.  Some
-    OS interfaces may choose to ignore this variable in place temporary
+    OS interfaces may choose to ignore this variable and place temporary
     files in some other directory different from the directory specified
     here.  In that sense, this pragma is only advisory.</p>
-    </li>
-</ul>
-
-
-<hr /><a name="schema"></a>
-<h1>Pragmas to query the database schema</h1>
-
-
-<ul>
-<a name="pragma_collation_list"></a>
-
-<li><p><b>PRAGMA collation_list;</b></p>
-    <p>Return a list of the collating sequences defined for the current
-    database connection.</p></li>
-
-<a name="pragma_database_list"></a>
-
-<li><p><b>PRAGMA database_list;</b></p>
-    <p>This pragma works like a query to return one row for each database
-    attached to the current database connection.
-    Columns of the result set include the index and 
-    the name the database was attached with.  The first row will be for 
-    the main database.  The second row will be for the database used to 
-    store temporary tables.</p></li>
-
-<a name="pragma_foreign_key_list"></a>
-
-<li><p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
-    <p>This pragma returns one rwo for each foreign key that references
-    a column in the argument table.</li>
-
-<a name="pragma_freelist_count"></a>
-
-<li><p><b>PRAGMA freelist_count;</b></p>
-    <p>Return the number of unused pages in the database file. Running
-    a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
-    command with a large value of N will shrink the database file by this
-    number of pages when incremental vacuum is enabled. </p></li>
-
-<a name="pragma_index_info"></a>
-
-<li><p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
-    <p>This program returns one row row each column in the named index.</p>
-
-<a name="pragma_index_list"></a>
-
-<li><p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
-    <p>This pragma returns one row for each index associated with the
-    given table.   Columns of the result set include the
-    index name and a flag to indicate whether or not the index is UNIQUE.
-    </p></li>
-
-<a name="pragma_page_count"></a>
-
-<li><p><b>PRAGMA page_count;</b></p>
-    <p>Return the total number of pages in the database file.</p></li>
-
-<a name="pragma_table_info"></a>
-
-<li><p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
-    <p>This pragma returns one row for each column in the named table.
-    Columns in the result set include the column name,
-    data type, whether or not the column can be NULL, and the default
-    value for the column.</p></li>
-</ul>
-
-
-<hr /><a name="version"></a>
-<h1>Pragmas to query/modify version values</h1>
-
-
-<ul>
-<a name="pragma_schema_version"></a>
-
-<li><p><b>PRAGMA schema_version; 
-       <br>PRAGMA schema_version = </b><i>integer </i><b>;
-       <br>PRAGMA user_version;
-       <br>PRAGMA user_version = </b><i>integer </i><b>;</b>
-
-  
-<p>    The pragmas schema_version and user_version are used to set or get
-       the value of the schema-version and user-version, respectively. Both
-       the schema-version and the user-version are 32-bit signed integers
-       stored in the database header.</p>
-  
-<p>    The schema-version is usually only manipulated internally by SQLite.  
-       It is incremented by SQLite whenever the database schema is modified 
-       (by creating or dropping a table or index). The schema version is 
-       used by SQLite each time a query is executed to ensure that the 
-       internal cache of the schema used when compiling the SQL query matches 
-       the schema of the database against which the compiled query is actually 
-       executed.  Subverting this mechanism by using "PRAGMA schema_version" 
-       to modify the schema-version is potentially dangerous and may lead 
-       to program crashes or database corruption. Use with caution!</p>
-  
-<p>    The user-version is not used internally by SQLite. It may be used by
-       applications for any purpose.</p>
-</li>
-</ul>
-
-
-<hr /><a name="debug"></a>
-<h1>Pragmas to debug the library</h1>
-
-
-<ul>
-<a name="pragma_compile_options"></a>
-
-<li><p><b>PRAGMA compile_options;</b></p>
-    <p>This pragma returns the names of <a href="compile.html">compile-time options</a> used when
-    building SQLite, one option per row.  The "SQLITE_" prefix is omitted
-    from the returned option names.  See also the
-    <a href="c3ref/compileoption_get.html">sqlite3_compileoption_get()</a> C/C++ interface and the
-    <a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get()</a> SQL functions.</p></li>
-
-<a name="pragma_integrity_check"></a>
-
-<li><p><b>PRAGMA integrity_check;
-    <br>PRAGMA integrity_check(</b><i>integer</i><b>)</b></p>
-    <p>This pragma does an integrity check of the entire database.  It
-    looks for out-of-order records, missing pages, malformed records, and
-    corrupt indices.
-    If any problems are found, then strings are returned (as multiple
-    rows with a single column per row) which describe
-    the problems.  At most <i>integer</i> errors will be reported
-    before the analysis quits.  The default value for <i>integer</i>
-    is 100.  If no errors are found, a single row with the value "ok" is
-    returned.</p></li>
-
-<a name="pragma_quick_check"></a>
-
-<li><p><b>PRAGMA quick_check;
-    <br>PRAGMA quick_check(</b><i>integer</i><b>)</b></p>
-    <p>The pragma is like <a href="pragma.html#pragma_integrity_check">integrity_check</a> except that it does not verify
-    that index content matches table content.  By skipping the verification
-    of index content, quick_check is able to run much faster than
-    integrity_check.  Otherwise the two pragmas are the same.
-    </p></li>
-
-<a name="pragma_parser_trace"></a>
-
-<li><p><b>PRAGMA parser_trace = </b><i>boolean</i><b>; </b></p>
-
-    <p>Turn tracing of the SQL parser inside of the
-    SQLite library on and off.  This is used for debugging.
-    This only works if the library is compiled with the SQLITE_DEBUG
-    compile-time option.
-    </p></li>
-
-<a name="pragma_vdbe_trace"></a>
-
-<li><p><b>PRAGMA vdbe_trace = </b><i>boolean</i><b>;</b></p>
-
-    <p>Turn tracing of the virtual database engine inside of the
-    SQLite library on and off.  This is used for debugging.  See the 
-    <a href="vdbe.html#trace">VDBE documentation</a> for more 
-    information.</p></li>
-
 <a name="pragma_vdbe_listing"></a>
-
-<li><p><b>PRAGMA vdbe_listing = </b><i>boolean</i><b>;</b></p>
+<hr>
+    <p><b>PRAGMA vdbe_listing = </b><i>boolean</i><b>;</b></p>
 
     <p>Turn listings of virtual machine programs on and off.
     With listing is on, the entire content of a program is printed
@@ -1090,6 +1046,51 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     executes normally after the listing is printed.
     This is used for debugging.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
-    information.</p></li>
-</ul>
+    information.</p>
+
+    <p>This PRAGMA is used to help test and debug the SQLite library
+    itself.  It is of little or not use to applications and is disabled
+    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
+<a name="pragma_vdbe_trace"></a>
+<hr>
+    <p><b>PRAGMA vdbe_trace = </b><i>boolean</i><b>;</b></p>
+
+    <p>Turn tracing of the virtual database engine inside of the
+    SQLite library on and off.  This is used for debugging.  See the 
+    <a href="vdbe.html#trace">VDBE documentation</a> for more 
+    information.</p>
+
+    <p>This PRAGMA is used to help test and debug the SQLite library
+    itself.  It is of little or not use to applications and is disabled
+    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
+<a name="pragma_wal_autocheckpoint"></a>
+<hr>
+    <p><b>PRAGMA wal_autocheckpoint;<br>
+     PRAGMA wal_autocheckpoint=</b><i>N</i><b>;</b></p>
+
+    <p>This pragma queries or sets the <a href="wal.html">write-ahead log</a> auto-checkpoint
+    interval.  When the <a href="wal.html">write-ahead log</a> is enabled (via the
+    <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>) a checkpoint will be run automatically whenever
+    the write-ahead log equals or exceeds <i>N</i> pages in length.
+    Setting the auto-checkpoint size to zero or a negative value
+    turns auto-checkpointing off.</p>
+    
+    <p>This pragma is a wrapper around the
+    <a href="c3ref/wal_autocheckpoint.html">sqlite3_wal_autocheckpoint()</a> C interface.</p>
+
+<a name="pragma_wal_checkpoint"></a>
+<hr>
+    <p><b>PRAGMA </b><i>database</i><b>.wal_checkpoint;</b></p>
+
+    <p>If the <a href="wal.html">write-ahead log</a> is enabled (via the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>),
+    this pragma causes a checkpoint operation to run on database
+    <i>database</i>, or on all attached databases if <i>database</i>
+    is omitted.  If <a href="wal.html">write-ahead log</a> is disabled, this pragma is a
+    harmless no-op.</p>
+
+    <p>Invoking this pragma is equivalent to calling the
+    <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> C interface.</p>
+
+
+<hr>
 

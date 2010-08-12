@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -148,7 +148,7 @@ highest to lowest precedence:</p>
 +    -
 &lt;&lt;   &gt;&gt;   &amp;    |
 &lt;    &lt;=   &gt;    &gt;=
-=    ==   !=   &lt;&gt;   </big>IS  IN  LIKE  GLOB  MATCH  REGEXP
+=    ==   !=   &lt;&gt;   </big>IS   IS NOT   IN   LIKE   GLOB   MATCH   REGEXP
 AND   
 OR</font>
 </pre></blockquote>
@@ -168,8 +168,8 @@ any binary operator.</p>
 
 
 <p>The unary operator <font color="#2c2cf0"><big>+</big></font> is a no-op.  It can be applied
-to strings, numbers, or blobs and it always gives as its result the
-value of the operand.</p>
+to strings, numbers, blobs or NULL and it always returns a result
+with the same value as the operand.</p>
 
 <p>Note that there are two variations of the equals and not equals
 operators.  Equals can be either
@@ -179,16 +179,21 @@ The non-equals operator can be either
 <font color="#2c2cf0"><big>!=</big></font> or <font color="#2c2cf0"><big>&lt;&gt;</big></font>.
 The <font color="#2c2cf0"><big>||</big></font> operator is "concatenate" - it joins together
 the two strings of its operands.
-The operator <font color="#2c2cf0"><big>%</big></font> outputs the remainder of its left 
+The operator <font color="#2c2cf0"><big>%</big></font> outputs the value of its left 
 operand modulo its right operand.</p>
 
-<p>The result of any binary operator is a numeric value, except
-for the <font color="#2c2cf0"><big>||</big></font> concatenation operator which gives a string
-result.</p><a name="isisnot"></a>
+<p>The result of any binary operator is either a numeric value or 
+NULL, except for the <font color="#2c2cf0"><big>||</big></font> concatenation operator which always 
+evaluates to either NULL or a text value.</p><a name="isisnot"></a>
 <p>The <font color="#2c2cf0"><big>IS</big></font> and <font color="#2c2cf0"><big>IS NOT</big></font> operators work
-like <font color="#2c2cf0"><big>=</big></font> and <font color="#2c2cf0"><big>!=</big></font> except that NULL values compare
-equal to one another.  <font color="#2c2cf0"><big>IS</big></font> and <font color="#2c2cf0"><big>IS NOT</big></font>
-have the same precedence as <font color="#2c2cf0"><big>=</big></font>.<a name="litvalue"></a>
+like <font color="#2c2cf0"><big>=</big></font> and <font color="#2c2cf0"><big>!=</big></font> except when one or both of the
+operands are NULL. In this case, if both operands are NULL, then the
+IS operator evaluates to 1 (true) and the IS NOT operator evaluates
+to 0 (false). If one operand is NULL and the other is not, then the
+IS operator evaluates to 0 (false) and the IS NOT operator is 1 (true).
+It is not possible for an IS or IS NOT expression to evaluate to NULL.
+Operators <font color="#2c2cf0"><big>IS</big></font> and <font color="#2c2cf0"><big>IS NOT</big></font> have the same 
+precedence as <font color="#2c2cf0"><big>=</big></font>.<a name="litvalue"></a>
 
 <h3>Literal Values</h3>
 <p>
@@ -380,6 +385,73 @@ If the base expression is NULL then the result of the CASE is the
 result of the ELSE expression if it exists, or NULL if the ELSE clause
 is omitted.</p>
 
+<a name="in_op"></a>
+
+<h3>The IN and NOT IN operators</h3>
+<p>The IN and NOT IN operators take a single scalar operand on the
+left and a vector operand on the right
+formed by an explicit list of zero or more scalars or by a 
+single subquery.
+When the right operand of an IN or NOT IN operator is a subquery, the
+subquery must have a single result column.
+When the right operand is an empty set, the result of IN is false and the
+result of NOT IN is true, regardless of the left operand and even if the
+left operand is NULL.
+The result of an IN or NOT IN operator is determined by the following
+matrix:
+
+<center>
+<table border=1>
+<tr>
+<th>Left operand <br>is NULL
+<th>Right operand <br>contains NULL
+<th>Right operand <br>is an empty set
+<th>Left operand found <br>within right operand
+<th>Result of <br>IN operator
+<th>Result of <br>NOT IN operator
+<tr>
+<td align="center">no
+<td align="center">no
+<td align="center">no
+<td align="center">no
+<td align="center">false
+<td align="center">true
+<tr>
+<td align="center">does not matter
+<td align="center">no
+<td align="center">yes
+<td align="center">no
+<td align="center">false
+<td align="center">true
+<tr>
+<td align="center">no
+<td align="center">does not matter
+<td align="center">no
+<td align="center">yes
+<td align="center">true
+<td align="center">false
+<tr>
+<td align="center">no
+<td align="center">yes
+<td align="center">no
+<td align="center">no
+<td align="center">NULL
+<td align="center">NULL
+<tr>
+<td align="center">yes
+<td align="center">does not matter
+<td align="center">no
+<td align="center">does not matter
+<td align="center">NULL
+<td align="center">NULL
+</table>
+</center>
+
+<p>Note that SQLite allows the parenthesized list of scalar values on
+the right-hand side of an IN or NOT IN operator to be an empty list but
+most other SQL database database engines and the SQL92 standard require
+the list to contain at least one element.</p>
+
 
 <h3>Table Column Names</h3>
 <p>A column name can be any of the names defined in the <a href="lang_createtable.html">CREATE TABLE</a>
@@ -395,12 +467,12 @@ column can be used.</p>
 
 <h3>Subqueries</h3>
 <p><a href="lang_select.html">SELECT</a> statements can appear in expressions as either the
-right-hand operand of the IN operator, as a scalar quantity, or
+right-hand operand of the IN or NOT IN operators, as a scalar quantity, or
 as the operand of an EXISTS operator.
-As a scalar quantity or the operand of an IN operator,
-the SELECT should have only a single column in its
+As a scalar quantity or the operand of an IN or NOT IN operator,
+the SELECT may have only a single column in its
 result.  Compound SELECTs (connected with keywords like UNION or
-EXCEPT) are allowed.
+EXCEPT) are allowed in any subquery.
 With the EXISTS operator, the columns in the result set of the <a href="lang_select.html">SELECT</a> are
 ignored and the expression returns TRUE if one or more rows exist
 and FALSE if the result set is empty.
@@ -410,14 +482,8 @@ processing and the result is reused as necessary.  If the <a href="lang_select.h
 does contain variables from the outer query, then the <a href="lang_select.html">SELECT</a> is reevaluated
 every time it is needed.</p>
 
-<p>When a SELECT is the right operand of the IN operator, the IN
-operator returns TRUE if the SELECT result contains no NULLs and if
-the left operand matches any of the values in the SELECT result.
-The IN operator may be preceded
-by the NOT keyword to invert the sense of the test.</p>
-
 <p>When a SELECT appears within an expression but is not the right
-operand of an IN operator, then the first row of the result of the
+operand of an IN or NOT IN operator, then the first row of the result of the
 SELECT becomes the value used in the expression.  If the SELECT yields
 more than one result row, all rows after the first are ignored.  If
 the SELECT yields no rows, then the value of the SELECT is NULL.</p>
@@ -433,7 +499,7 @@ for the type in a column definition of a <a href="lang_createtable.html">CREATE 
 The &lt;type&gt; name is interpreted according to the 
 <a href="datatype3.html#affname">rules for determining column affinity</a>.
 
-<p>An explicit cast is strong than affinity; with the CAST expression
+<p>An explicit cast is stronger than affinity; with the CAST expression
 the datatype conversion is forced even if it is lossy and irrreversible.
 <ul>
 <li><p>

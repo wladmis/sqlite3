@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -615,6 +615,10 @@ when used in combination with other options.</p>
   behave in the same way as columns declared as "<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>" when a 
   NULL is inserted. The sqlite_sequence system table is neither created, nor
   respected if it already exists.
+</p></blockquote><a name="omit_automatic_index"></a>
+<p><b>SQLITE_OMIT_AUTOMATIC_INDEX</b></p><blockquote><p>
+  This option is used to omit the 
+  <a href="optoverview.html#autoindex">automatic indexing</a> functionality.
 </p></blockquote><a name="omit_autoinit"></a>
 <p><b>SQLITE_OMIT_AUTOINIT</b></p><blockquote><p>
   For backwards compatibility with older versions of SQLite that lack
@@ -644,6 +648,11 @@ when used in combination with other options.</p>
 <p><b>SQLITE_OMIT_BLOB_LITERAL</b></p><blockquote><p>
   When this option is defined, it is not possible to specify a blob in
   an SQL statement using the X'ABCD' syntax.
+</p></blockquote><a name="omit_btreecount"></a>
+<p><b>SQLITE_OMIT_BTREECOUNT</b></p><blockquote><p>
+  When this option is defined, an optimization that accelerates counting
+  all entires in a table (in other words, an optimization that helps
+  "SELECT count(*) FROM table" run faster) is omitted.
 </p></blockquote><a name="omit_builtin_test"></a>
 <p><b>SQLITE_OMIT_BUILTIN_TEST</b></p><blockquote><p>
   A standard SQLite build includes a small amount of logic controlled
@@ -658,10 +667,6 @@ when used in combination with other options.</p>
   This option causes SQLite to omit support for CHECK constraints.
   The parser will still accept CHECK constraints in SQL statements,
   they will just not be enforced.
-</p></blockquote><a name="omit_complete"></a>
-<p><b>SQLITE_OMIT_COMPLETE</b></p><blockquote><p>
-  This option causes the <a href="c3ref/complete.html">sqlite3_complete()</a> and <a href="c3ref/complete.html">sqlite3_complete16()</a>
-  interfaces to be omitted.
 </p></blockquote><a name="omit_compileoption_diags"></a>
 <p><b>SQLITE_OMIT_COMPILEOPTION_DIAGS</b></p><blockquote><p>
   This option is used to omit the compile-time option diagnostics available
@@ -669,6 +674,10 @@ when used in combination with other options.</p>
   <a href="c3ref/compileoption_get.html">sqlite3_compileoption_get()</a> C/C++ functions, the
   <a href="lang_corefunc.html#sqlite_compileoption_used">sqlite_compileoption_used()</a> and <a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get()</a> SQL functions,
   and the <a href="pragma.html#pragma_compile_options">compile_options pragma</a>.
+</p></blockquote><a name="omit_complete"></a>
+<p><b>SQLITE_OMIT_COMPLETE</b></p><blockquote><p>
+  This option causes the <a href="c3ref/complete.html">sqlite3_complete()</a> and <a href="c3ref/complete.html">sqlite3_complete16()</a>
+  interfaces to be omitted.
 </p></blockquote><a name="omit_compound_select"></a>
 <p><b>SQLITE_OMIT_COMPOUND_SELECT</b></p><blockquote><p>
   This option is used to omit the compound <a href="lang_select.html">SELECT</a> functionality. 
@@ -703,7 +712,8 @@ when used in combination with other options.</p>
 </p></blockquote><a name="omit_diskio"></a>
 <p><b>SQLITE_OMIT_DISKIO</b></p><blockquote><p>
   This option omits all support for writing to the disk and forces
-  databases to exist in memory only.
+  databases to exist in memory only.  This option has not been 
+  maintained and probably does not work with newer versions of SQLite.
 </p></blockquote><a name="omit_explain"></a>
 <p><b>SQLITE_OMIT_EXPLAIN</b></p><blockquote><p>
   Defining this option causes the <a href="lang_explain.html">EXPLAIN</a> command to be omitted from the
@@ -754,6 +764,9 @@ when used in combination with other options.</p>
   functions.  This option is sometimes useful when trying to compile
   the date and time functions on a platform that does not support the
   concept of local time.
+</p></blockquote><a name="omit_lookaside"></a>
+<p><b>SQLITE_OMIT_LOOKASIDE</b></p><blockquote><p>
+  This option omits the <a href="malloc.html#lookaside">lookaside memory allocator</a>.
 </p></blockquote><a name="omit_memorydb"></a>
 <p><b>SQLITE_OMIT_MEMORYDB</b></p><blockquote><p>
   When this is defined, the library does not respect the special database
@@ -863,6 +876,9 @@ when used in combination with other options.</p>
 <p><b>SQLITE_OMIT_VIRTUALTABLE</b></p><blockquote><p>
   This option omits support for the <a href="c3ref/vtab.html">Virtual Table</a>
   mechanism in SQLite.
+</p></blockquote><a name="omit_wal"></a>
+<p><b>SQLITE_OMIT_WAL</b></p><blockquote><p>
+  This option omits the "<a href="wal.html">write-ahead log</a>" (a.k.a. "<a href="wal.html">WAL</a>") capability.
 </p></blockquote><a name="omit_wsd"></a>
 <p><b>SQLITE_OMIT_WSD</b></p><blockquote><p>
   This options builds a version of the SQLite library that contains no

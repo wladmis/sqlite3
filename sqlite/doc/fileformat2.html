@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -136,12 +136,12 @@ The SQLite Database File Format
 format used by SQLite.</p>
 
 <p>This is the second document to define the SQLite database file format.
-The <a href="fileformat.html">first document</a> differs from this one in that it is
+The <a href="fileformat.html">first edition file format document</a> differs from this one in that it is
 written in a formal style whereas this document attempts to be more
 conversational.  The two documents were independently written (they have
 different authors) and hence serve as cross-checks for one another.
 Both documents should describe exactly the same file format.  
-Any discrepencies between the two documents should be considered a bug.</p>
+Any incompatibilities between the two documents should be considered a bug.</p>
 
 <h2>1.0 The Database File</h2>
 
@@ -234,9 +234,9 @@ The header string: "SQLite format 3\000"
 The database page size in bytes.  Must be a power of two between 512
 and 32768 inclusive.
 <tr><td valign=top align=center>18<td valign=top align=center>1<td align=left>
-File format write version.  Must be 1.
+File format write version.  1 for legacy; 2 for <a href="wal.html">WAL</a>.
 <tr><td valign=top align=center>19<td valign=top align=center>1<td align=left>
-File format read version.  Must be 1.
+File format read version.  1 for legacy; 2 for <a href="wal.html">WAL</a>.
 <tr><td valign=top align=center>20<td valign=top align=center>1<td align=left>
 Bytes of unused "reserved" space at the end of each page.  Usually 0.
 <tr><td valign=top align=center>21<td valign=top align=center>1<td align=left>
@@ -248,7 +248,7 @@ Leaf payload fraction.  Must be 32.
 <tr><td valign=top align=center>24<td valign=top align=center>4<td align=left>
 File change counter.
 <tr><td valign=top align=center>28<td valign=top align=center>4<td align=left>
-Reserved for expansion.  Must be zero.
+Size of the database file in pages.  The "in-header database size".
 <tr><td valign=top align=center>32<td valign=top align=center>4<td align=left>
 Page number of the first freelist trunk page.
 <tr><td valign=top align=center>36<td valign=top align=center>4<td align=left>
@@ -256,7 +256,7 @@ Total number of freelist pages.
 <tr><td valign=top align=center>40<td valign=top align=center>4<td align=left>
 The schema cookie.
 <tr><td valign=top align=center>44<td valign=top align=center>4<td align=left>
-The schema format number.  Currently support schema formats are 1, 2, 3, and 4.
+The schema format number.  Supported schema formats are 1, 2, 3, and 4.
 <tr><td valign=top align=center>48<td valign=top align=center>4<td align=left>
 Default page cache size.
 <tr><td valign=top align=center>52<td valign=top align=center>4<td align=left>
@@ -269,23 +269,34 @@ means UTF-16le.  A value of 3 means UTF-16be.
 The "user version" as read and set by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.
 <tr><td valign=top align=center>64<td valign=top align=center>4<td align=left>
 True (non-zero) for incremental-vacuum mode.  False (zero) otherwise.
-<tr><td valign=top align=center>68<td valign=top align=center>32<td align=left>
+<tr><td valign=top align=center>68<td valign=top align=center>24<td align=left>
 Reserved for expansion.  Must be zero.
+<tr><td valign=top align=center>92<td valign=top align=center>4<td align=left>
+The <a href="fileformat2.html#validfor">version-valid-for number</a>.
+<tr><td valign=top align=center>96<td valign=top align=center>4<td align=left>
+<a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>
 </table></center>
+
+<h4>1.2.1 Magic Header String</h4>
 
 <p>Every SQLite database file begins with the following 16 bytes (in hex):
 53 51 4c 69 74 65 20 66 6f 72 6d 61 74 20 33 00.  This byte sequence
 corresponds to the UTF-8 string "SQLite format 3" including the nul
 terminator character at the end.</p>
 
+<h4>1.2.2 File format version numbers</h4>
+
 <p>The file format write version and file format read version at offsets
 18 and 19 are intended to allow for enhancements of the file format
 in future versions of SQLite.  In current versions of SQLite, both of
-these values must be one.  If a version of SQLite coded to the current
+these values are 1 for rollback journalling modes and 2 for <a href="wal.html">WAL</a>
+journalling mode.  If a version of SQLite coded to the current
 file format specification encounters a database file where the read
-version is 1 but the write version is greater than one, then the database
+version is 1 or 2 but the write version is greater than 2, then the database
 file must be treated as read-only.  If a database file with a read version
-greater than 1 is encounter, then that database cannot be read or written.</p>
+greater than 2 is encounter, then that database cannot be read or written.</p>
+
+<h4>1.2.3 Reserved bytes per page</h4>
 
 <p>SQLite has the ability to set aside a small number of extra bytes at
 the end of every page for use by extensions.  These extra bytes are
@@ -304,6 +315,8 @@ size of a page might be an odd number.  However, the usable size is not
 allowed to be less than 480.  In other words, if the page size is 512,
 then the reserved space size cannot exceed 32.</p>
 
+<h4>1.2.4 Payload fractions</h4>
+
 <p>The maximum and minimum embedded payload fractions and the leaf
 payload fraction values must be 64, 32, and 32.  These values were
 orginally intended to as tunable parameters that could be used to
@@ -312,19 +325,60 @@ functionality is not supported and there are no current plans to add
 support in the future.  Hence, these three bytes are fixed at the
 values specified.</p>
 
+<h4>1.2.5 File change counter</h4>
+
+<a name="chngctr"></a>
+
 <p>The file change counter is a 4-byte big-endian integer which is
-incremented whenever the database file is changed.  When two or more
-processes are reading the same database file, each process can detect
-database changes from other processes by monitoring the change counter.
+incremented whenever the database file is changed in rollback mode.  
+When two or more processes are reading the same database file, each 
+process can detect database changes from other processes by monitoring 
+the change counter.
 A process will normally want to flush its database page cache when
 another process modified the database, since the cache has become stale.
 The file change counter facilitates this.</p>
+
+<p>In WAL mode, changes to the database are detected using the wal-index
+and so the change counter is not needed.  Hence, the change counter might
+not be incremented on each transaction in WAL mode.</p>
+
+<h4>1.2.6 In-header database size</h4>
+
+<a name="filesize"></a>
+
+<p>The 4-byte big-endian integer at offset 28 into the header 
+stores the size of the database file in pages.  If this in-header
+datasize size is not valid (see the next paragraph), then the database 
+size is computed by looking
+at the actual size of the database file. Older versions of SQLite
+ignored the in-header database size and used the actual file size
+exclusively.  Newer versions of SQLite use the in-header database
+size if it is available but fall back to the actual file size if
+the in-header database size is not valid.</p>
+
+<p>The in-header database size is only considered to be valid if
+it is non-zero and if the 4-byte <a href="fileformat2.html#chngctr">change counter</a> at offset 24
+exactly matches the 4-byte <a href="fileformat2.html#validfor">version-valid-for number</a> at offset 92.
+The in-header database size should always be valid 
+when the database is only modified using recent versions of SQLite
+(versions 3.7.0 and later).
+If a legacy version of SQLite writes to the database, it will not
+know to update the in-header database size and so the in-header
+database size could be incorrect.  But legacy versions of SQLite
+will also leave the version-valid-for number at offset 92 unchanged
+so it will not match the change-counter.  Hence, invalid in-header
+database sizes can be detected (and ignored) by observing when
+the change-counter does not match the version-valid-for number.</p>
+
+<h4>1.2.7 Free page list</h4>
 
 <p>Unused pages in the database file are stored on a freelist.  The
 4-byte big-endian integer at offset 32 stores the page number of
 the first page of the freelist, or zero if the freelist is empty.
 The 4-byte big-endian integer at offset 36 stores stores the total 
 number of pages on the freelist.</p>
+
+<h4>1.2.8 Schema cookie</h4>
 
 <p>The schema cookie is a 4-byte big-endian integer at offset 40
 that is incremented whenever the database schema changes.  A 
@@ -333,6 +387,8 @@ database schema.  Whenever the database schema changes, the statement
 must be reprepared.  Whenever a prepared statement runs, it first checks
 the schema cookie to make sure the value is the same as when the statement
 was prepared and if not it aborts to force the statement to be reprepared.</p>
+
+<h4>1.2.9 Schema format number</h4>
 
 <p>The schema format number is a 4-byte big-endian integer at offset 44.
 The schema format number is similar to the file format read and write
@@ -367,11 +423,15 @@ The <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a
 to create new database files using format 4.  Future versions of 
 SQLite may begin to create files using format 4 by default.</p>
 
+<h4>1.2.10 Suggested cache size</h4>
+
 <p>The 4-byte big-endian signed integer at offset 48 is the suggest
 cache size in pages for the database file.  The value is a suggestion
 only and SQLite is under no obligation to honor it.  The absolute value
 of the integer is used as the suggested size.  The suggested cache size
 can be set using the <a href="pragma.html#pragma_default_cache_size">default_cache_size pragma</a>.</p>
+
+<h4>1.2.11 Incremental vacuum settings</h4>
 
 <p>The two 4-byte big-endian integers at offsets 52 and 64 are used
 to manage the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> and <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> modes.  If
@@ -385,14 +445,31 @@ case, the integer at offset 64 is true for incremental_vacuum and
 false for auto_vacuum.  If the integer at offset 52 is zero then
 the integer at offset 64 must also be zero.</p>
 
+<h4>1.2.12 Text encoding</h4>
+
 <p>The 4-byte big-endian integer at offset 56 determines the encoding
 used for all text strings stored in the database.  A value of 1 means
 UTF-8.  A value of 2 means UTF-16le.  A value of 3 means UTF-16be.
 No other values are allowed.</p>
 
+<h4>1.2.13 User version number</h4>
+
 <p>The 4-byte big-endian integer at offset 60 is the user version which
 is set and queried by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.  The user version is
 not used by SQLite.</p>
+
+<a name="validfor"></a>
+
+<h4>1.2.14 Write library version number and version-valid-for number</h4>
+
+<p>The 4-byte big-endian integer at offset 96 stores the 
+<a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value.  The 4-byte big-ending integer at
+offset 92 is the value of the <a href="fileformat2.html#chngctr">change counter</a> when the version number
+was stored.  The integer at offset 92 indicates which transaction
+the version number is valid for and is sometimes called the
+"version-valid-for number".
+
+<h4>1.2.15 Header space reserved for expansion</h4>
 
 <p>All other bytes of the database file header are reserved for
 future expansion and must be set to zero.</p>
@@ -1212,4 +1289,217 @@ journal must contain the same database page size and sector size.</p>
 <p>If M is -1 in the initial journal header, then the number of page records
 that follow is computed by figure out how many page records will fit in
 the available space of the remainder of the journal file.</p>
+
+<a name="walformat"></a>
+
+<h2>4.0 The Write-Ahead Log</h2>
+
+<p>Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a>, SQLite supports a new transaction
+control mechanism called "<a href="wal.html">write-ahead log</a>" or "<a href="wal.html">WAL</a>".
+When a database is in WAL mode, all connections to that database must
+use the WAL.  A particular database will use either a rollback journal
+or a WAL, but not both at the same time.
+The WAL is always located in the directory as the database
+file and has the same name as the database file but with the string
+"<tt>-wal</tt>" appended.</p>
+
+<h3>4.1 WAL File Format</h4>
+
+<p>A WAL file consists of a header followed by zero or more "frames".
+Each frame records the revised content of a single page from the
+database file.  All changes to the database are recorded by writing
+frames into the WAL.  Transactions commit when a frame is written that
+contains a commit marker.  A single WAL can and usually does record 
+multiple transactions.  Periodically, the content of the WAL is
+transferred back into the database file in an operation called a
+"checkpoint".</p>
+
+<p>A single WAL file can be reused multiple times.  In other words, the
+WAL can fill up with frames and then be checkpointed and then new
+frames can overwrite the old ones.  A WAL always grows from beginning
+toward the end.  Checksums and counters attached to each frame are
+used to determine which frames within the WAL are valid and which
+are leftovers from prior checkpoints.</p>
+
+<p>The WAL header is 32 bytes in size and consists of the following eight
+big-endian 32-bit unsigned integer values:</p>
+
+<center>
+<i>WAL Header Format</i><br>
+<table width="80%" border=1>
+<tr><th>Offset<th>Size<th>Description
+<tr><td valign=top align=center>0<td valign=top align=center>4
+    <td>Magic number.  0x377f0682 or 0x377f0683
+<tr><td valign=top align=center>4<td valign=top align=center>4
+    <td>File format version.  Currently 3007000.
+<tr><td valign=top align=center>8<td valign=top align=center>4
+    <td>Database page size.  Example: 1024
+<tr><td valign=top align=center>12<td valign=top align=center>4
+    <td>Checkpoint sequence number
+<tr><td valign=top align=center>16<td valign=top align=center>4
+    <td>Salt-1: random integer incremented with each checkpoint
+<tr><td valign=top align=center>20<td valign=top align=center>4
+    <td>Salt-2: a different random number for each checkpoint
+<tr><td valign=top align=center>24<td valign=top align=center>4
+    <td>Checksum-1: First part of a checksum on the first 24 bytes of header
+<tr><td valign=top align=center>28<td valign=top align=center>4
+    <td>Checksum-2: Second part of the checksum on the first 24 bytes of header
+</table>
+</center>
+
+<p>Immediately following the wal-header are zero or more frames. Each
+frame consists of a 24-byte frame-header followed by a <i>page-size</i> bytes
+of page data. The frame-header is six big-endian 32-bit unsigned 
+integer values, as follows:
+
+<center>
+<i>WAL Frame Header Format</i><br>
+<table width="80%" border=1>
+<tr><th>Offset<th>Size<th>Description
+<tr><td valign=top align=center>0<td valign=top align=center>4
+    <td>Page number
+<tr><td valign=top align=center>4<td valign=top align=center>4
+    <td>For commit records, the size of the database file in pages
+        after the commit.  For all other records, zero.
+<tr><td valign=top align=center>8<td valign=top align=center>4
+    <td>Salt-1 copied from the WAL header
+<tr><td valign=top align=center>12<td valign=top align=center>4
+    <td>Salt-2 copied from the WAL header
+<tr><td valign=top align=center>16<td valign=top align=center>4
+    <td>Checksum-1:  Cumulative checksum up through and including this page
+<tr><td valign=top align=center>20<td valign=top align=center>4
+    <td>Checksum-2:  Second half of the cumulative checksum.
+</table>
+</center>
+
+<p>A frame is considered valid if and only if the following conditions are
+true:</p>
+
+<ol>
+<li><p>The salt-1 and salt-2 values in the frame-header match
+       salt values in the wal-header</p></li>
+
+<li><p>The checksum values in the final 8 bytes of the frame-header
+       exactly match the checksum computed consecutively on the
+       WAL header and the first 8 bytes and the content of all frames
+       up to and including the current frame.</p></li></li>
+</ol>
+
+<a name="walcksm"></a>
+
+<h3>4.2 Checksum Algorithm</h3>
+
+<p>The checksum is computed by interpreting the input as
+an even number of unsigned 32-bit integers: x(0) through x(N).
+The 32-bit integers are big-endian if the
+magic number in the first 4 bytes of the WAL header is 0x377f0683 and
+the integers are little-endian the magic number is 0x377f0682.
+The checksum values are always stored in the frame header in a
+big-endian format regardless of which byte order is used to compute
+the checksum.</p>
+
+<p>The checksum algorithm only works for content which is a multiple of
+8 bytes in length.  In other words, if the inputs are x(0) through x(N)
+then N must be odd.
+The checksum algorithm is as follows:
+
+<blockquote><pre> 
+s0 = s1 = 0
+for i from 0 to n-1 step 2:
+   s0 += x(i) + s1;
+   s1 += x(i+1) + s0;
+endfor
+# result in s0 and s1
+</pre></blockquote>
+
+<p>The outputs s0 and s1 are both weighted checksums using fibonacci weights
+in reverse order (the largest fibonacci weight occurs on the first element
+of the sequence being summed.)  The s1 value spans all 32-bit integer
+terms of the sequence whereas s0 omits the final term.</p>
+
+<h3>4.3 Checkpoint Algorithm</h3>
+
+<p>On a <a href="wal.html#ckpt">checkpoint</a>, the WAL is first flushed to persistent storage using
+the xSync method of the <a href="c3ref/io_methods.html">VFS</a>. 
+Then valid content of the WAL is transferred into the database file.
+Finally, the database is flushed to persistent storage using another
+xSync method call.
+The xSync operations serve as write barriers - all writes launched
+before the xSync must complete before any write that launches after the
+xSync begins.</p>
+
+<p>After each checkpoint, the WAL header salt-1 value is incremented and the 
+salt-2 value is randomized.  This prevents old and new frames in the WAL from
+being considered valid at the same time and being checkpointing together
+following a crash.</p>
+
+<a name="walread"></a>
+
+<h3>4.4 Reader Algorithm</h3>
+
+<p>To read a page from the database (call it page number P), a reader
+first checks the WAL to see if it contains page P.  If so, then the
+last valid instance of page P that is a followed by a commit frame
+or is a commit frame itself becomes the value read.  If the WAL
+contains no copies of page P that are valid and which are a commit
+frame or are followed by a commit frame, then page P is read from
+the database file.</p>
+
+<p>To start a read transaction, the reader records the index of the last
+valid frame in the WAL.  The reader uses this recorded "mxFrame" value
+for all subsequent read operations.  New transactions can be appended
+to the WAL, but as long as the reader uses its original mxFrame value
+and ignores subsequently appended content, the reader will see a 
+consistent snapshot of the database from a single point in time.  
+This technique allows multiple concurrent readers to view different 
+versions of the database content simultaneously.</p>
+
+<p>The reader algorithm in the previous paragraphs works correctly, but 
+because frames for page P can appear anywhere within the WAL, the
+reader has to scan the entire WAL looking for page P frames.  If the
+WAL is large (multiple megabytes is typical) that scan can be slow,
+and read performance suffers.  To overcome this problem, a separate
+data structure called the wal-index is maintained to expedite the
+search for frames of a particular page.</p>
+
+<a name="walindexformat"></a>
+
+<h3>4.5 WAL-Index Format</h3>
+
+<p>Conceptually, the wal-index is shared memory, though the current
+VFS implementations use a mmapped file for the wal-index.  The mmapped
+file is in the same directory as the database and has the same name
+as the database with a "<tt>-shm</tt>" suffix appended.  Because
+the wal-index is shared memory, SQLite does not support 
+<a href="pragma.html#pragma_journal_mode">journal_mode=WAL</a> 
+on a network filesystem when clients are on different machines.
+All users of the database must be able to share the same memory.</p>
+
+<p>The purpose of the wal-index is to answer this question quickly:</p>
+
+<blockquote><i>
+Given a page number P and a maximum WAL frame index M,
+return the largest WAL frame index for page P that does not exceed M, 
+or return NULL if there are no frames for page P that do not exceed M.
+</i></blockquote>
+
+<p>The <i>M</i> value in the previous paragraph is the "mxFrame" value
+defined in <a href="fileformat2.html#walread">section 4.4</a> that is read at the start 
+of a transaction and which defines the maximum frame from the WAL that 
+the reader will use.</p>
+
+<p>The wal-index is transient.  After a crash, the wal-index is
+reconstructed from the original WAL file.  The VFS is required
+to either truncate or zero the header of the wal-index when the last
+connection to it closes.  Because the wal-index is transient, it can
+use an architecture-specific format; it does not have to be cross-platform.
+Hence, unlike the database and WAL file formats which store all values
+as big endian, the wal-index stores multi-byte values in the native
+byte order of the host computer.</p>
+
+<p>This document is concerned with the persist state of the database
+file, and since the wal-index is a transient structure, no further 
+information about the format of the wal-index will be provided here.
+Complete details on the format of the wal-index are contained within
+comments in SQLite source code.</p>
 

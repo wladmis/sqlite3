@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -137,16 +137,16 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_6_23.html">version 3.6.23</a> (all statistics in the report are against that
+<p>As of <a href="releaselog/3_7_0.html">version 3.7.0</a> (all statistics in the report are against that
 release of SQLite),
 the SQLite library consists of approximately
-67.2 KSLOC of C code.
+70.6 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-679 times as much
+647 times as much
 test code and test scripts - 
-45678.3 KSLOC.</p>
+45716.6 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -185,11 +185,11 @@ SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 14.7 KSLOC 
+The TCL test harness itself consists of 16.8 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 536 files totaling 
-8.4MB in size.  There are
-25400 distinct test cases, but many of the test
+in 571 files totaling 
+8.7MB in size.  There are
+26439 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run, about 2.2 million 
 separate tests are performed.
@@ -204,15 +204,14 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-45.6 MB or 602.9 KSLOC
-of C code implementing 29644 distinct test cases.
+47.5 MB or 628.4 KSLOC
+of C code implementing 30641 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
-about 1.5 million different test
+about 1.9 million different test
 instances.  The cases that provide 100% branch test coverage constitute
 a subset of the total TH3 test suite.  A soak test
-prior to release does in excess of 2.50 billion
-tests.  Additional information on TH3 is
-<a href="th3.html">available separately</a>.</p></li>
+prior to release does hundreds of millions of tests.
+Additional information on TH3 is <a href="th3.html">available separately</a>.</p></li>
 
 <li><p>
 <a name="slt"></a>
@@ -248,7 +247,7 @@ instead of a few hours.</p>
 of SQLite when something goes wrong.  It is (relatively) easy to build
 an SQL database engine that behaves correctly on well-formed inputs
 on a fully functional computer.  It is more difficult to build a system
-that responses sanely to invalid inputs and continues to function following
+that responds sanely to invalid inputs and continues to function following
 system malfunctions.  The anomaly tests are designed to verify the latter
 behavior.</p>
 
@@ -368,7 +367,7 @@ snapshot with different random damage each time.</p>
 <h3>3.4 Compound failure tests</h3>
 
 <p>The test suites for SQLite also explore the result of stacking
-multiple failures.  For example, tests are run to insure correct behavior
+multiple failures.  For example, tests are run to ensure correct behavior
 when an I/O error or OOM fault occurs while trying to recover from a
 prior crash.
 
@@ -377,7 +376,7 @@ prior crash.
 <h2>4.0 Fuzz Testing</h2>
 
 <p><a href="http://en.wikipedia.org/wiki/Fuzz_testing">Fuzz testing</a>
-seeks to establish that SQLite response correctly to invalid, out-of-range,
+seeks to establish that SQLite responds correctly to invalid, out-of-range,
 or malformed inputs.</p>
 
 <h3>4.1 SQL Fuzz</h3>
@@ -434,7 +433,7 @@ have been tested.</p>
 fixed until new test cases have been added to the TCL test suite which
 would exhibit the bug in an unpatched version of SQLite.  Over the years,
 this has resulted in thousands and thousands of new tests being added
-to the TCL test suite.  These regression tests insure that bugs that have
+to the TCL test suite.  These regression tests ensure that bugs that have
 been fixed in the past are not reintroduced into future versions of
 SQLite.</p>
 
@@ -446,10 +445,10 @@ SQLite.</p>
 are allocated and never freed.  The most troublesome resource leaks
 in many applications are memory leaks - when memory is allocated using
 malloc() but never released using free().  But other kinds of resources
-can also be linked:  file descriptors, threads, mutexes, etc.</p>
+can also be leaked:  file descriptors, threads, mutexes, etc.</p>
 
 <p>Both the TCL and TH3 test harnesses automatically track system
-resources and report resources leaks on <u>every</u> test run.
+resources and report resource leaks on <u>every</u> test run.
 No special configuration or setup is required.   The test harnesses
 are especially vigilant with regard to memory leaks.  If a change
 causes a memory leak, the test harnesses will recognize this
@@ -482,7 +481,7 @@ mean statement coverage.  Statement coverage measures what percentage
 of lines of code are executed at least once by the test suite.</p>
 
 <p>Branch coverage is more rigorous than statement coverage.  Branch
-coverage measure the number of machine-code branch instructions that
+coverage measures the number of machine-code branch instructions that
 are evaluated at least once on both directions.</p>
 
 <p>To illustrate the difference between statement coverage and
@@ -575,19 +574,19 @@ form (the pass-through form) for deployment.</p>
 <p>Another macro used in conjunction with test coverage measurement is
 the <tt>testcase()</tt> macro.  The argument is a condition for which
 we want test cases that evaluate to both true and false.
-In non-coverage builds (that is to so, in release builds) the testcase()
-macro is a no-op:</p>
+In non-coverage builds (that is to say, in release builds) the
+<tt>testcase()</tt> macro is a no-op:</p>
 
 <blockquote><pre>
 #define testcase(X)
 </pre></blockquote>
 
-<p>But in a coverage measuring build, the testcase() macro generates code
-that evaluates the conditional expression in its argument.  
+<p>But in a coverage measuring build, the <tt>testcase()</tt> macro
+generates code that evaluates the conditional expression in its argument.  
 Then during analysis, a check
-is made to insure tests exists that evaluate the conditional to both true
-and false.  Testcase() macros are used, for example, to help verify that
-boundary values are tested.  For example:</p>
+is made to ensure tests exist that evaluate the conditional to both true
+and false.  <tt>Testcase()</tt> macros are used, for example, to help verify
+that boundary values are tested.  For example:</p>
 
 <blockquote><pre>
 testcase( a==b );
@@ -612,10 +611,11 @@ switch( op ){
 }
 </pre></blockquote>
 
-<p>For bitmask tests, testcase() macros are used to verify that every
-bit of the bitmask effects the test.  For example, in the following block
+<p>For bitmask tests, <tt>testcase()</tt> macros are used to verify that every
+bit of the bitmask affects the test.  For example, in the following block
 of code, the condition is true if the mask contains either of two bits
-indicating either a MAIN_DB or a TEMP_DB is being opened.  The testcase()
+indicating either a MAIN_DB or a TEMP_DB is being opened.  
+The <tt>testcase()</tt>
 macros that precede the if statement verify that both cases are tested:</p>
 
 <blockquote><pre>
@@ -624,8 +624,8 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The SQLite source code contains 558
-uses of the testcase() macro.</p>
+<p>The SQLite source code contains 626
+uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
 
@@ -686,7 +686,7 @@ quality of SQLite.</p>
 
 <h3>8.1 Assert</h3>
 
-<p>The SQLite core contains 2831 <tt>assert()</tt>
+<p>The SQLite core contains 2957 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be
@@ -710,7 +710,7 @@ and useful developer tool in the world.  Valgrind is a simulator - it simulates
 an x86 running a linux binary.  (Ports of valgrind for platforms other
 than linux are in development, but as of this writing, valgrind only
 works reliably on linux, which in the opinion of the SQLite developers 
-means that linux should be preferred platform for all software development.)
+means that linux should be the preferred platform for all software development.)
 As valgrind runs a linux binary, it looks for all kinds of interesting
 errors such as array overruns, reading from uninitialized memory,
 stack overflows, memory leaks, and so forth.  Valgrind finds problems
@@ -758,7 +758,7 @@ in multi-threaded applications.</p>
 
 <h3>8.5 Journal Tests</h3>
 
-<p>One of the things that SQLite does to insure that transactions
+<p>One of the things that SQLite does to ensure that transactions
 are atomic across system crashes and power failures is to write
 all changes into the rollback journal file prior to changing the
 database.  The TCL test harness contains an alternative
@@ -805,7 +805,7 @@ decreased as a result.</p>
 
 <h2>10.0 Summary</h2>
 
-<p>SQLite is open source.  This gives many people with the idea that
+<p>SQLite is open source.  This gives many people the idea that
 it is not well tested as commercial software and is perhaps unreliable.
 But that impression is false.  
 SQLite has exhibited very high reliability in the field and

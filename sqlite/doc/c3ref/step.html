@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(../images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(../images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.png) 0% 0% no-repeat }
+.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="../index.html">
-<img class="logo" src="../images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -142,7 +142,7 @@ interface will continue to be supported.</p>
 <p>In the legacy interface, the return value will be either <a href="../c3ref/c_abort.html">SQLITE_BUSY</a>,
 <a href="../c3ref/c_abort.html">SQLITE_DONE</a>, <a href="../c3ref/c_abort.html">SQLITE_ROW</a>, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>, or <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.
 With the "v2" interface, any of the other <a href="../c3ref/c_abort.html">result codes</a> or
-<a href="../c3ref/c_ioerr_access.html">extended result codes</a> might be returned as well.</p>
+<a href="../c3ref/c_busy_recovery.html">extended result codes</a> might be returned as well.</p>
 
 <p><a href="../c3ref/c_abort.html">SQLITE_BUSY</a> means that the database engine was unable to acquire the
 database locks it needs to do its job.  If the statement is a <a href="../lang_transaction.html">COMMIT</a>
@@ -176,6 +176,14 @@ already been <a href="../c3ref/finalize.html">finalized</a> or on one that had
 previously returned <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> or <a href="../c3ref/c_abort.html">SQLITE_DONE</a>.  Or it could
 be the case that the same database connection is being used by two or
 more threads at the same moment in time.</p>
+
+<p>For all versions of SQLite up to and including 3.6.23.1, it was required
+after sqlite3_step() returned anything other than <a href="../c3ref/c_abort.html">SQLITE_ROW</a> that
+<a href="../c3ref/reset.html">sqlite3_reset()</a> be called before any subsequent invocation of
+sqlite3_step().  Failure to invoke <a href="../c3ref/reset.html">sqlite3_reset()</a> in this way would
+result in an <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> return from sqlite3_step().  But after
+version 3.6.23.1, sqlite3_step() began calling <a href="../c3ref/reset.html">sqlite3_reset()</a>
+automatically in this circumstance rather than returning <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.</p>
 
 <p><b>Goofy Interface Alert:</b> In the legacy interface, the sqlite3_step()
 API always returns a generic error code, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>, following any

@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(../images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(../images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.png) 0% 0% no-repeat }
+.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="../index.html">
-<img class="logo" src="../images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,14 +120,14 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
 </script>
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>OS Interface Object</h2><blockquote><pre>typedef struct sqlite3_vfs sqlite3_vfs;
 struct sqlite3_vfs {
-  int iVersion;            /* Structure version number */
+  int iVersion;            /* Structure version number (currently 2) */
   int szOsFile;            /* Size of subclassed sqlite3_file */
   int mxPathname;          /* Maximum file pathname length */
   sqlite3_vfs *pNext;      /* Next registered VFS */
@@ -146,8 +146,16 @@ struct sqlite3_vfs {
   int (*xSleep)(sqlite3_vfs*, int microseconds);
   int (*xCurrentTime)(sqlite3_vfs*, double*);
   int (*xGetLastError)(sqlite3_vfs*, int, char *);
-  /* New fields may be appended in figure versions.  The iVersion
-  ** value will increment whenever this happens. */
+  /*
+  ** The methods above are in version 1 of the sqlite_vfs object
+  ** definition.  Those that follow are added in version 2 or later
+  */
+  int (*xCurrentTimeInt64)(sqlite3_vfs*, sqlite3_int64*);
+  /*
+  ** The methods above are in versions 1 and 2 of the sqlite_vfs object.
+  ** New fields may be appended in figure versions.  The iVersion
+  ** value will increment whenever this happens. 
+  */
 };
 </pre></blockquote><p>
 An instance of the sqlite3_vfs object defines the interface between
@@ -265,17 +273,24 @@ is not large enough, <a href="../c3ref/c_abort.html">SQLITE_CANTOPEN</a> should 
 handled as a fatal error by SQLite, vfs implementations should endeavor
 to prevent this by setting mxPathname to a sufficiently large value.</p>
 
-<p>The xRandomness(), xSleep(), and xCurrentTime() interfaces
-are not strictly a part of the filesystem, but they are
+<p>The xRandomness(), xSleep(), xCurrentTime(), and xCurrentTimeInt64()
+interfaces are not strictly a part of the filesystem, but they are
 included in the VFS structure for completeness.
 The xRandomness() function attempts to return nBytes bytes
 of good-quality randomness into zOut.  The return value is
 the actual number of bytes of randomness obtained.
 The xSleep() method causes the calling thread to sleep for at
 least the number of microseconds given.  The xCurrentTime()
-method returns a Julian Day Number for the current date and time.</p>
-
-<p></p><p>See also lists of
+method returns a Julian Day Number for the current date and time as
+a floating point value.
+The xCurrentTimeInt64() method returns, as an integer, the Julian
+Day Number multipled by 86400000 (the number of milliseconds in
+a 24-hour day).
+SQLite will use the xCurrentTimeInt64() method to get the current
+date and time if that method is available (if iVersion is 2 or
+greater and the function pointer is not NULL) and will fall back
+to xCurrentTime() if xCurrentTimeInt64() is unavailable.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>

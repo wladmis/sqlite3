@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -238,7 +238,7 @@ routines used by SQLite through the
 <p>Over
 75% of the code in the SQLite source tree is devoted purely to 
 <a href="testing.html">testing and verification</a>.  Reliability is important to SQLite.
-Among the tasks of the test infrastructure is to insure that
+Among the tasks of the test infrastructure is to ensure that
 SQLite does not misuse dynamically allocated memory, that SQLite
 does not leak memory, and that SQLite responds
 correctly to a dynamic memory allocation failure.</p>
@@ -260,7 +260,7 @@ outside the bounds of the allocation.</p></li>
 
 <li><p><b>Use of memory after freeing.</b>
 When each block of memory is freed, every byte is overwritten with a
-nonsense bit pattern.  This helps to insure that no memory is ever
+nonsense bit pattern.  This helps to ensure that no memory is ever
 used after having been freed.</p></li>
 
 <li><p><b>Freeing memory not obtained from malloc.</b>
@@ -270,7 +270,7 @@ from prior malloc.</p></li>
 
 <li><p><b>Uninitialized memory.</b>
 The instrumented memory allocator initializes each memory allocation
-to a nonsense bit pattern to help insure that the user makes no
+to a nonsense bit pattern to help ensure that the user makes no
 assumptions about the content of allocation memory.</p></li>
 </ul>
 
@@ -278,7 +278,7 @@ assumptions about the content of allocation memory.</p></li>
 used, SQLite keeps track of how much memory is currently checked out.
 There are hundreds of test scripts used for testing SQLite.  At the
 end of each script, all objects are destroyed and a test is made to
-insure that all  memory has been freed.  This is how memory
+ensure that all  memory has been freed.  This is how memory
 leaks are detected.  Notice that memory leak detection is in force at
 all times, during test builds and during production builds.  Whenever
 one of the developers runs any individual test script, memory leak
@@ -377,7 +377,7 @@ tracking down the source of memory leaks detected by the test suite.</p>
 makes sure each new allocation is filled with nonsense data prior to
 returning the allocation to the caller.  And as soon as an allocation
 is free, it is again filled with nonsense data.  These two actions help
-to insure that the SQLite core does not make assumptions about the state
+to ensure that the SQLite core does not make assumptions about the state
 of newly allocated memory and that memory allocations are not used after
 they have been freed.</p>
 
@@ -782,14 +782,14 @@ returns.</p>
 single <a href="c3ref/sqlite3.html">database connection</a>:</p>
 
 <blockquote><pre>
-<a href="c3ref/db_status.html">sqlite3_db_status</a>(db, <a href="c3ref/c_dbstatus_lookaside_used.html">verb</a>, &current, &highwater, resetflag);
+<a href="c3ref/db_status.html">sqlite3_db_status</a>(db, <a href="c3ref/c_dbstatus_cache_used.html">verb</a>, &current, &highwater, resetflag);
 </pre></blockquote>
 
 <p>This interface is similar except that it takes a pointer to
 a <a href="c3ref/sqlite3.html">database connection</a> as its first argument and returns statistics about
 that one object rather than about the entire SQLite library.
 The <a href="c3ref/db_status.html">sqlite3_db_status()</a> interface currently only recognizes a
-single verb <a href="c3ref/c_dbstatus_lookaside_used.html">SQLITE_DBSTATUS_LOOKASIDE_USED</a>, though additional verbs
+single verb <a href="c3ref/c_dbstatus_cache_used.html">SQLITE_DBSTATUS_LOOKASIDE_USED</a>, though additional verbs
 may be added in the future.</p>
 
 <p>The per-connection statistics do not use global variables and hence

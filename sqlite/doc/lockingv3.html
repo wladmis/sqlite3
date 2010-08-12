@@ -8,7 +8,7 @@ body {
     padding: 8px 1%;
 }
 
-a { color: #45735f }
+a { color: #044a64 }
 a:visited { color: #734559 }
 
 .logo { position:absolute; margin:3px; }
@@ -29,7 +29,7 @@ a:visited { color: #734559 }
 }
 .toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
 .toolbar a:visited { color: white; }
-.toolbar a:hover { color: #80a796; background: white; }
+.toolbar a:hover { color: #044a64; background: white; }
 
 .content    { margin: 5%; }
 .content dt { font-weight:bold; }
@@ -37,15 +37,15 @@ a:visited { color: #734559 }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
 
 /* rounded corners */
-.se  { background: url(images/se.png) 100% 100% no-repeat #80a796}
-.sw  { background: url(images/sw.png) 0% 100% no-repeat }
-.ne  { background: url(images/ne.png) 100% 0% no-repeat }
-.nw  { background: url(images/nw.png) 0% 0% no-repeat }
+.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
+.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
+.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
+.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
 .fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#80a796}
+.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
@@ -69,7 +69,7 @@ a:visited { color: #734559 }
 <div><!-- container div to satisfy validator -->
 
 <a href="index.html">
-<img class="logo" src="images/SQLite.gif" alt="SQLite Logo"
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
@@ -92,7 +92,7 @@ a:visited { color: #734559 }
     <form name=f method="GET" action="http://www.sqlite.org/search">
       <input id=q name=q type=text value=""
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#80a796;color:white;font-size:0.9em;padding:0 1ex">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
     </form>
     </div>
   </table>
@@ -112,7 +112,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     if( q.value == "" ) { 
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
     }
   }
@@ -120,7 +120,7 @@ a:visited { color: #734559 }
     var q = document.getElementById("q");
     q.value = ""
       q.value = gMsg
-      q.style.color = "#80a796"
+      q.style.color = "#044a64"
       q.style.fontStyle = "italic"
   }
   window.onload = initsearch
@@ -129,8 +129,9 @@ a:visited { color: #734559 }
 
 <h2>1.0 File Locking And Concurrency In SQLite Version 3</h2>
 
-<p>Version 3 of SQLite introduces a more complex locking and journaling 
-mechanism designed to improve concurrency and reduce the writer starvation 
+<p>SQLite <a href="releaselog/3_0_0.html">Version 3.0.0</a> introduced a new locking and journaling 
+mechanism designed to improve concurrency over SQLite version 2
+and to reduce the writer starvation 
 problem.  The new mechanism also allows atomic commits of transactions
 involving multiple database files.
 This document describes the new locking mechanism.
@@ -138,6 +139,15 @@ The intended audience is programmers who want to understand and/or modify
 the pager code and reviewers working to verify the design
 of SQLite version 3.
 </p>
+
+<p>This document was originally created in early 2004 when SQLite version 2
+was still in widesprad use and was written to introduce
+the new concepts of SQLite version 3 to readers who were already familiar
+with SQLite version 2.  But these days, most readers of this document have
+probably never seen SQLite version 2 and are only familiar with SQLite
+version 3.  Nevertheless, this document continues to serve as an
+authoritative reference to how database file locking works in SQLite 
+version 3.</p>
 
 <a name="overview"></a>
 <h2>2.0 Overview</h2>
@@ -255,25 +265,26 @@ does not track PENDING locks.
 <a name="rollback"></a>
 <h2>4.0 The Rollback Journal</h2>
 
-<p>Any time a process wants to make a changes to a database file, it
-first records enough information in the <em>rollback journal</em> to
-restore the database file back to its initial condition.  Thus, before
-altering any page of the database, the original contents of that page
-must be written into the journal.  The journal also records the initial
+<p>When a process wants to change a database file (and it is not
+in <a href="wal.html">WAL</a> mode), it
+first records the original unchanged database content
+in a <em>rollback journal</em>.  The rollback journal is an ordinary
+disk file that is always located
+in the same directory or folder as the database file and has the
+same name as the database file with the addition of a <tt>-journal</tt>
+suffix. The rollback journal also records the initial
 size of the database so that if the database file grows it can be truncated
 back to its original size on a rollback.</p>
 
-<p>The rollback journal is a ordinary disk file that has the same name as
-the database file with the suffix "<tt>-journal</tt>" added.</p>
-
 <p>If SQLite is working with multiple databases at the same time
-(using the ATTACH command) then each database has its own journal.
+(using the <a href="lang_attach.html">ATTACH</a> command) then each database has its own rollback journal.
 But there is also a separate aggregate journal
 called the <em>master journal</em>.
 The master journal does not contain page data used for rolling back
 changes.  Instead the master journal contains the names of the
-individual file journals for each of the ATTACHed databases.   Each of
-the individual file journals also contain the name of the master journal.
+individual database rollback journals for each of the ATTACHed databases. 
+Each of the individual database rollback journals also contain the name 
+of the master journal.
 If there are no ATTACHed databases (or if none of the ATTACHed database
 is participating in the current transaction) no master journal is
 created and the normal rollback journal contains an empty string
@@ -297,7 +308,8 @@ you will never get a hot journal.
 
 <p>
 If no master journal is involved, then
-a journal is hot if it exists and its corresponding database file
+a journal is hot if it exists and has a non-zero header
+and its corresponding database file
 does not have a RESERVED lock.
 If a master journal is named in the file journal, then the file journal
 is hot if its master journal exists and there is no RESERVED
@@ -310,6 +322,8 @@ preceding rules will be repeated in bullets:
 <li>A journal is hot if...
     <ul>
     <li>It exists, and</li>
+    <li>Its size is greater than 512 bytes, and</li>
+    <li>The journal header is non-zero and well-formed, and</li>
     <li>Its master journal exists or the master journal name is an
         empty string, and</li>
     <li>There is no RESERVED lock on the corresponding database file.</li>
@@ -346,9 +360,12 @@ the following sequence of steps:
     drop all locks, close the database, and return SQLITE_BUSY. </li>
 <li>Read the journal file and roll back the changes.</li>
 <li>Wait for the rolled back changes to be written onto 
-    the surface of the disk.  This protects the integrity of the database
+    persistent storage.  This protects the integrity of the database
     in case another power failure or crash occurs.</li>
-<li>Delete the journal file.</li>
+<li>Delete the journal file (or truncate the journal to zero bytes in
+    length if <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=TRUNCATE</a> is
+    set, or zero the journal header if
+    <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=PERSIST</a> is set).</li>
 <li>Delete the master journal file if it is safe to do so.
     This step is optional.  It is here only to prevent stale
     master journals from cluttering up the disk drive.
@@ -451,7 +468,9 @@ steps:
    using the algorithm of steps 1-3 above.</li>
 <li>Flush all database file changes to the disk.  Wait for those changes
     to actually be written onto the disk surface.</li>
-<li>Delete the journal file.  This is the instant when the changes are
+<li>Delete the journal file.  (Or if the <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a> is TRUNCATE or
+    PERSIST, truncate the journal file or zero the header of the journal file,
+    respectively.)  This is the instant when the changes are
     committed.  Prior to deleting the journal file, if a power failure
     or crash occurs, the next process to open the database will see that
     it has a hot journal and will roll the changes back.
@@ -462,7 +481,7 @@ steps:
     </li>
 </ol>
 
-<p>As soon as PENDING lock is released from the database file, other
+<p>As soon as the PENDING lock is released from the database file, other
 processes can begin reading the database again.  In the current implementation,
 the RESERVED lock is also released, but that is not essential.  Future
 versions of SQLite might provide a "CHECKPOINT" SQL command that will
@@ -523,9 +542,8 @@ writer will be given a chance to make its changes.</p>
 <a name="how_to_corrupt"></a>
 <h2>6.0 How To Corrupt Your Database Files</h2>
 
-<p>The pager module is robust but it is not completely failsafe.
-It can be subverted.  This section attempts to identify and explain
-the risks.
+<p>The pager module is very robust but it can be subverted.  
+This section attempts to identify and explain the risks.
 (See also the <a href="atomiccommit.html#sect_9_0">Things That Can Go Wrong</a> section of the article
 on <a href="atomiccommit.html">Atomic Commit</a>.</p>
 
@@ -557,7 +575,7 @@ it uses the FlushFileBuffers() to do the same under Windows.  Once again,
 SQLite assumes that these operating system services function as advertised.
 But it has been reported that fsync() and FlushFileBuffers() do not always
 work correctly, especially with inexpensive IDE disks.  Apparently some
-manufactures of IDE disks have defective controller chips that report
+manufactures of IDE disks have controller chips that report
 that data has reached the disk surface when in fact the data is still
 in volatile cache memory in the disk drive electronics.  There are also
 reports that Windows sometimes chooses to ignore FlushFileBuffers() for
@@ -566,6 +584,28 @@ But if they are true, it means that database corruption is a possibility
 following an unexpected power loss.  These are hardware and/or operating
 system bugs that SQLite is unable to defend against.
 </p>
+
+<a name="ext3-barrier-problem"></a>
+
+<p>If a Linux <a href="http://en.wikipedia.org/wiki/Ext3">ext3</a>
+filesystem is mounted without the "barrier=1" option
+in the <a href="http://en.wikipedia.org/wiki/fstab">/etc/fstab</a>
+and the disk drive write cache is enabled
+then filesystem corruption can occur following a power loss or OS crash.
+Whether or not corruption can occur depends on the details of the disk control
+hardware; corruption is more likely with inexpensive consumer-grade disks
+and less of a problem for enterprise-class storage devices with advanced
+features such as non-volatile write caches.
+Various ext3 experts
+<a href="http://www.redhat.com/archives/ext3-users/2010-July/msg00001.html">
+confirm this behavior</a>.
+We are told that most Linux distributions do not use barrier=1 and do
+not disable the write cache so most
+Linux distributions are vulnerable to this problem.  Note that this is an
+operating system and hardware issue and that there is nothing that SQLite
+can do to work around it.  
+<a href="http://ozlabs.org/~rusty/index.cgi/tech/2009-10-20.html">
+Other database engines</a> have also run into this same problem.</p>
 
 <p>
 If a crash or power failure occurs and results in a hot journal but that
