@@ -10,7 +10,7 @@
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 --- sqlite/libsqlite3.map.alt-ver	2009-12-08 16:21:20 +0300
 +++ sqlite/libsqlite3.map	2009-12-08 16:24:10 +0300
-@@ -0,0 +1,281 @@
+@@ -0,0 +1,290 @@
 +SQLITE_3.2.2 {
 +    global:
 +	sqlite3_db_handle;
@@ -235,7 +235,7 @@
 +	sqlite3_unlock_notify;
 +};
 +
-+LIBSQLITE3_3.7.0.1 {
++SQLITE3_3.7.0.1 {
 +    global:
 +	sqlite3BtreeLastPage;
 +	sqlite3BtreeSetVersion;
@@ -278,6 +278,15 @@
 +	sqlite3_wal_autocheckpoint;
 +	sqlite3_wal_checkpoint;
 +	sqlite3_wal_hook;
++};
++
++SQLITE3_3.7.2 {
++    global:
++	sqlite3BtreeCheckpoint;
++	sqlite3ExprSetCollByToken;
++	sqlite3PagerExclusiveLock;
++	sqlite3VdbeDeleteObject;
++	sqlite3VdbeLinkSubProgram;
 +};
 +
 +SQLITE3_COLUMN_METADATA {
