@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 <h1 align="center">PRAGMA Statements</h1>
 
@@ -138,7 +130,7 @@ different in the following important respects:
 </p>
 <ul>
 <li>Specific pragma statements may be removed and others added in future
-    releases of SQLite. There is no guarantee of backwards compatiblity.
+    releases of SQLite. There is no guarantee of backwards compatibility.
 <li>No error messages are generated if an unknown pragma is issued.
     Unknown pragmas are simply ignored. This means if there is a typo in 
     a pragma statement the library does not inform the user of the fact.
@@ -255,7 +247,7 @@ name is meaningless and is simply ignored.</p>
     The "none" setting means that auto-vacuum is disabled.
     When auto-vacuum is disabled and data is deleted data from a database,
     the database file remains the same size.  Unused database file 
-    pages are added to a "freelist" and reused for subsequent inserts.  So
+    pages are added to a "<a href="fileformat2.html#freelist">freelist</a>" and reused for subsequent inserts.  So
     no database file space is lost.  However, the database file does not
     shrink.  In this mode the <a href="lang_vacuum.html">VACUUM</a>
     command can be used to rebuild the entire database file and
@@ -316,7 +308,7 @@ name is meaningless and is simply ignored.</p>
     that SQLite will hold in memory at once per open database file.  Whether
     or not this suggestion is honored is at the discretion of the
     <a href="c3ref/pcache_methods.html">Application Defined Page Cache</a>.   In the
-    default page cache implemention, the suggested cache size is honored
+    default page cache implementation, the suggested cache size is honored
     as long as it is 10 or greater.  A suggested cache size of less
     than 10 are treated as if it were 10.
     Alternative application-defined page cache implementations
@@ -507,23 +499,13 @@ name is meaningless and is simply ignored.</p>
 <hr>
     <p><b>PRAGMA incremental_vacuum</b><i>(N)</i><b>;</b></p>
     <p>The incremental_vacuum pragma causes up to <i>N</i> pages to
-    be removed from the freelist.  The database file is truncated by
+    be removed from the <a href="fileformat2.html#freelist">freelist</a>.  The database file is truncated by
     the same amount.  The incremental_vacuum pragma has no effect if
     the database is not in
-    <a href="#pragma_auto_vacuum">auto_vacuum==incremental</a> mode
+    <a href="#pragma_auto_vacuum">auto_vacuum=incremental</a> mode
     or if there are no pages on the freelist.  If there are fewer than
     <i>N</i> pages on the freelist, or if <i>N</i> is less than 1, or
     if <i>N</i> is omitted entirely, then the entire freelist is cleared.</p>
-
-    <p>As of <a href="releaselog/3_4_0.html">version 3.4.0</a> (the first version that supports
-    incremental_vacuum) this feature is still experimental.  Possible
-    future changes include enhancing incremental vacuum to do
-    defragmentation and node repacking just as the full-blown
-    <a href="lang_vacuum.html">VACUUM</a> command does.  And
-    incremental vacuum may be promoted from a pragma to a separate
-    SQL command, or perhaps some variation on the <a href="lang_vacuum.html">VACUUM</a> command.
-    Programmers are cautioned to not become enamored with the
-    current syntax or functionality as it is likely to change.</p>
 <a name="pragma_index_info"></a>
 <hr>
     <p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
@@ -743,8 +725,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Query or set the page size of the database. The page size
     may only be set if the database has not yet been created. The page
     size must be a power of two greater than or equal to 512 and less
-    than or equal to <a href="limits.html#max_page_size">SQLITE_MAX_PAGE_SIZE</a>.
-    The maximum value for <a href="limits.html#max_page_size">SQLITE_MAX_PAGE_SIZE</a> is 32768.
+    than or equal to 65536.
     </p>
 
     <p>When a new database is created, SQLite assigned a default page size
@@ -771,7 +752,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object, but not more than 
     SQLITE_MAX_DEFAULT_PAGE_SIZE.  The normal configuration for SQLite
     running on workstations is for atomic write to be
-    disabled, for the maximum page size to be set to 32768, for
+    disabled, for the maximum page size to be set to 65536, for
     SQLITE_DEFAULT_PAGE_SIZE to be 1024, and for the
     maximum default page size to be set to 8192.  The default xSectorSize
     method on workstation implementations always reports a sector size
@@ -1094,3 +1075,5 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
 <hr>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ATTACH DATABASE</h2><h4><a href="syntaxdiagrams.html#attach-stmt">attach-stmt:</a></h4><blockquote> <img alt="syntax diagram attach-stmt" src="images/syntax/attach-stmt.gif"></img> </blockquote>
 
 
@@ -135,25 +127,19 @@ The database-names 'main' and
 temporary tables.  The main and temp databases cannot be attached or
 detached.</p>
 
-<p> You cannot create a new table with the same name as a table in 
-an attached database, but you can attach a database which contains
-tables whose names are duplicates of tables in the main database.  If
-the system is not running in <a href="sharedcache.html">shared cache mode</a>, it is also permissible 
-to attach the same database file multiple times.</p>
-
 <p> Tables in an attached database can be referred to using the syntax 
 <i>database-name.table-name</i>.  If the name of the table is unique
 across all attached databases and the main and temp databases, then the
-<i>database-name</i> prefix is not required.  When a database is attached, 
-all tables which don't have duplicate names become the default table
-of that name.  Any tables of that name attached afterwards require the
-database prefix. If the default table of a given name is detached, then
-the last table of that name attached becomes the new default.</p>
+<i>database-name</i> prefix is not required.  If two or more tables in
+different databases have the same name and the 
+<i>database-name</i> prefix is not used on a table reference, then the
+table chosen is the one in the database that was least recently attached.</p>
 
 <p>
 Transactions involving multiple attached databases are atomic,
-assuming that the main database is not "<a href="inmemorydb.html">:memory:</a>".  If the main
-database is ":memory:" then 
+assuming that the main database is not "<a href="inmemorydb.html">:memory:</a>" and the 
+<a href="pragma.html#pragma_journal_mode">journal_mode</a> is not <a href="wal.html">WAL</a>.  If the main
+database is ":memory:" or if the journal_mode is WAL, then 
 transactions continue to be atomic within each individual
 database file. But if the host computer crashes in the middle
 of a <a href="lang_transaction.html">COMMIT</a> where two or more database files are updated,
@@ -161,7 +147,10 @@ some of those files might get the changes where others
 might not.
 </p>
 
-<p> There is a compile-time limit of <a href="limits.html#max_attached">SQLITE_MAX_ATTACHED</a>
-attached database files.</p>
+<p> There is is a limit, set using <a href="c3ref/limit.html">sqlite3_limit()</a> and 
+<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_ATTACHED</a>, to the number of databases that can be
+simultaneously attached to a single database connection.</p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

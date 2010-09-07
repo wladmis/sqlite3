@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>SAVEPOINT</h2><h4><a href="syntaxdiagrams.html#savepoint-stmt">savepoint-stmt:</a></h4><blockquote> <img alt="syntax diagram savepoint-stmt" src="images/syntax/savepoint-stmt.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#release-stmt">release-stmt:</a></h4><blockquote> <img alt="syntax diagram release-stmt" src="images/syntax/release-stmt.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#rollback-stmt">rollback-stmt:</a></h4><blockquote> <img alt="syntax diagram rollback-stmt" src="images/syntax/rollback-stmt.gif"></img> </blockquote>
@@ -146,7 +138,7 @@ it was just after the corresponding SAVEPOINT.  Note that unlike that
 plain <a href="lang_transaction.html">ROLLBACK</a> command (without the TO keyword) the ROLLBACK TO command
 does not cancel the transaction.  Instead of cancelling the transaction,
 the ROLLBACK TO command restarts the transaction again at the beginning.
-All intervening SAVEPOINTs are cancelled, however.</p>
+All intervening SAVEPOINTs are canceled, however.</p>
 
 <p>The RELEASE command is like a <a href="lang_transaction.html">COMMIT</a> for a SAVEPOINT.
 The RELEASE command causes all savepoints back to and including the 
@@ -163,7 +155,7 @@ commit the transaction even if the transaction was originally started
 by a SAVEPOINT command instead of a <a href="lang_transaction.html">BEGIN</a> command.</p>
 
 <p>If the savepoint-name in a RELEASE command does not match any
-savepoint currently in the tranaction stack, then no savepoints are
+savepoint currently in the transaction stack, then no savepoints are
 released, the database is unchanged, and the RELEASE command returns
 an error.</p>
 
@@ -237,3 +229,5 @@ match any SAVEPOINT on the stack, then the ROLLBACK command fails with an
 error and leaves the state of the database unchanged.</p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

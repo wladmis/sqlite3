@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -252,7 +244,7 @@ locks required by the rules enumerated below (see section
   /* Set the value of the read-uncommitted flag:
   **
   **   True  -> Set the connection to read-uncommitted mode.
-  **   False -> Set the connectino to serialized (the default) mode.
+  **   False -> Set the connection to serialized (the default) mode.
   */
   PRAGMA read_uncommitted = &lt;boolean&gt;;
 
@@ -311,7 +303,7 @@ int sqlite3_enable_shared_cache(int);
 <p>Each call <a href="c3ref/enable_shared_cache.html">sqlite3_enable_shared_cache()</a> effects subsequent database
 connections created using <a href="c3ref/open.html">sqlite3_open()</a>, <a href="c3ref/open.html">sqlite3_open16()</a>, or
 <a href="c3ref/open.html">sqlite3_open_v2()</a>.  Database connections that already exist are
-uneffected.  Each call to <a href="c3ref/enable_shared_cache.html">sqlite3_enable_shared_cache()</a> overrides
+unaffected.  Each call to <a href="c3ref/enable_shared_cache.html">sqlite3_enable_shared_cache()</a> overrides
 all previous calls within the same process.
 </p>
 
@@ -324,3 +316,5 @@ No more than one of the flags should be used; if both SQLITE_OPEN_SHAREDCACHE
 and SQLITE_OPEN_PRIVATECACHE flags are used in the third argument to
 <a href="c3ref/open.html">sqlite3_open_v2()</a> then the behavior is undefined.</p>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

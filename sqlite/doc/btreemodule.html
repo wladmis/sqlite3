@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <!-- title>SQLite B-Tree Module</title -->
 
 
@@ -771,7 +763,7 @@ entry at all (because the b-tree structure is empty).</span></p>
       one or more other cursors currently pointing to the entry being deleted.
 
     <p class=todo>
-      Requirements to do with how the above is handled. Traceibility to 
+      Requirements to do with how the above is handled. Traceability to 
       sqlite3BtreeCursorHasMoved is required.
 
     <h3 id="section_2_1_5">2.1.5 Writing to the Database Image</h3>
@@ -1413,9 +1405,9 @@ than that requested, *pRes shall be set to 1.</span></p>
       <pre class=api>typedef struct KeyInfo KeyInfo;
 struct KeyInfo {
   sqlite3 *db;        /* The database connection */
-  u8 enc;             /* Text encoding - one of the TEXT_Utf* values */
+  u8 enc;             /* Text encoding - one of the SQLITE_UTF* values */
   u16 nField;         /* Number of entries in aColl}; hd_resolve_one {}; hd_puts { */
-  u8 *aSortOrder;     /* If defined an aSortOrder}; hd_resolve_one {i}; hd_puts { is true, sort DESC */
+  u8 *aSortOrder;     /* Sort order for each column.  May be NULL */
   CollSeq *aColl}; hd_resolve_one {1}; hd_puts {;  /* Collating sequence for each term of the key */
 };</pre>
       <pre class=api>typedef struct UnpackedRecord UnpackedRecord;
@@ -1567,7 +1559,7 @@ respectively.</span> (P: <a class=reqlink href=#H50128>H50128</a>)</p>
         may be safely ignored by alternative b-tree implementations.
 
       <p class=todo>
-        There should be some rationalization for these, eventually. Some tracebility
+        There should be some rationalization for these, eventually. Some traceability
         from somewhere to show how the b-tree module offering these slightly esoteric
         interfaces is helpful to SQLite overall.
 
@@ -1589,7 +1581,7 @@ this value.</span></p>
 
       <p class=todo>
         Malloc and IO error handling. Maybe these should be grouped together
-        for a whole bunch of APIs. And hook into the above via a defintion of
+        for a whole bunch of APIs. And hook into the above via a definition of
         "successful call".
 
       <h3 id="sqlite3BtreeIncrVacuum">3.8.9 sqlite3BtreeIncrVacuum</h3>
@@ -1802,7 +1794,7 @@ sqlite3_int64 sqlite3BtreeGetCachedRowid(BtCursor*);</pre>
       <p>
 	A b-tree node page has a finite capacity. If one of the algorithms
 	described here is required to insert a cell into a b-tree node page,
-	and there is not enough free space within the page to accomadate the
+	and there is not enough free space within the page to accommodate the
 	cell, it is still nominally inserted into the requested position within
         the node, but becomes an <a class=defnlink href="#glossary_Overflow_Cell">overflow cell</a>. <a class=defnlink href="#glossary_Overflow_Cell">Overflow cells</a> never remain so
         for very long. If an insert, replace or delete entry operation creates
@@ -2215,3 +2207,5 @@ redistributed b-tree cells.</span></p>
 
   
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

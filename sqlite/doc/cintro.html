@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 <h1 align=center>An Introduction To The SQLite C/C++ Interface</h1>
 
@@ -344,7 +336,7 @@ a:visited { color: #734559 }
 
 <p>
   The foregoing is all one really needs to know in order to use SQLite
-  effectively.  All the rest is just ornimentation and detail.
+  effectively.  All the rest is just ornamentation and detail.
 </p>
 
 <h2>2.0 Convenience Wrappers Around Core Routines</h2>
@@ -383,7 +375,7 @@ a:visited { color: #734559 }
 
 <p>
   After a <a href="c3ref/stmt.html">prepared statement</a> has been evaluated by one or more calls to
-  <a href="c3ref/step.html">sqlite3_step()</a>, it can be reset in order to be evaluted again by a
+  <a href="c3ref/step.html">sqlite3_step()</a>, it can be reset in order to be evaluated again by a
   call to <a href="c3ref/reset.html">sqlite3_reset()</a>.
   Using <a href="c3ref/reset.html">sqlite3_reset()</a> on an existing <a href="c3ref/stmt.html">prepared statement</a> rather
   creating a new <a href="c3ref/stmt.html">prepared statement</a> avoids unnecessary calls to
@@ -396,7 +388,7 @@ a:visited { color: #734559 }
 
 <p>
   Usually, though, it is not useful to evaluate exactly the same SQL
-  statement more than once.  More often, one wants to evalute similar
+  statement more than once.  More often, one wants to evaluate similar
   statements.  For example, you might want to evaluate an INSERT statement
   multiple times though with different values to insert.  To accommodate
   this kind of flexibility, SQLite allows SQL statements to contain
@@ -407,7 +399,7 @@ a:visited { color: #734559 }
 </p>
 
 <p>
-  In SQLite, whereever it is valid to include a string literal, one can use
+  In SQLite, wherever it is valid to include a string literal, one can use
   a <a href="lang_expr.html#varparam">parameter</a> in one of the following forms:
 </p>
 
@@ -489,3 +481,5 @@ a:visited { color: #734559 }
   all SQLite interfaces.
 </p>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

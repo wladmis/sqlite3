@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,18 +103,25 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Status Parameters for database connections</h2><blockquote><pre>#define SQLITE_DBSTATUS_LOOKASIDE_USED     0
 #define SQLITE_DBSTATUS_CACHE_USED         1
-#define SQLITE_DBSTATUS_MAX                1   /* Largest defined DBSTATUS */
+#define SQLITE_DBSTATUS_SCHEMA_USED        2
+#define SQLITE_DBSTATUS_STMT_USED          3
+#define SQLITE_DBSTATUS_MAX                3   /* Largest defined DBSTATUS */
 </pre></blockquote><p>
 These constants are the available integer "verbs" that can be passed as
 the second argument to the <a href="../c3ref/db_status.html">sqlite3_db_status()</a> interface.</p>
@@ -146,10 +140,27 @@ checked out.</dd></p>
 <p><dt>SQLITE_DBSTATUS_CACHE_USED</dt>
 <dd>This parameter returns the approximate number of of bytes of heap
 memory used by all pager caches associated with the database connection.
-The highwater mark associated with SQLITE_DBSTATUS_CACHE_USED is always 0.
+The highwater mark associated with SQLITE_DBSTATUS_CACHE_USED is always 0.</p>
+
+<p><dt>SQLITE_DBSTATUS_SCHEMA_USED</dt>
+<dd>This parameter returns the approximate number of of bytes of heap
+memory used to store the schema for all databases associated
+with the connection - main, temp, and any <a href="../lang_attach.html">ATTACH</a>-ed databases.
+The full amount of memory used by the schemas is reported, even if the
+schema memory is shared with other database connections due to
+<a href="../sharedcache.html">shared cache mode</a> being enabled.
+The highwater mark associated with SQLITE_DBSTATUS_SCHEMA_USED is always 0.</p>
+
+<p><dt>SQLITE_DBSTATUS_STMT_USED</dt>
+<dd>This parameter returns the approximate number of of bytes of heap
+and lookaside memory used by all prepared statements associated with
+the database connection.
+The highwater mark associated with SQLITE_DBSTATUS_STMT_USED is always 0.
 </dd>
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

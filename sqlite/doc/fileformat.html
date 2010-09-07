@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -1167,7 +1159,10 @@ shall be set to an integer value between 1 and 4, inclusive.</span></p>
         of <i><a class=defnlink href="#glossary_Page_size">page-size</a></i> bytes, where <i><a class=defnlink href="#glossary_Page_size">page-size</a></i> is the 2-byte 
         integer value stored at offset 16 of the <a class=defnlink href="#glossary_Database_header">database header</a> (see above).
         The <i><a class=defnlink href="#glossary_Page_size">page-size</a></i> is always a power of two between 512 
-        (2<sup>9</sup>) and 32768 (2<sup>15</sup>). SQLite <a class=defnlink href="#glossary_Database_file">database files</a>
+        (2<sup>9</sup>) and 32768 (2<sup>15</sup>) or the value 1 used to 
+        represent a 65536-byte page. This field can equivalently be viewed
+        as a little-endian number which is <a class=defnlink href="#glossary_Page_size">page size</a> divided by 256.
+        SQLite <a class=defnlink href="#glossary_Database_file">database files</a>
         always consist of an exact number of pages.
       <p>
         Pages are numbered beginning from 1, not 0. Page 1 consists of
@@ -1338,7 +1333,7 @@ field of the <i>schema table</i> record shall contain the integer
 value 0 (zero).</span></p>
           <p class=req id=H30310><span>In a well-formed database, the fifth field of all <i>schema table</i>
 records associated with SQL tables shall contain a "CREATE TABLE"
-or "CREATE VIRTUAL TABLE" statment (a text value).  The details
+or "CREATE VIRTUAL TABLE" statement (a text value).  The details
 of the statement shall be such that executing the statement
 would create a table of precisely the same name and schema as the
 existing database table.</span></p>
@@ -1529,7 +1524,7 @@ format consumes from 1 to 9 bytes of space.</span></p>
 <i>variable length integer</i> is always set. Unless the serialized
 form consumes the maximum 9 bytes available, then the most significant
 bit of the final byte of the representation is always cleared.</span></p>
-          <p class=req id=H30540><span>The eight least significant bytes of the 64-bit twos-compliment
+          <p class=req id=H30540><span>The eight least significant bytes of the 64-bit twos-complement
 representation of a value stored in a 9 byte <i>variable length
 integer</i> are stored in the final byte (byte offset 8) of the
 serialized <i>variable length integer</i>. The other 56 bits are
@@ -1920,7 +1915,8 @@ index.</span></p>
         <tr style="text-align:left"><td>5..6  <td>2<td>Byte offset of the first byte of the cell
                                content area (see figure 
                                <cite><a href="#figure_indexpage" title="Index B-Tree Page Data">4</a></cite>), relative to the 
-                               start of the page.
+                               start of the page.  If this value is zero, then
+                               it should be interpreted as 65536.
         <tr style="text-align:left;background-color:#DDDDDD"><td>7     <td>1<td>Number of fragmented free bytes on page.
         <tr style="text-align:left"><td>8..11 <td>4<td>Page number of rightmost child-page (the
                                child-page that heads the sub-tree in which all
@@ -4011,3 +4007,5 @@ zero.</span></p>
 
   
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

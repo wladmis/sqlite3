@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -178,7 +170,7 @@ a:visited { color: #734559 }
         the <i>journal file</i>.
     <li><p>SQLite is required to <b>implement isolated transactions</b> (the 'I'
         from the ACID acronym). 
-        <p>This is done by using the file locking facililities provided by the
+        <p>This is done by using the file locking facilities provided by the
         VFS adaptor to serialize writers (write transactions) and preventing
         readers (read transactions) from accessing database files while writers
         are midway through updating them.
@@ -245,7 +237,7 @@ a:visited { color: #734559 }
       required from the VFS implementation are presented along with the
       description of the VFS interface in 
       <cite>capi_sqlitert_requirements</cite>. Section
-      <cite>vfs_assumptions</cite> compliments this by describing in more
+      <cite>vfs_assumptions</cite> complements this by describing in more
       detail the assumptions made about VFS implementations on which the
       algorithms presented in this document depend. Some of these assumptions
       relate to performance issues, but most concern the expected state of
@@ -267,7 +259,7 @@ a:visited { color: #734559 }
       Section <cite>rollback</cite> describes the way in which aborted
       <i>write transactions</i> may be rolled back (reverted), either as
       a result of an explicit user directive or because an application,
-      operating system or power failure occured while SQLite was midway
+      operating system or power failure occurred while SQLite was midway
       through updating a database file.
     <p>
       Section <cite>page_cache_algorithms</cite> describes some of the
@@ -360,7 +352,7 @@ a:visited { color: #734559 }
       and 4095, inclusive, is invalid. It also assumes that since the first
       sector of the file, containing the data from byte offset 0 to 2047 
       inclusive, is valid, since it was not in a transient state when the 
-      crash occured.
+      crash occurred.
     <p>
       Assuming that any and all sectors in the transient state may be 
       corrupted following a power or system failure is a very pessimistic
@@ -406,7 +398,7 @@ a:visited { color: #734559 }
           whether or not any of the write operations performed by SQLite 
           since the last time a file was <i>synced</i>. SQLite is able to
           assume that if the write operations of unknown status are arranged
-          in the order that they occured:
+          in the order that they occurred:
           <ol> 
             <li> the first <i>n</i> operations will have been executed 
                  successfully,
@@ -453,7 +445,7 @@ a:visited { color: #734559 }
       operating system crash.
     <p>
       SQLite does not assume that a <b>create file</b> operation has actually
-      modified the file-system records within perisistent storage until
+      modified the file-system records within persistent storage until
       after the file has been successfully <i>synced</i>.
 <p class=req id=A21001>
       If a system failure occurs during or after a "create file"
@@ -533,7 +525,7 @@ a:visited { color: #734559 }
       If a system failure occurs on a system that supports the 
       <i>atomic-write</i> property for blocks of size <i>N</i> bytes
       following an aligned write of <i>N</i> 
-      bytes to a file but before the file has been succesfully <i>synced</i>,
+      bytes to a file but before the file has been successfully <i>synced</i>,
       then is is assumed following recovery that all sectors spanned by the
       write operation were correctly updated, or that none of the sectors were
       modified at all.
@@ -541,7 +533,7 @@ a:visited { color: #734559 }
       If a system failure occurs on a system that supports the 
       <i>safe-append</i> following a write operation that appends data
       to the end of the file without modifying any of the existing file 
-      content but before the file has been succesfully <i>synced</i>,
+      content but before the file has been successfully <i>synced</i>,
       then is is assumed following recovery that either the data was
       correctly appended to the file, or that the file size remains 
       unchanged. It is assumed that it is impossible that the file be
@@ -581,7 +573,7 @@ a:visited { color: #734559 }
       of possible states that the file-system may be in following recovery
       is the same as if each of the write operations performed since the most
       recent time a file was <i>synced</i> was itself followed by a <i>sync
-      file</i> operation, and that the system failure may have occured during
+      file</i> operation, and that the system failure may have occurred during
       any of the write or <i>sync file</i> operations.
 </p><!--
     <p>
@@ -608,11 +600,11 @@ a:visited { color: #734559 }
           the next successful call to xSync() on the same file-handle 
           returns. If a power failure or operating system crash occurs, then
           part or all of all sectors in the transient state when the crash
-          occured may contain invalid data following system recovery.
+          occurred may contain invalid data following system recovery.
       <li>
           Following a power failure or operating system crash, the content
           of all sectors that were not in a transient state when the crash
-          occured may be trusted.
+          occurred may be trusted.
     </ul>
     <p class=todo>
       What do we assume about the other three file-system write 
@@ -630,7 +622,7 @@ a:visited { color: #734559 }
     </ul>
     <p class=todo>
       Write an explanation as to how the file-system properties influence
-      the model used to predict file damage after a catastrophy.
+      the model used to predict file damage after a catastrophe.
  -->
 <h1 id=database_connections>Database Connections</h1>
   <p>
@@ -978,20 +970,20 @@ file</i>, then the <i>shared-lock</i> on the database file is released,
 no transaction is opened and an error returned to the user.
     <p>
       Section <cite>hot_journal_detection</cite> contains a description of
-      and requirements governing the detection of a hot-journal file refered
+      and requirements governing the detection of a hot-journal file referred
       to in the above requirements.
 <p class=req id=H35040>
-Assuming no errors have occured, then after attempting to detect and
+Assuming no errors have occurred, then after attempting to detect and
 roll back a <i>hot journal file</i>, if the <i>page cache</i> contains
 any entries associated with the current <i>database connection</i>,
 then SQLite shall validate the contents of the <i>page cache</i> by
 testing the <i>file change counter</i>.  This procedure is known as
-<i>cache validiation</i>.
+<i>cache validation</i>.
     <p>
-      The <i>cache validiation</i> process is described in detail in section
+      The <i>cache validation</i> process is described in detail in section
       <cite>cache_validation</cite>
 <p class=req id=H35050>
-If the cache validiate procedure prescribed by H35040 is required and
+If the cache validate procedure prescribed by H35040 is required and
 does not prove that the <i>page cache</i> entries associated with the
 current <i>database connection</i> are valid, then SQLite shall discard
 all entries associated with the current <i>database connection</i> from
@@ -1334,7 +1326,8 @@ calling the xUnlock() method of the file-handle.
         failure occurs while the database file is being updated to reflect
         the modifications made by the <i>write transaction</i>. Each time
         SQLite opens a database file, it checks if such a system failure has
-        occured and, if so, reconstructs the database file based on the contents
+        occurred and, if so, 
+        reconstructs the database file based on the contents
         of the journal file. The procedure used to detect whether or not this
         process, coined <i>hot journal rollback</i>, is required is described
         in section <cite>hot_journal_detection</cite>. <i>Hot journal rollback
@@ -1818,7 +1811,7 @@ every 200th byte of the page data, beginning with the
       If all three of the steps enumerated above are executed successfully,
       then it is safe to modify the content of the <i>journalled</i> 
       database pages within the database file itself. The combination of
-      the three steps above is refered to as <i>syncing the journal file</i>.
+      the three steps above is referred to as <i>syncing the journal file</i>.
 <p class=req id=H35750>
 When required to <i>sync the journal file</i>, SQLite shall invoke the
 xSync method of the file handle open on the <i>journal file</i>.
@@ -1870,7 +1863,7 @@ xLock method of the file handle opened on the <i>database file</i>.
         The database file header <i>change counter</i> field is incremented.
         The <i>change counter</i>, described in
         <cite>ff_sqlitert_requirements</cite>, is used by the <i>cache
-        validiation</i> procedure described in section
+        validation</i> procedure described in section
         <cite>cache_validation</cite>.
       <li><p> 
         The <i>journal file</i> is synced. The steps required to <i>sync the
@@ -1978,11 +1971,11 @@ method of the <i>database connection</i> file handle.
 <p class=req id=H35640>
 When required to purge a <i>non-writable dirty page</i> from the
 <i>page cache</i>, SQLite shall <i>sync the journal file</i> before
-proceding with the write operation required by H35670.
+proceeding with the write operation required by H35670.
 <p class=req id=H35660>
 After <i>syncing the journal file</i> as required by H35640, SQLite
 shall append a new <i>journal header</i> to the <i>journal file</i>
-before proceding with the write operation required by H35670.
+before proceeding with the write operation required by H35670.
     <p>
       Appending a new <i>journal header</i> to the journal file is described
       in section <cite>writing_journal_header</cite>.
@@ -2011,3 +2004,5 @@ connection</i> file handle.
   </table>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

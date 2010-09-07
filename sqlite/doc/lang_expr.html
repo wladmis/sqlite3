@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>expression</h2><h4><a href="syntaxdiagrams.html#expr">expr:</a></h4><blockquote> <img alt="syntax diagram expr" src="images/syntax/expr.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#literal-value">literal-value:</a></h4><blockquote> <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#signed-number">signed-number:</a></h4><blockquote> <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif"></img> </blockquote>
@@ -161,10 +153,16 @@ OR</font>
 
 <a name="collateop"></a>
 
-<p>The COLLATE operator can be thought of as a unary postfix
-operator.  The COLLATE operator has the highest precedence.
-It always binds more tightly than any prefix unary operator or
-any binary operator.</p>
+<p>The COLLATE operator is a unary postfix
+operator that assigns a <a href="datatype3.html#collation">collating sequence</a> to an expression.
+The COLLATE operator has a higher precedence (binds more tightly) than any
+prefix unary operator or any binary operator.
+The collating sequence set by the COLLATE operator overrides the
+collating sequence determined by the COLLATE clause in a table
+<a href="lang_createtable.html#tablecoldef">column definition</a>.
+See the <a href="datatype3.html#collation">detailed discussion on collating sequences</a>
+in the <a href="datatype3.html">Datatype In SQLite3</a> document for additional information.
+</p>
 
 
 <p>The unary operator <font color="#2c2cf0"><big>+</big></font> is a no-op.  It can be applied
@@ -225,7 +223,7 @@ A literal value can also be the token "NULL".
 <h3>Parameters</h3>
 <p>
 A "variable" or "parameter" token
-specifies a placeholder in the expression for a literal
+specifies a placeholder in the expression for a 
 value that is filled in at runtime using the
 <a href="c3ref/bind_blob.html">sqlite3_bind()</a> family of C/C++ interfaces.
 Parameters can take several forms:
@@ -236,29 +234,37 @@ Parameters can take several forms:
 <tr>
 <td align="right" valign="top"><b>?</b><i>NNN</i></td><td width="20"></td>
 <td>A question mark followed by a number <i>NNN</i> holds a spot for the
-NNN-th parameter.  NNN must be between 1 and <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a>.</td>
+NNN-th parameter.  NNN must be between 1 and <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a>.
+</td>
 </tr>
 <tr>
 <td align="right" valign="top"><b>?</b></td><td width="20"></td>
-<td>A question mark that is not followed by a number holds a spot for
-the next unused parameter.</td>
+<td>A question mark that is not followed by a number creates a parameter
+with a number one greater than the largest parameter number already assigned.
+If this means the parameter number is greater than
+<a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a>, it is an error.
+</td>
 </tr>
 <tr>
 <td align="right" valign="top"><b>:</b><i>AAAA</i></td><td width="20"></td>
-<td>A colon followed by an identifier name holds a spot for a named
-parameter with the name AAAA.  Named parameters are also numbered.
-The number assigned is the next unused number.  To avoid confusion,
-it is best to avoid mixing named and numbered parameters.</td>
+<td>A colon followed by an identifier name holds a spot for a 
+<a href="c3ref/bind_parameter_name.html">named parameter</a> with the name :AAAA.  
+Named parameters are also numbered. The number assigned is one greater than
+the largest parameter number already assigned. If this means the parameter
+would be assigned a number greater than <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a>, it is
+an error. To avoid confusion, it is best to avoid mixing named and numbered
+parameters.</td>
 </tr>
 <tr>
 <td align="right" valign="top"><b>@</b><i>AAAA</i></td><td width="20"></td>
-<td>An "at" sign works exactly like a colon.</td>
+<td>An "at" sign works exactly like a colon, except that the name of
+the parameter created is @AAAA.</td>
 </tr>
 <tr>
 <td align="right" valign="top"><b>$</b><i>AAAA</i></td><td width="20"></td>
 <td>A dollar-sign followed by an identifier name also holds a spot for a named
-parameter with the name AAAA.  The identifier name in this case can include
-one or more occurances of "::" and a suffix enclosed in "(...)" containing
+parameter with the name $AAAA.  The identifier name in this case can include
+one or more occurrences of "::" and a suffix enclosed in "(...)" containing
 any text at all.  This syntax is the form of a variable name in the
 <a href="http://www.tcl.tk/">Tcl programming language</a>.  The presence
 of this syntax results from the fact that SQLite is really a 
@@ -350,16 +356,16 @@ as operators <b>==</b> and <b>!=</b> and <b>LIKE</b> and groups left to right.
 programming languages.  WHEN expressions are evaluated from left to
 right until one is found that is true, at which point the corresponding
 THEN term becomes the result.  If no WHEN expression is true then the ELSE 
-clause determines the result or the result is NULL if there is no ELSE clase.
+clause determines the result or the result is NULL if there is no ELSE clause.
 </p>
 
 <p>The optional expression that occurs in between the CASE keyword and the
 first WHEN keyword is the "base" expression.  There are two basic forms
 of a CASE expression: those with and without a base expression.
-In a CASE without a base expression, each WHEN expression is evaluted
+In a CASE without a base expression, each WHEN expression is evaluated
 as a boolean and the overall result is determined by first WHEN expression
 that is true.
-In a CASE with a base expression, the base expression is evaluted just
+In a CASE with a base expression, the base expression is evaluated just
 once and the result is compared against each WHEN expression until a 
 match is found.
 When comparing a base expression against a WHEN expression, the same
@@ -495,7 +501,7 @@ the SELECT yields no rows, then the value of the SELECT is NULL.</p>
 <p>A CAST expression changes the <a href="datatype3.html">datatype</a> of the <expr> into the
 type specified by &lt;type&gt;. 
 &lt;type&gt; can be any non-empty type name that is valid
-for the type in a column definition of a <a href="lang_createtable.html">CREATE TABLE</a> statement.
+for the type in a <a href="lang_createtable.html#tablecoldef">column definition</a> of a <a href="lang_createtable.html">CREATE TABLE</a> statement.
 The &lt;type&gt; name is interpreted according to the 
 <a href="datatype3.html#affname">rules for determining column affinity</a>.
 
@@ -559,3 +565,5 @@ may only be used in a SELECT statement.  Aggregate functions compute
 their result across all rows of the result set.</p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

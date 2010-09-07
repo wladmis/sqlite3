@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -150,11 +142,12 @@ with non-standard compilation options.
 <h2>1.1 Options To Set Default Parameter Values</h2>
 
 <a name="default_autovacuum"></a>
-<p><b>SQLITE_DEFAULT_AUTOVACUUM=<i>&lt;1 or 0&gt;</i></b></p><blockquote><p>
+<p><b>SQLITE_DEFAULT_AUTOVACUUM=<i>&lt;0 or 1 or 2&gt;</i></b></p><blockquote><p>
   This macro determines if SQLite creates databases with the 
-  <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> flag set by default. The default value is 0 
-  (do not create auto-vacuum databases). In any case the
-  compile-time default may be overridden by the 
+  <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> flag set by default to OFF (0), FULL (1), or
+  INCREMENTAL (2). The default value is 0 meaning that databases
+  are created with auto-vacuum turned off.
+  In any case the compile-time default may be overridden by the 
   <a href="pragma.html#pragma_auto_vacuum">PRAGMA auto_vacuum</a> command.
 </p></blockquote><a name="default_cache_size"></a>
 <p><b>SQLITE_DEFAULT_CACHE_SIZE=<i>&lt;pages&gt;</i></b></p><blockquote><p>
@@ -236,7 +229,6 @@ the available settings:</p>
 <li> <a href="limits.html#max_length">SQLITE_MAX_LENGTH</a>  </li>
 <li> <a href="limits.html#max_like_pattern_length">SQLITE_MAX_LIKE_PATTERN_LENGTH</a>  </li>
 <li> <a href="limits.html#max_page_count">SQLITE_MAX_PAGE_COUNT</a>  </li>
-<li> <a href="limits.html#max_page_size">SQLITE_MAX_PAGE_SIZE</a>  </li>
 <li> <a href="limits.html#max_sql_length">SQLITE_MAX_SQL_LENGTH</a>  </li>
 <li> <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a>  </li>
 </ul>
@@ -383,7 +375,7 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_FTS3_PARENTHESIS</b></p><blockquote><p>
   This option modifies the query pattern parser in FTS3 such that it
   supports operators AND and NOT (in addition to the usual OR and NEAR)
-  and also allows query expressions to contain nested parenthesesis.
+  and also allows query expressions to contain nested parenthesis.
 </p></blockquote><a name="enable_icu"></a>
 <p><b>SQLITE_ENABLE_ICU</b></p><blockquote><p>
   This option causes the 
@@ -500,7 +492,7 @@ the available settings:</p>
 </p></blockquote><a name="yytrackmaxstackdepth"></a>
 <p><b>YYTRACKMAXSTACKDEPTH</b></p><blockquote><p>
   This option causes the LALR(1) parser stack depth to be tracked
-  and reported using the <a href="c3ref/status.html">sqlite3_status</a>(<a href="c3ref/c_status_malloc_size.html">SQLITE_STATUS_PARSER_STACK</a>,...)
+  and reported using the <a href="c3ref/status.html">sqlite3_status</a>(<a href="c3ref/c_status_malloc_count.html">SQLITE_STATUS_PARSER_STACK</a>,...)
   interface.  SQLite's LALR(1) parser has a fixed stack depth
   (determined at compile-time using the <a href="compile.html#yystackdepth">YYSTACKDEPTH</a> options).
   This option can be used to help determine if an application is
@@ -651,7 +643,7 @@ when used in combination with other options.</p>
 </p></blockquote><a name="omit_btreecount"></a>
 <p><b>SQLITE_OMIT_BTREECOUNT</b></p><blockquote><p>
   When this option is defined, an optimization that accelerates counting
-  all entires in a table (in other words, an optimization that helps
+  all entries in a table (in other words, an optimization that helps
   "SELECT count(*) FROM table" run faster) is omitted.
 </p></blockquote><a name="omit_builtin_test"></a>
 <p><b>SQLITE_OMIT_BUILTIN_TEST</b></p><blockquote><p>
@@ -930,3 +922,5 @@ when used in combination with other options.</p>
   allocated memory.
 </p></blockquote>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -478,26 +470,6 @@ a 32-bit integer.</p>
 The maximum number of attached databases can be lowered at run-time using
 the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_ATTACHED</a>,size) interface.
 </p>
-</li><a name="max_page_size"></a>
-<li><p><b>Maximum Database Page Size</b></p>
-
-<p>
-An SQLite database file is organized as pages.  The size of each
-page is a power of 2 between 512 and SQLITE_MAX_PAGE_SIZE.
-The default value for SQLITE_MAX_PAGE_SIZE is 32768.  The current
-implementation will not support a larger value.
-</p>
-
-<p>
-It used to be the case that SQLite would allocate some stack
-structures whose size was proportional to the maximum page size.
-For this reason, SQLite would sometimes be compiled with a smaller
-maximum page size on embedded devices with limited stack memory.  But
-more recent versions of SQLite put these large structures on the
-heap, not on the stack, so reducing the maximum page size is no
-longer necessary on embedded devices.  There is no longer any
-real reason to lower the maximum page size.
-</p>
 </li><a name="max_page_count"></a>
 <li><p><b>Maximum Number Of Pages In A Database File</b></p>
 
@@ -520,3 +492,5 @@ limit at run-time.
 </li></ol>
 </li>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

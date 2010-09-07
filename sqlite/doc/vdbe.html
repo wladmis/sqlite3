@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 <h2>The Virtual Database Engine of SQLite</h2>
@@ -153,7 +145,7 @@ works and in particular how the various VDBE instructions
 to do useful things with the database.  The style is tutorial,
 beginning with simple tasks and working toward solving more
 complex problems.  Along the way we will visit most
-submodules in the SQLite library.  After completeing this tutorial,
+submodules in the SQLite library.  After completing this tutorial,
 you should have a pretty good understanding of how SQLite works
 and will be ready to begin studying the actual source code.</p>
 
@@ -688,7 +680,7 @@ And if the scan
 order changes in the middle of the scan, some records might be
 visited more than once and other records might not be visited at all.</p>
 
-<p>So the implemention of DELETE is really in two loops.  The first loop 
+<p>So the implementation of DELETE is really in two loops.  The first loop 
 (instructions 5 through 11) locates the records that are to be deleted 
 and saves their keys onto a temporary list, and the second loop 
 (instructions 16 through 19) uses the key list to delete the records one 
@@ -821,7 +813,7 @@ instruction closes the cursor P1.  Again, this is done by the VDBE
 engine when it is finished running this program.  The Commit ends the 
 current transaction successfully, and causes all changes that occurred 
 in this transaction to be saved to the database.  The final Halt is also 
-unneccessary, since it is added to every VDBE program when it is 
+unnecessary, since it is added to every VDBE program when it is 
 prepared to run.</p>
 
 
@@ -1048,7 +1040,7 @@ following:</p>
 index has an entry in the sqlite_master table.  Since we are creating
 a new index, we have to add a new entry to sqlite_master.  This is
 handled by instructions 3 through 15.  Adding an entry to sqlite_master
-works just like any other INSERT statement so we will not say anymore
+works just like any other INSERT statement so we will not say any more
 about it here.  In this example, we want to focus on populating the
 new index with valid data, which happens on instructions 16 through 
 23.</p>
@@ -1487,7 +1479,7 @@ by two loops.  The first loop scans the input table and computes
 aggregate information into buckets and the second loop scans through
 all the buckets to compute the final result.</p>
 
-<p>The realization that an aggregate query is really two consequtive
+<p>The realization that an aggregate query is really two consecutive
 loops makes it much easier to understand the difference between
 a WHERE clause and a HAVING clause in SQL query statement.  The
 WHERE clause is a restriction on the first loop and the HAVING
@@ -1760,7 +1752,7 @@ instead of in the data -- so they can be easily located and deleted.</p>
 
 <p>Let's look more closely at what is happening here.  The first
 SELECT is implemented by the loop at instructions 5 through 10.
-Instruction 5 intializes the loop by rewinding its cursor.
+Instruction 5 initializes the loop by rewinding its cursor.
 Instruction 6 extracts the value of the "two" column from "examp"
 and instruction 7 converts this into a row.  Instruction 8 pushes
 an empty string onto the stack.  Finally, instruction 9 writes the
@@ -1773,7 +1765,7 @@ the row created by MakeRecord is the record key and the record data is
 just an empty string.</p>
 
 <p>The second SELECT is implemented by instructions 14 through 19.
-Instruction 14 intializes the loop by rewinding its cursor.
+Instruction 14 initializes the loop by rewinding its cursor.
 A new result row is created from the "four" column of table "examp2"
 by instructions 15 and 16.  But instead of using PutStrKey to write this
 new row into the temporary table, we instead call Delete to remove
@@ -1817,3 +1809,5 @@ feel free to fix them and/or contact the author at
 suggestions are always welcomed.</p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

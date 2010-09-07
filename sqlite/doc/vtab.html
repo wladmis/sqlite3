@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 <h1 align="center">The Virtual Table Mechanism Of SQLite</h1>
@@ -203,7 +195,7 @@ when the virtual
 table is created and that constructor is responsible for parsing and 
 interpreting the arguments. The argument syntax is sufficiently general 
 that a virtual table implementation can, if it wants to, interpret its
-arguments as column definitions in an ordinary <a href="lang_createtable.html">CREATE TABLE</a> statement. 
+arguments as <a href="lang_createtable.html#tablecoldef">column definitions</a> in an ordinary <a href="lang_createtable.html">CREATE TABLE</a> statement. 
 The implementation could also impose some other interpretation on the 
 arguments.
 
@@ -278,7 +270,7 @@ row of a virtual table. This is what an sqlite3_vtab_cursor looks like:
 <p>Once again, practical implementations will likely subclass this 
 structure to add additional private fields.
 
-<p>The <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure is used to pass information into
+<p>The <a href="c3ref/index_info.html">sqlite3_index_info</a> structure is used to pass information into
 and out of the xBestIndex method of the module that implements a 
 virtual table.
 
@@ -561,10 +553,10 @@ The xBestIndex method has a prototype like this:
 </pre></blockquote>
 
 <p>The SQLite core communicates with the xBestIndex method by filling 
-in certain fields of the <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure and passing a 
+in certain fields of the <a href="c3ref/index_info.html">sqlite3_index_info</a> structure and passing a 
 pointer to that structure into xBestIndex as the second parameter. 
 The xBestIndex method fills out other fields of this structure which
-forms the reply. The <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure looks like this:
+forms the reply. The <a href="c3ref/index_info.html">sqlite3_index_info</a> structure looks like this:
 
 <blockquote><pre>
   struct sqlite3_index_info {
@@ -617,12 +609,12 @@ with information that the SQLite core can then use to conduct an
 efficient search of the virtual table.
 
 <p>While compiling a single SQL query, the SQLite core might call 
-xBestIndex multiple times with different settings in <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a>.
+xBestIndex multiple times with different settings in <a href="c3ref/index_info.html">sqlite3_index_info</a>.
 The SQLite core will then select the combination that appears to 
 give the best performance.
 
 <p>Before calling this method, the SQLite core initializes an instance 
-of the <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure with information about the
+of the <a href="c3ref/index_info.html">sqlite3_index_info</a> structure with information about the
 query that it is currently trying to process. This information 
 derives mainly from the WHERE clause and ORDER BY or GROUP BY clauses 
 of the query, but also from any ON or USING clauses if the query is a 
@@ -630,10 +622,10 @@ join. The information that the SQLite core provides to the xBestIndex
 method is held in the part of the structure that is marked as "Inputs". 
 The "Outputs" section is initialized to zero.
 
-<p>The information in the <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure is ephemeral
+<p>The information in the <a href="c3ref/index_info.html">sqlite3_index_info</a> structure is ephemeral
 and may be overwritten or deallocated as soon as the xBestIndex method
 returns.  If the xBestIndex method needs to remember any part of the
-<a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure, it should make a copy.  Care must be
+<a href="c3ref/index_info.html">sqlite3_index_info</a> structure, it should make a copy.  Care must be
 take to store the copy in a place where it will be deallocated, such
 as in the idxStr field with needToFreeIdxStr set to 1.
 
@@ -748,7 +740,7 @@ estimates, then choose the query plan that gives the lowest estimate.
 
 <p>The aConstraintUsage[] array contains one element for each of 
 the nConstraint constraints in the inputs section of the 
-<a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure. 
+<a href="c3ref/index_info.html">sqlite3_index_info</a> structure. 
 The aConstraintUsage[] array is used by xBestIndex to tell the 
 core how it is using the constraints.
 
@@ -889,13 +881,13 @@ This method is called by the SQL engine immediately after each
 <p>This method begins a search of a virtual table. 
 The first argument is a cursor opened by <a href="vtab.html#xopen">xOpen</a>. 
 The next two argument define a particular search index previously 
-choosen by <a href="vtab.html#xbestindex">xBestIndex</a>. The specific meanings of idxNum and idxStr 
+chosen by <a href="vtab.html#xbestindex">xBestIndex</a>. The specific meanings of idxNum and idxStr 
 are unimportant as long as xFilter and xBestIndex agree on what 
 that meaning is.
 
 <p>The xBestIndex function may have requested the values of 
 certain expressions using the aConstraintUsage[].argvIndex values 
-of the <a href="c3ref/c_index_constraint_eq.html">sqlite3_index_info</a> structure. 
+of the <a href="c3ref/index_info.html">sqlite3_index_info</a> structure. 
 Those values are passed to xFilter using the argc and argv parameters.
 
 <p>If the virtual table contains one or more rows that match the
@@ -1207,3 +1199,5 @@ If this method returns an <a href="c3ref/c_abort.html">error code</a> then the r
 
 <p>The xRename method is required for every virtual table implementation.
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

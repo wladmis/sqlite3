@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -245,7 +237,7 @@ a:visited { color: #734559 }
 <blockquote><pre>
   ... WHERE b IN (1,2,3) AND c NOT NULL AND d='hello'
 </pre></blockquote><p>
-  The index is not usable at all becaues the left-most column of the
+  The index is not usable at all because the left-most column of the
   index (column "a") is not constrained.)  Assuming there are no other
   indices, the query above would result in a full table scan.
 </p>
@@ -332,9 +324,9 @@ a:visited { color: #734559 }
 </b></pre></blockquote><p>
   The rewritten expression above is conceptual; WHERE clauses containing
   OR are not really rewritten this way.
-  The actual implemention of the OR clause uses a mechanism that is
+  The actual implementation of the OR clause uses a mechanism that is
   more efficient than subqueries and which works even 
-  even for tables where the "rowid" column name has been 
+  for tables where the "rowid" column name has been 
   overloaded for other uses and no longer refers to the real rowid.
   But the essence of the implementation is captured by the statement
   above:  Separate indices are used to find candidate result rows
@@ -376,12 +368,12 @@ a:visited { color: #734559 }
   <li>The ESCAPE clause cannot appear on the LIKE operator.</li>
   <li>The build-in functions used to implement LIKE and GLOB must not
       have been overloaded using the sqlite3_create_function() API.</li>
-  <li>For the GLOB operator, the column must use the default BINARY
-      collating sequence.</li>
+  <li>For the GLOB operator, the column must be indexed using the 
+      built-in BINARY collating sequence.</li>
   <li>For the LIKE operator, if <a href="pragma.html#pragma_case_sensitive_like">case_sensitive_like</a> mode is enabled then
-      the column must use the default BINARY collating sequence, or if
-      <a href="pragma.html#pragma_case_sensitive_like">case_sensitive_like</a> mode is disabled then the column must use the
-      built-in NOCASE collating sequence.</li>
+      the column must indexed using BINARY collating sequence, or if
+      <a href="pragma.html#pragma_case_sensitive_like">case_sensitive_like</a> mode is disabled then the column must indexed
+      using built-in NOCASE collating sequence.</li>
   </ol>
 </p>
 <p>
@@ -418,14 +410,11 @@ a:visited { color: #734559 }
 </p>
 <p>
   The LIKE optimization might occur if the column named on the left of the
-  operator uses the BINARY collating sequence (which is the default) and
+  operator is indexed using the built-in BINARY collating sequence and
   case_sensitive_like is turned on.  Or the optimization might occur if
-  the column uses the built-in NOCASE collating sequence and the 
+  the column is indexed using the built-in NOCASE collating sequence and the 
   case_sensitive_like mode is off.  These are the only two combinations
-  under which LIKE operators will be optimized.  If the column on the
-  right-hand side of the LIKE operator uses any collating sequence other
-  than the built-in BINARY and NOCASE collating sequences, then no optimizations
-  will ever be attempted on the LIKE operator.
+  under which LIKE operators will be optimized.
 </p>
 <p>
   The GLOB operator is always case sensitive.  The column on the left side
@@ -614,7 +603,7 @@ a:visited { color: #734559 }
   Let the number of alice nodes be M and the number of bob nodes be N.
   Consider two scenarios. In the first scenario, M and N are both 2 but
   there are thousands of edges on each node. In this case, option 1 is
-  perferred. With option 1, the inner loop checks for the existence of
+  preferred. With option 1, the inner loop checks for the existence of
   an edge between a pair of nodes and outputs the result if found. 
   But because there are only 2 alice and bob nodes each, the inner loop
   only has to run 4 times and the query is very quick. Option 2 would
@@ -967,8 +956,8 @@ a:visited { color: #734559 }
 </p>
 <a name="autoindex"></a>
 <h2>11.0 Automatic Indices</h2><p>
-  When no indices are available to aid the evaulation of a query, SQLite
-  will consider creating a automatic index that lasts only for the duration
+  When no indices are available to aid the evaluation of a query, SQLite
+  might create an automatic index that lasts only for the duration
   of a single SQL statement and use that index to help boost the query
   performance.  Since the cost of constructing the automatic index is
   O(NlogN) (where N is the number of entries in the table) and the cost of
@@ -1012,3 +1001,5 @@ a:visited { color: #734559 }
 </p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

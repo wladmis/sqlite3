@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2><h4><a href="syntaxdiagrams.html#create-table-stmt">create-table-stmt:</a></h4><blockquote> <img alt="syntax diagram create-table-stmt" src="images/syntax/create-table-stmt.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#column-def">column-def:</a></h4><blockquote> <img alt="syntax diagram column-def" src="images/syntax/column-def.gif"></img> </blockquote>
 <h4><a href="syntaxdiagrams.html#type-name">type-name:</a></h4><blockquote> <img alt="syntax diagram type-name" src="images/syntax/type-name.gif"></img> </blockquote>
@@ -139,6 +131,8 @@ definitions and constraints.
 Tables names that begin with "<b>sqlite_</b>" are reserved
 for use by SQLite itself and cannot normally
 appear in a CREATE TABLE statement.</p>
+
+<a name="tablecoldef"></a>
 
 <p>Each column definition is the name of the column optionally followed by the
 <a href="datatype3.html">datatype</a> for that column, then one or more optional column constraints.
@@ -156,7 +150,7 @@ The built-in <a href="datatype3.html#collation">BINARY</a> collating function is
 The DEFAULT constraint specifies a default value to use when doing an <a href="lang_insert.html">INSERT</a>.
 The value may be NULL, a string constant, a number, or a constant expression
 enclosed in parentheses.
-The default value may also be one of the special case-independant
+The default value may also be one of the special case-independent
 keywords CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP.  If the value is
 NULL, a string constant or number, it is inserted into the column
 whenever an INSERT statement that does not specify a value for the column is
@@ -232,7 +226,7 @@ the result set of a query.  The names of the table columns are
 the names of the columns in the result.</p>
 
 <p>If the optional IF NOT EXISTS clause is present and another table
-with the same name aleady exists, then this command becomes a no-op.</p>
+with the same name already exists, then this command becomes a no-op.</p>
 
 <p>Tables are removed using the <a href="lang_droptable.html">DROP TABLE</a> statement.  </p>
 
@@ -305,3 +299,5 @@ feel that goofy behavior in an corner case is far better than
 a compatibility break, so the original behavior is retained.</p>
 
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

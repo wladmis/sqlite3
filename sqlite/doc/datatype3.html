@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -171,7 +163,7 @@ datatypes of different lengths.  This makes a difference on disk.  But
 as soon as INTEGER values are read off of disk and into memory for processing,
 they are converted to the most general datatype (8-byte signed integer).
 And so for the most part, "storage class" is indistinguishable from 
-"datatype" and the two terms can be used interchangably.</p>
+"datatype" and the two terms can be used interchangeably.</p>
 
 <p>Any column in an SQLite version 3 database,
 except an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> column, may be used to store a value 
@@ -475,7 +467,7 @@ Operand affinity is determined by the the following rules:
   are column names, then +X and +Y.Z are considered expressions for the
   purpose of determining affinity.</p>
 
-  <li><p>An expression of the form "CAST(<i>expr</i> TO <i>type</i>)"
+  <li><p>An expression of the form "CAST(<i>expr</i> AS <i>type</i>)"
   has an affinity that is the same as a column with a declared
   type of "<i>type</i>".
 
@@ -645,7 +637,7 @@ the <a href="c3ref/create_collation.html">sqlite3_create_collation()</a> interfa
 Every column of every
 table has an associated collating function.  If no collating function
 is explicitly defined, then the collating function defaults to BINARY.
-The COLLATE clause of the <a href="syntaxdiagrams.html#column-def">column definition</a> is used
+The COLLATE clause of the <a href="lang_createtable.html#tablecoldef">column definition</a> is used
 to define alternative collating functions for a column.
 </p>  
 
@@ -669,6 +661,20 @@ preceded by one or more unary "+" operators is still considered a column name.
 <li><p>Otherwise, the BINARY collating function is used for comparison.
 </p></li>
 </ol>
+
+<p>
+An operand of a comparison is considered to have an explicit
+collating function assignment (rule 1 above) 
+if any subexpression of the operand uses
+the postfix <a href="lang_expr.html#collateop">COLLATE operator</a>.  Thus, if a <a href="lang_expr.html#collateop">COLLATE operator</a> is used
+anywhere in a comparision expression, the collating function defined
+by that operator is used for string comparison regardless of what 
+table columns might be a part of that expression.  If two or more
+<a href="lang_expr.html#collateop">COLLATE operator</a> subexpressions appear anywhere in a comparison, the 
+left most explicit collating function is used regardless of how deeply the
+COLLATE operators are nested in the expression and regardless of
+how the expression is parenthesized.
+</p>
 
 <p>
 The expression "x BETWEEN y and z" is logically
@@ -761,3 +767,5 @@ SELECT x FROM t1 ORDER BY c COLLATE NOCASE, x;
 </pre>
 </blockquote>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

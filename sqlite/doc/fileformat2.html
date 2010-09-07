@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 
@@ -163,16 +155,16 @@ on the main database file.</p>
 <h3>1.1 Pages</h3>
 
 <p>The main database file consists of one or more pages.  The size of a
-page is a power of two between 512 and 32768 inclusive.  All pages within
+page is a power of two between 512 and 65536 inclusive.  All pages within
 the same database are the same size.  The page size for a database file
-is determined by the 2-byte big-endian integer located at an offset of
+is determined by the 2-byte integer located at an offset of
 16 bytes from the beginning of the database file.</p>
 
 <p>Pages are numbered beginning with 1.  The maximum page number is
 2147483646 (2<sup><small>31</small></sup> - 2).  The minimum size
 SQLite database is a single 512-byte page.
-The maximum size database would be 2147483646 pages at 32768 bytes per
-page or 70,368,744,112,128 bytes (about 70 terabytes).  Usually SQLite will
+The maximum size database would be 2147483646 pages at 65536 bytes per
+page or 140,737,488,224,256 bytes (about 140 terabytes).  Usually SQLite will
 hit the maximum file size limit of the underlying filesystem or disk
 hardware size limit long before it hits its own internal size limit.</p>
 
@@ -232,7 +224,7 @@ stored with the must significant byte first (big-endian).</p>
 The header string: "SQLite format 3\000"
 <tr><td valign=top align=center>16<td valign=top align=center>2<td align=left>
 The database page size in bytes.  Must be a power of two between 512
-and 32768 inclusive.
+and 32768 inclusive, or the value 1 representing a page size of 65536.
 <tr><td valign=top align=center>18<td valign=top align=center>1<td align=left>
 File format write version.  1 for legacy; 2 for <a href="wal.html">WAL</a>.
 <tr><td valign=top align=center>19<td valign=top align=center>1<td align=left>
@@ -279,12 +271,27 @@ The <a href="fileformat2.html#validfor">version-valid-for number</a>.
 
 <h4>1.2.1 Magic Header String</h4>
 
-<p>Every SQLite database file begins with the following 16 bytes (in hex):
-53 51 4c 69 74 65 20 66 6f 72 6d 61 74 20 33 00.  This byte sequence
+<p>Every valid SQLite database file begins with the following 16 bytes 
+(in hex): 53 51 4c 69 74 65 20 66 6f 72 6d 61 74 20 33 00.  This byte sequence
 corresponds to the UTF-8 string "SQLite format 3" including the nul
 terminator character at the end.</p>
 
-<h4>1.2.2 File format version numbers</h4>
+<h4>1.2.2 Page Size</h4>
+
+<p>The two-byte value beginning at offset 16 determines the page size of 
+the database.  For SQLite versions 3.7.0.1 and earlier, this value is 
+interpreted as a big-endian integer and must be a power of two between
+512 and 32768, inclusive.  Beginning with SQLite version 3.7.1, a page
+size of 65536 bytes is supported.  The value 65536 will not fit in a
+two-byte integer, so to specify a 65536-byte page size, the value is
+at offset 16 is 0x00 0x01.
+This value can be interpreted as a big-endian
+1 and thought of is as a magic number to represent the 65536 page size.
+Or one can view the two-byte field as a little endian number and say
+that it represents the page size divided by 256.  These two 
+interpretations of the page-size field are equivelent.</p>
+
+<h4>1.2.3 File format version numbers</h4>
 
 <p>The file format write version and file format read version at offsets
 18 and 19 are intended to allow for enhancements of the file format
@@ -296,7 +303,7 @@ version is 1 or 2 but the write version is greater than 2, then the database
 file must be treated as read-only.  If a database file with a read version
 greater than 2 is encounter, then that database cannot be read or written.</p>
 
-<h4>1.2.3 Reserved bytes per page</h4>
+<h4>1.2.4 Reserved bytes per page</h4>
 
 <p>SQLite has the ability to set aside a small number of extra bytes at
 the end of every page for use by extensions.  These extra bytes are
@@ -315,22 +322,23 @@ size of a page might be an odd number.  However, the usable size is not
 allowed to be less than 480.  In other words, if the page size is 512,
 then the reserved space size cannot exceed 32.</p>
 
-<h4>1.2.4 Payload fractions</h4>
+<h4>1.2.5 Payload fractions</h4>
 
 <p>The maximum and minimum embedded payload fractions and the leaf
 payload fraction values must be 64, 32, and 32.  These values were
-orginally intended to as tunable parameters that could be used to
+originally intended to as tunable parameters that could be used to
 modify the storage format of the b-tree algorithm.  However, that
 functionality is not supported and there are no current plans to add
 support in the future.  Hence, these three bytes are fixed at the
 values specified.</p>
 
-<h4>1.2.5 File change counter</h4>
+<h4>1.2.6 File change counter</h4>
 
 <a name="chngctr"></a>
 
 <p>The file change counter is a 4-byte big-endian integer which is
-incremented whenever the database file is changed in rollback mode.  
+incremented whenever the database file is unlocked after having
+been modified.
 When two or more processes are reading the same database file, each 
 process can detect database changes from other processes by monitoring 
 the change counter.
@@ -342,7 +350,7 @@ The file change counter facilitates this.</p>
 and so the change counter is not needed.  Hence, the change counter might
 not be incremented on each transaction in WAL mode.</p>
 
-<h4>1.2.6 In-header database size</h4>
+<h4>1.2.7 In-header database size</h4>
 
 <a name="filesize"></a>
 
@@ -359,7 +367,7 @@ the in-header database size is not valid.</p>
 <p>The in-header database size is only considered to be valid if
 it is non-zero and if the 4-byte <a href="fileformat2.html#chngctr">change counter</a> at offset 24
 exactly matches the 4-byte <a href="fileformat2.html#validfor">version-valid-for number</a> at offset 92.
-The in-header database size should always be valid 
+The in-header database size is always valid 
 when the database is only modified using recent versions of SQLite
 (versions 3.7.0 and later).
 If a legacy version of SQLite writes to the database, it will not
@@ -370,7 +378,7 @@ so it will not match the change-counter.  Hence, invalid in-header
 database sizes can be detected (and ignored) by observing when
 the change-counter does not match the version-valid-for number.</p>
 
-<h4>1.2.7 Free page list</h4>
+<h4>1.2.8 Free page list</h4>
 
 <p>Unused pages in the database file are stored on a freelist.  The
 4-byte big-endian integer at offset 32 stores the page number of
@@ -378,7 +386,7 @@ the first page of the freelist, or zero if the freelist is empty.
 The 4-byte big-endian integer at offset 36 stores stores the total 
 number of pages on the freelist.</p>
 
-<h4>1.2.8 Schema cookie</h4>
+<h4>1.2.9 Schema cookie</h4>
 
 <p>The schema cookie is a 4-byte big-endian integer at offset 40
 that is incremented whenever the database schema changes.  A 
@@ -386,9 +394,10 @@ prepared statement is compiled against a specific version of the
 database schema.  Whenever the database schema changes, the statement
 must be reprepared.  Whenever a prepared statement runs, it first checks
 the schema cookie to make sure the value is the same as when the statement
-was prepared and if not it aborts to force the statement to be reprepared.</p>
+was prepared and if the schema cookie has changed, the statement aborts
+in order to force the statement to be reprepared.</p>
 
-<h4>1.2.9 Schema format number</h4>
+<h4>1.2.10 Schema format number</h4>
 
 <p>The schema format number is a 4-byte big-endian integer at offset 44.
 The schema format number is similar to the file format read and write
@@ -423,7 +432,7 @@ The <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a
 to create new database files using format 4.  Future versions of 
 SQLite may begin to create files using format 4 by default.</p>
 
-<h4>1.2.10 Suggested cache size</h4>
+<h4>1.2.11 Suggested cache size</h4>
 
 <p>The 4-byte big-endian signed integer at offset 48 is the suggest
 cache size in pages for the database file.  The value is a suggestion
@@ -431,7 +440,7 @@ only and SQLite is under no obligation to honor it.  The absolute value
 of the integer is used as the suggested size.  The suggested cache size
 can be set using the <a href="pragma.html#pragma_default_cache_size">default_cache_size pragma</a>.</p>
 
-<h4>1.2.11 Incremental vacuum settings</h4>
+<h4>1.2.12 Incremental vacuum settings</h4>
 
 <p>The two 4-byte big-endian integers at offsets 52 and 64 are used
 to manage the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> and <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> modes.  If
@@ -445,14 +454,14 @@ case, the integer at offset 64 is true for incremental_vacuum and
 false for auto_vacuum.  If the integer at offset 52 is zero then
 the integer at offset 64 must also be zero.</p>
 
-<h4>1.2.12 Text encoding</h4>
+<h4>1.2.13 Text encoding</h4>
 
 <p>The 4-byte big-endian integer at offset 56 determines the encoding
 used for all text strings stored in the database.  A value of 1 means
 UTF-8.  A value of 2 means UTF-16le.  A value of 3 means UTF-16be.
 No other values are allowed.</p>
 
-<h4>1.2.13 User version number</h4>
+<h4>1.2.14 User version number</h4>
 
 <p>The 4-byte big-endian integer at offset 60 is the user version which
 is set and queried by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.  The user version is
@@ -460,16 +469,17 @@ not used by SQLite.</p>
 
 <a name="validfor"></a>
 
-<h4>1.2.14 Write library version number and version-valid-for number</h4>
+<h4>1.2.15 Write library version number and version-valid-for number</h4>
 
 <p>The 4-byte big-endian integer at offset 96 stores the 
-<a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value.  The 4-byte big-ending integer at
+<a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value for the SQLite library that most
+recently modified the database file.  The 4-byte big-ending integer at
 offset 92 is the value of the <a href="fileformat2.html#chngctr">change counter</a> when the version number
 was stored.  The integer at offset 92 indicates which transaction
 the version number is valid for and is sometimes called the
 "version-valid-for number".
 
-<h4>1.2.15 Header space reserved for expansion</h4>
+<h4>1.2.16 Header space reserved for expansion</h4>
 
 <p>All other bytes of the database file header are reserved for
 future expansion and must be set to zero.</p>
@@ -486,12 +496,14 @@ in size contains no lock-byte page.  A database file larger than
 <p>The lock-byte page is set aside for use by the operating-system specific
 VFS implementation in implementing the database file locking primitives.
 SQLite will not use the lock-byte page; it will never be read or written
-by the SQLite core, though operating-system specific VFS implementions may
+by the SQLite core, though operating-system specific VFS implementations may
 choose to read or write bytes on the lock-byte page according to the 
-needs and proclavities of the underlying system.  The unix and win32
+needs and proclivities of the underlying system.  The unix and win32
 VFS implementations that come built into SQLite do not write to the
 lock-byte page, but we are aware of third-party VFS implementations for
 other operating systems that do sometimes write to the lock-byte page.</p>
+
+<a name="freelist"></a>
 
 <h3>1.4 The Freelist</h3>
 
@@ -514,7 +526,7 @@ is the number of leaf page pointers to follow.  Call the second integer L.
 If L is greater than zero then integers with array indexes between 2 and
 L+1 inclusive contain page numbers for freelist leaf pages.</p>
 
-<p>Freelist leaf pages contain no information.  SQLite avoid reading or
+<p>Freelist leaf pages contain no information.  SQLite avoids reading or
 writing freelist leaf pages in order to reduce disk I/O.</p>
 
 <p>A bug in SQLite versions prior to 3.6.0 caused the database to be
@@ -542,7 +554,7 @@ page number of the child page.</p>
 
 
 <p>Define the depth
-of a leaf b-tree to be 1 and that the depth of any interior b-tree to be one
+of a leaf b-tree to be 1 and the the depth of any interior b-tree to be one
 more than the maximum depth of any of its children.  In a well-formed
 database, all children of any one interior b-tree have the same depth.</p>
 
@@ -550,10 +562,13 @@ database, all children of any one interior b-tree have the same depth.</p>
 with a pointer on both ends. (The previous sentence is to be understood
 conceptually - the actual layout of the keys and
 pointers within the page is more complicated and will be described in
-the sequel.)  All keys within the same page are unique and are organized
-in ascending order from left to right.  For any key X, pointers to the left
+the sequel.)  All keys within the same page are unique and are logically
+organized in ascending order from left to right.  (Again, this ordering
+is logical, not physical.  The actual location of keys within the page
+is arbitrary.) For any key X, pointers to the left
 of a X refer to b-tree pages on which alls keys are less than or equal to X.
-Pointers to the right of X refer to pages where all keys are greater than X.</p>
+Pointers to the right of X refer to pages where all keys are 
+greater than X.</p>
 
 <p>Within an interior b-tree page, each key and the pointer to its
 immediate left are combined into a structure called a "cell".  The
@@ -640,13 +655,13 @@ A value of 2 means the page is an interior index b-tree page.
 A value of 5 means the page is an interior table b-tree page.
 A value of 10 means the page is a leaf index b-tree page.
 A value of 13 means the page is a leaf table b-tree page.
-Any other value is an error.
+Any other value for the b-tree page type is an error.
 <tr><td align=center valign=top>1<td align=center valign=top>2<td align=left>
 Byte offset into the page of the first freeblock
 <tr><td align=center valign=top>3<td align=center valign=top>2<td align=left>
 Number of cells on this page
 <tr><td align=center valign=top>5<td align=center valign=top>2<td align=left>
-Offset to the first byte of the cell content area
+Offset to the first byte of the cell content area.  A zero value is used to represent an offset of 65536, which occurs on an empty root page when using a 65536-byte page size.
 <tr><td align=center valign=top>7<td align=center valign=top>1<td align=left>
 Number of fragmented free bytes within the cell content area
 <tr><td align=center valign=top>8<td align=center valign=top>4<td align=left>
@@ -667,12 +682,21 @@ The area in between the last cell pointer array entry and the beginning of
 the first cell is the unallocated region.
 </p>
 
+<p>If a page contains no cells (which is only possible for a root page
+of a table that contains no rows) then the offset to the cell content
+area will equal the page size minus the bytes of reserved space.  If
+the database uses a 65536-byte page size and the reserved space is zero
+(the usual value for reserved space) then the cell content offset of an
+empty page wants to be 65536.  
+However, that integer is too large to be stored in a
+2-byte unsigned integer, so a value of 0 is used in its place.
+
 <p>A freeblock is a structure used to identify unallocated space within
-a b-tree page.  Freeblocks are organized on a chain.  The first 2 bytes of
+a b-tree page.  Freeblocks are organized as a chain.  The first 2 bytes of
 a freeblock are a big-endian integer which is the offset in the b-tree page
 of the next freeblock in the chain, or zero if the freeblock is the last on
 the chain.  The third and fourth bytes of each freeblock form
-a bit-endian integers which is the size of the freeblock in bytes, including
+a big-endian integer which is the size of the freeblock in bytes, including
 the 4-byte header.  Freeblocks are always connected in order 
 of increasing offset.  The second field of the b-tree page header is the
 offset of the first freeblock, or zero if there are no freeblocks on the
@@ -868,7 +892,7 @@ contain ptrmap pages.</p>
 A ptrmap page consists of an array of 5-byte entries.  Let J be the
 number of 5-byte entries that will fit in the usable space of a page.
 (In other words, J=U/5.)  The first ptrmap page will contain back pointer
-information for pages 3 through J+2, inclusive.  The next pointer map
+information for pages 3 through J+2, inclusive.  The second pointer map
 page will be on page J+3 and that ptrmap page will provide back pointer
 information for pages J+4 through 2*J+3 inclusive.  An so forth for
 the entire database file.</p>
@@ -880,7 +904,7 @@ fall on the same page number as a ptrmap page, then the ptrmap is moved
 to the following page for that one case.</p>
 
 <p>Each 5-byte entry on a ptrmap page provides back-link information about 
-one of pages that immediately follow the pointer map.  If page B is
+one of pages that immediately follow the pointer map.  If page B is a
 ptrmap page then back-link information about page B+1 is provided by
 the first entry on the pointer map.  Information about page B+2 is
 provided by the second entry.  And so forth.</p>
@@ -906,12 +930,19 @@ page number is the parent b-tree page.
 
 <p>In any database file that contains ptrmap pages, all b-tree root pages 
 must come before any non-root b-tree page, cell payload overflow page, or
-freelist page.</p>
+freelist page.  This restriction ensures that a root page will never
+be moved during an auto-vacuum or incremental-vacuum.  The auto-vacuum
+logic is not to update the root_page field of the sqlite_master
+table and so it is necessary to prevent root pages from being moved
+during an auto-vacuum in order to preserve the integrity of the
+sqlite_master table.  Root pages are moved to the beginning of the
+database file by the CREATE TABLE, CREATE INDEX, DROP TABLE, and
+DROP INDEX operations.</p>
 
 <h2>2.0 Schema Layer</h2>
 
 <p>The foregoing text describes low-level aspects of the SQLite file
-format.  The b-tree mechanism provides powerful and efficient means of
+format.  The b-tree mechanism provides a powerful and efficient means of
 accessing a large data set.  This section will describe how the
 low-level b-tree layer is used to implement higher-level SQL
 capabilities.</p>
@@ -925,7 +956,7 @@ of any index b-tree page was characterized above
 as an arbitrary sequence of bytes.
 The prior discussion mentioned one key being less than another, but
 did not define what "less than" meant.  The current section will address
-these deficiencies.</p>
+these omissions.</p>
 
 <p>Payload, be it table content or index keys, is always in the "record
 format".  The record format defines a sequence of values corresponding to
@@ -941,7 +972,7 @@ representation of 64-bit signed integers defined above.</p>
 <p>A record contains a header and a body, in that order.  
 The header begins with a single varint which determines the total number
 of bytes in the header.  The varint value is the size of the header in
-byte including the size varint itself.  Following the size varint are
+bytes including the size varint itself.  Following the size varint are
 one or more additional varints, one per column.  These additional varints
 are called "serial type" numbers and
 determine the datatype of each column, according to the following key:</p>
@@ -1006,18 +1037,18 @@ follows:</p>
 <li>NULL values (serial type 0) sort first
 <li>Numeric values (serial types 1 through 9) sort next and in numeric order
 <li>Text values (even serial types 12 and larger) sort next in the order
-    determined by the columns collating function
+    determined by the columns <a href="datatype3.html#collation">collating function</a>
 <li>BLOB values (odd serial types 13 and larger) sort last in order 
     determined by memcmp().
 </ol>
 
-<p>A collating function for each column is necessary in order to compute
+<p>A <a href="datatype3.html#collation">collating function</a> for each column is necessary in order to compute
 the order of text fields.  SQLite defines three built-in collating functions:
 </p>
 
 <blockquote><table border=0 cellspacing=10>
 <tr><td valign=top>BINARY
-    <td>Strings are comparied byte by byte using the memcmp() function
+    <td>Strings are compared byte by byte using the memcmp() function
         from the standard C library.
 <tr><td valign=top>NOCASE
     <td>Like BINARY except that uppercase ASCII characters ('A' through 'Z')
@@ -1034,7 +1065,7 @@ SQLite using the <a href="c3ref/create_collation.html">sqlite3_create_collation(
 
 <p>The default collating function for all strings is BINARY.
 Alternative collating functions for table columns can be specified in the
-<a href="lang_createtable.html">CREATE TABLE</a> statement using the COLLATE clause on the column definition.
+<a href="lang_createtable.html">CREATE TABLE</a> statement using the COLLATE clause on the <a href="lang_createtable.html#tablecoldef">column definition</a>.
 When a column is indexed, the same collating function specified in the
 <a href="lang_createtable.html">CREATE TABLE</a> statement is used for the column in the index, by default,
 though this can be overridden using a COLLATE clause in the 
@@ -1054,7 +1085,7 @@ an entry in the table b-tree.  The order of values in the record is
 the same as the order of columns in the SQL table definition.
 When an SQL table that includes an
 <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> column (which aliases the <a href="lang_createtable.html#rowid">rowid</a>) then that
-column appears in the record as a NULL value.  SQLite will know to use
+column appears in the record as a NULL value.  SQLite will always use
 the table b-tree key rather than the NULL value when referencing the
 <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> column.</p>
 
@@ -1062,7 +1093,7 @@ the table b-tree key rather than the NULL value when referencing the
 value that can be converted to an integer without loss of information
 (if the value contains no fractional part and is not too large to be
 represented as an integer) then the column may be stored in the record
-as an integer.  SQLite will know to convert the value back to floating
+as an integer.  SQLite will convert the value back to floating
 point when extracting it from the record.</p>
 
 
@@ -1111,10 +1142,11 @@ according to the type of object defined.  The 'table' string is used
 for both ordinary and <a href="vtab.html">virtual tables</a>.</p>
 
 </p>The sqlite_master.name column will hold the name of the object.
-For indices that are automatically created by UNIQUE constraints, the
-name is "sqlite_autoindex_TABLE_N" where TABLE is replaced by the name
-of the table that contains the UNIQUE constraint and N is an integer beginning
-with 1 and increasing by one with each UNIQUE constraint seen.</p>
+For indices that are automatically created by UNIQUE or PRIMARY KEY
+constraints, the name is "sqlite_autoindex_TABLE_N" where TABLE is 
+replaced by the name of the table that contains the constraint and N 
+is an integer beginning
+with 1 and increasing by one with each constraint seen.</p>
 
 <p>The sqlite_master.tbl_name column holds the name of a table or view
 that the object is associated with.  For a table or view, the
@@ -1132,7 +1164,7 @@ object.  This SQL text is a <a href="lang_createtable.html">CREATE TABLE</a>, <a
 <a href="lang_createindex.html">CREATE INDEX</a>,
 <a href="lang_createview.html">CREATE VIEW</a>, or <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement that if evaluated against
 the database file when it is the main database of a <a href="c3ref/sqlite3.html">database connection</a>
-would recreated the object.  The text is usually a copy of the original
+would recreated the object.)  The text is usually a copy of the original
 statement used to create the object but with normalizations applied so
 that the text conforms to the following rules:
 
@@ -1152,8 +1184,8 @@ space.
 CREATE statement text that created the object, except normalized as
 described above and as modified by subsequent <a href="lang_altertable.html">ALTER TABLE</a> statements.</p>
 
-<p>For indices that are automatically created by UNIQUE constraints,
-the sqlite_master.sql field is NULL.</p>
+<p>For indices that are automatically created by UNIQUE or
+PRIMARY KEY constraints, the sqlite_master.sql field is NULL.</p>
 
 
 <a name="rollbackjournal"></a>
@@ -1271,7 +1303,7 @@ unsigned integer.  Add the value of that integer to the checksum.
 
 <p>The checksum value is used to guard against incomplete writes of
 a journal page record following a power failure.  A different random nonce
-is used each time a trasaction is started in order to minimize the risk
+is used each time a transaction is started in order to minimize the risk
 that unwritten sectors might by chance contain data from the same page
 that was a part of prior journals.  By changing the nonce for each
 transaction, stale data on disk will still generate an incorrect checksum
@@ -1280,14 +1312,14 @@ of 32-bit words from the data record for performance reasons - design studies
 during the planning phases of SQLite 3.0.0 showed
 a significant performance hit in checksumming the entire page.</p>
 
-<p>Let the page count value at offset 8 in the journal header by M.
+<p>Let the page count value at offset 8 in the journal header be M.
 If M is greater than zero then after M page records the journal file
 may be zero padded out to the next multiple of the sector size and another
 journal header may be inserted.  All journal headers within the same
 journal must contain the same database page size and sector size.</p>
 
 <p>If M is -1 in the initial journal header, then the number of page records
-that follow is computed by figure out how many page records will fit in
+that follow is computed by computing how many page records will fit in
 the available space of the remainder of the journal file.</p>
 
 <a name="walformat"></a>
@@ -1439,7 +1471,7 @@ following a crash.</p>
 
 <p>To read a page from the database (call it page number P), a reader
 first checks the WAL to see if it contains page P.  If so, then the
-last valid instance of page P that is a followed by a commit frame
+last valid instance of page P that is followed by a commit frame
 or is a commit frame itself becomes the value read.  If the WAL
 contains no copies of page P that are valid and which are a commit
 frame or are followed by a commit frame, then page P is read from
@@ -1503,3 +1535,5 @@ information about the format of the wal-index will be provided here.
 Complete details on the format of the wal-index are contained within
 comments in SQLite source code.</p>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      

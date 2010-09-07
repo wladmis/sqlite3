@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
+<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -87,19 +87,6 @@ a:visited { color: #734559 }
     <a href="news.html">News</a>
     <a href="support.html">Support</a>
   </div>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
-      <input id=q name=q type=text value=""
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-</div></div></div></div>
-</td></tr></table>
-<div class=startsearch></div>
-  
 <script>
   gMsg = "Search SQLite Docs..."
   function entersearch() {
@@ -116,15 +103,20 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
-  function initsearch() {
-    var q = document.getElementById("q");
-    q.value = ""
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-  }
-  window.onload = initsearch
 </script>
+<td>
+    <div style="padding:0 1em 0px 0;white-space:nowrap">
+    <form name=f method="GET" action="http://www.sqlite.org/search">
+      <input id=q name=q type=text
+       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
+      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
+    </form>
+    </div>
+  </table>
+</div></div></div></div>
+</td></tr></table>
+<div class=startsearch></div>
+  
 
 
 <h2>The C language interface to SQLite Version 2</h2>
@@ -311,7 +303,7 @@ the type of error.  Here is a complete list of the return codes:
 #define SQLITE_EMPTY       16   /* (Internal Only) Database table is empty */
 #define SQLITE_SCHEMA      17   /* The database schema changed */
 #define SQLITE_TOOBIG      18   /* Too much data for one row of a table */
-#define SQLITE_CONSTRAINT  19   /* Abort due to contraint violation */
+#define SQLITE_CONSTRAINT  19   /* Abort due to constraint violation */
 #define SQLITE_MISMATCH    20   /* Data type mismatch */
 #define SQLITE_MISUSE      21   /* Library used incorrectly */
 #define SQLITE_NOLFS       22   /* Uses OS features not supported on host */
@@ -383,7 +375,7 @@ that there is no more space left on the disk.
 <dd><p>This value is returned if SQLite detects that the database it is
 working on has become corrupted.  Corruption might occur due to a rogue
 process writing to the database file or it might happen due to an 
-perviously undetected logic error in of SQLite. This value is also
+previously undetected logic error in of SQLite. This value is also
 returned if a disk I/O error occurs in such a way that SQLite is forced
 to leave the database file in a corrupted state.  The latter should only
 happen due to a hardware or operating system malfunction.
@@ -784,7 +776,7 @@ call or since the most recent <b>sqlite_compile</b>.  But if you have
 nested calls to <b>sqlite_exec</b> (that is, if the callback routine
 of one <b>sqlite_exec</b> invokes another <b>sqlite_exec</b>) or if
 you invoke <b>sqlite_compile</b> to create a new VM while there is
-still another VM in existance, then
+still another VM in existence, then
 the meaning of the number returned by <b>sqlite_changes</b> is more
 complex.
 The number reported includes any changes
@@ -1035,7 +1027,7 @@ will work just fine.  But suppose the user enters a string like
 INSERT INTO table1 VALUES('Hi y'all')
 </pre></blockquote>
 
-<p>This is not valid SQL because of the apostrophy in the word "y'all".
+<p>This is not valid SQL because of the apostrophe in the word "y'all".
 But if the %q formatting option is used instead of %s, like this:</p>
 
 <blockquote><pre>
@@ -1050,7 +1042,7 @@ sqlite_exec_printf(db,
 INSERT INTO table1 VALUES('Hi y''all')
 </pre></blockquote>
 
-<p>Here the apostrophy has been escaped and the SQL statement is well-formed.
+<p>Here the apostrophe has been escaped and the SQL statement is well-formed.
 When generating SQL on-the-fly from data that might contain a
 single-quote character ('), it is always a good idea to use the
 SQLite printf routines and the %q formatting option instead of <b>sprintf</b>.
@@ -1235,3 +1227,5 @@ Additional information about sqlite is available at
 See also the sources to the Tcl interface for SQLite in
 the source file <b>src/tclsqlite.c</b>.</p>
 
+        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+      
