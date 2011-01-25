@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.7.2
-Release: alt2
+Version: 3.7.4
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -14,7 +14,6 @@ Patch0: sqlite3-alt-dl.patch
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
 Patch3: sqlite3-alt-version-script.patch
-Patch4: sqlite3-alt-makefile-fix.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -98,7 +97,6 @@ embedded controllers.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
@@ -134,7 +132,7 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_man1dir/%name.*
 
 %files -n lib%name
-%_libdir/lib%name.so.?*
+%_libdir/lib%name.so.*
 
 %files -n lib%name-devel
 %_includedir/sqlite3.h
@@ -160,6 +158,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Tue Jan 25 2011 Valery Inozemtsev <shrek@altlinux.ru> 3.7.4-alt1
+- 3.7.4
+
 * Thu Nov 04 2010 Valery Inozemtsev <shrek@altlinux.ru> 3.7.2-alt2
 - rebuild
 
