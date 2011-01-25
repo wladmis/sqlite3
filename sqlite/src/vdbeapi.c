@@ -65,6 +65,8 @@ static int vdbeSafetyNotNull(Vdbe *p){
 int sqlite3_finalize(sqlite3_stmt *pStmt){
   int rc;
   if( pStmt==0 ){
+    /* IMPLEMENTATION-OF: R-57228-12904 Invoking sqlite3_finalize() on a NULL
+    ** pointer is a harmless no-op. */
     rc = SQLITE_OK;
   }else{
     Vdbe *v = (Vdbe*)pStmt;
@@ -141,7 +143,7 @@ const void *sqlite3_value_blob(sqlite3_value *pVal){
     sqlite3VdbeMemExpandBlob(p);
     p->flags &= ~MEM_Str;
     p->flags |= MEM_Blob;
-    return p->z;
+    return p->n ? p->z : 0;
   }else{
     return sqlite3_value_text(pVal);
   }
@@ -495,6 +497,12 @@ void *sqlite3_user_data(sqlite3_context *p){
 /*
 ** Extract the user data from a sqlite3_context structure and return a
 ** pointer to it.
+**
+** IMPLEMENTATION-OF: R-46798-50301 The sqlite3_context_db_handle() interface
+** returns a copy of the pointer to the database connection (the 1st
+** parameter) of the sqlite3_create_function() and
+** sqlite3_create_function16() routines that originally registered the
+** application defined function.
 */
 sqlite3 *sqlite3_context_db_handle(sqlite3_context *p){
   assert( p && p->pFunc );
@@ -704,8 +712,7 @@ static Mem *columnMem(sqlite3_stmt *pStmt, int i){
 **     sqlite3_column_real()
 **     sqlite3_column_bytes()
 **     sqlite3_column_bytes16()
-**
-** But not for sqlite3_column_blob(), which never calls malloc().
+**     sqiite3_column_blob()
 */
 static void columnMallocFailure(sqlite3_stmt *pStmt)
 {
@@ -973,6 +980,12 @@ static int vdbeUnbind(Vdbe *p, int i){
 
   /* If the bit corresponding to this variable in Vdbe.expmask is set, then 
   ** binding a new value to this variable invalidates the current query plan.
+  **
+  ** IMPLEMENTATION-OF: R-48440-37595 If the specific value bound to host
+  ** parameter in the WHERE clause might influence the choice of query plan
+  ** for a statement, then the statement will be automatically recompiled,
+  ** as if there had been a schema change, on the first sqlite3_step() call
+  ** following any change to the bindings of that parameter.
   */
   if( p->isPrepareV2 &&
      ((i<32 && p->expmask & ((u32)1 << i)) || p->expmask==0xffffffff)
@@ -1009,6 +1022,8 @@ static int bindText(
       rc = sqlite3ApiExit(p->db, rc);
     }
     sqlite3_mutex_leave(p->db->mutex);
+  }else if( xDel!=SQLITE_STATIC && xDel!=SQLITE_TRANSIENT ){
+    xDel((void*)zData);
   }
   return rc;
 }
@@ -1249,6 +1264,14 @@ int sqlite3_transfer_bindings(sqlite3_stmt *pFromStmt, sqlite3_stmt *pToStmt){
 */
 sqlite3 *sqlite3_db_handle(sqlite3_stmt *pStmt){
   return pStmt ? ((Vdbe*)pStmt)->db : 0;
+}
+
+/*
+** Return true if the prepared statement is guaranteed to not modify the
+** database.
+*/
+int sqlite3_stmt_readonly(sqlite3_stmt *pStmt){
+  return pStmt ? ((Vdbe*)pStmt)->readOnly : 1;
 }
 
 /*

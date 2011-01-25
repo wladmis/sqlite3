@@ -161,7 +161,7 @@ return can be used to deny an untrusted user access to individual
 columns of a table.
 If the action code is <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> and the callback returns
 <a href="../c3ref/c_deny.html">SQLITE_IGNORE</a> then the <a href="../lang_delete.html">DELETE</a> operation proceeds but the
-<a href="../lang_delete.html#trucateopt">truncate optimization</a> is disabled and all rows are deleted individually.</p>
+<a href="../lang_delete.html#truncateopt">truncate optimization</a> is disabled and all rows are deleted individually.</p>
 
 <p>An authorizer is used when <a href="../c3ref/prepare.html">preparing</a>
 SQL statements from an untrusted source, to ensure that the SQL statements

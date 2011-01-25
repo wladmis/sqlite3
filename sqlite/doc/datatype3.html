@@ -136,6 +136,8 @@ work the same way in SQLite.  However, the dynamic typing in SQLite allows
 it to do things which are not possible in traditional rigidly typed
 databases.</p>
 
+<a name="storageclasses"></a>
+
 <h2>1.0 Storage Classes and Datatypes</h2>
 
 <p>Each value stored in an SQLite database (or manipulated by the
@@ -171,7 +173,7 @@ of any storage class.</p>
 
 <p>All values in SQL statements, whether they are literals embedded in SQL
 statement text or <a href="lang_expr.html#varparam">parameters</a> bound to 
-<a href="c3ref/stmt.html">pre-compiled SQL statements</a>
+<a href="c3ref/stmt.html">precompiled SQL statements</a>
 have an implicit storage class.
 Under circumstances described below, the
 database engine may convert values between numeric storage classes
@@ -428,7 +430,8 @@ null|null|null|null|null
 <h2>3.0 Comparison Expressions</h2>
 
 <p>SQLite version 3 has the usual set of SQL comparison operators
-including "=", "&lt;", "&lt;=", "&gt;=", "!=", "IN", "BETWEEN", and "IS".
+including "=", "==", "&lt;", "&lt;=", "&gt;", "&gt;=", "!=", "<>",
+"IN", "NOT IN", "BETWEEN", "IS", and "IS NOT", .
 
 <h3>3.1 Sort Order</h3>
 
@@ -458,7 +461,7 @@ operands, according to the following rules:</p>
 INTEGER, REAL, and/or TEXT before performing a comparison.
 Whether or not any conversions are attempted before the comparison takes
 place depends on the affinity of the operands.
-Operand affinity is determined by the the following rules:
+Operand affinity is determined by the following rules:
 
 <ul>
   <li><p>An expression that is a simple reference to a column value

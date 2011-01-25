@@ -151,6 +151,7 @@ test code and test scripts -
 <li> Crash and power loss tests
 <li> Fuzz tests
 <li> Boundary value tests
+<li> Disabled optimization tests
 <li> Regression tests
 <li> Malformed database tests
 <li> Extensive use of assert() and run-time checks
@@ -699,22 +700,22 @@ SQLITE_DEBUG preprocessor macro defined.</p>
 
 <p><a href="http://valgrind.org/">Valgrind</a> is perhaps the most amazing
 and useful developer tool in the world.  Valgrind is a simulator - it simulates
-an x86 running a linux binary.  (Ports of valgrind for platforms other
-than linux are in development, but as of this writing, valgrind only
-works reliably on linux, which in the opinion of the SQLite developers 
-means that linux should be the preferred platform for all software development.)
-As valgrind runs a linux binary, it looks for all kinds of interesting
+an x86 running a Linux binary.  (Ports of Valgrind for platforms other
+than Linux are in development, but as of this writing, Valgrind only
+works reliably on Linux, which in the opinion of the SQLite developers 
+means that Linux should be the preferred platform for all software development.)
+As Valgrind runs a Linux binary, it looks for all kinds of interesting
 errors such as array overruns, reading from uninitialized memory,
 stack overflows, memory leaks, and so forth.  Valgrind finds problems
 that can easily slip through all of the other tests run against SQLite.
-And, when valgrind does find an error, it can dump the developer directly
+And, when Valgrind does find an error, it can dump the developer directly
 into a symbolic debugger at the exact point where the error occur, to
 facilitate a quick fix.</p>
 
-<p>Because it is a simulator, running a binary in valgrind is slower than 
+<p>Because it is a simulator, running a binary in Valgrind is slower than 
 running it on native hardware.  So it is impractical to run the full
-SQLite test suite through valgrind.  However, the veryquick tests and
-a subset of the TH3 tests are run through valgrind prior to every release.</p>
+SQLite test suite through Valgrind.  However, the veryquick tests and
+a subset of the TH3 tests are run through Valgrind prior to every release.</p>
 
 <a name="memtesting"></a>
 
@@ -729,8 +730,8 @@ is inserted that looks for memory allocation
 errors at run-time.  The memsys2 wrapper checks for memory leaks, of
 course, but also looks for buffer overruns, uses of uninitialized memory,
 and attempts to use memory after it has been freed.  These same checks
-are also done by valgrind (and, indeed, valgrind does them better)
-but memsys2 has the advantage of being much faster than valgrind, which
+are also done by valgrind (and, indeed, Valgrind does them better)
+but memsys2 has the advantage of being much faster than Valgrind, which
 means the checks can be done more often and for longer tests.</p>
 
 <a name="mutextesting"></a>
@@ -765,9 +766,35 @@ If any discrepancies are found, an assertion fault is raised.</p>
 the crash tests to make sure that SQLite transactions will be atomic
 across system crashes and power failures.</p>
 
+<a name="disopttest"></a>
+
+<h2>9.0 Disabled Optimization Tests</h2>
+
+<p>The <a href="c3ref/test_control.html">sqlite3_test_control</a>(<a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_OPTIMIZATIONS</a>, ...) interface
+allows selected SQL statement optimizations to be disabled at run-time.
+SQLite should always generate exactly the same answer with optimizations
+enabled and with optimizations disabled; the answer simply arrives quicker
+with the optimizations turned on.  So in a production environment, one always
+leaves the optimizations turned on (the default setting).</p>
+
+<p>One verification technique used on SQLite is to run an entire test suite
+twice, once with optimizations left on and a second time with optimizations
+turned off, and verify that the same output is obtained both times.  This
+verifies that the optimizations do not introduce errors.</p>
+
+<p>Not all test cases can be handled this way.  Some test cases check
+to verify that the optimizations really are reducing the amount of
+computation by counting the number of disk accesses, sort operations, 
+full-scan steps, or other processing steps that occur during queries.
+Those test cases will appear to fail when optimizations are disabled.
+But the majority of test cases simply look to see if the correct answer
+was obtained, and all of those cases can be run successfully with and
+without the optimizations, in order to show that the optimizations do not
+cause malfunctions.</p>
+
 <a name="staticanalysis"></a>
 
-<h2>9.0 Static Analysis</h2>
+<h2>10.0 Static Analysis</h2>
 
 <p>Static analysis means analyzing code at or before compile-time to
 check for correctness.  Static analysis consists mostly of making
@@ -795,7 +822,7 @@ decreased as a result.</p>
 
 <a name="summary"></a>
 
-<h2>10.0 Summary</h2>
+<h2>11.0 Summary</h2>
 
 <p>SQLite is open source.  This gives many people the idea that
 it is not well tested as commercial software and is perhaps unreliable.

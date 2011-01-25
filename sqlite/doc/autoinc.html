@@ -162,10 +162,12 @@ a ROWID that is one larger than the largest ROWID in the table prior
 to the insert.  If the table is initially empty, then a ROWID of 1 is
 used.  If the largest ROWID is equal to the largest possible integer
 (9223372036854775807) then the database
-engine starts picking candidate ROWIDs at random until it finds one
+engine starts picking positive candidate ROWIDs at random until it finds one
 that is not previously used.
 If no unused ROWID can be found after a reasonable number of attempts,
 the insert operation fails with an <a href="c3ref/c_abort.html">SQLITE_FULL</a> error.
+If no negative ROWID values are inserted explicitly, then automatically 
+generated ROWID values will always be greater than zero.
 </p>
 
 <p>

@@ -248,7 +248,7 @@ int sqlite3_vfs_register(sqlite3_vfs*, int makeDflt);
   If the new VFS is not the default, then you will probably have to use
   the new <a href="c3ref/open.html">sqlite3_open_v2()</a> API to use it.  Note, however, that if
   a new VFS is the only VFS known to SQLite (if SQLite was compiled without
-  its usual default VFS or if the pre-compiled default VFS was removed
+  its usual default VFS or if the precompiled default VFS was removed
   using <a href="c3ref/vfs_find.html">sqlite3_vfs_unregister()</a>) then the new VFS automatic becomes the
   default VFS regardless of the makeDflt argument to <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a>.
 </p>
@@ -258,7 +258,7 @@ int sqlite3_vfs_register(sqlite3_vfs*, int makeDflt);
   built without a default VFS.  In that case, the application must
   register at least one VFS prior to calling <a href="c3ref/open.html">sqlite3_open()</a>.
   This is the approach that embedded applications should use.
-  Rather than modifying the SQLite source to to insert an alternative
+  Rather than modifying the SQLite source to insert an alternative
   OS layer as was done in prior releases of SQLite, instead compile
   an unmodified SQLite source file (preferably the amalgamation)
   with the -DOS_OTHER=1 option, then invoke <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a>

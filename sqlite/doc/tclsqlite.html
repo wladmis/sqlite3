@@ -281,6 +281,8 @@ a=2 b=goodbye<br>
 a=3 b=howdy!</b>
 </blockquote>
 
+<a name="varsubst"></a>
+
 <p>
 Tcl variable names can appear in the SQL statement of the second argument
 in any position where it is legal to put a string or number literal.  The
@@ -313,7 +315,22 @@ db1 eval {INSERT INTO t1 VALUES(5,@bigstring)}
 
 <p>
 If the variable does not have a bytearray representation, then "@" works
-just like "$".
+just like "$".  Note that ":" works like "$" in all cases so the following
+is another way to express the same statement:
+</p>
+
+<blockquote><b>
+db1 eval {INSERT INTO t1 VALUES(5,:bigstring)}
+</b></blockquote>
+
+<p>The use of ":" instead of "$" before the name of a variable can 
+sometimes be useful if the SQL text is enclosed in "..." instead of
+{...}.  When the SQL is contained within "..." then TCL will do
+the substitution of $-variables, which can lead to SQL injection if
+extreme care is not used.  But TCL will never substitute a :-variable
+regardless of whether "..." or {...} are used to enclose the SQL, so
+the use of :-variables adds an extra measure of defense against SQL
+injection.
 </p>
 
 <a name="close"></a>
@@ -439,7 +456,7 @@ The syntax of the copy method looks like this:</p>
 &nbsp;&nbsp;?<i>null-indicator</i>?
 </blockquote>
 
-<p>Conflict-alogrithm must be one of the SQLite conflict algorithms for
+<p>Conflict-algorithm must be one of the SQLite conflict algorithms for
 the INSERT statement: <i>rollback</i>, <i>abort</i>,
 <i>fail</i>,<i>ignore</i>, or <i>replace</i>. See the SQLite Language
 section for <a href="lang.html#conflict">ON CONFLICT</a> for more information.
@@ -729,7 +746,7 @@ into a preexisting BLOB in the database.  The syntax is like this:</p>
 <p>
 The command returns a new TCL channel for reading or writing to the BLOB.
 The channel is opened using the underlying 
-<a href="c3ref/blob_open.html">sqlite3_blob_open()</a> C-langauge
+<a href="c3ref/blob_open.html">sqlite3_blob_open()</a> C-language
 interface.  Close the channel using the <b>close</b> command of TCL.
 </p>
 <a name="errorcode"></a>

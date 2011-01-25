@@ -121,7 +121,65 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2010_august_24"></a><h3>2010-August-24 - <a href="releaselog/3_7_2.html">Version 3.7.2</a></h3><p>
+<a name="2010_december_08"></a><h3>2010-December-08 - <a href="releaselog/3_7_4.html">Version 3.7.4</a></h3><p>
+  SQLite <a href="releaselog/3_7_4.html">version 3.7.4</a> is a regularly scheduled bi-monthly maintenance
+  release of SQLite.  Upgrading from <a href="releaselog/3_7_2.html">version 3.7.2</a> and <a href="releaselog/3_7_3.html">version 3.7.3</a>
+  is optional.  Upgrading from all other SQLite releases is recommended.</p>
+
+<p>  This release features <a href="fts3.html">full-text search</a> enhancements.  The older 
+  <a href="fts3.html">FTS3</a> virtual table is still fully supported, and should also run
+  faster.  In addition, the new <a href="fts3.html#fts4">FTS4</a> virtual table is added.  FTS4
+  follows the same syntax as FTS3 but holds additional metadata which
+  facilitates some performance improvements and more advanced 
+  <a href="fts3.html#matchinfo">matchinfo()</a> output.  Look for further full-text search enhancements
+  in subsequent releases.</p>
+
+<p>  Also in this release, the <a href="eqp.html">EXPLAIN QUERY PLAN</a> output has been enhanced
+  and new documentation is provided so that application developers can
+  more easily understand how SQLite is performing their queries.</p>
+
+<p>  Thanks to an account from the folks at <a href="http://www.devio.us/">http://www.devio.us/</a>, OpenBSD
+  has been added to the list of platforms upon which we 
+  <a href="testing.html">test SQLite</a> prior to every release.  That list of platforms
+  now includes:</p>
+
+<p>  <ul>
+  <li> Linux x86 &amp; x86_64
+  <li> MacOS 10.5 &amp; 10.6
+  <li> MacOS 10.2 PowerPC
+  <li> WinXP and Win7
+  <li> Android 2.2
+  <li> OpenBSD 4.7
+  </ul></p>
+
+<p>  The previous release of SQLite (<a href="releaselog/3_7_3.html">version 3.7.3</a>) has proven to be very
+  robust.  The only serious issue discovered was
+  <a href="http://www.sqlite.org/src/info/80ba201079">ticket 80ba201079</a> that
+  describes an incorrect query result that can occur under very 
+  unusual circumstances.  The ticket description contains details of the
+  problem.  Suffice it to say here that the problem is very obscure and
+  is unlikely to effect most applications and so upgrading is optional.
+  The problem is fixed, of course, in this release.
+</p><hr width="50%"><a name="2010_october_08"></a><h3>2010-October-08 - <a href="releaselog/3_7_3.html">Version 3.7.3</a></h3><p>
+  SQLite <a href="releaselog/3_7_3.html">version 3.7.3</a> is a regularly scheduled bi-monthly maintenance
+  release of SQLite.  Upgrading from <a href="releaselog/3_7_2.html">version 3.7.2</a> is optional.
+  Upgrading from all other releases is recommended.</p>
+
+<p>  This release adds two new interfaces (really just variations on existing
+  interfaces).  The <a href="c3ref/create_function.html">sqlite3_create_function_v2()</a> interface adds a 
+  destructor for the application-data pointer.  The new 
+  <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> interface allows the soft heap limit to
+  be set to a value greater than 2<sup>31</sup>. </p>
+
+<p>  The <a href="rtree.html">RTREE</a> extension has been enhanced with the ability to have an
+  <a href="rtree.html#customquery">application-defined query region</a>.  This might
+  be used, for example, to locate all objects within 
+  the field of view of a camera.</p>
+
+<p>  The 3.7.3 release also includes some performance enhancements, including
+  query planner improvements, documentation updates,
+  and fixes to some very obscure bugs.
+</p><hr width="50%"><a name="2010_august_24"></a><h3>2010-August-24 - <a href="releaselog/3_7_2.html">Version 3.7.2</a></h3><p>
   SQLite <a href="releaselog/3_7_2.html">version 3.7.2</a> fixes a long-standing bug that can cause the
   database <a href="fileformat2.html#freelist">free-page list</a> to go corrupt if <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> is used
   multiple times to

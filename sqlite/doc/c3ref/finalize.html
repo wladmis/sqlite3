@@ -120,17 +120,26 @@ a:visited { color: #734559 }
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Destroy A Prepared Statement Object</h2><blockquote><pre>int sqlite3_finalize(sqlite3_stmt *pStmt);
 </pre></blockquote><p>
 The sqlite3_finalize() function is called to delete a <a href="../c3ref/stmt.html">prepared statement</a>.
-If the statement was executed successfully or not executed at all, then
-SQLITE_OK is returned. If execution of the statement failed then an
-<a href="../c3ref/c_abort.html">error code</a> or <a href="../c3ref/c_busy_recovery.html">extended error code</a> is returned.</p>
+If the most recent evaluation of the statement encountered no errors or
+or if the statement is never been evaluated, then sqlite3_finalize() returns
+SQLITE_OK.  If the most recent evaluation of statement S failed, then
+sqlite3_finalize(S) returns the appropriate <a href="../c3ref/c_abort.html">error code</a> or
+<a href="../c3ref/c_busy_recovery.html">extended error code</a>.</p>
 
-<p>This routine can be called at any point during the execution of the
-<a href="../c3ref/stmt.html">prepared statement</a>.  If the virtual machine has not
-completed execution when this routine is called, that is like
-encountering an error or an <a href="../c3ref/interrupt.html">interrupt</a>.
-Incomplete updates may be rolled back and transactions canceled,
-depending on the circumstances, and the
-<a href="../c3ref/c_abort.html">error code</a> returned will be <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.
+<p>The sqlite3_finalize(S) routine can be called at any point during
+the life cycle of <a href="../c3ref/stmt.html">prepared statement</a> S:
+before statement S is ever evaluated, after
+one or more calls to <a href="../c3ref/reset.html">sqlite3_reset()</a>, or after any call
+to <a href="../c3ref/step.html">sqlite3_step()</a> regardless of whether or not the statement has
+completed execution.</p>
+
+<p>Invoking sqlite3_finalize() on a NULL pointer is a harmless no-op.</p>
+
+<p>The application must finalize every <a href="../c3ref/stmt.html">prepared statement</a> in order to avoid
+resource leaks.  It is a grievous error for the application to try to use
+a prepared statement after it has been finalized.  Any use of a prepared
+statement after it has been finalized can result in undefined and
+undesirable behavior such as segfaults and heap corruption.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

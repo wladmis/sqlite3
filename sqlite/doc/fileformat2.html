@@ -127,29 +127,23 @@ The SQLite Database File Format
 <p>This document describes and defines the on-disk database file
 format used by SQLite.</p>
 
-<p>This is the second document to define the SQLite database file format.
-The <a href="fileformat.html">first edition file format document</a> differs from this one in that it is
-written in a formal style whereas this document attempts to be more
-conversational.  The two documents were independently written (they have
-different authors) and hence serve as cross-checks for one another.
-Both documents should describe exactly the same file format.  
-Any incompatibilities between the two documents should be considered a bug.</p>
-
 <h2>1.0 The Database File</h2>
 
 <p>Most of the time the complete state of an SQLite database 
 is contained a single file on disk called the "main database file".</p>
 
-<p>While performing a transaction, SQLite stores some temporary information
-in a second file called the "rollback journal".  If the application or
+<p>While performing a transaction, the default behavior is to stores 
+some temporary information in a second file called the "rollback journal".
+(The alternative is to use a <a href="wal.html">write-ahead log</a> - described separately.)
+If the application or
 host computer crashes before completing the transaction, then the rollback
 journal contains critical state information needed to restore the
 content of the main database file.  When a rollback journal contains
 information necessary for recovering the state of the database, we say
 that it is a "hot journal".  Hot journals only come up in an error recovery
 scenario and so are uncommon, but they are part of the state of an SQLite
-database and so should not be ignored.  This document will define the format
-of a rollback journal, but most of the content of this document will focus
+database and so should not be ignored.  This document defines the format
+of a rollback journal (and the write-ahead log file), but main focus is
 on the main database file.</p>
 
 <h3>1.1 Pages</h3>
@@ -289,7 +283,7 @@ This value can be interpreted as a big-endian
 1 and thought of is as a magic number to represent the 65536 page size.
 Or one can view the two-byte field as a little endian number and say
 that it represents the page size divided by 256.  These two 
-interpretations of the page-size field are equivelent.</p>
+interpretations of the page-size field are equivalent.</p>
 
 <h4>1.2.3 File format version numbers</h4>
 
@@ -409,7 +403,7 @@ formatting.  Four schema format numbers are currently defined:</p>
 <li value=1>Format 1 is understood by all versions of SQLite back to
 version 3.0.0.</li>
 <li value=2>Format 2 adds the ability of rows within the same table
-to have a varing number of columns, in order to support the
+to have a varying number of columns, in order to support the
 <a href="lang_altertable.html">ALTER TABLE ... ADD COLUMN</a> functionality.  Support for
 reading and writing format 2 was added in SQLite version 3.1.3 
 on 2005-02-19.</li>
@@ -495,13 +489,14 @@ in size contains no lock-byte page.  A database file larger than
 
 <p>The lock-byte page is set aside for use by the operating-system specific
 VFS implementation in implementing the database file locking primitives.
-SQLite will not use the lock-byte page; it will never be read or written
-by the SQLite core, though operating-system specific VFS implementations may
-choose to read or write bytes on the lock-byte page according to the 
+SQLite does not use the lock-byte page.  The SQLite core 
+will never read or write, though operating-system specific VFS 
+implementations may choose to read or write bytes on the lock-byte 
+page according to the 
 needs and proclivities of the underlying system.  The unix and win32
 VFS implementations that come built into SQLite do not write to the
-lock-byte page, but we are aware of third-party VFS implementations for
-other operating systems that do sometimes write to the lock-byte page.</p>
+lock-byte page, but third-party VFS implementations for
+other operating systems might.</p>
 
 <a name="freelist"></a>
 
@@ -530,7 +525,7 @@ L+1 inclusive contain page numbers for freelist leaf pages.</p>
 writing freelist leaf pages in order to reduce disk I/O.</p>
 
 <p>A bug in SQLite versions prior to 3.6.0 caused the database to be
-reported as corrupt if any last 6 entries in the freelist trunk page 
+reported as corrupt if any of the last 6 entries in the freelist trunk page 
 array contained non-zero values.  Newer versions of SQLite do not have
 this problem.  However, newer versions of SQLite still avoid using the 
 last six entries in the freelist trunk page array in order that database
@@ -554,7 +549,7 @@ page number of the child page.</p>
 
 
 <p>Define the depth
-of a leaf b-tree to be 1 and the the depth of any interior b-tree to be one
+of a leaf b-tree to be 1 and the depth of any interior b-tree to be one
 more than the maximum depth of any of its children.  In a well-formed
 database, all children of any one interior b-tree have the same depth.</p>
 
@@ -566,7 +561,7 @@ the sequel.)  All keys within the same page are unique and are logically
 organized in ascending order from left to right.  (Again, this ordering
 is logical, not physical.  The actual location of keys within the page
 is arbitrary.) For any key X, pointers to the left
-of a X refer to b-tree pages on which alls keys are less than or equal to X.
+of a X refer to b-tree pages on which all keys are less than or equal to X.
 Pointers to the right of X refer to pages where all keys are 
 greater than X.</p>
 
@@ -932,7 +927,7 @@ page number is the parent b-tree page.
 must come before any non-root b-tree page, cell payload overflow page, or
 freelist page.  This restriction ensures that a root page will never
 be moved during an auto-vacuum or incremental-vacuum.  The auto-vacuum
-logic is not to update the root_page field of the sqlite_master
+logic does not know how to update the root_page field of the sqlite_master
 table and so it is necessary to prevent root pages from being moved
 during an auto-vacuum in order to preserve the integrity of the
 sqlite_master table.  Root pages are moved to the beginning of the
@@ -958,8 +953,8 @@ The prior discussion mentioned one key being less than another, but
 did not define what "less than" meant.  The current section will address
 these omissions.</p>
 
-<p>Payload, be it table content or index keys, is always in the "record
-format".  The record format defines a sequence of values corresponding to
+<p>Payload, either table content or index keys, is always in the "record
+format".  The record format defines a sequence of values corresponding
 to columns in a table or index.  The record format specifies the number
 of columns, the datatype of each column, and the content of each column.</p>
 
@@ -975,7 +970,7 @@ of bytes in the header.  The varint value is the size of the header in
 bytes including the size varint itself.  Following the size varint are
 one or more additional varints, one per column.  These additional varints
 are called "serial type" numbers and
-determine the datatype of each column, according to the following key:</p>
+determine the datatype of each column, according to the following chart:</p>
 
 <center>
 <i>Serial Type Codes Of The Record Format</i><br>
@@ -1027,7 +1022,7 @@ record is empty.</p>
 <h3>2.2 Record Sort Order</h3>
 
 <p>The order of keys in an index b-tree is determined by the sort order of
-the records that the keys represent.  Record comparison proceeds column
+the records that the keys represent.  Record comparison progresses column
 by column.  Columns of a record are examined from left to right.  The
 first pair of columns that are not equal determines the relative order
 of the two records.  The sort order of individual columns is as
@@ -1193,9 +1188,10 @@ PRIMARY KEY constraints, the sqlite_master.sql field is NULL.</p>
 <h2>3.0 The Rollback Journal</h2>
 
 <p>The rollback journal is a file associated with each SQLite database
-fail that hold information used to restore the database file to its initial
+file that hold information used to restore the database file to its initial
 state during the course of a transaction.
-The rollback journal file is always located in the directory as the database
+The rollback journal file is always located in the same 
+directory as the database
 file and has the same name as the database file but with the string
 "<tt>-journal</tt>" appended.  There can only be a single rollback journal
 associated with a give database and hence there can only be one write
@@ -1307,7 +1303,7 @@ is used each time a transaction is started in order to minimize the risk
 that unwritten sectors might by chance contain data from the same page
 that was a part of prior journals.  By changing the nonce for each
 transaction, stale data on disk will still generate an incorrect checksum
-and be detected with high probability.  The checksum only uses a sparce sample
+and be detected with high probability.  The checksum only uses a sparse sample
 of 32-bit words from the data record for performance reasons - design studies 
 during the planning phases of SQLite 3.0.0 showed
 a significant performance hit in checksumming the entire page.</p>
@@ -1331,7 +1327,7 @@ control mechanism called "<a href="wal.html">write-ahead log</a>" or "<a href="w
 When a database is in WAL mode, all connections to that database must
 use the WAL.  A particular database will use either a rollback journal
 or a WAL, but not both at the same time.
-The WAL is always located in the directory as the database
+The WAL is always located in the same directory as the database
 file and has the same name as the database file but with the string
 "<tt>-wal</tt>" appended.</p>
 
@@ -1444,8 +1440,8 @@ endfor
 # result in s0 and s1
 </pre></blockquote>
 
-<p>The outputs s0 and s1 are both weighted checksums using fibonacci weights
-in reverse order (the largest fibonacci weight occurs on the first element
+<p>The outputs s0 and s1 are both weighted checksums using Fibonacci weights
+in reverse order.  (The largest Fibonacci weight occurs on the first element
 of the sequence being summed.)  The s1 value spans all 32-bit integer
 terms of the sequence whereas s0 omits the final term.</p>
 

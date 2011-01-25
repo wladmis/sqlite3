@@ -126,18 +126,21 @@ SQL statement to behave as a query and to return information about
 how the SQL statement would have operated if the EXPLAIN keyword or
 phrase had been omitted.</p>
 
-<p>When the EXPLAIN keyword appears by itself it causes the statement
-to behave as a query that returns the sequence of 
-<a href="opcode.html">virtual machine instructions</a> it would have
-used to execute the command had the EXPLAIN keyword not been present.
-When the EXPLAIN QUERY PLAN phrase appears, the statement returns
-high-level information about what indices would have been used.</p>
-
 <p>The output from EXPLAIN and EXPLAIN QUERY PLAN is intended for
 interactive analysis and troubleshooting only.  The details of the 
 output format are subject to change from one release of SQLite to the next.
 Applications should not use EXPLAIN or EXPLAIN QUERY PLAN since
-their exact behavior is undocumented, unspecified, and variable.</p>
+their exact behavior is variable and only partially documented.</p>
+
+<p>When the EXPLAIN keyword appears by itself it causes the statement
+to behave as a query that returns the sequence of 
+<a href="opcode.html">virtual machine instructions</a> it would have used to execute the command had
+the EXPLAIN keyword not been present. When the EXPLAIN QUERY PLAN phrase
+appears, the statement returns high-level information regarding the query
+plan that would have been used.
+
+The EXPLAIN QUERY PLAN command is described in 
+<a href="eqp.html">more detail here</a>.
 
 
         <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

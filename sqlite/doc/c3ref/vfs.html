@@ -181,14 +181,18 @@ object once the object has been registered.</p>
 <p>The zName field holds the name of the VFS module.  The name must
 be unique across all VFS modules.</p>
 
-<p>SQLite will guarantee that the zFilename parameter to xOpen
+<p>SQLite guarantees that the zFilename parameter to xOpen
 is either a NULL pointer or string obtained
-from xFullPathname().  SQLite further guarantees that
+from xFullPathname() with an optional suffix added.
+If a suffix is added to the zFilename parameter, it will
+consist of a single "-" character followed by no more than
+10 alphanumeric and/or "-" characters.
+SQLite further guarantees that
 the string will be valid and unchanged until xClose() is
 called. Because of the previous sentence,
 the <a href="../c3ref/file.html">sqlite3_file</a> can safely store a pointer to the
 filename if it needs to remember the filename for some reason.
-If the zFilename parameter is xOpen is a NULL pointer then xOpen
+If the zFilename parameter to xOpen is a NULL pointer then xOpen
 must invent its own temporary name for the file.  Whenever the
 xFilename parameter is NULL it will also be the case that the
 flags parameter will include <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>.</p>
@@ -211,6 +215,7 @@ call, depending on the object being opened:</p>
 <li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a>
 <li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_SUBJOURNAL</a>
 <li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_MASTER_JOURNAL</a>
+<li>  <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_WAL</a>
 </ul></p>
 
 <p>The file I/O implementation can use the object type flags to
@@ -231,7 +236,8 @@ order and set up its I/O subsystem accordingly.</p>
 
 <p>The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a> flag means the file should be
 deleted when it is closed.  The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_DELETEONCLOSE</a>
-will be set for TEMP  databases, journals and for subjournals.</p>
+will be set for TEMP databases and their journals, transient
+databases, and subjournals.</p>
 
 <p>The <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_EXCLUSIVE</a> flag is always used in conjunction
 with the <a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_CREATE</a> flag, which are both directly

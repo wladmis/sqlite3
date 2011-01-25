@@ -128,7 +128,10 @@ the nearest second. The number of milliseconds of sleep actually
 requested from the operating system is returned.</p>
 
 <p>SQLite implements this interface by calling the xSleep()
-method of the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.
+method of the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.  If the xSleep() method
+of the default VFS is not implemented correctly, or not implemented at
+all, then the behavior of sqlite3_sleep() may deviate from the description
+in the previous paragraphs.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

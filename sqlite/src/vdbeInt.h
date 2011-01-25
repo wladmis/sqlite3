@@ -57,6 +57,7 @@ struct VdbeCursor {
   Bool deferredMoveto;  /* A call to sqlite3BtreeMoveto() is needed */
   Bool isTable;         /* True if a table requiring integer keys */
   Bool isIndex;         /* True if an index containing keys only - no data */
+  Bool isOrdered;       /* True if the underlying table is BTREE_UNORDERED */
   i64 movetoTarget;     /* Argument to the deferred sqlite3BtreeMoveto() */
   Btree *pBt;           /* Separate file holding temporary table */
   int pseudoTableReg;   /* Register holding pseudotable content. */
@@ -96,26 +97,34 @@ typedef struct VdbeCursor VdbeCursor;
 ** restoring the state of the VM to as it was before the sub-program
 ** began executing.
 **
-** Frames are stored in a linked list headed at Vdbe.pParent. Vdbe.pParent
-** is the parent of the current frame, or zero if the current frame
-** is the main Vdbe program.
+** The memory for a VdbeFrame object is allocated and managed by a memory
+** cell in the parent (calling) frame. When the memory cell is deleted or
+** overwritten, the VdbeFrame object is not freed immediately. Instead, it
+** is linked into the Vdbe.pDelFrame list. The contents of the Vdbe.pDelFrame
+** list is deleted when the VM is reset in VdbeHalt(). The reason for doing
+** this instead of deleting the VdbeFrame immediately is to avoid recursive
+** calls to sqlite3VdbeMemRelease() when the memory cells belonging to the
+** child frame are released.
+**
+** The currently executing frame is stored in Vdbe.pFrame. Vdbe.pFrame is
+** set to NULL if the currently executing frame is the main program.
 */
 typedef struct VdbeFrame VdbeFrame;
 struct VdbeFrame {
   Vdbe *v;                /* VM this frame belongs to */
-  int pc;                 /* Program Counter */
-  Op *aOp;                /* Program instructions */
+  int pc;                 /* Program Counter in parent (calling) frame */
+  Op *aOp;                /* Program instructions for parent frame */
   int nOp;                /* Size of aOp array */
-  Mem *aMem;              /* Array of memory cells */
+  Mem *aMem;              /* Array of memory cells for parent frame */
   int nMem;               /* Number of entries in aMem */
-  VdbeCursor **apCsr;     /* Element of Vdbe cursors */
+  VdbeCursor **apCsr;     /* Array of Vdbe cursors for parent frame */
   u16 nCursor;            /* Number of entries in apCsr */
   void *token;            /* Copy of SubProgram.token */
   int nChildMem;          /* Number of memory cells for child frame */
   int nChildCsr;          /* Number of cursors for child frame */
   i64 lastRowid;          /* Last insert rowid (sqlite3.lastRowid) */
   int nChange;            /* Statement changes (Vdbe.nChanges)     */
-  VdbeFrame *pParent;     /* Parent of this frame */
+  VdbeFrame *pParent;     /* Parent of this frame, or NULL if parent is main */
 };
 
 #define VdbeFrameMem(p) ((Mem *)&((u8 *)p)[ROUND8(sizeof(VdbeFrame))])
@@ -151,6 +160,10 @@ struct Mem {
   u16 flags;          /* Some combination of MEM_Null, MEM_Str, MEM_Dyn, etc. */
   u8  type;           /* One of SQLITE_NULL, SQLITE_TEXT, SQLITE_INTEGER, etc */
   u8  enc;            /* SQLITE_UTF8, SQLITE_UTF16BE, SQLITE_UTF16LE */
+#ifdef SQLITE_DEBUG
+  Mem *pScopyFrom;    /* This Mem is a shallow copy of pScopyFrom */
+  void *pFiller;      /* So that sizeof(Mem) is a multiple of 8 */
+#endif
   void (*xDel)(void *);  /* If not null, call this function to delete Mem.z */
   char *zMalloc;      /* Dynamic buffer allocated by sqlite3_malloc() */
 };
@@ -177,6 +190,7 @@ struct Mem {
 #define MEM_Blob      0x0010   /* Value is a BLOB */
 #define MEM_RowSet    0x0020   /* Value is a RowSet object */
 #define MEM_Frame     0x0040   /* Value is a VdbeFrame object */
+#define MEM_Invalid   0x0080   /* Value is undefined */
 #define MEM_TypeMask  0x00ff   /* Mask of type bits */
 
 /* Whenever Mem contains a valid string or blob representation, one of
@@ -190,18 +204,24 @@ struct Mem {
 #define MEM_Ephem     0x1000   /* Mem.z points to an ephemeral string */
 #define MEM_Agg       0x2000   /* Mem.z points to an agg function context */
 #define MEM_Zero      0x4000   /* Mem.i contains count of 0s appended to blob */
-
 #ifdef SQLITE_OMIT_INCRBLOB
   #undef MEM_Zero
   #define MEM_Zero 0x0000
 #endif
-
 
 /*
 ** Clear any existing type flags from a Mem and replace them with f
 */
 #define MemSetTypeFlag(p, f) \
    ((p)->flags = ((p)->flags&~(MEM_TypeMask|MEM_Zero))|f)
+
+/*
+** Return true if a memory cell is not marked as invalid.  This macro
+** is for use inside assert() statements only.
+*/
+#ifdef SQLITE_DEBUG
+#define memIsValid(M)  ((M)->flags & MEM_Invalid)==0
+#endif
 
 
 /* A VdbeFunc is just a FuncDef (defined in sqliteInt.h) that contains
@@ -321,6 +341,7 @@ struct Vdbe {
   FILE *trace;            /* Write an execution trace here, if not NULL */
 #endif
   VdbeFrame *pFrame;      /* Parent frame */
+  VdbeFrame *pDelFrame;   /* List of frame objects to free on VM reset */
   int nFrame;             /* Number of frames in pFrame list */
   u32 expmask;            /* Binding to these vars invalidates VM */
   SubProgram *pProgram;   /* Linked list of all sub-programs used by VM */
@@ -390,6 +411,10 @@ int sqlite3VdbeCloseStatement(Vdbe *, int);
 void sqlite3VdbeFrameDelete(VdbeFrame*);
 int sqlite3VdbeFrameRestore(VdbeFrame *);
 void sqlite3VdbeMemStoreType(Mem *pMem);
+
+#ifdef SQLITE_DEBUG
+void sqlite3VdbeMemPrepareToChange(Vdbe*,Mem*);
+#endif
 
 #ifndef SQLITE_OMIT_FOREIGN_KEY
 int sqlite3VdbeCheckFk(Vdbe *, int);

@@ -162,8 +162,8 @@ virtual table on demand.
 <p>Here are some postulated uses for virtual tables:
 
 <ul>
-<li> A full-text search interface
-<li> Spatial indices using R-Trees
+<li> A <a href="fts3.html">full-text search</a> interface
+<li> Spatial indices using <a href="rtree.html">R-Trees</a>
 <li> Read and/or write the content of a comma-separated value (CSV)
      file
 <li> Access to the filesystem of the host computer
@@ -414,7 +414,7 @@ The second, argv[1], is the name of the database in which the new virtual table 
 statement for attached databases.  The third element of the array, argv[2], 
 is the name of the new virtual table, as specified following the TABLE
 keyword in the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
-If present, the fourth and subsquent strings in the argv[] array report 
+If present, the fourth and subsequent strings in the argv[] array report 
 the arguments to the module name in the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
 
 <p>The job of this method is to construct the new virtual table object
@@ -441,6 +441,28 @@ held in persistent memory.  The string can be
 deallocated and/or reused as soon as the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a>
 routine returns.
 
+<p>The xCreate method need not initialize the pModule, nRef, and zErrMsg
+fields of the <a href="c3ref/vtab.html">sqlite3_vtab</a> object.  The SQLite core will take care of 
+that chore.
+
+<p>The xCreate must should return <a href="c3ref/c_abort.html">SQLITE_OK</a> if it is successful in 
+creating the new virtual table, or <a href="c3ref/c_abort.html">SQLITE_ERROR</a> if it is not successful.
+If not successful, the <a href="c3ref/vtab.html">sqlite3_vtab</a> structure must not be allocated. 
+An error message may optionally be returned in *pzErr if unsuccessful.
+Space to hold the error message string must be allocated using
+an SQLite memory allocation function like 
+<a href="c3ref/free.html">sqlite3_malloc()</a> or <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> as the SQLite core will
+attempt to free the space using <a href="c3ref/free.html">sqlite3_free()</a> after the error has
+been reported up to the application.
+
+<p>The xCreate method is required for every virtual table implementation, 
+though the xCreate and <a href="vtab.html#xconnect">xConnect</a> pointers of the <a href="c3ref/module.html">sqlite3_module</a> object
+may point to the same function the virtual table does not need to initialize
+backing store.
+
+<a name="hiddencol"></a>
+
+<h4>2.1.1 Hidden columns in virtual tables</h4>
 <p>If a column datatype contains the special keyword "HIDDEN"
 (in any combination of upper and lower case letters) then that keyword
 it is omitted from the column datatype name and the column is marked 
@@ -466,24 +488,11 @@ A hidden column differs from a normal column in three respects:
 <p>Then the virtual table would be created with two hidden columns,
 and with datatypes of "VARCHAR(12)" and "INTEGER".
 
-<p>The xCreate method need not initialize the pModule, nRef, and zErrMsg
-fields of the <a href="c3ref/vtab.html">sqlite3_vtab</a> object.  The SQLite core will take care of 
-that chore.
+<p>An example use of hidden columns can be seen in the <a href="fts3.html">FTS3</a> virtual 
+table implementation, where every FTS virtual table
+contains an <a href="fts3.html#hiddencol">FTS hidden column</a> that is used to pass information from the
+virtual table into <a href="fts3.html#snippet">FTS auxiliary functions</a> and to the <a href="fts3.html#section_3">FTS MATCH</a> operator.
 
-<p>The xCreate must should return <a href="c3ref/c_abort.html">SQLITE_OK</a> if it is successful in 
-creating the new virtual table, or <a href="c3ref/c_abort.html">SQLITE_ERROR</a> if it is not successful.
-If not successful, the <a href="c3ref/vtab.html">sqlite3_vtab</a> structure must not be allocated. 
-An error message may optionally be returned in *pzErr if unsuccessful.
-Space to hold the error message string must be allocated using
-an SQLite memory allocation function like 
-<a href="c3ref/free.html">sqlite3_malloc()</a> or <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> as the SQLite core will
-attempt to free the space using <a href="c3ref/free.html">sqlite3_free()</a> after the error has
-been reported up to the application.
-
-<p>The xCreate method is required for every virtual table implementation, 
-though the xCreate and <a href="vtab.html#xconnect">xConnect</a> pointers of the <a href="c3ref/module.html">sqlite3_module</a> object
-may point to the same function the virtual table does not need to initialize
-backing store.
 
 <a name="xconnect"></a>
 
@@ -776,7 +785,7 @@ associated with the virtual table persists.
 This method undoes the work of <a href="vtab.html#xconnect">xConnect</a>.
 
 <p>This method is a destructor for a connection to the virtual table.
-Constrast this method with <a href="vtab.html#sqlite3_module.xDestroy">xDestroy</a>.  The xDestroy is a destructor
+Contrast this method with <a href="vtab.html#sqlite3_module.xDestroy">xDestroy</a>.  The xDestroy is a destructor
 for the entire virtual table.
 
 <p>The xDestroy method is required for every virtual table implementation,

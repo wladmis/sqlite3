@@ -526,7 +526,7 @@ a:visited { color: #734559 }
       <i>atomic-write</i> property for blocks of size <i>N</i> bytes
       following an aligned write of <i>N</i> 
       bytes to a file but before the file has been successfully <i>synced</i>,
-      then is is assumed following recovery that all sectors spanned by the
+      then is assumed following recovery that all sectors spanned by the
       write operation were correctly updated, or that none of the sectors were
       modified at all.
 </p><p class=req id=A21012>
@@ -534,7 +534,7 @@ a:visited { color: #734559 }
       <i>safe-append</i> following a write operation that appends data
       to the end of the file without modifying any of the existing file 
       content but before the file has been successfully <i>synced</i>,
-      then is is assumed following recovery that either the data was
+      then is assumed following recovery that either the data was
       correctly appended to the file, or that the file size remains 
       unchanged. It is assumed that it is impossible that the file be
       extended but populated with incorrect data.

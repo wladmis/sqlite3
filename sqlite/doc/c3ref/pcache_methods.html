@@ -134,32 +134,42 @@ struct sqlite3_pcache_methods {
 </pre></blockquote><p>
 The <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_PCACHE</a>, ...) interface can
 register an alternative page cache implementation by passing in an
-instance of the sqlite3_pcache_methods structure. The majority of the
-heap memory used by SQLite is used by the page cache to cache data read
-from, or ready to be written to, the database file. By implementing a
-custom page cache using this API, an application can control more
-precisely the amount of memory consumed by SQLite, the way in which
+instance of the sqlite3_pcache_methods structure.
+In many applications, most of the heap memory allocated by
+SQLite is used for the page cache.
+By implementing a
+custom page cache using this API, an application can better control
+the amount of memory consumed by SQLite, the way in which
 that memory is allocated and released, and the policies used to
 determine exactly which parts of a database file are cached and for
 how long.</p>
+
+<p>The alternative page cache mechanism is an
+extreme measure that is only needed by the most demanding applications.
+The built-in page cache is recommended for most uses.</p>
 
 <p>The contents of the sqlite3_pcache_methods structure are copied to an
 internal buffer by SQLite within the call to <a href="../c3ref/config.html">sqlite3_config</a>.  Hence
 the application may discard the parameter after the call to
 <a href="../c3ref/config.html">sqlite3_config()</a> returns.</p>
 
-<p>The xInit() method is called once for each call to <a href="../c3ref/initialize.html">sqlite3_initialize()</a>
+<p>The xInit() method is called once for each effective
+call to <a href="../c3ref/initialize.html">sqlite3_initialize()</a>
 (usually only once during the lifetime of the process). The xInit()
 method is passed a copy of the sqlite3_pcache_methods.pArg value.
-The xInit() method can set up up global structures and/or any mutexes
-required by the custom page cache implementation.</p>
+The intent of the xInit() method is to set up global data structures
+required by the custom page cache implementation.
+If the xInit() method is NULL, then the
+built-in default page cache is used instead of the application defined
+page cache.</p>
 
-<p>The xShutdown() method is called from within <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>,
-if the application invokes this API. It can be used to clean up
-any outstanding resources before process shutdown, if required.</p>
+<p>The xShutdown() method is called by <a href="../c3ref/initialize.html">sqlite3_shutdown()</a>.
+It can be used to clean up
+any outstanding resources before process shutdown, if required.
+The xShutdown() method may be NULL.</p>
 
-<p>SQLite holds a <a href="../c3ref/c_mutex_fast.html">SQLITE_MUTEX_RECURSIVE</a> mutex when it invokes
-the xInit method, so the xInit method need not be threadsafe.  The
+<p>SQLite automatically serializes calls to the xInit method,
+so the xInit method need not be threadsafe.  The
 xShutdown method is only called from <a href="../c3ref/initialize.html">sqlite3_shutdown()</a> so it does
 not need to be threadsafe either.  All other methods must be threadsafe
 in multithreaded applications.</p>
@@ -167,8 +177,8 @@ in multithreaded applications.</p>
 <p>SQLite will never invoke xInit() more than once without an intervening
 call to xShutdown().</p>
 
-<p>The xCreate() method is used to construct a new cache instance.  SQLite
-will typically create one cache instance for each open database file,
+<p>SQLite invokes the xCreate() method to construct a new cache instance.
+SQLite will typically create one cache instance for each open database file,
 though this is not guaranteed. The
 first parameter, szPage, is the size in bytes of the pages that must
 be allocated by the cache.  szPage will not be a power of two.  szPage
@@ -184,7 +194,9 @@ false if it is used for an in-memory database. The cache implementation
 does not have to do anything special based with the value of bPurgeable;
 it is purely advisory.  On a cache where bPurgeable is false, SQLite will
 never invoke xUnpin() except to deliberately delete a page.
-In other words, a cache created with bPurgeable set to false will
+In other words, calls to xUnpin() on a cache with bPurgeable set to
+false will always have the "discard" flag set to true.
+Hence, a cache created with bPurgeable false will
 never contain any unpinned pages.</p>
 
 <p>The xCachesize() method may be called at any time by SQLite to set the
@@ -194,20 +206,21 @@ the SQLite "<a href="../pragma.html#pragma_cache_size">PRAGMA cache_size</a>" co
 parameter, the implementation is not required to do anything with this
 value; it is advisory only.</p>
 
-<p>The xPagecount() method should return the number of pages currently
-stored in the cache.</p>
+<p>The xPagecount() method must return the number of pages currently
+stored in the cache, both pinned and unpinned.</p>
 
-<p>The xFetch() method is used to fetch a page and return a pointer to it.
-A 'page', in this context, is a buffer of szPage bytes aligned at an
+<p>The xFetch() method locates a page in the cache and returns a pointer to
+the page, or a NULL pointer.
+A "page", in this context, means a buffer of szPage bytes aligned at an
 8-byte boundary. The page to be fetched is determined by the key. The
-mimimum key value is 1. After it has been retrieved using xFetch, the page
+mimimum key value is 1.  After it has been retrieved using xFetch, the page
 is considered to be "pinned".</p>
 
 <p>If the requested page is already in the page cache, then the page cache
 implementation must return a pointer to the page buffer with its content
 intact.  If the requested page is not already in the cache, then the
-behavior of the cache implementation is determined by the value of the
-createFlag parameter passed to xFetch, according to the following table:</p>
+behavior of the cache implementation should use the value of the createFlag
+parameter to help it determined what action to take:</p>
 
 <p><table border=1 width=85% align=center>
 <tr><th> createFlag <th> Behaviour when page is not already in cache
@@ -218,28 +231,27 @@ Otherwise return NULL.
 NULL if allocating a new page is effectively impossible.
 </table></p>
 
-<p>SQLite will normally invoke xFetch() with a createFlag of 0 or 1.  If
-a call to xFetch() with createFlag==1 returns NULL, then SQLite will
+<p>SQLite will normally invoke xFetch() with a createFlag of 0 or 1.  SQLite
+will only use a createFlag of 2 after a prior call with a createFlag of 1
+failed.  In between the to xFetch() calls, SQLite may
 attempt to unpin one or more cache pages by spilling the content of
-pinned pages to disk and synching the operating system disk cache. After
-attempting to unpin pages, the xFetch() method will be invoked again with
-a createFlag of 2.</p>
+pinned pages to disk and synching the operating system disk cache.</p>
 
 <p>xUnpin() is called by SQLite with a pointer to a currently pinned page
-as its second argument. If the third parameter, discard, is non-zero,
-then the page should be evicted from the cache. In this case SQLite
-assumes that the next time the page is retrieved from the cache using
-the xFetch() method, it will be zeroed. If the discard parameter is
-zero, then the page is considered to be unpinned. The cache implementation
+as its second argument.  If the third parameter, discard, is non-zero,
+then the page must be evicted from the cache.
+If the discard parameter is
+zero, then the page may be discarded or retained at the discretion of
+page cache implementation. The page cache implementation
 may choose to evict unpinned pages at any time.</p>
 
-<p>The cache is not required to perform any reference counting. A single
+<p>The cache must not perform any reference counting. A single
 call to xUnpin() unpins the page regardless of the number of prior calls
 to xFetch().</p>
 
 <p>The xRekey() method is used to change the key value associated with the
-page passed as the second argument from oldKey to newKey. If the cache
-previously contains an entry associated with newKey, it should be
+page passed as the second argument. If the cache
+previously contains an entry associated with newKey, it must be
 discarded. Any prior cache entry associated with newKey is guaranteed not
 to be pinned.</p>
 

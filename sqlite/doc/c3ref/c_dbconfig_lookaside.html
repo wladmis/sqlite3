@@ -143,8 +143,14 @@ slots.  The size of the buffer in the first argument must be greater than
 or equal to the product of the second and third arguments.  The buffer
 must be aligned to an 8-byte boundary.  If the second argument to
 SQLITE_DBCONFIG_LOOKASIDE is not a multiple of 8, it is internally
-rounded down to the next smaller
-multiple of 8.  See also: <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_LOOKASIDE</a></dd></p>
+rounded down to the next smaller multiple of 8.  The lookaside memory
+configuration for a database connection can only be changed when that
+connection is not currently using lookaside memory, or in other words
+when the "current value" returned by
+<a href="../c3ref/db_status.html">sqlite3_db_status</a>(D,<a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_LOOKASIDE</a>,...) is zero.
+Any attempt to change the lookaside memory configuration when lookaside
+memory is in use leaves the configuration unchanged and returns
+<a href="../c3ref/c_abort.html">SQLITE_BUSY</a>.</dd></p>
 
 <p></dl>
 </p><p>See also lists of

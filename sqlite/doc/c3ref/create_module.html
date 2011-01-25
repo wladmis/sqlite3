@@ -147,7 +147,9 @@ when a new virtual table is be being created or reinitialized.</p>
 <p>The sqlite3_create_module_v2() interface has a fifth parameter which
 is a pointer to a destructor for the pClientData.  SQLite will
 invoke the destructor function (if it is not NULL) when SQLite
-no longer needs the pClientData pointer.  The sqlite3_create_module()
+no longer needs the pClientData pointer.  The destructor will also
+be invoked if the call to sqlite3_create_module_v2() fails.
+The sqlite3_create_module()
 interface is equivalent to sqlite3_create_module_v2() with a NULL
 destructor.
 </p><p>See also lists of

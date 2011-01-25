@@ -119,8 +119,14 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Number of columns in a result set</h2><blockquote><pre>int sqlite3_data_count(sqlite3_stmt *pStmt);
 </pre></blockquote><p>
-The sqlite3_data_count(P) the number of columns in the
-of the result set of <a href="../c3ref/stmt.html">prepared statement</a> P.
+The sqlite3_data_count(P) interface returns the number of columns in the
+current row of the result set of <a href="../c3ref/stmt.html">prepared statement</a> P.
+If prepared statement P does not have results ready to return
+(via calls to the <a href="../c3ref/column_blob.html">sqlite3_column_*()</a> of
+interfaces) then sqlite3_data_count(P) returns 0.
+The sqlite3_data_count(P) routine also returns 0 if P is a NULL pointer.</p>
+
+<p>See also: <a href="../c3ref/column_count.html">sqlite3_column_count()</a>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

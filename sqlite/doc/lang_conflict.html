@@ -160,7 +160,7 @@ with an SQLITE_CONSTRAIT error and backs out any changes
 made by the current SQL statement; but changes caused
 by prior SQL statements within the same transaction are preserved and the
 transaction remains active.
-This is the default behavior and the behavior proscribed the the SQL
+This is the default behavior and the behavior proscribed the SQL
 standard.</p></dd>
 
 <dt><b>FAIL</b></dt>
@@ -201,7 +201,7 @@ satisfy a constraint, <a href="lang_createtrigger.html">delete triggers</a> fire
 <a href="pragma.html#pragma_recursive_triggers">recursive triggers</a> are enabled.</p>
 
 <p>The <a href="c3ref/update_hook.html">update hook</a> is not invoked for rows that
-are deleted by the REPLACE conflict resolution stretegy.  Nor does
+are deleted by the REPLACE conflict resolution strategy.  Nor does
 REPLACE increment the <a href="c3ref/changes.html">change counter</a>.
 The exceptional behaviors defined in this paragraph might change 
 in a future release.</p>

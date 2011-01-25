@@ -122,7 +122,7 @@ a:visited { color: #734559 }
 The <a href="../c3ref/file_control.html">sqlite3_file_control()</a> interface makes a direct call to the
 xFileControl method for the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object associated
 with a particular database identified by the second argument. The
-name of the database "main" for the main database or "temp" for the
+name of the database is "main" for the main database or "temp" for the
 TEMP database, or the name that appears after the AS keyword for
 databases that are added using the <a href="../lang_attach.html">ATTACH</a> SQL command.
 A NULL pointer can be used in place of "main" to refer to the
@@ -131,6 +131,12 @@ The third and fourth parameters to this routine
 are passed directly through to the second and third parameters of
 the xFileControl method.  The return value of the xFileControl
 method becomes the return value of this routine.</p>
+
+<p>The SQLITE_FCNTL_FILE_POINTER value for the op parameter causes
+a pointer to the underlying <a href="../c3ref/file.html">sqlite3_file</a> object to be written into
+the space pointed to by the 4th parameter.  The SQLITE_FCNTL_FILE_POINTER
+case is a short-circuit path which does not actually invoke the
+underlying sqlite3_io_methods.xFileControl method.</p>
 
 <p>If the second parameter (zDbName) does not match the name of any
 open database file, then SQLITE_ERROR is returned.  This error

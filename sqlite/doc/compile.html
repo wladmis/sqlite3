@@ -236,7 +236,13 @@ the available settings:</p>
 <a name="controlfeatures"></a>
 <h2>1.3 Options To Control Operating Characteristics</h2>
 
-<a name="case_sensitive_like"></a>
+<a name="4_byte_aligned_malloc"></a>
+<p><b>SQLITE_4_BYTE_ALIGNED_MALLOC</b></p><blockquote><p>
+  On most systems, the malloc() system call returns a buffer that is
+  aligned to an 8-byte boundary.  But on some systems (ex: windows) malloc()
+  returns 4-byte aligned pointer.  This compile-time option must be used
+  on systems that return 4-byte aligned pointers from malloc().
+</p></blockquote><a name="case_sensitive_like"></a>
 <p><b>SQLITE_CASE_SENSITIVE_LIKE</b></p><blockquote><p>
   If this option is present, then the built-in <a href="lang_expr.html#like">LIKE</a> operator will be
   case sensitive.  This same effect can be achieved at run-time using
@@ -432,9 +438,7 @@ the available settings:</p>
   memory upon request.  This option must be enabled in order for the
   <a href="c3ref/release_memory.html">sqlite3_release_memory()</a> interface to work.  If this compile-time
   option is not used, the <a href="c3ref/release_memory.html">sqlite3_release_memory()</a> interface is a 
-  no-op.  Since <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit()</a> depends on
-  <a href="c3ref/release_memory.html">sqlite3_release_memory()</a>, this option is also necessary for
-  the correct operation of <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit()</a>.
+  no-op.
 </p></blockquote><a name="enable_memsys3"></a>
 <p><b>SQLITE_ENABLE_MEMSYS3</b></p><blockquote><p>
   This option includes code in SQLite that implements an alternative

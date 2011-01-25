@@ -122,7 +122,7 @@ a:visited { color: #734559 }
 <h1>Dynamic Memory Allocation In SQLite</h1>
 
 
-<p>SQLite uses of dynamic memory allocation to obtain
+<p>SQLite uses dynamic memory allocation to obtain
 memory for storing various objects
 (ex: <a href="c3ref/sqlite3.html">database connections</a> and <a href="c3ref/stmt.html">prepared statements</a>) and to build
 a memory cache of the database file and to hold the results of queries.
@@ -171,7 +171,7 @@ errors.
 
 <li><p>
 <b>Memory usage limits.</b>
-The <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit()</a> mechanism allows the application to
+The <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> mechanism allows the application to
 set a memory usage limit that SQLite strives to stay below.  SQLite
 will attempt to reuse memory from its caches rather than allocation new
 memory as it approaches the soft limit.
@@ -576,8 +576,8 @@ at least sz*N bytes in size.  The "sz" parameter
 is the maximum size of each scratch allocation.  N is the maximum 
 number of simultaneous scratch allocations.  The "sz" parameter should
 be approximately 6 times the maximum database page size.  N should
-be the number of threads running in the system.  No single thread will
-ever request more than one scratch allocation at a time so if there
+be twice the number of threads running in the system.  No single thread will
+ever request more than two scratch allocation at a time so if there
 are never more than N threads, then there will always be enough scratch
 memory available.</p>
 
@@ -792,13 +792,14 @@ per-connection statistics continue to function even if
 <a name="heaplimit"></a>
 <h3>3.6 Setting memory usage limits</h3>
 
-<p>The <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit()</a> interface can be used to set an
+<p>The <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> interface can be used to set an
 upper bound on the total amount of outstanding memory that the
 general-purpose memory allocator for SQLite will allow to be outstanding
 at one time.  If attempts are made to allocate more memory that specified
 by the soft heap limit, then SQLite will first attempt to free cache
 memory before continuing with the allocation request.  The soft heap
 limit mechanism only works if <a href="malloc.html#memstatus">memory statistics</a> are enabled and
+it works best
 if the SQLite library is compiled with the <a href="compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a>
 compile-time option.</p>
 
@@ -913,8 +914,8 @@ all memory allocations are of the same size.  Hence, <b>n</b>=1
 and therefore <b>N</b>=<b>M</b>.  In other words, the memory pool need
 be no larger than the largest amount of memory in use at any given moment.</p>
 
-<p>SQLite guarantees that no thread will ever use more than a single
-scratch memory slot at one time.  So if an application allocates as many
+<p>SQLite guarantees that no thread will ever use more than two
+scratch memory slots at one time.  So if an application allocates twice as many
 scratch memory slots as there are threads, and assuming the size of
 each slot is large enough, there is never a chance of overflowing the
 scratch memory allocator.  An upper bound on the size of scratch memory
@@ -1082,6 +1083,9 @@ eventually stabilize.  Appropriate notice will be given when that
 occurs.  In the meantime, applications developers who make use of
 these interfaces need to be prepared to modify their applications
 to accommodate changes in the SQLite interface.</p>
+
+<p><b>Update:</b> As of SQLite version 3.7.0, all of these interfaces
+are considered stable</p>
 
 <a name="summary"></a>
 <h2>6.0 Summary Of Memory Allocator Interfaces</h2>

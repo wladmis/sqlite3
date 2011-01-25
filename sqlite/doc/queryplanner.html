@@ -128,7 +128,7 @@ language.  When programming in SQL you tell the system <i>what</i> you
 want to compute, not <i>how</i> to compute it.  The task of figuring out
 the <i>how</i> is delegated to the <i>query planner</i> subsystem within 
 the SQL database engine.
-Releaving the programmer from the chore of designing specific
+Relieving the programmer from the chore of designing specific
 query algorithms reduces the workload on the programmer and 
 reduces the number of opportunities for the
 programmer to make mistakes.
@@ -144,13 +144,15 @@ schema that are sufficient for the query planner to accomplish its task.
 
 <p>
 This document is intended to provide programmers who are new to SQL
-and databases with the background information to help them understand
+with background information to help them understand
 what is going on behind the scenes with SQLite, which in turn should make
 it easier for programmers to create the indices that will help the SQLite
 query planner to pick the best plans.
 </p>
 
-<h2>1.0 Querying</h2>
+<a name="searching"></a>
+
+<h2>1.0 Searching</h2>
 
 <h3>1.1 Tables Without Indices</h3>
 
@@ -254,11 +256,11 @@ Figure 3: Lookup By Rowid
 <p>
 The problem with looking up information by rowid is that you probably
 do not care what the price of "item 4" is - you want to know the price
-of peaches.  And so a rowid lookup is is not helpful.
+of peaches.  And so a rowid lookup is not helpful.
 </p>
 
 <p>
-To make the original query more effcient, we can add an index on the
+To make the original query more efficient, we can add an index on the
 "fruit" column of the "fruitsforsale" table like this:
 </p>
 
@@ -344,13 +346,13 @@ In this case, SQLite still does a single binary search to find the first
 entry of the index where fruit='Orange'.  Then it extracts the rowid from
 the index and uses that rowid to lookup the original table entry via
 binary search and output the price from the original table.  But instead
-of quiting, the database engine then advances to the next row of index
+of quitting, the database engine then advances to the next row of index
 to repeat the process for next fruit='Orange' entry.  Advancing to the
 next row of an index (or table) is much less costly than doing a binary
 search since the next row is often located on the same database page as
 the current row.  In fact, the cost of advancing to the next row is so
 cheap in comparison to a binary search that we usually ignore it.  So
-our estimate for the total cost of this query is 3 binary searchs.
+our estimate for the total cost of this query is 3 binary searches.
 If the number of rows of output is K and the number of rows in the table
 is N, then in general the cost of doing the query proportional
 to (K+1)*logN.
@@ -377,7 +379,7 @@ Figure 7: Indexed Lookup Of California Oranges
 One approach to this query is to use the fruit='Orange' term of the WHERE
 clause to find all rows dealing with oranges, then filter those rows
 by rejecting any that are from states other than California.  This
-process is shows by <a href="#fig7">figure 7</a> above.  This is a perfectly
+process is shown by <a href="#fig7">figure 7</a> above.  This is a perfectly
 reasonable approach in most cases.  Yes, the database engine did have
 to do an extra binary search for the Florida orange row that was
 later rejected, so it was not as efficient as we might hope, though
@@ -521,6 +523,8 @@ index with fewer columns.  SQLite will still be able to do efficient
 lookups with the longer index.
 </p>
 
+<a name="covidx"></a>
+
 <h3>1.7 Covering Indices</h3>
 
 <p>
@@ -558,14 +562,16 @@ Figure 14: Query Using A Covering Index
 <p>
 Hence, by adding extra "output" columns onto the end of an index, one
 can avoid having to reference the original table and thereby
-cut the number of binary searchs for a query in half.  This is a
+cut the number of binary searches for a query in half.  This is a
 constant-factor improvement in performance (roughly a doubling of
 the speed).  But on the other hand, it is also just a refinement;
 A two-fold performance increase is not nearly as dramatic as the
-one-millon-fold increase seen when the table was first indexed.
+one-million-fold increase seen when the table was first indexed.
 And for most queries, the difference between 1 microsecond and
 2 microseconds is unlikely to be noticed.
 </p>
+
+<a name="or_in_where"></a>
 
 <h3>1.8 OR-Connected Terms In The WHERE Clause</h3>
 
@@ -621,7 +627,7 @@ binary searches.
 
 <p>
 One can see how the OR-by-UNION technique could also be leveraged to
-use multiple indices on query where the WHERE clause has terms connected
+use multiple indices on queries where the WHERE clause has terms connected
 by AND, by using an intersect operator in place of union.  Many SQL
 database engines will do just that.  But the performance gain over using
 just a single index is slight and so SQLite does not implement that technique
@@ -629,6 +635,7 @@ at this time.  However, a future version SQLite might be enhanced to support
 AND-by-INTERSECT.
 </p>
 
+<a name="sorting"></a>
 
 <h2>2.0 Sorting</h2>
 
@@ -756,13 +763,13 @@ time, and so this case could go either way depending on the table size and
 what WHERE clause constraints were available, and so forth.  But generally
 speaking, the indexed sort would probably be chosen, if for no other
 reason, because it does not need to accumulate the entire result set in
-temporary before sorting and thus uses much less temporary storage.
+temporary storage before sorting and thus uses much less temporary storage.
 </p>
 
 <h3>2.3 Sorting By Covering Index</h3>
 
 <p>
-If a covering index can be used for a query, then the multiple rowid looks
+If a covering index can be used for a query, then the multiple rowid lookups
 can be avoided and the cost of the query drops dramatically.
 </p>
 
@@ -778,18 +785,115 @@ other and deliver the output in time proportional to N and without having
 allocate a large buffer to hold the result set.
 </p>
 
+<h2>3.0 Searching And Sorting At The Same Time</h2>
+
+<p>
+The previous discussion has treated searching and sorting as separate
+topics.  But in practice, it is often the case that one wants to search
+and sort at the same time.  Fortunately, it is possible to do this
+using a single index.
+</p>
+
+<h3>3.1 Searching And Sorting With A Multi-Column Index</h3>
+
+<p>
+Suppose we want to find the prices of all kinds of oranges sorted in
+order of the state where they are grown.  The query is this:
+</p>
+
+<center><table><tr><td><pre>
+SELECT price FROM fruitforsale WHERE fruit='Orange' ORDER BY state
+</pre></table></center>
+
+
+<p>
+The query contains both a search restriction in the WHERE clause
+and a sort order in the ORDER BY clause.  Both the search and the sort
+can be accomplished at the same time using the two-column index Idx3.
+</p>
+
+<p><center>
+<img src="images/qp/fruitobstate0.gif" alt="figure 20"><br>
+Figure 20: Search And Sort By Multi-Column Index
+</center></p>
+
+
+<p>
+The query does a binary search on the index to find the subset of rows
+that have fruit='Orange'.  (Because the fruit column is the left-most column
+of the index and the rows of the index are in sorted order, all such 
+rows will be adjacent.)  Then it scans the matching index rows from top to
+bottom to get the rowids for the original table, and for each rowid does
+a binary search on the original table to find the price.
+</p>
+
+<p>
+You will notice that there is no "sort" box anywhere in the above diagram.
+The ORDER BY clause of the query has become a no-op.  No sorting has to be
+done here because the output order is by the state column and the state
+column also happens to be the first column after the fruit column in the
+index.  So, if we scan entries of the index that have the same value for
+the fruit column from top to bottom, those index entries are guaranteed to
+be ordered by the state column.
+</p>
+
+<a name="srchsortcovidx"></a>
+
+<h3>3.2 Searching And Sorting With A Covering Index</h3>
+
+<p>
+A <a href="queryplanner.html#covidx">covering index</a> can also be used to search and sort at the same time.
+Consider the following:
+</p>
+
+<center><table><tr><td><pre>
+SELECT * FROM fruitforsale WHERE fruit='Orange' ORDER BY state
+</pre></table></center>
+<p><center>
+<img src="images/qp/fruitobstate.gif" alt="figure 21"><br>
+Figure 21: Search And Sort By Covering Index
+</center></p>
+
+
+<p>
+As before, SQLite does single binary search
+for the range of rows in the covering
+index that satisfy the WHERE clause, the scans that range from top to 
+bottom to get the desired results.  
+The rows that satisfy the WHERE clause are guaranteed to be adjacent
+since the WHERE clause is an equality constraint on the left-most
+column of the index.  And by scanning the matching index rows from
+top to bottom, the output is guaranteed to be ordered by state since the
+state column is the very next column to the right of the fruit column.
+And so the resulting query is very efficient.
+</p>
+
+<p>
+SQLite can pull a similar trick for a descending ORDER BY:
+</p>
+
+<center><table><tr><td><pre>
+SELECT * FROM fruitforsale WHERE fruit='Orange' ORDER BY state DESC
+</pre></table></center>
+
+
+<p>
+The same basic algorithm is followed, except this time the matching rows
+of the index are scanned from bottom to top instead of from top to bottom,
+so that the states will appear in descending order.
+</p>
+
 <h2>To Be Continued...</h2>
 
-<p>Additional topics to discuss include:</b></p>
+<p>Further topics:</p>
 
 <p><ul>
-<li>Search and sorting at the same time
 <li>How to construct a good index
 <li>Joins and join-order
 <li>Automatic transient indices
 <li>How to determine what query plan SQLite is using
 <li>Automatic detection of inefficient query plans
-<li>Techniques for influcing what query plan SQLite chooses
+<li>Techniques for influencing what query plan SQLite chooses
 </ul>
 </p>
 

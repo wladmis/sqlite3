@@ -121,32 +121,56 @@ a:visited { color: #734559 }
 <h4><a href="syntaxdiagrams.html#qualified-table-name">qualified-table-name:</a></h4><blockquote> <img alt="syntax diagram qualified-table-name" src="images/syntax/qualified-table-name.gif"></img> </blockquote>
 
 
-<p>The UPDATE statement is used to change the value of columns in 
-selected rows of a table.  Each assignment in an UPDATE specifies
-a column name to the left of the equals sign and an arbitrary expression
-to the right.  The expressions may use the values of other columns.
-All expressions are evaluated before any assignments are made.
-A WHERE clause can be used to restrict which rows are updated.</p>
+<p>An UPDATE statement is used to modify a subset of the values stored in 
+zero or more rows of the database table identified by the 
+<i>qualified-table-name</i> specified as part of the UPDATE statement.
 
-<p>The optional conflict-clause allows the specification of an alternative
+<p>If the UPDATE statement does not have a WHERE clause, all rows in the
+table are modified by the UPDATE. Otherwise, the UPDATE affects only those
+rows for which the result of evaluating the WHERE clause expression as a 
+<a href="lang_expr.html#booleanexpr">boolean expression is true</a>. It is not an error if the
+WHERE clause does not evaluate to true for any row in the table - this just
+means that the UPDATE statement affects zero rows.
+
+<p>The modifications made to each row affected by an UPDATE statement are
+determined by the list of assignments following the SET keyword. Each
+assignment specifies a column name to the left of the equals sign and a
+scalar expression to the right. For each affected row, the named columns
+are set to the values found by evaluating the corresponding scalar 
+expressions. If a single column-name appears more than once in the list of
+assignment expressions, all but the rightmost occurence is ignored. Columns
+that do not appear in the list of assignments are left unmodified. The scalar
+expressions may refer to columns of the row being updated. In this case all
+scalar expressions are evaluated before any assignments are made.
+
+<p>The optional conflict-clause allows the user to nominate a specific
 constraint conflict resolution algorithm to use during this one UPDATE command.
-See the section titled
-<a href="lang_conflict.html">ON CONFLICT</a> for additional information.</p>
+Refer to the section entitled <a href="lang_conflict.html">ON CONFLICT</a> for additional information.
 
 <h3>Restrictions on UPDATE Statements Within CREATE TRIGGER</h3>
 
-<p>There are additional syntax restrictions on UPDATE statements that
-occur within the body of a <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement.  The <i>table-name</i>
-of the UPDATE must be unqualified. 
-In other words, the <i>database-name</i><b>.</b> prefix 
-on the table name of the UPDATE is not allowed within triggers.
-The table to be updated must be in the same
-database as the table to which the trigger is attached.</p>
+<p>The following additional syntax restrictions apply to UPDATE statements that
+occur within the body of a <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement.  
 
-<p>The INDEXED BY and NOT INDEXED clauses are not allowed on UPDATE
-statements within triggers.</p>
+<ul>
+  <li><p>The <i>table-name</i> specified as part of an UPDATE statement within
+      a trigger body must be unqualified. In other words, the
+      <i>database-name</i><b>.</b> prefix on the table name of the UPDATE is
+      not allowed within triggers. Unless the table to which the trigger
+      is attached is in the TEMP database, the table being updated by the
+      trigger program must reside in the same database as it. If the table
+      to which the trigger is attached is in the TEMP database, then the
+      unqualified name of the table being updated is resolved in the same way
+      as it is for a top-level statement (by searching first the TEMP database,
+      then the main database, then any other databases in the order they were
+      attached).
 
-<p>The LIMIT clause for UPDATE is unsupported within triggers.</p>
+  <li><p>The INDEXED BY and NOT INDEXED clauses are not allowed on UPDATE
+      statements within triggers.</p>
+
+  <li><p>The LIMIT and ORDER BY clauses for UPDATE are unsupported within
+      triggers, regardless of the compilation options used to build SQLite.
+</ul>
 
 <h3>Optional LIMIT and ORDER BY Clauses</h3>
 
@@ -157,12 +181,26 @@ with optional ORDER BY and LIMIT clauses as follows:</p>
 <h4><a href="syntaxdiagrams.html#update-stmt-limited">update-stmt-limited:</a></h4><blockquote> <img alt="syntax diagram update-stmt-limited" src="images/syntax/update-stmt-limited.gif"></img> </blockquote>
 
 
-<p>The optional LIMIT clause can be used to limit the number of
-rows modified, and thereby limit the size of the transaction.
-The ORDER BY clause on an UPDATE statement
-is used only to determine which rows fall
-within the LIMIT.  The order in which rows are modified is arbitrary
-and is not determined by the ORDER BY clause.</p>
+<p>If an UPDATE statement has a LIMIT clause, the maximum number of rows that
+will be updated is found by evaluating the accompanying expression and casting
+it to an integer value. A negative value is interpreted as "no limit".
+
+<p>If the LIMIT expression evaluates to non-negative value <i>N</i> and the
+UPDATE statement has an ORDER BY clause, then all rows that would be updated in
+the absence of the LIMIT clause are sorted according to the ORDER BY and the
+first <i>N</i> updated. If the UPDATE statement also has an OFFSET clause,
+then it is similarly evaluated and cast to an integer value. If the OFFSET
+expression evaluates to a non-negative value <i>M</i>, then the first <i>M</i>
+rows are skipped and the following <i>N</i> rows updated instead.
+
+<p>If the UPDATE statement has no ORDER BY clause, then all rows that
+would be updated in the absence of the LIMIT clause are assembled in an
+arbitrary order before applying the LIMIT and OFFSET clauses to determine 
+which are actually updated.
+
+<p>The ORDER BY clause on an UPDATE statement is used only to determine which
+rows fall within the LIMIT. The order in which rows are modified is arbitrary
+and is not influenced by the ORDER BY clause.
 
 
         <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -127,7 +127,10 @@ a:visited { color: #734559 }
 );
 void sqlite3_free_table(char **result);
 </pre></blockquote><p>
-Definition: A <b>result table</b> is memory data structure created by the
+This is a legacy interface that is preserved for backwards compatibility.
+Use of this interface is not recommended.</p>
+
+<p>Definition: A <b>result table</b> is memory data structure created by the
 <a href="../c3ref/free_table.html">sqlite3_get_table()</a> interface.  A result table records the
 complete query results from one or more queries.</p>
 
@@ -179,7 +182,7 @@ string of its 2nd parameter and returns a result table to the
 pointer given in its 3rd parameter.</p>
 
 <p>After the application has finished with the result from sqlite3_get_table(),
-it should pass the result table pointer to sqlite3_free_table() in order to
+it must pass the result table pointer to sqlite3_free_table() in order to
 release the memory that was malloced.  Because of the way the
 <a href="../c3ref/free.html">sqlite3_malloc()</a> happens within sqlite3_get_table(), the calling
 function must not try to call <a href="../c3ref/free.html">sqlite3_free()</a> directly.  Only

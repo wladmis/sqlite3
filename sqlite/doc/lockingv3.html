@@ -145,7 +145,7 @@ version 3.</p>
 <h2>2.0 Overview</h2>
 
 <p>
-Locking and concurrency control are handled by the the 
+Locking and concurrency control are handled by the 
 <a href="http://www.sqlite.org/src/finfo?name=src/pager.c">
 pager module</a>.
 The pager module is responsible for making SQLite "ACID" (Atomic,
@@ -625,7 +625,7 @@ The last (fourth) bullet above merits additional comment.  When SQLite creates
 a journal file on Unix, it opens the directory that contains that file and
 calls fsync() on the directory, in an effort to push the directory information
 to disk.  But suppose some other process is adding or removing unrelated
-files to the directory that contains the database and journal at the the
+files to the directory that contains the database and journal at the
 moment of a power failure.  The supposedly unrelated actions of this other
 process might result in the journal file being dropped from the directory and
 moved into "lost+found".  This is an unlikely scenario, but it could happen.

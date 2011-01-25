@@ -291,7 +291,7 @@ SELECT id FROM demo_index
 </pre></blockquote>
 
 <p>
-The query above would very quickly locate id of 1 even if the
+The query above would very quickly locate the id of 1 even if the
 R*Tree contained millions of entries.  The previous is an example
 of a "contained-within" query.  The R*Tree also supports "overlapping"
 queries.  For example, to find all bounding boxes that overlap the
@@ -307,7 +307,7 @@ SELECT id FROM demo_index
 <p>
 This second query would find both entry 1 (the SQLite.org office) which
 is entirely contained within the query box and also
-Mel Watt's Congressional District which extends well outside the
+the 12th Congressional District which extends well outside the
 query box but still overlaps the query box.
 </p>
 
@@ -370,18 +370,18 @@ Suppose the demo_data.boundary field holds some proprietary data description
 of a complex two-dimensional boundary for an object and suppose that the
 application has used the <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface to
 created application-defined functions "contained_in" and
-"overlaps" accept two demo_data.boundary objects and return true or false.
+"overlaps" accepting two demo_data.boundary objects and return true or false.
 One may assume that "contained_in" and "overlaps" are relatively slow
 functions that we do not want to invoke too frequently.
 Then an efficient way to find the name of all objects located within
-the North Carolina 12th District, one may run a query like this:
+the North Carolina 12th District, one may be to run a query like this:
 </p>
 
 <blockquote><pre>
 SELECT objname FROM demo_data, demo_index
  WHERE demo_data.id=demo_index.id
    AND contained_in(demo_data.boundary, :boundary)
-   AND minX>=-81.0 AND max<=-79.6
+   AND minX>=-81.0 AND maxX<=-79.6
    AND minY>=35.0 AND maxY<=36.2;
 </pre></blockquote>
 
@@ -412,6 +412,120 @@ The use of the R*Tree in the penultimate query reduces the number of
 calls to contained_in() function to a small subset of the entire table.
 The R*Tree index did not find the exact answer itself, it merely
 limited the search space.</p>
+
+<a name="customquery"></a>
+
+<h1>5.0 Custom R-Tree Queries</h1>
+
+<p>By using standard SQL expressions in the WHERE clause of a SELECT query,
+a user may query for all r-tree entries that intersect a specified
+bounding-box, or for all entries that are completely encapsulated by a
+specified bounding-box. Custom r-tree queries, which use the special MATCH
+operator in the WHERE clause of a SELECT, allow the user to query for the set
+of r-tree entries that intersect any arbitrarily defined region.
+
+<p>Regions for custom r-tree queries are defined by r-tree geometry callbacks
+implemented by the application and registered with SQLite via a call to the 
+following API:
+
+<blockquote><pre>
+int sqlite3_rtree_geometry_callback(
+  sqlite3 *db,
+  const char *zGeom,
+  int (*xGeom)(sqlite3_rtree_geometry *, int nCoord, double *aCoord, int *pRes),
+  void *pContext
+);
+</pre></blockquote>
+
+<p>A call to the above API registers an r-tree geometry callback named zGeom.
+If an r-tree geometry callback or ordinary SQL user function named zGeom 
+already exists when sqlite3_rtree_geometry_callback() is called, it is replaced
+by the new r-tree geometry callback. If the xGeom parameter is passed a NULL
+value, then any existing r-tree geometry callback or SQL user function is
+removed from the system, but no new r-tree geometry callback is registered.
+
+<p>When the r-tree geometry callback is used in a custom r-tree query, the
+registered callback is invoked one or more times by SQLite to test whether or
+not the user-defined region intersects with specific bounding boxes.
+The bounding box being tested is defined by the contents of the aCoord[] 
+array (size nCoord) passed to the callback. The aCoord[] array always contains
+the same number of entries as there are coordinate columns in the r-tree table
+(one less than the total number of columns, since the object id column does not
+contain a coordinate). They define a bounding-box in the same way as each row
+of the r-tree table itself does - the first scalar coordinate contains the
+minimum value for the first dimension, followed by the maximum value for the
+first dimension, followed by the minimum value for the second dimension, and so
+on. If the specified bounding box intersects with the custom query region, then
+the implementation of the callback must set the output parameter *pRes to
+non-zero and return SQLITE_OK. If the specified bounding box does not intersect
+the queried region, *pRes should be set to zero before returning SQLITE_OK. If
+an error occurs, the callback may return an SQLite error code other than
+SQLITE_OK, in which case the value of *pRes is ignored by SQLite and the query
+abandoned.
+
+<p>A registered r-tree geometry callback is used in an r-tree query by adding
+a MATCH condition to the WHERE clause of a SELECT statement. For example,
+assuming a custom geometry callback named "circle" has been registered, it may
+be used in a query on the two-dimensional r-tree table "demo_index" defined in
+earlier examples as follows: 
+
+<blockquote><pre>
+SELECT * FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
+</blockquote></pre>
+
+<p>The left-hand side of the MATCH operator may be any column from the r-tree
+table, including the object id column. It makes no difference which column is
+used. The right-hand side of the MATCH operator is passed the results of an
+SQL function with the same name as the r-tree geometry callback. Zero or more
+function parameters may be specified by the user. Parameters are always
+interpreted as 64-bit real values. If a text, integer or blob value is passed
+as a parameter to an r-tree geometry callback function, it is converted to
+a real value as if by a <a href="lang_expr.html#castexpr">CAST expression</a>. If an SQL NULL value is passed to
+an r-tree geometry callback function, it is converted to the value 0.0.
+
+<p>Parameters passed to r-tree geometry callback functions may be used by the
+implementation of the r-tree geometry callback to define the specified
+region in any way. For example, the three parameters passed to the "circle"
+geometry callback above could identify the center point and radius of the
+circular region of interest.
+
+<p>The first argument to each invocation of an r-tree geometry callback is
+a pointer to a structure of the following type. The contents of the structure
+are not modified between multiple calls to the r-tree geometry callback
+associated with a single query (unless the pUser or xDelUser member variables
+are modified by the callback implementation - see below).
+
+<blockquote><pre>
+typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
+struct sqlite3_rtree_geometry {
+  void *pContext;                 /* Copy of pContext passed to s_r_g_c() */
+  int nParam;                     /* Size of array aParam */
+  double *aParam;                 /* Parameters passed to SQL geom function */
+  void *pUser;                    /* Callback implementation user data */
+  void (*xDelUser)(void *);       /* Called by SQLite to clean up pUser */
+};
+</pre></blockquote>
+
+<p>The pContext member of the structure is always set to a copy of the pContext
+argument passed to sqlite3_rtree_geometry_callback() when the r-tree geometry
+callback is registered. The aParam[] array (size nParam) contains the parameter
+values passed to the r-tree geometry callback as part of the SQL query. In
+the example "circle" query above, nParam would be set to 3 and the aParam[]
+array would contain the three values 45.3, 22.9 and 5.0.
+
+<p>The pUser and xDelUser members of the sqlite3_rtree_geometry structure are
+initially set to NULL. The pUser variable may be set by the callback
+implementation to any arbitrary value that may be useful to subsequent
+invocations of the callback within the same custom r-tree query (for example, a
+pointer to a complicated data structure used to test for region intersection).
+If the xDelUser variable is set to a non-NULL value, then after the custom
+r-tree query has finished running SQLite automatically invokes it with the
+value of the pUser variable as the only argument. In other words, xDelUser
+may be set to a destructor function for the pUser value.
+
+<p>Example code implementing the "circle" r-tree geometry callback may be
+found in the file 
+<a href=http://www.sqlite.org/src/doc/trunk/src/test_rtree.c>test_rtree.c</a>.
 
         <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
       

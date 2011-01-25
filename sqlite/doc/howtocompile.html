@@ -251,14 +251,14 @@ standalone tclsh that comes with SQLite built in.
 A copy of the tcl amalgamation
 is included on the <a href="download.html">download page</a> as a file in the <a href="download.html">TEA tarball</a>.</p>
 
-<p>To generate a TCL-loadable library for SQLite on linux, the following
+<p>To generate a TCL-loadable library for SQLite on Linux, the following
 command will suffice:</p>
 
 <blockquote><pre>
 gcc -o libtclsqlite3.so -shared tclsqlite3.c -lpthread -ldl -ltcl
 </pre></blockquote>
 
-<p>Building shared libraries for Mac OSX and Windows is not nearly so simple,
+<p>Building shared libraries for Mac OS X and Windows is not nearly so simple,
 unfortunately.  For those platforms it is best to use the configure script
 and makefile that is included with the <a href="download.html">TEA tarball</a>.</p>
 
@@ -272,7 +272,7 @@ gcc -DTCLSH=1 tclsqlite3.c -ltcl -lpthread -ldl -lz -lm
 <p>The trick here is the -DTCLSH=1 option.  The TCL interface module for
 SQLite includes a <b>main()</b> procedure that initializes a TCL interpreter
 and enters a command-line loop when it is compiled with -DTCLSH=1.  The
-command above works on both Linux and Mac OSX, though one may need to adjust
+command above works on both Linux and Mac OS X, though one may need to adjust
 the library options depending on the platform and which version of TCL one
 is linking against.</p>
 
@@ -316,9 +316,9 @@ be known by the code generators includes:</p>
 </ul>
 
 <p>To build a custom amalgamation, first download the original individual
-source files onto a unix or unix-like development platform.  (Any linux or
-mac osx machine will suffice.  Windows will work if loaded with
-<a href="http://www.cygwin.com/">cygwin</a>.)  Be sure to get the original source
+source files onto a unix or unix-like development platform.  (Any Linux or
+Mac OS X machine will suffice.  Windows will work if loaded with
+<a href="http://www.cygwin.com/">Cygwin</a>.)  Be sure to get the original source
 files not the "preprocessed source files".  One can obtain the complete
 set of original source files either from the <a href="download.html">download page</a> or directly
 from the <a href="http://www.sqlite.org/src">configuration management system</a>.</p>

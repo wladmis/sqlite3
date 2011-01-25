@@ -160,7 +160,7 @@ value returned is in pages, not in bytes.</dd></p>
 
 <p><dt>SQLITE_STATUS_PAGECACHE_OVERFLOW</dt>
 <dd>This parameter returns the number of bytes of page cache
-allocation which could not be statisfied by the <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_PAGECACHE</a>
+allocation which could not be satisfied by the <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_PAGECACHE</a>
 buffer and where forced to overflow to <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The
 returned value includes allocations that overflowed because they
 where too large (they were larger than the "sz" parameter to
@@ -183,7 +183,7 @@ using scratch memory at the same time.</dd></p>
 
 <p><dt>SQLITE_STATUS_SCRATCH_OVERFLOW</dt>
 <dd>This parameter returns the number of bytes of scratch memory
-allocation which could not be statisfied by the <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SCRATCH</a>
+allocation which could not be satisfied by the <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SCRATCH</a>
 buffer and where forced to overflow to <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The values
 returned include overflows because the requested allocation was too
 larger (that is, because the requested allocation was larger than the

@@ -120,27 +120,37 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>INSERT</h2><h4><a href="syntaxdiagrams.html#insert-stmt">insert-stmt:</a></h4><blockquote> <img alt="syntax diagram insert-stmt" src="images/syntax/insert-stmt.gif"></img> </blockquote>
 
 
-<p>The INSERT statement comes in three basic forms.  The first form
-(with the "VALUES" keyword) creates a single new row in an existing table.
-If no column-list is specified then the number of values must
-be the same as the number of columns in the table.  If a column-list
-is specified, then the number of values must match the number of
-specified columns.  Columns of the table that do not appear in the
-column list are filled with the default value, or with NULL if no
-default value is specified.
-</p>
+<p>The INSERT statement comes in three basic forms.  
+<ul>
+<li><p>The first form (with the "VALUES" keyword) creates a single new row in
+an existing table. If no column-list is specified then the number of
+values must be the same as the number of columns in the table. In this case
+the result of evaluting the left-most expression in the VALUES list is 
+inserted into the left-most column of the new row, and so on. If a
+column-list is specified, then the number of values must match the number of
+specified columns. Each of the named columns of the new row is populated
+with the results of evaluating the corresponding VALUES expression. Table
+columns that do not appear in the column list are populated with the default
+column value (specified as part of the CREATE TABLE statement), or with NULL if
+no default value is specified.
 
-<p>The second form of the INSERT statement takes its data from a
-SELECT statement.  The number of columns in the result of the
-SELECT must exactly match the number of columns in the table if
-no column list is specified, or it must match the number of columns
-named in the column list.  A new entry is made in the table
-for every row of the SELECT result.  The SELECT may be simple
-or compound.</p>
+<li><p>The second form of the INSERT statement contains a SELECT statement
+instead of a VALUES clause. A new entry is inserted into the table for each
+row of data returned by executing the SELECT statement. If a column-list is
+specified, the number of columns in the result of the SELECT must be the same
+as the number of items in the column-list. Otherwise, if no column-list is
+specified, the number of columns in the result of the SELECT must be the same
+as the number of columns in the table. Any SELECT statement, including
+compound SELECTs and SELECT statements with ORDER BY and/or LIMIT clauses, 
+may be used in an INSERT statement of this form.
 
-<p>The third form of an INSERT statement is with DEFAULT VALUES.
-The INSERT ... DEFAULT VALUES statement simply creates a single new
-row in the table in which each column is filled with its default value.</p>
+<li><p>The third form of an INSERT statement is with DEFAULT VALUES.
+The INSERT ... DEFAULT VALUES statement inserts a single new row into the
+named table. Each column of the new row is populated with its default value,
+or with a NULL if no default value is specified as part of the column
+definition in the CREATE TABLE statement.
+
+</ul>
 
 <p>The optional conflict-clause allows the specification of an alternative
 constraint conflict resolution algorithm to use during this one INSERT command.
@@ -149,7 +159,6 @@ See the section titled
 For compatibility with MySQL, the parser allows the use of the
 single keyword <a href="lang_replace.html">REPLACE</a> as an 
 alias for "INSERT OR REPLACE".
-</p>
 
 <p>The optional "<i>database-name</i><b>.</b>" prefix on the <i>table-name</i>
 is support for top-level INSERT statements only.  The table name must be

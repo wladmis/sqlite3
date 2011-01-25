@@ -190,19 +190,21 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_automatic_index">automatic_index</a>
 <li><a href="#pragma_cache_size">cache_size</a>
 <li><a href="#pragma_case_sensitive_like">case_sensitive_like</a>
+<li><a href="#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a>
 <li><a href="#pragma_collation_list">collation_list</a>
 <li><a href="#pragma_compile_options">compile_options</a>
-<li><a href="#pragma_count_changes">count_changes</a>
+<li><a href="#pragma_count_changes"><s>count_changes</s></a>&sup1;
 <li><a href="#pragma_database_list">database_list</a>
-<li><a href="#pragma_default_cache_size">default_cache_size</a>
-<li><a href="#pragma_empty_result_callbacks">empty_result_callbacks</a>
+<li><a href="#pragma_default_cache_size"><s>default_cache_size</s></a>&sup1;
+<li><a href="#pragma_empty_result_callbacks"><s>empty_result_callbacks</s></a>&sup1;
 <li><a href="#pragma_encoding">encoding</a>
-<li><a href="#pragma_foreign_key_list">foreign_key_list</a>
+<li><a href="#pragma_foreign_key_list"><s>foreign_key_list</s></a>&sup1;
 <li><a href="#pragma_foreign_keys">foreign_keys</a>
 <li><a href="#pragma_freelist_count">freelist_count</a>
-<li><a href="#pragma_full_column_names">full_column_names</a>
+<li><a href="#pragma_full_column_names"><s>full_column_names</s></a>&sup1;
 </ul></td><td valign="top" align="left"><ul>
 <li><a href="#pragma_fullfsync">fullfsync</a>
+<li><a href="#pragma_ignore_check_constraints">ignore_check_constraints</a>
 <li><a href="#pragma_incremental_vacuum">incremental_vacuum</a>
 <li><a href="#pragma_index_info">index_info</a>
 <li><a href="#pragma_index_list">index_list</a>
@@ -214,7 +216,7 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_max_page_count">max_page_count</a>
 <li><a href="#pragma_page_count">page_count</a>
 <li><a href="#pragma_page_size">page_size</a>
-<li><a href="#pragma_parser_trace">parser_trace</a>
+<li><a href="#pragma_parser_trace"><i>parser_trace</i></a>&sup2;
 <li><a href="#pragma_quick_check">quick_check</a>
 <li><a href="#pragma_read_uncommitted">read_uncommitted</a>
 </ul></td><td valign="top" align="left"><ul>
@@ -222,18 +224,28 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_reverse_unordered_selects">reverse_unordered_selects</a>
 <li><a href="#pragma_schema_version">schema_version</a>
 <li><a href="#pragma_secure_delete">secure_delete</a>
-<li><a href="#pragma_short_column_names">short_column_names</a>
+<li><a href="#pragma_short_column_names"><s>short_column_names</s></a>&sup1;
 <li><a href="#pragma_synchronous">synchronous</a>
 <li><a href="#pragma_table_info">table_info</a>
 <li><a href="#pragma_temp_store">temp_store</a>
-<li><a href="#pragma_temp_store_directory">temp_store_directory</a>
+<li><a href="#pragma_temp_store_directory"><s>temp_store_directory</s></a>&sup1;
 <li><a href="#pragma_user_version">user_version</a>
-<li><a href="#pragma_vdbe_listing">vdbe_listing</a>
-<li><a href="#pragma_vdbe_trace">vdbe_trace</a>
+<li><a href="#pragma_vdbe_listing"><i>vdbe_listing</i></a>&sup2;
+<li><a href="#pragma_vdbe_trace"><i>vdbe_trace</i></a>&sup2;
 <li><a href="#pragma_wal_autocheckpoint">wal_autocheckpoint</a>
 <li><a href="#pragma_wal_checkpoint">wal_checkpoint</a>
+<li><a href="#pragma_writable_schema">writable_schema</a>
 
 </ul></td></tr></table>
+<p>Notes:
+<ol>
+<li>Pragmas whose names are marked through in the list above
+are deprecated that are maintained for historical compatibility only.
+Do not use the deprecated pragmas in new applications.
+Remove deprecated pragmas
+from existing applications at your earliest opportunity.</blockquote>
+<li>These pragmas are used for debugging SQLite itself and
+are only available which SQLite is compiled using <a href="compile.html#debug">SQLITE_DEBUG</a>.</ol></p>
 <a name="pragma_auto_vacuum"></a>
 <hr>
     <p><b>PRAGMA auto_vacuum;<br>
@@ -265,7 +277,7 @@ name is meaningless and is simply ignored.</p>
 
     <p>Auto-vacuuming is only possible if the database stores some
     additional information that allows each database page to be
-    traced backwards to its referer.  Therefore, auto-vacuuming must
+    traced backwards to its referrer.  Therefore, auto-vacuuming must
     be turned on before any tables are created.  It is not possible
     to enable or disable auto-vacuum after a table has been created.</p>
 
@@ -278,7 +290,8 @@ name is meaningless and is simply ignored.</p>
 
     <p>The database connection can be changed between full and incremental
     autovacuum mode at any time.  However, changing from
-    "none" to "full" or "incremental" when the database is new (no tables
+    "none" to "full" or "incremental" can only occur when the database 
+    is new (no tables
     have yet been created) or by running the <a href="lang_vacuum.html">VACUUM</a> command.  To
     change auto-vacuum modes, first use the auto_vacuum pragma to set
     the new desired mode, then invoke the <a href="lang_vacuum.html">VACUUM</a> command to 
@@ -296,10 +309,6 @@ name is meaningless and is simply ignored.</p>
 
     <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
     <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default.
-     This pragma only influences the query plan as statements are
-     prepared or reprepared.  Existing prepared statements must be
-     reprepared for a change in the automatic_index setting to affect
-     their operation.
 <a name="pragma_cache_size"></a>
 <hr>
     <p><b>PRAGMA cache_size;
@@ -308,13 +317,15 @@ name is meaningless and is simply ignored.</p>
     that SQLite will hold in memory at once per open database file.  Whether
     or not this suggestion is honored is at the discretion of the
     <a href="c3ref/pcache_methods.html">Application Defined Page Cache</a>.   In the
-    default page cache implementation, the suggested cache size is honored
-    as long as it is 10 or greater.  A suggested cache size of less
-    than 10 are treated as if it were 10.
+    default page cache implementation, the actual cache size is the
+    greater of the suggested cache size and 10.
     Alternative application-defined page cache implementations
     may choose to interpret the suggested cache size in different ways
     or to ignore it all together.
     The default suggested cache size is 2000.</p>
+
+    <p>The suggested cache size is set to the absolute value of the
+    <i>Number-of-pages</i> argument given to this pragma.</p>
 
     <p>When you change the cache size using the cache_size pragma, the
     change only endures for the current session.  The cache size reverts
@@ -327,12 +338,30 @@ name is meaningless and is simply ignored.</p>
     <p>The default behavior of the <a href="lang_expr.html#like">LIKE</a> operator is to ignore case
     for ASCII characters. Hence, by default <b>'a' LIKE 'A'</b> is
     true.  The case_sensitive_like pragma installs a new application-defined
-    LIKE function that can change
-    this behavior.  When case_sensitive_like is enabled,
+    LIKE function that is either case sensitive or insensitive depending
+    on the value of the case_sensitive_like pragma.
+    When case_sensitive_like is disabled, the default LIKE behavior is
+    expressed.  When case_sensitive_like is enabled, case becomes
+    significant.  So, for example,
     <b>'a' LIKE 'A'</b> is false but <b>'a' LIKE 'a'</b> is still true.</p>
 
-    <p>This pragma only works if the <a href="lang_corefunc.html#like">built-in like() SQL function</a>
-    has not been overloaded using <a href="c3ref/create_function.html">sqlite3_create_function()</a>.</p>
+    <p>Each invocation of this pragma causes any application-defined
+    LIKE and/or GLOB functions created using the <a href="c3ref/create_function.html">sqlite3_create_function()</a>
+    family of interfaces to be replaced with the built-in LIKE and GLOB
+    implementations.</p>
+<a name="pragma_checkpoint_fullfsync"></a>
+<hr>
+    <p><b>PRAGMA checkpoint_fullfsync
+       <br>PRAGMA checkpoint_fullfsync = </b><i>boolean</i><b>;</b></p>
+    <p>Query or change the fullfsync flag for <a href="wal.html#ckpt">checkpoint</a> operations.
+    If this flag is set, then the F_FULLFSYNC syncing method is used
+    during checkpoint operations on systems that support F_FULLFSYNC. 
+    The default value of the checkpoint_fullfsync flag
+    is off.  Only Mac OS-X supports F_FULLFSYNC.</p>
+
+    <p>If the <a href="pragma.html#pragma_fullfsync">fullfsync</a> flag is set, then the F_FULLFSYNC syncing
+    method is used for all sync operations and the checkpoint_fullfsync
+    setting is irrelevant.</p>
 <a name="pragma_collation_list"></a>
 <hr>
     <p><b>PRAGMA collation_list;</b></p>
@@ -350,6 +379,16 @@ name is meaningless and is simply ignored.</p>
 <hr>
     <p><b>PRAGMA count_changes;
        <br>PRAGMA count_changes = </b>boolean</i><b>;</b></p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+  
     <p>Query or change the count-changes flag. Normally, when the
     count-changes flag is not set, <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a> and <a href="lang_delete.html">DELETE</a> statements
     return no data. When count-changes is set, each of these commands 
@@ -371,23 +410,46 @@ name is meaningless and is simply ignored.</p>
     <p><b>PRAGMA database_list;</b></p>
     <p>This pragma works like a query to return one row for each database
     attached to the current database connection.
-    Columns of the result set include the index and 
-    the name the database was attached with.  The first row will be for 
-    the main database.  The second row will be for the database used to 
-    store temporary tables.</p>
+    The second column is the "main" for the main database file, "temp"
+    for the database file used to store TEMP objects, or the name of the
+    ATTACHed database for other database files.
+    The third column is the name of the database file itself, or an empty
+    string if the database is not associated with a file.</p>
 <a name="pragma_default_cache_size"></a>
 <hr>
     <b>PRAGMA default_cache_size;
        <br>PRAGMA default_cache_size = </b><i>Number-of-pages</i><b>;</b></p>
+
     <p>This pragma queries or sets the suggested maximum number of pages
     of disk cache that will be allocated per open database file.
     The difference between this pragma and <a href="pragma.html#pragma_cache_size">cache_size</a> is that the
     value set here persists across database connections.
+    The value of the default cache size is stored in the 4-byte
+    big-endian integer located at offset 48 in the header of the
+    database file.
     </p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 <a name="pragma_empty_result_callbacks"></a>
 <hr>
     <p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>boolean</i><b>;</b></p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 
     <p>Query or change the empty-result-callbacks flag.</p>
 
@@ -399,10 +461,6 @@ name is meaningless and is simply ignored.</p>
     with the third parameter set to 0 (NULL). This is to enable programs  
     that use the <a href="c3ref/exec.html">sqlite3_exec()</a> API to retrieve column-names even when
     a query returns no data.</p>
-
-    <p>This pragma is legacy.  It was created long ago in the early
-    days of SQLite before the prepared statement interface was available.
-    Do not use this pragma.  It is likely to go away in a future release</p>
 <a name="pragma_encoding"></a>
 <hr>
    <p><b>PRAGMA encoding;
@@ -417,22 +475,33 @@ name is meaningless and is simply ignored.</p>
     database has not already been created, then the value returned is the
     text encoding that will be used to create the main database, if 
     it is created by this session.</p>
-    <p>The second and subsequent forms of this pragma are only useful if
-    the main database has not already been created.  In this case the 
-    pragma sets the encoding that the main database will be created with if
+
+    <p>The second through fifth forms of this pragma
+    set the encoding that the main database will be created with if
     it is created by this session. The string "UTF-16" is interpreted
-    as "UTF-16 encoding using native machine byte-ordering".  If the second
-    and subsequent forms are used after the database file has already
-    been created, they have no effect and are silently ignored.</p>
+    as "UTF-16 encoding using native machine byte-ordering".  It is not
+    possible to change the text encoding of a database after it has been
+    created and any attempt to do so will be silently ignored.</p>
 
     <p>Once an encoding has been set for a database, it cannot be changed.</p>
 
     <p>Databases created by the <a href="lang_attach.html">ATTACH</a> command always use the same encoding
-    as the main database.</p>
+    as the main database.  An attempt to <a href="lang_attach.html">ATTACH</a> a database with a different
+    text encoding from the "main" database will fail.</p>
 <a name="pragma_foreign_key_list"></a>
 <hr>
     <p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
-    <p>This pragma returns one rwo for each foreign key that references
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+
+    <p>This pragma returns one row for each foreign key that references
     a column in the argument table.
 <a name="pragma_foreign_keys"></a>
 <hr>
@@ -467,6 +536,16 @@ name is meaningless and is simply ignored.</p>
 <hr>
     <p><b>PRAGMA full_column_names;
        <br>PRAGMA full_column_names = </b><i>boolean</i><b>;</b></p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+
     <p>Query or change the full_column_names flag. This flag together 
     with the <a href="pragma.html#pragma_short_column_names">short_column_names</a> flag determine
     the way SQLite assigns names to result columns of <a href="lang_select.html">SELECT</a> statements.
@@ -490,11 +569,19 @@ name is meaningless and is simply ignored.</p>
 <hr>
     <p><b>PRAGMA fullfsync
        <br>PRAGMA fullfsync = </b><i>boolean</i><b>;</b></p>
-    <p>Query or change the fullfsync flag. This flag affects
+    <p>Query or change the fullfsync flag. This flag
     determines whether or not the F_FULLFSYNC syncing method is used
     on systems that support it.  The default value of the fullfsync flag
-    is off.  Only Mac OS X supports F_FULLFSYNC.
-    </p>
+    is off.  Only Mac OS X supports F_FULLFSYNC.</p>
+
+    <p>See also <a href="pragma.html#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a>.</p>
+<a name="pragma_ignore_check_constraints"></a>
+<hr>
+    <p><b>PRAGMA ignore_check_constraints  = </b><i>boolean</i><b>;</b></p>
+
+    <p>This pragma enables or disables the enforcement of CHECK constraints.
+    The default setting is off, meaning that CHECK constraints are
+    enforced by default.</p>
 <a name="pragma_incremental_vacuum"></a>
 <hr>
     <p><b>PRAGMA incremental_vacuum</b><i>(N)</i><b>;</b></p>
@@ -509,7 +596,11 @@ name is meaningless and is simply ignored.</p>
 <a name="pragma_index_info"></a>
 <hr>
     <p><b>PRAGMA index_info(</b><i>index-name</i><b>);</b></p>
-    <p>This program returns one row row each column in the named index.</p>
+    <p>This pragma returns one row each column in the named index.
+    The first column of the result is the rank of the column within the index.
+    The second column of the result is the rank of the column within the
+    table. The third column of output is the name of the column being indexed.
+    </p>
 <a name="pragma_index_list"></a>
 <hr>
     <p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
@@ -681,11 +772,17 @@ name is meaningless and is simply ignored.</p>
     NORMAL is not enough - locks are not be released until the next time
     the database file is accessed.</p>
 
-    <p>There are two reasons to set the locking-mode to EXCLUSIVE. One
-    is if the application actually wants to prevent other processes from
-    accessing the database file. The other is that a small number of
-    filesystem operations are saved by optimizations enabled in this
-    mode. This may be significant in embedded environments.</p>
+    <p>There are three reasons to set the locking-mode to EXCLUSIVE.
+    <ol>
+    <li>The application wants to prevent other processes from
+        accessing the database file.
+    <li>The number of system calls for filesystem operations is reduced,
+        possibly resulting in a small performance increase.
+    <li><a href="wal.html">WAL</a> databases can be accessed in EXCLUSIVE mode without the
+        use of shared memory. 
+        (<a href="wal.html#noshm">Additional information</a>)
+    </ol>
+    </p>
 
     <p>When the locking_mode pragma specifies a particular database,
     for example:</p>
@@ -705,6 +802,14 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
    <a href="inmemorydb.html">in-memory databases</a> cannot
    be changed.  All other databases use the normal locking mode by default
    and are affected by this pragma.</p>
+
+   <p>If the locking mode is EXCLUSIVE when first entering
+   <a href="wal.html">WAL journal mode</a>, then the locking mode cannot be changed to
+   NORMAL until after exiting WAL journal mode. 
+   If the locking mode is NORMAL when first entering WAL
+   journal mode, then the locking mode can be changed between NORMAL and
+   EXCLUSIVE and back again at any time and without needing to exit
+   WAL journal mode.</p>
 <a name="pragma_max_page_count"></a>
 <hr>
     <p><b>PRAGMA max_page_count;
@@ -755,21 +860,26 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     disabled, for the maximum page size to be set to 65536, for
     SQLITE_DEFAULT_PAGE_SIZE to be 1024, and for the
     maximum default page size to be set to 8192.  The default xSectorSize
-    method on workstation implementations always reports a sector size
+    method on unix workstation implementations always reports a sector size
     of 512 bytes.  Hence, 
-    the default page size chosen by SQLite is usually 1024 bytes.</p>
+    the default page size chosen by SQLite on unix is usually 1024 bytes.
+    On windows, the GetDiskFreeSpace() interface is used to obtain the
+    actual device sector size and hence the default page size on windows
+    will sometimes be greater than 1024.</p>
 <a name="pragma_parser_trace"></a>
 <hr>
     <p><b>PRAGMA parser_trace = </b><i>boolean</i><b>; </b></p>
 
-    <p>Turn tracing of the SQL parser inside of the
-    SQLite library on and off.  This is used for debugging.
-    This only works if the library is compiled with the SQLITE_DEBUG
-    compile-time option.</p>
+    
+    <p>This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
 
-    <p>This PRAGMA is used to help test and debug the SQLite library
-    itself.  It is of little or not use to applications and is disabled
-    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
+    <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
+    option, then the parser_trace pragma can be used to turn on tracing
+    of the SQL parser used internally by SQLite.
+    This feature is used for debugging SQLite itself.</p>
 <a name="pragma_quick_check"></a>
 <hr>
     <p><b>PRAGMA quick_check;
@@ -845,9 +955,10 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
   
 <p>    The pragmas schema_version and user_version are used to set or get
-       the value of the schema-version and user-version, respectively. Both
-       the schema-version and the user-version are 32-bit signed integers
-       stored in the database header.</p>
+       the value of the schema-version and user-version, respectively. The
+       schema-version and the user-version are big-endian 32-bit signed
+       integers stored in the database header at offsets 40 and 60,
+       respectively.</p>
   
 <p>    The schema-version is usually only manipulated internally by SQLite.  
        It is incremented by SQLite whenever the database schema is modified 
@@ -889,6 +1000,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <hr>
     <p><b>PRAGMA short_column_names;
        <br>PRAGMA short_column_names = </b><i>boolean</i><b>;</b></p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+
     <p>Query or change the short-column-names flag. This flag affects
     the way SQLite names columns of data returned by <a href="lang_select.html">SELECT</a> statements.
     See the <a href="pragma.html#pragma_full_column_names">full_column_names</a> pragma for full details.
@@ -902,19 +1023,19 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Query or change the setting of the "synchronous" flag.
     The first (query) form will return the synchronous setting as an 
     integer.  When synchronous is FULL (2), the SQLite database engine will
-    pause at critical moments to make sure that data has actually been 
-    written to the disk surface before continuing.  This ensures that if
-    the operating system crashes or if there is a power failure, the database
-    will be uncorrupted after rebooting.  FULL synchronous is very 
-    safe, but it is also slower. 
+    use the xSync method of the VFS to ensure that all content is safely
+    written to the disk surface prior to continuing.
+    This ensures that an operating system crash or power failure will
+    not corrupt the dartbase.
+    FULL synchronous is very safe, but it is also slower. 
     When synchronous is NORMAL (1), the SQLite database
-    engine will still pause at the most critical moments, but less often
+    engine will still sync at the most critical moments, but less often
     than in FULL mode.  There is a very small (though non-zero) chance that
     a power failure at just the wrong time could corrupt the database in
     NORMAL mode.  But in practice, you are more likely to suffer
     a catastrophic disk failure or some other unrecoverable hardware
     fault.
-    With synchronous OFF (0), SQLite continues without pausing
+    With synchronous OFF (0), SQLite continues without syncing
     as soon as it has handed data off to the operating system.
     If the application running SQLite crashes, the data will be safe, but
     the database might become corrupted if the operating system
@@ -922,8 +1043,18 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     to the disk surface.  On the other hand, some
     operations are as much as 50 or more times faster with synchronous OFF.
     </p>
-    <p>The default setting is synchronous=FULL.
-    </p>
+ 
+    <p>In <a href="wal.html">WAL</a> mode when synchronous is NORMAL (1), the WAL file is
+    synchronized before each <a href="wal.html#ckpt">checkpoint</a> and the database file is
+    synchronized after each completed <a href="wal.html#ckpt">checkpoint</a>, but no other sync
+    operations occur.  With synchronous=FULL in WAL mode, an additional
+    sync operation of the WAL file happens after each transaction commit.
+    If durability is not a concern, then synchronous=NORMAL is normally
+    all one needs in WAL mode.</p>
+
+    <p>The default setting is synchronous=FULL.</p>
+
+    <p>See also the <a href="pragma.html#pragma_fullfsync">fullfsync</a> and <a href="pragma.html#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a> pragmas.</p>
 <a name="pragma_table_info"></a>
 <hr>
     <p><b>PRAGMA table_info(</b><i>table-name</i><b>);</b></p>
@@ -991,14 +1122,27 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <hr>
     <p><b>PRAGMA temp_store_directory;
        <br>PRAGMA temp_store_directory = '</b><i>directory-name</i><b>';</b></p>
-    <p>Query or change the setting of the "temp_store_directory" - the
-    directory where files used for storing <a href="inmemorydb.html#temp_db">temporary tables</a> and indices
-    are kept.</p>
+    <p>Query or change the value of the <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> global
+    variable, which many operating-system interface backends use to
+    determine where to store <a href="inmemorydb.html#temp_db">temporary tables</a> and indices.</p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 
     <p>When the temp_store_directory setting is changed, all existing temporary
-    tables, indices, triggers, and viewers are immediately deleted.  In
-    practice, temp_store_directory should be set immediately after the 
-    database is opened.</p>
+    tables, indices, triggers, and viewers in the database connection that
+    issued the pragma are immediately deleted.  In
+    practice, temp_store_directory should be set immediately after the first
+    database connection for a process is opened.  If the temp_store_directory
+    is changed for one database connection while other database connections
+    are open in the same process, then the behavior is undefined and
+    probably undesirable.</p>
 
     <p>Changing the temp_store_directory setting is <u>not</u> threadsafe.
     Never change the temp_store_directory setting if another thread
@@ -1021,29 +1165,38 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <hr>
     <p><b>PRAGMA vdbe_listing = </b><i>boolean</i><b>;</b></p>
 
-    <p>Turn listings of virtual machine programs on and off.
+    
+    <p>This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
+
+    <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
+    option, then the vdbe_listing pragma can be used to cause a complete
+    listing of the virtual machine opcodes to appear on standard output
+    as each statement is evaluated.
     With listing is on, the entire content of a program is printed
     just prior to beginning execution.  The statement
     executes normally after the listing is printed.
-    This is used for debugging.  See the 
+    This feature is used for debugging SQLite itself.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p>
-
-    <p>This PRAGMA is used to help test and debug the SQLite library
-    itself.  It is of little or not use to applications and is disabled
-    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
 <a name="pragma_vdbe_trace"></a>
 <hr>
     <p><b>PRAGMA vdbe_trace = </b><i>boolean</i><b>;</b></p>
 
-    <p>Turn tracing of the virtual database engine inside of the
-    SQLite library on and off.  This is used for debugging.  See the 
+    
+    <p>This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
+
+    <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
+    option, then the vdbe_trace pragma can be used to cause virtual machine
+    opcodes to be printed on standard output as they are evaluated.
+    This feature is used for debugging SQLite.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p>
-
-    <p>This PRAGMA is used to help test and debug the SQLite library
-    itself.  It is of little or not use to applications and is disabled
-    if SQLite is not compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>.</p>
 <a name="pragma_wal_autocheckpoint"></a>
 <hr>
     <p><b>PRAGMA wal_autocheckpoint;<br>
@@ -1072,6 +1225,14 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Invoking this pragma is equivalent to calling the
     <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> C interface.</p>
 
+<a name="pragma_writable_schema"></a>
+<hr>
+    <p><b>PRAGMA writable_schema  = </b><i>boolean</i><b>;</b></p>
+
+    <p>When this pragma is on, the SQLITE_MASTER tables in which database
+    can be changed using ordinary <a href="lang_update.html">UPDATE</a>, <a href="lang_insert.html">INSERT</a>, and <a href="lang_delete.html">DELETE</a>
+    statements.  Warning:  misuse of this pragma can easily result in
+    a corrupt database file.</p>
 
 <hr>
 

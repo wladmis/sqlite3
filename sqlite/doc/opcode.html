@@ -141,7 +141,7 @@ virtual machine does, you can refer back to this document for
 the details on a particular opcode.
 Unfortunately, the virtual machine tutorial was written for
 SQLite version 1.0.  There are substantial changes in the virtual
-machine for version 2.0 and and again for version 3.0.0 and again
+machine for version 2.0 and again for version 3.0.0 and again
 for version 3.5.5 and the document has not been updated.  But the
 basic concepts behind the virtual machine still apply.
 </p>
@@ -265,7 +265,7 @@ changing the value "on" to "off".</p>
 
 <h3>The Opcodes</h3>
 
-<p>There are currently 141
+<p>There are currently 142
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
@@ -314,11 +314,7 @@ ones-complement of the P1 value into register P2.  If P1 holds
 a NULL then store a NULL in P2.</td></tr><tr><td valign="top" align="center"><a name="BitOr"></a><p>BitOr</p><td><p>Take the bit-wise OR of the values in register P1 and P2 and
 store the result in register P3.
 If either input is NULL, the result is NULL.</td></tr><tr><td valign="top" align="center"><a name="Blob"></a><p>Blob</p><td><p>P4 points to a blob of data P1 bytes long.  Store this
-blob in register P2. This instruction is not coded directly
-by the compiler. Instead, the compiler layer specifies
-an OP_HexBlob opcode, with the hex string representation of
-the blob as P4. This opcode is transformed to an OP_Blob
-the first time it is executed.</td></tr><tr><td valign="top" align="center"><a name="Checkpoint"></a><p>Checkpoint</p><td><p>Checkpoint database P1. This is a no-op if P1 is not currently in
+blob in register P2.</td></tr><tr><td valign="top" align="center"><a name="Checkpoint"></a><p>Checkpoint</p><td><p>Checkpoint database P1. This is a no-op if P1 is not currently in
 WAL mode.</td></tr><tr><td valign="top" align="center"><a name="Clear"></a><p>Clear</p><td><p>Delete all contents of the database table or index whose root page
 in the database file is given by P1.  But, unlike Destroy, do not
 remove the table or index from the database file.</p>
@@ -356,8 +352,8 @@ the result.</p>
 <p>If the OPFLAG_CLEARCACHE bit is set on P5 and P1 is a pseudo-table cursor,
 then the cache of the cursor is reset prior to extracting the column.
 The first OP_Column against a pseudo-table after the value of the content
-register has changed should have this bit set.</td></tr><tr><td valign="top" align="center"><a name="Compare"></a><p>Compare</p><td><p>Compare to vectors of registers in reg(P1)..reg(P1+P3-1) (all this
-one "A") and in reg(P2)..reg(P2+P3-1) ("B").  Save the result of
+register has changed should have this bit set.</td></tr><tr><td valign="top" align="center"><a name="Compare"></a><p>Compare</p><td><p>Compare two vectors of registers in reg(P1)..reg(P1+P3-1) (call this
+vector "A") and in reg(P2)..reg(P2+P3-1) ("B").  Save the result of
 the comparison for use by the next OP_Jump instruct.</p>
 
 <p>P4 is a KeyInfo structure that defines collating sequences and sort
@@ -647,7 +643,7 @@ jump to address P2.</p>
 
 <p>If the SQLITE_JUMPIFNULL bit of P5 is set and either reg(P1) or
 reg(P3) is NULL then take the jump.  If the SQLITE_JUMPIFNULL
-bit is clear then fall thru if either operand is NULL.</p>
+bit is clear then fall through if either operand is NULL.</p>
 
 <p>The SQLITE_AFF_MASK portion of P5 must be an affinity character -
 SQLITE_AFF_TEXT, SQLITE_AFF_INTEGER, and so forth. An attempt is made
@@ -668,12 +664,9 @@ are of different types, then numbers are considered less than
 strings and strings are considered less than blobs.</p>
 
 <p>If the SQLITE_STOREP2 bit of P5 is set, then do not jump.  Instead,
-store a boolean result (either 0, or 1, or NULL) in register P2.</td></tr><tr><td valign="top" align="center"><a name="MakeRecord"></a><p>MakeRecord</p><td><p>Convert P2 registers beginning with P1 into a single entry
-suitable for use as a data record in a database table or as a key
-in an index.  The details of the format are irrelevant as long as
-the OP_Column opcode can decode the record later.
-Refer to source code comments for the details of the record
-format.</p>
+store a boolean result (either 0, or 1, or NULL) in register P2.</td></tr><tr><td valign="top" align="center"><a name="MakeRecord"></a><p>MakeRecord</p><td><p>Convert P2 registers beginning with P1 into the <a href="fileformat2.html#record_format">record format</a>
+use as a data record in a database table or as a key
+in an index.  The OP_Column opcode can decode the record later.</p>
 
 <p>P4 may be a string that is P2 characters long.  The nth character of the
 string indicates the column affinity that should be used for the nth
@@ -682,7 +675,11 @@ field of the index key.</p>
 <p>The mapping from character to affinity is given by the SQLITE_AFF_
 macros defined in sqliteInt.h.</p>
 
-<p>If P4 is NULL then all index fields have the affinity NONE.</td></tr><tr><td valign="top" align="center"><a name="MemMax"></a><p>MemMax</p><td><p>P1 is a register in the root frame of this VM (the root frame is
+<p>If P4 is NULL then all index fields have the affinity NONE.</td></tr><tr><td valign="top" align="center"><a name="MaxPgcnt"></a><p>MaxPgcnt</p><td><p>Try to set the maximum page count for database P1 to the value in P3.
+Do not let the maximum page count fall below the current page count and
+do not change the maximum page count value if P3==0.</p>
+
+<p>Store the maximum page count after the change in register P2.</td></tr><tr><td valign="top" align="center"><a name="MemMax"></a><p>MemMax</p><td><p>P1 is a register in the root frame of this VM (the root frame is
 different from the current frame if this instruction is being executed
 within a sub-program). Set the value of register P1 to the maximum of
 its current value and the value in register P2.</p>
@@ -729,7 +726,7 @@ destination.</td></tr><tr><td valign="top" align="center"><a name="Not"></a><p>N
 boolean complement in register P2.  If the value in register P1 is
 NULL, then a NULL is stored in P2.</td></tr><tr><td valign="top" align="center"><a name="NotExists"></a><p>NotExists</p><td><p>Use the content of register P3 as a integer key.  If a record
 with that key does not exist in table of P1, then jump to P2.
-If the record does exist, then fall thru.  The cursor is left
+If the record does exist, then fall through.  The cursor is left
 pointing to the record if it exists.</p>
 
 <p>The difference between this operation and NotFound is that this
@@ -991,7 +988,7 @@ size, and so forth.  P1==0 is the main database file and P1==1 is the
 database file used to store temporary tables.</p>
 
 <p>A transaction must be started before executing this opcode.</td></tr><tr><td valign="top" align="center"><a name="ShiftLeft"></a><p>ShiftLeft</p><td><p>Shift the integer value in register P2 to the left by the
-number of bits specified by the integer in regiser P1.
+number of bits specified by the integer in register P1.
 Store the result in register P3.
 If either input is NULL, the result is NULL.</td></tr><tr><td valign="top" align="center"><a name="ShiftRight"></a><p>ShiftRight</p><td><p>Shift the integer value in register P2 to the right by the
 number of bits specified by the integer in register P1.
@@ -1022,7 +1019,7 @@ If the value is numeric, convert it to a string first.
 Strings are simply reinterpreted as blobs with no change
 to the underlying data.</p>
 
-<p>A NULL value is not changed by this routine.  It remains NULL.</td></tr><tr><td valign="top" align="center"><a name="ToInt"></a><p>ToInt</p><td><p>Force the value in register P1 be an integer.  If
+<p>A NULL value is not changed by this routine.  It remains NULL.</td></tr><tr><td valign="top" align="center"><a name="ToInt"></a><p>ToInt</p><td><p>Force the value in register P1 to be an integer.  If
 The value is currently a real number, drop its fractional part.
 If the value is text or blob, try to convert it to an integer using the
 equivalent of atoi() and store 0 if no such conversion is possible.</p>

@@ -1149,7 +1149,7 @@ attempt to open a connection to a <a class=defnlink href="#glossary_Persistent_d
       function consist of the bitwise OR of zero or more of the following
       symbols.
 
-      <pre class=api>#define BTREE_OMIT_JOURNAL  1  /* Do not use journal.  No argument */
+      <pre class=api>#define BTREE_OMIT_JOURNAL  1  /* Do not create or use a rollback journal */
 #define BTREE_NO_READLOCK   2  /* Omit readlocks on readonly files */</pre>
 
       <p class=req id=H51005><span>If the BTREE_OMIT_JOURNAL bit is set in the flags parameter passed to a 
@@ -1239,7 +1239,7 @@ int sqlite3BtreeSetPageSize(Btree *p, int nPagesize, int nReserve, int eFix);</p
 
 
       <pre class=api>int sqlite3BtreeSetCacheSize(Btree*,int);
-int sqlite3BtreeSetSafetyLevel(Btree*,int,int);
+int sqlite3BtreeSetSafetyLevel(Btree*,int,int,int);
 int sqlite3BtreeMaxPageCount(Btree*,int);</pre>
 
     <p>
@@ -1470,9 +1470,9 @@ sqlite3BtreeGetMeta.</span> (P: <a class=reqlink href=#H50109>H50109</a>)</p>
       <h3 id="sqlite3BtreeCreateTable">3.8.1 sqlite3BtreeCreateTable</h3>
 
       <pre class=api>int sqlite3BtreeCreateTable(Btree*, int*, int flags);</pre>
-      <pre class=api>#define BTREE_INTKEY     1    /* Table has only 64-bit signed integer keys */
-#define BTREE_ZERODATA   2    /* Table has keys only - no data */
-#define BTREE_LEAFDATA   4    /* Data stored in leaves only.  Implies INTKEY */</pre>
+      <pre class=api>** Every SQLite table must have either BTREE_INTKEY or BTREE_BLOBKEY set.
+
+</pre>
 
       <h3 id="sqlite3BtreeDropTable">3.8.2 sqlite3BtreeDropTable</h3>
 
@@ -1734,7 +1734,7 @@ sqlite3_int64 sqlite3BtreeGetCachedRowid(BtCursor*);</pre>
 <li> sqlite3PagerIsMemdb (vacuum and backup).
 <li> sqlite3PagerJournalSizeLimit
 <li> sqlite3PagerFile (used by sqlite3_file_control() and pragma lock_proxy_file).
-<li> sqlite3PagerPagecounT (pragma page_count and backup).
+<li> sqlite3PagerPagecount (pragma page_count and backup).
 <li> Page APIs used by backup routines:
   <ul>
     <li> sqlite3PagerGet
@@ -2130,7 +2130,7 @@ redistributed b-tree cells.</span></p>
 	       b-tree, the cells that contained pointers to the old sibling
                pages are replaced by a divider cell associated with all but the
                right-most sibling page. The child-page number stored in each divider
-               cell is set to the page number of the associated sibling. The ingeger key 
+               cell is set to the page number of the associated sibling. The integer key 
                value stored in each divider cell is a copy of the largest integer key
                value stored on the associated sibling page.
 

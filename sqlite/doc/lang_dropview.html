@@ -120,10 +120,20 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>DROP VIEW</h2><h4><a href="syntaxdiagrams.html#drop-view-stmt">drop-view-stmt:</a></h4><blockquote> <img alt="syntax diagram drop-view-stmt" src="images/syntax/drop-view-stmt.gif"></img> </blockquote>
 
 
-<p>The DROP VIEW statement removes a view created by the
-<a href="lang_createview.html">CREATE VIEW</a> statement.  The name specified is the 
-view name.  It is removed from the database schema, but no actual data 
-in the underlying base tables is modified.</p>
+<p>The DROP VIEW statement removes a view created by the <a href="lang_createview.html">CREATE VIEW</a> 
+  statement. The view definition is removed from the database schema, but 
+  no actual data in the underlying base tables is modified.
+
+<p>The view to drop is identified by the view-name and optional 
+  database-name specified as part of the DROP VIEW statement. This 
+  reference is resolved using the standard procedure for <a href="lang_naming.html">object resolution</a>.
+
+<p>
+  If the specified view cannot be found and the IF EXISTS clause is not 
+  present, it is an error. If the specified view cannot be found and an IF
+  EXISTS clause is present in the DROP VIEW statement, then the statement
+  is a no-op.
+
 
 
         <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -455,7 +455,7 @@ in the INSERT example.</p>
 <blockquote><tt>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rewind&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10</tt></blockquote>
 <p> The <a href="opcode.html#Rewind">Rewind</a> instruction initializes 
 a loop that iterates over the "examp" table. It rewinds the cursor P1 
-to the first entry in its table.  This is required by the the Column and 
+to the first entry in its table.  This is required by the Column and 
 Next instructions, which use the cursor to iterate through the table.  
 If the table is empty, then jump to P2 (10), which is the instruction just 
 past the loop.  If the table is not empty, fall through to the following 
@@ -725,7 +725,7 @@ instruction.</p>
 <blockquote><tt>9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recno&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
 10&nbsp;&nbsp;&nbsp;&nbsp;ListWrite&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0</tt></blockquote>
 <p>The <a href="opcode.html#Recno">Recno</a> instruction pushes onto the 
-stack an integer which is the first 4 bytes of the the key to the current 
+stack an integer which is the first 4 bytes of the key to the current 
 entry in a sequential scan of the table pointed to by cursor P1.
 The <a href="opcode.html#ListWrite">ListWrite</a> instruction writes the 
 integer on the top of the stack into a temporary storage list and pops 
@@ -758,7 +758,7 @@ the one in the UPDATE example.  The ListRead instruction plays the role
 that the Next did in the INSERT loop, but because it jumps to P2 on 
 failure, and Next jumps on success, we put it at the start of the loop 
 instead of the end.  This means that we have to put a Goto at the end of 
-the loop to jump back to the the loop test at the beginning.  So this 
+the loop to jump back to the loop test at the beginning.  So this 
 loop has the form of a C while(){...} loop, while the loop in the INSERT 
 example had the form of a do{...}while() loop.  The Delete instruction 
 fills the role that the callback function did in the preceding examples.
@@ -787,7 +787,7 @@ same principle.</p>
 <p>The <a href="opcode.html#NotExists">NotExists</a> instruction pops 
 the top stack element and uses it as an integer key.  If a record with 
 that key does not exist in table P1, then jump to P2.  If a record does 
-exist, then fall thru to the next instruction.  In this case P2 takes 
+exist, then fall through to the next instruction.  In this case P2 takes 
 us to the Goto at the end of the loop, which jumps back to the ListRead 
 at the beginning.  This could have been coded to have P2 be 16, the 
 ListRead at the start of the loop, but the SQLite parser which generated 
@@ -1135,7 +1135,7 @@ instruction at 11 which pushes a copy of the index key back onto the
 stack.  The instruction <a href="opcode.html#IdxGT">IdxGT</a> at 12 
 compares the key to the key in the current index record pointed to by 
 cursor P1.  If the index key at the current cursor location is greater 
-than the the index we are looking for, then jump out of the loop.</p>
+than the index we are looking for, then jump out of the loop.</p>
 
 <p>The instruction <a href="opcode.html#IdxRecno">IdxRecno</a> at 13 
 pushes onto the stack the table record number from the index.  The 
