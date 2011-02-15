@@ -122,6 +122,9 @@ install -pD -m644 %name.1 %buildroot%_man1dir/%name.1
 install -pD -m755 lemon %buildroot%_bindir/lemon
 install -pD -m644 lempar.c %buildroot%_datadir/lemon/lempar.c
 
+# for perl-DBD-SQLite
+install -p -m644 ext/fts3/fts3.h ext/fts3/fts3_*.h %buildroot%_includedir/
+
 %define pkgdocdir %_docdir/%name
 mkdir -p %buildroot%pkgdocdir
 cp -a doc %buildroot%pkgdocdir/html
@@ -137,6 +140,8 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %files -n lib%name-devel
 %_includedir/sqlite3.h
 %_includedir/sqlite3ext.h
+%_includedir/fts3.h
+%_includedir/fts3_*.h
 %_libdir/lib%name.so
 %_pkgconfigdir/%name.pc
 
