@@ -9,12 +9,13 @@
  
  # Define this for the autoconf-based build, so that the code knows it can
  # include the generated config.h
-@@ -320,6 +320,16 @@ SRC += \
+@@ -320,6 +320,17 @@ SRC += \
    $(TOP)/ext/fts3/fts3_tokenizer.c \
    $(TOP)/ext/fts3/fts3_tokenizer1.c \
    $(TOP)/ext/fts3/fts3_write.c
 +OBJS0 += \
 +  fts3.lo \
++  fts3_aux.lo \
 +  fts3_expr.lo \
 +  fts3_hash.lo \
 +  fts3_icu.lo \
