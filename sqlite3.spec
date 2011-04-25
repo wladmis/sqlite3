@@ -1,6 +1,6 @@
 Name: sqlite3
-Version: 3.7.4
-Release: alt2
+Version: 3.7.6.2
+Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
 Group: Development/Databases
@@ -163,6 +163,9 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Mon Apr 25 2011 Valery Inozemtsev <shrek@altlinux.ru> 3.7.6.2-alt1
+- 3.7.6.2
+
 * Tue Feb 15 2011 Alexey Tourbin <at@altlinux.ru> 3.7.4-alt2
 - rebuilt for debuginfo
 - disabled symbol versioning

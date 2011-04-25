@@ -10,7 +10,7 @@
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 --- sqlite-3.7.4/libsqlite3.lds-	2011-02-15 21:35:18.763214945 +0300
 +++ sqlite-3.7.4/libsqlite3.lds	2011-02-15 21:35:28.646359743 +0300
-@@ -0,0 +1,191 @@
+@@ -0,0 +1,190 @@
 +"sqlite3AuthReadCol@SQLITE3_3.6.19" = sqlite3AuthReadCol;
 +"sqlite3BtreeCheckpoint@SQLITE3_3.7.2" = sqlite3BtreeCheckpoint;
 +"sqlite3BtreeCursorZero@SQLITE3_3.6.21" = sqlite3BtreeCursorZero;
@@ -56,7 +56,6 @@
 +"sqlite3Fts3PutVarint@SQLITE3_3.6.21" = sqlite3Fts3PutVarint;
 +"sqlite3Fts3ReadBlock@SQLITE3_3.6.21" = sqlite3Fts3ReadBlock;
 +"sqlite3Fts3SegReaderFree@SQLITE3_3.6.21" = sqlite3Fts3SegReaderFree;
-+"sqlite3Fts3SegReaderIterate@SQLITE3_3.6.21" = sqlite3Fts3SegReaderIterate;
 +"sqlite3Fts3SegReaderNew@SQLITE3_3.6.21" = sqlite3Fts3SegReaderNew;
 +"sqlite3Fts3SegReaderPending@SQLITE3_3.6.22" = sqlite3Fts3SegReaderPending;
 +"sqlite3Fts3Snippet@SQLITE3_3.6.21" = sqlite3Fts3Snippet;
