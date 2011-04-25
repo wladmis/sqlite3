@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -169,13 +169,17 @@ previously returned <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> or <a href=
 be the case that the same database connection is being used by two or
 more threads at the same moment in time.</p>
 
-<p>For all versions of SQLite up to and including 3.6.23.1, it was required
-after sqlite3_step() returned anything other than <a href="../c3ref/c_abort.html">SQLITE_ROW</a> that
-<a href="../c3ref/reset.html">sqlite3_reset()</a> be called before any subsequent invocation of
-sqlite3_step().  Failure to invoke <a href="../c3ref/reset.html">sqlite3_reset()</a> in this way would
-result in an <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> return from sqlite3_step().  But after
-version 3.6.23.1, sqlite3_step() began calling <a href="../c3ref/reset.html">sqlite3_reset()</a>
-automatically in this circumstance rather than returning <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.</p>
+<p>For all versions of SQLite up to and including 3.6.23.1, a call to
+<a href="../c3ref/reset.html">sqlite3_reset()</a> was required after sqlite3_step() returned anything
+other than <a href="../c3ref/c_abort.html">SQLITE_ROW</a> before any subsequent invocation of
+sqlite3_step().  Failure to reset the prepared statement using
+<a href="../c3ref/reset.html">sqlite3_reset()</a> would result in an <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> return from
+sqlite3_step().  But after version 3.6.23.1, sqlite3_step() began
+calling <a href="../c3ref/reset.html">sqlite3_reset()</a> automatically in this circumstance rather
+than returning <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.  This is not considered a compatibility
+break because any application that ever receives an SQLITE_MISUSE error
+is broken by definition.  The <a href="../compile.html#omit_autoreset">SQLITE_OMIT_AUTORESET</a> compile-time option
+can be used to restore the legacy behavior.</p>
 
 <p><b>Goofy Interface Alert:</b> In the legacy interface, the sqlite3_step()
 API always returns a generic error code, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>, following any
@@ -192,5 +196,3 @@ by sqlite3_step().  The use of the "v2" interface is recommended.
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -125,21 +125,51 @@ a:visited { color: #734559 }
 
 </table>
 
+<a name="encoding"></a>
+
+<h3>Build Product Names</h3>
+
+<p>Beginning with SQLite <a href="releaselog/3_7_4.html">version 3.7.4</a>, the names of the build products
+have changed to be more consistent.  (Prior to version 3.7.4, the
+names of build products were seemingly random.)  Build products are named
+using one of the following templates:
+
+<ol>
+<li> <b>sqlite-</b>product<b>-</b>version<b>.zip</b>
+<li> <b>sqlite-</b>product<b>-</b>version<b>.tar.gz</b>
+<li> <b>sqlite-</b>product<b>-</b>os<b>-</b>cpu<b>-</b>version<b>.zip</b>
+<li> <b>sqlite-</b>product<b>-</b>date<b>.zip</b>
+</ol>
+
+<p>Templates (1) and (2) are used for source-code products.  Template (1) is
+used for generic source-code products and templates (2) is used for source-code
+products that are generally only useful on unix-like platforms.  Template (3)
+is used for precompiled binaries products.  Template (4) is used for
+unofficial pre-release "snapshots" of source code.
+
+<p>The <i>version</i> is encoded so that filenames sort in order of
+increasing version number when viewed using "ls".  For version 3.X.Y the filename encoding is 3XXYY00.  For branch version 3.X.Y.Z, the encoding is 3XXYYZZ.
+
+<p>The <i>date</i> in template (4) is of the form: YYYYMMDDHHMM
+
 <a name="cvs"></a>
-<h3>Direct Access To The Sources</h3>
+<h3>Canonical Source Code</h3>
 
 <p>
-All SQLite source code is maintained in three self-synchronizing
+The canonical SQLite source code is maintained in three self-synchronizing
 <a href="http://www.fossil-scm.org/">Fossil</a> repositories that are
 available for anonymous read-only access.  Anyone can 
 view the repository contents and download historical versions
-of individual files or ZIP archives of
-historical check-ins by visiting</p>
+of individual files or ZIP archives of historical check-ins.</p>
+
+<p>Note that a unix-like development environment, including a recent
+version of <a href="http://www.tcl.tk/">Tcl</a>, is required in order to
+build from the canonical sources.</p>
 
 <blockquote>
-<a href="http://www.sqlite.org/src">http://www.sqlite.org/src</a> (Dallas)<br>
-<a href="http://www.hwaci.com/cgi-bin/sqlite">http://www.hwaci.com/cgi-bin/sqlite</a> (San Jose)<br>
-<a href="http://www2.sqlite.org/src">http://www2.sqlite.org/src</a> (Atlanta)<br>
+<a href="http://www.sqlite.org/cgi/src">http://www.sqlite.org/cgi/src</a> (Dallas)<br>
+<a href="http://www2.sqlite.org/cgi/src">http://www2.sqlite.org/cgi/src</a> (Atlanta)<br>
+<a href="http://www3.sqlite.org/cgi/src">http://www3.sqlite.org/cgi/src</a> (Fremont)<br>
 </blockquote>
 
 <p>The documentation is maintained in separate
@@ -147,10 +177,9 @@ historical check-ins by visiting</p>
 at:</p>
 
 <blockquote>
-<a href="http://www.sqlite.org/docsrc">http://www.sqlite.org/docsrc</a> (Dallas)<br>
-<a href="http://www.hwaci.com/cgi-bin/docsrc">http://www.hwaci.com/cgi-bin/docsrc</a> (San Jose)<br>
-<a href="http://www2.sqlite.org/docsrc">http://www2.sqlite.org/docsrc</a> (Atlanta)<br>
+<a href="http://www.sqlite.org/cgi/docsrc">http://www.sqlite.org/cgi/docsrc</a> (Dallas)<br>
+<a href="http://www2.sqlite.org/cgi/docsrc">http://www2.sqlite.org/cgi/docsrc</a> (Atlanta)<br>
+<a href="http://www3.sqlite.org/cgi/docsrc">http://www3.sqlite.org/cgi/docsrc</a> (Fremont)<br>
+
 </blockquote>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

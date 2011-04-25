@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -1001,11 +1001,11 @@ Integer constant 1.  Only available for schema format 4 and higher.
 <i>Not used.  Reserved for expansion.</i>
 <tr><td valign=top align=center>N&#x2265;12 and even
     <td valign=top align=center>(N-12)/2<td align=left>
-A string in the database encoding and (N-12)/2 bytes in length.
-The nul terminator is omitted.
+A BLOB that is (N-12)/2 bytes in length
 <tr><td valign=top align=center>N&#x2265;13 and odd
     <td valign=top align=center>(N-13)/2<td align=left>
-A BLOB that is (N-13)/2 bytes in length
+A string in the database encoding and (N-13)/2 bytes in length.
+The nul terminator is omitted.
 </table></center>
 
 <p>Note that because of the way varints are defined, the header size varint
@@ -1531,5 +1531,3 @@ information about the format of the wal-index will be provided here.
 Complete details on the format of the wal-index are contained within
 comments in SQLite source code.</p>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -171,6 +171,15 @@ with non-standard compilation options.
 
 <p>  The file format for a new database can be set at runtime using
   the <a href="pragma.html#pragma_legacy_file_format">PRAGMA legacy_file_format</a> command.
+</p></blockquote><a name="default_foreign_keys"></a>
+<p><b>SQLITE_DEFAULT_FOREIGN_KEYS=<i>&lt;0 or 1&gt;</i></b></p><blockquote><p>
+  This macro determines whether enforcement of 
+  <a href="foreignkeys.html">foreign key constraints</a> is enabled or disabled by default for
+  new database connections.  Each database connection can always turn
+  enforcement of foreign key constraints on and off and run-time using
+  the <a href="pragma.html#pragma_foreign_keys">foreign_keys pragma</a>.  Enforcement of foreign key constraints
+  is normally off by default, but if this compile-time parameter is
+  set to 1, enforcement of foreign key constraints will be on by default.
 </p></blockquote><a name="default_journal_size_limit"></a>
 <p><b>SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT=<i>&lt;bytes&gt;</i></b></p><blockquote><p>
   This option sets the size limit on rollback journal files in
@@ -197,6 +206,11 @@ with non-standard compilation options.
   not affect the page-cache for the temp database, where tables created
   using <a href="lang_createtable.html">CREATE TEMP TABLE</a> are stored. The default value
   is 500.
+</p></blockquote><a name="default_wal_autocheckpoint"></a>
+<p><b>SQLITE_DEFAULT_WAL_AUTOCHECKPOINT=<i>&lt;pages&gt;</i></b></p><blockquote><p>
+  This macro sets the default page count for the <a href="wal.html">WAL</a>
+  <a href="wal.html#ckpt">automatic checkpointing</a> feature.  If unspecified,
+  the default page count is 1000.
 </p></blockquote><a name="yystackdepth"></a>
 <p><b>YYSTACKDEPTH=<i>&lt;max_depth&gt;</i></b></p><blockquote><p>
   This macro sets the maximum depth of the LALR(1) stack used by
@@ -627,6 +641,30 @@ when used in combination with other options.</p>
   will not automatically initialize itself and the application is required
   to invoke <a href="c3ref/initialize.html">sqlite3_initialize()</a> directly prior to beginning use of the
   SQLite library.
+</p></blockquote><a name="omit_autoreset"></a>
+<p><b>SQLITE_OMIT_AUTORESET</b></p><blockquote><p>
+  By default, the <a href="c3ref/step.html">sqlite3_step()</a> interface will automatically invoke
+  <a href="c3ref/reset.html">sqlite3_reset()</a> to reset the <a href="c3ref/stmt.html">prepared statement</a> if necessary.  This
+  compile-time option changes that behavior so that <a href="c3ref/step.html">sqlite3_step()</a> will
+  return <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> if it called again after returning anything other
+  than <a href="c3ref/c_abort.html">SQLITE_ROW</a>, <a href="c3ref/c_abort.html">SQLITE_BUSY</a>, or <a href="c3ref/c_abort.html">SQLITE_LOCKED</a> unless there was an
+  intervening call to <a href="c3ref/reset.html">sqlite3_reset()</a>.</p>
+
+<p>  In SQLite version 3.6.23.1 and earlier, <a href="c3ref/step.html">sqlite3_step()</a> used to always
+  return <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> if it was invoked again after returning anything
+  other than <a href="c3ref/c_abort.html">SQLITE_ROW</a> without an intervening call to <a href="c3ref/reset.html">sqlite3_reset()</a>.
+  This caused problems on some poorly written smartphone applications which
+  did not correctly handle the <a href="c3ref/c_abort.html">SQLITE_LOCKED</a> and <a href="c3ref/c_abort.html">SQLITE_BUSY</a> error 
+  returns.  Rather than fix the many defective smartphone applications, 
+  the behavior of SQLite was changed in 3.6.23.2 to automatically reset
+  the prepared statement.  But that changed caused issues in other 
+  improperly implemented applications that were actually looking
+  for an <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> return to terminate their query loops.  (Anytime
+  an application gets an SQLITE_MISUSE error code from SQLite, that means the
+  application is misusing the SQLite interface and is thus incorrectly
+  implemented.)  The SQLITE_OMIT_AUTORESET interface was added to SQLite
+  version 3.7.5 in an effort to get all of the (broken)
+  applications to work again without having to actually fix the applications.
 </p></blockquote><a name="omit_autovacuum"></a>
 <p><b>SQLITE_OMIT_AUTOVACUUM</b></p><blockquote><p>
   If this option is defined, the library cannot create or write to 
@@ -926,5 +964,3 @@ when used in combination with other options.</p>
   allocated memory.
 </p></blockquote>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -183,11 +183,13 @@ though this is not guaranteed. The
 first parameter, szPage, is the size in bytes of the pages that must
 be allocated by the cache.  szPage will not be a power of two.  szPage
 will the page size of the database file that is to be cached plus an
-increment (here called "R") of about 100 or 200.  SQLite will use the
+increment (here called "R") of less than 250.  SQLite will use the
 extra R bytes on each page to store metadata about the underlying
 database page on disk.  The value of R depends
 on the SQLite version, the target platform, and how SQLite was compiled.
-R is constant for a particular build of SQLite.  The second argument to
+R is constant for a particular build of SQLite. Except, there are two
+distinct values of R when SQLite is compiled with the proprietary
+ZIPVFS extension.  The second argument to
 xCreate(), bPurgeable, is true if the cache being created will
 be used to cache database pages of a file stored on disk, or
 false if it is used for an in-memory database. The cache implementation
@@ -219,7 +221,7 @@ is considered to be "pinned".</p>
 <p>If the requested page is already in the page cache, then the page cache
 implementation must return a pointer to the page buffer with its content
 intact.  If the requested page is not already in the cache, then the
-behavior of the cache implementation should use the value of the createFlag
+cache implementation should use the value of the createFlag
 parameter to help it determined what action to take:</p>
 
 <p><table border=1 width=85% align=center>
@@ -270,5 +272,3 @@ functions.
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

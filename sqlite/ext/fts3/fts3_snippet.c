@@ -226,7 +226,7 @@ static int fts3ExprNearTrim(Fts3Expr *pExpr){
 ** for each phrase into Fts3Expr.aDoclist[]/nDoclist. See also
 ** fts3ExprLoadDoclists().
 */
-static int fts3ExprLoadDoclistsCb1(Fts3Expr *pExpr, int iPhrase, void *ctx){
+static int fts3ExprLoadDoclistsCb(Fts3Expr *pExpr, int iPhrase, void *ctx){
   int rc = SQLITE_OK;
   LoadDoclistCtx *p = (LoadDoclistCtx *)ctx;
 
@@ -247,22 +247,6 @@ static int fts3ExprLoadDoclistsCb1(Fts3Expr *pExpr, int iPhrase, void *ctx){
 }
 
 /*
-** This is an fts3ExprIterate() callback used while loading the doclists
-** for each phrase into Fts3Expr.aDoclist[]/nDoclist. See also
-** fts3ExprLoadDoclists().
-*/
-static int fts3ExprLoadDoclistsCb2(Fts3Expr *pExpr, int iPhrase, void *ctx){
-  UNUSED_PARAMETER(iPhrase);
-  UNUSED_PARAMETER(ctx);
-  if( pExpr->aDoclist ){
-    pExpr->pCurrent = pExpr->aDoclist;
-    pExpr->iCurrent = 0;
-    pExpr->pCurrent += sqlite3Fts3GetVarint(pExpr->pCurrent, &pExpr->iCurrent);
-  }
-  return SQLITE_OK;
-}
-
-/*
 ** Load the doclists for each phrase in the query associated with FTS3 cursor
 ** pCsr. 
 **
@@ -280,10 +264,7 @@ static int fts3ExprLoadDoclists(
   int rc;                         /* Return Code */
   LoadDoclistCtx sCtx = {0,0,0};  /* Context for fts3ExprIterate() */
   sCtx.pCsr = pCsr;
-  rc = fts3ExprIterate(pCsr->pExpr, fts3ExprLoadDoclistsCb1, (void *)&sCtx);
-  if( rc==SQLITE_OK ){
-    (void)fts3ExprIterate(pCsr->pExpr, fts3ExprLoadDoclistsCb2, 0);
-  }
+  rc = fts3ExprIterate(pCsr->pExpr, fts3ExprLoadDoclistsCb, (void *)&sCtx);
   if( pnPhrase ) *pnPhrase = sCtx.nPhrase;
   if( pnToken ) *pnToken = sCtx.nToken;
   return rc;
@@ -899,13 +880,13 @@ static int fts3ExprLocalHitsCb(
   void *pCtx                      /* Pointer to MatchInfo structure */
 ){
   MatchInfo *p = (MatchInfo *)pCtx;
+  int iStart = iPhrase * p->nCol * 3;
+  int i;
+
+  for(i=0; i<p->nCol; i++) p->aMatchinfo[iStart+i*3] = 0;
 
   if( pExpr->aDoclist ){
     char *pCsr;
-    int iStart = iPhrase * p->nCol * 3;
-    int i;
-
-    for(i=0; i<p->nCol; i++) p->aMatchinfo[iStart+i*3] = 0;
 
     pCsr = sqlite3Fts3FindPositions(pExpr, p->pCursor->iPrevId, -1);
     if( pCsr ){
@@ -975,9 +956,11 @@ static int fts3MatchinfoSelectDoctotal(
     if( rc!=SQLITE_OK ) return rc;
   }
   pStmt = *ppStmt;
+  assert( sqlite3_data_count(pStmt)==1 );
 
   a = sqlite3_column_blob(pStmt, 0);
   a += sqlite3Fts3GetVarint(a, &nDoc);
+  if( nDoc==0 ) return SQLITE_CORRUPT;
   *pnDoc = (u32)nDoc;
 
   if( paLen ) *paLen = a;
@@ -1184,9 +1167,11 @@ static int fts3MatchinfoValues(
           if( rc==SQLITE_OK ){
             int iCol;
             for(iCol=0; iCol<pInfo->nCol; iCol++){
+              u32 iVal;
               sqlite3_int64 nToken;
               a += sqlite3Fts3GetVarint(a, &nToken);
-              pInfo->aMatchinfo[iCol] = (u32)(((u32)(nToken&0xffffffff)+nDoc/2)/nDoc);
+              iVal = (u32)(((u32)(nToken&0xffffffff)+nDoc/2)/nDoc);
+              pInfo->aMatchinfo[iCol] = iVal;
             }
           }
         }

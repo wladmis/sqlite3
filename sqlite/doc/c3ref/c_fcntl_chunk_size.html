@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -124,6 +124,7 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_SIZE_HINT        5
 #define SQLITE_FCNTL_CHUNK_SIZE       6
 #define SQLITE_FCNTL_FILE_POINTER     7
+#define SQLITE_FCNTL_SYNC_OMITTED     8
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
@@ -150,10 +151,23 @@ by the user. The fourth argument to <a href="../c3ref/file_control.html">sqlite3
 point to an integer (type int) containing the new chunk-size to use
 for the nominated database. Allocating database file space in large
 chunks (say 1MB at a time), may reduce file-system fragmentation and
-improve performance on some systems.
+improve performance on some systems.</p>
+
+<p>The <a href="../c3ref/c_fcntl_chunk_size.html">SQLITE_FCNTL_FILE_POINTER</a> opcode is used to obtain a pointer
+to the <a href="../c3ref/file.html">sqlite3_file</a> object associated with a particular database
+connection.  See the <a href="../c3ref/file_control.html">sqlite3_file_control()</a> documentation for
+additional information.</p>
+
+<p>The <a href="../c3ref/c_fcntl_chunk_size.html">SQLITE_FCNTL_SYNC_OMITTED</a> opcode is generated internally by
+SQLite and sent to all VFSes in place of a call to the xSync method
+when the database connection has <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to OFF.
+Some specialized VFSes need this signal in order to operate correctly
+when <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous=OFF</a> is set, but most
+VFSes do not need this signal and should silently ignore this opcode.
+Applications should not call <a href="../c3ref/file_control.html">sqlite3_file_control()</a> with this
+opcode as doing so may disrupt the operation of the specialized VFSes
+that do require it.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

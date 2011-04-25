@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -164,7 +164,7 @@ force strings to be UTF16 with native byte order.
 The <a href="../c3ref/c_any.html">SQLITE_UTF16_ALIGNED</a> value for eTextRep forces strings to begin
 on an even byte address.</p>
 
-<p>The fourth argument, pArg, is a application data pointer that is passed
+<p>The fourth argument, pArg, is an application data pointer that is passed
 through as the first argument to the collating function callback.</p>
 
 <p>The fifth argument, xCallback, is a pointer to the collating function.
@@ -180,7 +180,7 @@ application data pointer and with two strings in the encoding specified
 by the eTextRep argument.  The collating function must return an
 integer that is negative, zero, or positive
 if the first string is less than, equal to, or greater than the second,
-respectively.  A collating function must alway return the same answer
+respectively.  A collating function must always return the same answer
 given the same inputs.  If two or more collating functions are registered
 to the same collation name (using different eTextRep values) then all
 must give an equivalent answer when invoked with equivalent strings.
@@ -219,5 +219,3 @@ compatibility.</p>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

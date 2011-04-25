@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -121,7 +121,40 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2010_december_08"></a><h3>2010-December-08 - <a href="releaselog/3_7_4.html">Version 3.7.4</a></h3><p>
+<a name="2011_april_12"></a><h3>2011-April-12 - <a href="releaselog/3_7_6.html">Version 3.7.6</a></h3><p>
+  SQLite <a href="releaselog/3_7_6.html">version 3.7.6</a> is a regularly scheduled byi-monthly maintenance
+  release of SQLite.  Upgrading from version 3.7.5 is optional.  Upgrading
+  releases prior to 3.7.5 is recommended.
+</p><hr width="50%"><a name="2011_february_01"></a><h3>2011-February-01 - <a href="releaselog/3_7_5.html">Version 3.7.5</a></h3><p>
+  SQLite <a href="releaselog/3_7_5.html">version 3.7.5</a> is a regularly scheduled bi-monthly maintenance
+  release of SQLite.  Due to the discovery and fix of 
+  <a href="http://www.sqlite.org/src/tktview?name=5d863f876e">an obscure bug</a>
+  that could cause database corruption, upgrading from all prior
+  releases of SQLite is recommended.  This bug was found during code
+  review and has not been observed in the wild.</p>
+
+<p>  This release adds new <a href="c3ref/c_dbstatus_cache_used.html">opcodes</a> for the
+  <a href="c3ref/db_status.html">sqlite3_db_status()</a> interface that allow more precise measurement of
+  how the <a href="malloc.html#lookaside">lookaside memory allocator</a> is performing, which can be useful
+  for tuning in applications with very tight memory constraints.</p>
+
+<p>  The <a href="c3ref/mprintf.html">sqlite3_vsnprintf()</a> interface was added.  This routine is simply
+  a varargs version of the long-standing <a href="c3ref/mprintf.html">sqlite3_snprintf()</a> interface.</p>
+
+<p>  The output from <a href="c3ref/profile.html">sqlite3_trace()</a> interface has been enhanced to work
+  better (and faster) in systems that use recursive extensions such as
+  <a href="fts3.html">FTS3</a> or <a href="rtree.html">RTREE</a>.</p>
+
+<p>  Testing with Valgrind shows that this release of SQLite is about 1%
+  or 2% faster than the previous release for most operations.</p>
+
+<p>  A fork of the popular ADO.NET adaptor for SQLite known as System.Data.SQLite
+  is now available on <a href="http://System.Data.SQLite.org/">http://System.Data.SQLite.org/</a>.  The originator
+  of System.Data.SQLite, Robert Simpson, is aware of this fork, has
+  expressed his approval, and has commit privileges on the new Fossil
+  repository.  The SQLite development team intends to maintain
+  System.Data.SQLite moving forward.
+</p><hr width="50%"><a name="2010_december_08"></a><h3>2010-December-08 - <a href="releaselog/3_7_4.html">Version 3.7.4</a></h3><p>
   SQLite <a href="releaselog/3_7_4.html">version 3.7.4</a> is a regularly scheduled bi-monthly maintenance
   release of SQLite.  Upgrading from <a href="releaselog/3_7_2.html">version 3.7.2</a> and <a href="releaselog/3_7_3.html">version 3.7.3</a>
   is optional.  Upgrading from all other SQLite releases is recommended.</p>
@@ -286,5 +319,3 @@ a:visited { color: #734559 }
 
 <a href="oldnews.html">Old news...</a>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

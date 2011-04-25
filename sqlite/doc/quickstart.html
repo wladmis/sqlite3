@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -157,20 +157,20 @@ SQL commands against the database, and the closing of the database connection
 on the last line of the script.</p>
 
 <blockquote><pre>
-#!/usr/bin/tclsh
-if {$argc!=2} {
-  puts stderr "Usage: %s DATABASE SQL-STATEMENT"
-  exit 1
-}
-load /usr/lib/tclsqlite3.so Sqlite3
-<b>sqlite3</b> db &#91;lindex $argv 0]
-<b>db</b> eval &#91;lindex $argv 1] x {
-  foreach v $x(*) {
-    puts "$v = $x($v)"
-  }
-  puts ""
-}
-<b>db</b> close
+01  #!/usr/bin/tclsh
+02  if {$argc!=2} {
+03    puts stderr "Usage: %s DATABASE SQL-STATEMENT"
+04    exit 1
+05  }
+06  load /usr/lib/tclsqlite3.so Sqlite3
+07  <b>sqlite3</b> db &#91;lindex $argv 0]
+08  <b>db</b> eval &#91;lindex $argv 1] x {
+09    foreach v $x(*) {
+10      puts "$v = $x($v)"
+11    }
+12    puts ""
+13  }
+14  <b>db</b> close
 </pre></blockquote>
 </li>
 
@@ -179,8 +179,8 @@ the <a href="c3ref/intro.html">C/C++ interface</a> to SQLite.  The name of a dat
 the first argument and the second argument is one or more SQL statements
 to execute against the database.  The function calls to pay attention
 to here are the call to <a href="c3ref/open.html">sqlite3_open()</a> on line 22 which opens
-the database, <a href="c3ref/exec.html">sqlite3_exec()</a> on line 27 that executes SQL
-commands against the database, and <a href="c3ref/close.html">sqlite3_close()</a> on line 31
+the database, <a href="c3ref/exec.html">sqlite3_exec()</a> on line 28 that executes SQL
+commands against the database, and <a href="c3ref/close.html">sqlite3_close()</a> on line 33
 that closes the database connection.</p>
 
 <p>See also the <a href="cintro.html">Introduction To The SQLite C/C++ Interface</a> for
@@ -188,44 +188,42 @@ an introductory overview and roadmap to the dozens of SQLite interface
 functions.</p>
 
 <blockquote><pre>
-#include &lt;stdio.h&gt;
-#include &lt;sqlite3.h&gt;
-
-static int callback(void *NotUsed, int argc, char **argv, char **azColName){
-  int i;
-  for(i=0; i&lt;argc; i++){
-    printf("%s = %s\n", azColName&#91;i], argv&#91;i] ? argv&#91;i] : "NULL");
-  }
-  printf("\n");
-  return 0;
-}
-
-int main(int argc, char **argv){
-  <b>sqlite3</b> *db;
-  char *zErrMsg = 0;
-  int rc;
-
-  if( argc!=3 ){
-    fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv&#91;0]);
-    exit(1);
-  }
-  rc = <b>sqlite3_open</b>(argv&#91;1], &db);
-  if( rc ){
-    fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-    <b>sqlite3_close</b>(db);
-    exit(1);
-  }
-  rc = <b>sqlite3_exec</b>(db, argv&#91;2], callback, 0, &zErrMsg);
-  if( rc!=SQLITE_OK ){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    <b>sqlite3_free</b>(zErrMsg);
-  }
-  <b>sqlite3_close</b>(db);
-  return 0;
-}
+01  #include &lt;stdio.h&gt;
+02  #include &lt;sqlite3.h&gt;
+03  
+04  static int callback(void *NotUsed, int argc, char **argv, char **azColName){
+05    int i;
+06    for(i=0; i&lt;argc; i++){
+07      printf("%s = %s\n", azColName&#91;i], argv&#91;i] ? argv&#91;i] : "NULL");
+08    }
+09    printf("\n");
+10    return 0;
+11  }
+12  
+13  int main(int argc, char **argv){
+14    <b>sqlite3</b> *db;
+15    char *zErrMsg = 0;
+16    int rc;
+17  
+18    if( argc!=3 ){
+19      fprintf(stderr, "Usage: %s DATABASE SQL-STATEMENT\n", argv&#91;0]);
+20      exit(1);
+21    }
+22    rc = <b>sqlite3_open</b>(argv&#91;1], &db);
+23    if( rc ){
+24      fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+25      <b>sqlite3_close</b>(db);
+26      exit(1);
+27    }
+28    rc = <b>sqlite3_exec</b>(db, argv&#91;2], callback, 0, &zErrMsg);
+29    if( rc!=SQLITE_OK ){
+30      fprintf(stderr, "SQL error: %s\n", zErrMsg);
+31      <b>sqlite3_free</b>(zErrMsg);
+32    }
+33    <b>sqlite3_close</b>(db);
+34    return 0;
+35  }
 </pre></blockquote>
 </li>
 </ul>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

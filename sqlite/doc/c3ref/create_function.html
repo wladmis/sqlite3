@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -153,7 +153,7 @@ These functions (collectively known as "function creation routines")
 are used to add SQL functions or aggregates or to redefine the behavior
 of existing SQL functions or aggregates.  The only differences between
 these routines are the text encoding expected for
-the the second parameter (the name of the function being created)
+the second parameter (the name of the function being created)
 and the presence or absence of a destructor callback for
 the application data pointer.</p>
 
@@ -192,16 +192,16 @@ encoding is used, then the fourth argument should be <a href="../c3ref/c_any.htm
 <p>The fifth parameter is an arbitrary pointer.  The implementation of the
 function can gain access to this pointer using <a href="../c3ref/user_data.html">sqlite3_user_data()</a>.</p>
 
-<p>The seventh, eighth and ninth parameters, xFunc, xStep and xFinal, are
+<p>The sixth, seventh and eighth parameters, xFunc, xStep and xFinal, are
 pointers to C-language functions that implement the SQL function or
 aggregate. A scalar SQL function requires an implementation of the xFunc
 callback only; NULL pointers must be passed as the xStep and xFinal
 parameters. An aggregate SQL function requires an implementation of xStep
 and xFinal and NULL pointer must be passed for xFunc. To delete an existing
-SQL function or aggregate, pass NULL poiners for all three function
+SQL function or aggregate, pass NULL pointers for all three function
 callbacks.</p>
 
-<p>If the tenth parameter to sqlite3_create_function_v2() is not NULL,
+<p>If the ninth parameter to sqlite3_create_function_v2() is not NULL,
 then it is destructor for the application data pointer.
 The destructor is invoked when the function is deleted, either by being
 overloaded or when the database connection closes.
@@ -234,5 +234,3 @@ statement in which the function is running.
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

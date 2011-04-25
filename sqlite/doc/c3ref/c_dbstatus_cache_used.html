@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -117,11 +117,14 @@ a:visited { color: #734559 }
 </td></tr></table>
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Status Parameters for database connections</h2><blockquote><pre>#define SQLITE_DBSTATUS_LOOKASIDE_USED     0
-#define SQLITE_DBSTATUS_CACHE_USED         1
-#define SQLITE_DBSTATUS_SCHEMA_USED        2
-#define SQLITE_DBSTATUS_STMT_USED          3
-#define SQLITE_DBSTATUS_MAX                3   /* Largest defined DBSTATUS */
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Status Parameters for database connections</h2><blockquote><pre>#define SQLITE_DBSTATUS_LOOKASIDE_USED       0
+#define SQLITE_DBSTATUS_CACHE_USED           1
+#define SQLITE_DBSTATUS_SCHEMA_USED          2
+#define SQLITE_DBSTATUS_STMT_USED            3
+#define SQLITE_DBSTATUS_LOOKASIDE_HIT        4
+#define SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE  5
+#define SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL  6
+#define SQLITE_DBSTATUS_MAX                  6   /* Largest defined DBSTATUS */
 </pre></blockquote><p>
 These constants are the available integer "verbs" that can be passed as
 the second argument to the <a href="../c3ref/db_status.html">sqlite3_db_status()</a> interface.</p>
@@ -136,6 +139,25 @@ if a discontinued or unsupported verb is invoked.</p>
 <dt>SQLITE_DBSTATUS_LOOKASIDE_USED</dt>
 <dd>This parameter returns the number of lookaside memory slots currently
 checked out.</dd></p>
+
+<p><dt>SQLITE_DBSTATUS_LOOKASIDE_HIT</dt>
+<dd>This parameter returns the number malloc attempts that were
+satisfied using lookaside memory. Only the high-water value is meaningful;
+the current value is always zero.</p>
+
+<p><dt>SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE</dt>
+<dd>This parameter returns the number malloc attempts that might have
+been satisfied using lookaside memory but failed due to the amount of
+memory requested being larger than the lookaside slot size.
+Only the high-water value is meaningful;
+the current value is always zero.</p>
+
+<p><dt>SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL</dt>
+<dd>This parameter returns the number malloc attempts that might have
+been satisfied using lookaside memory but failed due to all lookaside
+memory already being in use.
+Only the high-water value is meaningful;
+the current value is always zero.</p>
 
 <p><dt>SQLITE_DBSTATUS_CACHE_USED</dt>
 <dd>This parameter returns the approximate number of of bytes of heap
@@ -162,5 +184,3 @@ The highwater mark associated with SQLITE_DBSTATUS_STMT_USED is always 0.
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -198,7 +198,7 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_default_cache_size"><s>default_cache_size</s></a>&sup1;
 <li><a href="#pragma_empty_result_callbacks"><s>empty_result_callbacks</s></a>&sup1;
 <li><a href="#pragma_encoding">encoding</a>
-<li><a href="#pragma_foreign_key_list"><s>foreign_key_list</s></a>&sup1;
+<li><a href="#pragma_foreign_key_list">foreign_key_list</a>
 <li><a href="#pragma_foreign_keys">foreign_keys</a>
 <li><a href="#pragma_freelist_count">freelist_count</a>
 <li><a href="#pragma_full_column_names"><s>full_column_names</s></a>&sup1;
@@ -245,7 +245,7 @@ Do not use the deprecated pragmas in new applications.
 Remove deprecated pragmas
 from existing applications at your earliest opportunity.</blockquote>
 <li>These pragmas are used for debugging SQLite itself and
-are only available which SQLite is compiled using <a href="compile.html#debug">SQLITE_DEBUG</a>.</ol></p>
+are only available when SQLite is compiled using <a href="compile.html#debug">SQLITE_DEBUG</a>.</ol></p>
 <a name="pragma_auto_vacuum"></a>
 <hr>
     <p><b>PRAGMA auto_vacuum;<br>
@@ -316,9 +316,7 @@ are only available which SQLite is compiled using <a href="compile.html#debug">S
     <p>Query or change the suggested maximum number of database disk pages
     that SQLite will hold in memory at once per open database file.  Whether
     or not this suggestion is honored is at the discretion of the
-    <a href="c3ref/pcache_methods.html">Application Defined Page Cache</a>.   In the
-    default page cache implementation, the actual cache size is the
-    greater of the suggested cache size and 10.
+    <a href="c3ref/pcache_methods.html">Application Defined Page Cache</a>.
     Alternative application-defined page cache implementations
     may choose to interpret the suggested cache size in different ways
     or to ignore it all together.
@@ -345,10 +343,9 @@ are only available which SQLite is compiled using <a href="compile.html#debug">S
     significant.  So, for example,
     <b>'a' LIKE 'A'</b> is false but <b>'a' LIKE 'a'</b> is still true.</p>
 
-    <p>Each invocation of this pragma causes any application-defined
-    LIKE and/or GLOB functions created using the <a href="c3ref/create_function.html">sqlite3_create_function()</a>
-    family of interfaces to be replaced with the built-in LIKE and GLOB
-    implementations.</p>
+    <p>This pragma uses <a href="c3ref/create_function.html">sqlite3_create_function()</a> to overload the
+    LIKE and GLOB functions, which may override previous implementations
+    of LIKE and GLOB registered by the application.</p>
 <a name="pragma_checkpoint_fullfsync"></a>
 <hr>
     <p><b>PRAGMA checkpoint_fullfsync
@@ -492,15 +489,6 @@ are only available which SQLite is compiled using <a href="compile.html#debug">S
 <hr>
     <p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
 
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
-
     <p>This pragma returns one row for each foreign key that references
     a column in the argument table.
 <a name="pragma_foreign_keys"></a>
@@ -522,16 +510,15 @@ are only available which SQLite is compiled using <a href="compile.html#debug">S
 
     <p>As of SQLite <a href="releaselog/3_6_19.html">version 3.6.19</a>, the default setting for foreign
        key enforcement is OFF.  However, that might change in a future
-       release of SQLite.  To minimize future problems, applications should
+       release of SQLite.  The default setting for foreign key enforcement
+       can be specified at compile-time using the <a href="compile.html#default_foreign_keys">SQLITE_DEFAULT_FOREIGN_KEYS</a>
+       preprocessor macro.  To minimize future problems, applications should
        set the foreign key enforcement flag as required by the application
        and not depend on the default setting.
 <a name="pragma_freelist_count"></a>
 <hr>
     <p><b>PRAGMA freelist_count;</b></p>
-    <p>Return the number of unused pages in the database file. Running
-    a <a href="#pragma_incremental_vacuum">"PRAGMA incremental_vaccum(N);"</a> 
-    command with a large value of N will shrink the database file by this
-    number of pages when incremental vacuum is enabled. </p>
+    <p>Return the number of unused pages in the database file.</p>
 <a name="pragma_full_column_names"></a>
 <hr>
     <p><b>PRAGMA full_column_names;
@@ -1026,7 +1013,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     use the xSync method of the VFS to ensure that all content is safely
     written to the disk surface prior to continuing.
     This ensures that an operating system crash or power failure will
-    not corrupt the dartbase.
+    not corrupt the database.
     FULL synchronous is very safe, but it is also slower. 
     When synchronous is NORMAL (1), the SQLite database
     engine will still sync at the most critical moments, but less often
@@ -1202,8 +1189,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p><b>PRAGMA wal_autocheckpoint;<br>
      PRAGMA wal_autocheckpoint=</b><i>N</i><b>;</b></p>
 
-    <p>This pragma queries or sets the <a href="wal.html">write-ahead log</a> auto-checkpoint
-    interval.  When the <a href="wal.html">write-ahead log</a> is enabled (via the
+    <p>This pragma queries or sets the <a href="wal.html">write-ahead log</a> 
+    <a href="wal.html#ckpt">auto-checkpoint</a> interval.
+    When the <a href="wal.html">write-ahead log</a> is enabled (via the
     <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>) a checkpoint will be run automatically whenever
     the write-ahead log equals or exceeds <i>N</i> pages in length.
     Setting the auto-checkpoint size to zero or a negative value
@@ -1212,9 +1200,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>This pragma is a wrapper around the
     <a href="c3ref/wal_autocheckpoint.html">sqlite3_wal_autocheckpoint()</a> C interface.</p>
 
+    <p>Autocheckpointing is enabled by default with an interval
+    of 1000 or <a href="compile.html#default_wal_autocheckpoint">SQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a>.</p>
+
 <a name="pragma_wal_checkpoint"></a>
 <hr>
-    <p><b>PRAGMA </b><i>database</i><b>.wal_checkpoint;</b></p>
+    <p><b>PRAGMA </b><i>database</i><b>.wal_checkpoint;</b><br>
+    <b>PRAGMA </b><i>database</i><b>.wal_checkpoint(PASSIVE);</b><br>
+    <b>PRAGMA </b><i>database</i><b>.wal_checkpoint(FULL);</b><br>
+    <b>PRAGMA </b><i>database</i><b>.wal_checkpoint(RESTART);</b>
+   </p>
 
     <p>If the <a href="wal.html">write-ahead log</a> is enabled (via the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>),
     this pragma causes a checkpoint operation to run on database
@@ -1223,6 +1218,10 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     harmless no-op.</p>
 
     <p>Invoking this pragma is equivalent to calling the
+    <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> C interface with a 
+    <a href="c3ref/c_checkpoint_full.html">3rd parameter</a>
+    corresponding to the argument of the PRAGMA.  Invoking this
+    pragma without an argument is equivalent to calling the
     <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> C interface.</p>
 
 <a name="pragma_writable_schema"></a>
@@ -1236,5 +1235,3 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
 <hr>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

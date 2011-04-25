@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -136,7 +136,7 @@ Belorussian</a>.</p>
   where column1 has the value "column1".</a></li><li><a href="#q25">How are the syntax diagrams (a.k.a. "railroad" diagrams) for
   SQLite generated?</a></li><li><a href="#q26">The SQL standard requires that a UNIQUE constraint be enforced even of
   one or more of the columns in the constraint are NULL, but SQLite does
-  not do this.  Isn't that a bug?</a></li></ol><a name="q1"></a>
+  not do this.  Isn't that a bug?</a></li><li><a href="#q27">What is the Export Control Classification Number (ECCN) for SQLite?</a></li></ol><a name="q1"></a>
 <p><b>(1) How do I create an AUTOINCREMENT field.</b></p>
 <blockquote><p>Short answer: A column declared <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> will
   autoincrement.</p>
@@ -510,7 +510,7 @@ COMMIT;
   warnings have already been fixed in the
   compilers used for SQLite development (various versions of GCC).
   Compiler warnings only arise from compilers that the developers do
-  not have access to.</p></blockquote></li>
+  not use on a daily basis (Ex: MSVC).</p></blockquote></li>
 <a name="q18"></a>
 <p><b>(18) Case-insensitive matching of Unicode characters does not work.</b></p>
 <blockquote>The default configuration of SQLite only supports case-insensitive
@@ -677,7 +677,14 @@ COMMIT;
   of the requirement and we also want to maximize compatibility with other
   SQL database engines, and most other database engines also go with (1),
   so that is what SQLite does.</blockquote></li>
+<a name="q27"></a>
+<p><b>(27) What is the Export Control Classification Number (ECCN) for SQLite?</b></p>
+<blockquote>After careful review of the Commerce Control List (CCL), we are convinced
+  that the core public-domain SQLite source code is not described by any ECCN,
+  hence the ECCN should be reported as <b>EAR99</b>.
+
+  <p>The above is true for the core public-domain SQLite.  If you extend
+  SQLite by adding new code, or if you statically link SQLite with your
+  application, that might change the ECCN in your particular case.</blockquote></li>
 </ol>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

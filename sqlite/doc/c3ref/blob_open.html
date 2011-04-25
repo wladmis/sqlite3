@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -162,7 +162,7 @@ then the BLOB handle is marked as "expired".
 This is true if any column of the row is changed, even a column
 other than the one the BLOB handle is open on.
 Calls to <a href="../c3ref/blob_read.html">sqlite3_blob_read()</a> and <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a> for
-a expired BLOB handle fail with an return code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.
+an expired BLOB handle fail with a return code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.
 Changes written into a BLOB prior to the BLOB expiring are not
 rolled back by the expiration of the BLOB.  Such changes will eventually
 commit if the transaction continues to completion.</p>
@@ -183,5 +183,3 @@ be released by a call to <a href="../c3ref/blob_close.html">sqlite3_blob_close()
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

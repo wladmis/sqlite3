@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -221,7 +221,7 @@ allocation statistics are disabled by default.
 <p><dt>SQLITE_CONFIG_SCRATCH</dt>
 <dd> This option specifies a static memory buffer that SQLite can use for
 scratch memory.  There are three arguments:  A pointer an 8-byte
-aligned memory buffer from which the scrach allocations will be
+aligned memory buffer from which the scratch allocations will be
 drawn, the size of each scratch allocation (sz),
 and the maximum number of scratch allocations (N).  The sz
 argument must be a multiple of 16.
@@ -268,7 +268,9 @@ memory pointer is not NULL and either <a href="../compile.html#enable_memsys3">S
 <a href="../compile.html#enable_memsys5">SQLITE_ENABLE_MEMSYS5</a> are defined, then the alternative memory
 allocator is engaged to handle all of SQLites memory allocation needs.
 The first pointer (the memory pointer) must be aligned to an 8-byte
-boundary or subsequent behavior of SQLite will be undefined.</dd></p>
+boundary or subsequent behavior of SQLite will be undefined.
+The minimum allocation size is capped at 212. Reasonable values
+for the minimum allocation size are 25 through 28.</dd></p>
 
 <p><dt>SQLITE_CONFIG_MUTEX</dt>
 <dd> This option takes a single argument which is a pointer to an
@@ -301,7 +303,7 @@ memory allocation for the lookaside memory allocator on each
 <a href="../c3ref/sqlite3.html">database connection</a>.  The first argument is the
 size of each lookaside buffer slot and the second is the number of
 slots allocated to each database connection.  This option sets the
-<i>default</i> lookaside size. The <a href="../c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>
+<i>default</i> lookaside size. The <a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a>
 verb to <a href="../c3ref/db_config.html">sqlite3_db_config()</a> can be used to change the lookaside
 configuration on individual connections. </dd></p>
 
@@ -339,5 +341,3 @@ function must be threadsafe. </dd></p>
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

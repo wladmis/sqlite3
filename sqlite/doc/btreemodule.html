@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -1282,11 +1282,8 @@ return a pointer to a buffer to a nul-terminated string zero bytes in length
     <h2 id="section_3_5">3.5 Mutex Functions</h2>
 
 
-      <pre class=api>typedef struct BtreeMutexArray BtreeMutexArray;
-struct BtreeMutexArray {
-  int nMutex;
-  Btree *aBtree}; hd_resolve_one {SQLITE_MAX_ATTACHED+1}; hd_puts {;
-};</pre>
+      <pre class=api>
+</pre>
 
       <pre class=api>void sqlite3BtreeEnter(Btree*);
 void sqlite3BtreeEnterAll(sqlite3*);
@@ -1294,16 +1291,16 @@ void sqlite3BtreeLeave(Btree*);
 void sqlite3BtreeEnterCursor(BtCursor*);
 void sqlite3BtreeLeaveCursor(BtCursor*);
 void sqlite3BtreeLeaveAll(sqlite3*);
-void sqlite3BtreeMutexArrayEnter(BtreeMutexArray*);
-void sqlite3BtreeMutexArrayLeave(BtreeMutexArray*);
-void sqlite3BtreeMutexArrayInsert(BtreeMutexArray*, Btree*);</pre>
+
+
+</pre>
 
     <h2 id="section_3_6">3.6 Transaction and Savepoint API</h2>
 
 
       <pre class=api>int sqlite3BtreeBeginTrans(Btree*,int);
 int sqlite3BtreeCommitPhaseOne(Btree*, const char *zMaster);
-int sqlite3BtreeCommitPhaseTwo(Btree*);
+int sqlite3BtreeCommitPhaseTwo(Btree*, int);
 int sqlite3BtreeCommit(Btree*);
 int sqlite3BtreeRollback(Btree*);</pre>
 
@@ -2207,5 +2204,3 @@ redistributed b-tree cells.</span></p>
 
   
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

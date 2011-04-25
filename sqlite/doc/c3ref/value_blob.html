@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="../images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -137,7 +137,7 @@ the function or aggregate.</p>
 <p>The xFunc (for scalar functions) or xStep (for aggregates) parameters
 to <a href="../c3ref/create_function.html">sqlite3_create_function()</a> and <a href="../c3ref/create_function.html">sqlite3_create_function16()</a>
 define callbacks that implement the SQL functions and aggregates.
-The 4th parameter to these callbacks is an array of pointers to
+The 3rd parameter to these callbacks is an array of pointers to
 <a href="../c3ref/value.html">protected sqlite3_value</a> objects.  There is one <a href="../c3ref/value.html">sqlite3_value</a> object for
 each parameter to the SQL function.  These routines are used to
 extract values from the <a href="../c3ref/value.html">sqlite3_value</a> objects.</p>
@@ -175,5 +175,3 @@ the SQL function that supplied the <a href="../c3ref/value.html">sqlite3_value*<
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

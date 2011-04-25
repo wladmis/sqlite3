@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -710,7 +710,7 @@ to changes in future releases.)
 <a href="c3ref/sqlite3.html">database connection</a> "db" using this call:</p>
 
 <blockquote><pre>
-<a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_lookaside.html">SQLITE_DBCONFIG_LOOKASIDE</a>, pBuf, sz, cnt);
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a>, pBuf, sz, cnt);
 </pre></blockquote>
 
 <p>The "pBuf" parameter is a pointer to memory space that will be
@@ -1092,5 +1092,3 @@ are considered stable</p>
 
 <p><i>To be completed...</i></p>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

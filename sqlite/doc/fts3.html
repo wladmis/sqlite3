@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -128,8 +128,8 @@ a:visited { color: #734559 }
     </div>
     <div style="font-size:1.5em;margin:1em;color:#044a64">
       Table Of Contents</div>
-    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Introduction to FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Differences between FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Creating and Destroying FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_3">1.3. Populating FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_4">1.4. Simple FTS Queries</a></div><div style="margin-left:12ex"><a href="#section_1_5">1.5. Summary</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling and Enabling FTS3 and FTS4</a></div><div style="margin-left:6ex"><a href="#section_3">3. Full-text Index Queries</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. 
-  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#tokenizer">5. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_5_1">5.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_6">6. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Introduction to FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Differences between FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Creating and Destroying FTS Tables</a></div><div style="margin-left:18ex"><a href="#fts4_options">1.2.1. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_1_3">1.3. Populating FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_4">1.4. Simple FTS Queries</a></div><div style="margin-left:12ex"><a href="#section_1_5">1.5. Summary</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling and Enabling FTS3 and FTS4</a></div><div style="margin-left:6ex"><a href="#section_3">3. Full-text Index Queries</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. 
+  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#tokenizer">6. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_7">7. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_7_1">7.1. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_7_2">7.2. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_7_2_1">7.2.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_7_2_2">7.2.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_7_3">7.3. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
   Appendix A: Search Application Tips
 </a></div> </div>
     <div class=startsearch></div>
@@ -149,7 +149,7 @@ a:visited { color: #734559 }
 
 <p>
   FTS1 and FTS2 are obsolete full-text search modules for SQLite.  There are known
-  issues with this older modules and their use should be avoided.
+  issues with these older modules and their use should be avoided.
   Portions of the original FTS3 code were contributed to the SQLite project 
   by Scott Hess of <a href="http://www.google.com">Google</a>. It is now 
   developed and maintained as part of SQLite.
@@ -220,6 +220,10 @@ SELECT count(*) FROM enrondata2 WHERE content LIKE '%linux%'; /* 22.5 seconds */
        directive <a href="fts3.html#*matchinfo_fts3">"matchinfo=fts3"</a> as part of the FTS4 table
        declaration, but this comes at the expense of sacrificing some of the
        extra supported matchinfo() options.
+
+  <li> <p>FTS4 provides hooks (the compress and uncompress 
+       <a href="fts3.html#fts4_options">options</a>) allowing data to be stored in a compressed 
+       form, reducing disk usage and IO.
 </ul>
 
 <p>
@@ -299,27 +303,98 @@ CREATE VIRTUAL TABLE names USING fts3(a, b, tokenize=icu en_AU);
 </table></div>
 
 <p>
+  FTS tables may be dropped from the database using an ordinary <a href="lang_droptable.html">DROP TABLE</a>
+  statement. For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create, then immediately drop, an FTS4 table.</i>
+CREATE VIRTUAL TABLE data USING fts4();
+DROP TABLE data;
+</table></div>
+
+<h3 id="fts4_options">1.2.1. FTS4 Options</h3>
+
+<p>
 <a name="*matchinfo_fts3"></a>
 
+
   If the "CREATE VIRTUAL TABLE" statement specifies module FTS4 (not FTS3), 
-  then the special directive "matchinfo=fts3" may also appear in place of
-  a column name. If it does, then some of the extra information stored by
-  FTS4 is omitted. This reduces the amount of disk space consumed by an FTS4 
-  table until it is almost the same as the amount that would be used by
-  the equivalent FTS3 table, but also means that the data accessed by passing
-  the 'l' flag to the <a href="fts3.html#matchinfo">matchinfo()</a> function is not available. For example:
+  then special directives - FTS4 options - similar to the "tokenize=*" option
+  may also appear in place of column names. An FTS4 option consists of the
+  option name, followed by an "=" character, followed by the option value.
+  The option value may optionally be enclosed in single or double quotes, with
+  embedded quote characters escaped in the same way as for SQL literals. There
+  may not be whitespace on either side of the "=" character. For example,
+  to create an FTS4 table with the value of option "matchinfo" set to "fts3":
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create a reduced-footprint FTS4 table.</i>
 CREATE VIRTUAL TABLE papers USING fts4(author, document, matchinfo=fts3);
 </table></div>
 
 <p>
+  FTS4 currently supports the following three options:
+
+<table style="margin:1em auto; width:80%; border-spacing:0">
+  <tr style="text-align:left"><th>Option<th>Interpretation
+  <tr style="text-align:left;background-color:#DDDDDD"><td>matchinfo<td> This option may only be set to the value "fts3".
+    Attempting to set it otherwise is an error. If this option is specified,
+    then some of the extra information stored by FTS4 is omitted. This reduces
+    the amount of disk space consumed by an FTS4 table until it is almost the
+    same as the amount that would be used by the equivalent FTS3 table, but 
+    also means that the data accessed by passing the 'l' flag to the 
+    <a href="fts3.html#matchinfo">matchinfo()</a> function is not available. For example:
+
+  <tr style="text-align:left"><td>compress<td>
+    This option is used to specify the compress function. It is an error to
+    specify a compress function without also specifying an uncompress
+    function.
+    
+  <tr style="text-align:left;background-color:#DDDDDD"><td>uncompress<td>
+    This option is used to specify the uncompress function. It is an error to
+    specify an uncompress function without also specifying a compress
+    function.
+</table>
+
+<a name="*fts4compression"></a>
+
+<p>
+  The compress and uncompress options allow FTS4 content to be stored in
+  the database in a compressed form. Both options should be set to the name
+  of an SQL scalar function registered using <a href="c3ref/create_function.html">sqlite3_create_function()</a>
+  that accepts a single argument. 
+
+<p>
+  The compress function should return a compressed version of the value 
+  passed to it as an argument. Each time data is written to the FTS4 table, 
+  each column value is passed to the compress function and the result value 
+  stored in the database. The compress function may return any type of SQLite 
+  value (blob, text, real, integer or null).
+
+<p>
+  The uncompress function should uncompress data previously compressed by
+  the compress function. In other words, for all SQLite values X, it should
+  be true that uncompress(compress(X)) equals X. When data that has been
+  compressed by the compress function is read from the database by FTS4, it
+  is passed to the uncompress function before it is used.
+
+<p>
+  If the specified compress or uncompress functions do not exist, the table
+  may still be created. An error is not returned until the FTS4 table is
+  read (if the uncompress function does not exist) or written (if it is the 
+  compress function that does not exist).
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create an FTS4 table that stores data in compressed form. This</i>
+<i>-- assumes that the scalar functions zip() and unzip() have been (or</i>
+<i>-- will be) added to the database handle.</i>
+CREATE VIRTUAL TABLE papers USING fts4(author, document, compress=zip, uncompress=unzip);
+</table></div>
+
+<p>
   When using FTS4, specifying a column name that contains an "=" character
-  and is not either a "tokenize=*" or "matchinfo=fts3" directive is an error.
-  With FTS3, the first token in the unrecognized directive is interpreted
-  as a column name. Similarly, specifying multiple "tokenize=*" directives
-  in a single table declaration is an error when using FTS4, whereas the
-  second and subsequent "tokenize=*" directives are interpreted as column
+  and is not either a "tokenize=*" specification or a recognized FTS4 option
+  is an error. With FTS3, the first token in the unrecognized directive is 
+  interpreted as a column name. Similarly, specifying multiple "tokenize=*"
+  directives in a single table declaration is an error when using FTS4, whereas
+  the second and subsequent "tokenize=*" directives are interpreted as column
   names by FTS3. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- An error. FTS4 does not recognize the directive "xyz=abc".</i>
@@ -338,15 +413,6 @@ CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple);
 
 <i>-- An error. Cannot create a table with two columns named "tokenize".</i>
 CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple, tokenize=icu);
-</table></div>
-
-<p>
-  FTS tables may be dropped from the database using an ordinary <a href="lang_droptable.html">DROP TABLE</a>
-  statement. For example:
-
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create, then immediately drop, an FTS4 table.</i>
-CREATE VIRTUAL TABLE data USING fts4();
-DROP TABLE data;
 </table></div>
 
 <h2 id="section_1_3">1.3. Populating FTS Tables</h2>
@@ -402,7 +468,7 @@ INSERT INTO pages(rowid, docid, title, body) VALUES(1, 2, 'A title', 'A document
     To support full-text queries, FTS maintains an inverted index that maps
     from each unique term or word that appears in the dataset to the locations
     in which it appears within the table contents. For the curious, a 
-    complete description of the <a href="fts3.html#section_6">data structure</a> used to store
+    complete description of the <a href="fts3.html#section_7">data structure</a> used to store
     this index within the database file appears below. A feature of
     this data structure is that at any time the database may contain not
     one index b-tree, but several different b-trees that are incrementally
@@ -1349,7 +1415,111 @@ SELECT docid, offsets(tbl) FROM tbl WHERE tbl MATCH &lt;query expression&gt;;
   document, "<a href="fts3.html#appendix_a">search application tips</a>", contains an example of using the
   matchinfo() function efficiently.
 
-<h1 id="tokenizer">5. Tokenizers</h1>
+<h1 id="fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</h1>
+
+<p>
+  As of version 3.7.6, SQLite includes a new virtual table module called 
+  "fts4aux", which can be used to inspect the full-text index of an exiting
+  FTS table directly. Despite its name, fts4aux works just as well with FTS3
+  tables as it does with FTS4 tables. Fts4aux tables are read-only. The only
+  way to modify the contents of an fts4aux table is by modifying the
+  contents of the associated FTS table. The fts4aux module is automatically
+  included in all <a href="fts3.html#section_2">builds that include FTS</a>.
+
+<p>
+  An fts4aux virtual table is constructed with a single argument - the 
+  unqualified name of the FTS table that it will be used to access.
+  For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create an FTS4 table</i>
+CREATE VIRTUAL TABLE ft USING fts4(x, y);
+
+<i>-- Create an fts4aux table to access the full-text index for table "ft"</i>
+CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft);
+</table></div>
+
+<p>
+  For each term present in the FTS table, there are between 2 and N+1 rows
+  in the fts4aux table, where N is the number of user-defined columns in
+  the associated FTS table. An fts4aux table always has the same four columns, 
+  as follows, from left to right:
+
+<table style="margin:1em auto; width:80%; border-spacing:0">
+  <tr style="text-align:left"><th>Column Name<th>Column Contents
+  <tr style="text-align:left;background-color:#DDDDDD"><td>term<td> 
+    Contains the text of the term for this row.
+  <tr style="text-align:left"><td>col<td> 
+    This column may contain either the text value '*' (i.e. a single 
+    character, UTF codepoint 42) or an integer between 0 and N-1, where N is
+    again the number of user-defined columns in the corresponing FTS table.
+
+  <tr style="text-align:left;background-color:#DDDDDD"><td>documents<td>
+    This column always contains an integer value greater than zero.
+    <br><br>
+    If the "col" column contains the value '*', then this column
+    contains the number of rows of the FTS table that contain at least one
+    instance of the term (in any column). If col contains an integer
+    value, then this column contains the number of rows of the FTS table that
+    contain at least one instance of the term in the column identified by
+    the col value. As usual, the columns of the FTS table are numbered
+    from left to right, starting with zero.
+
+  <tr style="text-align:left"><td>occurrences<td>
+    This column also always contains an integer value greater than zero.
+    <br><br>
+    If the "col" column contains the value '*', then this column
+    contains the total number of instances of the term in all rows of the 
+    FTS table (in any column). Otherwise, if col contains an integer
+    value, then this column contains the total number of instances of the
+    term that appear in the FTS table column identified by the col
+    value.
+</table>
+
+<p>
+  For example, using the tables created above:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">INSERT INTO ft(x, y) VALUES('Apple banana', 'Cherry');
+INSERT INTO ft(x, y) VALUES('Banana Date Date', 'cherry');
+INSERT INTO ft(x, y) VALUES('Cherry Elderberry', 'Elderberry');
+
+<i>-- The following query returns this data:</i>
+<i>--</i>
+<i>--     apple       |  *  |  1  |  1</i>
+<i>--     apple       |  0  |  1  |  1</i>
+<i>--     banana      |  *  |  2  |  2</i>
+<i>--     banana      |  0  |  2  |  2</i>
+<i>--     cherry      |  *  |  3  |  3</i>
+<i>--     cherry      |  0  |  1  |  1</i>
+<i>--     cherry      |  1  |  2  |  2</i>
+<i>--     date        |  *  |  1  |  2</i>
+<i>--     date        |  0  |  1  |  2</i>
+<i>--     elderberry  |  *  |  1  |  2</i>
+<i>--     elderberry  |  1  |  1  |  1</i>
+<i>--     elderberry  |  1  |  1  |  1</i>
+<i>--</i>
+SELECT term, col, documents, occurrences FROM ft_terms;
+</table></div>
+
+<p>
+  In the example, the values in the "term" column are all lower case, 
+  even though they were inserted into table "ft" in mixed case. This is because
+  an fts3aux table contains the terms as extracted from the document text
+  by the <a href="fts3.html#tokenizer">tokenizer</a>. In this case, since table "ft" uses the 
+  <a href="fts3.html#tokenizer">simple tokenizer</a>, this means all terms have been folded to
+  lower case. Also, there is (for example) no row with column "term"
+  set to "apple" and column "col" set to 1. Since there are no instances
+  of the term "apple" in column 1, no row is present in the fts4aux table.
+
+<p>
+  During a transaction, some of the data written to an FTS table may be 
+  cached in memory and written to the database only when the transaction is 
+  committed. However the implementation of the fts4aux module is only able 
+  to read data from the database. In practice this means that if an fts4aux 
+  table is queried from within a transaction in which the associated 
+  FTS table has been modified, the results of the query are likely to reflect 
+  only a (possibly empty) subset of the changes made.
+
+<h1 id="tokenizer">6. Tokenizers</h1>
 
 <p>
   An FTS tokenizer is a set of rules for extracting terms from a document 
@@ -1444,7 +1614,7 @@ SELECT * FROM porter WHERE porter MATCH 'Frustration';
   discard punctuation, this can be done by creating a tokenizer
   implementation that uses the ICU tokenizer as part of its implementation.
 
-<h2 id="section_5_1">5.1. Custom (User Implemented) Tokenizers</h2>
+<h2 id="section_6_1">6.1. Custom (User Implemented) Tokenizers</h2>
 
 <p>
   As well as the built-in "simple", "porter" and (possibly) "icu" tokenizers,
@@ -1546,7 +1716,7 @@ int queryTokenizer(
 </table></div>
 
   
-<h1 id="section_6">6. Data Structures</h1>
+<h1 id="section_7">7. Data Structures</h1>
 
 <p>
   This section describes at a high-level the way the FTS module stores its
@@ -1697,7 +1867,7 @@ CREATE TABLE %_segdir(
   b-tree and merge the results), but it has been found that in practice this
   overhead is often negligible.
   
-<h2 id="section_6_1">6.1. Variable Length Integer (varint) Format</h2>
+<h2 id="section_7_1">7.1. Variable Length Integer (varint) Format</h2>
 
 <p>
   Integer values stored as part of segment b-tree nodes are encoded using the
@@ -1732,7 +1902,7 @@ CREATE TABLE %_segdir(
 </table>
   
 
-<h2 id="section_6_2">6.2. Segment B-Tree Format</h2>
+<h2 id="section_7_2">7.2. Segment B-Tree Format</h2>
 
 <p>
   Segment b-trees are prefix-compressed b+-trees. There is one segment b-tree
@@ -1783,7 +1953,7 @@ CREATE TABLE %_segdir(
   leaves of a segment b-tree, in key order, by traversing the %_segments 
   table in blockid order from "start_block" to "leaves_end_block".  
 
-<h3 id="section_6_2_1">6.2.1. Segment B-Tree Leaf Nodes</h3>
+<h3 id="section_7_2_1">7.2.1. Segment B-Tree Leaf Nodes</h3>
 
 <p>
   The following diagram depicts the format of a segment b-tree leaf node.
@@ -1799,7 +1969,7 @@ CREATE TABLE %_segdir(
   to its predecessor. Terms are stored within a page in sorted (memcmp)
   order.
 
-<h3 id="section_6_2_2">6.2.2. Segment B-Tree Interior Nodes</h3>
+<h3 id="section_7_2_2">7.2.2. Segment B-Tree Interior Nodes</h3>
 
 <p>
   The following diagram depicts the format of a segment b-tree interior 
@@ -1811,7 +1981,7 @@ CREATE TABLE %_segdir(
 </center>
 
 
-<h2 id="section_6_3">6.3. Doclist Format</h2>
+<h2 id="section_7_3">7.3. Doclist Format</h2>
 
 <p>
   A doclist consists of an array of 64-bit signed integers, serialized using
@@ -1893,8 +2063,8 @@ CREATE VIRTUAL TABLE documents USING fts3(title, content);
 <i>-- documents will be those that the users considers more or less the most "relevant".</i>
 SELECT title FROM documents 
   WHERE documents MATCH &lt;query&gt;
-  ORDER BY countintegers(offsets(document)) DESC
-  OFFSET 0 LIMIT 10
+  ORDER BY countintegers(offsets(documents)) DESC
+  LIMIT 10 OFFSET 0
 </table></div>
 
 <p>
@@ -1914,8 +2084,8 @@ SELECT title FROM documents
 <i>-- titles of the 10 most relevant documents in the dataset for a users query.</i>
 SELECT title FROM documents 
   WHERE documents MATCH &lt;query&gt;
-  ORDER BY rank(matchinfo(document)) DESC
-  OFFSET 0 LIMIT 10
+  ORDER BY rank(matchinfo(documents)) DESC
+  LIMIT 10 OFFSET 0
 </table></div>
 
 <p>
@@ -1944,11 +2114,11 @@ SELECT title FROM documents
   in dramatically less data being loaded from the database into memory.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT title FROM documents JOIN ( 
-    SELECT docid, rank(matchinfo(document)) AS rank 
+    SELECT docid, rank(matchinfo(documents)) AS rank 
     FROM documents
     WHERE documents MATCH &lt;query&gt;
     ORDER BY rank DESC 
-    OFFSET 0 LIMIT 10
+    LIMIT 10 OFFSET 0
 ) AS ranktable USING(docid)
 ORDER BY ranktable.rank DESC
 </table></div>
@@ -1994,11 +2164,11 @@ CREATE TABLE documents_data(docid INTEGER PRIMARY KEY, weight);
 <i>--      implementation of the rank function has access to the static weight assigned</i>
 <i>--      to each document.</i>
 SELECT title, snippet(documents) FROM documents JOIN ( 
-    SELECT docid, rank(matchinfo(document), documents_data.weight) AS rank
+    SELECT docid, rank(matchinfo(documents), documents_data.weight) AS rank
     FROM documents JOIN documents_data USING(docid)
     WHERE documents MATCH &lt;query&gt;
     ORDER BY rank DESC 
-    OFFSET 0 LIMIT 10
+    LIMIT 10 OFFSET 0
 ) AS ranktable USING(docid)
 WHERE documents MATCH &lt;query&gt;
 ORDER BY ranktable.rank DESC
@@ -2105,5 +2275,3 @@ wrong_number_args:
 }
 </table></div>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      

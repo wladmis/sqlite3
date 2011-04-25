@@ -72,7 +72,7 @@ a:visited { color: #734559 }
 <img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
  border="0"></a>
 <div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline"><font size="6" color="red">*** DRAFT ***</font></div>
+<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
 <table width=100% style="clear:both"><tr><td>
   <div class="se"><div class="sw"><div class="ne"><div class="nw">
@@ -219,7 +219,9 @@ there are now three primitive operations:  reading, writing, and
 checkpointing.</p>
 
 <p>By default, SQLite does a checkpoint automatically when the WAL file
-reaches a threshold size of 1000 pages.  Applications using WAL do
+reaches a threshold size of 1000 pages.  (The
+<a href="compile.html#default_wal_autocheckpoint">SQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a> compile-time option can be used to
+specify a different default.) Applications using WAL do
 not have to do anything in order to for these checkpoints to occur.  
 But if they want to, applications can adjust the automatic checkpoint
 threshold.  Or they can turn off the automatic checkpoints and run 
@@ -556,5 +558,3 @@ PRAGMA journal_mode=DELETE;
 version numbers back to 1 so that older versions of SQLite can once again 
 access the database file.</p>
 
-        <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
-      
