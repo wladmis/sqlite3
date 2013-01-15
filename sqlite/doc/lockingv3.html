@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>File Locking And Concurrency In SQLite Version 3</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,11 +113,25 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
+
+<font color="#7f001f"><p>
+<p>This document was originally created in early 2004 when SQLite version 2
+was still in widespread use and was written to introduce
+the new concepts of SQLite version 3 to readers who were already familiar
+with SQLite version 2.  But these days, most readers of this document have
+probably never seen SQLite version 2 and are only familiar with SQLite
+version 3.  Nevertheless, this document continues to serve as an
+authoritative reference to how database file locking works in SQLite 
+version 3.</p>
+
+<p>The document only describes locking for the older rollback-mode
+transaction mechanism.  Locking for the newer <a href="wal.html">write-ahead log</a> or <a href="wal.html">WAL mode</a>
+is described separately.</p>
+</font>
 
 <h2>1.0 File Locking And Concurrency In SQLite Version 3</h2>
 
@@ -131,15 +145,6 @@ The intended audience is programmers who want to understand and/or modify
 the pager code and reviewers working to verify the design
 of SQLite version 3.
 </p>
-
-<p>This document was originally created in early 2004 when SQLite version 2
-was still in widespread use and was written to introduce
-the new concepts of SQLite version 3 to readers who were already familiar
-with SQLite version 2.  But these days, most readers of this document have
-probably never seen SQLite version 2 and are only familiar with SQLite
-version 3.  Nevertheless, this document continues to serve as an
-authoritative reference to how database file locking works in SQLite 
-version 3.</p>
 
 <a name="overview"></a>
 <h2>2.0 Overview</h2>
@@ -285,7 +290,7 @@ journal.</p>
 
 <a name="hotjrnl"></a>
 
-<p>A individual rollback journal is said to be <em>hot</em>
+<p>A rollback journal is said to be <em>hot</em>
 if it needs to be rolled back
 in order to restore the integrity of its database.  
 A hot journal is created when a process is in the middle of a database
@@ -327,7 +332,7 @@ preceding rules will be repeated in bullets:
 <h3>4.1 Dealing with hot journals</h3>
 
 <p>
-Before reading from a a database file, SQLite always checks to see if that
+Before reading from a database file, SQLite always checks to see if that
 database file has a hot journal.  If the file does have a hot journal, then
 the journal is rolled back before the file is read.  In this way, we ensure
 that the database file is in a consistent state before it is read.

@@ -32,7 +32,7 @@ Table *sqlite3SrcListLookup(Parse *pParse, SrcList *pSrc){
   struct SrcList_item *pItem = pSrc->a;
   Table *pTab;
   assert( pItem && pSrc->nSrc==1 );
-  pTab = sqlite3LocateTable(pParse, 0, pItem->zName, pItem->zDatabase);
+  pTab = sqlite3LocateTableItem(pParse, 0, pItem);
   sqlite3DeleteTable(pParse->db, pItem->pTab);
   pItem->pTab = pTab;
   if( pTab ){
@@ -112,6 +112,7 @@ void sqlite3MaterializeView(
       sqlite3SelectDelete(db, pDup);
     }
     pDup = sqlite3SelectNew(pParse, 0, pFrom, pWhere, 0, 0, 0, 0, 0, 0);
+    if( pDup ) pDup->selFlags |= SF_Materialize;
   }
   sqlite3SelectDestInit(&dest, SRT_EphemTab, iCur);
   sqlite3Select(pParse, pDup, &dest);
@@ -148,7 +149,6 @@ Expr *sqlite3LimitWhere(
   */
   if( pOrderBy && (pLimit == 0) ) {
     sqlite3ErrorMsg(pParse, "ORDER BY without LIMIT on %s", zStmtType);
-    pParse->parseError = 1;
     goto limit_where_cleanup_2;
   }
 
@@ -371,9 +371,11 @@ void sqlite3DeleteFrom(
     /* Collect rowids of every row to be deleted.
     */
     sqlite3VdbeAddOp2(v, OP_Null, 0, iRowSet);
-    pWInfo = sqlite3WhereBegin(pParse, pTabList, pWhere,0,WHERE_DUPLICATES_OK);
+    pWInfo = sqlite3WhereBegin(
+        pParse, pTabList, pWhere, 0, 0, WHERE_DUPLICATES_OK, 0
+    );
     if( pWInfo==0 ) goto delete_from_cleanup;
-    regRowid = sqlite3ExprCodeGetColumn(pParse, pTab, -1, iCur, iRowid);
+    regRowid = sqlite3ExprCodeGetColumn(pParse, pTab, -1, iCur, iRowid, 0);
     sqlite3VdbeAddOp2(v, OP_RowSetAdd, iRowSet, regRowid);
     if( db->flags & SQLITE_CountRows ){
       sqlite3VdbeAddOp2(v, OP_AddImm, memCnt, 1);
@@ -401,6 +403,7 @@ void sqlite3DeleteFrom(
       const char *pVTab = (const char *)sqlite3GetVTable(db, pTab);
       sqlite3VtabMakeWritable(pParse, pTab);
       sqlite3VdbeAddOp4(v, OP_VUpdate, 0, 1, iRowid, pVTab, P4_VTAB);
+      sqlite3VdbeChangeP5(v, OE_Abort);
       sqlite3MayAbort(pParse);
     }else
 #endif
@@ -635,8 +638,16 @@ int sqlite3GenerateIndexKey(
     }
   }
   if( doMakeRec ){
+    const char *zAff;
+    if( pTab->pSelect
+     || OptimizationDisabled(pParse->db, SQLITE_IdxRealAsInt)
+    ){
+      zAff = 0;
+    }else{
+      zAff = sqlite3IndexAffinityStr(v, pIdx);
+    }
     sqlite3VdbeAddOp3(v, OP_MakeRecord, regBase, nCol+1, regOut);
-    sqlite3VdbeChangeP4(v, -1, sqlite3IndexAffinityStr(v, pIdx), P4_TRANSIENT);
+    sqlite3VdbeChangeP4(v, -1, zAff, P4_TRANSIENT);
   }
   sqlite3ReleaseTempRange(pParse, regBase, nCol+1);
   return regBase;

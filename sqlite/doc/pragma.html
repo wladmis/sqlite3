@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Pragma statements supported by SQLite</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -122,7 +121,7 @@ a:visited { color: #734559 }
 
 
 
-<p>The PRAGMA statement is a SQL extension specific to SQLite and used to 
+<p>The PRAGMA statement is an SQL extension specific to SQLite and used to 
 modify the operation of the SQLite library or to query the SQLite library for 
 internal (non-table) data. The PRAGMA statement is issued using the same
 interface as other SQLite commands (e.g. <a href="lang_select.html">SELECT</a>, <a href="lang_insert.html">INSERT</a>) but is
@@ -146,6 +145,11 @@ different in the following important respects:
 <li>The pragma command is specific to SQLite and is very unlikely 
     to be compatible with any other SQL database engine.
 </ul>
+
+<p>The C-language API for SQLite provides the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a>
+<a href="c3ref/file_control.html">file control</a> which gives <a href="vfs.html">VFS</a> implementations the
+opportunity to add new PRAGMA statements or to override the meaning of
+built-in PRAGMA statements.</p>
 
 
 <hr /><a name="syntax"></a>
@@ -188,12 +192,14 @@ name is meaningless and is simply ignored.</p>
 <tr><td valign="top" align="left"><ul>
 <li><a href="#pragma_auto_vacuum">auto_vacuum</a>
 <li><a href="#pragma_automatic_index">automatic_index</a>
+<li><a href="#pragma_busy_timeout">busy_timeout</a>
 <li><a href="#pragma_cache_size">cache_size</a>
 <li><a href="#pragma_case_sensitive_like">case_sensitive_like</a>
 <li><a href="#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a>
 <li><a href="#pragma_collation_list">collation_list</a>
 <li><a href="#pragma_compile_options">compile_options</a>
 <li><a href="#pragma_count_changes"><s>count_changes</s></a>&sup1;
+<li><a href="#pragma_data_store_directory"><s>data_store_directory</s></a>&sup1;
 <li><a href="#pragma_database_list">database_list</a>
 <li><a href="#pragma_default_cache_size"><s>default_cache_size</s></a>&sup1;
 <li><a href="#pragma_empty_result_callbacks"><s>empty_result_callbacks</s></a>&sup1;
@@ -201,8 +207,8 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_foreign_key_list">foreign_key_list</a>
 <li><a href="#pragma_foreign_keys">foreign_keys</a>
 <li><a href="#pragma_freelist_count">freelist_count</a>
-<li><a href="#pragma_full_column_names"><s>full_column_names</s></a>&sup1;
 </ul></td><td valign="top" align="left"><ul>
+<li><a href="#pragma_full_column_names"><s>full_column_names</s></a>&sup1;
 <li><a href="#pragma_fullfsync">fullfsync</a>
 <li><a href="#pragma_ignore_check_constraints">ignore_check_constraints</a>
 <li><a href="#pragma_incremental_vacuum">incremental_vacuum</a>
@@ -225,6 +231,7 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_schema_version">schema_version</a>
 <li><a href="#pragma_secure_delete">secure_delete</a>
 <li><a href="#pragma_short_column_names"><s>short_column_names</s></a>&sup1;
+<li><a href="#pragma_shrink_memory">shrink_memory</a>
 <li><a href="#pragma_synchronous">synchronous</a>
 <li><a href="#pragma_table_info">table_info</a>
 <li><a href="#pragma_temp_store">temp_store</a>
@@ -309,27 +316,38 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
 
     <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
     <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default.
+<a name="pragma_busy_timeout"></a>
+<hr>
+    <p><b>PRAGMA busy_timeout;
+         <br>PRAGMA busy_timeout = </b><i>milliseconds</i><b>;</b></p>
+    <p>Query or change the setting of the
+    <a href="c3ref/busy_timeout.html">busy timeout</a>.
+    This pragma is an alternative to the <a href="c3ref/busy_timeout.html">sqlite3_busy_timeout()</a> C-language
+    interface which is made available as a pragma for use with language
+    bindings that do not provide direct access to <a href="c3ref/busy_timeout.html">sqlite3_busy_timeout()</a>.
 <a name="pragma_cache_size"></a>
 <hr>
     <p><b>PRAGMA cache_size;
-       <br>PRAGMA cache_size = </b><i>Number-of-pages</i><b>;</b></p>
+       <br>PRAGMA cache_size = </b><i>pages</i><b>;
+       <br>PRAGMA cache_size = -</b><i>kibibytes</i><b>;</b></p>
     <p>Query or change the suggested maximum number of database disk pages
     that SQLite will hold in memory at once per open database file.  Whether
     or not this suggestion is honored is at the discretion of the
-    <a href="c3ref/pcache_methods.html">Application Defined Page Cache</a>.
-    Alternative application-defined page cache implementations
+    <a href="c3ref/pcache_methods2.html">Application Defined Page Cache</a>.
+    The default page cache that is built into SQLite honors the request,
+    however alternative application-defined page cache implementations
     may choose to interpret the suggested cache size in different ways
     or to ignore it all together.
-    The default suggested cache size is 2000.</p>
+    The default suggested cache size is 2000 pages.</p>
 
-    <p>The suggested cache size is set to the absolute value of the
-    <i>Number-of-pages</i> argument given to this pragma.</p>
+    <p>If the argument N is positive then the suggested cache size is set 
+    to N. If the argument N is negative, then the
+    number of cache pages is adjusted to use approximately N*1024 bytes
+    of memory.</p>
 
     <p>When you change the cache size using the cache_size pragma, the
     change only endures for the current session.  The cache size reverts
-    to the default value when the database is closed and reopened.  Use
-    the <a href="pragma.html#pragma_default_cache_size">default_cache_size</a>
-    pragma to check the cache size permanently.</p>
+    to the default value when the database is closed and reopened.</p>
 <a name="pragma_case_sensitive_like"></a>
 <hr>
     <p><b>PRAGMA case_sensitive_like = </b><i>boolean</i><b>;</b></p>
@@ -402,6 +420,35 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     the count_changes pragma reports the number of rows in the view
     that fired the trigger, whereas <a href="c3ref/changes.html">sqlite3_changes()</a> and
     <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> do not.
+<a name="pragma_data_store_directory"></a>
+<hr>
+    <p><b>PRAGMA data_store_directory;
+       <br>PRAGMA data_store_directory = '</b><i>directory-name</i><b>';</b></p>
+    <p>Query or change the value of the <a href="c3ref/data_directory.html">sqlite3_data_directory</a> global
+    variable, which windows operating-system interface backends use to
+    determine where to store database files specified using a relative
+    pathname.</p>
+
+    
+    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+
+    <p>Changing the data_store_directory setting is <u>not</u> threadsafe.
+    Never change the data_store_directory setting if another thread
+    within the application is running any SQLite interface at the same time.
+    Doing so results in undefined behavior.  Changing the data_store_directory
+    setting writes to the <a href="c3ref/data_directory.html">sqlite3_data_directory</a> global
+    variable and that global variable is not protected by a mutex.</p>
+
+    <p>This facility is provided for WinRT which does not have an OS
+    mechanism for reading or changing the current working directory.
+    The use of this pragma in any other context is discouraged and may
+    be disallowed in future releases.</p>
 <a name="pragma_database_list"></a>
 <hr>
     <p><b>PRAGMA database_list;</b></p>
@@ -638,7 +685,7 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     mode, the rollback journal is deleted at the conclusion of each
     transaction.  Indeed, the delete operation is the action that causes
     the transaction to commit.
-    (See the documented titled <a href="atomiccommit.html">
+    (See the document titled <a href="atomiccommit.html">
     Atomic Commit In SQLite</a> for additional detail.)</p>
 
     <p>The TRUNCATE journaling mode commits transactions by truncating
@@ -652,7 +699,8 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     database connections from rolling the journal back.  The PERSIST
     journaling mode is useful as an optimization on platforms where
     deleting or truncating a file is much more expensive than overwriting
-    the first block of a file with zeros.</p>
+    the first block of a file with zeros.  See also:
+    <a href="pragma.html#pragma_journal_size_limit">PRAGMA journal_size_limit</a> and <a href="compile.html#default_journal_size_limit">SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</a>.</p>
 
     <p>The MEMORY journaling mode stores the rollback journal in 
     volatile RAM.  This saves disk I/O but at the expense of database
@@ -688,34 +736,45 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     PRAGMA journal_size_limit<br>
     PRAGMA journal_size_limit = </b><i>N</i> <b>;</b>
 
-  <p>If a database connection is operating in either "exclusive mode"
-  (PRAGMA locking_mode=exclusive) or "persistent journal mode"
-  (PRAGMA journal_mode=persist) then under certain circumstances
-  after committing a transaction the journal file may remain in
-  the file-system. This increases efficiency but also consumes
-  space in the file-system. After a large transaction (e.g. a VACUUM),
-  it may consume a very large amount of space.
+  <p>If a database connection is operating in
+  <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> or in
+  <a href="pragma.html#pragma_journal_mode">persistent journal mode</a> 
+  (PRAGMA journal_mode=persist) then
+  after committing a transaction the <a href="lockingv3.html#rollback">rollback journal</a> file may remain in
+  the file-system. This increases performance for subsequent transactions
+  since overwriting an existing file is faster than append to a file,
+  but it also consumes
+  file-system space. After a large transaction (e.g. a <a href="lang_vacuum.html">VACUUM</a>),
+  the rollback journal file may consume a very large amount of space.
 
-  <p>This pragma may be used to limit the size of journal files left
-  in the file-system after transactions are committed on a per database
-  basis.  Each time a transaction is committed, SQLite compares the
-  size of the journal file left in the file-system to the size limit
-  configured using this pragma and if the journal file is larger than the
-  limit allows for, it is truncated to the limit.
+  <p>Similarly, in <a href="wal.html">WAL mode</a>, the write-ahead log file is not truncated
+  following a <a href="wal.html#ckpt">checkpoint</a>.  Instead, SQLite reuses the existing file
+  for subsequent WAL entries since overwriting is faster than appending.
+
+  <p>The journal_size_limit pragma may be used to limit the size of 
+  rollback-journal and WAL files left
+  in the file-system after transactions or checkpoints.
+  Each time a transaction is committed or a WAL file resets, SQLite 
+  compares the size of the rollback journal file or WAL file left in 
+  the file-system to the size limit
+  set by this pragma and if the journal or WAL file is larger 
+  it is truncated to the limit.
 
   <p>The second form of the pragma listed above is used to set a new limit
   in bytes for the specified database.  A negative number implies no limit.
+  To always truncate rollback journals and WAL files to their minimum size, 
+  set the journal_size_limit to zero.
   Both the first and second forms of the pragma listed above return a single
   result row containing a single integer column - the value of the journal
-  size limit in bytes. The default limit value is -1 (no limit), which
-  may be overridden by defining the preprocessor macro
-  <a href="compile.html#default_journal_size_limit">SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</a> at compile time.</p>
+  size limit in bytes. The default journal size limit is -1 (no limit).  The
+  <a href="compile.html#default_journal_size_limit">SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</a> preprocessor macro can be used to change
+  the default journal size limit at compile-time.</p>
 
   <p>This pragma only operates on the single database specified prior
   to the pragma name (or on the "main" database if no database is specified.)
-  There is no way to operate on all attached databases using a single
-  PRAGMA statement, nor is there a way to set the limit to use for databases
-  that will be attached in the future.
+  There is no way to change the journal size limit on all attached databases
+  using a single PRAGMA statement.  The size limit must be set separately for
+  each attached database.
 <a name="pragma_legacy_file_format"></a>
 <hr>
    <p><b>PRAGMA legacy_file_format;
@@ -732,8 +791,8 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     which file format the current database is using; it tells what format
     will be used by any newly created databases.</p>
 
-    <p>This flag only affects newly created databases.  It has no
-    effect on databases that already exist.</p>
+    <p>The legacy_file_format pragma is initialized to OFF when an existing
+    database in the newer file format is first opened.</p>
 
     <p>The default file format is set by the
     <a href="compile.html#default_file_format">SQLITE_DEFAULT_FILE_FORMAT</a> compile-time option.</p>
@@ -744,7 +803,8 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <p>This pragma sets or queries the database connection locking-mode. 
     The locking-mode is either NORMAL or EXCLUSIVE.
 
-    <p>In NORMAL locking-mode (the default), a database connection
+    <p>In NORMAL locking-mode (the default unless overridden at compile-time
+    using <a href="compile.html#default_locking_mode">SQLITE_DEFAULT_LOCKING_MODE</a>), a database connection
     unlocks the database file at the conclusion of each read or
     write transaction. When the locking-mode is set to EXCLUSIVE, the
     database connection never releases file-locks. The first time the
@@ -814,10 +874,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <hr>
    <p><b>PRAGMA page_size;
        <br>PRAGMA page_size = </b><i>bytes</i><b>;</b></p>
-    <p>Query or set the page size of the database. The page size
-    may only be set if the database has not yet been created. The page
-    size must be a power of two greater than or equal to 512 and less
-    than or equal to 65536.
+    <p>Query or set the page size of the database. The page
+    size must be a power of two between 512 and 65536 inclusive.
     </p>
 
     <p>When a new database is created, SQLite assigned a default page size
@@ -826,9 +884,10 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     of the newly created database file.  The page_size pragma will only
     cause an immediate change in the
     page size if it is issued while the database is still empty, prior 
-    to the first CREATE TABLE statement.  As of <a href="releaselog/3_5_8.html">version 3.5.8</a>, if
-    the page_size pragma is used to specify a new page size just prior to
-    running the <a href="lang_vacuum.html">VACUUM</a> command then <a href="lang_vacuum.html">VACUUM</a> will change the page
+    to the first CREATE TABLE statement.  If the page_size pragma is
+    used to specify a new page size just prior to
+    running the <a href="lang_vacuum.html">VACUUM</a> command and if the database is not in
+    <a href="wal.html">WAL journal mode</a> then <a href="lang_vacuum.html">VACUUM</a> will change the page
     size to the new value.</p>
 
     <p>If SQLite is compiled with the SQLITE_ENABLE_ATOMIC_WRITE option,
@@ -839,7 +898,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     the database file.  If the SQLITE_ENABLE_ATOMIC_WRITE option is
     disabled or if xDeviceCharacteristics reports no suitable atomic
     write page sizes, then the default page size is the larger of 
-    SQLITE_DEFALT_PAGE_SIZE
+    SQLITE_DEFAULT_PAGE_SIZE
     and the sector size as reported by the xSectorSize method of the
     <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object, but not more than 
     SQLITE_MAX_DEFAULT_PAGE_SIZE.  The normal configuration for SQLite
@@ -865,7 +924,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
     <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
     option, then the parser_trace pragma can be used to turn on tracing
-    of the SQL parser used internally by SQLite.
+    for the SQL parser used internally by SQLite.
     This feature is used for debugging SQLite itself.</p>
 <a name="pragma_quick_check"></a>
 <hr>
@@ -911,12 +970,12 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
     <p>The depth of recursion for triggers has a hard upper limit set by
     the <a href="limits.html#max_trigger_depth">SQLITE_MAX_TRIGGER_DEPTH</a> compile-time option and a run-time
-    limit set by <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_TRIGGER_DEPTH</a>,...).</p>
+    limit set by <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimittriggerdepth">SQLITE_LIMIT_TRIGGER_DEPTH</a>,...).</p>
 <a name="pragma_reverse_unordered_selects"></a>
 <hr>
     <p><b>PRAGMA reverse_unordered_selects;
        <br>PRAGMA reverse_unordered_selects = </b><i>boolean</i><b>;</b></p>
-    <p>When enabled, this PRAGMA causes <a href="lang_select.html">SELECT</a> statements without a
+    <p>When enabled, this PRAGMA causes <a href="lang_select.html">SELECT</a> statements without
     an ORDER BY clause to emit their results in the reverse order of what
     they normally would.  This can help debug applications that are
     making invalid assumptions about the result order.<p>SQLite makes no
@@ -1001,6 +1060,14 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     the way SQLite names columns of data returned by <a href="lang_select.html">SELECT</a> statements.
     See the <a href="pragma.html#pragma_full_column_names">full_column_names</a> pragma for full details.
     </p>
+<a name="pragma_shrink_memory"></a>
+<hr>
+    <p><b>PRAGMA shrink_memory</b></p>
+
+    <p>This pragma causes the database connection on which it is invoked
+    to free up as much memory as it can, by calling
+    <a href="c3ref/db_release_memory.html">sqlite3_db_release_memory()</a>.
+    </p>
 <a name="pragma_synchronous"></a>
 <hr>
     <p><b>PRAGMA synchronous;
@@ -1010,7 +1077,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>Query or change the setting of the "synchronous" flag.
     The first (query) form will return the synchronous setting as an 
     integer.  When synchronous is FULL (2), the SQLite database engine will
-    use the xSync method of the VFS to ensure that all content is safely
+    use the xSync method of the <a href="vfs.html">VFS</a> to ensure that all content is safely
     written to the disk surface prior to continuing.
     This ensures that an operating system crash or power failure will
     not corrupt the database.
@@ -1033,9 +1100,14 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
  
     <p>In <a href="wal.html">WAL</a> mode when synchronous is NORMAL (1), the WAL file is
     synchronized before each <a href="wal.html#ckpt">checkpoint</a> and the database file is
-    synchronized after each completed <a href="wal.html#ckpt">checkpoint</a>, but no other sync
-    operations occur.  With synchronous=FULL in WAL mode, an additional
+    synchronized after each completed <a href="wal.html#ckpt">checkpoint</a> and the WAL file
+    header is synchronized when a WAL file begins to be reused after
+    a checkpoint, but no sync operations occur during most transactions.
+    With synchronous=FULL in WAL mode, an additional
     sync operation of the WAL file happens after each transaction commit.
+    The extra WAL sync following each transaction help ensure that 
+    transactions are durable across a power loss, but they do not aid
+    in preserving consistency.
     If durability is not a concern, then synchronous=NORMAL is normally
     all one needs in WAL mode.</p>
 
@@ -1212,9 +1284,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
    </p>
 
     <p>If the <a href="wal.html">write-ahead log</a> is enabled (via the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>),
-    this pragma causes a checkpoint operation to run on database
+    this pragma causes a <a href="wal.html#ckpt">checkpoint</a> operation to run on database
     <i>database</i>, or on all attached databases if <i>database</i>
-    is omitted.  If <a href="wal.html">write-ahead log</a> is disabled, this pragma is a
+    is omitted.  If <a href="wal.html">write-ahead log</a> mode is disabled, this pragma is a
     harmless no-op.</p>
 
     <p>Invoking this pragma is equivalent to calling the
@@ -1224,6 +1296,21 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     pragma without an argument is equivalent to calling the
     <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> C interface.</p>
 
+    <p>The wal_checkpoint pragma returns a single row with three
+    integer columns.  The first column is usually 0 but will be
+    1 if a RESTART or FULL checkpoint was blocked from completing,
+    for example because another thread or process was actively
+    using the database.  In other words, the first column is 0 if the
+    equivalent call to <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> would have returned
+    <a href="c3ref/c_abort.html">SQLITE_OK</a> or 1 if the equivalent call would have returned <a href="c3ref/c_abort.html">SQLITE_BUSY</a>.
+    The second column is the number of modified pages that have been
+    written to the write-ahead log file.
+    The third column is the number of pages in the write-ahead log file
+    that have been successfully moved back into the database file at
+    the conclusion of the checkpoint.
+   The second and third column are -1 if there is no
+    write-ahead log, for example if this pragma is invoked on a database
+    connection that is not in <a href="wal.html">WAL mode</a>.</p>
 <a name="pragma_writable_schema"></a>
 <hr>
     <p><b>PRAGMA writable_schema  = </b><i>boolean</i><b>;</b></p>

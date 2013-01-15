@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Binding Values To Prepared Statements</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Binding Values To Prepared Statements</h2><blockquote><pre>int sqlite3_bind_blob(sqlite3_stmt*, int, const void*, int n, void(*)(void*));
@@ -156,15 +155,25 @@ The index for named parameters can be looked up using the
 <a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index()</a> API if desired.  The index
 for "?NNN" parameters is the value of NNN.
 The NNN value must be between 1 and the <a href="../c3ref/limit.html">sqlite3_limit()</a>
-parameter <a href="../c3ref/c_limit_attached.html">SQLITE_LIMIT_VARIABLE_NUMBER</a> (default value: 999).</p>
+parameter <a href="../c3ref/c_limit_attached.html#sqlitelimitvariablenumber">SQLITE_LIMIT_VARIABLE_NUMBER</a> (default value: 999).</p>
 
 <p>The third argument is the value to bind to the parameter.</p>
 
 <p>In those routines that have a fourth argument, its value is the
 number of bytes in the parameter.  To be clear: the value is the
 number of <u>bytes</u> in the value, not the number of characters.
-If the fourth parameter is negative, the length of the string is
-the number of bytes up to the first zero terminator.</p>
+If the fourth parameter to sqlite3_bind_text() or sqlite3_bind_text16()
+is negative, then the length of the string is
+the number of bytes up to the first zero terminator.
+If the fourth parameter to sqlite3_bind_blob() is negative, then
+the behavior is undefined.
+If a non-negative fourth parameter is provided to sqlite3_bind_text()
+or sqlite3_bind_text16() then that parameter must be the byte offset
+where the NUL terminator would occur assuming the string were NUL
+terminated.  If any NUL characters occur at byte offsets less than
+the value of the fourth parameter then the resulting string value will
+contain embedded NULs.  The result of expressions involving strings
+with embedded NULs is undefined.</p>
 
 <p>The fifth argument to sqlite3_bind_blob(), sqlite3_bind_text(), and
 sqlite3_bind_text16() is a destructor used to dispose of the BLOB or

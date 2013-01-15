@@ -13,21 +13,18 @@
 */
 #include "sqliteInt.h"
 
-/* Ignore this whole file if pragmas are disabled
-*/
-#if !defined(SQLITE_OMIT_PRAGMA)
-
 /*
 ** Interpret the given string as a safety level.  Return 0 for OFF,
 ** 1 for ON or NORMAL and 2 for FULL.  Return 1 for an empty or 
-** unrecognized string argument.
+** unrecognized string argument.  The FULL option is disallowed
+** if the omitFull parameter it 1.
 **
 ** Note that the values returned are one less that the values that
 ** should be passed into sqlite3BtreeSetSafetyLevel().  The is done
 ** to support legacy SQL code.  The safety level used to be boolean
 ** and older scripts may have used numbers 0 for OFF and 1 for ON.
 */
-static u8 getSafetyLevel(const char *z){
+static u8 getSafetyLevel(const char *z, int omitFull, int dflt){
                              /* 123456789 123456789 */
   static const char zText[] = "onoffalseyestruefull";
   static const u8 iOffset[] = {0, 1, 2, 4, 9, 12, 16};
@@ -38,20 +35,26 @@ static u8 getSafetyLevel(const char *z){
     return (u8)sqlite3Atoi(z);
   }
   n = sqlite3Strlen30(z);
-  for(i=0; i<ArraySize(iLength); i++){
+  for(i=0; i<ArraySize(iLength)-omitFull; i++){
     if( iLength[i]==n && sqlite3StrNICmp(&zText[iOffset[i]],z,n)==0 ){
       return iValue[i];
     }
   }
-  return 1;
+  return dflt;
 }
 
 /*
 ** Interpret the given string as a boolean value.
 */
-static u8 getBoolean(const char *z){
-  return getSafetyLevel(z)&1;
+u8 sqlite3GetBoolean(const char *z, int dflt){
+  return getSafetyLevel(z,1,dflt)!=0;
 }
+
+/* The sqlite3GetBoolean() function is used by other modules but the
+** remainder of this file is specific to PRAGMA processing.  So omit
+** the rest of the file if PRAGMAs are omitted from the build.
+*/
+#if !defined(SQLITE_OMIT_PRAGMA)
 
 /*
 ** Interpret the given string as a locking mode value.
@@ -115,7 +118,7 @@ static int invalidateTempStorage(Parse *pParse){
     }
     sqlite3BtreeClose(db->aDb[1].pBt);
     db->aDb[1].pBt = 0;
-    sqlite3ResetInternalSchema(db, -1);
+    sqlite3ResetAllSchemasOfConnection(db);
   }
   return SQLITE_OK;
 }
@@ -187,7 +190,6 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
 #endif
     /* The following is VERY experimental */
     { "writable_schema",          SQLITE_WriteSchema|SQLITE_RecoveryMode },
-    { "omit_readlock",            SQLITE_NoReadlock    },
 
     /* TODO: Maybe it shouldn't be possible to change the ReadUncommitted
     ** flag if there are any active statements. */
@@ -219,7 +221,7 @@ static int flagPragma(Parse *pParse, const char *zLeft, const char *zRight){
             mask &= ~(SQLITE_ForeignKeys);
           }
 
-          if( getBoolean(zRight) ){
+          if( sqlite3GetBoolean(zRight, 0) ){
             db->flags |= mask;
           }else{
             db->flags &= ~mask;
@@ -310,9 +312,12 @@ void sqlite3Pragma(
   const char *zDb = 0;   /* The database name */
   Token *pId;            /* Pointer to <id> token */
   int iDb;               /* Database index for <database> */
-  sqlite3 *db = pParse->db;
-  Db *pDb;
-  Vdbe *v = pParse->pVdbe = sqlite3VdbeCreate(db);
+  char *aFcntl[4];       /* Argument to SQLITE_FCNTL_PRAGMA */
+  int rc;                      /* return value form SQLITE_FCNTL_PRAGMA */
+  sqlite3 *db = pParse->db;    /* The database connection */
+  Db *pDb;                     /* The specific database being pragmaed */
+  Vdbe *v = pParse->pVdbe = sqlite3VdbeCreate(db);  /* Prepared statement */
+
   if( v==0 ) return;
   sqlite3VdbeRunOnlyOnce(v);
   pParse->nMem = 2;
@@ -343,8 +348,37 @@ void sqlite3Pragma(
   if( sqlite3AuthCheck(pParse, SQLITE_PRAGMA, zLeft, zRight, zDb) ){
     goto pragma_out;
   }
+
+  /* Send an SQLITE_FCNTL_PRAGMA file-control to the underlying VFS
+  ** connection.  If it returns SQLITE_OK, then assume that the VFS
+  ** handled the pragma and generate a no-op prepared statement.
+  */
+  aFcntl[0] = 0;
+  aFcntl[1] = zLeft;
+  aFcntl[2] = zRight;
+  aFcntl[3] = 0;
+  db->busyHandler.nBusy = 0;
+  rc = sqlite3_file_control(db, zDb, SQLITE_FCNTL_PRAGMA, (void*)aFcntl);
+  if( rc==SQLITE_OK ){
+    if( aFcntl[0] ){
+      int mem = ++pParse->nMem;
+      sqlite3VdbeAddOp4(v, OP_String8, 0, mem, 0, aFcntl[0], 0);
+      sqlite3VdbeSetNumCols(v, 1);
+      sqlite3VdbeSetColName(v, 0, COLNAME_NAME, "result", SQLITE_STATIC);
+      sqlite3VdbeAddOp2(v, OP_ResultRow, mem, 1);
+      sqlite3_free(aFcntl[0]);
+    }
+  }else if( rc!=SQLITE_NOTFOUND ){
+    if( aFcntl[0] ){
+      sqlite3ErrorMsg(pParse, "%s", aFcntl[0]);
+      sqlite3_free(aFcntl[0]);
+    }
+    pParse->nErr++;
+    pParse->rc = rc;
+  }else
+                            
  
-#ifndef SQLITE_OMIT_PAGER_PRAGMAS
+#if !defined(SQLITE_OMIT_PAGER_PRAGMAS) && !defined(SQLITE_OMIT_DEPRECATED)
   /*
   **  PRAGMA [database.]default_cache_size
   **  PRAGMA [database.]default_cache_size=N
@@ -393,7 +427,9 @@ void sqlite3Pragma(
       sqlite3BtreeSetCacheSize(pDb->pBt, pDb->pSchema->cache_size);
     }
   }else
+#endif /* !SQLITE_OMIT_PAGER_PRAGMAS && !SQLITE_OMIT_DEPRECATED */
 
+#if !defined(SQLITE_OMIT_PAGER_PRAGMAS)
   /*
   **  PRAGMA [database.]page_size
   **  PRAGMA [database.]page_size=N
@@ -414,7 +450,7 @@ void sqlite3Pragma(
       ** buffer that the pager module resizes using sqlite3_realloc().
       */
       db->nextPagesize = sqlite3Atoi(zRight);
-      if( SQLITE_NOMEM==sqlite3BtreeSetPageSize(pBt, db->nextPagesize, -1, 0) ){
+      if( SQLITE_NOMEM==sqlite3BtreeSetPageSize(pBt, db->nextPagesize,-1,0) ){
         db->mallocFailed = 1;
       }
     }
@@ -433,7 +469,7 @@ void sqlite3Pragma(
     int b = -1;
     assert( pBt!=0 );
     if( zRight ){
-      b = getBoolean(zRight);
+      b = sqlite3GetBoolean(zRight, 0);
     }
     if( pId2->n==0 && b>=0 ){
       int ii;
@@ -454,6 +490,10 @@ void sqlite3Pragma(
   ** second form attempts to change this setting.  Both
   ** forms return the current setting.
   **
+  ** The absolute value of N is used.  This is undocumented and might
+  ** change.  The only purpose is to provide an easy way to test
+  ** the sqlite3AbsInt32() function.
+  **
   **  PRAGMA [database.]page_count
   **
   ** Return the number of pages in the specified database.
@@ -465,10 +505,11 @@ void sqlite3Pragma(
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
     sqlite3CodeVerifySchema(pParse, iDb);
     iReg = ++pParse->nMem;
-    if( zLeft[0]=='p' ){
+    if( sqlite3Tolower(zLeft[0])=='p' ){
       sqlite3VdbeAddOp2(v, OP_Pagecount, iDb, iReg);
     }else{
-      sqlite3VdbeAddOp3(v, OP_MaxPgcnt, iDb, iReg, sqlite3Atoi(zRight));
+      sqlite3VdbeAddOp3(v, OP_MaxPgcnt, iDb, iReg, 
+                        sqlite3AbsInt32(sqlite3Atoi(zRight)));
     }
     sqlite3VdbeAddOp2(v, OP_ResultRow, iReg, 1);
     sqlite3VdbeSetNumCols(v, 1);
@@ -531,8 +572,10 @@ void sqlite3Pragma(
     int eMode;        /* One of the PAGER_JOURNALMODE_XXX symbols */
     int ii;           /* Loop counter */
 
-    /* Force the schema to be loaded on all databases.  This cases all
-    ** database files to be opened and the journal_modes set. */
+    /* Force the schema to be loaded on all databases.  This causes all
+    ** database files to be opened and the journal_modes set.  This is
+    ** necessary because subsequent processing must know if the databases
+    ** are in WAL mode. */
     if( sqlite3ReadSchema(pParse) ){
       goto pragma_out;
     }
@@ -621,7 +664,7 @@ void sqlite3Pragma(
         ** creates the database file. It is important that it is created
         ** as an auto-vacuum capable db.
         */
-        int rc = sqlite3BtreeSetAutoVacuum(pBt, eAuto);
+        rc = sqlite3BtreeSetAutoVacuum(pBt, eAuto);
         if( rc==SQLITE_OK && (eAuto==1 || eAuto==2) ){
           /* When setting the auto_vacuum mode to either "full" or 
           ** "incremental", write the value of meta[6] in the database
@@ -680,14 +723,11 @@ void sqlite3Pragma(
   **  PRAGMA [database.]cache_size=N
   **
   ** The first form reports the current local setting for the
-  ** page cache size.  The local setting can be different from
-  ** the persistent cache size value that is stored in the database
-  ** file itself.  The value returned is the maximum number of
-  ** pages in the page cache.  The second form sets the local
-  ** page cache size value.  It does not change the persistent
-  ** cache size stored on the disk so the cache size will revert
-  ** to its default value when the database is closed and reopened.
-  ** N should be a positive integer.
+  ** page cache size. The second form sets the local
+  ** page cache size value.  If N is positive then that is the
+  ** number of pages in the cache.  If N is negative, then the
+  ** number of pages is adjusted so that the cache uses -N kibibytes
+  ** of memory.
   */
   if( sqlite3StrICmp(zLeft,"cache_size")==0 ){
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
@@ -695,7 +735,7 @@ void sqlite3Pragma(
     if( !zRight ){
       returnSingleInt(pParse, "cache_size", pDb->pSchema->cache_size);
     }else{
-      int size = sqlite3AbsInt32(sqlite3Atoi(zRight));
+      int size = sqlite3Atoi(zRight);
       pDb->pSchema->cache_size = size;
       sqlite3BtreeSetCacheSize(pDb->pBt, pDb->pSchema->cache_size);
     }
@@ -742,7 +782,6 @@ void sqlite3Pragma(
     }else{
 #ifndef SQLITE_OMIT_WSD
       if( zRight[0] ){
-        int rc;
         int res;
         rc = sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
         if( rc!=SQLITE_OK || res==0 ){
@@ -766,6 +805,50 @@ void sqlite3Pragma(
     }
   }else
 
+#if SQLITE_OS_WIN
+  /*
+  **   PRAGMA data_store_directory
+  **   PRAGMA data_store_directory = ""|"directory_name"
+  **
+  ** Return or set the local value of the data_store_directory flag.  Changing
+  ** the value sets a specific directory to be used for database files that
+  ** were specified with a relative pathname.  Setting to a null string reverts
+  ** to the default database directory, which for database files specified with
+  ** a relative path will probably be based on the current directory for the
+  ** process.  Database file specified with an absolute path are not impacted
+  ** by this setting, regardless of its value.
+  **
+  */
+  if( sqlite3StrICmp(zLeft, "data_store_directory")==0 ){
+    if( !zRight ){
+      if( sqlite3_data_directory ){
+        sqlite3VdbeSetNumCols(v, 1);
+        sqlite3VdbeSetColName(v, 0, COLNAME_NAME, 
+            "data_store_directory", SQLITE_STATIC);
+        sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, sqlite3_data_directory, 0);
+        sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 1);
+      }
+    }else{
+#ifndef SQLITE_OMIT_WSD
+      if( zRight[0] ){
+        int res;
+        rc = sqlite3OsAccess(db->pVfs, zRight, SQLITE_ACCESS_READWRITE, &res);
+        if( rc!=SQLITE_OK || res==0 ){
+          sqlite3ErrorMsg(pParse, "not a writable directory");
+          goto pragma_out;
+        }
+      }
+      sqlite3_free(sqlite3_data_directory);
+      if( zRight[0] ){
+        sqlite3_data_directory = sqlite3_mprintf("%s", zRight);
+      }else{
+        sqlite3_data_directory = 0;
+      }
+#endif /* SQLITE_OMIT_WSD */
+    }
+  }else
+#endif
+
 #if !defined(SQLITE_ENABLE_LOCKING_STYLE)
 #  if defined(__APPLE__)
 #    define SQLITE_ENABLE_LOCKING_STYLE 1
@@ -787,7 +870,7 @@ void sqlite3Pragma(
       Pager *pPager = sqlite3BtreePager(pDb->pBt);
       char *proxy_file_path = NULL;
       sqlite3_file *pFile = sqlite3PagerFile(pPager);
-      sqlite3OsFileControl(pFile, SQLITE_GET_LOCKPROXYFILE, 
+      sqlite3OsFileControlHint(pFile, SQLITE_GET_LOCKPROXYFILE, 
                            &proxy_file_path);
       
       if( proxy_file_path ){
@@ -834,7 +917,7 @@ void sqlite3Pragma(
         sqlite3ErrorMsg(pParse, 
             "Safety level may not be changed inside a transaction");
       }else{
-        pDb->safety_level = getSafetyLevel(zRight)+1;
+        pDb->safety_level = getSafetyLevel(zRight,0,1)+1;
       }
     }
   }else
@@ -892,7 +975,8 @@ void sqlite3Pragma(
         }else{
           sqlite3VdbeAddOp2(v, OP_Null, 0, 5);
         }
-        sqlite3VdbeAddOp2(v, OP_Integer, pCol->isPrimKey, 6);
+        sqlite3VdbeAddOp2(v, OP_Integer,
+                            (pCol->colFlags&COLFLAG_PRIMKEY)!=0, 6);
         sqlite3VdbeAddOp2(v, OP_ResultRow, 1, 6);
       }
     }
@@ -1033,7 +1117,7 @@ void sqlite3Pragma(
 #ifndef NDEBUG
   if( sqlite3StrICmp(zLeft, "parser_trace")==0 ){
     if( zRight ){
-      if( getBoolean(zRight) ){
+      if( sqlite3GetBoolean(zRight, 0) ){
         sqlite3ParserTrace(stderr, "parser: ");
       }else{
         sqlite3ParserTrace(0, 0);
@@ -1047,7 +1131,7 @@ void sqlite3Pragma(
   */
   if( sqlite3StrICmp(zLeft, "case_sensitive_like")==0 ){
     if( zRight ){
-      sqlite3RegisterLikeFunctions(db, getBoolean(zRight));
+      sqlite3RegisterLikeFunctions(db, sqlite3GetBoolean(zRight, 0));
     }
   }else
 
@@ -1076,7 +1160,20 @@ void sqlite3Pragma(
       { OP_ResultRow,   3, 1,        0},
     };
 
-    int isQuick = (zLeft[0]=='q');
+    int isQuick = (sqlite3Tolower(zLeft[0])=='q');
+
+    /* If the PRAGMA command was of the form "PRAGMA <db>.integrity_check",
+    ** then iDb is set to the index of the database identified by <db>.
+    ** In this case, the integrity of database iDb only is verified by
+    ** the VDBE created below.
+    **
+    ** Otherwise, if the command was simply "PRAGMA integrity_check" (or
+    ** "PRAGMA quick_check"), then iDb is set to 0. In this case, set iDb
+    ** to -1 here, to indicate that the VDBE should verify the integrity
+    ** of all attached databases.  */
+    assert( iDb>=0 );
+    assert( iDb==0 || pId2->z );
+    if( pId2->z==0 ) iDb = -1;
 
     /* Initialize the VDBE program */
     if( sqlite3ReadSchema(pParse) ) goto pragma_out;
@@ -1101,6 +1198,7 @@ void sqlite3Pragma(
       int cnt = 0;
 
       if( OMIT_TEMPDB && i==1 ) continue;
+      if( iDb>=0 && i!=iDb ) continue;
 
       sqlite3CodeVerifySchema(pParse, i);
       addr = sqlite3VdbeAddOp1(v, OP_IfPos, 1); /* Halt if out of errors */
@@ -1112,7 +1210,7 @@ void sqlite3Pragma(
       ** Begin by filling registers 2, 3, ... with the root pages numbers
       ** for all tables and indices in the database.
       */
-      assert( sqlite3SchemaMutexHeld(db, iDb, 0) );
+      assert( sqlite3SchemaMutexHeld(db, i, 0) );
       pTbls = &db->aDb[i].pSchema->tblHash;
       for(x=sqliteHashFirst(pTbls); x; x=sqliteHashNext(x)){
         Table *pTab = sqliteHashData(x);
@@ -1137,7 +1235,7 @@ void sqlite3Pragma(
       sqlite3VdbeAddOp4(v, OP_String8, 0, 3, 0,
          sqlite3MPrintf(db, "*** in database %s ***\n", db->aDb[i].zName),
          P4_DYNAMIC);
-      sqlite3VdbeAddOp3(v, OP_Move, 2, 4, 1);
+      sqlite3VdbeAddOp2(v, OP_Move, 2, 4);
       sqlite3VdbeAddOp3(v, OP_Concat, 4, 3, 2);
       sqlite3VdbeAddOp2(v, OP_ResultRow, 2, 1);
       sqlite3VdbeJumpHere(v, addr);
@@ -1430,6 +1528,32 @@ void sqlite3Pragma(
   }else
 #endif
 
+  /*
+  **  PRAGMA shrink_memory
+  **
+  ** This pragma attempts to free as much memory as possible from the
+  ** current database connection.
+  */
+  if( sqlite3StrICmp(zLeft, "shrink_memory")==0 ){
+    sqlite3_db_release_memory(db);
+  }else
+
+  /*
+  **   PRAGMA busy_timeout
+  **   PRAGMA busy_timeout = N
+  **
+  ** Call sqlite3_busy_timeout(db, N).  Return the current timeout value
+  ** if one is set.  If no busy handler or a different busy handler is set
+  ** then 0 is returned.  Setting the busy_timeout to 0 or negative
+  ** disables the timeout.
+  */
+  if( sqlite3StrICmp(zLeft, "busy_timeout")==0 ){
+    if( zRight ){
+      sqlite3_busy_timeout(db, sqlite3Atoi(zRight));
+    }
+    returnSingleInt(pParse, "timeout",  db->busyTimeout);
+  }else
+
 #if defined(SQLITE_DEBUG) || defined(SQLITE_TEST)
   /*
   ** Report the current state of file logs for all databases
@@ -1445,13 +1569,12 @@ void sqlite3Pragma(
     sqlite3VdbeSetColName(v, 1, COLNAME_NAME, "status", SQLITE_STATIC);
     for(i=0; i<db->nDb; i++){
       Btree *pBt;
-      Pager *pPager;
       const char *zState = "unknown";
       int j;
       if( db->aDb[i].zName==0 ) continue;
       sqlite3VdbeAddOp4(v, OP_String8, 0, 1, 0, db->aDb[i].zName, P4_STATIC);
       pBt = db->aDb[i].pBt;
-      if( pBt==0 || (pPager = sqlite3BtreePager(pBt))==0 ){
+      if( pBt==0 || sqlite3BtreePager(pBt)==0 ){
         zState = "closed";
       }else if( sqlite3_file_control(db, i ? db->aDb[i].zName : 0, 
                                      SQLITE_FCNTL_LOCKSTATE, &j)==SQLITE_OK ){

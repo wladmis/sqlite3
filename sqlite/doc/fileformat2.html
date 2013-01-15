@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>File Format For SQLite Databases</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -129,21 +128,22 @@ format used by SQLite.</p>
 
 <h2>1.0 The Database File</h2>
 
-<p>Most of the time the complete state of an SQLite database 
-is contained a single file on disk called the "main database file".</p>
+<p>The complete state of an SQLite database is usually
+contained a single file on disk called the "main database file".</p>
 
-<p>While performing a transaction, the default behavior is to stores 
-some temporary information in a second file called the "rollback journal".
-(The alternative is to use a <a href="wal.html">write-ahead log</a> - described separately.)
+<p>During a transaction, SQLite stores additional information 
+in a second file called the "rollback journal", or if SQLite is in
+<a href="wal.html">WAL mode</a>, a write-ahead log file.
 If the application or
-host computer crashes before completing the transaction, then the rollback
-journal contains critical state information needed to restore the
-content of the main database file.  When a rollback journal contains
-information necessary for recovering the state of the database, we say
-that it is a "hot journal".  Hot journals only come up in an error recovery
-scenario and so are uncommon, but they are part of the state of an SQLite
-database and so should not be ignored.  This document defines the format
-of a rollback journal (and the write-ahead log file), but main focus is
+host computer crashes before the transaction completes, then the rollback
+journal or write-ahead log contains critical state information needed 
+to restore the main database file to a consistent state.  When a rollback 
+journal or write-ahead log contains information necessary for recovering 
+the state of the database, they are called a "hot journal" or "hot WAL file".
+Hot journals and WAL files are only a factor during error recovery
+scenarios and so are uncommon, but they are part of the state of an SQLite
+database and so cannot be ignored.  This document defines the format
+of a rollback journal and the write-ahead log file, but the focus is
 on the main database file.</p>
 
 <h3>1.1 Pages</h3>
@@ -208,7 +208,7 @@ reduce disk I/O.</p>
 <p>The first 100 bytes of the database file comprise the database file 
 header.  The database file header is divided into fields as shown by
 the table below.  All multibyte fields in the database file header are
-stored with the must significant byte first (big-endian).</p>
+stored with the most significant byte first (big-endian).</p>
 
 <center>
 <i>Database Header Format</i><br>
@@ -391,6 +391,8 @@ the schema cookie to make sure the value is the same as when the statement
 was prepared and if the schema cookie has changed, the statement aborts
 in order to force the statement to be reprepared.</p>
 
+<a name="schemaformat"></a>
+
 <h4>1.2.10 Schema format number</h4>
 
 <p>The schema format number is a 4-byte big-endian integer at offset 44.
@@ -411,7 +413,8 @@ on 2005-02-19.</li>
 <a href="lang_altertable.html">ALTER TABLE ... ADD COLUMN</a> to have non-NULL default
 values.  This capability was added in SQLite version 3.1.4 
 on 2005-03-11.</li>
-<li value=4>Format 4 causes SQLite to respect the DESC keyword on
+<li value=4>Format 4 causes SQLite to respect the
+<a href="lang_createindex.html#descidx">DESC keyword</a> on
 index declarations.  (The DESC keyword is ignored in indices for 
 formats 1, 2, and 3.)
 Format 4 also adds two new boolean record type values (<a href="fileformat2.html#serialtype">serial types</a>
@@ -419,16 +422,16 @@ Format 4 also adds two new boolean record type values (<a href="fileformat2.html
 2006-01-10.</li>
 </ol>
 
-<p>New database files created by SQLite use format 1 by default, so
-that database files created by newer versions of SQLite can still
-be read by older versions of SQLite.
+<p>New database files created by SQLite use format 4 by default.
 The <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a> can be used to cause SQLite
-to create new database files using format 4.  Future versions of 
-SQLite may begin to create files using format 4 by default.</p>
+to create new database files using format 1.
+The format version number can be made to default to 1 instead of 4 by
+setting <a href="compile.html#default_file_format">SQLITE_DEFAULT_FILE_FORMAT</a>=1 at compile-time.
+</p>
 
 <h4>1.2.11 Suggested cache size</h4>
 
-<p>The 4-byte big-endian signed integer at offset 48 is the suggest
+<p>The 4-byte big-endian signed integer at offset 48 is the suggested
 cache size in pages for the database file.  The value is a suggestion
 only and SQLite is under no obligation to honor it.  The absolute value
 of the integer is used as the suggested size.  The suggested cache size
@@ -442,7 +445,7 @@ the integer at offset 52 is zero then pointer-map (ptrmap) pages are
 omitted from the database file and neither auto_vacuum nor
 incremental_vacuum are supported.  If the integer at offset 52 is
 non-zero then it is the page number of the largest root page in the
-database file, the database file contain ptrmap pages, and the
+database file, the database file will contain ptrmap pages, and the
 mode must be either auto_vacuum or incremental_vacuum.  In this latter
 case, the integer at offset 64 is true for incremental_vacuum and
 false for auto_vacuum.  If the integer at offset 52 is zero then
@@ -467,7 +470,7 @@ not used by SQLite.</p>
 
 <p>The 4-byte big-endian integer at offset 96 stores the 
 <a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value for the SQLite library that most
-recently modified the database file.  The 4-byte big-ending integer at
+recently modified the database file.  The 4-byte big-endian integer at
 offset 92 is the value of the <a href="fileformat2.html#chngctr">change counter</a> when the version number
 was stored.  The integer at offset 92 indicates which transaction
 the version number is valid for and is sometimes called the
@@ -488,13 +491,14 @@ in size contains no lock-byte page.  A database file larger than
 </p>
 
 <p>The lock-byte page is set aside for use by the operating-system specific
-VFS implementation in implementing the database file locking primitives.
+<a href="vfs.html">VFS</a> implementation in implementing the database file locking primitives.
 SQLite does not use the lock-byte page.  The SQLite core 
-will never read or write, though operating-system specific VFS 
+will never read or write the lock-byte page,
+though operating-system specific <a href="vfs.html">VFS</a> 
 implementations may choose to read or write bytes on the lock-byte 
 page according to the 
 needs and proclivities of the underlying system.  The unix and win32
-VFS implementations that come built into SQLite do not write to the
+<a href="vfs.html">VFS</a> implementations that come built into SQLite do not write to the
 lock-byte page, but third-party VFS implementations for
 other operating systems might.</p>
 
@@ -744,7 +748,7 @@ overflow page list - omitted if all payload fits on the b-tree page.
 
 <dt><p>Table B-Tree Interior Cell:</p></dt>
 <dd><p><ul>
-<li>A 4-byte big-ending page number which is the left child pointer.
+<li>A 4-byte big-endian page number which is the left child pointer.
 <li>A varint which is the integer key
 </ul></p></dd>
 
@@ -760,7 +764,7 @@ overflow page list - omitted if all payload fits on the b-tree page.
 
 <dt><p>Index B-Tree Interior Cell:</p></dt>
 <dd><p><ul>
-<li>A 4-byte big-ending page number which is the left child pointer.
+<li>A 4-byte big-endianpage number which is the left child pointer.
 <li>A varint which is the total number of bytes of key payload, including any
 overflow
 <li>The initial portion of the payload that does not spill to overflow
@@ -828,10 +832,12 @@ end of each page.  And let P be the payload size.</p>
 <blockquote><dl>
 <dt>Table B-Tree Leaf Cell:</dt>
 <dd><p>
-If the payload size P is less than U-36 then the entire payload is stored
-on the b-tree page.  Let M be ((U-12)*32/255)-23.  If P is greater than U-35
-then the number of byte stored on the b-tree page is the lessor of
+If the payload size P is less than or equal to U-35 then
+the entire payload is stored on the b-tree leaf page.  
+Let M be ((U-12)*32/255)-23.  If P is greater than U-35
+then the number of byte stored on the b-tree leaf page is the smaller of
 M+((P-M)%(U-4)) and U-35.
+Note that number of bytes stored on the leaf page is never less than M.
 </p></dd>
 
 <dt>Table B-Tree Interior Cell:</dt>
@@ -842,11 +848,12 @@ any payload to spill.
 
 <dt>Index B-Tree Leaf Or Interior Cell:</dt>
 <dd><p>
-If the payload size P is less than ((U-12)*64/255)-22 then the entire
-payload is stored on the b-tree page.  
-Let M be ((U-12)*32/255)-23.  If P is greater than ((U-12)*64/255)-23
-then the number of byte stored on the b-tree page is the lessor of
-M+((P-M)%(U-4)) and ((U-12)*64/255)-23.
+Let X be ((U-12)*64/255)-23).  If the payload size P is less than
+or equal to X then the entire payload is stored on the b-tree page.
+Let M be ((U-12)*32/255)-23.  If P is greater than X then the number
+of byte stored on the b-tree page is the smaller of
+M+((P-M)%(U-4)) and X.
+Note that number of bytes stored on the index page is never less than M.
 </p></dd>
 </dl></blockquote>
 
@@ -855,9 +862,11 @@ M+((P-M)%(U-4)) and ((U-12)*64/255)-23.
 is on the b-tree page that the record header can usually be accessed
 without consulting an overflow page.  In hindsight, the designers of
 the SQLite b-tree logic realize that these thresholds could have been
-made much simpler.  However, the computations cannot be now be changed
+made much simpler.  However, the computations cannot be changed
 without resulting in an incompatible file format.  And the current computations
 work well, even if they are a little complex.</p>
+
+<a name="ovflpgs"></a>
 
 <h3>1.6 Cell Payload Overflow Pages</h3>
 
@@ -873,7 +882,7 @@ byte are used to hold overflow content.</p>
 <p>Pointer map or ptrmap pages are extra pages inserted into the database
 to make the operation of <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> and <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> modes
 more efficient.  Other page types in the database typically have pointers
-from parent to child.  For example, a interior b-tree page contains pointers
+from parent to child.  For example, an interior b-tree page contains pointers
 to its child b-tree pages and an overflow chain has a pointer
 from earlier to later links in the chain.  A ptrmap page contains linkage
 information going in the opposite direction, from child to parent.</p>
@@ -889,7 +898,7 @@ number of 5-byte entries that will fit in the usable space of a page.
 (In other words, J=U/5.)  The first ptrmap page will contain back pointer
 information for pages 3 through J+2, inclusive.  The second pointer map
 page will be on page J+3 and that ptrmap page will provide back pointer
-information for pages J+4 through 2*J+3 inclusive.  An so forth for
+information for pages J+4 through 2*J+3 inclusive.  And so forth for
 the entire database file.</p>
 
 <p>In a database that uses ptrmap pages, all pages at locations identified
@@ -1029,16 +1038,18 @@ of the two records.  The sort order of individual columns is as
 follows:</p>
 
 <ol>
-<li>NULL values (serial type 0) sort first
-<li>Numeric values (serial types 1 through 9) sort next and in numeric order
-<li>Text values (even serial types 12 and larger) sort next in the order
-    determined by the columns <a href="datatype3.html#collation">collating function</a>
-<li>BLOB values (odd serial types 13 and larger) sort last in order 
+<li>NULL values (serial type 0) sort first.
+<li>Numeric values (serial types 1 through 9) sort after NULLs
+      and in numeric order.
+<li>Text values (odd serial types 13 and larger) sort after numeric
+    values in the order determined by the columns <a href="datatype3.html#collation">collating function</a>.
+<li>BLOB values (even serial types 12 and larger) sort last and in the order 
     determined by memcmp().
 </ol>
 
 <p>A <a href="datatype3.html#collation">collating function</a> for each column is necessary in order to compute
-the order of text fields.  SQLite defines three built-in collating functions:
+the order of text fields.
+SQLite defines three built-in collating functions:
 </p>
 
 <blockquote><table border=0 cellspacing=10>
@@ -1109,6 +1120,8 @@ entries in each index associated with that table.
 Corresponding rows int the index and table b-trees share the same rowid
 value, and contain the same value for all indexed columns.</p>
 
+<a name="sqlite_master"></a>
+
 <h3>2.5 Storage Of The SQL Database Schema</h3>
 
 <p>Page 1 of a database file is the root page of a table b-tree that
@@ -1127,9 +1140,12 @@ CREATE TABLE sqlite_master(
 );
 </pre></blockquote>
 
-<p>The sqlite_master table contains a row for each table, index, view,
-and trigger in the database schema, except there is no entry for the
-sqlite_master table itself.</p>
+<p>The sqlite_master table contains one row for each table, index, view,
+and trigger (collectively "objects") in the database schema, except there
+is no entry for the sqlite_master table itself.  The sqlite_master table
+contains entries for <a href="fileformat2.html#intschema">internal schema objects</a> in addition to application-
+and programmer-defined objects.
+
 
 <p>The sqlite_master.type column will be one
 of the following text strings:  'table', 'index', 'view', or 'trigger'
@@ -1137,11 +1153,11 @@ according to the type of object defined.  The 'table' string is used
 for both ordinary and <a href="vtab.html">virtual tables</a>.</p>
 
 </p>The sqlite_master.name column will hold the name of the object.
-For indices that are automatically created by UNIQUE or PRIMARY KEY
-constraints, the name is "sqlite_autoindex_TABLE_N" where TABLE is 
-replaced by the name of the table that contains the constraint and N 
-is an integer beginning
-with 1 and increasing by one with each constraint seen.</p>
+<a href="lang_createtable.html#uniqueconst">UNIQUE</a> and <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> constraints on tables cause SQLite to create
+<a href="fileformat2.html#intschema">internal indices</a> with names of the form "sqlite_autoindex_TABLE_N"
+where TABLE is replaced by the name of the table that contains the
+constraint and N is an integer beginning with 1 and increasing by one
+with each constraint seen in the table definition.</p>
 
 <p>The sqlite_master.tbl_name column holds the name of a table or view
 that the object is associated with.  For a table or view, the
@@ -1159,7 +1175,7 @@ object.  This SQL text is a <a href="lang_createtable.html">CREATE TABLE</a>, <a
 <a href="lang_createindex.html">CREATE INDEX</a>,
 <a href="lang_createview.html">CREATE VIEW</a>, or <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement that if evaluated against
 the database file when it is the main database of a <a href="c3ref/sqlite3.html">database connection</a>
-would recreated the object.)  The text is usually a copy of the original
+would recreated the object.  The text is usually a copy of the original
 statement used to create the object but with normalizations applied so
 that the text conforms to the following rules:
 
@@ -1177,11 +1193,210 @@ space.
 
 <p>The text in the sqlite_master.sql column is a copy of the original
 CREATE statement text that created the object, except normalized as
-described above and as modified by subsequent <a href="lang_altertable.html">ALTER TABLE</a> statements.</p>
+described above and as modified by subsequent <a href="lang_altertable.html">ALTER TABLE</a> statements.
+The sqlite_master.sql is NULL for the <a href="fileformat2.html#intschema">internal indices</a> that are
+automatically created by <a href="lang_createtable.html#uniqueconst">UNIQUE</a> or <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> constraints.</p>
 
-<p>For indices that are automatically created by UNIQUE or
-PRIMARY KEY constraints, the sqlite_master.sql field is NULL.</p>
 
+<a name="intschema"></a>
+
+<h4>2.5.1 Internal Schema Objects</h4>
+
+<p>In addition to the tables, indices, views, and triggers created by
+the application and/or the developer using CREATE statements SQL, the
+sqlite_master table may contain zero or more entries for 
+<i>internal schema objects</i> that are created by SQLite for its 
+own internal use.  The names of internal schema objects
+always begin with "sqlite_" and any table, index, view, or trigger
+whose name begins with "sqlite_" is an internal schema object.
+SQLite prohibits applications from creating objects whose names begin
+with "sqlite_".  
+
+<p>Internal schema objects used by SQLite may include the following:
+
+<ul>
+<li><p>Indices with names of the form "sqlite_autoindex_TABLE_N" that
+       are used to implement <a href="lang_createtable.html#uniqueconst">UNIQUE</a> and <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> constraints on
+       ordinary tables.
+
+<li><p>A table with the name "sqlite_sequence" that is used to keep track
+       of the maximum historical <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> for a table that
+       using <a href="autoinc.html">AUTOINCREMENT</a>.
+
+<li><p>Tables with names of the form "sqlite_statN" where N is an integer.
+       Such tables store database statistics gathered by the <a href="lang_analyze.html">ANALYZE</a>
+       command and used by the query planner to help determine the best
+       algorithm to use for each query.
+</ul>
+
+<p>Additional internal schema objects names, always beginning with "sqlite_",
+may be added to the SQLite file format in future releases.
+
+<a name="seqtab"></a>
+
+<h4>2.5.2 The sqlite_sequence table</h4>
+
+<p>The sqlite_sequence table is an internal table used to help implement
+<a href="autoinc.html">AUTOINCREMENT</a>.  The sqlite_sequence table is created automatically
+whenever any ordinary table with an AUTOINCREMENT integer primary
+key is created.  Once created, the sqlite_sequence table exists in the
+sqlite_master table forever; it cannot be dropped.
+The schema for the sqlite_sequence table is:
+
+<blockquote><pre>
+CREATE TABLE sqlite_sequence(name,seq);
+</pre></blockquote>
+
+<p>There is a single row in the sqlite_sequence table for each ordinary
+table that uses AUTOINCREMENT.  The name of the table (as it appears in
+sqlite_master.name) is in the sqlite_sequence.main field and the largest
+<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> ever used by that table is in the sqlite_sequence.seq
+field.  New automatically generated integer primary keys for AUTOINCREMENT
+tables are guaranteed to be larger than the sqlite_sequence.seq field for
+that table.
+If the sqlite_sequence.seq field of an AUTOINCREMENT table is already at
+the largest integer value (9223372036854775807) then attempts to add new
+rows to that table with an automatically generated integer primary will fail
+with an <a href="c3ref/c_abort.html">SQLITE_FULL</a> error.
+The sqlite_sequence.seq field is automatically updated if required when
+new entries are added to an AUTOINCREMENT table.  
+The sqlite_sequence row for an AUTOINCREMENT table is automatically deleted
+when the table is dropped.
+If the sqlite_sequence row for an AUTOINCREMENT table does not exist when
+the AUTOINCREMENT table is updated, then a new sqlite_sequence row is created.
+If the sqlite_sequence.seq value for an AUTOINCREMENT table is manually 
+set to something other than an integer and there is a subsequent attempt to
+insert the or update the AUTOINCREMENT table, then the behavior is undefined.
+
+<p>Application code is allowed to modify the sqlite_sequence table, to add
+new rows, to delete rows, or to modify existing rows.  However, application
+code cannot create the sqlite_sequence table if it does not already exist.
+Application code can delete all entries from the sqlite_sequence table,
+but application code cannot drop the sqlite_sequence table.
+
+<a name="stat1tab"></a>
+
+<h4>2.5.3 The sqlite_stat1 table</h4>
+
+<p>The sqlite_stat1 is an internal table created by the <a href="lang_analyze.html">ANALYZE</a> command
+and used to hold supplemental information about tables and indices that the
+query planner can use to help it find better ways of performing queries.
+Applications can update, delete from, insert into or drop the sqlite_stat1
+table, but may not create or alter the sqlite_stat1 table.
+The schema of the sqlite_stat1 table is as follows:
+
+<blockquote><pre>
+CREATE TABLE sqlite_stat1(tbl,idx,stat);
+</pre></blockquote>
+
+<p>There is normally one row per index, with the index identified by the
+name in the sqlite_stat1.idx column.  The sqlite_stat1.tbl column is
+the name of the table to which the index belongs.  In each such row, 
+the sqlite_stat.stat column will be
+a string consisting of a list of integers.  The first integer in this
+list is the number of rows in the index and in the table.  The second
+integer is the average number of rows in the index that have the same
+value in the first column of the index.  The third integer is the average
+number of rows in the index that have the same value for the first two
+columns.  The N-th integer (for N>1) is the average number of rows in 
+the index which have the same value for the first N-1 columns.  For
+a K-column index, there will be K+1 integers in the stat column.  If
+the index is unique, then the last integer will be 1.
+
+<p>The list of integers in the stat column can optionally be followed
+by the keyword "unordered".  The "unordered" keyword, if it is present,
+must be separated from the last integer by a single space.  If the
+"unordered" keyword is present, then the query planner assumes that
+the index is unordered and will not use the index for a range query.
+
+<p>If the sqlite_stat1.idx column is NULL, then the sqlite_stat1.stat
+column contains a single integer which is the (estimated) number of
+rows in the table identified by sqlite_stat1.tbl.
+
+<a name="stat2tab"></a>
+
+<h4>2.5.4 The sqlite_stat2 table</h4>
+
+<p>The sqlite_stat2 is only created and is only used if SQLite is compiled
+with SQLITE_ENABLE_STAT2 and if the SQLite version number is between
+3.6.18 and 3.7.8.  The sqlite_stat2 table is neither read nor written by any
+version of SQLite before 3.6.18 nor after 3.7.8.
+The sqlite_stat2 table contains additional information
+about the distribution of keys within an index.
+The schema of the sqlite_stat2 table is as follows:
+
+<blockquote><pre>
+CREATE TABLE sqlite_stat2(tbl,idx,sampleno,sample);
+</pre></blockquote>
+
+<p>The sqlite_stat2.idx column and the sqlite_stat2.tbl column in each 
+row of the sqlite_stat2 table identify an index described by that row.
+There are usually 10 rows in the sqlite_stat2
+table for each index.
+
+<p>The sqlite_stat2 entries for an index that have sqlite_stat2.sampleno
+between 0 and 9 inclusive are samples of the left-most key value in the
+index taken at evenly spaced points along the index.
+Let C be the number of rows in the index.
+Then the sampled rows are given by
+
+<blockquote>
+     rownumber = (i*C*2 + C)/20
+</blockquote>
+
+<p>The variable i in the previous expression varies between 0 and 9.
+Conceptually, the index space is divided into
+10 uniform buckets and the samples are the middle row from each bucket.
+
+<p>The format for sqlite_stat2 is recorded here for legacy reference.  
+Recent versions of SQLite no longer support sqlite_stat2 and the
+sqlite_stat2 table, it is exists, is simply ignored.
+
+<a name="stat3tab"></a>
+
+<h4>2.5.5 The sqlite_stat3 table</h4>
+
+<p>The sqlite_stat3 is only created and is only used if SQLite is compiled
+with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> and if the SQLite version number is
+3.7.9 or greater.  The sqlite_stat3 table is neither read nor written by any
+version of SQLite before 3.6.9.
+The sqlite_stat3 table contains additional information
+about the distribution of keys within an index, information that the
+query planner can use to devise better and faster query algorithms.
+The schema of the sqlite_stat3 table is as follows:
+
+<blockquote><pre>
+CREATE TABLE sqlite_stat3(tbl,idx,nEq,nLt,nDLt,sample);
+</pre></blockquote>
+
+<p>There are usually multiple entries in the sqlite_stat3 table for each index.
+The sqlite_stat3.sample column holds the value of the left-most field of an
+index identified by the sqlite_stat3.idx and the sqlite_stat3.tbl columns.
+If the sqlite_stat3.idx and sqlite_stat3.tbl
+columns hold the same value, then that row contains a sample from
+the <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> of the table.
+The sqlite_stat3.nEq column holds the approximate
+number of entries in the index whose left-most column exactly matches
+the sample.  
+The sqlite_stat3.nLt holds the approximate number of entries in the
+index whose left-most column is less than the sample.
+The sqlite_stat3.nDLt column holds the approximate
+number of distinct left-most entries in the index that are less than
+the sample.
+
+<p>Future versions of SQLite might change to store a string containing
+multiple integers values in the sqlite_stat3.nDLt column, a string in which
+the first integer will be the number of prior index entries that are
+distinct in the left-most column, the second integer is the number of
+prior index entries that are distinct in the first two columns, the
+third integer is the number of prior index entries that are distinct
+in the first three columns, and so forth  With such an extension, the
+nDLt field will become similar in function to the sqlite_stat1.stat field.
+
+<p>There can be an arbitrary number of sqlite_stat3 entries per index.
+The <a href="lang_analyze.html">ANALYZE</a> command will typically generate sqlite_stat3 tables
+that contain between 10 and 40 samples that are distributed across
+the key space and with large nEq values.
 
 <a name="rollbackjournal"></a>
 
@@ -1421,7 +1636,7 @@ true:</p>
 an even number of unsigned 32-bit integers: x(0) through x(N).
 The 32-bit integers are big-endian if the
 magic number in the first 4 bytes of the WAL header is 0x377f0683 and
-the integers are little-endian the magic number is 0x377f0682.
+the integers are little-endian if the magic number is 0x377f0682.
 The checksum values are always stored in the frame header in a
 big-endian format regardless of which byte order is used to compute
 the checksum.</p>
@@ -1525,7 +1740,7 @@ Hence, unlike the database and WAL file formats which store all values
 as big endian, the wal-index stores multi-byte values in the native
 byte order of the host computer.</p>
 
-<p>This document is concerned with the persist state of the database
+<p>This document is concerned with the persistent state of the database
 file, and since the wal-index is a transient structure, no further 
 information about the format of the wal-index will be provided here.
 Complete details on the format of the wal-index are contained within

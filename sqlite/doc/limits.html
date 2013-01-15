@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Implementation Limits For SQLite</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -165,7 +164,7 @@ attackers who inject malicious SQL statements.
 <p>
 Some limits can be changed at run-time on a per-connection basis
 using the <a href="c3ref/limit.html">sqlite3_limit()</a> interface with one of the
-<a href="c3ref/c_limit_attached.html">limit categories</a> defined for that interface.
+<a href="c3ref/c_limit_attached.html#sqlitelimitlength">limit categories</a> defined for that interface.
 Run-time limits are designed for applications that have multiple
 databases, some of which are for internal use only and others which
 can be influenced or controlled by potentially hostile external agents.
@@ -214,7 +213,7 @@ number of bytes in a row.
 
 <p>
 The maximum string or BLOB length can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_LENGTH</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitlength">SQLITE_LIMIT_LENGTH</a>,size) interface.
 </p>
 </li><a name="max_column"></a>
 <li><p><b>Maximum Number Of Columns</b></p>
@@ -253,7 +252,7 @@ runs slowly.</p>
 
 <p>
 The maximum number of columns can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_COLUMN</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitcolumn">SQLITE_LIMIT_COLUMN</a>,size) interface.
 </p>
 
 </li><a name="max_sql_length"></a>
@@ -288,7 +287,7 @@ string does not need to be parsed or copied as much.
 
 <p>
 The maximum length of an SQL statement can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_SQL_LENGTH</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitsqllength">SQLITE_LIMIT_SQL_LENGTH</a>,size) interface.
 </p>
 </li><li><p><b>Maximum Number Of Tables In A Join</b></p>
 
@@ -323,12 +322,12 @@ current implementation has a default value of 1000.
 
 <p>
 The maximum depth of an expression tree can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_EXPR_DEPTH</a>,size) interface if the
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitexprdepth">SQLITE_LIMIT_EXPR_DEPTH</a>,size) interface if the
 SQLITE_MAX_EXPR_DEPTH is initially positive.  In other words, the maximum
 expression depth can be lowered at run-time if there is already a 
 compile-time limit on the expression depth.  If SQLITE_MAX_EXPR_DEPTH is
 set to 0 at compile time (if the depth of expressions is unlimited) then
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_EXPR_DEPTH</a>,size) is a no-op.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitexprdepth">SQLITE_LIMIT_EXPR_DEPTH</a>,size) is a no-op.
 </p>
 
 
@@ -351,7 +350,7 @@ of 127.</p>
 
 <p>
 The maximum number of arguments in a function can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_FUNCTION_ARG</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitfunctionarg">SQLITE_LIMIT_FUNCTION_ARG</a>,size) interface.
 </p>
 </li><a name="max_compound_select"></a>
 <li><p><b>Maximum Number Of Terms In A Compound SELECT Statement</b></p>
@@ -373,7 +372,7 @@ never see the number of terms in a compound select exceed single digits.
 
 <p>
 The maximum number of compound SELECT terms can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_COMPOUND_SELECT</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitcompoundselect">SQLITE_LIMIT_COMPOUND_SELECT</a>,size) interface.
 </p>
 
 
@@ -399,7 +398,7 @@ external users are able to generate arbitrary patterns.
 
 <p>
 The maximum length of a LIKE or GLOB pattern can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_LIKE_PATTERN_LENGTH</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitlikepatternlength">SQLITE_LIMIT_LIKE_PATTERN_LENGTH</a>,size) interface.
 </p>
 </li><a name="max_variable_number"></a>
 <li><p><b>Maximum Number Of Host Parameters In A Single SQL Statement</b></p>
@@ -432,7 +431,7 @@ which defaults to 999.
 
 <p>
 The maximum host parameter number can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_VARIABLE_NUMBER</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitvariablenumber">SQLITE_LIMIT_VARIABLE_NUMBER</a>,size) interface.
 </p>
 </li><a name="max_trigger_depth"></a>
 <li><p><b>Maximum Depth Of Trigger Recursion</b></p>
@@ -463,12 +462,11 @@ of simultaneously attached databases is limited to SQLITE_MAX_ATTACHED
 which is set to 10 by default.
 The code generator in SQLite uses bitmaps
 to keep track of attached databases.  That means that the number of
-attached databases cannot be increased above 30 on a machines with
-a 32-bit integer.</p>
+attached databases cannot be increased above 62.</p>
 
 <p>
 The maximum number of attached databases can be lowered at run-time using
-the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_ATTACHED</a>,size) interface.
+the <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitattached">SQLITE_LIMIT_ATTACHED</a>,size) interface.
 </p>
 </li><a name="max_page_count"></a>
 <li><p><b>Maximum Number Of Pages In A Database File</b></p>
@@ -485,10 +483,24 @@ SQLITE_FULL.
 </p>
 
 <p>
+The largest possible setting for SQLITE_MAX_PAGE_COUNT is 2147483646.
+When used with the maximum page size of 65536, this gives a maximum
+SQLite database size of about 140 terabytes.</p>
+
+<p>
 The <a href="pragma.html#pragma_max_page_count">
 max_page_count PRAGMA</a> can be used to raise or lower this
 limit at run-time.
 </p>
-</li></ol>
+</li><li><p><b>Maximum Number Of Rows In A Table</b></p>
+
+<p>
+The theoretical maximum number of rows in a table is
+2<sup><small>64</small></sup> (18446744073709551616 or about 1.8e+19).
+This limit is unreachable since the maximum database size of 140 terabytes
+will be reached first.  A 140 terabytes database can hold no more than
+approximately 1e+13 rows, and then only if there are no indices and if
+each row contains very little data.
 </li>
+</ol>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Memory Allocation Routines</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Memory Allocation Routines</h2><blockquote><pre>typedef struct sqlite3_mem_methods sqlite3_mem_methods;
@@ -135,9 +134,9 @@ and low-level memory allocation routines.</p>
 <p>This object is used in only one place in the SQLite interface.
 A pointer to an instance of this object is the argument to
 <a href="../c3ref/config.html">sqlite3_config()</a> when the configuration option is
-<a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MALLOC</a> or <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_GETMALLOC</a>.
+<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a> or <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiggetmalloc">SQLITE_CONFIG_GETMALLOC</a>.
 By creating an instance of this object
-and passing it to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MALLOC</a>)
+and passing it to <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a>)
 during configuration, an application can specify an alternative
 memory allocation subsystem for SQLite to use for all of its
 dynamic memory needs.</p>
@@ -151,16 +150,10 @@ memory allocator that simulates memory out-of-memory conditions in
 order to verify that SQLite recovers gracefully from such
 conditions.</p>
 
-<p>The xMalloc and xFree methods must work like the
-malloc() and free() functions from the standard C library.
-The xRealloc method must work like realloc() from the standard C library
-with the exception that if the second argument to xRealloc is zero,
-xRealloc must be a no-op - it must not perform any allocation or
-deallocation.  SQLite guarantees that the second argument to
-xRealloc is always a value returned by a prior call to xRoundup.
-And so in cases where xRoundup always returns a positive number,
-xRealloc can perform exactly as the standard library realloc() and
-still be in compliance with this specification.</p>
+<p>The xMalloc, xRealloc, and xFree methods must work like the
+malloc(), realloc() and free() functions from the standard C library.
+SQLite guarantees that the second argument to
+xRealloc is always a value returned by a prior call to xRoundup.</p>
 
 <p>xSize should return the allocated size of a memory allocation
 previously obtained from xMalloc or xRealloc.  The allocated size
@@ -186,9 +179,9 @@ the xInit method, so the xInit method need not be threadsafe.  The
 xShutdown method is only called from <a href="../c3ref/initialize.html">sqlite3_shutdown()</a> so it does
 not need to be threadsafe either.  For all other methods, SQLite
 holds the <a href="../c3ref/c_mutex_fast.html">SQLITE_MUTEX_STATIC_MEM</a> mutex as long as the
-<a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MEMSTATUS</a> configuration option is turned on (which
+<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a> configuration option is turned on (which
 it is by default) and so the methods are automatically serialized.
-However, if <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MEMSTATUS</a> is disabled, then the other
+However, if <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a> is disabled, then the other
 methods must be threadsafe or else make their own arrangements for
 serialization.</p>
 

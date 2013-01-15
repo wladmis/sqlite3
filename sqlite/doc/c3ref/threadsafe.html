@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Test To See If The Library Is Threadsafe</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
@@ -113,14 +113,13 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Test To See If The Library Is Threadsafe</h2><blockquote><pre>int sqlite3_threadsafe(void);
 </pre></blockquote><p>
 The sqlite3_threadsafe() function returns zero if and only if
-SQLite was compiled mutexing code omitted due to the
+SQLite was compiled with mutexing code omitted due to the
 <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> compile-time option being set to 0.</p>
 
 <p>SQLite can be compiled with or without mutexes.  When
@@ -143,8 +142,8 @@ the desired setting of the <a href="../compile.html#threadsafe">SQLITE_THREADSAF
 of the <a href="../compile.html#threadsafe">SQLITE_THREADSAFE</a> flag.  If SQLite is compiled with
 SQLITE_THREADSAFE=1 or =2 then mutexes are enabled by default but
 can be fully or partially disabled using a call to <a href="../c3ref/config.html">sqlite3_config()</a>
-with the verbs <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MULTITHREAD</a>,
-or <a href="../c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MUTEX</a>.  The return value of the
+with the verbs <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">SQLITE_CONFIG_MULTITHREAD</a>,
+or <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmutex">SQLITE_CONFIG_MUTEX</a>.  The return value of the
 sqlite3_threadsafe() function shows only the compile-time setting of
 thread safety, not any run-time changes to that setting made by
 sqlite3_config(). In other words, the return value from sqlite3_threadsafe()

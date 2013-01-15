@@ -58,8 +58,7 @@ typedef struct PgHdr DbPage;
 ** NOTE: These values must match the corresponding BTREE_ values in btree.h.
 */
 #define PAGER_OMIT_JOURNAL  0x0001    /* Do not use a rollback journal */
-#define PAGER_NO_READLOCK   0x0002    /* Omit readlocks on readonly files */
-#define PAGER_MEMORY        0x0004    /* In-memory database */
+#define PAGER_MEMORY        0x0002    /* In-memory database */
 
 /*
 ** Valid values for the second argument to sqlite3PagerLockingMode().
@@ -103,6 +102,7 @@ void sqlite3PagerSetBusyhandler(Pager*, int(*)(void *), void *);
 int sqlite3PagerSetPagesize(Pager*, u32*, int);
 int sqlite3PagerMaxPageCount(Pager*, int);
 void sqlite3PagerSetCachesize(Pager*, int);
+void sqlite3PagerShrink(Pager*);
 void sqlite3PagerSetSafetyLevel(Pager*,int,int,int);
 int sqlite3PagerLockingMode(Pager *, int);
 int sqlite3PagerSetJournalMode(Pager *, int);
@@ -138,23 +138,32 @@ int sqlite3PagerOpenSavepoint(Pager *pPager, int n);
 int sqlite3PagerSavepoint(Pager *pPager, int op, int iSavepoint);
 int sqlite3PagerSharedLock(Pager *pPager);
 
-int sqlite3PagerCheckpoint(Pager *pPager, int, int*, int*);
-int sqlite3PagerWalSupported(Pager *pPager);
-int sqlite3PagerWalCallback(Pager *pPager);
-int sqlite3PagerOpenWal(Pager *pPager, int *pisOpen);
-int sqlite3PagerCloseWal(Pager *pPager);
+#ifndef SQLITE_OMIT_WAL
+  int sqlite3PagerCheckpoint(Pager *pPager, int, int*, int*);
+  int sqlite3PagerWalSupported(Pager *pPager);
+  int sqlite3PagerWalCallback(Pager *pPager);
+  int sqlite3PagerOpenWal(Pager *pPager, int *pisOpen);
+  int sqlite3PagerCloseWal(Pager *pPager);
+#endif
+
+#ifdef SQLITE_ENABLE_ZIPVFS
+  int sqlite3PagerWalFramesize(Pager *pPager);
+#endif
 
 /* Functions used to query pager state and configuration. */
 u8 sqlite3PagerIsreadonly(Pager*);
 int sqlite3PagerRefcount(Pager*);
 int sqlite3PagerMemUsed(Pager*);
-const char *sqlite3PagerFilename(Pager*);
+const char *sqlite3PagerFilename(Pager*, int);
 const sqlite3_vfs *sqlite3PagerVfs(Pager*);
 sqlite3_file *sqlite3PagerFile(Pager*);
 const char *sqlite3PagerJournalname(Pager*);
 int sqlite3PagerNosync(Pager*);
 void *sqlite3PagerTempSpace(Pager*);
 int sqlite3PagerIsMemdb(Pager*);
+void sqlite3PagerCacheStat(Pager *, int, int, int *);
+void sqlite3PagerClearCache(Pager *);
+int sqlite3SectorSize(sqlite3_file *);
 
 /* Functions used to truncate the database file. */
 void sqlite3PagerTruncateImage(Pager*,Pgno);

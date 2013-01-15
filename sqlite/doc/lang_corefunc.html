@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Query Language: Core Functions</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>Core Functions</h2>
@@ -161,6 +160,17 @@ ifnull(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The ifnull() function returns a copy of its first non-NULL argument, or
   NULL if both arguments are NULL.  Ifnull() must have exactly 2 arguments.
   The ifnull() function is equivalent to <a href="lang_corefunc.html#coalesce">coalesce()</a> with two arguments.
+</td></tr><tr><td valign="top" align="right" width="120"><a name="instr"></a>
+instr(<i>X</i>,<i>Y</i>)</td><td valign="top">
+  The instr(X,Y) function finds the first occurrence of string Y within 
+  string X and returns the number of prior characters plus 1, or 0 if
+  Y is nowhere found within X.
+  Or, if X and Y are both BLOBs, then instr(X,Y) returns one
+  more than the number bytes prior to the first occurrence of Y, or 0 if
+  Y does not occur anywhere within X.
+  If both arguments X and Y to instr(X,Y) are non-NULL and are not BLOBs
+  then both are interpreted as strings.
+  If either X or Y are NULL in instr(X,Y) then the result is NULL.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="hex"></a>
 hex(<i>X</i>)</td><td valign="top">
   The hex() function interprets its argument as a BLOB and returns
@@ -175,8 +185,11 @@ last_insert_rowid()</td><td valign="top">
   <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> C/C++ interface function.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="length"></a>
 length(<i>X</i>)</td><td valign="top">
-  The length(X) function returns the length of X in 
-  characters if X is a string, or in bytes if X is a blob.
+  For a string value X, the length(X) function returns the number of 
+  characters (not bytes) in X prior to the first NUL character.
+  Since SQLite strings do not normally contain NUL characters, the length(X)
+  function will usually return the total number of characters in the string X.
+  For a blob value X, length(X) returns the number of bytes in the blob.
   If X is NULL then length(X) is NULL.
   If X is numeric then length(X) returns the length of a string
   representation of X.
@@ -204,7 +217,7 @@ load_extension(<i>X</i>)<br></br>load_extension(<i>X</i>,<i>Y</i>)</td><td valig
   raises an exception if the extension fails to load or initialize correctly.
 
   <p>The load_extension() function will fail if the extension attempts to 
-  modify or delete a SQL function or collating sequence.  The
+  modify or delete an SQL function or collating sequence.  The
   extension can add new functions or collating sequences, but cannot
   modify or delete existing functions or collating sequences because
   those functions and/or collating sequences might be used elsewhere
@@ -256,10 +269,13 @@ nullif(<i>X</i>,<i>Y</i>)</td><td valign="top">
   then the BINARY is used.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="quote"></a>
 quote(<i>X</i>)</td><td valign="top">
-  The quote(X) function returns a string which is the value of
-  its argument suitable for inclusion into another SQL statement.
+  The quote(X) function returns the text of an SQL literal which
+  is the value of its argument suitable for inclusion into an SQL statement.
   Strings are surrounded by single-quotes with escapes on interior quotes
   as needed.  BLOBs are encoded as hexadecimal literals.
+  Strings with embedded NUL characters cannot be represented as string
+  literals in SQL and hence the returned string literal is truncated prior
+  to the first NUL.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="random"></a>
 random()</td><td valign="top">
   The random() function returns a pseudo-random integer
@@ -286,9 +302,9 @@ replace(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign="top">
   a string, it is cast to a UTF-8 string prior to processing.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="round"></a>
 round(<i>X</i>)<br></br>round(<i>X</i>,<i>Y</i>)</td><td valign="top">
-  The round(X,Y) function returns a string representation of the floating-point
+  The round(X,Y) function returns a floating-point
   value X rounded to Y digits to the right of the decimal point.
-  If the Y argument is omitted, the X value is truncated to an integer.
+  If the Y argument is omitted, it is assumed to be 0.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="rtrim"></a>
 rtrim(<i>X</i>)<br></br>rtrim(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The rtrim(X,Y) function returns a string formed by removing any and all

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Changes From Version 3.4.2 To 3.5.0</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <?xml version="1.0" encoding="Windows-1252"?>
@@ -427,7 +426,7 @@ struct sqlite3_vfs {
   is used for explicitly declared and named TEMP tables (using the
   CREATE TEMP TABLE syntax) or for named tables in a temporary database
   that is created by opening a database with a filename that is an empty
-  string.  An <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a> holds an database table that
+  string.  An <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_TRANSIENT_DB</a> holds a database table that
   SQLite creates automatically in order to evaluate a subquery or
   ORDER BY or GROUP BY clause.  Both TEMP_DB and TRANSIENT_DB databases
   are private and are deleted automatically.  TEMP_DB databases last
@@ -570,8 +569,8 @@ struct sqlite3_io_methods {
   The xRead method reads iAmt bytes from the file beginning at a byte
   offset to iOfst.  The data read is stored in the pointer of the
   second parameter.  xRead returns the <a href="c3ref/c_abort.html">SQLITE_OK</a> on success,
-  <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_SHORT_READ</a> if it was not able to read the full number
-  of bytes because it reached end-of-file, or <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_READ</a> for
+  <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_SHORT_READ</a> if it was not able to read the full number
+  of bytes because it reached end-of-file, or <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_READ</a> for
   any other error.
 </p>
 <p>
@@ -584,13 +583,13 @@ struct sqlite3_io_methods {
   at the conclusion of the xWrite call.  The xWrite method returns
   <a href="c3ref/c_abort.html">SQLITE_OK</a> on success.  If the write cannot complete because the
   underlying storage medium is full, then <a href="c3ref/c_abort.html">SQLITE_FULL</a> is returned.
-  <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_WRITE</a> should be returned for any other error.
+  <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_WRITE</a> should be returned for any other error.
 </p>
 <p>
   The xTruncate method truncates a file to be nByte bytes in length.
   If the file is already nByte bytes or less in length then this
   method is a no-op.  The xTruncate method returns <a href="c3ref/c_abort.html">SQLITE_OK</a> on
-  success and <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_TRUNCATE</a> if anything goes wrong.
+  success and <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_TRUNCATE</a> if anything goes wrong.
 </p>
 <p>
   The xSync method is used to force previously written data out of
@@ -600,12 +599,12 @@ struct sqlite3_io_methods {
   data has also been flushed through the disk controllers cache.
   The <a href="c3ref/c_sync_dataonly.html">SQLITE_SYNC_FULL</a> parameter is the equivalent of the F_FULLSYNC
   ioctl() on Mac OS X. The xSync method returns
-  <a href="c3ref/c_abort.html">SQLITE_OK</a> on success and <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_FSYNC</a> if anything goes wrong.
+  <a href="c3ref/c_abort.html">SQLITE_OK</a> on success and <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_FSYNC</a> if anything goes wrong.
 </p>
 <p>
   The xFileSize() method determines the current size of the file
   in bytes and writes that value into *pSize.  It returns <a href="c3ref/c_abort.html">SQLITE_OK</a>
-  on success and <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_FSTAT</a> if something goes wrong.
+  on success and <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_FSTAT</a> if something goes wrong.
 </p>
 <p>
   The xLock and xUnlock methods are used to set and clear file locks.
@@ -635,9 +634,9 @@ struct sqlite3_io_methods {
   connection can hold an exclusive lock and no other connection can hold
   any lock (other than "none") while one connection is hold an exclusive
   lock.  The xLock returns <a href="c3ref/c_abort.html">SQLITE_OK</a> on success, <a href="c3ref/c_abort.html">SQLITE_BUSY</a> if it
-  is unable to obtain the lock, or <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_RDLOCK</a> if something else
+  is unable to obtain the lock, or <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_RDLOCK</a> if something else
   goes wrong.  The xUnlock method returns <a href="c3ref/c_abort.html">SQLITE_OK</a> on success and
-  <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_UNLOCK</a> for problems.
+  <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_UNLOCK</a> for problems.
 </p>
 <p>
   The xCheckReservedLock method checks to see if another connection or
@@ -657,7 +656,7 @@ struct sqlite3_io_methods {
   locking strategy (for example to use dot-file locks), to inquire
   about the status of a lock, or to break stale locks.  The SQLite
   core reserves opcodes less than 100 for its own use. 
-  A <a href="c3ref/c_fcntl_chunk_size.html">list of opcodes</a> less than 100 is available.
+  A <a href="c3ref/c_fcntl_busyhandler.html">list of opcodes</a> less than 100 is available.
   Applications that define a custom xFileControl method should use opcodes 
   greater than 100 to avoid conflicts.
 </p>

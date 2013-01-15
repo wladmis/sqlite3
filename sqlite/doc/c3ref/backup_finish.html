@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Online Backup API.</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Online Backup API.</h2><blockquote><pre>sqlite3_backup *sqlite3_backup_init(
@@ -154,7 +153,8 @@ associated with the backup operation.
 There should be exactly one call to sqlite3_backup_finish() for each
 successful call to sqlite3_backup_init().</p>
 
-<p><b>sqlite3_backup_init()</b></p>
+<p><a name="sqlite3backupinit"></a>
+ <b>sqlite3_backup_init()</b></p>
 
 <p>The D and N arguments to sqlite3_backup_init(D,N,S,M) are the
 <a href="../c3ref/sqlite3.html">database connection</a> associated with the destination database
@@ -181,7 +181,8 @@ The <a href="../c3ref/backup.html">sqlite3_backup</a> object may be used with th
 sqlite3_backup_finish() functions to perform the specified backup
 operation.</p>
 
-<p><b>sqlite3_backup_step()</b></p>
+<p><a name="sqlite3backupstep"></a>
+ <b>sqlite3_backup_step()</b></p>
 
 <p>Function sqlite3_backup_step(B,N) will copy up to N pages between
 the source and destination databases specified by <a href="../c3ref/backup.html">sqlite3_backup</a> object B.
@@ -194,7 +195,7 @@ If an error occurs while running sqlite3_backup_step(B,N),
 then an <a href="../c3ref/c_abort.html">error code</a> is returned. As well as <a href="../c3ref/c_abort.html">SQLITE_OK</a> and
 <a href="../c3ref/c_abort.html">SQLITE_DONE</a>, a call to sqlite3_backup_step() may return <a href="../c3ref/c_abort.html">SQLITE_READONLY</a>,
 <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>, <a href="../c3ref/c_abort.html">SQLITE_BUSY</a>, <a href="../c3ref/c_abort.html">SQLITE_LOCKED</a>, or an
-<a href="../c3ref/c_busy_recovery.html">SQLITE_IOERR_XXX</a> extended error code.</p>
+<a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_XXX</a> extended error code.</p>
 
 <p>The sqlite3_backup_step() might return <a href="../c3ref/c_abort.html">SQLITE_READONLY</a> if
 <ol>
@@ -215,7 +216,7 @@ sqlite3_backup_step() can be retried later. If the source
 is being used to write to the source database when sqlite3_backup_step()
 is called, then <a href="../c3ref/c_abort.html">SQLITE_LOCKED</a> is returned immediately. Again, in this
 case the call to sqlite3_backup_step() can be retried later on. If
-<a href="../c3ref/c_busy_recovery.html">SQLITE_IOERR_XXX</a>, <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>, or
+<a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_XXX</a>, <a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>, or
 <a href="../c3ref/c_abort.html">SQLITE_READONLY</a> is returned, then
 there is no point in retrying the call to sqlite3_backup_step(). These
 errors are considered fatal.  The application must accept
@@ -238,7 +239,8 @@ database is modified by the using the same database connection as is used
 by the backup operation, then the backup database is automatically
 updated at the same time.</p>
 
-<p><b>sqlite3_backup_finish()</b></p>
+<p><a name="sqlite3backupfinish"></a>
+ <b>sqlite3_backup_finish()</b></p>
 
 <p>When sqlite3_backup_step() has returned <a href="../c3ref/c_abort.html">SQLITE_DONE</a>, or when the
 application wishes to abandon the backup operation, the application
@@ -261,7 +263,10 @@ sqlite3_backup_finish() returns the corresponding <a href="../c3ref/c_abort.html
 is not a permanent error and does not affect the return value of
 sqlite3_backup_finish().</p>
 
-<p><b>sqlite3_backup_remaining(), sqlite3_backup_pagecount()</b></p>
+<p><a name="sqlite3backupremaining"></a>
+ <a name="sqlite3backuppagecount"></a>
+
+<b>sqlite3_backup_remaining() and sqlite3_backup_pagecount()</b></p>
 
 <p>Each call to sqlite3_backup_step() sets two values inside
 the <a href="../c3ref/backup.html">sqlite3_backup</a> object: the number of pages still to be backed

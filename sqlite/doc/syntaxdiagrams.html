@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Syntax Diagrams For SQLite</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -156,6 +155,7 @@ See also:&nbsp;&nbsp; <a href="lang_analyze.html">lang_analyze.html</a>
 <h4>attach-stmt:</h4><blockquote>
 <img src="images/syntax/attach-stmt.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
+References:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>
 </blockquote>
 
@@ -253,7 +253,7 @@ See also:&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
 <img src="images/syntax/table-constraint.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#create-table-stmt">create-table-stmt</a><br></br>
 References:&nbsp;&nbsp; <a href="#conflict-clause">conflict-clause</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#foreign-key-clause">foreign-key-clause</a>&nbsp;&nbsp; <a href="#indexed-column">indexed-column</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#constraints">lang_createtable.html#constraints</a>&nbsp;&nbsp; <a href="lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
+See also:&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#primkeyconst">lang_createtable.html#primkeyconst</a>&nbsp;&nbsp; <a href="lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
 </blockquote>
 
 <a name="foreign-key-clause"></a>
@@ -267,7 +267,7 @@ See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nb
 <h4>conflict-clause:</h4><blockquote>
 <img src="images/syntax/conflict-clause.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_conflict.html">lang_conflict.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#constraints">lang_createtable.html#constraints</a>
+See also:&nbsp;&nbsp; <a href="lang_conflict.html">lang_conflict.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#notnullconst">lang_createtable.html#notnullconst</a>
 </blockquote>
 
 <a name="create-trigger-stmt"></a>
@@ -347,7 +347,7 @@ See also:&nbsp;&nbsp; <a href="lang_dropview.html">lang_dropview.html</a>
 <a name="expr"></a>
 <h4>expr:</h4><blockquote>
 <img src="images/syntax/expr.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#attach-stmt">attach-stmt</a>&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
 References:&nbsp;&nbsp; <a href="#literal-value">literal-value</a>&nbsp;&nbsp; <a href="#raise-function">raise-function</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#type-name">type-name</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
 </blockquote>
@@ -415,7 +415,7 @@ See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
 <h4>select-core:</h4><blockquote>
 <img src="images/syntax/select-core.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#join-source">join-source</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a><br></br>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#join-source">join-source</a>&nbsp;&nbsp; <a href="#result-column">result-column</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
 </blockquote>
 
@@ -461,7 +461,7 @@ See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp
 <a name="ordering-term"></a>
 <h4>ordering-term:</h4><blockquote>
 <img src="images/syntax/ordering-term.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
 References:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
 </blockquote>

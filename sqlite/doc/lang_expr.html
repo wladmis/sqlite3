@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Query Language: expression</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>expression</h2><h4><a href="syntaxdiagrams.html#expr">expr:</a></h4><blockquote> <img alt="syntax diagram expr" src="images/syntax/expr.gif"></img> </blockquote>
@@ -293,7 +292,7 @@ as NULL.</p>
 <p>The maximum parameter number is set at compile-time by
 the <a href="limits.html#max_variable_number">SQLITE_MAX_VARIABLE_NUMBER</a> macro.  An individual <a href="c3ref/sqlite3.html">database connections</a>
 D can reduce its maximum parameter number below the compile-time maximum
-using the <a href="c3ref/limit.html">sqlite3_limit</a>(D, <a href="c3ref/c_limit_attached.html">SQLITE_LIMIT_VARIABLE_NUMBER</a>,...) interface.
+using the <a href="c3ref/limit.html">sqlite3_limit</a>(D, <a href="c3ref/c_limit_attached.html#sqlitelimitvariablenumber">SQLITE_LIMIT_VARIABLE_NUMBER</a>,...) interface.
 </p>
 
 <a name="like"></a>
@@ -508,6 +507,8 @@ with a single column. The result of the expression is the value of the
 only column in the first row returned by the SELECT statement. If the SELECT 
 yields more than one result row, all rows after the first are ignored. If
 the SELECT yields no rows, then the value of the expression is NULL.
+The LIMIT of a scalar subquery is always 1.
+Any other LIMIT value given in the SQL text is ignored.
 
 <p>All types of <a href="lang_select.html">SELECT</a> statement, including aggregate and compound SELECT
 queries (queries with keywords like UNION or EXCEPT) are allowed as scalar
@@ -592,7 +593,7 @@ the &lt;type-name&gt; specified as part of the CAST expression.
         of the conversion is 0.
 
       <p>A cast of a REAL value into an INTEGER will truncate the fractional
-      part of the REAL.  If an REAL is too large to be represented as an 
+      part of the REAL.  If a REAL is too large to be represented as an 
       INTEGER then the result of the cast is the largest negative integer: 
       -9223372036854775808.
 

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>The SQLite R*Tree Module</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,14 +113,14 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
 
+<h1 align="center">The SQLite R*Tree Module</h1>
 
-<h1>1.0 Overview</h1>
+<h2>1.0 Overview</h2>
 
 <p>
 An <a href="http://en.wikipedia.org/wiki/R-tree">R-Tree</a> is a special
@@ -151,7 +151,7 @@ Norbert Beckmann, Hans-Peter Kriegel, Ralf Schneider, Bernhard Seeger:
 and Rectangles.</em> SIGMOD Conference 1990: 322-331.
 </p>
 
-<h1>2.0 Compiling The R*Tree Module</h1>
+<h2>2.0 Compiling The R*Tree Module</h2>
 
 <p>
 The source code to the SQLite R*Tree module is included as part
@@ -162,7 +162,7 @@ by adding the option "-DSQLITE_ENABLE_RTREE=1" to the compiler
 command-line.
 </p>
 
-<h1>3.0 Using the R*Tree Module</h1>
+<h2>3.0 Using the R*Tree Module</h2>
 
 <p>
 The SQLite R*Tree module is implemented as a
@@ -189,7 +189,7 @@ other than a floating point value into the other columns, will result
 in an error.
 </p>
 
-<h2>3.1 Creating An R*Tree Index</h2>
+<h3>3.1 Creating An R*Tree Index</h3>
 
 <p>
 A new R*Tree index is created as follows:
@@ -215,7 +215,7 @@ store its content.  The names of these shadow tables are:
 
 <p>
 The shadow tables are ordinary SQLite data tables.  You can query them 
-directly if you like, though this unlikely to to reveal anything particularly
+directly if you like, though this unlikely to reveal anything particularly
 useful. 
 And you can <a href="lang_update.html">UPDATE</a>, <a href="lang_delete.html">DELETE</a>, <a href="lang_insert.html">INSERT</a> or even <a href="lang_droptable.html">DROP</a> 
 the shadow tables, though doing so will corrupt your R*Tree index.
@@ -236,7 +236,7 @@ CREATE VIRTUAL TABLE demo_index USING rtree(
 );
 </pre></blockquote>
 
-<h2>3.2 Populating An R*Tree Index</h2>
+<h3>3.2 Populating An R*Tree Index</h3>
 
 <p>
 The usual <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a>, and <a href="lang_delete.html">DELETE</a> commands work on an R*Tree
@@ -248,7 +248,7 @@ R*Tree index, we can do something like this:
 INSERT INTO demo_index VALUES(
     1,                   -- Primary key
     -80.7749, -80.7747,  -- Longitude range
-    30.3776, 30.3778     -- Latitude range
+    33.3776, 35.3778     -- Latitude range
 );
 INSERT INTO demo_index VALUES(
     2,
@@ -259,11 +259,12 @@ INSERT INTO demo_index VALUES(
 
 <p>
 The entries above might represent (for example) a bounding box around
-the offices for SQLite.org and bounding box around the
-12th Congressional District of North Carolina in which SQLite.org is located.  
+the main office for SQLite.org and bounding box around the
+12th Congressional District of North Carolina (prior to the 2011
+redistricting) in which SQLite.org was located.  
 </p>
 
-<h2>3.3 Querying An R*Tree Index</h2>
+<h3>3.3 Querying An R*Tree Index</h3>
 
 <p>
 Any valid query will work against an R*Tree index.  But the R*Tree
@@ -329,7 +330,29 @@ has to work with, and the smaller the bounding box, the faster the
 results will come back.
 </p>
 
-<h1>4.0 Using R*Trees Effectively</h1>
+<h3>3.3 Roundoff Error</h3>
+
+<p>
+By default, coordinates are stored in an R*Tree using 32-bit floating
+point values.  When a coordinate cannot be exactly represented by a
+32-bit floating point number, the lower-bound coordinates are rounded down
+and the upper-bound coordinates are rounded up.  Thus, bounding boxes might
+be slightly larger than specified, but will never be any smaller.  This
+is exactly what is desired for doing the more common "overlapping" queries
+where the application wants to find every entry in the R*Tree that overlaps
+a query bounding box.  Rounding the entry bounding boxes outward might cause a
+few extra entries to appears in an overlapping query if the edge of the
+entry bounding box corresponds to an edge of the query bounding box.  But
+the overlapping query will never miss a valid table entry.  
+
+<p>However, for a "contained-within" style query, rounding the bounding
+boxes outward might cause some entries to be excluded from the result set
+if the edge of the entry bounding box corresponds to the edge of the query
+bounding box.  To guard against this, applications should expand their
+contained-within query boxes slightly (by 0.000012%) by rounding down the
+lower coordinates and rounding up the top coordinates, in each dimension.
+
+<h2>4.0 Using R*Trees Effectively</h2>
 
 <p>
 The only information that an R*Tree index stores about an object is
@@ -413,9 +436,32 @@ calls to contained_in() function to a small subset of the entire table.
 The R*Tree index did not find the exact answer itself, it merely
 limited the search space.</p>
 
+<a name="intrtree"></a>
+
+<h2>5.0 Integer-Valued R-Trees</h2>
+
+<p>
+The default virtual table ("rtree") normally stores coordinates as
+single-precision (4-byte) floating point numbers.  If integer coordinates
+are desired, declare the table using "rtree_i32" instead:
+
+<blockquote><pre>
+CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,y1);
+</pre></blockquote>
+
+<p>
+An rtree_i32 stores coordinates as 32-bit signed integers.  But it still
+using floating point computations internally as part of the r-tree algorithm.
+For applications running on processors without hardware floating point,
+it might be desirable to have a pure integer implementation of r-trees.
+This is accomplished by compiling with the <a href="compile.html#rtree_int_only">SQLITE_RTREE_INT_ONLY</a> option.
+When SQLITE_RTREE_INT_ONLY is used, both the "rtree" and the "rtree_i32"
+virtual tables store 32-bit integers and only integer values are used for
+internal computations.
+
 <a name="customquery"></a>
 
-<h1>5.0 Custom R-Tree Queries</h1>
+<h2>6.0 Custom R-Tree Queries</h2>
 
 <p>By using standard SQL expressions in the WHERE clause of a SELECT query,
 a user may query for all r-tree entries that intersect a specified

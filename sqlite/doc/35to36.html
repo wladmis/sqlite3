@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Changes From Version 3.5.9 To 3.6.0</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -148,7 +147,7 @@ a:visited { color: #734559 }
       to by a parameter, rather than returning the output directly.
       This change allows the xAccess() method to report failures.
       In association with this signature change, a new 
-      extended error code <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_ACCESS</a> has been added.
+      extended error code <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_ACCESS</a> has been added.
       </p></li>
 
       <li><p>The xGetTempname method has been removed from <a href="c3ref/vfs.html">sqlite3_vfs</a>.
@@ -165,7 +164,7 @@ a:visited { color: #734559 }
       has been modified so that it returns an <a href="c3ref/c_abort.html">error code</a> and stores its
       boolean result into an integer pointed to by a parameter.  In
       association with this change, a new extended error code
-      <a href="c3ref/c_busy_recovery.html">SQLITE_IOERR_CHECKRESERVEDLOCK</a> has been added.</p></li>
+      <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_CHECKRESERVEDLOCK</a> has been added.</p></li>
 
   <li><p>When SQLite is ported to new operation systems (operating systems 
       other than Unix, Windows, and OS/2 for which ports are provided together
@@ -187,7 +186,7 @@ a:visited { color: #734559 }
       <li><p>The SQLITE_MUTEX_APPDEF compile-time parameter is no longer
       recognized.  As a replacement, alternative 
       <a href="c3ref/mutex_alloc.html">mutex implementations</a> may be created
-      at runtime using <a href="c3ref/config.html">sqlite3_config()</a> with the <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MUTEX</a>
+      at runtime using <a href="c3ref/config.html">sqlite3_config()</a> with the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmutex">SQLITE_CONFIG_MUTEX</a>
       operator and the <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object.</p></li>
 
       <li><p>Compile-time options OS_UNIX, OS_WIN, OS_OS2, OS_OTHER, and
@@ -215,7 +214,7 @@ a:visited { color: #734559 }
   changes in the SQLite operating-system interface for version 3.6.0
   only affect the rare applications that make use of the 
   <a href="c3ref/vfs.html">virtual file system</a> interface or that
-  supply a application-defined <a href="c3ref/mutex_alloc.html">mutex implementation</a>
+  supply an application-defined <a href="c3ref/mutex_alloc.html">mutex implementation</a>
   or that make use of other obscure compile-time options.  The
   changes introduced by SQLite version 3.6.0 will have zero impact on the
   vast majority of SQLite applications that use the built-in interfaces
@@ -312,12 +311,12 @@ a:visited { color: #734559 }
   using <a href="c3ref/config.html">sqlite3_config()</a> include the following:</p>
   <ol type="a">
   <li><p>Specify an alternative mutex implementation using the
-  <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MUTEX</a> verb with the <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object.</p></li>
+  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmutex">SQLITE_CONFIG_MUTEX</a> verb with the <a href="c3ref/mutex_methods.html">sqlite3_mutex_methods</a> object.</p></li>
   <li><p>Specify an alternative malloc implementation using the
-  <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MALLOC</a> verb with the <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> object.</p></li>
+  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a> verb with the <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> object.</p></li>
   <li><p>Partially or fully disable the use of mutexes using
-  <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MULTITHREAD</a> and
-  <a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_SERIALIZED</a>.</p></li>
+  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a>, <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">SQLITE_CONFIG_MULTITHREAD</a> and
+  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigserialized">SQLITE_CONFIG_SERIALIZED</a>.</p></li>
   </ol>
   </li>
 

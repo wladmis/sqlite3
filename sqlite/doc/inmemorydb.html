@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>In-Memory Databases</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -134,7 +133,7 @@ a real disk file into one of the <a href="c3ref/open.html">sqlite3_open()</a>, <
 example:</p>
 
 <blockquote><pre>
-rc = sqlite3_open(":memory:", &db);
+rc = sqlite3_open(":memory:", &amp;db);
 </pre></blockquote>
 
 <p>When this is done, no disk file is opened.  
@@ -148,14 +147,73 @@ other.  So, opening two database connections each with the filename
 filename is permitted.  For example, it can be used as the
 <i>filename</i> in an <a href="lang_attach.html">ATTACH</a> command:</p>
 
-<blockquote>
-<b>ATTACH DATABASE ':memory:' AS aux1;</b>
-</blockquote>
+<blockquote><pre>
+ATTACH DATABASE ':memory:' AS aux1;
+</pre></blockquote>
 
 <p>Note that in order for the special ":memory:" name to apply and to
 create a pure in-memory database, there must be no additional text in the
 filename.  Thus, a disk-based database can be created in a file by prepending
 a pathname, like this:  "./:memory:".</p>
+
+<p>The special ":memory:" filename also works when using <a href="uri.html">URI filenames</a>.
+For example:
+
+<blockquote><pre>
+rc = sqlite3_open("file::memory:", &amp;db);
+</pre></blockquote>
+
+Or,
+
+<blockquote><pre>
+ATTACH DATABASE 'file::memory:' AS aux1;
+</pre></blockquote>
+
+<a name="sharedmemdb"></a>
+
+<h2>In-memory Databases And Shared Cache</h2>
+
+<p>In-memory databases are allowed to use <a href="sharedcache.html">shared cache</a> if they are
+opened using a <a href="uri.html">URI filename</a>.  If the unadorned ":memory:" name is used
+to specify the in-memory database, then that database always has a private
+cache and is this only visible to the database connection that originally
+opened it.  However, the same in-memory database can be opened by two or
+more database connections as follows:
+
+<blockquote><pre>
+rc = sqlite3_open("file::memory:?cache=shared", &amp;db);
+</pre></blockquote>
+
+Or,
+
+<blockquote><pre>
+ATTACH DATABASE 'file::memory:?cache=shared' AS aux1;
+</pre></blockquote>
+
+<p>This allows separate database connections to share the same
+in-memory database.  Of course, all database connections sharing the
+in-memory database need to be in the same process.  The database is
+automatically deleted and memory is reclaimed when the last connection
+to the database closes.
+
+<p>If two or more distinct but shareable in-memory databases are needed
+in a single process, then the <a href="uri.html#coreqp">mode=memory</a> query parameter can
+be used with a <a href="uri.html">URI filename</a> to create a named in-memory database:
+
+<blockquote><pre>
+rc = sqlite3_open("file:memdb1?mode=memory&amp;cache=shared", &amp;db);
+</pre></blockquote>
+
+Or,
+
+<blockquote><pre>
+ATTACH DATABASE 'file:memdb1?mode=memory&amp;cache=shared' AS aux1;
+</pre></blockquote>
+
+<p>When an in-memory database is named in this way, it will only share its
+cache with another connection that uses exactly the same name.
+
+
 
 <a name="temp_db"></a>
 
@@ -166,12 +224,12 @@ a pathname, like this:  "./:memory:".</p>
 the database.</p>
 
 <blockquote><pre>
-rc = sqlite3_open("", &db);
+rc = sqlite3_open("", &amp;db);
 </pre></blockquote>
 
-<blockquote><b>
+<blockquote><pre>
 ATTACH DATABASE '' AS aux2;
-</b></blockquote>
+</pre></blockquote>
 
 <p>A different temporary file is created each time, so that just like as
 with the special ":memory:" string, two database connections to temporary

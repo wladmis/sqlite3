@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Query Language: ANALYZE</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ANALYZE</h2><h4><a href="syntaxdiagrams.html#analyze-stmt">analyze-stmt:</a></h4><blockquote> <img alt="syntax diagram analyze-stmt" src="images/syntax/analyze-stmt.gif"></img> </blockquote>
@@ -122,8 +121,8 @@ a:visited { color: #734559 }
 
 <p> The ANALYZE command gathers statistics about tables and
 indices and stores the collected information
-in a special tables in the database where the query optimizer can use
-them to help make better query planning choices.
+in <a href="fileformat2.html#intschema">internal tables</a> of the database where the query optimizer can
+access the information and use it to help make better query planning choices.
 If no arguments are given, all attached databases are
 analyzed.  If a database name is given as the argument, then all tables
 and indices in that one database are analyzed.  
@@ -132,18 +131,23 @@ indices associated with that table are analyzed.  If the argument
 is an index name, then only that one index is analyzed.</p>
 
 <p> The default implementation stores all statistics in a single
-table named <b>sqlite_stat1</b>.  If SQLite is compiled with the
-<a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> option, then additional histogram data is
-collected and stored in <b>sqlite_stat2</b>.
+table named "<a href="fileformat2.html#stat1tab">sqlite_stat1</a>".  If SQLite is compiled with the
+<a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> option, then additional histogram data is
+collected and stored in <a href="fileformat2.html#stat3tab">sqlite_stat3</a>.
+Older versions of SQLite would make use of the <a href="fileformat2.html#stat2tab">sqlite_stat2</a> table
+when compiled with <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> but all recent versions of
+SQLite ignore the sqlite_stat2 table.
 Future enhancements may create
-additional tables with the same name pattern except with the "1"
-or "2" changed to a different digit.</p>
+additional <a href="fileformat2.html#intschema">internal tables</a> with the same name pattern except with
+final digit larger than "3".</p>
 
-<p> The <a href="lang_droptable.html">DROP TABLE</a> and <a href="lang_altertable.html">ALTER TABLE</a> commands do
-not work on the <b>sqlite_stat1</b> or <b>sqlite_stat2</b> tables,
+<p> The <a href="lang_altertable.html">ALTER TABLE</a> command does
+not work on the sqlite_stat1 or sqlite_stat3 tables,
 but all the content of those tables can be queried using <a href="lang_select.html">SELECT</a>
 and can be deleted, augmented, or modified using the <a href="lang_delete.html">DELETE</a>,
 <a href="lang_insert.html">INSERT</a>, and <a href="lang_update.html">UPDATE</a> commands.
+The <a href="lang_droptable.html">DROP TABLE</a> command works on sqlite_stat1 and
+sqlite_stat3 as of SQLite version 3.7.9.
 Appropriate care should be used when changing the content of the statistics
 tables as invalid content can cause SQLite to select inefficient
 query plans.  Generally speaking, one should not modify the content of
@@ -156,7 +160,7 @@ changes significantly, or if the database schema changes, then one should
 consider rerunning the ANALYZE command in order to update the statistics.</p>
 
 <p> The query planner might not notice manual changes to the
-<b>sqlite_stat1</b> and/or <b>sqlite3_stat2</b> tables.  An application
+sqlite_stat1 and/or sqlite_stat3 tables.  An application
 can force the query planner to reread the statistics tables by running
 <b>ANALYZE sqlite_master</b>. </p>
 

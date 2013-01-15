@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Backup API</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -165,7 +164,7 @@ a:visited { color: #734559 }
 </ul>
 
 <p>
-  The <a href="c3ref/backup_finish.html">Online Backup API</a> was created to 
+  The <a href="c3ref/backup_finish.html#sqlite3backupinit">Online Backup API</a> was created to 
   address these concerns. The online backup API allows the contents of
   one database to be copied into another database, overwriting the 
   original contents of the target database. The copy operation may be 
@@ -176,7 +175,7 @@ a:visited { color: #734559 }
   made.
 
 <p>
-  The online backup API is <a href="c3ref/backup_finish.html">documented here</a>.
+  The online backup API is <a href="c3ref/backup_finish.html#sqlite3backupinit">documented here</a>.
   The remainder of this page contains two C language examples illustrating 
   common uses of the API and discussions thereof. Reading these examples
   is no substitute for reading the API documentation!
@@ -233,10 +232,10 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
     <span style="color:blue;font-style:italic">** connection pTo. If no error occurred, then the error code belonging</span>
     <span style="color:blue;font-style:italic">** to pTo is set to SQLITE_OK.</span>
     <span style="color:blue;font-style:italic">*/</span>
-    pBackup = <a href="c3ref/backup_finish.html">sqlite3_backup_init</a>(pTo, "main", pFrom, "main");
+    pBackup = <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init</a>(pTo, "main", pFrom, "main");
     if( pBackup ){
-      (void)<a href="c3ref/backup_finish.html">sqlite3_backup_step</a>(pBackup, -1);
-      (void)<a href="c3ref/backup_finish.html">sqlite3_backup_finish</a>(pBackup);
+      (void)<a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step</a>(pBackup, -1);
+      (void)<a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish</a>(pBackup);
     }
     rc = <a href="c3ref/errcode.html">sqlite3_errcode</a>(pTo);
   }
@@ -256,13 +255,13 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
   follows in this example:
 
   <ol>
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_init()</a> is called to create an <a href="c3ref/backup.html">sqlite3_backup</a>
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init()</a> is called to create an <a href="c3ref/backup.html">sqlite3_backup</a>
         object to copy data between the two databases (either from a file and
         into the in-memory database, or vice-versa).
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> is called with a parameter of 
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> is called with a parameter of 
         <tt>-1</tt> to copy the entire source database to the destination.
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_finish()</a> is called to clean up resources
-        allocated by <a href="c3ref/backup_finish.html">sqlite3_backup_init()</a>.
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a> is called to clean up resources
+        allocated by <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init()</a>.
   </ol>
 
 <p><b>Error handling</b>
@@ -272,13 +271,13 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
   then the <a href="c3ref/c_abort.html">error code</a> and <a href="c3ref/errcode.html">message</a> are attached to
   the destination <a href="c3ref/sqlite3.html">database connection</a>.
   Additionally, if
-  <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> encounters an error, then the <a href="c3ref/c_abort.html">error code</a> is returned
-  by both the <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> call itself, and by the subsequent call
-  to <a href="c3ref/backup_finish.html">sqlite3_backup_finish()</a>. So a call to <a href="c3ref/backup_finish.html">sqlite3_backup_finish()</a>
+  <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> encounters an error, then the <a href="c3ref/c_abort.html">error code</a> is returned
+  by both the <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> call itself, and by the subsequent call
+  to <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>. So a call to <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>
   does not overwrite an <a href="c3ref/c_abort.html">error code</a> stored in the destination
-  <a href="c3ref/sqlite3.html">database connection</a> by <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a>.  This feature
+  <a href="c3ref/sqlite3.html">database connection</a> by <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a>.  This feature
   is used in the example code to reduce amount of error handling required.
-  The return values of the <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> and <a href="c3ref/backup_finish.html">sqlite3_backup_finish()</a>
+  The return values of the <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> and <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>
   calls are ignored and the error code indicating the success or failure of
   the copy operation collected from the destination <a href="c3ref/sqlite3.html">database connection</a>
   afterward.
@@ -305,7 +304,7 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
   timeout with <a href="c3ref/sqlite3.html">database connection</a> pFile 
   using <a href="c3ref/busy_handler.html">sqlite3_busy_handler()</a> or <a href="c3ref/busy_timeout.html">sqlite3_busy_timeout()</a>
   as soon as it is opened. If it fails to obtain a required lock immediately,
-  <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> uses any registered busy-handler callback or timeout
+  <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> uses any registered busy-handler callback or timeout
   in the same way as <a href="c3ref/step.html">sqlite3_step()</a> or <a href="c3ref/exec.html">sqlite3_exec()</a> does.
 
 <p>
@@ -363,7 +362,7 @@ int backupDb(
   if( rc==SQLITE_OK ){
 
     <span style="color:blue;font-style:italic">/* Open the <a href="c3ref/backup.html">sqlite3_backup</a> object used to accomplish the transfer */</span>
-    pBackup = <a href="c3ref/backup_finish.html">sqlite3_backup_init</a>(pFile, "main", pDb, "main");
+    pBackup = <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init</a>(pFile, "main", pDb, "main");
     if( pBackup ){
 
       <span style="color:blue;font-style:italic">/* Each iteration of this loop copies 5 database pages from database</span>
@@ -371,10 +370,10 @@ int backupDb(
       <span style="color:blue;font-style:italic">** indicates that there are still further pages to copy, sleep for</span>
       <span style="color:blue;font-style:italic">** 250 ms before repeating. */</span>
       do {
-        rc = <a href="c3ref/backup_finish.html">sqlite3_backup_step</a>(pBackup, 5);
+        rc = <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step</a>(pBackup, 5);
         xProgress(
             <a href="c3ref/backup_finish.html">sqlite3_backup_remaining</a>(pBackup),
-            <a href="c3ref/backup_finish.html">sqlite3_backup_pagecount</a>(pBackup)
+            <a href="c3ref/backup_finish.html#sqlite3backuppagecount">sqlite3_backup_pagecount</a>(pBackup)
         );
         if( rc==SQLITE_OK || rc==SQLITE_BUSY || rc==SQLITE_LOCKED ){
           <a href="c3ref/sleep.html">sqlite3_sleep</a>(250);
@@ -382,7 +381,7 @@ int backupDb(
       } while( rc==SQLITE_OK || rc==SQLITE_BUSY || rc==SQLITE_LOCKED );
 
       <span style="color:blue;font-style:italic">/* Release resources allocated by backup_init(). */</span>
-      (void)<a href="c3ref/backup_finish.html">sqlite3_backup_finish</a>(pBackup);
+      (void)<a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish</a>(pBackup);
     }
     rc = <a href="c3ref/errcode.html">sqlite3_errcode</a>(pFile);
   }
@@ -397,7 +396,7 @@ int backupDb(
 
 <p>
   The function presented in the previous example copies the entire source
-  database in one call to <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a>. This requires holding a 
+  database in one call to <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a>. This requires holding a 
   read-lock on the source database file for the duration of the operation,
   preventing any other database user from writing to the database. It also
   holds the mutex associated with database pInMemory throughout the copy,
@@ -407,16 +406,16 @@ int backupDb(
   approach:
 
   <ol>
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_init()</a> is called to create an <a href="c3ref/backup.html">sqlite3_backup</a>
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init()</a> is called to create an <a href="c3ref/backup.html">sqlite3_backup</a>
         object to copy data from database pDb to the backup database file 
         identified by zFilename.
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_step()</a> is called with a parameter of 5 to
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> is called with a parameter of 5 to
         copy 5 pages of database pDb to the backup database (file zFilename).
     <li>If there are still more pages to copy from database pDb, then the
         function sleeps for 250 milliseconds (using the <a href="c3ref/sleep.html">sqlite3_sleep()</a>
         utility) and then returns to step 2.
-    <li>Function <a href="c3ref/backup_finish.html">sqlite3_backup_finish()</a> is called to clean up resources
-        allocated by <a href="c3ref/backup_finish.html">sqlite3_backup_init()</a>.
+    <li>Function <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a> is called to clean up resources
+        allocated by <a href="c3ref/backup_finish.html#sqlite3backupinit">sqlite3_backup_init()</a>.
   </ol>
 
 <p><b>File and Database Connection Locking</b>

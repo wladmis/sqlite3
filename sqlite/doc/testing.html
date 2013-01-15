@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>How SQLite Is Tested</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -129,16 +128,15 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_7_5.html">version 3.7.5</a> (all statistics in the report are against that
-release of SQLite),
+<p>As of <a href="releaselog/3_7_14.html">version 3.7.14</a>,
 the SQLite library consists of approximately
-73.0 KSLOC of C code.
+81.3 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-1251 times as much
+1124 times as much
 test code and test scripts - 
-91378.6 KSLOC.</p>
+91421.1 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -179,13 +177,13 @@ SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 18.9 KSLOC 
+The TCL test harness itself consists of 25.1 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 617 files totaling 
-9.3MB in size.  There are
-27664 distinct test cases, but many of the test
+in 711 files totaling 
+10.0MB in size.  There are
+29226 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
-so that on a full test run, about 1.4 million 
+so that on a full test run, about 3.1 million 
 separate tests are performed.
 </p>
 </li>
@@ -198,10 +196,10 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-48.7 MB or 646.8 KSLOC
-of C code implementing 32688 distinct test cases.
+50.1 MB or 666.9 KSLOC
+of C code implementing 34229 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
-about 0.7 million different test
+about 0.8 million different test
 instances.  The cases that provide 100% branch test coverage constitute
 a subset of the total TH3 test suite.  A soak test
 prior to release does hundreds of millions of tests.
@@ -227,7 +225,7 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-134.8 thousand test cases.
+129.1 thousand test cases.
 The veryquick tests include everything except the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
@@ -261,7 +259,7 @@ SQLite be able to gracefully handle OOM errors.</p>
 
 <p>OOM testing is accomplished by simulating OOM errors.
 SQLite allows an application to substitute an alternative malloc()
-implementation using the <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_getmalloc.html">SQLITE_CONFIG_MALLOC</a>,...)
+implementation using the <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a>,...)
 interface.  The TCL and TH3 test harnesses are both capable of
 inserting a modified version of malloc() that can be rigged to fail 
 after a certain number of allocations.  These instrumented mallocs
@@ -331,7 +329,7 @@ harness to simulate the state of the database file following a crash.</p>
 <p>In the TCL test harness, the crash simulation is done in a separate
 process.  The main testing process spawns a child process which runs
 some SQLite operation and randomly crashes somewhere in the middle of
-a write operation.  A special VFS randomly reorders and corrupts
+a write operation.  A special <a href="vfs.html">VFS</a> randomly reorders and corrupts
 the unsynchronized
 write operations to simulate the effect of buffered filesystems.  After
 the child dies, the original test process opens and reads the test
@@ -342,7 +340,7 @@ occurs.</p>
 
 <p>The TH3 test harness needs to run on embedded systems that do not
 necessarily have the ability to spawn child processes, so it uses
-an in-memory VFS to simulate crashes.  The in-memory VFS can be rigged
+an in-memory <a href="vfs.html">VFS</a> to simulate crashes.  The in-memory <a href="vfs.html">VFS</a> can be rigged
 to make a snapshot of the entire filesystem after a set number of I/O
 operations.  Crash tests run in a loop.  On each iteration of the loop,
 the point at which a snapshot is made is advanced until the SQLite
@@ -384,7 +382,7 @@ resulting prepared statement is run to make sure it gives a reasonable
 result.</p>
 
 <p>The SQL fuzz generator tests are part of the TCL test suite.
-During a full test run, about 103.9 
+During a full test run, about 126.3 
 thousand fuzz SQL statements are
 generated and tested.</p>
 
@@ -460,7 +458,7 @@ harnesses are zealous to enforce this.</p>
 utility on SuSE Linux 10.1 on x86 hardware with the GCC 4.0.1 compiler.</p>
 
 <p>The "SQLite core" in the previous paragraph excludes the
-operating-system dependent <a href="c3ref/vfs.html">VFS</a> backends, since it is
+operating-system dependent <a href="vfs.html">VFS</a> backends, since it is
 not possible to write cross-platform tests for those modules.  Extensions
 such as FTS3 and RTree are also excluded from the analysis.</p>
 
@@ -618,7 +616,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The SQLite source code contains 648
+<p>The SQLite source code contains 667
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -680,7 +678,7 @@ quality of SQLite.</p>
 
 <h3>8.1 Assert</h3>
 
-<p>The SQLite core contains 3242 <tt>assert()</tt>
+<p>The SQLite core contains 3531 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be
@@ -759,7 +757,7 @@ in multi-threaded applications.</p>
 are atomic across system crashes and power failures is to write
 all changes into the rollback journal file prior to changing the
 database.  The TCL test harness contains an alternative
-<a href="c3ref/vfs.html">Virtual File System</a> implementation that helps to
+<a href="vfs.html">OS backend</a> implementation that helps to
 verify this is occurring correctly.  The "journal-test VFS" monitors
 all disk I/O traffic between the database file and rollback journal,
 checking to make sure that nothing is written into the database
@@ -830,25 +828,20 @@ check for correctness.  Static analysis includes looking at compiler
 warning messages and running the code through more in-depth
 analysis engines such as the
 <a href="http://clang-analyzer.llvm.org/">Clang Static Analyzer</a>.
-SQLite is developed primarily using GCC and it does
-compile without warnings on GCC using the -Wall and -Wextra flags.
-The SQLite source code is also run through Clang from time to time 
-as well, though most of the warnings there are false-positives.
-VC++ often will generate a number of warnings from SQLite source code,
-but the experience of SQLite developers is that VC++ warnings are of
-lower quality and can be safely ignored.  Users are encouraged not
-to stress over VC++ warnings.</p>
+SQLite compiles without warnings on GCC and Clang using 
+the -Wall and -Wextra flags on Linux and Mac and on MSVC on Windows.
+No warnings are generated by the Clang Static Analyzer tool "scan-build"
+either.  Nevertheless, some warnings might be generated by other
+static analyzers.  Users are encouraged not to stress over these
+warnings and to instead take solace in the intense testing of SQLite
+described above. 
+</p>
 
-<p>Static analysis has not proven to be helpful in finding
-bugs in SQLite.  We cannot call to mind a single problem in SQLite that
-was detected by static analysis that was not first seen by one
-of the other testing methods described above.  On the other hand,
-we have on occasion introduced new bugs in our efforts to get SQLite
-to compile without warnings.</p>
-
-<p>Our experience, then, is that static analysis is not helpful
-to maintaining high code quality and it is therefore deemphasized
-in SQLite development and maintenance.</p>
+<p>Static analysis has not proven to be especially helpful in finding
+bugs in SQLite.  Static analysis has found a few bugs in SQLite, but
+those are the exceptions.  More bugs have been
+introduced into SQLite while trying to get it to compile without 
+warnings than have been found by static analysis.</p>
 
 <a name="summary"></a>
 

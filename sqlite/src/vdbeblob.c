@@ -273,7 +273,7 @@ int sqlite3_blob_open(
 
       /* Configure the OP_TableLock instruction */
 #ifdef SQLITE_OMIT_SHARED_CACHE
-      sqlite3VdbeChangeToNoop(v, 2, 1);
+      sqlite3VdbeChangeToNoop(v, 2);
 #else
       sqlite3VdbeChangeP1(v, 2, iDb);
       sqlite3VdbeChangeP2(v, 2, pTab->tnum);
@@ -283,7 +283,7 @@ int sqlite3_blob_open(
 
       /* Remove either the OP_OpenWrite or OpenRead. Set the P2 
       ** parameter of the other to pTab->tnum.  */
-      sqlite3VdbeChangeToNoop(v, 4 - flags, 1);
+      sqlite3VdbeChangeToNoop(v, 4 - flags);
       sqlite3VdbeChangeP2(v, 3 + flags, pTab->tnum);
       sqlite3VdbeChangeP3(v, 3 + flags, iDb);
 
@@ -297,7 +297,10 @@ int sqlite3_blob_open(
       sqlite3VdbeChangeP4(v, 3+flags, SQLITE_INT_TO_PTR(pTab->nCol+1),P4_INT32);
       sqlite3VdbeChangeP2(v, 7, pTab->nCol);
       if( !db->mallocFailed ){
-        sqlite3VdbeMakeReady(v, 1, 1, 1, 0, 0, 0);
+        pParse->nVar = 1;
+        pParse->nMem = 1;
+        pParse->nTab = 1;
+        sqlite3VdbeMakeReady(v, pParse);
       }
     }
    

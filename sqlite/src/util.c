@@ -216,13 +216,13 @@ int sqlite3Dequote(char *z){
 ** Some systems have stricmp().  Others have strcasecmp().  Because
 ** there is no consistency, we will define our own.
 **
-** IMPLEMENTATION-OF: R-20522-24639 The sqlite3_strnicmp() API allows
-** applications and extensions to compare the contents of two buffers
-** containing UTF-8 strings in a case-independent fashion, using the same
-** definition of case independence that SQLite uses internally when
-** comparing identifiers.
+** IMPLEMENTATION-OF: R-30243-02494 The sqlite3_stricmp() and
+** sqlite3_strnicmp() APIs allow applications and extensions to compare
+** the contents of two buffers containing UTF-8 strings in a
+** case-independent fashion, using the same definition of "case
+** independence" that SQLite uses internally when comparing identifiers.
 */
-int sqlite3StrICmp(const char *zLeft, const char *zRight){
+int sqlite3_stricmp(const char *zLeft, const char *zRight){
   register unsigned char *a, *b;
   a = (unsigned char *)zLeft;
   b = (unsigned char *)zRight;
@@ -331,7 +331,7 @@ int sqlite3AtoF(const char *z, double *pResult, int length, u8 enc){
     }
     /* copy digits to exponent */
     while( z<zEnd && sqlite3Isdigit(*z) ){
-      e = e*10 + (*z - '0');
+      e = e<10000 ? (e*10 + (*z - '0')) : 10000;
       z+=incr;
       eValid = 1;
     }
@@ -371,7 +371,7 @@ do_atof_calc:
     /* if exponent, scale significand as appropriate
     ** and store in result. */
     if( e ){
-      double scale = 1.0;
+      LONGDOUBLE_TYPE scale = 1.0;
       /* attempt to handle extremely small/large numbers better */
       if( e>307 && e<342 ){
         while( e%308 ) { scale *= 1.0e+1; e -= 1; }
@@ -381,6 +381,12 @@ do_atof_calc:
         }else{
           result = s * scale;
           result *= 1.0e+308;
+        }
+      }else if( e>=342 ){
+        if( esign<0 ){
+          result = 0.0*s;
+        }else{
+          result = 1e308*1e308*s;  /* Infinity */
         }
       }else{
         /* 1.0e+22 is the largest power of 10 than can be 
@@ -983,13 +989,12 @@ void sqlite3Put4byte(unsigned char *p, u32 v){
 
 
 
-#if !defined(SQLITE_OMIT_BLOB_LITERAL) || defined(SQLITE_HAS_CODEC)
 /*
 ** Translate a single byte of Hex into an integer.
 ** This routine only works if h really is a valid hexadecimal
 ** character:  0..9a..fA..F
 */
-static u8 hexToInt(int h){
+u8 sqlite3HexToInt(int h){
   assert( (h>='0' && h<='9') ||  (h>='a' && h<='f') ||  (h>='A' && h<='F') );
 #ifdef SQLITE_ASCII
   h += 9*(1&(h>>6));
@@ -999,7 +1004,6 @@ static u8 hexToInt(int h){
 #endif
   return (u8)(h & 0xf);
 }
-#endif /* !SQLITE_OMIT_BLOB_LITERAL || SQLITE_HAS_CODEC */
 
 #if !defined(SQLITE_OMIT_BLOB_LITERAL) || defined(SQLITE_HAS_CODEC)
 /*
@@ -1016,7 +1020,7 @@ void *sqlite3HexToBlob(sqlite3 *db, const char *z, int n){
   n--;
   if( zBlob ){
     for(i=0; i<n; i+=2){
-      zBlob[i/2] = (hexToInt(z[i])<<4) | hexToInt(z[i+1]);
+      zBlob[i/2] = (sqlite3HexToInt(z[i])<<4) | sqlite3HexToInt(z[i+1]);
     }
     zBlob[i/2] = 0;
   }
@@ -1148,3 +1152,34 @@ int sqlite3AbsInt32(int x){
   if( x==(int)0x80000000 ) return 0x7fffffff;
   return -x;
 }
+
+#ifdef SQLITE_ENABLE_8_3_NAMES
+/*
+** If SQLITE_ENABLE_8_3_NAMES is set at compile-time and if the database
+** filename in zBaseFilename is a URI with the "8_3_names=1" parameter and
+** if filename in z[] has a suffix (a.k.a. "extension") that is longer than
+** three characters, then shorten the suffix on z[] to be the last three
+** characters of the original suffix.
+**
+** If SQLITE_ENABLE_8_3_NAMES is set to 2 at compile-time, then always
+** do the suffix shortening regardless of URI parameter.
+**
+** Examples:
+**
+**     test.db-journal    =>   test.nal
+**     test.db-wal        =>   test.wal
+**     test.db-shm        =>   test.shm
+**     test.db-mj7f3319fa =>   test.9fa
+*/
+void sqlite3FileSuffix3(const char *zBaseFilename, char *z){
+#if SQLITE_ENABLE_8_3_NAMES<2
+  if( sqlite3_uri_boolean(zBaseFilename, "8_3_names", 0) )
+#endif
+  {
+    int i, sz;
+    sz = sqlite3Strlen30(z);
+    for(i=sz-1; i>0 && z[i]!='/' && z[i]!='.'; i--){}
+    if( z[i]=='.' && ALWAYS(sz>i+4) ) memmove(&z[i+1], &z[sz-3], 4);
+  }
+}
+#endif

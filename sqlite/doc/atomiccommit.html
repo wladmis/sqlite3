@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Atomic Commit In SQLite</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -147,9 +146,13 @@ operating system crash or power failure.</p>
 <p>This article describes the techniques used by SQLite to create the
 illusion of atomic commit.</p>
 
-<p>The information in this article applies only when SQLite is not
-using a <a href="wal.html">write-ahead log</a>.  Support for write-ahead logging was added
-in SQLite <a href="releaselog/3_7_0.html">version 3.7.0</a>.  The write-ahead log is turned off by default.</p>
+<p>The information in this article applies only when SQLite is operating
+in "rollback mode", or in other words when SQLite is not 
+using a <a href="wal.html">write-ahead log</a>.  SQLite still supports atomic commit when
+write-ahead logging is enabled, but it accomplishes atomic commit by
+a different mechanism from the one describe in this article.  See
+the <a href="wal.html">write-ahead log documentation</a> for additional information on how
+SQLite supports atomic commit in that context.</p>
 
 <a name="hardware"></a>
 
@@ -190,8 +193,8 @@ of data that can be written to mass storage in a single go.</p>
   left open the possibility of filling in a more meaningful implementation
   on Unix and Windows in the future.</p>
 
-<p>SQLite does <u>not</u> assume that a sector write is atomic.
-However, it does assume that a sector write is linear.  By "linear"
+<p>SQLite has traditionally assumed that a sector write is <u>not</u> atomic.
+However, SQLite does always assume that a sector write is linear.  By "linear"
 we mean that SQLite assumes that when writing a sector, the hardware begins
 at one end of the data and writes byte by byte until it gets to
 the other end.  The write might go from beginning to end or from
@@ -207,7 +210,7 @@ seems reasonable.</p>
 <p>The previous paragraph states that SQLite does not assume that
 sector writes are atomic.  This is true by default.  But as of
 SQLite version 3.5.0, there is a new interface called the
-Virtual File System (VFS) interface.  The VFS is the only means
+Virtual File System (<a href="vfs.html">VFS</a>) interface.  The <a href="vfs.html">VFS</a> is the only means
 by which SQLite communicates to the underlying filesystem.  The
 code comes with default VFS implementations for Unix and Windows
 and there is a mechanism for creating new custom VFS implementations
@@ -246,7 +249,7 @@ pessimistic assumption and SQLite has to do some extra work to make
 sure that it does not cause database corruption if power is lost
 between the time when the file size is increased and when the
 new content is written.  The xDeviceCharacteristics method of
-the VFS might indicate that the filesystem will always write the
+the <a href="vfs.html">VFS</a> might indicate that the filesystem will always write the
 data before updating the file size.  (This is the 
 SQLITE_IOCAP_SAFE_APPEND property for those readers who are looking
 at the code.)  When the xDeviceCharacteristics method indicates
@@ -275,6 +278,20 @@ SQLite does not add any redundancy to the database file for
 the purpose of detecting corruption or I/O errors.
 SQLite assumes that the data it reads is exactly the same data 
 that it previously wrote.</p>
+
+<p>By default, SQLite assumes that an operating system call to write
+a range of bytes will not damage or alter any bytes outside of that range
+even if a power lose or OS crash occurs during that write.  We
+call this the "<a href="psow.html">powersafe overwrite</a>" property.  Prior to version 3.7.9,
+SQLite did not assume powersafe overwrite.  But with the standard
+sector size increasing from 512 to 4096 bytes on most disk drives, it
+has become necessary to assume powersafe overwrite in order to maintain
+historical performance levels and so powersafe overwrite is assumed by
+default in recent versions of SQLite.  The assumption of powersafe 
+overwrite property can be disabled at compile-time or a run-time if
+desired.  See the <a href="psow.html">powersafe overwrite documentation</a> for further
+details.
+
 
 <a name="section_3_0"></a>
 <h2>3.0 Single File Commit</h2>

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>OS Interface Object</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(../images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(../images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(../images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(../images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>OS Interface Object</h2><blockquote><pre>typedef struct sqlite3_vfs sqlite3_vfs;
@@ -160,7 +159,8 @@ struct sqlite3_vfs {
 </pre></blockquote><p>
 An instance of the sqlite3_vfs object defines the interface between
 the SQLite core and the underlying operating system.  The "vfs"
-in the name of the object stands for "virtual file system".</p>
+in the name of the object stands for "virtual file system".  See
+the <a href="../vfs.html">VFS documentation</a> for further information.</p>
 
 <p>The value of the iVersion field is initially 1 but may be larger in
 future versions of SQLite.  Additional fields may be appended to this
@@ -189,12 +189,14 @@ object once the object has been registered.</p>
 <p>The zName field holds the name of the VFS module.  The name must
 be unique across all VFS modules.</p>
 
-<p>SQLite guarantees that the zFilename parameter to xOpen
+<p><a name="sqlite3vfsxopen"></a>
+
+SQLite guarantees that the zFilename parameter to xOpen
 is either a NULL pointer or string obtained
 from xFullPathname() with an optional suffix added.
 If a suffix is added to the zFilename parameter, it will
 consist of a single "-" character followed by no more than
-10 alphanumeric and/or "-" characters.
+11 alphanumeric and/or "-" characters.
 SQLite further guarantees that
 the string will be valid and unchanged until xClose() is
 called. Because of the previous sentence,
@@ -266,7 +268,9 @@ this even if the open fails.  SQLite expects that the sqlite3_file.pMethods
 element will be valid after xOpen returns regardless of the success
 or failure of the xOpen call.</p>
 
-<p>The flags argument to xAccess() may be <a href="../c3ref/c_access_exists.html">SQLITE_ACCESS_EXISTS</a>
+<p><a name="sqlite3vfsxaccess"></a>
+
+The flags argument to xAccess() may be <a href="../c3ref/c_access_exists.html">SQLITE_ACCESS_EXISTS</a>
 to test for the existence of a file, or <a href="../c3ref/c_access_exists.html">SQLITE_ACCESS_READWRITE</a> to
 test whether a file is readable and writable, or <a href="../c3ref/c_access_exists.html">SQLITE_ACCESS_READ</a>
 to test whether a file is at least readable.   The file can be a
@@ -290,7 +294,7 @@ least the number of microseconds given.  The xCurrentTime()
 method returns a Julian Day Number for the current date and time as
 a floating point value.
 The xCurrentTimeInt64() method returns, as an integer, the Julian
-Day Number multipled by 86400000 (the number of milliseconds in
+Day Number multiplied by 86400000 (the number of milliseconds in
 a 24-hour day).
 SQLite will use the xCurrentTimeInt64() method to get the current
 date and time if that method is available (if iVersion is 2 or

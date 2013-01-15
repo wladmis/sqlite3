@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>SQLite Query Language: CREATE TABLE</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2><h4><a href="syntaxdiagrams.html#create-table-stmt">create-table-stmt:</a></h4><blockquote> <img alt="syntax diagram create-table-stmt" src="images/syntax/create-table-stmt.gif"></img> </blockquote>
@@ -254,7 +253,7 @@ the new row are determined by their default values, as follows:
     used in the new row.
 
   <li><p>If the default value of a column is CURRENT_TIME, CURRENT_DATE or
-    CURRENT_DATETIME, then the value used in the new row is a text
+    CURRENT_TIMESTAMP, then the value used in the new row is a text
     representation of the current UTC date and/or time. For CURRENT_TIME, the
     format of the value is "HH:MM:SS". For CURRENT_DATE, "YYYY-MM-DD". The
     format for CURRENT_TIMESTAMP is "YYYY-MM-DD HH:MM:SS".
@@ -273,6 +272,8 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
 
 <h3>SQL Data Constraints</h3>
 
+<a name="primkeyconst"></a>
+
 <p>Each table in SQLite may have at most one <b>PRIMARY KEY</b>. If the
   keywords PRIMARY KEY are added to a column definition, then the primary key
   for the table consists of that single column. Or, if a PRIMARY KEY clause 
@@ -283,7 +284,7 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
 
 <p>If a table has a single column primary key, and the declared type of that
   column is "INTEGER", then the column is known as an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
-  See below for a description of the special properties and behaviours
+  See below for a description of the special properties and behaviors
   associated with an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
 
 <p>Each row in a table with a primary key must feature a unique combination
@@ -303,6 +304,8 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
   aware, however, that we may change SQLite to conform to the SQL standard in
   future and should design new programs accordingly.
 
+<a name="uniqueconst"></a>
+
 <p>A <b>UNIQUE</b> constraint is similar to a PRIMARY KEY constraint, except
   that a single table may have any number of UNIQUE constraints. For each
   UNIQUE constraint on the table, each row must feature a unique combination
@@ -321,6 +324,8 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
   in creating an index on a set of columns that are already collectively
   subject to a UNIQUE or PRIMARY KEY constraint.
 
+<a name="ckconst"></a>
+
 <p>A <b>CHECK</b> constraint may be attached to a column definition or
   specified as a table constraint. In practice it makes no difference. Each
   time a new row is inserted into the table or an existing row is updated,
@@ -329,9 +334,12 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
   result is zero (integer value 0 or real value 0.0), then a constraint
   violation has occurred. If the CHECK expression evaluates to NULL, or
   any other non-zero value, it is not a constraint violation.
+  The expression of a CHECK constraint may not contain a subquery.
 
 <p>CHECK constraints have been supported since <a href="releaselog/3_3_0.html">version 3.3.0</a>. Prior to
   version 3.3.0, CHECK constraints were parsed but not enforced.
+
+<a name="notnullconst"></a>
 
 <p>A <b>NOT NULL</b> constraint may only be attached to a column definition,
   not specified as a table constraint.  Not surprisingly, a NOT NULL
@@ -384,7 +392,7 @@ declared type "INTEGER" includes an "PRIMARY KEY DESC" clause, it does not
 become an alias for the rowid and is not classified as an integer primary key.
 This quirk is not by design. It is due to a bug in early versions of SQLite.
 But fixing the bug could result in very serious backwards incompatibilities.
-The SQLite developers feel that goofy behavior in an corner case is far better
+The SQLite developers feel that goofy behavior in a corner case is far better
 than a compatibility break, so the original behavior is retained. This means
 that the following three table declarations all cause the column "x" to be an
 alias for the rowid (an integer primary key):

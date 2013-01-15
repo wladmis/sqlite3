@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>The SQLite Query Optimizer Overview</title>
 <style type="text/css">
 body {
@@ -21,6 +22,14 @@ a:visited { color: #734559 }
   margin-top:58px;
 }
 
+.menubar {
+  clear: both;
+  border-radius: 8px;
+  background: #044a64;
+  padding: 0px;
+  margin: 0px;
+  cell-spacing: 0px;
+}    
 .toolbar {
   text-align: center;
   line-height: 1.6em;
@@ -35,12 +44,6 @@ a:visited { color: #734559 }
 .content dt { font-weight:bold; }
 .content dd { margin-bottom: 25px; margin-left:20%; }
 .content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* rounded corners */
-.se  { background: url(images/se.gif) 100% 100% no-repeat #044a64}
-.sw  { background: url(images/sw.gif) 0% 100% no-repeat }
-.ne  { background: url(images/ne.gif) 100% 0% no-repeat }
-.nw  { background: url(images/nw.gif) 0% 0% no-repeat }
 
 /* Things for "fancyformat" documents start here. */
 .fancy img+p {font-style:italic}
@@ -62,7 +65,6 @@ a:visited { color: #734559 }
 /* End of "fancyformat" specific rules. */
 
 </style>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   
 </head>
 <body>
@@ -74,9 +76,7 @@ a:visited { color: #734559 }
 <div><!-- IE hack to prevent disappearing logo--></div>
 <div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
 
-<table width=100% style="clear:both"><tr><td>
-  <div class="se"><div class="sw"><div class="ne"><div class="nw">
-  <table width=100% style="padding:0;margin:0;cell-spacing:0"><tr>
+<table width=100% class="menubar"><tr>
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
@@ -113,8 +113,7 @@ a:visited { color: #734559 }
     </form>
     </div>
   </table>
-</div></div></div></div>
-</td></tr></table>
+
 <div class=startsearch></div>
   
 
@@ -238,7 +237,7 @@ a:visited { color: #734559 }
   ... WHERE b IN (1,2,3) AND c NOT NULL AND d='hello'
 </pre></blockquote><p>
   The index is not usable at all because the left-most column of the
-  index (column "a") is not constrained.)  Assuming there are no other
+  index (column "a") is not constrained.  Assuming there are no other
   indices, the query above would result in a full table scan.
 </p>
 <p>
@@ -395,7 +394,7 @@ a:visited { color: #734559 }
   evaluate to false.  Note that case insensitivity only applies to
   latin1 characters - basically the upper and lower case letters of English
   in the lower 127 byte codes of ASCII.  International character sets
-  are case sensitive in SQLite unless a application-defined
+  are case sensitive in SQLite unless an application-defined
   <a href="datatype3.html#collation">collating sequence</a> and <a href="lang_corefunc.html#like">like() SQL function</a> are provided that
   take non-ASCII characters into account.
   But if an application-defined collating sequence and/or like() SQL
@@ -482,7 +481,7 @@ a:visited { color: #734559 }
 </p>
 <a name="joins"></a>
 <h2>5.0 Joins</h2><p>
-  The ON and USING clauses of a inner join are converted into additional
+  The ON and USING clauses of an inner join are converted into additional
   terms of the WHERE clause prior to WHERE clause analysis described
   above in paragraph 1.0.  Thus with SQLite, there is no computational
   advantage to use the newer SQL92 join syntax
@@ -643,7 +642,7 @@ a:visited { color: #734559 }
   for the one scenario described in the following paragraph.
 </p>
 <p>
-  For an program that uses an SQLite database as its application file
+  For a program that uses an SQLite database as its application file
   format, when a new database instances is first created the <a href="lang_analyze.html">ANALYZE</a>
   command is ineffective because the database contain no data from which
   to gather statistics.  In that case, one could construct a large prototype
@@ -791,9 +790,9 @@ a:visited { color: #734559 }
 </p>
 <p>
   SQLite will make this determination, but only if it has been compiled
-  with <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a>.  The <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> option causes
+  with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>.  The <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> option causes
   the <a href="lang_analyze.html">ANALYZE</a> command to collect a histogram of column content in the
-  <b>sqlite_stat2</b> table and to use this histogram to make a better
+  <b>sqlite_stat3</b> table and to use this histogram to make a better
   guess at the best query to use for range constraints such as the above.
 </p>
 <p>
