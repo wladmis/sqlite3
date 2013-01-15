@@ -9,7 +9,7 @@
  
  # Define this for the autoconf-based build, so that the code knows it can
  # include the generated config.h
-@@ -320,6 +320,17 @@ SRC += \
+@@ -320,6 +320,19 @@ SRC += \
    $(TOP)/ext/fts3/fts3_tokenizer.c \
    $(TOP)/ext/fts3/fts3_tokenizer1.c \
    $(TOP)/ext/fts3/fts3_write.c
@@ -23,6 +23,8 @@
 +  fts3_snippet.lo \
 +  fts3_tokenizer.lo \
 +  fts3_tokenizer1.lo \
++  fts3_unicode.lo \
++  fts3_unicode2.lo \
 +  fts3_write.lo
  SRC += \
    $(TOP)/ext/icu/sqliteicu.h \

@@ -10,7 +10,7 @@
  libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
 --- sqlite-3.7.4/libsqlite3.lds-	2011-02-15 21:35:18.763214945 +0300
 +++ sqlite-3.7.4/libsqlite3.lds	2011-02-15 21:35:28.646359743 +0300
-@@ -0,0 +1,190 @@
+@@ -0,0 +1,185 @@
 +"sqlite3AuthReadCol@SQLITE3_3.6.19" = sqlite3AuthReadCol;
 +"sqlite3BtreeCheckpoint@SQLITE3_3.7.2" = sqlite3BtreeCheckpoint;
 +"sqlite3BtreeCursorZero@SQLITE3_3.6.21" = sqlite3BtreeCursorZero;
@@ -30,7 +30,6 @@
 +"sqlite3ExprCodeIsNullJump@SQLITE3_3.6.21" = sqlite3ExprCodeIsNullJump;
 +"sqlite3ExprListCompare@SQLITE3_3.7.0.1" = sqlite3ExprListCompare;
 +"sqlite3ExprNeedsNoAffinityChange@SQLITE3_3.6.21" = sqlite3ExprNeedsNoAffinityChange;
-+"sqlite3ExprSetCollByToken@SQLITE3_3.7.2" = sqlite3ExprSetCollByToken;
 +"sqlite3FkActions@SQLITE3_3.6.19" = sqlite3FkActions;
 +"sqlite3FkCheck@SQLITE3_3.6.19" = sqlite3FkCheck;
 +"sqlite3FkDelete@SQLITE3_3.6.19" = sqlite3FkDelete;
@@ -40,9 +39,6 @@
 +"sqlite3FkRequired@SQLITE3_3.6.19" = sqlite3FkRequired;
 +"sqlite3Fts3AllSegdirs@SQLITE3_3.6.21" = sqlite3Fts3AllSegdirs;
 +"sqlite3Fts3Dequote@SQLITE3_3.6.21" = sqlite3Fts3Dequote;
-+"sqlite3Fts3ExprLoadDoclist@SQLITE3_3.6.22" = sqlite3Fts3ExprLoadDoclist;
-+"sqlite3Fts3ExprNearTrim@SQLITE3_3.6.23.1" = sqlite3Fts3ExprNearTrim;
-+"sqlite3Fts3FindPositions@SQLITE3_3.6.22" = sqlite3Fts3FindPositions;
 +"sqlite3Fts3GetVarint32@SQLITE3_3.6.21" = sqlite3Fts3GetVarint32;
 +"sqlite3Fts3GetVarint@SQLITE3_3.6.21" = sqlite3Fts3GetVarint;
 +"sqlite3Fts3HashFindElem@SQLITE3_3.6.22" = sqlite3Fts3HashFindElem;
@@ -85,7 +81,6 @@
 +"sqlite3TriggerColmask@SQLITE3_3.6.21" = sqlite3TriggerColmask;
 +"sqlite3VdbeAddOp4Int@SQLITE3_3.6.21" = sqlite3VdbeAddOp4Int;
 +"sqlite3VdbeCheckFk@SQLITE3_3.6.19" = sqlite3VdbeCheckFk;
-+"sqlite3VdbeDeleteObject@SQLITE3_3.7.2" = sqlite3VdbeDeleteObject;
 +"sqlite3VdbeExpandSql@SQLITE3_3.6.21" = sqlite3VdbeExpandSql;
 +"sqlite3VdbeGetValue@SQLITE3_3.6.20" = sqlite3VdbeGetValue;
 +"sqlite3VdbeLinkSubProgram@SQLITE3_3.7.2" = sqlite3VdbeLinkSubProgram;
