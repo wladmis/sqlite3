@@ -12,7 +12,6 @@ Source0: sqlite-%version.tar
 
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
-Patch3: sqlite3-alt-version-script.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -94,7 +93,6 @@ embedded controllers.
 %setup -q -n sqlite-%version
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
