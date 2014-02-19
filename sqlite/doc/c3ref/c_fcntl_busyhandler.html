@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -132,6 +144,11 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_PRAGMA                 14
 #define SQLITE_FCNTL_BUSYHANDLER            15
 #define SQLITE_FCNTL_TEMPFILENAME           16
+#define SQLITE_FCNTL_MMAP_SIZE              18
+#define SQLITE_FCNTL_TRACE                  19
+#define SQLITE_FCNTL_HAS_MOVED              20
+#define SQLITE_FCNTL_SYNC                   21
+#define SQLITE_FCNTL_COMMIT_PHASETWO        22
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
@@ -173,15 +190,31 @@ additional information.</p>
 
 <p><li><a name="sqlitefcntlsyncomitted"></a>
 
-The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> opcode is generated internally by
-SQLite and sent to all VFSes in place of a call to the xSync method
-when the database connection has <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to OFF.
-Some specialized VFSes need this signal in order to operate correctly
-when <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous=OFF</a> is set, but most
-VFSes do not need this signal and should silently ignore this opcode.
-Applications should not call <a href="../c3ref/file_control.html">sqlite3_file_control()</a> with this
-opcode as doing so may disrupt the operation of the specialized VFSes
-that do require it.</p>
+No longer in use.</p>
+
+<p><li><a name="sqlitefcntlsync"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsync">SQLITE_FCNTL_SYNC</a> opcode is generated internally by SQLite and
+sent to the VFS immediately before the xSync method is invoked on a
+database file descriptor. Or, if the xSync method is not invoked
+because the user has configured SQLite with
+<a href="../pragma.html#pragma_synchronous">PRAGMA synchronous=OFF</a> it is invoked in place
+of the xSync method. In most cases, the pointer argument passed with
+this file-control is NULL. However, if the database file is being synced
+as part of a multi-database commit, the argument points to a nul-terminated
+string containing the transactions master-journal file name. VFSes that
+do not need this signal should silently ignore this opcode. Applications
+should not call <a href="../c3ref/file_control.html">sqlite3_file_control()</a> with this opcode as doing so may
+disrupt the operation of the specialized VFSes that do require it.</p>
+
+<p><li><a name="sqlitefcntlcommitphasetwo"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo">SQLITE_FCNTL_COMMIT_PHASETWO</a> opcode is generated internally by SQLite
+and sent to the VFS after a transaction has been committed immediately
+but before the database is unlocked. VFSes that do not need this signal
+should silently ignore this opcode. Applications should not call
+<a href="../c3ref/file_control.html">sqlite3_file_control()</a> with this opcode as doing so may disrupt the
+operation of the specialized VFSes that do require it.</p>
 
 <p><li><a name="sqlitefcntlwin32avretry"></a>
 
@@ -274,7 +307,8 @@ it is able to override built-in <a href="../pragma.html#syntax">PRAGMA</a> state
 
 <p><li><a name="sqlitefcntlbusyhandler"></a>
 
-This file-control may be invoked by SQLite on the database file handle
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">SQLITE_FCNTL_BUSYHANDLER</a>
+file-control may be invoked by SQLite on the database file handle
 shortly after it is opened in order to provide a custom VFS with access
 to the connections busy-handler callback. The argument is of type (void **)
 - an array of two (void *) values. The first (void *) actually points
@@ -286,12 +320,40 @@ current operation.</p>
 
 <p><li><a name="sqlitefcntltempfilename"></a>
 
-Application can invoke this file-control to have SQLite generate a
+Application can invoke the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename">SQLITE_FCNTL_TEMPFILENAME</a> file-control
+to have SQLite generate a
 temporary filename using the same algorithm that is followed to generate
 temporary filenames for TEMP tables and other internal uses.  The
 argument should be a char** which will be filled with the filename
 written into memory obtained from <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The caller should
 invoke <a href="../c3ref/free.html">sqlite3_free()</a> on the result to avoid a memory leak.</p>
+
+<p><li><a name="sqlitefcntlmmapsize"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize">SQLITE_FCNTL_MMAP_SIZE</a> file control is used to query or set the
+maximum number of bytes that will be used for memory-mapped I/O.
+The argument is a pointer to a value of type sqlite3_int64 that
+is an advisory maximum number of bytes in the file to memory map.  The
+pointer is overwritten with the old value.  The limit is not changed if
+the value originally pointed to is negative, and so the current limit
+can be queried by passing in a pointer to a negative number.  This
+file-control is used internally to implement <a href="../pragma.html#pragma_mmap_size">PRAGMA mmap_size</a>.</p>
+
+<p><li><a name="sqlitefcntltrace"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace">SQLITE_FCNTL_TRACE</a> file control provides advisory information
+to the VFS about what the higher layers of the SQLite stack are doing.
+This file control is used by some VFS activity tracing <a href="../vfs.html#shim">shims</a>.
+The argument is a zero-terminated string.  Higher layers in the
+SQLite stack may generate instances of this file control if
+the <a href="../compile.html#use_fcntl_trace">SQLITE_USE_FCNTL_TRACE</a> compile-time option is enabled.</p>
+
+<p><li><a name="sqlitefcntlhasmoved"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved">SQLITE_FCNTL_HAS_MOVED</a> file control interprets its argument as a
+pointer to an integer and it writes a boolean into that integer depending
+on whether or not the file has been renamed, moved, or deleted since it
+was first opened.</p>
 
 <p></ul>
 </p><p>See also lists of

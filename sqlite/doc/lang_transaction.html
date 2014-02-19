@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,9 +128,11 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>BEGIN TRANSACTION</h2><h4><a href="syntaxdiagrams.html#begin-stmt">begin-stmt:</a></h4><blockquote> <img alt="syntax diagram begin-stmt" src="images/syntax/begin-stmt.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#commit-stmt">commit-stmt:</a></h4><blockquote> <img alt="syntax diagram commit-stmt" src="images/syntax/commit-stmt.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#rollback-stmt">rollback-stmt:</a></h4><blockquote> <img alt="syntax diagram rollback-stmt" src="images/syntax/rollback-stmt.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>BEGIN TRANSACTION</h2><p><b><a href="syntaxdiagrams.html#begin-stmt">begin-stmt:</a></b>
+<button id='x801' onclick='hideorshow("x801","x802")'>hide</button></p>
+ <blockquote id='x802'>
+ <img alt="syntax diagram begin-stmt" src="images/syntax/begin-stmt.gif" />
+</blockquote>
 
 
 <p>
@@ -154,6 +168,8 @@ the transaction was started by <a href="lang_savepoint.html">SAVEPOINT</a> or a 
 The COMMIT command and the ROLLBACK command without the TO clause
 work the same on <a href="lang_savepoint.html">SAVEPOINT</a> transactions as they do with transactions
 started by BEGIN.</p>
+
+<a name="immediate"></a>
 
 <p>
 Transactions can be deferred, immediate, or exclusive.  
@@ -225,7 +241,7 @@ file) then the behavior of the ROLLBACK command is undefined.
 
 <p> If certain kinds of errors occur within a transaction, the
 transaction may or may not be rolled back automatically.  The
-errors that cause the behavior include:</p>
+errors that can cause an automatic rollback include:</p>
 
 <ul>
 <li> <a href="c3ref/c_abort.html">SQLITE_FULL</a>: database or disk full

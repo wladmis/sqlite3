@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -117,6 +129,7 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 
+
 <body>
 <h1 align="center">
 Internal Versus External BLOBs in SQLite
@@ -130,7 +143,7 @@ in a separate file and store just the corresponding filename in the database?
 </p>
 
 <p>
-To try answer this, we ran 49 test cases with various BLOB sizes and
+To try to answer this, we ran 49 test cases with various BLOB sizes and
 SQLite page sizes on a Linux workstation (Ubuntu circa 2011 with the
 Ext4 filesystem on a fast SATA disk).
 For each test case, a database was created that contains 100MB of BLOB

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -130,7 +142,7 @@ which the value is stored.</p>
 of a value is associated with the value itself, not with its container.
 The dynamic type system of SQLite is backwards
 compatible with the more common static type systems of other database engines
-in the sense that SQL statement that work on statically typed databases should
+in the sense that SQL statements that work on statically typed databases should
 work the same way in SQLite.  However, the dynamic typing in SQLite allows
 it to do things which are not possible in traditional rigidly typed
 databases.</p>

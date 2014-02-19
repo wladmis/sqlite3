@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -196,7 +208,8 @@ behave differently in three ways:</p>
 <li>
 If the database schema changes, instead of returning <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a> as it
 always used to do, <a href="../c3ref/step.html">sqlite3_step()</a> will automatically recompile the SQL
-statement and try to run it again.
+statement and try to run it again. As many as <a href="../compile.html#max_schema_retry">SQLITE_MAX_SCHEMA_RETRY</a>
+retries will occur before sqlite3_step() gives up and returns an error.
 </li></p>
 
 <p><li>
@@ -218,7 +231,6 @@ The specific value of WHERE-clause <a href="../lang_expr.html#varparam">paramete
 choice of query plan if the parameter is the left-hand side of a <a href="../lang_expr.html#like">LIKE</a>
 or <a href="../lang_expr.html#glob">GLOB</a> operator or if the parameter is compared to an indexed column
 and the <a href="../compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> compile-time option is enabled.
-the
 </li>
 </ol>
 </p><p>See also lists of

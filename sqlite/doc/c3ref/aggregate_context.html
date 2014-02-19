@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -134,14 +146,17 @@ implementation is never called and xFinal() is called exactly once.
 In those cases, sqlite3_aggregate_context() might be called for the
 first time from within xFinal().</p>
 
-<p>The sqlite3_aggregate_context(C,N) routine returns a NULL pointer if N is
-less than or equal to zero or if a memory allocate error occurs.</p>
+<p>The sqlite3_aggregate_context(C,N) routine returns a NULL pointer
+when first called if N is less than or equal to zero or if a memory
+allocate error occurs.</p>
 
 <p>The amount of space allocated by sqlite3_aggregate_context(C,N) is
 determined by the N parameter on first successful call.  Changing the
 value of N in subsequent call to sqlite3_aggregate_context() within
 the same aggregate function instance will not resize the memory
-allocation.</p>
+allocation.  Within the xFinal callback, it is customary to set
+N=0 in calls to sqlite3_aggregate_context(C,N) so that no
+pointless memory allocations occur.</p>
 
 <p>SQLite automatically frees the memory allocated by
 sqlite3_aggregate_context() when the aggregate query concludes.</p>

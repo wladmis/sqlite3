@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -223,11 +235,28 @@ Formats 8 through 10 that specify only a time assume a date of
 2000-01-01. Format 11, the string 'now', is converted into the 
 current date and time as obtained from the xCurrentTime method
 of the <a href="c3ref/vfs.html">sqlite3_vfs</a> object in use.
+The 'now' argument to date and time functions always returns exactly the
+same value for multiple invocations within the same <a href="c3ref/step.html">sqlite3_step()</a> call.
 <a href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">Universal Coordinated Time (UTC)</a> is used. 
 Format 12 is the 
 <a href="http://en.wikipedia.org/wiki/Julian_day">Julian day number</a>
 expressed as a floating point value.
 </p>
+
+<p>
+Formats 2 through 10 may be optionally followed by a timezone indicator of the form
+"<i>&#91;+-&#93;HH:MM</i>" or just "<i>Z</i>".  The date and time functions use UTC or "zulu"
+time internally, and so the "Z" suffix is a no-op.  Any non-zero "HH:MM" suffix is
+subtracted from the indicated date and time in order to compute zulu time.
+For example, all of the following time strings are equivalent:
+</p>
+
+<blockquote>
+2013-10-07 08:23:19.120<br>
+2013-10-07T08:23:19.120Z<br>
+2013-10-07 08:23:19.120-04:00<br>
+2456572.84952685
+</blockquote>
 
 <p>
 In formats 4, 7, and 10, the fractional seconds value SS.SSS can have

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -622,6 +634,9 @@ NOT DEFERRABLE                               <i>-- An immediate foreign key cons
 DEFERRABLE INITIALLY IMMEDIATE               <i>-- An immediate foreign key constraint</i>
 DEFERRABLE                                   <i>-- An immediate foreign key constraint</i>
 </table></div>
+
+  <p>The <a href="pragma.html#pragma_defer_foreign_keys">defer_foreign_keys pragma</a> can be used to temporarily change all foreign
+    key constraints to deferred regardless of how they are declared.
 
   <p>
     The following example illustrates the effect of using a deferred foreign

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -180,23 +192,65 @@ It is designed to replace <a href="http://man.he.net/man3/fopen">fopen()</a>.
 
 <p>
 SQLite has been used with great success as the on-disk file format
-for desktop applications such as financial analysis tools, CAD
+for desktop applications such as version control systems,
+financial analysis tools, media cataloging and editing suites, CAD
 packages, record keeping programs, and so forth.  The traditional
-File/Open operation does an sqlite3_open() and executes a
-BEGIN TRANSACTION to get exclusive access to the content.  File/Save
-does a COMMIT followed by another BEGIN TRANSACTION.  The use
-of transactions guarantees that updates to the application file are atomic,
-durable, isolated, and consistent.
+File/Open operation calls sqlite3_open() to attach to the database
+file.  Updates happen atomically as application content is revised
+so the File/Save menu option become superfluous.  The File/Save_As
+menu option can be implemented using the <a href="backup.html">backup API</a>.
 </p>
 
 <p>
-Temporary triggers can be added to the database to record all
-changes into a (temporary) undo/redo log table.  These changes can then
-be played back when the user presses the Undo and Redo buttons.  Using
-this technique, an unlimited depth undo/redo implementation can be written
-in surprisingly little code.
+There are many advantages to using SQLite as an application file format,
+including:
 </p>
-</li>
+
+<ol type="1">
+<li> There is no file parsing and generating code to write and debug.
+<li> Content can be accessed and updated using powerful SQL queries,
+     greatly reducing the complexity of the application code.
+<li> Extending the file format for new capabilities in later releases
+     is a simple as adding new tables or new columns to existing tables.
+<li> Diverse content which might otherwise be stored as a "pile-of-files"
+     can be encapsulated into a single disk file.
+<li> The content can be viewed using third-party tools.
+<li> The application file is portable across all operating systems,
+     32-bit and 64-bit and big- and little-endian architectures.
+<li> The application only has to load as much data as it needs, rather
+     than reading the entire application file and holding a complete parse
+     in memory.  Startup time and memory consumption are reduced.
+<li> Small edits only overwrite the parts of the file that change,
+     not the entire file, thus improving performance
+     and reducing wear on SSD drives.
+<li> Content is updated continuously and atomically so 
+     that there is no work lost in the event of a power failure or crash.
+<li> Applications can leverage the
+     <a href="fts3.html">full-text search</a> and <a href="rtree.html">RTREE</a> capabilities that are built into SQLite.
+<li> Performance problems can often be resolved using <a href="lang_createindex.html">CREATE INDEX</a>
+     rather than redesigning, rewriting, and retesting application code.
+<li> A federation of programs, perhaps written in different programming
+     languages, can all access the same application file with no 
+     compatibility concerns.
+<li> Multiple processes can attach to the same application
+     file and can read and write without interfering with each another.
+<li> Cross-session undo/redo can be implemented using triggers.
+<li> In many common cases, loading content from an SQLite database
+     is faster than loading content out of individual files.
+     See <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> for additional information.
+<li> Content stored in an SQLite database is more likely to be 
+     recoverable decades in the future, long after all traces of
+     the original application have been lost. Data lives longer than code.
+</ol>
+
+<p>
+SQLite allows database files to have any desired filename extension, so
+an application can choose a custom filename extension for its own use, if
+desired.  The <a href="pragma.html#pragma_application_id">application_id pragma</a> can be used to set an "Application ID"
+integer in the database file so that tools like
+<a href="http://www.darwinsys.com/file/">file(1)</a> can determine that the file
+is associated with your application and is not just a generic
+SQL database.</p>
 
 <li><p><b>Embedded devices and applications</b></p>
 
@@ -343,8 +397,8 @@ engine instead of SQLite.</p>
 
 <li><p><b>Very large datasets</b></p>
 
-<p>With the default page size of 1024 bytes, an SQLite database is
-limited in size to 2 terabytes (2<sup><small>41</small></sup> bytes).
+<p>An SQLite database is limited in size to 140 terabytes 
+(2<sup><small>47</small></sup> bytes, 128 tibibytes).
 And even if it could handle larger databases, SQLite stores the entire
 database in a single disk file and many filesystems limit the maximum
 size of files to something less than this.  So if you are contemplating
@@ -357,12 +411,8 @@ disk files, and perhaps across multiple volumes.
 <li><p><b>High Concurrency</b></p>
 
 <p>
-SQLite uses reader/writer locks on the entire database file.  That means
-if any process is reading from any part of the database, all other
-processes are prevented from writing any other part of the database.
-Similarly, if any one process is writing to the database,
-all other processes are prevented from reading any other part of the
-database.
+SQLite supports an unlimited number of simultaneous readers, but it 
+will only allow one writer at any instant in time.
 For many situations, this is not a problem.  Each application
 does its database work quickly and moves on, and no lock lasts for more
 than a few dozen milliseconds.  But there are some applications that require

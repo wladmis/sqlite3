@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -501,6 +513,37 @@ This limit is unreachable since the maximum database size of 140 terabytes
 will be reached first.  A 140 terabytes database can hold no more than
 approximately 1e+13 rows, and then only if there are no indices and if
 each row contains very little data.
+</li><li><p><b>Maximum Database Size</b></p>
+
+<p>
+Every database consists of one or more "pages".  Within a single database,
+every page is the same size, but different database can have page sizes
+that are powers of two between 512 and 65536, inclusive.  The maximum
+size of a database file is 2147483646 pages.  At the maximum page size
+of 65536 bytes, this translates into a maximum database size of 
+approximately 1.4e+14 bytes (140 terabytes, or 128 tebibytes, or
+140,000 gigabytes or 128,000 gibibytes).
+<p>
+This particular upper bound is untested since the developers do not 
+have access to hardware capable of reaching this limit.  However, tests
+do verify that SQLite behaves correctly and sanely when a database 
+reaches the maximum file size of the underlying filesystem (which is
+usually much less than the maximum theoretical database size) and when
+a database is unable to grow due to disk space exhaustion.
+</li><li><p><b>Maximum Number Of Tables In A Schema</b></p>
+
+<p>
+Each table and index requires at least one page in the database file.
+An "index" in the previous sentence means an index created explicitly
+using a <a href="lang_createindex.html">CREATE INDEX</a> statement or implicit indices created by UNIQUE
+and PRIMARY KEY constraints.  Since the maximum number of pages in a
+database file is 2147483646 (a little over 2 billion) this is also then
+an upper bound on the number of tables and indices in a schema.
+<p>
+Whenever a database is opened, the entire schema is scanned and parsed
+and a parse tree for the schema is held in memory.  That means that
+database connection startup time and initial memory usage
+is proportional to the size of the schema.
 </li>
 </ol>
 

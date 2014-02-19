@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -269,7 +281,7 @@ Mentioned <a href="http://www.mail-archive.com/sqlite-users@sqlite.org/msg16931.
 <img src="images/foreignlogos/microsoft.gif" border="0"></a>
 </td>
 <td>
-It can inferred from 
+It can be inferred from 
 <a href="http://www.mail-archive.com/sqlite-users@sqlite.org/msg19226.html">traffic on the SQLite mailing list</a>
 that at least one group within 
 <a href="http://www.microsoft.com/">Microsoft</a>
@@ -315,6 +327,15 @@ There are
 <a href="http://www.mail-archive.com/sqlite-users%40sqlite.org/msg27332.html">sightings</a>
 of SQLite in the Skype client for Mac OS X and Windows.
 </td></tr>
+
+<tr><td valign="top">
+<a href="http://www.tcl.tk/">
+<img src="images/foreignlogos/tcl.gif" border="0"></a>
+</td><td>
+The Tcl/Tk programming language now comes with SQLite built-in.  SQLite works
+particularly well with Tcl since SQLite was originally a Tcl extension that
+subsequently "escaped" into the wild.
+</td>
 
 <tr><td valign="top">
 <a href="http://www.toshiba.com/">

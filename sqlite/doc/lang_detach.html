@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,14 +128,21 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>DETACH DATABASE</h2><h4><a href="syntaxdiagrams.html#detach-stmt">detach-stmt:</a></h4><blockquote> <img alt="syntax diagram detach-stmt" src="images/syntax/detach-stmt.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>DETACH DATABASE</h2><p><b><a href="syntaxdiagrams.html#detach-stmt">detach-stmt:</a></b>
+<button id='x1045' onclick='hideorshow("x1045","x1046")'>hide</button></p>
+ <blockquote id='x1046'>
+ <img alt="syntax diagram detach-stmt" src="images/syntax/detach-stmt.gif" />
+</blockquote>
 
 
 <p>This statement detaches an additional database connection previously 
 attached using the <a href="lang_attach.html">ATTACH</a> statement.  
-It is possible to have the same database file attached multiple times using 
+When not in <a href="sharedcache.html">shared cache mode</a>, 
+it is possible to have the same database file attached multiple times using 
 different names, and detaching one connection to a file will leave the 
 others intact.</p>
+In <a href="sharedcache.html">shared cache mode</a>, attempting to attach the same database file more
+than once results in an error.
 
 <p>This statement will fail if SQLite is in the middle of a transaction.</p>
 

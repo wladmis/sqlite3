@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -130,6 +142,9 @@ SQL statement text as the statement first begins executing.
 Additional sqlite3_trace() callbacks might occur
 as each triggered subprogram is entered.  The callbacks for triggers
 contain a UTF-8 SQL comment that identifies the trigger.</p>
+
+<p>The <a href="../compile.html#trace_size_limit">SQLITE_TRACE_SIZE_LIMIT</a> compile-time option can be used to limit
+the length of <a href="../lang_expr.html#varparam">bound parameter</a> expansion in the output of sqlite3_trace().</p>
 
 <p>The callback function registered by sqlite3_profile() is invoked
 as each SQL statement finishes.  The profile callback contains

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -121,16 +133,10 @@ a:visited { color: #734559 }
 <h2>SQL Features That SQLite Does Not Implement</h2>
 
 <p>
-Rather than try to list all the features of SQL92 that SQLite does
+SQLite implements most of the common features of SQL.
+Rather than try to list all the features of SQL that SQLite does
 support, it is much easier to list those that it does not.
-Unsupported features of SQL92 are shown below.</p>
-
-<p>
-The order of this list gives some hint as to when a feature might
-be added to SQLite.  Those features near the top of the list are
-likely to be added in the near future.  There are no immediate
-plans to add features near the bottom of the list.
-</p>
+Unsupported features of SQL are shown below.</p>
 
 <table cellpadding="10">
 

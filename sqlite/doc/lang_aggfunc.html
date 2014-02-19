@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -145,13 +157,13 @@ avg(<i>X</i>)</td><td valign="top">
   inputs are integers.  The result of avg() is NULL if and only if
   there are no non-NULL inputs.  
 </td></tr><tr><td valign="top" align="right" width="120"><a name="count"></a>
-count(<i>X</i>)<br></br>count(*)</td><td valign="top">
+count(<i>X</i>)<br />count(*)</td><td valign="top">
   The count(X) function returns
   a count of the number of times
   that <i>X</i> is not NULL in a group.  The count(*) function
   (with no arguments) returns the total number of rows in the group.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="groupconcat"></a>
-group_concat(<i>X</i>)<br></br>group_concat(<i>X</i>,<i>Y</i>)</td><td valign="top">
+group_concat(<i>X</i>)<br />group_concat(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The group_concat() function returns
   a string which is the concatenation of
   all non-NULL values of <i>X</i>.  If parameter <i>Y</i> is present then
@@ -175,7 +187,7 @@ min(<i>X</i>)</td><td valign="top">
   Aggregate min() returns NULL if and only if there are no non-NULL
   values in the group.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="sumunc"></a>
-sum(<i>X</i>)<br></br>total(<i>X</i>)</td><td valign="top">
+sum(<i>X</i>)<br />total(<i>X</i>)</td><td valign="top">
   The sum() and total() aggregate functions
   return sum of all non-NULL values in the group.
   If there are no non-NULL input rows then sum() returns

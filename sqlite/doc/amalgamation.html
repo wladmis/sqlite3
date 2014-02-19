@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -164,6 +176,6 @@ binary image larger.</p>
 <p>The amalgamation and
 the sqlite3.h header file are available on
 the <a href="download.html">download page</a> as a file 
-named sqlite-amalgamation-X_X_X.zip 
-where the X's are replaced by the appropriate version number.</p>
+named sqlite-amalgamation-X.zip
+where the X is replaced by the appropriate version number.</p>
 

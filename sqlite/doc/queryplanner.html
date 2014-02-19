@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -353,7 +365,7 @@ the current row.  In fact, the cost of advancing to the next row is so
 cheap in comparison to a binary search that we usually ignore it.  So
 our estimate for the total cost of this query is 3 binary searches.
 If the number of rows of output is K and the number of rows in the table
-is N, then in general the cost of doing the query proportional
+is N, then in general the cost of doing the query is proportional
 to (K+1)*logN.
 </p>
 
@@ -469,7 +481,7 @@ the indexed columns are added in front of the rowid.  The only difference
 is that now multiple columns are added.  The left-most column is the
 primary key used for ordering the rows in the index.  The second column is
 used to break ties in the left-most column.  If there were a third column,
-it would be used to break ties for the first to columns.  And so forth for
+it would be used to break ties for the first two columns.  And so forth for
 as many columns as their are in the index.  Because rowid is guaranteed
 to be unique, every row of the index will be unique even if all of the
 content columns for two rows are the same.  That case does not happen
@@ -656,7 +668,7 @@ SELECT * FROM fruitsforsale ORDER BY fruit;
 
 
 <p>
-SQLite processes this by gather all the output of query and then
+SQLite processes this by gathering all the output of query and then
 running that output through a sorter.
 </p>
 

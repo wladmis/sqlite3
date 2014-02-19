@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -117,18 +129,21 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>INDEXED BY</h2>
-<p>The INDEXED BY phrase is an SQL extension found only in SQLite which can
-be used to verify that the correct indices are being used on a <a href="lang_delete.html">DELETE</a>,
-<a href="lang_select.html">SELECT</a>, or <a href="lang_update.html">UPDATE</a> statement.
-The INDEXED BY phrase always follows the name of a table that SQLite will
-be reading.  The INDEXED BY phrase can be seen in the following syntax
+<p>The INDEXED BY phrase forces the <a href="optoverview.html">SQLite query planner</a> to use a
+particular named index on a <a href="lang_delete.html">DELETE</a>, <a href="lang_select.html">SELECT</a>, or <a href="lang_update.html">UPDATE</a> statement.
+The INDEXED BY phrase is an extension that is particular to SQLite and
+is not portable to other SQL database engines.
+The INDEXED BY phrase can be seen in the following syntax
 diagrams:</p>
 
-<h4><a href="syntaxdiagrams.html#qualified-table-name">qualified-table-name:</a></h4><blockquote> <img alt="syntax diagram qualified-table-name" src="images/syntax/qualified-table-name.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#single-source">single-source:</a></h4><blockquote> <img alt="syntax diagram single-source" src="images/syntax/single-source.gif"></img> </blockquote>
+<p><b><a href="syntaxdiagrams.html#qualified-table-name">qualified-table-name:</a></b>
+<button id='x1417' onclick='hideorshow("x1417","x1418")'>hide</button></p>
+ <blockquote id='x1418'>
+ <img alt="syntax diagram qualified-table-name" src="images/syntax/qualified-table-name.gif" />
+</blockquote>
 
 
-<p>The "INDEXED BY index-name" clause specifies that the named index
+<p>The "INDEXED BY index-name" phrase specifies that the named index
 must be used in order to look up values on the preceding table.
 If index-name does not exist or cannot be used for the query, then
 the preparation of the SQL statement fails.
@@ -159,11 +174,25 @@ end of the development process when "locking down" a design.</p>
 
 <h3>See Also:</h3>
 
-<p>The <a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> C/C++ interface together with the
+<ol>
+<li><p>The <a href="queryplanner-ng.html#howtofix">query planner checklist</a> describes steps that application
+developers should following to help resolve query planner problems.
+Notice the that the use of INDEXED BY is a last resort, to be used only
+when all other measures fail.</p>
+
+<li><p><a href="optoverview.html#uplus">The unary "+" operator</a>
+can be used to disqualify terms in the WHERE clause from use by indices.
+Careful use of unary + can sometimes help prevent the query planner from
+choosing a poor index without restricting it to using one specific index.
+Careful placement of unary + operators is a better method for controlling 
+which indices are used by a query.</p>
+
+<li><p>The <a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> C/C++ interface together with the
 <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusfullscanstep">SQLITE_STMTSTATUS_FULLSCAN_STEP</a> and <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort">SQLITE_STMTSTATUS_SORT</a> verbs
 can be used to detect at run-time when an SQL statement is not
 making effective use of indices.  Many applications may prefer to
 use the <a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> interface to detect index misuse
 rather than the INDEXED BY phrase described here.</p>
+</ol>
 
 <DIV class="pdf_section">

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,7 +128,11 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>REINDEX</h2><h4><a href="syntaxdiagrams.html#reindex-stmt">reindex-stmt:</a></h4><blockquote> <img alt="syntax diagram reindex-stmt" src="images/syntax/reindex-stmt.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>REINDEX</h2><p><b><a href="syntaxdiagrams.html#reindex-stmt">reindex-stmt:</a></b>
+<button id='x1119' onclick='hideorshow("x1119","x1120")'>hide</button></p>
+ <blockquote id='x1120'>
+ <img alt="syntax diagram reindex-stmt" src="images/syntax/reindex-stmt.gif" />
+</blockquote>
 
 
 <p>The REINDEX command is used to delete and recreate indices from scratch.

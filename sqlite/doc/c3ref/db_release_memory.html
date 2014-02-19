@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -120,8 +132,8 @@ a:visited { color: #734559 }
 </pre></blockquote><p>
 The sqlite3_db_release_memory(D) interface attempts to free as much heap
 memory as possible from database connection D. Unlike the
-<a href="../c3ref/release_memory.html">sqlite3_release_memory()</a> interface, this interface is effect even
-when then <a href="../compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a> compile-time option is
+<a href="../c3ref/release_memory.html">sqlite3_release_memory()</a> interface, this interface is in effect even
+when the <a href="../compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a> compile-time option is
 omitted.</p>
 
 <p>See also: <a href="../c3ref/release_memory.html">sqlite3_release_memory()</a>

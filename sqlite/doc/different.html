@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -212,7 +224,7 @@ database engines.
 <p><b>Compact</b></p>
 <blockquote>
   When optimized for size, the whole SQLite library with everything enabled
-  is [footprint | less than 350KiB in size]
+  is <a href="footprint.html">less than 400KiB in size</a>
   (as measured on an ix86 using the "size"
   utility from the GNU compiler suite.)  Unneeded features can be disabled
   at compile-time to further reduce the size of the library to under

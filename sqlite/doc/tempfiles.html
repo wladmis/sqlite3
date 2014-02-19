@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -155,17 +167,19 @@ the current temporary file uses might be discontinued
 in future releases of SQLite.
 </p>
 
-<a name="seventypes"></a>
+<a name="types"></a>
 
-<h2>2.0 Seven Kinds Of Temporary Files</h2>
+<h2>2.0 Nine Kinds Of Temporary Files</h2>
 
 <p>
-SQLite currently uses seven distinct types of temporary files:
+SQLite currently uses nine distinct types of temporary files:
 </p>
 
 <ol>
 <li>Rollback journals</li>
 <li>Master journals</li>
+<li>Write-ahead Log (WAL) files</li>
+<li>Shared-memory files</li>
 <li>Statement journals</li>
 <li>TEMP databases</li>
 <li>Materializations of views and subqueries</li>
@@ -250,18 +264,80 @@ journal and thus has the same effect as deleting the journal file, though
 without the expense of actually removing the file from disk.  In other
 words, journal mode PERSIST exhibits the same behavior as is seen
 in EXCLUSIVE locking mode. The
-OFF journal mode causes SQLite to forego creating a rollback journal
-in the first place.  The OFF journal mode disables the atomic
+OFF journal mode causes SQLite to omit the rollback journal, completely.
+In other words, no rollback journal is ever written if journal mode is
+set to OFF.
+The OFF journal mode disables the atomic
 commit and rollback capabilities of SQLite.  The ROLLBACK command
 is not available when OFF journal mode is set.  And if a crash or power
 loss occurs in the middle of a transaction that uses the OFF journal
 mode, no recovery is possible and the database file will likely
 go corrupt.
+The MEMORY journal mode causes the rollback journal to be stored in
+memory rather than on disk.  The ROLLBACK command still works when
+the journal mode is MEMORY, but because no file exists on disks for
+recovery, a crash or power loss in the middle of a transaction that uses
+the MEMORY journal mode will likely result in a corrupt database.
+</p>
+
+<a name="walfile"></a>
+
+<h3>2.2 Write-Ahead Log (WAL) Files</h3>
+
+<p>
+A write-ahead log or WAL file is used in place of a rollback journal
+when SQLite is operating in <a href="wal.html">WAL mode</a>.  As with the rollback journal,
+the purpose of the WAL file is to implement atomic commit and rollback.
+The WAL file is always located in the same directory
+as the database file and has the same name as the database
+file except with the 4 characters "<b>-wal</b>" appended.
+The WAL file is created when the first connection to the
+database is opened and is normally removed when the last
+connection to the database closes.  However, if the last connection
+does not shutdown cleanly, the WAL file will remain in the filesystem
+and will be automatically cleaned up the next time the database is
+opened.
+</p>
+
+<a name="shmfile"></a>
+
+<h3>2.3 Shared-Memory Files</h3>
+
+<p>
+When operating in <a href="wal.html">WAL mode</a>, all SQLite database connections associated
+with the same database file need to share some memory that is used as an
+index for the WAL file.  In most implementations, this shared memory is
+implemented by calling mmap() on a file created for this sole purpose:
+the shared-memory file.  The shared-memory file, if it exists, is located
+in the same directory as the database file and has the same name as the
+database file except with the 4 characters "<b>-shm</b>" appended.
+Shared memory files only exist while running in WAL mode.
+</p>
+
+<p>
+The shared-memory file contains no persistent content.  The only purpose
+of the shared-memory file is to provide a block of shared memory for use
+by multiple processes all accessing the same database in WAL mode.
+If the <a href="vfs.html">VFS</a> is able to provide an alternative method for accessing shared
+memory, then that alternative method might be used rather than the
+shared-memory file.  For example, if <a href="pragma.html#pragma_locking_mode">PRAGMA locking_mode</a> is set to
+EXCLUSIVE (meaning that only one process is able to access the database
+file) then the shared memory will be allocated from heap rather than out
+of the shared-memory file, and the shared-memory file will never be
+created.
+</p>
+
+<p>
+The shared-memory file has the same lifetime as its associated WAL file.
+The shared-memory file is created when the WAL file is created and is
+deleted when the WAL file is deleted.  During WAL file recovery, the
+shared memory file is recreated from scratch based on the contents of
+the WAL file being recovered.
 </p>
 
 <a name="masterjrnl"></a>
 
-<h3>2.2 Master Journal Files</h3>
+<h3>2.4 Master Journal Files</h3>
 
 <p>
 The master journal file is used as part of the atomic commit
@@ -298,7 +374,7 @@ changes in all databases to either rollback or commit together.
 
 <a name="stmtjrnl"></a>
 
-<h3>2.3 Statement Journal Files</h3>
+<h3>2.5 Statement Journal Files</h3>
 
 <p>
 A statement journal file is used to rollback partial results of
@@ -346,7 +422,7 @@ to be created.
 
 <a name="tempdb"></a>
 
-<h3>2.4 TEMP Databases</h3>
+<h3>2.6 TEMP Databases</h3>
 
 <p>Tables created using the "CREATE TEMP TABLE" syntax are only
 visible to the <a href="c3ref/sqlite3.html">database connection</a> in which the "CREATE TEMP TABLE"
@@ -382,7 +458,7 @@ of the "CREATE TEMP TABLE" statement.
 
 <a name="views"></a>
 
-<h3>2.5 Materializations Of Views And Subqueries</h3>
+<h3>2.7 Materializations Of Views And Subqueries</h3>
 
 <p>Queries that contain subqueries must sometime evaluate
 the subqueries separately and store the results in a temporary
@@ -483,13 +559,13 @@ flattening to avoid the temporary table.  Whether or not
 the query can be flattened depends on such factors as whether
 or not the subquery or outer query contain aggregate functions,
 ORDER BY or GROUP BY clauses, LIMIT clauses, and so forth.
-The rules for when a query and cannot be flattened are
+The rules for when a query can and cannot be flattened are
 very complex and are beyond the scope of this document.
 </p>
 
 <a name="transidx"></a>
 
-<h3>2.6 Transient Indices</h3>
+<h3>2.8 Transient Indices</h3>
 
 <p>
 SQLite may make use of transient indices to
@@ -529,18 +605,6 @@ The ordering by GROUP BY terms is done in exactly the same way
 as the ordering by ORDER BY terms.  A preexisting index is used
 if possible, but if no suitable index is available, a transient
 index is created.
-</p>
-
-<p>
-The previous two paragraphs describe the implementation of SQLite
-as of version 3.5.8.  There are known problems with this approach
-for very large results sets - result sets that are larger than the
-available disk cache.  Future versions of SQLite will likely address
-this deficiency by completely reworking the sort algorithm for 
-cases when no suitable preexisting sort index is available.  The
-new sort algorithm will also use temporary files, but not in the
-same way as the current implementation, the temporary files
-for the new implementation will probably not be index files.
 </p>
 
 <p>
@@ -584,7 +648,7 @@ depending on how they are composed.)
 
 <a name="vacuumdb"></a>
 
-<h3>2.7 Transient Database Used By <a href="lang_vacuum.html">VACUUM</a></h3>
+<h3>2.9 Transient Database Used By <a href="lang_vacuum.html">VACUUM</a></h3>
 
 <p>
 The <a href="lang_vacuum.html">VACUUM</a> command works by creating a temporary file
@@ -605,9 +669,9 @@ file will be no larger than the original database.
 <h2>3.0 The SQLITE_TEMP_STORE Compile-Time Parameter and Pragma</h2>
 
 <p>
-The rollback journal, master journal,
-and statement journal files are always written
-to disk.
+The temporary files associated with transaction control, namely
+the rollback journal, master journal, write-ahead log (WAL) files,
+and shared-memory files, are always written to disk.
 But the other kinds of temporary files might be stored in memory
 only and never written to disk.
 Whether or not temporary files other than the rollback,

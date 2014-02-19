@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,12 +128,176 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2><h4><a href="syntaxdiagrams.html#create-table-stmt">create-table-stmt:</a></h4><blockquote> <img alt="syntax diagram create-table-stmt" src="images/syntax/create-table-stmt.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#column-def">column-def:</a></h4><blockquote> <img alt="syntax diagram column-def" src="images/syntax/column-def.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#type-name">type-name:</a></h4><blockquote> <img alt="syntax diagram type-name" src="images/syntax/type-name.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#column-constraint">column-constraint:</a></h4><blockquote> <img alt="syntax diagram column-constraint" src="images/syntax/column-constraint.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#table-constraint">table-constraint:</a></h4><blockquote> <img alt="syntax diagram table-constraint" src="images/syntax/table-constraint.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#foreign-key-clause">foreign-key-clause:</a></h4><blockquote> <img alt="syntax diagram foreign-key-clause" src="images/syntax/foreign-key-clause.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2><p><b><a href="syntaxdiagrams.html#create-table-stmt">create-table-stmt:</a></b>
+<button id='x839' onclick='hideorshow("x839","x840")'>hide</button></p>
+ <blockquote id='x840'>
+ <img alt="syntax diagram create-table-stmt" src="images/syntax/create-table-stmt.gif" />
+<p><b><a href="syntaxdiagrams.html#column-def">column-def:</a></b>
+<button id='x841' onclick='hideorshow("x841","x842")'>show</button></p>
+ <blockquote id='x842' style='display:none;'>
+ <img alt="syntax diagram column-def" src="images/syntax/column-def.gif" />
+<p><b><a href="syntaxdiagrams.html#column-constraint">column-constraint:</a></b>
+<button id='x843' onclick='hideorshow("x843","x844")'>show</button></p>
+ <blockquote id='x844' style='display:none;'>
+ <img alt="syntax diagram column-constraint" src="images/syntax/column-constraint.gif" />
+<p><b><a href="syntaxdiagrams.html#conflict-clause">conflict-clause:</a></b>
+<button id='x845' onclick='hideorshow("x845","x846")'>show</button></p>
+ <blockquote id='x846' style='display:none;'>
+ <img alt="syntax diagram conflict-clause" src="images/syntax/conflict-clause.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#expr">expr:</a></b>
+<button id='x847' onclick='hideorshow("x847","x848")'>show</button></p>
+ <blockquote id='x848' style='display:none;'>
+ <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
+<p><b><a href="syntaxdiagrams.html#raise-function">raise-function:</a></b>
+<button id='x849' onclick='hideorshow("x849","x850")'>show</button></p>
+ <blockquote id='x850' style='display:none;'>
+ <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#foreign-key-clause">foreign-key-clause:</a></b>
+<button id='x851' onclick='hideorshow("x851","x852")'>show</button></p>
+ <blockquote id='x852' style='display:none;'>
+ <img alt="syntax diagram foreign-key-clause" src="images/syntax/foreign-key-clause.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#literal-value">literal-value:</a></b>
+<button id='x853' onclick='hideorshow("x853","x854")'>show</button></p>
+ <blockquote id='x854' style='display:none;'>
+ <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x855' onclick='hideorshow("x855","x856")'>show</button></p>
+ <blockquote id='x856' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#type-name">type-name:</a></b>
+<button id='x857' onclick='hideorshow("x857","x858")'>show</button></p>
+ <blockquote id='x858' style='display:none;'>
+ <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x859' onclick='hideorshow("x859","x860")'>show</button></p>
+ <blockquote id='x860' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#select-stmt">select-stmt:</a></b>
+<button id='x861' onclick='hideorshow("x861","x862")'>show</button></p>
+ <blockquote id='x862' style='display:none;'>
+ <img alt="syntax diagram select-stmt" src="images/syntax/select-stmt.gif" />
+<p><b><a href="syntaxdiagrams.html#common-table-expression">common-table-expression:</a></b>
+<button id='x863' onclick='hideorshow("x863","x864")'>show</button></p>
+ <blockquote id='x864' style='display:none;'>
+ <img alt="syntax diagram common-table-expression" src="images/syntax/common-table-expression.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#compound-operator">compound-operator:</a></b>
+<button id='x865' onclick='hideorshow("x865","x866")'>show</button></p>
+ <blockquote id='x866' style='display:none;'>
+ <img alt="syntax diagram compound-operator" src="images/syntax/compound-operator.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#expr">expr:</a></b>
+<button id='x867' onclick='hideorshow("x867","x868")'>show</button></p>
+ <blockquote id='x868' style='display:none;'>
+ <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
+<p><b><a href="syntaxdiagrams.html#literal-value">literal-value:</a></b>
+<button id='x869' onclick='hideorshow("x869","x870")'>show</button></p>
+ <blockquote id='x870' style='display:none;'>
+ <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#raise-function">raise-function:</a></b>
+<button id='x871' onclick='hideorshow("x871","x872")'>show</button></p>
+ <blockquote id='x872' style='display:none;'>
+ <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#type-name">type-name:</a></b>
+<button id='x873' onclick='hideorshow("x873","x874")'>show</button></p>
+ <blockquote id='x874' style='display:none;'>
+ <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x875' onclick='hideorshow("x875","x876")'>show</button></p>
+ <blockquote id='x876' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#join-clause">join-clause:</a></b>
+<button id='x877' onclick='hideorshow("x877","x878")'>show</button></p>
+ <blockquote id='x878' style='display:none;'>
+ <img alt="syntax diagram join-clause" src="images/syntax/join-clause.gif" />
+<p><b><a href="syntaxdiagrams.html#join-constraint">join-constraint:</a></b>
+<button id='x879' onclick='hideorshow("x879","x880")'>show</button></p>
+ <blockquote id='x880' style='display:none;'>
+ <img alt="syntax diagram join-constraint" src="images/syntax/join-constraint.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#join-operator">join-operator:</a></b>
+<button id='x881' onclick='hideorshow("x881","x882")'>show</button></p>
+ <blockquote id='x882' style='display:none;'>
+ <img alt="syntax diagram join-operator" src="images/syntax/join-operator.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#ordering-term">ordering-term:</a></b>
+<button id='x883' onclick='hideorshow("x883","x884")'>show</button></p>
+ <blockquote id='x884' style='display:none;'>
+ <img alt="syntax diagram ordering-term" src="images/syntax/ordering-term.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#result-column">result-column:</a></b>
+<button id='x885' onclick='hideorshow("x885","x886")'>show</button></p>
+ <blockquote id='x886' style='display:none;'>
+ <img alt="syntax diagram result-column" src="images/syntax/result-column.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#table-or-subquery">table-or-subquery:</a></b>
+<button id='x887' onclick='hideorshow("x887","x888")'>show</button></p>
+ <blockquote id='x888' style='display:none;'>
+ <img alt="syntax diagram table-or-subquery" src="images/syntax/table-or-subquery.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#table-constraint">table-constraint:</a></b>
+<button id='x889' onclick='hideorshow("x889","x890")'>show</button></p>
+ <blockquote id='x890' style='display:none;'>
+ <img alt="syntax diagram table-constraint" src="images/syntax/table-constraint.gif" />
+<p><b><a href="syntaxdiagrams.html#conflict-clause">conflict-clause:</a></b>
+<button id='x891' onclick='hideorshow("x891","x892")'>show</button></p>
+ <blockquote id='x892' style='display:none;'>
+ <img alt="syntax diagram conflict-clause" src="images/syntax/conflict-clause.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#expr">expr:</a></b>
+<button id='x893' onclick='hideorshow("x893","x894")'>show</button></p>
+ <blockquote id='x894' style='display:none;'>
+ <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
+<p><b><a href="syntaxdiagrams.html#literal-value">literal-value:</a></b>
+<button id='x895' onclick='hideorshow("x895","x896")'>show</button></p>
+ <blockquote id='x896' style='display:none;'>
+ <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#raise-function">raise-function:</a></b>
+<button id='x897' onclick='hideorshow("x897","x898")'>show</button></p>
+ <blockquote id='x898' style='display:none;'>
+ <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#type-name">type-name:</a></b>
+<button id='x899' onclick='hideorshow("x899","x900")'>show</button></p>
+ <blockquote id='x900' style='display:none;'>
+ <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x901' onclick='hideorshow("x901","x902")'>show</button></p>
+ <blockquote id='x902' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#foreign-key-clause">foreign-key-clause:</a></b>
+<button id='x903' onclick='hideorshow("x903","x904")'>show</button></p>
+ <blockquote id='x904' style='display:none;'>
+ <img alt="syntax diagram foreign-key-clause" src="images/syntax/foreign-key-clause.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#indexed-column">indexed-column:</a></b>
+<button id='x905' onclick='hideorshow("x905","x906")'>show</button></p>
+ <blockquote id='x906' style='display:none;'>
+ <img alt="syntax diagram indexed-column" src="images/syntax/indexed-column.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
 
 
 <p>The "CREATE TABLE" command is used to create a new table in an SQLite 
@@ -148,6 +324,8 @@ new table:
 
   <li><p> A set of SQL constraints for each table. SQLite supports UNIQUE, NOT
        NULL, CHECK and FOREIGN KEY constraints.
+
+  <li><p> Whether the table is a <a href="withoutrowid.html">WITHOUT ROWID</a> table.
 </ul>
 
 <p>Every CREATE TABLE statement must specify a name for the new table.
@@ -279,50 +457,52 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
   for the table consists of that single column. Or, if a PRIMARY KEY clause 
   is specified as a <a href="syntaxdiagrams.html#table-constraint">table-constraint</a>, then the primary key of the table
   consists of the list of columns specified as part of the PRIMARY KEY clause.
-  If there is more than one PRIMARY KEY clause in a single CREATE TABLE
-  statement, it is an error.
+  An error is raised if more than one PRIMARY KEY clause appears in a
+  CREATE TABLE statement.  The PRIMARY KEY is optional for ordinary tables
+  but is required for <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
 
-<p>If a table has a single column primary key, and the declared type of that
-  column is "INTEGER", then the column is known as an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
+<p>If a table has a single column primary key and the declared type of that
+  column is "INTEGER" and the table is not a <a href="withoutrowid.html">WITHOUT ROWID</a> table,
+  then the column is known as an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
   See below for a description of the special properties and behaviors
   associated with an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.
 
-<p>Each row in a table with a primary key must feature a unique combination
+<p>Each row in a table with a primary key must have a unique combination
   of values in its primary key columns. For the purposes of determining
   the uniqueness of primary key values, NULL values are considered distinct from
   all other values, including other NULLs. If an <a href="lang_insert.html">INSERT</a> or <a href="lang_update.html">UPDATE</a>
   statement attempts to modify the table content so that two or more rows
   feature identical primary key values, it is a constraint violation.
   According to the SQL standard, PRIMARY KEY should always imply NOT NULL.
-  Unfortunately, due to a long-standing coding oversight, this is not the
-  case in SQLite. Unless the column is an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> SQLite
-  allows NULL values in a PRIMARY KEY column.  We could change SQLite to
-  conform to the standard (and we might do so in the future), but by the time
-  the oversight was discovered, SQLite was in such wide use that we feared
-  breaking legacy code if we fixed the problem.  So for now we have chosen to
-  continue allowing NULLs in PRIMARY KEY columns.  Developers should be
-  aware, however, that we may change SQLite to conform to the SQL standard in
-  future and should design new programs accordingly.
+  Unfortunately, due to a bug in some early versions, this is not the
+  case in SQLite. Unless the column is an <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> or
+  the table is a <a href="withoutrowid.html">WITHOUT ROWID</a> table or the column is declared NOT NULL,
+  SQLite allows NULL values in a PRIMARY KEY column.  SQLite could be fixed to
+  conform to the standard, but doing so might break legacy applications.
+  Hence, it has been decided to merely document the fact that SQLite
+  allowing NULLs in most PRIMARY KEY columns.
 
 <a name="uniqueconst"></a>
 
 <p>A <b>UNIQUE</b> constraint is similar to a PRIMARY KEY constraint, except
   that a single table may have any number of UNIQUE constraints. For each
-  UNIQUE constraint on the table, each row must feature a unique combination
-  of values in the columns identified by the UNIQUE constraint. As with
-  PRIMARY KEY constraints, for the purposes of UNIQUE constraints NULL values
-  are considered distinct from all other values (including other NULLs).
-  If an <a href="lang_insert.html">INSERT</a> or <a href="lang_update.html">UPDATE</a> statement attempts to modify the table content so
-  that two or more rows feature identical values in a set of columns that
-  are subject to a UNIQUE constraint, it is a constraint violation.
+  UNIQUE constraint on the table, each row must contain a unique combination
+  of values in the columns identified by the UNIQUE constraint. 
+  For the purposes of UNIQUE constraints, NULL values
+  are considered distinct from all other values, including other NULLs.
 
-<p><a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> columns aside, both UNIQUE and PRIMARY KEY
-  constraints are implemented by creating an index in the database (in the same
-  way as a <a href="lang_createindex.html">"CREATE UNIQUE INDEX"</a> statement would). Such an 
-  index is used like any other index in the database to <a href="optoverview.html">optimize
-  queries</a>.  As a result, there often no advantage (but significant overhead)
-  in creating an index on a set of columns that are already collectively
-  subject to a UNIQUE or PRIMARY KEY constraint.
+<p>In most cases, UNIQUE and PRIMARY KEY
+  constraints are implemented by creating a unique index in the database.
+  (The exceptions are <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> and PRIMARY KEYs on 
+  <a href="withoutrowid.html">WITHOUT ROWID</a> tables.)
+  Hence, the following schemas are logically equivalent:
+
+  <ol>
+  <li><p>CREATE TABLE t1(a, b UNIQUE);
+  <li><p>CREATE TABLE t1(a, b PRIMARY KEY);
+  <li><p>CREATE TABLE t1(a, b);<br>
+         CREATE UNIQUE INDEX t1b ON t1(b);
+  </ol>
 
 <a name="ckconst"></a>
 
@@ -362,23 +542,28 @@ runtime using the <a href="c3ref/limit.html">sqlite3_limit()</a> C/C++ interface
 
 <h3>ROWIDs and the INTEGER PRIMARY KEY</h3>
 
-<p>Every row of every SQLite table has a 64-bit signed integer key 
-that uniquely identifies the row within its table. This integer is usually
+<p>Except for <a href="withoutrowid.html">WITHOUT ROWID</a> tables, all rows within SQLite tables
+have a 64-bit signed integer key that uniquely identifies the row within its table.
+This integer is usually
 called the "rowid". The rowid value can be accessed using one of the special
 case-independent names "rowid", "oid", or "_rowid_" in place of a column name.
 If a table contains a user defined column named "rowid", "oid" or "_rowid_",
 then that name always refers the explicitly declared column and cannot be used
 to retrieve the integer rowid value.
 
-<p>The data for each table in SQLite is stored as a B-Tree structure containing
-an entry for each table row, using the rowid value as the key. This means that
+<p>The rowid (and "oid" and "_rowid_") is omitted in <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+WITHOUT ROWID tables are only available in SQLite <a href="releaselog/3_8_2.html">version 3.8.2</a> and later.
+A table that lacks the WITHOUT ROWID clause is called a "rowid table".
+
+<p>The data for rowid tables is stored as a B-Tree structure containing
+one entry for each table row, using the rowid value as the key. This means that
 retrieving or sorting records by rowid is fast. Searching for a record with a
 specific rowid, or for all records with rowids within a specified range is
 around twice as fast as a similar search made by specifying any other PRIMARY
 KEY or indexed value.
 
-<p> With one exception, if a table has a primary key that consists of a single
-column, and the declared type of that column is "INTEGER" in any mixture of
+<p> With one exception noted below, if a rowid table has a primary key that consists
+of a single column and the declared type of that column is "INTEGER" in any mixture of
 upper and lower case, then the column becomes an alias for the rowid. Such a
 column is usually referred to as an "integer primary key". A PRIMARY KEY column
 only becomes an integer primary key if the declared type name is exactly
@@ -391,9 +576,9 @@ the rowid.
 declared type "INTEGER" includes an "PRIMARY KEY DESC" clause, it does not
 become an alias for the rowid and is not classified as an integer primary key.
 This quirk is not by design. It is due to a bug in early versions of SQLite.
-But fixing the bug could result in very serious backwards incompatibilities.
-The SQLite developers feel that goofy behavior in a corner case is far better
-than a compatibility break, so the original behavior is retained. This means
+But fixing the bug could result in backwards incompatibilities.
+Hence, the original behavior has been retained (and documented) because
+behavior in a corner case is far better than a compatibility break.  This means
 that the following three table declarations all cause the column "x" to be an
 alias for the rowid (an integer primary key):
 

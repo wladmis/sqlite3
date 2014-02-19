@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -1239,7 +1251,7 @@ int sqlite3BtreeSetPageSize(Btree *p, int nPagesize, int nReserve, int eFix);</p
 
 
       <pre class=api>int sqlite3BtreeSetCacheSize(Btree*,int);
-int sqlite3BtreeSetSafetyLevel(Btree*,int,int,int);
+
 int sqlite3BtreeMaxPageCount(Btree*,int);</pre>
 
     <p>
@@ -1345,8 +1357,8 @@ int sqlite3BtreeEof(BtCursor*);</pre>
 
       <pre class=api>int sqlite3BtreeKeySize(BtCursor*, i64 *pSize);
 int sqlite3BtreeKey(BtCursor*, u32 offset, u32 amt, void*);
-const void *sqlite3BtreeKeyFetch(BtCursor*, int *pAmt);
-const void *sqlite3BtreeDataFetch(BtCursor*, int *pAmt);
+const void *sqlite3BtreeKeyFetch(BtCursor*, u32 *pAmt);
+const void *sqlite3BtreeDataFetch(BtCursor*, u32 *pAmt);
 int sqlite3BtreeDataSize(BtCursor*, u32 *pSize);
 int sqlite3BtreeData(BtCursor*, u32 offset, u32 amt, void*);</pre>
 
@@ -1401,10 +1413,12 @@ than that requested, *pRes shall be set to 1.</span></p>
 
       <pre class=api>typedef struct KeyInfo KeyInfo;
 struct KeyInfo {
-  sqlite3 *db;        /* The database connection */
+  u32 nRef;           /* Number of references to this KeyInfo object */
   u8 enc;             /* Text encoding - one of the SQLITE_UTF* values */
-  u16 nField;         /* Number of entries in aColl}; hd_resolve_one {}; hd_puts { */
-  u8 *aSortOrder;     /* Sort order for each column.  May be NULL */
+  u16 nField;         /* Number of key columns in the index */
+  u16 nXField;        /* Number of columns beyond the key columns */
+  sqlite3 *db;        /* The database connection */
+  u8 *aSortOrder;     /* Sort order for each column. */
   CollSeq *aColl}; hd_resolve_one {1}; hd_puts {;  /* Collating sequence for each term of the key */
 };</pre>
       <pre class=api>typedef struct UnpackedRecord UnpackedRecord;
@@ -1412,7 +1426,6 @@ struct UnpackedRecord {
   KeyInfo *pKeyInfo;  /* Collation and sort-order information */
   u16 nField;         /* Number of entries in apMem}; hd_resolve_one {}; hd_puts { */
   u8 flags;           /* Boolean settings.  UNPACKED_... below */
-  i64 rowid;          /* Used by UNPACKED_PREFIX_SEARCH */
   Mem *aMem;          /* Values */
 };</pre>
 

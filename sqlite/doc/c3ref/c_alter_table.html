@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -150,6 +162,7 @@ a:visited { color: #734559 }
 #define SQLITE_FUNCTION             31   /* NULL            Function Name   */
 #define SQLITE_SAVEPOINT            32   /* Operation       Savepoint Name  */
 #define SQLITE_COPY                  0   /* No longer used */
+#define SQLITE_RECURSIVE            33   /* NULL            NULL            */
 </pre></blockquote><p>
 The <a href="../c3ref/set_authorizer.html">sqlite3_set_authorizer()</a> interface registers a callback function
 that is invoked to authorize certain SQL statement actions.  The

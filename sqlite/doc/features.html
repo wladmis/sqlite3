@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -133,15 +145,13 @@ a:visited { color: #734559 }
 <li>Supports terabyte-sized databases and gigabyte-sized strings
     and blobs.  (See <a href="limits.html">limits.html</a>.)
 <li>Small code <a href="footprint.html">footprint</a>: 
-    less than 400KiB fully configured or less
-    than 250KiB with optional features omitted.</li>
+    less than 500KiB fully configured or much less
+    with optional features omitted.</li>
 <li><a href="speed.html">Faster</a> than popular client/server database
     engines for most common operations.</li>
 <li>Simple, easy to use <a href="c3ref/intro.html">API</a>.</li>
 <li>Written in ANSI-C.  <a href="tclsqlite.html">TCL bindings</a> included.
-    Bindings for dozens of other languages 
-    <a href="http://www.sqlite.org/cvstrac/wiki?p=SqliteWrappers">
-    available separately.</a></li>
+    Bindings for dozens of other languages available separately.</li>
 <li>Well-commented source code with
     <a href="testing.html#coverage">100% branch test coverage</a>.</li>
 <li>Available as a 
@@ -163,11 +173,12 @@ a:visited { color: #734559 }
 
 <p><ul>
 <li><p><b>Application File Format.</b>
-Rather than using fopen() to write XML or some proprietary format into
-disk files used by your application, use an SQLite database instead.
+Rather than using fopen() to write XML, JSON, CSV,
+or some proprietary format into
+disk files used by your application, use an SQLite database.
 You'll avoid having to write and troubleshoot a parser, your data
 will be more easily accessible and cross-platform, and your updates
-will be transactional.</p></li>
+will be transactional.  (<a href="whentouse.html#appfileformat">more...</a>)</p></li>
 
 <li><p><b>Database For Gadgets.</b>
 SQLite is popular choice for the database engine in cellphones,

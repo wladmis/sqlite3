@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -151,6 +163,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/blob_write.html">sqlite3_blob_write</a></li>
 <li><a href="../c3ref/busy_handler.html">sqlite3_busy_handler</a></li>
 <li><a href="../c3ref/busy_timeout.html">sqlite3_busy_timeout</a></li>
+<li><a href="../c3ref/cancel_auto_extension.html">sqlite3_cancel_auto_extension</a></li>
 <li><a href="../c3ref/changes.html">sqlite3_changes</a></li>
 <li><a href="../c3ref/clear_bindings.html">sqlite3_clear_bindings</a></li>
 <li><a href="../c3ref/close.html">sqlite3_close</a></li>
@@ -191,9 +204,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/create_function.html">sqlite3_create_function</a></li>
 <li><a href="../c3ref/create_function.html">sqlite3_create_function16</a></li>
 <li><a href="../c3ref/create_function.html">sqlite3_create_function_v2</a></li>
-<li><a href="../c3ref/create_module.html">sqlite3_create_module</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="../c3ref/create_module.html">sqlite3_create_module_v2</a></li>
+<td valign="top"><ul><li><a href="../c3ref/create_module.html">sqlite3_create_module</a></li>
+<li><a href="../c3ref/create_module.html">sqlite3_create_module_v2</a></li>
 <li><a href="../c3ref/data_count.html">sqlite3_data_count</a></li>
 <li><a href="../c3ref/db_config.html">sqlite3_db_config</a></li>
 <li><a href="../c3ref/db_filename.html">sqlite3_db_filename</a></li>
@@ -261,9 +274,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/reset_auto_extension.html">sqlite3_reset_auto_extension</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_blob</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_double</a></li>
-<li><a href="../c3ref/result_blob.html">sqlite3_result_error</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="../c3ref/result_blob.html">sqlite3_result_error16</a></li>
+<td valign="top"><ul><li><a href="../c3ref/result_blob.html">sqlite3_result_error</a></li>
+<li><a href="../c3ref/result_blob.html">sqlite3_result_error16</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error_code</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error_nomem</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error_toobig</a></li>
@@ -291,6 +304,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/stmt_busy.html">sqlite3_stmt_busy</a></li>
 <li><a href="../c3ref/stmt_readonly.html">sqlite3_stmt_readonly</a></li>
 <li><a href="../c3ref/stmt_status.html">sqlite3_stmt_status</a></li>
+<li><a href="../c3ref/strglob.html">sqlite3_strglob</a></li>
 <li><a href="../c3ref/stricmp.html">sqlite3_stricmp</a></li>
 <li><a href="../c3ref/stricmp.html">sqlite3_strnicmp</a></li>
 <li><a href="../c3ref/table_column_metadata.html">sqlite3_table_column_metadata</a></li>

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -132,7 +144,8 @@ a:visited { color: #734559 }
 #define SQLITE_TESTCTRL_SCRATCHMALLOC           17
 #define SQLITE_TESTCTRL_LOCALTIME_FAULT         18
 #define SQLITE_TESTCTRL_EXPLAIN_STMT            19
-#define SQLITE_TESTCTRL_LAST                    19
+#define SQLITE_TESTCTRL_NEVER_CORRUPT           20
+#define SQLITE_TESTCTRL_LAST                    20
 </pre></blockquote><p>
 These constants are the valid operation code parameters used
 as the first argument to <a href="../c3ref/test_control.html">sqlite3_test_control()</a>.</p>

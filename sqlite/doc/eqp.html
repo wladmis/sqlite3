@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -135,16 +147,22 @@ a:visited { color: #734559 }
 
 <p style="margin-left:10ex;margin-right:10ex">
 <b>Warning: The data returned by the EXPLAIN QUERY PLAN command is 
-intended for interactive debugging only. It may change dramatically between
-SQLite releases. Applications should not depend on the results of an EXPLAIN
-QUERY PLAN command.</b>
+intended for interactive debugging only.  The output format may change
+between SQLite releases. Applications should not depend on the output
+format of the EXPLAIN QUERY PLAN command.</b>
 
 <p>The <a href="lang_explain.html">EXPLAIN QUERY PLAN</a> SQL command is used to obtain a high-level
 description of the strategy or plan that SQLite uses to implement a specific
-SQL query. Most significantly, it reports on the way in which the query uses
-database indices. In interpreting and using this information to optimize 
-database schemas and queries, users might find the documents describing how
-SQLite <a href="queryplanner.html">plans</a> and <a href="optoverview.html">optimizes</a> queries useful.
+SQL query.  Most significantly, EXPLAIN QUERY PLAN reports on the way in 
+which the query uses database indices. This document is a guide to
+understanding and interpreting the EXPLAIN QUERY PLAN output.  Background
+information is available separately:
+
+<ul>
+<li> Notes on the <a href="optoverview.html">query optimizer</a>.
+<li> How <a href="queryplanner.html">indexing</a> works.
+<li> The <a href="queryplanner-ng.html">next generation query planner</a>.
+</ul>
 
 <p>An EXPLAIN QUERY PLAN command returns zero or more rows of four columns
 each. The column names are "selectid", "order", "from", "detail". The
@@ -181,14 +199,13 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
   <li> Whether or not an index or <a href="optoverview.html#autoindex">automatic index</a> is used.
   <li> Whether or not the <a href="queryplanner.html#covidx">covering index</a> optimization applies.
   <li> Which terms of the WHERE clause are used for indexing.
-  <li> The estimated number of rows that SQLite will visit.
 </ul>
 
 <p>
   For example, the following EXPLAIN QUERY PLAN command operates on a SELECT
   statement that is implemented by performing a full-table scan on table t1:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
-0|0|0|SCAN TABLE t1 (~100000 rows)
+0|0|0|SCAN TABLE t1
 </table></div>
 
 <p>
@@ -200,7 +217,7 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
   identified. For example:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i1 ON t1(a);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
-0|0|0|SEARCH TABLE t1 USING INDEX i1 (a=?) (~10 rows)
+0|0|0|SEARCH TABLE t1 USING INDEX i1
 </table></div>
 
 <p>
@@ -211,7 +228,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   example can, and that fact is reflected in the output:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i2 ON t1(a, b);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?) (~10 rows)
+0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
 </table></div>
 
 <p>
@@ -219,8 +236,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   SELECT query that features a join is analyzed using EXPLAIN QUERY PLAN, one
   SCAN or SEARCH record is output for each nested loop. For example:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t1, t2 WHERE t1.a=1 AND t1.b>2;
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?) (~3 rows)
-0|1|1|SCAN TABLE t2 (~1000000 rows)
+0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
+0|1|1|SCAN TABLE t2
 </table></div>
 
 <p>
@@ -236,17 +253,9 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   clause of the SELECT are reversed. The query strategy remains the same, but
   the values in the "from" column of the output are adjusted accordingly.
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t2, t1 WHERE t1.a=1 AND t1.b>2;
-0|0|1|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?) (~3 rows)
-0|1|0|SCAN TABLE t2 (~1000000 rows)
+0|0|1|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
+0|1|0|SCAN TABLE t2
 </table></div>
-
-<p>
-  In the example above, SQLite estimates that the outer loop scan will visit
-  approximately 3 rows, and that the inner loop will visit
-  approximately 1,000,000. If
-  you observe that SQLite's estimates are wildly inaccurate (and appear to be
-  causing it to generate sub-optimal query plans), your queries may benefit
-  from running the <a href="lang_analyze.html">ANALYZE</a> command on the database.
 
 <p>
   If the WHERE clause of a query contains an OR expression, then SQLite might
@@ -256,8 +265,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   For example: 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i3 ON t1(b);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?) (~10 rows)
-0|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?) (~10 rows)
+0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
+0|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
 </table></div>
 
 <h2 id="section_1_2">1.2. Temporary Sorting B-Trees</h2>
@@ -273,7 +282,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
   "GROUP BY" or "DISTINCT". For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
-0|0|0|SCAN TABLE t2 (~1000000 rows)
+0|0|0|SCAN TABLE t2
 0|0|0|USE TEMP B-TREE FOR ORDER BY
 </table></div>
 
@@ -283,7 +292,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i4 ON t2(c);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
-0|0|0|SCAN TABLE t2 USING INDEX i4 (~1000000 rows)
+0|0|0|SCAN TABLE t2 USING INDEX i4
 </table></div>
 
 <h2 id="section_1_3">1.3. Subqueries</h2>
@@ -297,11 +306,11 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
   always assigned the selectid value 0. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT (SELECT b FROM t1 WHERE a=0), (SELECT a FROM t1 WHERE b=t2.c) FROM t2;
-0|0|0|SCAN TABLE t2 (~1000000 rows)
+0|0|0|SCAN TABLE t2
 0|0|0|EXECUTE SCALAR SUBQUERY 1
-1|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?) (~10 rows)
+1|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
 0|0|0|EXECUTE CORRELATED SCALAR SUBQUERY 2
-2|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?) (~10 rows)
+2|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
 </table></div>
 
 <p>
@@ -327,8 +336,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
   for each element in the FROM clause. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT count(*) FROM (SELECT max(b) AS x FROM t1 GROUP BY a) GROUP BY x;
-1|0|0|SCAN TABLE t1 USING COVERING INDEX i2 (~1000000 rows)
-0|0|0|SCAN SUBQUERY 1 (~1000000 rows)
+1|0|0|SCAN TABLE t1 USING COVERING INDEX i2
+0|0|0|SCAN SUBQUERY 1
 0|0|0|USE TEMP B-TREE FOR GROUP BY
 </table></div>
 
@@ -342,8 +351,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
   of tables t1 and t2.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM (SELECT * FROM t2 WHERE c=1), t1;
-0|0|0|SEARCH TABLE t2 USING INDEX i4 (c=?) (~10 rows)
-0|1|1|SCAN TABLE t1 (~1000000 rows)
+0|0|0|SEARCH TABLE t2 USING INDEX i4 (c=?)
+0|1|1|SCAN TABLE t1
 </table></div>
 
 <h2 id="section_1_4">1.4. Compound Queries</h2>
@@ -356,8 +365,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
   it. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT a FROM t1 UNION SELECT c FROM t2;
-1|0|0|SCAN TABLE t1 (~1000000 rows)
-2|0|0|SCAN TABLE t2 (~1000000 rows)
+1|0|0|SCAN TABLE t1
+2|0|0|SCAN TABLE t2
 0|0|0|COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (UNION)
 </table></div>
 
@@ -368,8 +377,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
   in the following example, the clause is not present.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT a FROM t1 EXCEPT SELECT d FROM t2 ORDER BY 1;
-1|0|0|SCAN TABLE t1 USING COVERING INDEX i2 (~1000000 rows)
-2|0|0|SCAN TABLE t2 (~1000000 rows)
+1|0|0|SCAN TABLE t1 USING COVERING INDEX i2
+2|0|0|SCAN TABLE t2
 2|0|0|USE TEMP B-TREE FOR ORDER BY
 0|0|0|COMPOUND SUBQUERIES 1 AND 2 (EXCEPT)
 </table></div>

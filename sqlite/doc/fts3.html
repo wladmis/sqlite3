@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -128,7 +140,7 @@ a:visited { color: #734559 }
     <div style="font-size:1.5em;margin:1em;color:#044a64">
       Table Of Contents</div>
     <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Introduction to FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Differences between FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Creating and Destroying FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_3">1.3. Populating FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_4">1.4. Simple FTS Queries</a></div><div style="margin-left:12ex"><a href="#section_1_5">1.5. Summary</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling and Enabling FTS3 and FTS4</a></div><div style="margin-left:6ex"><a href="#section_3">3. Full-text Index Queries</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. 
-  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=B" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
+  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The notindexed= option</a></div><div style="margin-left:12ex"><a href="#section_6_6">6.6. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=B" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_2">8.2. Querying Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
   Appendix A: Search Application Tips
 </a></div> </div>
     <div class=startsearch></div>
@@ -676,6 +688,8 @@ SELECT * FROM docs WHERE docs MATCH 'title:linux problems';
 SELECT * FROM docs WHERE body MATCH 'title:linux driver';
 </table></div>
 
+<a name="phrase"></a>
+
 <ul>
   <li><p><b>Phrase queries</b>.
     A phrase query is a query that retrieves all documents that contain a
@@ -693,6 +707,8 @@ SELECT * FROM docs WHERE docs MATCH '"linux applications"';
 <i>-- or "link apprentice".</i>
 SELECT * FROM docs WHERE docs MATCH '"lin* app*"';
 </table></div>
+
+<a name="near"></a>
 
 <ul>
   <li><p><b>NEAR queries</b>. 
@@ -1325,8 +1341,15 @@ SELECT docid, offsets(tbl) FROM tbl WHERE tbl MATCH &lt;query expression&gt;;
   included in all <a href="fts3.html#section_2">builds that include FTS</a>.
 
 <p>
-  An fts4aux virtual table is constructed with a single argument - the 
-  unqualified name of the FTS table that it will be used to access.
+  An fts4aux virtual table is constructed with one or two arguments.  When
+  used with a single argument, that argument is the unqualified name of the
+  FTS table that it will be used to access.  To access a table in a different
+  database (for example, to create a TEMP fts4aux table that will access an
+  FTS3 table in the MAIN database) use the two-argument form and give the
+  name of the target database (ex: "main") in the first argument and the name
+  of the FTS3/4 table as the second argument.  (The two-argument form of 
+  fts4aux was added for SQLite version 3.7.17 and will throw an error in
+  prior releases.)
   For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create an FTS4 table</i>
@@ -1334,6 +1357,9 @@ CREATE VIRTUAL TABLE ft USING fts4(x, y);
 
 <i>-- Create an fts4aux table to access the full-text index for table "ft"</i>
 CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft);
+
+<i>-- Create a TEMP fts4aux table accessing the "ft" table in "main"</i>
+CREATE VIRTUAL TABLE temp.ft_terms_2 USING fts4aux(main,ft);
 </table></div>
 
 <p>
@@ -1371,6 +1397,18 @@ CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft);
     value, then this column contains the total number of instances of the
     term that appear in the FTS table column identified by the col
     value.
+
+  <tr style="text-align:left;background-color:#DDDDDD"><td>languageid <i>(hidden)</i><td>
+    <a name="f4alid"></a>
+
+    This column determines which <a href="fts3.html#*fts4languageid">languageid</a> is used to
+    extract vocabulary from the FTS3/4 table.
+    <br><br>
+    The default value for languageid is 0.  If an alternative language
+    is specified in WHERE clause constraints, then that alternative is
+    used instead of 0.  There can only be a single languageid per query.
+    In other words, the WHERE clause cannot contain a range constraint
+    or IN operator on the languageid.
 </table>
 
 <p>
@@ -1392,7 +1430,7 @@ INSERT INTO ft(x, y) VALUES('Cherry Elderberry', 'Elderberry');
 <i>--     date        |  *  |  1  |  2</i>
 <i>--     date        |  0  |  1  |  2</i>
 <i>--     elderberry  |  *  |  1  |  2</i>
-<i>--     elderberry  |  1  |  1  |  1</i>
+<i>--     elderberry  |  0  |  1  |  1</i>
 <i>--     elderberry  |  1  |  1  |  1</i>
 <i>--</i>
 SELECT term, col, documents, occurrences FROM ft_terms;
@@ -1460,7 +1498,14 @@ CREATE VIRTUAL TABLE papers USING fts4(author, document, matchinfo=fts3);
     information stored by FTS4 with the consequence that the "l" option of
     <a href="fts3.html#matchinfo">matchinfo()</a> is no longer available.
 
-  <tr style="text-align:left;background-color:#DDDDDD"><td>order<td>
+  <tr style="text-align:left;background-color:#DDDDDD"><td>notindexed<td> 
+    This option is used to specify the name of a column for which data is
+    not indexed. Values stored in columns that are not indexed are not
+    matched by MATCH queries. Nor are they recognized by auxiliary functions.
+    A single CREATE VIRTUAL TABLE statement may have any number of notindexed 
+    options.
+
+  <tr style="text-align:left"><td>order<td>
     <a name="fts4order"></a>
 
     The "order" option may be set to either "DESC" or "ASC" (in upper or
@@ -1472,14 +1517,14 @@ CREATE VIRTUAL TABLE papers USING fts4(author, document, matchinfo=fts3);
     docid DESC", then it may improve performance to add the "order=desc" 
     option to the CREATE VIRTUAL TABLE statement.
 
-  <tr style="text-align:left"><td>prefix<td>
+  <tr style="text-align:left;background-color:#DDDDDD"><td>prefix<td>
     This option may be set to a comma-separated list of positive non-zero 
     integers. For each integer N in the list, a separate index is created
     in the database file to optimize <a href="fts3.html#termprefix">prefix queries</a> where
     the query term is N bytes in length, not including the '*' character,
-    when encoded using UTF-8. <a href="fts3.html#section_6_5">See below</a> for details.
+    when encoded using UTF-8. <a href="fts3.html#section_6_6">See below</a> for details.
 
-  <tr style="text-align:left;background-color:#DDDDDD"><td>uncompress<td>
+  <tr style="text-align:left"><td>uncompress<td>
     This option is used to specify the uncompress function. It is an error to
     specify an uncompress function without also specifying a compress
     function. <a href="fts3.html#section_6_1">See below</a> for details.
@@ -1657,11 +1702,15 @@ CREATE VIRTUAL TABLE t3 USING fts4(content="t2", a, c);
 
 <p>
   Assuming the nominated table does exist, then its columns must be the same 
-  as or a superset of those defined for the FTS table.
+  as or a superset of those defined for the FTS table.  The external table
+  must also be in the same database file as the FTS table.  In other words,
+  The external table cannot be in a different database file connected using
+  <a href="lang_attach.html">ATTACH</a> nor may one of the FTS table and the external content be in the
+  TEMP database when the other is in a persistent database file such as MAIN.
 
 <p>
   When a users query on the FTS table requires a column value other than
-  docid, FTS attempts to read this value from the corresponding column of
+  docid, FTS attempts to read the requested value from the corresponding column of
   the row in the content table with a rowid value equal to the current FTS
   docid. Or, if such a row cannot be found in the content table, a NULL
   value is used instead. For example:
@@ -1820,9 +1869,31 @@ END;
   accessed by passing the 'l' flag to the <a href="fts3.html#matchinfo">matchinfo()</a> function is
   not available. 
 
+<a name="fts4notindexed"></a>
+
+<h2 id="section_6_5">6.5. The notindexed= option</h2>
+
+<p>
+  Normally, the FTS module maintains an inverted index of all terms in
+  all columns of the table. This option is used to specify the name of
+  a column for which entries should not be added to the index. Multiple
+  "notindexed" options may be used to specify that multiple columns should
+  be omitted from the index. For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create an FTS4 table for which only the contents of columns c2 and c4</i>
+<i>-- are tokenized and added to the inverted index.</i>
+CREATE VIRTUAL TABLE t1 USING fts4(c1, c2, c3, c4, notindexed=c1, notindexed=c3);
+</table></div>
+
+<p>
+  Values stored in unindexed columns are not eligible to match MATCH 
+  operators. The do not influence the results of the offsets() or matchinfo()
+  auxiliary functions. Nor will the snippet() function ever return a
+  snippet based on a value stored in an unindexed column.
+
 <a name="fts4prefix"></a>
 
-<h2 id="section_6_5">6.5. The prefix= option</h2>
+<h2 id="section_6_6">6.6. The prefix= option</h2>
 
 <p>
   The FTS4 prefix option causes FTS to index term prefixes of specified lengths
@@ -1927,7 +1998,7 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
 <p>
   The "integrity-check" command is similar in concept to
  <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>.  In a working system, the "integrity-command"
- should aways be successful.  Possible causes of integrity-check
+ should always be successful.  Possible causes of integrity-check
  failures include:
   <ul>
   <li> The application has made changes to the <a href="fts3.html#*shadowtab">FTS shadow tables</a>
@@ -2054,8 +2125,8 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
   As well as the "simple" tokenizer, the FTS source code features a tokenizer 
   that uses the <a href="http://tartarus.org/~martin/PorterStemmer/">Porter 
   Stemming algorithm</a>. This tokenizer uses the same rules to separate
-  the input document into terms, but as well as folding all terms to lower
-  case it uses the Porter Stemming algorithm to reduce related English language
+  the input document into terms including folding all terms into lower case,
+  but also uses the Porter Stemming algorithm to reduce related English language
   words to a common root. For example, using the same input document as in the
   paragraph above, the porter tokenizer extracts the following tokens:
   "right now thei veri frustrat". Even though some of these terms are not even
@@ -2121,10 +2192,68 @@ SELECT * FROM porter WHERE porter MATCH 'Frustration';
   The simple tokenizer only does case folding of ASCII characters and only
   recognizes ASCII space and punctuation characters as token separators.
 
+<p>
+  By default, "unicode61" also removes all diacritics from Latin script
+  characters. This behaviour can be overridden by adding the tokenizer argument
+  "remove_diacritics=0". For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create tables that remove diacritics from Latin script characters</i>
+<i>-- as part of tokenization.</i>
+CREATE VIRTUAL TABLE txt1 USING fts4(tokenize=unicode61);
+CREATE VIRTUAL TABLE txt2 USING fts4(tokenize=unicode61 "remove_diacritics=1");
+
+<i>-- Create a table that does not remove diacritics from Latin script</i>
+<i>-- characters as part of tokenization.</i>
+CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "remove_diacritics=0");
+</table></div>
+
+<p>
+  It is also possible to customize the set of codepoints that unicode61 treats
+  as separator characters. The "separators=" option may be used to specify one
+  or more extra characters that should be treated as separator characters, and
+  the "tokenchars=" option may be used to specify one or more extra characters
+  that should be treated as part of tokens instead of as separator characters.
+  For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create a table that uses the unicode61 tokenizer, but considers "."</i>
+<i>-- and "=" characters to be part of tokens, and capital "X" characters to</i>
+<i>-- function as separators.</i>
+CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "tokenchars=.=" "separators=X");
+
+<i>-- Create a tables that considers space characters (codepoint 32) to be</i>
+<i>-- a token character</i>
+CREATE VIRTUAL TABLE txt4 USING fts4(tokenize=unicode61 "tokenchars= ");
+</table></div>
+
+<p>
+  If a character specified as part of the argument to "tokenchars=" is considered
+  to be a token character by default, it is ignored. This is true even if it has
+  been marked as a separator by an earlier "separators=" option. Similarly, if
+  a character specified as part of a "separators=" option is treated as a separator
+  character by default, it is ignored. If multiple "tokenchars=" or "separators="
+  options are specified, all are processed. For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create a table that uses the unicode61 tokenizer, but considers "."</i>
+<i>-- and "=" characters to be part of tokens, and capital "X" characters to</i>
+<i>-- function as separators. Both of the "tokenchars=" options are processed</i>
+<i>-- The "separators=" option ignores the "." passed to it, as "." is by</i>
+<i>-- default a separator character, even though it has been marked as a token</i>
+<i>-- character by an earlier "tokenchars=" option.</i>
+CREATE VIRTUAL TABLE txt5 USING fts4(
+    tokenize=unicode61 "tokenchars=." "separators=X." "tokenchars=="
+);
+</table></div>
+
+<p>
+  The arguments passed to the "tokenchars=" or "separators=" options are 
+  case-sensitive. In the example above, specifying that "X" is a separator
+  character does not affect the way "x" is handled.
+
 <h2 id="section_8_1">8.1. Custom (User Implemented) Tokenizers</h2>
 
 <p>
-  As well as the built-in "simple", "porter" and (possibly) "icu" tokenizers,
+  As well as the built-in "simple", "porter" and (possibly) "icu" and
+  "unicode61" tokenizers,
   FTS exports an interface that allows users to implement custom tokenizers
   using C. The interface used to create a new tokenizer is defined and 
   described in the fts3_tokenizer.h source file.
@@ -2150,12 +2279,12 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
 </table></div>
 
 <p>
-  Where <tokenizer-name> is a string identifying the tokenizer and
-  <sqlite3_tokenizer_module ptr="1"> is a pointer to an sqlite3_tokenizer_module
+  Where &lt;tokenizer-name&gt; is a string identifying the tokenizer and
+  &lt;sqlite3_tokenizer_module ptr&gt; is a pointer to an sqlite3_tokenizer_module
   structure encoded as an SQL blob. If the second argument is present,
-  it is registered as tokenizer <tokenizer-name> and a copy of it
+  it is registered as tokenizer &lt;tokenizer-name&gt; and a copy of it
   returned. If only one argument is passed, a pointer to the tokenizer
-  implementation currently registered as <tokenizer-name> is returned,
+  implementation currently registered as &lt;tokenizer-name&gt; is returned,
   encoded as a blob. Or, if no such tokenizer exists, an SQL exception
   (error) is raised.
 
@@ -2222,7 +2351,75 @@ int queryTokenizer(
 }
 </table></div>
 
-  
+
+<a name="fts3tok"></a>
+
+<h2 id="section_8_2">8.2. Querying Tokenizers</h2>
+
+<p>The "fts3tokenize" virtual table can be used to directly access any
+   tokenizer.  The following SQL demonstrates how to create an instance 
+   of the fts3tokenize virtual table:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE tok1 USING fts3tokenize('porter');
+</table></div>
+
+<p>The name of the desired tokenizer should be substituted in place of
+   'porter' in the example, of course.  If the tokenizer requires one or
+   more arguments, they should be separated by commas in the fts3tokenize
+   declaration (even though they are separated by spaces in declarations
+   of regular fts4 tables). The following creates fts4 and fts3tokenize
+   tables that use the same tokenizer:
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE text1 USING fts4(tokenize=icu en_AU);
+CREATE VIRTUAL TABLE tokens1 USING fts3tokenize(icu, en_AU);
+
+CREATE VIRTUAL TABLE text2 USING fts4(tokenize=unicode61 "tokenchars=@." "separators=123");
+CREATE VIRTUAL TABLE tokens2 USING fts3tokenize(unicode61, "tokenchars=@.", "separators=123");
+</table></div>
+   
+<p>
+   Once the virtual table is created, it can be queried as follows:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT token, start, end, position 
+  FROM tok1
+ WHERE input='This is a test sentence.';
+</table></div>
+
+<p>The virtual table will return one row of output for each token in the
+   input string.  The "token" column is the text of the token.  The "start"
+   and "end" columns are the byte offset to the beginning and end of the
+   token in the original input string.  
+   The "position" column is the sequence number
+   of the token in the original input string.  There is also an "input"
+   column which is simply a copy of the input string that is specified in
+   the WHERE clause.  Note that a constraint of the form "input=?" must
+   appear in the WHERE clause or else the virtual table will have no input
+   to tokenize and will return no rows.  The example above generates
+   the following output:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">thi|0|4|0
+is|5|7|1
+a|8|9|2
+test|10|14|3
+sentenc|15|23|4
+</table></div>
+
+<p>Notice that the tokens in the result set from the fts3tokenize virtual
+   table have been transformed according to the rules of the tokenizer.
+   Since this example used the "porter" tokenizer, the "This" token was
+   converted into "thi".  If the original text of the token is desired,
+   it can be retrieved using the "start" and "end" columns with the
+   <a href="lang_corefunc.html#substr">substr()</a> function.  For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT substr(input, start+1, end-start), token, position
+  FROM tok1
+ WHERE input='This is a test sentence.';
+</table></div>
+
+<p>The fts3tokenize virtual table can be used on any tokenizer, regardless
+   of whether or not there exists an FTS3 or FTS4 table that actually uses
+   that tokenizer.
+
+ 
 <h1 id="section_9">9. Data Structures</h1>
 
 <p>

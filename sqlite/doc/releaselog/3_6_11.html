@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.6.11 On 2009 Feb 18 (3.6.11)</title>
+<title>SQLite Release 3.6.11 On 2009-02-18 (3.6.11)</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.6.11 On 2009 Feb 18 (3.6.11)</h2><p><ul>
+<h2>SQLite Release 3.6.11 On 2009-02-18 (3.6.11)</h2><p><ul>
 <li>Added the <a href="../c3ref/backup_finish.html#sqlite3backupinit">hot-backup interface</a>.
 <li>Added new commands ".backup" and ".restore" to the <a href="../sqlite.html">CLI</a>.
 <li>Added new methods <a href="../tclsqlite.html#backup">backup</a> and

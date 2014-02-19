@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -135,7 +147,7 @@ TH3 is designed to meet the following objectives:</p>
      published and documented interfaces.
      In other words, TH3 tests the compiled object code, not
      the source code, thus verifying that no problems were introduced
-     by compiler bugs.</p></li>
+     by compiler bugs.  "Fly what you test and test what you fly."</p></li>
 
 <li><p> TH3 checks SQLite's response to out-of-memory errors, disk I/O
      errors, and power loss during transaction commit. </p></li>
@@ -168,8 +180,8 @@ correct operation of SQLite on that platform.</p>
 <p>The inputs to TH3 are test modules written in C or SQL and
 small configuration
 files that determine how to initialize SQLite.  The
-TH3 package includes approximately one thousand test
-modules and several dozens configuration files.
+TH3 package includes over one thousand test
+modules and several dozen configuration files.
 New modules and configurations
 can be added to customize TH3 for specialized applications.
 Each time TH3 is run, it reads
@@ -189,15 +201,9 @@ modules up into smaller, more easily digested pieces.</p>
 
 <p>Each individual test module might contain dozens, hundreds, or thousands
 of separate tests.  The test modules can be written in C or as scripts of
-SQL.
-Test modules done in SQL are very easy to write and
-the test modules written in C are not as nearly as cumbersome 
-to write as one might suppose.  The TH3
-system provides high-level interfaces that simplify test writing.
-A typical C-language test case in TH3 might contains slightly more syntax that 
-the corresponding TCL-script test, but the difference is not that great.
-The test modules written as SQL contain special comments that define
-the boundaries and operation of each test case and the expected results.</p>
+SQL or a mixture of the two.  About two-thirds of the existing test modules are
+written SQL with the remainder either in pure C or a combination of C and SQL.
+</p>
 
 <p>Each test module file contains a header which describes the circumstances
 under which the test is valid.  For a particular configuration, only those
@@ -233,9 +239,16 @@ In a working installation, one would normally want
 to specify optimization parameters and compile-time switches on the
 compiler command line.</p>
 
+<p>For testing on embedded systems, the mkth3.tcl script and the compiler
+steps shown above a typically performed on an ordinary workstation using
+a cross-compiler for the second step, then the resulting test program is
+transfer onto the device to be run.</p>
+
 <p>Once the test program is generated, it is run with no arguments to
 perform the tests.  Progress information as well as error diagnostics
-appear on standard output.  The program returns zero if there are no
+appear on standard output.  (Alternative output arrangements can be made
+using a compile-time option for embedded devices that lack a standard
+output channel.) The program returns zero if there are no
 errors and non-zero if any problems were detected.</p>
 
 <p>TH3 comes with additional TCL scripts (for example:
@@ -252,7 +265,8 @@ tests) SQLite obtained
 <a href="testing.html#coverage">100% branch test coverage</a> and 100% <a href="testing.html#mcdc">MC/DC</a> as measured
 by <a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>
 on Linux x86 and x86_64 hardware.  All releases of SQLite since
-<a href="releaselog/3_6_17.html">version 3.6.17</a> have been tested to this standard. The SQLite developers 
+<a href="releaselog/3_6_17.html">version 3.6.17</a> (circa 2009-08-10) have been tested to this standard. 
+The SQLite developers 
 are committed to maintaining 100% branch coverage and MC/DC for all 
 future releases of SQLite.</p>
 
@@ -274,7 +288,8 @@ of TH3 (or any historical version) whenever they like.</p>
 
 <p>Even though open-source users do not have direct access to TH3, all
 users of SQLite benefit from TH3 indirectly since each version of SQLite is
-validated by TH3 prior to release.  So anyone using an official release
+validated running TH3 on multiple platforms (Linux, Windows, WinRT, Mac,
+OpenBSD, Solaris Sparc) prior to release.  So anyone using an official release
 of SQLite can deploy their application with the confidence of knowing that
 it has been tested using TH3.  They simply cannot rerun those tests
 themselves without purchasing a TH3 license.</p>

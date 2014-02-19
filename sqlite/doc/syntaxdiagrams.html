@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -169,15 +181,13 @@ See also:&nbsp;&nbsp; <a href="lang_transaction.html">lang_transaction.html</a>
 <a name="commit-stmt"></a>
 <h4>commit-stmt:</h4><blockquote>
 <img src="images/syntax/commit-stmt.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_transaction.html">lang_transaction.html</a>
+Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a>
 </blockquote>
 
 <a name="rollback-stmt"></a>
 <h4>rollback-stmt:</h4><blockquote>
 <img src="images/syntax/rollback-stmt.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_savepoint.html">lang_savepoint.html</a>&nbsp;&nbsp; <a href="lang_transaction.html">lang_transaction.html</a>
+Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a>
 </blockquote>
 
 <a name="savepoint-stmt"></a>
@@ -190,23 +200,22 @@ See also:&nbsp;&nbsp; <a href="lang_savepoint.html">lang_savepoint.html</a>
 <a name="release-stmt"></a>
 <h4>release-stmt:</h4><blockquote>
 <img src="images/syntax/release-stmt.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_savepoint.html">lang_savepoint.html</a>
+Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a>
 </blockquote>
 
 <a name="create-index-stmt"></a>
 <h4>create-index-stmt:</h4><blockquote>
 <img src="images/syntax/create-index-stmt.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#indexed-column">indexed-column</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#indexed-column">indexed-column</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="indexed-column"></a>
 <h4>indexed-column:</h4><blockquote>
 <img src="images/syntax/indexed-column.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#create-index-stmt">create-index-stmt</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>
+See also:&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="create-table-stmt"></a>
@@ -230,7 +239,7 @@ See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nb
 <img src="images/syntax/type-name.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-def">column-def</a>&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
 References:&nbsp;&nbsp; <a href="#signed-number">signed-number</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="column-constraint"></a>
@@ -238,14 +247,14 @@ See also:&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>
 <img src="images/syntax/column-constraint.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-def">column-def</a><br></br>
 References:&nbsp;&nbsp; <a href="#conflict-clause">conflict-clause</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#foreign-key-clause">foreign-key-clause</a>&nbsp;&nbsp; <a href="#literal-value">literal-value</a>&nbsp;&nbsp; <a href="#signed-number">signed-number</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#tablecoldef">lang_createtable.html#tablecoldef</a>
 </blockquote>
 
 <a name="signed-number"></a>
 <h4>signed-number:</h4><blockquote>
 <img src="images/syntax/signed-number.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#pragma-value">pragma-value</a>&nbsp;&nbsp; <a href="#type-name">type-name</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>&nbsp;&nbsp; <a href="pragma.html#syntax">pragma.html#syntax</a>
 </blockquote>
 
 <a name="table-constraint"></a>
@@ -267,7 +276,7 @@ See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nb
 <h4>conflict-clause:</h4><blockquote>
 <img src="images/syntax/conflict-clause.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_conflict.html">lang_conflict.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#notnullconst">lang_createtable.html#notnullconst</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_conflict.html">lang_conflict.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtable.html#notnullconst">lang_createtable.html#notnullconst</a>
 </blockquote>
 
 <a name="create-trigger-stmt"></a>
@@ -293,19 +302,49 @@ Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_createvtab.html">lang_createvtab.html</a>
 </blockquote>
 
+<a name="with-clause"></a>
+<h4>with-clause:</h4><blockquote>
+<img src="images/syntax/with-clause.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
+References:&nbsp;&nbsp; <a href="#cte-table-name">cte-table-name</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>
+</blockquote>
+
+<a name="cte-table-name"></a>
+<h4>cte-table-name:</h4><blockquote>
+<img src="images/syntax/cte-table-name.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#recursive-cte">recursive-cte</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="lang_with.html#recursivecte">lang_with.html#recursivecte</a>
+</blockquote>
+
+<a name="recursive-cte"></a>
+<h4>recursive-cte:</h4><blockquote>
+<img src="images/syntax/recursive-cte.gif"></img><br></br><br></br>
+References:&nbsp;&nbsp; <a href="#cte-table-name">cte-table-name</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_with.html#recursivecte">lang_with.html#recursivecte</a>
+</blockquote>
+
+<a name="common-table-expression"></a>
+<h4>common-table-expression:</h4><blockquote>
+<img src="images/syntax/common-table-expression.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#simple-select-stmt">simple-select-stmt</a><br></br>
+References:&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
+</blockquote>
+
 <a name="delete-stmt"></a>
 <h4>delete-stmt:</h4><blockquote>
 <img src="images/syntax/delete-stmt.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>
 </blockquote>
 
 <a name="delete-stmt-limited"></a>
 <h4>delete-stmt-limited:</h4><blockquote>
 <img src="images/syntax/delete-stmt-limited.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a><br></br>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>
 </blockquote>
 
@@ -347,23 +386,23 @@ See also:&nbsp;&nbsp; <a href="lang_dropview.html">lang_dropview.html</a>
 <a name="expr"></a>
 <h4>expr:</h4><blockquote>
 <img src="images/syntax/expr.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#attach-stmt">attach-stmt</a>&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#attach-stmt">attach-stmt</a>&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="#create-index-stmt">create-index-stmt</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#simple-select-stmt">simple-select-stmt</a>&nbsp;&nbsp; <a href="#table-constraint">table-constraint</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
 References:&nbsp;&nbsp; <a href="#literal-value">literal-value</a>&nbsp;&nbsp; <a href="#raise-function">raise-function</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#type-name">type-name</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="raise-function"></a>
 <h4>raise-function:</h4><blockquote>
 <img src="images/syntax/raise-function.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_createtrigger.html#undef_before">lang_createtrigger.html#undef_before</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html#undef_before">lang_createtrigger.html#undef_before</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="literal-value"></a>
 <h4>literal-value:</h4><blockquote>
 <img src="images/syntax/literal-value.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#column-constraint">column-constraint</a>&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="numeric-literal"></a>
@@ -376,8 +415,8 @@ See also:&nbsp;&nbsp; <a href="lang_expr.html#litvalue">lang_expr.html#litvalue<
 <h4>insert-stmt:</h4><blockquote>
 <img src="images/syntax/insert-stmt.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>
 </blockquote>
 
 <a name="pragma-stmt"></a>
@@ -406,86 +445,107 @@ See also:&nbsp;&nbsp; <a href="lang_reindex.html">lang_reindex.html</a>
 <a name="select-stmt"></a>
 <h4>select-stmt:</h4><blockquote>
 <img src="images/syntax/select-stmt.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#create-table-stmt">create-table-stmt</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#create-view-stmt">create-view-stmt</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#single-source">single-source</a>&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#compound-operator">compound-operator</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#select-core">select-core</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
+Used by:&nbsp;&nbsp; <a href="#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="#create-table-stmt">create-table-stmt</a>&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#create-view-stmt">create-view-stmt</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#insert-stmt">insert-stmt</a>&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a>&nbsp;&nbsp; <a href="#table-or-subquery">table-or-subquery</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
+References:&nbsp;&nbsp; <a href="#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="#compound-operator">compound-operator</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#join-clause">join-clause</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#table-or-subquery">table-or-subquery</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="lang_with.html#recursivecte">lang_with.html#recursivecte</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
+</blockquote>
+
+<a name="join-clause"></a>
+<h4>join-clause:</h4><blockquote>
+<img src="images/syntax/join-clause.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#table-or-subquery">table-or-subquery</a><br></br>
+References:&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#join-operator">join-operator</a>&nbsp;&nbsp; <a href="#table-or-subquery">table-or-subquery</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="select-core"></a>
 <h4>select-core:</h4><blockquote>
 <img src="images/syntax/select-core.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#join-source">join-source</a>&nbsp;&nbsp; <a href="#result-column">result-column</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="#simple-select-stmt">simple-select-stmt</a><br></br>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#join-clause">join-clause</a>&nbsp;&nbsp; <a href="#result-column">result-column</a>&nbsp;&nbsp; <a href="#table-or-subquery">table-or-subquery</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>
+</blockquote>
+
+<a name="factored-select-stmt"></a>
+<h4>factored-select-stmt:</h4><blockquote>
+<img src="images/syntax/factored-select-stmt.gif"></img><br></br><br></br>
+References:&nbsp;&nbsp; <a href="#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="#compound-operator">compound-operator</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#select-core">select-core</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
+</blockquote>
+
+<a name="simple-select-stmt"></a>
+<h4>simple-select-stmt:</h4><blockquote>
+<img src="images/syntax/simple-select-stmt.gif"></img><br></br><br></br>
+References:&nbsp;&nbsp; <a href="#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#select-core">select-core</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>
+</blockquote>
+
+<a name="compound-select-stmt"></a>
+<h4>compound-select-stmt:</h4><blockquote>
+<img src="images/syntax/compound-select-stmt.gif"></img><br></br><br></br>
+References:&nbsp;&nbsp; <a href="#common-table-expression">common-table-expression</a>&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#select-core">select-core</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>
+</blockquote>
+
+<a name="table-or-subquery"></a>
+<h4>table-or-subquery:</h4><blockquote>
+<img src="images/syntax/table-or-subquery.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#join-clause">join-clause</a>&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
+References:&nbsp;&nbsp; <a href="#join-clause">join-clause</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="result-column"></a>
 <h4>result-column:</h4><blockquote>
 <img src="images/syntax/result-column.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#select-core">select-core</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
 References:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
-<a name="join-source"></a>
-<h4>join-source:</h4><blockquote>
-<img src="images/syntax/join-source.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#select-core">select-core</a>&nbsp;&nbsp; <a href="#single-source">single-source</a><br></br>
-References:&nbsp;&nbsp; <a href="#join-constraint">join-constraint</a>&nbsp;&nbsp; <a href="#join-op">join-op</a>&nbsp;&nbsp; <a href="#single-source">single-source</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
-</blockquote>
-
-<a name="single-source"></a>
-<h4>single-source:</h4><blockquote>
-<img src="images/syntax/single-source.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#join-source">join-source</a><br></br>
-References:&nbsp;&nbsp; <a href="#join-source">join-source</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_indexedby.html">lang_indexedby.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
-</blockquote>
-
-<a name="join-op"></a>
-<h4>join-op:</h4><blockquote>
-<img src="images/syntax/join-op.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#join-source">join-source</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#fromclause">lang_select.html#fromclause</a>
+<a name="join-operator"></a>
+<h4>join-operator:</h4><blockquote>
+<img src="images/syntax/join-operator.gif"></img><br></br>
+Used by:&nbsp;&nbsp; <a href="#join-clause">join-clause</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#fromclause">lang_select.html#fromclause</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="join-constraint"></a>
 <h4>join-constraint:</h4><blockquote>
 <img src="images/syntax/join-constraint.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#join-source">join-source</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#join-clause">join-clause</a><br></br>
 References:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#fromclause">lang_select.html#fromclause</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#fromclause">lang_select.html#fromclause</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="ordering-term"></a>
 <h4>ordering-term:</h4><blockquote>
 <img src="images/syntax/ordering-term.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
+Used by:&nbsp;&nbsp; <a href="#compound-select-stmt">compound-select-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a>&nbsp;&nbsp; <a href="#simple-select-stmt">simple-select-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
 References:&nbsp;&nbsp; <a href="#expr">expr</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="compound-operator"></a>
 <h4>compound-operator:</h4><blockquote>
 <img src="images/syntax/compound-operator.gif"></img><br></br>
-Used by:&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>
+Used by:&nbsp;&nbsp; <a href="#factored-select-stmt">factored-select-stmt</a>&nbsp;&nbsp; <a href="#select-stmt">select-stmt</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_altertable.html">lang_altertable.html</a>&nbsp;&nbsp; <a href="lang_attach.html">lang_attach.html</a>&nbsp;&nbsp; <a href="lang_createindex.html">lang_createindex.html</a>&nbsp;&nbsp; <a href="lang_createtable.html">lang_createtable.html</a>&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_createview.html">lang_createview.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_expr.html">lang_expr.html</a>&nbsp;&nbsp; <a href="lang_insert.html">lang_insert.html</a>&nbsp;&nbsp; <a href="lang_select.html">lang_select.html</a>&nbsp;&nbsp; <a href="lang_select.html#compound">lang_select.html#compound</a>&nbsp;&nbsp; <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>&nbsp;&nbsp; <a href="lang_with.html">lang_with.html</a>&nbsp;&nbsp; <a href="lang_with.html#recursivecte">lang_with.html#recursivecte</a>&nbsp;&nbsp; <a href="partialindex.html">partialindex.html</a>
 </blockquote>
 
 <a name="update-stmt"></a>
 <h4>update-stmt:</h4><blockquote>
 <img src="images/syntax/update-stmt.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#create-trigger-stmt">create-trigger-stmt</a>&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
 </blockquote>
 
 <a name="update-stmt-limited"></a>
 <h4>update-stmt-limited:</h4><blockquote>
 <img src="images/syntax/update-stmt-limited.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#sql-stmt">sql-stmt</a><br></br>
-References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a><br></br>
+References:&nbsp;&nbsp; <a href="#expr">expr</a>&nbsp;&nbsp; <a href="#ordering-term">ordering-term</a>&nbsp;&nbsp; <a href="#qualified-table-name">qualified-table-name</a>&nbsp;&nbsp; <a href="#with-clause">with-clause</a><br></br>
 See also:&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
 </blockquote>
 
@@ -493,7 +553,7 @@ See also:&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
 <h4>qualified-table-name:</h4><blockquote>
 <img src="images/syntax/qualified-table-name.gif"></img><br></br>
 Used by:&nbsp;&nbsp; <a href="#delete-stmt">delete-stmt</a>&nbsp;&nbsp; <a href="#delete-stmt-limited">delete-stmt-limited</a>&nbsp;&nbsp; <a href="#update-stmt">update-stmt</a>&nbsp;&nbsp; <a href="#update-stmt-limited">update-stmt-limited</a><br></br>
-See also:&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_indexedby.html">lang_indexedby.html</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
+See also:&nbsp;&nbsp; <a href="lang_createtrigger.html">lang_createtrigger.html</a>&nbsp;&nbsp; <a href="lang_delete.html">lang_delete.html</a>&nbsp;&nbsp; <a href="lang_indexedby.html">lang_indexedby.html</a>&nbsp;&nbsp; <a href="lang_update.html">lang_update.html</a>
 </blockquote>
 
 <a name="vacuum-stmt"></a>

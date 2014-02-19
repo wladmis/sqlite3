@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -119,7 +131,7 @@ a:visited { color: #734559 }
 
 
 
-<h1> The SQLite Query Planner</h1><p>
+<h1 align='center'> The SQLite Query Planner</h1><p>
   This document provides overview of how the query planner and optimizer
   for SQLite works.
 </p>
@@ -130,6 +142,14 @@ a:visited { color: #734559 }
   task of the query planner is to select an algorithm from among the many
   choices that provides the answer with a minimum of disk I/O and CPU
   overhead.
+</p>
+<p>
+  With release 3.8.0, the SQLite query planner was reimplemented as the
+  <a href="queryplanner-ng.html">Next Generation Query Planner</a> or "NGQP".  All of the features, techniques,
+  and algorithms described in this document are applicable to both the
+  pre-3.8.0 legacy query planner and to the NGQP.  For further information on
+  how the NGQP differs from the legacy query planner, see the 
+  <a href="queryplanner-ng.html">detailed description of the NGQP</a>.
 </p>
 <a name="where_clause"></a>
 <h2>1.0 WHERE clause analysis</h2><p>
@@ -142,20 +162,6 @@ a:visited { color: #734559 }
 <p>
   All terms of the WHERE clause are analyzed to see if they can be
   satisfied using indices.
-  Terms that cannot be satisfied through the use of indices become
-  tests that are evaluated against each row of the relevant input
-  tables.  No tests are done for terms that are completely satisfied by
-  indices.  Sometimes
-  one or more terms will provide hints to indices but still must be
-  evaluated against each row of the input tables.
-</p>
-<p>
-  The analysis of a term might cause new "virtual" terms to
-  be added to the WHERE clause.  Virtual terms can be used with
-  indices to restrict a search.  But virtual terms never generate code
-  that is tested against input rows.
-</p>
-<p>
   To be usable by an index a term must be of one of the following
   forms:
 </p>
@@ -182,7 +188,7 @@ a:visited { color: #734559 }
   Then the index might be used if the initial columns of the index
   (columns a, b, and so forth) appear in WHERE clause terms.
   The initial columns of the index must be used with
-  the <tt><b><big>=</big></b></tt> or <tt><b><big>IN</big></b></tt> operators.  
+  the <tt><b><big>=</big></b></tt> or <tt><b><big>IN</big></b></tt> or <tt><b><big>IS NULL</big></b></tt> operators.  
   The right-most column that is used can employ inequalities.  
   For the right-most
   column of an index that is used, there can be up to two inequalities
@@ -195,9 +201,10 @@ a:visited { color: #734559 }
   Thus for the example index above, if there is no WHERE clause term
   that constraints column c, then terms that constrain columns a and b can
   be used with the index but not terms that constraint columns d through z.
-  Similarly, no index column will be used (for indexing purposes)
-  that is to the right of a 
+  Similarly, index columns will not normally be used (for indexing purposes)
+  if they are to the right of a 
   column that is constrained only by inequalities.
+  (See the <a href="optoverview.html#skipscan">skip-scan optimization</a> below for the exception.)
 </p>
 <a name="idxexamp"></a>
 <h3>1.1 Index term usage examples</h3><p>
@@ -259,11 +266,13 @@ a:visited { color: #734559 }
 <blockquote><pre><b>
   </b><i>expr1</i><b> BETWEEN </b><i>expr2</i><b> AND </b><i>expr3</i><b>
 </b></pre></blockquote><p>
-  Then two virtual terms are added as follows:
+  Then two "virtual" terms are added as follows:
 </p>
 <blockquote><pre><b>
   </b><i>expr1</i><b> &gt;= </b><i>expr2</i><b> AND </b><i>expr1</i><b> &lt;= </b><i>expr3</i><b>
 </b></pre></blockquote><p>
+  Virtual terms are used for analysis only and do not cause any VDBE
+  code to be generated.
   If both virtual terms end up being used as constraints on an index,
   then the original BETWEEN term is omitted and the corresponding test
   is not performed on input rows.
@@ -278,8 +287,8 @@ a:visited { color: #734559 }
 </p>
 <a name="or_opt"></a>
 <h2>3.0 OR optimizations</h2><p>
-  WHERE clause constraints that are connected by OR instead of AND are
-  handled in one of two way.
+  WHERE clause constraints that are connected by OR instead of AND can
+  be handled in two different ways.
   If a term consists of multiple subterms containing a common column
   name and separated by OR, like this:
 </p>
@@ -289,7 +298,7 @@ a:visited { color: #734559 }
   Then that term is rewritten as follows:
 </p>
 <blockquote><pre><b>
-  </b><i>column</i><b> IN (</b><i>expr1</i><b>,</b><i>expr2</i><b>,</b><i>expr3</i><b>,</b><i>expr4</i><b>,...)
+  </b><i>column</i><b> IN (</b><i>expr1</i><b>,</b><i>expr2</i><b>,</b><i>expr3</i><b>,...)
 </b></pre></blockquote><p>
   The rewritten term then might go on to constrain an index using the
   normal rules for <tt><b><big>IN</big></b></tt> operators.  Note that <i>column</i> must be
@@ -313,7 +322,7 @@ a:visited { color: #734559 }
   If <u>every</u> subterm of an OR clause is separately indexable
   then the OR clause might be coded such that a separate index is used
   to evaluate each term of the OR clause.  One way to think about how
-  SQLite uses separate indices foreach each OR clause term is to imagine
+  SQLite uses separate indices for each OR clause term is to imagine
   that the WHERE clause where rewritten as follows:
 </p>
 <blockquote><pre><b>
@@ -365,7 +374,7 @@ a:visited { color: #734559 }
       or a <a href="lang_expr.html#varparam">parameter</a> bound to a string literal
       that does not begin with a wildcard character.</li>
   <li>The ESCAPE clause cannot appear on the LIKE operator.</li>
-  <li>The build-in functions used to implement LIKE and GLOB must not
+  <li>The built-in functions used to implement LIKE and GLOB must not
       have been overloaded using the sqlite3_create_function() API.</li>
   <li>For the GLOB operator, the column must be indexed using the 
       built-in BINARY collating sequence.</li>
@@ -479,8 +488,103 @@ a:visited { color: #734559 }
   LIKE or GLOB operator and determine whether or not to employ the
   optimization described above.
 </p>
+<a name="skipscan"></a>
+<h2>5.0 The Skip-Scan Optimization</h2><p>
+  The general rule is that indexes are only useful if there are 
+  WHERE-clause constraints on the left-most columns of the index.
+  However, in some cases,
+  SQLite is able to use an index even if the first few columns of
+  the index are omitted from the WHERE clause but later columns 
+  are included.
+</p>
+<p>
+  Consider a table such as the following:
+</p>
+<blockquote><pre>
+  CREATE TABLE people(
+    name TEXT PRIMARY KEY,
+    role TEXT NOT NULL,
+    height INT NOT NULL, -- in cm
+    CHECK( role IN ('student','teacher') )
+  );
+  CREATE INDEX people_idx1 ON people(role, height);
+</pre></blockquote><p>
+  The people table has one entry for each person in a large
+  organization.  Each person is either a "student" or a "teacher",
+  as determined by the "role" field.  And we record the height in
+  centimeters of each person.  The role and height are indexed.
+  Notice that the left-most column of the index is not very
+  selective - it only contains two possible values.
+</p>
+<p>
+  Now consider a query to find the names of everyone in the
+  organization that is 180cm tall or taller:
+</p>
+<blockquote><pre>
+  SELECT name FROM people WHERE height>=180;
+</pre></blockquote><p>
+  Because the left-most column of the index does not appear in the
+  WHERE clause of the query, one is tempted to conclude that the
+  index is not usable here.  But SQLite is able to use the index.
+  Conceptually, SQLite uses the index as if the query were more
+  like the following:
+</p>
+<blockquote><pre>
+  SELECT name FROM people
+   WHERE role IN (SELECT DISTINCT role FROM people)
+     AND height>=180;
+</pre></blockquote><p>
+  Or this:
+</p>
+<blockquote><pre>
+  SELECT name FROM people WHERE role='teacher' AND height>=180
+  UNION ALL
+  SELECT name FROM people WHERE role='student' AND height>=180;
+</pre></blockquote><p>
+  The alternative query formulations shown above are conceptual only.
+  SQLite does not really transform the query. 
+  The actual query plan is like this:
+  SQLite locates the first possible value for "role", which it
+  can do by rewinding the "people_idx1" index to the beginning and reading
+  the first record.  SQLite stores this first "role" value in an
+  internal variable that we will here call "$role".  Then SQLite
+  runs a query like: "SELECT name FROM people WHERE role=$role AND height>=180".
+  This query has an equality constraint on the left-most column of the
+  index and so the index can be used to resolve that query.  Once
+  that query is finished, SQLite then uses the "people_idx1" index to
+  locate the next value of the "role" column, using code that is logically
+  similar to "SELECT role FROM people WHERE role>$role LIMIT 1".
+  This new "role" value overwrites the $role variable, and the process
+  repeats until all possible values for "role" have been examined.
+</p>
+<p>
+  We call this kind of index usage a "skip-scan" because the database
+  engine is basically doing a full scan of the index but it optimizes the
+  scan (making it less than "full") by occasionally skipping ahead to the
+  next candidate value.
+</p>
+<p>
+  SQLite might use a skip-scan on an index if it knows that the first
+  one or more columns contain many duplication values.
+  If there are too few duplicates
+  in the left-most columns of the index, then it would
+  be faster to simply step ahead to the next value, and thus do
+  a full table scan, than to do a binary search on an index to locate
+  the next left-column value.
+</p>
+<p>
+  The only way that SQLite can know that the left-most columns of an index
+  have many duplicate is if the <a href="lang_analyze.html">ANALYZE</a> command has been run
+  on the database.
+  Without the results of ANALYZE, SQLite has to guess at the "shape" of
+  the data in the table, and the default guess is that there are an average
+  of 10 duplicates for every value in the left-most column of the index.
+  But skip-scan only becomes profitable (it only gets to be faster than
+  a full table scan) when the number of duplicates is about 18 or more.
+  Hence, a skip-scan is never used on a database that has not been analyzed.
+</p>
 <a name="joins"></a>
-<h2>5.0 Joins</h2><p>
+<h2>6.0 Joins</h2><p>
   The ON and USING clauses of an inner join are converted into additional
   terms of the WHERE clause prior to WHERE clause analysis described
   above in paragraph 1.0.  Thus with SQLite, there is no computational
@@ -506,7 +610,7 @@ a:visited { color: #734559 }
   ordinary INNER JOIN - albeit an inner join that runs more slowly.
 </p>
 <a name="table_order"></a>
-<h3>5.1 Order of tables in a join</h3><p>
+<h3>6.1 Order of tables in a join</h3><p>
   The current implementation of 
   SQLite uses only loop joins.  That is to say, joins are implemented as
   nested loops.
@@ -526,9 +630,17 @@ a:visited { color: #734559 }
   always evaluated in the order in which they occur.
 </p>
 <p>
-  When selecting the order of tables in a join, SQLite uses a greedy
-  algorithm that runs in polynomial (O(N&sup2;)) time.  Because of this,
-  SQLite is able to efficiently plan queries with 50- or 60-way joins.
+  SQLite <a href="lang_select.html#crossjoin">treats the CROSS JOIN operator specially</a>.
+  The CROSS JOIN operator is commutative in theory.  But SQLite chooses to
+  never reorder tables in a CROSS JOIN.  This provides a mechanism
+  by which the programmer can force SQLite to choose a particular loop nesting
+  order.  
+</p>
+<p>
+  When selecting the order of tables in a join, SQLite uses an efficient
+  polynomial-time algorithm.  Because of this,
+  SQLite is able to plan queries with 50- or 60-way joins in a matter of
+  microseconds.
 </p>
 <p>
   Join reordering is automatic and usually works well enough that
@@ -570,6 +682,7 @@ a:visited { color: #734559 }
   we will only consider two of them here.)
   Pseudocode below demonstrating these two choices.
 </p>
+<a name="option1"></a>
 <p>Option 1:</p>
 <blockquote><pre>
   foreach n1 where n1.name='alice' do:
@@ -579,7 +692,8 @@ a:visited { color: #734559 }
       end
     end
   end
-</pre></blockquote><p>Option 2:</p>
+</pre></blockquote><a name="option2"></a>
+<p>Option 2:</p>
 <blockquote><pre>
   foreach n1 where n1.name='alice' do:
     foreach e where e.orig=n1.id do:
@@ -634,35 +748,41 @@ a:visited { color: #734559 }
   alternative is likely to run faster.
 </p>
 <a name="manctrl"></a>
-<h3>5.2 Manual Control Of Query Plans</h3><p>
+<h3>6.2 Manual Control Of Query Plans Using SQLITE_STAT Tables</h3><p>
   SQLite provides the ability for advanced programmers to exercise control
   over the query plan chosen by the optimizer. One method for doing this
-  is to fudge the <a href="lang_analyze.html">ANALYZE</a> results in the <b>sqlite_stat1</b> and
-  <b>sqlite_stat2</b> tables.  That approach is not recommended except
-  for the one scenario described in the following paragraph.
+  is to fudge the <a href="lang_analyze.html">ANALYZE</a> results in the <a href="fileformat2.html#stat1tab">sqlite_stat1</a>, 
+  <a href="fileformat2.html#stat3tab">sqlite_stat3</a>, and/or <a href="fileformat2.html#stat4tab">sqlite_stat4</a> tables.  That approach is not 
+  recommended except for the one scenario described in the next paragraph.
 </p>
 <p>
-  For a program that uses an SQLite database as its application file
-  format, when a new database instances is first created the <a href="lang_analyze.html">ANALYZE</a>
+  For a program that uses an SQLite database as its 
+  <a href="whentouse.html#appfileformat">application file-format</a>,
+  when a new database instance is first created the <a href="lang_analyze.html">ANALYZE</a>
   command is ineffective because the database contain no data from which
   to gather statistics.  In that case, one could construct a large prototype
   database containing typical data during development and run the 
   <a href="lang_analyze.html">ANALYZE</a> command on this prototype database to gather statistics,
   then save the prototype statistics as part of the application.
   After deployment, when the application goes to create a new database file,
-  it can run the <a href="lang_analyze.html">ANALYZE</a> command in order to create the <b>sqlite_stat1</b>
-  and <b>sqlite_stat2</b> tables, then copy the precomputed statistics obtained
+  it can run the <a href="lang_analyze.html">ANALYZE</a> command in order to create the statistics
+  tables, then copy the precomputed statistics obtained
   from the prototype database into these new statistics tables.
   In that way, statistics from large working data sets can be preloaded
   into newly created application files.
 </p>
+<a name="crossjoin"></a>
+<h3>6.3 Manual Control Of Query Plans Using CROSS JOIN</h3><p>
+  Programmers can force SQLite to use a particular loop nesting order
+  for a join by using the CROSS JOIN operator instead of just JOIN, 
+  INNER JOIN, NATURAL JOIN, or a "," join.  Though CROSS JOINs are
+  commutative in theory, SQLite chooses to never reorder the tables in
+  a CROSS JOIN.  Hence, the left table of a CROSS JOIN will always be
+  in an outer loop relative to the right table.
+</p>
 <p>
-  If you really must take manual control of join loop nesting order,
-  the preferred method is to use some peculiar (though valid) SQL syntax
-  to specify the join.  If you use the keyword CROSS in a join, then 
-  the two tables connected by that join will not be reordered.
-  So in the query, the optimizer is free to reorder the tables of
-  the FROM clause anyway it sees fit:
+  In the following query, the optimizer is free to reorder the 
+  tables of FROM clause anyway it sees fit:
 </p>
 <blockquote><pre>
   SELECT *
@@ -674,7 +794,7 @@ a:visited { color: #734559 }
      AND e.orig = n1.id
      AND e.dest = n2.id;
 </pre></blockquote><p>
-  But in the following logically equivalent formulation of the query,
+  But in the following logically equivalent formulation of the same query,
   the substitution of "CROSS JOIN" for the "," means that the order
   of tables must be N1, E, N2.
 </p>
@@ -688,17 +808,24 @@ a:visited { color: #734559 }
      AND e.orig = n1.id
      AND e.dest = n2.id;
 </pre></blockquote><p>
-  Hence, in the second form, the query plan must be option 2.  Note that
-  you must use the keyword CROSS in order to disable the table reordering
+  In the latter query, the query plan must be 
+  <a href="#option2">option 2</a>.  Note that
+  you must use the keyword "CROSS" in order to disable the table reordering
   optimization; INNER JOIN, NATURAL JOIN, JOIN, and other similar
   combinations work just like a comma join in that the optimizer is
   free to reorder tables as it sees fit. (Table reordering is also
   disabled on an outer join, but that is because outer joins are not
-  associative or commutative. Reordering tables in outer joins changes
+  associative or commutative. Reordering tables in in OUTER JOIN changes
   the result.)
 </p>
+<p>
+  See "<a href="queryplanner-ng.html#fossilcasestudy">The Fossil NGQP Upgrade Case Study</a>" for another real-world example
+  of using CROSS JOIN to manually control the nesting order of a join.
+  The <a href="queryplanner-ng.html#howtofix">query planner checklist</a> found later in the same document provides
+  further guidance on manual control of the query planner.
+</p>
 <a name="multi_index"></a>
-<h2>6.0 Choosing between multiple indices</h2><p>
+<h2>7.0 Choosing between multiple indices</h2><p>
   Each table in the FROM clause of a query can use at most one index
   (except when the <a href="#or_opt">OR-clause optimization</a> comes into
   play)
@@ -739,18 +866,19 @@ a:visited { color: #734559 }
 </p>
 <p>
   The various <b>sqlite_stat</b><i>N</i> tables contain information on how
-  selective the various indices are.  For example, the <b>sqlite_stat1</b>
+  selective the various indices are.  For example, the <a href="fileformat2.html#stat1tab">sqlite_stat1</a>
   table might indicate that an equality constraint on column x reduces the
   search space to 10 rows on average, whereas an equality constraint on
   column y reduces the search space to 3 rows on average.  In that case,
-  SQLite would prefer to use index ex2i2 since that index.
+  SQLite would prefer to use index ex2i2 since that index is more selective.
 </p>
-<p>
+<a name="uplus"></a>
+<h3>7.1 Disqualifying WHERE Clause Terms Using Unary-"+"</h3><p>
   Terms of the WHERE clause can be manually disqualified for use with
   indices by prepending a unary <tt><b><big>+</big></b></tt> operator to the column name.  The
-  unary <tt><b><big>+</big></b></tt> is a no-op and will not slow down the evaluation of the test
-  specified by the term.
-  But it will prevent the term from constraining an index.
+  unary <tt><b><big>+</big></b></tt> is a no-op and will not generate any byte code in the prepared
+  statement.
+  But the unary <tt><b><big>+</big></b></tt> operator will prevent the term from constraining an index.
   So, in the example above, if the query were rewritten as:
 </p>
 <blockquote><pre>
@@ -771,7 +899,7 @@ a:visited { color: #734559 }
   in column <tt><b><big>x</big></b></tt> with the numeric value 5 and will always be false.
 </p>
 <a name="rangequery"></a>
-<h3>6.1 Range Queries</h3><p>
+<h3>7.2 Range Queries</h3><p>
   Consider a slightly different scenario:
 </p>
 <blockquote><pre>
@@ -790,10 +918,15 @@ a:visited { color: #734559 }
 </p>
 <p>
   SQLite will make this determination, but only if it has been compiled
-  with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>.  The <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> option causes
+  with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>.
+  The <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> and <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> options causes
   the <a href="lang_analyze.html">ANALYZE</a> command to collect a histogram of column content in the
-  <b>sqlite_stat3</b> table and to use this histogram to make a better
-  guess at the best query to use for range constraints such as the above.
+  <a href="fileformat2.html#stat3tab">sqlite_stat3</a> or <a href="fileformat2.html#stat4tab">sqlite_stat4</a> tables and to use this histogram to 
+  make a better guess at the best query to use for range constraints
+  such as the above.  The main difference between STAT3 and STAT4 is
+  that STAT3 records histogram data for only the left-most column of
+  an index whereas STAT4 records histogram data for all columns of an
+  index.  For single-column indexes, STAT3 and STAT4 work the same.
 </p>
 <p>
   The histogram data is only useful if the right-hand side of the constraint
@@ -814,8 +947,7 @@ a:visited { color: #734559 }
   left-most column of indices is useless in helping to choose between the
   range constraints on columns x and y.
 </p>
-<a name="index_only"></a>
-<h2>7.0 Avoidance of table lookups</h2><p>
+<h2>8.0 Covering Indices</h2><p>
   When doing an indexed lookup of a row, the usual procedure is to
   do a binary search on the index to find the index entry, then extract
   the <a href="lang_createtable.html#rowid">rowid</a> from the index and use that <a href="lang_createtable.html#rowid">rowid</a> to do a binary search on
@@ -827,18 +959,32 @@ a:visited { color: #734559 }
   row.  This saves one binary search for each row and can make many
   queries run twice as fast.
 </p>
+<p>
+  When an index contains all of the data needed for a query and when the
+  original table never needs to be consulted, we call that index a
+  "covering index".
+</p>
 <a name="order_by"></a>
-<h2>8.0 ORDER BY optimizations</h2><p>
+<h2>9.0 ORDER BY optimizations</h2><p>
   SQLite attempts to use an index to satisfy the ORDER BY clause of a
   query when possible.
   When faced with the choice of using an index to satisfy WHERE clause
   constraints or satisfying an ORDER BY clause, SQLite does the same
   work analysis described above
   and chooses the index that it believes will result in the fastest answer.
-
+</p>
+<p>
+  SQLite will also attempt to use indices to help satisfy GROUP BY clauses
+  and the DISTINCT keyword.  If the nested loops of the join can be arranged
+  such that are equivalent for the GROUP BY or for the DISTINCT are
+  consecutive, then the GROUP BY or DISTINCT logic can determine if the 
+  current row is part of the same group or if the current row is distinct
+  simply by comparing the current row to the previous row.
+  This can be much faster than the alternative of comparing each row to
+  all prior rows.
 </p>
 <a name="flattening"></a>
-<h2>9.0 Subquery flattening</h2><p>
+<h2>10.0 Subquery flattening</h2><p>
   When a subquery occurs in the FROM clause of a SELECT, the simplest
   behavior is to evaluate the subquery into a transient table, then run
   the outer SELECT against the transient table.  But such a plan
@@ -939,7 +1085,7 @@ a:visited { color: #734559 }
   each use of a view is translated into a subquery.
 </p>
 <a name="minmax"></a>
-<h2>10.0 The MIN/MAX optimization</h2><p>
+<h2>11.0 The MIN/MAX optimization</h2><p>
   Queries of the following forms will be optimized to run in logarithmic
   time assuming appropriate indices exist:
 </p>
@@ -954,11 +1100,11 @@ a:visited { color: #734559 }
   The column in the MIN or MAX function must be an indexed column.
 </p>
 <a name="autoindex"></a>
-<h2>11.0 Automatic Indices</h2><p>
+<h2>12.0 Automatic Indices</h2><p>
   When no indices are available to aid the evaluation of a query, SQLite
   might create an automatic index that lasts only for the duration
-  of a single SQL statement and use that index to help boost the query
-  performance.  Since the cost of constructing the automatic index is
+  of a single SQL statement.
+  Since the cost of constructing the automatic index is
   O(NlogN) (where N is the number of entries in the table) and the cost of
   doing a full table scan is only O(N), an automatic index will
   only be created if SQLite expects that the lookup will be run more than
@@ -995,8 +1141,20 @@ a:visited { color: #734559 }
 </p>
 <p>
   The automatic indexing capability can be disabled at run-time using
-  the <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a> and can be omitted from the build at
-  compile-time using the <a href="compile.html#omit_automatic_index">SQLITE_OMIT_AUTOMATIC_INDEX</a> compile-time option.
+  the <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a>.  Automatic indexing is turned on by
+  default, but this can be changed so that automatic indexing is off
+  by default using the <a href="compile.html#default_automatic_index">SQLITE_DEFAULT_AUTOMATIC_INDEX</a> compile-time option.
+  The ability to create automatic indices can be completely disabled by
+  compiling with the <a href="compile.html#omit_automatic_index">SQLITE_OMIT_AUTOMATIC_INDEX</a> compile-time option.
+</p>
+<p>
+  In SQLite version 3.8.0, an <a href="c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> message is sent
+  to the <a href="errlog.html">error log</a> every time a statement is prepared that uses an
+  automatic index.  Application developers can and should use these warnings
+  to identify the need for new persistent indices in the schema.
+</p>
+<p>
+  Future releases of SQLite may disable automatic indices by default.
 </p>
 
 

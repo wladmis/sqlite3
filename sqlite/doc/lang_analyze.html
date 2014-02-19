@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,7 +128,11 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ANALYZE</h2><h4><a href="syntaxdiagrams.html#analyze-stmt">analyze-stmt:</a></h4><blockquote> <img alt="syntax diagram analyze-stmt" src="images/syntax/analyze-stmt.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ANALYZE</h2><p><b><a href="syntaxdiagrams.html#analyze-stmt">analyze-stmt:</a></b>
+<button id='x769' onclick='hideorshow("x769","x770")'>hide</button></p>
+ <blockquote id='x770'>
+ <img alt="syntax diagram analyze-stmt" src="images/syntax/analyze-stmt.gif" />
+</blockquote>
 
 
 <p> The ANALYZE command gathers statistics about tables and
@@ -132,36 +148,46 @@ is an index name, then only that one index is analyzed.</p>
 
 <p> The default implementation stores all statistics in a single
 table named "<a href="fileformat2.html#stat1tab">sqlite_stat1</a>".  If SQLite is compiled with the
-<a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> option, then additional histogram data is
+<a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> option and without the <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>
+option, then additional histogram data is
 collected and stored in <a href="fileformat2.html#stat3tab">sqlite_stat3</a>.
+ If SQLite is compiled with the
+<a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> option, then additional histogram data is
+collected and stored in <a href="fileformat2.html#stat4tab">sqlite_stat4</a>.
 Older versions of SQLite would make use of the <a href="fileformat2.html#stat2tab">sqlite_stat2</a> table
 when compiled with <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> but all recent versions of
 SQLite ignore the sqlite_stat2 table.
 Future enhancements may create
 additional <a href="fileformat2.html#intschema">internal tables</a> with the same name pattern except with
-final digit larger than "3".</p>
+final digit larger than "4".
+All of these tables are collectively referred to as "statistics tables".
+</p>
 
-<p> The <a href="lang_altertable.html">ALTER TABLE</a> command does
-not work on the sqlite_stat1 or sqlite_stat3 tables,
-but all the content of those tables can be queried using <a href="lang_select.html">SELECT</a>
-and can be deleted, augmented, or modified using the <a href="lang_delete.html">DELETE</a>,
-<a href="lang_insert.html">INSERT</a>, and <a href="lang_update.html">UPDATE</a> commands.
-The <a href="lang_droptable.html">DROP TABLE</a> command works on sqlite_stat1 and
-sqlite_stat3 as of SQLite version 3.7.9.
+<p> The content of the statistics tables can be queried using <a href="lang_select.html">SELECT</a>
+and can be changed using the <a href="lang_delete.html">DELETE</a>, <a href="lang_insert.html">INSERT</a>, and <a href="lang_update.html">UPDATE</a> commands.
+The <a href="lang_droptable.html">DROP TABLE</a> command works on statistics tables
+as of SQLite version 3.7.9.
+The <a href="lang_altertable.html">ALTER TABLE</a> command does not work on statistics tables.
 Appropriate care should be used when changing the content of the statistics
 tables as invalid content can cause SQLite to select inefficient
 query plans.  Generally speaking, one should not modify the content of
 the statistics tables by any mechanism other than invoking the
-ANALYZE command.</p>
+ANALYZE command.  
+See "<a href="optoverview.html#manctrl">Manual Control Of Query Plans Using SQLITE_STAT Tables</a>" for
+further information.</p>
 
-<p> Statistics gathered by ANALYZE are <u>not</u> automatically updated as
+<p> Statistics gathered by ANALYZE are not automatically updated as
 the content of the database changes.  If the content of the database
 changes significantly, or if the database schema changes, then one should
 consider rerunning the ANALYZE command in order to update the statistics.</p>
 
-<p> The query planner might not notice manual changes to the
-sqlite_stat1 and/or sqlite_stat3 tables.  An application
+<p> The query planner loads the content of the statistics tables
+into memory when the schema is read.  Hence, when an application
+changes the statistics tables directly, SQLite will not immediately
+notice the changes. An application
 can force the query planner to reread the statistics tables by running
 <b>ANALYZE sqlite_master</b>. </p>
+
+<p> 
 
 

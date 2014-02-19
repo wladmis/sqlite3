@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -119,19 +131,18 @@ a:visited { color: #734559 }
 
 
 <h2>SQLite Download Page</h2>
-<table width="100%" cellpadding="5">
+<table width="100%" cellpadding="5" cellspacing="0">
 
 
 </table>
+<hr>
 
 <a name="encoding"></a>
 
 <h3>Build Product Names</h3>
 
-<p>Beginning with SQLite <a href="releaselog/3_7_4.html">version 3.7.4</a>, the names of the build products
-have changed to be more consistent.  (Prior to version 3.7.4, the
-names of build products were seemingly random.)  Build products are named
-using one of the following templates:
+<p>
+Build products are named using one of the following templates:
 
 <ol>
 <li> <b>sqlite-</b>product<b>-</b>version<b>.zip</b>
@@ -155,10 +166,11 @@ filename encoding is 3XXYY00.  For branch version 3.X.Y.Z, the encoding is
 
 <a name="cvs"></a>
 <a name="fossil"></a>
-<h3>Canonical Source Code</h3>
+<h3>Source Code Repositories</h3>
 
 <p>
-The canonical SQLite source code is maintained in three self-synchronizing
+The SQLite source code is maintained in three geographically-dispersed
+self-synchronizing
 <a href="http://www.fossil-scm.org/">Fossil</a> repositories that are
 available for anonymous read-only access.  Anyone can 
 view the repository contents and download historical versions
@@ -166,7 +178,9 @@ of individual files or ZIP archives of historical check-ins.</p>
 
 <p>Note that a unix-like development environment, including a recent
 version of <a href="http://www.tcl.tk/">Tcl</a>, is required in order to
-build from the canonical sources.</p>
+build from the repository sources.  The <a href="amalgamation.html">amalgamation</a> source code files
+(the "sqlite3.c" and "sqlite3.h" files) are not contained in
+the repository.</p>
 
 <blockquote>
 <a href="http://www.sqlite.org/cgi/src">http://www.sqlite.org/cgi/src</a> (Dallas)<br>
@@ -183,4 +197,13 @@ at:</p>
 <a href="http://www2.sqlite.org/cgi/docsrc">http://www2.sqlite.org/cgi/docsrc</a> (Newark)<br>
 <a href="http://www3.sqlite.org/cgi/docsrc">http://www3.sqlite.org/cgi/docsrc</a> (Fremont)<br>
 </blockquote>
+<script type='text/JavaScript'>
+/* <![CDATA[ */
+function adce4d016d6cd(){
+function d391(a,b){document.getElementById(a).href=b;}
+}
+setTimeout('adce4d016d6cd();',10);
+/* ]]> */
+</script>
+
 

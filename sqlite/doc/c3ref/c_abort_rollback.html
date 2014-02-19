@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -139,15 +151,35 @@ a:visited { color: #734559 }
 #define SQLITE_IOERR_SHMMAP            (SQLITE_IOERR | (21&lt;&lt;8))
 #define SQLITE_IOERR_SEEK              (SQLITE_IOERR | (22&lt;&lt;8))
 #define SQLITE_IOERR_DELETE_NOENT      (SQLITE_IOERR | (23&lt;&lt;8))
+#define SQLITE_IOERR_MMAP              (SQLITE_IOERR | (24&lt;&lt;8))
+#define SQLITE_IOERR_GETTEMPPATH       (SQLITE_IOERR | (25&lt;&lt;8))
+#define SQLITE_IOERR_CONVPATH          (SQLITE_IOERR | (26&lt;&lt;8))
 #define SQLITE_LOCKED_SHAREDCACHE      (SQLITE_LOCKED |  (1&lt;&lt;8))
 #define SQLITE_BUSY_RECOVERY           (SQLITE_BUSY   |  (1&lt;&lt;8))
+#define SQLITE_BUSY_SNAPSHOT           (SQLITE_BUSY   |  (2&lt;&lt;8))
 #define SQLITE_CANTOPEN_NOTEMPDIR      (SQLITE_CANTOPEN | (1&lt;&lt;8))
 #define SQLITE_CANTOPEN_ISDIR          (SQLITE_CANTOPEN | (2&lt;&lt;8))
 #define SQLITE_CANTOPEN_FULLPATH       (SQLITE_CANTOPEN | (3&lt;&lt;8))
+#define SQLITE_CANTOPEN_CONVPATH       (SQLITE_CANTOPEN | (4&lt;&lt;8))
 #define SQLITE_CORRUPT_VTAB            (SQLITE_CORRUPT | (1&lt;&lt;8))
 #define SQLITE_READONLY_RECOVERY       (SQLITE_READONLY | (1&lt;&lt;8))
 #define SQLITE_READONLY_CANTLOCK       (SQLITE_READONLY | (2&lt;&lt;8))
+#define SQLITE_READONLY_ROLLBACK       (SQLITE_READONLY | (3&lt;&lt;8))
+#define SQLITE_READONLY_DBMOVED        (SQLITE_READONLY | (4&lt;&lt;8))
 #define SQLITE_ABORT_ROLLBACK          (SQLITE_ABORT | (2&lt;&lt;8))
+#define SQLITE_CONSTRAINT_CHECK        (SQLITE_CONSTRAINT | (1&lt;&lt;8))
+#define SQLITE_CONSTRAINT_COMMITHOOK   (SQLITE_CONSTRAINT | (2&lt;&lt;8))
+#define SQLITE_CONSTRAINT_FOREIGNKEY   (SQLITE_CONSTRAINT | (3&lt;&lt;8))
+#define SQLITE_CONSTRAINT_FUNCTION     (SQLITE_CONSTRAINT | (4&lt;&lt;8))
+#define SQLITE_CONSTRAINT_NOTNULL      (SQLITE_CONSTRAINT | (5&lt;&lt;8))
+#define SQLITE_CONSTRAINT_PRIMARYKEY   (SQLITE_CONSTRAINT | (6&lt;&lt;8))
+#define SQLITE_CONSTRAINT_TRIGGER      (SQLITE_CONSTRAINT | (7&lt;&lt;8))
+#define SQLITE_CONSTRAINT_UNIQUE       (SQLITE_CONSTRAINT | (8&lt;&lt;8))
+#define SQLITE_CONSTRAINT_VTAB         (SQLITE_CONSTRAINT | (9&lt;&lt;8))
+#define SQLITE_CONSTRAINT_ROWID        (SQLITE_CONSTRAINT |(10&lt;&lt;8))
+#define SQLITE_NOTICE_RECOVER_WAL      (SQLITE_NOTICE | (1&lt;&lt;8))
+#define SQLITE_NOTICE_RECOVER_ROLLBACK (SQLITE_NOTICE | (2&lt;&lt;8))
+#define SQLITE_WARNING_AUTOINDEX       (SQLITE_WARNING | (1&lt;&lt;8))
 </pre></blockquote><p>
 In its default configuration, SQLite API routines return one of 26 integer
 <a href="../c3ref/c_abort.html">result codes</a>.  However, experience has shown that many of
@@ -160,7 +192,7 @@ on a per database connection basis using the
 <a href="../c3ref/extended_result_codes.html">sqlite3_extended_result_codes()</a> API.</p>
 
 <p>Some of the available extended result codes are listed here.
-One may expect the number of extended result codes will be expand
+One may expect the number of extended result codes will increase
 over time.  Software that uses extended result codes should expect
 to see new result codes in future releases of SQLite.</p>
 

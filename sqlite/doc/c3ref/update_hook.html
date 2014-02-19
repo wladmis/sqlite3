@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -124,12 +136,13 @@ a:visited { color: #734559 }
 </pre></blockquote><p>
 The sqlite3_update_hook() interface registers a callback function
 with the <a href="../c3ref/sqlite3.html">database connection</a> identified by the first argument
-to be invoked whenever a row is updated, inserted or deleted.
+to be invoked whenever a row is updated, inserted or deleted in
+a rowid table.
 Any callback set by a previous call to this function
 for the same database connection is overridden.</p>
 
 <p>The second argument is a pointer to the function to invoke when a
-row is updated, inserted or deleted.
+row is updated, inserted or deleted in a rowid table.
 The first argument to the callback is a copy of the third argument
 to sqlite3_update_hook().
 The second callback argument is one of <a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a>,
@@ -141,7 +154,8 @@ The final callback parameter is the <a href="../lang_createtable.html#rowid">row
 In the case of an update, this is the <a href="../lang_createtable.html#rowid">rowid</a> after the update takes place.</p>
 
 <p>The update hook is not invoked when internal system tables are
-modified (i.e. sqlite_master and sqlite_sequence).</p>
+modified (i.e. sqlite_master and sqlite_sequence).
+The update hook is not invoked when <a href="../withoutrowid.html">WITHOUT ROWID</a> tables are modified.</p>
 
 <p>In the current implementation, the update hook
 is not invoked when duplication rows are deleted because of an

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,9 +128,9 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.7.15.2"
-#define SQLITE_VERSION_NUMBER 3007015
-#define SQLITE_SOURCE_ID      "2013-01-09 11:53:05 c0e09560d26f0a6456be9dd3447f5311eb4f238f"
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.8.3.1"
+#define SQLITE_VERSION_NUMBER 3008003
+#define SQLITE_SOURCE_ID      "2014-02-11 14:52:19 ea3317a4803d71d88183b29f1d3086f46d68a00e"
 </pre></blockquote><p>
 The <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the

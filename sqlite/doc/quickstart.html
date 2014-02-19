@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -150,8 +162,8 @@ the TCL interface to SQLite.  The program executes the SQL statements
 given as the second argument on the database defined by the first
 argument.  The commands to watch for are the <b>sqlite3</b> command
 on line 7 which opens an SQLite database and creates
-a new TCL command named "<b>db</b>" to access that database, the
-invocation of the <b>db</b> command on line 8 to execute
+a new object named "<b>db</b>" to access that database, the
+use of the <a href="tclsqlite.html#eval">eval method</a> on the <b>db</b> object on line 8 to run
 SQL commands against the database, and the closing of the database connection
 on the last line of the script.</p>
 
@@ -161,7 +173,7 @@ on the last line of the script.</p>
 03    puts stderr "Usage: %s DATABASE SQL-STATEMENT"
 04    exit 1
 05  }
-06  load /usr/lib/tclsqlite3.so Sqlite3
+06  package require sqlite3
 07  <b>sqlite3</b> db &#91;lindex $argv 0]
 08  <b>db</b> eval &#91;lindex $argv 1] x {
 09    foreach v $x(*) {

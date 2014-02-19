@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -139,7 +151,9 @@ a:visited { color: #734559 }
   char *idxStr;              /* String, possibly obtained from sqlite3_malloc */
   int needToFreeIdxStr;      /* Free idxStr using sqlite3_free() if true */
   int orderByConsumed;       /* True if output is already ordered */
-  double estimatedCost;      /* Estimated cost of using this index */
+  double estimatedCost;           /* Estimated cost of using this index */
+  /* Fields below are only available in SQLite 3.8.2 and later */
+  sqlite3_int64 estimatedRows;    /* Estimated number of rows returned */
 };
 </pre></blockquote><p>
 The sqlite3_index_info structure and its substructures is used as part
@@ -186,10 +200,22 @@ needToFreeIdxPtr is true.</p>
 the correct order to satisfy the ORDER BY clause so that no separate
 sorting step is required.</p>
 
-<p>The estimatedCost value is an estimate of the cost of doing the
-particular lookup.  A full scan of a table with N entries should have
-a cost of N.  A binary search of a table of N entries should have a
-cost of approximately log(N).
+<p>The estimatedCost value is an estimate of the cost of a particular
+strategy. A cost of N indicates that the cost of the strategy is similar
+to a linear scan of an SQLite table with N rows. A cost of log(N)
+indicates that the expense of the operation is similar to that of a
+binary search on a unique indexed field of an SQLite table with N rows.</p>
+
+<p>The estimatedRows value is an estimate of the number of rows that
+will be returned by the strategy.</p>
+
+<p>IMPORTANT: The estimatedRows field was added to the sqlite3_index_info
+structure for SQLite version 3.8.2. If a virtual table extension is
+used with an SQLite version earlier than 3.8.2, the results of attempting
+to read or write the estimatedRows field are undefined (but are likely
+to included crashing the application). The estimatedRows field should
+therefore only be used if <a href="../c3ref/libversion.html">sqlite3_libversion_number()</a> returns a
+value greater than or equal to 3008002.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

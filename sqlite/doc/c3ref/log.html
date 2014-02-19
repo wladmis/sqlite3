@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -118,7 +130,7 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Error Logging Interface</h2><blockquote><pre>void sqlite3_log(int iErrCode, const char *zFormat, ...);
 </pre></blockquote><p>
-The <a href="../c3ref/log.html">sqlite3_log()</a> interface writes a message into the error log
+The <a href="../c3ref/log.html">sqlite3_log()</a> interface writes a message into the <a href="../errlog.html">error log</a>
 established by the <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> option to <a href="../c3ref/config.html">sqlite3_config()</a>.
 If logging is enabled, the zFormat string and subsequent arguments are
 used with <a href="../c3ref/mprintf.html">sqlite3_snprintf()</a> to generate the final output string.</p>

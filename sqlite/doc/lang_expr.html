@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,10 +128,76 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>expression</h2><h4><a href="syntaxdiagrams.html#expr">expr:</a></h4><blockquote> <img alt="syntax diagram expr" src="images/syntax/expr.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#literal-value">literal-value:</a></h4><blockquote> <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#signed-number">signed-number:</a></h4><blockquote> <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#raise-function">raise-function:</a></h4><blockquote> <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif"></img> </blockquote>
+<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>expression</h2><p><b><a href="syntaxdiagrams.html#expr">expr:</a></b>
+<button id='x1055' onclick='hideorshow("x1055","x1056")'>hide</button></p>
+ <blockquote id='x1056'>
+ <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
+<p><b><a href="syntaxdiagrams.html#literal-value">literal-value:</a></b>
+<button id='x1057' onclick='hideorshow("x1057","x1058")'>show</button></p>
+ <blockquote id='x1058' style='display:none;'>
+ <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#raise-function">raise-function:</a></b>
+<button id='x1059' onclick='hideorshow("x1059","x1060")'>show</button></p>
+ <blockquote id='x1060' style='display:none;'>
+ <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#select-stmt">select-stmt:</a></b>
+<button id='x1061' onclick='hideorshow("x1061","x1062")'>show</button></p>
+ <blockquote id='x1062' style='display:none;'>
+ <img alt="syntax diagram select-stmt" src="images/syntax/select-stmt.gif" />
+<p><b><a href="syntaxdiagrams.html#common-table-expression">common-table-expression:</a></b>
+<button id='x1063' onclick='hideorshow("x1063","x1064")'>show</button></p>
+ <blockquote id='x1064' style='display:none;'>
+ <img alt="syntax diagram common-table-expression" src="images/syntax/common-table-expression.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#compound-operator">compound-operator:</a></b>
+<button id='x1065' onclick='hideorshow("x1065","x1066")'>show</button></p>
+ <blockquote id='x1066' style='display:none;'>
+ <img alt="syntax diagram compound-operator" src="images/syntax/compound-operator.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#join-clause">join-clause:</a></b>
+<button id='x1067' onclick='hideorshow("x1067","x1068")'>show</button></p>
+ <blockquote id='x1068' style='display:none;'>
+ <img alt="syntax diagram join-clause" src="images/syntax/join-clause.gif" />
+<p><b><a href="syntaxdiagrams.html#join-constraint">join-constraint:</a></b>
+<button id='x1069' onclick='hideorshow("x1069","x1070")'>show</button></p>
+ <blockquote id='x1070' style='display:none;'>
+ <img alt="syntax diagram join-constraint" src="images/syntax/join-constraint.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#join-operator">join-operator:</a></b>
+<button id='x1071' onclick='hideorshow("x1071","x1072")'>show</button></p>
+ <blockquote id='x1072' style='display:none;'>
+ <img alt="syntax diagram join-operator" src="images/syntax/join-operator.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#ordering-term">ordering-term:</a></b>
+<button id='x1073' onclick='hideorshow("x1073","x1074")'>show</button></p>
+ <blockquote id='x1074' style='display:none;'>
+ <img alt="syntax diagram ordering-term" src="images/syntax/ordering-term.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#result-column">result-column:</a></b>
+<button id='x1075' onclick='hideorshow("x1075","x1076")'>show</button></p>
+ <blockquote id='x1076' style='display:none;'>
+ <img alt="syntax diagram result-column" src="images/syntax/result-column.gif" />
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#table-or-subquery">table-or-subquery:</a></b>
+<button id='x1077' onclick='hideorshow("x1077","x1078")'>show</button></p>
+ <blockquote id='x1078' style='display:none;'>
+ <img alt="syntax diagram table-or-subquery" src="images/syntax/table-or-subquery.gif" />
+</blockquote>
+</blockquote>
+<p><b><a href="syntaxdiagrams.html#type-name">type-name:</a></b>
+<button id='x1079' onclick='hideorshow("x1079","x1080")'>show</button></p>
+ <blockquote id='x1080' style='display:none;'>
+ <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x1081' onclick='hideorshow("x1081","x1082")'>show</button></p>
+ <blockquote id='x1082' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
 
 
 <p>This section is different from the others.  Most other sections of
@@ -155,7 +233,8 @@ OR</font>
 <p>The COLLATE operator is a unary postfix
 operator that assigns a <a href="datatype3.html#collation">collating sequence</a> to an expression.
 The COLLATE operator has a higher precedence (binds more tightly) than any
-prefix unary operator or any binary operator.
+binary operator and any unary prefix operator except "~".
+(COLLATE and "~" are associative so their binding order does not matter.)
 The collating sequence set by the COLLATE operator overrides the
 collating sequence determined by the COLLATE clause in a table
 <a href="lang_createtable.html#tablecoldef">column definition</a>.
@@ -201,7 +280,9 @@ BLOBs, or NULLs.</p>
 <p>The syntax for integer and floating point literals (collectively
 "numeric literals") is shown by the following diagram:</p>
 
-<h4><a href="syntaxdiagrams.html#numeric-literal">numeric-literal:</a></h4><blockquote> <img alt="syntax diagram numeric-literal" src="images/syntax/numeric-literal.gif"></img> </blockquote>
+<p><b><a href="syntaxdiagrams.html#numeric-literal">numeric-literal:</a></b></p><blockquote>
+ <img alt="syntax diagram numeric-literal" src="images/syntax/numeric-literal.gif"></img>
+ </blockquote>
 
 
 <p>
@@ -344,9 +425,9 @@ that function.</p>
 <p>The REGEXP operator is a special syntax for the regexp()
 user function.  No regexp() user function is defined by default
 and so use of the REGEXP operator will normally result in an
-error message.  If a <a href="c3ref/create_function.html">application-defined SQL function</a> named "regexp"
-is added at run-time, that function will be called in order
-to implement the REGEXP operator.</p>
+error message.  If an <a href="c3ref/create_function.html">application-defined SQL function</a> named "regexp"
+is added at run-time, then the "<i>X</i> REGEXP <i>Y</i>" operator will
+be implemented as a call to "regexp(<i>Y</i>,<i>X</i>)".</p>
 
 <a name="match"></a>
 
@@ -510,7 +591,7 @@ the SELECT yields no rows, then the value of the expression is NULL.
 The LIMIT of a scalar subquery is always 1.
 Any other LIMIT value given in the SQL text is ignored.
 
-<p>All types of <a href="lang_select.html">SELECT</a> statement, including aggregate and compound SELECT
+<p>All types of <a href="lang_select.html">SELECT</a> statement, including aggregate and <a href="lang_select.html#compound">compound SELECT</a>
 queries (queries with keywords like UNION or EXCEPT) are allowed as scalar
 subqueries.
 
@@ -538,17 +619,19 @@ and the result reused as necessary.
 
 <h3>CAST expressions</h3>
 
-<p>A CAST expression is used to convert the value of &lt;expr&gt; to 
-a different <a href="datatype3.html#storageclasses">storage class</a> in a similar way to the conversion that takes
-place when a <a href="datatype3.html#affinity">column affinity</a> is applied to a value. Application of a CAST
-expression is different to application of a column affinity, as
-with a CAST expression the storage class conversion is forced even 
-if it is lossy and irrreversible.
+<p>A CAST expression of the form "CAST(&lt;expr&gt; AS &lt;type-name&gt;)"
+is used to convert the value of &lt;expr&gt; to 
+a different <a href="datatype3.html#storageclasses">storage class</a> specified by &lt;type-name&gt;.
+A CAST conversion is similar to the conversion that takes
+place when a <a href="datatype3.html#affinity">column affinity</a> is applied to a value except that with
+the CAST operator the conversion always takes place even if the conversion
+lossy and irreversible, whereas column affinity only changes the data type
+of a value if the change is lossless and reversible.
 
 <p>If the value of &lt;expr&gt; is NULL, then the result of the CAST
-expression is also NULL. Otherwise, the storage class of the result value
+expression is also NULL. Otherwise, the storage class of the result
 is determined by applying the <a href="datatype3.html#affname">rules for determining column affinity</a> to
-the &lt;type-name&gt; specified as part of the CAST expression.
+the &lt;type-name&gt;.
 
 <table border=1>
 <tr>
@@ -592,10 +675,18 @@ the &lt;type-name&gt; specified as part of the CAST expression.
         is no prefix that can be interpreted as an integer number, the result
         of the conversion is 0.
 
-      <p>A cast of a REAL value into an INTEGER will truncate the fractional
-      part of the REAL.  If a REAL is too large to be represented as an 
-      INTEGER then the result of the cast is the largest negative integer: 
-      -9223372036854775808.
+      <p>A cast of a REAL value into an INTEGER results in the integer
+      between the REAL value and zero that is closest to the REAL value.
+      If a REAL is greater than the greatest possible signed
+      integer (+9223372036854775807) then the result is the greatest possible
+      signed integer and if the REAL is less than the least possible signed
+      integer (-9223372036854775808) then the result is the least possible
+      signed integer.
+
+      <p>Prior to SQLite version 3.8.2, casting a REAL value greater than
+      +9223372036854775807.0 into an integer resulted in the most negative
+      integer, -9223372036854775808.  This behavior was meant to emulate the
+      behavior of x86/x64 hardware when doing the equivalent cast.
 
 <tr>
   <td> NUMERIC

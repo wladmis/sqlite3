@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -170,7 +182,7 @@ or "VFS".</p>
 <h2>2.0 Multiple VFSes</h2>
 
 <p>
-The standard SQLite source tree contains built-in VFSes for os/2, unix,
+The standard SQLite source tree contains built-in VFSes for unix
 and windows.  Alternative VFSes can be
 added at start-time or run-time using the
 <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a> interface.
@@ -233,7 +245,7 @@ of the default VFS.
 <p>
 The default VFS can be changed by registering or re-registering the
 VFS using the <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a> interface with a second parameter
-of 1.  Hence, if a (unix) process to always use the "unix-nolock" VFS 
+of 1.  Hence, if a (unix) process wants to always use the "unix-nolock" VFS 
 in place of "unix", the following code would work:
 </p>
 
@@ -268,6 +280,8 @@ a VFS specified as the fourth argument to <a href="c3ref/open.html">sqlite3_open
 default VFS is used if no VFS is specified otherwise.
 </p>
 
+<a name="shim"></a>
+
 <h2>2.2 VFS Shims</h2>
 
 <p>
@@ -297,7 +311,7 @@ SQLite source tree:
 <ul>
 <li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_demovfs.c">test_demovfs.c</a> - 
-This file implements a very simple VFS named "demo" that uss POSIX 
+This file implements a very simple VFS named "demo" that uses POSIX 
 functions such as
 open(), read(), write(), fsync(), close(), fsync(), sleep(), time(),
 and so forth.  This VFS only works on unix systems.  But it is not

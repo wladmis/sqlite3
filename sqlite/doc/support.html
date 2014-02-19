@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -158,8 +170,13 @@ will read and write database file encrypted using
 
 <li><p>
 The <a href="http://www.hwaci.com/sw/sqlite/cerod.html">SQLite Compressed and Encrypted Read-Only Database (CEROD)</a>
-Extension will read a database file that is both compressed
+extension will read a database file that is both compressed
 and encrypted.</p></li>
+
+<li><p>
+The <a href="http://www.hwaci.com/sw/sqlite/zipvfs.html">ZIPVFS</a>
+extension will both read and write database files that is both compressed and optionally
+encrypted using application-supplied compression and encryption routines.</p></li>
 
 <li><p>
 The <a href="th3.html">Test Harness #3 (TH3)</a> is an alternative set of test
@@ -176,14 +193,15 @@ as-deployed configuration on embedded platforms with
 SQLite:</p>
 
 <ul>
+<li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-users">
+sqlite-users</a> - general discussion for programmers using SQLite in their applications.  
+Most postings belong here.</li>
+<li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-dev">
+sqlite-dev</a> - conversations about SQLite internals, for those who work
+directly on enhancing SQLite itself.</li>
 <li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-announce">
 sqlite-announce</a> - announcements of new
-releases or significant developments.</li>
-<li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-users">
-sqlite-users</a> - general user discussion; most postings belong here.</li>
-<li><a href="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-dev">
-sqlite-dev</a> - developer conversations; for people who have or aspire to
-have write permission on the SQLite source code repository.</li>
+releases or significant developments; a very-low traffic list.</li>
 </ul>
 
 <p>
@@ -205,23 +223,5 @@ sqlite-users</a> list are available at:
 <a href="http://news.gmane.org/gmane.comp.db.sqlite.general">http://news.gmane.org/gmane.comp.db.sqlite.general</a>
 </blockquote>
 
-</p>
-
-<a name="directemail"></a>
-<h3>Direct E-Mail To The Author</h3>
-
-<p>
-Use the mailing list.
-Please do <b>not</b> send email directly to the author of SQLite
-unless:
-<ul>
-<li>You have or intend to acquire a professional support contract
-as described above, or</li>
-<li>You are working on an open source project.</li>
-</ul>
-You are welcomed to use SQLite in closed source, proprietary, and/or
-commercial projects and to ask questions about such use on the public
-mailing list.  But please do not ask to receive free direct technical
-support.  The software is free; direct technical support is not.
 </p>
 

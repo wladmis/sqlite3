@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -136,7 +148,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_blob.html">SQLITE_BLOB</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_BUSY</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_BUSY_RECOVERY</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_BUSY_SNAPSHOT</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_CANTOPEN</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CANTOPEN_CONVPATH</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_CANTOPEN_FULLPATH</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_CANTOPEN_ISDIR</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_CANTOPEN_NOTEMPDIR</a></li>
@@ -153,6 +167,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a></li>
+<li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">SQLITE_CONFIG_MMAP_SIZE</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">SQLITE_CONFIG_MULTITHREAD</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigmutex">SQLITE_CONFIG_MUTEX</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a></li>
@@ -163,7 +178,18 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog">SQLITE_CONFIG_SQLLOG</a></li>
 <li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a></li>
+<li><a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize">SQLITE_CONFIG_WIN32_HEAPSIZE</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_CONSTRAINT</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_CHECK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_COMMITHOOK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_FOREIGNKEY</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_FUNCTION</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_NOTNULL</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_PRIMARYKEY</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_ROWID</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_TRIGGER</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_UNIQUE</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_VTAB</a></li>
 <li><a href="../c3ref/c_alter_table.html">SQLITE_COPY</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_CORRUPT</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_CORRUPT_VTAB</a></li>
@@ -183,6 +209,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">SQLITE_DBSTATUS_CACHE_MISS</a></li>
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuscacheused">SQLITE_DBSTATUS_CACHE_USED</a></li>
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuscachewrite">SQLITE_DBSTATUS_CACHE_WRITE</a></li>
+<li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatusdeferredfks">SQLITE_DBSTATUS_DEFERRED_FKS</a></li>
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidehit">SQLITE_DBSTATUS_LOOKASIDE_HIT</a></li>
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidemissfull">SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL</a></li>
 <li><a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidemisssize">SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE</a></li>
@@ -193,6 +220,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a></li>
 <li><a href="../c3ref/c_deny.html">SQLITE_DENY</a></li>
 <li><a href="../c3ref/c_alter_table.html">SQLITE_DETACH</a></li>
+<li><a href="../c3ref/c_deterministic.html">SQLITE_DETERMINISTIC</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_DONE</a></li>
 <li><a href="../c3ref/c_alter_table.html">SQLITE_DROP_INDEX</a></li>
 <li><a href="../c3ref/c_alter_table.html">SQLITE_DROP_TABLE</a></li>
@@ -208,15 +236,20 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_fail.html">SQLITE_FAIL</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">SQLITE_FCNTL_BUSYHANDLER</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize">SQLITE_FCNTL_CHUNK_SIZE</a></li>
+<li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo">SQLITE_FCNTL_COMMIT_PHASETWO</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a></li>
+<li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved">SQLITE_FCNTL_HAS_MOVED</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html">SQLITE_FCNTL_LOCKSTATE</a></li>
+<li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize">SQLITE_FCNTL_MMAP_SIZE</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntloverwrite">SQLITE_FCNTL_OVERWRITE</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpersistwal">SQLITE_FCNTL_PERSIST_WAL</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpowersafeoverwrite">SQLITE_FCNTL_POWERSAFE_OVERWRITE</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a></li>
+<li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsync">SQLITE_FCNTL_SYNC</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename">SQLITE_FCNTL_TEMPFILENAME</a></li>
+<li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace">SQLITE_FCNTL_TRACE</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfsname">SQLITE_FCNTL_VFSNAME</a></li>
 <li><a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32avretry">SQLITE_FCNTL_WIN32_AV_RETRY</a></li>
 <li><a href="../c3ref/c_blob.html">SQLITE_FLOAT</a></li>
@@ -253,16 +286,19 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_BLOCKED</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_CHECKRESERVEDLOCK</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_CLOSE</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_CONVPATH</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_DELETE</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_DELETE_NOENT</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_DIR_CLOSE</a></li>
-<li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_DIR_FSYNC</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_DIR_FSYNC</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_FSTAT</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_FSYNC</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_GETTEMPPATH</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_LOCK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_MMAP</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_NOMEM</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_RDLOCK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_RDLOCK</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_READ</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_SEEK</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_IOERR_SHMLOCK</a></li>
@@ -308,6 +344,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_abort.html">SQLITE_NOMEM</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_NOTADB</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_NOTFOUND</a></li>
+<li><a href="../c3ref/c_abort.html">SQLITE_NOTICE</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_NOTICE_RECOVER_ROLLBACK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_NOTICE_RECOVER_WAL</a></li>
 <li><a href="../c3ref/c_blob.html">SQLITE_NULL</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_OK</a></li>
 <li><a href="../c3ref/c_open_autoproxy.html">SQLITE_OPEN_AUTOPROXY</a></li>
@@ -337,7 +376,10 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_alter_table.html">SQLITE_READ</a></li>
 <li><a href="../c3ref/c_abort.html">SQLITE_READONLY</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_READONLY_CANTLOCK</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_READONLY_DBMOVED</a></li>
 <li><a href="../c3ref/c_abort_rollback.html">SQLITE_READONLY_RECOVERY</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_READONLY_ROLLBACK</a></li>
+<li><a href="../c3ref/c_alter_table.html">SQLITE_RECURSIVE</a></li>
 <li><a href="../c3ref/c_alter_table.html">SQLITE_REINDEX</a></li>
 <li><a href="../c3ref/c_fail.html">SQLITE_REPLACE</a></li>
 <li><a href="../c3ref/c_fail.html">SQLITE_ROLLBACK</a></li>
@@ -366,6 +408,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusautoindex">SQLITE_STMTSTATUS_AUTOINDEX</a></li>
 <li><a href="../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusfullscanstep">SQLITE_STMTSTATUS_FULLSCAN_STEP</a></li>
 <li><a href="../c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort">SQLITE_STMTSTATUS_SORT</a></li>
+<li><a href="../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusvmstep">SQLITE_STMTSTATUS_VM_STEP</a></li>
 <li><a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_DATAONLY</a></li>
 <li><a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_FULL</a></li>
 <li><a href="../c3ref/c_sync_dataonly.html">SQLITE_SYNC_NORMAL</a></li>
@@ -379,6 +422,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_ISKEYWORD</a></li>
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_LAST</a></li>
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_LOCALTIME_FAULT</a></li>
+<li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_NEVER_CORRUPT</a></li>
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_OPTIMIZATIONS</a></li>
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_PENDING_BYTE</a></li>
 <li><a href="../c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_PRNG_RESET</a></li>
@@ -399,6 +443,8 @@ are <a href="../c3ref/experimental.html">experimental</a> and constants marked w
 <li><a href="../c3ref/c_source_id.html">SQLITE_VERSION</a></li>
 <li><a href="../c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a></li>
 <li><a href="../c3ref/c_vtab_constraint_support.html">SQLITE_VTAB_CONSTRAINT_SUPPORT</a></li>
+<li><a href="../c3ref/c_abort.html">SQLITE_WARNING</a></li>
+<li><a href="../c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a></li>
 </ul></td>
 </tr></table>
 <p>Other lists:

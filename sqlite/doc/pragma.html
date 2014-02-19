@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -154,8 +166,21 @@ built-in PRAGMA statements.</p>
 
 <hr /><a name="syntax"></a>
 <h2>PRAGMA command syntax</h2>
-<h4><a href="syntaxdiagrams.html#pragma-stmt">pragma-stmt:</a></h4><blockquote> <img alt="syntax diagram pragma-stmt" src="images/syntax/pragma-stmt.gif"></img> </blockquote>
-<h4><a href="syntaxdiagrams.html#pragma-value">pragma-value:</a></h4><blockquote> <img alt="syntax diagram pragma-value" src="images/syntax/pragma-value.gif"></img> </blockquote>
+<p><b><a href="syntaxdiagrams.html#pragma-stmt">pragma-stmt:</a></b>
+<button id='x1451' onclick='hideorshow("x1451","x1452")'>hide</button></p>
+ <blockquote id='x1452'>
+ <img alt="syntax diagram pragma-stmt" src="images/syntax/pragma-stmt.gif" />
+<p><b><a href="syntaxdiagrams.html#pragma-value">pragma-value:</a></b>
+<button id='x1453' onclick='hideorshow("x1453","x1454")'>hide</button></p>
+ <blockquote id='x1454'>
+ <img alt="syntax diagram pragma-value" src="images/syntax/pragma-value.gif" />
+<p><b><a href="syntaxdiagrams.html#signed-number">signed-number:</a></b>
+<button id='x1455' onclick='hideorshow("x1455","x1456")'>show</button></p>
+ <blockquote id='x1456' style='display:none;'>
+ <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
+</blockquote>
+</blockquote>
+</blockquote>
 
 
 <p>
@@ -190,10 +215,12 @@ name is meaningless and is simply ignored.</p>
 
 <table border=0 width="100%" cellpadding=10>
 <tr><td valign="top" align="left"><ul>
+<li><a href="#pragma_application_id">application_id</a>
 <li><a href="#pragma_auto_vacuum">auto_vacuum</a>
 <li><a href="#pragma_automatic_index">automatic_index</a>
 <li><a href="#pragma_busy_timeout">busy_timeout</a>
 <li><a href="#pragma_cache_size">cache_size</a>
+<li><a href="#pragma_cache_spill">cache_spill</a>
 <li><a href="#pragma_case_sensitive_like">case_sensitive_like</a>
 <li><a href="#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a>
 <li><a href="#pragma_collation_list">collation_list</a>
@@ -202,12 +229,14 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_data_store_directory"><s>data_store_directory</s></a>&sup1;
 <li><a href="#pragma_database_list">database_list</a>
 <li><a href="#pragma_default_cache_size"><s>default_cache_size</s></a>&sup1;
+<li><a href="#pragma_defer_foreign_keys">defer_foreign_keys</a>
 <li><a href="#pragma_empty_result_callbacks"><s>empty_result_callbacks</s></a>&sup1;
 <li><a href="#pragma_encoding">encoding</a>
+<li><a href="#pragma_foreign_key_check">foreign_key_check</a>
 <li><a href="#pragma_foreign_key_list">foreign_key_list</a>
 <li><a href="#pragma_foreign_keys">foreign_keys</a>
-<li><a href="#pragma_freelist_count">freelist_count</a>
 </ul></td><td valign="top" align="left"><ul>
+<li><a href="#pragma_freelist_count">freelist_count</a>
 <li><a href="#pragma_full_column_names"><s>full_column_names</s></a>&sup1;
 <li><a href="#pragma_fullfsync">fullfsync</a>
 <li><a href="#pragma_ignore_check_constraints">ignore_check_constraints</a>
@@ -220,9 +249,11 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_legacy_file_format">legacy_file_format</a>
 <li><a href="#pragma_locking_mode">locking_mode</a>
 <li><a href="#pragma_max_page_count">max_page_count</a>
+<li><a href="#pragma_mmap_size">mmap_size</a>
 <li><a href="#pragma_page_count">page_count</a>
 <li><a href="#pragma_page_size">page_size</a>
 <li><a href="#pragma_parser_trace"><i>parser_trace</i></a>&sup2;
+<li><a href="#pragma_query_only">query_only</a>
 <li><a href="#pragma_quick_check">quick_check</a>
 <li><a href="#pragma_read_uncommitted">read_uncommitted</a>
 </ul></td><td valign="top" align="left"><ul>
@@ -232,11 +263,15 @@ name is meaningless and is simply ignored.</p>
 <li><a href="#pragma_secure_delete">secure_delete</a>
 <li><a href="#pragma_short_column_names"><s>short_column_names</s></a>&sup1;
 <li><a href="#pragma_shrink_memory">shrink_memory</a>
+<li><a href="#pragma_soft_heap_limit">soft_heap_limit</a>
+<li><a href="#pragma_stats">stats</a>
 <li><a href="#pragma_synchronous">synchronous</a>
 <li><a href="#pragma_table_info">table_info</a>
 <li><a href="#pragma_temp_store">temp_store</a>
 <li><a href="#pragma_temp_store_directory"><s>temp_store_directory</s></a>&sup1;
-<li><a href="#pragma_user_version">user_version</a>
+<li><a href="#pragma_schema_version">user_version</a>
+<li><a href="#pragma_vdbe_addoptrace"><i>vdbe_addoptrace</i></a>&sup2;
+<li><a href="#pragma_vdbe_debug"><i>vdbe_debug</i></a>&sup2;
 <li><a href="#pragma_vdbe_listing"><i>vdbe_listing</i></a>&sup2;
 <li><a href="#pragma_vdbe_trace"><i>vdbe_trace</i></a>&sup2;
 <li><a href="#pragma_wal_autocheckpoint">wal_autocheckpoint</a>
@@ -253,6 +288,20 @@ Remove deprecated pragmas
 from existing applications at your earliest opportunity.</blockquote>
 <li>These pragmas are used for debugging SQLite itself and
 are only available when SQLite is compiled using <a href="compile.html#debug">SQLITE_DEBUG</a>.</ol></p>
+<a name="pragma_application_id"></a>
+<hr>
+    <p><b>PRAGMA application_id;
+       <br>PRAGMA application_id = </b><i>integer </i><b>;</b>
+  
+<p>    The application_id PRAGMA is used to query or set the 32-bit
+       unsigned big-endian "Application ID" integer located at offset
+       68 into the <a href="fileformat2.html#database_header">database header</a>.  Applications that use SQLite as their
+       <a href="whentouse.html#appfileformat">application file-format</a> should set the Application ID integer to
+       a unique integer so that utilities such as 
+       <a href="http://www.darwinsys.com/file/">file(1)</a> can determine the specific
+       file type rather than just reporting "SQLite3 Database".  A list of
+       assigned application IDs can be seen by consulting the
+       <a href="http://www.sqlite.org/src/artifact?ci=trunk&filename=magic.txt">magic.txt</a> file in the SQLite source repository.
 <a name="pragma_auto_vacuum"></a>
 <hr>
     <p><b>PRAGMA auto_vacuum;<br>
@@ -315,7 +364,8 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
      <br>PRAGMA automatic_index = </b><i>boolean</i><b>;</b></p>
 
     <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
-    <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default.
+    <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default as of version 3.7.17,
+    but this might change in future releases of SQLite.
 <a name="pragma_busy_timeout"></a>
 <hr>
     <p><b>PRAGMA busy_timeout;
@@ -343,11 +393,32 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <p>If the argument N is positive then the suggested cache size is set 
     to N. If the argument N is negative, then the
     number of cache pages is adjusted to use approximately N*1024 bytes
-    of memory.</p>
+    of memory.
+    <i>Backwards compatibility note:</i>
+    The behavior of cache_size with a negative N
+    was different in SQLite versions prior to 3.7.10.  In
+    version 3.7.9 and earlier, the number of pages in the cache was set
+    to the absolute value of N.</p>
 
     <p>When you change the cache size using the cache_size pragma, the
     change only endures for the current session.  The cache size reverts
     to the default value when the database is closed and reopened.</p>
+
+
+<a name="pragma_cache_spill"></a>
+<hr>
+    <p><b>PRAGMA cache_spill;
+         <br>PRAGMA cache_spill=</b><i>boolean</i><b>;</b></p>
+
+    <p>The cache_spill pragma enables or disables the ability of the pager
+    to spill dirty cache pages to the database file in the middle of a 
+    transaction.  Cache_spill is enabled by default and most applications
+    should leave it that way as cache spilling is usually advantageous.
+    However, a cache spill has the side-effect of acquiring an
+    <a href="lockingv3.html#excl_lock">EXCLUSIVE lock</a> on the database file.  Hence, some applications that
+    have large long-running transactions may want to disable cache spilling
+    in order to prevent the application from acquiring an exclusive lock
+    on the database until the moment that the transaction <a href="lang_transaction.html">COMMIT</a>s.
 <a name="pragma_case_sensitive_like"></a>
 <hr>
     <p><b>PRAGMA case_sensitive_like = </b><i>boolean</i><b>;</b></p>
@@ -395,15 +466,6 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <p><b>PRAGMA count_changes;
        <br>PRAGMA count_changes = </b>boolean</i><b>;</b></p>
 
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
-  
     <p>Query or change the count-changes flag. Normally, when the
     count-changes flag is not set, <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a> and <a href="lang_delete.html">DELETE</a> statements
     return no data. When count-changes is set, each of these commands 
@@ -420,6 +482,16 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     the count_changes pragma reports the number of rows in the view
     that fired the trigger, whereas <a href="c3ref/changes.html">sqlite3_changes()</a> and
     <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> do not.
+
+    
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 <a name="pragma_data_store_directory"></a>
 <hr>
     <p><b>PRAGMA data_store_directory;
@@ -428,15 +500,6 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     variable, which windows operating-system interface backends use to
     determine where to store database files specified using a relative
     pathname.</p>
-
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
 
     <p>Changing the data_store_directory setting is <u>not</u> threadsafe.
     Never change the data_store_directory setting if another thread
@@ -449,6 +512,16 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     mechanism for reading or changing the current working directory.
     The use of this pragma in any other context is discouraged and may
     be disallowed in future releases.</p>
+
+    
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 <a name="pragma_database_list"></a>
 <hr>
     <p><b>PRAGMA database_list;</b></p>
@@ -474,26 +547,35 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     </p>
 
     
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
     for backwards compatibility only.  New applications
     should avoid using this pragma.  Older applications should discontinue
     use of this pragma at the earliest opportunity.  This pragma may be omitted
     from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
     </p>
   
+<a name="pragma_defer_foreign_keys"></a>
+<hr>
+    <p><b>PRAGMA defer_foreign_keys
+       <br>PRAGMA defer_foreign_keys = </b><i>boolean</i><b>;</b></p>
+    <p>When the defer_foreign_keys <a href="pragma.html#syntax">PRAGMA</a> is on,
+    enforcement of all <a href="foreignkeys.html">foreign key constraints</a> is delayed until the
+    outermost transaction is committed.  The defer_foreign_keys pragma
+    defaults to OFF so that foreign key constraints are only deferred if
+    they are created as "DEFERRABLE INITIALLY DEFERRED".  The 
+    defer_foreign_keys pragma is automatically switched off at each
+    COMMIT or ROLLBACK.  Hence, the defer_foreign_keys pragma must be
+    separately enabled for each transaction.  This pragma is
+    only meaningful if foreign key constraints are enabled, of course.</p>
+
+    <p>The <a href="c3ref/db_status.html">sqlite3_db_status</a>(db,<a href="c3ref/c_dbstatus_options.html#sqlitedbstatusdeferredfks">SQLITE_DBSTATUS_DEFERRED_FKS</a>,...)
+    C-language interface can be used during a transaction to determine 
+    if there are deferred and unresolved foreign key constraints.</p>
 <a name="pragma_empty_result_callbacks"></a>
 <hr>
     <p><b>PRAGMA empty_result_callbacks;
        <br>PRAGMA empty_result_callbacks = </b><i>boolean</i><b>;</b></p>
-
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
 
     <p>Query or change the empty-result-callbacks flag.</p>
 
@@ -505,6 +587,16 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     with the third parameter set to 0 (NULL). This is to enable programs  
     that use the <a href="c3ref/exec.html">sqlite3_exec()</a> API to retrieve column-names even when
     a query returns no data.</p>
+
+    
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 <a name="pragma_encoding"></a>
 <hr>
    <p><b>PRAGMA encoding;
@@ -532,12 +624,32 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <p>Databases created by the <a href="lang_attach.html">ATTACH</a> command always use the same encoding
     as the main database.  An attempt to <a href="lang_attach.html">ATTACH</a> a database with a different
     text encoding from the "main" database will fail.</p>
+<a name="pragma_foreign_key_check"></a>
+<hr>
+    <p><b>PRAGMA foreign_key_check;
+        <br>PRAGMA foreign_key_check(</b><i>table-name</i><b>);</b></b></p>
+
+    <p>The foreign_key_check pragma checks the database, or the table
+    called "<i>table-name</i>", for 
+    <a href="foreignkeys.html">foreign key constraints</a> that are violated and returns one row of
+    output for each violation.  There are four columns in each result row.
+    The first column is the name of the table that contains the REFERENCES
+    clause.  The second column is the <a href="lang_createtable.html#rowid">rowid</a> of the row that
+    contains the invalid REFERENCES clause.  The third column is the name
+    of the table that is referred to. The fourth column is the index of
+    the specific foreign key constraint that failed.  The fourth column
+    in the output of the foreign_key_check pragma is the same integer as
+    the first column in the output of the <a href="pragma.html#pragma_foreign_key_list">foreign_key_list pragma</a>.
+    When a "<i>table-name</i>" is specified, the only foreign key constraints
+    checked are those created by REFERENCES clauses in the
+    CREATE TABLE statement for <i>table-name</i>.</p>
 <a name="pragma_foreign_key_list"></a>
 <hr>
     <p><b>PRAGMA foreign_key_list(</b><i>table-name</i><b>);</b></p>
 
-    <p>This pragma returns one row for each foreign key that references
-    a column in the argument table.
+    <p>This pragma returns one row for each <a href="foreignkeys.html">foreign key constraint</a>
+    created by a REFERENCES clause in the CREATE TABLE statement of
+    table "<i>table-name</i>".
 <a name="pragma_foreign_keys"></a>
 <hr>
      <p><b>PRAGMA foreign_keys;
@@ -571,15 +683,6 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <p><b>PRAGMA full_column_names;
        <br>PRAGMA full_column_names = </b><i>boolean</i><b>;</b></p>
 
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
-
     <p>Query or change the full_column_names flag. This flag together 
     with the <a href="pragma.html#pragma_short_column_names">short_column_names</a> flag determine
     the way SQLite assigns names to result columns of <a href="lang_select.html">SELECT</a> statements.
@@ -599,6 +702,16 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     <li><p>The name of the result column is a combination of the source table
         and source column name:  TABLE.COLUMN</p></li>
     </ol>
+
+    
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
 <a name="pragma_fullfsync"></a>
 <hr>
     <p><b>PRAGMA fullfsync
@@ -639,22 +752,24 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
 <hr>
     <p><b>PRAGMA index_list(</b><i>table-name</i><b>);</b></p>
     <p>This pragma returns one row for each index associated with the
-    given table.   Columns of the result set include the
+    given table.
+    Columns of the result set include the
     index name and a flag to indicate whether or not the index is UNIQUE.
     </p>
 <a name="pragma_integrity_check"></a>
 <hr>
     <p><b>PRAGMA integrity_check;
-    <br>PRAGMA integrity_check(</b><i>integer</i><b>)</b></p>
-    <p>This pragma does an integrity check of the entire database.  It
+    <br>PRAGMA integrity_check(</b><i>N</i><b>)</b></p>
+    <p>This pragma does an integrity check of the entire database.  The
+    integrity_check pragma
     looks for out-of-order records, missing pages, malformed records, and
     corrupt indices.
-    If any problems are found, then strings are returned (as multiple
-    rows with a single column per row) which describe
-    the problems.  At most <i>integer</i> errors will be reported
-    before the analysis quits.  The default value for <i>integer</i>
-    is 100.  If no errors are found, a single row with the value "ok" is
-    returned.</p>
+    If the integrity_check pragma finds problems, strings are returned
+    (as multiple rows with a single column per row) which describe
+    the problems.  Pragma integrity_check will return at most <i>N</i>
+    errors will be reported before the analysis quits, with N defaulting
+    to 100.  If pragma integrity_check finds no errors are found, a
+    single row with the value 'ok' is returned.</p>
 <a name="pragma_journal_mode"></a>
 <hr>
     <p><b>PRAGMA journal_mode;
@@ -816,7 +931,7 @@ are only available when SQLite is compiled using <a href="compile.html#debug">SQ
     released either by closing the database connection, or by setting the
     locking-mode back to NORMAL using this pragma and then accessing the
     database file (for read or write). Simply setting the locking-mode to
-    NORMAL is not enough - locks are not be released until the next time
+    NORMAL is not enough - locks are not released until the next time
     the database file is accessed.</p>
 
     <p>There are three reasons to set the locking-mode to EXCLUSIVE.
@@ -866,6 +981,41 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     form attempts to modify the maximum page count.  The maximum page
     count cannot be reduced below the current database size.
     </p>
+<a name="pragma_mmap_size"></a>
+<hr>
+    <p><br><b>PRAGMA </b><i>database</i><b>.mmap_size;
+         <br>PRAGMA </b><i>database</i><b>.mmap_size=</b><i>N</i></p>
+
+    <p>Query or change the maximum number of bytes that are set
+       aside for memory-mapped I/O on a single database.  The first form
+       (without an argument) queries the current limit.  The second
+       form (with a numeric argument) sets the limit for the specified
+       database, or for all databases if the optional database name is
+       omitted.  In the second form, if the database name is omitted, the
+       limit that is set becomes the default limit for all databases that
+       are added to the <a href="c3ref/sqlite3.html">database connection</a> by subsequent <a href="lang_attach.html">ATTACH</a>
+       statements.</p>
+
+    <p>The argument N is the maximum number of bytes of the database file
+       that will be accessed using memory-mapped I/O.  If N is zero then
+       memory mapped I/O is disabled.  If N is negative, then the limit
+       reverts to the default value determined by the most recent
+       <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">SQLITE_CONFIG_MMAP_SIZE</a>), or to the compile
+       time default determined by <a href="compile.html#default_mmap_size">SQLITE_DEFAULT_MMAP_SIZE</a> if not
+       start-time limit has been set.</p>
+
+    <p>The <a href="pragma.html#pragma_mmap_size">PRAGMA mmap_size</a> statement will never increase the amount
+       of address space used for memory-mapped I/O above the
+       hard limit set by the <a href="compile.html#max_mmap_size">SQLITE_MAX_MMAP_SIZE</a> compile-time option,
+       nor the hard limit set start-time by the second argument to
+       sqlite3_config(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">SQLITE_CONFIG_MMAP_SIZE</a>)</p>
+
+    <p>The size of the memory-mapped I/O region cannot be changed while
+       the memory-mapped I/O region is in active use, to avoid unmapping
+       memory out from under running SQL statements.  For this reason,
+       the mmap_size pragma may be a no-op if the prior mmap_size is non-zero
+       and there are other SQL statements running concurrently on the same
+       <a href="c3ref/sqlite3.html">database connection</a>.</p>
 <a name="pragma_page_count"></a>
 <hr>
     <p><b>PRAGMA page_count;</b></p>
@@ -916,20 +1066,28 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 <hr>
     <p><b>PRAGMA parser_trace = </b><i>boolean</i><b>; </b></p>
 
-    
-    <p>This pragma is intended for use when debugging SQLite itself.  It
-    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
-    is used.</p>
-  
-
     <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
     option, then the parser_trace pragma can be used to turn on tracing
     for the SQL parser used internally by SQLite.
     This feature is used for debugging SQLite itself.</p>
+
+    
+    <p style='background-color: #f0e0ff;'>
+    This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
+<a name="pragma_query_only"></a>
+<hr>
+    <p><b>PRAGMA query_only;
+       <br>PRAGMA query_only = </b><i>boolean</i><b>;</b></p>
+
+    <p>The query_only pragma prevents all changes to database files when
+    enabled.</p>
 <a name="pragma_quick_check"></a>
 <hr>
     <p><b>PRAGMA quick_check;
-    <br>PRAGMA quick_check(</b><i>integer</i><b>)</b></p>
+    <br>PRAGMA quick_check(</b><i>N</i><b>)</b></p>
     <p>The pragma is like <a href="pragma.html#pragma_integrity_check">integrity_check</a> except that it does not verify
     that index content matches table content.  By skipping the verification
     of index content, quick_check is able to run much faster than
@@ -1047,19 +1205,20 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p><b>PRAGMA short_column_names;
        <br>PRAGMA short_column_names = </b><i>boolean</i><b>;</b></p>
 
+    <p>Query or change the short-column-names flag. This flag affects
+    the way SQLite names columns of data returned by <a href="lang_select.html">SELECT</a> statements.
+    See the <a href="pragma.html#pragma_full_column_names">full_column_names</a> pragma for full details.
+    </p>
+
     
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
     for backwards compatibility only.  New applications
     should avoid using this pragma.  Older applications should discontinue
     use of this pragma at the earliest opportunity.  This pragma may be omitted
     from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
     </p>
   
-
-    <p>Query or change the short-column-names flag. This flag affects
-    the way SQLite names columns of data returned by <a href="lang_select.html">SELECT</a> statements.
-    See the <a href="pragma.html#pragma_full_column_names">full_column_names</a> pragma for full details.
-    </p>
 <a name="pragma_shrink_memory"></a>
 <hr>
     <p><b>PRAGMA shrink_memory</b></p>
@@ -1068,6 +1227,28 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     to free up as much memory as it can, by calling
     <a href="c3ref/db_release_memory.html">sqlite3_db_release_memory()</a>.
     </p>
+<a name="pragma_soft_heap_limit"></a>
+<hr>
+    <p><b>PRAGMA soft_heap_limit<br>
+          PRAGMA soft_heap_limit=</b><i>N</i></p>
+
+    <p>This pragma invokes the <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> interface with
+    the argument N, if N is specified and is a non-negative integer.
+    The soft_heap_limit pragma always returns the same integer
+    that would be returned by the <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64</a>(-1) C-language
+    function.
+    </p>
+<a name="pragma_stats"></a>
+<hr>
+    <p><b>PRAGMA stats;</b> </p>
+    <p>This pragma returns auxiliary information about tables and
+    indices.  The returned information is used during testing to help
+    verify that the query planner is operating correctly.  The format
+    and meaning of this pragma will likely change from release
+    to the next. Because of its volatility, the behavior and output
+    format of this pragma are deliberately undocumented.  This pragma is
+    intended for interactive, debugging, and testing use only.
+    Applications should avoid using this pragma.</p>
 <a name="pragma_synchronous"></a>
 <hr>
     <p><b>PRAGMA synchronous;
@@ -1120,7 +1301,10 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>This pragma returns one row for each column in the named table.
     Columns in the result set include the column name,
     data type, whether or not the column can be NULL, and the default
-    value for the column.</p>
+    value for the column.  The "pk" column in the result set is zero
+    for columns that are not part of the primary key, and is the index of
+    the column in the primary key for columns that are part of the primary
+    key.</p>
 <a name="pragma_temp_store"></a>
 <hr>
     <p><b>PRAGMA temp_store;
@@ -1185,15 +1369,6 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     variable, which many operating-system interface backends use to
     determine where to store <a href="inmemorydb.html#temp_db">temporary tables</a> and indices.</p>
 
-    
-    <p><u>Do not use this pragma!</u> This pragma is deprecated and exists
-    for backwards compatibility only.  New applications
-    should avoid using this pragma.  Older applications should discontinue
-    use of this pragma at the earliest opportunity.  This pragma may be omitted
-    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
-    </p>
-  
-
     <p>When the temp_store_directory setting is changed, all existing temporary
     tables, indices, triggers, and viewers in the database connection that
     issued the pragma are immediately deleted.  In
@@ -1220,15 +1395,53 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     OS interfaces may choose to ignore this variable and place temporary
     files in some other directory different from the directory specified
     here.  In that sense, this pragma is only advisory.</p>
-<a name="pragma_vdbe_listing"></a>
-<hr>
-    <p><b>PRAGMA vdbe_listing = </b><i>boolean</i><b>;</b></p>
 
     
-    <p>This pragma is intended for use when debugging SQLite itself.  It
+    <p style='background-color: #ffd0d0;'>
+    <b>This pragma is deprecated</b> and exists
+    for backwards compatibility only.  New applications
+    should avoid using this pragma.  Older applications should discontinue
+    use of this pragma at the earliest opportunity.  This pragma may be omitted
+    from the build when SQLite is compiled using <a href="compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a>.
+    </p>
+  
+<a name="pragma_vdbe_addoptrace"></a>
+<hr>
+    <p><b>PRAGMA vdbe_addoptrace = </b><i>boolean</i><b>;</b></p>
+
+    <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
+    option, then the vdbe_addoptrace pragma can be used to cause a complete
+    VDBE opcodes to be displayed as they are created during code generation.
+    This feature is used for debugging SQLite itself.  See the 
+    <a href="vdbe.html#trace">VDBE documentation</a> for more 
+    information.</p>
+
+    
+    <p style='background-color: #f0e0ff;'>
+    This pragma is intended for use when debugging SQLite itself.  It
     is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
     is used.</p>
   
+<a name="pragma_vdbe_debug"></a>
+<hr>
+    <p><b>PRAGMA vdbe_debug = </b><i>boolean</i><b>;</b></p>
+
+    <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
+    option, then the vdbe_debug pragma is a shorthand for three other
+    debug-only pragmas: vdbe_addoptrace, vdbe_listing, and vdbe_trace.
+    This feature is used for debugging SQLite itself.  See the 
+    <a href="vdbe.html#trace">VDBE documentation</a> for more 
+    information.</p>
+
+    
+    <p style='background-color: #f0e0ff;'>
+    This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
+<a name="pragma_vdbe_listing"></a>
+<hr>
+    <p><b>PRAGMA vdbe_listing = </b><i>boolean</i><b>;</b></p>
 
     <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
     option, then the vdbe_listing pragma can be used to cause a complete
@@ -1240,15 +1453,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     This feature is used for debugging SQLite itself.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p>
-<a name="pragma_vdbe_trace"></a>
-<hr>
-    <p><b>PRAGMA vdbe_trace = </b><i>boolean</i><b>;</b></p>
 
     
-    <p>This pragma is intended for use when debugging SQLite itself.  It
+    <p style='background-color: #f0e0ff;'>
+    This pragma is intended for use when debugging SQLite itself.  It
     is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
     is used.</p>
   
+<a name="pragma_vdbe_trace"></a>
+<hr>
+    <p><b>PRAGMA vdbe_trace = </b><i>boolean</i><b>;</b></p>
 
     <p>If SQLite has been compiled with the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time
     option, then the vdbe_trace pragma can be used to cause virtual machine
@@ -1256,6 +1470,13 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     This feature is used for debugging SQLite.  See the 
     <a href="vdbe.html#trace">VDBE documentation</a> for more 
     information.</p>
+
+    
+    <p style='background-color: #f0e0ff;'>
+    This pragma is intended for use when debugging SQLite itself.  It
+    is only contained in the build when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
+    is used.</p>
+  
 <a name="pragma_wal_autocheckpoint"></a>
 <hr>
     <p><b>PRAGMA wal_autocheckpoint;<br>

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -161,8 +173,12 @@ a:visited { color: #734559 }
 <li><a href="limits.html">Implementation Limits For SQLite</a></li>
 <li><a href="inmemorydb.html">In-Memory Databases</a></li>
 <li><a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a></li>
+<li><a href="isolation.html">Isolation In SQLite</a></li>
+<li><a href="hp1.html">Javascript Required</a></li>
+<li><a href="mmap.html">Memory-Mapped I/O</a></li>
 <li><a href="mostdeployed.html">Most Widely Deployed SQL Database Engine</a></li>
 <li><a href="nulls.html">NULL Handling in SQLite</a></li>
+<li><a href="partialindex.html">Partial Indexes</a></li>
 <li><a href="psow.html">Powersafe Overwrite</a></li>
 <li><a href="pragma.html">Pragma statements supported by SQLite</a></li>
 <li><a href="privatebranch.html">Private Branches Of SQLite</a></li>
@@ -170,6 +186,7 @@ a:visited { color: #734559 }
 <li><a href="queryplanner.html">Query Planning</a></li>
 <li><a href="news.html">Recent SQLite News</a></li>
 <li><a href="changes.html">Release History Of SQLite</a></li>
+<li><a href="loadext.html">Run-Time Loadable Extensions</a></li>
 <li><a href="omitted.html">SQL Features That SQLite Does Not Implement</a></li>
 <li><a href="autoinc.html">SQLite Autoincrement</a></li>
 <li><a href="backup.html">SQLite Backup API</a></li>
@@ -205,6 +222,8 @@ a:visited { color: #734559 }
 <li><a href="syntaxdiagrams.html">Syntax Diagrams For SQLite</a></li>
 <li><a href="tempfiles.html">Temporary Files Used By SQLite</a></li>
 <li><a href="c_interface.html">The C language interface to SQLite Version 2</a></li>
+<li><a href="errlog.html">The Error And Warning Log</a></li>
+<li><a href="queryplanner-ng.html">The Next-Generation Query Planner</a></li>
 <li><a href="vfs.html">The OS Backend (VFS) To SQLite</a></li>
 <li><a href="spellfix1.html">The spellfix1 virtual table</a></li>
 <li><a href="amalgamation.html">The SQLite Amalgamation</a></li>
@@ -213,6 +232,7 @@ a:visited { color: #734559 }
 <li><a href="tclsqlite.html">The Tcl interface to the SQLite library</a></li>
 <li><a href="vdbe.html">The Virtual Database Engine of SQLite</a></li>
 <li><a href="vtab.html">The Virtual Table Mechanism Of SQLite</a></li>
+<li><a href="withoutrowid.html">The WITHOUT ROWID Optimization</a></li>
 <li><a href="uri.html">Uniform Resource Identifiers</a></li>
 <li><a href="threadsafe.html">Using SQLite In Multi-Threaded Applications</a></li>
 <li><a href="keyword_index.html">Website Keyword Index</a></li>

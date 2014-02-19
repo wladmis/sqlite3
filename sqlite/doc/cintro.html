@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -120,7 +132,7 @@ a:visited { color: #734559 }
 <h1 align=center>An Introduction To The SQLite C/C++ Interface</h1>
 
 <p>
-  This article provides an overview and roadmap to the C/C++ interface
+  This article provides an overview to the C/C++ interface
   to SQLite.
 </p>
 
@@ -128,9 +140,9 @@ a:visited { color: #734559 }
   Early versions of SQLite were very easy to learn since they only
   supported 5 C/C++ interfaces.  But as SQLite has grown in capability,
   new C/C++ interfaces have been added so that now there
-  are over 185 distinct APIs.  This can be overwhelming to a new programmer.
+  are over 200 distinct APIs.  This can be overwhelming to a new programmer.
   Fortunately, most of the C/C++ interfaces in SQLite are very specialized
-  and never need to be used.  Despite having so many
+  and never need to be considered.  Despite having so many
   entry points, the core API is still relatively simple and easy to code to.
   This article aims to provide all of the background information needed to
   easily understand how SQLite works.
@@ -190,7 +202,7 @@ a:visited { color: #734559 }
 </p>
 
 <p>
-  Note that the list of routines is conceptual rather than actual.
+  Note that the list of routines above is conceptual rather than actual.
   Many of these routines come in multiple versions.
   For example, the list above shows a single routine
   named <a href="c3ref/open.html">sqlite3_open()</a> when in fact there are three separate routines
@@ -230,8 +242,13 @@ a:visited { color: #734559 }
   the SQL statement to be prepared.  This API does not actually evaluate
   the SQL statement.  It merely prepares the SQL statement for evaluation.
 
+  <p>Think of each SQL statement as a small computer program.  The purpose
+  of <a href="c3ref/prepare.html">sqlite3_prepare()</a> is to compile that program into object code.
+  The <a href="c3ref/stmt.html">prepared statement</a> is the object code.  The <a href="c3ref/step.html">sqlite3_step()</a> interface
+  then runs the object code to get a result.
+
   <p>Note that the use of <a href="c3ref/prepare.html">sqlite3_prepare()</a> is not recommended for new
-  applications.  The alternative routine <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> should
+  applications.  A newer alternative routine <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> should
   be used instead.</p>
 </td>
 
@@ -255,7 +272,7 @@ a:visited { color: #734559 }
   can be called multiple times to find the values of all columns in that row.
   As noted above, there really is no such thing as a "sqlite3_column()"
   function in the SQLite API.  Instead, what we here call "sqlite3_column()"
-  is really a place-holder for an entire family of functions that return
+  is a place-holder for an entire family of functions that return
   a value from the result set in various data types.  There are also routines
   in this family that return the size of the result (if it is a string or
   BLOB) and the number of columns in the result set.  
@@ -428,7 +445,33 @@ a:visited { color: #734559 }
   <a href="c3ref/stmt.html">prepared statements</a>.
 </p>
 
-<h2>4.0 Extending SQLite</h2>
+<h2>4.0 Configuring SQLite</h2>
+
+<p>
+  The default configuration for SQLite works great for most applications.
+  But sometimes developers want to tweak the setup to try to squeeze out
+  a little more performance, or take advantage of some obscure feature.
+<p>
+  The <a href="c3ref/config.html">sqlite3_config()</a> interface is used to make global, process-wide
+  configuration changes for SQLite.  The <a href="c3ref/config.html">sqlite3_config()</a> interface must
+  be called before any <a href="c3ref/sqlite3.html">database connections</a> are created.  The
+  <a href="c3ref/config.html">sqlite3_config()</a> interface allows the programmer to do things like:
+<ul>
+<li>Adjust how SQLite does <a href="malloc.html">memory allocation</a>, including setting up
+    alternative memory allocators appropriate for safety-critical
+    real-time embedded systems and application-defined memory allocators.
+<li>Set up a process-wide <a href="errlog.html">error log</a>.
+<li>Specify an application-defined page cache.
+<li>Adjust the use of mutexes so that they are appropriate for various
+    <a href="threadsafe.html">threading models</a>, or substitute an 
+    application-defined mutex system.
+</ul> 
+<p>
+  After process-wide configuration is complete and <a href="c3ref/sqlite3.html">database connections</a>
+  have been created, individual database connections can be configured using
+  calls to <a href="c3ref/limit.html">sqlite3_limit()</a> and <a href="c3ref/db_config.html">sqlite3_db_config()</a>.
+
+<h2>5.0 Extending SQLite</h2>
 
 <p>
   SQLite includes interfaces that can be used to extend its functionality.
@@ -439,13 +482,15 @@ a:visited { color: #734559 }
   <li> <a href="c3ref/create_collation.html">sqlite3_create_collation()</a> </li>
   <li> <a href="c3ref/create_function.html">sqlite3_create_function()</a> </li>
   <li> <a href="c3ref/create_module.html">sqlite3_create_module()</a> </li>
+  <li> <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a> </li>
 </ul></p>
 
 <p>
   The <a href="c3ref/create_collation.html">sqlite3_create_collation()</a> interface is used to create new
-  collating sequences for sorting text.
+  <a href="datatype3.html#collation">collating sequences</a> for sorting text.
   The <a href="c3ref/create_module.html">sqlite3_create_module()</a> interface is used to register new
-  virtual table implementations.
+  <a href="vtab.html">virtual table</a> implementations.
+  The <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a> interface creates new <a href="vfs.html">VFSes</a>.
 </p>
 
 <p>
@@ -464,10 +509,16 @@ a:visited { color: #734559 }
 <p>
   All of the built-in SQL functions of SQLite are created using exactly
   these same interfaces.  Refer to the SQLite source code, and in particular
-  the <b>date.c</b> and <b>func.c</b> source files for examples.
+  the 
+  <a href="http://www.sqlite.org/src/doc/trunk/src/date.c">date.c</a> and
+  <a href="http://www.sqlite.org/src/doc/trunk/src/func.c">func.c</a> source files
+  for examples.
 </p>
 
-<h2>5.0 Other Interfaces</h2>
+<p>
+  Shared libraries or DLLs can be used as <a href="loadext.html">loadable extensions</a> to SQLite.
+
+<h2>6.0 Other Interfaces</h2>
 
 <p>
   This article only mentions the foundational SQLite interfaces.

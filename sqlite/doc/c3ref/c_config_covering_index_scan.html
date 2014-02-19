@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -137,6 +149,8 @@ a:visited { color: #734559 }
 #define SQLITE_CONFIG_GETPCACHE2   19  /* sqlite3_pcache_methods2* */
 #define SQLITE_CONFIG_COVERING_INDEX_SCAN 20  /* int */
 #define SQLITE_CONFIG_SQLLOG       21  /* xSqllog, void* */
+#define SQLITE_CONFIG_MMAP_SIZE    22  /* sqlite3_int64, sqlite3_int64 */
+#define SQLITE_CONFIG_WIN32_HEAPSIZE      23  /* int nByte */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the first argument to the <a href="../c3ref/config.html">sqlite3_config()</a> interface.</p>
@@ -338,7 +352,9 @@ page cache implementation into that object. </dd></p>
 
 <p><a name="sqliteconfiglog"></a>
  <dt>SQLITE_CONFIG_LOG</dt>
-<dd> The SQLITE_CONFIG_LOG option takes two arguments: a pointer to a
+<dd> The SQLITE_CONFIG_LOG option is used to configure the SQLite
+global <a href="../errlog.html">error log</a>.
+(The SQLITE_CONFIG_LOG option takes two arguments: a pointer to a
 function with a call signature of void(*)(void*,int,const char*),
 and a pointer to void. If the function pointer is not NULL, it is
 invoked by <a href="../c3ref/log.html">sqlite3_log()</a> to process each logging event.  If the
@@ -357,7 +373,7 @@ function must be threadsafe. </dd></p>
 
 <p><a name="sqliteconfiguri"></a>
  <dt>SQLITE_CONFIG_URI
-<dd> This option takes a single argument of type int. If non-zero, then
+<dd>This option takes a single argument of type int. If non-zero, then
 URI handling is globally enabled. If the parameter is zero, then URI handling
 is globally disabled. If URI handling is globally enabled, all filenames
 passed to <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open_v2()</a>, <a href="../c3ref/open.html">sqlite3_open16()</a> or
@@ -371,14 +387,14 @@ disabled. The default value may be changed by compiling with the
 
 <p><a name="sqliteconfigcoveringindexscan"></a>
  <dt>SQLITE_CONFIG_COVERING_INDEX_SCAN
-<dd> This option takes a single integer argument which is interpreted as
+<dd>This option takes a single integer argument which is interpreted as
 a boolean in order to enable or disable the use of covering indices for
 full table scans in the query optimizer.  The default setting is determined
 by the <a href="../compile.html#allow_covering_index_scan">SQLITE_ALLOW_COVERING_INDEX_SCAN</a> compile-time option, or is "on"
 if that compile-time option is omitted.
 The ability to disable the use of covering indices for full table scans
 is because some incorrectly coded legacy applications might malfunction
-malfunction when the optimization is enabled.  Providing the ability to
+when the optimization is enabled.  Providing the ability to
 disable the optimization allows the older, buggy application code to work
 without change even with newer versions of SQLite.</p>
 
@@ -388,13 +404,13 @@ without change even with newer versions of SQLite.</p>
 <dt>SQLITE_CONFIG_PCACHE and SQLITE_CONFIG_GETPCACHE
 <dd> These options are obsolete and should not be used by new code.
 They are retained for backwards compatibility but are now no-ops.
-</dl></p>
+</dd></p>
 
 <p><a name="sqliteconfigsqllog"></a>
 
 <dt>SQLITE_CONFIG_SQLLOG
 <dd>This option is only available if sqlite is compiled with the
-SQLITE_ENABLE_SQLLOG pre-processor macro defined. The first argument should
+<a href="../compile.html#enable_sqllog">SQLITE_ENABLE_SQLLOG</a> pre-processor macro defined. The first argument should
 be a pointer to a function of type void(*)(void*,sqlite3*,const char*, int).
 The second should be of type (void*). The callback is invoked by the library
 in three separate circumstances, identified by the value passed as the
@@ -404,7 +420,32 @@ points to a buffer containing the name of the main database file. If the
 fourth parameter is 1, then the SQL statement that the third parameter
 points to has just been executed. Or, if the fourth parameter is 2, then
 the connection being passed as the second parameter is being closed. The
-third parameter is passed NULL In this case.
+third parameter is passed NULL In this case.  An example of using this
+configuration option can be seen in the "test_sqllog.c" source file in
+the canonical SQLite source tree.</dd></p>
+
+<p><a name="sqliteconfigmmapsize"></a>
+
+<dt>SQLITE_CONFIG_MMAP_SIZE
+<dd>SQLITE_CONFIG_MMAP_SIZE takes two 64-bit integer (sqlite3_int64) values
+that are the default mmap size limit (the default setting for
+<a href="../pragma.html#pragma_mmap_size">PRAGMA mmap_size</a>) and the maximum allowed mmap size limit.
+The default setting can be overridden by each database connection using
+either the <a href="../pragma.html#pragma_mmap_size">PRAGMA mmap_size</a> command, or by using the
+<a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize">SQLITE_FCNTL_MMAP_SIZE</a> file control.  The maximum allowed mmap size
+cannot be changed at run-time.  Nor may the maximum allowed mmap size
+exceed the compile-time maximum mmap size set by the
+<a href="../compile.html#max_mmap_size">SQLITE_MAX_MMAP_SIZE</a> compile-time option.
+If either argument to this option is negative, then that argument is
+changed to its compile-time default.</p>
+
+<p><a name="sqliteconfigwin32heapsize"></a>
+
+<dt>SQLITE_CONFIG_WIN32_HEAPSIZE
+<dd>This option is only available if SQLite is compiled for Windows
+with the <a href="../compile.html#win32_malloc">SQLITE_WIN32_MALLOC</a> pre-processor macro defined.
+SQLITE_CONFIG_WIN32_HEAPSIZE takes a 32-bit unsigned integer value
+that specifies the maximum size of the created heap.
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -480,11 +492,8 @@ steps:
 
 <p>As soon as the PENDING lock is released from the database file, other
 processes can begin reading the database again.  In the current implementation,
-the RESERVED lock is also released, but that is not essential.  Future
-versions of SQLite might provide a "CHECKPOINT" SQL command that will
-commit all changes made so far within a transaction but retain the
-RESERVED lock so that additional changes can be made without given
-any other process an opportunity to write.</p>
+the RESERVED lock is also released, but that is not essential for
+correct operation.</p>
 
 <p>If a transaction involves multiple databases, then a more complex
 commit sequence is used, as follows:</p>

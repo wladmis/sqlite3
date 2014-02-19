@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -143,7 +155,7 @@ a:visited { color: #734559 }
   into that column of the table, the NULL is automatically converted
   into an integer which is one greater than the largest value of that
   column over all other rows in the table, or 1 if the table is empty.
-  (If the largest possible integer key, 9223372036854775807, then an
+  (If the largest possible integer key 9223372036854775807 is in use then an
   unused key value is chosen at random.)
   For example, suppose you have a table like this:
 <blockquote><pre>
@@ -171,7 +183,7 @@ INSERT INTO t1 VALUES((SELECT max(a) FROM t1)+1,123);
   overlap with keys that have been previously deleted from the
   table.  To create keys that are unique over the lifetime of the
   table, add the <a href="autoinc.html">AUTOINCREMENT</a> keyword to the <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>
-  declaration.  Then the key chosen will be one more than than the
+  declaration.  Then the key chosen will be one more than the
   largest key that has ever existed in that table.  If the largest
   possible key has previously existed in that table, then the <a href="lang_insert.html">INSERT</a>
   will fail with an <a href="c3ref/c_abort.html">SQLITE_FULL</a> error code.</p></blockquote></li>
@@ -439,7 +451,7 @@ COMMIT;
   An SQLITE_SCHEMA error can only occur when using the <a href="c3ref/prepare.html">sqlite3_prepare()</a>,
   and <a href="c3ref/step.html">sqlite3_step()</a> interfaces to run SQL.
   You will never receive an <a href="c3ref/c_abort.html">SQLITE_SCHEMA</a> error from
-  <a href="c3ref/exec.html">sqlite3_exec()</a>.  Nor will you receive a the error if you
+  <a href="c3ref/exec.html">sqlite3_exec()</a>.  Nor will you receive an error if you
   prepare statements using <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> instead of
   <a href="c3ref/prepare.html">sqlite3_prepare()</a>.</p>
 
@@ -587,7 +599,7 @@ COMMIT;
   update, your database is safe.  The database is safe even if your OS
   crashes or takes a power loss.  The crash-resistance of SQLite has
   been extensively studied and tested and is attested by years of real-world 
-  experience by millions of users."</p>
+  experience by millions of users.</p>
 
   <p>That said, there are a number of things that external programs or bugs
   in your hardware or OS can do to corrupt a database file.  Details
@@ -622,7 +634,7 @@ COMMIT;
 <p><b>(23) I get a compiler error if I use the SQLITE_OMIT_... 
   compile-time options when building SQLite.</b></p>
 <blockquote>The <a href="compile.html#omitfeatures">SQLITE_OMIT_...</a> compile-time options only work
-  when building from canonically source files.  They do <u>not</u> work
+  when building from canonical source files.  They do <u>not</u> work
   when you build from the SQLite <a href="amalgamation.html">amalgamation</a> or from the pre-processed
   source files.
 
@@ -635,7 +647,7 @@ COMMIT;
   where column1 has the value "column1".</b></p>
 <blockquote>Use single-quotes, not double-quotes, around string literals in SQL.
   This is what the SQL standard requires.  Your WHERE clause expression
-  should read: <tt>column1='column2'</tt>
+  should read: <tt>column1='column1'</tt>
 
   <p>SQL uses double-quotes around identifiers (column or table names) that
   contains special characters or which are keywords.  So double-quotes are

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -119,41 +131,49 @@ a:visited { color: #734559 }
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Function Auxiliary Data</h2><blockquote><pre>void *sqlite3_get_auxdata(sqlite3_context*, int N);
 void sqlite3_set_auxdata(sqlite3_context*, int N, void*, void (*)(void*));
 </pre></blockquote><p>
-The following two functions may be used by scalar SQL functions to
+These functions may be used by (non-aggregate) SQL functions to
 associate metadata with argument values. If the same value is passed to
 multiple invocations of the same SQL function during query execution, under
-some circumstances the associated metadata may be preserved. This may
-be used, for example, to add a regular-expression matching scalar
-function. The compiled version of the regular expression is stored as
-metadata associated with the SQL value passed as the regular expression
-pattern.  The compiled regular expression can be reused on multiple
-invocations of the same function so that the original pattern string
-does not need to be recompiled on each invocation.</p>
+some circumstances the associated metadata may be preserved.  An example
+of where this might be useful is in a regular-expression matching
+function. The compiled version of the regular expression can be stored as
+metadata associated with the pattern string.
+Then as long as the pattern string remains the same,
+the compiled regular expression can be reused on multiple
+invocations of the same function.</p>
 
 <p>The sqlite3_get_auxdata() interface returns a pointer to the metadata
 associated by the sqlite3_set_auxdata() function with the Nth argument
-value to the application-defined function. If no metadata has been ever
-been set for the Nth argument of the function, or if the corresponding
-function parameter has changed since the meta-data was set,
-then sqlite3_get_auxdata() returns a NULL pointer.</p>
+value to the application-defined function. If there is no metadata
+associated with the function argument, this sqlite3_get_auxdata() interface
+returns a NULL pointer.</p>
 
-<p>The sqlite3_set_auxdata() interface saves the metadata
-pointed to by its 3rd parameter as the metadata for the N-th
+<p>The sqlite3_set_auxdata(C,N,P,X) interface saves P as metadata for the N-th
 argument of the application-defined function.  Subsequent
-calls to sqlite3_get_auxdata() might return this data, if it has
-not been destroyed.
-If it is not NULL, SQLite will invoke the destructor
-function given by the 4th parameter to sqlite3_set_auxdata() on
-the metadata when the corresponding function parameter changes
-or when the SQL statement completes, whichever comes first.</p>
+calls to sqlite3_get_auxdata(C,N) return P from the most recent
+sqlite3_set_auxdata(C,N,P,X) call if the metadata is still valid or
+NULL if the metadata has been discarded.
+After each call to sqlite3_set_auxdata(C,N,P,X) where X is not NULL,
+SQLite will invoke the destructor function X with parameter P exactly
+once, when the metadata is discarded.
+SQLite is free to discard the metadata at any time, including: <ul>
+<li> when the corresponding function parameter changes, or
+<li> when <a href="../c3ref/reset.html">sqlite3_reset()</a> or <a href="../c3ref/finalize.html">sqlite3_finalize()</a> is called for the
+SQL statement, or
+<li> when sqlite3_set_auxdata() is invoked again on the same parameter, or
+<li> during the original sqlite3_set_auxdata() call when a memory
+allocation error occurs. </ul></p>
 
-<p>SQLite is free to call the destructor and drop metadata on any
-parameter of any function at any time.  The only guarantee is that
-the destructor will be called before the metadata is dropped.</p>
+<p>Note the last bullet in particular.  The destructor X in
+sqlite3_set_auxdata(C,N,P,X) might be called immediately, before the
+sqlite3_set_auxdata() interface even returns.  Hence sqlite3_set_auxdata()
+should be called near the end of the function implementation and the
+function implementation should not make any use of P after
+sqlite3_set_auxdata() has been called.</p>
 
 <p>In practice, metadata is preserved between function calls for
-expressions that are constant at compile time. This includes literal
-values and <a href="../lang_expr.html#varparam">parameters</a>.</p>
+function parameters that are compile-time constants, including literal
+values and <a href="../lang_expr.html#varparam">parameters</a> and expressions composed from the same.</p>
 
 <p>These routines must be called from the same thread in which
 the SQL function is running.

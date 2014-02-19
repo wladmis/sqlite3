@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -128,15 +140,15 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_7_14.html">version 3.7.14</a>,
+<p>As of <a href="releaselog/3_8_0.html">version 3.8.0</a>,
 the SQLite library consists of approximately
-81.3 KSLOC of C code.
+84.3 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-1124 times as much
+1084 times as much
 test code and test scripts - 
-91421.1 KSLOC.</p>
+91452.5 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -177,13 +189,13 @@ SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 25.1 KSLOC 
+The TCL test harness itself consists of 24.2 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 711 files totaling 
-10.0MB in size.  There are
-29226 distinct test cases, but many of the test
+in 760 files totaling 
+10.3MB in size.  There are
+30295 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
-so that on a full test run, about 3.1 million 
+so that on a full test run millions of
 separate tests are performed.
 </p>
 </li>
@@ -196,8 +208,8 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-50.1 MB or 666.9 KSLOC
-of C code implementing 34229 distinct test cases.
+51.2 MB or 691.2 KSLOC
+of C code implementing 35211 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
 about 0.8 million different test
 instances.  The cases that provide 100% branch test coverage constitute
@@ -225,7 +237,7 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-129.1 thousand test cases.
+202.2 thousand test cases.
 The veryquick tests include everything except the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
@@ -382,7 +394,7 @@ resulting prepared statement is run to make sure it gives a reasonable
 result.</p>
 
 <p>The SQL fuzz generator tests are part of the TCL test suite.
-During a full test run, about 126.3 
+During a full test run, about 114.9 
 thousand fuzz SQL statements are
 generated and tested.</p>
 
@@ -422,10 +434,11 @@ have been tested.</p>
 <h2>5.0 Regression Testing</h2>
 
 <p>Whenever a bug is reported against SQLite, that bug is not considered
-fixed until new test cases have been added to the TCL test suite which
-would exhibit the bug in an unpatched version of SQLite.  Over the years,
-this has resulted in thousands and thousands of new tests being added
-to the TCL test suite.  These regression tests ensure that bugs that have
+fixed until new test cases that would exhibit the bug have been added 
+to either the TCL or TH3 test suites.
+Over the years,
+this has resulted in thousands and thousands of new tests.
+These regression tests ensure that bugs that have
 been fixed in the past are not reintroduced into future versions of
 SQLite.</p>
 
@@ -452,10 +465,9 @@ harnesses are zealous to enforce this.</p>
 
 <h2>7.0 Test Coverage</h2>
 
-<p>The SQLite core has 100% branch test coverage under <a href="th3.html">TH3</a> as of
-2009-07-25, in its default configuration as measured by
-<a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>
-utility on SuSE Linux 10.1 on x86 hardware with the GCC 4.0.1 compiler.</p>
+<p>The SQLite core has 100% branch test coverage under <a href="th3.html">TH3</a> in
+its default configuration as measured by
+<a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>.</p>
 
 <p>The "SQLite core" in the previous paragraph excludes the
 operating-system dependent <a href="vfs.html">VFS</a> backends, since it is
@@ -616,7 +628,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The SQLite source code contains 667
+<p>The SQLite source code contains 695
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -678,7 +690,7 @@ quality of SQLite.</p>
 
 <h3>8.1 Assert</h3>
 
-<p>The SQLite core contains 3531 <tt>assert()</tt>
+<p>The SQLite core contains 3691 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be

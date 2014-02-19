@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -142,27 +154,76 @@ namespace.</p>
 <p>The <b>sqlite3</b> command is used as follows:</p>
 
 <blockquote>
-<b>sqlite3</b>&nbsp;&nbsp;<i>dbcmd&nbsp;&nbsp;database-name</i>
+<b>sqlite3</b>&nbsp;&nbsp;<i>dbcmd&nbsp;&nbsp;database-name&nbsp;&nbsp;?options?</i>
 </blockquote>
 
 <p>
 The <b>sqlite3</b> command opens the database named in the second
-argument.  If the database does not already exist, it is
-automatically created.
-The <b>sqlite3</b> command also creates a new Tcl
+argument.  If the database does not already exist, the default behavior
+is for it to be created automatically (though this can be changed by
+using the "<b>-create false</b>" option).
+The <b>sqlite3</b> command always creates a new Tcl
 command to control the database.  The name of the new Tcl command
 is given by the first argument.  This approach is similar to the
 way widgets are created in Tk.
 </p>
 
 <p>
-The name of the database is just the name of a disk file in which
+The name of the database is usually just the name of a disk file in which
 the database is stored.  If the name of the database is 
 the special name "<a href="inmemorydb.html">:memory:</a>" then a new database is created
 in memory.  If the name of the database is an empty string, then
 the database is created in an empty file that is automatically deleted
-when the database connection closes.
+when the database connection closes.  <a href="uri.html">URI filenames</a> can be used if
+the "<b>-uri yes</b>" option is supplied on the <b>sqlite3</b> command.
 </p>
+
+<p>
+Options understood by the <b>sqlite3</b> command include:
+</p>
+
+<blockquote>
+<dl>
+
+<dt><b>-create</b> <i>BOOLEAN</i></dt>
+<dd><p>
+If true, then a new database is created if one does not already exist.
+If false, then an attempt to open a database file that does not previously
+exist raises an error.  The default behavior is "true".
+</p></dd>
+
+<dt><b>-nomutex</b> <i>BOOLEAN</i></dt>
+<dd><p>
+If true, then all mutexes for the database connection are disabled.
+This provides a small performance boost in single-threaded applications.
+</p></dd>
+
+<dt><b>-readonly</b> <i>BOOLEAN</i></dt>
+<dd><p>
+If true, then open the database file read-only.  If false, then the
+database is opened for both reading and writing if filesystem permissions
+allow, or for reading only if filesystem write permission is denied
+by the operating system.  The default setting is "false".  Note that
+if the previous process to have the database did not exits cleanly
+and left behind a <a href="lockingv3.html#hotjrnl">hot journal</a>, then the write permission is required
+to recover the database after opening, and the database cannot be
+opened read-only.
+</p></dd>
+
+<dt><b>-uri</b> <i>BOOLEAN</i></dt>
+<dd><p>
+If true, then interpret the filename argument as a <a href="uri.html">URI filename</a>.  If
+false, then the argument is a literal filename.  The default value is
+"false".
+</p></dd>
+
+<dt><b>-vfs</b> <i>VFSNAME</i></dt>
+<dd><p>
+Use an alternative <a href="vfs.html">VFS</a> named by the argument.
+</p></dd>
+
+</dl>
+</blockquote>
 
 <p>
 Once an SQLite database is open, it can be controlled using 
@@ -172,7 +233,7 @@ defined.</p>
 <p>
 <ul>
 
-<li><a href="#authorizer">authorizer</a></li><li><a href="#backup">backup</a></li><li><a href="#busy">busy</a></li><li><a href="#cache">cache</a></li><li><a href="#changes">changes</a></li><li><a href="#close">close</a></li><li><a href="#collate">collate</a></li><li><a href="#collation_needed">collation_needed</a></li><li><a href="#commit_hook">commit_hook</a></li><li><a href="#complete">complete</a></li><li><a href="#copy">copy</a></li><li><a href="#enable_load_extension">enable_load_extension</a></li><li><a href="#errorcode">errorcode</a></li><li><a href="#eval">eval</a></li><li><a href="#exists">exists</a></li><li><a href="#function">function</a></li><li><a href="#incrblob">incrblob</a></li><li><a href="#last_insert_rowid">last_insert_rowid</a></li><li><a href="#nullvalue">nullvalue</a></li><li><a href="#onecolumn">onecolumn</a></li><li><a href="#profile">profile</a></li><li><a href="#progress">progress</a></li><li><a href="#restore">restore</a></li><li><a href="#rollback_hook">rollback_hook</a></li><li><a href="#status">status</a></li><li><a href="#timeout">timeout</a></li><li><a href="#total_changes">total_changes</a></li><li><a href="#trace">trace</a></li><li><a href="#transaction">transaction</a></li><li><a href="#unlock_notify">unlock_notify</a></li><li><a href="#update_hook">update_hook</a></li><li><a href="#version">version</a></li>
+<li><a href="#authorizer">authorizer</a></li><li><a href="#backup">backup</a></li><li><a href="#busy">busy</a></li><li><a href="#cache">cache</a></li><li><a href="#changes">changes</a></li><li><a href="#close">close</a></li><li><a href="#collate">collate</a></li><li><a href="#collation_needed">collation_needed</a></li><li><a href="#commit_hook">commit_hook</a></li><li><a href="#complete">complete</a></li><li><a href="#copy">copy</a></li><li><a href="#enable_load_extension">enable_load_extension</a></li><li><a href="#errorcode">errorcode</a></li><li><a href="#eval">eval</a></li><li><a href="#exists">exists</a></li><li><a href="#function">function</a></li><li><a href="#incrblob">incrblob</a></li><li><a href="#last_insert_rowid">last_insert_rowid</a></li><li><a href="#nullvalue">nullvalue</a></li><li><a href="#onecolumn">onecolumn</a></li><li><a href="#profile">profile</a></li><li><a href="#progress">progress</a></li><li><a href="#restore">restore</a></li><li><a href="#rollback_hook">rollback_hook</a></li><li><a href="#status">status</a></li><li><a href="#timeout">timeout</a></li><li><a href="#total_changes">total_changes</a></li><li><a href="#trace">trace</a></li><li><a href="#transaction">transaction</a></li><li><a href="#unlock_notify">unlock_notify</a></li><li><a href="#update_hook">update_hook</a></li><li><a href="#version">version</a></li><li><a href="#wal_hook">wal_hook</a></li>
 </ul>
 </p>
 
@@ -253,8 +314,11 @@ values(b) = howdy!</b>
 
 <p>
 For each column in a row of the result, the name of that column
-is used as an index in to array.  The value of the column is stored
-in the corresponding array entry.  The special array index * is
+is used as an index in to array and the value of the column is stored
+in the corresponding array entry.  (Caution:  If two or more columns
+in the result set of a query have the same name, then the last column
+with that name will overwrite prior values and earlier columns with the
+same name will be inaccessible.) The special array index * is
 used to store a list of column names in the order that they appear.
 </p>
 
@@ -323,12 +387,14 @@ db1 eval {INSERT INTO t1 VALUES(5,:bigstring)}
 </b></blockquote>
 
 <p>The use of ":" instead of "$" before the name of a variable can 
-sometimes be useful if the SQL text is enclosed in "..." instead of
-{...}.  When the SQL is contained within "..." then TCL will do
+sometimes be useful if the SQL text is enclosed in double-quotes "..."
+instead of curly-braces {...}.  
+When the SQL is contained within double-quotes "..." then TCL will do
 the substitution of $-variables, which can lead to SQL injection if
 extreme care is not used.  But TCL will never substitute a :-variable
-regardless of whether "..." or {...} are used to enclose the SQL, so
-the use of :-variables adds an extra measure of defense against SQL
+regardless of whether double-quotes "..." or curly-braces {...} are 
+used to enclose the SQL, so the use of :-variables adds an extra 
+measure of defense against SQL
 injection.
 </p>
 
@@ -730,6 +796,24 @@ arguments are appended to the callback before it is invoked:</p>
 <li>The table that is being changed</li>
 <li>The rowid of the row in the table being changed</li>
 </ul>
+<a name="wal_hook"></a>
+<h3>The "wal_hook" method</h3>
+
+
+<p>This method registers a callback routine that is invoked after transaction
+commit when the database is in <a href="wal.html">WAL mode</a>.  Two arguments are appended to the
+callback command before it is invoked:</p>
+
+<ul>
+<li>The name of the database on which the transaction was committed
+<li>The number of entries in the write-ahead log (WAL) file for that database
+</ul>
+
+<p>This method might decide to run a <a href="wal.html#ckpt">checkpoint</a> either itself or as a
+subsequent idle callback.  Note that SQLite only allows a single WAL hook.
+By default this single WAL hook is used for the auto-checkpointing.  If you
+set up an explicit WAL hook, then that one WAL hook must ensure that checkpoints
+are occurring since the auto-checkpointing mechanism will be disabled.</p>
 <a name="incrblob"></a>
 <h3>The "incrblob" method</h3>
 

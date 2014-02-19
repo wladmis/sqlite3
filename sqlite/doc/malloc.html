@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -172,7 +184,7 @@ errors.
 <b>Memory usage limits.</b>
 The <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> mechanism allows the application to
 set a memory usage limit that SQLite strives to stay below.  SQLite
-will attempt to reuse memory from its caches rather than allocation new
+will attempt to reuse memory from its caches rather than allocating new
 memory as it approaches the soft limit.
 </p></li>
 
@@ -287,7 +299,7 @@ cause the Nth memory allocation to fail.  To run an OOM test, the overlay
 is first set to fail on the first allocation attempt.  Then some test
 script is run and verification that the allocation was correctly caught
 and handled is made.  Then the overlay is set to fail on the second
-allocation and the test repeats.  The failure point continues to advice
+allocation and the test repeats.  The failure point continues to advance
 one allocation at a time until the entire test procedure runs to
 completion without hitting a memory allocation error.  This whole
 test sequence run twice.  On the first pass, the
@@ -473,7 +485,7 @@ in a subsequent release.  Update:  Memsys6 was removed as of
 <a href="releaselog/3_6_5.html">version 3.6.5</a>.</p>
 
 <p>Other experimental memory allocators might be added in future releases
-of SQLite.  One many anticipate that these will be called memsys7, memsys8,
+of SQLite.  One may anticipate that these will be called memsys7, memsys8,
 and so forth.</p>
 
 <a name="appalloc"></a>
@@ -620,7 +632,7 @@ of the memory needs of SQLite.
 </ul>
 
 <p>The page-cache memory allocator is disabled by default.
-An application can enabled it at start-time as follows:</p>
+An application can enable it at start-time as follows:</p>
 
 <blockquote><pre>
 <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a>, pBuf, sz, N);

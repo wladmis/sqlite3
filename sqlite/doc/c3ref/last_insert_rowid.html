@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -118,19 +130,21 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Last Insert Rowid</h2><blockquote><pre>sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*);
 </pre></blockquote><p>
-Each entry in an SQLite table has a unique 64-bit signed
+Each entry in most SQLite tables (except for <a href="../withoutrowid.html">WITHOUT ROWID</a> tables)
+has a unique 64-bit signed
 integer key called the <a href="../lang_createtable.html#rowid">"rowid"</a>. The rowid is always available
 as an undeclared column named ROWID, OID, or _ROWID_ as long as those
 names are not also used by explicitly declared columns. If
 the table has a column of type <a href="../lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> then that column
 is another alias for the rowid.</p>
 
-<p>This routine returns the <a href="../lang_createtable.html#rowid">rowid</a> of the most recent
-successful <a href="../lang_insert.html">INSERT</a> into the database from the <a href="../c3ref/sqlite3.html">database connection</a>
-in the first argument.  As of SQLite version 3.7.7, this routines
-records the last insert rowid of both ordinary tables and <a href="../vtab.html">virtual tables</a>.
-If no successful <a href="../lang_insert.html">INSERT</a>s
-have ever occurred on that database connection, zero is returned.</p>
+<p>The sqlite3_last_insert_rowid(D) interface returns the <a href="../lang_createtable.html#rowid">rowid</a> of the
+most recent successful <a href="../lang_insert.html">INSERT</a> into a rowid table or <a href="../vtab.html">virtual table</a>
+on database connection D.
+Inserts into <a href="../withoutrowid.html">WITHOUT ROWID</a> tables are not recorded.
+If no successful <a href="../lang_insert.html">INSERT</a>s into rowid tables
+have ever occurred on the database connection D,
+then sqlite3_last_insert_rowid(D) returns zero.</p>
 
 <p>If an <a href="../lang_insert.html">INSERT</a> occurs within a trigger or within a <a href="../vtab.html">virtual table</a>
 method, then this routine will return the <a href="../lang_createtable.html#rowid">rowid</a> of the inserted

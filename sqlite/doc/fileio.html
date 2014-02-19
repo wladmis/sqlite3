@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -1594,7 +1606,7 @@ calling the xUnlock() method of the file-handle.
       the <i>database connection</i> must open a <i>write transaction</i>. 
       Opening a <i>write transaction</i> requires that the <i>database
       connection</i> obtains a <i>reserved lock</i> (or greater) on the 
-      <i>database file</i>. Because a obtaining a <i>reserved lock</i> on
+      <i>database file</i>. Because obtaining a <i>reserved lock</i> on
       a <i>database file</i> guarantees that no other <i>database
       connection</i> may hold or obtain a <i>reserved lock</i> or greater,
       it follows that no other <i>database connection</i> may have an

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -167,7 +179,7 @@ Every memory allocation request coming in through <a href="../c3ref/free.html">s
 or <a href="../c3ref/free.html">sqlite3_realloc()</a> first calls xRoundup.  If xRoundup returns 0,
 that causes the corresponding memory allocation to fail.</p>
 
-<p>The xInit method initializes the memory allocator.  (For example,
+<p>The xInit method initializes the memory allocator.  For example,
 it might allocate any require mutexes or initialize internal data
 structures.  The xShutdown method is invoked (indirectly) by
 <a href="../c3ref/initialize.html">sqlite3_shutdown()</a> and should deallocate any resources acquired

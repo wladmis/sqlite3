@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -150,7 +162,7 @@ illusion of atomic commit.</p>
 in "rollback mode", or in other words when SQLite is not 
 using a <a href="wal.html">write-ahead log</a>.  SQLite still supports atomic commit when
 write-ahead logging is enabled, but it accomplishes atomic commit by
-a different mechanism from the one describe in this article.  See
+a different mechanism from the one described in this article.  See
 the <a href="wal.html">write-ahead log documentation</a> for additional information on how
 SQLite supports atomic commit in that context.</p>
 
@@ -281,7 +293,7 @@ that it previously wrote.</p>
 
 <p>By default, SQLite assumes that an operating system call to write
 a range of bytes will not damage or alter any bytes outside of that range
-even if a power lose or OS crash occurs during that write.  We
+even if a power loss or OS crash occurs during that write.  We
 call this the "<a href="psow.html">powersafe overwrite</a>" property.  Prior to version 3.7.9,
 SQLite did not assume powersafe overwrite.  But with the standard
 sector size increasing from 512 to 4096 bytes on most disk drives, it
@@ -347,7 +359,7 @@ while we are reading it.  This is necessary because if another
 database connection were writing to the database file at the
 same time we are reading from the database file, we might read
 some data before the change and other data after the change.
-This would make it appears as if the change made by the other
+This would make it appear as if the change made by the other
 process is not atomic.</p>
 
 <p>Notice that the shared lock is on the operating system
@@ -399,7 +411,7 @@ single reserved lock on the database file.  Hence only a
 single process can be attempting to write to the database
 at one time.</p>
 
-<p>The idea behind a reserved locks is that it signals that
+<p>The idea behind a reserved lock is that it signals that
 a process intends to modify the database file in the near
 future but has not yet started to make the modifications.
 And because the modifications have not yet started, other
@@ -528,7 +540,7 @@ This is a critical step to ensure that the database will
 survive a power loss without damage.  However, because
 of the inherent slowness of writing to disk or flash memory, 
 this step together with the rollback journal file flush in section
-3.7 above takes up most the time required to complete a
+3.7 above takes up most of the time required to complete a
 transaction commit in SQLite.</p>
 
 <br clear="both">
@@ -541,7 +553,7 @@ storage device, the rollback journal file is deleted.
 This is the instant where the transaction commits.
 If a power failure or system crash occurs prior to this
 point, then recovery processes to be described later make
-it appears as if no changes were ever made to the database
+it appear as if no changes were ever made to the database
 file.  If a power failure or system crash occurs after
 the rollback journal is deleted, then it appears as if
 all changes have been written to disk.  Thus, SQLite gives
@@ -627,7 +639,8 @@ the state it was in prior to the beginning of the transaction.</p>
 <h3>4.1 When Something Goes Wrong...</h3>
 <img src="images/ac/rollback-0.gif" align="right" hspace="15">
 
-<p>Suppose the power loss occurred during step 3.10 above,
+<p>Suppose the power loss occurred
+during <a href="#section_3_10">step 3.10</a> above,
 while the database changes were being written to disk.
 After power is restored, the situation might be something
 like what is shown to the right.  We were trying to change
@@ -637,7 +650,8 @@ and a third page was not written at all.</p>
 
 <p>The rollback journal is complete and intact on disk when
 the power is restored.  This is a key point.  The reason for
-the flush operation in step 3.7 is to make absolutely sure that
+the flush operation in <a href="#section_3_7">step 3.7</a>
+is to make absolutely sure that
 all of the rollback journal is safely on nonvolatile storage
 prior to making any changes to the database file itself.</p>
 
@@ -648,7 +662,8 @@ prior to making any changes to the database file itself.</p>
 
 <p>The first time that any SQLite process attempts to access
 the database file, it obtains a shared lock as described in
-section 3.2 above.  But then it notices that there is a 
+<a href="section_3_2">section 3.2</a> above.
+But then it notices that there is a 
 rollback journal file present.  SQLite then checks to see if
 the rollback journal is a "hot journal".   A hot journal is
 a rollback journal that needs to be played back in order to
@@ -660,7 +675,7 @@ a transaction when it crashed or lost power.</p>
 are true:</p>
 
 <ul>
-<li>The rollback journal exist.
+<li>The rollback journal exists.
 <li>The rollback journal is not an empty file.
 <li>There is no reserved lock on the main database file.
 <li>The header of the rollback journal is well-formed and in particular
@@ -698,7 +713,7 @@ at the same time.</p>
 <p>Once a process obtains an exclusive lock, it is permitted
 to write to the database file.  It then proceeds to read the
 original content of pages out of the rollback journal and write
-that content back to were it came from in the database file.
+that content back to where it came from in the database file.
 Recall that the header of the rollback journal records the original
 size of the database file prior to the start of the aborted
 transaction.  SQLite uses this information to truncate the
@@ -722,8 +737,8 @@ can be deleted.</p>
 <p>As in <a href="#section_3_11">section 3.11</a>, the journal
 file might be truncated to zero length or its header might
 be overwritten with zeros as an optimization on systems where
-deleting a file is expense.  Either way, the journal is no 
-long hot after this step.</p>
+deleting a file is expensive.  Either way, the journal is no 
+longer hot after this step.</p>
 
 <br clear="both">
 <a name="cont"></a>
@@ -1091,7 +1106,7 @@ are different, or reuses the cache if they are the same.</p>
 <p>SQLite version 3.3.14 adds the concept of "Exclusive Access Mode".
 In exclusive access mode, SQLite retains the exclusive
 database lock at the conclusion of each transaction.  This prevents
-other processes for accessing the database, but in many deployments
+other processes from accessing the database, but in many deployments
 only a single process is using a database so this is not a
 serious problem.  The advantage of exclusive access mode is that
 disk I/O can be reduced in three ways:</p>
@@ -1175,7 +1190,7 @@ layers in between the write system call and the on-board disk drive
 electronics that we take the safe approach in both Unix and w32 VFS
 implementations and assume that sector writes are not atomic.  On the
 other hand, device
-manufactures with more control over their filesystems might want
+manufacturers with more control over their filesystems might want
 to consider enabling the atomic write property of xDeviceCharacteristics
 if their hardware really does do atomic writes.</p>
 
@@ -1333,7 +1348,7 @@ but it can be circumvented by a sufficiently creative
 adversary or a sufficiently broken operating system implementation.
 This section describes a few of the ways in which an SQLite database
 might be corrupted by a power failure or system crash.
-(See also: <a href="lockingv3.html#how_to_corrupt">How To Corrupt Your Database Files</a>.)</p>
+(See also: <a href="howtocorrupt.html">How To Corrupt Your Database Files</a>.)</p>
 
 <a name="brokenlocks"></a>
 
@@ -1431,7 +1446,7 @@ do to defend against these kinds of problems.</p>
 the disk, it is essential that the original database file and the hot
 journal remain on disk with their original names until the database
 file is opened by another SQLite process and rolled back.  
-During recovery at <a href="section_4_2">step 4.2</a> SQLite locates
+During recovery at <a href="#section_4_2">step 4.2</a> SQLite locates
 the hot journal by looking for a file in the same directory as the
 database being opened and whose name is derived from the name of the
 file being opened.  If either the original database file or the

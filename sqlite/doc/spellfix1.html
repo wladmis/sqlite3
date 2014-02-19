@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -127,23 +139,21 @@ it could be used with <a href="fts3.html#fts4">FTS4</a> to do full-text search u
 misspelled words.
 
 <p>The implementation for the spellfix1 virtual table is held in the
-canonical SQLite source tree in the file src/test_spellfix1.c.  The
-spellfix1 virtual table is not included in the SQLite <a href="amalgamation.html">amalgamation</a>
-and is not a part of any standard SQLite build.  Applications that
-want to make use of spellfix1 should obtain a copy of the src/test_spellfix1.c
-source file and compile it as a shared library or DLL.  Then use the
-<a href="c3ref/load_extension.html">sqlite3_load_extension()</a> interface at run-time to load this extension
-into the application.
+SQLite source tree in the miscellaneous extensions folder and in
+particular in the file 
+<a href="http://www.sqlite.org/src/finfo?name=ext/misc/spellfix.c">ext/misc/spellfix1.c</a>.
+The spellfix1 virtual table is not included in the SQLite <a href="amalgamation.html">amalgamation</a>
+and is not a part of any standard SQLite build.  It is a <a href="loadext.html">loadable extension</a>.
 
-<p>Once the extension is loaded, an instance of the spellfix1 virtual table
-is created like this:
+<p>Once the spellfix1 extension is loaded, an instance of the spellfix1 
+virtual table is created like this:
 
 <blockquote><pre>
 CREATE VIRTUAL TABLE demo USING spellfix1;
 </pre></blockquote>
 
-<p>The "spellfix1" term is the name of this module and must be entered as
-shown.  The "demo" term is the
+<p>The "spellfix1" term is the name of the spellfix module and must be 
+entered as shown.  The "demo" term is the
 name of the virtual table you will be creating and can be altered
 to suit the needs of your application.  The virtual table is initially
 empty.  In order for the virtual table to be useful, you will need to
@@ -154,9 +164,9 @@ have a list of words in a table named "big_vocabulary".  Then do this:
 INSERT INTO demo(word) SELECT word FROM big_vocabulary;
 </pre></blockquote>
 
-<p>If you intend to use this virtual table in cooperation with an FTS4
+<p>If you intend to use this virtual table in cooperation with an <a href="fts3.html#fts4">FTS4</a>
 table (for spelling correctly of search terms) then you might extract
-the vocabulary using an fts3aux table:
+the vocabulary using an <a href="fts3.html#fts4aux">fts4aux</a> table:
 
 <blockquote><pre>
 INSERT INTO demo(word) SELECT term FROM search_aux WHERE col='*';
@@ -257,8 +267,9 @@ way to search all languages at once.
 
 <h2>Virtual Table Details</h2>
 
-<p>The virtual table actually has a unique rowid with seven columns plus five
-extra hidden columns.  The columns are as follows:
+<p>Each row in the spellfix1 virtual table has a unique rowid 
+with seven columns plus five extra hidden columns.
+The columns are as follows:
 
 <blockquote><dl>
 <dt><p><b>rowid</b><dd>
@@ -317,7 +328,7 @@ the form "top=N" in the WHERE clause of the query.
 rows.  The scope is a measure of how widely the virtual
 table looks for matching words.  Smaller values of
 scope cause a broader search.  The scope is normally
-choosen automatically and is capped at 4.  Applications
+chosen automatically and is capped at 4.  Applications
 can change the scope by including a term of the form
 "scope=N" in the WHERE clause of the query.  Increasing
 the scope will make the query run faster, but will reduce
@@ -332,7 +343,7 @@ value is for diagnostic use only.
 
 <dt><p><b>soundslike</b><dd>
 (HIDDEN)  When inserting vocabulary entries, this field
-can be set to an spelling that matches what the word
+can be set to a spelling that matches what the word
 sounds like.  See the DEALING WITH UNUSUAL AND DIFFICULT
 SPELLINGS section below for details.
 
@@ -341,7 +352,7 @@ SPELLINGS section below for details.
 applications can insert special strings into the "command" column in order
 to provoke certain behaviors in the spellfix1 virtual table.
 For example, inserting the string 'reset' into the "command" column
-will cause the virtual table will reread its edit distance weights
+will cause the virtual table to reread its edit distance weights
 (if there are any).
 </dl></blockquote>
 
@@ -396,13 +407,13 @@ cost more than others.  Changing one vowel into a different vowel,
 for example is relatively cheap, as is doubling a constant, or
 omitting the second character of a double-constant.  Other transformations
 or more expensive.  The idea is that the edit distance function returns
-a low cost of words that are similar and a higher cost for words
-that are futher apart.  In this implementation, the maximum cost
+a low cost for words that are similar and a higher cost for words
+that are further apart.  In this implementation, the maximum cost
 of any single-character edit (delete, insert, or substitute) is 100,
 with lower costs for some edits (such as transforming vowels).
 
 <p>The "score" for a comparison is the edit distance between the pattern
-and the word, adjusted down by the base-2 logorithm of the word rank.
+and the word, adjusted down by the base-2 logarithm of the word rank.
 For example, a match with distance 100 but rank 1000 would have a
 score of 122 (= 100 - log2(1000) + 32) where as a match with distance
 100 with a rank of 1 would have a score of 131 (100 - log2(1) + 32).
@@ -455,10 +466,20 @@ For example:
 CREATE VIRTUAL TABLE demo2 USING spellfix1(edit_cost_table=APPCOST);
 </pre></blockquote>
 
-<p>In the example above, the APPCOST table would be interrogated to find
+<p>The <a href="spellfix1.html#editdist3">editdist3()</a> edit-distance function can also be selected or 
+deselected at run-time by inserting an appropriate string into the
+"command" column of the virtual table:</p>
+
+<blockquote><pre>
+INSERT INTO demo2(command) VALUES('edit_cost_table=APPCOST');
+</pre></blockquote>
+
+
+<p>In the examples above, the APPCOST table would be interrogated to find
 the edit distance coefficients.  It is the presence of the "edit_cost_table="
 parameter to the spellfix1 module name that causes editdist3() to be used
-in place of the built-in edit distance function.
+in place of the built-in edit distance function.  If APPCOST is an empty
+string, then the built-in Wagner edit-distance function is used.
 
 <p>The edit distance coefficients are normally read from the APPCOST table
 once and there after stored in memory.  Hence, run-time changes to the
@@ -520,7 +541,7 @@ and the target language.
 <li>"Tch" sounds in Slavic words:  Tchaikovsky vs. Chaykovsky
 <li>The letter "j" pronounced like "h" in Spanish:  LaJolla
 <li>Words beginning with "wr" versus "r":  write vs. rite
-<li>Miscellanous problem words such as "debt", "tsetse",
+<li>Miscellaneous problem words such as "debt", "tsetse",
       "Nguyen", "Van Nuyes".
 </ul>
 
@@ -533,14 +554,14 @@ applications that use spellfix1.  The following auxiliary functions are
 available:
 
 <blockquote><dl>
-<dt><p><b>editdist3(P,W)<br>editdist2(P,W,L)<br>editdist3(T)</b><dd>
+<dt><p><b>editdist3(P,W)<br>editdist3(P,W,L)<br>editdist3(T)</b><dd>
 These routines provide direct access to the version of the Wagner
 edit-distance function that allows for application-defined weights
 on edit operations.  The first two forms of this function compare
 pattern P against word W and return the edit distance.  In the first
 function, the langid is assumed to be 0 and in the second, the
 langid is given by the L parameter.  The third form of this function
-reloads edit distance coefficience from the table named by T.
+reloads edit distance coefficients from the table named by T.
 
 <dt><p><b>spellfix1_editdist(P,W)</b><dd>
 This routine provides access to the built-in Wagner edit-distance
@@ -554,7 +575,7 @@ order to transform the K1 column of the shadow table into the K2
 column.
 
 <dt><p><b>spellfix1_scriptcode(X)</b><dd>
-Given an input string X, this routine attempts to determin the dominant
+Given an input string X, this routine attempts to determine the dominant
 script of that input and returns the ISO-15924 numeric code for that
 script.  The current implementation understands the following scripts:
 <ul>
@@ -588,7 +609,7 @@ Features of editdist3 include:
 <li><p>A table of insertion, deletion, and substitution costs can be 
        provided by the application.
 
-<li><p>Multi-character insertsions, deletions, and substitutions can be
+<li><p>Multi-character insertions, deletions, and substitutions can be
        enumerated in the cost table.
 </ul>
 
@@ -601,7 +622,7 @@ CREATE TABLE editcost(
   iLang INT,   -- The language ID
   cFrom TEXT,  -- Convert text from this
   cTo   TEXT,  -- Convert text into this
-  iCost INT    -- The cost of doing the conversionnn
+  iCost INT    -- The cost of doing the conversion
 );
 </pre></blockquote>
 
@@ -614,7 +635,7 @@ table must contain the four columns show above, with exactly the names shown.
 appropriate for a particular language.  The editdist3 function will only use
 a single iLang value for any given edit-distance computation.  The default
 value is 0.  It is recommended that applications that only need to use a
-single langauge always use iLang==0 for all entries.
+single language always use iLang==0 for all entries.
 
 <p>The iCost column is the numeric cost of transforming cFrom into cTo.  This
 value should be a non-negative integer, and should probably be less than 100.
@@ -694,6 +715,6 @@ weights used by the editdist3() SQL function are independent from the
 weights used by the spellfix1 virtual table.
 
 <p>The second and third forms return the computed edit distance between strings
-'string1' and "string2'.  In the second form, an language id of 0 is used.
+'string1' and "string2'.  In the second form, a language id of 0 is used.
 The language id is specified in the third form.
 

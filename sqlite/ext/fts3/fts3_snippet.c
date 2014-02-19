@@ -128,7 +128,7 @@ struct StrBuffer {
 */
 static void fts3GetDeltaPosition(char **pp, int *piPos){
   int iVal;
-  *pp += sqlite3Fts3GetVarint32(*pp, &iVal);
+  *pp += fts3GetVarint32(*pp, &iVal);
   *piPos += (iVal-2);
 }
 
@@ -389,9 +389,9 @@ static int fts3SnippetFindPositions(Fts3Expr *pExpr, int iPhrase, void *ctx){
 ** is the snippet with the highest score, where scores are calculated
 ** by adding:
 **
-**   (a) +1 point for each occurence of a matchable phrase in the snippet.
+**   (a) +1 point for each occurrence of a matchable phrase in the snippet.
 **
-**   (b) +1000 points for the first occurence of each matchable phrase in 
+**   (b) +1000 points for the first occurrence of each matchable phrase in 
 **       the snippet for which the corresponding mCovered bit is not set.
 **
 ** The selected snippet parameters are stored in structure *pFragment before
@@ -504,6 +504,7 @@ static int fts3StringAppend(
     pStr->z = zNew;
     pStr->nAlloc = nAlloc;
   }
+  assert( pStr->z!=0 && (pStr->nAlloc >= pStr->n+nAppend+1) );
 
   /* Append the data to the string buffer. */
   memcpy(&pStr->z[pStr->n], zAppend, nAppend);

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -208,19 +220,19 @@ that are applied:</p>
 
 <p><tr><td>  NULL    <td> INTEGER   <td> Result is 0
 <tr><td>  NULL    <td>  FLOAT    <td> Result is 0.0
-<tr><td>  NULL    <td>   TEXT    <td> Result is NULL pointer
-<tr><td>  NULL    <td>   BLOB    <td> Result is NULL pointer
+<tr><td>  NULL    <td>   TEXT    <td> Result is a NULL pointer
+<tr><td>  NULL    <td>   BLOB    <td> Result is a NULL pointer
 <tr><td> INTEGER  <td>  FLOAT    <td> Convert from integer to float
 <tr><td> INTEGER  <td>   TEXT    <td> ASCII rendering of the integer
 <tr><td> INTEGER  <td>   BLOB    <td> Same as INTEGER->TEXT
-<tr><td>  FLOAT   <td> INTEGER   <td> Convert from float to integer
+<tr><td>  FLOAT   <td> INTEGER   <td> <a href="../lang_expr.html#castexpr">CAST</a> to INTEGER
 <tr><td>  FLOAT   <td>   TEXT    <td> ASCII rendering of the float
-<tr><td>  FLOAT   <td>   BLOB    <td> Same as FLOAT->TEXT
-<tr><td>  TEXT    <td> INTEGER   <td> Use atoi()
-<tr><td>  TEXT    <td>  FLOAT    <td> Use atof()
+<tr><td>  FLOAT   <td>   BLOB    <td> <a href="../lang_expr.html#castexpr">CAST</a> to BLOB
+<tr><td>  TEXT    <td> INTEGER   <td> <a href="../lang_expr.html#castexpr">CAST</a> to INTEGER
+<tr><td>  TEXT    <td>  FLOAT    <td> <a href="../lang_expr.html#castexpr">CAST</a> to REAL
 <tr><td>  TEXT    <td>   BLOB    <td> No change
-<tr><td>  BLOB    <td> INTEGER   <td> Convert to TEXT then use atoi()
-<tr><td>  BLOB    <td>  FLOAT    <td> Convert to TEXT then use atof()
+<tr><td>  BLOB    <td> INTEGER   <td> <a href="../lang_expr.html#castexpr">CAST</a> to INTEGER
+<tr><td>  BLOB    <td>  FLOAT    <td> <a href="../lang_expr.html#castexpr">CAST</a> to REAL
 <tr><td>  BLOB    <td>   TEXT    <td> Add a zero terminator if needed
 </table>
 </blockquote></p>
@@ -276,7 +288,7 @@ with calls to sqlite3_column_bytes().</p>
 described above, or until <a href="../c3ref/step.html">sqlite3_step()</a> or <a href="../c3ref/reset.html">sqlite3_reset()</a> or
 <a href="../c3ref/finalize.html">sqlite3_finalize()</a> is called.  The memory space used to hold strings
 and BLOBs is freed automatically.  Do <b>not</b> pass the pointers returned
-<a href="../c3ref/column_blob.html">sqlite3_column_blob()</a>, <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>, etc. into
+from <a href="../c3ref/column_blob.html">sqlite3_column_blob()</a>, <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>, etc. into
 <a href="../c3ref/free.html">sqlite3_free()</a>.</p>
 
 <p>If a memory allocation error occurs during the evaluation of any

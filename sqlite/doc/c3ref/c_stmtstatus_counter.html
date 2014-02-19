@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -119,6 +131,7 @@ a:visited { color: #734559 }
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Status Parameters for prepared statements</h2><blockquote><pre>#define SQLITE_STMTSTATUS_FULLSCAN_STEP     1
 #define SQLITE_STMTSTATUS_SORT              2
 #define SQLITE_STMTSTATUS_AUTOINDEX         3
+#define SQLITE_STMTSTATUS_VM_STEP           4
 </pre></blockquote><p>
 These preprocessor macros define integer codes that name counter
 values associated with the <a href="../c3ref/stmt_status.html">sqlite3_stmt_status()</a> interface.
@@ -144,7 +157,17 @@ improvement performance through careful use of indices.</dd></p>
 were created automatically in order to help joins run faster.
 A non-zero value in this counter may indicate an opportunity to
 improvement performance by adding permanent indices that do not
-need to be reinitialized each time the statement is run.</dd>
+need to be reinitialized each time the statement is run.</dd></p>
+
+<p><a name="sqlitestmtstatusvmstep"></a>
+ <dt>SQLITE_STMTSTATUS_VM_STEP</dt>
+<dd>This is the number of virtual machine operations executed
+by the prepared statement if that number is less than or equal
+to 2147483647.  The number of virtual machine operations can be
+used as a proxy for the total work done by the prepared statement.
+If the number of virtual machine operations exceeds 2147483647
+then the value returned by this statement status code is undefined.
+</dd>
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

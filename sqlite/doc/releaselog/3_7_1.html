@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.7.1 On 2010 August 23 (3.7.1)</title>
+<title>SQLite Release 3.7.1 On 2010-08-23 (3.7.1)</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -116,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.7.1 On 2010 August 23 (3.7.1)</h2><p><ul>
+<h2>SQLite Release 3.7.1 On 2010-08-23 (3.7.1)</h2><p><ul>
 <li> Added new commands <a href="../c3ref/c_dbstatus_options.html#sqlitedbstatusschemaused">SQLITE_DBSTATUS_SCHEMA_USED</a> and
      <a href="../c3ref/c_dbstatus_options.html#sqlitedbstatusstmtused">SQLITE_DBSTATUS_STMT_USED</a> to the <a href="../c3ref/db_status.html">sqlite3_db_status()</a> interface, in
      order to report out the amount of memory used to hold the schema and

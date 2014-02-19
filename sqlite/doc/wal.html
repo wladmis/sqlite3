@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -166,7 +178,7 @@ a rollback journal.  Advantages include:</p>
     than the traditional rollback-journal approach
     in applications that do mostly reads and seldom write.
 <li>There is an additional quasi-persistent "<tt>-wal</tt>" file and
-    "<tt>-shm</tt> shared memory file associated with each
+    "<tt>-shm</tt>" shared memory file associated with each
     database, which can make SQLite less appealing for use as an 
     <a href="whentouse.html#appfileformat">application file-format</a>.
 <li>There is the extra operation of <a href="wal.html#ckpt">checkpointing</a> which, though automatic
@@ -507,7 +519,8 @@ by legacy <a href="vfs.html">VFSes</a> that lack the "version 2" shared-memory
 methods xShmMap, xShmLock, xShmBarrier, and xShmUnmap on the
 <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object.</p>
 
-<p>If EXCLUSIVE locking mode is set prior to the first WAL-mode 
+<p>If <a href="pragma.html#pragma_locking_mode">EXCLUSIVE locking mode</a>
+is set prior to the first WAL-mode 
 database access, then SQLite never attempts to call any of the
 shared-memory methods and hence no shared-memory
 wal-index is ever created.

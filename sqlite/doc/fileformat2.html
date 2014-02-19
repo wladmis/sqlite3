@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -255,7 +267,9 @@ means UTF-16le.  A value of 3 means UTF-16be.
 The "user version" as read and set by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.
 <tr><td valign=top align=center>64<td valign=top align=center>4<td align=left>
 True (non-zero) for incremental-vacuum mode.  False (zero) otherwise.
-<tr><td valign=top align=center>68<td valign=top align=center>24<td align=left>
+<tr><td valign=top align=center>68<td valign=top align=center>4<td align=left>
+The "Application ID" set by <a href="pragma.html#pragma_application_id">PRAGMA application_id</a>.
+<tr><td valign=top align=center>72<td valign=top align=center>20<td align=left>
 Reserved for expansion.  Must be zero.
 <tr><td valign=top align=center>92<td valign=top align=center>4<td align=left>
 The <a href="fileformat2.html#validfor">version-valid-for number</a>.
@@ -295,7 +309,7 @@ journalling mode.  If a version of SQLite coded to the current
 file format specification encounters a database file where the read
 version is 1 or 2 but the write version is greater than 2, then the database
 file must be treated as read-only.  If a database file with a read version
-greater than 2 is encounter, then that database cannot be read or written.</p>
+greater than 2 is encountered, then that database cannot be read or written.</p>
 
 <h4>1.2.4 Reserved bytes per page</h4>
 
@@ -320,7 +334,7 @@ then the reserved space size cannot exceed 32.</p>
 
 <p>The maximum and minimum embedded payload fractions and the leaf
 payload fraction values must be 64, 32, and 32.  These values were
-originally intended to as tunable parameters that could be used to
+originally intended to be tunable parameters that could be used to
 modify the storage format of the b-tree algorithm.  However, that
 functionality is not supported and there are no current plans to add
 support in the future.  Hence, these three bytes are fixed at the
@@ -464,9 +478,24 @@ No other values are allowed.</p>
 is set and queried by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.  The user version is
 not used by SQLite.</p>
 
+<a name="appid"></a>
+
+<h4>1.2.15 Application ID</h4>
+
+<p>The 4-byte big-endian integer at offset 68 is an "Application ID" that
+can be set by the <a href="pragma.html#pragma_application_id">PRAGMA application_id</a> command in order to identify the
+database as belonging to or associated with a particular application.
+The application ID is intended for database files used as an
+<a href="whentouse.html#appfileformat">application file-format</a>.  The application ID can be used by utilities 
+such as <a href="http://www.darwinsys.com/file/">file(1)</a> to determine the specific
+file type rather than just reporting "SQLite3 Database".  A list of
+assigned application IDs can be seen by consulting the
+<a href="http://www.sqlite.org/src/artifact?ci=trunk&filename=magic.txt">magic.txt</a>
+file in the SQLite source repository.</p>
+
 <a name="validfor"></a>
 
-<h4>1.2.15 Write library version number and version-valid-for number</h4>
+<h4>1.2.16 Write library version number and version-valid-for number</h4>
 
 <p>The 4-byte big-endian integer at offset 96 stores the 
 <a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value for the SQLite library that most
@@ -542,20 +571,34 @@ The database header also stores the page number of the first freelist trunk
 page as a 4-byte big-endian integer at an offset of 32 from the beginning
 of the file.</p>
 
+<a name="btree"></a>
+
 <h3>1.5 B-tree Pages</h3>
+
+<p>The b-tree algorithm provides key/data storage with unique and
+ordered keys on page-oriented storage devices.
+For background information on b-trees, see
+Knuth, <u>The Art Of Computer Programming</u>, Volume 3 "Sorting
+and Searching", pages 471-479.  Two kinds of b-trees are used by
+SQLite.  The algorithm that Knuth calls "B*-Tree" stores all data
+in the leaves of the tree.  SQLite calls this variety of b-tree
+a "table b-tree". The algorithm that Knuth calls simply "B-Tree"
+stores both the key and the data together in both leaves
+and in interior pages.  In the SQLite implementation, the original
+B-Tree algorithm stores keys only, omitting the data entirely, and
+is called an "index b-tree".
 
 <p>A b-tree page is either an interior page or a leaf page.
 A leaf page contains keys and in the case of a table b-tree each
-key has associated content.  An interior page contains
-K keys without content but with K+1 pointers to child b-tree pages.
+key has associated data.  An interior page contains
+K keys together with K+1 pointers to child b-tree pages.
 A "pointer" in an interior b-tree page is just the 31-bit integer
 page number of the child page.</p>
-
 
 <p>Define the depth
 of a leaf b-tree to be 1 and the depth of any interior b-tree to be one
 more than the maximum depth of any of its children.  In a well-formed
-database, all children of any one interior b-tree have the same depth.</p>
+database, all children of an interior b-tree have the same depth.</p>
 
 <p>In an interior b-tree page, the pointers and keys logically alternate 
 with a pointer on both ends. (The previous sentence is to be understood
@@ -573,7 +616,8 @@ greater than X.</p>
 immediate left are combined into a structure called a "cell".  The
 right-most pointer is held separately.  A leaf b-tree page has no
 pointers, but it still uses the cell structure to hold keys for
-index b-trees or keys and content for table b-trees.</p>
+index b-trees or keys and content for table b-trees.  Data is also
+contained in the cell.
 </p>
 
 <p>Every b-tree page has at most one parent b-tree page.
@@ -587,19 +631,26 @@ b-trees are identified by their root page number.</p>
 
 <p>A b-tree page is either a table b-tree page or an index b-tree page.
 All pages within each complete b-tree are of the same type: either table
-or index.  There is a one-to-one mapping from table b-trees in the database 
-file to (non-virtual) tables in the database schema, including system tables
-such as sqlite_master.  There is one-to-one mapping between index b-trees
-in the database file and indices in the schema, including implied indices
-created by uniqueness constraints.  The b-tree corresponding to the
-sqlite_master table always has its root page on a page number of 1.
+or index.  There is a one table b-trees in the database file
+for each rowid table in the database schema, including system tables
+such as sqlite_master.  There is one index b-trees
+in the database file for each index in the schema, including implied indices
+created by uniqueness constraints.  There are no b-trees associated with
+<a href="vtab.html">virtual tables</a>.  Specific virtual table implementations might make use
+of <a href="fts3.html#*shadowtab">shadow tables</a> for storage, but those shadow tables will have separate
+entries in the database schema.  <a href="withoutrowid.html">WITHOUT ROWID</a> tables use index b-trees
+rather than a table b-trees, so there is one
+index b-tree in the database file for each <a href="withoutrowid.html">WITHOUT ROWID</a> table.
+The b-tree corresponding to the sqlite_master table is always a table
+b-tree and always has a root page of 1.
 The sqlite_master table contains the root page number for every other 
 table and index in the database file.</p>
 
 <p>Each entry in a table b-tree consists of a 64-bit signed integer key
-and up to 2147483647 bytes of arbitrary data.  Interior table b-trees
-hold only keys and pointers to children.  All data is contained in the
-table b-tree leaves.</p>
+and up to 2147483647 bytes of arbitrary data.  (The key of a table b-tree
+corresponds to the <a href="lang_createtable.html#rowid">rowid</a> of the SQL table that the b-tree implements.)
+Interior table b-trees hold only keys and pointers to children.
+All data is contained in the table b-tree leaves.</p>
 
 <p>Each entry in an index b-tree consists of an arbitrary key of up
 to 2147483647 bytes in length and no data.</p>
@@ -739,7 +790,7 @@ order of appearance, for the various b-tree page types.</p>
 <dd><p><ul>
 <li>A varint which is the total number of bytes of payload, including any
 overflow
-<li>A varint which is the integer key, a.k.a. "rowid"
+<li>A varint which is the integer key, a.k.a. "<a href="lang_createtable.html#rowid">rowid</a>"
 <li>The initial portion of the payload that does not spill to overflow
 pages.
 <li>A 4-byte big-endian integer page number for the first page of the
@@ -955,15 +1006,16 @@ capabilities.</p>
 
 <h3>2.1 Record Format</h3>
 
-<p>The content of a table b-tree leaf page and the key
-of any index b-tree page was characterized above
+<p>The data for a table b-tree leaf page and the key
+of an index b-tree page was characterized above
 as an arbitrary sequence of bytes.
 The prior discussion mentioned one key being less than another, but
 did not define what "less than" meant.  The current section will address
 these omissions.</p>
 
-<p>Payload, either table content or index keys, is always in the "record
-format".  The record format defines a sequence of values corresponding
+<p>Payload, either table b-tree data or index b-tree keys, 
+is always in the "record format".
+The record format defines a sequence of values corresponding
 to columns in a table or index.  The record format specifies the number
 of columns, the datatype of each column, and the content of each column.</p>
 
@@ -1079,7 +1131,7 @@ though this can be overridden using a COLLATE clause in the
 
 <h3>2.3 Representation Of SQL Tables</h3>
 
-<p>Each ordinary SQL table in the database schema is represented on disk
+<p>Each ordinary SQL table in the database schema is represented on-disk
 by a table b-tree.  Each entry in the table b-tree corresponds to a row
 of the SQL table.  The <a href="lang_createtable.html#rowid">rowid</a> of the SQL table is the 64-bit signed
 integer key for each entry in the table b-tree.</p>
@@ -1102,27 +1154,83 @@ represented as an integer) then the column may be stored in the record
 as an integer.  SQLite will convert the value back to floating
 point when extracting it from the record.</p>
 
+<h3>2.4 Representation of WITHOUT ROWID Tables</h3>
 
-<h3>2.4 Representation Of SQL Indices</h3>
+<p>If an SQL table is created using the "WITHOUT ROWID" clause at the
+end of its CREATE TABLE statement, then that table is a <a href="withoutrowid.html">WITHOUT ROWID</a>
+table and uses a different on-disk representation.  A WITHOUT ROWID
+table uses an index b-tree rather than a table b-tree for storage.
+The key for each entry in the WITHOUT ROWID b-tree is a record composed
+of the columns of the PRIMARY KEY followed by all remaining columns of
+the table.  The primary key columns appear in the order they they were
+declared in the PRIMARY KEY clause and the remaining columns appear in
+the order they occur in the CREATE TABLE statement.
+
+<p>Hence, the content encoding for a WITHOUT ROWID table is the same
+as the content encoding for an ordinary rowid table, except that the
+order of the columns is rearranged so that PRIMARY KEY columns come
+first, and the content is used as the key in an index b-tree rather
+than as the data in a table b-tree.
+The special encoding rules for columns with REAL affinity
+apply to WITHOUT ROWID tables the same as they do with rowid tables.
+
+<h3>2.5 Representation Of SQL Indices</h3>
 
 <p>Each SQL index, whether explicitly declared via a <a href="lang_createindex.html">CREATE INDEX</a> statement
-or implied by a UNIQUE constraint, corresponds to an index b-tree in the
-database file.
-There is one entry in index b-tree for each row in the corresponding table.
+or implied by a UNIQUE or PRIMARY KEY constraint, corresponds to an 
+index b-tree in the database file.
+Each entry in the index b-tree corresponds to a single row in the 
+associated SQL table.
 The key to an index b-tree is
 a record composed of the columns that are being indexed followed by the
-<a href="lang_createtable.html#rowid">rowid</a> of the table row.  Because every row in a table has a unique
-rowid and all keys in an index contain the rowid, all keys in an index
-are unique.</p>
+key of the corresponding table row.  For ordinary tables, the row key is
+the <a href="lang_createtable.html#rowid">rowid</a>, and for <a href="withoutrowid.html">WITHOUT ROWID</a> tables the row key is the PRIMARY KEY.
+Because every row in the table has a unique row key,
+all keys in an index are unique.</p>
 
-<p>There is a one-to-one mapping between rows in a table and
-entries in each index associated with that table.
-Corresponding rows int the index and table b-trees share the same rowid
-value, and contain the same value for all indexed columns.</p>
+<p>In a normal index, there is a one-to-one mapping between rows in a 
+table and entries in each index associated with that table.
+However, in a <a href="partialindex.html">partial index</a>, the index b-tree only contains entries
+corresponding to table rows for which the WHERE clause expression on the
+CREATE INDEX statement is true.
+Corresponding rows in the index and table b-trees share the same rowid
+or primary key values and contain the same value for all indexed columns.</p>
+
+<h4>2.5.1 Suppression of redundant columns in WITHOUT ROWID secondary indexed
+</h4>
+
+<p>In an index on a WITHOUT ROWID table, if one or more of the columns
+of table PRIMARY KEY are also columns of the index, then the
+indexed column is not repeated in the table-key suffix on the end of
+the index record.  As an example, consider the following SQL:
+
+<blockquote><pre>
+CREATE TABLE ex25(a,b,c,d,e,PRIMARY KEY(d,c,a)) WITHOUT rowid;
+CREATE INDEX ex25ce ON ex25(c,e);
+CREATE INDEX ex25acde ON ex25(a,c,d,e);
+</pre></blockquote>
+
+<p>Each row in the ex25ce index of the example above consists of a record
+containing the following columns: c, e, d, a.  The first two columns are
+the columns being indexed, c and e.  The remaining columns are the primary
+key of the corresponding table row.  Normally, the primary key would be
+columns d, c, and a, but because column c already appears earlier in the
+index, it is omitted from the key suffix.</p>
+
+<p>In the extreme case where the columns being indexed cover all columns
+of the PRIMARY KEY, the index will consist of only the columns being
+indexed.  The ex25acde example above demonstrates this.  Each entry in
+the ex25acde index consists of only the columns a, c, d, and e, in that
+order.</p>
+
+<p>The suppression of redundant columns in the key suffix of an index
+entry only occurs in WITHOUT ROWID tables.  In an ordinary rowid table,
+the index entry always ends with the rowid even if the <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>
+column is one of the columns being indexed.</p>
 
 <a name="sqlite_master"></a>
 
-<h3>2.5 Storage Of The SQL Database Schema</h3>
+<h3>2.6 Storage Of The SQL Database Schema</h3>
 
 <p>Page 1 of a database file is the root page of a table b-tree that
 holds a special table named "sqlite_master" (or "sqlite_temp_master" in
@@ -1157,7 +1265,14 @@ for both ordinary and <a href="vtab.html">virtual tables</a>.</p>
 <a href="fileformat2.html#intschema">internal indices</a> with names of the form "sqlite_autoindex_TABLE_N"
 where TABLE is replaced by the name of the table that contains the
 constraint and N is an integer beginning with 1 and increasing by one
-with each constraint seen in the table definition.</p>
+with each constraint seen in the table definition.
+In a <a href="withoutrowid.html">WITHOUT ROWID</a> table, there is no sqlite_master entry for the
+PRIMARY KEY, but the "sqlite_autoindex_TABLE_N" name is set aside
+for the PRIMARY KEY as if the sqlite_master entry did exist.  This
+will affect the numbering of subsequent UNIQUE constraints.
+The "sqlite_autoindex_TABLE_N" name is never allocated for an
+<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>, either in rowid tables or WITHOUT ROWID tables.
+</p>
 
 <p>The sqlite_master.tbl_name column holds the name of a table or view
 that the object is associated with.  For a table or view, the
@@ -1200,7 +1315,7 @@ automatically created by <a href="lang_createtable.html#uniqueconst">UNIQUE</a> 
 
 <a name="intschema"></a>
 
-<h4>2.5.1 Internal Schema Objects</h4>
+<h4>2.6.1 Internal Schema Objects</h4>
 
 <p>In addition to the tables, indices, views, and triggers created by
 the application and/or the developer using CREATE statements SQL, the
@@ -1229,12 +1344,12 @@ with "sqlite_".
        algorithm to use for each query.
 </ul>
 
-<p>Additional internal schema objects names, always beginning with "sqlite_",
+<p>New internal schema objects names, always beginning with "sqlite_",
 may be added to the SQLite file format in future releases.
 
 <a name="seqtab"></a>
 
-<h4>2.5.2 The sqlite_sequence table</h4>
+<h4>2.6.2 The sqlite_sequence table</h4>
 
 <p>The sqlite_sequence table is an internal table used to help implement
 <a href="autoinc.html">AUTOINCREMENT</a>.  The sqlite_sequence table is created automatically
@@ -1276,7 +1391,7 @@ but application code cannot drop the sqlite_sequence table.
 
 <a name="stat1tab"></a>
 
-<h4>2.5.3 The sqlite_stat1 table</h4>
+<h4>2.6.3 The sqlite_stat1 table</h4>
 
 <p>The sqlite_stat1 is an internal table created by the <a href="lang_analyze.html">ANALYZE</a> command
 and used to hold supplemental information about tables and indices that the
@@ -1294,11 +1409,12 @@ name in the sqlite_stat1.idx column.  The sqlite_stat1.tbl column is
 the name of the table to which the index belongs.  In each such row, 
 the sqlite_stat.stat column will be
 a string consisting of a list of integers.  The first integer in this
-list is the number of rows in the index and in the table.  The second
-integer is the average number of rows in the index that have the same
-value in the first column of the index.  The third integer is the average
-number of rows in the index that have the same value for the first two
-columns.  The N-th integer (for N>1) is the average number of rows in 
+list is the approximate number of rows in the index and in the table.  
+The second integer is the approximate average number of rows in the index
+that have the same value in the first column of the index.  The third 
+integer is the approximate average number of rows in the index that have 
+the same value for the first two columns.  The N-th integer (for N>1) 
+is the approximate average number of rows in 
 the index which have the same value for the first N-1 columns.  For
 a K-column index, there will be K+1 integers in the stat column.  If
 the index is unique, then the last integer will be 1.
@@ -1307,15 +1423,25 @@ the index is unique, then the last integer will be 1.
 by the keyword "unordered".  The "unordered" keyword, if it is present,
 must be separated from the last integer by a single space.  If the
 "unordered" keyword is present, then the query planner assumes that
-the index is unordered and will not use the index for a range query.
+the index is unordered and will not use the index for a range query
+or for sorting.
+
+<p>The list of integers in the stat column can also optionally be followed
+by a token of the form "sz=NNN" where NNN is an unsigned integer.  The
+"sz=NNN" token, if present, must be separated from the last integer by a
+single space.  The "sz=NNN" token means that the average row size over all 
+records of the table or
+index is NNN bytes per row.  The SQLite query planner might use the
+estimated row size information provided by the "sz=NNN" token
+to help it choose smaller tables and indices that require less disk I/O.
 
 <p>If the sqlite_stat1.idx column is NULL, then the sqlite_stat1.stat
-column contains a single integer which is the (estimated) number of
+column contains a single integer which is the approximate number of
 rows in the table identified by sqlite_stat1.tbl.
 
 <a name="stat2tab"></a>
 
-<h4>2.5.4 The sqlite_stat2 table</h4>
+<h4>2.6.4 The sqlite_stat2 table</h4>
 
 <p>The sqlite_stat2 is only created and is only used if SQLite is compiled
 with SQLITE_ENABLE_STAT2 and if the SQLite version number is between
@@ -1354,12 +1480,16 @@ sqlite_stat2 table, it is exists, is simply ignored.
 
 <a name="stat3tab"></a>
 
-<h4>2.5.5 The sqlite_stat3 table</h4>
+<h4>2.6.5 The sqlite_stat3 table</h4>
 
-<p>The sqlite_stat3 is only created and is only used if SQLite is compiled
-with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> and if the SQLite version number is
-3.7.9 or greater.  The sqlite_stat3 table is neither read nor written by any
-version of SQLite before 3.6.9.
+<p>The sqlite_stat3 is only only used if SQLite is compiled
+with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>
+and if the SQLite version number is 3.7.9 or greater.
+The sqlite_stat3 table is neither read nor written by any
+version of SQLite before 3.7.9.
+If the <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time option is used and the
+SQLite version number is 3.8.1 or greater, then sqlite_stat3 might
+be read but not written.
 The sqlite_stat3 table contains additional information
 about the distribution of keys within an index, information that the
 query planner can use to devise better and faster query algorithms.
@@ -1371,10 +1501,7 @@ CREATE TABLE sqlite_stat3(tbl,idx,nEq,nLt,nDLt,sample);
 
 <p>There are usually multiple entries in the sqlite_stat3 table for each index.
 The sqlite_stat3.sample column holds the value of the left-most field of an
-index identified by the sqlite_stat3.idx and the sqlite_stat3.tbl columns.
-If the sqlite_stat3.idx and sqlite_stat3.tbl
-columns hold the same value, then that row contains a sample from
-the <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> of the table.
+index identified by sqlite_stat3.idx and sqlite_stat3.tbl.
 The sqlite_stat3.nEq column holds the approximate
 number of entries in the index whose left-most column exactly matches
 the sample.  
@@ -1384,17 +1511,52 @@ The sqlite_stat3.nDLt column holds the approximate
 number of distinct left-most entries in the index that are less than
 the sample.
 
-<p>Future versions of SQLite might change to store a string containing
-multiple integers values in the sqlite_stat3.nDLt column, a string in which
-the first integer will be the number of prior index entries that are
-distinct in the left-most column, the second integer is the number of
-prior index entries that are distinct in the first two columns, the
-third integer is the number of prior index entries that are distinct
-in the first three columns, and so forth  With such an extension, the
-nDLt field will become similar in function to the sqlite_stat1.stat field.
-
 <p>There can be an arbitrary number of sqlite_stat3 entries per index.
 The <a href="lang_analyze.html">ANALYZE</a> command will typically generate sqlite_stat3 tables
+that contain between 10 and 40 samples that are distributed across
+the key space and with large nEq values.
+
+<a name="stat4tab"></a>
+
+<h4>2.6.6 The sqlite_stat4 table</h4>
+
+<p>The sqlite_stat4 is only created and is only used if SQLite is compiled
+with <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> and if the SQLite version number is
+3.8.1 or greater.  The sqlite_stat4 table is neither read nor written by any
+version of SQLite before 3.8.1.
+The sqlite_stat4 table contains additional information
+about the distribution of keys within an index, information that the
+query planner can use to devise better and faster query algorithms.
+The schema of the sqlite_stat4 table is as follows:
+
+<blockquote><pre>
+CREATE TABLE sqlite_stat4(tbl,idx,nEq,nLt,nDLt,sample);
+</pre></blockquote>
+
+<p>There are usually multiple entries in the sqlite_stat4 table for each index.
+The sqlite_stat4.sample column holds the content of an index entry in
+the <a href="fileformat2.html#record_format">record format</a>.  The index entry stored is taken from the
+index identified by sqlite_stat4.idx and sqlite_stat4.tbl.
+The sqlite_stat4.nEq column holds a list of integers where the K-th integer
+is the approximate number of entries in the index whose left-most K columns
+exactly match the K left-most columns of the sample.
+The sqlite_stat4.nLt holds a list of integers where the K-th integer is
+the approximate number of entries in the
+index whose K left-most columns are collectively less than the 
+K left-most columns of the sample.
+The sqlite_stat4.nDLt column holds a list of integers where the K-th 
+integers is the approximate
+number of entries in the index that are distinct in the first K columns and
+that are whose left-most K columns are collectively less than the left-most
+K columns of the sample.
+
+<p>The sqlite_stat4 is a generalization of the sqlite_stat3 table.  The
+sqlite_stat3 table provides information about the left-most column of an
+index whereas the sqlite_stat4 table provides information about all columns
+of the index.
+
+<p>There can be an arbitrary number of sqlite_stat4 entries per index.
+The <a href="lang_analyze.html">ANALYZE</a> command will typically generate sqlite_stat4 tables
 that contain between 10 and 40 samples that are distributed across
 the key space and with large nEq values.
 
@@ -1624,7 +1786,8 @@ true:</p>
 
 <li><p>The checksum values in the final 8 bytes of the frame-header
        exactly match the checksum computed consecutively on the
-       WAL header and the first 8 bytes and the content of all frames
+       first 24 bytes of the WAL header and the first 8 bytes and
+       the content of all frames
        up to and including the current frame.</p></li></li>
 </ol>
 

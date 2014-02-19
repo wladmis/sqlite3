@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -157,7 +169,9 @@ members, including:</p>
 
   sponsor[4] = '<tr><td align="center"> <a href="http://www.bentley.com/"> <img src="images/foreignlogos/bentley.gif" alt="bentley.com" border="0"> </a></td><td> <a href="http://www.bentley.com/">Bentley</a> - Comprehensive software  solutions for Sustaining Infrastructure.</td></tr>'
 
-  count = 5
+  sponsor[5] = '<tr><td align="center"> <a href="http://www.nokia.com/"> <img src="images/foreignlogos/nokia.gif" alt="nokia.com" border="0"> </a></td><td> <a href="http://www.nokia.com/">Nokia</a> is the world leader in mobility, driving the transformation and growth of the converging internet and communications industries.</td></tr>'
+
+  count = 6
   while( count>0 ){
     i = Math.floor(Math.random()*6)
     if( sponsor[i]!=null ){
@@ -179,9 +193,10 @@ members, including:</p>
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_7_15_2.html">Version 3.7.15.2</a>
+<li><a href="releaselog/3_8_3_1.html">Version 3.8.3.1</a>
 of SQLite is recommended for all new development.
-Upgrading from all other SQLite versions
+Upgrading from versions 3.7.17, 3.8.0.2 is optional.
+Upgrading from all other prior versions of SQLite
 is recommended.</li>
 </ul></p>
 

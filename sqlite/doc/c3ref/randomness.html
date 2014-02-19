@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -124,12 +136,14 @@ already uses the largest possible <a href="../lang_createtable.html#rowid">ROWID
 the build-in random() and randomblob() SQL functions.  This interface allows
 applications to access the same PRNG for other purposes.</p>
 
-<p>A call to this routine stores N bytes of randomness into buffer P.</p>
+<p>A call to this routine stores N bytes of randomness into buffer P.
+If N is less than one, then P can be a NULL pointer.</p>
 
-<p>The first time this routine is invoked (either internally or by
-the application) the PRNG is seeded using randomness obtained
-from the xRandomness method of the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.
-On all subsequent invocations, the pseudo-randomness is generated
+<p>If this routine has not been previously called or if the previous
+call had N less than one, then the PRNG is seeded using randomness
+obtained from the xRandomness method of the default <a href="../c3ref/vfs.html">sqlite3_vfs</a> object.
+If the previous call to this routine had an N of 1 or more then
+the pseudo-randomness is generated
 internally and without recourse to the <a href="../c3ref/vfs.html">sqlite3_vfs</a> xRandomness
 method.
 </p><p>See also lists of

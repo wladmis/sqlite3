@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -126,7 +138,8 @@ a:visited { color: #734559 }
 #define SQLITE_DBSTATUS_CACHE_HIT            7
 #define SQLITE_DBSTATUS_CACHE_MISS           8
 #define SQLITE_DBSTATUS_CACHE_WRITE          9
-#define SQLITE_DBSTATUS_MAX                  9   /* Largest defined DBSTATUS */
+#define SQLITE_DBSTATUS_DEFERRED_FKS        10
+#define SQLITE_DBSTATUS_MAX                 10   /* Largest defined DBSTATUS */
 </pre></blockquote><p>
 These constants are the available integer "verbs" that can be passed as
 the second argument to the <a href="../c3ref/db_status.html">sqlite3_db_status()</a> interface.</p>
@@ -215,6 +228,13 @@ transaction rollback or database recovery operations are not included.
 If an IO or other error occurs while writing a page to disk, the effect
 on subsequent SQLITE_DBSTATUS_CACHE_WRITE requests is undefined. The
 highwater mark associated with SQLITE_DBSTATUS_CACHE_WRITE is always 0.
+</dd></p>
+
+<p><a name="sqlitedbstatusdeferredfks"></a>
+ <dt>SQLITE_DBSTATUS_DEFERRED_FKS</dt>
+<dd>This parameter returns zero for the current value if and only if
+all foreign key constraints (deferred or immediate) have been
+resolved.  The highwater mark is always 0.
 </dd>
 </dl>
 </p><p>See also lists of

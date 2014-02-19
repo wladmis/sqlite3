@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -132,7 +144,7 @@ abs(<i>X</i>)</td><td valign="top">
   argument X.  Abs(X) returns NULL if X is NULL. 
   Abs(X) return 0.0 if X is a string or blob
   that cannot be converted to a numeric value.  If X is the 
-  integer -9223372036854775807 then abs(X) throws an integer overflow
+  integer -9223372036854775808 then abs(X) throws an integer overflow
   error since there is no equivalent positive 64-bit two complement value.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="changes"></a>
 changes()</td><td valign="top">
@@ -141,10 +153,14 @@ changes()</td><td valign="top">
   or UPDATE statement, exclusive of statements in lower-level triggers.
   The changes() SQL function is a wrapper around the <a href="c3ref/changes.html">sqlite3_changes()</a>
   C/C++ function and hence follows the same rules for counting changes.
+</td></tr><tr><td valign="top" align="right" width="120"><a name="char"></a>
+char(<i>X1</i>,<i>X2</i>,...,<i>XN</i>)</td><td valign="top">
+  The char(X1,X2,...,XN) function returns a string composed of characters having the
+   unicode code point values of integers X1 through XN, respectively.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="coalesce"></a>
 coalesce(<i>X</i>,<i>Y</i>,...)</td><td valign="top">
   The coalesce() function returns a copy of its first non-NULL argument, or
-  NULL if all arguments are NULL.  Coalesce() must be at least 
+  NULL if all arguments are NULL.  Coalesce() must have at least 
   2 arguments.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="glob"></a>
 glob(<i>X</i>,<i>Y</i>)</td><td valign="top">
@@ -194,7 +210,7 @@ length(<i>X</i>)</td><td valign="top">
   If X is numeric then length(X) returns the length of a string
   representation of X.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="like"></a>
-like(<i>X</i>,<i>Y</i>)<br></br>like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign="top">
+like(<i>X</i>,<i>Y</i>)<br />like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign="top">
   The like() function is used to implement the
   "<b>Y LIKE X &#91;ESCAPE Z&#93;</b>" expression. 
   If the optional ESCAPE clause is present, then the
@@ -208,13 +224,25 @@ like(<i>X</i>,<i>Y</i>)<br></br>like(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign=
   function. Otherwise, different code may be called to implement the
   <a href="lang_expr.html#like">LIKE</a> operator depending on whether or not an ESCAPE clause was 
   specified.
+</td></tr><tr><td valign="top" align="right" width="120"><a name="likelihood"></a>
+likelihood(<i>X</i>,<i>Y</i>)</td><td valign="top">
+  The likelihood(X,Y) function returns argument X unchanged.
+  The value Y in likelihood(X,Y) must be a floating point constant
+  between 0.0 and 1.0, inclusive.
+  The likelihood(X) function is a no-op that the code generator
+  optimizes away so that it consumes no CPU cycles during run-time
+  (that is, during calls to <a href="c3ref/step.html">sqlite3_step()</a>).
+  The purpose of the likelihood(X,Y) function is to provide a hint
+  to the query planner that the argument X is a boolean that is
+  true with a probability of approximately Y.
+  The <a href="lang_corefunc.html#unlikely">unlikely(X)</a> function is short-hand for likelihood(X,0.0625).
 </td></tr><tr><td valign="top" align="right" width="120"><a name="load_extension"></a>
-load_extension(<i>X</i>)<br></br>load_extension(<i>X</i>,<i>Y</i>)</td><td valign="top">
-  The load_extension(X,Y) function loads SQLite extensions out of the shared
+load_extension(<i>X</i>)<br />load_extension(<i>X</i>,<i>Y</i>)</td><td valign="top">
+  The load_extension(X,Y) function loads <a href="loadext.html">SQLite extensions</a> out of the shared
   library file named X using the entry point Y.  The result of load_extension()
-  is always a NULL.  If Y is omitted then the default entry point
-  of <b>sqlite3_extension_init</b> is used.  The load_extension() function
-  raises an exception if the extension fails to load or initialize correctly.
+  is always a NULL.  If Y is omitted then the default entry point name is used.
+  The load_extension() function raises an exception if the extension fails to
+  load or initialize correctly.
 
   <p>The load_extension() function will fail if the extension attempts to 
   modify or delete an SQL function or collating sequence.  The
@@ -224,6 +252,9 @@ load_extension(<i>X</i>)<br></br>load_extension(<i>X</i>,<i>Y</i>)</td><td valig
   in the currently running SQL statement.  To load an extension that
   changes or deletes functions or collating sequences, use the
   <a href="c3ref/load_extension.html">sqlite3_load_extension()</a> C-language API.</p>
+
+  <p>For security reasons, extension loaded is turned off by default and must
+  be enabled by a prior call to <a href="c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a>.</p>
 </td></tr><tr><td valign="top" align="right" width="120"><a name="lower"></a>
 lower(<i>X</i>)</td><td valign="top">
   The lower(X) function returns a copy of string X with all ASCII characters
@@ -231,7 +262,7 @@ lower(<i>X</i>)</td><td valign="top">
   for ASCII characters only.  To do case conversions on non-ASCII
   characters, load the ICU extension.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="ltrim"></a>
-ltrim(<i>X</i>)<br></br>ltrim(<i>X</i>,<i>Y</i>)</td><td valign="top">
+ltrim(<i>X</i>)<br />ltrim(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The ltrim(X,Y) function returns a string formed by removing any and all
   characters that appear in Y from the left side of X.
   If the Y argument is omitted, ltrim(X) removes spaces from the left side
@@ -267,6 +298,17 @@ nullif(<i>X</i>,<i>Y</i>)</td><td valign="top">
   collating function and uses that collating function for all string
   comparisons.  If neither argument to nullif() defines a collating function
   then the BINARY is used.
+</td></tr><tr><td valign="top" align="right" width="120"><a name="printf"></a>
+printf(<i>FORMAT</i>,...)</td><td valign="top">
+  The printf(FORMAT,...) SQL function works like the <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> C-language
+  function and the printf() function from the standard C library.
+  The first argument is a format string that specifies how to construct the output
+  string using values taken from subsequent arguments.  If the FORMAT argument is
+  missing or NULL then the result is NULL.  The %n format is silently ignored and
+  does not consume an argument.  The %p format is an alias for %X.  The %z format
+  is interchangeable with %s.  If there are too few arguments in the argument list,
+  missing arguments are assumed to have a NULL value, which is translated into
+  0 or 0.0 for numeric formats or an empty string for %s.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="quote"></a>
 quote(<i>X</i>)</td><td valign="top">
   The quote(X) function returns the text of an SQL literal which
@@ -301,12 +343,12 @@ replace(<i>X</i>,<i>Y</i>,<i>Z</i>)</td><td valign="top">
   string then return X unchanged.  If Z is not initially
   a string, it is cast to a UTF-8 string prior to processing.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="round"></a>
-round(<i>X</i>)<br></br>round(<i>X</i>,<i>Y</i>)</td><td valign="top">
+round(<i>X</i>)<br />round(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The round(X,Y) function returns a floating-point
   value X rounded to Y digits to the right of the decimal point.
   If the Y argument is omitted, it is assumed to be 0.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="rtrim"></a>
-rtrim(<i>X</i>)<br></br>rtrim(<i>X</i>,<i>Y</i>)</td><td valign="top">
+rtrim(<i>X</i>)<br />rtrim(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The rtrim(X,Y) function returns a string formed by removing any and all
   characters that appear in Y from the right side of X.
   If the Y argument is omitted, rtrim(X) removes spaces from the right
@@ -348,7 +390,7 @@ sqlite_version()</td><td valign="top">
   library that is running.  This function is an SQL
   wrapper around the <a href="c3ref/libversion.html">sqlite3_libversion()</a> C-interface.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="substr"></a>
-substr(<i>X</i>,<i>Y</i>,<i>Z</i>)<br></br>substr(<i>X</i>,<i>Y</i>)</td><td valign="top">
+substr(<i>X</i>,<i>Y</i>,<i>Z</i>)<br />substr(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The substr(X,Y,Z) function returns a substring of input string X that begins
   with the Y-th character and which is Z characters long.
   If Z is omitted then substr(X,Y) returns all characters through the end
@@ -367,7 +409,7 @@ total_changes()</td><td valign="top">
   This function is a wrapper around the <a href="c3ref/total_changes.html">sqlite3_total_changes()</a>
   C/C++ interface.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="trim"></a>
-trim(<i>X</i>)<br></br>trim(<i>X</i>,<i>Y</i>)</td><td valign="top">
+trim(<i>X</i>)<br />trim(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The trim(X,Y) function returns a string formed by removing any and all
   characters that appear in Y from both ends of X.
   If the Y argument is omitted, trim(X) removes spaces from both ends of X.
@@ -375,6 +417,21 @@ trim(<i>X</i>)<br></br>trim(<i>X</i>,<i>Y</i>)</td><td valign="top">
 typeof(<i>X</i>)</td><td valign="top">
   The typeof(X) function returns a string that indicates the <a href="datatype3.html">datatype</a> of
   the expression X: "null", "integer", "real", "text", or "blob".
+</td></tr><tr><td valign="top" align="right" width="120"><a name="unlikely"></a>
+unlikely(<i>X</i>)</td><td valign="top">
+  The unlikely(X) function returns the argument X unchanged.
+  The unlikely(X) function is a no-op that the code generator
+  optimizes away so that it consumes no CPU cycles at
+  run-time (that is, during calls to <a href="c3ref/step.html">sqlite3_step()</a>).
+  The purpose of the unlikely(X) function is to provide a hint
+  to the query planner that the argument X is a boolean value
+  that is usually not true. The unlikely(X) function is equivalent
+  to <a href="lang_corefunc.html#likelihood">likelihood</a>(X, 0.0625).
+</td></tr><tr><td valign="top" align="right" width="120"><a name="unicode"></a>
+unicode(<i>X</i>)</td><td valign="top">
+  The unicode(X) function returns the numeric unicode code point corresponding to
+  the first character of the string X.  If the argument to unicode(X) is not a string
+  then the result is undefined.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="upper"></a>
 upper(<i>X</i>)</td><td valign="top">
   The upper(X) function returns a copy of input string X in which all 

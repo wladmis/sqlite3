@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -152,6 +164,19 @@ the information that was intended to go into the log file ended up
 overwriting parts of the SQLite database, leading to corruption of the
 database.</p>
 
+<p>One example of this occurred circa 2013-08-30 on the canonical repository
+for the <a href="http://www.fossil-scm.org/">Fossil DVCS</a>.  In that event,
+file descriptor 2 (standard error) was being erroneously closed prior to 
+<a href="c3ref/open.html">sqlite3_open_v2()</a> so that the file descriptor used for the
+repository database file was 2.  Later, another application 
+bug caused an assert() statement to emit
+an error message by invoking write(2,...).  But since file descriptor 2 was 
+now connected to a database file, the error message
+overwrote part of the database.  To guard against this kind of problem,
+SQLite <a href="releaselog/3_8_1.html">version 3.8.1</a> and later refuse to use low-numbered file descriptors
+for database files. 
+(See <a href="compile.html#minimum_file_descriptor">SQLITE_MINIMUM_FILE_DESCRIPTOR</a> for additional information.)</p>
+
 <h3>1.2 Backup or restore while a transaction is active</h3>
 
 <p>Systems that run automatic backups in the background might try to
@@ -186,6 +211,7 @@ and the database may go corrupt.</p>
 <p>Another manifestation of this problem is
 <a href="shortnames.html#db83corrupt">database corruption caused by inconsistent use of 8+3 filenames</a>.</p>
 
+
 <h2>2.0 File locking problems</h2>
 
 <p>SQLite uses file locks on the database file, and on the 
@@ -210,7 +236,7 @@ database at the same time, then database corruption might result.</p>
 
 <p>The default locking mechanism used by SQLite on unix platforms is
 POSIX advisory locking.  Unfortunately, POSIX advisory locking has design
-quirks that make it prone to misuse and failure.  In particular, any
+quirks that make it prone to misuse and failure. In particular, any
 thread in the same process with a file descriptor that is holding a POSIX
 advisory lock can override that lock using a different file descriptor.
 One particularly pernicious problem is that the <tt>close()</tt> system
@@ -255,7 +281,7 @@ corruption.</p>
 
 <p>The scenario above sounds far-fetched.
 But the SQLite developers are aware of at 
-least one commercial product that was release
+least one commercial product that was released
 with exactly this bug.  The vendor came to the SQLite developers seeking
 help in tracking down some infrequent database corruption issues they were
 seeing on Linux and Mac.  The problem was eventually traced to the
@@ -277,8 +303,49 @@ that does not support POSIX advisory locking.</p>
 the same locking protocol.
 If one application is using POSIX advisory locks and another application
 is using dot-file locking, then the two applications will not see each
-others locks and will not be able to coordinate database access, possibly
+other's locks and will not be able to coordinate database access, possibly
 leading to database corruption.</p>
+
+<a name="unlink"></a>
+
+<h3>2.4 Unlinking or renaming a database file while in use</h3>
+
+<p>If two processes have open connections to the same database file and
+one process closes its connection, unlinks the file, then creates a new
+database file in its place with the same name and reopens the new file,
+then the two processes will be talking to different database files with 
+the same name.  (Note that this is only possible on Posix and Posix-like
+systems that permit a file to be unlinked while it is still open for
+reading and writing.  Windows does not allow this to occur.)
+Since rollback journals and WAL files are based on the name of the database
+file, the two different database files will share the same rollback
+journal or WAL file.  A rollback or recovery for one of the databases
+might use content from the other database, resulting in corruption.</p>
+
+<p>A similar problem occurs if a database file is renamed while it is
+opened and a new file is created with the old name.</p>
+
+<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
+send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file is unlinked
+while it is still in use.</p>
+
+<a name="alias"></a>
+
+<h3>2.5 Multiple links to the same file</h3>
+
+<p>If a single database file has multiple links (either hard or soft links)
+then that is just another way of saying that the file has multiple names.
+If two or more processes open the database using different names, then
+they will use different rollback journals and WAL files.  That means that
+if one process crashes, the other process will be unable to recover the
+transaction in progress because it will be looking in the wrong place
+for the appropriate journal.</p>
+
+<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
+send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file has 
+multiple hard links.  As of this writing, SQLite still does not yet detect 
+or warn about the use of database files through soft links.</p>
+
 
 <h2>3.0 Failure to sync</h2>
 
@@ -286,7 +353,7 @@ leading to database corruption.</p>
 will occasionally ask the operating system to flush all pending writes to
 persistent storage then wait for that flush to complete.  This is 
 accomplished using the <tt>fsync()</tt> system call under unix and
-<tt>FlushFileBuffers()</tt> under windows.  We call this flush of
+<tt>FlushFileBuffers()</tt> under Windows.  We call this flush of
 pending writes a "sync".</p>
 
 <p>Actually, if one is only concerned with atomic and consistent writes and
@@ -382,13 +449,20 @@ disturbing information about this problem.
 
 <p>SQLite is a C-library that runs in the same address space as the 
 application that it serves.  That means that stray pointers, buffer
-overruns, heap corruption, or other malfunctions in application can
+overruns, heap corruption, or other malfunctions in the application can
 corrupt internal SQLite data structure and ultimately result in a
 corrupt database file.  Normally these kinds of problems manifest themselves
 as segfaults prior to any database corruption occurring, but there have
 been instances where application code errors have caused SQLite to
 malfunction subtly so as to corrupt the database file rather than
 panicking.</p>
+
+<p>The memory corruption problem becomes more acute when
+using <a href="mmap.html">memory-mapped I/O</a>.
+When all or part of the database file is mapped into the application's
+address space, then a stray pointer the overwrites any part of that
+mapped space will immediately corrupt the database file, without
+requiring the application to do a subsequent write() system call.</p>
 
 <h2>6.0 Other operating system problems</h2>
 
@@ -424,6 +498,26 @@ database file under that scenario.  QNX engineers are aware of this problem
 and are working on a solution; the problem may have already been fixed by
 the time you read this.</p>
 
+<p>When running on QNX, it is recommended that <a href="mmap.html">memory-mapped I/O</a> never
+be used.  Furthermore, to use <a href="wal.html">WAL mode</a>, it is recommended that applications
+employ the <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> in order to 
+use <a href="wal.html#noshm">WAL without shared memory</a>.
+
+
+<a name="fscorruption"></a>
+
+<h3>6.3 Filesystem Corruption</h3>
+
+<p>Since SQLite databases are ordinary disk files, any malfunction in the
+filesystem can corrupt the database.  Filesystems in modern operating systems
+are very reliable, but errors do still occur.  For example, on 2013-10-01
+the SQLite database that holds the
+<a href="http://wiki.tcl.tk/">Wiki for Tcl/Tk</a> went corrupt a few days
+after the host computer was moved to a dodgy build of the (linux) kernel
+that had issues in the filesystem layer.  In that event, the filesystem
+eventually became so badly corrupted that the machine was unusable, but
+the earliest symptom of trouble was the corrupted SQLite database.</p>
+
 <h2>7.0 Bugs in SQLite</h2>
 
 <p>SQLite is <a href="testing.html">very carefully tested</a> to help ensure that it is
@@ -441,7 +535,7 @@ database corruption tend to be very obscure.  The likelihood
 of an application encountering an SQLite bug is small.  To illustrate this,
 an account is given below 
 of all database-corruption bugs found in SQLite during the
-two-year period from 2009-04-01 to 2011-04-01.
+four-year period from 2009-04-01 to 2013-04-15.
 This account should give the reader an intuitive sense of the
 kinds of bugs in SQLite that manage to slip through testing procedures
 and make it into a release.</p>
@@ -454,12 +548,12 @@ written again by SQLite version 3.6.23 or earlier in such a way as to
 make the size of the database file decrease, then the next time that
 SQLite version 3.7.0 access the database file, it might report that the
 database file is corrupt.  The database file is not really corrupt, however.
-Version 3.7.0 was simply begin overly zealous in its corruption detection.</p>
+Version 3.7.0 was simply being overly zealous in its corruption detection.</p>
 
 <p>The problem was fixed on 2011-02-20.  The fix first appears in
 SQLite version 3.7.6.</p>
 
-<h3>7.2 Corruption follow switches between rollback and WAL modes</h3>
+<h3>7.2 Corruption following switches between rollback and WAL modes</h3>
 
 <p>Repeatedly switching an SQLite database in and out of <a href="wal.html">WAL mode</a>
 and running the <a href="lang_vacuum.html">VACUUM</a> command in between switches, in one process or
@@ -517,4 +611,21 @@ file increased, then written again by SQLite version 3.7.0, the database
 file could go corrupt.</p>
 
 <p>This problem was fixed on 2010-08-04 for SQLite version 3.7.1.</p>
+
+<h3>7.6 Race condition in recovery on windows system.</h3>
+
+<p>SQLite version 3.7.16.2 fixes a subtle race condition in the locking
+logic on Windows systems.  When a database file is in need
+of recovery because the previous process writing to it crashed in the
+middle of a transaction and two or more processes try to open the 
+that database at the same time, then the race condition might cause
+one of those processes to get a false indication that the recovery 
+has already completed, allowing that process to continue using the
+database file without running recovery first.  If that process writes
+to the file, then the file might go corrupt.  This race condition
+had apparently existing in all prior versions of SQLite for Windows going
+back to 2004.  But the race was very tight.  Practically speaking, you
+need a fast multi-core machine in which you launch two processes to run
+recovery at the same moment on two separate cores.  This defect was
+on Windows systems only and did not affect the posix OS interface.</p>
 

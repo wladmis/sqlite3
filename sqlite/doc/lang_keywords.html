@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -172,7 +184,7 @@ of an identifier.</p></li>
 <p>Programmers are cautioned not to use the two exceptions described in
 the previous bullets.  We emphasize that they exist only so that old
 and ill-formed SQL statements will run correctly.  Future versions of
-SQLite might change to raise errors instead of accepting the malformed
+SQLite might raise errors instead of accepting the malformed
 statements covered by the exceptions above.</p>
 
 <p>
@@ -189,7 +201,7 @@ Most reasonable configurations use most or all of these keywords,
 but some keywords may be omitted when SQL language features are
 disabled.
 Regardless of the compile-time configuration, any identifier that is not on
-the following 121 element
+the following 124 element
 list is not a keyword to the SQL parser in SQLite:
 </p>
 
@@ -287,6 +299,7 @@ PRAGMA<br>
 PRIMARY<br>
 QUERY<br>
 RAISE<br>
+RECURSIVE<br>
 REFERENCES<br>
 REGEXP<br>
 REINDEX<br>
@@ -295,8 +308,8 @@ RENAME<br>
 REPLACE<br>
 RESTRICT<br>
 RIGHT<br>
-ROLLBACK<br>
-</td><td valign="top" align="left" width="20%">ROW<br>
+</td><td valign="top" align="left" width="20%">ROLLBACK<br>
+ROW<br>
 SAVEPOINT<br>
 SELECT<br>
 SET<br>
@@ -317,6 +330,8 @@ VIEW<br>
 VIRTUAL<br>
 WHEN<br>
 WHERE<br>
+WITH<br>
+WITHOUT<br>
 
 </td></tr></table></blockquote>
 

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -125,9 +137,10 @@ database connection D.  An example use for this
 interface is to keep a GUI updated during a large query.</p>
 
 <p>The parameter P is passed through as the only parameter to the
-callback function X.  The parameter N is the number of
+callback function X.  The parameter N is the approximate number of
 <a href="../opcode.html">virtual machine instructions</a> that are evaluated between successive
-invocations of the callback X.</p>
+invocations of the callback X.  If N is less than one then the progress
+handler is disabled.</p>
 
 <p>Only a single progress handler may be defined at one time per
 <a href="../c3ref/sqlite3.html">database connection</a>; setting a new progress handler cancels the

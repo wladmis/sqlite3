@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -121,8 +133,9 @@ a:visited { color: #734559 }
 
 
 <p>
-In SQLite, every row of every table has an 64-bit signed integer <a href="lang_createtable.html#rowid">ROWID</a>.
-The ROWID for each row is unique among all rows in the same table.
+In SQLite, table rows normally have a 64-bit signed integer <a href="lang_createtable.html#rowid">ROWID</a>
+which is unique among all rows in the same table.
+(<a href="withoutrowid.html">WITHOUT ROWID</a> tables are the exception.)
 </p>
 
 <p>
@@ -224,4 +237,10 @@ the failed insertion attempt might not be reused on subsequent inserts,
 resulting in gaps in the ROWID sequence.  AUTOINCREMENT guarantees that
 automatically chosen ROWIDs will be increasing but not that they will be
 sequential.</p>
+
+<p>Because AUTOINCREMENT keyword changes the behavior of the ROWID selection
+algorithm, AUTOINCREMENT is not allowed on <a href="withoutrowid.html">WITHOUT ROWID</a> tables or on any
+table column other than INTEGER PRIMARY KEY.  Any attempt to use 
+AUTOINCREMENT on a <a href="withoutrowid.html">WITHOUT ROWID</a> table or on a column other than the
+INTEGER PRIMARY KEY column results in an error.</p>
 

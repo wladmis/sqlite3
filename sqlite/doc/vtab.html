@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -171,7 +183,7 @@ virtual table on demand.
 
 <h3>1.1 Usage</h3>
 
-<p>A virtual table is created using using a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
+<p>A virtual table is created using a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
 This statement creates a table with a particular name and associates the
 table with a "module".
 
@@ -461,8 +473,8 @@ been reported up to the application.
 
 <p>The xCreate method is required for every virtual table implementation, 
 though the xCreate and <a href="vtab.html#xconnect">xConnect</a> pointers of the <a href="c3ref/module.html">sqlite3_module</a> object
-may point to the same function the virtual table does not need to initialize
-backing store.
+may point to the same function if the virtual table does not need to
+initialize backing store.
 
 <a name="hiddencol"></a>
 
@@ -550,8 +562,8 @@ been reported up to the application.
 
 <p>The xConnect method is required for every virtual table implementation, 
 though the <a href="vtab.html#xcreate">xCreate</a> and xConnect pointers of the <a href="c3ref/module.html">sqlite3_module</a> object
-may point to the same function the virtual table does not need to initialize
-backing store.
+may point to the same function if the virtual table does not need to
+initialize backing store.
 
 <a name="xbestindex"></a>
 
@@ -893,7 +905,7 @@ This method is called by the SQL engine immediately after each
 
 <p>This method begins a search of a virtual table. 
 The first argument is a cursor opened by <a href="vtab.html#xopen">xOpen</a>. 
-The next two argument define a particular search index previously 
+The next two arguments define a particular search index previously 
 chosen by <a href="vtab.html#xbestindex">xBestIndex</a>. The specific meanings of idxNum and idxStr 
 are unimportant as long as xFilter and xBestIndex agree on what 
 that meaning is.

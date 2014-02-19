@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -120,7 +132,7 @@ a:visited { color: #734559 }
 #define SQLITE_UTF16LE        2
 #define SQLITE_UTF16BE        3
 #define SQLITE_UTF16          4    /* Use native byte order */
-#define SQLITE_ANY            5    /* sqlite3_create_function only */
+#define SQLITE_ANY            5    /* Deprecated */
 #define SQLITE_UTF16_ALIGNED  8    /* sqlite3_create_collation only */
 </pre></blockquote><p>
 These constant define integer codes that represent the various

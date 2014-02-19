@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -246,12 +258,12 @@ R*Tree index, we can do something like this:
 
 <blockquote><pre>
 INSERT INTO demo_index VALUES(
-    1,                   -- Primary key
+    1,                   -- Primary key -- SQLite.org headquarters
     -80.7749, -80.7747,  -- Longitude range
-    33.3776, 35.3778     -- Latitude range
+    35.3776, 35.3778     -- Latitude range
 );
 INSERT INTO demo_index VALUES(
-    2,
+    2,                   -- NC 12th Congressional District in 2010
     -81.0, -79.6,
     35.0, 36.2
 );
@@ -446,7 +458,7 @@ single-precision (4-byte) floating point numbers.  If integer coordinates
 are desired, declare the table using "rtree_i32" instead:
 
 <blockquote><pre>
-CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,y1);
+CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,z1);
 </pre></blockquote>
 
 <p>

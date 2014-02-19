@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -242,7 +254,7 @@ cache implementation should use the value of the createFlag
 parameter to help it determined what action to take:</p>
 
 <p><table border=1 width=85% align=center>
-<tr><th> createFlag <th> Behaviour when page is not already in cache
+<tr><th> createFlag <th> Behavior when page is not already in cache
 <tr><td> 0 <td> Do not allocate a new page.  Return NULL.
 <tr><td> 1 <td> Allocate a new page if it easy and convenient to do so.
 Otherwise return NULL.

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -149,7 +161,8 @@ to xWrite().  The SQLITE_IOCAP_POWERSAFE_OVERWRITE property means that
 after reboot following a crash or power loss, the only bytes in a
 file that were written at the application level might have changed
 and that adjacent bytes, even bytes within the same sector are
-guaranteed to be unchanged.
+guaranteed to be unchanged.  The SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN
+flag indicate that a file cannot be deleted when open.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

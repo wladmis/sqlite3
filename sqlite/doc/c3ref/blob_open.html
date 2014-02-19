@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -170,6 +182,9 @@ commit if the transaction continues to completion.</p>
 the opened blob.  The size of a blob may not be changed by this
 interface.  Use the <a href="../lang_update.html">UPDATE</a> SQL command to change the size of a
 blob.</p>
+
+<p>The <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a> interface will fail for a <a href="../withoutrowid.html">WITHOUT ROWID</a>
+table.  Incremental BLOB I/O is not possible on <a href="../withoutrowid.html">WITHOUT ROWID</a> tables.</p>
 
 <p>The <a href="../c3ref/bind_blob.html">sqlite3_bind_zeroblob()</a> and <a href="../c3ref/result_blob.html">sqlite3_result_zeroblob()</a> interfaces
 and the built-in <a href="../lang_corefunc.html#zeroblob">zeroblob</a> SQL function can be used, if desired,

@@ -103,6 +103,18 @@ a:visited { color: #734559 }
       q.style.fontStyle = "italic"
     }
   }
+  function hideorshow(btn,obj){
+    var x = document.getElementById(obj);
+    var b = document.getElementById(btn);
+    if( x.style.display!='none' ){
+      x.style.display = 'none';
+      b.innerHTML='show';
+    }else{
+      x.style.display = '';
+      b.innerHTML='hide';
+    }
+    return false;
+  }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
@@ -126,14 +138,16 @@ Command Line Shell For SQLite
 <p>The SQLite library includes a simple command-line utility named
 <b>sqlite3</b> (or <b>sqlite3.exe</b> on windows)
 that allows the user to manually enter and execute SQL
-commands against an SQLite database.  This document provides a brief
+statements against an SQLite database.  This document provides a brief
 introduction on how to use the <b>sqlite3</b> program.
 
 <h3>Getting Started</h3>
 
-<p>To start the <b>sqlite3</b> program, just type "sqlite3" followed by
-the name the file that holds the SQLite database.  If the file does
-not exist, a new one is created automatically.
+<p>To start the <b>sqlite3</b> program, just type "sqlite3" optionally
+followed by the name the file that holds the SQLite database.  If the 
+file does not exist, a new database file with the given name will be
+created automatically.  If no database file is specified, a temporary 
+database is created, then deleted when the "sqlite3" program exits.
 The <b>sqlite3</b> program will
 then prompt you to enter SQL.  Type in SQL statements (terminated by a
 semicolon), press "Enter" and the SQL will be executed.</p>
@@ -172,41 +186,6 @@ enter SQL commands that span multiple lines.  For example:</p>
    ...&gt; <b>);</b>
 sqlite&gt;</pre></blockquote>
 
-<h3>Aside: Querying the SQLITE_MASTER table</h3>
-
-<p>The database schema in an SQLite database is stored in
-a special table named "sqlite_master".
-You can execute "SELECT" statements against the
-special sqlite_master table just like any other table
-in an SQLite database.  For example:</p>
-
-<blockquote><pre>$ <b>sqlite3 ex1</b>
-SQLite version 3.6.11
-Enter ".help" for instructions
-sqlite&gt; <b>select * from sqlite_master;</b>
-    type = table
-    name = tbl1
-tbl_name = tbl1
-rootpage = 3
-     sql = create table tbl1(one varchar(10), two smallint)
-sqlite&gt;</pre></blockquote>
-
-<p>
-But you cannot execute DROP TABLE, UPDATE, INSERT or DELETE against
-the sqlite_master table.  The sqlite_master
-table is updated automatically as you create or drop tables and
-indices from the database.  You can not make manual changes
-to the sqlite_master table.
-</p>
-
-<p>
-The schema for TEMPORARY tables is not stored in the "sqlite_master" table
-since TEMPORARY tables are not visible to applications other than the
-application that created the table.  The schema for TEMPORARY tables
-is stored in another special table named "sqlite_temp_master".  The
-"sqlite_temp_master" table is temporary itself.
-</p>
-
 <h3>Special commands to sqlite3</h3>
 
 <p>
@@ -228,21 +207,20 @@ at any time.  For example:
 .bail ON|OFF           Stop after hitting an error.  Default OFF
 .databases             List names and files of attached databases
 .dump ?TABLE? ...      Dump the database in an SQL text format
+                         If TABLE specified, only dump tables matching
+                         LIKE pattern TABLE.
 .echo ON|OFF           Turn command echo on or off
 .exit                  Exit this program
-.explain ON|OFF        Turn output mode suitable for EXPLAIN on or off.
-.genfkey ?OPTIONS?     Options are:
-                         --no-drop: Do not drop old fkey triggers.
-                         --ignore-errors: Ignore tables with fkey errors
-                         --exec: Execute generated SQL immediately
-                       See file tool/genfkey.README in the source 
-                       distribution for further information.
+.explain ?ON|OFF?      Turn output mode suitable for EXPLAIN on or off.
+                         With no args, it turns EXPLAIN on.
 .header(s) ON|OFF      Turn display of headers on or off
 .help                  Show this message
 .import FILE TABLE     Import data from FILE into TABLE
-.indices TABLE         Show names of all indices on TABLE
-.iotrace FILE          Enable I/O diagnostic logging to FILE
+.indices ?TABLE?       Show names of all indices
+                         If TABLE specified, only show indices for tables
+                         matching LIKE pattern TABLE.
 .load FILE ?ENTRY?     Load an extension library
+.log FILE|off          Turn logging on or off.  FILE can be stderr/stdout
 .mode MODE ?TABLE?     Set output mode where MODE is one of:
                          csv      Comma-separated values
                          column   Left-aligned columns.  (See .width)
@@ -252,21 +230,52 @@ at any time.  For example:
                          list     Values delimited by .separator string
                          tabs     Tab-separated values
                          tcl      TCL list elements
-.nullvalue STRING      Print STRING in place of NULL values
+.nullvalue STRING      Use STRING in place of NULL values
+.open ?FILENAME?       Close existing database and reopen FILENAME
 .output FILENAME       Send output to FILENAME
 .output stdout         Send output to the screen
+.print STRING...       Print literal STRING
 .prompt MAIN CONTINUE  Replace the standard prompts
 .quit                  Exit this program
 .read FILENAME         Execute SQL in FILENAME
 .restore ?DB? FILE     Restore content of DB (default "main") from FILE
 .schema ?TABLE?        Show the CREATE statements
+                         If TABLE specified, only show tables matching
+                         LIKE pattern TABLE.
 .separator STRING      Change separator used by output mode and .import
 .show                  Show the current values for various settings
-.tables ?PATTERN?      List names of tables matching a LIKE pattern
+.stats ON|OFF          Turn stats on or off
+.tables ?TABLE?        List names of tables
+                         If TABLE specified, only list tables matching
+                         LIKE pattern TABLE.
 .timeout MS            Try opening locked tables for MS milliseconds
+.trace FILE|off        Output each SQL statement as it is run
+.vfsname ?AUX?         Print the name of the VFS stack
+.width NUM1 NUM2 ...   Set column widths for "column" mode
 .timer ON|OFF          Turn the CPU timer measurement on or off
-.width NUM NUM ...     Set column widths for "column" mode
 sqlite&gt;</pre></blockquote>
+
+<h3>Rules for "dot-commands</h3>
+
+<p>Ordinary SQL statements are very much free-form, can be
+spread across multiple lines, and can have whitespace and
+comments anywhere.  But dot-commands are not like that.
+The dot-commands are more restrictive:
+
+<ul>
+<li>A dot-command must begin with the "." at the left margin
+    with no preceding whitespace.
+<li>The dot-command must be entirely contained on a single input line.
+<li>A dot-command cannot occur in the middle of an ordinary SQL
+    statement.  In other words, a dot-command cannot occur at a
+    continuation prompt.
+<li>Dot-commands do not recognize comments.
+</ul>
+
+<p>And, of course, it is important to remember that the dot-commands
+are interpreted by the sqlite3.exe command-line program, not by
+SQLite itself.  So none of the dot-commands will work as an argument
+to SQLite interfaces like <a href="c3ref/prepare.html">sqlite3_prepare()</a> or <a href="c3ref/exec.html">sqlite3_exec()</a>.
 
 <h3>Changing Output Formats</h3>
 
@@ -350,6 +359,9 @@ first row of data.  This makes the column width self-adjusting.
 The default width setting for every column is this 
 auto-adjusting 0 value.</p>
 
+<p>You can specify a negative column width to get
+right-justified columns.</p>
+
 <p>The column labels that appear on the first two lines of output
 can be turned on and off using the ".header" dot command.  In the
 examples above, the column labels are on.  To turn them off you
@@ -383,7 +395,45 @@ all of the intervening &lt;TR&gt;s, &lt;TH&gt;s, and &lt;TD&gt;s
 are.  The html output mode is envisioned as being useful for
 CGI.</p>
 
+<p>The ".explain" dot command can be used to set the output mode
+to "column" and to set the column widths to values that are reasonable
+for looking at the output of an EXPLAIN command.  The EXPLAIN command
+is an SQLite-specific SQL extension that is useful for debugging.  If any
+regular SQL is prefaced by EXPLAIN, then the SQL command is parsed and
+analyzed but is not executed.  Instead, the sequence of virtual machine
+instructions that would have been used to execute the SQL command are
+returned like a query result.  For example:</p>
 
+<blockquote><pre>sqlite&gt; <b>.explain</b>
+sqlite&gt; <b>explain delete from tbl1 where two&lt;20;</b>
+addr  opcode         p1    p2    p3    p4             p5  comment      
+----  -------------  ----  ----  ----  -------------  --  -------------
+0     Trace          0     0     0                    00               
+1     Goto           0     18    0                    00               
+2     Null           0     1     0                    00  r[1]=NULL    
+3     OpenRead       0     2     0     2              00  root=2 iDb=0; tbl1
+4     Rewind         0     10    0                    00               
+5       Column         0     1     2                    00  r[2]=tbl1.two
+6       Ge             3     9     2     (BINARY)       6a  if r[3]&gt;=r[2] goto 10
+7       Rowid          0     4     0                    00  r[4]=rowid   
+8       RowSetAdd      1     4     0                    00  rowset(1)=r[4]
+9     Next           0     7     0                    01               
+10    Close          0     0     0                    00               
+11    OpenWrite      0     2     0     2              00  root=2 iDb=0; tbl1
+12      RowSetRead     1     16    4                    00  r[4]=rowset(1)
+13      NotExists      0     12    4     1              00  intkey=r[4]  
+14      Delete         0     1     0     tbl1           00               
+15    Goto           0     12    0                    00               
+16    Close          0     0     0                    00               
+17    Halt           0     0     0                    00               
+18    Transaction    0     1     0                    00               
+19    VerifyCookie   0     1     0                    00               
+20    TableLock      0     2     1     tbl1           00  iDb=0 root=2 write=1
+21    Integer        20    3     0                    00  r[3]=20      
+22    Goto           0     2     0                    00</pre></blockquote>
+
+<p>Notice how the shell changes the indentation of some opcodes to
+help show the loop structure of the VDBE program.
 
 <h3>Writing results to a file</h3>
 
@@ -403,6 +453,17 @@ hello|10
 goodbye|20
 $</pre></blockquote>
 
+<p>If the first character of the ".output" filename is a pipe symbol
+("|") then the remaining characters are treated as a command and the
+output is sent to that command.  This makes it easy to pipe the results
+of a query into some other process.  For example, a Mac, the 
+"open -f" command opens a text editor to display the content that
+it reads from standard input.  So to see the results of a query
+in a text editor, one could type:</p>
+
+<blockquote><pre>sqlite3&gt; <b>.output '|open -f'</b>
+sqlite3&gt; <b>SELECT * FROM bigTable;</b>
+sqlite3&gt; <b>.output stdout</b></pre></blockquote>
 
 <h3>Querying the database schema</h3>
 
@@ -435,7 +496,7 @@ ORDER BY 1
 
 <p>In fact, if you look at the source code to the sqlite3 program
 (found in the source tree in the file src/shell.c) you'll find
-exactly the above query.</p>
+a query very much like the above.</p>
 
 <p>The ".indices" command works in a similar way to list all of
 the indices for a particular table.  The ".indices" command takes
@@ -556,45 +617,9 @@ $ <b>sqlite3 ex1 .dump | psql ex2</b></pre></blockquote>
 
 <h3>Other Dot Commands</h3>
 
-<p>The ".explain" dot command can be used to set the output mode
-to "column" and to set the column widths to values that are reasonable
-for looking at the output of an EXPLAIN command.  The EXPLAIN command
-is an SQLite-specific SQL extension that is useful for debugging.  If any
-regular SQL is prefaced by EXPLAIN, then the SQL command is parsed and
-analyzed but is not executed.  Instead, the sequence of virtual machine
-instructions that would have been used to execute the SQL command are
-returned like a query result.  For example:</p>
-
-<blockquote><pre>sqlite&gt; <b>.explain</b>
-sqlite&gt; <b>explain delete from tbl1 where two&lt;20;</b>
-addr  opcode        p1     p2     p3          
-----  ------------  -----  -----  -------------------------------------   
-0     ListOpen      0      0                  
-1     Open          0      1      tbl1        
-2     Next          0      9                  
-3     Field         0      1                  
-4     Integer       20     0                  
-5     Ge            0      2                  
-6     Key           0      0                  
-7     ListWrite     0      0                  
-8     Goto          0      2                  
-9     Noop          0      0                  
-10    ListRewind    0      0                  
-11    ListRead      0      14                 
-12    Delete        0      0                  
-13    Goto          0      11                 
-14    ListClose     0      0</pre></blockquote>
-
-
-
-<p>The ".timeout" command sets the amount of time that the <b>sqlite3</b>
-program will wait for locks to clear on files it is trying to access
-before returning an error.  The default value of the timeout is zero so
-that an error is returned immediately if any needed database table or
-index is locked.</p>
-
-<p>And finally, we mention the ".exit" command which causes the
-sqlite3 program to exit.</p>
+<p>There are many other dot-commands available in the command-line
+shell.  See the ".help" command for a complete list for any particular
+version and build of SQLite.
 
 <h3>Using sqlite3 in a shell script</h3>
 
