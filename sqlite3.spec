@@ -1,5 +1,5 @@
 Name: sqlite3
-Version: 3.7.15.2
+Version: 3.8.3.1
 Release: alt1
 Summary: An Embeddable SQL Database Engine
 License: Public Domain
@@ -168,6 +168,13 @@ install -pD -m644 doc/lemon.html %buildroot%_docdir/lemon/lemon.html
 %_datadir/lemon
 
 %changelog
+* Wed Feb 19 2014 Mikhail Efremov <sem@altlinux.org> 3.8.3.1-alt1
+- Patches from Fedora:
+  + Temporary workaround for failed percentile test.
+  + Disable malloc_usable_size() usage.
+- Drop sqlite3-alt-version-script.patch.
+- 3.8.3.1.
+
 * Tue Jan 15 2013 Valery Inozemtsev <shrek@altlinux.ru> 3.7.15.2-alt1
 - 3.7.15.2 (closes: #27231)
 
