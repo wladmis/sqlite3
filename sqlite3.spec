@@ -106,7 +106,7 @@ embedded controllers.
 %build
 export TCLLIBDIR=%_tcllibdir
 export TCLDATADIR=%_tcldatadir/%name
-export CFLAGS="%optflags -DSQLITE_CORE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 "
+export CFLAGS="%optflags -DSQLITE_CORE=1 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 -DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -fno-strict-aliasing "
 autoreconf -i
 %configure \
 	--enable-threadsafe \
