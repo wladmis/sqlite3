@@ -12,6 +12,9 @@ Source0: sqlite-%version.tar
 
 Patch1: sqlite3-alt-fts3.patch
 Patch2: sqlite3-alt-tcl.patch
+# See https://bugzilla.redhat.com/show_bug.cgi?id=801981
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=665363
+Patch3: sqlite3-fedora-no-malloc-usable-size.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -93,6 +96,7 @@ embedded controllers.
 %setup -q -n sqlite-%version
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 export TCLLIBDIR=%_tcllibdir
