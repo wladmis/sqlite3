@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -150,7 +150,7 @@ create a new database named "test.db".  (You can use a different name if
 you like.)</p></li>
 <li><p>Enter SQL commands at the prompt to create and populate the
 new database.</p></li>
-<li><p>Additional documentation is available <a href="sqlite.html">here</a></li>
+<li><p>Additional documentation is available <a href="cli.html">here</a></li>
 </ul>
 
 <h2>Write Programs That Use SQLite</h2>
@@ -235,6 +235,8 @@ functions.</p>
 34    return 0;
 35  }
 </pre></blockquote>
+<p>See the <a href="howtocompile.html">How To Compile SQLite</a> document for instructions and hints on
+how to compile the program show above.
 </li>
 </ul>
 

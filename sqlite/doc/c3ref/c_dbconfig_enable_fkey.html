@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -139,7 +139,7 @@ can be passed as the second argument to the <a href="../c3ref/db_config.html">sq
 Existing configuration options might be discontinued.  Applications
 should check the return code from <a href="../c3ref/db_config.html">sqlite3_db_config()</a> to make sure that
 the call worked.  The <a href="../c3ref/db_config.html">sqlite3_db_config()</a> interface will return a
-non-zero <a href="../c3ref/c_abort.html">error code</a> if a discontinued or unsupported configuration option
+non-zero <a href="../rescode.html">error code</a> if a discontinued or unsupported configuration option
 is invoked.</p>
 
 <p><dl>
@@ -163,7 +163,7 @@ when the "current value" returned by
 <a href="../c3ref/db_status.html">sqlite3_db_status</a>(D,<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a>,...) is zero.
 Any attempt to change the lookaside memory configuration when lookaside
 memory is in use leaves the configuration unchanged and returns
-<a href="../c3ref/c_abort.html">SQLITE_BUSY</a>.</dd></p>
+<a href="../rescode.html#busy">SQLITE_BUSY</a>.</dd></p>
 
 <p><dt>SQLITE_DBCONFIG_ENABLE_FKEY</dt>
 <dd> This option is used to enable or disable the enforcement of

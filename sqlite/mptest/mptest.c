@@ -1252,7 +1252,7 @@ static void unrecognizedArguments(
   exit(1);
 }
 
-int main(int argc, char **argv){
+int SQLITE_CDECL main(int argc, char **argv){
   const char *zClient;
   int iClient;
   int n, i;
@@ -1262,6 +1262,9 @@ int main(int argc, char **argv){
   int taskId;
   const char *zTrace;
   const char *zCOption;
+  const char *zJMode;
+  const char *zNRep;
+  int nRep = 1, iRep;
 
   g.argv0 = argv[0];
   g.iTrace = 1;
@@ -1277,6 +1280,10 @@ int main(int argc, char **argv){
   }
   n = argc-2;
   sqlite3_snprintf(sizeof(g.zName), g.zName, "%05d.mptest", GETPID());
+  zJMode = findOption(argv+2, &n, "journalmode", 1);
+  zNRep = findOption(argv+2, &n, "repeat", 1);
+  if( zNRep ) nRep = atoi(zNRep);
+  if( nRep<1 ) nRep = 1;
   g.zVfs = findOption(argv+2, &n, "vfs", 1);
   zClient = findOption(argv+2, &n, "client", 1);
   g.zErrLog = findOption(argv+2, &n, "errlog", 1);
@@ -1305,6 +1312,9 @@ int main(int argc, char **argv){
                      GETPID(), iClient);
   }else{
     if( g.iTrace>0 ){
+      printf("BEGIN: %s", argv[0]);
+      for(i=1; i<argc; i++) printf(" %s", argv[i]);
+      printf("\n");
       printf("With SQLite " SQLITE_VERSION " " SQLITE_SOURCE_ID "\n" );
       for(i=0; (zCOption = sqlite3_compileoption_get(i))!=0; i++){
         printf("-DSQLITE_%s\n", zCOption);
@@ -1317,6 +1327,17 @@ int main(int argc, char **argv){
   }
   rc = sqlite3_open_v2(g.zDbFile, &g.db, openFlags, g.zVfs);
   if( rc ) fatalError("cannot open [%s]", g.zDbFile);
+  if( zJMode ){
+#if defined(_WIN32)
+    if( sqlite3_stricmp(zJMode,"persist")==0
+     || sqlite3_stricmp(zJMode,"truncate")==0
+    ){
+      printf("Changing journal mode to DELETE from %s", zJMode);
+      zJMode = "DELETE";
+    }
+#endif
+    runSql("PRAGMA journal_mode=%Q;", zJMode);
+  }
   sqlite3_enable_load_extension(g.db, 1);
   sqlite3_busy_handler(g.db, busyHandler, 0);
   sqlite3_create_function(g.db, "vfsname", 0, SQLITE_UTF8, 0,
@@ -1349,6 +1370,9 @@ int main(int argc, char **argv){
     }
     if( n>1 ) unrecognizedArguments(argv[0], n, argv+2);
     runSql(
+      "DROP TABLE IF EXISTS task;\n"
+      "DROP TABLE IF EXISTS counters;\n"
+      "DROP TABLE IF EXISTS client;\n"
       "CREATE TABLE task(\n"
       "  id INTEGER PRIMARY KEY,\n"
       "  name TEXT,\n"
@@ -1364,10 +1388,12 @@ int main(int argc, char **argv){
       "CREATE TABLE client(id INTEGER PRIMARY KEY, wantHalt);\n"
     );
     zScript = readFile(argv[2]);
-    if( g.iTrace ) logMessage("begin script [%s]\n", argv[2]);
-    runScript(0, 0, zScript, argv[2]);
+    for(iRep=1; iRep<=nRep; iRep++){
+      if( g.iTrace ) logMessage("begin script [%s] cycle %d\n", argv[2], iRep);
+      runScript(0, 0, zScript, argv[2]);
+      if( g.iTrace ) logMessage("end script [%s] cycle %d\n", argv[2], iRep);
+    }
     sqlite3_free(zScript);
-    if( g.iTrace ) logMessage("end script [%s]\n", argv[2]);
     waitForClient(0, 2000, "during shutdown...\n");
     trySql("UPDATE client SET wantHalt=1");
     sqlite3_sleep(10);
@@ -1391,11 +1417,14 @@ int main(int argc, char **argv){
     }
     sqlite3_finalize(pStmt);
   }
-  sqlite3_close(g.db);  
+  sqlite3_close(g.db);
   maybeClose(g.pLog);
   maybeClose(g.pErrLog);
   if( iClient==0 ){
-    printf("Summary: %d errors in %d tests\n", g.nError, g.nTest);
+    printf("Summary: %d errors out of %d tests\n", g.nError, g.nTest);
+    printf("END: %s", argv[0]);
+    for(i=1; i<argc; i++) printf(" %s", argv[i]);
+    printf("\n");
   }
   return g.nError>0;
 }

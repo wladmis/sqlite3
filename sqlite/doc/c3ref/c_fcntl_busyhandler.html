@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -129,9 +129,9 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Standard File Control Opcodes</h2><blockquote><pre>#define SQLITE_FCNTL_LOCKSTATE               1
-#define SQLITE_GET_LOCKPROXYFILE             2
-#define SQLITE_SET_LOCKPROXYFILE             3
-#define SQLITE_LAST_ERRNO                    4
+#define SQLITE_FCNTL_GET_LOCKPROXYFILE       2
+#define SQLITE_FCNTL_SET_LOCKPROXYFILE       3
+#define SQLITE_FCNTL_LAST_ERRNO              4
 #define SQLITE_FCNTL_SIZE_HINT               5
 #define SQLITE_FCNTL_CHUNK_SIZE              6
 #define SQLITE_FCNTL_FILE_POINTER            7
@@ -149,20 +149,25 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_HAS_MOVED              20
 #define SQLITE_FCNTL_SYNC                   21
 #define SQLITE_FCNTL_COMMIT_PHASETWO        22
+#define SQLITE_FCNTL_WIN32_SET_HANDLE       23
+#define SQLITE_FCNTL_WAL_BLOCK              24
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
 interface.</p>
 
-<p>The <a href="../c3ref/c_fcntl_busyhandler.html">SQLITE_FCNTL_LOCKSTATE</a> opcode is used for debugging.  This
+<p><ul>
+<li><a name="sqlitefcntllockstate"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntllockstate">SQLITE_FCNTL_LOCKSTATE</a> opcode is used for debugging.  This
 opcode causes the xFileControl method to write the current state of
 the lock (one of <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_NONE</a>, <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a>,
 <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_RESERVED</a>, <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_PENDING</a>, or <a href="../c3ref/c_lock_exclusive.html">SQLITE_LOCK_EXCLUSIVE</a>)
 into an integer that the pArg argument points to. This capability
-is used during testing and only needs to be supported when SQLITE_TEST
-is defined.
-<ul>
-<li><a name="sqlitefcntlsizehint"></a>
+is used during testing and is only available when the SQLITE_TEST
+compile-time option is used.</p>
+
+<p><li><a name="sqlitefcntlsizehint"></a>
 
 The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a> opcode is used by SQLite to give the VFS
 layer a hint of how large the database file will grow to be during the
@@ -294,12 +299,14 @@ pragma or NULL if the pragma has no argument.  The handler for an
 of the char** argument point to a string obtained from <a href="../c3ref/mprintf.html">sqlite3_mprintf()</a>
 or the equivalent and that string will become the result of the pragma or
 the error message if the pragma fails. If the
-<a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control returns <a href="../c3ref/c_abort.html">SQLITE_NOTFOUND</a>, then normal
+<a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control returns <a href="../rescode.html#notfound">SQLITE_NOTFOUND</a>, then normal
 <a href="../pragma.html#syntax">PRAGMA</a> processing continues.  If the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a>
-file control returns <a href="../c3ref/c_abort.html">SQLITE_OK</a>, then the parser assumes that the
+file control returns <a href="../rescode.html#ok">SQLITE_OK</a>, then the parser assumes that the
 VFS has handled the PRAGMA itself and the parser generates a no-op
-prepared statement.  If the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control returns
-any result code other than <a href="../c3ref/c_abort.html">SQLITE_OK</a> or <a href="../c3ref/c_abort.html">SQLITE_NOTFOUND</a>, that means
+prepared statement if result string is NULL, or that returns a copy
+of the result string if the string is non-NULL.
+If the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control returns
+any result code other than <a href="../rescode.html#ok">SQLITE_OK</a> or <a href="../rescode.html#notfound">SQLITE_NOTFOUND</a>, that means
 that the VFS encountered an error while handling the <a href="../pragma.html#syntax">PRAGMA</a> and the
 compilation of the PRAGMA fails with an error.  The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a>
 file control occurs at the beginning of pragma statement analysis and so
@@ -354,6 +361,21 @@ The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved">SQLITE_FCNTL
 pointer to an integer and it writes a boolean into that integer depending
 on whether or not the file has been renamed, moved, or deleted since it
 was first opened.</p>
+
+<p><li><a name="sqlitefcntlwin32sethandle"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32sethandle">SQLITE_FCNTL_WIN32_SET_HANDLE</a> opcode is used for debugging.  This
+opcode causes the xFileControl method to swap the file handle with the one
+pointed to by the pArg argument.  This capability is used during testing
+and only needs to be supported when SQLITE_TEST is defined.</p>
+
+<p><li><a name="sqlitefcntlwalblock"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlwalblock">SQLITE_FCNTL_WAL_BLOCK</a> is a signal to the VFS layer that it might
+be advantageous to block on the next WAL lock if the lock is not immediately
+available.  The WAL subsystem issues this signal during rare
+circumstances in order to fix a problem with priority inversion.
+Applications should <em>not</em> use this file-control.</p>
 
 <p></ul>
 </p><p>See also lists of

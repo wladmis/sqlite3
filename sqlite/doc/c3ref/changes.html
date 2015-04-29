@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,47 +130,45 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Count The Number Of Rows Modified</h2><blockquote><pre>int sqlite3_changes(sqlite3*);
 </pre></blockquote><p>
-This function returns the number of database rows that were changed
-or inserted or deleted by the most recently completed SQL statement
-on the <a href="../c3ref/sqlite3.html">database connection</a> specified by the first parameter.
-Only changes that are directly specified by the <a href="../lang_insert.html">INSERT</a>, <a href="../lang_update.html">UPDATE</a>,
-or <a href="../lang_delete.html">DELETE</a> statement are counted.  Auxiliary changes caused by
-triggers or <a href="../foreignkeys.html#fk_actions">foreign key actions</a> are not counted. Use the
-<a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> function to find the total number of changes
-including changes caused by triggers and foreign key actions.</p>
+This function returns the number of rows modified, inserted or
+deleted by the most recently completed INSERT, UPDATE or DELETE
+statement on the database connection specified by the only parameter.
+Executing any other type of SQL statement does not modify the value
+returned by this function.</p>
 
-<p>Changes to a view that are simulated by an <a href="../lang_createtrigger.html#instead_of_trigger">INSTEAD OF trigger</a>
-are not counted.  Only real table changes are counted.</p>
+<p>Only changes made directly by the INSERT, UPDATE or DELETE statement are
+considered - auxiliary changes caused by <a href="../lang_createtrigger.html">triggers</a>,
+<a href="../foreignkeys.html#fk_actions">foreign key actions</a> or <a href="../lang_replace.html">REPLACE</a> constraint resolution are not counted.</p>
 
-<p>A "row change" is a change to a single row of a single table
-caused by an INSERT, DELETE, or UPDATE statement.  Rows that
-are changed as side effects of <a href="../lang_replace.html">REPLACE</a> constraint resolution,
-rollback, ABORT processing, <a href="../lang_droptable.html">DROP TABLE</a>, or by any other
-mechanisms do not count as direct row changes.</p>
+<p>Changes to a view that are intercepted by
+<a href="../lang_createtrigger.html#instead_of_trigger">INSTEAD OF triggers</a> are not counted. The value
+returned by sqlite3_changes() immediately after an INSERT, UPDATE or
+DELETE statement run on a view is always zero. Only changes made to real
+tables are counted.</p>
 
-<p>A "trigger context" is a scope of execution that begins and
-ends with the script of a <a href="../lang_createtrigger.html">trigger</a>.
-Most SQL statements are
-evaluated outside of any trigger.  This is the "top level"
-trigger context.  If a trigger fires from the top level, a
-new trigger context is entered for the duration of that one
-trigger.  Subtriggers create subcontexts for their duration.</p>
+<p>Things are more complicated if the sqlite3_changes() function is
+executed while a trigger program is running. This may happen if the
+program uses the <a href="../lang_corefunc.html#changes">changes() SQL function</a>, or if some other callback
+function invokes sqlite3_changes() directly. Essentially:</p>
 
-<p>Calling <a href="../c3ref/exec.html">sqlite3_exec()</a> or <a href="../c3ref/step.html">sqlite3_step()</a> recursively does
-not create a new trigger context.</p>
+<p><ul>
+<li> Before entering a trigger program the value returned by
+sqlite3_changes() function is saved. After the trigger program
+has finished, the original value is restored.</p>
 
-<p>This function returns the number of direct row changes in the
-most recent INSERT, UPDATE, or DELETE statement within the same
-trigger context.</p>
+<p><li> Within a trigger program each INSERT, UPDATE and DELETE
+statement sets the value returned by sqlite3_changes()
+upon completion as normal. Of course, this value will not include
+any changes performed by sub-triggers, as the sqlite3_changes()
+value will be saved and restored after each sub-trigger has run.
+</ul></p>
 
-<p>Thus, when called from the top level, this function returns the
-number of changes in the most recent INSERT, UPDATE, or DELETE
-that also occurred at the top level.  Within the body of a trigger,
-the sqlite3_changes() interface can be called to find the number of
-changes in the most recently completed INSERT, UPDATE, or DELETE
-statement within the body of the same trigger.
-However, the number returned does not include changes
-caused by subtriggers since those have their own context.</p>
+<p>This means that if the changes() SQL function (or similar) is used
+by the first INSERT, UPDATE or DELETE statement within a trigger, it
+returns the value as set when the calling statement began executing.
+If it is used by the second or subsequent such statement within a trigger
+program, the value returned reflects the number of rows modified by the
+previous INSERT, UPDATE or DELETE statement within the same trigger.</p>
 
 <p>See also the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface, the
 <a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#changes">changes() SQL function</a>.</p>

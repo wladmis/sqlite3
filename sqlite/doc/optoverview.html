@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -442,7 +442,7 @@ a:visited { color: #734559 }
   The LIKE optimization is not attempted if the
   right-hand side is a <a href="lang_expr.html#varparam">parameter</a> and the statement was prepared using
   <a href="c3ref/prepare.html">sqlite3_prepare()</a> or <a href="c3ref/prepare.html">sqlite3_prepare16()</a>.
-  The LIKE optimization is not attempted if there is an EXCEPT phrase
+  The LIKE optimization is not attempted if there is an ESCAPE phrase
   on the LIKE operator.
 </p>
 <p>
@@ -757,7 +757,7 @@ a:visited { color: #734559 }
 </p>
 <p>
   For a program that uses an SQLite database as its 
-  <a href="whentouse.html#appfileformat">application file-format</a>,
+  <a href="appfileformat.html">application file-format</a>,
   when a new database instance is first created the <a href="lang_analyze.html">ANALYZE</a>
   command is ineffective because the database contain no data from which
   to gather statistics.  In that case, one could construct a large prototype
@@ -815,7 +815,7 @@ a:visited { color: #734559 }
   combinations work just like a comma join in that the optimizer is
   free to reorder tables as it sees fit. (Table reordering is also
   disabled on an outer join, but that is because outer joins are not
-  associative or commutative. Reordering tables in in OUTER JOIN changes
+  associative or commutative. Reordering tables in OUTER JOIN changes
   the result.)
 </p>
 <p>
@@ -970,18 +970,35 @@ a:visited { color: #734559 }
   query when possible.
   When faced with the choice of using an index to satisfy WHERE clause
   constraints or satisfying an ORDER BY clause, SQLite does the same
-  work analysis described above
+  cost analysis described above
   and chooses the index that it believes will result in the fastest answer.
 </p>
 <p>
   SQLite will also attempt to use indices to help satisfy GROUP BY clauses
   and the DISTINCT keyword.  If the nested loops of the join can be arranged
-  such that are equivalent for the GROUP BY or for the DISTINCT are
+  such that rows that are equivalent for the GROUP BY or for the DISTINCT are
   consecutive, then the GROUP BY or DISTINCT logic can determine if the 
   current row is part of the same group or if the current row is distinct
   simply by comparing the current row to the previous row.
   This can be much faster than the alternative of comparing each row to
   all prior rows.
+</p>
+<a name="partsort"></a>
+<h3>9.1 Partial ORDER BY Via Index</h3><p>
+  If a query contains an ORDER BY clause with multiple terms, it might
+  be that SQLite can use indices to cause rows to come out in the order
+  of some prefix of the terms in the ORDER BY but that later terms in
+  the ORDER BY are not satisfied.  In that case, SQLite does block sorting.
+  Suppose the ORDER BY clause has four terms and the natural order of the
+  query results in rows appearing in order of the first two terms.  As
+  each row is output by the query engine and enters the sorter, the 
+  outputs in the current row corresponding to the first two terms of 
+  the ORDER BY are compared against the previous row.  If they have
+  changed, the current sort is finished and output and a new sort is
+  started.  This results in a slightly faster sort.  But the bigger
+  advantages are that many fewer rows need to be held in memory,
+  reducing memory requirements, and outputs can begin to appear before
+  the core query has run to completion.
 </p>
 <a name="flattening"></a>
 <h2>10.0 Subquery flattening</h2><p>
@@ -1009,69 +1026,95 @@ a:visited { color: #734559 }
   SELECT x+y AS a FROM t1 WHERE z<100 AND a>5
 </pre></blockquote><p>
   There is a long list of conditions that must all be met in order for
-  query flattening to occur.
+  query flattening to occur.  Some of the constraints are marked as 
+  obsolete by italic text.  These extra constraints are retained in the
+  documentation to preserve the numbering of the other constraints.
 </p>
 <p>
   <ol>
-  <li>  The subquery and the outer query do not both use aggregates.
+  <li value="1">  The subquery and the outer query do not both use aggregates.
 
-  <li>  The subquery is not an aggregate or the outer query is not a join.
+  <li value="2">
+  The subquery is not an aggregate or the outer query is not a join.
 
-  <li>  The subquery is not the right operand of a left outer join.
+  <li value="3">
+  The subquery is not the right operand of a left outer join.
 
-  <li>  The subquery is not DISTINCT or the outer query is not a join.
+  <li value="4">  The subquery is not DISTINCT.
 
-  <li>  The subquery is not DISTINCT or the outer query does not use
-        aggregates.
+  <li value="5"> <i>(Subsumed into constraint 4)</i>
 
-  <li>  The subquery does not use aggregates or the outer query is not
+  <li value="6">
+        The subquery does not use aggregates or the outer query is not
         DISTINCT.
 
-  <li>  The subquery has a FROM clause.
+  <li value="7">
+  The subquery has a FROM clause.
 
-  <li>  The subquery does not use LIMIT or the outer query is not a join.
+  <li value="8">
+  The subquery does not use LIMIT or the outer query is not a join.
 
-  <li>  The subquery does not use LIMIT or the outer query does not use
-        aggregates.
+  <li value="9">
+  The subquery does not use LIMIT or the outer query does not use
+  aggregates.
 
-  <li>  The subquery does not use aggregates or the outer query does not
-        use LIMIT.
+  <li value="10">
+  The subquery does not use aggregates or the outer query does not
+  use LIMIT.
 
-  <li>  The subquery and the outer query do not both have ORDER BY clauses.
+  <li value="11">
+  The subquery and the outer query do not both have ORDER BY clauses.
 
-  <li>  The subquery and outer query do not both use LIMIT.
+  <li value="12"> <i>(Subsumed into constraint 3)</i>
 
-  <li>  The subquery does not use OFFSET.
+  <li value="13">  The subquery and outer query do not both use LIMIT.
 
-  <li>  The outer query is not part of a compound select or the
-        subquery does not have both an ORDER BY and a LIMIT clause.
+  <li value="14">  The subquery does not use OFFSET.
 
-  <li>  The outer query is not an aggregate or the subquery does
-        not contain ORDER BY. 
+  <li value="15">
+  The outer query is not part of a compound select or the
+  subquery does not have a LIMIT clause.
 
-  <li>  The sub-query is not a compound select, or it is a UNION ALL 
-        compound clause made up entirely of non-aggregate queries, and 
-        the parent query:
+  <li value="16">
+  The outer query is not an aggregate or the subquery does
+  not contain ORDER BY. 
 
-        <ul>
-        <li> is not itself part of a compound select,
-        <li> is not an aggregate or DISTINCT query, and
-        <li> has no other tables or sub-selects in the FROM clause.
-        </ul>
+  <li value="17">
+  The sub-query is not a compound select, or it is a UNION ALL 
+  compound clause made up entirely of non-aggregate queries, and 
+  the parent query:
 
-        The parent and sub-query may contain WHERE clauses. Subject to
-        rules (11), (12) and (13), they may also contain ORDER BY,
-        LIMIT and OFFSET clauses.
+  <ul>
+  <li> is not itself part of a compound select,
+  <li> is not an aggregate or DISTINCT query, and
+  <li> is not a join.
+  </ul>
 
-  <li>  If the sub-query is a compound select, then all terms of the
-        ORDER by clause of the parent must be simple references to 
-        columns of the sub-query.
+  The parent and sub-query may contain WHERE clauses. Subject to
+  rules (11), (12) and (13), they may also contain ORDER BY,
+  LIMIT and OFFSET clauses.
 
-  <li>  The subquery does not use LIMIT or the outer query does not
-        have a WHERE clause.
+  <li value="18">
+  If the sub-query is a compound select, then all terms of the
+  ORDER by clause of the parent must be simple references to 
+  columns of the sub-query.
 
-  <li>  If the sub-query is a compound select, then it must not use
-        an ORDER BY clause.
+  <li value="19">
+  The subquery does not use LIMIT or the outer query does not
+  have a WHERE clause.
+
+  <li value="20">
+  If the sub-query is a compound select, then it must not use
+  an ORDER BY clause.
+
+  <li value="21">
+  The subquery does not use LIMIT or the outer query is not
+  DISTINCT.
+
+  <li value="22"> The subquery is not a recursive CTE.
+
+  <li value="23"> The parent is not a recursive CTE, or the sub-query
+  is not a compound query.
   </ol>
 </p>
 <p>
@@ -1086,20 +1129,15 @@ a:visited { color: #734559 }
 </p>
 <a name="minmax"></a>
 <h2>11.0 The MIN/MAX optimization</h2><p>
-  Queries of the following forms will be optimized to run in logarithmic
-  time assuming appropriate indices exist:
+  Queries that contain a single MIN() or MAX() aggregate function whose
+  argument is the left-most column of an index might be satisfied
+  by doing a single index lookup rather than by scanning the entire table.
+  Examples:
 </p>
 <blockquote><pre>
   SELECT MIN(x) FROM table;
-  SELECT MAX(x) FROM table;
-</pre></blockquote><p>
-  In order for these optimizations to occur, they must appear in exactly
-  the form shown above - changing only the name of the table and column.
-  It is not permissible to add a WHERE clause or do any arithmetic on the
-  result.  The result set must contain a single column.
-  The column in the MIN or MAX function must be an indexed column.
-</p>
-<a name="autoindex"></a>
+  SELECT MAX(x)+1 FROM table;
+</pre></blockquote><a name="autoindex"></a>
 <h2>12.0 Automatic Indices</h2><p>
   When no indices are available to aid the evaluation of a query, SQLite
   might create an automatic index that lasts only for the duration
@@ -1148,7 +1186,7 @@ a:visited { color: #734559 }
   compiling with the <a href="compile.html#omit_automatic_index">SQLITE_OMIT_AUTOMATIC_INDEX</a> compile-time option.
 </p>
 <p>
-  In SQLite version 3.8.0, an <a href="c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> message is sent
+  In SQLite version 3.8.0, an <a href="rescode.html#warning_autoindex">SQLITE_WARNING_AUTOINDEX</a> message is sent
   to the <a href="errlog.html">error log</a> every time a statement is prepared that uses an
   automatic index.  Application developers can and should use these warnings
   to identify the need for new persistent indices in the schema.

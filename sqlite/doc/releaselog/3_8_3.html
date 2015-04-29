@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.8.3 On 2014-02-03 (3.8.3)</title>
+<title>SQLite Release 3.8.3 On 2014-02-03</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,14 +128,14 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.8.3 On 2014-02-03 (3.8.3)</h2><p><ul>
+<h2>SQLite Release 3.8.3 On 2014-02-03</h2><p><ul>
 <li>Added support for <a href="../lang_with.html">common table expressions</a> and the <a href="../lang_with.html">WITH clause</a>.
 <li>Added the <a href="../lang_corefunc.html#printf">printf()</a> SQL function.
 <li>Added <a href="../c3ref/c_deterministic.html">SQLITE_DETERMINISTIC</a> as an optional bit in the 4th argument to the
     <a href="../c3ref/create_function.html">sqlite3_create_function()</a> and related interfaces, providing applications with
     the ability to create new functions that can be factored out of inner loops when
     they have constant arguments.
-<li>Add <a href="../c3ref/c_abort_rollback.html">SQLITE_READONLY_DBMOVED</a> error code, returned at the beginning of a
+<li>Add <a href="../rescode.html#readonly_dbmoved">SQLITE_READONLY_DBMOVED</a> error code, returned at the beginning of a
     transaction, to indicate that the underlying database file has been renamed
     or moved out from under SQLite.
 <li>Allow arbitrary expressions, including function calls and subqueries, in
@@ -150,7 +150,7 @@ a:visited { color: #734559 }
     the grammar.
 <li>Change the LEMON source code to avoid calling C-library functions that OpenBSD
     considers dangerous.  (Ex: sprintf).
-<li>Bug fix: In the <a href="../sqlite.html">command-line shell</a> CSV import feature, do not end a field
+<li>Bug fix: In the <a href="../cli.html">command-line shell</a> CSV import feature, do not end a field
     when an escaped double-quote occurs at the end of a CRLN line.
 <li>SQLITE_SOURCE_ID: 
     "2014-02-03 13:52:03 e816dd924619db5f766de6df74ea2194f3e3b538"

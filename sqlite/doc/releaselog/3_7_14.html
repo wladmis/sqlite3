@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.7.14 On 2012-09-03 (3.7.14)</title>
+<title>SQLite Release 3.7.14 On 2012-09-03</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.7.14 On 2012-09-03 (3.7.14)</h2><p><ul>
+<h2>SQLite Release 3.7.14 On 2012-09-03</h2><p><ul>
 <li>Drop built-in support for OS/2. If you need to upgrade an OS/2
     application to use this or a later version of SQLite,
     then add an application-defined <a href="../vfs.html">VFS</a> using the
@@ -136,9 +136,9 @@ a:visited { color: #734559 }
     serve as a baseline for the application-defined VFS.
 <li>Ensure that floating point values are preserved exactly when reconstructing
     a database from the output of the ".dump" command of the 
-    <a href="../sqlite.html">command-line shell</a>.
+    <a href="../cli.html">command-line shell</a>.
 <li>Added the <a href="../c3ref/close.html">sqlite3_close_v2()</a> interface.
-<li>Updated the <a href="../sqlite.html">command-line shell</a> so that it can be built using
+<li>Updated the <a href="../cli.html">command-line shell</a> so that it can be built using
     <a href="../compile.html#omit_floating_point">SQLITE_OMIT_FLOATING_POINT</a> and <a href="../compile.html#omit_autoinit">SQLITE_OMIT_AUTOINIT</a>.
 <li>Improvements to the windows makefiles and build processes.
 <li>Enhancements to <a href="../pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> and <a href="../pragma.html#pragma_quick_check">PRAGMA quick_check</a> so that

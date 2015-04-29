@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -1244,7 +1244,7 @@ int sqlite3BtreeSetPageSize(Btree *p, int nPagesize, int nReserve, int eFix);</p
       Queries:
 
       <pre class=api>int sqlite3BtreeGetPageSize(Btree*);</pre>
-      <pre class=api>int sqlite3BtreeGetReserve(Btree*);</pre>
+      <pre class=api></pre>
       <pre class=api>int sqlite3BtreeGetAutoVacuum(Btree *);</pre>
 
     <h2 id="section_3_3">3.3 Connection Configuration</h2>
@@ -1314,7 +1314,7 @@ void sqlite3BtreeLeaveAll(sqlite3*);
 int sqlite3BtreeCommitPhaseOne(Btree*, const char *zMaster);
 int sqlite3BtreeCommitPhaseTwo(Btree*, int);
 int sqlite3BtreeCommit(Btree*);
-int sqlite3BtreeRollback(Btree*,int);</pre>
+int sqlite3BtreeRollback(Btree*,int,int);</pre>
 
       <pre class=api>int sqlite3BtreeBeginStmt(Btree*,int);
 int sqlite3BtreeSavepoint(Btree *, int, int);</pre>
@@ -1425,8 +1425,11 @@ struct KeyInfo {
 struct UnpackedRecord {
   KeyInfo *pKeyInfo;  /* Collation and sort-order information */
   u16 nField;         /* Number of entries in apMem}; hd_resolve_one {}; hd_puts { */
-  u8 flags;           /* Boolean settings.  UNPACKED_... below */
+  i8 default_rc;      /* Comparison result if keys are equal */
+  u8 errCode;         /* Error detected by xRecordCompare (CORRUPT or NOMEM) */
   Mem *aMem;          /* Values */
+  int r1;             /* Value to return if (lhs > rhs) */
+  int r2;             /* Value to return if (rhs < lhs) */
 };</pre>
 
     <h3 id="section_3_7_2">3.7.2 sqlite3BtreeGetMeta</h3>
@@ -1494,7 +1497,7 @@ sqlite3BtreeGetMeta.</span> (P: <a class=reqlink href=#H50109>H50109</a>)</p>
 
       <h3 id="sqlite3BtreeCursorHasMoved">3.8.4 sqlite3BtreeCursorHasMoved</h3>
 
-      <pre class=api>int sqlite3BtreeCursorHasMoved(BtCursor*, int*);</pre>
+      <pre class=api>int sqlite3BtreeCursorHasMoved(BtCursor*);</pre>
 
       <h3 id="sqlite3BtreePutData">3.8.5 sqlite3BtreePutData</h3>
 
@@ -1722,13 +1725,13 @@ int sqlite3BtreeCopyFile(Btree *, Btree *);</pre>
       <pre class=api>void *sqlite3BtreeSchema(Btree *, int, void(*)(void *));
 int sqlite3BtreeSchemaLocked(Btree *pBtree);
 int sqlite3BtreeLockTable(Btree *pBtree, int iTab, u8 isWriteLock);
-void sqlite3BtreeTripAllCursors(Btree*, int);</pre>
+int sqlite3BtreeTripAllCursors(Btree*, int, int);</pre>
 
       <p class=todo>
         I know what the following do, but is this mechanism ever used? Or has it been superceded by other tricks in OP_NewRowid?
 
-      <pre class=api>void sqlite3BtreeSetCachedRowid(BtCursor*, sqlite3_int64);
-sqlite3_int64 sqlite3BtreeGetCachedRowid(BtCursor*);</pre>
+      <pre class=api>
+</pre>
 
       <p class=todo>
         Should move to btreeInt.h

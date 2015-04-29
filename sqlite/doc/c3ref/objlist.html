@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,10 +130,7 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 
-<h2>Objects:</h2>
-<p>Note: Objects marked with "<a href="../c3ref/experimental.html"><small><i>exp</i></small></a>"
-are <a href="../c3ref/experimental.html">experimental</a> and objects marked with
-"<a href="../c3ref/experimental.html"><small><i>(obs)</i></small></a>" are <a href="../c3ref/experimental.html">deprecated</a>.</p>
+<h2>List Of Objects:</h2>
 <table width="100%" cellpadding="5"><tr>
 <td valign="top"><ul><li><a href="../c3ref/sqlite3.html">sqlite3</a></li>
 <li><a href="../c3ref/backup.html">sqlite3_backup</a></li>
@@ -166,5 +163,6 @@ are <a href="../c3ref/experimental.html">experimental</a> and objects marked wit
 </tr></table>
 <p>Other lists:
 <a href="constlist.html">Constants</a> and
-<a href="funclist.html">Functions</a>.
+<a href="funclist.html">Functions</a> and
+<a href="../rescode.html">Result Codes</a>.
 

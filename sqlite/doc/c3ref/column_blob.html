@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -153,11 +153,11 @@ The number of columns in the result can be determined using
 <p>If the SQL statement does not currently point to a valid row, or if the
 column index is out of range, the result is undefined.
 These routines may only be called when the most recent call to
-<a href="../c3ref/step.html">sqlite3_step()</a> has returned <a href="../c3ref/c_abort.html">SQLITE_ROW</a> and neither
+<a href="../c3ref/step.html">sqlite3_step()</a> has returned <a href="../rescode.html#row">SQLITE_ROW</a> and neither
 <a href="../c3ref/reset.html">sqlite3_reset()</a> nor <a href="../c3ref/finalize.html">sqlite3_finalize()</a> have been called subsequently.
 If any of these routines are called after <a href="../c3ref/reset.html">sqlite3_reset()</a> or
 <a href="../c3ref/finalize.html">sqlite3_finalize()</a> or after <a href="../c3ref/step.html">sqlite3_step()</a> has returned
-something other than <a href="../c3ref/c_abort.html">SQLITE_ROW</a>, the results are undefined.
+something other than <a href="../rescode.html#row">SQLITE_ROW</a>, the results are undefined.
 If <a href="../c3ref/step.html">sqlite3_step()</a> or <a href="../c3ref/reset.html">sqlite3_reset()</a> or <a href="../c3ref/finalize.html">sqlite3_finalize()</a>
 are called from a different thread while any of these routines
 are pending, then the results are undefined.</p>
@@ -295,7 +295,7 @@ from <a href="../c3ref/column_blob.html">sqlite3_column_blob()</a>, <a href="../
 of these routines, a default value is returned.  The default value
 is either the integer 0, the floating point number 0.0, or a NULL
 pointer.  Subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode()</a> will return
-<a href="../c3ref/c_abort.html">SQLITE_NOMEM</a>.
+<a href="../rescode.html#nomem">SQLITE_NOMEM</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

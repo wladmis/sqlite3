@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.8.0.2 On 2013-09-03 (3.8.0.2)</title>
+<title>SQLite Release 3.8.0.2 On 2013-09-03</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.8.0.2 On 2013-09-03 (3.8.0.2)</h2><p><ul>
+<h2>SQLite Release 3.8.0.2 On 2013-09-03</h2><p><ul>
 <li>Add support for <a href="../partialindex.html">partial indexes</a></li>
 <li>Cut-over to the <a href="../queryplanner-ng.html">next generation query planner</a> for faster and better query plans.
 <li>The <a href="../eqp.html">EXPLAIN QUERY PLAN</a> output no longer shows an estimate of the number of 
@@ -148,12 +148,12 @@ a:visited { color: #734559 }
     transaction from closing.
 <li>Add the <a href="../compile.html#default_automatic_index">SQLITE_DEFAULT_AUTOMATIC_INDEX</a> compile-time option.  Setting this option
     to 0 disables automatic indices by default.
-<li>Issue an <a href="../c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> warning on the <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> whenever
+<li>Issue an <a href="../rescode.html#warning_autoindex">SQLITE_WARNING_AUTOINDEX</a> warning on the <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> whenever
     the query planner uses an automatic index.
 <li>Added the <a href="../compile.html#fts3_max_expr_depth">SQLITE_FTS3_MAX_EXPR_DEPTH</a> compile-time option.
 <li>Added an optional 5th parameter defining the collating sequence to the 
     next_char() extension SQL function.
-<li>The <a href="../c3ref/c_abort_rollback.html">SQLITE_BUSY_SNAPSHOT</a> extended error code is returned in WAL mode when
+<li>The <a href="../rescode.html#busy_snapshot">SQLITE_BUSY_SNAPSHOT</a> extended error code is returned in WAL mode when
     a read transaction cannot be upgraded to a write transaction because the read is
     on an older snapshot.
 <li>Enhancements to the sqlite3_analyzer utility program to provide size
@@ -164,7 +164,7 @@ a:visited { color: #734559 }
     function is called by a SELECT statement that does not access any database table.
 <li>Disable the use of posix_fallocate() on all (unix) systems unless the
     HAVE_POSIX_FALLOCATE compile-time option is used.
-<li>Update the ".import" command in the <a href="../sqlite.html">command-line shell</a> to support multi-line
+<li>Update the ".import" command in the <a href="../cli.html">command-line shell</a> to support multi-line
     fields and correct RFC-4180 quoting and to issue warning and/or error messages
     if the input text is not strictly RFC-4180 compliant.
 <li>Bug fix: In the <a href="../fts3.html#unicode61">unicode61</a> tokenizer of <a href="../fts3.html#fts4">FTS4</a>, treat all private code points

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.7.16.2 On 2013-04-12 (3.7.16.2)</title>
+<title>SQLite Release 3.7.16.2 On 2013-04-12</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.7.16.2 On 2013-04-12 (3.7.16.2)</h2><p><ul>
+<h2>SQLite Release 3.7.16.2 On 2013-04-12</h2><p><ul>
 <li>Added the <a href="../pragma.html#pragma_foreign_key_check">PRAGMA foreign_key_check</a> command.
 <li>Added new extended error codes for all SQLITE_CONSTRAINT errors
 <li>Added the SQLITE_READONLY_ROLLBACK extended error code for when a database
@@ -152,11 +152,11 @@ a:visited { color: #734559 }
 <li>Added the test_regexp.c module as a demonstration of how to implement
     the REGEXP operator.
 <li>Improved error messages in the <a href="../rtree.html">RTREE</a> extension.
-<li>Enhance the <a href="../sqlite.html">command-line shell</a> so that a non-zero argument to the
+<li>Enhance the <a href="../cli.html">command-line shell</a> so that a non-zero argument to the
     ".exit" command causes the shell to exit immediately without cleanly
     shutting down the database connection.
 <li>Improved error messages for invalid boolean arguments to dot-commands
-    in the <a href="../sqlite.html">command-line shell</a>.
+    in the <a href="../cli.html">command-line shell</a>.
 <li>Improved error messages for "foreign key mismatch" showing the names of
     the two tables involved.
 <li>Remove all uses of umask() in the unix VFS.

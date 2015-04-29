@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -280,13 +280,13 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
 
 <p>
   If an error occurs in any of the three main backup API routines
-  then the <a href="c3ref/c_abort.html">error code</a> and <a href="c3ref/errcode.html">message</a> are attached to
+  then the <a href="rescode.html">error code</a> and <a href="c3ref/errcode.html">message</a> are attached to
   the destination <a href="c3ref/sqlite3.html">database connection</a>.
   Additionally, if
-  <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> encounters an error, then the <a href="c3ref/c_abort.html">error code</a> is returned
+  <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> encounters an error, then the <a href="rescode.html">error code</a> is returned
   by both the <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> call itself, and by the subsequent call
   to <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>. So a call to <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>
-  does not overwrite an <a href="c3ref/c_abort.html">error code</a> stored in the destination
+  does not overwrite an <a href="rescode.html">error code</a> stored in the destination
   <a href="c3ref/sqlite3.html">database connection</a> by <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a>.  This feature
   is used in the example code to reduce amount of error handling required.
   The return values of the <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a> and <a href="c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_finish()</a>
@@ -300,7 +300,7 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
   The implementation of this function could be enhanced in at least two ways:
 
   <ol>
-    <li> Failing to obtain the lock on database file zFilename (an <a href="c3ref/c_abort.html">SQLITE_BUSY</a>
+    <li> Failing to obtain the lock on database file zFilename (an <a href="rescode.html#busy">SQLITE_BUSY</a>
          error) could be handled, and
     <li> Cases where the page-sizes of database pInMemory and zFilename are
          different could be handled better.
@@ -384,7 +384,7 @@ int backupDb(
       do {
         rc = <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step</a>(pBackup, 5);
         xProgress(
-            <a href="c3ref/backup_finish.html">sqlite3_backup_remaining</a>(pBackup),
+            <a href="c3ref/backup_finish.html#sqlite3backupremaining">sqlite3_backup_remaining</a>(pBackup),
             <a href="c3ref/backup_finish.html#sqlite3backuppagecount">sqlite3_backup_pagecount</a>(pBackup)
         );
         if( rc==SQLITE_OK || rc==SQLITE_BUSY || rc==SQLITE_LOCKED ){

@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -150,7 +150,7 @@ do not have a <a href="sharedcache.html">shared cache</a>, then the reader is on
 see complete committed transactions from the writer.  Partial changes
 by the writer that have not been committed are invisible to the reader.
 This is true regardless of whether the two database connections are in
-the same thread, the different threads of the same process, or in
+the same thread, in different threads of the same process, or in
 different processes.  This
 is the usual and expected behavior for SQL database systems.
 </p>
@@ -225,7 +225,7 @@ exclusive access to the database file.
 Hence, readers are prohibited from seeing incomplete
 transactions by virtue of being locked out of the database while the
 transaction is being written to disk.  Only after the transaction is
-complete written and synced to disk and commits are the readers allowed
+completely written and synced to disk and commits are the readers allowed
 back into the database.  Hence readers never get a chance to see partially
 written changes.
 </p>
@@ -260,7 +260,7 @@ Another example: X starts a read transaction using <a href="lang_transaction.htm
 Y makes a changes to the database using <a href="lang_update.html">UPDATE</a>.  Then X tries to make a
 change to the database using <a href="lang_update.html">UPDATE</a>.  The attempt by X to escalate its
 transaction from a read transaction to a write transaction fails with an
-<a href="c3ref/c_abort_rollback.html">SQLITE_BUSY_SNAPSHOT</a> error because the snapshot of the database being
+<a href="rescode.html#busy_snapshot">SQLITE_BUSY_SNAPSHOT</a> error because the snapshot of the database being
 viewed by X is no longer the latest version of the database.  If X were
 allowed to write, it would fork the history of the database file, which is
 something SQLite does not support.  In order for X to write to the database,
@@ -277,7 +277,7 @@ its transaction instead of just an ordinary BEGIN.  The <a href="lang_transactio
 command goes ahead and starts a write transaction, and thus blocks all
 other writers.  If the <a href="lang_transaction.html#immediate">BEGIN IMMEDIATE</a> operation succeeds, then no
 subsequent operations in that transaction will ever fail with an
-<a href="c3ref/c_abort.html">SQLITE_BUSY</a> error.
+<a href="rescode.html#busy">SQLITE_BUSY</a> error.
 </p>
 
 <h2>No Isolation Between Operations On The Same Database Connection</h2>

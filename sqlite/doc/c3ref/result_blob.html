@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -129,6 +129,8 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Setting The Result Of An SQL Function</h2><blockquote><pre>void sqlite3_result_blob(sqlite3_context*, const void*, int, void(*)(void*));
+void sqlite3_result_blob64(sqlite3_context*,const void*,
+                           sqlite3_uint64,void(*)(void*));
 void sqlite3_result_double(sqlite3_context*, double);
 void sqlite3_result_error(sqlite3_context*, const char*, int);
 void sqlite3_result_error16(sqlite3_context*, const void*, int);
@@ -139,6 +141,8 @@ void sqlite3_result_int(sqlite3_context*, int);
 void sqlite3_result_int64(sqlite3_context*, sqlite3_int64);
 void sqlite3_result_null(sqlite3_context*);
 void sqlite3_result_text(sqlite3_context*, const char*, int, void(*)(void*));
+void sqlite3_result_text64(sqlite3_context*, const char*,sqlite3_uint64,
+                           void(*)(void*), unsigned char encoding);
 void sqlite3_result_text16(sqlite3_context*, const void*, int, void(*)(void*));
 void sqlite3_result_text16le(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_text16be(sqlite3_context*, const void*, int,void(*)(void*));
@@ -210,6 +214,10 @@ sqlite3_result_text16le(), and sqlite3_result_text16be() interfaces
 set the return value of the application-defined function to be
 a text string which is represented as UTF-8, UTF-16 native byte order,
 UTF-16 little endian, or UTF-16 big endian, respectively.
+The sqlite3_result_text64() interface sets the return value of an
+application-defined function to be a text string in an encoding
+specified by the fifth (and last) parameter, which must be one
+of <a href="../c3ref/c_any.html">SQLITE_UTF8</a>, <a href="../c3ref/c_any.html">SQLITE_UTF16</a>, <a href="../c3ref/c_any.html">SQLITE_UTF16BE</a>, or <a href="../c3ref/c_any.html">SQLITE_UTF16LE</a>.
 SQLite takes the text result from the application from
 the 2nd parameter of the sqlite3_result_text* interfaces.
 If the 3rd parameter to the sqlite3_result_text* interfaces

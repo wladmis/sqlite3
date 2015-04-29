@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -182,13 +182,13 @@ the current value is always zero.</p>
 
 <p><a name="sqlitedbstatuscacheused"></a>
  <dt>SQLITE_DBSTATUS_CACHE_USED</dt>
-<dd>This parameter returns the approximate number of of bytes of heap
+<dd>This parameter returns the approximate number of bytes of heap
 memory used by all pager caches associated with the database connection.
 The highwater mark associated with SQLITE_DBSTATUS_CACHE_USED is always 0.</p>
 
 <p><a name="sqlitedbstatusschemaused"></a>
  <dt>SQLITE_DBSTATUS_SCHEMA_USED</dt>
-<dd>This parameter returns the approximate number of of bytes of heap
+<dd>This parameter returns the approximate number of bytes of heap
 memory used to store the schema for all databases associated
 with the connection - main, temp, and any <a href="../lang_attach.html">ATTACH</a>-ed databases.
 The full amount of memory used by the schemas is reported, even if the
@@ -198,7 +198,7 @@ The highwater mark associated with SQLITE_DBSTATUS_SCHEMA_USED is always 0.</p>
 
 <p><a name="sqlitedbstatusstmtused"></a>
  <dt>SQLITE_DBSTATUS_STMT_USED</dt>
-<dd>This parameter returns the approximate number of of bytes of heap
+<dd>This parameter returns the approximate number of bytes of heap
 and lookaside memory used by all prepared statements associated with
 the database connection.
 The highwater mark associated with SQLITE_DBSTATUS_STMT_USED is always 0.

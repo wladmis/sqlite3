@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,7 +130,7 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 
-<h2>Functions:</h2>
+<h2>List Of Functions:</h2>
 <p>Note: Functions marked with "<a href="../c3ref/experimental.html"><small><i>(exp)</i></small></a>"
 are <a href="../c3ref/experimental.html">experimental</a> and functions marked with
 <a href="../c3ref/experimental.html"><small><i>(obs)</i></small></a> are <a href="../c3ref/experimental.html">deprecated</a>.</p>
@@ -144,6 +144,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_remaining</a></li>
 <li><a href="../c3ref/backup_finish.html#sqlite3backupfinish">sqlite3_backup_step</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_blob</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_blob64</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_double</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_int</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_int64</a></li>
@@ -153,6 +154,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_text</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_text16</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_text64</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_value</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_zeroblob</a></li>
 <li><a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes</a></li>
@@ -204,9 +206,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/create_function.html">sqlite3_create_function</a></li>
 <li><a href="../c3ref/create_function.html">sqlite3_create_function16</a></li>
 <li><a href="../c3ref/create_function.html">sqlite3_create_function_v2</a></li>
+<li><a href="../c3ref/create_module.html">sqlite3_create_module</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="../c3ref/create_module.html">sqlite3_create_module</a></li>
-<li><a href="../c3ref/create_module.html">sqlite3_create_module_v2</a></li>
+<td valign="top"><ul><li><a href="../c3ref/create_module.html">sqlite3_create_module_v2</a></li>
 <li><a href="../c3ref/data_count.html">sqlite3_data_count</a></li>
 <li><a href="../c3ref/db_config.html">sqlite3_db_config</a></li>
 <li><a href="../c3ref/db_filename.html">sqlite3_db_filename</a></li>
@@ -243,10 +245,12 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/load_extension.html">sqlite3_load_extension</a></li>
 <li><a href="../c3ref/log.html">sqlite3_log</a></li>
 <li><a href="../c3ref/free.html">sqlite3_malloc</a></li>
+<li><a href="../c3ref/free.html">sqlite3_malloc64</a></li>
 <li><a href="../c3ref/aggregate_count.html">sqlite3_memory_alarm</a>&nbsp;&nbsp;<a href="../c3ref/experimental.html"><small><i>(obs)</i></small></a></li>
 <li><a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater</a></li>
 <li><a href="../c3ref/memory_highwater.html">sqlite3_memory_used</a></li>
 <li><a href="../c3ref/mprintf.html">sqlite3_mprintf</a></li>
+<li><a href="../c3ref/free.html">sqlite3_msize</a></li>
 <li><a href="../c3ref/mutex_alloc.html">sqlite3_mutex_alloc</a></li>
 <li><a href="../c3ref/mutex_alloc.html">sqlite3_mutex_enter</a></li>
 <li><a href="../c3ref/mutex_alloc.html">sqlite3_mutex_free</a></li>
@@ -269,10 +273,12 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/progress_handler.html">sqlite3_progress_handler</a></li>
 <li><a href="../c3ref/randomness.html">sqlite3_randomness</a></li>
 <li><a href="../c3ref/free.html">sqlite3_realloc</a></li>
+<li><a href="../c3ref/free.html">sqlite3_realloc64</a></li>
 <li><a href="../c3ref/release_memory.html">sqlite3_release_memory</a></li>
 <li><a href="../c3ref/reset.html">sqlite3_reset</a></li>
 <li><a href="../c3ref/reset_auto_extension.html">sqlite3_reset_auto_extension</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_blob</a></li>
+<li><a href="../c3ref/result_blob.html">sqlite3_result_blob64</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_double</a></li>
 </ul></td>
 <td valign="top"><ul><li><a href="../c3ref/result_blob.html">sqlite3_result_error</a></li>
@@ -287,6 +293,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text16</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text16be</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text16le</a></li>
+<li><a href="../c3ref/result_blob.html">sqlite3_result_text64</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_value</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_zeroblob</a></li>
 <li><a href="../c3ref/commit_hook.html">sqlite3_rollback_hook</a></li>
@@ -303,6 +310,8 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/step.html">sqlite3_step</a></li>
 <li><a href="../c3ref/stmt_busy.html">sqlite3_stmt_busy</a></li>
 <li><a href="../c3ref/stmt_readonly.html">sqlite3_stmt_readonly</a></li>
+<li><a href="../c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus</a></li>
+<li><a href="../c3ref/stmt_scanstatus_reset.html">sqlite3_stmt_scanstatus_reset</a></li>
 <li><a href="../c3ref/stmt_status.html">sqlite3_stmt_status</a></li>
 <li><a href="../c3ref/strglob.html">sqlite3_strglob</a></li>
 <li><a href="../c3ref/stricmp.html">sqlite3_stricmp</a></li>
@@ -348,5 +357,6 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 </tr></table>
 <p>Other lists:
 <a href="constlist.html">Constants</a> and
-<a href="objlist.html">Objects</a>.</p>
+<a href="objlist.html">Objects</a> and
+<a href="../rescode.html">Result Codes</a></p>
 

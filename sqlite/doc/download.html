@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -166,6 +166,8 @@ filename encoding is 3XXYY00.  For branch version 3.X.Y.Z, the encoding is
 
 <a name="cvs"></a>
 <a name="fossil"></a>
+<a name="srctree"></a>
+
 <h3>Source Code Repositories</h3>
 
 <p>
@@ -174,13 +176,16 @@ self-synchronizing
 <a href="http://www.fossil-scm.org/">Fossil</a> repositories that are
 available for anonymous read-only access.  Anyone can 
 view the repository contents and download historical versions
-of individual files or ZIP archives of historical check-ins.</p>
+of individual files or ZIP archives of historical check-ins.
+You can also <a href="getthecode.html#clone">clone the entire repository</a>.</p>
 
-<p>Note that a unix-like development environment, including a recent
-version of <a href="http://www.tcl.tk/">Tcl</a>, is required in order to
-build from the repository sources.  The <a href="amalgamation.html">amalgamation</a> source code files
-(the "sqlite3.c" and "sqlite3.h" files) are not contained in
-the repository.</p>
+<p>See the <a href="howtocompile.html">How To Compile SQLite</a> page for additional information
+on how to use the raw SQLite source code.
+Note that a recent version of <a href="http://www.tcl.tk/">Tcl</a>
+is required in order to build from the repository sources. 
+The <a href="amalgamation.html">amalgamation</a> source code files
+(the "sqlite3.c" and "sqlite3.h" files) build products and are
+not contained in raw source code tree.</p>
 
 <blockquote>
 <a href="http://www.sqlite.org/cgi/src">http://www.sqlite.org/cgi/src</a> (Dallas)<br>

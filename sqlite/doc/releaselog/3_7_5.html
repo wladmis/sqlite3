@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.7.5 On 2011-02-01 (3.7.5)</title>
+<title>SQLite Release 3.7.5 On 2011-02-01</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,7 +128,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.7.5 On 2011-02-01 (3.7.5)</h2><p><ul>
+<h2>SQLite Release 3.7.5 On 2011-02-01</h2><p><ul>
 <li> Added the <a href="../c3ref/mprintf.html">sqlite3_vsnprintf()</a> interface.
 <li> Added the <a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidehit">SQLITE_DBSTATUS_LOOKASIDE_HIT</a>,
      <a href="../c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidemisssize">SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE</a>, and
@@ -138,7 +138,7 @@ a:visited { color: #734559 }
 <li> Added the <a href="../compile.html#default_foreign_keys">SQLITE_DEFAULT_FOREIGN_KEYS</a> compile-time option.
 <li> Updates to <a href="../c3ref/stmt_readonly.html">sqlite3_stmt_readonly()</a> so that its result is well-defined
      for all prepared statements and so that it works with <a href="../lang_vacuum.html">VACUUM</a>.
-<li> Added the "-heap" option to the <a href="../sqlite.html">command-line shell</a>
+<li> Added the "-heap" option to the <a href="../cli.html">command-line shell</a>
 <li> Fix <a href="http://www.sqlite.org/src/info/5d863f876e">a bug</a> involving
      frequent changes in and out of WAL mode and
      VACUUM that could (in theory) cause database corruption.
@@ -148,7 +148,7 @@ a:visited { color: #734559 }
      greatly improves tracing output when using the FTS3/4 and/or RTREE
      virtual tables.
 <li> Change the xFileControl() methods on all built-in VFSes to return
-     <a href="../c3ref/c_abort.html">SQLITE_NOTFOUND</a> instead of <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> for an unrecognized
+     <a href="../rescode.html#notfound">SQLITE_NOTFOUND</a> instead of <a href="../rescode.html#error">SQLITE_ERROR</a> for an unrecognized
      operation code.
 <li> The SQLite core invokes the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> 
      <a href="../c3ref/file_control.html">file control</a>

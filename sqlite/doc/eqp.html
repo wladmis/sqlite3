@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -206,7 +206,7 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
   statement that is implemented by performing a full-table scan on table t1:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
 0|0|0|SCAN TABLE t1
-</table></div>
+</pre></table></div>
 
 <p>
   The example above shows
@@ -218,7 +218,7 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i1 ON t1(a);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 0|0|0|SEARCH TABLE t1 USING INDEX i1
-</table></div>
+</pre></table></div>
 
 <p>
   The previous example, SQLite uses index "i1" to optimize
@@ -229,7 +229,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i2 ON t1(a, b);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
 0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
-</table></div>
+</pre></table></div>
 
 <p>
   All joins in SQLite are <a href="optoverview.html#table_order">implemented using nested scans</a>. When a
@@ -238,7 +238,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t1, t2 WHERE t1.a=1 AND t1.b>2;
 0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
 0|1|1|SCAN TABLE t2
-</table></div>
+</pre></table></div>
 
 <p>
   The second column of output (column "order") indicates the nesting order. In
@@ -255,7 +255,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t2, t1 WHERE t1.a=1 AND t1.b>2;
 0|0|1|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
 0|1|0|SCAN TABLE t2
-</table></div>
+</pre></table></div>
 
 <p>
   If the WHERE clause of a query contains an OR expression, then SQLite might
@@ -267,7 +267,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
 0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
 0|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
-</table></div>
+</pre></table></div>
 
 <h2 id="section_1_2">1.2. Temporary Sorting B-Trees</h2>
 
@@ -284,7 +284,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
 0|0|0|SCAN TABLE t2
 0|0|0|USE TEMP B-TREE FOR ORDER BY
-</table></div>
+</pre></table></div>
 
 <p>
   In this case using the temporary b-tree can be avoided by creating an index
@@ -293,7 +293,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; CREATE INDEX i4 ON t2(c);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
 0|0|0|SCAN TABLE t2 USING INDEX i4
-</table></div>
+</pre></table></div>
 
 <h2 id="section_1_3">1.3. Subqueries</h2>
 
@@ -311,7 +311,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
 1|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
 0|0|0|EXECUTE CORRELATED SCALAR SUBQUERY 2
 2|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
-</table></div>
+</pre></table></div>
 
 <p>
   The example above contains a pair of scalar subqueries assigned selectid 
@@ -339,7 +339,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
 1|0|0|SCAN TABLE t1 USING COVERING INDEX i2
 0|0|0|SCAN SUBQUERY 1
 0|0|0|USE TEMP B-TREE FOR GROUP BY
-</table></div>
+</pre></table></div>
 
 <p>
   If the <a href="optoverview.html#flattening">flattening optimization</a> is used on a subquery in the FROM clause
@@ -353,7 +353,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM (SELECT * FROM t2 WHERE c=1), t1;
 0|0|0|SEARCH TABLE t2 USING INDEX i4 (c=?)
 0|1|1|SCAN TABLE t1
-</table></div>
+</pre></table></div>
 
 <h2 id="section_1_4">1.4. Compound Queries</h2>
 
@@ -368,7 +368,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
 1|0|0|SCAN TABLE t1
 2|0|0|SCAN TABLE t2
 0|0|0|COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (UNION)
-</table></div>
+</pre></table></div>
 
 <p>
   The "USING TEMP B-TREE" clause in the above output indicates that a 
@@ -381,7 +381,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
 2|0|0|SCAN TABLE t2
 2|0|0|USE TEMP B-TREE FOR ORDER BY
 0|0|0|COMPOUND SUBQUERIES 1 AND 2 (EXCEPT)
-</table></div>
+</pre></table></div>
 
 <h1 id="section_2">2. Sample Code</h1>
 
@@ -427,5 +427,5 @@ int printExplainQueryPlan(sqlite3_stmt *pStmt){
 
   return sqlite3_finalize(pExplain);
 }
-</table></div>
+</pre></table></div>
 

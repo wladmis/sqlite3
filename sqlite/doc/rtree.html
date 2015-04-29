@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -144,7 +144,7 @@ or which overlap the query rectangle.  This idea is easily extended to
 three dimensions for use in CAD systems.  R-Trees also find use in time-domain
 range look-ups.  For example, suppose a database records the starting and
 ending times for a large number of events.  A R-Tree is able to quickly
-find all events, for example, that were active at any time during a given
+find all events that were active at any time during a given
 time interval, or all events that started during a particular time interval,
 or all events that both started and ended within a given time interval.
 And so forth.
@@ -181,23 +181,27 @@ The SQLite R*Tree module is implemented as a
 <a href="c3ref/create_module.html">virtual table</a>.  Each R*Tree index is a
 virtual table with an odd number of columns between 3 and 11.
 The first column is always a 64-bit signed integer primary key.
-The other columns are minimum- and maximum-value pairs (stored as
-32-bit floating point numbers) for each
-dimension.  A 1-dimensional R*Tree thus has 3 columns.  
-A 2-dimensional R*Tree (the most common case) has 5 columns.
-A 5-dimensional R*Tree has 11 columns.  The SQLite R*Tree implementation
+The other columns are pairs, one pair per dimension, containing the
+minimum and maximum values for that dimension, respectively.
+A 1-dimensional R*Tree thus has 3 columns.  
+A 2-dimensional R*Tree has 5 columns.
+A 3-dimensional R*Tree has 7 columns.
+A 4-dimensional R*Tree has 9 columns.
+And a 5-dimensional R*Tree has 11 columns.  The SQLite R*Tree implementation
 does not support R*Trees wider than 5 dimensions.
 </p>
 
 <p>
 The first column of an SQLite R*Tree must always be an integer
 primary key.
-The min/max-value pair columns are always stored as
-32-bit floating point values.  Unlike regular SQLite tables which
+The min/max-value pair columns are stored as
+32-bit floating point values for "rtree" virtual tables or as
+32-bit signed integers in "rtree_i32" virtual tables.
+Unlike regular SQLite tables which
 can store data in a variety of datatypes and formats, the R*Tree
-indices rigidly enforce these two storage types.  Attempts to insert
+indices rigidly enforce these storage types.  Attempts to insert
 something other than an integer into the first column, or something
-other than a floating point value into the other columns, will result
+other than a numeric value into the other columns, will result
 in an error.
 </p>
 
@@ -232,7 +236,7 @@ useful.
 And you can <a href="lang_update.html">UPDATE</a>, <a href="lang_delete.html">DELETE</a>, <a href="lang_insert.html">INSERT</a> or even <a href="lang_droptable.html">DROP</a> 
 the shadow tables, though doing so will corrupt your R*Tree index.
 So it is best to simply ignore the shadow tables.  Recognize that they
-are there to hold your R*Tree index information and let it go as that.
+hold your R*Tree index information and let it go as that.
 </p>
 
 <p>
@@ -289,9 +293,9 @@ SELECT * FROM demo_index WHERE id=1;
 </pre></blockquote>
 
 <p>
-Of course, an ordinary SQLite table will do a query against its
+Of course, an ordinary SQLite table will also do a query against its
 integer primary key efficiently, so the previous is no big deal.
-The real reason for using an R*Tree in the first place is so that
+The real reason for using an R*Tree is so that
 you can efficiently do inequality queries against the coordinate
 ranges.  To find all elements of the index that are contained within
 the vicinity of Charlotte, North Carolina, one might do:
@@ -325,7 +329,7 @@ query box but still overlaps the query box.
 </p>
 
 <p>
-Note that is not necessary for all coordinates in an R*Tree index
+Note that it is not necessary for all coordinates in an R*Tree index
 to be constrained in order for the index search to be efficient.
 One might, for example, want to query all objects that overlap with
 the 35th parallel:
@@ -476,17 +480,27 @@ internal computations.
 <h2>6.0 Custom R-Tree Queries</h2>
 
 <p>By using standard SQL expressions in the WHERE clause of a SELECT query,
-a user may query for all r-tree entries that intersect a specified
-bounding-box, or for all entries that are completely encapsulated by a
-specified bounding-box. Custom r-tree queries, which use the special MATCH
-operator in the WHERE clause of a SELECT, allow the user to query for the set
-of r-tree entries that intersect any arbitrarily defined region.
+a programmer can query for all R*Tree entries that have a spatial relationship
+(they intersect with or are contained within) a particular bounding-box.
+Custom R*Tree queries, using the MATCH
+operator in the WHERE clause of a SELECT, allow the programmer to query for 
+the set of R*Tree entries that intersect any arbitrary region or shape, not 
+just a box.  This capability is useful, for example, in computing the 
+subset of objects in the R*Tree that are visible from a camera positioned 
+in 3-D space.
 
-<p>Regions for custom r-tree queries are defined by r-tree geometry callbacks
-implemented by the application and registered with SQLite via a call to the 
-following API:
+<p>Regions for custom R*Tree queries are defined by R*Tree geometry callbacks
+implemented by the application and registered with SQLite via a call to one
+of the following two APIs:
 
 <blockquote><pre>
+int sqlite3_rtree_query_callback(
+  sqlite3 *db,
+  const char *zQueryFunc,
+  int (*xQueryFunc)(sqlite3_rtree_query_info*),
+  void *pContext,
+  void (*xDestructor)(void*)
+);
 int sqlite3_rtree_geometry_callback(
   sqlite3 *db,
   const char *zGeom,
@@ -495,63 +509,56 @@ int sqlite3_rtree_geometry_callback(
 );
 </pre></blockquote>
 
-<p>A call to the above API registers an r-tree geometry callback named zGeom.
-If an r-tree geometry callback or ordinary SQL user function named zGeom 
-already exists when sqlite3_rtree_geometry_callback() is called, it is replaced
-by the new r-tree geometry callback. If the xGeom parameter is passed a NULL
-value, then any existing r-tree geometry callback or SQL user function is
-removed from the system, but no new r-tree geometry callback is registered.
+<p>The sqlite3_rtree_query_callback() became available with SQLite
+<a href="releaselog/3_8_5.html">version 3.8.5</a> and is the preferred interface.
+The sqlite3_rtree_geometry_callback() is an older and less flexible
+interface that is supported for backwards compatibility.
 
-<p>When the r-tree geometry callback is used in a custom r-tree query, the
-registered callback is invoked one or more times by SQLite to test whether or
-not the user-defined region intersects with specific bounding boxes.
-The bounding box being tested is defined by the contents of the aCoord[] 
-array (size nCoord) passed to the callback. The aCoord[] array always contains
-the same number of entries as there are coordinate columns in the r-tree table
-(one less than the total number of columns, since the object id column does not
-contain a coordinate). They define a bounding-box in the same way as each row
-of the r-tree table itself does - the first scalar coordinate contains the
-minimum value for the first dimension, followed by the maximum value for the
-first dimension, followed by the minimum value for the second dimension, and so
-on. If the specified bounding box intersects with the custom query region, then
-the implementation of the callback must set the output parameter *pRes to
-non-zero and return SQLITE_OK. If the specified bounding box does not intersect
-the queried region, *pRes should be set to zero before returning SQLITE_OK. If
-an error occurs, the callback may return an SQLite error code other than
-SQLITE_OK, in which case the value of *pRes is ignored by SQLite and the query
-abandoned.
+<p>A call to one of the above APIs creates a new SQL function named by the
+second parameter (zQueryFunc or zGeom).  When that SQL function appears
+on the right-hand side of the MATCH operator and the left-hand side of the
+MATCH operator is any column in the R*Tree virtual table, then the callback 
+defined by the third argument (xQueryFunc or xGeom) is invoked to determine
+if a particular object or subtree overlaps the desired region.
 
-<p>A registered r-tree geometry callback is used in an r-tree query by adding
-a MATCH condition to the WHERE clause of a SELECT statement. For example,
-assuming a custom geometry callback named "circle" has been registered, it may
-be used in a query on the two-dimensional r-tree table "demo_index" defined in
-earlier examples as follows: 
+<p>For example, a query like the following might be used to find all
+R*Tree entries that overlap with a circle centered a 45.3,22.9 with a
+radius of 5.0:
 
 <blockquote><pre>
-SELECT * FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
+SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
 </blockquote></pre>
 
-<p>The left-hand side of the MATCH operator may be any column from the r-tree
-table, including the object id column. It makes no difference which column is
-used. The right-hand side of the MATCH operator is passed the results of an
-SQL function with the same name as the r-tree geometry callback. Zero or more
-function parameters may be specified by the user. Parameters are always
-interpreted as 64-bit real values. If a text, integer or blob value is passed
-as a parameter to an r-tree geometry callback function, it is converted to
-a real value as if by a <a href="lang_expr.html#castexpr">CAST expression</a>. If an SQL NULL value is passed to
-an r-tree geometry callback function, it is converted to the value 0.0.
+<p>The SQL syntax for custom queries is the same regardless of which
+interface, sqlite3_rtree_geometry_callback() or sqlite3_rtree_query_callback(),
+is used to register the SQL function.  However, the newer query-style
+callbacks give the application greater control over how the query proceeds.
 
-<p>Parameters passed to r-tree geometry callback functions may be used by the
-implementation of the r-tree geometry callback to define the specified
-region in any way. For example, the three parameters passed to the "circle"
-geometry callback above could identify the center point and radius of the
-circular region of interest.
+<h3>6.1 The Legacy xGeom Callback</h3>
 
-<p>The first argument to each invocation of an r-tree geometry callback is
-a pointer to a structure of the following type. The contents of the structure
-are not modified between multiple calls to the r-tree geometry callback
-associated with a single query (unless the pUser or xDelUser member variables
-are modified by the callback implementation - see below).
+<p>The legacy xGeom callback is invoked with four arguments.  The first
+argument is a pointer to an sqlite3_rtree_geometry structure which provides
+information about how the SQL function was invoked.  The second argument
+is the number of coordinates in each r-tree entry, and is always the same
+for any given R*Tree.  The number of coordinates is 2 for a 1-dimensional R*Tree,
+4 for a 2-dimensional R*Tree, 6 for a 3-dimensional R*Tree, and so forth.
+The third argument, aCoord[], is an array of nCoord coordinates that defines
+a bounding box to be tested.  The last argument is a pointer into which 
+the callback result should be written.  The result is zero
+if the bounding-box defined by aCoord[] is completely outside
+the region defined by the xGeom callback and the result is non-zero if
+the bounding-box is inside or overlaps with the xGeom region.  The xGeom
+callback should normally return SQLITE_OK.  If xGeom returns anything other
+than SQLITE_OK, then the r-tree query will abort with an error.
+
+<p>The sqlite3_rtree_geometry structure that the first argument to the
+xGeom callback points to has a structure shown below.  The exact same
+sqlite3_rtree_geometry
+structure is used for every callback for same MATCH operator in the same
+query.  The contents of the sqlite3_rtree_geometry
+structure are initialized by SQLite but are
+not subsequently modified.  The callback is free to make changes to the
+pUser and xDelUser elements of the structure if desired.
 
 <blockquote><pre>
 typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
@@ -564,24 +571,133 @@ struct sqlite3_rtree_geometry {
 };
 </pre></blockquote>
 
-<p>The pContext member of the structure is always set to a copy of the pContext
-argument passed to sqlite3_rtree_geometry_callback() when the r-tree geometry
+<p>The pContext member of the sqlite3_rtree_geometry
+structure is always set to a copy of the pContext
+argument passed to sqlite3_rtree_geometry_callback() when the
 callback is registered. The aParam[] array (size nParam) contains the parameter
-values passed to the r-tree geometry callback as part of the SQL query. In
-the example "circle" query above, nParam would be set to 3 and the aParam[]
+values passed to the SQL function on the right-hand side of the MATCH operator.
+In the example "circle" query above, nParam would be set to 3 and the aParam[]
 array would contain the three values 45.3, 22.9 and 5.0.
 
 <p>The pUser and xDelUser members of the sqlite3_rtree_geometry structure are
 initially set to NULL. The pUser variable may be set by the callback
 implementation to any arbitrary value that may be useful to subsequent
-invocations of the callback within the same custom r-tree query (for example, a
+invocations of the callback within the same query (for example, a
 pointer to a complicated data structure used to test for region intersection).
-If the xDelUser variable is set to a non-NULL value, then after the custom
-r-tree query has finished running SQLite automatically invokes it with the
+If the xDelUser variable is set to a non-NULL value, then after the
+query has finished running SQLite automatically invokes it with the
 value of the pUser variable as the only argument. In other words, xDelUser
 may be set to a destructor function for the pUser value.
 
-<p>Example code implementing the "circle" r-tree geometry callback may be
-found in the file 
-<a href=http://www.sqlite.org/src/doc/trunk/src/test_rtree.c>test_rtree.c</a>.
+<p>The xGeom callback always does a depth-first search of the r-tree.
+
+<a name="xquery"></a>
+
+<h3>6.2 The New xQueryFunc Callback</h3>
+
+<p>The newer xQueryFunc callback receives more information from the r-tree
+query engine on each call, and it sends more information back to the query engine
+before it returns.
+To help keep the interface manageable, the xQueryFunc callback sends and receives
+information from the query engine as fields in the
+sqlite3_rtree_query_info structure:
+
+<blockquote><pre>
+struct sqlite3_rtree_query_info {
+  void *pContext;                   /* pContext from when function registered */
+  int nParam;                       /* Number of function parameters */
+  sqlite3_rtree_dbl *aParam;        /* value of function parameters */
+  void *pUser;                      /* callback can use this, if desired */
+  void (*xDelUser)(void*);          /* function to free pUser */
+  sqlite3_rtree_dbl *aCoord;        /* Coordinates of node or entry to check */
+  unsigned int *anQueue;            /* Number of pending entries in the queue */
+  int nCoord;                       /* Number of coordinates */
+  int iLevel;                       /* Level of current node or entry */
+  int mxLevel;                      /* The largest iLevel value in the tree */
+  sqlite3_int64 iRowid;             /* Rowid for current entry */
+  sqlite3_rtree_dbl rParentScore;   /* Score of parent node */
+  int eParentWithin;                /* Visibility of parent node */
+  int eWithin;                      /* OUT: Visiblity */
+  sqlite3_rtree_dbl rScore;         /* OUT: Write the score here */
+};
+</pre></blockquote>
+
+<p>The first five fields of the sqlite3_rtree_query_info structure are identical
+to the sqlite3_rtree_geometry structure, and have exactly the same meaning.
+The sqlite3_rtree_query_info structure also contains nCoord and aCoord fields 
+which have the same meaning as the parameter of the same name in the xGeom callback.
+
+<p>The xQueryFunc must set the eWithin field of sqlite3_rtree_query_info to
+on of the values NOT_WITHIN, PARTLY_WITHIN, or FULLY_WITHIN depending on whether
+or not the bounding box defined by aCoord[] is completely outside the region,
+overlaps the region, or is completely inside the region, respectively.  In
+addition, the xQueryFunc must set the rScore field to a non-negative value that
+indicates the order in which subtrees and entries of the query should be analyzed
+and returned.  Smaller scores are processed first.
+
+<p>As its name implies, an R*Tree is organized as a tree.  Each node of the
+tree is a bounding box.  The root of the tree is a bounding box that encapsulates
+all elements of the tree.  Beneath the root are a number of subtrees (typically
+20 or more) each with their own smaller bounding boxes and each containing some
+subset of the R*Tree entries.  The subtrees may have sub-subtrees, and so forth
+until finally one reaches the leaves of the tree which are the actual R*Tree
+entries.
+
+<p>An R*Tree query is initialized by making the root node the only entry
+in a priority queue sorted by rScore.
+The query proceeds by extracting the entry from the priority queue that has
+the lowest score.  If that entry is a leaf (meaning that it is an actual
+R*Tree entry and not a subtree) then that entry
+is returned as one row of the query result.  
+If the extracted priority queue entry is a node (a subtree),
+then sub-subtrees or leaves contained within that entry are passed to the
+xQueryFunc callback, one by one.  Those subelements for which the xQueryFunc
+callback sets eWithin to PARTLY_WITHIN or FULLY_WITHIN are added to the priority
+queue using the score supplied by the callback.  Subelements that return
+NOT_WITHIN are discarded.  The query runs until the priority queue is empty.
+
+<p>Every leaf entry and node (subtree) within the R*Tree has an integer "level".
+The leaves have a level of 0.  The first containing subtree of the leaves has
+a level of 1.  The root of the R*Tree has the largest level value.  The
+mxLevel entry in the sqlite3_rtree_query_info structure is the level value for
+the root of the R*Tree.  The iLevel entry in sqlite3_rtree_query_info gives the
+level for the object being interrogated.
+
+<p>Most R*Tree queries use a depth-first search.  This is accomplished by setting
+the rScore equal to iLevel.  A depth-first search is usually preferred since it
+minimizes the number of elements in the priority queue, which reduces memory
+requirements and speeds processing.  However, some application may prefer a
+breadth-first search, which can be accomplished by setting rScore to mxLevel-iLevel.
+By creating more complex formulas for rScore, applications can exercise
+detailed control over the order in which subtree are searched and leaf
+R*Tree entries are returned.  For example, in an application with many
+millions of R*Tree entries, the rScore might be arranged so that the
+largest or most significant entries are returned first, allowing the
+application to display the most important information quickly, and
+filling in smaller and less important details as they become available.
+
+<p>Other information fields of the sqlite3_rtree_query_info structure are
+available for use by the xQueryFunc callback, if desired.  The iRowid field
+is the rowid (the first of the 3 to 11 columns in the R*Tree) for the element
+being considered.  iRowid is only valid for leaves.  The eParentWithin and
+rParentScore values are copies of the eWithin and rScore values from the
+containing subtree of the current row.  The anQueue field is an array
+of mxLevel+1 unsigned integers that tell the current number of elements in
+the priority queue at each level.
+
+<h3>6.3 Additional Considerations for Custom Queries</h3>
+
+<p>
+The MATCH operator of a custom R*Tree query function must be a top-level
+AND-connected term of the WHERE clause, or else it will not be usable
+by the R*Tree query optimizer and the query will not be runnable.
+If the MATCH operator is connected to other terms of the WHERE clause 
+via an OR operator, for example, the query will fail with an error.
+
+<p>
+Two or more MATCH operators are allowed in the same WHERE clause, as long
+as they are connected by AND operators.  However,
+the R*Tree query engine only contains a single priority queue.  The priority
+assigned to each node in the search is the lowest priority returned by any
+of the MATCH operators.
 

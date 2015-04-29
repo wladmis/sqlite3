@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -151,14 +151,14 @@ returned in *ppDb, even if an error occurs.  The only exception is that
 if SQLite is unable to allocate memory to hold the <a href="../c3ref/sqlite3.html">sqlite3</a> object,
 a NULL will be written into *ppDb instead of a pointer to the <a href="../c3ref/sqlite3.html">sqlite3</a>
 object. If the database is opened (and/or created) successfully, then
-<a href="../c3ref/c_abort.html">SQLITE_OK</a> is returned.  Otherwise an <a href="../c3ref/c_abort.html">error code</a> is returned. The
+<a href="../rescode.html#ok">SQLITE_OK</a> is returned.  Otherwise an <a href="../rescode.html">error code</a> is returned. The
 <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> or <a href="../c3ref/errcode.html">sqlite3_errmsg16()</a> routines can be used to obtain
 an English language description of the error following a failure of any
 of the sqlite3_open() routines.</p>
 
-<p>The default encoding for the database will be UTF-8 if
-sqlite3_open() or sqlite3_open_v2() is called and
-UTF-16 in the native byte order if sqlite3_open16() is used.</p>
+<p>The default encoding will be UTF-8 for databases created using
+sqlite3_open() or sqlite3_open_v2().  The default encoding for databases
+created using sqlite3_open16() will be UTF-16 in the native byte order.</p>
 
 <p>Whether or not an error occurs when it is opened, resources
 associated with the <a href="../c3ref/sqlite3.html">database connection</a> handle should be released by
@@ -254,7 +254,8 @@ is a drive specification (e.g. "C:").</p>
 
 The query component of a URI may contain parameters that are interpreted
 either by SQLite itself, or by a <a href="../vfs.html">custom VFS implementation</a>.
-SQLite interprets the following three query parameters:</p>
+SQLite and its built-in <a href="../vfs.html">VFSes</a> interpret the
+following query parameters:</p>
 
 <p><ul>
 <li> <b>vfs</b>: The "vfs" parameter may be used to specify the name of
@@ -287,8 +288,30 @@ sqlite3_open_v2(). Setting the cache parameter to "private" is
 equivalent to setting the SQLITE_OPEN_PRIVATECACHE bit.
 If sqlite3_open_v2() is used and the "cache" parameter is present in
 a URI filename, its value overrides any behavior requested by setting
-SQLITE_OPEN_PRIVATECACHE or SQLITE_OPEN_SHAREDCACHE flag.
-</ul></p>
+SQLITE_OPEN_PRIVATECACHE or SQLITE_OPEN_SHAREDCACHE flag.</p>
+
+<p><li> <b>psow</b>: The psow parameter indicates whether or not the
+<a href="../psow.html">powersafe overwrite</a> property does or does not apply to the
+storage media on which the database file resides.</p>
+
+<p><li> <b>nolock</b>: The nolock parameter is a boolean query parameter
+which if set disables file locking in rollback journal modes.  This
+is useful for accessing a database on a filesystem that does not
+support locking.  Caution:  Database corruption might result if two
+or more processes write to the same database and any one of those
+processes uses nolock=1.</p>
+
+<p><li> <b>immutable</b>: The immutable parameter is a boolean query
+parameter that indicates that the database file is stored on
+read-only media.  When immutable is set, SQLite assumes that the
+database file cannot be changed, even by a process with higher
+privilege, and so the database is opened read-only and all locking
+and change detection is disabled.  Caution: Setting the immutable
+property on a database file that does in fact change can result
+in incorrect query results and/or <a href="../rescode.html#corrupt">SQLITE_CORRUPT</a> errors.
+See also: <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_IMMUTABLE</a>.</p>
+
+<p></ul></p>
 
 <p>Specifying an unknown parameter in the query component of a URI is not an
 error.  Future versions of SQLite might understand additional query
@@ -318,8 +341,9 @@ in URI filenames.
 Open file "data.db" in the current directory for read-only access.
 Regardless of whether or not shared-cache mode is enabled by
 default, use a private cache.
-<tr><td> file:/home/fred/data.db?vfs=unix-nolock <td>
-Open file "/home/fred/data.db". Use the special VFS "unix-nolock".
+<tr><td> file:/home/fred/data.db?vfs=unix-dotfile <td>
+Open file "/home/fred/data.db". Use the special VFS "unix-dotfile"
+that uses dot-files in place of posix advisory locking.
 <tr><td> file:data.db?mode=readonly <td>
 An error. "readonly" is not a valid option for the "mode" parameter.
 </table></p>

@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -142,66 +142,66 @@ interface <a href="../c3ref/prepare.html">sqlite3_prepare()</a> and <a href="../
 new "v2" interface is recommended for new applications but the legacy
 interface will continue to be supported.</p>
 
-<p>In the legacy interface, the return value will be either <a href="../c3ref/c_abort.html">SQLITE_BUSY</a>,
-<a href="../c3ref/c_abort.html">SQLITE_DONE</a>, <a href="../c3ref/c_abort.html">SQLITE_ROW</a>, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>, or <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.
-With the "v2" interface, any of the other <a href="../c3ref/c_abort.html">result codes</a> or
-<a href="../c3ref/c_abort_rollback.html">extended result codes</a> might be returned as well.</p>
+<p>In the legacy interface, the return value will be either <a href="../rescode.html#busy">SQLITE_BUSY</a>,
+<a href="../rescode.html#done">SQLITE_DONE</a>, <a href="../rescode.html#row">SQLITE_ROW</a>, <a href="../rescode.html#error">SQLITE_ERROR</a>, or <a href="../rescode.html#misuse">SQLITE_MISUSE</a>.
+With the "v2" interface, any of the other <a href="../rescode.html">result codes</a> or
+<a href="../rescode.html#extrc">extended result codes</a> might be returned as well.</p>
 
-<p><a href="../c3ref/c_abort.html">SQLITE_BUSY</a> means that the database engine was unable to acquire the
+<p><a href="../rescode.html#busy">SQLITE_BUSY</a> means that the database engine was unable to acquire the
 database locks it needs to do its job.  If the statement is a <a href="../lang_transaction.html">COMMIT</a>
 or occurs outside of an explicit transaction, then you can retry the
 statement.  If the statement is not a <a href="../lang_transaction.html">COMMIT</a> and occurs within an
 explicit transaction then you should rollback the transaction before
 continuing.</p>
 
-<p><a href="../c3ref/c_abort.html">SQLITE_DONE</a> means that the statement has finished executing
+<p><a href="../rescode.html#done">SQLITE_DONE</a> means that the statement has finished executing
 successfully.  sqlite3_step() should not be called again on this virtual
 machine without first calling <a href="../c3ref/reset.html">sqlite3_reset()</a> to reset the virtual
 machine back to its initial state.</p>
 
-<p>If the SQL statement being executed returns any data, then <a href="../c3ref/c_abort.html">SQLITE_ROW</a>
+<p>If the SQL statement being executed returns any data, then <a href="../rescode.html#row">SQLITE_ROW</a>
 is returned each time a new row of data is ready for processing by the
 caller. The values may be accessed using the <a href="../c3ref/column_blob.html">column access functions</a>.
 sqlite3_step() is called again to retrieve the next row of data.</p>
 
-<p><a href="../c3ref/c_abort.html">SQLITE_ERROR</a> means that a run-time error (such as a constraint
+<p><a href="../rescode.html#error">SQLITE_ERROR</a> means that a run-time error (such as a constraint
 violation) has occurred.  sqlite3_step() should not be called again on
 the VM. More information may be found by calling <a href="../c3ref/errcode.html">sqlite3_errmsg()</a>.
 With the legacy interface, a more specific error code (for example,
-<a href="../c3ref/c_abort.html">SQLITE_INTERRUPT</a>, <a href="../c3ref/c_abort.html">SQLITE_SCHEMA</a>, <a href="../c3ref/c_abort.html">SQLITE_CORRUPT</a>, and so forth)
+<a href="../rescode.html#interrupt">SQLITE_INTERRUPT</a>, <a href="../rescode.html#schema">SQLITE_SCHEMA</a>, <a href="../rescode.html#corrupt">SQLITE_CORRUPT</a>, and so forth)
 can be obtained by calling <a href="../c3ref/reset.html">sqlite3_reset()</a> on the
 <a href="../c3ref/stmt.html">prepared statement</a>.  In the "v2" interface,
 the more specific error code is returned directly by sqlite3_step().</p>
 
-<p><a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> means that the this routine was called inappropriately.
+<p><a href="../rescode.html#misuse">SQLITE_MISUSE</a> means that the this routine was called inappropriately.
 Perhaps it was called on a <a href="../c3ref/stmt.html">prepared statement</a> that has
 already been <a href="../c3ref/finalize.html">finalized</a> or on one that had
-previously returned <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> or <a href="../c3ref/c_abort.html">SQLITE_DONE</a>.  Or it could
+previously returned <a href="../rescode.html#error">SQLITE_ERROR</a> or <a href="../rescode.html#done">SQLITE_DONE</a>.  Or it could
 be the case that the same database connection is being used by two or
 more threads at the same moment in time.</p>
 
 <p>For all versions of SQLite up to and including 3.6.23.1, a call to
 <a href="../c3ref/reset.html">sqlite3_reset()</a> was required after sqlite3_step() returned anything
-other than <a href="../c3ref/c_abort.html">SQLITE_ROW</a> before any subsequent invocation of
+other than <a href="../rescode.html#row">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
-<a href="../c3ref/reset.html">sqlite3_reset()</a> would result in an <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a> return from
+<a href="../c3ref/reset.html">sqlite3_reset()</a> would result in an <a href="../rescode.html#misuse">SQLITE_MISUSE</a> return from
 sqlite3_step().  But after version 3.6.23.1, sqlite3_step() began
 calling <a href="../c3ref/reset.html">sqlite3_reset()</a> automatically in this circumstance rather
-than returning <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.  This is not considered a compatibility
+than returning <a href="../rescode.html#misuse">SQLITE_MISUSE</a>.  This is not considered a compatibility
 break because any application that ever receives an SQLITE_MISUSE error
 is broken by definition.  The <a href="../compile.html#omit_autoreset">SQLITE_OMIT_AUTORESET</a> compile-time option
 can be used to restore the legacy behavior.</p>
 
 <p><b>Goofy Interface Alert:</b> In the legacy interface, the sqlite3_step()
-API always returns a generic error code, <a href="../c3ref/c_abort.html">SQLITE_ERROR</a>, following any
-error other than <a href="../c3ref/c_abort.html">SQLITE_BUSY</a> and <a href="../c3ref/c_abort.html">SQLITE_MISUSE</a>.  You must call
+API always returns a generic error code, <a href="../rescode.html#error">SQLITE_ERROR</a>, following any
+error other than <a href="../rescode.html#busy">SQLITE_BUSY</a> and <a href="../rescode.html#misuse">SQLITE_MISUSE</a>.  You must call
 <a href="../c3ref/reset.html">sqlite3_reset()</a> or <a href="../c3ref/finalize.html">sqlite3_finalize()</a> in order to find one of the
-specific <a href="../c3ref/c_abort.html">error codes</a> that better describes the error.
+specific <a href="../rescode.html">error codes</a> that better describes the error.
 We admit that this is a goofy design.  The problem has been fixed
 with the "v2" interface.  If you prepare all of your SQL statements
 using either <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> instead
 of the legacy <a href="../c3ref/prepare.html">sqlite3_prepare()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16()</a> interfaces,
-then the more specific <a href="../c3ref/c_abort.html">error codes</a> are returned directly
+then the more specific <a href="../rescode.html">error codes</a> are returned directly
 by sqlite3_step().  The use of the "v2" interface is recommended.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

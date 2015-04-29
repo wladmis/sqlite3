@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -140,7 +140,7 @@ a:visited { color: #734559 }
 TH3 is designed to meet the following objectives:</p>
 
 <ul>
-<li><p> TH3 runs on embedded platforms that lack the support
+<li><p> TH3 is able to run on embedded platforms that lack the support
      infrastructure of workstations.</p></li>
 
 <li><p> TH3 tests SQLite in an as-deployed configuration using only
@@ -165,8 +165,8 @@ TH3 is designed to meet the following objectives:</p>
 <p>TH3 was originally written for validation testing only, but has
 subsequently been used for development testing and debugging
 as well, and has proven very helpful in those roles.  A full-coverage
-test run for TH3 takes less than 4 minutes on a workstation and hence
-serves as a fast but effect regression test during day-to-day maintenance
+test takes less than three minutes on a workstation and hence
+serves as a fast regression test during day-to-day maintenance
 of the SQLite code base.</p>
 
 <h2>2.0 Operation</h2>
@@ -240,8 +240,8 @@ to specify optimization parameters and compile-time switches on the
 compiler command line.</p>
 
 <p>For testing on embedded systems, the mkth3.tcl script and the compiler
-steps shown above a typically performed on an ordinary workstation using
-a cross-compiler for the second step, then the resulting test program is
+steps shown above are performed on an ordinary workstation using
+a cross-compiler, then the resulting test program is
 transfer onto the device to be run.</p>
 
 <p>Once the test program is generated, it is run with no arguments to

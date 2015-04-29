@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,24 +130,22 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Close A BLOB Handle</h2><blockquote><pre>int sqlite3_blob_close(sqlite3_blob *);
 </pre></blockquote><p>
-Closes an open <a href="../c3ref/blob.html">BLOB handle</a>.</p>
+This function closes an open <a href="../c3ref/blob.html">BLOB handle</a>. The BLOB handle is closed
+unconditionally.  Even if this routine returns an error code, the
+handle is still closed.</p>
 
-<p>Closing a BLOB shall cause the current transaction to commit
-if there are no other BLOBs, no pending prepared statements, and the
-database connection is in <a href="../c3ref/get_autocommit.html">autocommit mode</a>.
-If any writes were made to the BLOB, they might be held in cache
-until the close operation if they will fit.</p>
+<p>If the blob handle being closed was opened for read-write access, and if
+the database is in auto-commit mode and there are no other open read-write
+blob handles or active write statements, the current transaction is
+committed. If an error occurs while committing the transaction, an error
+code is returned and the transaction rolled back.</p>
 
-<p>Closing the BLOB often forces the changes
-out to disk and so if any I/O errors occur, they will likely occur
-at the time when the BLOB is closed.  Any errors that occur during
-closing are reported as a non-zero return value.</p>
-
-<p>The BLOB is closed unconditionally.  Even if this routine returns
-an error code, the BLOB is still closed.</p>
-
-<p>Calling this routine with a null pointer (such as would be returned
-by a failed call to <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a>) is a harmless no-op.
+<p>Calling this function with an argument that is not a NULL pointer or an
+open blob handle results in undefined behaviour. Calling this routine
+with a null pointer (such as would be returned by a failed call to
+<a href="../c3ref/blob_open.html">sqlite3_blob_open()</a>) is a harmless no-op. Otherwise, if this function
+is passed a valid open blob handle, the values returned by the
+sqlite3_errcode() and sqlite3_errmsg() functions are set before returning.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

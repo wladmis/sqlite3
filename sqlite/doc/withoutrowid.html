@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -194,8 +194,9 @@ in an error.
 on WITHOUT ROWID tables.</b>
 In an ordinary table, "INTEGER PRIMARY KEY" means that the column is an
 alias for the rowid.  But since there is no rowid in a WITHOUT ROWID
-table, that special meaning no longer applies.  An "INTEGER PRIMARY KEY" works
-like an "INT PRIMARY KEY" in an ordinary table: It is a PRIMARY KEY
+table, that special meaning no longer applies.  An "INTEGER PRIMARY KEY" 
+column in a WITHOUT ROWID table works
+like an "INT PRIMARY KEY" column in an ordinary table: It is a PRIMARY KEY
 that has integer <a href="datatype3.html#affinity">affinity</a>.
 
 <li><p>
@@ -244,6 +245,8 @@ Hence, the update hook is not invoked when a WITHOUT ROWID table changes.
 that the session extension will not work correctly on a database that includes
 WITHOUT ROWID tables.
 </ol>
+
+<a name="bene"></a>
 
 <h2>3.0 Benefits Of WITHOUT ROWID Tables</h2>
 
@@ -318,6 +321,8 @@ real-world schema, there will typically be secondary indices and/or
 UNIQUE constraints, and the situation is more complicated.  But even then,
 there can often be space and performance advantages to using WITHOUT ROWID
 on tables that have non-integer or composite PRIMARY KEYs.
+
+<a name="wtu"></a>
 
 <h2>4.0 When To Use WITHOUT ROWID</h2>
 

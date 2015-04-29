@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -138,33 +138,35 @@ a:visited { color: #734559 }
     even after system crashes and power failures.</li>
 <li><a href="zeroconf.html">Zero-configuration</a>
      - no setup or administration needed.</li>
-<li>Implements most of SQL92.
-    (<a href="omitted.html">Features not supported</a>)</li>
+<li><a href="lang.html">Full SQL implementation</a>
+    with advanced features like <a href="partialindex.html">partial indexes</a>
+    and <a href="lang_with.html">common table expressions</a>.
+    (<a href="omitted.html">Omitted features</a>)</li>
 <li>A complete database is stored in a 
-    <a href="onefile.html">single cross-platform disk file</a>.</li>
+    <a href="onefile.html">single cross-platform disk file</a>.
+    Great for use as an <a href="appfileformat.html">application file format</a>.</li>
 <li>Supports terabyte-sized databases and gigabyte-sized strings
     and blobs.  (See <a href="limits.html">limits.html</a>.)
 <li>Small code <a href="footprint.html">footprint</a>: 
     less than 500KiB fully configured or much less
     with optional features omitted.</li>
-<li><a href="speed.html">Faster</a> than popular client/server database
-    engines for most common operations.</li>
-<li>Simple, easy to use <a href="c3ref/intro.html">API</a>.</li>
+<li>Simple, easy to use <a href="cintro.html">API</a>.</li>
 <li>Written in ANSI-C.  <a href="tclsqlite.html">TCL bindings</a> included.
     Bindings for dozens of other languages available separately.</li>
 <li>Well-commented source code with
     <a href="testing.html#coverage">100% branch test coverage</a>.</li>
 <li>Available as a 
     <a href="amalgamation.html">single ANSI-C source-code file</a> 
-    that you can easily drop into another project.
+    that is <a href="howtocompile.html">easy to compile</a> and hence is easy
+    to add into a larger project.
 <li><a href="selfcontained.html">Self-contained</a>:
     no external dependencies.</li>
-<li>Cross-platform: Unix (Linux, Mac OS-X, Android, iOS) and Windows
-    (Win32, WinCE, WinRT)
+<li>Cross-platform: Android, *BSD, iOS, Linux, Mac, Solaris, VxWorks, 
+    and Windows (Win32, WinCE, WinRT)
     are supported out of the box.  Easy to port to other systems.
 <li>Sources are in the <a href="copyright.html">public domain</a>.
     Use for any purpose.</li>
-<li>Comes with a standalone <a href="sqlite.html">command-line interface</a>
+<li>Comes with a standalone <a href="cli.html">command-line interface</a>
     (CLI) client that can be used to administer SQLite databases.</li>
 </ul>
 </p>
@@ -172,20 +174,20 @@ a:visited { color: #734559 }
 <h2>Suggested Uses For SQLite:</h2>
 
 <p><ul>
+<li><p><b>Database For The Internet Of Things.</b>
+SQLite is popular choice for the database engine in cellphones,
+PDAs, MP3 players, set-top boxes, and other electronic gadgets.
+SQLite has a small code footprint, makes efficient use of memory,
+disk space, and disk bandwidth, is highly reliable, and requires
+no maintenance from a Database Administrator.</p></li>
+
 <li><p><b>Application File Format.</b>
 Rather than using fopen() to write XML, JSON, CSV,
 or some proprietary format into
 disk files used by your application, use an SQLite database.
 You'll avoid having to write and troubleshoot a parser, your data
 will be more easily accessible and cross-platform, and your updates
-will be transactional.  (<a href="whentouse.html#appfileformat">more...</a>)</p></li>
-
-<li><p><b>Database For Gadgets.</b>
-SQLite is popular choice for the database engine in cellphones,
-PDAs, MP3 players, set-top boxes, and other electronic gadgets.
-SQLite has a small code footprint, makes efficient use of memory,
-disk space, and disk bandwidth, is highly reliable, and requires
-no maintenance from a Database Administrator.</p></li>
+will be transactional.  (<a href="appfileformat.html">more...</a>)</p></li>
 
 <li><p><b>Website Database.</b>
 Because it requires no configuration and stores information in ordinary
@@ -197,5 +199,7 @@ SQLite is often used as a surrogate for an enterprise RDBMS for
 demonstration purposes or for testing.  SQLite is fast and requires
 no setup, which takes a lot of the hassle out of testing and which
 makes demos perky and easy to launch.</p></li>
+
+<li><p><a href="./whentouse.html">More suggestions...</a></p></li>
 </ul>
 

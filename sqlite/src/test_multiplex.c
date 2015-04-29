@@ -406,7 +406,7 @@ static void multiplexControlFunc(
 ){
   int rc = SQLITE_OK;
   sqlite3 *db = sqlite3_context_db_handle(context);
-  int op;
+  int op = 0;
   int iVal;
 
   if( !db || argc!=2 ){ 
@@ -535,7 +535,7 @@ static int multiplexOpen(
     /* assign pointers to extra space allocated */
     memset(pGroup, 0, sz);
     pMultiplexOpen->pGroup = pGroup;
-    pGroup->bEnabled = -1;
+    pGroup->bEnabled = (unsigned char)-1;
     pGroup->bTruncate = sqlite3_uri_boolean(zUri, "truncate", 
                                    (flags & SQLITE_OPEN_MAIN_DB)==0);
     pGroup->szChunk = (int)sqlite3_uri_int64(zUri, "chunksize",
@@ -573,6 +573,9 @@ static int multiplexOpen(
       rc = pSubOpen->pMethods->xFileSize(pSubOpen, &sz);
       if( rc==SQLITE_OK && zName ){
         int bExists;
+        if( flags & SQLITE_OPEN_MASTER_JOURNAL ){
+          pGroup->bEnabled = 0;
+        }else
         if( sz==0 ){
           if( flags & SQLITE_OPEN_MAIN_JOURNAL ){
             /* If opening a main journal file and the first chunk is zero
@@ -1002,6 +1005,39 @@ static int multiplexFileControl(sqlite3_file *pConn, int op, void *pArg){
       /* no-op these */
       rc = SQLITE_OK;
       break;
+    case SQLITE_FCNTL_PRAGMA: {
+      char **aFcntl = (char**)pArg;
+      /*
+      ** EVIDENCE-OF: R-29875-31678 The argument to the SQLITE_FCNTL_PRAGMA
+      ** file control is an array of pointers to strings (char**) in which the
+      ** second element of the array is the name of the pragma and the third
+      ** element is the argument to the pragma or NULL if the pragma has no
+      ** argument.
+      */
+      if( aFcntl[1] && sqlite3_stricmp(aFcntl[1],"multiplex_truncate")==0 ){
+        if( aFcntl[2] && aFcntl[2][0] ){
+          if( sqlite3_stricmp(aFcntl[2], "on")==0
+           || sqlite3_stricmp(aFcntl[2], "1")==0 ){
+            pGroup->bTruncate = 1;
+          }else
+          if( sqlite3_stricmp(aFcntl[2], "off")==0
+           || sqlite3_stricmp(aFcntl[2], "0")==0 ){
+            pGroup->bTruncate = 0;
+          }
+        }
+        /* EVIDENCE-OF: R-27806-26076 The handler for an SQLITE_FCNTL_PRAGMA
+        ** file control can optionally make the first element of the char**
+        ** argument point to a string obtained from sqlite3_mprintf() or the
+        ** equivalent and that string will become the result of the pragma
+        ** or the error message if the pragma fails.
+        */
+        aFcntl[0] = sqlite3_mprintf(pGroup->bTruncate ? "on" : "off");
+        rc = SQLITE_OK;
+        break;
+      }
+      /* If the multiplexor does not handle the pragma, pass it through
+      ** into the default case. */
+    }
     default:
       pSubOpen = multiplexSubOpen(pGroup, 0, &rc, NULL, 0);
       if( pSubOpen ){
@@ -1176,14 +1212,20 @@ int sqlite3_multiplex_initialize(const char *zOrigVfsName, int makeDefault){
 ** THIS ROUTINE IS NOT THREADSAFE.  Call this routine exactly once while
 ** shutting down in order to free all remaining multiplex groups.
 */
-int sqlite3_multiplex_shutdown(void){
+int sqlite3_multiplex_shutdown(int eForce){
+  int rc = SQLITE_OK;
   if( gMultiplex.isInitialized==0 ) return SQLITE_MISUSE;
-  if( gMultiplex.pGroups ) return SQLITE_MISUSE;
+  if( gMultiplex.pGroups ){
+    sqlite3_log(SQLITE_MISUSE, "sqlite3_multiplex_shutdown() called "
+                "while database connections are still open");
+    if( !eForce ) return SQLITE_MISUSE;
+    rc = SQLITE_MISUSE;
+  }
   gMultiplex.isInitialized = 0;
   sqlite3_mutex_free(gMultiplex.pMutex);
   sqlite3_vfs_unregister(&gMultiplex.sThisVfs);
   memset(&gMultiplex, 0, sizeof(gMultiplex));
-  return SQLITE_OK;
+  return rc;
 }
 
 /***************************** Test Code ***********************************/
@@ -1236,13 +1278,16 @@ static int test_multiplex_shutdown(
 
   UNUSED_PARAMETER(clientData);
 
-  if( objc!=1 ){
-    Tcl_WrongNumArgs(interp, 1, objv, "");
+  if( objc==2 && strcmp(Tcl_GetString(objv[1]),"-force")!=0 ){
+    objc = 3;
+  }
+  if( (objc!=1 && objc!=2) ){
+    Tcl_WrongNumArgs(interp, 1, objv, "?-force?");
     return TCL_ERROR;
   }
 
   /* Call sqlite3_multiplex_shutdown() */
-  rc = sqlite3_multiplex_shutdown();
+  rc = sqlite3_multiplex_shutdown(objc==2);
   Tcl_SetResult(interp, (char *)sqlite3ErrName(rc), TCL_STATIC);
 
   return TCL_OK;

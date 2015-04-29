@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -180,7 +180,7 @@ a rollback journal.  Advantages include:</p>
 <li>There is an additional quasi-persistent "<tt>-wal</tt>" file and
     "<tt>-shm</tt>" shared memory file associated with each
     database, which can make SQLite less appealing for use as an 
-    <a href="whentouse.html#appfileformat">application file-format</a>.
+    <a href="appfileformat.html">application file-format</a>.
 <li>There is the extra operation of <a href="wal.html#ckpt">checkpointing</a> which, though automatic
     by default, is still something that application developers need to
     be mindful of.
@@ -400,9 +400,26 @@ disabled using the <a href="pragma.html#pragma_wal_autocheckpoint">wal_autocheck
 <a href="c3ref/wal_autocheckpoint.html">sqlite3_wal_autocheckpoint()</a> C interface.  A program can also 
 use <a href="c3ref/wal_hook.html">sqlite3_wal_hook()</a> to register a callback to be invoked whenever
 any transaction commits to the WAL.  This callback can then invoke
-<a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> to for a checkpoint based on whatever
+<a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> or <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> based on whatever
 criteria it thinks is appropriate.  (The automatic checkpoint mechanism
 is implemented as a simple wrapper around <a href="c3ref/wal_hook.html">sqlite3_wal_hook()</a>.)</p>
+
+<h3>Application-Initiated Checkpoints</h3>
+
+<p>An application can initiate a checkpoint using any writable database
+connection on the database simply by invoking
+<a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> or <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a>.
+There are three subtypes of checkpoints that vary in their aggressiveness:
+PASSIVE, FULL, and RESTART.  The default checkpoint style is PASSIVE, which
+does as much work as it can without interfering with other database
+connections, and which might not run to completion if there are
+concurrent readers or writers.
+All checkpoints initiated by <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint()</a> and
+by the automatic checkpoint mechanism are PASSIVE.  FULL and RESTART
+checkpoints try harder to run the checkpoint to completion and can only
+be initiated by a call to <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a>.  See the
+<a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> documentation for additional information
+on FULL and RESET checkpoints.
 
 <h3>Persistence of WAL mode</h3>
 
@@ -417,7 +434,7 @@ DELETE rather than the previous TRUNCATE setting.</p>
 <p>The persistence of WAL mode means that applications can be converted
 to using SQLite in WAL mode without making any changes to the application
 itself.  One has merely to run "<tt>PRAGMA journal_mode=WAL;</tt>" on the
-database file(s) using the <a href="sqlite.html">command-line shell</a> or other utility, then
+database file(s) using the <a href="cli.html">command-line shell</a> or other utility, then
 restart the application.</p>
 
 <p>The WAL journal mode will be set on all
@@ -471,6 +488,98 @@ to read-only media.</p>
 all processes should run under user or group IDs that give them write
 access to the database files, the WAL file, the shared memory 
 <tt>-shm</tt> file, and the containing directory.</p>
+
+<a name="bigwal"></a>
+
+<h2>Avoiding Excessively Large WAL Files</h2>
+
+<p>In normal cases, new content is appended to the WAL file until the
+WAL file accumulates about 1000 pages (and is thus about 4MB 
+in size) at which point a checkpoint is automatically run and the WAL file
+is recycled.  The checkpoint does not normally truncate the WAL file
+(unless the <a href="pragma.html#pragma_journal_size_limit">journal_size_limit pragma</a> is set).  Instead, it merely
+causes SQLite to start overwriting the WAL file from the beginning.
+This is done because it is normally faster to overwrite an existing file
+than to append.  When the last connection to a database closes, that
+connection does one last checkpoint and then deletes the WAL and its
+associated shared-memory file, to clean up the disk.
+
+<p>So in the vast majority of cases, applications need not worry about
+the WAL file at all.  SQLite will automatically take care of it.  But
+it is possible to get SQLite into a state where the WAL file will grow
+without bound, causing excess disk space usage and slow queries speeds.
+The following bullets enumerate some of the ways that this can happen
+and how to avoid them.
+
+<ul>
+<li><p>
+<b>Disabling the automatic checkpoint mechanism.</b>
+In its default configuration, SQLite will checkpoint the WAL file at the
+conclusion of any transaction when the WAL file is more than 1000 pages
+long.  However, compile-time and run-time options exist that can disable
+or defer this automatic checkpoint.  If an application disables the
+automatic checkpoint, then there is nothing to prevent the WAL file
+from growing excessively.
+
+<li><p>
+<b>Checkpoint starvation.</b>
+A checkpoint is only able to run to completion, and reset the WAL file,
+if there are no other database connections using the WAL file.  If another
+connection has a read transaction open,
+then the checkpoint cannot reset the WAL file because
+doing so might delete content out from under the reader.
+The checkpoint will do as much work as it can without upsetting the
+reader, but it cannot run to completion.
+The checkpoint will start up again where it left off after the next
+write transaction.  This repeats until some checkpoint is able to complete.
+
+<p>However, if a database has many concurrent overlapping readers
+and there is always at least one active reader, then
+no checkpoints will be able to complete
+and hence the WAL file will grow without bound.
+
+<p>This scenario can be avoided by ensuring that there are "reader gaps":
+times when no processes are reading from the 
+database and that checkpoints are attempted during those times.
+In applications with many concurrent readers, one might also consider 
+running manual checkpoints with the <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_RESTART</a> or
+<a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_TRUNCATE</a> option which will ensure that the checkpoint
+runs to completion before returning.  The disadvantage of using
+<a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_RESTART</a> and <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_TRUNCATE</a> is that
+readers might block while the checkpoint is running.
+
+<li><p>
+<b>Very large write transactions.</b>
+A checkpoint can only complete when no other transactions are running, 
+which means the WAL file cannot be reset in the middle of a write
+transaction.  So a large change to a large database
+might result in a very large WAL file.  The WAL file will be checkpointed
+once the write transaction completes (assuming there are no other readers
+blocking it) but in the meantime, the file can grow very big.
+
+<p>Note that sometimes the same database page can be written into
+the WAL file multiple times within the same transaction, and hence the
+WAL file can end up being many times larger than the original database.
+This can happen when the <a href="pragma.html#pragma_cache_size">cache_size</a> is smaller then the number of
+database pages changed during the transaction.
+When changes are made to a page, those changes are normally held in
+memory until the end of the transaction, at which point their are
+written to the WAL file.  But if the cache fills up, some pages might
+need to be spilled to the WAL file before the end of the transaction.
+If those same pages change again, then they must be written
+to the WAL file again.  For a very
+large transaction and a small cache, it is possible for the same page
+to spill many times and thus be written into the WAL file many times.
+
+<p>Defenses against this failure mode include: (1) switching to a
+rollback journal modes for large updates since pages are never
+written into a rollback journal more than once, (2) making sure that
+the <a href="pragma.html#pragma_cache_size">cache_size</a> is large enough to hold every page that will be changed
+during the transaction,
+(3) keeping the number of changed pages small by breaking
+the transaction up into smaller chunks, and/or (4) dropping indexes before
+a large insert and recreating them afterwards.
+</ul>
 
 <h2>Implementation Of Shared-Memory For The WAL-Index</h2>
 
@@ -551,7 +660,8 @@ WAL file and the <a href="fileformat2.html#walindexformat">wal-index</a> are new
 SQLite will not know
 how to recover a crashed SQLite database that was operating in WAL mode
 when the crash occurred.
-To prevent older versions of SQLite from trying to recover
+To prevent older versions of SQLite (prior to version 3.7.0, 2010-07-22)
+from trying to recover
 a WAL-mode database (and making matters worse) the database file format
 version numbers (bytes 18 and 19 in the <a href="fileformat2.html#database_header">database header</a>)
 are increased from 1 to 2 in WAL mode.
@@ -565,6 +675,7 @@ this:</p>
 <blockquote><pre>
 PRAGMA journal_mode=DELETE;
 </pre></blockquote>
+
 
 <p>Deliberately changing out of WAL mode changes the database file format
 version numbers back to 1 so that older versions of SQLite can once again 

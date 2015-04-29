@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,56 +130,27 @@ a:visited { color: #734559 }
   
 
 
-<h2>Appropriate Uses For SQLite</h2>
+<h1 align="center">Appropriate Uses For SQLite</h1>
 
 <p>
-SQLite is different from most other SQL database engines in that its
-primary design goal is to be simple:
-</p>
-
-<ul>
-<li>Simple to administer</li>
-<li>Simple to operate</li>
-<li>Simple to embed in a larger program</li>
-<li>Simple to maintain and customize</li>
-</ul>
-
-<p>
-Many people like SQLite because it is small and fast.  But those
-qualities are just happy accidents.
-Users also find that SQLite is very reliable.  Reliability is
-a consequence of simplicity.  With less complication, there is
-less to go wrong.  So, yes, SQLite is small, fast, and reliable,
-but first and foremost, SQLite strives to be simple.
+SQLite is not directly comparable to client/server SQL database engines such
+as MySQL, Oracle, PostgreSQL, or SQL Server since SQLite is trying to
+solve a different problem.
 </p>
 
 <p>
-Simplicity in a database engine can be either a strength or a
-weakness, depending on what you are trying to do.  In order to
-achieve simplicity, SQLite has had to sacrifice other characteristics
-that some people find useful, such as high concurrency, fine-grained
-access control, a rich set of built-in functions, stored procedures,
-esoteric SQL language features, XML and/or Java extensions,
-tera- or peta-byte scalability, and so forth.  If you need some of these
-features and do not mind the added complexity that they
-bring, then SQLite is probably not the database for you.
-SQLite is not intended to be an enterprise database engine.  It is
-not designed to compete with Oracle or PostgreSQL.
+Client/server SQL database engines strive to implement a shared repository
+of enterprise data.  They emphasis scalability, concurrency, centralization,
+and control.
+SQLite strives to provide local data storage for
+individual applications and devices.  SQLite emphasizes economy,
+efficiency, reliability, independence, and simplicity.
 </p>
 
-<p>
-The basic rule of thumb for when it is appropriate to use SQLite is
-this:  Use SQLite in situations where simplicity of administration,
-implementation, and maintenance are more important than the countless
-complex features that enterprise database engines provide.
-As it turns out, situations where simplicity is the better choice
-are more common than many people realize.
-</p>
 
 <p>
-Another way to look at SQLite is this:  SQLite is not designed
-to replace <a href="http://www.oracle.com/database/index.html">Oracle</a>.
-It is designed to replace <a href="http://man.he.net/man3/fopen">fopen()</a>.
+SQLite does not compete with client/server databases.
+SQLite competes with <a href="http://man.he.net/man3/fopen">fopen()</a>.
 </p>
 
 <h2>Situations Where SQLite Works Well</h2>
@@ -188,85 +159,49 @@ It is designed to replace <a href="http://man.he.net/man3/fopen">fopen()</a>.
 
 <a name="appfileformat"></a>
 
-<li><p><b>Application File Format</b></p>
+<li><b>Embedded devices and the internet of things</b>
+
+<p>Because an SQLite database requires no administration,
+it works well in devices that must operate without expert human support.
+SQLite is a good fit for use in 
+cellphones, set-top boxes, televisions, game consoles,
+cameras, watches, kitchen appliances, thermostats, automobiles, 
+machine tools, airplanes, remote sensors, drones, medical devices,
+and robots:  the "internet of things".
+</p>
+
+<p>Client/server database engines are designed to live inside a
+lovingly-attended datacenter at the core of the network.
+SQLite works there too, but SQLite also thrives at the edge of the network,
+fending for itself while providing fast and
+reliable data services to applications that would otherwise
+have dodgy connectivity.
+</li>
+
+<li><p><b>Application file format</b></p>
 
 <p>
-SQLite has been used with great success as the on-disk file format
+SQLite is often used as the on-disk file format
 for desktop applications such as version control systems,
 financial analysis tools, media cataloging and editing suites, CAD
 packages, record keeping programs, and so forth.  The traditional
 File/Open operation calls sqlite3_open() to attach to the database
-file.  Updates happen atomically as application content is revised
-so the File/Save menu option become superfluous.  The File/Save_As
+file.  Updates happen automatically as application content is revised
+so the File/Save menu option becomes superfluous.  The File/Save_As
 menu option can be implemented using the <a href="backup.html">backup API</a>.
 </p>
 
-<p>
-There are many advantages to using SQLite as an application file format,
-including:
-</p>
-
-<ol type="1">
-<li> There is no file parsing and generating code to write and debug.
-<li> Content can be accessed and updated using powerful SQL queries,
-     greatly reducing the complexity of the application code.
-<li> Extending the file format for new capabilities in later releases
-     is a simple as adding new tables or new columns to existing tables.
-<li> Diverse content which might otherwise be stored as a "pile-of-files"
-     can be encapsulated into a single disk file.
-<li> The content can be viewed using third-party tools.
-<li> The application file is portable across all operating systems,
-     32-bit and 64-bit and big- and little-endian architectures.
-<li> The application only has to load as much data as it needs, rather
-     than reading the entire application file and holding a complete parse
-     in memory.  Startup time and memory consumption are reduced.
-<li> Small edits only overwrite the parts of the file that change,
-     not the entire file, thus improving performance
-     and reducing wear on SSD drives.
-<li> Content is updated continuously and atomically so 
-     that there is no work lost in the event of a power failure or crash.
-<li> Applications can leverage the
-     <a href="fts3.html">full-text search</a> and <a href="rtree.html">RTREE</a> capabilities that are built into SQLite.
-<li> Performance problems can often be resolved using <a href="lang_createindex.html">CREATE INDEX</a>
-     rather than redesigning, rewriting, and retesting application code.
-<li> A federation of programs, perhaps written in different programming
-     languages, can all access the same application file with no 
-     compatibility concerns.
-<li> Multiple processes can attach to the same application
-     file and can read and write without interfering with each another.
-<li> Cross-session undo/redo can be implemented using triggers.
-<li> In many common cases, loading content from an SQLite database
-     is faster than loading content out of individual files.
-     See <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> for additional information.
-<li> Content stored in an SQLite database is more likely to be 
-     recoverable decades in the future, long after all traces of
-     the original application have been lost. Data lives longer than code.
-</ol>
-
-<p>
-SQLite allows database files to have any desired filename extension, so
-an application can choose a custom filename extension for its own use, if
-desired.  The <a href="pragma.html#pragma_application_id">application_id pragma</a> can be used to set an "Application ID"
-integer in the database file so that tools like
-<a href="http://www.darwinsys.com/file/">file(1)</a> can determine that the file
-is associated with your application and is not just a generic
-SQL database.</p>
-
-<li><p><b>Embedded devices and applications</b></p>
-
-<p>Because an SQLite database requires little or no administration,
-SQLite is a good choice for devices or services that must work
-unattended and without human support.  SQLite is a good fit for
-use in cellphones, PDAs, set-top boxes, and/or appliances.  It also
-works well as an embedded database in downloadable consumer applications.
-</p>
-</li>
+<p>There are many benefits to this approach, including improved
+application performance, reduced cost and complexity, and
+improved reliability.  See technical notes
+<a href="aff_short.html">here</a> and 
+<a href="appfileformat.html">here</a> for details.
 
 <li><p><b>Websites</b></p>
 
-<p>SQLite usually will work great as the database engine for low to
-medium traffic websites (which is to say, 99.9% of all websites).
-The amount of web traffic that SQLite can handle depends, of course,
+<p>SQLite works great as the database engine for most low to
+medium traffic websites (which is to say, most websites).
+The amount of web traffic that SQLite can handle depends
 on how heavily the website uses its database.  Generally
 speaking, any site that gets fewer than 100K hits/day should work
 fine with SQLite.
@@ -274,6 +209,101 @@ The 100K hits/day figure is a conservative estimate, not a
 hard upper bound.
 SQLite has been demonstrated to work with 10 times that amount
 of traffic.</p>
+
+<p>The SQLite website (<a href="https://www.sqlite.org/">https://www.sqlite.org/</a>) uses SQLite itself,
+of course, and as of this writing (2015) it handles about 400K to 500K
+HTTP requests per day, about 15-20% of which are dynamic pages touching
+the database.  Each dynamic page does roughly 200 SQL statements.
+This setup runs on a single VM that shares a physical server with 23 others
+and yet still keeps the load average below 0.1 most of the time.
+</li>
+
+<li><p><b>Data analysis</b></p>
+
+<p>
+People who understand SQL can employ the 
+<a href="cli.html">sqlite3 command-line shell</a> (or various third-party
+SQLite access programs) to analyze large
+datasets. Raw data can be imported from CSV files, then that
+data can be sliced and diced to generate a myriad of summary
+reports.  More complex analysis can be done using simple scripts written
+in Tcl or Python (both of which come with SQLite built-in) or in R or
+other languages using readily available adaptors.
+Possible uses include website log analysis, sports
+statistics analysis, compilation of programming metrics, and
+analysis of experimental results.  Many bioinformatics researchers
+use SQLite in this way.
+</p>
+
+<p>
+The same thing can be done with an enterprise client/server
+database, of course.  The advantage of SQLite is
+that it is easier to install and use and the resulting database 
+is a single file that can be written to a USB memory stick
+or emailed to a colleague.
+</p>
+</li>
+
+<li><p><b>Cache for enterprise data</b></p>
+
+<p>
+Many applications use SQLite as a cache of relevant content from
+an enterprise RDBMS.
+This reduces latency, since most queries now occur against the local
+cache and avoid a network round-trip.  It also reduces the load 
+on the network and on the central database server.  And in many cases, 
+it means that the client-side application can continue operating during
+network outages.
+</p>
+</li>
+
+<a name="serversidedb"></a>
+
+<li><p><b>Server-side database</b></p>
+
+<p>
+Systems designers
+report success using SQLite as a data store on server applications
+running in the datacenter, or in other words, using SQLite as the underlying
+storage engine for an application-specific database server.</p>
+
+<p>With this pattern, the overall system is still client/server:
+clients send requests to the server and get back replies over the network.
+But instead of sending generic SQL and getting back raw table content, 
+the client requests and server responses are high-level and 
+application-specific.
+The server translates requests into multiple SQL queries, gathers the
+results, does post-processing, filtering, and analysis, then constructs
+a high-level reply containing only the essential information.</p>
+
+<p>Developers report that SQLite is often faster than a client/server
+SQL database engine in this scenario.
+Database requests are serialized by the server, so concurrency is not
+an issue.  Concurrency is also improved by "database sharding":
+using separate database files for different subdomains.  For
+example, the server might have a separate SQLite database for each
+user, so that the server can handle hundreds or thousands of simultaneous
+connections, but each SQLite database is only used by one connection.</p>
+
+
+</li>
+
+<li><p><b>File archives</b></p>
+
+<p>
+The <a href="https://www.sqlite.org/sqlar">SQLite Archiver</a> project shows how
+SQLite can be used as a substitute for ZIP archives or Tarballs.
+An archive of files stored in SQLite is only very slightly larger, and
+in some cases actually smaller, than the equivalent ZIP archive.
+And an SQLite archive features incremental and atomic updating
+and the ability to store much richer metadata.
+</p>
+
+<p>SQLite archives are useful as the distribution format for software
+or content updates that are broadcast to many clients.  Variations
+on this idea are used, for example, to transmit TV programming guides
+to set-top boxes and to send over-the-air updates to vehicle navigation
+systems.</p>
 </li>
 
 <li><p><b>Replacement for <i>ad hoc</i> disk files</b></p>
@@ -301,42 +331,19 @@ having to recode every query.
 </p>
 </li>
 
-<li><p><b>Command-line dataset analysis tool</b></p>
-
-<p>
-Experienced SQL users can employ
-the command-line <b>sqlite3</b> program to analyze miscellaneous
-datasets. Raw data can be imported from CSV files, then that
-data can be sliced and diced to generate a myriad of summary
-reports.  Possible uses include website log analysis, sports
-statistics analysis, compilation of programming metrics, and
-analysis of experimental results.
-</p>
-
-<p>
-You can also do the same thing with an enterprise client/server
-database, of course.  The advantages to using SQLite in this situation
-are that SQLite is much easier to set up and the resulting database 
-is a single file that you can store on a floppy disk or flash-memory stick
-or email to a colleague.
-</p>
-</li>
-
 <li><p><b>Stand-in for an enterprise database during demos or testing</b></p>
 
 <p>
-If you are writing a client application for an enterprise database engine,
-it makes sense to use a generic database backend that allows you to connect
-to many different kinds of SQL database engines.  It makes even better
-sense to
-go ahead and include SQLite in the mix of supported databases and to statically
+Client applications typically use a generic database interface that allows
+connections to various SQL database engines.  It makes good sense to 
+include SQLite in the mix of supported databases and to statically
 link the SQLite engine in with the client.  That way the client program
 can be used standalone with an SQLite data file for testing or for
 demonstrations.
 </p>
 </li>
 
-<li><p><b>Database Pedagogy</b></p>
+<li><p><b>Education and Training</b></p>
 
 <p>
 Because it is simple to setup and use (installation is trivial: just
@@ -346,10 +353,7 @@ Students can easily create as many databases as they like and can
 email databases to the instructor for comments or grading.  For more
 advanced students who are interested in studying how an RDBMS is
 implemented, the modular and well-commented and documented SQLite code
-can serve as a good basis.  This is not to say that SQLite is an accurate
-model of how other database engines are implemented, but rather a student who
-understands how SQLite works can more quickly comprehend the operational
-principles of other systems.
+can serve as a good basis.
 </p>
 </li>
 
@@ -363,36 +367,36 @@ prototyping new, experimental database language features or ideas.
 
 </ul>
 
-<h2>Situations Where Another RDBMS May Work Better</h2>
+<h2>Situations Where A Client/Server RDBMS May Work Better</h2>
 
 <ul>
 <li><p><b>Client/Server Applications</b><p>
 
-<p>If you have many client programs accessing a common database
-over a network, you should consider using a client/server database
+<p>If there are many client programs sending SQL to the same 
+database over a network, then use a client/server database
 engine instead of SQLite.  SQLite will work over a network filesystem,
 but because of the latency associated with most network filesystems,
-performance will not be great.  Also, the file locking logic of
-many network filesystems implementation contains bugs (on both Unix
-and Windows).  If file locking does not work like it should,
-it might be possible for two or more client programs to modify the
+performance will not be great.  Also, file locking logic is buggy
+many network filesystem implementations (on both Unix and Windows).
+If file locking does not work correctly,
+two or more clients might try to modify the
 same part of the same database at the same time, resulting in 
-database corruption.  Because this problem results from bugs in
+corruption.  Because this problem results from bugs in
 the underlying filesystem implementation, there is nothing SQLite
 can do to prevent it.</p>
 
-<p>A good rule of thumb is that you should avoid using SQLite
-in situations where the same database will be accessed simultaneously
-from many computers over a network filesystem.</p>
+<p>A good rule of thumb is to avoid using SQLite
+in situations where the same database will be accessed directly
+(without an intervening application server) and simultaneously
+from many computers over a network.</p>
 </li>
 
 <li><p><b>High-volume Websites</b></p>
 
 <p>SQLite will normally work fine as the database backend to a website.
-But if you website is so busy that you are thinking of splitting the
-database component off onto a separate machine, then you should 
-definitely consider using an enterprise-class client/server database
-engine instead of SQLite.</p>
+But if the website is write-intensive or is so busy that it requires
+multiple servers, then consider using an enterprise-class client/server 
+database engine instead of SQLite.</p>
 </li>
 
 <li><p><b>Very large datasets</b></p>
@@ -413,13 +417,78 @@ disk files, and perhaps across multiple volumes.
 <p>
 SQLite supports an unlimited number of simultaneous readers, but it 
 will only allow one writer at any instant in time.
-For many situations, this is not a problem.  Each application
+For many situations, this is not a problem.  Writer queue up. Each application
 does its database work quickly and moves on, and no lock lasts for more
-than a few dozen milliseconds.  But there are some applications that require
+than a few dozen milliseconds. But there are some applications that require
 more concurrency, and those applications may need to seek a different
 solution.
 </p>
 </li>
 
 </ul>
+
+<a name="dbcklst"></a>
+
+<h2>Checklist For Choosing The Right Database Engine</h2>
+
+<ol>
+<li><p><b>Is the data separated from the application by a network?
+       &rarr; choose client/server</b></p>
+
+<p>Relational database engines act as bandwidth-reducing data filters.
+So it is best to keep the database engine and the data on
+the same physical device so that the high-bandwidth engine-to-disk
+link does not have to traverse the network, only the lower-bandwidth
+application-to-engine link.
+
+<p>But SQLite is built into the application.  So if the data is on a
+separate device from the application, it is required that the higher
+bandwidth engine-to-disk link be across the network.  This works, but
+it is suboptimal.  Hence, it is usually better to select a client/server
+database engine when the data is on a separate device from the
+application.
+
+<p><em>Nota Bene:</em>
+In this rule, "application" means the code that issues SQL statements.
+If the "application" is an <a href="whentouse.html#serversidedb">application server</a> and
+if the content resides on the same physical machine as the application server,
+then SQLite might still be appropriate even though the end user is
+another network hop away.</p>
+</li>
+
+<li><p><b>Many concurrent writers? &rarr; choose client/server</b></p>
+
+<p>If many threads and/or processes need to write the
+database at the same instant (and they cannot queue up and take turns)
+then it is best to select a database engine that supports that
+capability, which always means a client/server database engine.
+
+<p>SQLite only supports one writer at a time per database file.
+But in most cases, a write transaction only takes milliseconds and
+so multiple writers can simply take turns.  SQLite will handle
+more write concurrency that many people suspect.  Nevertheless,
+client/server database systems, because they have a long-running
+server process at hand to coordinate access, can usually handle 
+far more write concurrency than SQLite ever will.
+</li>
+
+<li><p><b>Big data? &rarr; choose client/server</b></p>
+
+<p>If your data will grow to a size that you are uncomfortable
+or unable to fit into a single disk file, then you should select
+a solution other than SQLite.  SQLite supports databases up to
+140 terabytes in size, assuming you can find a disk drive and filesystem
+that will support 140-terabyte files.  Even so, when the size of the
+content looks like it might creep into the terabyte range, it would
+be good to consider a centralized client/server database.
+</li>
+
+<li><p><b>Otherwise &rarr; choose SQLite!</b></p>
+
+<p>For device-local storage with low writer concurrency and less than a
+terabyte of content, SQLite is almost always a better solution.  SQLite
+is fast and reliable and it requires no configuration or maintenance.
+It keeps thing simple.  SQLite "just works".
+</li>
+</ol>
 

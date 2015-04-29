@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.5.1 On 2007-10-04 (3.5.1)</title>
+<title>SQLite Release 3.5.1 On 2007-10-04</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -128,13 +128,13 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.5.1 On 2007-10-04 (3.5.1)</h2><p><ul>
+<h2>SQLite Release 3.5.1 On 2007-10-04</h2><p><ul>
 <li><i><b>Nota Bene:</b> We are not using terms "alpha" or "beta" on this
     release because the code is stable and because if we use those terms,
     nobody will upgrade.  However, we still reserve the right to make
     incompatible changes to the new VFS interface in future releases.</i></li>
 
-<li>Fix a bug in the handling of <a href="../c3ref/c_abort.html">SQLITE_FULL</a> errors that could lead
+<li>Fix a bug in the handling of <a href="../rescode.html#full">SQLITE_FULL</a> errors that could lead
     to database corruption.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2686">Ticket #2686</a>.
 <li>The test_async.c drive now does full file locking and works correctly
     when used simultaneously by multiple processes on the same database.
@@ -145,7 +145,7 @@ a:visited { color: #734559 }
     mass storage without a filesystem.
 <li>Added an output buffer size parameter to the xGetTempname() method
     of the VFS layer.
-<li>Sticky <a href="../c3ref/c_abort.html">SQLITE_FULL</a> or <a href="../c3ref/c_abort.html">SQLITE_IOERR</a> errors in the pager are reset
+<li>Sticky <a href="../rescode.html#full">SQLITE_FULL</a> or <a href="../rescode.html#ioerr">SQLITE_IOERR</a> errors in the pager are reset
     when a new transaction is started.
 </ul></p>
       <p>A <a href="../changes.html">complete list of SQLite releases</a>

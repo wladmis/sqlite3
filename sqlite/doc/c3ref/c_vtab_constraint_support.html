@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -141,19 +141,19 @@ can use to customize and optimize their behavior.</p>
 where X is an integer.  If X is zero, then the <a href="../vtab.html">virtual table</a> whose
 <a href="../vtab.html#xcreate">xCreate</a> or <a href="../vtab.html#xconnect">xConnect</a> method invoked <a href="../c3ref/vtab_config.html">sqlite3_vtab_config()</a> does not
 support constraints.  In this configuration (which is the default) if
-a call to the <a href="../vtab.html#xupdate">xUpdate</a> method returns <a href="../c3ref/c_abort.html">SQLITE_CONSTRAINT</a>, then the entire
+a call to the <a href="../vtab.html#xupdate">xUpdate</a> method returns <a href="../rescode.html#constraint">SQLITE_CONSTRAINT</a>, then the entire
 statement is rolled back as if <a href="../lang_conflict.html">OR ABORT</a> had been
 specified as part of the users SQL statement, regardless of the actual
 ON CONFLICT mode specified.</p>
 
 <p>If X is non-zero, then the virtual table implementation guarantees
-that if <a href="../vtab.html#xupdate">xUpdate</a> returns <a href="../c3ref/c_abort.html">SQLITE_CONSTRAINT</a>, it will do so before
+that if <a href="../vtab.html#xupdate">xUpdate</a> returns <a href="../rescode.html#constraint">SQLITE_CONSTRAINT</a>, it will do so before
 any modifications to internal or persistent data structures have been made.
 If the <a href="../lang_conflict.html">ON CONFLICT</a> mode is ABORT, FAIL, IGNORE or ROLLBACK, SQLite
 is able to roll back a statement or database transaction, and abandon
 or continue processing the current SQL statement as appropriate.
 If the ON CONFLICT mode is REPLACE and the <a href="../vtab.html#xupdate">xUpdate</a> method returns
-<a href="../c3ref/c_abort.html">SQLITE_CONSTRAINT</a>, SQLite handles this as if the ON CONFLICT mode
+<a href="../rescode.html#constraint">SQLITE_CONSTRAINT</a>, SQLite handles this as if the ON CONFLICT mode
 had been ABORT.</p>
 
 <p>Virtual table implementations that are required to handle OR REPLACE

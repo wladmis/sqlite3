@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -142,7 +142,7 @@ the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
 abs(<i>X</i>)</td><td valign="top">
   The abs(X) function returns the absolute value of the numeric
   argument X.  Abs(X) returns NULL if X is NULL. 
-  Abs(X) return 0.0 if X is a string or blob
+  Abs(X) returns 0.0 if X is a string or blob
   that cannot be converted to a numeric value.  If X is the 
   integer -9223372036854775808 then abs(X) throws an integer overflow
   error since there is no equivalent positive 64-bit two complement value.
@@ -236,6 +236,17 @@ likelihood(<i>X</i>,<i>Y</i>)</td><td valign="top">
   to the query planner that the argument X is a boolean that is
   true with a probability of approximately Y.
   The <a href="lang_corefunc.html#unlikely">unlikely(X)</a> function is short-hand for likelihood(X,0.0625).
+  The <a href="lang_corefunc.html#likely">likely(X)</a> function is short-hand for likelihood(X,0.9375).
+</td></tr><tr><td valign="top" align="right" width="120"><a name="likely"></a>
+likely(<i>X</i>)</td><td valign="top">
+  The likely(X) function returns the argument X unchanged.
+  The likely(X) function is a no-op that the code generator
+  optimizes away so that it consumes no CPU cycles at
+  run-time (that is, during calls to <a href="c3ref/step.html">sqlite3_step()</a>).
+  The purpose of the likely(X) function is to provide a hint
+  to the query planner that the argument X is a boolean value
+  that is usually true. The likely(X) function is equivalent
+  to <a href="lang_corefunc.html#likelihood">likelihood</a>(X,0.9375). See also: <a href="lang_corefunc.html#unlikely">unlikely(X)</a>.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="load_extension"></a>
 load_extension(<i>X</i>)<br />load_extension(<i>X</i>,<i>Y</i>)</td><td valign="top">
   The load_extension(X,Y) function loads <a href="loadext.html">SQLite extensions</a> out of the shared
@@ -277,7 +288,7 @@ max(<i>X</i>,<i>Y</i>,...)</td><td valign="top">
   define a collating function, then the BINARY collating function is used.
   Note that <b>max()</b> is a simple function when
   it has 2 or more arguments but operates as an
-  <a href="lang_aggfunc.html#minggunc">aggregate function</a> if given only a single argument.
+  <a href="lang_aggfunc.html#maxggunc">aggregate function</a> if given only a single argument.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="minoreunc"></a>
 min(<i>X</i>,<i>Y</i>,...)</td><td valign="top">
   The multi-argument min() function returns the argument with the
@@ -288,7 +299,7 @@ min(<i>X</i>,<i>Y</i>,...)</td><td valign="top">
   define a collating function, then the BINARY collating function is used.
   Note that <b>min()</b> is a simple function when
   it has 2 or more arguments but operates as an 
-  <a href="lang_aggfunc.html#maxggunc">aggregate function</a> if given
+  <a href="lang_aggfunc.html#minggunc">aggregate function</a> if given
   only a single argument.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="nullif"></a>
 nullif(<i>X</i>,<i>Y</i>)</td><td valign="top">

@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -130,19 +130,16 @@ a:visited { color: #734559 }
   
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Total Number Of Rows Modified</h2><blockquote><pre>int sqlite3_total_changes(sqlite3*);
 </pre></blockquote><p>
-This function returns the number of row changes caused by <a href="../lang_insert.html">INSERT</a>,
-<a href="../lang_update.html">UPDATE</a> or <a href="../lang_delete.html">DELETE</a> statements since the <a href="../c3ref/sqlite3.html">database connection</a> was opened.
-The count returned by sqlite3_total_changes() includes all changes
-from all <a href="../lang_createtrigger.html">trigger</a> contexts and changes made by
-<a href="../foreignkeys.html#fk_actions">foreign key actions</a>. However,
-the count does not include changes used to implement <a href="../lang_replace.html">REPLACE</a> constraints,
-do rollbacks or ABORT processing, or <a href="../lang_droptable.html">DROP TABLE</a> processing.  The
-count does not include rows of views that fire an <a href="../lang_createtrigger.html#instead_of_trigger">INSTEAD OF trigger</a>,
-though if the INSTEAD OF trigger makes changes of its own, those changes
-are counted.
-The sqlite3_total_changes() function counts the changes as soon as
-the statement that makes them is completed (when the statement handle
-is passed to <a href="../c3ref/reset.html">sqlite3_reset()</a> or <a href="../c3ref/finalize.html">sqlite3_finalize()</a>).</p>
+This function returns the total number of rows inserted, modified or
+deleted by all <a href="../lang_insert.html">INSERT</a>, <a href="../lang_update.html">UPDATE</a> or <a href="../lang_delete.html">DELETE</a> statements completed
+since the database connection was opened, including those executed as
+part of trigger programs. Executing any other type of SQL statement
+does not affect the value returned by sqlite3_total_changes().</p>
+
+<p>Changes made as part of <a href="../foreignkeys.html#fk_actions">foreign key actions</a> are included in the
+count, but those made as part of REPLACE constraint resolution are
+not. Changes to a view that are intercepted by INSTEAD OF triggers
+are not counted.</p>
 
 <p>See also the <a href="../c3ref/changes.html">sqlite3_changes()</a> interface, the
 <a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#total_changes">total_changes() SQL function</a>.</p>

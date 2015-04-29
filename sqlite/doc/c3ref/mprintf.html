@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -134,7 +134,11 @@ char *sqlite3_snprintf(int,char*,const char*, ...);
 char *sqlite3_vsnprintf(int,char*,const char*, va_list);
 </pre></blockquote><p>
 These routines are work-alikes of the "printf()" family of functions
-from the standard C library.</p>
+from the standard C library.
+These routines understand most of the common K&R formatting options,
+plus some additional non-standard formats, detailed below.
+Note that some of the more obscure formatting options from recent
+C-library standards are omitted from this implementation.</p>
 
 <p>The sqlite3_mprintf() and sqlite3_vmprintf() routines write their
 results into memory obtained from <a href="../c3ref/free.html">sqlite3_malloc()</a>.
@@ -167,7 +171,7 @@ written will be n-1 characters.</p>
 <p>These routines all implement some additional formatting
 options that are useful for constructing SQL statements.
 All of the usual printf() formatting options apply.  In addition, there
-is are "%q", "%Q", and "%z" options.</p>
+is are "%q", "%Q", "%w" and "%z" options.</p>
 
 <p>The %q option works like %s in that it substitutes a nul-terminated
 string from the argument list.  But %q also doubles every '\'' character.
@@ -219,6 +223,12 @@ sqlite3_free(zSQL);
 
 <p>The code above will render a correct SQL statement in the zSQL
 variable even if the zText variable is a NULL pointer.</p>
+
+<p>The "%w" formatting option is like "%q" except that it expects to
+be contained within double-quotes instead of single quotes, and it
+escapes the double-quote character instead of the single-quote
+character.  The "%w" formatting option is intended for safely inserting
+table and column names into a constructed SQL statement.</p>
 
 <p>The "%z" formatting option works like "%s" but with the
 addition that after the string has been read and copied into

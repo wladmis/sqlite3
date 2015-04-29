@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -150,19 +150,17 @@ parameter.
 
 <p>
 In order to maintain full backwards compatibility for legacy applications,
-the URI filename capability is disabled by default.  
-In order for URI filenames
-to work, one or more of the following must be true:
+the URI filename capability is disabled by default.
+URI filenames can be enabled or disabled using the <a href="compile.html#use_uri">SQLITE_USE_URI=1</a>
+or <a href="compile.html#use_uri">SQLITE_USE_URI=0</a> compile-time options.
+The compile-time setting for URI filenames can be changed
+at start-time using the <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a>,1)
+or <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a>,0) configuration calls.
+Regardless of the compile-time or start-time settings, URI filenames
+can be enabled for individual database connections by including the
+<a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_URI</a> bit in the set of bits passed as the F parameter
+to <a href="c3ref/open.html">sqlite3_open_v2(N,P,F,V)</a>.
 </p>
-
-<ol>
-<li><p>The SQLite library is compiled with the <a href="compile.html#use_uri">SQLITE_USE_URI</a> 
-       compile-time option.</p></li>
-<li><p>The <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a>, 1); configuration option
-       is set at application start-time.</p></li>
-<li><p>The <a href="c3ref/c_open_autoproxy.html">SQLITE_OPEN_URI</a> bit is OR-ed in with the set bits passed in
-       as the 3rd parameter to the <a href="c3ref/open.html">sqlite3_open_v2()</a> interface.</p></li>
-</ol>
 
 <p>
 If URI filenames are recognized when the database connection is originally
@@ -172,7 +170,7 @@ is first opened, they will not be recognized by <a href="lang_attach.html">ATTAC
 </p>
 
 <p>
-Since SQLite always interprets any filename that does not begins 
+Since SQLite always interprets any filename that does not begin
 with "<tt>file:</tt>"
 as an ordinary filename regardless of the URI setting, and because it is
 very unusual to have an actual file begin with "<tt>file:</tt>", 
@@ -266,7 +264,7 @@ be changed into an absolute pathname first.</p>
 
 <p>A URI filename can optionally be followed by a query string.
 The query string consists of text following the first "<tt>?</tt>"
-character but excluding the optional fragment that begins with with
+character but excluding the optional fragment that begins with
 "<tt>#</tt>".  The query string is divided into key/value pairs.
 We usually refer to these key/value pairs as "query parameters".
 Key/value pairs are separated by a single "<tt>&amp;</tt>" character.
@@ -282,7 +280,7 @@ being appended to the xOpen filename.
 A single zero-byte separates the xOpen filename argument from the key of
 the first query parameters, each key and value, and each subsequent key
 from the prior value.
-The list of query parameters parameters appended to the xOpen filename
+The list of query parameters appended to the xOpen filename
 is terminated by a single zero-length key.
 Note that the value of a query parameter can be an empty string.
 </p>
@@ -299,11 +297,13 @@ they are previously read and interpreted by the SQLite core.
 </p>
 
 <p>
-The following query parameters are recognized by SQLite as of version 3.7.10.
+The following query parameters are recognized by SQLite as of version 3.8.0.
 Other query parameters might be added to this set in future releases.
 </p>
 
 <dl>
+<a name="urivfs"></a>
+
 <dt><b>vfs=</b><i>NAME</i></dt>
 <dd><p>The vfs query parameter causes the database connection to be opened
 using the <a href="vfs.html">VFS</a> called <i>NAME</i>.
@@ -311,24 +311,58 @@ The open attempt fails if <i>NAME</i> is not the name of a <a href="vfs.html">VF
 is built into SQLite or that has been previously registered using
 <a href="c3ref/vfs_find.html">sqlite3_vfs_register()</a>.</dd>
 
+<a name="urimode"></a>
+
 <dt><b>mode=ro<br>mode=rw<br>mode=rwc<br>mode=memory</b></dt>
 <dd><p>The mode query parameter determines if the new database is opened
 read-only, read-write, read-write and created if it does not exist, or
 that the database is a pure in-memory database that never interacts with
-disk, respectively.  The <b>mode=memory</b> option was added in 
-<a href="releaselog/3_7_13.html">version 3.7.13</a>.
+disk, respectively.
 </dd>
+
+<a name="uricache"></a>
 
 <dt><b>cache=shared<br>cache=private</b></dt>
 <dd><p>The cache query parameter determines if the new database is opened
 using <a href="sharedcache.html">shared cache mode</a> or with a private cache.
 </dd>
 
+<a name="uripsow"></a>
+
 <dt><b>psow=0<br>psow=1</b></dt>
 <dd><p>The psow query parameter overrides the <a href="psow.html">powersafe overwrite</a>
 property of the database file being opened.  The psow query parameter
 works with the default windows and unix <a href="vfs.html">VFSes</a> but might be a no-op for
 other proprietary or non-standard VFSes.
+</dd>
+
+<a name="urinolock"></a>
+
+<dt><b>nolock=1</b></dt>
+<dd><p>The nolock query parameter is a boolean that disables all calls
+to the xLock, xUnlock, and xCheckReservedLock methods of the VFS when true.
+The nolock query parameter might be used, for example, when trying to
+access a file on a filesystem that does not support file locking.
+Caution:  If two or more <a href="c3ref/sqlite3.html">database connections</a> try to interact with 
+the same SQLite database and one or more of those connections has
+enabled "nolock", then database corruption can result.  The "nolock"
+query parameter should only be used if the application can guarantee
+that writes to the database are serialized.
+</dd>
+
+<a name="uriimmutable"></a>
+
+<dt><b>immutable=1</b></dt>
+<dd><p>The immutable query parameter is a boolean that signals to
+SQLite that the underlying database file is held on read-only media
+and cannot be modified, even by another process with elevated 
+privileges.  SQLite always opens immutable database files
+read-only and it skips all file locking and change detection
+on immutable database files.  If these query parameter (or
+the <a href="c3ref/c_iocap_atomic.html">SQLITE_IOCAP_IMMUTABLE</a> bit in xDeviceCharacteristics)
+asserts that a database file is immutable and that file 
+changes anyhow, then SQLite might return incorrect query 
+results and/or <a href="rescode.html#corrupt">SQLITE_CORRUPT</a> errors.
 </dd>
 </dl>
 

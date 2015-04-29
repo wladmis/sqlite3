@@ -863,6 +863,7 @@ proc speed_trial_summary {name} {
 #
 proc finish_test {} {
   catch {db close}
+  catch {db1 close}
   catch {db2 close}
   catch {db3 close}
   if {0==[info exists ::SLAVE]} { finalize_testing }
@@ -1062,13 +1063,21 @@ proc explain_i {sql {db db}} {
   #   Blue:  Opcodes that reposition or seek a cursor. 
   #   Green: The ResultRow opcode.
   #
-  set R "\033\[31;1m"        ;# Red fg
-  set G "\033\[32;1m"        ;# Green fg
-  set B "\033\[34;1m"        ;# Red fg
-  set D "\033\[39;0m"        ;# Default fg
+  if { [catch {fconfigure stdout -mode}]==0 } {
+    set R "\033\[31;1m"        ;# Red fg
+    set G "\033\[32;1m"        ;# Green fg
+    set B "\033\[34;1m"        ;# Red fg
+    set D "\033\[39;0m"        ;# Default fg
+  } else {
+    set R ""
+    set G ""
+    set B ""
+    set D ""
+  }
   foreach opcode {
       Seek SeekGe SeekGt SeekLe SeekLt NotFound Last Rewind
       NoConflict Next Prev VNext VPrev VFilter
+      SorterSort SorterNext
   } {
     set color($opcode) $B
   }
@@ -1091,6 +1100,7 @@ proc explain_i {sql {db db}} {
 
     if {$opcode=="Next"  || $opcode=="Prev" 
      || $opcode=="VNext" || $opcode=="VPrev"
+     || $opcode=="SorterNext"
     } {
       for {set i $p2} {$i<$addr} {incr i} {
         incr x($i) 2

@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -310,9 +310,8 @@ uses bitmaps with one bit per join-table in the query optimizer.
 </p>
 
 <p>
-SQLite uses a very efficient O(N&sup2;) greedy algorithm for determining
-the order of tables in a join and so a large join can be
-<a href="c3ref/prepare.html">prepared</a> quickly.
+SQLite uses an efficient <a href="queryplanner-ng.html">query planner algorithm</a>
+and so even a large join can be <a href="c3ref/prepare.html">prepared</a> quickly.
 Hence, there is no mechanism to raise or lower the limit on the
 number of tables in a join.
 </p>
@@ -472,9 +471,7 @@ that allows two or more databases to be associated to the same database
 connection and to operate as if they were a single database.  The number
 of simultaneously attached databases is limited to SQLITE_MAX_ATTACHED
 which is set to 10 by default.
-The code generator in SQLite uses bitmaps
-to keep track of attached databases.  That means that the number of
-attached databases cannot be increased above 62.</p>
+The maximum number of attached databases cannot be increased above 125.</p>
 
 <p>
 The maximum number of attached databases can be lowered at run-time using

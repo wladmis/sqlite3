@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -140,7 +140,7 @@ a:visited { color: #734559 }
     <div style="font-size:1.5em;margin:1em;color:#044a64">
       Table Of Contents</div>
     <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Introduction to FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Differences between FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Creating and Destroying FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_3">1.3. Populating FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_4">1.4. Simple FTS Queries</a></div><div style="margin-left:12ex"><a href="#section_1_5">1.5. Summary</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling and Enabling FTS3 and FTS4</a></div><div style="margin-left:6ex"><a href="#section_3">3. Full-text Index Queries</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. 
-  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The notindexed= option</a></div><div style="margin-left:12ex"><a href="#section_6_6">6.6. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=B" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_2">8.2. Querying Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
+  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The notindexed= option</a></div><div style="margin-left:12ex"><a href="#section_6_6">6.6. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=N" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_2">8.2. Querying Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
   Appendix A: Search Application Tips
 </a></div> </div>
     <div class=startsearch></div>
@@ -182,7 +182,7 @@ a:visited { color: #734559 }
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE enrondata1 USING fts3(content TEXT);     /* FTS3 table */
 CREATE TABLE enrondata2(content TEXT);                        /* Ordinary table */
-</table></div>
+</pre></table></div>
 
 <p>
   Then either of the two queries below may be executed to find the number of
@@ -192,7 +192,7 @@ CREATE TABLE enrondata2(content TEXT);                        /* Ordinary table 
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT count(*) FROM enrondata1 WHERE content MATCH 'linux';  /* 0.03 seconds */
 SELECT count(*) FROM enrondata2 WHERE content LIKE '%linux%'; /* 22.5 seconds */
-</table></div>
+</pre></table></div>
 
 <p>
   Of course, the two queries above are not entirely equivalent. For example
@@ -286,7 +286,7 @@ CREATE VIRTUAL TABLE mail USING fts3(
   subject VARCHAR(256) NOT NULL,
   body TEXT CHECK(length(body)&lt;10240)
 );
-</table></div>
+</pre></table></div>
 
 <p>
   As well as a list of columns, the module arguments passed to a CREATE
@@ -311,7 +311,7 @@ CREATE VIRTUAL TABLE data USING fts4(tokenize=simple);
 <i>-- Create an FTS table with two columns that uses the "icu" tokenizer.</i>
 <i>-- The qualifier "en_AU" is passed to the tokenizer implementation</i>
 CREATE VIRTUAL TABLE names USING fts3(a, b, tokenize=icu en_AU);
-</table></div>
+</pre></table></div>
 
 <p>
   FTS tables may be dropped from the database using an ordinary <a href="lang_droptable.html">DROP TABLE</a>
@@ -320,7 +320,7 @@ CREATE VIRTUAL TABLE names USING fts3(a, b, tokenize=icu en_AU);
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create, then immediately drop, an FTS4 table.</i>
 CREATE VIRTUAL TABLE data USING fts4();
 DROP TABLE data;
-</table></div>
+</pre></table></div>
 
 <h2 id="section_1_3">1.3. Populating FTS Tables</h2>
 
@@ -369,7 +369,7 @@ DELETE FROM pages;
 <i>-- The following is an error. It is not possible to assign non-NULL values to both</i>
 <i>-- the rowid and docid columns of an FTS table.</i>
 INSERT INTO pages(rowid, docid, title, body) VALUES(1, 2, 'A title', 'A document body');
-</table></div>
+</pre></table></div>
 
   <p>
     To support full-text queries, FTS maintains an inverted index that maps
@@ -394,7 +394,7 @@ INSERT INTO pages(rowid, docid, title, body) VALUES(1, 2, 'A title', 'A document
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Optimize the internal structure of FTS table "docs".</i>
 INSERT INTO docs(docs) VALUES('optimize');
-</table></div>
+</pre></table></div>
 
   <p>
     The statement above may appear syntactically incorrect to some. Refer to
@@ -446,7 +446,7 @@ SELECT * FROM mail WHERE mail MATCH 'search';       <i>-- Fast. Full-text query.
 SELECT * FROM mail WHERE rowid BETWEEN 15 AND 20;   <i>-- Slow. Linear scan.</i>
 SELECT * FROM mail WHERE subject = 'database';      <i>-- Slow. Linear scan.</i>
 SELECT * FROM mail WHERE subject MATCH 'database';  <i>-- Fast. Full-text query.</i>
-</table></div>
+</pre></table></div>
 
 <p>
   In all of the full-text queries above, the right-hand operand of the MATCH
@@ -493,7 +493,7 @@ SELECT * FROM mail WHERE subject MATCH 'software';    <i>-- Selects rows 1 and 2
 SELECT * FROM mail WHERE body    MATCH 'feedback';    <i>-- Selects row 2</i>
 SELECT * FROM mail WHERE mail    MATCH 'software';    <i>-- Selects rows 1, 2 and 3</i>
 SELECT * FROM mail WHERE mail    MATCH 'slow';        <i>-- Selects rows 1 and 3</i>
-</table></div>
+</pre></table></div>
   
 <p>
   At first glance, the final two full-text queries in the example above seem
@@ -520,7 +520,7 @@ SELECT * FROM docs WHERE docs MATCH 'sqlite';              <i>-- OK.</i>
 SELECT * FROM docs WHERE docs.docs MATCH 'sqlite';         <i>-- OK.</i>
 SELECT * FROM docs WHERE main.docs.docs MATCH 'sqlite';    <i>-- OK.</i>
 SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
-</table></div>
+</pre></table></div>
  
 <h2 id="section_1_5">1.5. Summary</h2>
 
@@ -583,7 +583,7 @@ SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">-DSQLITE_ENABLE_FTS3
 -DSQLITE_ENABLE_FTS3_PARENTHESIS
-</table></div>
+</pre></table></div>
 
 <p>
   Note that enabling FTS3 also makes FTS4 available.  There is not a separate
@@ -596,7 +596,7 @@ SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
   way to set these macros. For example, the following command:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CPPFLAGS="-DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS" ./configure &lt;configure options&gt;
-</table></div>
+</pre></table></div>
 
 <p>
   where <i>&lt;configure options&gt;</i> are those options normally passed to
@@ -620,7 +620,7 @@ SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
   (words) using the conventions for a specified language and locale.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">-DSQLITE_ENABLE_ICU
-</table></div>
+</pre></table></div>
   
 
 <h1 id="section_3">3. Full-text Index Queries</h1>
@@ -663,7 +663,7 @@ SELECT * FROM docs WHERE docs MATCH 'linux';
 <i>-- all documents that contain "linux", but also those that contain terms "linear",</i>
 <i>--"linker", "linguistic" and so on.</i>
 SELECT * FROM docs WHERE docs MATCH 'lin*';
-</table></div>
+</pre></table></div>
 
 <ul>
   <li style="list-style:none"><p>
@@ -686,7 +686,22 @@ SELECT * FROM docs WHERE docs MATCH 'title:linux problems';
 <i>-- ("driver" may also appear in the title, but this alone will not satisfy the</i>.
 <i>-- query criteria).</i>
 SELECT * FROM docs WHERE body MATCH 'title:linux driver';
-</table></div>
+</pre></table></div>
+
+<ul>
+  <li style="list-style:none"><p>
+    If the FTS table is an FTS4 table (not FTS3), a token may also be prefixed
+    with a "&#94;" character. In this case, in order to match the token must
+    appear as the very first token in any column of the matching row. Examples:
+</ul>
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- All documents for which "linux" is the first token of at least one</i>
+<i>-- column.</i>
+SELECT * FROM docs WHERE docs MATCH '&#94;linux';
+
+<i>-- All documents for which the first token in column "title" begins with "lin".</i>
+SELECT * FROM docs WHERE body MATCH 'title: &#94;lin*';
+</pre></table></div>
 
 <a name="phrase"></a>
 
@@ -706,7 +721,7 @@ SELECT * FROM docs WHERE docs MATCH '"linux applications"';
 <i>-- "linux applications", this will match common phrases such as "linoleum appliances"</i>
 <i>-- or "link apprentice".</i>
 SELECT * FROM docs WHERE docs MATCH '"lin* app*"';
-</table></div>
+</pre></table></div>
 
 <a name="near"></a>
 
@@ -753,7 +768,7 @@ SELECT * FROM docs WHERE docs MATCH 'database NEAR/2 "ACID compliant"';
 <i>-- "sqlite" with not more than 2 terms separating the two. This also matches</i>
 <i>-- the only document stored in table docs.</i>
 SELECT * FROM docs WHERE docs MATCH '"ACID compliant" NEAR/2 sqlite';
-</table></div>
+</pre></table></div>
 
 <ul>
   <li style="list-style: none"><p>
@@ -765,16 +780,16 @@ SELECT * FROM docs WHERE docs MATCH '"ACID compliant" NEAR/2 sqlite';
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">
 <i>-- The following query selects documents that contains an instance of the term </i>
- <i>-- "sqlite" separated by two or fewer terms from an instance of the term "acid",</i>
- <i>-- which is in turn separated by two or fewer terms from an instance of the term</i>
- <i>-- "relational". As it happens, the only document in table docs satisfies this criteria.</i>
- SELECT * FROM docs WHERE docs MATCH 'sqlite NEAR/2 acid NEAR/2 relational';
+<i>-- "sqlite" separated by two or fewer terms from an instance of the term "acid",</i>
+<i>-- which is in turn separated by two or fewer terms from an instance of the term</i>
+<i>-- "relational".</i>
+SELECT * FROM docs WHERE docs MATCH 'sqlite NEAR/2 acid NEAR/2 relational';
 
- <i>-- This query matches no documents. There is an instance of the term "sqlite" with</i>
- <i>-- sufficient proximity to an instance of "acid" but it is not sufficiently close</i>
- <i>-- to an instance of the term "relational".</i>
- SELECT * FROM docs WHERE docs MATCH 'acid NEAR/2 sqlite NEAR/2 relational';
-</table></div>
+<i>-- This query matches no documents. There is an instance of the term "sqlite" with</i>
+<i>-- sufficient proximity to an instance of "acid" but it is not sufficiently close</i>
+<i>-- to an instance of the term "relational".</i>
+SELECT * FROM docs WHERE docs MATCH 'acid NEAR/2 sqlite NEAR/2 relational';
+</pre></table></div>
 
 <p>
   Phrase and NEAR queries may not span multiple columns within a row.
@@ -853,7 +868,7 @@ SELECT * FROM docs WHERE docs MATCH 'database NOT sqlite';
 <i>-- that contain each of the three terms "database", "and" and "sqlite" at least once.</i>
 <i>-- No documents in the example data above match this criteria.</i>
 SELECT * FROM docs WHERE docs MATCH 'database and sqlite';
-</table></div>
+</pre></table></div>
 
 <p>
   The examples above all use basic full-text term queries as both operands of 
@@ -893,7 +908,7 @@ SELECT docid FROM (
     UNION
   SELECT docid FROM docs WHERE docs MATCH '"sqlite database"'
 );
-</table></div>
+</pre></table></div>
 
 
 <h2 id="section_3_2">3.2. Set Operations Using The Standard Query Syntax</h2>
@@ -927,7 +942,7 @@ SELECT docid FROM (
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Search for the set of documents that contain the term "sqlite" but do</i>
 <i>-- not contain the term "database".</i>
 SELECT * FROM docs WHERE docs MATCH 'sqlite -database';
-</table></div>
+</pre></table></div>
 
 <ol>
   <li value="4"><p> The relative precedence of the set operations is different. 
@@ -953,7 +968,7 @@ SELECT * FROM docs WHERE docs MATCH 'sqlite -database';
 <i>-- in operator precedences, this query would have a different interpretation using</i>
 <i>-- the enhanced query syntax.</i>
 SELECT * FROM docs WHERE docs MATCH 'sqlite OR database library';
-</table></div>
+</pre></table></div>
 
 <a name="snippet"></a>
 
@@ -977,7 +992,7 @@ SELECT * FROM docs WHERE docs MATCH 'sqlite OR database library';
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT offsets(mail) FROM mail WHERE mail MATCH &lt;full-text query expression&gt;;
 SELECT snippet(mail) FROM mail WHERE mail MATCH &lt;full-text query expression&gt;;
 SELECT matchinfo(mail) FROM mail WHERE mail MATCH &lt;full-text query expression&gt;;
-</table></div>
+</pre></table></div>
 
 <p>
   The three auxiliary functions are only useful within a SELECT statement that
@@ -1063,7 +1078,7 @@ SELECT offsets(mail) FROM mail WHERE mail MATCH 'message';
 <i>-- that are part of an instance of the phrase "serious mail" are identified; the</i>
 <i>-- other occurrences of "serious" and "mail" are ignored.</i>
 SELECT offsets(mail) FROM mail WHERE mail MATCH '"serious mail"';
-</table></div>
+</pre></table></div>
 
 <a name="snippet"></a>
 
@@ -1182,7 +1197,7 @@ SELECT snippet(text) FROM text WHERE text MATCH 'cold';
 <i>--    &#91;minimum&#93; &#91;temperature&#93; 17-20oC. Cold..."</i>
 <i>--</i>
 SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* tem*"'
-</table></div>
+</pre></table></div>
 
 <h2 id="matchinfo">4.3. The Matchinfo Function</h2>
 
@@ -1306,7 +1321,7 @@ SELECT matchinfo(t1) FROM t1 WHERE t1 MATCH 'default transaction "these semantic
 <i>-- number of rows in the table). The following two values are the lengths </i>
 <i>-- of the longest common subsequence of phrase matches in each column.</i>
 SELECT matchinfo(t1, 'ns') FROM t1 WHERE t1 MATCH 'default transaction';
-</table></div>
+</pre></table></div>
 
 <p>
   The matchinfo function is much faster than either the snippet or offsets
@@ -1319,7 +1334,7 @@ SELECT matchinfo(t1, 'ns') FROM t1 WHERE t1 MATCH 'default transaction';
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT docid, matchinfo(tbl) FROM tbl WHERE tbl MATCH &lt;query expression&gt;;
 SELECT docid, offsets(tbl) FROM tbl WHERE tbl MATCH &lt;query expression&gt;;
-</table></div>
+</pre></table></div>
 
 <p>
   The matchinfo function provides all the information required to calculate
@@ -1360,7 +1375,7 @@ CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft);
 
 <i>-- Create a TEMP fts4aux table accessing the "ft" table in "main"</i>
 CREATE VIRTUAL TABLE temp.ft_terms_2 USING fts4aux(main,ft);
-</table></div>
+</pre></table></div>
 
 <p>
   For each term present in the FTS table, there are between 2 and N+1 rows
@@ -1434,7 +1449,7 @@ INSERT INTO ft(x, y) VALUES('Cherry Elderberry', 'Elderberry');
 <i>--     elderberry  |  1  |  1  |  1</i>
 <i>--</i>
 SELECT term, col, documents, occurrences FROM ft_terms;
-</table></div>
+</pre></table></div>
 
 <p>
   In the example, the values in the "term" column are all lower case, 
@@ -1469,7 +1484,7 @@ SELECT term, col, documents, occurrences FROM ft_terms;
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create a reduced-footprint FTS4 table.</i>
 CREATE VIRTUAL TABLE papers USING fts4(author, document, matchinfo=fts3);
-</table></div>
+</pre></table></div>
 
 <p>
   FTS4 currently supports the following options:
@@ -1555,7 +1570,7 @@ CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple);
 
 <i>-- An error. Cannot create a table with two columns named "tokenize".</i>
 CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple, tokenize=icu);
-</table></div>
+</pre></table></div>
 
 <a name="*fts4compression"></a>
 
@@ -1591,7 +1606,7 @@ CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple, tokeniz
 <i>-- assumes that the scalar functions zip() and unzip() have been (or</i>
 <i>-- will be) added to the database handle.</i>
 CREATE VIRTUAL TABLE papers USING fts4(author, document, compress=zip, uncompress=unzip);
-</table></div>
+</pre></table></div>
 
 <p>
   When implementing the compress and uncompress functions it is important to
@@ -1633,7 +1648,7 @@ CREATE VIRTUAL TABLE papers USING fts4(author, document, compress=zip, uncompres
   columns - "a", "b", and "c":
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE t1 USING fts4(content="", a, b, c);
-</table></div>
+</pre></table></div>
 
 <p>
   Data can be inserted into such an FTS4 table using an INSERT statements.
@@ -1645,7 +1660,7 @@ INSERT INTO t1(docid, a, b, c) VALUES(1, 'a b c', 'd e f', 'g h i');
 
 <i>-- This statement causes an error, as no docid value has been provided:</i>
 INSERT INTO t1(a, b, c) VALUES('j k l', 'm n o', 'p q r');
-</table></div>
+</pre></table></div>
 
 <p>
   It is not possible to UPDATE or DELETE a row stored in a contentless FTS4
@@ -1668,7 +1683,7 @@ SELECT * FROM t1;
 SELECT a, b FROM t1 WHERE t1 MATCH 'xxx';
 SELECT docid FROM t1 WHERE a LIKE 'xxx%';
 SELECT snippet(t1) FROM t1 WHERE t1 MATCH 'xxx';
-</table></div>
+</pre></table></div>
 
 <p>
   Errors related to attempting to retrieve column values other than docid
@@ -1698,7 +1713,7 @@ SELECT snippet(t1) FROM t1 WHERE t1 MATCH 'xxx';
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE t2(id INTEGER PRIMARY KEY, a, b, c);
 CREATE VIRTUAL TABLE t3 USING fts4(content="t2", a, c);
-</table></div>
+</pre></table></div>
 
 <p>
   Assuming the nominated table does exist, then its columns must be the same 
@@ -1746,7 +1761,7 @@ SELECT * FROM t3 WHERE t3 MATCH 'k';
 --</i>
 DELETE FROM t2;
 SELECT * FROM t3 WHERE t3 MATCH 'k';
-</table></div>
+</pre></table></div>
 
 <p>
   When a row is deleted from an external content FTS4 table, FTS4 needs to
@@ -1779,7 +1794,7 @@ END;
 CREATE TRIGGER t2_ai AFTER INSERT ON t2 BEGIN
   INSERT INTO t3(docid, b, c) VALUES(new.rowid, new.b, new.c);
 END;
-</table></div>
+</pre></table></div>
 
 <p>
   The DELETE trigger must be fired before the actual delete takes place
@@ -1797,7 +1812,7 @@ END;
   name of the external content FTS4 table, the rebuild command looks like this:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">INSERT INTO t3(t3) VALUES('rebuild');
-</table></div>
+</pre></table></div>
 
 <p>
   This command may also be used with ordinary FTS4 tables, for example if
@@ -1818,7 +1833,7 @@ END;
   be distinct from all other column names in the FTS4 table.  Example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE t1 USING fts4(x, y, languageid="lid")
-</table></div>
+</pre></table></div>
 
 <p>
   The default value of a languageid column is 0. Any value inserted
@@ -1833,7 +1848,7 @@ END;
   WHERE clause. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT * FROM t1 WHERE t1 MATCH 'abc' AND lid=5;
-</table></div>
+</pre></table></div>
 
 <p>
   It is not possible for a single FTS query to return rows with
@@ -1849,9 +1864,11 @@ END;
 <p>
   When the languageid option is used, SQLite invokes the xLanguageid()
   on the sqlite3_tokenizer_module object immediately after the object
-  is created in order to pass in the language id that particular
+  is created in order to pass in the language id that the
   tokenizer should use.  The xLanguageid() method will never be called
-  more than once for any single tokenizer object.
+  more than once for any single tokenizer object.  The fact that different
+  languages might be tokenized differently is one reason why no single
+  FTS query can return rows with different languageid values.
   
 
 
@@ -1883,7 +1900,7 @@ END;
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Create an FTS4 table for which only the contents of columns c2 and c4</i>
 <i>-- are tokenized and added to the inverted index.</i>
 CREATE VIRTUAL TABLE t1 USING fts4(c1, c2, c3, c4, notindexed=c1, notindexed=c3);
-</table></div>
+</pre></table></div>
 
 <p>
   Values stored in unindexed columns are not eligible to match MATCH 
@@ -1925,7 +1942,7 @@ SELECT * FROM t1 WHERE t1 MATCH 'abcd*';
 <i>-- above, but still an improvement over no prefix indexes at all.</i>
 SELECT * FROM t1 WHERE t1 MATCH 'a*';
 SELECT * FROM t1 WHERE t1 MATCH 'abc*';
-</table></div>
+</pre></table></div>
 
 <a name="*cmds"></a>
 
@@ -1943,7 +1960,7 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
 <li><p>INSERT INTO xyz(xyz) VALUES('rebuild');</p>
 <li><p>INSERT INTO xyz(xyz) VALUES('integrity-check');</p>
 <li><p>INSERT INTO xyz(xyz) VALUES('merge=X,Y');</p>
-<li><p>INSERT INTO xyz(xyz) VALUES('automerge=B');</p>
+<li><p>INSERT INTO xyz(xyz) VALUES('automerge=N');</p>
 </ul>
 
 <a name="*fts4optcmd"></a>
@@ -2055,24 +2072,26 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
 
 <a name="*fts4automergecmd"></a>
 
-<h2 id="automerge"">7.5. The "automerge=B" command</h2>
+<h2 id="automerge"">7.5. The "automerge=N" command</h2>
 
 <p>
-  The "automerge=B" command (where B is either "1" or "0") disables
-  or enables automatic incremental inverted index merging for an
-  FTS3/4 table.  The default for new tables is for automatic incremental
-  merging to be disabled.  The "automerge=B" command changes this
-  setting.  The change is persistent and continues to be in effect
-  for all subsequent database connections to the same database.
+  The "automerge=N" command (where N is an integer between 0 and 15,
+  inclusive) is used to configure an FTS3/4 tables "automerge" parameter,
+  which controls automatic incremental inverted index merging. The default 
+  automerge value for new tables is 0, meaning that automatic incremental 
+  merging is completely disabled. If the value of the automerge parameter
+  is modified using the "automerge=N" command, the new parameter value is
+  stored persistently in the database and is used by all subsequently
+  established database connections.
 
 <p>
-  Enabling automatic incremental merge causes SQLite to do a small
-  amount of inverted index merging after every INSERT operation.
-  The amount of merging performed is designed so that the FTS3/4
-  table never reaches a point where it has 16 segments at the same
-  level and hence has to do a large merge in order to complete an
-  insert.  In other words, automatic incremental merging is designed
-  to prevent spiky INSERT performance.
+  Setting the automerge parameter to a non-zero value enables automatic
+  incremental merging. This causes SQLite to do a small amount of inverted 
+  index merging after every INSERT operation. The amount of merging 
+  performed is designed so that the FTS3/4 table never reaches a point 
+  where it has 16 segments at the same level and hence has to do a large 
+  merge in order to complete an insert.  In other words, automatic 
+  incremental merging is designed to prevent spiky INSERT performance.
 
 <p>
   The downside of automatic incremental merging is that it makes
@@ -2084,6 +2103,29 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
   well merged.  But if the structure of an application does not easily
   allow for idle processes, the use of automatic incremental merge is
   a very reasonable fallback solution.
+
+<p>
+  The actual value of the automerge parameter determines the number of
+  index segments merged simultaneously by an automatic inverted index
+  merge. If the value is set to N, the system waits until there are at
+  least N segments on a single level before beginning to incrementally
+  merge them. Setting a lower value of N causes segments to be merged more
+  quickly, which may speed up full-text queries and, if the workload 
+  contains UPDATE or DELETE operations as well as INSERTs, reduce the space
+  on disk consumed by the full-text index. However, it also increases the
+  amount of data written to disk.
+
+<p>
+  For general use in cases where the workload contains few UPDATE or DELETE
+  operations, a good choice for automerge is 8. If the workload contains
+  many UPDATE or DELETE commands, 
+  or if query speed is a concern, it may be advantageous to reduce automerge
+  to 2.
+
+<p>
+  For reasons of backwards compatibility, the "automerge=1" command sets
+  the automerge parameter to 8, not 1 (a value of 1 would make no sense 
+  anyway, as merging data from a single segment is a no-op).
 
 
 <h1 id="tokenizer">8. Tokenizers</h1>
@@ -2160,7 +2202,7 @@ INSERT INTO porter VALUES('Right now they''re very frustrated');
 <i>-- Both of the following queries match the document stored in table "porter".</i>
 SELECT * FROM porter WHERE porter MATCH 'Frustrated';
 SELECT * FROM porter WHERE porter MATCH 'Frustration';
-</table></div>
+</pre></table></div>
 
 <p>
   If this extension is compiled with the SQLITE_ENABLE_ICU pre-processor
@@ -2171,7 +2213,7 @@ SELECT * FROM porter WHERE porter MATCH 'Frustration';
   in Turkey, or "en_AU" for English as used in Australia. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE thai_text USING fts3(text, tokenize=icu th_TH)
-</table></div>
+</pre></table></div>
 
 <p>
   The ICU tokenizer implementation is very simple. It splits the input
@@ -2205,7 +2247,7 @@ CREATE VIRTUAL TABLE txt2 USING fts4(tokenize=unicode61 "remove_diacritics=1");
 <i>-- Create a table that does not remove diacritics from Latin script</i>
 <i>-- characters as part of tokenization.</i>
 CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "remove_diacritics=0");
-</table></div>
+</pre></table></div>
 
 <p>
   It is also possible to customize the set of codepoints that unicode61 treats
@@ -2220,10 +2262,10 @@ CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "remove_diacritics=0");
 <i>-- function as separators.</i>
 CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 "tokenchars=.=" "separators=X");
 
-<i>-- Create a tables that considers space characters (codepoint 32) to be</i>
+<i>-- Create a table that considers space characters (codepoint 32) to be</i>
 <i>-- a token character</i>
 CREATE VIRTUAL TABLE txt4 USING fts4(tokenize=unicode61 "tokenchars= ");
-</table></div>
+</pre></table></div>
 
 <p>
   If a character specified as part of the argument to "tokenchars=" is considered
@@ -2242,7 +2284,7 @@ CREATE VIRTUAL TABLE txt4 USING fts4(tokenize=unicode61 "tokenchars= ");
 CREATE VIRTUAL TABLE txt5 USING fts4(
     tokenize=unicode61 "tokenchars=." "separators=X." "tokenchars=="
 );
-</table></div>
+</pre></table></div>
 
 <p>
   The arguments passed to the "tokenchars=" or "separators=" options are 
@@ -2276,7 +2318,7 @@ CREATE VIRTUAL TABLE txt5 USING fts4(
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT fts3_tokenizer(&lt;tokenizer-name&gt;);
 SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&gt;);
-</table></div>
+</pre></table></div>
 
 <p>
   Where &lt;tokenizer-name&gt; is a string identifying the tokenizer and
@@ -2349,7 +2391,7 @@ int queryTokenizer(
 
   return sqlite3_finalize(pStmt);
 }
-</table></div>
+</pre></table></div>
 
 
 <a name="fts3tok"></a>
@@ -2361,7 +2403,7 @@ int queryTokenizer(
    of the fts3tokenize virtual table:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE tok1 USING fts3tokenize('porter');
-</table></div>
+</pre></table></div>
 
 <p>The name of the desired tokenizer should be substituted in place of
    'porter' in the example, of course.  If the tokenizer requires one or
@@ -2374,7 +2416,7 @@ CREATE VIRTUAL TABLE tokens1 USING fts3tokenize(icu, en_AU);
 
 CREATE VIRTUAL TABLE text2 USING fts4(tokenize=unicode61 "tokenchars=@." "separators=123");
 CREATE VIRTUAL TABLE tokens2 USING fts3tokenize(unicode61, "tokenchars=@.", "separators=123");
-</table></div>
+</pre></table></div>
    
 <p>
    Once the virtual table is created, it can be queried as follows:
@@ -2382,7 +2424,7 @@ CREATE VIRTUAL TABLE tokens2 USING fts3tokenize(unicode61, "tokenchars=@.", "sep
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT token, start, end, position 
   FROM tok1
  WHERE input='This is a test sentence.';
-</table></div>
+</pre></table></div>
 
 <p>The virtual table will return one row of output for each token in the
    input string.  The "token" column is the text of the token.  The "start"
@@ -2401,7 +2443,7 @@ is|5|7|1
 a|8|9|2
 test|10|14|3
 sentenc|15|23|4
-</table></div>
+</pre></table></div>
 
 <p>Notice that the tokens in the result set from the fts3tokenize virtual
    table have been transformed according to the rules of the tokenizer.
@@ -2413,7 +2455,7 @@ sentenc|15|23|4
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT substr(input, start+1, end-start), token, position
   FROM tok1
  WHERE input='This is a test sentence.';
-</table></div>
+</pre></table></div>
 
 <p>The fts3tokenize virtual table can be used on any tokenizer, regardless
    of whether or not there exists an FTS3 or FTS4 table that actually uses
@@ -2454,7 +2496,7 @@ CREATE VIRTUAL TABLE abc USING fts4(a NUMBER, b TEXT, c);
 
 <i>-- Corresponding %_content table declaration</i>
 CREATE TABLE abc_content(docid INTEGER PRIMARY KEY, c0a, c1b, c2c);
-</table></div>
+</pre></table></div>
 
 <p>
   The %_content table contains the unadulterated data inserted by the user 
@@ -2477,7 +2519,7 @@ CREATE TABLE %_docsize(
   docid INTEGER PRIMARY KEY,
   size BLOB
 );
-</table></div>
+</pre></table></div>
 
 <p>
   For each row in the FTS table, the %_docsize table contains a corresponding
@@ -2517,7 +2559,7 @@ CREATE TABLE %_segdir(
   root BLOB,                         <i>-- B-tree root node</i>
   PRIMARY KEY(level, idx)
 );
-</table></div>
+</pre></table></div>
 
 <p>
   The schema depicted above is not designed to store the full-text index 
@@ -2638,10 +2680,19 @@ CREATE TABLE %_segdir(
     that belongs to this segment b-tree. Or zero if the entire segment b-tree
     fits on the root node.
   <tr style="text-align:left;background-color:#DDDDDD"><td>end_block <td>
-    The blockid that corresponds to the interior node with the largest 
-    blockid that belongs to this segment b-tree.  Or zero if the entire segment
-    b-tree fits on the root node. If it exists, this node is always an
-    interior node.
+    This field may contain either an integer or a text field consisting of
+    two integers separated by a space character (unicode codepoint 0x20).
+<p style="margin-left:0;margin-right:0">
+    The first, or only, integer is the blockid that corresponds to the interior
+    node with the largest blockid that belongs to this segment b-tree. Or zero
+    if the entire segment b-tree fits on the root node. If it exists, this node
+    is always an interior node.
+<p style="margin-left:0;margin-right:0;margin-bottom:0">
+    The second integer, if it is present, is the aggregate size of all data
+    stored on leaf pages in bytes. If the value is negative, then the segment
+    is the output of an unfinished incremental-merge operation, and the
+    absolute value is current size in bytes.
+
   <tr style="text-align:left"><td>root             <td>
     Blob containing the root node of the segment b-tree.
 </table>
@@ -2770,7 +2821,7 @@ SELECT title FROM documents
   WHERE documents MATCH &lt;query&gt;
   ORDER BY countintegers(offsets(documents)) DESC
   LIMIT 10 OFFSET 0
-</table></div>
+</pre></table></div>
 
 <p>
   The query above could be made to run faster by using the FTS <a href="fts3.html#matchinfo">matchinfo</a>
@@ -2791,7 +2842,7 @@ SELECT title FROM documents
   WHERE documents MATCH &lt;query&gt;
   ORDER BY rank(matchinfo(documents)) DESC
   LIMIT 10 OFFSET 0
-</table></div>
+</pre></table></div>
 
 <p>
   The SQL query in the example above uses less CPU than the first example
@@ -2826,7 +2877,7 @@ SELECT title FROM documents
     LIMIT 10 OFFSET 0
 ) AS ranktable USING(docid)
 ORDER BY ranktable.rank DESC
-</table></div>
+</pre></table></div>
 
 <p>
   The next block of SQL enhances the query with solutions to two other problems
@@ -2877,7 +2928,7 @@ SELECT title, snippet(documents) FROM documents JOIN (
 ) AS ranktable USING(docid)
 WHERE documents MATCH &lt;query&gt;
 ORDER BY ranktable.rank DESC
-</table></div>
+</pre></table></div>
 
 <p>
   All the example queries above return the ten most relevant query results.
@@ -2978,5 +3029,5 @@ static void rankfunc(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
 wrong_number_args:
   sqlite3_result_error(pCtx, "wrong number of arguments to function rank()", -1);
 }
-</table></div>
+</pre></table></div>
 

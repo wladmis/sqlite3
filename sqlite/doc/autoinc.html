@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -129,8 +129,34 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 
-<h1>SQLite Autoincrement</h1>
 
+<h1 align=center>Autoincrement In SQLite</h1>
+
+<h2>Summary</h2>
+
+<ol type="1">
+<li><p>
+  The AUTOINCREMENT keyword imposes extra CPU, memory, disk space,
+  and disk I/O overhead and should be avoided if not strictly needed.
+  It is usually not needed.
+<li><p>
+  In SQLite, a column with type INTEGER PRIMARY KEY is an alias for the <a href="lang_createtable.html#rowid">ROWID</a>
+  (except in <a href="withoutrowid.html">WITHOUT ROWID</a> tables) which is always a 64-bit signed integer.
+<li><p>
+  On an <a href="lang_insert.html">INSERT</a>, if the ROWID or INTEGER PRIMARY KEY column is not 
+  explicitly given a value, then it
+  will be filled automatically with an unused integer, usually
+  one more than the largest ROWID currently in use.
+  This is true regardless of whether or not the AUTOINCREMENT keyword is used.
+<li><p>
+  If the AUTOINCREMENT keyword appears after INTEGER PRIMARY KEY, that
+  changes the automatic ROWID assignment algorithm to prevent
+  the reuse of ROWIDs over the lifetime of the database.  In other words,
+  the purpose of AUTOINCREMENT is to prevent the reuse of ROWIDs from
+  previously deleted rows.
+</ol>
+
+<h2>Background</h2>
 
 <p>
 In SQLite, table rows normally have a 64-bit signed integer <a href="lang_createtable.html#rowid">ROWID</a>
@@ -177,7 +203,7 @@ used.  If the largest ROWID is equal to the largest possible integer
 engine starts picking positive candidate ROWIDs at random until it finds one
 that is not previously used.
 If no unused ROWID can be found after a reasonable number of attempts,
-the insert operation fails with an <a href="c3ref/c_abort.html">SQLITE_FULL</a> error.
+the insert operation fails with an <a href="rescode.html#full">SQLITE_FULL</a> error.
 If no negative ROWID values are inserted explicitly, then automatically 
 generated ROWID values will always be greater than zero.
 </p>
@@ -203,7 +229,9 @@ that has ever before existed in that same table.  If the table has never
 before contained any data, then a ROWID of 1 is used.  If the table
 has previously held a row with the largest possible ROWID, then new INSERTs
 are not allowed and any attempt to insert a new row will fail with an
-SQLITE_FULL error.
+SQLITE_FULL error.  Only ROWID values from previously transactions that
+were committed are considered.  ROWID values that were rolled back
+are ignored and can be reused.
 </p>
 
 <p>

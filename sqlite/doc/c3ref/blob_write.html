@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -134,27 +134,30 @@ This function is used to write data into an open <a href="../c3ref/blob.html">BL
 caller-supplied buffer. N bytes of data are copied from the buffer Z
 into the open BLOB, starting at offset iOffset.</p>
 
+<p>On success, sqlite3_blob_write() returns SQLITE_OK.
+Otherwise, an  <a href="../rescode.html">error code</a> or an <a href="../rescode.html#extrc">extended error code</a> is returned.
+Unless SQLITE_MISUSE is returned, this function sets the
+<a href="../c3ref/sqlite3.html">database connection</a> error code and message accessible via
+<a href="../c3ref/errcode.html">sqlite3_errcode()</a> and <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> and related functions.</p>
+
 <p>If the <a href="../c3ref/blob.html">BLOB handle</a> passed as the first argument was not opened for
 writing (the flags parameter to <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a> was zero),
-this function returns <a href="../c3ref/c_abort.html">SQLITE_READONLY</a>.</p>
+this function returns <a href="../rescode.html#readonly">SQLITE_READONLY</a>.</p>
 
 <p>This function may only modify the contents of the BLOB; it is
 not possible to increase the size of a BLOB using this API.
 If offset iOffset is less than N bytes from the end of the BLOB,
-<a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is written.  If N is
-less than zero <a href="../c3ref/c_abort.html">SQLITE_ERROR</a> is returned and no data is written.
-The size of the BLOB (and hence the maximum value of N+iOffset)
-can be determined using the <a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a> interface.</p>
+<a href="../rescode.html#error">SQLITE_ERROR</a> is returned and no data is written. The size of the
+BLOB (and hence the maximum value of N+iOffset) can be determined
+using the <a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a> interface. If N or iOffset are less
+than zero <a href="../rescode.html#error">SQLITE_ERROR</a> is returned and no data is written.</p>
 
 <p>An attempt to write to an expired <a href="../c3ref/blob.html">BLOB handle</a> fails with an
-error code of <a href="../c3ref/c_abort.html">SQLITE_ABORT</a>.  Writes to the BLOB that occurred
+error code of <a href="../rescode.html#abort">SQLITE_ABORT</a>.  Writes to the BLOB that occurred
 before the <a href="../c3ref/blob.html">BLOB handle</a> expired are not rolled back by the
 expiration of the handle, though of course those changes might
 have been overwritten by the statement that expired the BLOB handle
 or by other independent statements.</p>
-
-<p>On success, sqlite3_blob_write() returns SQLITE_OK.
-Otherwise, an  <a href="../c3ref/c_abort.html">error code</a> or an <a href="../c3ref/c_abort_rollback.html">extended error code</a> is returned.</p>
 
 <p>This routine only works on a <a href="../c3ref/blob.html">BLOB handle</a> which has been created
 by a prior successful call to <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a> and which has not

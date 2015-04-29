@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -132,13 +132,13 @@ a:visited { color: #734559 }
 #define SQLITE_IGNORE 2   /* Don't allow access, but don't generate an error */
 </pre></blockquote><p>
 The <a href="../c3ref/set_authorizer.html">authorizer callback function</a> must
-return either <a href="../c3ref/c_abort.html">SQLITE_OK</a> or one of these two constants in order
+return either <a href="../rescode.html#ok">SQLITE_OK</a> or one of these two constants in order
 to signal SQLite whether or not the action is permitted.  See the
 <a href="../c3ref/set_authorizer.html">authorizer documentation</a> for additional
 information.</p>
 
-<p>Note that SQLITE_IGNORE is also used as a <a href="../c3ref/c_fail.html">return code</a>
-from the <a href="../c3ref/vtab_on_conflict.html">sqlite3_vtab_on_conflict()</a> interface.
+<p>Note that SQLITE_IGNORE is also used as a <a href="../c3ref/c_fail.html">conflict resolution mode</a>
+returned from the <a href="../c3ref/vtab_on_conflict.html">sqlite3_vtab_on_conflict()</a> interface.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

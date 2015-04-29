@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -163,15 +163,9 @@ members, including:</p>
 
   sponsor[1] = '<tr><td align="center"> <a href="http://www.bloomberg.com/"> <img src="images/foreignlogos/bloomberg.gif" alt="bloomberg.com" border="0"> </a></td><td> <a href="http://www.bloomberg.com/">Bloomberg</a> -  A world leader in financial-information technology.</td></tr>'
 
-  sponsor[2] = '<tr><td align="center"> <a href="http://www.adobe.com/"> <img src="images/foreignlogos/adobe-logo.gif" alt="adobe.com" border="0"> </a></td><td> <a href="http://www.adobe.com/">Adobe</a> revolutionizes how the  world engages with ideas and information - anywhere, anytime, and  through any medium.</td></tr>'
+  sponsor[2] = '<tr><td align="center"> <a href="http://www.bentley.com/"> <img src="images/foreignlogos/bentley.gif" alt="bentley.com" border="0"> </a></td><td> <a href="http://www.bentley.com/">Bentley</a> - Comprehensive software  solutions for Sustaining Infrastructure.</td></tr>'
 
-  sponsor[3] = '<tr><td align="center"> <a href="http://www.oracle.com/us/technologies/embedded/"> <img src="images/foreignlogos/oracle.gif" alt="oracle.com" border="0"> </a></td><td> <a href="http://www.oracle.com/us/technologies/embedded/">Oracle</a> - Software.  Hardware.  Complete.</td></tr>'
-
-  sponsor[4] = '<tr><td align="center"> <a href="http://www.bentley.com/"> <img src="images/foreignlogos/bentley.gif" alt="bentley.com" border="0"> </a></td><td> <a href="http://www.bentley.com/">Bentley</a> - Comprehensive software  solutions for Sustaining Infrastructure.</td></tr>'
-
-  sponsor[5] = '<tr><td align="center"> <a href="http://www.nokia.com/"> <img src="images/foreignlogos/nokia.gif" alt="nokia.com" border="0"> </a></td><td> <a href="http://www.nokia.com/">Nokia</a> is the world leader in mobility, driving the transformation and growth of the converging internet and communications industries.</td></tr>'
-
-  count = 6
+  count = 3
   while( count>0 ){
     i = Math.floor(Math.random()*6)
     if( sponsor[i]!=null ){
@@ -193,17 +187,19 @@ members, including:</p>
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_8_3_1.html">Version 3.8.3.1</a>
+<li><a href="releaselog/3_8_9.html">Version 3.8.9</a>
 of SQLite is recommended for all new development.
-Upgrading from versions 3.7.17, 3.8.0.2 is optional.
-Upgrading from all other prior versions of SQLite
+Upgrading from versions 3.8.8.x is optional.
+Upgrading from all other versions of SQLite
 is recommended.</li>
+</li>
 </ul></p>
 
 <h3>Common Links</h3>
 
 <p><ul>
 <li> <a href="features.html">Features</a> </li>
+<li> <a href="whentouse.html">When to use SQLite</a> </li>
 <li> <a href="faq.html">Frequently Asked Questions</a> </li>
 <li> <a href="famous.html">Well-known Users</a> </li>
 <li> <a href="quickstart.html">Getting Started</a> </li>

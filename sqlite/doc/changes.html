@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -140,7 +140,410 @@ http://www.sqlite.org/src/timeline</a> and
 http://www.sqlite.org/src/timeline?t=release</a>
 </p>
 
-<a name="version_3_8_3_1"></a>
+<a name="version_3_8_9"></a>
+<h3>2015-04-08 (3.8.9)</h3><p><ul>
+<li>Add VxWorks-7 as an officially supported and tested platform.
+<li>Added the <font color="red">sqlite3_status64()</font> interface.
+<li>Fix memory size tracking so that it works even if SQLite uses more
+    than 2GiB of memory.
+<li>Added the <a href="pragma.html#pragma_index_xinfo">PRAGMA index_xinfo</a> command.
+<li>Fix a potential 32-bit integer overflow problem in the
+    <a href="c3ref/blob_read.html">sqlite3_blob_read()</a> and <a href="c3ref/blob_write.html">sqlite3_blob_write()</a> interfaces.
+<li>Ensure that prepared statements automatically reset on extended
+    error codes of SQLITE_BUSY and SQLITE_LOCKED even when compiled
+    using <a href="compile.html#omit_autoreset">SQLITE_OMIT_AUTORESET</a>.
+<li>Correct miscounts in the sqlite3_analyzer.exe utility related
+    to WITHOUT ROWID tables.
+<li>Added the ".dbinfo" command to the <a href="cli.html">command-line shell</a>.
+<li>Improve the performance of fts3/4 queries that use the OR operator 
+    and at least one auxiliary fts function.
+<li>Fix a bug in the fts3 snippet() function causing it to omit
+    leading separator characters from snippets that begin with the
+    first token in a column.
+<li>SQLITE_SOURCE_ID: "2015-04-08 12:16:33 8a8ffc862e96f57aa698f93de10dee28e69f6e09"
+<li>SHA1 for sqlite3.c: 49f1c3ae347e1327b5aaa6c7f76126bdf09c6f42
+</ul></p><a name="version_3_8_8_3"></a>
+<h3>2015-02-25 (3.8.8.3)</h3><p><ul>
+<li>Fix a bug (ticket
+    <a href="https://www.sqlite.org/src/info/2326c258d02ead33">2326c258d02ead33</a>) that can lead
+    to incorrect results if the qualifying constraint of a <a href="partialindex.html">partial index</a> appears in the
+    ON clause of a LEFT JOIN.
+<li>Added the ability to link against the 
+    "<a href="https://github.com/antirez/linenoise">linenoise</a>"
+    command-line editing library in unix builds of the <a href="cli.html">command-line shell</a>.
+
+<li>SQLITE_SOURCE_ID: "2015-02-25 13:29:11 9d6c1880fb75660bbabd693175579529785f8a6b"
+<li>SHA1 for sqlite3.c: 74ee38c8c6fd175ec85a47276dfcefe8a262827a
+</ul></p><a name="version_3_8_8_2"></a>
+<h3>2015-01-30 (3.8.8.2)</h3><p><ul>
+<li>Enhance <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2(TRUNCATE)</a> interface so that it truncates the
+    WAL file even if there is no checkpoint work to be done.
+
+<li>SQLITE_SOURCE_ID: "2015-01-30 14:30:45 7757fc721220e136620a89c9d28247f28bbbc098"
+<li>SHA1 for sqlite3.c: 85ce79948116aa9a087ec345c9d2ce2c1d3cd8af
+
+</ul></p><a name="version_3_8_8_1"></a>
+<h3>2015-01-20 (3.8.8.1)</h3><p><ul>
+<li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
+    output to appear in the wrong order on queries that contains an ORDER BY clause,
+    a LIMIT clause, and that have approximately 60 or more columns in the result set.
+    Ticket <a href="https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79">f97c4637102a3ae72b79</a>.
+
+<li>SQLITE_SOURCE_ID: "2015-01-20 16:51:25 f73337e3e289915a76ca96e7a05a1a8d4e890d55"
+<li>SHA1 for sqlite3.c: 33987fb50dcc09f1429a653d6b47672f5a96f19e
+</ul></p><a name="version_3_8_8"></a>
+<h3>2015-01-16 (3.8.8)</h3><p><ul>
+<p><b>New Features:</b>
+<li>Added the <a href="pragma.html#pragma_data_version">PRAGMA data_version</a> command that can be used to determine if
+    a database file has been modified by another process.
+<li>Added the <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_TRUNCATE</a> option to the
+    <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> interface, with corresponding enhancements
+    to <a href="pragma.html#pragma_wal_checkpoint">PRAGMA wal_checkpoint</a>.
+<li>Added the <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus()</a> interface, available only when
+    compiled with <a href="compile.html#enable_stmt_scanstatus">SQLITE_ENABLE_STMT_SCANSTATUS</a>.
+<li>The <a href="c3ref/table_column_metadata.html">sqlite3_table_column_metadata()</a> is enhanced to work correctly on
+    <a href="withoutrowid.html">WITHOUT ROWID</a> tables and to check for the existence of a
+    a table if the column name parameter is NULL.  The interface is now
+    also included in the build by default, without requiring
+    the <a href="compile.html#enable_column_metadata">SQLITE_ENABLE_COLUMN_METADATA</a> compile-time option.
+<li>Added the <a href="compile.html#enable_api_armor">SQLITE_ENABLE_API_ARMOR</a> compile-time option.
+<li>Added the <a href="compile.html#reverse_unordered_selects">SQLITE_REVERSE_UNORDERED_SELECTS</a> compile-time option.
+<li>Added the <a href="compile.html#sorter_pmasz">SQLITE_SORTER_PMASZ</a> compile-time option and <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpmasz">SQLITE_CONFIG_PMASZ</a>
+    start-time option.
+<li>Added the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpcachehdrsz">SQLITE_CONFIG_PCACHE_HDRSZ</a> option to <a href="c3ref/config.html">sqlite3_config()</a>
+    which makes it easier for applications to determine the appropriate
+    amount of memory for use with <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a>.
+<li>The number of rows in a <a href="lang_select.html#values">VALUES clause</a> is no longer limited by
+    <a href="c3ref/c_limit_attached.html#sqlitelimitcompoundselect">SQLITE_LIMIT_COMPOUND_SELECT</a>.
+<li>Added the <a href="https://www.sqlite.org/src/artifact/f971962e92ebb8b0">eval.c</a>
+    <a href="loadext.html">loadable extension</a> that implements an eval() SQL function that will recursively
+    evaluate SQL.
+<p><b>Performance Enhancements:</b>
+<li>Reduce the number of memcpy() operations involved in balancing a b-tree,
+    for 3.2% overall performance boost.
+<li>Improvements to cost estimates for the <a href="optoverview.html#skipscan">skip-scan optimization</a>.
+<li>The <a href="optoverview.html#autoindex">automatic indexing</a> optimization is now capable of generating
+    a <a href="partialindex.html">partial index</a> if that is appropriate.
+<p><b>Bug fixes:</b>
+<li>Ensure durability following a power loss with
+    "PRAGMA journal_mode=TRUNCATE" by calling fsync() right after truncating
+    the journal file.
+<li>The query planner now recognizes that any column in the right-hand
+    table of a LEFT JOIN can be NULL, even if that column has a NOT NULL
+    constraint.  Avoid trying to optimize out NULL tests in those cases.
+    Fix for ticket
+    <a href="https://www.sqlite.org/src/info/6f2222d550f5b0ee7ed">6f2222d550f5b0ee7ed</a>.
+<li>Make sure ORDER BY puts rows in ascending order even if the DISTINCT
+    operator  is implemented using a descending index.  Fix for ticket
+    <a href="https://www.sqlite.org/src/info/c5ea805691bfc4204b1cb9e">c5ea805691bfc4204b1cb9e</a>.
+<li>Fix data races that might occur under stress when running with many threads
+    in <a href="sharedcache.html">shared cache mode</a> where some of the threads are opening and
+    closing connections.
+<li>Fix obscure crash bugs found by
+    <a href="http://lcamtuf.coredump.cx/afl/">american fuzzy lop</a>.  Ticket
+    <a href="https://www.sqlite.org/src/info/a59ae93ee990a55">a59ae93ee990a55</a>.
+<li>Work around a GCC optimizer bug (for gcc 4.2.1 on MacOS 10.7) that caused the 
+    <a href="rtree.html">R-Tree extension</a> to compute incorrect results when compiled with -O3.
+<p><b>Other changes:</b>
+<li>Disable the use of the strchrnul() C-library routine unless it is
+    specifically enabled using the -DHAVE_STRCHRNULL compile-time option.
+<li>Improvements to the effectiveness and accuracy of the
+    <a href="lang_corefunc.html#likelihood">likelihood()</a>, <a href="lang_corefunc.html#likely">likely()</a>, and <a href="lang_corefunc.html#unlikely">unlikely()</a> SQL hint functions.
+
+<li>SQLITE_SOURCE_ID: "2015-01-16 12:08:06 7d68a42face3ab14ed88407d4331872f5b243fdf"
+<li>SHA1 for sqlite3.c: 91aea4cc722371d58aae3d22e94d2a4165276905
+</ul></p><a name="version_3_8_7_4"></a>
+<h3>2014-12-09 (3.8.7.4)</h3><p><ul>
+<li>Bug fix: Add in a mutex that was omitted from the previous release.
+<li>SQLITE_SOURCE_ID: "2014-12-09 01:34:36 f66f7a17b78ba617acde90fc810107f34f1a1f2e"
+<li>SHA1 for sqlite3.c: 0a56693a3c24aa3217098afab1b6fecccdedfd23
+</ul></p><a name="version_3_8_7_3"></a>
+<h3>2014-12-06 (3.8.7.3)</h3><p><ul>
+<li>Bug fix: Ensure the cached KeyInfo objects (an internal abstraction not visible to the
+    application) do not go stale when operating in <a href="sharedcache.html">shared cache mode</a> and frequently closing
+    and reopening some database connections while leaving other database connections on the
+    same shared cache open continuously.  Ticket 
+    <a href="https://www.sqlite.org/src/info/e4a18565a36884b00edf">e4a18565a36884b00edf</a>.
+<li>Bug fix: Recognize that any column in the right-hand table of a LEFT JOIN can be
+    NULL even if the column has a NOT NULL constraint.  Do not apply optimizations that
+    assume the column is never NULL.  Ticket
+    <a href="https://www.sqlite.org/src/info/6f2222d550f5b0ee7ed">6f2222d550f5b0ee7ed</a>.
+
+<li>SQLITE_SOURCE_ID: "2014-12-05 22:29:24 647e77e853e81a5effeb4c33477910400a67ba86"
+<li>SHA1 for sqlite3.c: 3ad2f5ba3a4a3e3e51a1dac9fda9224b359f0261
+</ul></p><a name="version_3_8_7_2"></a>
+<h3>2014-11-19 (3.8.7.2)</h3><p><ul>
+<li>Enhance the <a href="lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
+    as the schema is unchanged.  Formerly, a ROLLBACK would cause all pending queries to
+    fail with an <a href="rescode.html#abort">SQLITE_ABORT</a> or <a href="rescode.html#abort_rollback">SQLITE_ABORT_ROLLBACK</a> error.  That error is still returned
+    if the ROLLBACK modifies the schema.
+<li>Bug fix: Make sure that NULL results from OP_Column are fully and completely NULL and
+    do not have the MEM_Ephem bit set.
+    Ticket <a href="http://www.sqlite.org/src/info/094d39a4c95ee4">094d39a4c95ee4</a>.
+<li>Bug fix:  The %c format in sqlite3_mprintf() is able to handle precisions greater than 70.
+<li>Bug fix:  Do not automatically remove the DISTINCT keyword from a SELECT that forms
+    the right-hand side of an IN operator since it is necessary if the SELECT also 
+    contains a LIMIT.
+    Ticket <a href="http://www.sqlite.org/src/info/db87229497">db87229497</a>.
+
+<li>SQLITE_SOURCE_ID: "2014-11-18 20:57:56 2ab564bf9655b7c7b97ab85cafc8a48329b27f93"
+<li>SHA1 for sqlite3.c: b2a68d5783f48dba6a8cb50d8bf69b238c5ec53a
+</ul></p><a name="version_3_8_7_1"></a>
+<h3>2014-10-30 (3.8.7.1)</h3><p><ul>
+<li>In <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=TRUNCATE</a> mode, call fsync() immediately after truncating
+    the journal file to ensure that the transaction is durable across a power loss.
+<li>Fix an assertion fault that can occur when updating the NULL value of a field
+    at the end of a table that was added using <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>.
+<li>Do not attempt to use the strchrnul() function from the standard C library unless
+    the HAVE_STRCHRNULL compile-time option is set.
+<li>Fix a couple of problems associated with running an UPDATE or DELETE on a
+    <a href="lang_createview.html">VIEW</a> with a <a href="lang_createtable.html#rowid">rowid</a> in the WHERE clause.
+
+<li>SQLITE_SOURCE_ID: "2014-10-29 13:59:56 3b7b72c4685aa5cf5e675c2c47ebec10d9704221"
+<li>SHA1 for sqlite3.c: 2d25bd1a73dc40f538f3a81c28e6efa5999bdf0c
+</ul></p><a name="version_3_8_7"></a>
+<h3>2014-10-17 (3.8.7)</h3><p><ul>
+<p><b>Performance Enhancements:</b>
+<li>Many micro-optimizations result in 20.3% more work for the same number
+    of CPU cycles relative to the previous release. 
+    The cumulative performance increase since <a href="#version_3_8_0">version 3.8.0</a> is 61%.
+    (Measured using 
+    <a href="http://valgrind.org/docs/manual/cg-manual.html">cachegrind</a> on the
+    <a href="http://www.sqlite.org/src/artifact/83f6b3318f7ee">speedtest1.c</a> workload on
+    Ubuntu 13.10 x64 with gcc 4.8.1 and -Os. Your performance may vary.)
+<li>The sorter can use auxiliary helper threads to increase real-time response.
+    This feature is off by default and may be
+    enabled using the <a href="pragma.html#pragma_threads">PRAGMA threads</a> command or the <a href="compile.html#default_worker_threads">SQLITE_DEFAULT_WORKER_THREADS</a>
+    compile-time option.
+<li>Enhance the <a href="optoverview.html#skipscan">skip-scan</a> optimization so that it is able to skip index terms that
+    occur in the middle of the index, not just as the left-hand side of the index.
+<li>Improved optimization of <a href="lang_expr.html#castexpr">CAST</a> operators.
+<li>Various improvements in how the query planner uses <a href="fileformat2.html#stat4tab">sqlite_stat4</a>
+    information to estimate plan costs.
+<p><b>New Features:</b>
+<li>Added new interfaces with 64-bit length parameters:
+    <a href="c3ref/free.html">sqlite3_malloc64()</a>,
+    <a href="c3ref/free.html">sqlite3_realloc64()</a>,
+    <a href="c3ref/bind_blob.html">sqlite3_bind_blob64()</a>,
+    <a href="c3ref/result_blob.html">sqlite3_result_blob64()</a>,
+    <a href="c3ref/bind_blob.html">sqlite3_bind_text64()</a>, and
+    <a href="c3ref/result_blob.html">sqlite3_result_text64()</a>.
+<li>Added the new interface <a href="c3ref/free.html">sqlite3_msize()</a> that returns the size of a memory allocation
+    obtained from <a href="c3ref/free.html">sqlite3_malloc64()</a> and its variants.
+<li>Added the <a href="c3ref/c_limit_attached.html#sqlitelimitworkerthreads">SQLITE_LIMIT_WORKER_THREADS</a> option to <a href="c3ref/limit.html">sqlite3_limit()</a> and
+    <a href="pragma.html#pragma_threads">PRAGMA threads</a> command for configuring the number of available worker threads.
+<li>The <a href="spellfix1.html">spellfix1</a> extension allows the application to optionally specify the rowid for
+    each INSERT.
+<li>Added the <a href="http://www.sqlite.org/src/doc/trunk/ext/userauth/user-auth.txt">User Authentication</a>
+    extension.
+<p><b>Bug Fixes:</b>
+<li>Fix a bug in the <a href="partialindex.html">partial index</a> implementation that might result in an incorrect
+    answer if a partial index is used in a subquery or in a <a href="lang_createview.html">view</a>.
+    Ticket <a href="http://www.sqlite.org/src/info/98d973b8f5">98d973b8f5</a>.
+<li>Fix a query planner bug that might cause a table to be scanned in the wrong direction
+    (thus reversing the order of output) when a DESC index is used to implement the ORDER BY
+    clause on a query that has an identical GROUP BY clause.
+    Ticket <a href="http://www.sqlite.org/src/info/ba7cbfaedc7e6">ba7cbfaedc7e6</a>.
+<li>Fix a bug in <a href="c3ref/profile.html">sqlite3_trace()</a> that was causing it to sometimes fail to print
+    an SQL statement if that statement needed to be re-prepared.
+    Ticket <a href="http://www.sqlite.org/src/info/11d5aa455e0d98f3c1e6a08">11d5aa455e0d98f3c1e6a08</a>
+<li>Fix a faulty assert() statement.
+    Ticket <a href="http://www.sqlite.org/src/info/369d57fb8e5ccdff06f1">369d57fb8e5ccdff06f1</a>
+<p><b>Test, Debug, and Analysis Changes:</b>
+<li>Show ASCII-art abstract syntax tree diagrams using the ".selecttrace"
+    and ".wheretrace" commands in the 
+    <a href="cli.html">command-line shell</a> when compiled with <a href="compile.html#debug">SQLITE_DEBUG</a>, SQLITE_ENABLE_SELECTTRACE,
+    and SQLITE_ENABLE_WHERETRACE.  Also provide the sqlite3TreeViewExpr() and
+    sqlite3TreeViewSelect() entry points that can be invoked from with the
+    debugger to show the parse tree when stopped at a breakpoint.
+<li>Drop support for SQLITE_ENABLE_TREE_EXPLAIN.  The SELECTTRACE mechanism provides
+    more useful diagnostics information.
+<li>New options to the <a href="cli.html">command-line shell</a> for configuring auxiliary
+    memory usage: --pagecache, --lookaside, and --scratch.
+<li>SQLITE_SOURCE_ID: "2014-10-17 11:24:17 e4ab094f8afce0817f4074e823fabe59fc29ebb4"
+<li>SHA1 for sqlite3.c: 56dcf5e931a9e1fa12fc2d600cd91d3bf9b639cd
+
+</ul></p><a name="version_3_8_6"></a>
+<h3>2014-08-15 (3.8.6)</h3><p><ul>
+<li>Added support for <a href="lang_expr.html#hexint">hexadecimal integer literals</a> in the SQL parser.
+    (Ex: 0x123abc)
+<li>Enhanced the <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> command to detect <a href="lang_createtable.html#uniqueconst">UNIQUE</a> and
+    <a href="lang_createtable.html#notnullconst">NOT NULL</a> constraint violations.
+<li>Increase the maximum value of <a href="limits.html#max_attached">SQLITE_MAX_ATTACHED</a> from 62 to 125.
+<li>Increase the timeout in <a href="wal.html">WAL mode</a> before issuing an <a href="rescode.html#protocol">SQLITE_PROTOCOL</a>
+    error from 1 second to 10 seconds.
+<li>Added the <a href="lang_corefunc.html#likely">likely(X)</a> SQL function.
+<li>The <a href="fts3.html#unicode61">unicode61</a> tokenizer is now included in <a href="fts3.html#fts4">FTS4</a> by default.
+<li>Trigger automatic reprepares on all prepared statements when <a href="lang_analyze.html">ANALYZE</a> is
+    run.
+<li>Added a new
+    <a href="loadext.html">loadable extension</a> source code file to the source tree:
+    <a href="http://www.sqlite.org/src/finfo?name=ext/misc/fileio.c">fileio.c</a>
+<li>Add extension functions <a href="cli.html#fileio">readfile(X) and writefile(X,Y)</a>
+    (using code copy/pasted from fileio.c in the previous bullet) to the
+    <a href="cli.html">command-line shell</a>.
+<li>Added the <a href="cli.html#fullschema">.fullschema</a> dot-command to the <a href="cli.html">command-line shell</a>.
+<p><b>Performance Enhancements:</b>
+<li>Deactivate the <a href="lang_select.html#distinct">DISTINCT</a> keyword on subqueries on the
+    right-hand side of the <a href="lang_expr.html#in_op">IN operator</a>.
+<li>Add the capability of evaluating an <a href="lang_expr.html#in_op">IN operator</a> as a sequence
+    of comparisons as an alternative to using a table lookup.  Use the sequence
+    of comparisons implementation in circumstances where it is likely to be
+    faster, such as when the right-hand side of the IN operator
+    is small and/or changes frequently.
+<li>The query planner now uses <a href="fileformat2.html#stat4tab">sqlite_stat4</a> information (created by <a href="lang_analyze.html">ANALYZE</a>)
+    to help determine if the <a href="optoverview.html#skipscan">skip-scan optimization</a> is appropriate.
+<li>Ensure that the query planner never tries to use a self-made transient
+    index in place of a schema-defined index.
+<li>Other minor tweaks to improve the quality of <a href="opcode.html">VDBE</a> code.
+<p><b>Bug Fixes:</b>
+<li>Fix a bug in <a href="lang_createindex.html">CREATE UNIQUE INDEX</a>, introduced when <a href="withoutrowid.html">WITHOUT ROWID</a>
+    support added in version 3.8.2, that allows a non-unique NOT NULL column to be
+    given a UNIQUE index.
+    Ticket <a href="http://www.sqlite.org/src/info/9a6daf340df99ba93c">9a6daf340df99ba93c</a>
+<li>Fix a bug in <a href="rtree.html">R-Tree extension</a>, introduced in the previous release,
+    that can cause an
+    incorrect results for queries that use the rowid of the R-Tree on the
+    left-hand side of an <a href="lang_expr.html#in_op">IN operator</a>.
+    Ticket <a href="http://www.sqlite.org/src/info/d2889096e7bdeac6">d2889096e7bdeac6</a>.
+<li>Fix the <a href="c3ref/stmt_busy.html">sqlite3_stmt_busy()</a> interface so that it gives the correct answer
+    for <a href="lang_transaction.html">ROLLBACK</a> statements that have been stepped but never reset.
+<li>Fix a bug in that would cause a null pointer to be dereferenced
+    if a column with a DEFAULT that is an aggregate function tried to usee its
+    DEFAULT.
+    Ticket <a href="http://www.sqlite.org/src/info/3a88d85f36704eebe1">3a88d85f36704eebe1</a>
+<li>CSV output from the <a href="cli.html">command-line shell</a> now always uses CRNL for the
+    row separator and avoids inserting CR in front of NLs contained in
+    data.
+<li>Fix a <a href="datatype3.html#affinity">column affinity</a> problem with the <a href="lang_expr.html#in_op">IN operator</a>.
+    Ticket <a href="http://www.sqlite.org/src/info/9a8b09f8e6">9a8b09f8e6</a>.
+<li>Fix the <a href="lang_analyze.html">ANALYZE</a> command so that it adds correct samples for
+    <a href="withoutrowid.html">WITHOUT ROWID</a> tables in the <a href="fileformat2.html#stat4tab">sqlite_stat4</a> table.
+    Ticket <a href="http://www.sqlite.org/src/info/b2fa5424e6fcb15">b2fa5424e6fcb15</a>.
+
+<li>SQLITE_SOURCE_ID: "2014-08-15 11:46:33 9491ba7d738528f168657adb43a198238abde19e"
+<li>SHA1 for sqlite3.c: 72c64f05cd9babb9c0f9b3c82536d83be7804b1c
+</ul></p><a name="version_3_8_5"></a>
+<h3>2014-06-04 (3.8.5)</h3><p><ul>
+<li>Added support for <a href="queryplanner.html#partialsort">partial sorting by index</a>.
+<li>Enhance the query planner so that it always prefers an index that uses a superset of
+    WHERE clause terms relative to some other index.
+<li>Improvements to the <a href="fts3.html#*fts4automergecmd">automerge command</a> of <a href="fts3.html#fts4">FTS4</a> to better control the index size
+    for a full-text index that is subject to a large number of updates.
+<li>Added the <a href="rtree.html#xquery">sqlite3_rtree_query_callback()</a> interface to <a href="rtree.html">R-Tree extension</a>
+<li>Added new <a href="uri.html#coreqp">URI query parameters</a> "nolock" and "immutable".
+<li>Use less memory by not remembering CHECK constraints on read-only
+    database connections.
+<li>Enable the <a href="queryplanner.html#or_in_where">OR optimization</a> for <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+<li>Render expressions of the form "x IN (?)" (with a single value in
+    the list on the right-hand side of the IN operator) as if they where "x==?",
+    Similarly optimize "x NOT IN (?)"
+<li>Add the ".system" and ".once" commands to the <a href="cli.html">command-line shell</a>.
+<li>Added the <a href="c3ref/c_iocap_atomic.html">SQLITE_IOCAP_IMMUTABLE</a> bit to the set of bits that can be returned by
+    the xDeviceCharacteristics method of a <a href="vfs.html">VFS</a>.
+<li>Added the <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_BYTEORDER</a> test control.
+<p><b>Bug Fixes:</b>
+<li>OFFSET clause ignored on queries without a FROM clause.
+    Ticket <a href="http://www.sqlite.org/src/info/07d6a0453d">07d6a0453d</a>
+<li>Assertion fault on queries involving expressions of the form
+    "x IN (?)".  Ticket <a href="http://www.sqlite.org/src/info/e39d032577">e39d032577</a>.
+<li>Incorrect column datatype reported.
+    Ticket <a href="http://www.sqlite.org/src/info/a8a0d2996a">a8a0d2996a</a>
+<li>Duplicate row returned on a query against a table with more than
+    16 indices, each on a separate column, and all used via OR-connected constraints.
+    Ticket <a href="http://www.sqlite.org/src/info/10fb063b11">10fb063b11</a>
+<li>Partial index causes assertion fault on UPDATE OR REPLACE.
+    Ticket <a href="http://www.sqlite.org/src/info/2ea3e9fe63">2ea3e9fe63</a>
+<li>Crash when calling undocumented SQL function sqlite_rename_parent()
+    with NULL parameters.
+    Ticket <a href="http://www.sqlite.org/src/info/264b970c4379fd">264b970c43</a>
+<li>ORDER BY ignored if the query has an identical GROUP BY.
+    Ticket <a href="http://www.sqlite.org/src/info/b75a9ca6b0499">b75a9ca6b0</a>
+<li>The group_concat(x,'') SQL function returns NULL instead of an empty string
+    when all inputs are empty strings.  
+    Ticket <a href="http://www.sqlite.org/src/info/55746f9e65f85">55746f9e65</a>
+<li>Fix a bug in the VDBE code generator that caused crashes when
+    doing an INSERT INTO ... SELECT statement where the number of columns
+    being inserted is larger than the number of columns in the destination
+    table.
+    Ticket <a href="http://www.sqlite.org/src/info/e9654505cfda9">e9654505cfd</a>
+<li>Fix a problem in CSV import in the <a href="cli.html">command-line shell</a>
+    where if the leftmost field of the first row
+    in the CSV file was both zero bytes in size and unquoted no data would
+    be imported.
+<li>Fix a problem in FTS4 where the left-most column that contained
+    the <a href="fts3.html#fts4notindexed">notindexed column</a> name as a prefix
+    was not indexed rather than the column whose name matched exactly.
+<li>Fix the <a href="c3ref/db_readonly.html">sqlite3_db_readonly()</a> interface so that it returns true if
+    the database is read-only due to the file format write version number
+    being too large.
+
+<li>SQLITE_SOURCE_ID: "2014-06-04 14:06:34 b1ed4f2a34ba66c29b130f8d13e9092758019212"
+<li>SHA1 for sqlite3.c: 7bc194957238c61b1a47f301270286be5bc5208c
+</ul></p><a name="version_3_8_4_3"></a>
+<h3>2014-04-03 (3.8.4.3)</h3><p><ul>
+<li>Add a 
+    <a href="http://www.sqlite.org/src/fdiff?sbs=1&v1=7d539cedb1c&v2=ebad891b7494d&smhdr">one-character fix</a>
+    for a problem that might cause incorrect query results on a query that mixes
+    DISTINCT, GROUP BY in a subquery, and ORDER BY.
+    <a href="http://www.sqlite.org/src/info/98825a79ce1456863">Ticket 98825a79ce14</a>.
+<li>SQLITE_SOURCE_ID: "2014-04-03 16:53:12 a611fa96c4a848614efe899130359c9f6fb889c3"
+<li>SHA1 for sqlite3.c: 310a1faeb9332a3cd8d1f53b4a2e055abf537bdc
+</ul></p><a name="version_3_8_4_2"></a>
+<h3>2014-03-26 (3.8.4.2)</h3><p><ul>
+<li>Fix a potential buffer overread that could result when trying to search a
+    corrupt database file.
+<li>SQLITE_SOURCE_ID: "2014-03-26 18:51:19 02ea166372bdb2ef9d8dfbb05e78a97609673a8e"
+<li>SHA1 for sqlite3.c: 4685ca86c2ea0649ed9f59a500013e90b3fe6d03
+</ul></p><a name="version_3_8_4_1"></a>
+<h3>2014-03-11 (3.8.4.1)</h3><p><ul>
+<li>Work around a C-preprocessor macro conflict that breaks the build for some
+    configurations with Microsoft Visual Studio.
+<li>When computing the cost of the <a href="optoverview.html#skipscan">skip-scan optimization</a>, take into account the
+    fact that multiple seeks are required.
+<li>SQLITE_SOURCE_ID: "2014-03-11 15:27:36 018d317b1257ce68a92908b05c9c7cf1494050d0"
+<li>SHA1 for sqlite3.c: d5cd1535053a50aa8633725e3595740b33709ac5
+</ul></p><a name="version_3_8_4"></a>
+<h3>2014-03-10 (3.8.4)</h3><p><ul>
+<li>Code optimization and refactoring for improved performance.
+<li>Add the ".clone" and ".save" commands to the command-line shell.
+<li>Update the banner on the command-line shell to alert novice users when they
+    are using an ephemeral in-memory database.
+<li>Fix editline support in the command-line shell.
+<li>Add support for coverage testing of VDBE programs using the
+    <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_VDBE_COVERAGE</a> verb of <a href="c3ref/test_control.html">sqlite3_test_control()</a>.
+<li>Update the _FILE_OFFSET_BITS macro so that builds work again on QNX.
+<li>Change the datatype of SrcList.nSrc from type u8 to type int to work around 
+    an issue in the C compiler on AIX.
+<li>Get extension loading working on Cygwin.
+<li>Bug fix: Fix the <a href="lang_corefunc.html#char">char()</a> SQL function so that it returns an empty string
+    rather than an "out of memory" error when called with zero arguments. 
+<li>Bug fix: DISTINCT now recognizes that a <a href="lang_corefunc.html#zeroblob">zeroblob</a> and a blob of all
+    0x00 bytes are the same thing. 
+    <a href="http://www.sqlite.org/src/info/fccbde530a">Ticket &#91;fccbde530a&#93</a>
+<li>Bug fix: Compute the correct answer for queries that contain an IS NOT NULL
+    term in the WHERE clause and also contain an OR term in the WHERE clause and
+    are compiled with <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>.
+    <a href="http://www.sqlite.org/src/info/4c86b126f2">Ticket &#91;4c86b126f2&#93</a>
+<li>Bug fix: Make sure "rowid" columns are correctly resolved in joins between
+    normal tables and WITHOUT ROWID tables.
+    <a href="http://www.sqlite.org/src/info/c34d0557f7">Ticket &#91;c34d0557f7&#93</a>
+<li>Bug fix: Make sure the same temporary registers are not used in concurrent
+    co-routines used to implement compound SELECT statements containing ORDER
+    BY clauses, as such use can lead to incorrect answers.
+    <a href="http://www.sqlite.org/src/info/8c63ff0eca">Ticket &#91;8c63ff0eca&#93</a>
+<li>Bug fix: Ensure that "ORDER BY random()" clauses do not get optimized out.
+    <a href="http://www.sqlite.org/src/info/65bdeb9739">Ticket &#91;65bdeb9739&#93</a>
+<li>Bug fix: Repair a name-resolution error that can occur in sub-select statements
+    contained within a TRIGGER.
+    <a href="http://www.sqlite.org/src/info/4ef7e3cfca">Ticket &#91;4ef7e3cfca&#93</a>
+<li>Bug fix: Fix column default values expressions of the form
+    "DEFAULT(-(-9223372036854775808))" so that they work correctly, initializing
+    the column to a floating point value approximately equal to
+    +9223372036854775808.0.
+<li>SQLITE_SOURCE_ID: "2014-03-10 12:20:37 530a1ee7dc2435f80960ce4710a3c2d2bfaaccc5"
+<li>SHA1 for sqlite3.c: b0c22e5f15f5ba2afd017ecd990ea507918afe1c
+</ul></p><a name="version_3_8_3_1"></a>
 <h3>2014-02-11 (3.8.3.1)</h3><p><ul>
 <li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
     that causes rows to go missing on some queries with OR clauses and
@@ -157,7 +560,7 @@ http://www.sqlite.org/src/timeline?t=release</a>
     <a href="c3ref/create_function.html">sqlite3_create_function()</a> and related interfaces, providing applications with
     the ability to create new functions that can be factored out of inner loops when
     they have constant arguments.
-<li>Add <a href="c3ref/c_abort_rollback.html">SQLITE_READONLY_DBMOVED</a> error code, returned at the beginning of a
+<li>Add <a href="rescode.html#readonly_dbmoved">SQLITE_READONLY_DBMOVED</a> error code, returned at the beginning of a
     transaction, to indicate that the underlying database file has been renamed
     or moved out from under SQLite.
 <li>Allow arbitrary expressions, including function calls and subqueries, in
@@ -172,7 +575,7 @@ http://www.sqlite.org/src/timeline?t=release</a>
     the grammar.
 <li>Change the LEMON source code to avoid calling C-library functions that OpenBSD
     considers dangerous.  (Ex: sprintf).
-<li>Bug fix: In the <a href="sqlite.html">command-line shell</a> CSV import feature, do not end a field
+<li>Bug fix: In the <a href="cli.html">command-line shell</a> CSV import feature, do not end a field
     when an escaped double-quote occurs at the end of a CRLN line.
 <li>SQLITE_SOURCE_ID: 
     "2014-02-03 13:52:03 e816dd924619db5f766de6df74ea2194f3e3b538"
@@ -199,9 +602,9 @@ http://www.sqlite.org/src/timeline?t=release</a>
 <li>Performance enhancements in the VDBE, especially to the OP_Column opcode.
 <li>Factor constant subexpressions in inner loops out to the initialization code
     in prepared statements.
-<li>Enhanced the ".explain" output formatting of the <a href="sqlite.html">command-line shell</a>
+<li>Enhanced the ".explain" output formatting of the <a href="cli.html">command-line shell</a>
     so that loops are indented to better show the structure of the program.
-<li>Enhanced the ".timer" feature of the <a href="sqlite.html">command-line shell</a> so that it
+<li>Enhanced the ".timer" feature of the <a href="cli.html">command-line shell</a> so that it
     shows wall-clock time in addition to system and user times.
 
 <li>SQLITE_SOURCE_ID: 
@@ -292,12 +695,12 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     transaction from closing.
 <li>Add the <a href="compile.html#default_automatic_index">SQLITE_DEFAULT_AUTOMATIC_INDEX</a> compile-time option.  Setting this option
     to 0 disables automatic indices by default.
-<li>Issue an <a href="c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> warning on the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> whenever
+<li>Issue an <a href="rescode.html#warning_autoindex">SQLITE_WARNING_AUTOINDEX</a> warning on the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> whenever
     the query planner uses an automatic index.
 <li>Added the <a href="compile.html#fts3_max_expr_depth">SQLITE_FTS3_MAX_EXPR_DEPTH</a> compile-time option.
 <li>Added an optional 5th parameter defining the collating sequence to the 
     next_char() extension SQL function.
-<li>The <a href="c3ref/c_abort_rollback.html">SQLITE_BUSY_SNAPSHOT</a> extended error code is returned in WAL mode when
+<li>The <a href="rescode.html#busy_snapshot">SQLITE_BUSY_SNAPSHOT</a> extended error code is returned in WAL mode when
     a read transaction cannot be upgraded to a write transaction because the read is
     on an older snapshot.
 <li>Enhancements to the sqlite3_analyzer utility program to provide size
@@ -308,7 +711,7 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     function is called by a SELECT statement that does not access any database table.
 <li>Disable the use of posix_fallocate() on all (unix) systems unless the
     HAVE_POSIX_FALLOCATE compile-time option is used.
-<li>Update the ".import" command in the <a href="sqlite.html">command-line shell</a> to support multi-line
+<li>Update the ".import" command in the <a href="cli.html">command-line shell</a> to support multi-line
     fields and correct RFC-4180 quoting and to issue warning and/or error messages
     if the input text is not strictly RFC-4180 compliant.
 <li>Bug fix: In the <a href="fts3.html#unicode61">unicode61</a> tokenizer of <a href="fts3.html#fts4">FTS4</a>, treat all private code points
@@ -327,7 +730,7 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
 <li>Add support for <a href="mmap.html">memory-mapped I/O</a>.
 <li>Add the <a href="c3ref/strglob.html">sqlite3_strglob()</a> convenience interface.
 <li>Assigned the integer at offset 68 in the <a href="fileformat2.html#database_header">database header</a> as the
-    <a href="fileformat2.html#appid">Application ID</a> for when SQLite is used as an <a href="whentouse.html#appfileformat">application file-format</a>.
+    <a href="fileformat2.html#appid">Application ID</a> for when SQLite is used as an <a href="appfileformat.html">application file-format</a>.
     Added the <a href="pragma.html#pragma_application_id">PRAGMA application_id</a> command to query and set the Application ID.
 <li>Report rollback recovery in the <a href="errlog.html">error log</a> as SQLITE_NOTICE_RECOVER_ROLLBACK.
     Change the error log code for WAL recover from 
@@ -384,7 +787,7 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
 <li>Bug fix: Do not suppress the ORDER BY clause on a virtual table query if
     an IN constraint is used.
     Ticket <a href="http://www.sqlite.org/src/info/f69b96e3076e">f69b96e3076e</a>.
-<li>Bug fix: The <a href="sqlite.html">command-line shell</a> gives an exit code of 0 when terminated
+<li>Bug fix: The <a href="cli.html">command-line shell</a> gives an exit code of 0 when terminated
     using the ".quit" command.
 <li>Bug fix: Make sure <a href="pragma.html#syntax">PRAGMA</a> statements appear in <a href="c3ref/profile.html">sqlite3_trace()</a> output.
 <li>Bug fix: When a <a href="lang_select.html#compound">compound query</a> that uses an ORDER BY clause
@@ -464,11 +867,11 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
 <li>Added the test_regexp.c module as a demonstration of how to implement
     the REGEXP operator.
 <li>Improved error messages in the <a href="rtree.html">RTREE</a> extension.
-<li>Enhance the <a href="sqlite.html">command-line shell</a> so that a non-zero argument to the
+<li>Enhance the <a href="cli.html">command-line shell</a> so that a non-zero argument to the
     ".exit" command causes the shell to exit immediately without cleanly
     shutting down the database connection.
 <li>Improved error messages for invalid boolean arguments to dot-commands
-    in the <a href="sqlite.html">command-line shell</a>.
+    in the <a href="cli.html">command-line shell</a>.
 <li>Improved error messages for "foreign key mismatch" showing the names of
     the two tables involved.
 <li>Remove all uses of umask() in the unix VFS.
@@ -518,7 +921,7 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
 <h3>2012-12-12 (3.7.15)</h3><p><ul>
 <li>Added the <a href="c3ref/errcode.html">sqlite3_errstr()</a> interface.
 <li>Avoid invoking the <a href="c3ref/profile.html">sqlite3_trace()</a> callback multiple times when a
-    statement is automatically reprepared due to <a href="c3ref/c_abort.html">SQLITE_SCHEMA</a> errors.
+    statement is automatically reprepared due to <a href="rescode.html#schema">SQLITE_SCHEMA</a> errors.
 <li>Added support for Windows Phone 8 platforms
 <li>Enhance IN operator processing to make use of indices with numeric
     affinities.
@@ -578,9 +981,9 @@ TCL implementations of SQL functions.
     serve as a baseline for the application-defined VFS.
 <li>Ensure that floating point values are preserved exactly when reconstructing
     a database from the output of the ".dump" command of the 
-    <a href="sqlite.html">command-line shell</a>.
+    <a href="cli.html">command-line shell</a>.
 <li>Added the <a href="c3ref/close.html">sqlite3_close_v2()</a> interface.
-<li>Updated the <a href="sqlite.html">command-line shell</a> so that it can be built using
+<li>Updated the <a href="cli.html">command-line shell</a> so that it can be built using
     <a href="compile.html#omit_floating_point">SQLITE_OMIT_FLOATING_POINT</a> and <a href="compile.html#omit_autoinit">SQLITE_OMIT_AUTOINIT</a>.
 <li>Improvements to the windows makefiles and build processes.
 <li>Enhancements to <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> and <a href="pragma.html#pragma_quick_check">PRAGMA quick_check</a> so that
@@ -692,7 +1095,7 @@ TCL implementations of SQL functions.
     to be officially supported.
 <li>Pending statements no longer block <a href="lang_transaction.html">ROLLBACK</a>.  Instead, the pending
     statement will return SQLITE_ABORT upon next access after the ROLLBACK.
-<li>Improvements to the handling of CSV inputs in the <a href="sqlite.html">command-line shell</a>
+<li>Improvements to the handling of CSV inputs in the <a href="cli.html">command-line shell</a>
 <li>Fix a <a href="http://www.sqlite.org/src/info/b7c8682cc1">bug</a> introduced 
     in <a href="#version_3_7_10">version 3.7.10</a> that might cause a LEFT JOIN
     to be incorrectly converted into an INNER JOIN if the WHERE clause
@@ -750,7 +1153,7 @@ TCL implementations of SQL functions.
     used for creating new database connection objects.
 <li>Added the <a href="c3ref/c_testctrl_always.html">SQLITE_TESTCTRL_EXPLAIN_STMT</a> test-control option with the
     <a href="compile.html#enable_tree_explain">SQLITE_ENABLE_TREE_EXPLAIN</a> compile-time option to enable the
-    <a href="sqlite.html">command-line shell</a> to display ASCII-art parse trees of SQL statements
+    <a href="cli.html">command-line shell</a> to display ASCII-art parse trees of SQL statements
     that it processes, for debugging and analysis.
 <li><b>Bug fix:</b>
     Add an additional xSync when restarting a WAL in order to prevent an
@@ -833,7 +1236,7 @@ TCL implementations of SQL functions.
 <h3>2011-06-28 (3.7.7.1)</h3><p><ul>
 <li> Fix <a href="http://www.sqlite.org/src/info/25ee812710">a bug</a> causing 
      <a href="pragma.html#pragma_case_sensitive_like">PRAGMA case_sensitive_like</a> statements compiled using sqlite3_prepare()
-     to fail with an <a href="c3ref/c_abort.html">SQLITE_SCHEMA</a> error.
+     to fail with an <a href="rescode.html#schema">SQLITE_SCHEMA</a> error.
 <li> SQLITE_SOURCE_ID:
     "2011-06-28 17:39:05 af0d91adf497f5f36ec3813f04235a6e195a605f"
 <li> SHA1 for sqlite3.c: d47594b8a02f6cf58e91fb673e96cb1b397aace0
@@ -916,7 +1319,7 @@ TCL implementations of SQL functions.
 <li> Added the <a href="compile.html#default_foreign_keys">SQLITE_DEFAULT_FOREIGN_KEYS</a> compile-time option.
 <li> Updates to <a href="c3ref/stmt_readonly.html">sqlite3_stmt_readonly()</a> so that its result is well-defined
      for all prepared statements and so that it works with <a href="lang_vacuum.html">VACUUM</a>.
-<li> Added the "-heap" option to the <a href="sqlite.html">command-line shell</a>
+<li> Added the "-heap" option to the <a href="cli.html">command-line shell</a>
 <li> Fix <a href="http://www.sqlite.org/src/info/5d863f876e">a bug</a> involving
      frequent changes in and out of WAL mode and
      VACUUM that could (in theory) cause database corruption.
@@ -926,7 +1329,7 @@ TCL implementations of SQL functions.
      greatly improves tracing output when using the FTS3/4 and/or RTREE
      virtual tables.
 <li> Change the xFileControl() methods on all built-in VFSes to return
-     <a href="c3ref/c_abort.html">SQLITE_NOTFOUND</a> instead of <a href="c3ref/c_abort.html">SQLITE_ERROR</a> for an unrecognized
+     <a href="rescode.html#notfound">SQLITE_NOTFOUND</a> instead of <a href="rescode.html#error">SQLITE_ERROR</a> for an unrecognized
      operation code.
 <li> The SQLite core invokes the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> 
      <a href="c3ref/file_control.html">file control</a>
@@ -1040,12 +1443,12 @@ TCL implementations of SQL functions.
      <a href="lang_corefunc.html#sqlite_compileoption_get">sqlite_compileoption_get()</a> SQL functions.
 <li> Added the <a href="c3ref/log.html">sqlite3_log()</a> interface together with the
      <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">SQLITE_CONFIG_LOG</a> verb to <a href="c3ref/config.html">sqlite3_config()</a>.  The ".log" command
-     is added to the <a href="sqlite.html">Command Line Interface</a>.
+     is added to the <a href="cli.html">Command Line Interface</a>.
 <li> Improvements to <a href="fts3.html">FTS3</a>.
 <li> Improvements and bug-fixes in support for <a href="compile.html#omit_floating_point">SQLITE_OMIT_FLOATING_POINT</a>.
 <li> The <a href="pragma.html#pragma_integrity_check">integrity_check pragma</a> is enhanced to detect out-of-order rowids.
 <li> The ".genfkey" operator has been removed from the
-     <a href="sqlite.html">Command Line Interface</a>.
+     <a href="cli.html">Command Line Interface</a>.
 <li> Updates to the co-hosted Lemon LALR(1) parser generator. (These
      updates did not affect SQLite.)
 <li> Various minor bug fixes and performance enhancements.
@@ -1079,7 +1482,7 @@ New <a href="fts3.html">FTS3 documentation</a> is now available.
 <li>The <a href="compile.html#secure_delete">SQLITE_SECURE_DELETE</a> compile-time option fixed to make sure that
 content is deleted even when the <a href="lang_delete.html#truncateopt">truncate optimization</a> applies.
 <li>Improvements to "dot-command" handling in the
-<a href="sqlite.html">Command Line Interface</a>.
+<a href="cli.html">Command Line Interface</a>.
 <li>Other minor bug fixes and documentation enhancements.
 </ul></p><a name="version_3_6_20"></a>
 <h3>2009-11-04 (3.6.20)</h3><p><ul>
@@ -1143,7 +1546,7 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Reduce the amount of stack space used
 <li>Fix an 64-bit alignment bug on HP/UX and Sparc
 <li>The <a href="c3ref/create_function.html">sqlite3_create_function()</a> family of interfaces now return
-    <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> instead of <a href="c3ref/c_abort.html">SQLITE_ERROR</a> when passed invalid
+    <a href="rescode.html#misuse">SQLITE_MISUSE</a> instead of <a href="rescode.html#error">SQLITE_ERROR</a> when passed invalid
     parameter combinations.
 <li>When new tables are created using CREATE TABLE ... AS SELECT ... the
     datatype of the columns is the simplified SQLite datatype (TEXT, INT,
@@ -1195,7 +1598,7 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Added the <a href="pragma.html#pragma_reverse_unordered_selects">reverse_unordered_selects pragma</a>.
 <li>The default page size on windows is automatically adjusted to match the
     capabilities of the underlying filesystem.
-<li>Add the new ".genfkey" command in the <a href="sqlite.html">CLI</a> for generating triggers to
+<li>Add the new ".genfkey" command in the <a href="cli.html">CLI</a> for generating triggers to
     implement foreign key constraints.
 <li>Performance improvements for "count(*)" queries.
 <li>Reduce the amount of heap memory used, especially by TRIGGERs.
@@ -1203,7 +1606,7 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 </ul></p><a name="version_3_6_11"></a>
 <h3>2009-02-18 (3.6.11)</h3><p><ul>
 <li>Added the <a href="c3ref/backup_finish.html#sqlite3backupinit">hot-backup interface</a>.
-<li>Added new commands ".backup" and ".restore" to the <a href="sqlite.html">CLI</a>.
+<li>Added new commands ".backup" and ".restore" to the <a href="cli.html">CLI</a>.
 <li>Added new methods <a href="tclsqlite.html#backup">backup</a> and
     <a href="tclsqlite.html#restore">restore</a> to the TCL interface.
 <li>Improvements to the <a href="syntaxdiagrams.html">syntax bubble
@@ -1268,8 +1671,8 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     return the correct values.</li>
 <li>Added the <a href="c3ref/errcode.html">sqlite3_extended_errcode()</a> interface.</li>
 <li>The <a href="lang_transaction.html">COMMIT</a> command now succeeds even if there are pending queries.
-    It returns <a href="c3ref/c_abort.html">SQLITE_BUSY</a> if there are pending incremental BLOB I/O requests.
-<li>The error code is changed to <a href="c3ref/c_abort.html">SQLITE_BUSY</a> (instead of <a href="c3ref/c_abort.html">SQLITE_ERROR</a>)
+    It returns <a href="rescode.html#busy">SQLITE_BUSY</a> if there are pending incremental BLOB I/O requests.
+<li>The error code is changed to <a href="rescode.html#busy">SQLITE_BUSY</a> (instead of <a href="rescode.html#error">SQLITE_ERROR</a>)
     when an attempt is made to <a href="lang_transaction.html">ROLLBACK</a> while one or more queries are
     still pending.</li>
 <li>Drop all support for the <a href="malloc.html#memsysx">experimental memory allocators</a> memsys4 and
@@ -1478,7 +1881,7 @@ that does not exist.
 <li>Allow collating sequence names to be quoted.
 <li>Modify the TCL interface to use <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>.
 <li>Fix multiple bugs that can occur following a malloc() failure.
-<li><a href="c3ref/step.html">sqlite3_step()</a> returns <a href="c3ref/c_abort.html">SQLITE_MISUSE</a> instead of crashing when
+<li><a href="c3ref/step.html">sqlite3_step()</a> returns <a href="rescode.html#misuse">SQLITE_MISUSE</a> instead of crashing when
 called with a NULL parameter.
 <li>FTS3 now uses the SQLite memory allocator exclusively.  The
 FTS3 amalgamation can now be appended to the SQLite amalgamation to
@@ -1506,7 +1909,7 @@ in binary instead of text for a performance boost.
     nobody will upgrade.  However, we still reserve the right to make
     incompatible changes to the new VFS interface in future releases.</i></li>
 
-<li>Fix a bug in the handling of <a href="c3ref/c_abort.html">SQLITE_FULL</a> errors that could lead
+<li>Fix a bug in the handling of <a href="rescode.html#full">SQLITE_FULL</a> errors that could lead
     to database corruption.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2686">Ticket #2686</a>.
 <li>The test_async.c drive now does full file locking and works correctly
     when used simultaneously by multiple processes on the same database.
@@ -1517,7 +1920,7 @@ in binary instead of text for a performance boost.
     mass storage without a filesystem.
 <li>Added an output buffer size parameter to the xGetTempname() method
     of the VFS layer.
-<li>Sticky <a href="c3ref/c_abort.html">SQLITE_FULL</a> or <a href="c3ref/c_abort.html">SQLITE_IOERR</a> errors in the pager are reset
+<li>Sticky <a href="rescode.html#full">SQLITE_FULL</a> or <a href="rescode.html#ioerr">SQLITE_IOERR</a> errors in the pager are reset
     when a new transaction is started.
 </ul></p><a name="version_3_5_0"></a>
 <h3>2007-09-04 (3.5.0) alpha</h3><p><ul>
@@ -1586,7 +1989,7 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <li>Other minor bug fixes and documentation enhancements</li>
 </ul></p><a name="version_3_4_0"></a>
 <h3>2007-06-18 (3.4.0)</h3><p><ul>
-<li>Fix a bug that can lead to database corruption if an <a href="c3ref/c_abort.html">SQLITE_BUSY</a> error
+<li>Fix a bug that can lead to database corruption if an <a href="rescode.html#busy">SQLITE_BUSY</a> error
     occurs in the middle of an explicit transaction and that transaction
     is later committed.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2409">Ticket #2409</a>.
     See the

@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -184,7 +184,7 @@ CREATE TABLE track(
   trackname   TEXT, 
   trackartist INTEGER     <b>-- Must map to an artist.artistid!</b>
 );
-</table></div>
+</pre></table></div>
 
   <p>
     The applications using this database are entitled to assume that for
@@ -211,7 +211,7 @@ CREATE TABLE track(
   trackartist INTEGER,
   <b>FOREIGN KEY(trackartist) REFERENCES artist(artistid)</b>
 );
-</table></div>
+</pre></table></div>
 
   <p>
     This way, the constraint is enforced by SQLite. Attempting to insert
@@ -224,7 +224,7 @@ CREATE TABLE track(
     means that for every row in the <i>track</i> table, the following
     expression evaluates to true:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">trackartist IS NULL OR EXISTS(SELECT 1 FROM artist WHERE artistid=trackartist)
-</table></div>
+</pre></table></div>
 
   <p>Tip: If the application requires a stricter relationship between 
      <i>artist</i> and <i>track</i>, where NULL values are not permitted 
@@ -276,7 +276,7 @@ sqlite&gt; <i>-- Now that "Sammy Davis Jr." (artistid = 3) has been added to the
 sqlite&gt; <i>-- it is possible to INSERT new tracks using this artist without violating</i>
 sqlite&gt; <i>-- the foreign key constraint:</i>
 sqlite&gt; INSERT INTO track VALUES(15, 'Boogie Woogie', 3);
-</table></div>
+</pre></table></div>
 
   <p>
     As you would expect, it is not possible to manipulate the database to a state
@@ -301,7 +301,7 @@ sqlite&gt; <i>-- Once all the records that refer to a row in the artist table ha
 sqlite&gt; <i>-- been deleted, it is possible to modify the artistid of the row.</i>
 sqlite&gt; DELETE FROM track WHERE trackname IN('That''s Amore', 'Christmas Blues');
 sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
-</table></div>
+</pre></table></div>
 
   <p>
     SQLite uses the following terminology:
@@ -370,19 +370,18 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
     <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> command. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; PRAGMA foreign_keys = ON;
-</table></div>
+</pre></table></div>
 
   <p>
     Foreign key constraints are disabled by default 
     (for backwards compatibility),
-    so must be enabled separately for each <a href="c3ref/sqlite3.html">database connection</a>
-    separately.
+    so must be enabled separately for each <a href="c3ref/sqlite3.html">database connection</a>.
     (Note, however, that future releases of SQLite might change
     so that foreign key constraints enabled by default.  Careful
     developers will not
     make any assumptions about whether or not foreign keys are enabled by
     default but will instead enable or disable them as necessary.)
-    The application can can also use a <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> statement to
+    The application can also use a <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> statement to
     determine if foreign keys are currently enabled. The following 
     command-line session demonstrates this:
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite> PRAGMA foreign_keys;
@@ -393,7 +392,7 @@ sqlite> PRAGMA foreign_keys;
 sqlite> PRAGMA foreign_keys = OFF;
 sqlite> PRAGMA foreign_keys;
 0
-</table></div>
+</pre></table></div>
 
   <p>Tip: If the command "PRAGMA foreign_keys" returns no data instead of a
      single row containing "0" or "1", then the version of SQLite you are
@@ -431,7 +430,7 @@ CREATE TABLE child4(l, m REFERENCES parent(e));                        <i>-- Err
 CREATE TABLE child5(n, o REFERENCES parent(f));                        <i>-- Error!</i>
 CREATE TABLE child6(p, q, FOREIGN KEY(p, q) REFERENCES parent(b, c));  <i>-- Error!</i>
 CREATE TABLE child7(r REFERENCES parent(c));                           <i>-- Error!</i>
-</table></div>
+</pre></table></div>
 
   <p>
     The foreign key constraints created as part of tables <i>child1</i>, 
@@ -480,7 +479,7 @@ CREATE TABLE child7(r REFERENCES parent(c));                           <i>-- Err
 CREATE TABLE child8(x, y, FOREIGN KEY(x,y) REFERENCES parent2);        <i>-- Ok</i>
 CREATE TABLE child9(x REFERENCES parent2);                             <i>-- Error!</i>
 CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Error!</i>
-</table></div>
+</pre></table></div>
 
   <p>
     By contrast, if foreign key errors can be recognized simply by looking
@@ -501,7 +500,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
     for referencing rows in the <i>track</i> table (the child table).
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT rowid FROM track WHERE trackartist = ?
-</table></div>
+</pre></table></div>
 
  <p>
    where ? in the above is replaced with the value of the <i>artistid</i>
@@ -510,7 +509,7 @@ CREATE TABLE child10(x,y,z, FOREIGN KEY(x,y,z) REFERENCES parent2);    <i>-- Err
    column is the parent key). Or, more generally:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT rowid FROM &lt;child-table&gt; WHERE &lt;child-key&gt; = :parent_key_value
-</table></div>
+</pre></table></div>
 
  <p>
    If this SELECT returns any rows at all, then SQLite concludes that
@@ -540,7 +539,7 @@ CREATE TABLE track(
   trackartist INTEGER REFERENCES artist
 );
 CREATE INDEX trackindex ON track(trackartist);
-</table></div>
+</pre></table></div>
 
   <p>
     The block above uses a shorthand form to create the foreign key constraint.
@@ -573,7 +572,7 @@ CREATE TABLE song(
   songname   TEXT,
   <b>FOREIGN KEY(songartist, songalbum) REFERENCES album(albumartist, albumname)</b>
 );
-</table></div>
+</pre></table></div>
 
   <p>
     In this system, each entry in the song table is required to map to an entry
@@ -620,7 +619,7 @@ CREATE TABLE song(
     include the following clause:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">DEFERRABLE INITIALLY DEFERRED                <i>-- A deferred foreign key constraint</i>
-</table></div>
+</pre></table></div>
 
   <p>
     The full syntax for specifying foreign key constraints is available as part
@@ -633,7 +632,7 @@ NOT DEFERRABLE INITIALLY IMMEDIATE           <i>-- An immediate foreign key cons
 NOT DEFERRABLE                               <i>-- An immediate foreign key constraint</i>
 DEFERRABLE INITIALLY IMMEDIATE               <i>-- An immediate foreign key constraint</i>
 DEFERRABLE                                   <i>-- An immediate foreign key constraint</i>
-</table></div>
+</pre></table></div>
 
   <p>The <a href="pragma.html#pragma_defer_foreign_keys">defer_foreign_keys pragma</a> can be used to temporarily change all foreign
     key constraints to deferred regardless of how they are declared.
@@ -671,7 +670,7 @@ sqlite3&gt; <i>-- deferred foreign key constraint is satisfied. It is then possi
 sqlite3&gt; <i>-- to commit the transaction without error.</i>
 sqlite3&gt;   INSERT INTO artist VALUES(5, 'Bing Crosby');
 sqlite3&gt; COMMIT;
-</table></div>
+</pre></table></div>
   <p>
     A <a href="lang_savepoint.html">nested savepoint</a> transaction may be RELEASEd while the
     database is in a state that does not satisfy a deferred foreign key 
@@ -791,7 +790,7 @@ trackid  trackname          trackartist
 11       That's Amore       100
 12       Christmas Blues    100  
 13       My Way             2  
-</table></div>
+</pre></table></div>
 
   <p>
     Configuring an ON UPDATE or ON DELETE action does not mean that the foreign
@@ -845,7 +844,7 @@ sqlite&gt; SELECT * FROM track;
 trackid  trackname          trackartist
 -------  -----------------  -----------
 14       Mr. Bojangles      0
-</table></div>
+</pre></table></div>
 
   <p>
     Those familiar with <a href="lang_createtrigger.html">SQLite triggers</a>
@@ -855,7 +854,7 @@ trackid  trackname          trackartist
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TRIGGER on_delete_set_default AFTER DELETE ON artist BEGIN
   UPDATE child SET trackartist = 0 WHERE trackartist = old.artistid;
 END;
-</table></div>
+</pre></table></div>
 
   <p>
     Whenever a row in the parent table of a foreign key constraint is deleted,
@@ -907,7 +906,7 @@ sqlite&gt; SELECT IFNULL(y, 'null') FROM child;
 y
 ----
 null
-</table></div>
+</pre></table></div>
 
 <h1 id="fk_schemacommands">5. CREATE, ALTER and DROP TABLE commands</h1>
 
@@ -1022,7 +1021,7 @@ null
          settings determine the maximum allowable depth of trigger
          program recursion. For the purposes of these limits,
          <a href="foreignkeys.html#fk_actions">foreign key actions</a> are considered trigger programs. The
-         <a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> setting does not not affect the operation 
+         <a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> setting does not affect the operation 
          of foreign key actions. It is not possible to disable recursive foreign 
          key actions.
    </ol>

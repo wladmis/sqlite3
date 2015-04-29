@@ -58,6 +58,9 @@ IF NOT DEFINED _AECHO (SET _AECHO=REM)
 IF NOT DEFINED _CECHO (SET _CECHO=REM)
 IF NOT DEFINED _VECHO (SET _VECHO=REM)
 
+SET REDIRECT=^>
+IF DEFINED __ECHO SET REDIRECT=^^^>
+
 %_AECHO% Running %0 %*
 
 REM SET DFLAGS=/L
@@ -145,6 +148,17 @@ IF NOT DEFINED CONFIGURATIONS (
 )
 
 %_VECHO% Configurations = '%CONFIGURATIONS%'
+
+REM
+REM NOTE: If the command used to invoke NMAKE is not already set, use the
+REM       default.
+REM
+IF NOT DEFINED NMAKE_CMD (
+  SET NMAKE_CMD=nmake -B -f Makefile.msc
+)
+
+%_VECHO% NmakeCmd = '%NMAKE_CMD%'
+%_VECHO% NmakeArgs = '%NMAKE_ARGS%'
 
 REM
 REM NOTE: Setup environment variables to translate between the MSVC platform
@@ -238,6 +252,7 @@ GOTO set_vcvarsall_done
 :set_vcvarsall_phone
 SET VCVARSALL=%VCINSTALLDIR%\WPSDK\WP80\vcvarsphoneall.bat
 :set_vcvarsall_done
+SET VCVARSALL=%VCVARSALL:\\=\%
 
 REM
 REM NOTE: This is the outer loop.  There should be exactly one iteration per
@@ -265,9 +280,11 @@ FOR %%P IN (%PLATFORMS%) DO (
     REM       and/or Visual Studio.  This block may need to be updated in the
     REM       future to account for additional environment variables.
     REM
+    CALL :fn_UnsetVariable CommandPromptType
     CALL :fn_UnsetVariable DevEnvDir
     CALL :fn_UnsetVariable ExtensionSdkDir
     CALL :fn_UnsetVariable Framework35Version
+    CALL :fn_UnsetVariable Framework40Version
     CALL :fn_UnsetVariable FrameworkDir
     CALL :fn_UnsetVariable FrameworkDir32
     CALL :fn_UnsetVariable FrameworkVersion
@@ -283,6 +300,8 @@ FOR %%P IN (%PLATFORMS%) DO (
     CALL :fn_UnsetVariable WindowsSdkDir
     CALL :fn_UnsetVariable WindowsSdkDir_35
     CALL :fn_UnsetVariable WindowsSdkDir_old
+    CALL :fn_UnsetVariable WindowsSDK_ExecutablePath_x86
+    CALL :fn_UnsetVariable WindowsSDK_ExecutablePath_x64
 
     REM
     REM NOTE: Reset the PATH here to the absolute bare minimum required.
@@ -299,8 +318,21 @@ FOR %%P IN (%PLATFORMS%) DO (
       REM       environment variables to be picked up by the MSVC makefile
       REM       itself.
       REM
+      %_AECHO% Building the %%B configuration for platform %%P with name %%D...
+
       IF /I "%%B" == "Debug" (
-        SET DEBUG=2
+        REM
+        REM NOTE: Using this level for the DEBUG environment variable should
+        REM       disable all compiler optimizations and prevent use of the
+        REM       NDEBUG define.  Additionally, both SQLITE_ENABLE_API_ARMOR
+        REM       and SQLITE_DEBUG defines should be enabled.
+        REM
+        SET DEBUG=3
+
+        REM
+        REM NOTE: Setting this to non-zero should enable the SQLITE_MEMDEBUG
+        REM       define.
+        REM
         SET MEMDEBUG=1
       ) ELSE (
         CALL :fn_UnsetVariable DEBUG
@@ -374,11 +406,12 @@ FOR %%P IN (%PLATFORMS%) DO (
 
             REM
             REM NOTE: The Windows 8.1 SDK has a slightly different directory
-            REM       naming convention.  Currently, this tool assumes that
-            REM       the Windows 8.1 SDK should only be used with MSVC 2013.
+            REM       naming convention.
             REM
-            IF "%VisualStudioVersion%" == "12.0" (
+            IF DEFINED USE_WINV63_NSDKLIBPATH (
               CALL :fn_AppendVariable NSDKLIBPATH \lib\winv6.3\um\x86
+            ) ELSE IF "%VisualStudioVersion%" == "12.0" (
+              CALL :fn_AppendVariable NSDKLIBPATH \..\8.0\lib\win8\um\x86
             ) ELSE (
               CALL :fn_AppendVariable NSDKLIBPATH \lib\win8\um\x86
             )
@@ -392,7 +425,7 @@ FOR %%P IN (%PLATFORMS%) DO (
         REM       file, etc.
         REM
         IF NOT DEFINED NOCLEAN (
-          %__ECHO% nmake -f Makefile.msc clean
+          %__ECHO% %NMAKE_CMD% clean
 
           IF ERRORLEVEL 1 (
             ECHO Failed to clean for platform %%P.
@@ -401,10 +434,11 @@ FOR %%P IN (%PLATFORMS%) DO (
         ) ELSE (
           REM
           REM NOTE: Even when the cleaning step has been disabled, we still
-          REM       need to remove the build output for the files we are
+          REM       need to remove the build output for all the files we are
           REM       specifically wanting to build for each platform.
           REM
-          %__ECHO% DEL /Q *.lo sqlite3.dll sqlite3.lib sqlite3.pdb
+          %_AECHO% Cleaning final core library output files only...
+          %__ECHO% DEL /Q *.lo sqlite3.dll sqlite3.lib sqlite3.pdb 2%REDIRECT% NUL
         )
 
         REM
@@ -414,7 +448,7 @@ FOR %%P IN (%PLATFORMS%) DO (
         REM       Also, disable looking for and/or linking to the native Tcl
         REM       runtime library.
         REM
-        %__ECHO% nmake -f Makefile.msc sqlite3.dll XCOMPILE=1 USE_NATIVE_LIBPATHS=1 NO_TCL=1 %NMAKE_ARGS%
+        %__ECHO% %NMAKE_CMD% sqlite3.dll XCOMPILE=1 USE_NATIVE_LIBPATHS=1 NO_TCL=1 %NMAKE_ARGS%
 
         IF ERRORLEVEL 1 (
           ECHO Failed to build %%B "sqlite3.dll" for platform %%P.
@@ -454,6 +488,64 @@ FOR %%P IN (%PLATFORMS%) DO (
           IF ERRORLEVEL 1 (
             ECHO Failed to copy "sqlite3.pdb" to "%BINARYDIRECTORY%\%%B\%%D\".
             GOTO errors
+          )
+        )
+
+        REM
+        REM NOTE: If requested, also build the shell executable.
+        REM
+        IF DEFINED BUILD_ALL_SHELL (
+          REM
+          REM NOTE: If necessary, make sure any previous build output for the
+          REM       shell executable is deleted.
+          REM
+          IF DEFINED NOCLEAN (
+            REM
+            REM NOTE: Even when the cleaning step has been disabled, we still
+            REM       need to remove the build output for all the files we are
+            REM       specifically wanting to build for each platform.
+            REM
+            %_AECHO% Cleaning final shell executable output files only...
+            %__ECHO% DEL /Q sqlite3.exe sqlite3sh.pdb 2%REDIRECT% NUL
+          )
+
+          REM
+          REM NOTE: Call NMAKE with the MSVC makefile to build the "sqlite3.exe"
+          REM       binary.  The x86 compiler will be used to compile the native
+          REM       command line tools needed during the build process itself.
+          REM       Also, disable looking for and/or linking to the native Tcl
+          REM       runtime library.
+          REM
+          %__ECHO% %NMAKE_CMD% sqlite3.exe XCOMPILE=1 USE_NATIVE_LIBPATHS=1 NO_TCL=1 %NMAKE_ARGS%
+
+          IF ERRORLEVEL 1 (
+            ECHO Failed to build %%B "sqlite3.exe" for platform %%P.
+            GOTO errors
+          )
+
+          REM
+          REM NOTE: Copy the "sqlite3.exe" file to the appropriate directory
+          REM       for the build and platform beneath the binary directory.
+          REM
+          %__ECHO% XCOPY sqlite3.exe "%BINARYDIRECTORY%\%%B\%%D\" %FFLAGS% %DFLAGS%
+
+          IF ERRORLEVEL 1 (
+            ECHO Failed to copy "sqlite3.exe" to "%BINARYDIRECTORY%\%%B\%%D\".
+            GOTO errors
+          )
+
+          REM
+          REM NOTE: Copy the "sqlite3sh.pdb" file to the appropriate directory
+          REM       for the build and platform beneath the binary directory
+          REM       unless we are prevented from doing so.
+          REM
+          IF NOT DEFINED NOSYMBOLS (
+            %__ECHO% XCOPY sqlite3sh.pdb "%BINARYDIRECTORY%\%%B\%%D\" %FFLAGS% %DFLAGS%
+
+            IF ERRORLEVEL 1 (
+              ECHO Failed to copy "sqlite3sh.pdb" to "%BINARYDIRECTORY%\%%B\%%D\".
+              GOTO errors
+            )
           )
         )
       )

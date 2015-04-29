@@ -60,7 +60,7 @@ a:visited { color: #734559 }
 .fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
 .fancy img { display:block; }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol { margin: 1em 5ex }
+.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
@@ -118,7 +118,7 @@ a:visited { color: #734559 }
 </script>
 <td>
     <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="http://www.sqlite.org/search">
+    <form name=f method="GET" action="https://www.sqlite.org/search">
       <input id=q name=q type=text
        onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
       <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
@@ -189,7 +189,7 @@ In order to use either the C-language or SQL extension loading functions,
 one must first enable extension loading using the
 <a href="c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> C-language API in your application.</p>
 
-<p>From the <a href="sqlite.html">command-line shell</a>, extensions can be loaded using the
+<p>From the <a href="cli.html">command-line shell</a>, extensions can be loaded using the
 ".load" dot-command.  For example:
 
 <blockquote><pre>
@@ -339,7 +339,7 @@ int sqlite3_extension_init(
 
 <p>Many examples of complete and working loadable extensions can be seen in the
 SQLite source tree in the
-<a href="http://www.sqlite.org/src/dir?name=ext/misc&ci=trunk">ext/misc</a>
+<a href="http://www.sqlite.org/src/tree?name=ext/misc&ci=trunk">ext/misc</a>
 subdirectory.</p>
 
 <h2>Statically Linking A Run-Time Loadable Extension</h2>
