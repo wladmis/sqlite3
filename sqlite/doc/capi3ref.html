@@ -191,7 +191,7 @@ be removed in some future release.</li>
 
 <hr>
 <h2>List Of Objects:</h2>
-<table width="100%" cellpadding="5"><tr>
+<table width="100%" cellpadding="0"><tr>
 <td valign="top"><ul><li><a href="#sqlite3">sqlite3</a></li>
 <li><a href="#sqlite3_backup">sqlite3_backup</a></li>
 <li><a href="#sqlite3_blob">sqlite3_blob</a></li>
@@ -225,7 +225,7 @@ be removed in some future release.</li>
 
 <h2>List Of Constants:</h2>
 <p>Also available: <a href="rescode.html">list of error codes</a></p>
-<table width="100%" cellpadding="5"><tr>
+<table width="100%" cellpadding="0"><tr>
 <td valign="top"><ul><li><a href="#SQLITE_ABORT">SQLITE_ABORT</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_ABORT_ROLLBACK</a></li>
 <li><a href="#SQLITE_ACCESS_EXISTS">SQLITE_ACCESS_EXISTS</a></li>
@@ -566,7 +566,7 @@ be removed in some future release.</li>
 <p>Note: Functions marked with "<a href="capi3ref.html"><small><i>(exp)</i></small></a>"
 are <a href="capi3ref.html">experimental</a> and functions marked with
 <a href="capi3ref.html"><small><i>(obs)</i></small></a> are <a href="capi3ref.html">deprecated</a>.</p>
-<table width="100%" cellpadding="5"><tr>
+<table width="100%" cellpadding="0"><tr>
 <td valign="top"><ul><li><a href="#sqlite3_aggregate_context">sqlite3_aggregate_context</a></li>
 <li><a href="#sqlite3_aggregate_count">sqlite3_aggregate_count</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(obs)</i></small></a></li>
 <li><a href="#sqlite3_auto_extension">sqlite3_auto_extension</a></li>
@@ -639,9 +639,9 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_create_function">sqlite3_create_function16</a></li>
 <li><a href="#sqlite3_create_function">sqlite3_create_function_v2</a></li>
 <li><a href="#sqlite3_create_module">sqlite3_create_module</a></li>
+<li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a></li>
-<li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
 <li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
 <li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
 <li><a href="#sqlite3_db_handle">sqlite3_db_handle</a></li>
@@ -712,10 +712,10 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_result_blob">sqlite3_result_blob</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_blob64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_double</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error16</a></li>
-<li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
@@ -739,6 +739,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_libversion">sqlite3_sourceid</a></li>
 <li><a href="#sqlite3_sql">sqlite3_sql</a></li>
 <li><a href="#sqlite3_status">sqlite3_status</a></li>
+<li><a href="#sqlite3_status">sqlite3_status64</a></li>
 <li><a href="#sqlite3_step">sqlite3_step</a></li>
 <li><a href="#sqlite3_stmt_busy">sqlite3_stmt_busy</a></li>
 <li><a href="#sqlite3_stmt_readonly">sqlite3_stmt_readonly</a></li>
@@ -860,7 +861,37 @@ pointer through into calls to <a href="#sqlite3_result_blob">sqlite3_result()</a
 <a href="#sqlite3_aggregate_context">sqlite3_aggregate_context()</a>, <a href="#sqlite3_user_data">sqlite3_user_data()</a>,
 <a href="#sqlite3_context_db_handle">sqlite3_context_db_handle()</a>, <a href="#sqlite3_get_auxdata">sqlite3_get_auxdata()</a>,
 and/or <a href="#sqlite3_get_auxdata">sqlite3_set_auxdata()</a>.
-</p><hr><a name="sqlite3_data_directory"></a>
+</p><table width="100%" cellpadding="0"><tr>
+<td colspan=3>Methods:</td></tr><tr>
+<td valign="top"><ul><li><a href="#sqlite3_aggregate_context">sqlite3_aggregate_context</a></li>
+<li><a href="#sqlite3_context_db_handle">sqlite3_context_db_handle</a></li>
+<li><a href="#sqlite3_get_auxdata">sqlite3_get_auxdata</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_blob</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_blob64</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_double</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error16</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_text</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_text16</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_text16le</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_text64</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_value</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_zeroblob</a></li>
+<li><a href="#sqlite3_get_auxdata">sqlite3_set_auxdata</a></li>
+<li><a href="#sqlite3_user_data">sqlite3_user_data</a></li>
+</ul></td>
+</tr></table>
+</p>
+<hr><a name="sqlite3_data_directory"></a>
 <h2>Name Of The Folder Holding Database Files</h2><blockquote><pre>SQLITE_EXTERN char *sqlite3_data_directory;
 </pre></blockquote><p>
 If this global variable is made to point to a string which is
@@ -1544,7 +1575,7 @@ any of these methods if the iVersion of the VFS is less than 3.
 </p><hr><a name="sqlite3_vtab"></a>
 <h2>Virtual Table Instance Object</h2><blockquote><pre>struct sqlite3_vtab {
   const sqlite3_module *pModule;  /* The module for this virtual table */
-  int nRef;                       /* NO LONGER USED */
+  int nRef;                       /* Number of open cursors */
   char *zErrMsg;                  /* Error message from sqlite3_mprintf() */
   /* Virtual table implementations will typically add additional fields */
 };
@@ -2748,34 +2779,6 @@ changes in future releases of SQLite.
 This interface can be used to retrieve a saved copy of the original
 SQL text used to create a <a href="#sqlite3_stmt">prepared statement</a> if that statement was
 compiled using either <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>.
-</p><hr><a name="sqlite3_status"></a>
-<h2>SQLite Runtime Status</h2><blockquote><pre>int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag);
-</pre></blockquote><p>
-This interface is used to retrieve runtime status information
-about the performance of SQLite, and optionally to reset various
-highwater marks.  The first argument is an integer code for
-the specific parameter to measure.  Recognized integer codes
-are of the form <a href="#SQLITE_STATUS_MALLOC_COUNT">SQLITE_STATUS_...</a>.
-The current value of the parameter is returned into *pCurrent.
-The highest recorded value is returned in *pHighwater.  If the
-resetFlag is true, then the highest record value is reset after
-*pHighwater is written.  Some parameters do not record the highest
-value.  For those parameters
-nothing is written into *pHighwater and the resetFlag is ignored.
-Other parameters record only the highwater mark and not the current
-value.  For these latter parameters nothing is written into *pCurrent.</p>
-
-<p>The sqlite3_status() routine returns SQLITE_OK on success and a
-non-zero <a href="rescode.html">error code</a> on failure.</p>
-
-<p>This routine is threadsafe but is not atomic.  This routine can be
-called while other threads are running the same or different SQLite
-interfaces.  However the values returned in *pCurrent and
-*pHighwater reflect the status of SQLite at different points in time
-and it is possible that another thread might change the parameter
-in between the times when *pCurrent and *pHighwater are written.</p>
-
-<p>See also: <a href="#sqlite3_db_status">sqlite3_db_status()</a>
 </p><hr><a name="sqlite3_step"></a>
 <h2>Evaluate An SQL Statement</h2><blockquote><pre>int sqlite3_step(sqlite3_stmt*);
 </pre></blockquote><p>
@@ -3834,7 +3837,7 @@ disabled, the following SQLite interfaces become non-operational:
 <li> <a href="#sqlite3_memory_highwater">sqlite3_memory_used()</a>
 <li> <a href="#sqlite3_memory_highwater">sqlite3_memory_highwater()</a>
 <li> <a href="#sqlite3_soft_heap_limit64">sqlite3_soft_heap_limit64()</a>
-<li> <a href="#sqlite3_status">sqlite3_status()</a>
+<li> <a href="#sqlite3_status">sqlite3_status64()</a>
 </ul>
 Memory allocation statistics are enabled by default unless SQLite is
 compiled with <a href="compile.html#default_memstatus">SQLITE_DEFAULT_MEMSTATUS</a>=0 in which case memory
@@ -4608,9 +4611,9 @@ was given on the corresponding lock.</p>
 between unlocked and EXCLUSIVE.  It cannot transition between SHARED
 and EXCLUSIVE.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.8.9"
-#define SQLITE_VERSION_NUMBER 3008009
-#define SQLITE_SOURCE_ID      "2015-03-21 15:45:24 142743918fd5a6d79fa10c44398360c3684a255a"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.8.10.2"
+#define SQLITE_VERSION_NUMBER 3008010
+#define SQLITE_SOURCE_ID      "2015-05-20 18:17:19 2ef4f3a5b1d1d0c4338f8243d40a2452cc1f7fe4"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the
@@ -5137,7 +5140,14 @@ and destroyed by <a href="#sqlite3_blob_close">sqlite3_blob_close()</a>.
 The <a href="#sqlite3_blob_read">sqlite3_blob_read()</a> and <a href="#sqlite3_blob_write">sqlite3_blob_write()</a> interfaces
 can be used to read or write small subsections of the BLOB.
 The <a href="#sqlite3_blob_bytes">sqlite3_blob_bytes()</a> interface returns the size of the BLOB in bytes.
-</p><hr><a name="sqlite3"></a>
+</p><p>Constructor: <a href="#sqlite3_blob_open">sqlite3_blob_open()</a></p>
+<p>Destructor: <a href="#sqlite3_blob_close">sqlite3_blob_close()</a></p>
+<p>Methods:
+ <a href="#sqlite3_blob_bytes">sqlite3_blob_bytes()</a>,
+<a href="#sqlite3_blob_read">sqlite3_blob_read()</a>,
+<a href="#sqlite3_blob_reopen">sqlite3_blob_reopen()</a>,
+<a href="#sqlite3_blob_write">sqlite3_blob_write()</a></p>
+<hr><a name="sqlite3"></a>
 <h2>Database Connection Handle</h2><blockquote><pre>typedef struct sqlite3 sqlite3;
 </pre></blockquote><p>
 Each open SQLite database is represented by a pointer to an instance of
@@ -5149,7 +5159,77 @@ interfaces (such as
 <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>, <a href="#sqlite3_create_function">sqlite3_create_function()</a>, and
 <a href="#sqlite3_busy_timeout">sqlite3_busy_timeout()</a> to name but three) that are methods on an
 sqlite3 object.
-</p><hr><a name="sqlite3_pcache_methods2"></a>
+</p><p>Constructors:
+ <a href="#sqlite3_open">sqlite3_open()</a>,
+<a href="#sqlite3_open">sqlite3_open16()</a>,
+<a href="#sqlite3_open">sqlite3_open_v2()</a></p>
+<p>Destructors:
+ <a href="#sqlite3_close">sqlite3_close()</a>,
+<a href="#sqlite3_close">sqlite3_close_v2()</a></p>
+<table width="100%" cellpadding="0"><tr>
+<td colspan=3>Methods:</td></tr><tr>
+<td valign="top"><ul><li><a href="#sqlite3_blob_open">sqlite3_blob_open</a></li>
+<li><a href="#sqlite3_busy_handler">sqlite3_busy_handler</a></li>
+<li><a href="#sqlite3_busy_timeout">sqlite3_busy_timeout</a></li>
+<li><a href="#sqlite3_changes">sqlite3_changes</a></li>
+<li><a href="#sqlite3_collation_needed">sqlite3_collation_needed</a></li>
+<li><a href="#sqlite3_collation_needed">sqlite3_collation_needed16</a></li>
+<li><a href="#sqlite3_commit_hook">sqlite3_commit_hook</a></li>
+<li><a href="#sqlite3_create_collation">sqlite3_create_collation</a></li>
+<li><a href="#sqlite3_create_collation">sqlite3_create_collation16</a></li>
+<li><a href="#sqlite3_create_collation">sqlite3_create_collation_v2</a></li>
+<li><a href="#sqlite3_create_function">sqlite3_create_function</a></li>
+<li><a href="#sqlite3_create_function">sqlite3_create_function16</a></li>
+<li><a href="#sqlite3_create_function">sqlite3_create_function_v2</a></li>
+<li><a href="#sqlite3_create_module">sqlite3_create_module</a></li>
+<li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a></li>
+<li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
+<li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
+<li><a href="#sqlite3_db_mutex">sqlite3_db_mutex</a></li>
+<li><a href="#sqlite3_db_readonly">sqlite3_db_readonly</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_db_release_memory">sqlite3_db_release_memory</a></li>
+<li><a href="#sqlite3_db_status">sqlite3_db_status</a></li>
+<li><a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension</a></li>
+<li><a href="#sqlite3_errcode">sqlite3_errcode</a></li>
+<li><a href="#sqlite3_errcode">sqlite3_errmsg</a></li>
+<li><a href="#sqlite3_errcode">sqlite3_errmsg16</a></li>
+<li><a href="#sqlite3_errcode">sqlite3_errstr</a></li>
+<li><a href="#sqlite3_exec">sqlite3_exec</a></li>
+<li><a href="#sqlite3_errcode">sqlite3_extended_errcode</a></li>
+<li><a href="#sqlite3_extended_result_codes">sqlite3_extended_result_codes</a></li>
+<li><a href="#sqlite3_file_control">sqlite3_file_control</a></li>
+<li><a href="#sqlite3_free_table">sqlite3_free_table</a></li>
+<li><a href="#sqlite3_get_autocommit">sqlite3_get_autocommit</a></li>
+<li><a href="#sqlite3_free_table">sqlite3_get_table</a></li>
+<li><a href="#sqlite3_interrupt">sqlite3_interrupt</a></li>
+<li><a href="#sqlite3_last_insert_rowid">sqlite3_last_insert_rowid</a></li>
+<li><a href="#sqlite3_limit">sqlite3_limit</a></li>
+<li><a href="#sqlite3_load_extension">sqlite3_load_extension</a></li>
+<li><a href="#sqlite3_next_stmt">sqlite3_next_stmt</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_overload_function">sqlite3_overload_function</a></li>
+<li><a href="#sqlite3_prepare">sqlite3_prepare</a></li>
+<li><a href="#sqlite3_prepare">sqlite3_prepare16</a></li>
+<li><a href="#sqlite3_prepare">sqlite3_prepare16_v2</a></li>
+<li><a href="#sqlite3_prepare">sqlite3_prepare_v2</a></li>
+<li><a href="#sqlite3_profile">sqlite3_profile</a></li>
+<li><a href="#sqlite3_progress_handler">sqlite3_progress_handler</a></li>
+<li><a href="#sqlite3_commit_hook">sqlite3_rollback_hook</a></li>
+<li><a href="#sqlite3_set_authorizer">sqlite3_set_authorizer</a></li>
+<li><a href="#sqlite3_table_column_metadata">sqlite3_table_column_metadata</a></li>
+<li><a href="#sqlite3_total_changes">sqlite3_total_changes</a></li>
+<li><a href="#sqlite3_profile">sqlite3_trace</a></li>
+<li><a href="#sqlite3_unlock_notify">sqlite3_unlock_notify</a></li>
+<li><a href="#sqlite3_update_hook">sqlite3_update_hook</a></li>
+<li><a href="#sqlite3_wal_autocheckpoint">sqlite3_wal_autocheckpoint</a></li>
+<li><a href="#sqlite3_wal_checkpoint">sqlite3_wal_checkpoint</a></li>
+<li><a href="#sqlite3_wal_checkpoint_v2">sqlite3_wal_checkpoint_v2</a></li>
+<li><a href="#sqlite3_wal_hook">sqlite3_wal_hook</a></li>
+</ul></td>
+</tr></table>
+</p>
+<hr><a name="sqlite3_pcache_methods2"></a>
 <h2>Application Defined Page Cache.</h2><blockquote><pre>typedef struct sqlite3_pcache_methods2 sqlite3_pcache_methods2;
 struct sqlite3_pcache_methods2 {
   int iVersion;
@@ -5333,28 +5413,87 @@ free up as much of heap memory as possible.  The page cache implementation
 is not obligated to free any memory, but well-behaved implementations should
 do their best.
 </p><hr><a name="sqlite3_stmt"></a>
-<h2>SQL Statement Object</h2><blockquote><pre>typedef struct sqlite3_stmt sqlite3_stmt;
+<h2>Prepared Statement Object</h2><blockquote><pre>typedef struct sqlite3_stmt sqlite3_stmt;
 </pre></blockquote><p>
-An instance of this object represents a single SQL statement.
-This object is variously known as a "prepared statement" or a
-"compiled SQL statement" or simply as a "statement".</p>
+An instance of this object represents a single SQL statement that
+has been compiled into binary form and is ready to be evaluated.</p>
 
-<p>The life of a statement object goes something like this:</p>
+<p>Think of each SQL statement as a separate computer program.  The
+original SQL text is source code.  A prepared statement object
+is the compiled object code.  All SQL must be converted into a
+prepared statement before it can be run.</p>
+
+<p>The life-cycle of a prepared statement object usually goes like this:</p>
 
 <p><ol>
-<li> Create the object using <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or a related
-function.
-<li> Bind values to <a href="#sqlite3_bind_blob">host parameters</a> using the sqlite3_bind_*()
+<li> Create the prepared statement object using <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>.
+<li> Bind values to <a href="lang_expr.html#varparam">parameters</a> using the sqlite3_bind_*()
 interfaces.
 <li> Run the SQL by calling <a href="#sqlite3_step">sqlite3_step()</a> one or more times.
-<li> Reset the statement using <a href="#sqlite3_reset">sqlite3_reset()</a> then go back
+<li> Reset the prepared statement using <a href="#sqlite3_reset">sqlite3_reset()</a> then go back
 to step 2.  Do this zero or more times.
 <li> Destroy the object using <a href="#sqlite3_finalize">sqlite3_finalize()</a>.
-</ol></p>
-
-<p>Refer to documentation on individual methods above for additional
-information.
-</p><hr><a name="sqlite3_value"></a>
+</ol>
+</p><p>Constructors:
+ <a href="#sqlite3_prepare">sqlite3_prepare()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare16()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare_v2()</a></p>
+<p>Destructor: <a href="#sqlite3_finalize">sqlite3_finalize()</a></p>
+<table width="100%" cellpadding="0"><tr>
+<td colspan=3>Methods:</td></tr><tr>
+<td valign="top"><ul><li><a href="#sqlite3_bind_blob">sqlite3_bind_blob</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_blob64</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_double</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_int</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_int64</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_null</a></li>
+<li><a href="#sqlite3_bind_parameter_count">sqlite3_bind_parameter_count</a></li>
+<li><a href="#sqlite3_bind_parameter_index">sqlite3_bind_parameter_index</a></li>
+<li><a href="#sqlite3_bind_parameter_name">sqlite3_bind_parameter_name</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_text</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_text16</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_text64</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_value</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_zeroblob</a></li>
+<li><a href="#sqlite3_clear_bindings">sqlite3_clear_bindings</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_blob</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_column_blob">sqlite3_column_bytes</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_bytes16</a></li>
+<li><a href="#sqlite3_column_count">sqlite3_column_count</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_database_name</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_database_name16</a></li>
+<li><a href="#sqlite3_column_decltype">sqlite3_column_decltype</a></li>
+<li><a href="#sqlite3_column_decltype">sqlite3_column_decltype16</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_double</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_int</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_int64</a></li>
+<li><a href="#sqlite3_column_name">sqlite3_column_name</a></li>
+<li><a href="#sqlite3_column_name">sqlite3_column_name16</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_origin_name</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_origin_name16</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_table_name</a></li>
+<li><a href="#sqlite3_column_database_name">sqlite3_column_table_name16</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_column_blob">sqlite3_column_text</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_text16</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_type</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_value</a></li>
+<li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
+<li><a href="#sqlite3_db_handle">sqlite3_db_handle</a></li>
+<li><a href="#sqlite3_reset">sqlite3_reset</a></li>
+<li><a href="#sqlite3_sql">sqlite3_sql</a></li>
+<li><a href="#sqlite3_step">sqlite3_step</a></li>
+<li><a href="#sqlite3_stmt_busy">sqlite3_stmt_busy</a></li>
+<li><a href="#sqlite3_stmt_readonly">sqlite3_stmt_readonly</a></li>
+<li><a href="#sqlite3_stmt_scanstatus">sqlite3_stmt_scanstatus</a></li>
+<li><a href="#sqlite3_stmt_scanstatus_reset">sqlite3_stmt_scanstatus_reset</a></li>
+<li><a href="#sqlite3_stmt_status">sqlite3_stmt_status</a></li>
+</ul></td>
+</tr></table>
+</p>
+<hr><a name="sqlite3_value"></a>
 <h2>Dynamically Typed Value Object</h2><blockquote><pre>typedef struct Mem sqlite3_value;
 </pre></blockquote><p>
 SQLite uses the sqlite3_value object to represent all values
@@ -5389,7 +5528,26 @@ Unprotected sqlite3_value objects may only be used with
 <a href="#sqlite3_result_blob">sqlite3_result_value()</a> and <a href="#sqlite3_bind_blob">sqlite3_bind_value()</a>.
 The <a href="#sqlite3_value_blob">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
-</p><hr><a name="sqlite3_aggregate_count"></a>
+</p><table width="100%" cellpadding="0"><tr>
+<td colspan=3>Methods:</td></tr><tr>
+<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_blob</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_bytes</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_bytes16</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_double</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_int</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_int64</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_numeric_type</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_text</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_text16</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_text16be</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_text16le</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_type</a></li>
+</ul></td>
+</tr></table>
+</p>
+<hr><a name="sqlite3_aggregate_count"></a>
 <h2>Deprecated Functions</h2><blockquote><pre>#ifndef SQLITE_OMIT_DEPRECATED
 int sqlite3_aggregate_count(sqlite3_context*);
 int sqlite3_expired(sqlite3_stmt*);
@@ -7069,6 +7227,37 @@ kind of <a href="#sqlite3_value">sqlite3_value</a> object can be used with this 
 <p>If these routines are called from within the different thread
 than the one containing the application-defined function that received
 the <a href="#sqlite3_context">sqlite3_context</a> pointer, the results are undefined.
+</p><hr><a name="sqlite3_status"></a>
+<h2>SQLite Runtime Status</h2><blockquote><pre>int sqlite3_status(int op, int *pCurrent, int *pHighwater, int resetFlag);
+int sqlite3_status64(
+  int op,
+  sqlite3_int64 *pCurrent,
+  sqlite3_int64 *pHighwater,
+  int resetFlag
+);
+</pre></blockquote><p>
+These interfaces are used to retrieve runtime status information
+about the performance of SQLite, and optionally to reset various
+highwater marks.  The first argument is an integer code for
+the specific parameter to measure.  Recognized integer codes
+are of the form <a href="#SQLITE_STATUS_MALLOC_COUNT">SQLITE_STATUS_...</a>.
+The current value of the parameter is returned into *pCurrent.
+The highest recorded value is returned in *pHighwater.  If the
+resetFlag is true, then the highest record value is reset after
+*pHighwater is written.  Some parameters do not record the highest
+value.  For those parameters
+nothing is written into *pHighwater and the resetFlag is ignored.
+Other parameters record only the highwater mark and not the current
+value.  For these latter parameters nothing is written into *pCurrent.</p>
+
+<p>The sqlite3_status() and sqlite3_status64() routines return
+SQLITE_OK on success and a non-zero <a href="rescode.html">error code</a> on failure.</p>
+
+<p>If either the current value or the highwater mark is too large to
+be represented by a 32-bit integer, then the values returned by
+sqlite3_status() are undefined.</p>
+
+<p>See also: <a href="#sqlite3_db_status">sqlite3_db_status()</a>
 </p><hr><a name="sqlite3_stricmp"></a>
 <h2>String Comparison</h2><blockquote><pre>int sqlite3_stricmp(const char *, const char *);
 int sqlite3_strnicmp(const char *, const char *, int);

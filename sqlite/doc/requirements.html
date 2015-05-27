@@ -281,7 +281,7 @@ comments in the source code.
 
 <dt><b>R-00197-14279-64967-54349-51250-28289-13484-05768</b></dt>
 <dd><p>The rank of the column within the index. (0 means left-most. Key columns come before auxiliary columns.)
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-00202-17548-59772-16282-16027-29431-32424-58722</b></dt>
 <dd><p>The outer query is not an aggregate or the subquery does not contain ORDER BY.
@@ -513,7 +513,7 @@ comments in the source code.
 
 <dt><b>R-01427-50262-39785-63328-51541-20069-27047-34287</b></dt>
 <dd><p>PRAGMA database.foreign_key_check; PRAGMA database.foreign_key_check(table-name);
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/fkey5.test)</i></p></dd>
 
 <dt><b>R-01448-06859-29804-04457-45951-59563-33373-60665</b></dt>
 <dd><p>When xSavepoint(X,N) is invoked, that is a signal to the virtual table X that it should save its current state as savepoint N.
@@ -655,6 +655,10 @@ comments in the source code.
 <dd><p>The %n format is silently ignored and does not consume an argument.
 <i>(source <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: tcl/printf2.test)</i></p></dd>
 
+<dt><b>R-02348-55344-32378-57138-47141-59055-59036-53991</b></dt>
+<dd><p>If the most recent sqlite3_* API call associated with database connection D failed, then the sqlite3_errcode(D) interface returns the numeric result code or extended result code for that API call.
+<i>(source <a href="c3ref/errcode.html">c3ref/errcode.html</a>)</i></p></dd>
+
 <dt><b>R-02355-51069-10404-51667-09139-26886-58872-12048</b></dt>
 <dd><p>The sqlite3_initialize() routine initializes the SQLite library.
 <i>(source <a href="c3ref/initialize.html">c3ref/initialize.html</a>)</i></p></dd>
@@ -705,7 +709,7 @@ comments in the source code.
 
 <dt><b>R-02644-22131-14285-04703-01059-19073-41336-39895</b></dt>
 <dd><p>In a compound SELECT statement, only the last or right-most simple SELECT may have an ORDER BY clause.
-<i>(source <a href="lang_select.html">lang_select.html</a>)</i></p></dd>
+<i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/select4.test)</i></p></dd>
 
 <dt><b>R-02661-56399-16863-16765-39256-52589-25619-21380</b></dt>
 <dd><p>If the result of the evaluating the LIMIT clause cannot be losslessly converted to an integer value, it is an error.
@@ -721,7 +725,7 @@ comments in the source code.
 
 <dt><b>R-02748-19096-10502-39344-29556-06426-40271-21454</b></dt>
 <dd><p>This option sets the threading mode to Single-thread.
-<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c)</i></p></dd>
 
 <dt><b>R-02752-50091-50763-13370-06213-52053-61647-05504</b></dt>
 <dd><p>A cast of a REAL value into an INTEGER results in the integer between the REAL value and zero that is closest to the REAL value.
@@ -729,7 +733,7 @@ comments in the source code.
 
 <dt><b>R-02753-24748-27922-38844-00567-47453-02164-18624</b></dt>
 <dd><p>A sequence number assigned to each index for internal tracking purposes.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-02762-06118-02091-47563-07775-65228-64836-17683</b></dt>
 <dd><p>If one operand has TEXT affinity and the other has NONE affinity, then TEXT affinity is applied to the other operand.
@@ -821,7 +825,7 @@ comments in the source code.
 
 <dt><b>R-03235-45250-36807-55036-40039-56232-40830-51576</b></dt>
 <dd><p>The "REPLACE" and "INSERT OR action" forms specify an alternative constraint conflict resolution algorithm to use during this one INSERT command.
-<i>(source <a href="lang_insert.html">lang_insert.html</a>)</i></p></dd>
+<i>(source <a href="lang_insert.html">lang_insert.html</a>, checked-by: tcl/e_insert.test)</i></p></dd>
 
 <dt><b>R-03236-28327-53832-55698-26984-08951-20811-30621</b></dt>
 <dd><p>The callback function registered by sqlite3_profile() is invoked as each SQL statement finishes.
@@ -925,7 +929,7 @@ comments in the source code.
 
 <dt><b>R-03782-50113-07889-61345-45931-21509-48774-40990</b></dt>
 <dd><p>In a compound SELECT, the LIMIT clause applies to the entire compound, not just the final SELECT.
-<i>(source <a href="lang_select.html">lang_select.html</a>)</i></p></dd>
+<i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/limit.test)</i></p></dd>
 
 <dt><b>R-03793-19254-25835-35208-42396-01402-31770-31653</b></dt>
 <dd><p>If you ever delete rows or if you ever create a row with the maximum possible ROWID, then ROWIDs from previously deleted rows might be reused when creating new rows and newly created ROWIDs might not be in strictly ascending order.
@@ -1079,6 +1083,10 @@ comments in the source code.
 <dd><p>If a ROLLBACK operation occurs on the same database connection as a pending read or write, then the pending read or write may fail with an SQLITE_ABORT or SQLITE_ABORT_ROLLBACK error.
 <i>(source <a href="rescode.html">rescode.html</a>)</i></p></dd>
 
+<dt><b>R-04837-64006-43032-20048-34043-15001-60399-59054</b></dt>
+<dd><p>The "%w" formatting option is like "%q" except that it expects to be contained within double-quotes instead of single quotes, and it escapes the double-quote character instead of the single-quote character.
+<i>(source <a href="c3ref/mprintf.html">c3ref/mprintf.html</a>)</i></p></dd>
+
 <dt><b>R-04857-57605-48133-44150-30535-05379-36560-24650</b></dt>
 <dd><p>An attempt to change the journal_mode of an in-memory database to any setting other than MEMORY or OFF is ignored.
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
@@ -1195,6 +1203,10 @@ comments in the source code.
 <dd><p>If SQLite is compiled with the SQLITE_ENABLE_STAT4 option, then additional histogram data is collected and stored in sqlite_stat4.
 <i>(source <a href="lang_analyze.html">lang_analyze.html</a>)</i></p></dd>
 
+<dt><b>R-05475-27562-55227-25532-19767-14622-00601-03902</b></dt>
+<dd><p>The sqlite3_backup_remaining() routine returns the number of pages still to be backed up at the conclusion of the most recent sqlite3_backup_step().
+<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
+
 <dt><b>R-05485-48422-13403-52608-43825-07463-15494-45842</b></dt>
 <dd><p>The schema-version is usually only manipulated internally by SQLite. It is incremented by SQLite whenever the database schema is modified (by creating or dropping a table or index).
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
@@ -1266,10 +1278,6 @@ comments in the source code.
 <dt><b>R-05912-10167-55658-18265-62443-52976-18281-50268</b></dt>
 <dd><p>The journal_size_limit pragma may be used to limit the size of rollback-journal and WAL files left in the file-system after transactions or checkpoints.
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
-
-<dt><b>R-05951-02312-23711-17446-20598-09219-25533-37117</b></dt>
-<dd><p>This interface is used to retrieve runtime status information about the performance of SQLite, and optionally to reset various highwater marks.
-<i>(source <a href="c3ref/status.html">c3ref/status.html</a>)</i></p></dd>
 
 <dt><b>R-06021-09373-60954-10709-09959-52253-36320-11394</b></dt>
 <dd><p>But extensions can override the match() function with more helpful logic.
@@ -1486,10 +1494,6 @@ comments in the source code.
 <dt><b>R-07373-26855-08191-07958-60277-35412-28383-64233</b></dt>
 <dd><p>The SQLITE_FCNTL_VFSNAME opcode can be used to obtain the names of all VFSes in the VFS stack.
 <i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
-
-<dt><b>R-07382-08557-17278-61689-15374-46602-01237-34965</b></dt>
-<dd><p>The values returned by these functions are only updated by sqlite3_backup_step().
-<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
 
 <dt><b>R-07387-29430-25270-46585-59144-29340-25578-53451</b></dt>
 <dd><p>The three special identifiers describe the unique integer key (the rowid) associated with every row of every table and so are not available on WITHOUT ROWID tables.
@@ -1747,6 +1751,10 @@ comments in the source code.
 <dd><p>If the simple SELECT is a SELECT ALL, then the entire set of result rows are returned by the SELECT.
 <i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test)</i></p></dd>
 
+<dt><b>R-08903-51590-18062-24037-51123-18798-32019-19886</b></dt>
+<dd><p>The sqlite3_backup_pagecount() routine returns the total number of pages in the source database at the conclusion of the most recent sqlite3_backup_step().
+<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
+
 <dt><b>R-08904-24719-11346-47287-22123-01310-57737-05262</b></dt>
 <dd><p>Sum() will throw an "integer overflow" exception if all inputs are integers or NULL and an integer overflow occurs at any point during the computation.
 <i>(source <a href="lang_aggfunc.html">lang_aggfunc.html</a>)</i></p></dd>
@@ -1782,10 +1790,6 @@ comments in the source code.
 <dt><b>R-09033-01493-08484-25490-18731-61378-37357-02599</b></dt>
 <dd><p>As of SQLite version 3.6.19, the default setting for foreign key enforcement is OFF.
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
-
-<dt><b>R-09056-11515-12774-07770-59896-07057-39657-55585</b></dt>
-<dd><p>If nByte is non-negative, then it is the maximum number of bytes read from zSql.
-<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
 
 <dt><b>R-09068-40660-27195-07118-53993-03715-03215-45426</b></dt>
 <dd><p>A return of SQLITE_BUSY or SQLITE_LOCKED from sqlite3_backup_step() is not a permanent error and does not affect the return value of sqlite3_backup_finish().
@@ -1897,7 +1901,7 @@ comments in the source code.
 
 <dt><b>R-09773-34266-19272-64425-39680-64969-31410-22959</b></dt>
 <dd><p>The name of the column being indexed.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-09773-40602-32968-36782-04559-37578-19507-63398</b></dt>
 <dd><p>Or if no collating sequence is otherwise defined, the built-in BINARY collating sequence is used.
@@ -1917,7 +1921,7 @@ comments in the source code.
 
 <dt><b>R-09808-17554-50654-05359-25920-63839-21736-07612</b></dt>
 <dd><p>SQLITE_LIMIT_SQL_LENGTH The maximum length of an SQL statement, in bytes.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-09813-17279-59166-04895-48075-17845-31813-35638</b></dt>
 <dd><p>Also, GLOB is case sensitive, unlike LIKE.
@@ -2026,10 +2030,6 @@ comments in the source code.
 <dt><b>R-10487-06498-43070-01372-57532-56331-23782-33348</b></dt>
 <dd><p>If two or more tables in different databases have the same name and the database-name prefix is not used on a table reference, then the table chosen is the one in the database that was least recently attached.
 <i>(source <a href="lang_attach.html">lang_attach.html</a>)</i></p></dd>
-
-<dt><b>R-10498-57086-37452-22554-31064-17235-16247-62729</b></dt>
-<dd><p>When nByte is non-negative, the zSql string ends at either the first '\000' or '\u0000' character or the nByte-th byte, whichever comes first.
-<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
 
 <dt><b>R-10514-25250-42695-33540-35883-31325-38548-55570</b></dt>
 <dd><p>If pnCkpt is not NULL,then *pnCkpt is set to the total number of checkpointed frames in the log file (including any that were already checkpointed before the function was called) or to -1 if the checkpoint could not run due to an error or because the database is not in WAL mode.
@@ -2273,7 +2273,7 @@ comments in the source code.
 
 <dt><b>R-11847-09179-40053-04599-51829-21779-50650-56945</b></dt>
 <dd><p>1 if the index-column is sorted in reverse (DESC) order by the index and 0 otherwise.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-11848-39326-04026-39006-16097-08947-10502-17699</b></dt>
 <dd><p>When secure-delete on, SQLite overwrites deleted content with zeros.
@@ -2325,7 +2325,7 @@ comments in the source code.
 
 <dt><b>R-12238-55120-28128-47311-07751-08633-28104-35625</b></dt>
 <dd><p>Whenever a PRAGMA statement is parsed, an SQLITE_FCNTL_PRAGMA file control is sent to the open sqlite3_file object corresponding to the database file to which the pragma statement refers.
-<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, checked-by: src/pragma.c, tcl/multiplex4.test)</i></p></dd>
 
 <dt><b>R-12253-03857-23707-37833-05511-18068-12774-39997</b></dt>
 <dd><p>If a memory allocation error occurs during the evaluation of any of these routines, a default value is returned. The default value is either the integer 0, the floating point number 0.0, or a NULL pointer. Subsequent calls to sqlite3_errcode() will return SQLITE_NOMEM.
@@ -2413,7 +2413,7 @@ comments in the source code.
 
 <dt><b>R-12723-08526-08318-37597-13416-02611-20506-59607</b></dt>
 <dd><p>SQLITE_LIMIT_EXPR_DEPTH The maximum depth of the parse tree on any expression.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-12747-43999-37880-44715-10819-05870-41962-30541</b></dt>
 <dd><p>A VALUES clause cannot be followed by ORDER BY.
@@ -2429,7 +2429,7 @@ comments in the source code.
 
 <dt><b>R-12793-43283-00395-32420-06808-58269-41877-63577</b></dt>
 <dd><p>Every value in SQLite has one of five fundamental datatypes: 64-bit signed integer 64-bit IEEE floating point number string BLOB NULL
-<i>(source <a href="c3ref/c_blob.html">c3ref/c_blob.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_blob.html">c3ref/c_blob.html</a>, checked-by: src/vdbeapi.c, tcl/capi3.test)</i></p></dd>
 
 <dt><b>R-12804-26213-16166-58523-53387-54270-64862-30854</b></dt>
 <dd><p>The highest recorded value is returned in *pHighwater.
@@ -2457,7 +2457,7 @@ comments in the source code.
 
 <dt><b>R-12940-37052-20666-01661-57871-26003-21807-26945</b></dt>
 <dd><p>SQLITE_LIMIT_LIKE_PATTERN_LENGTH The maximum length of the pattern argument to the LIKE or GLOB operators.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-12970-05880-15397-14967-05801-18246-49491-02402</b></dt>
 <dd><p>SQLite will not use more than one scratch buffers per thread.
@@ -2553,7 +2553,7 @@ comments in the source code.
 
 <dt><b>R-13512-64012-34604-11605-36367-14798-29892-18682</b></dt>
 <dd><p>In a compound SELECT, only the last or right-most simple SELECT may contain a LIMIT clause.
-<i>(source <a href="lang_select.html">lang_select.html</a>)</i></p></dd>
+<i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/limit.test)</i></p></dd>
 
 <dt><b>R-13523-04394-10297-34543-39920-38715-25686-62539</b></dt>
 <dd><p>The second integer on a freelist trunk page is the number of leaf page pointers to follow.
@@ -2633,7 +2633,7 @@ comments in the source code.
 
 <dt><b>R-13905-26312-39252-03533-26775-21314-28755-34945</b></dt>
 <dd><p>PRAGMA database.page_count; Return the total number of pages in the database file.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-13931-10421-35283-26355-06468-08264-20065-34151</b></dt>
 <dd><p>sqlite> EXPLAIN QUERY PLAN SELECT (SELECT b FROM t1 WHERE a=0), (SELECT a FROM t1 WHERE b=t2.c) FROM t2; 0|0|0|SCAN TABLE t2 0|0|0|EXECUTE SCALAR SUBQUERY 1 1|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?) 0|0|0|EXECUTE CORRELATED SCALAR SUBQUERY 2 2|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
@@ -2705,7 +2705,7 @@ comments in the source code.
 
 <dt><b>R-14310-64553-52878-24653-31344-14066-48757-18483</b></dt>
 <dd><p>1 if the index-column is a key column and 0 if the index-column is an auxiliary column.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-14349-34154-22313-18444-03285-54966-26711-64366</b></dt>
 <dd><p>Note that the order of the rules for determining column affinity is important.
@@ -2721,7 +2721,7 @@ comments in the source code.
 
 <dt><b>R-14374-42468-63596-09513-53214-31321-61248-26314</b></dt>
 <dd><p>This option sets the threading mode to Multi-thread.
-<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c)</i></p></dd>
 
 <dt><b>R-14396-37867-24413-20088-54172-40989-25899-41989</b></dt>
 <dd><p>The SQLITE_FCNTL_FILE_POINTER case is a short-circuit path which does not actually invoke the underlying sqlite3_io_methods.
@@ -2889,7 +2889,7 @@ comments in the source code.
 
 <dt><b>R-15313-19540-00987-59181-43377-13803-46289-24513</b></dt>
 <dd><p>The name for the collating sequence used to compare values in the index-column.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-15326-32258-55998-27349-46389-10665-40357-65139</b></dt>
 <dd><p>When multiple database connections share the same cache, changing the secure-delete flag on one database connection changes it for them all.
@@ -3005,7 +3005,7 @@ comments in the source code.
 
 <dt><b>R-15800-25719-02234-49112-58438-56406-07161-16214</b></dt>
 <dd><p>If index-name does not exist or cannot be used for the query, then the preparation of the SQL statement fails.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-15807-22461-03820-63759-43480-30184-16184-55723</b></dt>
 <dd><p>The SQLITE_TRANSIENT value means that the content will likely change in the near future and that SQLite should make its own private copy of the content before returning.
@@ -3130,10 +3130,6 @@ comments in the source code.
 <dt><b>R-16489-33536-23753-27840-15577-08736-43956-56461</b></dt>
 <dd><p>The "const char *" variable pointed to by the T parameter will be set to a zero-terminated UTF-8 string containing the EXPLAIN QUERY PLAN description for the X-th loop.
 <i>(source <a href="c3ref/c_scanstat_est.html">c3ref/c_scanstat_est.html</a>)</i></p></dd>
-
-<dt><b>R-16527-30573-16737-00630-62330-59603-54641-29152</b></dt>
-<dd><p>Each call to sqlite3_backup_step() sets two values inside the sqlite3_backup object: the number of pages still to be backed up and the total number of pages in the source database file.
-<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
 
 <dt><b>R-16566-16123-02807-20883-30772-24192-15588-47043</b></dt>
 <dd><p>If the fourth parameter to sqlite3_bind_text() or sqlite3_bind_text16() is negative, then the length of the string is the number of bytes up to the first zero terminator.
@@ -3429,7 +3425,7 @@ comments in the source code.
 
 <dt><b>R-17887-14874-47996-22564-42297-10873-08328-08065</b></dt>
 <dd><p>PRAGMA database.freelist_count; Return the number of unused pages in the database file.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma2.test)</i></p></dd>
 
 <dt><b>R-17899-04554-16139-08865-17180-48146-22421-25181</b></dt>
 <dd><p>Table names that begin with "sqlite_" are reserved for internal use. It is an error to attempt to create a table with a name that starts with "sqlite_".
@@ -3693,7 +3689,7 @@ comments in the source code.
 
 <dt><b>R-19249-32353-33767-36599-40313-00705-24761-59859</b></dt>
 <dd><p>SQLITE_LIMIT_WORKER_THREADS The maximum number of auxiliary worker threads that a single prepared statement may start.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sort4.test)</i></p></dd>
 
 <dt><b>R-19326-44825-19062-24470-23880-46223-50935-31383</b></dt>
 <dd><p>The "PRAGMA data_version" value is a local property of each database connection and so values returned by two concurrent invocations of "PRAGMA data_version" on separate database connections are often different even though the underlying database is identical.
@@ -3874,10 +3870,6 @@ comments in the source code.
 <dt><b>R-20339-64003-24275-14776-38996-63966-02497-20063</b></dt>
 <dd><p>Format 4 causes SQLite to respect the DESC keyword on index declarations.
 <i>(source <a href="fileformat2.html">fileformat2.html</a>)</i></p></dd>
-
-<dt><b>R-20391-43527-53623-61319-58031-07910-46932-20040</b></dt>
-<dd><p>If the source database is modified during a backup operation, then the values are not updated to account for any extra pages that need to be updated or the size of the source database file changing.
-<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
 
 <dt><b>R-20409-33051-08329-62436-45384-49643-45094-34288</b></dt>
 <dd><p>The avg() function returns the average value of all non-NULL X within a group.
@@ -4257,7 +4249,7 @@ comments in the source code.
 
 <dt><b>R-22751-28901-48150-55263-36520-47093-21742-33919</b></dt>
 <dd><p>The name of the column being indexed, or NULL if the index-column is the rowid of the table being indexed.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-22776-52830-07659-57324-38629-30744-28731-31224</b></dt>
 <dd><p>For each pair of named columns, the expression "lhs.X = rhs.X" is evaluated for each row of the cartesian product as a boolean expression. Only rows for which all such expressions evaluates to true are included from the result set.
@@ -4270,6 +4262,10 @@ comments in the source code.
 <dt><b>R-22795-48828-40923-07115-03137-30466-52786-33478</b></dt>
 <dd><p>If X is a BLOB then the indices refer to bytes.
 <i>(source <a href="lang_corefunc.html">lang_corefunc.html</a>)</i></p></dd>
+
+<dt><b>R-22799-40241-49763-48856-12252-38243-16002-08188</b></dt>
+<dd><p>The sqlite3_status() and sqlite3_status64() routines return SQLITE_OK on success and a non-zero error code on failure.
+<i>(source <a href="c3ref/status.html">c3ref/status.html</a>)</i></p></dd>
 
 <dt><b>R-22825-10487-14088-37965-39008-13808-51021-60336</b></dt>
 <dd><p>The "int" variable pointed to by the T parameter will be set to the "select-id" for the X-th loop.
@@ -4337,7 +4333,7 @@ comments in the source code.
 
 <dt><b>R-23114-21695-36244-34709-35067-61095-03657-31992</b></dt>
 <dd><p>The auxiliary index-columns are not shown by the index_info pragma, but they are listed by the index_xinfo pragma.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-23120-24122-52717-58793-54182-36500-02638-57419</b></dt>
 <dd><p>After an application receives an SQLITE_LOCKED error, it may call the sqlite3_unlock_notify() method with the blocked connection handle as the first argument to register for a callback that will be invoked when the blocking connections current transaction is concluded.
@@ -4401,7 +4397,7 @@ comments in the source code.
 
 <dt><b>R-23445-46109-37360-43495-15091-19372-04158-40881</b></dt>
 <dd><p>This pragma causes the database connection on which it is invoked to free up as much memory as it can, by calling sqlite3_db_release_memory().
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/pragma.c)</i></p></dd>
 
 <dt><b>R-23452-42564-31892-16470-45278-27764-45099-08550</b></dt>
 <dd><p>If the optional database name is omitted, "main" is assumed.
@@ -4441,7 +4437,7 @@ comments in the source code.
 
 <dt><b>R-23579-05241-28343-33967-00321-51471-16387-08197</b></dt>
 <dd><p>PRAGMA busy_timeout; PRAGMA busy_timeout = milliseconds; Query or change the setting of the busy timeout.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/lock.test)</i></p></dd>
 
 <dt><b>R-23588-34450-24473-59625-33708-24256-58306-00821</b></dt>
 <dd><p>The two-byte integer at offset 1 gives the start of the first freeblock on the page, or is zero if there are no freeblocks.
@@ -4497,7 +4493,7 @@ comments in the source code.
 
 <dt><b>R-23918-17301-20351-08154-14070-22495-33406-46123</b></dt>
 <dd><p>The foreign_key_check pragma checks the database, or the table called "table-name", for foreign key constraints that are violated and returns one row of output for each violation.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/fkey5.test)</i></p></dd>
 
 <dt><b>R-23927-54081-32743-59723-35169-61192-28393-34691</b></dt>
 <dd><p>Each expression in the result-set is then evaluated once for each group of rows.
@@ -4534,6 +4530,10 @@ comments in the source code.
 <dt><b>R-23984-49501-37243-56289-03587-60124-22633-25227</b></dt>
 <dd><p>PRAGMA ignore_check_constraints = boolean; This pragma enables or disables the enforcement of CHECK constraints.
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+
+<dt><b>R-23992-54131-34297-51092-28105-58242-15143-29320</b></dt>
+<dd><p>If the "TEMP" or "TEMPORARY" keyword occurs in between "CREATE" and "VIEW" then the view that is created is only visible to the database connection that created it and is automatically deleted when the database connection is closed.
+<i>(source <a href="lang_createview.html">lang_createview.html</a>)</i></p></dd>
 
 <dt><b>R-24016-17929-42002-59431-23117-37264-43384-47268</b></dt>
 <dd><p>C-style comments can span multiple lines.
@@ -4581,7 +4581,7 @@ comments in the source code.
 
 <dt><b>R-24197-42751-15270-03272-21086-32864-42989-62970</b></dt>
 <dd><p>PRAGMA database.cache_size; PRAGMA database.cache_size = pages; PRAGMA database.cache_size = -kibibytes; Query or change the suggested maximum number of database disk pages that SQLite will hold in memory at once per open database file.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-24227-04807-65013-09510-28047-53461-17252-27305</b></dt>
 <dd><p>Or, if none of the WHEN expressions evaluate to true, the result of evaluating the ELSE expression, if any.
@@ -4959,6 +4959,10 @@ comments in the source code.
 <dd><p>The first argument is an integer code for the specific parameter to measure.
 <i>(source <a href="c3ref/status.html">c3ref/status.html</a>)</i></p></dd>
 
+<dt><b>R-26188-08449-06969-05333-36262-60871-22176-39475</b></dt>
+<dd><p>If the SQLITE_FCNTL_PRAGMA file control returns SQLITE_OK, then the parser assumes that the VFS has handled the PRAGMA itself and the parser generates a no-op prepared statement if result string is NULL, or that returns a copy of the result string if the string is non-NULL.
+<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, checked-by: tcl/multiplex4.test)</i></p></dd>
+
 <dt><b>R-26223-47623-19728-21792-34687-27643-09360-29816</b></dt>
 <dd><p>Like other SQL identifiers, database names are case-insensitive.
 <i>(source <a href="lang_naming.html">lang_naming.html</a>, checked-by: tcl/e_resolve.test)</i></p></dd>
@@ -4993,7 +4997,7 @@ comments in the source code.
 
 <dt><b>R-26343-45930-10507-06945-56497-65367-59680-35735</b></dt>
 <dd><p>This pragma invokes the sqlite3_soft_heap_limit64() interface with the argument N, if N is specified and is a non-negative integer.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/pragma.c, tcl/softheap1.test)</i></p></dd>
 
 <dt><b>R-26346-36443-14203-01237-59463-02061-43306-07214</b></dt>
 <dd><p>When casting a BLOB value to a REAL, the value is first converted to TEXT.
@@ -5257,7 +5261,7 @@ comments in the source code.
 
 <dt><b>R-27806-26076-28846-24074-00653-42186-57572-51475</b></dt>
 <dd><p>The handler for an SQLITE_FCNTL_PRAGMA file control can optionally make the first element of the char** argument point to a string obtained from sqlite3_mprintf() or the equivalent and that string will become the result of the pragma or the error message if the pragma fails.
-<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, checked-by: src/test_multiplex.c)</i></p></dd>
 
 <dt><b>R-27809-56550-37281-65484-19482-39813-11020-02299</b></dt>
 <dd><p>The VACUUM command works by copying the contents of the database into a temporary database file and then overwriting the original with the contents of the temporary file.
@@ -5307,6 +5311,10 @@ comments in the source code.
 <dd><p>An attempt to create a WITHOUT ROWID table without a PRIMARY KEY results in an error.
 <i>(source <a href="withoutrowid.html">withoutrowid.html</a>, checked-by: tcl/without_rowid5.test)</i></p></dd>
 
+<dt><b>R-27985-03553-20917-04804-06476-41235-27520-21131</b></dt>
+<dd><p>These interfaces are used to retrieve runtime status information about the performance of SQLite, and optionally to reset various highwater marks.
+<i>(source <a href="c3ref/status.html">c3ref/status.html</a>)</i></p></dd>
+
 <dt><b>R-27994-60376-08852-47971-54191-53637-09431-08610</b></dt>
 <dd><p>The same arbitrarily selected row is used for each non-aggregate expression.
 <i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test)</i></p></dd>
@@ -5347,10 +5355,6 @@ comments in the source code.
 <dd><p>Note that for serial types 0, 8, 9, 12, and 13, the value is zero bytes in length. If all columns are of these types then the body section of the record is empty.
 <i>(source <a href="fileformat2.html">fileformat2.html</a>)</i></p></dd>
 
-<dt><b>R-28229-64777-06590-55758-54727-64377-65259-21401</b></dt>
-<dd><p>If the nByte argument is less than zero, then zSql is read up to the first zero terminator.
-<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
-
 <dt><b>R-28258-23166-61617-36220-57922-46020-57990-00363</b></dt>
 <dd><p>Row iRow is not present in the table
 <i>(source <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>, checked-by: tcl/e_blobopen.test)</i></p></dd>
@@ -5362,6 +5366,10 @@ comments in the source code.
 <dt><b>R-28265-37702-63167-40719-28674-33175-26294-56765</b></dt>
 <dd><p>The second argument is a pointer to the function to invoke when a row is updated, inserted or deleted in a rowid table.
 <i>(source <a href="c3ref/update_hook.html">c3ref/update_hook.html</a>)</i></p></dd>
+
+<dt><b>R-28279-44669-55028-49406-32452-64424-01870-54893</b></dt>
+<dd><p>If nByte is positive, then it is the number of bytes read from zSql.
+<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
 
 <dt><b>R-28307-32767-23693-57600-42950-25827-15696-21088</b></dt>
 <dd><p>All other databases use the normal locking mode by default and are affected by this pragma.
@@ -5605,7 +5613,7 @@ comments in the source code.
 
 <dt><b>R-29639-16887-16584-30400-13663-34877-64046-50311</b></dt>
 <dd><p>The sqlite3_db_readonly(D,N) interface returns 1 if the database N of connection D is read-only, 0 if it is read/write, or -1 if N is not the name of a database on connection D.
-<i>(source <a href="c3ref/db_readonly.html">c3ref/db_readonly.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/db_readonly.html">c3ref/db_readonly.html</a>, checked-by: tcl/rdonly.test)</i></p></dd>
 
 <dt><b>R-29639-49338-45805-35258-41039-23584-19093-35749</b></dt>
 <dd><p>The sqlite3_create_function() interface can be used to override the like() function and thereby change the operation of the LIKE operator.
@@ -5689,7 +5697,7 @@ comments in the source code.
 
 <dt><b>R-29875-31678-61620-24152-15277-25938-13734-04890</b></dt>
 <dd><p>The argument to the SQLITE_FCNTL_PRAGMA file control is an array of pointers to strings (char**) in which the second element of the array is the name of the pragma and the third element is the argument to the pragma or NULL if the pragma has no argument.
-<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, checked-by: src/pragma.c, src/test_multiplex.c)</i></p></dd>
 
 <dt><b>R-29897-28851-11131-17538-15635-12313-50588-15022</b></dt>
 <dd><p>Such transactions usually persist until the next COMMIT or ROLLBACK command. But a transaction will also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict resolution algorithm is specified.
@@ -5798,10 +5806,6 @@ comments in the source code.
 <dt><b>R-30326-06845-64615-54981-43603-53973-26447-14350</b></dt>
 <dd><p>The destructor is called to dispose of the BLOB or string even if the call to bind API fails.
 <i>(source <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>)</i></p></dd>
-
-<dt><b>R-30345-49683-04761-28240-55990-63496-60615-22028</b></dt>
-<dd><p>If the SQLITE_FCNTL_PRAGMA file control returns SQLITE_OK, then the parser assumes that the VFS has handled the PRAGMA itself and the parser generates a no-op prepared statement.
-<i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
 
 <dt><b>R-30347-18702-41681-51017-11561-03801-56644-21815</b></dt>
 <dd><p>Casting a REAL or INTEGER value to NUMERIC is a no-op, even if a real value could be losslessly converted to an integer.
@@ -5925,7 +5929,7 @@ comments in the source code.
 
 <dt><b>R-31093-59126-54996-31086-46526-58121-23400-49196</b></dt>
 <dd><p>The default suggested cache size is 2000 pages.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/sqliteLimit.h)</i></p></dd>
 
 <dt><b>R-31163-29022-10663-19494-01661-06524-11639-30452</b></dt>
 <dd><p>The "E" character that begins the exponentiation clause of a floating point literal can be either upper or lower case.
@@ -6153,7 +6157,7 @@ comments in the source code.
 
 <dt><b>R-32195-19465-48930-47525-56822-22090-53999-25366</b></dt>
 <dd><p>The schema version is used by SQLite each time a query is executed to ensure that the internal cache of the schema used when compiling the SQL query matches the schema of the database against which the compiled query is actually executed.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/vdbe.c)</i></p></dd>
 
 <dt><b>R-32235-53300-57293-28888-55345-58030-49173-41178</b></dt>
 <dd><p>FOR EACH ROW implies that the SQL statements specified in the trigger may be executed (depending on the WHEN clause) for each database row being inserted, updated or deleted by the statement causing the trigger to fire.
@@ -6469,7 +6473,7 @@ comments in the source code.
 
 <dt><b>R-34186-52914-35981-17820-54007-24600-55033-63809</b></dt>
 <dd><p>The rank of the column within the index. (0 means left-most.)
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-34234-52126-13891-36855-21265-08475-46071-60317</b></dt>
 <dd><p>The default mode is for LIKE comparisons to be insensitive to differences of case for latin1 characters.
@@ -6481,7 +6485,7 @@ comments in the source code.
 
 <dt><b>R-34271-33106-55360-31605-05941-37144-32278-15012</b></dt>
 <dd><p>PRAGMA automatic_index; PRAGMA automatic_index = boolean; Query, set, or clear the automatic indexing capability.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/autoindex1.test)</i></p></dd>
 
 <dt><b>R-34280-42283-63975-25394-58653-47378-35851-53437</b></dt>
 <dd><p>The count(X) function returns a count of the number of times that X is not NULL in a group.
@@ -6517,7 +6521,7 @@ comments in the source code.
 
 <dt><b>R-34457-09668-37447-61343-26020-24066-28137-60426</b></dt>
 <dd><p>"1" if the index is a partial index and "0" if not.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/index7.test)</i></p></dd>
 
 <dt><b>R-34489-53953-36029-13063-60538-08284-18396-26034</b></dt>
 <dd><p>Nine static mutexes are used by the current version of SQLite.
@@ -6538,10 +6542,6 @@ comments in the source code.
 <dt><b>R-34561-00264-36299-40120-12079-02627-14730-26524</b></dt>
 <dd><p>If an authorizer callback returns SQLITE_IGNORE for an SQLITE_DELETE action code, then the DELETE operation will proceed but the truncate optimization will be bypassed and rows will be deleted one by one.
 <i>(source <a href="lang_delete.html">lang_delete.html</a>)</i></p></dd>
-
-<dt><b>R-34614-52552-60710-47749-45454-53290-65494-24106</b></dt>
-<dd><p>The sqlite3_status() routine returns SQLITE_OK on success and a non-zero error code on failure.
-<i>(source <a href="c3ref/status.html">c3ref/status.html</a>)</i></p></dd>
 
 <dt><b>R-34616-57962-62200-63763-25892-01209-38424-05918</b></dt>
 <dd><p>Cache sharing is enabled and disabled for an entire process.
@@ -6745,7 +6745,7 @@ comments in the source code.
 
 <dt><b>R-35496-03635-05800-19681-11567-09775-48933-50480</b></dt>
 <dd><p>The name of the index.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-35503-60218-20246-16465-03448-36808-43658-06556</b></dt>
 <dd><p>When SQLite compares two strings, it uses a collating sequence or collating function (two words for the same thing) to determine which string is greater or if the two strings are equal.
@@ -6863,6 +6863,10 @@ comments in the source code.
 <dd><p>All mathematical operators (+, -, *, /, %, <<, >>, &, and |) cast both operands to the NUMERIC storage class prior to being carried out.
 <i>(source <a href="datatype3.html">datatype3.html</a>)</i></p></dd>
 
+<dt><b>R-36322-06257-02337-56371-28217-24228-64026-14937</b></dt>
+<dd><p>When memory allocation statistics are disabled, the following SQLite interfaces become non-operational: sqlite3_memory_used() sqlite3_memory_highwater() sqlite3_soft_heap_limit64() sqlite3_status64()
+<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>)</i></p></dd>
+
 <dt><b>R-36327-17224-30714-13238-62239-10610-34314-51642</b></dt>
 <dd><p>If a result expression is the special expression "*" then all columns in the input data are substituted for that one expression.
 <i>(source <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test)</i></p></dd>
@@ -6913,7 +6917,7 @@ comments in the source code.
 
 <dt><b>R-36609-39554-02465-47159-11232-33677-21086-13785</b></dt>
 <dd><p>"c" if the index was created by a CREATE INDEX statement, "u" if the index was created by a UNIQUE constraint, or "pk" if the index was created by a PRIMARY KEY constraint.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-36610-45292-54097-28024-65527-46641-42678-27744</b></dt>
 <dd><p>The sqlite3_snprintf() routine is similar to "snprintf()" from the standard C library. The result is written into the buffer supplied as the second parameter whose size is given by the first parameter. Note that the order of the first two parameters is reversed from snprintf().
@@ -6977,7 +6981,7 @@ comments in the source code.
 
 <dt><b>R-37002-28871-53113-54694-45983-06407-17129-31700</b></dt>
 <dd><p>The "NOT INDEXED" clause specifies that no index shall be used when accessing the preceding table, including implied indices create by UNIQUE and PRIMARY KEY constraints. However, the rowid can still be used to look up entries even when "NOT INDEXED" is specified.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-37002-32774-01005-00409-47681-36421-50128-30923</b></dt>
 <dd><p>The two-byte integer at offset 3 gives the number of cells on the page.
@@ -7589,7 +7593,7 @@ comments in the source code.
 
 <dt><b>R-40297-14464-07991-25596-41588-39255-21146-34618</b></dt>
 <dd><p>The INDEXED BY phrase forces the SQLite query planner to use a particular named index on a DELETE, SELECT, or UPDATE statement.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-40298-31327-08313-07924-25737-24102-08430-39905</b></dt>
 <dd><p>The LIKE optimization might occur if the column named on the left of the operator is indexed using the built-in BINARY collating sequence and case_sensitive_like is turned on. Or the optimization might occur if the column is indexed using the built-in NOCASE collating sequence and the case_sensitive_like mode is off. These are the only two combinations under which LIKE operators will be optimized.
@@ -7705,7 +7709,7 @@ comments in the source code.
 
 <dt><b>R-40889-06838-65299-31381-40601-55617-17573-42107</b></dt>
 <dd><p>The rank of the column within the table being indexed, or -1 if the index-column is the rowid of the table being indexed.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-40912-17796-52858-33167-65116-31464-10604-52940</b></dt>
 <dd><p>Only an effective call of sqlite3_initialize() does any initialization. All other calls are harmless no-ops.
@@ -7785,7 +7789,7 @@ comments in the source code.
 
 <dt><b>R-41220-51800-40113-04594-39111-44246-00162-60024</b></dt>
 <dd><p>This option sets the threading mode to Serialized.
-<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c)</i></p></dd>
 
 <dt><b>R-41246-06467-15697-52258-02048-61500-49466-56999</b></dt>
 <dd><p>The multi-argument max() function searches its arguments from left to right for an argument that defines a collating function and uses that collating function for all string comparisons.
@@ -7873,7 +7877,7 @@ comments in the source code.
 
 <dt><b>R-41778-26203-39333-15071-00697-32758-59991-57440</b></dt>
 <dd><p>SQLITE_LIMIT_ATTACHED The maximum number of attached databases.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-41784-13339-39195-36557-35011-50589-62735-17221</b></dt>
 <dd><p>Tip: If the command "PRAGMA foreign_keys" returns no data instead of a single row containing "0" or "1", then the version of SQLite you are using does not support foreign keys (either because it is older than 3.6.19 or because it was compiled with SQLITE_OMIT_FOREIGN_KEY or SQLITE_OMIT_TRIGGER defined).
@@ -7945,7 +7949,7 @@ comments in the source code.
 
 <dt><b>R-42059-47211-64082-08084-07412-31027-38938-26624</b></dt>
 <dd><p>If the argument N is positive then the suggested cache size is set to N.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/pcache.c, tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-42089-41020-28633-04847-35892-58431-48484-20358</b></dt>
 <dd><p>If no transaction is active (other than the implied transaction that is created on every command) then the ROLLBACK resolution algorithm works the same as the ABORT algorithm.
@@ -8005,7 +8009,7 @@ comments in the source code.
 
 <dt><b>R-42363-29104-39854-61131-26966-39533-29446-04460</b></dt>
 <dd><p>SQLITE_LIMIT_VARIABLE_NUMBER The maximum index number of any parameter in an SQL statement.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-42393-33810-20509-47326-15941-02937-41283-04621</b></dt>
 <dd><p>If Z is not initially a string, it is cast to a UTF-8 string prior to processing.
@@ -8345,7 +8349,7 @@ comments in the source code.
 
 <dt><b>R-43996-29471-48886-45304-51416-12121-07825-19150</b></dt>
 <dd><p>SQLITE_LIMIT_COLUMN The maximum number of columns in a table definition or in the result set of a SELECT or the maximum number of columns in an index or in an ORDER BY or GROUP BY clause.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-44013-13102-10441-32146-65192-28233-37032-42173</b></dt>
 <dd><p>The mode parameter may be set to either "ro", "rw", "rwc", or "memory". Attempting to set it to any other value is an error
@@ -8509,7 +8513,7 @@ comments in the source code.
 
 <dt><b>R-44699-55558-27782-01179-44434-54573-03026-09570</b></dt>
 <dd><p>The INDEXED BY clause does not give the optimizer hints about which index to use; it gives the optimizer a requirement of which index to use.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-44699-57140-60647-60895-26603-26594-01750-63577</b></dt>
 <dd><p>This mode works the same way as SQLITE_CHECKPOINT_RESTART with the addition that it also truncates the log file to zero bytes just prior to a successful return.
@@ -8529,7 +8533,7 @@ comments in the source code.
 
 <dt><b>R-44874-46325-10575-39003-32393-00844-31842-18146</b></dt>
 <dd><p>PRAGMA database.index_xinfo(index-name); This pragma returns information about every column in an index.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-44877-05564-55761-20700-41033-29591-21228-47309</b></dt>
 <dd><p>Executing any other type of SQL statement does not modify the value returned by this function.
@@ -8681,7 +8685,7 @@ comments in the source code.
 
 <dt><b>R-45540-25505-12705-13417-45651-45483-56013-24623</b></dt>
 <dd><p>To prevent older versions of SQLite (prior to version 3.7.0, 2010-07-22) from trying to recover a WAL-mode database (and making matters worse) the database file format version numbers (bytes 18 and 19 in the database header) are increased from 1 to 2 in WAL mode.
-<i>(source <a href="wal.html">wal.html</a>)</i></p></dd>
+<i>(source <a href="wal.html">wal.html</a>, checked-by: tcl/e_wal.test)</i></p></dd>
 
 <dt><b>R-45667-58607-22220-28108-32382-15512-20537-62688</b></dt>
 <dd><p>If it does, then SQLite requires every entry in the index to be unique.
@@ -8769,7 +8773,7 @@ comments in the source code.
 
 <dt><b>R-45970-35618-54800-59485-17030-46204-37187-33805</b></dt>
 <dd><p>Unlike this index_info pragma, this pragma returns information about every column in the index, not just the key columns.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-45981-25528-39449-05041-45662-56122-46761-09278</b></dt>
 <dd><p>The fragment component of a URI, if present, is ignored.
@@ -8938,10 +8942,6 @@ comments in the source code.
 <dt><b>R-46912-28798-53031-38709-36895-29366-07860-41608</b></dt>
 <dd><p>Any attempt to use AUTOINCREMENT on a WITHOUT ROWID table or on a column other than the INTEGER PRIMARY KEY column results in an error.
 <i>(source <a href="autoinc.html">autoinc.html</a>)</i></p></dd>
-
-<dt><b>R-46927-16727-32978-55538-27882-44845-62428-50887</b></dt>
-<dd><p>The sqlite3_errcode() interface returns the numeric result code or extended result code for the most recent failed sqlite3_* API call associated with a database connection.
-<i>(source <a href="c3ref/errcode.html">c3ref/errcode.html</a>)</i></p></dd>
 
 <dt><b>R-46937-57672-41895-41327-41182-38354-24563-01052</b></dt>
 <dd><p>Objects of this type are created by sqlite3_blob_open() and destroyed by sqlite3_blob_close().
@@ -9221,7 +9221,7 @@ comments in the source code.
 
 <dt><b>R-48205-43578-08481-37323-43342-53439-37471-23722</b></dt>
 <dd><p>The default suggested cache size can be altered using the SQLITE_DEFAULT_CACHE_SIZE compile-time options.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/sqliteLimit.h)</i></p></dd>
 
 <dt><b>R-48230-36247-21230-47058-09870-51505-35285-11048</b></dt>
 <dd><p>The special behaviors associated "INTEGER PRIMARY KEY" do not apply on WITHOUT ROWID tables.
@@ -9307,6 +9307,10 @@ comments in the source code.
 <dd><p>Page 1 of a database file is the root page of a table b-tree that holds a special table named "sqlite_master" (or "sqlite_temp_master" in the case of a TEMP database) which stores the complete database schema.
 <i>(source <a href="fileformat2.html">fileformat2.html</a>)</i></p></dd>
 
+<dt><b>R-48563-15053-26384-64007-26863-55213-59220-45966</b></dt>
+<dd><p>If nByte is zero, then no prepared statement is generated.
+<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
+
 <dt><b>R-48576-42125-14408-22326-23329-43841-05542-05024</b></dt>
 <dd><p>This pragma only operates on the single database specified prior to the pragma name (or on the "main" database if no database is specified.
 <i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
@@ -9354,10 +9358,6 @@ comments in the source code.
 <dt><b>R-48780-51154-29045-33846-29685-59485-21134-40329</b></dt>
 <dd><p>A rollback journal header is padded with zeros out to the size of a single sector (as defined by the sector size integer at offset 20).
 <i>(source <a href="fileformat2.html">fileformat2.html</a>)</i></p></dd>
-
-<dt><b>R-48816-31606-01723-32328-02759-44643-37648-45150</b></dt>
-<dd><p>If the "TEMP" or "TEMPORARY" keyword occurs in between "CREATE" and "VIEW" then the view that is created is only visible to the process that opened the database and is automatically deleted when the database is closed.
-<i>(source <a href="lang_createview.html">lang_createview.html</a>)</i></p></dd>
 
 <dt><b>R-48887-45097-32252-48133-01081-61153-45933-38095</b></dt>
 <dd><p>When INSERT OR REPLACE encounters a constraint violation, it does not fail. The INSERT continues to completion after deleting rows that caused the constraint problem so INSERT OR REPLACE will always change the return value of this interface.
@@ -10247,6 +10247,10 @@ comments in the source code.
 <dd><p>If no column-list is specified then the number of values inserted into each row must be the same as the number of columns in the table.
 <i>(source <a href="lang_insert.html">lang_insert.html</a>, checked-by: tcl/e_insert.test)</i></p></dd>
 
+<dt><b>R-53666-61329-49768-59983-34751-33356-35133-56080</b></dt>
+<dd><p>The values returned by these functions are only updated by sqlite3_backup_step(). If the source database is modified in a way that changes the size of the source database or the number of pages remaining, those changes are not reflected in the output of sqlite3_backup_pagecount() and sqlite3_backup_remaining() until after the next sqlite3_backup_step().
+<i>(source <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>)</i></p></dd>
+
 <dt><b>R-53670-03373-29503-41803-42706-56849-33971-45159</b></dt>
 <dd><p>The unary operator + is a no-op.
 <i>(source <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test)</i></p></dd>
@@ -10849,7 +10853,7 @@ comments in the source code.
 
 <dt><b>R-57301-64506-10586-49672-48759-26432-01783-64495</b></dt>
 <dd><p>"1" if the index is UNIQUE and "0" if not.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-57313-56280-52259-04296-10229-37412-19300-33360</b></dt>
 <dd><p>If URI filenames are recognized when the database connection is originally opened, then URI filenames will also be recognized on ATTACH statements.
@@ -11001,7 +11005,7 @@ comments in the source code.
 
 <dt><b>R-58230-57098-08245-26579-57280-54560-29149-45335</b></dt>
 <dd><p>The "INDEXED BY index-name" phrase specifies that the named index must be used in order to look up values on the preceding table.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-58261-63259-31112-34122-01382-46669-15924-59329</b></dt>
 <dd><p>The sum() and total() aggregate functions return sum of all non-NULL values in the group.
@@ -11105,7 +11109,7 @@ comments in the source code.
 
 <dt><b>R-58814-63508-14637-55727-60663-34396-08543-07836</b></dt>
 <dd><p>The sqlite3_db_release_memory(D) interface attempts to free as much heap memory as possible from database connection D.
-<i>(source <a href="c3ref/db_release_memory.html">c3ref/db_release_memory.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/db_release_memory.html">c3ref/db_release_memory.html</a>, checked-by: tcl/shrink.test)</i></p></dd>
 
 <dt><b>R-58823-28748-40734-32181-06103-05121-55072-03563</b></dt>
 <dd><p>If it identifies a specific database index, then just that index is recreated.
@@ -11114,6 +11118,10 @@ comments in the source code.
 <dt><b>R-58835-30946-01453-54095-45782-49033-61690-21172</b></dt>
 <dd><p>The SQLITE_FCNTL_POWERSAFE_OVERWRITE opcode is used to set or query the persistent "powersafe-overwrite" or "PSOW" setting.
 <i>(source <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>)</i></p></dd>
+
+<dt><b>R-58838-55911-33120-57542-55492-25177-48727-11020</b></dt>
+<dd><p>If the nByte argument is negative, then zSql is read up to the first zero terminator.
+<i>(source <a href="c3ref/prepare.html">c3ref/prepare.html</a>)</i></p></dd>
 
 <dt><b>R-58862-44169-03141-46737-61496-44954-25565-37290</b></dt>
 <dd><p>If an UPDATE statement has a LIMIT clause, the maximum number of rows that will be updated is found by evaluating the accompanying expression and casting it to an integer value.
@@ -11133,7 +11141,7 @@ comments in the source code.
 
 <dt><b>R-59001-45278-16450-29510-31593-00362-58308-30623</b></dt>
 <dd><p>SQLITE_LIMIT_FUNCTION_ARG The maximum number of arguments on a function.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-59007-20454-04815-57542-48714-11187-47465-31544</b></dt>
 <dd><p>Any other character matches itself or its lower/upper case equivalent (i.e. case-insensitive matching).
@@ -11581,7 +11589,7 @@ comments in the source code.
 
 <dt><b>R-61436-13639-25666-64094-55239-63519-07702-63359</b></dt>
 <dd><p>If the argument N is negative, then the number of cache pages is adjusted to use approximately abs(N*1024) bytes of memory.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/pcache.c)</i></p></dd>
 
 <dt><b>R-61449-07528-25918-54581-50691-46240-35761-07017</b></dt>
 <dd><p>If the 4th parameter to the sqlite3_result_text* interfaces or to sqlite3_result_blob is the special constant SQLITE_STATIC, then SQLite assumes that the text or BLOB result is in constant space and does not copy the content of the parameter nor call a destructor on the content when it has finished using that result.
@@ -11665,7 +11673,7 @@ comments in the source code.
 
 <dt><b>R-61987-00541-30628-29518-50059-37734-56753-06843</b></dt>
 <dd><p>SQLITE_LIMIT_LENGTH The maximum size of any string or BLOB or table row, in bytes.
-<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>)</i></p></dd>
+<i>(source <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test)</i></p></dd>
 
 <dt><b>R-62028-47212-10324-26388-32955-09019-38502-43412</b></dt>
 <dd><p>All calls obtain an exclusive "checkpoint" lock on the database file.
@@ -11697,7 +11705,7 @@ comments in the source code.
 
 <dt><b>R-62112-42456-10685-52365-06071-10785-51242-17242</b></dt>
 <dd><p>If the query optimizer is unable to use the index specified by the INDEX BY clause, then the query will fail with an error.
-<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>)</i></p></dd>
+<i>(source <a href="lang_indexedby.html">lang_indexedby.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-62139-20964-30258-06406-62558-17842-12310-23723</b></dt>
 <dd><p>The sqlite3_mutex_alloc() routine allocates a new mutex and returns a pointer to it.
@@ -11777,7 +11785,7 @@ comments in the source code.
 
 <dt><b>R-62725-03366-15515-38146-19465-29803-04047-11519</b></dt>
 <dd><p>PRAGMA database.index_info(index-name); This pragma returns one row for each key column in the named index.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-62740-39384-05078-12157-18759-37018-24032-16854</b></dt>
 <dd><p>To change from "full" or "incremental" back to "none" always requires running VACUUM even on an empty database.
@@ -11937,7 +11945,7 @@ comments in the source code.
 
 <dt><b>R-63500-32024-15857-14083-04222-06268-01932-07879</b></dt>
 <dd><p>PRAGMA database.index_list(table-name); This pragma returns one row for each index associated with the given table.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-63519-36751-50402-28921-52304-51801-25208-52249</b></dt>
 <dd><p>The load_extension(X,Y) function loads SQLite extensions out of the shared library file named X using the entry point Y.
@@ -11997,7 +12005,7 @@ comments in the source code.
 
 <dt><b>R-63761-48810-50941-29491-45550-32077-62798-10177</b></dt>
 <dd><p><img src="images/syntax/qualified-table-name.gif"><br>
-<i>(source <a href="syntax/qualified-table-name.html">syntax/qualified-table-name.html</a>)</i></p></dd>
+<i>(source <a href="syntax/qualified-table-name.html">syntax/qualified-table-name.html</a>, checked-by: tcl/indexedby.test)</i></p></dd>
 
 <dt><b>R-63806-59621-53713-38948-48550-43673-56726-15716</b></dt>
 <dd><p>If the resetFlg is true, then the highest instantaneous value is reset back down to the current value.
@@ -12117,7 +12125,7 @@ comments in the source code.
 
 <dt><b>R-64451-07163-52994-32419-24914-21127-60728-58807</b></dt>
 <dd><p>The soft_heap_limit pragma always returns the same integer that would be returned by the sqlite3_soft_heap_limit64(-1) C-language function.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: src/pragma.c, tcl/softheap1.test)</i></p></dd>
 
 <dt><b>R-64470-55820-31502-18212-19924-05102-35790-30152</b></dt>
 <dd><p>Calling this routine with an argument less than or equal to zero turns off all busy handlers.
@@ -12231,10 +12239,6 @@ comments in the source code.
 <dd><p>The sqlite3_backup object is created by a call to sqlite3_backup_init() and is destroyed by a call to sqlite3_backup_finish().
 <i>(source <a href="c3ref/backup.html">c3ref/backup.html</a>, checked-by: src/backup.c)</i></p></dd>
 
-<dt><b>R-64876-15663-33951-59728-40293-17011-49499-29219</b></dt>
-<dd><p>When memory allocation statistics are disabled, the following SQLite interfaces become non-operational: sqlite3_memory_used() sqlite3_memory_highwater() sqlite3_soft_heap_limit64() sqlite3_status()
-<i>(source <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>)</i></p></dd>
-
 <dt><b>R-64894-16593-62452-43919-42251-52509-45292-14622</b></dt>
 <dd><p>Thus if the BETWEEN term is not used as an index constraint and instead must be used to test input rows, the expr1 expression is only evaluated once.
 <i>(source <a href="optoverview.html">optoverview.html</a>)</i></p></dd>
@@ -12269,7 +12273,7 @@ comments in the source code.
 
 <dt><b>R-65019-08383-37218-08161-37100-03292-58035-06860</b></dt>
 <dd><p>The rank of the column within the table being indexed.
-<i>(source <a href="pragma.html">pragma.html</a>)</i></p></dd>
+<i>(source <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma.test)</i></p></dd>
 
 <dt><b>R-65033-28449-21866-26015-44447-32158-58356-59086</b></dt>
 <dd><p>The built-in BINARY collation compares strings byte by byte using the memcmp() function from the standard C library.

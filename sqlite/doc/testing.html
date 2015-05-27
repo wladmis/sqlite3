@@ -140,15 +140,15 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_8_6.html">version 3.8.6</a>,
+<p>As of <a href="releaselog/3_8_10.html">version 3.8.10</a>,
 the SQLite library consists of approximately
-89.9 KSLOC of C code.
+94.2 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-1017 times as much
+971 times as much
 test code and test scripts - 
-91493.0 KSLOC.</p>
+91515.5 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -190,11 +190,11 @@ SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 23.1 KSLOC 
+The TCL test harness itself consists of 23.2 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 825 files totaling 
-10.9MB in size.  There are
-33402 distinct test cases, but many of the test
+in 875 files totaling 
+11.3MB in size.  There are
+34851 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run millions of
 separate tests are performed.
@@ -209,10 +209,10 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-53.1 MB or 718.2 KSLOC
-of C code implementing 36618 distinct test cases.
+54.1 MB or 732.4 KSLOC
+of C code implementing 38394 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
-about 1.5 million different test
+about 1.4 million different test
 instances.  The cases that provide 100% branch test coverage constitute
 a subset of the total TH3 test suite.  A soak test
 prior to release does hundreds of millions of tests.
@@ -231,13 +231,19 @@ SLT runs 7.2 million queries comprising
 </p></li>
 </ol>
 
-<p>In addition to the three major test suites, there are a few separate
-programs that implement specialized tests.  The "speedtest1.c" program 
+<p>In addition to the three major test harnesses, there several other
+small programs that implement specialized tests.
+<ol>
+<li value="4">The "speedtest1.c" program 
 estimates the performance of SQLite under a typical workload.  
-The "mptester.c" program is a stress test for multiple processes 
+<li>The "mptester.c" program is a stress test for multiple processes 
 concurrently reading and writing a single database.
-And the "threadtest3.c" program is a stress test for multiple threads using
-SQLite simultaneously.</p>
+<li>The "threadtest3.c" program is a stress test for multiple threads using
+SQLite simultaneously.  
+<li>The "fuzzershell.c" program is used to
+run some <a href='#fuzztesting'>fuzz tests</a>.
+</ol>
+</p>
 
 <p>All of the tests above must run successfully, on multiple platforms
 and under multiple compile-time configurations,
@@ -246,7 +252,7 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-206.5 thousand test cases.
+140.2 thousand test cases.
 The veryquick tests include most tests other than the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
@@ -403,9 +409,39 @@ resulting prepared statement is run to make sure it gives a reasonable
 result.</p>
 
 <p>The SQL fuzz generator tests are part of the TCL test suite.
-During a full test run, about 119.6 
+During a full test run, about 116.5 
 thousand fuzz SQL statements are
 generated and tested.</p>
+
+<a name="aflfuzz"></a>
+
+<h4>4.1.1 SQL Fuzz Using The American Fuzzy Lop Fuzzer</h4>
+
+<p>The <a href="http://lcamtuf.coredump.cx/afl/">American Fuzzy Lop</a>
+or "AFL" fuzzer is a recent (circa 2014) innovation from Michal Zalewski.
+Unlike most other fuzzers that blindly generate random inputs, the AFL
+fuzzer instruments the program being tested (by editing the assembly-language
+output from the C compiler) and uses that instrumentation to detect when
+an input causes the program to do something different - to follow
+a new control path or loop a different number of times.  Inputs that provoke
+new behavior are retained and further mutated.  In this way, AFL is able
+to "discover" new behaviors of the program under test, including behaviors
+that were never envisioned by the designers.
+
+<p>AFL has proven remarkably adept at finding arcane bugs in SQLite.
+Most of the findings have been assert() statements where the conditional
+was false under obscure circumstances.  But AFL has also found
+a fair number of crash bugs in SQLite, and even a few cases where SQLite 
+computed incorrect results.
+
+<p>Because of its past success, AFL became a standard part of the testing
+strategy for SQLite beginning with <a href="releaselog/3_8_10.html">version 3.8.10</a>.  There is at least one
+instance of AFL running against SQLite continuously, 24/7/365, trying new
+randomly mutated inputs against SQLite at a rate of a few hundred to a few
+thousand per second.  Billions of inputs have been tried, but AFL's 
+instrumentation has narrowed them down to less than 20,000 test cases that
+cover all distinct behaviors.  Newly discovered test cases are periodically
+captured and added to the <a href="testing.html#tcl">TCL test suite</a>.
 
 <h3>4.2 Malformed Database Files</h3>
 
@@ -638,7 +674,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The SQLite source code contains 749
+<p>The SQLite source code contains 782
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -686,7 +722,7 @@ so the gcov-generated report is processed using
 some simple scripts to put it into a more human-friendly format.
 This entire process is automated using scripts, of course.
 
-<p>Note that running SQLite using gcov is not a test of SQLite &mdash;
+<p>Note that running SQLite with gcov is not a test of SQLite &mdash;
 it is a test of the test suite.  The gcov run does not test SQLite because
 the -fprofile-args and -ftest-coverage options cause the compiler to 
 generate different code.  
@@ -699,7 +735,7 @@ then the test program is recompiled using delivery compiler options
 and the test program is rerun.
 This second run is the actual test of SQLite.
 
-<p>It is important to verify that both the gcov test run 
+<p>It is important to verify that the gcov test run 
 and the second real test run both give the same output.  Any
 differences in output indicate either the use of undefined or
 indeterminate behavior in the SQLite code (and hence a bug), 
@@ -714,13 +750,23 @@ configuration.
 <h3>7.6 Experience with full test coverage</h3>
 
 <p>The developers of SQLite have found that full coverage testing is an
-extremely productive method for preventing the introduction of new bugs
-as the system evolves.  Because every single branch
+extremely effective method for locating and preventing bugs.
+Because every single branch
 instruction in SQLite core code is covered by test cases, the developers
-can be confident that changes they make in one part of the code
+can be confident that changes made in one part of the code
 do not have unintended consequences in other parts of the code.
-It would be extremely difficult maintain the quality of SQLite without such
-assurances.</p>
+The many new features and performance improvements that have been
+added to SQLite in recent years would not have been possible without
+the availability full-coverage testing.</p>
+
+<p>Maintaining 100% MC/DC is laborious and time-consuming.
+The level of effort needed to maintain full-coverage testing
+is probably not cost effective for a typical application.
+However, we think that full-coverage testing is justified for a
+<a href="mostdeployed.html">very widely deployed</a> infrastructure library
+like SQLite, and especially for a database library which by its very
+nature "remembers" past mistakes.
+
 
 <a name="dynamicanalysis"></a>
 
@@ -735,7 +781,7 @@ quality of SQLite.</p>
 
 <h3>8.1 Assert</h3>
 
-<p>The SQLite core contains 3986 <tt>assert()</tt>
+<p>The SQLite core contains 4197 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be

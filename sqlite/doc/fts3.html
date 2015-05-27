@@ -1213,7 +1213,7 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
   The matchinfo function is called with either one or two arguments. As for
   all auxiliary functions, the first argument must be the special 
   <a href="fts3.html#hiddencol">FTS hidden column</a>. The second argument, if it is specified, must be a text value
-  comprised only of the characters 'p', 'c', 'n', 'a', 'l', 's' and 'x'.
+  comprised only of the characters 'p', 'c', 'n', 'a', 'l', 's', 'x', and 'y'.
   If no second argument is explicitly supplied, it defaults to "pcx". The
   second argument is referred to as the "format string" below.
 
@@ -1257,20 +1257,56 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
           hits_all_rows  = array&#91;3 * (c + p*cols) + 1&#93;
           docs_with_hits = array&#91;3 * (c + p*cols) + 2&#93;
 </pre>
+  <tr style="text-align:left"><td><a name="matchinfo-y">y</a> <td style="white-space:nowrap"><i>cols</i> * <i>phrases</i> 
+    <td>
+      For each distinct combination of a phrase and table column, the
+      number of usable phrase matches that appear in the column. This is
+      usually identical to the first value in each set of three returned by the
+      'x' directive (see above). However, the number of hits reported by the
+      'y' directive is zero for any phrase that is part of a sub-expression
+      that does not match the current row. This makes a difference for
+      expressions that contain AND operators that are descendants of OR
+      operators. For example, consider the expression: 
+<pre>
+          a OR (b AND c)
+</pre>
+      and the document:
+<pre>
+          "a c d"
+</pre>
+      The 'x' directive would report a single hit for the phrases "a" and "c".
+      However, the 'y' directive reports the number of hits for "c" as zero, as
+      it is part of a sub-expression that does not match the document - (b AND c).
+      For queries that do not contain AND operators descended from OR
+      operators, the result values returned by 'y' are always the same as
+      those returned by 'x'.
 
-  <tr style="text-align:left"><td>n <td>1 <td>The number of rows in the FTS4 table. This value is
+<p style="margin-left:0;margin-right:0">
+      The first value in the array of integer values corresponds to the
+      leftmost column of the table (column 0) and the first phrase in the query
+      (phrase 0). The values corresponding to other column/phrase combinations
+      may be located using the following formula:
+
+<pre>
+          hits_for_phrase_p_column_c  = array&#91;c + p*cols&#93;
+</pre>
+      For queries that use OR expressions, or those that use LIMIT or return
+      many rows, the 'y' matchinfo option may incur significantly less overhead
+      than 'x'.
+
+  <tr style="text-align:left;background-color:#DDDDDD"><td>n <td>1 <td>The number of rows in the FTS4 table. This value is
     only available when querying FTS4 tables, not FTS3.
-  <tr style="text-align:left;background-color:#DDDDDD"><td>a <td><i>cols</i> <td>For each column, the average number of
+  <tr style="text-align:left"><td>a <td><i>cols</i> <td>For each column, the average number of
     tokens in the text values stored in the column (considering all rows in
     the FTS4 table). This value is only available when querying FTS4 tables,
     not FTS3.  
-  <tr style="text-align:left"><td>l <td><i>cols</i> <td>
+  <tr style="text-align:left;background-color:#DDDDDD"><td>l <td><i>cols</i> <td>
     For each column, the length of the value stored in the current row of the
     FTS4 table, in tokens.  This value is only available when querying
     FTS4 tables, not FTS3. And only if the "matchinfo=fts3" directive was not
     specified as part of the "CREATE VIRTUAL TABLE" statement used to create
     the FTS4 table.
-  <tr style="text-align:left;background-color:#DDDDDD"><td>s <td><i>cols</i> <td>For each column, the length of the longest 
+  <tr style="text-align:left"><td>s <td><i>cols</i> <td>For each column, the length of the longest 
     subsequence of phrase matches that the column value has in common
     with the query text. For example, if a table column contains the text
     'a b c d e' and the query is 'a c "d e"', then the length of the longest

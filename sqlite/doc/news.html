@@ -132,10 +132,40 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2015_04_08"></a><h3>2015-04-08 - Release 3.8.9</h3><blockquote>
+<a name="2015_05_20"></a><h3>2015-05-20 - Release 3.8.10.2</h3><blockquote>
+<p>Yikes!  Index corruption after a sequence of valid SQL statements!
+<p>It has been many years since anything like 
+   <a href="https://www.sqlite.org/src/info/34cd55d6">this bug</a> has snuck into
+   an official SQLite release.  But for the pasts seven months
+   (<a href="releaselog/3_8_7.html">version 3.8.7</a> through <a href="releaselog/3_8_10_1.html">version 3.8.10.1</a>)
+   if you do an INSERT into a carefully
+   crafted schema in which there are two nested triggers that convert
+   an index key value from TEXT to INTEGER and then back
+   to TEXT again, the INTEGER value might get inserted as the index
+   key instead of the correct TEXT, resulting in index corruption.
+   This patch release adds a single line of code to fix the problem.
+<p>If you do actually encounter this problem, running <a href="lang_reindex.html">REINDEX</a> on the
+   damaged indexes will clear it.
+</blockquote><hr width="50%"><a name="2015_05_09"></a><h3>2015-05-09 - Release 3.8.10.1</h3><blockquote>
+<p>The 3.8.10 release did not add the new <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
+   compile-time option to the <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> interface.
+   This patch release fixes that omission.  And while we are at it,
+   the associated <a href="dbstat.html">dbstat virtual table</a> was enhanced slightly and a
+   harmless compiler warning was fixed.</p>
+
+<p>   <p>There is no reason to upgrade from version 3.8.10 unless you are
+   using the new <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> compile-time option.
+</blockquote><hr width="50%"><a name="2015_05_07"></a><h3>2015-05-07 - Release 3.8.10</h3><blockquote>
+<p>SQLite version 3.8.10 is a regularly scheduled maintenance release.
+   This release features performance improvements, fixes to several
+   arcane bugs found by the AFL fuzzer, the new "sqldiff.exe" command-line
+   utility, improvements to the documentation, and other enhancements.
+   See the <a href='releaselog/3_8_10.html'>release notes</a> for 
+   additional information.
+</blockquote><hr width="50%"><a name="2015_04_08"></a><h3>2015-04-08 - Release 3.8.9</h3><blockquote>
 <p>SQLite version 3.8.9 is a regularly scheduled maintenance release.
    New features in this release include the 
-   <a href="pragma.html#pragma_index_xinfo">PRAGMA index_xinfo</a> command, the <font color="red">sqlite3_status64()</font> interface,
+   <a href="pragma.html#pragma_index_xinfo">PRAGMA index_xinfo</a> command, the <a href="c3ref/status.html">sqlite3_status64()</a> interface,
    and the ".dbinfo" command of the <a href="cli.html">command-line shell</a>.
    See the <a href='releaselog/3_8_9.html'>release notes</a> for
    additional information.
@@ -193,7 +223,7 @@ a:visited { color: #734559 }
    the previous release and from <a href="releaselog/3_8_7.html">version 3.8.7</a> are minimal.</p>
 
 <p><p>This release fixes adds in a mutex that is required by the changes of
-   the 3.8.7.3 patch but was accidently omitted.  The mutex was not required
+   the 3.8.7.3 patch but was accidentally omitted.  The mutex was not required
    by any of the internal SQLite tests, but Firefox crashes without it.
    Test cases have been added to ensure that mutex is never again missed.
 </blockquote><hr width="50%"><a name="2014_12_06"></a><h3>2014-12-06 - Release 3.8.7.3</h3><blockquote>

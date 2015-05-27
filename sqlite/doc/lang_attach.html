@@ -207,7 +207,10 @@ a:visited { color: #734559 }
 
 <p> The ATTACH DATABASE statement adds another database 
 file to the current <a href="c3ref/sqlite3.html">database connection</a>. 
-The filename for the database to be attached is the value of
+Database files that were previously attached can be removed using
+the <a href="lang_detach.html">DETACH DATABASE</a> command.
+
+<p>The filename for the database to be attached is the value of
 the expression that occurs before the AS keyword.
 The filename of the database follows the same semantics as the
 filename argument to <a href="c3ref/open.html">sqlite3_open()</a> and <a href="c3ref/open.html">sqlite3_open_v2()</a>; the

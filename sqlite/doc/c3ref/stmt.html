@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQL Statement Object</title>
+<title>Prepared Statement Object</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -128,28 +128,87 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>SQL Statement Object</h2><blockquote><pre>typedef struct sqlite3_stmt sqlite3_stmt;
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Prepared Statement Object</h2><blockquote><pre>typedef struct sqlite3_stmt sqlite3_stmt;
 </pre></blockquote><p>
-An instance of this object represents a single SQL statement.
-This object is variously known as a "prepared statement" or a
-"compiled SQL statement" or simply as a "statement".</p>
+An instance of this object represents a single SQL statement that
+has been compiled into binary form and is ready to be evaluated.</p>
 
-<p>The life of a statement object goes something like this:</p>
+<p>Think of each SQL statement as a separate computer program.  The
+original SQL text is source code.  A prepared statement object
+is the compiled object code.  All SQL must be converted into a
+prepared statement before it can be run.</p>
+
+<p>The life-cycle of a prepared statement object usually goes like this:</p>
 
 <p><ol>
-<li> Create the object using <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or a related
-function.
-<li> Bind values to <a href="../c3ref/bind_blob.html">host parameters</a> using the sqlite3_bind_*()
+<li> Create the prepared statement object using <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>.
+<li> Bind values to <a href="../lang_expr.html#varparam">parameters</a> using the sqlite3_bind_*()
 interfaces.
 <li> Run the SQL by calling <a href="../c3ref/step.html">sqlite3_step()</a> one or more times.
-<li> Reset the statement using <a href="../c3ref/reset.html">sqlite3_reset()</a> then go back
+<li> Reset the prepared statement using <a href="../c3ref/reset.html">sqlite3_reset()</a> then go back
 to step 2.  Do this zero or more times.
 <li> Destroy the object using <a href="../c3ref/finalize.html">sqlite3_finalize()</a>.
-</ol></p>
-
-<p>Refer to documentation on individual methods above for additional
-information.
-</p><p>See also lists of
+</ol>
+</p><p>Constructors:
+ <a href="../c3ref/prepare.html">sqlite3_prepare()</a>,
+<a href="../c3ref/prepare.html">sqlite3_prepare16()</a>,
+<a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>,
+<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a></p>
+<p>Destructor: <a href="../c3ref/finalize.html">sqlite3_finalize()</a></p>
+<table width="100%" cellpadding="0"><tr>
+<td colspan=3>Methods:</td></tr><tr>
+<td valign="top"><ul><li><a href="../c3ref/bind_blob.html">sqlite3_bind_blob</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_blob64</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_double</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_int</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_int64</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_null</a></li>
+<li><a href="../c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count</a></li>
+<li><a href="../c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index</a></li>
+<li><a href="../c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_text</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_text16</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_text64</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_value</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_zeroblob</a></li>
+<li><a href="../c3ref/clear_bindings.html">sqlite3_clear_bindings</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_blob</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="../c3ref/column_blob.html">sqlite3_column_bytes</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_bytes16</a></li>
+<li><a href="../c3ref/column_count.html">sqlite3_column_count</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_database_name</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_database_name16</a></li>
+<li><a href="../c3ref/column_decltype.html">sqlite3_column_decltype</a></li>
+<li><a href="../c3ref/column_decltype.html">sqlite3_column_decltype16</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_double</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_int</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_int64</a></li>
+<li><a href="../c3ref/column_name.html">sqlite3_column_name</a></li>
+<li><a href="../c3ref/column_name.html">sqlite3_column_name16</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_origin_name</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_origin_name16</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_table_name</a></li>
+<li><a href="../c3ref/column_database_name.html">sqlite3_column_table_name16</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="../c3ref/column_blob.html">sqlite3_column_text</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_text16</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_type</a></li>
+<li><a href="../c3ref/column_blob.html">sqlite3_column_value</a></li>
+<li><a href="../c3ref/data_count.html">sqlite3_data_count</a></li>
+<li><a href="../c3ref/db_handle.html">sqlite3_db_handle</a></li>
+<li><a href="../c3ref/reset.html">sqlite3_reset</a></li>
+<li><a href="../c3ref/sql.html">sqlite3_sql</a></li>
+<li><a href="../c3ref/step.html">sqlite3_step</a></li>
+<li><a href="../c3ref/stmt_busy.html">sqlite3_stmt_busy</a></li>
+<li><a href="../c3ref/stmt_readonly.html">sqlite3_stmt_readonly</a></li>
+<li><a href="../c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus</a></li>
+<li><a href="../c3ref/stmt_scanstatus_reset.html">sqlite3_stmt_scanstatus_reset</a></li>
+<li><a href="../c3ref/stmt_status.html">sqlite3_stmt_status</a></li>
+</ul></td>
+</tr></table>
+</p>
+<p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>

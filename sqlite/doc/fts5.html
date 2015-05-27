@@ -139,7 +139,7 @@ a:visited { color: #734559 }
     </div>
     <div style="font-size:1.5em;margin:1em;color:#044a64">
       Table Of Contents</div>
-    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Overview of FTS5</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Overview of Functionality</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Differences between FTS5 and FTS3/4</a></div><div style="margin-left:6ex"><a href="#section_2">2. Full-text Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_3">3. FTS5 Table Creation and Initialization</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. Prefix Indexes</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Tokenizers</a></div><div style="margin-left:18ex"><a href="#section_3_2_1">3.2.1. Unicode61 Tokenizer</a></div><div style="margin-left:18ex"><a href="#section_3_2_2">3.2.2. Ascii Tokenizer</a></div><div style="margin-left:18ex"><a href="#section_3_2_3">3.2.3. Porter Tokenizer</a></div><div style="margin-left:12ex"><a href="#section_3_3">3.3. External Content and Contentless Tables</a></div><div style="margin-left:18ex"><a href="#section_3_3_1">3.3.1. Contentless Tables</a></div><div style="margin-left:18ex"><a href="#section_3_3_2">3.3.2. External Content Tables</a></div><div style="margin-left:6ex"><a href="#section_4">4.  Auxiliary Functions </a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. Built-in Auxiliary Functions</a></div><div style="margin-left:18ex"><a href="#section_4_1_1">4.1.1. The bm25() function</a></div><div style="margin-left:18ex"><a href="#section_4_1_2">4.1.2. The highlight() function</a></div><div style="margin-left:18ex"><a href="#section_4_1_3">4.1.3. The snippet() function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. Sorting by Auxiliary Function Results</a></div><div style="margin-left:6ex"><a href="#section_5">5. Special INSERT Commands</a></div><div style="margin-left:12ex"><a href="#section_5_1">5.1. The 'automerge' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_2">5.2. The 'crisismerge' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_3">5.3. The 'delete' Command</a></div><div style="margin-left:12ex"><a href="#section_5_4">5.4. The 'delete-all' Command</a></div><div style="margin-left:12ex"><a href="#section_5_5">5.5. The 'integrity-check' Command</a></div><div style="margin-left:12ex"><a href="#section_5_6">5.6. The 'optimize' Command</a></div><div style="margin-left:12ex"><a href="#section_5_7">5.7. The 'pgsz' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_8">5.8. The 'rank' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_9">5.9. The 'rebuild' Command</a></div><div style="margin-left:6ex"><a href="#section_6">6. Extending FTS5</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. Custom Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. Custom Auxiliary Functions</a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1. Custom Auxiliary Functions API Reference</a></div> </div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Overview of FTS5</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Overview of Functionality</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Differences between FTS5 and FTS3/4</a></div><div style="margin-left:6ex"><a href="#section_2">2. Full-text Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_3">3. FTS5 Table Creation and Initialization</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. The UNINDEXED column option</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Prefix Indexes</a></div><div style="margin-left:12ex"><a href="#section_3_3">3.3. Tokenizers</a></div><div style="margin-left:18ex"><a href="#section_3_3_1">3.3.1. Unicode61 Tokenizer</a></div><div style="margin-left:18ex"><a href="#section_3_3_2">3.3.2. Ascii Tokenizer</a></div><div style="margin-left:18ex"><a href="#section_3_3_3">3.3.3. Porter Tokenizer</a></div><div style="margin-left:12ex"><a href="#section_3_4">3.4. External Content and Contentless Tables</a></div><div style="margin-left:18ex"><a href="#section_3_4_1">3.4.1. Contentless Tables</a></div><div style="margin-left:18ex"><a href="#section_3_4_2">3.4.2. External Content Tables</a></div><div style="margin-left:6ex"><a href="#section_4">4.  Auxiliary Functions </a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. Built-in Auxiliary Functions</a></div><div style="margin-left:18ex"><a href="#section_4_1_1">4.1.1. The bm25() function</a></div><div style="margin-left:18ex"><a href="#section_4_1_2">4.1.2. The highlight() function</a></div><div style="margin-left:18ex"><a href="#section_4_1_3">4.1.3. The snippet() function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. Sorting by Auxiliary Function Results</a></div><div style="margin-left:6ex"><a href="#section_5">5. Special INSERT Commands</a></div><div style="margin-left:12ex"><a href="#section_5_1">5.1. The 'automerge' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_2">5.2. The 'crisismerge' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_3">5.3. The 'delete' Command</a></div><div style="margin-left:12ex"><a href="#section_5_4">5.4. The 'delete-all' Command</a></div><div style="margin-left:12ex"><a href="#section_5_5">5.5. The 'integrity-check' Command</a></div><div style="margin-left:12ex"><a href="#section_5_6">5.6. The 'optimize' Command</a></div><div style="margin-left:12ex"><a href="#section_5_7">5.7. The 'pgsz' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_8">5.8. The 'rank' Configuration Option</a></div><div style="margin-left:12ex"><a href="#section_5_9">5.9. The 'rebuild' Command</a></div><div style="margin-left:6ex"><a href="#section_6">6. Extending FTS5</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. Custom Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. Custom Auxiliary Functions</a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1. Custom Auxiliary Functions API Reference</a></div> </div>
     <div class=startsearch></div>
   
 
@@ -219,7 +219,7 @@ regarding configuration of the special "rank" column, are
 <a href="fts5.html#section_4">available below</a>. <a href="fts5.html#section_6_2">Custom auxiliary functions</a> may also be implemented in C and registered with
 FTS5, just as custom SQL functions may be registered with the SQLite core.
 
-<p> As well as seaching for all rows that contain a term, FTS5 allows 
+<p> As well as searching for all rows that contain a term, FTS5 allows 
 the user to search for rows that contain:
 
 <ul>
@@ -359,7 +359,7 @@ matches a document if the document contains at least one clump of tokens that:
 <ol> 
   <li> contains at least one instance of each phrase, and 
   <li> for which the number of tokens between the end of the first phrase 
-       and the beginning of the last phrase in the clump is less than <i>N</i>.
+       and the beginning of the last phrase in the clump is less than or equal to <i>N</i>.
 </ol>
 
 <p>For example:
@@ -447,24 +447,25 @@ parenthesis. For example:
 <h1 id="section_3">3. FTS5 Table Creation and Initialization</h1>
 
 <p>Each argument specified as part of a "CREATE VIRTUAL TABLE ... USING fts5 
-..." statement is either a column name or a configuration option. A column
-name consists of a single FTS5 bareword or a single string literal quoted
-in any manner acceptable to SQLite. A configuration option consists of an
-FTS5 bareword - the option name - followed by an "=" character, followed by
-the option value. The option value is specified using either a single FTS5 
-bareword or a string literal, again quoted in any manner acceptable to the
-SQLite core. Anything else is a syntax error.
+..." statement is either a column declaration or a configuration option. A
+<b>column declaration</b> consists of one or more whitespace separated FTS5
+barewords or string literals quoted in any manner acceptable to SQLite.
 
-<p>It is an error to attempt to name an fts5 table column "rowid" or "rank",
-or to assign the same name to a column as is used by the table itself. This 
-is not supported.
+<p>The first string or bareword in a column declaration is the column name. It
+is an error to attempt to name an fts5 table column "rowid" or "rank", or to
+assign the same name to a column as is used by the table itself. This is not
+supported.
 
-<p>It is also an error to add a type, constraint specification or PRIMARY KEY
-clause to a column name in an FTS5 CREATE VIRTUAL TABLE statement.
+<p>Each subsequent string or bareword in a column declaration is a column
+option that modifies the behaviour of that column. Column options are
+case-independent. Unlike the SQLite core, FTS5 considers unrecognized column
+options to be errors. Currently, the only option recognized is 
+<a href="fts5.html#section_3_1">"UNINDEXED" (see below)</a>.
 
-<p> A configuration option consists of an FTS5 bareword - the option name -
-followed by an "=" character, followed by a either an FTS5 bareword or a
-string literal. For example:
+<p>A <b>configuration option</b> consists of an FTS5 bareword - the option name -
+followed by an "=" character, followed by the option value. The option value is
+specified using either a single FTS5 bareword or a string literal, again quoted
+in any manner acceptable to the SQLite core. For example:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE mail USING fts5(sender, title, body, tokenize = 'porter ascii');
 </pre></table></div>
@@ -472,16 +473,27 @@ string literal. For example:
 <p> There are currently the following configuration options:
 
 <ul>
-  <li> The "tokenize" option, used to configure a <a href="fts5.html#section_3_2">custom tokenizer</a>.
-  <li> The "prefix" option, used to add <a href="fts5.html#section_3_1">prefix indexes</a>
+  <li> The "tokenize" option, used to configure a <a href="fts5.html#section_3_3">custom tokenizer</a>.
+  <li> The "prefix" option, used to add <a href="fts5.html#section_3_2">prefix indexes</a>
        to an FTS5 table.
   <li> The "content" option, used to make the FTS5 table an 
-       <a href="fts5.html#section_3_3">external content or contentless table</a>.
+       <a href="fts5.html#section_3_4">external content or contentless table</a>.
   <li> The "content_rowid" option, used to set the rowid field of an 
-  <a href="fts5.html#section_3_3_2">external content table</a>.
+  <a href="fts5.html#section_3_4_2">external content table</a>.
 </ul>
 
-<h2 id="section_3_1">3.1. Prefix Indexes</h2>
+<h2 id="section_3_1">3.1. The UNINDEXED column option</h2>
+
+<p>The contents of columns qualified with the UNINDEXED column option are not
+added to the FTS index. This means that for the purposes of MATCH queries and
+<a href="fts5.html#section_4">FTS5 auxiliary functions</a>, the column contains no matchable tokens. 
+
+<p>For example, to avoid adding the contents of the "uuid" field to the FTS
+index:
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE VIRTUAL TABLE customers USING fts5(name, addr, uuid UNINDEXED);
+</pre></table></div>
+
+<h2 id="section_3_2">3.2. Prefix Indexes</h2>
 
 <p> By default, FTS5 maintains a single index recording the location of each
 token instance within the document set. This means that querying for complete
@@ -507,7 +519,7 @@ CREATE VIRTUAL TABLE ft USING fts5(a, b, prefix='2 3');
 CREATE VIRTUAL TABLE ft USING fts5(a, b, prefix=2, prefix=3);
 </pre></table></div>
 
-<h2 id="section_3_2">3.2. Tokenizers</h2>
+<h2 id="section_3_3">3.3. Tokenizers</h2>
 
 <p> The CREATE VIRTUAL TABLE "tokenize" option is used to configure the
 specific tokenizer used by the FTS5 table. The option argument must be either
@@ -551,7 +563,7 @@ sections:
 
 <p> It is also possible to create custom tokenizers for FTS5. The API for doing so is <a href="fts5.html#section_6_1">described here</a>.
 
-<h3 id="section_3_2_1">3.2.1. Unicode61 Tokenizer</h3>
+<h3 id="section_3_3_1">3.3.1. Unicode61 Tokenizer</h3>
 
 <p> The unicode tokenizer classifies all unicode characters as either 
 "separator" or "token" characters. By default all space and punctuation
@@ -598,7 +610,7 @@ CREATE VIRTUAL TABLE ft USING fts5(a, b,
 );
 </pre></table></div>
 
-<h3 id="section_3_2_2">3.2.2. Ascii Tokenizer</h3>
+<h3 id="section_3_3_2">3.3.2. Ascii Tokenizer</h3>
 
 <p> The Ascii tokenizer is similar to the Unicode61 tokenizer, except that:
 
@@ -622,7 +634,7 @@ CREATE VIRTUAL TABLE ft USING fts5(a, b,
 );
 </pre></table></div>
 
-<h3 id="section_3_2_3">3.2.3. Porter Tokenizer</h3>
+<h3 id="section_3_3_3">3.3.3. Porter Tokenizer</h3>
 
 <p> The porter tokenizer is a wrapper tokenizer. It takes the output of some
 other tokenizer and applies the 
@@ -647,7 +659,7 @@ CREATE VIRTUAL TABLE t1 USING fts5(x, tokenize = 'porter unicode61');
 CREATE VIRTUAL TABLE t1 USING fts5(x, tokenize = 'porter unicode61 remove_diacritics 1');
 </pre></table></div>
 
-<h2 id="section_3_3">3.3. External Content and Contentless Tables</h2>
+<h2 id="section_3_4">3.4. External Content and Contentless Tables</h2>
 
 <p>
 Normally, when a row is inserted into an FTS5 table, as well as the various
@@ -677,7 +689,7 @@ There are two ways to use the "content" option:
        unpredictable.  
 </ul>
 
-<h3 id="section_3_3_1">3.3.1. Contentless Tables</h3>
+<h3 id="section_3_4_1">3.4.1. Contentless Tables</h3>
 
 <p> A contentless FTS5 table is created by setting the "content" option to
 an empty string. For example:
@@ -692,7 +704,7 @@ Rows may be deleted from a contentless table using an <a href="fts5.html#section
 <p> Attempting to read any column value except the rowid from a contentless
 FTS5 table returns an SQL NULL value.
 
-<h3 id="section_3_3_2">3.3.2. External Content Tables</h3>
+<h3 id="section_3_4_2">3.4.2. External Content Tables</h3>
 
 <p> An external content FTS5 table is created by setting the content 
 option to the name of a table, virtual table or view (hereafter the "content
@@ -700,22 +712,27 @@ table") within the same database. Whenever column values are required by
 FTS5, it queries the content table as follows, with the rowid of the row
 for which values are required bound to the SQL variable:
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT * FROM &lt;content&gt; WHERE &lt;content_rowid&gt; = ?;
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT &lt;content_rowid&gt;, &lt;cols&gt; FROM &lt;content&gt; WHERE &lt;content_rowid&gt; = ?;
 </pre></table></div>
 
 <p> In the above, &lt;content&gt; is replaced by the name of the content table.
 By default, &lt;content_rowid&gt; is replaced by the literal text "rowid". Or,
 if the "content_rowid" option is set within the CREATE VIRTUAL TABLE statement,
-by the value of that option.
+by the value of that option. &lt;cols&gt; is replaced by a comma-separated list
+of the FTS5 table column names. For example:
 
-<p> The "*" in the above query must expand to a set of columns consisting of
-the &lt;column_rowid&gt; column followed by each indexed column, in the same
-order as they are present in the external content fts5 table.
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- If the database schema is: </i>
+CREATE TABLE tbl (a, b, c, d INTEGER PRIMARY KEY);
+CREATE TABLE fts USING fts5(a, c, content=tbl, content_rowid=d);
+
+<i>-- Fts5 may issue queries such as:</i>
+SELECT d, a, c FROM tbl WHERE d = ?;
+</pre></table></div>
 
 <p> The content table may also be queried as follows:
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT * FROM &lt;content&gt; ORDER BY &lt;content_rowid&gt; ASC;
-SELECT * FROM &lt;content&gt; ORDER BY &lt;content_rowid&gt; DESC;
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT &lt;content_rowid&gt;, &lt;cols&gt; FROM &lt;content&gt; ORDER BY &lt;content_rowid&gt; ASC;
+SELECT &lt;content_rowid&gt;, &lt;cols&gt; FROM &lt;content&gt; ORDER BY &lt;content_rowid&gt; DESC;
 </pre></table></div>
 
 <p> It is still the responsibility of the user to ensure that the contents of
@@ -1033,7 +1050,7 @@ setting it to the default value (16). It is an error to attempt to set the
 
 <h2 id="section_5_3">5.3. The 'delete' Command</h2>
 
-<p> This command is only available with <a href="fts5.html#section_3_3_2">external content</a> and <a href="fts5.html#section_3_3_1">contentless</a> tables. It
+<p> This command is only available with <a href="fts5.html#section_3_4_2">external content</a> and <a href="fts5.html#section_3_4_1">contentless</a> tables. It
 is used to delete the index entries associated with a single row from the
 full-text index. This command and the <a href="fts5.html#section_5_4">delete-all</a>
 command are the only ways to remove entries from the full-text index of a
@@ -1069,7 +1086,7 @@ unpredictable state, making future query results unreliable.
 
 <h2 id="section_5_4">5.4. The 'delete-all' Command</h2>
 
-<p> This command is only available with <a href="fts5.html#section_3_3_2">external content</a> and <a href="fts5.html#section_3_3_1">contentless</a> tables. It
+<p> This command is only available with <a href="fts5.html#section_3_4_2">external content</a> and <a href="fts5.html#section_3_4_1">contentless</a> tables. It
 deletes all entries from the full-text index.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">INSERT INTO ft(ft) VALUES('delete-all');
@@ -1078,8 +1095,8 @@ deletes all entries from the full-text index.
 <h2 id="section_5_5">5.5. The 'integrity-check' Command</h2>
 
 <p> This command is used to verify that the full-text index is consistent 
-with the contents of the FTS5 table or <a href="fts5.html#section_3_3_2">content 
-table</a>. It is not available with <a href="fts5.html#section_3_3_1">contentless tables</a>.
+with the contents of the FTS5 table or <a href="fts5.html#section_3_4_2">content 
+table</a>. It is not available with <a href="fts5.html#section_3_4_1">contentless tables</a>.
 
 <p>The integrity-check command is invoked by inserting the text value
 'integrity-check' into the special column with the same name as the FTS5
@@ -1096,7 +1113,7 @@ discrepancy is found, it fails with an <a href="rescode.html#corrupt_vtab">SQLIT
 
 <p>This command merges all individual b-trees that currently make up the
 full-text index into a single large b-tree structure. This ensures that the
-full-text index consumes the mimimum space within the database and is in the
+full-text index consumes the minimum space within the database and is in the
 fastest form to query.
 
 <p>Refer to the documentation for the <a href="fts5.html#section_5_1">FTS5 automerge option</a> for more details
@@ -1133,8 +1150,8 @@ above. For example:
 <h2 id="section_5_9">5.9. The 'rebuild' Command</h2>
 
 <p> This command first deletes the entire full-text index, then rebuilds it
-based on the contents of the table or <a href="fts5.html#section_3_3_2">content
-table</a>.  It is not available with <a href="fts5.html#section_3_3_1">contentless
+based on the contents of the table or <a href="fts5.html#section_3_4_2">content
+table</a>.  It is not available with <a href="fts5.html#section_3_4_1">contentless
 tables</a>.
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">INSERT INTO ft(ft) VALUES('rebuild');
@@ -1188,37 +1205,7 @@ retrieving existing tokenizer. The latter is intended to facilitate the
 implementation of "tokenizer wrappers" similar to the built-in
 porter tokenizer.
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">typedef struct fts5_api fts5_api;
-struct fts5_api {
-  int iVersion;                   <i>/* Currently always set to 1 */</i>
-
-  <i>/* Create a new tokenizer */</i>
-  int (*xCreateTokenizer)(
-    fts5_api *pApi,
-    const char *zName,
-    void *pContext,
-    fts5_tokenizer *pTokenizer,
-    void (*xDestroy)(void*)
-  );
-
-  <i>/* Find an existing tokenizer */</i>
-  int (*xFindTokenizer)(
-    fts5_api *pApi,
-    const char *zName,
-    void **ppContext,
-    fts5_tokenizer *pTokenizer
-  );
-
-  <i>/* Create a new auxiliary function */</i>
-  int (*xCreateFunction)(
-    fts5_api *pApi,
-    const char *zName,
-    void *pContext,
-    fts5_extension_function xFunction,
-    void (*xDestroy)(void*)
-  );
-};
-</pre></table></div>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"></pre></table></div>
 
 <p> To invoke a method of the fts5_api object, the fts5_api pointer itself
 should be passed as the methods first argument followed by the other, method
@@ -1237,80 +1224,12 @@ functions: a tokenizer constructor (xCreate), a destructor (xDelete) and a
 function to do the actual tokenization (xTokenize). The type of each
 function is as for the member variables of the fts5_tokenizer struct:
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">typedef struct Fts5Tokenizer Fts5Tokenizer;
-typedef struct fts5_tokenizer fts5_tokenizer;
-struct fts5_tokenizer {
-  int (*xCreate)(void*, const char **azArg, int nArg, Fts5Tokenizer **ppOut);
-  void (*xDelete)(Fts5Tokenizer*);
-  int (*xTokenize)(Fts5Tokenizer*, 
-      void *pCtx,
-      const char *pText, int nText, 
-      int (*xToken)(
-        void *pCtx,         <i>/* Copy of 2nd argument to xTokenize() */</i>
-        const char *pToken, <i>/* Pointer to buffer containing token */</i>
-        int nToken,         <i>/* Size of token in bytes */</i>
-        int iStart,         <i>/* Byte offset of token within input text */</i>
-        int iEnd            <i>/* Byte offset of end of token within input text */</i>
-      )
-  );
-};
-</pre></table></div>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"></pre></table></div>
 
 <p> When an FTS5 table uses the custom tokenizer, the FTS5 core calls xCreate()
 once to create a tokenizer, then xTokenize() zero or more times to tokenize
 strings, then xDelete() to free any resources allocated by xCreate(). More
 specifically:
-
-<dl>
-<dt><b>xCreate:</b></dt><dd><p style="margin-top:0">
-   This function is used to allocate and inititalize a tokenizer instance.
-   A tokenizer instance is required to actually tokenize text.
-<p>
-   The first argument passed to this function is a copy of the (void*)
-   pointer provided by the application when the fts5_tokenizer object
-   was registered with FTS5 (the third argument to xCreateTokenizer()). 
-   The second and third arguments are an array of nul-terminated strings
-   containing the tokenizer arguments, if any, specified following the
-   tokenizer name as part of the CREATE VIRTUAL TABLE statement used
-   to create the FTS5 table.
-<p>
-   The final argument is an output variable. If successful, (*ppOut) 
-   should be set to point to the new tokenizer handle and SQLITE_OK
-   returned. If an error occurs, some value other than SQLITE_OK should
-   be returned. In this case, fts5 assumes that the final value of *ppOut 
-   is undefined.
-<p>
-<dt><b> xDelete:</b></dt><dd><p style="margin-top:0">
-   This function is invoked to delete a tokenizer handle previously
-   allocated using xCreate(). Fts5 guarantees that this function will
-   be invoked exactly once for each successful call to xCreate().
-<p>
-<dt><b> xTokenize:</b></dt><dd><p style="margin-top:0">
-   This function is expected to tokenize the nText byte string indicated 
-   by argument pText. pText may not be nul-terminated. The first argument
-   passed to this function is a pointer to an Fts5Tokenizer object returned 
-   by an earlier call to xCreate().
-<p>
-   For each token in the input string, the supplied callback xToken() must
-   be invoked. The first argument to it should be a copy of the pointer
-   passed as the second argument to xTokenize(). The next two arguments
-   are a pointer to a buffer containing the token text, and the size of
-   the token in bytes. The 4th and 5th arguments are the byte offsets of
-   the first byte of and first byte immediately following the text from 
-   which the token is derived within the input.
-<p>
-   FTS5 assumes the xToken() callback is invoked for each token in the 
-   order that they occur within the input text.
-<p>
-   If an xToken() callback returns any value other than SQLITE_OK, then
-   the tokenization should be abandoned and the xTokenize() method should
-   immediately return a copy of the xToken() return value. Or, if the
-   input buffer is exhausted, xTokenize() should return SQLITE_OK. Finally,
-   if an error occurs with the xTokenize() implementation itself, it
-   may abandon the tokenization and return any error code other than
-   SQLITE_OK or SQLITE_DONE.
-<p>
-</dl>
 
 
 
@@ -1320,17 +1239,7 @@ specifically:
 <a href="c3ref/create_function.html">scalar SQL function</a>. The implementation
 should be a C function of type fts5_extension_function, defined as follows:
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">typedef struct Fts5ExtensionApi Fts5ExtensionApi;
-typedef struct Fts5Context Fts5Context;
-
-typedef void (*fts5_extension_function)(
-  const Fts5ExtensionApi *pApi,   <i>/* API offered by current FTS version */</i>
-  Fts5Context *pFts,              <i>/* First arg to pass to pApi functions */</i>
-  sqlite3_context *pCtx,          <i>/* Context for returning result/error */</i>
-  int nVal,                       <i>/* Number of values in apVal[] array */</i>
-  sqlite3_value **apVal           <i>/* Array of trailing arguments */</i>
-);
-</pre></table></div>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"></pre></table></div>
 
 <p> The implementation is registered with the FTS5 module by calling the
 xCreateFunction() method of the fts5_api object. If there is already an
@@ -1381,208 +1290,7 @@ file of the source code.
 
 <h3 id="section_6_2_1">6.2.1. Custom Auxiliary Functions API Reference</h3>
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">struct Fts5ExtensionApi {
-  int iVersion;                   <i>/* Currently always set to 1 */</i>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"></pre></table></div>
 
-  void *(*<a href="#xUserData">xUserData</a>)(Fts5Context*);
-
-  int (*<a href="#xColumnCount">xColumnCount</a>)(Fts5Context*);
-  int (*<a href="#xRowCount">xRowCount</a>)(Fts5Context*, sqlite3_int64 *pnRow);
-  int (*<a href="#xColumnTotalSize">xColumnTotalSize</a>)(Fts5Context*, int iCol, sqlite3_int64 *pnToken);
-
-  int (*<a href="#xTokenize">xTokenize</a>)(Fts5Context*, 
-    const char *pText, int nText, <i>/* Text to tokenize */</i>
-    void *pCtx,                   <i>/* Context passed to xToken() */</i>
-    int (*xToken)(void*, const char*, int, int, int)       <i>/* Callback */</i>
-  );
-
-  int (*<a href="#xPhraseCount">xPhraseCount</a>)(Fts5Context*);
-  int (*<a href="#xPhraseSize">xPhraseSize</a>)(Fts5Context*, int iPhrase);
-
-  int (*<a href="#xInstCount">xInstCount</a>)(Fts5Context*, int *pnInst);
-  int (*<a href="#xInst">xInst</a>)(Fts5Context*, int iIdx, int *piPhrase, int *piCol, int *piOff);
-
-  sqlite3_int64 (*<a href="#xRowid">xRowid</a>)(Fts5Context*);
-  int (*<a href="#xColumnText">xColumnText</a>)(Fts5Context*, int iCol, const char **pz, int *pn);
-  int (*<a href="#xColumnSize">xColumnSize</a>)(Fts5Context*, int iCol, int *pnToken);
-
-  int (*<a href="#xQueryPhrase">xQueryPhrase</a>)(Fts5Context*, int iPhrase, void *pUserData,
-    int(*)(const Fts5ExtensionApi*,Fts5Context*,void*)
-  );
-  int (*<a href="#xSetAuxdata">xSetAuxdata</a>)(Fts5Context*, void *pAux, void(*xDelete)(void*));
-  void *(*<a href="#xGetAuxdata">xGetAuxdata</a>)(Fts5Context*, int bClear);
-};
-</pre></table></div>
-
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xUserData">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>void *(*xUserData)(Fts5Context*)</pre></h>
-<p>
-Return a copy of the context pointer the extension function was 
-   registered with.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xColumnTotalSize">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xColumnTotalSize)(Fts5Context*, int iCol, sqlite3_int64 *pnToken)</pre></h>
-<p>
-If parameter iCol is less than zero, set output variable *pnToken
-   to the total number of tokens in the FTS5 table. Or, if iCol is
-   non-negative but less than the number of columns in the table, return
-   the total number of tokens in column iCol, considering all rows in 
-   the FTS5 table.
-</p>
-
-<p>
-   If parameter iCol is greater than or equal to the number of columns
-   in the table, SQLITE_RANGE is returned. Or, if an error occurs (e.g.
-   an OOM condition or IO error), an appropriate SQLite error code is 
-   returned.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xColumnCount">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xColumnCount)(Fts5Context*)</pre></h>
-<p>
-Returns the number of columns in the FTS5 table.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xColumnSize">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xColumnSize)(Fts5Context*, int iCol, int *pnToken)</pre></h>
-<p>
-Reports the size in tokens of a column value from the current row.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xColumnText">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xColumnText)(Fts5Context*, int iCol, const char **pz, int *pn)</pre></h>
-<p>
-Reports the size in tokens of a column value from the current row.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xPhraseCount">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xPhraseCount)(Fts5Context*)</pre></h>
-<p>
-Returns the number of phrases in the current query expression.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xPhraseSize">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xPhraseSize)(Fts5Context*, int iPhrase)</pre></h>
-<p>
-Returns the number of tokens in phrase iPhrase of the query. Phrases
-   are numbered starting from zero.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xInstCount">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xInstCount)(Fts5Context*, int *pnInst)</pre></h>
-<p>
-Set *pnInst to the total number of occurrences of all phrases within
-   the query within the current row. Return SQLITE_OK if successful, or
-   an error code (i.e. SQLITE_NOMEM) if an error occurs.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xInst">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xInst)(Fts5Context*, int iIdx, int *piPhrase, int *piCol, int *piOff)</pre></h>
-<p>
-Query for the details of phrase match iIdx within the current row.
-   Phrase matches are numbered starting from zero, so the iIdx argument
-   should be greater than or equal to zero and smaller than the value
-   output by xInstCount().
-</p>
-
-<p>
-   Returns SQLITE_OK if successful, or an error code (i.e. SQLITE_NOMEM) 
-   if an error occurs.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xRowid">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>sqlite3_int64 (*xRowid)(Fts5Context*)</pre></h>
-<p>
-Returns the rowid of the current row.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xTokenize">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xTokenize)(Fts5Context*, 
-    const char *pText, int nText, 
-    void *pCtx,                   
-    int (*xToken)(void*, const char*, int, int, int)       
-  )</pre></h>
-<p>
-Tokenize text using the tokenizer belonging to the FTS5 table.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xQueryPhrase">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xQueryPhrase)(Fts5Context*, int iPhrase, void *pUserData,
-    int(*)(const Fts5ExtensionApi*,Fts5Context*,void*)
-  )</pre></h>
-<p>
-This API function is used to query the FTS table for phrase iPhrase
-   of the current query. Specifically, a query equivalent to:
-</p>
-
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">... FROM ftstable WHERE ftstable MATCH $p ORDER BY rowid
-</pre></table></div>
-
-<p>
-   with $p set to a phrase equivalent to the phrase iPhrase of the
-   current query is executed. For each row visited, the callback function
-   passed as the fourth argument is invoked. The context and API objects 
-   passed to the callback function may be used to access the properties of
-   each matched row. Invoking Api.xUserData() returns a copy of the pointer
-   passed as the third argument to pUserData.
-</p>
-
-<p>
-   If the callback function returns any value other than SQLITE_OK, the
-   query is abandoned and the xQueryPhrase function returns immediately.
-   If the returned value is SQLITE_DONE, xQueryPhrase returns SQLITE_OK.
-   Otherwise, the error code is propagated upwards.
-</p>
-
-<p>
-   If the query runs to completion without incident, SQLITE_OK is returned.
-   Or, if some error occurs before the query completes or is aborted by
-   the callback, an SQLite error code is returned.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xSetAuxdata">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xSetAuxdata)(Fts5Context*, void *pAux, void(*xDelete)(void*))</pre></h>
-<p>
-Save the pointer passed as the second argument as the extension functions 
-   "auxiliary data". The pointer may then be retrieved by the current or any
-   future invocation of the same fts5 extension function made as part of
-   of the same MATCH query using the xGetAuxdata() API.
-</p>
-
-<p>
-   Each extension function is allocated a single auxiliary data slot for
-   each FTS query (MATCH expression). If the extension function is invoked 
-   more than once for a single FTS query, then all invocations share a 
-   single auxiliary data context.
-</p>
-
-<p>
-   If there is already an auxiliary data pointer when this function is
-   invoked, then it is replaced by the new pointer. If an xDelete callback
-   was specified along with the original pointer, it is invoked at this
-   point.
-</p>
-
-<p>
-   The xDelete callback, if one is specified, is also invoked on the
-   auxiliary data pointer after the FTS5 query has finished.
-</p>
-
-<p>
-   If an error (e.g. an OOM condition) occurs within this function, an
-   the auxiliary data is set to NULL and an error code returned. If the
-   xDelete parameter was not NULL, it is invoked on the auxiliary data
-   pointer before returning.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xGetAuxdata">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>void *(*xGetAuxdata)(Fts5Context*, int bClear)</pre></h>
-<p>
-Returns the current auxiliary data pointer for the fts5 extension 
-   function. See the xSetAuxdata() method for details.
-</p>
-
-<p>
-   If the bClear argument is non-zero, then the auxiliary data is cleared
-   (set to NULL) before this function returns. In this case the xDelete,
-   if any, is not invoked.
-</p>
-<hr color="#eeeee" style="margin:1em 8.4ex 0 8.4ex;" id="xRowCount">
-<h style="padding-left:6ex;font-size:1.4em;display:block"><pre>int (*xRowCount)(Fts5Context*, sqlite3_int64 *pnRow)</pre></h>
-<p>
-This function is used to retrieve the total number of rows in the table.
-   In other words, the same value that would be returned by:
-</p>
-
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT count(*) FROM ftstable;
-</pre></table></div>
 
 
