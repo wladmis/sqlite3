@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -683,6 +689,10 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_FTS4</b></p><blockquote><p>
   When this option is defined in the <a href="amalgamation.html">amalgamation</a>, versions 3 and 4
   of the full-text search engine is added to the build automatically.
+</p></blockquote><a name="enable_fts5"></a>
+<p><b>SQLITE_ENABLE_FTS5</b></p><blockquote><p>
+  When this option is defined in the <a href="amalgamation.html">amalgamation</a>, versions 5
+  of the full-text search engine (<a href="fts5.html">fts5</a>) is added to the build automatically.
 </p></blockquote><a name="enable_icu"></a>
 <p><b>SQLITE_ENABLE_ICU</b></p><blockquote><p>
   This option causes the 
@@ -694,6 +704,10 @@ the available settings:</p>
   compiled with this option, then the CLI provides an extra command
   named ".iotrace" that provides a low-level log of I/O activity.
   This option is experimental and may be discontinued in a future release.
+</p></blockquote><a name="enable_json1"></a>
+<p><b>SQLITE_ENABLE_JSON1</b></p><blockquote><p>
+  When this option is defined in the <a href="amalgamation.html">amalgamation</a>, the
+  <a href="json1.html">JSON SQL functions</a> are added to the build automatically.
 </p></blockquote><a name="enable_locking_style"></a>
 <p><b>SQLITE_ENABLE_LOCKING_STYLE</b></p><blockquote><p>
   This option enables additional logic in the OS interface layer for
@@ -761,6 +775,9 @@ the available settings:</p>
   of two and uses a first-fit, buddy-allocator algorithm
   that provides strong guarantees against fragmentation and breakdown
   subject to certain operating constraints.
+</p></blockquote><a name="enable_rbu"></a>
+<p><b>SQLITE_ENABLE_RBU</b></p><blockquote><p>
+  Enable the code the implements the <a href="rbu.html">RBU extension</a>.
 </p></blockquote><a name="enable_rtree"></a>
 <p><b>SQLITE_ENABLE_RTREE</b></p><blockquote><p>
   This option causes SQLite to include support for the

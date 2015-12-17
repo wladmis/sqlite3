@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -517,7 +523,7 @@ use <a href="wal.html#noshm">WAL without shared memory</a>.
 filesystem can corrupt the database.  Filesystems in modern operating systems
 are very reliable, but errors do still occur.  For example, on 2013-10-01
 the SQLite database that holds the
-<a href="http://wiki.tcl.tk/">Wiki for Tcl/Tk</a> went corrupt a few days
+<a href="http://wiki.tcl-lang.org/">Wiki for Tcl/Tk</a> went corrupt a few days
 after the host computer was moved to a dodgy build of the (linux) kernel
 that had issues in the filesystem layer.  In that event, the filesystem
 eventually became so badly corrupted that the machine was unusable, but

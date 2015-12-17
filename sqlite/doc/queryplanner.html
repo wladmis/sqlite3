@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -168,8 +174,10 @@ query planner to pick the best plans.
 <h3>1.1 Tables Without Indices</h3>
 
 <p>
-Every table in SQLite consists of zero or more rows with a unique integer
-key (the <a href="lang_createtable.html#rowid">rowid</a> or <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>) followed by content.  The rows
+Most tables in SQLite consist of zero or more rows with a unique integer
+key (the <a href="lang_createtable.html#rowid">rowid</a> or <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>) followed by content.  
+(The exception is <a href="withoutrowid.html">WITHOUT ROWID</a> tables.)
+The rows
 are logically stored in order of increasing rowid.  As an example, this
 article uses a table named "FruitsForSale" which relates various fruits 
 to the state
@@ -945,4 +953,14 @@ are:
 </ol>
 Because of these advantages, SQLite always tries to do a partial sort using an
 index even if a complete sort by index is not possible.</p>
+
+<h2>4.0 WITHOUT ROWID tables</h2>
+
+<p>
+The basic principals described above apply to both ordinary rowid tables
+and <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+The only difference is that the rowid column that serves as the key for
+tables and that appears as the right-most term in indexes is replaced by
+the PRIMARY KEY.
+</p>
 

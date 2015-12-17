@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -141,6 +147,7 @@ of SQLite exist in the wild.  SQLite is found in:
 <li>Every Android device
 <li>Every iPhone and iOS device
 <li>Every Mac
+<li>Every Windows10 machine
 <li>Every Firefox, Chrome, and Safari web browser
 <li>Every instance of Skype
 <li>Every instance of iTunes
@@ -154,9 +161,9 @@ of SQLite exist in the wild.  SQLite is found in:
 
 <h2>Most Widely Deployed Software Module of Any Type?</h2>
 
-<p>SQLite is perhaps one of the top five most deployed
-software modules of any description.  It might even be the
-number one.  Other libraries with similar reach include:
+<p>SQLite is probably one of the top five most deployed
+software modules of any description.  
+Other libraries with similar reach include:
 
 <ul>
 <li>
@@ -170,27 +177,24 @@ Libjpeg from the <a href="http://ijg.org">Independent JPEG Group</a>
 </ul>
 
 <p>
-<i>(If you know of any other software that should
-be added to this list, please send a quick
-email note to <a href="mailto:drh@sqlite.org">drh@sqlite.org</a>.
-Thanks.)</i>
-</p>
-
-<p>
 Libc is omitted from the above list even though
 it is more common than SQLite because
 libc is not a single software component but rather several
 competing implementations (ex: BSD vs. GNU) with similar interfaces.
+There are also independent implementations of libjpeg and libpng,
+though in those cases the canonical implementations are very popular.
 </p>
 
 <p>
 Precise numbers are difficult to obtain and so exact rankings
-are impossible.  But some commentators observe that SQLite tends
+are impossible.  But our best guess is that SQLite is the second
+mostly widely deployed software library, after libz.
+Some commentators observe that SQLite tends
 to be statically linked and thus have multiple instances on
-each machine, whereas libz, libpng, and libjpeg tend to have just
+each machine, whereas libz tend sto have just
 a single instance per machine in the form of a shared library or DLL.
-So even though the number of devices containing libz, 
-libpng, and/or libjpeg, may be greater than the number of
+So even though the number of devices containing libz
+may be greater than the number of
 devices that contain SQLite, the total number of instances per device
 <em>might</em> be higher for SQLite and so SQLite <em>might</em>
 be the single most widely deployed and used software component.

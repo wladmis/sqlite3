@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -157,6 +163,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_text64</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_value</a></li>
 <li><a href="../c3ref/bind_blob.html">sqlite3_bind_zeroblob</a></li>
+<li><a href="../c3ref/bind_blob.html">sqlite3_bind_zeroblob64</a></li>
 <li><a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes</a></li>
 <li><a href="../c3ref/blob_close.html">sqlite3_blob_close</a></li>
 <li><a href="../c3ref/blob_open.html">sqlite3_blob_open</a></li>
@@ -208,9 +215,9 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/create_function.html">sqlite3_create_function_v2</a></li>
 <li><a href="../c3ref/create_module.html">sqlite3_create_module</a></li>
 <li><a href="../c3ref/create_module.html">sqlite3_create_module_v2</a></li>
+<li><a href="../c3ref/data_count.html">sqlite3_data_count</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="../c3ref/data_count.html">sqlite3_data_count</a></li>
-<li><a href="../c3ref/db_config.html">sqlite3_db_config</a></li>
+<td valign="top"><ul><li><a href="../c3ref/db_config.html">sqlite3_db_config</a></li>
 <li><a href="../c3ref/db_filename.html">sqlite3_db_filename</a></li>
 <li><a href="../c3ref/db_handle.html">sqlite3_db_handle</a></li>
 <li><a href="../c3ref/db_mutex.html">sqlite3_db_mutex</a></li>
@@ -282,13 +289,14 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/result_blob.html">sqlite3_result_double</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error16</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="../c3ref/result_blob.html">sqlite3_result_error_code</a></li>
+<li><a href="../c3ref/result_blob.html">sqlite3_result_error_code</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error_nomem</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_error_toobig</a></li>
-<li><a href="../c3ref/result_blob.html">sqlite3_result_int</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="../c3ref/result_blob.html">sqlite3_result_int</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_int64</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_null</a></li>
+<li><a href="../c3ref/result_subtype.html">sqlite3_result_subtype</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text16</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text16be</a></li>
@@ -296,6 +304,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/result_blob.html">sqlite3_result_text64</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_value</a></li>
 <li><a href="../c3ref/result_blob.html">sqlite3_result_zeroblob</a></li>
+<li><a href="../c3ref/result_blob.html">sqlite3_result_zeroblob64</a></li>
 <li><a href="../c3ref/commit_hook.html">sqlite3_rollback_hook</a></li>
 <li><a href="../c3ref/set_authorizer.html">sqlite3_set_authorizer</a></li>
 <li><a href="../c3ref/get_auxdata.html">sqlite3_set_auxdata</a></li>
@@ -334,9 +343,12 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions marked w
 <li><a href="../c3ref/value_blob.html">sqlite3_value_bytes</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_bytes16</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_double</a></li>
+<li><a href="../c3ref/value_dup.html">sqlite3_value_dup</a></li>
+<li><a href="../c3ref/value_dup.html">sqlite3_value_free</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_int</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_int64</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_numeric_type</a></li>
+<li><a href="../c3ref/value_subtype.html">sqlite3_value_subtype</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_text</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_text16</a></li>
 <li><a href="../c3ref/value_blob.html">sqlite3_value_text16be</a></li>

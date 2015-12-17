@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -175,7 +181,8 @@ including:
 <li> The file format can be extended in future releases simply
      by adding new tables and/or column, preserving backwards compatibility.
 <li> Applications can leverage the
-     <a href="fts3.html">full-text search</a> and <a href="rtree.html">RTREE</a> indexes.
+     <a href="fts3.html">full-text search</a> and <a href="rtree.html">RTREE</a> indexes and use triggers to implement
+     an <a href="undoredo.html">automated undo/redo stack</a>.
 <li> Performance problems can often be resolved, even late in the
      development cycle, using <a href="lang_createindex.html">CREATE INDEX</a>, avoiding costly
      redesign, rewrite, and retest efforts.

@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -173,7 +179,7 @@ about the virtual machine.  When in doubt, refer to the source code.</p>
 <p>Each instruction in the virtual machine consists of an opcode and
 up to five operands named P1, P2  P3, P4, and P5.  The P1, P2, and P3 
 operands are 32-bit signed integers.  These operands often refer to 
-registers but can also be use dfor other purposes.  The P1 operand is
+registers but can also be used for other purposes.  The P1 operand is
 usually the cursor number for opcodes that operate on cursors.
 P2 is usually the jump destination jump instructions.
 P4 may be a 32-bit signed integer, a 64-bit signed integer, a
@@ -212,7 +218,7 @@ closed when the virtual machine terminates.</p>
 
 <p>The virtual machine contains an arbitrary number of registers
 with addresses beginning at one and growing upward.
-Each register can a single SQL value (a string, a BLOB, a signed 64-bit
+Each register can hold a single SQL value (a string, a BLOB, a signed 64-bit
 integer, a 64-bit floating point number, or a NULL).  A register might
 also hold objects used internally by SQLite, such as a RowSet or Frame.
 </p>
@@ -284,12 +290,12 @@ pragmas include:
 
 <h3>The Opcodes</h3>
 
-<p>There are currently 153
+<p>There are currently 156
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/163e045d58ec5ff5384020e48b12ea49950c2922">vdbe.c</a>.</p>
+<a href="http://www.sqlite.org/src/artifact/1e0bf8d6a2308ce916d444ef399921407fd5d972">vdbe.c</a>.</p>
 
 <p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
@@ -331,9 +337,24 @@ the step function was not previously called.</td></tr>
 <tr><td valign="top" align="center">
 <a name="AggStep"></a><p>AggStep</p>
 <td><p>Execute the step function for an aggregate.  The
+function has P5 arguments.   P4 is a pointer to an sqlite3_context
+object that is used to run the function.  Register P3 is
+as the accumulator.</p>
+
+<p>The P5 arguments are taken from register P2 and its
+successors.</p>
+
+<p>This opcode is initially coded as <a href="#AggStep0">AggStep0</a>.  On first evaluation,
+the FuncDef stored in P4 is converted into an sqlite3_context and
+the opcode is changed.  In this way, the initialization of the
+sqlite3_context only happens once, instead of on each call to the
+step function.</td></tr>
+<tr><td valign="top" align="center">
+<a name="AggStep0"></a><p>AggStep0</p>
+<td><p>Execute the step function for an aggregate.  The
 function has P5 arguments.   P4 is a pointer to the FuncDef
-structure that specifies the function.  Use register
-P3 as the accumulator.</p>
+structure that specifies the function.  Register P3 is the
+accumulator.</p>
 
 <p>The P5 arguments are taken from register P2 and its
 successors.</td></tr>
@@ -454,6 +475,15 @@ the result is guaranteed to only be used as the argument of a length()
 or typeof() function, respectively.  The loading of large blobs can be
 skipped for length() and all content loading can be skipped for typeof().</td></tr>
 <tr><td valign="top" align="center">
+<a name="ColumnsUsed"></a><p>ColumnsUsed</p>
+<td><p>This opcode (which only exists if SQLite was compiled with
+SQLITE_ENABLE_COLUMN_USED_MASK) identifies which columns of the
+table or index for cursor P1 are used.  P4 is a 64-bit integer
+(P4_INT64) in which the first 63 bits are one for each of the
+first 63 columns of the table or index that are actually used
+by the cursor.  The high-order bit is set if any column after
+the 64th is used.</td></tr>
+<tr><td valign="top" align="center">
 <a name="Compare"></a><p>Compare</p>
 <td><p>Compare two vectors of registers in reg(P1)..reg(P1+P3-1) (call this
 vector "A") and in reg(P2)..reg(P2+P3-1) ("B").  Save the result of
@@ -520,10 +550,11 @@ then jump to P2 if the new value is exactly zero.</td></tr>
 <a name="Delete"></a><p>Delete</p>
 <td><p>Delete the record at which the P1 cursor is currently pointing.</p>
 
-<p>The cursor will be left pointing at either the next or the previous
-record in the table. If it is left pointing at the next record, then
-the next <a href="#Next">Next</a> instruction will be a no-op.  Hence it is OK to delete
-a record from within a <a href="#Next">Next</a> loop.</p>
+<p>If the P5 parameter is non-zero, the cursor will be left pointing at
+either the next or the previous record in the table. If it is left
+pointing at the next record, then the next <a href="#Next">Next</a> instruction will be a
+no-op. As a result, in this case it is OK to delete a record from within a
+<a href="#Next">Next</a> loop. If P5 is zero, then the cursor is left in an undefined state.</p>
 
 <p>If the OPFLAG_NCHANGE flag of P2 is set, then the row change count is
 incremented (otherwise not).</p>
@@ -641,7 +672,29 @@ but not the <a href="#Prev">Prev</a> instruction.</p>
 <p>See also: <a href="#NotFound">NotFound</a>, <a href="#NoConflict">NoConflict</a>, <a href="#NotExists">NotExists</a>. SeekGe</td></tr>
 <tr><td valign="top" align="center">
 <a name="Function"></a><p>Function</p>
-<td><p>Invoke a user function (P4 is a pointer to a <a href="#Function">Function</a> structure that
+<td><p>Invoke a user function (P4 is a pointer to an sqlite3_context object that
+contains a pointer to the function to be run) with P5 arguments taken
+from register P2 and successors.  The result of the function is stored
+in register P3.  Register P3 must not be one of the function inputs.</p>
+
+<p>P1 is a 32-bit bitmask indicating whether or not each argument to the
+function was determined to be constant at compile time. If the first
+argument was constant then bit 0 of P1 is set. This is used to determine
+whether meta data associated with a user function argument using the
+sqlite3_set_auxdata() API may be safely retained until the next
+invocation of this opcode.</p>
+
+<p>SQL functions are initially coded as <a href="#Function0">Function0</a> with P4 pointing
+to a FuncDef object.  But on first evaluation, the P4 operand is
+automatically converted into an sqlite3_context object and the operation
+changed to this <a href="#Function">Function</a> opcode.  In this way, the initialization of
+the sqlite3_context object occurs only once, rather than once for each
+evaluation of the function.</p>
+
+<p>See also: <a href="#Function0">Function0</a>, <a href="#AggStep">AggStep</a>, <a href="#AggFinal">AggFinal</a></td></tr>
+<tr><td valign="top" align="center">
+<a name="Function0"></a><p>Function0</p>
+<td><p>Invoke a user function (P4 is a pointer to a FuncDef object that
 defines the function) with P5 arguments taken from register P2 and
 successors.  The result of the function is stored in register P3.
 Register P3 must not be one of the function inputs.</p>
@@ -653,7 +706,7 @@ whether meta data associated with a user function argument using the
 sqlite3_set_auxdata() API may be safely retained until the next
 invocation of this opcode.</p>
 
-<p>See also: <a href="#AggStep">AggStep</a> and <a href="#AggFinal">AggFinal</a></td></tr>
+<p>See also: <a href="#Function">Function</a>, <a href="#AggStep">AggStep</a>, <a href="#AggFinal">AggFinal</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="Ge"></a><p>Ge</p>
 <td><p>This works just like the Lt opcode except that the jump is taken if
@@ -787,10 +840,6 @@ the rowid of the table entry to which this index entry points.</p>
 is considered true if it is numeric and non-zero.  If the value
 in P1 is NULL then take the jump if and only if P3 is non-zero.</td></tr>
 <tr><td valign="top" align="center">
-<a name="IfNeg"></a><p>IfNeg</p>
-<td><p>Register P1 must contain an integer.  <a href="#Add">Add</a> literal P3 to the value in
-register P1 then if the value of register P1 is less than zero, jump to P2.</td></tr>
-<tr><td valign="top" align="center">
 <a name="IfNot"></a><p>IfNot</p>
 <td><p>Jump to P2 if the value in register P1 is False.  The value
 is considered false if it has a numeric value of zero.  If the value
@@ -798,13 +847,14 @@ in P1 is NULL then take the jump if and only if P3 is non-zero.</td></tr>
 <tr><td valign="top" align="center">
 <a name="IfNotZero"></a><p>IfNotZero</p>
 <td><p>Register P1 must contain an integer.  If the content of register P1 is
-initially nonzero, then add P3 to P1 and jump to P2.  If register P1 is
-initially zero, leave it unchanged and fall through.</td></tr>
+initially nonzero, then subtract P3 from the value in register P1 and
+jump to P2.  If register P1 is initially zero, leave it unchanged
+and fall through.</td></tr>
 <tr><td valign="top" align="center">
 <a name="IfPos"></a><p>IfPos</p>
 <td><p>Register P1 must contain an integer.
-If the value of register P1 is 1 or greater, jump to P2 and
-add the literal value P3 to register P1.</p>
+If the value of register P1 is 1 or greater, subtract P3 from the
+value in P1 and jump to P2.</p>
 
 <p>If the initial value of register P1 is less than 1, then the
 value is unchanged and control passes through to the next instruction.</td></tr>
@@ -991,7 +1041,7 @@ field of the index key.</p>
 <p>The mapping from character to affinity is given by the SQLITE_AFF_
 macros defined in sqliteInt.h.</p>
 
-<p>If P4 is NULL then all index fields have the affinity NONE.</td></tr>
+<p>If P4 is NULL then all index fields have the affinity BLOB.</td></tr>
 <tr><td valign="top" align="center">
 <a name="MaxPgcnt"></a><p>MaxPgcnt</p>
 <td><p>Try to set the maximum page count for database P1 to the value in P3.
@@ -1114,9 +1164,10 @@ NULL, then a NULL is stored in P2.</td></tr>
 <a name="NotExists"></a><p>NotExists</p>
 <td><p>P1 is the index of a cursor open on an SQL table btree (with integer
 keys).  P3 is an integer rowid.  If P1 does not contain a record with
-rowid P3 then jump immediately to P2.  If P1 does contain a record
-with rowid P3 then leave the cursor pointing at that record and fall
-through to the next instruction.</p>
+rowid P3 then jump immediately to P2.  Or, if P2 is 0, raise an
+SQLITE_CORRUPT error. If P1 does contain a record with rowid P3 then
+leave the cursor pointing at that record and fall through to the next
+instruction.</p>
 
 <p>The <a href="#NotFound">NotFound</a> opcode performs the same operation on index btrees
 (with arbitrary multi-value keys).</p>
@@ -1576,6 +1627,11 @@ size, and so forth.  P1==0 is the main database file and P1==1 is the
 database file used to store temporary tables.</p>
 
 <p>A transaction must be started before executing this opcode.</td></tr>
+<tr><td valign="top" align="center">
+<a name="SetIfNotPos"></a><p>SetIfNotPos</p>
+<td><p>Register P1 must contain an integer.
+If the value of register P1 is not positive (if it is less than 1) then
+set the value of register P2 to be the integer P3.</td></tr>
 <tr><td valign="top" align="center">
 <a name="ShiftLeft"></a><p>ShiftLeft</p>
 <td><p>Shift the integer value in register P2 to the left by the

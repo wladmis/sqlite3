@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -131,8 +137,9 @@ a:visited { color: #734559 }
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>Core Functions</h2>
 
 <p>The core functions shown below are available by default. 
-<a href="lang_datefunc.html">Date &amp; Time functions</a> and
-<a href="lang_aggfunc.html">aggregate functions</a> are documented separately.  An
+<a href="lang_datefunc.html">Date &amp; Time functions</a>,
+<a href="lang_aggfunc.html">aggregate functions</a>, and
+<a href="json1.html">JSON functions</a> are documented separately.  An
 application may define additional
 functions written in C and added to the database engine using
 the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</p>
@@ -391,9 +398,9 @@ sqlite_compileoption_used(<i>X</i>)</td><td valign="top">
 sqlite_source_id()</td><td valign="top">
   The sqlite_source_id() function returns a string that identifies the
   specific version of the source code that was used to build the SQLite
-  library.  The string returned by sqlite_source_id() begins with
-  the date and time that the source code was checked in and is follows by
-  an SHA1 hash that uniquely identifies the source tree.  This function is
+  library.  The string returned by sqlite_source_id() is
+  the date and time that the source code was checked in followed by
+  the SHA1 hash for that check-in.  This function is
   an SQL wrapper around the <a href="c3ref/libversion.html">sqlite3_sourceid()</a> C interface.
 </td></tr><tr><td valign="top" align="right" width="120"><a name="sqlite_version"></a>
 sqlite_version()</td><td valign="top">

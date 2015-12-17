@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -133,28 +139,24 @@ a:visited { color: #734559 }
 <h2>File Format Changes in SQLite</h2>
 
 <p>
-Every effort is made to keep SQLite fully backwards compatible from
-one release to the next.  Rarely, however, some
-enhancements or bug fixes may require a change to
-the underlying file format.  When this happens and you
-must convert the contents of your
-databases into a portable ASCII representation using the old version
-of the library then reload the data using the new version of the
-library.
+The <a href="fileformat2.html">underlying file format</a> for SQLite databases does not
+change in incompatible ways.  There are literally tens of billions of
+SQLite database files in circulation and the SQLite developers are
+committing to supporting those files for decades into the future.
 </p>
 
 <p>
-You can tell if you should reload your databases by comparing the
-version numbers of the old and new libraries.  If the first digit
-of the version number is different, then a reload of the database will
-be required.  If the second digit changes, newer versions of SQLite
-will be able to read and write older database files, but older versions
-of the library may have difficulty reading or writing newer database
-files.
-For example, upgrading from
-version 2.8.14 to 3.0.0 requires a reload.  Going from
-version 3.0.8 to 3.1.0 is backwards compatible but not necessarily
-forwards compatible.
+This document describes incompatibilities that have occurred in
+SQLite prior to 2004.  Since 2004, there have been enhancements to
+SQLite such that newer database files are unreadable by older versions
+of the SQLite library.  But the most recent versions of the SQLite
+library should be able to read and write any older SQLite database
+file without any problems.
+</p>
+
+<p>
+In other words, since 2004 all SQLite releases have been backwards
+compatible, though not necessarily forwards compatible.
 </p>
 
 <p>
@@ -312,111 +314,6 @@ occurred since version 1.0.0:
   version 2 file format.</p>
   </td>
 </tr>
-<tr>
-  <td valign="top">3.0.8 to 3.1.0</td>
-  <td valign="top">2005-Jan-21</td>
-  <td><p>Version 3.1.0 adds support for
-  <a href="pragma.html#pragma_auto_vacuum">autovacuum mode</a>.
-  Prior versions of SQLite will be able to read an autovacuumed
-  database but will not be able to write it.  If autovaccum is disabled
-  (which is the default condition)
-  then databases are fully forwards and backwards compatible.</p>
-  </td>
-</tr>
-<tr>
-  <td valign="top">3.1.6 to 3.2.0</td>
-  <td valign="top">2005-Mar-19</td>
-  <td><p>Version 3.2.0 adds support for the 
-  <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>
-  command.  A database that has been modified by this command can
-  not be read by a version of SQLite prior to 3.1.4.  Running 
-  <a href="lang_vacuum.html">VACUUM</a>
-  after the ALTER TABLE
-  restores the database to a format such that it can be read by earlier
-  SQLite versions.</p>
-  </td>
-</tr>
-<tr>
-  <td valign="top">3.2.8 to 3.3.0</td>
-  <td valign="top">2006-Jan-10</td>
-  <td><p>Version 3.3.0 adds support for descending indices and
-  uses a new encoding for boolean values that requires
-  less disk space.  Version 3.3.0 can read and write database
-  files created by prior versions of SQLite.  But prior versions
-  of SQLite will not be able to read or write databases created
-  by Version 3.3.0</p>
-  <p>If you need backwards and forwards compatibility, you can
-  compile with -DSQLITE_DEFAULT_FILE_FORMAT=1.  Or at runtime
-  you can say "PRAGMA legacy_file_format=ON" prior to creating
-  a new database file</p>
-  <p>Once a database file is created, its format is fixed.  So
-  a database file created by SQLite 3.2.8 and merely modified
-  by version 3.3.0 or later will retain the old format.  Except,
-  the VACUUM command recreates the database so running VACUUM
-  on 3.3.0 or later will change the file format to the latest
-  edition.</p>
-  </td>
-</tr>
-<tr>
-  <td valign="top">3.3.6 to 3.3.7</td>
-  <td valign="top">2006-Aug-12</td>
-  <td><p>The previous file format change has caused so much
-  grief that the default behavior has been changed back to 
-  the original file format.  This means that DESC option on
-  indices is ignored by default that the more efficient encoding
-  of boolean values is not used.  In that way, older versions
-  of SQLite can read and write databases created by newer
-  versions.  If the new features are desired, they can be
-  enabled using pragma: "PRAGMA legacy_file_format=OFF".</p>
-  <p>To be clear: both old and new file formats continue to
-  be understood and continue to work.  But the old file format
-  is used by default instead of the new.  This might change
-  again in some future release - we may go back to generating
-  the new file format by default - but probably not until
-  all users have upgraded to a version of SQLite that will
-  understand the new file format.  That might take several
-  years.</p></td>
-</tr>
-<tr>
-  <td valign="top">3.4.2 to 3.5.0</td>
-  <td valign="top">2007-Sep-3</td>
-  <td><p>The design of the OS interface layer was changed for
-  release 3.5.0.  Applications that implemented a custom OS
-  interface will need to be modified in order to upgrade.
-  There are also some subtly different semantics a few obscure
-  APIs.  An <a href="34to35.html">article</a> is available which
-  describing the changes in detail.</p>
-
-  <p>The on-disk file format is unchanged.</p>
-  </td>
-</tr>
-<tr>
-  <td valign="top">3.5.9 to 3.6.0</td>
-  <td valign="top">2008-July-16</td>
-  <td><p>There are minor tweaks to the new OS interface layer that
-  was added in version 3.5.0.
-  Applications that implemented a custom OS
-  interface will need to be adjusted.
-  An <a href="35to36.html">article</a> is available which
-  describing the changes in detail.</p>
-
-  <p>The on-disk file format is unchanged.</p>
-  </td>
-</tr>
 </table>
-</blockquote>
-
-<p>
-To perform a database reload, have ready versions of the
-<b>sqlite</b> command-line utility for both the old and new
-version of SQLite.  Call these two executables "<b>sqlite-old</b>"
-and "<b>sqlite-new</b>".  Suppose the name of your old database
-is "<b>old.db</b>" and you want to create a new database with
-the same information named "<b>new.db</b>".  The command to do
-this is as follows:
-</p>
-
-<blockquote>
-  sqlite-old old.db .dump | sqlite-new new.db
 </blockquote>
 

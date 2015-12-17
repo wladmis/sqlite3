@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -243,8 +249,12 @@ following type affinities:</p>
 	<li>NUMERIC</LI>
 	<li>INTEGER</LI>
         <li>REAL</li>
-	<li>NONE</LI>
+	<li>BLOB</LI>
 </ul>
+
+<p>(Historical note:  The "BLOB" type affinity used to be called "NONE".
+But that term was easy to confuse with "no affinity" and so it was
+renamed.)
 
 <p>A column with TEXT affinity stores all data using storage classes
 NULL, TEXT or BLOB. If numerical data is inserted into a column with
@@ -282,7 +292,7 @@ the value is read out.
 This optimization is completely invisible at the SQL level and can only
 be detected by examining the raw bits of the database file.)</p>
 
-<p>A column with affinity NONE does not prefer one storage class over
+<p>A column with affinity BLOB does not prefer one storage class over
 another and no attempt is made to coerce data from one storage class into
 another.</p>
 
@@ -304,7 +314,7 @@ of the column, according to the following rules in the order shown:</p>
 
   <li><p>If the declared type for a column
   contains the string "BLOB" or if
-  no type is specified then the column has affinity NONE.</p>
+  no type is specified then the column has affinity BLOB.</p>
 
   <li><p>If the declared type for a column
   contains any of the strings "REAL", "FLOA",
@@ -364,7 +374,7 @@ strings, BLOBs or numeric values.</p>
 <tr><td align="center" valign="top">
   BLOB<br>
   <i>no datatype specified</i>
-<td align="center">NONE
+<td align="center">BLOB
 <td align="center">3
 
 <tr><td align="center" valign="top">
@@ -471,13 +481,18 @@ operands, according to the following rules:</p>
 <p>SQLite may attempt to convert values between the storage classes
 INTEGER, REAL, and/or TEXT before performing a comparison.
 Whether or not any conversions are attempted before the comparison takes
-place depends on the affinity of the operands.
-Operand affinity is determined by the following rules:
+place depends on the type affinity of the operands.
+
+<p>Note that every table column as a type affinity (one of BLOB, TEXT, INTEGER,
+REAL, or NUMERIC) but expressions do no necessarily have an affinity.
+
+<p>Operand affinity is determined by the following rules:
 
 <ul>
-  <li><p>The affinity of the right-hand operand of an IN or NOT IN
-  operator is NONE if the operand is a list and is the same as the
-  affinity of the result set expression if the operand is a SELECT.
+  <li><p>The right-hand operand of an IN or NOT IN
+  operator has no affinity if the operand is a list and has the same
+  affinity as the affinity of the result set expression if the operand
+  is a SELECT.
 
   <li><p>An expression that is a simple reference to a column value
   has the same affinity as the column.
@@ -489,7 +504,7 @@ Operand affinity is determined by the following rules:
   has an affinity that is the same as a column with a declared
   type of "<i>type</i>".
 
-  <li><p>Otherwise, an expression has NONE affinity.
+  <li><p>Otherwise, an expression has no affinity.
 </ul>
 
 <a name="compaff"></a>
@@ -503,10 +518,10 @@ the comparison according to the following rules in the order shown:</p>
 
 <ul>
 <li><p>If one operand has INTEGER, REAL or NUMERIC affinity
-and the other operand has TEXT or NONE affinity
+and the other operand has TEXT or BLOB or no affinity
 then NUMERIC affinity is applied to other operand.
 
-<li><p>If one operand has TEXT affinity and the other has NONE affinity,
+<li><p>If one operand has TEXT affinity and the other has no affinity,
 then TEXT affinity is applied to the other operand.
 
 <li><p>Otherwise, no affinity is applied and both operands are compared

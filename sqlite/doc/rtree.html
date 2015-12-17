@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -192,18 +198,21 @@ does not support R*Trees wider than 5 dimensions.
 </p>
 
 <p>
-The first column of an SQLite R*Tree must always be an integer
-primary key.
-The min/max-value pair columns are stored as
-32-bit floating point values for "rtree" virtual tables or as
-32-bit signed integers in "rtree_i32" virtual tables.
-Unlike regular SQLite tables which
-can store data in a variety of datatypes and formats, the R*Tree
-indices rigidly enforce these storage types.  Attempts to insert
-something other than an integer into the first column, or something
-other than a numeric value into the other columns, will result
-in an error.
-</p>
+The first column of an SQLite R*Tree is similar to an integer primary 
+key column of a normal SQLite table. It may only store a 64-bit signed
+integer value. Inserting a NULL value into this column causes SQLite
+to automatically generate a new unique primary key value. If an attempt
+is made to insert any other non-integer value into this column,
+the r-tree module silently converts it to an integer before writing it
+into the database.
+<p>
+The min/max-value pair columns are stored as 32-bit floating point values for
+"rtree" virtual tables or as 32-bit signed integers in "rtree_i32" virtual
+tables.  Unlike regular SQLite tables which can store data in a variety of
+datatypes and formats, the R*Tree rigidly enforce these storage types. 
+If any other type of value is inserted into such a column, the r-tree
+module silently converts it to the required type before writing the
+new record to the database.
 
 <h3>3.1 Creating An R*Tree Index</h3>
 

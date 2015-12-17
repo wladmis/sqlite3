@@ -428,6 +428,7 @@ struct Wal {
   u8 syncHeader;             /* Fsync the WAL header if true */
   u8 padToSectorBoundary;    /* Pad transactions out to the next sector */
   WalIndexHdr hdr;           /* Wal-index header for current transaction */
+  u32 minFrame;              /* Ignore wal frames before this one */
   const char *zWalName;      /* Name of WAL file */
   u32 nCkpt;                 /* Checkpoint sequence counter in the wal-header */
 #ifdef SQLITE_DEBUG
@@ -648,9 +649,9 @@ static void walIndexWriteHdr(Wal *pWal){
   pWal->hdr.isInit = 1;
   pWal->hdr.iVersion = WALINDEX_MAX_VERSION;
   walChecksumBytes(1, (u8*)&pWal->hdr, nCksum, 0, pWal->hdr.aCksum);
-  memcpy((void *)&aHdr[1], (void *)&pWal->hdr, sizeof(WalIndexHdr));
+  memcpy((void*)&aHdr[1], (const void*)&pWal->hdr, sizeof(WalIndexHdr));
   walShmBarrier(pWal);
-  memcpy((void *)&aHdr[0], (void *)&pWal->hdr, sizeof(WalIndexHdr));
+  memcpy((void*)&aHdr[0], (const void*)&pWal->hdr, sizeof(WalIndexHdr));
 }
 
 /*
@@ -952,13 +953,13 @@ static void walCleanupHash(Wal *pWal){
   ** via the hash table even after the cleanup.
   */
   if( iLimit ){
-    int i;           /* Loop counter */
+    int j;           /* Loop counter */
     int iKey;        /* Hash key */
-    for(i=1; i<=iLimit; i++){
-      for(iKey=walHash(aPgno[i]); aHash[iKey]; iKey=walNextHash(iKey)){
-        if( aHash[iKey]==i ) break;
+    for(j=1; j<=iLimit; j++){
+      for(iKey=walHash(aPgno[j]); aHash[iKey]; iKey=walNextHash(iKey)){
+        if( aHash[iKey]==j ) break;
       }
-      assert( aHash[iKey]==i );
+      assert( aHash[iKey]==j );
     }
   }
 #endif /* SQLITE_ENABLE_EXPENSIVE_ASSERT */
@@ -1460,7 +1461,7 @@ static void walMergesort(
   int nMerge = 0;                 /* Number of elements in list aMerge */
   ht_slot *aMerge = 0;            /* List to be merged */
   int iList;                      /* Index into input list */
-  int iSub = 0;                   /* Index into aSub array */
+  u32 iSub = 0;                   /* Index into aSub array */
   struct Sublist aSub[13];        /* Array of sub-lists */
 
   memset(aSub, 0, sizeof(aSub));
@@ -1471,7 +1472,9 @@ static void walMergesort(
     nMerge = 1;
     aMerge = &aList[iList];
     for(iSub=0; iList & (1<<iSub); iSub++){
-      struct Sublist *p = &aSub[iSub];
+      struct Sublist *p;
+      assert( iSub<ArraySize(aSub) );
+      p = &aSub[iSub];
       assert( p->aList && p->nList<=(1<<iSub) );
       assert( p->aList==&aList[iList&~((2<<iSub)-1)] );
       walMerge(aContent, p->aList, p->nList, &aMerge, &nMerge, aBuffer);
@@ -1482,7 +1485,9 @@ static void walMergesort(
 
   for(iSub++; iSub<ArraySize(aSub); iSub++){
     if( nList & (1<<iSub) ){
-      struct Sublist *p = &aSub[iSub];
+      struct Sublist *p;
+      assert( iSub<ArraySize(aSub) );
+      p = &aSub[iSub];
       assert( p->nList<=(1<<iSub) );
       assert( p->aList==&aList[nList&~((2<<iSub)-1)] );
       walMerge(aContent, p->aList, p->nList, &aMerge, &nMerge, aBuffer);
@@ -2292,12 +2297,27 @@ static int walTryBeginRead(Wal *pWal, int *pChanged, int useWal, int cnt){
     ** pWal->hdr.mxFrame risks reading a corrupted snapshot. So, retry
     ** instead.
     **
-    ** This does not guarantee that the copy of the wal-index header is up to
-    ** date before proceeding. That would not be possible without somehow
-    ** blocking writers. It only guarantees that a dangerous checkpoint or 
-    ** log-wrap (either of which would require an exclusive lock on
-    ** WAL_READ_LOCK(mxI)) has not occurred since the snapshot was valid.
+    ** Before checking that the live wal-index header has not changed
+    ** since it was read, set Wal.minFrame to the first frame in the wal
+    ** file that has not yet been checkpointed. This client will not need
+    ** to read any frames earlier than minFrame from the wal file - they
+    ** can be safely read directly from the database file.
+    **
+    ** Because a ShmBarrier() call is made between taking the copy of 
+    ** nBackfill and checking that the wal-header in shared-memory still
+    ** matches the one cached in pWal->hdr, it is guaranteed that the 
+    ** checkpointer that set nBackfill was not working with a wal-index
+    ** header newer than that cached in pWal->hdr. If it were, that could
+    ** cause a problem. The checkpointer could omit to checkpoint
+    ** a version of page X that lies before pWal->minFrame (call that version
+    ** A) on the basis that there is a newer version (version B) of the same
+    ** page later in the wal file. But if version B happens to like past
+    ** frame pWal->hdr.mxFrame - then the client would incorrectly assume
+    ** that it can read version A from the database file. However, since
+    ** we can guarantee that the checkpointer that set nBackfill could not
+    ** see any pages past pWal->hdr.mxFrame, this problem does not come up.
     */
+    pWal->minFrame = pInfo->nBackfill+1;
     walShmBarrier(pWal);
     if( pInfo->aReadMark[mxI]!=mxReadMark
      || memcmp((void *)walIndexHdr(pWal), &pWal->hdr, sizeof(WalIndexHdr))
@@ -2368,6 +2388,7 @@ int sqlite3WalFindFrame(
   u32 iRead = 0;                  /* If !=0, WAL frame to return data from */
   u32 iLast = pWal->hdr.mxFrame;  /* Last page in WAL for this reader */
   int iHash;                      /* Used to loop through N hash tables */
+  int iMinHash;
 
   /* This routine is only be called from within a read transaction. */
   assert( pWal->readLock>=0 || pWal->lockError );
@@ -2408,7 +2429,8 @@ int sqlite3WalFindFrame(
   **     This condition filters out entries that were added to the hash
   **     table after the current read-transaction had started.
   */
-  for(iHash=walFramePage(iLast); iHash>=0 && iRead==0; iHash--){
+  iMinHash = walFramePage(pWal->minFrame);
+  for(iHash=walFramePage(iLast); iHash>=iMinHash && iRead==0; iHash--){
     volatile ht_slot *aHash;      /* Pointer to hash table */
     volatile u32 *aPgno;          /* Pointer to array of page numbers */
     u32 iZero;                    /* Frame number corresponding to aPgno[0] */
@@ -2423,7 +2445,7 @@ int sqlite3WalFindFrame(
     nCollide = HASHTABLE_NSLOT;
     for(iKey=walHash(pgno); aHash[iKey]; iKey=walNextHash(iKey)){
       u32 iFrame = aHash[iKey] + iZero;
-      if( iFrame<=iLast && aPgno[aHash[iKey]]==pgno ){
+      if( iFrame<=iLast && iFrame>=pWal->minFrame && aPgno[aHash[iKey]]==pgno ){
         assert( iFrame>iRead || CORRUPT_DB );
         iRead = iFrame;
       }
@@ -2440,7 +2462,8 @@ int sqlite3WalFindFrame(
   {
     u32 iRead2 = 0;
     u32 iTest;
-    for(iTest=iLast; iTest>0; iTest--){
+    assert( pWal->minFrame>0 );
+    for(iTest=iLast; iTest>=pWal->minFrame; iTest--){
       if( walFramePgno(pWal, iTest)==pgno ){
         iRead2 = iTest;
         break;

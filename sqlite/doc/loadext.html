@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -143,7 +149,7 @@ on an as-needed basis.</p>
 <p>Extensions can also be statically linked with the application.
 The code template shown below will work just as well as a statically
 linked extension as it does as a run-time loadable extension except that
-you should want to give the entry point function ("sqlite3_extension_init")
+you should give the entry point function ("sqlite3_extension_init")
 a different name to avoid name collisions if your application contains
 two or more extensions.</p>
 
@@ -242,7 +248,7 @@ will usually work:</p>
 
 <blockquote><pre>
 cl YourCode.c -link -dll -out:YourCode.dll
-</blockquote></pre>
+</pre></blockquote>
 
 <p>To compile for Windows using MinGW, the command line is just like it
 is for unix except that the output file suffix is changed to ".dll" and

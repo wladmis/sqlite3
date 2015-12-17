@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -275,10 +281,10 @@ like this:
 <blockquote><pre>
 CREATE TABLE files(filename TEXT PRIMARY KEY, content BLOB);
 </pre></blockquote>
-If the content is compressed, then such an SQLite database is only
-slightly larger, and <a href="affcase1.html#smaller">sometimes smaller</a> 
-than an equivalent ZIP archive, and it has the advantage
-of being able to update individual "files" without rewrite
+If the content is compressed, then such an SQLite database is
+<a href="affcase1.html#smaller">the same size</a> (&#177;1%)
+as an equivalent ZIP archive, and it has the advantage
+of being able to update individual "files" without rewriting
 the entire document.
 
 <p>
@@ -322,9 +328,10 @@ application C code, and SQLite will take care of all of the application
 file I/O.  This can reduce application code size by many thousands of
 lines, with corresponding saving in development and maintenance costs.
 
-<p>SQLite is widely used and stable.  There are literally billions of
-SQLite database files in use daily, on smartphones and gadgets
-and in desktop applications.
+<p>SQLite is one of the
+<a href="mostdeployed.html">most used</a> software libraries in the world.
+There are literally tens of billions of SQLite database files in use 
+daily, on smartphones and gadgets and in desktop applications.
 SQLite is <a href="testing.html">carefully tested</a> and proven reliable.  It is not
 a component that needs much tuning or debugging, allowing developers
 to stay focused on application logic.
@@ -375,9 +382,8 @@ more powerful and convenient way for examining the content, so the
 inability to use "grep" and "awk" and the like is not seen as a loss.
 
 <p>An SQLite database is a <a href="fileformat2.html">well-defined and well-documented</a>
-file format that is in widespread use by literally hundreds of 
-thousands of applications and
-is backwards compatible to its inception in 2004 and which promises
+file format that is in widespread use by literally millions of applications
+and is backwards compatible to its inception in 2004 and which promises
 to continue to be compatible in years to come.  The longevity of
 SQLite database files is particularly important to bespoke applications,
 since it allows the document content to be accessed years or decades in the
@@ -426,10 +432,9 @@ usually larger with pile-of-file formats (a single file) than with SQLite
 Instead of collecting changes in memory and then writing
 them to disk only on a File/Save action, changes can be written back to
 the disk as they occur.  This avoids loss of work on a system crash or
-power failure.  The undo/redo stack can also be kept in the on-disk 
-database, meaning that undo/redo can occur across session boundaries.
-Maintenance of the undo/redo stack can often be automated using SQL
-triggers.
+power failure.  An <a href="undoredo.html">automated undo/redo stack</a>, managed using triggers,
+can be kept in the on-disk  database, meaning that undo/redo can occur 
+across session boundaries.
 
 <li><p><b>Easily Extensible.</b>
 As an application grows, new features can be added to an

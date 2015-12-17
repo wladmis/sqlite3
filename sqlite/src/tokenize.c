@@ -102,7 +102,11 @@ const char sqlite3IsEbcdicIdChar[] = {
 };
 #define IdChar(C)  (((c=C)>=0x42 && sqlite3IsEbcdicIdChar[c-0x40]))
 #endif
+
+/* Make the IdChar function accessible from ctime.c */
+#ifndef SQLITE_OMIT_COMPILEOPTION_DIAGS
 int sqlite3IsIdChar(u8 c){ return IdChar(c); }
+#endif
 
 
 /*
@@ -399,6 +403,7 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   pParse->zTail = zSql;
   i = 0;
   assert( pzErrMsg!=0 );
+  /* sqlite3ParserTrace(stdout, "parser: "); */
   pEngine = sqlite3ParserAlloc(sqlite3Malloc);
   if( pEngine==0 ){
     db->mallocFailed = 1;
@@ -450,7 +455,8 @@ int sqlite3RunParser(Parse *pParse, const char *zSql, char **pzErrMsg){
   }
 abort_parse:
   assert( nErr==0 );
-  if( zSql[i]==0 && pParse->rc==SQLITE_OK && db->mallocFailed==0 ){
+  if( pParse->rc==SQLITE_OK && db->mallocFailed==0 ){
+    assert( zSql[i]==0 );
     if( lastTokenParsed!=TK_SEMI ){
       sqlite3Parser(pEngine, TK_SEMI, pParse->sLastToken, pParse);
       pParse->zTail = &zSql[i];
@@ -472,7 +478,7 @@ abort_parse:
     pParse->rc = SQLITE_NOMEM;
   }
   if( pParse->rc!=SQLITE_OK && pParse->rc!=SQLITE_DONE && pParse->zErrMsg==0 ){
-    sqlite3SetString(&pParse->zErrMsg, db, "%s", sqlite3ErrStr(pParse->rc));
+    pParse->zErrMsg = sqlite3MPrintf(db, "%s", sqlite3ErrStr(pParse->rc));
   }
   assert( pzErrMsg!=0 );
   if( pParse->zErrMsg ){

@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -131,7 +137,7 @@ a:visited { color: #734559 }
 <h2>SQLite Release 3.8.10 On 2015-05-07</h2><p><ul>
 <li>Added the <a href="../sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
     SQLite database files.
-<li>Added the <a href="../fts3.html#matchinfo-y">y format string</a> to the 
+<li>Added the <a href="../fts3.html#matchinfo-y">matchinfo y flag</a> to the 
     <a href="../fts3.html#matchinfo">matchinfo()</a> function of <a href="../fts3.html">FTS3</a>.
 <li>Performance improvements for <a href="../lang_select.html#orderby">ORDER BY</a>, <a href="../lang_vacuum.html">VACUUM</a>, <a href="../lang_createindex.html">CREATE INDEX</a>,
     <a href="../pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, and <a href="../pragma.html#pragma_quick_check">PRAGMA quick_check</a>.
@@ -148,8 +154,9 @@ a:visited { color: #734559 }
 <li>SHA1 for sqlite3.c: 0b34f0de356a3f21b9dfc761f3b7821b6353c570
 </ul></p>
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
-      in a single page is also available.  A detailed history of every
+      in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
+      A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
-      http://www.sqlite.org/src/timeline</a>.</p>
+      SQLite version control site</a>.</p>
     

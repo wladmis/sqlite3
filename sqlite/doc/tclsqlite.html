@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -134,8 +140,8 @@ a:visited { color: #734559 }
 <h1 align=center>The Tcl interface to the SQLite library</h1>
 
 <p>The SQLite library is designed to be very easy to use from
-a <a href="http://www.tcl.tk">Tcl or Tcl/Tk</a> script.  SQLite
-began as a <a href="http://www.tcl.tk/doc/tea/">Tcl extension</a>
+a <a href="http://www.tcl-lang.org">Tcl or Tcl/Tk</a> script.  SQLite
+began as a <a href="http://www.tcl-lang.org/doc/tea/">Tcl extension</a>
 and the primary <a href="testing.html">test suite</a> for SQLite is written in TCL.  SQLite
 can be used with any programming language, but its connections to
 TCL run deep.</p>
@@ -920,7 +926,7 @@ database file from which the content is extracted.</p>
 </p>
 
 <blockquote>
-<i>dbcmd</i>&nbsp;&nbsp;<b>profile</b>&nbsp;&nbsp;?<i>script</i>
+<i>dbcmd</i>&nbsp;&nbsp;<b>profile</b>&nbsp;&nbsp;?<i>script</i>?
 </blockquote>
 
 <p>Unless <i>script</i> is an empty string, this method arranges for the

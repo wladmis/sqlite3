@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -129,8 +135,8 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>DROP VIEW</h2><p><b><a href="syntax/drop-view-stmt.html">drop-view-stmt:</a></b>
-<button id='x1069' onclick='hideorshow("x1069","x1070")'>hide</button></p>
- <blockquote id='x1070'>
+<button id='x1071' onclick='hideorshow("x1071","x1072")'>hide</button></p>
+ <blockquote id='x1072'>
  <img alt="syntax diagram drop-view-stmt" src="images/syntax/drop-view-stmt.gif" />
 </blockquote>
 
@@ -140,7 +146,7 @@ a:visited { color: #734559 }
   no actual data in the underlying base tables is modified.
 
 <p>The view to drop is identified by the view-name and optional 
-  database-name specified as part of the DROP VIEW statement. This 
+  schema-name specified as part of the DROP VIEW statement. This 
   reference is resolved using the standard procedure for <a href="lang_naming.html">object resolution</a>.
 
 <p>

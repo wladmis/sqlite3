@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -133,23 +139,38 @@ a:visited { color: #734559 }
 
 <h2>1.0 The SQLite Amalgamation</h2>
 
-<p>The core SQLite library consists of 102 files of C code
-(as of <a href="releaselog/3_8_8.html">Version 3.8.8</a>) in the core with 18 additional files
-in the <a href="fts3.html">FTS3</a> and <a href="rtree.html">RTREE</a> extensions.
+<p>The SQLite library consists of 102 files of C code
+(as of <a href="releaselog/3_9_0.html">Version 3.9.0</a>) in the core with 32 additional files that
+implement the <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, <a href="rtree.html">RTREE</a>, <a href="dbstat.html">DBSTAT</a>, <a href="json1.html">JSON1</a>, and
+<a href="rbu.html">RBU</a> extensions.
 Most of these are "source" files in the sense that they are stored 
-in the configuration management system and are maintained directly. 
-But 6 of the core C files are generated automatically using scripts
+in the <a href="https://www.sqlite.org/src">SQLite version control system</a>
+and are maintained directly. 
+But some of the C files are generated automatically using scripts
 or auxiliary programs during the compilation process.  Of the 102 
-core files, 75 are C code and 26 are C header files.</p>
+main source files, about 75% are C code and about 25% are C header files.</p>
 
 <p>The standard makefiles for SQLite have a target for building
 an object we call the "amalgamation".  
 The amalgamation is a single C code file, named "sqlite3.c",
 that contains all C code 
-for the core SQLite library and the <a href="fts3.html">FTS3</a> and <a href="rtree.html">RTREE</a> extensions.
-This file contains about 153K lines of code 
-(93K if you omit blank lines and comments) and is over 5.4 megabytes
-in size.</p>
+for the core SQLite library and the <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, <a href="rtree.html">RTREE</a>,
+<a href="dbstat.html">DBSTAT</a>, <a href="json1.html">JSON1</a>, and <a href="rbu.html">RBU</a> extensions.
+This file contains about 184K lines of code 
+(113K if you omit blank lines and comments) and is over 6.4 megabytes
+in size.
+Though the the various extensions are included in the
+"sqlite3.c" amalgamation file, they are disabled using #ifdef statements.
+Activate the extensions using <a href="compile.html">compile-time options</a> like:
+
+<ul>
+<li> <a href="compile.html#enable_fts3">-DSQLITE_ENABLE_FTS3</a>
+<li> <a href="compile.html#enable_fts5">-DSQLITE_ENABLE_FTS5</a>
+<li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a>
+<li> <a href="compile.html#enable_dbstat_vtab">-DSQLITE_ENABLE_DBSTAT_VTAB</a>
+<li> <a href="compile.html#enable_json1">-DSQLITE_ENABLE_JSON1</a>
+<li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a>
+</ul>
 
 <p>The amalgamation contains everything you need to integrate SQLite 
 into a larger project.  Just copy the amalgamation into your source 
@@ -179,8 +200,8 @@ binary image larger.</p>
 
 <h2>2.0 The Split Amalgamation</h2>
 
-<p>Developers sometimes experience difficulting debugging the
-150,000-line-long amalgamation source file because some debuggers
+<p>Developers sometimes experience trouble debugging the
+185,000-line-long amalgamation source file because some debuggers
 are only able to handle source code line numbers less than 32,768.
 The amalgamation source code runs fine.  One just cannot single-step
 through it in a debugger.
@@ -198,6 +219,8 @@ complete amalgamation.  Then there is a separate source file named
 #include "sqlite3-3.c"
 #include "sqlite3-4.c"
 #include "sqlite3-5.c"
+#include "sqlite3-6.c"
+#include "sqlite3-7.c"
 </pre></blockquote>
 
 <p>Applications using the split amalgamation simply compile against
@@ -244,9 +267,9 @@ substituting "sqlite3-all.c" for "sqlite3.c" as the make target.
 <h3>4.1 Dependencies</h3>
 
 <p>The build process makes extensive use of the 
-<a href="http://www.tcl.tk/">Tcl</a> scripting language.  You will need to have a
+<a href="http://www.tcl-lang.org/">Tcl</a> scripting language.  You will need to have a
 copy of TCL installed in order for the make targets above to work.
-Easy-to-use installers can be obtained from <a href="http://www.tcl.tk/">http://www.tcl.tk/</a>.
+Easy-to-use installers can be obtained from <a href="http://www.tcl-lang.org/">http://www.tcl-lang.org/</a>.
 May unix workstations of Tcl installed by default.
 
 <p>The build process also uses <a href="http://en.wikipedia.org/wiki/AWK">AWK</a>.

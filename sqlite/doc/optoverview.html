@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -167,6 +173,7 @@ a:visited { color: #734559 }
 </p>
 <blockquote><pre><b>
   </b><i>column</i><b> = </b><i>expression</i><b>
+  </b><i>column</i><b> IS </b><i>expression</i><b>
   </b><i>column</i><b> &gt; </b><i>expression</i><b>
   </b><i>column</i><b> &gt;= </b><i>expression</i><b>
   </b><i>column</i><b> &lt; </b><i>expression</i><b>
@@ -188,7 +195,7 @@ a:visited { color: #734559 }
   Then the index might be used if the initial columns of the index
   (columns a, b, and so forth) appear in WHERE clause terms.
   The initial columns of the index must be used with
-  the <tt><b><big>=</big></b></tt> or <tt><b><big>IN</big></b></tt> or <tt><b><big>IS NULL</big></b></tt> operators.  
+  the <tt><b><big>=</big></b></tt> or <tt><b><big>IN</big></b></tt> or <tt><b><big>IS</big></b></tt> operators.  
   The right-most column that is used can employ inequalities.  
   For the right-most
   column of an index that is used, there can be up to two inequalities
@@ -197,7 +204,7 @@ a:visited { color: #734559 }
 <p>
   It is not necessary for every column of an index to appear in a
   WHERE clause term in order for that index to be used. 
-  But there can not be gaps in the columns of the index that are used.
+  But there cannot be gaps in the columns of the index that are used.
   Thus for the example index above, if there is no WHERE clause term
   that constraints column c, then terms that constrain columns a and b can
   be used with the index but not terms that constraint columns d through z.
@@ -205,6 +212,12 @@ a:visited { color: #734559 }
   if they are to the right of a 
   column that is constrained only by inequalities.
   (See the <a href="optoverview.html#skipscan">skip-scan optimization</a> below for the exception.)
+</p>
+<p>
+  In the case of <a href="expridx.html">indexes on expressions</a>, whenever the word "column" is
+  used in the foregoing text, one can substitute "indexed expression"
+  (meaning a copy of the expression that appears in the <a href="lang_createindex.html">CREATE INDEX</a>
+  statement) and everything will work the same.
 </p>
 <a name="idxexamp"></a>
 <h3>1.1 Index term usage examples</h3><p>
@@ -333,9 +346,8 @@ a:visited { color: #734559 }
   The rewritten expression above is conceptual; WHERE clauses containing
   OR are not really rewritten this way.
   The actual implementation of the OR clause uses a mechanism that is
-  more efficient than subqueries and which works even 
-  for tables where the "rowid" column name has been 
-  overloaded for other uses and no longer refers to the real rowid.
+  more efficient and that works even for <a href="withoutrowid.html">WITHOUT ROWID</a> tables or 
+  tables in which the "rowid" is inaccessible.
   But the essence of the implementation is captured by the statement
   above:  Separate indices are used to find candidate result rows
   from each OR clause term and the final result is the union of
@@ -1138,7 +1150,7 @@ a:visited { color: #734559 }
   SELECT MIN(x) FROM table;
   SELECT MAX(x)+1 FROM table;
 </pre></blockquote><a name="autoindex"></a>
-<h2>12.0 Automatic Indices</h2><p>
+<h2>12.0 Automatic Indexes</h2><p>
   When no indices are available to aid the evaluation of a query, SQLite
   might create an automatic index that lasts only for the duration
   of a single SQL statement.
@@ -1186,13 +1198,23 @@ a:visited { color: #734559 }
   compiling with the <a href="compile.html#omit_automatic_index">SQLITE_OMIT_AUTOMATIC_INDEX</a> compile-time option.
 </p>
 <p>
-  In SQLite version 3.8.0, an <a href="rescode.html#warning_autoindex">SQLITE_WARNING_AUTOINDEX</a> message is sent
+  In SQLite version 3.8.0 and later, 
+  an <a href="rescode.html#warning_autoindex">SQLITE_WARNING_AUTOINDEX</a> message is sent
   to the <a href="errlog.html">error log</a> every time a statement is prepared that uses an
   automatic index.  Application developers can and should use these warnings
   to identify the need for new persistent indices in the schema.
 </p>
 <p>
-  Future releases of SQLite may disable automatic indices by default.
+  Do not confuse automatic indexes with the <a href="fileformat2.html#intschema">internal indexes</a> (having names
+  like "sqlite_autoindex_<i>table</i>_<i>N</i>") that are sometimes
+  created to implement a <a href="lang_createtable.html#primkeyconst">PRIMARY KEY constraint</a> or <a href="lang_createtable.html#uniqueconst">UNIQUE constraint</a>.
+  The automatic indexes described here exist only for the duration of a
+  single query, are never persisted to disk, and are only visible to a
+  single database connection.  Internal indexes are part of the implementation
+  of PRIMARY KEY and UNIQUE constraints, are long-lasting and persisted
+  to disk, and are visible to all database connections.  The term "autoindex"
+  appears in the names of <a href="fileformat2.html#intschema">internal indexes</a> for legacy reasons and does
+  not indicate that internal indexes and automatic indexes are related.
 </p>
 
 

@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -130,7 +136,7 @@ a:visited { color: #734559 }
   
 
 
-<h2>SQLite Copyright</h2>
+<h2>SQLite Is Public Domain</h2>
 
 <table align="right" vspace="0" hspace="10" border="1" cellpadding="20">
 <tr><td align="center">
@@ -174,7 +180,14 @@ on file.  So the SQLite code base is clean and is
 uncontaminated with licensed code from other projects.
 </p>
 
-<h2>Obtaining An Explicit License To Use SQLite</h2>
+<table border=0 align='right'>
+<tr><td>
+<form method="GET" action="http://www.hwaci.com/cgi-bin/license-step1">
+<input type="submit" value="Buy An SQLite License">
+</form>
+</table>
+
+<h2>Obtaining An License To Use SQLite</h2>
 
 <p>
 Even though SQLite is in the public domain and does not require
@@ -183,6 +196,8 @@ for obtaining a license include:
 </p>
 
 <ul>
+<li> Your company desires warranty of title and
+     indemnity against claims of copyright infringement.
 <li> You are using SQLite in a jurisdiction that does not recognize
      the public domain.  </li>
 <li> You are using SQLite in a jurisdiction that does not recognize
@@ -196,11 +211,13 @@ for obtaining a license include:
 </ul>
 
 <p>
-If you feel like you really have to purchase a license for SQLite,
+If you feel like you really need to purchase a license for SQLite,
 <a href="http://www.hwaci.com/">Hwaci</a>, the company that employs 
 the architect and principal developers of SQLite, will 
 <a href="http://www.hwaci.com/cgi-bin/license-step1">sell you
 one</a>.
+All proceeds from the sale of SQLite licenses are used to fund further
+improvements to SQLite.
 </p>
 
 <h2>Contributed Code</h2>

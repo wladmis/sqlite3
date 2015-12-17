@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -138,13 +144,13 @@ a:visited { color: #734559 }
 <p>A virtual table is an object that is registered with an open SQLite
 <a href="c3ref/sqlite3.html">database connection</a>. From the perspective of an SQL statement,
 the virtual table object looks like any other table or view. 
-But behind the scenes, queries from and updates to a virtual table
-invoke callback methods on the virtual table object instead of
+But behind the scenes, queries and updates on a virtual table
+invoke callback methods of the virtual table object instead of
 reading and writing to the database file.
 
 <p>The virtual table mechanism allows an application to publish
 interfaces that are accessible from SQL statements as if they were
-tables. SQL statements can in general do anything to a
+tables. SQL statements can do almost anything to a
 virtual table that they can do to a real table, with the following
 exceptions:
 
@@ -159,7 +165,7 @@ exceptions:
      commands against a virtual table.
 </ul>
 
-<p>Particular virtual table implementations might impose additional
+<p>Individual virtual table implementations might impose additional
 constraints. For example, some virtual implementations might provide
 read-only tables. Or some virtual table implementations might allow
 <a href="lang_insert.html">INSERT</a> or <a href="lang_delete.html">DELETE</a> but not <a href="lang_update.html">UPDATE</a>.  Or some virtual table implementations
@@ -170,22 +176,35 @@ Or it might represent a view of data on disk that is not in the
 SQLite format. Or the application might compute the content of the 
 virtual table on demand.
 
-<p>Here are some postulated uses for virtual tables:
+<p>Here are some existing and postulated uses for virtual tables:
 
 <ul>
 <li> A <a href="fts3.html">full-text search</a> interface
 <li> Spatial indices using <a href="rtree.html">R-Trees</a>
+<li> Introspect the disk content of an SQLite database file
+     (the <a href="dbstat.html">dbstat virtual table</a>)
 <li> Read and/or write the content of a comma-separated value (CSV)
      file
-<li> Access to the filesystem of the host computer
+<li> Access the filesystem of the host computer as if it were a database table
 <li> Enabling SQL manipulation of data in statistics packages like R
 </ul>
 
 <h3>1.1 Usage</h3>
 
 <p>A virtual table is created using a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
-This statement creates a table with a particular name and associates the
-table with a "module".
+
+<p><b><a href="syntax/create-virtual-table-stmt.html">create-virtual-table-stmt:</a></b>
+<button id='x1475' onclick='hideorshow("x1475","x1476")'>hide</button></p>
+ <blockquote id='x1476'>
+ <img alt="syntax diagram create-virtual-table-stmt" src="images/syntax/create-virtual-table-stmt.gif" />
+</blockquote>
+
+
+<p>The CREATE VIRTUAL TABLE statement creates a new table
+called <span class='yyterm'>table-name</span> derived from the class
+class <span class='yyterm'>module-name</span>.  The <span class='yyterm'>module-name</span>
+is the name that is registered for the virtual table by
+the <a href="c3ref/create_module.html">sqlite3_create_module()</a> interface.
 
 <blockquote><pre>
    CREATE VIRTUAL TABLE tablename USING modulename;
@@ -198,9 +217,11 @@ the module name:
    CREATE VIRTUAL TABLE tablename USING modulename(arg1, arg2, ...);
 </pre></blockquote>
 
-<p>The format of the arguments to the module is very general. Each argument 
-can consist of keywords, string literals, identifiers, numbers, and 
-punctuation. The arguments are passed as written (as text) into the
+<p>The format of the arguments to the module is very general. Each 
+<span class='yyterm'>module-argument</span>
+may contain keywords, string literals, identifiers, numbers, and 
+punctuation. Each <span class='yyterm'>module-argument</span> is passed as 
+written (as text) into the
 <a href="vtab.html#xcreate">constructor method</a> of the virtual table implementation 
 when the virtual 
 table is created and that constructor is responsible for parsing and 
@@ -215,7 +236,65 @@ table with the exceptions noted above and imposed by specific virtual
 table implementations. A virtual table is destroyed using the ordinary
 <a href="lang_droptable.html">DROP TABLE</a> syntax.
 
-<h2>1.2 Implementation</h2>
+<h4>1.1.1 Temporary virtual tables</h4>
+
+<p>There is no "CREATE TEMP VIRTUAL TABLE" statement.  To create a
+temporary virtual table, add the "temp" schema
+before the virtual table name.
+
+<blockcuqote><pre>
+   CREATE VIRTUAL TABLE <b>temp.</b>tablename USING module(arg1, ...);
+</pre></blockquote>
+
+<a name="epovtab"></a>
+
+<h4>1.1.2 Eponymous virtual tables</h4>
+
+<p>Some virtual tables exist automatically in the "main" schema of
+every database connection in which their
+module is registered, even without a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
+Such virtual tables are called "eponymous virtual tables".
+To use an eponymous virtual table, simple use the 
+module name as if it were a table.
+Eponymous virtual tables exist in the "main" schema only, so they will
+not work if prefixed with a different schema name.
+
+<p>An example of an eponymous virtual table is the <a href="dbstat.html">dbstat virtual table</a>.
+To use the dbstat virtual table as an eponymous virtual table, 
+simply query against the "dbstat"
+module name, as if it were an ordinary table.  (Note that SQLite
+must be compiled with the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option to include
+the dbstat virtual table in the build.)
+
+<blockquote><pre>
+   SELECT * FROM dbstat;
+</pre></blockquote>
+
+<p>A virtual table is eponymous if its <a href="vtab.html#xcreate">xCreate</a> method is the exact same
+function as the <a href="vtab.html#xconnect">xConnect</a> method, or if the <a href="vtab.html#xcreate">xCreate</a> method is NULL.
+The <a href="vtab.html#xcreate">xCreate</a> method is called when a virtual table is first created
+using the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.  The <a href="vtab.html#xconnect">xConnect</a> method whenever
+a database connection attaches to or reparses a schema. When these two methods
+are the same, that indicates that the virtual table has no persistent
+state that needs to be created and destroyed.
+
+<a name="epoonlyvtab"></a>
+
+<h5>1.1.2.1 Eponymous-only virtual tables</h5>
+<p>If the <a href="vtab.html#xcreate">xCreate</a> method is NULL, then
+<a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statements are prohibited for that virtual table,
+and the virtual table is an "eponymous-only virtual table".
+Eponymous-only virtual tables are useful as 
+<a href="vtab.html#tabfunc2">table-valued functions</a>.
+
+<p>
+Note that SQLite versions prior to 3.9.0 did not check the xCreate method
+for NULL before invoking it.  So if an eponymous-only virtual table is
+registered with SQLite version 3.8.11.1 or earlier and a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a>
+command is attempted against that virtual table module, a jump to a NULL
+pointer will occur, resulting in a crash.
+
+<h3>1.2 Implementation</h3>
 
 <p>Several new C-level objects are used by the virtual table implementation:
 
@@ -471,10 +550,21 @@ an SQLite memory allocation function like
 attempt to free the space using <a href="c3ref/free.html">sqlite3_free()</a> after the error has
 been reported up to the application.
 
-<p>The xCreate method is required for every virtual table implementation, 
-though the xCreate and <a href="vtab.html#xconnect">xConnect</a> pointers of the <a href="c3ref/module.html">sqlite3_module</a> object
-may point to the same function if the virtual table does not need to
-initialize backing store.
+<p>
+If the xCreate method is omitted (left as a NULL pointer) then the
+virtual table is an <a href="vtab.html#epoonlyvtab">eponymous-only virtual table</a>.  New instances of
+the virtual table cannot be created using <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> and the
+virtual table can only be used via its module name.
+Note that SQLite versions prior to 3.9.0 do not understand
+eponymous-only virtual tables and will segfault if an attempt is made
+to <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> on an eponymous-only virtual table because
+the xCreate method was not checked for null.
+
+<p>
+If the xCreate method is the exact same pointer as the <a href="vtab.html#xconnect">xConnect</a> method,
+that indicates that the virtual table does not need to initialize backing
+store.  Such a virtual table can be used as an <a href="vtab.html#epovtab">eponymous virtual table</a>
+or as a named virtual table using <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> or both.
 
 <a name="hiddencol"></a>
 
@@ -509,6 +599,51 @@ table implementation, where every FTS virtual table
 contains an <a href="fts3.html#hiddencol">FTS hidden column</a> that is used to pass information from the
 virtual table into <a href="fts3.html#snippet">FTS auxiliary functions</a> and to the <a href="fts3.html#section_3">FTS MATCH</a> operator.
 
+<a name="tabfunc2"></a>
+
+<h4>2.1.2 Table-valued functions</h4>
+
+<p>A <a href="vtab.html">virtual table</a> that contains <a href="vtab.html#hiddencol">hidden columns</a> can be used like
+a table-valued function in the FROM clause of a <a href="lang_select.html">SELECT</a> statement.
+The arguments to the table-valued function become constraints on 
+the HIDDEN columns of the virtual table.
+
+<p>For example, the "generate_series" extension (located in the
+<a href="http://www.sqlite.org/src/artifact?ci=trunk&filename=ext/misc/series.c">ext/misc/series.c</a>
+file in the <a href="http://www.sqlite.org/src/tree?ci=trunk">source tree</a>)
+implements an <a href="vtab.html#epovtab">eponymous virtual table</a> with the following schema:
+
+<blockquote><pre>
+CREATE TABLE generate_series(
+  value,
+  start HIDDEN,
+  stop HIDDEN,
+  step HIDDEN
+);
+</pre></blockquote>
+
+<p>The <a href="vtab.html#xbestindex">sqlite3_module.xBestIndex</a> method in the implementation of this
+table checks for equality constraints against the HIDDEN columns, and uses
+those as input parameters to determine the range of integer "value" outputs
+to generate.  Reasonable defaults are used for any unconstrained columns.
+For example, to list all integers between 5 and 50:
+
+<blockquote><pre>
+SELECT value FROM generate_series(5,50);
+</pre></blockquote>
+
+<p>The previous query is equivalent to the following:
+
+<blockquote><pre>
+SELECT value FROM generate_series WHERE start=5 AND stop=50;
+</pre></blockquote>
+
+<p>Arguments on the virtual table name are matched to <a href="vtab.html#hiddencol">hidden columns</a>
+in order.  The number of arguments can be less than the
+number of hidden columns, in which case the latter hidden columns are
+unconstrained.  However, an error results if there are more arguments
+than there are hidden columns in the virtual table.
+
 
 <a name="xconnect"></a>
 
@@ -534,7 +669,8 @@ to create a new virtual table from scratch.
 virtual table has some kind of backing store that must be initialized 
 the first time the virtual table is created. The xCreate method creates 
 and initializes the backing store. The xConnect method just connects 
-to an existing backing store.
+to an existing backing store.  When xCreate and xConnect are the same,
+the table is an <a href="vtab.html#epovtab">eponymous virtual table</a>.
 
 <p>As an example, consider a virtual table implementation that 
 provides read-only access to existing comma-separated-value (CSV)
@@ -611,15 +747,18 @@ forms the reply. The <a href="c3ref/index_info.html">sqlite3_index_info</a> stru
     double estimatedCost;      /* Estimated cost of using this index */
     <b>/* Fields below are only available in SQLite 3.8.2 and later */</b>
     sqlite3_int64 estimatedRows;    /* Estimated number of rows returned */
+    <b>/* Fields below are only available in SQLite 3.9.0 and later */</b>
+    int idxFlags;              /* Mask of SQLITE_INDEX_SCAN_* flags */
   };
 </pre></blockquote>
 
-<p>Please note the warning above the "estimatedRows" field. This field was
-added to the structure beginning with SQLite version 3.8.2. This means that any
-extension that reads or writes this field must first check that the version of
-the SQLite library in use is greater than or equal to 3.8.2 - perhaps using
-a call to <a href="c3ref/libversion.html">sqlite3_version()</a>. The results of attempting to access this field
-within a structure created by an older version of SQLite are undefined.
+<p>Please note the warnings on the "estimatedRows" and "idxFlags" field.
+These fields were added with SQLite versions 3.8.2 and 3.9.0, respectively. 
+Any extension that reads or writes these fields must first check that the 
+version of the SQLite library in use is greater than or equal to 3.8.2 or
+3.9.0 - perhaps using a call to <a href="c3ref/libversion.html">sqlite3_version()</a>. The result of attempting 
+to access these fields in an sqlite3_index_info structure created by an 
+older version of SQLite are undefined.
 
 <p>In addition, there are some defined constants:
 
@@ -630,6 +769,7 @@ within a structure created by an older version of SQLite are undefined.
   #define SQLITE_INDEX_CONSTRAINT_LT    16
   #define SQLITE_INDEX_CONSTRAINT_GE    32
   #define SQLITE_INDEX_CONSTRAINT_MATCH 64
+  #define SQLITE_INDEX_SCAN_UNIQUE      1     /* Scan visits at most 1 row */
 </pre></blockquote>
 
 <p>The SQLite core calls the xBestIndex method when it is compiling a query
@@ -777,6 +917,11 @@ field may be set to an estimate of the number of rows returned by the
 proposed query plan. If this value is not explicitly set, the default 
 estimate of 25 rows is used.
 
+<p>If the current version of SQLite is 3.9.0 or greater, the idxFlags field
+may be set to SQLITE_INDEX_SCAN_UNIQUE to indicate that the virtual table
+will return only zero or one rows given the input constraints.  Additional
+bits of the idxFlags field might be understood in later versions of SQLite.
+
 <p>The aConstraintUsage[] array contains one element for each of 
 the nConstraint constraints in the inputs section of the 
 <a href="c3ref/index_info.html">sqlite3_index_info</a> structure. 
@@ -784,7 +929,7 @@ The aConstraintUsage[] array is used by xBestIndex to tell the
 core how it is using the constraints.
 
 <p>The xBestIndex method may set aConstraintUsage[].argvIndex 
-entries to values greater than one. 
+entries to values greater than zero. 
 Exactly one entry should be set to 1, another to 2, another to 3, 
 and so forth up to as many or as few as the xBestIndex method wants. 
 The EXPR of the corresponding constraints will then be passed 

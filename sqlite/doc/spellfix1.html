@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -235,7 +241,7 @@ is the new maximum.  For example, to see the 5 best matches:
 SELECT word FROM demo WHERE word MATCH 'kennes*' AND top=5;
 </pre></blockquote>
 
-<p>Each entry in the spellfix1 virtual table is associated with a
+<p>Each entry in the spellfix1 virtual table is associated with
 a particular language, identified by the integer "langid" column.
 The default langid is 0 and if no other actions are taken, the
 entire vocabulary is a part of the 0 language.  But if your application
@@ -279,7 +285,7 @@ as a foreign key on other tables in the database.
 
 <dt><p><b>word</b><dd>
 The text of the word that matches the pattern.
-Both word and pattern can contains unicode characters
+Both word and pattern can contain unicode characters
 and can be mixed case.
 
 <dt><p><b>rank</b><dd>
@@ -288,7 +294,7 @@ original INSERT statement.
 
 
 <dt><p><b>distance</b><dd>
-This is an edit distance or Levensthein distance going
+This is an edit distance or Levenshtein distance going
 from the pattern to the word.
 
 <dt><p><b>langid</b><dd>
@@ -337,7 +343,7 @@ the possible corrections.
 <dt><p><b>srchcnt</b><dd>
 (HIDDEN)  For any query, this value is the same on all
 rows.  This value is an integer which is the number of
-of words examined using the edit-distance algorithm to
+words examined using the edit-distance algorithm to
 find the top matches that are ultimately displayed.  This
 value is for diagnostic use only.
 
@@ -415,7 +421,7 @@ with lower costs for some edits (such as transforming vowels).
 <p>The "score" for a comparison is the edit distance between the pattern
 and the word, adjusted down by the base-2 logarithm of the word rank.
 For example, a match with distance 100 but rank 1000 would have a
-score of 122 (= 100 - log2(1000) + 32) where as a match with distance
+score of 122 (= 100 - log2(1000) + 32) whereas a match with distance
 100 with a rank of 1 would have a score of 131 (100 - log2(1) + 32).
 (NB:  The constant 32 is added to each score to keep it from going
 negative in case the edit distance is zero.)  In this way, frequently
@@ -483,7 +489,7 @@ string, then the built-in Wagner edit-distance function is used.
 
 <p>The edit distance coefficients are normally read from the APPCOST table
 once and there after stored in memory.  Hence, run-time changes to the
-APPCOST table will not normally effect the edit distance results.
+APPCOST table will not normally affect the edit distance results.
 However, inserting the special string 'reset' into the "command" column of the
 virtual table causes the edit distance coefficients to be reread the
 APPCOST table.  Hence, applications should run a SQL statement similar

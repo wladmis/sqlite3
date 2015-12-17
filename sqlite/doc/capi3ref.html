@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -342,6 +348,7 @@ be removed in some future release.</li>
 <li><a href="#sqlitefcntlpersistwal">SQLITE_FCNTL_PERSIST_WAL</a></li>
 <li><a href="#sqlitefcntlpowersafeoverwrite">SQLITE_FCNTL_POWERSAFE_OVERWRITE</a></li>
 <li><a href="#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a></li>
+<li><a href="#sqlitefcntlrbu">SQLITE_FCNTL_RBU</a></li>
 <li><a href="#SQLITE_FCNTL_BUSYHANDLER">SQLITE_FCNTL_SET_LOCKPROXYFILE</a></li>
 <li><a href="#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a></li>
 <li><a href="#sqlitefcntlsync">SQLITE_FCNTL_SYNC</a></li>
@@ -352,6 +359,7 @@ be removed in some future release.</li>
 <li><a href="#sqlitefcntlwalblock">SQLITE_FCNTL_WAL_BLOCK</a></li>
 <li><a href="#sqlitefcntlwin32avretry">SQLITE_FCNTL_WIN32_AV_RETRY</a></li>
 <li><a href="#sqlitefcntlwin32sethandle">SQLITE_FCNTL_WIN32_SET_HANDLE</a></li>
+<li><a href="#sqlitefcntlzipvfs">SQLITE_FCNTL_ZIPVFS</a></li>
 <li><a href="#SQLITE_BLOB">SQLITE_FLOAT</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_FORMAT</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_FULL</a></li>
@@ -363,6 +371,7 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_INDEX_CONSTRAINT_EQ">SQLITE_INDEX_CONSTRAINT_LE</a></li>
 <li><a href="#SQLITE_INDEX_CONSTRAINT_EQ">SQLITE_INDEX_CONSTRAINT_LT</a></li>
 <li><a href="#SQLITE_INDEX_CONSTRAINT_EQ">SQLITE_INDEX_CONSTRAINT_MATCH</a></li>
+<li><a href="#SQLITE_INDEX_SCAN_UNIQUE">SQLITE_INDEX_SCAN_UNIQUE</a></li>
 <li><a href="#SQLITE_ALTER_TABLE">SQLITE_INSERT</a></li>
 <li><a href="#SQLITE_BLOB">SQLITE_INTEGER</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_INTERNAL</a></li>
@@ -408,6 +417,7 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_SHORT_READ</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_TRUNCATE</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_UNLOCK</a></li>
+<li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_VNODE</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_WRITE</a></li>
 <li><a href="#sqlitelimitattached">SQLITE_LIMIT_ATTACHED</a></li>
 <li><a href="#sqlitelimitcolumn">SQLITE_LIMIT_COLUMN</a></li>
@@ -443,6 +453,9 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_OPEN</a></li>
 <li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_PMEM</a></li>
 <li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_PRNG</a></li>
+<li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_VFS1</a></li>
+<li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_VFS2</a></li>
+<li><a href="#SQLITE_MUTEX_FAST">SQLITE_MUTEX_STATIC_VFS3</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_NOLFS</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_NOMEM</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_NOTADB</a></li>
@@ -589,6 +602,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_text64</a></li>
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_value</a></li>
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_zeroblob</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_zeroblob64</a></li>
 <li><a href="#sqlite3_blob_bytes">sqlite3_blob_bytes</a></li>
 <li><a href="#sqlite3_blob_close">sqlite3_blob_close</a></li>
 <li><a href="#sqlite3_blob_open">sqlite3_blob_open</a></li>
@@ -640,9 +654,9 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_create_function">sqlite3_create_function_v2</a></li>
 <li><a href="#sqlite3_create_module">sqlite3_create_module</a></li>
 <li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a></li>
+<li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
-<li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
 <li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
 <li><a href="#sqlite3_db_handle">sqlite3_db_handle</a></li>
 <li><a href="#sqlite3_db_mutex">sqlite3_db_mutex</a></li>
@@ -714,13 +728,14 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_result_blob">sqlite3_result_double</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error16</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
-<li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
+<li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
@@ -728,6 +743,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_result_blob">sqlite3_result_text64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_value</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_zeroblob</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_zeroblob64</a></li>
 <li><a href="#sqlite3_commit_hook">sqlite3_rollback_hook</a></li>
 <li><a href="#sqlite3_set_authorizer">sqlite3_set_authorizer</a></li>
 <li><a href="#sqlite3_get_auxdata">sqlite3_set_auxdata</a></li>
@@ -766,9 +782,12 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_value_blob">sqlite3_value_bytes</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_bytes16</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_double</a></li>
+<li><a href="#sqlite3_value_dup">sqlite3_value_dup</a></li>
+<li><a href="#sqlite3_value_dup">sqlite3_value_free</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_int</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_int64</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_numeric_type</a></li>
+<li><a href="#sqlite3_value_subtype">sqlite3_value_subtype</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16be</a></li>
@@ -796,7 +815,9 @@ These constants may be ORed together with the
 <a href="#SQLITE_ANY">preferred text encoding</a> as the fourth argument
 to <a href="#sqlite3_create_function">sqlite3_create_function()</a>, <a href="#sqlite3_create_function">sqlite3_create_function16()</a>, or
 <a href="#sqlite3_create_function">sqlite3_create_function_v2()</a>.
-</p><hr><a name="SQLITE_SHM_NLOCK"></a>
+</p><hr><a name="SQLITE_INDEX_SCAN_UNIQUE"></a>
+<h2>Virtual Table Scan Flags</h2><blockquote><pre>#define SQLITE_INDEX_SCAN_UNIQUE      1     /* Scan visits at most 1 row */
+</pre></blockquote><p></p><hr><a name="SQLITE_SHM_NLOCK"></a>
 <h2>Maximum xShmLock index</h2><blockquote><pre>#define SQLITE_SHM_NLOCK        8
 </pre></blockquote><p>
 The xShmLock method on <a href="#sqlite3_io_methods">sqlite3_io_methods</a> may use values
@@ -871,21 +892,23 @@ and/or <a href="#sqlite3_get_auxdata">sqlite3_set_auxdata()</a>.
 <li><a href="#sqlite3_result_blob">sqlite3_result_double</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error16</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error_code</a></li>
-<li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
+<li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
-<li><a href="#sqlite3_result_blob">sqlite3_result_text16le</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_text16le</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_value</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_zeroblob</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_zeroblob64</a></li>
 <li><a href="#sqlite3_get_auxdata">sqlite3_set_auxdata</a></li>
 <li><a href="#sqlite3_user_data">sqlite3_user_data</a></li>
 </ul></td>
@@ -965,6 +988,8 @@ I/O operations on the open file.
   double estimatedCost;           /* Estimated cost of using this index */
   /* Fields below are only available in SQLite 3.8.2 and later */
   sqlite3_int64 estimatedRows;    /* Estimated number of rows returned */
+  /* Fields below are only available in SQLite 3.9.0 and later */
+  int idxFlags;              /* Mask of SQLITE_INDEX_SCAN_* flags */
 };
 </pre></blockquote><p>
 The sqlite3_index_info structure and its substructures is used as part
@@ -1020,13 +1045,31 @@ binary search on a unique indexed field of an SQLite table with N rows.</p>
 <p>The estimatedRows value is an estimate of the number of rows that
 will be returned by the strategy.</p>
 
+<p>The xBestIndex method may optionally populate the idxFlags field with a
+mask of SQLITE_INDEX_SCAN_* flags. Currently there is only one such flag -
+SQLITE_INDEX_SCAN_UNIQUE. If the xBestIndex method sets this flag, SQLite
+assumes that the strategy may visit at most one row.</p>
+
+<p>Additionally, if xBestIndex sets the SQLITE_INDEX_SCAN_UNIQUE flag, then
+SQLite also assumes that if a call to the xUpdate() method is made as
+part of the same statement to delete or update a virtual table row and the
+implementation returns SQLITE_CONSTRAINT, then there is no need to rollback
+any database changes. In other words, if the xUpdate() returns
+SQLITE_CONSTRAINT, the database contents must be exactly as they were
+before xUpdate was called. By contrast, if SQLITE_INDEX_SCAN_UNIQUE is not
+set and xUpdate returns SQLITE_CONSTRAINT, any database changes made by
+the xUpdate method are automatically rolled back by SQLite.</p>
+
 <p>IMPORTANT: The estimatedRows field was added to the sqlite3_index_info
 structure for SQLite version 3.8.2. If a virtual table extension is
 used with an SQLite version earlier than 3.8.2, the results of attempting
 to read or write the estimatedRows field are undefined (but are likely
 to included crashing the application). The estimatedRows field should
 therefore only be used if <a href="#sqlite3_libversion">sqlite3_libversion_number()</a> returns a
-value greater than or equal to 3008002.
+value greater than or equal to 3008002. Similarly, the idxFlags field
+was added for version 3.9.0. It may therefore only be used if
+sqlite3_libversion_number() returns a value greater than or equal to
+3009000.
 </p><hr><a name="sqlite3_io_methods"></a>
 <h2>OS Interface File Virtual Methods Object</h2><blockquote><pre>typedef struct sqlite3_io_methods sqlite3_io_methods;
 struct sqlite3_io_methods {
@@ -1698,7 +1741,7 @@ was prepared from UTF-16 text using <a href="#sqlite3_prepare">sqlite3_prepare16
 
 <p>See also: <a href="#sqlite3_bind_blob">sqlite3_bind()</a>,
 <a href="#sqlite3_bind_parameter_count">sqlite3_bind_parameter_count()</a>, and
-<a href="#sqlite3_bind_parameter_index">sqlite3_bind_parameter_index()</a>.
+<a href="#sqlite3_bind_parameter_name">sqlite3_bind_parameter_name()</a>.
 </p><hr><a name="sqlite3_bind_parameter_name"></a>
 <h2>Name Of A Host Parameter</h2><blockquote><pre>const char *sqlite3_bind_parameter_name(sqlite3_stmt*, int);
 </pre></blockquote><p>
@@ -2015,9 +2058,11 @@ the application.  The default configuration is recommended for most
 applications and so this routine is usually not necessary.  It is
 provided to support rare applications with unusual needs.</p>
 
-<p>The sqlite3_config() interface is not threadsafe.  The application
-must insure that no other SQLite interfaces are invoked by other
-threads while sqlite3_config() is running.  Furthermore, sqlite3_config()
+<p><b>The sqlite3_config() interface is not threadsafe. The application
+must ensure that no other SQLite interfaces are invoked by other
+threads while sqlite3_config() is running.</b></p>
+
+<p>The sqlite3_config() interface
 may only be invoked prior to library initialization using
 <a href="#sqlite3_initialize">sqlite3_initialize()</a> or after shutdown by <a href="#sqlite3_initialize">sqlite3_shutdown()</a>.
 If sqlite3_config() is called after <a href="#sqlite3_initialize">sqlite3_initialize()</a> and before
@@ -2252,7 +2297,7 @@ is not changed.</p>
 <p>Restrictions:</p>
 
 <p><ul>
-<li> The application must insure that the 1st parameter to sqlite3_exec()
+<li> The application must ensure that the 1st parameter to sqlite3_exec()
 is a valid and open <a href="#sqlite3">database connection</a>.
 <li> The application must not close the <a href="#sqlite3">database connection</a> specified by
 the 1st parameter to sqlite3_exec() while sqlite3_exec() is running.
@@ -2618,6 +2663,16 @@ of any <a href="#sqlite3_bind_blob">bindings</a> on the <a href="#sqlite3_stmt">
 </pre></blockquote><p>
 This interface disables all automatic extensions previously
 registered using <a href="#sqlite3_auto_extension">sqlite3_auto_extension()</a>.
+</p><hr><a name="sqlite3_result_subtype"></a>
+<h2>Setting The Subtype Of An SQL Function</h2><blockquote><pre>void sqlite3_result_subtype(sqlite3_context*,unsigned int);
+</pre></blockquote><p>
+The sqlite3_result_subtype(C,T) function causes the subtype of
+the result from the <a href="#sqlite3_create_function">application-defined SQL function</a> with
+<a href="#sqlite3_context">sqlite3_context</a> C to be the value T.  Only the lower 8 bits
+of the subtype T are preserved in current versions of SQLite;
+higher order bits are discarded.
+The number of subtype bytes preserved by SQLite might increase
+in future releases of SQLite.
 </p><hr><a name="sqlite3_set_authorizer"></a>
 <h2>Compile-Time Authorization Callbacks</h2><blockquote><pre>int sqlite3_set_authorizer(
   sqlite3*,
@@ -2860,7 +2915,8 @@ by sqlite3_step().  The use of the "v2" interface is recommended.
 </pre></blockquote><p>
 The sqlite3_stmt_busy(S) interface returns true (non-zero) if the
 <a href="#sqlite3_stmt">prepared statement</a> S has been stepped at least once using
-<a href="#sqlite3_step">sqlite3_step(S)</a> but has not run to completion and/or has not
+<a href="#sqlite3_step">sqlite3_step(S)</a> but has neither run to completion (returned
+<a href="#SQLITE_ABORT">SQLITE_DONE</a> from <a href="#sqlite3_step">sqlite3_step(S)</a>) nor
 been reset using <a href="#sqlite3_reset">sqlite3_reset(S)</a>.  The sqlite3_stmt_busy(S)
 interface returns false if S is a NULL pointer.  If S is not a
 NULL pointer and is not a pointer to a valid <a href="#sqlite3_stmt">prepared statement</a>
@@ -3298,6 +3354,18 @@ registered the application defined function.</p>
 
 <p>This routine must be called from the same thread in which
 the application-defined function is running.
+</p><hr><a name="sqlite3_value_subtype"></a>
+<h2>Finding The Subtype Of SQL Values</h2><blockquote><pre>unsigned int sqlite3_value_subtype(sqlite3_value*);
+</pre></blockquote><p>
+The sqlite3_value_subtype(V) function returns the subtype for
+an <a href="#sqlite3_create_function">application-defined SQL function</a> argument V.  The subtype
+information can be used to pass a limited amount of context from
+one SQL function to another.  Use the <a href="#sqlite3_result_subtype">sqlite3_result_subtype()</a>
+routine to set the subtype for the return value of an SQL function.</p>
+
+<p>SQLite makes no use of subtype itself.  It merely passes the subtype
+from the result of one <a href="#sqlite3_create_function">application-defined SQL function</a> into the
+input of another.
 </p><hr><a name="sqlite3_vtab_config"></a>
 <h2>Virtual Table Interface Configuration</h2><blockquote><pre>int sqlite3_vtab_config(sqlite3*, int op, ...);
 </pre></blockquote><p>
@@ -3565,6 +3633,7 @@ here in order to indicate success or failure.</p>
 #define SQLITE_IOERR_MMAP              (SQLITE_IOERR | (24&lt;&lt;8))
 #define SQLITE_IOERR_GETTEMPPATH       (SQLITE_IOERR | (25&lt;&lt;8))
 #define SQLITE_IOERR_CONVPATH          (SQLITE_IOERR | (26&lt;&lt;8))
+#define SQLITE_IOERR_VNODE             (SQLITE_IOERR | (27&lt;&lt;8))
 #define SQLITE_LOCKED_SHAREDCACHE      (SQLITE_LOCKED |  (1&lt;&lt;8))
 #define SQLITE_BUSY_RECOVERY           (SQLITE_BUSY   |  (1&lt;&lt;8))
 #define SQLITE_BUSY_SNAPSHOT           (SQLITE_BUSY   |  (2&lt;&lt;8))
@@ -4195,6 +4264,8 @@ return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()
 #define SQLITE_FCNTL_COMMIT_PHASETWO        22
 #define SQLITE_FCNTL_WIN32_SET_HANDLE       23
 #define SQLITE_FCNTL_WAL_BLOCK              24
+#define SQLITE_FCNTL_ZIPVFS                 25
+#define SQLITE_FCNTL_RBU                    26
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="#sqlite3_io_methods">sqlite3_io_methods</a> object and for the <a href="#sqlite3_file_control">sqlite3_file_control()</a>
@@ -4421,7 +4492,17 @@ available.  The WAL subsystem issues this signal during rare
 circumstances in order to fix a problem with priority inversion.
 Applications should <em>not</em> use this file-control.</p>
 
-<p></ul>
+<p><li><a name="sqlitefcntlzipvfs"></a>
+
+The <a href="#sqlitefcntlzipvfs">SQLITE_FCNTL_ZIPVFS</a> opcode is implemented by zipvfs only. All other
+VFS should return SQLITE_NOTFOUND for this opcode.</p>
+
+<p><li><a name="sqlitefcntlrbu"></a>
+
+The <a href="#sqlitefcntlrbu">SQLITE_FCNTL_RBU</a> opcode is implemented by the special VFS used by
+the RBU extension only.  All other VFS should return SQLITE_NOTFOUND for
+this opcode.
+</ul>
 </p><hr><a name="SQLITE_INDEX_CONSTRAINT_EQ"></a>
 <h2>Virtual Table Constraint Operator Codes</h2><blockquote><pre>#define SQLITE_INDEX_CONSTRAINT_EQ    2
 #define SQLITE_INDEX_CONSTRAINT_GT    4
@@ -4498,6 +4579,9 @@ of an <a href="#sqlite3_io_methods">sqlite3_io_methods</a> object.
 #define SQLITE_MUTEX_STATIC_APP1      8  /* For use by application */
 #define SQLITE_MUTEX_STATIC_APP2      9  /* For use by application */
 #define SQLITE_MUTEX_STATIC_APP3     10  /* For use by application */
+#define SQLITE_MUTEX_STATIC_VFS1     11  /* For use by built-in VFS */
+#define SQLITE_MUTEX_STATIC_VFS2     12  /* For use by extension VFS */
+#define SQLITE_MUTEX_STATIC_VFS3     13  /* For use by application VFS */
 </pre></blockquote><p>
 The <a href="#sqlite3_mutex_alloc">sqlite3_mutex_alloc()</a> interface takes a single argument
 which is one of these integer constants.</p>
@@ -4611,9 +4695,9 @@ was given on the corresponding lock.</p>
 between unlocked and EXCLUSIVE.  It cannot transition between SHARED
 and EXCLUSIVE.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.8.10.2"
-#define SQLITE_VERSION_NUMBER 3008010
-#define SQLITE_SOURCE_ID      "2015-05-20 18:17:19 2ef4f3a5b1d1d0c4338f8243d40a2452cc1f7fe4"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.9.2"
+#define SQLITE_VERSION_NUMBER 3009002
+#define SQLITE_SOURCE_ID      "2015-11-02 18:31:45 bda77dda9697c463c3d0704014d51627fceee328"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the
@@ -5456,10 +5540,11 @@ to step 2.  Do this zero or more times.
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_text64</a></li>
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_value</a></li>
 <li><a href="#sqlite3_bind_blob">sqlite3_bind_zeroblob</a></li>
+<li><a href="#sqlite3_bind_blob">sqlite3_bind_zeroblob64</a></li>
 <li><a href="#sqlite3_clear_bindings">sqlite3_clear_bindings</a></li>
-<li><a href="#sqlite3_column_blob">sqlite3_column_blob</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_column_blob">sqlite3_column_bytes</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_column_blob">sqlite3_column_blob</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_bytes</a></li>
 <li><a href="#sqlite3_column_blob">sqlite3_column_bytes16</a></li>
 <li><a href="#sqlite3_column_count">sqlite3_column_count</a></li>
 <li><a href="#sqlite3_column_database_name">sqlite3_column_database_name</a></li>
@@ -5474,9 +5559,9 @@ to step 2.  Do this zero or more times.
 <li><a href="#sqlite3_column_database_name">sqlite3_column_origin_name</a></li>
 <li><a href="#sqlite3_column_database_name">sqlite3_column_origin_name16</a></li>
 <li><a href="#sqlite3_column_database_name">sqlite3_column_table_name</a></li>
-<li><a href="#sqlite3_column_database_name">sqlite3_column_table_name16</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_column_blob">sqlite3_column_text</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_column_database_name">sqlite3_column_table_name16</a></li>
+<li><a href="#sqlite3_column_blob">sqlite3_column_text</a></li>
 <li><a href="#sqlite3_column_blob">sqlite3_column_text16</a></li>
 <li><a href="#sqlite3_column_blob">sqlite3_column_type</a></li>
 <li><a href="#sqlite3_column_blob">sqlite3_column_value</a></li>
@@ -5505,7 +5590,9 @@ can be integers, floating point values, strings, BLOBs, or NULL.</p>
 Some interfaces require a protected sqlite3_value.  Other interfaces
 will accept either a protected or an unprotected sqlite3_value.
 Every interface that accepts sqlite3_value arguments specifies
-whether or not it requires a protected sqlite3_value.</p>
+whether or not it requires a protected sqlite3_value.  The
+<a href="#sqlite3_value_dup">sqlite3_value_dup()</a> interface can be used to construct a new
+protected sqlite3_value from an unprotected sqlite3_value.</p>
 
 <p>The terms "protected" and "unprotected" refer to whether or not
 a mutex is held.  An internal mutex is held for a protected
@@ -5534,13 +5621,16 @@ interfaces require protected sqlite3_value objects.
 <li><a href="#sqlite3_value_blob">sqlite3_value_bytes</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_bytes16</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_double</a></li>
+<li><a href="#sqlite3_value_dup">sqlite3_value_dup</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_int</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_value_dup">sqlite3_value_free</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_int</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_int64</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_numeric_type</a></li>
-<li><a href="#sqlite3_value_blob">sqlite3_value_text</a></li>
+<li><a href="#sqlite3_value_subtype">sqlite3_value_subtype</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_text16</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_value_blob">sqlite3_value_text</a></li>
+<li><a href="#sqlite3_value_blob">sqlite3_value_text16</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16be</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_text16le</a></li>
 <li><a href="#sqlite3_value_blob">sqlite3_value_type</a></li>
@@ -6531,7 +6621,7 @@ These interfaces provide the same information as the <a href="#SQLITE_SOURCE_ID"
 but are associated with the library instead of the header file.  Cautious
 programmers might include assert() statements in their application to
 verify that values returned by these interfaces match the macros in
-the header, and thus insure that the application is
+the header, and thus ensure that the application is
 compiled with matching library and header files.</p>
 
 <p><blockquote><pre>
@@ -6735,6 +6825,9 @@ integer constants:</p>
 <li>  SQLITE_MUTEX_STATIC_APP1
 <li>  SQLITE_MUTEX_STATIC_APP2
 <li>  SQLITE_MUTEX_STATIC_APP3
+<li>  SQLITE_MUTEX_STATIC_VFS1
+<li>  SQLITE_MUTEX_STATIC_VFS2
+<li>  SQLITE_MUTEX_STATIC_VFS3
 </ul></p>
 
 <p>The first two constants (SQLITE_MUTEX_FAST and SQLITE_MUTEX_RECURSIVE)
@@ -7116,6 +7209,7 @@ void sqlite3_result_text16le(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_text16be(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_value(sqlite3_context*, sqlite3_value*);
 void sqlite3_result_zeroblob(sqlite3_context*, int n);
+int sqlite3_result_zeroblob64(sqlite3_context*, sqlite3_uint64 n);
 </pre></blockquote><p>
 These routines are used by the xFunc or xFinal callbacks that
 implement SQL functions and aggregates.  See
@@ -7131,9 +7225,9 @@ an application-defined function to be the BLOB whose content is pointed
 to by the second parameter and which is N bytes long where N is the
 third parameter.</p>
 
-<p>The sqlite3_result_zeroblob() interfaces set the result of
-the application-defined function to be a BLOB containing all zero
-bytes and N bytes in size, where N is the value of the 2nd parameter.</p>
+<p>The sqlite3_result_zeroblob(C,N) and sqlite3_result_zeroblob64(C,N)
+interfaces set the result of the application-defined function to be
+a BLOB containing all zero bytes and N bytes in size.</p>
 
 <p>The sqlite3_result_double() interface sets the result from
 an application-defined function to be a floating point value specified
@@ -7215,7 +7309,7 @@ then SQLite makes a copy of the result into space obtained from
 from <a href="#sqlite3_free">sqlite3_malloc()</a> before it returns.</p>
 
 <p>The sqlite3_result_value() interface sets the result of
-the application-defined function to be a copy the
+the application-defined function to be a copy of the
 <a href="#sqlite3_value">unprotected sqlite3_value</a> object specified by the 2nd parameter.  The
 sqlite3_result_value() interface makes a copy of the <a href="#sqlite3_value">sqlite3_value</a>
 so that the <a href="#sqlite3_value">sqlite3_value</a> specified in the parameter may change or
@@ -7307,7 +7401,7 @@ is not a database file pathname pointer that SQLite passed into the xOpen
 VFS method, then the behavior of this routine is undefined and probably
 undesirable.
 </p><hr><a name="sqlite3_value_blob"></a>
-<h2>Obtaining SQL Function Parameter Values</h2><blockquote><pre>const void *sqlite3_value_blob(sqlite3_value*);
+<h2>Obtaining SQL Values</h2><blockquote><pre>const void *sqlite3_value_blob(sqlite3_value*);
 int sqlite3_value_bytes(sqlite3_value*);
 int sqlite3_value_bytes16(sqlite3_value*);
 double sqlite3_value_double(sqlite3_value*);
@@ -7361,6 +7455,19 @@ or <a href="#sqlite3_value_blob">sqlite3_value_text16()</a>.</p>
 
 <p>These routines must be called from the same thread as
 the SQL function that supplied the <a href="#sqlite3_value">sqlite3_value*</a> parameters.
+</p><hr><a name="sqlite3_value_dup"></a>
+<h2>Copy And Free SQL Values</h2><blockquote><pre>sqlite3_value *sqlite3_value_dup(const sqlite3_value*);
+void sqlite3_value_free(sqlite3_value*);
+</pre></blockquote><p>
+The sqlite3_value_dup(V) interface makes a copy of the <a href="#sqlite3_value">sqlite3_value</a>
+object D and returns a pointer to that copy.  The <a href="#sqlite3_value">sqlite3_value</a> returned
+is a <a href="#sqlite3_value">protected sqlite3_value</a> object even if the input is not.
+The sqlite3_value_dup(V) interface returns NULL if V is NULL or if a
+memory allocation fails.</p>
+
+<p>The sqlite3_value_free(V) interface frees an <a href="#sqlite3_value">sqlite3_value</a> object
+previously obtained from <a href="#sqlite3_value_dup">sqlite3_value_dup()</a>.  If V is a NULL pointer
+then sqlite3_value_free(V) is a harmless no-op.
 </p><hr><a name="sqlite3_vfs_find"></a>
 <h2>Virtual File System Objects</h2><blockquote><pre>sqlite3_vfs *sqlite3_vfs_find(const char *zVfsName);
 int sqlite3_vfs_register(sqlite3_vfs*, int makeDflt);
@@ -7405,6 +7512,7 @@ int sqlite3_bind_text64(sqlite3_stmt*, int, const char*, sqlite3_uint64,
                          void(*)(void*), unsigned char encoding);
 int sqlite3_bind_value(sqlite3_stmt*, int, const sqlite3_value*);
 int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n);
+int sqlite3_bind_zeroblob64(sqlite3_stmt*, int, sqlite3_uint64);
 </pre></blockquote><p>
 In the SQL statement text input to <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> and its variants,
 literals may be replaced by a <a href="lang_expr.html#varparam">parameter</a> that matches one of following
@@ -7820,9 +7928,7 @@ const void *sqlite3_column_text16(sqlite3_stmt*, int iCol);
 int sqlite3_column_type(sqlite3_stmt*, int iCol);
 sqlite3_value *sqlite3_column_value(sqlite3_stmt*, int iCol);
 </pre></blockquote><p>
-These routines form the "result set" interface.</p>
-
-<p>These routines return information about a single column of the current
+These routines return information about a single column of the current
 result row of a query.  In every case the first argument is a pointer
 to the <a href="#sqlite3_stmt">prepared statement</a> that is being evaluated (the <a href="#sqlite3_stmt">sqlite3_stmt*</a>
 that was returned from <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or one of its variants)
@@ -7881,13 +7987,14 @@ bytes in the string, not the number of characters.</p>
 even empty strings, are always zero-terminated.  The return
 value from sqlite3_column_blob() for a zero-length BLOB is a NULL pointer.</p>
 
-<p>The object returned by <a href="#sqlite3_column_blob">sqlite3_column_value()</a> is an
-<a href="#sqlite3_value">unprotected sqlite3_value</a> object.  An unprotected sqlite3_value object
-may only be used with <a href="#sqlite3_bind_blob">sqlite3_bind_value()</a> and <a href="#sqlite3_result_blob">sqlite3_result_value()</a>.
+<p><b>Warning:</b> The object returned by <a href="#sqlite3_column_blob">sqlite3_column_value()</a> is an
+<a href="#sqlite3_value">unprotected sqlite3_value</a> object.  In a multithreaded environment,
+an unprotected sqlite3_value object may only be used safely with
+<a href="#sqlite3_bind_blob">sqlite3_bind_value()</a> and <a href="#sqlite3_result_blob">sqlite3_result_value()</a>.
 If the <a href="#sqlite3_value">unprotected sqlite3_value</a> object returned by
 <a href="#sqlite3_column_blob">sqlite3_column_value()</a> is used in any other way, including calls
 to routines like <a href="#sqlite3_value_blob">sqlite3_value_int()</a>, <a href="#sqlite3_value_blob">sqlite3_value_text()</a>,
-or <a href="#sqlite3_value_blob">sqlite3_value_bytes()</a>, then the behavior is undefined.</p>
+or <a href="#sqlite3_value_blob">sqlite3_value_bytes()</a>, the behavior is not threadsafe.</p>
 
 <p>These routines attempt to convert the value where appropriate.  For
 example, if the internal representation is FLOAT and a text result
@@ -7918,12 +8025,6 @@ that are applied:</p>
 </table>
 </blockquote></p>
 
-<p>The table above makes reference to standard C library functions atoi()
-and atof().  SQLite does not really use these functions.  It has its
-own equivalent internal routines.  The atoi() and atof() names are
-used in the table for brevity and because they are familiar to most
-C programmers.</p>
-
 <p>Note that when type conversions occur, pointers returned by prior
 calls to sqlite3_column_blob(), sqlite3_column_text(), and/or
 sqlite3_column_text16() may be invalidated.
@@ -7948,7 +8049,7 @@ that the prior pointer references will have been modified.  Other kinds
 of conversion are done in place when it is possible, but sometimes they
 are not possible and in those cases prior pointers are invalidated.</p>
 
-<p>The safest and easiest to remember policy is to invoke these routines
+<p>The safest policy is to invoke these routines
 in one of the following ways:</p>
 
 <p><ul>
@@ -7968,7 +8069,7 @@ with calls to sqlite3_column_bytes().</p>
 <p>The pointers returned are valid until a type conversion occurs as
 described above, or until <a href="#sqlite3_step">sqlite3_step()</a> or <a href="#sqlite3_reset">sqlite3_reset()</a> or
 <a href="#sqlite3_finalize">sqlite3_finalize()</a> is called.  The memory space used to hold strings
-and BLOBs is freed automatically.  Do <b>not</b> pass the pointers returned
+and BLOBs is freed automatically.  Do <em>not</em> pass the pointers returned
 from <a href="#sqlite3_column_blob">sqlite3_column_blob()</a>, <a href="#sqlite3_column_blob">sqlite3_column_text()</a>, etc. into
 <a href="#sqlite3_free">sqlite3_free()</a>.</p>
 

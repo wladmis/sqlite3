@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -140,15 +146,15 @@ a:visited { color: #734559 }
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_8_10.html">version 3.8.10</a>,
+<p>As of <a href="releaselog/3_9_0.html">version 3.9.0</a>,
 the SQLite library consists of approximately
-94.2 KSLOC of C code.
+112.8 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-971 times as much
+811 times as much
 test code and test scripts - 
-91515.5 KSLOC.</p>
+91555.1 KSLOC.</p>
 
 <h3>1.1 Executive Summary</h3>
 
@@ -189,12 +195,12 @@ They are contained in the same source tree as the
 SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
-<a href="http://www.tcl.tk/">TCL scripting language</a>.
-The TCL test harness itself consists of 23.2 KSLOC 
+<a href="http://www.tcl-lang.org/">TCL scripting language</a>.
+The TCL test harness itself consists of 23.4 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 875 files totaling 
-11.3MB in size.  There are
-34851 distinct test cases, but many of the test
+in 994 files totaling 
+12.6MB in size.  There are
+36934 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run millions of
 separate tests are performed.
@@ -209,8 +215,8 @@ on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces.  TH3 is free to <a href="consortium.html">SQLite Consortium</a> members 
 and is available by license to others.  TH3 consists of about
-54.1 MB or 732.4 KSLOC
-of C code implementing 38394 distinct test cases.
+54.8 MB or 743.7 KSLOC
+of C code implementing 39071 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
 about 1.4 million different test
 instances.  The cases that provide 100% branch test coverage constitute
@@ -252,7 +258,7 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-140.2 thousand test cases.
+140.1 thousand test cases.
 The veryquick tests include most tests other than the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
@@ -409,7 +415,7 @@ resulting prepared statement is run to make sure it gives a reasonable
 result.</p>
 
 <p>The SQL fuzz generator tests are part of the TCL test suite.
-During a full test run, about 116.5 
+During a full test run, about 211.1 
 thousand fuzz SQL statements are
 generated and tested.</p>
 
@@ -420,7 +426,7 @@ generated and tested.</p>
 <p>The <a href="http://lcamtuf.coredump.cx/afl/">American Fuzzy Lop</a>
 or "AFL" fuzzer is a recent (circa 2014) innovation from Michal Zalewski.
 Unlike most other fuzzers that blindly generate random inputs, the AFL
-fuzzer instruments the program being tested (by editing the assembly-language
+fuzzer instruments the program being tested (by modifying the assembly-language
 output from the C compiler) and uses that instrumentation to detect when
 an input causes the program to do something different - to follow
 a new control path or loop a different number of times.  Inputs that provoke
@@ -435,13 +441,13 @@ a fair number of crash bugs in SQLite, and even a few cases where SQLite
 computed incorrect results.
 
 <p>Because of its past success, AFL became a standard part of the testing
-strategy for SQLite beginning with <a href="releaselog/3_8_10.html">version 3.8.10</a>.  There is at least one
-instance of AFL running against SQLite continuously, 24/7/365, trying new
-randomly mutated inputs against SQLite at a rate of a few hundred to a few
-thousand per second.  Billions of inputs have been tried, but AFL's 
-instrumentation has narrowed them down to less than 20,000 test cases that
+strategy for SQLite beginning with <a href="releaselog/3_8_10.html">version 3.8.10</a>.  
+Both SQL statements and database files are fuzzed.
+Billions and billions of mutations have been tried, but AFL's 
+instrumentation has narrowed them down to less than 50,000 test cases that
 cover all distinct behaviors.  Newly discovered test cases are periodically
-captured and added to the <a href="testing.html#tcl">TCL test suite</a>.
+captured and added to the <a href="testing.html#tcl">TCL test suite</a> where they can be rerun using
+the "make fuzztest" or "make valgrindfuzz" commands.
 
 <h3>4.2 Malformed Database Files</h3>
 
@@ -674,7 +680,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></blockquote>
 
-<p>The SQLite source code contains 782
+<p>The SQLite source code contains 816
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -781,7 +787,7 @@ quality of SQLite.</p>
 
 <h3>8.1 Assert</h3>
 
-<p>The SQLite core contains 4197 <tt>assert()</tt>
+<p>The SQLite core contains 4715 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be

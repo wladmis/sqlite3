@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -137,16 +143,16 @@ a:visited { color: #734559 }
 
 <li>SQLITE_SOURCE_ID: "2015-05-20 18:17:19 2ef4f3a5b1d1d0c4338f8243d40a2452cc1f7fe4"
 <li>SHA1 for sqlite3.c: 638abb77965332c956dbbd2c8e4248e84da4eb63
-</ul></p><p><b>Prior changes from version 3.8.10.1 (2015-05-09):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.10.1 (2015-05-09):</b></p><p><ul>
 <li>Make <a href="../c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
     compile-time option.
 <li>Fix a harmless warning in the <a href="../cli.html">command-line shell</a> on some versions of MSVC.
 <li>Fix minor issues with the <a href="../dbstat.html">dbstat virtual table</a>.
 
-</ul></p><p><b>Prior changes from version 3.8.10 (2015-05-07):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.10 (2015-05-07):</b></p><p><ul>
 <li>Added the <a href="../sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
     SQLite database files.
-<li>Added the <a href="fts3.html#matchinfo-y">y format string</a> to the 
+<li>Added the <a href="../fts3.html#matchinfo-y">matchinfo y flag</a> to the 
     <a href="../fts3.html#matchinfo">matchinfo()</a> function of <a href="../fts3.html">FTS3</a>.
 <li>Performance improvements for <a href="../lang_select.html#orderby">ORDER BY</a>, <a href="../lang_vacuum.html">VACUUM</a>, <a href="../lang_createindex.html">CREATE INDEX</a>,
     <a href="../pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, and <a href="../pragma.html#pragma_quick_check">PRAGMA quick_check</a>.
@@ -161,8 +167,9 @@ a:visited { color: #734559 }
 
 </ul></p>
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
-      in a single page is also available.  A detailed history of every
+      in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
+      A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
-      http://www.sqlite.org/src/timeline</a>.</p>
+      SQLite version control site</a>.</p>
     

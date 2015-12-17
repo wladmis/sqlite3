@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -1510,7 +1516,7 @@ sqlite3BtreeGetMeta.</span> (P: <a class=reqlink href=#H50109>H50109</a>)</p>
       <h3 id="sqlite3BtreeDelete">3.8.7 sqlite3BtreeDelete</h3>
 
 
-        <pre class=api>int sqlite3BtreeDelete(BtCursor*);</pre>
+        <pre class=api>int sqlite3BtreeDelete(BtCursor*, int);</pre>
 
         <p class=req id=L50013><span>A successful call to the sqlite3BtreeDelete function made with a read/write
 <a class=defnlink href="#glossary_B-Tree_Cursor">b-tree cursor</a> passed as the first argument shall remove the entry pointed to by

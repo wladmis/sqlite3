@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -151,6 +157,8 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_COMMIT_PHASETWO        22
 #define SQLITE_FCNTL_WIN32_SET_HANDLE       23
 #define SQLITE_FCNTL_WAL_BLOCK              24
+#define SQLITE_FCNTL_ZIPVFS                 25
+#define SQLITE_FCNTL_RBU                    26
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
@@ -377,7 +385,17 @@ available.  The WAL subsystem issues this signal during rare
 circumstances in order to fix a problem with priority inversion.
 Applications should <em>not</em> use this file-control.</p>
 
-<p></ul>
+<p><li><a name="sqlitefcntlzipvfs"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlzipvfs">SQLITE_FCNTL_ZIPVFS</a> opcode is implemented by zipvfs only. All other
+VFS should return SQLITE_NOTFOUND for this opcode.</p>
+
+<p><li><a name="sqlitefcntlrbu"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlrbu">SQLITE_FCNTL_RBU</a> opcode is implemented by the special VFS used by
+the RBU extension only.  All other VFS should return SQLITE_NOTFOUND for
+this opcode.
+</ul>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

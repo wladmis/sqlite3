@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -240,11 +246,28 @@ gcc -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION shell.c sqlite3.c
 </pre></blockquote>
 
 <p>One might want to provide other <a href="compile.html">compile-time options</a> such as
-<a href="compile.html#enable_fts3">SQLITE_ENABLE_FTS3</a> for full-text search or <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a>
-for the R*Tree search engine extension.  And one would normally to
-specify some compiler optimization switches too.  (The precompiled
+<a href="compile.html#enable_fts4">-DSQLITE_ENABLE_FTS4</a> or <a href="compile.html#enable_fts5">-DSQLITE_ENABLE_FTS5</a> for full-text search,
+<a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a> for the R*Tree search engine extension,
+<a href="compile.html#enable_json1">-DSQLITE_ENABLE_JSON1</a> to include <a href="json1.html">JSON SQL functions</a>, or
+<a href="compile.html#enable_dbstat_vtab">-DSQLITE_ENABLE_DBSTAT_VTAB</a> for the <a href="dbstat.html">dbstat virtual table</a>.
+In order to see extra commentary in <a href="lang_explain.html">EXPLAIN</a> listings, add the 
+<a href="compile.html#enable_explain_comments">-DSQLITE_ENABLE_EXPLAIN_COMMENTS</a> option.
+On unix systems, add -DHAVE_USLEEP=1 if the host machine supports the
+usleep() system call.  Add -DHAVE_READLINE and the -lreadline
+and -lncurses libraries to get command-line editing support.
+One might also want to
+specify some compiler optimization switches.  (The precompiled
 CLI available for download from the SQLite website uses "-Os".)
-There are countless possible variations here.</p>
+There are countless possible variations here.  A command to
+compile a full-featured shell might look something like this:</p>
+
+<blockquote><pre>
+gcc -Os -I. -DSQLITE_THREADSAFE=0 -DSQLITE_ENABLE_FTS4 &#92;
+   -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 &#92;
+   -DSQLITE_ENABLE_RTREE -DSQLITE_ENABLE_EXPLAIN_COMMENTS &#92;
+   -DHAVE_USLEEP -DHAVE_READLINE &#92;
+   shell.c sqlite3.c -ldl -lreadline -lncurses -o sqlite3
+</pre></blockquote>
 
 <p>The key point is this:  Building the CLI consists of compiling 
 together two C-language files.   The <b>shell.c</b> file contains the
@@ -261,9 +284,9 @@ the regular amalgamation.  The result is a new amalgamated source
 file called "<b>tclsqlite3.c</b>".  This single source file is all that
 is needed to generate a shared library that can be loaded into a
 standard 
-<a href="http://wiki.tcl.tk/2541">tclsh</a> or 
-<a href="http://wiki.tcl.tk/2364">wish</a> using the 
-<a href="http://wiki.tcl.tk/9830">TCL load command</a>, or to generate a
+<a href="http://wiki.tcl-lang.org/2541">tclsh</a> or 
+<a href="http://wiki.tcl-lang.org/2364">wish</a> using the 
+<a href="http://wiki.tcl-lang.org/9830">TCL load command</a>, or to generate a
 standalone tclsh that comes with SQLite built in.
 A copy of the tcl amalgamation
 is included on the <a href="download.html">download page</a> as a file in the <a href="download.html">TEA tarball</a>.</p>

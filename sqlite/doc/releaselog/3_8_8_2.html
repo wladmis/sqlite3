@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -135,13 +141,13 @@ a:visited { color: #734559 }
 <li>SQLITE_SOURCE_ID: "2015-01-30 14:30:45 7757fc721220e136620a89c9d28247f28bbbc098"
 <li>SHA1 for sqlite3.c: 85ce79948116aa9a087ec345c9d2ce2c1d3cd8af
 
-</ul></p><p><b>Prior changes from version 3.8.8.1 (2015-01-20):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.8.1 (2015-01-20):</b></p><p><ul>
 <li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
     output to appear in the wrong order on queries that contains an ORDER BY clause,
     a LIMIT clause, and that have approximately 60 or more columns in the result set.
     Ticket <a href="https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79">f97c4637102a3ae72b79</a>.
 
-</ul></p><p><b>Prior changes from version 3.8.8 (2015-01-16):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.8 (2015-01-16):</b></p><p><ul>
 <p><b>New Features:</b>
 <li>Added the <a href="../pragma.html#pragma_data_version">PRAGMA data_version</a> command that can be used to determine if
     a database file has been modified by another process.
@@ -201,8 +207,9 @@ a:visited { color: #734559 }
 
 </ul></p>
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
-      in a single page is also available.  A detailed history of every
+      in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
+      A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
-      http://www.sqlite.org/src/timeline</a>.</p>
+      SQLite version control site</a>.</p>
     

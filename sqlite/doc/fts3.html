@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -405,6 +411,7 @@ INSERT INTO docs(docs) VALUES('optimize');
     operation using a SELECT statement. New code should use statements
     similar to the INSERT above to optimize FTS structures.
 
+<a name="section_1_4"></a>
 <h2 id="section_1_4">1.4. Simple FTS Queries</h2>
 
 <p>
@@ -571,6 +578,7 @@ SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
 </ol>
 
 
+<a name="section_2"></a>
 <h1 id="section_2">2. Compiling and Enabling FTS3 and FTS4</h1>
 
 <p>
@@ -623,6 +631,7 @@ SELECT * FROM docs WHERE main.docs MATCH 'sqlite';         <i>-- Error.</i>
 </pre></table></div>
   
 
+<a name="section_3"></a>
 <h1 id="section_3">3. Full-text Index Queries</h1>
 
 <p>
@@ -820,6 +829,7 @@ SELECT * FROM docs WHERE docs MATCH 'acid NEAR/2 sqlite NEAR/2 relational';
   describe the part of the two query syntaxes that pertains to set operations. 
   Refer to the description of how to <a href="fts3.html#section_2">compile fts</a> for compilation notes.
 
+<a name="section_3_1"></a>
 <h2 id="section_3_1">3.1. 
   Set Operations Using The Enhanced Query Syntax</h2>
 
@@ -1199,6 +1209,7 @@ SELECT snippet(text) FROM text WHERE text MATCH 'cold';
 SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* tem*"'
 </pre></table></div>
 
+<a name="matchinfo"></a>
 <h2 id="matchinfo">4.3. The Matchinfo Function</h2>
 
 <p>
@@ -1213,7 +1224,7 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
   The matchinfo function is called with either one or two arguments. As for
   all auxiliary functions, the first argument must be the special 
   <a href="fts3.html#hiddencol">FTS hidden column</a>. The second argument, if it is specified, must be a text value
-  comprised only of the characters 'p', 'c', 'n', 'a', 'l', 's', 'x', and 'y'.
+  comprised only of the characters 'p', 'c', 'n', 'a', 'l', 's', 'x', 'y' and 'b'.
   If no second argument is explicitly supplied, it defaults to "pcx". The
   second argument is referred to as the "format string" below.
 
@@ -1233,7 +1244,8 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
   <tr style="text-align:left"><td>c <td>1 <td>The number of user defined columns in the FTS
     table (i.e. not including the docid or the <a href="fts3.html#hiddencol">FTS hidden column</a>).
   <tr style="text-align:left;background-color:#DDDDDD"><td>x <td style="white-space:nowrap">3 * <i>cols</i> * <i>phrases</i> 
-    <td>
+    <td><a name="matchinfo-x"></a>
+
       For each distinct combination of a phrase and table column, the
       following three values:
       <ul>
@@ -1257,13 +1269,14 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
           hits_all_rows  = array&#91;3 * (c + p*cols) + 1&#93;
           docs_with_hits = array&#91;3 * (c + p*cols) + 2&#93;
 </pre>
-  <tr style="text-align:left"><td><a name="matchinfo-y">y</a> <td style="white-space:nowrap"><i>cols</i> * <i>phrases</i> 
-    <td>
+  <tr style="text-align:left"><td>y<td style="white-space:nowrap"><i>cols</i> * <i>phrases</i> 
+    <td><a name="matchinfo-y"></a>
+
       For each distinct combination of a phrase and table column, the
       number of usable phrase matches that appear in the column. This is
       usually identical to the first value in each set of three returned by the
-      'x' directive (see above). However, the number of hits reported by the
-      'y' directive is zero for any phrase that is part of a sub-expression
+      <a href="fts3.html#matchinfo-x">matchinfo 'x' flag</a>. However, the number of hits reported by the
+      'y' flag is zero for any phrase that is part of a sub-expression
       that does not match the current row. This makes a difference for
       expressions that contain AND operators that are descendants of OR
       operators. For example, consider the expression: 
@@ -1274,7 +1287,7 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
 <pre>
           "a c d"
 </pre>
-      The 'x' directive would report a single hit for the phrases "a" and "c".
+      The <a href="fts3.html#matchinfo-x">matchinfo 'x' flag</a> would report a single hit for the phrases "a" and "c".
       However, the 'y' directive reports the number of hits for "c" as zero, as
       it is part of a sub-expression that does not match the document - (b AND c).
       For queries that do not contain AND operators descended from OR
@@ -1291,22 +1304,54 @@ SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* te
           hits_for_phrase_p_column_c  = array&#91;c + p*cols&#93;
 </pre>
       For queries that use OR expressions, or those that use LIMIT or return
-      many rows, the 'y' matchinfo option may incur significantly less overhead
-      than 'x'.
+      many rows, the 'y' matchinfo option may be faster than 'x'.
 
-  <tr style="text-align:left;background-color:#DDDDDD"><td>n <td>1 <td>The number of rows in the FTS4 table. This value is
+<tr style="text-align:left;background-color:#DDDDDD"><td>b<td style="white-space:nowrap"><i>((cols+31)/32)</i> * <i>phrases</i> 
+<td><a name="matchinfo-b"></a>
+
+
+  The matchinfo 'b' flag provides similar information to the
+  <a href="fts3.html#matchinfo-y">matchinfo 'y' flag</a>, but in a more
+  compact form. Instead of the precise number of hits, 'b' provides a single
+  boolean flag for each phrase/column combination. If the phrase is present in
+  the column at least once (i.e. if the corresponding integer output of 'y' would
+  be non-zero), the corresponding flag is set. Otherwise cleared.
+
+<p style="margin-left:0;margin-right:0">
+  If the table has 32 or fewer columns, a single unsigned integer is output for
+  each phrase in the query. The least significant bit of the integer is set if the
+  phrase appears at least once in column 0. The second least significant bit is
+  set if the phrase appears once or more in column 1. And so on.
+
+<p style="margin-left:0;margin-right:0">
+  If the table has more than 32 columns, an extra integer is added to the output
+  of each phrase for each extra 32 columns or part thereof. Integers
+  corresponding to the same phrase are clumped together. For example, if a table
+  with 45 columns is queried for two phrases, 4 integers are output. The first
+  corresponds to phrase 0 and columns 0-31 of the table. The second integer
+  contains data for phrase 0 and columns 32-44, and so on.
+
+<p style="margin-left:0;margin-right:0">
+  For example, if nCol is the number of columns in the table, to determine if
+  phrase p is present in column c:
+
+<pre>
+    p_is_in_c = array&#91;p * ((nCol+31)/32)&#93; & (1 &lt;&lt; (c % 32))
+</pre>
+
+  <tr style="text-align:left"><td>n <td>1 <td>The number of rows in the FTS4 table. This value is
     only available when querying FTS4 tables, not FTS3.
-  <tr style="text-align:left"><td>a <td><i>cols</i> <td>For each column, the average number of
+  <tr style="text-align:left;background-color:#DDDDDD"><td>a <td><i>cols</i> <td>For each column, the average number of
     tokens in the text values stored in the column (considering all rows in
     the FTS4 table). This value is only available when querying FTS4 tables,
     not FTS3.  
-  <tr style="text-align:left;background-color:#DDDDDD"><td>l <td><i>cols</i> <td>
+  <tr style="text-align:left"><td>l <td><i>cols</i> <td>
     For each column, the length of the value stored in the current row of the
     FTS4 table, in tokens.  This value is only available when querying
     FTS4 tables, not FTS3. And only if the "matchinfo=fts3" directive was not
     specified as part of the "CREATE VIRTUAL TABLE" statement used to create
     the FTS4 table.
-  <tr style="text-align:left"><td>s <td><i>cols</i> <td>For each column, the length of the longest 
+  <tr style="text-align:left;background-color:#DDDDDD"><td>s <td><i>cols</i> <td>For each column, the length of the longest 
     subsequence of phrase matches that the column value has in common
     with the query text. For example, if a table column contains the text
     'a b c d e' and the query is 'a c "d e"', then the length of the longest
@@ -1380,6 +1425,7 @@ SELECT docid, offsets(tbl) FROM tbl WHERE tbl MATCH &lt;query expression&gt;;
   document, "<a href="fts3.html#appendix_a">search application tips</a>", contains an example of using the
   matchinfo() function efficiently.
 
+<a name="fts4aux"></a>
 <h1 id="fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</h1>
 
 <p>
@@ -1506,6 +1552,7 @@ SELECT term, col, documents, occurrences FROM ft_terms;
   FTS table has been modified, the results of the query are likely to reflect 
   only a (possibly empty) subset of the changes made.
 
+<a name="fts4_options"></a>
 <h1 id="fts4_options">6. FTS4 Options</h1>
 
 <p>
@@ -1610,6 +1657,7 @@ CREATE VIRTUAL TABLE papers USING fts3(tokenize=porter, tokenize=simple, tokeniz
 
 <a name="*fts4compression"></a>
 
+<a name="section_6_1"></a>
 <h2 id="section_6_1">6.1. The compress= and uncompress= options</h2>
 
 <p>
@@ -1656,6 +1704,7 @@ CREATE VIRTUAL TABLE papers USING fts4(author, document, compress=zip, uncompres
 
 <a name="*fts4content"></a>
 
+<a name="section_6_2"></a>
 <h2 id="section_6_2">6.2. The content= option </h2>
 
 <p>
@@ -1675,6 +1724,7 @@ CREATE VIRTUAL TABLE papers USING fts4(author, document, compress=zip, uncompres
   the full-text index, the content option can be used to achieve 
   significant space savings.
 
+<a name="section_6_2_1"></a>
 <h3 id="section_6_2_1">6.2.1.  Contentless FTS4 Tables </h3>
 
 <p>
@@ -1728,6 +1778,7 @@ SELECT snippet(t1) FROM t1 WHERE t1 MATCH 'xxx';
   may be no error at all even if a statement does refer to column values 
   other than docid.
 
+<a name="section_6_2_2"></a>
 <h3 id="section_6_2_2">6.2.2.  External Content FTS4 Tables </h3>
 
 <p>
@@ -1811,6 +1862,30 @@ SELECT * FROM t3 WHERE t3 MATCH 'k';
   by subsequent SELECT queries. The same applies when a row is updated, as
   internally an UPDATE is the same as a DELETE followed by an INSERT.
 
+<p>
+  This means that in order to keep an FTS in sync with an external content
+  table, any UPDATE or DELETE operations must be applied first to the FTS
+  table, and then to the external content table. For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE t1_real(id INTEGER PRIMARY KEY, a, b, c, d);
+CREATE VIRTUAL TABLE t1_fts USING fts4(content="t1_real", b, c);
+
+<i>-- This works. When the row is removed from the FTS table, FTS retrieves 
+-- the row with rowid=123 and tokenizes it in order to determine the entries 
+-- that must be removed from the full-text index.
+--</i> 
+DELETE FROM t1_fts WHERE rowid = 123;
+DELETE FROM t1_real WHERE rowid = 123;
+
+--<i> This <b>does not work</b>. By the time the FTS table is updated, the row
+-- has already been deleted from the underlying content table. As a result
+-- FTS is unable to determine the entries to remove from the FTS index and
+-- so the index and content table are left out of sync.
+--</i>
+DELETE FROM t1_real WHERE rowid = 123;
+DELETE FROM t1_fts WHERE rowid = 123;
+</pre></table></div>
+
 <p>  
   Instead of writing separately to the full-text index and the content table,
   some users may wish to use database triggers to keep the full-text index
@@ -1859,6 +1934,7 @@ END;
 
 <a name="*fts4languageid"></a>
 
+<a name="section_6_3"></a>
 <h2 id="section_6_3">6.3. The languageid= option</h2>
 
 <p>
@@ -1910,6 +1986,7 @@ END;
 
 <a name="fts4matchinfo"></a>
 
+<a name="section_6_4"></a>
 <h2 id="section_6_4">6.4. The matchinfo= option</h2>
 
 <p>
@@ -1924,6 +2001,7 @@ END;
 
 <a name="fts4notindexed"></a>
 
+<a name="section_6_5"></a>
 <h2 id="section_6_5">6.5. The notindexed= option</h2>
 
 <p>
@@ -1946,6 +2024,7 @@ CREATE VIRTUAL TABLE t1 USING fts4(c1, c2, c3, c4, notindexed=c1, notindexed=c3)
 
 <a name="fts4prefix"></a>
 
+<a name="section_6_6"></a>
 <h2 id="section_6_6">6.6. The prefix= option</h2>
 
 <p>
@@ -1982,6 +2061,7 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
 
 <a name="*cmds"></a>
 
+<a name="commands"></a>
 <h1 id="commands">7. Special Commands For FTS3 and FTS4</h1>
 
 <p>
@@ -2164,6 +2244,7 @@ SELECT * FROM t1 WHERE t1 MATCH 'abc*';
   anyway, as merging data from a single segment is a no-op).
 
 
+<a name="tokenizer"></a>
 <h1 id="tokenizer">8. Tokenizers</h1>
 
 <p>
@@ -2498,6 +2579,7 @@ sentenc|15|23|4
    that tokenizer.
 
  
+<a name="section_9"></a>
 <h1 id="section_9">9. Data Structures</h1>
 
 <p>
@@ -2507,9 +2589,11 @@ sentenc|15|23|4
   application. However, it may be useful to application developers attempting 
   to analyze and understand FTS performance characteristics, or to developers 
   contemplating enhancements to the existing FTS feature set.
+</p>
 
 <a name="*shadowtab"></a>
 
+<a name="section_9_1"></a>
 <h2 id="section_9_1">9.1. Shadow Tables</h2>
 <p>
   For each FTS virtual table in a database, three to five real (non-virtual) tables
@@ -2818,6 +2902,7 @@ CREATE TABLE %_segdir(
   column 0 (if any) is always first, allowing the first two fields of the
   term-offset list to be omitted in this case.
 
+<a name="appendix_a"></a>
 <h1 id="appendix_a"> 
   Appendix A: Search Application Tips
 </h1>

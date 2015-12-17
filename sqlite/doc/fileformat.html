@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -800,7 +806,7 @@ appears on.  The following table shows the elements of a cell, in
 order of appearance, for the various b-tree page types.</p>
 
 <blockquote><dl>
-<dt><p>Table B-Tree Leaf Cell:</p></dt>
+<dt><p>Table B-Tree Leaf Cell (header 0x0d):</p></dt>
 <dd><p><ul>
 <li>A varint which is the total number of bytes of payload, including any
 overflow
@@ -811,13 +817,13 @@ pages.
 overflow page list - omitted if all payload fits on the b-tree page.
 </ul></p></dd>
 
-<dt><p>Table B-Tree Interior Cell:</p></dt>
+<dt><p>Table B-Tree Interior Cell (header 0x05):</p></dt>
 <dd><p><ul>
 <li>A 4-byte big-endian page number which is the left child pointer.
 <li>A varint which is the integer key
 </ul></p></dd>
 
-<dt><p>Index B-Tree Leaf Cell:</p></dt>
+<dt><p>Index B-Tree Leaf Cell (header 0x0a):</p></dt>
 <dd><p><ul>
 <li>A varint which is the total number of bytes of key payload, including any
 overflow
@@ -827,7 +833,7 @@ pages.
 overflow page list - omitted if all payload fits on the b-tree page.
 </ul></p></dd>
 
-<dt><p>Index B-Tree Interior Cell:</p></dt>
+<dt><p>Index B-Tree Interior Cell (header 0x02):</p></dt>
 <dd><p><ul>
 <li>A 4-byte big-endianpage number which is the left child pointer.
 <li>A varint which is the total number of bytes of key payload, including any
@@ -849,10 +855,10 @@ overflow page list - omitted if all payload fits on the b-tree page.
 <tr><th rowspan=2>Datatype
     <th colspan=4>Appears in...
     <th rowspan=2>Description
-<tr><th>Table Leaf
-    <th>Table Interior
-    <th>Index Leaf
-    <th>Index Interior
+<tr><th>Table Leaf (0x0d)
+    <th>Table Interior (0x05)
+    <th>Index Leaf (0x0a)
+    <th>Index Interior (0x02)
 <tr><td align=center valign=top>4-byte integer
     <td align=center valign=top>&nbsp;
     <td align=center valign=top>&#x2714;

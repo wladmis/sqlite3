@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -129,18 +135,18 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>BEGIN TRANSACTION</h2><p><b><a href="syntax/begin-stmt.html">begin-stmt:</a></b>
-<button id='x809' onclick='hideorshow("x809","x810")'>hide</button></p>
- <blockquote id='x810'>
+<button id='x811' onclick='hideorshow("x811","x812")'>hide</button></p>
+ <blockquote id='x812'>
  <img alt="syntax diagram begin-stmt" src="images/syntax/begin-stmt.gif" />
 </blockquote>
 <p><b><a href="syntax/commit-stmt.html">commit-stmt:</a></b>
-<button id='x811' onclick='hideorshow("x811","x812")'>hide</button></p>
- <blockquote id='x812'>
+<button id='x813' onclick='hideorshow("x813","x814")'>hide</button></p>
+ <blockquote id='x814'>
  <img alt="syntax diagram commit-stmt" src="images/syntax/commit-stmt.gif" />
 </blockquote>
 <p><b><a href="syntax/rollback-stmt.html">rollback-stmt:</a></b>
-<button id='x813' onclick='hideorshow("x813","x814")'>hide</button></p>
- <blockquote id='x814'>
+<button id='x815' onclick='hideorshow("x815","x816")'>hide</button></p>
+ <blockquote id='x816'>
  <img alt="syntax diagram rollback-stmt" src="images/syntax/rollback-stmt.gif" />
 </blockquote>
 
@@ -170,7 +176,7 @@ END TRANSACTION is an alias for COMMIT.
 
 <p> Transactions created using BEGIN...COMMIT do not nest.
 For nested transactions, use the <a href="lang_savepoint.html">SAVEPOINT</a> and <a href="lang_savepoint.html">RELEASE</a> commands.
-The "TO SAVEPOINT <i>name</i>" clause of the ROLLBACK command shown
+The "TO SAVEPOINT <span class='yyterm'>name</span>" clause of the ROLLBACK command shown
 in the syntax diagram above is only applicable to <a href="lang_savepoint.html">SAVEPOINT</a>
 transactions.  An attempt to invoke the BEGIN command within
 a transaction will fail with an error, regardless of whether

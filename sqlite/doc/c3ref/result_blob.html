@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -148,6 +154,7 @@ void sqlite3_result_text16le(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_text16be(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_value(sqlite3_context*, sqlite3_value*);
 void sqlite3_result_zeroblob(sqlite3_context*, int n);
+int sqlite3_result_zeroblob64(sqlite3_context*, sqlite3_uint64 n);
 </pre></blockquote><p>
 These routines are used by the xFunc or xFinal callbacks that
 implement SQL functions and aggregates.  See
@@ -163,9 +170,9 @@ an application-defined function to be the BLOB whose content is pointed
 to by the second parameter and which is N bytes long where N is the
 third parameter.</p>
 
-<p>The sqlite3_result_zeroblob() interfaces set the result of
-the application-defined function to be a BLOB containing all zero
-bytes and N bytes in size, where N is the value of the 2nd parameter.</p>
+<p>The sqlite3_result_zeroblob(C,N) and sqlite3_result_zeroblob64(C,N)
+interfaces set the result of the application-defined function to be
+a BLOB containing all zero bytes and N bytes in size.</p>
 
 <p>The sqlite3_result_double() interface sets the result from
 an application-defined function to be a floating point value specified
@@ -247,7 +254,7 @@ then SQLite makes a copy of the result into space obtained from
 from <a href="../c3ref/free.html">sqlite3_malloc()</a> before it returns.</p>
 
 <p>The sqlite3_result_value() interface sets the result of
-the application-defined function to be a copy the
+the application-defined function to be a copy of the
 <a href="../c3ref/value.html">unprotected sqlite3_value</a> object specified by the 2nd parameter.  The
 sqlite3_result_value() interface makes a copy of the <a href="../c3ref/value.html">sqlite3_value</a>
 so that the <a href="../c3ref/value.html">sqlite3_value</a> specified in the parameter may change or

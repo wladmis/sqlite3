@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="../about.html">About</a>
-    <a href="../sitemap.html">Sitemap</a>
     <a href="../docs.html">Documentation</a>
     <a href="../download.html">Download</a>
     <a href="../copyright.html">License</a>
-    <a href="../news.html">News</a>
     <a href="../support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -139,17 +145,17 @@ a:visited { color: #734559 }
 
 <li>SQLITE_SOURCE_ID: "2015-02-25 13:29:11 9d6c1880fb75660bbabd693175579529785f8a6b"
 <li>SHA1 for sqlite3.c: 74ee38c8c6fd175ec85a47276dfcefe8a262827a
-</ul></p><p><b>Prior changes from version 3.8.8.2 (2015-01-30):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.8.2 (2015-01-30):</b></p><p><ul>
 <li>Enhance <a href="../c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2(TRUNCATE)</a> interface so that it truncates the
     WAL file even if there is no checkpoint work to be done.
 
-</ul></p><p><b>Prior changes from version 3.8.8.1 (2015-01-20):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.8.1 (2015-01-20):</b></p><p><ul>
 <li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
     output to appear in the wrong order on queries that contains an ORDER BY clause,
     a LIMIT clause, and that have approximately 60 or more columns in the result set.
     Ticket <a href="https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79">f97c4637102a3ae72b79</a>.
 
-</ul></p><p><b>Prior changes from version 3.8.8 (2015-01-16):</b></p><p><ul>
+</ul></p><p><b>Changes carried forward from version 3.8.8 (2015-01-16):</b></p><p><ul>
 <p><b>New Features:</b>
 <li>Added the <a href="../pragma.html#pragma_data_version">PRAGMA data_version</a> command that can be used to determine if
     a database file has been modified by another process.
@@ -209,8 +215,9 @@ a:visited { color: #734559 }
 
 </ul></p>
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
-      in a single page is also available.  A detailed history of every
+      in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
+      A detailed history of every
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
-      http://www.sqlite.org/src/timeline</a>.</p>
+      SQLite version control site</a>.</p>
     

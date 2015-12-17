@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -130,11 +136,52 @@ a:visited { color: #734559 }
   
 
 
-<h2>SQLite Support Options</h2>
+<a name="mailinglists"></a>
+
+<h2>Free Public Mailing Lists</h2>
+
+<blockquote>
+<table border=0 cellspacing=10>
+<tr><td valign="top">
+<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-users">
+sqlite-users</a>
+</td>
+<td valign="top">General discussion for programmers using SQLite in their applications.  
+<i>This is probably the mailing list you want!</i></td>
+<td valign="top" align="center">
+<form method="GET" action="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-users">
+<input type="submit" value="Sign-up"></form></td>
+<td valign="top" align="center">
+<form method="GET" action="http://www.mail-archive.com/sqlite-users%40mailinglists.sqlite.org/">
+<input type="submit" value="Archives"></form></td>
+</form></td></tr>
+
+<tr><td valign="top">
+<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-dev">
+sqlite-dev</a>
+</td>
+<td valign="top">Conversations about SQLite internals, for those who work
+directly on enhancing SQLite itself.</td>
+<td valign="top" align="center">
+<form method="GET" action="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-dev">
+<input type="submit" value="Sign-up">
+</form></td></tr>
+
+<tr><td valign="top">
+<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-announce">
+<nobr>sqlite-announce</nobr></a>
+</td>
+<td valign="top">Announcements of new SQLite releases.</td>
+<td valign="top" align="center">
+<form method="GET" action="http://sqlite.org:8080/cgi-bin/mailman/listinfo/sqlite-announce">
+<input type="submit" value="Sign-up">
+</form></td></tr>
+</table></blockquote>
+
 
 <a name="prosupport"></a>
 
-<h3>Professional Support</h3>
+<h2>Paid Professional Support</h2>
 
 <p>
 If you would like professional support for SQLite
@@ -152,15 +199,18 @@ Hwaci - Applied Software Research <br />
 </td><td valign="top">
 <form method="GET" action="http://www.hwaci.com/sw/sqlite/prosupport.html">
 <input type="submit" value="More Info"></form>
-</td></tr>
+</td>
+<!--<td valign="top">
+<form method="GET" action="http://www.hwaci.com/cgi-bin/sams-step1">
+<input type="submit" value="Buy Now!"></form>
+</td>--></tr>
 </table>
 
-<h3>Proprietary SQLite Extensions</h3>
+<h2>Proprietary SQLite Extensions</h2>
 
 <p>The core SQLite library found on this website is in the
 <a href="copyright.html">public domain</a>.  But there also exist
-proprietary, licensed extensions to SQLite, written and maintained
-by the original developer.</p>
+proprietary, licensed extensions to SQLite.</p>
 
 <ul>
 <li><p>
@@ -185,43 +235,6 @@ as-deployed configuration on embedded platforms with
 <a href="testing.html#coverage">100% branch test coverage</a>.
 </li>
 </ul>
-
-<a name="mailinglists"></a>
-
-<h3>Mailing Lists</h3>
-<p>Three separate mailing lists have been established to help support
-SQLite:</p>
-
-<ul>
-<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-users">
-sqlite-users</a> - general discussion for programmers using SQLite in their applications.  
-Most postings belong here.</li>
-<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-dev">
-sqlite-dev</a> - conversations about SQLite internals, for those who work
-directly on enhancing SQLite itself.</li>
-<li><a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-announce">
-sqlite-announce</a> - announcements of new
-releases or significant developments; a very-low traffic list.</li>
-</ul>
-
-<p>
-Most users of SQLite will want to join the
-<a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-announce">
-sqlite-announce</a> list and many will want to join the
-<a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-users">
-sqlite-users</a> list.  The
-<a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-dev">
-sqlite-dev</a> list is more specialized and appeals to a narrower audience.
-Off-site archives of the
-<a href="http://mailinglists.sqlite.org/cgi-bin/mailman/listinfo/sqlite-users">
-sqlite-users</a> list are available at:
-</p>
-
-<blockquote>
-<a href="http://www.mail-archive.com/sqlite-users%40sqlite.org/">http://www.mail-archive.com/sqlite-users%40sqlite.org/</a><br>
-<a href="http://marc.info/?l=sqlite-users&r=1&w=2">http://marc.info/?l=sqlite-users&r=1&w=2</a><br>
-<a href="http://news.gmane.org/gmane.comp.db.sqlite.general">http://news.gmane.org/gmane.comp.db.sqlite.general</a>
-</blockquote>
 
 </p>
 

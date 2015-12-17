@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -129,8 +135,8 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>REINDEX</h2><p><b><a href="syntax/reindex-stmt.html">reindex-stmt:</a></b>
-<button id='x1135' onclick='hideorshow("x1135","x1136")'>hide</button></p>
- <blockquote id='x1136'>
+<button id='x1137' onclick='hideorshow("x1137","x1138")'>hide</button></p>
+ <blockquote id='x1138'>
  <img alt="syntax diagram reindex-stmt" src="images/syntax/reindex-stmt.gif" />
 </blockquote>
 
@@ -150,10 +156,10 @@ are recreated.
 database table, then all indices attached to the database table are rebuilt. 
 If it identifies a specific database index, then just that index is recreated.
 
-<p>If no <i>database-name</i> is specified and there exists both a table or
-index and a collation sequence of the specified name, SQLite interprets
-this as a request to rebuild the indices that use the named collation sequence.
+<p>For a command of the form "REINDEX <i>name</i>", a match
+against <span class='yyterm'>collation-name</span> takes precedence over a match
+against <span class='yyterm'>index-name</span> or <span class='yyterm'>table-name</span>.
 This ambiguity in the syntax may be avoided by always specifying a
-<i>database-name</i> when reindexing a specific table or index.
+<span class='yyterm'>schema-name</span> when reindexing a specific table or index.
 
 

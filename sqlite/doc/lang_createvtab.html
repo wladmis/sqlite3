@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -129,8 +135,8 @@ a:visited { color: #734559 }
 <div class=startsearch></div>
   
 <h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE VIRTUAL TABLE</h2><p><b><a href="syntax/create-virtual-table-stmt.html">create-virtual-table-stmt:</a></b>
-<button id='x1005' onclick='hideorshow("x1005","x1006")'>hide</button></p>
- <blockquote id='x1006'>
+<button id='x1007' onclick='hideorshow("x1007","x1008")'>hide</button></p>
+ <blockquote id='x1008'>
  <img alt="syntax diagram create-virtual-table-stmt" src="images/syntax/create-virtual-table-stmt.gif" />
 </blockquote>
 
@@ -144,8 +150,8 @@ with an ordinary table, except that you cannot create indices or triggers on a
 virtual table.  Some virtual table implementations might impose additional
 restrictions.  For example, many virtual tables are read-only.</p>
 
-<p>The &lt;module-name&gt; is the name of an object that implements
-the virtual table.  The &lt;module-name&gt; must be registered with
+<p>The <span class='yyterm'>module-name</span> is the name of an object that implements
+the virtual table.  The <span class='yyterm'>module-name</span> must be registered with
 the SQLite database connection using
 <a href="c3ref/create_module.html">sqlite3_create_module()</a> or <a href="c3ref/create_module.html">sqlite3_create_module_v2()</a>
 prior to issuing the CREATE VIRTUAL TABLE statement.

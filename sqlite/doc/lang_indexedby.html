@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -135,16 +141,17 @@ The INDEXED BY phrase is an SQLite extension and
 is not portable to other SQL database engines.</p>
 
 <p><b><a href="syntax/qualified-table-name.html">qualified-table-name:</a></b>
-<button id='x1433' onclick='hideorshow("x1433","x1434")'>hide</button></p>
- <blockquote id='x1434'>
+<button id='x1435' onclick='hideorshow("x1435","x1436")'>hide</button></p>
+ <blockquote id='x1436'>
  <img alt="syntax diagram qualified-table-name" src="images/syntax/qualified-table-name.gif" />
 </blockquote>
 
 
-<p>The "INDEXED BY index-name" phrase specifies that the named index
+<p>The "INDEXED BY <span class='yyterm'>index-name</span>" phrase specifies 
+that the named index
 must be used in order to look up values on the preceding table.
-If index-name does not exist or cannot be used for the query, then
-the preparation of the SQL statement fails.
+If <span class='yyterm'>index-name</span> does not exist or cannot be used 
+for the query, then the preparation of the SQL statement fails.
 The "NOT INDEXED" clause specifies that no index shall be used when
 accessing the preceding table, including implied indices create by
 UNIQUE and PRIMARY KEY constraints.  However, the <a href="lang_createtable.html#rowid">rowid</a>
@@ -165,7 +172,8 @@ to raise a run-time error if a schema change, such as dropping or
 creating an index, causes the query plan for a time-sensitive query
 to change.  The INDEXED BY clause is designed to help detect
 undesirable query plan changes during regression testing.
-Developers are admonished to omit all use of INDEXED BY during
+Application 
+developers are admonished to omit all use of INDEXED BY during
 application design, implementation, testing, and tuning.  If
 INDEXED BY is to be used at all, it should be inserted at the very
 end of the development process when "locking down" a design.</p>

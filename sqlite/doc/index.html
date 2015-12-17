@@ -64,6 +64,13 @@ a:visited { color: #734559 }
 .fancy li p { margin: 1em 0 }
 /* End of "fancyformat" specific rules. */
 
+.yyterm {
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 11px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 </style>
   
 </head>
@@ -80,12 +87,11 @@ a:visited { color: #734559 }
   <td width=100%>
   <div class="toolbar">
     <a href="about.html">About</a>
-    <a href="sitemap.html">Sitemap</a>
     <a href="docs.html">Documentation</a>
     <a href="download.html">Download</a>
     <a href="copyright.html">License</a>
-    <a href="news.html">News</a>
     <a href="support.html">Support</a>
+    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
   </div>
 <script>
   gMsg = "Search SQLite Docs..."
@@ -159,13 +165,17 @@ members, including:</p>
 
 <script language="JavaScript">
   var sponsor = new Array()
-  sponsor[0] = '<tr><td align="center"> <a href="http://www.mozilla.com/"> <img src="images/foreignlogos/mozilla.gif" alt="mozilla.com" border="0"> </a></td><td> <a href="http://www.mozilla.com/">Mozilla</a> - Working to preserve  choice and innovation on the internet.</td></tr>'
+  sponsor[0] = '<tr><td align="center"> <a href="https://www.mozilla.com/"> <img src="images/foreignlogos/mozilla.gif" alt="mozilla.com" border="0"> </a></td><td> <a href="https://www.mozilla.com/">Mozilla</a> - Working to preserve  choice and innovation on the internet.</td></tr>'
 
-  sponsor[1] = '<tr><td align="center"> <a href="http://www.bloomberg.com/"> <img src="images/foreignlogos/bloomberg.gif" alt="bloomberg.com" border="0"> </a></td><td> <a href="http://www.bloomberg.com/">Bloomberg</a> -  A world leader in financial-information technology.</td></tr>'
+  sponsor[1] = '<tr><td align="center"> <a href="https://www.bloomberg.com/"> <img src="images/foreignlogos/bloomberg.gif" alt="bloomberg.com" border="0"> </a></td><td> <a href="https://www.bloomberg.com/">Bloomberg</a> -  A world leader in financial-information technology.</td></tr>'
 
-  sponsor[2] = '<tr><td align="center"> <a href="http://www.bentley.com/"> <img src="images/foreignlogos/bentley.gif" alt="bentley.com" border="0"> </a></td><td> <a href="http://www.bentley.com/">Bentley</a> - Comprehensive software  solutions for Sustaining Infrastructure.</td></tr>'
+  sponsor[2] = '<tr><td align="center"> <a href="https://www.bentley.com/"> <img src="images/foreignlogos/bentley.gif" alt="bentley.com" border="0"> </a></td><td> <a href="https://www.bentley.com/">Bentley</a> - Comprehensive software  solutions for Sustaining Infrastructure.</td></tr>'
 
-  count = 3
+  sponsor[3] = '<tr><td align="center"> <a href="http://www.nds-association.org/"> <img src="images/foreignlogos/nds.png" alt="nds-association.org" border="0"> </a></td><td> <a href="http://www.nds-association.org/">NDS</a> - The leading map standard  for automotive infotainment and autonomous driving.</td></tr>'
+
+  sponsor[4] = '<tr><td align="center"> <a href="https://www.expensify.com/"> <img src="images/foreignlogos/expensify.png" width="225" height="32"  alt="expensify.org" border="0"> </a></td><td> <a href="https://www.expensify.com/">Expensify</a> -  We power the most exciting companies in the world using SQLite. </td></tr>'
+
+  count = 5
   while( count>0 ){
     i = Math.floor(Math.random()*6)
     if( sponsor[i]!=null ){
@@ -187,9 +197,8 @@ members, including:</p>
 <h3>Current Status</h3>
 
 <p><ul>
-<li><a href="releaselog/3_8_10_2.html">Version 3.8.10.2</a>
-of SQLite is recommended for all new development.  Upgrading
-from all prior releases is recommended.
+<li><a href="releaselog/3_9_2.html">Version 3.9.2</a>
+of SQLite is recommended for all new development.
 </li>
 </ul></p>
 
@@ -207,6 +216,7 @@ from all prior releases is recommended.
 <li> <a href="lang_corefunc.html">SQL functions</a>
 <li> <a href="lang_datefunc.html">Date &amp; time functions</a>
 <li> <a href="lang_aggfunc.html">Aggregate functions</a>
+<li> <a href="json1.html">JSON functions</a>
 </ul>
 </li>
 <li> <a href="c3ref/intro.html">C/C++ Interface Spec</a>
@@ -218,6 +228,7 @@ from all prior releases is recommended.
 <li> <a href="tclsqlite.html">The TCL Interface Spec</a>
 <li> <a href="http://www.sqlite.org/src/timeline">Development Timeline</a> </li>
 <li> <a href="http://www.sqlite.org/src/wiki?name=Bug+Reports">Report a Bug</a> </li>
+<li> <a href="news.html">News</a> </li>
 </ul></p>
 
 </td></tr>
