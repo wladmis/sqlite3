@@ -516,14 +516,12 @@ harnesses are zealous to enforce this.</p>
 
 <h2>7.0 Test Coverage</h2>
 
-<p>The SQLite core has 100% branch test coverage under <a href="th3.html">TH3</a> in
+<p>The SQLite core, including the unix <a href="vfs.html">VFS</a>,
+has 100% branch test coverage under <a href="th3.html">TH3</a> in
 its default configuration as measured by
-<a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>.</p>
-
-<p>The "SQLite core" in the previous paragraph excludes the
-operating-system dependent <a href="vfs.html">VFS</a> backends, since it is
-not possible to write cross-platform tests for those modules.  Extensions
-such as FTS3 and RTree are also excluded from the analysis.</p>
+<a href="http://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>.
+Extensions such as FTS3 and RTree are excluded from this
+analysis.</p>
 
 <a name="stmtvbr"></a>
 

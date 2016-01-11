@@ -432,7 +432,8 @@ for use in application programs.</ol></p>
 <a name="pragma_cache_spill"></a>
 <hr>
     <p><b>PRAGMA cache_spill;
-         <br>PRAGMA cache_spill=</b><i>boolean</i><b>;</b></p>
+         <br>PRAGMA cache_spill=</b><i>boolean</i><b>;
+         <br>PRAGMA </b><i>schema.</i><b>cache_spill=<i>N</i>;</b></p>
 
     <p>The cache_spill pragma enables or disables the ability of the pager
     to spill dirty cache pages to the database file in the middle of a 
@@ -443,6 +444,16 @@ for use in application programs.</ol></p>
     have large long-running transactions may want to disable cache spilling
     in order to prevent the application from acquiring an exclusive lock
     on the database until the moment that the transaction <a href="lang_transaction.html">COMMIT</a>s.
+    <p>The "PRAGMA cache_spill=<i>N</i>" form of this pragma sets a minimum
+    cache size threshold required for spilling to occur. The number of pages
+    in cache must exceed both the cache_spill threshold and the maximum cache
+    size set by the <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> statement in order for spilling to
+    occur.
+    <p>The "PRAGMA cache_spill=<i>boolean</i>" form of this pragma applies
+    across all databases attached to the database connection.  But the
+    "PRAGMA cache_spill=<i>N</i>" form of this statement only applies to
+    the "main" schema or whatever other schema is specified as part of the
+    statement.
 <a name="pragma_case_sensitive_like"></a>
 <hr>
     <p><b>PRAGMA case_sensitive_like = </b><i>boolean</i><b>;</b></p>
@@ -458,7 +469,10 @@ for use in application programs.</ol></p>
 
     <p>This pragma uses <a href="c3ref/create_function.html">sqlite3_create_function()</a> to overload the
     LIKE and GLOB functions, which may override previous implementations
-    of LIKE and GLOB registered by the application.</p>
+    of LIKE and GLOB registered by the application.  This pragma
+    only changes the behavior of the SQL <a href="lang_expr.html#like">LIKE</a> operator.  It does not
+    change the behavior of the <a href="c3ref/strlike.html">sqlite3_strlike()</a> C-language interface,
+    which is always case insensitive.</p>
 <a name="pragma_cell_size_check"></a>
 <hr>
     <p><b>PRAGMA cell_size_check

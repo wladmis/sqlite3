@@ -376,12 +376,7 @@ Table *sqlite3LocateTable(
     }
     pParse->checkSchema = 1;
   }
-#if SQLITE_USER_AUTHENTICATION
-  else if( pParse->db->auth.authLevel<UAUTH_User ){
-    sqlite3ErrorMsg(pParse, "user not authenticated");
-    p = 0;
-  }
-#endif
+
   return p;
 }
 
@@ -449,7 +444,7 @@ static void freeIndex(sqlite3 *db, Index *p){
   sqlite3ExprDelete(db, p->pPartIdxWhere);
   sqlite3ExprListDelete(db, p->aColExpr);
   sqlite3DbFree(db, p->zColAff);
-  if( p->isResized ) sqlite3DbFree(db, p->azColl);
+  if( p->isResized ) sqlite3DbFree(db, (void *)p->azColl);
 #ifdef SQLITE_ENABLE_STAT3_OR_STAT4
   sqlite3_free(p->aiRowEst);
 #endif
@@ -1049,18 +1044,19 @@ begin_table_error:
   return;
 }
 
-/*
-** This macro is used to compare two strings in a case-insensitive manner.
-** It is slightly faster than calling sqlite3StrICmp() directly, but
-** produces larger code.
-**
-** WARNING: This macro is not compatible with the strcmp() family. It
-** returns true if the two strings are equal, otherwise false.
+/* Set properties of a table column based on the (magical)
+** name of the column.
 */
-#define STRICMP(x, y) (\
-sqlite3UpperToLower[*(unsigned char *)(x)]==   \
-sqlite3UpperToLower[*(unsigned char *)(y)]     \
-&& sqlite3StrICmp((x)+1,(y)+1)==0 )
+#if SQLITE_ENABLE_HIDDEN_COLUMNS
+void sqlite3ColumnPropertiesFromName(Table *pTab, Column *pCol){
+  if( sqlite3_strnicmp(pCol->zName, "__hidden__", 10)==0 ){
+    pCol->colFlags |= COLFLAG_HIDDEN;
+  }else if( pTab && pCol!=pTab->aCol && (pCol[-1].colFlags & COLFLAG_HIDDEN) ){
+    pTab->tabFlags |= TF_OOOHidden;
+  }
+}
+#endif
+
 
 /*
 ** Add a new column to the table currently being constructed.
@@ -1086,7 +1082,7 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   z = sqlite3NameFromToken(db, pName);
   if( z==0 ) return;
   for(i=0; i<p->nCol; i++){
-    if( STRICMP(z, p->aCol[i].zName) ){
+    if( sqlite3_stricmp(z, p->aCol[i].zName)==0 ){
       sqlite3ErrorMsg(pParse, "duplicate column name: %s", z);
       sqlite3DbFree(db, z);
       return;
@@ -1104,6 +1100,7 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   pCol = &p->aCol[p->nCol];
   memset(pCol, 0, sizeof(p->aCol[0]));
   pCol->zName = z;
+  sqlite3ColumnPropertiesFromName(p, pCol);
  
   /* If there is no type specified, columns have the default affinity
   ** 'BLOB'. If there is a type specified, then sqlite3AddColumnType() will
@@ -1638,7 +1635,7 @@ static int resizeIndexObject(sqlite3 *db, Index *pIdx, int N){
   zExtra = sqlite3DbMallocZero(db, nByte);
   if( zExtra==0 ) return SQLITE_NOMEM;
   memcpy(zExtra, pIdx->azColl, sizeof(char*)*pIdx->nColumn);
-  pIdx->azColl = (char**)zExtra;
+  pIdx->azColl = (const char**)zExtra;
   zExtra += sizeof(char*)*N;
   memcpy(zExtra, pIdx->aiColumn, sizeof(i16)*pIdx->nColumn);
   pIdx->aiColumn = (i16*)zExtra;
@@ -1777,7 +1774,7 @@ static void convertToWithoutRowidTable(Parse *pParse, Table *pTab){
   ** do not enforce this for imposter tables.) */
   if( !db->init.imposterTable ){
     for(i=0; i<nPk; i++){
-      pTab->aCol[pPk->aiColumn[i]].notNull = 1;
+      pTab->aCol[pPk->aiColumn[i]].notNull = OE_Abort;
     }
     pPk->uniqNotNull = 1;
   }
@@ -1819,7 +1816,7 @@ static void convertToWithoutRowidTable(Parse *pParse, Table *pTab){
       if( !hasColumn(pPk->aiColumn, j, i) ){
         assert( j<pPk->nColumn );
         pPk->aiColumn[j] = i;
-        pPk->azColl[j] = "BINARY";
+        pPk->azColl[j] = sqlite3StrBINARY;
         j++;
       }
     }
@@ -2869,7 +2866,7 @@ Index *sqlite3AllocateIndexObject(
   p = sqlite3DbMallocZero(db, nByte + nExtra);
   if( p ){
     char *pExtra = ((char*)p)+ROUND8(sizeof(Index));
-    p->azColl = (char**)pExtra;       pExtra += ROUND8(sizeof(char*)*nCol);
+    p->azColl = (const char**)pExtra; pExtra += ROUND8(sizeof(char*)*nCol);
     p->aiRowLogEst = (LogEst*)pExtra; pExtra += sizeof(LogEst)*(nCol+1);
     p->aiColumn = (i16*)pExtra;       pExtra += sizeof(i16)*nCol;
     p->aSortOrder = (u8*)pExtra;
@@ -3146,7 +3143,7 @@ Index *sqlite3CreateIndex(
   for(i=0, pListItem=pList->a; i<pList->nExpr; i++, pListItem++){
     Expr *pCExpr;                  /* The i-th index expression */
     int requestedSortOrder;        /* ASC or DESC on the i-th expression */
-    char *zColl;                   /* Collation sequence name */
+    const char *zColl;             /* Collation sequence name */
 
     sqlite3StringToId(pListItem->pExpr);
     sqlite3ResolveSelfReference(pParse, pTab, NC_IdxExpr, pListItem->pExpr, 0);
@@ -3192,7 +3189,7 @@ Index *sqlite3CreateIndex(
     }else if( j>=0 ){
       zColl = pTab->aCol[j].zColl;
     }
-    if( !zColl ) zColl = "BINARY";
+    if( !zColl ) zColl = sqlite3StrBINARY;
     if( !db->init.busy && !sqlite3LocateCollSeq(pParse, zColl) ){
       goto exit_create_index;
     }
@@ -3221,7 +3218,7 @@ Index *sqlite3CreateIndex(
     assert( i==pIndex->nColumn );
   }else{
     pIndex->aiColumn[i] = XN_ROWID;
-    pIndex->azColl[i] = "BINARY";
+    pIndex->azColl[i] = sqlite3StrBINARY;
   }
   sqlite3DefaultRowEst(pIndex);
   if( pParse->pNewTable==0 ) estimateIndexWidth(pIndex);
@@ -3874,7 +3871,7 @@ void sqlite3SrcListIndexedBy(Parse *pParse, SrcList *p, Token *pIndexedBy){
 ** table-valued-function.
 */
 void sqlite3SrcListFuncArgs(Parse *pParse, SrcList *p, ExprList *pList){
-  if( p && pList ){
+  if( p ){
     struct SrcList_item *pItem = &p->a[p->nSrc-1];
     assert( pItem->fg.notIndexed==0 );
     assert( pItem->fg.isIndexedBy==0 );
@@ -4345,9 +4342,8 @@ KeyInfo *sqlite3KeyInfoOfIndex(Parse *pParse, Index *pIdx){
   if( pKey ){
     assert( sqlite3KeyInfoIsWriteable(pKey) );
     for(i=0; i<nCol; i++){
-      char *zColl = pIdx->azColl[i];
-      assert( zColl!=0 );
-      pKey->aColl[i] = strcmp(zColl,"BINARY")==0 ? 0 :
+      const char *zColl = pIdx->azColl[i];
+      pKey->aColl[i] = zColl==sqlite3StrBINARY ? 0 :
                         sqlite3LocateCollSeq(pParse, zColl);
       pKey->aSortOrder[i] = pIdx->aSortOrder[i];
     }

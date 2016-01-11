@@ -195,6 +195,150 @@ for {set x 0} {$x<2} {incr x} {
   execsql { INSERT INTO t3(t3) VALUES('integrity-check') }
 }
 
+#-------------------------------------------------------------------------
+#
+reset_db
+do_execsql_test 4.0 {
+  CREATE VIRTUAL TABLE t2 USING fts5(c1, c2);
+  INSERT INTO t2 VALUES('xa xb', 'xb xa');
+
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 2
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 4
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 8
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 16
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 32
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 64
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 128
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 256
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 512
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 1024
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 2048
+  INSERT INTO t2 SELECT c1||' '||c1, c2||' '||c2 FROM t2; -- 4096
+
+  SELECT count(*) FROM t2('x*');
+} {4096}
+
+do_execsql_test 4.1 {
+  UPDATE t2 SET c2 = 'ya yb';
+  SELECT count(*) FROM t2('c1:x*');
+  SELECT count(*) FROM t2('c2:x*');
+} {4096 0}
+
+do_execsql_test 4.2 {
+  UPDATE t2 SET c2 = 'xa';
+  SELECT count(*) FROM t2('c1:x*');
+  SELECT count(*) FROM t2('c2:x*');
+} {4096 4096}
+
+#-------------------------------------------------------------------------
+#
+reset_db
+proc rnddoc {n} {
+  set map [list a b c d]
+  set doc [list]
+  for {set i 0} {$i < $n} {incr i} {
+    lappend doc "x[lindex $map [expr int(rand()*4)]]"
+  }
+  set doc
+}
+set cols [list]
+for {set i 1} {$i<250} {incr i} { 
+  lappend cols "c$i" 
+  lappend vals "'[rnddoc 10]'"
+}
+
+do_test 5.0 {
+  execsql "CREATE VIRTUAL TABLE t4 USING fts5([join $cols ,])"
+  execsql {INSERT INTO t4(t4, rank) VALUES('pgsz', 32)}
+  execsql "INSERT INTO t4 VALUES([join $vals ,])"
+  execsql "INSERT INTO t4 VALUES([join $vals ,])"
+  execsql "INSERT INTO t4 VALUES([join $vals ,])"
+  execsql "INSERT INTO t4 VALUES([join $vals ,])"
+} {}
+
+proc gmatch {col pattern} {
+  expr {[lsearch -glob $col $pattern]>=0}
+}
+db func gmatch gmatch
+foreach {tn col pattern} {
+  1 c100 {xa*}
+  2 c200 {xb*}
+} {
+  set res [db eval "SELECT rowid FROM t4 WHERE gmatch($col, \$pattern)"]
+  set query "$col : $pattern"
+  do_execsql_test 5.$tn { SELECT rowid FROM t4($query) } $res
+}
+
+reset_db
+db func fts5_rnddoc fts5_rnddoc
+do_test 6.0 {
+  execsql {
+    CREATE VIRTUAL TABLE t5 USING fts5(x, y);
+    INSERT INTO t5 VALUES( fts5_rnddoc(10000), fts5_rnddoc(10000) );
+    INSERT INTO t5 VALUES( fts5_rnddoc(10000), fts5_rnddoc(10000) );
+    INSERT INTO t5 VALUES( fts5_rnddoc(10000), fts5_rnddoc(10000) );
+    INSERT INTO t5 VALUES( fts5_rnddoc(10000), fts5_rnddoc(10000) );
+  }
+} {}
+
+proc gmatch {col pattern} {
+  expr {[lsearch -glob $col $pattern]>=0}
+}
+db func gmatch gmatch
+foreach {tn col pattern} {
+  1 y {xa*}
+  2 y {xb*}
+  3 y {xc*}
+  4 x {xa*}
+  5 x {xb*}
+  6 x {xc*}
+} {
+  set res [db eval "SELECT rowid FROM t5 WHERE gmatch($col, \$pattern)"]
+  set query "$col : $pattern"
+  do_execsql_test 6.$tn { SELECT rowid FROM t5($query) } $res
+}
+
+#-------------------------------------------------------------------------
+# Check that the various ways of creating prefix indexes produce the
+# same database on disk.
+#
+save_prng_state
+foreach {tn create} {
+  1 { CREATE VIRTUAL TABLE tt USING fts5(x, y, prefix="1,2,3") }
+  2 { CREATE VIRTUAL TABLE tt USING fts5(x, y, prefix="1 2 3") }
+  3 { CREATE VIRTUAL TABLE tt USING fts5(x, y, prefix=1, prefix=2, prefix=3) }
+  4 { CREATE VIRTUAL TABLE tt USING fts5(x, y, prefix="1 2", prefix=3) }
+} {
+  execsql { DROP TABLE IF EXISTS tt }
+  restore_prng_state
+  execsql $create
+  execsql {
+    INSERT INTO tt VALUES('cc b ggg ccc aa eee hh', 'aa g b hh a e');
+    INSERT INTO tt VALUES('cc bb cc gg j g cc', 'ii jjj ggg jjj cc cc');
+    INSERT INTO tt VALUES('h eee cc h iii', 'aaa iii dd iii dd');
+    INSERT INTO tt VALUES('jjj hh eee c e b gg', 'j bbb jj ddd jj');
+    INSERT INTO tt VALUES('ii hhh aaa ff c hhh iii', 'j cc hh bb e');
+    INSERT INTO tt VALUES('e fff hhh i aaa', 'g b aa gg c aa dd');
+    INSERT INTO tt VALUES('i aaa ccc gg hhh aa h', 'j bbb bbb d ff');
+    INSERT INTO tt VALUES('g f gg ff ff jjj d', 'jjj d j fff fff ee j');
+    INSERT INTO tt VALUES('a cc e ccc jjj c', 'ccc iii d bb a eee g');
+    INSERT INTO tt VALUES('jj hh hh bb bbb gg', 'j c jjj bb iii f');
+    INSERT INTO tt VALUES('a ggg g cc ccc aa', 'jjj j j aaa c');
+    INSERT INTO tt VALUES('ddd j dd b i', 'aaa bbb iii ggg ff ccc ddd');
+    INSERT INTO tt VALUES('jj ii hh c ii h gg', 'hhh bbb ddd bbb hh g ggg');
+    INSERT INTO tt VALUES('aa hhh ccc h ggg ccc', 'iii d jj a ff ii');
+  }
+
+  #db eval {SELECT rowid, fts5_decode(rowid, block) aS r FROM tt_data} {puts $r}
+
+  if {$tn==1} {
+    set ::checksum [execsql {SELECT md5sum(id, block) FROM tt_data}]
+  } else {
+    do_execsql_test 7.$tn {
+      SELECT md5sum(id, block) FROM tt_data
+    } [list $::checksum]
+  }
+}
 
 finish_test
 

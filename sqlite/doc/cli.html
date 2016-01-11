@@ -230,7 +230,9 @@ preexisting database files having the same name without prompting for
 confirmation.  As with the ".open" command, you might want to use a
 full pathname with forward-slash directory separators to avoid ambiguity.
 
-<h3>Special commands to sqlite3</h3>
+<a name="dotcmd"></a>
+
+<h3>Special commands to sqlite3 (dot-commands)</h3>
 
 <p>
 Most of the time, sqlite3 just reads lines of input and passes them
@@ -250,6 +252,7 @@ at any time.  For example:
 .backup ?DB? FILE      Backup DB (default "main") to FILE
 .bail on|off           Stop after hitting an error.  Default OFF
 .binary on|off         Turn binary output on or off.  Default OFF
+.changes on|off        Show number of rows changed by SQL
 .clone NEWDB           Clone data into NEWDB from the existing database
 .databases             List names and files of attached databases
 .dbinfo ?DB?           Show status information about the database
@@ -307,6 +310,7 @@ at any time.  For example:
 .timeout MS            Try opening locked tables for MS milliseconds
 .timer on|off          Turn SQL timer on or off
 .trace FILE|off        Output each SQL statement as it is run
+.vfsinfo ?AUX?         Information about the top-level VFS
 .vfsname ?AUX?         Print the name of the VFS stack
 .width NUM1 NUM2 ...   Set column widths for "column" mode
                          Negative values right-justify

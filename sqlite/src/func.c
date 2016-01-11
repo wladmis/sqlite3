@@ -747,7 +747,7 @@ static int patternCompare(
     }
     c2 = Utf8Read(zString);
     if( c==c2 ) continue;
-    if( noCase && c<0x80 && c2<0x80 && sqlite3Tolower(c)==sqlite3Tolower(c2) ){
+    if( noCase && sqlite3Tolower(c)==sqlite3Tolower(c2) ){
       continue;
     }
     if( c==matchOne && zPattern!=zEscaped && c2!=0 ) continue;
@@ -761,6 +761,13 @@ static int patternCompare(
 */
 int sqlite3_strglob(const char *zGlobPattern, const char *zString){
   return patternCompare((u8*)zGlobPattern, (u8*)zString, &globInfo, 0)==0;
+}
+
+/*
+** The sqlite3_strlike() interface.
+*/
+int sqlite3_strlike(const char *zPattern, const char *zStr, unsigned int esc){
+  return patternCompare((u8*)zPattern, (u8*)zStr, &likeInfoNorm, esc)==0;
 }
 
 /*
@@ -795,6 +802,17 @@ static void likeFunc(
   int nPat;
   sqlite3 *db = sqlite3_context_db_handle(context);
 
+#ifdef SQLITE_LIKE_DOESNT_MATCH_BLOBS
+  if( sqlite3_value_type(argv[0])==SQLITE_BLOB
+   || sqlite3_value_type(argv[1])==SQLITE_BLOB
+  ){
+#ifdef SQLITE_TEST
+    sqlite3_like_count++;
+#endif
+    sqlite3_result_int(context, 0);
+    return;
+  }
+#endif
   zB = sqlite3_value_text(argv[0]);
   zA = sqlite3_value_text(argv[1]);
 

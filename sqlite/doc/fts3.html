@@ -1817,7 +1817,7 @@ CREATE VIRTUAL TABLE t3 USING fts4(content="t2", a, c);
   docid. Or, if such a row cannot be found in the content table, a NULL
   value is used instead. For example:
 
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE t2(id INTEGER PRIMARY KEY, a, b, c, d);
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">CREATE TABLE t2(id INTEGER PRIMARY KEY, a, b, c);
 CREATE VIRTUAL TABLE t3 USING fts4(content="t2", b, c);
 
 INSERT INTO t2 VALUES(2, 'a b', 'c d', 'e f');

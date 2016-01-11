@@ -137,7 +137,7 @@ static void fts5HighlightAppend(
   const char *z, int n
 ){
   if( *pRc==SQLITE_OK ){
-    if( n<0 ) n = strlen(z);
+    if( n<0 ) n = (int)strlen(z);
     p->zOut = sqlite3_mprintf("%z%.*s", p->zOut, n, z);
     if( p->zOut==0 ) *pRc = SQLITE_NOMEM;
   }
@@ -544,7 +544,7 @@ int sqlite3Fts5AuxInit(fts5_api *pApi){
   int rc = SQLITE_OK;             /* Return code */
   int i;                          /* To iterate through builtin functions */
 
-  for(i=0; rc==SQLITE_OK && i<sizeof(aBuiltin)/sizeof(aBuiltin[0]); i++){
+  for(i=0; rc==SQLITE_OK && i<(int)ArraySize(aBuiltin); i++){
     rc = pApi->xCreateFunction(pApi,
         aBuiltin[i].zFunc,
         aBuiltin[i].pUserData,

@@ -263,10 +263,12 @@ void sqlite3Update(
   assert( chngPk==0 || chngPk==1 );
   chngKey = chngRowid + chngPk;
 
-  /* The SET expressions are not actually used inside the WHERE loop.
-  ** So reset the colUsed mask
+  /* The SET expressions are not actually used inside the WHERE loop.  
+  ** So reset the colUsed mask. Unless this is a virtual table. In that
+  ** case, set all bits of the colUsed mask (to ensure that the virtual
+  ** table implementation makes all columns available).
   */
-  pTabList->a[0].colUsed = 0;
+  pTabList->a[0].colUsed = IsVirtual(pTab) ? (Bitmask)-1 : 0;
 
   hasFK = sqlite3FkRequired(pParse, pTab, aXRef, chngKey);
 
@@ -429,7 +431,7 @@ void sqlite3Update(
       if( aiCurOnePass[0]>=0 ) aToOpen[aiCurOnePass[0]-iBaseCur] = 0;
       if( aiCurOnePass[1]>=0 ) aToOpen[aiCurOnePass[1]-iBaseCur] = 0;
     }
-    sqlite3OpenTableAndIndices(pParse, pTab, OP_OpenWrite, iBaseCur, aToOpen,
+    sqlite3OpenTableAndIndices(pParse, pTab, OP_OpenWrite, 0, iBaseCur, aToOpen,
                                0, 0);
   }
 
@@ -522,7 +524,7 @@ void sqlite3Update(
         */
         testcase( i==31 );
         testcase( i==32 );
-        sqlite3ExprCodeGetColumnOfTable(v, pTab, iDataCur, i, regNew+i);
+        sqlite3ExprCodeGetColumnToReg(pParse, pTab, i, iDataCur, regNew+i);
       }else{
         sqlite3VdbeAddOp2(v, OP_Null, 0, regNew+i);
       }

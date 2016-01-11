@@ -70,6 +70,9 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include "sqlite3.h"
+#define ISSPACE(X) isspace((unsigned char)(X))
+#define ISDIGIT(X) isdigit((unsigned char)(X))
+
 
 #ifdef __unix__
 # include <signal.h>
@@ -585,18 +588,13 @@ static int inmemFullPathname(
   return SQLITE_OK;
 }
 
-/* GetLastError() is never used */
-static int inmemGetLastError(sqlite3_vfs *pVfs, int n, char *z){
-  return SQLITE_OK;
-}
-
 /*
 ** Register the VFS that reads from the g.aFile[] set of files.
 */
 static void inmemVfsRegister(void){
   static sqlite3_vfs inmemVfs;
   sqlite3_vfs *pDefault = sqlite3_vfs_find(0);
-  inmemVfs.iVersion = 1;
+  inmemVfs.iVersion = 3;
   inmemVfs.szOsFile = sizeof(VHandle);
   inmemVfs.mxPathname = 200;
   inmemVfs.zName = "inmem";
@@ -606,8 +604,7 @@ static void inmemVfsRegister(void){
   inmemVfs.xFullPathname = inmemFullPathname;
   inmemVfs.xRandomness = pDefault->xRandomness;
   inmemVfs.xSleep = pDefault->xSleep;
-  inmemVfs.xCurrentTime = pDefault->xCurrentTime;
-  inmemVfs.xGetLastError = inmemGetLastError;
+  inmemVfs.xCurrentTimeInt64 = pDefault->xCurrentTimeInt64;
   sqlite3_vfs_register(&inmemVfs, 0);
 };
 
@@ -633,9 +630,9 @@ static void runSql(sqlite3 *db, const char *zSql, unsigned  runFlags){
     if( runFlags & SQL_TRACE ){
       const char *z = zSql;
       int n;
-      while( z<zMore && isspace(z[0]) ) z++;
+      while( z<zMore && ISSPACE(z[0]) ) z++;
       n = (int)(zMore - z);
-      while( n>0 && isspace(z[n-1]) ) n--;
+      while( n>0 && ISSPACE(z[n-1]) ) n--;
       if( n==0 ) break;
       if( pStmt==0 ){
         printf("TRACE: %.*s (error: %s)\n", n, z, sqlite3_errmsg(db));
@@ -757,7 +754,7 @@ static int integerValue(const char *zArg){
       zArg++;
     }
   }else{
-    while( isdigit(zArg[0]) ){
+    while( ISDIGIT(zArg[0]) ){
       v = v*10 + zArg[0] - '0';
       zArg++;
     }
@@ -835,6 +832,7 @@ int main(int argc, char **argv){
   int nMem = 0;                /* Memory limit */
   char *zExpDb = 0;            /* Write Databases to files in this directory */
   char *zExpSql = 0;           /* Write SQL to files in this directory */
+  void *pHeap = 0;             /* Heap for use by SQLite */
 
   iBegin = timeOfDay();
 #ifdef __unix__
@@ -1082,7 +1080,6 @@ int main(int argc, char **argv){
 
     /* Limit available memory, if requested */
     if( nMem>0 ){
-      void *pHeap;
       sqlite3_shutdown();
       pHeap = malloc(nMem);
       if( pHeap==0 ){
@@ -1181,5 +1178,6 @@ int main(int argc, char **argv){
            sqlite3_libversion(), sqlite3_sourceid());
   }
   free(azSrcDb);
+  free(pHeap);
   return 0;
 }

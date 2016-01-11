@@ -3405,10 +3405,6 @@ comments in the source code.
 <dd><p>Most R*Tree queries use a depth-first search. This is accomplished by setting the rScore equal to iLevel.
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-17759-10613-53810-53402-33339-35108-00085-57750'>context</a>, <a href='matrix/matrix_drtree.html#R-17759-10613-53810-53402-33339-35108-00085-57750'>detail</a>)</i></p></dd>
 
-<dt><b>R-17762-10110-24222-01374-10453-56278-15219-43086</b></dt>
-<dd><p>SQLITE_STATUS_PARSER_STACK This parameter records the deepest parser stack. It is only meaningful if SQLite is compiled with YYTRACKMAXSTACKDEPTH.
-<i>(source: <a href="c3ref/c_status_malloc_count.html">c3ref/c_status_malloc_count.html</a>, matrix: <a href='matrix/c3ref/c_status_malloc_count.html#R-17762-10110-24222-01374-10453-56278-15219-43086'>context</a>, <a href='matrix/matrix_dc_status_malloc_count.html#R-17762-10110-24222-01374-10453-56278-15219-43086'>detail</a>)</i></p></dd>
-
 <dt><b>R-17768-43126-25682-30166-03658-34000-04918-35023</b></dt>
 <dd><p>The name of a result column is the value of the "AS" clause for that column, if there is an AS clause.
 <i>(source: <a href="c3ref/column_name.html">c3ref/column_name.html</a>, matrix: <a href='matrix/c3ref/column_name.html#R-17768-43126-25682-30166-03658-34000-04918-35023'>context</a>, <a href='matrix/matrix_dcolumn_name.html#R-17768-43126-25682-30166-03658-34000-04918-35023'>detail</a>)</i></p></dd>
@@ -7132,6 +7128,10 @@ comments in the source code.
 <dt><b>R-37639-55938-19671-37883-10811-32762-31289-05215</b></dt>
 <dd><p>This interfaces opens a handle to the BLOB located in row iRow, column zColumn, table zTable in database zDb; in other words, the same BLOB that would be selected by: SELECT zColumn FROM zDb.zTable WHERE rowid = iRow;
 <i>(source: <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>, checked-by: tcl/e_blobopen.test, matrix: <a href='matrix/c3ref/blob_open.html#R-37639-55938-19671-37883-10811-32762-31289-05215'>context</a>, <a href='matrix/matrix_dblob_open.html#R-37639-55938-19671-37883-10811-32762-31289-05215'>detail</a>)</i></p></dd>
+
+<dt><b>R-37652-04911-31573-58834-59963-33871-29287-50836</b></dt>
+<dd><p>SQLITE_STATUS_PARSER_STACK The *pHighwater parameter records the deepest parser stack. The *pCurrent value is undefined. The *pHighwater value is only meaningful if SQLite is compiled with YYTRACKMAXSTACKDEPTH.
+<i>(source: <a href="c3ref/c_status_malloc_count.html">c3ref/c_status_malloc_count.html</a>, matrix: <a href='matrix/c3ref/c_status_malloc_count.html#R-37652-04911-31573-58834-59963-33871-29287-50836'>context</a>, <a href='matrix/matrix_dc_status_malloc_count.html#R-37652-04911-31573-58834-59963-33871-29287-50836'>detail</a>)</i></p></dd>
 
 <dt><b>R-37688-43700-53103-62151-49236-10303-34051-45197</b></dt>
 <dd><p>Use the sqlite3_blob_bytes() interface to determine the size of the opened blob.

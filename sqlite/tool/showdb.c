@@ -3,6 +3,8 @@
 */
 #include <stdio.h>
 #include <ctype.h>
+#define ISDIGIT(X) isdigit((unsigned char)(X))
+#define ISPRINT(X) isprint((unsigned char)(X))
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -217,7 +219,7 @@ static unsigned char *print_byte_range(
       if( i+j>nByte ){
         fprintf(stdout, " ");
       }else{
-        fprintf(stdout,"%c", isprint(aData[i+j]) ? aData[i+j] : '.');
+        fprintf(stdout,"%c", ISPRINT(aData[i+j]) ? aData[i+j] : '.');
       }
     }
     fprintf(stdout,"\n");
@@ -600,7 +602,7 @@ static void decodeCell(
          }else{
            zConst[0] = '\'';
            for(ii=1, jj=0; jj<szCol[i] && ii<24; jj++, ii++){
-             zConst[ii] = isprint(pData[jj]) ? pData[jj] : '.';
+             zConst[ii] = ISPRINT(pData[jj]) ? pData[jj] : '.';
            }
            zConst[ii] = 0;
          }
@@ -653,11 +655,11 @@ static void decode_btree_page(
       case 'c': showCellContent = 1;  break;
       case 'm': showMap = 1;          break;
       case 'd': {
-        if( !isdigit(zArgs[1]) ){
+        if( !ISDIGIT(zArgs[1]) ){
           cellToDecode = -1;
         }else{
           cellToDecode = 0;
-          while( isdigit(zArgs[1]) ){
+          while( ISDIGIT(zArgs[1]) ){
             zArgs++;
             cellToDecode = cellToDecode*10 + zArgs[0] - '0';
           }
@@ -1123,7 +1125,7 @@ int main(int argc, char **argv){
         usage(zPrg);
         continue;
       }
-      if( !isdigit(azArg[i][0]) ){
+      if( !ISDIGIT(azArg[i][0]) ){
         fprintf(stderr, "%s: unknown option: [%s]\n", zPrg, azArg[i]);
         continue;
       }
@@ -1150,10 +1152,10 @@ int main(int argc, char **argv){
       }else if( zLeft && zLeft[0]=='t' ){
         int detail = 0;
         int recursive = 0;
-        int i;
-        for(i=1; zLeft[i]; i++){
-          if( zLeft[i]=='r' ) recursive = 1;
-          if( zLeft[i]=='d' ) detail = 1;
+        int j;
+        for(j=1; zLeft[j]; j++){
+          if( zLeft[j]=='r' ) recursive = 1;
+          if( zLeft[j]=='d' ) detail = 1;
         }
         decode_trunk_page(iStart, detail, recursive);
         continue;

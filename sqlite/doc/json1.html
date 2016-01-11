@@ -140,10 +140,10 @@ a:visited { color: #734559 }
 
 <p>
 The <b>json1</b> extension is a <a href="loadext.html">loadable extension</a> that
-implements eleven <a href="c3ref/create_function.html">application-defined SQL functions</a> and
+implements thirteen <a href="c3ref/create_function.html">application-defined SQL functions</a> and
 two <a href="vtab.html#tabfunc2">table-valued functions</a> that are useful for
 managing <a href="http://json.org/">JSON</a> content stored in an SQLite database.
-These are the SQL functions implemented by json1:
+These are the scalar SQL functions implemented by json1:
 
 <blockquote>
 <center><table border=0 cellpadding=5>
@@ -219,17 +219,37 @@ Return true (1) if the input text is a valid JSON string
 
 </table></center></blockquote>
 
-<p>The <a href="vtab.html#tabfunc2">table-valued functions</a> implemented by this routine are:
+<p>There are two aggregate SQL functions:
 
 <blockquote><center><table border=0 cellpadding=5>
 <tr><td width=30 valign='top'>12.</td><td valign='top' width='30%'>
+<a href='#jgrouparray'>json_group_array</a>(<i>value</i>)
+</td><td valign='top'>
+Return a JSON array composed of all <i>value</i> elements 
+  in the aggregation.
+</td></tr>
+
+<tr><td width=30 valign='top'>13.</td><td valign='top' width='30%'>
+<a href='#jgroupobject'>json_group_object</a>(name,<i>value</i>)
+</td><td valign='top'>
+Return a JSON object composed of all <i>name</i> and <i>value</i> pairs
+  in the aggregation.
+</td></tr>
+
+
+</table></center></blockquote>
+
+<p>The <a href="vtab.html#tabfunc2">table-valued functions</a> implemented by this routine are:
+
+<blockquote><center><table border=0 cellpadding=5>
+<tr><td width=30 valign='top'>14.</td><td valign='top' width='30%'>
 <a href='#jeach'>json_each</a>(<i>json</i>)<br><a href='#jeach'>json_each</a>(<i>json</i>,<i>path</i>)
 </td><td valign='top'>
 Return one row describing each element in an array or object
   at the top-level or at "path" within the input JSON.
 </td></tr>
 
-<tr><td width=30 valign='top'>13.</td><td valign='top' width='30%'>
+<tr><td width=30 valign='top'>15.</td><td valign='top' width='30%'>
 <a href='#jtree'>json_tree</a>(<i>json</i>)<br><a href='#jtree'>json_tree</a>(<i>json</i>,<i>path</i>)
 </td><td valign='top'>
 Walk the JSON recursively starting at the top-level or at the
@@ -441,7 +461,7 @@ be used to force strings to be recognized as JSON.
 in the JSON array X, or 0 if X is some kind of JSON value other
 than an array.  The json_array_length(X,P) locates the array at path P
 within X and returns the length of that array, or 0 if path P locates
-a element or X other than an JSON array, and NULL if path P does not
+a element or X other than a JSON array, and NULL if path P does not
 locate any element of X.  Errors are thrown if either X is not 
 well-formed JSON or if P is not a well-formed path.
 
@@ -542,7 +562,7 @@ preexisting values.
 <p>The json_insert(), json_replace(), and json_set() functions always
 take an odd number of arguments.  The first argument is always the original
 JSON to be edited.  Subsequent arguments occur in pairs with the first
-element of each pair being a path and the second element being an value
+element of each pair being a path and the second element being the value
 to insert or replace or set on that path.
 
 <p>Edits occurs sequentially from left to right.  Changes caused by
@@ -748,12 +768,24 @@ JSON and return 0 if the argument X is not well-formed JSON.
 </table></blockquote>
 
 
+<a name="jgrouparray"></a>
+<a name="jgroupobject"></a>
+
+<h3>3.10 The json_group_array() and json_group_object()
+aggregate SQL functions</h3>
+
+<p>The json_group_array(X) function is an 
+<a href="lang_aggfunc.html">aggregate SQL function</a> that returns a JSON array
+comprised of all X values in the aggregation.
+Similarly, the json_group_object(NAME,VALUE) function returns a JSON object
+comprised of all NAME/VALUE pairs in the aggregation.
+
 
 <a name="jeach"></a>
 
 <a name="jtree"></a>
 
-<h3>3.9 The json_each() and json_tree() table-valued functions</h3>
+<h3>3.11 The json_each() and json_tree() table-valued functions</h3>
 
 <p>The json_each(X) and json_tree(X) <a href="vtab.html#tabfunc2">table-valued functions</a> walk the
 JSON value provided as their first argument and return one row for each
@@ -828,7 +860,7 @@ the current row, or the path to the current row in the case where the
 iteration starts on a primitive type and thus only provides a single
 row of output.
 
-<h4>3.10.1 Examples using json_each() and json_tree()</h4>
+<h4>3.11.1 Examples using json_each() and json_tree()</h4>
 
 <p>Suppose the table "CREATE TABLE user(name,phone)" stores zero or
 more phone numbers as a JSON array object in the user.phone field.

@@ -192,6 +192,14 @@ a:visited { color: #734559 }
 </td></tr><tr><td valign="top" align="right"><a href="pragma.html">Pragma&nbsp;commands</a></td><td width="10"></td><td valign="top" align="left">
   This document describes SQLite performance tuning options and other 
   special purpose database commands.
+</td></tr><tr><td valign="top" align="right"><a href="lang_corefunc.html">Core&nbsp;SQL&nbsp;Functions</a></td><td width="10"></td><td valign="top" align="left">
+  General-purpose built-in scalar SQL functions.
+</td></tr><tr><td valign="top" align="right"><a href="lang_aggfunc.html">Aggregate&nbsp;SQL&nbsp;Functions</a></td><td width="10"></td><td valign="top" align="left">
+  General-purpose built-in aggregate SQL functions.
+</td></tr><tr><td valign="top" align="right"><a href="lang_datefunc.html">Date&nbsp;and&nbsp;Time&nbsp;SQL&nbsp;Functions</a></td><td width="10"></td><td valign="top" align="left">
+  SQL functions for manipulating dates and times.
+</td></tr><tr><td valign="top" align="right"><a href="json1.html">JSON&nbsp;SQL&nbsp;Functions</a></td><td width="10"></td><td valign="top" align="left">
+  SQL functions for creating, parsing, and querying JSON content.
 </td></tr><tr><td valign="top" align="right"><a href="datatype3.html">DataTypes</a></td><td width="10"></td><td valign="top" align="left">
   SQLite version 3 introduces the concept of manifest typing, where the
   type of a value is associated with the value itself, not the column that
@@ -226,6 +234,9 @@ a:visited { color: #734559 }
   in version 3.6.19.
 </td></tr><tr><td valign="top" align="right"><a href="fts3.html">Full&nbsp;Text&nbsp;Search</a></td><td width="10"></td><td valign="top" align="left">
   A description of the SQLite Full Text Search (FTS3) extension.
+</td></tr><tr><td valign="top" align="right"><a href="expridx.html">Indexes&nbsp;On&nbsp;Expressions</a></td><td width="10"></td><td valign="top" align="left">
+  Notes on how to create indexes on expressions instead of just
+  individual columns.
 </td></tr><tr><td valign="top" align="right"><a href="intern-v-extern-blob.html">Internal&nbsp;versus&nbsp;External&nbsp;Blob&nbsp;Storage</a></td><td width="10"></td><td valign="top" align="left">
   Should you store large BLOBs directly in the database, or store them
   in files and just record the filename in the database?  This document
@@ -288,7 +299,7 @@ a:visited { color: #734559 }
   These documents are oriented toward describing the internal
   implementation details and operation of SQLite.  
 <tr><td valign="top" align="right"><a href="howtocorrupt.html">How&nbsp;Database&nbsp;Corruption&nbsp;Can&nbsp;Occur</a></td><td width="10"></td><td valign="top" align="left">
-  SQLite is highly resistent to database corruption.  But application,
+  SQLite is highly resistant to database corruption.  But application,
   OS, and hardware bugs can still result in corrupt database files.
   This article describes many of the ways that SQLite database files
   can go corrupt.

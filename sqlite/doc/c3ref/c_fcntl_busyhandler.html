@@ -159,6 +159,7 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_WAL_BLOCK              24
 #define SQLITE_FCNTL_ZIPVFS                 25
 #define SQLITE_FCNTL_RBU                    26
+#define SQLITE_FCNTL_VFS_POINTER            27
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
@@ -293,6 +294,16 @@ all file-control actions, there is no guarantee that this will actually
 do anything.  Callers should initialize the char* variable to a NULL
 pointer in case this file-control is not implemented.  This file-control
 is intended for diagnostic use only.</p>
+
+<p><li><a name="sqlitefcntlvfspointer"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfspointer">SQLITE_FCNTL_VFS_POINTER</a> opcode finds a pointer to the top-level
+<a href="../vfs.html">VFSes</a> currently in use.  The argument X in
+sqlite3_file_control(db,SQLITE_FCNTL_VFS_POINTER,X) must be
+of type "<a href="../c3ref/vfs.html">sqlite3_vfs</a> **".  This opcodes will set *X
+to a pointer to the top-level VFS.
+When there are multiple VFS shims in the stack, this opcode finds the
+upper-most shim only.</p>
 
 <p><li><a name="sqlitefcntlpragma"></a>
 

@@ -736,10 +736,8 @@ void sqlite3Insert(
   /* Make sure the number of columns in the source data matches the number
   ** of columns to be inserted into the table.
   */
-  if( IsVirtual(pTab) ){
-    for(i=0; i<pTab->nCol; i++){
-      nHidden += (IsHiddenColumn(&pTab->aCol[i]) ? 1 : 0);
-    }
+  for(i=0; i<pTab->nCol; i++){
+    nHidden += (IsHiddenColumn(&pTab->aCol[i]) ? 1 : 0);
   }
   if( pColumn==0 && nColumn && nColumn!=(pTab->nCol-nHidden) ){
     sqlite3ErrorMsg(pParse, 
@@ -762,7 +760,7 @@ void sqlite3Insert(
   /* If this is not a view, open the table and and all indices */
   if( !isView ){
     int nIdx;
-    nIdx = sqlite3OpenTableAndIndices(pParse, pTab, OP_OpenWrite, -1, 0,
+    nIdx = sqlite3OpenTableAndIndices(pParse, pTab, OP_OpenWrite, 0, -1, 0,
                                       &iDataCur, &iIdxCur);
     aRegIdx = sqlite3DbMallocRaw(db, sizeof(int)*(nIdx+1));
     if( aRegIdx==0 ){
@@ -835,15 +833,14 @@ void sqlite3Insert(
 
     /* Create the new column data
     */
-    for(i=0; i<pTab->nCol; i++){
-      if( pColumn==0 ){
-        j = i;
-      }else{
+    for(i=j=0; i<pTab->nCol; i++){
+      if( pColumn ){
         for(j=0; j<pColumn->nId; j++){
           if( pColumn->a[j].idx==i ) break;
         }
       }
-      if( (!useTempTable && !pList) || (pColumn && j>=pColumn->nId) ){
+      if( (!useTempTable && !pList) || (pColumn && j>=pColumn->nId)
+            || (pColumn==0 && IsOrdinaryHiddenColumn(&pTab->aCol[i])) ){
         sqlite3ExprCode(pParse, pTab->aCol[i].pDflt, regCols+i+1);
       }else if( useTempTable ){
         sqlite3VdbeAddOp3(v, OP_Column, srcTab, j, regCols+i+1); 
@@ -851,6 +848,7 @@ void sqlite3Insert(
         assert( pSelect==0 ); /* Otherwise useTempTable is true */
         sqlite3ExprCodeAndCache(pParse, pList->a[j].pExpr, regCols+i+1);
       }
+      if( pColumn==0 && !IsOrdinaryHiddenColumn(&pTab->aCol[i]) ) j++;
     }
 
     /* If this is an INSERT on a view with an INSTEAD OF INSERT trigger,
@@ -934,7 +932,6 @@ void sqlite3Insert(
       }
       if( pColumn==0 ){
         if( IsHiddenColumn(&pTab->aCol[i]) ){
-          assert( IsVirtual(pTab) );
           j = -1;
           nHidden++;
         }else{
@@ -1411,7 +1408,7 @@ void sqlite3GenerateConstraintChecks(
       int x;
       if( iField==XN_EXPR ){
         pParse->ckBase = regNewData+1;
-        sqlite3ExprCode(pParse, pIdx->aColExpr->a[i].pExpr, regIdx+i);
+        sqlite3ExprCodeCopy(pParse, pIdx->aColExpr->a[i].pExpr, regIdx+i);
         pParse->ckBase = 0;
         VdbeComment((v, "%s column %d", pIdx->zName, i));
       }else{
@@ -1422,7 +1419,7 @@ void sqlite3GenerateConstraintChecks(
         }else{
           x = iField + regNewData + 1;
         }
-        sqlite3VdbeAddOp2(v, OP_SCopy, x, regIdx+i);
+        sqlite3VdbeAddOp2(v, iField<0 ? OP_IntCopy : OP_SCopy, x, regIdx+i);
         VdbeComment((v, "%s", iField<0 ? "rowid" : pTab->aCol[iField].zName));
       }
     }
@@ -1650,6 +1647,7 @@ int sqlite3OpenTableAndIndices(
   Parse *pParse,   /* Parsing context */
   Table *pTab,     /* Table to be opened */
   int op,          /* OP_OpenRead or OP_OpenWrite */
+  u8 p5,           /* P5 value for OP_Open* instructions */
   int iBase,       /* Use this for the table cursor, if there is one */
   u8 *aToOpen,     /* If not NULL: boolean for each table and index */
   int *piDataCur,  /* Write the database source cursor number here */
@@ -1662,6 +1660,7 @@ int sqlite3OpenTableAndIndices(
   Vdbe *v;
 
   assert( op==OP_OpenRead || op==OP_OpenWrite );
+  assert( op==OP_OpenWrite || p5==0 );
   if( IsVirtual(pTab) ){
     /* This routine is a no-op for virtual tables. Leave the output
     ** variables *piDataCur and *piIdxCur uninitialized so that valgrind
@@ -1689,6 +1688,7 @@ int sqlite3OpenTableAndIndices(
     if( aToOpen==0 || aToOpen[i+1] ){
       sqlite3VdbeAddOp3(v, op, iIdxCur, pIdx->tnum, iDb);
       sqlite3VdbeSetP4KeyInfo(pParse, pIdx);
+      sqlite3VdbeChangeP5(v, p5);
       VdbeComment((v, "%s", pIdx->zName));
     }
   }
@@ -1709,20 +1709,6 @@ int sqlite3_xferopt_count;
 
 
 #ifndef SQLITE_OMIT_XFER_OPT
-/*
-** Check to collation names to see if they are compatible.
-*/
-static int xferCompatibleCollation(const char *z1, const char *z2){
-  if( z1==0 ){
-    return z2==0;
-  }
-  if( z2==0 ){
-    return 0;
-  }
-  return sqlite3StrICmp(z1, z2)==0;
-}
-
-
 /*
 ** Check to see if index pSrc is compatible as a source of data
 ** for index pDest in an insert transfer optimization.  The rules
@@ -1758,7 +1744,7 @@ static int xferCompatibleIndex(Index *pDest, Index *pSrc){
     if( pSrc->aSortOrder[i]!=pDest->aSortOrder[i] ){
       return 0;   /* Different sort orders */
     }
-    if( !xferCompatibleCollation(pSrc->azColl[i],pDest->azColl[i]) ){
+    if( sqlite3_stricmp(pSrc->azColl[i],pDest->azColl[i])!=0 ){
       return 0;   /* Different collating sequences */
     }
   }
@@ -1873,7 +1859,7 @@ static int xferOptimization(
     return 0;   /* The result set must have exactly one column */
   }
   assert( pEList->a[0].pExpr );
-  if( pEList->a[0].pExpr->op!=TK_ALL ){
+  if( pEList->a[0].pExpr->op!=TK_ASTERISK ){
     return 0;   /* The result set must be the special operator "*" */
   }
 
@@ -1909,10 +1895,17 @@ static int xferOptimization(
   for(i=0; i<pDest->nCol; i++){
     Column *pDestCol = &pDest->aCol[i];
     Column *pSrcCol = &pSrc->aCol[i];
+#ifdef SQLITE_ENABLE_HIDDEN_COLUMNS
+    if( (db->flags & SQLITE_Vacuum)==0 
+     && (pDestCol->colFlags | pSrcCol->colFlags) & COLFLAG_HIDDEN 
+    ){
+      return 0;    /* Neither table may have __hidden__ columns */
+    }
+#endif
     if( pDestCol->affinity!=pSrcCol->affinity ){
       return 0;    /* Affinity must be the same on all columns */
     }
-    if( !xferCompatibleCollation(pDestCol->zColl, pSrcCol->zColl) ){
+    if( sqlite3_stricmp(pDestCol->zColl, pSrcCol->zColl)!=0 ){
       return 0;    /* Collating sequence must be the same on all columns */
     }
     if( pDestCol->notNull && !pSrcCol->notNull ){
@@ -2059,9 +2052,10 @@ static int xferOptimization(
       ** a VACUUM command. In that case keys may not be written in strictly
       ** sorted order.  */
       for(i=0; i<pSrcIdx->nColumn; i++){
-        char *zColl = pSrcIdx->azColl[i];
-        assert( zColl!=0 );
-        if( sqlite3_stricmp("BINARY", zColl) ) break;
+        const char *zColl = pSrcIdx->azColl[i];
+        assert( sqlite3_stricmp(sqlite3StrBINARY, zColl)!=0
+                    || sqlite3StrBINARY==zColl );
+        if( sqlite3_stricmp(sqlite3StrBINARY, zColl) ) break;
       }
       if( i==pSrcIdx->nColumn ){
         idxInsFlags = OPFLAG_USESEEKRESULT;

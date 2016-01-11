@@ -227,7 +227,8 @@ The value written into the *pCurrent parameter is undefined.</dd></p>
 
 <p><a name="sqlitestatusparserstack"></a>
  <dt>SQLITE_STATUS_PARSER_STACK</dt>
-<dd>This parameter records the deepest parser stack.  It is only
+<dd>The *pHighwater parameter records the deepest parser stack.
+The *pCurrent value is undefined.  The *pHighwater value is only
 meaningful if SQLite is compiled with <a href="../compile.html#yytrackmaxstackdepth">YYTRACKMAXSTACKDEPTH</a>.</dd>
 </dl></p>
 

@@ -470,7 +470,6 @@ struct CellInfo {
   u8 *pPayload;  /* Pointer to the start of payload */
   u32 nPayload;  /* Bytes of payload */
   u16 nLocal;    /* Amount of payload held locally, not on overflow */
-  u16 iOverflow; /* Offset to overflow page number.  Zero if no overflow */
   u16 nSize;     /* Size of the cell content on the main b-tree page */
 };
 
@@ -517,7 +516,7 @@ struct BtCursor {
   int skipNext;    /* Prev() is noop if negative. Next() is noop if positive.
                    ** Error code if eState==CURSOR_FAULT */
   u8 curFlags;              /* zero or more BTCF_* flags defined below */
-  u8 curPagerFlags;         /* Flags to send to sqlite3PagerAcquire() */
+  u8 curPagerFlags;         /* Flags to send to sqlite3PagerGet() */
   u8 eState;                /* One of the CURSOR_XXX constants (see below) */
   u8 hints;                 /* As configured by CursorSetHints() */
   /* All fields above are zeroed when the cursor is allocated.  See

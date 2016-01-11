@@ -254,7 +254,7 @@ before the virtual table name.
 every database connection in which their
 module is registered, even without a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
 Such virtual tables are called "eponymous virtual tables".
-To use an eponymous virtual table, simple use the 
+To use an eponymous virtual table, simply use the 
 module name as if it were a table.
 Eponymous virtual tables exist in the "main" schema only, so they will
 not work if prefixed with a different schema name.
@@ -749,27 +749,33 @@ forms the reply. The <a href="c3ref/index_info.html">sqlite3_index_info</a> stru
     sqlite3_int64 estimatedRows;    /* Estimated number of rows returned */
     <b>/* Fields below are only available in SQLite 3.9.0 and later */</b>
     int idxFlags;              /* Mask of SQLITE_INDEX_SCAN_* flags */
+    <b>/* Fields below are only available in SQLite 3.10.0 and later */</b>
+    sqlite3_uint64 colUsed;    /* Input: Mask of columns used by statement */
   };
 </pre></blockquote>
 
-<p>Please note the warnings on the "estimatedRows" and "idxFlags" field.
-These fields were added with SQLite versions 3.8.2 and 3.9.0, respectively. 
+<p>Note the warnings on the "estimatedRows", "idxFlags", and colUsed fields.
+These fields were added with SQLite versions 3.8.2, 3.9.0, and 3.10.0, respectively. 
 Any extension that reads or writes these fields must first check that the 
-version of the SQLite library in use is greater than or equal to 3.8.2 or
-3.9.0 - perhaps using a call to <a href="c3ref/libversion.html">sqlite3_version()</a>. The result of attempting 
+version of the SQLite library in use is greater than or equal to appropriate
+version - perhaps comparing the value returned from <a href="c3ref/libversion.html">sqlite3_libversion_number()</a>
+against constants 3008002, 3009000, and/or 3010000. The result of attempting 
 to access these fields in an sqlite3_index_info structure created by an 
 older version of SQLite are undefined.
 
 <p>In addition, there are some defined constants:
 
 <blockquote><pre>
-  #define SQLITE_INDEX_CONSTRAINT_EQ    2
-  #define SQLITE_INDEX_CONSTRAINT_GT    4
-  #define SQLITE_INDEX_CONSTRAINT_LE    8
-  #define SQLITE_INDEX_CONSTRAINT_LT    16
-  #define SQLITE_INDEX_CONSTRAINT_GE    32
-  #define SQLITE_INDEX_CONSTRAINT_MATCH 64
-  #define SQLITE_INDEX_SCAN_UNIQUE      1     /* Scan visits at most 1 row */
+  #define SQLITE_INDEX_CONSTRAINT_EQ      2
+  #define SQLITE_INDEX_CONSTRAINT_GT      4
+  #define SQLITE_INDEX_CONSTRAINT_LE      8
+  #define SQLITE_INDEX_CONSTRAINT_LT     16
+  #define SQLITE_INDEX_CONSTRAINT_GE     32
+  #define SQLITE_INDEX_CONSTRAINT_MATCH  64
+  #define SQLITE_INDEX_CONSTRAINT_LIKE   65     /* 3.10.0 and later only */
+  #define SQLITE_INDEX_CONSTRAINT_GLOB   66     /* 3.10.0 and later only */
+  #define SQLITE_INDEX_CONSTRAINT_REGEXP 67     /* 3.10.0 and later only */
+  #define SQLITE_INDEX_SCAN_UNIQUE        1     /* Scan visits at most 1 row */
 </pre></blockquote>
 
 <p>The SQLite core calls the xBestIndex method when it is compiling a query
@@ -879,6 +885,18 @@ If all terms of the ORDER BY clause are columns in the virtual table,
 then nOrderBy will be the number of terms in the ORDER BY clause 
 and the aOrderBy[] array will identify the column for each term 
 in the order by clause and whether or not that column is ASC or DESC.
+
+<a name="colUsed"></a>
+
+<p>In SQLite version 3.10.0 and later, the colUsed field is available
+to indicate which fields of the virtual table are actually used by the
+statement being prepared.  If the lowest bit of colUsed is set, that
+means that the first column is used.  The second lowest bit corresponds
+to the second column.  And so forth.  If the most significant bit of
+colUsed is set, that means that one or more columns other than the 
+first 63 columns are used.  If column usage information is needed by the
+<a href="vtab.html#xfilter">xFilter</a> method, then the required bits must be encoded into either
+the idxNum or idxStr output fields.
 
 <h4>2.3.2 Outputs</h4>
 

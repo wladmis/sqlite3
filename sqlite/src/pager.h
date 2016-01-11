@@ -79,7 +79,7 @@ typedef struct PgHdr DbPage;
 #define PAGER_JOURNALMODE_WAL         5   /* Use write-ahead logging */
 
 /*
-** Flags that make up the mask passed to sqlite3PagerAcquire().
+** Flags that make up the mask passed to sqlite3PagerGet().
 */
 #define PAGER_GET_NOCONTENT     0x01  /* Do not load data from disk */
 #define PAGER_GET_READONLY      0x02  /* Read-only page is acceptable */
@@ -123,6 +123,7 @@ void sqlite3PagerAlignReserve(Pager*,Pager*);
 #endif
 int sqlite3PagerMaxPageCount(Pager*, int);
 void sqlite3PagerSetCachesize(Pager*, int);
+int sqlite3PagerSetSpillsize(Pager*, int);
 void sqlite3PagerSetMmapLimit(Pager *, sqlite3_int64);
 void sqlite3PagerShrink(Pager*);
 void sqlite3PagerSetFlags(Pager*,unsigned);
@@ -132,10 +133,10 @@ int sqlite3PagerGetJournalMode(Pager*);
 int sqlite3PagerOkToChangeJournalMode(Pager*);
 i64 sqlite3PagerJournalSizeLimit(Pager *, i64);
 sqlite3_backup **sqlite3PagerBackupPtr(Pager*);
+int sqlite3PagerFlush(Pager*);
 
 /* Functions used to obtain and release page references. */ 
-int sqlite3PagerAcquire(Pager *pPager, Pgno pgno, DbPage **ppPage, int clrFlag);
-#define sqlite3PagerGet(A,B,C) sqlite3PagerAcquire(A,B,C,0)
+int sqlite3PagerGet(Pager *pPager, Pgno pgno, DbPage **ppPage, int clrFlag);
 DbPage *sqlite3PagerLookup(Pager *pPager, Pgno pgno);
 void sqlite3PagerRef(DbPage*);
 void sqlite3PagerUnref(DbPage*);
@@ -167,6 +168,10 @@ int sqlite3PagerSharedLock(Pager *pPager);
   int sqlite3PagerWalCallback(Pager *pPager);
   int sqlite3PagerOpenWal(Pager *pPager, int *pisOpen);
   int sqlite3PagerCloseWal(Pager *pPager);
+# ifdef SQLITE_ENABLE_SNAPSHOT
+  int sqlite3PagerSnapshotGet(Pager *pPager, sqlite3_snapshot **ppSnapshot);
+  int sqlite3PagerSnapshotOpen(Pager *pPager, sqlite3_snapshot *pSnapshot);
+# endif
 #endif
 
 #ifdef SQLITE_ENABLE_ZIPVFS
@@ -181,7 +186,7 @@ u32 sqlite3PagerDataVersion(Pager*);
 #endif
 int sqlite3PagerMemUsed(Pager*);
 const char *sqlite3PagerFilename(Pager*, int);
-const sqlite3_vfs *sqlite3PagerVfs(Pager*);
+sqlite3_vfs *sqlite3PagerVfs(Pager*);
 sqlite3_file *sqlite3PagerFile(Pager*);
 const char *sqlite3PagerJournalname(Pager*);
 int sqlite3PagerNosync(Pager*);

@@ -54,6 +54,7 @@ LIBTCL = @TCL_LIB_SPEC@
 # Compiler options needed for programs that use the readline() library.
 #
 READLINE_FLAGS = -DHAVE_READLINE=@TARGET_HAVE_READLINE@ @TARGET_READLINE_INC@
+READLINE_FLAGS += -DHAVE_EDITLINE=@TARGET_HAVE_EDITLINE@
 
 # The library that programs using readline() must link against.
 #
@@ -154,9 +155,6 @@ ALLOWRELEASE = @ALLOWRELEASE@
 LTCOMPILE = $(LIBTOOL) --mode=compile --tag=CC $(TCC) $(LTCOMPILE_EXTRAS)
 LTLINK = $(LIBTOOL) --mode=link $(TCC) $(LTCOMPILE_EXTRAS) @LDFLAGS@ $(LTLINK_EXTRAS)
 LTINSTALL = $(LIBTOOL) --mode=install $(INSTALL)
-
-# nawk compatible awk.
-NAWK = @AWK@
 
 # You should not have to change anything below this line
 ###############################################################################
@@ -404,6 +402,7 @@ TESTSRC = \
   $(TOP)/src/test_tclvar.c \
   $(TOP)/src/test_thread.c \
   $(TOP)/src/test_vfs.c \
+  $(TOP)/src/test_windirent.c \
   $(TOP)/src/test_wsd.c       \
   $(TOP)/ext/fts3/fts3_term.c \
   $(TOP)/ext/fts3/fts3_test.c \
@@ -551,7 +550,7 @@ TESTOPTS = --verbose=file --output=test-out.txt
 #
 SHELL_OPT = -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5
 FUZZERSHELL_OPT = -DSQLITE_ENABLE_JSON1
-FUZZCHECK_OPT = -DSQLITE_ENABLE_JSON1
+FUZZCHECK_OPT = -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_MEMSYS5
 
 # This is the default Makefile target.  The objects listed here
 # are what get build when you type just "make" with no arguments.
@@ -647,9 +646,9 @@ sqlite3.lo:	sqlite3.c
 
 # Rules to build the LEMON compiler generator
 #
-lemon$(BEXE):	$(TOP)/tool/lemon.c $(TOP)/src/lempar.c
+lemon$(BEXE):	$(TOP)/tool/lemon.c $(TOP)/tool/lempar.c
 	$(BCC) -o $@ $(TOP)/tool/lemon.c
-	cp $(TOP)/src/lempar.c .
+	cp $(TOP)/tool/lempar.c .
 
 # Rules to build individual *.o files from generated *.c files. This
 # applies to:
@@ -902,22 +901,22 @@ tclsqlite3$(TEXE):	tclsqlite-shell.lo libsqlite3.la
 
 # Rules to build opcodes.c and opcodes.h
 #
-opcodes.c:	opcodes.h $(TOP)/mkopcodec.awk
-	$(NAWK) -f $(TOP)/mkopcodec.awk opcodes.h >opcodes.c
+opcodes.c:	opcodes.h $(TOP)/tool/mkopcodec.tcl
+	$(TCLSH_CMD) $(TOP)/tool/mkopcodec.tcl opcodes.h >opcodes.c
 
-opcodes.h:	parse.h $(TOP)/src/vdbe.c $(TOP)/mkopcodeh.awk
-	cat parse.h $(TOP)/src/vdbe.c | $(NAWK) -f $(TOP)/mkopcodeh.awk >opcodes.h
+opcodes.h:	parse.h $(TOP)/src/vdbe.c $(TOP)/tool/mkopcodeh.tcl
+	cat parse.h $(TOP)/src/vdbe.c | $(TCLSH_CMD) $(TOP)/tool/mkopcodeh.tcl >opcodes.h
 
 # Rules to build parse.c and parse.h - the outputs of lemon.
 #
 parse.h:	parse.c
 
-parse.c:	$(TOP)/src/parse.y lemon$(BEXE) $(TOP)/addopcodes.awk
+parse.c:	$(TOP)/src/parse.y lemon$(BEXE) $(TOP)/tool/addopcodes.tcl
 	cp $(TOP)/src/parse.y .
 	rm -f parse.h
 	./lemon$(BEXE) $(OPT_FEATURE_FLAGS) $(OPTS) parse.y
 	mv parse.h parse.h.temp
-	$(NAWK) -f $(TOP)/addopcodes.awk parse.h.temp >parse.h
+	$(TCLSH_CMD) $(TOP)/tool/addopcodes.tcl parse.h.temp >parse.h
 
 sqlite3.h:	$(TOP)/src/sqlite.h.in $(TOP)/manifest.uuid $(TOP)/VERSION
 	$(TCLSH_CMD) $(TOP)/tool/mksqlite3h.tcl $(TOP) >sqlite3.h
@@ -1070,7 +1069,7 @@ fastfuzztest:	fuzzcheck$(TEXE) $(FUZZDATA)
 	./fuzzcheck$(TEXE) --limit-mem 100M $(FUZZDATA)
 
 valgrindfuzz:	fuzzcheck$(TEXT) $(FUZZDATA)
-	valgrind ./fuzzcheck$(TEXE) --cell-size-check --limit-mem 10M $(FUZZDATA)
+	valgrind ./fuzzcheck$(TEXE) --cell-size-check --limit-mem 10M --timeout 600 $(FUZZDATA)
 
 # Minimal testing that runs in less than 3 minutes
 #
@@ -1102,7 +1101,7 @@ sqlite3_analyzer.c: sqlite3.c $(TOP)/src/tclsqlite.c $(TOP)/tool/spaceanal.tcl
 	cat sqlite3.c $(TOP)/src/tclsqlite.c >> $@
 	echo "static const char *tclsh_main_loop(void){" >> $@
 	echo "static const char *zMainloop = " >> $@
-	$(NAWK) -f $(TOP)/tool/tostr.awk $(TOP)/tool/spaceanal.tcl >> $@
+	$(TCLSH_CMD) $(TOP)/tool/tostr.tcl $(TOP)/tool/spaceanal.tcl >> $@
 	echo "; return zMainloop; }" >> $@
 
 sqlite3_analyzer$(TEXE): sqlite3_analyzer.c
@@ -1157,7 +1156,7 @@ THREADTEST3_SRC = $(TOP)/test/threadtest3.c    \
                   $(TOP)/test/tt3_lookaside1.c
 
 threadtest3$(TEXE): sqlite3.lo $(THREADTEST3_SRC)
-	$(LTLINK) $(TOP)/test/threadtest3.c sqlite3.lo -o $@ $(TLIBS)
+	$(LTLINK) $(TOP)/test/threadtest3.c $(TOP)/src/test_multiplex.c sqlite3.lo -o $@ $(TLIBS)
 
 threadtest: threadtest3$(TEXE)
 	./threadtest3$(TEXE)

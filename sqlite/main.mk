@@ -37,9 +37,6 @@
 # LIBREADLINE      Linker options needed by programs using readline() must
 #                  link against.
 #
-# NAWK             Nawk compatible awk program.  Older (obsolete?) solaris
-#                  systems need this to avoid using the original AT&T AWK.
-#
 # Once the macros above are defined, the rest of this make script will
 # build the SQLite library and testing tools.
 ################################################################################
@@ -315,6 +312,7 @@ TESTSRC = \
   $(TOP)/src/test_tclvar.c \
   $(TOP)/src/test_thread.c \
   $(TOP)/src/test_vfs.c \
+  $(TOP)/src/test_windirent.c \
   $(TOP)/src/test_wsd.c
 
 # Extensions to be statically loaded.
@@ -462,7 +460,7 @@ TESTOPTS = --verbose=file --output=test-out.txt
 #
 SHELL_OPT = -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS5
 FUZZERSHELL_OPT = -DSQLITE_ENABLE_JSON1
-FUZZCHECK_OPT = -DSQLITE_ENABLE_JSON1
+FUZZCHECK_OPT = -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_MEMSYS5
 
 # This is the default Makefile target.  The objects listed here
 # are what get build when you type just "make" with no arguments.
@@ -557,9 +555,9 @@ fts3amal.c:	target_source $(TOP)/ext/fts3/mkfts3amal.tcl
 
 # Rules to build the LEMON compiler generator
 #
-lemon:	$(TOP)/tool/lemon.c $(TOP)/src/lempar.c
+lemon:	$(TOP)/tool/lemon.c $(TOP)/tool/lempar.c
 	$(BCC) -o lemon $(TOP)/tool/lemon.c
-	cp $(TOP)/src/lempar.c .
+	cp $(TOP)/tool/lempar.c .
 
 # Rules to build individual *.o files from generated *.c files. This
 # applies to:
@@ -582,23 +580,23 @@ tclsqlite.o:	$(TOP)/src/tclsqlite.c $(HDR)
 
 # Rules to build opcodes.c and opcodes.h
 #
-opcodes.c:	opcodes.h $(TOP)/mkopcodec.awk
-	$(NAWK) -f $(TOP)/mkopcodec.awk opcodes.h >opcodes.c
+opcodes.c:	opcodes.h $(TOP)/tool/mkopcodec.tcl
+	tclsh $(TOP)/tool/mkopcodec.tcl opcodes.h >opcodes.c
 
-opcodes.h:	parse.h $(TOP)/src/vdbe.c $(TOP)/mkopcodeh.awk
+opcodes.h:	parse.h $(TOP)/src/vdbe.c $(TOP)/tool/mkopcodeh.tcl
 	cat parse.h $(TOP)/src/vdbe.c | \
-		$(NAWK) -f $(TOP)/mkopcodeh.awk >opcodes.h
+		tclsh $(TOP)/tool/mkopcodeh.tcl >opcodes.h
 
 # Rules to build parse.c and parse.h - the outputs of lemon.
 #
 parse.h:	parse.c
 
-parse.c:	$(TOP)/src/parse.y lemon $(TOP)/addopcodes.awk
+parse.c:	$(TOP)/src/parse.y lemon $(TOP)/tool/addopcodes.tcl
 	cp $(TOP)/src/parse.y .
 	rm -f parse.h
 	./lemon -s $(OPTS) parse.y
 	mv parse.h parse.h.temp
-	$(NAWK) -f $(TOP)/addopcodes.awk parse.h.temp >parse.h
+	tclsh $(TOP)/tool/addopcodes.tcl parse.h.temp >parse.h
 
 sqlite3.h:	$(TOP)/src/sqlite.h.in $(TOP)/manifest.uuid $(TOP)/VERSION $(TOP)/ext/rtree/sqlite3rtree.h
 	tclsh $(TOP)/tool/mksqlite3h.tcl $(TOP) >sqlite3.h
@@ -712,7 +710,7 @@ sqlite3_analyzer.c: sqlite3.c $(TOP)/src/tclsqlite.c $(TOP)/tool/spaceanal.tcl
 	cat sqlite3.c $(TOP)/src/tclsqlite.c >> $@
 	echo "static const char *tclsh_main_loop(void){" >> $@
 	echo "static const char *zMainloop = " >> $@
-	$(NAWK) -f $(TOP)/tool/tostr.awk $(TOP)/tool/spaceanal.tcl >> $@
+	tclsh $(TOP)/tool/tostr.tcl $(TOP)/tool/spaceanal.tcl >> $@
 	echo "; return zMainloop; }" >> $@
 
 sqlite3_analyzer$(EXE): sqlite3_analyzer.c
@@ -758,7 +756,7 @@ fastfuzztest:	fuzzcheck$(EXE) $(FUZZDATA)
 	./fuzzcheck$(EXE) --limit-mem 100M $(FUZZDATA)
 
 valgrindfuzz:	fuzzcheck$(EXE) $(FUZZDATA)
-	valgrind ./fuzzcheck$(EXE) --cell-size-check --limit-mem 10M $(FUZZDATA)
+	valgrind ./fuzzcheck$(EXE) --cell-size-check --limit-mem 10M --timeout 600 $(FUZZDATA)
 
 # A very quick test using only testfixture and omitting all the slower
 # tests.  Designed to run in under 3 minutes on a workstation.
@@ -797,8 +795,8 @@ THREADTEST3_SRC = $(TOP)/test/threadtest3.c    \
                   $(TOP)/test/tt3_stress.c      \
                   $(TOP)/test/tt3_lookaside1.c
 
-threadtest3$(EXE): sqlite3.o $(THREADTEST3_SRC)
-	$(TCCX) $(TOP)/test/threadtest3.c sqlite3.o -o $@ $(THREADLIB)
+threadtest3$(EXE): sqlite3.o $(THREADTEST3_SRC) $(TOP)/src/test_multiplex.c
+	$(TCCX) $(TOP)/test/threadtest3.c $(TOP)/src/test_multiplex.c sqlite3.o -o $@ $(THREADLIB)
 
 threadtest: threadtest3$(EXE)
 	./threadtest3$(EXE)

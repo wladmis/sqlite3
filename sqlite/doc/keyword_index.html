@@ -158,6 +158,7 @@ a:visited { color: #734559 }
 <li> <a href="uri.html#uripsow">"psow" query parameter</a> </li>
 <li> <a href="fts3.html#*fts4rebuidcmd">"rebuild" command</a> </li>
 <li> <a href="uri.html#urivfs">"vfs" query parameter</a> </li>
+<li> <a href="lang_datefunc.html#localtime">'utc' modifier</a> </li>
 <li> <a href="compile.html#fdatasync">-DHAVE_FDATASYNC</a> </li>
 <li> <a href="compile.html#gmtime_r">-DHAVE_GMTIME_R</a> </li>
 <li> <a href="compile.html#isnan">-DHAVE_ISNAN</a> </li>
@@ -220,6 +221,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#enable_update_delete_limit">-DSQLITE_ENABLE_UPDATE_DELETE_LIMIT</a> </li>
 <li> <a href="compile.html#fts3_max_expr_depth">-DSQLITE_FTS3_MAX_EXPR_DEPTH</a> </li>
 <li> <a href="compile.html#have_isnan">-DSQLITE_HAVE_ISNAN</a> </li>
+<li> <a href="compile.html#like_doesnt_match_blobs">-DSQLITE_LIKE_DOESNT_MATCH_BLOBS</a> </li>
 <li> <a href="compile.html#max_mmap_size">-DSQLITE_MAX_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#max_schema_retry">-DSQLITE_MAX_SCHEMA_RETRY</a> </li>
 <li> <a href="compile.html#max_worker_threads">-DSQLITE_MAX_WORKER_THREADS</a> </li>
@@ -407,6 +409,7 @@ a:visited { color: #734559 }
 <li> <a href="syntax/column-constraint.html">column-constraint syntax diagram</a> </li>
 <li> <a href="syntax/column-def.html">column-def</a> </li>
 <li> <a href="syntax/column-def.html">column-def syntax diagram</a> </li>
+<li> <a href="vtab.html#colUsed">colUsed field</a> </li>
 <li> <a href="cli.html">Command Line Interface</a> </li>
 <li> <a href="cli.html">command-line interface</a> </li>
 <li> <a href="cli.html">command-line shell</a> </li>
@@ -516,6 +519,7 @@ a:visited { color: #734559 }
 <li> <a href="syntax/detach-stmt.html">detach-stmt</a> </li>
 <li> <a href="syntax/detach-stmt.html">detach-stmt syntax diagram</a> </li>
 <li> <a href="lang_select.html#distinct">DISTINCT</a> </li>
+<li> <a href="cli.html#dotcmd">dot-commands</a> </li>
 <li> <a href="download.html">download page</a> </li>
 <li> <a href="lang_dropindex.html">DROP INDEX</a> </li>
 <li> <a href="lang_droptable.html">DROP TABLE</a> </li>
@@ -718,6 +722,10 @@ a:visited { color: #734559 }
 <li> <a href="json1.html#jeach">json_each table-valued function</a> </li>
 <li> <a href="json1.html#jex">json_extract</a> </li>
 <li> <a href="json1.html#jex">json_extract SQL function</a> </li>
+<li> <a href="json1.html#jgrouparray">json_group_array</a> </li>
+<li> <a href="json1.html#jgrouparray">json_group_array SQL function</a> </li>
+<li> <a href="json1.html#jgroupobject">json_group_object</a> </li>
+<li> <a href="json1.html#jgroupobject">json_group_object SQL function</a> </li>
 <li> <a href="json1.html#jins">json_insert</a> </li>
 <li> <a href="json1.html#jins">json_insert SQL function</a> </li>
 <li> <a href="json1.html#jobj">json_object</a> </li>
@@ -1013,6 +1021,7 @@ a:visited { color: #734559 }
 <li> <a href="optoverview.html#skipscan">skip-scan</a> </li>
 <li> <a href="optoverview.html#skipscan">skip-scan optimization</a> </li>
 <li> <a href="testing.html#slt">SLT</a> </li>
+<li> <a href="c3ref/snapshot.html">snapshot</a> </li>
 <li> <a href="fts3.html#snippet">snippet</a> </li>
 <li> <a href="pragma.html#pragma_soft_heap_limit">soft_heap_limit pragma</a> </li>
 <li> <a href="lang_with.html#sudoku">solve Sudoku puzzles</a> </li>
@@ -1119,6 +1128,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/create_module.html">sqlite3_create_module_v2</a> </li>
 <li> <a href="c3ref/data_count.html">sqlite3_data_count</a> </li>
 <li> <a href="c3ref/data_directory.html">sqlite3_data_directory</a> </li>
+<li> <a href="c3ref/db_cacheflush.html">sqlite3_db_cacheflush</a> </li>
 <li> <a href="c3ref/db_config.html">sqlite3_db_config</a> </li>
 <li> <a href="c3ref/db_filename.html">sqlite3_db_filename</a> </li>
 <li> <a href="c3ref/db_handle.html">sqlite3_db_handle</a> </li>
@@ -1242,6 +1252,10 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/get_auxdata.html">sqlite3_set_auxdata</a> </li>
 <li> <a href="c3ref/initialize.html">sqlite3_shutdown</a> </li>
 <li> <a href="c3ref/sleep.html">sqlite3_sleep</a> </li>
+<li> <a href="c3ref/snapshot.html">sqlite3_snapshot</a> </li>
+<li> <a href="c3ref/snapshot_free.html">sqlite3_snapshot_free</a> </li>
+<li> <a href="c3ref/snapshot_get.html">sqlite3_snapshot_get</a> </li>
+<li> <a href="c3ref/snapshot_open.html">sqlite3_snapshot_open</a> </li>
 <li> <a href="c3ref/mprintf.html">sqlite3_snprintf</a> </li>
 <li> <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a> </li>
 <li> <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64</a> </li>
@@ -1258,6 +1272,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/stmt_status.html">sqlite3_stmt_status</a> </li>
 <li> <a href="c3ref/strglob.html">sqlite3_strglob</a> </li>
 <li> <a href="c3ref/stricmp.html">sqlite3_stricmp</a> </li>
+<li> <a href="c3ref/strlike.html">sqlite3_strlike</a> </li>
 <li> <a href="c3ref/stricmp.html">sqlite3_strnicmp</a> </li>
 <li> <a href="c3ref/table_column_metadata.html">sqlite3_table_column_metadata</a> </li>
 <li> <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> </li>
@@ -1483,6 +1498,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename">SQLITE_FCNTL_TEMPFILENAME</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace">SQLITE_FCNTL_TRACE</a> </li>
+<li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfspointer">SQLITE_FCNTL_VFS_POINTER</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfsname">SQLITE_FCNTL_VFSNAME</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwalblock">SQLITE_FCNTL_WAL_BLOCK</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32avretry">SQLITE_FCNTL_WIN32_AV_RETRY</a> </li>
@@ -1497,10 +1513,13 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_deny.html">SQLITE_IGNORE</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_EQ</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_GE</a> </li>
+<li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_GLOB</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_GT</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_LE</a> </li>
+<li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_LIKE</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_LT</a> </li>
 <li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_MATCH</a> </li>
+<li> <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_REGEXP</a> </li>
 <li> <a href="c3ref/c_index_scan_unique.html">SQLITE_INDEX_SCAN_UNIQUE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_INSERT</a> </li>
 <li> <a href="c3ref/int64.html">sqlite_int64</a> </li>
@@ -1523,6 +1542,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_iocap_atomic.html">SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_IOERR</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_ACCESS</a> </li>
+<li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_AUTH</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_BLOCKED</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_CHECKRESERVEDLOCK</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_CLOSE</a> </li>
@@ -1549,6 +1569,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_UNLOCK</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_VNODE</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_IOERR_WRITE</a> </li>
+<li> <a href="compile.html#like_doesnt_match_blobs">SQLITE_LIKE_DOESNT_MATCH_BLOBS</a> </li>
 <li> <a href="c3ref/c_limit_attached.html#sqlitelimitattached">SQLITE_LIMIT_ATTACHED</a> </li>
 <li> <a href="c3ref/c_limit_attached.html#sqlitelimitcolumn">SQLITE_LIMIT_COLUMN</a> </li>
 <li> <a href="c3ref/c_limit_attached.html#sqlitelimitcompoundselect">SQLITE_LIMIT_COMPOUND_SELECT</a> </li>
@@ -1961,6 +1982,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_1_4.html">Version 3.1.4</a> </li>
 <li> <a href="releaselog/3_1_5.html">Version 3.1.5</a> </li>
 <li> <a href="releaselog/3_1_6.html">Version 3.1.6</a> </li>
+<li> <a href="releaselog/3_10_0.html">Version 3.10.0</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>

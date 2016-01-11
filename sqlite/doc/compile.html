@@ -204,7 +204,7 @@ with non-standard compilation options.
   If the HAVE_MALLOC_USABLE_SIZE option is true, then SQLite tries uses the
   malloc_usable_size() interface to find the size of a memory allocation obtained
   from the standard-library malloc() or realloc() routines.  This option is only
-  applicable if the standard-library malloc() is used.  On Apply systems,
+  applicable if the standard-library malloc() is used.  On Apple systems,
   "zone malloc" is used instead, and so this option is not applicable.  And, of
   course, if the application supplies its own malloc implementation using
   <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmalloc">SQLITE_CONFIG_MALLOC</a> then this option has no effect.
@@ -359,6 +359,24 @@ with non-standard compilation options.
   So the default depth limit of 12 is sufficient for up to 4095 ordinary
   terms on a MATCH, it is only sufficient for 11 or 12 phrase or NEAR
   terms.  Even so, the default is more than enough for most application.
+</p></blockquote><a name="like_doesnt_match_blobs"></a>
+<p><b>SQLITE_LIKE_DOESNT_MATCH_BLOBS</b></p><blockquote><p>
+  This compile-time option causes the <a href="lang_expr.html#like">LIKE</a> operator to always return 
+  False if either operand is a BLOB.  The default behavior of <a href="lang_expr.html#like">LIKE</a> 
+  is that BLOB operands are cast to TEXT before the comparison is done.
+  <p>
+  This compile-time option makes SQLite run more efficiently when processing
+  queries that use the <a href="lang_expr.html#like">LIKE</a> operator, at the expense of breaking backwards
+  compatibility.  However, the backwards compatibility break may be only
+  a technicality.  There was a long-standing bug in the <a href="lang_expr.html#like">LIKE</a> processing logic
+  (see <a href="https://www.sqlite.org/src/info/05f43be8fdda9f">https://www.sqlite.org/src/info/05f43be8fdda9f</a>) that caused it to
+  misbehavior for BLOB operands and nobody observed that bug in nearly
+  10 years of active use.  So for more users, it is probably safe to
+  enable this compile-time option and thereby save a little CPU time
+  on LIKE queries.
+  <p>
+  This compile-time option affects the SQL <a href="lang_expr.html#like">LIKE</a> operator only and has
+  no impact on the <a href="c3ref/strlike.html">sqlite3_strlike()</a> C-language interface.
 </p></blockquote><a name="max_mmap_size"></a>
 <p><b>SQLITE_MAX_MMAP_SIZE=<i>N</i></b></p><blockquote><p>
   This macro sets a hard upper bound on the amount of address space that
@@ -938,16 +956,17 @@ options must also be defined when using the 'lemon' tool to generate the
 parse.c file and when compiling the 'mkkeywordhash' tool which generates 
 the keywordhash.h file.
 Because of this, these options may only be used when the library is built
-from canonical source, not from the <a href="amalgamation.html">amalgamation</a> or from the collection of
-pre-packaged C files provided for non-Unix like platforms on the website.
-Any SQLITE_OMIT_* options which can be used directly with the <a href="amalgamation.html">amalgamation</a> 
-are listed below, however, the warnings in the following paragraph should be noted.
+from canonical source, not from the <a href="amalgamation.html">amalgamation</a>.
+Some SQLITE_OMIT_* options might work, or appear to work, when used with
+the <a href="amalgamation.html">amalgamation</a>.  But this is not guaranteed.  In general, always compile
+from canonical sources in order to take advantage of SQLITE_OMIT_* options.
 </p>
 
 <blockquote>
-<i><b>Important Note:</b> The SQLITE_OMIT_* options do not work with the
-<a href="amalgamation.html">amalgamation</a> or with pre-packaged C code files.  SQLITE_OMIT_* compile-time
-options only work correctly when SQLite is built from canonical source files.
+<i><b>Important Note:</b> The SQLITE_OMIT_* options may not work with the
+<a href="amalgamation.html">amalgamation</a>.  SQLITE_OMIT_* compile-time
+options usually work correctly only when SQLite is built from canonical 
+source files.
 </i>
 </blockquote>
 
@@ -963,20 +982,18 @@ The resulting "sqlite3.c" amalgamation code file (and its associated
 header file "sqlite3.h") can then be moved to a non-unix platform
 for final compilation using a native compiler.</p>
 
-<p>All of the SQLITE_OMIT_* options are unsupported.</p>
+<p>The SQLITE_OMIT_* options are unsupported.  By this we mean that
+an SQLITE_OMIT_* option that omits code from the build in the current
+release might become a no-op in the next release.  Or the other way around:
+an SQLITE_OMIT_* that is a no-op in the current release might cause code
+to be excluded in the next release.  Also, not all SQLITE_OMIT_* options
+are tested.  Some SQLITE_OMIT_* options might cause SQLite to malfunction
+and/or provide incorrect answers.
 
 <blockquote>
 <i><b>Important Note:</b>
 The SQLITE_OMIT_* compile-time options are unsupported.
 </i></blockquote>
-
-<p>
-The SQLITE_OMIT_* compile-time options are usually untested and
-are almost certainly untested in combination.
-Any or all of these options may be removed from the code in future releases
-and without warning.  For any particular release, some of these
-options may cause compile-time or run-time failures, particularly
-when used in combination with other options.</p>
 
 <a name="omit_altertable"></a>
 <p><b>SQLITE_OMIT_ALTERTABLE</b></p><blockquote><p>

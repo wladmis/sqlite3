@@ -148,7 +148,56 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
-<a name="version_3_9_2"></a>
+<a name="version_3_10_0"></a>
+<h3>2016-01-06 (3.10.0)</h3><p><ul>
+<p><b>General improvements:</b>
+<li>Added support for <a href="lang_expr.html#like">LIKE</a>, <a href="lang_expr.html#glob">GLOB</a>, and <a href="lang_expr.html#regexp">REGEXP</a> operators on <a href="vtab.html">virtual tables</a>.
+<li>Added the <a href="vtab.html#colUsed">colUsed field</a> to <a href="c3ref/index_info.html">sqlite3_index_info</a> for use by
+    the <a href="vtab.html#xbestindex">sqlite3_module.xBestIndex</a> method.
+<li>Enhance the <a href="pragma.html#pragma_cache_spill">PRAGMA cache_spill</a> statement to accept a 32-bit integer
+    parameter which is the threshold below which cache spilling is prohibited.
+<li>On unix, if a symlink to a database file is opened, then the corresponding
+    journal files are based on the actual filename, not the symlink name.
+<li>Added the "--transaction" option to <a href="sqldiff.html">sqldiff</a>.
+<li>Added the <a href="c3ref/db_cacheflush.html">sqlite3_db_cacheflush()</a> interface.
+<li>Added the <a href="c3ref/strlike.html">sqlite3_strlike()</a> interface.
+<li>When using <a href="mmap.html">memory-mapped I/O</a> map the database file read-only so that stray pointers
+    and/or array overruns in the application cannot accidently modify the database file.
+<li>Added the <em>experimental</em> <a href="c3ref/snapshot_get.html">sqlite3_snapshot_get()</a>, <a href="c3ref/snapshot_open.html">sqlite3_snapshot_open()</a>,
+    and <a href="c3ref/snapshot_free.html">sqlite3_snapshot_free()</a> interfaces.  These are subject to change or removal in
+    a subsequent release.
+<li>Enhance the <a href="lang_datefunc.html#localtime">'utc' modifier</a> in the <a href="lang_datefunc.html">date and time functions</a> so that it is a no-op if
+    the date/time is known to already be in UTC.  (This is not a compatibility break since
+    the behavior has long been documented as "undefined" in that case.)
+<li>Added the <a href="json1.html#jgrouparray">json_group_array()</a> and <a href="json1.html#jgroupobject">json_group_object()</a> SQL functions in the
+    <a href="json1.html#jmini">json</a> extension.
+<li>Added the <a href="compile.html#like_doesnt_match_blobs">SQLITE_LIKE_DOESNT_MATCH_BLOBS</a> compile-time option.
+<li>Many small performance optimizations.
+<p><b>Portability enhancements:</b>
+<li>Work around a sign-exension bug in the optimizer of the HP C compiler on HP/UX.
+    <a href="https://www.sqlite.org/src/fdiff?sbs=1&v1=869c95b0fc73026d&v2=232c242a0ccb3d67">(details)</a>
+<p><b>Enhancements to the <a href="cli.html">command-line shell</a>:</b>
+<li>Added the ".changes ON|OFF" and ".vfsinfo" <a href="cli.html#dotcmd">dot-commands</a>.
+<li>Translate between MBCS and UTF8 when
+    running in <a href="https://en.wikipedia.org/wiki/Cmd.exe">cmd.exe</a> on Windows.
+<p><b>Enhancements to makefiles:</b>
+<li>Added the --enable-editline and --enable-static-shell options
+    to the various autoconf-generated configure scripts.
+<li>Omit all use of "awk" in the makefiles, to make building easier for MSVC users.
+<p><b>Important fixes:</b>
+<li>Fix inconsistent integer to floating-point comparison operations that
+    could result in a corrupt index if the index is created on a table
+    column that contains both large integers and floating point values
+    of similar magnitude.  Ticket 
+    <a href="https://www.sqlite.org/src/tktview?name=38a97a87a6">38a97a87a6</a>.
+<li>Fix an infinite-loop in the query planner that could occur on
+    malformed <a href="lang_with.html">common table expressions</a>.
+<li>Various bug fixes in the <a href="sqldiff.html">sqldiff</a> tool.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2016-01-06 11:01:07 fd0a50f0797d154fefff724624f00548b5320566"
+<li>SHA1 for sqlite3.c: b92ca988ebb6df02ac0c8f866dbf3256740408ac
+
+</ul></p><a name="version_3_9_2"></a>
 <h3>2015-11-03 (3.9.2)</h3><p><ul>
 <li>Fix the schema parser so that it interprets certain 
     (obscure and ill-formed)

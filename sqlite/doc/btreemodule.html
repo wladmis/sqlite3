@@ -1344,7 +1344,22 @@ int sqlite3BtreeIsInBackup(Btree*);</pre>
 
       <pre class=api>typedef struct BtCursor BtCursor;</pre>
 
-      <pre class=api>int sqlite3BtreeCursor(
+      <pre class=api>** Flags passed as the third argument to sqlite3BtreeCursor().
+**
+** For read-only cursors the wrFlag argument is always zero. For read-write
+** cursors it may be set to either (BTREE_WRCSR|BTREE_FORDELETE) or
+** (BTREE_WRCSR). If the BTREE_FORDELETE flag is set, then the cursor will
+** only be used by SQLite for the following:
+**
+**   * to seek to and delete specific entries, and/or
+**
+**   * to read values that will be used to create keys that other
+**     BTREE_FORDELETE cursors will seek to and delete.
+*/
+#define BTREE_WRCSR     0x00000004     /* read-write cursor */
+#define BTREE_FORDELETE 0x00000008     /* Cursor is for seek/delete only */
+
+int sqlite3BtreeCursor(
   Btree*,                              /* BTree containing table to open */
   int iTable,                          /* Index of root page */
   int wrFlag,                          /* 1 for writing.  0 for read-only */
@@ -1430,12 +1445,13 @@ struct KeyInfo {
       <pre class=api>typedef struct UnpackedRecord UnpackedRecord;
 struct UnpackedRecord {
   KeyInfo *pKeyInfo;  /* Collation and sort-order information */
+  Mem *aMem;          /* Values */
   u16 nField;         /* Number of entries in apMem}; hd_resolve_one {}; hd_puts { */
   i8 default_rc;      /* Comparison result if keys are equal */
   u8 errCode;         /* Error detected by xRecordCompare (CORRUPT or NOMEM) */
-  Mem *aMem;          /* Values */
-  int r1;             /* Value to return if (lhs > rhs) */
-  int r2;             /* Value to return if (rhs < lhs) */
+  i8 r1;              /* Value to return if (lhs > rhs) */
+  i8 r2;              /* Value to return if (rhs < lhs) */
+  u8 eqSeen;          /* True if an equality comparison has been seen */
 };</pre>
 
     <h3 id="section_3_7_2">3.7.2 sqlite3BtreeGetMeta</h3>

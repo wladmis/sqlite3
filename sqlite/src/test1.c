@@ -2226,6 +2226,137 @@ static int test_stmt_scanstatus_reset(
 }
 #endif
 
+#ifdef SQLITE_ENABLE_SQLLOG
+/*
+** Usage:  sqlite3_config_sqllog
+**
+** Zero the SQLITE_CONFIG_SQLLOG configuration
+*/
+static int test_config_sqllog(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  if( objc!=1 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "");
+    return TCL_ERROR;
+  }
+  sqlite3_config(SQLITE_CONFIG_SQLLOG, 0, 0);
+  return TCL_OK;
+}
+#endif
+
+/*
+** Usage: vfs_current_time_int64
+**
+** Return the value returned by the default VFS's xCurrentTimeInt64 method.
+*/
+static int vfsCurrentTimeInt64(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  i64 t;
+  sqlite3_vfs *pVfs = sqlite3_vfs_find(0);
+  if( objc!=1 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "");
+    return TCL_ERROR;
+  }
+  pVfs->xCurrentTimeInt64(pVfs, &t);
+  Tcl_SetObjResult(interp, Tcl_NewWideIntObj(t));
+  return TCL_OK;
+}
+
+#ifdef SQLITE_ENABLE_SNAPSHOT
+/*
+** Usage: sqlite3_snapshot_get DB DBNAME
+*/
+static int test_snapshot_get(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int rc;
+  sqlite3 *db;
+  char *zName;
+  sqlite3_snapshot *pSnapshot = 0;
+
+  if( objc!=3 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "DB DBNAME");
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  zName = Tcl_GetString(objv[2]);
+
+  rc = sqlite3_snapshot_get(db, zName, &pSnapshot);
+  if( rc!=SQLITE_OK ){
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(sqlite3ErrName(rc), -1));
+    return TCL_ERROR;
+  }else{
+    char zBuf[100];
+    if( sqlite3TestMakePointerStr(interp, zBuf, pSnapshot) ) return TCL_ERROR;
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(zBuf, -1));
+  }
+  return TCL_OK;
+}
+#endif /* SQLITE_ENABLE_SNAPSHOT */
+
+#ifdef SQLITE_ENABLE_SNAPSHOT
+/*
+** Usage: sqlite3_snapshot_open DB DBNAME SNAPSHOT
+*/
+static int test_snapshot_open(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int rc;
+  sqlite3 *db;
+  char *zName;
+  sqlite3_snapshot *pSnapshot;
+
+  if( objc!=4 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "DB DBNAME SNAPSHOT");
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  zName = Tcl_GetString(objv[2]);
+  pSnapshot = (sqlite3_snapshot*)sqlite3TestTextToPtr(Tcl_GetString(objv[3]));
+
+  rc = sqlite3_snapshot_open(db, zName, pSnapshot);
+  if( rc!=SQLITE_OK ){
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(sqlite3ErrName(rc), -1));
+    return TCL_ERROR;
+  }
+  return TCL_OK;
+}
+#endif /* SQLITE_ENABLE_SNAPSHOT */
+
+#ifdef SQLITE_ENABLE_SNAPSHOT
+/*
+** Usage: sqlite3_snapshot_free SNAPSHOT
+*/
+static int test_snapshot_free(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  sqlite3_snapshot *pSnapshot;
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "SNAPSHOT");
+    return TCL_ERROR;
+  }
+  pSnapshot = (sqlite3_snapshot*)sqlite3TestTextToPtr(Tcl_GetString(objv[1]));
+  sqlite3_snapshot_free(pSnapshot);
+  return TCL_OK;
+}
+#endif /* SQLITE_ENABLE_SNAPSHOT */
+
 /*
 ** Usage:  sqlite3_next_stmt  DB  STMT
 **
@@ -4689,6 +4820,34 @@ static int test_db_release_memory(
 }
 
 /*
+** Usage:  sqlite3_db_cacheflush DB
+**
+** Attempt to flush any dirty pages to disk.
+*/
+static int test_db_cacheflush(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  sqlite3 *db;
+  int rc;
+  if( objc!=2 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "DB");
+    return TCL_ERROR;
+  }
+  if( getDbPointer(interp, Tcl_GetString(objv[1]), &db) ) return TCL_ERROR;
+  rc = sqlite3_db_cacheflush(db);
+  if( rc ){
+    Tcl_SetResult(interp, (char *)sqlite3ErrStr(rc), TCL_STATIC);
+    return TCL_ERROR;
+  }
+
+  Tcl_ResetResult(interp);
+  return TCL_OK;
+}
+
+/*
 ** Usage:  sqlite3_db_filename DB DBNAME
 **
 ** Return the name of a file associated with a database.
@@ -5835,13 +5994,13 @@ static int test_sqlite3_log(
     Tcl_DecrRefCount(logcallback.pObj);
     logcallback.pObj = 0;
     logcallback.pInterp = 0;
-    sqlite3_config(SQLITE_CONFIG_LOG, 0, 0);
+    sqlite3_config(SQLITE_CONFIG_LOG, (void*)0, (void*)0);
   }
   if( objc>1 ){
     logcallback.pObj = objv[1];
     Tcl_IncrRefCount(logcallback.pObj);
     logcallback.pInterp = interp;
-    sqlite3_config(SQLITE_CONFIG_LOG, xLogcallback, 0);
+    sqlite3_config(SQLITE_CONFIG_LOG, xLogcallback, (void*)0);
   }
   return TCL_OK;
 }
@@ -6876,6 +7035,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
 
      { "sqlite3_release_memory",        test_release_memory,     0},
      { "sqlite3_db_release_memory",     test_db_release_memory,  0},
+     { "sqlite3_db_cacheflush",         test_db_cacheflush,      0},
      { "sqlite3_db_filename",           test_db_filename,        0},
      { "sqlite3_db_readonly",           test_db_readonly,        0},
      { "sqlite3_soft_heap_limit",       test_soft_heap_limit,    0},
@@ -7007,9 +7167,18 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_stmt_scanstatus",       test_stmt_scanstatus,   0 },
      { "sqlite3_stmt_scanstatus_reset", test_stmt_scanstatus_reset,   0 },
 #endif
-
+#ifdef SQLITE_ENABLE_SQLLOG
+     { "sqlite3_config_sqllog",         test_config_sqllog,   0 },
+#endif
+     { "vfs_current_time_int64",           vfsCurrentTimeInt64,   0 },
+#ifdef SQLITE_ENABLE_SNAPSHOT
+     { "sqlite3_snapshot_get", test_snapshot_get, 0 },
+     { "sqlite3_snapshot_open", test_snapshot_open, 0 },
+     { "sqlite3_snapshot_free", test_snapshot_free, 0 },
+#endif
   };
   static int bitmask_size = sizeof(Bitmask)*8;
+  static int longdouble_size = sizeof(LONGDOUBLE_TYPE);
   int i;
   extern int sqlite3_sync_count, sqlite3_fullsync_count;
   extern int sqlite3_opentemp_count;
@@ -7110,6 +7279,8 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
       (char*)&sqlite3_data_directory, TCL_LINK_STRING);
   Tcl_LinkVar(interp, "bitmask_size",
       (char*)&bitmask_size, TCL_LINK_INT|TCL_LINK_READ_ONLY);
+  Tcl_LinkVar(interp, "longdouble_size",
+      (char*)&longdouble_size, TCL_LINK_INT|TCL_LINK_READ_ONLY);
   Tcl_LinkVar(interp, "sqlite_sync_count",
       (char*)&sqlite3_sync_count, TCL_LINK_INT);
   Tcl_LinkVar(interp, "sqlite_fullsync_count",
