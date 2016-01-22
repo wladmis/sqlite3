@@ -160,6 +160,7 @@ a:visited { color: #734559 }
 #define SQLITE_FCNTL_ZIPVFS                 25
 #define SQLITE_FCNTL_RBU                    26
 #define SQLITE_FCNTL_VFS_POINTER            27
+#define SQLITE_FCNTL_JOURNAL_POINTER        28
 </pre></blockquote><p>
 These integer constants are opcodes for the xFileControl method
 of the <a href="../c3ref/io_methods.html">sqlite3_io_methods</a> object and for the <a href="../c3ref/file_control.html">sqlite3_file_control()</a>
@@ -199,8 +200,14 @@ improve performance on some systems.</p>
 
 The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a> opcode is used to obtain a pointer
 to the <a href="../c3ref/file.html">sqlite3_file</a> object associated with a particular database
-connection.  See the <a href="../c3ref/file_control.html">sqlite3_file_control()</a> documentation for
-additional information.</p>
+connection.  See also <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">SQLITE_FCNTL_JOURNAL_POINTER</a>.</p>
+
+<p><li><a name="sqlitefcntljournalpointer"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">SQLITE_FCNTL_JOURNAL_POINTER</a> opcode is used to obtain a pointer
+to the <a href="../c3ref/file.html">sqlite3_file</a> object associated with the journal file (either
+the <a href="../lockingv3.html#rollback">rollback journal</a> or the <a href="../wal.html">write-ahead log</a>) for a particular database
+connection.  See also <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a>.</p>
 
 <p><li><a name="sqlitefcntlsyncomitted"></a>
 

@@ -2970,7 +2970,6 @@ static int openDatabase(
   sqlite3_wal_autocheckpoint(db, SQLITE_DEFAULT_WAL_AUTOCHECKPOINT);
 
 opendb_out:
-  sqlite3_free(zOpen);
   if( db ){
     assert( db->mutex!=0 || isThreadsafe==0
            || sqlite3GlobalConfig.bFullMutex==0 );
@@ -3007,6 +3006,7 @@ opendb_out:
     }
   }
 #endif
+  sqlite3_free(zOpen);
   return rc & 0xff;
 }
 
@@ -3423,6 +3423,9 @@ int sqlite3_file_control(sqlite3 *db, const char *zDbName, int op, void *pArg){
       rc = SQLITE_OK;
     }else if( op==SQLITE_FCNTL_VFS_POINTER ){
       *(sqlite3_vfs**)pArg = sqlite3PagerVfs(pPager);
+      rc = SQLITE_OK;
+    }else if( op==SQLITE_FCNTL_JOURNAL_POINTER ){
+      *(sqlite3_file**)pArg = sqlite3PagerJrnlFile(pPager);
       rc = SQLITE_OK;
     }else if( fd->pMethods ){
       rc = sqlite3OsFileControl(fd, op, pArg);

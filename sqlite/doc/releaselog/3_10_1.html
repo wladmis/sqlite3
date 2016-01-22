@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>SQLite Release 3.10.2 On 2016-01-20</title>
+<title>SQLite Release 3.10.1 On 2016-01-14</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -134,26 +134,16 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<h2>SQLite Release 3.10.2 On 2016-01-20</h2><p><ul>
-<p><b>Critical bug fix:</b>
-<li>Version 3.10.0 introduced a case-folding bug in the <a href="../lang_expr.html#like">LIKE</a> operator which is fixed
-    by this patch release.  Ticket 
-    <a href="https://www.sqlite.org/src/info/80369eddd5c94">80369eddd5c94</a>.
-<p><b>Other miscellaneous bug fixes:</b>
-<li>Fix a use-after-free that can occur when SQLite is compiled with -DSQLITE_HAS_CODEC.
-<li>Fix the build so that it works with -DSQLITE_OMIT_WAL.
-<li>Fix the configure script for the amalgamation so that the --readline option works again
-    on Raspberry PIs.
-<p><b>Hashes:</b>
-<li>SQLITE_SOURCE_ID: "2016-01-20 15:27:19 17efb4209f97fb4971656086b138599a91a75ff9"
-<li>SHA1 for sqlite3.c: f7088b19d97cd7a1c805ee95c696abd54f01de4f
-</ul></p><p><b>Changes carried forward from version 3.10.1 (2016-01-14):</b></p><p><ul>
+<h2>SQLite Release 3.10.1 On 2016-01-14</h2><p><ul>
 <p><b>New feature:</b>
 <li>Add the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">SQLITE_FCNTL_JOURNAL_POINTER</a> file control.
 <p><b>Bug fix:</b>
 <li>Fix a 16-month-old bug in the query planner that could generate incorrect results
     when a scalar subquery attempts to use the <a href="../queryplanner.html#partialsort">block sorting</a> optimization.  Ticket
     <a href="https://www.sqlite.org/src/info/cb3aa0641d9a4">cb3aa0641d9a4</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2016-01-13 21:41:56 254419c36766225ca542ae873ed38255e3fb8588"
+<li>SHA1 for sqlite3.c: 1398ba8e4043550a533cdd0834bfdad1c9eab0f4
 </ul></p><p><b>Changes carried forward from version 3.10.0 (2016-01-06):</b></p><p><ul>
 <p><b>General improvements:</b>
 <li>Added support for <a href="../lang_expr.html#like">LIKE</a>, <a href="../lang_expr.html#glob">GLOB</a>, and <a href="../lang_expr.html#regexp">REGEXP</a> operators on <a href="../vtab.html">virtual tables</a>.

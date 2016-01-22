@@ -454,19 +454,20 @@ upper/lower case equivalence is understood for ASCII-range characters only.
 
 <p>
 Phrases and NEAR groups may be arranged into expressions using <b>boolean
-operators</b>. In order of precedence, from highest to lowest, the operators 
-are:
+operators</b>. In order of precedence, from highest (tightest grouping) to
+lowest (loosest grouping), the operators are:
 
 <table style="margin:1em auto; width:80%; border-spacing:0">
   <tr style="text-align:left"><th>Operator <th>Function
-  <tr style="text-align:left;background-color:#DDDDDD"><td><code>&lt;query1&gt; AND &lt;query2&gt;</code> 
-      <td>Matches if both query1 and query2 match.
-
-  <tr style="text-align:left"><td><code>&lt;query1&gt; OR &lt;query2&gt;</code> 
-      <td>Matches if either query1 or query2 match.
 
   <tr style="text-align:left;background-color:#DDDDDD"><td><code>&lt;query1&gt; NOT &lt;query2&gt;</code> 
       <td>Matches if query1 matches and query2 does not match.
+
+  <tr style="text-align:left"><td><code>&lt;query1&gt; AND &lt;query2&gt;</code> 
+      <td>Matches if both query1 and query2 match.
+
+  <tr style="text-align:left;background-color:#DDDDDD"><td><code>&lt;query1&gt; OR &lt;query2&gt;</code> 
+      <td>Matches if either query1 or query2 match.
 
 </table>
 
