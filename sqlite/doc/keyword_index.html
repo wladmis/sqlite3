@@ -200,6 +200,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#enable_explain_comments">-DSQLITE_ENABLE_EXPLAIN_COMMENTS</a> </li>
 <li> <a href="compile.html#enable_fts3">-DSQLITE_ENABLE_FTS3</a> </li>
 <li> <a href="compile.html#enable_fts3_parenthesis">-DSQLITE_ENABLE_FTS3_PARENTHESIS</a> </li>
+<li> <a href="compile.html#enable_fts3_tokenizer">-DSQLITE_ENABLE_FTS3_TOKENIZER</a> </li>
 <li> <a href="compile.html#enable_fts4">-DSQLITE_ENABLE_FTS4</a> </li>
 <li> <a href="compile.html#enable_fts5">-DSQLITE_ENABLE_FTS5</a> </li>
 <li> <a href="compile.html#enable_icu">-DSQLITE_ENABLE_ICU</a> </li>
@@ -219,6 +220,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#enable_tree_explain">-DSQLITE_ENABLE_TREE_EXPLAIN</a> </li>
 <li> <a href="compile.html#enable_unlock_notify">-DSQLITE_ENABLE_UNLOCK_NOTIFY</a> </li>
 <li> <a href="compile.html#enable_update_delete_limit">-DSQLITE_ENABLE_UPDATE_DELETE_LIMIT</a> </li>
+<li> <a href="compile.html#extra_durable">-DSQLITE_EXTRA_DURABLE</a> </li>
 <li> <a href="compile.html#fts3_max_expr_depth">-DSQLITE_FTS3_MAX_EXPR_DEPTH</a> </li>
 <li> <a href="compile.html#have_isnan">-DSQLITE_HAVE_ISNAN</a> </li>
 <li> <a href="compile.html#like_doesnt_match_blobs">-DSQLITE_LIKE_DOESNT_MATCH_BLOBS</a> </li>
@@ -593,6 +595,7 @@ a:visited { color: #734559 }
 <li> <a href="fts3.html#hiddencol">FTS hidden column</a> </li>
 <li> <a href="fts3.html#section_3">FTS MATCH</a> </li>
 <li> <a href="fts3.html#*shadowtab">FTS shadow tables</a> </li>
+<li> <a href="fts3.html#f3tknzr">fts3_tokenizer</a> </li>
 <li> <a href="fts3.html#fts3tok">fts3tokenize</a> </li>
 <li> <a href="fts3.html#fts3tok">fts3tokenize virtual table</a> </li>
 <li> <a href="fts3.html#fts4">FTS4</a> </li>
@@ -623,6 +626,7 @@ a:visited { color: #734559 }
 <li> <a href="fts5.html#section_7_2">FTS5 custom auxiliary functions</a> </li>
 <li> <a href="fts5.html#section_6_3">FTS5 delete command</a> </li>
 <li> <a href="fts5.html#section_6_4">FTS5 delete-all command</a> </li>
+<li> <a href="fts5.html#section_4_6">FTS5 detail option</a> </li>
 <li> <a href="fts5.html#section_4_4_2">FTS5 external content tables</a> </li>
 <li> <a href="fts5.html#section_5_1_2">FTS5 highlight</a> </li>
 <li> <a href="fts5.html#section_6_6">FTS5 merge command</a> </li>
@@ -1405,6 +1409,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
+<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_WHEREINFO</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html">SQLITE_DBSTATUS options</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">SQLITE_DBSTATUS_CACHE_MISS</a> </li>
@@ -1460,6 +1465,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#enable_explain_comments">SQLITE_ENABLE_EXPLAIN_COMMENTS</a> </li>
 <li> <a href="compile.html#enable_fts3">SQLITE_ENABLE_FTS3</a> </li>
 <li> <a href="compile.html#enable_fts3_parenthesis">SQLITE_ENABLE_FTS3_PARENTHESIS</a> </li>
+<li> <a href="compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a> </li>
 <li> <a href="compile.html#enable_fts4">SQLITE_ENABLE_FTS4</a> </li>
 <li> <a href="compile.html#enable_fts5">SQLITE_ENABLE_FTS5</a> </li>
 <li> <a href="compile.html#enable_icu">SQLITE_ENABLE_ICU</a> </li>
@@ -1480,6 +1486,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#enable_unlock_notify">SQLITE_ENABLE_UNLOCK_NOTIFY</a> </li>
 <li> <a href="compile.html#enable_update_delete_limit">SQLITE_ENABLE_UPDATE_DELETE_LIMIT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_ERROR</a> </li>
+<li> <a href="compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> </li>
 <li> <a href="c3ref/c_fail.html">SQLITE_FAIL</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">SQLITE_FCNTL_BUSYHANDLER</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize">SQLITE_FCNTL_CHUNK_SIZE</a> </li>
@@ -1989,6 +1996,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_10_0.html">Version 3.10.0</a> </li>
 <li> <a href="releaselog/3_10_1.html">Version 3.10.1</a> </li>
 <li> <a href="releaselog/3_10_2.html">Version 3.10.2</a> </li>
+<li> <a href="releaselog/3_11_0.html">Version 3.11.0</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>

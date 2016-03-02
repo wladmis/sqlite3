@@ -342,6 +342,10 @@ with non-standard compilation options.
   <a href="c3ref/stmt.html">prepared statement</a> will launch to assist it with a query.  If not specified,
   the default maximum is 0.
   The value set here cannot be more than <a href="compile.html#max_worker_threads">SQLITE_MAX_WORKER_THREADS</a>.
+</p></blockquote><a name="extra_durable"></a>
+<p><b>SQLITE_EXTRA_DURABLE</b></p><blockquote><p>
+  The SQLITE_EXTRA_DURABLE compile-time option causes the default
+  <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting to be EXTRA, rather than FULL.
 </p></blockquote><a name="fts3_max_expr_depth"></a>
 <p><b>SQLITE_FTS3_MAX_EXPR_DEPTH=<i>N</i></b></p><blockquote><p>
   This macro sets the maximum depth of the search tree that corresponds to
@@ -703,6 +707,17 @@ the available settings:</p>
   This option modifies the query pattern parser in FTS3 such that it
   supports operators AND and NOT (in addition to the usual OR and NEAR)
   and also allows query expressions to contain nested parenthesis.
+</p></blockquote><a name="enable_fts3_tokenizer"></a>
+<p><b>SQLITE_ENABLE_FTS3_TOKENIZER</b></p><blockquote><p>
+  This option enables the two-argument version of the <a href="fts3.html#f3tknzr">fts3_tokenizer()</a>
+  interface.  The second argument to fts3_tokenizer() is suppose to be a
+  pointer to a function (encoded as a BLOB) that implements an
+  application defined tokenizer.  If hostile actors are able to run
+  the two-argument version of fts3_tokenizer() with an arbitrary second
+  argument, they could use crash or take control of the process.  Because 
+  of ongoing security concerns about this (seldom-used) feature, it is
+  disabled beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> unless this compile-time
+  option is used.
 </p></blockquote><a name="enable_fts4"></a>
 <p><b>SQLITE_ENABLE_FTS4</b></p><blockquote><p>
   When this option is defined in the <a href="amalgamation.html">amalgamation</a>, versions 3 and 4

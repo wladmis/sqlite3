@@ -505,6 +505,10 @@ comments in the source code.
 <dd><p>Hence, the histogram data which is collected no left-most column of indices is useless in helping to choose between the range constraints on columns x and y.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-01335-41434-49669-14652-18813-14877-14788-28819'>context</a>, <a href='matrix/matrix_doptoverview.html#R-01335-41434-49669-14652-18813-14877-14788-28819'>detail</a>)</i></p></dd>
 
+<dt><b>R-01338-29125-17631-56667-46599-64781-10952-19968</b></dt>
+<dd><p>The default setting is usually synchronous=FULL, except in WAL mode when the default is synchronous=NORMAL.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-01338-29125-17631-56667-46599-64781-10952-19968'>context</a>, <a href='matrix/matrix_dpragma.html#R-01338-29125-17631-56667-46599-64781-10952-19968'>detail</a>)</i></p></dd>
+
 <dt><b>R-01379-47306-55874-35809-24668-39985-05961-47226</b></dt>
 <dd><p>Before any information-bearing page of the database is modified, the original unmodified content of that page is written into the rollback journal.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-01379-47306-55874-35809-24668-39985-05961-47226'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-01379-47306-55874-35809-24668-39985-05961-47226'>detail</a>)</i></p></dd>
@@ -3489,6 +3493,10 @@ comments in the source code.
 <dd><p>In the following query, the optimizer is free to reorder the tables of FROM clause anyway it sees fit: SELECT * FROM node AS n1, edge AS e, node AS n2 WHERE n1.name = 'alice' AND n2.name = 'bob' AND e.orig = n1.id AND e.dest = n2.id;
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-17957-41878-23952-00530-42808-37166-56745-23900'>context</a>, <a href='matrix/matrix_doptoverview.html#R-17957-41878-23952-00530-42808-37166-56745-23900'>detail</a>)</i></p></dd>
 
+<dt><b>R-18023-38297-26646-57171-09733-60965-00209-38549</b></dt>
+<dd><p>EXTRA synchronous is like FULL with the addition that the directory containing a rollback journal is synced after that journal is unlinked to commit a transaction in DELETE mode.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-18023-38297-26646-57171-09733-60965-00209-38549'>context</a>, <a href='matrix/matrix_dpragma.html#R-18023-38297-26646-57171-09733-60965-00209-38549'>detail</a>)</i></p></dd>
+
 <dt><b>R-18043-40700-22598-52813-64197-51522-53393-10304</b></dt>
 <dd><p>The psow query parameter works with the default windows and unix VFSes but might be a no-op for other proprietary or non-standard VFSes.
 <i>(source: <a href="uri.html">uri.html</a>, matrix: <a href='matrix/uri.html#R-18043-40700-22598-52813-64197-51522-53393-10304'>context</a>, <a href='matrix/matrix_duri.html#R-18043-40700-22598-52813-64197-51522-53393-10304'>detail</a>)</i></p></dd>
@@ -3996,10 +4004,6 @@ comments in the source code.
 <dt><b>R-20690-50594-54745-63542-12245-05150-52761-00851</b></dt>
 <dd><p>The second field of the b-tree page header is the offset of the first freeblock, or zero if there are no freeblocks on the page.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/btree.c, matrix: <a href='matrix/fileformat2.html#R-20690-50594-54745-63542-12245-05150-52761-00851'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-20690-50594-54745-63542-12245-05150-52761-00851'>detail</a>)</i></p></dd>
-
-<dt><b>R-20710-21364-17315-13272-36898-18787-08778-08385</b></dt>
-<dd><p>PRAGMA schema.synchronous; PRAGMA schema.synchronous = 0 | OFF | 1 | NORMAL | 2 | FULL; Query or change the setting of the "synchronous" flag.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-20710-21364-17315-13272-36898-18787-08778-08385'>context</a>, <a href='matrix/matrix_dpragma.html#R-20710-21364-17315-13272-36898-18787-08778-08385'>detail</a>)</i></p></dd>
 
 <dt><b>R-20784-11852-57325-61888-34040-48421-29147-36386</b></dt>
 <dd><p>Metadata is returned by writing to the memory locations passed as the 5th and subsequent parameters to this function.
@@ -5600,10 +5604,6 @@ comments in the source code.
 <dt><b>R-29255-51137-31633-40808-05446-49202-54154-26438</b></dt>
 <dd><p>For "X LIKE P" without the ESCAPE clause, set the E parameter of sqlite3_strlike(P,X,E) to 0.
 <i>(source: <a href="c3ref/strlike.html">c3ref/strlike.html</a>, matrix: <a href='matrix/c3ref/strlike.html#R-29255-51137-31633-40808-05446-49202-54154-26438'>context</a>, <a href='matrix/matrix_dstrlike.html#R-29255-51137-31633-40808-05446-49202-54154-26438'>detail</a>)</i></p></dd>
-
-<dt><b>R-29263-18958-07673-24386-24101-32791-35483-64861</b></dt>
-<dd><p>The default setting is synchronous=FULL.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-29263-18958-07673-24386-24101-32791-35483-64861'>context</a>, <a href='matrix/matrix_dpragma.html#R-29263-18958-07673-24386-24101-32791-35483-64861'>detail</a>)</i></p></dd>
 
 <dt><b>R-29276-00741-11068-20150-45137-35653-26807-40835</b></dt>
 <dd><p>When the locking-mode is set to EXCLUSIVE, the database connection never releases file-locks.
@@ -9445,10 +9445,6 @@ comments in the source code.
 <dd><p>The "localtime" modifier (12) assumes the time string to its left is in Universal Coordinated Time (UTC) and adjusts the time string so that it displays localtime.
 <i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-48397-09304-28438-45944-41933-38380-50154-54249'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-48397-09304-28438-45944-41933-38380-50154-54249'>detail</a>)</i></p></dd>
 
-<dt><b>R-48406-37154-26561-02461-09510-38646-59935-58030</b></dt>
-<dd><p>The first integer in this list is the approximate number of rows in the index and in the table.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-48406-37154-26561-02461-09510-38646-59935-58030'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-48406-37154-26561-02461-09510-38646-59935-58030'>detail</a>)</i></p></dd>
-
 <dt><b>R-48422-12154-41896-26820-42783-11801-54961-22024</b></dt>
 <dd><p>SQLITE_DONE means that the statement has finished executing successfully.
 <i>(source: <a href="c3ref/step.html">c3ref/step.html</a>, matrix: <a href='matrix/c3ref/step.html#R-48422-12154-41896-26820-42783-11801-54961-22024'>context</a>, <a href='matrix/matrix_dstep.html#R-48422-12154-41896-26820-42783-11801-54961-22024'>detail</a>)</i></p></dd>
@@ -9984,6 +9980,10 @@ comments in the source code.
 <dt><b>R-51278-32108-12212-46077-36246-55134-53199-48747</b></dt>
 <dd><p>SQLite interprets the error message string from sqlite3_result_error() as UTF-8.
 <i>(source: <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>, matrix: <a href='matrix/c3ref/result_blob.html#R-51278-32108-12212-46077-36246-55134-53199-48747'>context</a>, <a href='matrix/matrix_dresult_blob.html#R-51278-32108-12212-46077-36246-55134-53199-48747'>detail</a>)</i></p></dd>
+
+<dt><b>R-51288-13280-04102-45116-03468-31022-16818-18887</b></dt>
+<dd><p>PRAGMA schema.synchronous; PRAGMA schema.synchronous = 0 | OFF | 1 | NORMAL | 2 | FULL | 3 | EXTRA; Query or change the setting of the "synchronous" flag.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-51288-13280-04102-45116-03468-31022-16818-18887'>context</a>, <a href='matrix/matrix_dpragma.html#R-51288-13280-04102-45116-03468-31022-16818-18887'>detail</a>)</i></p></dd>
 
 <dt><b>R-51323-12432-10115-25604-37361-38665-02530-63723</b></dt>
 <dd><p>The sqlite_stat4.nDLt column holds a list of N integers where the K-th integers is the approximate number of entries in the index that are distinct in the first K columns and that are whose left-most K columns are collectively less than the left-most K columns of the sample.
@@ -10684,6 +10684,10 @@ comments in the source code.
 <dt><b>R-55269-29598-22145-31317-31671-53288-42244-17124</b></dt>
 <dd><p>The localtime_r() C function normally only works for years between 1970 and 2037. For dates outside this range, SQLite attempts to map the year into an equivalent year within this range, do the calculation, then map the year back.
 <i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, checked-by: src/date.c, matrix: <a href='matrix/lang_datefunc.html#R-55269-29598-22145-31317-31671-53288-42244-17124'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-55269-29598-22145-31317-31671-53288-42244-17124'>detail</a>)</i></p></dd>
+
+<dt><b>R-55292-54599-58036-06496-23806-16073-05204-14716</b></dt>
+<dd><p>The first integer in this list is the approximate number of rows in the index.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-55292-54599-58036-06496-23806-16073-05204-14716'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-55292-54599-58036-06496-23806-16073-05204-14716'>detail</a>)</i></p></dd>
 
 <dt><b>R-55312-58443-27187-57557-21962-11397-57143-02839</b></dt>
 <dd><p>The SQLITE_VERSION_NUMBER C preprocessor macro resolves to an integer with the value (X*1000000 + Y*1000 + Z) where X, Y, and Z are the same numbers used in SQLITE_VERSION.

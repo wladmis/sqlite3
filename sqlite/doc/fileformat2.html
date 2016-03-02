@@ -646,9 +646,9 @@ b-trees are identified by their root page number.</p>
 
 <p>A b-tree page is either a table b-tree page or an index b-tree page.
 All pages within each complete b-tree are of the same type: either table
-or index.  There is a one table b-trees in the database file
+or index.  There is one table b-trees in the database file
 for each rowid table in the database schema, including system tables
-such as sqlite_master.  There is one index b-trees
+such as sqlite_master.  There is one index b-tree
 in the database file for each index in the schema, including implied indexes
 created by uniqueness constraints.  There are no b-trees associated with
 <a href="vtab.html">virtual tables</a>.  Specific virtual table implementations might make use
@@ -794,7 +794,7 @@ cells are packed tightly at the end of the page.  This is called
 of 64-bit twos-complement integers that uses less space for small positive 
 values. 
 A varint is between 1 and 9 bytes in length.  The varint consists of either
-zero or more byte which have the high-order bit set followed by a single byte
+zero or more bytes which have the high-order bit set followed by a single byte
 with the high-order bit clear, or nine bytes, whichever is shorter.
 The lower seven bits of each of the first eight bytes and all 8 bits of
 the ninth byte are used to reconstruct the 64-bit twos-complement integer.
@@ -835,7 +835,7 @@ overflow page list - omitted if all payload fits on the b-tree page.
 
 <dt><p>Index B-Tree Interior Cell (header 0x02):</p></dt>
 <dd><p><ul>
-<li>A 4-byte big-endianpage number which is the left child pointer.
+<li>A 4-byte big-endian page number which is the left child pointer.
 <li>A varint which is the total number of bytes of key payload, including any
 overflow
 <li>The initial portion of the payload that does not spill to overflow
@@ -906,7 +906,7 @@ end of each page.  And let P be the payload size.</p>
 If the payload size P is less than or equal to U-35 then
 the entire payload is stored on the b-tree leaf page.  
 Let M be ((U-12)*32/255)-23.  If P is greater than U-35
-then the number of byte stored on the b-tree leaf page is the smaller of
+then the number of bytes stored on the b-tree leaf page is the smaller of
 M+((P-M)%(U-4)) and U-35.
 Note that number of bytes stored on the leaf page is never less than M.
 </p></dd>
@@ -922,7 +922,7 @@ any payload to spill.
 Let X be ((U-12)*64/255)-23).  If the payload size P is less than
 or equal to X then the entire payload is stored on the b-tree page.
 Let M be ((U-12)*32/255)-23.  If P is greater than X then the number
-of byte stored on the b-tree page is the smaller of
+of bytes stored on the b-tree page is the smaller of
 M+((P-M)%(U-4)) and X.
 Note that number of bytes stored on the index page is never less than M.
 </p></dd>
@@ -979,7 +979,7 @@ fall on the same page number as a ptrmap page, then the ptrmap is moved
 to the following page for that one case.</p>
 
 <p>Each 5-byte entry on a ptrmap page provides back-link information about 
-one of pages that immediately follow the pointer map.  If page B is a
+one of the pages that immediately follow the pointer map.  If page B is a
 ptrmap page then back-link information about page B+1 is provided by
 the first entry on the pointer map.  Information about page B+2 is
 provided by the second entry.  And so forth.</p>
@@ -1166,7 +1166,7 @@ first combining the values in the various columns into a byte array
 in the record format, then storing that byte array as the payload in
 an entry in the table b-tree.  The order of values in the record is
 the same as the order of columns in the SQL table definition.
-When an SQL table that includes an
+When an SQL table includes an
 <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> column (which aliases the <a href="lang_createtable.html#rowid">rowid</a>) then that
 column appears in the record as a NULL value.  SQLite will always use
 the table b-tree key rather than the NULL value when referencing the
@@ -1315,7 +1315,7 @@ object.  This SQL text is a <a href="lang_createtable.html">CREATE TABLE</a>, <a
 <a href="lang_createindex.html">CREATE INDEX</a>,
 <a href="lang_createview.html">CREATE VIEW</a>, or <a href="lang_createtrigger.html">CREATE TRIGGER</a> statement that if evaluated against
 the database file when it is the main database of a <a href="c3ref/sqlite3.html">database connection</a>
-would recreated the object.  The text is usually a copy of the original
+would recreate the object.  The text is usually a copy of the original
 statement used to create the object but with normalizations applied so
 that the text conforms to the following rules:
 
@@ -1360,7 +1360,7 @@ with "sqlite_".
        ordinary tables.
 
 <li><p>A table with the name "sqlite_sequence" that is used to keep track
-       of the maximum historical <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> for a table that
+       of the maximum historical <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> for a table
        using <a href="autoinc.html">AUTOINCREMENT</a>.
 
 <li><p>Tables with names of the form "sqlite_statN" where N is an integer.
@@ -1435,7 +1435,9 @@ the name of the table to which the index belongs.  In each such row,
 the sqlite_stat.stat column will be
 a string consisting of a list of integers followed by zero or more 
 arguments.  The first integer in this
-list is the approximate number of rows in the index and in the table.
+list is the approximate number of rows in the index.  (The number of
+rows in the index is the same as the number of rows in the table,
+except for <a href="partialindex.html">partial indexes</a>.)
 The second integer is the approximate average number of rows in the index
 that have the same value in the first column of the index.  The third 
 integer is the approximate average number of rows in the index that have 
@@ -1553,7 +1555,7 @@ the key space and with large nEq values.
 index must appear in the same order that they occur in the index.  
 In other words, if the entry with left-most column S1 is earlier in
 the index b-tree than the
-entry with lef-most column S2, then in the sqlite_stat3 table, 
+entry with left-most column S2, then in the sqlite_stat3 table, 
 sample S1 must have a smaller rowid than sample S2.
 
 <a name="stat4tab"></a>
@@ -1621,9 +1623,9 @@ The meanings of the columns in the sqlite_stat4 table are as follows:
 
 <tr><td valign="top" align="right">nDLt:</td>
     <td>The sqlite_stat4.nDLt column holds a list of N integers where
-    the K-th integers is the approximate
+    the K-th integer is the approximate
     number of entries in the index that are distinct in the first K columns and
-    that are whose left-most K columns are collectively less than the left-most
+    where the left-most K columns are collectively less than the left-most
     K columns of the sample.
 </table>
 </center>

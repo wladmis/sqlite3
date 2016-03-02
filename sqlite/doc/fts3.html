@@ -2408,14 +2408,22 @@ CREATE VIRTUAL TABLE txt5 USING fts4(
   case-sensitive. In the example above, specifying that "X" is a separator
   character does not affect the way "x" is handled.
 
+<a name="f3tknzr"></a>
+
 <h2 id="section_8_1">8.1. Custom (User Implemented) Tokenizers</h2>
 
 <p>
   As well as the built-in "simple", "porter" and (possibly) "icu" and
-  "unicode61" tokenizers,
-  FTS exports an interface that allows users to implement custom tokenizers
-  using C. The interface used to create a new tokenizer is defined and 
-  described in the fts3_tokenizer.h source file.
+  "unicode61" tokenizers, if the library is compiled with the following 
+  compiler option:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">-DSQLITE_ENABLE_FTS3_TOKENIZER
+</pre></table></div>
+
+<p>
+  then FTS exports an interface that allows users to implement custom
+  tokenizers using C. The interface used to create a new tokenizer is defined
+  and described in the fts3_tokenizer.h source file.
 
 <p>
   Registering a new FTS tokenizer is similar to registering a new
@@ -2448,10 +2456,23 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
   (error) is raised.
 
 <p>
-  <b>SECURITY WARNING</b>: If the fts3/4 extension is used in an environment
-  where potentially malicious users may execute arbitrary SQL, they should 
-  be prevented from invoking the fts3_tokenizer() function, possibly using 
-  the <a href="c3ref/set_authorizer.html">authorization callback</a>.
+  As of SQLite version 3.11.0, the second form of the fts3_tokenizer() function
+  is only available if the library is compiled with the
+  -DSQLITE_ENABLE_FTS3_TOKENIZER compiler switch. In earlier versions it was
+  always available.
+
+<p>
+  <b>SECURITY WARNING</b>: 
+  If a version of the fts3/4 extension that supports the second form of
+  fts3_tokenizer() is deployed in an environment where potentially malicious
+  users may execute arbitrary SQL, they should be prevented from invoking the
+  fts3_tokenizer() function, possibly using the 
+  <a href="c3ref/set_authorizer.html">authorization callback</a>.
+
+<p>
+  <b>SECURITY UPDATE</b> for <a href="releaselog/3_11_0.html">Version 3.11.0</a>:
+  Because of continuing concern, the two-argument version of fts3_tokenizer()
+  is disabled unless SQLite is compiled with <a href="compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
 
 <p>
   The following block contains an example of calling the fts3_tokenizer()

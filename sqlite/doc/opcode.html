@@ -295,7 +295,7 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/6ac8e5d808d48afc369316e147c191102f0584c1">vdbe.c</a>.</p>
+<a href="http://www.sqlite.org/src/artifact/c193299e595a13eba247738e22fce25c49346a6c">vdbe.c</a>.</p>
 
 <p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
@@ -556,14 +556,22 @@ then jump to P2 if the new value is exactly zero.</td></tr>
 <a name="Delete"></a><p>Delete</p>
 <td><p>Delete the record at which the P1 cursor is currently pointing.</p>
 
-<p>If the P5 parameter is non-zero, the cursor will be left pointing at
-either the next or the previous record in the table. If it is left
-pointing at the next record, then the next <a href="#Next">Next</a> instruction will be a
-no-op. As a result, in this case it is OK to delete a record from within a
-<a href="#Next">Next</a> loop. If P5 is zero, then the cursor is left in an undefined state.</p>
+<p>If the OPFLAG_SAVEPOSITION bit of the P5 parameter is set, then
+the cursor will be left pointing at  either the next or the previous
+record in the table. If it is left pointing at the next record, then
+the next <a href="#Next">Next</a> instruction will be a no-op. As a result, in this case
+it is ok to delete a record from within a <a href="#Next">Next</a> loop. If
+OPFLAG_SAVEPOSITION bit of P5 is clear, then the cursor will be
+left in an undefined state.</p>
 
-<p>If the OPFLAG_NCHANGE flag of P2 is set, then the row change count is
-incremented (otherwise not).</p>
+<p>If the OPFLAG_AUXDELETE bit is set on P5, that indicates that this
+delete one of several associated with deleting a table row and all its
+associated index entries.  Exactly one of those deletes is the "primary"
+delete.  The others are all on OPFLAG_FORDELETE cursors or else are
+marked with the AUXDELETE flag.</p>
+
+<p>If the OPFLAG_NCHANGE flag of P2 (NB: P2 not P5) is set, then the row
+change count is incremented (otherwise not).</p>
 
 <p>P1 must not be pseudo-table.  It has to be a real table with
 multiple rows.</p>
@@ -1225,6 +1233,22 @@ NULL values will not compare equal even if SQLITE_NULLEQ is set on
 that occur while the cursor is on the null row will always
 write a NULL.</td></tr>
 <tr><td valign="top" align="center">
+<a name="OffsetLimit"></a><p>OffsetLimit</p>
+<td><p>This opcode performs a commonly used computation associated with
+LIMIT and OFFSET process.  r&#91;P1&#93 holds the limit counter.  r&#91;P3&#93
+holds the offset counter.  The opcode computes the combined value
+of the LIMIT and OFFSET and stores that value in r&#91;P2&#93.  The r&#91;P2&#93
+value computed is the total number of rows that will need to be
+visited in order to complete the query.</p>
+
+<p>If r&#91;P3&#93 is zero or negative, that means there is no OFFSET
+and r&#91;P2&#93 is set to be the value of the LIMIT, r&#91;P1&#93.</p>
+
+<p>if r&#91;P1&#93 is zero or negative, that means there is no LIMIT
+and r&#91;P2&#93 is set to -1.</p>
+
+<p>Otherwise, r&#91;P2&#93 is set to the sum of r&#91;P1&#93 and r&#91;P3&#93.</td></tr>
+<tr><td valign="top" align="center">
 <a name="Once"></a><p>Once</p>
 <td><p>Check the "once" flag number P1. If it is set, jump to instruction P2.
 Otherwise, set the flag and fall through to the next instruction.
@@ -1353,7 +1377,10 @@ of integers in P4.</p>
 
 <p>The permutation is only valid until the next <a href="#Compare">Compare</a> that has
 the OPFLAG_PERMUTE bit set in P5. Typically the <a href="#Permutation">Permutation</a> should
-occur immediately prior to the <a href="#Compare">Compare</a>.</td></tr>
+occur immediately prior to the <a href="#Compare">Compare</a>.</p>
+
+<p>The first integer in the P4 integer array is the length of the array
+and does not become part of the permutation.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Prev"></a><p>Prev</p>
 <td><p>Back up cursor P1 so that it points to the previous key/data pair in its
@@ -1549,12 +1576,21 @@ during the lifetime of the copy.  Use <a href="#Copy">Copy</a> to make a complet
 copy.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Seek"></a><p>Seek</p>
-<td><p>P1 is an open table cursor and P2 is a rowid integer.  Arrange
-for P1 to move so that it points to the rowid given by P2.</p>
+<td><p>P1 is an open index cursor and P3 is a cursor on the corresponding
+table.  This opcode does a deferred seek of the P3 table cursor
+to the row that corresponds to the current row of P1.</p>
 
-<p>This is actually a deferred seek.  Nothing actually happens until
+<p>This is a deferred seek.  Nothing actually happens until
 the cursor is used to read a record.  That way, if no reads
-occur, no unnecessary I/O happens.</td></tr>
+occur, no unnecessary I/O happens.</p>
+
+<p>P4 may be an array of integers (type P4_INTARRAY) containing
+one entry for each column in the P3 table.  If array entry a(i)
+is non-zero, then reading column a(i)-1 from cursor P3 is
+equivalent to performing the deferred seek and then reading column i
+from P1.  This information is stored in P3 and used to redirect
+reads against P3 over to P1, thus possibly avoiding the need to
+seek and read cursor P3.</td></tr>
 <tr><td valign="top" align="center">
 <a name="SeekGE"></a><p>SeekGE</p>
 <td><p>If cursor P1 refers to an SQL table (B-Tree that uses integer keys),
@@ -1646,18 +1682,13 @@ to P2. Regardless of whether or not the jump is taken, increment the
 the sequence value.</td></tr>
 <tr><td valign="top" align="center">
 <a name="SetCookie"></a><p>SetCookie</p>
-<td><p>Write the content of register P3 (interpreted as an integer)
-into cookie number P2 of database P1.  P2==1 is the schema version.
-P2==2 is the database format. P2==3 is the recommended pager cache
+<td><p>Write the integer value P3 into cookie number P2 of database P1.
+P2==1 is the schema version.  P2==2 is the database format.
+P2==3 is the recommended pager cache
 size, and so forth.  P1==0 is the main database file and P1==1 is the
 database file used to store temporary tables.</p>
 
 <p>A transaction must be started before executing this opcode.</td></tr>
-<tr><td valign="top" align="center">
-<a name="SetIfNotPos"></a><p>SetIfNotPos</p>
-<td><p>Register P1 must contain an integer.
-If the value of register P1 is not positive (if it is less than 1) then
-set the value of register P2 to be the integer P3.</td></tr>
 <tr><td valign="top" align="center">
 <a name="ShiftLeft"></a><p>ShiftLeft</p>
 <td><p>Shift the integer value in register P2 to the left by the

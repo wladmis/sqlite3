@@ -724,7 +724,7 @@ forms the reply. The <a href="c3ref/index_info.html">sqlite3_index_info</a> stru
     /* Inputs */
     const int nConstraint;     /* Number of entries in aConstraint */
     const struct sqlite3_index_constraint {
-       int iColumn;              /* Column on left-hand side of constraint */
+       int iColumn;              /* Column constrained.  -1 for ROWID */
        unsigned char op;         /* Constraint operator */
        unsigned char usable;     /* True if this constraint is usable */
        int iTermOffset;          /* Used internally - xBestIndex should ignore */

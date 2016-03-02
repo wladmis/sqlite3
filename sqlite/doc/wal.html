@@ -190,13 +190,15 @@ a rollback journal.  Advantages include:</p>
 <li>There is the extra operation of <a href="wal.html#ckpt">checkpointing</a> which, though automatic
     by default, is still something that application developers need to
     be mindful of.
-<li>WAL works best with smaller transactions.  WAL does
+<li><s>WAL works best with smaller transactions.  WAL does
     not work well for very large transactions.  For transactions larger than
     about 100 megabytes, traditional rollback journal modes will likely
     be faster.  For transactions in excess of a gigabyte, WAL mode may 
     fail with an I/O or disk-full error.
     It is recommended that one of the rollback journal modes be used for
-    transactions larger than a few dozen megabytes.
+    transactions larger than a few dozen megabytes.</s>
+    Beginning with <a href="releaselog/3_11_0.html">version 3.11.0</a>, WAL mode works as efficiently with
+    large transactions as does rollback mode.
     
 </ol>
 

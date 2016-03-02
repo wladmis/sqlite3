@@ -137,6 +137,7 @@ a:visited { color: #734559 }
 <a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Database Connection Configuration Options</h2><blockquote><pre>#define SQLITE_DBCONFIG_LOOKASIDE       1001  /* void* int int */
 #define SQLITE_DBCONFIG_ENABLE_FKEY     1002  /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER  1003  /* int int* */
+#define SQLITE_DBCONFIG_WHEREINFO       1004  /* xWhereInfo void* */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the second argument to the <a href="../c3ref/db_config.html">sqlite3_db_config()</a> interface.</p>
