@@ -165,7 +165,7 @@ is not NULL then any error message is written into memory obtained
 from <a href="../c3ref/free.html">sqlite3_malloc()</a> and passed back through the 5th parameter.
 To avoid memory leaks, the application should invoke <a href="../c3ref/free.html">sqlite3_free()</a>
 on error message strings returned through the 5th parameter of
-of sqlite3_exec() after the error message string is no longer needed.
+sqlite3_exec() after the error message string is no longer needed.
 If the 5th parameter to sqlite3_exec() is not NULL and no errors
 occur, then sqlite3_exec() sets the pointer in its 5th parameter to
 NULL before returning.</p>

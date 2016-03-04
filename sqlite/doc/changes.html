@@ -148,7 +148,16 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
-<a name="version_3_11_0"></a>
+<a name="version_3_11_1"></a>
+<h3>2016-03-03 (3.11.1)</h3><p><ul>
+<li>Improvements to the Makefiles and build scripts used by VisualStudio.
+<li>Fix an <a href="fts5.html">FTS5</a> issue in which the 'optimize' command could cause index corruption.
+<li>Fix a buffer overread that might occur if <a href="fts5.html">FTS5</a> is used to query a corrupt
+    database file.
+<li>Increase the maximum "scope" value for the <a href="spellfix1.html">spellfix1</a> extension from 6 to 30.
+<li>SQLITE_SOURCE_ID: "2016-03-03 16:17:53 f047920ce16971e573bc6ec9a48b118c9de2b3a7"
+<li>SHA1 for sqlite3.c: 3da832fd2af36eaedb05d61a8f4c2bb9f3d54265
+</ul></p><a name="version_3_11_0"></a>
 <h3>2016-02-15 (3.11.0)</h3><p><ul>
 <p><b>General improvements:</b>
 <li>Enhanced <a href="wal.html">WAL mode</a> so that it works efficiently with transactions that are
@@ -193,7 +202,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>Because of continuing security concerns, the two-argument version of
     of the seldom-used and little-known <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function is
     disabled unless SQLite is compiled with the <a href="compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
-
+<p><b>Hashes:</b>
 <li>SQLITE_SOURCE_ID: "2016-02-15 17:29:24 3d862f207e3adc00f78066799ac5a8c282430a5f"
 <li>SHA1 for sqlite3.c: df01436c5fcfe72d1a95bc172158219796e1a90b
 

@@ -307,7 +307,6 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_FKEY</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_TRIGGER</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_LOOKASIDE</a></li>
-<li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_WHEREINFO</a></li>
 <li><a href="#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a></li>
 <li><a href="#sqlitedbstatuscachemiss">SQLITE_DBSTATUS_CACHE_MISS</a></li>
 <li><a href="#sqlitedbstatuscacheused">SQLITE_DBSTATUS_CACHE_USED</a></li>
@@ -2325,7 +2324,7 @@ is not NULL then any error message is written into memory obtained
 from <a href="#sqlite3_free">sqlite3_malloc()</a> and passed back through the 5th parameter.
 To avoid memory leaks, the application should invoke <a href="#sqlite3_free">sqlite3_free()</a>
 on error message strings returned through the 5th parameter of
-of sqlite3_exec() after the error message string is no longer needed.
+sqlite3_exec() after the error message string is no longer needed.
 If the 5th parameter to sqlite3_exec() is not NULL and no errors
 occur, then sqlite3_exec() sets the pointer in its 5th parameter to
 NULL before returning.</p>
@@ -4293,7 +4292,6 @@ to be sorted exceeds the page size times the minimum of the
 <h2>Database Connection Configuration Options</h2><blockquote><pre>#define SQLITE_DBCONFIG_LOOKASIDE       1001  /* void* int int */
 #define SQLITE_DBCONFIG_ENABLE_FKEY     1002  /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER  1003  /* int int* */
-#define SQLITE_DBCONFIG_WHEREINFO       1004  /* xWhereInfo void* */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the second argument to the <a href="#sqlite3_db_config">sqlite3_db_config()</a> interface.</p>
@@ -4851,9 +4849,9 @@ was given on the corresponding lock.</p>
 between unlocked and EXCLUSIVE.  It cannot transition between SHARED
 and EXCLUSIVE.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.11.0"
-#define SQLITE_VERSION_NUMBER 3011000
-#define SQLITE_SOURCE_ID      "2016-02-11 21:01:16 ed49f297bcee86674ed673e195610b8cc1d35647"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.11.1"
+#define SQLITE_VERSION_NUMBER 3011001
+#define SQLITE_SOURCE_ID      "2016-03-03 16:17:53 f047920ce16971e573bc6ec9a48b118c9de2b3a7"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the

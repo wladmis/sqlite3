@@ -569,6 +569,10 @@ comments in the source code.
 <dd><p>The schema of the sqlite_stat3 table is as follows: CREATE TABLE sqlite_stat3(tbl,idx,nEq,nLt,nDLt,sample);
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-01646-09830-46955-17168-41197-07539-61822-63814'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-01646-09830-46955-17168-41197-07539-61822-63814'>detail</a>)</i></p></dd>
 
+<dt><b>R-01665-16529-46232-20487-31256-22068-50948-28475</b></dt>
+<dd><p>The sqlite_stat4.nDLt column holds a list of N integers where the K-th integer is the approximate number of entries in the index that are distinct in the first K columns and where the left-most K columns are collectively less than the left-most K columns of the sample.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-01665-16529-46232-20487-31256-22068-50948-28475'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-01665-16529-46232-20487-31256-22068-50948-28475'>detail</a>)</i></p></dd>
+
 <dt><b>R-01669-33464-29023-56990-09830-45167-30109-01082</b></dt>
 <dd><p>When enabled, this PRAGMA causes many SELECT statements without an ORDER BY clause to emit their results in the reverse order from what they normally would.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-01669-33464-29023-56990-09830-45167-30109-01082'>context</a>, <a href='matrix/matrix_dpragma.html#R-01669-33464-29023-56990-09830-45167-30109-01082'>detail</a>)</i></p></dd>
@@ -1681,10 +1685,6 @@ comments in the source code.
 <dd><p>The first form (without an argument) queries the current limit.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-08181-17347-07123-49289-35480-05775-37202-24874'>context</a>, <a href='matrix/matrix_dpragma.html#R-08181-17347-07123-49289-35480-05775-37202-24874'>detail</a>)</i></p></dd>
 
-<dt><b>R-08183-51717-22303-21526-16092-06155-29977-37409</b></dt>
-<dd><p>In a well-formed sqlite_stat3 table, the samples for any single index must appear in the same order that they occur in the index. In other words, if the entry with left-most column S1 is earlier in the index b-tree than the entry with lef-most column S2, then in the sqlite_stat3 table, sample S1 must have a smaller rowid than sample S2.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-08183-51717-22303-21526-16092-06155-29977-37409'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-08183-51717-22303-21526-16092-06155-29977-37409'>detail</a>)</i></p></dd>
-
 <dt><b>R-08185-34281-12728-08403-04938-30337-50100-31193</b></dt>
 <dd><p>The sqlite3_result_blob() interface sets the result from an application-defined function to be the BLOB whose content is pointed to by the second parameter and which is N bytes long where N is the third parameter.
 <i>(source: <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>, matrix: <a href='matrix/c3ref/result_blob.html#R-08185-34281-12728-08403-04938-30337-50100-31193'>context</a>, <a href='matrix/matrix_dresult_blob.html#R-08185-34281-12728-08403-04938-30337-50100-31193'>detail</a>)</i></p></dd>
@@ -1708,6 +1708,10 @@ comments in the source code.
 <dt><b>R-08267-32299-63841-11105-16971-59372-17886-11855</b></dt>
 <dd><p>If Z is omitted then substr(X,Y) returns all characters through the end of the string X beginning with the Y-th.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-08267-32299-63841-11105-16971-59372-17886-11855'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-08267-32299-63841-11105-16971-59372-17886-11855'>detail</a>)</i></p></dd>
+
+<dt><b>R-08292-01711-30929-18073-05835-23551-48977-32015</b></dt>
+<dd><p>The sqlite_master.sql column stores SQL text that describes the object. This SQL text is a CREATE TABLE, CREATE VIRTUAL TABLE, CREATE INDEX, CREATE VIEW, or CREATE TRIGGER statement that if evaluated against the database file when it is the main database of a database connection would recreate the object.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-08292-01711-30929-18073-05835-23551-48977-32015'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-08292-01711-30929-18073-05835-23551-48977-32015'>detail</a>)</i></p></dd>
 
 <dt><b>R-08308-17224-38959-45804-35149-08611-40097-56535</b></dt>
 <dd><p>The default collating function for all strings is BINARY.
@@ -3945,10 +3949,6 @@ comments in the source code.
 <dd><p>The first four bytes of each overflow page are a big-endian integer which is the page number of the next page in the chain, or zero for the final page in the chain.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-20413-39093-25878-54576-60732-55561-33363-27302'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-20413-39093-25878-54576-60732-55561-33363-27302'>detail</a>)</i></p></dd>
 
-<dt><b>R-20419-58047-32048-57525-49522-20687-43753-47745</b></dt>
-<dd><p>When an SQL table that includes an INTEGER PRIMARY KEY column (which aliases the rowid) then that column appears in the record as a NULL value.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-20419-58047-32048-57525-49522-20687-43753-47745'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-20419-58047-32048-57525-49522-20687-43753-47745'>detail</a>)</i></p></dd>
-
 <dt><b>R-20446-37715-39007-53706-23139-04675-09949-14226</b></dt>
 <dd><p>If no WHEN clause is supplied, the SQL statements are executed for all rows.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-20446-37715-39007-53706-23139-04675-09949-14226'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-20446-37715-39007-53706-23139-04675-09949-14226'>detail</a>)</i></p></dd>
@@ -5913,6 +5913,10 @@ comments in the source code.
 <dd><p>An underscore ("_") in the LIKE pattern matches any single character in the string.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-30433-25443-23879-51033-37593-48703-34224-12115'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-30433-25443-23879-51033-37593-48703-34224-12115'>detail</a>)</i></p></dd>
 
+<dt><b>R-30457-05504-62442-23114-37127-08512-05189-64337</b></dt>
+<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than U-35 then the number of bytes stored on the b-tree leaf page is the smaller of M+((P-M)%(U-4)) and U-35.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-30457-05504-62442-23114-37127-08512-05189-64337'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-30457-05504-62442-23114-37127-08512-05189-64337'>detail</a>)</i></p></dd>
+
 <dt><b>R-30470-29835-03618-00817-05721-31518-05673-45416</b></dt>
 <dd><p>Any column in an SQLite version 3 database, except an INTEGER PRIMARY KEY column, may be used to store a value of any storage class.
 <i>(source: <a href="datatype3.html">datatype3.html</a>, matrix: <a href='matrix/datatype3.html#R-30470-29835-03618-00817-05721-31518-05673-45416'>context</a>, <a href='matrix/matrix_ddatatype3.html#R-30470-29835-03618-00817-05721-31518-05673-45416'>detail</a>)</i></p></dd>
@@ -6040,10 +6044,6 @@ comments in the source code.
 <dt><b>R-31275-44060-31786-28874-63587-64128-53792-58628</b></dt>
 <dd><p>Strings returned by sqlite3_column_text() and sqlite3_column_text16(), even empty strings, are always zero-terminated.
 <i>(source: <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>, checked-by: src/vdbemem.c, matrix: <a href='matrix/c3ref/column_blob.html#R-31275-44060-31786-28874-63587-64128-53792-58628'>context</a>, <a href='matrix/matrix_dcolumn_blob.html#R-31275-44060-31786-28874-63587-64128-53792-58628'>detail</a>)</i></p></dd>
-
-<dt><b>R-31295-24696-44210-39757-63794-35429-55817-16527</b></dt>
-<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than X then the number of byte stored on the b-tree page is the smaller of M+((P-M)%(U-4)) and X.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-31295-24696-44210-39757-63794-35429-55817-16527'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-31295-24696-44210-39757-63794-35429-55817-16527'>detail</a>)</i></p></dd>
 
 <dt><b>R-31305-35170-11464-64098-34506-16219-33057-18056</b></dt>
 <dd><p>After the header and zero padding are zero or more page records.
@@ -7188,6 +7188,10 @@ comments in the source code.
 <dt><b>R-37342-04007-10606-64148-39195-51101-42464-04051</b></dt>
 <dd><p>The index value returned is suitable for use as the second parameter to sqlite3_bind().
 <i>(source: <a href="c3ref/bind_parameter_index.html">c3ref/bind_parameter_index.html</a>, matrix: <a href='matrix/c3ref/bind_parameter_index.html#R-37342-04007-10606-64148-39195-51101-42464-04051'>context</a>, <a href='matrix/matrix_dbind_parameter_index.html#R-37342-04007-10606-64148-39195-51101-42464-04051'>detail</a>)</i></p></dd>
+
+<dt><b>R-37367-57340-65398-65389-19439-49960-45341-59090</b></dt>
+<dd><p>In a well-formed sqlite_stat3 table, the samples for any single index must appear in the same order that they occur in the index. In other words, if the entry with left-most column S1 is earlier in the index b-tree than the entry with left-most column S2, then in the sqlite_stat3 table, sample S1 must have a smaller rowid than sample S2.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-37367-57340-65398-65389-19439-49960-45341-59090'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-37367-57340-65398-65389-19439-49960-45341-59090'>detail</a>)</i></p></dd>
 
 <dt><b>R-37390-56181-43004-09239-55854-05379-58019-03084</b></dt>
 <dd><p>Pending write operations always fail with this error when a rollback occurs.
@@ -9789,6 +9793,10 @@ comments in the source code.
 <dd><p>When an applicable constraint violation occurs, the IGNORE resolution algorithm skips the one row that contains the constraint violation and continues processing subsequent rows of the SQL statement as if nothing went wrong.
 <i>(source: <a href="lang_conflict.html">lang_conflict.html</a>, matrix: <a href='matrix/lang_conflict.html#R-50299-05307-25514-21202-52371-12958-26129-48124'>context</a>, <a href='matrix/matrix_dlang_conflict.html#R-50299-05307-25514-21202-52371-12958-26129-48124'>detail</a>)</i></p></dd>
 
+<dt><b>R-50324-49641-07188-15996-37030-30300-11878-30571</b></dt>
+<dd><p>When an SQL table includes an INTEGER PRIMARY KEY column (which aliases the rowid) then that column appears in the record as a NULL value.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-50324-49641-07188-15996-37030-30300-11878-30571'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-50324-49641-07188-15996-37030-30300-11878-30571'>detail</a>)</i></p></dd>
+
 <dt><b>R-50329-17145-27119-54152-42841-36375-05497-15742</b></dt>
 <dd><p>If a query contains sub-selects, either as part of the FROM clause or as part of SQL expressions, then the output of EXPLAIN QUERY PLAN also includes a report for each sub-select.
 <i>(source: <a href="eqp.html">eqp.html</a>, matrix: <a href='matrix/eqp.html#R-50329-17145-27119-54152-42841-36375-05497-15742'>context</a>, <a href='matrix/matrix_deqp.html#R-50329-17145-27119-54152-42841-36375-05497-15742'>detail</a>)</i></p></dd>
@@ -9905,10 +9913,6 @@ comments in the source code.
 <dd><p>For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX=35.00 AND minY
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-50953-26869-09407-63329-65116-60500-37653-24297'>context</a>, <a href='matrix/matrix_drtree.html#R-50953-26869-09407-63329-65116-60500-37653-24297'>detail</a>)</i></p></dd>
 
-<dt><b>R-50962-21157-55350-61372-15327-22326-52750-26645</b></dt>
-<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than U-35 then the number of byte stored on the b-tree leaf page is the smaller of M+((P-M)%(U-4)) and U-35.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-50962-21157-55350-61372-15327-22326-52750-26645'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-50962-21157-55350-61372-15327-22326-52750-26645'>detail</a>)</i></p></dd>
-
 <dt><b>R-50991-36730-61115-19569-38902-10025-13040-27195</b></dt>
 <dd><p>The julianday() function returns the Julian day - the number of days since noon in Greenwich on November 24, 4714 B.C. (Proleptic Gregorian calendar).
 <i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-50991-36730-61115-19569-38902-10025-13040-27195'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-50991-36730-61115-19569-38902-10025-13040-27195'>detail</a>)</i></p></dd>
@@ -9985,10 +9989,6 @@ comments in the source code.
 <dd><p>PRAGMA schema.synchronous; PRAGMA schema.synchronous = 0 | OFF | 1 | NORMAL | 2 | FULL | 3 | EXTRA; Query or change the setting of the "synchronous" flag.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-51288-13280-04102-45116-03468-31022-16818-18887'>context</a>, <a href='matrix/matrix_dpragma.html#R-51288-13280-04102-45116-03468-31022-16818-18887'>detail</a>)</i></p></dd>
 
-<dt><b>R-51323-12432-10115-25604-37361-38665-02530-63723</b></dt>
-<dd><p>The sqlite_stat4.nDLt column holds a list of N integers where the K-th integers is the approximate number of entries in the index that are distinct in the first K columns and that are whose left-most K columns are collectively less than the left-most K columns of the sample.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-51323-12432-10115-25604-37361-38665-02530-63723'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-51323-12432-10115-25604-37361-38665-02530-63723'>detail</a>)</i></p></dd>
-
 <dt><b>R-51332-60960-52674-22540-45151-35167-25354-18137</b></dt>
 <dd><p>Zero or more escape sequences of the form "%HH" (where H represents any hexadecimal digit) can occur in the path, query string, or fragment.
 <i>(source: <a href="uri.html">uri.html</a>, matrix: <a href='matrix/uri.html#R-51332-60960-52674-22540-45151-35167-25354-18137'>context</a>, <a href='matrix/matrix_duri.html#R-51332-60960-52674-22540-45151-35167-25354-18137'>detail</a>)</i></p></dd>
@@ -10036,6 +10036,10 @@ comments in the source code.
 <dt><b>R-51478-11146-41529-00991-24938-53832-30881-29241</b></dt>
 <dd><p>A trigger may be specified to fire whenever a DELETE, INSERT, or UPDATE of a particular database table occurs, or whenever an UPDATE occurs on on one or more specified columns of a table.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-51478-11146-41529-00991-24938-53832-30881-29241'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-51478-11146-41529-00991-24938-53832-30881-29241'>detail</a>)</i></p></dd>
+
+<dt><b>R-51494-34398-19070-65222-52425-64251-64954-50365</b></dt>
+<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than X then the number of bytes stored on the b-tree page is the smaller of M+((P-M)%(U-4)) and X.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-51494-34398-19070-65222-52425-64251-64954-50365'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-51494-34398-19070-65222-52425-64251-64954-50365'>detail</a>)</i></p></dd>
 
 <dt><b>R-51513-12026-58956-15151-33280-52344-26081-14635</b></dt>
 <dd><p>The last_insert_rowid() SQL function is a wrapper around the sqlite3_last_insert_rowid() C/C++ interface function.
@@ -11948,10 +11952,6 @@ comments in the source code.
 <dt><b>R-62610-51329-57761-33466-25437-21860-03475-27712</b></dt>
 <dd><p>A dollar-sign followed by an identifier name also holds a spot for a named parameter with the name $AAAA.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-62610-51329-57761-33466-25437-21860-03475-27712'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-62610-51329-57761-33466-25437-21860-03475-27712'>detail</a>)</i></p></dd>
-
-<dt><b>R-62632-06079-21053-35147-03546-21377-45684-59837</b></dt>
-<dd><p>The sqlite_master.sql column stores SQL text that describes the object. This SQL text is a CREATE TABLE, CREATE VIRTUAL TABLE, CREATE INDEX, CREATE VIEW, or CREATE TRIGGER statement that if evaluated against the database file when it is the main database of a database connection would recreated the object.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-62632-06079-21053-35147-03546-21377-45684-59837'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-62632-06079-21053-35147-03546-21377-45684-59837'>detail</a>)</i></p></dd>
 
 <dt><b>R-62671-45936-15699-15939-47274-39312-22685-45097</b></dt>
 <dd><p>Coincidentally, that same index is useful for locating the team leader of a particular team: SELECT person_id FROM person WHERE is_team_leader AND team_id=?1;
