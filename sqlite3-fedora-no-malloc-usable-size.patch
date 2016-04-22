@@ -6,8 +6,8 @@ index c73b820..9d23aa7 100755
  #########
  # Figure out whether or not we have these functions
  #
--for ac_func in fdatasync gmtime_r isnan localtime_r localtime_s malloc_usable_size strchrnul usleep utime
-+for ac_func in fdatasync gmtime_r isnan localtime_r localtime_s strchrnul usleep utime
+-for ac_func in fdatasync gmtime_r isnan localtime_r localtime_s malloc_usable_size strchrnul usleep utime pread pread64 pwrite pwrite64
++for ac_func in fdatasync gmtime_r isnan localtime_r localtime_s strchrnul usleep utime pread pread64 pwrite pwrite64
  do :
    as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
  ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -19,8 +19,8 @@ index 6a11888..d9f910e 100644
  #########
  # Figure out whether or not we have these functions
  #
--AC_CHECK_FUNCS([fdatasync gmtime_r isnan localtime_r localtime_s malloc_usable_size strchrnul usleep utime])
-+AC_CHECK_FUNCS([fdatasync gmtime_r isnan localtime_r localtime_s strchrnul usleep utime])
+-AC_CHECK_FUNCS([fdatasync gmtime_r isnan localtime_r localtime_s malloc_usable_size strchrnul usleep utime pread pread64 pwrite pwrite64])
++AC_CHECK_FUNCS([fdatasync gmtime_r isnan localtime_r localtime_s strchrnul usleep utime pread pread64 pwrite pwrite64])
  
  #########
  # By default, we use the amalgamation (this may be changed below...)
