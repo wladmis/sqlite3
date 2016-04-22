@@ -505,10 +505,6 @@ comments in the source code.
 <dd><p>Hence, the histogram data which is collected no left-most column of indices is useless in helping to choose between the range constraints on columns x and y.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-01335-41434-49669-14652-18813-14877-14788-28819'>context</a>, <a href='matrix/matrix_doptoverview.html#R-01335-41434-49669-14652-18813-14877-14788-28819'>detail</a>)</i></p></dd>
 
-<dt><b>R-01338-29125-17631-56667-46599-64781-10952-19968</b></dt>
-<dd><p>The default setting is usually synchronous=FULL, except in WAL mode when the default is synchronous=NORMAL.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-01338-29125-17631-56667-46599-64781-10952-19968'>context</a>, <a href='matrix/matrix_dpragma.html#R-01338-29125-17631-56667-46599-64781-10952-19968'>detail</a>)</i></p></dd>
-
 <dt><b>R-01379-47306-55874-35809-24668-39985-05961-47226</b></dt>
 <dd><p>Before any information-bearing page of the database is modified, the original unmodified content of that page is written into the rollback journal.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-01379-47306-55874-35809-24668-39985-05961-47226'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-01379-47306-55874-35809-24668-39985-05961-47226'>detail</a>)</i></p></dd>
@@ -1080,10 +1076,6 @@ comments in the source code.
 <dt><b>R-04591-34196-50064-55566-45109-16204-13417-11786</b></dt>
 <dd><p>If V is a NULL pointer then sqlite3_value_free(V) is a harmless no-op.
 <i>(source: <a href="c3ref/value_dup.html">c3ref/value_dup.html</a>, matrix: <a href='matrix/c3ref/value_dup.html#R-04591-34196-50064-55566-45109-16204-13417-11786'>context</a>, <a href='matrix/matrix_dvalue_dup.html#R-04591-34196-50064-55566-45109-16204-13417-11786'>detail</a>)</i></p></dd>
-
-<dt><b>R-04656-22047-57963-06528-08042-08976-27891-34567</b></dt>
-<dd><p>Example: Let the index by CREATE INDEX ex2 ON tab2(b,c) WHERE c IS NOT NULL; Then any query that uses operators =, <, >, <=, >=, <>, or IN on column "c" would be usable with the partial index because those comparison operators are only true if "c" is not NULL.
-<i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-04656-22047-57963-06528-08042-08976-27891-34567'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-04656-22047-57963-06528-08042-08976-27891-34567'>detail</a>)</i></p></dd>
 
 <dt><b>R-04670-35394-33055-58940-18775-32578-18606-16346</b></dt>
 <dd><p>The schema of the sqlite_stat4 table is as follows: CREATE TABLE sqlite_stat4(tbl,idx,nEq,nLt,nDLt,sample);
@@ -2597,6 +2589,10 @@ comments in the source code.
 <dd><p>The escape character followed by a percent symbol (%), underscore (_), or a second instance of the escape character itself matches a literal percent symbol, underscore, or a single escape character, respectively.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-13345-31830-42625-35192-25815-10226-10074-63536'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-13345-31830-42625-35192-25815-10226-10074-63536'>detail</a>)</i></p></dd>
 
+<dt><b>R-13380-27850-48182-47987-05437-06690-53655-55495</b></dt>
+<dd><p>This option is used to enable or disable the two-argument version of the fts3_tokenizer() function which is part of the FTS3 full-text search engine extension.
+<i>(source: <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_enable_fkey.html#R-13380-27850-48182-47987-05437-06690-53655-55495'>context</a>, <a href='matrix/matrix_dc_dbconfig_enable_fkey.html#R-13380-27850-48182-47987-05437-06690-53655-55495'>detail</a>)</i></p></dd>
+
 <dt><b>R-13435-26311-61176-01189-39199-58705-21930-17615</b></dt>
 <dd><p>Usually, the parent key of a foreign key constraint is the primary key of the parent table. If they are not the primary key, then the parent key columns must be collectively subject to a UNIQUE constraint or have a UNIQUE index.
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: tcl/e_fkey.test, matrix: <a href='matrix/foreignkeys.html#R-13435-26311-61176-01189-39199-58705-21930-17615'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-13435-26311-61176-01189-39199-58705-21930-17615'>detail</a>)</i></p></dd>
@@ -2916,6 +2912,10 @@ comments in the source code.
 <dt><b>R-15172-56782-14433-51557-38019-58913-08243-11771</b></dt>
 <dd><p>The returned value is one of SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_TEXT, SQLITE_BLOB, or SQLITE_NULL.
 <i>(source: <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>, matrix: <a href='matrix/c3ref/column_blob.html#R-15172-56782-14433-51557-38019-58913-08243-11771'>context</a>, <a href='matrix/matrix_dcolumn_blob.html#R-15172-56782-14433-51557-38019-58913-08243-11771'>detail</a>)</i></p></dd>
+
+<dt><b>R-15179-00775-17006-23705-43111-64529-05716-35122</b></dt>
+<dd><p>The N-th integer (for N>1) is the estimated average number of rows in the index which have the same value for the first N-1 columns.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-15179-00775-17006-23705-43111-64529-05716-35122'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-15179-00775-17006-23705-43111-64529-05716-35122'>detail</a>)</i></p></dd>
 
 <dt><b>R-15199-61389-24637-25675-62796-22180-46893-15939</b></dt>
 <dd><p>There are two basic forms of the CASE expression: those with a base expression and those without.
@@ -3261,10 +3261,6 @@ comments in the source code.
 <dd><p>The xSetSystemCall(), xGetSystemCall(), and xNestSystemCall() interfaces are not used by the SQLite core.
 <i>(source: <a href="c3ref/vfs.html">c3ref/vfs.html</a>, matrix: <a href='matrix/c3ref/vfs.html#R-16960-46772-37295-51769-03234-47143-37776-03273'>context</a>, <a href='matrix/matrix_dvfs.html#R-16960-46772-37295-51769-03234-47143-37776-03273'>detail</a>)</i></p></dd>
 
-<dt><b>R-16984-47079-59652-11585-17814-53725-42803-65209</b></dt>
-<dd><p>If the SQLITE_ENABLE_ATOMIC_WRITE option is disabled or if xDeviceCharacteristics reports no suitable atomic write page sizes, then the default page size is the larger of SQLITE_DEFAULT_PAGE_SIZE and the sector size as reported by the xSectorSize method of the sqlite3_io_methods object, but not more than SQLITE_MAX_DEFAULT_PAGE_SIZE.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-16984-47079-59652-11585-17814-53725-42803-65209'>context</a>, <a href='matrix/matrix_dpragma.html#R-16984-47079-59652-11585-17814-53725-42803-65209'>detail</a>)</i></p></dd>
-
 <dt><b>R-17002-27534-60658-04301-02636-10331-43886-13324</b></dt>
 <dd><p>The %z format is interchangeable with %s.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: tcl/printf2.test, matrix: <a href='matrix/lang_corefunc.html#R-17002-27534-60658-04301-02636-10331-43886-13324'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-17002-27534-60658-04301-02636-10331-43886-13324'>detail</a>)</i></p></dd>
@@ -3428,6 +3424,10 @@ comments in the source code.
 <dt><b>R-17683-59594-13579-14757-04762-40863-05270-49270</b></dt>
 <dd><p>At various points during the compilation process, as logic is being created to perform various actions, the authorizer callback is invoked to see if those actions are allowed.
 <i>(source: <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>, matrix: <a href='matrix/c3ref/set_authorizer.html#R-17683-59594-13579-14757-04762-40863-05270-49270'>context</a>, <a href='matrix/matrix_dset_authorizer.html#R-17683-59594-13579-14757-04762-40863-05270-49270'>detail</a>)</i></p></dd>
+
+<dt><b>R-17684-03275-18018-08876-61159-17187-00685-37913</b></dt>
+<dd><p>Only ROWID values from previous transactions that were committed are considered. ROWID values that were rolled back are ignored and can be reused.
+<i>(source: <a href="autoinc.html">autoinc.html</a>, matrix: <a href='matrix/autoinc.html#R-17684-03275-18018-08876-61159-17187-00685-37913'>context</a>, <a href='matrix/matrix_dautoinc.html#R-17684-03275-18018-08876-61159-17187-00685-37913'>detail</a>)</i></p></dd>
 
 <dt><b>R-17719-44813-04835-03337-09891-18871-23593-16128</b></dt>
 <dd><p>An aggregate SQL function requires an implementation of xStep and xFinal and NULL pointer must be passed for xFunc.
@@ -3893,6 +3893,10 @@ comments in the source code.
 <dd><p>There are three arguments to SQLITE_CONFIG_HEAP: An 8-byte aligned pointer to the memory, the number of bytes in the memory buffer, and the minimum allocation size.
 <i>(source: <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c, matrix: <a href='matrix/c3ref/c_config_covering_index_scan.html#R-19854-42126-27972-10302-08269-22410-63996-33681'>context</a>, <a href='matrix/matrix_dc_config_covering_index_scan.html#R-19854-42126-27972-10302-08269-22410-63996-33681'>detail</a>)</i></p></dd>
 
+<dt><b>R-19878-23484-53576-16359-03133-43197-12770-47752</b></dt>
+<dd><p>Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)). If P is greater than X then the number of bytes stored on the table b-tree leaf page is K if K is less or equal to X or M otherwise.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-19878-23484-53576-16359-03133-43197-12770-47752'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-19878-23484-53576-16359-03133-43197-12770-47752'>detail</a>)</i></p></dd>
+
 <dt><b>R-19885-09448-58561-44146-11128-00310-35686-58085</b></dt>
 <dd><p>The names of internal schema objects always begin with "sqlite_" and any table, index, view, or trigger whose name begins with "sqlite_" is an internal schema object.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-19885-09448-58561-44146-11128-00310-35686-58085'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-19885-09448-58561-44146-11128-00310-35686-58085'>detail</a>)</i></p></dd>
@@ -3980,6 +3984,10 @@ comments in the source code.
 <dt><b>R-20560-39162-53987-29912-13699-13892-53398-21192</b></dt>
 <dd><p>The UNION operator works the same way as UNION ALL, except that duplicate rows are removed from the final result set.
 <i>(source: <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test, matrix: <a href='matrix/lang_select.html#R-20560-39162-53987-29912-13699-13892-53398-21192'>context</a>, <a href='matrix/matrix_dlang_select.html#R-20560-39162-53987-29912-13699-13892-53398-21192'>detail</a>)</i></p></dd>
+
+<dt><b>R-20574-06110-58017-01957-45334-14595-63260-32420</b></dt>
+<dd><p>The default setting is usually synchronous=FULL.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-20574-06110-58017-01957-45334-14595-63260-32420'>context</a>, <a href='matrix/matrix_dpragma.html#R-20574-06110-58017-01957-45334-14595-63260-32420'>detail</a>)</i></p></dd>
 
 <dt><b>R-20590-08726-45565-50300-40304-23510-62801-34037</b></dt>
 <dd><p>It is an error to specify a value for the mode parameter that is less restrictive than that specified by the flags passed in the third parameter to sqlite3_open_v2().
@@ -4132,10 +4140,6 @@ comments in the source code.
 <dt><b>R-21599-16038-23557-29825-04044-13537-53990-06867</b></dt>
 <dd><p>In SQLite, a foreign key constraint is permanently marked as deferred or immediate when it is created.
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: tcl/e_fkey.test, matrix: <a href='matrix/foreignkeys.html#R-21599-16038-23557-29825-04044-13537-53990-06867'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-21599-16038-23557-29825-04044-13537-53990-06867'>detail</a>)</i></p></dd>
-
-<dt><b>R-21618-58903-18112-13131-43171-58784-25040-46197</b></dt>
-<dd><p>The N-th integer (for N>1) is the approximate average number of rows in the index which have the same value for the first N-1 columns.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-21618-58903-18112-13131-43171-58784-25040-46197'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-21618-58903-18112-13131-43171-58784-25040-46197'>detail</a>)</i></p></dd>
 
 <dt><b>R-21637-36677-40497-35509-61399-46252-57328-58576</b></dt>
 <dd><p>If a term in X is of the form "z IS NOT NULL" and if a term in W is a comparison operator on "z" other than "IS", then those terms match.
@@ -4841,6 +4845,10 @@ comments in the source code.
 <dd><p>These routine might also return NULL if a memory allocation error occurs.
 <i>(source: <a href="c3ref/column_database_name.html">c3ref/column_database_name.html</a>, matrix: <a href='matrix/c3ref/column_database_name.html#R-25394-06637-63632-64734-15986-15167-14146-59945'>context</a>, <a href='matrix/matrix_dcolumn_database_name.html#R-25394-06637-63632-64734-15986-15167-14146-59945'>detail</a>)</i></p></dd>
 
+<dt><b>R-25431-51432-49583-45321-20136-64162-50998-25796</b></dt>
+<dd><p>If P>X and KIf P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
+<i>(source: <a href="requirements.html">requirements.html</a>, matrix: <a href='matrix/requirements.html#R-25431-51432-49583-45321-20136-64162-50998-25796'>context</a>, <a href='matrix/matrix_drequirements.html#R-25431-51432-49583-45321-20136-64162-50998-25796'>detail</a>)</i></p></dd>
+
 <dt><b>R-25451-61125-57795-23914-51441-34414-44666-54346</b></dt>
 <dd><p>The SQLITE_CONFIG_URI option takes a single argument of type int. If non-zero, then URI handling is globally enabled. If the parameter is zero, then URI handling is globally disabled.
 <i>(source: <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c, matrix: <a href='matrix/c3ref/c_config_covering_index_scan.html#R-25451-61125-57795-23914-51441-34414-44666-54346'>context</a>, <a href='matrix/matrix_dc_config_covering_index_scan.html#R-25451-61125-57795-23914-51441-34414-44666-54346'>detail</a>)</i></p></dd>
@@ -5152,10 +5160,6 @@ comments in the source code.
 <dt><b>R-26845-32976-14599-31607-31221-37786-17413-24156</b></dt>
 <dd><p>Value "rwc" is equivalent to setting both SQLITE_OPEN_READWRITE and SQLITE_OPEN_CREATE.
 <i>(source: <a href="c3ref/open.html">c3ref/open.html</a>, checked-by: tcl/e_uri.test, matrix: <a href='matrix/c3ref/open.html#R-26845-32976-14599-31607-31221-37786-17413-24156'>context</a>, <a href='matrix/matrix_dopen.html#R-26845-32976-14599-31607-31221-37786-17413-24156'>detail</a>)</i></p></dd>
-
-<dt><b>R-26866-55466-22220-19063-03012-49506-22267-60987</b></dt>
-<dd><p>The second integer is the approximate average number of rows in the index that have the same value in the first column of the index.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-26866-55466-22220-19063-03012-49506-22267-60987'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-26866-55466-22220-19063-03012-49506-22267-60987'>detail</a>)</i></p></dd>
 
 <dt><b>R-26888-26313-07515-35775-03599-15989-59200-07369</b></dt>
 <dd><p>The default setting is off, meaning that CHECK constraints are enforced by default.
@@ -5805,10 +5809,6 @@ comments in the source code.
 <dd><p>If the argument to sqlite3_mutex_enter(), sqlite3_mutex_try(), or sqlite3_mutex_leave() is a NULL pointer, then all three routines behave as no-ops.
 <i>(source: <a href="c3ref/mutex_alloc.html">c3ref/mutex_alloc.html</a>, matrix: <a href='matrix/c3ref/mutex_alloc.html#R-29989-03153-00644-12353-52386-44408-44979-16456'>context</a>, <a href='matrix/matrix_dmutex_alloc.html#R-29989-03153-00644-12353-52386-44408-44979-16456'>detail</a>)</i></p></dd>
 
-<dt><b>R-30001-10095-62865-61285-32235-57729-38609-25645</b></dt>
-<dd><p>Only ROWID values from previously transactions that were committed are considered. ROWID values that were rolled back are ignored and can be reused.
-<i>(source: <a href="autoinc.html">autoinc.html</a>, matrix: <a href='matrix/autoinc.html#R-30001-10095-62865-61285-32235-57729-38609-25645'>context</a>, <a href='matrix/matrix_dautoinc.html#R-30001-10095-62865-61285-32235-57729-38609-25645'>detail</a>)</i></p></dd>
-
 <dt><b>R-30008-03647-27202-20831-29850-54434-32362-14140</b></dt>
 <dd><p>If the result is a BLOB or UTF-16 string then the sqlite3_column_bytes16() routine returns the number of bytes in that BLOB or string.
 <i>(source: <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>, matrix: <a href='matrix/c3ref/column_blob.html#R-30008-03647-27202-20831-29850-54434-32362-14140'>context</a>, <a href='matrix/matrix_dcolumn_blob.html#R-30008-03647-27202-20831-29850-54434-32362-14140'>detail</a>)</i></p></dd>
@@ -5848,6 +5848,10 @@ comments in the source code.
 <dt><b>R-30164-60316-40156-60446-50221-53227-39726-53106</b></dt>
 <dd><p>The number of pages in cache must exceed both the cache_spill threshold and the maximum cache size set by the PRAGMA cache_size statement in order for spilling to occur.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-30164-60316-40156-60446-50221-53227-39726-53106'>context</a>, <a href='matrix/matrix_dpragma.html#R-30164-60316-40156-60446-50221-53227-39726-53106'>detail</a>)</i></p></dd>
+
+<dt><b>R-30185-15359-41231-64088-51727-20362-49126-10873</b></dt>
+<dd><p>The default suggested cache size is -2000, which means the cache size is limited to 2048000 bytes of memory.
+<i>(source: <a href="pragma.html">pragma.html</a>, checked-by: src/sqliteLimit.h, matrix: <a href='matrix/pragma.html#R-30185-15359-41231-64088-51727-20362-49126-10873'>context</a>, <a href='matrix/matrix_dpragma.html#R-30185-15359-41231-64088-51727-20362-49126-10873'>detail</a>)</i></p></dd>
 
 <dt><b>R-30189-54097-58322-43687-36717-28803-52946-09131</b></dt>
 <dd><p>For each limit category SQLITE_LIMIT_NAME there is a hard upper bound set at compile-time by a C preprocessor macro called SQLITE_MAX_NAME. (The "_LIMIT_" in the name is changed to "_MAX_".)
@@ -5912,10 +5916,6 @@ comments in the source code.
 <dt><b>R-30433-25443-23879-51033-37593-48703-34224-12115</b></dt>
 <dd><p>An underscore ("_") in the LIKE pattern matches any single character in the string.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-30433-25443-23879-51033-37593-48703-34224-12115'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-30433-25443-23879-51033-37593-48703-34224-12115'>detail</a>)</i></p></dd>
-
-<dt><b>R-30457-05504-62442-23114-37127-08512-05189-64337</b></dt>
-<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than U-35 then the number of bytes stored on the b-tree leaf page is the smaller of M+((P-M)%(U-4)) and U-35.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-30457-05504-62442-23114-37127-08512-05189-64337'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-30457-05504-62442-23114-37127-08512-05189-64337'>detail</a>)</i></p></dd>
 
 <dt><b>R-30470-29835-03618-00817-05721-31518-05673-45416</b></dt>
 <dd><p>Any column in an SQLite version 3 database, except an INTEGER PRIMARY KEY column, may be used to store a value of any storage class.
@@ -6012,10 +6012,6 @@ comments in the source code.
 <dt><b>R-31086-35521-56938-30140-08121-54172-49179-57363</b></dt>
 <dd><p>On success, SQLITE_OK is returned and the new BLOB handle is stored in *ppBlob. Otherwise an error code is returned and, unless the error code is SQLITE_MISUSE, *ppBlob is set to NULL.
 <i>(source: <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>, checked-by: tcl/e_blobopen.test, matrix: <a href='matrix/c3ref/blob_open.html#R-31086-35521-56938-30140-08121-54172-49179-57363'>context</a>, <a href='matrix/matrix_dblob_open.html#R-31086-35521-56938-30140-08121-54172-49179-57363'>detail</a>)</i></p></dd>
-
-<dt><b>R-31093-59126-54996-31086-46526-58121-23400-49196</b></dt>
-<dd><p>The default suggested cache size is 2000 pages.
-<i>(source: <a href="pragma.html">pragma.html</a>, checked-by: src/sqliteLimit.h, matrix: <a href='matrix/pragma.html#R-31093-59126-54996-31086-46526-58121-23400-49196'>context</a>, <a href='matrix/matrix_dpragma.html#R-31093-59126-54996-31086-46526-58121-23400-49196'>detail</a>)</i></p></dd>
 
 <dt><b>R-31163-29022-10663-19494-01661-06524-11639-30452</b></dt>
 <dd><p>The "E" character that begins the exponentiation clause of a floating point literal can be either upper or lower case.
@@ -6213,17 +6209,9 @@ comments in the source code.
 <dd><p>However, if three additional indices where added that contained columns b, c, and d as their left-most columns, then the OR-clause optimization might apply.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-32076-12237-46595-29546-24176-12469-16826-41322'>context</a>, <a href='matrix/matrix_doptoverview.html#R-32076-12237-46595-29546-24176-12469-16826-41322'>detail</a>)</i></p></dd>
 
-<dt><b>R-32076-61231-62705-03238-04533-28632-50823-60259</b></dt>
-<dd><p>If the payload size P is less than or equal to U-35 then the entire payload is stored on the b-tree leaf page.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-32076-61231-62705-03238-04533-28632-50823-60259'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-32076-61231-62705-03238-04533-28632-50823-60259'>detail</a>)</i></p></dd>
-
 <dt><b>R-32090-20403-62451-54879-55700-60084-08956-01962</b></dt>
 <dd><p>Autocommit mode is re-enabled by a COMMIT or ROLLBACK.
 <i>(source: <a href="c3ref/get_autocommit.html">c3ref/get_autocommit.html</a>, matrix: <a href='matrix/c3ref/get_autocommit.html#R-32090-20403-62451-54879-55700-60084-08956-01962'>context</a>, <a href='matrix/matrix_dget_autocommit.html#R-32090-20403-62451-54879-55700-60084-08956-01962'>detail</a>)</i></p></dd>
-
-<dt><b>R-32157-42167-08368-62832-45024-59083-51380-54169</b></dt>
-<dd><p>The normal configuration for SQLite running on workstations is for atomic write to be disabled, for the maximum page size to be set to 65536, for SQLITE_DEFAULT_PAGE_SIZE to be 1024, and for the maximum default page size to be set to 8192.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-32157-42167-08368-62832-45024-59083-51380-54169'>context</a>, <a href='matrix/matrix_dpragma.html#R-32157-42167-08368-62832-45024-59083-51380-54169'>detail</a>)</i></p></dd>
 
 <dt><b>R-32172-42404-39492-45133-11034-45047-00308-58009</b></dt>
 <dd><p>Function sqlite3_backup_step(B,N) will copy up to N pages between the source and destination databases specified by sqlite3_backup object B.
@@ -6304,10 +6292,6 @@ comments in the source code.
 <dt><b>R-32633-52682-08562-36271-43194-24127-51342-52899</b></dt>
 <dd><p>At least szOsFile bytes of memory are allocated by SQLite to hold the sqlite3_file structure passed as the third argument to xOpen.
 <i>(source: <a href="c3ref/vfs.html">c3ref/vfs.html</a>, matrix: <a href='matrix/c3ref/vfs.html#R-32633-52682-08562-36271-43194-24127-51342-52899'>context</a>, <a href='matrix/matrix_dvfs.html#R-32633-52682-08562-36271-43194-24127-51342-52899'>detail</a>)</i></p></dd>
-
-<dt><b>R-32693-16572-08453-15229-49794-25574-60503-63674</b></dt>
-<dd><p>If SQLite is compiled with the SQLITE_ENABLE_ATOMIC_WRITE option, then the default page size is chosen to be the largest page size less than or equal to SQLITE_MAX_DEFAULT_PAGE_SIZE for which atomic write is enabled according to the xDeviceCharacteristics method of the sqlite3_io_methods object for the database file.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-32693-16572-08453-15229-49794-25574-60503-63674'>context</a>, <a href='matrix/matrix_dpragma.html#R-32693-16572-08453-15229-49794-25574-60503-63674'>detail</a>)</i></p></dd>
 
 <dt><b>R-32706-07403-21974-02831-34123-06843-55643-09070</b></dt>
 <dd><p>No affinity transformations are applied to any values when comparing rows as part of a compound SELECT.
@@ -6685,6 +6669,10 @@ comments in the source code.
 <dd><p>The DESC keyword is ignored in indexes for formats 1, 2, and 3.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-34789-59934-28389-39071-40559-33528-38029-45906'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-34789-59934-28389-39071-40559-33528-38029-45906'>detail</a>)</i></p></dd>
 
+<dt><b>R-34809-04839-09181-10394-33851-21757-50200-61577</b></dt>
+<dd><p>Let X be U-35. If the payload size P is less than or equal to X then the entire payload is stored on the b-tree leaf page.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-34809-04839-09181-10394-33851-21757-50200-61577'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-34809-04839-09181-10394-33851-21757-50200-61577'>detail</a>)</i></p></dd>
+
 <dt><b>R-34814-22035-19752-61012-44426-48112-33201-20182</b></dt>
 <dd><p>Values stored in sqlite3_value objects can be integers, floating point values, strings, BLOBs, or NULL.
 <i>(source: <a href="c3ref/value.html">c3ref/value.html</a>, matrix: <a href='matrix/c3ref/value.html#R-34814-22035-19752-61012-44426-48112-33201-20182'>context</a>, <a href='matrix/matrix_dvalue.html#R-34814-22035-19752-61012-44426-48112-33201-20182'>detail</a>)</i></p></dd>
@@ -6853,6 +6841,10 @@ comments in the source code.
 <dd><p>Ifnull() must have exactly 2 arguments.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-35443-03595-46720-21224-13105-18323-15585-18563'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-35443-03595-46720-21224-13105-18323-15585-18563'>detail</a>)</i></p></dd>
 
+<dt><b>R-35454-31058-05961-25112-64343-26549-00069-20498</b></dt>
+<dd><p>If P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
+<i>(source: <a href="requirements.html">requirements.html</a>, matrix: <a href='matrix/requirements.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>context</a>, <a href='matrix/matrix_drequirements.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>detail</a>)</i></p></dd>
+
 <dt><b>R-35460-03740-02108-04893-51916-60089-58945-40785</b></dt>
 <dd><p>Registering a NULL function disables the callback.
 <i>(source: <a href="c3ref/commit_hook.html">c3ref/commit_hook.html</a>, matrix: <a href='matrix/c3ref/commit_hook.html#R-35460-03740-02108-04893-51916-60089-58945-40785'>context</a>, <a href='matrix/matrix_dcommit_hook.html#R-35460-03740-02108-04893-51916-60089-58945-40785'>detail</a>)</i></p></dd>
@@ -6884,10 +6876,6 @@ comments in the source code.
 <dt><b>R-35640-30414-24972-23354-27947-42421-53546-27717</b></dt>
 <dd><p>The sqlite3_value_dup(V) interface returns NULL if V is NULL or if a memory allocation fails.
 <i>(source: <a href="c3ref/value_dup.html">c3ref/value_dup.html</a>, matrix: <a href='matrix/c3ref/value_dup.html#R-35640-30414-24972-23354-27947-42421-53546-27717'>context</a>, <a href='matrix/matrix_dvalue_dup.html#R-35640-30414-24972-23354-27947-42421-53546-27717'>detail</a>)</i></p></dd>
-
-<dt><b>R-35647-22698-14151-02154-35973-15621-42359-11519</b></dt>
-<dd><p>When a new database is created, SQLite assigned a default page size based on information received from the xSectorSize and xDeviceCharacteristics methods of the sqlite3_io_methods object of the newly created database file.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-35647-22698-14151-02154-35973-15621-42359-11519'>context</a>, <a href='matrix/matrix_dpragma.html#R-35647-22698-14151-02154-35973-15621-42359-11519'>detail</a>)</i></p></dd>
 
 <dt><b>R-35668-58241-09537-53108-57582-24768-01452-25578</b></dt>
 <dd><p>The phrase "VALUES(expr-list)" means the same thing as "SELECT expr-list".
@@ -7077,6 +7065,10 @@ comments in the source code.
 <dd><p>The PRAGMA wal_checkpoint command can be used to invoke this interface from SQL.
 <i>(source: <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>, checked-by: tcl/e_walckpt.test, matrix: <a href='matrix/c3ref/wal_checkpoint_v2.html#R-36706-10507-15107-19022-47834-34931-59903-48809'>context</a>, <a href='matrix/matrix_dwal_checkpoint_v2.html#R-36706-10507-15107-19022-47834-34931-59903-48809'>detail</a>)</i></p></dd>
 
+<dt><b>R-36711-50877-10817-10210-50248-54315-51243-39654</b></dt>
+<dd><p>Attempt to return the underlying operating system error code or error number that caused the most reason I/O error or failure to open a file.
+<i>(source: <a href="c3ref/system_errno.html">c3ref/system_errno.html</a>, matrix: <a href='matrix/c3ref/system_errno.html#R-36711-50877-10817-10210-50248-54315-51243-39654'>context</a>, <a href='matrix/matrix_dsystem_errno.html#R-36711-50877-10817-10210-50248-54315-51243-39654'>detail</a>)</i></p></dd>
+
 <dt><b>R-36754-20545-04159-27572-44208-64137-08044-49180</b></dt>
 <dd><p>Strings with embedded NUL characters cannot be represented as string literals in SQL and hence the returned string literal is truncated prior to the first NUL.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-36754-20545-04159-27572-44208-64137-08044-49180'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-36754-20545-04159-27572-44208-64137-08044-49180'>detail</a>)</i></p></dd>
@@ -7212,6 +7204,10 @@ comments in the source code.
 <dt><b>R-37514-35566-00640-25084-57688-04377-16048-30214</b></dt>
 <dd><p>A value of 1 means UTF-8.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-37514-35566-00640-25084-57688-04377-16048-30214'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-37514-35566-00640-25084-57688-04377-16048-30214'>detail</a>)</i></p></dd>
+
+<dt><b>R-37526-53407-04018-28041-58853-34090-01926-44362</b></dt>
+<dd><p>The second integer is the approximate number of rows in the index that have the same value in the first column of the index.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-37526-53407-04018-28041-58853-34090-01926-44362'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-37526-53407-04018-28041-58853-34090-01926-44362'>detail</a>)</i></p></dd>
 
 <dt><b>R-37639-55938-19671-37883-10811-32762-31289-05215</b></dt>
 <dd><p>This interfaces opens a handle to the BLOB located in row iRow, column zColumn, table zTable in database zDb; in other words, the same BLOB that would be selected by: SELECT zColumn FROM zDb.zTable WHERE rowid = iRow;
@@ -7889,6 +7885,10 @@ comments in the source code.
 <dd><p>The fifth byte through the last usable byte are used to hold overflow content.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-40949-19585-05483-44375-20599-28045-28956-60873'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-40949-19585-05483-44375-20599-28045-28956-60873'>detail</a>)</i></p></dd>
 
+<dt><b>R-40949-22892-24068-33862-21333-32882-13770-09171</b></dt>
+<dd><p>The third integer is the number number of rows in the index that have the same value for the first two columns.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-40949-22892-24068-33862-21333-32882-13770-09171'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-40949-22892-24068-33862-21333-32882-13770-09171'>detail</a>)</i></p></dd>
+
 <dt><b>R-41004-58299-09133-05321-11963-32065-55865-10893</b></dt>
 <dd><p>The parameter P is passed through as the only parameter to the callback function X.
 <i>(source: <a href="c3ref/progress_handler.html">c3ref/progress_handler.html</a>, matrix: <a href='matrix/c3ref/progress_handler.html#R-41004-58299-09133-05321-11963-32065-55865-10893'>context</a>, <a href='matrix/matrix_dprogress_handler.html#R-41004-58299-09133-05321-11963-32065-55865-10893'>detail</a>)</i></p></dd>
@@ -8264,10 +8264,6 @@ comments in the source code.
 <dt><b>R-42811-40895-19437-55912-12563-37813-52753-07207</b></dt>
 <dd><p>The real tables underlying the view are not modified (except possibly explicitly, by a trigger program).
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-42811-40895-19437-55912-12563-37813-52753-07207'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-42811-40895-19437-55912-12563-37813-52753-07207'>detail</a>)</i></p></dd>
-
-<dt><b>R-42842-27162-40716-30864-56022-22193-11385-61399</b></dt>
-<dd><p>Note that the sqlite3_wal_autocheckpoint() interface and the wal_autocheckpoint pragma both invoke sqlite3_wal_hook() and will those overwrite any prior sqlite3_wal_hook() settings.
-<i>(source: <a href="c3ref/wal_hook.html">c3ref/wal_hook.html</a>, checked-by: tcl/e_walhook.test, matrix: <a href='matrix/c3ref/wal_hook.html#R-42842-27162-40716-30864-56022-22193-11385-61399'>context</a>, <a href='matrix/matrix_dwal_hook.html#R-42842-27162-40716-30864-56022-22193-11385-61399'>detail</a>)</i></p></dd>
 
 <dt><b>R-42868-39706-29794-00885-30480-27776-00308-11610</b></dt>
 <dd><p>In other words, the filename will be an absolute pathname, even if the filename used to open the database originally was a URI or relative pathname.
@@ -9045,10 +9041,6 @@ comments in the source code.
 <dd><p>The SQLITE_FCNTL_WIN32_AV_RETRY opcode is used to configure automatic retry counts and intervals for certain disk I/O operations for the windows VFS in order to provide robustness in the presence of anti-virus programs.
 <i>(source: <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, matrix: <a href='matrix/c3ref/c_fcntl_busyhandler.html#R-46542-01490-05241-30409-15162-63986-32317-12249'>context</a>, <a href='matrix/matrix_dc_fcntl_busyhandler.html#R-46542-01490-05241-30409-15162-63986-32317-12249'>detail</a>)</i></p></dd>
 
-<dt><b>R-46598-54879-05048-34769-09708-06532-60280-29531</b></dt>
-<dd><p>The third integer is the approximate average number of rows in the index that have the same value for the first two columns.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-46598-54879-05048-34769-09708-06532-60280-29531'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-46598-54879-05048-34769-09708-06532-60280-29531'>detail</a>)</i></p></dd>
-
 <dt><b>R-46612-63606-63989-00465-43025-33740-12303-63068</b></dt>
 <dd><p>Note that min() is a simple function when it has 2 or more arguments but operates as an aggregate function if given only a single argument.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-46612-63606-63989-00465-43025-33740-12303-63068'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-46612-63606-63989-00465-43025-33740-12303-63068'>detail</a>)</i></p></dd>
@@ -9084,6 +9076,10 @@ comments in the source code.
 <dt><b>R-46702-22190-08999-08775-06967-16190-65475-37101</b></dt>
 <dd><p>Databases created by the ATTACH command always use the same encoding as the main database.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-46702-22190-08999-08775-06967-16190-65475-37101'>context</a>, <a href='matrix/matrix_dpragma.html#R-46702-22190-08999-08775-06967-16190-65475-37101'>detail</a>)</i></p></dd>
+
+<dt><b>R-46709-29000-19476-32067-18840-61551-53618-60985</b></dt>
+<dd><p>Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)). If P is greater than X then the number of bytes stored on the index b-tree page is K if K is less than or equal to X or M otherwise.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-46709-29000-19476-32067-18840-61551-53618-60985'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-46709-29000-19476-32067-18840-61551-53618-60985'>detail</a>)</i></p></dd>
 
 <dt><b>R-46762-41357-02891-26535-53181-26230-38926-40574</b></dt>
 <dd><p>The schema-name is the name of an ATTACH-ed database or "main" or "temp" for the main and the TEMP databases.
@@ -10037,10 +10033,6 @@ comments in the source code.
 <dd><p>A trigger may be specified to fire whenever a DELETE, INSERT, or UPDATE of a particular database table occurs, or whenever an UPDATE occurs on on one or more specified columns of a table.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-51478-11146-41529-00991-24938-53832-30881-29241'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-51478-11146-41529-00991-24938-53832-30881-29241'>detail</a>)</i></p></dd>
 
-<dt><b>R-51494-34398-19070-65222-52425-64251-64954-50365</b></dt>
-<dd><p>Let M be ((U-12)*32/255)-23. If P is greater than X then the number of bytes stored on the b-tree page is the smaller of M+((P-M)%(U-4)) and X.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-51494-34398-19070-65222-52425-64251-64954-50365'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-51494-34398-19070-65222-52425-64251-64954-50365'>detail</a>)</i></p></dd>
-
 <dt><b>R-51513-12026-58956-15151-33280-52344-26081-14635</b></dt>
 <dd><p>The last_insert_rowid() SQL function is a wrapper around the sqlite3_last_insert_rowid() C/C++ interface function.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: src/func.c, matrix: <a href='matrix/lang_corefunc.html#R-51513-12026-58956-15151-33280-52344-26081-14635'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-51513-12026-58956-15151-33280-52344-26081-14635'>detail</a>)</i></p></dd>
@@ -10757,6 +10749,10 @@ comments in the source code.
 <dd><p>The char(X1,X2,...,XN) function returns a string composed of characters having the unicode code point values of integers X1 through XN, respectively.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: tcl/func.test, matrix: <a href='matrix/lang_corefunc.html#R-55469-62130-44621-63602-01605-63421-57069-12544'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-55469-62130-44621-63602-01605-63421-57069-12544'>detail</a>)</i></p></dd>
 
+<dt><b>R-55491-50411-34640-45855-15884-48843-01601-19161</b></dt>
+<dd><p>A snapshot will fail to open if the database connection D has not previously completed at least one read operation against the database file.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, checked-by: tcl/snapshot.test, matrix: <a href='matrix/c3ref/snapshot_open.html#R-55491-50411-34640-45855-15884-48843-01601-19161'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-55491-50411-34640-45855-15884-48843-01601-19161'>detail</a>)</i></p></dd>
+
 <dt><b>R-55530-52930-45065-40235-10917-28940-04210-09538</b></dt>
 <dd><p>In a well-formed b-tree page, there will always be at least one cell before the first freeblock.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/btree.c, matrix: <a href='matrix/fileformat2.html#R-55530-52930-45065-40235-10917-28940-04210-09538'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-55530-52930-45065-40235-10917-28940-04210-09538'>detail</a>)</i></p></dd>
@@ -11076,6 +11072,10 @@ comments in the source code.
 <dt><b>R-57428-63758-17863-58074-13884-12302-03924-53063</b></dt>
 <dd><p>The same page may not appear more than once within a single rollback journal.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-57428-63758-17863-58074-13884-12302-03924-53063'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-57428-63758-17863-58074-13884-12302-03924-53063'>detail</a>)</i></p></dd>
+
+<dt><b>R-57445-43425-22232-12533-21797-53023-32757-29365</b></dt>
+<dd><p>Note that the sqlite3_wal_autocheckpoint() interface and the wal_autocheckpoint pragma both invoke sqlite3_wal_hook() and will overwrite any prior sqlite3_wal_hook() settings.
+<i>(source: <a href="c3ref/wal_hook.html">c3ref/wal_hook.html</a>, checked-by: tcl/e_walhook.test, matrix: <a href='matrix/c3ref/wal_hook.html#R-57445-43425-22232-12533-21797-53023-32757-29365'>context</a>, <a href='matrix/matrix_dwal_hook.html#R-57445-43425-22232-12533-21797-53023-32757-29365'>detail</a>)</i></p></dd>
 
 <dt><b>R-57464-30285-51678-51682-55772-21804-29928-17163</b></dt>
 <dd><p>PRAGMA database_list; This pragma works like a query to return one row for each database attached to the current database connection.
@@ -11489,6 +11489,10 @@ comments in the source code.
 <dd><p>The SQLITE_CHECKPOINT_FULL, RESTART and TRUNCATE modes also obtain the exclusive "writer" lock on the database file.
 <i>(source: <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>, checked-by: src/wal.c, tcl/e_walckpt.test, matrix: <a href='matrix/c3ref/wal_checkpoint_v2.html#R-59782-36818-22157-37925-40398-63566-64063-39784'>context</a>, <a href='matrix/matrix_dwal_checkpoint_v2.html#R-59782-36818-22157-37925-40398-63566-64063-39784'>detail</a>)</i></p></dd>
 
+<dt><b>R-59819-51448-16003-11815-02743-33577-02500-29005</b></dt>
+<dd><p>When a new database is created, SQLite assigned a page size to the database based on platform and filesystem.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-59819-51448-16003-11815-02743-33577-02500-29005'>context</a>, <a href='matrix/matrix_dpragma.html#R-59819-51448-16003-11815-02743-33577-02500-29005'>detail</a>)</i></p></dd>
+
 <dt><b>R-59829-49719-48760-25089-64787-41616-07778-57513</b></dt>
 <dd><p>The optional "schema-name." prefix on the table-name is supported for top-level INSERT statements only.
 <i>(source: <a href="lang_insert.html">lang_insert.html</a>, checked-by: tcl/e_insert.test, matrix: <a href='matrix/lang_insert.html#R-59829-49719-48760-25089-64787-41616-07778-57513'>context</a>, <a href='matrix/matrix_dlang_insert.html#R-59829-49719-48760-25089-64787-41616-07778-57513'>detail</a>)</i></p></dd>
@@ -11757,6 +11761,10 @@ comments in the source code.
 <dd><p>The sqlite_master.type column will be one of the following text strings: 'table', 'index', 'view', or 'trigger' according to the type of object defined. The 'table' string is used for both ordinary and virtual tables.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-61406-01422-12165-06477-03063-10518-53004-15686'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-61406-01422-12165-06477-03063-10518-53004-15686'>detail</a>)</i></p></dd>
 
+<dt><b>R-61413-50265-52071-27114-12254-11492-58681-53001</b></dt>
+<dd><p>The SQLITE_CONFIG_STMTJRNL_SPILL option takes a single parameter which becomes the statement journal spill-to-disk threshold.
+<i>(source: <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, matrix: <a href='matrix/c3ref/c_config_covering_index_scan.html#R-61413-50265-52071-27114-12254-11492-58681-53001'>context</a>, <a href='matrix/matrix_dc_config_covering_index_scan.html#R-61413-50265-52071-27114-12254-11492-58681-53001'>detail</a>)</i></p></dd>
+
 <dt><b>R-61427-46983-18669-51894-26690-07828-25787-33323</b></dt>
 <dd><p>For example, a query like the following might be used to find all R*Tree entries that overlap with a circle centered a 45.3,22.9 with a radius of 5.0: SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-61427-46983-18669-51894-26690-07828-25787-33323'>context</a>, <a href='matrix/matrix_drtree.html#R-61427-46983-18669-51894-26690-07828-25787-33323'>detail</a>)</i></p></dd>
@@ -11957,6 +11965,10 @@ comments in the source code.
 <dd><p>Coincidentally, that same index is useful for locating the team leader of a particular team: SELECT person_id FROM person WHERE is_team_leader AND team_id=?1;
 <i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-62671-45936-15699-15939-47274-39312-22685-45097'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-62671-45936-15699-15939-47274-39312-22685-45097'>detail</a>)</i></p></dd>
 
+<dt><b>R-62681-08918-23602-12301-03262-02217-50931-47866</b></dt>
+<dd><p>If PIf P>X and KIf P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-62681-08918-23602-12301-03262-02217-50931-47866'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-62681-08918-23602-12301-03262-02217-50931-47866'>detail</a>)</i></p></dd>
+
 <dt><b>R-62683-08521-49725-09422-28749-53533-20757-42549</b></dt>
 <dd><p><img src="images/syntax/create-trigger-stmt.gif"><br>
 <i>(source: <a href="syntax/create-trigger-stmt.html">syntax/create-trigger-stmt.html</a>, matrix: <a href='matrix/syntax/create-trigger-stmt.html#R-62683-08521-49725-09422-28749-53533-20757-42549'>context</a>, <a href='matrix/matrix_dcreate_trigger_stmt.html#R-62683-08521-49725-09422-28749-53533-20757-42549'>detail</a>)</i></p></dd>
@@ -12149,6 +12161,10 @@ comments in the source code.
 <dd><p><img src="images/syntax/create-index-stmt.gif"><br>
 <i>(source: <a href="syntax/create-index-stmt.html">syntax/create-index-stmt.html</a>, matrix: <a href='matrix/syntax/create-index-stmt.html#R-63484-12505-31722-29488-20808-43731-19220-61523'>context</a>, <a href='matrix/matrix_dcreate_index_stmt.html#R-63484-12505-31722-29488-20808-43731-19220-61523'>detail</a>)</i></p></dd>
 
+<dt><b>R-63507-01129-21500-25861-47527-64075-04015-47786</b></dt>
+<dd><p>Example: Let the index be CREATE INDEX ex2 ON tab2(b,c) WHERE c IS NOT NULL; Then any query that uses operators =, <, >, <=, >=, <>, or IN on column "c" would be usable with the partial index because those comparison operators are only true if "c" is not NULL.
+<i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-63507-01129-21500-25861-47527-64075-04015-47786'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-63507-01129-21500-25861-47527-64075-04015-47786'>detail</a>)</i></p></dd>
+
 <dt><b>R-63519-36751-50402-28921-52304-51801-25208-52249</b></dt>
 <dd><p>The load_extension(X,Y) function loads SQLite extensions out of the shared library file named X using the entry point Y.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-63519-36751-50402-28921-52304-51801-25208-52249'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-63519-36751-50402-28921-52304-51801-25208-52249'>detail</a>)</i></p></dd>
@@ -12292,6 +12308,10 @@ comments in the source code.
 <dt><b>R-64203-64297-25977-44727-61905-56050-52768-56293</b></dt>
 <dd><p>The same SQL function may be registered multiple times using different preferred text encodings, with different implementations for each encoding.
 <i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-64203-64297-25977-44727-61905-56050-52768-56293'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-64203-64297-25977-44727-61905-56050-52768-56293'>detail</a>)</i></p></dd>
+
+<dt><b>R-64208-53052-48559-48683-00395-47002-65177-30547</b></dt>
+<dd><p>The SQLITE_DEFAULT_PAGE_SIZE compile-time option can be used to change the default page size assigned to new databases.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-64208-53052-48559-48683-00395-47002-65177-30547'>context</a>, <a href='matrix/matrix_dpragma.html#R-64208-53052-48559-48683-00395-47002-65177-30547'>detail</a>)</i></p></dd>
 
 <dt><b>R-64224-62578-03972-01663-15299-36598-00230-00133</b></dt>
 <dd><p>If an UPDATE statement attempts to set an integer primary key or rowid column to a NULL or blob value, or to a string or real value that cannot be losslessly converted to an integer, a "datatype mismatch" error occurs and the statement is aborted.

@@ -304,6 +304,10 @@ struct Fts5Index {
   sqlite3_stmt *pIdxDeleter;      /* "DELETE FROM %_idx WHERE segid=? */
   sqlite3_stmt *pIdxSelect;
   int nRead;                      /* Total number of blocks read */
+
+  sqlite3_stmt *pDataVersion;
+  i64 iStructVersion;             /* data_version when pStruct read */
+  Fts5Structure *pStruct;         /* Current db structure (or NULL) */
 };
 
 struct Fts5DoclistIter {
@@ -866,7 +870,7 @@ static int fts5StructureDecode(
 
     for(iLvl=0; rc==SQLITE_OK && iLvl<nLevel; iLvl++){
       Fts5StructureLevel *pLvl = &pRet->aLevel[iLvl];
-      int nTotal;
+      int nTotal = 0;
       int iSeg;
 
       if( i>=nData ){
@@ -959,6 +963,50 @@ static void fts5StructureExtendLevel(
   }
 }
 
+static Fts5Structure *fts5StructureReadUncached(Fts5Index *p){
+  Fts5Structure *pRet = 0;
+  Fts5Config *pConfig = p->pConfig;
+  int iCookie;                    /* Configuration cookie */
+  Fts5Data *pData;
+
+  pData = fts5DataRead(p, FTS5_STRUCTURE_ROWID);
+  if( p->rc==SQLITE_OK ){
+    /* TODO: Do we need this if the leaf-index is appended? Probably... */
+    memset(&pData->p[pData->nn], 0, FTS5_DATA_PADDING);
+    p->rc = fts5StructureDecode(pData->p, pData->nn, &iCookie, &pRet);
+    if( p->rc==SQLITE_OK && pConfig->iCookie!=iCookie ){
+      p->rc = sqlite3Fts5ConfigLoad(pConfig, iCookie);
+    }
+    fts5DataRelease(pData);
+    if( p->rc!=SQLITE_OK ){
+      fts5StructureRelease(pRet);
+      pRet = 0;
+    }
+  }
+
+  return pRet;
+}
+
+static i64 fts5IndexDataVersion(Fts5Index *p){
+  i64 iVersion = 0;
+
+  if( p->rc==SQLITE_OK ){
+    if( p->pDataVersion==0 ){
+      p->rc = fts5IndexPrepareStmt(p, &p->pDataVersion, 
+          sqlite3_mprintf("PRAGMA %Q.data_version", p->pConfig->zDb)
+          );
+      if( p->rc ) return 0;
+    }
+
+    if( SQLITE_ROW==sqlite3_step(p->pDataVersion) ){
+      iVersion = sqlite3_column_int64(p->pDataVersion, 0);
+    }
+    p->rc = sqlite3_reset(p->pDataVersion);
+  }
+
+  return iVersion;
+}
+
 /*
 ** Read, deserialize and return the structure record.
 **
@@ -971,26 +1019,49 @@ static void fts5StructureExtendLevel(
 ** is called, it is a no-op.
 */
 static Fts5Structure *fts5StructureRead(Fts5Index *p){
-  Fts5Config *pConfig = p->pConfig;
-  Fts5Structure *pRet = 0;        /* Object to return */
-  int iCookie;                    /* Configuration cookie */
-  Fts5Data *pData;
 
-  pData = fts5DataRead(p, FTS5_STRUCTURE_ROWID);
-  if( p->rc ) return 0;
-  /* TODO: Do we need this if the leaf-index is appended? Probably... */
-  memset(&pData->p[pData->nn], 0, FTS5_DATA_PADDING);
-  p->rc = fts5StructureDecode(pData->p, pData->nn, &iCookie, &pRet);
-  if( p->rc==SQLITE_OK && pConfig->iCookie!=iCookie ){
-    p->rc = sqlite3Fts5ConfigLoad(pConfig, iCookie);
+  if( p->pStruct==0 ){
+    p->iStructVersion = fts5IndexDataVersion(p);
+    if( p->rc==SQLITE_OK ){
+      p->pStruct = fts5StructureReadUncached(p);
+    }
   }
 
-  fts5DataRelease(pData);
-  if( p->rc!=SQLITE_OK ){
-    fts5StructureRelease(pRet);
-    pRet = 0;
+#if 0
+  else{
+    Fts5Structure *pTest = fts5StructureReadUncached(p);
+    if( pTest ){
+      int i, j;
+      assert_nc( p->pStruct->nSegment==pTest->nSegment );
+      assert_nc( p->pStruct->nLevel==pTest->nLevel );
+      for(i=0; i<pTest->nLevel; i++){
+        assert_nc( p->pStruct->aLevel[i].nMerge==pTest->aLevel[i].nMerge );
+        assert_nc( p->pStruct->aLevel[i].nSeg==pTest->aLevel[i].nSeg );
+        for(j=0; j<pTest->aLevel[i].nSeg; j++){
+          Fts5StructureSegment *p1 = &pTest->aLevel[i].aSeg[j];
+          Fts5StructureSegment *p2 = &p->pStruct->aLevel[i].aSeg[j];
+          assert_nc( p1->iSegid==p2->iSegid );
+          assert_nc( p1->pgnoFirst==p2->pgnoFirst );
+          assert_nc( p1->pgnoLast==p2->pgnoLast );
+        }
+      }
+      fts5StructureRelease(pTest);
+    }
   }
-  return pRet;
+#endif
+
+  if( p->rc!=SQLITE_OK ) return 0;
+  assert( p->iStructVersion!=0 );
+  assert( p->pStruct!=0 );
+  fts5StructureRef(p->pStruct);
+  return p->pStruct;
+}
+
+static void fts5StructureInvalidate(Fts5Index *p){
+  if( p->pStruct ){
+    fts5StructureRelease(p->pStruct);
+    p->pStruct = 0;
+  }
 }
 
 /*
@@ -2250,6 +2321,18 @@ static void fts5LeafSeek(
   fts5SegIterLoadNPos(p, pIter);
 }
 
+static sqlite3_stmt *fts5IdxSelectStmt(Fts5Index *p){
+  if( p->pIdxSelect==0 ){
+    Fts5Config *pConfig = p->pConfig;
+    fts5IndexPrepareStmt(p, &p->pIdxSelect, sqlite3_mprintf(
+          "SELECT pgno FROM '%q'.'%q_idx' WHERE "
+          "segid=? AND term<=? ORDER BY term DESC LIMIT 1",
+          pConfig->zDb, pConfig->zName
+    ));
+  }
+  return p->pIdxSelect;
+}
+
 /*
 ** Initialize the object pIter to point to term pTerm/nTerm within segment
 ** pSeg. If there is no such term in the index, the iterator is set to EOF.
@@ -2267,6 +2350,7 @@ static void fts5SegIterSeekInit(
   int iPg = 1;
   int bGe = (flags & FTS5INDEX_QUERY_SCAN);
   int bDlidx = 0;                 /* True if there is a doclist-index */
+  sqlite3_stmt *pIdxSelect = 0;
 
   assert( bGe==0 || (flags & FTS5INDEX_QUERY_DESC)==0 );
   assert( pTerm && nTerm );
@@ -2275,23 +2359,16 @@ static void fts5SegIterSeekInit(
 
   /* This block sets stack variable iPg to the leaf page number that may
   ** contain term (pTerm/nTerm), if it is present in the segment. */
-  if( p->pIdxSelect==0 ){
-    Fts5Config *pConfig = p->pConfig;
-    fts5IndexPrepareStmt(p, &p->pIdxSelect, sqlite3_mprintf(
-          "SELECT pgno FROM '%q'.'%q_idx' WHERE "
-          "segid=? AND term<=? ORDER BY term DESC LIMIT 1",
-          pConfig->zDb, pConfig->zName
-    ));
-  }
+  pIdxSelect = fts5IdxSelectStmt(p);
   if( p->rc ) return;
-  sqlite3_bind_int(p->pIdxSelect, 1, pSeg->iSegid);
-  sqlite3_bind_blob(p->pIdxSelect, 2, pTerm, nTerm, SQLITE_STATIC);
-  if( SQLITE_ROW==sqlite3_step(p->pIdxSelect) ){
-    i64 val = sqlite3_column_int(p->pIdxSelect, 0);
+  sqlite3_bind_int(pIdxSelect, 1, pSeg->iSegid);
+  sqlite3_bind_blob(pIdxSelect, 2, pTerm, nTerm, SQLITE_STATIC);
+  if( SQLITE_ROW==sqlite3_step(pIdxSelect) ){
+    i64 val = sqlite3_column_int(pIdxSelect, 0);
     iPg = (int)(val>>1);
     bDlidx = (val & 0x0001);
   }
-  p->rc = sqlite3_reset(p->pIdxSelect);
+  p->rc = sqlite3_reset(pIdxSelect);
 
   if( iPg<pSeg->pgnoFirst ){
     iPg = pSeg->pgnoFirst;
@@ -3453,18 +3530,46 @@ static int fts5AllocateSegid(Fts5Index *p, Fts5Structure *pStruct){
     if( pStruct->nSegment>=FTS5_MAX_SEGMENT ){
       p->rc = SQLITE_FULL;
     }else{
-      while( iSegid==0 ){
-        int iLvl, iSeg;
-        sqlite3_randomness(sizeof(u32), (void*)&iSegid);
-        iSegid = iSegid & ((1 << FTS5_DATA_ID_B)-1);
-        for(iLvl=0; iLvl<pStruct->nLevel; iLvl++){
-          for(iSeg=0; iSeg<pStruct->aLevel[iLvl].nSeg; iSeg++){
-            if( iSegid==pStruct->aLevel[iLvl].aSeg[iSeg].iSegid ){
-              iSegid = 0;
-            }
+      /* FTS5_MAX_SEGMENT is currently defined as 2000. So the following
+      ** array is 63 elements, or 252 bytes, in size.  */
+      u32 aUsed[(FTS5_MAX_SEGMENT+31) / 32];
+      int iLvl, iSeg;
+      int i;
+      u32 mask;
+      memset(aUsed, 0, sizeof(aUsed));
+      for(iLvl=0; iLvl<pStruct->nLevel; iLvl++){
+        for(iSeg=0; iSeg<pStruct->aLevel[iLvl].nSeg; iSeg++){
+          int iId = pStruct->aLevel[iLvl].aSeg[iSeg].iSegid;
+          if( iId<=FTS5_MAX_SEGMENT ){
+            aUsed[(iId-1) / 32] |= 1 << ((iId-1) % 32);
           }
         }
       }
+
+      for(i=0; aUsed[i]==0xFFFFFFFF; i++);
+      mask = aUsed[i];
+      for(iSegid=0; mask & (1 << iSegid); iSegid++);
+      iSegid += 1 + i*32;
+
+#ifdef SQLITE_DEBUG
+      for(iLvl=0; iLvl<pStruct->nLevel; iLvl++){
+        for(iSeg=0; iSeg<pStruct->aLevel[iLvl].nSeg; iSeg++){
+          assert( iSegid!=pStruct->aLevel[iLvl].aSeg[iSeg].iSegid );
+        }
+      }
+      assert( iSegid>0 && iSegid<=FTS5_MAX_SEGMENT );
+
+      {
+        sqlite3_stmt *pIdxSelect = fts5IdxSelectStmt(p);
+        if( p->rc==SQLITE_OK ){
+          u8 aBlob[2] = {0xff, 0xff};
+          sqlite3_bind_int(pIdxSelect, 1, iSegid);
+          sqlite3_bind_blob(pIdxSelect, 2, aBlob, 2, SQLITE_STATIC);
+          assert( sqlite3_step(pIdxSelect)!=SQLITE_ROW );
+          p->rc = sqlite3_reset(pIdxSelect);
+        }
+      }
+#endif
     }
   }
 
@@ -3710,6 +3815,9 @@ static void fts5WriteFlushLeaf(Fts5Index *p, Fts5SegWriter *pWriter){
   Fts5PageWriter *pPage = &pWriter->writer;
   i64 iRowid;
 
+static int nCall = 0;
+nCall++;
+
   assert( (pPage->pgidx.n==0)==(pWriter->bFirstTermInPage) );
 
   /* Set the szLeaf header field. */
@@ -3909,7 +4017,9 @@ static void fts5WriteFinish(
       fts5WriteFlushLeaf(p, pWriter);
     }
     *pnLeaf = pLeaf->pgno-1;
-    fts5WriteFlushBtree(p, pWriter);
+    if( pLeaf->pgno>1 ){
+      fts5WriteFlushBtree(p, pWriter);
+    }
   }
   fts5BufferFree(&pLeaf->term);
   fts5BufferFree(&pLeaf->buf);
@@ -4179,13 +4289,17 @@ static void fts5IndexMergeLevel(
 
 /*
 ** Do up to nPg pages of automerge work on the index.
+**
+** Return true if any changes were actually made, or false otherwise.
 */
-static void fts5IndexMerge(
+static int fts5IndexMerge(
   Fts5Index *p,                   /* FTS5 backend object */
   Fts5Structure **ppStruct,       /* IN/OUT: Current structure of index */
-  int nPg                         /* Pages of work to do */
+  int nPg,                        /* Pages of work to do */
+  int nMin                        /* Minimum number of segments to merge */
 ){
   int nRem = nPg;
+  int bRet = 0;
   Fts5Structure *pStruct = *ppStruct;
   while( nRem>0 && p->rc==SQLITE_OK ){
     int iLvl;                   /* To iterate through levels */
@@ -4216,17 +4330,17 @@ static void fts5IndexMerge(
     }
 #endif
 
-    if( nBest<p->pConfig->nAutomerge 
-        && pStruct->aLevel[iBestLvl].nMerge==0 
-      ){
+    if( nBest<nMin && pStruct->aLevel[iBestLvl].nMerge==0 ){
       break;
     }
+    bRet = 1;
     fts5IndexMergeLevel(p, &pStruct, iBestLvl, &nRem);
     if( p->rc==SQLITE_OK && pStruct->aLevel[iBestLvl].nMerge==0 ){
       fts5StructurePromote(p, iBestLvl+1, pStruct);
     }
   }
   *ppStruct = pStruct;
+  return bRet;
 }
 
 /*
@@ -4254,7 +4368,7 @@ static void fts5IndexAutomerge(
     pStruct->nWriteCounter += nLeaf;
     nRem = (int)(p->nWorkUnit * nWork * pStruct->nLevel);
 
-    fts5IndexMerge(p, ppStruct, nRem);
+    fts5IndexMerge(p, ppStruct, nRem, p->pConfig->nAutomerge);
   }
 }
 
@@ -4324,6 +4438,7 @@ static void fts5FlushOneHash(Fts5Index *p){
   ** for the new level-0 segment.  */
   pStruct = fts5StructureRead(p);
   iSegid = fts5AllocateSegid(p, pStruct);
+  fts5StructureInvalidate(p);
 
   if( iSegid ){
     const int pgsz = p->pConfig->pgsz;
@@ -4474,28 +4589,41 @@ static void fts5IndexFlush(Fts5Index *p){
   }
 }
 
-
-int sqlite3Fts5IndexOptimize(Fts5Index *p){
-  Fts5Structure *pStruct;
+static Fts5Structure *fts5IndexOptimizeStruct(
+  Fts5Index *p, 
+  Fts5Structure *pStruct
+){
   Fts5Structure *pNew = 0;
-  int nSeg = 0;
+  int nByte = sizeof(Fts5Structure);
+  int nSeg = pStruct->nSegment;
+  int i;
 
-  assert( p->rc==SQLITE_OK );
-  fts5IndexFlush(p);
-  pStruct = fts5StructureRead(p);
-
-  if( pStruct ){
-    assert( pStruct->nSegment==fts5StructureCountSegments(pStruct) );
-    nSeg = pStruct->nSegment;
-    if( nSeg>1 ){
-      int nByte = sizeof(Fts5Structure);
-      nByte += (pStruct->nLevel+1) * sizeof(Fts5StructureLevel);
-      pNew = (Fts5Structure*)sqlite3Fts5MallocZero(&p->rc, nByte);
+  /* Figure out if this structure requires optimization. A structure does
+  ** not require optimization if either:
+  **
+  **  + it consists of fewer than two segments, or 
+  **  + all segments are on the same level, or
+  **  + all segments except one are currently inputs to a merge operation.
+  **
+  ** In the first case, return NULL. In the second, increment the ref-count
+  ** on *pStruct and return a copy of the pointer to it.
+  */
+  if( nSeg<2 ) return 0;
+  for(i=0; i<pStruct->nLevel; i++){
+    int nThis = pStruct->aLevel[i].nSeg;
+    if( nThis==nSeg || (nThis==nSeg-1 && pStruct->aLevel[i].nMerge==nThis) ){
+      fts5StructureRef(pStruct);
+      return pStruct;
     }
+    assert( pStruct->aLevel[i].nMerge<=nThis );
   }
+
+  nByte += (pStruct->nLevel+1) * sizeof(Fts5StructureLevel);
+  pNew = (Fts5Structure*)sqlite3Fts5MallocZero(&p->rc, nByte);
+
   if( pNew ){
     Fts5StructureLevel *pLvl;
-    int nByte = nSeg * sizeof(Fts5StructureSegment);
+    nByte = nSeg * sizeof(Fts5StructureSegment);
     pNew->nLevel = pStruct->nLevel+1;
     pNew->nRef = 1;
     pNew->nWriteCounter = pStruct->nWriteCounter;
@@ -4520,8 +4648,27 @@ int sqlite3Fts5IndexOptimize(Fts5Index *p){
     }
   }
 
+  return pNew;
+}
+
+int sqlite3Fts5IndexOptimize(Fts5Index *p){
+  Fts5Structure *pStruct;
+  Fts5Structure *pNew = 0;
+
+  assert( p->rc==SQLITE_OK );
+  fts5IndexFlush(p);
+  pStruct = fts5StructureRead(p);
+  fts5StructureInvalidate(p);
+
+  if( pStruct ){
+    pNew = fts5IndexOptimizeStruct(p, pStruct);
+  }
+  fts5StructureRelease(pStruct);
+
+  assert( pNew==0 || pNew->nSegment>0 );
   if( pNew ){
-    int iLvl = pNew->nLevel-1;
+    int iLvl;
+    for(iLvl=0; pNew->aLevel[iLvl].nSeg==0; iLvl++){}
     while( p->rc==SQLITE_OK && pNew->aLevel[iLvl].nSeg>0 ){
       int nRem = FTS5_OPT_WORK_UNIT;
       fts5IndexMergeLevel(p, &pNew, iLvl, &nRem);
@@ -4531,20 +4678,32 @@ int sqlite3Fts5IndexOptimize(Fts5Index *p){
     fts5StructureRelease(pNew);
   }
 
-  fts5StructureRelease(pStruct);
   return fts5IndexReturn(p); 
 }
 
+/*
+** This is called to implement the special "VALUES('merge', $nMerge)"
+** INSERT command.
+*/
 int sqlite3Fts5IndexMerge(Fts5Index *p, int nMerge){
-  Fts5Structure *pStruct;
-
-  pStruct = fts5StructureRead(p);
-  if( pStruct && pStruct->nLevel ){
-    fts5IndexMerge(p, &pStruct, nMerge);
-    fts5StructureWrite(p, pStruct);
+  Fts5Structure *pStruct = fts5StructureRead(p);
+  if( pStruct ){
+    int nMin = p->pConfig->nUsermerge;
+    fts5StructureInvalidate(p);
+    if( nMerge<0 ){
+      Fts5Structure *pNew = fts5IndexOptimizeStruct(p, pStruct);
+      fts5StructureRelease(pStruct);
+      pStruct = pNew;
+      nMin = 2;
+      nMerge = nMerge*-1;
+    }
+    if( pStruct && pStruct->nLevel ){
+      if( fts5IndexMerge(p, &pStruct, nMerge, nMin) ){
+        fts5StructureWrite(p, pStruct);
+      }
+    }
+    fts5StructureRelease(pStruct);
   }
-  fts5StructureRelease(pStruct);
-
   return fts5IndexReturn(p);
 }
 
@@ -4958,6 +5117,7 @@ int sqlite3Fts5IndexSync(Fts5Index *p, int bCommit){
 int sqlite3Fts5IndexRollback(Fts5Index *p){
   fts5CloseReader(p);
   fts5IndexDiscardData(p);
+  fts5StructureInvalidate(p);
   /* assert( p->rc==SQLITE_OK ); */
   return SQLITE_OK;
 }
@@ -4969,6 +5129,7 @@ int sqlite3Fts5IndexRollback(Fts5Index *p){
 */
 int sqlite3Fts5IndexReinit(Fts5Index *p){
   Fts5Structure s;
+  fts5StructureInvalidate(p);
   memset(&s, 0, sizeof(Fts5Structure));
   fts5DataWrite(p, FTS5_AVERAGES_ROWID, (const u8*)"", 0);
   fts5StructureWrite(p, &s);
@@ -5027,11 +5188,13 @@ int sqlite3Fts5IndexClose(Fts5Index *p){
   int rc = SQLITE_OK;
   if( p ){
     assert( p->pReader==0 );
+    fts5StructureInvalidate(p);
     sqlite3_finalize(p->pWriter);
     sqlite3_finalize(p->pDeleter);
     sqlite3_finalize(p->pIdxWriter);
     sqlite3_finalize(p->pIdxDeleter);
     sqlite3_finalize(p->pIdxSelect);
+    sqlite3_finalize(p->pDataVersion);
     sqlite3Fts5HashFree(p->pHash);
     sqlite3_free(p->zDataTbl);
     sqlite3_free(p);
@@ -6286,4 +6449,13 @@ int sqlite3Fts5IndexInit(sqlite3 *db){
     );
   }
   return rc;
+}
+
+
+int sqlite3Fts5IndexReset(Fts5Index *p){
+  assert( p->pStruct==0 || p->iStructVersion!=0 );
+  if( fts5IndexDataVersion(p)!=p->iStructVersion ){
+    fts5StructureInvalidate(p);
+  }
+  return fts5IndexReturn(p);
 }

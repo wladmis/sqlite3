@@ -898,16 +898,21 @@ overflow page list - omitted if all payload fits on the b-tree page.
 <p>The amount of payload that spills onto overflow pages also depends on
 the page type.  For the following computations, let U be the usable size
 of a database page, the total page size less the reserved space at the
-end of each page.  And let P be the payload size.</p>
+end of each page.  And let P be the payload size.  In the following,
+symbol X represents the maximum amount of payload that can be stored directly
+on the b-tree page without spilling onto an overflow page and symbol M
+represents the minimum amount of payload that must be stored on the btree
+page before spilling is allowed.</p>
 
 <blockquote><dl>
 <dt>Table B-Tree Leaf Cell:</dt>
 <dd><p>
-If the payload size P is less than or equal to U-35 then
-the entire payload is stored on the b-tree leaf page.  
-Let M be ((U-12)*32/255)-23.  If P is greater than U-35
-then the number of bytes stored on the b-tree leaf page is the smaller of
-M+((P-M)%(U-4)) and U-35.
+Let X be U-35.  If the payload size P is less than or equal to X then
+the entire payload is stored on the b-tree leaf page.
+Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)).
+If P is greater than X
+then the number of bytes stored on the table b-tree leaf page is K
+if K is less or equal to X or M otherwise.
 Note that number of bytes stored on the leaf page is never less than M.
 </p></dd>
 
@@ -921,12 +926,28 @@ any payload to spill.
 <dd><p>
 Let X be ((U-12)*64/255)-23).  If the payload size P is less than
 or equal to X then the entire payload is stored on the b-tree page.
-Let M be ((U-12)*32/255)-23.  If P is greater than X then the number
-of bytes stored on the b-tree page is the smaller of
-M+((P-M)%(U-4)) and X.
+Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)).
+If P is greater than X then the number
+of bytes stored on the index b-tree page is K if K is less than or
+equal to X or M otherwise.
 Note that number of bytes stored on the index page is never less than M.
 </p></dd>
 </dl></blockquote>
+
+<p>Here is an alternative description of the same computation:
+
+<ul>
+<li>X is U-35 for table btree leaf pages or
+    ((U-12)*64/255)-23 for index pages.
+<li>M is always ((U-12)*32/255)-23.
+<li>Let K be M+((P-M)%(U-4)).
+<li>If P<=X then all P bytes of payload are stored directly on the 
+    btree page without overflow.
+<li>If P>X and K<=X then the first K bytes of P are stored on the 
+    btree page and the remaining P-K bytes are stored on overflow pages.
+<li>If P>X and K>X then the first M bytes of P are stored on the
+    btree page and the remaining P-M bytes are stored on overflow pages.
+</ul>
 
 <p>The overflow thresholds are designed to give a minimum fanout of
 4 for index b-trees and to make sure enough of the payload
@@ -1438,11 +1459,11 @@ arguments.  The first integer in this
 list is the approximate number of rows in the index.  (The number of
 rows in the index is the same as the number of rows in the table,
 except for <a href="partialindex.html">partial indexes</a>.)
-The second integer is the approximate average number of rows in the index
+The second integer is the approximate number of rows in the index
 that have the same value in the first column of the index.  The third 
-integer is the approximate average number of rows in the index that have 
+integer is the number number of rows in the index that have 
 the same value for the first two columns.  The N-th integer (for N>1) 
-is the approximate average number of rows in 
+is the estimated average number of rows in 
 the index which have the same value for the first N-1 columns.  For
 a K-column index, there will be K+1 integers in the stat column.  If
 the index is unique, then the last integer will be 1.

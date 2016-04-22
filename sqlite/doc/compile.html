@@ -256,10 +256,13 @@ with non-standard compilation options.
   In any case the compile-time default may be overridden by the 
   <a href="pragma.html#pragma_auto_vacuum">PRAGMA auto_vacuum</a> command.
 </p></blockquote><a name="default_cache_size"></a>
-<p><b>SQLITE_DEFAULT_CACHE_SIZE=<i>&lt;pages&gt;</i></b></p><blockquote><p>
-  This macro sets the default size of the page-cache for each attached
-  database, in pages. This can be overridden by the 
-  <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> command. The default value is 2000.
+<p><b>SQLITE_DEFAULT_CACHE_SIZE=<i>&lt;N&gt;</i></b></p><blockquote><p>
+  This macro sets the default maximum size of the page-cache for each attached
+  database.  A positive value means that the limit is N page.  If N is negative
+  that means to limit the cache size to -N*1024 bytes.
+  The suggested maximum cache size can be overridden by the 
+  <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> command. The default value is -2000, which translates
+  into a maximum of 2048000 bytes per cache.
 </p></blockquote><a name="default_file_format"></a>
 <p><b>SQLITE_DEFAULT_FILE_FORMAT=<i>&lt;1 or 4&gt;</i></b></p><blockquote><p>
   The default <a href="fileformat2.html#schemaformat">schema format number</a> used by SQLite when creating
@@ -327,8 +330,30 @@ with non-standard compilation options.
 <p><b>SQLITE_DEFAULT_PAGE_SIZE=<i>&lt;bytes&gt;</i></b></p><blockquote><p>
   This macro is used to set the default page-size used when a
   database is created. The value assigned must be a power of 2. The
-  default value is 1024. The compile-time default may be overridden at 
+  default value is 4096. The compile-time default may be overridden at 
   runtime by the <a href="pragma.html#pragma_page_size">PRAGMA page_size</a> command.
+</p></blockquote><a name="default_synchronous"></a>
+<p><b>SQLITE_DEFAULT_SYNCHRONOUS=<i>&lt;0-3&gt;</i></b></p><blockquote><p>
+  This macro determines the default value of the
+  <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting.  If not overridden at compile-time,
+  the default setting is 2 (FULL).
+</p></blockquote><a name="default_wal_synchronous"></a>
+<p><b>SQLITE_DEFAULT_WAL_SYNCHRONOUS=<i>&lt;0-3&gt;</i></b></p><blockquote><p>
+  This macro determines the default value of the
+  <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting for database files that open in
+  <a href="wal.html">WAL mode</a>.  If not overridden at compile-time, this value is the
+  same as <a href="compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a>.
+  <p>
+  If SQLITE_DEFAULT_WAL_SYNCHRONOUS differs from SQLITE_DEFAULT_SYNCHRONOUS,
+  and if the application has not modified the synchronous setting for
+  the database file using the <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> statement, then
+  the synchronous setting is changed to value defined by
+  SQLITE_DEFAULT_WAL_SYNCHRONOUS when the database connection switches
+  into WAL mode for the first time.
+  If the SQLITE_DEFAULT_WAL_SYNCHRONOUS value is not overridden at
+  compile-time, then it will always be the same as
+  <a href="compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a> and so no automatic synchronous setting
+  changes will ever occur.
 </p></blockquote><a name="default_wal_autocheckpoint"></a>
 <p><b>SQLITE_DEFAULT_WAL_AUTOCHECKPOINT=<i>&lt;pages&gt;</i></b></p><blockquote><p>
   This macro sets the default page count for the <a href="wal.html">WAL</a>
@@ -344,8 +369,10 @@ with non-standard compilation options.
   The value set here cannot be more than <a href="compile.html#max_worker_threads">SQLITE_MAX_WORKER_THREADS</a>.
 </p></blockquote><a name="extra_durable"></a>
 <p><b>SQLITE_EXTRA_DURABLE</b></p><blockquote><p>
-  The SQLITE_EXTRA_DURABLE compile-time option causes the default
-  <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting to be EXTRA, rather than FULL.
+  The SQLITE_EXTRA_DURABLE compile-time option that used to cause the default
+  <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting to be EXTRA, rather than FULL.  This option
+  is no longer supported.  Use
+  <a href="compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS=3</a> instead.
 </p></blockquote><a name="fts3_max_expr_depth"></a>
 <p><b>SQLITE_FTS3_MAX_EXPR_DEPTH=<i>N</i></b></p><blockquote><p>
   This macro sets the maximum depth of the search tree that corresponds to
@@ -452,6 +479,12 @@ with non-standard compilation options.
   This compile-time option sets the default value for the
   <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpmasz">SQLITE_CONFIG_PMASZ</a> start-time option.
   The default value is 250.
+</p></blockquote><a name="stmtjrnl_spill"></a>
+<p><b>SQLITE_STMTJRNL_SPILL=<i>N</i></b></p><blockquote><p>
+  The SQLITE_STMTJRNL_SPILL compile-time option determines the
+  default setting of the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">SQLITE_CONFIG_STMTJRNL_SPILL</a> start-time
+  setting.  That setting determines the size threshold above which
+  <a href="tempfiles.html#stmtjrnl">statement journals</a> are moved from memory to disk.
 </p></blockquote><a name="win32_malloc"></a>
 <p><b>SQLITE_WIN32_MALLOC</b></p><blockquote><p>
   This option enables the use of the Windows Heap API functions for memory
@@ -714,10 +747,15 @@ the available settings:</p>
   pointer to a function (encoded as a BLOB) that implements an
   application defined tokenizer.  If hostile actors are able to run
   the two-argument version of fts3_tokenizer() with an arbitrary second
-  argument, they could use crash or take control of the process.  Because 
-  of ongoing security concerns about this (seldom-used) feature, it is
-  disabled beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> unless this compile-time
+  argument, they could use crash or take control of the process. 
+  <p>
+  Because of security concerns, the two-argument fts3_tokenizer() feature 
+  was disabled beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> unless this compile-time
   option is used.
+  <a href="releaselog/3_12_0.html">Version 3.12.0</a> added the 
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0) interface
+  that activates the two-argument version of <a href="fts3.html#f3tknzr">fts3_tokenizer()</a>
+  for a specific <a href="c3ref/sqlite3.html">database connection</a> at run-time.
 </p></blockquote><a name="enable_fts4"></a>
 <p><b>SQLITE_ENABLE_FTS4</b></p><blockquote><p>
   When this option is defined in the <a href="amalgamation.html">amalgamation</a>, versions 3 and 4

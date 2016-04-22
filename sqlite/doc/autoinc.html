@@ -235,7 +235,7 @@ that has ever before existed in that same table.  If the table has never
 before contained any data, then a ROWID of 1 is used.  If the table
 has previously held a row with the largest possible ROWID, then new INSERTs
 are not allowed and any attempt to insert a new row will fail with an
-SQLITE_FULL error.  Only ROWID values from previously transactions that
+SQLITE_FULL error.  Only ROWID values from previous transactions that
 were committed are considered.  ROWID values that were rolled back
 are ignored and can be reused.
 </p>

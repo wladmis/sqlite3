@@ -193,7 +193,7 @@ A file format is used to store a single object.  So, for example, a GIF or
 JPEG file stores a single image, and an XHTML file stores text,
 so those are "file formats" and not "application formats".  An EPUB file, 
 in contrast, stores both text and images (as contained XHTML and GIF/JPEG
-files) and so it is considered a "application format".  This article is
+files) and so it is considered an "application format".  This article is
 about "application formats".
 
 <p>The boundary between a file format and an application format is fuzzy.
@@ -290,7 +290,7 @@ the entire document.
 <p>
 But an SQLite database is not limited to a simple key/value structure
 like a pile-of-files database.  An SQLite database can have dozens
-or hundreds or thousands of different of tables, with dozens or
+or hundreds or thousands of different tables, with dozens or
 hundreds or thousands of fields per table, each with different datatypes
 and constraints and particular meanings, all cross-referencing each other,
 appropriately and automatically indexed for rapid retrieval,
@@ -365,7 +365,7 @@ formatting details.
 A key/value database is better than no database at all.
 But without transactions or indices or a high-level query language or
 a proper schema,
-it much harder and more error prone to use a key/value database than
+it is much harder and more error prone to use a key/value database than
 a relational database.
 
 <li><p><b>Accessible Content.</b>
@@ -433,7 +433,7 @@ Instead of collecting changes in memory and then writing
 them to disk only on a File/Save action, changes can be written back to
 the disk as they occur.  This avoids loss of work on a system crash or
 power failure.  An <a href="undoredo.html">automated undo/redo stack</a>, managed using triggers,
-can be kept in the on-disk  database, meaning that undo/redo can occur 
+can be kept in the on-disk database, meaning that undo/redo can occur 
 across session boundaries.
 
 <li><p><b>Easily Extensible.</b>

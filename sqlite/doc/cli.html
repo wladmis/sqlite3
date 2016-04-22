@@ -147,6 +147,8 @@ that allows the user to manually enter and execute SQL
 statements against an SQLite database.  This document provides a brief
 introduction on how to use the <b>sqlite3</b> program.
 
+<a name="intro"></a>
+
 <h3>Getting Started</h3>
 
 <p>To start the <b>sqlite3</b> program, just type "sqlite3" optionally
@@ -173,7 +175,7 @@ hello!|10
 goodbye|20
 sqlite&gt;</pre></blockquote>
 
-<p>You can terminate the sqlite3 program by typing your systems
+<p>You can terminate the sqlite3 program by typing your system
 End-Of-File character (usually a Control-D).  Use the interrupt
 character (usually a Control-C) to stop a long-running SQL statement.</p>
 
@@ -191,6 +193,8 @@ enter SQL commands that span multiple lines.  For example:</p>
    ...&gt; <b>  f3 real</b>
    ...&gt; <b>);</b>
 sqlite&gt;</pre></blockquote>
+
+<a name="dblclick"></a>
 
 <h3>Double-click Startup On Windows</h3>
 
@@ -316,6 +320,8 @@ at any time.  For example:
                          Negative values right-justify
 sqlite&gt;</pre></blockquote>
 
+<a name="dotrules"></a>
+
 <h3>Rules for "dot-commands"</h3>
 
 <p>Ordinary SQL statements are free-form, and can be
@@ -337,6 +343,8 @@ more restrictive:
 are interpreted by the sqlite3.exe command-line program, not by
 SQLite itself.  So none of the dot-commands will work as an argument
 to SQLite interfaces like <a href="c3ref/prepare.html">sqlite3_prepare()</a> or <a href="c3ref/exec.html">sqlite3_exec()</a>.
+
+<a name="dotmode"></a>
 
 <h3>Changing Output Formats</h3>
 
@@ -468,6 +476,8 @@ for looking at the output of an <a href="lang_explain.html">EXPLAIN</a> command.
 detected and the output is automatically formatted.  So the ".explain"
 command has become superfluous.
 
+<a name="dotoutput"></a>
+
 <h3>Writing results to a file</h3>
 
 <p>By default, sqlite3 sends query results to standard output.  You
@@ -527,6 +537,7 @@ are available as a <a href="loadext.html">loadable extension</a> in the
 <a href="http://www.sqlite.org/src/artifact?ci=trunk&filename=ext/misc/fileio.c">ext/misc/fileio.c</a>
 source file in the <a href="download.html#srctree">SQLite source code repositories</a>.
 
+<a name="schema"></a>
 
 <h3>Querying the database schema</h3>
 
@@ -760,6 +771,8 @@ into other popular SQL database engines.  Like this:</p>
 <blockquote><pre>$ <b>createdb ex2</b>
 $ <b>sqlite3 ex1 .dump | psql ex2</b></pre></blockquote>
 
+<a name="dotload"></a>
+
 <h3>Loading Extensions</h3>
 
 <p>You can add new custom <a href="c3ref/create_function.html">application-defined SQL functions</a>,
@@ -785,11 +798,15 @@ subdirectory of the SQLite source tree.  You can use these extensions
 as-is, or as a basis for creating your own custom extensions to address
 your own particular needs.
 
+<a name="dotother"></a>
+
 <h3>Other Dot Commands</h3>
 
 <p>There are many other dot-commands available in the command-line
 shell.  See the ".help" command for a complete list for any particular
 version and build of SQLite.
+
+<a name="insh"></a>
 
 <h3>Using sqlite3 in a shell script</h3>
 
@@ -813,6 +830,7 @@ to make sqlite3 easy to use in conjunction with programs like
 &lt;tr&gt;&lt;td&gt;goodbye&lt;td&gt;20
 $</pre></blockquote>
 
+<a name="endsh"></a>
 
 <h3>Ending shell commands</h3>
 
@@ -825,6 +843,7 @@ because the shell translates these into a semicolon before passing them
 to that function.</p>
 
 
+<a name="compiling"></a>
 
 <h3>Compiling the sqlite3 program from sources</h3>
 

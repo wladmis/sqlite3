@@ -138,7 +138,37 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2016_03_03"></a><h3>2016-03-03 - Release 3.11.1</h3><blockquote>
+<a name="2016_04_18"></a><h3>2016-04-18 - Release 3.12.2</h3><blockquote>
+<p>Yikes!  The 3.12.0 and 3.12.1 releases contain a backwards compatibility bug!
+   Tables that declare a column with type <tt>"INTEGER" PRIMARY KEY</tt>
+   (where the datatype name INTEGER is quoted) generate an incompatible
+   database file.  The mistake came about because the developers have never
+   thought to put a typename in quotes before, and so there was no documentation 
+   of that capability nor any tests.  (There are tests now, though, of course.)
+   Instances of quoting the datatype name are probably infrequent in the wild,
+   so we do not expect the impact of this bug to be too severe.
+   Upgrading is still strongly recommended.
+<p>Fixes for three other minor issues were included in this patch release.
+   The other issues would have normally been deferred until the next scheduled
+   release, but since a patch release is being issued anyhow, they might as
+   well be included.
+</blockquote><hr width="50%"><a name="2016_04_08"></a><h3>2016-04-08 - Release 3.12.1</h3><blockquote>
+<p>SQLite <a href="releaselog/3_12_1.html">version 3.12.1</a> is an emergency patch release to address a 
+   <a href="https://www.sqlite.org/src/info/7f7f8026eda38">crash bug</a> that snuck
+   into <a href="releaselog/3_12_0.html">version 3.12.0</a>.  Upgrading from version 3.12.0 is highly
+   recommended.
+<p>Another minor problem involving datatypes on <a href="lang_createview.html">view</a> columns, and
+   a query planner deficiency are fixed at the same time.  These two
+   issues did not justify a new release on their own, but since a release
+   is being issued to deal with the crash bug, we included these other
+   fixes for good measure.
+</blockquote><hr width="50%"><a name="2016_03_29"></a><h3>2016-03-29 - Release 3.12.0</h3><blockquote>
+<p>SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a> is a regularly scheduled maintenance release.
+   A notable change in this release is an
+   <a href="pgszchng2016.html">increase in the default page size</a> for newly created database files.
+   There are also various performance improvements.
+   See the <a href="releaselog/3_12_0.html">change log</a> for details.
+</blockquote><hr width="50%"><a name="2016_03_03"></a><h3>2016-03-03 - Release 3.11.1</h3><blockquote>
 <p>SQLite <a href="releaselog/3_11_1.html">version 3.11.1</a> is a patch release that fixes problems in the
    new <a href="fts5.html">FTS5</a> extension and increases a default setting in the <a href="spellfix1.html">spellfix1</a>
    extension, and implements enhancements to some of the Windows makefiles.

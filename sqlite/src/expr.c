@@ -1283,7 +1283,8 @@ u32 sqlite3ExprListFlags(const ExprList *pList){
   if( pList ){
     for(i=0; i<pList->nExpr; i++){
        Expr *pExpr = pList->a[i].pExpr;
-       if( ALWAYS(pExpr) ) m |= pExpr->flags;
+       assert( pExpr!=0 );
+       m |= pExpr->flags;
     }
   }
   return m;
@@ -1568,23 +1569,22 @@ int sqlite3IsRowid(const char *z){
 }
 
 /*
-** Return true if we are able to the IN operator optimization on a
-** query of the form
-**
-**       x IN (SELECT ...)
-**
-** Where the SELECT... clause is as specified by the parameter to this
-** routine.
-**
-** The Select object passed in has already been preprocessed and no
-** errors have been found.
+** pX is the RHS of an IN operator.  If pX is a SELECT statement 
+** that can be simplified to a direct table access, then return
+** a pointer to the SELECT statement.  If pX is not a SELECT statement,
+** or if the SELECT statement needs to be manifested into a transient
+** table, then return NULL.
 */
 #ifndef SQLITE_OMIT_SUBQUERY
-static int isCandidateForInOpt(Select *p){
+static Select *isCandidateForInOpt(Expr *pX){
+  Select *p;
   SrcList *pSrc;
   ExprList *pEList;
+  Expr *pRes;
   Table *pTab;
-  if( p==0 ) return 0;                   /* right-hand side of IN is SELECT */
+  if( !ExprHasProperty(pX, EP_xIsSelect) ) return 0;  /* Not a subquery */
+  if( ExprHasProperty(pX, EP_VarSelect)  ) return 0;  /* Correlated subq */
+  p = pX->x.pSelect;
   if( p->pPrior ) return 0;              /* Not a compound SELECT */
   if( p->selFlags & (SF_Distinct|SF_Aggregate) ){
     testcase( (p->selFlags & (SF_Distinct|SF_Aggregate))==SF_Distinct );
@@ -1600,13 +1600,15 @@ static int isCandidateForInOpt(Select *p){
   if( pSrc->nSrc!=1 ) return 0;          /* Single term in FROM clause */
   if( pSrc->a[0].pSelect ) return 0;     /* FROM is not a subquery or view */
   pTab = pSrc->a[0].pTab;
-  if( NEVER(pTab==0) ) return 0;
+  assert( pTab!=0 );
   assert( pTab->pSelect==0 );            /* FROM clause is not a view */
   if( IsVirtual(pTab) ) return 0;        /* FROM clause not a virtual table */
   pEList = p->pEList;
   if( pEList->nExpr!=1 ) return 0;       /* One column in the result set */
-  if( pEList->a[0].pExpr->op!=TK_COLUMN ) return 0; /* Result is a column */
-  return 1;
+  pRes = pEList->a[0].pExpr;
+  if( pRes->op!=TK_COLUMN ) return 0;    /* Result is a column */
+  assert( pRes->iTable==pSrc->a[0].iCursor );  /* Not a correlated subquery */
+  return p;
 }
 #endif /* SQLITE_OMIT_SUBQUERY */
 
@@ -1738,15 +1740,13 @@ int sqlite3FindInIndex(Parse *pParse, Expr *pX, u32 inFlags, int *prRhsHasNull){
   ** satisfy the query.  This is preferable to generating a new 
   ** ephemeral table.
   */
-  p = (ExprHasProperty(pX, EP_xIsSelect) ? pX->x.pSelect : 0);
-  if( pParse->nErr==0 && isCandidateForInOpt(p) ){
+  if( pParse->nErr==0 && (p = isCandidateForInOpt(pX))!=0 ){
     sqlite3 *db = pParse->db;              /* Database connection */
     Table *pTab;                           /* Table <table>. */
     Expr *pExpr;                           /* Expression <column> */
     i16 iCol;                              /* Index of column <column> */
     i16 iDb;                               /* Database idx for pTab */
 
-    assert( p );                        /* Because of isCandidateForInOpt(p) */
     assert( p->pEList!=0 );             /* Because of isCandidateForInOpt(p) */
     assert( p->pEList->a[0].pExpr!=0 ); /* Because of isCandidateForInOpt(p) */
     assert( p->pSrc!=0 );               /* Because of isCandidateForInOpt(p) */
@@ -2888,7 +2888,6 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       ExprList *pFarg;       /* List of function arguments */
       int nFarg;             /* Number of function arguments */
       FuncDef *pDef;         /* The function definition object */
-      int nId;               /* Length of the function name in bytes */
       const char *zId;       /* The function name */
       u32 constMask = 0;     /* Mask of function arguments that are constant */
       int i;                 /* Loop counter */
@@ -2904,10 +2903,9 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       nFarg = pFarg ? pFarg->nExpr : 0;
       assert( !ExprHasProperty(pExpr, EP_IntValue) );
       zId = pExpr->u.zToken;
-      nId = sqlite3Strlen30(zId);
-      pDef = sqlite3FindFunction(db, zId, nId, nFarg, enc, 0);
+      pDef = sqlite3FindFunction(db, zId, nFarg, enc, 0);
       if( pDef==0 || pDef->xFinalize!=0 ){
-        sqlite3ErrorMsg(pParse, "unknown function: %.*s()", nId, zId);
+        sqlite3ErrorMsg(pParse, "unknown function: %s()", zId);
         break;
       }
 
@@ -3072,6 +3070,7 @@ int sqlite3ExprCodeTarget(Parse *pParse, Expr *pExpr, int target){
       sqlite3ReleaseTempReg(pParse, r4);
       break;
     }
+    case TK_SPAN:
     case TK_COLLATE: 
     case TK_UPLUS: {
       inReg = sqlite3ExprCodeTarget(pParse, pExpr->pLeft, target);
@@ -3550,6 +3549,13 @@ void sqlite3ExprIfTrue(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
       sqlite3ExprIfFalse(pParse, pExpr->pLeft, dest, jumpIfNull);
       break;
     }
+    case TK_IS:
+    case TK_ISNOT:
+      testcase( op==TK_IS );
+      testcase( op==TK_ISNOT );
+      op = (op==TK_IS) ? TK_EQ : TK_NE;
+      jumpIfNull = SQLITE_NULLEQ;
+      /* Fall thru */
     case TK_LT:
     case TK_LE:
     case TK_GT:
@@ -3565,23 +3571,12 @@ void sqlite3ExprIfTrue(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
       assert(TK_LE==OP_Le); testcase(op==OP_Le); VdbeCoverageIf(v,op==OP_Le);
       assert(TK_GT==OP_Gt); testcase(op==OP_Gt); VdbeCoverageIf(v,op==OP_Gt);
       assert(TK_GE==OP_Ge); testcase(op==OP_Ge); VdbeCoverageIf(v,op==OP_Ge);
-      assert(TK_EQ==OP_Eq); testcase(op==OP_Eq); VdbeCoverageIf(v,op==OP_Eq);
-      assert(TK_NE==OP_Ne); testcase(op==OP_Ne); VdbeCoverageIf(v,op==OP_Ne);
-      testcase( regFree1==0 );
-      testcase( regFree2==0 );
-      break;
-    }
-    case TK_IS:
-    case TK_ISNOT: {
-      testcase( op==TK_IS );
-      testcase( op==TK_ISNOT );
-      r1 = sqlite3ExprCodeTemp(pParse, pExpr->pLeft, &regFree1);
-      r2 = sqlite3ExprCodeTemp(pParse, pExpr->pRight, &regFree2);
-      op = (op==TK_IS) ? TK_EQ : TK_NE;
-      codeCompare(pParse, pExpr->pLeft, pExpr->pRight, op,
-                  r1, r2, dest, SQLITE_NULLEQ);
-      VdbeCoverageIf(v, op==TK_EQ);
-      VdbeCoverageIf(v, op==TK_NE);
+      assert(TK_EQ==OP_Eq); testcase(op==OP_Eq);
+      VdbeCoverageIf(v, op==OP_Eq && jumpIfNull==SQLITE_NULLEQ);
+      VdbeCoverageIf(v, op==OP_Eq && jumpIfNull!=SQLITE_NULLEQ);
+      assert(TK_NE==OP_Ne); testcase(op==OP_Ne);
+      VdbeCoverageIf(v, op==OP_Ne && jumpIfNull==SQLITE_NULLEQ);
+      VdbeCoverageIf(v, op==OP_Ne && jumpIfNull!=SQLITE_NULLEQ);
       testcase( regFree1==0 );
       testcase( regFree2==0 );
       break;
@@ -3706,6 +3701,13 @@ void sqlite3ExprIfFalse(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
       sqlite3ExprIfTrue(pParse, pExpr->pLeft, dest, jumpIfNull);
       break;
     }
+    case TK_IS:
+    case TK_ISNOT:
+      testcase( pExpr->op==TK_IS );
+      testcase( pExpr->op==TK_ISNOT );
+      op = (pExpr->op==TK_IS) ? TK_NE : TK_EQ;
+      jumpIfNull = SQLITE_NULLEQ;
+      /* Fall thru */
     case TK_LT:
     case TK_LE:
     case TK_GT:
@@ -3721,23 +3723,12 @@ void sqlite3ExprIfFalse(Parse *pParse, Expr *pExpr, int dest, int jumpIfNull){
       assert(TK_LE==OP_Le); testcase(op==OP_Le); VdbeCoverageIf(v,op==OP_Le);
       assert(TK_GT==OP_Gt); testcase(op==OP_Gt); VdbeCoverageIf(v,op==OP_Gt);
       assert(TK_GE==OP_Ge); testcase(op==OP_Ge); VdbeCoverageIf(v,op==OP_Ge);
-      assert(TK_EQ==OP_Eq); testcase(op==OP_Eq); VdbeCoverageIf(v,op==OP_Eq);
-      assert(TK_NE==OP_Ne); testcase(op==OP_Ne); VdbeCoverageIf(v,op==OP_Ne);
-      testcase( regFree1==0 );
-      testcase( regFree2==0 );
-      break;
-    }
-    case TK_IS:
-    case TK_ISNOT: {
-      testcase( pExpr->op==TK_IS );
-      testcase( pExpr->op==TK_ISNOT );
-      r1 = sqlite3ExprCodeTemp(pParse, pExpr->pLeft, &regFree1);
-      r2 = sqlite3ExprCodeTemp(pParse, pExpr->pRight, &regFree2);
-      op = (pExpr->op==TK_IS) ? TK_NE : TK_EQ;
-      codeCompare(pParse, pExpr->pLeft, pExpr->pRight, op,
-                  r1, r2, dest, SQLITE_NULLEQ);
-      VdbeCoverageIf(v, op==TK_EQ);
-      VdbeCoverageIf(v, op==TK_NE);
+      assert(TK_EQ==OP_Eq); testcase(op==OP_Eq);
+      VdbeCoverageIf(v, op==OP_Eq && jumpIfNull!=SQLITE_NULLEQ);
+      VdbeCoverageIf(v, op==OP_Eq && jumpIfNull==SQLITE_NULLEQ);
+      assert(TK_NE==OP_Ne); testcase(op==OP_Ne);
+      VdbeCoverageIf(v, op==OP_Ne && jumpIfNull!=SQLITE_NULLEQ);
+      VdbeCoverageIf(v, op==OP_Ne && jumpIfNull==SQLITE_NULLEQ);
       testcase( regFree1==0 );
       testcase( regFree2==0 );
       break;
@@ -4132,7 +4123,7 @@ static int analyzeAggregate(Walker *pWalker, Expr *pExpr){
             pItem->iMem = ++pParse->nMem;
             assert( !ExprHasProperty(pExpr, EP_IntValue) );
             pItem->pFunc = sqlite3FindFunction(pParse->db,
-                   pExpr->u.zToken, sqlite3Strlen30(pExpr->u.zToken),
+                   pExpr->u.zToken, 
                    pExpr->x.pList ? pExpr->x.pList->nExpr : 0, enc, 0);
             if( pExpr->flags & EP_Distinct ){
               pItem->iDistinct = pParse->nTab++;
@@ -4260,3 +4251,26 @@ void sqlite3ClearTempRegCache(Parse *pParse){
   pParse->nTempReg = 0;
   pParse->nRangeReg = 0;
 }
+
+/*
+** Validate that no temporary register falls within the range of
+** iFirst..iLast, inclusive.  This routine is only call from within assert()
+** statements.
+*/
+#ifdef SQLITE_DEBUG
+int sqlite3NoTempsInRange(Parse *pParse, int iFirst, int iLast){
+  int i;
+  if( pParse->nRangeReg>0
+   && pParse->iRangeReg+pParse->nRangeReg<iLast
+   && pParse->iRangeReg>=iFirst
+  ){
+     return 0;
+  }
+  for(i=0; i<pParse->nTempReg; i++){
+    if( pParse->aTempReg[i]>=iFirst && pParse->aTempReg[i]<=iLast ){
+      return 0;
+    }
+  }
+  return 1;
+}
+#endif /* SQLITE_DEBUG */

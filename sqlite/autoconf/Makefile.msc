@@ -256,6 +256,8 @@ OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_COLUMN_METADATA=1
 #
 !IFNDEF EXT_FEATURE_FLAGS
 !IF $(FOR_WIN10)!=0
+EXT_FEATURE_FLAGS = $(EXT_FEATURE_FLAGS) -DSQLITE_ENABLE_STAT4=1
+EXT_FEATURE_FLAGS = $(EXT_FEATURE_FLAGS) -DSQLITE_ENABLE_FTS3_PARENTHESIS=1
 EXT_FEATURE_FLAGS = $(EXT_FEATURE_FLAGS) -DSQLITE_ENABLE_FTS4=1
 EXT_FEATURE_FLAGS = $(EXT_FEATURE_FLAGS) -DSQLITE_SYSTEM_MALLOC=1
 EXT_FEATURE_FLAGS = $(EXT_FEATURE_FLAGS) -DSQLITE_OMIT_LOCALTIME=1
@@ -289,6 +291,14 @@ PROGRAMFILES_X86 = $(PROGRAMFILES_X86:\\=\)
 #
 !IFNDEF CC
 CC = cl.exe
+!ENDIF
+
+# Check for the predefined command macro CSC.  This should point to a working
+# C Sharp compiler binary.  If it is not defined, simply define it to the
+# legacy default value 'csc.exe'.
+#
+!IFNDEF CSC
+CSC = csc.exe
 !ENDIF
 
 # Check for the command macro LD.  This should point to the linker binary for
@@ -460,7 +470,7 @@ CORE_COMPILE_OPTS = $(CORE_CCONV_OPTS)
 !IF $(DYNAMIC_SHELL)!=0
 CORE_LINK_DEP =
 !ELSEIF $(FOR_WIN10)==0 || "$(PLATFORM)"=="x86"
-CORE_LINK_DEP =
+CORE_LINK_DEP = sqlite3.def
 !ELSE
 CORE_LINK_DEP =
 !ENDIF
@@ -472,7 +482,7 @@ CORE_LINK_DEP =
 !IF $(DYNAMIC_SHELL)!=0
 CORE_LINK_OPTS =
 !ELSEIF $(FOR_WIN10)==0 || "$(PLATFORM)"=="x86"
-CORE_LINK_OPTS =
+CORE_LINK_OPTS = /DEF:sqlite3.def
 !ELSE
 CORE_LINK_OPTS =
 !ENDIF
@@ -888,6 +898,14 @@ shell:	$(SQLITE3EXE)
 $(SQLITE3DLL):	$(LIBOBJ) $(LIBRESOBJS) $(CORE_LINK_DEP)
 	$(LD) $(LDFLAGS) $(LTLINKOPTS) $(LTLIBPATHS) /DLL $(CORE_LINK_OPTS) /OUT:$@ $(LIBOBJ) $(LIBRESOBJS) $(LTLIBS) $(TLIBS)
 
+Replace.exe:
+	$(CSC) /target:exe $(TOP)\Replace.cs
+
+sqlite3.def:	Replace.exe $(LIBOBJ)
+	echo EXPORTS > sqlite3.def
+	dumpbin /all $(LIBOBJ) \
+		| .\Replace.exe "^\s+/EXPORT:_?(sqlite3_[^@,]*)(?:@\d+|,DATA)?$$" $$1 true \
+		| sort >> sqlite3.def
 
 $(SQLITE3EXE):	$(TOP)\shell.c $(SHELL_CORE_DEP) $(LIBRESOBJS) $(SHELL_CORE_SRC) $(SQLITE3H)
 	$(LTLINK) $(SHELL_COMPILE_OPTS) $(READLINE_FLAGS) $(TOP)\shell.c $(SHELL_CORE_SRC) \
@@ -927,4 +945,4 @@ $(LIBRESOBJS):	$(TOP)\sqlite3.rc rcver.vc $(SQLITE3H)
 clean:
 	del /Q *.exp *.lo *.ilk *.lib *.obj *.ncb *.pdb *.sdf *.suo 2>NUL
 	del /Q *.bsc *.def *.cod *.da *.bb *.bbg *.vc gmon.out 2>NUL
-	del /Q $(SQLITE3EXE) $(SQLITE3DLL) 2>NUL
+	del /Q $(SQLITE3EXE) $(SQLITE3DLL) Replace.exe 2>NUL

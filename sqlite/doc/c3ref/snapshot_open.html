@@ -150,7 +150,11 @@ or an appropriate <a href="../rescode.html">error code</a> if it fails.</p>
 the first operation, apart from other sqlite3_snapshot_open() calls,
 following the <a href="../lang_transaction.html">BEGIN</a> that starts a new read transaction.
 A <a href="../c3ref/snapshot.html">snapshot</a> will fail to open if it has been overwritten by a
-<a href="../wal.html#ckpt">checkpoint</a>.</p>
+<a href="../wal.html#ckpt">checkpoint</a>.
+A <a href="../c3ref/snapshot.html">snapshot</a> will fail to open if the database connection D has not
+previously completed at least one read operation against the database
+file.  (Hint: Run "<a href="../pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
+database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface is only available when the
 SQLITE_ENABLE_SNAPSHOT compile-time option is used.

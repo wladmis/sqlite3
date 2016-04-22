@@ -171,7 +171,7 @@ INSERT INTO demo(word) SELECT word FROM big_vocabulary;
 </pre></blockquote>
 
 <p>If you intend to use this virtual table in cooperation with an <a href="fts3.html#fts4">FTS4</a>
-table (for spelling correctly of search terms) then you might extract
+table (for spelling correction of search terms) then you might extract
 the vocabulary using an <a href="fts3.html#fts4aux">fts4aux</a> table:
 
 <blockquote><pre>
@@ -458,6 +458,8 @@ BACA, yielding "Pascagoula" as the best match.
 Hence, the same table can contain entries from multiple languages
 and only the requested language will be used.  The default langid
 is 0.
+
+<a name="configeditdist"></a>
 
 <h2>Configurable Edit Distance</h2>
 

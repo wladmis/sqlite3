@@ -279,6 +279,7 @@ be removed in some future release.</li>
 <li><a href="#sqliteconfigserialized">SQLITE_CONFIG_SERIALIZED</a></li>
 <li><a href="#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a></li>
 <li><a href="#sqliteconfigsqllog">SQLITE_CONFIG_SQLLOG</a></li>
+<li><a href="#sqliteconfigstmtjrnlspill">SQLITE_CONFIG_STMTJRNL_SPILL</a></li>
 <li><a href="#sqliteconfiguri">SQLITE_CONFIG_URI</a></li>
 <li><a href="#sqliteconfigwin32heapsize">SQLITE_CONFIG_WIN32_HEAPSIZE</a></li>
 <li><a href="#SQLITE_ABORT">SQLITE_CONSTRAINT</a></li>
@@ -305,6 +306,7 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_ALTER_TABLE">SQLITE_CREATE_VIEW</a></li>
 <li><a href="#SQLITE_ALTER_TABLE">SQLITE_CREATE_VTABLE</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_FKEY</a></li>
+<li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_TRIGGER</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_LOOKASIDE</a></li>
 <li><a href="#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a></li>
@@ -404,9 +406,9 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_CLOSE</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_CONVPATH</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DELETE</a></li>
-<li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DELETE_NOENT</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DIR_CLOSE</a></li>
+<td valign="top"><ul><li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DELETE_NOENT</a></li>
+<li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DIR_CLOSE</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_DIR_FSYNC</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_FSTAT</a></li>
 <li><a href="#SQLITE_ABORT_ROLLBACK">SQLITE_IOERR_FSYNC</a></li>
@@ -663,9 +665,9 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_create_module">sqlite3_create_module_v2</a></li>
 <li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
 <li><a href="#sqlite3_db_cacheflush">sqlite3_db_cacheflush</a></li>
+<li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
-<li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
 <li><a href="#sqlite3_db_handle">sqlite3_db_handle</a></li>
 <li><a href="#sqlite3_db_mutex">sqlite3_db_mutex</a></li>
 <li><a href="#sqlite3_db_readonly">sqlite3_db_readonly</a></li>
@@ -740,10 +742,10 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_nomem</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
+<li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
-<li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
@@ -777,6 +779,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_stricmp">sqlite3_stricmp</a></li>
 <li><a href="#sqlite3_strlike">sqlite3_strlike</a></li>
 <li><a href="#sqlite3_stricmp">sqlite3_strnicmp</a></li>
+<li><a href="#sqlite3_system_errno">sqlite3_system_errno</a></li>
 <li><a href="#sqlite3_table_column_metadata">sqlite3_table_column_metadata</a></li>
 <li><a href="#sqlite3_test_control">sqlite3_test_control</a></li>
 <li><a href="#sqlite3_aggregate_count">sqlite3_thread_cleanup</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(obs)</i></small></a></li>
@@ -1480,7 +1483,7 @@ struct sqlite3_vfs {
   const char *(*xNextSystemCall)(sqlite3_vfs*, const char *zName);
   /*
   ** The methods above are in versions 1 through 3 of the sqlite_vfs object.
-  ** New fields may be appended in figure versions.  The iVersion
+  ** New fields may be appended in future versions.  The iVersion
   ** value will increment whenever this happens. 
   */
 };
@@ -2874,7 +2877,11 @@ or an appropriate <a href="rescode.html">error code</a> if it fails.</p>
 the first operation, apart from other sqlite3_snapshot_open() calls,
 following the <a href="lang_transaction.html">BEGIN</a> that starts a new read transaction.
 A <a href="#sqlite3_snapshot">snapshot</a> will fail to open if it has been overwritten by a
-<a href="wal.html#ckpt">checkpoint</a>.</p>
+<a href="wal.html#ckpt">checkpoint</a>.
+A <a href="#sqlite3_snapshot">snapshot</a> will fail to open if the database connection D has not
+previously completed at least one read operation against the database
+file.  (Hint: Run "<a href="pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
+database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> interface is only available when the
 SQLITE_ENABLE_SNAPSHOT compile-time option is used.
@@ -3156,6 +3163,15 @@ only ASCII characters are case folded.</p>
 do not match, the same as <a href="#sqlite3_stricmp">sqlite3_stricmp()</a> and <a href="#sqlite3_stricmp">sqlite3_strnicmp()</a>.</p>
 
 <p>See also: <a href="#sqlite3_strglob">sqlite3_strglob()</a>.
+</p><hr><a name="sqlite3_system_errno"></a>
+<h2>Low-level system error code</h2><blockquote><pre>int sqlite3_system_errno(sqlite3*);
+</pre></blockquote><p>
+Attempt to return the underlying operating system error code or error
+number that caused the most reason I/O error or failure to open a file.
+The return value is OS-dependent.  For example, on unix systems, after
+<a href="#sqlite3_open">sqlite3_open_v2()</a> returns <a href="#SQLITE_ABORT">SQLITE_CANTOPEN</a>, this interface could be
+called to get back the underlying "errno" that caused the problem, such
+as ENOSPC, EAUTH, EISDIR, and so forth.
 </p><hr><a name="sqlite3_table_column_metadata"></a>
 <h2>Extract Metadata About A Column Of A Table</h2><blockquote><pre>int sqlite3_table_column_metadata(
   sqlite3 *db,                /* Connection handle */
@@ -3691,7 +3707,7 @@ registered at one time. Calling <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</
 previously registered write-ahead log callback. Note that the
 <a href="#sqlite3_wal_autocheckpoint">sqlite3_wal_autocheckpoint()</a> interface and the
 <a href="pragma.html#pragma_wal_autocheckpoint">wal_autocheckpoint pragma</a> both invoke <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</a> and will
-those overwrite any prior <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</a> settings.
+overwrite any prior <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</a> settings.
 </p><hr><a name="SQLITE_ABORT"></a>
 <h2>Result Codes</h2><blockquote><pre>#define SQLITE_OK           0   /* Successful result */
 /* beginning-of-error-codes */
@@ -3948,6 +3964,7 @@ meaning of each of these checkpoint modes.
 #define SQLITE_CONFIG_WIN32_HEAPSIZE      23  /* int nByte */
 #define SQLITE_CONFIG_PCACHE_HDRSZ        24  /* int *psz */
 #define SQLITE_CONFIG_PMASZ               25  /* unsigned int szPma */
+#define SQLITE_CONFIG_STMTJRNL_SPILL      26  /* int nByte */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the first argument to the <a href="#sqlite3_config">sqlite3_config()</a> interface.</p>
@@ -4286,12 +4303,28 @@ sorter to that integer.  The default minimum PMA Size is set by the
 to help with sort operations when multithreaded sorting
 is enabled (using the <a href="pragma.html#pragma_threads">PRAGMA threads</a> command) and the amount of content
 to be sorted exceeds the page size times the minimum of the
-<a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> setting and this value.
+<a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a> setting and this value.</p>
+
+<p><a name="sqliteconfigstmtjrnlspill"></a>
+
+<dt>SQLITE_CONFIG_STMTJRNL_SPILL
+<dd>The SQLITE_CONFIG_STMTJRNL_SPILL option takes a single parameter which
+becomes the <a href="tempfiles.html#stmtjrnl">statement journal</a> spill-to-disk threshold.
+<a href="tempfiles.html#stmtjrnl">Statement journals</a> are held in memory until their size (in bytes)
+exceeds this threshold, at which point they are written to disk.
+Or if the threshold is -1, statement journals are always held
+exclusively in memory.
+Since many statement journals never become large, setting the spill
+threshold to a value such as 64KiB can greatly reduce the amount of
+I/O required to support statement rollback.
+The default value for this setting is controlled by the
+<a href="compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> compile-time option.
 </dl>
 </p><hr><a name="SQLITE_DBCONFIG_ENABLE_FKEY"></a>
-<h2>Database Connection Configuration Options</h2><blockquote><pre>#define SQLITE_DBCONFIG_LOOKASIDE       1001  /* void* int int */
-#define SQLITE_DBCONFIG_ENABLE_FKEY     1002  /* int int* */
-#define SQLITE_DBCONFIG_ENABLE_TRIGGER  1003  /* int int* */
+<h2>Database Connection Configuration Options</h2><blockquote><pre>#define SQLITE_DBCONFIG_LOOKASIDE             1001 /* void* int int */
+#define SQLITE_DBCONFIG_ENABLE_FKEY           1002 /* int int* */
+#define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
+#define SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER 1004 /* int int* */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the second argument to the <a href="#sqlite3_db_config">sqlite3_db_config()</a> interface.</p>
@@ -4345,6 +4378,19 @@ The second parameter is a pointer to an integer into which
 is written 0 or 1 to indicate whether triggers are disabled or enabled
 following this call.  The second parameter may be a NULL pointer, in
 which case the trigger setting is not reported back. </dd></p>
+
+<p><dt>SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</dt>
+<dd> This option is used to enable or disable the two-argument
+version of the <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function which is part of the
+<a href="fts3.html">FTS3</a> full-text search engine extension.
+There should be two additional arguments.
+The first argument is an integer which is 0 to disable fts3_tokenizer() or
+positive to enable fts3_tokenizer() or negative to leave the setting
+unchanged.
+The second parameter is a pointer to an integer into which
+is written 0 or 1 to indicate whether fts3_tokenizer is disabled or enabled
+following this call.  The second parameter may be a NULL pointer, in
+which case the new setting is not reported back. </dd></p>
 
 <p></dl>
 </p><hr><a name="SQLITE_DENY"></a>
@@ -4849,9 +4895,9 @@ was given on the corresponding lock.</p>
 between unlocked and EXCLUSIVE.  It cannot transition between SHARED
 and EXCLUSIVE.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.11.1"
-#define SQLITE_VERSION_NUMBER 3011001
-#define SQLITE_SOURCE_ID      "2016-03-03 16:17:53 f047920ce16971e573bc6ec9a48b118c9de2b3a7"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.12.2"
+#define SQLITE_VERSION_NUMBER 3012002
+#define SQLITE_SOURCE_ID      "2016-04-18 17:30:31 92dc59fd5ad66f646666042eb04195e3a61a9e8e"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the

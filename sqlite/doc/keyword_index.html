@@ -185,7 +185,9 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#default_memstatus">-DSQLITE_DEFAULT_MEMSTATUS</a> </li>
 <li> <a href="compile.html#default_mmap_size">-DSQLITE_DEFAULT_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#default_page_size">-DSQLITE_DEFAULT_PAGE_SIZE</a> </li>
+<li> <a href="compile.html#default_synchronous">-DSQLITE_DEFAULT_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_wal_autocheckpoint">-DSQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a> </li>
+<li> <a href="compile.html#default_wal_synchronous">-DSQLITE_DEFAULT_WAL_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_worker_threads">-DSQLITE_DEFAULT_WORKER_THREADS</a> </li>
 <li> <a href="compile.html#direct_overflow_read">-DSQLITE_DIRECT_OVERFLOW_READ</a> </li>
 <li> <a href="compile.html#disable_dirsync">-DSQLITE_DISABLE_DIRSYNC</a> </li>
@@ -293,6 +295,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#secure_delete">-DSQLITE_SECURE_DELETE</a> </li>
 <li> <a href="compile.html#sorter_pmasz">-DSQLITE_SORTER_PMASZ</a> </li>
 <li> <a href="compile.html#soundex">-DSQLITE_SOUNDEX</a> </li>
+<li> <a href="compile.html#stmtjrnl_spill">-DSQLITE_STMTJRNL_SPILL</a> </li>
 <li> <a href="compile.html#temp_store">-DSQLITE_TEMP_STORE</a> </li>
 <li> <a href="compile.html#threadsafe">-DSQLITE_THREADSAFE</a> </li>
 <li> <a href="compile.html#trace_size_limit">-DSQLITE_TRACE_SIZE_LIMIT</a> </li>
@@ -447,6 +450,7 @@ a:visited { color: #734559 }
 <li> <a href="syntax/compound-select-stmt.html">compound-select-stmt syntax diagram</a> </li>
 <li> <a href="fts3.html#*fts4compression">compressed FTS4 content</a> </li>
 <li> <a href="lang_with.html#mandelbrot">compute the Mandelbrot set</a> </li>
+<li> <a href="spellfix1.html#configeditdist">configurable edit distances</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html">configuration option</a> </li>
 <li> <a href="lang_conflict.html">conflict clause</a> </li>
 <li> <a href="c3ref/c_fail.html">conflict resolution mode</a> </li>
@@ -639,6 +643,7 @@ a:visited { color: #734559 }
 <li> <a href="fts5.html#section_5_1_3">FTS5 snippet</a> </li>
 <li> <a href="fts5.html#notoc6">fts5 technical differences</a> </li>
 <li> <a href="fts5.html#section_4_3">FTS5 tokenizers</a> </li>
+<li> <a href="fts5.html#section_6_11">FTS5 usermerge option</a> </li>
 <li> <a href="fts3.html">full-text search</a> </li>
 <li> <a href="pragma.html#pragma_full_column_names">full_column_names pragma</a> </li>
 <li> <a href="pragma.html#pragma_fullfsync">fullfsync pragma</a> </li>
@@ -680,6 +685,7 @@ a:visited { color: #734559 }
 <li> <a href="inmemorydb.html#sharedmemdb">in-memory shared cache database</a> </li>
 <li> <a href="sharedcache.html#inmemsharedcache">in-memory shared-cache</a> </li>
 <li> <a href="tclsqlite.html#incrblob">incrblob method</a> </li>
+<li> <a href="pgszchng2016.html">increase in the default page size</a> </li>
 <li> <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum pragma</a> </li>
 <li> <a href="pragma.html#pragma_index_info">index_info pragma</a> </li>
 <li> <a href="pragma.html#pragma_index_list">index_list pragma</a> </li>
@@ -777,6 +783,7 @@ a:visited { color: #734559 }
 <li> <a href="support.html#mailinglists">mailing lists</a> </li>
 <li> <a href="optoverview.html#crossjoin">Manual Control Of Query Plans Using CROSS JOIN</a> </li>
 <li> <a href="optoverview.html#manctrl">Manual Control Of Query Plans Using SQLITE_STAT Tables</a> </li>
+<li> <a href="tempfiles.html#masterjrnl">master journal</a> </li>
 <li> <a href="lang_expr.html#match">MATCH</a> </li>
 <li> <a href="fts3.html#matchinfo">matchinfo</a> </li>
 <li> <a href="fts3.html#matchinfo-b">matchinfo b flag</a> </li>
@@ -1281,6 +1288,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/stricmp.html">sqlite3_stricmp</a> </li>
 <li> <a href="c3ref/strlike.html">sqlite3_strlike</a> </li>
 <li> <a href="c3ref/stricmp.html">sqlite3_strnicmp</a> </li>
+<li> <a href="c3ref/system_errno.html">sqlite3_system_errno</a> </li>
 <li> <a href="c3ref/table_column_metadata.html">sqlite3_table_column_metadata</a> </li>
 <li> <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> </li>
 <li> <a href="c3ref/test_control.html">sqlite3_test_control</a> </li>
@@ -1381,6 +1389,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigserialized">SQLITE_CONFIG_SERIALIZED</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog">SQLITE_CONFIG_SQLLOG</a> </li>
+<li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">SQLITE_CONFIG_STMTJRNL_SPILL</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize">SQLITE_CONFIG_WIN32_HEAPSIZE</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_CONSTRAINT</a> </li>
@@ -1407,6 +1416,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VIEW</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_VTABLE</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
+<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html">SQLITE_DBSTATUS options</a> </li>
@@ -1434,7 +1444,9 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#default_memstatus">SQLITE_DEFAULT_MEMSTATUS</a> </li>
 <li> <a href="compile.html#default_mmap_size">SQLITE_DEFAULT_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> </li>
+<li> <a href="compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_wal_autocheckpoint">SQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a> </li>
+<li> <a href="compile.html#default_wal_synchronous">SQLITE_DEFAULT_WAL_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_worker_threads">SQLITE_DEFAULT_WORKER_THREADS</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_DELETE</a> </li>
 <li> <a href="c3ref/c_deny.html">SQLITE_DENY</a> </li>
@@ -1775,6 +1787,7 @@ a:visited { color: #734559 }
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchoverflow">SQLITE_STATUS_SCRATCH_OVERFLOW</a> </li>
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchsize">SQLITE_STATUS_SCRATCH_SIZE</a> </li>
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchused">SQLITE_STATUS_SCRATCH_USED</a> </li>
+<li> <a href="compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html">SQLITE_STMTSTATUS counter</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusautoindex">SQLITE_STMTSTATUS_AUTOINDEX</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusfullscanstep">SQLITE_STMTSTATUS_FULLSCAN_STEP</a> </li>
@@ -1833,6 +1846,7 @@ a:visited { color: #734559 }
 <li> <a href="compile.html#win32_malloc_validate">SQLITE_WIN32_MALLOC_VALIDATE</a> </li>
 <li> <a href="compile.html#zero_malloc">SQLITE_ZERO_MALLOC</a> </li>
 <li> <a href="uri.html#coreqp">standard query parameters</a> </li>
+<li> <a href="tempfiles.html#stmtjrnl">statement journal</a> </li>
 <li> <a href="pragma.html#pragma_stats">stats pragma</a> </li>
 <li> <a href="tclsqlite.html#status">status method</a> </li>
 <li> <a href="c3ref/c_status_malloc_count.html">status parameters</a> </li>
@@ -1997,6 +2011,10 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_10_2.html">Version 3.10.2</a> </li>
 <li> <a href="releaselog/3_11_0.html">Version 3.11.0</a> </li>
 <li> <a href="releaselog/3_11_1.html">Version 3.11.1</a> </li>
+<li> <a href="releaselog/3_12_0.html">Version 3.12.0</a> </li>
+<li> <a href="pgszchng2016.html">version 3.12.0 page size change</a> </li>
+<li> <a href="releaselog/3_12_1.html">Version 3.12.1</a> </li>
+<li> <a href="releaselog/3_12_2.html">Version 3.12.2</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>
@@ -2127,6 +2145,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_9_0.html">Version 3.9.0</a> </li>
 <li> <a href="releaselog/3_9_1.html">Version 3.9.1</a> </li>
 <li> <a href="releaselog/3_9_2.html">Version 3.9.2</a> </li>
+<li> <a href="releaselog/3_9_3.html">Version 3.9.3</a> </li>
 <li> <a href="tclsqlite.html#version">version method</a> </li>
 <li> <a href="versionnumbers.html">version numbering conventions</a> </li>
 <li> <a href="fileformat2.html#validfor">version-valid-for number</a> </li>

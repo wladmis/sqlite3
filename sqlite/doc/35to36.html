@@ -184,7 +184,7 @@ a:visited { color: #734559 }
       association with this change, a new extended error code
       <a href="rescode.html#ioerr_checkreservedlock">SQLITE_IOERR_CHECKRESERVEDLOCK</a> has been added.</p></li>
 
-  <li><p>When SQLite is ported to new operation systems (operating systems 
+  <li><p>When SQLite is ported to new operating systems (operating systems 
       other than Unix, Windows, and OS/2 for which ports are provided together
       with the core)
       two new functions, <a href="c3ref/initialize.html">sqlite3_os_init()</a> and <a href="c3ref/initialize.html">sqlite3_os_end()</a>, must
@@ -354,9 +354,9 @@ a:visited { color: #734559 }
   called automatically when invoking certain interfaces so the use of
   <a href="c3ref/initialize.html">sqlite3_initialize()</a> is not required, but it is recommended.</p></li>
 
-  <li><p>The <a href="c3ref/initialize.html">sqlite3_shutdown()</a> interface causes SQLite release any
+  <li><p>The <a href="c3ref/initialize.html">sqlite3_shutdown()</a> interface causes SQLite to release any
   system resources (memory allocations, mutexes, open file handles)
-  that it might have been allocated by <a href="c3ref/initialize.html">sqlite3_initialize()</a>.</p></li>
+  that might have been allocated by <a href="c3ref/initialize.html">sqlite3_initialize()</a>.</p></li>
 
   <li><p>The <a href="c3ref/next_stmt.html">sqlite3_next_stmt()</a> interface allows an application to discover
   all <a href="c3ref/stmt.html">prepared statements</a> associated with a <a href="c3ref/sqlite3.html">database connection</a>.</p></li>

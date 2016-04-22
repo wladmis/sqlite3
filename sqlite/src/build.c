@@ -571,8 +571,6 @@ void sqlite3DeleteColumnNames(sqlite3 *db, Table *pTable){
     for(i=0; i<pTable->nCol; i++, pCol++){
       sqlite3DbFree(db, pCol->zName);
       sqlite3ExprDelete(db, pCol->pDflt);
-      sqlite3DbFree(db, pCol->zDflt);
-      sqlite3DbFree(db, pCol->zType);
       sqlite3DbFree(db, pCol->zColl);
     }
     sqlite3DbFree(db, pTable->aCol);
@@ -710,12 +708,8 @@ int sqlite3FindDbName(sqlite3 *db, const char *zName){
   int i = -1;         /* Database number */
   if( zName ){
     Db *pDb;
-    int n = sqlite3Strlen30(zName);
     for(i=(db->nDb-1), pDb=&db->aDb[i]; i>=0; i--, pDb--){
-      if( (!OMIT_TEMPDB || i!=1 ) && n==sqlite3Strlen30(pDb->zName) && 
-          0==sqlite3StrICmp(pDb->zName, zName) ){
-        break;
-      }
+      if( 0==sqlite3StrICmp(pDb->zName, zName) ) break;
     }
   }
   return i;
@@ -927,7 +921,7 @@ void sqlite3StartTable(
   pTable = sqlite3DbMallocZero(db, sizeof(Table));
   if( pTable==0 ){
     assert( db->mallocFailed );
-    pParse->rc = SQLITE_NOMEM;
+    pParse->rc = SQLITE_NOMEM_BKPT;
     pParse->nErr++;
     goto begin_table_error;
   }
@@ -1043,10 +1037,11 @@ void sqlite3ColumnPropertiesFromName(Table *pTab, Column *pCol){
 ** first to get things going.  Then this routine is called for each
 ** column.
 */
-void sqlite3AddColumn(Parse *pParse, Token *pName){
+void sqlite3AddColumn(Parse *pParse, Token *pName, Token *pType){
   Table *p;
   int i;
   char *z;
+  char *zType;
   Column *pCol;
   sqlite3 *db = pParse->db;
   if( (p = pParse->pNewTable)==0 ) return;
@@ -1056,8 +1051,11 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
     return;
   }
 #endif
-  z = sqlite3NameFromToken(db, pName);
+  z = sqlite3DbMallocRaw(db, pName->n + pType->n + 2);
   if( z==0 ) return;
+  memcpy(z, pName->z, pName->n);
+  z[pName->n] = 0;
+  sqlite3Dequote(z);
   for(i=0; i<p->nCol; i++){
     if( sqlite3_stricmp(z, p->aCol[i].zName)==0 ){
       sqlite3ErrorMsg(pParse, "duplicate column name: %s", z);
@@ -1079,13 +1077,21 @@ void sqlite3AddColumn(Parse *pParse, Token *pName){
   pCol->zName = z;
   sqlite3ColumnPropertiesFromName(p, pCol);
  
-  /* If there is no type specified, columns have the default affinity
-  ** 'BLOB'. If there is a type specified, then sqlite3AddColumnType() will
-  ** be called next to set pCol->affinity correctly.
-  */
-  pCol->affinity = SQLITE_AFF_BLOB;
-  pCol->szEst = 1;
+  if( pType->n==0 ){
+    /* If there is no type specified, columns have the default affinity
+    ** 'BLOB'. */
+    pCol->affinity = SQLITE_AFF_BLOB;
+    pCol->szEst = 1;
+  }else{
+    zType = z + sqlite3Strlen30(z) + 1;
+    memcpy(zType, pType->z, pType->n);
+    zType[pType->n] = 0;
+    sqlite3Dequote(zType);
+    pCol->affinity = sqlite3AffinityType(zType, &pCol->szEst);
+    pCol->colFlags |= COLFLAG_HASTYPE;
+  }
   p->nCol++;
+  pParse->constraintName.n = 0;
 }
 
 /*
@@ -1131,7 +1137,7 @@ char sqlite3AffinityType(const char *zIn, u8 *pszEst){
   char aff = SQLITE_AFF_NUMERIC;
   const char *zChar = 0;
 
-  if( zIn==0 ) return aff;
+  assert( zIn!=0 );
   while( zIn[0] ){
     h = (h<<8) + sqlite3UpperToLower[(*zIn)&0xff];
     zIn++;
@@ -1189,28 +1195,6 @@ char sqlite3AffinityType(const char *zIn, u8 *pszEst){
 }
 
 /*
-** This routine is called by the parser while in the middle of
-** parsing a CREATE TABLE statement.  The pFirst token is the first
-** token in the sequence of tokens that describe the type of the
-** column currently under construction.   pLast is the last token
-** in the sequence.  Use this information to construct a string
-** that contains the typename of the column and store that string
-** in zType.
-*/ 
-void sqlite3AddColumnType(Parse *pParse, Token *pType){
-  Table *p;
-  Column *pCol;
-
-  p = pParse->pNewTable;
-  if( p==0 || NEVER(p->nCol<1) ) return;
-  pCol = &p->aCol[p->nCol-1];
-  assert( pCol->zType==0 || CORRUPT_DB );
-  sqlite3DbFree(pParse->db, pCol->zType);
-  pCol->zType = sqlite3NameFromToken(pParse->db, pType);
-  pCol->affinity = sqlite3AffinityType(pCol->zType, &pCol->szEst);
-}
-
-/*
 ** The expression is the default value for the most recently added column
 ** of the table currently under construction.
 **
@@ -1235,11 +1219,16 @@ void sqlite3AddDefaultValue(Parse *pParse, ExprSpan *pSpan){
       ** tokens that point to volatile memory. The 'span' of the expression
       ** is required by pragma table_info.
       */
+      Expr x;
       sqlite3ExprDelete(db, pCol->pDflt);
-      pCol->pDflt = sqlite3ExprDup(db, pSpan->pExpr, EXPRDUP_REDUCE);
-      sqlite3DbFree(db, pCol->zDflt);
-      pCol->zDflt = sqlite3DbStrNDup(db, (char*)pSpan->zStart,
-                                     (int)(pSpan->zEnd - pSpan->zStart));
+      memset(&x, 0, sizeof(x));
+      x.op = TK_SPAN;
+      x.u.zToken = sqlite3DbStrNDup(db, (char*)pSpan->zStart,
+                                    (int)(pSpan->zEnd - pSpan->zStart));
+      x.pLeft = pSpan->pExpr;
+      x.flags = EP_Skip;
+      pCol->pDflt = sqlite3ExprDup(db, &x, EXPRDUP_REDUCE);
+      sqlite3DbFree(db, x.u.zToken);
     }
   }
   sqlite3ExprDelete(db, pSpan->pExpr);
@@ -1295,7 +1284,7 @@ void sqlite3AddPrimaryKey(
   int sortOrder     /* SQLITE_SO_ASC or SQLITE_SO_DESC */
 ){
   Table *pTab = pParse->pNewTable;
-  char *zType = 0;
+  Column *pCol = 0;
   int iCol = -1, i;
   int nTerm;
   if( pTab==0 || IN_DECLARE_VTAB ) goto primary_key_exit;
@@ -1307,8 +1296,8 @@ void sqlite3AddPrimaryKey(
   pTab->tabFlags |= TF_HasPrimaryKey;
   if( pList==0 ){
     iCol = pTab->nCol - 1;
-    pTab->aCol[iCol].colFlags |= COLFLAG_PRIMKEY;
-    zType = pTab->aCol[iCol].zType;
+    pCol = &pTab->aCol[iCol];
+    pCol->colFlags |= COLFLAG_PRIMKEY;
     nTerm = 1;
   }else{
     nTerm = pList->nExpr;
@@ -1320,8 +1309,8 @@ void sqlite3AddPrimaryKey(
         const char *zCName = pCExpr->u.zToken;
         for(iCol=0; iCol<pTab->nCol; iCol++){
           if( sqlite3StrICmp(zCName, pTab->aCol[iCol].zName)==0 ){
-            pTab->aCol[iCol].colFlags |= COLFLAG_PRIMKEY;
-            zType = pTab->aCol[iCol].zType;
+            pCol = &pTab->aCol[iCol];
+            pCol->colFlags |= COLFLAG_PRIMKEY;
             break;
           }
         }
@@ -1329,7 +1318,8 @@ void sqlite3AddPrimaryKey(
     }
   }
   if( nTerm==1
-   && zType && sqlite3StrICmp(zType, "INTEGER")==0
+   && pCol
+   && sqlite3StrICmp(sqlite3ColumnType(pCol,""), "INTEGER")==0
    && sortOrder!=SQLITE_SO_DESC
   ){
     pTab->iPKey = iCol;
@@ -1608,7 +1598,7 @@ static int resizeIndexObject(sqlite3 *db, Index *pIdx, int N){
   assert( pIdx->isResized==0 );
   nByte = (sizeof(char*) + sizeof(i16) + 1)*N;
   zExtra = sqlite3DbMallocZero(db, nByte);
-  if( zExtra==0 ) return SQLITE_NOMEM;
+  if( zExtra==0 ) return SQLITE_NOMEM_BKPT;
   memcpy(zExtra, pIdx->azColl, sizeof(char*)*pIdx->nColumn);
   pIdx->azColl = (const char**)zExtra;
   zExtra += sizeof(char*)*N;
@@ -2187,44 +2177,55 @@ int sqlite3ViewGetColumnNames(Parse *pParse, Table *pTable){
   ** statement that defines the view.
   */
   assert( pTable->pSelect );
-  if( pTable->pCheck ){
+  pSel = sqlite3SelectDup(db, pTable->pSelect, 0);
+  if( pSel ){
+    n = pParse->nTab;
+    sqlite3SrcListAssignCursors(pParse, pSel->pSrc);
+    pTable->nCol = -1;
     db->lookaside.bDisable++;
-    sqlite3ColumnsFromExprList(pParse, pTable->pCheck, 
-                               &pTable->nCol, &pTable->aCol);
-    db->lookaside.bDisable--;
-  }else{
-    pSel = sqlite3SelectDup(db, pTable->pSelect, 0);
-    if( pSel ){
-      n = pParse->nTab;
-      sqlite3SrcListAssignCursors(pParse, pSel->pSrc);
-      pTable->nCol = -1;
-      db->lookaside.bDisable++;
 #ifndef SQLITE_OMIT_AUTHORIZATION
-      xAuth = db->xAuth;
-      db->xAuth = 0;
-      pSelTab = sqlite3ResultSetOfSelect(pParse, pSel);
-      db->xAuth = xAuth;
+    xAuth = db->xAuth;
+    db->xAuth = 0;
+    pSelTab = sqlite3ResultSetOfSelect(pParse, pSel);
+    db->xAuth = xAuth;
 #else
-      pSelTab = sqlite3ResultSetOfSelect(pParse, pSel);
+    pSelTab = sqlite3ResultSetOfSelect(pParse, pSel);
 #endif
-      db->lookaside.bDisable--;
-      pParse->nTab = n;
-      if( pSelTab ){
-        assert( pTable->aCol==0 );
-        pTable->nCol = pSelTab->nCol;
-        pTable->aCol = pSelTab->aCol;
-        pSelTab->nCol = 0;
-        pSelTab->aCol = 0;
-        sqlite3DeleteTable(db, pSelTab);
-        assert( sqlite3SchemaMutexHeld(db, 0, pTable->pSchema) );
-      }else{
-        pTable->nCol = 0;
-        nErr++;
+    pParse->nTab = n;
+    if( pTable->pCheck ){
+      /* CREATE VIEW name(arglist) AS ...
+      ** The names of the columns in the table are taken from
+      ** arglist which is stored in pTable->pCheck.  The pCheck field
+      ** normally holds CHECK constraints on an ordinary table, but for
+      ** a VIEW it holds the list of column names.
+      */
+      sqlite3ColumnsFromExprList(pParse, pTable->pCheck, 
+                                 &pTable->nCol, &pTable->aCol);
+      if( db->mallocFailed==0 
+       && pParse->nErr==0
+       && pTable->nCol==pSel->pEList->nExpr
+      ){
+        sqlite3SelectAddColumnTypeAndCollation(pParse, pTable, pSel);
       }
-      sqlite3SelectDelete(db, pSel);
-    } else {
+    }else if( pSelTab ){
+      /* CREATE VIEW name AS...  without an argument list.  Construct
+      ** the column names from the SELECT statement that defines the view.
+      */
+      assert( pTable->aCol==0 );
+      pTable->nCol = pSelTab->nCol;
+      pTable->aCol = pSelTab->aCol;
+      pSelTab->nCol = 0;
+      pSelTab->aCol = 0;
+      assert( sqlite3SchemaMutexHeld(db, 0, pTable->pSchema) );
+    }else{
+      pTable->nCol = 0;
       nErr++;
     }
+    if( pSelTab ) sqlite3DeleteTable(db, pSelTab);
+    sqlite3SelectDelete(db, pSel);
+    db->lookaside.bDisable--;
+  } else {
+    nErr++;
   }
   pTable->pSchema->schemaFlags |= DB_UnresetViews;
 #endif /* SQLITE_OMIT_VIEW */
@@ -3200,6 +3201,20 @@ Index *sqlite3CreateIndex(
   sqlite3DefaultRowEst(pIndex);
   if( pParse->pNewTable==0 ) estimateIndexWidth(pIndex);
 
+  /* If this index contains every column of its table, then mark
+  ** it as a covering index */
+  assert( HasRowid(pTab) 
+      || pTab->iPKey<0 || sqlite3ColumnOfIndex(pIndex, pTab->iPKey)>=0 );
+  if( pTblName!=0 && pIndex->nColumn>=pTab->nCol ){
+    pIndex->isCovering = 1;
+    for(j=0; j<pTab->nCol; j++){
+      if( j==pTab->iPKey ) continue;
+      if( sqlite3ColumnOfIndex(pIndex,j)>=0 ) continue;
+      pIndex->isCovering = 0;
+      break;
+    }
+  }
+
   if( pTab==pParse->pNewTable ){
     /* This routine has been called to create an automatic index as a
     ** result of a PRIMARY KEY or UNIQUE clause on a column definition, or
@@ -3237,7 +3252,7 @@ Index *sqlite3CreateIndex(
         if( pIdx->aiColumn[k]!=pIndex->aiColumn[k] ) break;
         z1 = pIdx->azColl[k];
         z2 = pIndex->azColl[k];
-        if( z1!=z2 && sqlite3StrICmp(z1, z2) ) break;
+        if( sqlite3StrICmp(z1, z2) ) break;
       }
       if( k==pIdx->nKeyCol ){
         if( pIdx->onError!=pIndex->onError ){

@@ -837,6 +837,12 @@ that contains the master journal is also synced in order to make sure
 the master journal file will appear in the directory following a
 power failure.</p>
 
+<p>The purpose of the master journal is to ensure that multi-file
+transactions are atomic across a power-loss.  But if the database files
+have other settings that compromise integrity across a power-loss event
+(such as <a href="pragma.html#pragma_synchronous">PRAGMA synchronous=OFF</a> or <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=MEMORY</a>) then
+the creation of the master journal is omitted, as an optimization.
+
 <br clear="both">
 <a name="multijrnlupdate"></a>
 
@@ -938,7 +944,7 @@ in the gaps.</p>
 
 <p>When the original content of a database page is written into
 the rollback journal (as shown in <a href="#section_3_5">section 3.5</a>),
-SQLite always writes a complete sectors worth of data, even if the
+SQLite always writes a complete sector of data, even if the
 page size of the database is smaller than the sector size.  
 Historically, the sector size in SQLite has been hard coded to 512
 bytes and since the minimum page size is also 512 bytes, this has never
@@ -1265,7 +1271,7 @@ For example:</p>
 PRAGMA journal_mode=PERSIST;
 </per></blockquote>
 
-<p>The use of persistent journal mode provide a noticeable performance
+<p>The use of persistent journal mode provides a noticeable performance
 improvement on many systems.  Of course, the drawback is that the 
 journal files remain on the disk, using disk space and cluttering
 directories, long after the transaction commits.  The only safe way
@@ -1398,7 +1404,7 @@ dot-file locks or vice versa.</p>
 
 <p>SQLite uses the fsync() system call on Unix and the FlushFileBuffers()
 system call on w32 in order to sync the file system buffers onto disk
-oxide as shown in  <a href="#section_3_7">step 3.7</a> and
+oxide as shown in <a href="#section_3_7">step 3.7</a> and
 <a href="#section_3_10">step 3.10</a>.  Unfortunately, we have received
 reports that neither of these interfaces works as advertised on many
 systems.  We hear that FlushFileBuffers() can be completely disabled

@@ -146,7 +146,7 @@ a:visited { color: #734559 }
     <div style="font-size:1.5em;margin:1em;color:#044a64">
       Table Of Contents</div>
     <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Introduction to FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Differences between FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Creating and Destroying FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_3">1.3. Populating FTS Tables</a></div><div style="margin-left:12ex"><a href="#section_1_4">1.4. Simple FTS Queries</a></div><div style="margin-left:12ex"><a href="#section_1_5">1.5. Summary</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling and Enabling FTS3 and FTS4</a></div><div style="margin-left:6ex"><a href="#section_3">3. Full-text Index Queries</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. 
-  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The notindexed= option</a></div><div style="margin-left:12ex"><a href="#section_6_6">6.6. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=N" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (User Implemented) Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_2">8.2. Querying Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
+  Set Operations Using The Enhanced Query Syntax</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Set Operations Using The Standard Query Syntax</a></div><div style="margin-left:6ex"><a href="#section_4">4. Auxiliary Functions - Snippet, Offsets and Matchinfo</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. The Offsets Function</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. The Snippet Function</a></div><div style="margin-left:12ex"><a href="#matchinfo">4.3. The Matchinfo Function</a></div><div style="margin-left:6ex"><a href="#fts4aux">5. Fts4aux - Direct Access to the Full-Text Index</a></div><div style="margin-left:6ex"><a href="#fts4_options">6. FTS4 Options</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The compress= and uncompress= options</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The content= option </a></div><div style="margin-left:18ex"><a href="#section_6_2_1">6.2.1.  Contentless FTS4 Tables </a></div><div style="margin-left:18ex"><a href="#section_6_2_2">6.2.2.  External Content FTS4 Tables </a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. The languageid= option</a></div><div style="margin-left:12ex"><a href="#section_6_4">6.4. The matchinfo= option</a></div><div style="margin-left:12ex"><a href="#section_6_5">6.5. The notindexed= option</a></div><div style="margin-left:12ex"><a href="#section_6_6">6.6. The prefix= option</a></div><div style="margin-left:6ex"><a href="#commands">7. Special Commands For FTS3 and FTS4</a></div><div style="margin-left:12ex"><a href="#optimize">7.1. The "optimize" command</a></div><div style="margin-left:12ex"><a href="#rebuild">7.2. The "rebuild" command</a></div><div style="margin-left:12ex"><a href="#integcheck">7.3. The "integrity-check" command</a></div><div style="margin-left:12ex"><a href="#mergecmd">7.4. The "merge=X,Y" command</a></div><div style="margin-left:12ex"><a href="#automerge"">7.5. The "automerge=N" command</a></div><div style="margin-left:6ex"><a href="#tokenizer">8. Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_1">8.1. Custom (Application Defined) Tokenizers</a></div><div style="margin-left:12ex"><a href="#section_8_2">8.2. Querying Tokenizers</a></div><div style="margin-left:6ex"><a href="#section_9">9. Data Structures</a></div><div style="margin-left:12ex"><a href="#section_9_1">9.1. Shadow Tables</a></div><div style="margin-left:12ex"><a href="#section_9_2">9.2. Variable Length Integer (varint) Format</a></div><div style="margin-left:12ex"><a href="#section_9_3">9.3. Segment B-Tree Format</a></div><div style="margin-left:18ex"><a href="#section_9_3_1">9.3.1. Segment B-Tree Leaf Nodes</a></div><div style="margin-left:18ex"><a href="#section_9_3_2">9.3.2. Segment B-Tree Interior Nodes</a></div><div style="margin-left:12ex"><a href="#section_9_4">9.4. Doclist Format</a></div><div style="margin-left:6ex"><a href="#appendix_a"> 
   Appendix A: Search Application Tips
 </a></div> </div>
     <div class=startsearch></div>
@@ -2345,7 +2345,7 @@ SELECT * FROM porter WHERE porter MATCH 'Frustration';
 
 <p>
   The "unicode61" tokenizer is available beginning with SQLite <a href="releaselog/3_7_13.html">version 3.7.13</a>.
-  Unicode61 works very much like "simple" except that it does full unicode
+  Unicode61 works very much like "simple" except that it does simple unicode
   case folding according to rules in Unicode Version 6.1 and it recognizes
   unicode space and punctuation characters and uses those to separate tokens.
   The simple tokenizer only does case folding of ASCII characters and only
@@ -2410,19 +2410,13 @@ CREATE VIRTUAL TABLE txt5 USING fts4(
 
 <a name="f3tknzr"></a>
 
-<h2 id="section_8_1">8.1. Custom (User Implemented) Tokenizers</h2>
+<h2 id="section_8_1">8.1. Custom (Application Defined) Tokenizers</h2>
 
 <p>
-  As well as the built-in "simple", "porter" and (possibly) "icu" and
-  "unicode61" tokenizers, if the library is compiled with the following 
-  compiler option:
-
-<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">-DSQLITE_ENABLE_FTS3_TOKENIZER
-</pre></table></div>
-
-<p>
-  then FTS exports an interface that allows users to implement custom
-  tokenizers using C. The interface used to create a new tokenizer is defined
+  In addition to providing built-in "simple", "porter" and (possibly) "icu" and
+  "unicode61" tokenizers,
+  FTS provides an interface for applications to implement and register custom
+  tokenizers written in C.  The interface used to create a new tokenizer is defined
   and described in the fts3_tokenizer.h source file.
 
 <p>
@@ -2456,23 +2450,24 @@ SELECT fts3_tokenizer(&lt;tokenizer-name&gt;, &lt;sqlite3_tokenizer_module ptr&g
   (error) is raised.
 
 <p>
-  As of SQLite version 3.11.0, the second form of the fts3_tokenizer() function
-  is only available if the library is compiled with the
-  -DSQLITE_ENABLE_FTS3_TOKENIZER compiler switch. In earlier versions it was
-  always available.
+  Because of security concerns, SQLite version 3.11.0 only enabled the
+  second form of the fts3_tokenizer() function when the library is compiled
+  with the <a href="compile.html#enable_fts3_tokenizer">-DSQLITE_ENABLE_FTS3_TOKENIZER</a>
+  option. In earlier versions it was
+  always available.  Beginning with SQLite version 3.12.0, the second form of
+  fts3_tokenizer() can also be activated at run-time by calling
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,1,0).
 
 <p>
   <b>SECURITY WARNING</b>: 
-  If a version of the fts3/4 extension that supports the second form of
-  fts3_tokenizer() is deployed in an environment where potentially malicious
-  users may execute arbitrary SQL, they should be prevented from invoking the
-  fts3_tokenizer() function, possibly using the 
-  <a href="c3ref/set_authorizer.html">authorization callback</a>.
-
-<p>
-  <b>SECURITY UPDATE</b> for <a href="releaselog/3_11_0.html">Version 3.11.0</a>:
-  Because of continuing concern, the two-argument version of fts3_tokenizer()
-  is disabled unless SQLite is compiled with <a href="compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
+  If a version of the fts3/4 extension that supports the two-argument form of
+  fts3_tokenizer() is deployed in an environment where malicious users can
+  run arbitrary SQL, then those users should be prevented from invoking the 
+  two-argument fts3_tokenizer() function.
+  This can be done using the <a href="c3ref/set_authorizer.html">authorization callback</a>, 
+  or by disabling the two-argument fts3_tokenizer() interface using a
+  call to
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a>,0,0).
 
 <p>
   The following block contains an example of calling the fts3_tokenizer()

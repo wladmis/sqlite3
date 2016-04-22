@@ -561,32 +561,16 @@ readers might block while the checkpoint is running.
 A checkpoint can only complete when no other transactions are running, 
 which means the WAL file cannot be reset in the middle of a write
 transaction.  So a large change to a large database
-might result in a very large WAL file.  The WAL file will be checkpointed
+might result in a large WAL file.  The WAL file will be checkpointed
 once the write transaction completes (assuming there are no other readers
 blocking it) but in the meantime, the file can grow very big.
 
-<p>Note that sometimes the same database page can be written into
-the WAL file multiple times within the same transaction, and hence the
-WAL file can end up being many times larger than the original database.
-This can happen when the <a href="pragma.html#pragma_cache_size">cache_size</a> is smaller then the number of
-database pages changed during the transaction.
-When changes are made to a page, those changes are normally held in
-memory until the end of the transaction, at which point their are
-written to the WAL file.  But if the cache fills up, some pages might
-need to be spilled to the WAL file before the end of the transaction.
-If those same pages change again, then they must be written
-to the WAL file again.  For a very
-large transaction and a small cache, it is possible for the same page
-to spill many times and thus be written into the WAL file many times.
-
-<p>Defenses against this failure mode include: (1) switching to a
-rollback journal modes for large updates since pages are never
-written into a rollback journal more than once, (2) making sure that
-the <a href="pragma.html#pragma_cache_size">cache_size</a> is large enough to hold every page that will be changed
-during the transaction,
-(3) keeping the number of changed pages small by breaking
-the transaction up into smaller chunks, and/or (4) dropping indexes before
-a large insert and recreating them afterwards.
+<p>As of SQLite version 3.11.0, the WAL file for a single transaction
+should be proportional in size to the transaction itself.  Pages that
+are changed by the transaction should only be written into the WAL file
+once.  However, with older versions of SQLite, the same page might be
+written into the WAL file multiple times if the transaction grows larger
+than the page cache.
 </ul>
 
 <h2>Implementation Of Shared-Memory For The WAL-Index</h2>

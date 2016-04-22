@@ -252,7 +252,7 @@ statements) are ordinary full indexes.
 <p>
 The expression following the WHERE clause may contain operators,
 literal values, and names of columns in the table being indexed.
-The WHERE clause may <em>not</em> contains subqueries, references to other
+The WHERE clause may <em>not</em> contain subqueries, references to other
 tables, functions, or <a href="lang_expr.html#varparam">bound parameters</a>.  The LIKE, GLOB, MATCH,
 and REGEXP operators in SQLite are implemented as functions by the same name.
 Since functions are prohibited in the 
@@ -381,7 +381,7 @@ never match anything.</p>
        W is a comparison operator on "z" other than "IS", then those
        terms match.</p>
 
-<p>Example:  Let the index by
+<p>Example:  Let the index be
 <blockquote>
 CREATE INDEX ex2 ON tab2(b,c) WHERE c IS NOT NULL;
 </blockquote>

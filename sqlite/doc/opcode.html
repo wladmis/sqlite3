@@ -295,7 +295,7 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/c193299e595a13eba247738e22fce25c49346a6c">vdbe.c</a>.</p>
+<a href="http://www.sqlite.org/src/artifact/cd990451b504507b455cc649d46dad51f2835a67">vdbe.c</a>.</p>
 
 <p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
@@ -963,9 +963,8 @@ At most reg(P3) errors will be reported.
 In other words, the analysis stops as soon as reg(P1) errors are
 seen.  Reg(P1) is updated with the number of errors remaining.</p>
 
-<p>The root page numbers of all tables in the database are integer
-stored in reg(P1), reg(P1+1), reg(P1+2), ....  There are P2 tables
-total.</p>
+<p>The root page numbers of all tables in the database are integers
+stored in P4_INTARRAY argument.</p>
 
 <p>If P5 is not zero, the check is done on the auxiliary database
 file, not the main database file.</p>

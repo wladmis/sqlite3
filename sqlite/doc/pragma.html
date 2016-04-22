@@ -409,7 +409,8 @@ for use in application programs.</ol></p>
     however alternative application-defined page cache implementations
     may choose to interpret the suggested cache size in different ways
     or to ignore it all together.
-    The default suggested cache size is 2000 pages.
+    The default suggested cache size is -2000, which means the cache size
+    is limited to 2048000 bytes of memory.
     The default suggested cache size can be altered using the
     <a href="compile.html#default_cache_size">SQLITE_DEFAULT_CACHE_SIZE</a> compile-time options.
     The TEMP database has a default suggested cache size of 0 pages.</p>
@@ -1149,11 +1150,13 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     size must be a power of two between 512 and 65536 inclusive.
     </p>
 
-    <p>When a new database is created, SQLite assigned a default page size
-    based on information received from the xSectorSize and 
-    xDeviceCharacteristics methods of the <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object
-    of the newly created database file.  The page_size pragma will only
-    cause an immediate change in the
+    <p>When a new database is created, SQLite assigned a page size to
+    the database based on platform and filesystem.  For many years,
+    the default page size was almost always 1024 bytes, but beginning
+    with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a> in 2016, the default page size increased
+    to 4096.
+
+    <p>The page_size pragma will only cause an immediate change in the
     page size if it is issued while the database is still empty, prior 
     to the first CREATE TABLE statement.  If the page_size pragma is
     used to specify a new page size just prior to
@@ -1161,28 +1164,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <a href="wal.html">WAL journal mode</a> then <a href="lang_vacuum.html">VACUUM</a> will change the page
     size to the new value.</p>
 
-    <p>If SQLite is compiled with the SQLITE_ENABLE_ATOMIC_WRITE option,
-    then the default page size is chosen to be the largest page size
-    less than or equal to SQLITE_MAX_DEFAULT_PAGE_SIZE for which atomic
-    write is enabled according to the
-    xDeviceCharacteristics method of the <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object for
-    the database file.  If the SQLITE_ENABLE_ATOMIC_WRITE option is
-    disabled or if xDeviceCharacteristics reports no suitable atomic
-    write page sizes, then the default page size is the larger of 
-    SQLITE_DEFAULT_PAGE_SIZE
-    and the sector size as reported by the xSectorSize method of the
-    <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object, but not more than 
-    SQLITE_MAX_DEFAULT_PAGE_SIZE.  The normal configuration for SQLite
-    running on workstations is for atomic write to be
-    disabled, for the maximum page size to be set to 65536, for
-    SQLITE_DEFAULT_PAGE_SIZE to be 1024, and for the
-    maximum default page size to be set to 8192.  The default xSectorSize
-    method on unix workstation implementations always reports a sector size
-    of 512 bytes.  Hence, 
-    the default page size chosen by SQLite on unix is usually 1024 bytes.
-    On windows, the GetDiskFreeSpace() interface is used to obtain the
-    actual device sector size and hence the default page size on windows
-    will sometimes be greater than 1024.</p>
+    <p>The <a href="compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> compile-time option can be used
+    to change the default page size assigned to new databases.
 <a name="pragma_parser_trace"></a>
 <hr>
     <p><b>PRAGMA parser_trace = </b><i>boolean</i><b>; </b></p>
@@ -1403,7 +1386,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     This ensures that an operating system crash or power failure will
     not corrupt the database.
     FULL synchronous is very safe, but it is also slower.  FULL is the
-    usual default setting when not in <a href="wal.html">WAL mode</a>.</dd>
+    most commonly used synchronous setting when not in <a href="wal.html">WAL mode</a>.</dd>
     <dt><b>NORMAL</b> (1)</dt>
     <dd>
     When synchronous is NORMAL (1), the SQLite database
@@ -1412,7 +1395,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     a power failure at just the wrong time could corrupt the database in
     NORMAL mode.  But in practice, you are more likely to suffer
     a catastrophic disk failure or some other unrecoverable hardware
-    fault.  NORMAL is the default when in <a href="wal.html">WAL mode</a>.</dd>
+    fault.  Many applications choose NORMAL when in <a href="wal.html">WAL mode</a>.</dd>
     <dt><b>OFF</b> (0)</dt>
     <dd>
     With synchronous OFF (0), SQLite continues without syncing
@@ -1438,8 +1421,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     If durability is not a concern, then synchronous=NORMAL is normally
     all one needs in WAL mode.</p>
 
-    <p>The default setting is usually synchronous=FULL, 
-    except in <a href="wal.html">WAL mode</a> when the default is synchronous=NORMAL.
+    <p>The default setting is usually synchronous=FULL.
     The <a href="compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> compile-time option changes the
     default to synchronous=EXTRA.</p>
 

@@ -616,6 +616,7 @@ test_suite "utf16" -description {
     trace.test trigger1.test trigger2.test trigger3.test
     trigger4.test types2.test types.test unique.test update.test
     vacuum.test view.test where.test
+    bestindex1.test
 }
 
 # Run some tests in exclusive locking mode.
@@ -1067,12 +1068,12 @@ proc help {} {
   exit -1
 }
 
-if {[info script] == $argv0} {
+if {[file tail $argv0] == "permutations.test"} {
   proc main {argv} {
     if {[llength $argv]==0} {
       help
     } else {
-      set suite [lindex $argv 0]
+      set suite [file tail [lindex $argv 0]]
       if {[info exists ::testspec($suite)]==0} help
       set extra ""
       if {[llength $argv]>1} { set extra [list -files [lrange $argv 1 end]] }

@@ -241,12 +241,12 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
     <span style="color:blue;font-style:italic">/* Set up the backup procedure to copy from the "main" database of </span>
     <span style="color:blue;font-style:italic">** connection pFile to the main database of connection pInMemory.</span>
     <span style="color:blue;font-style:italic">** If something goes wrong, pBackup will be set to NULL and an error</span>
-    <span style="color:blue;font-style:italic">** code and  message left in connection pTo.</span>
+    <span style="color:blue;font-style:italic">** code and message left in connection pTo.</span>
     <span style="color:blue;font-style:italic">**</span>
     <span style="color:blue;font-style:italic">** If the backup object is successfully created, call backup_step()</span>
     <span style="color:blue;font-style:italic">** to copy data from pFile to pInMemory. Then call backup_finish()</span>
     <span style="color:blue;font-style:italic">** to release resources associated with the pBackup object.  If an</span>
-    <span style="color:blue;font-style:italic">** error occurred, then  an error code and message will be left in</span>
+    <span style="color:blue;font-style:italic">** error occurred, then an error code and message will be left in</span>
     <span style="color:blue;font-style:italic">** connection pTo. If no error occurred, then the error code belonging</span>
     <span style="color:blue;font-style:italic">** to pTo is set to SQLITE_OK.</span>
     <span style="color:blue;font-style:italic">*/</span>
@@ -267,7 +267,7 @@ int loadOrSaveDb(<a href="c3ref/sqlite3.html">sqlite3</a> *pInMemory, const char
 
 
 <p>
-  The C function to the right demonstrates of one of the simplest,
+  The C function to the right demonstrates one of the simplest,
   and most common, uses of the backup API: loading and saving the contents
   of an in-memory database to a file on disk. The backup API is used as
   follows in this example:
@@ -453,7 +453,7 @@ int backupDb(
   operation and uses the same database handle (pDb), then the destination
   database (the one opened using connection pFile) is automatically updated
   along with the source. The backup process may then be continued after the 
-  xSleep() call returns as if nothing had happened. 
+  sqlite3_sleep() call returns as if nothing had happened. 
 
 <p>
   Whether or not the backup process is restarted as a result of writes to

@@ -364,11 +364,6 @@ additional detail.
 </p>
 
 <p>
-The master journal file is only created in cases where a single
-<a href="c3ref/sqlite3.html">database connection</a> is talking with two or more databases files
-as a result of using <a href="lang_attach.html">ATTACH</a> to connection to auxiliary databases,
-and where a single transaction modifies more than one of those
-database files.
 Without the master journal, the transaction commit on a multi-database
 transaction would be atomic for each database individually, but it
 would not be atomic across all databases.  In other words, if the
@@ -377,6 +372,28 @@ the changes to one of the databases might complete while the changes
 to another database might roll back.  The master journal causes all
 changes in all databases to either rollback or commit together.
 </p>
+
+</p>
+The master journal file is only created for <a href="lang_transaction.html">COMMIT</a> operations that
+involve multiple database files where at least two of the databases 
+meet all of the following requirements:
+<ol>
+<li>The database is modified by the transaction
+<li>The <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting is not OFF
+<li>The <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a> is not OFF, MEMORY, or WAL
+</ol>
+This means that SQLite transactions are not atomic
+across multiple database files on a power-loss when the database 
+files have synchronous turned off or when they are using journal 
+modes of OFF, MEMORY, or WAL.  For synchronous OFF and for
+journal_modes OFF and MEMORY, database will usually corrupt if
+a transaction commit is interrupted by a power loss.  For 
+<a href="wal.html">WAL mode</a>, individual database files are updated atomically
+across a power-loss, but in the case of a multi-file transactions,
+some files might rollback while others roll forward after
+power is restored.
+</p>
+
 
 <a name="stmtjrnl"></a>
 
@@ -411,9 +428,11 @@ used.  For example:
 UPDATE OR FAIL ...
 UPDATE OR IGNORE ...
 UPDATE OR REPLACE ...
+UPDATE OR ROLLBACK ...
 INSERT OR FAIL ...
 INSERT OR IGNORE ...
 INSERT OR REPLACE ...
+INSERT OR ROLLBACK ...
 REPLACE INTO ....
 </pre></blockquote>
 
