@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -138,7 +139,10 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2016_04_18"></a><h3>2016-04-18 - Release 3.12.2</h3><blockquote>
+<a name="2016_05_18"></a><h3>2016-05-18 - Release 3.13.0</h3><blockquote>
+SQLite <a href="releaselog/3_13_0.html">version 3.13.0</a> is a regularly schedule maintenance release containg
+performance enhancements and fixes for obscure bugs.
+</blockquote><hr width="50%"><a name="2016_04_18"></a><h3>2016-04-18 - Release 3.12.2</h3><blockquote>
 <p>Yikes!  The 3.12.0 and 3.12.1 releases contain a backwards compatibility bug!
    Tables that declare a column with type <tt>"INTEGER" PRIMARY KEY</tt>
    (where the datatype name INTEGER is quoted) generate an incompatible

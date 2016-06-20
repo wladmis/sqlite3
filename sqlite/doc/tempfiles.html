@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -815,4 +816,41 @@ be changed at run-time or on a per-table or per-index basis.
 Each temporary file gets its own private page cache with its
 own SQLITE_DEFAULT_TEMP_CACHE_SIZE page limit.
 </p>
+
+<a name="tempdir"></a>
+
+<h2>5.0 Temporary File Storage Locations</h2>
+
+<p>
+The directory or folder in which temporary files are created is
+determined by the OS-specific <a href="vfs.html">VFS</a>.
+
+<p>
+On unix-like systems, directories are searched in the following order:
+<ol>
+<li>The directory set by <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a> or by the
+    <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> global variable
+<li>The SQLITE_TMPDIR environment variable
+<li>The TMPDIR environment variable
+<li>/var/tmp
+<li>/usr/tmp
+<li>/tmp
+<li>The current working directory (".")
+</ol>
+The first of the above that is found to exist and have the write and
+execute bits set is used.  The final "." fallback is important for some
+applications that use SQLite inside of chroot jails that do not have
+the standard temporary file locations available.
+
+<p>
+On Windows systems, folders are searched in the following order:
+<ol>
+<li>The folder set by <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a> or by the
+    <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> global variable
+<li>The folder returned by the GetTempPath() system interface.
+</ol>
+SQLite itself does not pay any attention to environment variables
+in this case, though presumably the GetTempPath() system call does.
+The search algorithm is different for CYGWIN builds.  Check the 
+source code for details.
 

@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -846,6 +847,19 @@ the available settings:</p>
   of two and uses a first-fit, buddy-allocator algorithm
   that provides strong guarantees against fragmentation and breakdown
   subject to certain operating constraints.
+</p></blockquote><a name="enable_preupdate_hook"></a>
+<p><b>SQLITE_ENABLE_PREUPDATE_HOOK</b></p><blockquote><p>
+  This option enables 
+  <a href="c3ref/preupdate_count.html">several new APIs</a> that provide callbacks
+  prior to any change to a <a href="rowidtable.html">rowid table</a>.  The callbacks can be used
+  to record the state of the row before the change occurs.
+  <p>The action of the preupdate hook is similar to the
+  <a href="c3ref/update_hook.html">update hook</a> except that the callback is
+  invoked before the change, not afterwards, and the preupdate
+  hook interfaces are omitted unless this compile-time option is
+  used.
+  <p>The preupdate hook interfaces were originally added to
+  support the <a href="sessionintro.html">session</a> extension.
 </p></blockquote><a name="enable_rbu"></a>
 <p><b>SQLITE_ENABLE_RBU</b></p><blockquote><p>
   Enable the code the implements the <a href="rbu.html">RBU extension</a>.
@@ -853,6 +867,9 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_RTREE</b></p><blockquote><p>
   This option causes SQLite to include support for the
   <a href="rtree.html">R*Tree index extension</a>.
+</p></blockquote><a name="enable_session"></a>
+<p><b>SQLITE_ENABLE_SESSION</b></p><blockquote><p>
+  This option enables the <a href="sessionintro.html">session extension</a>.
 </p></blockquote><a name="enable_stmt_scanstatus"></a>
 <p><b>SQLITE_ENABLE_STMT_SCANSTATUS</b></p><blockquote><p>
   This option enables the <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus()</a> interface.  The

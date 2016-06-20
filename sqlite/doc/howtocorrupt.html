@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -331,10 +332,12 @@ reading and writing.  Windows does not allow this to occur.)
 Since rollback journals and WAL files are based on the name of the database
 file, the two different database files will share the same rollback
 journal or WAL file.  A rollback or recovery for one of the databases
-might use content from the other database, resulting in corruption.</p>
-
-<p>A similar problem occurs if a database file is renamed while it is
+might use content from the other database, resulting in corruption.
+A similar problem occurs if a database file is renamed while it is
 opened and a new file is created with the old name.</p>
+
+<p>In other words, unlinking or renaming an open database file 
+results in behavior that is undefined and probably undesirable.</p>
 
 <p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
 send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file is unlinked
@@ -352,11 +355,18 @@ if one process crashes, the other process will be unable to recover the
 transaction in progress because it will be looking in the wrong place
 for the appropriate journal.</p>
 
+<p>In other words, opening and using a database file that has two or
+more names results in behavior that is undefined and probably undesirable.</p>
+
 <p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
 send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file has 
-multiple hard links.  As of this writing, SQLite still does not yet detect 
-or warn about the use of database files through soft links.</p>
+multiple hard links.</p>
 
+<p>Beginning with SQLite <a href="releaselog/3_10_0.html">version 3.10.0</a>, the unix OS interface will
+attempt to resolve symbolic links and open the database file by its
+canonical name.  Prior to version 3.10.0, opening a database file 
+through a symbolic link was similar to opening a database file
+that had multiple hard links and resulted in undefined behavior.</p>
 
 <h2>3.0 Failure to sync</h2>
 

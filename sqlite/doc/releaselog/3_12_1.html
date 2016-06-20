@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -145,7 +146,10 @@ a:visited { color: #734559 }
 <p><b>Hashes:</b>
 <li>SQLITE_SOURCE_ID: "2016-04-08 15:09:49 fe7d3b75fe1bde41511b323925af8ae1b910bc4d"
 <li>SHA1 for sqlite3.c: ebb18593350779850e3e1a930eb84a70fca8c1d1
-</ul></p><p><b>Changes carried forward from version 3.12.0 (2016-03-29):</b></p><p><ul>
+
+</ul></p>
+<p><b>Changes carried forward from version 3.12.0 (2016-03-29):</b></p>
+<p><ul>
 <p><b>Potentially Disruptive Change:</b>
 <li>The <a href="../compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> is increased from 1024 to 4096.  
     The <a href="../compile.html#default_cache_size">SQLITE_DEFAULT_CACHE_SIZE</a> is changed from 2000 to -2000 so 
@@ -202,7 +206,9 @@ a:visited { color: #734559 }
     the SELECT statement on the RHS is a correlated subquery.
     Ticket <a href="https://www.sqlite.org/src/info/5e3c886796e5512e">5e3c886796e5512e</a>.
 <li>Fix a harmless TSAN warning associated with the <a href="../c3ref/db_readonly.html">sqlite3_db_readonly()</a> interface.
+
 </ul></p>
+
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
       A detailed history of every

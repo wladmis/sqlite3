@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -138,8 +139,16 @@ a:visited { color: #734559 }
 
 <h2>Constants:</h2>
 <table width="100%" cellpadding="5"><tr>
-<td valign="top"><ul></ul></td>
-<td valign="top"><ul></ul></td>
+<td valign="top"><ul><li><a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_ABORT</a></li>
+<li><a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONFLICT</a></li>
+<li><a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a></li>
+<li><a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_DATA</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_FOREIGN_KEY</a></li>
+<li><a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a></li>
+<li><a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_OMIT</a></li>
+<li><a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a></li>
+</ul></td>
 </tr></table>
 <p>Other lists:
 <a href="objlist.html">Objects</a> and

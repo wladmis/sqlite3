@@ -1271,7 +1271,7 @@ static int sqlite3_mprintf_int64(
     return TCL_ERROR;
   }
   for(i=2; i<5; i++){
-    if( sqlite3Atoi64(argv[i], &a[i-2], 1000000, SQLITE_UTF8) ){
+    if( sqlite3Atoi64(argv[i], &a[i-2], sqlite3Strlen30(argv[i]), SQLITE_UTF8) ){
       Tcl_AppendResult(interp, "argument is not a valid 64-bit integer", 0);
       return TCL_ERROR;
     }
@@ -2355,6 +2355,31 @@ static int test_snapshot_free(
   }
   pSnapshot = (sqlite3_snapshot*)sqlite3TestTextToPtr(Tcl_GetString(objv[1]));
   sqlite3_snapshot_free(pSnapshot);
+  return TCL_OK;
+}
+#endif /* SQLITE_ENABLE_SNAPSHOT */
+
+#ifdef SQLITE_ENABLE_SNAPSHOT
+/*
+** Usage: sqlite3_snapshot_cmp SNAPSHOT1 SNAPSHOT2
+*/
+static int test_snapshot_cmp(
+  void * clientData,
+  Tcl_Interp *interp,
+  int objc,
+  Tcl_Obj *CONST objv[]
+){
+  int res;
+  sqlite3_snapshot *p1;
+  sqlite3_snapshot *p2;
+  if( objc!=3 ){
+    Tcl_WrongNumArgs(interp, 1, objv, "SNAPSHOT1 SNAPSHOT2");
+    return TCL_ERROR;
+  }
+  p1 = (sqlite3_snapshot*)sqlite3TestTextToPtr(Tcl_GetString(objv[1]));
+  p2 = (sqlite3_snapshot*)sqlite3TestTextToPtr(Tcl_GetString(objv[2]));
+  res = sqlite3_snapshot_cmp(p1, p2);
+  Tcl_SetObjResult(interp, Tcl_NewIntObj(res));
   return TCL_OK;
 }
 #endif /* SQLITE_ENABLE_SNAPSHOT */
@@ -5188,7 +5213,9 @@ static int vfs_unregister_all(
 /*
 ** tclcmd:   vfs_reregister_all
 **
-** Restore all VFSes that were removed using vfs_unregister_all
+** Restore all VFSes that were removed using vfs_unregister_all. Taking
+** care to put the linked list back together in the same order as it was
+** in before vfs_unregister_all was invoked.
 */
 static int vfs_reregister_all(
   ClientData clientData, /* Pointer to sqlite3_enable_XXX function */
@@ -5197,8 +5224,8 @@ static int vfs_reregister_all(
   Tcl_Obj *CONST objv[]  /* Command arguments */
 ){
   int i;
-  for(i=0; i<nVfs; i++){
-    sqlite3_vfs_register(apVfs[i], i==0);
+  for(i=nVfs-1; i>=0; i--){
+    sqlite3_vfs_register(apVfs[i], 1);
   }
   return TCL_OK;
 }
@@ -6673,8 +6700,8 @@ static int sorter_test_sort4_helper(
   const char *zSql2;
   int nStep; 
   int iStep; 
-  int iCksum1 = 0; 
-  int iCksum2 = 0; 
+  unsigned int iCksum1 = 0; 
+  unsigned int iCksum2 = 0; 
   int rc;
   int iB;
   sqlite3 *db;
@@ -6701,7 +6728,7 @@ static int sorter_test_sort4_helper(
       return TCL_ERROR;
     }
 
-    iCksum1 += (iCksum1 << 3) + a;
+    iCksum1 += (iCksum1 << 3) + (unsigned int)a;
   }
   rc = sqlite3_finalize(pStmt);
   if( rc!=SQLITE_OK ) goto sql_error;
@@ -6710,7 +6737,7 @@ static int sorter_test_sort4_helper(
   if( rc!=SQLITE_OK ) goto sql_error;
   for(iStep=0; SQLITE_ROW==sqlite3_step(pStmt); iStep++){
     int a = sqlite3_column_int(pStmt, 0);
-    iCksum2 += (iCksum2 << 3) + a;
+    iCksum2 += (iCksum2 << 3) + (unsigned int)a;
   }
   rc = sqlite3_finalize(pStmt);
   if( rc!=SQLITE_OK ) goto sql_error;
@@ -6963,6 +6990,7 @@ static int test_sqlite3_db_config(
     { "FKEY",            SQLITE_DBCONFIG_ENABLE_FKEY },
     { "TRIGGER",         SQLITE_DBCONFIG_ENABLE_TRIGGER },
     { "FTS3_TOKENIZER",  SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER },
+    { "LOAD_EXTENSION",  SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION },
   };
   int i;
   int v;
@@ -7249,6 +7277,7 @@ int Sqlitetest1_Init(Tcl_Interp *interp){
      { "sqlite3_snapshot_get", test_snapshot_get, 0 },
      { "sqlite3_snapshot_open", test_snapshot_open, 0 },
      { "sqlite3_snapshot_free", test_snapshot_free, 0 },
+     { "sqlite3_snapshot_cmp", test_snapshot_cmp, 0 },
 #endif
   };
   static int bitmask_size = sizeof(Bitmask)*8;

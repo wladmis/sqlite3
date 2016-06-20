@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -142,7 +143,10 @@ a:visited { color: #734559 }
 
 <li>SQLITE_SOURCE_ID: "2015-05-09 12:14:55 05b4b1f2a937c06c90db70c09890038f6c98ec40"
 <li>SHA1 for sqlite3.c: 85e4e1c08c7df28ef61bb9759a0d466e0eefbaa2
-</ul></p><p><b>Changes carried forward from version 3.8.10 (2015-05-07):</b></p><p><ul>
+
+</ul></p>
+<p><b>Changes carried forward from version 3.8.10 (2015-05-07):</b></p>
+<p><ul>
 <li>Added the <a href="../sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
     SQLite database files.
 <li>Added the <a href="../fts3.html#matchinfo-y">matchinfo y flag</a> to the 
@@ -158,7 +162,9 @@ a:visited { color: #734559 }
 <li>Make the <a href="../dbstat.html">dbstat virtual table</a> part of standard builds when
     compiled with the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option.
 
+
 </ul></p>
+
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
       A detailed history of every

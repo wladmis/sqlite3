@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -144,7 +145,10 @@ a:visited { color: #734559 }
 <p><b>Hashes:</b>
 <li>SQLITE_SOURCE_ID: "2016-01-13 21:41:56 254419c36766225ca542ae873ed38255e3fb8588"
 <li>SHA1 for sqlite3.c: 1398ba8e4043550a533cdd0834bfdad1c9eab0f4
-</ul></p><p><b>Changes carried forward from version 3.10.0 (2016-01-06):</b></p><p><ul>
+
+</ul></p>
+<p><b>Changes carried forward from version 3.10.0 (2016-01-06):</b></p>
+<p><ul>
 <p><b>General improvements:</b>
 <li>Added support for <a href="../lang_expr.html#like">LIKE</a>, <a href="../lang_expr.html#glob">GLOB</a>, and <a href="../lang_expr.html#regexp">REGEXP</a> operators on <a href="../vtab.html">virtual tables</a>.
 <li>Added the <a href="../vtab.html#colUsed">colUsed field</a> to <a href="../c3ref/index_info.html">sqlite3_index_info</a> for use by
@@ -188,7 +192,9 @@ a:visited { color: #734559 }
 <li>Fix an infinite-loop in the query planner that could occur on
     malformed <a href="../lang_with.html">common table expressions</a>.
 <li>Various bug fixes in the <a href="../sqldiff.html">sqldiff</a> tool.
+
 </ul></p>
+
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
       A detailed history of every

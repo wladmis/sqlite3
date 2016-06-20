@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -137,8 +138,18 @@ a:visited { color: #734559 }
 
 
 
-<h1 align=center>Datatypes In SQLite Version 3</h1>
 
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      Datatypes In SQLite Version 3
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#044a64">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Datatypes In SQLite</a></div><div style="margin-left:6ex"><a href="#section_2">2. Storage Classes and Datatypes</a></div><div style="margin-left:12ex"><a href="#section_2_1">2.1. Boolean Datatype</a></div><div style="margin-left:12ex"><a href="#section_2_2">2.2. Date and Time Datatype</a></div><div style="margin-left:6ex"><a href="#section_3">3. Type Affinity</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. Determination Of Column Affinity</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Affinity Name Examples</a></div><div style="margin-left:12ex"><a href="#section_3_3">3.3. Column Affinity Behavior Example</a></div><div style="margin-left:6ex"><a href="#section_4">4. Comparison Expressions</a></div><div style="margin-left:12ex"><a href="#section_4_1">4.1. Sort Order</a></div><div style="margin-left:12ex"><a href="#section_4_2">4.2. Affinity Of Comparison Operands</a></div><div style="margin-left:12ex"><a href="#section_4_3">4.3. Type Conversions Prior To Comparison</a></div><div style="margin-left:12ex"><a href="#section_4_4">4.4. Comparison Example</a></div><div style="margin-left:6ex"><a href="#section_5">5. Operators</a></div><div style="margin-left:6ex"><a href="#section_6">6. Sorting, Grouping and Compound SELECTs</a></div><div style="margin-left:6ex"><a href="#section_7">7. Collating Sequences</a></div><div style="margin-left:12ex"><a href="#section_7_1">7.1. Assigning Collating Sequences from SQL</a></div><div style="margin-left:12ex"><a href="#section_7_2">7.2. Collation Sequence Examples</a></div> </div>
+    <div class=startsearch></div>
+  
+
+<h1 id="section_1">1. Datatypes In SQLite</h1>
 <p>Most SQL database engines (every SQL database engine other than SQLite,
 as far as we know) uses static, rigid typing.  With static typing, the datatype
 of a value is determined by its container - the particular column in
@@ -155,7 +166,7 @@ databases.</p>
 
 <a name="storageclasses"></a>
 
-<h2>1.0 Storage Classes and Datatypes</h2>
+<h1 id="section_2">2. Storage Classes and Datatypes</h1>
 
 <p>Each value stored in an SQLite database (or manipulated by the
 database engine) has one of the following storage classes:</p>
@@ -199,14 +210,14 @@ database engine may convert values between numeric storage classes
 
 <a name="boolean"></a>
 
-<h3>1.1 Boolean Datatype</h3>
+<h2 id="section_2_1">2.1. Boolean Datatype</h2>
 
 <p>SQLite does not have a separate Boolean storage class.
 Instead, Boolean values are stored as integers 0 (false) and 1 (true).</p>
 
 <a name="datetime"></a>
 
-<h3>1.2 Date and Time Datatype</h3>
+<h2 id="section_2_2">2.2. Date and Time Datatype</h2>
 
 <p>SQLite does not have a storage class set aside for storing
 dates and/or times.
@@ -229,7 +240,7 @@ and time functions.</p>
 
 <a name="affinity"></a>
 
-<h2>2.0 Type Affinity</h2>
+<h1 id="section_3">3. Type Affinity</h1>
 
 <p>
 In order to maximize compatibility between SQLite and other database
@@ -298,7 +309,7 @@ another.</p>
 
 <a name="affname"></a>
 
-<h3>2.1 Determination Of Column Affinity</h3>
+<h2 id="section_3_1">3.1. Determination Of Column Affinity</h2>
 
 <p>The affinity of a column is determined by the declared type
 of the column, according to the following rules in the order shown:</p>
@@ -328,7 +339,7 @@ is important.  A column whose declared type is "CHARINT" will match
 both rules 1 and 2 but the first rule takes precedence and so the 
 column affinity will be INTEGER.</p>
 
-<h3>2.2 Affinity Name Examples</h3>
+<h2 id="section_3_2">3.2. Affinity Name Examples</h2>
 
 <p>The following table shows how many common datatype names from
 more traditional SQL implementations are converted into affinities by the five rules of the
@@ -400,7 +411,7 @@ strings, BLOBs or numeric values.</p>
 affinity, not REAL affinity, due to the "INT" at the end of "POINT".
 And the declared type of "STRING" has an affinity of NUMERIC, not TEXT.
 
-<h3>2.3 Column Affinity Behavior Example</h3>
+<h2 id="section_3_3">3.3. Column Affinity Behavior Example</h2>
 
 <p>The following SQL demonstrates how SQLite uses column affinity
 to do type conversions when values are inserted into a table.</p>
@@ -448,13 +459,13 @@ null|null|null|null|null
 
 <a name="comparisons"></a>
 
-<h2>3.0 Comparison Expressions</h2>
+<h1 id="section_4">4. Comparison Expressions</h1>
 
 <p>SQLite version 3 has the usual set of SQL comparison operators
-including "=", "==", "&lt;", "&lt;=", "&gt;", "&gt;=", "!=", "<>",
+including "=", "==", "&lt;", "&lt;=", "&gt;", "&gt;=", "!=", "",
 "IN", "NOT IN", "BETWEEN", "IS", and "IS NOT", .
 
-<h3>3.1 Sort Order</h3>
+<h2 id="section_4_1">4.1. Sort Order</h2>
 
 <p>The results of a comparison depend on the storage classes of the
 operands, according to the following rules:</p>
@@ -476,7 +487,7 @@ operands, according to the following rules:</p>
 
 <a name="expraff"></a>
 
-<h3>3.2 Affinity Of Comparison Operands</h3>
+<h2 id="section_4_2">4.2. Affinity Of Comparison Operands</h2>
 
 <p>SQLite may attempt to convert values between the storage classes
 INTEGER, REAL, and/or TEXT before performing a comparison.
@@ -509,7 +520,7 @@ REAL, or NUMERIC) but expressions do no necessarily have an affinity.
 
 <a name="compaff"></a>
 
-<h3>3.3 Type Conversions Prior To Comparison</h3>
+<h2 id="section_4_3">4.3. Type Conversions Prior To Comparison</h2>
 
 <p>To "apply affinity" means to convert an operand to a particular storage
 class if and only if the conversion is lossless and reversible.
@@ -541,7 +552,7 @@ and "z" values in this example) are considered to have no affinity,
 even if they happen to be column values or CAST expressions.  
 </p>
 
-<h3>3.4 Comparison Example</h3>
+<h2 id="section_4_4">4.4. Comparison Example</h2>
 
 <blockquote>
 <pre>
@@ -607,7 +618,7 @@ SELECT d &lt; '40', d &lt; '60', d &lt; '600' FROM t1;
 commuted - if expressions of the form "a&lt;40" are rewritten
 as "40&gt;a".
 
-<h2>4.0 Operators</h2>
+<h1 id="section_5">5. Operators</h1>
 
 <p>All mathematical operators (+, -, *, /, %, &lt;&lt;, &gt;&gt;,
 &amp;, and |)
@@ -618,7 +629,7 @@ An operand on a mathematical operator that does not look in any way
 numeric and is not NULL is converted to 0 or 0.0.
 </p>
 
-<h2>5.0 Sorting, Grouping and Compound SELECTs</h2>
+<h1 id="section_6">6. Sorting, Grouping and Compound SELECTs</h1>
 
 <p>When query results are sorted by an ORDER BY clause, values with storage
 class NULL come first, followed by INTEGER and REAL values
@@ -640,7 +651,7 @@ are compared as is.</p>
 
 <a name="collation"></a>
 
-<h2>6.0 Collating Sequences</h2>
+<h1 id="section_7">7. Collating Sequences</h1>
 
 <p>When SQLite compares two strings, it uses a collating sequence or
 collating function (two words for the same thing) to determine which
@@ -664,7 +675,7 @@ RTRIM.</p>
 <p>An application can register additional collating functions using
 the <a href="c3ref/create_collation.html">sqlite3_create_collation()</a> interface.</p>
 
-<h3>6.1 Assigning Collating Sequences from SQL</h3>
+<h2 id="section_7_1">7.1. Assigning Collating Sequences from SQL</h2>
 
 <p>
 Every column of every
@@ -730,7 +741,7 @@ determine sort order. If the expression is not a column and has no
 COLLATE clause, then the BINARY collating sequence is used.
 </p>  
 
-<h3>6.2 Collation Sequence Examples</h3>
+<h2 id="section_7_2">7.2. Collation Sequence Examples</h2>
 <p>
 The examples below identify the collating sequences that would be used to
 determine the results of text comparisons that may be performed by various

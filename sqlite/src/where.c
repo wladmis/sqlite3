@@ -261,7 +261,10 @@ static WhereTerm *whereScanNext(WhereScan *pScan){
 **
 ** The scanner will be searching the WHERE clause pWC.  It will look
 ** for terms of the form "X <op> <expr>" where X is column iColumn of table
-** iCur.  The <op> must be one of the operators described by opMask.
+** iCur.   Or if pIdx!=0 then X is column iColumn of index pIdx.  pIdx
+** must be one of the indexes of table iCur.
+**
+** The <op> must be one of the operators described by opMask.
 **
 ** If the search is for X and the WHERE clause contains terms of the
 ** form X=Y then this routine might also return terms of the form
@@ -309,11 +312,12 @@ static WhereTerm *whereScanInit(
 
 /*
 ** Search for a term in the WHERE clause that is of the form "X <op> <expr>"
-** where X is a reference to the iColumn of table iCur and <op> is one of
-** the WO_xx operator codes specified by the op parameter.
-** Return a pointer to the term.  Return 0 if not found.
+** where X is a reference to the iColumn of table iCur or of index pIdx
+** if pIdx!=0 and <op> is one of the WO_xx operator codes specified by
+** the op parameter.  Return a pointer to the term.  Return 0 if not found.
 **
-** If pIdx!=0 then search for terms matching the iColumn-th column of pIdx
+** If pIdx!=0 then it must be one of the indexes of table iCur.  
+** Search for terms matching the iColumn-th column of pIdx
 ** rather than the iColumn-th column of table iCur.
 **
 ** The term returned might by Y=<expr> if there is another constraint in
@@ -1651,11 +1655,12 @@ static void whereTermPrint(WhereTerm *pTerm, int iTerm){
 */
 static void whereLoopPrint(WhereLoop *p, WhereClause *pWC){
   WhereInfo *pWInfo = pWC->pWInfo;
-  int nb = 1+(pWInfo->pTabList->nSrc+7)/8;
+  int nb = 1+(pWInfo->pTabList->nSrc+3)/4;
   struct SrcList_item *pItem = pWInfo->pTabList->a + p->iTab;
   Table *pTab = pItem->pTab;
+  Bitmask mAll = (((Bitmask)1)<<(nb*4)) - 1;
   sqlite3DebugPrintf("%c%2d.%0*llx.%0*llx", p->cId,
-                     p->iTab, nb, p->maskSelf, nb, p->prereq);
+                     p->iTab, nb, p->maskSelf, nb, p->prereq & mAll);
   sqlite3DebugPrintf(" %12s",
                      pItem->zAlias ? pItem->zAlias : pTab->zName);
   if( (p->wsFlags & WHERE_VIRTUALTABLE)==0 ){
@@ -3880,9 +3885,9 @@ static int wherePathSolver(WhereInfo *pWInfo, LogEst nRowEst){
    && nRowEst
   ){
     Bitmask notUsed;
-    int rc = wherePathSatisfiesOrderBy(pWInfo, pWInfo->pResultSet, pFrom,
+    int rc = wherePathSatisfiesOrderBy(pWInfo, pWInfo->pDistinctSet, pFrom,
                  WHERE_DISTINCTBY, nLoop-1, pFrom->aLoop[nLoop-1], &notUsed);
-    if( rc==pWInfo->pResultSet->nExpr ){
+    if( rc==pWInfo->pDistinctSet->nExpr ){
       pWInfo->eDistinct = WHERE_DISTINCT_ORDERED;
     }
   }
@@ -4097,14 +4102,14 @@ static int whereShortCut(WhereLoopBuilder *pBuilder){
 ** used.
 */
 WhereInfo *sqlite3WhereBegin(
-  Parse *pParse,        /* The parser context */
-  SrcList *pTabList,    /* FROM clause: A list of all tables to be scanned */
-  Expr *pWhere,         /* The WHERE clause */
-  ExprList *pOrderBy,   /* An ORDER BY (or GROUP BY) clause, or NULL */
-  ExprList *pResultSet, /* Result set of the query */
-  u16 wctrlFlags,       /* One of the WHERE_* flags defined in sqliteInt.h */
-  int iAuxArg           /* If WHERE_ONETABLE_ONLY is set, index cursor number,
-                        ** If WHERE_USE_LIMIT, then the limit amount */
+  Parse *pParse,          /* The parser context */
+  SrcList *pTabList,      /* FROM clause: A list of all tables to be scanned */
+  Expr *pWhere,           /* The WHERE clause */
+  ExprList *pOrderBy,     /* An ORDER BY (or GROUP BY) clause, or NULL */
+  ExprList *pDistinctSet, /* Try not to output two rows that duplicate these */
+  u16 wctrlFlags,         /* The WHERE_* flags defined in sqliteInt.h */
+  int iAuxArg             /* If WHERE_ONETABLE_ONLY is set, index cursor number
+                          ** If WHERE_USE_LIMIT, then the limit amount */
 ){
   int nByteWInfo;            /* Num. bytes allocated for WhereInfo struct */
   int nTabList;              /* Number of elements in pTabList */
@@ -4179,7 +4184,7 @@ WhereInfo *sqlite3WhereBegin(
   pWInfo->pParse = pParse;
   pWInfo->pTabList = pTabList;
   pWInfo->pOrderBy = pOrderBy;
-  pWInfo->pResultSet = pResultSet;
+  pWInfo->pDistinctSet = pDistinctSet;
   pWInfo->iBreak = pWInfo->iContinue = sqlite3VdbeMakeLabel(v);
   pWInfo->wctrlFlags = wctrlFlags;
   pWInfo->iLimit = iAuxArg;
@@ -4252,13 +4257,13 @@ WhereInfo *sqlite3WhereBegin(
   if( db->mallocFailed ) goto whereBeginError;
 
   if( wctrlFlags & WHERE_WANT_DISTINCT ){
-    if( isDistinctRedundant(pParse, pTabList, &pWInfo->sWC, pResultSet) ){
+    if( isDistinctRedundant(pParse, pTabList, &pWInfo->sWC, pDistinctSet) ){
       /* The DISTINCT marking is pointless.  Ignore it. */
       pWInfo->eDistinct = WHERE_DISTINCT_UNIQUE;
     }else if( pOrderBy==0 ){
       /* Try to ORDER BY the result set to make distinct processing easier */
       pWInfo->wctrlFlags |= WHERE_DISTINCTBY;
-      pWInfo->pOrderBy = pResultSet;
+      pWInfo->pOrderBy = pDistinctSet;
     }
   }
 
@@ -4337,10 +4342,10 @@ WhereInfo *sqlite3WhereBegin(
 #endif
   /* Attempt to omit tables from the join that do not effect the result */
   if( pWInfo->nLevel>=2
-   && pResultSet!=0
+   && pDistinctSet!=0
    && OptimizationEnabled(db, SQLITE_OmitNoopJoin)
   ){
-    Bitmask tabUsed = sqlite3WhereExprListUsage(pMaskSet, pResultSet);
+    Bitmask tabUsed = sqlite3WhereExprListUsage(pMaskSet, pDistinctSet);
     if( sWLB.pOrderBy ){
       tabUsed |= sqlite3WhereExprListUsage(pMaskSet, sWLB.pOrderBy);
     }
@@ -4606,13 +4611,8 @@ void sqlite3WhereEnd(WhereInfo *pWInfo){
     }
 #ifndef SQLITE_LIKE_DOESNT_MATCH_BLOBS
     if( pLevel->addrLikeRep ){
-      int op;
-      if( sqlite3VdbeGetOp(v, pLevel->addrLikeRep-1)->p1 ){
-        op = OP_DecrJumpZero;
-      }else{
-        op = OP_JumpZeroIncr;
-      }
-      sqlite3VdbeAddOp2(v, op, pLevel->iLikeRepCntr, pLevel->addrLikeRep);
+      sqlite3VdbeAddOp2(v, OP_DecrJumpZero, (int)(pLevel->iLikeRepCntr>>1),
+                        pLevel->addrLikeRep);
       VdbeCoverage(v);
     }
 #endif

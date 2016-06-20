@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -140,20 +141,29 @@ a:visited { color: #734559 }
   sqlite3_snapshot *pSnapshot
 );
 </pre></blockquote><p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
-The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> interface attempts to move the
-read transaction that is currently open on schema S of
-<a href="../c3ref/sqlite3.html">database connection</a> D so that it refers to historical <a href="../c3ref/snapshot.html">snapshot</a> P.
+The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> interface starts a
+read transaction for schema S of
+<a href="../c3ref/sqlite3.html">database connection</a> D such that the read transaction
+refers to historical <a href="../c3ref/snapshot.html">snapshot</a> P, rather than the most
+recent change to the database.
 The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface returns SQLITE_OK on success
 or an appropriate <a href="../rescode.html">error code</a> if it fails.</p>
 
 <p>In order to succeed, a call to <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> must be
-the first operation, apart from other sqlite3_snapshot_open() calls,
-following the <a href="../lang_transaction.html">BEGIN</a> that starts a new read transaction.
+the first operation following the <a href="../lang_transaction.html">BEGIN</a> that takes the schema S
+out of <a href="../c3ref/get_autocommit.html">autocommit mode</a>.
+In other words, schema S must not currently be in
+a transaction for <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> to work, but the
+database connection D must be out of <a href="../c3ref/get_autocommit.html">autocommit mode</a>.
 A <a href="../c3ref/snapshot.html">snapshot</a> will fail to open if it has been overwritten by a
 <a href="../wal.html#ckpt">checkpoint</a>.
-A <a href="../c3ref/snapshot.html">snapshot</a> will fail to open if the database connection D has not
-previously completed at least one read operation against the database
-file.  (Hint: Run "<a href="../pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
+A call to <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> will fail if the
+database connection D does not know that the database file for
+schema S is in <a href="../wal.html">WAL mode</a>.  A database connection might not know
+that the database file is in <a href="../wal.html">WAL mode</a> if there has been no prior
+I/O on that database connection, or if the database entered <a href="../wal.html">WAL mode</a>
+after the most recent I/O on the database connection.
+(Hint: Run "<a href="../pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
 database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface is only available when the

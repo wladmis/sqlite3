@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -307,6 +308,7 @@ be removed in some future release.</li>
 <li><a href="#SQLITE_ALTER_TABLE">SQLITE_CREATE_VTABLE</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_FKEY</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a></li>
+<li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_TRIGGER</a></li>
 <li><a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_LOOKASIDE</a></li>
 <li><a href="#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a></li>
@@ -666,10 +668,10 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_data_count">sqlite3_data_count</a></li>
 <li><a href="#sqlite3_db_cacheflush">sqlite3_db_cacheflush</a></li>
 <li><a href="#sqlite3_db_config">sqlite3_db_config</a></li>
-</ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
+<li><a href="#sqlite3_db_filename">sqlite3_db_filename</a></li>
 <li><a href="#sqlite3_db_handle">sqlite3_db_handle</a></li>
-<li><a href="#sqlite3_db_mutex">sqlite3_db_mutex</a></li>
+</ul></td>
+<td valign="top"><ul><li><a href="#sqlite3_db_mutex">sqlite3_db_mutex</a></li>
 <li><a href="#sqlite3_db_readonly">sqlite3_db_readonly</a></li>
 <li><a href="#sqlite3_db_release_memory">sqlite3_db_release_memory</a></li>
 <li><a href="#sqlite3_db_status">sqlite3_db_status</a></li>
@@ -725,6 +727,11 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_prepare">sqlite3_prepare16</a></li>
 <li><a href="#sqlite3_prepare">sqlite3_prepare16_v2</a></li>
 <li><a href="#sqlite3_prepare">sqlite3_prepare_v2</a></li>
+<li><a href="#sqlite3_preupdate_count">sqlite3_preupdate_count</a></li>
+<li><a href="#sqlite3_preupdate_count">sqlite3_preupdate_depth</a></li>
+<li><a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook</a></li>
+<li><a href="#sqlite3_preupdate_count">sqlite3_preupdate_new</a></li>
+<li><a href="#sqlite3_preupdate_count">sqlite3_preupdate_old</a></li>
 <li><a href="#sqlite3_profile">sqlite3_profile</a></li>
 <li><a href="#sqlite3_progress_handler">sqlite3_progress_handler</a></li>
 <li><a href="#sqlite3_randomness">sqlite3_randomness</a></li>
@@ -743,9 +750,9 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_result_blob">sqlite3_result_error_toobig</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_int64</a></li>
-<li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
 </ul></td>
-<td valign="top"><ul><li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
+<td valign="top"><ul><li><a href="#sqlite3_result_blob">sqlite3_result_null</a></li>
+<li><a href="#sqlite3_result_subtype">sqlite3_result_subtype</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16</a></li>
 <li><a href="#sqlite3_result_blob">sqlite3_result_text16be</a></li>
@@ -759,6 +766,7 @@ are <a href="capi3ref.html">experimental</a> and functions marked with
 <li><a href="#sqlite3_get_auxdata">sqlite3_set_auxdata</a></li>
 <li><a href="#sqlite3_initialize">sqlite3_shutdown</a></li>
 <li><a href="#sqlite3_sleep">sqlite3_sleep</a></li>
+<li><a href="#sqlite3_snapshot_cmp">sqlite3_snapshot_cmp</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_snapshot_free">sqlite3_snapshot_free</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_snapshot_get">sqlite3_snapshot_get</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
 <li><a href="#sqlite3_snapshot_open">sqlite3_snapshot_open</a>&nbsp;&nbsp;<a href="capi3ref.html"><small><i>(exp)</i></small></a></li>
@@ -2261,7 +2269,18 @@ is provided to turn the <a href="#sqlite3_load_extension">sqlite3_load_extension
 <p>Extension loading is off by default.
 Call the sqlite3_enable_load_extension() routine with onoff==1
 to turn extension loading on and call it with onoff==0 to turn
-it back off again.
+it back off again.</p>
+
+<p>This interface enables or disables both the C-API
+<a href="#sqlite3_load_extension">sqlite3_load_extension()</a> and the SQL function <a href="lang_corefunc.html#load_extension">load_extension()</a>.
+Use <a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,..)
+to enable or disable only the C-API.</p>
+
+<p><b>Security warning:</b> It is recommended that extension loading
+be disabled using the <a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method
+rather than this interface, so the <a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function
+remains disabled. This will prevent SQL injections from giving attackers
+access to extension loading capabilities.
 </p><hr><a name="sqlite3_enable_shared_cache"></a>
 <h2>Enable Or Disable Shared Pager Cache</h2><blockquote><pre>int sqlite3_enable_shared_cache(int);
 </pre></blockquote><p>
@@ -2578,8 +2597,17 @@ obtained from <a href="#sqlite3_free">sqlite3_malloc()</a>. The calling function
 should free this memory by calling <a href="#sqlite3_free">sqlite3_free()</a>.</p>
 
 <p>Extension loading must be enabled using
-<a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> prior to calling this API,
+<a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> or
+<a href="#sqlite3_db_config">sqlite3_db_config</a>(db,<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
+prior to calling this API,
 otherwise an error will be returned.</p>
+
+<p><b>Security warning:</b> It is recommended that the
+<a href="#SQLITE_DBCONFIG_ENABLE_FKEY">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> method be used to enable only this
+interface.  The use of the <a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> interface
+should be avoided.  This will keep the SQL function <a href="lang_corefunc.html#load_extension">load_extension()</a>
+disabled and prevent SQL injections from giving attackers
+access to extension loading capabilities.</p>
 
 <p>See also the <a href="lang_corefunc.html#load_extension">load_extension() SQL function</a>.
 </p><hr><a name="sqlite3_log"></a>
@@ -2829,6 +2857,29 @@ method of the default <a href="#sqlite3_vfs">sqlite3_vfs</a> object.  If the xSl
 of the default VFS is not implemented correctly, or not implemented at
 all, then the behavior of sqlite3_sleep() may deviate from the description
 in the previous paragraphs.
+</p><hr><a name="sqlite3_snapshot_cmp"></a>
+<h2>Compare the ages of two snapshot handles.</h2><blockquote><pre>int sqlite3_snapshot_cmp(
+  sqlite3_snapshot *p1,
+  sqlite3_snapshot *p2
+);
+</pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
+The sqlite3_snapshot_cmp(P1, P2) interface is used to compare the ages
+of two valid snapshot handles.</p>
+
+<p>If the two snapshot handles are not associated with the same database
+file, the result of the comparison is undefined.</p>
+
+<p>Additionally, the result of the comparison is only valid if both of the
+snapshot handles were obtained by calling sqlite3_snapshot_get() since the
+last time the wal file was deleted. The wal file is deleted when the
+database is changed back to rollback mode or when the number of database
+clients drops to zero. If either snapshot handle was obtained before the
+wal file was last deleted, the value returned by this function
+is undefined.</p>
+
+<p>Otherwise, this API returns a negative value if P1 refers to an older
+snapshot than P2, zero if the two handles refer to the same database
+snapshot, and a positive value if P1 is a newer snapshot than P2.
 </p><hr><a name="sqlite3_snapshot_free"></a>
 <h2>Destroy a snapshot</h2><blockquote><pre>void sqlite3_snapshot_free(sqlite3_snapshot*);
 </pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
@@ -2867,20 +2918,29 @@ SQLITE_ENABLE_SNAPSHOT compile-time option is used.
   sqlite3_snapshot *pSnapshot
 );
 </pre></blockquote><p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
-The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open(D,S,P)</a> interface attempts to move the
-read transaction that is currently open on schema S of
-<a href="#sqlite3">database connection</a> D so that it refers to historical <a href="#sqlite3_snapshot">snapshot</a> P.
+The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open(D,S,P)</a> interface starts a
+read transaction for schema S of
+<a href="#sqlite3">database connection</a> D such that the read transaction
+refers to historical <a href="#sqlite3_snapshot">snapshot</a> P, rather than the most
+recent change to the database.
 The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> interface returns SQLITE_OK on success
 or an appropriate <a href="rescode.html">error code</a> if it fails.</p>
 
 <p>In order to succeed, a call to <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open(D,S,P)</a> must be
-the first operation, apart from other sqlite3_snapshot_open() calls,
-following the <a href="lang_transaction.html">BEGIN</a> that starts a new read transaction.
+the first operation following the <a href="lang_transaction.html">BEGIN</a> that takes the schema S
+out of <a href="#sqlite3_get_autocommit">autocommit mode</a>.
+In other words, schema S must not currently be in
+a transaction for <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open(D,S,P)</a> to work, but the
+database connection D must be out of <a href="#sqlite3_get_autocommit">autocommit mode</a>.
 A <a href="#sqlite3_snapshot">snapshot</a> will fail to open if it has been overwritten by a
 <a href="wal.html#ckpt">checkpoint</a>.
-A <a href="#sqlite3_snapshot">snapshot</a> will fail to open if the database connection D has not
-previously completed at least one read operation against the database
-file.  (Hint: Run "<a href="pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
+A call to <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open(D,S,P)</a> will fail if the
+database connection D does not know that the database file for
+schema S is in <a href="wal.html">WAL mode</a>.  A database connection might not know
+that the database file is in <a href="wal.html">WAL mode</a> if there has been no prior
+I/O on that database connection, or if the database entered <a href="wal.html">WAL mode</a>
+after the most recent I/O on the database connection.
+(Hint: Run "<a href="pragma.html#pragma_application_id">PRAGMA application_id</a>" against a newly opened
 database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> interface is only available when the
@@ -3167,7 +3227,7 @@ do not match, the same as <a href="#sqlite3_stricmp">sqlite3_stricmp()</a> and <
 <h2>Low-level system error code</h2><blockquote><pre>int sqlite3_system_errno(sqlite3*);
 </pre></blockquote><p>
 Attempt to return the underlying operating system error code or error
-number that caused the most reason I/O error or failure to open a file.
+number that caused the most recent I/O error or failure to open a file.
 The return value is OS-dependent.  For example, on unix systems, after
 <a href="#sqlite3_open">sqlite3_open_v2()</a> returns <a href="#SQLITE_ABORT">SQLITE_CANTOPEN</a>, this interface could be
 called to get back the underlying "errno" that caused the problem, such
@@ -3445,7 +3505,7 @@ SQLITE_LOCKED.
 The sqlite3_update_hook() interface registers a callback function
 with the <a href="#sqlite3">database connection</a> identified by the first argument
 to be invoked whenever a row is updated, inserted or deleted in
-a rowid table.
+a <a href="rowidtable.html">rowid table</a>.
 Any callback set by a previous call to this function
 for the same database connection is overridden.</p>
 
@@ -3484,8 +3544,8 @@ returns the P argument from the previous call
 on the same <a href="#sqlite3">database connection</a> D, or NULL for
 the first call on D.</p>
 
-<p>See also the <a href="#sqlite3_commit_hook">sqlite3_commit_hook()</a> and <a href="#sqlite3_commit_hook">sqlite3_rollback_hook()</a>
-interfaces.
+<p>See also the <a href="#sqlite3_commit_hook">sqlite3_commit_hook()</a>, <a href="#sqlite3_commit_hook">sqlite3_rollback_hook()</a>,
+and <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> interfaces.
 </p><hr><a name="sqlite3_user_data"></a>
 <h2>User Data For Functions</h2><blockquote><pre>void *sqlite3_user_data(sqlite3_context*);
 </pre></blockquote><p>
@@ -4325,6 +4385,7 @@ The default value for this setting is controlled by the
 #define SQLITE_DBCONFIG_ENABLE_FKEY           1002 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER 1004 /* int int* */
+#define SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION 1005 /* int int* */
 </pre></blockquote><p>
 These constants are the available integer configuration options that
 can be passed as the second argument to the <a href="#sqlite3_db_config">sqlite3_db_config()</a> interface.</p>
@@ -4391,6 +4452,23 @@ The second parameter is a pointer to an integer into which
 is written 0 or 1 to indicate whether fts3_tokenizer is disabled or enabled
 following this call.  The second parameter may be a NULL pointer, in
 which case the new setting is not reported back. </dd></p>
+
+<p><dt>SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</dt>
+<dd> This option is used to enable or disable the <a href="#sqlite3_load_extension">sqlite3_load_extension()</a>
+interface independently of the <a href="lang_corefunc.html#load_extension">load_extension()</a> SQL function.
+The <a href="#sqlite3_enable_load_extension">sqlite3_enable_load_extension()</a> API enables or disables both the
+C-API <a href="#sqlite3_load_extension">sqlite3_load_extension()</a> and the SQL function <a href="lang_corefunc.html#load_extension">load_extension()</a>.
+There should be two additional arguments.
+When the first argument to this interface is 1, then only the C-API is
+enabled and the SQL function remains disabled.  If the first argment to
+this interface is 0, then both the C-API and the SQL function are disabled.
+If the first argument is -1, then no changes are made to state of either the
+C-API or the SQL function.
+The second parameter is a pointer to an integer into which
+is written 0 or 1 to indicate whether <a href="#sqlite3_load_extension">sqlite3_load_extension()</a> interface
+is disabled or enabled following this call.  The second parameter may
+be a NULL pointer, in which case the new setting is not reported back.
+</dd></p>
 
 <p></dl>
 </p><hr><a name="SQLITE_DENY"></a>
@@ -4895,9 +4973,9 @@ was given on the corresponding lock.</p>
 between unlocked and EXCLUSIVE.  It cannot transition between SHARED
 and EXCLUSIVE.
 </p><hr><a name="SQLITE_SOURCE_ID"></a>
-<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.12.2"
-#define SQLITE_VERSION_NUMBER 3012002
-#define SQLITE_SOURCE_ID      "2016-04-18 17:30:31 92dc59fd5ad66f646666042eb04195e3a61a9e8e"
+<h2>Compile-Time Library Version Numbers</h2><blockquote><pre>#define SQLITE_VERSION        "3.13.0"
+#define SQLITE_VERSION_NUMBER 3013000
+#define SQLITE_SOURCE_ID      "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 </pre></blockquote><p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
 evaluates to a string literal that is the SQLite version in the
@@ -5931,7 +6009,7 @@ The source and destination <a href="#sqlite3">database connections</a> (paramete
 must be different or else sqlite3_backup_init(D,N,S,M) will fail with
 an error.</p>
 
-<p>A call to sqlite3_backup_init() will fail, returning SQLITE_ERROR, if
+<p>A call to sqlite3_backup_init() will fail, returning NULL, if
 there is already a read or read-write transaction open on the
 destination database.</p>
 
@@ -7383,6 +7461,99 @@ prior to calling sqlite3_open() or sqlite3_open_v2().  Otherwise, various
 features that require the use of temporary files may fail.</p>
 
 <p>See also: <a href="#sqlite3_temp_directory">sqlite3_temp_directory</a>
+</p><hr><a name="sqlite3_preupdate_count"></a>
+<h2>The pre-update hook.</h2><blockquote><pre>void *sqlite3_preupdate_hook(
+  sqlite3 *db,
+  void(*xPreUpdate)(
+    void *pCtx,                   /* Copy of third arg to preupdate_hook() */
+    sqlite3 *db,                  /* Database handle */
+    int op,                       /* SQLITE_UPDATE, DELETE or INSERT */
+    char const *zDb,              /* Database name */
+    char const *zName,            /* Table name */
+    sqlite3_int64 iKey1,          /* Rowid of row about to be deleted/updated */
+    sqlite3_int64 iKey2           /* New rowid value (for a rowid UPDATE) */
+  ),
+  void*
+);
+int sqlite3_preupdate_old(sqlite3 *, int, sqlite3_value **);
+int sqlite3_preupdate_count(sqlite3 *);
+int sqlite3_preupdate_depth(sqlite3 *);
+int sqlite3_preupdate_new(sqlite3 *, int, sqlite3_value **);
+</pre></blockquote><p>
+These interfaces are only available if SQLite is compiled using the
+<a href="compile.html#enable_preupdate_hook">SQLITE_ENABLE_PREUPDATE_HOOK</a> compile-time option.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> interface registers a callback function
+that is invoked prior to each <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a>, and <a href="lang_delete.html">DELETE</a> operation
+on a <a href="rowidtable.html">rowid table</a>.
+At most one preupdate hook may be registered at a time on a single
+<a href="#sqlite3">database connection</a>; each call to <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> overrides
+the previous setting.
+The preupdate hook is disabled by invoking <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a>
+with a NULL pointer as the second parameter.
+The third parameter to <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> is passed through as
+the first parameter to callbacks.</p>
+
+<p>The preupdate hook only fires for changes to <a href="rowidtable.html">rowid tables</a>; the preupdate
+hook is not invoked for changes to <a href="vtab.html">virtual tables</a> or <a href="withoutrowid.html">WITHOUT ROWID</a>
+tables.</p>
+
+<p>The second parameter to the preupdate callback is a pointer to
+the <a href="#sqlite3">database connection</a> that registered the preupdate hook.
+The third parameter to the preupdate callback is one of the constants
+<a href="#SQLITE_ALTER_TABLE">SQLITE_INSERT</a>, <a href="#SQLITE_ALTER_TABLE">SQLITE_DELETE</a>, or <a href="#SQLITE_ALTER_TABLE">SQLITE_UPDATE</a> to indentify the
+kind of update operation that is about to occur.
+The fourth parameter to the preupdate callback is the name of the
+database within the database connection that is being modified.  This
+will be "main" for the main database or "temp" for TEMP tables or
+the name given after the AS keyword in the <a href="lang_attach.html">ATTACH</a> statement for attached
+databases.
+The fifth parameter to the preupdate callback is the name of the
+table that is being modified.
+The sixth parameter to the preupdate callback is the initial <a href="lang_createtable.html#rowid">rowid</a> of the
+row being changes for SQLITE_UPDATE and SQLITE_DELETE changes and is
+undefined for SQLITE_INSERT changes.
+The seventh parameter to the preupdate callback is the final <a href="lang_createtable.html#rowid">rowid</a> of
+the row being changed for SQLITE_UPDATE and SQLITE_INSERT changes and is
+undefined for SQLITE_DELETE changes.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_old()</a>, <a href="#sqlite3_preupdate_count">sqlite3_preupdate_new()</a>,
+<a href="#sqlite3_preupdate_count">sqlite3_preupdate_count()</a>, and <a href="#sqlite3_preupdate_count">sqlite3_preupdate_depth()</a> interfaces
+provide additional information about a preupdate event. These routines
+may only be called from within a preupdate callback.  Invoking any of
+these routines from outside of a preupdate callback or with a
+<a href="#sqlite3">database connection</a> pointer that is different from the one supplied
+to the preupdate callback results in undefined and probably undesirable
+behavior.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_count(D)</a> interface returns the number of columns
+in the row that is being inserted, updated, or deleted.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_old(D,N,P)</a> interface writes into P a pointer to
+a <a href="#sqlite3_value">protected sqlite3_value</a> that contains the value of the Nth column of
+the table row before it is updated.  The N parameter must be between 0
+and one less than the number of columns or the behavior will be
+undefined. This must only be used within SQLITE_UPDATE and SQLITE_DELETE
+preupdate callbacks; if it is used by an SQLITE_INSERT callback then the
+behavior is undefined.  The <a href="#sqlite3_value">sqlite3_value</a> that P points to
+will be destroyed when the preupdate callback returns.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_new(D,N,P)</a> interface writes into P a pointer to
+a <a href="#sqlite3_value">protected sqlite3_value</a> that contains the value of the Nth column of
+the table row after it is updated.  The N parameter must be between 0
+and one less than the number of columns or the behavior will be
+undefined. This must only be used within SQLITE_INSERT and SQLITE_UPDATE
+preupdate callbacks; if it is used by an SQLITE_DELETE callback then the
+behavior is undefined.  The <a href="#sqlite3_value">sqlite3_value</a> that P points to
+will be destroyed when the preupdate callback returns.</p>
+
+<p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_depth(D)</a> interface returns 0 if the preupdate
+callback was invoked as a result of a direct insert, update, or delete
+operation; or 1 for inserts, updates, or deletes invoked by top-level
+triggers; or 2 for changes resulting from triggers called by top-level
+triggers; and so forth.</p>
+
+<p>See also:  <a href="#sqlite3_update_hook">sqlite3_update_hook()</a>
 </p><hr><a name="sqlite3_profile"></a>
 <h2>Tracing And Profiling Functions</h2><blockquote><pre>void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
 void *sqlite3_profile(sqlite3*,

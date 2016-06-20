@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -137,9 +138,16 @@ a:visited { color: #734559 }
 
 
 
-<h1 align=center>
-Command Line Shell For SQLite
-</h1>
+
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      Command Line Shell For SQLite
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#044a64">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Getting Started</a></div><div style="margin-left:6ex"><a href="#section_2">2. Double-click Startup On Windows</a></div><div style="margin-left:6ex"><a href="#section_3">3. Special commands to sqlite3 (dot-commands)</a></div><div style="margin-left:6ex"><a href="#section_4">4. Rules for "dot-commands"</a></div><div style="margin-left:6ex"><a href="#section_5">5. Changing Output Formats</a></div><div style="margin-left:6ex"><a href="#section_6">6. Writing results to a file</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. File I/O Functions</a></div><div style="margin-left:6ex"><a href="#section_7">7. Querying the database schema</a></div><div style="margin-left:6ex"><a href="#section_8">8. CSV Import</a></div><div style="margin-left:6ex"><a href="#section_9">9. CSV Export</a></div><div style="margin-left:6ex"><a href="#section_10">10. Converting An Entire Database To An ASCII Text File</a></div><div style="margin-left:6ex"><a href="#section_11">11. Loading Extensions</a></div><div style="margin-left:6ex"><a href="#section_12">12. Other Dot Commands</a></div><div style="margin-left:6ex"><a href="#section_13">13. Using sqlite3 in a shell script</a></div><div style="margin-left:6ex"><a href="#section_14">14. Ending shell commands</a></div><div style="margin-left:6ex"><a href="#section_15">15. Compiling the sqlite3 program from sources</a></div> </div>
+    <div class=startsearch></div>
+  
 
 <p>The SQLite project provides a simple command-line utility named
 <b>sqlite3</b> (or <b>sqlite3.exe</b> on windows)
@@ -149,7 +157,7 @@ introduction on how to use the <b>sqlite3</b> program.
 
 <a name="intro"></a>
 
-<h3>Getting Started</h3>
+<h1 id="section_1">1. Getting Started</h1>
 
 <p>To start the <b>sqlite3</b> program, just type "sqlite3" optionally
 followed by the name the file that holds the SQLite database.  If the 
@@ -164,7 +172,7 @@ by a semicolon), press "Enter" and the SQL will be executed.</p>
 <p>For example, to create a new SQLite database named "ex1" 
 with a single table named "tbl1", you might do this:</p>
 
-<blockquote><pre>$ <b>sqlite3 ex1</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">$ <b>sqlite3 ex1</b>
 SQLite version 3.8.5 2014-05-29 12:36:14
 Enter ".help" for usage hints.
 sqlite&gt; <b>create table tbl1(one varchar(10), two smallint);</b>
@@ -173,7 +181,8 @@ sqlite&gt; <b>insert into tbl1 values('goodbye', 20);</b>
 sqlite&gt; <b>select * from tbl1;</b>
 hello!|10
 goodbye|20
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>You can terminate the sqlite3 program by typing your system
 End-Of-File character (usually a Control-D).  Use the interrupt
@@ -187,16 +196,17 @@ added to the current SQL command.  This feature allows you to
 enter SQL commands that span multiple lines.  For example:</p>
 
 
-<blockquote><pre>sqlite&gt; <b>CREATE TABLE tbl2 (</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>CREATE TABLE tbl2 (</b>
    ...&gt; <b>  f1 varchar(30) primary key,</b>
    ...&gt; <b>  f2 text,</b>
    ...&gt; <b>  f3 real</b>
    ...&gt; <b>);</b>
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <a name="dblclick"></a>
 
-<h3>Double-click Startup On Windows</h3>
+<h1 id="section_2">2. Double-click Startup On Windows</h1>
 
 <p>Windows users can double-click on the <b>sqlite3.exe</b> icon to cause
 the command-line shell to pop-up a terminal window running SQLite.  Note,
@@ -205,12 +215,13 @@ not a file on disk, and so all changes will be lost when the session exits.
 To use a persistent disk file as the database, enter the ".open" command
 immediately after the terminal window starts up:
 
-<blockquote><pre>SQLite version 3.8.5 2014-05-29 12:36:14
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SQLite version 3.8.5 2014-05-29 12:36:14
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
 sqlite&gt; <b>.open ex1.db</b>
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>The example above causes the database file named "ex1.db" to be opened
 and used, and created if it does not previously exist.  You might want to
@@ -221,13 +232,14 @@ In other words use "c:/work/ex1.db", not "c:\work\ex1.db".</p>
 <p>Alternatively, you can create a new database using the default in-memory
 storage, then save that database into a disk file using the ".save" command:
 
-<blockquote><pre>SQLite version 3.8.5 2014-05-29 12:36:14
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SQLite version 3.8.5 2014-05-29 12:36:14
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
 sqlite&gt; <i>... many SQL commands omitted ...</i>
 sqlite&gt; <b>.save ex1.db</b>
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>Be careful when using the ".save" command as it will overwrite any
 preexisting database files having the same name without prompting for
@@ -236,7 +248,7 @@ full pathname with forward-slash directory separators to avoid ambiguity.
 
 <a name="dotcmd"></a>
 
-<h3>Special commands to sqlite3 (dot-commands)</h3>
+<h1 id="section_3">3. Special commands to sqlite3 (dot-commands)</h1>
 
 <p>
 Most of the time, sqlite3 just reads lines of input and passes them
@@ -252,7 +264,8 @@ For a listing of the available dot commands, you can enter ".help"
 at any time.  For example:
 </p>
 
-<blockquote><pre>sqlite&gt; <b>.help</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.help</b>
+.auth ON|OFF           Show authorizer callbacks
 .backup ?DB? FILE      Backup DB (default "main") to FILE
 .bail on|off           Stop after hitting an error.  Default OFF
 .binary on|off         Turn binary output on or off.  Default OFF
@@ -303,9 +316,10 @@ at any time.  For example:
                          LIKE pattern TABLE.
 .separator COL ?ROW?   Change the column separator and optionally the row
                          separator for both the output mode and .import
+.session CMD ...       Create or control sessions
 .shell CMD ARGS...     Run CMD ARGS... in a system shell
 .show                  Show the current values for various settings
-.stats on|off          Turn stats on or off
+.stats ?on|off?        Show stats or turn stats on or off
 .system CMD ARGS...    Run CMD ARGS... in a system shell
 .tables ?TABLE?        List names of tables
                          If TABLE specified, only list tables matching
@@ -318,11 +332,12 @@ at any time.  For example:
 .vfsname ?AUX?         Print the name of the VFS stack
 .width NUM1 NUM2 ...   Set column widths for "column" mode
                          Negative values right-justify
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <a name="dotrules"></a>
 
-<h3>Rules for "dot-commands"</h3>
+<h1 id="section_4">4. Rules for "dot-commands"</h1>
 
 <p>Ordinary SQL statements are free-form, and can be
 spread across multiple lines, and can have whitespace and
@@ -346,7 +361,7 @@ to SQLite interfaces like <a href="c3ref/prepare.html">sqlite3_prepare()</a> or 
 
 <a name="dotmode"></a>
 
-<h3>Changing Output Formats</h3>
+<h1 id="section_5">5. Changing Output Formats</h1>
 
 <p>The sqlite3 program is able to show the results of a query
 in eight different formats: "csv", "column", "html", "insert",
@@ -361,21 +376,23 @@ separator string.  The default separator is a pipe symbol ("|").
 List mode is especially useful when you are going to send the output
 of a query to another program (such as AWK) for additional processing.</p>
 
-<blockquote><pre>sqlite&gt; <b>.mode list</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode list</b>
 sqlite&gt; <b>select * from tbl1;</b>
 hello|10
 goodbye|20
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>You can use the ".separator" dot command to change the separator
 for list mode.  For example, to change the separator to a comma and
 a space, you could do this:</p>
 
-<blockquote><pre>sqlite&gt; <b>.separator ", "</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.separator ", "</b>
 sqlite&gt; <b>select * from tbl1;</b>
 hello, 10
 goodbye, 20
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>In "line" mode, each column in a row of the database
 is shown on a line by itself.  Each line consists of the column
@@ -383,38 +400,41 @@ name, an equal sign and the column data.  Successive records are
 separated by a blank line.  Here is an example of line mode
 output:</p>
 
-<blockquote><pre>sqlite&gt; <b>.mode line</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode line</b>
 sqlite&gt; <b>select * from tbl1;</b>
 one = hello
 two = 10
 
 one = goodbye
 two = 20
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>In column mode, each record is shown on a separate line with the
 data aligned in columns.  For example:</p>
 
-<blockquote><pre>sqlite&gt; <b>.mode column</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode column</b>
 sqlite&gt; <b>select * from tbl1;</b>
 one         two       
 ----------  ----------
 hello       10        
 goodbye     20        
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>By default, each column is between 1 and 10 characters wide, depending
 on the column header name and the width of the first column of data.
 Data that is too wide to fit in a column is truncated.  You can
 adjust the column widths using the ".width" command.  Like this:</p>
 
-<blockquote><pre>sqlite&gt; <b>.width 12 6</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.width 12 6</b>
 sqlite&gt; <b>select * from tbl1;</b>
 one           two   
 ------------  ------
 hello         10    
 goodbye       20    
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>The ".width" command in the example above sets the width of the first
 column to 12 and the width of the second column to 6.  All other column
@@ -437,11 +457,12 @@ can be turned on and off using the ".header" dot command.  In the
 examples above, the column labels are on.  To turn them off you
 could do this:</p>
 
-<blockquote><pre>sqlite&gt; <b>.header off</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.header off</b>
 sqlite&gt; <b>select * from tbl1;</b>
 hello         10    
 goodbye       20    
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 <p>Another useful output mode is "insert".  In insert mode, the output
 is formatted to look like SQL INSERT statements.  You can use insert
@@ -451,11 +472,12 @@ different database.</p>
 <p>When specifying insert mode, you have to give an extra argument
 which is the name of the table to be inserted into.  For example:</p>
 
-<blockquote><pre>sqlite&gt; <b>.mode insert new_table</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode insert new_table</b>
 sqlite&gt; <b>select * from tbl1;</b>
 INSERT INTO "new_table" VALUES('hello',10);
 INSERT INTO "new_table" VALUES('goodbye',20);
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 
 <p>The last output mode is "html".  In this mode, sqlite3 writes
@@ -478,7 +500,7 @@ command has become superfluous.
 
 <a name="dotoutput"></a>
 
-<h3>Writing results to a file</h3>
+<h1 id="section_6">6. Writing results to a file</h1>
 
 <p>By default, sqlite3 sends query results to standard output.  You
 can change this using the ".output" and ".once" commands.  Just put 
@@ -488,7 +510,7 @@ instead of .output and output will only be redirected for the single next
 command before returning the console.  Use .output with no arguments to
 begin writing to standard output again.  For example:</p>
 
-<blockquote><pre>sqlite&gt; <b>.mode list</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode list</b>
 sqlite&gt; <b>.separator |</b>
 sqlite&gt; <b>.output test_file_1.txt</b>
 sqlite&gt; <b>select * from tbl1;</b>
@@ -496,7 +518,8 @@ sqlite&gt; <b>.exit</b>
 $ <b>cat test_file_1.txt</b>
 hello|10
 goodbye|20
-$</pre></blockquote>
+$
+</pre></table></div>
 
 <p>If the first character of the ".output" or ".once" filename is a pipe
 symbol ("|") then the remaining characters are treated as a command and the
@@ -506,12 +529,13 @@ of a query into some other process.  For example, the
 it reads from standard input.  So to see the results of a query
 in a text editor, one could type:</p>
 
-<blockquote><pre>sqlite3&gt; <b>.once '|open -f'</b>
-sqlite3&gt; <b>SELECT * FROM bigTable;</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite3&gt; <b>.once '|open -f'</b>
+sqlite3&gt; <b>SELECT * FROM bigTable;</b>
+</pre></table></div>
 
 <a name="fileio"></a>
 
-<h4>File I/O Functions</h4>
+<h2 id="section_6_1">6.1. File I/O Functions</h2>
 
 <p>The command-line shell adds two <a href="c3ref/create_function.html">application-defined SQL functions</a> that
 facilitate read content from a file into an table column, and writing the
@@ -521,15 +545,17 @@ content of a column into a file, respectively.
 X and returns that content as a BLOB.  This can be used to load content into
 a table.  For example:
 
-<blockquote><pre>sqlite&gt; <b>CREATE TABLE images(name TEXT, type TEXT, img BLOB);</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>CREATE TABLE images(name TEXT, type TEXT, img BLOB);</b>
 sqlite&gt; <b>INSERT INTO images(name,type,img</b>)
-   ...&gt; <b>  VALUES('icon','jpeg',readfile('icon.jpg'));</b></pre></blockquote>
+   ...&gt; <b>  VALUES('icon','jpeg',readfile('icon.jpg'));</b>
+</pre></table></div>
 
 <p>The writefile(X,Y) SQL function write the blob Y into the file named X
 and returns the number of bytes written.  Use this function to extract
 the content of a single table column into a file.  For example:
 
-<blockquote><pre>sqlite&gt; <b>SELECT writefile('icon.jpg',img) FROM images WHERE name='icon';</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>SELECT writefile('icon.jpg',img) FROM images WHERE name='icon';</b>
+</pre></table></div>
 
 <p>Note that the readfile(X) and writefile(X,Y) functions are extension
 functions and are not built into the core SQLite library.  These routines
@@ -539,7 +565,7 @@ source file in the <a href="download.html#srctree">SQLite source code repositori
 
 <a name="schema"></a>
 
-<h3>Querying the database schema</h3>
+<h1 id="section_7">7. Querying the database schema</h1>
 
 <p>The sqlite3 program provides several convenience commands that
 are useful for looking at the schema of the database.  There is
@@ -550,27 +576,28 @@ means.  These commands are provided purely as a shortcut.</p>
 can enter ".tables".</p>
 
 
-<blockquote><pre>sqlite&gt; <b>.tables</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.tables</b>
 tbl1
 tbl2
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 
 <p>The ".tables" command is similar to setting list mode then
 executing the following query:</p>
 
-<blockquote><pre>
-SELECT name FROM sqlite_master 
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT name FROM sqlite_master 
 WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
 UNION ALL 
 SELECT name FROM sqlite_temp_master 
 WHERE type IN ('table','view') 
 ORDER BY 1
-</pre></blockquote>
+</pre></table></div>
 
 <p>In fact, if you look at the source code to the sqlite3 program
-(found in the source tree in the file src/shell.c) you'll find
-a query very much like the above.</p>
+(found in the source tree in the file 
+<a href="https://www.sqlite.org/src/artifact?ci=trunk&filename=src/shell.c">src/shell.c</a>)
+you'll find a query very much like the above.</p>
 
 <p>The ".indices" command works in a similar way to list all of
 the indices for a particular table.  The ".indices" command takes
@@ -582,7 +609,7 @@ If you give the name of a table to ".schema", it shows the original
 CREATE statement used to make that table and all if its indices.
 We have:</p>
 
-<blockquote><pre>sqlite&gt; <b>.schema</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.schema</b>
 create table tbl1(one varchar(10), two smallint)
 CREATE TABLE tbl2 (
   f1 varchar(30) primary key,
@@ -595,50 +622,49 @@ CREATE TABLE tbl2 (
   f2 text,
   f3 real
 )
-sqlite&gt;</pre></blockquote>
+sqlite&gt;
+</pre></table></div>
 
 
 <p>The ".schema" command accomplishes the same thing as setting
 list mode, then entering the following query:</p>
 
-<blockquote><pre>
-SELECT sql FROM 
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT sql FROM 
    (SELECT * FROM sqlite_master UNION ALL
     SELECT * FROM sqlite_temp_master)
 WHERE type!='meta'
 ORDER BY tbl_name, type DESC, name
-</pre></blockquote>
+</pre></table></div>
 
 <p>Or, if you give an argument to ".schema" because you only
 want the schema for a single table, the query looks like this:</p>
 
-<blockquote><pre>
-SELECT sql FROM
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT sql FROM
    (SELECT * FROM sqlite_master UNION ALL
     SELECT * FROM sqlite_temp_master)
 WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
 ORDER BY substr(type,2,1), name
-</pre></blockquote>
+</pre></table></div>
 
 <p>
 You can supply an argument to the .schema command.  If you do, the
 query looks like this:
 </p>
 
-<blockquote><pre>
-SELECT sql FROM
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SELECT sql FROM
    (SELECT * FROM sqlite_master UNION ALL
     SELECT * FROM sqlite_temp_master)
 WHERE tbl_name LIKE '%s'
   AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
 ORDER BY substr(type,2,1), name
-</pre></blockquote>
+</pre></table></div>
 
 <p>The "%s" in the query is replace by your argument.  This allows you
 to view the schema for some subset of the database.</p>
 
 
-<blockquote><pre>sqlite&gt; <b>.schema %abc%</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.schema %abc%</b>
+</pre></table></div>
 
 
 <p>
@@ -657,7 +683,8 @@ databases listed for databases attached using the ATTACH statement.
 The first output column is the name the database is attached with, 
 and the second column is the filename of the external file.</p>
 
-<blockquote><pre>sqlite&gt; <b>.databases</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.databases</b>
+</pre></table></div>
 
 <a name="fullschema"></a>
 
@@ -676,7 +703,7 @@ over a public channel.</p>
 
 <a name="csv"></a>
 
-<h3>CSV Import</h3>
+<h1 id="section_8">8. CSV Import</h1>
 
 <p>Use the ".import" command to import CSV (comma separated value) data into
 an SQLite table.  The ".import" command takes two arguments which are the
@@ -687,8 +714,9 @@ SQLite table into which the CSV data is to be inserted.
  ".import" command.  This is necessary to prevent the command-line shell
 from trying to interpret the input file text as some other format.
 
-<blockquote><pre>sqlite&gt; <b>.mode csv</b>
-sqlite&gt; <b>.import C:/work/somedata.csv tab1</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode csv</b>
+sqlite&gt; <b>.import C:/work/somedata.csv tab1</b>
+</pre></table></div>
 
 <p>There are two cases to consider:  (1) Table "tab1" does not previously
 exist and (2) table "tab1" does already exist.
@@ -708,17 +736,18 @@ table does not previously exist.
 
 <a name="csvout"></a>
 
-<h3>CSV Export</h3>
+<h1 id="section_9">9. CSV Export</h1>
 
 <p>To export an SQLite table (or part of a table) as CSV, simply set
 the "mode" to "csv" and then run a query to extract the desired rows
 of the table.
 
-<blockquote><pre>sqlite&gt; <b>.header on</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.header on</b>
 sqlite&gt; <b>.mode csv</b>
 sqlite&gt; <b>.once c:/work/dataout.csv</b>
 sqlite&gt; <b>SELECT * FROM tab1;</b>
-sqlite&gt; <b>.system c:/work/dataout.csv</b></pre></blockquote>
+sqlite&gt; <b>.system c:/work/dataout.csv</b>
+</pre></table></div>
 
 <p>In the example above, the ".header on" line causes column labels to
 be printed as the first row of output.  This means that the first row of
@@ -743,7 +772,7 @@ CSV viewing program for "libreoffice".
 
 <a name="dump"></a>
 
-<h3>Converting An Entire Database To An ASCII Text File</h3>
+<h1 id="section_10">10. Converting An Entire Database To An ASCII Text File</h1>
 
 <p>Use the ".dump" command to convert the entire contents of a
 database into a single ASCII text file.  This file can be converted
@@ -752,7 +781,8 @@ back into a database by piping it back into <b>sqlite3</b>.</p>
 <p>A good way to make an archival copy of a database is this:</p>
 
 
-<blockquote><pre>$ <b>echo '.dump' | sqlite3 ex1 | gzip -c &gt;ex1.dump.gz</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">$ <b>echo '.dump' | sqlite3 ex1 | gzip -c &gt;ex1.dump.gz</b>
+</pre></table></div>
 
 
 <p>This generates a file named <b>ex1.dump.gz</b> that contains everything
@@ -760,7 +790,8 @@ you need to reconstruct the database at a later time, or on another
 machine.  To reconstruct the database, just type:</p>
 
 
-<blockquote><pre>$ <b>zcat ex1.dump.gz | sqlite3 ex2</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">$ <b>zcat ex1.dump.gz | sqlite3 ex2</b>
+</pre></table></div>
 
 
 <p>The text format is pure SQL so you
@@ -768,12 +799,13 @@ can also use the .dump command to export an SQLite database
 into other popular SQL database engines.  Like this:</p>
 
 
-<blockquote><pre>$ <b>createdb ex2</b>
-$ <b>sqlite3 ex1 .dump | psql ex2</b></pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">$ <b>createdb ex2</b>
+$ <b>sqlite3 ex1 .dump | psql ex2</b>
+</pre></table></div>
 
 <a name="dotload"></a>
 
-<h3>Loading Extensions</h3>
+<h1 id="section_11">11. Loading Extensions</h1>
 
 <p>You can add new custom <a href="c3ref/create_function.html">application-defined SQL functions</a>,
 <a href="datatype3.html#collation">collating sequences</a>, <a href="vtab.html">virtual tables</a>, and <a href="vfs.html">VFSes</a> to the command-line
@@ -781,7 +813,8 @@ shell at run-time using the ".load" command.  First, convert the
 extension in to a DLL or shared library (as described in the
 <a href="loadext.html">Run-Time Loadable Extensions</a> document) then type:
 
-<blockquote><pre>sqlite&gt; .load /path/to/my_extension</pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; .load /path/to/my_extension
+</pre></table></div>
 
 <p>Note that SQLite automatically adds the appropriate extension suffix
 (".dll" on windows, ".dylib" on Mac, ".so" on most other unixes) to the
@@ -800,7 +833,7 @@ your own particular needs.
 
 <a name="dotother"></a>
 
-<h3>Other Dot Commands</h3>
+<h1 id="section_12">12. Other Dot Commands</h1>
 
 <p>There are many other dot-commands available in the command-line
 shell.  See the ".help" command for a complete list for any particular
@@ -808,7 +841,7 @@ version and build of SQLite.
 
 <a name="insh"></a>
 
-<h3>Using sqlite3 in a shell script</h3>
+<h1 id="section_13">13. Using sqlite3 in a shell script</h1>
 
 <p>
 One way to use sqlite3 in a shell script is to use "echo" or
@@ -824,15 +857,16 @@ in list mode, and the program exits.  This mechanism is designed
 to make sqlite3 easy to use in conjunction with programs like
 "awk".  For example:</p>
 
-<blockquote><pre>$ <b>sqlite3 ex1 'select * from tbl1' |</b>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">$ <b>sqlite3 ex1 'select * from tbl1' |</b>
 &gt; <b> awk '{printf "&lt;tr&gt;&lt;td&gt;%s&lt;td&gt;%s\n",$1,$2 }'</b>
 &lt;tr&gt;&lt;td&gt;hello&lt;td&gt;10
 &lt;tr&gt;&lt;td&gt;goodbye&lt;td&gt;20
-$</pre></blockquote>
+$
+</pre></table></div>
 
 <a name="endsh"></a>
 
-<h3>Ending shell commands</h3>
+<h1 id="section_14">14. Ending shell commands</h1>
 
 <p>
 SQLite commands are normally terminated by a semicolon.  In the shell 
@@ -845,7 +879,7 @@ to that function.</p>
 
 <a name="compiling"></a>
 
-<h3>Compiling the sqlite3 program from sources</h3>
+<h1 id="section_15">15. Compiling the sqlite3 program from sources</h1>
 
 <p>
 The source code to the sqlite3 command line interface is in a single
@@ -856,7 +890,6 @@ download</a> from the SQLite website.
 with the <a href="amalgamation.html">sqlite3 library source code</a>) to generate
 the executable.  For example:</p>
 
-<blockquote><pre>
-gcc -o sqlite3 shell.c sqlite3.c -ldl -lpthread
-</pre></blockquote>
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">gcc -o sqlite3 shell.c sqlite3.c -ldl -lpthread
+</pre></table></div>
 

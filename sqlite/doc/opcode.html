@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -290,12 +291,12 @@ pragmas include:
 
 <h3>The Opcodes</h3>
 
-<p>There are currently 158
+<p>There are currently 157
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/cd990451b504507b455cc649d46dad51f2835a67">vdbe.c</a>.</p>
+<a href="http://www.sqlite.org/src/artifact/4bad04212736526845fda9ca674afafb10078b2b">vdbe.c</a>.</p>
 
 <p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
@@ -576,10 +577,16 @@ change count is incremented (otherwise not).</p>
 <p>P1 must not be pseudo-table.  It has to be a real table with
 multiple rows.</p>
 
-<p>If P4 is not NULL, then it is the name of the table that P1 is
-pointing to.  The update hook will be invoked, if it exists.
-If P4 is not NULL then the P1 cursor must have been positioned
-using <a href="#NotFound">NotFound</a> prior to invoking this opcode.</td></tr>
+<p>If P4 is not NULL then it points to a Table struture. In this case either
+the update or pre-update hook, or both, may be invoked. The P1 cursor must
+have been positioned using <a href="#NotFound">NotFound</a> prior to invoking this opcode in
+this case. Specifically, if one is configured, the pre-update hook is
+invoked if P4 is not NULL. The update-hook is invoked if one is configured,
+P4 is not NULL, and the OPFLAG_NCHANGE flag is set in P2.</p>
+
+<p>If the OPFLAG_ISUPDATE flag is set in P2, then P3 contains the address
+of the memory cell that contains the value that the rowid of the row will
+be set to by the update.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Destroy"></a><p>Destroy</p>
 <td><p>Delete an entire database table or index whose root page in the database
@@ -923,9 +930,9 @@ UPDATE operation.  Otherwise (if the flag is clear) then this opcode
 is part of an INSERT operation.  The difference is only important to
 the update hook.</p>
 
-<p>Parameter P4 may point to a string containing the table-name, or
-may be NULL. If it is not NULL, then the update-hook
-(sqlite3.xUpdateCallback) is invoked following a successful insert.</p>
+<p>Parameter P4 may point to a Table structure, or may be NULL. If it is
+not NULL, then the update-hook (sqlite3.xUpdateCallback) is invoked
+following a successful insert.</p>
 
 <p>(WARNING/TODO: If P1 is a pseudo-cursor and P2 is dynamically
 allocated, then ownership of P2 is transferred to the pseudo-cursor
@@ -988,11 +995,6 @@ operation. No IO is required.</p>
 <td><p>Jump to the instruction at address P1, P2, or P3 depending on whether
 in the most recent <a href="#Compare">Compare</a> instruction the P1 vector was less than
 equal to, or greater than the P2 vector, respectively.</td></tr>
-<tr><td valign="top" align="center">
-<a name="JumpZeroIncr"></a><p>JumpZeroIncr</p>
-<td><p>The register P1 must contain an integer.  If register P1 is initially
-zero, then jump to P2.  Increment register P1 regardless of whether or
-not the jump is taken.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Last"></a><p>Last</p>
 <td><p>The next use of the <a href="#Rowid">Rowid</a> or <a href="#Column">Column</a> or <a href="#Prev">Prev</a> instruction for P1
@@ -1753,10 +1755,12 @@ key is sufficient to produce the required results.</td></tr>
 <a name="String"></a><p>String</p>
 <td><p>The string value P4 of length P1 (bytes) is stored in register P2.</p>
 
-<p>If P5!=0 and the content of register P3 is greater than zero, then
+<p>If P3 is not zero and the content of register P3 is equal to P5, then
 the datatype of the register P2 is converted to BLOB.  The content is
 the same sequence of bytes, it is merely interpreted as a BLOB instead
-of a string, as if it had been CAST.</td></tr>
+of a string, as if it had been CAST.  In other words:</p>
+
+<p>if( P3!=0 and reg&#91;P3&#93==P5 ) reg&#91;P2&#93 := CAST(reg&#91;P2&#93 as BLOB)</td></tr>
 <tr><td valign="top" align="center">
 <a name="String8"></a><p>String8</p>
 <td><p>P4 points to a nul terminated UTF-8 string. This opcode is transformed

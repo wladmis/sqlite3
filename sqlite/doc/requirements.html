@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -868,6 +869,10 @@ comments in the source code.
 <dt><b>R-03407-11483-10764-04340-16731-05555-54147-57723</b></dt>
 <dd><p>Each term of the ORDER BY clause is processed separately and may be matched against result columns from different SELECT statements in the compound.
 <i>(source: <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test, matrix: <a href='matrix/lang_select.html#R-03407-11483-10764-04340-16731-05555-54147-57723'>context</a>, <a href='matrix/matrix_dlang_select.html#R-03407-11483-10764-04340-16731-05555-54147-57723'>detail</a>)</i></p></dd>
+
+<dt><b>R-03407-34626-50961-58560-51866-04262-39023-12943</b></dt>
+<dd><p>If P<=X then all P bytes of payload are stored directly on the btree page without overflow.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-03407-34626-50961-58560-51866-04262-39023-12943'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-03407-34626-50961-58560-51866-04262-39023-12943'>detail</a>)</i></p></dd>
 
 <dt><b>R-03415-51114-16877-13927-48292-50475-12409-45422</b></dt>
 <dd><p>This routine returns SQLITE_OK if shared cache was enabled or disabled successfully. An error code is returned otherwise.
@@ -2289,6 +2294,10 @@ comments in the source code.
 <dd><p>No attempt is made to convert NULL or BLOB values.
 <i>(source: <a href="datatype3.html">datatype3.html</a>, matrix: <a href='matrix/datatype3.html#R-11628-62147-05445-61752-17620-56103-14750-56419'>context</a>, <a href='matrix/matrix_ddatatype3.html#R-11628-62147-05445-61752-17620-56103-14750-56419'>detail</a>)</i></p></dd>
 
+<dt><b>R-11643-51568-63953-16021-50557-65139-53423-53670</b></dt>
+<dd><p>The sqlite3_preupdate_count(D) interface returns the number of columns in the row that is being inserted, updated, or deleted.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-11643-51568-63953-16021-50557-65139-53423-53670'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-11643-51568-63953-16021-50557-65139-53423-53670'>detail</a>)</i></p></dd>
+
 <dt><b>R-11683-62380-30736-32552-21398-51660-49111-11348</b></dt>
 <dd><p>The specified column of row iRow contains a value that is not a TEXT or BLOB value
 <i>(source: <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>, checked-by: tcl/e_blobopen.test, matrix: <a href='matrix/c3ref/blob_open.html#R-11683-62380-30736-32552-21398-51660-49111-11348'>context</a>, <a href='matrix/matrix_dblob_open.html#R-11683-62380-30736-32552-21398-51660-49111-11348'>detail</a>)</i></p></dd>
@@ -2412,6 +2421,10 @@ comments in the source code.
 <dt><b>R-12452-54941-39354-45567-09766-62540-46508-43420</b></dt>
 <dd><p>Note that case insensitivity only applies to latin1 characters - basically the upper and lower case letters of English in the lower 127 byte codes of ASCII.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-12452-54941-39354-45567-09766-62540-46508-43420'>context</a>, <a href='matrix/matrix_doptoverview.html#R-12452-54941-39354-45567-09766-62540-46508-43420'>detail</a>)</i></p></dd>
+
+<dt><b>R-12482-18070-30469-35511-31025-38188-23401-30246</b></dt>
+<dd><p>Extension loading must be enabled using sqlite3_enable_load_extension() or sqlite3_db_config(db,SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION,1,NULL) prior to calling this API, otherwise an error will be returned.
+<i>(source: <a href="c3ref/load_extension.html">c3ref/load_extension.html</a>, matrix: <a href='matrix/c3ref/load_extension.html#R-12482-18070-30469-35511-31025-38188-23401-30246'>context</a>, <a href='matrix/matrix_dload_extension.html#R-12482-18070-30469-35511-31025-38188-23401-30246'>detail</a>)</i></p></dd>
 
 <dt><b>R-12507-28763-48132-30913-24133-27495-38799-45736</b></dt>
 <dd><p>PRAGMA foreign_key_list(table-name); This pragma returns one row for each foreign key constraint created by a REFERENCES clause in the CREATE TABLE statement of table "table-name".
@@ -2841,9 +2854,9 @@ comments in the source code.
 <dd><p>If a schema name is specified, then only that one schema is searched for the named object.
 <i>(source: <a href="lang_naming.html">lang_naming.html</a>, checked-by: tcl/e_resolve.test, matrix: <a href='matrix/lang_naming.html#R-14755-58619-21710-46731-49779-58295-52088-49443'>context</a>, <a href='matrix/matrix_dlang_naming.html#R-14755-58619-21710-46731-49779-58295-52088-49443'>detail</a>)</i></p></dd>
 
-<dt><b>R-14785-56733-25459-22277-14451-32364-47758-09418</b></dt>
-<dd><p>Extension loading must be enabled using sqlite3_enable_load_extension() prior to calling this API, otherwise an error will be returned.
-<i>(source: <a href="c3ref/load_extension.html">c3ref/load_extension.html</a>, matrix: <a href='matrix/c3ref/load_extension.html#R-14785-56733-25459-22277-14451-32364-47758-09418'>context</a>, <a href='matrix/matrix_dload_extension.html#R-14785-56733-25459-22277-14451-32364-47758-09418'>detail</a>)</i></p></dd>
+<dt><b>R-14786-64066-57173-54332-48842-61932-26767-55226</b></dt>
+<dd><p>The fourth parameter to the preupdate callback is the name of the database within the database connection that is being modified. This will be "main" for the main database or "temp" for TEMP tables or the name given after the AS keyword in the ATTACH statement for attached databases.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-14786-64066-57173-54332-48842-61932-26767-55226'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-14786-64066-57173-54332-48842-61932-26767-55226'>detail</a>)</i></p></dd>
 
 <dt><b>R-14809-12532-29849-37931-55866-36288-34668-62105</b></dt>
 <dd><p>Every column of every table has an associated collating function.
@@ -3397,6 +3410,10 @@ comments in the source code.
 <dd><p>If the resetFlag is true, then the highest record value is reset after *pHighwater is written.
 <i>(source: <a href="c3ref/status.html">c3ref/status.html</a>, matrix: <a href='matrix/c3ref/status.html#R-17564-54218-01993-46231-42657-60991-50837-12624'>context</a>, <a href='matrix/matrix_dstatus.html#R-17564-54218-01993-46231-42657-60991-50837-12624'>detail</a>)</i></p></dd>
 
+<dt><b>R-17579-15688-44175-34852-39551-28405-28214-64262</b></dt>
+<dd><p>These interfaces are only available if SQLite is compiled using the SQLITE_ENABLE_PREUPDATE_HOOK compile-time option.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-17579-15688-44175-34852-39551-28405-28214-64262'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-17579-15688-44175-34852-39551-28405-28214-64262'>detail</a>)</i></p></dd>
+
 <dt><b>R-17591-50446-37876-17822-10375-27592-36497-28987</b></dt>
 <dd><p>Boolean values are stored as integers 0 (false) and 1 (true).
 <i>(source: <a href="datatype3.html">datatype3.html</a>, matrix: <a href='matrix/datatype3.html#R-17591-50446-37876-17822-10375-27592-36497-28987'>context</a>, <a href='matrix/matrix_ddatatype3.html#R-17591-50446-37876-17822-10375-27592-36497-28987'>detail</a>)</i></p></dd>
@@ -3512,6 +3529,10 @@ comments in the source code.
 <dt><b>R-18088-57186-13089-35997-22868-17352-00310-65503</b></dt>
 <dd><p>For example, let the index be CREATE INDEX ex1 ON tab1(a,b) WHERE a=5 OR b=6; And let the query be: SELECT * FROM tab1 WHERE b=6 AND a=7; -- uses partial index Then the index is usable by the query because the "b=6" term appears in both the index definition and in the query.
 <i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-18088-57186-13089-35997-22868-17352-00310-65503'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-18088-57186-13089-35997-22868-17352-00310-65503'>detail</a>)</i></p></dd>
+
+<dt><b>R-18130-23470-26620-07261-16274-17871-22790-47651</b></dt>
+<dd><p>This interface enables or disables both the C-API sqlite3_load_extension() and the SQL function load_extension().
+<i>(source: <a href="c3ref/enable_load_extension.html">c3ref/enable_load_extension.html</a>, matrix: <a href='matrix/c3ref/enable_load_extension.html#R-18130-23470-26620-07261-16274-17871-22790-47651'>context</a>, <a href='matrix/matrix_denable_load_extension.html#R-18130-23470-26620-07261-16274-17871-22790-47651'>detail</a>)</i></p></dd>
 
 <dt><b>R-18143-12121-25249-36193-24562-40889-39176-48672</b></dt>
 <dd><p>Value is the integer 1.
@@ -3721,6 +3742,10 @@ comments in the source code.
 <dd><p>Different constraints within the same table may have different default conflict resolution algorithms.
 <i>(source: <a href="lang_createtable.html">lang_createtable.html</a>, checked-by: tcl/e_createtable.test, matrix: <a href='matrix/lang_createtable.html#R-19114-56113-41752-64271-30879-46460-35912-30160'>context</a>, <a href='matrix/matrix_dlang_createtable.html#R-19114-56113-41752-64271-30879-46460-35912-30160'>detail</a>)</i></p></dd>
 
+<dt><b>R-19120-50787-31629-64944-20395-18225-62762-09460</b></dt>
+<dd><p>The sqlite3_preupdate_old(D,N,P) interface writes into P a pointer to a protected sqlite3_value that contains the value of the Nth column of the table row before it is updated.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-19120-50787-31629-64944-20395-18225-62762-09460'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-19120-50787-31629-64944-20395-18225-62762-09460'>detail</a>)</i></p></dd>
+
 <dt><b>R-19139-12267-31476-22597-30278-48901-50934-33461</b></dt>
 <dd><p>If sqlite3_unlock_notify() is called with a NULL pointer as its second argument, then any existing unlock-notify callback is canceled.
 <i>(source: <a href="c3ref/unlock_notify.html">c3ref/unlock_notify.html</a>, matrix: <a href='matrix/c3ref/unlock_notify.html#R-19139-12267-31476-22597-30278-48901-50934-33461'>context</a>, <a href='matrix/matrix_dunlock_notify.html#R-19139-12267-31476-22597-30278-48901-50934-33461'>detail</a>)</i></p></dd>
@@ -3896,6 +3921,10 @@ comments in the source code.
 <dt><b>R-19878-23484-53576-16359-03133-43197-12770-47752</b></dt>
 <dd><p>Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)). If P is greater than X then the number of bytes stored on the table b-tree leaf page is K if K is less or equal to X or M otherwise.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-19878-23484-53576-16359-03133-43197-12770-47752'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-19878-23484-53576-16359-03133-43197-12770-47752'>detail</a>)</i></p></dd>
+
+<dt><b>R-19884-42355-59719-29955-34222-13016-47876-51670</b></dt>
+<dd><p>The sqlite3_preupdate_new(D,N,P) interface writes into P a pointer to a protected sqlite3_value that contains the value of the Nth column of the table row after it is updated.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-19884-42355-59719-29955-34222-13016-47876-51670'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-19884-42355-59719-29955-34222-13016-47876-51670'>detail</a>)</i></p></dd>
 
 <dt><b>R-19885-09448-58561-44146-11128-00310-35686-58085</b></dt>
 <dd><p>The names of internal schema objects always begin with "sqlite_" and any table, index, view, or trigger whose name begins with "sqlite_" is an internal schema object.
@@ -4285,10 +4314,6 @@ comments in the source code.
 <dd><p>The third and fourth bytes of each freeblock form a big-endian integer which is the size of the freeblock in bytes, including the 4-byte header.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/btree.c, matrix: <a href='matrix/fileformat2.html#R-22710-53328-59796-08773-22880-08291-09347-39531'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-22710-53328-59796-08773-22880-08291-09347-39531'>detail</a>)</i></p></dd>
 
-<dt><b>R-22721-02998-24076-24165-27195-48873-21582-46997</b></dt>
-<dd><p>A call to sqlite3_backup_init() will fail, returning SQLITE_ERROR, if there is already a read or read-write transaction open on the destination database.
-<i>(source: <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>, matrix: <a href='matrix/c3ref/backup_finish.html#R-22721-02998-24076-24165-27195-48873-21582-46997'>context</a>, <a href='matrix/matrix_dbackup_finish.html#R-22721-02998-24076-24165-27195-48873-21582-46997'>detail</a>)</i></p></dd>
-
 <dt><b>R-22724-45533-32532-12289-36170-43581-26380-53780</b></dt>
 <dd><p>if there is only a single global wildcard to the right of x, then the original LIKE or GLOB test is disabled.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-22724-45533-32532-12289-36170-43581-26380-53780'>context</a>, <a href='matrix/matrix_doptoverview.html#R-22724-45533-32532-12289-36170-43581-26380-53780'>detail</a>)</i></p></dd>
@@ -4597,10 +4622,6 @@ comments in the source code.
 <dd><p>The mode query parameter determines if the new database is opened read-only, read-write, read-write and created if it does not exist, or that the database is a pure in-memory database that never interacts with disk, respectively.
 <i>(source: <a href="uri.html">uri.html</a>, matrix: <a href='matrix/uri.html#R-24023-61156-56094-16008-29634-01440-59018-40109'>context</a>, <a href='matrix/matrix_duri.html#R-24023-61156-56094-16008-29634-01440-59018-40109'>detail</a>)</i></p></dd>
 
-<dt><b>R-24070-05668-25664-03045-42257-54405-22780-32578</b></dt>
-<dd><p>The sqlite3_snapshot_open(D,S,P) interface attempts to move the read transaction that is currently open on schema S of database connection D so that it refers to historical snapshot P.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-24070-05668-25664-03045-42257-54405-22780-32578'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-24070-05668-25664-03045-42257-54405-22780-32578'>detail</a>)</i></p></dd>
-
 <dt><b>R-24078-09375-10188-46060-61284-00703-09304-21721</b></dt>
 <dd><p>Value is a NULL.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/vdbeaux.c, matrix: <a href='matrix/fileformat2.html#R-24078-09375-10188-46060-61284-00703-09304-21721'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-24078-09375-10188-46060-61284-00703-09304-21721'>detail</a>)</i></p></dd>
@@ -4844,10 +4865,6 @@ comments in the source code.
 <dt><b>R-25394-06637-63632-64734-15986-15167-14146-59945</b></dt>
 <dd><p>These routine might also return NULL if a memory allocation error occurs.
 <i>(source: <a href="c3ref/column_database_name.html">c3ref/column_database_name.html</a>, matrix: <a href='matrix/c3ref/column_database_name.html#R-25394-06637-63632-64734-15986-15167-14146-59945'>context</a>, <a href='matrix/matrix_dcolumn_database_name.html#R-25394-06637-63632-64734-15986-15167-14146-59945'>detail</a>)</i></p></dd>
-
-<dt><b>R-25431-51432-49583-45321-20136-64162-50998-25796</b></dt>
-<dd><p>If P>X and KIf P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
-<i>(source: <a href="requirements.html">requirements.html</a>, matrix: <a href='matrix/requirements.html#R-25431-51432-49583-45321-20136-64162-50998-25796'>context</a>, <a href='matrix/matrix_drequirements.html#R-25431-51432-49583-45321-20136-64162-50998-25796'>detail</a>)</i></p></dd>
 
 <dt><b>R-25451-61125-57795-23914-51441-34414-44666-54346</b></dt>
 <dd><p>The SQLITE_CONFIG_URI option takes a single argument of type int. If non-zero, then URI handling is globally enabled. If the parameter is zero, then URI handling is globally disabled.
@@ -5101,6 +5118,10 @@ comments in the source code.
 <dd><p>But making modifications to this table will likely perturb the AUTOINCREMENT key generation algorithm.
 <i>(source: <a href="autoinc.html">autoinc.html</a>, matrix: <a href='matrix/autoinc.html#R-26490-64257-21643-35537-33187-49961-28588-55610'>context</a>, <a href='matrix/matrix_dautoinc.html#R-26490-64257-21643-35537-33187-49961-28588-55610'>detail</a>)</i></p></dd>
 
+<dt><b>R-26492-45204-29363-38379-65381-14832-32787-08398</b></dt>
+<dd><p>If P>X and K<=X then the first K bytes of P are stored on the btree page and the remaining P-K bytes are stored on overflow pages.
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-26492-45204-29363-38379-65381-14832-32787-08398'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-26492-45204-29363-38379-65381-14832-32787-08398'>detail</a>)</i></p></dd>
+
 <dt><b>R-26501-17306-17113-63025-42217-43181-46541-32131</b></dt>
 <dd><p>If a table contains a user defined column named "rowid", "oid" or "_rowid_", then that name always refers the explicitly declared column and cannot be used to retrieve the integer rowid value.
 <i>(source: <a href="lang_createtable.html">lang_createtable.html</a>, checked-by: tcl/e_createtable.test, matrix: <a href='matrix/lang_createtable.html#R-26501-17306-17113-63025-42217-43181-46541-32131'>context</a>, <a href='matrix/matrix_dlang_createtable.html#R-26501-17306-17113-63025-42217-43181-46541-32131'>detail</a>)</i></p></dd>
@@ -5344,6 +5365,10 @@ comments in the source code.
 <dt><b>R-27849-26297-61734-41281-64688-05393-35782-25088</b></dt>
 <dd><p>PRAGMA schema.incremental_vacuum(N); The incremental_vacuum pragma causes up to N pages to be removed from the freelist.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-27849-26297-61734-41281-64688-05393-35782-25088'>context</a>, <a href='matrix/matrix_dpragma.html#R-27849-26297-61734-41281-64688-05393-35782-25088'>detail</a>)</i></p></dd>
+
+<dt><b>R-27882-15425-11851-57208-29860-19997-13242-33591</b></dt>
+<dd><p>This option is used to enable or disable the sqlite3_load_extension() interface independently of the load_extension() SQL function.
+<i>(source: <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_enable_fkey.html#R-27882-15425-11851-57208-29860-19997-13242-33591'>context</a>, <a href='matrix/matrix_dc_dbconfig_enable_fkey.html#R-27882-15425-11851-57208-29860-19997-13242-33591'>detail</a>)</i></p></dd>
 
 <dt><b>R-27896-13480-56358-14836-45881-39569-16238-21022</b></dt>
 <dd><p>The sqlite3_result_null() interface sets the return value of the application-defined function to be NULL.
@@ -6045,6 +6070,10 @@ comments in the source code.
 <dd><p>After the header and zero padding are zero or more page records.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-31305-35170-11464-64098-34506-16219-33057-18056'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-31305-35170-11464-64098-34506-16219-33057-18056'>detail</a>)</i></p></dd>
 
+<dt><b>R-31310-22333-18574-57043-24725-36788-30807-54807</b></dt>
+<dd><p>In other words, schema S must not currently be in a transaction for sqlite3_snapshot_open(D,S,P) to work, but the database connection D must be out of autocommit mode.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-31310-22333-18574-57043-24725-36788-30807-54807'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-31310-22333-18574-57043-24725-36788-30807-54807'>detail</a>)</i></p></dd>
+
 <dt><b>R-31312-33516-05278-47140-12669-18608-41834-55008</b></dt>
 <dd><p>The lower(X) function returns a copy of string X with all ASCII characters converted to lower case.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, matrix: <a href='matrix/lang_corefunc.html#R-31312-33516-05278-47140-12669-18608-41834-55008'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-31312-33516-05278-47140-12669-18608-41834-55008'>detail</a>)</i></p></dd>
@@ -6229,6 +6258,10 @@ comments in the source code.
 <dd><p>FOR EACH ROW implies that the SQL statements specified in the trigger may be executed (depending on the WHEN clause) for each database row being inserted, updated or deleted by the statement causing the trigger to fire.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-32235-53300-57293-28888-55345-58030-49173-41178'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-32235-53300-57293-28888-55345-58030-49173-41178'>detail</a>)</i></p></dd>
 
+<dt><b>R-32246-51249-01476-28736-10889-32262-29627-47860</b></dt>
+<dd><p>The preupdate hook is disabled by invoking sqlite3_preupdate_hook() with a NULL pointer as the second parameter.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-32246-51249-01476-28736-10889-32262-29627-47860'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-32246-51249-01476-28736-10889-32262-29627-47860'>detail</a>)</i></p></dd>
+
 <dt><b>R-32266-59420-04967-20715-46228-25200-01200-16446</b></dt>
 <dd><p>If the second parameter (zDbName) does not match the name of any open database file, then SQLITE_ERROR is returned.
 <i>(source: <a href="c3ref/file_control.html">c3ref/file_control.html</a>, matrix: <a href='matrix/c3ref/file_control.html#R-32266-59420-04967-20715-46228-25200-01200-16446'>context</a>, <a href='matrix/matrix_dfile_control.html#R-32266-59420-04967-20715-46228-25200-01200-16446'>detail</a>)</i></p></dd>
@@ -6260,6 +6293,10 @@ comments in the source code.
 <dt><b>R-32369-26304-55789-00588-64019-11696-17983-36545</b></dt>
 <dd><p>If the transaction is immediate, then RESERVED locks are acquired on all databases as soon as the BEGIN command is executed, without waiting for the database to be used.
 <i>(source: <a href="lang_transaction.html">lang_transaction.html</a>, matrix: <a href='matrix/lang_transaction.html#R-32369-26304-55789-00588-64019-11696-17983-36545'>context</a>, <a href='matrix/matrix_dlang_transaction.html#R-32369-26304-55789-00588-64019-11696-17983-36545'>detail</a>)</i></p></dd>
+
+<dt><b>R-32370-18782-48434-43620-03325-42190-31866-11040</b></dt>
+<dd><p>The seventh parameter to the preupdate callback is the final rowid of the row being changed for SQLITE_UPDATE and SQLITE_INSERT changes and is undefined for SQLITE_DELETE changes.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-32370-18782-48434-43620-03325-42190-31866-11040'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-32370-18782-48434-43620-03325-42190-31866-11040'>detail</a>)</i></p></dd>
 
 <dt><b>R-32434-09092-13813-42395-15886-36394-05508-61902</b></dt>
 <dd><p>If the value of expr is NULL, then the result of the CAST expression is also NULL.
@@ -6364,6 +6401,10 @@ comments in the source code.
 <dt><b>R-33142-02092-43419-10432-03484-54260-43121-37781</b></dt>
 <dd><p>AUTOINCREMENT does not work on WITHOUT ROWID tables.
 <i>(source: <a href="withoutrowid.html">withoutrowid.html</a>, checked-by: tcl/without_rowid5.test, matrix: <a href='matrix/withoutrowid.html#R-33142-02092-43419-10432-03484-54260-43121-37781'>context</a>, <a href='matrix/matrix_dwithoutrowid.html#R-33142-02092-43419-10432-03484-54260-43121-37781'>detail</a>)</i></p></dd>
+
+<dt><b>R-33198-05775-12486-51098-43766-32149-25799-18917</b></dt>
+<dd><p>In order to succeed, a call to sqlite3_snapshot_open(D,S,P) must be the first operation following the BEGIN that takes the schema S out of autocommit mode.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-33198-05775-12486-51098-43766-32149-25799-18917'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-33198-05775-12486-51098-43766-32149-25799-18917'>detail</a>)</i></p></dd>
 
 <dt><b>R-33211-38833-64331-54724-35381-31821-05246-63257</b></dt>
 <dd><p>These routines do not parse the SQL statements thus will not detect syntactically incorrect SQL.
@@ -6843,7 +6884,7 @@ comments in the source code.
 
 <dt><b>R-35454-31058-05961-25112-64343-26549-00069-20498</b></dt>
 <dd><p>If P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
-<i>(source: <a href="requirements.html">requirements.html</a>, matrix: <a href='matrix/requirements.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>context</a>, <a href='matrix/matrix_drequirements.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>detail</a>)</i></p></dd>
+<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-35454-31058-05961-25112-64343-26549-00069-20498'>detail</a>)</i></p></dd>
 
 <dt><b>R-35460-03740-02108-04893-51916-60089-58945-40785</b></dt>
 <dd><p>Registering a NULL function disables the callback.
@@ -6957,6 +6998,10 @@ comments in the source code.
 <dd><p>The sqlite_stat3.nLt holds the approximate number of entries in the index whose left-most column is less than the sample.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-36103-43483-56354-57798-31615-25926-09784-32512'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-36103-43483-56354-57798-31615-25926-09784-32512'>detail</a>)</i></p></dd>
 
+<dt><b>R-36147-61857-54581-58200-55810-07092-59837-08687</b></dt>
+<dd><p>The second parameter to the preupdate callback is a pointer to the database connection that registered the preupdate hook.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-36147-61857-54581-58200-55810-07092-59837-08687'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-36147-61857-54581-58200-55810-07092-59837-08687'>detail</a>)</i></p></dd>
+
 <dt><b>R-36185-29671-26091-33323-34163-48928-21638-35689</b></dt>
 <dd><p>If the column-name list is omitted, then the names of the columns in the view are derived from the names of the result-set columns in the select-stmt.
 <i>(source: <a href="lang_createview.html">lang_createview.html</a>, matrix: <a href='matrix/lang_createview.html#R-36185-29671-26091-33323-34163-48928-21638-35689'>context</a>, <a href='matrix/matrix_dlang_createview.html#R-36185-29671-26091-33323-34163-48928-21638-35689'>detail</a>)</i></p></dd>
@@ -7064,10 +7109,6 @@ comments in the source code.
 <dt><b>R-36706-10507-15107-19022-47834-34931-59903-48809</b></dt>
 <dd><p>The PRAGMA wal_checkpoint command can be used to invoke this interface from SQL.
 <i>(source: <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>, checked-by: tcl/e_walckpt.test, matrix: <a href='matrix/c3ref/wal_checkpoint_v2.html#R-36706-10507-15107-19022-47834-34931-59903-48809'>context</a>, <a href='matrix/matrix_dwal_checkpoint_v2.html#R-36706-10507-15107-19022-47834-34931-59903-48809'>detail</a>)</i></p></dd>
-
-<dt><b>R-36711-50877-10817-10210-50248-54315-51243-39654</b></dt>
-<dd><p>Attempt to return the underlying operating system error code or error number that caused the most reason I/O error or failure to open a file.
-<i>(source: <a href="c3ref/system_errno.html">c3ref/system_errno.html</a>, matrix: <a href='matrix/c3ref/system_errno.html#R-36711-50877-10817-10210-50248-54315-51243-39654'>context</a>, <a href='matrix/matrix_dsystem_errno.html#R-36711-50877-10817-10210-50248-54315-51243-39654'>detail</a>)</i></p></dd>
 
 <dt><b>R-36754-20545-04159-27572-44208-64137-08044-49180</b></dt>
 <dd><p>Strings with embedded NUL characters cannot be represented as string literals in SQL and hence the returned string literal is truncated prior to the first NUL.
@@ -7373,6 +7414,10 @@ comments in the source code.
 <dd><p>The subquery does not use LIMIT or the outer query is not DISTINCT.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-38341-53143-20377-01008-01065-23997-09704-35751'>context</a>, <a href='matrix/matrix_doptoverview.html#R-38341-53143-20377-01008-01065-23997-09704-35751'>detail</a>)</i></p></dd>
 
+<dt><b>R-38363-06047-50466-51951-52658-34860-15008-00434</b></dt>
+<dd><p>The WHERE clause may not contain subqueries, references to other tables, functions, or bound parameters.
+<i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-38363-06047-50466-51951-52658-34860-15008-00434'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-38363-06047-50466-51951-52658-34860-15008-00434'>detail</a>)</i></p></dd>
+
 <dt><b>R-38392-49970-12862-30349-17432-31139-60846-54763</b></dt>
 <dd><p>If the action code is SQLITE_READ and the callback returns SQLITE_IGNORE then the prepared statement statement is constructed to substitute a NULL value in place of the table column that would have been read if SQLITE_OK had been returned.
 <i>(source: <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>, matrix: <a href='matrix/c3ref/set_authorizer.html#R-38392-49970-12862-30349-17432-31139-60846-54763'>context</a>, <a href='matrix/matrix_dset_authorizer.html#R-38392-49970-12862-30349-17432-31139-60846-54763'>detail</a>)</i></p></dd>
@@ -7605,6 +7650,10 @@ comments in the source code.
 <dd><p>The first time the database is written, an exclusive lock is obtained and held.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-39464-36566-10218-24417-22703-07867-12954-27805'>context</a>, <a href='matrix/matrix_dpragma.html#R-39464-36566-10218-24417-22703-07867-12954-27805'>detail</a>)</i></p></dd>
 
+<dt><b>R-39474-38888-56362-54378-59272-28720-13606-34425</b></dt>
+<dd><p>The sixth parameter to the preupdate callback is the initial rowid of the row being changes for SQLITE_UPDATE and SQLITE_DELETE changes and is undefined for SQLITE_INSERT changes.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-39474-38888-56362-54378-59272-28720-13606-34425'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-39474-38888-56362-54378-59272-28720-13606-34425'>detail</a>)</i></p></dd>
+
 <dt><b>R-39544-28997-13653-57291-53593-51283-21786-51117</b></dt>
 <dd><p>In other words, the first column is 0 if the equivalent call to sqlite3_wal_checkpoint_v2() would have returned SQLITE_OK or 1 if the equivalent call would have returned SQLITE_BUSY.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-39544-28997-13653-57291-53593-51283-21786-51117'>context</a>, <a href='matrix/matrix_dpragma.html#R-39544-28997-13653-57291-53593-51283-21786-51117'>detail</a>)</i></p></dd>
@@ -7780,6 +7829,10 @@ comments in the source code.
 <dt><b>R-40416-50415-37533-65510-36358-17565-47393-05373</b></dt>
 <dd><p>SQLite will also add one of the following flags to the xOpen() call, depending on the object being opened: SQLITE_OPEN_MAIN_DB SQLITE_OPEN_MAIN_JOURNAL SQLITE_OPEN_TEMP_DB SQLITE_OPEN_TEMP_JOURNAL SQLITE_OPEN_TRANSIENT_DB SQLITE_OPEN_SUBJOURNAL SQLITE_OPEN_MASTER_JOURNAL SQLITE_OPEN_WAL
 <i>(source: <a href="c3ref/vfs.html">c3ref/vfs.html</a>, matrix: <a href='matrix/c3ref/vfs.html#R-40416-50415-37533-65510-36358-17565-47393-05373'>context</a>, <a href='matrix/matrix_dvfs.html#R-40416-50415-37533-65510-36358-17565-47393-05373'>detail</a>)</i></p></dd>
+
+<dt><b>R-40460-39888-52540-38305-24333-10191-58577-29064</b></dt>
+<dd><p>A call to sqlite3_snapshot_open(D,S,P) will fail if the database connection D does not know that the database file for schema S is in WAL mode. A database connection might not know that the database file is in WAL mode if there has been no prior I/O on that database connection, or if the database entered WAL mode after the most recent I/O on the database connection.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-40460-39888-52540-38305-24333-10191-58577-29064'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-40460-39888-52540-38305-24333-10191-58577-29064'>detail</a>)</i></p></dd>
 
 <dt><b>R-40463-24712-34752-07038-54630-26227-29776-31431</b></dt>
 <dd><p>SQLITE_DBSTATUS_CACHE_MISS This parameter returns the number of pager cache misses that have occurred.
@@ -8129,6 +8182,10 @@ comments in the source code.
 <dd><p>The sqlite3_update_hook(D,C,P) function returns the P argument from the previous call on the same database connection D, or NULL for the first call on D.
 <i>(source: <a href="c3ref/update_hook.html">c3ref/update_hook.html</a>, matrix: <a href='matrix/c3ref/update_hook.html#R-42136-40354-42275-03158-50011-22774-46135-65161'>context</a>, <a href='matrix/matrix_dupdate_hook.html#R-42136-40354-42275-03158-50011-22774-46135-65161'>detail</a>)</i></p></dd>
 
+<dt><b>R-42144-12179-61067-60521-47776-40756-33656-09079</b></dt>
+<dd><p>The third parameter to sqlite3_preupdate_hook() is passed through as the first parameter to callbacks.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-42144-12179-61067-60521-47776-40756-33656-09079'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-42144-12179-61067-60521-47776-40756-33656-09079'>detail</a>)</i></p></dd>
+
 <dt><b>R-42168-23975-08359-11434-07624-62565-20004-56753</b></dt>
 <dd><p>Built-in functions may be overloaded by new application-defined functions.
 <i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-42168-23975-08359-11434-07624-62565-20004-56753'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-42168-23975-08359-11434-07624-62565-20004-56753'>detail</a>)</i></p></dd>
@@ -8148,6 +8205,10 @@ comments in the source code.
 <dt><b>R-42264-30503-59734-27182-09604-54439-24686-19729</b></dt>
 <dd><p>The SQLITE_MAX_TRIGGER_DEPTH and SQLITE_LIMIT_TRIGGER_DEPTH settings determine the maximum allowable depth of trigger program recursion. For the purposes of these limits, foreign key actions are considered trigger programs.
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: tcl/e_fkey.test, matrix: <a href='matrix/foreignkeys.html#R-42264-30503-59734-27182-09604-54439-24686-19729'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-42264-30503-59734-27182-09604-54439-24686-19729'>detail</a>)</i></p></dd>
+
+<dt><b>R-42285-56877-09234-46641-17073-37053-15248-47437</b></dt>
+<dd><p>The sqlite3_snapshot_open(D,S,P) interface starts a read transaction for schema S of database connection D such that the read transaction refers to historical snapshot P, rather than the most recent change to the database.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-42285-56877-09234-46641-17073-37053-15248-47437'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-42285-56877-09234-46641-17073-37053-15248-47437'>detail</a>)</i></p></dd>
 
 <dt><b>R-42315-53658-63706-40087-63101-17320-03632-52756</b></dt>
 <dd><p>This routine sets a busy handler that sleeps for a specified amount of time when a table is locked.
@@ -8517,6 +8578,10 @@ comments in the source code.
 <dd><p>SQLITE_LIMIT_COLUMN The maximum number of columns in a table definition or in the result set of a SELECT or the maximum number of columns in an index or in an ORDER BY or GROUP BY clause.
 <i>(source: <a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a>, checked-by: tcl/sqllimits1.test, matrix: <a href='matrix/c3ref/c_limit_attached.html#R-43996-29471-48886-45304-51416-12121-07825-19150'>context</a>, <a href='matrix/matrix_dc_limit_attached.html#R-43996-29471-48886-45304-51416-12121-07825-19150'>detail</a>)</i></p></dd>
 
+<dt><b>R-43999-41837-62286-49175-01368-30942-36574-62513</b></dt>
+<dd><p>The preupdate hook only fires for changes to rowid tables; the preupdate hook is not invoked for changes to virtual tables or WITHOUT ROWID tables.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-43999-41837-62286-49175-01368-30942-36574-62513'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-43999-41837-62286-49175-01368-30942-36574-62513'>detail</a>)</i></p></dd>
+
 <dt><b>R-44013-13102-10441-32146-65192-28233-37032-42173</b></dt>
 <dd><p>The mode parameter may be set to either "ro", "rw", "rwc", or "memory". Attempting to set it to any other value is an error
 <i>(source: <a href="c3ref/open.html">c3ref/open.html</a>, checked-by: tcl/e_uri.test, matrix: <a href='matrix/c3ref/open.html#R-44013-13102-10441-32146-65192-28233-37032-42173'>context</a>, <a href='matrix/matrix_dopen.html#R-44013-13102-10441-32146-65192-28233-37032-42173'>detail</a>)</i></p></dd>
@@ -8632,10 +8697,6 @@ comments in the source code.
 <dt><b>R-44448-00687-59565-33416-30258-38835-37742-50898</b></dt>
 <dd><p>The pUser and xDelUser members of the sqlite3_rtree_geometry structure are initially set to NULL.
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-44448-00687-59565-33416-30258-38835-37742-50898'>context</a>, <a href='matrix/matrix_drtree.html#R-44448-00687-59565-33416-30258-38835-37742-50898'>detail</a>)</i></p></dd>
-
-<dt><b>R-44454-62925-59479-49991-49814-37875-32192-54285</b></dt>
-<dd><p>The WHERE clause may not contains subqueries, references to other tables, functions, or bound parameters.
-<i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-44454-62925-59479-49991-49814-37875-32192-54285'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-44454-62925-59479-49991-49814-37875-32192-54285'>detail</a>)</i></p></dd>
 
 <dt><b>R-44492-58344-41928-11727-58799-16717-41714-60827</b></dt>
 <dd><p>The purpose of the likely(X) function is to provide a hint to the query planner that the argument X is a boolean value that is usually true.
@@ -9249,6 +9310,10 @@ comments in the source code.
 <dd><p><img src="images/syntax/literal-value.gif"><br>
 <i>(source: <a href="syntax/literal-value.html">syntax/literal-value.html</a>, matrix: <a href='matrix/syntax/literal-value.html#R-47443-11280-39343-26300-13209-50193-13307-46522'>context</a>, <a href='matrix/matrix_dliteral_value.html#R-47443-11280-39343-26300-13209-50193-13307-46522'>detail</a>)</i></p></dd>
 
+<dt><b>R-47446-42933-31518-33219-37380-53181-26111-02925</b></dt>
+<dd><p>At most one preupdate hook may be registered at a time on a single database connection; each call to sqlite3_preupdate_hook() overrides the previous setting.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-47446-42933-31518-33219-37380-53181-26111-02925'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-47446-42933-31518-33219-37380-53181-26111-02925'>detail</a>)</i></p></dd>
+
 <dt><b>R-47475-12388-30783-49021-03360-34906-23996-23410</b></dt>
 <dd><p><img src="images/syntax/sql-stmt.gif"><br>
 <i>(source: <a href="syntax/sql-stmt.html">syntax/sql-stmt.html</a>, matrix: <a href='matrix/syntax/sql-stmt.html#R-47475-12388-30783-49021-03360-34906-23996-23410'>context</a>, <a href='matrix/matrix_dsql_stmt.html#R-47475-12388-30783-49021-03360-34906-23996-23410'>detail</a>)</i></p></dd>
@@ -9473,6 +9538,10 @@ comments in the source code.
 <dd><p>Page 1 of a database file is the root page of a table b-tree that holds a special table named "sqlite_master" (or "sqlite_temp_master" in the case of a TEMP database) which stores the complete database schema.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-48544-16048-58560-43794-36911-40715-54849-57363'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-48544-16048-58560-43794-36911-40715-54849-57363'>detail</a>)</i></p></dd>
 
+<dt><b>R-48560-31808-12822-42502-57159-22070-42910-14910</b></dt>
+<dd><p>The fifth parameter to the preupdate callback is the name of the table that is being modified.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-48560-31808-12822-42502-57159-22070-42910-14910'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-48560-31808-12822-42502-57159-22070-42910-14910'>detail</a>)</i></p></dd>
+
 <dt><b>R-48563-15053-26384-64007-26863-55213-59220-45966</b></dt>
 <dd><p>If nByte is zero, then no prepared statement is generated.
 <i>(source: <a href="c3ref/prepare.html">c3ref/prepare.html</a>, matrix: <a href='matrix/c3ref/prepare.html#R-48563-15053-26384-64007-26863-55213-59220-45966'>context</a>, <a href='matrix/matrix_dprepare.html#R-48563-15053-26384-64007-26863-55213-59220-45966'>detail</a>)</i></p></dd>
@@ -9584,6 +9653,10 @@ comments in the source code.
 <dt><b>R-49155-63541-44229-54839-02572-16362-28643-16859</b></dt>
 <dd><p>If the busy-handler returns 0 before the writer lock is obtained or while waiting for database readers, the checkpoint operation proceeds from that point in the same way as SQLITE_CHECKPOINT_PASSIVE - checkpointing as many frames as possible without blocking any further.
 <i>(source: <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>, checked-by: tcl/e_walckpt.test, matrix: <a href='matrix/c3ref/wal_checkpoint_v2.html#R-49155-63541-44229-54839-02572-16362-28643-16859'>context</a>, <a href='matrix/matrix_dwal_checkpoint_v2.html#R-49155-63541-44229-54839-02572-16362-28643-16859'>detail</a>)</i></p></dd>
+
+<dt><b>R-49171-60075-23277-08635-09807-23806-52142-24431</b></dt>
+<dd><p>The sqlite3_preupdate_hook() interface registers a callback function that is invoked prior to each INSERT, UPDATE, and DELETE operation on a rowid table.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-49171-60075-23277-08635-09807-23806-52142-24431'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-49171-60075-23277-08635-09807-23806-52142-24431'>detail</a>)</i></p></dd>
 
 <dt><b>R-49178-21358-58489-31319-06651-33455-27209-45773</b></dt>
 <dd><p>By contrast, if a statement modifies the contents of the database such that a deferred foreign key constraint is violated, the violation is not reported immediately.
@@ -9904,6 +9977,10 @@ comments in the source code.
 <dt><b>R-50943-18433-57597-04082-04676-55042-26161-32461</b></dt>
 <dd><p>Frequent inserts, updates, and deletes can cause the database file to become fragmented - where data for a single table or index is scattered around the database file.
 <i>(source: <a href="lang_vacuum.html">lang_vacuum.html</a>, checked-by: tcl/e_vacuum.test, matrix: <a href='matrix/lang_vacuum.html#R-50943-18433-57597-04082-04676-55042-26161-32461'>context</a>, <a href='matrix/matrix_dlang_vacuum.html#R-50943-18433-57597-04082-04676-55042-26161-32461'>detail</a>)</i></p></dd>
+
+<dt><b>R-50949-63870-33866-03179-22330-03090-53959-18896</b></dt>
+<dd><p>The sqlite3_preupdate_depth(D) interface returns 0 if the preupdate callback was invoked as a result of a direct insert, update, or delete operation; or 1 for inserts, updates, or deletes invoked by top-level triggers; or 2 for changes resulting from triggers called by top-level triggers; and so forth.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-50949-63870-33866-03179-22330-03090-53959-18896'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-50949-63870-33866-03179-22330-03090-53959-18896'>detail</a>)</i></p></dd>
 
 <dt><b>R-50953-26869-09407-63329-65116-60500-37653-24297</b></dt>
 <dd><p>For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX=35.00 AND minY
@@ -10749,10 +10826,6 @@ comments in the source code.
 <dd><p>The char(X1,X2,...,XN) function returns a string composed of characters having the unicode code point values of integers X1 through XN, respectively.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: tcl/func.test, matrix: <a href='matrix/lang_corefunc.html#R-55469-62130-44621-63602-01605-63421-57069-12544'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-55469-62130-44621-63602-01605-63421-57069-12544'>detail</a>)</i></p></dd>
 
-<dt><b>R-55491-50411-34640-45855-15884-48843-01601-19161</b></dt>
-<dd><p>A snapshot will fail to open if the database connection D has not previously completed at least one read operation against the database file.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, checked-by: tcl/snapshot.test, matrix: <a href='matrix/c3ref/snapshot_open.html#R-55491-50411-34640-45855-15884-48843-01601-19161'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-55491-50411-34640-45855-15884-48843-01601-19161'>detail</a>)</i></p></dd>
-
 <dt><b>R-55530-52930-45065-40235-10917-28940-04210-09538</b></dt>
 <dd><p>In a well-formed b-tree page, there will always be at least one cell before the first freeblock.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/btree.c, matrix: <a href='matrix/fileformat2.html#R-55530-52930-45065-40235-10917-28940-04210-09538'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-55530-52930-45065-40235-10917-28940-04210-09538'>detail</a>)</i></p></dd>
@@ -10984,6 +11057,10 @@ comments in the source code.
 <dt><b>R-56966-62845-41906-06988-64325-13391-23596-51092</b></dt>
 <dd><p>The integrity_check pragma looks for out-of-order records, missing pages, malformed records, missing index entries, and UNIQUE and NOT NULL constraint errors.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-56966-62845-41906-06988-64325-13391-23596-51092'>context</a>, <a href='matrix/matrix_dpragma.html#R-56966-62845-41906-06988-64325-13391-23596-51092'>detail</a>)</i></p></dd>
+
+<dt><b>R-57019-29874-21566-05710-22141-45725-52460-50437</b></dt>
+<dd><p>Attempt to return the underlying operating system error code or error number that caused the most recent I/O error or failure to open a file.
+<i>(source: <a href="c3ref/system_errno.html">c3ref/system_errno.html</a>, matrix: <a href='matrix/c3ref/system_errno.html#R-57019-29874-21566-05710-22141-45725-52460-50437'>context</a>, <a href='matrix/matrix_dsystem_errno.html#R-57019-29874-21566-05710-22141-45725-52460-50437'>detail</a>)</i></p></dd>
 
 <dt><b>R-57025-62168-38373-42436-38968-34840-50734-33391</b></dt>
 <dd><p>The CREATE INDEX command consists of the keywords "CREATE INDEX" followed by the name of the new index, the keyword "ON", the name of a previously created table that is to be indexed, and a parenthesized list of table column names and/or expressions that are used for the index key.
@@ -11464,6 +11541,10 @@ comments in the source code.
 <dt><b>R-59665-46340-25157-22824-10328-32934-42335-25570</b></dt>
 <dd><p>This routine actually returns the index of the largest (rightmost) parameter. For all forms except ?NNN, this will correspond to the number of unique parameters. If parameters of the ?NNN form are used, there may be gaps in the list.
 <i>(source: <a href="c3ref/bind_parameter_count.html">c3ref/bind_parameter_count.html</a>, matrix: <a href='matrix/c3ref/bind_parameter_count.html#R-59665-46340-25157-22824-10328-32934-42335-25570'>context</a>, <a href='matrix/matrix_dbind_parameter_count.html#R-59665-46340-25157-22824-10328-32934-42335-25570'>detail</a>)</i></p></dd>
+
+<dt><b>R-59669-10869-34908-11524-35310-23296-03670-09985</b></dt>
+<dd><p>The third parameter to the preupdate callback is one of the constants SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE to indentify the kind of update operation that is about to occur.
+<i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-59669-10869-34908-11524-35310-23296-03670-09985'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-59669-10869-34908-11524-35310-23296-03670-09985'>detail</a>)</i></p></dd>
 
 <dt><b>R-59712-18547-02212-00843-63183-21822-46730-58410</b></dt>
 <dd><p>The source database is read-locked only while it is being read; it is not locked continuously for the entire backup operation.
@@ -11965,10 +12046,6 @@ comments in the source code.
 <dd><p>Coincidentally, that same index is useful for locating the team leader of a particular team: SELECT person_id FROM person WHERE is_team_leader AND team_id=?1;
 <i>(source: <a href="partialindex.html">partialindex.html</a>, matrix: <a href='matrix/partialindex.html#R-62671-45936-15699-15939-47274-39312-22685-45097'>context</a>, <a href='matrix/matrix_dpartialindex.html#R-62671-45936-15699-15939-47274-39312-22685-45097'>detail</a>)</i></p></dd>
 
-<dt><b>R-62681-08918-23602-12301-03262-02217-50931-47866</b></dt>
-<dd><p>If PIf P>X and KIf P>X and K>X then the first M bytes of P are stored on the btree page and the remaining P-M bytes are stored on overflow pages.
-<i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-62681-08918-23602-12301-03262-02217-50931-47866'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-62681-08918-23602-12301-03262-02217-50931-47866'>detail</a>)</i></p></dd>
-
 <dt><b>R-62683-08521-49725-09422-28749-53533-20757-42549</b></dt>
 <dd><p><img src="images/syntax/create-trigger-stmt.gif"><br>
 <i>(source: <a href="syntax/create-trigger-stmt.html">syntax/create-trigger-stmt.html</a>, matrix: <a href='matrix/syntax/create-trigger-stmt.html#R-62683-08521-49725-09422-28749-53533-20757-42549'>context</a>, <a href='matrix/matrix_dcreate_trigger_stmt.html#R-62683-08521-49725-09422-28749-53533-20757-42549'>detail</a>)</i></p></dd>
@@ -12205,6 +12282,10 @@ comments in the source code.
 <dd><p>The outputs s0 and s1 are both weighted checksums using Fibonacci weights in reverse order.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-63672-25227-17465-07864-20680-40543-20473-50716'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-63672-25227-17465-07864-20680-40543-20473-50716'>detail</a>)</i></p></dd>
 
+<dt><b>R-63674-39978-56596-19929-61687-32380-54180-59144</b></dt>
+<dd><p>A call to sqlite3_backup_init() will fail, returning NULL, if there is already a read or read-write transaction open on the destination database.
+<i>(source: <a href="c3ref/backup_finish.html">c3ref/backup_finish.html</a>, matrix: <a href='matrix/c3ref/backup_finish.html#R-63674-39978-56596-19929-61687-32380-54180-59144'>context</a>, <a href='matrix/matrix_dbackup_finish.html#R-63674-39978-56596-19929-61687-32380-54180-59144'>detail</a>)</i></p></dd>
+
 <dt><b>R-63697-19365-62485-52298-29987-32888-31412-50224</b></dt>
 <dd><p>Calls to sqlite3_db_config() return SQLITE_OK if and only if the call is considered successful.
 <i>(source: <a href="c3ref/db_config.html">c3ref/db_config.html</a>, matrix: <a href='matrix/c3ref/db_config.html#R-63697-19365-62485-52298-29987-32888-31412-50224'>context</a>, <a href='matrix/matrix_ddb_config.html#R-63697-19365-62485-52298-29987-32888-31412-50224'>detail</a>)</i></p></dd>
@@ -12408,10 +12489,6 @@ comments in the source code.
 <dt><b>R-64634-29359-61184-64182-15828-53059-45249-47923</b></dt>
 <dd><p>Note also that when adding a CHECK constraint, the CHECK constraint is not tested against preexisting rows of the table.
 <i>(source: <a href="lang_altertable.html">lang_altertable.html</a>, matrix: <a href='matrix/lang_altertable.html#R-64634-29359-61184-64182-15828-53059-45249-47923'>context</a>, <a href='matrix/matrix_dlang_altertable.html#R-64634-29359-61184-64182-15828-53059-45249-47923'>detail</a>)</i></p></dd>
-
-<dt><b>R-64673-08124-52694-04524-03249-21922-25183-14546</b></dt>
-<dd><p>In order to succeed, a call to sqlite3_snapshot_open(D,S,P) must be the first operation, apart from other sqlite3_snapshot_open() calls, following the BEGIN that starts a new read transaction.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-64673-08124-52694-04524-03249-21922-25183-14546'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-64673-08124-52694-04524-03249-21922-25183-14546'>detail</a>)</i></p></dd>
 
 <dt><b>R-64707-05329-18384-25236-31190-36839-36915-56468</b></dt>
 <dd><p>The left-most character of X is number 1.

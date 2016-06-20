@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -141,7 +142,10 @@ a:visited { color: #734559 }
     tables that was reported a few hours after the 3.8.11 release.
 <li>SQLITE_SOURCE_ID: "2015-07-29 20:00:57 cf538e2783e468bbc25e7cb2a9ee64d3e0e80b2f"
 <li>SHA1 for sqlite3.c: 3be71d99121fe5b17f057011025bcf84e7cc6c84
-</ul></p><p><b>Changes carried forward from version 3.8.11 (2015-07-27):</b></p><p><ul>
+
+</ul></p>
+<p><b>Changes carried forward from version 3.8.11 (2015-07-27):</b></p>
+<p><ul>
 <li>Added the experimental <a href="../rbu.html">RBU</a> extension.  Note that this extension is experimental
     and subject to change in incompatible ways.
 <li>Added the experimental <a href="../fts5.html">FTS5</a> extension.  Note that this extension is experimental
@@ -189,7 +193,9 @@ a:visited { color: #734559 }
 <li>Fix the <a href="../c3ref/memory_highwater.html">sqlite3_memory_used()</a> and <a href="../c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> interfaces
     so that they actually do provide a 64-bit answer.
 
+
 </ul></p>
+
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
       A detailed history of every

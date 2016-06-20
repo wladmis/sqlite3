@@ -52,7 +52,7 @@ a:visited { color: #734559 }
 .fancy h2 { margin-left: 10px }
 .fancy h3 { margin-left: 20px }
 .fancy h4 { margin-left: 30px }
-.fancy th {white-space:nowrap;text-align:left;border-bottom:solid 1px #444}
+.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
 .fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
 .fancy #toc a        { color: darkblue ; text-decoration: none }
 .fancy .todo         { color: #AA3333 ; font-style : italic }
@@ -62,6 +62,7 @@ a:visited { color: #734559 }
 .fancy :link:hover, .fancy :visited:hover { background: wheat }
 .fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
 .fancy li p { margin: 1em 0 }
+.fancy blockquote { margin-left : 10ex }
 /* End of "fancyformat" specific rules. */
 
 .yyterm {
@@ -143,7 +144,10 @@ a:visited { color: #734559 }
 
 <li>SQLITE_SOURCE_ID: ""2015-10-16 17:31:12 767c1727fec4ce11b83f25b3f1bfcfe68a2c8b02"
 <li>SHA1 for sqlite3.c: 5e6d1873a32d82c2cf8581f143649940cac8ae49
-</ul></p><p><b>Changes carried forward from version 3.9.0 (2015-10-14):</b></p><p><ul>
+
+</ul></p>
+<p><b>Changes carried forward from version 3.9.0 (2015-10-14):</b></p>
+<p><ul>
 <p><b>Policy Changes:</b>
 <li>The <a href="../versionnumbers.html">version numbering conventions</a> for SQLite are revised to use the
     emerging standard of <a href="http://semver.org/">semantic versioning</a>.
@@ -188,7 +192,9 @@ a:visited { color: #734559 }
     in the ON or USING clause of a LEFT JOIN.  Fix for ticket
     <a href="https://www.sqlite.org/src/info/c2a19d81652f40568c">c2a19d81652f40568c</a>.
 
+
 </ul></p>
+
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
       A detailed history of every
