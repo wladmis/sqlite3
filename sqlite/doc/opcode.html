@@ -291,12 +291,12 @@ pragmas include:
 
 <h3>The Opcodes</h3>
 
-<p>There are currently 157
+<p>There are currently 158
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/4bad04212736526845fda9ca674afafb10078b2b">vdbe.c</a>.</p>
+<a href="http://www.sqlite.org/src/artifact/ea260b61e73b11a71e70b28a8e25866e2899e5da">vdbe.c</a>.</p>
 
 <p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
@@ -918,10 +918,12 @@ then rowid is stored for subsequent return by the
 sqlite3_last_insert_rowid() function (otherwise it is unmodified).</p>
 
 <p>If the OPFLAG_USESEEKRESULT flag of P5 is set and if the result of
-the last seek operation (OP_NotExists) was a success, then this
+the last seek operation (OP_NotExists or <a href="#SeekRowid">SeekRowid</a>) was a success,
+then this
 operation will not attempt to find the appropriate row before doing
 the insert but will instead overwrite the row that the cursor is
-currently pointing to.  Presumably, the prior <a href="#NotExists">NotExists</a> opcode
+currently pointing to.  Presumably, the prior <a href="#NotExists">NotExists</a> or
+<a href="#SeekRowid">SeekRowid</a> opcode
 has already positioned the cursor correctly.  This is an optimization
 that boosts performance by avoiding redundant seeks.</p>
 
@@ -1190,6 +1192,10 @@ SQLITE_CORRUPT error. If P1 does contain a record with rowid P3 then
 leave the cursor pointing at that record and fall through to the next
 instruction.</p>
 
+<p>The <a href="#SeekRowid">SeekRowid</a> opcode performs the same operation but also allows the
+P3 register to contain a non-integer value, in which case the jump is
+always taken.  This opcode requires that P3 always contain an integer.</p>
+
 <p>The <a href="#NotFound">NotFound</a> opcode performs the same operation on index btrees
 (with arbitrary multi-value keys).</p>
 
@@ -1197,7 +1203,7 @@ instruction.</p>
 in either direction.  In other words, the <a href="#Next">Next</a> and <a href="#Prev">Prev</a> opcodes will
 not work following this opcode.</p>
 
-<p>See also: <a href="#Found">Found</a>, <a href="#NotFound">NotFound</a>, <a href="#NoConflict">NoConflict</a></td></tr>
+<p>See also: <a href="#Found">Found</a>, <a href="#NotFound">NotFound</a>, <a href="#NoConflict">NoConflict</a>, <a href="#SeekRowid">SeekRowid</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="NotFound"></a><p>NotFound</p>
 <td><p>If P4==0 then register P3 holds a blob constructed by <a href="#MakeRecord">MakeRecord</a>.  If
@@ -1670,6 +1676,28 @@ from the end toward the beginning.  In other words, the cursor is
 configured to use <a href="#Prev">Prev</a>, not <a href="#Next">Next</a>.</p>
 
 <p>See also: <a href="#Found">Found</a>, <a href="#NotFound">NotFound</a>, SeekGt, SeekGe, SeekLe</td></tr>
+<tr><td valign="top" align="center">
+<a name="SeekRowid"></a><p>SeekRowid</p>
+<td><p>P1 is the index of a cursor open on an SQL table btree (with integer
+keys).  If register P3 does not contain an integer or if P1 does not
+contain a record with rowid P3 then jump immediately to P2.
+Or, if P2 is 0, raise an SQLITE_CORRUPT error. If P1 does contain
+a record with rowid P3 then
+leave the cursor pointing at that record and fall through to the next
+instruction.</p>
+
+<p>The <a href="#NotExists">NotExists</a> opcode performs the same operation, but with <a href="#NotExists">NotExists</a>
+the P3 register must be guaranteed to contain an integer value.  With this
+opcode, register P3 might not contain an integer.</p>
+
+<p>The <a href="#NotFound">NotFound</a> opcode performs the same operation on index btrees
+(with arbitrary multi-value keys).</p>
+
+<p>This opcode leaves the cursor in a state where it cannot be advanced
+in either direction.  In other words, the <a href="#Next">Next</a> and <a href="#Prev">Prev</a> opcodes will
+not work following this opcode.</p>
+
+<p>See also: <a href="#Found">Found</a>, <a href="#NotFound">NotFound</a>, <a href="#NoConflict">NoConflict</a>, <a href="#SeekRowid">SeekRowid</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="Sequence"></a><p>Sequence</p>
 <td><p>Find the next available sequence number for cursor P1.

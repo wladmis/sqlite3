@@ -190,6 +190,7 @@ a:visited { color: #734559 }
 #define SQLITE_NOTICE_RECOVER_ROLLBACK (SQLITE_NOTICE | (2&lt;&lt;8))
 #define SQLITE_WARNING_AUTOINDEX       (SQLITE_WARNING | (1&lt;&lt;8))
 #define SQLITE_AUTH_USER               (SQLITE_AUTH | (1&lt;&lt;8))
+#define SQLITE_OK_LOAD_PERMANENTLY     (SQLITE_OK | (1&lt;&lt;8))
 </pre></blockquote><p>
 In its default configuration, SQLite API routines return one of 30 integer
 <a href="../rescode.html">result codes</a>.  However, experience has shown that many of

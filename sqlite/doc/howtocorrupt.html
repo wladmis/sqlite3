@@ -510,7 +510,7 @@ on older linux systems that make use of LinuxThreads.</p>
 <h3>6.2 Failures of mmap() on QNX</h3>
 
 <p>There exists some subtle problem with mmap() on QNX such that making
-a second mmap() call against the a single file descriptor can cause
+a second mmap() call against a single file descriptor can cause
 the memory obtained from the first mmap() call to be zeroed.  SQLite on
 unix uses mmap() to create a shared memory region for transaction 
 coordination in <a href="wal.html">WAL mode</a>, and it will call mmap() multiple times
@@ -610,7 +610,7 @@ harness that simulates I/O errors.</p>
 
 <p>When content is deleted from an SQLite database, pages that are no
 longer used are added to a free list and are reused to hold content
-added but subsequent inserts.  A bug in SQLite that was present in
+added by subsequent inserts.  A bug in SQLite that was present in
 version 3.6.16 through 3.7.2 might cause pages to go missing out of
 the free list when <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> was used.  This would not cause
 data loss.  But it would result in the database file being larger than

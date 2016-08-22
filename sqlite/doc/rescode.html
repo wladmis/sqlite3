@@ -248,7 +248,7 @@ result codes, might appear in future releases of SQLite.
 
 <a name="extrc"></a>
 <h2>Extended Result Code List</h2>
-<p>The 52 extended result codes
+<p>The 53 extended result codes
   are <a href="c3ref/c_abort_rollback.html">defined in sqlite3.h</a> and are
   listed in alphabetical order below:
   <table border=0 width="100%" cellpadding=10>
@@ -279,8 +279,8 @@ result codes, might appear in future releases of SQLite.
 <li> <a href="rescode.html#ioerr_delete">SQLITE_IOERR_DELETE</a> (2570)
 <li> <a href="rescode.html#ioerr_delete_noent">SQLITE_IOERR_DELETE_NOENT</a> (5898)
 <li> <a href="rescode.html#ioerr_dir_close">SQLITE_IOERR_DIR_CLOSE</a> (4362)
-</ul></td><td valign="top" align="left"><ul>
 <li> <a href="rescode.html#ioerr_dir_fsync">SQLITE_IOERR_DIR_FSYNC</a> (1290)
+</ul></td><td valign="top" align="left"><ul>
 <li> <a href="rescode.html#ioerr_fstat">SQLITE_IOERR_FSTAT</a> (1802)
 <li> <a href="rescode.html#ioerr_fsync">SQLITE_IOERR_FSYNC</a> (1034)
 <li> <a href="rescode.html#ioerr_gettemppath">SQLITE_IOERR_GETTEMPPATH</a> (6410)
@@ -301,6 +301,7 @@ result codes, might appear in future releases of SQLite.
 <li> <a href="rescode.html#locked_sharedcache">SQLITE_LOCKED_SHAREDCACHE</a> (262)
 <li> <a href="rescode.html#notice_recover_rollback">SQLITE_NOTICE_RECOVER_ROLLBACK</a> (539)
 <li> <a href="rescode.html#notice_recover_wal">SQLITE_NOTICE_RECOVER_WAL</a> (283)
+<li> <a href="rescode.html#ok_load_permanently">SQLITE_OK_LOAD_PERMANENTLY</a> (256)
 <li> <a href="rescode.html#readonly_cantlock">SQLITE_READONLY_CANTLOCK</a> (520)
 <li> <a href="rescode.html#readonly_dbmoved">SQLITE_READONLY_DBMOVED</a> (1032)
 <li> <a href="rescode.html#readonly_recovery">SQLITE_READONLY_RECOVERY</a> (264)
@@ -311,7 +312,7 @@ result codes, might appear in future releases of SQLite.
 
 <h2>Result Code Meanings</h2>
 <p>
-The meanings for all 83 result code values are shown below,
+The meanings for all 84 result code values are shown below,
 in numeric order.
 <!--------------------------------------------------------------->
 <a name="ok"></a>
@@ -715,6 +716,24 @@ in numeric order.
   from <a href="c3ref/step.html">sqlite3_step()</a> indicating that the SQL statement has run to
   completion.  But SQLITE_DONE can also be returned by other multi-step
   interfaces such as <a href="c3ref/backup_finish.html#sqlite3backupstep">sqlite3_backup_step()</a>.
+
+
+<!--------------------------------------------------------------->
+<a name="ok_load_permanently"></a>
+<h3>(256) SQLITE_OK_LOAD_PERMANENTLY</h3>
+
+  The <a href="c3ref/load_extension.html">sqlite3_load_extension()</a> interface loads an 
+  <a href="loadext.html">extension</a> into a single
+  database connection.  The default behavior is for that extension to be
+  automatically unloaded when the database connection closes.  However,
+  if the extension entry point returns SQLITE_OK_LOAD_PERMANENTLY instead
+  of SQLITE_OK, then the extension remains loaded into the process address
+  space after the database connection closes.  In other words, the
+  xDlClose methods of the <a href="c3ref/vfs.html">sqlite3_vfs</a> object is not called for the
+  extension when the database connection closes.
+  <p>
+  The SQLITE_OK_LOAD_PERMANENTLY return code is useful to 
+  <a href="loadext.html">loadable extensions</a> that register new <a href="vfs.html">VFSes</a>, for example.
 
 
 <!--------------------------------------------------------------->

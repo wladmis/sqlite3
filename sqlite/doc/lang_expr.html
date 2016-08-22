@@ -548,10 +548,13 @@ formed by an explicit list of zero or more scalars or by a
 single subquery.
 When the right operand of an IN or NOT IN operator is a subquery, the
 subquery must have a single result column.
+The "subquery" on the right-hand side of an IN operator can be a
+table name or <a href="vtab.html#tabfunc2">table-valued function</a> name in which case the
+subquery is understood to be "(SELECT * FROM <i>name</i>)".
 When the right operand is an empty set, the result of IN is false and the
 result of NOT IN is true, regardless of the left operand and even if the
 left operand is NULL.
-The result of an IN or NOT IN operator is determined by the following
+<p>The result of an IN or NOT IN operator is determined by the following
 matrix:
 
 <center>

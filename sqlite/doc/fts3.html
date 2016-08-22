@@ -1207,7 +1207,7 @@ SELECT snippet(text) FROM text WHERE text MATCH 'cold';
 <i>--   "...the upper portion, &#91;minimum&#93; &#91;temperature&#93; 14-16oC and cool elsewhere,</i>
 <i>--    &#91;minimum&#93; &#91;temperature&#93; 17-20oC. Cold..."</i>
 <i>--</i>
-SELECT snippet(text, '&#91; '&#93;', '...') FROM text WHERE text MATCH '"min* tem*"'
+SELECT snippet(text, '&#91;', '&#93;', '...') FROM text WHERE text MATCH '"min* tem*"'
 </pre></table></div>
 
 <a name="matchinfo"></a>
@@ -2700,7 +2700,7 @@ CREATE TABLE %_segdir(
 
 <p>
   The schema depicted above is not designed to store the full-text index 
-  directly. Instead, it is used to one or more b-tree structures. There
+  directly. Instead, it is used to store one or more b-tree structures. There
   is one b-tree for each row in the %_segdir table. The %_segdir table
   row contains the root node and various meta-data associated with the
   b-tree structure, and the %_segments table contains all other (non-root)

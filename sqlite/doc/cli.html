@@ -138,7 +138,6 @@ a:visited { color: #734559 }
 
 
 
-
     <div class=fancy>
     <div style="font-size:2em;text-align:center;color:#044a64">
       Command Line Shell For SQLite
@@ -149,23 +148,25 @@ a:visited { color: #734559 }
     <div class=startsearch></div>
   
 
-<p>The SQLite project provides a simple command-line utility named
-<b>sqlite3</b> (or <b>sqlite3.exe</b> on windows)
-that allows the user to manually enter and execute SQL
-statements against an SQLite database.  This document provides a brief
-introduction on how to use the <b>sqlite3</b> program.
-
 <a name="intro"></a>
 
 <h1 id="section_1">1. Getting Started</h1>
 
-<p>To start the <b>sqlite3</b> program, just type "sqlite3" optionally
+<p>The SQLite project provides a simple command-line utility named
+<b>sqlite3</b> (or <b>sqlite3.exe</b> on Windows)
+that allows the user to manually enter and execute SQL
+statements against an SQLite database.  This document provides a brief
+introduction on how to use the <b>sqlite3</b> program.
+
+<p>To start the <b>sqlite3</b> program, simply type "sqlite3" at the
+command prompt.  The "sqlite3" command may be optionally
 followed by the name the file that holds the SQLite database.  If the 
 file does not exist, a new database file with the given name will be
-created automatically.  If no database file is specified, a temporary 
-database is created, then deleted when the "sqlite3" program exits.
+created automatically.  If no database file is specified on the
+command-line, a temporary database is created, then deleted when 
+the "sqlite3" program exits.
 
-<p>When started, the <b>sqlite3</b> program will show a brief banner
+<p>On startup, the <b>sqlite3</b> program will show a brief banner
 message then prompt you to enter SQL.  Type in SQL statements (terminated
 by a semicolon), press "Enter" and the SQL will be executed.</p>
 
@@ -209,9 +210,10 @@ sqlite&gt;
 <h1 id="section_2">2. Double-click Startup On Windows</h1>
 
 <p>Windows users can double-click on the <b>sqlite3.exe</b> icon to cause
-the command-line shell to pop-up a terminal window running SQLite.  Note,
-however, that by default this SQLite session is using an in-memory database,
-not a file on disk, and so all changes will be lost when the session exits.
+the command-line shell to pop-up a terminal window running SQLite.  However,
+because double-clicking starts the sqlite3.exe without command-line arguments,
+no database file will have been specified, so SQLite will use a temporary
+database that is deleted when the session exits.
 To use a persistent disk file as the database, enter the ".open" command
 immediately after the terminal window starts up:
 
@@ -229,7 +231,7 @@ use a full pathname to ensure that the file is in the directory that you
 think it is in.  Use forward-slashes as the directory separator character.
 In other words use "c:/work/ex1.db", not "c:\work\ex1.db".</p>
 
-<p>Alternatively, you can create a new database using the default in-memory
+<p>Alternatively, you can create a new database using the default temporary
 storage, then save that database into a disk file using the ".save" command:
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">SQLite version 3.8.5 2014-05-29 12:36:14
@@ -253,8 +255,8 @@ full pathname with forward-slash directory separators to avoid ambiguity.
 <p>
 Most of the time, sqlite3 just reads lines of input and passes them
 on to the SQLite library for execution.
-But if an input line begins with a dot ("."), then
-that line is intercepted and interpreted by the sqlite3 program itself.
+But input lines that begin with a dot (".")
+are intercepted and interpreted by the sqlite3 program itself.
 These "dot commands" are typically used to change the output format
 of queries, or to execute certain prepackaged query statements.
 </p>
@@ -507,7 +509,7 @@ can change this using the ".output" and ".once" commands.  Just put
 the name of an output file as an argument to .output and all subsequent
 query results will be written to that file.  Or use the .once command
 instead of .output and output will only be redirected for the single next
-command before returning the console.  Use .output with no arguments to
+command before reverting to the console.  Use .output with no arguments to
 begin writing to standard output again.  For example:</p>
 
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">sqlite&gt; <b>.mode list</b>
@@ -538,7 +540,7 @@ sqlite3&gt; <b>SELECT * FROM bigTable;</b>
 <h2 id="section_6_1">6.1. File I/O Functions</h2>
 
 <p>The command-line shell adds two <a href="c3ref/create_function.html">application-defined SQL functions</a> that
-facilitate read content from a file into an table column, and writing the
+facilitate reading content from a file into an table column, and writing the
 content of a column into a file, respectively.
 
 <p>The readfile(X) SQL function reads the entire content of the file named

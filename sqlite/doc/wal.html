@@ -284,7 +284,7 @@ a time.</p>
 <p>A checkpoint operation takes content from the WAL file
 and transfers it back into the original database file.
 A checkpoint can run concurrently with readers, however the checkpoint
-must stop when it reaches a page in the WAL that is past the read mark
+must stop when it reaches a page in the WAL that is past the end mark
 of any current reader.  The checkpoint has to stop at that point because
 otherwise it might overwrite part of the database file that the reader
 is actively using.  The checkpoint remembers (in the wal-index) how far

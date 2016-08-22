@@ -320,8 +320,8 @@ A detailed explanation follows.
 <div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">&lt;phrase&gt;    := string &#91;*]
 &lt;phrase&gt;    := &lt;phrase&gt; + &lt;phrase&gt;
 &lt;neargroup&gt; := NEAR ( &lt;phrase&gt; &lt;phrase&gt; ... &#91;, N] )
-&lt;query&gt;     := &#91;&lt;colspec&gt; :] &lt;phrase&gt;
-&lt;query&gt;     := &#91;&lt;colspec&gt; :] &lt;neargroup&gt;
+&lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;phrase&gt;
+&lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;neargroup&gt;
 &lt;query&gt;     := ( &lt;query&gt; )
 &lt;query&gt;     := &lt;query&gt; AND &lt;query&gt;
 &lt;query&gt;     := &lt;query&gt; OR &lt;query&gt;
@@ -451,6 +451,17 @@ upper/lower case equivalence is understood for ASCII-range characters only.
 
 ... MATCH '{col1 col2} : NEAR("one two" "three four", 10)'
 ... MATCH '{col2 col1 col3} : one + two + three'
+</pre></table></div>
+
+<p>
+If a column filter specification is preceded by a "-" character, then
+it is interpreted as a list of column not to match against. For example:
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em"><i>-- Search for matches in all columns except "colname"</i>
+... MATCH '- colname : NEAR("one two" "three four", 10)'
+
+<i>-- Search for matches in all columns except "col1", "col2" and "col3"</i>
+... MATCH '- {col2 col1 col3} : one + two + three'
 </pre></table></div>
 
 <p>
@@ -1596,7 +1607,7 @@ specifically:
 
 <dl>
 <dt><b>xCreate:</b></dt><dd><p style="margin-top:0">
-   This function is used to allocate and inititalize a tokenizer instance.
+   This function is used to allocate and initialize a tokenizer instance.
    A tokenizer instance is required to actually tokenize text.
 <p>
    The first argument passed to this function is a copy of the (void*)
@@ -2205,6 +2216,7 @@ See xPhraseFirstColumn above.
 </dl>
 
 
+<a name="section_8"></a>
 <h1 id="section_8">8. The fts5vocab Virtual Table Module</h1>
 
 <p> The fts5vocab virtual table module allows users to extract information from
@@ -2395,7 +2407,8 @@ improved upon in the future.
 <h3 id="notoc5">  Other Issues</h3>
 
 <ol>
-  <li><p> FTS5 does not currently provide an equivalent to the fts4aux table.
+  <li><p> The functionality provided by the fts4aux module is now provided
+          by <a href="fts5.html#section_8">fts5vocab</a>. The schema of these two tables is slightly different.
 
   <li><p> The FTS3/4 "merge=X,Y" command has been replaced by the 
           <a href="fts5.html#section_6_6">FTS5 merge command</a>.

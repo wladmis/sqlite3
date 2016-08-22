@@ -135,7 +135,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Automatically Load Statically Linked Extensions</h2><blockquote><pre>int sqlite3_auto_extension(void (*xEntryPoint)(void));
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Automatically Load Statically Linked Extensions</h2><blockquote><pre>int sqlite3_auto_extension(void(*xEntryPoint)(void));
 </pre></blockquote><p>
 This interface causes the xEntryPoint() function to be invoked for
 each new <a href="../c3ref/sqlite3.html">database connection</a> that is created.  The idea here is that
@@ -144,7 +144,7 @@ that is to be automatically loaded into all new database connections.</p>
 
 <p>Even though the function prototype shows that xEntryPoint() takes
 no arguments and returns void, SQLite invokes xEntryPoint() with three
-arguments and expects and integer result as if the signature of the
+arguments and expects an integer result as if the signature of the
 entry point where as follows:</p>
 
 <p><blockquote><pre>

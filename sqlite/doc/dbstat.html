@@ -137,7 +137,27 @@ a:visited { color: #734559 }
   
 
 
-<h2>The DBSTAT Virtual Table</h2>
+
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      The DBSTAT Virtual Table
+    </div>
+    <div class=startsearch></div>
+  
+
+<p>
+The DBSTAT virtual tables is a read-only <a href="vtab.html#epovtab">eponymous virtual table</a> that returns
+information about which pages of the database files are used by which
+tables and indexes in the schema.
+The the DBSTAT virtual table is used to implement <a href="sqlanalyze.html">sqlite3_analyzer.exe</a>
+utility program, and to help compute the 
+<a href="https://www.sqlite.org/src/repo-tabsize">table size pie-chart</a> in
+the <a href="https://www.fossil-scm.org/">Fossil-implemented</a> version control system
+for SQLite.
+</p>
+
+
+<h1 id="section_1">1. Overview</h1>
 
 <p>
 The <b>dbstat</b> virtual table is available on all 
@@ -205,7 +225,7 @@ database file.  Freelist pages, the lock page, and
 pointer-map pages of the database file do not appear in the
 dbstat virtual table.
 
-<h3>The "path" column of the dbstat virtual table</h3>
+<h1 id="section_2">2. The "path" column of the dbstat virtual table</h1>
 
 <p>
 The "path" column describes the path taken from the 
@@ -232,6 +252,7 @@ by the paths:
 '/1c2/000+000002'         // Third page in overflow chain
 </pre></blockquote>
 
+<p>
 If the paths are sorted using the BINARY collation sequence, then
 the overflow pages associated with a cell will appear earlier in the
 sort-order than its child page:
@@ -240,7 +261,7 @@ sort-order than its child page:
 '/1c2/000/'               // Left-most child of 451st child of root
 </pre></blockquote>
 
-<h3>Example uses of the dbstat virtual table</h3>
+<h1 id="section_3">3. Example uses of the dbstat virtual table</h1>
 
 <p>
 To find the total number of pages used to store table "xyz" in schema "aux1",

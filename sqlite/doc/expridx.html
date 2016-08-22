@@ -161,8 +161,8 @@ CREATE INDEX acctchng_magnitude ON account_change(acct_no, abs(amt));
 </pre></blockquote>
 
 <p>
-Each entry in the account_change table records a deposit or a withdrawl
-into an account.  Deposits have a positive "amt" and withdrawls have
+Each entry in the account_change table records a deposit or a withdrawal
+into an account.  Deposits have a positive "amt" and withdrawals have
 a negative "amt".
 
 <p>
@@ -252,7 +252,7 @@ may only refer to columns of the table being indexed, not to
 columns in other tables.
 
 <li><p>
-Expressions in CREATE INDEX statmeent
+Expressions in CREATE INDEX statements
 may contain function calls, but only to functions whose output
 is always determined completely by its input parameters (a.k.a.:
 "deterministic" functions).  Obviously, functions like <a href="lang_corefunc.html#random">random()</a> will not

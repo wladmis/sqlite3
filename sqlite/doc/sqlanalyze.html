@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>sqlite3_analyzer.exe: Database Size Measurement Utility</title>
+<title>The sqlite3_analyzer.exe Utility Program</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -137,7 +137,17 @@ a:visited { color: #734559 }
   
 
 
-<h1>The sqllite3_analyzer.exe Utility Program</h1>
+
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      The sqlite3_analyzer.exe Utility Program
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#044a64">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. The sqlite3_analyzer.exe Utility Program</a></div><div style="margin-left:12ex"><a href="#section_1_1">1.1. Implementation</a></div><div style="margin-left:12ex"><a href="#section_1_2">1.2. Example Output</a></div> </div>
+    <div class=startsearch></div>
+  
+<h1 id="section_1">1. The sqlite3_analyzer.exe Utility Program</h1>
 
 <p>
 The <tt>sqlite3_analyzer.exe</tt> binary is a command-line utility program
@@ -153,7 +163,7 @@ sqlite3_analyzer database.sqlite
 The output is a human-readable ASCII text report that provides information
 on the space utilization of the database file.  The report is intended to
 be self-explanatory, though there is some 
-<a href='#defs'>additional explanation</a> of the
+<a href="'#defs'">additional explanation</a> of the
 various parameters reported toward the end of the report.
 
 <p>
@@ -166,13 +176,22 @@ report can be read into an instance of the <a href="cli.html">command-line shell
 the raw data can be queried to dig deeper into the space utilization of
 a particular database file.
 
+<h2 id="section_1_1">1.1. Implementation</h2>
 
-<h2>Example Output</h2>
+<p>
+The <tt>sqlite3_analyzer.exe</tt> program is a
+<a href="http://www.tcl.tk/">TCL</a> program that uses the <a href="dbstat.html">dbstat virtual table</a>
+to gather information about the database file and then format that
+information neatly.
+</p>
+
+
+<h2 id="section_1_2">1.2. Example Output</h2>
 
 <p>The following is sqlite3_analyzer output for an example
 places.sqlite database used by Firefox.
 
-<pre>
+<blockquote><pre>
 /** Disk-Space Utilization Report For &#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;/places.sqlite
 
 Page size in bytes................................ 32768     
@@ -1514,5 +1533,5 @@ INSERT INTO space_used VALUES('moz_annos_placeattributeindex','moz_annos',1,195,
 INSERT INTO space_used VALUES('moz_items_annos_itemattributeindex','moz_items_annos',1,79,79,1,562,0,0,9,0,1,0,0,31961,0,0,32768);
 INSERT INTO space_used VALUES('moz_keywords_placepostdata_uniqueindex','moz_keywords',1,0,0,1,0,0,0,0,0,1,0,0,32760,0,0,32768);
 COMMIT;
-</pre>
+</pre></blockquote>
 

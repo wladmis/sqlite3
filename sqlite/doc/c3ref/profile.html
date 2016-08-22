@@ -135,11 +135,15 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Tracing And Profiling Functions</h2><blockquote><pre>void *sqlite3_trace(sqlite3*, void(*xTrace)(void*,const char*), void*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Tracing And Profiling Functions</h2><blockquote><pre>void *sqlite3_trace(sqlite3*,
+   void(*xTrace)(void*,const char*), void*);
 void *sqlite3_profile(sqlite3*,
    void(*xProfile)(void*,const char*,sqlite3_uint64), void*);
 </pre></blockquote><p>
-These routines register callback functions that can be used for
+These routines are deprecated. Use the <a href="../c3ref/trace_v2.html">sqlite3_trace_v2()</a> interface
+instead of the routines described here.</p>
+
+<p>These routines register callback functions that can be used for
 tracing and profiling the execution of SQL statements.</p>
 
 <p>The callback function registered by sqlite3_trace() is invoked at

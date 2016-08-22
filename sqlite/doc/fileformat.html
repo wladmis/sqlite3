@@ -163,7 +163,7 @@ in a second file called the "rollback journal", or if SQLite is in
 <a href="wal.html">WAL mode</a>, a write-ahead log file.
 If the application or
 host computer crashes before the transaction completes, then the rollback
-journal or write-ahead log contains critical state information needed 
+journal or write-ahead log contains information needed 
 to restore the main database file to a consistent state.  When a rollback 
 journal or write-ahead log contains information necessary for recovering 
 the state of the database, they are called a "hot journal" or "hot WAL file".
@@ -187,7 +187,7 @@ SQLite database is a single 512-byte page.
 The maximum size database would be 2147483646 pages at 65536 bytes per
 page or 140,737,488,224,256 bytes (about 140 terabytes).  Usually SQLite will
 hit the maximum file size limit of the underlying filesystem or disk
-hardware size limit long before it hits its own internal size limit.</p>
+hardware long before it hits its own internal size limit.</p>
 
 <p>In common use, SQLite databases tend to range in size from a few kilobytes
 to a few gigabytes.</p>
@@ -554,6 +554,11 @@ needs and proclivities of the underlying system.  The unix and win32
 lock-byte page, but third-party VFS implementations for
 other operating systems might.</p>
 
+<p>The lock-byte page arose from the need to support Win95 which had
+only mandatory file locking.  All modern operating systems that we know of
+support advisory file locking, and so the lock-byte page is not really
+needed any more, but is retained for backwards compatibility.</p>
+
 <a name="freelist"></a>
 
 <h2 id="section_1_4">1.4. The Freelist</h2>
@@ -919,7 +924,7 @@ Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)).
 If P is greater than X
 then the number of bytes stored on the table b-tree leaf page is K
 if K is less or equal to X or M otherwise.
-Note that number of bytes stored on the leaf page is never less than M.
+The number of bytes stored on the leaf page is never less than M.
 </p></dd>
 
 <dt><p>Table B-Tree Interior Cell:</dt>
@@ -936,7 +941,7 @@ Let M be ((U-12)*32/255)-23 and let K be M+((P-M)%(U-4)).
 If P is greater than X then the number
 of bytes stored on the index b-tree page is K if K is less than or
 equal to X or M otherwise.
-Note that number of bytes stored on the index page is never less than M.
+The number of bytes stored on the index page is never less than M.
 </p></dd>
 </dl>
 
@@ -958,8 +963,8 @@ Note that number of bytes stored on the index page is never less than M.
 <p>The overflow thresholds are designed to give a minimum fanout of
 4 for index b-trees and to make sure enough of the payload
 is on the b-tree page that the record header can usually be accessed
-without consulting an overflow page.  In hindsight, the designers of
-the SQLite b-tree logic realize that these thresholds could have been
+without consulting an overflow page.  In hindsight, the designer of
+the SQLite b-tree logic realized that these thresholds could have been
 made much simpler.  However, the computations cannot be changed
 without resulting in an incompatible file format.  And the current computations
 work well, even if they are a little complex.</p>
@@ -1116,16 +1121,26 @@ Value is a string in the <a href="fileformat2.html#enc">text encoding</a> and (N
 The nul terminator is not stored.
 </table></center>
 
-<p>Note that because of the way varints are defined, the header size varint
+<p>The header size varint
 and serial type varints will usually consist of a single byte.  The
 serial type varints for large strings and BLOBs might extend to two or three
 byte varints, but that is the exception rather than the rule. 
 The varint format is very efficient at coding the record header.</p>
 
 <p>The values for each column in the record immediately follow the header.
-Note that for serial types 0, 8, 9, 12, and 13, the value is zero bytes in
+For serial types 0, 8, 9, 12, and 13, the value is zero bytes in
 length.  If all columns are of these types then the body section of the
 record is empty.</p>
+
+<p>A record might have fewer values than the number of columns in the
+corresponding table.  This can happen, for example, after an
+<a href="lang_altertable.html">ALTER TABLE ... ADD COLUMN</a> SQL statement has increased
+the number of columns in the table schema without modifying preexisting rows
+in the table.
+Missing values at the end of the record are filled in using the
+<a href="lang_createtable.html#dfltval">default value</a> for the corresponding columns defined in the table schema.
+</p>
+
 
 <h2 id="section_2_2">2.2. Record Sort Order</h2>
 
@@ -1160,7 +1175,7 @@ SQLite defines three built-in collating functions:
     <td> The NOCASE collation is like BINARY except that uppercase
         ASCII characters ('A' through 'Z')
         are folded into their lowercase equivalents prior to running the
-        comparison.  Note that only ASCII characters are case-folded.
+        comparison.  Only ASCII characters are case-folded.
         NOCASE
         does not implement a general purpose unicode caseless comparison.
 <tr><td valign="top">RTRIM

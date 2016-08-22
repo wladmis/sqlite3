@@ -948,6 +948,21 @@ the available settings:</p>
   from source, not from the <a href="amalgamation.html">amalgamation</a> or from the collection of
   pre-packaged C files provided for non-Unix like platforms on the website.
   </p>
+</p></blockquote><a name="enable_unknown_sql_function"></a>
+<p><b>SQLITE_ENABLE_UNKNOWN_SQL_FUNCTION</b></p><blockquote><p>
+  When the SQLITE_ENABLE_UNKNOWN_SQL_FUNCTION compile-time option is
+  activated, SQLite will suppress "unknown function" errors when running
+  an <a href="lang_explain.html">EXPLAIN</a> or <a href="eqp.html">EXPLAIN QUERY PLAN</a>.  Instead of throwing an error,
+  SQLite will insert a substitute no-op function named "unknown()".
+  The substitution of "unknown()" in place of unrecognized functions
+  only occurs on <a href="lang_explain.html">EXPLAIN</a> and <a href="eqp.html">EXPLAIN QUERY PLAN</a>, not on ordinary
+  statements.
+  <p>
+  When used in the <a href="cli.html">command-line shell</a>, the
+  SQLITE_ENABLE_UNKNOWN_SQL_FUNCTION feature allows SQL text that contains
+  application-defined functions to be pasted into the shell for 
+  analysis and debugging without having to create and load an
+  extension that implements the application-defined functions.
 </p></blockquote><a name="enable_unlock_notify"></a>
 <p><b>SQLITE_ENABLE_UNLOCK_NOTIFY</b></p><blockquote><p>
   This option enables the <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a> interface and
@@ -1448,5 +1463,78 @@ The SQLITE_OMIT_* compile-time options are unsupported.
   This option forces the Win32 native memory allocator, when enabled, to
   make strategic calls into the HeapValidate() function if assert() is also
   enabled.
+</p></blockquote>
+<a name="linkage"></a>
+<h2>1.10 Compiler Linkage Control</h2>
+
+<p>The following macros specify
+interface linkage for certain kinds of SQLite builds.  The Makefiles will normally
+handle setting these macros automatically.  Application developers should
+not need to worry with these macros.  The following documentation about these 
+macros is included completeness.</p>
+
+<a name="api"></a>
+<p><b>SQLITE_API</b></p><blockquote><p>
+  This macro identifies a externally visible interface for SQLite.
+  This macro is sometimes set to "extern".  But the definition is
+  compiler-specific.
+</p></blockquote><a name="apicall"></a>
+<p><b>SQLITE_APICALL</b></p><blockquote><p>
+  This macro identifies the calling convention used by public interface
+  routines in SQLite.  This macro is normally defined to be nothing,
+  though on Windows builds it can sometimes be set to "__cdecl" or "__stdcall".
+  The "__cdecl" setting is the default, but "__stdcall" is used when SQLite
+  is intended to be compiled as a Windows system library.
+  <p>
+  A single function declaration should contain no more than one of
+  the following:  <a href="compile.html#apicall">SQLITE_APICALL</a>, <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>,
+  or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
+</p></blockquote><a name="callback"></a>
+<p><b>SQLITE_CALLBACK</b></p><blockquote><p>
+  This macro specifies the calling convention used by callback pointers
+  in SQLite.  This macro is normally defined to be nothing, though on Windows
+  builds it can sometimes be set to "__cdecl" or "__stdcall".  The
+  "__cdecl" setting is the default, but "__stdcall" is used when SQLite
+  is intended to be compiled as a Windows system library.
+  <p>
+  A single function declaration should contain no more than one of
+  the following:  <a href="compile.html#apicall">SQLITE_APICALL</a>, <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>,
+  or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
+</p></blockquote><a name="cdecl"></a>
+<p><b>SQLITE_CDECL</b></p><blockquote><p>
+  This macro specifies the calling convention used by varargs interface
+  routines in SQLite.  This macro is normally defined to be nothing,
+  though on Windows builds it can sometimes be set to "__cdecl".  This
+  macro is used on varargs routines and so cannot be set to "__stdcall"
+  since the __stdcall calling convention does not support varargs functions.
+  <p>
+  A single function declaration should contain no more than one of
+  the following:  <a href="compile.html#apicall">SQLITE_APICALL</a>, <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>,
+  or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
+</p></blockquote><a name="syscall"></a>
+<p><b>SQLITE_SYSCALL</b></p><blockquote><p>
+  This macro identifies the calling convention used by operating system
+  interfaces for target the platform for an SQLite build.
+  This macro is normally defined to be nothing, though on Windows
+  builds it can sometimes be set to "__stdcall".
+  <p>
+  A single function declaration should contain no more than one of
+  the following:  <a href="compile.html#apicall">SQLITE_APICALL</a>, <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>,
+  or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
+</p></blockquote><a name="tclapi"></a>
+<p><b>SQLITE_TCLAPI</b></p><blockquote><p>
+  This macro specifies the calling convention used by the 
+  <a href="http://www.tcl.tk">TCL</a> library interface routines.
+  This macro is not used by the SQLite core, but only by the <a href="tclsqlite.html">TCL Interface</a>
+  and <a href="testing.html#tcl">TCL test suite</a>.
+  This macro is normally defined to be nothing,
+  though on Windows builds it can sometimes be set to "__cdecl".  This
+  macro is used on TCL library interface routines which are always compiled
+  as __cdecl, even on platforms that prefer to use __stdcall, so this
+  macro should not be set to __stdcall unless the platform as a custom
+  TCL library build that supports __stdcall.
+  <p>
+  This macro may not be used in combination with any of <a href="compile.html#apicall">SQLITE_APICALL</a>,
+  <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>, or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
 </p></blockquote>
 

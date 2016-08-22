@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Retrieving Statement SQL</title>
+<title>Loadable Extension Thunk</title>
 <style type="text/css">
 body {
     margin: auto;
@@ -135,11 +135,12 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Retrieving Statement SQL</h2><blockquote><pre>const char *sqlite3_sql(sqlite3_stmt *pStmt);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Loadable Extension Thunk</h2><blockquote><pre>typedef struct sqlite3_api_routines sqlite3_api_routines;
 </pre></blockquote><p>
-This interface can be used to retrieve a saved copy of the original
-SQL text used to create a <a href="../c3ref/stmt.html">prepared statement</a> if that statement was
-compiled using either <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>.
+A pointer to the opaque sqlite3_api_routines structure is passed as
+the third parameter to entry points of <a href="../loadext.html">loadable extensions</a>.  This
+structure must be typedefed in order to work around compiler warnings
+on some platforms.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

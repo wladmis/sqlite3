@@ -138,7 +138,18 @@ a:visited { color: #734559 }
 
 
 
-<h1 align="center">Run-Time Loadable Extensions</h1>
+
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      Run-Time Loadable Extensions
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#044a64">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Overview</a></div><div style="margin-left:6ex"><a href="#section_2">2. Loading An Extension</a></div><div style="margin-left:6ex"><a href="#section_3">3. Compiling A Loadable Extension</a></div><div style="margin-left:6ex"><a href="#section_4">4. Programming Loadable Extensions</a></div><div style="margin-left:6ex"><a href="#section_5">5. Persistent Loadable Extensions</a></div><div style="margin-left:6ex"><a href="#section_6">6. Statically Linking A Run-Time Loadable Extension</a></div><div style="margin-left:6ex"><a href="#section_7">7. Implementation Details</a></div> </div>
+    <div class=startsearch></div>
+  
+
+<h1 id="section_1">1. Overview</h1>
 
 <p>SQLite has the ability to load extensions (including new
 <a href="c3ref/create_function.html">application-defined SQL functions</a>,
@@ -154,7 +165,7 @@ you should give the entry point function ("sqlite3_extension_init")
 a different name to avoid name collisions if your application contains
 two or more extensions.</p>
 
-<h2>Loading An Extension</h2>
+<h1 id="section_2">2. Loading An Extension</h1>
 
 <p>An SQLite extension is a shared library or DLL.  To load it, you
 need to supply SQLite with the name of the file containing the
@@ -194,7 +205,8 @@ would be "sqlite3_mathfunc_init".  Or if the filename is
 <p>For security reasons, extension loading is turned off by default.
 In order to use either the C-language or SQL extension loading functions,
 one must first enable extension loading using the
-<a href="c3ref/enable_load_extension.html">sqlite3_enable_load_extension()</a> C-language API in your application.</p>
+<a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a>,1,NULL)
+C-language API in your application.</p>
 
 <p>From the <a href="cli.html">command-line shell</a>, extensions can be loaded using the
 ".load" dot-command.  For example:
@@ -221,7 +233,7 @@ argument.  For example:</p>
 
 <a name="build"></a>
 
-<h2>Compiling A Loadable Extension</h2>
+<h1 id="section_3">3. Compiling A Loadable Extension</h1>
 
 <p>Loadable extensions are C-code.  To compile them on
 most unix-like operating
@@ -261,7 +273,7 @@ gcc -g -shared YourCode.c -o YourCode.dll
 
 <a name="write"></a>
 
-<h2>Programming Loadable Extensions</h2>
+<h1 id="section_4">4. Programming Loadable Extensions</h1>
 
 <p>A template loadable extension contains the following three elements:</p>
 
@@ -279,11 +291,11 @@ right after the "<tt>#include &lt;sqlite3ext.h&gt;</tt>" line.
 <li><p>
 Add an extension loading entry point routine that looks like 
 something the following:
-<blockquote><pre>
-#ifdef _WIN32
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">#ifdef _WIN32
 __declspec(dllexport)
 #endif
-int sqlite3_extension_init( /* <== Change this name, maybe */
+int sqlite3_extension_init( /* &lt;== Change this name, maybe */
   sqlite3 *db, 
   char **pzErrMsg, 
   const sqlite3_api_routines *pApi
@@ -293,7 +305,8 @@ int sqlite3_extension_init( /* <== Change this name, maybe */
   /* insert code to initialize your extension here */
   return rc;
 }
-</pre></blockquote>
+</pre></table></div>
+
 <p>You will do well to customize the name of your entry point to
 correspond to the name of the shared library you will be generating,
 rather than using the generic "sqlite3_extension_init" name.  Giving
@@ -309,9 +322,8 @@ above, then the correct entry point name would be
 
 <p>Here is a complete template extension that you can copy/paste 
 to get started:</p>
-<blockquote>
-<pre style="background-color:#f3f3f3;border:1px #000 dashed;padding:0.5em">
-/* Add your header comment here */
+
+<div class=codeblock style="margin:0 15ex"><table width=100% style="border:1px solid #80a796;padding:0 1ex;background-color:#EEEEEE"><tr><td><pre style="font-size:1.1em">/* Add your header comment here */
 #include &lt;sqlite3ext.h&gt; /* Do not use &lt;sqlite3.h&gt;! */
 SQLITE_EXTENSION_INIT1
 
@@ -342,14 +354,28 @@ int sqlite3_extension_init(
   */
   return rc;
 }
-</pre></blockquote>
+</pre></table></div>
 
 <p>Many examples of complete and working loadable extensions can be seen in the
 SQLite source tree in the
 <a href="http://www.sqlite.org/src/tree?name=ext/misc&ci=trunk">ext/misc</a>
 subdirectory.</p>
 
-<h2>Statically Linking A Run-Time Loadable Extension</h2>
+<a name="persist"></a>
+
+<h1 id="section_5">5. Persistent Loadable Extensions</h1>
+
+<p>The default behavior for a loadable extension is that it is unloaded
+from process memory when the database connection that orginally invoked
+<a href="c3ref/load_extension.html">sqlite3_load_extension()</a> closes.  (In other words, the xDlUnload method 
+of the <a href="c3ref/vfs.html">sqlite3_vfs</a> object is called for all extensions when a database
+connection closes.)  However, if the initialization procedure returns
+<a href="rescode.html#ok_load_permanently">SQLITE_OK_LOAD_PERMANENTLY</a> instead of SQLITE_OK, then the extension will
+not be unloaded (xDlClose will not be invoked) and the extension will remain
+in process memory indefinitely.  The SQLITE_OK_LOAD_PERMANENTLY return
+value is useful for extensions that want to register new <a href="vfs.html">VFSes</a>.
+
+<h1 id="section_6">6. Statically Linking A Run-Time Loadable Extension</h1>
 
 <p>The exact same source code can be used for both a run-time loadable
 shared library or DLL and as a module that is statically linked with your
@@ -383,7 +409,7 @@ configuration you need to accomplish using <a href="c3ref/config.html">sqlite3_c
 registering your extensions, since the <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a>
 interface implicitly calls <a href="c3ref/initialize.html">sqlite3_initialize()</a>.</p>
 
-<h2>Implementation Details</h2>
+<h1 id="section_7">7. Implementation Details</h1>
 
 <p>SQLite implements run-time extension loading using the
 xDlOpen(), xDlError(), xDlSym(), and xDlClose() methods of the

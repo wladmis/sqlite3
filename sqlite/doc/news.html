@@ -139,8 +139,19 @@ a:visited { color: #734559 }
 
 <h2>Recent News</h2>
 
-<a name="2016_05_18"></a><h3>2016-05-18 - Release 3.13.0</h3><blockquote>
-SQLite <a href="releaselog/3_13_0.html">version 3.13.0</a> is a regularly schedule maintenance release containg
+<a name="2016_08_11"></a><h3>2016-08-11 - Release 3.14.1</h3><blockquote>
+SQLite <a href="releaselog/3_14_1.html">version 3.14.1</a> adds a small patch to improve the performance
+of the pcache1TruncateUnsafe() routine for cases when the only a few
+pages on the end of the cache are being removed.  This causes COMMITs
+to run faster when there is a very large page cache.  Upgrading from
+version 3.14 is optional.
+</blockquote><hr width="50%"><a name="2016_08_08"></a><h3>2016-08-08 - Release 3.14</h3><blockquote>
+SQLite <a href="releaselog/3_14.html">version 3.14</a> (the "&#960;" release)
+is a regularly scheduled maintenance
+release containing performance enhancements, new features, and fixes for
+obscure bugs.
+</blockquote><hr width="50%"><a name="2016_05_18"></a><h3>2016-05-18 - Release 3.13.0</h3><blockquote>
+SQLite <a href="releaselog/3_13_0.html">version 3.13.0</a> is a regularly schedule maintenance release containing
 performance enhancements and fixes for obscure bugs.
 </blockquote><hr width="50%"><a name="2016_04_18"></a><h3>2016-04-18 - Release 3.12.2</h3><blockquote>
 <p>Yikes!  The 3.12.0 and 3.12.1 releases contain a backwards compatibility bug!
@@ -199,7 +210,7 @@ the Firefox developers at Mozilla.  The differences from version
 <a href="https://www.sqlite.org/src/tktview?name=ac661962a2">(2)</a>).
 Upgrade only if you are having problems.
 </blockquote><hr width="50%"><a name="2015_10_16"></a><h3>2015-10-16 - Release 3.9.1</h3><blockquote>
-<p>SQlite <a href="releaselog/3_9_1.html">version 3.9.1</a> is a
+<p>SQLite <a href="releaselog/3_9_1.html">version 3.9.1</a> is a
 <a href="https://www.sqlite.org/src/vpatch?from=version-3.9.0&to=version-3.9.1">small patch</a>
 to <a href="releaselog/3_9_0.html">version 3.9.0</a> that includes
 a few simple build script and #ifdef tweaks to make the code easier to 

@@ -137,9 +137,18 @@ a:visited { color: #734559 }
   
 
 
-<h1 align="center">The SQLite R*Tree Module</h1>
 
-<h2>1.0 Overview</h2>
+    <div class=fancy>
+    <div style="font-size:2em;text-align:center;color:#044a64">
+      The SQLite R*Tree Module
+    </div>
+    <div style="font-size:1.5em;margin:1em;color:#044a64">
+      Table Of Contents</div>
+    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Overview</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling The R*Tree Module</a></div><div style="margin-left:6ex"><a href="#section_3">3. Using the R*Tree Module</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. Creating An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Populating An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_3">3.3. Querying An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_4">3.4. Roundoff Error</a></div><div style="margin-left:6ex"><a href="#section_4">4. Using R*Trees Effectively</a></div><div style="margin-left:6ex"><a href="#section_5">5. Integer-Valued R-Trees</a></div><div style="margin-left:6ex"><a href="#section_6">6. Custom R-Tree Queries</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The Legacy xGeom Callback</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The New xQueryFunc Callback</a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. Additional Considerations for Custom Queries</a></div> </div>
+    <div class=startsearch></div>
+  
+
+<h1 id="section_1">1. Overview</h1>
 
 <p>
 An <a href="http://en.wikipedia.org/wiki/R-tree">R-Tree</a> is a special
@@ -170,7 +179,7 @@ Norbert Beckmann, Hans-Peter Kriegel, Ralf Schneider, Bernhard Seeger:
 and Rectangles.</em> SIGMOD Conference 1990: 322-331.
 </p>
 
-<h2>2.0 Compiling The R*Tree Module</h2>
+<h1 id="section_2">2. Compiling The R*Tree Module</h1>
 
 <p>
 The source code to the SQLite R*Tree module is included as part
@@ -181,7 +190,7 @@ by adding the option "-DSQLITE_ENABLE_RTREE=1" to the compiler
 command-line.
 </p>
 
-<h2>3.0 Using the R*Tree Module</h2>
+<h1 id="section_3">3. Using the R*Tree Module</h1>
 
 <p>
 The SQLite R*Tree module is implemented as a
@@ -215,7 +224,7 @@ If any other type of value is inserted into such a column, the r-tree
 module silently converts it to the required type before writing the
 new record to the database.
 
-<h3>3.1 Creating An R*Tree Index</h3>
+<h2 id="section_3_1">3.1. Creating An R*Tree Index</h2>
 
 <p>
 A new R*Tree index is created as follows:
@@ -262,7 +271,7 @@ CREATE VIRTUAL TABLE demo_index USING rtree(
 );
 </pre></blockquote>
 
-<h3>3.2 Populating An R*Tree Index</h3>
+<h2 id="section_3_2">3.2. Populating An R*Tree Index</h2>
 
 <p>
 The usual <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a>, and <a href="lang_delete.html">DELETE</a> commands work on an R*Tree
@@ -290,7 +299,7 @@ the main office for SQLite.org and bounding box around the
 redistricting) in which SQLite.org was located.  
 </p>
 
-<h3>3.3 Querying An R*Tree Index</h3>
+<h2 id="section_3_3">3.3. Querying An R*Tree Index</h2>
 
 <p>
 Any valid query will work against an R*Tree index.  But the R*Tree
@@ -313,9 +322,7 @@ the vicinity of Charlotte, North Carolina, one might do:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE minX>=-81.08 AND maxX<=-80.58
-   AND minY>=35.00  AND maxY<=35.44;
-</pre></blockquote>
+ WHERE minX>=-81.08 AND maxX<=-80.58 AND="1" minY="1">=35.00  AND maxY<=35.44; </pre="1"></blockquote>
 
 <p>
 The query above would very quickly locate the id of 1 even if the
@@ -327,9 +334,7 @@ Charlotte area:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE maxX>=-81.08 AND minX<=-80.58
-   AND maxY>=35.00  AND minY<=35.44;
-</pre></blockquote>
+ WHERE maxX>=-81.08 AND minX<=-80.58 AND="1" maxY="1">=35.00  AND minY<=35.44; </pre="1"></blockquote>
 
 <p>
 This second query would find both entry 1 (the SQLite.org office) which
@@ -347,8 +352,7 @@ the 35th parallel:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE maxY>=35.0  AND minY<=35.0;
-</pre></blockquote>
+ WHERE maxY>=35.0  AND minY<=35.0; </pre="1"></blockquote>
 
 <p>
 But, generally speaking, the more constraints that the R*Tree module
@@ -356,7 +360,7 @@ has to work with, and the smaller the bounding box, the faster the
 results will come back.
 </p>
 
-<h3>3.3 Roundoff Error</h3>
+<h2 id="section_3_4">3.4. Roundoff Error</h2>
 
 <p>
 By default, coordinates are stored in an R*Tree using 32-bit floating
@@ -378,7 +382,7 @@ bounding box.  To guard against this, applications should expand their
 contained-within query boxes slightly (by 0.000012%) by rounding down the
 lower coordinates and rounding up the top coordinates, in each dimension.
 
-<h2>4.0 Using R*Trees Effectively</h2>
+<h1 id="section_4">4. Using R*Trees Effectively</h1>
 
 <p>
 The only information that an R*Tree index stores about an object is
@@ -430,9 +434,7 @@ the North Carolina 12th District, one may be to run a query like this:
 SELECT objname FROM demo_data, demo_index
  WHERE demo_data.id=demo_index.id
    AND contained_in(demo_data.boundary, :boundary)
-   AND minX>=-81.0 AND maxX<=-79.6
-   AND minY>=35.0 AND maxY<=36.2;
-</pre></blockquote>
+   AND minX>=-81.0 AND maxX<=-79.6 AND="1" minY="1">=35.0 AND maxY<=36.2; </pre="1"></blockquote>
 
 <p>In the query above, one would presumably bind the binary BLOB 
 description of the precise boundary of the 12th district to the
@@ -464,7 +466,7 @@ limited the search space.</p>
 
 <a name="intrtree"></a>
 
-<h2>5.0 Integer-Valued R-Trees</h2>
+<h1 id="section_5">5. Integer-Valued R-Trees</h1>
 
 <p>
 The default virtual table ("rtree") normally stores coordinates as
@@ -487,7 +489,7 @@ internal computations.
 
 <a name="customquery"></a>
 
-<h2>6.0 Custom R-Tree Queries</h2>
+<h1 id="section_6">6. Custom R-Tree Queries</h1>
 
 <p>By using standard SQL expressions in the WHERE clause of a SELECT query,
 a programmer can query for all R*Tree entries that have a spatial relationship
@@ -544,7 +546,7 @@ interface, sqlite3_rtree_geometry_callback() or sqlite3_rtree_query_callback(),
 is used to register the SQL function.  However, the newer query-style
 callbacks give the application greater control over how the query proceeds.
 
-<h3>6.1 The Legacy xGeom Callback</h3>
+<h2 id="section_6_1">6.1. The Legacy xGeom Callback</h2>
 
 <p>The legacy xGeom callback is invoked with four arguments.  The first
 argument is a pointer to an sqlite3_rtree_geometry structure which provides
@@ -603,7 +605,7 @@ may be set to a destructor function for the pUser value.
 
 <a name="xquery"></a>
 
-<h3>6.2 The New xQueryFunc Callback</h3>
+<h2 id="section_6_2">6.2. The New xQueryFunc Callback</h2>
 
 <p>The newer xQueryFunc callback receives more information from the r-tree
 query engine on each call, and it sends more information back to the query engine
@@ -695,7 +697,7 @@ containing subtree of the current row.  The anQueue field is an array
 of mxLevel+1 unsigned integers that tell the current number of elements in
 the priority queue at each level.
 
-<h3>6.3 Additional Considerations for Custom Queries</h3>
+<h2 id="section_6_3">6.3. Additional Considerations for Custom Queries</h2>
 
 <p>
 The MATCH operator of a custom R*Tree query function must be a top-level

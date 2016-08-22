@@ -383,7 +383,7 @@ prototyping new, experimental database language features or ideas.
 database over a network, then use a client/server database
 engine instead of SQLite.  SQLite will work over a network filesystem,
 but because of the latency associated with most network filesystems,
-performance will not be great.  Also, file locking logic is buggy
+performance will not be great.  Also, file locking logic is buggy in
 many network filesystem implementations (on both Unix and Windows).
 If file locking does not work correctly,
 two or more clients might try to modify the

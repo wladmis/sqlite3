@@ -1290,12 +1290,17 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        applications for any purpose.</p>
 <a name="pragma_secure_delete"></a>
 <hr>
-    <p>PRAGMA </b><i>schema.</i><b>secure_delete;
+    <p><b>PRAGMA </b><i>schema.</i><b>secure_delete;
      <br>PRAGMA </b><i>schema.</i><b>secure_delete = </b><i>boolean</i></p>
-    <p>Query or change the secure-delete setting. When secure-delete
+    <p>Query or change the secure-delete setting. When secure_delete is
     on, SQLite overwrites deleted content with zeros.  The default
-    setting is determined by the <a href="compile.html#secure_delete">SQLITE_SECURE_DELETE</a>
-    compile-time option.
+    setting for secure_delete is determined by the <a href="compile.html#secure_delete">SQLITE_SECURE_DELETE</a>
+    compile-time option and is normally off.  The off setting for
+    secure_delete improves performance by reducing the
+    amount of disk I/O.  Applications that wish to avoid leaving
+    forensic traces after content is deleted or updated should enable the
+    secure_delete pragma prior to performing the delete or update, or else
+    run <a href="lang_vacuum.html">VACUUM</a> after the delete or update.
 
     <p>
     When there are <a href="lang_attach.html">attached databases</a> and no database

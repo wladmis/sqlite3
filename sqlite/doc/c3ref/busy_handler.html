@@ -135,7 +135,7 @@ a:visited { color: #734559 }
 
 <div class=startsearch></div>
   
-<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Register A Callback To Handle SQLITE_BUSY Errors</h2><blockquote><pre>int sqlite3_busy_handler(sqlite3*, int(*)(void*,int), void*);
+<a href="intro.html"><h2>SQLite C Interface</h2></a><h2>Register A Callback To Handle SQLITE_BUSY Errors</h2><blockquote><pre>int sqlite3_busy_handler(sqlite3*,int(*)(void*,int),void*);
 </pre></blockquote><p>
 The sqlite3_busy_handler(D,X,P) routine sets a callback function X
 that might be invoked with argument P whenever
