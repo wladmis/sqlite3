@@ -1,140 +1,78 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>SQLite Requirements</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-
-<div class=startsearch></div>
-  
+</div>
 
 
 
@@ -846,10 +784,6 @@ comments in the source code.
 <dd><p>If aConstraintUsage[].omit is true, then the constraint is assumed to be fully handled by the virtual table and is not checked again by SQLite.
 <i>(source: <a href="c3ref/index_info.html">c3ref/index_info.html</a>, matrix: <a href='matrix/c3ref/index_info.html#R-03152-62612-16815-38242-09328-52021-06080-07878'>context</a>, <a href='matrix/matrix_dindex_info.html#R-03152-62612-16815-38242-09328-52021-06080-07878'>detail</a>)</i></p></dd>
 
-<dt><b>R-03153-51711-62729-48073-48955-48855-20367-13139</b></dt>
-<dd><p>Then an efficient way to find the name of all objects located within the North Carolina 12th District, one may be to run a query like this: SELECT objname FROM demo_data, demo_index WHERE demo_data.id=demo_index.id AND contained_in(demo_data.boundary, :boundary) AND minX>=-81.0 AND maxX=35.0 AND maxY
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-03153-51711-62729-48073-48955-48855-20367-13139'>context</a>, <a href='matrix/matrix_drtree.html#R-03153-51711-62729-48073-48955-48855-20367-13139'>detail</a>)</i></p></dd>
-
 <dt><b>R-03235-45250-36807-55036-40039-56232-40830-51576</b></dt>
 <dd><p>The "REPLACE" and "INSERT OR action" forms specify an alternative constraint conflict resolution algorithm to use during this one INSERT command.
 <i>(source: <a href="lang_insert.html">lang_insert.html</a>, checked-by: tcl/e_insert.test, matrix: <a href='matrix/lang_insert.html#R-03235-45250-36807-55036-40039-56232-40830-51576'>context</a>, <a href='matrix/matrix_dlang_insert.html#R-03235-45250-36807-55036-40039-56232-40830-51576'>detail</a>)</i></p></dd>
@@ -1449,6 +1383,10 @@ comments in the source code.
 <dt><b>R-06730-09692-37737-40278-41150-46947-53359-48437</b></dt>
 <dd><p>Note that the unary + operator also removes type affinity from an expression, and in some cases this can cause subtle changes in the meaning of an expression.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-06730-09692-37737-40278-41150-46947-53359-48437'>context</a>, <a href='matrix/matrix_doptoverview.html#R-06730-09692-37737-40278-41150-46947-53359-48437'>detail</a>)</i></p></dd>
+
+<dt><b>R-06824-28531-04860-08794-38432-46623-19840-41642</b></dt>
+<dd><p>This option is used to change the name of the "main" database schema.
+<i>(source: <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_enable_fkey.html#R-06824-28531-04860-08794-38432-46623-19840-41642'>context</a>, <a href='matrix/matrix_dc_dbconfig_enable_fkey.html#R-06824-28531-04860-08794-38432-46623-19840-41642'>detail</a>)</i></p></dd>
 
 <dt><b>R-06827-27714-37662-62265-13123-35942-36667-57305</b></dt>
 <dd><p>These routines provide a means to determine the database, table, and table column that is the origin of a particular result column in SELECT statement.
@@ -2593,10 +2531,6 @@ comments in the source code.
 <dt><b>R-13245-13613-20612-29669-51853-01593-36495-38547</b></dt>
 <dd><p>SQLITE_BUSY means that the database engine was unable to acquire the database locks it needs to do its job.
 <i>(source: <a href="c3ref/step.html">c3ref/step.html</a>, matrix: <a href='matrix/c3ref/step.html#R-13245-13613-20612-29669-51853-01593-36495-38547'>context</a>, <a href='matrix/matrix_dstep.html#R-13245-13613-20612-29669-51853-01593-36495-38547'>detail</a>)</i></p></dd>
-
-<dt><b>R-13264-56530-15604-47190-64669-54938-51022-12155</b></dt>
-<dd><p>To find all elements of the index that are contained within the vicinity of Charlotte, North Carolina, one might do: SELECT id FROM demo_index WHERE minX>=-81.08 AND maxX=35.00 AND maxY
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-13264-56530-15604-47190-64669-54938-51022-12155'>context</a>, <a href='matrix/matrix_drtree.html#R-13264-56530-15604-47190-64669-54938-51022-12155'>detail</a>)</i></p></dd>
 
 <dt><b>R-13279-06508-34532-04763-41016-09422-12015-14257</b></dt>
 <dd><p>This interface returns a pointer to the next prepared statement after pStmt associated with the database connection pDb.
@@ -4290,6 +4224,10 @@ comments in the source code.
 <dd><p>Leading spaces are removed.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-22484-49535-05658-48568-12441-17149-15045-25439'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-22484-49535-05658-48568-12441-17149-15045-25439'>detail</a>)</i></p></dd>
 
+<dt><b>R-22490-27246-39721-62527-58944-44667-39725-60392</b></dt>
+<dd><p>One might, for example, want to query all objects that overlap with the 35th parallel: SELECT id FROM demo_index WHERE maxY>=35.0 AND minY<=35.0;
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-22490-27246-39721-62527-58944-44667-39725-60392'>context</a>, <a href='matrix/matrix_drtree.html#R-22490-27246-39721-62527-58944-44667-39725-60392'>detail</a>)</i></p></dd>
+
 <dt><b>R-22517-03298-06877-11770-25908-54043-03696-50918</b></dt>
 <dd><p>The FTS4 prefix option causes FTS to index term prefixes of specified lengths in the same way that it always indexes complete terms.
 <i>(source: <a href="fts3.html">fts3.html</a>, matrix: <a href='matrix/fts3.html#R-22517-03298-06877-11770-25908-54043-03696-50918'>context</a>, <a href='matrix/matrix_dfts3.html#R-22517-03298-06877-11770-25908-54043-03696-50918'>detail</a>)</i></p></dd>
@@ -4826,6 +4764,10 @@ comments in the source code.
 <dd><p>If sqlite3_collation_needed16() is used, the names are passed as UTF-16 in machine native byte order.
 <i>(source: <a href="c3ref/collation_needed.html">c3ref/collation_needed.html</a>, matrix: <a href='matrix/c3ref/collation_needed.html#R-24874-01721-30373-30915-48096-44417-56853-33182'>context</a>, <a href='matrix/matrix_dcollation_needed.html#R-24874-01721-30373-30915-48096-44417-56853-33182'>detail</a>)</i></p></dd>
 
+<dt><b>R-24884-23543-23693-37223-33863-51380-19088-32186</b></dt>
+<dd><p>To find all elements of the index that are contained within the vicinity of Charlotte, North Carolina, one might do: SELECT id FROM demo_index WHERE minX>=-81.08 AND maxX<=-80.58 AND minY>=35.00 AND maxY<=35.44;
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-24884-23543-23693-37223-33863-51380-19088-32186'>context</a>, <a href='matrix/matrix_drtree.html#R-24884-23543-23693-37223-33863-51380-19088-32186'>detail</a>)</i></p></dd>
+
 <dt><b>R-24896-34661-16790-51948-60772-09392-38798-62711</b></dt>
 <dd><p>The sqlite_stat4.tbl column holds name of the table that owns the index that the row describes
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-24896-34661-16790-51948-60772-09392-38798-62711'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-24896-34661-16790-51948-60772-09392-38798-62711'>detail</a>)</i></p></dd>
@@ -5181,10 +5123,6 @@ comments in the source code.
 <dt><b>R-26602-05678-16907-15766-43643-13869-48465-09322</b></dt>
 <dd><p>The sqlite3_blob_read() and sqlite3_blob_write() interfaces can be used to read or write small subsections of the BLOB.
 <i>(source: <a href="c3ref/blob.html">c3ref/blob.html</a>, matrix: <a href='matrix/c3ref/blob.html#R-26602-05678-16907-15766-43643-13869-48465-09322'>context</a>, <a href='matrix/matrix_dblob.html#R-26602-05678-16907-15766-43643-13869-48465-09322'>detail</a>)</i></p></dd>
-
-<dt><b>R-26661-41922-59096-19000-31799-48031-02223-27178</b></dt>
-<dd><p>Regardless of the compile-time configuration, any identifier that is not on the following 124 element list is not a keyword to the SQL parser in SQLite: ABORT ACTION ADD AFTER ALL ALTER ANALYZE AND AS ASC ATTACH AUTOINCREMENT BEFORE BEGIN BETWEEN BY CASCADE CASE CAST CHECK COLLATE COLUMN COMMIT CONFLICT CONSTRAINT CREATE CROSS CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP DATABASE DEFAULT DEFERRABLE DEFERRED DELETE DESC DETACH DISTINCT DROP EACH ELSE END ESCAPE EXCEPT EXCLUSIVE EXISTS EXPLAIN FAIL FOR FOREIGN FROM FULL GLOB GROUP HAVING IF IGNORE IMMEDIATE IN INDEX INDEXED INITIALLY INNER INSERT INSTEAD INTERSECT INTO IS ISNULL JOIN KEY LEFT LIKE LIMIT MATCH NATURAL NO NOT NOTNULL NULL OF OFFSET ON OR ORDER OUTER PLAN PRAGMA PRIMARY QUERY RAISE RECURSIVE REFERENCES REGEXP REINDEX RELEASE RENAME REPLACE RESTRICT RIGHT ROLLBACK ROW SAVEPOINT SELECT SET TABLE TEMP TEMPORARY THEN TO TRANSACTION TRIGGER UNION UNIQUE UPDATE USING VACUUM VALUES VIEW VIRTUAL WHEN WHERE WITH WITHOUT
-<i>(source: <a href="lang_keywords.html">lang_keywords.html</a>, matrix: <a href='matrix/lang_keywords.html#R-26661-41922-59096-19000-31799-48031-02223-27178'>context</a>, <a href='matrix/matrix_dlang_keywords.html#R-26661-41922-59096-19000-31799-48031-02223-27178'>detail</a>)</i></p></dd>
 
 <dt><b>R-26684-40576-09126-53282-12439-40003-41887-60526</b></dt>
 <dd><p>Each non-aggregate expression in the result-set is evaluated once for an arbitrarily selected row of the dataset.
@@ -5845,6 +5783,10 @@ comments in the source code.
 <dt><b>R-29875-31678-61620-24152-15277-25938-13734-04890</b></dt>
 <dd><p>The argument to the SQLITE_FCNTL_PRAGMA file control is an array of pointers to strings (char**) in which the second element of the array is the name of the pragma and the third element is the argument to the pragma or NULL if the pragma has no argument.
 <i>(source: <a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a>, checked-by: src/pragma.c, src/test_multiplex.c, matrix: <a href='matrix/c3ref/c_fcntl_busyhandler.html#R-29875-31678-61620-24152-15277-25938-13734-04890'>context</a>, <a href='matrix/matrix_dc_fcntl_busyhandler.html#R-29875-31678-61620-24152-15277-25938-13734-04890'>detail</a>)</i></p></dd>
+
+<dt><b>R-29893-27796-00757-54960-07346-15618-09863-54887</b></dt>
+<dd><p>For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX<=-80.58 AND maxY>=35.00 AND minY<=35.44;
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-29893-27796-00757-54960-07346-15618-09863-54887'>context</a>, <a href='matrix/matrix_drtree.html#R-29893-27796-00757-54960-07346-15618-09863-54887'>detail</a>)</i></p></dd>
 
 <dt><b>R-29897-28851-11131-17538-15635-12313-50588-15022</b></dt>
 <dd><p>Such transactions usually persist until the next COMMIT or ROLLBACK command. But a transaction will also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict resolution algorithm is specified.
@@ -6790,6 +6732,10 @@ comments in the source code.
 <dd><p>The names returned are the original un-aliased names of the database, table, and column.
 <i>(source: <a href="c3ref/column_database_name.html">c3ref/column_database_name.html</a>, matrix: <a href='matrix/c3ref/column_database_name.html#R-34933-01612-63826-59975-42480-58884-65014-06327'>context</a>, <a href='matrix/matrix_dcolumn_database_name.html#R-34933-01612-63826-59975-42480-58884-65014-06327'>detail</a>)</i></p></dd>
 
+<dt><b>R-34937-45675-11260-35059-56178-30979-30227-02001</b></dt>
+<dd><p>The sole argument is a pointer to a constant UTF8 string which will become the new schema name in place of "main".
+<i>(source: <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_enable_fkey.html#R-34937-45675-11260-35059-56178-30979-30227-02001'>context</a>, <a href='matrix/matrix_dc_dbconfig_enable_fkey.html#R-34937-45675-11260-35059-56178-30979-30227-02001'>detail</a>)</i></p></dd>
+
 <dt><b>R-34963-21048-59232-16607-21091-43824-49294-11066</b></dt>
 <dd><p>If the sqlite_sequence.seq field of an AUTOINCREMENT table is already at the largest integer value (9223372036854775807) then attempts to add new rows to that table with an automatically generated integer primary will fail with an SQLITE_FULL error.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-34963-21048-59232-16607-21091-43824-49294-11066'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-34963-21048-59232-16607-21091-43824-49294-11066'>detail</a>)</i></p></dd>
@@ -7073,6 +7019,10 @@ comments in the source code.
 <dt><b>R-36239-04077-08470-54931-40517-19628-02448-15955</b></dt>
 <dd><p>The scalar expressions may refer to columns of the row being updated.
 <i>(source: <a href="lang_update.html">lang_update.html</a>, checked-by: tcl/e_update.test, matrix: <a href='matrix/lang_update.html#R-36239-04077-08470-54931-40517-19628-02448-15955'>context</a>, <a href='matrix/matrix_dlang_update.html#R-36239-04077-08470-54931-40517-19628-02448-15955'>detail</a>)</i></p></dd>
+
+<dt><b>R-36257-52125-15338-28227-38982-51329-51201-58164</b></dt>
+<dd><p>SQLite does not make a copy of the new main schema name string, so the application must ensure that the argument passed into this DBCONFIG option is unchanged until after the database connection closes.
+<i>(source: <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>, matrix: <a href='matrix/c3ref/c_dbconfig_enable_fkey.html#R-36257-52125-15338-28227-38982-51329-51201-58164'>context</a>, <a href='matrix/matrix_dc_dbconfig_enable_fkey.html#R-36257-52125-15338-28227-38982-51329-51201-58164'>detail</a>)</i></p></dd>
 
 <dt><b>R-36265-51196-56439-27074-26615-17035-18675-11586</b></dt>
 <dd><p>All mathematical operators (+, -, *, /, %, <<, >>, &, and |) cast both operands to the NUMERIC storage class prior to being carried out.
@@ -7969,10 +7919,6 @@ comments in the source code.
 <dt><b>R-40812-03570-58737-26450-04451-50021-12578-43661</b></dt>
 <dd><p>If no negative ROWID values are inserted explicitly, then automatically generated ROWID values will always be greater than zero.
 <i>(source: <a href="autoinc.html">autoinc.html</a>, checked-by: src/vdbe.c, matrix: <a href='matrix/autoinc.html#R-40812-03570-58737-26450-04451-50021-12578-43661'>context</a>, <a href='matrix/matrix_dautoinc.html#R-40812-03570-58737-26450-04451-50021-12578-43661'>detail</a>)</i></p></dd>
-
-<dt><b>R-40822-33276-58156-53336-07099-39057-58220-02470</b></dt>
-<dd><p>One might, for example, want to query all objects that overlap with the 35th parallel: SELECT id FROM demo_index WHERE maxY>=35.0 AND minY
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-40822-33276-58156-53336-07099-39057-58220-02470'>context</a>, <a href='matrix/matrix_drtree.html#R-40822-33276-58156-53336-07099-39057-58220-02470'>detail</a>)</i></p></dd>
 
 <dt><b>R-40827-27357-46487-27198-26867-15174-62736-47681</b></dt>
 <dd><p>If foreign key constraints are enabled when a table is renamed, then any REFERENCES clauses in any table (either the table being renamed or some other table) that refer to the table being renamed are modified to refer to the renamed table by its new name.
@@ -10086,10 +10032,6 @@ comments in the source code.
 <dd><p>The sqlite3_preupdate_depth(D) interface returns 0 if the preupdate callback was invoked as a result of a direct insert, update, or delete operation; or 1 for inserts, updates, or deletes invoked by top-level triggers; or 2 for changes resulting from triggers called by top-level triggers; and so forth.
 <i>(source: <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>, matrix: <a href='matrix/c3ref/preupdate_count.html#R-50949-63870-33866-03179-22330-03090-53959-18896'>context</a>, <a href='matrix/matrix_dpreupdate_count.html#R-50949-63870-33866-03179-22330-03090-53959-18896'>detail</a>)</i></p></dd>
 
-<dt><b>R-50953-26869-09407-63329-65116-60500-37653-24297</b></dt>
-<dd><p>For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX=35.00 AND minY
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-50953-26869-09407-63329-65116-60500-37653-24297'>context</a>, <a href='matrix/matrix_drtree.html#R-50953-26869-09407-63329-65116-60500-37653-24297'>detail</a>)</i></p></dd>
-
 <dt><b>R-50991-36730-61115-19569-38902-10025-13040-27195</b></dt>
 <dd><p>The julianday() function returns the Julian day - the number of days since noon in Greenwich on November 24, 4714 B.C. (Proleptic Gregorian calendar).
 <i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-50991-36730-61115-19569-38902-10025-13040-27195'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-50991-36730-61115-19569-38902-10025-13040-27195'>detail</a>)</i></p></dd>
@@ -11169,6 +11111,10 @@ comments in the source code.
 <dt><b>R-56966-62845-41906-06988-64325-13391-23596-51092</b></dt>
 <dd><p>The integrity_check pragma looks for out-of-order records, missing pages, malformed records, missing index entries, and UNIQUE and NOT NULL constraint errors.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-56966-62845-41906-06988-64325-13391-23596-51092'>context</a>, <a href='matrix/matrix_dpragma.html#R-56966-62845-41906-06988-64325-13391-23596-51092'>detail</a>)</i></p></dd>
+
+<dt><b>R-56985-05306-57401-30586-53381-19063-22094-04979</b></dt>
+<dd><p>Then an efficient way to find the name of all objects located within the North Carolina 12th District, one may be to run a query like this: SELECT objname FROM demo_data, demo_index WHERE demo_data.id=demo_index.id AND contained_in(demo_data.boundary, :boundary) AND minX>=-81.0 AND maxX<=-79.6 AND minY>=35.0 AND maxY>=36.2;
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-56985-05306-57401-30586-53381-19063-22094-04979'>context</a>, <a href='matrix/matrix_drtree.html#R-56985-05306-57401-30586-53381-19063-22094-04979'>detail</a>)</i></p></dd>
 
 <dt><b>R-57019-29874-21566-05710-22141-45725-52460-50437</b></dt>
 <dd><p>Attempt to return the underlying operating system error code or error number that caused the most recent I/O error or failure to open a file.

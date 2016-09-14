@@ -1,144 +1,90 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>Write-Ahead Logging</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-
-<div class=startsearch></div>
-  
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+Write-Ahead Logging
+</div>
+</div>
 
 
 
-<h1 align="center">Write-Ahead Logging</h1>
+
+
+<h1 id="overview"><span>1. </span>Overview</h1>
 
 <p>The default method by which SQLite implements
 <a href="atomiccommit.html">atomic commit and rollback</a> is a <a href="lockingv3.html#rollback">rollback journal</a>.
@@ -156,7 +102,7 @@ a rollback journal.  Advantages include:</p>
 <li>Disk I/O operations tends to be more sequential using WAL.
 <li>WAL uses many fewer fsync() operations and is thus less vulnerable to
     problems on systems where the fsync() system call is broken.
-</ol>
+</li></li></li></li></ol>
 
 <p>But there are also disadvantages:</p>
 
@@ -201,9 +147,9 @@ a rollback journal.  Advantages include:</p>
     Beginning with <a href="releaselog/3_11_0.html">version 3.11.0</a>, WAL mode works as efficiently with
     large transactions as does rollback mode.
     
-</ol>
+</li></li></li></li></li></li></li></li></li></ol>
 
-<h2>How WAL Works</h2>
+<h1 id="how_wal_works"><span>2. </span>How WAL Works</h1>
 
 <p>The traditional rollback journal works by writing a copy of the
 original unchanged database content into a separate rollback journal file
@@ -224,14 +170,14 @@ end of a single WAL file.</p>
 
 <a name="ckpt"></a>
 
-<h3>Checkpointing</h3>
+<h2 id="checkpointing"><span>2.1. </span>Checkpointing</h2>
 
 <p>Of course, one wants to eventually transfer all the transactions that
 are appended in the WAL file back into the original database.  Moving
 the WAL file transactions back into the database is called a
-"<i>checkpoint</i>".<p>
+"<i>checkpoint</i>".</p><p>
 
-<p>Another way to think about the difference between rollback and 
+</p><p>Another way to think about the difference between rollback and 
 write-ahead log is that in the rollback-journal
 approach, there are two primitive operations, reading and writing,
 whereas with a write-ahead log
@@ -249,7 +195,7 @@ checkpoints during idle moments or in a separate thread or process.</p>
 
 <a name="concurrency"></a>
 
-<h3>Concurrency</h3>
+<h2 id="concurrency"><span>2.2. </span>Concurrency</h2>
 
 <p>When a read operation begins on a WAL-mode database, it first
 remembers the location of the last valid commit record in the WAL.
@@ -304,7 +250,7 @@ file from growing without bound.</p>
 
 <a name="fast"></a>
 
-<h3>Performance Considerations</h3>
+<h2 id="performance_considerations"><span>2.3. </span>Performance Considerations</h2>
 
 <p>Write transactions are very fast since they only involve writing
 the content once (versus twice for rollback-journal transactions)
@@ -377,7 +323,7 @@ reaches 1000 pages and this strategy seems to work well in test applications on
 workstations, but other strategies might work better on different 
 platforms or for different workloads.</p>
 
-<h2>Activating And Configuring WAL Mode</h2>
+<h1 id="activating_and_configuring_wal_mode"><span>3. </span>Activating And Configuring WAL Mode</h1>
 
 <p>An SQLite database connection defaults to 
 <a href="pragma.html#pragma_journal_mode">journal_mode=DELETE</a>.  To convert to WAL mode, use the
@@ -395,7 +341,7 @@ journaling mode will be unchanged and the string returned from the
 primitive will be the prior journaling mode (for example "<tt>delete</tt>").
 
 <a name="how_to_checkpoint"></a>
-<h3>Automatic Checkpoint</h3>
+</p><h2 id="automatic_checkpoint"><span>3.1. </span>Automatic Checkpoint</h2>
 
 <p>By default, SQLite will automatically checkpoint whenever a <a href="lang_transaction.html">COMMIT</a>
 occurs that causes the WAL file to be 1000 pages or more in size, or when the 
@@ -413,7 +359,7 @@ any transaction commits to the WAL.  This callback can then invoke
 criteria it thinks is appropriate.  (The automatic checkpoint mechanism
 is implemented as a simple wrapper around <a href="c3ref/wal_hook.html">sqlite3_wal_hook()</a>.)</p>
 
-<h3>Application-Initiated Checkpoints</h3>
+<h2 id="application_initiated_checkpoints"><span>3.2. </span>Application-Initiated Checkpoints</h2>
 
 <p>An application can initiate a checkpoint using any writable database
 connection on the database simply by invoking
@@ -430,7 +376,7 @@ be initiated by a call to <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_che
 <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> documentation for additional information
 on FULL and RESET checkpoints.
 
-<h3>Persistence of WAL mode</h3>
+</p><h2 id="persistence_of_wal_mode"><span>3.3. </span>Persistence of WAL mode</h2>
 
 <p>Unlike the other journaling modes, 
 <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=WAL</a> is
@@ -452,7 +398,7 @@ connections to the same database file if it is set on any one connection.
 
 <a name="readonly"></a>
 
-<h2>Read-Only Databases</h2>
+<h1 id="read_only_databases"><span>4. </span>Read-Only Databases</h1>
 
 <p>No SQLite database (regardless of whether or not it is WAL mode) is
 readable if it is located on read-only media and it requires recovery.
@@ -500,7 +446,7 @@ access to the database files, the WAL file, the shared memory
 
 <a name="bigwal"></a>
 
-<h2>Avoiding Excessively Large WAL Files</h2>
+<h1 id="avoiding_excessively_large_wal_files"><span>5. </span>Avoiding Excessively Large WAL Files</h1>
 
 <p>In normal cases, new content is appended to the WAL file until the
 WAL file accumulates about 1000 pages (and is thus about 4MB 
@@ -513,14 +459,14 @@ than to append.  When the last connection to a database closes, that
 connection does one last checkpoint and then deletes the WAL and its
 associated shared-memory file, to clean up the disk.
 
-<p>So in the vast majority of cases, applications need not worry about
+</p><p>So in the vast majority of cases, applications need not worry about
 the WAL file at all.  SQLite will automatically take care of it.  But
 it is possible to get SQLite into a state where the WAL file will grow
 without bound, causing excess disk space usage and slow queries speeds.
 The following bullets enumerate some of the ways that this can happen
 and how to avoid them.
 
-<ul>
+</p><ul>
 <li><p>
 <b>Disabling the automatic checkpoint mechanism.</b>
 In its default configuration, SQLite will checkpoint the WAL file at the
@@ -530,7 +476,7 @@ or defer this automatic checkpoint.  If an application disables the
 automatic checkpoint, then there is nothing to prevent the WAL file
 from growing excessively.
 
-<li><p>
+</p><li><p>
 <b>Checkpoint starvation.</b>
 A checkpoint is only able to run to completion, and reset the WAL file,
 if there are no other database connections using the WAL file.  If another
@@ -542,12 +488,12 @@ reader, but it cannot run to completion.
 The checkpoint will start up again where it left off after the next
 write transaction.  This repeats until some checkpoint is able to complete.
 
-<p>However, if a database has many concurrent overlapping readers
+</p><p>However, if a database has many concurrent overlapping readers
 and there is always at least one active reader, then
 no checkpoints will be able to complete
 and hence the WAL file will grow without bound.
 
-<p>This scenario can be avoided by ensuring that there are "reader gaps":
+</p><p>This scenario can be avoided by ensuring that there are "reader gaps":
 times when no processes are reading from the 
 database and that checkpoints are attempted during those times.
 In applications with many concurrent readers, one might also consider 
@@ -557,7 +503,7 @@ runs to completion before returning.  The disadvantage of using
 <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_RESTART</a> and <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_TRUNCATE</a> is that
 readers might block while the checkpoint is running.
 
-<li><p>
+</p><li><p>
 <b>Very large write transactions.</b>
 A checkpoint can only complete when no other transactions are running, 
 which means the WAL file cannot be reset in the middle of a write
@@ -566,15 +512,15 @@ might result in a large WAL file.  The WAL file will be checkpointed
 once the write transaction completes (assuming there are no other readers
 blocking it) but in the meantime, the file can grow very big.
 
-<p>As of SQLite version 3.11.0, the WAL file for a single transaction
+</p><p>As of SQLite version 3.11.0, the WAL file for a single transaction
 should be proportional in size to the transaction itself.  Pages that
 are changed by the transaction should only be written into the WAL file
 once.  However, with older versions of SQLite, the same page might be
 written into the WAL file multiple times if the transaction grows larger
 than the page cache.
-</ul>
+</p></li></li></li></ul>
 
-<h2>Implementation Of Shared-Memory For The WAL-Index</h2>
+<h1 id="implementation_of_shared_memory_for_the_wal_index"><span>6. </span>Implementation Of Shared-Memory For The WAL-Index</h1>
 
 <p>The <a href="fileformat2.html#walindexformat">wal-index</a> is implemented using an ordinary file that is
 mmapped for robustness.  Early (pre-release) implementations of WAL mode
@@ -608,7 +554,7 @@ can be implemented using heap memory instead of true shared memory.</p>
 
 <a name="noshm"></a>
 
-<h2>Use of WAL Without Shared-Memory</h2>
+<h1 id="use_of_wal_without_shared_memory"><span>7. </span>Use of WAL Without Shared-Memory</h1>
 
 <p>Beginning in SQLite version 3.7.4, WAL databases can be created, read, and
 written even if shared memory is unavailable as long as the
@@ -646,7 +592,7 @@ locking mode is stuck in EXCLUSIVE.</p>
 
 <a name="bkwrds"></a>
 
-<h2>Backwards Compatibility</h2>
+<h1 id="backwards_compatibility"><span>8. </span>Backwards Compatibility</h1>
 
 <p>The database file format is unchanged for WAL mode.  However, the
 WAL file and the <a href="fileformat2.html#walindexformat">wal-index</a> are new concepts and so older versions of 

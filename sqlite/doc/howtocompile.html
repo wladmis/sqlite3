@@ -1,145 +1,115 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>How To Compile SQLite</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-
-<div class=startsearch></div>
-  
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+How To Compile SQLite
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#amalgamation_versus_individual_source_files">1. Amalgamation Versus Individual Source Files</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_command_line_interface">2. Compiling The Command-Line Interface</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_tcl_interface">3. Compiling The TCL Interface</a></div>
+<div class="fancy-toc1"><a href="#building_the_amalgamation">4. Building The Amalgamation</a></div>
+<div class="fancy-toc1"><a href="#building_a_windows_dll">5. Building A Windows DLL</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
           
 <title>How To Compile SQLite</title>
 
 
-<h1 align=center>How To Compile SQLite</h1>
+
+<h2 style="margin-left:1.0em" notoc="1" id="overview"> Overview</h2> 
 
 <p>
 SQLite is ANSI-C source code.
@@ -157,7 +127,7 @@ as guidance for developing their own custom compilation procedures.
 In other words, this article provides ideas and insights, not turnkey
 solutions.</p>
 
-<h2>Amalgamation Versus Individual Source Files</h2> 
+<h1 id="amalgamation_versus_individual_source_files"><span>1. </span>Amalgamation Versus Individual Source Files</h1> 
 
 <p>SQLite is built from over one hundred files of C code and script
 spread across multiple directories.  The implementation of SQLite is pure
@@ -196,7 +166,7 @@ amalgamation source file be used as an intermediate step.</p>
 
 <a name="cli"></a>
 
-<h2>Compiling The Command-Line Interface</h2>
+<h1 id="compiling_the_command_line_interface"><span>2. </span>Compiling The Command-Line Interface</h1>
 
 <p>A build of the <a href="cli.html">command-line interface</a> requires three source
 files:</p>
@@ -209,7 +179,7 @@ defines the C-language interfaces to SQLite.
 This is the C source code file that contains the definition of
 the <b>main()</b> routine and the loop that prompts for user input
 and passes that input into the SQLite database engine for processing.
-</ul>
+</li></li></li></ul>
 
 <p>All three of the above source files are contained in the
 <a href="download.html">amalgamation tarball</a> available on the <a href="download.html">download page</a>.</p>
@@ -217,7 +187,7 @@ and passes that input into the SQLite database engine for processing.
 <p>To build the CLI, simply put these three files in the same directory
 and compile them together.  Using MSVC:
 
-<blockquote><pre>
+</p><blockquote><pre>
 cl shell.c sqlite3.c -Fesqlite3.exe
 </pre></blockquote>
 
@@ -278,7 +248,7 @@ of the SQLite library.</p>
 
 <a name="tcl"></a>
 
-<h2>Compiling The TCL Interface</h2>
+<h1 id="compiling_the_tcl_interface"><span>3. </span>Compiling The TCL Interface</h1>
 
 <p>The TCL interface for SQLite is a small module that is added into
 the regular amalgamation.  The result is a new amalgamated source
@@ -319,7 +289,7 @@ is linking against.</p>
 
 <a name="amal"></a>
 
-<h2>Building The Amalgamation</h2>
+<h1 id="building_the_amalgamation"><span>4. </span>Building The Amalgamation</h1>
 
 <p>The versions of the SQLite amalgamation that are supplied on the
 <a href="download.html">download page</a> are normally adequate for most users.  However, some
@@ -353,7 +323,7 @@ be known by the code generators includes:</p>
 <li><a href="compile.html#omit_vacuum">SQLITE_OMIT_VACUUM</a>
 <li><a href="compile.html#omit_view">SQLITE_OMIT_VIEW</a>
 <li><a href="compile.html#omit_virtualtable">SQLITE_OMIT_VIRTUALTABLE</a>
-</ul>
+</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
 
 <p>To build a custom amalgamation, first download the original individual
 source files onto a unix or unix-like development platform.  
@@ -376,7 +346,7 @@ make sqlite3.c
 
 <p>Or on Windows with MSVC:
 
-<blockquote><pre>
+</p><blockquote><pre>
 nmake /f Makefile.msc sqlite3.c
 </pre></blockquote>
 
@@ -389,7 +359,7 @@ compiled according to the procedures outlined above.</p>
 
 <a name="dll"></a>
 
-<h2>Building A Windows DLL</h2>
+<h1 id="building_a_windows_dll"><span>5. </span>Building A Windows DLL</h1>
 
 <p>To build a DLL of SQLite for use in Windows, first acquire the
 appropriate amalgamated source code files, sqlite3.c and sqlite3.h.  
@@ -400,7 +370,7 @@ or custom generated from sources as shown above.</p>
 <p>With source code files in the working directory, a DLL
 can be generated using MSVC with the following command:
 
-<blockquote><pre>
+</p><blockquote><pre>
 cl sqlite3.c -link -dll -out:sqlite3.dll
 </pre></blockquote>
 
@@ -412,7 +382,7 @@ Use the appropriate Command Prompt depending on the desired DLL.</p>
 
 <p>If using the MinGW compiler, the command-line is this:
 
-<blockquote><pre>
+</p><blockquote><pre>
 gcc -shared sqlite3.c -o sqlite3.dll
 </pre></blockquote>
 
@@ -424,11 +394,11 @@ on WinXP and earlier versions of Windows.  So for maximum compatibility
 of your generated DLL, MinGW is recommended.  A good rule-of-thumb
 is to generate 32-bit DLLs using MinGW and 64-bit DLLs using MSVC.
 
-<p>In most cases, you will want to supplement the basic commands above with
+</p><p>In most cases, you will want to supplement the basic commands above with
 <a href="compile.html">compile-time options</a> appropriate for your application.  Commonly used
 compile-time options include:
 
-<ul>
+</p><ul>
 <li><p><b>-Os</b> - Optimize for size. 
 Make the DLL as small as possible.</p>
 
@@ -438,10 +408,10 @@ unrolling loops and inlining functions.</p>
 <li><p><b>-DSQLITE_ENABLE_FTS4</b> -
 Include the <a href="fts3.html">full-text search</a> engine code in SQLite.
 
-<li><p><b>-DSQLITE_ENABLE_RTREE</b> - Include the <a href="rtree.html">R-Tree extension</a>.
+</p><li><p><b>-DSQLITE_ENABLE_RTREE</b> - Include the <a href="rtree.html">R-Tree extension</a>.
 
-<li><p><b>-DSQLITE_ENABLE_COLUMN_METADATA</b> -
+</p><li><p><b>-DSQLITE_ENABLE_COLUMN_METADATA</b> -
 This enables some extra APIs that are required by some common systems,
 including Ruby-on-Rails.
-</ul>
+</p></li></li></li></li></li></ul>
 

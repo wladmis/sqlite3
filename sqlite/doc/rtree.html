@@ -1,154 +1,122 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>The SQLite R*Tree Module</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+The SQLite R*Tree Module
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#overview">1. Overview</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_r_tree_module">2. Compiling The R*Tree Module</a></div>
+<div class="fancy-toc1"><a href="#using_the_r_tree_module">3. Using the R*Tree Module</a></div>
+<div class="fancy-toc2"><a href="#creating_an_r_tree_index">3.1. Creating An R*Tree Index</a></div>
+<div class="fancy-toc2"><a href="#populating_an_r_tree_index">3.2. Populating An R*Tree Index</a></div>
+<div class="fancy-toc2"><a href="#querying_an_r_tree_index">3.3. Querying An R*Tree Index</a></div>
+<div class="fancy-toc2"><a href="#roundoff_error">3.4. Roundoff Error</a></div>
+<div class="fancy-toc1"><a href="#using_r_trees_effectively">4. Using R*Trees Effectively</a></div>
+<div class="fancy-toc1"><a href="#integer_valued_r_trees">5. Integer-Valued R-Trees</a></div>
+<div class="fancy-toc1"><a href="#custom_r_tree_queries">6. Custom R-Tree Queries</a></div>
+<div class="fancy-toc2"><a href="#the_legacy_xgeom_callback">6.1. The Legacy xGeom Callback</a></div>
+<div class="fancy-toc2"><a href="#the_new_xqueryfunc_callback">6.2. The New xQueryFunc Callback</a></div>
+<div class="fancy-toc2"><a href="#additional_considerations_for_custom_queries">6.3. Additional Considerations for Custom Queries</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
 
-<div class=startsearch></div>
-  
 
 
 
-    <div class=fancy>
-    <div style="font-size:2em;text-align:center;color:#044a64">
-      The SQLite R*Tree Module
-    </div>
-    <div style="font-size:1.5em;margin:1em;color:#044a64">
-      Table Of Contents</div>
-    <div id=toc> <div style="margin-left:6ex"><a href="#section_1">1. Overview</a></div><div style="margin-left:6ex"><a href="#section_2">2. Compiling The R*Tree Module</a></div><div style="margin-left:6ex"><a href="#section_3">3. Using the R*Tree Module</a></div><div style="margin-left:12ex"><a href="#section_3_1">3.1. Creating An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_2">3.2. Populating An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_3">3.3. Querying An R*Tree Index</a></div><div style="margin-left:12ex"><a href="#section_3_4">3.4. Roundoff Error</a></div><div style="margin-left:6ex"><a href="#section_4">4. Using R*Trees Effectively</a></div><div style="margin-left:6ex"><a href="#section_5">5. Integer-Valued R-Trees</a></div><div style="margin-left:6ex"><a href="#section_6">6. Custom R-Tree Queries</a></div><div style="margin-left:12ex"><a href="#section_6_1">6.1. The Legacy xGeom Callback</a></div><div style="margin-left:12ex"><a href="#section_6_2">6.2. The New xQueryFunc Callback</a></div><div style="margin-left:12ex"><a href="#section_6_3">6.3. Additional Considerations for Custom Queries</a></div> </div>
-    <div class=startsearch></div>
-  
-
-<h1 id="section_1">1. Overview</h1>
+<h1 id="overview"><span>1. </span>Overview</h1>
 
 <p>
 An <a href="http://en.wikipedia.org/wiki/R-tree">R-Tree</a> is a special
@@ -179,7 +147,7 @@ Norbert Beckmann, Hans-Peter Kriegel, Ralf Schneider, Bernhard Seeger:
 and Rectangles.</em> SIGMOD Conference 1990: 322-331.
 </p>
 
-<h1 id="section_2">2. Compiling The R*Tree Module</h1>
+<h1 id="compiling_the_r_tree_module"><span>2. </span>Compiling The R*Tree Module</h1>
 
 <p>
 The source code to the SQLite R*Tree module is included as part
@@ -190,7 +158,7 @@ by adding the option "-DSQLITE_ENABLE_RTREE=1" to the compiler
 command-line.
 </p>
 
-<h1 id="section_3">3. Using the R*Tree Module</h1>
+<h1 id="using_the_r_tree_module"><span>3. </span>Using the R*Tree Module</h1>
 
 <p>
 The SQLite R*Tree module is implemented as a
@@ -215,7 +183,7 @@ to automatically generate a new unique primary key value. If an attempt
 is made to insert any other non-integer value into this column,
 the r-tree module silently converts it to an integer before writing it
 into the database.
-<p>
+</p><p>
 The min/max-value pair columns are stored as 32-bit floating point values for
 "rtree" virtual tables or as 32-bit signed integers in "rtree_i32" virtual
 tables.  Unlike regular SQLite tables which can store data in a variety of
@@ -224,7 +192,7 @@ If any other type of value is inserted into such a column, the r-tree
 module silently converts it to the required type before writing the
 new record to the database.
 
-<h2 id="section_3_1">3.1. Creating An R*Tree Index</h2>
+</p><h2 id="creating_an_r_tree_index"><span>3.1. </span>Creating An R*Tree Index</h2>
 
 <p>
 A new R*Tree index is created as follows:
@@ -244,8 +212,8 @@ store its content.  The names of these shadow tables are:
 
 <blockquote>
 <em>&lt;name&gt;</em><strong>_node</strong><br>
-<em>&lt;name&gt;</em><strong>_rowid</strong><br>
-<em>&lt;name&gt;</em><strong>_parent</strong>
+</br><em>&lt;name&gt;</em><strong>_rowid</strong><br>
+</br><em>&lt;name&gt;</em><strong>_parent</strong>
 </blockquote>
 
 <p>
@@ -271,7 +239,7 @@ CREATE VIRTUAL TABLE demo_index USING rtree(
 );
 </pre></blockquote>
 
-<h2 id="section_3_2">3.2. Populating An R*Tree Index</h2>
+<h2 id="populating_an_r_tree_index"><span>3.2. </span>Populating An R*Tree Index</h2>
 
 <p>
 The usual <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a>, and <a href="lang_delete.html">DELETE</a> commands work on an R*Tree
@@ -299,7 +267,7 @@ the main office for SQLite.org and bounding box around the
 redistricting) in which SQLite.org was located.  
 </p>
 
-<h2 id="section_3_3">3.3. Querying An R*Tree Index</h2>
+<h2 id="querying_an_r_tree_index"><span>3.3. </span>Querying An R*Tree Index</h2>
 
 <p>
 Any valid query will work against an R*Tree index.  But the R*Tree
@@ -322,7 +290,9 @@ the vicinity of Charlotte, North Carolina, one might do:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE minX>=-81.08 AND maxX<=-80.58 AND="1" minY="1">=35.00  AND maxY<=35.44; </pre="1"></blockquote>
+ WHERE minX&gt;=-81.08 AND maxX&lt;=-80.58
+   AND minY&gt;=35.00  AND maxY&lt;=35.44;
+</pre></blockquote>
 
 <p>
 The query above would very quickly locate the id of 1 even if the
@@ -334,7 +304,9 @@ Charlotte area:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE maxX>=-81.08 AND minX<=-80.58 AND="1" maxY="1">=35.00  AND minY<=35.44; </pre="1"></blockquote>
+ WHERE maxX&gt;=-81.08 AND minX&lt;=-80.58
+   AND maxY&gt;=35.00  AND minY&lt;=35.44;
+</pre></blockquote>
 
 <p>
 This second query would find both entry 1 (the SQLite.org office) which
@@ -352,7 +324,8 @@ the 35th parallel:
 
 <blockquote><pre>
 SELECT id FROM demo_index
- WHERE maxY>=35.0  AND minY<=35.0; </pre="1"></blockquote>
+ WHERE maxY&gt;=35.0  AND minY&lt;=35.0;
+</pre></blockquote>
 
 <p>
 But, generally speaking, the more constraints that the R*Tree module
@@ -360,7 +333,7 @@ has to work with, and the smaller the bounding box, the faster the
 results will come back.
 </p>
 
-<h2 id="section_3_4">3.4. Roundoff Error</h2>
+<h2 id="roundoff_error"><span>3.4. </span>Roundoff Error</h2>
 
 <p>
 By default, coordinates are stored in an R*Tree using 32-bit floating
@@ -375,14 +348,14 @@ few extra entries to appears in an overlapping query if the edge of the
 entry bounding box corresponds to an edge of the query bounding box.  But
 the overlapping query will never miss a valid table entry.  
 
-<p>However, for a "contained-within" style query, rounding the bounding
+</p><p>However, for a "contained-within" style query, rounding the bounding
 boxes outward might cause some entries to be excluded from the result set
 if the edge of the entry bounding box corresponds to the edge of the query
 bounding box.  To guard against this, applications should expand their
 contained-within query boxes slightly (by 0.000012%) by rounding down the
 lower coordinates and rounding up the top coordinates, in each dimension.
 
-<h1 id="section_4">4. Using R*Trees Effectively</h1>
+</p><h1 id="using_r_trees_effectively"><span>4. </span>Using R*Trees Effectively</h1>
 
 <p>
 The only information that an R*Tree index stores about an object is
@@ -434,7 +407,9 @@ the North Carolina 12th District, one may be to run a query like this:
 SELECT objname FROM demo_data, demo_index
  WHERE demo_data.id=demo_index.id
    AND contained_in(demo_data.boundary, :boundary)
-   AND minX>=-81.0 AND maxX<=-79.6 AND="1" minY="1">=35.0 AND maxY<=36.2; </pre="1"></blockquote>
+   AND minX&gt;=-81.0 AND maxX&lt;=-79.6
+   AND minY&gt;=35.0 AND maxY&gt;=36.2;
+</pre></blockquote>
 
 <p>In the query above, one would presumably bind the binary BLOB 
 description of the precise boundary of the 12th district to the
@@ -466,14 +441,14 @@ limited the search space.</p>
 
 <a name="intrtree"></a>
 
-<h1 id="section_5">5. Integer-Valued R-Trees</h1>
+<h1 id="integer_valued_r_trees"><span>5. </span>Integer-Valued R-Trees</h1>
 
 <p>
 The default virtual table ("rtree") normally stores coordinates as
 single-precision (4-byte) floating point numbers.  If integer coordinates
 are desired, declare the table using "rtree_i32" instead:
 
-<blockquote><pre>
+</p><blockquote><pre>
 CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,z1);
 </pre></blockquote>
 
@@ -489,7 +464,7 @@ internal computations.
 
 <a name="customquery"></a>
 
-<h1 id="section_6">6. Custom R-Tree Queries</h1>
+</p><h1 id="custom_r_tree_queries"><span>6. </span>Custom R-Tree Queries</h1>
 
 <p>By using standard SQL expressions in the WHERE clause of a SELECT query,
 a programmer can query for all R*Tree entries that have a spatial relationship
@@ -501,11 +476,11 @@ just a box.  This capability is useful, for example, in computing the
 subset of objects in the R*Tree that are visible from a camera positioned 
 in 3-D space.
 
-<p>Regions for custom R*Tree queries are defined by R*Tree geometry callbacks
+</p><p>Regions for custom R*Tree queries are defined by R*Tree geometry callbacks
 implemented by the application and registered with SQLite via a call to one
 of the following two APIs:
 
-<blockquote><pre>
+</p><blockquote><pre>
 int sqlite3_rtree_query_callback(
   sqlite3 *db,
   const char *zQueryFunc,
@@ -526,27 +501,27 @@ int sqlite3_rtree_geometry_callback(
 The sqlite3_rtree_geometry_callback() is an older and less flexible
 interface that is supported for backwards compatibility.
 
-<p>A call to one of the above APIs creates a new SQL function named by the
+</p><p>A call to one of the above APIs creates a new SQL function named by the
 second parameter (zQueryFunc or zGeom).  When that SQL function appears
 on the right-hand side of the MATCH operator and the left-hand side of the
 MATCH operator is any column in the R*Tree virtual table, then the callback 
 defined by the third argument (xQueryFunc or xGeom) is invoked to determine
 if a particular object or subtree overlaps the desired region.
 
-<p>For example, a query like the following might be used to find all
+</p><p>For example, a query like the following might be used to find all
 R*Tree entries that overlap with a circle centered a 45.3,22.9 with a
 radius of 5.0:
 
-<blockquote><pre>
+</p><blockquote><pre>
 SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
-</blockquote></pre>
+</pre></blockquote>
 
 <p>The SQL syntax for custom queries is the same regardless of which
 interface, sqlite3_rtree_geometry_callback() or sqlite3_rtree_query_callback(),
 is used to register the SQL function.  However, the newer query-style
 callbacks give the application greater control over how the query proceeds.
 
-<h2 id="section_6_1">6.1. The Legacy xGeom Callback</h2>
+</p><h2 id="the_legacy_xgeom_callback"><span>6.1. </span>The Legacy xGeom Callback</h2>
 
 <p>The legacy xGeom callback is invoked with four arguments.  The first
 argument is a pointer to an sqlite3_rtree_geometry structure which provides
@@ -563,7 +538,7 @@ the bounding-box is inside or overlaps with the xGeom region.  The xGeom
 callback should normally return SQLITE_OK.  If xGeom returns anything other
 than SQLITE_OK, then the r-tree query will abort with an error.
 
-<p>The sqlite3_rtree_geometry structure that the first argument to the
+</p><p>The sqlite3_rtree_geometry structure that the first argument to the
 xGeom callback points to has a structure shown below.  The exact same
 sqlite3_rtree_geometry
 structure is used for every callback for same MATCH operator in the same
@@ -572,7 +547,7 @@ structure are initialized by SQLite but are
 not subsequently modified.  The callback is free to make changes to the
 pUser and xDelUser elements of the structure if desired.
 
-<blockquote><pre>
+</p><blockquote><pre>
 typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
 struct sqlite3_rtree_geometry {
   void *pContext;                 /* Copy of pContext passed to s_r_g_c() */
@@ -591,7 +566,7 @@ values passed to the SQL function on the right-hand side of the MATCH operator.
 In the example "circle" query above, nParam would be set to 3 and the aParam[]
 array would contain the three values 45.3, 22.9 and 5.0.
 
-<p>The pUser and xDelUser members of the sqlite3_rtree_geometry structure are
+</p><p>The pUser and xDelUser members of the sqlite3_rtree_geometry structure are
 initially set to NULL. The pUser variable may be set by the callback
 implementation to any arbitrary value that may be useful to subsequent
 invocations of the callback within the same query (for example, a
@@ -601,11 +576,11 @@ query has finished running SQLite automatically invokes it with the
 value of the pUser variable as the only argument. In other words, xDelUser
 may be set to a destructor function for the pUser value.
 
-<p>The xGeom callback always does a depth-first search of the r-tree.
+</p><p>The xGeom callback always does a depth-first search of the r-tree.
 
 <a name="xquery"></a>
 
-<h2 id="section_6_2">6.2. The New xQueryFunc Callback</h2>
+</p><h2 id="the_new_xqueryfunc_callback"><span>6.2. </span>The New xQueryFunc Callback</h2>
 
 <p>The newer xQueryFunc callback receives more information from the r-tree
 query engine on each call, and it sends more information back to the query engine
@@ -614,7 +589,7 @@ To help keep the interface manageable, the xQueryFunc callback sends and receive
 information from the query engine as fields in the
 sqlite3_rtree_query_info structure:
 
-<blockquote><pre>
+</p><blockquote><pre>
 struct sqlite3_rtree_query_info {
   void *pContext;                   /* pContext from when function registered */
   int nParam;                       /* Number of function parameters */
@@ -639,7 +614,7 @@ to the sqlite3_rtree_geometry structure, and have exactly the same meaning.
 The sqlite3_rtree_query_info structure also contains nCoord and aCoord fields 
 which have the same meaning as the parameter of the same name in the xGeom callback.
 
-<p>The xQueryFunc must set the eWithin field of sqlite3_rtree_query_info to
+</p><p>The xQueryFunc must set the eWithin field of sqlite3_rtree_query_info to
 on of the values NOT_WITHIN, PARTLY_WITHIN, or FULLY_WITHIN depending on whether
 or not the bounding box defined by aCoord[] is completely outside the region,
 overlaps the region, or is completely inside the region, respectively.  In
@@ -647,7 +622,7 @@ addition, the xQueryFunc must set the rScore field to a non-negative value that
 indicates the order in which subtrees and entries of the query should be analyzed
 and returned.  Smaller scores are processed first.
 
-<p>As its name implies, an R*Tree is organized as a tree.  Each node of the
+</p><p>As its name implies, an R*Tree is organized as a tree.  Each node of the
 tree is a bounding box.  The root of the tree is a bounding box that encapsulates
 all elements of the tree.  Beneath the root are a number of subtrees (typically
 20 or more) each with their own smaller bounding boxes and each containing some
@@ -655,7 +630,7 @@ subset of the R*Tree entries.  The subtrees may have sub-subtrees, and so forth
 until finally one reaches the leaves of the tree which are the actual R*Tree
 entries.
 
-<p>An R*Tree query is initialized by making the root node the only entry
+</p><p>An R*Tree query is initialized by making the root node the only entry
 in a priority queue sorted by rScore.
 The query proceeds by extracting the entry from the priority queue that has
 the lowest score.  If that entry is a leaf (meaning that it is an actual
@@ -668,14 +643,14 @@ callback sets eWithin to PARTLY_WITHIN or FULLY_WITHIN are added to the priority
 queue using the score supplied by the callback.  Subelements that return
 NOT_WITHIN are discarded.  The query runs until the priority queue is empty.
 
-<p>Every leaf entry and node (subtree) within the R*Tree has an integer "level".
+</p><p>Every leaf entry and node (subtree) within the R*Tree has an integer "level".
 The leaves have a level of 0.  The first containing subtree of the leaves has
 a level of 1.  The root of the R*Tree has the largest level value.  The
 mxLevel entry in the sqlite3_rtree_query_info structure is the level value for
 the root of the R*Tree.  The iLevel entry in sqlite3_rtree_query_info gives the
 level for the object being interrogated.
 
-<p>Most R*Tree queries use a depth-first search.  This is accomplished by setting
+</p><p>Most R*Tree queries use a depth-first search.  This is accomplished by setting
 the rScore equal to iLevel.  A depth-first search is usually preferred since it
 minimizes the number of elements in the priority queue, which reduces memory
 requirements and speeds processing.  However, some application may prefer a
@@ -688,7 +663,7 @@ largest or most significant entries are returned first, allowing the
 application to display the most important information quickly, and
 filling in smaller and less important details as they become available.
 
-<p>Other information fields of the sqlite3_rtree_query_info structure are
+</p><p>Other information fields of the sqlite3_rtree_query_info structure are
 available for use by the xQueryFunc callback, if desired.  The iRowid field
 is the rowid (the first of the 3 to 11 columns in the R*Tree) for the element
 being considered.  iRowid is only valid for leaves.  The eParentWithin and
@@ -697,7 +672,7 @@ containing subtree of the current row.  The anQueue field is an array
 of mxLevel+1 unsigned integers that tell the current number of elements in
 the priority queue at each level.
 
-<h2 id="section_6_3">6.3. Additional Considerations for Custom Queries</h2>
+</p><h2 id="additional_considerations_for_custom_queries"><span>6.3. </span>Additional Considerations for Custom Queries</h2>
 
 <p>
 The MATCH operator of a custom R*Tree query function must be a top-level
@@ -706,10 +681,10 @@ by the R*Tree query optimizer and the query will not be runnable.
 If the MATCH operator is connected to other terms of the WHERE clause 
 via an OR operator, for example, the query will fail with an error.
 
-<p>
+</p><p>
 Two or more MATCH operators are allowed in the same WHERE clause, as long
 as they are connected by AND operators.  However,
 the R*Tree query engine only contains a single priority queue.  The priority
 assigned to each node in the search is the lowest priority returned by any
 of the MATCH operators.
-
+</p>

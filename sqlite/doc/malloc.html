@@ -1,144 +1,132 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>Dynamic Memory Allocation In SQLite</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+Dynamic Memory Allocation In SQLite
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#_features">1.  Features</a></div>
+<div class="fancy-toc1"><a href="#_testing">2.  Testing</a></div>
+<div class="fancy-toc2"><a href="#_use_of_reallocarray_">2.1.  Use of reallocarray()</a></div>
+<div class="fancy-toc1"><a href="#_configuration">3.  Configuration</a></div>
+<div class="fancy-toc2"><a href="#_alternative_low_level_memory_allocators">3.1.  Alternative low-level memory allocators</a></div>
+<div class="fancy-toc3"><a href="#the_default_memory_allocator">3.1.1. The default memory allocator</a></div>
+<div class="fancy-toc3"><a href="#the_debugging_memory_allocator">3.1.2. The debugging memory allocator</a></div>
+<div class="fancy-toc3"><a href="#the_win32_native_memory_allocator">3.1.3. The Win32 native memory allocator</a></div>
+<div class="fancy-toc3"><a href="#zero_malloc_memory_allocator">3.1.4. Zero-malloc memory allocator</a></div>
+<div class="fancy-toc3"><a href="#experimental_memory_allocators">3.1.5. Experimental memory allocators</a></div>
+<div class="fancy-toc3"><a href="#application_defined_memory_allocators">3.1.6. Application-defined memory allocators</a></div>
+<div class="fancy-toc3"><a href="#memory_allocator_overlays">3.1.7. Memory allocator overlays</a></div>
+<div class="fancy-toc3"><a href="#no_op_memory_allocator_stub">3.1.8. No-op memory allocator stub</a></div>
+<div class="fancy-toc2"><a href="#_scratch_memory">3.2.  Scratch memory</a></div>
+<div class="fancy-toc2"><a href="#_page_cache_memory">3.3.  Page cache memory</a></div>
+<div class="fancy-toc2"><a href="#_lookaside_memory_allocator">3.4.  Lookaside memory allocator</a></div>
+<div class="fancy-toc2"><a href="#_memory_status">3.5.  Memory status</a></div>
+<div class="fancy-toc2"><a href="#_setting_memory_usage_limits">3.6.  Setting memory usage limits</a></div>
+<div class="fancy-toc1"><a href="#_mathematical_guarantees_against_memory_allocation_failures">4.  Mathematical Guarantees Against Memory Allocation Failures</a></div>
+<div class="fancy-toc2"><a href="#_computing_and_controlling_parameters_m_and_n">4.1.  Computing and controlling parameters M and n</a></div>
+<div class="fancy-toc2"><a href="#_ductile_failure">4.2.  Ductile failure</a></div>
+<div class="fancy-toc1"><a href="#_stability_of_memory_interfaces">5.  Stability Of Memory Interfaces</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
 
-<div class=startsearch></div>
-  
 
 
-<h1>Dynamic Memory Allocation In SQLite</h1>
 
+
+<h1 style="margin-left:1.0em" notoc="1" id="overview"> Overview</h1> 
 
 <p>SQLite uses dynamic memory allocation to obtain
 memory for storing various objects
@@ -157,7 +145,7 @@ be useful to engineers who are tuning SQLite to comply with special
 requirements or to run under unusual circumstances.</p>
 
 <a name="features"></a>
-<h2>1.0 Features</h2>
+<h1 id="_features"><span>1. </span> Features</h1>
 
 <p>The SQLite core and its memory allocation subsystem provides the 
 following capabilities:</p>
@@ -248,10 +236,10 @@ routines used by SQLite through the
 <a href="c3ref/free.html">sqlite3_malloc()</a>, <a href="c3ref/free.html">sqlite3_realloc()</a>, and <a href="c3ref/free.html">sqlite3_free()</a> interfaces.
 </p></li>
 
-</ul>
+</li></ul>
 
 <a name="testing"></a>
-<h2>2.0 Testing</h2>
+<h1 id="_testing"><span>2. </span> Testing</h1>
 
 <p>Most of the code in the SQLite source tree is devoted purely to 
 <a href="testing.html">testing and verification</a>.  Reliability is important to SQLite.
@@ -337,7 +325,7 @@ strong evidence that dynamic memory allocation is used correctly
 everywhere within SQLite.</p>
 
 <a name="allocarray"></a>
-<h3>2.1 Use of reallocarray()</h3>
+<h2 id="_use_of_reallocarray_"><span>2.1. </span> Use of reallocarray()</h2>
 
 <p>The reallocarray() interface is a recent innovation (circa 2014)
 from the OpenBSD community that grow out of efforts to prevent the
@@ -376,7 +364,7 @@ during the computation.</p>
 do not overflow in SQLite are repeated prior to every SQLite release.</p>
 
 <a name="config"></a>
-<h2>3.0 Configuration</h2>
+<h1 id="_configuration"><span>3. </span> Configuration</h1>
 
 <p>The default memory allocation settings in SQLite are appropriate
 for most applications.  However, applications with unusual or particularly
@@ -386,7 +374,7 @@ Both compile-time and start-time configuration options are available.</p>
 
 <a name="altalloc"></a>
 
-<h3>3.1 Alternative low-level memory allocators</h3>
+<h2 id="_alternative_low_level_memory_allocators"><span>3.1. </span> Alternative low-level memory allocators</h2>
 
 <p>The SQLite source code includes several different memory allocation
 modules that can be selected at compile-time, or to a limited extent
@@ -394,7 +382,7 @@ at start-time.</p>
 
 <a name="defaultalloc"></a>
 
-<h4>3.1.1 The default memory allocator</h4>
+<h3 id="the_default_memory_allocator"><span>3.1.1. </span>The default memory allocator</h3>
 
 <p>By default, SQLite uses the malloc(), realloc(), and free() routines
 from the standard C library for its memory allocation needs.  These routines
@@ -412,7 +400,7 @@ allocator, then use the default.</p>
 
 <a name="memdebug"></a>
 
-<h4>3.1.2 The debugging memory allocator</h4>
+<h3 id="the_debugging_memory_allocator"><span>3.1.2. </span>The debugging memory allocator</h3>
 
 <p>If SQLite is compiled with the <a href="compile.html#memdebug">SQLITE_MEMDEBUG</a> compile-time option,
 then a different, heavy wrapper is used around system malloc(), realloc(), 
@@ -444,7 +432,7 @@ be used in production.</p>
 
 <a name="win32heap"></a>
 
-<h4>3.1.3 The Win32 native memory allocator</h4>
+<h3 id="the_win32_native_memory_allocator"><span>3.1.3. </span>The Win32 native memory allocator</h3>
 
 <p>If SQLite is compiled for Windows with the <a href="compile.html#win32_malloc">SQLITE_WIN32_MALLOC</a>
 compile-time option, then a different, thin wrapper is used around
@@ -457,7 +445,7 @@ called if SQLite is compiled with assert() enabled and the
 
 <a name="memsys5"></a>
 
-<h4>3.1.4 Zero-malloc memory allocator</h4>
+<h3 id="zero_malloc_memory_allocator"><span>3.1.4. </span>Zero-malloc memory allocator</h3>
 
 <p>When SQLite is compiled with the <a href="compile.html#enable_memsys5">SQLITE_ENABLE_MEMSYS5</a> option, an
 alternative memory allocator that does not use malloc() is included in the
@@ -498,7 +486,7 @@ breakdown, as described further <a href="#nofrag">below</a>.</p>
 
 <a name="memsysx"></a>
 
-<h4>3.1.5 Experimental memory allocators</h4>
+<h3 id="experimental_memory_allocators"><span>3.1.5. </span>Experimental memory allocators</h3>
 
 <p>The name "memsys5" used for the zero-malloc memory allocator implies
 that there are several additional memory allocators available, and indeed
@@ -555,7 +543,7 @@ of SQLite.  One may anticipate that these will be called memsys7, memsys8,
 and so forth.</p>
 
 <a name="appalloc"></a>
-<h4>3.1.6 Application-defined memory allocators</h4>
+<h3 id="application_defined_memory_allocators"><span>3.1.6. </span>Application-defined memory allocators</h3>
 
 <p>New memory allocators do not have to be part of the SQLite source tree
 nor included in the sqlite3.c <a href="amalgamation.html">amalgamation</a>.  Individual applications can
@@ -580,7 +568,7 @@ If <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLIT
 <a href="c3ref/mem_methods.html">sqlite3_mem_methods</a> must take care of their own serialization needs.</p>
 
 <a name="overlayalloc"></a>
-<h4>3.1.7 Memory allocator overlays</h4>
+<h3 id="memory_allocator_overlays"><span>3.1.7. </span>Memory allocator overlays</h3>
 
 <p>An application can insert layers or "overlays" in between the
 SQLite core and the underlying memory allocator.
@@ -602,7 +590,7 @@ the <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_cover
 <a href="#appalloc">above</a>.
 
 <a name="stuballoc"></a>
-<h4>3.1.8 No-op memory allocator stub</h4>
+</p><h3 id="no_op_memory_allocator_stub"><span>3.1.8. </span>No-op memory allocator stub</h3>
 
 <p>If SQLite is compiled with the <a href="compile.html#zero_malloc">SQLITE_ZERO_MALLOC</a> option, then
 the <a href="malloc.html#defaultalloc">default memory allocator</a> is omitted and replaced by a stub
@@ -620,7 +608,7 @@ before beginning to use SQLite.</p>
 
 <a name="scratch"></a>
 
-<h3>3.2 Scratch memory</h3>
+<h2 id="_scratch_memory"><span>3.2. </span> Scratch memory</h2>
 
 <p>SQLite occasionally needs a large chunk of "scratch" memory to
 perform some transient calculation.  Scratch memory is used, for example,
@@ -665,7 +653,7 @@ of the regular memory allocator is the default behavior.</p>
 
 <a name="pagecache"></a>
 
-<h3>3.3 Page cache memory</h3>
+<h2 id="_page_cache_memory"><span>3.3. </span> Page cache memory</h2>
 
 <p>In most applications, the database page cache subsystem within 
 SQLite uses more dynamically allocated memory than all other parts
@@ -716,7 +704,7 @@ general-purpose memory allocator.</p>
 
 <a name="lookaside"></a>
 
-<h3>3.4 Lookaside memory allocator</h3>
+<h2 id="_lookaside_memory_allocator"><span>3.4. </span> Lookaside memory allocator</h2>
 
 <p>SQLite <a href="c3ref/sqlite3.html">database connections</a> make many
 small and short-lived memory allocations.
@@ -805,7 +793,7 @@ evaluating any SQL statements on the connection.</p>
 
 <a name="memstatus"></a>
 
-<h3>3.5 Memory status</h3>
+<h2 id="_memory_status"><span>3.5. </span> Memory status</h2>
 
 <p>By default, SQLite keeps statistics on its memory usage.  These
 statistics are useful in helping to determine how much memory an
@@ -867,7 +855,7 @@ per-connection statistics continue to function even if
 <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a> is turned off.</p>
 
 <a name="heaplimit"></a>
-<h3>3.6 Setting memory usage limits</h3>
+<h2 id="_setting_memory_usage_limits"><span>3.6. </span> Setting memory usage limits</h2>
 
 <p>The <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> interface can be used to set an
 upper bound on the total amount of outstanding memory that the
@@ -894,7 +882,7 @@ This deficiency will likely be addressed in a future release.</p>
 
 <a name="nofrag"></a>
 
-<h2>4.0 Mathematical Guarantees Against Memory Allocation Failures</h2>
+<h1 id="_mathematical_guarantees_against_memory_allocation_failures"><span>4. </span> Mathematical Guarantees Against Memory Allocation Failures</h1>
 
 <p>The problem of dynamic memory allocation, and specifically the
 problem of a memory allocator breakdown, has been studied by
@@ -974,7 +962,7 @@ This is an important property for
 applications where a software fault could cause injury, physical harm, or
 loss of irreplaceable data.</p>
 
-<h3>4.1 Computing and controlling parameters <b>M</b> and <b>n</b></h3>
+<h2 id="_computing_and_controlling_parameters_m_and_n"><span>4.1. </span> Computing and controlling parameters <b>M</b> and <b>n</b></h2>
 
 <p>The Robson proof applies separately to each of the memory allocators
 used by SQLite:</p>
@@ -1115,7 +1103,7 @@ determined experimentally using <a href="c3ref/c_status_malloc_count.html#sqlite
 A typical application might only use about 40KB of general-purpose
 memory.  This gives a value of <b>N</b> of around 100KB.</p>
 
-<h3>4.2 Ductile failure</h3>
+<h2 id="_ductile_failure"><span>4.2. </span> Ductile failure</h2>
 
 <p>If the memory allocation subsystems within SQLite are configured
 for breakdown-free operation but the actual memory usage exceeds
@@ -1144,7 +1132,7 @@ all the mechanism necessary to complete the monitoring portion of
 this task.</p>
 
 <a name="stability"></a>
-<h2>5.0 Stability Of Memory Interfaces</h2>
+<h1 id="_stability_of_memory_interfaces"><span>5. </span> Stability Of Memory Interfaces</h1>
 
 <p><b>Update:</b> As of SQLite version 3.7.0 (2010-07-22), 
 all of SQLite memory allocation interfaces

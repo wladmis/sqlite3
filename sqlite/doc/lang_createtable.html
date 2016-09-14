@@ -1,310 +1,248 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>SQLite Query Language: CREATE TABLE</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
-
-<div class=startsearch></div>
-  
-<h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2><p><b><a href="syntax/create-table-stmt.html">create-table-stmt:</a></b>
+</div>
+<div class=nosearch><h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>CREATE TABLE</h2></div><p><b><a href="syntax/create-table-stmt.html">create-table-stmt:</a></b>
 <button id='x857' onclick='hideorshow("x857","x858")'>hide</button></p>
- <blockquote id='x858'>
+ <div id='x858' class='imgcontainer'>
  <img alt="syntax diagram create-table-stmt" src="images/syntax/create-table-stmt.gif" />
 <p><b><a href="syntax/column-def.html">column-def:</a></b>
 <button id='x859' onclick='hideorshow("x859","x860")'>show</button></p>
- <blockquote id='x860' style='display:none;'>
+ <div id='x860' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram column-def" src="images/syntax/column-def.gif" />
 <p><b><a href="syntax/column-constraint.html">column-constraint:</a></b>
 <button id='x861' onclick='hideorshow("x861","x862")'>show</button></p>
- <blockquote id='x862' style='display:none;'>
+ <div id='x862' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram column-constraint" src="images/syntax/column-constraint.gif" />
 <p><b><a href="syntax/conflict-clause.html">conflict-clause:</a></b>
 <button id='x863' onclick='hideorshow("x863","x864")'>show</button></p>
- <blockquote id='x864' style='display:none;'>
+ <div id='x864' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram conflict-clause" src="images/syntax/conflict-clause.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/expr.html">expr:</a></b>
 <button id='x865' onclick='hideorshow("x865","x866")'>show</button></p>
- <blockquote id='x866' style='display:none;'>
+ <div id='x866' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
 <p><b><a href="syntax/raise-function.html">raise-function:</a></b>
 <button id='x867' onclick='hideorshow("x867","x868")'>show</button></p>
- <blockquote id='x868' style='display:none;'>
+ <div id='x868' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
-</blockquote>
-</blockquote>
+</div>
+</div>
 <p><b><a href="syntax/foreign-key-clause.html">foreign-key-clause:</a></b>
 <button id='x869' onclick='hideorshow("x869","x870")'>show</button></p>
- <blockquote id='x870' style='display:none;'>
+ <div id='x870' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram foreign-key-clause" src="images/syntax/foreign-key-clause.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/literal-value.html">literal-value:</a></b>
 <button id='x871' onclick='hideorshow("x871","x872")'>show</button></p>
- <blockquote id='x872' style='display:none;'>
+ <div id='x872' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
 <button id='x873' onclick='hideorshow("x873","x874")'>show</button></p>
- <blockquote id='x874' style='display:none;'>
+ <div id='x874' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
-</blockquote>
-</blockquote>
+</div>
+</div>
 <p><b><a href="syntax/type-name.html">type-name:</a></b>
 <button id='x875' onclick='hideorshow("x875","x876")'>show</button></p>
- <blockquote id='x876' style='display:none;'>
+ <div id='x876' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
 <button id='x877' onclick='hideorshow("x877","x878")'>show</button></p>
- <blockquote id='x878' style='display:none;'>
+ <div id='x878' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
-</blockquote>
-</blockquote>
-</blockquote>
+</div>
+</div>
+</div>
 <p><b><a href="syntax/select-stmt.html">select-stmt:</a></b>
 <button id='x879' onclick='hideorshow("x879","x880")'>show</button></p>
- <blockquote id='x880' style='display:none;'>
+ <div id='x880' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram select-stmt" src="images/syntax/select-stmt.gif" />
 <p><b><a href="syntax/common-table-expression.html">common-table-expression:</a></b>
 <button id='x881' onclick='hideorshow("x881","x882")'>show</button></p>
- <blockquote id='x882' style='display:none;'>
+ <div id='x882' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram common-table-expression" src="images/syntax/common-table-expression.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/compound-operator.html">compound-operator:</a></b>
 <button id='x883' onclick='hideorshow("x883","x884")'>show</button></p>
- <blockquote id='x884' style='display:none;'>
+ <div id='x884' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram compound-operator" src="images/syntax/compound-operator.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/expr.html">expr:</a></b>
 <button id='x885' onclick='hideorshow("x885","x886")'>show</button></p>
- <blockquote id='x886' style='display:none;'>
+ <div id='x886' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
 <p><b><a href="syntax/literal-value.html">literal-value:</a></b>
 <button id='x887' onclick='hideorshow("x887","x888")'>show</button></p>
- <blockquote id='x888' style='display:none;'>
+ <div id='x888' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/raise-function.html">raise-function:</a></b>
 <button id='x889' onclick='hideorshow("x889","x890")'>show</button></p>
- <blockquote id='x890' style='display:none;'>
+ <div id='x890' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/type-name.html">type-name:</a></b>
 <button id='x891' onclick='hideorshow("x891","x892")'>show</button></p>
- <blockquote id='x892' style='display:none;'>
+ <div id='x892' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
 <button id='x893' onclick='hideorshow("x893","x894")'>show</button></p>
- <blockquote id='x894' style='display:none;'>
+ <div id='x894' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
-</blockquote>
-</blockquote>
-</blockquote>
+</div>
+</div>
+</div>
 <p><b><a href="syntax/join-clause.html">join-clause:</a></b>
 <button id='x895' onclick='hideorshow("x895","x896")'>show</button></p>
- <blockquote id='x896' style='display:none;'>
+ <div id='x896' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram join-clause" src="images/syntax/join-clause.gif" />
 <p><b><a href="syntax/join-constraint.html">join-constraint:</a></b>
 <button id='x897' onclick='hideorshow("x897","x898")'>show</button></p>
- <blockquote id='x898' style='display:none;'>
+ <div id='x898' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram join-constraint" src="images/syntax/join-constraint.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/join-operator.html">join-operator:</a></b>
 <button id='x899' onclick='hideorshow("x899","x900")'>show</button></p>
- <blockquote id='x900' style='display:none;'>
+ <div id='x900' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram join-operator" src="images/syntax/join-operator.gif" />
-</blockquote>
-</blockquote>
+</div>
+</div>
 <p><b><a href="syntax/ordering-term.html">ordering-term:</a></b>
 <button id='x901' onclick='hideorshow("x901","x902")'>show</button></p>
- <blockquote id='x902' style='display:none;'>
+ <div id='x902' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram ordering-term" src="images/syntax/ordering-term.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/result-column.html">result-column:</a></b>
 <button id='x903' onclick='hideorshow("x903","x904")'>show</button></p>
- <blockquote id='x904' style='display:none;'>
+ <div id='x904' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram result-column" src="images/syntax/result-column.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/table-or-subquery.html">table-or-subquery:</a></b>
 <button id='x905' onclick='hideorshow("x905","x906")'>show</button></p>
- <blockquote id='x906' style='display:none;'>
+ <div id='x906' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram table-or-subquery" src="images/syntax/table-or-subquery.gif" />
-</blockquote>
-</blockquote>
+</div>
+</div>
 <p><b><a href="syntax/table-constraint.html">table-constraint:</a></b>
 <button id='x907' onclick='hideorshow("x907","x908")'>show</button></p>
- <blockquote id='x908' style='display:none;'>
+ <div id='x908' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram table-constraint" src="images/syntax/table-constraint.gif" />
 <p><b><a href="syntax/conflict-clause.html">conflict-clause:</a></b>
 <button id='x909' onclick='hideorshow("x909","x910")'>show</button></p>
- <blockquote id='x910' style='display:none;'>
+ <div id='x910' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram conflict-clause" src="images/syntax/conflict-clause.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/expr.html">expr:</a></b>
 <button id='x911' onclick='hideorshow("x911","x912")'>show</button></p>
- <blockquote id='x912' style='display:none;'>
+ <div id='x912' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram expr" src="images/syntax/expr.gif" />
 <p><b><a href="syntax/literal-value.html">literal-value:</a></b>
 <button id='x913' onclick='hideorshow("x913","x914")'>show</button></p>
- <blockquote id='x914' style='display:none;'>
+ <div id='x914' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram literal-value" src="images/syntax/literal-value.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/raise-function.html">raise-function:</a></b>
 <button id='x915' onclick='hideorshow("x915","x916")'>show</button></p>
- <blockquote id='x916' style='display:none;'>
+ <div id='x916' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram raise-function" src="images/syntax/raise-function.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/type-name.html">type-name:</a></b>
 <button id='x917' onclick='hideorshow("x917","x918")'>show</button></p>
- <blockquote id='x918' style='display:none;'>
+ <div id='x918' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram type-name" src="images/syntax/type-name.gif" />
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
 <button id='x919' onclick='hideorshow("x919","x920")'>show</button></p>
- <blockquote id='x920' style='display:none;'>
+ <div id='x920' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
-</blockquote>
-</blockquote>
-</blockquote>
+</div>
+</div>
+</div>
 <p><b><a href="syntax/foreign-key-clause.html">foreign-key-clause:</a></b>
 <button id='x921' onclick='hideorshow("x921","x922")'>show</button></p>
- <blockquote id='x922' style='display:none;'>
+ <div id='x922' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram foreign-key-clause" src="images/syntax/foreign-key-clause.gif" />
-</blockquote>
+</div>
 <p><b><a href="syntax/indexed-column.html">indexed-column:</a></b>
 <button id='x923' onclick='hideorshow("x923","x924")'>show</button></p>
- <blockquote id='x924' style='display:none;'>
+ <div id='x924' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram indexed-column" src="images/syntax/indexed-column.gif" />
-</blockquote>
-</blockquote>
-</blockquote>
+</div>
+</div>
+</div>
 
 
 <p>The "CREATE TABLE" command is used to create a new table in an SQLite 

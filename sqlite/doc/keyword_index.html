@@ -1,154 +1,92 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>Website Keyword Index</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
 
-<div class=startsearch></div>
-  
+<h2 align=center>Keyword Index</h1>
 
-<h1 align=center>Website Keyword Index</h1>
-
-<table align=right border=1 cellpadding=10>
-<tr><td>Other Documentation Indices:
+<var class="rightsidebar border2px desktoponly">
+Other Documentation Indexes:
 <ul>
 <li><a href="docs.html">Categorical Document List</a>
 <li><a href="books.html">Books About SQLite</a>
 <li><a href="doclist.html">Alphabetical List Of Documents</a>
-<li><a href="sitemap.html#pindex">Permuted Document Title Index</a>
+<li><a href="sitemap.html">Permuted Document Title Index</a>
 </ul>
-</table>
+</var>
 
-<ul>
+<ul class='lessindent'>
 <li> <a href="fts3.html#*fts4automergecmd">"automerge" command</a> </li>
 <li> <a href="uri.html#uricache">"cache" query parameter</a> </li>
 <li> <a href="uri.html#uriimmutable">"immutable" query parameter</a> </li>
@@ -319,7 +257,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#abs">abs() SQL function</a> </li>
 <li> <a href="datatype3.html#affinity">affinity</a> </li>
 <li> <a href="lang_aggfunc.html">Aggregate Functions</a> </li>
-<li> <a href="doclist.html">alphabetical listing of SQLite documents</a> </li>
+<li> <a href="doclist.html">alphabetical listing of documents</a> </li>
 <li> <a href="lang_altertable.html">ALTER TABLE</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt</a> </li>
 <li> <a href="syntax/alter-table-stmt.html">alter-table-stmt syntax diagram</a> </li>
@@ -348,7 +286,7 @@ a:visited { color: #734559 }
 <li> <a href="undoredo.html">automated undo/redo stack</a> </li>
 <li> <a href="optoverview.html#autoindex">automatic indexing</a> </li>
 <li> <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a> </li>
-<li> <a href="fts5.html#section_5_2">auxiliary function mapping</a> </li>
+<li> <a href="fts5.html#sorting_by_auxiliary_function_results">auxiliary function mapping</a> </li>
 <li> <a href="lang_aggfunc.html#avg">avg() aggregate function</a> </li>
 <li> <a href="wal.html#bigwal">avoiding large WAL files</a> </li>
 <li> <a href="fileformat2.html#btree">B*-Trees</a> </li>
@@ -379,6 +317,8 @@ a:visited { color: #734559 }
 <li> <a href="tclsqlite.html#busy">busy method</a> </li>
 <li> <a href="c3ref/busy_handler.html">busy-handler callback</a> </li>
 <li> <a href="pragma.html#pragma_busy_timeout">busy_timeout pragma</a> </li>
+<li> <a href="opcode.html">bytecode</a> </li>
+<li> <a href="opcode.html">bytecode engine</a> </li>
 <li> <a href="c3ref/funclist.html">C-API function list</a> </li>
 <li> <a href="c3ref/intro.html">C-language Interface</a> </li>
 <li> <a href="tclsqlite.html#cache">cache method</a> </li>
@@ -445,7 +385,7 @@ a:visited { color: #734559 }
 <li> <a href="datatype3.html#compaff">comparison affinity rules</a> </li>
 <li> <a href="datatype3.html#comparisons">comparison expressions</a> </li>
 <li> <a href="fts5.html#appendix_a">comparison with fts4</a> </li>
-<li> <a href="fts3.html#section_2">compile fts</a> </li>
+<li> <a href="fts3.html#compiling_and_enabling_fts3_and_fts4">compile fts</a> </li>
 <li> <a href="loadext.html#build">compile loadable extensions</a> </li>
 <li> <a href="compile.html">compile-time options</a> </li>
 <li> <a href="pragma.html#pragma_compile_options">compile_options pragma</a> </li>
@@ -469,8 +409,9 @@ a:visited { color: #734559 }
 <li> <a href="syntax/conflict-clause.html">conflict-clause</a> </li>
 <li> <a href="syntax/conflict-clause.html">conflict-clause syntax diagram</a> </li>
 <li> <a href="lang_createtable.html#constraints">constraints</a> </li>
-<li> <a href="fts3.html#section_6_2_1">contentless fts4 tables</a> </li>
+<li> <a href="fts3.html#_contentless_fts4_tables_">contentless fts4 tables</a> </li>
 <li> <a href="tclsqlite.html#copy">copy method</a> </li>
+<li> <a href="copyright.html">copyright</a> </li>
 <li> <a href="lang_corefunc.html">Core Functions</a> </li>
 <li> <a href="c3ref/open.html#coreuriqueryparameters">core URI query parameters</a> </li>
 <li> <a href="lang_aggfunc.html#count">count() aggregate function</a> </li>
@@ -500,10 +441,10 @@ a:visited { color: #734559 }
 <li> <a href="csv.html">CSV virtual table</a> </li>
 <li> <a href="syntax/cte-table-name.html">cte-table-name</a> </li>
 <li> <a href="syntax/cte-table-name.html">cte-table-name syntax diagram</a> </li>
-<li> <a href="fts5.html#section_7_2_1">custom auxiliary functions</a> </li>
+<li> <a href="fts5.html#_custom_auxiliary_functions_api_reference_">custom auxiliary functions</a> </li>
 <li> <a href="custombuild.html">custom builds</a> </li>
 <li> <a href="rtree.html#customquery">custom r-tree queries</a> </li>
-<li> <a href="fts5.html#section_7_1">custom tokenizers</a> </li>
+<li> <a href="fts5.html#custom_tokenizers">custom tokenizers</a> </li>
 <li> <a href="pragma.html#pragma_data_store_directory">data_store_directory pragma</a> </li>
 <li> <a href="pragma.html#pragma_data_version">data_version pragma</a> </li>
 <li> <a href="c3ref/sqlite3.html">database connection</a> </li>
@@ -542,6 +483,7 @@ a:visited { color: #734559 }
 <li> <a href="syntax/detach-stmt.html">detach-stmt</a> </li>
 <li> <a href="syntax/detach-stmt.html">detach-stmt syntax diagram</a> </li>
 <li> <a href="lang_select.html#distinct">DISTINCT</a> </li>
+<li> <a href="docs.html">documents by category</a> </li>
 <li> <a href="cli.html#dotcmd">dot-commands</a> </li>
 <li> <a href="download.html">download page</a> </li>
 <li> <a href="lang_dropindex.html">DROP INDEX</a> </li>
@@ -558,10 +500,11 @@ a:visited { color: #734559 }
 <li> <a href="syntax/drop-view-stmt.html">drop-view-stmt syntax diagram</a> </li>
 <li> <a href="datatype3.html">dynamic typing</a> </li>
 <li> <a href="spellfix1.html#editdist3">editdist3</a> </li>
+<li> <a href="serverless.html">embedded</a> </li>
 <li> <a href="pragma.html#pragma_empty_result_callbacks">empty_result_callbacks pragma</a> </li>
 <li> <a href="tclsqlite.html#enable_load_extension">enable_load_extension method</a> </li>
 <li> <a href="pragma.html#pragma_encoding">encoding pragma</a> </li>
-<li> <a href="fts3.html#section_3_1">enhanced query syntax</a> </li>
+<li> <a href="fts3.html#_set_operations_using_the_enhanced_query_syntax">enhanced query syntax</a> </li>
 <li> <a href="vtab.html#epovtab">eponymous virtual table</a> </li>
 <li> <a href="vtab.html#epoonlyvtab">eponymous-only virtual table</a> </li>
 <li> <a href="errlog.html">errlog</a> </li>
@@ -584,9 +527,9 @@ a:visited { color: #734559 }
 <li> <a href="rescode.html#extrc">extended error code</a> </li>
 <li> <a href="rescode.html#extrc">extended result code</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">extended result code definitions</a> </li>
-<li> <a href="fts5.html#section_7">Extending FTS5</a> </li>
+<li> <a href="fts5.html#extending_fts5">Extending FTS5</a> </li>
 <li> <a href="loadext.html">extension loading</a> </li>
-<li> <a href="fts3.html#section_6_2_2">external content fts4 tables</a> </li>
+<li> <a href="fts3.html#_external_content_fts4_tables_">external content fts4 tables</a> </li>
 <li> <a href="syntax/factored-select-stmt.html">factored-select-stmt</a> </li>
 <li> <a href="syntax/factored-select-stmt.html">factored-select-stmt syntax diagram</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html">file control opcode</a> </li>
@@ -613,7 +556,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_select.html#fromclause">FROM clause</a> </li>
 <li> <a href="fts3.html#snippet">FTS auxiliary functions</a> </li>
 <li> <a href="fts3.html#hiddencol">FTS hidden column</a> </li>
-<li> <a href="fts3.html#section_3">FTS MATCH</a> </li>
+<li> <a href="fts3.html#full_text_index_queries">FTS MATCH</a> </li>
 <li> <a href="fts3.html#*shadowtab">FTS shadow tables</a> </li>
 <li> <a href="fts3.html#f3tknzr">fts3_tokenizer</a> </li>
 <li> <a href="fts3.html#fts3tok">fts3tokenize</a> </li>
@@ -625,7 +568,7 @@ a:visited { color: #734559 }
 <li> <a href="fts3.html#*fts4optcmd">FTS4 "optimize" command</a> </li>
 <li> <a href="fts3.html#*fts4rebuidcmd">FTS4 "rebuild" command</a> </li>
 <li> <a href="fts3.html#*cmds">FTS4 commands</a> </li>
-<li> <a href="fts3.html#section_6_1">fts4 compress option</a> </li>
+<li> <a href="fts3.html#the_compress_and_uncompress_options">fts4 compress option</a> </li>
 <li> <a href="fts3.html#*fts4content">FTS4 content option</a> </li>
 <li> <a href="fts3.html#*fts4languageid">FTS4 languageid option</a> </li>
 <li> <a href="fts3.html#fts4matchinfo">FTS4 matchinfo option</a> </li>
@@ -635,32 +578,32 @@ a:visited { color: #734559 }
 <li> <a href="fts3.html#fts4prefix">FTS4 prefix option</a> </li>
 <li> <a href="fts3.html#fts4aux">fts4aux</a> </li>
 <li> <a href="fts3.html#f4alid">fts4aux languageid column</a> </li>
-<li> <a href="fts5.html#section_6_1">FTS5 automerge option</a> </li>
-<li> <a href="fts5.html#section_5">FTS5 auxiliary functions</a> </li>
-<li> <a href="fts5.html#section_5_1_1">FTS5 bm25</a> </li>
-<li> <a href="fts5.html#section_2">FTS5 building</a> </li>
-<li> <a href="fts5.html#section_4_5">FTS5 columnsize option</a> </li>
-<li> <a href="fts5.html#section_4_4">FTS5 content option</a> </li>
-<li> <a href="fts5.html#section_4_4_1">FTS5 contentless tables</a> </li>
-<li> <a href="fts5.html#section_4">FTS5 CREATE TABLE Options</a> </li>
-<li> <a href="fts5.html#section_7_2">FTS5 custom auxiliary functions</a> </li>
-<li> <a href="fts5.html#section_6_3">FTS5 delete command</a> </li>
-<li> <a href="fts5.html#section_6_4">FTS5 delete-all command</a> </li>
-<li> <a href="fts5.html#section_4_6">FTS5 detail option</a> </li>
-<li> <a href="fts5.html#section_4_4_2">FTS5 external content tables</a> </li>
-<li> <a href="fts5.html#section_5_1_2">FTS5 highlight</a> </li>
-<li> <a href="fts5.html#section_6_6">FTS5 merge command</a> </li>
-<li> <a href="fts5.html#section_6_7">FTS5 optimize command</a> </li>
-<li> <a href="fts5.html#section_6_8">FTS5 pgsz option</a> </li>
-<li> <a href="fts5.html#section_4_2">FTS5 prefix indexes</a> </li>
-<li> <a href="fts5.html#section_3">FTS5 query syntax</a> </li>
-<li> <a href="fts5.html#section_6_9">FTS5 rank configuration option</a> </li>
-<li> <a href="fts5.html#section_6_10">FTS5 rebuild command</a> </li>
-<li> <a href="fts5.html#section_5_1_3">FTS5 snippet</a> </li>
-<li> <a href="fts5.html#notoc6">fts5 technical differences</a> </li>
-<li> <a href="fts5.html#section_4_3">FTS5 tokenizers</a> </li>
-<li> <a href="fts5.html#section_6_11">FTS5 usermerge option</a> </li>
-<li> <a href="fts5.html#section_8">fts5vocab</a> </li>
+<li> <a href="fts5.html#the_automerge_configuration_option">FTS5 automerge option</a> </li>
+<li> <a href="fts5.html#_auxiliary_functions_">FTS5 auxiliary functions</a> </li>
+<li> <a href="fts5.html#the_bm25_function">FTS5 bm25</a> </li>
+<li> <a href="fts5.html#compiling_and_using_fts5">FTS5 building</a> </li>
+<li> <a href="fts5.html#the_columnsize_option">FTS5 columnsize option</a> </li>
+<li> <a href="fts5.html#external_content_and_contentless_tables">FTS5 content option</a> </li>
+<li> <a href="fts5.html#contentless_tables">FTS5 contentless tables</a> </li>
+<li> <a href="fts5.html#fts5_table_creation_and_initialization">FTS5 CREATE TABLE Options</a> </li>
+<li> <a href="fts5.html#custom_auxiliary_functions">FTS5 custom auxiliary functions</a> </li>
+<li> <a href="fts5.html#the_delete_command">FTS5 delete command</a> </li>
+<li> <a href="fts5.html#the_delete_all_command">FTS5 delete-all command</a> </li>
+<li> <a href="fts5.html#the_detail_option">FTS5 detail option</a> </li>
+<li> <a href="fts5.html#external_content_tables">FTS5 external content tables</a> </li>
+<li> <a href="fts5.html#the_highlight_function">FTS5 highlight</a> </li>
+<li> <a href="fts5.html#the_merge_command">FTS5 merge command</a> </li>
+<li> <a href="fts5.html#the_optimize_command">FTS5 optimize command</a> </li>
+<li> <a href="fts5.html#the_pgsz_configuration_option">FTS5 pgsz option</a> </li>
+<li> <a href="fts5.html#prefix_indexes">FTS5 prefix indexes</a> </li>
+<li> <a href="fts5.html#full_text_query_syntax">FTS5 query syntax</a> </li>
+<li> <a href="fts5.html#the_rank_configuration_option">FTS5 rank configuration option</a> </li>
+<li> <a href="fts5.html#the_rebuild_command">FTS5 rebuild command</a> </li>
+<li> <a href="fts5.html#the_snippet_function">FTS5 snippet</a> </li>
+<li> <a href="fts5.html#_summary_of_technical_differences_">fts5 technical differences</a> </li>
+<li> <a href="fts5.html#tokenizers">FTS5 tokenizers</a> </li>
+<li> <a href="fts5.html#the_usermerge_configuration_option">FTS5 usermerge option</a> </li>
+<li> <a href="fts5.html#the_fts5vocab_virtual_table_module">fts5vocab</a> </li>
 <li> <a href="fts3.html">full-text search</a> </li>
 <li> <a href="pragma.html#pragma_full_column_names">full_column_names pragma</a> </li>
 <li> <a href="pragma.html#pragma_fullfsync">fullfsync pragma</a> </li>
@@ -781,6 +724,7 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_legacy_file_format">legacy_file_format pragma</a> </li>
 <li> <a href="lang_corefunc.html#length">length() SQL function</a> </li>
 <li> <a href="footprint.html">library size</a> </li>
+<li> <a href="copyright.html">license</a> </li>
 <li> <a href="lang_expr.html#like">LIKE</a> </li>
 <li> <a href="optoverview.html#like_opt">LIKE optimization</a> </li>
 <li> <a href="lang_corefunc.html#like">like() SQL function</a> </li>
@@ -788,6 +732,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#likely">likely() SQL function</a> </li>
 <li> <a href="lang_select.html#limitoffset">LIMIT</a> </li>
 <li> <a href="c3ref/c_limit_attached.html">limit category</a> </li>
+<li> <a href="opcode.html#codes">list of current bytecodes</a> </li>
 <li> <a href="lang_expr.html#litvalue">literal value</a> </li>
 <li> <a href="syntax/literal-value.html">literal-value</a> </li>
 <li> <a href="syntax/literal-value.html">literal-value syntax diagram</a> </li>
@@ -820,7 +765,11 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#minoreunc">min() SQL function</a> </li>
 <li> <a href="mmap.html">mmap</a> </li>
 <li> <a href="pragma.html#pragma_mmap_size">mmap_size pragma</a> </li>
+<li> <a href="mostdeployed.html">most used</a> </li>
 <li> <a href="mostdeployed.html">most widely deployed</a> </li>
+<li> <a href="mostdeployed.html">most widely used</a> </li>
+<li> <a href="th3.html#muttest">mutation test script</a> </li>
+<li> <a href="testing.html#mutationtests">mutation testing</a> </li>
 <li> <a href="fts3.html#near">NEAR queries</a> </li>
 <li> <a href="queryplanner-ng.html">next generation query planner</a> </li>
 <li> <a href="queryplanner-ng.html">NGQP</a> </li>
@@ -840,6 +789,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_conflict.html">ON CONFLICT</a> </li>
 <li> <a href="lang_conflict.html">ON CONFLICT clause</a> </li>
 <li> <a href="tclsqlite.html#onecolumn">onecolumn method</a> </li>
+<li> <a href="opcode.html#codes">opcode definitions</a> </li>
 <li> <a href="opcode.html">opcodes</a> </li>
 <li> <a href="affcase1.html">OpenOffice case study</a> </li>
 <li> <a href="optoverview.html">optimizer</a> </li>
@@ -864,7 +814,7 @@ a:visited { color: #734559 }
 <li> <a href="partialindex.html">partial indexes</a> </li>
 <li> <a href="partialindex.html">partial indices</a> </li>
 <li> <a href="queryplanner.html#partialsort">partial sorting by index</a> </li>
-<li> <a href="sitemap.html#pindex">permuted index</a> </li>
+<li> <a href="sitemap.html">permuted index</a> </li>
 <li> <a href="loadext.html#persist">persistent loadable extensions</a> </li>
 <li> <a href="fts3.html#phrase">phrase queries</a> </li>
 <li> <a href="custombuild.html">porting SQLite</a> </li>
@@ -948,12 +898,13 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#printf">printf() SQL function</a> </li>
 <li> <a href="chronology.html">prior releases</a> </li>
 <li> <a href="privatebranch.html">private branches</a> </li>
-<li> <a href="support.html#prosupport">professional support</a> </li>
+<li> <a href="prosupport.html">professional support</a> </li>
 <li> <a href="tclsqlite.html#profile">profile method</a> </li>
 <li> <a href="loadext.html#write">Programming Loadable Extensions</a> </li>
 <li> <a href="tclsqlite.html#progress">progress method</a> </li>
 <li> <a href="c3ref/value.html">protected sqlite3_value</a> </li>
 <li> <a href="psow.html">PSOW</a> </li>
+<li> <a href="copyright.html">public-domain</a> </li>
 <li> <a href="syntax/qualified-table-name.html">qualified-table-name</a> </li>
 <li> <a href="syntax/qualified-table-name.html">qualified-table-name syntax diagram</a> </li>
 <li> <a href="lang_select.html">query</a> </li>
@@ -1030,7 +981,7 @@ a:visited { color: #734559 }
 <li> <a href="fts3.html#appendix_a">search application tips</a> </li>
 <li> <a href="fileformat2.html">second edition file format document</a> </li>
 <li> <a href="pragma.html#pragma_secure_delete">secure_delete pragma</a> </li>
-<li> <a href="fts3.html#section_9">segment btree</a> </li>
+<li> <a href="fts3.html#data_structures">segment btree</a> </li>
 <li> <a href="lang_select.html">SELECT</a> </li>
 <li> <a href="syntax/select-core.html">select-core</a> </li>
 <li> <a href="syntax/select-core.html">select-core syntax diagram</a> </li>
@@ -1038,12 +989,13 @@ a:visited { color: #734559 }
 <li> <a href="syntax/select-stmt.html">select-stmt syntax diagram</a> </li>
 <li> <a href="fileformat2.html#serialtype">serial type</a> </li>
 <li> <a href="whentouse.html#serversidedb">server-side database</a> </li>
+<li> <a href="serverless.html">serverless</a> </li>
 <li> <a href="sessionintro.html">session</a> </li>
 <li> <a href="sessionintro.html">session extension</a> </li>
 <li> <a href="session/intro.html">Session Extension C-language Interface</a> </li>
 <li> <a href="session/funclist.html">Session Module C-API function list</a> </li>
 <li> <a href="fts3.html#*shadowtab">shadow tables</a> </li>
-<li> <a href="fts3.html#section_9_1">shadowtabs</a> </li>
+<li> <a href="fts3.html#shadow_tables">shadowtabs</a> </li>
 <li> <a href="sharedcache.html">shared cache</a> </li>
 <li> <a href="sharedcache.html">shared cache mode</a> </li>
 <li> <a href="vfs.html#shim">shims</a> </li>
@@ -1052,7 +1004,7 @@ a:visited { color: #734559 }
 <li> <a href="pragma.html#pragma_shrink_memory">shrink_memory pragma</a> </li>
 <li> <a href="syntax/signed-number.html">signed-number</a> </li>
 <li> <a href="syntax/signed-number.html">signed-number syntax diagram</a> </li>
-<li> <a href="fts3.html#section_1_4">simple fts queries</a> </li>
+<li> <a href="fts3.html#simple_fts_queries">simple fts queries</a> </li>
 <li> <a href="lang_select.html#simpleselect">simple SELECT</a> </li>
 <li> <a href="syntax/simple-select-stmt.html">simple-select-stmt</a> </li>
 <li> <a href="syntax/simple-select-stmt.html">simple-select-stmt syntax diagram</a> </li>
@@ -2048,7 +2000,7 @@ a:visited { color: #734559 }
 <li> <a href="lang_corefunc.html#unicode">unicode() SQL function</a> </li>
 <li> <a href="fts3.html#unicode61">unicode61</a> </li>
 <li> <a href="uri.html">Uniform Resource Identifier</a> </li>
-<li> <a href="fts5.html#section_4_1">unindexed</a> </li>
+<li> <a href="fts5.html#the_unindexed_column_option">unindexed</a> </li>
 <li> <a href="lang_createtable.html#uniqueconst">UNIQUE</a> </li>
 <li> <a href="lang_createtable.html#uniqueconst">unique constraint</a> </li>
 <li> <a href="lang_createindex.html#uniqueidx">unique index</a> </li>
@@ -2114,6 +2066,7 @@ a:visited { color: #734559 }
 <li> <a href="releaselog/3_14.html">Version 3.14</a> </li>
 <li> <a href="releaselog/3_14.html">Version 3.14.0</a> </li>
 <li> <a href="releaselog/3_14_1.html">Version 3.14.1</a> </li>
+<li> <a href="releaselog/3_14_2.html">Version 3.14.2</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>
@@ -2325,6 +2278,7 @@ a:visited { color: #734559 }
 <li> <a href="vtab.html#xupdate">xUpdate</a> </li>
 <li> <a href="compile.html#yystackdepth">YYSTACKDEPTH</a> </li>
 <li> <a href="compile.html#yytrackmaxstackdepth">YYTRACKMAXSTACKDEPTH</a> </li>
+<li> <a href="zeroconf.html">zero-configuration</a> </li>
 <li> <a href="malloc.html#memsys5">zero-malloc memory allocator</a> </li>
 <li> <a href="lang_corefunc.html#zeroblob">zeroblob() SQL function</a> </li>
 

@@ -1,150 +1,130 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>The Next-Generation Query Planner</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+The Next-Generation Query Planner
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#_introduction">1.  Introduction</a></div>
+<div class="fancy-toc1"><a href="#_background">2.  Background</a></div>
+<div class="fancy-toc2"><a href="#_query_planning_in_sqlite">2.1.  Query Planning In SQLite</a></div>
+<div class="fancy-toc2"><a href="#_the_sqlite_query_planner_stability_guarantee">2.2.  The SQLite Query Planner Stability Guarantee</a></div>
+<div class="fancy-toc1"><a href="#_a_difficult_case">3.  A Difficult Case</a></div>
+<div class="fancy-toc2"><a href="#_query_details">3.1.  Query Details</a></div>
+<div class="fancy-toc2"><a href="#_complications">3.2.  Complications</a></div>
+<div class="fancy-toc2"><a href="#_finding_the_best_query_plan">3.3.  Finding The Best Query Plan</a></div>
+<div class="fancy-toc2"><a href="#_the_n_nearest_neighbors_or_n3_heuristic">3.4.  The N Nearest Neighbors or "N3" Heuristic</a></div>
+<div class="fancy-toc1"><a href="#_hazards_of_upgrading_to_ngqp">4.  Hazards Of Upgrading To NGQP</a></div>
+<div class="fancy-toc2"><a href="#_case_study_upgrading_fossil_to_the_ngqp">4.1.  Case Study: Upgrading Fossil to the NGQP</a></div>
+<div class="fancy-toc2"><a href="#_fixing_the_problem">4.2.  Fixing The Problem</a></div>
+<div class="fancy-toc1"><a href="#_checklist_for_avoiding_or_fixing_query_planner_problems">5.  Checklist For Avoiding Or Fixing Query Planner Problems</a></div>
+<div class="fancy-toc1"><a href="#_summary">6.  Summary</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
 
-<div class=startsearch></div>
-  
 
 
-<h1 align="center">The Next Generation Query Planner</h1>
 
-<h2>1.0 Introduction</h2>
+
+<h1 id="_introduction"><span>1. </span> Introduction</h1>
 
 <p>
 The task of the "query planner" is to figure
 out the best algorithm or "query plan" to accomplish an SQL statement.
-Beginning with SQLite version 3.8.0, the query planner component has been
+Beginning with SQLite <a href="releaselog/3_8_0.html">version 3.8.0</a> (2013-08-26), 
+the query planner component has been
 rewritten so that it runs faster and generates better plans.  The
 rewrite is called the "next generation query planner" or "NGQP".
 </p>
@@ -164,7 +144,7 @@ for reducing the risk and for fixing any issues that do arise.</p>
 SQLite query planner that encompasses the entire history of SQLite, see
 "<a href="optoverview.html">The SQLite Query Optimizer Overview</a>".</p>
 
-<h2>2.0 Background</h2>
+<h1 id="_background"><span>2. </span> Background</h1>
 
 <p>For simple queries against a single table with few indices, there is usually
 an obvious choice for the best algorithm.
@@ -199,7 +179,7 @@ sometimes be wrong. A good query planner is one that will
 find the correct solution often enough that application
 programmers rarely need to get involved.</p>
 
-<h3>2.1 Query Planning In SQLite</h3>
+<h2 id="_query_planning_in_sqlite"><span>2.1. </span> Query Planning In SQLite</h2>
 
 <p>SQLite computes joins using nested loops, 
 one loop for each table
@@ -212,18 +192,18 @@ table.  Thus query planning decomposes into two subtasks:</p>
 <ol>
 <li> Picking the nested order of the various loops
 <li> Choosing good indices for each loop
-</ol>
+</li></li></ol>
 <p>Picking the nesting order is generally the more challenging problem.
 Once the nesting order of the join is established, the choice of indices
 for each loop is normally obvious.</p>
 
 <a name="qpstab"></a>
 
-<h3>2.2 The SQLite Query Planner Stability Guarantee</h3>
+<h2 id="_the_sqlite_query_planner_stability_guarantee"><span>2.2. </span> The SQLite Query Planner Stability Guarantee</h2>
 
 <p>SQLite will always pick the same query plan for any
 given SQL statement as long as:
-<ol type="a">
+</p><ol type="a">
 <li>the database schema does not change in significant ways such as 
     adding or dropping indices,</li>
 <li>the ANALYZE command is not rerun, </li>
@@ -237,7 +217,7 @@ during testing, and if your application does not change the schema,
 then SQLite will not suddenly decide to start using a different
 query plan, possibly causing a performance problem, after your application 
 is released to users.  If your application works in the lab, it
-will continue working the same way after deployment.</p>
+will continue working the same way after deployment.
 
 <p>Enterprise-class client/server SQL database engines do not normally 
 make this guarantee.
@@ -268,7 +248,7 @@ you should consider statically linking your applications against SQLite
 rather than use a system-wide SQLite shared library which might 
 change without your knowledge or control.</p>
 
-<h2>3.0 A Difficult Case</h2>
+<h1 id="_a_difficult_case"><span>3. </span> A Difficult Case</h1>
 
 <p>
 "TPC-H Q8" is a test query from the
@@ -283,7 +263,7 @@ query planner.  This section tries to explain why this redesign was
 necessary and how the NGQP is different and addresses the TPC-H Q8 problem.
 </p>
 
-<h3>3.1 Query Details</h3>
+<h2 id="_query_details"><span>3.1. </span> Query Details</h2>
 
 <p>
 TPC-H Q8 is an eight-way join.
@@ -296,7 +276,7 @@ by the following diagram:
 
 <center>
 <img src="images/qp/tpchq8.gif">
-</center>
+</img></center>
 
 <p>
 In the diagram, each of the 8 tables in the FROM clause of the query is
@@ -333,7 +313,7 @@ exactly once.</p>
 by the query planner in SQLite 3.7.16 and converted using a natural logarithm.)
 </p>
 
-<h3>3.2 Complications</h3>
+<h2 id="_complications"><span>3.2. </span> Complications</h2>
 
 <p>The presentation of the query planner problem above is a simplification.
 The costs are estimates.  We cannot
@@ -380,7 +360,7 @@ the graph above is a reasonable representation of what needs to be computed.
 The general case involves a lot of extra complication, which for clarity
 is neglected in the remainder of this article.</p>
 
-<h3>3.3 Finding The Best Query Plan</h3>
+<h2 id="_finding_the_best_query_plan"><span>3.3. </span> Finding The Best Query Plan</h2>
 
 <p>Prior to version 3.8.0, SQLite always used
 the "Nearest Neighbor" or "NN" heuristic when searching for the best query plan.
@@ -411,7 +391,7 @@ K! (where K is the number of tables in the join) and so when you get
 beyond a 10-way join, the time
 to run <a href="c3ref/prepare.html">sqlite3_prepare()</a> becomes very large.</p>
 
-<h3>3.4 The N Nearest Neighbors or "N3" Heuristic</h3>
+<h2 id="_the_n_nearest_neighbors_or_n3_heuristic"><span>3.4. </span> The N Nearest Neighbors or "N3" Heuristic</h2>
 
 <p>The NGQP uses a new heuristic for seeking the best path through the
 graph: "N Nearest Neighbors" (hereafter "N3").  With N3, instead of
@@ -421,12 +401,12 @@ track of the N bests paths at each step for some small integer N.</p>
 <p>Suppose N=4.  Then for the TPC-H Q8 graph, the first step finds
 the four shortest paths to visit any single node in the graph:
 
-<blockquote>
+</p><blockquote>
     R (cost: 3.56) <br>
-    N1 (cost: 5.52) <br>
-    N2 (cost: 5.52) <br>
-    P (cost: 7.71) <br>
-</blockquote>
+    N1 (cost: 5.52) </br><br>
+    N2 (cost: 5.52) </br><br>
+    P (cost: 7.71) </br><br>
+</br></blockquote>
 
 <p>The second step finds the four shortest paths to visit two nodes 
 beginning with one of the four paths from the previous step.  In the
@@ -436,20 +416,20 @@ first and lowest-cost path is retained.  We have:</p>
 
 <blockquote>
     R-N1 (cost: 7.03) <br>
-    R-N2 (cost: 9.08) <br>
-    N2-N1 (cost: 11.04) <br>
-    R-P {cost: 11.27} <br>
-</blockquote>
+    R-N2 (cost: 9.08) </br><br>
+    N2-N1 (cost: 11.04) </br><br>
+    R-P {cost: 11.27} </br><br>
+</br></blockquote>
 
 <p>The third step starts with the four shortest two-node paths and finds
 the four shortest three-node paths:</p>
 
 <blockquote>
     R-N1-N2 (cost: 12.55) <br>
-    R-N1-C (cost: 13.43) <br>
-    R-N1-P (cost: 14.74) <br>
-    R-N2-S (cost: 15.08) <br>
-</blockquote>
+    R-N1-C (cost: 13.43) </br><br>
+    R-N1-P (cost: 14.74) </br><br>
+    R-N2-S (cost: 15.08) </br><br>
+</br></blockquote>
 
 <p>And so forth.  There are 8 nodes in the TPC-H Q8 query, 
 so this process repeats a total of 8
@@ -474,7 +454,7 @@ formula for selecting N might change in subsequent releases.</p>
 
 <a name="hazards"></a>
 
-<h2>4.0 Hazards Of Upgrading To NGQP</h2>
+<h1 id="_hazards_of_upgrading_to_ngqp"><span>4. </span> Hazards Of Upgrading To NGQP</h1>
 
 <p>For most applications, upgrading from the legacy query planner to the NGQP
 requires little thought or effort.
@@ -507,7 +487,7 @@ regression in practice, because of the shape of the data.</p>
     as long as the schema does not contain indices that have more than
     about 10 or 20 rows with the same value in the left-most column of the
     index.</p>
-</ul>
+</li></li></ul>
 
 <p>Not all applications meet these conditions.  Fortunately,
 the NGQP will still usually find good query plans, even without these conditions.
@@ -515,7 +495,7 @@ However, cases do arise (rarely) where performance regressions can occur.</p>
 
 <a name="fossilcasestudy"></a>
 
-<h3>4.1 Case Study: Upgrading Fossil to the NGQP</h3>
+<h2 id="_case_study_upgrading_fossil_to_the_ngqp"><span>4.1. </span> Case Study: Upgrading Fossil to the NGQP</h2>
 
 <p>The <a href="http://www.fossil-scm.org/">Fossil DVCS</a> is the version
 control system used to track all of the SQLite source code.
@@ -579,11 +559,11 @@ perhaps thousands of lines of procedural code.
 The gist of the query is this:  Scan down the EVENT table looking
 for the most recent 200 check-ins that satisfy any one of three conditions:
 
-<p><ol>
+</p><p></p><ol>
 <li> The check-in has a "trunk" tag.
 <li> The check-in has a child that has a "trunk" tag.
 <li> The check-in has a parent that has a "trunk" tag.
-</ol></p>
+</li></li></li></ol>
 
 <p>
 The first condition causes all of the trunk check-ins to be displayed and
@@ -630,13 +610,13 @@ CREATE INDEX tagxref_i1 ON tagxref(tagid, mtime);
 others are contenders for being the "best" algorithm.)</p>
 
 <ol type="1">
-<li value=1><p>
+<li value="1"><p>
 Find all children of check-in $ckid and test each one to see if
 it has the $trunk tag.
-<li value=2><p>
+</p><li value="2"><p>
 Find all check-ins with the $trunk tag and test each one to see if
 it is a child of $ckid.
-</ol>
+</p></li></li></ol>
 
 <p>
 Intuitively, we humans understand that algorithm-1 is best.
@@ -686,7 +666,7 @@ problem look like this:</p>
 
 <center>
 <img src="images/qp/fqp1.gif">
-</center>
+</img></center>
 
 <p>
 In the "without ANALYZE" case on the left, the NN algorithm chooses 
@@ -712,7 +692,7 @@ Hence, the cost estimates in
 these latter two graphs are not directly comparable to the cost estimates
 in the TPC-H Q8 graph.)</p>
 
-<h3>4.2 Fixing The Problem</h3>
+<h2 id="_fixing_the_problem"><span>4.2. </span> Fixing The Problem</h2>
 
 <p>Running <a href="lang_analyze.html">ANALYZE</a> on the repository database immediately fixed the
 performance problem.  However, we want Fossil to be robust and to always
@@ -741,7 +721,7 @@ to the problem in this case.</p>
 
 <a name="howtofix"></a>
 
-<h2>5.0 Checklist For Avoiding Or Fixing Query Planner Problems</h2>
+<h1 id="_checklist_for_avoiding_or_fixing_query_planner_problems"><span>5. </span> Checklist For Avoiding Or Fixing Query Planner Problems</h1>
 
 <ol>
 <li><p><b>Don't panic!</b>
@@ -796,7 +776,7 @@ hints to the query planner about WHERE clause terms that are probably
 not true, and thus aid the query planner in selecting the best possible
 plan.
 
-<li><p><b>Use the <a href="optoverview.html#crossjoin">CROSS JOIN</a> syntax to enforce a particular
+</p><li><p><b>Use the <a href="optoverview.html#crossjoin">CROSS JOIN</a> syntax to enforce a particular
 loop nesting order on queries that might use low-quality indices in an
 unanalyzed database.</b>
 SQLite <a href="lang_select.html#crossjoin">treats the CROSS JOIN operator specially</a>, forcing the table to 
@@ -828,9 +808,9 @@ particular indices on problem queries.</b>
 As with the previous two bullets, avoid this step if possible, and 
 especially avoid doing this early in development as it is clearly a
 premature optimization.</p>
-</ol>
+</li></li></li></li></li></li></li></li></li></ol>
 
-<h2>6.0 Summary</h2>
+<h1 id="_summary"><span>6. </span> Summary</h1>
 
 <p>The query planner in SQLite normally does a terrific job of selecting
 fast algorithms for running your SQL statements.  This is true of the 

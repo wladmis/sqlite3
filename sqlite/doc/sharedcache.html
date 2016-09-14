@@ -1,146 +1,120 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>SQLite Shared-Cache Mode</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+SQLite Shared-Cache Mode
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#sqlite_shared_cache_mode">1. SQLite Shared-Cache Mode</a></div>
+<div class="fancy-toc1"><a href="#shared_cache_locking_model">2. Shared-Cache Locking Model</a></div>
+<div class="fancy-toc2"><a href="#transaction_level_locking">2.1. Transaction Level Locking</a></div>
+<div class="fancy-toc2"><a href="#table_level_locking">2.2. Table Level Locking</a></div>
+<div class="fancy-toc3"><a href="#read_uncommitted_isolation_mode">2.2.1. Read-Uncommitted Isolation Mode</a></div>
+<div class="fancy-toc2"><a href="#schema_sqlite_master_level_locking">2.3. Schema (sqlite_master) Level Locking</a></div>
+<div class="fancy-toc1"><a href="#thread_related_issues">3. Thread Related Issues</a></div>
+<div class="fancy-toc1"><a href="#shared_cache_and_virtual_tables">4. Shared Cache And Virtual Tables</a></div>
+<div class="fancy-toc1"><a href="#enabling_shared_cache_mode">5. Enabling Shared-Cache Mode</a></div>
+<div class="fancy-toc1"><a href="#shared_cache_and_in_memory_databases">6. Shared Cache And In-Memory Databases</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
 
-<div class=startsearch></div>
-  
 
 
 
 
-
-<h2>1.0 SQLite Shared-Cache Mode</h2>
+<h1 id="sqlite_shared_cache_mode"><span>1. </span>SQLite Shared-Cache Mode</h1>
 
 <p>Starting with version 3.3.0, SQLite includes a special "shared-cache"
 mode (disabled by default) intended for use in embedded servers. If
@@ -162,7 +136,7 @@ this document. A basic understanding of the normal SQLite locking model (see
 <a href="lockingv3.html">File Locking And Concurrency In SQLite Version 3</a>
 for details) is assumed.</p>
 
-<h2>2.0 Shared-Cache Locking Model</h2>
+<h1 id="shared_cache_locking_model"><span>2. </span>Shared-Cache Locking Model</h1>
 
 <p>Externally, from the point of view of another process or thread, two
 or more <a href="c3ref/sqlite3.html">database connections</a> using a shared-cache appear as a single 
@@ -173,22 +147,8 @@ shared-caches or regular database users is described elsewhere.
 <table style="margin:auto">
 <tr><td>
 <img src="images/shared.gif">
-<!-- <pre>
-            +--------------+      +--------------+
-            | Connection 2 |      | Connection 3 |
-            +--------------+      +--------------+
-                         |          |
-                         V          V
-+--------------+       +--------------+
-| Connection 1 |       | Shared cache |
-+--------------+       +--------------+
-            |            |
-            V            V
-          +----------------+
-          |    Database    |
-          +----------------+
-</pre> -->
-</table>
+
+</img></td></tr></table>
 <p style="font-style:italic;text-align:center">Figure 1</p>
 
 <p>Figure 1 depicts an example runtime configuration where three 
@@ -205,7 +165,7 @@ connections 2 and 3 is described in the remainder of this section.
 transaction level locking, table level locking and schema level locking. 
 They are described in the following three sub-sections.</p>
 
-<h3>2.1 Transaction Level Locking</h3>
+<h2 id="transaction_level_locking"><span>2.1. </span>Transaction Level Locking</h2>
 
 <p>SQLite connections can open two kinds of transactions, read and write
 transactions. This is not done explicitly, a transaction is implicitly a
@@ -217,7 +177,7 @@ write transaction at any one time. This may co-exist with any number of read
 transactions. 
 </p>
 
-<h3>2.2 Table Level Locking</h3>
+<h2 id="table_level_locking"><span>2.2. </span>Table Level Locking</h2>
 
 <p>When two or more connections use a shared-cache, locks are used to 
 serialize concurrent access attempts on a per-table basis. Tables support 
@@ -237,7 +197,7 @@ the query fails and SQLITE_LOCKED is returned to the caller.
 current transaction (read or write) is concluded.
 </p>
 
-<h4>2.2.1 Read-Uncommitted Isolation Mode</h4>
+<h3 id="read_uncommitted_isolation_mode"><span>2.2.1. </span>Read-Uncommitted Isolation Mode</h3>
 
 <p>The behaviour described above may be modified slightly by using the 
 <a href="pragma.html#pragma_read_uncommitted">read_uncommitted</a> pragma to change the isolation level from serialized 
@@ -270,7 +230,7 @@ locks required by the rules enumerated below (see section
   PRAGMA read_uncommitted;
 </pre></blockquote>
 
-<h3>2.3 Schema (sqlite_master) Level Locking</h3>
+<h2 id="schema_sqlite_master_level_locking"><span>2.3. </span>Schema (sqlite_master) Level Locking</h2>
 
 <p>The <i>sqlite_master</i> table supports shared-cache read and write 
 locks in the same way as all other database tables (see description 
@@ -290,7 +250,7 @@ database (including the default database, "main").
 </li>
 </ul>
 
-<h2>3.0 Thread Related Issues</h2>
+<h1 id="thread_related_issues"><span>3. </span>Thread Related Issues</h1>
 
 <p>In SQLite versions 3.3.0 through 3.4.2 when shared-cache mode is enabled, 
 a database connection may only be
@@ -300,14 +260,14 @@ same thread.
 These restrictions were dropped beginning with SQLite version 3.5.0.
 </p>
 
-<h2>4.0 Shared Cache And Virtual Tables</h2>
+<h1 id="shared_cache_and_virtual_tables"><span>4. </span>Shared Cache And Virtual Tables</h1>
 
 <p>
 In older versions of SQLite,
 shared cache mode could not be used together with virtual tables.
 This restriction was removed in SQLite <a href="releaselog/3_6_17.html">version 3.6.17</a>.
 
-<h2>5.0 Enabling Shared-Cache Mode</h2>
+</p><h1 id="enabling_shared_cache_mode"><span>5. </span>Enabling Shared-Cache Mode</h1>
 
 <p>Shared-cache mode is enabled on a per-process basis. Using the C 
 interface, the following API can be used to globally enable or disable
@@ -346,7 +306,8 @@ ATTACH 'file:aux.db?cache=shared' AS aux;
 </pre></blockquote>
 
 <a name="inmemsharedcache"></a>
-<h2>6.0 Shared Cache And In-Memory Databases</h2>
+
+<h1 id="shared_cache_and_in_memory_databases"><span>6. </span>Shared Cache And In-Memory Databases</h1>
 
 <p>
 Beginning with SQLite <a href="releaselog/3_7_13.html">version 3.7.13</a>, shared cache can be used on

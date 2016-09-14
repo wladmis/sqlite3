@@ -1,144 +1,121 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
 <title>Compilation Options For SQLite</title>
-<style type="text/css">
-body {
-    margin: auto;
-    font-family: Verdana, sans-serif;
-    padding: 8px 1%;
-}
-
-a { color: #044a64 }
-a:visited { color: #734559 }
-
-.logo { position:absolute; margin:3px; }
-.tagline {
-  float:right;
-  text-align:right;
-  font-style:italic;
-  width:300px;
-  margin:12px;
-  margin-top:58px;
-}
-
-.menubar {
-  clear: both;
-  border-radius: 8px;
-  background: #044a64;
-  padding: 0px;
-  margin: 0px;
-  cell-spacing: 0px;
-}    
-.toolbar {
-  text-align: center;
-  line-height: 1.6em;
-  margin: 0;
-  padding: 0px 8px;
-}
-.toolbar a { color: white; text-decoration: none; padding: 6px 12px; }
-.toolbar a:visited { color: white; }
-.toolbar a:hover { color: #044a64; background: white; }
-
-.content    { margin: 5%; }
-.content dt { font-weight:bold; }
-.content dd { margin-bottom: 25px; margin-left:20%; }
-.content ul { padding:0px; padding-left: 15px; margin:0px; }
-
-/* Things for "fancyformat" documents start here. */
-.fancy img+p {font-style:italic}
-.fancy .codeblock i { color: darkblue; }
-.fancy h1,.fancy h2,.fancy h3,.fancy h4 {font-weight:normal;color:#044a64}
-.fancy h2 { margin-left: 10px }
-.fancy h3 { margin-left: 20px }
-.fancy h4 { margin-left: 30px }
-.fancy th {white-space:xnowrap;text-align:left;border-bottom:solid 1px #444}
-.fancy th, .fancy td {padding: 0.2em 1ex; vertical-align:top}
-.fancy #toc a        { color: darkblue ; text-decoration: none }
-.fancy .todo         { color: #AA3333 ; font-style : italic }
-.fancy .todo:before  { content: 'TODO:' }
-.fancy p.todo        { border: solid #AA3333 1px; padding: 1ex }
-.fancy img { display:block; }
-.fancy :link:hover, .fancy :visited:hover { background: wheat }
-.fancy p,.fancy ul,.fancy ol,.fancy dl { margin: 1em 5ex }
-.fancy li p { margin: 1em 0 }
-.fancy blockquote { margin-left : 10ex }
-/* End of "fancyformat" specific rules. */
-
-.yyterm {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 11px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-</style>
-  
 </head>
 <body>
-<div><!-- container div to satisfy validator -->
-
+<div class=nosearch>
 <a href="index.html">
-<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite Logo"
- border="0"></a>
-<div><!-- IE hack to prevent disappearing logo--></div>
-<div class="tagline">Small. Fast. Reliable.<br>Choose any three.</div>
-
-<table width=100% class="menubar"><tr>
-  <td width=100%>
-  <div class="toolbar">
-    <a href="about.html">About</a>
-    <a href="docs.html">Documentation</a>
-    <a href="download.html">Download</a>
-    <a href="copyright.html">License</a>
-    <a href="support.html">Support</a>
-    <a href="http://www.hwaci.com/sw/sqlite/prosupport.html">Purchase</a>
-  </div>
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
 <script>
-  gMsg = "Search SQLite Docs..."
-  function entersearch() {
-    var q = document.getElementById("q");
-    if( q.value == gMsg ) { q.value = "" }
-    q.style.color = "black"
-    q.style.fontStyle = "normal"
-  }
-  function leavesearch() {
-    var q = document.getElementById("q");
-    if( q.value == "" ) { 
-      q.value = gMsg
-      q.style.color = "#044a64"
-      q.style.fontStyle = "italic"
-    }
-  }
-  function hideorshow(btn,obj){
-    var x = document.getElementById(obj);
-    var b = document.getElementById(btn);
-    if( x.style.display!='none' ){
-      x.style.display = 'none';
-      b.innerHTML='show';
-    }else{
-      x.style.display = '';
-      b.innerHTML='hide';
-    }
-    return false;
-  }
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
 </script>
-<td>
-    <div style="padding:0 1em 0px 0;white-space:nowrap">
-    <form name=f method="GET" action="https://www.sqlite.org/search">
-      <input id=q name=q type=text
-       onfocus="entersearch()" onblur="leavesearch()" style="width:24ex;padding:1px 1ex; border:solid white 1px; font-size:0.9em ; font-style:italic;color:#044a64;" value="Search SQLite Docs...">
-      <input type=submit value="Go" style="border:solid white 1px;background-color:#044a64;color:white;font-size:0.9em;padding:0 1ex">
-    </form>
-    </div>
-  </table>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+Compilation Options For SQLite
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#overview">1. Overview</a></div>
+<div class="fancy-toc1"><a href="#_platform_configuration">2.  Platform Configuration</a></div>
+<div class="fancy-toc1"><a href="#_options_to_set_default_parameter_values">3.  Options To Set Default Parameter Values</a></div>
+<div class="fancy-toc1"><a href="#_options_to_set_size_limits">4.  Options To Set Size Limits</a></div>
+<div class="fancy-toc1"><a href="#_options_to_control_operating_characteristics">5.  Options To Control Operating Characteristics</a></div>
+<div class="fancy-toc1"><a href="#_options_to_enable_features_normally_turned_off">6.  Options To Enable Features Normally Turned Off</a></div>
+<div class="fancy-toc1"><a href="#_options_to_disable_features_normally_turned_on">7.  Options To Disable Features Normally Turned On</a></div>
+<div class="fancy-toc1"><a href="#_options_to_omit_features">8.  Options To Omit Features</a></div>
+<div class="fancy-toc1"><a href="#_analysis_and_debugging_options">9.  Analysis and Debugging Options</a></div>
+<div class="fancy-toc1"><a href="#_windows_specific_options">10.  Windows-Specific Options</a></div>
+<div class="fancy-toc1"><a href="#compiler_linkage_control">11. Compiler Linkage Control</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
 
-<div class=startsearch></div>
-  
 
 
 
-<h1>1.0 Compilation Options For SQLite</h1>
+
+<h1 id="overview"><span>1. </span>Overview</h1>
 
 <p>
 For most purposes, SQLite can be built just fine using the default
@@ -160,7 +137,7 @@ with non-standard compilation options.
 
 
 <a name="osconfig"></a>
-<h2>1.1 Platform Configuration</h2>
+<h1 id="_platform_configuration"><span>2. </span> Platform Configuration</h1>
 
 <a name="sqlite_config_h"></a>
 <p><b>_HAVE_SQLITE_CONFIG_H</b></p><blockquote><p>
@@ -237,7 +214,7 @@ with non-standard compilation options.
 </p></blockquote>
 
 <a name="defaults"></a>
-<h2>1.2 Options To Set Default Parameter Values</h2>
+<h1 id="_options_to_set_default_parameter_values"><span>3. </span> Options To Set Default Parameter Values</h1>
 
 <a name="default_automatic_index"></a>
 <p><b>SQLITE_DEFAULT_AUTOMATIC_INDEX=<i>&lt;0 or 1&gt;</i></b></p><blockquote><p>
@@ -501,7 +478,7 @@ with non-standard compilation options.
   the ability of any human to comprehend.
 </p></blockquote>
 
-<h2>1.3 Options To Set Size Limits</h2>
+<h1 id="_options_to_set_size_limits"><span>4. </span> Options To Set Size Limits</h1>
 
 <p>There are compile-time options that will set upper bounds
 on the sizes of various structures in SQLite.  The compile-time
@@ -527,7 +504,7 @@ the available settings:</p>
 </ul>
 
 <a name="controlfeatures"></a>
-<h2>1.4 Options To Control Operating Characteristics</h2>
+<h1 id="_options_to_control_operating_characteristics"><span>5. </span> Options To Control Operating Characteristics</h1>
 
 <a name="4_byte_aligned_malloc"></a>
 <p><b>SQLITE_4_BYTE_ALIGNED_MALLOC</b></p><blockquote><p>
@@ -649,7 +626,7 @@ the available settings:</p>
 </p></blockquote>
 
 <a name="enablefeatures"></a>
-<h2>1.5 Options To Enable Features Normally Turned Off</h2>
+<h1 id="_options_to_enable_features_normally_turned_off"><span>6. </span> Options To Enable Features Normally Turned Off</h1>
 
 <a name="allow_uri_authority"></a>
 <p><b>SQLITE_ALLOW_URI_AUTHORITY</b></p><blockquote><p>
@@ -683,7 +660,6 @@ the available settings:</p>
   the "<tt>8_3_names=1</tt>" query parameter.  If the value of
   this macro is 2, then the use of 8+3 filenames becomes the default
   but may be disabled on using the <tt>8_3_names=0</tt> query parameter.
-  See 
 </p></blockquote><a name="enable_api_armor"></a>
 <p><b>SQLITE_ENABLE_API_ARMOR</b></p><blockquote><p>
   When defined, this C-preprocessor macro activates extra code that
@@ -988,7 +964,7 @@ the available settings:</p>
 </p></blockquote>
 
 <a name="disablefeatures"></a>
-<h2>1.6 Options To Disable Features Normally Turned On</h2>
+<h1 id="_options_to_disable_features_normally_turned_on"><span>7. </span> Options To Disable Features Normally Turned On</h1>
 
 <a name="disable_lfs"></a>
 <p><b>SQLITE_DISABLE_LFS</b></p><blockquote><p>
@@ -1016,7 +992,7 @@ the available settings:</p>
 
 <a name="omitfeatures"></a>
 
-<h2>1.7 Options To Omit Features</h2>
+<h1 id="_options_to_omit_features"><span>8. </span> Options To Omit Features</h1>
 
 <p>The following options can be used to 
 <a href="footprint.html#relfootprint">reduce the size of the compiled library</a>
@@ -1031,10 +1007,10 @@ compile-time options.  You should also verify that
 
 <p>The macros in this section do not require values. The following 
 compilation switches all have the same effect:<br>
--DSQLITE_OMIT_ALTERTABLE<br>
--DSQLITE_OMIT_ALTERTABLE=1<br>
+-DSQLITE_OMIT_ALTERTABLE</br><br>
+-DSQLITE_OMIT_ALTERTABLE=1</br><br>
 -DSQLITE_OMIT_ALTERTABLE=0
-</p>
+</br></p>
 
 <p>If any of these options are defined, then the same set of SQLITE_OMIT_*
 options must also be defined when using the 'lemon' tool to generate the
@@ -1062,10 +1038,10 @@ make a copy of the Makefile.linux-gcc makefile template in the canonical
 source code distribution.  Change the name of your copy to simply "Makefile".
 Then edit "Makefile" to set up appropriate compile-time options.  Then
 type:
-<blockquote><tt>make clean; make sqlite3.c</tt></blockquote>
+</p><blockquote><tt>make clean; make sqlite3.c</tt></blockquote>
 The resulting "sqlite3.c" amalgamation code file (and its associated
 header file "sqlite3.h") can then be moved to a non-unix platform
-for final compilation using a native compiler.</p>
+for final compilation using a native compiler.
 
 <p>The SQLITE_OMIT_* options are unsupported.  By this we mean that
 an SQLITE_OMIT_* option that omits code from the build in the current
@@ -1075,7 +1051,7 @@ to be excluded in the next release.  Also, not all SQLITE_OMIT_* options
 are tested.  Some SQLITE_OMIT_* options might cause SQLite to malfunction
 and/or provide incorrect answers.
 
-<blockquote>
+</p><blockquote>
 <i><b>Important Note:</b>
 The SQLITE_OMIT_* compile-time options are unsupported.
 </i></blockquote>
@@ -1429,7 +1405,7 @@ The SQLITE_OMIT_* compile-time options are unsupported.
   malloc(), free(), and/or realloc().
 </p></blockquote>
 <a name="debugoptions"></a>
-<h2>1.8 Analysis and Debugging Options</h2>
+<h1 id="_analysis_and_debugging_options"><span>9. </span> Analysis and Debugging Options</h1>
 <a name="debug"></a>
 <p><b>SQLITE_DEBUG</b></p><blockquote><p>
   The SQLite source code contains literally thousands of assert() statements
@@ -1453,7 +1429,7 @@ The SQLITE_OMIT_* compile-time options are unsupported.
   allocated memory.
 </p></blockquote>
 <a name="win32options"></a>
-<h2>1.9 Windows-Specific Options</h2>
+<h1 id="_windows_specific_options"><span>10. </span> Windows-Specific Options</h1>
 <a name="win32_heap_create"></a>
 <p><b>SQLITE_WIN32_HEAP_CREATE</b></p><blockquote><p>
   This option forces the Win32 native memory allocator, when enabled, to
@@ -1465,7 +1441,7 @@ The SQLITE_OMIT_* compile-time options are unsupported.
   enabled.
 </p></blockquote>
 <a name="linkage"></a>
-<h2>1.10 Compiler Linkage Control</h2>
+<h1 id="compiler_linkage_control"><span>11. </span>Compiler Linkage Control</h1>
 
 <p>The following macros specify
 interface linkage for certain kinds of SQLite builds.  The Makefiles will normally
