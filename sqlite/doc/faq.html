@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -526,12 +528,9 @@ COMMIT;
   in the structure, format, or other control elements of the
   database file.</p>
 
-  <p>SQLite does not corrupt database files, except in the case of very
-  rare bugs (see 
-  <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">DatabaseCorruption</a>) 
-  and even then the bugs are normally difficult to
-  reproduce.  Even if your application crashes in the middle of an
-  update, your database is safe.  The database is safe even if your OS
+  <p>SQLite does not corrupt database files without external help.
+  If your application crashes in the middle of an
+  update, your data is safe.  The database is safe even if your OS
   crashes or takes a power loss.  The crash-resistance of SQLite has
   been extensively studied and tested and is attested by years of real-world 
   experience by billions of users.</p>
@@ -554,7 +553,8 @@ COMMIT;
 <a name="q22"></a>
 <p><b>(22) Does SQLite support foreign keys?</b></p>
 <blockquote><p>
-  As of version 3.6.19, SQLite supports <a href="foreignkeys.html">foreign key constraints</a>.  But enforcement
+  As of <a href="releaselog/3_6_19.html">version 3.6.19</a> (2009-10-14), 
+  SQLite supports <a href="foreignkeys.html">foreign key constraints</a>.  But enforcement
   of foreign key constraints is turned off by default (for backwards compatibility).
   To enable foreign key constraint enforcement, run 
   <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys=ON</a> or compile with

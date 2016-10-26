@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -84,21 +86,43 @@ The SQLite Amalgamation
 
 
 
-<h1 id="the_sqlite_amalgamation"><span>1. </span>The SQLite Amalgamation</h1>
+<h1 id="executive_summary"><span>1. </span>Executive Summary</h1>
+
+<p>Over 100 separate source files are concatenated into a
+single large files of C-code named "sqlite3.c" and
+called "the amalgamation". The amalgamation
+contains everything an application needs to embed SQLite.
+The amalgamation file is more than 180,000 lines long and over 6
+megabytes in size.
+
+</p><p>Combining all the code for SQLite into one big file makes SQLite
+easier to deploy &mdash; there is just one file to keep track of.  
+And because all code is in
+a single translation unit, compilers can do better inter-procedure
+optimization resulting in machine code that is between 5% and 10% faster.
+
+</p><h1 id="the_sqlite_amalgamation"><span>2. </span>The SQLite Amalgamation</h1>
 
 <p>The SQLite library consists of 102 files of C code
-(as of <a href="releaselog/3_9_0.html">Version 3.9.0</a>) in the core with 32 additional files that
+(as of <a href="releaselog/3_9_0.html">Version 3.9.0</a> - 2015-10-14)
+in the core with 32 additional files that
 implement the <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, <a href="rtree.html">RTREE</a>, <a href="dbstat.html">DBSTAT</a>, <a href="json1.html">JSON1</a>, and
 <a href="rbu.html">RBU</a> extensions.
+Of the 102 
+main source files, about 75% are C code and about 25% are C header files.
 Most of these are "source" files in the sense that they are stored 
 in the <a href="https://www.sqlite.org/src">SQLite version control system</a>
-and are maintained directly. 
-But some of the C files are generated automatically using scripts
-or auxiliary programs during the compilation process.  Of the 102 
-main source files, about 75% are C code and about 25% are C header files.</p>
+and are edited manually in an ordinary text editor.
+But some of the C-language files are generated using scripts
+or auxiliary programs.  For example, the
+<a href="https://www.sqlite.org/src/artifact?ci=trunk&filename=src/parse.y">parse.y</a>
+file contains an LALR(1) grammar of the SQL language which is compiled
+down into are parser in files "parse.c" and "parse.h" by the
+<a href="https://www.sqlite.org/src/doc/trunk/doc/lemon.html">Lemon</a> parser generator.
+</p>
 
-<p>The standard makefiles for SQLite have a target for building
-an object we call the "amalgamation".  
+<p>The makefiles for SQLite have an "sqlite3.c" target for building the
+file we call "the amalgamation".
 The amalgamation is a single C code file, named "sqlite3.c",
 that contains all C code 
 for the core SQLite library and the <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, <a href="rtree.html">RTREE</a>,
@@ -112,12 +136,12 @@ Activate the extensions using <a href="compile.html">compile-time options</a> li
 
 </p><ul>
 <li> <a href="compile.html#enable_fts3">-DSQLITE_ENABLE_FTS3</a>
-<li> <a href="compile.html#enable_fts5">-DSQLITE_ENABLE_FTS5</a>
-<li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a>
-<li> <a href="compile.html#enable_dbstat_vtab">-DSQLITE_ENABLE_DBSTAT_VTAB</a>
-<li> <a href="compile.html#enable_json1">-DSQLITE_ENABLE_JSON1</a>
-<li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a>
-</li></li></li></li></li></li></ul>
+</li><li> <a href="compile.html#enable_fts5">-DSQLITE_ENABLE_FTS5</a>
+</li><li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a>
+</li><li> <a href="compile.html#enable_dbstat_vtab">-DSQLITE_ENABLE_DBSTAT_VTAB</a>
+</li><li> <a href="compile.html#enable_json1">-DSQLITE_ENABLE_JSON1</a>
+</li><li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a>
+</li></ul>
 
 <p>The amalgamation contains everything you need to integrate SQLite 
 into a larger project.  Just copy the amalgamation into your source 
@@ -145,7 +169,7 @@ binary image larger.</p>
 
 <a name="amal32k"></a>
 
-<h1 id="the_split_amalgamation"><span>2. </span>The Split Amalgamation</h1>
+<h1 id="the_split_amalgamation"><span>3. </span>The Split Amalgamation</h1>
 
 <p>Developers sometimes experience trouble debugging the
 185,000-line-long amalgamation source file because some debuggers
@@ -160,15 +184,14 @@ where the concatenation of the files contain all of the code for the
 complete amalgamation.  Then there is a separate source file named
 "sqlite3-all.c" which basically consists of code like this:
 
-</p><blockquote><pre>
-#include "sqlite3-1.c"
+</p><div class="codeblock"><pre>#include "sqlite3-1.c"
 #include "sqlite3-2.c"
 #include "sqlite3-3.c"
 #include "sqlite3-4.c"
 #include "sqlite3-5.c"
 #include "sqlite3-6.c"
 #include "sqlite3-7.c"
-</pre></blockquote>
+</pre></div>
 
 <p>Applications using the split amalgamation simply compile against
 "sqlite3-all.c" instead of "sqlite3.c".  The two files work exactly
@@ -177,7 +200,7 @@ than 32,767 lines of code, and so it is more convenient to use some
 debuggers.  The downside of the split amalgamation is that it consists
 of 6 C source code files instead of just 1.
 
-</p><h1 id="download_copies_of_the_amalgamation"><span>3. </span>Download Copies Of The Amalgamation</h1>
+</p><h1 id="download_copies_of_the_amalgamation"><span>4. </span>Download Copies Of The Amalgamation</h1>
 
 <p>The amalgamation and
 the sqlite3.h header file are available on
@@ -187,7 +210,7 @@ where the X is replaced by the appropriate version number.</p>
 
 <a name="amalgbuild"></a>
 
-<h1 id="building_the_amalgamation_from_canonical_source_code"><span>4. </span>Building The Amalgamation From Canonical Source Code</h1>
+<h1 id="building_the_amalgamation_from_canonical_source_code"><span>5. </span>Building The Amalgamation From Canonical Source Code</h1>
 
 <p>To build the amalgamation (either the full amalgamation or the
 split amalgamation), first
@@ -197,21 +220,19 @@ free <a href="http://mingw.org/wiki/msys">MinGW</a> development environment
 installed, the amalgamation can be built using the
 following commands:
 
-</p><blockquote><pre>
-sh configure
+</p><div class="codeblock"><pre>sh configure
 make sqlite3.c
-</pre></blockquote>
+</pre></div>
 
 <p>To build using Microsoft Visual C++, run this command:
 
-</p><blockquote><pre>
-nmake /f makefile.msc sqlite3.c
-</pre></blockquote>
+</p><div class="codeblock"><pre>nmake /f makefile.msc sqlite3.c
+</pre></div>
 
 <p>In both cases, the split amalgamation can be obtained by
 substituting "sqlite3-all.c" for "sqlite3.c" as the make target.
 
-</p><h2 id="dependencies"><span>4.1. </span>Dependencies</h2>
+</p><h2 id="dependencies"><span>5.1. </span>Dependencies</h2>
 
 <p>The build process makes extensive use of the 
 <a href="http://www.tcl-lang.org/">Tcl</a> scripting language.  You will need to have a
@@ -219,7 +240,7 @@ copy of TCL installed in order for the make targets above to work.
 Easy-to-use installers can be obtained from <a href="http://www.tcl-lang.org/">http://www.tcl-lang.org/</a>.
 Many unix workstations have Tcl installed by default.
 
-</p><h2 id="see_also"><span>4.2. </span>See Also</h2>
+</p><h2 id="see_also"><span>5.2. </span>See Also</h2>
 
 <p>Additional notes on compiling SQLite can be found on the
 <a href="howtocompile.html">How To Compile SQLite</a> page.

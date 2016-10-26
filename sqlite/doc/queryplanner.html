@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -130,27 +132,40 @@ is that it is a <i>declarative</i> language, not a <i>procedural</i>
 language.  When programming in SQL you tell the system <i>what</i> you
 want to compute, not <i>how</i> to compute it.  The task of figuring out
 the <i>how</i> is delegated to the <i>query planner</i> subsystem within 
-the SQL database engine.
-Relieving the programmer from the chore of designing specific
-query algorithms reduces the workload on the programmer and 
-reduces the number of opportunities for the
-programmer to make mistakes.
+the SQL database engine.</p>
+
+<p>For any given SQL statement, there might be hundreds or thousands or
+even millions of different algorithms of performing the operation.  All
+of these algorithms will get the correct answer, though some will run
+faster than others.
+The query planner is an 
+<a href="https://en.wikipedia.org/wiki/Artificial_intelligence">AI</a> that 
+tries to pick the fastest and most efficient algorithm for each SQL
+statement.
 </p>
 
 <p>
-Most of the time, the query planner in SQLite does a good job on its
-own and without outside help.
+Most of the time, the query planner in SQLite does a good job.
 However, the query planner needs indices to
-work with and it usually falls to the programmer to add indices to the
-schema that are sufficient for the query planner to accomplish its task.
+work with.  
+These indices must normally be added by programmers.
+Rarely, the query planner AI will make a suboptimal algorithm
+choice.
+In those cases, programmers may want to provide additional
+hints to help the query planner do a better job.
 </p>
 
 <p>
-This document is intended to provide programmers who are new to SQL
-with background information to help them understand
-what is going on behind the scenes with SQLite, which in turn should make
-it easier for programmers to create the indices that will help the SQLite
-query planner to pick the best plans.
+This document provides background information about how the
+SQLite query planner and query engine work.
+Programmers can use this information to help create better
+indexes, and provide hints to help the query planner when
+needed.
+</p>
+
+<p>
+Additional information is provided in the
+<a href="queryplanner-ng.html">next generation query planner</a> document.
 </p>
 
 <a name="searching"></a>
@@ -192,7 +207,7 @@ Figure 1: Logical Layout Of Table "FruitsForSale"
 
 
 <p>
-The key features to notice in this example is that the rowids are not
+In this example, the rowids are not
 consecutive but they are ordered.  SQLite usually creates rowids beginning
 with one and increasing by one with each added row.  But if rows are 
 deleted, gaps can appear in the sequence.  And the application can control
@@ -202,7 +217,7 @@ unique and in strictly ascending order.
 </p>
 
 <p>
-Now suppose you want to look up the price of peaches.  The query would
+Suppose you want to look up the price of peaches.  The query would
 be as follows:
 </p>
 
@@ -212,15 +227,17 @@ SELECT price FROM fruitsforsale WHERE fruit='Peach';
 
 
 <p>
-In order to satisfy this query, SQLite has to read every row out of the
-table, check to see if the "fruit" column has the value of "Peach" and if
-so, output the "price" column from that row.  The process is illustrated
+To satisfy this query, SQLite reads every row out of the
+table, checks to see if the "fruit" column has the value of "Peach" and if
+so, outputs the "price" column from that row.  The process is illustrated
 by <a href="#fig2">figure 2</a> below.
-This is called a <i>full table scan</i> since the entire content of the
+This is algorithm is called a <i>full table scan</i> 
+since the entire content of the
 table must be read and examined in order to find the one row of interest.
-With a table of only 7 rows, this is not a big deal, but if your table
-contained 7 million rows, a full table scan might read megabytes of content in order to find a single 8-byte number.  For that reason, one normally
-tries to avoid full table scans.
+With a table of only 7 rows, a full table scan is acceptable, 
+but if the table contained 7 million rows, a full table scan might read 
+megabytes of content in order to find a single 8-byte number.  
+For that reason, one normally tries to avoid full table scans.
 </p>
 
 <a name='fig2'></a>
@@ -234,7 +251,7 @@ Figure 2: Full Table Scan
 
 <p>
 One technique for avoiding a full table scan is to do lookups by
-rowid (or by the equivalent INTEGER PRIMARY KEY).   To lookup the
+rowid (or by the equivalent <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>).   To lookup the
 price of peaches, one would query for the entry with a rowid of 4:
 </p>
 
@@ -245,12 +262,12 @@ SELECT price FROM fruitsforsale WHERE rowid=4;
 
 <p>
 Since the information is stored in the table in rowid order, SQLite
-can find the correct row using a binary search on the rowid.
+can find the correct row using a binary search.
 If the table contains N element, the time required to look up the
 desired row is proportional to logN rather than being proportional
 to N as in a full table scan.  If the table contains 10 million elements,
 that means the query will be on the order of N/logN or about 1 million
-times faster!
+times faster.
 </p>
 
 <a name='fig3'></a>
@@ -299,7 +316,7 @@ Figure 4: An Index On The Fruit Column
 
 
 <p>
-With the new index in place, we can devise an alternative plan for the
+This new index can be used to implement a faster algorithm for the
 original "Price of Peaches" query.
 </p>
 
@@ -313,10 +330,12 @@ The query starts by doing a binary search on the Idx1 index for entries
 that have fruit='Peach'.  SQLite can do this binary search on the Idx1 index
 but not on the original FruitsForSale table because the rows in Idx1 are sorted
 by the "fruit" column.  Having found a row in the Idx1 index that has
-fruit='Peach', the database engine can extract the rowid for that row,
-then do a separate binary search on the original FruitsForSale table to find the
-original row that contains fruit='Peach'.  From the row in the FruitsForSale table,
-SQLite can extract the value of the price column.
+fruit='Peach', the database engine can extract the rowid for that row.
+Then the database engines does a second binary search
+on the original FruitsForSale table to find the
+original row that contains fruit='Peach'.  
+From the row in the FruitsForSale table,
+SQLite can then extract the value of the price column.
 This procedure is illustrated by <a href="#fig5">figure 5</a>.
 </p>
 
@@ -949,18 +968,19 @@ are:
 </p><ol>
 <li>Multiple small sorts collectively use fewer CPU cycles than a single
     large sort.
-<li>Each small sort is run independently, meaning that much less information
+</li><li>Each small sort is run independently, meaning that much less information
     needs to be kept in temporary storage at any one time.
-<li>Those columns of the ORDER BY that are already in the correct order
+</li><li>Those columns of the ORDER BY that are already in the correct order
     due to indexes can be omitted from the sort key, further reducing
     storage requirements and CPU time.
-<li>Output rows can be returned to the application as each small sort
+</li><li>Output rows can be returned to the application as each small sort
     completes, and well before the table scan is complete.
-<li>If a LIMIT clause is present, it might be possible to avoid scanning
+</li><li>If a LIMIT clause is present, it might be possible to avoid scanning
     the entire table.
-</li></li></li></li></li></ol>
-Because of these advantages, SQLite always tries to do a partial sort using an
-index even if a complete sort by index is not possible.
+</li></ol>
+
+<p>Because of these advantages, SQLite always tries to do a partial sort using an
+index even if a complete sort by index is not possible.</p>
 
 <h1 id="_without_rowid_tables"><span>4. </span> WITHOUT ROWID tables</h1>
 

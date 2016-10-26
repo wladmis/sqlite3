@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -320,12 +322,12 @@ more restrictive:
 </p><ul>
 <li>A dot-command must begin with the "." at the left margin
     with no preceding whitespace.
-<li>The dot-command must be entirely contained on a single input line.
-<li>A dot-command cannot occur in the middle of an ordinary SQL
+</li><li>The dot-command must be entirely contained on a single input line.
+</li><li>A dot-command cannot occur in the middle of an ordinary SQL
     statement.  In other words, a dot-command cannot occur at a
     continuation prompt.
-<li>Dot-commands do not recognize comments.
-</li></li></li></li></ul>
+</li><li>Dot-commands do not recognize comments.
+</li></ul>
 
 <p>And, of course, it is important to remember that the dot-commands
 are interpreted by the sqlite3.exe command-line program, not by
@@ -466,7 +468,8 @@ CGI.</p>
 to "column" and to set the column widths to values that are reasonable
 for looking at the output of an <a href="lang_explain.html">EXPLAIN</a> command.
 
-</p><p>Beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a>, the command-line shell defaults to
+</p><p>Beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> (2016-02-15), 
+the command-line shell defaults to
 "auto-explain" mode, in which the EXPLAIN commands are automatically
 detected and the output is automatically formatted.  So the ".explain"
 command has become superfluous.
@@ -511,7 +514,7 @@ sqlite3&gt; <b>SELECT * FROM bigTable;</b>
 <h2 id="file_i_o_functions"><span>6.1. </span>File I/O Functions</h2>
 
 <p>The command-line shell adds two <a href="c3ref/create_function.html">application-defined SQL functions</a> that
-facilitate reading content from a file into an table column, and writing the
+facilitate reading content from a file into a table column, and writing the
 content of a column into a file, respectively.
 
 </p><p>The readfile(X) SQL function reads the entire content of the file named

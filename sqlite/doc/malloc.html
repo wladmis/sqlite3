@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -221,7 +223,7 @@ third-party memory debuggers (such as <a href="http://dmalloc.com">dmalloc</a> o
 <a href="http://valgrind.org">valgrind</a>) can be used to verify correct
 memory allocation behavior.</p>
 
-<li><p>
+</li><li><p>
 <b>Minimal calls to the allocator.</b>
 The system malloc() and free() implementations are inefficient
 on many systems.  SQLite strives to reduce overall processing time
@@ -236,7 +238,7 @@ routines used by SQLite through the
 <a href="c3ref/free.html">sqlite3_malloc()</a>, <a href="c3ref/free.html">sqlite3_realloc()</a>, and <a href="c3ref/free.html">sqlite3_free()</a> interfaces.
 </p></li>
 
-</li></ul>
+</ul>
 
 <a name="testing"></a>
 <h1 id="_testing"><span>2. </span> Testing</h1>
@@ -509,34 +511,10 @@ allocator should use memsys5 in preference to memsys3.  Memsys3 is
 considered both experimental and deprecated and will likely be removed 
 from the source tree in a future release of SQLite.</p>
 
-<p>Code for memsys4 is still in the SQLite source tree (as of this writing - 
-SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a>), but it has not been maintained for several release
-cycles and probably does not work.  (Update: memsys4 was removed as
-of <a href="releaselog/3_6_5.html">version 3.6.5</a>) Memsys4 was an attempt to use mmap()
-to obtain memory and then use madvise() to release unused pages
-back to the operating system so that they could be reused by other
-processes.  The work on memsys4 has been abandoned and the memsys4 module
-will likely be removed from the source tree in the near future.</p>
-
-<p>Memsys6 uses system malloc() and free() to obtain the memory it needs.
-Memsys6 serves as an aggregator.  Memsys6 only calls system malloc() to obtain
-large allocations.  It then subdivides those large allocations to services 
-multiple smaller memory allocation requests coming from the SQLite core.
-Memsys6 is intended for use in systems where
-system malloc() is particularly inefficient.  The idea behind memsys6 is
-to reduce the number of calls to system malloc() by a factor of 10 or more.</p>
-
-<p>Memsys6 is made available by compiling SQLite with the SQLITE_ENABLE_MEMSYS6
-compile-time option and then at start-time invoking:</p>
-
-<blockquote><pre>
-<a href="c3ref/config.html">sqlite3_config</a>(SQLITE_CONFIG_CHUNKALLOC);
-</pre></blockquote>
-
-<p>Memsys6 was added in SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a>.
-It is very experimental.  Its future is uncertain and it may be removed
-in a subsequent release.  Update:  Memsys6 was removed as of 
-<a href="releaselog/3_6_5.html">version 3.6.5</a>.</p>
+<p>Memsys4 and memsys6 were experimental memory allocators
+introduced in around 2007 and subsequently removed from the
+source tree in around 2008, after it became clear that they
+added no new value.</p>
 
 <p>Other experimental memory allocators might be added in future releases
 of SQLite.  One may anticipate that these will be called memsys7, memsys8,
@@ -718,7 +696,8 @@ many calls to malloc() and free() - so many calls that malloc() and
 free() end up using a significant fraction of the CPU time assigned
 to SQLite.</p>
 
-<p>SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a> introduced the lookaside memory allocator to
+<p>SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a> (2008-08-06)
+introduced the lookaside memory allocator to
 help reduce the memory allocation load.  In the lookaside allocator,
 each <a href="c3ref/sqlite3.html">database connection</a> preallocates a single large chunk of memory
 (typically in the range of 50 to 100 kilobytes) and divides that chunk
@@ -874,7 +853,8 @@ ahead and allocations the extra memory and exceeds its limit.  This occurs
 under the theory that it is better to use additional memory than to fail
 outright.</p>
 
-<p>As of SQLite version 3.6.1, the soft heap limit only applies to the
+<p>As of SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a> (2008-08-06), 
+the soft heap limit only applies to the
 general-purpose memory allocator.  The soft heap limit does not know
 about or interact with the <a href="malloc.html#scratch">scratch memory allocator</a>, 
 the <a href="malloc.html#pagecache">pagecache memory allocator</a>, or the <a href="malloc.html#lookaside">lookaside memory allocator</a>.
@@ -1134,7 +1114,7 @@ this task.</p>
 <a name="stability"></a>
 <h1 id="_stability_of_memory_interfaces"><span>5. </span> Stability Of Memory Interfaces</h1>
 
-<p><b>Update:</b> As of SQLite version 3.7.0 (2010-07-22), 
+<p><b>Update:</b> As of SQLite version 3.7.0 (2010-07-21), 
 all of SQLite memory allocation interfaces
 are considered stable and will be supported in future releases.</p>
 

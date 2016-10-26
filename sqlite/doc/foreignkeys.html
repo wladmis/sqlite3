@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -120,7 +122,7 @@ mk.innerHTML = "&#x25ba;";
 <h2 style="margin-left:1.0em" notoc="1" id="overview"> Overview</h2>
 
 <p>This document describes the support for SQL foreign key constraints
-   introduced in SQLite version 3.6.19. 
+   introduced in SQLite <a href="releaselog/3_6_19.html">version 3.6.19</a> (2009-10-14). 
 
 </p><p>The first section introduces the 
    concept of an SQL foreign key by example and defines the terminology 
@@ -285,21 +287,21 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
         <i>referenced table</i>, which is arguably more correct, but tends
         to lead to confusion.
 
-    </p><li><p>The <b>child table</b> is the table that a foreign key constraint
+    </p></li><li><p>The <b>child table</b> is the table that a foreign key constraint
         is applied to and the table that contains the REFERENCES clause.
         The example in this section uses the <i>track</i> table
         as the child table. Other books and articles refer to this as the
         <i>referencing table</i>.
 
-    </p><li><p>The <b>parent key</b> is the column or set of columns in the parent 
+    </p></li><li><p>The <b>parent key</b> is the column or set of columns in the parent 
         table that the foreign key constraint refers to. This is normally, but
         not always, the primary key of the parent table.  The parent key must
         be a named column or columns in the parent table, not the <a href="lang_createtable.html#rowid">rowid</a>.
 
-    </p><li><p>The <b>child key</b> is the column or set of columns in the child 
+    </p></li><li><p>The <b>child key</b> is the column or set of columns in the child 
         table that are constrained by the foreign key constraint and which
         hold the REFERENCES clause.
-  </p></li></li></li></li></ul>
+  </p></li></ul>
 
   <p>
     The foreign key constraint is satisfied if for each row in the child table 
@@ -315,10 +317,10 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
   </p><ul>
     <li><p>When comparing text values, the <a href="datatype3.html#collation">collating sequence</a>
         associated with the parent key column is always used.
-    </p><li><p>When comparing values, if the parent key column has an <a href="datatype3.html#affinity">affinity</a>,
+    </p></li><li><p>When comparing values, if the parent key column has an <a href="datatype3.html#affinity">affinity</a>,
         then that affinity is applied to the child key value before the
         comparison is performed.  
-  </p></li></li></ul>
+  </p></li></ul>
 
 <a name="fk_enable"></a>
 <h1 id="fk_enable" tags="foreign key constraints are enabled"><span>2. </span>
@@ -329,7 +331,8 @@ sqlite&gt; UPDATE artist SET artistid=4 WHERE artistname = 'Dean Martin';
     be compiled with neither <a href="compile.html#omit_foreign_key">SQLITE_OMIT_FOREIGN_KEY</a> or 
     <a href="compile.html#omit_trigger">SQLITE_OMIT_TRIGGER</a> defined. If SQLITE_OMIT_TRIGGER is defined 
     but SQLITE_OMIT_FOREIGN_KEY is not, then SQLite behaves as it did prior 
-    to version 3.6.19 - foreign key definitions are parsed and may be 
+    to <a href="releaselog/3_6_19.html">version 3.6.19</a> (2009-10-14)
+    - foreign key definitions are parsed and may be 
     queried using <a href="pragma.html#pragma_foreign_key_list">PRAGMA foreign_key_list</a>, but foreign key constraints 
     are not enforced. The <a href="pragma.html#pragma_foreign_keys">PRAGMA foreign_keys</a> command is a no-op in this 
     configuration. If OMIT_FOREIGN_KEY is defined, then foreign key 
@@ -433,15 +436,15 @@ CREATE TABLE child7(r REFERENCES parent(c));                           <i>-- Err
 
   </p><ul>
     <li> The parent table does not exist, or
-    <li> The parent key columns named in the foreign key constraint do
+    </li><li> The parent key columns named in the foreign key constraint do
          not exist, or
-    <li> The parent key columns named in the foreign key constraint are not
+    </li><li> The parent key columns named in the foreign key constraint are not
          the primary key of the parent table and are not subject to a unique
          constraint using collating sequence specified in the CREATE TABLE, or
-    <li> The child table references the primary key of the parent without
+    </li><li> The child table references the primary key of the parent without
          specifying the primary key columns and the number of primary key
          columns in the parent do not match the number of child key columns.
-  </li></li></li></li></ul>
+  </li></ul>
 
   <p>
     The last bullet above is illustrated by the following:
@@ -681,7 +684,7 @@ sqlite3&gt; COMMIT;
      parent key is modified or deleted from the database, no special action is
      taken.
 
-    </p><li><p> <b>RESTRICT</b>: The "RESTRICT" action means that the application
+    </p></li><li><p> <b>RESTRICT</b>: The "RESTRICT" action means that the application
       is prohibited from deleting (for ON DELETE RESTRICT) or modifying
       (for ON UPDATE RESTRICT) a parent key when there exists one or more child
       keys mapped to it. The difference between the effect of a RESTRICT
@@ -695,25 +698,25 @@ sqlite3&gt; COMMIT;
       return an error immediately if a parent key with dependent child keys is 
       deleted or modified.
 
-    </p><li><p> <b>SET NULL</b>: If the configured action is "SET NULL", then when
+    </p></li><li><p> <b>SET NULL</b>: If the configured action is "SET NULL", then when
       a parent key is deleted (for ON DELETE SET NULL) or modified (for ON 
       UPDATE SET NULL), the child key columns of all rows in the child table
       that mapped to the parent key are set to contain SQL NULL values.
 
-    </p><li><p> <b>SET DEFAULT</b>: The "SET DEFAULT" actions are similar to
+    </p></li><li><p> <b>SET DEFAULT</b>: The "SET DEFAULT" actions are similar to
       "SET NULL",
       except that each of the child key columns is set to contain the columns 
       default value instead of NULL. Refer to the <a href="lang_createtable.html">CREATE TABLE</a> 
       documentation for details on how default values are assigned to table
       columns.
 
-    </p><li><p> <b>CASCADE</b>: A "CASCADE" action propagates the delete or update
+    </p></li><li><p> <b>CASCADE</b>: A "CASCADE" action propagates the delete or update
       operation on the parent key to each dependent child key. For an "ON 
       DELETE CASCADE" action, this means that each row in the child table that
       was associated with the deleted parent row is also deleted. For an "ON
       UPDATE CASCADE" action, it means that the values stored in each dependent
       child key are modified to match the new parent key values.
-  </p></li></li></li></li></li></ul>
+  </p></li></ul>
 
   <p>
     For example, adding an "ON UPDATE CASCADE" clause to the foreign key as
@@ -836,11 +839,11 @@ END;
 
   </p><ol>
    <li> Execute applicable BEFORE trigger programs,
-   <li> Check local (non foreign key) constraints,
-   <li> Update or delete the row in the parent table,
-   <li> Perform any required foreign key actions,
-   <li> Execute applicable AFTER trigger programs.
-  </li></li></li></li></li></ol>
+   </li><li> Check local (non foreign key) constraints,
+   </li><li> Update or delete the row in the parent table,
+   </li><li> Perform any required foreign key actions,
+   </li><li> Execute applicable AFTER trigger programs.
+  </li></ol>
 
   <p>
     There is one important difference between ON UPDATE foreign key actions and
@@ -907,14 +910,14 @@ null
          value of the new column is NULL. Attempting to do so returns an
          error.
 
-    </p><li><p> 
+    </p></li><li><p> 
          If an "ALTER TABLE ... RENAME TO" command is used to rename a table
          that is the parent table of one or more foreign key constraints, the
          definitions of the foreign key constraints are modified to refer to
          the parent table by its new name. The text of the child CREATE
          TABLE statement or statements stored in the sqlite_master table are 
          modified to reflect the new parent table name.
-  </p></li></li></ul>
+  </p></li></ul>
 
   <p>
     If foreign key constraints are enabled when it is prepared, the 
@@ -980,7 +983,7 @@ null
          SQLite parses MATCH clauses (i.e. does not report a syntax error
          if you specify one), but does not enforce them. All foreign key 
          constraints in SQLite are handled as if MATCH SIMPLE were specified.
-    </p><li> <p>
+    </p></li><li> <p>
       <b>No support for switching constraints between deferred and immediate 
          mode.</b> Many systems allow the user to toggle individual foreign key
          constraints between <a href="#fk_deferred">deferred</a> and immediate 
@@ -988,7 +991,7 @@ null
          SQLite does not support this. In SQLite, a foreign key constraint is
          permanently marked as deferred or immediate when it is created.
 
-    </p><li><p>
+    </p></li><li><p>
       <b>Recursion limit on foreign key actions.</b> The 
          <a href="limits.html#max_trigger_depth">SQLITE_MAX_TRIGGER_DEPTH</a> and <a href="c3ref/c_limit_attached.html#sqlitelimittriggerdepth">SQLITE_LIMIT_TRIGGER_DEPTH</a>
          settings determine the maximum allowable depth of trigger
@@ -997,5 +1000,5 @@ null
          <a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> setting does not affect the operation 
          of foreign key actions. It is not possible to disable recursive foreign 
          key actions.
-   </p></li></li></li></ol>
+   </p></li></ol>
 

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -78,7 +80,7 @@ return false;
 <h2>Single-file Cross-platform Database</h2>
 
 <p>
-A database in SQLite is a single disk file.
+A database in SQLite is a single disk file&sup1.
 Furthermore, the <a href="fileformat2.html">file format</a> is cross-platform.
 A database that is created on one machine can be
 copied and used on a different machine with
@@ -109,4 +111,13 @@ that the file format is cross-platform combine to make SQLite
 database files an excellent choice as an 
 <a href="appfileformat.html">Application File Format</a>.</p>
 </p>
+
+<hr>
+<div style='font-size: 75%;'>
+<p>Notes:
+<ol>
+<li>Temporary journal files are created as part of transaction control,
+but those extra files are not part of the steady-state database.
+</ol>
+</div>
 

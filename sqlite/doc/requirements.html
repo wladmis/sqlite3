@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -6256,10 +6258,6 @@ comments in the source code.
 <dd><p>The data_store_directory pragma may modify this variable and cause it to point to memory obtained from sqlite3_malloc.
 <i>(source: <a href="c3ref/data_directory.html">c3ref/data_directory.html</a>, matrix: <a href='matrix/c3ref/data_directory.html#R-32267-31938-07296-47086-37699-20446-18682-32942'>context</a>, <a href='matrix/matrix_ddata_directory.html#R-32267-31938-07296-47086-37699-20446-18682-32942'>detail</a>)</i></p></dd>
 
-<dt><b>R-32297-21015-24929-53880-34602-47692-61789-52266</b></dt>
-<dd><p>The page_size pragma will only cause an immediate change in the page size if it is issued while the database is still empty (prior to the first CREATE statement) and if the database is not in WAL mode.
-<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-32297-21015-24929-53880-34602-47692-61789-52266'>context</a>, <a href='matrix/matrix_dpragma.html#R-32297-21015-24929-53880-34602-47692-61789-52266'>detail</a>)</i></p></dd>
-
 <dt><b>R-32326-44592-25744-64223-64465-06212-39042-00138</b></dt>
 <dd><p>Unlike normal SQLite columns, an integer primary key or rowid column must contain integer values. Integer primary key or rowid columns are not able to hold floating point values, strings, BLOBs, or NULLs.
 <i>(source: <a href="lang_createtable.html">lang_createtable.html</a>, checked-by: tcl/e_createtable.test, matrix: <a href='matrix/lang_createtable.html#R-32326-44592-25744-64223-64465-06212-39042-00138'>context</a>, <a href='matrix/matrix_dlang_createtable.html#R-32326-44592-25744-64223-64465-06212-39042-00138'>detail</a>)</i></p></dd>
@@ -10295,6 +10293,10 @@ comments in the source code.
 <dt><b>R-52283-25228-19541-55999-19496-13674-36111-40642</b></dt>
 <dd><p>This second query would find both entry 1 (the SQLite.org office) which is entirely contained within the query box and also the 12th Congressional District which extends well outside the query box but still overlaps the query box.
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-52283-25228-19541-55999-19496-13674-36111-40642'>context</a>, <a href='matrix/matrix_drtree.html#R-52283-25228-19541-55999-19496-13674-36111-40642'>detail</a>)</i></p></dd>
+
+<dt><b>R-52287-25867-02377-32286-13836-33551-39021-58125</b></dt>
+<dd><p>The page_size pragma will only set in the page size if it is issued before any other SQL statements that cause I/O against the database file.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-52287-25867-02377-32286-13836-33551-39021-58125'>context</a>, <a href='matrix/matrix_dpragma.html#R-52287-25867-02377-32286-13836-33551-39021-58125'>detail</a>)</i></p></dd>
 
 <dt><b>R-52288-14881-36562-17691-64762-46156-12692-08866</b></dt>
 <dd><p><img src="images/syntax/detach-stmt.gif"><br>

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -123,7 +125,8 @@ overwrite property.
 
 <h2>SQLite Assumptions About Powersafe Overwrite</h2>
 
-<p>All versions of SQLite up to and including version 3.7.9 assume that
+<p>All versions of SQLite up to and including <a href="releaselog/3_7_9.html">version 3.7.9</a>
+(2011-11-01) assume that
 the filesystem does <u>not</u> provide powersafe overwrite.  SQLite 
 has traditionally assumed that when any one byte of a file changes, all
 other bytes within the same sector of that byte have the potential of
@@ -141,7 +144,8 @@ the sector size (or blast radius) for all versions of SQLite up to
 and including version 3.7.9.
 
 <p>Newer disk drives have begun using 4096 byte sectors however.  Beginning
-with SQLite version 3.7.10, the SQLite development team experimented with 
+with SQLite <a href="releaselog/3_7_10.html">version 3.7.10</a> (2012-01-16), 
+the SQLite development team experimented with 
 changes xSectorSize to report 4096 bytes as the blast radius.
 This had the effect of increasing write overhead on
 many databases.  For a database with a <a href="pragma.html#pragma_page_size">PRAGMA page_size</a> of 1024
@@ -191,7 +195,8 @@ to recover from a torn page.</p>
 
 <h2>Changes In SQLite Version 3.7.10</h2>
 
-<p>The <a href="vfs.html">VFS</a> for SQLite version 3.7.10 adds a new device characteristic 
+<p>The <a href="vfs.html">VFS</a> for SQLite <a href="releaselog/3_7_10.html">version 3.7.10</a> (2012-01-16)
+adds a new device characteristic 
 named <a href="c3ref/c_iocap_atomic.html">SQLITE_IOCAP_POWERSAFE_OVERWRITE</a>.  Database files that report this
 characteristic are assumed to reside on storage systems that have the
 powersafe overwrite property.

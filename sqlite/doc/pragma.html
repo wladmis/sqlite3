@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -112,16 +114,16 @@ built-in PRAGMA statements.</p>
 <hr /><a name="syntax"></a>
 <h2>PRAGMA command syntax</h2>
 <p><b><a href="syntax/pragma-stmt.html">pragma-stmt:</a></b>
-<button id='x1469' onclick='hideorshow("x1469","x1470")'>hide</button></p>
- <div id='x1470' class='imgcontainer'>
+<button id='x1477' onclick='hideorshow("x1477","x1478")'>hide</button></p>
+ <div id='x1478' class='imgcontainer'>
  <img alt="syntax diagram pragma-stmt" src="images/syntax/pragma-stmt.gif" />
 <p><b><a href="syntax/pragma-value.html">pragma-value:</a></b>
-<button id='x1471' onclick='hideorshow("x1471","x1472")'>hide</button></p>
- <div id='x1472' class='imgcontainer'>
+<button id='x1479' onclick='hideorshow("x1479","x1480")'>hide</button></p>
+ <div id='x1480' class='imgcontainer'>
  <img alt="syntax diagram pragma-value" src="images/syntax/pragma-value.gif" />
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
-<button id='x1473' onclick='hideorshow("x1473","x1474")'>show</button></p>
- <div id='x1474' style='display:none;' class='imgcontainer'>
+<button id='x1481' onclick='hideorshow("x1481","x1482")'>show</button></p>
+ <div id='x1482' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
 </div>
 </div>
@@ -162,11 +164,11 @@ pragmas for which the schema name is meaningful are shown with a
 <hr /><a name="toc"></a>
 <h2>List Of PRAGMAs</h2>
 <style>
-#listtab30 tr td {vertical-align:top;}
+#listtab28 tr td {vertical-align:top;}
 </style>
-<table id='listtab30' width='100%'></table>
+<table id='listtab28' width='100%'></table>
 <script>
-var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
+var listitems28 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
 {"u":"pragma.html#pragma_auto_vacuum","x":"auto_vacuum","s":0},
 {"u":"pragma.html#pragma_automatic_index","x":"automatic_index","s":0},
 {"u":"pragma.html#pragma_busy_timeout","x":"busy_timeout","s":0},
@@ -211,7 +213,7 @@ var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_read_uncommitted","x":"read_uncommitted","s":0},
 {"u":"pragma.html#pragma_recursive_triggers","x":"recursive_triggers","s":0},
 {"u":"pragma.html#pragma_reverse_unordered_selects","x":"reverse_unordered_selects","s":0},
-{"u":"pragma.html#pragma_schema_version","x":"schema_version","s":0},
+{"u":"pragma.html#pragma_schema_version","x":"schema_version","s":5},
 {"u":"pragma.html#pragma_secure_delete","x":"secure_delete","s":0},
 {"u":"pragma.html#pragma_short_column_names","x":"short_column_names","s":3},
 {"u":"pragma.html#pragma_shrink_memory","x":"shrink_memory","s":0},
@@ -222,45 +224,45 @@ var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_temp_store","x":"temp_store","s":0},
 {"u":"pragma.html#pragma_temp_store_directory","x":"temp_store_directory","s":3},
 {"u":"pragma.html#pragma_threads","x":"threads","s":0},
-{"u":"pragma.html#pragma_schema_version","x":"user_version","s":0},
+{"u":"pragma.html#pragma_user_version","x":"user_version","s":0},
 {"u":"pragma.html#pragma_vdbe_addoptrace","x":"vdbe_addoptrace","s":4},
 {"u":"pragma.html#pragma_vdbe_debug","x":"vdbe_debug","s":4},
 {"u":"pragma.html#pragma_vdbe_listing","x":"vdbe_listing","s":4},
 {"u":"pragma.html#pragma_vdbe_trace","x":"vdbe_trace","s":4},
 {"u":"pragma.html#pragma_wal_autocheckpoint","x":"wal_autocheckpoint","s":0},
 {"u":"pragma.html#pragma_wal_checkpoint","x":"wal_checkpoint","s":0},
-{"u":"pragma.html#pragma_writable_schema","x":"writable_schema","s":0}];
+{"u":"pragma.html#pragma_writable_schema","x":"writable_schema","s":5}];
 var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/250);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems30.length+1)/nCol);
+var nRow = Math.ceil((listitems28.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems30.length; i++){
+for(var i=0; i<listitems28.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems30[i].u=="" || listitems30[i].s==2){
+  if(listitems28[i].u=="" || listitems28[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems30[i].u;
+    h += listitems28[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems30[i].s==2 || listitems30[i].s==3) h += "<s>"
-  h += listitems30[i].x;
-  if(listitems30[i].s==2 || listitems30[i].s==3) h += "</s>"
+  if(listitems28[i].s==2 || listitems28[i].s==3) h += "<s>"
+  h += listitems28[i].x;
+  if(listitems28[i].s==2 || listitems28[i].s==3) h += "</s>"
   h += ea
-  if(listitems30[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems30[i].s==3) h += "&sup1\n";
-  if(listitems30[i].s==4) h += "&sup2\n";
-  if(listitems30[i].s==5) h += "&sup3\n";
+  if(listitems28[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems28[i].s==3) h += "&sup1\n";
+  if(listitems28[i].s==4) h += "&sup2\n";
+  if(listitems28[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab30").innerHTML = h;
+document.getElementById("listtab28").innerHTML = h;
 </script>
 
 <p>Notes:
@@ -286,6 +288,8 @@ for use in application programs.</ol></p>
        file type rather than just reporting "SQLite3 Database".  A list of
        assigned application IDs can be seen by consulting the
        <a href="http://www.sqlite.org/src/artifact?ci=trunk&filename=magic.txt">magic.txt</a> file in the SQLite source repository.
+
+<p>   See also the <a href="pragma.html#pragma_user_version">user_version pragma</a>.
 <a name="pragma_auto_vacuum"></a>
 <h _id=pragma_auto_vacuum style="display:none"> PRAGMA auto_vacuum</h><hr>
     <p><b>PRAGMA </b><i>schema.</i><b>auto_vacuum;<br>
@@ -348,7 +352,8 @@ for use in application programs.</ol></p>
      <br>PRAGMA automatic_index = </b><i>boolean</i><b>;</b></p>
 
     <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
-    <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default as of version 3.7.17,
+    <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default as of 
+    <a href="releaselog/3_7_17.html">version 3.7.17</a> (dateof:3.7.17]),
     but this might change in future releases of SQLite.
 <a name="pragma_busy_timeout"></a>
 <h _id=pragma_busy_timeout style="display:none"> PRAGMA busy_timeout</h><hr>
@@ -388,7 +393,7 @@ for use in application programs.</ol></p>
     of memory.
     <i>Backwards compatibility note:</i>
     The behavior of cache_size with a negative N
-    was different in SQLite versions prior to 3.7.10.  In
+    was different in prior to <a href="releaselog/3_7_10.html">version 3.7.10</a> (2012-01-16).  In
     version 3.7.9 and earlier, the number of pages in the cache was set
     to the absolute value of N.</p>
 
@@ -909,14 +914,16 @@ for use in application programs.</ol></p>
     volatile RAM.  This saves disk I/O but at the expense of database
     safety and integrity.  If the application using SQLite crashes in
     the middle of a transaction when the MEMORY journaling mode is set,
-    then the database file will very likely go corrupt.</p>
+    then the database file will very likely 
+    <a href="howtocorrupt.html#cfgerr">go corrupt</a>.</p>
 
     <p>The WAL journaling mode uses a <a href="wal.html">write-ahead log</a> instead of a
     rollback journal to implement transactions.  The WAL journaling mode
     is persistent; after being set it stays in effect
     across multiple database connections and after closing and
     reopening the database.  A database in WAL journaling mode
-    can only be accessed by SQLite version 3.7.0 or later.</p>
+    can only be accessed by SQLite <a href="releaselog/3_7_0.html">version 3.7.0</a> (2010-07-21)
+    or later.</p>
 
     <p>The OFF journaling mode disables the rollback journal completely.
     No rollback journal is ever created and hence there is never a rollback
@@ -926,7 +933,8 @@ for use in application programs.</ol></p>
     avoid using the <a href="lang_transaction.html">ROLLBACK</a> command when the journal mode is OFF.
     If the application crashes
     in the middle of a transaction when the OFF journaling mode is
-    set, then the database file will very likely go corrupt.</p>
+    set, then the database file will very likely
+    <a href="howtocorrupt.html#cfgerr">go corrupt</a>.</p>
 
     <p>Note that the journal_mode for an <a href="inmemorydb.html">in-memory database</a>
     is either MEMORY or OFF and can not be changed to a different value.
@@ -1120,7 +1128,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>When a new database is created, SQLite assigned a page size to
     the database based on platform and filesystem.  For many years,
     the default page size was almost always 1024 bytes, but beginning
-    with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a> in 2016, the default page size increased
+    with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a> (2016-03-29), 
+    the default page size increased
     to 4096.
 
     <p>The page_size pragma will only set in the
@@ -1194,8 +1203,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        <a href="c3ref/prepare.html">sqlite3_prepare()</a> interface may fail with an <a href="rescode.html#schema">SQLITE_SCHEMA</a> error
        after the recursive_triggers setting is changed.
 
-    <p>Prior to SQLite version 3.6.18, recursive triggers were not
-    supported.  The behavior of SQLite was always as if this pragma was
+    <p>Prior to SQLite <a href="releaselog/3_6_18.html">version 3.6.18</a> (2009-09-11), 
+    recursive triggers were not supported.
+    The behavior of SQLite was always as if this pragma was
     set to OFF.  Support for recursive triggers was added in version 3.6.18
     but was initially turned OFF by default, for compatibility.  Recursive
     triggers may be turned on by default in future versions of SQLite.
@@ -1231,31 +1241,36 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     that might be caused by linking against a different version of SQLite.
     </p>
 <a name="pragma_schema_version"></a>
-<h _id=pragma_schema_version style="display:none"> PRAGMA schema_version, user_version</h><hr>
+<h _id=pragma_schema_version style="display:none"> PRAGMA schema_version</h><hr>
     <p><b>PRAGMA </b><i>schema.</i><b>schema_version; 
-      <br>PRAGMA </b><i>schema.</i><b>schema_version = </b><i>integer </i><b>;
-      <br>PRAGMA </b><i>schema.</i><b>user_version;
-      <br>PRAGMA </b><i>schema.</i><b>user_version = </b><i>integer </i><b>;</b>
+      <br>PRAGMA </b><i>schema.</i><b>schema_version = </b><i>integer </i>;
 
+<p>   The schema_version pragma will to get or set
+       the value of the schema-version integer at offset 40 in the
+       <a href="fileformat2.html#database_header">database header</a>. 
+
+<p>    SQLite automatically increments the schema-version whenever the
+       schema changes. As each SQL statement runs, the schema version is
+       checked to ensure that the schema has not changed since the SQL
+       statement was <a href="c3ref/prepare.html">prepared</a>.
+       Subverting this mechanism by using "PRAGMA schema_version"
+       my cause SQL statement to run using an obsolete schema,
+       which can lead to incorrect answers and/or
+       <a href="howtocorrupt.html#cfgerr">database corruption</a>.
+
+       
+    <p><span style='background-color: #ffff60;'>
+    <b>Warning:</b>
+    Misuse of this pragma can result in <a href="howtocorrupt.html#cfgerr">database corruption</a>.
+    </span></p>
   
-<p>    The pragmas schema_version and user_version are used to set or get
-       the value of the schema-version and user-version, respectively. The
-       schema-version and the user-version are big-endian 32-bit signed
-       integers stored in the database header at offsets 40 and 60,
-       respectively.</p>
-  
-<p>    The schema-version is usually only manipulated internally by SQLite.  
-       It is incremented by SQLite whenever the database schema is modified 
-       (by creating or dropping a table or index). The schema version is 
-       used by SQLite each time a query is executed to ensure that the 
-       internal cache of the schema used when compiling the SQL query matches 
-       the schema of the database against which the compiled query is actually 
-       executed.  Subverting this mechanism by using "PRAGMA schema_version" 
-       to modify the schema-version is potentially dangerous and may lead 
-       to program crashes or database corruption. Use with caution!</p>
-  
-<p>    The user-version is not used internally by SQLite. It may be used by
-       applications for any purpose.</p>
+
+<p>    For the purposes of this pragma, the <a href="lang_vacuum.html">VACUUM</a> command is considered
+       a schema change, since <a href="lang_vacuum.html">VACUUM</a> will usual alter the "rootpage"
+       values for entries in the <a href="fileformat2.html#sqlite_master">sqlite_master table</a>.
+
+
+<p>    See also the <a href="pragma.html#pragma_application_id">application_id pragma</a> and <a href="pragma.html#pragma_user_version">user_version pragma</a>.
 <a name="pragma_secure_delete"></a>
 <h _id=pragma_secure_delete style="display:none"> PRAGMA secure_delete</h><hr>
     <p><b>PRAGMA </b><i>schema.</i><b>secure_delete;
@@ -1376,7 +1391,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     With synchronous OFF (0), SQLite continues without syncing
     as soon as it has handed data off to the operating system.
     If the application running SQLite crashes, the data will be safe, but
-    the database might become corrupted if the operating system
+    the database <a href="howtocorrupt.html#cfgerr">might become corrupted</a> if the operating system
     crashes or the computer loses power before that data has been written
     to the disk surface.  On the other hand, commits can be orders of
     magnitude faster with synchronous OFF.
@@ -1528,6 +1543,19 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p>This pragma is a thin wrapper around the
     <a href="c3ref/limit.html">sqlite3_limit</a>(db,<a href="c3ref/c_limit_attached.html#sqlitelimitworkerthreads">SQLITE_LIMIT_WORKER_THREADS</a>,...) interface.
     </p>
+<a name="pragma_user_version"></a>
+<h _id=pragma_user_version style="display:none"> PRAGMA user_version</h><hr>
+      <p><b>PRAGMA </b><i>schema.</i><b>user_version;
+      <br>PRAGMA </b><i>schema.</i><b>user_version = </b><i>integer </i><b>;</b>
+
+  
+<p>    The user_version pragma will to get or set
+       the value of the user-version integer at offset 60 in the
+       <a href="fileformat2.html#database_header">database header</a>.  The user-version is an integer that is
+       available to applications to use however they want.  SQLite
+       makes no use of the user-version itself.
+
+<p>    See also the <a href="pragma.html#pragma_application_id">application_id pragma</a> and <a href="pragma.html#pragma_schema_version">schema_version pragma</a>.
 <a name="pragma_vdbe_addoptrace"></a>
 <h _id=pragma_vdbe_addoptrace style="display:none"> PRAGMA vdbe_addoptrace</h><hr>
     <p><b>PRAGMA vdbe_addoptrace = </b><i>boolean</i><b>;</b></p>
@@ -1698,8 +1726,9 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
 
     <p>When this pragma is on, the SQLITE_MASTER tables in which database
     can be changed using ordinary <a href="lang_update.html">UPDATE</a>, <a href="lang_insert.html">INSERT</a>, and <a href="lang_delete.html">DELETE</a>
-    statements.  Warning:  misuse of this pragma can easily result in
-    a corrupt database file.</p>
+    statements.  <span style='background-color: #ffff60;'><b>Warning:</b>
+    misuse of this pragma can easily result in
+    a <a href="howtocorrupt.html#cfgerr">corrupt database file</a>.</span></p>
 
 <hr>
 

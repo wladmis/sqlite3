@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -310,7 +312,8 @@ that it previously wrote.</p>
 <p>By default, SQLite assumes that an operating system call to write
 a range of bytes will not damage or alter any bytes outside of that range
 even if a power loss or OS crash occurs during that write.  We
-call this the "<a href="psow.html">powersafe overwrite</a>" property.  Prior to version 3.7.9,
+call this the "<a href="psow.html">powersafe overwrite</a>" property.  
+Prior to <a href="releaselog/3_7_9.html">version 3.7.9</a> (2011-11-01),
 SQLite did not assume powersafe overwrite.  But with the standard
 sector size increasing from 512 to 4096 bytes on most disk drives, it
 has become necessary to assume powersafe overwrite in order to maintain
@@ -336,7 +339,7 @@ multiple databases are discussed in later sections.</p>
 
 <img src="images/ac/commit-0.gif" align="right" hspace="15">
 
-</img><p>The state of the computer when a database connection is
+<p>The state of the computer when a database connection is
 first opened is shown conceptually by the diagram at the
 right.
 The area of the diagram on the extreme right (labeled "Disk") represents
@@ -353,13 +356,13 @@ user space is empty.
 </p>
 <br clear="both">
 
-</br><a name="rdlck"></a>
+<a name="rdlck"></a>
 
 <h2 id="_acquiring_a_read_lock"><span>3.2. </span> Acquiring A Read Lock</h2>
 
 <img src="images/ac/commit-1.gif" align="right" hspace="15">
 
-</img><p>Before SQLite can write to a database, it must first read
+<p>Before SQLite can write to a database, it must first read
 the database to see what is there already.  Even if it is just
 appending new data, SQLite still has to read in the database
 schema from the <b>sqlite_master</b> table so that it can know
@@ -389,12 +392,12 @@ process that created the lock exits.</p>
 
 <br clear="both">
 
-</br><a name="section_3_3"></a>
+<a name="section_3_3"></a>
 <h2 id="_reading_information_out_of_the_database"><span>3.3. </span> Reading Information Out Of The Database</h2>
 
 <img src="images/ac/commit-2.gif" align="right" hspace="15">
 
-</img><p>After the shared lock is acquired, we can begin reading
+<p>After the shared lock is acquired, we can begin reading
 information from the database file.  In this scenario, we
 are assuming a cold cache, so information must first be
 read from mass storage into the operating system cache then
@@ -411,13 +414,13 @@ only touch a small percentage of those pages.</p>
 
 <br clear="both">
 
-</br><a name="rsvdlock"></a>
+<a name="rsvdlock"></a>
 
 <h2 id="_obtaining_a_reserved_lock"><span>3.4. </span> Obtaining A Reserved Lock</h2>
 
 <img src="images/ac/commit-3.gif" align="right" hspace="15">
 
-</img><p>Before making changes to the database, SQLite first
+<p>Before making changes to the database, SQLite first
 obtains a "reserved" lock on the database file.  A reserved
 lock is similar to a shared lock in that both a reserved lock
 and shared lock allow other processes to read from the database
@@ -436,11 +439,11 @@ no other process should also begin trying to write to the
 database.</p>
 
 <br clear="both">
-</br><a name="section_3_5"></a>
+<a name="section_3_5"></a>
 <h2 id="_creating_a_rollback_journal_file"><span>3.5. </span> Creating A Rollback Journal File</h2>
 <img src="images/ac/commit-4.gif" align="right" hspace="15">
 
-</img><p>Prior to making any changes to the database file, SQLite first
+<p>Prior to making any changes to the database file, SQLite first
 creates a separate rollback journal file and writes into the 
 rollback journal the original
 content of the database pages that are to be altered.
@@ -468,11 +471,11 @@ written into the rollback journal.</p>
   disk itself.</p>
 
 <br clear="both">
-</br><a name="section_3_6"></a>
+<a name="section_3_6"></a>
 <h2 id="_changing_database_pages_in_user_space"><span>3.6. </span> Changing Database Pages In User Space</h2>
 <img src="images/ac/commit-5.gif" align="right" hspace="15">
 
-</img><p>After the original page content has been saved in the rollback
+<p>After the original page content has been saved in the rollback
 journal, the pages can be modified in user memory.  Each database
 connection has its own private copy of user space, so the changes
 that are made in user space are only visible to the database connection
@@ -483,11 +486,11 @@ modifying the database, other processes can continue to read their
 own copies of the original database content.</p>
 
 <br clear="both">
-</br><a name="section_3_7"></a>
+<a name="section_3_7"></a>
 <h2 id="_flushing_the_rollback_journal_file_to_mass_storage"><span>3.7. </span> Flushing The Rollback Journal File To Mass Storage</h2>
 <img src="images/ac/commit-6.gif" align="right" hspace="15">
 
-</img><p>The next step is to flush the content of the rollback journal
+<p>The next step is to flush the content of the rollback journal
 file to nonvolatile storage.
 As we will see later, 
 this is a critical step in insuring that the database can survive
@@ -505,11 +508,11 @@ on why we do this header modification and extra flush are provided
 in a later section of this paper.</p>
 
 <br clear="both">
-</br><a name="section_3_8"></a>
+<a name="section_3_8"></a>
 <h2 id="_obtaining_an_exclusive_lock"><span>3.8. </span> Obtaining An Exclusive Lock</h2>
 <img src="images/ac/commit-7.gif" align="right" hspace="15">
 
-</img><p>Prior to making changes to the database file itself, we must
+<p>Prior to making changes to the database file itself, we must
 obtain an exclusive lock on the database file.  Obtaining an
 exclusive lock is really a two-step process.  First SQLite obtains
 a "pending" lock.  Then it escalates the pending lock to an
@@ -535,22 +538,22 @@ all shared locks will clear and the pending lock will then be
 able to escalate into an exclusive lock.</p>
 
 <br clear="both">
-</br><a name="section_3_9"></a>
+<a name="section_3_9"></a>
 <h2 id="_writing_changes_to_the_database_file"><span>3.9. </span> Writing Changes To The Database File</h2>
 <img src="images/ac/commit-8.gif" align="right" hspace="15">
 
-</img><p>Once an exclusive lock is held, we know that no other
+<p>Once an exclusive lock is held, we know that no other
 processes are reading from the database file and it is
 safe to write changes into the database file.  Usually
 those changes only go as far as the operating systems disk
 cache and do not make it all the way to mass storage.</p>
 
 <br clear="both">
-</br><a name="section_3_10"></a>
+<a name="section_3_10"></a>
 <h2 id="0_flushing_changes_to_mass_storage"><span>3.10. </span>0 Flushing Changes To Mass Storage</h2>
 <img src="images/ac/commit-9.gif" align="right" hspace="15">
 
-</img><p>Another flush must occur to make sure that all the
+<p>Another flush must occur to make sure that all the
 database changes are written into nonvolatile storage.
 This is a critical step to ensure that the database will
 survive a power loss without damage.  However, because
@@ -560,11 +563,11 @@ this step together with the rollback journal file flush in section
 transaction commit in SQLite.</p>
 
 <br clear="both">
-</br><a name="section_3_11"></a>
+<a name="section_3_11"></a>
 <h2 id="1_deleting_the_rollback_journal"><span>3.11. </span>1 Deleting The Rollback Journal</h2>
 <img src="images/ac/commit-A.gif" align="right" hspace="15">
 
-</img><p>After the database changes are all safely on the mass
+<p>After the database changes are all safely on the mass
 storage device, the rollback journal file is deleted.
 This is the instant where the transaction commits.
 If a power failure or system crash occurs prior to this
@@ -610,11 +613,11 @@ is sufficiently changed to make it invalid.  Typically this happens
 as soon as the first byte of the header is zeroed.</p>
 
 <br clear="both">
-</br><a name="section_3_12"></a>
+<a name="section_3_12"></a>
 <h2 id="2_releasing_the_lock"><span>3.12. </span>2 Releasing The Lock</h2>
 <img src="images/ac/commit-B.gif" align="right" hspace="15">
 
-</img><p>The last step in the commit process is to release the
+<p>The last step in the commit process is to release the
 exclusive lock so that other processes can once again
 start accessing the database file.</p>
 
@@ -638,7 +641,7 @@ commonly the case that no changes have been made and the user
 space cache can be reused for a significant performance savings.</p>
 
 <br clear="both">
-</br><a name="rollback"></a>
+<a name="rollback"></a>
 
 <h1 id="_rollback"><span>4. </span> Rollback</h1>
 
@@ -655,7 +658,7 @@ the state it was in prior to the beginning of the transaction.</p>
 <h2 id="_when_something_goes_wrong_"><span>4.1. </span> When Something Goes Wrong...</h2>
 <img src="images/ac/rollback-0.gif" align="right" hspace="15">
 
-</img><p>Suppose the power loss occurred
+<p>Suppose the power loss occurred
 during <a href="#section_3_10">step 3.10</a> above,
 while the database changes were being written to disk.
 After power is restored, the situation might be something
@@ -672,11 +675,11 @@ all of the rollback journal is safely on nonvolatile storage
 prior to making any changes to the database file itself.</p>
 
 <br clear="both">
-</br><a name="section_4_2"></a>
+<a name="section_4_2"></a>
 <h2 id="_hot_rollback_journals"><span>4.2. </span> Hot Rollback Journals</h2>
 <img src="images/ac/rollback-1.gif" align="right" hspace="15">
 
-</img><p>The first time that any SQLite process attempts to access
+<p>The first time that any SQLite process attempts to access
 the database file, it obtains a shared lock as described in
 <a href="section_3_2">section 3.2</a> above.
 But then it notices that there is a 
@@ -692,16 +695,16 @@ are true:</p>
 
 <ul>
 <li>The rollback journal exists.
-<li>The rollback journal is not an empty file.
-<li>There is no reserved lock on the main database file.
-<li>The header of the rollback journal is well-formed and in particular
+</li><li>The rollback journal is not an empty file.
+</li><li>There is no reserved lock on the main database file.
+</li><li>The header of the rollback journal is well-formed and in particular
     has not been zeroed out.
-<li>The rollback journal does not
+</li><li>The rollback journal does not
 contain the name of a master journal file (see
 <a href="#section_5_5">section 5.5</a> below) or if does
 contain the name of a master journal, then that master journal
 file exists.
-</li></li></li></li></li></ul>
+</li></ul>
 
 <p>The presence of a hot journal is our indication
 that a previous process was trying to commit a transaction but
@@ -711,22 +714,22 @@ the database file is in an inconsistent state and needs to
 be repaired (by rollback) prior to being used.</p>
 
 <br clear="both">
-</br><a name="exlock"></a>
+<a name="exlock"></a>
 
 <h2 id="_obtaining_an_exclusive_lock_on_the_database"><span>4.3. </span> Obtaining An Exclusive Lock On The Database</h2>
 <img src="images/ac/rollback-2.gif" align="right" hspace="15">
 
-</img><p>The first step toward dealing with a hot journal is to
+<p>The first step toward dealing with a hot journal is to
 obtain an exclusive lock on the database file.  This prevents two
 or more processes from trying to rollback the same hot journal
 at the same time.</p>
 
 <br clear="both">
-</br><a name="section_4_4"></a>
+<a name="section_4_4"></a>
 <h2 id="_rolling_back_incomplete_changes"><span>4.4. </span> Rolling Back Incomplete Changes</h2>
 <img src="images/ac/rollback-3.gif" align="right" hspace="15">
 
-</img><p>Once a process obtains an exclusive lock, it is permitted
+<p>Once a process obtains an exclusive lock, it is permitted
 to write to the database file.  It then proceeds to read the
 original content of pages out of the rollback journal and write
 that content back to where it came from in the database file.
@@ -740,12 +743,12 @@ contain the same information as it did before the start of
 the aborted transaction.</p>
 
 <br clear="both">
-</br><a name="delhotjrnl"></a>
+<a name="delhotjrnl"></a>
 
 <h2 id="_deleting_the_hot_journal"><span>4.5. </span> Deleting The Hot Journal</h2>
 <img src="images/ac/rollback-4.gif" align="right" hspace="15">
 
-</img><p>After all information in the rollback journal has been
+<p>After all information in the rollback journal has been
 played back into the database file (and flushed to disk in case
 we encounter yet another power failure), the hot rollback journal
 can be deleted.</p>
@@ -757,12 +760,12 @@ deleting a file is expensive.  Either way, the journal is no
 longer hot after this step.</p>
 
 <br clear="both">
-</br><a name="cont"></a>
+<a name="cont"></a>
 
 <h2 id="_continue_as_if_the_uncompleted_writes_had_never_happened"><span>4.6. </span> Continue As If The Uncompleted Writes Had Never Happened</h2>
 <img src="images/ac/rollback-5.gif" align="right" hspace="15">
 
-</img><p>The final recovery step is to reduce the exclusive lock back
+<p>The final recovery step is to reduce the exclusive lock back
 to a shared lock.  Once this happens, the database is back in the
 state that it would have been if the aborted transaction had never
 started.  Since all of this recovery activity happens completely
@@ -770,7 +773,7 @@ automatically and transparently, it appears to the program using
 SQLite as if the aborted transaction had never begun.</p>
 
 <br clear="both">
-</br><a name="multicommit"></a>
+<a name="multicommit"></a>
 
 <h1 id="_multi_file_commit"><span>5. </span> Multi-file Commit</h1>
 
@@ -791,7 +794,7 @@ describes how SQLite works that bit of magic.</p>
 <h2 id="_separate_rollback_journals_for_each_database"><span>5.1. </span> Separate Rollback Journals For Each Database</h2>
 <img src="images/ac/multi-0.gif" align="right" hspace="15">
 
-</img><p>When multiple database files are involved in a transaction,
+<p>When multiple database files are involved in a transaction,
 each database has its own rollback journal and each database
 is locked separately.  The diagram at the right shows a scenario
 where three different database files have been modified within
@@ -816,12 +819,12 @@ just take up a lot of space in the diagrams and they do not add
 any new information, so they are omitted here.</p>
 
 <br clear="both">
-</br><a name="masterjrnl"></a>
+<a name="masterjrnl"></a>
 
 <h2 id="_the_master_journal_file"><span>5.2. </span> The Master Journal File</h2>
 <img src="images/ac/multi-1.gif" align="right" hspace="15">
 
-</img><p>The next step in a multi-file commit is the creation of a
+<p>The next step in a multi-file commit is the creation of a
 "master journal" file.  The name of the master journal file is
 the same name as the original database filename (the database
 that was opened using the 
@@ -854,12 +857,12 @@ have other settings that compromise integrity across a power-loss event
 the creation of the master journal is omitted, as an optimization.
 
 <br clear="both">
-</br><a name="multijrnlupdate"></a>
+<a name="multijrnlupdate"></a>
 
 </p><h2 id="_updating_rollback_journal_headers"><span>5.3. </span> Updating Rollback Journal Headers</h2>
 <img src="images/ac/multi-2.gif" align="right" hspace="15">
 
-</img><p>The next step is to record the full pathname of the master journal file
+<p>The next step is to record the full pathname of the master journal file
 in the header of every rollback journal.  Space to hold the master
 journal filename was reserved at the beginning of each rollback journal
 as the rollback journals were created.</p>
@@ -875,12 +878,12 @@ page of the journal file (the first page) has changed.</p>
 scenario described above.</p>
 
 <br clear="both">
-</br><a name="multidbupdate"></a>
+<a name="multidbupdate"></a>
 
 <h2 id="_updating_the_database_files"><span>5.4. </span> Updating The Database Files</h2>
 <img src="images/ac/multi-3.gif" align="right" hspace="15">
 
-</img><p>Once all rollback journal files have been flushed to disk, it
+<p>Once all rollback journal files have been flushed to disk, it
 is safe to begin updating database files.  We have to obtain an
 exclusive lock on all database files before writing the changes.
 After all the changes are written, it is important to flush the
@@ -895,11 +898,11 @@ scenario described previously.</p>
 
 
 <br clear="both">
-</br><a name="section_5_5"></a>
+<a name="section_5_5"></a>
 <h2 id="_delete_the_master_journal_file"><span>5.5. </span> Delete The Master Journal File</h2>
 <img src="images/ac/multi-4.gif" align="right" hspace="15">
 
-</img><p>The next step is to delete the master journal file.
+<p>The next step is to delete the master journal file.
 This is the point where the multi-file transaction commits.
 This step corresponds to 
 <a href="#section_3_11">step 3.11</a> in the single-file
@@ -916,12 +919,12 @@ a single-file commit) or if the master journal file still
 exists on disk.</p>
 
 <br clear="both">
-</br><a name="cleanup"></a>
+<a name="cleanup"></a>
 
 <h2 id="_clean_up_the_rollback_journals"><span>5.6. </span> Clean Up The Rollback Journals</h2>
 <img src="images/ac/multi-5.gif" align="right" hspace="15">
 
-</img><p>The final step in a multi-file commit is to delete the
+<p>The final step in a multi-file commit is to delete the
 individual rollback journals and drop the exclusive locks on
 the database files so that other processes can see the changes.
 This corresponds to 
@@ -1298,7 +1301,8 @@ COMMIT;
 since the journal file might be hot, in which case deleting it will
 corrupt the corresponding database file.</p>
 
-<p>Beginning in SQLite version 3.6.4, the TRUNCATE journal mode is
+<p>Beginning in SQLite <a href="releaselog/3_6_4.html">version 3.6.4</a> (2008-10-15), 
+the TRUNCATE journal mode is
 also supported:</p>
 
 <blockquote><pre>

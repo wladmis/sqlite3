@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -74,14 +76,15 @@ return false;
 </script>
 </div>
 <div class=nosearch><h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>VACUUM</h2></div><p><b><a href="syntax/vacuum-stmt.html">vacuum-stmt:</a></b>
-<button id='x1433' onclick='hideorshow("x1433","x1434")'>hide</button></p>
- <div id='x1434' class='imgcontainer'>
+<button id='x1441' onclick='hideorshow("x1441","x1442")'>hide</button></p>
+ <div id='x1442' class='imgcontainer'>
  <img alt="syntax diagram vacuum-stmt" src="images/syntax/vacuum-stmt.gif" />
 </div>
 
 
 <p>
-  The VACUUM command rebuilds the entire database. There are several 
+  The VACUUM command rebuilds the database file, repacking it into a minimal
+  amount of disk space. There are several 
   reasons an application might do this:
 
 <ul>
@@ -108,8 +111,15 @@ return false;
      support property can be changed using VACUUM.
 </ul>
 
-<p>VACUUM only works on the main database. It is not possible to VACUUM an
-attached database file.
+<p>By default, VACUUM only works only on the main database.
+<a href="lang_attach.html">Attached databases</a> can be vacuumed by appending the appropriate
+<span class='yyterm'>schema-name</span> to the VACUUM statement.
+
+<p><b>Compatibility Warning:</b> The ability to vacuum attached databases was
+added in <a href="releaselog/3_15_0.html">version 3.15.0</a> (2016-10-14).  Prior to that, a 
+<span class='yyterm'>schema-name</span> added to the
+VACUUM statement would be silently ignored and the "main" schema would be
+vacuumed.</p>
 
 <p>The VACUUM command works by copying the contents of the database into
 a temporary database file and then overwriting the original with the 
@@ -126,7 +136,7 @@ tables that do not have an explicit <a href="lang_createtable.html#rowid">INTEGE
 <p>A VACUUM will fail if there is an open transaction, or if there are one or
 more active SQL statements when it is run.
 
-<p>As of SQLite version 3.1, an alternative to using the VACUUM command to
+<p>An alternative to using the VACUUM command to
 reclaim space after data has been deleted is auto-vacuum mode, enabled using
 the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> pragma. When <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> is enabled for a database
 free pages may be reclaimed after deleting data, causing the file to shrink,

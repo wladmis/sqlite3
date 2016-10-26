@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -105,13 +107,14 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#_linux_threads">6.1.  Linux Threads</a></div>
 <div class="fancy-toc2"><a href="#_failures_of_mmap_on_qnx">6.2.  Failures of mmap() on QNX</a></div>
 <div class="fancy-toc2"><a href="#_filesystem_corruption">6.3.  Filesystem Corruption</a></div>
-<div class="fancy-toc1"><a href="#_bugs_in_sqlite">7.  Bugs in SQLite</a></div>
-<div class="fancy-toc2"><a href="#_false_corruption_reports_due_to_database_shrinkage">7.1.  False corruption reports due to database shrinkage</a></div>
-<div class="fancy-toc2"><a href="#_corruption_following_switches_between_rollback_and_wal_modes">7.2.  Corruption following switches between rollback and WAL modes</a></div>
-<div class="fancy-toc2"><a href="#_i_o_while_obtaining_a_lock_leads_to_corruption">7.3.  I/O while obtaining a lock leads to corruption</a></div>
-<div class="fancy-toc2"><a href="#_database_pages_leak_from_the_free_page_list">7.4.  Database pages leak from the free page list</a></div>
-<div class="fancy-toc2"><a href="#_corruption_following_alternating_writes_from_3_6_and_3_7_">7.5.  Corruption following alternating writes from 3.6 and 3.7.</a></div>
-<div class="fancy-toc2"><a href="#_race_condition_in_recovery_on_windows_system_">7.6.  Race condition in recovery on windows system.</a></div>
+<div class="fancy-toc1"><a href="#sqlite_configuration_errors">7. SQLite Configuration Errors</a></div>
+<div class="fancy-toc1"><a href="#_bugs_in_sqlite">8.  Bugs in SQLite</a></div>
+<div class="fancy-toc2"><a href="#_false_corruption_reports_due_to_database_shrinkage">8.1.  False corruption reports due to database shrinkage</a></div>
+<div class="fancy-toc2"><a href="#_corruption_following_switches_between_rollback_and_wal_modes">8.2.  Corruption following switches between rollback and WAL modes</a></div>
+<div class="fancy-toc2"><a href="#_i_o_while_obtaining_a_lock_leads_to_corruption">8.3.  I/O while obtaining a lock leads to corruption</a></div>
+<div class="fancy-toc2"><a href="#_database_pages_leak_from_the_free_page_list">8.4.  Database pages leak from the free page list</a></div>
+<div class="fancy-toc2"><a href="#_corruption_following_alternating_writes_from_3_6_and_3_7_">8.5.  Corruption following alternating writes from 3.6 and 3.7.</a></div>
+<div class="fancy-toc2"><a href="#_race_condition_in_recovery_on_windows_system_">8.6.  Race condition in recovery on windows system.</a></div>
 </div>
 </div>
 <script>
@@ -175,7 +178,8 @@ bug caused an assert() statement to emit
 an error message by invoking write(2,...).  But since file descriptor 2 was 
 now connected to a database file, the error message
 overwrote part of the database.  To guard against this kind of problem,
-SQLite <a href="releaselog/3_8_1.html">version 3.8.1</a> and later refuse to use low-numbered file descriptors
+SQLite <a href="releaselog/3_8_1.html">version 3.8.1</a> (2013-10-17)
+and later refuse to use low-numbered file descriptors
 for database files. 
 (See <a href="compile.html#minimum_file_descriptor">SQLITE_MINIMUM_FILE_DESCRIPTOR</a> for additional information.)</p>
 
@@ -333,7 +337,8 @@ opened and a new file is created with the old name.</p>
 <p>In other words, unlinking or renaming an open database file 
 results in behavior that is undefined and probably undesirable.</p>
 
-<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
+<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a> (2013-05-20),
+the unix OS interface will
 send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file is unlinked
 while it is still in use.</p>
 
@@ -352,11 +357,13 @@ for the appropriate journal.</p>
 <p>In other words, opening and using a database file that has two or
 more names results in behavior that is undefined and probably undesirable.</p>
 
-<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a>, the unix OS interface will
+<p>Beginning with SQLite <a href="releaselog/3_7_17.html">version 3.7.17</a> (2013-05-20),
+the unix OS interface will
 send SQLITE_WARNING messages to the <a href="errlog.html">error log</a> if a database file has 
 multiple hard links.</p>
 
-<p>Beginning with SQLite <a href="releaselog/3_10_0.html">version 3.10.0</a>, the unix OS interface will
+<p>Beginning with SQLite <a href="releaselog/3_10_0.html">version 3.10.0</a> (2016-01-06), 
+the unix OS interface will
 attempt to resolve symbolic links and open the database file by its
 canonical name.  Prior to version 3.10.0, opening a database file 
 through a symbolic link was similar to opening a database file
@@ -496,7 +503,8 @@ with respect to handling of POSIX advisory locks.  SQLite versions
 runtime and took appropriate action to work around the non-standard
 behavior of LinuxThreads.  But most modern Linux implementations make
 use of the newer, and correct, NPTL implementation of Pthreads.  Beginning
-with SQLite version 3.7.0, the use of NPTL is assumed.  No checks are 
+with SQLite <a href="releaselog/3_7_0.html">version 3.7.0</a> (2010-07-21), the use of NPTL is assumed.
+No checks are 
 made.  Hence, recent versions of SQLite will subtly malfunction and may 
 corrupt database files if used in multi-threaded application that run
 on older linux systems that make use of LinuxThreads.</p>
@@ -533,7 +541,34 @@ that had issues in the filesystem layer.  In that event, the filesystem
 eventually became so badly corrupted that the machine was unusable, but
 the earliest symptom of trouble was the corrupted SQLite database.</p>
 
-<h1 id="_bugs_in_sqlite"><span>7. </span> Bugs in SQLite</h1>
+<a name="cfgerr"></a>
+
+<h1 id="sqlite_configuration_errors"><span>7. </span>SQLite Configuration Errors</h1>
+
+<p>SQLite has many built-in protections against database corruption.
+But many of these protections can be disabled by configuration options.
+If protections are disabled, database corruption may occur.
+
+</p><p>The following are examples of disabling the built-in protections
+mechanisms of SQLite:
+
+</p><ul>
+<li><p>Setting <a href="pragma.html#pragma_synchronous">PRAGMA synchronous=OFF</a> can cause the database to
+go corrupt if there is an operating-system crass or power failure,
+though this setting is safe from damage due to application crashes.
+
+</p></li><li><p>Changing the <a href="pragma.html#pragma_schema_version">PRAGMA schema_version</a> while other database
+connections are open.
+
+</p></li><li><p>Using <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=OFF</a> or <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=MEMORY</a>
+and taking an application crash in the middle of a write transaction.
+
+</p></li><li><p>Setting <a href="pragma.html#pragma_writable_schema">PRAGMA writable_schema=ON</a> and then changing the
+database schema using DML statements can render the database completely
+unreadable, if not done carefully.
+</p></li></ul>
+
+<h1 id="_bugs_in_sqlite"><span>8. </span> Bugs in SQLite</h1>
 
 <p>SQLite is <a href="testing.html">very carefully tested</a> to help ensure that it is
 as bug-free as possible.  Among the many tests that are carried out for
@@ -556,7 +591,7 @@ kinds of bugs in SQLite that manage to slip through testing procedures
 and make it into a release.</p>
 
 
-<h2 id="_false_corruption_reports_due_to_database_shrinkage"><span>7.1. </span> False corruption reports due to database shrinkage</h2>
+<h2 id="_false_corruption_reports_due_to_database_shrinkage"><span>8.1. </span> False corruption reports due to database shrinkage</h2>
 
 <p>If a database is written by SQLite version 3.7.0 or later and then
 written again by SQLite version 3.6.23 or earlier in such a way as to
@@ -566,9 +601,9 @@ database file is corrupt.  The database file is not really corrupt, however.
 Version 3.7.0 was simply being overly zealous in its corruption detection.</p>
 
 <p>The problem was fixed on 2011-02-20.  The fix first appears in
-SQLite version 3.7.6.</p>
+SQLite <a href="releaselog/3_7_6.html">version 3.7.6</a> (2011-04-12).</p>
 
-<h2 id="_corruption_following_switches_between_rollback_and_wal_modes"><span>7.2. </span> Corruption following switches between rollback and WAL modes</h2>
+<h2 id="_corruption_following_switches_between_rollback_and_wal_modes"><span>8.2. </span> Corruption following switches between rollback and WAL modes</h2>
 
 <p>Repeatedly switching an SQLite database in and out of <a href="wal.html">WAL mode</a>
 and running the <a href="lang_vacuum.html">VACUUM</a> command in between switches, in one process or
@@ -581,7 +616,7 @@ cause database corruption.</p>
 observed in the wild.  The problem was fixed on 2011-01-27 and in version
 3.7.5.</p>
 
-<h2 id="_i_o_while_obtaining_a_lock_leads_to_corruption"><span>7.3. </span> I/O while obtaining a lock leads to corruption</h2>
+<h2 id="_i_o_while_obtaining_a_lock_leads_to_corruption"><span>8.3. </span> I/O while obtaining a lock leads to corruption</h2>
 
 <p>If the operating system returns an I/O error while attempting to obtain
 a certain lock on shared memory in <a href="wal.html">WAL mode</a> then SQLite might fail 
@@ -600,7 +635,7 @@ harness that simulates I/O errors.</p>
 
 <p>This problem was fixed on 2010-09-20 for SQLite version 3.7.3.</p>
 
-<h2 id="_database_pages_leak_from_the_free_page_list"><span>7.4. </span> Database pages leak from the free page list</h2>
+<h2 id="_database_pages_leak_from_the_free_page_list"><span>8.4. </span> Database pages leak from the free page list</h2>
 
 <p>When content is deleted from an SQLite database, pages that are no
 longer used are added to a free list and are reused to hold content
@@ -613,7 +648,7 @@ pages missing from the free list.</p>
 
 <p>This problem was fixed on 2010-08-23 for SQLite version 3.7.2.</p>
 
-<h2 id="_corruption_following_alternating_writes_from_3_6_and_3_7_"><span>7.5. </span> Corruption following alternating writes from 3.6 and 3.7.</h2>
+<h2 id="_corruption_following_alternating_writes_from_3_6_and_3_7_"><span>8.5. </span> Corruption following alternating writes from 3.6 and 3.7.</h2>
 
 <p>SQLite version 3.7.0 introduced a number of new enhancements to
 the SQLite database file format (such as but not limited to <a href="wal.html">WAL</a>).
@@ -627,7 +662,7 @@ file could go corrupt.</p>
 
 <p>This problem was fixed on 2010-08-04 for SQLite version 3.7.1.</p>
 
-<h2 id="_race_condition_in_recovery_on_windows_system_"><span>7.6. </span> Race condition in recovery on windows system.</h2>
+<h2 id="_race_condition_in_recovery_on_windows_system_"><span>8.6. </span> Race condition in recovery on windows system.</h2>
 
 <p>SQLite version 3.7.16.2 fixes a subtle race condition in the locking
 logic on Windows systems.  When a database file is in need

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -78,6 +80,41 @@ return false;
 <div class="fancy_title">
 Write-Ahead Logging
 </div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#overview">1. Overview</a></div>
+<div class="fancy-toc1"><a href="#how_wal_works">2. How WAL Works</a></div>
+<div class="fancy-toc2"><a href="#checkpointing">2.1. Checkpointing</a></div>
+<div class="fancy-toc2"><a href="#concurrency">2.2. Concurrency</a></div>
+<div class="fancy-toc2"><a href="#performance_considerations">2.3. Performance Considerations</a></div>
+<div class="fancy-toc1"><a href="#activating_and_configuring_wal_mode">3. Activating And Configuring WAL Mode</a></div>
+<div class="fancy-toc2"><a href="#automatic_checkpoint">3.1. Automatic Checkpoint</a></div>
+<div class="fancy-toc2"><a href="#application_initiated_checkpoints">3.2. Application-Initiated Checkpoints</a></div>
+<div class="fancy-toc2"><a href="#persistence_of_wal_mode">3.3. Persistence of WAL mode</a></div>
+<div class="fancy-toc1"><a href="#read_only_databases">4. Read-Only Databases</a></div>
+<div class="fancy-toc1"><a href="#avoiding_excessively_large_wal_files">5. Avoiding Excessively Large WAL Files</a></div>
+<div class="fancy-toc1"><a href="#implementation_of_shared_memory_for_the_wal_index">6. Implementation Of Shared-Memory For The WAL-Index</a></div>
+<div class="fancy-toc1"><a href="#use_of_wal_without_shared_memory">7. Use of WAL Without Shared-Memory</a></div>
+<div class="fancy-toc1"><a href="#sometimes_queries_return_sqlite_busy_in_wal_mode">8. Sometimes Queries Return SQLITE_BUSY In WAL Mode</a></div>
+<div class="fancy-toc1"><a href="#backwards_compatibility">9. Backwards Compatibility</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
 </div>
 
 
@@ -88,21 +125,23 @@ Write-Ahead Logging
 
 <p>The default method by which SQLite implements
 <a href="atomiccommit.html">atomic commit and rollback</a> is a <a href="lockingv3.html#rollback">rollback journal</a>.
-Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a>, a new "Write-Ahead Log" option
+Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a> (2010-07-21), a new "Write-Ahead Log" option
 (hereafter referred to as "WAL") is available.</p>
 
 <p>There are advantages and disadvantages to using WAL instead of
 a rollback journal.  Advantages include:</p>
 
+<a name="advantages"></a>
+
 <ol>
 <li>WAL is significantly faster in most scenarios.
-<li>WAL provides more concurrency as readers do not block writers and 
+</li><li>WAL provides more concurrency as readers do not block writers and 
     a writer does not block readers.  Reading and writing can proceed 
     concurrently.
-<li>Disk I/O operations tends to be more sequential using WAL.
-<li>WAL uses many fewer fsync() operations and is thus less vulnerable to
+</li><li>Disk I/O operations tends to be more sequential using WAL.
+</li><li>WAL uses many fewer fsync() operations and is thus less vulnerable to
     problems on systems where the fsync() system call is broken.
-</li></li></li></li></ol>
+</li></ol>
 
 <p>But there are also disadvantages:</p>
 
@@ -113,41 +152,42 @@ a rollback journal.  Advantages include:</p>
     The built-in unix and windows VFSes
     support this but third-party extension VFSes for custom operating
     systems might not.
-<li>All processes using a database must be on the same host computer;
+</li><li>All processes using a database must be on the same host computer;
     WAL does not work over a network filesystem.
-<li>Transactions that involve changes against multiple <a href="lang_attach.html">ATTACHed</a>
+</li><li>Transactions that involve changes against multiple <a href="lang_attach.html">ATTACHed</a>
     databases are atomic for each individual database, but are not
     atomic across all databases as a set.
-<li>It is not possible to change the database page size after entering WAL
+</li><li>It is not possible to change the <a href="pragma.html#pragma_page_size">page_size</a> after entering WAL
     mode, either on an empty database or by using <a href="lang_vacuum.html">VACUUM</a> or by restoring
     from a backup using the <a href="backup.html">backup API</a>.  You must be in a rollback journal
     mode to change the page size.
-<li>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
+</li><li>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
     The opening process must have write privileges for "<tt>-shm</tt>"
     <a href="fileformat2.html#walindexformat">wal-index</a> shared memory file associated with the database, if that
     file exists, or else write access on the directory containing
     the database file if the "<tt>-shm</tt>" file does not exist.
-<li>WAL might be very slightly slower (perhaps 1% or 2% slower)
+</li><li>WAL might be very slightly slower (perhaps 1% or 2% slower)
     than the traditional rollback-journal approach
     in applications that do mostly reads and seldom write.
-<li>There is an additional quasi-persistent "<tt>-wal</tt>" file and
+</li><li>There is an additional quasi-persistent "<tt>-wal</tt>" file and
     "<tt>-shm</tt>" shared memory file associated with each
     database, which can make SQLite less appealing for use as an 
     <a href="appfileformat.html">application file-format</a>.
-<li>There is the extra operation of <a href="wal.html#ckpt">checkpointing</a> which, though automatic
+</li><li>There is the extra operation of <a href="wal.html#ckpt">checkpointing</a> which, though automatic
     by default, is still something that application developers need to
     be mindful of.
-<li><s>WAL works best with smaller transactions.  WAL does
+</li><li><s>WAL works best with smaller transactions.  WAL does
     not work well for very large transactions.  For transactions larger than
     about 100 megabytes, traditional rollback journal modes will likely
     be faster.  For transactions in excess of a gigabyte, WAL mode may 
     fail with an I/O or disk-full error.
     It is recommended that one of the rollback journal modes be used for
     transactions larger than a few dozen megabytes.</s>
-    Beginning with <a href="releaselog/3_11_0.html">version 3.11.0</a>, WAL mode works as efficiently with
+    Beginning with <a href="releaselog/3_11_0.html">version 3.11.0</a> (2016-02-15), 
+    WAL mode works as efficiently with
     large transactions as does rollback mode.
     
-</li></li></li></li></li></li></li></li></li></ol>
+</li></ol>
 
 <h1 id="how_wal_works"><span>2. </span>How WAL Works</h1>
 
@@ -476,7 +516,7 @@ or defer this automatic checkpoint.  If an application disables the
 automatic checkpoint, then there is nothing to prevent the WAL file
 from growing excessively.
 
-</p><li><p>
+</p></li><li><p>
 <b>Checkpoint starvation.</b>
 A checkpoint is only able to run to completion, and reset the WAL file,
 if there are no other database connections using the WAL file.  If another
@@ -503,7 +543,7 @@ runs to completion before returning.  The disadvantage of using
 <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_RESTART</a> and <a href="c3ref/c_checkpoint_full.html">SQLITE_CHECKPOINT_TRUNCATE</a> is that
 readers might block while the checkpoint is running.
 
-</p><li><p>
+</p></li><li><p>
 <b>Very large write transactions.</b>
 A checkpoint can only complete when no other transactions are running, 
 which means the WAL file cannot be reset in the middle of a write
@@ -512,13 +552,14 @@ might result in a large WAL file.  The WAL file will be checkpointed
 once the write transaction completes (assuming there are no other readers
 blocking it) but in the meantime, the file can grow very big.
 
-</p><p>As of SQLite version 3.11.0, the WAL file for a single transaction
+</p><p>As of SQLite <a href="releaselog/3_11_0.html">version 3.11.0</a> (2016-02-15), 
+the WAL file for a single transaction
 should be proportional in size to the transaction itself.  Pages that
 are changed by the transaction should only be written into the WAL file
 once.  However, with older versions of SQLite, the same page might be
 written into the WAL file multiple times if the transaction grows larger
 than the page cache.
-</p></li></li></li></ul>
+</p></li></ul>
 
 <h1 id="implementation_of_shared_memory_for_the_wal_index"><span>6. </span>Implementation Of Shared-Memory For The WAL-Index</h1>
 
@@ -556,7 +597,8 @@ can be implemented using heap memory instead of true shared memory.</p>
 
 <h1 id="use_of_wal_without_shared_memory"><span>7. </span>Use of WAL Without Shared-Memory</h1>
 
-<p>Beginning in SQLite version 3.7.4, WAL databases can be created, read, and
+<p>Beginning in SQLite <a href="releaselog/3_7_4.html">version 3.7.4</a> (2010-12-07), 
+WAL databases can be created, read, and
 written even if shared memory is unavailable as long as the
 <a href="pragma.html#pragma_locking_mode">locking_mode</a> is set to EXCLUSIVE before the first attempted access.
 In other words, a process can interact with
@@ -590,9 +632,48 @@ It is only when the shared-memory wal-index is omitted, when the locking
 mode is EXCLUSIVE prior to the first WAL-mode database access, that the 
 locking mode is stuck in EXCLUSIVE.</p>
 
+<a name="busy"></a>
+
+<h1 id="sometimes_queries_return_sqlite_busy_in_wal_mode"><span>8. </span>Sometimes Queries Return SQLITE_BUSY In WAL Mode</h1>
+
+<p>The <a href="wal.html#advantages">second advantage of WAL-mode</a> is that
+writers do not block readers and readers to do not block writers.
+This is <u>mostly</u> true.
+But there are some obscure cases where a query against a WAL-mode
+database can return <a href="rescode.html#busy">SQLITE_BUSY</a>, so applications should be prepared
+for that happenstance.
+
+</p><p>Cases where a query against a WAL-mode database can return <a href="rescode.html#busy">SQLITE_BUSY</a>
+include the following:
+
+</p><ul>
+<li><p>If another database connection has the database mode open
+in <a href="pragma.html#pragma_locking_mode">exclusive locking mode</a> then all queries against the
+database will return <a href="rescode.html#busy">SQLITE_BUSY</a>.  Both Chrome and Firefox open their
+database files in exclusive locking mode, so attempts to read Chrome or
+Firefox databases while the applications are running will run into this
+problem, for example.
+
+</p></li><li><p>
+When the last connection to a particular database is closing, that
+connection will acquire an exclusive lock for a short time while it
+cleans up the WAL and shared-memory files.  If a second database tries
+to open and query the database while the first connection
+is still in the middle
+of its cleanup process, the second connection might get an <a href="rescode.html#busy">SQLITE_BUSY</a>
+error.
+
+</p></li><li><p>
+If the last connection to a database crashed, then the first new
+connection to open the database will start a recovery process.  An
+exclusive lock is held during recovery.  So if a third database connection
+tries to jump in and query while the second connection is running recovery,
+the third connection will get an <a href="rescode.html#busy">SQLITE_BUSY</a> error.
+</p></li></ul>
+
 <a name="bkwrds"></a>
 
-<h1 id="backwards_compatibility"><span>8. </span>Backwards Compatibility</h1>
+<h1 id="backwards_compatibility"><span>9. </span>Backwards Compatibility</h1>
 
 <p>The database file format is unchanged for WAL mode.  However, the
 WAL file and the <a href="fileformat2.html#walindexformat">wal-index</a> are new concepts and so older versions of 

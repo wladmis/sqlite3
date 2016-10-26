@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -142,6 +144,8 @@ improved reliability.  See technical notes
 <a href="aff_short.html">here</a> and 
 <a href="appfileformat.html">here</a> for details.
 
+<a name="website"></a>
+
 <li><p><b>Websites</b></p>
 
 <p>SQLite works great as the database engine for most low to
@@ -158,7 +162,7 @@ of traffic.</p>
 <p>The SQLite website (<a href="https://www.sqlite.org/">https://www.sqlite.org/</a>) uses SQLite itself,
 of course, and as of this writing (2015) it handles about 400K to 500K
 HTTP requests per day, about 15-20% of which are dynamic pages touching
-the database.  Each dynamic page does roughly 200 SQL statements.
+the database.  Dynamic content uses <a href="np1queryprob.html">about 200 SQL statements per webpage</a>.
 This setup runs on a single VM that shares a physical server with 23 others
 and yet still keeps the load average below 0.1 most of the time.
 </li>

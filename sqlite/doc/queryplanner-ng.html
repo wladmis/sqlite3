@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -123,7 +125,7 @@ mk.innerHTML = "&#x25ba;";
 <p>
 The task of the "query planner" is to figure
 out the best algorithm or "query plan" to accomplish an SQL statement.
-Beginning with SQLite <a href="releaselog/3_8_0.html">version 3.8.0</a> (2013-08-26), 
+Beginning with SQLite <a href="releaselog/3_8_0.html">version 3.8.0</a> (2013-08-26),
 the query planner component has been
 rewritten so that it runs faster and generates better plans.  The
 rewrite is called the "next generation query planner" or "NGQP".
@@ -191,8 +193,8 @@ or a loop might be a "full table scan" that reads every row in the
 table.  Thus query planning decomposes into two subtasks:</p>
 <ol>
 <li> Picking the nested order of the various loops
-<li> Choosing good indices for each loop
-</li></li></ol>
+</li><li> Choosing good indices for each loop
+</li></ol>
 <p>Picking the nesting order is generally the more challenging problem.
 Once the nesting order of the join is established, the choice of indices
 for each loop is normally obvious.</p>
@@ -203,6 +205,7 @@ for each loop is normally obvious.</p>
 
 <p>SQLite will always pick the same query plan for any
 given SQL statement as long as:
+
 </p><ol type="a">
 <li>the database schema does not change in significant ways such as 
     adding or dropping indices,</li>
@@ -211,13 +214,14 @@ given SQL statement as long as:
     or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>, and</li>
 <li>the same version of SQLite is used.</li>
 </ol>
-The SQLite stability guarantee means that if all of your queries run 
+
+<p>The SQLite stability guarantee means that if all of your queries run 
 efficiently
 during testing, and if your application does not change the schema,
 then SQLite will not suddenly decide to start using a different
 query plan, possibly causing a performance problem, after your application 
 is released to users.  If your application works in the lab, it
-will continue working the same way after deployment.
+will continue working the same way after deployment.</p>
 
 <p>Enterprise-class client/server SQL database engines do not normally 
 make this guarantee.
@@ -276,7 +280,7 @@ by the following diagram:
 
 <center>
 <img src="images/qp/tpchq8.gif">
-</img></center>
+</center>
 
 <p>
 In the diagram, each of the 8 tables in the FROM clause of the query is
@@ -309,7 +313,7 @@ nodes in the graph.</p>
 a minimum-cost path through the graph that visits each node
 exactly once.</p>
 
-<p>(Side note:  The costs estimates in the TPC-H Q8 graph were computed
+<p>(Side note:  The cost estimates in the TPC-H Q8 graph above were computed
 by the query planner in SQLite 3.7.16 and converted using a natural logarithm.)
 </p>
 
@@ -362,7 +366,7 @@ is neglected in the remainder of this article.</p>
 
 <h2 id="_finding_the_best_query_plan"><span>3.3. </span> Finding The Best Query Plan</h2>
 
-<p>Prior to version 3.8.0, SQLite always used
+<p>Prior to <a href="releaselog/3_8_0.html">version 3.8.0</a> (2013-08-26), SQLite always used
 the "Nearest Neighbor" or "NN" heuristic when searching for the best query plan.
 The NN heuristic makes a single traversal of the graph, always choosing
 the lowest-cost arc as the next step.  
@@ -403,10 +407,10 @@ the four shortest paths to visit any single node in the graph:
 
 </p><blockquote>
     R (cost: 3.56) <br>
-    N1 (cost: 5.52) </br><br>
-    N2 (cost: 5.52) </br><br>
-    P (cost: 7.71) </br><br>
-</br></blockquote>
+    N1 (cost: 5.52) <br>
+    N2 (cost: 5.52) <br>
+    P (cost: 7.71) <br>
+</blockquote>
 
 <p>The second step finds the four shortest paths to visit two nodes 
 beginning with one of the four paths from the previous step.  In the
@@ -416,20 +420,20 @@ first and lowest-cost path is retained.  We have:</p>
 
 <blockquote>
     R-N1 (cost: 7.03) <br>
-    R-N2 (cost: 9.08) </br><br>
-    N2-N1 (cost: 11.04) </br><br>
-    R-P {cost: 11.27} </br><br>
-</br></blockquote>
+    R-N2 (cost: 9.08) <br>
+    N2-N1 (cost: 11.04) <br>
+    R-P {cost: 11.27} <br>
+</blockquote>
 
 <p>The third step starts with the four shortest two-node paths and finds
 the four shortest three-node paths:</p>
 
 <blockquote>
     R-N1-N2 (cost: 12.55) <br>
-    R-N1-C (cost: 13.43) </br><br>
-    R-N1-P (cost: 14.74) </br><br>
-    R-N2-S (cost: 15.08) </br><br>
-</br></blockquote>
+    R-N1-C (cost: 13.43) <br>
+    R-N1-P (cost: 14.74) <br>
+    R-N2-S (cost: 15.08) <br>
+</blockquote>
 
 <p>And so forth.  There are 8 nodes in the TPC-H Q8 query, 
 so this process repeats a total of 8
@@ -483,11 +487,11 @@ regression in practice, because of the shape of the data.</p>
 <li><p>The NGQP will always find an equal or better query plan, compared to
     prior query planners, as long as it
     has access to accurate <a href="lang_analyze.html">ANALYZE</a> data in the <a href="fileformat2.html#stat1tab">SQLITE_STAT1</a> file.</p>
-<li><p>The NGQP will always find a good query plan 
+</li><li><p>The NGQP will always find a good query plan 
     as long as the schema does not contain indices that have more than
     about 10 or 20 rows with the same value in the left-most column of the
     index.</p>
-</li></li></ul>
+</li></ul>
 
 <p>Not all applications meet these conditions.  Fortunately,
 the NGQP will still usually find good query plans, even without these conditions.
@@ -561,9 +565,9 @@ for the most recent 200 check-ins that satisfy any one of three conditions:
 
 </p><p></p><ol>
 <li> The check-in has a "trunk" tag.
-<li> The check-in has a child that has a "trunk" tag.
-<li> The check-in has a parent that has a "trunk" tag.
-</li></li></li></ol>
+</li><li> The check-in has a child that has a "trunk" tag.
+</li><li> The check-in has a parent that has a "trunk" tag.
+</li></ol>
 
 <p>
 The first condition causes all of the trunk check-ins to be displayed and
@@ -613,10 +617,10 @@ others are contenders for being the "best" algorithm.)</p>
 <li value="1"><p>
 Find all children of check-in $ckid and test each one to see if
 it has the $trunk tag.
-</p><li value="2"><p>
+</p></li><li value="2"><p>
 Find all check-ins with the $trunk tag and test each one to see if
 it is a child of $ckid.
-</p></li></li></ol>
+</p></li></ol>
 
 <p>
 Intuitively, we humans understand that algorithm-1 is best.
@@ -666,7 +670,7 @@ problem look like this:</p>
 
 <center>
 <img src="images/qp/fqp1.gif">
-</img></center>
+</center>
 
 <p>
 In the "without ANALYZE" case on the left, the NN algorithm chooses 
@@ -730,14 +734,14 @@ rare.  You are unlikely to run across any problems in your application.
 If you are not having performance issues, you do not need to worry
 about any of this.</p>
 
-<li><p><b>Create appropriate indices.</b>
+</li><li><p><b>Create appropriate indices.</b>
 Most SQL performance problems arise not because of query planner issues
 but rather due to lack of appropriate indices.  Make sure indices are
 available to assist all large queries.  Most performance issues can be
 resolved by one or two CREATE INDEX commands and with no changes to
 application code.</p>
 
-<li><p><b>Avoid creating low-quality indices.</b>.
+</li><li><p><b>Avoid creating low-quality indices.</b>.
 A low-quality index (for the purpose of this checklist) is one where
 there are more than 10 or 20 rows in the table that have the same value
 for the left-most column of the index.  In particular, avoid using
@@ -748,7 +752,7 @@ this document arose because there were over
 ten-thousand entries in the TAGXREF table with the same value for the 
 left-most column (the TAGID column) of the TAGXREF_I1 index.</p>
 
-<li><p><b>If you must use a low-quality index, be sure to run <a href="lang_analyze.html">ANALYZE</a>.</b>
+</li><li><p><b>If you must use a low-quality index, be sure to run <a href="lang_analyze.html">ANALYZE</a>.</b>
 Low-quality indices will not confuse the query planner as long as the
 query planner knows that the indices are of low quality.  And the way
 the query planner knows this is by the content of the <a href="fileformat2.html#stat1tab">SQLITE_STAT1</a> table,
@@ -763,11 +767,11 @@ with content that describes a typical
 database for your application - perhaps content that you extracted after
 running ANALYZE on a well-populated template database in the lab.</p>
 
-<li><p><b>Instrument your code.</b>
+</li><li><p><b>Instrument your code.</b>
 Add logic that lets you know quickly and easily which queries are taking
 too much time.  Then work on just those specific queries.</p>
 
-<li><p><b>Use <a href="lang_corefunc.html#unlikely">unlikely()</a> and <a href="lang_corefunc.html#likelihood">likelihood()</a> SQL functions.</b>
+</li><li><p><b>Use <a href="lang_corefunc.html#unlikely">unlikely()</a> and <a href="lang_corefunc.html#likelihood">likelihood()</a> SQL functions.</b>
 SQLite normally assumes that terms in the WHERE clause that cannot be used
 by indices have a strong probability of being true.  If this assumption
 is incorrect, it could lead to a suboptimal query plan.  The
@@ -776,7 +780,7 @@ hints to the query planner about WHERE clause terms that are probably
 not true, and thus aid the query planner in selecting the best possible
 plan.
 
-</p><li><p><b>Use the <a href="optoverview.html#crossjoin">CROSS JOIN</a> syntax to enforce a particular
+</p></li><li><p><b>Use the <a href="optoverview.html#crossjoin">CROSS JOIN</a> syntax to enforce a particular
 loop nesting order on queries that might use low-quality indices in an
 unanalyzed database.</b>
 SQLite <a href="lang_select.html#crossjoin">treats the CROSS JOIN operator specially</a>, forcing the table to 
@@ -792,7 +796,7 @@ cycle as doing so is a premature optimization, which is well known to
 be <a href="http://c2.com/cgi/wiki?PrematureOptimization">the root of
 all evil</a>.</p>
 
-<li><p><b>Use unary "+" operators to disqualify WHERE clause terms.</b>
+</li><li><p><b>Use unary "+" operators to disqualify WHERE clause terms.</b>
 If the query planner insists on selecting a poor-quality index for a particular
 query when a much higher-quality index is available, then
 <a href="optoverview.html#uplus">careful use of unary "+" operators</a> in the WHERE clause
@@ -803,12 +807,12 @@ adding a unary "+" operator to an equality expression might change
 the result of that expression if 
 <a href="datatype3.html#affinity">type affinity</a> is involved.</p>
 
-<li><p><b>Use the <a href="lang_indexedby.html">INDEXED BY</a> syntax to enforce the selection of
+</li><li><p><b>Use the <a href="lang_indexedby.html">INDEXED BY</a> syntax to enforce the selection of
 particular indices on problem queries.</b>
 As with the previous two bullets, avoid this step if possible, and 
 especially avoid doing this early in development as it is clearly a
 premature optimization.</p>
-</li></li></li></li></li></li></li></li></li></ol>
+</li></ol>
 
 <h1 id="_summary"><span>6. </span> Summary</h1>
 

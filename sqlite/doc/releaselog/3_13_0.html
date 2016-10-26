@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -111,65 +113,6 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.12.0 (2016-03-29):</b></p>
-
-<p><b>Potentially Disruptive Change:</b>
-<li>The <a href="../compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> is increased from 1024 to 4096.  
-    The <a href="../compile.html#default_cache_size">SQLITE_DEFAULT_CACHE_SIZE</a> is changed from 2000 to -2000 so 
-    the same amount of cache memory is used by default.
-    See the application note on the
-    <a href="../pgszchng2016.html">version 3.12.0 page size change</a> for further information.
-<p><b>Performance enhancements:</b>
-<li>Enhancements to the <a href="https://www.sqlite.org/src/doc/trunk/doc/lemon.html">Lemon</a>
-    parser generator so that it creates a smaller and faster SQL parser.
-<li>Only create <a href="../tempfiles.html#masterjrnl">master journal</a> files if two or more attached databases are all
-    modified, do not have <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to OFF, and
-    do not have the <a href="../pragma.html#pragma_journal_mode">journal_mode</a> set to OFF, MEMORY, or WAL.
-<li>Only create <a href="../tempfiles.html#stmtjrnl">statement journal</a> files when their size exceeds a threshold.
-    Otherwise the journal is held in memory and no I/O occurs.  The threshold
-    can be configured at compile-time using <a href="../compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> or at
-    start-time using <a href="../c3ref/config.html">sqlite3_config</a>(<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">SQLITE_CONFIG_STMTJRNL_SPILL</a>).
-<li>The query planner is able to optimize IN operators on <a href="../vtab.html">virtual tables</a>
-    even if the <a href="../vtab.html#xbestindex">xBestIndex</a> method does not set the
-    sqlite3_index_constraint_usage.omit flag of the
-    virtual table column to the left of the IN operator.
-<li>The query planner now does a better job of optimizing <a href="../vtab.html">virtual table</a>
-    accesses in a 3-way or higher join where constraints on the virtual
-    table are split across two or more other tables of the join.
-<li>More efficient handling of <a href="../c3ref/create_function.html">application-defined SQL functions</a>, especially
-    in cases where the application defines hundreds or thousands of 
-    custom functions.
-<li>The query planner considers the LIMIT clause when estimating the cost
-    of ORDER BY.
-<li>The configure script (on unix) automatically detects
-    pread() and pwrite() and sets compile-time options to use those OS
-    interfaces if they are available.
-<li>Reduce the amount of memory needed to hold the schema.
-<li>Other miscellaneous micro-optimizations for improved performance and reduced
-    memory usage.
-<p><b>New Features:</b>
-<li>Added the <a href="../c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> option to <a href="../c3ref/db_config.html">sqlite3_db_config()</a>
-    which allows the two-argument version of the <a href="../fts3.html#f3tknzr">fts3_tokenizer()</a> SQL function to
-    be enabled or disabled at run-time.
-<li>Added the <a href="https://www.sqlite.org/src/artifact/d7cc99350?ln=403-443">sqlite3rbu_bp_progress()</a>
-    interface to the <a href="../rbu.html">RBU</a> extension.
-<li>The <a href="../pragma.html#pragma_defer_foreign_keys">PRAGMA defer_foreign_keys=ON</a> statement now also disables 
-    <a href="../foreignkeys.html#fk_actions">RESTRICT actions</a> on foreign key.
-<li>Added the <a href="../c3ref/system_errno.html">sqlite3_system_errno()</a> interface.
-<li>Added the <a href="../compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a> and <a href="../compile.html#default_wal_synchronous">SQLITE_DEFAULT_WAL_SYNCHRONOUS</a>
-    compile-time options.  The <a href="../compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a> compile-time option
-    replaces the <a href="../compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> option, which is no longer supported.
-<li>Enhanced the ".stats" command in the <a href="../cli.html">command-line shell</a> to show more
-    information about I/O performance obtained from /proc, when available.
-<p><b>Bug fixes:</b>
-<li>Make sure the <a href="../c3ref/get_auxdata.html">sqlite3_set_auxdata()</a> values from multiple triggers
-    within a single statement do not interfere with one another.
-    Ticket <a href="https://www.sqlite.org/src/info/dc9b1c91">dc9b1c91</a>.
-<li>Fix the code generator for expressions of the form "x IN (SELECT...)" where
-    the SELECT statement on the RHS is a correlated subquery.
-    Ticket <a href="https://www.sqlite.org/src/info/5e3c886796e5512e">5e3c886796e5512e</a>.
-<li>Fix a harmless TSAN warning associated with the <a href="../c3ref/db_readonly.html">sqlite3_db_readonly()</a> interface.
-
 <p><b>Bug fixes backported into patch release 3.11.1 (2016-03-03):</b></p>
 
 <li>Improvements to the Makefiles and build scripts used by VisualStudio.
@@ -177,6 +120,52 @@ return false;
 <li>Fix a buffer overread that might occur if <a href="../fts5.html">FTS5</a> is used to query a corrupt
     database file.
 <li>Increase the maximum "scope" value for the <a href="../spellfix1.html">spellfix1</a> extension from 6 to 30.
+
+<p><b>Bug fixes backported into patch release 3.11.0 (2016-02-15):</b></p>
+
+<p><b>General improvements:</b>
+<li>Enhanced <a href="../wal.html">WAL mode</a> so that it works efficiently with transactions that are
+    larger than the <a href="../pragma.html#pragma_cache_size">cache_size</a>.
+<li>Added the <a href="../fts5.html#the_detail_option">FTS5 detail option</a>.
+<li>Added the "EXTRA" option to <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous</a> that does a sync of the
+    containing directory when a rollback journal is unlinked in DELETE mode,
+    for better durability.  The <a href="../compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> compile-time option enables
+    <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous=EXTRA</a> by default.
+<li>Enhanced the <a href="../optoverview.html">query planner</a> so that it is able to use
+    a <a href="../queryplanner.html#covidx">covering index</a> as part of the <a href="../optoverview.html#or_opt">OR optimization</a>.
+<li>Avoid recomputing <a href="../lang_createtable.html#notnullconst">NOT NULL</a> and <a href="../lang_createtable.html#ckconst">CHECK constraints</a> on unchanged
+    columns in <a href="../lang_update.html">UPDATE</a> statement.
+<li>Many micro-optimizations, resulting in a library that is 
+    faster than the previous release.
+<p><b>Enhancements to the <a href="../cli.html">command-line shell</a>:</b>
+<li>By default, the shell is now in "auto-explain" mode.  The output of
+    <a href="../lang_explain.html">EXPLAIN</a> commands is automatically formatted.
+<li>Added the ".vfslist" <a href="../cli.html#dotcmd">dot-command</a>.
+<li>The <a href="../compile.html#enable_explain_comments">SQLITE_ENABLE_EXPLAIN_COMMENTS</a> compile-time option is now turned
+    on by default in the standard builds.
+<p><b>Enhancements to the <a href="../tclsqlite.html">TCL Interface</a>:</b>
+<li>If a database connection is opened with the "-uri 1" option, then
+    <a href="../uri.html">URI filenames</a> are honored by the "backup" and "restore" commands.
+<li>Added the "-sourceid" option to the "sqlite3" command.
+<p><b>Makefile improvements:</b>
+<li>Improved pthreads detection in configure scripts.
+<li>Add the ability to do MSVC Windows builds from the <a href="../download.html">amalgamation tarball</a>.
+<p><b>Bug fixes</b>
+<li>Fix an issue with incorrect sharing of VDBE temporary registers between
+    co-routines that could cause incorrect query results in obscure cases.  Ticket
+    <a href="https://www.sqlite.org/src/info/d06a25c84454a">d06a25c84454a</a>.
+<li>Fix a problem in the <a href="../c3ref/result_subtype.html">sqlite3_result_subtype()</a> interface that could
+    cause problems for the <a href="../json1.html">json1</a> extension under obscure circumstances.
+    Fix for ticket
+    <a href="https://www.sqlite.org/src/info/f45ac567eaa9f9">f45ac567eaa9f9</a>.
+<li>Escape control characters in JSON strings.  Fix for ticket
+    <a href="https://www.sqlite.org/src/info/ad2559db380abf8">ad2559db380abf8</a>.
+<li>Reenable the xCurrentTime and xGetLastError methods in the built-in
+    unix <a href="../vfs.html">VFSes</a> as long as <a href="../compile.html#omit_deprecated">SQLITE_OMIT_DEPRECATED</a> is not defined.
+<p><b>Backwards Compatibility:</b>
+<li>Because of continuing security concerns, the two-argument version of
+    of the seldom-used and little-known <a href="../fts3.html#f3tknzr">fts3_tokenizer()</a> function is
+    disabled unless SQLite is compiled with the <a href="../compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
 
 </ul></p>
 

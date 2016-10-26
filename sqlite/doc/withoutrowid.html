@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
-<title>The WITHOUT ROWID Optimization</title>
+<title>Clustered Indexes and the WITHOUT ROWID Optimization</title>
 </head>
 <body>
 <div class=nosearch>
@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -76,7 +78,7 @@ return false;
 <div class=fancy>
 <div class=nosearch>
 <div class="fancy_title">
-The WITHOUT ROWID Optimization
+Clustered Indexes and the WITHOUT ROWID Optimization
 </div>
 </div>
 
@@ -90,6 +92,10 @@ The WITHOUT ROWID Optimization
 if the phrase "WITHOUT ROWID" is added to the end of a <a href="lang_createtable.html">CREATE TABLE</a> statement,
 then the special "rowid" column is omitted.  There are sometimes
 space and performance advantages to omitting the rowid.</p>
+
+<p>A WITHOUT ROWID table is a table that uses a 
+<a href="https://en.wikipedia.org/wiki/Database_index#Clustered">Clustered Index</a>
+as the primary key.</p>
 
 <h2 id="syntax"><span>1.1. </span>Syntax</h2>
 
@@ -116,7 +122,8 @@ the keyword in the CREATE TABLE statement.</p>
 
 <h2 id="compatibility"><span>1.2. </span>Compatibility</h2>
 
-<p>SQLite <a href="releaselog/3_8_2.html">version 3.8.2</a> or later is necessary in order to use a WITHOUT
+<p>SQLite <a href="releaselog/3_8_2.html">version 3.8.2</a> (2013-12-06) or later 
+is necessary in order to use a WITHOUT
 ROWID table.  An attempt to open a database that contains one or more WITHOUT
 ROWID tables using an earlier version of SQLite will result in a
 "malformed database schema" error.</p>
@@ -156,7 +163,7 @@ WITHOUT ROWID tables that do not apply to ordinary rowid tables:</p>
 An attempt to create a WITHOUT ROWID table without a PRIMARY KEY results
 in an error.
 
-</p><li><p>
+</p></li><li><p>
 <b>The special behaviors associated "<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>" do not apply
 on WITHOUT ROWID tables.</b>
 In an ordinary table, "INTEGER PRIMARY KEY" means that the column is an
@@ -166,14 +173,14 @@ column in a WITHOUT ROWID table works
 like an "INT PRIMARY KEY" column in an ordinary table: It is a PRIMARY KEY
 that has integer <a href="datatype3.html#affinity">affinity</a>.
 
-</p><li><p>
+</p></li><li><p>
 <b><a href="autoinc.html">AUTOINCREMENT</a> does not work on WITHOUT ROWID tables.</b>
 The <a href="autoinc.html">AUTOINCREMENT</a> mechanism assumes the presence of a rowid and so it
 does not work on a WITHOUT ROWID table.  An error is raised if the
  "AUTOINCREMENT" keyword is used in the CREATE TABLE statement for
 a WITHOUT ROWID table.
 
-</p><li><p>
+</p></li><li><p>
 <b>NOT NULL is enforced on every column of the PRIMARY KEY in a WITHOUT
 ROWID table.</b>
 This is in accordance with the SQL standard.  Each column of a PRIMARY KEY
@@ -186,7 +193,7 @@ SQL standard and allow NULL values in PRIMARY KEY fields.  But WITHOUT ROWID
 tables do follow the standard and will throw an error on any attempt to
 insert a NULL into a PRIMARY KEY column.
 
-</p><li><p>
+</p></li><li><p>
 <b>The <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a> function
 does not work for WITHOUT ROWID tables.</b>
 Inserts into a WITHOUT ROWID do not change the value returned by the
@@ -194,7 +201,7 @@ Inserts into a WITHOUT ROWID do not change the value returned by the
 function is also unaffected since it is just a wrapper around
 <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>.
 
-</p><li><p>
+</p></li><li><p>
 <b>The <a href="c3ref/blob_open.html">incremental blob I/O</a> mechanism does not work
 for WITHOUT ROWID tables.</b>
 Incremental BLOB I/O uses the rowid to create an <a href="c3ref/blob.html">sqlite3_blob</a> object for
@@ -202,7 +209,7 @@ doing the direct I/O.  However, WITHOUT ROWID tables do not have a rowid,
 and so there is no way to create an <a href="c3ref/blob.html">sqlite3_blob</a> object for a WITHOUT
 ROWID table.
 
-</p><li><p>
+</p></li><li><p>
 <b>The <a href="c3ref/update_hook.html">sqlite3_update_hook()</a> interface does not fire callbacks for changes
 to a WITHOUT ROWID table.</b>
 Part of the callback from <a href="c3ref/update_hook.html">sqlite3_update_hook()</a> is the rowid of the table
@@ -211,7 +218,7 @@ Hence, the update hook is not invoked when a WITHOUT ROWID table changes.
 </p><p>Note that since the <a href="sessionintro.html">session</a> extension uses the update hook, that means
 that the session extension will not work correctly on a database that includes
 WITHOUT ROWID tables.
-</p></li></li></li></li></li></li></li></ol>
+</p></li></ol>
 
 <a name="bene"></a>
 

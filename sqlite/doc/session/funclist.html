@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -77,12 +79,15 @@ return false;
 
 <h2>Functions:</h2>
 <style>
-#listtab35 tr td {vertical-align:top;}
+#listtab33 tr td {vertical-align:top;}
 </style>
-<table id='listtab35' width='100%'></table>
+<table id='listtab33' width='100%'></table>
 <script>
-var listitems35 = [{"u":"../session/sqlite3changegroup_add_strm.html","x":"sqlite3changegroup_add_strm","s":0},
+var listitems33 = [{"u":"../session/sqlite3changegroup_add.html","x":"sqlite3changegroup_add","s":0},
+{"u":"../session/sqlite3changegroup_add_strm.html","x":"sqlite3changegroup_add_strm","s":0},
+{"u":"../session/sqlite3changegroup_delete.html","x":"sqlite3changegroup_delete","s":0},
 {"u":"../session/sqlite3changegroup_new.html","x":"sqlite3changegroup_new","s":0},
+{"u":"../session/sqlite3changegroup_output.html","x":"sqlite3changegroup_output","s":0},
 {"u":"../session/sqlite3changegroup_add_strm.html","x":"sqlite3changegroup_output_strm","s":0},
 {"u":"../session/sqlite3changeset_apply.html","x":"sqlite3changeset_apply","s":0},
 {"u":"../session/sqlite3changegroup_add_strm.html","x":"sqlite3changeset_apply_strm","s":0},
@@ -116,33 +121,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/300);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems35.length+1)/nCol);
+var nRow = Math.ceil((listitems33.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems35.length; i++){
+for(var i=0; i<listitems33.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems35[i].u=="" || listitems35[i].s==2){
+  if(listitems33[i].u=="" || listitems33[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems35[i].u;
+    h += listitems33[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems35[i].s==2 || listitems35[i].s==3) h += "<s>"
-  h += listitems35[i].x;
-  if(listitems35[i].s==2 || listitems35[i].s==3) h += "</s>"
+  if(listitems33[i].s==2 || listitems33[i].s==3) h += "<s>"
+  h += listitems33[i].x;
+  if(listitems33[i].s==2 || listitems33[i].s==3) h += "</s>"
   h += ea
-  if(listitems35[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems35[i].s==3) h += "&sup1\n";
-  if(listitems35[i].s==4) h += "&sup2\n";
-  if(listitems35[i].s==5) h += "&sup3\n";
+  if(listitems33[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems33[i].s==3) h += "&sup1\n";
+  if(listitems33[i].s==4) h += "&sup2\n";
+  if(listitems33[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab35").innerHTML = h;
+document.getElementById("listtab33").innerHTML = h;
 </script>
 <p>Other lists:
 <a href="constlist.html">Constants</a> and

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -79,9 +81,9 @@ return false;
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.14.2"
-#define SQLITE_VERSION_NUMBER 3014002
-#define SQLITE_SOURCE_ID      "2016-09-12 18:50:49 29dbef4b8585f753861a36d6dd102ca634197bd6"
+#define SQLITE_VERSION        "3.15.0"
+#define SQLITE_VERSION_NUMBER 3015000
+#define SQLITE_SOURCE_ID      "2016-10-14 10:20:30 707875582fcba352b4906a595ad89198d84711d8"
 </pre></blockquote>
 <p>
 The <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -96,7 +98,8 @@ be larger than the release from which it is derived.  Either Y will
 be held constant and Z will be incremented or else Y will be incremented
 and Z will be reset to zero.</p>
 
-<p>Since version 3.6.18, SQLite source code has been stored in the
+<p>Since <a href="../releaselog/3_6_18.html">version 3.6.18</a> (2009-09-11),
+SQLite source code has been stored in the
 <a href="http://www.fossil-scm.org/">Fossil configuration management
 system</a>.  The SQLITE_SOURCE_ID macro evaluates to
 a string which identifies a particular check-in of SQLite

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -128,9 +130,9 @@ information is available separately:
 
 </p><ul>
 <li> Notes on the <a href="optoverview.html">query optimizer</a>.
-<li> How <a href="queryplanner.html">indexing</a> works.
-<li> The <a href="queryplanner-ng.html">next generation query planner</a>.
-</li></li></li></ul>
+</li><li> How <a href="queryplanner.html">indexing</a> works.
+</li><li> The <a href="queryplanner-ng.html">next generation query planner</a>.
+</li></ul>
 
 <p>An EXPLAIN QUERY PLAN command returns zero or more rows of four columns
 each. The column names are "selectid", "order", "from", "detail". The
@@ -164,10 +166,10 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
 
 </p><ul>
   <li> The name of the table data is read from.
-  <li> Whether or not an index or <a href="optoverview.html#autoindex">automatic index</a> is used.
-  <li> Whether or not the <a href="queryplanner.html#covidx">covering index</a> optimization applies.
-  <li> Which terms of the WHERE clause are used for indexing.
-</li></li></li></li></ul>
+  </li><li> Whether or not an index or <a href="optoverview.html#autoindex">automatic index</a> is used.
+  </li><li> Whether or not the <a href="queryplanner.html#covidx">covering index</a> optimization applies.
+  </li><li> Which terms of the WHERE clause are used for indexing.
+</li></ul>
 
 <p>
   For example, the following EXPLAIN QUERY PLAN command operates on a SELECT

@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
-<title>File Format For SQLite Databases</title>
+<title>Database File Format</title>
 </head>
 <body>
 <div class=nosearch>
@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -76,7 +78,7 @@ return false;
 <div class=fancy>
 <div class=nosearch>
 <div class="fancy_title">
-File Format For SQLite Databases
+Database File Format
 </div>
 <div class="fancy_toc">
 <a onclick="toggle_toc()">
@@ -151,13 +153,14 @@ mk.innerHTML = "&#x25ba;";
 
 
 
+
 <p>This document describes and defines the on-disk database file
 format used by SQLite.</p>
 
 <h1 id="the_database_file"><span>1. </span>The Database File</h1>
 
 <p>The complete state of an SQLite database is usually
-contained a single file on disk called the "main database file".</p>
+contained in a single file on disk called the "main database file".</p>
 
 <p>During a transaction, SQLite stores additional information 
 in a second file called the "rollback journal", or if SQLite is in
@@ -197,21 +200,21 @@ to a few gigabytes.</p>
 use which is one of the following:
 </p><ul>
 <li>The lock-byte page
-<li>A freelist page
+</li><li>A freelist page
 <ul>
 <li>A freelist trunk page
-<li>A freelist leaf page
-</li></li></ul>
-<li>A b-tree page
+</li><li>A freelist leaf page
+</li></ul>
+</li><li>A b-tree page
 <ul>
 <li>A table b-tree interior page
-<li>A table b-tree leaf page
-<li>An index b-tree interior page
-<li>An index b-tree leaf page
-</li></li></li></li></ul>
-<li>A payload overflow page
-<li>A pointer map page
-</li></li></li></li></li></ul>
+</li><li>A table b-tree leaf page
+</li><li>An index b-tree interior page
+</li><li>An index b-tree leaf page
+</li></ul>
+</li><li>A payload overflow page
+</li><li>A pointer map page
+</li></ul>
 
 
 <p>All reads from and writes to the main database file begin at a page
@@ -240,7 +243,7 @@ stored with the most significant byte first (big-endian).</p>
 
 <center>
 <i>Database Header Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td valign="top" align="center">0</td><td valign="top" align="center">16</td><td align="left">
 The header string: "SQLite format 3\000"
@@ -280,7 +283,7 @@ incremental-vacuum modes, or zero otherwise.
 The database text encoding.  A value of 1 means UTF-8.  A value of 2
 means UTF-16le.  A value of 3 means UTF-16be.
 </td></tr><tr><td valign="top" align="center">60</td><td valign="top" align="center">4</td><td align="left">
-The "user version" as read and set by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.
+The "user version" as read and set by the <a href="pragma.html#pragma_user_version">user_version pragma</a>.
 </td></tr><tr><td valign="top" align="center">64</td><td valign="top" align="center">4</td><td align="left">
 True (non-zero) for incremental-vacuum mode.  False (zero) otherwise.
 </td></tr><tr><td valign="top" align="center">68</td><td valign="top" align="center">4</td><td align="left">
@@ -305,7 +308,8 @@ terminator character at the end.</p>
 <p>The two-byte value beginning at offset 16 determines the page size of 
 the database.  For SQLite versions 3.7.0.1 and earlier, this value is 
 interpreted as a big-endian integer and must be a power of two between
-512 and 32768, inclusive.  Beginning with SQLite version 3.7.1, a page
+512 and 32768, inclusive.  Beginning with SQLite <a href="releaselog/3_7_1.html">version 3.7.1</a>
+(2010-08-23), a page
 size of 65536 bytes is supported.  The value 65536 will not fit in a
 two-byte integer, so to specify a 65536-byte page size, the value
 at offset 16 is 0x00 0x01.
@@ -434,15 +438,15 @@ formatting.  Four schema format numbers are currently defined:</p>
 
 <ol>
 <li value="1">Format 1 is understood by all versions of SQLite back to
-version 3.0.0.</li>
+<a href="releaselog/3_0_0.html">version 3.0.0</a> (2004-06-18).</li>
 <li value="2">Format 2 adds the ability of rows within the same table
 to have a varying number of columns, in order to support the
 <a href="lang_altertable.html">ALTER TABLE ... ADD COLUMN</a> functionality.  Support for
-reading and writing format 2 was added in SQLite version 3.1.3 
-on 2005-02-19.</li>
+reading and writing format 2 was added in SQLite 
+<a href="releaselog/3_1_3.html">version 3.1.3</a> on 2005-02-20.</li>
 <li value="3">Format 3 adds the ability of extra columns added by
 <a href="lang_altertable.html">ALTER TABLE ... ADD COLUMN</a> to have non-NULL default
-values.  This capability was added in SQLite version 3.1.4 
+values.  This capability was added in SQLite <a href="releaselog/3_1_4.html">version 3.1.4</a>
 on 2005-03-11.</li>
 <li value="4">Format 4 causes SQLite to respect the
 <a href="lang_createindex.html#descidx">DESC keyword</a> on
@@ -499,7 +503,7 @@ the numeric codes for the text encoding.</p>
 <h3 id="user_version_number"><span>1.2.14. </span>User version number</h3>
 
 <p>The 4-byte big-endian integer at offset 60 is the user version which
-is set and queried by the <a href="pragma.html#pragma_schema_version">user_version pragma</a>.  The user version is
+is set and queried by the <a href="pragma.html#pragma_user_version">user_version pragma</a>.  The user version is
 not used by SQLite.</p>
 
 <a name="appid"></a>
@@ -702,12 +706,12 @@ of content overflow pages.</p>
 
 </p><ol>
 <li>The 100-byte database file header (found on page 1 only)
-<li>The 8 or 12 byte b-tree page header
-<li>The cell pointer array
-<li>Unallocated space
-<li>The cell content area
-<li>The reserved region.
-</li></li></li></li></li></li></ol>
+</li><li>The 8 or 12 byte b-tree page header
+</li><li>The cell pointer array
+</li><li>Unallocated space
+</li><li>The cell content area
+</li><li>The reserved region.
+</li></ol>
 
 
 <p>The 100-byte database file header is found only on page 1, which is
@@ -727,14 +731,14 @@ The b-tree page header is composed of the following fields:</p>
 
 <center>
 <i>B-tree Page Header Format</i><br>
-</br><table border="1" width="80%">
+<table border="1" width="80%">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td align="center" valign="top">0</td><td align="center" valign="top">1</td><td align="left">
 The one-byte flag at offset 0 indicating the b-tree page type.<ul>
 <li>A value of 2 (0x02) means the page is an interior index b-tree page.
-<li>A value of 5 (0x05) means the page is an interior table b-tree page.
-<li>A value of 10 (0x0a) means the page is a leaf index b-tree page.
-<li>A value of 13 (0x0d) means the page is a leaf table b-tree page.</li></li></li></li></ul>
+</li><li>A value of 5 (0x05) means the page is an interior table b-tree page.
+</li><li>A value of 10 (0x0a) means the page is a leaf index b-tree page.
+</li><li>A value of 13 (0x0d) means the page is a leaf table b-tree page.</li></ul>
 Any other value for the b-tree page type is an error.
 </td></tr><tr><td align="center" valign="top">1</td><td align="center" valign="top">2</td><td align="left">
 The two-byte integer at offset 1 gives the start of the
@@ -825,39 +829,39 @@ order of appearance, for the various b-tree page types.
 <dd><p></p><ul>
 <li>A varint which is the total number of bytes of payload, including any
 overflow
-<li>A varint which is the integer key, a.k.a. "<a href="lang_createtable.html#rowid">rowid</a>"
-<li>The initial portion of the payload that does not spill to overflow
+</li><li>A varint which is the integer key, a.k.a. "<a href="lang_createtable.html#rowid">rowid</a>"
+</li><li>The initial portion of the payload that does not spill to overflow
 pages.
-<li>A 4-byte big-endian integer page number for the first page of the
+</li><li>A 4-byte big-endian integer page number for the first page of the
 overflow page list - omitted if all payload fits on the b-tree page.
-</li></li></li></li></ul></dd>
+</li></ul></dd>
 
 <dt><p>Table B-Tree Interior Cell (header 0x05):</p></dt>
 <dd><p></p><ul>
 <li>A 4-byte big-endian page number which is the left child pointer.
-<li>A varint which is the integer key
-</li></li></ul></dd>
+</li><li>A varint which is the integer key
+</li></ul></dd>
 
 <dt><p>Index B-Tree Leaf Cell (header 0x0a):</p></dt>
 <dd><p></p><ul>
 <li>A varint which is the total number of bytes of key payload, including any
 overflow
-<li>The initial portion of the payload that does not spill to overflow
+</li><li>The initial portion of the payload that does not spill to overflow
 pages.
-<li>A 4-byte big-endian integer page number for the first page of the
+</li><li>A 4-byte big-endian integer page number for the first page of the
 overflow page list - omitted if all payload fits on the b-tree page.
-</li></li></li></ul></dd>
+</li></ul></dd>
 
 <dt><p>Index B-Tree Interior Cell (header 0x02):</p></dt>
 <dd><p></p><ul>
 <li>A 4-byte big-endian page number which is the left child pointer.
-<li>A varint which is the total number of bytes of key payload, including any
+</li><li>A varint which is the total number of bytes of key payload, including any
 overflow
-<li>The initial portion of the payload that does not spill to overflow
+</li><li>The initial portion of the payload that does not spill to overflow
 pages.
-<li>A 4-byte big-endian integer page number for the first page of the
+</li><li>A 4-byte big-endian integer page number for the first page of the
 overflow page list - omitted if all payload fits on the b-tree page.
-</li></li></li></li></ul></dd>
+</li></ul></dd>
 </dl>
 
 <p>The information above can be recast into a table format as follows:</p>
@@ -951,15 +955,15 @@ The number of bytes stored on the index page is never less than M.
 </p><ul>
 <li>X is U-35 for table btree leaf pages or
     ((U-12)*64/255)-23 for index pages.
-<li>M is always ((U-12)*32/255)-23.
-<li>Let K be M+((P-M)%(U-4)).
-<li>If P&lt;=X then all P bytes of payload are stored directly on the 
+</li><li>M is always ((U-12)*32/255)-23.
+</li><li>Let K be M+((P-M)%(U-4)).
+</li><li>If P&lt;=X then all P bytes of payload are stored directly on the 
     btree page without overflow.
-<li>If P&gt;X and K&lt;=X then the first K bytes of P are stored on the 
+</li><li>If P&gt;X and K&lt;=X then the first K bytes of P are stored on the 
     btree page and the remaining P-K bytes are stored on overflow pages.
-<li>If P&gt;X and K&gt;X then the first M bytes of P are stored on the
+</li><li>If P&gt;X and K&gt;X then the first M bytes of P are stored on the
     btree page and the remaining P-M bytes are stored on overflow pages.
-</li></li></li></li></li></li></ul>
+</li></ul>
 
 <p>The overflow thresholds are designed to give a minimum fanout of
 4 for index b-trees and to make sure enough of the payload
@@ -1024,17 +1028,17 @@ followed by a 4-byte big-endian page number.  Five page types are recognized:
 <ol>
 <li>A b-tree root page.  The
 page number should be zero.
-<li>A freelist page.  The page number should be
+</li><li>A freelist page.  The page number should be
 zero.
-<li>The first page of a
+</li><li>The first page of a
 cell payload overflow chain.  The page number is the b-tree page that
 contains the cell whose content has overflowed.
-<li>A page in an overflow chain
+</li><li>A page in an overflow chain
 other than the first page.  The page number is the prior page of the
 overflow chain.
-<li>A non-root b-tree page.  The
+</li><li>A non-root b-tree page.  The
 page number is the parent b-tree page.
-</li></li></li></li></li></ol>
+</li></ol>
 
 <p>In any database file that contains ptrmap pages, all b-tree root pages 
 must come before any non-root b-tree page, cell payload overflow page, or
@@ -1088,7 +1092,7 @@ determine the datatype of each column, according to the following chart:</p>
 
 <center>
 <i>Serial Type Codes Of The Record Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Serial Type</th><th>Content Size</th><th>Meaning
 </th></tr><tr><td valign="top" align="center">0</td><td valign="top" align="center">0</td><td align="left">
 Value is a NULL.
@@ -1154,13 +1158,13 @@ follows:</p>
 
 <ol>
 <li>NULL values (serial type 0) sort first.
-<li>Numeric values (serial types 1 through 9) sort after NULLs
+</li><li>Numeric values (serial types 1 through 9) sort after NULLs
       and in numeric order.
-<li>Text values (odd serial types 13 and larger) sort after numeric
+</li><li>Text values (odd serial types 13 and larger) sort after numeric
     values in the order determined by the columns <a href="datatype3.html#collation">collating function</a>.
-<li>BLOB values (even serial types 12 and larger) sort last and in the order 
+</li><li>BLOB values (even serial types 12 and larger) sort last and in the order 
     determined by memcmp().
-</li></li></li></li></ol>
+</li></ol>
 
 <p>A <a href="datatype3.html#collation">collating function</a> for each column is necessary in order to compute
 the order of text fields.
@@ -1365,14 +1369,14 @@ that the text conforms to the following rules:
 </p><ul>
 <li>The CREATE, TABLE, VIEW, TRIGGER, and INDEX keywords at the beginning
 of the statement are converted to all upper case letters.
-<li>The TEMP or TEMPORARY keyword is removed if it occurs after the 
+</li><li>The TEMP or TEMPORARY keyword is removed if it occurs after the 
 initial CREATE keyword.
-<li>Any database name qualifier that occurs prior to the name of the
+</li><li>Any database name qualifier that occurs prior to the name of the
 object being created is removed.
-<li>Leading spaces are removed.
-<li>All spaces following the first two keywords are converted into a single
+</li><li>Leading spaces are removed.
+</li><li>All spaces following the first two keywords are converted into a single
 space.
-</li></li></li></li></li></ul>
+</li></ul>
 
 <p>The text in the sqlite_master.sql column is a copy of the original
 CREATE statement text that created the object, except normalized as
@@ -1402,15 +1406,15 @@ with "sqlite_".
        are used to implement <a href="lang_createtable.html#uniqueconst">UNIQUE</a> and <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> constraints on
        ordinary tables.
 
-</p><li><p>A table with the name "sqlite_sequence" that is used to keep track
+</p></li><li><p>A table with the name "sqlite_sequence" that is used to keep track
        of the maximum historical <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> for a table
        using <a href="autoinc.html">AUTOINCREMENT</a>.
 
-</p><li><p>Tables with names of the form "sqlite_statN" where N is an integer.
+</p></li><li><p>Tables with names of the form "sqlite_statN" where N is an integer.
        Such tables store database statistics gathered by the <a href="lang_analyze.html">ANALYZE</a>
        command and used by the query planner to help determine the best
        algorithm to use for each query.
-</p></li></li></li></ul>
+</p></li></ul>
 
 <p>New internal schema objects names, always beginning with "sqlite_",
 may be added to the SQLite file format in future releases.
@@ -1715,10 +1719,10 @@ contains a valid header.  Hence a transaction can be committed in one
 of three ways:
 </p><ol>
 <li>The rollback journal file can be deleted,
-<li>The rollback journal file can be truncated to zero length, or
-<li>The header of the rollback journal can be overwritten with
+</li><li>The rollback journal file can be truncated to zero length, or
+</li><li>The header of the rollback journal can be overwritten with
 invalid header text (for example, all zeros).
-</li></li></li></ol>
+</li></ol>
 <p>
 These three ways of committing a transaction correspond to the DELETE,
 TRUNCATE, and PERSIST settings, respectively, of the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>.
@@ -1729,7 +1733,7 @@ TRUNCATE, and PERSIST settings, respectively, of the <a href="pragma.html#pragma
 
 <center>
 <i>Rollback Journal Header Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td valign="top" align="center">0
     </td><td valign="top" align="center">8
@@ -1776,7 +1780,7 @@ Then the format of a page record is as follows:</p>
 
 <center>
 <i>Rollback Journal Page Record Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td valign="top" align="center">0
     </td><td valign="top" align="center">4
@@ -1796,13 +1800,13 @@ Then the format of a page record is as follows:</p>
 <ol>
 <li>Initialize the checksum to the checksum nonce value found in the
 journal header at offset 12.
-<li>Initialize index X to be N-200 (where N is the size of a database page
+</li><li>Initialize index X to be N-200 (where N is the size of a database page
 in bytes.
-<li>Interpret the four bytes at offset X into the page as a 4-byte big-endian
+</li><li>Interpret the four bytes at offset X into the page as a 4-byte big-endian
 unsigned integer.  Add the value of that integer to the checksum.
-<li>Subtrace 200 from X.
-<li>If X is greater than or equal to zero, go back to step 3.
-</li></li></li></li></li></ol>
+</li><li>Subtrace 200 from X.
+</li><li>If X is greater than or equal to zero, go back to step 3.
+</li></ol>
 
 <p>The checksum value is used to guard against incomplete writes of
 a journal page record following a power failure.  A different random nonce
@@ -1829,7 +1833,8 @@ the available space of the remainder of the journal file.</p>
 
 <h1 id="the_write_ahead_log"><span>4. </span>The Write-Ahead Log</h1>
 
-<p>Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a>, SQLite supports a new transaction
+<p>Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a> (dateof:3.7.0), 
+SQLite supports a new transaction
 control mechanism called "<a href="wal.html">write-ahead log</a>" or "<a href="wal.html">WAL</a>".
 When a database is in WAL mode, all connections to that database must
 use the WAL.  A particular database will use either a rollback journal
@@ -1861,7 +1866,7 @@ big-endian 32-bit unsigned integer values:</p>
 
 <center>
 <i>WAL Header Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td valign="top" align="center">0</td><td valign="top" align="center">4
     </td><td>Magic number.  0x377f0682 or 0x377f0683
@@ -1889,7 +1894,7 @@ integer values, as follows:
 
 </p><center>
 <i>WAL Frame Header Format</i><br>
-</br><table width="80%" border="1">
+<table width="80%" border="1">
 <tr><th>Offset</th><th>Size</th><th>Description
 </th></tr><tr><td valign="top" align="center">0</td><td valign="top" align="center">4
     </td><td>Page number

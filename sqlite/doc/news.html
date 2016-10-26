@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -77,7 +79,24 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2016_09_12"></a><h3>2016-09-12 - Release 3.14.2</h3><blockquote>
+<a name="2016_10_14"></a><h3>2016-10-14 - Release 3.15.0</h3><blockquote>
+SQLite <a href="releaselog/3_15_0.html">version 3.15.0</a> is a regularly scheduled maintenance release.
+The key feature in this release is the added support for
+<a href="rowvalue.html">row values</a>.  There are also other enhancements and
+fixes for a number of obscure bugs.
+<p>
+The 3.15.0 release uses about 7% fewer CPU cycles than 3.14.2.
+Most of the improvement in this release
+is in the SQL parser, query planner, and
+byte-code generator (the front-end) corresponding
+to the <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> interface.  Overall,
+version 3.15.0 uses about half as much CPU time as
+version 3.8.1 (2013-10-17).  These
+performance measurements are made using the "speedtest1.c"
+workload on x64 compiled with gcc and -Os. Performance
+improvements may vary with different platforms and
+workloads.
+</blockquote><hr width="50%"><a name="2016_09_12"></a><h3>2016-09-12 - Release 3.14.2</h3><blockquote>
 SQLite <a href="releaselog/3_14_2.html">version 3.14.2</a> fixes several obscure bugs and adds 
 improved support for building SQLite using the STDCALL calling
 convention on 32-bit windows systems.  Upgrading from versions

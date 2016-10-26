@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -90,22 +92,22 @@ SQLite Autoincrement
   The AUTOINCREMENT keyword imposes extra CPU, memory, disk space,
   and disk I/O overhead and should be avoided if not strictly needed.
   It is usually not needed.
-</p><li><p>
+</p></li><li><p>
   In SQLite, a column with type INTEGER PRIMARY KEY is an alias for the <a href="lang_createtable.html#rowid">ROWID</a>
   (except in <a href="withoutrowid.html">WITHOUT ROWID</a> tables) which is always a 64-bit signed integer.
-</p><li><p>
+</p></li><li><p>
   On an <a href="lang_insert.html">INSERT</a>, if the ROWID or INTEGER PRIMARY KEY column is not 
   explicitly given a value, then it
   will be filled automatically with an unused integer, usually
   one more than the largest ROWID currently in use.
   This is true regardless of whether or not the AUTOINCREMENT keyword is used.
-</p><li><p>
+</p></li><li><p>
   If the AUTOINCREMENT keyword appears after INTEGER PRIMARY KEY, that
   changes the automatic ROWID assignment algorithm to prevent
   the reuse of ROWIDs over the lifetime of the database.  In other words,
   the purpose of AUTOINCREMENT is to prevent the reuse of ROWIDs from
   previously deleted rows.
-</p></li></li></li></li></ol>
+</p></li></ol>
 
 <h1 id="background"><span>2. </span>Background</h1>
 
@@ -138,10 +140,9 @@ automatically by the database engine.  To specify a ROWID manually,
 just include it in the list of values to be inserted.  For example:
 </p>
 
-<blockquote><pre>
-CREATE TABLE test1(a INT, b TEXT);
+<div class="codeblock"><pre>CREATE TABLE test1(a INT, b TEXT);
 INSERT INTO test1(rowid, a, b) VALUES(123, 5, 'hello');
-</pre></blockquote>
+</pre></div>
 
 <p>
 If no ROWID is specified on the insert, or if the specified ROWID has a value

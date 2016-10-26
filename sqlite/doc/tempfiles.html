@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -358,9 +360,9 @@ involve multiple database files where at least two of the databases
 meet all of the following requirements:
 <ol>
 <li>The database is modified by the transaction
-<li>The <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting is not OFF
-<li>The <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a> is not OFF, MEMORY, or WAL
-</li></li></li></ol>
+</li><li>The <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting is not OFF
+</li><li>The <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a> is not OFF, MEMORY, or WAL
+</li></ol>
 This means that SQLite transactions are not atomic
 across multiple database files on a power-loss when the database 
 files have synchronous turned off or when they are using journal 
@@ -507,7 +509,7 @@ SELECT * FROM ex1 WHERE EXISTS(SELECT 1 FROM ex2 WHERE ex2.b=ex1.a);
 </pre></blockquote>
 
 <p>
-Recent versions of SQLite (version 3.5.4 and later)
+Recent versions of SQLite (<a href="releaselog/3_5_4.html">version 3.5.4</a> 2007-12-14) and later)
 will do this rewrite automatically
 if an index exists on the column ex2.b.
 </p>
@@ -808,13 +810,13 @@ On unix-like systems, directories are searched in the following order:
 </p><ol>
 <li>The directory set by <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a> or by the
     <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> global variable
-<li>The SQLITE_TMPDIR environment variable
-<li>The TMPDIR environment variable
-<li>/var/tmp
-<li>/usr/tmp
-<li>/tmp
-<li>The current working directory (".")
-</li></li></li></li></li></li></li></ol>
+</li><li>The SQLITE_TMPDIR environment variable
+</li><li>The TMPDIR environment variable
+</li><li>/var/tmp
+</li><li>/usr/tmp
+</li><li>/tmp
+</li><li>The current working directory (".")
+</li></ol>
 The first of the above that is found to exist and have the write and
 execute bits set is used.  The final "." fallback is important for some
 applications that use SQLite inside of chroot jails that do not have
@@ -825,8 +827,8 @@ On Windows systems, folders are searched in the following order:
 </p><ol>
 <li>The folder set by <a href="pragma.html#pragma_temp_store_directory">PRAGMA temp_store_directory</a> or by the
     <a href="c3ref/temp_directory.html">sqlite3_temp_directory</a> global variable
-<li>The folder returned by the GetTempPath() system interface.
-</li></li></ol>
+</li><li>The folder returned by the GetTempPath() system interface.
+</li></ol>
 SQLite itself does not pay any attention to environment variables
 in this case, though presumably the GetTempPath() system call does.
 The search algorithm is different for CYGWIN builds.  Check the 

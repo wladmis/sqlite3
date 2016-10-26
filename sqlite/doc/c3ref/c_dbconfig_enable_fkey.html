@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -73,12 +75,13 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE -->
+<!-- keywords: SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Database Connection Configuration Options</h2>
 </div>
 <blockquote><pre>
+#define SQLITE_DBCONFIG_MAINDBNAME            1000 /* const char* */
 #define SQLITE_DBCONFIG_LOOKASIDE             1001 /* void* int int */
 #define SQLITE_DBCONFIG_ENABLE_FKEY           1002 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
@@ -167,6 +170,15 @@ The second parameter is a pointer to an integer into which
 is written 0 or 1 to indicate whether <a href="../c3ref/load_extension.html">sqlite3_load_extension()</a> interface
 is disabled or enabled following this call.  The second parameter may
 be a NULL pointer, in which case the new setting is not reported back.
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_MAINDBNAME</dt>
+<dd> This option is used to change the name of the "main" database
+schema.  The sole argument is a pointer to a constant UTF8 string
+which will become the new schema name in place of "main".  SQLite
+does not make a copy of the new main schema name string, so the application
+must ensure that the argument passed into this DBCONFIG option is unchanged
+until after the database connection closes.
 </dd></p>
 
 <p></dl>

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -145,7 +147,7 @@ mk.innerHTML = "&#x25ba;";
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_12_0.html">version 3.12.0</a>,
+<p>As of <a href="releaselog/3_12_0.html">version 3.12.0</a> (2016-03-29),
 the SQLite library consists of approximately
 116.3 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
@@ -159,21 +161,21 @@ test code and test scripts -
 
 <ul>
 <li> Three independently developed test harnesses
-<li> 100% branch test coverage in an as-deployed configuration
-<li> Millions and millions of test cases
-<li> Out-of-memory tests
-<li> I/O error tests
-<li> Crash and power loss tests
-<li> Fuzz tests
-<li> Boundary value tests
-<li> Disabled optimization tests
-<li> Regression tests
-<li> Malformed database tests
-<li> Extensive use of assert() and run-time checks
-<li> Valgrind analysis
-<li> Undefined behavior checks
-<li> Checklists
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</li><li> 100% branch test coverage in an as-deployed configuration
+</li><li> Millions and millions of test cases
+</li><li> Out-of-memory tests
+</li><li> I/O error tests
+</li><li> Crash and power loss tests
+</li><li> Fuzz tests
+</li><li> Boundary value tests
+</li><li> Disabled optimization tests
+</li><li> Regression tests
+</li><li> Malformed database tests
+</li><li> Extensive use of assert() and run-time checks
+</li><li> Valgrind analysis
+</li><li> Undefined behavior checks
+</li><li> Checklists
+</li></ul>
 
 <a name="harnesses"></a>
 
@@ -240,13 +242,13 @@ small programs that implement specialized tests.
 </p><ol>
 <li value="4">The "speedtest1.c" program 
 estimates the performance of SQLite under a typical workload.  
-<li>The "mptester.c" program is a stress test for multiple processes 
+</li><li>The "mptester.c" program is a stress test for multiple processes 
 concurrently reading and writing a single database.
-<li>The "threadtest3.c" program is a stress test for multiple threads using
+</li><li>The "threadtest3.c" program is a stress test for multiple threads using
 SQLite simultaneously.  
-<li>The "fuzzershell.c" program is used to
+</li><li>The "fuzzershell.c" program is used to
 run some <a href="'#fuzztesting'">fuzz tests</a>.
-</li></li></li></li></ol>
+</li></ol>
 
 
 <p>All of the tests above must run successfully, on multiple platforms
@@ -439,7 +441,7 @@ a fair number of crash bugs in SQLite, and even a few cases where SQLite
 computed incorrect results.
 
 </p><p>Because of its past success, AFL became a standard part of the testing
-strategy for SQLite beginning with <a href="releaselog/3_8_10.html">version 3.8.10</a>.  
+strategy for SQLite beginning with <a href="releaselog/3_8_10.html">version 3.8.10</a> (2015-05-07).  
 Both SQL statements and database files are fuzzed.
 Billions and billions of mutations have been tried, but AFL's 
 instrumentation has narrowed them down to less than 50,000 test cases that
@@ -557,8 +559,8 @@ least three test cases:</p>
 
 <p></p><ul>
 <li> a<=b <li="1"> a>b && c==25
-<li> a>b && c!=25
-</li></=b></li></ul>
+</=b></li><li> a>b && c!=25
+</li></ul>
 
 <p>Any one of the above test cases would provide 100% statement coverage
 but all three are required for 100% branch coverage.  Generally speaking,
@@ -683,11 +685,11 @@ defines MC/DC as follows:</p>
 
 <ul>
 <li> Each decision tries every possible outcome.
-<li> Each condition in a decision takes on every possible outcome.
-<li> Each entry and exit point is invoked.
-<li> Each condition in a decision is shown to independently
+</li><li> Each condition in a decision takes on every possible outcome.
+</li><li> Each entry and exit point is invoked.
+</li><li> Each condition in a decision is shown to independently
      affect the outcome of the decision.
-</li></li></li></li></ul>
+</li></ul>
 
 <p>In the C programming language 
 where <b><tt>&amp;&amp;</tt></b> and <b><tt>||</tt></b>
@@ -939,14 +941,14 @@ ANSI C include:
 </p><ul>
 <li>Signed integer overflow.  (Signed integer overflow does <u>not</u>
 necessarily wrap around, as most people expect.)
-<li>Shifting an N-bit integer by more than N bits.
-<li>Shifting by a negative amount.
-<li>Shifting a negative number.
-<li>Using the memcpy() function on overlapping buffers.
-<li>The order of evaluation of function arguments.
-<li>Whether or not "char" variables are signed or unsigned.
-<li>And so forth....
-</li></li></li></li></li></li></li></li></ul>
+</li><li>Shifting an N-bit integer by more than N bits.
+</li><li>Shifting by a negative amount.
+</li><li>Shifting a negative number.
+</li><li>Using the memcpy() function on overlapping buffers.
+</li><li>The order of evaluation of function arguments.
+</li><li>Whether or not "char" variables are signed or unsigned.
+</li><li>And so forth....
+</li></ul>
 
 <p>Since undefined and implementation-defined behavior is non-portable
 and can easily lead to incorrect answers, SQLite works very hard to avoid it.

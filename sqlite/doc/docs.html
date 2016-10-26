@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -75,7 +77,7 @@ return false;
 </div>
 
 
-<h2 align="center">Documents By Category</h1>
+<h2 align="center">Documentation</h1>
 <style>
 .showhide {
   margin-left: 0;
@@ -124,21 +126,11 @@ function showhide(n){
 }
 </script>
 <ul class="showhide">
-<li><a onclick='showhide(1)'><span class='sh_mark' id='sh_mark_1'>&#x25ba;</span> Document Lists And Indexes</a>
-<ul id='sh_sub_1'>
-<li><a class='sh_link' href='doclist.html'>Alphabetical Listing Of Documents</a>
-<span class='desktoponly'>&rarr; 
-  A list of all titled pages on this website, sorted by title.
-</span>
+<li><a onclick='showhide(1)'><span class='sh_mark' id='sh_mark_1'>&#x25bc;</span> Document Lists And Indexes</a>
+<ul id='sh_sub_1' style='display:block;'>
+<li><a class='sh_link' href='doclist.html'>Alphabetical Listing Of All Documents</a>
 <li><a class='sh_link' href='keyword_index.html'>Website Keyword Index</a>
-<span class='desktoponly'>&rarr; 
-  A cross-reference from keywords to various pages within this website.
-</span>
 <li><a class='sh_link' href='sitemap.html#pindex'>Permuted Title Index</a>
-<span class='desktoponly'>&rarr; 
-  Also known as a "keyword in context" or "KWIC" index or as a concordance,
-  this document is a listing of all other documents sorted by keyword.
-</span>
 </ul>
 <li><a onclick='showhide(2)'><span class='sh_mark' id='sh_mark_2'>&#x25ba;</span> Overview Documents</a>
 <ul id='sh_sub_2'>
@@ -178,7 +170,7 @@ function showhide(n){
   A list of independently written books about SQLite.
 </span>
 </ul>
-<li><a onclick='showhide(3)'><span class='sh_mark' id='sh_mark_3'>&#x25ba;</span> SQLite Programming Interfaces</a>
+<li><a onclick='showhide(3)'><span class='sh_mark' id='sh_mark_3'>&#x25ba;</span> Programming Interfaces</a>
 <ul id='sh_sub_3'>
 <li><a class='sh_link' href='quickstart.html'>SQLite In 5 Minutes Or Less</a>
 <span class='desktoponly'>&rarr; 
@@ -203,10 +195,6 @@ function showhide(n){
   A description of the meanings of the numeric result codes
   returned by various C/C++ interfaces.
 </span>
-<li><a class='sh_link' href='tclsqlite.html'>Tcl API</a>
-<span class='desktoponly'>&rarr; 
-  A description of the TCL interface bindings for SQLite.
-</span>
 <li><a class='sh_link' href='lang.html'>SQL Syntax</a>
 <span class='desktoponly'>&rarr; 
   This document describes the SQL language that is understood by
@@ -229,6 +217,14 @@ function showhide(n){
 <span class='desktoponly'>&rarr; 
   SQL functions for manipulating dates and times.
 </span>
+<li><a class='sh_link' href='http://system.data.sqlite.org/'>System.Data.SQLite</a>
+<span class='desktoponly'>&rarr; 
+  C#/.NET bindings for SQLite
+</span>
+<li><a class='sh_link' href='tclsqlite.html'>Tcl API</a>
+<span class='desktoponly'>&rarr; 
+  A description of the TCL interface bindings for SQLite.
+</span>
 <li><a class='sh_link' href='datatype3.html'>DataTypes</a>
 <span class='desktoponly'>&rarr; 
   SQLite version 3 introduces the concept of manifest typing, where the
@@ -237,7 +233,7 @@ function showhide(n){
   This page describes data typing for SQLite version 3 in further detail.
 </span>
 </ul>
-<li><a onclick='showhide(4)'><span class='sh_mark' id='sh_mark_4'>&#x25ba;</span> SQLite Extensions</a>
+<li><a onclick='showhide(4)'><span class='sh_mark' id='sh_mark_4'>&#x25ba;</span> Extensions</a>
 <ul id='sh_sub_4'>
 <li><a class='sh_link' href='json1.html'>Json1 - JSON Integration</a>
 <span class='desktoponly'>&rarr; 
@@ -259,24 +255,10 @@ function showhide(n){
 </span>
 <li><a class='sh_link' href='sessionintro.html'>Sessions</a>
 <span class='desktoponly'>&rarr; 
-</span>
-<li><a class='sh_link' href='rbu.html'>RBU</a>
-<span class='desktoponly'>&rarr; 
-  A description of the SQLite R-Tree extension. An R-Tree is a specialized
-  data structure that supports fast multi-dimensional range queries often
-  used in geospatial systems.
-</span>
-<li><a class='sh_link' href='spellfix1.html'>Spellfix1</a>
-<span class='desktoponly'>&rarr; 
-</span>
-<li><a class='sh_link' href='dbstat.html'>Dbstat Virtual Table</a>
-<span class='desktoponly'>&rarr; 
-</span>
-<li><a class='sh_link' href='csv.html'>Csv Virtual Table</a>
-<span class='desktoponly'>&rarr; 
-</span>
-<li><a class='sh_link' href='carray.html'>Carray</a>
-<span class='desktoponly'>&rarr; 
+  The Sessions extension allows change to an SQLite database to be
+  captured in a compact file which can be reverted on the original
+  database (to implement "undo") or transferred and applied to another
+  similar database.
 </span>
 <li><a class='sh_link' href='loadext.html'>Run-Time Loadable Extensions</a>
 <span class='desktoponly'>&rarr; 
@@ -284,8 +266,39 @@ function showhide(n){
   are compiled, and how developers can create their own run-time loadable
   extensions for SQLite.
 </span>
+<li><a class='sh_link' href='http://sqlite.org/android/'>SQLite Android Bindings</a>
+<span class='desktoponly'>&rarr; 
+  Information on how to deploy your own private copy of SQLite on
+  Android, bypassing the built-in SQLite, but using the same Java
+  interface.
+</span>
+<li><a class='sh_link' href='dbstat.html'>Dbstat Virtual Table</a>
+<span class='desktoponly'>&rarr; 
+  The DBSTAT virtual table reports on the sizes and geometries of tables
+  storing content in an SQLite database, and is the basis for the
+  [sqlite3_analyzer] utility program.
+</span>
+<li><a class='sh_link' href='csv.html'>Csv Virtual Table</a>
+<span class='desktoponly'>&rarr; 
+  The CSV virtual table allows SQLite to directly read and query
+  [https://www.ietf.org/rfc/rfc4180.txt|RFC 4180] formatted files.
+</span>
+<li><a class='sh_link' href='carray.html'>Carray</a>
+<span class='desktoponly'>&rarr; 
+  CARRAY is a [table-valued function] that allows C-language arrays to
+  be used in SQL queries.
+</span>
+<li><a class='sh_link' href='series.html'>generate_series</a>
+<span class='desktoponly'>&rarr; 
+  A description of the generate_series() [table-valued function].
+</span>
+<li><a class='sh_link' href='spellfix1.html'>Spellfix1</a>
+<span class='desktoponly'>&rarr; 
+  The spellfix1 extension is an experiment in doing spelling correction
+  for [full-text search].
+</span>
 </ul>
-<li><a onclick='showhide(5)'><span class='sh_mark' id='sh_mark_5'>&#x25ba;</span> SQLite Features</a>
+<li><a onclick='showhide(5)'><span class='sh_mark' id='sh_mark_5'>&#x25ba;</span> Features</a>
 <ul id='sh_sub_5'>
 <li><a class='sh_link' href='shortnames.html'>8+3 Filenames</a>
 <span class='desktoponly'>&rarr; 
@@ -304,12 +317,6 @@ function showhide(n){
   copy content from a disk file into an in-memory database or vice
   versa and it can make a hot backup of a live database.  This application
   note gives examples of how.
-</span>
-<li><a class='sh_link' href='cli.html'>Command-Line Shell</a>
-<span class='desktoponly'>&rarr; 
-  Notes on using the "sqlite3.exe" command-line interface that
-  can be used to create, modify, and query arbitrary SQLite
-  database files.
 </span>
 <li><a class='sh_link' href='errlog.html'>Error and Warning Log</a>
 <span class='desktoponly'>&rarr; 
@@ -394,8 +401,48 @@ function showhide(n){
   explains how to use WAL mode for improved performance.
 </span>
 </ul>
-<li><a onclick='showhide(6)'><span class='sh_mark' id='sh_mark_6'>&#x25ba;</span> Advocacy</a>
+<li><a onclick='showhide(6)'><span class='sh_mark' id='sh_mark_6'>&#x25ba;</span> Tools</a>
 <ul id='sh_sub_6'>
+<li><a class='sh_link' href='cli.html'>Command-Line Shell (sqlite3.exe)</a>
+<span class='desktoponly'>&rarr; 
+  Notes on using the "sqlite3.exe" command-line interface that
+  can be used to create, modify, and query arbitrary SQLite
+  database files.
+</span>
+<li><a class='sh_link' href='sqlanalyze.html'>SQLite Database Analyzer (sqlite3_analyzer.exe)</a>
+<span class='desktoponly'>&rarr; 
+  This stand-alone program reads an SQLite database and outputs a file
+  showing the space used by each table and index and other statistics.
+  Built using the [dbstat virtual table].
+</span>
+<li><a class='sh_link' href='rbu.html'>RBU</a>
+<span class='desktoponly'>&rarr; 
+  The "Resumable Bulk Update" utility program allows a batch of changes
+  to be applied to a remote database running on embedded hardware in a
+  way that is resumeable and does not interrupt ongoing operation.
+</span>
+<li><a class='sh_link' href='sqldiff.html'>SQLite Database Diff (sqldiff.exe)</a>
+<span class='desktoponly'>&rarr; 
+  This stand-alone program compares two SQLite database files and
+  outputs the SQL needed to convert one into the other.
+</span>
+<li><a class='sh_link' href='dbhash.html'>Database Hash (dbhash.exe)</a>
+<span class='desktoponly'>&rarr; 
+  This program demonstrates how to compute a hash over the content
+  of an SQLite database.
+</span>
+<li><a class='sh_link' href='http://www.fossil-scm.org/'>Fossil</a>
+<span class='desktoponly'>&rarr; 
+  The Fossil Version Control System is a distributed VCS designed specifically
+  to support SQLite development.  Fossil uses SQLite as for storage.
+</span>
+<li><a class='sh_link' href='http://www.sqlite.org/sqlar/'>SQLite Archiver (sqlar.exe)</a>
+<span class='desktoponly'>&rarr; 
+  A ZIP-like archive program that uses SQLite for storage.
+</span>
+</ul>
+<li><a onclick='showhide(7)'><span class='sh_mark' id='sh_mark_7'>&#x25ba;</span> Advocacy</a>
+<ul id='sh_sub_7'>
 <li><a class='sh_link' href='appfileformat.html'>SQLite As An Application File Format</a>
 <span class='desktoponly'>&rarr; 
   This article advocates using SQLite as an application file format
@@ -407,8 +454,8 @@ function showhide(n){
   and application programs that make use of SQLite.
 </span>
 </ul>
-<li><a onclick='showhide(7)'><span class='sh_mark' id='sh_mark_7'>&#x25ba;</span> SQLite Technical/Design Documentation</a>
-<ul id='sh_sub_7'>
+<li><a onclick='showhide(8)'><span class='sh_mark' id='sh_mark_8'>&#x25ba;</span> Technical and Design Documentation</a>
+<ul id='sh_sub_8'>
 <li><a class='sh_link' href='howtocorrupt.html'>How Database Corruption Can Occur</a>
 <span class='desktoponly'>&rarr; 
   SQLite is highly resistant to database corruption.  But application,
@@ -503,9 +550,20 @@ function showhide(n){
   modify the default behavior of the library or omit optional features
   in order to reduce binary size.
 </span>
+<li><a class='sh_link' href='https://sqlite.org/android/'>Android Bindings for SQLite</a>
+<span class='desktoponly'>&rarr; 
+  A description of how to compile your own SQLite for Android
+  (bypassing the SQLite that is built into Android) together with
+  code and makefiles.
+</span>
+<li><a class='sh_link' href='debugging.html'>Debugging Hints</a>
+<span class='desktoponly'>&rarr; 
+  A list of tricks and techniques used to trace, examine, and understand
+  the operation of the core SQLite library.
+</span>
 </ul>
-<li><a onclick='showhide(8)'><span class='sh_mark' id='sh_mark_8'>&#x25ba;</span> Upgrading SQLite, Backwards Compatibility</a>
-<ul id='sh_sub_8'>
+<li><a onclick='showhide(9)'><span class='sh_mark' id='sh_mark_9'>&#x25ba;</span> Upgrading SQLite, Backwards Compatibility</a>
+<ul id='sh_sub_9'>
 <li><a class='sh_link' href='35to36.html'>Moving From SQLite 3.5 to 3.6</a>
 <span class='desktoponly'>&rarr; 
   A document describing the differences between SQLite version 3.5.9
@@ -532,8 +590,8 @@ function showhide(n){
   public SQLite source tree.
 </span>
 </ul>
-<li><a onclick='showhide(9)'><span class='sh_mark' id='sh_mark_9'>&#x25ba;</span> Obsolete Documents</a>
-<ul id='sh_sub_9'>
+<li><a onclick='showhide(10)'><span class='sh_mark' id='sh_mark_10'>&#x25ba;</span> Obsolete Documents</a>
+<ul id='sh_sub_10'>
 <li><a class='sh_link' href='asyncvfs.html'>Asynchronous IO Mode</a>
 <span class='desktoponly'>&rarr; 
   This page describes the asynchronous IO extension developed alongside

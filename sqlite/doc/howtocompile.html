@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -173,13 +175,13 @@ files:</p>
 
 <ul>
 <li><b>sqlite3.c</b>: The SQLite amalgamation source file
-<li><b>sqlite3.h</b>: The header files that accompanies sqlite3.c and 
+</li><li><b>sqlite3.h</b>: The header files that accompanies sqlite3.c and 
 defines the C-language interfaces to SQLite.
-<li><b>shell.c</b>: The command-line interface program itself.
+</li><li><b>shell.c</b>: The command-line interface program itself.
 This is the C source code file that contains the definition of
 the <b>main()</b> routine and the loop that prompts for user input
 and passes that input into the SQLite database engine for processing.
-</li></li></li></ul>
+</li></ul>
 
 <p>All three of the above source files are contained in the
 <a href="download.html">amalgamation tarball</a> available on the <a href="download.html">download page</a>.</p>
@@ -307,23 +309,23 @@ be known by the code generators includes:</p>
 
 <ul>
 <li><a href="compile.html#enable_update_delete_limit">SQLITE_ENABLE_UPDATE_DELETE_LIMIT</a>
-<li><a href="compile.html#omit_altertable">SQLITE_OMIT_ALTERTABLE</a>
-<li><a href="compile.html#omit_analyze">SQLITE_OMIT_ANALYZE</a>
-<li><a href="compile.html#omit_attach">SQLITE_OMIT_ATTACH</a>
-<li><a href="compile.html#omit_autoincrement">SQLITE_OMIT_AUTOINCREMENT</a>
-<li><a href="compile.html#omit_cast">SQLITE_OMIT_CAST</a>
-<li><a href="compile.html#omit_compound_select">SQLITE_OMIT_COMPOUND_SELECT</a>
-<li><a href="compile.html#omit_explain">SQLITE_OMIT_EXPLAIN</a>
-<li><a href="compile.html#omit_foreign_key">SQLITE_OMIT_FOREIGN_KEY</a>
-<li><a href="compile.html#omit_pragma">SQLITE_OMIT_PRAGMA</a>
-<li><a href="compile.html#omit_reindex">SQLITE_OMIT_REINDEX</a>
-<li><a href="compile.html#omit_subquery">SQLITE_OMIT_SUBQUERY</a>
-<li><a href="compile.html#omit_tempdb">SQLITE_OMIT_TEMPDB</a>
-<li><a href="compile.html#omit_trigger">SQLITE_OMIT_TRIGGER</a>
-<li><a href="compile.html#omit_vacuum">SQLITE_OMIT_VACUUM</a>
-<li><a href="compile.html#omit_view">SQLITE_OMIT_VIEW</a>
-<li><a href="compile.html#omit_virtualtable">SQLITE_OMIT_VIRTUALTABLE</a>
-</li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></li></ul>
+</li><li><a href="compile.html#omit_altertable">SQLITE_OMIT_ALTERTABLE</a>
+</li><li><a href="compile.html#omit_analyze">SQLITE_OMIT_ANALYZE</a>
+</li><li><a href="compile.html#omit_attach">SQLITE_OMIT_ATTACH</a>
+</li><li><a href="compile.html#omit_autoincrement">SQLITE_OMIT_AUTOINCREMENT</a>
+</li><li><a href="compile.html#omit_cast">SQLITE_OMIT_CAST</a>
+</li><li><a href="compile.html#omit_compound_select">SQLITE_OMIT_COMPOUND_SELECT</a>
+</li><li><a href="compile.html#omit_explain">SQLITE_OMIT_EXPLAIN</a>
+</li><li><a href="compile.html#omit_foreign_key">SQLITE_OMIT_FOREIGN_KEY</a>
+</li><li><a href="compile.html#omit_pragma">SQLITE_OMIT_PRAGMA</a>
+</li><li><a href="compile.html#omit_reindex">SQLITE_OMIT_REINDEX</a>
+</li><li><a href="compile.html#omit_subquery">SQLITE_OMIT_SUBQUERY</a>
+</li><li><a href="compile.html#omit_tempdb">SQLITE_OMIT_TEMPDB</a>
+</li><li><a href="compile.html#omit_trigger">SQLITE_OMIT_TRIGGER</a>
+</li><li><a href="compile.html#omit_vacuum">SQLITE_OMIT_VACUUM</a>
+</li><li><a href="compile.html#omit_view">SQLITE_OMIT_VIEW</a>
+</li><li><a href="compile.html#omit_virtualtable">SQLITE_OMIT_VIRTUALTABLE</a>
+</li></ul>
 
 <p>To build a custom amalgamation, first download the original individual
 source files onto a unix or unix-like development platform.  
@@ -402,16 +404,16 @@ compile-time options include:
 <li><p><b>-Os</b> - Optimize for size. 
 Make the DLL as small as possible.</p>
 
-<li><p><b>-O2</b> - Optimize for speed.  This will make the DLL larger by
+</li><li><p><b>-O2</b> - Optimize for speed.  This will make the DLL larger by
 unrolling loops and inlining functions.</p>
 
-<li><p><b>-DSQLITE_ENABLE_FTS4</b> -
+</li><li><p><b>-DSQLITE_ENABLE_FTS4</b> -
 Include the <a href="fts3.html">full-text search</a> engine code in SQLite.
 
-</p><li><p><b>-DSQLITE_ENABLE_RTREE</b> - Include the <a href="rtree.html">R-Tree extension</a>.
+</p></li><li><p><b>-DSQLITE_ENABLE_RTREE</b> - Include the <a href="rtree.html">R-Tree extension</a>.
 
-</p><li><p><b>-DSQLITE_ENABLE_COLUMN_METADATA</b> -
+</p></li><li><p><b>-DSQLITE_ENABLE_COLUMN_METADATA</b> -
 This enables some extra APIs that are required by some common systems,
 including Ruby-on-Rails.
-</p></li></li></li></li></li></ul>
+</p></li></ul>
 

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -111,18 +113,16 @@ instance of the dbstat virtual table before using it.  The "dbstat"
 module name can be used as if it were a table name to query the
 dbstat virtual table directly.  For example:
 
-</p><blockquote><pre>
-SELECT * FROM dbstat;
-</pre></blockquote>
+</p><div class="codeblock"><pre>SELECT * FROM dbstat;
+</pre></div>
 
 <p>
 If a named virtual table that uses the dbstat module is desired,
 then the recommended way to create an instance of the dbstat
 virtual table is as follows:
 
-</p><blockquote><pre>
-CREATE VIRTUAL TABLE temp.stat USING dbstat(main);
-</pre></blockquote>
+</p><div class="codeblock"><pre>CREATE VIRTUAL TABLE temp.stat USING dbstat(main);
+</pre></div>
 
 <p>
 Note the "temp." qualifier before the virtual table name ("stat").  This
@@ -141,8 +141,7 @@ name in the FROM clause of the query.  (See further discussion of
 
 </p><p>
 The schema for the dbstat virtual table is this:
-</p><blockquote><pre>
-CREATE TABLE dbstat(
+</p><div class="codeblock"><pre>CREATE TABLE dbstat(
   name       STRING,     -- Name of table or index
   path       INTEGER,    -- Path to page from root
   pageno     INTEGER,    -- Page number
@@ -155,7 +154,7 @@ CREATE TABLE dbstat(
   pgsize     INTEGER,    -- Size of the page
   schema     TEXT HIDDEN -- The database being analyzed
 );
-</pre></blockquote>
+</pre></div>
 
 <p>
 There is a single row of the dbstat table for each page in the
@@ -184,20 +183,18 @@ from. For example, the three overflow pages in a chain linked from
 the left-most cell of the 450th child of the root page are identified
 by the paths:
 
-</p><blockquote><pre>
-'/1c2/000+000000'         // First page in overflow chain
+</p><div class="codeblock"><pre>'/1c2/000+000000'         // First page in overflow chain
 '/1c2/000+000001'         // Second page in overflow chain
 '/1c2/000+000002'         // Third page in overflow chain
-</pre></blockquote>
+</pre></div>
 
 <p>
 If the paths are sorted using the BINARY collation sequence, then
 the overflow pages associated with a cell will appear earlier in the
 sort-order than its child page:
 
-</p><blockquote><pre>
-'/1c2/000/'               // Left-most child of 451st child of root
-</pre></blockquote>
+</p><div class="codeblock"><pre>'/1c2/000/'               // Left-most child of 451st child of root
+</pre></div>
 
 <h1 id="example_uses_of_the_dbstat_virtual_table"><span>3. </span>Example uses of the dbstat virtual table</h1>
 
@@ -205,9 +202,8 @@ sort-order than its child page:
 To find the total number of pages used to store table "xyz" in schema "aux1",
 use:
 
-</p><blockquote><pre>
-SELECT count(*) FROM dbstat('aux1') WHERE name='xyz';
-</pre></blockquote>
+</p><div class="codeblock"><pre>SELECT count(*) FROM dbstat('aux1') WHERE name='xyz';
+</pre></div>
 
 <p>
 To see how efficiently the content of a table is stored on disk,
@@ -216,16 +212,14 @@ by the total amount of disk space used.  The closer this number
 is to 100%, the more efficient the packing.  (In this example, the
 'xyz' table is assumed to be in the 'main' schema.)
 
-</p><blockquote><pre>
-SELECT sum(pgsize-unused)/sum(pgsize) FROM dbstat WHERE name='xyz';
-</pre></blockquote>
+</p><div class="codeblock"><pre>SELECT sum(pgsize-unused)/sum(pgsize) FROM dbstat WHERE name='xyz';
+</pre></div>
 
 <p>
 To find the average fan-out for a table, run:
 
-</p><blockquote><pre>
-SELECT avg(ncell) FROM dbstat WHERE name='xyz' AND pagetype='internal';
-</pre></blockquote>
+</p><div class="codeblock"><pre>SELECT avg(ncell) FROM dbstat WHERE name='xyz' AND pagetype='internal';
+</pre></div>
 
 
 <p>
@@ -235,12 +229,11 @@ is on sequential pages.  To find out what fraction of the pages in
 a database are sequential (and thus obtain a measurement that might
 be useful in determining when to <a href="lang_vacuum.html">VACUUM</a>), run a query like the following:
 
-</p><blockquote><pre>
-CREATE TEMP TABLE s(rowid INTEGER PRIMARY KEY, pageno INT);
+</p><div class="codeblock"><pre>CREATE TEMP TABLE s(rowid INTEGER PRIMARY KEY, pageno INT);
 INSERT INTO s(pageno) SELECT pageno FROM dbstat ORDER BY path;
 SELECT sum(s1.pageno+1==s2.pageno)*1.0/count(*)
   FROM s AS s1, s AS s2
  WHERE s1.rowid+1=s2.rowid;
 DROP TABLE s;
-</pre></blockquote>
+</pre></div>
 

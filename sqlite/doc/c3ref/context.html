@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -91,11 +93,11 @@ pointer through into calls to <a href="../c3ref/result_blob.html">sqlite3_result
 <a href="../c3ref/context_db_handle.html">sqlite3_context_db_handle()</a>, <a href="../c3ref/get_auxdata.html">sqlite3_get_auxdata()</a>,
 and/or <a href="../c3ref/get_auxdata.html">sqlite3_set_auxdata()</a>.
 </p><style>
-#listtab22 tr td {vertical-align:top;}
+#listtab21 tr td {vertical-align:top;}
 </style>
-<table id='listtab22' width='100%'></table>
+<table id='listtab21' width='100%'></table>
 <script>
-var listitems22 = [{"u":"../c3ref/aggregate_context.html","x":"sqlite3_aggregate_context","s":0},
+var listitems21 = [{"u":"../c3ref/aggregate_context.html","x":"sqlite3_aggregate_context","s":0},
 {"u":"../c3ref/context_db_handle.html","x":"sqlite3_context_db_handle","s":0},
 {"u":"../c3ref/get_auxdata.html","x":"sqlite3_get_auxdata","s":0},
 {"u":"../c3ref/result_blob.html","x":"sqlite3_result_blob","s":0},
@@ -124,34 +126,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems22.length+1)/nCol);
+var nRow = Math.ceil((listitems21.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems22.length; i++){
+for(var i=0; i<listitems21.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems22[i].u=="" || listitems22[i].s==2){
+  if(listitems21[i].u=="" || listitems21[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems22[i].u;
+    h += listitems21[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
-  h += listitems22[i].x;
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
+  h += listitems21[i].x;
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
   h += ea
-  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems22[i].s==3) h += "&sup1\n";
-  if(listitems22[i].s==4) h += "&sup2\n";
-  if(listitems22[i].s==5) h += "&sup3\n";
+  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems21[i].s==3) h += "&sup1\n";
+  if(listitems21[i].s==4) h += "&sup2\n";
+  if(listitems21[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab22").innerHTML = h;
+document.getElementById("listtab21").innerHTML = h;
 </script>
 </p>
 <p>See also lists of

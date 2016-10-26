@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -97,53 +99,54 @@ code file sqlite3session.h.</p>
 
 <h2>Objects:</h2>
 <style>
-#listtab33 tr td {vertical-align:top;}
+#listtab31 tr td {vertical-align:top;}
 </style>
-<table id='listtab33' width='100%'></table>
+<table id='listtab31' width='100%'></table>
 <script>
-var listitems33 = [{"u":"#sqlite3_changeset_iter","x":"sqlite3_changeset_iter","s":0},
+var listitems31 = [{"u":"#sqlite3_changegroup","x":"sqlite3_changegroup","s":0},
+{"u":"#sqlite3_changeset_iter","x":"sqlite3_changeset_iter","s":0},
 {"u":"#sqlite3_session","x":"sqlite3_session","s":0}];
 var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/300);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems33.length+1)/nCol);
+var nRow = Math.ceil((listitems31.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems33.length; i++){
+for(var i=0; i<listitems31.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems33[i].u=="" || listitems33[i].s==2){
+  if(listitems31[i].u=="" || listitems31[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems33[i].u;
+    h += listitems31[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems33[i].s==2 || listitems33[i].s==3) h += "<s>"
-  h += listitems33[i].x;
-  if(listitems33[i].s==2 || listitems33[i].s==3) h += "</s>"
+  if(listitems31[i].s==2 || listitems31[i].s==3) h += "<s>"
+  h += listitems31[i].x;
+  if(listitems31[i].s==2 || listitems31[i].s==3) h += "</s>"
   h += ea
-  if(listitems33[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems33[i].s==3) h += "&sup1\n";
-  if(listitems33[i].s==4) h += "&sup2\n";
-  if(listitems33[i].s==5) h += "&sup3\n";
+  if(listitems31[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems31[i].s==3) h += "&sup1\n";
+  if(listitems31[i].s==4) h += "&sup2\n";
+  if(listitems31[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab33").innerHTML = h;
+document.getElementById("listtab31").innerHTML = h;
 </script>
 <hr>
 
 <h2>Constants:</h2>
 <style>
-#listtab34 tr td {vertical-align:top;}
+#listtab32 tr td {vertical-align:top;}
 </style>
-<table id='listtab34' width='100%'></table>
+<table id='listtab32' width='100%'></table>
 <script>
-var listitems34 = [{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_ABORT","s":0},
+var listitems32 = [{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_ABORT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONFLICT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONSTRAINT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_DATA","s":0},
@@ -155,44 +158,47 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems34.length+1)/nCol);
+var nRow = Math.ceil((listitems32.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems34.length; i++){
+for(var i=0; i<listitems32.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems34[i].u=="" || listitems34[i].s==2){
+  if(listitems32[i].u=="" || listitems32[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems34[i].u;
+    h += listitems32[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems34[i].s==2 || listitems34[i].s==3) h += "<s>"
-  h += listitems34[i].x;
-  if(listitems34[i].s==2 || listitems34[i].s==3) h += "</s>"
+  if(listitems32[i].s==2 || listitems32[i].s==3) h += "<s>"
+  h += listitems32[i].x;
+  if(listitems32[i].s==2 || listitems32[i].s==3) h += "</s>"
   h += ea
-  if(listitems34[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems34[i].s==3) h += "&sup1\n";
-  if(listitems34[i].s==4) h += "&sup2\n";
-  if(listitems34[i].s==5) h += "&sup3\n";
+  if(listitems32[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems32[i].s==3) h += "&sup1\n";
+  if(listitems32[i].s==4) h += "&sup2\n";
+  if(listitems32[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab34").innerHTML = h;
+document.getElementById("listtab32").innerHTML = h;
 </script>
 <hr>
 
 <h2>Functions:</h2>
 <style>
-#listtab35 tr td {vertical-align:top;}
+#listtab33 tr td {vertical-align:top;}
 </style>
-<table id='listtab35' width='100%'></table>
+<table id='listtab33' width='100%'></table>
 <script>
-var listitems35 = [{"u":"#sqlite3changegroup_add_strm","x":"sqlite3changegroup_add_strm","s":0},
+var listitems33 = [{"u":"#sqlite3changegroup_add","x":"sqlite3changegroup_add","s":0},
+{"u":"#sqlite3changegroup_add_strm","x":"sqlite3changegroup_add_strm","s":0},
+{"u":"#sqlite3changegroup_delete","x":"sqlite3changegroup_delete","s":0},
 {"u":"#sqlite3changegroup_new","x":"sqlite3changegroup_new","s":0},
+{"u":"#sqlite3changegroup_output","x":"sqlite3changegroup_output","s":0},
 {"u":"#sqlite3changegroup_add_strm","x":"sqlite3changegroup_output_strm","s":0},
 {"u":"#sqlite3changeset_apply","x":"sqlite3changeset_apply","s":0},
 {"u":"#sqlite3changegroup_add_strm","x":"sqlite3changeset_apply_strm","s":0},
@@ -226,41 +232,119 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/300);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems35.length+1)/nCol);
+var nRow = Math.ceil((listitems33.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems35.length; i++){
+for(var i=0; i<listitems33.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems35[i].u=="" || listitems35[i].s==2){
+  if(listitems33[i].u=="" || listitems33[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems35[i].u;
+    h += listitems33[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems35[i].s==2 || listitems35[i].s==3) h += "<s>"
-  h += listitems35[i].x;
-  if(listitems35[i].s==2 || listitems35[i].s==3) h += "</s>"
+  if(listitems33[i].s==2 || listitems33[i].s==3) h += "<s>"
+  h += listitems33[i].x;
+  if(listitems33[i].s==2 || listitems33[i].s==3) h += "</s>"
   h += ea
-  if(listitems35[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems35[i].s==3) h += "&sup1\n";
-  if(listitems35[i].s==4) h += "&sup2\n";
-  if(listitems35[i].s==5) h += "&sup3\n";
+  if(listitems33[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems33[i].s==3) h += "&sup1\n";
+  if(listitems33[i].s==4) h += "&sup2\n";
+  if(listitems33[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab35").innerHTML = h;
+document.getElementById("listtab33").innerHTML = h;
 </script>
 <hr>
-<a name="sqlite3_changeset_iter"></a>
+<a name="sqlite3_changegroup"></a>
+<h2>Changegroup Handle</h2><blockquote><pre>typedef struct sqlite3_changegroup sqlite3_changegroup;
+</pre></blockquote><p></p><hr><a name="sqlite3_changeset_iter"></a>
 <h2>Changeset Iterator Handle</h2><blockquote><pre>typedef struct sqlite3_changeset_iter sqlite3_changeset_iter;
 </pre></blockquote><p></p><hr><a name="sqlite3_session"></a>
 <h2>Session Object Handle</h2><blockquote><pre>typedef struct sqlite3_session sqlite3_session;
+</pre></blockquote><p></p><hr><a name="sqlite3changegroup_add"></a>
+<h2>Add A Changeset To A Changegroup</h2><blockquote><pre>int sqlite3changegroup_add(sqlite3_changegroup*, int nData, void *pData);
+</pre></blockquote><p>
+Add all changes within the changeset (or patchset) in buffer pData (size
+nData bytes) to the changegroup.</p>
+
+<p>If the buffer contains a patchset, then all prior calls to this function
+on the same changegroup object must also have specified patchsets. Or, if
+the buffer contains a changeset, so must have the earlier calls to this
+function. Otherwise, SQLITE_ERROR is returned and no changes are added
+to the changegroup.</p>
+
+<p>Rows within the changeset and changegroup are identified by the values in
+their PRIMARY KEY columns. A change in the changeset is considered to
+apply to the same row as a change already present in the changegroup if
+the two rows have the same primary key.</p>
+
+<p>Changes to rows that do not already appear in the changegroup are
+simply copied into it. Or, if both the new changeset and the changegroup
+contain changes that apply to a single row, the final contents of the
+changegroup depends on the type of each change, as follows:</p>
+
+<p><table border=1 style="margin-left:8ex;margin-right:8ex">
+<tr><th style="white-space:pre">Existing Change  </th>
+<th style="white-space:pre">New Change       </th>
+<th>Output Change
+<tr><td>INSERT <td>INSERT <td>
+The new change is ignored. This case does not occur if the new
+changeset was recorded immediately after the changesets already
+added to the changegroup.
+<tr><td>INSERT <td>UPDATE <td>
+The INSERT change remains in the changegroup. The values in the
+INSERT change are modified as if the row was inserted by the
+existing change and then updated according to the new change.
+<tr><td>INSERT <td>DELETE <td>
+The existing INSERT is removed from the changegroup. The DELETE is
+not added.
+<tr><td>UPDATE <td>INSERT <td>
+The new change is ignored. This case does not occur if the new
+changeset was recorded immediately after the changesets already
+added to the changegroup.
+<tr><td>UPDATE <td>UPDATE <td>
+The existing UPDATE remains within the changegroup. It is amended
+so that the accompanying values are as if the row was updated once
+by the existing change and then again by the new change.
+<tr><td>UPDATE <td>DELETE <td>
+The existing UPDATE is replaced by the new DELETE within the
+changegroup.
+<tr><td>DELETE <td>INSERT <td>
+If one or more of the column values in the row inserted by the
+new change differ from those in the row deleted by the existing
+change, the existing DELETE is replaced by an UPDATE within the
+changegroup. Otherwise, if the inserted row is exactly the same
+as the deleted row, the existing DELETE is simply discarded.
+<tr><td>DELETE <td>UPDATE <td>
+The new change is ignored. This case does not occur if the new
+changeset was recorded immediately after the changesets already
+added to the changegroup.
+<tr><td>DELETE <td>DELETE <td>
+The new change is ignored. This case does not occur if the new
+changeset was recorded immediately after the changesets already
+added to the changegroup.
+</table></p>
+
+<p>If the new changeset contains changes to a table that is already present
+in the changegroup, then the number of columns and the position of the
+primary key columns for the table must be consistent. If this is not the
+case, this function fails with SQLITE_SCHEMA. If the input changeset
+appears to be corrupt and the corruption is detected, SQLITE_CORRUPT is
+returned. Or, if an out-of-memory condition occurs during processing, this
+function returns SQLITE_NOMEM. In all cases, if an error occurs the
+final contents of the changegroup is undefined.</p>
+
+<p>If no error occurs, SQLITE_OK is returned.
+</p><hr><a name="sqlite3changegroup_delete"></a>
+<h2>Delete A Changegroup Object</h2><blockquote><pre>void sqlite3changegroup_delete(sqlite3_changegroup*);
 </pre></blockquote><p></p><hr><a name="sqlite3changegroup_new"></a>
-<h2>Combine two or more changesets into a single changeset.</h2><blockquote><pre>int sqlite3changegroup_new(sqlite3_changegroup **pp);
+<h2>Create A New Changegroup Object</h2><blockquote><pre>int sqlite3changegroup_new(sqlite3_changegroup **pp);
 </pre></blockquote><p>
 An sqlite3_changegroup object is used to combine two or more changesets
 (or patchsets) into a single changeset (or patchset). A single changegroup
@@ -293,6 +377,33 @@ new() and delete(), and in any order.</p>
 <p>As well as the regular sqlite3changegroup_add() and
 sqlite3changegroup_output() functions, also available are the streaming
 versions sqlite3changegroup_add_strm() and sqlite3changegroup_output_strm().
+</p><hr><a name="sqlite3changegroup_output"></a>
+<h2>Obtain A Composite Changeset From A Changegroup</h2><blockquote><pre>int sqlite3changegroup_output(
+  sqlite3_changegroup*,
+  int *pnData,                    /* OUT: Size of output buffer in bytes */
+  void **ppData                   /* OUT: Pointer to output buffer */
+);
+</pre></blockquote><p>
+Obtain a buffer containing a changeset (or patchset) representing the
+current contents of the changegroup. If the inputs to the changegroup
+were themselves changesets, the output is a changeset. Or, if the
+inputs were patchsets, the output is also a patchset.</p>
+
+<p>As with the output of the sqlite3session_changeset() and
+sqlite3session_patchset() functions, all changes related to a single
+table are grouped together in the output of this function. Tables appear
+in the same order as for the very first changeset added to the changegroup.
+If the second or subsequent changesets added to the changegroup contain
+changes for tables that do not appear in the first changeset, they are
+appended onto the end of the output changeset, again in the order in
+which they are first encountered.</p>
+
+<p>If an error occurs, an SQLite error code is returned and the output
+variables (*pnData) and (*ppData) are set to 0. Otherwise, SQLITE_OK
+is returned and the output variables are set to the size of and a
+pointer to the output buffer, respectively. In this case it is the
+responsibility of the caller to eventually free the buffer using a
+call to sqlite3_free().
 </p><hr><a name="sqlite3changeset_apply"></a>
 <h2>Apply A Changeset To A Database</h2><blockquote><pre>int sqlite3changeset_apply(
   sqlite3 *db,                    /* Apply change to "main" db of this handle */
@@ -694,7 +805,7 @@ nCol is the number of columns in the table. Elements of *pabPK are set to
 0x01 if the corresponding column is part of the tables primary key, or
 0x00 if it is not.</p>
 
-<p>If argumet pnCol is not NULL, then *pnCol is set to the number of columns
+<p>If argument pnCol is not NULL, then *pnCol is set to the number of columns
 in the table.</p>
 
 <p>If this function is called when the iterator does not point to a valid
@@ -733,7 +844,7 @@ destroyed.</p>
 <a href="#sqlite3changeset_invert">sqlite3changeset_invert()</a> functions, all changes within the changeset
 that apply to a single table are grouped together. This means that when
 an application iterates through a changeset using an iterator created by
-this function, all changes that relate to a single table are visted
+this function, all changes that relate to a single table are visited
 consecutively. There is no chance that the iterator will visit a change
 the applies to table X, then one for table Y, and then later on visit
 another change for table X.
@@ -1075,7 +1186,7 @@ they were attached to the session object).
 );
 </pre></blockquote><p>
 The second argument (xFilter) is the "filter callback". For changes to rows
-in tables that are not attached to the Session oject, the filter is called
+in tables that are not attached to the Session object, the filter is called
 to determine whether changes to the table's rows should be tracked or not.
 If xFilter returns 0, changes is not tracked. Note that once a table is
 attached, xFilter will not be called again.

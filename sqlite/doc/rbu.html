@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -124,10 +126,10 @@ may be used for two separate tasks:
   <li> <b>RBU Update operations</b>. An <a href="rbu.html#rbu_updates">RBU Update</a> is a bulk update of a
           database file that may include many insert, update and delete
           operations on one or more tables.
-  <li> <b>RBU Vacuum operations</b>. An <a href="rbu.html#rbu_vacuum">RBU Vacuum</a> optimizes and rebuilds an
+  </li><li> <b>RBU Vacuum operations</b>. An <a href="rbu.html#rbu_vacuum">RBU Vacuum</a> optimizes and rebuilds an
           entire database file, with results similar to SQLite's native VACUUM
           command.  
-</li></li></ul>
+</li></ul>
 
 <p>The acronym RBU stands for "Resumable Bulk Update".
 
@@ -164,15 +166,15 @@ twice that to disk.
 
 </p><p>On the other hand, an RBU Vacuum uses more CPU than a regular SQLite
 VACUUM - in one test as much as five times as much. For this reason, an RBU
-Vaccum is often signficantly slower than an SQLite VACUUM under the same
+Vaccum is often significantly slower than an SQLite VACUUM under the same
 conditions.
 
-</p><li><b>RBU runs in the background</b>
+</p></li><li><b>RBU runs in the background</b>
 
 <p>An ongoing RBU operation (either an update or a vacuum) does not
 interfere with read access to the database file.
 
-</p><li><b>RBU runs incrementally</b>
+</p></li><li><b>RBU runs incrementally</b>
 
 <p>RBU operations may be suspended and then later resumed, perhaps with
 intervening power outages and/or system resets. For an RBU update, the
@@ -180,7 +182,7 @@ original database content remains visible to all database readers until
 the entire update has been applied - even if the update is suspended and
 then later resumed.
 
-</p></li></li></li></ol>
+</p></li></ol>
 
 <p>The RBU extension is not enabled by default. To enable it, compile the
 <a href="amalgamation.html">amalgamation</a> with the <a href="compile.html#enable_rbu">SQLITE_ENABLE_RBU</a> compile-time option.
@@ -210,10 +212,10 @@ then later resumed.
     </p></li>
 <li><p>The target database may not be in <a href="wal.html">WAL mode</a>.</p></li>
 <li><p>The target database may not contain <a href="expridx.html">indexes on expressions</a>.
-</p><li><p>No other writes may occur on the target database while the
+</p></li><li><p>No other writes may occur on the target database while the
        RBU update is being applied.  A read-lock is held on the target
        database to prevent this.</p></li>
-</li></ul>
+</ul>
 
 
 <h2 id="preparing_an_rbu_update_file"><span>2.2. </span>Preparing An RBU Update File</h2>
@@ -351,8 +353,8 @@ RBU allows deltas to be specified in two ways:
   <li> In the "fossil delta" format - the format used for blob deltas by the 
   <a href="http://fossil-scm.org">Fossil source-code management system</a>, or
 
-  <li> In a custom format defined by the RBU application.
-</li></li></ul>
+  </li><li> In a custom format defined by the RBU application.
+</li></ul>
 
 <p> The fossil delta format may only be used to update BLOB values. Instead
 of storing the new BLOB within the data_% table, the fossil delta is stored
@@ -491,7 +493,8 @@ FROM data_ccc;
 </p><h3 id="automatically_generating_rbu_updates_with_sqldiff"><span>2.2.4. </span>Automatically Generating RBU Updates with sqldiff</h3>
 
 <p>
-  As of SQLite version 3.9.0, the <a href="sqldiff.html">sqldiff</a> utility is able to generate
+  As of SQLite <a href="releaselog/3_9_0.html">version 3.9.0</a> (2015-10-14), 
+  the <a href="sqldiff.html">sqldiff</a> utility is able to generate
   RBU databases representing the difference between two databases with
   identical schemas. For example, the following command:
 
@@ -550,14 +553,14 @@ an "sqlite3rbu" object, which is then passed into the subsequent
 interfaces.
 
 
-</p><li><p>
+</p></li><li><p>
 Register any required virtual table modules with the database
 handle returned by sqlite3rbu_db(X) (where argument X is the sqlite3rbu
 pointer returned from sqlite3rbu_open()).  Also, if required, register
 the rbu_delta() SQL function using 
 <a href="c3ref/create_function.html">sqlite3_create_function_v2()</a>.
 
-</p><li><p>
+</p></li><li><p>
 Invoke the sqlite3rbu_step(X) function one or more times on
 the sqlite3rbu object pointer X. Each call to sqlite3rbu_step() 
 performs a single b-tree operation, so thousands of calls may be 
@@ -565,7 +568,7 @@ required to apply a complete update.  The sqlite3rbu_step()
 interface will return SQLITE_DONE when the update has been
 completely applied.
 
-</p><li><p>
+</p></li><li><p>
 Call sqlite3rbu_close(X) to destroy the sqlite3rbu object pointer.
 If sqlite3rbu_step(X) has been called enough times to completely
 apply the update to the target database, then the RBU database
@@ -573,7 +576,7 @@ is marked as fully applied. Otherwise, the state of the RBU
 update application is saved in the state database (or in the RBU
 database if the name of the state database file in sqlite3rbu_open()
 is NULL) for later resumption of the update.
-</p></li></li></li></li></ol>
+</p></li></ol>
 
 <p>If an update is only partially applied to the target database by the
 time sqlite3rbu_close() is called, state information is saved 
@@ -598,8 +601,8 @@ following limitations:
 
 </p><ul>
   <li><p>It may not be used on a database that contains <a href="expridx.html">indexes on expressions</a>.
-  </p><li><p>The database being vacuumed may not be in <a href="wal.html">WAL mode</a>.
-</p></li></li></ul>
+  </p></li><li><p>The database being vacuumed may not be in <a href="wal.html">WAL mode</a>.
+</p></li></ul>
 
 <h2 id="rbu_vacuum_c_c_programming"><span>3.2. </span>RBU Vacuum C/C++ Programming</h2>
 
@@ -635,11 +638,11 @@ procedure:
       example code below uses "&lt;target&gt;-vacuum", where &lt;target&gt; is
       the name of the database being vacuumed.
 
-  </p><li><p> Any custom collation sequences used by indexes within the database
+  </p></li><li><p> Any custom collation sequences used by indexes within the database
       being vacuumed are registered with both of the database handles returned
       by the sqlite3rbu_db() function.
 
-  </p><li><p> Function sqlite3rbu_step() is called on the RBU handle until either
+  </p></li><li><p> Function sqlite3rbu_step() is called on the RBU handle until either
       the RBU vacuum is finished, an error occurs or the application wishes to
       suspend the RBU vacuum.
 
@@ -652,7 +655,7 @@ procedure:
       an error does occur, all subsequent calls to sqlite3rbu_step() immediately
       return the same error code.
 
-  </p><li><p> Finally, sqlite3rbu_close() is called to close the RBU handle. If the
+  </p></li><li><p> Finally, sqlite3rbu_close() is called to close the RBU handle. If the
       application stopped calling sqlite3rbu_step() before either the vacuum
       finished or an error occurred, the state of the vacuum is saved in the
       state database so that it may be resumed later on.
@@ -663,7 +666,7 @@ procedure:
       occurred, an SQLite error code is returned. If an error occurred as part
       of a prior call to sqlite3rbu_step(), sqlite3rbu_close() returns the
       same error code.
-</p></li></li></li></li></ol>
+</p></li></ol>
 
 <p>The following example code illustrates the techniques described above.  
 
@@ -701,7 +704,7 @@ int do_rbu_vacuum(const char *zTarget){
     <i>** be registered with both database handles here.  */</i>
 
     while( sqlite3rbu_step(pRbu)==SQLITE_OK ){
-      if( <i>&lt;application has signalled interrupt&gt;</i> ) break;
+      if( <i>&lt;application has signaled interrupt&gt;</i> ) break;
     }
   }
   rc = sqlite3rbu_close(pRbu);

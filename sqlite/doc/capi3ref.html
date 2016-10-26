@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -73,6 +75,7 @@ return false;
 }
 </script>
 </div>
+
 
 
 
@@ -137,11 +140,11 @@ be removed in some future release.</li>
 <hr>
 <h2>List Of Objects:</h2>
 <style>
-#listtab19 tr td {vertical-align:top;}
+#listtab18 tr td {vertical-align:top;}
 </style>
-<table id='listtab19' width='100%'></table>
+<table id='listtab18' width='100%'></table>
 <script>
-var listitems19 = [{"u":"#sqlite3","x":"sqlite3","s":0},
+var listitems18 = [{"u":"#sqlite3","x":"sqlite3","s":0},
 {"u":"#sqlite3_api_routines","x":"sqlite3_api_routines","s":0},
 {"u":"#sqlite3_backup","x":"sqlite3_backup","s":0},
 {"u":"#sqlite3_blob","x":"sqlite3_blob","s":0},
@@ -172,44 +175,44 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/280);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems19.length+1)/nCol);
+var nRow = Math.ceil((listitems18.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems19.length; i++){
+for(var i=0; i<listitems18.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems19[i].u=="" || listitems19[i].s==2){
+  if(listitems18[i].u=="" || listitems18[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems19[i].u;
+    h += listitems18[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
-  h += listitems19[i].x;
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
+  if(listitems18[i].s==2 || listitems18[i].s==3) h += "<s>"
+  h += listitems18[i].x;
+  if(listitems18[i].s==2 || listitems18[i].s==3) h += "</s>"
   h += ea
-  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems19[i].s==3) h += "&sup1\n";
-  if(listitems19[i].s==4) h += "&sup2\n";
-  if(listitems19[i].s==5) h += "&sup3\n";
+  if(listitems18[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems18[i].s==3) h += "&sup1\n";
+  if(listitems18[i].s==4) h += "&sup2\n";
+  if(listitems18[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab19").innerHTML = h;
+document.getElementById("listtab18").innerHTML = h;
 </script>
 <hr>
 
 <h2>List Of Constants:</h2>
 <p>Also available: <a href="rescode.html">list of error codes</a></p>
 <style>
-#listtab20 tr td {vertical-align:top;}
+#listtab19 tr td {vertical-align:top;}
 </style>
-<table id='listtab20' width='100%'></table>
+<table id='listtab19' width='100%'></table>
 <script>
-var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
+var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_ABORT_ROLLBACK","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_EXISTS","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_READ","s":0},
@@ -286,6 +289,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
+{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
 {"u":"#sqlitedbstatuscacheused","x":"SQLITE_DBSTATUS_CACHE_USED","s":0},
@@ -534,6 +538,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_LAST","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_LOCALTIME_FAULT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_NEVER_CORRUPT","s":0},
+{"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_OPTIMIZATIONS","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PENDING_BYTE","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PRNG_RESET","s":0},
@@ -567,33 +572,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems20.length+1)/nCol);
+var nRow = Math.ceil((listitems19.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems20.length; i++){
+for(var i=0; i<listitems19.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems20[i].u=="" || listitems20[i].s==2){
+  if(listitems19[i].u=="" || listitems19[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems20[i].u;
+    h += listitems19[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
-  h += listitems20[i].x;
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
+  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
+  h += listitems19[i].x;
+  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
   h += ea
-  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems20[i].s==3) h += "&sup1\n";
-  if(listitems20[i].s==4) h += "&sup2\n";
-  if(listitems20[i].s==5) h += "&sup3\n";
+  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems19[i].s==3) h += "&sup1\n";
+  if(listitems19[i].s==4) h += "&sup2\n";
+  if(listitems19[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab20").innerHTML = h;
+document.getElementById("listtab19").innerHTML = h;
 </script>
 <hr>
 
@@ -605,11 +610,11 @@ are <a href="capi3ref.html">experimental</a> and functions whose names are
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 4 -->
 <style>
-#listtab21 tr td {vertical-align:top;}
+#listtab20 tr td {vertical-align:top;}
 </style>
-<table id='listtab21' width='100%'></table>
+<table id='listtab20' width='100%'></table>
 <script>
-var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_aggregate_count","x":"sqlite3_aggregate_count","s":2},
 {"u":"#sqlite3_auto_extension","x":"sqlite3_auto_extension","s":0},
 {"u":"#sqlite3backupfinish","x":"sqlite3_backup_finish","s":0},
@@ -850,33 +855,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/315);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems21.length+1)/nCol);
+var nRow = Math.ceil((listitems20.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems21.length; i++){
+for(var i=0; i<listitems20.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems21[i].u=="" || listitems21[i].s==2){
+  if(listitems20[i].u=="" || listitems20[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems21[i].u;
+    h += listitems20[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
-  h += listitems21[i].x;
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
+  h += listitems20[i].x;
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
   h += ea
-  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems21[i].s==3) h += "&sup1\n";
-  if(listitems21[i].s==4) h += "&sup2\n";
-  if(listitems21[i].s==5) h += "&sup3\n";
+  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems20[i].s==3) h += "&sup1\n";
+  if(listitems20[i].s==4) h += "&sup2\n";
+  if(listitems20[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab21").innerHTML = h;
+document.getElementById("listtab20").innerHTML = h;
 </script>
 <hr>
 <a name="SQLITE_DETERMINISTIC"></a>
@@ -989,11 +994,11 @@ pointer through into calls to <a href="#sqlite3_result_blob">sqlite3_result()</a
 <a href="#sqlite3_context_db_handle">sqlite3_context_db_handle()</a>, <a href="#sqlite3_get_auxdata">sqlite3_get_auxdata()</a>,
 and/or <a href="#sqlite3_get_auxdata">sqlite3_set_auxdata()</a>.
 </p><style>
-#listtab22 tr td {vertical-align:top;}
+#listtab21 tr td {vertical-align:top;}
 </style>
-<table id='listtab22' width='100%'></table>
+<table id='listtab21' width='100%'></table>
 <script>
-var listitems22 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_context_db_handle","x":"sqlite3_context_db_handle","s":0},
 {"u":"#sqlite3_get_auxdata","x":"sqlite3_get_auxdata","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_blob","s":0},
@@ -1022,34 +1027,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems22.length+1)/nCol);
+var nRow = Math.ceil((listitems21.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems22.length; i++){
+for(var i=0; i<listitems21.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems22[i].u=="" || listitems22[i].s==2){
+  if(listitems21[i].u=="" || listitems21[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems22[i].u;
+    h += listitems21[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
-  h += listitems22[i].x;
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
+  h += listitems21[i].x;
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
   h += ea
-  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems22[i].s==3) h += "&sup1\n";
-  if(listitems22[i].s==4) h += "&sup2\n";
-  if(listitems22[i].s==5) h += "&sup3\n";
+  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems21[i].s==3) h += "&sup1\n";
+  if(listitems21[i].s==4) h += "&sup2\n";
+  if(listitems21[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab22").innerHTML = h;
+document.getElementById("listtab21").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_data_directory"></a>
@@ -1224,13 +1229,15 @@ set and xUpdate returns SQLITE_CONSTRAINT, any database changes made by
 the xUpdate method are automatically rolled back by SQLite.</p>
 
 <p>IMPORTANT: The estimatedRows field was added to the sqlite3_index_info
-structure for SQLite version 3.8.2. If a virtual table extension is
+structure for SQLite <a href="releaselog/3_8_2.html">version 3.8.2</a> (2013-12-06).
+If a virtual table extension is
 used with an SQLite version earlier than 3.8.2, the results of attempting
 to read or write the estimatedRows field are undefined (but are likely
 to included crashing the application). The estimatedRows field should
 therefore only be used if <a href="#sqlite3_libversion">sqlite3_libversion_number()</a> returns a
 value greater than or equal to 3008002. Similarly, the idxFlags field
-was added for version 3.9.0. It may therefore only be used if
+was added for <a href="releaselog/3_9_0.html">version 3.9.0</a> (2015-10-14).
+It may therefore only be used if
 sqlite3_libversion_number() returns a value greater than or equal to
 3009000.
 </p><hr><a name="sqlite3_io_methods"></a>
@@ -2573,7 +2580,8 @@ to the same database. Sharing is enabled if the argument is true
 and disabled if the argument is false.</p>
 
 <p>Cache sharing is enabled and disabled for an entire process.
-This is a change as of SQLite version 3.5.0. In prior versions of SQLite,
+This is a change as of SQLite <a href="releaselog/3_5_0.html">version 3.5.0</a> (2007-09-04).
+In prior versions of SQLite,
 sharing was enabled or disabled for each thread separately.</p>
 
 <p>The cache sharing mode set by this interface effects all subsequent
@@ -3372,7 +3380,8 @@ by <a href="#sqlite3_config">sqlite3_config</a>(<a href="#sqliteconfigpagecache"
 from the heap.
 </ul></p>
 
-<p>Beginning with SQLite version 3.7.3, the soft heap limit is enforced
+<p>Beginning with SQLite <a href="releaselog/3_7_3.html">version 3.7.3</a> (2010-10-08),
+the soft heap limit is enforced
 regardless of whether or not the <a href="compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a>
 compile-time option is invoked.  With <a href="compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a>,
 the soft heap limit is enforced on every memory allocation.  Without
@@ -3446,7 +3455,8 @@ more threads at the same moment in time.</p>
 other than <a href="#SQLITE_ABORT">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
 <a href="#sqlite3_reset">sqlite3_reset()</a> would result in an <a href="#SQLITE_ABORT">SQLITE_MISUSE</a> return from
-sqlite3_step().  But after version 3.6.23.1, sqlite3_step() began
+sqlite3_step().  But after <a href="releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26,
+sqlite3_step() began
 calling <a href="#sqlite3_reset">sqlite3_reset()</a> automatically in this circumstance rather
 than returning <a href="#SQLITE_ABORT">SQLITE_MISUSE</a>.  This is not considered a compatibility
 break because any application that ever receives an SQLITE_MISUSE error
@@ -4384,7 +4394,8 @@ In its default configuration, SQLite API routines return one of 30 integer
 <a href="rescode.html">result codes</a>.  However, experience has shown that many of
 these result codes are too coarse-grained.  They do not provide as
 much information about problems as programmers might like.  In an effort to
-address this, newer versions of SQLite (version 3.3.8 and later) include
+address this, newer versions of SQLite (version 3.3.8 2006-10-09
+and later) include
 support for additional result codes that provide more detailed information
 about errors. These <a href="rescode.html#extrc">extended result codes</a> are enabled or disabled
 on a per database connection basis using the
@@ -4922,6 +4933,7 @@ The default value for this setting is controlled by the
 <h2>Database Connection Configuration Options</h2>
 </div>
 <blockquote><pre>
+#define SQLITE_DBCONFIG_MAINDBNAME            1000 /* const char* */
 #define SQLITE_DBCONFIG_LOOKASIDE             1001 /* void* int int */
 #define SQLITE_DBCONFIG_ENABLE_FKEY           1002 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
@@ -5010,6 +5022,15 @@ The second parameter is a pointer to an integer into which
 is written 0 or 1 to indicate whether <a href="#sqlite3_load_extension">sqlite3_load_extension()</a> interface
 is disabled or enabled following this call.  The second parameter may
 be a NULL pointer, in which case the new setting is not reported back.
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_MAINDBNAME</dt>
+<dd> This option is used to change the name of the "main" database
+schema.  The sole argument is a pointer to a constant UTF8 string
+which will become the new schema name in place of "main".  SQLite
+does not make a copy of the new main schema name string, so the application
+must ensure that the argument passed into this DBCONFIG option is unchanged
+until after the database connection closes.
 </dd></p>
 
 <p></dl>
@@ -5419,7 +5440,7 @@ of an <a href="#sqlite3_io_methods">sqlite3_io_methods</a> object.
 #define SQLITE_MUTEX_STATIC_MEM       3  /* sqlite3_malloc() */
 #define SQLITE_MUTEX_STATIC_MEM2      4  /* NOT USED */
 #define SQLITE_MUTEX_STATIC_OPEN      4  /* sqlite3BtreeOpen() */
-#define SQLITE_MUTEX_STATIC_PRNG      5  /* sqlite3_random() */
+#define SQLITE_MUTEX_STATIC_PRNG      5  /* sqlite3_randomness() */
 #define SQLITE_MUTEX_STATIC_LRU       6  /* lru page list */
 #define SQLITE_MUTEX_STATIC_LRU2      7  /* NOT USED */
 #define SQLITE_MUTEX_STATIC_PMEM      7  /* sqlite3PageMalloc() */
@@ -5558,9 +5579,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.14.2"
-#define SQLITE_VERSION_NUMBER 3014002
-#define SQLITE_SOURCE_ID      "2016-09-12 18:50:49 29dbef4b8585f753861a36d6dd102ca634197bd6"
+#define SQLITE_VERSION        "3.15.0"
+#define SQLITE_VERSION_NUMBER 3015000
+#define SQLITE_SOURCE_ID      "2016-10-14 10:20:30 707875582fcba352b4906a595ad89198d84711d8"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -5575,7 +5596,8 @@ be larger than the release from which it is derived.  Either Y will
 be held constant and Z will be incremented or else Y will be incremented
 and Z will be reset to zero.</p>
 
-<p>Since version 3.6.18, SQLite source code has been stored in the
+<p>Since <a href="releaselog/3_6_18.html">version 3.6.18</a> (2009-09-11),
+SQLite source code has been stored in the
 <a href="http://www.fossil-scm.org/">Fossil configuration management
 system</a>.  The SQLITE_SOURCE_ID macro evaluates to
 a string which identifies a particular check-in of SQLite
@@ -5760,6 +5782,7 @@ cares about the difference.)
 #define SQLITE_TESTCTRL_SCRATCHMALLOC           17
 #define SQLITE_TESTCTRL_LOCALTIME_FAULT         18
 #define SQLITE_TESTCTRL_EXPLAIN_STMT            19  /* NOT USED */
+#define SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD    19
 #define SQLITE_TESTCTRL_NEVER_CORRUPT           20
 #define SQLITE_TESTCTRL_VDBE_COVERAGE           21
 #define SQLITE_TESTCTRL_BYTEORDER               22
@@ -6266,11 +6289,11 @@ sqlite3 object.
  <a href="#sqlite3_close">sqlite3_close()</a>,
 <a href="#sqlite3_close">sqlite3_close_v2()</a></p>
 <style>
-#listtab23 tr td {vertical-align:top;}
+#listtab22 tr td {vertical-align:top;}
 </style>
-<table id='listtab23' width='100%'></table>
+<table id='listtab22' width='100%'></table>
 <script>
-var listitems23 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
+var listitems22 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
 {"u":"#sqlite3_busy_handler","x":"sqlite3_busy_handler","s":0},
 {"u":"#sqlite3_busy_timeout","x":"sqlite3_busy_timeout","s":0},
 {"u":"#sqlite3_changes","x":"sqlite3_changes","s":0},
@@ -6331,34 +6354,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems23.length+1)/nCol);
+var nRow = Math.ceil((listitems22.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems23.length; i++){
+for(var i=0; i<listitems22.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems23[i].u=="" || listitems23[i].s==2){
+  if(listitems22[i].u=="" || listitems22[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems23[i].u;
+    h += listitems22[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
-  h += listitems23[i].x;
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
+  h += listitems22[i].x;
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
   h += ea
-  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems23[i].s==3) h += "&sup1\n";
-  if(listitems23[i].s==4) h += "&sup2\n";
-  if(listitems23[i].s==5) h += "&sup3\n";
+  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems22[i].s==3) h += "&sup1\n";
+  if(listitems22[i].s==4) h += "&sup2\n";
+  if(listitems22[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab23").innerHTML = h;
+document.getElementById("listtab22").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_pcache_methods2"></a>
@@ -6581,11 +6604,11 @@ to step 2.  Do this zero or more times.
 <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a></p>
 <p>Destructor: <a href="#sqlite3_finalize">sqlite3_finalize()</a></p>
 <style>
-#listtab24 tr td {vertical-align:top;}
+#listtab23 tr td {vertical-align:top;}
 </style>
-<table id='listtab24' width='100%'></table>
+<table id='listtab23' width='100%'></table>
 <script>
-var listitems24 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
+var listitems23 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob64","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_double","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_int","s":0},
@@ -6637,34 +6660,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems24.length+1)/nCol);
+var nRow = Math.ceil((listitems23.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems24.length; i++){
+for(var i=0; i<listitems23.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems24[i].u=="" || listitems24[i].s==2){
+  if(listitems23[i].u=="" || listitems23[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems24[i].u;
+    h += listitems23[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
-  h += listitems24[i].x;
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
+  h += listitems23[i].x;
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
   h += ea
-  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems24[i].s==3) h += "&sup1\n";
-  if(listitems24[i].s==4) h += "&sup2\n";
-  if(listitems24[i].s==5) h += "&sup3\n";
+  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems23[i].s==3) h += "&sup1\n";
+  if(listitems23[i].s==4) h += "&sup2\n";
+  if(listitems23[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab24").innerHTML = h;
+document.getElementById("listtab23").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_value"></a>
@@ -6709,11 +6732,11 @@ Unprotected sqlite3_value objects may only be used with
 The <a href="#sqlite3_value_blob">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
-#listtab25 tr td {vertical-align:top;}
+#listtab24 tr td {vertical-align:top;}
 </style>
-<table id='listtab25' width='100%'></table>
+<table id='listtab24' width='100%'></table>
 <script>
-var listitems25 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
+var listitems24 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes16","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_double","s":0},
@@ -6732,34 +6755,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems25.length+1)/nCol);
+var nRow = Math.ceil((listitems24.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems25.length; i++){
+for(var i=0; i<listitems24.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems25[i].u=="" || listitems25[i].s==2){
+  if(listitems24[i].u=="" || listitems24[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems25[i].u;
+    h += listitems24[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems25[i].s==2 || listitems25[i].s==3) h += "<s>"
-  h += listitems25[i].x;
-  if(listitems25[i].s==2 || listitems25[i].s==3) h += "</s>"
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
+  h += listitems24[i].x;
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
   h += ea
-  if(listitems25[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems25[i].s==3) h += "&sup1\n";
-  if(listitems25[i].s==4) h += "&sup2\n";
-  if(listitems25[i].s==5) h += "&sup3\n";
+  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems24[i].s==3) h += "&sup1\n";
+  if(listitems24[i].s==4) h += "&sup2\n";
+  if(listitems24[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab25").innerHTML = h;
+document.getElementById("listtab24").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_aggregate_count"></a>

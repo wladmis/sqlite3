@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -116,14 +118,16 @@ mk.innerHTML = "&#x25ba;";
 
 <h1 id="sqlite_shared_cache_mode"><span>1. </span>SQLite Shared-Cache Mode</h1>
 
-<p>Starting with version 3.3.0, SQLite includes a special "shared-cache"
+<p>Starting with <a href="releaselog/3_3_0.html">version 3.3.0</a> (2006-01-11), 
+SQLite includes a special "shared-cache"
 mode (disabled by default) intended for use in embedded servers. If
 shared-cache mode is enabled and a thread establishes multiple connections
 to the same database, the connections share a single data and schema cache.
 This can significantly reduce the quantity of memory and IO required by
 the system.</p>
 
-<p>In version 3.5.0, shared-cache mode was modified so that the same
+<p>In <a href="releaselog/3_5_0.html">version 3.5.0</a> (2007-09-04), 
+shared-cache mode was modified so that the same
 cache can be shared across an entire process rather than just within
 a single thread.  Prior to this change, there were restrictions on
 passing database connections between threads.  Those restrictions were
@@ -148,7 +152,7 @@ shared-caches or regular database users is described elsewhere.
 <tr><td>
 <img src="images/shared.gif">
 
-</img></td></tr></table>
+</td></tr></table>
 <p style="font-style:italic;text-align:center">Figure 1</p>
 
 <p>Figure 1 depicts an example runtime configuration where three 
@@ -257,7 +261,8 @@ a database connection may only be
 used by the thread that called <a href="c3ref/open.html">sqlite3_open()</a> to create it.
 And a connection could only share cache with another connection in the
 same thread.
-These restrictions were dropped beginning with SQLite version 3.5.0.
+These restrictions were dropped beginning with SQLite 
+<a href="releaselog/3_5_0.html">version 3.5.0</a> (2007-09-04).
 </p>
 
 <h1 id="shared_cache_and_virtual_tables"><span>4. </span>Shared Cache And Virtual Tables</h1>
@@ -265,7 +270,7 @@ These restrictions were dropped beginning with SQLite version 3.5.0.
 <p>
 In older versions of SQLite,
 shared cache mode could not be used together with virtual tables.
-This restriction was removed in SQLite <a href="releaselog/3_6_17.html">version 3.6.17</a>.
+This restriction was removed in SQLite <a href="releaselog/3_6_17.html">version 3.6.17</a> (2009-08-10).
 
 </p><h1 id="enabling_shared_cache_mode"><span>5. </span>Enabling Shared-Cache Mode</h1>
 
@@ -310,7 +315,8 @@ ATTACH 'file:aux.db?cache=shared' AS aux;
 <h1 id="shared_cache_and_in_memory_databases"><span>6. </span>Shared Cache And In-Memory Databases</h1>
 
 <p>
-Beginning with SQLite <a href="releaselog/3_7_13.html">version 3.7.13</a>, shared cache can be used on
+Beginning with SQLite <a href="releaselog/3_7_13.html">version 3.7.13</a> (2012-06-11), 
+shared cache can be used on
 <a href="inmemorydb.html">in-memory databases</a>, provided that the database is created using
 a <a href="uri.html">URI filename</a>.  For backwards compatibility, shared cache is always
 disable for in-memory

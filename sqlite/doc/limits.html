@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -398,10 +400,12 @@ a statement involving recursive triggers from using an unbounded amount
 of memory.  
 </p>
 
-<p>Prior to SQLite version 3.6.18, triggers were not recursive and so
+<p>Prior to SQLite <a href="releaselog/3_6_18.html">version 3.6.18</a> (2009-09-11), 
+triggers were not recursive and so
 this limit was meaningless.  Beginning with version 3.6.18, recursive triggers
 were supported but had to be explicitly enabled using the
-<a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> statement.  Beginning with version 3.7.0, 
+<a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a> statement.  
+Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a> (2009-09-11), 
 recursive triggers are enabled by default but can be manually disabled
 using <a href="pragma.html#pragma_recursive_triggers">PRAGMA recursive_triggers</a>.  The SQLITE_MAX_TRIGGER_DEPTH is
 only meaningful if recursive triggers are enabled.</p>

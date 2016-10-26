@@ -198,6 +198,8 @@ a:visited { color: #734559 }
   .fancy-toc5 {margin-left:30ex;}
   .fancy-toc6 {margin-left:36ex;}
   .fancy .codeblock {margin:0 10ex;}
+  .fancy ol .codeblock {margin:0 5ex;}
+  .fancy .imgcontainer {margin: 1em 5ex}
 }
 @media screen and (max-width: 600px){
   /* Indentation amounts for narrow mobile screens */

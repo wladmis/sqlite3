@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -157,11 +159,11 @@ for the CSV virtual table.  But other arguments are also possible.
 CSV content is read.  Every CSV virtual table must have either a 
 <b>filename=</b> argument or a <b>data=</b> argument and not both.
 
-</p><li><p><b>data=</b><i>TEXT</i>
+</p></li><li><p><b>data=</b><i>TEXT</i>
 </p><p>The <b>data=</b> argument specifies that <i>TEXT</i> is the literal
 content of the CSV file.
 
-</p><li><p><b>schema=</b><i>SCHEMA</i>
+</p></li><li><p><b>schema=</b><i>SCHEMA</i>
 </p><p> The <b>schema=</b> argument specifies a <a href="lang_createtable.html">CREATE TABLE</a> statement that
 the CVS virtual table passes to the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> interface in
 order to define the number and names of the columns in the virtual table.
@@ -169,12 +171,12 @@ If both the <b>schema=</b> and the <b>columns=</b> arguments are omitted,
 then the CVS virtual table reads the first row of the input content in order
 to determine the number of columns and names the columns <b>cNNN</b> where
 <b>NNN</b> values are consecutive integers.  It is not allowed to have
-both <b>scheam=</b> and <b>columns=</b> arguments.
+both <b>schema=</b> and <b>columns=</b> arguments.
 
-</p><li><p><b>columns=</b><i>N</i>
+</p></li><li><p><b>columns=</b><i>N</i>
 </p><p>The <b>columns=</b><i>N</i> argument causes the virtual table to have
 exactly <i>N</i> columns.  If the input data contains more columns than this,
 then the excess columns are ignored.  If the input data contains fewer columns,
 then extra columns are filled with NULL.
 
-</p></li></li></li></li></ul>
+</p></li></ul>

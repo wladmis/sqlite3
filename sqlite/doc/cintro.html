@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -124,42 +126,42 @@ elements of the SQLite interface:
 The database connection object.  Created by
 <a href="c3ref/open.html">sqlite3_open()</a> and destroyed by <a href="c3ref/close.html">sqlite3_close()</a>.
 
-</p><li><p><b><a href="c3ref/stmt.html">sqlite3_stmt</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/stmt.html">sqlite3_stmt</a></b> &rarr;
 The prepared statement object.  Created by
 <a href="c3ref/prepare.html">sqlite3_prepare()</a> and destroyed by <a href="c3ref/finalize.html">sqlite3_finalize()</a>.
 
 
-</p><li><p><b><a href="c3ref/open.html">sqlite3_open()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/open.html">sqlite3_open()</a></b> &rarr;
 Open a connection to a new or existing SQLite database.
 The constructor for <a href="c3ref/sqlite3.html">sqlite3</a>.
 
-</p><li><p><b><a href="c3ref/prepare.html">sqlite3_prepare()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/prepare.html">sqlite3_prepare()</a></b> &rarr;
 Compile SQL text into
 byte-code that will do the work of querying or updating the database. 
 The constructor for <a href="c3ref/stmt.html">sqlite3_stmt</a>.
 
-</p><li><p><b><a href="c3ref/bind_blob.html">sqlite3_bind()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/bind_blob.html">sqlite3_bind()</a></b> &rarr;
 Store application data into
 <a href="lang_expr.html#varparam">parameters</a> of the original SQL.
 
 
-</p><li><p><b><a href="c3ref/step.html">sqlite3_step()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/step.html">sqlite3_step()</a></b> &rarr;
 Advance an <a href="c3ref/stmt.html">sqlite3_stmt</a> to the next result row or to completion.
 
-</p><li><p><b><a href="c3ref/column_blob.html">sqlite3_column()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/column_blob.html">sqlite3_column()</a></b> &rarr;
 Column values in the current result row for an <a href="c3ref/stmt.html">sqlite3_stmt</a>.
 
-</p><li><p><b><a href="c3ref/finalize.html">sqlite3_finalize()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/finalize.html">sqlite3_finalize()</a></b> &rarr;
 Destructor for <a href="c3ref/stmt.html">sqlite3_stmt</a>.
 
-</p><li><p><b><a href="c3ref/close.html">sqlite3_close()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/close.html">sqlite3_close()</a></b> &rarr;
 Destructor for <a href="c3ref/sqlite3.html">sqlite3</a>.
 
-</p><li><p><b><a href="c3ref/exec.html">sqlite3_exec()</a></b> &rarr;
+</p></li><li><p><b><a href="c3ref/exec.html">sqlite3_exec()</a></b> &rarr;
 A wrapper function that does <a href="c3ref/prepare.html">sqlite3_prepare()</a>, <a href="c3ref/step.html">sqlite3_step()</a>,
 <a href="c3ref/column_blob.html">sqlite3_column()</a>, and <a href="c3ref/finalize.html">sqlite3_finalize()</a> for
 a string of one or more SQL statements.
-</p></li></li></li></li></li></li></li></li></li></li></ul>
+</p></li></ul>
 
 <h1 id="introduction"><span>2. </span>Introduction</h1>
 
@@ -249,7 +251,7 @@ a string of one or more SQL statements.
   This routine is the constructor for the <a href="c3ref/sqlite3.html">database connection</a> object.
 </p>
 
-<li><p><b><a href="c3ref/prepare.html">sqlite3_prepare()</a></b>
+</li><li><p><b><a href="c3ref/prepare.html">sqlite3_prepare()</a></b>
 </p><p>
   This routine
   converts SQL text into a <a href="c3ref/stmt.html">prepared statement</a> object and returns a pointer
@@ -268,7 +270,7 @@ a string of one or more SQL statements.
   backwards compatibility.  But <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> provides a much
   better interface.</p>
 
-<li><p><b><a href="c3ref/step.html">sqlite3_step()</a></b>
+</li><li><p><b><a href="c3ref/step.html">sqlite3_step()</a></b>
 </p><p>
   This routine is used to evaluate a <a href="c3ref/stmt.html">prepared statement</a> that has been
   previously created by the <a href="c3ref/prepare.html">sqlite3_prepare()</a> interface.  The statement
@@ -278,7 +280,7 @@ a string of one or more SQL statements.
   Statements that do not return results (ex: INSERT, UPDATE, or DELETE
   statements) run to completion on a single call to <a href="c3ref/step.html">sqlite3_step()</a>.
 
-</p><li><p><b><a href="c3ref/column_blob.html">sqlite3_column()</a></b>
+</p></li><li><p><b><a href="c3ref/column_blob.html">sqlite3_column()</a></b>
 </p><p>
   This routine returns a single column from the current row of a result
   set for a <a href="c3ref/stmt.html">prepared statement</a> that is being evaluated by <a href="c3ref/step.html">sqlite3_step()</a>.
@@ -307,19 +309,19 @@ a string of one or more SQL statements.
   </ul>
 
 
-<li><p><b><a href="c3ref/finalize.html">sqlite3_finalize()</a></b>
+</li><li><p><b><a href="c3ref/finalize.html">sqlite3_finalize()</a></b>
 </p><p>
   This routine destroys a <a href="c3ref/stmt.html">prepared statement</a> created by a prior call
   to <a href="c3ref/prepare.html">sqlite3_prepare()</a>.  Every prepared statement must be destroyed using
   a call to this routine in order to avoid memory leaks.
 
-</p><li><p><b><a href="c3ref/close.html">sqlite3_close()</a></b>
+</p></li><li><p><b><a href="c3ref/close.html">sqlite3_close()</a></b>
 </p><p>
   This routine closes a <a href="c3ref/sqlite3.html">database connection</a> previously opened by a call
   to <a href="c3ref/open.html">sqlite3_open()</a>.  All <a href="c3ref/stmt.html">prepared statements</a> associated with the
   connection should be <a href="c3ref/finalize.html">finalized</a> prior to closing the
   connection.
-</p></li></li></li></li></li></li></ul>
+</p></li></ul>
 
 <h1 id="typical_usage_of_core_routines_and_objects"><span>4. </span>Typical Usage Of Core Routines And Objects</h1>
 
@@ -483,12 +485,12 @@ a string of one or more SQL statements.
 <li>Adjust how SQLite does <a href="malloc.html">memory allocation</a>, including setting up
     alternative memory allocators appropriate for safety-critical
     real-time embedded systems and application-defined memory allocators.
-<li>Set up a process-wide <a href="errlog.html">error log</a>.
-<li>Specify an application-defined page cache.
-<li>Adjust the use of mutexes so that they are appropriate for various
+</li><li>Set up a process-wide <a href="errlog.html">error log</a>.
+</li><li>Specify an application-defined page cache.
+</li><li>Adjust the use of mutexes so that they are appropriate for various
     <a href="threadsafe.html">threading models</a>, or substitute an 
     application-defined mutex system.
-</li></li></li></li></ul> 
+</li></ul> 
 <p>
   After process-wide configuration is complete and <a href="c3ref/sqlite3.html">database connections</a>
   have been created, individual database connections can be configured using

@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -132,7 +134,7 @@ altered using command-line switches:
 <dd><p>Load the shared library or DLL file LIBRARY into SQLite prior to
        computing the differences.  This can be used to add application-defined
        <a href="datatype3.html#collation">collating sequences</a> that are required by the schema.
-</p><dt><b>--primarykey</b></dt>
+</p></dd><dt><b>--primarykey</b></dt>
 <dd><p>Use the schema-defined <a href="lang_createtable.html#primkeyconst">PRIMARY KEY</a> instead of the <a href="lang_createtable.html#rowid">rowid</a> to
        pair rows in the source and destination database.  (See additional
        explanation below.)</p></dd>
@@ -150,7 +152,7 @@ altered using command-line switches:
 <dd><p>Add support for handling <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a> and <a href="rtree.html">rtree</a> virtual tables. 
        <a href="#vtab">See below</a> for details. 
 </p></dd>
-</dd></dl>
+</dl>
 
 <h1 id="how_it_works"><span>2. </span>How It Works</h1>
 
@@ -186,11 +188,11 @@ a table with an inaccessible rowid is:
 );
 </pre></div>
 
-<li><p>
+</li><li><p>
 The sqldiff.exe utility does not (currently) display differences in
 <a href="lang_createtrigger.html">TRIGGERs</a> or <a href="lang_createview.html">VIEWs</a>.
 
-</p><li><p id="vtab">
+</p></li><li><p id="vtab">
 By default, differences in the schema or content of virtual tables are
 not reported on. 
 
@@ -206,5 +208,5 @@ may include corruption of the virtual table content.
 underlying shadow tables belonging to an FTS3, FTS5 or rtree virtual table
 and instead includes the virtual table differences directly.
 
-</p></li></li></li></ol>
+</p></li></ol>
 

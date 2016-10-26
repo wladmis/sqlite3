@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='about.html'>About</a>
 <li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
 <li><a href='support.html'>Support</a>
 <li><a href='prosupport.html'>Purchase</a>
 </ul>
@@ -245,12 +247,12 @@ Use "<tt>#include &lt;sqlite3ext.h&gt;</tt>" at the top of your source
 code files instead of "<tt>#include &lt;sqlite3.h&gt;</tt>".
 </p>
 
-<li><p>
+</li><li><p>
 Put the macro "<tt>SQLITE_EXTENSION_INIT1</tt>" on a line by itself 
 right after the "<tt>#include &lt;sqlite3ext.h&gt;</tt>" line.
 </p>
 
-<li><p>
+</li><li><p>
 Add an extension loading entry point routine that looks like 
 something the following:
 
@@ -280,7 +282,7 @@ If your shared library ends up being named "YourCode.so" or
 "YourCode.dll" or "YourCode.dylib" as shown in the compiler examples
 above, then the correct entry point name would be
 "sqlite3_yourcode_init".
-</p></li></li></li></ol>
+</p></li></ol>
 
 <p>Here is a complete template extension that you can copy/paste 
 to get started:</p>
@@ -328,7 +330,7 @@ subdirectory.</p>
 <h1 id="persistent_loadable_extensions"><span>5. </span>Persistent Loadable Extensions</h1>
 
 <p>The default behavior for a loadable extension is that it is unloaded
-from process memory when the database connection that orginally invoked
+from process memory when the database connection that originally invoked
 <a href="c3ref/load_extension.html">sqlite3_load_extension()</a> closes.  (In other words, the xDlUnload method 
 of the <a href="c3ref/vfs.html">sqlite3_vfs</a> object is called for all extensions when a database
 connection closes.)  However, if the initialization procedure returns

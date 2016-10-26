@@ -30,7 +30,9 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu submenu" id="submenu">
 <ul>
+<li><a href='../about.html'>About</a>
 <li><a href='../docs.html'>Documentation</a>
+<li><a href='../download.html'>Download</a>
 <li><a href='../support.html'>Support</a>
 <li><a href='../prosupport.html'>Purchase</a>
 </ul>
@@ -137,7 +139,8 @@ more threads at the same moment in time.</p>
 other than <a href="../rescode.html#row">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
 <a href="../c3ref/reset.html">sqlite3_reset()</a> would result in an <a href="../rescode.html#misuse">SQLITE_MISUSE</a> return from
-sqlite3_step().  But after version 3.6.23.1, sqlite3_step() began
+sqlite3_step().  But after <a href="../releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26,
+sqlite3_step() began
 calling <a href="../c3ref/reset.html">sqlite3_reset()</a> automatically in this circumstance rather
 than returning <a href="../rescode.html#misuse">SQLITE_MISUSE</a>.  This is not considered a compatibility
 break because any application that ever receives an SQLITE_MISUSE error
