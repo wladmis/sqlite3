@@ -209,7 +209,7 @@ For example:
 </p><div class="codeblock"><pre>UPDATE tab3 
    SET (a,b,c) = (SELECT x,y,z
                     FROM tab4
-                   WHERE tab4.w=tab3.d);
+                   WHERE tab4.w=tab3.d)
  WHERE tab3.e BETWEEN 55 AND 66;
 </pre></div>
 
@@ -282,7 +282,7 @@ convenient way to compare dates:
 
 <h2 id="search_against_multi_column_keys"><span>3.3. </span>Search against multi-column keys</h2>
 
-<p>Suppose we want to know the order number, product number, and quanity
+<p>Suppose we want to know the order number, product number, and quantity
 for any item in which the product number and quantity match the product
 number and quantity of any item in order number 365:
 

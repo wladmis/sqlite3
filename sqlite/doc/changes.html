@@ -89,6 +89,26 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_15_1"></a>
+<h3>2016-11-04 (3.15.1)</h3><p><ul class='lessindent'>
+<li> Added <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32gethandle">SQLITE_FCNTL_WIN32_GET_HANDLE</a> file control opcode.
+<p><b>Bug Fixes:</b>
+<li> Fix the <a href="lang_vacuum.html">VACUUM</a> command so that it spills excess content to disk rather
+     than holding everything in memory, and possible causing an out-of-memory
+     error for larger database files.  This fixes an issue introduced by
+     version 3.15.0.
+<li> Fix a case (present since 3.8.0 - 2013-08-26) 
+     where OR-connected terms in the ON clause of a LEFT JOIN
+     might cause incorrect results.  Ticket
+     <a href="https://www.sqlite.org/src/info/34a579141b2c5ac">34a579141b2c5ac</a>.
+<li> Fix a case where the use of <a href="rowvalue.html">row values</a> in the ON clause of a LEFT JOIN
+     might cause incorrect results.  Ticket
+     <a href="https://www.sqlite.org/src/info/fef4bb4bd9185ec8f">fef4bb4bd9185ec8f</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2016-11-04 12:08:49 1136863c76576110e710dd5d69ab6bf347c65e36"
+<li>SHA1 for sqlite3.c: e7c26a7be3e431dd06898f8d262c4ef240c07366
+
+</ul></p>
 <a name="version_3_15_0"></a>
 <h3>2016-10-14 (3.15.0)</h3><p><ul class='lessindent'>
 <li> Added support for <a href="rowvalue.html">row values</a>.
@@ -262,14 +282,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.11.1 (2016-03-03):</b></p>
-
-<li>Improvements to the Makefiles and build scripts used by VisualStudio.
-<li>Fix an <a href="fts5.html">FTS5</a> issue in which the 'optimize' command could cause index corruption.
-<li>Fix a buffer overread that might occur if <a href="fts5.html">FTS5</a> is used to query a corrupt
-    database file.
-<li>Increase the maximum "scope" value for the <a href="spellfix1.html">spellfix1</a> extension from 6 to 30.
-
 <p><b>Bug fixes backported into patch release 3.11.0 (2016-02-15):</b></p>
 
 <p><b>General improvements:</b>
@@ -315,6 +327,18 @@ with a home-baked pie.</center>
 <li>Because of continuing security concerns, the two-argument version of
     of the seldom-used and little-known <a href="fts3.html#f3tknzr">fts3_tokenizer()</a> function is
     disabled unless SQLite is compiled with the <a href="compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
+
+<p><b>Bug fixes backported into patch release 3.10.2 (2016-01-20):</b></p>
+
+<p><b>Critical bug fix:</b>
+<li>Version 3.10.0 introduced a case-folding bug in the <a href="lang_expr.html#like">LIKE</a> operator which is fixed
+    by this patch release.  Ticket 
+    <a href="https://www.sqlite.org/src/info/80369eddd5c94">80369eddd5c94</a>.
+<p><b>Other miscellaneous bug fixes:</b>
+<li>Fix a use-after-free that can occur when SQLite is compiled with -DSQLITE_HAS_CODEC.
+<li>Fix the build so that it works with -DSQLITE_OMIT_WAL.
+<li>Fix the configure script for the amalgamation so that the --readline option works again
+    on Raspberry PIs.
 
 </ul></p>
 <a name="version_3_12_2"></a>

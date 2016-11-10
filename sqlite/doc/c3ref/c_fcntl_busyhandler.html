@@ -75,7 +75,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_FCNTL_BUSYHANDLER SQLITE_FCNTL_CHUNK_SIZE SQLITE_FCNTL_COMMIT_PHASETWO SQLITE_FCNTL_FILE_POINTER SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_HAS_MOVED SQLITE_FCNTL_JOURNAL_POINTER SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_LOCKSTATE SQLITE_FCNTL_MMAP_SIZE SQLITE_FCNTL_OVERWRITE SQLITE_FCNTL_PERSIST_WAL SQLITE_FCNTL_POWERSAFE_OVERWRITE SQLITE_FCNTL_PRAGMA SQLITE_FCNTL_RBU SQLITE_FCNTL_SET_LOCKPROXYFILE SQLITE_FCNTL_SIZE_HINT SQLITE_FCNTL_SYNC SQLITE_FCNTL_SYNC_OMITTED SQLITE_FCNTL_TEMPFILENAME SQLITE_FCNTL_TRACE SQLITE_FCNTL_VFSNAME SQLITE_FCNTL_VFS_POINTER SQLITE_FCNTL_WAL_BLOCK SQLITE_FCNTL_WIN32_AV_RETRY SQLITE_FCNTL_WIN32_SET_HANDLE SQLITE_FCNTL_ZIPVFS {file control opcode} {file control opcodes} -->
+<!-- keywords: SQLITE_FCNTL_BUSYHANDLER SQLITE_FCNTL_CHUNK_SIZE SQLITE_FCNTL_COMMIT_PHASETWO SQLITE_FCNTL_FILE_POINTER SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_HAS_MOVED SQLITE_FCNTL_JOURNAL_POINTER SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_LOCKSTATE SQLITE_FCNTL_MMAP_SIZE SQLITE_FCNTL_OVERWRITE SQLITE_FCNTL_PERSIST_WAL SQLITE_FCNTL_POWERSAFE_OVERWRITE SQLITE_FCNTL_PRAGMA SQLITE_FCNTL_RBU SQLITE_FCNTL_SET_LOCKPROXYFILE SQLITE_FCNTL_SIZE_HINT SQLITE_FCNTL_SYNC SQLITE_FCNTL_SYNC_OMITTED SQLITE_FCNTL_TEMPFILENAME SQLITE_FCNTL_TRACE SQLITE_FCNTL_VFSNAME SQLITE_FCNTL_VFS_POINTER SQLITE_FCNTL_WAL_BLOCK SQLITE_FCNTL_WIN32_AV_RETRY SQLITE_FCNTL_WIN32_GET_HANDLE SQLITE_FCNTL_WIN32_SET_HANDLE SQLITE_FCNTL_ZIPVFS {file control opcode} {file control opcodes} -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Standard File Control Opcodes</h2>
@@ -108,6 +108,7 @@ return false;
 #define SQLITE_FCNTL_RBU                    26
 #define SQLITE_FCNTL_VFS_POINTER            27
 #define SQLITE_FCNTL_JOURNAL_POINTER        28
+#define SQLITE_FCNTL_WIN32_GET_HANDLE       29
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -335,6 +336,13 @@ The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved">SQLITE_FCNTL
 pointer to an integer and it writes a boolean into that integer depending
 on whether or not the file has been renamed, moved, or deleted since it
 was first opened.</p>
+
+<p><li><a name="sqlitefcntlwin32gethandle"></a>
+
+The <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32gethandle">SQLITE_FCNTL_WIN32_GET_HANDLE</a> opcode can be used to obtain the
+underlying native file handle associated with a file handle.  This file
+control interprets its argument as a pointer to a native file handle and
+writes the resulting value there.</p>
 
 <p><li><a name="sqlitefcntlwin32sethandle"></a>
 

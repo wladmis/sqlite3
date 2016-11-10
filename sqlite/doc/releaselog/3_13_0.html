@@ -113,14 +113,6 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.11.1 (2016-03-03):</b></p>
-
-<li>Improvements to the Makefiles and build scripts used by VisualStudio.
-<li>Fix an <a href="../fts5.html">FTS5</a> issue in which the 'optimize' command could cause index corruption.
-<li>Fix a buffer overread that might occur if <a href="../fts5.html">FTS5</a> is used to query a corrupt
-    database file.
-<li>Increase the maximum "scope" value for the <a href="../spellfix1.html">spellfix1</a> extension from 6 to 30.
-
 <p><b>Bug fixes backported into patch release 3.11.0 (2016-02-15):</b></p>
 
 <p><b>General improvements:</b>
@@ -166,6 +158,18 @@ return false;
 <li>Because of continuing security concerns, the two-argument version of
     of the seldom-used and little-known <a href="../fts3.html#f3tknzr">fts3_tokenizer()</a> function is
     disabled unless SQLite is compiled with the <a href="../compile.html#enable_fts3_tokenizer">SQLITE_ENABLE_FTS3_TOKENIZER</a>.
+
+<p><b>Bug fixes backported into patch release 3.10.2 (2016-01-20):</b></p>
+
+<p><b>Critical bug fix:</b>
+<li>Version 3.10.0 introduced a case-folding bug in the <a href="../lang_expr.html#like">LIKE</a> operator which is fixed
+    by this patch release.  Ticket 
+    <a href="https://www.sqlite.org/src/info/80369eddd5c94">80369eddd5c94</a>.
+<p><b>Other miscellaneous bug fixes:</b>
+<li>Fix a use-after-free that can occur when SQLite is compiled with -DSQLITE_HAS_CODEC.
+<li>Fix the build so that it works with -DSQLITE_OMIT_WAL.
+<li>Fix the configure script for the amalgamation so that the --readline option works again
+    on Raspberry PIs.
 
 </ul></p>
 
