@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -94,9 +94,9 @@ xFetch() and xUnfetch() methods on <a href="c3ref/io_methods.html">sqlite3_io_me
 Advantages include:</p>
 
 <ol>
-<li><p>Many operations, especially I/O intensive operations, can be much
+<li><p>Many operations, especially I/O intensive operations, can be
     faster since content does need to be copied between kernel space
-    and user space.  In some cases, performance can nearly double.</p>
+    and user space.</p>
 
 <li><p>The SQLite library may need less RAM since it shares pages with
     the operating-system page cache and does not always need its own copy of
@@ -106,16 +106,6 @@ Advantages include:</p>
 <p>But there are also disadvantages:</p>
 
 <ol>
-<li><p>A stray pointer or buffer overflow in the application program
-    might change the content of mapped memory, potentially corrupting the
-    database file.  Bugs in application program that overwrite memory
-    assigned to the SQLite library could, in theory, also cause corruption
-    in read/write mode, but that would require that the overwrite
-    be followed by a call to xWrite() and in practice the buggy application
-    usually errors out or crashes before that point.  With memory-mapped
-    I/O, the database corruption occurs immediately and is thus more of a
-    risk.</p>
-
 <li><p>An I/O error on a memory-mapped file cannot be caught and dealt with by
     SQLite.  Instead, the I/O error causes a signal which, if not caught
     by the application, results in a program crash.</p>
@@ -130,7 +120,7 @@ Advantages include:</p>
 
 <li><p>Performance does not always increase with memory-mapped I/O.  In fact,
     it is possible to construct test cases where performance is reduced
-    by the use of memory-mapped I/O, though this is hard to do.</p>
+    by the use of memory-mapped I/O.</p>
 
 <li><p>Windows is unable to truncate a memory-mapped file.  Hence, on Windows,
     if an operation such as <a href="lang_vacuum.html">VACUUM</a> or <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> tries to reduce the
@@ -146,8 +136,8 @@ Advantages include:</p>
     after the next <a href="lang_vacuum.html">VACUUM</a>.
 </ol>
 
-<p>Because of the potential disadvantages, memory-mapped I/O is turned
-off by default.  To activate memory-mapped I/O, use the <a href="pragma.html#pragma_mmap_size">mmap_size pragma</a>
+<p>Because of the potential disadvantages, memory-mapped I/O is disabled
+by default.  To activate memory-mapped I/O, use the <a href="pragma.html#pragma_mmap_size">mmap_size pragma</a>
 and set the mmap_size to some large number, usually 256MB or larger, depending
 on how much address space your application can spare.  The rest is
 automatic.  The <a href="pragma.html#pragma_mmap_size">PRAGMA mmap_size</a> statement will be a silent no-op on
@@ -177,16 +167,18 @@ if xRead() also fails.</p>
 
 <p>When updating the database file, SQLite always makes a copy of the
 page content into heap memory before modifying the page.  This is necessary
-since the changes are not supposed to be visible to other processes until
+for two reasons.  First, changes to the database
+are not supposed to be visible to other processes until
 after the transaction commits and so the changes must occur in private memory.
+Second, SQLite uses a read-only memory map to prevent stray pointers in the 
+application from overwriting and corrupting the database file.
+
+<p>
 After all needed changes are completed, xWrite() is used to move the content
-back into the database file.  The current xWrite() implementations for both
-unix and windows check to see if section of the file being written is 
-mapped into the applications address space, and if it is the write operation
-is implemented using memcpy() rather than invoking a "write()" system call,
-but that is just an implementation detail.  A memory copy occurs either way.
-So the use of memory mapped I/O does not significantly change the performance
-of database changes.  Memory mapped I/O is mostly a benefit for queries.</p>
+back into the database file.
+Hence the use of memory mapped I/O does not significantly change the
+performance of database changes.
+Memory mapped I/O is mostly a benefit for queries.</p>
 
 <h2>Configuring Memory-Mapped I/O</h2>
 

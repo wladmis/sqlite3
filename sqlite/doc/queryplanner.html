@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -124,6 +124,7 @@ mk.innerHTML = "&#x25ba;";
 
 
 
+
 <h2 style="margin-left:1.0em" notoc="1" id="overview"> Overview</h2> 
 
 <p>
@@ -165,7 +166,8 @@ needed.
 
 <p>
 Additional information is provided in the
-<a href="queryplanner-ng.html">next generation query planner</a> document.
+<a href="optoverview.html">SQLite query planner</a> and 
+<a href="queryplanner-ng.html">next generation query planner</a> documents.
 </p>
 
 <a name="searching"></a>

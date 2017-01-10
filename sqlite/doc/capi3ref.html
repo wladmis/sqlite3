@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -164,7 +164,6 @@ var listitems18 = [{"u":"#sqlite3","x":"sqlite3","s":0},
 {"u":"#sqlite3_pcache","x":"sqlite3_pcache","s":0},
 {"u":"#sqlite3_pcache_methods2","x":"sqlite3_pcache_methods2","s":0},
 {"u":"#sqlite3_pcache_page","x":"sqlite3_pcache_page","s":0},
-{"u":"#sqlite3_snapshot","x":"sqlite3_snapshot","s":1},
 {"u":"#sqlite3_stmt","x":"sqlite3_stmt","s":0},
 {"u":"#sqlite3_temp_directory","x":"sqlite3_temp_directory","s":0},
 {"u":"#sqlite3_value","x":"sqlite3_value","s":0},
@@ -290,6 +289,7 @@ var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
+{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
 {"u":"#sqlitedbstatuscacheused","x":"SQLITE_DBSTATUS_CACHE_USED","s":0},
@@ -331,6 +331,7 @@ var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitefcntllockstate","x":"SQLITE_FCNTL_LOCKSTATE","s":0},
 {"u":"#sqlitefcntlmmapsize","x":"SQLITE_FCNTL_MMAP_SIZE","s":0},
 {"u":"#sqlitefcntloverwrite","x":"SQLITE_FCNTL_OVERWRITE","s":0},
+{"u":"#SQLITE_FCNTL_BUSYHANDLER","x":"SQLITE_FCNTL_PDB","s":0},
 {"u":"#sqlitefcntlpersistwal","x":"SQLITE_FCNTL_PERSIST_WAL","s":0},
 {"u":"#sqlitefcntlpowersafeoverwrite","x":"SQLITE_FCNTL_POWERSAFE_OVERWRITE","s":0},
 {"u":"#sqlitefcntlpragma","x":"SQLITE_FCNTL_PRAGMA","s":0},
@@ -609,7 +610,7 @@ are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
 <!-- number of functions: 226 -->
 <!-- number of deprecated functions: 7 -->
-<!-- number of experimental functions: 4 -->
+<!-- number of experimental functions: 5 -->
 <style>
 #listtab20 tr td {vertical-align:top;}
 </style>
@@ -793,6 +794,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_snapshot_free","x":"sqlite3_snapshot_free","s":1},
 {"u":"#sqlite3_snapshot_get","x":"sqlite3_snapshot_get","s":1},
 {"u":"#sqlite3_snapshot_open","x":"sqlite3_snapshot_open","s":1},
+{"u":"#sqlite3_snapshot_recover","x":"sqlite3_snapshot_recover","s":1},
 {"u":"#sqlite3_mprintf","x":"sqlite3_snprintf","s":0},
 {"u":"#sqlite3_soft_heap_limit","x":"sqlite3_soft_heap_limit","s":2},
 {"u":"#sqlite3_soft_heap_limit64","x":"sqlite3_soft_heap_limit64","s":0},
@@ -840,7 +842,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text16be","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text16le","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_type","s":0},
-{"u":"","x":"sqlite3_version,","s":0},
+{"u":"#sqlite3_libversion","x":"sqlite3_version","s":0},
 {"u":"#sqlite3_vfs_find","x":"sqlite3_vfs_find","s":0},
 {"u":"#sqlite3_vfs_find","x":"sqlite3_vfs_register","s":0},
 {"u":"#sqlite3_vfs_find","x":"sqlite3_vfs_unregister","s":0},
@@ -2316,8 +2318,12 @@ int sqlite3_column_count(sqlite3_stmt *pStmt);
 </pre></blockquote>
 <p>
 Return the number of columns in the result set returned by the
-<a href="#sqlite3_stmt">prepared statement</a>. This routine returns 0 if pStmt is an SQL
-statement that does not return data (for example an <a href="lang_update.html">UPDATE</a>).</p>
+<a href="#sqlite3_stmt">prepared statement</a>. If this routine returns 0, that means the
+<a href="#sqlite3_stmt">prepared statement</a> returns no data (for example an <a href="lang_update.html">UPDATE</a>).
+However, just because this routine returns a positive number does not
+mean that one or more rows of data will be returned.  A SELECT statement
+will always have a positive sqlite3_column_count() but depending on the
+WHERE clause constraints and the table content, it might return no rows.</p>
 
 <p>See also: <a href="#sqlite3_data_count">sqlite3_data_count()</a>
 </p><hr><a name="sqlite3_config"></a>
@@ -3281,9 +3287,32 @@ new <a href="#sqlite3_snapshot">sqlite3_snapshot</a> object that records the cur
 schema S in database connection D.  On success, the
 <a href="#sqlite3_snapshot_get">sqlite3_snapshot_get(D,S,P)</a> interface writes a pointer to the newly
 created <a href="#sqlite3_snapshot">sqlite3_snapshot</a> object into *P and returns SQLITE_OK.
-If schema S of <a href="#sqlite3">database connection</a> D is not a <a href="wal.html">WAL mode</a> database
-that is in a read transaction, then <a href="#sqlite3_snapshot_get">sqlite3_snapshot_get(D,S,P)</a>
-leaves the *P value unchanged and returns an appropriate <a href="rescode.html">error code</a>.</p>
+If there is not already a read-transaction open on schema S when
+this function is called, one is opened automatically.</p>
+
+<p>The following must be true for this function to succeed. If any of
+the following statements are false when sqlite3_snapshot_get() is
+called, SQLITE_ERROR is returned. The final value of *P is undefined
+in this case.</p>
+
+<p><ul>
+<li> The database handle must be in <a href="#sqlite3_get_autocommit">autocommit mode</a>.</p>
+
+<p><li> Schema S of <a href="#sqlite3">database connection</a> D must be a <a href="wal.html">WAL mode</a> database.</p>
+
+<p><li> There must not be a write transaction open on schema S of database
+connection D.</p>
+
+<p><li> One or more transactions must have been written to the current wal
+file since it was created on disk (by any connection). This means
+that a snapshot cannot be taken on a wal mode database with no wal
+file immediately after it is first opened. At least one transaction
+must be written to it first.
+</ul></p>
+
+<p>This function may also return SQLITE_NOMEM.  If it is called with the
+database handle in autocommit mode but fails for some other reason,
+whether or not a read transaction is opened on schema S is undefined.</p>
 
 <p>The <a href="#sqlite3_snapshot">sqlite3_snapshot</a> object returned from a successful call to
 <a href="#sqlite3_snapshot_get">sqlite3_snapshot_get()</a> must be freed using <a href="#sqlite3_snapshot_free">sqlite3_snapshot_free()</a>
@@ -3329,6 +3358,28 @@ database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> interface is only available when the
 SQLITE_ENABLE_SNAPSHOT compile-time option is used.
+</p><hr><a name="sqlite3_snapshot_recover"></a>
+<h2>Recover snapshots from a wal file</h2>
+</div>
+<blockquote><pre>
+int sqlite3_snapshot_recover(sqlite3 *db, const char *zDb);
+</pre></blockquote>
+<p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
+If all connections disconnect from a database file but do not perform
+a checkpoint, the existing wal file is opened along with the database
+file the next time the database is opened. At this point it is only
+possible to successfully call sqlite3_snapshot_open() to open the most
+recent snapshot of the database (the one at the head of the wal file),
+even though the wal file may contain other valid snapshots for which
+clients have sqlite3_snapshot handles.</p>
+
+<p>This function attempts to scan the wal file associated with database zDb
+of database handle db and make all valid snapshots available to
+sqlite3_snapshot_open(). It is an error if there is already a read
+transaction open on the database, or if the database is not a wal mode
+database.</p>
+
+<p>SQLITE_OK is returned if successful, or an SQLite error code otherwise.
 </p><hr><a name="sqlite3_soft_heap_limit"></a>
 <h2>Deprecated Soft Heap Limit Interface</h2>
 </div>
@@ -3528,6 +3579,10 @@ database.  The <a href="lang_attach.html">ATTACH</a> and <a href="lang_detach.ht
 sqlite3_stmt_readonly() to return true since, while those statements
 change the configuration of a database connection, they do not make
 changes to the content of the database files on disk.
+The sqlite3_stmt_readonly() interface returns true for <a href="lang_transaction.html">BEGIN</a> since
+<a href="lang_transaction.html">BEGIN</a> merely sets internal flags, but the <a href="lang_transaction.html">BEGIN IMMEDIATE</a> and
+<a href="lang_transaction.html">BEGIN EXCLUSIVE</a> commands do touch the database and so
+sqlite3_stmt_readonly() returns false for those commands.
 </p><hr><a name="sqlite3_stmt_scanstatus"></a>
 <h2>Prepared Statement Scan Status</h2>
 </div>
@@ -4284,6 +4339,35 @@ previously registered write-ahead log callback. Note that the
 <a href="#sqlite3_wal_autocheckpoint">sqlite3_wal_autocheckpoint()</a> interface and the
 <a href="pragma.html#pragma_wal_autocheckpoint">wal_autocheckpoint pragma</a> both invoke <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</a> and will
 overwrite any prior <a href="#sqlite3_wal_hook">sqlite3_wal_hook()</a> settings.
+</p><hr><a name="sqlite3_snapshot"></a>
+<h2>Database Snapshot</h2>
+</div>
+<blockquote><pre>
+typedef struct sqlite3_snapshot {
+  unsigned char hidden[48];
+} sqlite3_snapshot;
+</pre></blockquote>
+<p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
+An instance of the snapshot object records the state of a <a href="wal.html">WAL mode</a>
+database for some specific point in history.</p>
+
+<p>In <a href="wal.html">WAL mode</a>, multiple <a href="#sqlite3">database connections</a> that are open on the
+same database file can each be reading a different historical version
+of the database file.  When a <a href="#sqlite3">database connection</a> begins a read
+transaction, that connection sees an unchanging copy of the database
+as it existed for the point in time when the transaction first started.
+Subsequent changes to the database from other connections are not seen
+by the reader until a new read transaction is started.</p>
+
+<p>The sqlite3_snapshot object records state information about an historical
+version of the database file so that it is possible to later open a new read
+transaction that sees that historical version of the database rather than
+the most recent version.</p>
+
+<p>The constructor for this object is <a href="#sqlite3_snapshot_get">sqlite3_snapshot_get()</a>.  The
+<a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> method causes a fresh read transaction to refer
+to an historical snapshot (if possible).  The destructor for
+sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_free()</a>.
 </p><hr><a name="SQLITE_ABORT"></a>
 <h2>Result Codes</h2>
 </div>
@@ -4940,6 +5024,7 @@ The default value for this setting is controlled by the
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER 1004 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION 1005 /* int int* */
+#define SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE      1006 /* int int* */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5034,6 +5119,18 @@ must ensure that the argument passed into this DBCONFIG option is unchanged
 until after the database connection closes.
 </dd></p>
 
+<p><dt>SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</dt>
+<dd> Usually, when a database in wal mode is closed or detached from a
+database handle, SQLite checks if this will mean that there are now no
+connections at all to the database. If so, it performs a checkpoint
+operation before closing the connection. This option may be used to
+override this behaviour. The first parameter passed to this operation
+is an integer - non-zero to disable checkpoints-on-close, or zero (the
+default) to enable them. The second parameter is a pointer to an integer
+into which is written 0 or 1 to indicate whether checkpoints-on-close
+have been disabled - 0 if they are not disabled, 1 if they are.
+</dd></p>
+
 <p></dl>
 </p><hr><a name="SQLITE_DENY"></a>
 <h2>Authorizer Return Codes</h2>
@@ -5101,6 +5198,7 @@ return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()
 #define SQLITE_FCNTL_VFS_POINTER            27
 #define SQLITE_FCNTL_JOURNAL_POINTER        28
 #define SQLITE_FCNTL_WIN32_GET_HANDLE       29
+#define SQLITE_FCNTL_PDB                    30
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -5588,9 +5686,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.15.2"
-#define SQLITE_VERSION_NUMBER 3015002
-#define SQLITE_SOURCE_ID      "2016-11-28 19:13:37 bbd85d235f7037c6a033a9690534391ffeacecc8"
+#define SQLITE_VERSION        "3.16.2"
+#define SQLITE_VERSION_NUMBER 3016002
+#define SQLITE_SOURCE_ID      "2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -6124,33 +6222,6 @@ If the number of virtual machine operations exceeds 2147483647
 then the value returned by this statement status code is undefined.
 </dd>
 </dl>
-</p><hr><a name="sqlite3_snapshot"></a>
-<h2>Database Snapshot</h2>
-</div>
-<blockquote><pre>
-typedef struct sqlite3_snapshot sqlite3_snapshot;
-</pre></blockquote>
-<p><b>Important:</b> This interface is <a href="capi3ref.html">experimental</a> and is subject to change without notice.</p><p>
-An instance of the snapshot object records the state of a <a href="wal.html">WAL mode</a>
-database for some specific point in history.</p>
-
-<p>In <a href="wal.html">WAL mode</a>, multiple <a href="#sqlite3">database connections</a> that are open on the
-same database file can each be reading a different historical version
-of the database file.  When a <a href="#sqlite3">database connection</a> begins a read
-transaction, that connection sees an unchanging copy of the database
-as it existed for the point in time when the transaction first started.
-Subsequent changes to the database from other connections are not seen
-by the reader until a new read transaction is started.</p>
-
-<p>The sqlite3_snapshot object records state information about an historical
-version of the database file so that it is possible to later open a new read
-transaction that sees that historical version of the database rather than
-the most recent version.</p>
-
-<p>The constructor for this object is <a href="#sqlite3_snapshot_get">sqlite3_snapshot_get()</a>.  The
-<a href="#sqlite3_snapshot_open">sqlite3_snapshot_open()</a> method causes a fresh read transaction to refer
-to an historical snapshot (if possible).  The destructor for
-sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_free()</a>.
 </p><hr><a name="sqlite3_int64"></a>
 <h2>64-Bit Integer Types</h2>
 </div>
@@ -8447,6 +8518,7 @@ features that require the use of temporary files may fail.</p>
 <h2>The pre-update hook.</h2>
 </div>
 <blockquote><pre>
+#if defined(SQLITE_ENABLE_PREUPDATE_HOOK)
 void *sqlite3_preupdate_hook(
   sqlite3 *db,
   void(*xPreUpdate)(
@@ -8464,6 +8536,7 @@ int sqlite3_preupdate_old(sqlite3 *, int, sqlite3_value **);
 int sqlite3_preupdate_count(sqlite3 *);
 int sqlite3_preupdate_depth(sqlite3 *);
 int sqlite3_preupdate_new(sqlite3 *, int, sqlite3_value **);
+#endif
 </pre></blockquote>
 <p>
 These interfaces are only available if SQLite is compiled using the

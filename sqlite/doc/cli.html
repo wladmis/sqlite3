@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -207,7 +207,7 @@ In other words use "c:/work/ex1.db", not "c:\work\ex1.db".</p>
 <p>Alternatively, you can create a new database using the default temporary
 storage, then save that database into a disk file using the ".save" command:
 
-</p><div class="codeblock"><pre>SQLite version 3.8.5 2014-05-29 12:36:14
+</p><div class="codeblock"><pre>SQLite version 3.16.0 2016-12-29 19:48:46
 Enter ".help" for usage hints.
 Connected to a transient in-memory database.
 Use ".open FILENAME" to reopen on a persistent database.
@@ -245,6 +245,7 @@ at any time.  For example:
 .bail on|off           Stop after hitting an error.  Default OFF
 .binary on|off         Turn binary output on or off.  Default OFF
 .changes on|off        Show number of rows changed by SQL
+.check GLOB            Fail if output since .testcase does not match
 .clone NEWDB           Clone data into NEWDB from the existing database
 .databases             List names and files of attached databases
 .dbinfo ?DB?           Show status information about the database
@@ -252,17 +253,21 @@ at any time.  For example:
                          If TABLE specified, only dump tables matching
                          LIKE pattern TABLE.
 .echo on|off           Turn command echo on or off
-.eqp on|off            Enable or disable automatic EXPLAIN QUERY PLAN
+.eqp on|off|full       Enable or disable automatic EXPLAIN QUERY PLAN
 .exit                  Exit this program
 .explain ?on|off|auto? Turn EXPLAIN output mode on or off or to automatic
-.fullschema            Show schema and the content of sqlite_stat tables
+.fullschema ?--indent? Show schema and the content of sqlite_stat tables
 .headers on|off        Turn display of headers on or off
 .help                  Show this message
 .import FILE TABLE     Import data from FILE into TABLE
+.imposter INDEX TABLE  Create imposter table TABLE on index INDEX
 .indexes ?TABLE?       Show names of all indexes
                          If TABLE specified, only show indexes for tables
                          matching LIKE pattern TABLE.
+.iotrace FILE          Enable I/O diagnostic logging to FILE
 .limit ?LIMIT? ?VAL?   Display or change the value of an SQLITE_LIMIT
+.lint OPTIONS          Report potential schema issues. Options:
+                         fkey-indexes     Find missing foreign key indexes
 .load FILE ?ENTRY?     Load an extension library
 .log FILE|off          Turn logging on or off.  FILE can be stderr/stdout
 .mode MODE ?TABLE?     Set output mode where MODE is one of:
@@ -273,11 +278,13 @@ at any time.  For example:
                          insert   SQL insert statements for TABLE
                          line     One value per line
                          list     Values delimited by .separator strings
+                         quote    Escape answers as for SQL
                          tabs     Tab-separated values
                          tcl      TCL list elements
 .nullvalue STRING      Use STRING in place of NULL values
 .once FILENAME         Output for the next SQL command only to FILENAME
-.open ?FILENAME?       Close existing database and reopen FILENAME
+.open ?--new? ?FILE?   Close existing database and reopen FILE
+                         The --new starts with an empty file
 .output ?FILENAME?     Send output to FILENAME or stdout
 .print STRING...       Print literal STRING
 .prompt MAIN CONTINUE  Replace the standard prompts
@@ -286,9 +293,8 @@ at any time.  For example:
 .restore ?DB? FILE     Restore content of DB (default "main") from FILE
 .save FILE             Write in-memory database into FILE
 .scanstats on|off      Turn sqlite3_stmt_scanstatus() metrics on or off
-.schema ?TABLE?        Show the CREATE statements
-                         If TABLE specified, only show tables matching
-                         LIKE pattern TABLE.
+.schema ?PATTERN?      Show the CREATE statements matching PATTERN
+                          Add --indent for pretty-printing
 .separator COL ?ROW?   Change the column separator and optionally the row
                          separator for both the output mode and .import
 .session CMD ...       Create or control sessions
@@ -299,6 +305,7 @@ at any time.  For example:
 .tables ?TABLE?        List names of tables
                          If TABLE specified, only list tables matching
                          LIKE pattern TABLE.
+.testcase NAME         Begin redirecting output to 'testcase-out.txt'
 .timeout MS            Try opening locked tables for MS milliseconds
 .timer on|off          Turn SQL timer on or off
 .trace FILE|off        Output each SQL statement as it is run
@@ -564,16 +571,8 @@ executing the following query:</p>
 
 <div class="codeblock"><pre>SELECT name FROM sqlite_master 
 WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
-UNION ALL 
-SELECT name FROM sqlite_temp_master 
-WHERE type IN ('table','view') 
 ORDER BY 1
 </pre></div>
-
-<p>In fact, if you look at the source code to the sqlite3 program
-(found in the source tree in the file 
-<a href="https://www.sqlite.org/src/artifact?ci=trunk&filename=src/shell.c">src/shell.c</a>)
-you'll find a query very much like the above.</p>
 
 <p>The ".indices" command works in a similar way to list all of
 the indices for a particular table.  The ".indices" command takes
@@ -602,22 +601,17 @@ sqlite&gt;
 </pre></div>
 
 
-<p>The ".schema" command accomplishes the same thing as setting
+<p>The ".schema" command is roughly the same as setting
 list mode, then entering the following query:</p>
 
-<div class="codeblock"><pre>SELECT sql FROM 
-   (SELECT * FROM sqlite_master UNION ALL
-    SELECT * FROM sqlite_temp_master)
-WHERE type!='meta'
+<div class="codeblock"><pre>SELECT sql FROM sqlite_master
 ORDER BY tbl_name, type DESC, name
 </pre></div>
 
 <p>Or, if you give an argument to ".schema" because you only
 want the schema for a single table, the query looks like this:</p>
 
-<div class="codeblock"><pre>SELECT sql FROM
-   (SELECT * FROM sqlite_master UNION ALL
-    SELECT * FROM sqlite_temp_master)
+<div class="codeblock"><pre>SELECT sql FROM sqlite_master
 WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
 ORDER BY substr(type,2,1), name
 </pre></div>
@@ -627,9 +621,7 @@ You can supply an argument to the .schema command.  If you do, the
 query looks like this:
 </p>
 
-<div class="codeblock"><pre>SELECT sql FROM
-   (SELECT * FROM sqlite_master UNION ALL
-    SELECT * FROM sqlite_temp_master)
+<div class="codeblock"><pre>SELECT sql FROM sqlite_master
 WHERE tbl_name LIKE '%s'
   AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
 ORDER BY substr(type,2,1), name

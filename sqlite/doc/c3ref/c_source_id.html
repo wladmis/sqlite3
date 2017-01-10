@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -81,9 +81,9 @@ return false;
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.15.2"
-#define SQLITE_VERSION_NUMBER 3015002
-#define SQLITE_SOURCE_ID      "2016-11-28 19:13:37 bbd85d235f7037c6a033a9690534391ffeacecc8"
+#define SQLITE_VERSION        "3.16.2"
+#define SQLITE_VERSION_NUMBER 3016002
+#define SQLITE_SOURCE_ID      "2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209"
 </pre></blockquote>
 <p>
 The <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header

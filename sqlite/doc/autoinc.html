@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -177,18 +177,19 @@ new rows and newly created ROWIDs might not be in strictly ascending order.
 If a column has the type INTEGER PRIMARY KEY AUTOINCREMENT then a slightly
 different ROWID selection algorithm is used.  
 The ROWID chosen for the new row is at least one larger than the largest ROWID
-that has ever before existed in that same table.  If the table has never
-before contained any data, then a ROWID of 1 is used.  If the table
-has previously held a row with the largest possible ROWID, then new INSERTs
-are not allowed and any attempt to insert a new row will fail with an
-SQLITE_FULL error.  Only ROWID values from previous transactions that
+that has ever before been inserted in that same table.  If the table has never
+before contained any data, then a ROWID of 1 is used.  If the largest possible
+ROWID has previously been inserted, then
+new INSERTs are not allowed and any attempt to insert a new row will
+fail with an SQLITE_FULL error.  
+Only ROWID values from previous transactions that
 were committed are considered.  ROWID values that were rolled back
 are ignored and can be reused.
 </p>
 
 <p>
-SQLite keeps track of the largest ROWID that a table has ever held using
-an <a href="fileformat2.html#intschema">internal table</a> named "<a href="fileformat2.html#seqtab">sqlite_sequence</a>".
+SQLite keeps track of the largest ROWID
+using an <a href="fileformat2.html#intschema">internal table</a> named "<a href="fileformat2.html#seqtab">sqlite_sequence</a>".
 The sqlite_sequence table is created
 and initialized automatically whenever a normal table that contains an
 AUTOINCREMENT column is created.  The content of the sqlite_sequence table
@@ -196,6 +197,8 @@ can be modified using ordinary UPDATE, INSERT, and DELETE statements.
 But making modifications to this table will likely perturb the AUTOINCREMENT
 key generation algorithm.  Make sure you know what you are doing before
 you undertake such changes.
+The sqlite_sequence table does not track ROWID changes associated with
+UPDATE statement, only INSERT statements.
 </p>
 
 <p>

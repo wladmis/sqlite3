@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -518,7 +518,7 @@ input data is implicitly a single row zero columns wide (i.e. <i>N</i>=1 and
 <p>If a FROM clause is specified, the data on which a simple SELECT query
 operates comes from the one or more tables or subqueries (SELECT statements
 in parenthesis) specified following the FROM keyword. A subquery specified
-in the table-or-subquery following the FROM clause in a 
+in the <span class='yyterm'>table-or-subquery</span> following the FROM clause in a 
 simple SELECT statement is
 handled as if it was a table containing the data returned by executing the
 subquery statement. Each column of the subquery has the
@@ -724,6 +724,46 @@ of rows.
     the GROUP BY and HAVING clauses to the filtered input dataset.
 </ul>
 
+<a name="bareagg"></a>
+
+<p><b>Side note: Bare columns in an aggregate queries.</b>
+The usual case is that all column names in an aggregate query are either
+arguments to <a href="lang_aggfunc.html">aggregate functions</a> or else appear in the GROUP BY clause.
+A result column which contains a column name that is not within an
+aggregate function and that does not appear in the GROUP BY clause (if
+one exists) is called a "bare" column.
+Example:
+<blockquote><pre>
+SELECT a, b, sum(c) FROM tab1 GROUP BY a;
+</pre></blockquote>
+<p>In the query above, the "a" column is part of the GROUP BY clause
+and so each row of the output contains one of the distinct values for
+"a".  The "c" column is contained within the <a href="lang_aggfunc.html#sumunc">sum()</a> aggregate function
+and so that output column is the sum of all "c" values in rows that
+have the same value for "a".  But what is the result of the bare 
+column "b"? The answer is that the "b" result will be the
+value for "b" in one of the input rows that form the aggregate.
+The problem is that you usually do not know which input row is used
+to compute "b", and so in many cases the value for "b" is undefined.
+</p>
+<p>
+Special processing occurs occurs when the aggregate function is 
+either <a href="lang_aggfunc.html#maxggunc">min()</a> or <a href="lang_aggfunc.html#minggunc">max()</a>.  Example:
+<blockquote><pre>
+SELECT a, b, max(c) FROM tab1 GROUP BY a;
+</pre></blockquote>
+When the <a href="lang_aggfunc.html#maxggunc">min()</a> or <a href="lang_aggfunc.html#minggunc">max()</a> aggregate functions 
+are used in an aggregate query, all bare columns in the result set 
+take values from the input
+row which also contains the minimum or maximum.  So in the query
+above, the value of the "b" column in the output will be the value of
+the "b" column in the input row that has the largest "c" value.
+There is still an ambiguity if two or more of the input rows have the
+same minimum or maximum value or if the query contains more than one
+min() and/or max() aggregate function. Only the built-in <a href="lang_aggfunc.html#minggunc">min()</a> 
+and <a href="lang_aggfunc.html#maxggunc">max()</a> functions work this way.
+</p>
+
 <p><b>4. Removal of duplicate rows (DISTINCT processing).</b>
 <a name="distinct"></a>
 
@@ -736,8 +776,8 @@ DISTINCT are present, then the behavior is as if ALL were specified.
 If the simple SELECT is a SELECT DISTINCT, then duplicate rows are removed
 from the set of result rows before it is returned. For the purposes of
 detecting duplicate rows, two NULL values are considered to be equal. The
-normal rules for selecting a collation sequence to compare text values with
-apply.
+<a href="datatype3.html#colrules">usual rules</a> apply for selecting a collation
+sequence to compare text values.
 
 <a name="compound"></a>
 

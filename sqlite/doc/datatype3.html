@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -162,7 +162,7 @@ database engine) has one of the following storage classes:</p>
   it was input.</p>
 </li></ul>
 
-<p>Note that a storage class is slightly more general than a datatype.
+<p>A storage class is more general than a datatype.
 The INTEGER storage class, for example, includes 6 different integer
 datatypes of different lengths.  This makes a difference on disk.  But
 as soon as INTEGER values are read off of disk and into memory for processing,
@@ -469,7 +469,7 @@ INTEGER, REAL, and/or TEXT before performing a comparison.
 Whether or not any conversions are attempted before the comparison takes
 place depends on the type affinity of the operands.
 
-</p><p>Note that every table column as a type affinity (one of BLOB, TEXT, INTEGER,
+</p><p>Every table column has a type affinity (one of BLOB, TEXT, INTEGER,
 REAL, or NUMERIC) but expressions do no necessarily have an affinity.
 
 </p><p>Operand affinity is determined by the following rules:
@@ -658,12 +658,15 @@ table has an associated collating function.  If no collating function
 is explicitly defined, then the collating function defaults to BINARY.
 The COLLATE clause of the <a href="lang_createtable.html#tablecoldef">column definition</a> is used
 to define alternative collating functions for a column.
-</p>  
+</p>
+
+<a name="colrules"></a>
+
 
 <p>
 The rules for determining which collating function to use for a
 binary comparison operator (=, &lt;, &gt;, &lt;=, &gt;=, !=, IS, and
-IS NOT) are as follows and in the order shown:
+IS NOT) are as follows:
 
 </p><ol>
 <li><p>If either operand has an explicit collating function assignment

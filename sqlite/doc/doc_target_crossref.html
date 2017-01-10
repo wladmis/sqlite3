@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -146,7 +146,7 @@ return false;
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill</a> &rarr; SQLITE_CONFIG_STMTJRNL_SPILL</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">c3ref/c_config_covering_index_scan.html#sqliteconfiguri</a> &rarr; SQLITE_CONFIG_URI</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize">c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize</a> &rarr; SQLITE_CONFIG_WIN32_HEAPSIZE</li>
-<li><a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a> &rarr; SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME</li>
+<li><a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a> &rarr; SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</li>
 <li><a href="c3ref/c_dbstatus_options.html">c3ref/c_dbstatus_options.html</a> &rarr; {SQLITE_DBSTATUS options} SQLITE_DBSTATUS_MAX</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit</a> &rarr; SQLITE_DBSTATUS_CACHE_HIT</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss</a> &rarr; SQLITE_DBSTATUS_CACHE_MISS</li>
@@ -163,7 +163,7 @@ return false;
 <li><a href="c3ref/c_deny.html">c3ref/c_deny.html</a> &rarr; SQLITE_DENY SQLITE_IGNORE</li>
 <li><a href="c3ref/c_deterministic.html">c3ref/c_deterministic.html</a> &rarr; SQLITE_DETERMINISTIC</li>
 <li><a href="c3ref/c_fail.html">c3ref/c_fail.html</a> &rarr; SQLITE_FAIL SQLITE_REPLACE SQLITE_ROLLBACK {conflict resolution mode}</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a> &rarr; SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_SET_LOCKPROXYFILE {file control opcode} {file control opcodes}</li>
+<li><a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a> &rarr; SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_PDB SQLITE_FCNTL_SET_LOCKPROXYFILE {file control opcode} {file control opcodes}</li>
 <li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler</a> &rarr; SQLITE_FCNTL_BUSYHANDLER</li>
 <li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize">c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize</a> &rarr; SQLITE_FCNTL_CHUNK_SIZE</li>
 <li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo">c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo</a> &rarr; SQLITE_FCNTL_COMMIT_PHASETWO</li>
@@ -343,6 +343,7 @@ return false;
 <li><a href="c3ref/snapshot_free.html">c3ref/snapshot_free.html</a> &rarr; sqlite3_snapshot_free</li>
 <li><a href="c3ref/snapshot_get.html">c3ref/snapshot_get.html</a> &rarr; sqlite3_snapshot_get</li>
 <li><a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a> &rarr; sqlite3_snapshot_open</li>
+<li><a href="c3ref/snapshot_recover.html">c3ref/snapshot_recover.html</a> &rarr; sqlite3_snapshot_recover</li>
 <li><a href="c3ref/soft_heap_limit.html">c3ref/soft_heap_limit.html</a> &rarr; sqlite3_soft_heap_limit</li>
 <li><a href="c3ref/soft_heap_limit64.html">c3ref/soft_heap_limit64.html</a> &rarr; sqlite3_soft_heap_limit64</li>
 <li><a href="c3ref/sqlite3.html">c3ref/sqlite3.html</a> &rarr; {database connection} {database connections} sqlite3</li>
@@ -545,6 +546,7 @@ return false;
 <li><a href="compile.html#temp_store">compile.html#temp_store</a> &rarr; -DSQLITE_TEMP_STORE SQLITE_TEMP_STORE</li>
 <li><a href="compile.html#threadsafe">compile.html#threadsafe</a> &rarr; -DSQLITE_THREADSAFE SQLITE_THREADSAFE</li>
 <li><a href="compile.html#trace_size_limit">compile.html#trace_size_limit</a> &rarr; -DSQLITE_TRACE_SIZE_LIMIT SQLITE_TRACE_SIZE_LIMIT</li>
+<li><a href="compile.html#untestable">compile.html#untestable</a> &rarr; -DSQLITE_UNTESTABLE SQLITE_UNTESTABLE</li>
 <li><a href="compile.html#use_fcntl_trace">compile.html#use_fcntl_trace</a> &rarr; -DSQLITE_USE_FCNTL_TRACE SQLITE_USE_FCNTL_TRACE</li>
 <li><a href="compile.html#use_uri">compile.html#use_uri</a> &rarr; -DSQLITE_USE_URI SQLITE_USE_URI</li>
 <li><a href="compile.html#usleep">compile.html#usleep</a> &rarr; -DHAVE_USLEEP HAVE_USLEEP</li>
@@ -557,6 +559,8 @@ return false;
 <li><a href="compile.html#zero_malloc">compile.html#zero_malloc</a> &rarr; -DSQLITE_ZERO_MALLOC SQLITE_ZERO_MALLOC</li>
 <li><a href="consortium.html">consortium.html</a> &rarr; {SQLite Consortium}</li>
 <li><a href="copyright.html">copyright.html</a> &rarr; copyright license public-domain</li>
+<li><a href="cpu.html">cpu.html</a> &rarr; {CPU cycles used} {CPU performance measurement}</li>
+<li><a href="cpu.html#microopt">cpu.html#microopt</a> &rarr; microoptimizations</li>
 <li><a href="csv.html">csv.html</a> &rarr; {CSV virtual table} csv</li>
 <li><a href="custombuild.html">custombuild.html</a> &rarr; {custom builds} {porting SQLite}</li>
 <li><a href="datatype3.html">datatype3.html</a> &rarr; datatype {dynamic typing}</li>
@@ -564,6 +568,7 @@ return false;
 <li><a href="datatype3.html#affname">datatype3.html#affname</a> &rarr; {rules for determining column affinity}</li>
 <li><a href="datatype3.html#boolean">datatype3.html#boolean</a> &rarr; {boolean datatype}</li>
 <li><a href="datatype3.html#collation">datatype3.html#collation</a> &rarr; BINARY {BINARY collating function} NOCASE {NOCASE collating function} RTRIM {RTRIM collating function} {collating function} {collating sequence} {collating sequences} collation</li>
+<li><a href="datatype3.html#colrules">datatype3.html#colrules</a> &rarr; {how collation is determined}</li>
 <li><a href="datatype3.html#compaff">datatype3.html#compaff</a> &rarr; {comparison affinity rules}</li>
 <li><a href="datatype3.html#comparisons">datatype3.html#comparisons</a> &rarr; {comparison expressions}</li>
 <li><a href="datatype3.html#datetime">datatype3.html#datetime</a> &rarr; {date and time datatype}</li>
@@ -714,6 +719,8 @@ return false;
 <li><a href="howtocorrupt.html#delhotjrnl">howtocorrupt.html#delhotjrnl</a> &rarr; {deleting a hot journal}</li>
 <li><a href="howtocorrupt.html#fscorruption">howtocorrupt.html#fscorruption</a> &rarr; {filesystem corruption}</li>
 <li><a href="howtocorrupt.html#unlink">howtocorrupt.html#unlink</a> &rarr; {unlink corruption} {unlinked database files}</li>
+<li><a href="imposter.html">imposter.html</a> &rarr; {imposter tables}</li>
+<li><a href="imposter.html#dotimposter">imposter.html#dotimposter</a> &rarr; {.imposter dot-command}</li>
 <li><a href="inmemorydb.html">inmemorydb.html</a> &rarr; {in-memory database} {in-memory databases} memory</li>
 <li><a href="inmemorydb.html#sharedmemdb">inmemorydb.html#sharedmemdb</a> &rarr; {in-memory shared cache database}</li>
 <li><a href="inmemorydb.html#temp_db">inmemorydb.html#temp_db</a> &rarr; {temporary databases} {temporary tables}</li>
@@ -846,6 +853,7 @@ return false;
 <li><a href="lang_replace.html">lang_replace.html</a> &rarr; REPLACE</li>
 <li><a href="lang_savepoint.html">lang_savepoint.html</a> &rarr; RELEASE SAVEPOINT</li>
 <li><a href="lang_select.html">lang_select.html</a> &rarr; SELECT query</li>
+<li><a href="lang_select.html#bareagg">lang_select.html#bareagg</a> &rarr; {bare aggregate terms}</li>
 <li><a href="lang_select.html#compound">lang_select.html#compound</a> &rarr; {compound SELECT} {compound SELECTs} {compound query} {compound select}</li>
 <li><a href="lang_select.html#crossjoin">lang_select.html#crossjoin</a> &rarr; {treats the CROSS JOIN operator specially}</li>
 <li><a href="lang_select.html#distinct">lang_select.html#distinct</a> &rarr; DISTINCT</li>
@@ -925,6 +933,7 @@ return false;
 <li><a href="optoverview.html#uplus">optoverview.html#uplus</a> &rarr; upluscontrol</li>
 <li><a href="partialindex.html">partialindex.html</a> &rarr; {partial index} {partial indexes} {partial indices}</li>
 <li><a href="pgszchng2016.html">pgszchng2016.html</a> &rarr; {increase in the default page size} {version 3.12.0 page size change}</li>
+<li><a href="pragma.html#pragfunc">pragma.html#pragfunc</a> &rarr; {PRAGMA function} {PRAGMA functions}</li>
 <li><a href="pragma.html#pragma_application_id">pragma.html#pragma_application_id</a> &rarr; {PRAGMA application_id} application_id {application_id pragma}</li>
 <li><a href="pragma.html#pragma_auto_vacuum">pragma.html#pragma_auto_vacuum</a> &rarr; {PRAGMA auto_vacuum} auto_vacuum {auto_vacuum pragma}</li>
 <li><a href="pragma.html#pragma_automatic_index">pragma.html#pragma_automatic_index</a> &rarr; {PRAGMA automatic_index} automatic_index {automatic_index pragma}</li>
@@ -1038,6 +1047,9 @@ return false;
 <li><a href="releaselog/3_15_0.html">releaselog/3_15_0.html</a> &rarr; {Version 3.15.0} {version 3.15.0}</li>
 <li><a href="releaselog/3_15_1.html">releaselog/3_15_1.html</a> &rarr; {Version 3.15.1} {version 3.15.1}</li>
 <li><a href="releaselog/3_15_2.html">releaselog/3_15_2.html</a> &rarr; {Version 3.15.2} {version 3.15.2}</li>
+<li><a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a> &rarr; {Version 3.16.0} {version 3.16.0}</li>
+<li><a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a> &rarr; {Version 3.16.1} {version 3.16.1}</li>
+<li><a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a> &rarr; {Version 3.16.2} {version 3.16.2}</li>
 <li><a href="releaselog/3_1_0.html">releaselog/3_1_0.html</a> &rarr; {Version 3.1.0} {version 3.1.0}</li>
 <li><a href="releaselog/3_1_1.html">releaselog/3_1_1.html</a> &rarr; {Version 3.1.1} {version 3.1.1}</li>
 <li><a href="releaselog/3_1_2.html">releaselog/3_1_2.html</a> &rarr; {Version 3.1.2} {version 3.1.2}</li>

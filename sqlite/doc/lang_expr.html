@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -483,15 +483,20 @@ might be evaluated multiple times in the second:
 <a name="in_op"></a>
 
 <h3>The IN and NOT IN operators</h3>
-<p>The IN and NOT IN operators take a single scalar operand on the
-left and a vector operand on the right
-formed by an explicit list of zero or more scalars or by a 
-single subquery.
+<p>The IN and NOT IN operators take an expression on the
+left and a list of values or a subquery on the right.
 When the right operand of an IN or NOT IN operator is a subquery, the
-subquery must have a single result column.
-The "subquery" on the right-hand side of an IN operator can be a
-table name or <a href="vtab.html#tabfunc2">table-valued function</a> name in which case the
-subquery is understood to be "(SELECT * FROM <i>name</i>)".
+subquery must have the same number of columns as there are columns in
+the <a href="rowvalue.html">row value</a> of the left operand.  The subquery on the
+right of an IN or NOT IN operator must be a scalar subquery if the left
+expression is not a <a href="rowvalue.html">row value</a> expression.
+If the right operand of an IN or NOT IN operator is a list of values,
+each of those values must be scalars and the left expression must also
+be a scalar.
+The right-hand side of an IN or NOT IN operator can be a
+table <i>name</i> or <a href="vtab.html#tabfunc2">table-valued function</a> <i>name</i> in which 
+case the right-hand side is understood to be subquery of
+the form "(SELECT * FROM <i>name</i>)".
 When the right operand is an empty set, the result of IN is false and the
 result of NOT IN is true, regardless of the left operand and even if the
 left operand is NULL.
@@ -550,6 +555,19 @@ the right-hand side of an IN or NOT IN operator to be an empty list but
 most other SQL database database engines and the SQL92 standard require
 the list to contain at least one element.</p>
 
+<h3>Table Column Names</h3>
+
+<p>A column name can be any of the names defined in the <a href="lang_createtable.html">CREATE TABLE</a>
+statement or one of the following special identifiers: "<b>ROWID</b>",
+"<b>OID</b>", or "<b>_ROWID_</b>".
+The three special identifiers describe the
+unique integer key (the <a href="lang_createtable.html#rowid">rowid</a>) associated with every 
+row of every table and so are not available on <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+The special identifiers only refer to the row key if the <a href="lang_createtable.html">CREATE TABLE</a>
+statement does not define a real column with the same name.
+The rowid can be used anywhere a regular
+column can be used.</p>
+
 <a name="in_op"></a>
 
 <h3>The EXISTS operator</h3>
@@ -567,33 +585,23 @@ not handled any differently from rows without NULL values.
 
 <a name="subq"></a>
 
-<h3>Scalar Subqueries</h3>
+<h3>Subquery Expressions</h3>
 
-<p>A <a href="lang_select.html">SELECT</a> statement enclosed in parentheses may appear as a scalar
-quantity. A <a href="lang_select.html">SELECT</a> used as a scalar quantity must return a result set
-with a single column. The result of the expression is the value of the
-only column in the first row returned by the SELECT statement. If the SELECT 
-yields more than one result row, all rows after the first are ignored. If
-the SELECT yields no rows, then the value of the expression is NULL.
-The LIMIT of a scalar subquery is always 1.
-Any other LIMIT value given in the SQL text is ignored.
+<p>A <a href="lang_select.html">SELECT</a> statement enclosed in parentheses is a subquery.
+All types of SELECT statement, including
+aggregate and compound SELECT queries (queries with keywords like
+UNION or EXCEPT) are allowed as scalar subqueries.
+The value of a subquery expression is the first row of the result
+from the enclosed <a href="lang_select.html">SELECT</a> statement.
+In other words, an implied "LIMIT 1" is added to the subquery, overriding
+an explicitly coded LIMIT.
+The value of a subquery expression is NULL if the enclosed
+<a href="lang_select.html">SELECT</a> statement returns no rows.
 
-<p>All types of <a href="lang_select.html">SELECT</a> statement, including aggregate and <a href="lang_select.html#compound">compound SELECT</a>
-queries (queries with keywords like UNION or EXCEPT) are allowed as scalar
-subqueries.
-
-<h3>Table Column Names</h3>
-
-<p>A column name can be any of the names defined in the <a href="lang_createtable.html">CREATE TABLE</a>
-statement or one of the following special identifiers: "<b>ROWID</b>",
-"<b>OID</b>", or "<b>_ROWID_</b>".
-The three special identifiers describe the
-unique integer key (the <a href="lang_createtable.html#rowid">rowid</a>) associated with every 
-row of every table and so are not available on <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
-The special identifiers only refer to the row key if the <a href="lang_createtable.html">CREATE TABLE</a>
-statement does not define a real column with the same name.
-The rowid can be used anywhere a regular
-column can be used.</p>
+<p>A subquery that returns a single column is a scalar subquery and can
+be used most anywhere.
+A subquery that returns two or more columns is a <a href="rowvalue.html">row value</a>
+subquery and can only be used as the operand of a comparison operator.
 
 <a name="cosub"></a>
 

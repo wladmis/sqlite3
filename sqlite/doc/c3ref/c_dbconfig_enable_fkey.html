@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -75,7 +75,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME -->
+<!-- keywords: SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Database Connection Configuration Options</h2>
@@ -87,6 +87,7 @@ return false;
 #define SQLITE_DBCONFIG_ENABLE_TRIGGER        1003 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER 1004 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION 1005 /* int int* */
+#define SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE      1006 /* int int* */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -179,6 +180,18 @@ which will become the new schema name in place of "main".  SQLite
 does not make a copy of the new main schema name string, so the application
 must ensure that the argument passed into this DBCONFIG option is unchanged
 until after the database connection closes.
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</dt>
+<dd> Usually, when a database in wal mode is closed or detached from a
+database handle, SQLite checks if this will mean that there are now no
+connections at all to the database. If so, it performs a checkpoint
+operation before closing the connection. This option may be used to
+override this behaviour. The first parameter passed to this operation
+is an integer - non-zero to disable checkpoints-on-close, or zero (the
+default) to enable them. The second parameter is a pointer to an integer
+into which is written 0 or 1 to indicate whether checkpoints-on-close
+have been disabled - 0 if they are not disabled, 1 if they are.
 </dd></p>
 
 <p></dl>

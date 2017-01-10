@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -175,8 +175,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.15.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bbd85d235f703'>bbd85d235f703</a> dated 2016-11-28.
+ version 3.16.2 check-in
+<a href='https://www.sqlite.org/src/timeline?c=a65a62893ca83'>a65a62893ca83</a> dated 2017-01-06.
 
 
 
@@ -342,20 +342,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 159
+<p>There are currently 161
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/f43aa96f2efe9bc8a06d17115661af527a3318fa">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/88bd6c32b333580d2661ac3afe33369757fb1522">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.15.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=bbd85d235f703'>bbd85d235f703</a> dated 2016-11-28.
+ version 3.16.2 check-in
+<a href='https://www.sqlite.org/src/timeline?c=a65a62893ca83'>a65a62893ca83</a> dated 2017-01-06.
 
 <a name="codes"></a>
 
@@ -609,8 +609,8 @@ to values currently held in registers.  TK_COLUMN terms in the P4
 expression refer to columns in the b-tree to which cursor P1 is pointing.</td></tr>
 <tr><td valign="top" align="center">
 <a name="DecrJumpZero"></a>DecrJumpZero
-<td>Register P1 must hold an integer.  Decrement the value in register P1
-then jump to P2 if the new value is exactly zero.</td></tr>
+<td>Register P1 must hold an integer.  Decrement the value in P1
+and jump to P2 if the new value is exactly zero.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Delete"></a>Delete
 <td>Delete the record at which the P1 cursor is currently pointing.</p>
@@ -904,16 +904,23 @@ then jump to P2.  Otherwise fall through to the next instruction.</td></tr>
 <a href="opcode.html#MakeRecord">MakeRecord</a> instructions.  This opcode writes that key
 into the index P1.  Data for the entry is nil.</p>
 
-<p>P3 is a flag that provides a hint to the b-tree layer that this
-insert is likely to be an append.</p>
+<p>If P4 is not zero, then it is the number of values in the unpacked
+key of reg(P2).  In that case, P3 is the index of the first register
+for the unpacked key.  The availability of the unpacked key can sometimes
+be an optimization.</p>
+
+<p>If P5 has the OPFLAG_APPEND bit set, that is a hint to the b-tree layer
+that this insert is likely to be an append.</p>
 
 <p>If P5 has the OPFLAG_NCHANGE bit set, then the change counter is
 incremented by this instruction.  If the OPFLAG_NCHANGE bit is clear,
 then the change counter is unchanged.</p>
 
-<p>If P5 has the OPFLAG_USESEEKRESULT bit set, then the cursor must have
-just done a seek to the spot where the new entry is to be inserted.
-This flag avoids doing an extra seek.</p>
+<p>If the OPFLAG_USESEEKRESULT flag of P5 is set, the implementation might
+run faster by avoiding an unnecessary seek on cursor P1.  However,
+the OPFLAG_USESEEKRESULT flag must only be set if there have been no prior
+seeks on the cursor or if the most recent seek used a key equivalent
+to P2.</p>
 
 <p>This instruction only works for indices.  The equivalent instruction
 for tables is <a href="opcode.html#Insert">Insert</a>.</td></tr>
@@ -955,9 +962,9 @@ in P1 is NULL then take the jump if and only if P3 is non-zero.</td></tr>
 <tr><td valign="top" align="center">
 <a name="IfNotZero"></a>IfNotZero
 <td>Register P1 must contain an integer.  If the content of register P1 is
-initially nonzero, then subtract P3 from the value in register P1 and
-jump to P2.  If register P1 is initially zero, leave it unchanged
-and fall through.</td></tr>
+initially greater than zero, then decrement the value in register P1.
+If it is non-zero (negative or positive) and then also jump to P2.
+If register P1 is initially zero, leave it unchanged and fall through.</td></tr>
 <tr><td valign="top" align="center">
 <a name="IfPos"></a>IfPos
 <td>Register P1 must contain an integer.
@@ -1007,15 +1014,10 @@ incremented (otherwise not).  If the OPFLAG_LASTROWID flag of P5 is set,
 then rowid is stored for subsequent return by the
 sqlite3_last_insert_rowid() function (otherwise it is unmodified).</p>
 
-<p>If the OPFLAG_USESEEKRESULT flag of P5 is set and if the result of
-the last seek operation (<a href="opcode.html#NotExists">NotExists</a> or <a href="opcode.html#SeekRowid">SeekRowid</a>) was a success,
-then this
-operation will not attempt to find the appropriate row before doing
-the insert but will instead overwrite the row that the cursor is
-currently pointing to.  Presumably, the prior <a href="opcode.html#NotExists">NotExists</a> or
-<a href="opcode.html#SeekRowid">SeekRowid</a> opcode
-has already positioned the cursor correctly.  This is an optimization
-that boosts performance by avoiding redundant seeks.</p>
+<p>If the OPFLAG_USESEEKRESULT flag of P5 is set, the implementation might
+run faster by avoiding an unnecessary seek on cursor P1.  However,
+the OPFLAG_USESEEKRESULT flag must only be set if there have been no prior
+seeks on the cursor or if the most recent seek used a key equal to P3.</p>
 
 <p>If the OPFLAG_ISUPDATE flag is set, then this opcode is part of an
 UPDATE operation.  Otherwise (if the flag is clear) then this opcode
@@ -1097,7 +1099,14 @@ to the following instruction.</p>
 
 <p>This opcode leaves the cursor configured to move in reverse order,
 from the end toward the beginning.  In other words, the cursor is
-configured to use <a href="opcode.html#Prev">Prev</a>, not <a href="opcode.html#Next">Next</a>.</td></tr>
+configured to use <a href="opcode.html#Prev">Prev</a>, not <a href="opcode.html#Next">Next</a>.</p>
+
+<p>If P3 is -1, then the cursor is positioned at the end of the btree
+for the purpose of appending a new entry onto the btree.  In that
+case P2 must be 0.  It is assumed that the cursor is used only for
+appending and so if the cursor is valid, then the cursor must already
+be pointing at the end of the btree and so no changes are made to
+the cursor.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Le"></a>Le
 <td>This works just like the Lt opcode except that the jump is taken if
@@ -1586,10 +1595,14 @@ from the beginning toward the end.  In other words, the cursor is
 configured to use <a href="opcode.html#Next">Next</a>, not <a href="opcode.html#Prev">Prev</a>.</td></tr>
 <tr><td valign="top" align="center">
 <a name="RowData"></a>RowData
-<td>Write into register P2 the complete row data for cursor P1.
+<td>Write into register P2 the complete row content for the row at
+which cursor P1 is currently pointing.
 There is no interpretation of the data.
 It is just copied onto the P2 register exactly as
 it is found in the database file.</p>
+
+<p>If cursor P1 is an index, then the content is the key of the row.
+If cursor P2 is a table, then the content extracted is the data.</p>
 
 <p>If the P1 cursor must be pointing to a valid row (not a NULL row)
 of a real table, not a pseudo-table.</td></tr>
@@ -1601,15 +1614,6 @@ P1 is currently point to.</p>
 <p>P1 can be either an ordinary table or a virtual table.  There used to
 be a separate OP_VRowid opcode for use with virtual tables, but this
 one opcode now works for both table types.</td></tr>
-<tr><td valign="top" align="center">
-<a name="RowKey"></a>RowKey
-<td>Write into register P2 the complete row key for cursor P1.
-There is no interpretation of the data.
-The key is copied onto the P2 register exactly as
-it is found in the database file.</p>
-
-<p>If the P1 cursor must be pointing to a valid row (not a NULL row)
-of a real table, not a pseudo-table.</td></tr>
 <tr><td valign="top" align="center">
 <a name="RowSetAdd"></a>RowSetAdd
 <td>Insert the integer value held by register P2 into a boolean index
@@ -1849,6 +1853,17 @@ a register that is the source for a pseudo-table cursor created using
 parameter P3.  Clearing the P3 column cache as part of this opcode saves
 us from having to issue a separate <a href="opcode.html#NullRow">NullRow</a> instruction to clear that cache.</td></tr>
 <tr><td valign="top" align="center">
+<a name="SorterInsert"></a>SorterInsert
+<td>Register P2 holds an SQL index key made using the
+<a href="opcode.html#MakeRecord">MakeRecord</a> instructions.  This opcode writes that key
+into the sorter P1.  Data for the entry is nil.</td></tr>
+<tr><td valign="top" align="center">
+<a name="SorterNext"></a>SorterNext
+<td>This opcode works just like <a href="opcode.html#Next">Next</a> except that P1 must be a
+sorter object for which the <a href="opcode.html#SorterSort">SorterSort</a> opcode has been
+invoked.  This opcode advances the cursor to the next sorted
+record, or jumps to P2 if there are no more sorted records.</td></tr>
+<tr><td valign="top" align="center">
 <a name="SorterOpen"></a>SorterOpen
 <td>This opcode works like <a href="opcode.html#OpenEphemeral">OpenEphemeral</a> except that it opens
 a transient index that is specifically designed to sort large
@@ -1857,6 +1872,14 @@ tables using an external merge-sort algorithm.</p>
 <p>If argument P3 is non-zero, then it indicates that the sorter may
 assume that a stable sort considering the first P3 fields of each
 key is sufficient to produce the required results.</td></tr>
+<tr><td valign="top" align="center">
+<a name="SorterSort"></a>SorterSort
+<td>After all records have been inserted into the Sorter object
+identified by P1, invoke this opcode to actually do the sorting.
+<a href="opcode.html#Jump">Jump</a> to P2 if there are no records to be sorted.</p>
+
+<p>This opcode is an alias for <a href="opcode.html#Sort">Sort</a> and <a href="opcode.html#Rewind">Rewind</a> that is used
+for Sorter objects.</td></tr>
 <tr><td valign="top" align="center">
 <a name="String"></a>String
 <td>The string value P4 of length P1 (bytes) is stored in register P2.</p>

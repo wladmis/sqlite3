@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -83,7 +83,7 @@ are <a href="../c3ref/experimental.html">experimental</a> and functions whose na
 <s>struck through</s> are <a href="../c3ref/experimental.html">deprecated</a>.</p>
 <!-- number of functions: 226 -->
 <!-- number of deprecated functions: 7 -->
-<!-- number of experimental functions: 4 -->
+<!-- number of experimental functions: 5 -->
 <style>
 #listtab20 tr td {vertical-align:top;}
 </style>
@@ -267,6 +267,7 @@ var listitems20 = [{"u":"../c3ref/aggregate_context.html","x":"sqlite3_aggregate
 {"u":"../c3ref/snapshot_free.html","x":"sqlite3_snapshot_free","s":1},
 {"u":"../c3ref/snapshot_get.html","x":"sqlite3_snapshot_get","s":1},
 {"u":"../c3ref/snapshot_open.html","x":"sqlite3_snapshot_open","s":1},
+{"u":"../c3ref/snapshot_recover.html","x":"sqlite3_snapshot_recover","s":1},
 {"u":"../c3ref/mprintf.html","x":"sqlite3_snprintf","s":0},
 {"u":"../c3ref/soft_heap_limit.html","x":"sqlite3_soft_heap_limit","s":2},
 {"u":"../c3ref/soft_heap_limit64.html","x":"sqlite3_soft_heap_limit64","s":0},
@@ -314,7 +315,7 @@ var listitems20 = [{"u":"../c3ref/aggregate_context.html","x":"sqlite3_aggregate
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_text16be","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_text16le","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_type","s":0},
-{"u":"","x":"sqlite3_version,","s":0},
+{"u":"../c3ref/libversion.html","x":"sqlite3_version","s":0},
 {"u":"../c3ref/vfs_find.html","x":"sqlite3_vfs_find","s":0},
 {"u":"../c3ref/vfs_find.html","x":"sqlite3_vfs_register","s":0},
 {"u":"../c3ref/vfs_find.html","x":"sqlite3_vfs_unregister","s":0},

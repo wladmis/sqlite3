@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -78,7 +78,129 @@ return false;
 <?xml version="1.0" encoding="Windows-1252"?>
 
 
-<a name="2014_12_09"></a><h3>2014-12-09 - Release 3.8.7.4</h3><blockquote>
+<a name="2015_11_02"></a><h3>2015-11-02 - Release 3.9.2</h3><blockquote>
+<p>SQLite <a href="releaselog/3_9_2.html">version 3.9.2</a> is a patch release fixing two obscure bugs.
+(Details: <a href="https://www.sqlite.org/src/tktview?name=8a2adec166">(1)</a>,
+<a href="https://www.sqlite.org/src/tktview?name=ac661962a2">(2)</a>).
+Upgrade only if you are having problems.
+</blockquote><hr width="50%"><a name="2015_10_16"></a><h3>2015-10-16 - Release 3.9.1</h3><blockquote>
+<p>SQLite <a href="releaselog/3_9_1.html">version 3.9.1</a> is a
+<a href="https://www.sqlite.org/src/vpatch?from=version-3.9.0&to=version-3.9.1">small patch</a>
+to <a href="releaselog/3_9_0.html">version 3.9.0</a> that includes
+a few simple build script and #ifdef tweaks to make the code easier to 
+compile on a wider variety of platform.  There are no functional changes, 
+except for a single
+<a href="https://www.sqlite.org/src/info/57eec374ae1d0a1d4a">minor bug-fix</a> in 
+<a href="json1.html">the json1 extension</a> to stop it from recognizing form-feed 
+(ASCII 0x0c) as a whitespace character, in conformance with 
+<a href="http://www.rfc-editor.org/rfc/rfc7159.txt">RFC7159</a>.
+</blockquote><hr width="50%"><a name="2015_10_14"></a><h3>2015-10-14 - Release 3.9.0</h3><blockquote>
+<p>SQLite version 3.9.0 is a regularly schedule maintenance release.
+Key changes include:
+<ul>
+<li>Begin using <a href="http://semver.org/">semantic versioning</a>.
+<li><a href="json1.html">JSON SQL functions</a>
+<li>The <a href="fts5.html">FTS5</a> full-text search engine
+<li>Support for <a href="expridx.html">indexes on expressions</a>
+<li>Support for <a href="vtab.html#tabfunc2">table-valued functions</a>
+</ul>
+See the <a href="releaselog/3_9_0.html">change log</a> for a long and more complete list
+of changes.
+</blockquote><hr width="50%"><a name="2015_07_29"></a><h3>2015-07-29 - Release 3.8.11.1</h3><blockquote>
+<p>SQLite version 3.8.11.1 is a patch release that fixes two arcane
+   issues that were reported shortly after 3.8.11 was released.  Upgrade
+   from 3.8.11 only in the unlikely event that one of these obscure
+   issues affect your code.
+</blockquote><hr width="50%"><a name="2015_07_27"></a><h3>2015-07-27 - Release 3.8.11</h3><blockquote>
+<p>SQLite version 3.8.11 is a regularly scheduled maintenance release.
+   See the <a href="releaselog/3_8_11.html">change log</a> for details.
+</blockquote><hr width="50%"><a name="2015_05_20"></a><h3>2015-05-20 - Release 3.8.10.2</h3><blockquote>
+<p>Yikes!  Index corruption after a sequence of valid SQL statements!
+<p>It has been many years since anything like 
+   <a href="https://www.sqlite.org/src/info/34cd55d6">this bug</a> has snuck into
+   an official SQLite release.  But for the pasts seven months
+   (<a href="releaselog/3_8_7.html">version 3.8.7</a> through <a href="releaselog/3_8_10_1.html">version 3.8.10.1</a>)
+   if you do an INSERT into a carefully
+   crafted schema in which there are two nested triggers that convert
+   an index key value from TEXT to INTEGER and then back
+   to TEXT again, the INTEGER value might get inserted as the index
+   key instead of the correct TEXT, resulting in index corruption.
+   This patch release adds a single line of code to fix the problem.
+<p>If you do actually encounter this problem, running <a href="lang_reindex.html">REINDEX</a> on the
+   damaged indexes will clear it.
+</blockquote><hr width="50%"><a name="2015_05_09"></a><h3>2015-05-09 - Release 3.8.10.1</h3><blockquote>
+<p>The 3.8.10 release did not add the new <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
+   compile-time option to the <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> interface.
+   This patch release fixes that omission.  And while we are at it,
+   the associated <a href="dbstat.html">dbstat virtual table</a> was enhanced slightly and a
+   harmless compiler warning was fixed.</p>
+
+<p>   <p>There is no reason to upgrade from version 3.8.10 unless you are
+   using the new <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> compile-time option.
+</blockquote><hr width="50%"><a name="2015_05_07"></a><h3>2015-05-07 - Release 3.8.10</h3><blockquote>
+<p>SQLite version 3.8.10 is a regularly scheduled maintenance release.
+   This release features performance improvements, fixes to several
+   arcane bugs found by the AFL fuzzer, the new "sqldiff.exe" command-line
+   utility, improvements to the documentation, and other enhancements.
+   See the <a href='releaselog/3_8_10.html'>release notes</a> for 
+   additional information.
+</blockquote><hr width="50%"><a name="2015_04_08"></a><h3>2015-04-08 - Release 3.8.9</h3><blockquote>
+<p>SQLite version 3.8.9 is a regularly scheduled maintenance release.
+   New features in this release include the 
+   <a href="pragma.html#pragma_index_xinfo">PRAGMA index_xinfo</a> command, the <a href="c3ref/status.html">sqlite3_status64()</a> interface,
+   and the ".dbinfo" command of the <a href="cli.html">command-line shell</a>.
+   See the <a href='releaselog/3_8_9.html'>release notes</a> for
+   additional information.
+</blockquote><hr width="50%"><a name="2015_02_25"></a><h3>2015-02-25 - Release 3.8.8.3</h3><blockquote>
+<p>The 3.8.8.3 patch release fixes an obscure problem in the SQLite code
+   generator that can cause incorrect results when the qualifying expression
+   of a <a href="partialindex.html">partial index</a> is used inside the ON clause of a LEFT JOIN.
+   This problem has been in the code since support for partial indexes
+   was first added in version 3.8.0.  However, it is difficult to imagine
+   a valid reason to every put the qualifying constraint inside the ON
+   clause of a LEFT JOIN, and so this issue has never come up before.</p>
+
+<p><p>Any applications that is vulnerable to this bug would have encountered
+   problems already.  Hence, upgrading from the previous release is optional.
+</blockquote><hr width="50%"><a name="2015_01_30"></a><h3>2015-01-30 - Release 3.8.8.2</h3><blockquote>
+<p>The 3.8.8.2 patch release fixes a single minor problem:  It ensures
+   that the <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint(TRUNCATE)</a> operation will always truncate
+   the <a href="wal.html">write-ahead log</a> even if log had already been reset and contained
+   no new content.  It is unclear if this is a bug fix or a new feature.</p>
+
+<p><p>Something like this would normally go into the next regularly scheduled
+   release, but a prominent SQLite user needed the change in a hurry so
+   we were happy to rush it out via this patch.</p>
+
+<p><p>There is no reason to upgrade unless you actually need the enhanced
+   behavior of <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint(TRUNCATE)</a>.
+</blockquote><hr width="50%"><a name="2015_01_20"></a><h3>2015-01-20 - Release 3.8.8.1</h3><blockquote>
+<p>Within hours of releasing version 3.8.8, a bug was reported against
+   the 10-month-old 3.8.4 release.  As that bug exists in all subsequent
+   releases, the decision was made to issue a small patch to the
+   3.8.8 before it came into widespread use.</p>
+
+<p><p>See ticket
+   <a href="https://www.sqlite.org/src/info/f97c4637102a3ae72b7911">f97c4637102a3ae72b7911</a>
+   for a description of the bug.</p>
+
+<p><p>The changes between versions 3.8.8 and 3.8.8.1 are minimal.
+</blockquote><hr width="50%"><a name="2015_01_16"></a><h3>2015-01-16 - Release 3.8.8</h3><blockquote>
+<p>SQLite <a href="releaselog/3_8_8.html">version 3.8.8</a> is a regularly schedule maintenance release of
+   SQLite.</p>
+
+<p><p>There are no dramatic new features or performance enhancements in this
+   release, merely incremental improvements.  Most of the performance gain
+   in this release comes from refactoring the B-Tree rebalancing logic to
+   avoid unnecessary memcpy() operations.  New features include the
+   <a href="pragma.html#pragma_data_version">PRAGMA data_version</a> statement and the ability to accept a
+   <a href="lang_select.html#values">VALUES clause</a> with no arbitrary limit on the number of rows.
+   Several obscure bugs have been fixed, including some multithreading
+   races and a work-around for a compiler bug on some Macs.</p>
+
+<p><p>See the <a href="releaselog/3_8_8.html">change log</a> for a longer list of
+   enhancements and bug fixes.
+</blockquote><hr width="50%"><a name="2014_12_09"></a><h3>2014-12-09 - Release 3.8.7.4</h3><blockquote>
 <p>SQLite <a href="releaselog/3_8_7_4.html">version 3.8.7.4</a> an unscheduled bug-fix release.  Changes from
    the previous release and from <a href="releaselog/3_8_7.html">version 3.8.7</a> are minimal.</p>
 

@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -113,26 +113,26 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.10.2 (2016-01-20):</b></p>
+<p><b>Bug fixes backported into patch release 3.9.2 (2015-11-02):</b></p>
 
-<p><b>Critical bug fix:</b>
-<li>Version 3.10.0 introduced a case-folding bug in the <a href="../lang_expr.html#like">LIKE</a> operator which is fixed
-    by this patch release.  Ticket 
-    <a href="https://www.sqlite.org/src/info/80369eddd5c94">80369eddd5c94</a>.
-<p><b>Other miscellaneous bug fixes:</b>
-<li>Fix a use-after-free that can occur when SQLite is compiled with -DSQLITE_HAS_CODEC.
-<li>Fix the build so that it works with -DSQLITE_OMIT_WAL.
-<li>Fix the configure script for the amalgamation so that the --readline option works again
-    on Raspberry PIs.
+<li>Fix the schema parser so that it interprets certain 
+    (obscure and ill-formed)
+    CREATE TABLE statements the same as legacy.  Fix for ticket
+    <a href="https://www.sqlite.org/src/info/ac661962a2aeab3c331">ac661962a2aeab3c331</a>
+<li>Fix a query planner problem that could result in an incorrect
+    answer due to the use of <a href="../optoverview.html#autoindex">automatic indexing</a> in subqueries in
+    the FROM clause of a correlated scalar subqueries.  Fix for ticket
+    <a href="https://www.sqlite.org/src/info/8a2adec1">8a2adec1</a>.
 
-<p><b>Bug fixes backported into patch release 3.10.1 (2016-01-14):</b></p>
 
-<p><b>New feature:</b>
-<li>Add the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">SQLITE_FCNTL_JOURNAL_POINTER</a> file control.
-<p><b>Bug fix:</b>
-<li>Fix a 16-month-old bug in the query planner that could generate incorrect results
-    when a scalar subquery attempts to use the <a href="../queryplanner.html#partialsort">block sorting</a> optimization.  Ticket
-    <a href="https://www.sqlite.org/src/info/cb3aa0641d9a4">cb3aa0641d9a4</a>.
+<p><b>Bug fixes backported into patch release 3.9.1 (2015-10-16):</b></p>
+
+<li>Fix <a href="../json1.html">the json1 extension</a> so that it does <u>not</u> recognize ASCII form-feed as a
+    whitespace character, in order to comply with RFC-7159.  Fix for ticket
+    <a href="https://www.sqlite.org/src/info/57eec374ae1d0a1d">57eec374ae1d0a1d</a>
+<li>Add a few #ifdef and build script changes to address compilation issues that
+    appeared after the 3.9.0 release.
+
 
 </ul></p>
 

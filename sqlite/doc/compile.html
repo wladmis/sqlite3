@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -1164,9 +1164,8 @@ The SQLITE_OMIT_* compile-time options are mostly unsupported.
   in the library.
 </p></blockquote><a name="omit_autoincrement"></a>
 <p><b>SQLITE_OMIT_AUTOINCREMENT</b></p><blockquote><p>
-  This option is used to omit the 
-  <a href="autoinc.html">AUTOINCREMENT</a> functionality. When this 
-  is macro is defined, columns declared as 
+  This option is omits the <a href="autoinc.html">AUTOINCREMENT</a> feature. 
+  When this is macro is defined, columns declared as 
   "<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> AUTOINCREMENT"
   behave in the same way as columns declared as "<a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>" when a 
   NULL is inserted. The sqlite_sequence system table is neither created, nor
@@ -1237,10 +1236,7 @@ The SQLITE_OMIT_* compile-time options are mostly unsupported.
   "SELECT count(*) FROM table" run faster) is omitted.
 </p></blockquote><a name="omit_builtin_test"></a>
 <p><b>SQLITE_OMIT_BUILTIN_TEST</b></p><blockquote><p>
-  A standard SQLite build includes a small amount of logic controlled
-  by the <a href="c3ref/test_control.html">sqlite3_test_control()</a> interface that is used to exercise
-  parts of the SQLite core that are difficult to control and measure using
-  the standard API.  This option omits that built-in test logic.
+  This compile-time option has been renamed to <a href="compile.html#untestable">SQLITE_UNTESTABLE</a>.
 </p></blockquote><a name="omit_cast"></a>
 <p><b>SQLITE_OMIT_CAST</b></p><blockquote><p>
   This option causes SQLite to omit support for the CAST operator.
@@ -1480,6 +1476,24 @@ The SQLITE_OMIT_* compile-time options are mostly unsupported.
 <p><b>SQLITE_OMIT_XFER_OPT</b></p><blockquote><p>
   This option omits support for optimizations that help statements
   of the form "INSERT INTO ... SELECT ..." run faster.
+</p></blockquote><a name="untestable"></a>
+<p><b>SQLITE_UNTESTABLE</b></p><blockquote><p>
+  A standard SQLite build includes a small amount of logic associated
+  with <a href="c3ref/test_control.html">sqlite3_test_control()</a> to exercise
+  parts of the SQLite core that are otherwise difficult to validate.
+  This compile-time option omits that extra testing logic.  This
+  compile-time option was called "SQLITE_OMIT_BUILTIN_TEST" prior
+  to SQLite version 3.16.0 (2017-01-02).  The name was changed
+  to better describe the implications of using it.
+  <p>
+  Setting this compile-time option prevents SQLite from being fully
+  testable.  Branch test coverage drops from 100% down to about 95%.
+  <p>
+  SQLite developers follow the NASA principle of
+  "fly what you test and test what you fly".  This principle is violated
+  if this option is enabled for delivery but disabled for testing.
+  But if this option is enabled during testing, not all branches are 
+  reachable.  Therefore, the use of this compile-time option is discouraged.
 </p></blockquote><a name="zero_malloc"></a>
 <p><b>SQLITE_ZERO_MALLOC</b></p><blockquote><p>
   This option omits both the <a href="malloc.html#defaultalloc">default memory allocator</a> and the

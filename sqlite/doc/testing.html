@@ -57,7 +57,7 @@ function div_off(nm){document.getElementById(nm).style.display="none";}
 window.onbeforeunload = function(e){div_off("submenu");}
 /* Disable the Search feature if we are not operating from CGI, since */
 /* Search is accomplished using CGI and will not work without it. */
-if( !location.origin.match(/http/) ){
+if( !location.origin.match || !location.origin.match(/http/) ){
 document.getElementById("search_menubutton").style.display = "none";
 }
 /* Used by the Hide/Show button beside syntax diagrams, to toggle the */
@@ -147,15 +147,15 @@ mk.innerHTML = "&#x25ba;";
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_12_0.html">version 3.12.0</a> (2016-03-29),
+<p>As of <a href="releaselog/3_16_0.html">version 3.16.0</a> (2017-01-02),
 the SQLite library consists of approximately
-116.3 KSLOC of C code.
+122.9 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-787 times as much
+745 times as much
 test code and test scripts - 
-91577.3 KSLOC.</p>
+91596.1 KSLOC.</p>
 
 <h2 id="executive_summary"><span>1.1. </span>Executive Summary</h2>
 
@@ -197,11 +197,11 @@ SQLite core and like the SQLite core are in the public domain.  The
 TCL tests are the primary tests used during development.
 The TCL tests are written using the 
 <a href="http://www.tcl-lang.org/">TCL scripting language</a>.
-The TCL test harness itself consists of 24.7 KSLOC 
+The TCL test harness itself consists of 25.3 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 1038 files totaling 
-12.8MB in size.  There are
-37706 distinct test cases, but many of the test
+in 1080 files totaling 
+12.7MB in size.  There are
+39035 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run millions of
 separate tests are performed.
@@ -215,10 +215,10 @@ the core SQLite library.  The TH3 tests are designed to run
 on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces. TH3 consists of about
-55.6 MB or 758.5 KSLOC
-of C code implementing 40100 distinct test cases.
+56.6 MB or 773.3 KSLOC
+of C code implementing 41661 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
-about 1.5 million different test
+about 1.6 million different test
 instances.  The cases that provide 100% branch test coverage constitute
 a subset of the total TH3 test suite.  A soak test
 prior to release does hundreds of millions of tests.
@@ -669,7 +669,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></div>
 
-<p>The SQLite source code contains 823
+<p>The SQLite source code contains 844
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -837,7 +837,7 @@ quality of SQLite.</p>
 
 <h2 id="assert"><span>8.1. </span>Assert</h2>
 
-<p>The SQLite core contains 4955 <tt>assert()</tt>
+<p>The SQLite core contains 5191 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be
@@ -1039,10 +1039,9 @@ ensure that nothing is overlooked during the release process.</p>
 
 <h1 id="static_analysis"><span>11. </span>Static Analysis</h1>
 
-<p>Static analysis means analyzing code at or before compile-time to
-check for correctness.  Static analysis includes looking at compiler
-warning messages and running the code through more in-depth
-analysis engines such as the
+<p>Static analysis means analyzing source code at compile-time to
+check for correctness.  Static analysis includes compiler
+warning messages and more in-depth analysis engines such as the
 <a href="http://clang-analyzer.llvm.org/">Clang Static Analyzer</a>.
 SQLite compiles without warnings on GCC and Clang using 
 the -Wall and -Wextra flags on Linux and Mac and on MSVC on Windows.
@@ -1054,7 +1053,7 @@ warnings and to instead take solace in the intense testing of SQLite
 described above. 
 </p>
 
-<p>Static analysis has not proven to be especially helpful in finding
+<p>Static analysis has not been helpful in finding
 bugs in SQLite.  Static analysis has found a few bugs in SQLite, but
 those are the exceptions.  More bugs have been
 introduced into SQLite while trying to get it to compile without 
