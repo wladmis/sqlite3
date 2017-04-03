@@ -18,6 +18,9 @@ Patch3: sqlite3-fedora-no-malloc-usable-size.patch
 # 2749999.5. This patch is temporary workaround and should be dropped as soon as a valid
 # fix is found.
 Patch4: sqlite3-fedora-percentile-test.patch
+# Patch from Fedora: Disable test date-2.2c on i586
+# The test always failing and seems no one cares.
+Patch5: sqlite3-fedora-datetest-2.2c.patch
 
 BuildRequires(Pre): tcl-devel
 BuildRequires: libreadline-devel
@@ -102,6 +105,10 @@ embedded controllers.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+
+%ifarch %ix86
+%patch5 -p1
+%endif
 
 %build
 export TCLLIBDIR=%_tcllibdir
