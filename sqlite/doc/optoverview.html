@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>The SQLite Query Optimizer Overview</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -319,18 +320,29 @@ return false;
 </p>
 <a name="like_opt"></a>
 <h2>4.0 The LIKE optimization</h2><p>
-  Terms that are composed of the <a href="lang_expr.html#like">LIKE</a> or <a href="lang_expr.html#glob">GLOB</a> operator
-  can sometimes be used to constrain indices.
-  There are many conditions on this use:
+  A WHERE-clause term that uses the <a href="lang_expr.html#like">LIKE</a> or <a href="lang_expr.html#glob">GLOB</a> operator
+  can sometimes be used with an index to do a range search, 
+  almost as if the LIKE or GLOB were an alternative to a <a href="lang_expr.html#between">BETWEEN</a>
+  operator.
+  There are many conditions on this optimization:
 </p>
 <p>
   <ol>
-  <li>The left-hand side of the LIKE or GLOB operator must be the name
-      of an indexed column with <a href="datatype3.html#affinity">TEXT affinity</a>.</li>
   <li>The right-hand side of the LIKE or GLOB must be either a string literal
       or a <a href="lang_expr.html#varparam">parameter</a> bound to a string literal
       that does not begin with a wildcard character.</li>
   <li>The ESCAPE clause cannot appear on the LIKE operator.</li>
+  <li>It must not be possible to make the LIKE or GLOB operator true by
+      having a numeric value (instead of a string or blob) on the
+      left-hand side. This means that either:
+      <ol type="A">
+      <li> the left-hand side of the LIKE or GLOB operator is the name
+           of an indexed column with <a href="datatype3.html#affinity">TEXT affinity</a>, or</li>
+      <li> the right-hand side pattern argument does not begin with a
+           minus sign ("-") or a digit.</li>
+      </ol>
+      This constraint arises from the fact that numbers do not sort in
+      lexicographical order.  For example: 9&lt;10 but '9'&gt;'10'.</li>
   <li>The built-in functions used to implement LIKE and GLOB must not
       have been overloaded using the sqlite3_create_function() API.</li>
   <li>For the GLOB operator, the column must be indexed using the 

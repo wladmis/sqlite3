@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
 <title>Open A BLOB For Incremental I/O</title>
+<!-- path=../ -->
 </head>
 <body>
 <div class=nosearch>
@@ -38,7 +39,7 @@ Small. Fast. Reliable.<br>Choose any three.
 </ul>
 </div>
 <div class="searchmenu" id="searchmenu">
-<form method="GET" action="search">
+<form method="GET" action="../search">
 <span class="desktoponly">Search for:</span> <input type="text" name="q">
 <input type="submit" value="Go">
 </form>
@@ -136,6 +137,13 @@ being opened for read/write access.
 <a href="../c3ref/sqlite3.html">database connection</a> error code and message accessible via
 <a href="../c3ref/errcode.html">sqlite3_errcode()</a> and <a href="../c3ref/errcode.html">sqlite3_errmsg()</a> and related functions.</p>
 
+<p>A BLOB referenced by sqlite3_blob_open() may be read using the
+<a href="../c3ref/blob_read.html">sqlite3_blob_read()</a> interface and modified by using
+<a href="../c3ref/blob_write.html">sqlite3_blob_write()</a>.  The <a href="../c3ref/blob.html">BLOB handle</a> can be moved to a
+different row of the same table using the <a href="../c3ref/blob_reopen.html">sqlite3_blob_reopen()</a>
+interface.  However, the column, table, or database of a <a href="../c3ref/blob.html">BLOB handle</a>
+cannot be changed after the <a href="../c3ref/blob.html">BLOB handle</a> is opened.</p>
+
 <p>If the row that a BLOB handle points to is modified by an
 <a href="../lang_update.html">UPDATE</a>, <a href="../lang_delete.html">DELETE</a>, or by <a href="../lang_conflict.html">ON CONFLICT</a> side-effects
 then the BLOB handle is marked as "expired".
@@ -157,7 +165,11 @@ and the built-in <a href="../lang_corefunc.html#zeroblob">zeroblob</a> SQL funct
 zero-filled blob to read or write using the incremental-blob interface.</p>
 
 <p>To avoid a resource leak, every open <a href="../c3ref/blob.html">BLOB handle</a> should eventually
-be released by a call to <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.
+be released by a call to <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>.</p>
+
+<p>See also: <a href="../c3ref/blob_close.html">sqlite3_blob_close()</a>,
+<a href="../c3ref/blob_reopen.html">sqlite3_blob_reopen()</a>, <a href="../c3ref/blob_read.html">sqlite3_blob_read()</a>,
+<a href="../c3ref/blob_bytes.html">sqlite3_blob_bytes()</a>, <a href="../c3ref/blob_write.html">sqlite3_blob_write()</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

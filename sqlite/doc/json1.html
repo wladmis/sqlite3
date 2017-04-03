@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>The JSON1 Extension</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -99,14 +100,15 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#the_json_extract_function">4.4. The json_extract() function</a></div>
 <div class="fancy-toc2"><a href="#the_json_insert_json_replace_and_json_set_functions">4.5. The json_insert(), json_replace, and json_set() functions</a></div>
 <div class="fancy-toc2"><a href="#the_json_object_function">4.6. The json_object() function</a></div>
-<div class="fancy-toc2"><a href="#the_json_remove_function">4.7. The json_remove() function</a></div>
-<div class="fancy-toc2"><a href="#the_json_type_function">4.8. The json_type() function</a></div>
-<div class="fancy-toc2"><a href="#the_json_valid_function">4.9. The json_valid() function</a></div>
-<div class="fancy-toc2"><a href="#the_json_quote_function">4.10. The json_quote() function</a></div>
-<div class="fancy-toc2"><a href="#the_json_group_array_and_json_group_object_aggregate_sql_functions">4.11. The json_group_array() and json_group_object()
+<div class="fancy-toc2"><a href="#the_json_patch_function">4.7. The json_patch() function</a></div>
+<div class="fancy-toc2"><a href="#the_json_remove_function">4.8. The json_remove() function</a></div>
+<div class="fancy-toc2"><a href="#the_json_type_function">4.9. The json_type() function</a></div>
+<div class="fancy-toc2"><a href="#the_json_valid_function">4.10. The json_valid() function</a></div>
+<div class="fancy-toc2"><a href="#the_json_quote_function">4.11. The json_quote() function</a></div>
+<div class="fancy-toc2"><a href="#the_json_group_array_and_json_group_object_aggregate_sql_functions">4.12. The json_group_array() and json_group_object()
 aggregate SQL functions</a></div>
-<div class="fancy-toc2"><a href="#the_json_each_and_json_tree_table_valued_functions">4.12. The json_each() and json_tree() table-valued functions</a></div>
-<div class="fancy-toc3"><a href="#examples_using_json_each_and_json_tree_">4.12.1. Examples using json_each() and json_tree()</a></div>
+<div class="fancy-toc2"><a href="#the_json_each_and_json_tree_table_valued_functions">4.13. The json_each() and json_tree() table-valued functions</a></div>
+<div class="fancy-toc3"><a href="#examples_using_json_each_and_json_tree_">4.13.1. Examples using json_each() and json_tree()</a></div>
 </div>
 </div>
 <script>
@@ -131,7 +133,7 @@ mk.innerHTML = "&#x25ba;";
 <h1 id="overview"><span>1. </span>Overview</h1>
 <p>
 The <b>json1</b> extension is a <a href="loadext.html">loadable extension</a> that
-implements fourteen <a href="c3ref/create_function.html">application-defined SQL functions</a> and
+implements fifteen <a href="c3ref/create_function.html">application-defined SQL functions</a> and
 two <a href="vtab.html#tabfunc2">table-valued functions</a> that are useful for
 managing <a href="http://json.org/">JSON</a> content stored in an SQLite database.
 Twelve of the fourteen SQL functions are  scalar functions:
@@ -162,26 +164,30 @@ Twelve of the fourteen SQL functions are  scalar functions:
 </li>
 
 <li value='7'>
-<a href='#jrm'>json_remove</a>(<i>json</i>,<i>path</i>,...)
+<a href='#jpatch'>json_patch</a>(<i>json</i>1,json2)
 </li>
 
 <li value='8'>
-<a href='#jrepl'>json_replace</a>(<i>json</i>,<i>path</i>,<i>value</i>,...)
+<a href='#jrm'>json_remove</a>(<i>json</i>,<i>path</i>,...)
 </li>
 
 <li value='9'>
-<a href='#jset'>json_set</a>(<i>json</i>,<i>path</i>,<i>value</i>,...)
+<a href='#jrepl'>json_replace</a>(<i>json</i>,<i>path</i>,<i>value</i>,...)
 </li>
 
 <li value='10'>
-<a href='#jtype'>json_type</a>(<i>json</i>)<br><a href='#jtype'>json_type</a>(<i>json</i>,<i>path</i>)
+<a href='#jset'>json_set</a>(<i>json</i>,<i>path</i>,<i>value</i>,...)
 </li>
 
 <li value='11'>
-<a href='#jvalid'>json_valid</a>(<i>json</i>)
+<a href='#jtype'>json_type</a>(<i>json</i>)<br><a href='#jtype'>json_type</a>(<i>json</i>,<i>path</i>)
 </li>
 
 <li value='12'>
+<a href='#jvalid'>json_valid</a>(<i>json</i>)
+</li>
+
+<li value='13'>
 <a href='#jvalid'>json_quote</a>(<i>value</i>)
 </li>
 
@@ -191,11 +197,11 @@ Twelve of the fourteen SQL functions are  scalar functions:
 <p>There are two aggregate SQL functions:
 
 </p><ol>
-<li value='13'>
+<li value='14'>
 <a href='#jgrouparray'>json_group_array</a>(<i>value</i>)
 </li>
 
-<li value='14'>
+<li value='15'>
 <a href='#jgroupobject'>json_group_object</a>(name,<i>value</i>)
 </li>
 
@@ -205,11 +211,11 @@ Twelve of the fourteen SQL functions are  scalar functions:
 <p>The two <a href="vtab.html#tabfunc2">table-valued functions</a> are:
 
 </p><ol>
-<li value='15'>
+<li value='16'>
 <a href='#jeach'>json_each</a>(<i>json</i>)<br><a href='#jeach'>json_each</a>(<i>json</i>,<i>path</i>)
 </li>
 
-<li value='16'>
+<li value='17'>
 <a href='#jtree'>json_tree</a>(<i>json</i>)<br><a href='#jtree'>json_tree</a>(<i>json</i>,<i>path</i>)
 </li>
 
@@ -614,10 +620,47 @@ be used to force strings to be recognized as JSON.
 </ul>
 
 
+<a name="jpatch"></a>
+
+</p><h2 id="the_json_patch_function"><span>4.7. </span>The json_patch() function</h2>
+
+<p>The json_patch(T,P) SQL function runs the
+<a href="https://tools.ietf.org/html/rfc7396">RFC-7396</a> MergePatch algorithm
+to apply patch P against input T.  The patched copy of T is returned.
+
+</p><p>MergePatch can add, modify, or delete elements of a JSON Object,
+and so for JSON Objects, the json_patch() routine is a generalized
+replacement for <a href="json1.html#jset">json_set()</a> and <a href="json1.html#jrm">json_remove()</a>.  However, MergePatch
+treats JSON Array objects as atomic.  MergePatch cannot append to an
+Array nor modify individual elements of an Array.  It can only insert,
+replace, or delete the whole Array as a single unit.  Hence, json_patch()
+is not as useful when dealing with JSON that includes Arrays,
+especially Arrays with lots of substructure.
+
+</p><p>Examples:
+
+<ul>
+<li><span class='jex'>json_patch('{"a":1,"b":2}','{"c":3,"d":4}')</span>
+<span class='jans'>&rarr; '{"a":1,"b":2,"c":3,"d":4}'</span></li>
+
+<li><span class='jex'>json_patch('{"a":[1,2],"b":2}','{"a":9}')</span>
+<span class='jans'>&rarr; '{"a":9,"b":2}'</span></li>
+
+<li><span class='jex'>json_patch('{"a":[1,2],"b":2}','{"a":null}')</span>
+<span class='jans'>&rarr; '{"b":2}'</span></li>
+
+<li><span class='jex'>json_patch('{"a":1,"b":2}','{"a":9,"b":null,"c":8}')</span>
+<span class='jans'>&rarr; '{"a":9,"c":8}'</span></li>
+
+<li><span class='jex'>json_patch('{"a":{"x":1,"y":2},"b":3}','{"a":{"y":9},"c":8}')</span>
+<span class='jans'>&rarr; '{"a":{"x":1,"y":9},"b":3,"c":8}'</span></li>
+
+</ul>
+
 
 <a name="jrm"></a>
 
-</p><h2 id="the_json_remove_function"><span>4.7. </span>The json_remove() function</h2>
+</p><h2 id="the_json_remove_function"><span>4.8. </span>The json_remove() function</h2>
 
 <p>The json_remove(X,P,...) function takes a single JSON value as its
 first argument followed by zero or more path arguments.
@@ -666,7 +709,7 @@ path, or if any argument is a BLOB.
 
 <a name="jtype"></a>
 
-</p><h2 id="the_json_type_function"><span>4.8. </span>The json_type() function</h2>
+</p><h2 id="the_json_type_function"><span>4.9. </span>The json_type() function</h2>
 
 <p>The json_type(X) function returns the "type" of the outermost element
 of X.  The json_type(X,P) function returns the "type" of the element
@@ -717,7 +760,7 @@ not well-formed or is a BLOB.
 
 <a name="jvalid"></a>
 
-</p><h2 id="the_json_valid_function"><span>4.9. </span>The json_valid() function</h2>
+</p><h2 id="the_json_valid_function"><span>4.10. </span>The json_valid() function</h2>
 
 <p>The json_valid(X) function return 1 if the argument X is well-formed
 JSON and return 0 if the argument X is not well-formed JSON.
@@ -736,7 +779,7 @@ JSON and return 0 if the argument X is not well-formed JSON.
 
 <a name="jquote"></a>
 
-</p><h2 id="the_json_quote_function"><span>4.10. </span>The json_quote() function</h2>
+</p><h2 id="the_json_quote_function"><span>4.11. </span>The json_quote() function</h2>
 
 <p>The json_quote(X) function converts the SQL value X (a number or a
 string) into its corresponding JSON representation. 
@@ -756,7 +799,7 @@ string) into its corresponding JSON representation.
 <a name="jgrouparray"></a>
 <a name="jgroupobject"></a>
 
-</p><h2 id="the_json_group_array_and_json_group_object_aggregate_sql_functions"><span>4.11. </span>The json_group_array() and json_group_object()
+</p><h2 id="the_json_group_array_and_json_group_object_aggregate_sql_functions"><span>4.12. </span>The json_group_array() and json_group_object()
 aggregate SQL functions</h2>
 
 <p>The json_group_array(X) function is an 
@@ -770,7 +813,7 @@ comprised of all NAME/VALUE pairs in the aggregation.
 
 <a name="jtree"></a>
 
-</p><h2 id="the_json_each_and_json_tree_table_valued_functions"><span>4.12. </span>The json_each() and json_tree() table-valued functions</h2>
+</p><h2 id="the_json_each_and_json_tree_table_valued_functions"><span>4.13. </span>The json_each() and json_tree() table-valued functions</h2>
 
 <p>The json_each(X) and json_tree(X) <a href="vtab.html#tabfunc2">table-valued functions</a> walk the
 JSON value provided as their first argument and return one row for each
@@ -845,7 +888,7 @@ the current row, or the path to the current row in the case where the
 iteration starts on a primitive type and thus only provides a single
 row of output.
 
-</p><h3 id="examples_using_json_each_and_json_tree_"><span>4.12.1. </span>Examples using json_each() and json_tree()</h3>
+</p><h3 id="examples_using_json_each_and_json_tree_"><span>4.13.1. </span>Examples using json_each() and json_tree()</h3>
 
 <p>Suppose the table "CREATE TABLE user(name,phone)" stores zero or
 more phone numbers as a JSON array object in the user.phone field.

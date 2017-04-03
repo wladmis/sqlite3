@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>The SQLite Bytecode Engine</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -175,8 +176,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.16.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=a65a62893ca83'>a65a62893ca83</a> dated 2017-01-06.
+ version 3.18.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=424a0d3803328'>424a0d3803328</a> dated 2017-03-28.
 
 
 
@@ -342,20 +343,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 161
+<p>There are currently 163
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/88bd6c32b333580d2661ac3afe33369757fb1522">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/46c2c84a240218e3ea6171bcdc62a6a0d7f2ce57">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.16.2 check-in
-<a href='https://www.sqlite.org/src/timeline?c=a65a62893ca83'>a65a62893ca83</a> dated 2017-01-06.
+ version 3.18.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=424a0d3803328'>424a0d3803328</a> dated 2017-03-28.
 
 <a name="codes"></a>
 
@@ -974,6 +975,10 @@ value in P1 and jump to P2.</p>
 <p>If the initial value of register P1 is less than 1, then the
 value is unchanged and control passes through to the next instruction.</td></tr>
 <tr><td valign="top" align="center">
+<a name="IfSmaller"></a>IfSmaller
+<td>Estimate the number of rows in the table P1.  <a href="opcode.html#Jump">Jump</a> to P2 if that
+estimate is less than approximately 2**(0.1*P3).</td></tr>
+<tr><td valign="top" align="center">
 <a name="IncrVacuum"></a>IncrVacuum
 <td>Perform a single step of the incremental vacuum procedure on
 the P1 database. If the vacuum has finished, jump to instruction
@@ -1059,7 +1064,7 @@ values.</td></tr>
 register P1 the text of an error message describing any problems.
 If no problems are found, store a NULL in register P1.</p>
 
-<p>The register P3 contains the maximum number of allowed errors.
+<p>The register P3 contains one less than the maximum number of allowed errors.
 At most reg(P3) errors will be reported.
 In other words, the analysis stops as soon as reg(P1) errors are
 seen.  Reg(P1) is updated with the number of errors remaining.</p>
@@ -1348,10 +1353,20 @@ and r&#91;P2&#93 is set to -1.</p>
 <p>Otherwise, r&#91;P2&#93 is set to the sum of r&#91;P1&#93 and r&#91;P3&#93.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Once"></a>Once
-<td>If the P1 value is equal to the P1 value on the <a href="opcode.html#Init">Init</a> opcode at
-instruction 0, then jump to P2.  If the two P1 values differ, then
-set the P1 value on this opcode to equal the P1 value on the <a href="opcode.html#Init">Init</a>
-and fall through.</td></tr>
+<td>Fall through to the next instruction the first time this opcode is
+encountered on each invocation of the byte-code program.  <a href="opcode.html#Jump">Jump</a> to P2
+on the second and all subsequent encounters during the same invocation.</p>
+
+<p>Top-level programs determine first invocation by comparing the P1
+operand against the P1 operand on the <a href="opcode.html#Init">Init</a> opcode at the beginning
+of the program.  If the P1 values differ, then fall through and make
+the P1 of this opcode equal to the P1 of <a href="opcode.html#Init">Init</a>.  If P1 values are
+the same then take the jump.</p>
+
+<p>For subprograms, there is a bitmask in the VdbeFrame that determines
+whether or not the jump should be taken.  The bitmask is necessary
+because the self-altering code trick does not work for recursive
+triggers.</td></tr>
 <tr><td valign="top" align="center">
 <a name="OpenAutoindex"></a>OpenAutoindex
 <td>This opcode works the same as <a href="opcode.html#OpenEphemeral">OpenEphemeral</a>.  It has a
@@ -1466,8 +1481,8 @@ that match the WHERE clause P4.</p>
 then runs the new virtual machine.  It is thus a re-entrant opcode.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Permutation"></a>Permutation
-<td>Set the permutation used by the <a href="opcode.html#Compare">Compare</a> operator to be the array
-of integers in P4.</p>
+<td>Set the permutation used by the <a href="opcode.html#Compare">Compare</a> operator in the next
+instruction.  The permutation is stored in the P4 operand.</p>
 
 <p>The permutation is only valid until the next <a href="opcode.html#Compare">Compare</a> that has
 the OPFLAG_PERMUTE bit set in P5. Typically the <a href="opcode.html#Permutation">Permutation</a> should
@@ -1605,7 +1620,20 @@ it is found in the database file.</p>
 If cursor P2 is a table, then the content extracted is the data.</p>
 
 <p>If the P1 cursor must be pointing to a valid row (not a NULL row)
-of a real table, not a pseudo-table.</td></tr>
+of a real table, not a pseudo-table.</p>
+
+<p>If P3!=0 then this opcode is allowed to make an ephermeral pointer
+into the database page.  That means that the content of the output
+register will be invalidated as soon as the cursor moves - including
+moves caused by other cursors that "save" the the current cursors
+position in order that they can write to the same table.  If P3==0
+then a copy of the data is made into memory.  P3!=0 is faster, but
+P3==0 is safer.</p>
+
+<p>If P3!=0 then the content of the P2 register is unsuitable for use
+in OP_Result and any OP_Result will invalidate the P2 register content.
+The P2 register content is invalidated by opcodes like <a href="opcode.html#Function">Function</a> or
+by any use of another cursor pointing to the same table.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Rowid"></a>Rowid
 <td>Store in register P2 an integer which is the key of the table entry that
@@ -1880,6 +1908,9 @@ identified by P1, invoke this opcode to actually do the sorting.
 
 <p>This opcode is an alias for <a href="opcode.html#Sort">Sort</a> and <a href="opcode.html#Rewind">Rewind</a> that is used
 for Sorter objects.</td></tr>
+<tr><td valign="top" align="center">
+<a name="SqlExec"></a>SqlExec
+<td>Run the SQL statement or statements specified in the P4 string.</td></tr>
 <tr><td valign="top" align="center">
 <a name="String"></a>String
 <td>The string value P4 of length P1 (bytes) is stored in register P2.</p>

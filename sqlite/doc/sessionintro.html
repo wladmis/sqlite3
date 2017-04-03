@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>The Session Extension</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -171,8 +172,13 @@ disabled. To enable it, build with the following compiler switches:
 </p><h2 id="limitations"><span>1.3. </span>Limitations</h2>
 
 <ul>
-<li><p> The session extension only works with <a href="rowidtable.html">rowid tables</a>.  Changes 
-        to <a href="withoutrowid.html">WITHOUT ROWID</a> tables and <a href="vtab.html">virtual tables</a> are not captured.
+
+<li><p> Prior to SQLite version 3.17.0, the session extension only worked with
+        <a href="rowidtable.html">rowid tables</a>, not <a href="withoutrowid.html">WITHOUT ROWID</a> tables. As of 3.17.0, both
+        rowid and WITHOUT ROWID tables are supported.
+
+</p></li><li><p> There is no support for <a href="vtab.html">virtual tables</a>. Changes to virtual tables are
+        not captured.
 
 </p></li><li><p> The session extension only works with tables that have a declared
         PRIMARY KEY. The PRIMARY KEY of a table may be an INTEGER PRIMARY KEY

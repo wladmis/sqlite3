@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
 <title>Compile-Time Library Version Numbers</title>
+<!-- path=../ -->
 </head>
 <body>
 <div class=nosearch>
@@ -38,7 +39,7 @@ Small. Fast. Reliable.<br>Choose any three.
 </ul>
 </div>
 <div class="searchmenu" id="searchmenu">
-<form method="GET" action="search">
+<form method="GET" action="../search">
 <span class="desktoponly">Search for:</span> <input type="text" name="q">
 <input type="submit" value="Go">
 </form>
@@ -81,9 +82,9 @@ return false;
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.16.2"
-#define SQLITE_VERSION_NUMBER 3016002
-#define SQLITE_SOURCE_ID      "2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209"
+#define SQLITE_VERSION        "3.18.0"
+#define SQLITE_VERSION_NUMBER 3018000
+#define SQLITE_SOURCE_ID      "2017-03-28 18:48:43 424a0d380332858ee55bdebc4af3789f74e70a2b3ba1cf29d84b9b4bcf3e2e37"
 </pre></blockquote>
 <p>
 The <a href="../c3ref/c_source_id.html">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -104,8 +105,8 @@ SQLite source code has been stored in the
 system</a>.  The SQLITE_SOURCE_ID macro evaluates to
 a string which identifies a particular check-in of SQLite
 within its configuration management system.  The SQLITE_SOURCE_ID
-string contains the date and time of the check-in (UTC) and an SHA1
-hash of the entire source tree.</p>
+string contains the date and time of the check-in (UTC) and a SHA1
+or SHA3-256 hash of the entire source tree.</p>
 
 <p>See also: <a href="../c3ref/libversion.html">sqlite3_libversion()</a>,
 <a href="../c3ref/libversion.html">sqlite3_libversion_number()</a>, <a href="../c3ref/libversion.html">sqlite3_sourceid()</a>,

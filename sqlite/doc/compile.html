@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Compile-time Options</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -145,7 +146,7 @@ with non-standard compilation options.
 <p>The following compile-time options are recommended for applications that
 are able to use them, in order to minimized the number of CPU cycles and
 the bytes of memory used by SQLite.
-Note all of these compile-time options are usable by every application.
+Not all of these compile-time options are usable by every application.
 For example, the SQLITE_THREADSAFE=0 option is only usable by applications
 that never access SQLite from more than one thread at a time.  And the
 SQLITE_OMIT_PROGESS_CALLBACK option is only usable by applications that
@@ -294,6 +295,18 @@ some design situations, every little bit helps.
   If the HAVE_UTIME option is true, then the built-in but non-standard
   "unix-dotfile" VFS will use the utime() system call, instead of utimes(),
   to set the last access time on the lock file.
+</p></blockquote><a name="byteorder"></a>
+<p><b>SQLITE_BYTEORDER=<i>(0|1234|4321)</i></b></p><blockquote><p>
+  SQLite needs to know if the native byte order of the target CPU is
+  big-endian or little-ending.  The SQLITE_BYTEORDER preprocessor is set
+  to 4321 for big-endian machines and 1234 for little-endian machines, or
+  it can be 0 to mean that the byte order must be determined at run-time.
+  There are #ifdefs in the code that set SQLITE_BYTEORDER automatically
+  for all common platforms and compilers.  However, it may be advantageous
+  to set SQLITE_BYTEORDER appropriately when compiling SQLite for obscure
+  targets.  If the target byte order cannot be determined at compile-time,
+  then SQLite falls back to doing run-time checks, which always work, though
+  with a small performance penalty.
 </p></blockquote>
 
 <a name="defaults"></a>
@@ -382,12 +395,31 @@ some design situations, every little bit helps.
 <p><b>SQLITE_DEFAULT_LOCKING_MODE=<i>&lt;1 or 0&gt;</i></b></p><blockquote><p>
   If set to 1, then the default <a href="pragma.html#pragma_locking_mode">locking_mode</a> is set to EXCLUSIVE.
   If omitted or set to 0 then the default <a href="pragma.html#pragma_locking_mode">locking_mode</a> is NORMAL.
+</p></blockquote><a name="default_lookaside"></a>
+<p><b>SQLITE_DEFAULT_LOOKASIDE=<i>SZ,N</i></b></p><blockquote><p>
+  Sets the default size of the <a href="malloc.html#lookaside">lookaside memory allocator</a> memory pool
+  to N entries of SZ bytes each.  This setting can be modified at
+  start-time using <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a>) and/or
+  as each <a href="c3ref/sqlite3.html">database connection</a> is opened using
+  <a href="c3ref/db_config.html">sqlite3_db_config</a>(db, <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a>).
 </p></blockquote><a name="default_memstatus"></a>
 <p><b>SQLITE_DEFAULT_MEMSTATUS=<i>&lt;1 or 0&gt;</i></b></p><blockquote><p>
   This macro is used to determine whether or not the features enabled and
   disabled using the SQLITE_CONFIG_MEMSTATUS argument to <a href="c3ref/config.html">sqlite3_config()</a>
   are available by default. The default value is 1 (<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a>
   related features enabled).
+  <p>
+  The <a href="c3ref/memory_highwater.html">sqlite3_memory_used()</a> and <a href="c3ref/memory_highwater.html">sqlite3_memory_highwater()</a> interfaces,
+  the <a href="c3ref/status.html">sqlite3_status64</a>(<a href="c3ref/c_status_malloc_count.html#sqlitestatusmemoryused">SQLITE_STATUS_MEMORY_USED</a>) interface,
+  and the <a href="compile.html#max_memory">SQLITE_MAX_MEMORY</a> compile-time option are all non-functional
+  when memory usage tracking is disabled.
+</p></blockquote><a name="default_pcache_initsz"></a>
+<p><b>SQLITE_DEFAULT_PCACHE_INITSZ=<i>N</i></b></p><blockquote><p>
+  This macro determines the number of pages initially allocated by the 
+  page cache module when <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a> configuration option is
+  not use and memory for the page cache is obtained from <a href="c3ref/free.html">sqlite3_malloc()</a>
+  instead.  The number of pages set by this macro are allocated in a single
+  allocation, which reduces the load on the memory allocator.
 </p></blockquote><a name="default_page_size"></a>
 <p><b>SQLITE_DEFAULT_PAGE_SIZE=<i>&lt;bytes&gt;</i></b></p><blockquote><p>
   This macro is used to set the default page-size used when a
@@ -470,6 +502,22 @@ some design situations, every little bit helps.
   <p>
   This compile-time option affects the SQL <a href="lang_expr.html#like">LIKE</a> operator only and has
   no impact on the <a href="c3ref/strlike.html">sqlite3_strlike()</a> C-language interface.
+</p></blockquote><a name="max_memory"></a>
+<p><b>SQLITE_MAX_MEMORY=<i>N</i></b></p><blockquote><p>
+  This option limits the total amount of memory that SQLite will request
+  from malloc() to <i>N</i> bytes.  Any attempt by SQLite to allocate
+  new memory that would cause the sum of all allocations held by SQLite to exceed
+  <i>N</i> bytes will result in an out-of-memory error.
+  This is a hard upper limit.  See also the <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit()</a>
+  interface.
+  <p>
+  This limit is only functional if memory usage statistics are available via
+  the <a href="c3ref/memory_highwater.html">sqlite3_memory_used()</a> and <a href="c3ref/status.html">sqlite3_status64</a>(<a href="c3ref/c_status_malloc_count.html#sqlitestatusmemoryused">SQLITE_STATUS_MEMORY_USED</a>)
+  interfaces.  Without that memory usage information, SQLite has no way of
+  knowing when it is about to go over the limit, and thus is unable to prevent
+  the excess memory allocation.  Memory usage tracking is turned on by default,
+  but can be disabled at compile-time using the <a href="compile.html#default_memstatus">SQLITE_DEFAULT_MEMSTATUS</a> option,
+  or at start-time using <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmemstatus">SQLITE_CONFIG_MEMSTATUS</a>).
 </p></blockquote><a name="max_mmap_size"></a>
 <p><b>SQLITE_MAX_MMAP_SIZE=<i>N</i></b></p><blockquote><p>
   This macro sets a hard upper bound on the amount of address space that
@@ -907,6 +955,19 @@ the available settings:</p>
   of two and uses a first-fit, buddy-allocator algorithm
   that provides strong guarantees against fragmentation and breakdown
   subject to certain operating constraints.
+</p></blockquote><a name="enable_null_trim"></a>
+<p><b>SQLITE_ENABLE_NULL_TRIM</b></p><blockquote><p>
+  This option enables an optimization that omits NULL columns at
+  the ends of rows, for a space savings on disk.
+  <p>
+  Databases generated with this option enabled are not readable
+  by SQLite version 3.1.6 (2005-03-17) and earlier.  Also,
+  databases generated with this option enabled are prone to
+  triggering the
+  <a href="https://www.sqlite.org/src/info/e6e962d6b0f06f46e">e6e962d6b0f06f46</a>
+  bug in the <a href="c3ref/blob_reopen.html">sqlite3_blob_reopen()</a> interface.  For those reasons,
+  this optimization is disabled by default.  However, this optimization
+  may be enabled by default in a future release of SQLite.
 </p></blockquote><a name="enable_preupdate_hook"></a>
 <p><b>SQLITE_ENABLE_PREUPDATE_HOOK</b></p><blockquote><p>
   This option enables 
@@ -1073,6 +1134,11 @@ the available settings:</p>
   posting lists for terms that are in most documents of the collection
   and instead simply scans for those tokens in the document source.  <a href="fts3.html#fts4">FTS4</a>
   should get exactly the same answer both with and without this optimization.
+</p></blockquote><a name="disable_intrinsic"></a>
+<p><b>SQLITE_DISABLE_INTRINSIC</b></p><blockquote><p>
+  This option disables the use of compiler-specific built-in functions
+  such as __builtin_bswap32() and __builtin_add_overflow() in GCC and Clang, 
+  or _byteswap_ulong() and _ReadWriteBarrier() with MSVC.  
 </p></blockquote>
 
 <a name="omitfeatures"></a>

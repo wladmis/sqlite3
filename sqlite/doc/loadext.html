@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Run-Time Loadable Extensions</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -89,6 +90,7 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#loading_an_extension">2. Loading An Extension</a></div>
 <div class="fancy-toc1"><a href="#compiling_a_loadable_extension">3. Compiling A Loadable Extension</a></div>
 <div class="fancy-toc1"><a href="#programming_loadable_extensions">4. Programming Loadable Extensions</a></div>
+<div class="fancy-toc2"><a href="#example_extensions">4.1. Example Extensions</a></div>
 <div class="fancy-toc1"><a href="#persistent_loadable_extensions">5. Persistent Loadable Extensions</a></div>
 <div class="fancy-toc1"><a href="#statically_linking_a_run_time_loadable_extension">6. Statically Linking A Run-Time Loadable Extension</a></div>
 <div class="fancy-toc1"><a href="#implementation_details">7. Implementation Details</a></div>
@@ -320,14 +322,50 @@ int sqlite3_extension_init(
 }
 </pre></div>
 
-<p>Many examples of complete and working loadable extensions can be seen in the
-SQLite source tree in the
-<a href="http://www.sqlite.org/src/tree?name=ext/misc&ci=trunk">ext/misc</a>
-subdirectory.</p>
+<h2 id="example_extensions"><span>4.1. </span>Example Extensions</h2>
+
+<p>Many examples of complete and working loadable extensions can be 
+seen in the SQLite source tree in the
+<a href="https://www.sqlite.org/src/file/ext/misc">ext/misc</a> subdirectory.
+Each file in that directory is a separate extension.  Documentation
+is provided by a header comment on the file.
+Here are brief notes on a few of the extensions in 
+the <a href="https://www.sqlite.org/src/file/ext/misc">ext/misc</a> subdirectory:
+
+</p><ul>
+<li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/carray.c">carray.c</a> &mdash;
+Implementation of the <a href="carray.html">carray table-valued function</a>.
+</p></li><li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/compress.c">compress.c</a> &mdash;
+Implementation of <a href="c3ref/create_function.html">application-defined SQL functions</a> compress() and
+uncompress() that do zLib compression of text or blob content.
+</p></li><li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/json1.c">json1.c</a> &mdash;
+Implementation of <a href="json1.html">JSON SQL functions</a> and <a href="vtab.html#tabfunc2">table-valued functions</a>.
+This is a larger and more complex extension.
+</p></li><li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/memvfs.c">memvfs.c</a> &mdash;
+Implementation of a new <a href="vfs.html">VFS</a> that stores all content in-memory.
+</p></li><li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/rot13.c">rot13.c</a> &mdash;
+Implementation of a <a href="https://en.wikipedia.org/wiki/ROT13">rot13()</a> 
+SQL function.  This is a very simple example of an extension function
+and is useful as a template for creating new extensions.
+</p></li><li><p>
+<a href="https://www.sqlite.org/src/file/ext/misc/series.c">series.c</a> &mdash;
+Implementation of the generate_series <a href="vtab.html">virtual table</a> and
+<a href="vtab.html#tabfunc2">table-valued function</a>.  This is a relatively simple example of a
+virtual table implementation which can serve as a template for writing
+new virtual tables.
+</p></li></ul>
+
+<p>Other and more complex extensions can be found in subfolders
+under <a href="https://www.sqlite.org/src/file/ext">ext/</a> other than ext/misc/.
 
 <a name="persist"></a>
 
-<h1 id="persistent_loadable_extensions"><span>5. </span>Persistent Loadable Extensions</h1>
+</p><h1 id="persistent_loadable_extensions"><span>5. </span>Persistent Loadable Extensions</h1>
 
 <p>The default behavior for a loadable extension is that it is unloaded
 from process memory when the database connection that originally invoked

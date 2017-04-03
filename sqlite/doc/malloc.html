@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Dynamic Memory Allocation In SQLite</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -636,7 +637,7 @@ of the regular memory allocator is the default behavior.</p>
 <p>In most applications, the database page cache subsystem within 
 SQLite uses more dynamically allocated memory than all other parts
 of SQLite combined.  It is not unusual to see the database page cache
-consumes over 10 times more memory than the rest of SQLite combined.</p>
+consume over 10 times more memory than the rest of SQLite combined.</p>
 
 <p>SQLite can be configured to make page cache memory allocations from
 a separate and distinct memory pool of fixed-size
@@ -700,8 +701,8 @@ to SQLite.</p>
 introduced the lookaside memory allocator to
 help reduce the memory allocation load.  In the lookaside allocator,
 each <a href="c3ref/sqlite3.html">database connection</a> preallocates a single large chunk of memory
-(typically in the range of 50 to 100 kilobytes) and divides that chunk
-up into small fixed-size "slots" of around 50 to 200 byte each.  This
+(typically in the range of 60 to 120 kilobytes) and divides that chunk
+up into small fixed-size "slots" of around 100 to 1000 byte each.  This
 becomes the lookaside memory pool.  Thereafter, memory allocations
 associated with the <a href="c3ref/sqlite3.html">database connection</a> and that are not too larger
 are satisfied using one of the lookaside pool slots rather than by calling
@@ -728,26 +729,27 @@ Consequently, lookaside memory
 allocations and deallocations are very fast.  In speed tests on
 Linux and Mac OS X workstations, SQLite has shown overall performance
 improvements as high as 10% and 15%, depending on the workload how
-lookaside is configured.</p>
+and lookaside is configured.</p>
 
 <p>The size of the lookaside memory pool has a global default value
 but can also be configured on a connection-by-connection basis.
-To change the default size of the lookaside memory pool use the 
-following interface at start-time:</p>
+To change the default size of the lookaside memory pool at
+compile-time, use the 
+<a href="compile.html#default_lookaside">-DSQLITE_DEFAULT_LOOKASIDE=<i>SZ,N</i></a>
+option.
+To change the default size of the lookaside memory pool at
+start-time, use the <a href="c3ref/config.html">sqlite3_config()</a> interface:</p>
 
 <blockquote><pre>
 <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a>, sz, cnt);
 </pre></blockquote>
 
 <p>The "sz" parameter is the size in bytes of each lookaside slot.
-The default is 100 bytes.  The "cnt" parameter is
+The "cnt" parameter is
 the total number of lookaside memory slots per database connection.
-The default value is 500 slots. The total amount
+The total amount
 of lookaside memory allocated to each <a href="c3ref/sqlite3.html">database connection</a> is
-sz*cnt bytes.  Hence the lookaside memory pool allocated per database 
-connection is 50 kilobytes by default.
-(Note: these default values are for SQLite <a href="releaselog/3_6_1.html">version 3.6.1</a> and are subject
-to changes in future releases.)
+sz*cnt bytes. 
 </p>
 
 <p>The lookaside pool can be changed for an individual
@@ -839,7 +841,7 @@ per-connection statistics continue to function even if
 <p>The <a href="c3ref/soft_heap_limit64.html">sqlite3_soft_heap_limit64()</a> interface can be used to set an
 upper bound on the total amount of outstanding memory that the
 general-purpose memory allocator for SQLite will allow to be outstanding
-at one time.  If attempts are made to allocate more memory that specified
+at one time.  If attempts are made to allocate more memory than specified
 by the soft heap limit, then SQLite will first attempt to free cache
 memory before continuing with the allocation request.  The soft heap
 limit mechanism only works if <a href="malloc.html#memstatus">memory statistics</a> are enabled and
@@ -849,7 +851,7 @@ compile-time option.</p>
 
 <p>The soft heap limit is "soft" in this sense:  If SQLite is not able
 to free up enough auxiliary memory to stay below the limit, it goes
-ahead and allocations the extra memory and exceeds its limit.  This occurs
+ahead and allocates the extra memory and exceeds its limit.  This occurs
 under the theory that it is better to use additional memory than to fail
 outright.</p>
 

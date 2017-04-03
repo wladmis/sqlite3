@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>SQLite Autoincrement</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -177,7 +178,7 @@ new rows and newly created ROWIDs might not be in strictly ascending order.
 If a column has the type INTEGER PRIMARY KEY AUTOINCREMENT then a slightly
 different ROWID selection algorithm is used.  
 The ROWID chosen for the new row is at least one larger than the largest ROWID
-that has ever before been inserted in that same table.  If the table has never
+that has ever before existed in that same table.  If the table has never
 before contained any data, then a ROWID of 1 is used.  If the largest possible
 ROWID has previously been inserted, then
 new INSERTs are not allowed and any attempt to insert a new row will

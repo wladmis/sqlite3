@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Database File Format</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -116,7 +117,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#representation_of_sql_tables">2.3. Representation Of SQL Tables</a></div>
 <div class="fancy-toc2"><a href="#representation_of_without_rowid_tables">2.4. Representation of WITHOUT ROWID Tables</a></div>
 <div class="fancy-toc2"><a href="#representation_of_sql_indices">2.5. Representation Of SQL Indices</a></div>
-<div class="fancy-toc3"><a href="#suppression_of_redundant_columns_in_without_rowid_secondary_indexed_">2.5.1. Suppression of redundant columns in WITHOUT ROWID secondary indexed
+<div class="fancy-toc3"><a href="#suppression_of_redundant_columns_in_without_rowid_secondary_indexes_">2.5.1. Suppression of redundant columns in WITHOUT ROWID secondary indexes
 </a></div>
 <div class="fancy-toc2"><a href="#storage_of_the_sql_database_schema">2.6. Storage Of The SQL Database Schema</a></div>
 <div class="fancy-toc3"><a href="#internal_schema_objects">2.6.1. Internal Schema Objects</a></div>
@@ -1268,7 +1269,7 @@ CREATE INDEX statement is true.
 Corresponding rows in the index and table b-trees share the same rowid
 or primary key values and contain the same value for all indexed columns.</p>
 
-<h3 id="suppression_of_redundant_columns_in_without_rowid_secondary_indexed_"><span>2.5.1. </span>Suppression of redundant columns in WITHOUT ROWID secondary indexed
+<h3 id="suppression_of_redundant_columns_in_without_rowid_secondary_indexes_"><span>2.5.1. </span>Suppression of redundant columns in WITHOUT ROWID secondary indexes
 </h3>
 
 <p> In an index on a WITHOUT ROWID table, if one or more of the columns
@@ -1807,9 +1808,9 @@ Then the format of a page record is as follows:</p>
 journal header at offset 12.
 </li><li>Initialize index X to be N-200 (where N is the size of a database page
 in bytes.
-</li><li>Interpret the four bytes at offset X into the page as a 4-byte big-endian
-unsigned integer.  Add the value of that integer to the checksum.
-</li><li>Subtrace 200 from X.
+</li><li>Interpret the byte at offset X into the page as an 8-bit unsigned integer
+ and add the value of that integer to the checksum.
+</li><li>Subtract 200 from X.
 </li><li>If X is greater than or equal to zero, go back to step 3.
 </li></ol>
 
@@ -1838,7 +1839,7 @@ the available space of the remainder of the journal file.</p>
 
 <h1 id="the_write_ahead_log"><span>4. </span>The Write-Ahead Log</h1>
 
-<p>Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a> (dateof:3.7.0), 
+<p>Beginning with <a href="releaselog/3_7_0.html">version 3.7.0</a> (2010-07-21), 
 SQLite supports a new transaction
 control mechanism called "<a href="wal.html">write-ahead log</a>" or "<a href="wal.html">WAL</a>".
 When a database is in WAL mode, all connections to that database must

@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>SQLite Query Language: CREATE TRIGGER</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -252,9 +253,9 @@ events for which they are relevant, as follows:</p>
 </p>
 
 <p>If a WHEN clause is supplied, the SQL statements specified
-are only executed for rows for which the WHEN
-clause is true. If no WHEN clause is supplied, the SQL statements
-are executed for all rows.</p>
+are only executed if the WHEN clause is true.
+If no WHEN clause is supplied, the SQL statements
+are executed every time the trigger fires.</p>
 
 <p>The BEFORE or AFTER keyword determines when the trigger actions
 will be executed relative to the insertion, modification or removal of the

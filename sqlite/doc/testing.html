@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>How SQLite Is Tested</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -96,6 +97,7 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#fuzz_testing">4. Fuzz Testing</a></div>
 <div class="fancy-toc2"><a href="#sql_fuzz">4.1. SQL Fuzz</a></div>
 <div class="fancy-toc3"><a href="#sql_fuzz_using_the_american_fuzzy_lop_fuzzer">4.1.1. SQL Fuzz Using The American Fuzzy Lop Fuzzer</a></div>
+<div class="fancy-toc3"><a href="#google_oss_fuzz">4.1.2. Google OSS Fuzz</a></div>
 <div class="fancy-toc2"><a href="#malformed_database_files">4.2. Malformed Database Files</a></div>
 <div class="fancy-toc2"><a href="#boundary_value_tests">4.3. Boundary Value Tests</a></div>
 <div class="fancy-toc1"><a href="#regression_testing">5. Regression Testing</a></div>
@@ -147,7 +149,7 @@ mk.innerHTML = "&#x25ba;";
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_16_0.html">version 3.16.0</a> (2017-01-02),
+<p>As of <a href="releaselog/3_16_2.html">version 3.16.2</a> (2017-01-06),
 the SQLite library consists of approximately
 122.9 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
@@ -247,7 +249,7 @@ concurrently reading and writing a single database.
 </li><li>The "threadtest3.c" program is a stress test for multiple threads using
 SQLite simultaneously.  
 </li><li>The "fuzzershell.c" program is used to
-run some <a href="'#fuzztesting'">fuzz tests</a>.
+run some <a href="#fuzztesting">fuzz tests</a>.
 </li></ol>
 
 
@@ -448,6 +450,22 @@ instrumentation has narrowed them down to less than 50,000 test cases that
 cover all distinct behaviors.  Newly discovered test cases are periodically
 captured and added to the <a href="testing.html#tcl">TCL test suite</a> where they can be rerun using
 the "make fuzztest" or "make valgrindfuzz" commands.
+
+<a name="ossfuzz"></a>
+
+</p><h3 id="google_oss_fuzz"><span>4.1.2. </span>Google OSS Fuzz</h3>
+
+<p>Beginning in 2016, a team of engineers at Google started the
+<a href="https://github.com/google/oss-fuzz">OSS Fuzz</a> project.  
+OSS Fuzz uses a AFL-style guided fuzzer running on Google's infrastructure.
+The Fuzzer automatically downloads the latest check-ins for participating
+projects, fuzzes them, and sends email to the developers reporting any
+problems.  When a fix is checked in, the fuzzer automatically detects this
+and emails a confirmation to the developers.
+
+</p><p>SQLite is one of many open-source projects that OSS Fuzz tests. The
+<a href="https://www.sqlite.org/src/file/test/ossfuzz.c">test/ossfuzz.c</a> source file
+in the SQLite repository is SQLite's interface to OSS fuzz.
 
 </p><h2 id="malformed_database_files"><span>4.2. </span>Malformed Database Files</h2>
 

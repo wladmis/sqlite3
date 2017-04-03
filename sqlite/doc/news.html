@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Recent SQLite News</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -79,13 +80,31 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2017_01_06"></a><h3>2017-01-06 - Release 3.16.2</h3><blockquote>
+<a name="2017_02_13"></a><h3>2017-02-13 - Release 3.17.0</h3><blockquote>
+SQLite <a href="releaselog/3_17_0.html">version 3.17.0</a> is a regularly scheduled maintenance release.
+<p>
+Most of the changes in this release are performance optimizations.
+Optimizations to the <a href="rtree.html">R-Tree extension</a> are especially noticeable.
+<p>
+In this release, the default size of the 
+<a href="malloc.html#lookaside">lookaside buffer</a> allocated for each database connection
+is increased from 64,000 to 120,000 bytes.  This provides improved
+performance on many common workloads in exchange for a small increase
+in memory usage.
+Applications that value a small memory footprint over raw speed
+can change the lookaside buffer size back to its old value (or to zero)
+using the <a href="compile.html#default_lookaside">SQLITE_DEFAULT_LOOKASIDE</a> compile-time option, or the
+<a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">sqlite3_config(SQLITE_CONFIG_LOOKASIDE)</a>
+start-time setting, or the
+<a href="c3ref/c_dbconfig_enable_fkey.html">sqlite3_db_config(SQLITE_DBCONFIG_LOOKASIDE)</a>
+run-time setting.
+</blockquote><hr width="50%"><a name="2017_01_06"></a><h3>2017-01-06 - Release 3.16.2</h3><blockquote>
 One of the performance optimizations added in 3.16.0 caused triggers
 and foreign keys to malfunction for the <a href="lang_replace.html">REPLACE</a> statement on
 <a href="withoutrowid.html">WITHOUT ROWID</a> tables that lack secondary indexes.  This patch
 release fixes the problem.  See ticket 
 <a href="https://www.sqlite.org/src/info/30027b613b4">30027b613b4</a> for details.
-</blockquote><hr width="50%"><a name="2016_01_03"></a><h3>2016-01-03 - Release 3.16.1</h3><blockquote>
+</blockquote><hr width="50%"><a name="2017_01_03"></a><h3>2017-01-03 - Release 3.16.1</h3><blockquote>
 SQLite <a href="releaselog/3_16_1.html">version 3.16.1</a> fixes a bug in the row-value logic for UPDATE
 statements inside of triggers.  The bug has been there since row-values
 were added by release 3.15.0, but was not discovered until just a few

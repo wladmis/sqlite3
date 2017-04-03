@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Datatypes In SQLite Version 3</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -91,13 +92,14 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#date_and_time_datatype">2.2. Date and Time Datatype</a></div>
 <div class="fancy-toc1"><a href="#type_affinity">3. Type Affinity</a></div>
 <div class="fancy-toc2"><a href="#determination_of_column_affinity">3.1. Determination Of Column Affinity</a></div>
-<div class="fancy-toc2"><a href="#affinity_name_examples">3.2. Affinity Name Examples</a></div>
-<div class="fancy-toc2"><a href="#column_affinity_behavior_example">3.3. Column Affinity Behavior Example</a></div>
+<div class="fancy-toc3"><a href="#affinity_name_examples">3.1.1. Affinity Name Examples</a></div>
+<div class="fancy-toc2"><a href="#affinity_of_expressions">3.2. Affinity Of Expressions</a></div>
+<div class="fancy-toc2"><a href="#column_affinity_for_views_and_subqueries">3.3. Column Affinity For Views And Subqueries</a></div>
+<div class="fancy-toc2"><a href="#column_affinity_behavior_example">3.4. Column Affinity Behavior Example</a></div>
 <div class="fancy-toc1"><a href="#comparison_expressions">4. Comparison Expressions</a></div>
 <div class="fancy-toc2"><a href="#sort_order">4.1. Sort Order</a></div>
-<div class="fancy-toc2"><a href="#affinity_of_comparison_operands">4.2. Affinity Of Comparison Operands</a></div>
-<div class="fancy-toc2"><a href="#type_conversions_prior_to_comparison">4.3. Type Conversions Prior To Comparison</a></div>
-<div class="fancy-toc2"><a href="#comparison_example">4.4. Comparison Example</a></div>
+<div class="fancy-toc2"><a href="#type_conversions_prior_to_comparison">4.2. Type Conversions Prior To Comparison</a></div>
+<div class="fancy-toc2"><a href="#comparison_example">4.3. Comparison Example</a></div>
 <div class="fancy-toc1"><a href="#operators">5. Operators</a></div>
 <div class="fancy-toc1"><a href="#sorting_grouping_and_compound_selects">6. Sorting, Grouping and Compound SELECTs</a></div>
 <div class="fancy-toc1"><a href="#collating_sequences">7. Collating Sequences</a></div>
@@ -218,8 +220,24 @@ formats and freely convert between formats using the built-in
 <h1 id="type_affinity"><span>3. </span>Type Affinity</h1>
 
 <p>
+SQL database engines that use rigid typing will usually try to
+automatically convert values to the appropriate datatype.  Consider this:
+
+</p><blockquote><pre>
+CREATE TABLE t1(a INT, b VARCHAR(10));
+INSERT INTO t1(a,b) VALUES('123',456);
+</pre></blockquote>
+
+<p>
+Rigidly-typed database will convert the string '123' into an
+integer 123 and the integer 456 into a string '456' prior to
+doing the insert.
+
+</p><p>
 In order to maximize compatibility between SQLite and other database
-engines, SQLite supports the concept of "type affinity" on columns.
+engines, and so that the example above will work on SQLite as it does
+on other SQL database engines,
+SQLite supports the concept of "type affinity" on columns.
 The type affinity of a column is the recommended type for data stored
 in that column.  The important idea here is that the type is recommended, not
 required.  Any column can still store any type of data.
@@ -314,7 +332,7 @@ is important.  A column whose declared type is "CHARINT" will match
 both rules 1 and 2 but the first rule takes precedence and so the 
 column affinity will be INTEGER.</p>
 
-<h2 id="affinity_name_examples"><span>3.2. </span>Affinity Name Examples</h2>
+<h3 id="affinity_name_examples"><span>3.1.1. </span>Affinity Name Examples</h3>
 
 <p>The following table shows how many common datatype names from
 more traditional SQL implementations are converted into affinities by the five rules of the
@@ -386,7 +404,78 @@ strings, BLOBs or numeric values.</p>
 affinity, not REAL affinity, due to the "INT" at the end of "POINT".
 And the declared type of "STRING" has an affinity of NUMERIC, not TEXT.
 
-</p><h2 id="column_affinity_behavior_example"><span>3.3. </span>Column Affinity Behavior Example</h2>
+<a name="expraff"></a>
+
+</p><h2 id="affinity_of_expressions"><span>3.2. </span>Affinity Of Expressions</h2>
+
+<p>Every table column has a type affinity (one of BLOB, TEXT, INTEGER,
+REAL, or NUMERIC) but expressions do no necessarily have an affinity.
+
+</p><p>Expression affinity is determined by the following rules:
+
+</p><ul>
+  <li><p>The right-hand operand of an IN or NOT IN
+  operator has no affinity if the operand is a list and has the same
+  affinity as the affinity of the result set expression if the operand
+  is a SELECT.
+
+  </p></li><li><p>When an expression is a simple reference to a column of a
+  real table (not a <a href="lang_createview.html">VIEW</a> or subquery) then the expression
+  has the same affinity as the table column.
+  </p><ul>
+  <li><p>Parentheses around the column name are ignored.  Hence if
+  X and Y.Z are column names, then (X) and (Y.Z) are also considered
+  column names and have the affinity of the corresponding columns.
+  </p></li><li><p>
+  Any operators applied to column names, including the no-op 
+   unary "+" operator, convert the column name into an expression which
+   always has no affinity.  Hence even if X and Y.Z are column names, the
+   expressions +X and +Y.Z are not column names and have no affinity.
+  </p></li></ul>
+
+  </li><li><p>An expression of the form "CAST(<i>expr</i> AS <i>type</i>)"
+  has an affinity that is the same as a column with a declared
+  type of "<i>type</i>".
+
+  </p></li><li><p>Otherwise, an expression has no affinity.
+</p></li></ul>
+
+<a name="affview"></a>
+
+<h2 id="column_affinity_for_views_and_subqueries"><span>3.3. </span>Column Affinity For Views And Subqueries</h2>
+
+<p>The "columns" of a <a href="lang_createview.html">VIEW</a> or FROM-clause subquery are really
+the expressions
+in the result set of the <a href="lang_select.html">SELECT</a> statement that implements the VIEW
+or subquery.  Thus, the affinity for columns of a VIEW or subquery
+are determined by the expression affinity rules above.
+Consider an example:
+
+</p><blockquote><pre>
+CREATE TABLE t1(a INT, b TEXT, c REAL);
+CREATE VIEW v1(x,y,z) AS SELECT b, a+c, 42 FROM t1 WHERE b!=11;
+</pre></blockquote>
+
+<p>The affinity of the v1.x column will be the same as the affinity
+of t1.b (INTEGER), since v1.x maps directly into t1.b.  But
+columns v1.y and v1.z both have no affinity, since those columns
+map into expression a+c and 42, and expressions always have no
+affinity.
+
+</p><p>When the <a href="lang_select.html">SELECT</a> statement that implements a <a href="lang_createview.html">VIEW</a> or 
+FROM-clause subquery is a <a href="lang_select.html#compound">compound SELECT</a> then the affinity of 
+each supposed column of the VIEW or subquery will
+be the affinity of the corresponding result column for
+one of the individual SELECT statements that make up 
+the compound.  
+However, it is indeterminate which of the SELECT statements will 
+be used to determine affinity.
+Different constituent SELECT statements might be used to determine 
+affinity at different times during query evaluation.
+Best practice is to avoid mixing affinities in a compound SELECT.
+
+
+</p><h2 id="column_affinity_behavior_example"><span>3.4. </span>Column Affinity Behavior Example</h2>
 
 <p>The following SQL demonstrates how SQLite uses column affinity
 to do type conversions when values are inserted into a table.</p>
@@ -460,44 +549,16 @@ operands, according to the following rules:</p>
   determined using memcmp().</p>
 </li></ul>
 
-<a name="expraff"></a>
+<a name="compaff"></a>
 
-<h2 id="affinity_of_comparison_operands"><span>4.2. </span>Affinity Of Comparison Operands</h2>
+<h2 id="type_conversions_prior_to_comparison"><span>4.2. </span>Type Conversions Prior To Comparison</h2>
 
 <p>SQLite may attempt to convert values between the storage classes
 INTEGER, REAL, and/or TEXT before performing a comparison.
 Whether or not any conversions are attempted before the comparison takes
 place depends on the type affinity of the operands.
 
-</p><p>Every table column has a type affinity (one of BLOB, TEXT, INTEGER,
-REAL, or NUMERIC) but expressions do no necessarily have an affinity.
-
-</p><p>Operand affinity is determined by the following rules:
-
-</p><ul>
-  <li><p>The right-hand operand of an IN or NOT IN
-  operator has no affinity if the operand is a list and has the same
-  affinity as the affinity of the result set expression if the operand
-  is a SELECT.
-
-  </p></li><li><p>An expression that is a simple reference to a column value
-  has the same affinity as the column.
-  Note that if X and Y.Z 
-  are column names, then +X and +Y.Z are considered expressions for the
-  purpose of determining affinity.</p>
-
-  </li><li><p>An expression of the form "CAST(<i>expr</i> AS <i>type</i>)"
-  has an affinity that is the same as a column with a declared
-  type of "<i>type</i>".
-
-  </p></li><li><p>Otherwise, an expression has no affinity.
-</p></li></ul>
-
-<a name="compaff"></a>
-
-<h2 id="type_conversions_prior_to_comparison"><span>4.3. </span>Type Conversions Prior To Comparison</h2>
-
-<p>To "apply affinity" means to convert an operand to a particular storage
+</p><p>To "apply affinity" means to convert an operand to a particular storage
 class if and only if the conversion is lossless and reversible.
 Affinity is applied to operands of a comparison operator prior to
 the comparison according to the following rules in the order shown:</p>
@@ -527,7 +588,7 @@ and "z" values in this example) are considered to have no affinity,
 even if they happen to be column values or CAST expressions.  
 </p>
 
-<h2 id="comparison_example"><span>4.4. </span>Comparison Example</h2>
+<h2 id="comparison_example"><span>4.3. </span>Comparison Example</h2>
 
 <blockquote>
 <pre>

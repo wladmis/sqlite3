@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>EXPLAIN QUERY PLAN</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -180,8 +181,8 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
 
 <p>
   The example above shows
-  SQLite estimating that the full-table scan will visit approximately 
-  100,000 records. If the query were able to use an index, then the 
+  SQLite picking full-table scan will visit all rows in the table.
+  If the query were able to use an index, then the 
   SCAN/SEARCH record would include the name of the index and, for a
   SEARCH record, an indication of how the subset of rows visited is
   identified. For example:
@@ -192,8 +193,7 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
 
 <p>
   The previous example, SQLite uses index "i1" to optimize
-  a WHERE clause term of the form (a=?) - in this case "a=1". SQLite 
-  estimates that about 10 records will match the "a=1" term.
+  a WHERE clause term of the form (a=?) - in this case "a=1".
   The previous example could not use a <a href="queryplanner.html#covidx">covering index</a>, but the following
   example can, and that fact is reflected in the output:
 </p><div class="codeblock"><pre>sqlite&gt; CREATE INDEX i2 ON t1(a, b);

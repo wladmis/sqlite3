@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
 <title>Data Change Notification Callbacks</title>
+<!-- path=../ -->
 </head>
 <body>
 <div class=nosearch>
@@ -38,7 +39,7 @@ Small. Fast. Reliable.<br>Choose any three.
 </ul>
 </div>
 <div class="searchmenu" id="searchmenu">
-<form method="GET" action="search">
+<form method="GET" action="../search">
 <span class="desktoponly">Search for:</span> <input type="text" name="q">
 <input type="submit" value="Go">
 </form>
@@ -112,7 +113,7 @@ modified (i.e. sqlite_master and sqlite_sequence).
 The update hook is not invoked when <a href="../withoutrowid.html">WITHOUT ROWID</a> tables are modified.</p>
 
 <p>In the current implementation, the update hook
-is not invoked when duplication rows are deleted because of an
+is not invoked when conflicting rows are deleted because of an
 <a href="../lang_conflict.html">ON CONFLICT REPLACE</a> clause.  Nor is the update hook
 invoked when rows are deleted using the <a href="../lang_delete.html#truncateopt">truncate optimization</a>.
 The exceptions defined in this paragraph might change in a future

@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>SQLite Session Module C/C++ Interface</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -442,7 +443,7 @@ considered compatible if all of the following are true:</p>
 <p><ul>
 <li> The table has the same name as the name recorded in the
 changeset, and
-<li> The table has the same number of columns as recorded in the
+<li> The table has at least as many columns as recorded in the
 changeset, and
 <li> The table has primary key columns in the same position as
 recorded in the changeset.
@@ -487,7 +488,11 @@ the changeset the row is deleted from the target database.</p>
 <p>If a row with matching primary key values is found, but one or more of
 the non-primary key fields contains a value different from the original
 row value stored in the changeset, the conflict-handler function is
-invoked with <a href="#SQLITE_CHANGESET_CONFLICT">SQLITE_CHANGESET_DATA</a> as the second argument.</p>
+invoked with <a href="#SQLITE_CHANGESET_CONFLICT">SQLITE_CHANGESET_DATA</a> as the second argument. If the
+database table has more columns than are recorded in the changeset,
+only the values of those non-primary key fields are compared against
+the current database contents - any trailing database table columns
+are ignored.</p>
 
 <p>If no row with matching primary key values is found in the database,
 the conflict-handler function is invoked with <a href="#SQLITE_CHANGESET_CONFLICT">SQLITE_CHANGESET_NOTFOUND</a>
@@ -502,7 +507,9 @@ function returned <a href="#SQLITE_CHANGESET_ABORT">SQLITE_CHANGESET_REPLACE</a>
 
 <p><dt>INSERT Changes<dd>
 For each INSERT change, an attempt is made to insert the new row into
-the database.</p>
+the database. If the changeset row contains fewer fields than the
+database table, the trailing fields are populated with their default
+values.</p>
 
 <p>If the attempt to insert the row fails because the database already
 contains a row with the same primary key values, the conflict handler
@@ -520,13 +527,13 @@ an earlier call to the conflict handler function returned
 For each UPDATE change, this function checks if the target database
 contains a row with the same primary key value (or values) as the
 original row values stored in the changeset. If it does, and the values
-stored in all non-primary key columns also match the values stored in
-the changeset the row is updated within the target database.</p>
+stored in all modified non-primary key columns also match the values
+stored in the changeset the row is updated within the target database.</p>
 
 <p>If a row with matching primary key values is found, but one or more of
-the non-primary key fields contains a value different from an original
-row value stored in the changeset, the conflict-handler function is
-invoked with <a href="#SQLITE_CHANGESET_CONFLICT">SQLITE_CHANGESET_DATA</a> as the second argument. Since
+the modified non-primary key fields contains a value different from an
+original row value stored in the changeset, the conflict-handler function
+is invoked with <a href="#SQLITE_CHANGESET_CONFLICT">SQLITE_CHANGESET_DATA</a> as the second argument. Since
 UPDATE changes only contain values for non-primary key fields that are
 to be modified, only those fields need to match the original values to
 avoid the SQLITE_CHANGESET_DATA conflict-handler callback.</p>
@@ -1072,7 +1079,8 @@ the from-table, an INSERT record is added to the session object.</p>
 the from-table, a DELETE record is added to the session object.</p>
 
 <p><li> For each row (primary key) that exists in both tables, but features
-different in each, an UPDATE record is added to the session.
+different non-PK values in each, an UPDATE record is added to the
+session.
 </ul></p>
 
 <p>To clarify, if this function is called and then a changeset constructed

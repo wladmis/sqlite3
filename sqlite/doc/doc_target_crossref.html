@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Target Crossreference</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -337,6 +338,7 @@ return false;
 <li><a href="c3ref/result_blob.html">c3ref/result_blob.html</a> &rarr; sqlite3_result_blob sqlite3_result_blob64 sqlite3_result_double sqlite3_result_error sqlite3_result_error16 sqlite3_result_error_code sqlite3_result_error_nomem sqlite3_result_error_toobig sqlite3_result_int sqlite3_result_int64 sqlite3_result_null sqlite3_result_text sqlite3_result_text16 sqlite3_result_text16be sqlite3_result_text16le sqlite3_result_text64 sqlite3_result_value sqlite3_result_zeroblob sqlite3_result_zeroblob64</li>
 <li><a href="c3ref/result_subtype.html">c3ref/result_subtype.html</a> &rarr; sqlite3_result_subtype</li>
 <li><a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a> &rarr; sqlite3_set_authorizer</li>
+<li><a href="c3ref/set_last_insert_rowid.html">c3ref/set_last_insert_rowid.html</a> &rarr; sqlite3_set_last_insert_rowid</li>
 <li><a href="c3ref/sleep.html">c3ref/sleep.html</a> &rarr; sqlite3_sleep</li>
 <li><a href="c3ref/snapshot.html">c3ref/snapshot.html</a> &rarr; snapshot sqlite3_snapshot</li>
 <li><a href="c3ref/snapshot_cmp.html">c3ref/snapshot_cmp.html</a> &rarr; sqlite3_snapshot_cmp</li>
@@ -396,12 +398,15 @@ return false;
 <li><a href="cli.html#explain">cli.html#explain</a> &rarr; {explain dot-command}</li>
 <li><a href="cli.html#fileio">cli.html#fileio</a> &rarr; {file I/O functions}</li>
 <li><a href="cli.html#fullschema">cli.html#fullschema</a> &rarr; .fullschema {the .fullschema dot-command}</li>
+<li><a href="cli.html#selftest">cli.html#selftest</a> &rarr; {.selftest dot-command}</li>
+<li><a href="cli.html#sha3sum">cli.html#sha3sum</a> &rarr; {.sha3sum dot-command}</li>
 <li><a href="compile.html">compile.html</a> &rarr; {compile-time options}</li>
 <li><a href="compile.html#4_byte_aligned_malloc">compile.html#4_byte_aligned_malloc</a> &rarr; -DSQLITE_4_BYTE_ALIGNED_MALLOC SQLITE_4_BYTE_ALIGNED_MALLOC</li>
 <li><a href="compile.html#allow_covering_index_scan">compile.html#allow_covering_index_scan</a> &rarr; -DSQLITE_ALLOW_COVERING_INDEX_SCAN SQLITE_ALLOW_COVERING_INDEX_SCAN</li>
 <li><a href="compile.html#allow_uri_authority">compile.html#allow_uri_authority</a> &rarr; -DSQLITE_ALLOW_URI_AUTHORITY SQLITE_ALLOW_URI_AUTHORITY</li>
 <li><a href="compile.html#api">compile.html#api</a> &rarr; -DSQLITE_API SQLITE_API</li>
 <li><a href="compile.html#apicall">compile.html#apicall</a> &rarr; -DSQLITE_APICALL SQLITE_APICALL</li>
+<li><a href="compile.html#byteorder">compile.html#byteorder</a> &rarr; -DSQLITE_BYTEORDER SQLITE_BYTEORDER</li>
 <li><a href="compile.html#callback">compile.html#callback</a> &rarr; -DSQLITE_CALLBACK SQLITE_CALLBACK</li>
 <li><a href="compile.html#case_sensitive_like">compile.html#case_sensitive_like</a> &rarr; -DSQLITE_CASE_SENSITIVE_LIKE SQLITE_CASE_SENSITIVE_LIKE</li>
 <li><a href="compile.html#cdecl">compile.html#cdecl</a> &rarr; -DSQLITE_CDECL SQLITE_CDECL</li>
@@ -414,9 +419,11 @@ return false;
 <li><a href="compile.html#default_foreign_keys">compile.html#default_foreign_keys</a> &rarr; -DSQLITE_DEFAULT_FOREIGN_KEYS SQLITE_DEFAULT_FOREIGN_KEYS</li>
 <li><a href="compile.html#default_journal_size_limit">compile.html#default_journal_size_limit</a> &rarr; -DSQLITE_DEFAULT_JOURNAL_SIZE_LIMIT SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</li>
 <li><a href="compile.html#default_locking_mode">compile.html#default_locking_mode</a> &rarr; -DSQLITE_DEFAULT_LOCKING_MODE SQLITE_DEFAULT_LOCKING_MODE</li>
+<li><a href="compile.html#default_lookaside">compile.html#default_lookaside</a> &rarr; -DSQLITE_DEFAULT_LOOKASIDE SQLITE_DEFAULT_LOOKASIDE</li>
 <li><a href="compile.html#default_memstatus">compile.html#default_memstatus</a> &rarr; -DSQLITE_DEFAULT_MEMSTATUS SQLITE_DEFAULT_MEMSTATUS</li>
 <li><a href="compile.html#default_mmap_size">compile.html#default_mmap_size</a> &rarr; -DSQLITE_DEFAULT_MMAP_SIZE SQLITE_DEFAULT_MMAP_SIZE</li>
 <li><a href="compile.html#default_page_size">compile.html#default_page_size</a> &rarr; -DSQLITE_DEFAULT_PAGE_SIZE SQLITE_DEFAULT_PAGE_SIZE</li>
+<li><a href="compile.html#default_pcache_initsz">compile.html#default_pcache_initsz</a> &rarr; -DSQLITE_DEFAULT_PCACHE_INITSZ SQLITE_DEFAULT_PCACHE_INITSZ</li>
 <li><a href="compile.html#default_synchronous">compile.html#default_synchronous</a> &rarr; -DSQLITE_DEFAULT_SYNCHRONOUS SQLITE_DEFAULT_SYNCHRONOUS</li>
 <li><a href="compile.html#default_wal_autocheckpoint">compile.html#default_wal_autocheckpoint</a> &rarr; -DSQLITE_DEFAULT_WAL_AUTOCHECKPOINT SQLITE_DEFAULT_WAL_AUTOCHECKPOINT</li>
 <li><a href="compile.html#default_wal_synchronous">compile.html#default_wal_synchronous</a> &rarr; -DSQLITE_DEFAULT_WAL_SYNCHRONOUS SQLITE_DEFAULT_WAL_SYNCHRONOUS</li>
@@ -425,6 +432,7 @@ return false;
 <li><a href="compile.html#disable_dirsync">compile.html#disable_dirsync</a> &rarr; -DSQLITE_DISABLE_DIRSYNC SQLITE_DISABLE_DIRSYNC</li>
 <li><a href="compile.html#disable_fts3_unicode">compile.html#disable_fts3_unicode</a> &rarr; -DSQLITE_DISABLE_FTS3_UNICODE SQLITE_DISABLE_FTS3_UNICODE</li>
 <li><a href="compile.html#disable_fts4_deferred">compile.html#disable_fts4_deferred</a> &rarr; -DSQLITE_DISABLE_FTS4_DEFERRED SQLITE_DISABLE_FTS4_DEFERRED</li>
+<li><a href="compile.html#disable_intrinsic">compile.html#disable_intrinsic</a> &rarr; -DSQLITE_DISABLE_INTRINSIC SQLITE_DISABLE_INTRINSIC</li>
 <li><a href="compile.html#disable_lfs">compile.html#disable_lfs</a> &rarr; -DSQLITE_DISABLE_LFS SQLITE_DISABLE_LFS</li>
 <li><a href="compile.html#enable_8_3_names">compile.html#enable_8_3_names</a> &rarr; -DSQLITE_ENABLE_8_3_NAMES SQLITE_ENABLE_8_3_NAMES</li>
 <li><a href="compile.html#enable_api_armor">compile.html#enable_api_armor</a> &rarr; -DSQLITE_ENABLE_API_ARMOR SQLITE_ENABLE_API_ARMOR</li>
@@ -444,6 +452,7 @@ return false;
 <li><a href="compile.html#enable_memory_management">compile.html#enable_memory_management</a> &rarr; -DSQLITE_ENABLE_MEMORY_MANAGEMENT SQLITE_ENABLE_MEMORY_MANAGEMENT</li>
 <li><a href="compile.html#enable_memsys3">compile.html#enable_memsys3</a> &rarr; -DSQLITE_ENABLE_MEMSYS3 SQLITE_ENABLE_MEMSYS3</li>
 <li><a href="compile.html#enable_memsys5">compile.html#enable_memsys5</a> &rarr; -DSQLITE_ENABLE_MEMSYS5 SQLITE_ENABLE_MEMSYS5</li>
+<li><a href="compile.html#enable_null_trim">compile.html#enable_null_trim</a> &rarr; -DSQLITE_ENABLE_NULL_TRIM SQLITE_ENABLE_NULL_TRIM</li>
 <li><a href="compile.html#enable_preupdate_hook">compile.html#enable_preupdate_hook</a> &rarr; -DSQLITE_ENABLE_PREUPDATE_HOOK SQLITE_ENABLE_PREUPDATE_HOOK</li>
 <li><a href="compile.html#enable_rbu">compile.html#enable_rbu</a> &rarr; -DSQLITE_ENABLE_RBU SQLITE_ENABLE_RBU</li>
 <li><a href="compile.html#enable_rtree">compile.html#enable_rtree</a> &rarr; -DSQLITE_ENABLE_RTREE SQLITE_ENABLE_RTREE</li>
@@ -467,6 +476,7 @@ return false;
 <li><a href="compile.html#localtime_r">compile.html#localtime_r</a> &rarr; -DHAVE_LOCALTIME_R HAVE_LOCALTIME_R</li>
 <li><a href="compile.html#localtime_s">compile.html#localtime_s</a> &rarr; -DHAVE_LOCALTIME_S HAVE_LOCALTIME_S</li>
 <li><a href="compile.html#malloc_usable_size">compile.html#malloc_usable_size</a> &rarr; -DHAVE_MALLOC_USABLE_SIZE HAVE_MALLOC_USABLE_SIZE</li>
+<li><a href="compile.html#max_memory">compile.html#max_memory</a> &rarr; -DSQLITE_MAX_MEMORY SQLITE_MAX_MEMORY</li>
 <li><a href="compile.html#max_mmap_size">compile.html#max_mmap_size</a> &rarr; -DSQLITE_MAX_MMAP_SIZE SQLITE_MAX_MMAP_SIZE</li>
 <li><a href="compile.html#max_schema_retry">compile.html#max_schema_retry</a> &rarr; -DSQLITE_MAX_SCHEMA_RETRY SQLITE_MAX_SCHEMA_RETRY</li>
 <li><a href="compile.html#max_worker_threads">compile.html#max_worker_threads</a> &rarr; -DSQLITE_MAX_WORKER_THREADS SQLITE_MAX_WORKER_THREADS</li>
@@ -566,13 +576,14 @@ return false;
 <li><a href="datatype3.html">datatype3.html</a> &rarr; datatype {dynamic typing}</li>
 <li><a href="datatype3.html#affinity">datatype3.html#affinity</a> &rarr; affinities affinity {column affinity} {type affinity}</li>
 <li><a href="datatype3.html#affname">datatype3.html#affname</a> &rarr; {rules for determining column affinity}</li>
+<li><a href="datatype3.html#affview">datatype3.html#affview</a> &rarr; {rules for determining column affinity in VIEWs}</li>
 <li><a href="datatype3.html#boolean">datatype3.html#boolean</a> &rarr; {boolean datatype}</li>
 <li><a href="datatype3.html#collation">datatype3.html#collation</a> &rarr; BINARY {BINARY collating function} NOCASE {NOCASE collating function} RTRIM {RTRIM collating function} {collating function} {collating sequence} {collating sequences} collation</li>
 <li><a href="datatype3.html#colrules">datatype3.html#colrules</a> &rarr; {how collation is determined}</li>
 <li><a href="datatype3.html#compaff">datatype3.html#compaff</a> &rarr; {comparison affinity rules}</li>
 <li><a href="datatype3.html#comparisons">datatype3.html#comparisons</a> &rarr; {comparison expressions}</li>
 <li><a href="datatype3.html#datetime">datatype3.html#datetime</a> &rarr; {date and time datatype}</li>
-<li><a href="datatype3.html#expraff">datatype3.html#expraff</a> &rarr; {expression affinity}</li>
+<li><a href="datatype3.html#expraff">datatype3.html#expraff</a> &rarr; {Affinity Of Expressions} {expression affinity}</li>
 <li><a href="datatype3.html#storageclasses">datatype3.html#storageclasses</a> &rarr; {storage class}</li>
 <li><a href="dbhash.html">dbhash.html</a> &rarr; dbhash dbhash.exe</li>
 <li><a href="dbstat.html">dbstat.html</a> &rarr; dbstat {dbstat virtual table}</li>
@@ -736,6 +747,7 @@ return false;
 <li><a href="json1.html#jins">json1.html#jins</a> &rarr; json_insert {json_insert SQL function}</li>
 <li><a href="json1.html#jmini">json1.html#jmini</a> &rarr; json {json SQL function}</li>
 <li><a href="json1.html#jobj">json1.html#jobj</a> &rarr; json_object {json_object SQL function}</li>
+<li><a href="json1.html#jpatch">json1.html#jpatch</a> &rarr; json_patch {json_patch SQL function}</li>
 <li><a href="json1.html#jquote">json1.html#jquote</a> &rarr; json_quote {json_quote SQL function}</li>
 <li><a href="json1.html#jrepl">json1.html#jrepl</a> &rarr; json_replace {json_replace SQL function}</li>
 <li><a href="json1.html#jrm">json1.html#jrm</a> &rarr; json_remove {json_remove SQL function}</li>
@@ -753,6 +765,7 @@ return false;
 <li><a href="lang_aggfunc.html#sumunc">lang_aggfunc.html#sumunc</a> &rarr; sum {sum aggregate function} sumFunc total {total aggregate function}</li>
 <li><a href="lang_altertable.html">lang_altertable.html</a> &rarr; ALTER {ALTER TABLE}</li>
 <li><a href="lang_analyze.html">lang_analyze.html</a> &rarr; ANALYZE</li>
+<li><a href="lang_analyze.html#autoanalyze">lang_analyze.html#autoanalyze</a> &rarr; {automatically running ANALYZE}</li>
 <li><a href="lang_attach.html">lang_attach.html</a> &rarr; ATTACH {ATTACH DATABASE} attached</li>
 <li><a href="lang_comment.html">lang_comment.html</a> &rarr; comment comments</li>
 <li><a href="lang_conflict.html">lang_conflict.html</a> &rarr; {ON CONFLICT} {ON CONFLICT clause} {conflict clause}</li>
@@ -905,7 +918,7 @@ return false;
 <li><a href="malloc.html">malloc.html</a> &rarr; {memory allocation}</li>
 <li><a href="malloc.html#altalloc">malloc.html#altalloc</a> &rarr; {built-in memory allocators}</li>
 <li><a href="malloc.html#defaultalloc">malloc.html#defaultalloc</a> &rarr; {default memory allocator}</li>
-<li><a href="malloc.html#lookaside">malloc.html#lookaside</a> &rarr; {lookaside memory allocator}</li>
+<li><a href="malloc.html#lookaside">malloc.html#lookaside</a> &rarr; lookaside {lookaside buffer} {lookaside memory} {lookaside memory allocator}</li>
 <li><a href="malloc.html#memdebug">malloc.html#memdebug</a> &rarr; {debugging memory allocator} memsys2</li>
 <li><a href="malloc.html#memstatus">malloc.html#memstatus</a> &rarr; {memory statistics}</li>
 <li><a href="malloc.html#memsys5">malloc.html#memsys5</a> &rarr; memsys5 {zero-malloc memory allocator}</li>
@@ -971,6 +984,7 @@ return false;
 <li><a href="pragma.html#pragma_locking_mode">pragma.html#pragma_locking_mode</a> &rarr; {PRAGMA locking_mode} locking_mode {locking_mode pragma}</li>
 <li><a href="pragma.html#pragma_max_page_count">pragma.html#pragma_max_page_count</a> &rarr; {PRAGMA max_page_count} max_page_count {max_page_count pragma}</li>
 <li><a href="pragma.html#pragma_mmap_size">pragma.html#pragma_mmap_size</a> &rarr; {PRAGMA mmap_size} mmap_size {mmap_size pragma}</li>
+<li><a href="pragma.html#pragma_optimize">pragma.html#pragma_optimize</a> &rarr; {PRAGMA optimize} optimize {optimize pragma}</li>
 <li><a href="pragma.html#pragma_page_count">pragma.html#pragma_page_count</a> &rarr; {PRAGMA page_count} page_count {page_count pragma}</li>
 <li><a href="pragma.html#pragma_page_size">pragma.html#pragma_page_size</a> &rarr; {PRAGMA page_size} page_size {page_size pragma}</li>
 <li><a href="pragma.html#pragma_parser_trace">pragma.html#pragma_parser_trace</a> &rarr; {PRAGMA parser_trace} parser_trace {parser_trace pragma}</li>
@@ -1050,6 +1064,8 @@ return false;
 <li><a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a> &rarr; {Version 3.16.0} {version 3.16.0}</li>
 <li><a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a> &rarr; {Version 3.16.1} {version 3.16.1}</li>
 <li><a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a> &rarr; {Version 3.16.2} {version 3.16.2}</li>
+<li><a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a> &rarr; {Version 3.17.0} {version 3.17.0}</li>
+<li><a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a> &rarr; {Version 3.18.0} {version 3.18.0}</li>
 <li><a href="releaselog/3_1_0.html">releaselog/3_1_0.html</a> &rarr; {Version 3.1.0} {version 3.1.0}</li>
 <li><a href="releaselog/3_1_1.html">releaselog/3_1_1.html</a> &rarr; {Version 3.1.1} {version 3.1.1}</li>
 <li><a href="releaselog/3_1_2.html">releaselog/3_1_2.html</a> &rarr; {Version 3.1.2} {version 3.1.2}</li>
@@ -1438,6 +1454,7 @@ return false;
 <li><a href="testing.html#harnesses">testing.html#harnesses</a> &rarr; {test harness} {three test harnesses}</li>
 <li><a href="testing.html#mcdc">testing.html#mcdc</a> &rarr; MC/DC {MC/DC testing}</li>
 <li><a href="testing.html#mutationtests">testing.html#mutationtests</a> &rarr; {mutation testing}</li>
+<li><a href="testing.html#ossfuzz">testing.html#ossfuzz</a> &rarr; {OSS Fuzz}</li>
 <li><a href="testing.html#slt">testing.html#slt</a> &rarr; SLT {SQL Logic Tests}</li>
 <li><a href="testing.html#tcl">testing.html#tcl</a> &rarr; {TCL test suite}</li>
 <li><a href="testing.html#testcase">testing.html#testcase</a> &rarr; {testcase macros}</li>

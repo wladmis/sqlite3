@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Command Line Shell For SQLite</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -97,10 +98,12 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#csv_export">9. CSV Export</a></div>
 <div class="fancy-toc1"><a href="#converting_an_entire_database_to_an_ascii_text_file">10. Converting An Entire Database To An ASCII Text File</a></div>
 <div class="fancy-toc1"><a href="#loading_extensions">11. Loading Extensions</a></div>
-<div class="fancy-toc1"><a href="#other_dot_commands">12. Other Dot Commands</a></div>
-<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">13. Using sqlite3 in a shell script</a></div>
-<div class="fancy-toc1"><a href="#ending_shell_commands">14. Ending shell commands</a></div>
-<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">15. Compiling the sqlite3 program from sources</a></div>
+<div class="fancy-toc1"><a href="#cryptographic_hashes_of_database_content">12. Cryptographic Hashes Of Database Content</a></div>
+<div class="fancy-toc1"><a href="#database_content_self_tests">13. Database Content Self-Tests</a></div>
+<div class="fancy-toc1"><a href="#other_dot_commands">14. Other Dot Commands</a></div>
+<div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">15. Using sqlite3 in a shell script</a></div>
+<div class="fancy-toc1"><a href="#ending_shell_commands">16. Ending shell commands</a></div>
+<div class="fancy-toc1"><a href="#compiling_the_sqlite3_program_from_sources">17. Compiling the sqlite3 program from sources</a></div>
 </div>
 </div>
 <script>
@@ -277,7 +280,7 @@ at any time.  For example:
                          html     HTML &lt;table&gt; code
                          insert   SQL insert statements for TABLE
                          line     One value per line
-                         list     Values delimited by .separator strings
+                         list     Values delimited by "|"
                          quote    Escape answers as for SQL
                          tabs     Tab-separated values
                          tcl      TCL list elements
@@ -295,9 +298,11 @@ at any time.  For example:
 .scanstats on|off      Turn sqlite3_stmt_scanstatus() metrics on or off
 .schema ?PATTERN?      Show the CREATE statements matching PATTERN
                           Add --indent for pretty-printing
+.selftest ?--init?     Run tests defined in the SELFTEST table
 .separator COL ?ROW?   Change the column separator and optionally the row
                          separator for both the output mode and .import
 .session CMD ...       Create or control sessions
+.sha3sum ?OPTIONS...?  Compute a SHA3 hash of database content
 .shell CMD ARGS...     Run CMD ARGS... in a system shell
 .show                  Show the current values for various settings
 .stats ?on|off?        Show stats or turn stats on or off
@@ -323,7 +328,7 @@ sqlite&gt;
 
 <p>Ordinary SQL statements are free-form, and can be
 spread across multiple lines, and can have whitespace and
-comments anywhere.  But dot-commands are
+comments anywhere.  Dot-commands are
 more restrictive:
 
 </p><ul>
@@ -336,7 +341,7 @@ more restrictive:
 </li><li>Dot-commands do not recognize comments.
 </li></ul>
 
-<p>And, of course, it is important to remember that the dot-commands
+<p>The dot-commands
 are interpreted by the sqlite3.exe command-line program, not by
 SQLite itself.  So none of the dot-commands will work as an argument
 to SQLite interfaces like <a href="c3ref/prepare.html">sqlite3_prepare()</a> or <a href="c3ref/exec.html">sqlite3_exec()</a>.
@@ -347,13 +352,13 @@ to SQLite interfaces like <a href="c3ref/prepare.html">sqlite3_prepare()</a> or 
 
 <p>The sqlite3 program is able to show the results of a query
 in eight different formats: "csv", "column", "html", "insert",
-"line", "list", "tabs", and "tcl".
+"line", "list", "quote", "tabs", and "tcl".
 You can use the ".mode" dot command to switch between these output
 formats.</p>
 
 <p>The default output mode is "list".  In
-list mode, each record of a query result is written on one line of
-output and each column within that record is separated by a specific
+list mode, each row of a query result is written on one line of
+output and each column within that row is separated by a specific
 separator string.  The default separator is a pipe symbol ("|").
 List mode is especially useful when you are going to send the output
 of a query to another program (such as AWK) for additional processing.</p>
@@ -365,14 +370,32 @@ goodbye|20
 sqlite&gt;
 </pre></div>
 
-<p>You can use the ".separator" dot command to change the separator
-for list mode.  For example, to change the separator to a comma and
+<p>Use the ".separator" dot command to change the separator.
+For example, to change the separator to a comma and
 a space, you could do this:</p>
 
 <div class="codeblock"><pre>sqlite&gt; <b>.separator ", "</b>
 sqlite&gt; <b>select * from tbl1;</b>
 hello, 10
 goodbye, 20
+sqlite&gt;
+</pre></div>
+
+<p>The next ".mode" command will reset the ".separator" back to its default.
+So you will need repeat the ".separator" command whenever you change
+modes if you want to continue using a non-standard separator.
+
+</p><p>In "quote" mode, the output is formatted as SQL literals.  Strings are
+enclosed in single-quotes and internal single-quotes are escaped by doubling.
+Blobs are displayed in hexadecimal blob literal notation (Ex: x'abcd').
+Numbers are displayed as ASCII text and NULL values are shown as "NULL".
+All columns are separated from each other by a comma (or whatever alternative
+character is selected using ".separator").
+
+</p><div class="codeblock"><pre>sqlite&gt; <b>.mode quote</b>
+sqlite&gt; <b>select * from tbl1;</b>
+'hello',10
+'goodbye',20
 sqlite&gt;
 </pre></div>
 
@@ -406,8 +429,8 @@ sqlite&gt;
 
 <p>By default, each column is between 1 and 10 characters wide, depending
 on the column header name and the width of the first column of data.
-Data that is too wide to fit in a column is truncated.  You can
-adjust the column widths using the ".width" command.  Like this:</p>
+Data that is too wide to fit in a column is truncated.  Use the
+".width" dot-command to adjust column widths, like this:</p>
 
 <div class="codeblock"><pre>sqlite&gt; <b>.width 12 6</b>
 sqlite&gt; <b>select * from tbl1;</b>
@@ -431,8 +454,7 @@ first row of data.  This makes the column width self-adjusting.
 The default width setting for every column is this 
 auto-adjusting 0 value.</p>
 
-<p>You can specify a negative column width to get
-right-justified columns.</p>
+<p>Use a negative column width for right-justified columns.</p>
 
 <p>The column labels that appear on the first two lines of output
 can be turned on and off using the ".header" dot command.  In the
@@ -447,7 +469,7 @@ sqlite&gt;
 </pre></div>
 
 <p>Another useful output mode is "insert".  In insert mode, the output
-is formatted to look like SQL INSERT statements.  You can use insert
+is formatted to look like SQL INSERT statements.  Use insert
 mode to generate text that can later be used to input data into a 
 different database.</p>
 
@@ -574,17 +596,14 @@ WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
 ORDER BY 1
 </pre></div>
 
-<p>The ".indices" command works in a similar way to list all of
-the indices for a particular table.  The ".indices" command takes
-a single argument which is the name of the table for which the
-indices are desired.  Last, but not least, is the ".schema" command.
-With no arguments, the ".schema" command shows the original CREATE TABLE
-and CREATE INDEX statements that were used to build the current database.
-If you give the name of a table to ".schema", it shows the original
-CREATE statement used to make that table and all if its indices.
-We have:</p>
+<p>The ".indexes" command works in a similar way to list all of
+the indexes. If the ".indexes" command is given an argument which is
+the name of a table, then it shows just indexes on that table.
 
-<div class="codeblock"><pre>sqlite&gt; <b>.schema</b>
+</p><p>The ".schema" command shows the complete schema for the database,
+or for a single table if an optional tablename argument is provided:
+
+</p><div class="codeblock"><pre>sqlite&gt; <b>.schema</b>
 create table tbl1(one varchar(10), two smallint)
 CREATE TABLE tbl2 (
   f1 varchar(30) primary key,
@@ -607,41 +626,6 @@ list mode, then entering the following query:</p>
 <div class="codeblock"><pre>SELECT sql FROM sqlite_master
 ORDER BY tbl_name, type DESC, name
 </pre></div>
-
-<p>Or, if you give an argument to ".schema" because you only
-want the schema for a single table, the query looks like this:</p>
-
-<div class="codeblock"><pre>SELECT sql FROM sqlite_master
-WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
-ORDER BY substr(type,2,1), name
-</pre></div>
-
-<p>
-You can supply an argument to the .schema command.  If you do, the
-query looks like this:
-</p>
-
-<div class="codeblock"><pre>SELECT sql FROM sqlite_master
-WHERE tbl_name LIKE '%s'
-  AND type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%'
-ORDER BY substr(type,2,1), name
-</pre></div>
-
-<p>The "%s" in the query is replace by your argument.  This allows you
-to view the schema for some subset of the database.</p>
-
-
-<div class="codeblock"><pre>sqlite&gt; <b>.schema %abc%</b>
-</pre></div>
-
-
-<p>
-Along these same lines,
-the ".table" command also accepts a pattern as its first argument.
-If you give an argument to the .table command, a "%" is both
-appended and prepended and a LIKE clause is added to the query.
-This allows you to list only those tables that match a particular
-pattern.</p>
 
 <p>The ".databases" command shows a list of all databases open in
 the current connection.  There will always be at least 2.  The first
@@ -749,7 +733,7 @@ back into a database by piping it back into <b>sqlite3</b>.</p>
 <p>A good way to make an archival copy of a database is this:</p>
 
 
-<div class="codeblock"><pre>$ <b>echo '.dump' | sqlite3 ex1 | gzip -c &gt;ex1.dump.gz</b>
+<div class="codeblock"><pre>$ <b>sqlite3 ex1 .dump | gzip -c &gt;ex1.dump.gz</b>
 </pre></div>
 
 
@@ -799,9 +783,68 @@ subdirectory of the SQLite source tree.  You can use these extensions
 as-is, or as a basis for creating your own custom extensions to address
 your own particular needs.
 
+<a name="sha3sum"></a>
+
+</p><h1 id="cryptographic_hashes_of_database_content"><span>12. </span>Cryptographic Hashes Of Database Content</h1>
+
+<p>The ".sha3sum" dot-command computes a
+<a href="https://en.wikipedia.org/wiki/SHA-3">SHA3</a> hash of the <em>content</em>
+of the database.  To be clear, the hash is computed over the database content,
+not its representation on disk.  This means, for example, that a <a href="lang_vacuum.html">VACUUM</a>
+or similar data-preserving transformation does not change the hash.
+
+</p><p>The ".sha3sum" command supports options "--sha3-224", "--sha3-256", 
+"--sha3-384", and "--sha3-512" to define which variety of SHA3 to use
+for the hash.  The default is SHA3-256.
+
+</p><p>The database schema (in the <a href="fileformat2.html#sqlite_master">sqlite_master</a> table) is not normally
+included in the hash, but can be added by the "--schema" option.
+
+</p><p>The ".sha3sum" command takes a single optional argument which is a
+<a href="lang_expr.html#like">LIKE</a> pattern.  If this option is present, only tables whose names match
+the <a href="lang_expr.html#like">LIKE</a> pattern will be hashed.
+
+</p><p>The ".sha3sum" command is implemented with the help of the
+<a href="https://www.sqlite.org/src/file/ext/misc/shathree.c">extension function "sha3_query()"</a>
+that is included with the command-line shell.
+
+<a name="selftest"></a>
+
+</p><h1 id="database_content_self_tests"><span>13. </span>Database Content Self-Tests</h1>
+
+<p>The ".selftest" command attempts to verify that a database is
+intact and is not corrupt.  
+The .selftest command looks for a table in schema named "selftest"
+and defined as follows:
+
+</p><div class="codeblock"><pre>CREATE TABLE selftest(
+  tno INTEGER PRIMARY KEY,  -- Test number
+  op TEXT,                  -- 'run' or 'memo'
+  cmd TEXT,                 -- SQL command to run, or text of "memo"
+  ans TEXT                  -- Expected result of the SQL command
+);
+</pre></div>
+
+<p>The .selftest command reads the rows of the selftest table in
+selftest.tno order.
+For each 'memo' row, it writes the text in 'cmd' to the output.  For
+each 'run' row, it runs the 'cmd' text as SQL and compares the result
+to the value in 'ans', and shows an error message if the results differ.
+
+</p><p>If there is no selftest table, the ".selftest" command runs
+<a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>.
+
+</p><p>The ".selftest --init" command creates the selftest table if it
+does not already exists, then appends entries that check the SHA3
+hash of the content of all tables.  Subsequent runs of ".selftest"
+will verify that the database has not been changed in any way.  To
+generates tests to verify that a subset of the tables are unchanged,
+simply run ".selftest --init" then <a href="lang_delete.html">DELETE</a> the selftest rows that
+refer to tables that are not constant.  
+
 <a name="dotother"></a>
 
-</p><h1 id="other_dot_commands"><span>12. </span>Other Dot Commands</h1>
+</p><h1 id="other_dot_commands"><span>14. </span>Other Dot Commands</h1>
 
 <p>There are many other dot-commands available in the command-line
 shell.  See the ".help" command for a complete list for any particular
@@ -809,7 +852,7 @@ version and build of SQLite.
 
 <a name="insh"></a>
 
-</p><h1 id="using_sqlite3_in_a_shell_script"><span>13. </span>Using sqlite3 in a shell script</h1>
+</p><h1 id="using_sqlite3_in_a_shell_script"><span>15. </span>Using sqlite3 in a shell script</h1>
 
 <p>
 One way to use sqlite3 in a shell script is to use "echo" or
@@ -834,7 +877,7 @@ $
 
 <a name="endsh"></a>
 
-<h1 id="ending_shell_commands"><span>14. </span>Ending shell commands</h1>
+<h1 id="ending_shell_commands"><span>16. </span>Ending shell commands</h1>
 
 <p>
 SQLite commands are normally terminated by a semicolon.  In the shell 
@@ -847,7 +890,7 @@ to that function.</p>
 
 <a name="compiling"></a>
 
-<h1 id="compiling_the_sqlite3_program_from_sources"><span>15. </span>Compiling the sqlite3 program from sources</h1>
+<h1 id="compiling_the_sqlite3_program_from_sources"><span>17. </span>Compiling the sqlite3 program from sources</h1>
 
 <p>
 The source code to the sqlite3 command line interface is in a single
@@ -860,4 +903,25 @@ the executable.  For example:</p>
 
 <div class="codeblock"><pre>gcc -o sqlite3 shell.c sqlite3.c -ldl -lpthread
 </pre></div>
+
+<p>
+You might want to provide additional compile-time options:
+</p><ul>
+<li><p><a href="compile.html#threadsafe">-DSQLITE_THREADSAFE=0</a>:
+The command-line shell does no use threads, so you might as well turn
+thread-safety off, for improved performance and a reduced code footprint.
+This also eliminates the need for the "-lpthread" switch on the
+compiler command line.
+
+</p></li><li><p>-DSQLITE_ENABLE_EXPLAIN_COMMENT:
+This option adds comment text to the end of each opcode in the
+output of <a href="lang_explain.html">EXPLAIN</a>.  The EXPLAIN output is much easier to read
+with this option enabled.
+
+</p></li><li><p><a href="compile.html#enable_unknown_sql_function">-DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION</a>:
+This option allows <a href="lang_explain.html">EXPLAIN</a> statements to succeed even if the contain
+references to unknown SQL functions.  This makes the shell useful for
+looking at EXPLAIN or EXPLAIN QUERY PLAN output for queries pasted out
+of applications that define and use custom SQL functions.
+</p></li></ul>
 

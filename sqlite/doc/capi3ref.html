@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>C/C++ Interface For SQLite Version 3</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -608,7 +609,7 @@ document.getElementById("listtab19").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 226 -->
+<!-- number of functions: 227 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 5 -->
 <style>
@@ -788,6 +789,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_commit_hook","x":"sqlite3_rollback_hook","s":0},
 {"u":"#sqlite3_set_authorizer","x":"sqlite3_set_authorizer","s":0},
 {"u":"#sqlite3_get_auxdata","x":"sqlite3_set_auxdata","s":0},
+{"u":"#sqlite3_set_last_insert_rowid","x":"sqlite3_set_last_insert_rowid","s":0},
 {"u":"#sqlite3_initialize","x":"sqlite3_shutdown","s":0},
 {"u":"#sqlite3_sleep","x":"sqlite3_sleep","s":0},
 {"u":"#sqlite3_snapshot_cmp","x":"sqlite3_snapshot_cmp","s":1},
@@ -1343,6 +1345,9 @@ underlying device:</p>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_ATOMIC64K</a>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_SAFE_APPEND</a>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_SEQUENTIAL</a>
+<li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</a>
+<li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_POWERSAFE_OVERWRITE</a>
+<li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_IMMUTABLE</a>
 </ul></p>
 
 <p>The SQLITE_IOCAP_ATOMIC property means that all writes of
@@ -2093,6 +2098,13 @@ being opened for read/write access.
 <a href="#sqlite3">database connection</a> error code and message accessible via
 <a href="#sqlite3_errcode">sqlite3_errcode()</a> and <a href="#sqlite3_errcode">sqlite3_errmsg()</a> and related functions.</p>
 
+<p>A BLOB referenced by sqlite3_blob_open() may be read using the
+<a href="#sqlite3_blob_read">sqlite3_blob_read()</a> interface and modified by using
+<a href="#sqlite3_blob_write">sqlite3_blob_write()</a>.  The <a href="#sqlite3_blob">BLOB handle</a> can be moved to a
+different row of the same table using the <a href="#sqlite3_blob_reopen">sqlite3_blob_reopen()</a>
+interface.  However, the column, table, or database of a <a href="#sqlite3_blob">BLOB handle</a>
+cannot be changed after the <a href="#sqlite3_blob">BLOB handle</a> is opened.</p>
+
 <p>If the row that a BLOB handle points to is modified by an
 <a href="lang_update.html">UPDATE</a>, <a href="lang_delete.html">DELETE</a>, or by <a href="lang_conflict.html">ON CONFLICT</a> side-effects
 then the BLOB handle is marked as "expired".
@@ -2114,7 +2126,11 @@ and the built-in <a href="lang_corefunc.html#zeroblob">zeroblob</a> SQL function
 zero-filled blob to read or write using the incremental-blob interface.</p>
 
 <p>To avoid a resource leak, every open <a href="#sqlite3_blob">BLOB handle</a> should eventually
-be released by a call to <a href="#sqlite3_blob_close">sqlite3_blob_close()</a>.
+be released by a call to <a href="#sqlite3_blob_close">sqlite3_blob_close()</a>.</p>
+
+<p>See also: <a href="#sqlite3_blob_close">sqlite3_blob_close()</a>,
+<a href="#sqlite3_blob_reopen">sqlite3_blob_reopen()</a>, <a href="#sqlite3_blob_read">sqlite3_blob_read()</a>,
+<a href="#sqlite3_blob_bytes">sqlite3_blob_bytes()</a>, <a href="#sqlite3_blob_write">sqlite3_blob_write()</a>.
 </p><hr><a name="sqlite3_blob_read"></a>
 <h2>Read Data From A BLOB Incrementally</h2>
 </div>
@@ -2151,11 +2167,11 @@ to this routine results in undefined and probably undesirable behavior.</p>
 int sqlite3_blob_reopen(sqlite3_blob *, sqlite3_int64);
 </pre></blockquote>
 <p>
-This function is used to move an existing blob handle so that it points
+This function is used to move an existing <a href="#sqlite3_blob">BLOB handle</a> so that it points
 to a different row of the same database table. The new row is identified
 by the rowid value passed as the second argument. Only the row can be
 changed. The database, table and column on which the blob handle is open
-remain the same. Moving an existing blob handle to a new row can be
+remain the same. Moving an existing <a href="#sqlite3_blob">BLOB handle</a> to a new row is
 faster than closing the existing handle and opening a new one.</p>
 
 <p>The new row must meet the same criteria as for <a href="#sqlite3_blob_open">sqlite3_blob_open()</a> -
@@ -2810,20 +2826,30 @@ names are not also used by explicitly declared columns. If
 the table has a column of type <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> then that column
 is another alias for the rowid.</p>
 
-<p>The sqlite3_last_insert_rowid(D) interface returns the <a href="lang_createtable.html#rowid">rowid</a> of the
-most recent successful <a href="lang_insert.html">INSERT</a> into a rowid table or <a href="vtab.html">virtual table</a>
-on database connection D.
-Inserts into <a href="withoutrowid.html">WITHOUT ROWID</a> tables are not recorded.
-If no successful <a href="lang_insert.html">INSERT</a>s into rowid tables
-have ever occurred on the database connection D,
-then sqlite3_last_insert_rowid(D) returns zero.</p>
+<p>The sqlite3_last_insert_rowid(D) interface usually returns the <a href="lang_createtable.html#rowid">rowid</a> of
+the most recent successful <a href="lang_insert.html">INSERT</a> into a rowid table or <a href="vtab.html">virtual table</a>
+on database connection D. Inserts into <a href="withoutrowid.html">WITHOUT ROWID</a> tables are not
+recorded. If no successful <a href="lang_insert.html">INSERT</a>s into rowid tables have ever occurred
+on the database connection D, then sqlite3_last_insert_rowid(D) returns
+zero.</p>
 
-<p>If an <a href="lang_insert.html">INSERT</a> occurs within a trigger or within a <a href="vtab.html">virtual table</a>
-method, then this routine will return the <a href="lang_createtable.html#rowid">rowid</a> of the inserted
-row as long as the trigger or virtual table method is running.
-But once the trigger or virtual table method ends, the value returned
-by this routine reverts to what it was before the trigger or virtual
-table method began.</p>
+<p>As well as being set automatically as rows are inserted into database
+tables, the value returned by this function may be set explicitly by
+<a href="#sqlite3_set_last_insert_rowid">sqlite3_set_last_insert_rowid()</a></p>
+
+<p>Some virtual table implementations may INSERT rows into rowid tables as
+part of committing a transaction (e.g. to flush data accumulated in memory
+to disk). In this case subsequent calls to this function return the rowid
+associated with these internal INSERT operations, which leads to
+unintuitive results. Virtual table implementations that do write to rowid
+tables in this way can avoid this problem by restoring the original
+rowid value using <a href="#sqlite3_set_last_insert_rowid">sqlite3_set_last_insert_rowid()</a> before returning
+control to the user.</p>
+
+<p>If an <a href="lang_insert.html">INSERT</a> occurs within a trigger then this routine will
+return the <a href="lang_createtable.html#rowid">rowid</a> of the inserted row as long as the trigger is
+running. Once the trigger program ends, the value returned
+by this routine reverts to what it was before the trigger was fired.</p>
 
 <p>An <a href="lang_insert.html">INSERT</a> that fails due to a constraint violation is not a
 successful <a href="lang_insert.html">INSERT</a> and does not change the value returned by this
@@ -3211,6 +3237,16 @@ correct authorizer callback remains in place during the <a href="#sqlite3_step">
 performed during statement evaluation in <a href="#sqlite3_step">sqlite3_step()</a>, unless
 as stated in the previous paragraph, sqlite3_step() invokes
 sqlite3_prepare_v2() to reprepare a statement after a schema change.
+</p><hr><a name="sqlite3_set_last_insert_rowid"></a>
+<h2>Set the Last Insert Rowid value.</h2>
+</div>
+<blockquote><pre>
+void sqlite3_set_last_insert_rowid(sqlite3*,sqlite3_int64);
+</pre></blockquote>
+<p>
+The sqlite3_set_last_insert_rowid(D, R) method allows the application to
+set the value returned by calling sqlite3_last_insert_rowid(D) to R
+without inserting a row into the database.
 </p><hr><a name="sqlite3_sleep"></a>
 <h2>Suspend Execution For A Short Time</h2>
 </div>
@@ -4065,7 +4101,7 @@ modified (i.e. sqlite_master and sqlite_sequence).
 The update hook is not invoked when <a href="withoutrowid.html">WITHOUT ROWID</a> tables are modified.</p>
 
 <p>In the current implementation, the update hook
-is not invoked when duplication rows are deleted because of an
+is not invoked when conflicting rows are deleted because of an
 <a href="lang_conflict.html">ON CONFLICT REPLACE</a> clause.  Nor is the update hook
 invoked when rows are deleted using the <a href="lang_delete.html#truncateopt">truncate optimization</a>.
 The exceptions defined in this paragraph might change in a future
@@ -5519,7 +5555,7 @@ after reboot following a crash or power loss, the only bytes in a
 file that were written at the application level might have changed
 and that adjacent bytes, even bytes within the same sector are
 guaranteed to be unchanged.  The SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN
-flag indicate that a file cannot be deleted when open.  The
+flag indicates that a file cannot be deleted when open.  The
 SQLITE_IOCAP_IMMUTABLE flag indicates that the file is on
 read-only media and cannot be changed even by processes with
 elevated privileges.
@@ -5686,9 +5722,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.16.2"
-#define SQLITE_VERSION_NUMBER 3016002
-#define SQLITE_SOURCE_ID      "2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209"
+#define SQLITE_VERSION        "3.18.0"
+#define SQLITE_VERSION_NUMBER 3018000
+#define SQLITE_SOURCE_ID      "2017-03-28 18:48:43 424a0d380332858ee55bdebc4af3789f74e70a2b3ba1cf29d84b9b4bcf3e2e37"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -5709,8 +5745,8 @@ SQLite source code has been stored in the
 system</a>.  The SQLITE_SOURCE_ID macro evaluates to
 a string which identifies a particular check-in of SQLite
 within its configuration management system.  The SQLITE_SOURCE_ID
-string contains the date and time of the check-in (UTC) and an SHA1
-hash of the entire source tree.</p>
+string contains the date and time of the check-in (UTC) and a SHA1
+or SHA3-256 hash of the entire source tree.</p>
 
 <p>See also: <a href="#sqlite3_libversion">sqlite3_libversion()</a>,
 <a href="#sqlite3_libversion">sqlite3_libversion_number()</a>, <a href="#sqlite3_libversion">sqlite3_sourceid()</a>,
@@ -6016,9 +6052,9 @@ or in an ORDER BY or GROUP BY clause.</dd></p>
 <p><a name="sqlitelimitvdbeop"></a>
  <dt>SQLITE_LIMIT_VDBE_OP</dt>
 <dd>The maximum number of instructions in a virtual machine program
-used to implement an SQL statement.  This limit is not currently
-enforced, though that might be added in some future release of
-SQLite.</dd></p>
+used to implement an SQL statement.  If <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or
+the equivalent tries to allocate space for more than this many opcodes
+in a single prepared statement, an SQLITE_NOMEM error is returned.</dd></p>
 
 <p><a name="sqlitelimitfunctionarg"></a>
  <dt>SQLITE_LIMIT_FUNCTION_ARG</dt>
@@ -6228,7 +6264,11 @@ then the value returned by this statement status code is undefined.
 <blockquote><pre>
 #ifdef SQLITE_INT64_TYPE
   typedef SQLITE_INT64_TYPE sqlite_int64;
-  typedef unsigned SQLITE_INT64_TYPE sqlite_uint64;
+# ifdef SQLITE_UINT64_TYPE
+    typedef SQLITE_UINT64_TYPE sqlite_uint64;
+# else  
+    typedef unsigned SQLITE_INT64_TYPE sqlite_uint64;
+# endif
 #elif defined(_MSC_VER) || defined(__BORLANDC__)
   typedef __int64 sqlite_int64;
   typedef unsigned __int64 sqlite_uint64;
@@ -6420,6 +6460,7 @@ var listitems22 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
 {"u":"#sqlite3_progress_handler","x":"sqlite3_progress_handler","s":0},
 {"u":"#sqlite3_commit_hook","x":"sqlite3_rollback_hook","s":0},
 {"u":"#sqlite3_set_authorizer","x":"sqlite3_set_authorizer","s":0},
+{"u":"#sqlite3_set_last_insert_rowid","x":"sqlite3_set_last_insert_rowid","s":0},
 {"u":"#sqlite3_table_column_metadata","x":"sqlite3_table_column_metadata","s":0},
 {"u":"#sqlite3_total_changes","x":"sqlite3_total_changes","s":0},
 {"u":"#sqlite3_profile","x":"sqlite3_trace","s":0},
@@ -8544,7 +8585,7 @@ These interfaces are only available if SQLite is compiled using the
 
 <p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> interface registers a callback function
 that is invoked prior to each <a href="lang_insert.html">INSERT</a>, <a href="lang_update.html">UPDATE</a>, and <a href="lang_delete.html">DELETE</a> operation
-on a <a href="rowidtable.html">rowid table</a>.
+on a database table.
 At most one preupdate hook may be registered at a time on a single
 <a href="#sqlite3">database connection</a>; each call to <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> overrides
 the previous setting.
@@ -8553,9 +8594,9 @@ with a NULL pointer as the second parameter.
 The third parameter to <a href="#sqlite3_preupdate_count">sqlite3_preupdate_hook()</a> is passed through as
 the first parameter to callbacks.</p>
 
-<p>The preupdate hook only fires for changes to <a href="rowidtable.html">rowid tables</a>; the preupdate
-hook is not invoked for changes to <a href="vtab.html">virtual tables</a> or <a href="withoutrowid.html">WITHOUT ROWID</a>
-tables.</p>
+<p>The preupdate hook only fires for changes to real database tables; the
+preupdate hook is not invoked for changes to <a href="vtab.html">virtual tables</a> or to
+system tables like sqlite_master or sqlite_stat1.</p>
 
 <p>The second parameter to the preupdate callback is a pointer to
 the <a href="#sqlite3">database connection</a> that registered the preupdate hook.
@@ -8568,13 +8609,17 @@ will be "main" for the main database or "temp" for TEMP tables or
 the name given after the AS keyword in the <a href="lang_attach.html">ATTACH</a> statement for attached
 databases.
 The fifth parameter to the preupdate callback is the name of the
-table that is being modified.
-The sixth parameter to the preupdate callback is the initial <a href="lang_createtable.html#rowid">rowid</a> of the
-row being changes for SQLITE_UPDATE and SQLITE_DELETE changes and is
-undefined for SQLITE_INSERT changes.
-The seventh parameter to the preupdate callback is the final <a href="lang_createtable.html#rowid">rowid</a> of
-the row being changed for SQLITE_UPDATE and SQLITE_INSERT changes and is
-undefined for SQLITE_DELETE changes.</p>
+table that is being modified.</p>
+
+<p>For an UPDATE or DELETE operation on a <a href="rowidtable.html">rowid table</a>, the sixth
+parameter passed to the preupdate callback is the initial <a href="lang_createtable.html#rowid">rowid</a> of the
+row being modified or deleted. For an INSERT operation on a rowid table,
+or any operation on a WITHOUT ROWID table, the value of the sixth
+parameter is undefined. For an INSERT or UPDATE on a rowid table the
+seventh parameter is the final rowid value of the row being inserted
+or updated. The value of the seventh parameter passed to the callback
+function is not defined for operations on WITHOUT ROWID tables, or for
+INSERT operations on rowid tables.</p>
 
 <p>The <a href="#sqlite3_preupdate_count">sqlite3_preupdate_old()</a>, <a href="#sqlite3_preupdate_count">sqlite3_preupdate_new()</a>,
 <a href="#sqlite3_preupdate_count">sqlite3_preupdate_count()</a>, and <a href="#sqlite3_preupdate_count">sqlite3_preupdate_depth()</a> interfaces

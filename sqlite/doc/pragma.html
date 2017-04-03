@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Pragma statements supported by SQLite</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -274,6 +275,7 @@ var listitems28 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_locking_mode","x":"locking_mode","s":0},
 {"u":"pragma.html#pragma_max_page_count","x":"max_page_count","s":0},
 {"u":"pragma.html#pragma_mmap_size","x":"mmap_size","s":0},
+{"u":"pragma.html#pragma_optimize","x":"optimize","s":0},
 {"u":"pragma.html#pragma_page_count","x":"page_count","s":0},
 {"u":"pragma.html#pragma_page_size","x":"page_size","s":0},
 {"u":"pragma.html#pragma_parser_trace","x":"parser_trace","s":4},
@@ -422,7 +424,7 @@ for use in application programs.</ol></p>
 
     <p>Query, set, or clear the <a href="optoverview.html#autoindex">automatic indexing</a> capability.
     <p><a href="optoverview.html#autoindex">Automatic indexing</a> is enabled by default as of 
-    <a href="releaselog/3_7_17.html">version 3.7.17</a> (dateof:3.7.17]),
+    <a href="releaselog/3_7_17.html">version 3.7.17</a> (2013-05-20),
     but this might change in future releases of SQLite.
 <a name="pragma_busy_timeout"></a>
 <h _id=pragma_busy_timeout style="display:none"> PRAGMA busy_timeout</h><hr>
@@ -927,7 +929,7 @@ for use in application programs.</ol></p>
     <p>This pragma does an integrity check of the entire database.  The
     integrity_check pragma
     looks for out-of-order records, missing pages, malformed records, missing
-    index entries, and UNIQUE and NOT NULL constraint errors.
+    index entries, and UNIQUE, CHECK, and NOT NULL constraint errors.
     If the integrity_check pragma finds problems, strings are returned
     (as multiple rows with a single column per row) which describe
     the problems.  Pragma integrity_check will return at most <i>N</i>
@@ -1184,6 +1186,79 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        the mmap_size pragma may be a no-op if the prior mmap_size is non-zero
        and there are other SQL statements running concurrently on the same
        <a href="c3ref/sqlite3.html">database connection</a>.</p>
+<a name="pragma_optimize"></a>
+<h _id=pragma_optimize style="display:none"> PRAGMA optimize</h><hr>
+  <p><b>PRAGMA optimize;
+       <br>PRAGMA optimize(</b><i>MASK</i><b>);
+       <br>PRAGMA </b><i>schema</i><b>.optimize;
+       <br>PRAGMA </b><i>schema</i><b>.optimize(</b><i>MASK</i><b>);</b></p>
+  <p>Attempt to optimize the database.  All schemas are optimized in the 
+  first two forms, and only the specified schema is optimized in the latter
+  two.</p>
+  <p>To achieve the best long-term query performance without the need to
+  do a detailed engineering analysis of the application schema and SQL,
+  it is recommended that applications run "PRAGMA optimize" (with no arguments)
+  just before closing each <a href="c3ref/sqlite3.html">database connection</a>.  Long-running applications
+  might also benefit from setting a timer to run "PRAGMA optimize" every
+  few hours.
+  </p>
+  <p>This pragma is usually a no-op or nearly so and is very fast.
+  However if SQLite feels
+  that performing database optimizations (such as running <a href="lang_analyze.html">ANALYZE</a>
+  or creating new indexes) will improve the performance of future queries, then
+  some database I/O may be done.  Applications that want to limit the amount
+  of work performed can set a timer that will invoke
+  <a href="c3ref/interrupt.html">sqlite3_interrupt()</a> if the pragma goes on for too long.
+  </p>
+  <p>The details of optimizations performed by this pragma are expected
+  to change and improve over time.  Applications should anticipate that
+  this pragma will perform new optimizations in future releases.</p>
+
+  <p>The optional MASK argument is a bitmask of optimizations to perform:
+  <ol>
+  <li value='1'><p>
+         Debugging mode.  Do not actually perform any optimizations
+         but instead return one line of text for each optimization
+         that would have been done.  Off by default.
+  <li value='2'><p>
+         Run <a href="lang_analyze.html">ANALYZE</a> on tables that might benefit.  On by default.
+         See below for additional information.
+  <li value='4'><p>
+         <em>(Not yet implemented)</em>
+         Record usage and performance 
+         information from the current session in the
+         database file so that it will be available to "optimize"
+         pragmas run by future database connections.
+  <li value='8'><p>
+         <em>(Not yet implemented)</em>
+         Create indexes that might have been helpful to recent queries.
+  </ol>
+  <p>The default MASK is and always shall be 0xfffe.  The 0xfffe mask means
+  perform all of the optimizations listed above except Debug Mode.  If new
+  optimizations are added in the future that should be off by default, those
+  new optimizations will be given a mask of 0x10000 or larger.</p>
+
+  <p>To see all optimizations that would have been done without actually
+  doing them, run "PRAGMA optimize(-1)".  To use only the ANALYZE
+  optimization, run "PRAGMA optimize(0x02)".</p>
+  
+  <p><b>Determination Of When To Run Analyze</b></p>
+  <p> In the current implementation, a table is analyzed if and only if 
+      all of the following are true:
+  <ul>
+  <li><p>
+    MASK bit 0x02 is set.
+  <li><p>
+    The query planner used <a href="fileformat2.html#stat1tab">sqlite_stat1</a>-style statistics for one or
+    more indexes of the table at some point during the lifetime of
+    the current connection.
+  <li><p>
+    One or more indexes of the table are currently unanalyzed <em>or</em>
+    the number of rows in the table has increased by 25 times or more
+    since the last time ANALYZE was run.
+  </ul>
+  <p> The rules for when tables are analyzed are likely to change in
+      future releases.
 <a name="pragma_page_count"></a>
 <h _id=pragma_page_count style="display:none"> PRAGMA page_count</h><hr>
     <p><b>PRAGMA </b><i>schema.</i><b>page_count;</b></p>
@@ -1243,8 +1318,8 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     <p><b>PRAGMA </b><i>schema.</i><b>quick_check;
       <br>PRAGMA </b><i>schema.</i><b>quick_check(</b><i>N</i><b>)</b></p>
     <p>The pragma is like <a href="pragma.html#pragma_integrity_check">integrity_check</a> except that it does not verify
-    UNIQUE and NOT NULL constraints and does not verify
-    that index content matches table content.  By skipping UNIQUE and NOT NULL
+    UNIQUE constraints and does not verify
+    that index content matches table content.  By skipping UNIQUE
     and index consistency checks, quick_check is able to run much faster than
     integrity_check.  Otherwise the two pragmas are the same.
     </p>
@@ -1477,14 +1552,20 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     With synchronous=FULL in WAL mode, an additional
     sync operation of the WAL file happens after each transaction commit.
     The extra WAL sync following each transaction help ensure that 
-    transactions are durable across a power loss, but they do not aid
-    in preserving consistency.
+    transactions are durable across a power loss.  Transactions are
+    consistent with or without the extra syncs provided by
+    synchronous=FULL.
     If durability is not a concern, then synchronous=NORMAL is normally
     all one needs in WAL mode.</p>
 
     <p>The default setting is usually synchronous=FULL.
     The <a href="compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> compile-time option changes the
     default to synchronous=EXTRA.</p>
+
+    <p>The TEMP schema always has synchronous=OFF since the content of
+    of TEMP is ephemeral and is not expected to survive a power outage.
+    Attempts to change the synchronous setting for TEMP are
+    silently ignored.
 
     <p>See also the <a href="pragma.html#pragma_fullfsync">fullfsync</a> and <a href="pragma.html#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a> pragmas.</p>
 <a name="pragma_table_info"></a>

@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Website Keyword Index</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -93,6 +94,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#abs">abs() SQL function</a> </li>
 <li> <a href="wal.html#advantages">advantages of WAL-mode</a> </li>
 <li> <a href="datatype3.html#affinity">affinity</a> </li>
+<li> <a href="datatype3.html#expraff">Affinity Of Expressions</a> </li>
 <li> <a href="lang_aggfunc.html">Aggregate Functions</a> </li>
 <li> <a href="doclist.html">alphabetical listing of documents</a> </li>
 <li> <a href="lang_altertable.html">ALTER TABLE</a> </li>
@@ -123,6 +125,7 @@ Other Documentation Indexes:
 <li> <a href="undoredo.html">automated undo/redo stack</a> </li>
 <li> <a href="optoverview.html#autoindex">automatic indexing</a> </li>
 <li> <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a> </li>
+<li> <a href="lang_analyze.html#autoanalyze">automatically running ANALYZE</a> </li>
 <li> <a href="fts3.html#*fts4automergecmd">"automerge" command</a> </li>
 <li> <a href="fts5.html#sorting_by_auxiliary_function_results">auxiliary function mapping</a> </li>
 <li> <a href="lang_aggfunc.html#avg">avg() aggregate function</a> </li>
@@ -366,6 +369,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#allow_uri_authority">-DSQLITE_ALLOW_URI_AUTHORITY</a> </li>
 <li> <a href="compile.html#api">-DSQLITE_API</a> </li>
 <li> <a href="compile.html#apicall">-DSQLITE_APICALL</a> </li>
+<li> <a href="compile.html#byteorder">-DSQLITE_BYTEORDER</a> </li>
 <li> <a href="compile.html#callback">-DSQLITE_CALLBACK</a> </li>
 <li> <a href="compile.html#case_sensitive_like">-DSQLITE_CASE_SENSITIVE_LIKE</a> </li>
 <li> <a href="compile.html#cdecl">-DSQLITE_CDECL</a> </li>
@@ -378,9 +382,11 @@ Other Documentation Indexes:
 <li> <a href="compile.html#default_foreign_keys">-DSQLITE_DEFAULT_FOREIGN_KEYS</a> </li>
 <li> <a href="compile.html#default_journal_size_limit">-DSQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</a> </li>
 <li> <a href="compile.html#default_locking_mode">-DSQLITE_DEFAULT_LOCKING_MODE</a> </li>
+<li> <a href="compile.html#default_lookaside">-DSQLITE_DEFAULT_LOOKASIDE</a> </li>
 <li> <a href="compile.html#default_memstatus">-DSQLITE_DEFAULT_MEMSTATUS</a> </li>
 <li> <a href="compile.html#default_mmap_size">-DSQLITE_DEFAULT_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#default_page_size">-DSQLITE_DEFAULT_PAGE_SIZE</a> </li>
+<li> <a href="compile.html#default_pcache_initsz">-DSQLITE_DEFAULT_PCACHE_INITSZ</a> </li>
 <li> <a href="compile.html#default_synchronous">-DSQLITE_DEFAULT_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_wal_autocheckpoint">-DSQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a> </li>
 <li> <a href="compile.html#default_wal_synchronous">-DSQLITE_DEFAULT_WAL_SYNCHRONOUS</a> </li>
@@ -389,6 +395,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#disable_dirsync">-DSQLITE_DISABLE_DIRSYNC</a> </li>
 <li> <a href="compile.html#disable_fts3_unicode">-DSQLITE_DISABLE_FTS3_UNICODE</a> </li>
 <li> <a href="compile.html#disable_fts4_deferred">-DSQLITE_DISABLE_FTS4_DEFERRED</a> </li>
+<li> <a href="compile.html#disable_intrinsic">-DSQLITE_DISABLE_INTRINSIC</a> </li>
 <li> <a href="compile.html#disable_lfs">-DSQLITE_DISABLE_LFS</a> </li>
 <li> <a href="compile.html#enable_8_3_names">-DSQLITE_ENABLE_8_3_NAMES</a> </li>
 <li> <a href="compile.html#enable_api_armor">-DSQLITE_ENABLE_API_ARMOR</a> </li>
@@ -408,6 +415,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_memory_management">-DSQLITE_ENABLE_MEMORY_MANAGEMENT</a> </li>
 <li> <a href="compile.html#enable_memsys3">-DSQLITE_ENABLE_MEMSYS3</a> </li>
 <li> <a href="compile.html#enable_memsys5">-DSQLITE_ENABLE_MEMSYS5</a> </li>
+<li> <a href="compile.html#enable_null_trim">-DSQLITE_ENABLE_NULL_TRIM</a> </li>
 <li> <a href="compile.html#enable_preupdate_hook">-DSQLITE_ENABLE_PREUPDATE_HOOK</a> </li>
 <li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a> </li>
@@ -425,6 +433,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#fts3_max_expr_depth">-DSQLITE_FTS3_MAX_EXPR_DEPTH</a> </li>
 <li> <a href="compile.html#have_isnan">-DSQLITE_HAVE_ISNAN</a> </li>
 <li> <a href="compile.html#like_doesnt_match_blobs">-DSQLITE_LIKE_DOESNT_MATCH_BLOBS</a> </li>
+<li> <a href="compile.html#max_memory">-DSQLITE_MAX_MEMORY</a> </li>
 <li> <a href="compile.html#max_mmap_size">-DSQLITE_MAX_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#max_schema_retry">-DSQLITE_MAX_SCHEMA_RETRY</a> </li>
 <li> <a href="compile.html#max_worker_threads">-DSQLITE_MAX_WORKER_THREADS</a> </li>
@@ -719,6 +728,8 @@ Other Documentation Indexes:
 <li> <a href="json1.html#jins">json_insert SQL function</a> </li>
 <li> <a href="json1.html#jobj">json_object</a> </li>
 <li> <a href="json1.html#jobj">json_object SQL function</a> </li>
+<li> <a href="json1.html#jpatch">json_patch</a> </li>
+<li> <a href="json1.html#jpatch">json_patch SQL function</a> </li>
 <li> <a href="json1.html#jquote">json_quote</a> </li>
 <li> <a href="json1.html#jquote">json_quote SQL function</a> </li>
 <li> <a href="json1.html#jrm">json_remove</a> </li>
@@ -760,6 +771,9 @@ Other Documentation Indexes:
 <li> <a href="lang_datefunc.html#localtime">localtime modifier</a> </li>
 <li> <a href="pragma.html#pragma_locking_mode">locking_mode pragma</a> </li>
 <li> <a href="lts.html">long term support</a> </li>
+<li> <a href="malloc.html#lookaside">lookaside</a> </li>
+<li> <a href="malloc.html#lookaside">lookaside buffer</a> </li>
+<li> <a href="malloc.html#lookaside">lookaside memory</a> </li>
 <li> <a href="malloc.html#lookaside">lookaside memory allocator</a> </li>
 <li> <a href="selfcontained.html">low-dependency</a> </li>
 <li> <a href="lang_corefunc.html#lower">lower() SQL function</a> </li>
@@ -819,6 +833,7 @@ Other Documentation Indexes:
 <li> <a href="opcode.html#codes">opcode definitions</a> </li>
 <li> <a href="opcode.html">opcodes</a> </li>
 <li> <a href="affcase1.html">OpenOffice case study</a> </li>
+<li> <a href="pragma.html#pragma_optimize">optimize pragma</a> </li>
 <li> <a href="fts3.html#*fts4optcmd">"optimize" command</a> </li>
 <li> <a href="optoverview.html">optimizer</a> </li>
 <li> <a href="optoverview.html#or_opt">or optimization</a> </li>
@@ -828,6 +843,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/ordering-term.html">ordering-term syntax diagram</a> </li>
 <li> <a href="lang_with.html#ordinarycte">ordinary common table expressions</a> </li>
 <li> <a href="vfs.html">OS backend</a> </li>
+<li> <a href="testing.html#ossfuzz">OSS Fuzz</a> </li>
 <li> <a href="fileformat2.html#ovflpgs">overflow page</a> </li>
 <li> <a href="c3ref/pcache_methods2.html">page cache</a> </li>
 <li> <a href="pragma.html#pragma_page_count">page_count pragma</a> </li>
@@ -887,6 +903,7 @@ Other Documentation Indexes:
 <li> <a href="pragma.html#pragma_locking_mode">PRAGMA locking_mode</a> </li>
 <li> <a href="pragma.html#pragma_max_page_count">PRAGMA max_page_count</a> </li>
 <li> <a href="pragma.html#pragma_mmap_size">PRAGMA mmap_size</a> </li>
+<li> <a href="pragma.html#pragma_optimize">PRAGMA optimize</a> </li>
 <li> <a href="pragma.html#pragma_page_count">PRAGMA page_count</a> </li>
 <li> <a href="pragma.html#pragma_page_size">PRAGMA page_size</a> </li>
 <li> <a href="pragma.html#pragma_parser_trace">PRAGMA parser_trace</a> </li>
@@ -1003,6 +1020,7 @@ Other Documentation Indexes:
 <li> <a href="datatype3.html#collation">RTRIM collating function</a> </li>
 <li> <a href="lang_corefunc.html#rtrim">rtrim() SQL function</a> </li>
 <li> <a href="datatype3.html#affname">rules for determining column affinity</a> </li>
+<li> <a href="datatype3.html#affview">rules for determining column affinity in VIEWs</a> </li>
 <li> <a href="loadext.html">Run-Time Loadable Extensions</a> </li>
 <li> <a href="lang_savepoint.html">SAVEPOINT</a> </li>
 <li> <a href="syntax/savepoint-stmt.html">savepoint-stmt</a> </li>
@@ -1022,6 +1040,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/select-stmt.html">select-stmt</a> </li>
 <li> <a href="syntax/select-stmt.html">select-stmt syntax diagram</a> </li>
 <li> <a href="selfcontained.html">self-contained</a> </li>
+<li> <a href="cli.html#selftest">.selftest dot-command</a> </li>
 <li> <a href="fileformat2.html#serialtype">serial type</a> </li>
 <li> <a href="series.html">series</a> </li>
 <li> <a href="whentouse.html#serversidedb">server-side database</a> </li>
@@ -1030,6 +1049,7 @@ Other Documentation Indexes:
 <li> <a href="sessionintro.html">session extension</a> </li>
 <li> <a href="session/intro.html">Session Extension C-language Interface</a> </li>
 <li> <a href="session/funclist.html">Session Module C-API function list</a> </li>
+<li> <a href="cli.html#sha3sum">.sha3sum dot-command</a> </li>
 <li> <a href="fts3.html#*shadowtab">shadow tables</a> </li>
 <li> <a href="fts3.html#shadow_tables">shadowtabs</a> </li>
 <li> <a href="sharedcache.html">shared cache</a> </li>
@@ -1288,6 +1308,7 @@ Other Documentation Indexes:
 <li> <a href="session/session.html">sqlite3_session</a> </li>
 <li> <a href="c3ref/set_authorizer.html">sqlite3_set_authorizer</a> </li>
 <li> <a href="c3ref/get_auxdata.html">sqlite3_set_auxdata</a> </li>
+<li> <a href="c3ref/set_last_insert_rowid.html">sqlite3_set_last_insert_rowid</a> </li>
 <li> <a href="c3ref/initialize.html">sqlite3_shutdown</a> </li>
 <li> <a href="c3ref/sleep.html">sqlite3_sleep</a> </li>
 <li> <a href="c3ref/snapshot.html">sqlite3_snapshot</a> </li>
@@ -1418,6 +1439,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort.html">SQLITE_BUSY</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_BUSY_RECOVERY</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_BUSY_SNAPSHOT</a> </li>
+<li> <a href="compile.html#byteorder">SQLITE_BYTEORDER</a> </li>
 <li> <a href="compile.html#callback">SQLITE_CALLBACK</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_CANTOPEN</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_CANTOPEN_CONVPATH</a> </li>
@@ -1518,9 +1540,11 @@ Other Documentation Indexes:
 <li> <a href="compile.html#default_foreign_keys">SQLITE_DEFAULT_FOREIGN_KEYS</a> </li>
 <li> <a href="compile.html#default_journal_size_limit">SQLITE_DEFAULT_JOURNAL_SIZE_LIMIT</a> </li>
 <li> <a href="compile.html#default_locking_mode">SQLITE_DEFAULT_LOCKING_MODE</a> </li>
+<li> <a href="compile.html#default_lookaside">SQLITE_DEFAULT_LOOKASIDE</a> </li>
 <li> <a href="compile.html#default_memstatus">SQLITE_DEFAULT_MEMSTATUS</a> </li>
 <li> <a href="compile.html#default_mmap_size">SQLITE_DEFAULT_MMAP_SIZE</a> </li>
 <li> <a href="compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> </li>
+<li> <a href="compile.html#default_pcache_initsz">SQLITE_DEFAULT_PCACHE_INITSZ</a> </li>
 <li> <a href="compile.html#default_synchronous">SQLITE_DEFAULT_SYNCHRONOUS</a> </li>
 <li> <a href="compile.html#default_wal_autocheckpoint">SQLITE_DEFAULT_WAL_AUTOCHECKPOINT</a> </li>
 <li> <a href="compile.html#default_wal_synchronous">SQLITE_DEFAULT_WAL_SYNCHRONOUS</a> </li>
@@ -1533,6 +1557,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#disable_dirsync">SQLITE_DISABLE_DIRSYNC</a> </li>
 <li> <a href="compile.html#disable_fts3_unicode">SQLITE_DISABLE_FTS3_UNICODE</a> </li>
 <li> <a href="compile.html#disable_fts4_deferred">SQLITE_DISABLE_FTS4_DEFERRED</a> </li>
+<li> <a href="compile.html#disable_intrinsic">SQLITE_DISABLE_INTRINSIC</a> </li>
 <li> <a href="compile.html#disable_lfs">SQLITE_DISABLE_LFS</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_DONE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_DROP_INDEX</a> </li>
@@ -1563,6 +1588,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_memory_management">SQLITE_ENABLE_MEMORY_MANAGEMENT</a> </li>
 <li> <a href="compile.html#enable_memsys3">SQLITE_ENABLE_MEMSYS3</a> </li>
 <li> <a href="compile.html#enable_memsys5">SQLITE_ENABLE_MEMSYS5</a> </li>
+<li> <a href="compile.html#enable_null_trim">SQLITE_ENABLE_NULL_TRIM</a> </li>
 <li> <a href="compile.html#enable_preupdate_hook">SQLITE_ENABLE_PREUPDATE_HOOK</a> </li>
 <li> <a href="compile.html#enable_rbu">SQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a> </li>
@@ -1702,6 +1728,7 @@ Other Documentation Indexes:
 <li> <a href="limits.html#max_function_arg">SQLITE_MAX_FUNCTION_ARG</a> </li>
 <li> <a href="limits.html#max_length">SQLITE_MAX_LENGTH</a> </li>
 <li> <a href="limits.html#max_like_pattern_length">SQLITE_MAX_LIKE_PATTERN_LENGTH</a> </li>
+<li> <a href="compile.html#max_memory">SQLITE_MAX_MEMORY</a> </li>
 <li> <a href="compile.html#max_mmap_size">SQLITE_MAX_MMAP_SIZE</a> </li>
 <li> <a href="limits.html#max_page_count">SQLITE_MAX_PAGE_COUNT</a> </li>
 <li> <a href="compile.html#max_schema_retry">SQLITE_MAX_SCHEMA_RETRY</a> </li>
@@ -2124,6 +2151,8 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_16_0.html">Version 3.16.0</a> </li>
 <li> <a href="releaselog/3_16_1.html">Version 3.16.1</a> </li>
 <li> <a href="releaselog/3_16_2.html">Version 3.16.2</a> </li>
+<li> <a href="releaselog/3_17_0.html">Version 3.17.0</a> </li>
+<li> <a href="releaselog/3_18_0.html">Version 3.18.0</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>

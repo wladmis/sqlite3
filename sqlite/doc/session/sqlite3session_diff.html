@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
 <title>Load The Difference Between Tables Into A Session </title>
+<!-- path=../ -->
 </head>
 <body>
 <div class=nosearch>
@@ -38,7 +39,7 @@ Small. Fast. Reliable.<br>Choose any three.
 </ul>
 </div>
 <div class="searchmenu" id="searchmenu">
-<form method="GET" action="search">
+<form method="GET" action="../search">
 <span class="desktoponly">Search for:</span> <input type="text" name="q">
 <input type="submit" value="Go">
 </form>
@@ -117,7 +118,8 @@ the from-table, an INSERT record is added to the session object.</p>
 the from-table, a DELETE record is added to the session object.</p>
 
 <p><li> For each row (primary key) that exists in both tables, but features
-different in each, an UPDATE record is added to the session.
+different non-PK values in each, an UPDATE record is added to the
+session.
 </ul></p>
 
 <p>To clarify, if this function is called and then a changeset constructed

@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>Write-Ahead Logging</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -278,7 +279,7 @@ it got and will resume transferring content from the WAL to the database
 from where it left off on the next invocation.</p>
 
 <p>Thus a long-running read transaction can prevent a checkpointer from
-making progress.  But presumably every read transactions will eventually
+making progress.  But presumably every read transaction will eventually
 end and the checkpointer will be able to continue.</p>
 
 <p>Whenever a write operation occurs, the writer checks how much progress

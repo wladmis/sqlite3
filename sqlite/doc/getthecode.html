@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>How To Download Canonical SQLite Source Code</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -155,15 +156,27 @@ Then click on either the "Tarball" link or the
 
 <p>To clone the entire history of SQLite, first go to the
 <a href="http://www.fossil-scm.org/download.html">http://www.fossil-scm.org/download.html</a> page and grab a precompiled binary
-for the Fossil version control program.  (Or get the source code on the
-same page and compile it yourself.)  Fossil is a completely stand-alone
+for the Fossil version control program.  Or get the source code on the
+same page and compile it yourself.
+
+</p><p>As of 2017-03-12, you must use Fossil version
+2.0 or later for the following instructions to work.  
+The SQLite repository started using
+artifacts named using SHA3 hashes instead of SHA1 hashes on that date,
+and Fossil 2.0 or later is needed in order to understand the new SHA3
+hashes.  To find out what version of Fossil you are running, 
+type "fossil -v".</p>
+
+<p>Fossil is a completely stand-alone
 program, so install it simply by putting the "fossil" or "fossil.exe"
-executable someplace on your $PATH or %PATH%.  Then enter:
+executable someplace on your $PATH or %PATH%.  After you have Fossil
+installed, do this:
 
 </p><div class="codeblock"><pre>fossil clone http://www.sqlite.org/cgi/src sqlite.fossil
 </pre></div>
 
-<p>That command will make a copy of the complete development history of
+<p>The command above
+will make a copy of the complete development history of
 SQLite into the "sqlite.fossil" file on your computer.  Making this copy
 takes about a minute and uses about 32 megabytes of transfer.  After
 making the copy, "open" the repository by typing:

@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
 <title>SQLite FTS3 and FTS4 Extensions</title>
+<!-- path= -->
 </head>
 <body>
 <div class=nosearch>
@@ -451,7 +452,7 @@ CREATE VIRTUAL TABLE mail USING fts3(subject, body);
 SELECT * FROM mail WHERE rowid = 15;                <i>-- Fast. Rowid lookup.</i>
 SELECT * FROM mail WHERE body MATCH 'sqlite';       <i>-- Fast. Full-text query.</i>
 SELECT * FROM mail WHERE mail MATCH 'search';       <i>-- Fast. Full-text query.</i>
-SELECT * FROM mail WHERE rowid BETWEEN 15 AND 20;   <i>-- Slow. Linear scan.</i>
+SELECT * FROM mail WHERE rowid BETWEEN 15 AND 20;   <i>-- Fast. Rowid lookup.</i>
 SELECT * FROM mail WHERE subject = 'database';      <i>-- Slow. Linear scan.</i>
 SELECT * FROM mail WHERE subject MATCH 'database';  <i>-- Fast. Full-text query.</i>
 </pre></div>

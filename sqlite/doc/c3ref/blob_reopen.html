@@ -4,6 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
 <title>Move a BLOB Handle to a New Row</title>
+<!-- path=../ -->
 </head>
 <body>
 <div class=nosearch>
@@ -38,7 +39,7 @@ Small. Fast. Reliable.<br>Choose any three.
 </ul>
 </div>
 <div class="searchmenu" id="searchmenu">
-<form method="GET" action="search">
+<form method="GET" action="../search">
 <span class="desktoponly">Search for:</span> <input type="text" name="q">
 <input type="submit" value="Go">
 </form>
@@ -84,11 +85,11 @@ return false;
 int sqlite3_blob_reopen(sqlite3_blob *, sqlite3_int64);
 </pre></blockquote>
 <p>
-This function is used to move an existing blob handle so that it points
+This function is used to move an existing <a href="../c3ref/blob.html">BLOB handle</a> so that it points
 to a different row of the same database table. The new row is identified
 by the rowid value passed as the second argument. Only the row can be
 changed. The database, table and column on which the blob handle is open
-remain the same. Moving an existing blob handle to a new row can be
+remain the same. Moving an existing <a href="../c3ref/blob.html">BLOB handle</a> to a new row is
 faster than closing the existing handle and opening a new one.</p>
 
 <p>The new row must meet the same criteria as for <a href="../c3ref/blob_open.html">sqlite3_blob_open()</a> -
