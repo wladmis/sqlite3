@@ -243,6 +243,9 @@ techniques described there work fine for the json1 module.
 The json1 source code is included with the SQLite <a href="amalgamation.html">amalgamation</a>, though
 it is disabled by default.  Add the <a href="compile.html#enable_json1">-DSQLITE_ENABLE_JSON1</a> compile-time
 option to enable the json1 extension that is built into the <a href="amalgamation.html">amalgamation</a>.
+The standard makefiles include -DSQLITE_ENABLE_JSON1 when building the
+<a href="cli.html">command-line shell</a> and some of the test utilities so this extension is
+normally available in the <a href="cli.html">command-line shell</a>.
 
 </p><h1 id="interface_overview"><span>3. </span>Interface Overview</h1>
 
@@ -358,6 +361,14 @@ The json1 extension uses the <a href="c3ref/value_subtype.html">sqlite3_value_su
 SQLite version 3.9.0 (2015-10-14)
 The json1 extension will not work
 in earlier versions of SQLite.
+
+</p><p>
+The current implementation of this JSON library uses a recursive descent
+parser.  In order to avoid using excess stack space, any JSON input that has
+more than 2000 levels of nesting is considered invalid.   Limits on nesting
+depth are allowed for compatible implementations of JSON by
+<a href="https://tools.ietf.org/html/rfc7159#section-9">RFC-7159 section 9</a>.
+
 
 </p><h1 id="function_details"><span>4. </span>Function Details</h1>
 

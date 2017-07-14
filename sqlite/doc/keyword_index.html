@@ -90,6 +90,7 @@ Other Documentation Indexes:
 </var>
 
 <ul class='lessindent'>
+<li> <a href="fasterthanfs.html">35% Faster Than The Filesystem</a> </li>
 <li> <a href="np1queryprob.html">about 200 SQL statements per webpage</a> </li>
 <li> <a href="lang_corefunc.html#abs">abs() SQL function</a> </li>
 <li> <a href="wal.html#advantages">advantages of WAL-mode</a> </li>
@@ -118,6 +119,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/attach-stmt.html">attach-stmt</a> </li>
 <li> <a href="syntax/attach-stmt.html">attach-stmt syntax diagram</a> </li>
 <li> <a href="lang_attach.html">attached</a> </li>
+<li> <a href="c3ref/set_authorizer.html">authorizer callback</a> </li>
 <li> <a href="tclsqlite.html#authorizer">authorizer method</a> </li>
 <li> <a href="pragma.html#pragma_auto_vacuum">auto_vacuum pragma</a> </li>
 <li> <a href="c3ref/get_autocommit.html">autocommit mode</a> </li>
@@ -551,6 +553,7 @@ Other Documentation Indexes:
 <li> <a href="fts3.html#_external_content_fts4_tables_">external content fts4 tables</a> </li>
 <li> <a href="syntax/factored-select-stmt.html">factored-select-stmt</a> </li>
 <li> <a href="syntax/factored-select-stmt.html">factored-select-stmt syntax diagram</a> </li>
+<li> <a href="fasterthanfs.html">faster than the filesystem</a> </li>
 <li> <a href="c3ref/c_fcntl_busyhandler.html">file control opcode</a> </li>
 <li> <a href="fileformat2.html">file format</a> </li>
 <li> <a href="fileio.html">file I/O</a> </li>
@@ -600,7 +603,9 @@ Other Documentation Indexes:
 <li> <a href="fts5.html#the_automerge_configuration_option">FTS5 automerge option</a> </li>
 <li> <a href="fts5.html#_auxiliary_functions_">FTS5 auxiliary functions</a> </li>
 <li> <a href="fts5.html#the_bm25_function">FTS5 bm25</a> </li>
+<li> <a href="fts5.html#fts5_boolean_operators">FTS5 boolean operators</a> </li>
 <li> <a href="fts5.html#compiling_and_using_fts5">FTS5 building</a> </li>
+<li> <a href="fts5.html#fts5_column_filters">FTS5 column filters</a> </li>
 <li> <a href="fts5.html#the_columnsize_option">FTS5 columnsize option</a> </li>
 <li> <a href="fts5.html#external_content_and_contentless_tables">FTS5 content option</a> </li>
 <li> <a href="fts5.html#contentless_tables">FTS5 contentless tables</a> </li>
@@ -612,13 +617,17 @@ Other Documentation Indexes:
 <li> <a href="fts5.html#external_content_tables">FTS5 external content tables</a> </li>
 <li> <a href="fts5.html#the_highlight_function">FTS5 highlight</a> </li>
 <li> <a href="fts5.html#the_merge_command">FTS5 merge command</a> </li>
+<li> <a href="fts5.html#fts5_near_queries">FTS5 NEAR queries</a> </li>
 <li> <a href="fts5.html#the_optimize_command">FTS5 optimize command</a> </li>
 <li> <a href="fts5.html#the_pgsz_configuration_option">FTS5 pgsz option</a> </li>
+<li> <a href="fts5.html#fts5_phrases">FTS5 Phrases</a> </li>
 <li> <a href="fts5.html#prefix_indexes">FTS5 prefix indexes</a> </li>
+<li> <a href="fts5.html#fts5_prefix_queries">FTS5 prefix queries</a> </li>
 <li> <a href="fts5.html#full_text_query_syntax">FTS5 query syntax</a> </li>
 <li> <a href="fts5.html#the_rank_configuration_option">FTS5 rank configuration option</a> </li>
 <li> <a href="fts5.html#the_rebuild_command">FTS5 rebuild command</a> </li>
 <li> <a href="fts5.html#the_snippet_function">FTS5 snippet</a> </li>
+<li> <a href="fts5.html#fts5_strings">FTS5 Strings</a> </li>
 <li> <a href="fts5.html#_summary_of_technical_differences_">fts5 technical differences</a> </li>
 <li> <a href="fts5.html#tokenizers">FTS5 tokenizers</a> </li>
 <li> <a href="fts5.html#the_usermerge_configuration_option">FTS5 usermerge option</a> </li>
@@ -862,6 +871,8 @@ Other Documentation Indexes:
 <li> <a href="loadext.html#persist">persistent loadable extensions</a> </li>
 <li> <a href="fts3.html#phrase">phrase queries</a> </li>
 <li> <a href="custombuild.html">porting SQLite</a> </li>
+<li> <a href="transactional.html">power-safe</a> </li>
+<li> <a href="transactional.html">power-safe transactions</a> </li>
 <li> <a href="psow.html">powersafe overwrite</a> </li>
 <li> <a href="pragma.html#syntax">PRAGMA</a> </li>
 <li> <a href="pragma.html#pragma_application_id">PRAGMA application_id</a> </li>
@@ -1972,6 +1983,7 @@ Other Documentation Indexes:
 <li> <a href="datatype3.html#storageclasses">storage class</a> </li>
 <li> <a href="queryplanner.html#searching">strategies</a> </li>
 <li> <a href="lang_datefunc.html">strftime() SQL function</a> </li>
+<li> <a href="opcode.html#subprog">subprograms</a> </li>
 <li> <a href="lang_expr.html#subq">Subqueries</a> </li>
 <li> <a href="lang_corefunc.html#substr">substr() SQL function</a> </li>
 <li> <a href="lang_aggfunc.html#sumunc">sum() aggregate function</a> </li>
@@ -2015,6 +2027,7 @@ Other Documentation Indexes:
 <li> <a href="tclsqlite.html#total_changes">TCL interface total_changes method</a> </li>
 <li> <a href="tclsqlite.html#trace">TCL interface trace method</a> </li>
 <li> <a href="tclsqlite.html#transaction">TCL interface transaction method</a> </li>
+<li> <a href="tclsqlite.html#unlock_notify">TCL interface unlock_notify method</a> </li>
 <li> <a href="tclsqlite.html#update_hook">TCL interface update_hook method</a> </li>
 <li> <a href="tclsqlite.html#version">TCL interface version method</a> </li>
 <li> <a href="tclsqlite.html#wal_hook">TCL interface wal_hook method</a> </li>
@@ -2063,6 +2076,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#total_changes">total_changes() SQL function</a> </li>
 <li> <a href="tclsqlite.html#trace">trace method</a> </li>
 <li> <a href="tclsqlite.html#transaction">transaction method</a> </li>
+<li> <a href="transactional.html">transactional</a> </li>
 <li> <a href="lang_select.html#crossjoin">treats the CROSS JOIN operator specially</a> </li>
 <li> <a href="lang_corefunc.html#trim">trim() SQL function</a> </li>
 <li> <a href="lang_delete.html#truncateopt">truncate optimization</a> </li>
@@ -2082,6 +2096,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#unlikely">unlikely() SQL function</a> </li>
 <li> <a href="howtocorrupt.html#unlink">unlink corruption</a> </li>
 <li> <a href="howtocorrupt.html#unlink">unlinked database files</a> </li>
+<li> <a href="tclsqlite.html#unlock_notify">unlock_notify method</a> </li>
 <li> <a href="c3ref/value.html">unprotected sqlite3_value</a> </li>
 <li> <a href="lang_update.html">UPDATE</a> </li>
 <li> <a href="syntax/update-stmt.html">update-stmt</a> </li>
@@ -2153,6 +2168,10 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_16_2.html">Version 3.16.2</a> </li>
 <li> <a href="releaselog/3_17_0.html">Version 3.17.0</a> </li>
 <li> <a href="releaselog/3_18_0.html">Version 3.18.0</a> </li>
+<li> <a href="releaselog/3_19_0.html">Version 3.19.0</a> </li>
+<li> <a href="releaselog/3_19_1.html">Version 3.19.1</a> </li>
+<li> <a href="releaselog/3_19_2.html">Version 3.19.2</a> </li>
+<li> <a href="releaselog/3_19_3.html">Version 3.19.3</a> </li>
 <li> <a href="releaselog/3_2_0.html">Version 3.2.0</a> </li>
 <li> <a href="releaselog/3_2_1.html">Version 3.2.1</a> </li>
 <li> <a href="releaselog/3_2_2.html">Version 3.2.2</a> </li>

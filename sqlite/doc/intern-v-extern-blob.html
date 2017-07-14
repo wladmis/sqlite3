@@ -101,6 +101,13 @@ of BLOBs varied in order to keep the total BLOB content at about 100MB.
 so forth.)  SQLite <a href="releaselog/3_7_8.html">version 3.7.8</a> (2011-09-19) was used.
 </p>
 
+<blockquote><i>
+Update: New measurements for SQLite version 3.19.0
+(2017-05-22) show that SQLite is about 
+<a href="fasterthanfs.html">35% faster</a> than direct disk I/O for 
+both reads and writes of 10KB blobs.
+</i></blockquote>
+
 <p>
 The matrix below shows the time needed to read BLOBs stored in separate files
 divided by the time needed to read BLOBs stored entirely in the database.  

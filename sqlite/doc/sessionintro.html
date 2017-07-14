@@ -252,7 +252,7 @@ patchset and a changeset are that:
 
 <h2 id="conflicts"><span>2.2. </span>Conflicts</h2>
 
-<p> When a changset or patchset is applied to a database, an attempt is 
+<p> When a changeset or patchset is applied to a database, an attempt is 
 made to insert a new row for each INSERT change, remove a row for each
 DELETE change and modify a row for each UPDATE change. If the target 
 database is in the same state as the original database that the changeset
@@ -394,12 +394,14 @@ changeset while executing SQL commands. In summary:
        </p><p> It is not necessary to delete a session object after extracting
            a changeset or patchset from it. It can be left attached to the
            database handle and will continue monitoring for changes on the
-           configured tables as before. However, not that if 
+           configured tables as before. However, if 
            <a href="session/sqlite3session_changeset.html">sqlite3session_changeset()</a> or <a href="session/sqlite3session_patchset.html">sqlite3session_patchset()</a> is
-           called a second time on a session ojbect the changeset or patchset
-           still reflects all changes that have taken place on the connection
-           since the session was created. A session object is not reset or
-           zeroed by a call to sqlite3session_changeset() or patchset().
+           called a second time on a session object, the changeset or patchset
+           will contain <em>all</em> changes that have taken place on the connection
+           since the session was created. In other words,
+           a session object is not reset or
+           zeroed by a call to sqlite3session_changeset() or
+           sqlite3session_patchset().
 </p></li></ol>
 
 <div class="codeblock"><pre><i>/*

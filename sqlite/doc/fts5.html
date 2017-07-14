@@ -91,6 +91,12 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#building_fts5_as_part_of_sqlite">2.1. Building FTS5 as part of SQLite</a></div>
 <div class="fancy-toc2"><a href="#building_a_loadable_extension">2.2. Building a Loadable Extension</a></div>
 <div class="fancy-toc1"><a href="#full_text_query_syntax">3. Full-text Query Syntax</a></div>
+<div class="fancy-toc2"><a href="#fts5_strings">3.1. FTS5 Strings</a></div>
+<div class="fancy-toc2"><a href="#fts5_phrases">3.2. FTS5 Phrases</a></div>
+<div class="fancy-toc2"><a href="#fts5_prefix_queries">3.3. FTS5 Prefix Queries</a></div>
+<div class="fancy-toc2"><a href="#fts5_near_queries">3.4. FTS5 NEAR Queries</a></div>
+<div class="fancy-toc2"><a href="#fts5_column_filters">3.5. FTS5 Column Filters</a></div>
+<div class="fancy-toc2"><a href="#fts5_boolean_operators">3.6. FTS5 Boolean Operators</a></div>
 <div class="fancy-toc1"><a href="#fts5_table_creation_and_initialization">4. FTS5 Table Creation and Initialization</a></div>
 <div class="fancy-toc2"><a href="#the_unindexed_column_option">4.1. The UNINDEXED column option</a></div>
 <div class="fancy-toc2"><a href="#prefix_indexes">4.2. Prefix Indexes</a></div>
@@ -203,7 +209,8 @@ the contents of an FTS5 table:
 </li></ul>
 
 <p>If using the MATCH or = operators, the expression to the left of the MATCH
-   operator must be the name of the FTS5 table. The expression on the right
+   operator is usually the name of the FTS5 table (the exception is when 
+   <a href="fts5.html#fts5_column_filters">specifying a column-filter</a>). The expression on the right
    must be a text value specifying the term to search for. For the table-valued
    function syntax, the term to search for is specified as the first table argument.
    For example:
@@ -327,7 +334,7 @@ A detailed explanation follows.
 &lt;neargroup&gt; := NEAR ( &lt;phrase&gt; &lt;phrase&gt; ... &#91;, N] )
 &lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;phrase&gt;
 &lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;neargroup&gt;
-&lt;query&gt;     := ( &lt;query&gt; )
+&lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] ( &lt;query&gt; )
 &lt;query&gt;     := &lt;query&gt; AND &lt;query&gt;
 &lt;query&gt;     := &lt;query&gt; OR &lt;query&gt;
 &lt;query&gt;     := &lt;query&gt; NOT &lt;query&gt;
@@ -335,6 +342,8 @@ A detailed explanation follows.
 &lt;colspec&gt;   := { colname1 colname2 ... }
 </pre></div>
 
+<a name="fts5_strings"></a>
+<h2 tags="FTS5 Strings" id="fts5_strings"><span>3.1. </span>FTS5 Strings</h2>
 <p>
 Within an FTS expression a <b>string</b> may be specified in one of two ways:
 
@@ -365,6 +374,8 @@ Within an FTS expression a <b>string</b> may be specified in one of two ways:
        string may be interpreted differently by some future version of FTS5.
 </li></ul>
 
+<a name="fts5_phrases"></a>
+<h2 tags="FTS5 Phrases" id="fts5_phrases"><span>3.2. </span>FTS5 Phrases</h2>
 <p>
 FTS queries are made up of <b>phrases</b>. A phrase is an ordered list of 
 one or more tokens. A string is transformed into a phrase by passing it to
@@ -383,7 +394,9 @@ tokens, the following three queries all specify the same phrase:
 A phrase matches a document if the document contains at least one sub-sequence
 of tokens that matches the sequence of tokens that make up the phrase.
 
-</p><p>
+</p><a name="fts5_prefix_queries"></a>
+<h2 tags="FTS5 prefix queries" id="fts5_prefix_queries"><span>3.3. </span>FTS5 Prefix Queries</h2>
+<p>
 If a "*" character follows a string within an FTS expression, then the final
 token extracted from the string is marked as a <b>prefix token</b>. As you
 might expect, a prefix token matches any document token of which it is a 
@@ -402,7 +415,10 @@ which will likely discard it (or perhaps, depending on the specific tokenizer
 in use, include it as part of the final token) instead of recognizing it as
 a special FTS character.
 
-</p><p>Two or more phrases may be grouped into a <b>NEAR group</b>. A NEAR group
+</p><a name="fts5_near_queries"></a>
+<h2 tags="FTS5 NEAR queries" id="fts5_near_queries"><span>3.4. </span>FTS5 NEAR Queries</h2>
+
+<p>Two or more phrases may be grouped into a <b>NEAR group</b>. A NEAR group
 is specified by the token "NEAR" (case sensitive) followed by an open
 parenthesis character, followed by two or more whitespace separated phrases, optionally followed by a comma and the numeric parameter <i>N</i>, followed by
 a close parenthesis. For example:
@@ -439,6 +455,8 @@ INSERT INTO f(rowid, x) VALUES(1, 'A B C D x x x E F x');
 ... MATCH 'NEAR("a b c d" "b c" "e f", 3)';    <i>-- Does not match!</i>
 </pre></div>
 
+<a name="fts5_column_filters"></a>
+<h2 tags="FTS5 column filters" id="fts5_column_filters"><span>3.5. </span>FTS5 Column Filters</h2>
 
 <p>
 A single phrase or NEAR group may be restricted to matching text within a
@@ -468,6 +486,37 @@ it is interpreted as a list of column not to match against. For example:
 <i>-- Search for matches in all columns except "col1", "col2" and "col3"</i>
 ... MATCH '- {col2 col1 col3} : one + two + three'
 </pre></div>
+
+<p>
+Column filter specifications may also be applied to arbitrary expressions
+enclosed in parenthesis. In this case the column filter applies to all 
+phrases within the expression. Nested column filter operations may only 
+further restrict the subset of columns matched, they can not be used to 
+re-enable filtered columns. For example:
+
+</p><div class="codeblock"><pre><i>-- The following are equivalent:</i>
+... MATCH '{a b} : ( {b c} : "hello" AND "world" )'
+... MATCH '(b : "hello") AND ({a b} : "world")'
+</pre></div>
+
+<p>
+Finally, a column filter for a single column may be specified by using
+the column name as the LHS of a MATCH operator (instead of the usual
+table name). For example:
+
+</p><div class="codeblock"><pre><i>-- Given the following table</i>
+CREATE VIRTUAL TABLE ft USING fts5(a, b, c);
+
+<i>-- The following are equivalent</i>
+SELECT * FROM ft WHERE b MATCH 'uvw AND xyz';
+SELECT * FROM ft WHERE ft MATCH 'b : (uvw AND xyz)';
+
+<i>-- This query cannot match any rows (since all columns are filtered out): </i>
+SELECT * FROM ft WHERE b MATCH 'a : xyz';
+</pre></div>
+
+<a name="fts5_boolean_operators"></a>
+<h2 tags="FTS5 boolean operators" id="fts5_boolean_operators"><span>3.6. </span>FTS5 Boolean Operators</h2>
 
 <p>
 Phrases and NEAR groups may be arranged into expressions using <b>boolean
@@ -2381,8 +2430,16 @@ CREATE VIRTUAL TABLE t1 USING fts5(
   <li> <p>The "docid" alias does not exist. Applications must use "rowid"
           instead.
 
-  </p></li><li> <p>The left hand side of the MATCH operator in a full-text query must be
-          the table name - not any column name as in FTS4.
+  </p></li><li> <p>The behaviour of queries when a column-filter is specified both as
+          part of the FTS query and by using a column as the LHS of a MATCH
+          operator is slightly different. For a table with columns "a" and "b"
+          and a query similar to:
+</p><div class="codeblock"><pre>... a MATCH 'b: string'
+</pre></div>
+       <p>FTS3/4 searches for matches in column "b". However, FTS5 always
+          returns zero rows, as results are first filtered for column "b", then
+          for column "a", leaving no results. In other words, in FTS3/4 the
+          inner filter overrides the outer, in FTS5 both filters are applied.
 
   </p></li><li> <p>The FTS query syntax (right hand side of the MATCH operator) has
           changed in some ways. The FTS5 syntax is quite close to the FTS4
@@ -2391,13 +2448,6 @@ CREATE VIRTUAL TABLE t1 USING fts5(
           strings. Most queries that work with FTS3/4 should also work with
           FTS5, and those that do not should return parse errors.
 </p></li></ol>
-
-<div class="codeblock"><pre><i>-- FTS3/4 query </i>
-SELECT docid FROM t1 WHERE text MATCH 'token';
-
-<i>-- FTS5 equivalent </i>
-SELECT rowid FROM t1 WHERE t1 MATCH 'text:token';
-</pre></div>
 
 <h3 nonumber="1" id="_auxiliary_function_changes_"> Auxiliary Function Changes </h3>
 

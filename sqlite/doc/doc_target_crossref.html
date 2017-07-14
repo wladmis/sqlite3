@@ -337,7 +337,7 @@ return false;
 <li><a href="c3ref/reset_auto_extension.html">c3ref/reset_auto_extension.html</a> &rarr; sqlite3_reset_auto_extension</li>
 <li><a href="c3ref/result_blob.html">c3ref/result_blob.html</a> &rarr; sqlite3_result_blob sqlite3_result_blob64 sqlite3_result_double sqlite3_result_error sqlite3_result_error16 sqlite3_result_error_code sqlite3_result_error_nomem sqlite3_result_error_toobig sqlite3_result_int sqlite3_result_int64 sqlite3_result_null sqlite3_result_text sqlite3_result_text16 sqlite3_result_text16be sqlite3_result_text16le sqlite3_result_text64 sqlite3_result_value sqlite3_result_zeroblob sqlite3_result_zeroblob64</li>
 <li><a href="c3ref/result_subtype.html">c3ref/result_subtype.html</a> &rarr; sqlite3_result_subtype</li>
-<li><a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a> &rarr; sqlite3_set_authorizer</li>
+<li><a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a> &rarr; {authorizer callback} sqlite3_set_authorizer</li>
 <li><a href="c3ref/set_last_insert_rowid.html">c3ref/set_last_insert_rowid.html</a> &rarr; sqlite3_set_last_insert_rowid</li>
 <li><a href="c3ref/sleep.html">c3ref/sleep.html</a> &rarr; sqlite3_sleep</li>
 <li><a href="c3ref/snapshot.html">c3ref/snapshot.html</a> &rarr; snapshot sqlite3_snapshot</li>
@@ -597,6 +597,7 @@ return false;
 <li><a href="eqp.html">eqp.html</a> &rarr; {EXPLAIN QUERY PLAN} {explain query plan}</li>
 <li><a href="errlog.html">errlog.html</a> &rarr; errlog {error log}</li>
 <li><a href="expridx.html">expridx.html</a> &rarr; {Indexes On Expressions} {expression index} {indexes on expressions}</li>
+<li><a href="fasterthanfs.html">fasterthanfs.html</a> &rarr; {35 Faster Than The Filesystem} {faster than the filesystem}</li>
 <li><a href="fileformat2.html">fileformat2.html</a> &rarr; {file format} {second edition file format document}</li>
 <li><a href="fileformat2.html#appid">fileformat2.html#appid</a> &rarr; {Application ID}</li>
 <li><a href="fileformat2.html#btree">fileformat2.html#btree</a> &rarr; B-Trees B-tree</li>
@@ -694,6 +695,12 @@ return false;
 <li><a href="fts5.html#extending_fts5">fts5.html#extending_fts5</a> &rarr; {Extending FTS5}</li>
 <li><a href="fts5.html#external_content_and_contentless_tables">fts5.html#external_content_and_contentless_tables</a> &rarr; {FTS5 content option}</li>
 <li><a href="fts5.html#external_content_tables">fts5.html#external_content_tables</a> &rarr; {FTS5 external content tables}</li>
+<li><a href="fts5.html#fts5_boolean_operators">fts5.html#fts5_boolean_operators</a> &rarr; {FTS5 boolean operators}</li>
+<li><a href="fts5.html#fts5_column_filters">fts5.html#fts5_column_filters</a> &rarr; {FTS5 column filters}</li>
+<li><a href="fts5.html#fts5_near_queries">fts5.html#fts5_near_queries</a> &rarr; {FTS5 NEAR queries}</li>
+<li><a href="fts5.html#fts5_phrases">fts5.html#fts5_phrases</a> &rarr; {FTS5 Phrases}</li>
+<li><a href="fts5.html#fts5_prefix_queries">fts5.html#fts5_prefix_queries</a> &rarr; {FTS5 prefix queries}</li>
+<li><a href="fts5.html#fts5_strings">fts5.html#fts5_strings</a> &rarr; {FTS5 Strings}</li>
 <li><a href="fts5.html#fts5_table_creation_and_initialization">fts5.html#fts5_table_creation_and_initialization</a> &rarr; {FTS5 CREATE TABLE Options}</li>
 <li><a href="fts5.html#full_text_query_syntax">fts5.html#full_text_query_syntax</a> &rarr; {FTS5 query syntax}</li>
 <li><a href="fts5.html#prefix_indexes">fts5.html#prefix_indexes</a> &rarr; {FTS5 prefix indexes}</li>
@@ -932,6 +939,7 @@ return false;
 <li><a href="np1queryprob.html">np1queryprob.html</a> &rarr; {about 200 SQL statements per webpage}</li>
 <li><a href="opcode.html">opcode.html</a> &rarr; VDBE bytecode {bytecode engine} bytecodes opcodes {virtual machine} {virtual machine instructions}</li>
 <li><a href="opcode.html#codes">opcode.html#codes</a> &rarr; {list of current bytecodes} {opcode definitions}</li>
+<li><a href="opcode.html#subprog">opcode.html#subprog</a> &rarr; subprograms</li>
 <li><a href="optoverview.html">optoverview.html</a> &rarr; {SQLite query planner} optimizer {query planner}</li>
 <li><a href="optoverview.html#autoindex">optoverview.html#autoindex</a> &rarr; {Automatic indexing} {automatic indexing}</li>
 <li><a href="optoverview.html#crossjoin">optoverview.html#crossjoin</a> &rarr; {CROSS JOIN} {Manual Control Of Query Plans Using CROSS JOIN}</li>
@@ -1066,6 +1074,10 @@ return false;
 <li><a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a> &rarr; {Version 3.16.2} {version 3.16.2}</li>
 <li><a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a> &rarr; {Version 3.17.0} {version 3.17.0}</li>
 <li><a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a> &rarr; {Version 3.18.0} {version 3.18.0}</li>
+<li><a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a> &rarr; {Version 3.19.0} {version 3.19.0}</li>
+<li><a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a> &rarr; {Version 3.19.1} {version 3.19.1}</li>
+<li><a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a> &rarr; {Version 3.19.2} {version 3.19.2}</li>
+<li><a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a> &rarr; {Version 3.19.3} {version 3.19.3}</li>
 <li><a href="releaselog/3_1_0.html">releaselog/3_1_0.html</a> &rarr; {Version 3.1.0} {version 3.1.0}</li>
 <li><a href="releaselog/3_1_1.html">releaselog/3_1_1.html</a> &rarr; {Version 3.1.1} {version 3.1.1}</li>
 <li><a href="releaselog/3_1_2.html">releaselog/3_1_2.html</a> &rarr; {Version 3.1.2} {version 3.1.2}</li>
@@ -1438,6 +1450,7 @@ return false;
 <li><a href="tclsqlite.html#total_changes">tclsqlite.html#total_changes</a> &rarr; {TCL interface total_changes method} {total_changes method}</li>
 <li><a href="tclsqlite.html#trace">tclsqlite.html#trace</a> &rarr; {TCL interface trace method} {trace method}</li>
 <li><a href="tclsqlite.html#transaction">tclsqlite.html#transaction</a> &rarr; {TCL interface transaction method} {transaction method}</li>
+<li><a href="tclsqlite.html#unlock_notify">tclsqlite.html#unlock_notify</a> &rarr; {TCL interface unlock_notify method} {unlock_notify method}</li>
 <li><a href="tclsqlite.html#update_hook">tclsqlite.html#update_hook</a> &rarr; {TCL interface update_hook method} {update_hook method}</li>
 <li><a href="tclsqlite.html#varsubst">tclsqlite.html#varsubst</a> &rarr; {TCL variable substitution}</li>
 <li><a href="tclsqlite.html#version">tclsqlite.html#version</a> &rarr; {TCL interface version method} {version method}</li>
@@ -1461,6 +1474,7 @@ return false;
 <li><a href="th3.html">th3.html</a> &rarr; TH3</li>
 <li><a href="th3.html#muttest">th3.html#muttest</a> &rarr; {mutation test script}</li>
 <li><a href="threadsafe.html">threadsafe.html</a> &rarr; {threading mode}</li>
+<li><a href="transactional.html">transactional.html</a> &rarr; power-safe {power-safe transactions} transactional</li>
 <li><a href="undoredo.html">undoredo.html</a> &rarr; {automated undo/redo stack} undo/redo undoredo</li>
 <li><a href="unlock_notify.html">unlock_notify.html</a> &rarr; {Using the SQLite Unlock Notification Feature}</li>
 <li><a href="uri.html">uri.html</a> &rarr; URI {URI filename} {URI filenames} {Uniform Resource Identifier}</li>

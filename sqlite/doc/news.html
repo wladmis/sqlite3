@@ -80,7 +80,60 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2017_02_13"></a><h3>2017-02-13 - Release 3.17.0</h3><blockquote>
+<a name="2017_06_08"></a><h3>2017-06-08 - Release 3.19.3</h3><blockquote>
+<a href="releaselog/3_19_3.html">Version 3.19.3</a> is an emergency patch release to fix a 
+<a href="https://sqlite.org/src/info/fda22108">bug</a> in 
+<a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> logic that can lead to database corruption.
+The bug was introduced in <a href="releaselog/3_16_0.html">version 3.16.0</a> 
+(2017-01-02).  Though the bug is obscure and rarely
+encountered, upgrading is recommended for all users, and
+especially for users who turn on <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a>.
+</blockquote><hr width="50%"><a name="2017_05_25"></a><h3>2017-05-25 - Release 3.19.2</h3><blockquote>
+Still more problems have been found in the LEFT JOIN
+<a href="https://sqlite.org/optoverview.html#flattening">flattening</a> optimization
+that was added in the 3.19.0 release.  This patch release fixes all known
+issues with that optimization and adds new test cases.  Hopefully this
+will be the last patch.
+</blockquote><hr width="50%"><a name="2017_05_24"></a><h3>2017-05-24 - Release 3.19.1</h3><blockquote>
+One of the new query planner optimizations in the 3.19.0 release contained
+bugs.  The 3.19.1 patch release fixes them.
+<p>
+Beginning with 3.19.0, subqueries and views on the right-hand side of
+a LEFT JOIN operator could sometimes be
+<a href="https://sqlite.org/optoverview.html#flattening">flattened</a> into the
+main query.  The new optimization worked well for all of the test cases
+that the developers devised, and for millions of legacy test cases, but
+once 3.19.0 was released, users found some other cases where the optimization
+failed.  Ticket
+<a href="https://sqlite.org/src/info/cad1ab4cb7b0fc344">cad1ab4cb7b0fc344</a> contains
+examples.
+<p>
+These problems exist only in 3.19.0.  Users of SQLite 3.19.0 should
+upgrade, but users of all prior versions of SQLite are safe.
+</blockquote><hr width="50%"><a name="2017_05_22"></a><h3>2017-05-22 - Release 3.19.0</h3><blockquote>
+SQLite <a href="releaselog/3_19_0.html">version 3.19.0</a> is a regularly scheduled maintenance release.
+<p>
+The emphasis on this release is improvements to the query planner.
+There are also some obscure bug fixes.  There is no reason to upgrade
+unless you are having problems with a prior release.
+</blockquote><hr width="50%"><a name="2017_03_30"></a><h3>2017-03-30 - Release 3.18.0</h3><blockquote>
+SQLite <a href="releaselog/3_18_0.html">version 3.18.0</a> is a regularly scheduled maintenance release.
+<p>
+This release features an initial implementation the 
+"<a href="pragma.html#pragma_optimize">PRAGMA optimize</a>" command.  This command can now be used to cause
+<a href="lang_analyze.html">ANALYZE</a> to be run on an as-needed basis.  Applications should invoke
+"PRAGMA optimize" just before closing the <a href="c3ref/sqlite3.html">database connection</a>.
+The "PRAGMA optimize" statement will likely be enhanced to do other
+kinds of automated database maintenance in future releases.
+<p>
+The <a href="https://www.fossil-scm.org/">Fossil</a> version control system that is
+used to manage the SQLite project has been upgraded to use SHA3-256 hashes
+instead of SHA1.  Therefore, the version identifications for SQLite now
+show a 64-hex-digit SHA3-256 hash rather than the 40-hex-digit SHA1 hash.
+<p>
+See the <a href="releaselog/3_18_0.html">change log</a> for other enhancements and optimizations
+in this release.
+</blockquote><hr width="50%"><a name="2017_02_13"></a><h3>2017-02-13 - Release 3.17.0</h3><blockquote>
 SQLite <a href="releaselog/3_17_0.html">version 3.17.0</a> is a regularly scheduled maintenance release.
 <p>
 Most of the changes in this release are performance optimizations.

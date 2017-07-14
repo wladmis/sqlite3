@@ -216,9 +216,6 @@ to a WITHOUT ROWID table.</b>
 Part of the callback from <a href="c3ref/update_hook.html">sqlite3_update_hook()</a> is the rowid of the table
 row that has changed.  However, WITHOUT ROWID tables do not have a rowid.
 Hence, the update hook is not invoked when a WITHOUT ROWID table changes.
-</p><p>Note that since the <a href="sessionintro.html">session</a> extension uses the update hook, that means
-that the session extension will not work correctly on a database that includes
-WITHOUT ROWID tables.
 </p></li></ol>
 
 <a name="bene"></a>

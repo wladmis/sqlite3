@@ -453,7 +453,7 @@ This can manifest, for example, as random changes in the middle of a file
 that was not even open at the time of the power loss.  So, for example,
 a device would be writing content into an MP3 file in flash memory when a
 power loss occurs, and that could result in an SQLite database being
-corrupted even though the database as not even in use at the time of the
+corrupted even though the database was not even in use at the time of the
 power loss.</p>
 
 <a name="fakeusb"></a>
@@ -483,7 +483,7 @@ panicking.</p>
 <p>The memory corruption problem becomes more acute when
 using <a href="mmap.html">memory-mapped I/O</a>.
 When all or part of the database file is mapped into the application's
-address space, then a stray pointer the overwrites any part of that
+address space, then a stray pointer that overwrites any part of that
 mapped space will immediately corrupt the database file, without
 requiring the application to do a subsequent write() system call.</p>
 
@@ -500,7 +500,7 @@ perform, the possibility of database corruption exists.</p>
 <p>Some older versions of Linux used the LinuxThreads library for thread
 support.  LinuxThreads is similar to Pthreads, but is subtly different
 with respect to handling of POSIX advisory locks.  SQLite versions
-2.2.3 through 3.6.23 recognized that LinuxThreads where being used at
+2.2.3 through 3.6.23 recognized that LinuxThreads were being used at
 runtime and took appropriate action to work around the non-standard
 behavior of LinuxThreads.  But most modern Linux implementations make
 use of the newer, and correct, NPTL implementation of Pthreads.  Beginning
@@ -550,7 +550,7 @@ the earliest symptom of trouble was the corrupted SQLite database.</p>
 But many of these protections can be disabled by configuration options.
 If protections are disabled, database corruption may occur.
 
-</p><p>The following are examples of disabling the built-in protections
+</p><p>The following are examples of disabling the built-in protection
 mechanisms of SQLite:
 
 </p><ul>

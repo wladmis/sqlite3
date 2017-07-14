@@ -1007,7 +1007,8 @@ return false;
   The subquery is not an aggregate or the outer query is not a join.
 
   <li value="3">
-  The subquery is not the right operand of a left outer join.
+  The subquery is not the right operand of a left outer join or
+   the subquery is not itself a join.
 
   <li value="4">  The subquery is not DISTINCT.
 

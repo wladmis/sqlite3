@@ -90,6 +90,88 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_19_3"></a>
+<h3>2017-06-08 (3.19.3)</h3><p><ul class='lessindent'>
+<li>Fix a bug associated with <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> that can lead to database
+    corruption.  The bug was introduced in <a href="#version_3_16_0">version 3.16.0</a> (2017-01-02).
+    Ticket <a href="https://sqlite.org/src/info/fda22108">fda22108</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-06-08 14:26:16 0ee482a1e0eae22e08edc8978c9733a96603d4509645f348ebf55b579e89636b"
+<li>SHA3-256 for sqlite3.c: 368f1d31272b1739f804bcfa5485e5de62678015c4adbe575003ded85c164bb8
+
+</ul></p>
+<a name="version_3_19_2"></a>
+<h3>2017-05-25 (3.19.2)</h3><p><ul class='lessindent'>
+<li>Fix more bugs in the LEFT JOIN <a href="optoverview.html#flattening">flattening optimization</a>. Ticket
+    <a href="https://www.sqlite.org/src/info/7fde638e94287d2c">7fde638e94287d2c</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-05-25 16:50:27 edb4e819b0c058c7d74d27ebd14cc5ceb2bad6a6144a486a970182b7afe3f8b9"
+<li>SHA3-256 for sqlite3.c: 1be0c457869c1f7eba58c3b5097b9ec307a15be338308bee8e5be8570bcf5d1e
+
+</ul></p>
+<a name="version_3_19_1"></a>
+<h3>2017-05-24 (3.19.1)</h3><p><ul class='lessindent'>
+<li>Fix a bug in the LEFT JOIN <a href="optoverview.html#flattening">flattening optimization</a>. Ticket
+    <a href="https://www.sqlite.org/src/info/cad1ab4cb7b0fc">cad1ab4cb7b0fc</a>.
+<li>Remove a surplus semicolon that was causing problems for older versions of MSVC.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-05-24 13:08:33 f6d7b988f40217821a382bc298180e9e6794f3ed79a83c6ef5cae048989b3f86"
+<li>SHA3-256 for sqlite3.c: 996b2aff37b6e0c6663d0312cd921bbdf6826c989cbbb07dadde5e9672889bca
+
+</ul></p>
+<a name="version_3_19_0"></a>
+<h3>2017-05-22 (3.19.0)</h3><p><ul class='lessindent'>
+<li> The <a href="c3ref/c_alter_table.html">SQLITE_READ</a> <a href="c3ref/set_authorizer.html">authorizer callback</a> is invoked once
+     with a column name that is an empty string
+     for every table referenced in a query from which no columns are extracted.
+<li> When using an index on an expression, try to use expression values already
+     available in the index, rather than loading the original columns and recomputing
+     the expression.
+<li> Enhance the <a href="optoverview.html#flattening">flattening optimization</a> so that it is able to flatten views
+     on the right-hand side of a LEFT JOIN.
+<li> Use <a href="lang_corefunc.html#replace">replace()</a> instead of <a href="lang_corefunc.html#char">char()</a> for escaping newline and carriage-return
+     characters embedded in strings in the .dump output from the <a href="cli.html">command-line shell</a>.
+<li> Avoid unnecessary foreign key processing in UPDATE statements that do not
+     touch the columns that are constrained by the foreign keys.
+<li> On a DISTINCT query that uses an index, try to skip ahead to the next distinct
+     entry using the index rather than stepping through rows, when an appropriate
+     index is available.
+<li> Avoid unnecessary invalidation of <a href="c3ref/blob.html">sqlite3_blob</a> handles when making
+     changes to unrelated tables.
+<li> Transfer any terms of the HAVING clause that use only columns mentioned in
+     the GROUP BY clause over to the WHERE clause for faster processing.
+<li> Reuse the same materialization of a VIEW if that VIEW appears more than
+     once in the same query.
+<li> Enhance <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> so that it identifies tables that have two
+     or more rows with the same <a href="lang_createtable.html#rowid">rowid</a>.
+<li> Enhance the <a href="fts5.html">FTS5</a> query syntax so that <a href="fts5.html#fts5_column_filters">column filters</a>
+     may be applied to arbitrary expressions.
+<li> Enhance the <a href="json1.html#jex">json_extract()</a> function to cache and reuse parses of JSON
+     input text.
+<li> Added the <a href="https://sqlite.org/src/file/ext/misc/anycollseq.c">anycollseq.c</a>
+     <a href="loadext.html">loadable extension</a> that allows a generic SQLite database connection to
+     read a schema that contains unknown and/or
+     application-specific <a href="datatype3.html#collation">collating sequences</a>.
+<p><b>Bug Fixes:</b>
+<li> Fix a problem in <a href="lang_replace.html">REPLACE</a> that can result in a corrupt database containing
+     two or more rows with the same <a href="lang_createtable.html#rowid">rowid</a>.  Fix for ticket
+     <a href="https://www.sqlite.org/src/info/f68dc596c4e6018d">f68dc596c4e6018d</a>.
+<li> Fix a problem in <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> that was causing a subsequent
+     <a href="lang_vacuum.html">VACUUM</a> to behave suboptimally.
+<li> Fix the <a href="pragma.html#pragma_foreign_key_check">PRAGMA foreign_key_check</a> command so that it works correctly with
+     foreign keys on <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+<li> Disallow leading zeros in numeric constants in JSON.  Fix for ticket
+     <a href="https://www.sqlite.org/src/info/b93be8729a895a528e2">b93be8729a895a528e2</a>.
+<li> Disallow control characters inside of strings in JSON.  Fix for ticket
+     <a href="https://www.sqlite.org/src/info/6c9b5514077fed34551">6c9b5514077fed34551</a>.
+<li> Limit the depth of recursion for JSON objects and arrays in order to avoid
+     excess stack usage in the recursive descent parser.  Fix for ticket
+     <a href="https://www.sqlite.org/src/info/981329adeef51011052">981329adeef51011052</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-05-22 13:58:13 28a94eb282822cad1d1420f2dad6bf65e4b8b9062eda4a0b9ee8270b2c608e40"
+<li>SHA3-256 for sqlite3.c: c30326aa1a9cc342061b755725eac9270109acf878bc59200dd4b1cea6bc2908
+
+</ul></p>
 <a name="version_3_18_0"></a>
 <h3>2017-03-30 (3.18.0)</h3><p><ul class='lessindent'>
 <li>Added the <a href="pragma.html#pragma_optimize">PRAGMA optimize</a> command
@@ -479,59 +561,31 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.9.0 (2015-10-14):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.10.1 (2015-05-09):</b></p>
 
-<p><b>Policy Changes:</b>
-<li>The <a href="versionnumbers.html">version numbering conventions</a> for SQLite are revised to use the
-    emerging standard of <a href="http://semver.org/">semantic versioning</a>.
-<p><b>New Features And Enhancements:</b>
-<li>Added <a href="json1.html">the json1 extension</a> module in the source tree, and in the <a href="amalgamation.html">amalgamation</a>.
-    Enable support using the <a href="compile.html#enable_json1">SQLITE_ENABLE_JSON1</a> compile-time option.
-<li>Added <a href="fts5.html">Full Text Search version 5 (FTS5)</a> to the <a href="amalgamation.html">amalgamation</a>, enabled
-    using <a href="compile.html#enable_fts5">SQLITE_ENABLE_FTS5</a>.  FTS5 will be considered "experimental" (subject
-    to incompatible changes) for at least one more release cycle.
-<li>The <a href="lang_createview.html">CREATE VIEW</a> statement now accepts an optional list of
-    column names following the view name.
-<li>Added support for <a href="expridx.html">indexes on expressions</a>.
-<li>Added support for <a href="vtab.html#tabfunc2">table-valued functions</a> in the FROM clause of a
-    <a href="lang_select.html">SELECT</a> statement.
-<li>Added support for <a href="vtab.html#epovtab">eponymous virtual tables</a>.
-<li>A <a href="lang_createview.html">VIEW</a> may now reference undefined tables and functions when
-    initially created.  Missing tables and functions are reported when
-    the VIEW is used in a query.
-<li>Added the <a href="c3ref/value_subtype.html">sqlite3_value_subtype()</a> and <a href="c3ref/result_subtype.html">sqlite3_result_subtype()</a>
-    interfaced (used by <a href="json1.html">the json1 extension</a>).
-<li>The query planner is now able to use <a href="partialindex.html">partial indexes</a> that contain
-    AND-connected terms in the WHERE clause.
-<li>The sqlite3_analyzer.exe utility is updated to report the depth of
-    each btree and to show the average fanout for indexes and 
-    WITHOUT ROWID tables.
-<li>Enhanced the <a href="dbstat.html">dbstat virtual table</a> so that it can be used as a
-    <a href="vtab.html#tabfunc2">table-valued function</a> where the argument is the schema to be
-    analyzed.
-<p><b>Other changes:</b>
-<li>The <a href="c3ref/aggregate_count.html">sqlite3_memory_alarm()</a> interface, which has been deprecated and
-    undocumented for 8 years, is changed into a no-op.
-<p><b>Important fixes:</b>
-<li>Fixed a critical bug in the 
-    <a href="https://www.sqlite.org/see/doc/trunk/www/readme.wiki">SQLite Encryption Extension</a> that
-    could cause the database to become unreadable and unrecoverable if a <a href="lang_vacuum.html">VACUUM</a> command 
-    changed the size of the encryption nonce.
-<li>Added a memory barrier in the implementation of
-    <a href="c3ref/initialize.html">sqlite3_initialize()</a> to help ensure that it is thread-safe.
-<li>Fix the <a href="optoverview.html#or_opt">OR optimization</a> so that it always ignores subplans that
-    do not use an index.
-<li>Do not apply the WHERE-clause pushdown optimization on terms that originate
-    in the ON or USING clause of a LEFT JOIN.  Fix for ticket
-    <a href="https://www.sqlite.org/src/info/c2a19d81652f40568c">c2a19d81652f40568c</a>.
+<li>Make <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
+    compile-time option.
+<li>Fix a harmless warning in the <a href="cli.html">command-line shell</a> on some versions of MSVC.
+<li>Fix minor issues with the <a href="dbstat.html">dbstat virtual table</a>.
 
 
-<p><b>Bug fixes backported into patch release 3.8.11.1 (2015-07-29):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.10 (2015-05-07):</b></p>
 
-<li>Restore an undocumented side-effect of <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a>: force
-    the database schema to be parsed if the database has not been previously accessed.
-<li>Fix a long-standing problem in <a href="c3ref/changes.html">sqlite3_changes()</a> for <a href="withoutrowid.html">WITHOUT ROWID</a>
-    tables that was reported a few hours after the 3.8.11 release.
+<li>Added the <a href="sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
+    SQLite database files.
+<li>Added the <a href="fts3.html#matchinfo-y">matchinfo y flag</a> to the 
+    <a href="fts3.html#matchinfo">matchinfo()</a> function of <a href="fts3.html">FTS3</a>.
+<li>Performance improvements for <a href="lang_select.html#orderby">ORDER BY</a>, <a href="lang_vacuum.html">VACUUM</a>, <a href="lang_createindex.html">CREATE INDEX</a>,
+    <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, and <a href="pragma.html#pragma_quick_check">PRAGMA quick_check</a>.
+<li>Fix many obscure problems discovered while <a href="testing.html#fuzztesting">SQL fuzzing</a>.
+<li>Identify all methods for important objects in the interface documentation.
+    (<a href="c3ref/context.html">example</a>)
+<li>Made the <a href="testing.html#aflfuzz">American Fuzzy Lop fuzzer</a>
+    a standard part of SQLite's <a href="testing.html">testing strategy</a>.
+<li>Add the ".binary" and ".limits" commands to the <a href="cli.html">command-line shell</a>.
+<li>Make the <a href="dbstat.html">dbstat virtual table</a> part of standard builds when
+    compiled with the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option.
+
 
 </ul></p>
 <a name="version_3_12_2"></a>

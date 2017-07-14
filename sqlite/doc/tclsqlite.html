@@ -915,5 +915,13 @@ is invoked, the previous profile script is replaced by the new one. If the
 <i>script</i> argument is an empty string, any previously registered 
 profile callback is canceled but no new profile script is registered.
 </p>
+<a name="unlock_notify"></a>
+<h3>The "unlock_notify" method</h3>
+
+<p>The unlock_notify method is used access the <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a>
+   interface to the SQLite core library for testing purposes.  The use of
+   this method by applications is discouraged.
+</p>
+
 
 

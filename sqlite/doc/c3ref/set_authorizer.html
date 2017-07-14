@@ -76,7 +76,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_set_authorizer -->
+<!-- keywords: {authorizer callback} sqlite3_set_authorizer -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Compile-Time Authorization Callbacks</h2>
@@ -115,8 +115,10 @@ access is denied.</p>
 parameter to the sqlite3_set_authorizer() interface. The second parameter
 to the callback is an integer <a href="../c3ref/c_alter_table.html">action code</a> that specifies
 the particular action to be authorized. The third through sixth parameters
-to the callback are zero-terminated strings that contain additional
-details about the action to be authorized.</p>
+to the callback are either NULL pointers or zero-terminated strings
+that contain additional details about the action to be authorized.
+Applications must always be prepared to encounter a NULL pointer in any
+of the third through the sixth parameters of the authorization callback.</p>
 
 <p>If the action code is <a href="../c3ref/c_alter_table.html">SQLITE_READ</a>
 and the callback returns <a href="../c3ref/c_deny.html">SQLITE_IGNORE</a> then the
@@ -125,6 +127,10 @@ a NULL value in place of the table column that would have
 been read if <a href="../rescode.html#ok">SQLITE_OK</a> had been returned.  The <a href="../c3ref/c_deny.html">SQLITE_IGNORE</a>
 return can be used to deny an untrusted user access to individual
 columns of a table.
+When a table is referenced by a <a href="../lang_select.html">SELECT</a> but no column values are
+extracted from that table (for example in a query like
+"SELECT count(*) FROM tab") then the <a href="../c3ref/c_alter_table.html">SQLITE_READ</a> authorizer callback
+is invoked once for that table with a column name that is an empty string.
 If the action code is <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> and the callback returns
 <a href="../c3ref/c_deny.html">SQLITE_IGNORE</a> then the <a href="../lang_delete.html">DELETE</a> operation proceeds but the
 <a href="../lang_delete.html#truncateopt">truncate optimization</a> is disabled and all rows are deleted individually.</p>

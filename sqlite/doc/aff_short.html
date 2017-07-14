@@ -106,14 +106,15 @@ including:
 <ol type="1">
 <li><b>Better performance</b>
 <ul>
+<li> Reading and writing from an SQLite database
+     is often faster than reading and writing individual files from disk.
+     See <a href="fasterthanfs.html">35% Faster Than The Filesystem</a>
+     and <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a>.
 <li> The application only has to load the data it needs, rather
      than reading the entire file and holding a complete parse
      in memory.
 <li> Small edits only overwrite the parts of the file that change,
      reducing write time and wear on SSD drives.
-<li> In many cases, loading content from an SQLite database
-     is faster than reading individual files from disk.
-     See <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a>.
 </ul>
 <li><b>Reduced application cost and complexity</b>
 <ul>

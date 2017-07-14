@@ -755,7 +755,8 @@ for use in application programs.</ol></p>
     output for each violation.  There are four columns in each result row.
     The first column is the name of the table that contains the REFERENCES
     clause.  The second column is the <a href="lang_createtable.html#rowid">rowid</a> of the row that
-    contains the invalid REFERENCES clause.  The third column is the name
+    contains the invalid REFERENCES clause, or NULL if the child table is a
+    <a href="withoutrowid.html">WITHOUT ROWID</a> table.  The third column is the name
     of the table that is referred to. The fourth column is the index of
     the specific foreign key constraint that failed.  The fourth column
     in the output of the foreign_key_check pragma is the same integer as
@@ -1271,23 +1272,19 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     size must be a power of two between 512 and 65536 inclusive.
     </p>
 
-    <p>When a new database is created, SQLite assigned a page size to
+    <p>When a new database is created, SQLite assigns a page size to
     the database based on platform and filesystem.  For many years,
     the default page size was almost always 1024 bytes, but beginning
     with SQLite <a href="releaselog/3_12_0.html">version 3.12.0</a> (2016-03-29), 
-    the default page size increased
-    to 4096.
+    the default page size increased to 4096.
+    The default page size is recommended for most applications.
 
-    <p>The page_size pragma will only set in the
-    page size if it is issued before any other SQL statements that
-    cause I/O against the database file.
-    SQL statements that cause I/O against the database file include
-    "CREATE", "SELECT", "BEGIN IMMEDIATE", and "PRAGMA journal_mode=WAL".
-    If the page_size pragma is
-    used to specify a new page size just prior to
-    running the <a href="lang_vacuum.html">VACUUM</a> command and if the database is not in
-    <a href="wal.html">WAL journal mode</a> then <a href="lang_vacuum.html">VACUUM</a> will change the page
-    size to the new value.</p>
+    <p>Specifying a new page size does not change the page size
+    immediately.  Instead, the new page size is remembered and is used
+    to set the page size when the database is first created, if it does
+    not already exist when the page_size pragma is issued, or at the
+    next <a href="lang_vacuum.html">VACUUM</a> command that is run on the same database connection
+    while not in <a href="wal.html">WAL mode</a>.</p>
 
     <p>The <a href="compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> compile-time option can be used
     to change the default page size assigned to new databases.
@@ -1400,7 +1397,7 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        checked to ensure that the schema has not changed since the SQL
        statement was <a href="c3ref/prepare.html">prepared</a>.
        Subverting this mechanism by using "PRAGMA schema_version"
-       my cause SQL statement to run using an obsolete schema,
+       may cause SQL statement to run using an obsolete schema,
        which can lead to incorrect answers and/or
        <a href="howtocorrupt.html#cfgerr">database corruption</a>.
 

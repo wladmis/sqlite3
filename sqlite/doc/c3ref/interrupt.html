@@ -114,10 +114,7 @@ that are started after the running statement count reaches zero are
 not effected by the sqlite3_interrupt().
 A call to sqlite3_interrupt(D) that occurs when there are no running
 SQL statements is a no-op and has no effect on SQL statements
-that are started after the sqlite3_interrupt() call returns.</p>
-
-<p>If the database connection closes while <a href="../c3ref/interrupt.html">sqlite3_interrupt()</a>
-is running then bad things will likely happen.
+that are started after the sqlite3_interrupt() call returns.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

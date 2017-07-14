@@ -394,9 +394,11 @@ code that accesses the corresponding table must be located and modified to
 take into account the new columns.
 
 <li><p><b>Performance.</b>
-In many cases, an SQLite application file format will be faster than a
-custom or pile-of-files format.  In the case of a custom format, SQLite
-often dramatically improves start-up times because instead of having to
+In many cases, an SQLite application file format will be 
+<a href="fasterthanfs.html">faster than a pile-of-files format</a> or
+a custom format.  In addition to being faster for raw read and
+writes, SQLite can often dramatically improves start-up times because 
+instead of having to
 read and parse the entire document into memory, the application can
 do queries to extract only the information needed for the initial screen.
 As the application progresses, it only needs to load as much material as
@@ -408,8 +410,10 @@ footprint of the application under control.
 But many developers are surprised to learn that SQLite can read and 
 write smaller BLOBs (less than about 100KB in size) from its database 
 faster than those same blobs can be read or written as separate files 
-from the filesystem.  (See <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> for further 
-information.)  There is overhead associated with operating a relational
+from the filesystem.  (See
+<a href="fasterthanfs.html">35% Faster Than The Filesystem</a> and
+<a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> for further information.)
+There is overhead associated with operating a relational
 database engine, however one should not assume that direct file I/O
 is faster than SQLite database I/O, as often it is not.
 
