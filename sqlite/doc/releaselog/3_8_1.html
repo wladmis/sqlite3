@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,16 +91,16 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.8.1 On 2013-10-17</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.8.1 On 2013-10-17</h2><p><ol class='lessindent'>
 <li>Added the <a href="../lang_corefunc.html#unlikely">unlikely()</a> and <a href="../lang_corefunc.html#likelihood">likelihood()</a> SQL functions to be used
     as hints to the query planner.
 <li>Enhancements to the query planner:
-<ul>
+<ol type='a'>
 <li>Take into account the fact WHERE clause terms that cannot be used with indices
     still probably reduce the number of output rows.
 <li>Estimate the sizes of table and index rows and use the smallest applicable B-Tree
     for full scans and "count(*)" operations.
-</ul>
+</ol>
 <li>Added the <a href="../pragma.html#pragma_soft_heap_limit">soft_heap_limit pragma</a>.
 <li>Added support for <a href="../compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>
 <li>Added support for "sz=NNN" parameters at the end of 
@@ -121,7 +136,7 @@ return false;
     "2013-10-17 12:57:35 c78be6d786c19073b3a6730dfe3fb1be54f5657a"
 <li>SHA1 for sqlite3.c: 0a54d76566728c2ba96292a49b138e4f69a7c391
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -129,4 +144,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

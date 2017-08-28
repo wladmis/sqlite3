@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -136,9 +151,9 @@ The <a href="amalgamation.html">amalgamation</a> source code files
 not contained in raw source code tree.</p>
 
 <blockquote>
-<a href="http://www.sqlite.org/cgi/src">http://www.sqlite.org/cgi/src</a> (Dallas)<br>
-<a href="http://www2.sqlite.org/cgi/src">http://www2.sqlite.org/cgi/src</a> (Newark)<br>
-<a href="http://www3.sqlite.org/cgi/src">http://www3.sqlite.org/cgi/src</a> (Fremont)<br>
+<a href="https://www.sqlite.org/cgi/src">https://www.sqlite.org/cgi/src</a> (Dallas)<br>
+<a href="https://www2.sqlite.org/cgi/src">https://www2.sqlite.org/cgi/src</a> (Newark)<br>
+<a href="https://www3.sqlite.org/cgi/src">https://www3.sqlite.org/cgi/src</a> (San Francisco)<br>
 </blockquote>
 
 <p>The documentation is maintained in separate
@@ -146,9 +161,9 @@ not contained in raw source code tree.</p>
 at:</p>
 
 <blockquote>
-<a href="http://www.sqlite.org/cgi/docsrc">http://www.sqlite.org/cgi/docsrc</a> (Dallas)<br>
-<a href="http://www2.sqlite.org/cgi/docsrc">http://www2.sqlite.org/cgi/docsrc</a> (Newark)<br>
-<a href="http://www3.sqlite.org/cgi/docsrc">http://www3.sqlite.org/cgi/docsrc</a> (Fremont)<br>
+<a href="https://www.sqlite.org/cgi/docsrc">https://www.sqlite.org/cgi/docsrc</a> (Dallas)<br>
+<a href="https://www2.sqlite.org/cgi/docsrc">https://www2.sqlite.org/cgi/docsrc</a> (Newark)<br>
+<a href="https://www3.sqlite.org/cgi/docsrc">https://www3.sqlite.org/cgi/docsrc</a> (San Francisco)<br>
 </blockquote>
 <script type='text/JavaScript'>
 /* <![CDATA[ */
@@ -159,4 +174,4 @@ setTimeout('adce4d016d6cd();',10);
 /* ]]> */
 </script>
 
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

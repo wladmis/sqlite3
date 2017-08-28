@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -91,7 +106,7 @@ The Carray() Table-Valued Function
 <p>Carray($PTR,$N) is a <a href="vtab.html#tabfunc2">table-valued function</a> with a single column (named
 "value") and zero or more rows.
 The "value" of each row in the carray() is taken from a C-language array
-that is $N elements long and begins at address $PTR.
+that is $N elements long.  $PTR is a pointer to the beginning of the array.
 In this way, the carray() function provides a convenient mechanism to
 bind C-language arrays to SQL queries.
 
@@ -102,23 +117,14 @@ It is available as a <a href="loadext.html">loadable extension</a> in the
 <a href="https://www.sqlite.org/src/artifact?ci=trunk&filename=ext/misc/carray.c">ext/misc/carray.c</a>
 source file.
 
-</p><p>The carray() function is dangerous.  The first parameter is
-a 64-bit integer which gets cast into a pointer to an array.  In an
-application that runs user-generated or untrusted SQL, the carray()
-function could be used to crash the application or to leak sensitive 
-information.  For that
-reason, the carray() function will never be a standard part of SQLite.
-Carray() will only be available in applications that 
-deliberately request it.  Presumably, applications that deliberately
-link carray() will also have protections in place to prevent carray()
-from being misused.
-
 </p><h1 id="details"><span>3. </span>Details</h1>
 
 <p>The carray() function takes two or three arguments.
-The first argument is a 64-bit integer that will be cast into a pointer
-to the C-language array that is to be returned by the function.  The
-second argument is the number of elements in the array.  The optional
+The first argument is a pointer to an array.  Since pointer values cannot
+be specified directly in SQL, the first argument must be a <a href="lang_expr.html#varparam">parameter</a> that
+is bound to a pointer value using the <a href="c3ref/bind_blob.html">sqlite3_bind_pointer()</a> interface
+using a pointer-type of "carray".
+The second argument is the number of elements in the array.  The optional
 third argument is a string that determines the datatype of the elements
 in the C-language array.  Allowed values for the third argument are:
 
@@ -133,14 +139,14 @@ in the C-language array.  Allowed values for the third argument are:
 
 </p><p>The carray() function can be used in the FROM clause of a query.
 For example, to query two entries from the OBJ table using rowids
-taken from a C-language array at address 0x7b3830:
+taken from a C-language array at address $PTR.
 
-</p><div class="codeblock"><pre>SELECT obj.* FROM obj, carray(0x7b3830, 10) AS x
+</p><div class="codeblock"><pre>SELECT obj.* FROM obj, carray($PTR, 10) AS x
  WHERE obj.rowid=x.value;
 </pre></div>
 
 <p>This query gives the same result:
 
-</p><div class="codeblock"><pre>SELECT * FROM obj WHERE rowid IN carray(0x7b3830, 10);
+</p><div class="codeblock"><pre>SELECT * FROM obj WHERE rowid IN carray($PTR, 10);
 </pre></div>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

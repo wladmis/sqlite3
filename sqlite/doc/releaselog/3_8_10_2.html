@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.8.10.2 On 2015-05-20</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.8.10.2 On 2015-05-20</h2><p><ol class='lessindent'>
 <li>Fix an index corruption issue introduced by <a href="../releaselog/3_8_7.html">version 3.8.7</a>.  An index
     with a TEXT key can be corrupted by an <a href="../lang_insert.html">INSERT</a> into the corresponding 
     table if the table has two nested triggers that convert the key value to INTEGER
@@ -86,18 +101,18 @@ return false;
 <li>SQLITE_SOURCE_ID: "2015-05-20 18:17:19 2ef4f3a5b1d1d0c4338f8243d40a2452cc1f7fe4"
 <li>SHA1 for sqlite3.c: 638abb77965332c956dbbd2c8e4248e84da4eb63
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.8.10.1 (2015-05-09):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <li>Make <a href="../c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
     compile-time option.
 <li>Fix a harmless warning in the <a href="../cli.html">command-line shell</a> on some versions of MSVC.
 <li>Fix minor issues with the <a href="../dbstat.html">dbstat virtual table</a>.
 
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.8.10 (2015-05-07):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <li>Added the <a href="../sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
     SQLite database files.
 <li>Added the <a href="../fts3.html#matchinfo-y">matchinfo y flag</a> to the 
@@ -114,7 +129,7 @@ return false;
     compiled with the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option.
 
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -122,4 +137,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

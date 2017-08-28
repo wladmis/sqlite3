@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.13.0 On 2016-05-18</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.13.0 On 2016-05-18</h2><p><ol class='lessindent'>
 <li>Postpone I/O associated with TEMP files for as long as possible, with the hope
     that the I/O can ultimately be avoided completely.
 <li>Merged the <a href="../sessionintro.html">session</a> extension into trunk.
@@ -114,33 +129,21 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.10.1 (2015-05-09):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.8.2 (2015-01-30):</b></p>
 
-<li>Make <a href="../c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
-    compile-time option.
-<li>Fix a harmless warning in the <a href="../cli.html">command-line shell</a> on some versions of MSVC.
-<li>Fix minor issues with the <a href="../dbstat.html">dbstat virtual table</a>.
+<li>Enhance <a href="../c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2(TRUNCATE)</a> interface so that it truncates the
+    WAL file even if there is no checkpoint work to be done.
 
 
-<p><b>Bug fixes backported into patch release 3.8.10 (2015-05-07):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.8.1 (2015-01-20):</b></p>
 
-<li>Added the <a href="../sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
-    SQLite database files.
-<li>Added the <a href="../fts3.html#matchinfo-y">matchinfo y flag</a> to the 
-    <a href="../fts3.html#matchinfo">matchinfo()</a> function of <a href="../fts3.html">FTS3</a>.
-<li>Performance improvements for <a href="../lang_select.html#orderby">ORDER BY</a>, <a href="../lang_vacuum.html">VACUUM</a>, <a href="../lang_createindex.html">CREATE INDEX</a>,
-    <a href="../pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, and <a href="../pragma.html#pragma_quick_check">PRAGMA quick_check</a>.
-<li>Fix many obscure problems discovered while <a href="../testing.html#fuzztesting">SQL fuzzing</a>.
-<li>Identify all methods for important objects in the interface documentation.
-    (<a href="../c3ref/context.html">example</a>)
-<li>Made the <a href="../testing.html#aflfuzz">American Fuzzy Lop fuzzer</a>
-    a standard part of SQLite's <a href="../testing.html">testing strategy</a>.
-<li>Add the ".binary" and ".limits" commands to the <a href="../cli.html">command-line shell</a>.
-<li>Make the <a href="../dbstat.html">dbstat virtual table</a> part of standard builds when
-    compiled with the <a href="../compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option.
+<li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
+    output to appear in the wrong order on queries that contains an ORDER BY clause,
+    a LIMIT clause, and that have approximately 60 or more columns in the result set.
+    Ticket <a href="https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79">f97c4637102a3ae72b79</a>.
 
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -148,4 +151,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

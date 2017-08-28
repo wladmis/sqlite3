@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -981,6 +996,12 @@ the available settings:</p>
   used.
   <p>The preupdate hook interfaces were originally added to
   support the <a href="sessionintro.html">session</a> extension.
+</p></blockquote><a name="enable_qpsg"></a>
+<p><b>SQLITE_ENABLE_QPSG</b></p><blockquote><p>
+  This option causes the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG) to
+  be on by default.  Normally the QPSG is off and must be activated
+  at run-time using the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> option to the
+  <a href="c3ref/db_config.html">sqlite3_db_config()</a> interface.
 </p></blockquote><a name="enable_rbu"></a>
 <p><b>SQLITE_ENABLE_RBU</b></p><blockquote><p>
   Enable the code the implements the <a href="rbu.html">RBU extension</a>.
@@ -997,6 +1018,9 @@ the available settings:</p>
   <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus()</a> interface is normally omitted from the build
   because it imposes a small performance penalty, even on statements that
   do not use the feature.
+</p></blockquote><a name="enable_stmtvtab"></a>
+<p><b>SQLITE_ENABLE_STMTVTAB</b></p><blockquote><p>
+  This compile-time option enables the <a href="stmt.html">SQLITE_STMT virtual table</a> logic.
 </p></blockquote><a name="rtree_int_only"></a>
 <p><b>SQLITE_RTREE_INT_ONLY</b></p><blockquote><p>
   If this option is used together with <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a> then the
@@ -1682,4 +1706,4 @@ macros is included completeness.</p>
   This macro may not be used in combination with any of <a href="compile.html#apicall">SQLITE_APICALL</a>,
   <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>, or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
 </p></blockquote>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

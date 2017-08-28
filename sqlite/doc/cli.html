@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -247,6 +262,7 @@ at any time.  For example:
 .backup ?DB? FILE      Backup DB (default "main") to FILE
 .bail on|off           Stop after hitting an error.  Default OFF
 .binary on|off         Turn binary output on or off.  Default OFF
+.cd DIRECTORY          Change the working directory to DIRECTORY
 .changes on|off        Show number of rows changed by SQL
 .check GLOB            Fail if output since .testcase does not match
 .clone NEWDB           Clone data into NEWDB from the existing database
@@ -258,7 +274,6 @@ at any time.  For example:
 .echo on|off           Turn command echo on or off
 .eqp on|off|full       Enable or disable automatic EXPLAIN QUERY PLAN
 .exit                  Exit this program
-.explain ?on|off|auto? Turn EXPLAIN output mode on or off or to automatic
 .fullschema ?--indent? Show schema and the content of sqlite_stat tables
 .headers on|off        Turn display of headers on or off
 .help                  Show this message
@@ -286,8 +301,8 @@ at any time.  For example:
                          tcl      TCL list elements
 .nullvalue STRING      Use STRING in place of NULL values
 .once FILENAME         Output for the next SQL command only to FILENAME
-.open ?--new? ?FILE?   Close existing database and reopen FILE
-                         The --new starts with an empty file
+.open ?OPTIONS? ?FILE? Close existing database and reopen FILE
+                         The --new option starts with an empty file
 .output ?FILENAME?     Send output to FILENAME or stdout
 .print STRING...       Print literal STRING
 .prompt MAIN CONTINUE  Replace the standard prompts
@@ -491,21 +506,9 @@ all of the intervening &lt;TR&gt;s, &lt;TH&gt;s, and &lt;TD&gt;s
 are.  The html output mode is envisioned as being useful for
 CGI.</p>
 
-<a name="explain"></a>
-
-<p>The ".explain" dot command can be used to set the output mode
-to "column" and to set the column widths to values that are reasonable
-for looking at the output of an <a href="lang_explain.html">EXPLAIN</a> command.
-
-</p><p>Beginning with <a href="releaselog/3_11_0.html">Version 3.11.0</a> (2016-02-15), 
-the command-line shell defaults to
-"auto-explain" mode, in which the EXPLAIN commands are automatically
-detected and the output is automatically formatted.  So the ".explain"
-command has become superfluous.
-
 <a name="dotoutput"></a>
 
-</p><h1 id="writing_results_to_a_file"><span>6. </span>Writing results to a file</h1>
+<h1 id="writing_results_to_a_file"><span>6. </span>Writing results to a file</h1>
 
 <p>By default, sqlite3 sends query results to standard output.  You
 can change this using the ".output" and ".once" commands.  Just put 
@@ -577,6 +580,8 @@ are useful for looking at the schema of the database.  There is
 nothing that these commands do that cannot be done by some other
 means.  These commands are provided purely as a shortcut.</p>
 
+<a name="dtables"></a>
+
 <p>For example, to see a list of the tables in the database, you
 can enter ".tables".</p>
 
@@ -596,9 +601,15 @@ WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
 ORDER BY 1
 </pre></div>
 
-<p>The ".indexes" command works in a similar way to list all of
+<p>But the ".tables" command does more.  It queries the sqlite_master table
+for all <a href="lang_attach.html">attached</a> databases, not just the primary database.  And it arranges
+its output into neat columns.
+
+</p><p>The ".indexes" command works in a similar way to list all of
 the indexes. If the ".indexes" command is given an argument which is
 the name of a table, then it shows just indexes on that table.
+
+<a name="dschema"></a>
 
 </p><p>The ".schema" command shows the complete schema for the database,
 or for a single table if an optional tablename argument is provided:
@@ -627,7 +638,19 @@ list mode, then entering the following query:</p>
 ORDER BY tbl_name, type DESC, name
 </pre></div>
 
-<p>The ".databases" command shows a list of all databases open in
+<p>As with ".tables", the ".schema" command shows the schema for
+all <a href="lang_attach.html">attached</a> databases.  If you only want to see the schema for
+a single database (perhaps "main") then you can add an argument
+to ".schema" to restrict its output:
+
+</p><div class="codeblock"><pre>sqlite&gt; <b>.schema main.*</b>
+</pre></div>
+
+<p>The ".schema" command can be augmented with the "--indent" option,
+in which case it tries to reformat the various CREATE statements of
+the schema so that they are more easily readable by humans.
+
+</p><p>The ".databases" command shows a list of all databases open in
 the current connection.  There will always be at least 2.  The first
 one is "main", the original database opened.  The second is "temp",
 the database used for temporary tables. There may be additional 
@@ -924,4 +947,4 @@ references to unknown SQL functions.  This makes the shell useful for
 looking at EXPLAIN or EXPLAIN QUERY PLAN output for queries pasted out
 of applications that define and use custom SQL functions.
 </p></li></ul>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

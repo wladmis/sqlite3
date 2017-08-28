@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -146,6 +161,7 @@ See Also:
 <li><a href="mostdeployed.html">Most Widely Deployed SQL Database Engine</a></li>
 <li><a href="nulls.html">NULL Handling in SQLite</a></li>
 <li><a href="partialindex.html">Partial Indexes</a></li>
+<li><a href="bindptr.html">Pointer Passing Interfaces</a></li>
 <li><a href="psow.html">Powersafe Overwrite</a></li>
 <li><a href="pragma.html">Pragma statements supported by SQLite</a></li>
 <li><a href="lang.html">Query Language Understood by SQLite</a></li>
@@ -197,6 +213,7 @@ See Also:
 <li><a href="th3.html">TH3</a></li>
 <li><a href="c_interface.html">The C language interface to SQLite Version 2</a></li>
 <li><a href="carray.html">The Carray() Table-Valued Function</a></li>
+<li><a href="completion.html">The COMPLETION() Table-Valued Function</a></li>
 <li><a href="csv.html">The CSV Virtual Table</a></li>
 <li><a href="dbhash.html">The dbhash.exe Utility Program</a></li>
 <li><a href="dbstat.html">The DBSTAT Virtual Table</a></li>
@@ -214,7 +231,9 @@ See Also:
 <li><a href="optoverview.html">The SQLite Query Optimizer Overview</a></li>
 <li><a href="rtree.html">The SQLite R*Tree Module</a></li>
 <li><a href="sqlanalyze.html">The sqlite3_analyzer.exe Utility Program</a></li>
+<li><a href="stmt.html">The SQLITE_STMT Virtual Table</a></li>
 <li><a href="tclsqlite.html">The Tcl interface to the SQLite library</a></li>
+<li><a href="unionvtab.html">The UNION Virtual Table</a></li>
 <li><a href="vdbe.html">The Virtual Database Engine of SQLite</a></li>
 <li><a href="vtab.html">The Virtual Table Mechanism Of SQLite</a></li>
 <li><a href="uri.html">Uniform Resource Identifiers</a></li>
@@ -228,4 +247,4 @@ See Also:
 <li><a href="zeroconf.html">Zero-Configuration</a></li>
 
 </ol>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

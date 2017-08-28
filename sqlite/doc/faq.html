@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -78,7 +93,7 @@ return false;
 </div>
 
 
-<h2>Frequently Asked Questions</h2><ol class=nounderline><li><a href="#q1">How do I create an AUTOINCREMENT field.</a></li><li><a href="#q2">What datatypes does SQLite support?</a></li><li><a href="#q3">SQLite lets me insert a string into a database column of type integer!</a></li><li><a href="#q4">Why doesn't SQLite allow me to use '0' and '0.0' as the primary
+<h2>Frequently Asked Questions</h2><ol class=nounderline><li><a href="#q1">How do I create an AUTOINCREMENT field?</a></li><li><a href="#q2">What datatypes does SQLite support?</a></li><li><a href="#q3">SQLite lets me insert a string into a database column of type integer!</a></li><li><a href="#q4">Why doesn't SQLite allow me to use '0' and '0.0' as the primary
   key on two different rows of the same table?</a></li><li><a href="#q5">Can multiple applications or multiple instances of the same
   application access a single database file at the same time?</a></li><li><a href="#q6">Is SQLite threadsafe?</a></li><li><a href="#q7">How do I list all tables/indices contained in an SQLite database</a></li><li><a href="#q8">Are there any known size limits to SQLite databases?</a></li><li><a href="#q9">What is the maximum size of a VARCHAR in SQLite?</a></li><li><a href="#q10">Does SQLite support a BLOB type?</a></li><li><a href="#q11">How do I add or delete columns from an existing table in SQLite.</a></li><li><a href="#q12">I deleted a lot of data but the database file did not get any
   smaller.  Is this a bug?</a></li><li><a href="#q13">Can I use SQLite in my commercial product without paying royalties?</a></li><li><a href="#q14">How do I use a string literal that contains an embedded single-quote (')
@@ -93,7 +108,7 @@ return false;
   SQLite generated?</a></li><li><a href="#q26">The SQL standard requires that a UNIQUE constraint be enforced even if
   one or more of the columns in the constraint are NULL, but SQLite does
   not do this.  Isn't that a bug?</a></li><li><a href="#q27">What is the Export Control Classification Number (ECCN) for SQLite?</a></li><li><a href="#q28">My query does not return the column name that I expect.  Is this a bug?</a></li></ol><a name="q1"></a>
-<p><b>(1) How do I create an AUTOINCREMENT field.</b></p>
+<p><b>(1) How do I create an AUTOINCREMENT field?</b></p>
 <blockquote><p>Short answer: A column declared <a href="lang_createtable.html#rowid">INTEGER PRIMARY KEY</a> will
   autoincrement.</p>
 
@@ -632,4 +647,4 @@ COMMIT;
   is free to name the column anything it wants.
   See the <a href="c3ref/column_name.html">sqlite3_column_name()</a> documentation for further information.</blockquote></li>
 </ol>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

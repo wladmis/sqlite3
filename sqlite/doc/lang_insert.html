@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -164,8 +179,9 @@ return false;
 
 
 <p>The INSERT statement comes in three basic forms.  
-<ul>
-<li><p>The first form (with the "VALUES" keyword) creates one or more
+<ol>
+<li><p><b>INSERT INTO </b><i>table</i><b> VALUES(...);</b>
+<p>The first form (with the "VALUES" keyword) creates one or more
 new rows in
 an existing table. If the <span class='yyterm'>column-name</span> list after
 <span class='yyterm'>table-name</span> is omitted then the number
@@ -182,7 +198,8 @@ columns that do not appear in the column list are populated with the
 <a href="lang_createtable.html#dfltval">default column value</a> (specified as part of the <a href="lang_createtable.html">CREATE TABLE</a> statement), or
 with NULL if no <a href="lang_createtable.html#dfltval">default value</a> is specified.
 
-<li><p>The second form of the INSERT statement contains a <a href="lang_select.html">SELECT</a> statement
+<li><p><b>INSERT INTO </b><i>table</i><b> SELECT ...;</b>
+<p>The second form of the INSERT statement contains a <a href="lang_select.html">SELECT</a> statement
 instead of a VALUES clause. A new entry is inserted into the table for each
 row of data returned by executing the SELECT statement. If a column-list is
 specified, the number of columns in the result of the SELECT must be the same
@@ -192,17 +209,20 @@ as the number of columns in the table. Any SELECT statement, including
 <a href="lang_select.html#compound">compound SELECTs</a> and SELECT statements with <a href="lang_select.html#orderby">ORDER BY</a> and/or <a href="lang_select.html#limitoffset">LIMIT</a> clauses, 
 may be used in an INSERT statement of this form.
 
-<li><p>The third form of an INSERT statement is with DEFAULT VALUES.
+<li><p><b>INSERT INTO </b><i>table</i><b> DEFAULT VALUES;</b>
+<p>The third form of an INSERT statement is with DEFAULT VALUES.
 The INSERT ... DEFAULT VALUES statement inserts a single new row into the
 named table. Each column of the new row is populated with its 
 <a href="lang_createtable.html#dfltval">default value</a>, or with a NULL if no default value is specified 
 as part of the column definition in the <a href="lang_createtable.html">CREATE TABLE</a> statement.
 
-</ul>
+</ol>
 
-<p>The "REPLACE" and "INSERT OR <i>action</i>" forms specify an alternative
-constraint conflict resolution algorithm to use during this one INSERT command.
-See the section titled <a href="lang_conflict.html">ON CONFLICT</a> for additional information.
+<p>
+The initial "INSERT" keyword can be replaced by
+"REPLACE" or "INSERT OR <i>action</i>" to specify an alternative
+constraint <a href="lang_conflict.html">conflict resolution algorithm</a> to use during 
+that one INSERT command.
 For compatibility with MySQL, the parser allows the use of the
 single keyword <a href="lang_replace.html">REPLACE</a> as an 
 alias for "INSERT OR REPLACE".
@@ -216,4 +236,4 @@ top-level INSERT statements only and not for INSERT statements within
 triggers.
 <p>
 
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

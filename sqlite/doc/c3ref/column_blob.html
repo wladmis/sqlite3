@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -83,18 +98,40 @@ return false;
 </div>
 <blockquote><pre>
 const void *sqlite3_column_blob(sqlite3_stmt*, int iCol);
-int sqlite3_column_bytes(sqlite3_stmt*, int iCol);
-int sqlite3_column_bytes16(sqlite3_stmt*, int iCol);
 double sqlite3_column_double(sqlite3_stmt*, int iCol);
 int sqlite3_column_int(sqlite3_stmt*, int iCol);
 sqlite3_int64 sqlite3_column_int64(sqlite3_stmt*, int iCol);
 const unsigned char *sqlite3_column_text(sqlite3_stmt*, int iCol);
 const void *sqlite3_column_text16(sqlite3_stmt*, int iCol);
-int sqlite3_column_type(sqlite3_stmt*, int iCol);
 sqlite3_value *sqlite3_column_value(sqlite3_stmt*, int iCol);
+int sqlite3_column_bytes(sqlite3_stmt*, int iCol);
+int sqlite3_column_bytes16(sqlite3_stmt*, int iCol);
+int sqlite3_column_type(sqlite3_stmt*, int iCol);
 </pre></blockquote>
 <p>
-These routines return information about a single column of the current
+<b>Summary:</b>
+<blockquote><table border=0 cellpadding=0 cellspacing=0>
+<tr><td><b>sqlite3_column_blob</b><td>&rarr;<td>BLOB result
+<tr><td><b>sqlite3_column_double</b><td>&rarr;<td>REAL result
+<tr><td><b>sqlite3_column_int</b><td>&rarr;<td>32-bit INTEGER result
+<tr><td><b>sqlite3_column_int64</b><td>&rarr;<td>64-bit INTEGER result
+<tr><td><b>sqlite3_column_text</b><td>&rarr;<td>UTF-8 TEXT result
+<tr><td><b>sqlite3_column_text16</b><td>&rarr;<td>UTF-16 TEXT result
+<tr><td><b>sqlite3_column_value</b><td>&rarr;<td>The result as an
+<a href="../c3ref/value.html">unprotected sqlite3_value</a> object.
+<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;
+<tr><td><b>sqlite3_column_bytes</b><td>&rarr;<td>Size of a BLOB
+or a UTF-8 TEXT result in bytes
+<tr><td><b>sqlite3_column_bytes16&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Size of UTF-16
+TEXT in bytes
+<tr><td><b>sqlite3_column_type</b><td>&rarr;<td>Default
+datatype of the result
+</table></blockquote></p>
+
+<p><b>Details:</b></p>
+
+<p>These routines return information about a single column of the current
 result row of a query.  In every case the first argument is a pointer
 to the <a href="../c3ref/stmt.html">prepared statement</a> that is being evaluated (the <a href="../c3ref/stmt.html">sqlite3_stmt*</a>
 that was returned from <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or one of its variants)
@@ -115,15 +152,28 @@ If <a href="../c3ref/step.html">sqlite3_step()</a> or <a href="../c3ref/reset.ht
 are called from a different thread while any of these routines
 are pending, then the results are undefined.</p>
 
+<p>The first six interfaces (_blob, _double, _int, _int64, _text, and _text16)
+each return the value of a result column in a specific data format.  If
+the result column is not initially in the requested format (for example,
+if the query returns an integer but the sqlite3_column_text() interface
+is used to extract the value) then an automatic type conversion is performed.</p>
+
 <p>The sqlite3_column_type() routine returns the
 <a href="../c3ref/c_blob.html">datatype code</a> for the initial data type
 of the result column.  The returned value is one of <a href="../c3ref/c_blob.html">SQLITE_INTEGER</a>,
-<a href="../c3ref/c_blob.html">SQLITE_FLOAT</a>, <a href="../c3ref/c_blob.html">SQLITE_TEXT</a>, <a href="../c3ref/c_blob.html">SQLITE_BLOB</a>, or <a href="../c3ref/c_blob.html">SQLITE_NULL</a>.  The value
-returned by sqlite3_column_type() is only meaningful if no type
-conversions have occurred as described below.  After a type conversion,
-the value returned by sqlite3_column_type() is undefined.  Future
+<a href="../c3ref/c_blob.html">SQLITE_FLOAT</a>, <a href="../c3ref/c_blob.html">SQLITE_TEXT</a>, <a href="../c3ref/c_blob.html">SQLITE_BLOB</a>, or <a href="../c3ref/c_blob.html">SQLITE_NULL</a>.
+The return value of sqlite3_column_type() can be used to decide which
+of the first six interface should be used to extract the column value.
+The value returned by sqlite3_column_type() is only meaningful if no
+automatic type conversions have occurred for the value in question.
+After a type conversion, the result of calling sqlite3_column_type()
+is undefined, though harmless.  Future
 versions of SQLite may change the behavior of sqlite3_column_type()
 following a type conversion.</p>
+
+<p>If the result is a BLOB or a TEXT string, then the sqlite3_column_bytes()
+or sqlite3_column_bytes16() interfaces can be used to determine the size
+of that BLOB or string.</p>
 
 <p>If the result is a BLOB or UTF-8 string then the sqlite3_column_bytes()
 routine returns the number of bytes in that BLOB or string.
@@ -160,10 +210,14 @@ an unprotected sqlite3_value object may only be used safely with
 If the <a href="../c3ref/value.html">unprotected sqlite3_value</a> object returned by
 <a href="../c3ref/column_blob.html">sqlite3_column_value()</a> is used in any other way, including calls
 to routines like <a href="../c3ref/value_blob.html">sqlite3_value_int()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_text()</a>,
-or <a href="../c3ref/value_blob.html">sqlite3_value_bytes()</a>, the behavior is not threadsafe.</p>
+or <a href="../c3ref/value_blob.html">sqlite3_value_bytes()</a>, the behavior is not threadsafe.
+Hence, the sqlite3_column_value() interface
+is normally only useful within the implementation of
+<a href="../c3ref/create_function.html">application-defined SQL functions</a> or <a href="../vtab.html">virtual tables</a>, not within
+top-level application code.</p>
 
-<p>These routines attempt to convert the value where appropriate.  For
-example, if the internal representation is FLOAT and a text result
+<p>The these routines may attempt to convert the datatype of the result.
+For example, if the internal representation is FLOAT and a text result
 is requested, <a href="../c3ref/mprintf.html">sqlite3_snprintf()</a> is used internally to perform the
 conversion automatically.  The following table details the conversions
 that are applied:</p>
@@ -235,7 +289,7 @@ with calls to sqlite3_column_bytes().</p>
 <p>The pointers returned are valid until a type conversion occurs as
 described above, or until <a href="../c3ref/step.html">sqlite3_step()</a> or <a href="../c3ref/reset.html">sqlite3_reset()</a> or
 <a href="../c3ref/finalize.html">sqlite3_finalize()</a> is called.  The memory space used to hold strings
-and BLOBs is freed automatically.  Do <em>not</em> pass the pointers returned
+and BLOBs is freed automatically.  Do not pass the pointers returned
 from <a href="../c3ref/column_blob.html">sqlite3_column_blob()</a>, <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>, etc. into
 <a href="../c3ref/free.html">sqlite3_free()</a>.</p>
 
@@ -247,4 +301,4 @@ pointer.  Subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode()<
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

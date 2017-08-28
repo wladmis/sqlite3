@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -85,16 +100,18 @@ return false;
 int sqlite3_step(sqlite3_stmt*);
 </pre></blockquote>
 <p>
-After a <a href="../c3ref/stmt.html">prepared statement</a> has been prepared using either
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> or one of the legacy
+After a <a href="../c3ref/stmt.html">prepared statement</a> has been prepared using any of
+<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>, <a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a>, <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a>,
+or <a href="../c3ref/prepare.html">sqlite3_prepare16_v3()</a> or one of the legacy
 interfaces <a href="../c3ref/prepare.html">sqlite3_prepare()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16()</a>, this function
 must be called one or more times to evaluate the statement.</p>
 
 <p>The details of the behavior of the sqlite3_step() interface depend
-on whether the statement was prepared using the newer "v2" interface
-<a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> or the older legacy
-interface <a href="../c3ref/prepare.html">sqlite3_prepare()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16()</a>.  The use of the
-new "v2" interface is recommended for new applications but the legacy
+on whether the statement was prepared using the newer "vX" interfaces
+<a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a>, <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>, <a href="../c3ref/prepare.html">sqlite3_prepare16_v3()</a>,
+<a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> or the older legacy
+interfaces <a href="../c3ref/prepare.html">sqlite3_prepare()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16()</a>.  The use of the
+new "vX" interface is recommended for new applications but the legacy
 interface will continue to be supported.</p>
 
 <p>In the legacy interface, the return value will be either <a href="../rescode.html#busy">SQLITE_BUSY</a>,
@@ -140,7 +157,7 @@ more threads at the same moment in time.</p>
 other than <a href="../rescode.html#row">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
 <a href="../c3ref/reset.html">sqlite3_reset()</a> would result in an <a href="../rescode.html#misuse">SQLITE_MISUSE</a> return from
-sqlite3_step().  But after <a href="../releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26,
+sqlite3_step().  But after <a href="../releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26),
 sqlite3_step() began
 calling <a href="../c3ref/reset.html">sqlite3_reset()</a> automatically in this circumstance rather
 than returning <a href="../rescode.html#misuse">SQLITE_MISUSE</a>.  This is not considered a compatibility
@@ -155,11 +172,12 @@ error other than <a href="../rescode.html#busy">SQLITE_BUSY</a> and <a href="../
 specific <a href="../rescode.html">error codes</a> that better describes the error.
 We admit that this is a goofy design.  The problem has been fixed
 with the "v2" interface.  If you prepare all of your SQL statements
-using either <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> instead
+using <a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>
+or <a href="../c3ref/prepare.html">sqlite3_prepare16_v2()</a> or <a href="../c3ref/prepare.html">sqlite3_prepare16_v3()</a> instead
 of the legacy <a href="../c3ref/prepare.html">sqlite3_prepare()</a> and <a href="../c3ref/prepare.html">sqlite3_prepare16()</a> interfaces,
 then the more specific <a href="../rescode.html">error codes</a> are returned directly
-by sqlite3_step().  The use of the "v2" interface is recommended.
+by sqlite3_step().  The use of the "vX" interfaces is recommended.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

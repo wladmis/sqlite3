@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -154,6 +169,7 @@ Other Documentation Indices:
 <li><a href="speed.html">Comparison &#151; SQLite Database Speed</a></li>
 <li><a href="howtocompile.html">Compile SQLite &#151; How To</a></li>
 <li><b><a href="compile.html">Compile time Options</a></b></li>
+<li><a href="completion.html">COMPLETION() Table Valued Function &#151; The</a></li>
 <li><a href="lockingv3.html">Concurrency In SQLite Version 3 &#151; File Locking And</a></li>
 <li><a href="zeroconf.html">Configuration &#151; Zero</a></li>
 <li><a href="conflict.html">Conflict Resolution in SQLite &#151; Constraint</a></li>
@@ -241,6 +257,7 @@ Other Documentation Indices:
 <li><a href="fts5.html">FTS5 Extension &#151; SQLite</a></li>
 <li><b><a href="fullsql.html">Full Featured SQL</a></b></li>
 <li><a href="carray.html">Function &#151; The Carray() Table Valued</a></li>
+<li><a href="completion.html">Function &#151; The COMPLETION() Table Valued</a></li>
 <li><a href="series.html">Function &#151; The generate_series Table Valued</a></li>
 <li><a href="deterministic.html">Functions &#151; Deterministic SQL</a></li>
 <li><a href="series.html">generate_series Table Valued Function &#151; The</a></li>
@@ -274,6 +291,7 @@ Other Documentation Indices:
 <li><a href="capi3.html">Interface For SQLite Version 3 (old) &#151; C/C++</a></li>
 <li><a href="c_interface.html">interface to SQLite Version 2 &#151; The C language</a></li>
 <li><a href="tclsqlite.html">interface to the SQLite library &#151; The Tcl</a></li>
+<li><a href="bindptr.html">Interfaces &#151; Pointer Passing</a></li>
 <li><b><a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a></b></li>
 <li><a href="cintro.html">Introduction To The SQLite C/C++ Interface &#151; An</a></li>
 <li><b><a href="isolation.html">Isolation In SQLite</a></b></li>
@@ -334,9 +352,11 @@ Other Documentation Indices:
 <li><a href="index.html">Page &#151; SQLite Home</a></li>
 <li><a href="pgszchng2016.html">Page Size in SQLite Version 3.12.0 &#151; Change in Default</a></li>
 <li><b><a href="partialindex.html">Partial Indexes</a></b></li>
+<li><a href="bindptr.html">Passing Interfaces &#151; Pointer</a></li>
 <li><a href="eqp.html">PLAN &#151; EXPLAIN QUERY</a></li>
 <li><a href="queryplanner-ng.html">Planner &#151; The Next Generation Query</a></li>
 <li><a href="queryplanner.html">Planning &#151; Query</a></li>
+<li><b><a href="bindptr.html">Pointer Passing Interfaces</a></b></li>
 <li><b><a href="psow.html">Powersafe Overwrite</a></b></li>
 <li><b><a href="pragma.html">Pragma statements supported by SQLite</a></b></li>
 <li><a href="privatebranch.html">Private Branches Of SQLite &#151; Maintaining</a></li>
@@ -420,6 +440,7 @@ Other Documentation Indices:
 <li><a href="sqlanalyze.html">sqlite3_analyzer.exe Utility Program &#151; The</a></li>
 <li><b><a href="onefile.html">SQLite: Single File Database</a></b></li>
 <li><a href="affcase1.html">SQLite? &#151; What If OpenDocument Used</a></li>
+<li><a href="stmt.html">SQLITE_STMT Virtual Table &#151; The</a></li>
 <li><a href="pragma.html">statements supported by SQLite &#151; Pragma</a></li>
 <li><a href="lts.html">Support &#151; Long Term</a></li>
 <li><a href="foreignkeys.html">Support &#151; SQLite Foreign Key</a></li>
@@ -434,8 +455,11 @@ Other Documentation Indices:
 <li><a href="csv.html">Table &#151; The CSV Virtual</a></li>
 <li><a href="dbstat.html">Table &#151; The DBSTAT Virtual</a></li>
 <li><a href="spellfix1.html">Table &#151; The Spellfix1 Virtual</a></li>
+<li><a href="stmt.html">Table &#151; The SQLITE_STMT Virtual</a></li>
+<li><a href="unionvtab.html">Table &#151; The UNION Virtual</a></li>
 <li><a href="vtab.html">Table Mechanism Of SQLite &#151; The Virtual</a></li>
 <li><a href="carray.html">Table Valued Function &#151; The Carray()</a></li>
+<li><a href="completion.html">Table Valued Function &#151; The COMPLETION()</a></li>
 <li><a href="series.html">Table Valued Function &#151; The generate_series</a></li>
 <li><a href="imposter.html">Tables &#151; Imposter</a></li>
 <li><a href="rowidtable.html">Tables &#151; Rowid</a></li>
@@ -448,6 +472,7 @@ Other Documentation Indices:
 <li><a href="omitted.html">That SQLite Does Not Implement &#151; SQL Features</a></li>
 <li><b><a href="c_interface.html">The C language interface to SQLite Version 2</a></b></li>
 <li><b><a href="carray.html">The Carray() Table Valued Function</a></b></li>
+<li><b><a href="completion.html">The COMPLETION() Table Valued Function</a></b></li>
 <li><b><a href="csv.html">The CSV Virtual Table</a></b></li>
 <li><b><a href="dbhash.html">The dbhash.exe Utility Program</a></b></li>
 <li><b><a href="dbstat.html">The DBSTAT Virtual Table</a></b></li>
@@ -465,7 +490,9 @@ Other Documentation Indices:
 <li><b><a href="optoverview.html">The SQLite Query Optimizer Overview</a></b></li>
 <li><b><a href="rtree.html">The SQLite R*Tree Module</a></b></li>
 <li><b><a href="sqlanalyze.html">The sqlite3_analyzer.exe Utility Program</a></b></li>
+<li><b><a href="stmt.html">The SQLITE_STMT Virtual Table</a></b></li>
 <li><b><a href="tclsqlite.html">The Tcl interface to the SQLite library</a></b></li>
+<li><b><a href="unionvtab.html">The UNION Virtual Table</a></b></li>
 <li><b><a href="vdbe.html">The Virtual Database Engine of SQLite</a></b></li>
 <li><b><a href="vtab.html">The Virtual Table Mechanism Of SQLite</a></b></li>
 <li><a href="threadsafe.html">Threaded Applications &#151; Using SQLite In Multi</a></li>
@@ -475,6 +502,7 @@ Other Documentation Indices:
 <li><a href="lang.html">Understood by SQLite &#151; Query Language</a></li>
 <li><a href="undoredo.html">Undo/Redo With SQLite &#151; Automatic</a></li>
 <li><b><a href="uri.html">Uniform Resource Identifiers</a></b></li>
+<li><a href="unionvtab.html">UNION Virtual Table &#151; The</a></li>
 <li><a href="unlock_notify.html">Unlock Notify API &#151; SQLite</a></li>
 <li><a href="cpu.html">Usage in SQLite &#151; Measuring and Reducing CPU</a></li>
 <li><a href="tempfiles.html">Used By SQLite &#151; Temporary Files</a></li>
@@ -486,6 +514,7 @@ Other Documentation Indices:
 <li><a href="dbhash.html">Utility Program &#151; The dbhash.exe</a></li>
 <li><a href="sqlanalyze.html">Utility Program &#151; The sqlite3_analyzer.exe</a></li>
 <li><a href="carray.html">Valued Function &#151; The Carray() Table</a></li>
+<li><a href="completion.html">Valued Function &#151; The COMPLETION() Table</a></li>
 <li><a href="series.html">Valued Function &#151; The generate_series Table</a></li>
 <li><a href="rowvalue.html">Values &#151; Row</a></li>
 <li><a href="datatypes.html">version 2 &#151; Datatypes In SQLite</a></li>
@@ -505,6 +534,8 @@ Other Documentation Indices:
 <li><a href="csv.html">Virtual Table &#151; The CSV</a></li>
 <li><a href="dbstat.html">Virtual Table &#151; The DBSTAT</a></li>
 <li><a href="spellfix1.html">Virtual Table &#151; The Spellfix1</a></li>
+<li><a href="stmt.html">Virtual Table &#151; The SQLITE_STMT</a></li>
+<li><a href="unionvtab.html">Virtual Table &#151; The UNION</a></li>
 <li><a href="vtab.html">Virtual Table Mechanism Of SQLite &#151; The</a></li>
 <li><a href="errlog.html">Warning Log &#151; The Error And</a></li>
 <li><b><a href="keyword_index.html">Website Keyword Index</a></b></li>
@@ -519,4 +550,4 @@ Other Documentation Indices:
 <li><b><a href="zeroconf.html">Zero Configuration</a></b></li>
 
 </ul>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

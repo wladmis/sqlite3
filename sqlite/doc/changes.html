@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -90,8 +105,137 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_20_1"></a>
+<h3>2017-08-24 (3.20.1)</h3><p><ol class='lessindent'>
+<li> Fix a potential memory leak in the new <a href="c3ref/result_blob.html">sqlite3_result_pointer()</a> interface.
+     Ticket <a href="https://sqlite.org/src/info/7486aa54b968e9b5">7486aa54b968e9b5</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-08-24 16:21:36 8d3a7ea6c5690d6b7c3767558f4f01b511c55463e3f9e64506801fe9b74dce34"
+<li>SHA3-256 for sqlite3.c: 93b1a6d69b48dc39697d1d3a1e4c30b55da0bdd2cad0c054462f91081832954a
+
+</ol></p>
+<a name="version_3_20_0"></a>
+<h3>2017-08-01 (3.20.0)</h3><p><ol class='lessindent'>
+<li> Update the text of error messages returned by <a href="c3ref/errcode.html">sqlite3_errmsg()</a> for some
+     error codes.
+<li> Add new <a href="bindptr.html">pointer passing interfaces</a>.
+<li> Backwards-incompatible changes to some extensions in order to take 
+     advantage of the improved security offered by the new 
+     <a href="bindptr.html">pointer passing interfaces</a>:
+     <ol type='a'>
+     <li> <a href="fts5.html#extending_fts5">Extending FTS5</a> &rarr; requires <a href="c3ref/bind_blob.html">sqlite3_bind_pointer()</a> to find
+          the fts5_api pointer.
+     <li> <a href="carray.html">carray(PTR,N)</a> &rarr; requires <a href="c3ref/bind_blob.html">sqlite3_bind_pointer()</a> to set the PTR parameter.
+     <li> <a href="https://www.sqlite.org/src/file/ext/misc/remember.c">remember(V,PTR)</a>
+          &rarr; requires <a href="c3ref/bind_blob.html">sqlite3_bind_pointer()</a> to set the PTR parameter.
+     </ol>
+<li> Added the <a href="stmt.html">SQLITE_STMT virtual table</a> extension.
+<li> Added the <a href="completion.html">COMPLETION extension</a> - designed to suggest
+     tab-completions for interactive user interfaces.  This is a work in progress.
+     Expect further enhancements in future releases.
+<li> Added the <a href="unionvtab.html">UNION virtual table</a> extension.
+<li> The built-in <a href="lang_datefunc.html">date and time functions</a> have been enhanced so that they can be
+     used in <a href="lang_createtable.html#ckconst">CHECK constraints</a>, in <a href="expridx.html">indexes on expressions</a>, and in the WHERE clauses
+     of <a href="partialindex.html">partial indexes</a>, provided that they do not use the 'now', 'localtime', or
+     'utc' keywords.  <a href="deterministic.html#dtexception">Futher information</a>.
+<li> Added the <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and <a href="c3ref/prepare.html">sqlite3_prepare16_v3()</a> interfaces
+     with the extra "prepFlags" parameters.
+<li> Provide the <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and
+     use it to limit <a href="malloc.html#lookaside">lookaside memory</a> misuse by <a href="fts3.html">FTS3</a>, <a href="fts5.html">FTS5</a>, and the
+     <a href="rtree.html">R-Tree extension</a>.
+<li> Added the <a href="pragma.html#pragma_secure_delete">PRAGMA secure_delete=FAST</a> command.  When secure_delete is
+     set to FAST, old content is overwritten with zeros as long as that does
+     not increase the amount of I/O.  Deleted content might still persist on
+     the <a href="fileformat2.html#freelist">free-page list</a> but will be purged from all b-tree pages.
+<li> Enhancements to the <a href="cli.html">command-line shell</a>:
+<ol type='a'>
+<li> Add support for tab-completion using the <a href="completion.html">COMPLETION extension</a>, for
+     both readline and linenoise.
+<li> Add the ".cd" command.
+<li> Enhance the "<a href="cli.html#dschema">.schema</a>" command to show the schema of all attached
+     databases.
+<li> Enhance "<a href="cli.html#dtables">.tables</a>" so that it shows the schema names for all attached
+     if the name is anything other than "main".
+<li> The "<a href="cli.html#csv">.import</a>" command ignores an initial UTF-8 BOM.
+<li> Added the "--newlines" option to the "<a href="cli.html#dump">.dump</a>" command to cause U+000a and
+     U+000d characters to be output literally rather than escaped using the
+     <a href="lang_corefunc.html#replace">replace()</a> function.
+</ol>
+<li> Query planner enhancements:
+<ol type='a'>
+<li> When generating individual loops for each ORed term of an OR scan,
+     move any constant WHERE expressions outside of the loop, as is 
+     done for top-level loops.
+<li> The query planner examines the values of bound parameters to help
+     determine if a partial index is usable.
+<li> When deciding between two plans with the same estimated cost, bias 
+     the selection toward the one that does not use the sorter.
+<li> Evaluate WHERE clause constraints involving correlated subqueries
+     last, in the hope that they never have be evaluated at all.
+<li> Do not use the <a href="optoverview.html#flattening">flattening optimization</a> for a sub-query on the RHS 
+     of a LEFT JOIN if that subquery reads data from a <a href="vtab.html">virtual table</a> as
+     doing so prevents the query planner from creating <a href="optoverview.html#autoindex">automatic indexes</a>
+     on the results of the sub-query, which can slow down the query.
+</ol>
+<li> Add <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusreprepare">SQLITE_STMTSTATUS_REPREPARE</a>, <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun">SQLITE_STMTSTATUS_RUN</a>, 
+     and <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusmemused">SQLITE_STMTSTATUS_MEMUSED</a> options for the
+     <a href="c3ref/stmt_status.html">sqlite3_stmt_status()</a> interface.
+<li> Provide <a href="pragma.html#pragfunc">PRAGMA functions</a> for
+     <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, <a href="pragma.html#pragma_quick_check">PRAGMA quick_check</a>, and
+     <a href="pragma.html#pragma_foreign_key_check">PRAGMA foreign_key_check</a>.
+<li> Add the -withoutnulls option to the <a href="tclsqlite.html#eval">TCL interface eval method</a>.
+<li> Enhance the <a href="sqlanalyze.html">sqlite3_analyzer.exe</a> utility program so that it shows
+     the number of bytes of metadata on btree pages.
+<li> The <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> run-time option and the
+     <a href="compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> compile-time option enable the
+     <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a>.  See also ticket
+     <a href="https://www.sqlite.org/src/info/892fc34f173e99d8">892fc34f173e99d8</a>
+<li> Miscellaneous optimizations result in a 2% reduction in <a href="cpu.html">CPU cycles used</a>.
+<p><b>Bug Fixes:</b>
+<li> Fix the behavior of <a href="c3ref/column_name.html">sqlite3_column_name()</a> for queries that use the
+     <a href="optoverview.html#flattening">flattening optimization</a> so that the result is consistent with other
+     queries that do not use that optimization, and with PostgreSQL, MySQL,
+     and SQLServer.  Ticket <a href="https://sqlite.org/src/info/de3403bf5ae">de3403bf5ae</a>.
+<li> Fix the query planner so that it knows not to use <a href="optoverview.html#autoindex">automatic indexes</a>
+     on the right table of LEFT JOIN if the WHERE clause uses the <a href="lang_expr.html#isisnot">IS operator</a>.
+     Fix for <a href="https://sqlite.org/src/info/ce68383bf6aba">ce68383bf6aba</a>.
+<li> Ensure that the query planner knows that any column of a 
+     <a href="optoverview.html#flattening">flattened</a> LEFT JOIN can be NULL even 
+     if that column is labeled with "NOT NULL". Fix for ticket 
+     <a href="https://sqlite.org/src/info/892fc34f173e99d8">892fc34f173e99d8</a>.
+<li> Fix rare false-positives in <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> when run on a database connection
+     with <a href="lang_attach.html">attached databases</a>. Ticket
+     <a href="https://sqlite.org/src/info/a4e06e75a9ab61a12">a4e06e75a9ab61a12</a>
+<li> Fix a bug (discovered by OSSFuzz) that causes an assertion fault if certain
+     dodgy CREATE TABLE declarations are used.  Ticket
+     <a href="https://sqlite.org/src/info/bc115541132dad136">bc115541132dad136</a>
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-08-01 13:24:15 9501e22dfeebdcefa783575e47c60b514d7c2e0cad73b2a496c0bc4b680900a8"
+<li>SHA3-256 for sqlite3.c: 79b7f3b977360456350219cba0ba0e5eb55910565eab68ea83edda2f968ebe95
+
+</ol></p>
+<a name="version_3_18_2"></a>
+<h3>2017-06-17 (3.18.2)</h3><p><ol class='lessindent'>
+<li>Fix a bug that might cause duplicate output rows when an IN operator is
+    used in the WHERE clause.
+    Ticket <a href="https://sqlite.org/src/info/61fe9745">61fe9745</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-06-17 09:59:36 036ebf729e4b21035d7f4f8e35a6f705e6bf99887889e2dc14ebf2242e7930dd"
+<li>SHA3-256 for sqlite3.c: b0bd014f2776b9f9508a3fc6432f70e2436bf54475369f88f0aeef75b0eec93e
+
+</ol></p>
+<a name="version_3_18_1"></a>
+<h3>2017-06-16 (3.18.1)</h3><p><ol class='lessindent'>
+<li>Fix a bug associated with <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> that can lead to database
+    corruption.  The bug was introduced in <a href="#version_3_16_0">version 3.16.0</a> (2017-01-02).
+    Ticket <a href="https://sqlite.org/src/info/fda22108">fda22108</a>.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2017-06-16 13:41:15 77bb46233db03a3338bacf7e56f439be3dfd1926ea0c44d252eeafa7a7b31c06"
+<li>SHA3-256 for sqlite3.c: 334eaf776db9d09a4e69d6012c266bc837107edc2c981739ef82081cb11c5723
+
+</ol></p>
 <a name="version_3_19_3"></a>
-<h3>2017-06-08 (3.19.3)</h3><p><ul class='lessindent'>
+<h3>2017-06-08 (3.19.3)</h3><p><ol class='lessindent'>
 <li>Fix a bug associated with <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> that can lead to database
     corruption.  The bug was introduced in <a href="#version_3_16_0">version 3.16.0</a> (2017-01-02).
     Ticket <a href="https://sqlite.org/src/info/fda22108">fda22108</a>.
@@ -99,18 +243,18 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-06-08 14:26:16 0ee482a1e0eae22e08edc8978c9733a96603d4509645f348ebf55b579e89636b"
 <li>SHA3-256 for sqlite3.c: 368f1d31272b1739f804bcfa5485e5de62678015c4adbe575003ded85c164bb8
 
-</ul></p>
+</ol></p>
 <a name="version_3_19_2"></a>
-<h3>2017-05-25 (3.19.2)</h3><p><ul class='lessindent'>
+<h3>2017-05-25 (3.19.2)</h3><p><ol class='lessindent'>
 <li>Fix more bugs in the LEFT JOIN <a href="optoverview.html#flattening">flattening optimization</a>. Ticket
     <a href="https://www.sqlite.org/src/info/7fde638e94287d2c">7fde638e94287d2c</a>.
 <p><b>Hashes:</b>
 <li>SQLITE_SOURCE_ID: "2017-05-25 16:50:27 edb4e819b0c058c7d74d27ebd14cc5ceb2bad6a6144a486a970182b7afe3f8b9"
 <li>SHA3-256 for sqlite3.c: 1be0c457869c1f7eba58c3b5097b9ec307a15be338308bee8e5be8570bcf5d1e
 
-</ul></p>
+</ol></p>
 <a name="version_3_19_1"></a>
-<h3>2017-05-24 (3.19.1)</h3><p><ul class='lessindent'>
+<h3>2017-05-24 (3.19.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the LEFT JOIN <a href="optoverview.html#flattening">flattening optimization</a>. Ticket
     <a href="https://www.sqlite.org/src/info/cad1ab4cb7b0fc">cad1ab4cb7b0fc</a>.
 <li>Remove a surplus semicolon that was causing problems for older versions of MSVC.
@@ -118,9 +262,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-05-24 13:08:33 f6d7b988f40217821a382bc298180e9e6794f3ed79a83c6ef5cae048989b3f86"
 <li>SHA3-256 for sqlite3.c: 996b2aff37b6e0c6663d0312cd921bbdf6826c989cbbb07dadde5e9672889bca
 
-</ul></p>
+</ol></p>
 <a name="version_3_19_0"></a>
-<h3>2017-05-22 (3.19.0)</h3><p><ul class='lessindent'>
+<h3>2017-05-22 (3.19.0)</h3><p><ol class='lessindent'>
 <li> The <a href="c3ref/c_alter_table.html">SQLITE_READ</a> <a href="c3ref/set_authorizer.html">authorizer callback</a> is invoked once
      with a column name that is an empty string
      for every table referenced in a query from which no columns are extracted.
@@ -160,6 +304,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
      <a href="lang_vacuum.html">VACUUM</a> to behave suboptimally.
 <li> Fix the <a href="pragma.html#pragma_foreign_key_check">PRAGMA foreign_key_check</a> command so that it works correctly with
      foreign keys on <a href="withoutrowid.html">WITHOUT ROWID</a> tables.
+<li> Fix a bug in the b-tree logic that can result in incorrect duplicate answers
+     for IN operator queries.  Ticket
+     <a href="https://sqlite.org/src/info/61fe9745">61fe9745</a>
 <li> Disallow leading zeros in numeric constants in JSON.  Fix for ticket
      <a href="https://www.sqlite.org/src/info/b93be8729a895a528e2">b93be8729a895a528e2</a>.
 <li> Disallow control characters inside of strings in JSON.  Fix for ticket
@@ -171,9 +318,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-05-22 13:58:13 28a94eb282822cad1d1420f2dad6bf65e4b8b9062eda4a0b9ee8270b2c608e40"
 <li>SHA3-256 for sqlite3.c: c30326aa1a9cc342061b755725eac9270109acf878bc59200dd4b1cea6bc2908
 
-</ul></p>
+</ol></p>
 <a name="version_3_18_0"></a>
-<h3>2017-03-30 (3.18.0)</h3><p><ul class='lessindent'>
+<h3>2017-03-30 (3.18.0)</h3><p><ol class='lessindent'>
 <li>Added the <a href="pragma.html#pragma_optimize">PRAGMA optimize</a> command
 <li>The SQLite version identifier returned by the <a href="lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a> SQL function
     and the <a href="c3ref/libversion.html">sqlite3_sourceid()</a> C API and found in the <a href="c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> macro is
@@ -216,17 +363,17 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-03-28 18:48:43 424a0d380332858ee55bdebc4af3789f74e70a2b3ba1cf29d84b9b4bcf3e2e37"
 <li>SHA3-256 for sqlite3.c: cbf322df1f76be57fb3be84f3da1fc71d1d3dfdb7e7c2757fb0ff630b3bc2e5d
 
-</ul></p>
+</ol></p>
 <a name="version_3_17_0"></a>
-<h3>2017-02-13 (3.17.0)</h3><p><ul class='lessindent'>
+<h3>2017-02-13 (3.17.0)</h3><p><ol class='lessindent'>
 <li>Approximately 25% better performance from the <a href="rtree.html">R-Tree extension</a>.
-    <ul>
+    <ol type='a'>
     <li> Uses compiler built-ins (ex: __builtin_bswap32() or _byteswap_ulong())
          for byteswapping when available.
     <li> Uses the <a href="c3ref/blob.html">sqlite3_blob</a> key/value access object instead of SQL
          for pulling content out of R-Tree nodes
     <li> Other miscellaneous enhancements such as loop unrolling.
-    </ul>
+    </ol>
 <li>Add the <a href="compile.html#default_lookaside">SQLITE_DEFAULT_LOOKASIDE</a> compile-time option.
 <li>Increase the default <a href="malloc.html#lookaside">lookaside</a>
     size from 512,125 to 1200,100 
@@ -282,9 +429,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SHA1 for sqlite3.c: cc7d708bb073c44102a59ed63ce6142da1f174d1
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_16_2"></a>
-<h3>2017-01-06 (3.16.2)</h3><p><ul class='lessindent'>
+<h3>2017-01-06 (3.16.2)</h3><p><ol class='lessindent'>
 <li>Fix the <a href="lang_replace.html">REPLACE</a> statement for 
     <a href="withoutrowid.html">WITHOUT ROWID</a> tables that lack secondary indexes so that
     it works correctly with triggers and foreign keys.  This was a new bug
@@ -307,9 +454,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-01-06 16:32:41 a65a62893ca8319e89e48b8a38cf8a59c69a8209"
 <li>SHA1 for sqlite3.c: 2bebdc3f24911c0d12b6d6c0123c3f84d6946b08
 
-</ul></p>
+</ol></p>
 <a name="version_3_16_1"></a>
-<h3>2017-01-03 (3.16.1)</h3><p><ul class='lessindent'>
+<h3>2017-01-03 (3.16.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug concerning the use of <a href="rowvalue.html">row values</a> within <a href="lang_createtrigger.html">triggers</a>
     (see ticket <a href="https://www.sqlite.org/src/info/8c9458e7">8c9458e7</a>)
     that was in version 3.15.0 but was not reported until moments after the 3.16.0
@@ -318,9 +465,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-01-03 18:27:03 979f04392853b8053817a3eea2fc679947b437fd"
 <li>SHA1 for sqlite3.c: 354f6223490b30fd5320b4066b1535e4ce33988d
 
-</ul></p>
+</ol></p>
 <a name="version_3_16_0"></a>
-<h3>2017-01-02 (3.16.0)</h3><p><ul class='lessindent'>
+<h3>2017-01-02 (3.16.0)</h3><p><ol class='lessindent'>
 <li>Uses 9% fewer CPU cycles. (See the <a href="cpu.html">CPU performance measurement</a> report for
     details on how this performance increase was computed.)
 <li>Added experimental support for <a href="pragma.html#pragfunc">PRAGMA functions</a>.
@@ -353,9 +500,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2017-01-02 11:57:58 04ac0b75b1716541b2b97704f4809cb7ef19cccf"
 <li>SHA1 for sqlite3.c: e2920fb885569d14197c9b7958e6f1db573ee669
 
-</ul></p>
+</ol></p>
 <a name="version_3_15_2"></a>
-<h3>2016-11-28 (3.15.2)</h3><p><ul class='lessindent'>
+<h3>2016-11-28 (3.15.2)</h3><p><ol class='lessindent'>
 <li> Multiple bug fixes to the <a href="rowvalue.html">row value</a> logic that was introduced in version 3.15.0.
 <li> Fix a NULL pointer dereference in ATTACH/DETACH following a maliciously constructed
      syntax error.  Ticket 
@@ -368,9 +515,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2016-11-28 19:13:37 bbd85d235f7037c6a033a9690534391ffeacecc8"
 <li>SHA1 for sqlite3.c: 06d77b42a3e70609f8d4bbb97caf53652f1082cb
 
-</ul></p>
+</ol></p>
 <a name="version_3_15_1"></a>
-<h3>2016-11-04 (3.15.1)</h3><p><ul class='lessindent'>
+<h3>2016-11-04 (3.15.1)</h3><p><ol class='lessindent'>
 <li> Added <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32gethandle">SQLITE_FCNTL_WIN32_GET_HANDLE</a> file control opcode.
 <li> Fix the <a href="lang_vacuum.html">VACUUM</a> command so that it spills excess content to disk rather
      than holding everything in memory, and possible causing an out-of-memory
@@ -387,21 +534,21 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2016-11-04 12:08:49 1136863c76576110e710dd5d69ab6bf347c65e36"
 <li>SHA1 for sqlite3.c: e7c26a7be3e431dd06898f8d262c4ef240c07366
 
-</ul></p>
+</ol></p>
 <a name="version_3_15_0"></a>
-<h3>2016-10-14 (3.15.0)</h3><p><ul class='lessindent'>
+<h3>2016-10-14 (3.15.0)</h3><p><ol class='lessindent'>
 <li> Added support for <a href="rowvalue.html">row values</a>.
 <li> Allow <a href="deterministic.html">deterministic SQL functions</a> in the WHERE clause of a <a href="partialindex.html">partial index</a>.
 <li> Added the "<a href="uri.html#urimodeof">modeof=<i>filename</i></a>" URI parameter on the unix VFS
 <li> Added support for <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAINDBNAME</a>.
 <li> Added the ability to <a href="lang_vacuum.html">VACUUM</a> an <a href="lang_attach.html">ATTACH-ed</a> database.
 <li> Enhancements to the <a href="cli.html">command-line shell</a>:
-     <ul>
+     <ol type='a'>
      <li> Add the ".testcase" and ".check" <a href="cli.html#dotcmd">dot-commands</a>.
      <li> Added the --new option to the ".open" dot-command, causing
           any prior content in the database to be purged prior to
           opening.
-     </ul>
+     </ol>
 <li> Enhance the <a href="fts5.html#the_fts5vocab_virtual_table_module">fts5vocab</a> virtual table to handle "ORDER BY term" efficiently.
 <li> Miscellaneous micro-optimizations reduce CPU usage by more than 7%
      on common workloads.  Most optimization in this release has been on the
@@ -428,9 +575,9 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li>SQLITE_SOURCE_ID: "2016-10-14 10:20:30 707875582fcba352b4906a595ad89198d84711d8"
 <li>SHA1 for sqlite3.c: fba106f8f6493c66eeed08a2dfff0907de54ae76
 
-</ul></p>
+</ol></p>
 <a name="version_3_14_2"></a>
-<h3>2016-09-12 (3.14.2)</h3><p><ul class='lessindent'>
+<h3>2016-09-12 (3.14.2)</h3><p><ol class='lessindent'>
 <li> Improved support for using the STDCALL calling convention in winsqlite3.dll.
 <li> Fix the <a href="c3ref/trace_v2.html">sqlite3_trace_v2()</a> interface so that it is disabled if either the
 callback or the mask arguments are zero, in accordance with the documentation.
@@ -449,9 +596,9 @@ to no-op.  Ticket <a href="https://sqlite.org/src/info/ef360601">ef360601</a>
 <li>SQLITE_SOURCE_ID: "2016-09-12 18:50:49 29dbef4b8585f753861a36d6dd102ca634197bd6"
 <li>SHA1 for sqlite3.c: bcc4a1989db45e7f223191f2d0f66c1c28946383
 
-</ul></p>
+</ol></p>
 <a name="version_3_14_1"></a>
-<h3>2016-08-11 (3.14.1)</h3><p><ul class='lessindent'>
+<h3>2016-08-11 (3.14.1)</h3><p><ol class='lessindent'>
 <li>A performance enhancement to the page-cache "truncate" operation
     reduces <a href="lang_transaction.html">COMMIT</a> time by dozens of milliseconds on systems with a
     large <a href="pragma.html#pragma_cache_size">page cache</a>.
@@ -460,9 +607,9 @@ to no-op.  Ticket <a href="https://sqlite.org/src/info/ef360601">ef360601</a>
 <li>SQLITE_SOURCE_ID: "2016-08-11 18:53:32 a12d8059770df4bca59e321c266410344242bf7b"
 <li>SHA1 for sqlite3.c: d545b24892278272ce4e40e0567d69c8babf12ea
 
-</ul></p>
+</ol></p>
 <a name="version_3_14"></a>
-<h3>2016-08-08 (3.14)</h3><p><ul class='lessindent'>
+<h3>2016-08-08 (3.14)</h3><p><ol class='lessindent'>
 <div style="width:280px;float:right;padding:10px;margin:0px 10px;">
 <img src='images/sqlitepie.jpg' width=280 height=250></img><br>
 <center>Celebrating the SQLite "<big>&pi;</big> release"
@@ -521,9 +668,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-08-08 13:40:27 d5e98057028abcf7217d0d2b2e29bbbcdf09d6de"
 <li>SHA1 for sqlite3.c: 234a3275d03a287434ace3ccdf1afb208e6b0e92
 
-</ul></p>
+</ol></p>
 <a name="version_3_13_0"></a>
-<h3>2016-05-18 (3.13.0)</h3><p><ul class='lessindent'>
+<h3>2016-05-18 (3.13.0)</h3><p><ol class='lessindent'>
 <li>Postpone I/O associated with TEMP files for as long as possible, with the hope
     that the I/O can ultimately be avoided completely.
 <li>Merged the <a href="sessionintro.html">session</a> extension into trunk.
@@ -561,35 +708,23 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.10.1 (2015-05-09):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.8.2 (2015-01-30):</b></p>
 
-<li>Make <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
-    compile-time option.
-<li>Fix a harmless warning in the <a href="cli.html">command-line shell</a> on some versions of MSVC.
-<li>Fix minor issues with the <a href="dbstat.html">dbstat virtual table</a>.
+<li>Enhance <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2(TRUNCATE)</a> interface so that it truncates the
+    WAL file even if there is no checkpoint work to be done.
 
 
-<p><b>Bug fixes backported into patch release 3.8.10 (2015-05-07):</b></p>
+<p><b>Bug fixes backported into patch release 3.8.8.1 (2015-01-20):</b></p>
 
-<li>Added the <a href="sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
-    SQLite database files.
-<li>Added the <a href="fts3.html#matchinfo-y">matchinfo y flag</a> to the 
-    <a href="fts3.html#matchinfo">matchinfo()</a> function of <a href="fts3.html">FTS3</a>.
-<li>Performance improvements for <a href="lang_select.html#orderby">ORDER BY</a>, <a href="lang_vacuum.html">VACUUM</a>, <a href="lang_createindex.html">CREATE INDEX</a>,
-    <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a>, and <a href="pragma.html#pragma_quick_check">PRAGMA quick_check</a>.
-<li>Fix many obscure problems discovered while <a href="testing.html#fuzztesting">SQL fuzzing</a>.
-<li>Identify all methods for important objects in the interface documentation.
-    (<a href="c3ref/context.html">example</a>)
-<li>Made the <a href="testing.html#aflfuzz">American Fuzzy Lop fuzzer</a>
-    a standard part of SQLite's <a href="testing.html">testing strategy</a>.
-<li>Add the ".binary" and ".limits" commands to the <a href="cli.html">command-line shell</a>.
-<li>Make the <a href="dbstat.html">dbstat virtual table</a> part of standard builds when
-    compiled with the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a> option.
+<li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
+    output to appear in the wrong order on queries that contains an ORDER BY clause,
+    a LIMIT clause, and that have approximately 60 or more columns in the result set.
+    Ticket <a href="https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79">f97c4637102a3ae72b79</a>.
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_12_2"></a>
-<h3>2016-04-18 (3.12.2)</h3><p><ul class='lessindent'>
+<h3>2016-04-18 (3.12.2)</h3><p><ol class='lessindent'>
 <li>Fix a backwards compatibility problem in version 3.12.0 and 3.12.1:
     Columns declared as <tt>"INTEGER" PRIMARY KEY</tt> (with quotes around
     the datatype keyword) were not being recognized as an
@@ -607,9 +742,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-04-18 17:30:31 92dc59fd5ad66f646666042eb04195e3a61a9e8e"
 <li>SHA1 for sqlite3.c: de5a5898ebd3a3477d4652db143746d008b24c83
 
-</ul></p>
+</ol></p>
 <a name="version_3_12_1"></a>
-<h3>2016-04-08 (3.12.1)</h3><p><ul class='lessindent'>
+<h3>2016-04-08 (3.12.1)</h3><p><ol class='lessindent'>
 <li>Fix a boundary condition error introduced by version 3.12.0
     that can result in a crash during heavy <a href="lang_savepoint.html">SAVEPOINT</a> usage.
     Ticket <a href="https://www.sqlite.org/src/info/7f7f8026eda38">7f7f8026eda38</a>.
@@ -621,18 +756,18 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-04-08 15:09:49 fe7d3b75fe1bde41511b323925af8ae1b910bc4d"
 <li>SHA1 for sqlite3.c: ebb18593350779850e3e1a930eb84a70fca8c1d1
 
-</ul></p>
+</ol></p>
 <a name="version_3_9_3"></a>
-<h3>2016-04-01 (3.9.3)</h3><p><ul class='lessindent'>
+<h3>2016-04-01 (3.9.3)</h3><p><ol class='lessindent'>
 <li>Backport a
     <a href="https://www.sqlite.org/src/info/c648539b52ca28c0">simple query planner optimization</a>
     that allows the IS operator
     to drive an index on a LEFT OUTER JOIN.  No other changes from the
     <a href="#version_3_9_2">version 3.9.2</a> baseline.
 
-</ul></p>
+</ol></p>
 <a name="version_3_12_0"></a>
-<h3>2016-03-29 (3.12.0)</h3><p><ul class='lessindent'>
+<h3>2016-03-29 (3.12.0)</h3><p><ol class='lessindent'>
 <p><b>Potentially Disruptive Change:</b>
 <li>The <a href="compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> is increased from 1024 to 4096.  
     The <a href="compile.html#default_cache_size">SQLITE_DEFAULT_CACHE_SIZE</a> is changed from 2000 to -2000 so 
@@ -693,9 +828,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-03-29 10:14:15 e9bb4cf40f4971974a74468ef922bdee481c988b"
 <li>SHA1 for sqlite3.c: cba2be96d27cb51978cd4a200397a4ad178986eb
 
-</ul></p>
+</ol></p>
 <a name="version_3_11_1"></a>
-<h3>2016-03-03 (3.11.1)</h3><p><ul class='lessindent'>
+<h3>2016-03-03 (3.11.1)</h3><p><ol class='lessindent'>
 <li>Improvements to the Makefiles and build scripts used by VisualStudio.
 <li>Fix an <a href="fts5.html">FTS5</a> issue in which the 'optimize' command could cause index corruption.
 <li>Fix a buffer overread that might occur if <a href="fts5.html">FTS5</a> is used to query a corrupt
@@ -704,9 +839,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-03-03 16:17:53 f047920ce16971e573bc6ec9a48b118c9de2b3a7"
 <li>SHA1 for sqlite3.c: 3da832fd2af36eaedb05d61a8f4c2bb9f3d54265
 
-</ul></p>
+</ol></p>
 <a name="version_3_11_0"></a>
-<h3>2016-02-15 (3.11.0)</h3><p><ul class='lessindent'>
+<h3>2016-02-15 (3.11.0)</h3><p><ol class='lessindent'>
 <p><b>General improvements:</b>
 <li>Enhanced <a href="wal.html">WAL mode</a> so that it works efficiently with transactions that are
     larger than the <a href="pragma.html#pragma_cache_size">cache_size</a>.
@@ -755,9 +890,9 @@ with a home-baked pie.</center>
 <li>SHA1 for sqlite3.c: df01436c5fcfe72d1a95bc172158219796e1a90b
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_10_2"></a>
-<h3>2016-01-20 (3.10.2)</h3><p><ul class='lessindent'>
+<h3>2016-01-20 (3.10.2)</h3><p><ol class='lessindent'>
 <p><b>Critical bug fix:</b>
 <li>Version 3.10.0 introduced a case-folding bug in the <a href="lang_expr.html#like">LIKE</a> operator which is fixed
     by this patch release.  Ticket 
@@ -771,9 +906,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-01-20 15:27:19 17efb4209f97fb4971656086b138599a91a75ff9"
 <li>SHA1 for sqlite3.c: f7088b19d97cd7a1c805ee95c696abd54f01de4f
 
-</ul></p>
+</ol></p>
 <a name="version_3_10_1"></a>
-<h3>2016-01-14 (3.10.1)</h3><p><ul class='lessindent'>
+<h3>2016-01-14 (3.10.1)</h3><p><ol class='lessindent'>
 <p><b>New feature:</b>
 <li>Add the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">SQLITE_FCNTL_JOURNAL_POINTER</a> file control.
 <p><b>Bug fix:</b>
@@ -784,9 +919,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-01-13 21:41:56 254419c36766225ca542ae873ed38255e3fb8588"
 <li>SHA1 for sqlite3.c: 1398ba8e4043550a533cdd0834bfdad1c9eab0f4
 
-</ul></p>
+</ol></p>
 <a name="version_3_10_0"></a>
-<h3>2016-01-06 (3.10.0)</h3><p><ul class='lessindent'>
+<h3>2016-01-06 (3.10.0)</h3><p><ol class='lessindent'>
 <p><b>General improvements:</b>
 <li>Added support for <a href="lang_expr.html#like">LIKE</a>, <a href="lang_expr.html#glob">GLOB</a>, and <a href="lang_expr.html#regexp">REGEXP</a> operators on <a href="vtab.html">virtual tables</a>.
 <li>Added the <a href="vtab.html#colUsed">colUsed field</a> to <a href="c3ref/index_info.html">sqlite3_index_info</a> for use by
@@ -835,9 +970,9 @@ with a home-baked pie.</center>
 <li>SHA1 for sqlite3.c: b92ca988ebb6df02ac0c8f866dbf3256740408ac
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_9_2"></a>
-<h3>2015-11-02 (3.9.2)</h3><p><ul class='lessindent'>
+<h3>2015-11-02 (3.9.2)</h3><p><ol class='lessindent'>
 <li>Fix the schema parser so that it interprets certain 
     (obscure and ill-formed)
     CREATE TABLE statements the same as legacy.  Fix for ticket
@@ -850,9 +985,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-11-02 18:31:45 bda77dda9697c463c3d0704014d51627fceee328"
 <li>SHA1 for sqlite3.c: 1c4013876f50bbaa3e6f0f98e0147c76287684c1
 
-</ul></p>
+</ol></p>
 <a name="version_3_9_1"></a>
-<h3>2015-10-16 (3.9.1)</h3><p><ul class='lessindent'>
+<h3>2015-10-16 (3.9.1)</h3><p><ol class='lessindent'>
 <li>Fix <a href="json1.html">the json1 extension</a> so that it does <u>not</u> recognize ASCII form-feed as a
     whitespace character, in order to comply with RFC-7159.  Fix for ticket
     <a href="https://www.sqlite.org/src/info/57eec374ae1d0a1d">57eec374ae1d0a1d</a>
@@ -862,9 +997,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: ""2015-10-16 17:31:12 767c1727fec4ce11b83f25b3f1bfcfe68a2c8b02"
 <li>SHA1 for sqlite3.c: 5e6d1873a32d82c2cf8581f143649940cac8ae49
 
-</ul></p>
+</ol></p>
 <a name="version_3_9_0"></a>
-<h3>2015-10-14 (3.9.0)</h3><p><ul class='lessindent'>
+<h3>2015-10-14 (3.9.0)</h3><p><ol class='lessindent'>
 <p><b>Policy Changes:</b>
 <li>The <a href="versionnumbers.html">version numbering conventions</a> for SQLite are revised to use the
     emerging standard of <a href="http://semver.org/">semantic versioning</a>.
@@ -912,9 +1047,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-10-14 12:29:53 a721fc0d89495518fe5612e2e3bbc60befd2e90d"
 <li>SHA1 for sqlite3.c: c03e47e152ddb9c342b84ffb39448bf4a2bd4288
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_11_1"></a>
-<h3>2015-07-29 (3.8.11.1)</h3><p><ul class='lessindent'>
+<h3>2015-07-29 (3.8.11.1)</h3><p><ol class='lessindent'>
 <li>Restore an undocumented side-effect of <a href="pragma.html#pragma_cache_size">PRAGMA cache_size</a>: force
     the database schema to be parsed if the database has not been previously accessed.
 <li>Fix a long-standing problem in <a href="c3ref/changes.html">sqlite3_changes()</a> for <a href="withoutrowid.html">WITHOUT ROWID</a>
@@ -922,9 +1057,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-07-29 20:00:57 cf538e2783e468bbc25e7cb2a9ee64d3e0e80b2f"
 <li>SHA1 for sqlite3.c: 3be71d99121fe5b17f057011025bcf84e7cc6c84
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_11"></a>
-<h3>2015-07-27 (3.8.11)</h3><p><ul class='lessindent'>
+<h3>2015-07-27 (3.8.11)</h3><p><ol class='lessindent'>
 <li>Added the experimental <a href="rbu.html">RBU</a> extension.  Note that this extension is experimental
     and subject to change in incompatible ways.
 <li>Added the experimental <a href="fts5.html">FTS5</a> extension.  Note that this extension is experimental
@@ -976,9 +1111,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-07-27 13:49:41 b8e92227a469de677a66da62e4361f099c0b79d0"
 <li>SHA1 for sqlite3.c: 719f6891abcd9c459b5460b191d731cd12a3643e
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_10_2"></a>
-<h3>2015-05-20 (3.8.10.2)</h3><p><ul class='lessindent'>
+<h3>2015-05-20 (3.8.10.2)</h3><p><ol class='lessindent'>
 <li>Fix an index corruption issue introduced by <a href="#version_3_8_7">version 3.8.7</a>.  An index
     with a TEXT key can be corrupted by an <a href="lang_insert.html">INSERT</a> into the corresponding 
     table if the table has two nested triggers that convert the key value to INTEGER
@@ -988,9 +1123,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-05-20 18:17:19 2ef4f3a5b1d1d0c4338f8243d40a2452cc1f7fe4"
 <li>SHA1 for sqlite3.c: 638abb77965332c956dbbd2c8e4248e84da4eb63
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_10_1"></a>
-<h3>2015-05-09 (3.8.10.1)</h3><p><ul class='lessindent'>
+<h3>2015-05-09 (3.8.10.1)</h3><p><ol class='lessindent'>
 <li>Make <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> responsive to the <a href="compile.html#enable_dbstat_vtab">SQLITE_ENABLE_DBSTAT_VTAB</a>
     compile-time option.
 <li>Fix a harmless warning in the <a href="cli.html">command-line shell</a> on some versions of MSVC.
@@ -999,9 +1134,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-05-09 12:14:55 05b4b1f2a937c06c90db70c09890038f6c98ec40"
 <li>SHA1 for sqlite3.c: 85e4e1c08c7df28ef61bb9759a0d466e0eefbaa2
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_10"></a>
-<h3>2015-05-07 (3.8.10)</h3><p><ul class='lessindent'>
+<h3>2015-05-07 (3.8.10)</h3><p><ol class='lessindent'>
 <li>Added the <a href="sqldiff.html">sqldiff.exe</a> utility program for computing the differences between two
     SQLite database files.
 <li>Added the <a href="fts3.html#matchinfo-y">matchinfo y flag</a> to the 
@@ -1020,9 +1155,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-05-07 11:53:08 cf975957b9ae671f34bb65f049acf351e650d437"
 <li>SHA1 for sqlite3.c: 0b34f0de356a3f21b9dfc761f3b7821b6353c570
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_9"></a>
-<h3>2015-04-08 (3.8.9)</h3><p><ul class='lessindent'>
+<h3>2015-04-08 (3.8.9)</h3><p><ol class='lessindent'>
 <li>Add VxWorks-7 as an officially supported and tested platform.
 <li>Added the <a href="c3ref/status.html">sqlite3_status64()</a> interface.
 <li>Fix memory size tracking so that it works even if SQLite uses more
@@ -1044,9 +1179,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-04-08 12:16:33 8a8ffc862e96f57aa698f93de10dee28e69f6e09"
 <li>SHA1 for sqlite3.c: 49f1c3ae347e1327b5aaa6c7f76126bdf09c6f42
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_8_3"></a>
-<h3>2015-02-25 (3.8.8.3)</h3><p><ul class='lessindent'>
+<h3>2015-02-25 (3.8.8.3)</h3><p><ol class='lessindent'>
 <li>Fix a bug (ticket
     <a href="https://www.sqlite.org/src/info/2326c258d02ead33">2326c258d02ead33</a>) that can lead
     to incorrect results if the qualifying constraint of a <a href="partialindex.html">partial index</a> appears in the
@@ -1058,9 +1193,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-02-25 13:29:11 9d6c1880fb75660bbabd693175579529785f8a6b"
 <li>SHA1 for sqlite3.c: 74ee38c8c6fd175ec85a47276dfcefe8a262827a
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_8_2"></a>
-<h3>2015-01-30 (3.8.8.2)</h3><p><ul class='lessindent'>
+<h3>2015-01-30 (3.8.8.2)</h3><p><ol class='lessindent'>
 <li>Enhance <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2(TRUNCATE)</a> interface so that it truncates the
     WAL file even if there is no checkpoint work to be done.
 
@@ -1068,9 +1203,9 @@ with a home-baked pie.</center>
 <li>SHA1 for sqlite3.c: 85ce79948116aa9a087ec345c9d2ce2c1d3cd8af
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_8_1"></a>
-<h3>2015-01-20 (3.8.8.1)</h3><p><ul class='lessindent'>
+<h3>2015-01-20 (3.8.8.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the sorting logic, present since version 3.8.4, that can cause
     output to appear in the wrong order on queries that contains an ORDER BY clause,
     a LIMIT clause, and that have approximately 60 or more columns in the result set.
@@ -1079,9 +1214,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-01-20 16:51:25 f73337e3e289915a76ca96e7a05a1a8d4e890d55"
 <li>SHA1 for sqlite3.c: 33987fb50dcc09f1429a653d6b47672f5a96f19e
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_8"></a>
-<h3>2015-01-16 (3.8.8)</h3><p><ul class='lessindent'>
+<h3>2015-01-16 (3.8.8)</h3><p><ol class='lessindent'>
 <p><b>New Features:</b>
 <li>Added the <a href="pragma.html#pragma_data_version">PRAGMA data_version</a> command that can be used to determine if
     a database file has been modified by another process.
@@ -1142,16 +1277,16 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2015-01-16 12:08:06 7d68a42face3ab14ed88407d4331872f5b243fdf"
 <li>SHA1 for sqlite3.c: 91aea4cc722371d58aae3d22e94d2a4165276905
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_7_4"></a>
-<h3>2014-12-09 (3.8.7.4)</h3><p><ul class='lessindent'>
+<h3>2014-12-09 (3.8.7.4)</h3><p><ol class='lessindent'>
 <li>Bug fix: Add in a mutex that was omitted from the previous release.
 <li>SQLITE_SOURCE_ID: "2014-12-09 01:34:36 f66f7a17b78ba617acde90fc810107f34f1a1f2e"
 <li>SHA1 for sqlite3.c: 0a56693a3c24aa3217098afab1b6fecccdedfd23
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_7_3"></a>
-<h3>2014-12-05 (3.8.7.3)</h3><p><ul class='lessindent'>
+<h3>2014-12-05 (3.8.7.3)</h3><p><ol class='lessindent'>
 <li>Bug fix: Ensure the cached KeyInfo objects (an internal abstraction not visible to the
     application) do not go stale when operating in <a href="sharedcache.html">shared cache mode</a> and frequently closing
     and reopening some database connections while leaving other database connections on the
@@ -1165,9 +1300,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-12-05 22:29:24 647e77e853e81a5effeb4c33477910400a67ba86"
 <li>SHA1 for sqlite3.c: 3ad2f5ba3a4a3e3e51a1dac9fda9224b359f0261
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_7_2"></a>
-<h3>2014-11-18 (3.8.7.2)</h3><p><ul class='lessindent'>
+<h3>2014-11-18 (3.8.7.2)</h3><p><ol class='lessindent'>
 <li>Enhance the <a href="lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
     as the schema is unchanged.  Formerly, a ROLLBACK would cause all pending queries to
     fail with an <a href="rescode.html#abort">SQLITE_ABORT</a> or <a href="rescode.html#abort_rollback">SQLITE_ABORT_ROLLBACK</a> error.  That error is still returned
@@ -1184,9 +1319,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-11-18 20:57:56 2ab564bf9655b7c7b97ab85cafc8a48329b27f93"
 <li>SHA1 for sqlite3.c: b2a68d5783f48dba6a8cb50d8bf69b238c5ec53a
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_7_1"></a>
-<h3>2014-10-29 (3.8.7.1)</h3><p><ul class='lessindent'>
+<h3>2014-10-29 (3.8.7.1)</h3><p><ol class='lessindent'>
 <li>In <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=TRUNCATE</a> mode, call fsync() immediately after truncating
     the journal file to ensure that the transaction is durable across a power loss.
 <li>Fix an assertion fault that can occur when updating the NULL value of a field
@@ -1199,9 +1334,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-10-29 13:59:56 3b7b72c4685aa5cf5e675c2c47ebec10d9704221"
 <li>SHA1 for sqlite3.c: 2d25bd1a73dc40f538f3a81c28e6efa5999bdf0c
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_7"></a>
-<h3>2014-10-17 (3.8.7)</h3><p><ul class='lessindent'>
+<h3>2014-10-17 (3.8.7)</h3><p><ol class='lessindent'>
 <p><b>Performance Enhancements:</b>
 <li>Many micro-optimizations result in 20.3% more work for the same number
     of CPU cycles relative to the previous release. 
@@ -1263,9 +1398,9 @@ with a home-baked pie.</center>
 <li>SHA1 for sqlite3.c: 56dcf5e931a9e1fa12fc2d600cd91d3bf9b639cd
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_6"></a>
-<h3>2014-08-15 (3.8.6)</h3><p><ul class='lessindent'>
+<h3>2014-08-15 (3.8.6)</h3><p><ol class='lessindent'>
 <li>Added support for <a href="lang_expr.html#hexint">hexadecimal integer literals</a> in the SQL parser.
     (Ex: 0x123abc)
 <li>Enhanced the <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> command to detect <a href="lang_createtable.html#uniqueconst">UNIQUE</a> and
@@ -1325,9 +1460,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-08-15 11:46:33 9491ba7d738528f168657adb43a198238abde19e"
 <li>SHA1 for sqlite3.c: 72c64f05cd9babb9c0f9b3c82536d83be7804b1c
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_5"></a>
-<h3>2014-06-04 (3.8.5)</h3><p><ul class='lessindent'>
+<h3>2014-06-04 (3.8.5)</h3><p><ol class='lessindent'>
 <li>Added support for <a href="queryplanner.html#partialsort">partial sorting by index</a>.
 <li>Enhance the query planner so that it always prefers an index that uses a superset of
     WHERE clause terms relative to some other index.
@@ -1384,9 +1519,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-06-04 14:06:34 b1ed4f2a34ba66c29b130f8d13e9092758019212"
 <li>SHA1 for sqlite3.c: 7bc194957238c61b1a47f301270286be5bc5208c
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_4_3"></a>
-<h3>2014-04-03 (3.8.4.3)</h3><p><ul class='lessindent'>
+<h3>2014-04-03 (3.8.4.3)</h3><p><ol class='lessindent'>
 <li>Add a 
     <a href="http://www.sqlite.org/src/fdiff?sbs=1&v1=7d539cedb1c&v2=ebad891b7494d&smhdr">one-character fix</a>
     for a problem that might cause incorrect query results on a query that mixes
@@ -1395,17 +1530,17 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-04-03 16:53:12 a611fa96c4a848614efe899130359c9f6fb889c3"
 <li>SHA1 for sqlite3.c: 310a1faeb9332a3cd8d1f53b4a2e055abf537bdc
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_4_2"></a>
-<h3>2014-03-26 (3.8.4.2)</h3><p><ul class='lessindent'>
+<h3>2014-03-26 (3.8.4.2)</h3><p><ol class='lessindent'>
 <li>Fix a potential buffer overread that could result when trying to search a
     corrupt database file.
 <li>SQLITE_SOURCE_ID: "2014-03-26 18:51:19 02ea166372bdb2ef9d8dfbb05e78a97609673a8e"
 <li>SHA1 for sqlite3.c: 4685ca86c2ea0649ed9f59a500013e90b3fe6d03
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_4_1"></a>
-<h3>2014-03-11 (3.8.4.1)</h3><p><ul class='lessindent'>
+<h3>2014-03-11 (3.8.4.1)</h3><p><ol class='lessindent'>
 <li>Work around a C-preprocessor macro conflict that breaks the build for some
     configurations with Microsoft Visual Studio.
 <li>When computing the cost of the <a href="optoverview.html#skipscan">skip-scan optimization</a>, take into account the
@@ -1413,9 +1548,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-03-11 15:27:36 018d317b1257ce68a92908b05c9c7cf1494050d0"
 <li>SHA1 for sqlite3.c: d5cd1535053a50aa8633725e3595740b33709ac5
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_4"></a>
-<h3>2014-03-10 (3.8.4)</h3><p><ul class='lessindent'>
+<h3>2014-03-10 (3.8.4)</h3><p><ol class='lessindent'>
 <li>Code optimization and refactoring for improved performance.
 <li>Add the ".clone" and ".save" commands to the command-line shell.
 <li>Update the banner on the command-line shell to alert novice users when they
@@ -1455,9 +1590,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-03-10 12:20:37 530a1ee7dc2435f80960ce4710a3c2d2bfaaccc5"
 <li>SHA1 for sqlite3.c: b0c22e5f15f5ba2afd017ecd990ea507918afe1c
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_3_1"></a>
-<h3>2014-02-11 (3.8.3.1)</h3><p><ul class='lessindent'>
+<h3>2014-02-11 (3.8.3.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug (ticket <a href="http://www.sqlite.org/src/info/4c86b126f2">4c86b126f2</a>)
     that causes rows to go missing on some queries with OR clauses and
     IS NOT NULL operators in the WHERE clause, when the <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
@@ -1466,9 +1601,9 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2014-02-11 14:52:19 ea3317a4803d71d88183b29f1d3086f46d68a00e"
 <li>SHA1 for sqlite3.c: 990004ef2d0eec6a339e4caa562423897fe02bf0
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_3"></a>
-<h3>2014-02-03 (3.8.3)</h3><p><ul class='lessindent'>
+<h3>2014-02-03 (3.8.3)</h3><p><ol class='lessindent'>
 <li>Added support for <a href="lang_with.html">common table expressions</a> and the <a href="lang_with.html">WITH clause</a>.
 <li>Added the <a href="lang_corefunc.html#printf">printf()</a> SQL function.
 <li>Added <a href="c3ref/c_deterministic.html">SQLITE_DETERMINISTIC</a> as an optional bit in the 4th argument to the
@@ -1496,9 +1631,9 @@ with a home-baked pie.</center>
     "2014-02-03 13:52:03 e816dd924619db5f766de6df74ea2194f3e3b538"
 <li>SHA1 for sqlite3.c: 98a07da78f71b0275e8d9c510486877adc31dbee
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_2"></a>
-<h3>2013-12-06 (3.8.2)</h3><p><ul class='lessindent'>
+<h3>2013-12-06 (3.8.2)</h3><p><ol class='lessindent'>
 <li>Changed the defined behavior for the <a href="lang_expr.html#castexpr">CAST expression</a> when floating point values
     greater than  +9223372036854775807 are cast into into integers so that the
     result is the largest possible integer, +9223372036854775807, instead of
@@ -1528,18 +1663,18 @@ with a home-baked pie.</center>
     "2013-12-06 14:53:30 27392118af4c38c5203a04b8013e1afdb1cebd0d"
 <li>SHA1 for sqlite3.c: 6422c7d69866f5ea3db0968f67ee596e7114544e
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_1"></a>
-<h3>2013-10-17 (3.8.1)</h3><p><ul class='lessindent'>
+<h3>2013-10-17 (3.8.1)</h3><p><ol class='lessindent'>
 <li>Added the <a href="lang_corefunc.html#unlikely">unlikely()</a> and <a href="lang_corefunc.html#likelihood">likelihood()</a> SQL functions to be used
     as hints to the query planner.
 <li>Enhancements to the query planner:
-<ul>
+<ol type='a'>
 <li>Take into account the fact WHERE clause terms that cannot be used with indices
     still probably reduce the number of output rows.
 <li>Estimate the sizes of table and index rows and use the smallest applicable B-Tree
     for full scans and "count(*)" operations.
-</ul>
+</ol>
 <li>Added the <a href="pragma.html#pragma_soft_heap_limit">soft_heap_limit pragma</a>.
 <li>Added support for <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>
 <li>Added support for "sz=NNN" parameters at the end of 
@@ -1575,18 +1710,18 @@ with a home-baked pie.</center>
     "2013-10-17 12:57:35 c78be6d786c19073b3a6730dfe3fb1be54f5657a"
 <li>SHA1 for sqlite3.c: 0a54d76566728c2ba96292a49b138e4f69a7c391
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_0_2"></a>
-<h3>2013-09-03 (3.8.0.2)</h3><p><ul class='lessindent'>
+<h3>2013-09-03 (3.8.0.2)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the optimization that attempts to omit unused LEFT JOINs
 
 <li>SQLITE_SOURCE_ID: 
     "2013-09-03 17:11:13 7dd4968f235d6e1ca9547cda9cf3bd570e1609ef"
 <li>SHA1 for sqlite3.c: 6cf0c7b46975a87a0dc3fba69c229a7de61b0c21
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_0_1"></a>
-<h3>2013-08-29 (3.8.0.1)</h3><p><ul class='lessindent'>
+<h3>2013-08-29 (3.8.0.1)</h3><p><ol class='lessindent'>
 <li>Fix an off-by-one error that caused quoted empty string at the end of a 
 CRNL-terminated line of CSV input to be misread by the command-line shell.
 <li>Fix a query planner bug involving a LEFT JOIN with a BETWEEN or LIKE/GLOB
@@ -1598,9 +1733,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-08-29 17:35:01 352362bc01660edfbda08179d60f09e2038a2f49"
 <li>SHA1 for sqlite3.c: 99906bf63e6cef63d6f3d7f8526ac4a70e76559e
 
-</ul></p>
+</ol></p>
 <a name="version_3_8_0"></a>
-<h3>2013-08-26 (3.8.0)</h3><p><ul class='lessindent'>
+<h3>2013-08-26 (3.8.0)</h3><p><ol class='lessindent'>
 <li>Add support for <a href="partialindex.html">partial indexes</a></li>
 <li>Cut-over to the <a href="queryplanner-ng.html">next generation query planner</a> for faster and better query plans.
 <li>The <a href="eqp.html">EXPLAIN QUERY PLAN</a> output no longer shows an estimate of the number of 
@@ -1651,9 +1786,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-08-26 04:50:08 f64cd21e2e23ed7cff48f7dafa5e76adde9321c2"
 <li>SHA1 for sqlite3.c: b7347f4b4c2a840e6ba12040093d606bd16ea21e
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_17"></a>
-<h3>2013-05-20 (3.7.17)</h3><p><ul class='lessindent'>
+<h3>2013-05-20 (3.7.17)</h3><p><ol class='lessindent'>
 <li>Add support for <a href="mmap.html">memory-mapped I/O</a>.
 <li>Add the <a href="c3ref/strglob.html">sqlite3_strglob()</a> convenience interface.
 <li>Assigned the integer at offset 68 in the <a href="fileformat2.html#database_header">database header</a> as the
@@ -1737,9 +1872,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-05-20 00:56:22 118a3b35693b134d56ebd780123b7fd6f1497668"
 <li>SHA1 for sqlite3.c: 246987605d0503c700a08b9ee99a6b5d67454aab
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_16_2"></a>
-<h3>2013-04-12 (3.7.16.2)</h3><p><ul class='lessindent'>
+<h3>2013-04-12 (3.7.16.2)</h3><p><ol class='lessindent'>
 <li>Fix a bug (present since version 3.7.13) that could result in database corruption
     on windows if two or more processes try to access the same database file at the
     same time and immediately after third process crashed in the middle of committing
@@ -1751,9 +1886,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-04-12 11:52:43 cbea02d93865ce0e06789db95fd9168ebac970c7"
 <li>SHA1 for sqlite3.c: d466b54789dff4fb0238b9232e74896deaefab94
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_16_1"></a>
-<h3>2013-03-29 (3.7.16.1)</h3><p><ul class='lessindent'>
+<h3>2013-03-29 (3.7.16.1)</h3><p><ol class='lessindent'>
 <li>Fix for a bug in the ORDER BY optimizer that was introduced in
     <a href="#version_3_7_15">version 3.7.15</a> which would sometimes optimize out the sorting step
     when in fact the sort was required.
@@ -1774,9 +1909,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-03-29 13:44:34 527231bc67285f01fb18d4451b28f61da3c4e39d"
 <li>SHA1 for sqlite3.c: 7a91ceceac9bcf47ceb8219126276e5518f7ff5a
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_16"></a>
-<h3>2013-03-18 (3.7.16)</h3><p><ul class='lessindent'>
+<h3>2013-03-18 (3.7.16)</h3><p><ol class='lessindent'>
 <li>Added the <a href="pragma.html#pragma_foreign_key_check">PRAGMA foreign_key_check</a> command.
 <li>Added new extended error codes for all SQLITE_CONSTRAINT errors
 <li>Added the SQLITE_READONLY_ROLLBACK extended error code for when a database
@@ -1831,9 +1966,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-03-18 11:39:23 66d5f2b76750f3520eb7a495f6247206758f5b90"
 <li>SHA1 for sqlite3.c: 7308ab891ca1b2ebc596025cfe4dc36f1ee89cf6
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_15_2"></a>
-<h3>2013-01-09 (3.7.15.2)</h3><p><ul class='lessindent'>
+<h3>2013-01-09 (3.7.15.2)</h3><p><ol class='lessindent'>
 <li>Fix a bug, introduced in <a href="#version_3_7_15">version 3.7.15</a>, that causes an ORDER BY clause
     to be optimized out of a three-way join when the ORDER BY is actually
     required.	
@@ -1843,9 +1978,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2013-01-09 11:53:05 c0e09560d26f0a6456be9dd3447f5311eb4f238f"
 <li>SHA1 for sqlite3.c: 5741f47d1bc38aa0a8c38f09e60a5fe0031f272d
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_15_1"></a>
-<h3>2012-12-19 (3.7.15.1)</h3><p><ul class='lessindent'>
+<h3>2012-12-19 (3.7.15.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug, introduced in <a href="#version_3_7_15">version 3.7.15</a>, that causes a segfault if
     the AS name of a result column of a SELECT statement is used as a logical
     term in the WHERE clause.  Ticket 
@@ -1855,9 +1990,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2012-12-19 20:39:10 6b85b767d0ff7975146156a99ad673f2c1a23318"
 <li>SHA1 for sqlite3.c: bbbaa68061e925bd4d7d18d7e1270935c5f7e39a
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_15"></a>
-<h3>2012-12-12 (3.7.15)</h3><p><ul class='lessindent'>
+<h3>2012-12-12 (3.7.15)</h3><p><ol class='lessindent'>
 <li>Added the <a href="c3ref/errcode.html">sqlite3_errstr()</a> interface.
 <li>Avoid invoking the <a href="c3ref/profile.html">sqlite3_trace()</a> callback multiple times when a
     statement is automatically reprepared due to <a href="rescode.html#schema">SQLITE_SCHEMA</a> errors.
@@ -1873,11 +2008,11 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
 <li>Add the ability to implement FROM clause subqueries as coroutines rather
     that manifesting the subquery into a temporary table.
 <li>Enhancements the command-line shell:
-    <ul>
+    <ol type='a'>
     <li>Added the ".print" command
     <li>Negative numbers in the ".width" command cause right-alignment
     <li>Add the ".wheretrace" command when compiled with SQLITE_DEBUG
-    </ul>
+    </ol>
 <li>Added the <a href="pragma.html#pragma_busy_timeout">busy_timeout pragma</a>.
 <li>Added the <a href="lang_corefunc.html#instr">instr()</a> SQL function.
 <li>Added the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">SQLITE_FCNTL_BUSYHANDLER</a> file control, used to allow VFS
@@ -1900,9 +2035,9 @@ with a UNIQUE or PRIMARY KEY constraint with more than four columns.
     "2012-12-12 13:36:53 cd0b37c52658bfdf992b1e3dc467bae1835a94ae"
 <li>SHA1 for sqlite3.c: 2b413611f5e3e3b6ef5f618f2a9209cdf25cbcff"
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_14_1"></a>
-<h3>2012-10-04 (3.7.14.1)</h3><p><ul class='lessindent'>
+<h3>2012-10-04 (3.7.14.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug (ticket 
 <a href="www.sqlite.org/src/tktview/d02e1406a58ea02d">&#91;d02e1406a58ea02d]&#93;</a>)
 that causes a segfault on a LEFT JOIN that includes an OR in the ON clause.
@@ -1914,9 +2049,9 @@ TCL implementations of SQL functions.
     "2012-10-04 19:37:12 091570e46d04e84b67228e0bdbcd6e1fb60c6bdb"
 <li>SHA1 for sqlite3.c: 62aaecaacab3a4bf4a8fe4aec1cfdc1571fe9a44
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_14"></a>
-<h3>2012-09-03 (3.7.14)</h3><p><ul class='lessindent'>
+<h3>2012-09-03 (3.7.14)</h3><p><ol class='lessindent'>
 <li>Drop built-in support for OS/2. If you need to upgrade an OS/2
     application to use this or a later version of SQLite,
     then add an application-defined <a href="vfs.html">VFS</a> using the
@@ -1945,9 +2080,9 @@ TCL implementations of SQL functions.
     "2012-09-03 15:42:36 c0d89d4a9752922f9e367362366efde4f1b06f2a"
 <li>SHA1 for sqlite3.c: 5fdf596b29bb426001f28b488ff356ae14d5a5a6
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_13"></a>
-<h3>2012-06-11 (3.7.13)</h3><p><ul class='lessindent'>
+<h3>2012-06-11 (3.7.13)</h3><p><ol class='lessindent'>
 <li><a href="inmemorydb.html">In-memory databases</a> that are specified using
     <a href="uri.html">URI filenames</a> are allowed to use <a href="sharedcache.html#inmemsharedcache">shared cache</a>,
     so that the same
@@ -1971,9 +2106,9 @@ TCL implementations of SQL functions.
     "2012-06-11 02:05:22 f5b5a13f7394dc143aa136f1d4faba6839eaa6dc"
 <li>SHA1 for sqlite3.c: ff0a771d6252545740ba9685e312b0e3bb6a641b
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_12_1"></a>
-<h3>2012-05-22 (3.7.12.1)</h3><p><ul class='lessindent'>
+<h3>2012-05-22 (3.7.12.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug 
     <a href="http://www.sqlite.org/src/info/c2ad16f997ee9c">(ticket c2ad16f997)</a>
     in the 3.7.12 release that can cause a segfault for certain
@@ -1983,9 +2118,9 @@ TCL implementations of SQL functions.
     "2012-05-22 02:45:53 6d326d44fd1d626aae0e8456e5fa2049f1ce0789"
 <li>SHA1 for sqlite3.c: d494e8d81607f0515d4f386156fb0fd86d5ba7df
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_12"></a>
-<h3>2012-05-14 (3.7.12)</h3><p><ul class='lessindent'>
+<h3>2012-05-14 (3.7.12)</h3><p><ol class='lessindent'>
 <li>Add the <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachewrite">SQLITE_DBSTATUS_CACHE_WRITE</a> option for <a href="c3ref/db_status.html">sqlite3_db_status()</a>.
 <li>Optimize the <a href="lang_corefunc.html#typeof">typeof()</a> and <a href="lang_corefunc.html#length">length()</a> SQL functions so that they avoid
     unnecessary reading of database content from disk.
@@ -2025,9 +2160,9 @@ TCL implementations of SQL functions.
 <li>SHA1 for sqlite3.c: 57e2104a0f7b3f528e7f6b7a8e553e2357ccd2e1
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_11"></a>
-<h3>2012-03-20 (3.7.11)</h3><p><ul class='lessindent'>
+<h3>2012-03-20 (3.7.11)</h3><p><ol class='lessindent'>
 <li>Enhance the <a href="lang_insert.html">INSERT</a> syntax to allow multiple rows to be inserted
     via the VALUES clause.
 <li>Enhance the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> command to support the
@@ -2056,9 +2191,9 @@ TCL implementations of SQL functions.
     "2012-03-20 11:35:50 00bb9c9ce4f465e6ac321ced2a9d0062dc364669"
 <li>SHA1 for sqlite3.c: d460d7eda3a9dccd291aed2a9fda868b9b120a10
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_10"></a>
-<h3>2012-01-16 (3.7.10)</h3><p><ul class='lessindent'>
+<h3>2012-01-16 (3.7.10)</h3><p><ol class='lessindent'>
 <li>The default <a href="fileformat2.html#schemaformat">schema format number</a> is changed from 1 to 4.
     This means that, unless
     the <a href="pragma.html#pragma_legacy_file_format">PRAGMA legacy_file_format=ON</a> statement is
@@ -2124,9 +2259,9 @@ TCL implementations of SQL functions.
     "2012-01-16 13:28:40 ebd01a8deffb5024a5d7494eef800d2366d97204"
 <li>SHA1 for sqlite3.c: 6497cbbaad47220bd41e2e4216c54706e7ae95d4
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_9"></a>
-<h3>2011-11-01 (3.7.9)</h3><p><ul class='lessindent'>
+<h3>2011-11-01 (3.7.9)</h3><p><ol class='lessindent'>
 <li>If a search token (on the right-hand side of the MATCH operator) in
     <a href="fts3.html#fts4">FTS4</a> begins with "&#94;" then that token must be the first in its field
     of the document.  <b>** Potentially Incompatible Change **</b>
@@ -2170,9 +2305,9 @@ TCL implementations of SQL functions.
     "2011-11-01 00:52:41 c7c6050ef060877ebe77b41d959e9df13f8c9b5e"
 <li>SHA1 for sqlite3.c: becd16877f4f9b281b91c97e106089497d71bb47
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_8"></a>
-<h3>2011-09-19 (3.7.8)</h3><p><ul class='lessindent'>
+<h3>2011-09-19 (3.7.8)</h3><p><ol class='lessindent'>
 <li> Orders of magnitude performance improvement for <a href="lang_createindex.html">CREATE INDEX</a> on
      very large tables.
 <li> Improved the windows VFS to better defend against interference
@@ -2190,9 +2325,9 @@ TCL implementations of SQL functions.
     "2011-09-19 14:49:19 3e0da808d2f5b4d12046e05980ca04578f581177"
 <li> SHA1 for sqlite3.c: bfcd74a655636b592c5dba6d0d5729c0f8e3b4de
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_7_1"></a>
-<h3>2011-06-28 (3.7.7.1)</h3><p><ul class='lessindent'>
+<h3>2011-06-28 (3.7.7.1)</h3><p><ol class='lessindent'>
 <li> Fix <a href="http://www.sqlite.org/src/info/25ee812710">a bug</a> causing 
      <a href="pragma.html#pragma_case_sensitive_like">PRAGMA case_sensitive_like</a> statements compiled using sqlite3_prepare()
      to fail with an <a href="rescode.html#schema">SQLITE_SCHEMA</a> error.
@@ -2200,9 +2335,9 @@ TCL implementations of SQL functions.
     "2011-06-28 17:39:05 af0d91adf497f5f36ec3813f04235a6e195a605f"
 <li> SHA1 for sqlite3.c: d47594b8a02f6cf58e91fb673e96cb1b397aace0
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_7"></a>
-<h3>2011-06-23 (3.7.7)</h3><p><ul class='lessindent'>
+<h3>2011-06-23 (3.7.7)</h3><p><ol class='lessindent'>
 <li> Add support for <a href="uri.html">URI filenames</a>
 <li> Add the <a href="c3ref/vtab_config.html">sqlite3_vtab_config()</a> interface in
      support of <a href="lang_conflict.html">ON CONFLICT</a> clauses with <a href="vtab.html">virtual tables</a>.
@@ -2219,16 +2354,16 @@ TCL implementations of SQL functions.
      "2011-06-23 19:49:22 4374b7e83ea0a3fbc3691f9c0c936272862f32f2"
 <li> SHA1 for sqlite3.c: 5bbe79e206ae5ffeeca760dbd0d66862228db551
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_6_3"></a>
-<h3>2011-05-19 (3.7.6.3)</h3><p><ul class='lessindent'>
+<h3>2011-05-19 (3.7.6.3)</h3><p><ol class='lessindent'>
 <li> Fix a problem with <a href="wal.html">WAL mode</a> which could cause transactions to
      silently rollback if the <a href="pragma.html#pragma_cache_size">cache_size</a> is set very small (less than 10)
      and SQLite comes under memory pressure.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_6_2"></a>
-<h3>2011-04-17 (3.7.6.2)</h3><p><ul class='lessindent'>
+<h3>2011-04-17 (3.7.6.2)</h3><p><ol class='lessindent'>
 <li> Fix the function prototype for the open(2) system call to agree with
      POSIX.  Without this fix, pthreads does not work correctly on NetBSD.
 <li> SQLITE_SOURCE_ID:
@@ -2236,9 +2371,9 @@ TCL implementations of SQL functions.
 <li> SHA1 for sqlite3.c: 806577fd524dd5f3bfd8d4d27392ed2752bc9701
 
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_6_1"></a>
-<h3>2011-04-13 (3.7.6.1)</h3><p><ul class='lessindent'>
+<h3>2011-04-13 (3.7.6.1)</h3><p><ol class='lessindent'>
 <li> Fix a bug in 3.7.6 that only appears if the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a>
      file control is used with a build of SQLite that makes use of the
      HAVE_POSIX_FALLOCATE compile-time option and which has
@@ -2247,9 +2382,9 @@ TCL implementations of SQL functions.
      "2011-04-13 14:40:25 a35e83eac7b185f4d363d7fa51677f2fdfa27695"
 <li> SHA1 for sqlite3.c: b81bfa27d3e09caf3251475863b1ce6dd9f6ab66
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_6"></a>
-<h3>2011-04-12 (3.7.6)</h3><p><ul class='lessindent'>
+<h3>2011-04-12 (3.7.6)</h3><p><ol class='lessindent'>
 <li> Added the <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2()</a> interface and enhanced the
      <a href="pragma.html#pragma_wal_checkpoint">wal_checkpoint pragma</a> to support blocking checkpoints.
 <li> Improvements to the query planner so that it makes better estimates of
@@ -2278,9 +2413,9 @@ TCL implementations of SQL functions.
      "2011-04-12 01:58:40 f9d43fa363d54beab6f45db005abac0a7c0c47a7"
 <li> SHA1 for sqlite3.c: f38df08547efae0ff4343da607b723f588bbd66b
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_5"></a>
-<h3>2011-02-01 (3.7.5)</h3><p><ul class='lessindent'>
+<h3>2011-02-01 (3.7.5)</h3><p><ol class='lessindent'>
 <li> Added the <a href="c3ref/mprintf.html">sqlite3_vsnprintf()</a> interface.
 <li> Added the <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidehit">SQLITE_DBSTATUS_LOOKASIDE_HIT</a>,
      <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuslookasidemisssize">SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE</a>, and
@@ -2307,9 +2442,9 @@ TCL implementations of SQL functions.
      to the VFS in place of a call to xSync if the database has
      <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to OFF.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_4"></a>
-<h3>2010-12-07 (3.7.4)</h3><p><ul class='lessindent'>
+<h3>2010-12-07 (3.7.4)</h3><p><ol class='lessindent'>
 <li> Added the <a href="c3ref/blob_reopen.html">sqlite3_blob_reopen()</a> interface to allow an existing
      <a href="c3ref/blob.html">sqlite3_blob</a> object to be rebound to a new row.
 <li> Use the new <a href="c3ref/blob_reopen.html">sqlite3_blob_reopen()</a> interface to improve the performance
@@ -2332,9 +2467,9 @@ TCL implementations of SQL functions.
 <li> A <a href="http://www.sqlite.org/src/info/80ba201079">very obscure bug</a>
      associated with the <a href="optoverview.html#or_opt">or optimization</a> was fixed.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_3"></a>
-<h3>2010-10-08 (3.7.3)</h3><p><ul class='lessindent'>
+<h3>2010-10-08 (3.7.3)</h3><p><ol class='lessindent'>
 <li> Added the <a href="c3ref/create_function.html">sqlite3_create_function_v2()</a> interface that includes a
      destructor callback.
 <li> Added support for <a href="rtree.html#customquery">custom r-tree queries</a> using application-supplied
@@ -2361,16 +2496,16 @@ TCL implementations of SQL functions.
      tables.
 <li> Miscellaneous documentation enhancements.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_2"></a>
-<h3>2010-08-24 (3.7.2)</h3><p><ul class='lessindent'>
+<h3>2010-08-24 (3.7.2)</h3><p><ol class='lessindent'>
 <li> Fix an <a href="http://www.sqlite.org/src/info/5e10420e8d">
      old and very obscure bug</a> that can lead to corruption of the
      database <a href="fileformat2.html#freelist">free-page list</a> when <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> is used.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_1"></a>
-<h3>2010-08-23 (3.7.1)</h3><p><ul class='lessindent'>
+<h3>2010-08-23 (3.7.1)</h3><p><ol class='lessindent'>
 <li> Added new commands <a href="c3ref/c_dbstatus_options.html#sqlitedbstatusschemaused">SQLITE_DBSTATUS_SCHEMA_USED</a> and
      <a href="c3ref/c_dbstatus_options.html#sqlitedbstatusstmtused">SQLITE_DBSTATUS_STMT_USED</a> to the <a href="c3ref/db_status.html">sqlite3_db_status()</a> interface, in
      order to report out the amount of memory used to hold the schema and
@@ -2388,9 +2523,9 @@ TCL implementations of SQL functions.
 <li> The SQLITE_MAX_PAGE_SIZE compile-time option is now silently ignored.
      The maximum page size is hard-coded at 65536 bytes.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_0_1"></a>
-<h3>2010-08-04 (3.7.0.1)</h3><p><ul class='lessindent'>
+<h3>2010-08-04 (3.7.0.1)</h3><p><ol class='lessindent'>
 <li> Fix a potential database corruption bug that can occur if version 3.7.0
      and version 3.6.23.1 alternately write to the same database file.
      <a href="http://www.sqlite.org/src/info/51ae9cad317a1">
@@ -2398,9 +2533,9 @@ TCL implementations of SQL functions.
 <li> Fix a performance regression related to the query planner enhancements
      of version 3.7.0.
 
-</ul></p>
+</ol></p>
 <a name="version_3_7_0"></a>
-<h3>2010-07-21 (3.7.0)</h3><p><ul class='lessindent'>
+<h3>2010-07-21 (3.7.0)</h3><p><ol class='lessindent'>
 <li> Added support for <a href="wal.html">write-ahead logging</a>.
 <li> Query planner enhancement - automatic transient indices are created
      when doing so reduces the estimated query time.
@@ -2412,17 +2547,17 @@ TCL implementations of SQL functions.
      it and so that SQLite will work correctly on systems that lack support
      for ftruncate().
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_23_1"></a>
-<h3>2010-03-26 (3.6.23.1)</h3><p><ul class='lessindent'>
+<h3>2010-03-26 (3.6.23.1)</h3><p><ol class='lessindent'>
 <li> Fix a bug in the offsets() function of <a href="fts3.html">FTS3</a>
 <li> Fix a missing "sync" that when omitted could lead to database
      corruption if a power failure or OS crash occurred just as a
      ROLLBACK operation was finishing.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_23"></a>
-<h3>2010-03-09 (3.6.23)</h3><p><ul class='lessindent'>
+<h3>2010-03-09 (3.6.23)</h3><p><ol class='lessindent'>
 <li> Added the <a href="pragma.html#pragma_secure_delete">secure_delete pragma</a>.
 <li> Added the <a href="c3ref/compileoption_get.html">sqlite3_compileoption_used()</a> and
      <a href="c3ref/compileoption_get.html">sqlite3_compileoption_get()</a> interfaces as well as the
@@ -2440,17 +2575,17 @@ TCL implementations of SQL functions.
      updates did not affect SQLite.)
 <li> Various minor bug fixes and performance enhancements.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_22"></a>
-<h3>2010-01-06 (3.6.22)</h3><p><ul class='lessindent'>
+<h3>2010-01-06 (3.6.22)</h3><p><ol class='lessindent'>
 <li>Fix bugs that can (rarely) lead to incorrect query results when
     the CAST or OR operators are used in the WHERE clause of a query.
 <li>Continuing enhancements and improvements to <a href="fts3.html">FTS3</a>.
 <li>Other miscellaneous bug fixes.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_21"></a>
-<h3>2009-12-07 (3.6.21)</h3><p><ul class='lessindent'>
+<h3>2009-12-07 (3.6.21)</h3><p><ol class='lessindent'>
 <li>The SQL output resulting from <a href="c3ref/profile.html">sqlite3_trace()</a> is now modified to include
 the values of <a href="lang_expr.html#varparam">bound parameters</a>.
 <li>Performance optimizations targeting a specific use case from
@@ -2458,7 +2593,7 @@ a single high-profile user of SQLite.  A 12% reduction in the number of
 CPU operations is achieved (as measured by Valgrind).  Actual performance
 improvements in practice may vary depending on workload.  Changes
 include:
-<ul>
+<ol type='a'>
 <li>The <a href="lang_corefunc.html#ifnull">ifnull()</a> and <a href="lang_corefunc.html#coalesce">coalesce()</a> SQL functions are now implemented
 using in-line VDBE code rather than calling external functions, so that
 unused arguments need never be evaluated.
@@ -2467,7 +2602,7 @@ its entire input string if it is only computing a prefix
 <li>Unnecessary OP_IsNull, OP_Affinity, and OP_MustBeInt VDBE opcodes
 are suppressed
 <li>Various code refactorizations for performance
-</ul>
+</ol>
 <li>The FTS3 extension has undergone a major rework and cleanup.
 New <a href="fts3.html">FTS3 documentation</a> is now available.
 <li>The <a href="compile.html#secure_delete">SQLITE_SECURE_DELETE</a> compile-time option fixed to make sure that
@@ -2476,23 +2611,23 @@ content is deleted even when the <a href="lang_delete.html#truncateopt">truncate
 <a href="cli.html">Command Line Interface</a>.
 <li>Other minor bug fixes and documentation enhancements.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_20"></a>
-<h3>2009-11-04 (3.6.20)</h3><p><ul class='lessindent'>
+<h3>2009-11-04 (3.6.20)</h3><p><ol class='lessindent'>
 <li>Optimizer enhancement: <a href="c3ref/stmt.html">prepared statements</a> are automatically 
 re-compiled when a binding on the RHS of a LIKE operator changes or
 when any range constraint changes under <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a>.
 <li>Various minor bug fixes and documentation enhancements.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_16_1"></a>
-<h3>2009-10-30 (3.6.16.1)</h3><p><ul class='lessindent'>
+<h3>2009-10-30 (3.6.16.1)</h3><p><ol class='lessindent'>
 <li>A small patch to version 3.6.16 to fix 
 <a href="http://www.sqlite.org/src/info/6b00e0a34c">the OP_If bug</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_19"></a>
-<h3>2009-10-14 (3.6.19)</h3><p><ul class='lessindent'>
+<h3>2009-10-14 (3.6.19)</h3><p><ol class='lessindent'>
 <li>Added support for <a href="foreignkeys.html">foreign key constraints</a>.  Foreign key constraints
     are disabled by default.  Use the <a href="pragma.html#pragma_foreign_keys">foreign_keys pragma</a> to turn them on.
 <li>Generalized the IS and IS NOT operators to take arbitrary expressions
@@ -2503,9 +2638,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Fix a bug introduced in 3.6.18 that can lead to a segfault when an
     attempt is made to write on a read-only database.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_18"></a>
-<h3>2009-09-11 (3.6.18)</h3><p><ul class='lessindent'>
+<h3>2009-09-11 (3.6.18)</h3><p><ol class='lessindent'>
 <li>Versioning of the SQLite source code has transitioned from CVS to
     <a href="http://www.fossil-scm.org/">Fossil</a>.
 <li>Query planner enhancements.
@@ -2526,9 +2661,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Obscure bug fix on triggers
 (<a href="http://www.sqlite.org/src/info/efc02f9779">&#91;efc02f9779&#93;</a>).
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_17"></a>
-<h3>2009-08-10 (3.6.17)</h3><p><ul class='lessindent'>
+<h3>2009-08-10 (3.6.17)</h3><p><ol class='lessindent'>
 <li>Expose the <a href="c3ref/stricmp.html">sqlite3_strnicmp()</a> interface for use by extensions and
     applications.
 <li>Remove the restriction on <a href="vtab.html">virtual tables</a> and <a href="sharedcache.html">shared cache mode</a>.
@@ -2536,16 +2671,16 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Many code simplifications and obscure bug fixes in support of
     providing <a href="testing.html#coverage">100% branch test coverage</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_16"></a>
-<h3>2009-06-27 (3.6.16)</h3><p><ul class='lessindent'>
+<h3>2009-06-27 (3.6.16)</h3><p><ol class='lessindent'>
 <li>Fix a bug (ticket #3929) that occasionally causes INSERT or UPDATE
     operations to fail on an indexed table that has a self-modifying trigger.
 <li>Other minor bug fixes and performance optimizations.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_15"></a>
-<h3>2009-06-15 (3.6.15)</h3><p><ul class='lessindent'>
+<h3>2009-06-15 (3.6.15)</h3><p><ol class='lessindent'>
 <li>Refactor the internal representation of SQL expressions so that they
     use less memory on embedded platforms.
 <li>Reduce the amount of stack space used
@@ -2565,24 +2700,24 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     uncovering.
    
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_14_2"></a>
-<h3>2009-05-25 (3.6.14.2)</h3><p><ul class='lessindent'>
+<h3>2009-05-25 (3.6.14.2)</h3><p><ol class='lessindent'>
 <li>Fix a code generator bug introduced in <a href="#version_3_6_14">version 3.6.14</a>.  This bug
     can cause incorrect query results under obscure circumstances.
     <a href="http://www.sqlite.org/cvstrac/tktview?tn=3879">Ticket #3879</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_14_1"></a>
-<h3>2009-05-19 (3.6.14.1)</h3><p><ul class='lessindent'>
+<h3>2009-05-19 (3.6.14.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in <a href="lang_aggfunc.html#groupconcat">group_concat()</a>, <a href="http://www.sqlite.org/cvstrac/tktview?tn=3841">ticket #3841</a>
 <li>Fix a performance bug in the pager cache, <a href="http://www.sqlite.org/cvstrac/tktview?tn=3844">ticket #3844</a>
 <li>Fix a bug in the <a href="c3ref/backup.html">sqlite3_backup</a> implementation that can lead
     to a corrupt backup database.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3858">Ticket #3858</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_14"></a>
-<h3>2009-05-07 (3.6.14)</h3><p><ul class='lessindent'>
+<h3>2009-05-07 (3.6.14)</h3><p><ol class='lessindent'>
 <li>Added the optional <a href="asyncvfs.html">asynchronous VFS</a> module.</li>
 <li>Enhanced the query optimizer so that <a href="vtab.html">virtual tables</a> are able to
     make use of OR and IN operators in the WHERE clause.</li>
@@ -2593,9 +2728,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Countless minor bug fixes, documentation improvements, new and
     improved test cases, and code simplifications and cleanups.</p>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_13"></a>
-<h3>2009-04-13 (3.6.13)</h3><p><ul class='lessindent'>
+<h3>2009-04-13 (3.6.13)</h3><p><ol class='lessindent'>
 <li>Fix a bug in <a href="#version_3_6_12">version 3.6.12</a> that causes a segfault when running
     a count(*) on the sqlite_master table of an empty database. Ticket #3774.
 <li>Fix a bug in <a href="#version_3_6_12">version 3.6.12</a> that causes a segfault that when 
@@ -2604,9 +2739,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Fix data structure alignment issues on Sparc.  Ticket #3777.
 <li>Other minor bug fixes.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_12"></a>
-<h3>2009-03-31 (3.6.12)</h3><p><ul class='lessindent'>
+<h3>2009-03-31 (3.6.12)</h3><p><ol class='lessindent'>
 <li>Fixed a bug that caused database corruption when an <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> is
     rolled back in an in-memory database.  Ticket #3761.
 <li>Added the <a href="c3ref/unlock_notify.html">sqlite3_unlock_notify()</a> interface.
@@ -2619,9 +2754,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Reduce the amount of heap memory used, especially by TRIGGERs.
 <li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_11"></a>
-<h3>2009-02-18 (3.6.11)</h3><p><ul class='lessindent'>
+<h3>2009-02-18 (3.6.11)</h3><p><ol class='lessindent'>
 <li>Added the <a href="c3ref/backup_finish.html#sqlite3backupinit">hot-backup interface</a>.
 <li>Added new commands ".backup" and ".restore" to the <a href="cli.html">CLI</a>.
 <li>Added new methods <a href="tclsqlite.html#backup">backup</a> and
@@ -2630,22 +2765,22 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     diagrams</a>
 <li>Various minor bug fixes
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_10"></a>
-<h3>2009-01-15 (3.6.10)</h3><p><ul class='lessindent'>
+<h3>2009-01-15 (3.6.10)</h3><p><ol class='lessindent'>
 <li>Fix a cache coherency problem that could lead to database corruption.
     <a href="http://www.sqlite.org/cvstrac/tktview?tn=3584">Ticket #3584</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_9"></a>
-<h3>2009-01-14 (3.6.9)</h3><p><ul class='lessindent'>
+<h3>2009-01-14 (3.6.9)</h3><p><ol class='lessindent'>
 <li>Fix two bugs, which when combined might result in incorrect
     query results.  Both bugs were harmless by themselves; only when
     they team up do they cause problems.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3581">Ticket #3581</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_8"></a>
-<h3>2009-01-12 (3.6.8)</h3><p><ul class='lessindent'>
+<h3>2009-01-12 (3.6.8)</h3><p><ol class='lessindent'>
 <li>Added support for <a href="lang_savepoint.html">nested transactions</a></li>
 <li>Enhanced the query optimizer so that it is able to use
     multiple indices to efficiently process 
@@ -2654,9 +2789,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Added support for parentheses in FTS3 query patterns using the
     <a href="compile.html#enable_fts3_parenthesis">SQLITE_ENABLE_FTS3_PARENTHESIS</a> compile-time option.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_7"></a>
-<h3>2008-12-16 (3.6.7)</h3><p><ul class='lessindent'>
+<h3>2008-12-16 (3.6.7)</h3><p><ol class='lessindent'>
 <li>Reorganize the Unix interface in os_unix.c</li>
 <li>Added support for "Proxy Locking" on Mac OS X.</li>
 <li>Changed the prototype of the <a href="c3ref/auto_extension.html">sqlite3_auto_extension()</a> interface in a
@@ -2669,33 +2804,33 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     to suppress nuisance compiler warnings.</li>
 <li>Fixes for various minor bugs.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_6_2"></a>
-<h3>2008-11-26 (3.6.6.2)</h3><p><ul class='lessindent'>
+<h3>2008-11-26 (3.6.6.2)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the b-tree delete algorithm that seems like it might be
     able to cause database corruption.  The bug was first introduced in
     <a href="#version_3_6_6">version 3.6.6</a> by check-in &#91;5899&#93; on 2008-11-13.</li>
 <li>Fix a memory leak that can occur following a disk I/O error.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_6_1"></a>
-<h3>2008-11-22 (3.6.6.1)</h3><p><ul class='lessindent'>
+<h3>2008-11-22 (3.6.6.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the page cache that can lead database corruption following
     a rollback.  This bug was first introduced in <a href="#version_3_6_4">version 3.6.4</a>.</li>
 <li>Two other very minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_6"></a>
-<h3>2008-11-19 (3.6.6)</h3><p><ul class='lessindent'>
+<h3>2008-11-19 (3.6.6)</h3><p><ol class='lessindent'>
 <li>Fix a #define that prevented <a href="malloc.html#memsys5">memsys5</a> from compiling</li>
 <li>Fix a problem in the virtual table commit mechanism that was causing
     a crash in FTS3.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=3497">Ticket #3497</a>.</li>
 <li>Add the <a href="c3ref/pcache_methods2.html">application-defined page cache</a></li>
 <li>Added built-in support for VxWorks</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_5"></a>
-<h3>2008-11-12 (3.6.5)</h3><p><ul class='lessindent'>
+<h3>2008-11-12 (3.6.5)</h3><p><ol class='lessindent'>
 <li>Add the MEMORY option to the <a href="pragma.html#pragma_journal_mode">journal_mode pragma</a>.</li>
 <li>Added the <a href="c3ref/db_mutex.html">sqlite3_db_mutex()</a> interface.</li>
 <li>Added the <a href="compile.html#omit_truncate_optimization">SQLITE_OMIT_TRUNCATE_OPTIMIZATION</a> compile-time option.</li>
@@ -2712,9 +2847,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
     memsys6.</li>
 <li>Added the <a href="compile.html#zero_malloc">SQLITE_ZERO_MALLOC</a> compile-time option.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_4"></a>
-<h3>2008-10-15 (3.6.4)</h3><p><ul class='lessindent'>
+<h3>2008-10-15 (3.6.4)</h3><p><ol class='lessindent'>
 <li>Add option support for LIMIT and ORDER BY clauses on <a href="lang_delete.html">DELETE</a> and
     <a href="lang_update.html">UPDATE</a> statements.  Only works if SQLite is compiled with
     <a href="compile.html#enable_update_delete_limit">SQLITE_ENABLE_UPDATE_DELETE_LIMIT</a>.
@@ -2734,23 +2869,23 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <a href="syntaxdiagrams.html">syntax diagrams</a> instead of BNF.</li>
 <li>Other minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_3"></a>
-<h3>2008-09-22 (3.6.3)</h3><p><ul class='lessindent'>
+<h3>2008-09-22 (3.6.3)</h3><p><ol class='lessindent'>
 <li>Fix for a bug in the SELECT DISTINCT logic that was introduced by the
     prior version.</li>
 <li>Other minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_2"></a>
-<h3>2008-08-30 (3.6.2)</h3><p><ul class='lessindent'>
+<h3>2008-08-30 (3.6.2)</h3><p><ol class='lessindent'>
 <li>Split the pager subsystem into separate pager and pcache subsystems.</li>
 <li>Factor out identifier resolution procedures into separate files.</li>
 <li>Bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_6_1"></a>
-<h3>2008-08-06 (3.6.1)</h3><p><ul class='lessindent'>
+<h3>2008-08-06 (3.6.1)</h3><p><ol class='lessindent'>
 <li>Added the <a href="malloc.html#lookaside">lookaside memory allocator</a> for a speed improvement in excess
     of 15% on some workloads.  (Your mileage may vary.)</li>
 <li>Added the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">SQLITE_CONFIG_LOOKASIDE</a> verb to <a href="c3ref/config.html">sqlite3_config()</a> to control
@@ -2765,8 +2900,8 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Numerous other performance enhancements</li>
 <li>Miscellaneous minor bug fixes</li>
 
-</ul></p>
-<h3>2008-07-16 (3.6.0 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2008-07-16 (3.6.0 beta)</h3><p><ol class='lessindent'>
 <li>Modifications to the <a href="c3ref/vfs.html">virtual file system</a> interface
     to support a wider range of embedded systems.
     See <a href="35to36.html">35to36.html</a> for additional information.
@@ -2800,9 +2935,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Added the <a href="c3ref/next_stmt.html">sqlite3_next_stmt()</a> interface.</li>
 <li>Added a new <a href="rtree.html">R*Tree virtual table</a></li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_9"></a>
-<h3>2008-05-14 (3.5.9)</h3><p><ul class='lessindent'>
+<h3>2008-05-14 (3.5.9)</h3><p><ol class='lessindent'>
 <li>Added <em>experimental</em>
     support for the <a href="pragma.html#pragma_journal_mode">journal_mode</a> PRAGMA and persistent journal.</li>
 <li><a href="pragma.html#pragma_journal_mode">Journal mode PERSIST</a> is the default behavior in
@@ -2823,9 +2958,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Avoid cache pages leaks following disk-full or I/O errors</li>
 <li>And, many more minor bug fixes and performance enhancements....</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_8"></a>
-<h3>2008-04-16 (3.5.8)</h3><p><ul class='lessindent'>
+<h3>2008-04-16 (3.5.8)</h3><p><ol class='lessindent'>
 <li>Expose SQLite's internal pseudo-random number generator (PRNG)
     via the <a href="c3ref/randomness.html">sqlite3_randomness()</a> interface</li>
 <li>New interface <a href="c3ref/context_db_handle.html">sqlite3_context_db_handle()</a> that returns the
@@ -2852,9 +2987,9 @@ when any range constraint changes under <a href="compile.html#enable_stat2">SQLI
 <li>Other miscellaneous performance enhancements.</li>
 <li>Other miscellaneous minor bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_7"></a>
-<h3>2008-03-17 (3.5.7)</h3><p><ul class='lessindent'>
+<h3>2008-03-17 (3.5.7)</h3><p><ol class='lessindent'>
 <li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2927">ticket #2927</a>) in the register allocation for
 compound selects - introduced by the new VM code in version 3.5.5.</li>
 <li>ALTER TABLE uses double-quotes instead of single-quotes for quoting
@@ -2877,9 +3012,9 @@ for large database files.</li>
 collocated with the database file.</li>
 <li>Many improvements and cleanups to the configure script</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_6"></a>
-<h3>2008-02-06 (3.5.6)</h3><p><ul class='lessindent'>
+<h3>2008-02-06 (3.5.6)</h3><p><ol class='lessindent'>
 <li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2913">ticket #2913</a>)
 that prevented virtual tables from working in a LEFT JOIN.
 The problem was introduced into shortly before the 3.5.5 release.</li>
@@ -2888,17 +3023,17 @@ The problem was introduced into shortly before the 3.5.5 release.</li>
 implementation of <a href="lang_attach.html">ATTACH</a> so that proper error codes are returned
 when an <a href="lang_attach.html">ATTACH</a> fails.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_5"></a>
-<h3>2008-01-31 (3.5.5)</h3><p><ul class='lessindent'>
+<h3>2008-01-31 (3.5.5)</h3><p><ol class='lessindent'>
 <li>Convert the underlying virtual machine to be a register-based machine
 rather than a stack-based machine.  The only user-visible change
 is in the output of EXPLAIN.</li>
 <li>Add the build-in RTRIM collating sequence.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_4"></a>
-<h3>2007-12-14 (3.5.4)</h3><p><ul class='lessindent'>
+<h3>2007-12-14 (3.5.4)</h3><p><ol class='lessindent'>
 <li>Fix a critical bug in UPDATE or DELETE that occurs when an
 OR REPLACE clause or a trigger causes rows in the same table to
 be deleted as side effects.  (See <a href="http://www.sqlite.org/cvstrac/tktview?tn=2832">ticket #2832</a>.)  The most likely
@@ -2924,9 +3059,9 @@ the ".dump" output of databases with very large BLOBs and strings can
 be played back to recreate the database.</li>
 <li>Other small bug fixes and optimizations.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_3"></a>
-<h3>2007-11-27 (3.5.3)</h3><p><ul class='lessindent'>
+<h3>2007-11-27 (3.5.3)</h3><p><ol class='lessindent'>
 <li>Move website and documentation files out of the source tree into
 a <a href="http://www.sqlite.org/docsrc/">separate CM system</a>.
 <li>Fix a long-standing bug in INSERT INTO ... SELECT ... statements
@@ -2947,9 +3082,9 @@ generate a super-amalgamation containing both.
 appropriate index is available and the optimizer thinks its use
 might be advantageous.
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_2"></a>
-<h3>2007-11-05 (3.5.2)</h3><p><ul class='lessindent'>
+<h3>2007-11-05 (3.5.2)</h3><p><ol class='lessindent'>
 <li>Dropped support for the <a href="compile.html#omitfeatures">SQLITE_OMIT_MEMORY_ALLOCATION</a> compile-time
 option.
 <li>Always open files using FILE_FLAG_RANDOM_ACCESS under Windows.
@@ -2962,9 +3097,9 @@ in binary instead of text for a performance boost.
 <li>Fix a race condition in test_async.c.
 <li>Added the ".timer" command to the CLI
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_1"></a>
-<h3>2007-10-04 (3.5.1)</h3><p><ul class='lessindent'>
+<h3>2007-10-04 (3.5.1)</h3><p><ol class='lessindent'>
 <li><i><b>Nota Bene:</b> We are not using terms "alpha" or "beta" on this
     release because the code is stable and because if we use those terms,
     nobody will upgrade.  However, we still reserve the right to make
@@ -2984,9 +3119,9 @@ in binary instead of text for a performance boost.
 <li>Sticky <a href="rescode.html#full">SQLITE_FULL</a> or <a href="rescode.html#ioerr">SQLITE_IOERR</a> errors in the pager are reset
     when a new transaction is started.
 
-</ul></p>
+</ol></p>
 <a name="version_3_5_0"></a>
-<h3>2007-09-04 (3.5.0) alpha</h3><p><ul class='lessindent'>
+<h3>2007-09-04 (3.5.0) alpha</h3><p><ol class='lessindent'>
 <li>Redesign the OS interface layer.  See
     <a href="34to35.html">34to35.html</a> for details.
     <font color="red">*** Potentially incompatible change ***</font>
@@ -3003,9 +3138,9 @@ in binary instead of text for a performance boost.
 <li>The same database connection may now be used simultaneously by
     separate threads.
 
-</ul></p>
+</ol></p>
 <a name="version_3_4_2"></a>
-<h3>2007-08-13 (3.4.2)</h3><p><ul class='lessindent'>
+<h3>2007-08-13 (3.4.2)</h3><p><ol class='lessindent'>
 <li>Fix a database corruption bug that might occur if a ROLLBACK command
 is executed in <a href="pragma.html#pragma_auto_vacuum">auto-vacuum mode</a>
 and a very small <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a> is set. 
@@ -3024,9 +3159,9 @@ and a very small <a href="c3ref/soft_heap_limit.html">sqlite3_soft_heap_limit</a
 <li>Improvements to the amalgamation generator script so that all symbols
 are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 
-</ul></p>
+</ol></p>
 <a name="version_3_4_1"></a>
-<h3>2007-07-20 (3.4.1)</h3><p><ul class='lessindent'>
+<h3>2007-07-20 (3.4.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in <a href="lang_vacuum.html">VACUUM</a> that can lead to
     <a href="http://www.sqlite.org/cvstrac/wiki?p=DatabaseCorruption">
     database corruption</a> if two
@@ -3055,9 +3190,9 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     tokenization support to FTS2</li>
 <li>Other minor bug fixes and documentation enhancements</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_4_0"></a>
-<h3>2007-06-18 (3.4.0)</h3><p><ul class='lessindent'>
+<h3>2007-06-18 (3.4.0)</h3><p><ol class='lessindent'>
 <li>Fix a bug that can lead to database corruption if an <a href="rescode.html#busy">SQLITE_BUSY</a> error
     occurs in the middle of an explicit transaction and that transaction
     is later committed.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2409">Ticket #2409</a>.
@@ -3085,8 +3220,6 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <li>Added support for
     <a href="http://www.icu-project.org/">International Components for Unicode (ICU)</a>
     to the full-text search extensions.
-</ul><p>
-<ul type="circle">
 <li>In the Windows OS driver, reacquire a SHARED lock if an attempt to
     acquire an EXCLUSIVE lock fails.  <a href="http://www.sqlite.org/cvstrac/tktview?tn=2354">Ticket #2354</a></li>
 <li>Fix the REPLACE() function so that it returns NULL if the second argument
@@ -3118,17 +3251,17 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <li>Fix many potential segfaults that could be caused by malicious SQL
     statements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_17"></a>
-<h3>2007-04-25 (3.3.17)</h3><p><ul class='lessindent'>
+<h3>2007-04-25 (3.3.17)</h3><p><ol class='lessindent'>
 <li>When the "write_version" value of the database header is larger than
     what the library understands, make the database read-only instead of
     unreadable.</li>
 <li>Other minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_16"></a>
-<h3>2007-04-18 (3.3.16)</h3><p><ul class='lessindent'>
+<h3>2007-04-18 (3.3.16)</h3><p><ol class='lessindent'>
 <li>Fix a bug that caused VACUUM to fail if NULLs appeared in a
     UNIQUE column.</li>
 <li>Reinstate performance improvements that were added in
@@ -3140,9 +3273,9 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     a multi-threaded environment.</li>
 <li>Documentation updates.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_15"></a>
-<h3>2007-04-09 (3.3.15)</h3><p><ul class='lessindent'>
+<h3>2007-04-09 (3.3.15)</h3><p><ol class='lessindent'>
 <li>Fix a bug introduced in 3.3.14 that caused a rollback of
     CREATE TEMP TABLE to leave the database connection wedged.</li>
 <li>Fix a bug that caused an extra NULL row to be returned when
@@ -3153,9 +3286,9 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     a resource leak following an I/O error.</li>
 <li>Many improvements to the test suite.  Test coverage now exceeded 98%</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_14"></a>
-<h3>2007-04-02 (3.3.14)</h3><p><ul class='lessindent'>
+<h3>2007-04-02 (3.3.14)</h3><p><ol class='lessindent'>
 <li>Fix a bug (<a href="http://www.sqlite.org/cvstrac/tktview?tn=2273">ticket #2273</a>)
     that could cause a segfault when the IN operator
     is used one one term of a two-column index and the right-hand side of
@@ -3167,7 +3300,7 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     is faster and reduces fragmentation.  VACUUM uses statements of
     this form and thus runs faster and defragments better.</li>
 <li>Performance enhancements through reductions in disk I/O:
-<ul>
+<ol type='a'>
 <li>Do not read the last page of an overflow chain when
     deleting the row - just add that page to the freelist.</li>
 <li>Do not store pages being deleted in the 
@@ -3180,7 +3313,7 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
 <li>Truncate rather than delete the rollback journal when committing
     a transaction in exclusive access mode, or when committing the TEMP
     database.</li>
-</ul></li>
+</ol></li>
 <li>Added support for exclusive access mode using
     <a href="pragma.html#pragma_locking_mode">
     "PRAGMA locking_mode=EXCLUSIVE"</a></li>
@@ -3196,9 +3329,9 @@ are prefixed with either SQLITE_PRIVATE or SQLITE_API.
     memory leaks plugged,
     code refactored and/or recommended in places for easier reading.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_13"></a>
-<h3>2007-02-13 (3.3.13)</h3><p><ul class='lessindent'>
+<h3>2007-02-13 (3.3.13)</h3><p><ol class='lessindent'>
 <li>Add a "fragmentation" measurement in the output of sqlite3_analyzer.</li>
 <li>Add the COLLATE operator used to explicitly set the collating sequence
 used by an expression.  This feature is considered experimental pending
@@ -3218,9 +3351,9 @@ left-most table in the join is constrained by a UNIQUE index.</li>
 <li>Fixed a bug in the "copy" method of the TCL interface.</li>
 <li>Bug fixes in fts1 and fts2 modules.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_12"></a>
-<h3>2007-01-27 (3.3.12)</h3><p><ul class='lessindent'>
+<h3>2007-01-27 (3.3.12)</h3><p><ol class='lessindent'>
 <li>Fix another bug in the IS NULL optimization that was added in
 version 3.3.9.</li>
 <li>Fix an assertion fault that occurred on deeply nested views.</li>
@@ -3229,9 +3362,9 @@ version 3.3.9.</li>
 generates.</li>
 <li>Minor syntactic changes to support a wider variety of compilers.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_11"></a>
-<h3>2007-01-22 (3.3.11)</h3><p><ul class='lessindent'>
+<h3>2007-01-22 (3.3.11)</h3><p><ol class='lessindent'>
 <li>Fix another bug in the implementation of the new 
 <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> API.
 We'll get it right eventually...</li>
@@ -3242,9 +3375,9 @@ LEFT JOIN.</li>
 <li>Make AreFileApisANSI() a no-op macro in WinCE since WinCE does not
 support this function.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_10"></a>
-<h3>2007-01-09 (3.3.10)</h3><p><ul class='lessindent'>
+<h3>2007-01-09 (3.3.10)</h3><p><ol class='lessindent'>
 <li>Fix bugs in the implementation of the new 
 <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a> API
 that can lead to segfaults.</li>
@@ -3260,9 +3393,9 @@ database file names</li>
 correctly set their column names in the result set</li>
 <li>Documentation updates</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_9"></a>
-<h3>2007-01-04 (3.3.9)</h3><p><ul class='lessindent'>
+<h3>2007-01-04 (3.3.9)</h3><p><ol class='lessindent'>
 <li>Fix bugs in pager.c that could lead to database corruption if two
 processes both try to recover a hot journal at the same instant</li>
 <li>Added the <a href="c3ref/prepare.html">sqlite3_prepare_v2()</a>
@@ -3273,7 +3406,7 @@ indices, triggers and views again.</li>
 value if there is no default value</li>
 <li>Support for non-ASCII characters in win95 filenames</li>
 <li>Query optimizer enhancements:
-<ul>
+<ol type='a'>
 <li>Optimizer does a better job of using indices to satisfy ORDER BY
 clauses that sort on the integer primary key</li>
 <li>Use an index to satisfy an IS NULL operator in the WHERE clause</li>
@@ -3281,7 +3414,7 @@ clauses that sort on the integer primary key</li>
 opportunity</li>
 <li>The optimizer has more freedom to reorder tables in the FROM clause
 even in there are LEFT joins.</li>
-</ul>
+</ol>
 <li>Extension loading supported added to WinCE</li>
 <li>Allow constraint names on the DEFAULT clause in a table definition</li>
 <li>Added the ".bail" command to the command-line shell</li>
@@ -3294,9 +3427,9 @@ same directory as the original database</li>
 <li>The prefix on temporary filenames on Windows is changed from "sqlite"
 to "etilqs".</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_8"></a>
-<h3>2006-10-09 (3.3.8)</h3><p><ul class='lessindent'>
+<h3>2006-10-09 (3.3.8)</h3><p><ol class='lessindent'>
 <li>Support for full text search using the
 <a href="http://www.sqlite.org/cvstrac/wiki?p=FullTextIndex">FTS1 module</a>
 (beta)</li>
@@ -3310,9 +3443,9 @@ kinds of I/O errors.</li>
 <li>Added experimental API:  sqlite3_auto_extension()</li>
 <li>Various minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_7"></a>
-<h3>2006-08-12 (3.3.7)</h3><p><ul class='lessindent'>
+<h3>2006-08-12 (3.3.7)</h3><p><ol class='lessindent'>
 <li>Added support for
 <a href="http://www.sqlite.org/cvstrac/wiki?p=VirtualTables">virtual tables</a>
 (beta)</li>
@@ -3325,9 +3458,9 @@ routine can be called for a different thread</li>
 <li>Added the <a href="lang_expr.html#match">MATCH</a> operator.</li>
 <li>The default file format is now 1.  
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_6"></a>
-<h3>2006-06-06 (3.3.6)</h3><p><ul class='lessindent'>
+<h3>2006-06-06 (3.3.6)</h3><p><ol class='lessindent'>
 <li>Plays better with virus scanners on Windows</li>
 <li>Faster :memory: databases</li>
 <li>Fix an obscure segfault in UTF-8 to UTF-16 conversions</li>
@@ -3340,9 +3473,9 @@ routine can be called for a different thread</li>
 <li>Improved syntax error messages in the parser</li>
 <li>Fix type coercion rules for the IN operator</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_5"></a>
-<h3>2006-04-05 (3.3.5)</h3><p><ul class='lessindent'>
+<h3>2006-04-05 (3.3.5)</h3><p><ol class='lessindent'>
 <li>CHECK constraints use conflict resolution algorithms correctly.</li>
 <li>The SUM() function throws an error on integer overflow.</li>
 <li>Choose the column names in a compound query from the left-most SELECT
@@ -3362,9 +3495,9 @@ routine can be called for a different thread</li>
 <li>Various minor bug and documentation typo fixes and
     performance enhancements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_4"></a>
-<h3>2006-02-11 (3.3.4)</h3><p><ul class='lessindent'>
+<h3>2006-02-11 (3.3.4)</h3><p><ol class='lessindent'>
 <li>Fix a blunder in the Unix mutex implementation that can lead to
 deadlock on multithreaded systems.</li>
 <li>Fix an alignment problem on 64-bit machines</li>
@@ -3377,9 +3510,9 @@ an approximate result using floating point numbers</li>
 </li>
 <li>Other miscellaneous bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_3_3"></a>
-<h3>2006-01-31 (3.3.3)</h3><p><ul class='lessindent'>
+<h3>2006-01-31 (3.3.3)</h3><p><ol class='lessindent'>
 <li>Removed support for an ON CONFLICT clause on CREATE INDEX - it never
 worked correctly so this should not present any backward compatibility
 problems.</li>
@@ -3390,22 +3523,22 @@ sqlite3_prepare()</li>
 <li>Other minor bug fixes in preparation for the first stable release
 of version 3.3</li>
 
-</ul></p>
-<h3>2006-01-24 (3.3.2 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2006-01-24 (3.3.2 beta)</h3><p><ol class='lessindent'>
 <li>Bug fixes and speed improvements.  Improved test coverage.</li>
 <li>Changes to the OS-layer interface: mutexes must now be recursive.</li>
 <li>Discontinue the use of thread-specific data for out-of-memory
 exception handling</li>
 
-</ul></p>
-<h3>2006-01-16 (3.3.1 alpha)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2006-01-16 (3.3.1 alpha)</h3><p><ol class='lessindent'>
 <li>Countless bug fixes</li>
 <li>Speed improvements</li>
 <li>Database connections can now be used by multiple threads, not just
 the thread in which they were created.</li>
 
-</ul></p>
-<h3>2006-01-11 (3.3.0 alpha)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2006-01-11 (3.3.0 alpha)</h3><p><ol class='lessindent'>
 <li>CHECK constraints</li>
 <li>IF EXISTS and IF NOT EXISTS clauses on CREATE/DROP TABLE/INDEX.</li>
 <li>DESC indices</li>
@@ -3422,25 +3555,25 @@ in the same thread</li>
 isolation level of SERIALIZABLE) and table level locking when
 database connections share a common cache.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_8"></a>
-<h3>2005-12-19 (3.2.8)</h3><p><ul class='lessindent'>
+<h3>2005-12-19 (3.2.8)</h3><p><ol class='lessindent'>
 <li>Fix an obscure bug that can cause database corruption under the
 following unusual circumstances: A large INSERT or UPDATE statement which 
 is part of an even larger transaction fails due to a uniqueness constraint
 but the containing transaction commits.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_17"></a>
-<h3>2005-12-19 (2.8.17)</h3><p><ul class='lessindent'>
+<h3>2005-12-19 (2.8.17)</h3><p><ol class='lessindent'>
 <li>Fix an obscure bug that can cause database corruption under the
 following unusual circumstances: A large INSERT or UPDATE statement which 
 is part of an even larger transaction fails due to a uniqueness contraint
 but the containing transaction commits.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_7"></a>
-<h3>2005-09-24 (3.2.7)</h3><p><ul class='lessindent'>
+<h3>2005-09-24 (3.2.7)</h3><p><ol class='lessindent'>
 <li>GROUP BY now considers NULLs to be equal again, as it should
 </li>
 <li>Now compiles on Solaris and OpenBSD and other Unix variants
@@ -3451,9 +3584,9 @@ queries</li>
 <li>Correctly compute a LEFT OUTER JOINs that is constrained on the
 left table only</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_6"></a>
-<h3>2005-09-17 (3.2.6)</h3><p><ul class='lessindent'>
+<h3>2005-09-17 (3.2.6)</h3><p><ol class='lessindent'>
 <li>Fix a bug that can cause database corruption if a VACUUM (or
     autovacuum) fails and is rolled back on a database that is
     larger than 1GiB</li>
@@ -3469,9 +3602,9 @@ left table only</li>
 <li>Added the experimental and undocumented EXPLAIN QUERY PLAN capability</li>
 <li>Use the unicode API in Windows</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_5"></a>
-<h3>2005-08-27 (3.2.5)</h3><p><ul class='lessindent'>
+<h3>2005-08-27 (3.2.5)</h3><p><ol class='lessindent'>
 <li>Fix a bug effecting DELETE and UPDATE statements that changed
 more than 40960 rows.</li>
 <li>Change the makefile so that it no longer requires GNUmake extensions</li>
@@ -3481,17 +3614,17 @@ operator is constant and the right-hand side is a SELECT statement</li>
 <li>The PRAGMA synchronous=off statement now disables syncing of the
 master journal file in addition to the normal rollback journals</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_4"></a>
-<h3>2005-08-24 (3.2.4)</h3><p><ul class='lessindent'>
+<h3>2005-08-24 (3.2.4)</h3><p><ol class='lessindent'>
 <li>Fix a bug introduced in the previous release
 that can cause a segfault while generating code
 for complex WHERE clauses.</li>
 <li>Allow floating point literals to begin or end with a decimal point.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_3"></a>
-<h3>2005-08-21 (3.2.3)</h3><p><ul class='lessindent'>
+<h3>2005-08-21 (3.2.3)</h3><p><ol class='lessindent'>
 <li>Added support for the CAST operator</li>
 <li>Tcl interface allows BLOB values to be transferred to user-defined
 functions</li>
@@ -3520,9 +3653,9 @@ when the case_sensitive_like pragma is enabled</li>
 <li>Improved test coverage</li>
 <li>Dozens of minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_2"></a>
-<h3>2005-06-12 (3.2.2)</h3><p><ul class='lessindent'>
+<h3>2005-06-12 (3.2.2)</h3><p><ol class='lessindent'>
 <li>Added the sqlite3_db_handle() API</li>
 <li>Added the sqlite3_get_autocommit() API</li>
 <li>Added a REGEXP operator to the parser.  There is no function to back
@@ -3532,38 +3665,38 @@ sqlite3_create_function()</li>
 <li>Fix byte alignment problems on 64-bit architectures.</li>
 <li>Many, many minor bug fixes and documentation updates.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_1"></a>
-<h3>2005-03-29 (3.2.1)</h3><p><ul class='lessindent'>
+<h3>2005-03-29 (3.2.1)</h3><p><ol class='lessindent'>
 <li>Fix a memory allocation error in the new ADD COLUMN comment.</li>
 <li>Documentation updates</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_2_0"></a>
-<h3>2005-03-21 (3.2.0)</h3><p><ul class='lessindent'>
+<h3>2005-03-21 (3.2.0)</h3><p><ol class='lessindent'>
 <li>Added support for ALTER TABLE ADD COLUMN.</li>
 <li>Added support for the "T" separator in ISO-8601 date/time strings.</li>
 <li>Improved support for Cygwin.</li>
 <li>Numerous bug fixes and documentation updates.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_1_6"></a>
-<h3>2005-03-17 (3.1.6)</h3><p><ul class='lessindent'>
+<h3>2005-03-17 (3.1.6)</h3><p><ol class='lessindent'>
 <li>Fix a bug that could cause database corruption when inserting
     record into tables with around 125 columns.</li>
 <li>sqlite3_step() is now much more likely to invoke the busy handler
     and less likely to return SQLITE_BUSY.</li>
 <li>Fix memory leaks that used to occur after a malloc() failure.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_1_5"></a>
-<h3>2005-03-11 (3.1.5)</h3><p><ul class='lessindent'>
+<h3>2005-03-11 (3.1.5)</h3><p><ol class='lessindent'>
 <li>The ioctl on Mac OS X to control syncing to disk is F_FULLFSYNC,
     not F_FULLSYNC.  The previous release had it wrong.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_1_4"></a>
-<h3>2005-03-11 (3.1.4)</h3><p><ul class='lessindent'>
+<h3>2005-03-11 (3.1.4)</h3><p><ol class='lessindent'>
 <li>Fix a bug in autovacuum that could cause database corruption if
 a CREATE UNIQUE INDEX fails because of a constraint violation.
 This problem only occurs if the new autovacuum feature introduced in
@@ -3578,18 +3711,18 @@ file format.</li>
 <li>Remove the use of strcasecmp() from the shell</li>
 <li>Windows DLL exports symbols Tclsqlite_Init and Sqlite_Init</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_1_3"></a>
-<h3>2005-02-19 (3.1.3)</h3><p><ul class='lessindent'>
+<h3>2005-02-19 (3.1.3)</h3><p><ol class='lessindent'>
 <li>Fix a problem with VACUUM on databases from which tables containing
 AUTOINCREMENT have been dropped.</li>
 <li>Add forward compatibility to the future version 3.2 database file
 format.</li>
 <li>Documentation updates</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_1_2"></a>
-<h3>2005-02-15 (3.1.2)</h3><p><ul class='lessindent'>
+<h3>2005-02-15 (3.1.2)</h3><p><ol class='lessindent'>
 <li>Fix a bug that can lead to database corruption if there are two
 open connections to the same database and one connection does a VACUUM
 and the second makes some change to the database.</li>
@@ -3599,9 +3732,9 @@ and the second makes some change to the database.</li>
 <li>Add a numeric version number to the sqlite3.h include file.</li>
 <li>Other minor bug fixes and performance enhancements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_16"></a>
-<h3>2005-02-15 (2.8.16)</h3><p><ul class='lessindent'>
+<h3>2005-02-15 (2.8.16)</h3><p><ol class='lessindent'>
 <li>Fix a bug that can lead to database corruption if there are two
 open connections to the same database and one connection does a VACUUM
 and the second makes some change to the database.</li>
@@ -3610,15 +3743,15 @@ and the second makes some change to the database.</li>
 <li>Avoid excess heap usage when copying expressions.</li>
 <li>Other minor bug fixes.</li>
 
-</ul></p>
-<h3>2005-02-01 (3.1.1 BETA)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2005-02-01 (3.1.1 BETA)</h3><p><ol class='lessindent'>
 <li>Automatic caching of prepared statements in the TCL interface</li>
 <li>ATTACH and DETACH as well as some other operations cause existing
     prepared statements to expire.</li>
 <li>Numerous minor bug fixes</li>
 
-</ul></p>
-<h3>2005-01-21 (3.1.0 ALPHA)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2005-01-21 (3.1.0 ALPHA)</h3><p><ol class='lessindent'>
 <li>Autovacuum support added</li>
 <li>CURRENT_TIME, CURRENT_DATE, and CURRENT_TIMESTAMP added</li>
 <li>Support for the EXISTS clause added.</li>
@@ -3633,9 +3766,9 @@ and the second makes some change to the database.</li>
     all the information it needs from an index.</li>
 <li>Many nuisance bugs fixed.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_0_8"></a>
-<h3>2004-10-12 (3.0.8)</h3><p><ul class='lessindent'>
+<h3>2004-10-12 (3.0.8)</h3><p><ol class='lessindent'>
 <li>Add support for DEFERRED, IMMEDIATE, and EXCLUSIVE transactions.</li>
 <li>Allow new user-defined functions to be created when there are
 already one or more precompiled SQL statements.<li>
@@ -3649,9 +3782,9 @@ characters at the end of lines.</li>
 <li>Numerous code optimizations, specially optimizations designed to
 make the code footprint smaller.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_3_0_7"></a>
-<h3>2004-09-18 (3.0.7)</h3><p><ul class='lessindent'>
+<h3>2004-09-18 (3.0.7)</h3><p><ol class='lessindent'>
 <li>The BTree module allocates large buffers using malloc() instead of
     off of the stack, in order to play better on machines with limited
     stack space.</li>
@@ -3666,8 +3799,8 @@ make the code footprint smaller.</li>
     is executed, not when the statement is compiled.</li>
 <li>Makefile updates and miscellaneous bug fixes.</li>
 
-</ul></p>
-<h3>2004-09-02 (3.0.6 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-09-02 (3.0.6 beta)</h3><p><ol class='lessindent'>
 <li>Better detection and handling of corrupt database files.</li>
 <li>The sqlite3_step() interface returns SQLITE_BUSY if it is unable
     to commit a change because of a lock</li>
@@ -3675,8 +3808,8 @@ make the code footprint smaller.</li>
     pattern-matching subroutine.</li>
 <li>Miscellaneous code size optimizations and bug fixes</li>
 
-</ul></p>
-<h3>2004-08-29 (3.0.5 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-08-29 (3.0.5 beta)</h3><p><ol class='lessindent'>
 <li>Support for ":AAA" style bind parameter names.</li>
 <li>Added the new sqlite3_bind_parameter_name() interface.</li>
 <li>Support for TCL variable names embedded in SQL statements in the
@@ -3690,8 +3823,8 @@ make the code footprint smaller.</li>
     handler to be called when there is contention for a RESERVED lock.</li>
 <li>Various bug fixes and optimizations</li>
 
-</ul></p>
-<h3>2004-08-09 (3.0.4 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-08-09 (3.0.4 beta)</h3><p><ol class='lessindent'>
 <li>CREATE TABLE and DROP TABLE now work correctly as prepared statements.</li>
 <li>Fix a bug in VACUUM and UNIQUE indices.</li>
 <li>Add the ".import" command to the command-line shell.</li>
@@ -3700,31 +3833,31 @@ make the code footprint smaller.</li>
 <li>Library size optimizations.</li>
 <li>Other minor bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_15"></a>
-<h3>2004-07-22 (2.8.15)</h3><p><ul class='lessindent'>
+<h3>2004-07-22 (2.8.15)</h3><p><ol class='lessindent'>
 <li>This is a maintenance release only.  Various minor bugs have been
 fixed and some portability enhancements are added.</li>
 
-</ul></p>
-<h3>2004-07-22 (3.0.3 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-07-22 (3.0.3 beta)</h3><p><ol class='lessindent'>
 <li>The second beta release for SQLite 3.0.</li>
 <li>Add support for "PRAGMA page_size" to adjust the page size of
 the database.</li>
 <li>Various bug fixes and documentation updates.</li>
 
-</ul></p>
-<h3>2004-06-30 (3.0.2 beta)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-06-30 (3.0.2 beta)</h3><p><ol class='lessindent'>
 <li>The first beta release for SQLite 3.0.</li>
 
-</ul></p>
-<h3>2004-06-22 (3.0.1 alpha)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-06-22 (3.0.1 alpha)</h3><p><ol class='lessindent'>
 <li><font color="red"><b>
     *** Alpha Release - Research And Testing Use Only ***</b></font>
 <li>Lots of bug fixes.</li>
 
-</ul></p>
-<h3>2004-06-18 (3.0.0 alpha)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2004-06-18 (3.0.0 alpha)</h3><p><ol class='lessindent'>
 <li><font color="red"><b>
     *** Alpha Release - Research And Testing Use Only ***</b></font>
 <li>Support for internationalization including UTF-8, UTF-16, and
@@ -3737,9 +3870,9 @@ the database.</li>
 <li>64-bit rowids.</li>
 <li><a href="version3.html">More information</a>.
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_14"></a>
-<h3>2004-06-09 (2.8.14)</h3><p><ul class='lessindent'>
+<h3>2004-06-09 (2.8.14)</h3><p><ol class='lessindent'>
 <li>Fix the min() and max() optimizer so that it works when the FROM
     clause consists of a subquery.</li>
 <li>Ignore extra whitespace at the end of of "." commands in the shell.</li>
@@ -3754,9 +3887,9 @@ the database.</li>
 <li>sqlite_interrupt() plays well with VACUUM.</li>
 <li>Other minor bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_13"></a>
-<h3>2004-03-08 (2.8.13)</h3><p><ul class='lessindent'>
+<h3>2004-03-08 (2.8.13)</h3><p><ol class='lessindent'>
 <li>Refactor parts of the code in order to make the code footprint
     smaller.  The code is now also a little bit faster.</li>
 <li>sqlite_exec() is now implemented as a wrapper around sqlite_compile()
@@ -3771,9 +3904,9 @@ the database.</li>
 <li>Add functions prototypes for the database encryption API.</li>
 <li>Fix several nuisance bugs.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_12"></a>
-<h3>2004-02-08 (2.8.12)</h3><p><ul class='lessindent'>
+<h3>2004-02-08 (2.8.12)</h3><p><ol class='lessindent'>
 <li>Fix a bug that will might corrupt the rollback journal if a power failure
     or external program halt occurs in the middle of a COMMIT.  The corrupt
     journal can lead to database corruption when it is rolled back.</li>
@@ -3784,15 +3917,15 @@ the database.</li>
 <li>Optimizations to the sqlite_mprintf() routine.</li>
 <li>Make sure the MIN() and MAX() optimizations work within subqueries.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_11"></a>
-<h3>2004-01-14 (2.8.11)</h3><p><ul class='lessindent'>
+<h3>2004-01-14 (2.8.11)</h3><p><ol class='lessindent'>
 <li>Fix a bug in how the IN operator handles NULLs in subqueries.  The bug
     was introduced by the previous release.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_10"></a>
-<h3>2004-01-14 (2.8.10)</h3><p><ul class='lessindent'>
+<h3>2004-01-14 (2.8.10)</h3><p><ol class='lessindent'>
 <li>Fix a potential database corruption problem on Unix caused by the fact
     that all POSIX advisory locks are cleared whenever you close() a file.
     The work around it to embargo all close() calls while locks are 
@@ -3804,9 +3937,9 @@ the database.</li>
 <li>Improved accuracy of floating-point conversions using "long double".</li>
 <li>Bug fixes in the experimental date/time functions.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_9"></a>
-<h3>2004-01-06 (2.8.9)</h3><p><ul class='lessindent'>
+<h3>2004-01-06 (2.8.9)</h3><p><ol class='lessindent'>
 <li>Fix a 32-bit integer overflow problem that could result in corrupt
     indices in a database if large negative numbers (less than -2147483648)
     were inserted into an indexed numeric column.</li>
@@ -3817,18 +3950,18 @@ the database.</li>
     functions.</li>
 <li>Bug fixes to date/time functions.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_8"></a>
-<h3>2003-12-18 (2.8.8)</h3><p><ul class='lessindent'>
+<h3>2003-12-18 (2.8.8)</h3><p><ol class='lessindent'>
 <li>Fix a critical bug introduced into 2.8.0 which could cause
     database corruption.</li>
 <li>Fix a problem with 3-way joins that do not use indices</li>
 <li>The VACUUM command now works with the non-callback API</li>
 <li>Improvements to the "PRAGMA integrity_check" command</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_7"></a>
-<h3>2003-12-04 (2.8.7)</h3><p><ul class='lessindent'>
+<h3>2003-12-04 (2.8.7)</h3><p><ol class='lessindent'>
 <li>Added experimental sqlite_bind() and sqlite_reset() APIs.</li>
 <li>If the name of the database is an empty string, open a new database
     in a temporary file that is automatically deleted when the database
@@ -3842,9 +3975,9 @@ the database.</li>
 <li>Allow GLOB and LIKE operators to work as functions.</li>
 <li>Other minor documentation and makefile changes and bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_6"></a>
-<h3>2003-08-22 (2.8.6)</h3><p><ul class='lessindent'>
+<h3>2003-08-22 (2.8.6)</h3><p><ol class='lessindent'>
 <li>Moved the CVS repository to www.sqlite.org</li>
 <li>Update the NULL-handling documentation.</li>
 <li>Experimental date/time functions added.</li>
@@ -3858,9 +3991,9 @@ the database.</li>
 <li>Bug fix: Make sure the journal file directory entry is committed to disk
     before writing the database file.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_5"></a>
-<h3>2003-07-22 (2.8.5)</h3><p><ul class='lessindent'>
+<h3>2003-07-22 (2.8.5)</h3><p><ol class='lessindent'>
 <li>Make LIMIT work on a compound SELECT statement.</li>
 <li>LIMIT 0 now shows no rows.  Use LIMIT -1 to see all rows.</li>
 <li>Correctly handle comparisons between an INTEGER PRIMARY KEY and
@@ -3870,17 +4003,17 @@ the database.</li>
 <li>Allow NULL arguments in sqlite_compile() and sqlite_step().</li>
 <li>Many minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_4"></a>
-<h3>2003-06-29 (2.8.4)</h3><p><ul class='lessindent'>
+<h3>2003-06-29 (2.8.4)</h3><p><ol class='lessindent'>
 <li>Enhanced the "PRAGMA integrity_check" command to verify indices.</li>
 <li>Added authorization hooks for the new ATTACH and DETACH commands.</li>
 <li>Many documentation updates</li>
 <li>Many minor bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_3"></a>
-<h3>2003-06-04 (2.8.3)</h3><p><ul class='lessindent'>
+<h3>2003-06-04 (2.8.3)</h3><p><ol class='lessindent'>
 <li>Fix a problem that will corrupt the indices on a table if you
     do an INSERT OR REPLACE or an UPDATE OR REPLACE on a table that
     contains an INTEGER PRIMARY KEY plus one or more indices.</li>
@@ -3890,15 +4023,15 @@ the database.</li>
     "rowid" (or "_rowid_" or "oid") columns.</li>
 <li>Other important bug fixes</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_2"></a>
-<h3>2003-05-17 (2.8.2)</h3><p><ul class='lessindent'>
+<h3>2003-05-17 (2.8.2)</h3><p><ol class='lessindent'>
 <li>Fix a problem that will corrupt the database file if you drop a
     table from the main database that has a TEMP index.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_1"></a>
-<h3>2003-05-17 (2.8.1)</h3><p><ul class='lessindent'>
+<h3>2003-05-17 (2.8.1)</h3><p><ol class='lessindent'>
 <li>Reactivated the VACUUM command that reclaims unused disk space in 
     a database file.</li>
 <li>Added the ATTACH and DETACH commands to allow interacting with multiple
@@ -3912,16 +4045,16 @@ the database.</li>
     ON CONFLICT clauses on constraints.
 <li>Many, many bug fixes and compatibility enhancements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_8_0"></a>
-<h3>2003-02-16 (2.8.0)</h3><p><ul class='lessindent'>
+<h3>2003-02-16 (2.8.0)</h3><p><ol class='lessindent'>
 <li>Modified the journal file format to make it more resistant to corruption
     that can occur after an OS crash or power failure.</li>
 <li>Added a new C/C++ API that does not use callback for returning data.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_6"></a>
-<h3>2003-01-25 (2.7.6)</h3><p><ul class='lessindent'>
+<h3>2003-01-25 (2.7.6)</h3><p><ol class='lessindent'>
 <li>Performance improvements.  The library is now much faster.</li>
 <li>Added the <b>sqlite_set_authorizer()</b> API.  Formal documentation has
     not been written - see the source code comments for instructions on
@@ -3930,15 +4063,15 @@ the database.</li>
     with upper-case letters.</li>
 <li>Various minor bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_5"></a>
-<h3>2002-12-28 (2.7.5)</h3><p><ul class='lessindent'>
+<h3>2002-12-28 (2.7.5)</h3><p><ol class='lessindent'>
 <li>Fix an uninitialized variable in pager.c which could (with a probability
     of about 1 in 4 billion) result in a corrupted database.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_4"></a>
-<h3>2002-12-17 (2.7.4)</h3><p><ul class='lessindent'>
+<h3>2002-12-17 (2.7.4)</h3><p><ol class='lessindent'>
 <li>Database files can now grow to be up to 2&#94;41 bytes.  The old limit
     was 2&#94;31 bytes.</li>
 <li>The optimizer will now scan tables in the reverse if doing so will
@@ -3949,9 +4082,9 @@ the database.</li>
 <li>Speed improvements in the VDBE.</li>
 <li>Lots of little bug fixes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_3"></a>
-<h3>2002-10-31 (2.7.3)</h3><p><ul class='lessindent'>
+<h3>2002-10-31 (2.7.3)</h3><p><ol class='lessindent'>
 <li>Various compiler compatibility fixes.</li>
 <li>Fix a bug in the "expr IN ()" operator.</li>
 <li>Accept column names in parentheses.</li>
@@ -3961,9 +4094,9 @@ the database.</li>
 <li>Fix locking behavior under Windows</li>
 <li>Fix a bug in LEFT OUTER JOIN</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_2"></a>
-<h3>2002-09-25 (2.7.2)</h3><p><ul class='lessindent'>
+<h3>2002-09-25 (2.7.2)</h3><p><ol class='lessindent'>
 <li>Prevent journal file overflows on huge transactions.</li>
 <li>Fix a memory leak that occurred when sqlite_open() failed.</li>
 <li>Honor the ORDER BY and LIMIT clause of a SELECT even if the
@@ -3973,16 +4106,16 @@ the database.</li>
 <li>Fix a problem that was causing poor performance when many thousands
     of SQL statements were executed by a single sqlite_exec() call.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_1"></a>
-<h3>2002-08-31 (2.7.1)</h3><p><ul class='lessindent'>
+<h3>2002-08-31 (2.7.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the ORDER BY logic that was introduced in version 2.7.0</li>
 <li>C-style comments are now accepted by the tokenizer.</li>
 <li>INSERT runs a little faster when the source is a SELECT statement.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_7_0"></a>
-<h3>2002-08-25 (2.7.0)</h3><p><ul class='lessindent'>
+<h3>2002-08-25 (2.7.0)</h3><p><ol class='lessindent'>
 <li>Make a distinction between numeric and text values when sorting.
     Text values sort according to memcmp().  Numeric values sort in
     numeric order.</li>
@@ -3991,9 +4124,9 @@ the database.</li>
 <li>An error is now returned when trying to start a transaction if
     another transaction is already active.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_6_3"></a>
-<h3>2002-08-13 (2.6.3)</h3><p><ul class='lessindent'>
+<h3>2002-08-13 (2.6.3)</h3><p><ol class='lessindent'>
 <li>Add the ability to read both little-endian and big-endian databases.
     So a database created under SunOS or Mac OS X can be read and written
     under Linux or Windows and vice versa.</li>
@@ -4001,9 +4134,9 @@ the database.</li>
 <li>Allow transactions to span Linux Threads</li>
 <li>Bug fix in the processing of the ORDER BY clause for GROUP BY queries</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_6_2"></a>
-<h3>2002-07-31 (2.6.2)</h3><p><ul class='lessindent'>
+<h3>2002-07-31 (2.6.2)</h3><p><ol class='lessindent'>
 <li>Text files read by the COPY command can now have line terminators
     of LF,  CRLF, or CR.</li>
 <li>SQLITE_BUSY is handled correctly if encountered during database
@@ -4011,9 +4144,9 @@ the database.</li>
 <li>Fix to UPDATE triggers on TEMP tables.</li>
 <li>Documentation updates.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_6_1"></a>
-<h3>2002-07-19 (2.6.1)</h3><p><ul class='lessindent'>
+<h3>2002-07-19 (2.6.1)</h3><p><ol class='lessindent'>
 <li>Include a static string in the library that responds to the RCS
     "ident" command and which contains the library version number.</li>
 <li>Fix an assertion failure that occurred when deleting all rows of
@@ -4021,9 +4154,9 @@ the database.</li>
 <li>Better error reporting when problems occur during the automatic
     2.5.6 to 2.6.0 database format upgrade.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_6_0"></a>
-<h3>2002-07-18 (2.6.0)</h3><p><ul class='lessindent'>
+<h3>2002-07-18 (2.6.0)</h3><p><ol class='lessindent'>
 <li>Change the format of indices to correct a design flaw the originated
     with version 2.1.0.  <font color="red">*** This is an incompatible
     file format change ***</font>  When version 2.6.0 or later of the
@@ -4033,25 +4166,25 @@ the database.</li>
     version 2.6.0 of the library.</b>
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_6"></a>
-<h3>2002-07-07 (2.5.6)</h3><p><ul class='lessindent'>
+<h3>2002-07-07 (2.5.6)</h3><p><ol class='lessindent'>
 <li>Fix more problems with rollback.  Enhance the test suite to exercise
     the rollback logic extensively in order to prevent any future problems.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_5"></a>
-<h3>2002-07-06 (2.5.5)</h3><p><ul class='lessindent'>
+<h3>2002-07-06 (2.5.5)</h3><p><ol class='lessindent'>
 <li>Fix a bug which could cause database corruption during a rollback.
     This bugs was introduced in version 2.4.0 by the freelist
     optimization of checkin &#91;410&#93;.</li>
 <li>Fix a bug in aggregate functions for VIEWs.</li>
 <li>Other minor changes and enhancements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_4"></a>
-<h3>2002-07-01 (2.5.4)</h3><p><ul class='lessindent'>
+<h3>2002-07-01 (2.5.4)</h3><p><ol class='lessindent'>
 <li>Make the "AS" keyword optional again.</li>
 <li>The datatype of columns now appear in the 4th argument to the
     callback.</li>
@@ -4060,17 +4193,17 @@ the database.</li>
 <li>Added additional test cases and fixed a few bugs that those
     test cases found.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_3"></a>
-<h3>2002-06-25 (2.5.3)</h3><p><ul class='lessindent'>
+<h3>2002-06-25 (2.5.3)</h3><p><ol class='lessindent'>
 <li>Bug fix:  Database corruption can occur due to the optimization
     that was introduced in version 2.4.0 (check-in &#91;410&#93;).  The problem
     should now be fixed.  The use of versions 2.4.0 through 2.5.2 is
     not recommended.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_2"></a>
-<h3>2002-06-25 (2.5.2)</h3><p><ul class='lessindent'>
+<h3>2002-06-25 (2.5.2)</h3><p><ol class='lessindent'>
 <li>Added the new <b>SQLITE_TEMP_MASTER</b> table which records the schema
     for temporary tables in the same way that <b>SQLITE_MASTER</b> does for
     persistent tables.</li>
@@ -4082,16 +4215,16 @@ the database.</li>
     is numeric or text.</li>
 <li>Autoincrement now works for INSERT from a SELECT.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_1"></a>
-<h3>2002-06-19 (2.5.1)</h3><p><ul class='lessindent'>
+<h3>2002-06-19 (2.5.1)</h3><p><ol class='lessindent'>
 <li>The query optimizer now attempts to implement the ORDER BY clause
     using an index.  Sorting is still used if not suitable index is
     available.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_5_0"></a>
-<h3>2002-06-17 (2.5.0)</h3><p><ul class='lessindent'>
+<h3>2002-06-17 (2.5.0)</h3><p><ol class='lessindent'>
 <li>Added support for row triggers.</li>
 <li>Added SQL-92 compliant handling of NULLs.</li>
 <li>Add support for the full SQL-92 join syntax and LEFT OUTER JOINs.</li>
@@ -4104,22 +4237,22 @@ the database.</li>
 <li>Added the "%Q" expansion to sqlite_*_printf().</li>
 <li>Bug fixes too numerous to mention (see the change log).</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_12"></a>
-<h3>2002-05-10 (2.4.12)</h3><p><ul class='lessindent'>
+<h3>2002-05-10 (2.4.12)</h3><p><ol class='lessindent'>
 <li>Added logic to detect when the library API routines are called out
     of sequence.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_11"></a>
-<h3>2002-05-08 (2.4.11)</h3><p><ul class='lessindent'>
+<h3>2002-05-08 (2.4.11)</h3><p><ol class='lessindent'>
 <li>Bug fix: Column names in the result set were not being generated
     correctly for some (rather complex) VIEWs.  This could cause a
     segfault under certain circumstances.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_10"></a>
-<h3>2002-05-03 (2.4.10)</h3><p><ul class='lessindent'>
+<h3>2002-05-03 (2.4.10)</h3><p><ol class='lessindent'>
 <li>Bug fix: Generate correct column headers when a compound SELECT is used
     as a subquery.</li>
 <li>Added the sqlite_encode_binary() and sqlite_decode_binary() functions to
@@ -4129,15 +4262,15 @@ the database.</li>
 <li>Bug fix: Do not attempt the subquery flattening optimization on queries
     that lack a FROM clause.  To do so causes a segfault.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_9"></a>
-<h3>2002-04-22 (2.4.9)</h3><p><ul class='lessindent'>
+<h3>2002-04-22 (2.4.9)</h3><p><ol class='lessindent'>
 <li>Fix a bug that was causing the precompiled binary of SQLITE.EXE to
     report "out of memory" under Windows 98.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_8"></a>
-<h3>2002-04-20 (2.4.8)</h3><p><ul class='lessindent'>
+<h3>2002-04-20 (2.4.8)</h3><p><ol class='lessindent'>
 <li>Make sure VIEWs are created after their corresponding TABLEs in the
     output of the <b>.dump</b> command in the shell.</li>
 <li>Speed improvements: Do not do synchronous updates on TEMP tables.</li>
@@ -4146,9 +4279,9 @@ the database.</li>
     by a programmer.  This allows, for example, the LIKE operator to
     be changed to be case sensitive.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_7"></a>
-<h3>2002-04-12 (2.4.7)</h3><p><ul class='lessindent'>
+<h3>2002-04-12 (2.4.7)</h3><p><ol class='lessindent'>
 <li>Add the ability to put TABLE.* in the column list of a
     SELECT statement.</li>
 <li>Permit SELECT statements without a FROM clause.</li>
@@ -4160,15 +4293,15 @@ the database.</li>
 <li>Added the <b>sqlite_changes()</b> API function to return the number
     of row that changed in the most recent operation.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_6"></a>
-<h3>2002-04-02 (2.4.6)</h3><p><ul class='lessindent'>
+<h3>2002-04-02 (2.4.6)</h3><p><ol class='lessindent'>
 <li>Bug fix: Correctly handle terms in the WHERE clause of a join that
     do not contain a comparison operator.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_5"></a>
-<h3>2002-04-02 (2.4.5)</h3><p><ul class='lessindent'>
+<h3>2002-04-02 (2.4.5)</h3><p><ol class='lessindent'>
 <li>Bug fix: Correctly handle functions that appear in the WHERE clause
     of a join.</li>
 <li>When the PRAGMA vdbe_trace=ON is set, correctly print the P3 operand
@@ -4177,9 +4310,9 @@ the database.</li>
 <li>When inserting an explicit NULL into an INTEGER PRIMARY KEY, convert
     the NULL value into a unique key automatically.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_4"></a>
-<h3>2002-03-30 (2.4.4)</h3><p><ul class='lessindent'>
+<h3>2002-03-30 (2.4.4)</h3><p><ol class='lessindent'>
 <li>Allow "VIEW" to be a column name</li>
 <li>Added support for CASE expressions (patch from Dan Kennedy)</li>
 <li>Added RPMS to the delivery (patches from Doug Henry)</li>
@@ -4187,17 +4320,17 @@ the database.</li>
 <li>Cut over configuration management to a new CVS repository with
     its own CVSTrac bug tracking system.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_3"></a>
-<h3>2002-03-23 (2.4.3)</h3><p><ul class='lessindent'>
+<h3>2002-03-23 (2.4.3)</h3><p><ol class='lessindent'>
 <li>Fix a bug in SELECT that occurs when a compound SELECT is used as a
     subquery in the FROM of a SELECT.</li>
 <li>The <b>sqlite_get_table()</b> function now returns an error if you
     give it two or more SELECTs that return different numbers of columns.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_2"></a>
-<h3>2002-03-20 (2.4.2)</h3><p><ul class='lessindent'>
+<h3>2002-03-20 (2.4.2)</h3><p><ol class='lessindent'>
 <li>Bug fix: Fix an assertion failure that occurred when ROWID was a column
     in a SELECT statement on a view.</li>
 <li>Bug fix: Fix an uninitialized variable in the VDBE that would could an
@@ -4205,17 +4338,17 @@ the database.</li>
 <li>Make the os.h header file more robust in detecting when the compile is
     for Windows and when it is for Unix.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_1"></a>
-<h3>2002-03-13 (2.4.1)</h3><p><ul class='lessindent'>
+<h3>2002-03-13 (2.4.1)</h3><p><ol class='lessindent'>
 <li>Using an unnamed subquery in a FROM clause would cause a segfault.</li>
 <li>The parser now insists on seeing a semicolon or the end of input before
     executing a statement.  This avoids an accidental disaster if the
     WHERE keyword is misspelled in an UPDATE or DELETE statement.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_4_0"></a>
-<h3>2002-03-11 (2.4.0)</h3><p><ul class='lessindent'>
+<h3>2002-03-11 (2.4.0)</h3><p><ol class='lessindent'>
 <li>Change the name of the sanity_check PRAGMA to <b>integrity_check</b>
     and make it available in all compiles.</li>
 <li>SELECT min() or max() of an indexed column with no WHERE or GROUP BY
@@ -4241,9 +4374,9 @@ the database.</li>
 <li>Fixed a bug that was causing updates to fail inside of transactions when
     the database contained a temporary table.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_3_3"></a>
-<h3>2002-02-19 (2.3.3)</h3><p><ul class='lessindent'>
+<h3>2002-02-19 (2.3.3)</h3><p><ol class='lessindent'>
 <li>Allow identifiers to be quoted in square brackets, for compatibility
     with MS-Access.</li>
 <li>Added support for sub-queries in the FROM clause of a SELECT.</li>
@@ -4255,24 +4388,24 @@ the database.</li>
 <li>Bug fix: Creating and dropping a table all within a single
     transaction was not working.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_3_2"></a>
-<h3>2002-02-14 (2.3.2)</h3><p><ul class='lessindent'>
+<h3>2002-02-14 (2.3.2)</h3><p><ol class='lessindent'>
 <li>Bug fix: There was an incorrect assert() in pager.c.  The real code was
     all correct (as far as is known) so everything should work OK if you
     compile with -DNDEBUG=1.  When asserts are not disabled, there
     could be a fault.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_3_1"></a>
-<h3>2002-02-13 (2.3.1)</h3><p><ul class='lessindent'>
+<h3>2002-02-13 (2.3.1)</h3><p><ol class='lessindent'>
 <li>Bug fix: An assertion was failing if "PRAGMA full_column_names=ON;" was
     set and you did a query that used a rowid, like this:  
     "SELECT rowid, * FROM ...".</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_3_0"></a>
-<h3>2002-02-03 (2.3.0)</h3><p><ul class='lessindent'>
+<h3>2002-02-03 (2.3.0)</h3><p><ol class='lessindent'>
 <li>Fix a serious bug in the INSERT command which was causing data to go
     into the wrong columns if the data source was a SELECT and the INSERT
     clauses specified its columns in some order other than the default.</li>
@@ -4288,17 +4421,17 @@ the database.</li>
 <li>In the COPY command, backslash can now be used to escape a newline.</li>
 <li>Added the SANITY_CHECK pragma.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_5"></a>
-<h3>2002-01-28 (2.2.5)</h3><p><ul class='lessindent'>
+<h3>2002-01-28 (2.2.5)</h3><p><ol class='lessindent'>
 <li>Important bug fix: the IN operator was not working if either the
     left-hand or right-hand side was derived from an INTEGER PRIMARY KEY.</li>
 <li>Do not escape the backslash '\' character in the output of the
     <b>sqlite</b> command-line access program.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_4"></a>
-<h3>2002-01-22 (2.2.4)</h3><p><ul class='lessindent'>
+<h3>2002-01-22 (2.2.4)</h3><p><ol class='lessindent'>
 <li>The label to the right of an AS in the column list of a SELECT can now
     be used as part of an expression in the WHERE, ORDER BY, GROUP BY, and/or
     HAVING clauses.</li>
@@ -4308,25 +4441,25 @@ the database.</li>
     characters greater than 'Z' but less than 'a'.</li>
 <li>Report an error if an ORDER BY or GROUP BY expression is constant.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_3"></a>
-<h3>2002-01-16 (2.2.3)</h3><p><ul class='lessindent'>
+<h3>2002-01-16 (2.2.3)</h3><p><ol class='lessindent'>
 <li>Fix warning messages in VC++ 7.0.  (Patches from nicolas352001)</li>
 <li>Make the library thread-safe.  (The code is there and appears to work
     but has not been stressed.)</li>
 <li>Added the new <b>sqlite_last_insert_rowid()</b> API function.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_2"></a>
-<h3>2002-01-14 (2.2.2)</h3><p><ul class='lessindent'>
+<h3>2002-01-14 (2.2.2)</h3><p><ol class='lessindent'>
 <li>Bug fix: An assertion was failing when a temporary table with an index
     had the same name as a permanent table created by a separate process.</li>
 <li>Bug fix: Updates to tables containing an INTEGER PRIMARY KEY and an
     index could fail.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_1"></a>
-<h3>2002-01-09 (2.2.1)</h3><p><ul class='lessindent'>
+<h3>2002-01-09 (2.2.1)</h3><p><ol class='lessindent'>
 <li>Bug fix: An attempt to delete a single row of a table with a WHERE
     clause of "ROWID=x" when no such rowid exists was causing an error.</li>
 <li>Bug fix: Passing in a NULL as the 3rd parameter to <b>sqlite_open()</b>
@@ -4335,9 +4468,9 @@ the database.</li>
     within a single transaction was causing a coredump.</li>
 <li>Makefile updates from A. Rottmann</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_2_0"></a>
-<h3>2001-12-22 (2.2.0)</h3><p><ul class='lessindent'>
+<h3>2001-12-22 (2.2.0)</h3><p><ol class='lessindent'>
 <li>Columns of type INTEGER PRIMARY KEY are actually used as the primary
     key in underlying B-Tree representation of the table.</li>
 <li>Several obscure, unrelated bugs were found and fixed while 
@@ -4347,9 +4480,9 @@ the database.</li>
     <nobr>"<b>SELECT rowid, * FROM table1;</b>"</nobr>.</li>
 <li>Updates to comments and documentation.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_7"></a>
-<h3>2001-12-15 (2.1.7)</h3><p><ul class='lessindent'>
+<h3>2001-12-15 (2.1.7)</h3><p><ol class='lessindent'>
 <li>Fix a bug in <b>CREATE TEMPORARY TABLE</b> which was causing the
     table to be initially allocated in the main database file instead
     of in the separate temporary file.  This bug could cause the library
@@ -4358,25 +4491,25 @@ the database.</li>
 <li>Fix a bug in the b-tree subsystem that could sometimes cause the first
     row of a table to be repeated during a database scan.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_6"></a>
-<h3>2001-12-14 (2.1.6)</h3><p><ul class='lessindent'>
+<h3>2001-12-14 (2.1.6)</h3><p><ol class='lessindent'>
 <li>Fix the locking mechanism yet again to prevent
     <b>sqlite_exec()</b> from returning SQLITE_PROTOCOL
     unnecessarily.  This time the bug was a race condition in
     the locking code.  This change affects both POSIX and Windows users.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_5"></a>
-<h3>2001-12-06 (2.1.5)</h3><p><ul class='lessindent'>
+<h3>2001-12-06 (2.1.5)</h3><p><ol class='lessindent'>
 <li>Fix for another problem (unrelated to the one fixed in 2.1.4) 
     that sometimes causes <b>sqlite_exec()</b> to return SQLITE_PROTOCOL
     unnecessarily.  This time the bug was
     in the POSIX locking code and should not effect Windows users.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_4"></a>
-<h3>2001-12-05 (2.1.4)</h3><p><ul class='lessindent'>
+<h3>2001-12-05 (2.1.4)</h3><p><ol class='lessindent'>
 <li>Sometimes <b>sqlite_exec()</b> would return SQLITE_PROTOCOL when it
     should have returned SQLITE_BUSY.</li>
 <li>The fix to the previous bug uncovered a deadlock which was also
@@ -4385,18 +4518,18 @@ the database.</li>
     of the sqlite shell</li>
 <li>Updates to the FAQ</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_3"></a>
-<h3>2001-11-24 (2.1.3)</h3><p><ul class='lessindent'>
+<h3>2001-11-24 (2.1.3)</h3><p><ol class='lessindent'>
 <li>Fix the behavior of comparison operators 
     (ex: "<b>&lt</b>", "<b>==</b>", etc.)
     so that they are consistent with the order of entries in an index.</li>
 <li>Correct handling of integers in SQL expressions that are larger than
     what can be represented by the machine integer.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_2"></a>
-<h3>2001-11-23 (2.1.2)</h3><p><ul class='lessindent'>
+<h3>2001-11-23 (2.1.2)</h3><p><ol class='lessindent'>
 <li>Changes to support 64-bit architectures.</li>
 <li>Fix a bug in the locking protocol.</li>
 <li>Fix a bug that could (rarely) cause the database to become 
@@ -4407,23 +4540,23 @@ the database.</li>
     the library even though the SQLITE_MASTER table is (slightly)
     corrupted.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_1"></a>
-<h3>2001-11-13 (2.1.1)</h3><p><ul class='lessindent'>
+<h3>2001-11-13 (2.1.1)</h3><p><ol class='lessindent'>
 <li>Bug fix: Sometimes arbitrary strings were passed to the callback
     function when the actual value of a column was NULL.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_1_0"></a>
-<h3>2001-11-12 (2.1.0)</h3><p><ul class='lessindent'>
+<h3>2001-11-12 (2.1.0)</h3><p><ol class='lessindent'>
 <li>Change the format of data records so that records up to 16MB in size
     can be stored.</li>
 <li>Change the format of indices to allow for better query optimization.</li>
 <li>Implement the "LIMIT ... OFFSET ..." clause on SELECT statements.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_8"></a>
-<h3>2001-11-03 (2.0.8)</h3><p><ul class='lessindent'>
+<h3>2001-11-03 (2.0.8)</h3><p><ol class='lessindent'>
 <li>Made selected parameters in API functions <b>const</b>. This should
     be fully backwards compatible.</li>
 <li>Documentation updates</li>
@@ -4432,9 +4565,9 @@ the database.</li>
     In practice, no more than one sorter and one list was ever used anyhow.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_7"></a>
-<h3>2001-10-22 (2.0.7)</h3><p><ul class='lessindent'>
+<h3>2001-10-22 (2.0.7)</h3><p><ol class='lessindent'>
 <li>Any UTF-8 character or ISO8859 character can be used as part of
     an identifier.</li>
 <li>Patches from Christian Werner to improve ODBC compatibility and to
@@ -4445,32 +4578,32 @@ the database.</li>
 <li>Changes to some test scripts so that they work on Windows in
     addition to Unix.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_6"></a>
-<h3>2001-10-19 (2.0.6)</h3><p><ul class='lessindent'>
+<h3>2001-10-19 (2.0.6)</h3><p><ol class='lessindent'>
 <li>Added the EMPTY_RESULT_CALLBACKS pragma</li>
 <li>Support for UTF-8 and ISO8859 characters in column and table names.</li>
 <li>Bug fix: Compute correct table names with the FULL_COLUMN_NAMES pragma
     is turned on.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_5"></a>
-<h3>2001-10-15 (2.0.5)</h3><p><ul class='lessindent'>
+<h3>2001-10-15 (2.0.5)</h3><p><ol class='lessindent'>
 <li>Added the COUNT_CHANGES pragma.</li>
 <li>Changes to the FULL_COLUMN_NAMES pragma to help out the ODBC driver.</li>
 <li>Bug fix: "SELECT count(*)" was returning NULL for empty tables.
     Now it returns 0.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_4"></a>
-<h3>2001-10-13 (2.0.4)</h3><p><ul class='lessindent'>
+<h3>2001-10-13 (2.0.4)</h3><p><ol class='lessindent'>
 <li>Bug fix: an obscure and relatively harmless bug was causing one of
     the tests to fail when gcc optimizations are turned on.  This release
     fixes the problem.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_3"></a>
-<h3>2001-10-13 (2.0.3)</h3><p><ul class='lessindent'>
+<h3>2001-10-13 (2.0.3)</h3><p><ol class='lessindent'>
 <li>Bug fix: the <b>sqlite_busy_timeout()</b> function was delaying 1000
     times too long before failing.</li>
 <li>Bug fix: an assertion was failing if the disk holding the database
@@ -4481,9 +4614,9 @@ the database.</li>
     <b>&lt;&lt;</b> (shift left), <b>&gt;&gt;</b> (shift right).</li>
 <li>Added new functions: <b>round()</b> and <b>abs()</b>.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_2"></a>
-<h3>2001-10-09 (2.0.2)</h3><p><ul class='lessindent'>
+<h3>2001-10-09 (2.0.2)</h3><p><ol class='lessindent'>
 <li>Fix two bugs in the locking protocol.  (One was masking the other.)</li>
 <li>Removed some unused "#include <unistd.h>" that were causing problems
     for VC++.</li>
@@ -4494,9 +4627,9 @@ the database.</li>
     ODBC interface.</li>
 <li>Added support for TEMPORARY tables and indices.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_1"></a>
-<h3>2001-10-02 (2.0.1)</h3><p><ul class='lessindent'>
+<h3>2001-10-02 (2.0.1)</h3><p><ol class='lessindent'>
 <li>Remove some C++ style comments from btree.c so that it will compile
     using compilers other than gcc.</li>
 <li>The ".dump" output from the shell does not work if there are embedded
@@ -4507,25 +4640,25 @@ the database.</li>
     space between the "NOT" and the "NULL") in addition to "expr NOTNULL"
     (with no space).</li>
 
-</ul></p>
+</ol></p>
 <a name="version_2_0_0"></a>
-<h3>2001-09-28 (2.0.0)</h3><p><ul class='lessindent'>
+<h3>2001-09-28 (2.0.0)</h3><p><ol class='lessindent'>
 <li>Automatically build binaries for Linux and Windows and put them on
     the website.</li>
 
-</ul></p>
-<h3>2001-09-28 (2.0-alpha-4)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2001-09-28 (2.0-alpha-4)</h3><p><ol class='lessindent'>
 <li>Incorporate makefile patches form A. Rottmann to use LIBTOOL</li>
 
-</ul></p>
-<h3>2001-09-27 (2.0-alpha-3)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2001-09-27 (2.0-alpha-3)</h3><p><ol class='lessindent'>
 <li>SQLite now honors the UNIQUE keyword in CREATE UNIQUE INDEX.  Primary
     keys are required to be unique.</li>
 <li>File format changed back to what it was for alpha-1</li>
 <li>Fixes to the rollback and locking behavior</li>
 
-</ul></p>
-<h3>2001-09-20 (2.0-alpha-2)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2001-09-20 (2.0-alpha-2)</h3><p><ol class='lessindent'>
 <li>Initial release of version 2.0.  The idea of renaming the library
     to "SQLus" was abandoned in favor of keeping the "SQLite" name and
     bumping the major version number.</li>
@@ -4535,24 +4668,24 @@ the database.</li>
 <li>Copyright on all code was disclaimed.  The library is now in the
     public domain.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_32"></a>
-<h3>2001-07-23 (1.0.32)</h3><p><ul class='lessindent'>
+<h3>2001-07-23 (1.0.32)</h3><p><ol class='lessindent'>
 <li>Pager and btree subsystems removed.  These will be used in a follow-on
     SQL server library named "SQLus".</li>
 <li>Add the ability to use quoted strings as table and column names in
     expressions.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_31"></a>
-<h3>2001-04-15 (1.0.31)</h3><p><ul class='lessindent'>
+<h3>2001-04-15 (1.0.31)</h3><p><ol class='lessindent'>
 <li>Pager subsystem added but not yet used.</li>
 <li>More robust handling of out-of-memory errors.</li>
 <li>New tests added to the test suite.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_30"></a>
-<h3>2001-04-06 (1.0.30)</h3><p><ul class='lessindent'>
+<h3>2001-04-06 (1.0.30)</h3><p><ol class='lessindent'>
 <li>Remove the <b>sqlite_encoding</b> TCL variable that was introduced
     in the previous version.</li>
 <li>Add options <b>-encoding</b> and <b>-tcl-uses-utf</b> to the
@@ -4560,9 +4693,9 @@ the database.</li>
 <li>Add tests to make sure that tclsqlite was compiled using Tcl header
     files and libraries that match.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_29"></a>
-<h3>2001-04-05 (1.0.29)</h3><p><ul class='lessindent'>
+<h3>2001-04-05 (1.0.29)</h3><p><ol class='lessindent'>
 <li>The library now assumes data is stored as UTF-8 if the --enable-utf8
     option is given to configure.  The default behavior is to assume
     iso8859-x, as it has always done.  This only makes a difference for
@@ -4572,9 +4705,9 @@ the database.</li>
     then a conversion from UTF-8 to iso8859 and
     back again is done inside the TCL interface.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_28"></a>
-<h3>2001-04-04 (1.0.28)</h3><p><ul class='lessindent'>
+<h3>2001-04-04 (1.0.28)</h3><p><ol class='lessindent'>
 <li>Added limited support for transactions.  At this point, transactions
     will do table locking on the GDBM backend.  There is no support (yet)
     for rollback or atomic commit.</li>
@@ -4586,9 +4719,9 @@ the database.</li>
     compiled using MSVC.</li>
 <li>Bug fixes in the TCL interface identified by Oleg Oleinick.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_27"></a>
-<h3>2001-03-20 (1.0.27)</h3><p><ul class='lessindent'>
+<h3>2001-03-20 (1.0.27)</h3><p><ol class='lessindent'>
 <li>When doing DELETE and UPDATE, the library used to write the record
     numbers of records to be deleted or updated into a temporary file.
     This is changed so that the record numbers are held in memory.</li>
@@ -4596,15 +4729,15 @@ the database.</li>
     files from the disk, rather than going through and deleting record
     by record.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_26"></a>
-<h3>2001-03-20 (1.0.26)</h3><p><ul class='lessindent'>
+<h3>2001-03-20 (1.0.26)</h3><p><ol class='lessindent'>
 <li>A serious bug fixed on Windows.  Windows users should upgrade.
     No impact to Unix.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_25"></a>
-<h3>2001-03-15 (1.0.25)</h3><p><ul class='lessindent'>
+<h3>2001-03-15 (1.0.25)</h3><p><ol class='lessindent'>
 <li>Modify the test scripts to identify tests that depend on system
     load and processor speed and
     to warn the user that a failure of one of those (rare) tests does
@@ -4612,94 +4745,94 @@ the database.</li>
     code.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_24"></a>
-<h3>2001-03-14 (1.0.24)</h3><p><ul class='lessindent'>
+<h3>2001-03-14 (1.0.24)</h3><p><ol class='lessindent'>
 <li>Fix a bug which was causing
     the UPDATE command to fail on systems where "malloc(0)" returns
     NULL.  The problem does not appear on Windows, Linux, or HPUX but does 
     cause the library to fail on QNX.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_23"></a>
-<h3>2001-02-20 (1.0.23)</h3><p><ul class='lessindent'>
+<h3>2001-02-20 (1.0.23)</h3><p><ol class='lessindent'>
 <li>An unrelated (and minor) bug from Mark Muranwski fixed.  The algorithm
     for figuring out where to put temporary files for a "memory:" database
     was not working quite right.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_22"></a>
-<h3>2001-02-19 (1.0.22)</h3><p><ul class='lessindent'>
+<h3>2001-02-19 (1.0.22)</h3><p><ol class='lessindent'>
 <li>The previous fix was not quite right.  This one seems to work better.
     </li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_21"></a>
-<h3>2001-02-19 (1.0.21)</h3><p><ul class='lessindent'>
+<h3>2001-02-19 (1.0.21)</h3><p><ol class='lessindent'>
 <li>The UPDATE statement was not working when the WHERE clause contained
     some terms that could be satisfied using indices and other terms that
     could not.  Fixed.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_20"></a>
-<h3>2001-02-11 (1.0.20)</h3><p><ul class='lessindent'>
+<h3>2001-02-11 (1.0.20)</h3><p><ol class='lessindent'>
 <li>Merge development changes into the main trunk.  Future work toward
     using a BTree file structure will use a separate CVS source tree.  This
     CVS tree will continue to support the GDBM version of SQLite only.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_19"></a>
-<h3>2001-02-06 (1.0.19)</h3><p><ul class='lessindent'>
+<h3>2001-02-06 (1.0.19)</h3><p><ol class='lessindent'>
 <li>Fix a strange (but valid) C declaration that was causing problems
     for QNX.  No logical changes.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_18"></a>
-<h3>2001-01-04 (1.0.18)</h3><p><ul class='lessindent'>
+<h3>2001-01-04 (1.0.18)</h3><p><ol class='lessindent'>
 <li>Print the offending SQL statement when an error occurs.</li>
 <li>Do not require commas between constraints in CREATE TABLE statements.</li>
 <li>Added the "-echo" option to the shell.</li>
 <li>Changes to comments.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_17"></a>
-<h3>2000-12-10 (1.0.17)</h3><p><ul class='lessindent'>
+<h3>2000-12-10 (1.0.17)</h3><p><ol class='lessindent'>
 <li>Rewrote <b>sqlite_complete()</b> to make it faster.</li>
 <li>Minor tweaks to other code to make it run a little faster.</li>
 <li>Added new tests for <b>sqlite_complete()</b> and for memory leaks.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_16"></a>
-<h3>2000-11-28 (1.0.16)</h3><p><ul class='lessindent'>
+<h3>2000-11-28 (1.0.16)</h3><p><ol class='lessindent'>
 <li>Documentation updates.  Mostly fixing of typos and spelling errors.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_15"></a>
-<h3>2000-10-23 (1.0.15)</h3><p><ul class='lessindent'>
+<h3>2000-10-23 (1.0.15)</h3><p><ol class='lessindent'>
 <li>Documentation updates</li>
 <li>Some sanity checking code was removed from the inner loop of vdbe.c
     to help the library to run a little faster.  The code is only
     removed if you compile with -DNDEBUG.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_14"></a>
-<h3>2000-10-19 (1.0.14)</h3><p><ul class='lessindent'>
+<h3>2000-10-19 (1.0.14)</h3><p><ol class='lessindent'>
 <li>Added a "memory:" backend driver that stores its database in an
     in-memory hash table.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_13"></a>
-<h3>2000-10-19 (1.0.13)</h3><p><ul class='lessindent'>
+<h3>2000-10-19 (1.0.13)</h3><p><ol class='lessindent'>
 <li>Break out the GDBM driver into a separate file in anticipation
     to added new drivers.</li>
 <li>Allow the name of a database to be prefixed by the driver type.
     For now, the only driver type is "gdbm:".</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_12"></a>
-<h3>2000-10-17 (1.0.12)</h3><p><ul class='lessindent'>
+<h3>2000-10-17 (1.0.12)</h3><p><ol class='lessindent'>
 <li>Fixed an off-by-one error that was causing a coredump in 
     the '%q' format directive of the new
     <b>sqlite_..._printf()</b> routines.</li>
@@ -4709,28 +4842,28 @@ the database.</li>
 <li>Fixed some instances where <b>sqlite_exec()</b> was
     returning the wrong error code.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_10"></a>
-<h3>2000-10-11 (1.0.10)</h3><p><ul class='lessindent'>
+<h3>2000-10-11 (1.0.10)</h3><p><ol class='lessindent'>
 <li>Added notes on how to compile for Windows95/98.</li>
 <li>Removed a few variables that were not being used.  Etc.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_9"></a>
-<h3>2000-10-09 (1.0.9)</h3><p><ul class='lessindent'>
+<h3>2000-10-09 (1.0.9)</h3><p><ol class='lessindent'>
 <li>Added the <b>sqlite_..._printf()</b> interface routines.</li>
 <li>Modified the <b>sqlite</b> shell program to use the new interface 
     routines.</li>
 <li>Modified the <b>sqlite</b> shell program to print the schema for
     the built-in SQLITE_MASTER table, if explicitly requested.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_8"></a>
-<h3>2000-09-30 (1.0.8)</h3><p><ul class='lessindent'>
+<h3>2000-09-30 (1.0.8)</h3><p><ol class='lessindent'>
 <li>Begin writing documentation on the TCL interface.</li>
 
-</ul></p>
-<h3>2000-09-29 (Not Released)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-09-29 (Not Released)</h3><p><ol class='lessindent'>
 <li>Added the <b>sqlite_get_table()</b> API</li>
 <li>Updated the documentation for due to the above change.</li>
 <li>Modified the <b>sqlite</b> shell to make use of the new
@@ -4739,32 +4872,32 @@ the database.</li>
 <li>Modified the <b>sqlite</b> shell to print a semicolon at the
     end of each CREATE statement in the output of the ".schema" command.</li>
 
-</ul></p>
-<h3>2000-09-21 (Not Released)</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-09-21 (Not Released)</h3><p><ol class='lessindent'>
 <li>Change the tclsqlite "eval" method to return a list of results if
     no callback script is specified.</li>
 <li>Change tclsqlite.c to use the Tcl_Obj interface</li>
 <li>Add tclsqlite.c to the libsqlite.a library</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_5"></a>
-<h3>2000-09-14 (1.0.5)</h3><p><ul class='lessindent'>
+<h3>2000-09-14 (1.0.5)</h3><p><ol class='lessindent'>
 <li>Changed the print format for floating point values from "%g" to "%.15g".
     </li>
 <li>Changed the comparison function so that numbers in exponential notation
     (ex: 1.234e+05) sort in numerical order.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_4"></a>
-<h3>2000-08-28 (1.0.4)</h3><p><ul class='lessindent'>
+<h3>2000-08-28 (1.0.4)</h3><p><ol class='lessindent'>
 <li>Added functions <b>length()</b> and <b>substr()</b>.</li>
 <li>Fix a bug in the <b>sqlite</b> shell program that was causing
     a coredump when the output mode was "column" and the first row
     of data contained a NULL.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_3"></a>
-<h3>2000-08-22 (1.0.3)</h3><p><ul class='lessindent'>
+<h3>2000-08-22 (1.0.3)</h3><p><ol class='lessindent'>
 <li>In the sqlite shell, print the "Database opened READ ONLY" message
     to stderr instead of stdout.</li>
 <li>In the sqlite shell, now print the version number on initial startup.</li>
@@ -4774,86 +4907,86 @@ the database.</li>
     circumstance: a query on an indexed table containing a WHERE clause with
     an IN operator that had a subquery on its right-hand side.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0_1"></a>
-<h3>2000-08-18 (1.0.1)</h3><p><ul class='lessindent'>
+<h3>2000-08-18 (1.0.1)</h3><p><ol class='lessindent'>
 <li>Fix a bug in the configure script.</li>
 <li>Minor revisions to the website.</li>
 
-</ul></p>
+</ol></p>
 <a name="version_1_0"></a>
-<h3>2000-08-17 (1.0)</h3><p><ul class='lessindent'>
+<h3>2000-08-17 (1.0)</h3><p><ol class='lessindent'>
 <li>Change the <b>sqlite</b> program so that it can read
     databases for which it lacks write permission.  (It used to
     refuse all access if it could not write.)</li>
 
-</ul></p>
-<h3>2000-08-09</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-09</h3><p><ol class='lessindent'>
 <li>Treat carriage returns as white space.</li>
 
-</ul></p>
-<h3>2000-08-08</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-08</h3><p><ol class='lessindent'>
 <li>Added pattern matching to the ".table" command in the "sqlite"
 command shell.</li>
 
-</ul></p>
-<h3>2000-08-04</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-04</h3><p><ol class='lessindent'>
 <li>Documentation updates</li>
 <li>Added "busy" and "timeout" methods to the Tcl interface</li>
 
-</ul></p>
-<h3>2000-08-03</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-03</h3><p><ol class='lessindent'>
 <li>File format version number was being stored in sqlite_master.tcl
     multiple times. This was harmless, but unnecessary. It is now fixed.</li>
 
-</ul></p>
-<h3>2000-08-02</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-02</h3><p><ol class='lessindent'>
 <li>The file format for indices was changed slightly in order to work
     around an inefficiency that can sometimes come up with GDBM when
     there are large indices having many entries with the same key.
     <font color="red">** Incompatible Change **</font></li>
 
-</ul></p>
-<h3>2000-08-01</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-08-01</h3><p><ol class='lessindent'>
 <li>The parser's stack was overflowing on a very long UPDATE statement.
     This is now fixed.</li>
 
-</ul></p>
-<h3>2000-07-31</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-07-31</h3><p><ol class='lessindent'>
 <li>Finish the <a href="vdbe.html">VDBE tutorial</a>.</li>
 <li>Added documentation on compiling to WinNT.</li>
 <li>Fix a configuration program for WinNT.</li>
 <li>Fix a configuration problem for HPUX.</li>
 
-</ul></p>
-<h3>2000-07-29</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-07-29</h3><p><ol class='lessindent'>
 <li>Better labels on column names of the result.</li>
 
-</ul></p>
-<h3>2000-07-28</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-07-28</h3><p><ol class='lessindent'>
 <li>Added the <b>sqlite_busy_handler()</b> 
     and <b>sqlite_busy_timeout()</b> interface.</li>
 
-</ul></p>
-<h3>2000-06-23</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-23</h3><p><ol class='lessindent'>
 <li>Begin writing the <a href="vdbe.html">VDBE tutorial</a>.</li>
 
-</ul></p>
-<h3>2000-06-21</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-21</h3><p><ol class='lessindent'>
 <li>Clean up comments and variable names.  Changes to documentation.
     No functional changes to the code.</li>
 
-</ul></p>
-<h3>2000-06-19</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-19</h3><p><ol class='lessindent'>
 <li>Column names in UPDATE statements were case sensitive.
     This mistake has now been fixed.</li>
 
-</ul></p>
-<h3>2000-06-18</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-18</h3><p><ol class='lessindent'>
 <li>Added the concatenate string operator (||)</li>
 
-</ul></p>
-<h3>2000-06-12</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-12</h3><p><ol class='lessindent'>
 <li>Added the fcnt() function to the SQL interpreter.  The fcnt() function
     returns the number of database "Fetch" operations that have occurred.
     This function is designed for use in test scripts to verify that
@@ -4862,14 +4995,14 @@ command shell.</li>
 <li>Added a bunch more tests that take advantage of the new fcnt() function.
     The new tests did not uncover any new problems.</li>
 
-</ul></p>
-<h3>2000-06-08</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-08</h3><p><ol class='lessindent'>
 <li>Added lots of new test cases</li>
 <li>Fix a few bugs discovered while adding test cases</li>
 <li>Begin adding lots of new documentation</li>
 
-</ul></p>
-<h3>2000-06-06</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-06</h3><p><ol class='lessindent'>
 <li>Added compound select operators: <B>UNION</b>, <b>UNION ALL</B>,
 <b>INTERSECT</b>, and <b>EXCEPT</b></li>
 <li>Added support for using <b>(SELECT ...)</b> within expressions</li>
@@ -4878,35 +5011,35 @@ command shell.</li>
 <li>NULL values are now reported to the callback as a NULL pointer
     rather than an empty string.</li>
 
-</ul></p>
-<h3>2000-06-03</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-03</h3><p><ol class='lessindent'>
 <li>Added support for default values on columns of a table.</li>
 <li>Improved test coverage.  Fixed a few obscure bugs found by the
 improved tests.</li>
 
-</ul></p>
-<h3>2000-06-02</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-02</h3><p><ol class='lessindent'>
 <li>All database files to be modified by an UPDATE, INSERT or DELETE are 
 now locked before any changes are made to any files.  
 This makes it safe (I think) to access
 the same database simultaneously from multiple processes.</li>
 <li>The code appears stable so we are now calling it "beta".</li>
 
-</ul></p>
-<h3>2000-06-01</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-06-01</h3><p><ol class='lessindent'>
 <li>Better support for file locking so that two or more processes 
 (or threads)
 can access the same database simultaneously.  More work needed in
 this area, though.</li>
 
-</ul></p>
-<h3>2000-05-31</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-05-31</h3><p><ol class='lessindent'>
 <li>Added support for aggregate functions (Ex: <b>COUNT(*)</b>, <b>MIN(...)</b>)
 to the SELECT statement.</li>
 <li>Added support for <B>SELECT DISTINCT ...</B></li>
 
-</ul></p>
-<h3>2000-05-30</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-05-30</h3><p><ol class='lessindent'>
 <li>Added the <b>LIKE</b> operator.</li>
 <li>Added a <b>GLOB</b> operator: similar to <B>LIKE</B> 
 but it uses Unix shell globbing wildcards instead of the '%' 
@@ -4920,11 +5053,11 @@ of PostgreSQL.</li>
 files.</li>
 <li>And many, many bug fixes...</li>
 
-</ul></p>
-<h3>2000-05-29</h3><p><ul class='lessindent'>
+</ol></p>
+<h3>2000-05-29</h3><p><ol class='lessindent'>
 <li>Initial Public Release of Alpha code</li>
 
-</ul></p>
+</ol></p>
 
 </dl>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -120,11 +135,11 @@ Unprotected sqlite3_value objects may only be used with
 The <a href="../c3ref/value_blob.html">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
-#listtab24 tr td {vertical-align:top;}
+#listtab26 tr td {vertical-align:top;}
 </style>
-<table id='listtab24' width='100%'></table>
+<table id='listtab26' width='100%'></table>
 <script>
-var listitems24 = [{"u":"../c3ref/value_blob.html","x":"sqlite3_value_blob","s":0},
+var listitems26 = [{"u":"../c3ref/value_blob.html","x":"sqlite3_value_blob","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_bytes","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_bytes16","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_double","s":0},
@@ -133,6 +148,7 @@ var listitems24 = [{"u":"../c3ref/value_blob.html","x":"sqlite3_value_blob","s":
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_int","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_int64","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_numeric_type","s":0},
+{"u":"../c3ref/value_blob.html","x":"sqlite3_value_pointer","s":0},
 {"u":"../c3ref/value_subtype.html","x":"sqlite3_value_subtype","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_text","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_text16","s":0},
@@ -143,37 +159,37 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems24.length+1)/nCol);
+var nRow = Math.ceil((listitems26.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems24.length; i++){
+for(var i=0; i<listitems26.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems24[i].u=="" || listitems24[i].s==2){
+  if(listitems26[i].u=="" || listitems26[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems24[i].u;
+    h += listitems26[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
-  h += listitems24[i].x;
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "<s>"
+  h += listitems26[i].x;
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "</s>"
   h += ea
-  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems24[i].s==3) h += "&sup1\n";
-  if(listitems24[i].s==4) h += "&sup2\n";
-  if(listitems24[i].s==5) h += "&sup3\n";
+  if(listitems26[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems26[i].s==3) h += "&sup1\n";
+  if(listitems26[i].s==4) h += "&sup2\n";
+  if(listitems26[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab24").innerHTML = h;
+document.getElementById("listtab26").innerHTML = h;
 </script>
 </p>
 <p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.0.8 On 2004-10-12</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.0.8 On 2004-10-12</h2><p><ol class='lessindent'>
 <li>Add support for DEFERRED, IMMEDIATE, and EXCLUSIVE transactions.</li>
 <li>Allow new user-defined functions to be created when there are
 already one or more precompiled SQL statements.<li>
@@ -90,7 +105,7 @@ characters at the end of lines.</li>
 <li>Numerous code optimizations, specially optimizations designed to
 make the code footprint smaller.</li>
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -98,4 +113,4 @@ make the code footprint smaller.</li>
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

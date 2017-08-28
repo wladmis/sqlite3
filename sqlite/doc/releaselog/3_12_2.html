@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.12.2 On 2016-04-18</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.12.2 On 2016-04-18</h2><p><ol class='lessindent'>
 <li>Fix a backwards compatibility problem in version 3.12.0 and 3.12.1:
     Columns declared as <tt>"INTEGER" PRIMARY KEY</tt> (with quotes around
     the datatype keyword) were not being recognized as an
@@ -94,9 +109,9 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-04-18 17:30:31 92dc59fd5ad66f646666042eb04195e3a61a9e8e"
 <li>SHA1 for sqlite3.c: de5a5898ebd3a3477d4652db143746d008b24c83
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.12.1 (2016-04-08):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <li>Fix a boundary condition error introduced by version 3.12.0
     that can result in a crash during heavy <a href="../lang_savepoint.html">SAVEPOINT</a> usage.
     Ticket <a href="https://www.sqlite.org/src/info/7f7f8026eda38">7f7f8026eda38</a>.
@@ -105,9 +120,9 @@ return false;
 <li>Fix the query planner so that IS and IS NULL operators are able
     to drive an index on a LEFT OUTER JOIN.
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.12.0 (2016-03-29):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <p><b>Potentially Disruptive Change:</b>
 <li>The <a href="../compile.html#default_page_size">SQLITE_DEFAULT_PAGE_SIZE</a> is increased from 1024 to 4096.  
     The <a href="../compile.html#default_cache_size">SQLITE_DEFAULT_CACHE_SIZE</a> is changed from 2000 to -2000 so 
@@ -165,7 +180,7 @@ return false;
     Ticket <a href="https://www.sqlite.org/src/info/5e3c886796e5512e">5e3c886796e5512e</a>.
 <li>Fix a harmless TSAN warning associated with the <a href="../c3ref/db_readonly.html">sqlite3_db_readonly()</a> interface.
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -173,4 +188,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: {SQL statement compiler} sqlite3_prepare sqlite3_prepare16 sqlite3_prepare16_v2 sqlite3_prepare_v2 -->
+<!-- keywords: {SQL statement compiler} sqlite3_prepare sqlite3_prepare16 sqlite3_prepare16_v2 sqlite3_prepare16_v3 sqlite3_prepare_v2 sqlite3_prepare_v3 -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Compiling An SQL Statement</h2>
@@ -96,6 +111,14 @@ int sqlite3_prepare_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const char **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
+int sqlite3_prepare_v3(
+  sqlite3 *db,            /* Database handle */
+  const char *zSql,       /* SQL statement, UTF-8 encoded */
+  int nByte,              /* Maximum length of zSql in bytes. */
+  unsigned int prepFlags, /* Zero or more SQLITE_PREPARE_ flags */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const char **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
 int sqlite3_prepare16(
   sqlite3 *db,            /* Database handle */
   const void *zSql,       /* SQL statement, UTF-16 encoded */
@@ -110,19 +133,39 @@ int sqlite3_prepare16_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const void **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
+int sqlite3_prepare16_v3(
+  sqlite3 *db,            /* Database handle */
+  const void *zSql,       /* SQL statement, UTF-16 encoded */
+  int nByte,              /* Maximum length of zSql in bytes. */
+  unsigned int prepFlags, /* Zero or more SQLITE_PREPARE_ flags */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const void **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
 </pre></blockquote>
 <p>
-To execute an SQL query, it must first be compiled into a byte-code
-program using one of these routines.</p>
+To execute an SQL statement, it must first be compiled into a byte-code
+program using one of these routines.  Or, in other words, these routines
+are constructors for the <a href="../c3ref/stmt.html">prepared statement</a> object.</p>
+
+<p>The preferred routine to use is <a href="../c3ref/prepare.html">sqlite3_prepare_v2()</a>.  The
+<a href="../c3ref/prepare.html">sqlite3_prepare()</a> interface is legacy and should be avoided.
+<a href="../c3ref/prepare.html">sqlite3_prepare_v3()</a> has an extra "prepFlags" option that is used
+for special purposes.</p>
+
+<p>The use of the UTF-8 interfaces is preferred, as SQLite currently
+does all parsing using UTF-8.  The UTF-16 interfaces are provided
+as a convenience.  The UTF-16 interfaces work by converting the
+input text into UTF-8, then invoking the corresponding UTF-8 interface.</p>
 
 <p>The first argument, "db", is a <a href="../c3ref/sqlite3.html">database connection</a> obtained from a
 prior successful call to <a href="../c3ref/open.html">sqlite3_open()</a>, <a href="../c3ref/open.html">sqlite3_open_v2()</a> or
 <a href="../c3ref/open.html">sqlite3_open16()</a>.  The database connection must not have been closed.</p>
 
 <p>The second argument, "zSql", is the statement to be compiled, encoded
-as either UTF-8 or UTF-16.  The sqlite3_prepare() and sqlite3_prepare_v2()
-interfaces use UTF-8, and sqlite3_prepare16() and sqlite3_prepare16_v2()
-use UTF-16.</p>
+as either UTF-8 or UTF-16.  The sqlite3_prepare(), sqlite3_prepare_v2(),
+and sqlite3_prepare_v3()
+interfaces use UTF-8, and sqlite3_prepare16(), sqlite3_prepare16_v2(),
+and sqlite3_prepare16_v3() use UTF-16.</p>
 
 <p>If the nByte argument is negative, then zSql is read up to the
 first zero terminator. If nByte is positive, then it is the
@@ -149,10 +192,11 @@ ppStmt may not be NULL.</p>
 <p>On success, the sqlite3_prepare() family of routines return <a href="../rescode.html#ok">SQLITE_OK</a>;
 otherwise an <a href="../rescode.html">error code</a> is returned.</p>
 
-<p>The sqlite3_prepare_v2() and sqlite3_prepare16_v2() interfaces are
-recommended for all new programs. The two older interfaces are retained
-for backwards compatibility, but their use is discouraged.
-In the "v2" interfaces, the prepared statement
+<p>The sqlite3_prepare_v2(), sqlite3_prepare_v3(), sqlite3_prepare16_v2(),
+and sqlite3_prepare16_v3() interfaces are recommended for all new programs.
+The older interfaces (sqlite3_prepare() and sqlite3_prepare16())
+are retained for backwards compatibility, but their use is discouraged.
+In the "vX" interfaces, the prepared statement
 that is returned (the <a href="../c3ref/stmt.html">sqlite3_stmt</a> object) contains a copy of the
 original SQL text. This causes the <a href="../c3ref/step.html">sqlite3_step()</a> interface to
 behave differently in three ways:</p>
@@ -184,9 +228,15 @@ The specific value of WHERE-clause <a href="../lang_expr.html#varparam">paramete
 choice of query plan if the parameter is the left-hand side of a <a href="../lang_expr.html#like">LIKE</a>
 or <a href="../lang_expr.html#glob">GLOB</a> operator or if the parameter is compared to an indexed column
 and the <a href="../compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> compile-time option is enabled.
-</li>
+</li></p>
+
+<p><p>sqlite3_prepare_v3() differs from sqlite3_prepare_v2() only in having
+the extra prepFlags parameter, which is a bit array consisting of zero or
+more of the <a href="../c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_*</a> flags.  The
+sqlite3_prepare_v2() interface works exactly the same as
+sqlite3_prepare_v3() with a zero prepFlags parameter.
 </ol>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

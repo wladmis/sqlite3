@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -80,7 +95,36 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2017_06_08"></a><h3>2017-06-08 - Release 3.19.3</h3><blockquote>
+<a name="2017_08_24"></a><h3>2017-08-24 - Release 3.20.1</h3><blockquote>
+The <a href="releaselog/3_20_1.html">version 3.20.1</a> patch release changes two lines of code in
+the <a href="c3ref/result_blob.html">sqlite3_result_pointer()</a> interface in order to fix a rare
+memory leak.  There are no other changes relative to <a href="releaselog/3_20_0.html">version 3.20.0</a>.
+</blockquote><hr width="50%"><a name="2017_08_01"></a><h3>2017-08-01 - Release 3.20.0</h3><blockquote>
+SQLite <a href="releaselog/3_20_0.html">version 3.20.0</a> is a regularly secheduled maintenance release
+of SQLite.
+<p>
+This release contains many minor enhancements, including:
+<ul>
+<li> Several new extensions
+<li> Enhancements to the "sqlite3.exe" command-line shell
+<li> Query planner enhancements
+<li> Miscellaneous code optimizations for improved performance
+<li> Fixes for some obscure bugs
+</ul>
+<p>
+See the <a href="releaselog/3_20_0.html">release notes</a> for more information.
+</blockquote><hr width="50%"><a name="2017_06_17"></a><h3>2017-06-17 - Release 3.18.2</h3><blockquote>
+SQLite <a href="releaselog/3_18_2.html">version 3.18.2</a> is another backport of a bug fix found
+in SQLite <a href="releaselog/3_19_0.html">version 3.19.0</a>, specifically the fix for
+ticket <a href="https://sqlite.org/src/info/61fe9745">61fe9745</a>.  Changes
+against <a href="releaselog/3_18_0.html">version 3.18.0</a> are minimal.
+</blockquote><hr width="50%"><a name="2017_06_16"></a><h3>2017-06-16 - Release 3.18.1</h3><blockquote>
+SQLite <a href="releaselog/3_18_1.html">version 3.18.1</a> is a bug-fix release against <a href="releaselog/3_18_0.html">version 3.18.0</a>
+that fixes the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> corruption bug described in ticket
+<a href="https://sqlite.org/src/info/fda22108">fda22108</a>.  This release was
+created for users who need that bug fix but do not yet want to upgrade 
+to <a href="releaselog/3_19_3.html">version 3.19.3</a>.  
+</blockquote><hr width="50%"><a name="2017_06_08"></a><h3>2017-06-08 - Release 3.19.3</h3><blockquote>
 <a href="releaselog/3_19_3.html">Version 3.19.3</a> is an emergency patch release to fix a 
 <a href="https://sqlite.org/src/info/fda22108">bug</a> in 
 <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> logic that can lead to database corruption.
@@ -275,4 +319,4 @@ the Firefox developers at Mozilla.  The differences from version
 </blockquote><hr width="50%">
 
 <a href="oldnews.html">Old news...</a>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

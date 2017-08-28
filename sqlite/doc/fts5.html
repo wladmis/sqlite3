@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -1543,9 +1558,10 @@ below.
 registered with FTS5, an application must obtain a pointer to the "fts5_api"
 structure. There is one fts5_api structure for each database connection with
 which the FTS5 extension is registered. To obtain the pointer, the application
-invokes the SQL user-defined function fts5(), which returns a blob value
-containing the pointer to the fts5_api structure for the connection. The
-following example code demonstrates the technique:
+invokes the SQL user-defined function fts5() with a single argument.  That
+argument must be set to a pointer to a pointer to an fts5_api object
+using the <a href="c3ref/bind_blob.html">sqlite3_bind_pointer()</a> interface.
+The following example code demonstrates the technique:
 
 </p><div class="codeblock"><pre><i>/*
 ** Return a pointer to the fts5_api pointer for database connection db.
@@ -1556,18 +1572,21 @@ fts5_api *fts5_api_from_db(sqlite3 *db){
   fts5_api *pRet = 0;
   sqlite3_stmt *pStmt = 0;
 
-  if( SQLITE_OK==sqlite3_prepare(db, "SELECT fts5()", -1, &pStmt, 0)
-   && SQLITE_ROW==sqlite3_step(pStmt) 
-   && sizeof(pRet)==sqlite3_column_bytes(pStmt, 0)
-  ){
-    memcpy(&pRet, sqlite3_column_blob(pStmt, 0), sizeof(pRet));
+  if( SQLITE_OK==sqlite3_prepare(db, "SELECT fts5(?1)", -1, &pStmt, 0) ){
+    sqlite3_bind_pointer(pStmt, (void*)&pRet, "fts5_api_ptr", NULL);
+    sqlite3_step(pStmt);
   }
   sqlite3_finalize(pStmt);
   return pRet;
 }
 </pre></div>
 
-<p> The fts5_api structure is defined as follows. It exposes three methods, 
+<p><b>Backwards Compatibility Warning:</b>
+Prior to SQLite version 3.20.0 (2017-08-01), the fts5() worked slightly
+differently.  Older applications that extend FTS5 must be revised to use 
+the new technique shown above.
+
+</p><p> The fts5_api structure is defined as follows. It exposes three methods, 
 one each for registering new auxiliary functions and tokenizers, and one for
 retrieving existing tokenizer. The latter is intended to facilitate the
 implementation of "tokenizer wrappers" similar to the built-in
@@ -2555,4 +2574,4 @@ using FTS5.
        the amount of processing that may take place within any given 
        INSERT, UPDATE or DELETE operation.
 </p></li></ul>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

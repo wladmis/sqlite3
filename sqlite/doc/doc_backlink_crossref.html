@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -98,16 +113,28 @@ return false;
 <li>-DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION &rarr;  <a href="cli.html#compiling">cli.html#compiling</a>
 <li>-DSQLITE_THREADSAFE &rarr;  <a href="cli.html#compiling">cli.html#compiling</a>
   <a href="fasterthanfs.html">fasterthanfs.html</a>
+<li>.dump &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>.fullschema &rarr;  <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
   <a href="releaselog/3_8_6.html">releaselog/3_8_6.html</a>
+<li>.import &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>.imposter dot-command &rarr;  <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
   <a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a>
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
+<li>.schema &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>.selftest dot-command &rarr;  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
 <li>.sha3sum dot-command &rarr;  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+<li>.tables &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>34to35 &rarr;  <a href="35to36.html">35to36.html</a>
   <a href="oldnews.html">oldnews.html</a>
 <li>35 Faster Than The Filesystem &rarr;  <a href="whyc.html">whyc.html</a>
@@ -167,6 +194,7 @@ return false;
   <a href="compile.html#enable_json1">compile.html#enable_json1</a>
   <a href="compile.html#enable_update_delete_limit">compile.html#enable_update_delete_limit</a>
   <a href="compile.html#omitfeatures">compile.html#omitfeatures</a>
+  <a href="cpu.html">cpu.html</a>
   <a href="download.html#srctree">download.html#srctree</a>
   <a href="faq.html#q23">faq.html#q23</a>
   <a href="fasterthanfs.html">fasterthanfs.html</a>
@@ -185,13 +213,12 @@ return false;
   <a href="selfcontained.html">selfcontained.html</a>
   <a href="sessionintro.html">sessionintro.html</a>
   <a href="spellfix1.html">spellfix1.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>amalgamation tarball &rarr;  <a href="changes.html#version_3_11_0">changes.html#version_3_11_0</a>
   <a href="howtocompile.html#cli">howtocompile.html#cli</a>
   <a href="releaselog/3_11_0.html">releaselog/3_11_0.html</a>
   <a href="releaselog/3_11_1.html">releaselog/3_11_1.html</a>
-<li>American Fuzzy Lop fuzzer &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
+<li>American Fuzzy Lop fuzzer &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -251,23 +278,29 @@ return false;
 <li>Application ID &rarr;  <a href="appfileformat.html">appfileformat.html</a>
   <a href="changes.html#version_3_7_17">changes.html#version_3_7_17</a>
   <a href="releaselog/3_7_17.html">releaselog/3_7_17.html</a>
-<li>application-defined SQL function &rarr;  <a href="c3ref/result_subtype.html">c3ref/result_subtype.html</a>
+<li>application-defined SQL function &rarr;  <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
+  <a href="c3ref/result_subtype.html">c3ref/result_subtype.html</a>
   <a href="c3ref/value_subtype.html">c3ref/value_subtype.html</a>
+  <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
   <a href="capi3ref.html#sqlite3_result_subtype">capi3ref.html#sqlite3_result_subtype</a>
   <a href="capi3ref.html#sqlite3_value_subtype">capi3ref.html#sqlite3_value_subtype</a>
   <a href="fts5.html#custom_auxiliary_functions">fts5.html#custom_auxiliary_functions</a>
   <a href="lang_expr.html#regexp">lang_expr.html#regexp</a>
-<li>application-defined SQL functions &rarr;  <a href="c3ref/context.html">c3ref/context.html</a>
+<li>application-defined SQL functions &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/context.html">c3ref/context.html</a>
   <a href="c3ref/stmt_readonly.html">c3ref/stmt_readonly.html</a>
   <a href="c3ref/value.html">c3ref/value.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
+  <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
   <a href="capi3ref.html#sqlite3_context">capi3ref.html#sqlite3_context</a>
   <a href="capi3ref.html#sqlite3_stmt_readonly">capi3ref.html#sqlite3_stmt_readonly</a>
   <a href="capi3ref.html#sqlite3_value">capi3ref.html#sqlite3_value</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
   <a href="changes.html#version_3_12_0">changes.html#version_3_12_0</a>
   <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="cli.html#dotload">cli.html#dotload</a>
   <a href="cli.html#fileio">cli.html#fileio</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="expridx.html">expridx.html</a>
   <a href="fullsql.html">fullsql.html</a>
   <a href="json1.html">json1.html</a>
@@ -309,6 +342,7 @@ return false;
   <a href="capi3ref.html#sqlitedbstatusschemaused">capi3ref.html#sqlitedbstatusschemaused</a>
   <a href="capi3ref.html#sqlitelimitattached">capi3ref.html#sqlitelimitattached</a>
   <a href="changes.html#version_3_15_0">changes.html#version_3_15_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_5_6">changes.html#version_3_5_6</a>
   <a href="changes.html#version_3_8_3">changes.html#version_3_8_3</a>
   <a href="cintro.html">cintro.html</a>
@@ -316,6 +350,7 @@ return false;
   <a href="fts3.html#_external_content_fts4_tables_">fts3.html#_external_content_fts4_tables_</a>
   <a href="inmemorydb.html">inmemorydb.html</a>
   <a href="inmemorydb.html#temp_db">inmemorydb.html#temp_db</a>
+  <a href="lang_createtrigger.html">lang_createtrigger.html</a>
   <a href="lang_detach.html">lang_detach.html</a>
   <a href="lang_naming.html">lang_naming.html</a>
   <a href="lang_vacuum.html">lang_vacuum.html</a>
@@ -329,6 +364,8 @@ return false;
   <a href="releaselog/3_15_0.html">releaselog/3_15_0.html</a>
   <a href="releaselog/3_15_1.html">releaselog/3_15_1.html</a>
   <a href="releaselog/3_15_2.html">releaselog/3_15_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_5_6.html">releaselog/3_5_6.html</a>
   <a href="releaselog/3_8_3.html">releaselog/3_8_3.html</a>
   <a href="sharedcache.html">sharedcache.html</a>
@@ -337,6 +374,7 @@ return false;
   <a href="tclsqlite.html#restore">tclsqlite.html#restore</a>
   <a href="tempfiles.html#masterjrnl">tempfiles.html#masterjrnl</a>
   <a href="tempfiles.html#tempdb">tempfiles.html#tempdb</a>
+  <a href="unionvtab.html">unionvtab.html</a>
   <a href="uri.html">uri.html</a>
   <a href="vfs.html">vfs.html</a>
   <a href="vtab.html#xcreate">vtab.html#xcreate</a>
@@ -348,12 +386,15 @@ return false;
   <a href="c3ref/wal_checkpoint_v2.html">c3ref/wal_checkpoint_v2.html</a>
   <a href="capi3ref.html#sqlite3_db_cacheflush">capi3ref.html#sqlite3_db_cacheflush</a>
   <a href="capi3ref.html#sqlite3_wal_checkpoint_v2">capi3ref.html#sqlite3_wal_checkpoint_v2</a>
+  <a href="cli.html#dschema">cli.html#dschema</a>
+  <a href="cli.html#dtables">cli.html#dtables</a>
 <li>authorizer callback &rarr;  <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
-<li>auto_vacuum &rarr;  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
+<li>auto_vacuum &rarr;  <a href="changes.html#version_3_18_1">changes.html#version_3_18_1</a>
+  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
   <a href="compile.html#default_autovacuum">compile.html#default_autovacuum</a>
   <a href="compile.html#omit_autovacuum">compile.html#omit_autovacuum</a>
   <a href="fileformat2.html#ovflpgs">fileformat2.html#ovflpgs</a>
@@ -361,6 +402,8 @@ return false;
   <a href="lang_vacuum.html">lang_vacuum.html</a>
   <a href="mmap.html">mmap.html</a>
   <a href="news.html">news.html</a>
+  <a href="releaselog/3_18_1.html">releaselog/3_18_1.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
 <li>autocommit mode &rarr;  <a href="c3ref/snapshot_get.html">c3ref/snapshot_get.html</a>
   <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>
@@ -381,6 +424,10 @@ return false;
 <li>automated undo/redo stack &rarr;  <a href="aff_short.html">aff_short.html</a>
   <a href="affcase1.html#smaller">affcase1.html#smaller</a>
   <a href="appfileformat.html">appfileformat.html</a>
+<li>automatic indexes &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>Automatic indexing &rarr;  <a href="pragma.html#pragma_automatic_index">pragma.html#pragma_automatic_index</a>
 <li>automatic indexing &rarr;  <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="changes.html#version_3_8_8">changes.html#version_3_8_8</a>
@@ -402,6 +449,7 @@ return false;
   <a href="releaselog/3_8_5.html">releaselog/3_8_5.html</a>
 <li>auxiliary function mapping &rarr;  <a href="fts5.html#the_rank_configuration_option">fts5.html#the_rank_configuration_option</a>
 <li>B-tree &rarr;  <a href="imposter.html">imposter.html</a>
+  <a href="pragma.html#pragma_secure_delete">pragma.html#pragma_secure_delete</a>
   <a href="rowidtable.html">rowidtable.html</a>
 <li>B-Trees &rarr;  <a href="withoutrowid.html#wtu">withoutrowid.html#wtu</a>
 <li>backup API &rarr;  <a href="aff_short.html">aff_short.html</a>
@@ -463,8 +511,12 @@ return false;
 <li>bound parameter &rarr;  <a href="c3ref/profile.html">c3ref/profile.html</a>
   <a href="capi3ref.html#sqlite3_profile">capi3ref.html#sqlite3_profile</a>
   <a href="oldnews.html">oldnews.html</a>
-<li>bound parameters &rarr;  <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
+<li>bound parameters &rarr;  <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>
+  <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusreprepare">c3ref/c_stmtstatus_counter.html#sqlitestmtstatusreprepare</a>
+  <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
+  <a href="capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY">capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY</a>
   <a href="capi3ref.html#sqlite3_expanded_sql">capi3ref.html#sqlite3_expanded_sql</a>
+  <a href="capi3ref.html#sqlitestmtstatusreprepare">capi3ref.html#sqlitestmtstatusreprepare</a>
   <a href="changes.html#version_3_6_21">changes.html#version_3_6_21</a>
   <a href="lang_createtable.html#dfltval">lang_createtable.html#dfltval</a>
   <a href="partialindex.html">partialindex.html</a>
@@ -481,6 +533,7 @@ return false;
   <a href="debugging.html">debugging.html</a>
   <a href="rowvalue.html">rowvalue.html</a>
 <li>bytecode engine &rarr;  <a href="compile.html#rcmd">compile.html#rcmd</a>
+  <a href="stmt.html">stmt.html</a>
 <li>C-language Interface &rarr;  <a href="arch.html">arch.html</a>
   <a href="rescode.html">rescode.html</a>
 <li>cache_size &rarr;  <a href="changes.html#version_3_11_0">changes.html#version_3_11_0</a>
@@ -501,7 +554,13 @@ return false;
 <li>capi3ref &rarr;  <a href="cintro.html">cintro.html</a>
   <a href="quickstart.html">quickstart.html</a>
 <li>capi3ref_funclist &rarr;  <a href="cintro.html">cintro.html</a>
-<li>carray table-valued function &rarr;  <a href="changes.html#version_3_14">changes.html#version_3_14</a>
+<li>carray &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>carray table-valued function &rarr;  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="changes.html#version_3_14">changes.html#version_3_14</a>
   <a href="loadext.html#write">loadext.html#write</a>
   <a href="releaselog/3_14.html">releaselog/3_14.html</a>
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
@@ -552,15 +611,19 @@ return false;
   <a href="lang_conflict.html">lang_conflict.html</a>
   <a href="releaselog/3_7_12.html">releaselog/3_7_12.html</a>
 <li>CHECK constraint &rarr;  <a href="changes.html#version_3_7_15">changes.html#version_3_7_15</a>
+  <a href="deterministic.html">deterministic.html</a>
   <a href="lang_altertable.html">lang_altertable.html</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="releaselog/3_7_15.html">releaselog/3_7_15.html</a>
   <a href="rescode.html#constraint_check">rescode.html#constraint_check</a>
 <li>CHECK constraints &rarr;  <a href="changes.html#version_3_11_0">changes.html#version_3_11_0</a>
   <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="releaselog/3_11_0.html">releaselog/3_11_0.html</a>
   <a href="releaselog/3_11_1.html">releaselog/3_11_1.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>checkpoint &rarr;  <a href="asyncvfs.html">asyncvfs.html</a>
   <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>
   <a href="c3ref/wal_autocheckpoint.html">c3ref/wal_autocheckpoint.html</a>
@@ -623,6 +686,8 @@ return false;
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
   <a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_18_1.html">releaselog/3_18_1.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
@@ -634,6 +699,8 @@ return false;
   <a href="releaselog/3_1_4.html">releaselog/3_1_4.html</a>
   <a href="releaselog/3_1_5.html">releaselog/3_1_5.html</a>
   <a href="releaselog/3_1_6.html">releaselog/3_1_6.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a>
   <a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a>
   <a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a>
@@ -854,6 +921,7 @@ return false;
   <a href="changes.html#version_3_17_0">changes.html#version_3_17_0</a>
   <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_7_10">changes.html#version_3_7_10</a>
   <a href="changes.html#version_3_7_11">changes.html#version_3_7_11</a>
   <a href="changes.html#version_3_7_14">changes.html#version_3_7_14</a>
@@ -872,6 +940,7 @@ return false;
   <a href="changes.html#version_3_8_9">changes.html#version_3_8_9</a>
   <a href="compile.html#enable_explain_comments">compile.html#enable_explain_comments</a>
   <a href="compile.html#enable_unknown_sql_function">compile.html#enable_unknown_sql_function</a>
+  <a href="completion.html">completion.html</a>
   <a href="csv.html">csv.html</a>
   <a href="debugging.html">debugging.html</a>
   <a href="imposter.html#dotimposter">imposter.html#dotimposter</a>
@@ -905,6 +974,8 @@ return false;
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_10.html">releaselog/3_7_10.html</a>
   <a href="releaselog/3_7_11.html">releaselog/3_7_11.html</a>
   <a href="releaselog/3_7_14.html">releaselog/3_7_14.html</a>
@@ -928,6 +999,7 @@ return false;
   <a href="releaselog/3_8_9.html">releaselog/3_8_9.html</a>
   <a href="series.html">series.html</a>
   <a href="sqlanalyze.html">sqlanalyze.html</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="wal.html#fast">wal.html#fast</a>
   <a href="whentouse.html#website">whentouse.html#website</a>
 <li>comment-syntax &rarr;  <a href="lang_comment.html">lang_comment.html</a>
@@ -993,6 +1065,7 @@ return false;
 <li>compile fts &rarr;  <a href="fts3.html#fts4aux">fts3.html#fts4aux</a>
   <a href="fts3.html#near">fts3.html#near</a>
 <li>compile loadable extensions &rarr;  <a href="json1.html#howtocompile">json1.html#howtocompile</a>
+  <a href="stmt.html">stmt.html</a>
 <li>compile-time options &rarr;  <a href="amalgamation.html">amalgamation.html</a>
   <a href="debugging.html">debugging.html</a>
   <a href="footprint.html#relfootprint">footprint.html#relfootprint</a>
@@ -1039,6 +1112,8 @@ return false;
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
   <a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_18_1.html">releaselog/3_18_1.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
@@ -1050,6 +1125,8 @@ return false;
   <a href="releaselog/3_1_4.html">releaselog/3_1_4.html</a>
   <a href="releaselog/3_1_5.html">releaselog/3_1_5.html</a>
   <a href="releaselog/3_1_6.html">releaselog/3_1_6.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a>
   <a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a>
   <a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a>
@@ -1181,6 +1258,9 @@ return false;
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
   <a href="releaselog/3_9_2.html">releaselog/3_9_2.html</a>
   <a href="releaselog/3_9_3.html">releaselog/3_9_3.html</a>
+<li>COMPLETION extension &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>compound query &rarr;  <a href="changes.html#version_3_7_17">changes.html#version_3_7_17</a>
   <a href="eqp.html">eqp.html</a>
   <a href="releaselog/3_7_17.html">releaselog/3_7_17.html</a>
@@ -1253,14 +1333,16 @@ return false;
   <a href="releaselog/3_11_1.html">releaselog/3_11_1.html</a>
   <a href="releaselog/3_7_14.html">releaselog/3_7_14.html</a>
 <li>CPU cycles used &rarr;  <a href="changes.html#version_3_17_0">changes.html#version_3_17_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>CPU performance measurement &rarr;  <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
   <a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a>
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
 <li>CREATE INDEX &rarr;  <a href="aff_short.html">aff_short.html</a>
   <a href="appfileformat.html">appfileformat.html</a>
-  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
   <a href="changes.html#version_3_7_8">changes.html#version_3_7_8</a>
   <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
@@ -1278,7 +1360,6 @@ return false;
   <a href="pragma.html#pragma_index_info">pragma.html#pragma_index_info</a>
   <a href="pragma.html#pragma_index_list">pragma.html#pragma_index_list</a>
   <a href="pragma.html#pragma_index_xinfo">pragma.html#pragma_index_xinfo</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_7_8.html">releaselog/3_7_8.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
@@ -1512,6 +1593,7 @@ return false;
   <a href="rescode.html#locked">rescode.html#locked</a>
   <a href="rescode.html#locked_sharedcache">rescode.html#locked_sharedcache</a>
   <a href="rescode.html#pve">rescode.html#pve</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="tempfiles.html#masterjrnl">tempfiles.html#masterjrnl</a>
   <a href="tempfiles.html#tempdb">tempfiles.html#tempdb</a>
   <a href="unlock_notify.html">unlock_notify.html</a>
@@ -1562,11 +1644,12 @@ return false;
 <li>date and time functions &rarr;  <a href="changes.html#version_3_10_0">changes.html#version_3_10_0</a>
   <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
   <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="compile.html#gmtime_r">compile.html#gmtime_r</a>
   <a href="compile.html#localtime_r">compile.html#localtime_r</a>
   <a href="compile.html#localtime_s">compile.html#localtime_s</a>
   <a href="datatype3.html#datetime">datatype3.html#datetime</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="releaselog/3_10_0.html">releaselog/3_10_0.html</a>
   <a href="releaselog/3_10_1.html">releaselog/3_10_1.html</a>
   <a href="releaselog/3_10_2.html">releaselog/3_10_2.html</a>
@@ -1574,6 +1657,11 @@ return false;
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>date/time special case &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>datefunc &rarr;  <a href="lang_corefunc.html">lang_corefunc.html</a>
   <a href="lang_expr.html#booleanexpr">lang_expr.html#booleanexpr</a>
 <li>dbhash.exe &rarr;  <a href="changes.html#version_3_14">changes.html#version_3_14</a>
@@ -1581,14 +1669,12 @@ return false;
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
 <li>dbstat &rarr;  <a href="amalgamation.html">amalgamation.html</a>
-<li>dbstat virtual table &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
+<li>dbstat virtual table &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="changes.html#version_3_8_10_1">changes.html#version_3_8_10_1</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="compile.html#enable_dbstat_vtab">compile.html#enable_dbstat_vtab</a>
   <a href="howtocompile.html#cli">howtocompile.html#cli</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -1709,6 +1795,7 @@ return false;
   <a href="releaselog/3_7_9.html">releaselog/3_7_9.html</a>
   <a href="rescode.html#locked">rescode.html#locked</a>
   <a href="rtree.html">rtree.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
   <a href="vtab.html">vtab.html</a>
   <a href="vtab.html#sqlite3_module.xDestroy">vtab.html#sqlite3_module.xDestroy</a>
 <li>DROP TRIGGER &rarr;  <a href="compile.html#omit_trigger">compile.html#omit_trigger</a>
@@ -1744,7 +1831,8 @@ return false;
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
   <a href="releaselog/3_9_2.html">releaselog/3_9_2.html</a>
-<li>eponymous-only virtual table &rarr;  <a href="vtab.html#xcreate">vtab.html#xcreate</a>
+<li>eponymous-only virtual table &rarr;  <a href="stmt.html">stmt.html</a>
+  <a href="vtab.html#xcreate">vtab.html#xcreate</a>
 <li>error code &rarr;  <a href="35to36.html">35to36.html</a>
   <a href="backup.html">backup.html</a>
   <a href="c3ref/auto_extension.html">c3ref/auto_extension.html</a>
@@ -1837,7 +1925,6 @@ return false;
   <a href="changes.html#version_3_8_2">changes.html#version_3_8_2</a>
   <a href="changes.html#version_3_8_3">changes.html#version_3_8_3</a>
   <a href="cli.html#compiling">cli.html#compiling</a>
-  <a href="cli.html#explain">cli.html#explain</a>
   <a href="compile.html#enable_explain_comments">compile.html#enable_explain_comments</a>
   <a href="compile.html#enable_unknown_sql_function">compile.html#enable_unknown_sql_function</a>
   <a href="compile.html#omit_explain">compile.html#omit_explain</a>
@@ -1886,6 +1973,7 @@ return false;
   <a href="partialindex.html">partialindex.html</a>
 <li>expression affinity &rarr;  <a href="lang_createtable.html#createtabas">lang_createtable.html#createtabas</a>
 <li>expression index &rarr;  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
 <li>ext-v-prim &rarr;  <a href="rescode.html#abort_rollback">rescode.html#abort_rollback</a>
   <a href="rescode.html#busy_recovery">rescode.html#busy_recovery</a>
   <a href="rescode.html#busy_snapshot">rescode.html#busy_snapshot</a>
@@ -1955,7 +2043,11 @@ return false;
   <a href="capi3ref.html#SQLITE_ABORT_ROLLBACK">capi3ref.html#SQLITE_ABORT_ROLLBACK</a>
   <a href="capi3ref.html#sqlite3_extended_result_codes">capi3ref.html#sqlite3_extended_result_codes</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
-<li>Extending FTS5 &rarr;  <a href="fts5.html#compiling_and_using_fts5">fts5.html#compiling_and_using_fts5</a>
+<li>Extending FTS5 &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="fts5.html#compiling_and_using_fts5">fts5.html#compiling_and_using_fts5</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>extension loading &rarr;  <a href="c3ref/enable_load_extension.html">c3ref/enable_load_extension.html</a>
   <a href="capi3ref.html#sqlite3_enable_load_extension">capi3ref.html#sqlite3_enable_load_extension</a>
   <a href="changes.html#version_3_7_17">changes.html#version_3_7_17</a>
@@ -1984,11 +2076,14 @@ return false;
 <li>flattening optimization &rarr;  <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
   <a href="changes.html#version_3_19_1">changes.html#version_3_19_1</a>
   <a href="changes.html#version_3_19_2">changes.html#version_3_19_2</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="eqp.html">eqp.html</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>footprint &rarr;  <a href="different.html#small">different.html#small</a>
   <a href="features.html">features.html</a>
 <li>foreign key actions &rarr;  <a href="c3ref/changes.html">c3ref/changes.html</a>
@@ -2034,12 +2129,16 @@ return false;
   <a href="lang_altertable.html">lang_altertable.html</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="releaselog/3_6_19.html">releaselog/3_6_19.html</a>
-<li>free-page list &rarr;  <a href="changes.html#version_3_7_2">changes.html#version_3_7_2</a>
+<li>free-page list &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="changes.html#version_3_7_2">changes.html#version_3_7_2</a>
   <a href="oldnews.html">oldnews.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_2.html">releaselog/3_7_2.html</a>
 <li>freelist &rarr;  <a href="atomiccommit.html#freelistjrnl">atomiccommit.html#freelistjrnl</a>
   <a href="pragma.html#pragma_auto_vacuum">pragma.html#pragma_auto_vacuum</a>
   <a href="pragma.html#pragma_incremental_vacuum">pragma.html#pragma_incremental_vacuum</a>
+  <a href="pragma.html#pragma_secure_delete">pragma.html#pragma_secure_delete</a>
 <li>FROM clause &rarr;  <a href="lang_select.html#simpleselect">lang_select.html#simpleselect</a>
 <li>FTS auxiliary functions &rarr;  <a href="fts3.html#hiddencol">fts3.html#hiddencol</a>
   <a href="fts3.html#simple_fts_queries">fts3.html#simple_fts_queries</a>
@@ -2048,7 +2147,8 @@ return false;
 <li>FTS hidden column &rarr;  <a href="fts3.html#matchinfo">fts3.html#matchinfo</a>
   <a href="fts3.html#snippet">fts3.html#snippet</a>
   <a href="vtab.html#hiddencol">vtab.html#hiddencol</a>
-<li>FTS MATCH &rarr;  <a href="fts3.html#fts4">fts3.html#fts4</a>
+<li>FTS MATCH &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="fts3.html#fts4">fts3.html#fts4</a>
   <a href="fts3.html#hiddencol">fts3.html#hiddencol</a>
   <a href="fts3.html#simple_fts_queries">fts3.html#simple_fts_queries</a>
   <a href="vtab.html#hiddencol">vtab.html#hiddencol</a>
@@ -2056,10 +2156,12 @@ return false;
   <a href="fts3.html#fts4">fts3.html#fts4</a>
   <a href="rbu.html#sqldiff">rbu.html#sqldiff</a>
 <li>FTS3 &rarr;  <a href="amalgamation.html">amalgamation.html</a>
+  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
   <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>
   <a href="capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY">capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY</a>
-  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
   <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_6_22">changes.html#version_3_6_22</a>
   <a href="changes.html#version_3_6_23">changes.html#version_3_6_23</a>
   <a href="changes.html#version_3_6_23_1">changes.html#version_3_6_23_1</a>
@@ -2072,8 +2174,9 @@ return false;
   <a href="compile.html#fts3_max_expr_depth">compile.html#fts3_max_expr_depth</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="rbu.html#fts4_tables">rbu.html#fts4_tables</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_6_22.html">releaselog/3_6_22.html</a>
   <a href="releaselog/3_6_23.html">releaselog/3_6_23.html</a>
   <a href="releaselog/3_6_23_1.html">releaselog/3_6_23_1.html</a>
@@ -2166,9 +2269,11 @@ return false;
 <li>fts4aux languageid column &rarr;  <a href="changes.html#version_3_8_1">changes.html#version_3_8_1</a>
   <a href="releaselog/3_8_1.html">releaselog/3_8_1.html</a>
 <li>FTS5 &rarr;  <a href="amalgamation.html">amalgamation.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
   <a href="changes.html#version_3_11_1">changes.html#version_3_11_1</a>
   <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="fullsql.html">fullsql.html</a>
@@ -2180,6 +2285,8 @@ return false;
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
@@ -2285,7 +2392,8 @@ return false;
   <a href="releaselog/3_6_14_1.html">releaselog/3_6_14_1.html</a>
 <li>HAVE_ISNAN &rarr;  <a href="compile.html#have_isnan">compile.html#have_isnan</a>
 <li>hazards of upgrading to the NGQP &rarr;  <a href="oldnews.html">oldnews.html</a>
-<li>hex &rarr;  <a href="lang_corefunc.html#randomblob">lang_corefunc.html#randomblob</a>
+<li>hex &rarr;  <a href="bindptr.html#ptrleak">bindptr.html#ptrleak</a>
+  <a href="lang_corefunc.html#randomblob">lang_corefunc.html#randomblob</a>
 <li>hexadecimal integer literals &rarr;  <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
   <a href="releaselog/3_8_6.html">releaselog/3_8_6.html</a>
 <li>hexadecimal integers &rarr;  <a href="fullsql.html">fullsql.html</a>
@@ -2394,7 +2502,7 @@ return false;
 <li>http://www.adobe.com/products/acrobat/readstep2.html &rarr;  <a href="famous.html">famous.html</a>
 <li>http://www.adobe.com/products/photoshoplightroom/ &rarr;  <a href="famous.html">famous.html</a>
 <li>http://www.airbus.com/ &rarr;  <a href="famous.html">famous.html</a>
-<li>http://www.airbus.com/en/aircraftfamilies/a350 &rarr;  <a href="famous.html">famous.html</a>
+<li>http://www.aircraft.airbus.com/aircraftfamilies/passengeraircraft/a350xwbfamily/ &rarr;  <a href="famous.html">famous.html</a>
 <li>http://www.apple.com/ &rarr;  <a href="famous.html">famous.html</a>
 <li>http://www.apple.com/itunes/ &rarr;  <a href="famous.html">famous.html</a>
 <li>http://www.apple.com/safari/ &rarr;  <a href="uri.html">uri.html</a>
@@ -2463,8 +2571,6 @@ return false;
   <a href="oldnews.html">oldnews.html</a>
 <li>http://www.selenic.com/mercurial/wiki/ &rarr;  <a href="privatebranch.html">privatebranch.html</a>
 <li>http://www.sergeant.org/sqlite_vs_pgsync.html &rarr;  <a href="speed.html">speed.html</a>
-<li>http://www.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
-<li>http://www.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>http://www.sqlite.org/cgi/src/timeline &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>http://www.sqlite.org/cgi/src/timeline?c=2013-08-26 &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>http://www.sqlite.org/download.html &rarr;  <a href="howtocompile.html#dll">howtocompile.html#dll</a>
@@ -2652,10 +2758,6 @@ return false;
   <a href="th3.html">th3.html</a>
 <li>http://www.w3c.org/TR/NOTE-datetime &rarr;  <a href="lang_datefunc.html">lang_datefunc.html</a>
 <li>http://www.xojo.com/ &rarr;  <a href="famous.html">famous.html</a>
-<li>http://www2.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
-<li>http://www2.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
-<li>http://www3.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
-<li>http://www3.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>https://code.facebook.com/posts/313033472212144/debugging-file-corruption-on-ios/ &rarr;  <a href="howtocorrupt.html">howtocorrupt.html</a>
 <li>https://code.facebook.com/projects/658950180885092 &rarr;  <a href="famous.html">famous.html</a>
 <li>https://en.wikipedia.org/wiki/Artificial_intelligence &rarr;  <a href="queryplanner.html">queryplanner.html</a>
@@ -2674,6 +2776,7 @@ return false;
 <li>https://en.wikipedia.org/wiki/RPM_Package_Manager &rarr;  <a href="famous.html">famous.html</a>
 <li>https://en.wikipedia.org/wiki/SHA-3 &rarr;  <a href="cli.html#sha3sum">cli.html#sha3sum</a>
 <li>https://en.wikipedia.org/wiki/Symbian &rarr;  <a href="th3.html">th3.html</a>
+<li>https://en.wikipedia.org/wiki/Web_SQL_Database &rarr;  <a href="bindptr.html">bindptr.html</a>
 <li>https://gcc.gnu.org/onlinedocs/gcc/Gcov.html &rarr;  <a href="testing.html#mcdc">testing.html#mcdc</a>
 <li>https://git-scm.com &rarr;  <a href="sessionintro.html">sessionintro.html</a>
 <li>https://github.com/antirez/linenoise &rarr;  <a href="changes.html#version_3_8_8_3">changes.html#version_3_8_8_3</a>
@@ -2687,15 +2790,51 @@ return false;
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+<li>https://sqlite.org/src/file/ext/misc/remember.c &rarr;  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+<li>https://sqlite.org/src/file/ext/misc/stmt.c &rarr;  <a href="stmt.html">stmt.html</a>
+<li>https://sqlite.org/src/file/ext/misc/unionvtab.c &rarr;  <a href="unionvtab.html">unionvtab.html</a>
+<li>https://sqlite.org/src/file/src/shell.c.in &rarr;  <a href="completion.html">completion.html</a>
+<li>https://sqlite.org/src/file/test/speedtest1.c &rarr;  <a href="cpu.html">cpu.html</a>
+<li>https://sqlite.org/src/file/tool/cg_anno.tcl &rarr;  <a href="cpu.html#microopt">cpu.html#microopt</a>
+<li>https://sqlite.org/src/file/tool/speed-check.sh &rarr;  <a href="cpu.html">cpu.html</a>
+  <a href="cpu.html#microopt">cpu.html#microopt</a>
 <li>https://sqlite.org/src/info/0c4df46116e90f92 &rarr;  <a href="changes.html#version_3_14_2">changes.html#version_3_14_2</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
 <li>https://sqlite.org/src/info/199df4168c &rarr;  <a href="changes.html#version_3_14_2">changes.html#version_3_14_2</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
+<li>https://sqlite.org/src/info/61fe9745 &rarr;  <a href="changes.html#version_3_18_2">changes.html#version_3_18_2</a>
+  <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="news.html">news.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
+  <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
+  <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
+  <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
+  <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+<li>https://sqlite.org/src/info/7486aa54b968e9b5 &rarr;  <a href="changes.html#version_3_20_1">changes.html#version_3_20_1</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>https://sqlite.org/src/info/892fc34f173e99d8 &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>https://sqlite.org/src/info/a4e06e75a9ab61a12 &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>https://sqlite.org/src/info/bc115541132dad136 &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>https://sqlite.org/src/info/cad1ab4cb7b0fc344 &rarr;  <a href="news.html">news.html</a>
+<li>https://sqlite.org/src/info/ce68383bf6aba &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>https://sqlite.org/src/info/de3403bf5ae &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>https://sqlite.org/src/info/ef360601 &rarr;  <a href="changes.html#version_3_14_2">changes.html#version_3_14_2</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
-<li>https://sqlite.org/src/info/fda22108 &rarr;  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
+<li>https://sqlite.org/src/info/fda22108 &rarr;  <a href="changes.html#version_3_18_1">changes.html#version_3_18_1</a>
+  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
   <a href="news.html">news.html</a>
+  <a href="releaselog/3_18_1.html">releaselog/3_18_1.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
 <li>https://tools.ietf.org/html/rfc7159#section-9 &rarr;  <a href="json1.html#howtocompile">json1.html#howtocompile</a>
 <li>https://tools.ietf.org/html/rfc7396 &rarr;  <a href="json1.html#jpatch">json1.html#jpatch</a>
@@ -2703,7 +2842,8 @@ return false;
 <li>https://www.bentley.com/en/products/product-line/modeling-and-visualization-software/microstation &rarr;  <a href="famous.html">famous.html</a>
 <li>https://www.expensify.com/ &rarr;  <a href="famous.html">famous.html</a>
 <li>https://www.facebook.com/ &rarr;  <a href="famous.html">famous.html</a>
-<li>https://www.fossil-scm.org/ &rarr;  <a href="dbstat.html">dbstat.html</a>
+<li>https://www.fossil-scm.org/ &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="dbstat.html">dbstat.html</a>
   <a href="news.html">news.html</a>
   <a href="np1queryprob.html">np1queryprob.html</a>
   <a href="rowvalue.html">rowvalue.html</a>
@@ -2722,8 +2862,12 @@ return false;
   <a href="releaselog/3_14.html">releaselog/3_14.html</a>
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
+<li>https://www.microsoft.com/en-us/research/people/gray/ &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
+<li>https://www.microsoft.com/en-us/research/publication/to-blob-or-not-to-blob-large-object-storage-in-a-database-or-a-filesystem/ &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
 <li>https://www.neooffice.org/neojava/en/index.php &rarr;  <a href="affcase1.html">affcase1.html</a>
 <li>https://www.sqlite.org/ &rarr;  <a href="whentouse.html#website">whentouse.html#website</a>
+<li>https://www.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
+<li>https://www.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>https://www.sqlite.org/see/doc/trunk/www/readme.wiki &rarr;  <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
@@ -2766,9 +2910,12 @@ return false;
 <li>https://www.sqlite.org/src/file/ext/misc/json1.c &rarr;  <a href="loadext.html#write">loadext.html#write</a>
 <li>https://www.sqlite.org/src/file/ext/misc/memvfs.c &rarr;  <a href="loadext.html#write">loadext.html#write</a>
 <li>https://www.sqlite.org/src/file/ext/misc/remember.c &rarr;  <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a>
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>https://www.sqlite.org/src/file/ext/misc/rot13.c &rarr;  <a href="loadext.html#write">loadext.html#write</a>
 <li>https://www.sqlite.org/src/file/ext/misc/series.c &rarr;  <a href="loadext.html#write">loadext.html#write</a>
 <li>https://www.sqlite.org/src/file/ext/misc/sha1.c &rarr;  <a href="changes.html#version_3_17_0">changes.html#version_3_17_0</a>
@@ -2776,9 +2923,6 @@ return false;
 <li>https://www.sqlite.org/src/file/ext/misc/shathree.c &rarr;  <a href="cli.html#sha3sum">cli.html#sha3sum</a>
 <li>https://www.sqlite.org/src/file/test/kvtest.c &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
 <li>https://www.sqlite.org/src/file/test/ossfuzz.c &rarr;  <a href="testing.html#ossfuzz">testing.html#ossfuzz</a>
-<li>https://www.sqlite.org/src/file/test/speedtest1.c &rarr;  <a href="cpu.html">cpu.html</a>
-<li>https://www.sqlite.org/src/file/tool/cg_anno.tcl &rarr;  <a href="cpu.html#microopt">cpu.html#microopt</a>
-<li>https://www.sqlite.org/src/file/tool/speed-check.sh &rarr;  <a href="cpu.html#microopt">cpu.html#microopt</a>
 <li>https://www.sqlite.org/src/info/05f43be8fdda9f &rarr;  <a href="compile.html#like_doesnt_match_blobs">compile.html#like_doesnt_match_blobs</a>
 <li>https://www.sqlite.org/src/info/06796225f59c057c &rarr;  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
@@ -2861,6 +3005,9 @@ return false;
 <li>https://www.sqlite.org/src/info/873cae2b6e25b &rarr;  <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
+<li>https://www.sqlite.org/src/info/892fc34f173e99d8 &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>https://www.sqlite.org/src/info/8a2adec1 &rarr;  <a href="changes.html#version_3_9_2">changes.html#version_3_9_2</a>
   <a href="releaselog/3_9_2.html">releaselog/3_9_2.html</a>
 <li>https://www.sqlite.org/src/info/8c9458e7 &rarr;  <a href="changes.html#version_3_16_1">changes.html#version_3_16_1</a>
@@ -2968,12 +3115,18 @@ return false;
   <a href="releaselog/3_10_2.html">releaselog/3_10_2.html</a>
 <li>https://www.sqlite.org/src/tktview?name=8a2adec166 &rarr;  <a href="oldnews.html">oldnews.html</a>
 <li>https://www.sqlite.org/src/tktview?name=ac661962a2 &rarr;  <a href="oldnews.html">oldnews.html</a>
-<li>https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79 &rarr;  <a href="changes.html#version_3_8_8_1">changes.html#version_3_8_8_1</a>
+<li>https://www.sqlite.org/src/tktview?name=f97c4637102a3ae72b79 &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
+  <a href="changes.html#version_3_8_8_1">changes.html#version_3_8_8_1</a>
+  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_8_1.html">releaselog/3_8_8_1.html</a>
   <a href="releaselog/3_8_8_2.html">releaselog/3_8_8_2.html</a>
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
 <li>https://www.sqlite.org/src/vdiff?from=e4ab094f8afce0817f4074e823fabe59fc29ebb4&to=83afe23e553e802c0947c80d0ffdd120423e7c52&sbs=1 &rarr;  <a href="oldnews.html">oldnews.html</a>
 <li>https://www.sqlite.org/src/vpatch?from=version-3.9.0&to=version-3.9.1 &rarr;  <a href="oldnews.html">oldnews.html</a>
+<li>https://www2.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
+<li>https://www2.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
+<li>https://www3.sqlite.org/cgi/docsrc &rarr;  <a href="getthecode.html">getthecode.html</a>
+<li>https://www3.sqlite.org/cgi/src &rarr;  <a href="getthecode.html">getthecode.html</a>
 <li>ifnull &rarr;  <a href="changes.html#version_3_6_21">changes.html#version_3_6_21</a>
   <a href="releaselog/3_6_21.html">releaselog/3_6_21.html</a>
 <li>IN operator &rarr;  <a href="changes.html#version_3_12_2">changes.html#version_3_12_2</a>
@@ -3027,6 +3180,7 @@ return false;
 <li>Indexes On Expressions &rarr;  <a href="fullsql.html">fullsql.html</a>
   <a href="lang_createindex.html#indexexpr">lang_createindex.html#indexexpr</a>
 <li>indexes on expressions &rarr;  <a href="changes.html#version_3_15_0">changes.html#version_3_15_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="features.html">features.html</a>
   <a href="oldnews.html">oldnews.html</a>
@@ -3036,6 +3190,8 @@ return false;
   <a href="releaselog/3_15_0.html">releaselog/3_15_0.html</a>
   <a href="releaselog/3_15_1.html">releaselog/3_15_1.html</a>
   <a href="releaselog/3_15_2.html">releaselog/3_15_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
   <a href="releaselog/3_9_2.html">releaselog/3_9_2.html</a>
@@ -3127,9 +3283,12 @@ return false;
   <a href="appfileformat.html">appfileformat.html</a>
   <a href="fasterthanfs.html">fasterthanfs.html</a>
   <a href="whyc.html">whyc.html</a>
-<li>IS operator &rarr;  <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
+<li>IS operator &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="fullsql.html">fullsql.html</a>
   <a href="oldnews.html">oldnews.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
 <li>join order &rarr;  <a href="eqp.html">eqp.html</a>
@@ -3393,6 +3552,7 @@ return false;
   <a href="rescode.html#ok_load_permanently">rescode.html#ok_load_permanently</a>
   <a href="series.html">series.html</a>
   <a href="spellfix1.html">spellfix1.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
 <li>loadable extensions &rarr;  <a href="c3ref/api_routines.html">c3ref/api_routines.html</a>
   <a href="capi3ref.html#sqlite3_api_routines">capi3ref.html#sqlite3_api_routines</a>
   <a href="cintro.html">cintro.html</a>
@@ -3400,6 +3560,7 @@ return false;
   <a href="rescode.html#ok_load_permanently">rescode.html#ok_load_permanently</a>
 <li>localtime modifier &rarr;  <a href="compile.html#localtime_r">compile.html#localtime_r</a>
   <a href="compile.html#localtime_s">compile.html#localtime_s</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
 <li>locking_mode &rarr;  <a href="changes.html#version_3_5_9">changes.html#version_3_5_9</a>
   <a href="compile.html#default_journal_size_limit">compile.html#default_journal_size_limit</a>
   <a href="compile.html#default_locking_mode">compile.html#default_locking_mode</a>
@@ -3409,6 +3570,11 @@ return false;
   <a href="wal.html#busy">wal.html#busy</a>
   <a href="wal.html#noshm">wal.html#noshm</a>
 <li>lookaside buffer &rarr;  <a href="news.html">news.html</a>
+<li>lookaside memory &rarr;  <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">c3ref/c_prepare_persistent.html#sqlitepreparepersistent</a>
+  <a href="capi3ref.html#sqlitepreparepersistent">capi3ref.html#sqlitepreparepersistent</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>lookaside memory allocator &rarr;  <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>
   <a href="capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY">capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY</a>
   <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
@@ -3429,7 +3595,8 @@ return false;
   <a href="releaselog/3_7_9.html">releaselog/3_7_9.html</a>
 <li>lower &rarr;  <a href="faq.html#q18">faq.html#q18</a>
   <a href="lang_corefunc.html#randomblob">lang_corefunc.html#randomblob</a>
-<li>mailing lists &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
+<li>mailing lists &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="fasterthanfs.html">fasterthanfs.html</a>
 <li>Manual Control Of Query Plans Using SQLITE_STAT Tables &rarr;  <a href="lang_analyze.html">lang_analyze.html</a>
 <li>master journal &rarr;  <a href="changes.html#version_3_12_0">changes.html#version_3_12_0</a>
   <a href="releaselog/3_12_0.html">releaselog/3_12_0.html</a>
@@ -3440,7 +3607,8 @@ return false;
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
   <a href="vtab.html#xfindfunction">vtab.html#xfindfunction</a>
-<li>matchinfo &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
+<li>matchinfo &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
   <a href="changes.html#version_3_7_4">changes.html#version_3_7_4</a>
   <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
@@ -3450,7 +3618,6 @@ return false;
   <a href="fts3.html#simple_fts_queries">fts3.html#simple_fts_queries</a>
   <a href="fts3.html#the_matchinfo_option">fts3.html#the_matchinfo_option</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_7_4.html">releaselog/3_7_4.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
@@ -3461,10 +3628,8 @@ return false;
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
 <li>matchinfo x flag &rarr;  <a href="fts3.html#matchinfo-y">fts3.html#matchinfo-y</a>
-<li>matchinfo y flag &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
+<li>matchinfo y flag &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="fts3.html#matchinfo-b">fts3.html#matchinfo-b</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -3475,7 +3640,8 @@ return false;
   <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
 <li>maxAggFunc &rarr;  <a href="lang_corefunc.html#maxoreunc">lang_corefunc.html#maxoreunc</a>
   <a href="lang_select.html#bareagg">lang_select.html#bareagg</a>
-<li>MC/DC &rarr;  <a href="th3.html">th3.html</a>
+<li>MC/DC &rarr;  <a href="testing.html#tcl">testing.html#tcl</a>
+  <a href="th3.html">th3.html</a>
 <li>memory &rarr;  <a href="lang_attach.html">lang_attach.html</a>
   <a href="tclsqlite.html">tclsqlite.html</a>
 <li>memory allocation &rarr;  <a href="cintro.html">cintro.html</a>
@@ -3542,7 +3708,9 @@ return false;
 <li>NOT NULL constraint &rarr;  <a href="rescode.html#constraint_notnull">rescode.html#constraint_notnull</a>
 <li>numeric-literal &rarr;  <a href="lang_expr.html#litvalue">lang_expr.html#litvalue</a>
 <li>object resolution &rarr;  <a href="lang_dropview.html">lang_dropview.html</a>
-<li>offsets &rarr;  <a href="fts3.html#appendix_a">fts3.html#appendix_a</a>
+<li>offsets &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="fts3.html#appendix_a">fts3.html#appendix_a</a>
   <a href="fts3.html#simple_fts_queries">fts3.html#simple_fts_queries</a>
 <li>omitfeatures &rarr;  <a href="34to35.html">34to35.html</a>
   <a href="changes.html#version_3_1_4">changes.html#version_3_1_4</a>
@@ -3604,12 +3772,10 @@ return false;
 <li>or-connected-terms &rarr;  <a href="changes.html#version_3_8_5">changes.html#version_3_8_5</a>
   <a href="eqp.html">eqp.html</a>
   <a href="releaselog/3_8_5.html">releaselog/3_8_5.html</a>
-<li>ORDER BY &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
+<li>ORDER BY &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="lang_insert.html">lang_insert.html</a>
   <a href="lang_select.html#compound">lang_select.html#compound</a>
   <a href="lang_select.html#values">lang_select.html#values</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -3657,6 +3823,7 @@ return false;
   <a href="capi3ref.html#sqlite3_bind_blob">capi3ref.html#sqlite3_bind_blob</a>
   <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
   <a href="capi3ref.html#sqlitelimitvariablenumber">capi3ref.html#sqlitelimitvariablenumber</a>
+  <a href="carray.html">carray.html</a>
   <a href="cintro.html">cintro.html</a>
   <a href="limits.html#max_variable_number">limits.html#max_variable_number</a>
   <a href="optoverview.html#like_opt">optoverview.html#like_opt</a>
@@ -3678,6 +3845,7 @@ return false;
   <a href="changes.html#version_3_8_8">changes.html#version_3_8_8</a>
   <a href="changes.html#version_3_8_8_3">changes.html#version_3_8_8_3</a>
   <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="fileformat2.html#serialtype">fileformat2.html#serialtype</a>
   <a href="fullsql.html">fullsql.html</a>
   <a href="lang_createindex.html">lang_createindex.html</a>
@@ -3696,6 +3864,7 @@ return false;
   <a href="releaselog/3_8_8_2.html">releaselog/3_8_8_2.html</a>
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
 <li>partial indexes &rarr;  <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="features.html">features.html</a>
@@ -3703,6 +3872,8 @@ return false;
   <a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a>
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_8_0.html">releaselog/3_8_0.html</a>
   <a href="releaselog/3_8_0_1.html">releaselog/3_8_0_1.html</a>
   <a href="releaselog/3_8_0_2.html">releaselog/3_8_0_2.html</a>
@@ -3721,6 +3892,15 @@ return false;
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
 <li>phrase queries &rarr;  <a href="compile.html#fts3_max_expr_depth">compile.html#fts3_max_expr_depth</a>
+<li>pointer passing interface &rarr;  <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>
+  <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
+  <a href="capi3ref.html#sqlite3_bind_blob">capi3ref.html#sqlite3_bind_blob</a>
+  <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
+<li>pointer passing interfaces &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>power-safe &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
 <li>power-safe transactions &rarr;  <a href="fasterthanfs.html">fasterthanfs.html</a>
 <li>powersafe overwrite &rarr;  <a href="c3ref/open.html#coreuriqueryparameters">c3ref/open.html#coreuriqueryparameters</a>
@@ -3803,6 +3983,7 @@ return false;
   <a href="releaselog/3_12_1.html">releaselog/3_12_1.html</a>
   <a href="releaselog/3_12_2.html">releaselog/3_12_2.html</a>
 <li>PRAGMA foreign_key_check &rarr;  <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_7_16">changes.html#version_3_7_16</a>
   <a href="lang_altertable.html#otheralter">lang_altertable.html#otheralter</a>
   <a href="pragma.html#pragma_integrity_check">pragma.html#pragma_integrity_check</a>
@@ -3810,6 +3991,8 @@ return false;
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_16.html">releaselog/3_7_16.html</a>
   <a href="releaselog/3_7_16_1.html">releaselog/3_7_16_1.html</a>
   <a href="releaselog/3_7_16_2.html">releaselog/3_7_16_2.html</a>
@@ -3820,10 +4003,13 @@ return false;
   <a href="lang_altertable.html#otheralter">lang_altertable.html#otheralter</a>
 <li>PRAGMA function &rarr;  <a href="news.html">news.html</a>
 <li>PRAGMA functions &rarr;  <a href="changes.html#version_3_16_0">changes.html#version_3_16_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="news.html">news.html</a>
   <a href="releaselog/3_16_0.html">releaselog/3_16_0.html</a>
   <a href="releaselog/3_16_1.html">releaselog/3_16_1.html</a>
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>PRAGMA incremental_vacuum &rarr;  <a href="c3ref/data_count.html">c3ref/data_count.html</a>
   <a href="capi3ref.html#sqlite3_data_count">capi3ref.html#sqlite3_data_count</a>
   <a href="changes.html#version_3_7_16">changes.html#version_3_7_16</a>
@@ -3833,9 +4019,9 @@ return false;
 <li>PRAGMA index_xinfo &rarr;  <a href="changes.html#version_3_8_9">changes.html#version_3_8_9</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="releaselog/3_8_9.html">releaselog/3_8_9.html</a>
-<li>PRAGMA integrity_check &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+<li>PRAGMA integrity_check &rarr;  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
   <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_7_12">changes.html#version_3_7_12</a>
   <a href="changes.html#version_3_7_14">changes.html#version_3_7_14</a>
   <a href="changes.html#version_3_7_16">changes.html#version_3_7_16</a>
@@ -3846,12 +4032,13 @@ return false;
   <a href="lang_altertable.html#otheralter">lang_altertable.html#otheralter</a>
   <a href="mmap.html">mmap.html</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_12.html">releaselog/3_7_12.html</a>
   <a href="releaselog/3_7_14.html">releaselog/3_7_14.html</a>
   <a href="releaselog/3_7_16.html">releaselog/3_7_16.html</a>
@@ -3902,13 +4089,14 @@ return false;
   <a href="dbhash.html">dbhash.html</a>
   <a href="psow.html">psow.html</a>
 <li>PRAGMA parser_trace &rarr;  <a href="opcode.html#subprog">opcode.html#subprog</a>
-<li>PRAGMA quick_check &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+<li>PRAGMA quick_check &rarr;  <a href="changes.html#version_3_18_0">changes.html#version_3_18_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_7_14">changes.html#version_3_7_14</a>
   <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="pragma.html#pragma_integrity_check">pragma.html#pragma_integrity_check</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_18_0.html">releaselog/3_18_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_14.html">releaselog/3_7_14.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
@@ -3923,6 +4111,9 @@ return false;
   <a href="releaselog/3_12_2.html">releaselog/3_12_2.html</a>
 <li>PRAGMA schema_version &rarr;  <a href="howtocorrupt.html#cfgerr">howtocorrupt.html#cfgerr</a>
   <a href="lang_altertable.html#otheralter">lang_altertable.html#otheralter</a>
+<li>PRAGMA secure_delete &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>PRAGMA shrink_memory &rarr;  <a href="oldnews.html">oldnews.html</a>
 <li>PRAGMA stats &rarr;  <a href="changes.html#version_3_8_1">changes.html#version_3_8_1</a>
   <a href="oldnews.html">oldnews.html</a>
@@ -4066,6 +4257,7 @@ return false;
   <a href="pragma.html#pragma_threads">pragma.html#pragma_threads</a>
   <a href="rescode.html#misuse">rescode.html#misuse</a>
   <a href="rescode.html#schema">rescode.html#schema</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="vfs.html">vfs.html</a>
 <li>prepared statements &rarr;  <a href="35to36.html">35to36.html</a>
   <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread</a>
@@ -4086,6 +4278,7 @@ return false;
   <a href="malloc.html#nofrag">malloc.html#nofrag</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="releaselog/3_6_20.html">releaselog/3_6_20.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>PRIMARY KEY &rarr;  <a href="expridx.html">expridx.html</a>
   <a href="fileformat2.html#intschema">fileformat2.html#intschema</a>
   <a href="fileformat2.html#sqlite_master">fileformat2.html#sqlite_master</a>
@@ -4133,9 +4326,15 @@ return false;
 <li>query planner checklist &rarr;  <a href="lang_indexedby.html">lang_indexedby.html</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="optoverview.html#crossjoin">optoverview.html#crossjoin</a>
-<li>query planner stability guarantee &rarr;  <a href="compile.html#enable_stat3">compile.html#enable_stat3</a>
+<li>query planner stability guarantee &rarr;  <a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a>
+  <a href="capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY">capi3ref.html#SQLITE_DBCONFIG_ENABLE_FKEY</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="compile.html#enable_qpsg">compile.html#enable_qpsg</a>
+  <a href="compile.html#enable_stat3">compile.html#enable_stat3</a>
   <a href="compile.html#enable_stat4">compile.html#enable_stat4</a>
   <a href="oldnews.html">oldnews.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>query_only pragma &rarr;  <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="releaselog/3_8_0.html">releaselog/3_8_0.html</a>
   <a href="releaselog/3_8_0_1.html">releaselog/3_8_0_1.html</a>
@@ -4146,6 +4345,7 @@ return false;
   <a href="capi3ref.html">capi3ref.html</a>
 <li>quote SQL function &rarr;  <a href="undoredo.html">undoredo.html</a>
 <li>R-Tree extension &rarr;  <a href="changes.html#version_3_17_0">changes.html#version_3_17_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_8_2">changes.html#version_3_8_2</a>
   <a href="changes.html#version_3_8_5">changes.html#version_3_8_5</a>
   <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
@@ -4153,6 +4353,8 @@ return false;
   <a href="howtocompile.html#dll">howtocompile.html#dll</a>
   <a href="news.html">news.html</a>
   <a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_8_2.html">releaselog/3_8_2.html</a>
   <a href="releaselog/3_8_5.html">releaselog/3_8_5.html</a>
   <a href="releaselog/3_8_6.html">releaselog/3_8_6.html</a>
@@ -4225,7 +4427,7 @@ return false;
   <a href="vtab.html#xfindfunction">vtab.html#xfindfunction</a>
 <li>REINDEX &rarr;  <a href="compile.html#omit_reindex">compile.html#omit_reindex</a>
   <a href="dbhash.html">dbhash.html</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="fts3.html#*fts4rebuidcmd">fts3.html#*fts4rebuidcmd</a>
   <a href="fullsql.html">fullsql.html</a>
   <a href="imposter.html">imposter.html</a>
@@ -4257,10 +4459,13 @@ return false;
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
   <a href="releaselog/3_7_7.html">releaselog/3_7_7.html</a>
 <li>replace &rarr;  <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="releaselog/3_19_0.html">releaselog/3_19_0.html</a>
   <a href="releaselog/3_19_1.html">releaselog/3_19_1.html</a>
   <a href="releaselog/3_19_2.html">releaselog/3_19_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>RESERVED &rarr;  <a href="lang_transaction.html#immediate">lang_transaction.html#immediate</a>
 <li>result code &rarr;  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglog">c3ref/c_config_covering_index_scan.html#sqliteconfiglog</a>
   <a href="c3ref/c_fail.html">c3ref/c_fail.html</a>
@@ -4402,6 +4607,7 @@ return false;
   <a href="compile.html#enable_preupdate_hook">compile.html#enable_preupdate_hook</a>
   <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
 <li>rowid tables &rarr;  <a href="sessionintro.html">sessionintro.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
 <li>rtree &rarr;  <a href="35to36.html">35to36.html</a>
   <a href="changes.html#version_3_6_1">changes.html#version_3_6_1</a>
   <a href="changes.html#version_3_7_12">changes.html#version_3_7_12</a>
@@ -4504,6 +4710,7 @@ return false;
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
   <a href="releaselog/3_9_2.html">releaselog/3_9_2.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
   <a href="vtab.html#hiddencol">vtab.html#hiddencol</a>
   <a href="vtab.html#tabfunc2">vtab.html#tabfunc2</a>
 <li>select-core &rarr;  <a href="lang_select.html">lang_select.html</a>
@@ -4633,7 +4840,9 @@ return false;
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
 <li>snapshot &rarr;  <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>
   <a href="capi3ref.html#sqlite3_snapshot_open">capi3ref.html#sqlite3_snapshot_open</a>
-<li>snippet &rarr;  <a href="fts3.html#appendix_a">fts3.html#appendix_a</a>
+<li>snippet &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="fts3.html#appendix_a">fts3.html#appendix_a</a>
   <a href="fts3.html#simple_fts_queries">fts3.html#simple_fts_queries</a>
 <li>soft_heap_limit pragma &rarr;  <a href="changes.html#version_3_8_1">changes.html#version_3_8_1</a>
   <a href="releaselog/3_8_1.html">releaselog/3_8_1.html</a>
@@ -4654,9 +4863,7 @@ return false;
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
   <a href="releaselog/3_8_3.html">releaselog/3_8_3.html</a>
   <a href="releaselog/3_8_7.html">releaselog/3_8_7.html</a>
-<li>SQL fuzzing &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
+<li>SQL fuzzing &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -4680,9 +4887,7 @@ return false;
   <a href="releaselog/3_14_1.html">releaselog/3_14_1.html</a>
   <a href="releaselog/3_14_2.html">releaselog/3_14_2.html</a>
 <li>sqldiff --rbu &rarr;  <a href="rbu.html#database_contents">rbu.html#database_contents</a>
-<li>sqldiff.exe &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
+<li>sqldiff.exe &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -4714,7 +4919,10 @@ return false;
   <a href="capi3ref.html#sqlite3_context">capi3ref.html#sqlite3_context</a>
   <a href="cintro.html">cintro.html</a>
 <li>sqlite3_aggregate_count &rarr;  <a href="compile.html#omit_deprecated">compile.html#omit_deprecated</a>
-<li>sqlite3_analyzer.exe &rarr;  <a href="dbstat.html">dbstat.html</a>
+<li>sqlite3_analyzer.exe &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="dbstat.html">dbstat.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>sqlite3_auto_extension &rarr;  <a href="c3ref/cancel_auto_extension.html">c3ref/cancel_auto_extension.html</a>
   <a href="c3ref/reset_auto_extension.html">c3ref/reset_auto_extension.html</a>
   <a href="capi3ref.html#sqlite3_cancel_auto_extension">capi3ref.html#sqlite3_cancel_auto_extension</a>
@@ -4750,7 +4958,8 @@ return false;
 <li>sqlite3_backup_remaining &rarr;  <a href="backup.html">backup.html</a>
 <li>sqlite3_backup_step &rarr;  <a href="backup.html">backup.html</a>
   <a href="rescode.html#done">rescode.html#done</a>
-<li>sqlite3_bind_blob &rarr;  <a href="c3ref/bind_parameter_count.html">c3ref/bind_parameter_count.html</a>
+<li>sqlite3_bind_blob &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="c3ref/bind_parameter_count.html">c3ref/bind_parameter_count.html</a>
   <a href="c3ref/bind_parameter_index.html">c3ref/bind_parameter_index.html</a>
   <a href="c3ref/bind_parameter_name.html">c3ref/bind_parameter_name.html</a>
   <a href="c3ref/clear_bindings.html">c3ref/clear_bindings.html</a>
@@ -4789,6 +4998,16 @@ return false;
   <a href="capi3ref.html#sqlite3_bind_parameter_count">capi3ref.html#sqlite3_bind_parameter_count</a>
   <a href="capi3ref.html#sqlite3_bind_parameter_index">capi3ref.html#sqlite3_bind_parameter_index</a>
   <a href="lang_expr.html#varparam">lang_expr.html#varparam</a>
+<li>sqlite3_bind_pointer &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrleak">bindptr.html#ptrleak</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
+  <a href="carray.html">carray.html</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="fts5.html#extending_fts5">fts5.html#extending_fts5</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>sqlite3_bind_text &rarr;  <a href="c3ref/prepare.html">c3ref/prepare.html</a>
   <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
   <a href="optoverview.html#like_opt">optoverview.html#like_opt</a>
@@ -4859,6 +5078,7 @@ return false;
   <a href="changes.html#version_3_4_0">changes.html#version_3_4_0</a>
   <a href="lang_corefunc.html#zeroblob">lang_corefunc.html#zeroblob</a>
   <a href="releaselog/3_4_0.html">releaselog/3_4_0.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
   <a href="withoutrowid.html">withoutrowid.html</a>
 <li>sqlite3_blob_read &rarr;  <a href="c3ref/blob.html">c3ref/blob.html</a>
   <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>
@@ -4953,6 +5173,7 @@ return false;
   <a href="cintro.html">cintro.html</a>
   <a href="malloc.html">malloc.html</a>
   <a href="quickstart.html">quickstart.html</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="tempfiles.html#tempdb">tempfiles.html#tempdb</a>
 <li>sqlite3_close_v2 &rarr;  <a href="c3ref/close.html">c3ref/close.html</a>
   <a href="c3ref/sqlite3.html">c3ref/sqlite3.html</a>
@@ -5002,7 +5223,10 @@ return false;
   <a href="oldnews.html">oldnews.html</a>
 <li>sqlite3_column_name &rarr;  <a href="c3ref/exec.html">c3ref/exec.html</a>
   <a href="capi3ref.html#sqlite3_exec">capi3ref.html#sqlite3_exec</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="faq.html#q28">faq.html#q28</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>sqlite3_column_origin_name &rarr;  <a href="compile.html#enable_column_metadata">compile.html#enable_column_metadata</a>
 <li>sqlite3_column_origin_name16 &rarr;  <a href="compile.html#enable_column_metadata">compile.html#enable_column_metadata</a>
 <li>sqlite3_column_table_name &rarr;  <a href="compile.html#enable_column_metadata">compile.html#enable_column_metadata</a>
@@ -5034,13 +5258,11 @@ return false;
   <a href="pragma.html#pragma_compile_options">pragma.html#pragma_compile_options</a>
   <a href="releaselog/3_6_23.html">releaselog/3_6_23.html</a>
   <a href="th3.html">th3.html</a>
-<li>sqlite3_compileoption_used &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_6_23">changes.html#version_3_6_23</a>
+<li>sqlite3_compileoption_used &rarr;  <a href="changes.html#version_3_6_23">changes.html#version_3_6_23</a>
   <a href="changes.html#version_3_8_10_1">changes.html#version_3_8_10_1</a>
   <a href="compile.html#omit_compileoption_diags">compile.html#omit_compileoption_diags</a>
   <a href="lang_corefunc.html#sqlite_compileoption_used">lang_corefunc.html#sqlite_compileoption_used</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_6_23.html">releaselog/3_6_23.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -5127,9 +5349,7 @@ return false;
   <a href="capi3ref.html#sqlite3_aggregate_context">capi3ref.html#sqlite3_aggregate_context</a>
   <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
   <a href="capi3ref.html#sqlite3_result_subtype">capi3ref.html#sqlite3_result_subtype</a>
-  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
   <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -5154,13 +5374,11 @@ return false;
   <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
   <a href="c3ref/sqlite3.html">c3ref/sqlite3.html</a>
   <a href="c3ref/user_data.html">c3ref/user_data.html</a>
-  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#SQLITE_DETERMINISTIC">capi3ref.html#SQLITE_DETERMINISTIC</a>
   <a href="capi3ref.html#sqlite3">capi3ref.html#sqlite3</a>
   <a href="capi3ref.html#sqlite3_context_db_handle">capi3ref.html#sqlite3_context_db_handle</a>
   <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
   <a href="capi3ref.html#sqlite3_user_data">capi3ref.html#sqlite3_user_data</a>
-  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
   <a href="changes.html#version_3_6_15">changes.html#version_3_6_15</a>
   <a href="changes.html#version_3_8_3">changes.html#version_3_8_3</a>
   <a href="cintro.html">cintro.html</a>
@@ -5180,16 +5398,14 @@ return false;
   <a href="c3ref/context_db_handle.html">c3ref/context_db_handle.html</a>
   <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
   <a href="c3ref/user_data.html">c3ref/user_data.html</a>
-  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#SQLITE_DETERMINISTIC">capi3ref.html#SQLITE_DETERMINISTIC</a>
   <a href="capi3ref.html#sqlite3_context_db_handle">capi3ref.html#sqlite3_context_db_handle</a>
   <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
   <a href="capi3ref.html#sqlite3_user_data">capi3ref.html#sqlite3_user_data</a>
-  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
 <li>sqlite3_create_function_v2 &rarr;  <a href="c3ref/c_deterministic.html">c3ref/c_deterministic.html</a>
   <a href="capi3ref.html#SQLITE_DETERMINISTIC">capi3ref.html#SQLITE_DETERMINISTIC</a>
   <a href="changes.html#version_3_7_3">changes.html#version_3_7_3</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="rbu.html#sqldiff">rbu.html#sqldiff</a>
   <a href="releaselog/3_7_3.html">releaselog/3_7_3.html</a>
@@ -5237,10 +5453,12 @@ return false;
   <a href="cintro.html">cintro.html</a>
   <a href="compile.html#default_lookaside">compile.html#default_lookaside</a>
   <a href="compile.html#enable_fts3_tokenizer">compile.html#enable_fts3_tokenizer</a>
+  <a href="compile.html#enable_qpsg">compile.html#enable_qpsg</a>
   <a href="fts3.html#f3tknzr">fts3.html#f3tknzr</a>
   <a href="loadext.html">loadext.html</a>
   <a href="malloc.html#lookaside">malloc.html#lookaside</a>
   <a href="privatebranch.html">privatebranch.html</a>
+  <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
   <a href="releaselog/3_12_0.html">releaselog/3_12_0.html</a>
   <a href="releaselog/3_12_1.html">releaselog/3_12_1.html</a>
   <a href="releaselog/3_12_2.html">releaselog/3_12_2.html</a>
@@ -5363,6 +5581,9 @@ return false;
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
   <a href="capi3ref.html#sqlite3_wal_checkpoint_v2">capi3ref.html#sqlite3_wal_checkpoint_v2</a>
   <a href="capi3ref.html#sqlite3backupinit">capi3ref.html#sqlite3backupinit</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="rescode.html#constraint">rescode.html#constraint</a>
 <li>sqlite3_errmsg16 &rarr;  <a href="c3ref/backup_finish.html#sqlite3backupinit">c3ref/backup_finish.html#sqlite3backupinit</a>
   <a href="c3ref/open.html">c3ref/open.html</a>
@@ -5448,7 +5669,8 @@ return false;
   <a href="releaselog/3_7_4.html">releaselog/3_7_4.html</a>
   <a href="releaselog/3_7_5.html">releaselog/3_7_5.html</a>
   <a href="rescode.html#notfound">rescode.html#notfound</a>
-<li>sqlite3_finalize &rarr;  <a href="c3ref/close.html">c3ref/close.html</a>
+<li>sqlite3_finalize &rarr;  <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">c3ref/c_prepare_persistent.html#sqlitepreparepersistent</a>
+  <a href="c3ref/close.html">c3ref/close.html</a>
   <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
   <a href="c3ref/column_database_name.html">c3ref/column_database_name.html</a>
   <a href="c3ref/column_name.html">c3ref/column_name.html</a>
@@ -5466,6 +5688,7 @@ return false;
   <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
   <a href="capi3ref.html#sqlite3_stmt">capi3ref.html#sqlite3_stmt</a>
+  <a href="capi3ref.html#sqlitepreparepersistent">capi3ref.html#sqlitepreparepersistent</a>
   <a href="changes.html#version_3_7_6">changes.html#version_3_7_6</a>
   <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="cintro.html">cintro.html</a>
@@ -5477,6 +5700,7 @@ return false;
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
   <a href="rescode.html#misuse">rescode.html#misuse</a>
+  <a href="stmt.html">stmt.html</a>
 <li>sqlite3_free &rarr;  <a href="34to35.html">34to35.html</a>
   <a href="c3ref/auto_extension.html">c3ref/auto_extension.html</a>
   <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename">c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename</a>
@@ -6003,12 +6227,12 @@ return false;
   <a href="pragma.html#pragma_cache_size">pragma.html#pragma_cache_size</a>
   <a href="releaselog/3_6_6.html">releaselog/3_6_6.html</a>
   <a href="releaselog/3_7_10.html">releaselog/3_7_10.html</a>
-<li>sqlite3_prepare &rarr;  <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
+<li>sqlite3_prepare &rarr;  <a href="c3ref/prepare.html">c3ref/prepare.html</a>
+  <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
   <a href="c3ref/step.html">c3ref/step.html</a>
-  <a href="c3ref/stmt.html">c3ref/stmt.html</a>
+  <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
   <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
-  <a href="capi3ref.html#sqlite3_stmt">capi3ref.html#sqlite3_stmt</a>
   <a href="cintro.html">cintro.html</a>
   <a href="cli.html#dotrules">cli.html#dotrules</a>
   <a href="faq.html#q15">faq.html#q15</a>
@@ -6022,17 +6246,16 @@ return false;
   <a href="pragma.html#pragma_schema_version">pragma.html#pragma_schema_version</a>
   <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
   <a href="rescode.html#schema">rescode.html#schema</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="unlock_notify.html">unlock_notify.html</a>
   <a href="vtab.html#xbestindex">vtab.html#xbestindex</a>
   <a href="vtab.html#xfindfunction">vtab.html#xfindfunction</a>
 <li>sqlite3_prepare16 &rarr;  <a href="c3ref/bind_parameter_name.html">c3ref/bind_parameter_name.html</a>
   <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
   <a href="c3ref/step.html">c3ref/step.html</a>
-  <a href="c3ref/stmt.html">c3ref/stmt.html</a>
   <a href="capi3ref.html#sqlite3_bind_parameter_name">capi3ref.html#sqlite3_bind_parameter_name</a>
   <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
-  <a href="capi3ref.html#sqlite3_stmt">capi3ref.html#sqlite3_stmt</a>
   <a href="compile.html#omit_utf16">compile.html#omit_utf16</a>
   <a href="lang.html">lang.html</a>
   <a href="optoverview.html#like_opt">optoverview.html#like_opt</a>
@@ -6042,15 +6265,30 @@ return false;
   <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
   <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
   <a href="c3ref/step.html">c3ref/step.html</a>
-  <a href="c3ref/stmt.html">c3ref/stmt.html</a>
   <a href="capi3ref.html#sqlite3_bind_parameter_index">capi3ref.html#sqlite3_bind_parameter_index</a>
   <a href="capi3ref.html#sqlite3_bind_parameter_name">capi3ref.html#sqlite3_bind_parameter_name</a>
   <a href="capi3ref.html#sqlite3_expanded_sql">capi3ref.html#sqlite3_expanded_sql</a>
   <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
-  <a href="capi3ref.html#sqlite3_stmt">capi3ref.html#sqlite3_stmt</a>
   <a href="lang.html">lang.html</a>
   <a href="optoverview.html#like_opt">optoverview.html#like_opt</a>
+<li>sqlite3_prepare16_v3 &rarr;  <a href="c3ref/bind_parameter_index.html">c3ref/bind_parameter_index.html</a>
+  <a href="c3ref/bind_parameter_name.html">c3ref/bind_parameter_name.html</a>
+  <a href="c3ref/c_prepare_persistent.html">c3ref/c_prepare_persistent.html</a>
+  <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">c3ref/c_prepare_persistent.html#sqlitepreparepersistent</a>
+  <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
+  <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
+  <a href="c3ref/step.html">c3ref/step.html</a>
+  <a href="capi3ref.html#SQLITE_PREPARE_PERSISTENT">capi3ref.html#SQLITE_PREPARE_PERSISTENT</a>
+  <a href="capi3ref.html#sqlite3_bind_parameter_index">capi3ref.html#sqlite3_bind_parameter_index</a>
+  <a href="capi3ref.html#sqlite3_bind_parameter_name">capi3ref.html#sqlite3_bind_parameter_name</a>
+  <a href="capi3ref.html#sqlite3_expanded_sql">capi3ref.html#sqlite3_expanded_sql</a>
+  <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
+  <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
+  <a href="capi3ref.html#sqlitepreparepersistent">capi3ref.html#sqlitepreparepersistent</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>sqlite3_prepare_v2 &rarr;  <a href="arch.html">arch.html</a>
   <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>
   <a href="c3ref/c_limit_attached.html#sqlitelimitvdbeop">c3ref/c_limit_attached.html#sqlitelimitvdbeop</a>
@@ -6059,6 +6297,7 @@ return false;
   <a href="c3ref/db_handle.html">c3ref/db_handle.html</a>
   <a href="c3ref/exec.html">c3ref/exec.html</a>
   <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
+  <a href="c3ref/prepare.html">c3ref/prepare.html</a>
   <a href="c3ref/progress_handler.html">c3ref/progress_handler.html</a>
   <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
   <a href="c3ref/sqlite3.html">c3ref/sqlite3.html</a>
@@ -6073,6 +6312,7 @@ return false;
   <a href="capi3ref.html#sqlite3_db_handle">capi3ref.html#sqlite3_db_handle</a>
   <a href="capi3ref.html#sqlite3_exec">capi3ref.html#sqlite3_exec</a>
   <a href="capi3ref.html#sqlite3_expanded_sql">capi3ref.html#sqlite3_expanded_sql</a>
+  <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
   <a href="capi3ref.html#sqlite3_progress_handler">capi3ref.html#sqlite3_progress_handler</a>
   <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
@@ -6100,6 +6340,21 @@ return false;
   <a href="rescode.html#toobig">rescode.html#toobig</a>
   <a href="unlock_notify.html">unlock_notify.html</a>
   <a href="vfs.html">vfs.html</a>
+<li>sqlite3_prepare_v3 &rarr;  <a href="c3ref/c_prepare_persistent.html">c3ref/c_prepare_persistent.html</a>
+  <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">c3ref/c_prepare_persistent.html#sqlitepreparepersistent</a>
+  <a href="c3ref/expanded_sql.html">c3ref/expanded_sql.html</a>
+  <a href="c3ref/prepare.html">c3ref/prepare.html</a>
+  <a href="c3ref/set_authorizer.html">c3ref/set_authorizer.html</a>
+  <a href="c3ref/step.html">c3ref/step.html</a>
+  <a href="capi3ref.html#SQLITE_PREPARE_PERSISTENT">capi3ref.html#SQLITE_PREPARE_PERSISTENT</a>
+  <a href="capi3ref.html#sqlite3_expanded_sql">capi3ref.html#sqlite3_expanded_sql</a>
+  <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
+  <a href="capi3ref.html#sqlite3_set_authorizer">capi3ref.html#sqlite3_set_authorizer</a>
+  <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
+  <a href="capi3ref.html#sqlitepreparepersistent">capi3ref.html#sqlitepreparepersistent</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>sqlite3_preupdate_count &rarr;  <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
   <a href="capi3ref.html#sqlite3_preupdate_count">capi3ref.html#sqlite3_preupdate_count</a>
 <li>sqlite3_preupdate_depth &rarr;  <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
@@ -6154,6 +6409,7 @@ return false;
   <a href="compile.html#enable_memory_management">compile.html#enable_memory_management</a>
   <a href="releaselog/3_5_0.html">releaselog/3_5_0.html</a>
 <li>sqlite3_reset &rarr;  <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>
+  <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun">c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun</a>
   <a href="c3ref/clear_bindings.html">c3ref/clear_bindings.html</a>
   <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
   <a href="c3ref/finalize.html">c3ref/finalize.html</a>
@@ -6173,6 +6429,7 @@ return false;
   <a href="capi3ref.html#sqlite3_step">capi3ref.html#sqlite3_step</a>
   <a href="capi3ref.html#sqlite3_stmt">capi3ref.html#sqlite3_stmt</a>
   <a href="capi3ref.html#sqlite3_stmt_busy">capi3ref.html#sqlite3_stmt_busy</a>
+  <a href="capi3ref.html#sqlitestmtstatusrun">capi3ref.html#sqlitestmtstatusrun</a>
   <a href="changes.html#version_3_8_11">changes.html#version_3_8_11</a>
   <a href="cintro.html">cintro.html</a>
   <a href="compile.html#omit_autoreset">compile.html#omit_autoreset</a>
@@ -6180,10 +6437,12 @@ return false;
   <a href="opcode.html">opcode.html</a>
   <a href="releaselog/3_8_11.html">releaselog/3_8_11.html</a>
   <a href="releaselog/3_8_11_1.html">releaselog/3_8_11_1.html</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="unlock_notify.html">unlock_notify.html</a>
 <li>sqlite3_reset_auto_extension &rarr;  <a href="c3ref/auto_extension.html">c3ref/auto_extension.html</a>
   <a href="capi3ref.html#sqlite3_auto_extension">capi3ref.html#sqlite3_auto_extension</a>
-<li>sqlite3_result_blob &rarr;  <a href="c3ref/c_static.html">c3ref/c_static.html</a>
+<li>sqlite3_result_blob &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="c3ref/c_static.html">c3ref/c_static.html</a>
   <a href="capi3ref.html#SQLITE_STATIC">capi3ref.html#SQLITE_STATIC</a>
   <a href="vtab.html#xcolumn">vtab.html#xcolumn</a>
 <li>sqlite3_result_blob64 &rarr;  <a href="changes.html#version_3_8_7">changes.html#version_3_8_7</a>
@@ -6197,8 +6456,19 @@ return false;
   <a href="cintro.html">cintro.html</a>
   <a href="vtab.html#xcolumn">vtab.html#xcolumn</a>
 <li>sqlite3_result_int64 &rarr;  <a href="vtab.html#xcolumn">vtab.html#xcolumn</a>
-<li>sqlite3_result_null &rarr;  <a href="vtab.html#xcolumn">vtab.html#xcolumn</a>
-<li>sqlite3_result_subtype &rarr;  <a href="c3ref/value_subtype.html">c3ref/value_subtype.html</a>
+<li>sqlite3_result_null &rarr;  <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
+  <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
+  <a href="vtab.html#xcolumn">vtab.html#xcolumn</a>
+<li>sqlite3_result_pointer &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrleak">bindptr.html#ptrleak</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
+  <a href="changes.html#version_3_20_1">changes.html#version_3_20_1</a>
+  <a href="news.html">news.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+<li>sqlite3_result_subtype &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="c3ref/value_subtype.html">c3ref/value_subtype.html</a>
   <a href="capi3ref.html#sqlite3_value_subtype">capi3ref.html#sqlite3_value_subtype</a>
   <a href="changes.html#version_3_11_0">changes.html#version_3_11_0</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
@@ -6230,6 +6500,7 @@ return false;
 <li>sqlite3_rtree_query_callback &rarr;  <a href="changes.html#version_3_8_5">changes.html#version_3_8_5</a>
   <a href="releaselog/3_8_5.html">releaselog/3_8_5.html</a>
 <li>sqlite3_set_authorizer &rarr;  <a href="arch.html">arch.html</a>
+  <a href="bindptr.html">bindptr.html</a>
   <a href="c3ref/c_alter_table.html">c3ref/c_alter_table.html</a>
   <a href="c3ref/c_deny.html">c3ref/c_deny.html</a>
   <a href="c3ref/c_fail.html">c3ref/c_fail.html</a>
@@ -6372,6 +6643,7 @@ return false;
   <a href="backup.html">backup.html</a>
   <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>
   <a href="c3ref/busy_timeout.html">c3ref/busy_timeout.html</a>
+  <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun">c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun</a>
   <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
   <a href="c3ref/column_database_name.html">c3ref/column_database_name.html</a>
   <a href="c3ref/column_name.html">c3ref/column_name.html</a>
@@ -6407,6 +6679,7 @@ return false;
   <a href="capi3ref.html#sqlite3_stmt_busy">capi3ref.html#sqlite3_stmt_busy</a>
   <a href="capi3ref.html#sqlite3_unlock_notify">capi3ref.html#sqlite3_unlock_notify</a>
   <a href="capi3ref.html#sqlite3_update_hook">capi3ref.html#sqlite3_update_hook</a>
+  <a href="capi3ref.html#sqlitestmtstatusrun">capi3ref.html#sqlitestmtstatusrun</a>
   <a href="changes.html#version_3_5_3">changes.html#version_3_5_3</a>
   <a href="changes.html#version_3_8_1">changes.html#version_3_8_1</a>
   <a href="cintro.html">cintro.html</a>
@@ -6428,6 +6701,7 @@ return false;
   <a href="rescode.html#done">rescode.html#done</a>
   <a href="rescode.html#row">rescode.html#row</a>
   <a href="rescode.html#schema">rescode.html#schema</a>
+  <a href="stmt.html">stmt.html</a>
   <a href="unlock_notify.html">unlock_notify.html</a>
   <a href="vfs.html">vfs.html</a>
 <li>sqlite3_stmt &rarr;  <a href="arch.html">arch.html</a>
@@ -6467,9 +6741,12 @@ return false;
   <a href="c3ref/db_status.html">c3ref/db_status.html</a>
   <a href="capi3ref.html#SQLITE_STMTSTATUS counter">capi3ref.html#SQLITE_STMTSTATUS counter</a>
   <a href="capi3ref.html#sqlite3_db_status">capi3ref.html#sqlite3_db_status</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_6_4">changes.html#version_3_6_4</a>
   <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="lang_indexedby.html">lang_indexedby.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_6_4.html">releaselog/3_6_4.html</a>
   <a href="releaselog/3_8_0.html">releaselog/3_8_0.html</a>
   <a href="releaselog/3_8_0_1.html">releaselog/3_8_0_1.html</a>
@@ -6611,16 +6888,20 @@ return false;
   <a href="capi3ref.html#sqlite3_context">capi3ref.html#sqlite3_context</a>
   <a href="capi3ref.html#sqlite3_create_function">capi3ref.html#sqlite3_create_function</a>
   <a href="cintro.html">cintro.html</a>
-<li>sqlite3_value &rarr;  <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
+<li>sqlite3_value &rarr;  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
   <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
   <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="c3ref/value_dup.html">c3ref/value_dup.html</a>
+  <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
   <a href="capi3ref.html#sqlite3_preupdate_count">capi3ref.html#sqlite3_preupdate_count</a>
   <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
   <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
   <a href="capi3ref.html#sqlite3_value_dup">capi3ref.html#sqlite3_value_dup</a>
   <a href="opcode.html">opcode.html</a>
-<li>sqlite3_value_blob &rarr;  <a href="c3ref/value.html">c3ref/value.html</a>
+<li>sqlite3_value_blob &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="c3ref/value.html">c3ref/value.html</a>
   <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#sqlite3_value">capi3ref.html#sqlite3_value</a>
   <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
@@ -6644,7 +6925,13 @@ return false;
 <li>sqlite3_value_int &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
   <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
   <a href="cintro.html">cintro.html</a>
-<li>sqlite3_value_subtype &rarr;  <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
+<li>sqlite3_value_pointer &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="bindptr.html#ptrleak">bindptr.html#ptrleak</a>
+  <a href="bindptr.html#ptrtyp">bindptr.html#ptrtyp</a>
+  <a href="c3ref/result_blob.html">c3ref/result_blob.html</a>
+  <a href="capi3ref.html#sqlite3_result_blob">capi3ref.html#sqlite3_result_blob</a>
+<li>sqlite3_value_subtype &rarr;  <a href="bindptr.html">bindptr.html</a>
+  <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
   <a href="json1.html#howtocompile">json1.html#howtocompile</a>
   <a href="releaselog/3_9_0.html">releaselog/3_9_0.html</a>
   <a href="releaselog/3_9_1.html">releaselog/3_9_1.html</a>
@@ -6775,11 +7062,13 @@ return false;
   <a href="capi3ref.html#SQLITE_CHECKPOINT_FULL">capi3ref.html#SQLITE_CHECKPOINT_FULL</a>
   <a href="capi3ref.html#sqlite3_wal_autocheckpoint">capi3ref.html#sqlite3_wal_autocheckpoint</a>
   <a href="capi3ref.html#sqlite3_wal_checkpoint">capi3ref.html#sqlite3_wal_checkpoint</a>
+  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
   <a href="changes.html#version_3_7_6">changes.html#version_3_7_6</a>
   <a href="changes.html#version_3_8_8">changes.html#version_3_8_8</a>
   <a href="changes.html#version_3_8_8_2">changes.html#version_3_8_8_2</a>
   <a href="pragma.html#pragma_wal_autocheckpoint">pragma.html#pragma_wal_autocheckpoint</a>
   <a href="pragma.html#pragma_wal_checkpoint">pragma.html#pragma_wal_checkpoint</a>
+  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_7_6.html">releaselog/3_7_6.html</a>
   <a href="releaselog/3_8_8.html">releaselog/3_8_8.html</a>
   <a href="releaselog/3_8_8_1.html">releaselog/3_8_8_1.html</a>
@@ -6790,6 +7079,7 @@ return false;
   <a href="c3ref/wal_hook.html">c3ref/wal_hook.html</a>
   <a href="capi3ref.html#sqlite3_wal_autocheckpoint">capi3ref.html#sqlite3_wal_autocheckpoint</a>
   <a href="capi3ref.html#sqlite3_wal_hook">capi3ref.html#sqlite3_wal_hook</a>
+  <a href="tclsqlite.html#wal_hook">tclsqlite.html#wal_hook</a>
   <a href="wal.html#fast">wal.html#fast</a>
 <li>sqlite3changeset_apply &rarr;  <a href="session.html#sqlite3changegroup_add_strm">session.html#sqlite3changegroup_add_strm</a>
   <a href="session.html#sqlite3changeset_conflict">session.html#sqlite3changeset_conflict</a>
@@ -6932,7 +7222,9 @@ return false;
   <a href="compile.html#syscall">compile.html#syscall</a>
   <a href="compile.html#tclapi">compile.html#tclapi</a>
 <li>SQLITE_BLOB &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
 <li>SQLITE_BUSY &rarr;  <a href="34to35.html">34to35.html</a>
   <a href="backup.html">backup.html</a>
   <a href="c3ref/backup_finish.html#sqlite3backupfinish">c3ref/backup_finish.html#sqlite3backupfinish</a>
@@ -7222,6 +7514,11 @@ return false;
   <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
   <a href="loadext.html">loadext.html</a>
   <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
+<li>SQLITE_DBCONFIG_ENABLE_QPSG &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="compile.html#enable_qpsg">compile.html#enable_qpsg</a>
+  <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>SQLITE_DBCONFIG_LOOKASIDE &rarr;  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside">c3ref/c_config_covering_index_scan.html#sqliteconfiglookaside</a>
   <a href="c3ref/db_config.html">c3ref/db_config.html</a>
   <a href="capi3ref.html#sqlite3_db_config">capi3ref.html#sqlite3_db_config</a>
@@ -7356,7 +7653,7 @@ return false;
 <li>SQLITE_DETERMINISTIC &rarr;  <a href="c3ref/create_function.html">c3ref/create_function.html</a>
   <a href="capi3ref.html#sqlite3_create_function">capi3ref.html#sqlite3_create_function</a>
   <a href="changes.html#version_3_8_3">changes.html#version_3_8_3</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="expridx.html">expridx.html</a>
   <a href="releaselog/3_8_3.html">releaselog/3_8_3.html</a>
 <li>SQLITE_DIRECT_OVERFLOW_READ &rarr;  <a href="changes.html#version_3_17_0">changes.html#version_3_17_0</a>
@@ -7399,12 +7696,10 @@ return false;
   <a href="releaselog/3_8_8_1.html">releaselog/3_8_8_1.html</a>
   <a href="releaselog/3_8_8_2.html">releaselog/3_8_8_2.html</a>
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
-<li>SQLITE_ENABLE_DBSTAT_VTAB &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
+<li>SQLITE_ENABLE_DBSTAT_VTAB &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="changes.html#version_3_8_10_1">changes.html#version_3_8_10_1</a>
   <a href="dbstat.html">dbstat.html</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -7455,6 +7750,10 @@ return false;
   <a href="releaselog/3_17_0.html">releaselog/3_17_0.html</a>
 <li>SQLITE_ENABLE_PREUPDATE_HOOK &rarr;  <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
   <a href="capi3ref.html#sqlite3_preupdate_count">capi3ref.html#sqlite3_preupdate_count</a>
+<li>SQLITE_ENABLE_QPSG &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>SQLITE_ENABLE_RBU &rarr;  <a href="rbu.html">rbu.html</a>
 <li>SQLITE_ENABLE_RTREE &rarr;  <a href="compile.html#rtree_int_only">compile.html#rtree_int_only</a>
   <a href="footprint.html#relfootprint">footprint.html#relfootprint</a>
@@ -7482,7 +7781,6 @@ return false;
   <a href="lang_analyze.html">lang_analyze.html</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="optoverview.html#rangequery">optoverview.html#rangequery</a>
-  <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
   <a href="releaselog/3_7_9.html">releaselog/3_7_9.html</a>
   <a href="releaselog/3_8_3_1.html">releaselog/3_8_3_1.html</a>
 <li>SQLITE_ENABLE_STAT4 &rarr;  <a href="changes.html#version_3_8_1">changes.html#version_3_8_1</a>
@@ -7493,7 +7791,6 @@ return false;
   <a href="lang_analyze.html">lang_analyze.html</a>
   <a href="oldnews.html">oldnews.html</a>
   <a href="optoverview.html#rangequery">optoverview.html#rangequery</a>
-  <a href="queryplanner-ng.html#qpstab">queryplanner-ng.html#qpstab</a>
   <a href="releaselog/3_8_1.html">releaselog/3_8_1.html</a>
   <a href="releaselog/3_8_3_1.html">releaselog/3_8_3_1.html</a>
   <a href="releaselog/3_8_4.html">releaselog/3_8_4.html</a>
@@ -7506,6 +7803,7 @@ return false;
   <a href="releaselog/3_8_8_1.html">releaselog/3_8_8_1.html</a>
   <a href="releaselog/3_8_8_2.html">releaselog/3_8_8_2.html</a>
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
+<li>SQLITE_ENABLE_STMTVTAB &rarr;  <a href="stmt.html">stmt.html</a>
 <li>SQLITE_ENABLE_TREE_EXPLAIN &rarr;  <a href="changes.html#version_3_7_10">changes.html#version_3_7_10</a>
   <a href="releaselog/3_7_10.html">releaselog/3_7_10.html</a>
 <li>SQLITE_ENABLE_UNKNOWN_SQL_FUNCTION &rarr;  <a href="changes.html#version_3_14">changes.html#version_3_14</a>
@@ -7651,7 +7949,9 @@ return false;
 <li>SQLITE_FCNTL_ZIPVFS &rarr;  <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlzipvfs">c3ref/c_fcntl_busyhandler.html#sqlitefcntlzipvfs</a>
   <a href="capi3ref.html#sqlitefcntlzipvfs">capi3ref.html#sqlitefcntlzipvfs</a>
 <li>SQLITE_FLOAT &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
 <li>SQLITE_FTS3_MAX_EXPR_DEPTH &rarr;  <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="releaselog/3_8_0.html">releaselog/3_8_0.html</a>
   <a href="releaselog/3_8_0_1.html">releaselog/3_8_0_1.html</a>
@@ -7982,7 +8282,9 @@ return false;
   <a href="changes.html#version_3_7_5">changes.html#version_3_7_5</a>
   <a href="releaselog/3_7_5.html">releaselog/3_7_5.html</a>
 <li>SQLITE_NULL &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
 <li>SQLITE_OK &rarr;  <a href="34to35.html">34to35.html</a>
   <a href="c3ref/backup_finish.html#sqlite3backupfinish">c3ref/backup_finish.html#sqlite3backupfinish</a>
   <a href="c3ref/backup_finish.html#sqlite3backupstep">c3ref/backup_finish.html#sqlite3backupstep</a>
@@ -8245,6 +8547,11 @@ return false;
 <li>SQLITE_POWERSAFE_OVERWRITE &rarr;  <a href="changes.html#version_3_7_10">changes.html#version_3_7_10</a>
   <a href="psow.html#tornpage">psow.html#tornpage</a>
   <a href="releaselog/3_7_10.html">releaselog/3_7_10.html</a>
+<li>SQLITE_PREPARE_PERSISTENT &rarr;  <a href="c3ref/prepare.html">c3ref/prepare.html</a>
+  <a href="capi3ref.html#sqlite3_prepare">capi3ref.html#sqlite3_prepare</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>SQLITE_PROTOCOL &rarr;  <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
   <a href="releaselog/3_8_6.html">releaselog/3_8_6.html</a>
 <li>SQLITE_RANGE &rarr;  <a href="c3ref/bind_blob.html">c3ref/bind_blob.html</a>
@@ -8377,6 +8684,10 @@ return false;
 <li>SQLITE_STATUS_PARSER_STACK &rarr;  <a href="compile.html#yytrackmaxstackdepth">compile.html#yytrackmaxstackdepth</a>
 <li>SQLITE_STATUS_SCRATCH_SIZE &rarr;  <a href="changes.html#version_3_6_1">changes.html#version_3_6_1</a>
   <a href="releaselog/3_6_1.html">releaselog/3_6_1.html</a>
+<li>SQLITE_STMT virtual table &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="compile.html#enable_stmtvtab">compile.html#enable_stmtvtab</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>SQLITE_STMTJRNL_SPILL &rarr;  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill</a>
   <a href="capi3ref.html#sqliteconfigstmtjrnlspill">capi3ref.html#sqliteconfigstmtjrnlspill</a>
   <a href="changes.html#version_3_12_0">changes.html#version_3_12_0</a>
@@ -8387,12 +8698,28 @@ return false;
   <a href="capi3ref.html#sqlite3_stmt_status">capi3ref.html#sqlite3_stmt_status</a>
 <li>SQLITE_STMTSTATUS counters &rarr;  <a href="c3ref/stmt_status.html">c3ref/stmt_status.html</a>
   <a href="capi3ref.html#sqlite3_stmt_status">capi3ref.html#sqlite3_stmt_status</a>
+<li>SQLITE_STMTSTATUS_AUTOINDEX &rarr;  <a href="stmt.html">stmt.html</a>
 <li>SQLITE_STMTSTATUS_FULLSCAN_STEP &rarr;  <a href="lang_indexedby.html">lang_indexedby.html</a>
+  <a href="stmt.html">stmt.html</a>
+<li>SQLITE_STMTSTATUS_MEMUSED &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+  <a href="stmt.html">stmt.html</a>
+<li>SQLITE_STMTSTATUS_REPREPARE &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+  <a href="stmt.html">stmt.html</a>
+<li>SQLITE_STMTSTATUS_RUN &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>SQLITE_STMTSTATUS_SORT &rarr;  <a href="lang_indexedby.html">lang_indexedby.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>SQLITE_STMTSTATUS_VM_STEP &rarr;  <a href="changes.html#version_3_8_0">changes.html#version_3_8_0</a>
   <a href="releaselog/3_8_0.html">releaselog/3_8_0.html</a>
   <a href="releaselog/3_8_0_1.html">releaselog/3_8_0_1.html</a>
   <a href="releaselog/3_8_0_2.html">releaselog/3_8_0_2.html</a>
+  <a href="stmt.html">stmt.html</a>
 <li>SQLITE_SYNC_DATAONLY &rarr;  <a href="c3ref/io_methods.html">c3ref/io_methods.html</a>
   <a href="capi3ref.html#sqlite3_io_methods">capi3ref.html#sqlite3_io_methods</a>
 <li>SQLITE_SYNC_FULL &rarr;  <a href="34to35.html">34to35.html</a>
@@ -8420,7 +8747,9 @@ return false;
 <li>SQLITE_TESTCTRL_VDBE_COVERAGE &rarr;  <a href="changes.html#version_3_8_4">changes.html#version_3_8_4</a>
   <a href="releaselog/3_8_4.html">releaselog/3_8_4.html</a>
 <li>SQLITE_TEXT &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
   <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
 <li>SQLITE_THREADSAFE &rarr;  <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiggetmutex">c3ref/c_config_covering_index_scan.html#sqliteconfiggetmutex</a>
   <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread">c3ref/c_config_covering_index_scan.html#sqliteconfigmultithread</a>
   <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmutex">c3ref/c_config_covering_index_scan.html#sqliteconfigmutex</a>
@@ -8521,7 +8850,7 @@ return false;
   <a href="c3ref/libversion.html">c3ref/libversion.html</a>
   <a href="capi3ref.html#SQLITE_SOURCE_ID">capi3ref.html#SQLITE_SOURCE_ID</a>
   <a href="capi3ref.html#sqlite3_libversion">capi3ref.html#sqlite3_libversion</a>
-  <a href="deterministic.html">deterministic.html</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="expridx.html">expridx.html</a>
   <a href="lang_createindex.html#indexexpr">lang_createindex.html#indexexpr</a>
 <li>SQLITE_VERSION_NUMBER &rarr;  <a href="c3ref/c_source_id.html">c3ref/c_source_id.html</a>
@@ -8593,6 +8922,7 @@ return false;
   <a href="partialindex.html">partialindex.html</a>
 <li>table-valued function &rarr;  <a href="carray.html">carray.html</a>
   <a href="changes.html#version_3_9_0">changes.html#version_3_9_0</a>
+  <a href="completion.html">completion.html</a>
   <a href="fts5.html">fts5.html</a>
   <a href="fullsql.html">fullsql.html</a>
   <a href="lang_expr.html#in_op">lang_expr.html#in_op</a>
@@ -8628,6 +8958,9 @@ return false;
   <a href="releaselog/3_11_1.html">releaselog/3_11_1.html</a>
   <a href="releaselog/3_6_19.html">releaselog/3_6_19.html</a>
   <a href="releaselog/3_7_10.html">releaselog/3_7_10.html</a>
+<li>TCL interface eval method &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>TCL test suite &rarr;  <a href="compile.html#tclapi">compile.html#tclapi</a>
   <a href="malloc.html">malloc.html</a>
   <a href="testing.html#aflfuzz">testing.html#aflfuzz</a>
@@ -8662,13 +8995,11 @@ return false;
 <li>testcase macros &rarr;  <a href="testing.html#ossfuzz">testing.html#ossfuzz</a>
 <li>tested &rarr;  <a href="appfileformat.html">appfileformat.html</a>
   <a href="oldnews.html">oldnews.html</a>
-<li>testing &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
+<li>testing &rarr;  <a href="changes.html#version_3_8_10">changes.html#version_3_8_10</a>
   <a href="hirely.html">hirely.html</a>
   <a href="howtocorrupt.html#cfgerr">howtocorrupt.html#cfgerr</a>
   <a href="malloc.html">malloc.html</a>
   <a href="oldnews.html">oldnews.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_8_10.html">releaselog/3_8_10.html</a>
   <a href="releaselog/3_8_10_1.html">releaselog/3_8_10_1.html</a>
   <a href="releaselog/3_8_10_2.html">releaselog/3_8_10_2.html</a>
@@ -8827,6 +9158,9 @@ return false;
   <a href="releaselog/3_8_6.html">releaselog/3_8_6.html</a>
 <li>unindexed &rarr;  <a href="fts5.html#appendix_a">fts5.html#appendix_a</a>
   <a href="fts5.html#fts5_table_creation_and_initialization">fts5.html#fts5_table_creation_and_initialization</a>
+<li>UNION virtual table &rarr;  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
 <li>UNIQUE &rarr;  <a href="changes.html#version_3_8_6">changes.html#version_3_8_6</a>
   <a href="conflict.html">conflict.html</a>
   <a href="expridx.html">expridx.html</a>
@@ -8952,11 +9286,11 @@ return false;
   <a href="capi3ref.html#sqlite3_unlock_notify">capi3ref.html#sqlite3_unlock_notify</a>
   <a href="compile.html#enable_unlock_notify">compile.html#enable_unlock_notify</a>
 <li>utc modifier &rarr;  <a href="changes.html#version_3_10_0">changes.html#version_3_10_0</a>
+  <a href="deterministic.html#dtexception">deterministic.html#dtexception</a>
   <a href="releaselog/3_10_0.html">releaselog/3_10_0.html</a>
   <a href="releaselog/3_10_1.html">releaselog/3_10_1.html</a>
   <a href="releaselog/3_10_2.html">releaselog/3_10_2.html</a>
-<li>VACUUM &rarr;  <a href="changes.html#version_3_13_0">changes.html#version_3_13_0</a>
-  <a href="changes.html#version_3_15_0">changes.html#version_3_15_0</a>
+<li>VACUUM &rarr;  <a href="changes.html#version_3_15_0">changes.html#version_3_15_0</a>
   <a href="changes.html#version_3_15_1">changes.html#version_3_15_1</a>
   <a href="changes.html#version_3_19_0">changes.html#version_3_19_0</a>
   <a href="changes.html#version_3_5_8">changes.html#version_3_5_8</a>
@@ -8983,7 +9317,6 @@ return false;
   <a href="pragma.html#pragma_schema_version">pragma.html#pragma_schema_version</a>
   <a href="pragma.html#pragma_secure_delete">pragma.html#pragma_secure_delete</a>
   <a href="rbu.html">rbu.html</a>
-  <a href="releaselog/3_13_0.html">releaselog/3_13_0.html</a>
   <a href="releaselog/3_15_0.html">releaselog/3_15_0.html</a>
   <a href="releaselog/3_15_1.html">releaselog/3_15_1.html</a>
   <a href="releaselog/3_15_2.html">releaselog/3_15_2.html</a>
@@ -9018,6 +9351,7 @@ return false;
   <a href="releaselog/3_8_8_1.html">releaselog/3_8_8_1.html</a>
   <a href="releaselog/3_8_8_2.html">releaselog/3_8_8_2.html</a>
   <a href="releaselog/3_8_8_3.html">releaselog/3_8_8_3.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
 <li>variable-length integer &rarr;  <a href="fileformat2.html#record_format">fileformat2.html#record_format</a>
   <a href="rowidtable.html">rowidtable.html</a>
 <li>varint &rarr;  <a href="fileformat2.html#record_format">fileformat2.html#record_format</a>
@@ -9052,8 +9386,7 @@ return false;
 <li>version 3.10.1 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
 <li>version 3.10.2 &rarr;  <a href="chronology.html">chronology.html</a>
-<li>Version 3.11.0 &rarr;  <a href="cli.html#explain">cli.html#explain</a>
-  <a href="compile.html#enable_fts3_tokenizer">compile.html#enable_fts3_tokenizer</a>
+<li>Version 3.11.0 &rarr;  <a href="compile.html#enable_fts3_tokenizer">compile.html#enable_fts3_tokenizer</a>
 <li>version 3.11.0 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="fts3.html#f3tknzr">fts3.html#f3tknzr</a>
   <a href="news.html">news.html</a>
@@ -9098,17 +9431,23 @@ return false;
   <a href="news.html">news.html</a>
 <li>version 3.15.2 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
-<li>version 3.16.0 &rarr;  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
+<li>version 3.16.0 &rarr;  <a href="changes.html#version_3_18_1">changes.html#version_3_18_1</a>
+  <a href="changes.html#version_3_19_3">changes.html#version_3_19_3</a>
   <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
+  <a href="releaselog/3_18_1.html">releaselog/3_18_1.html</a>
+  <a href="releaselog/3_18_2.html">releaselog/3_18_2.html</a>
   <a href="releaselog/3_19_3.html">releaselog/3_19_3.html</a>
 <li>version 3.16.1 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
 <li>version 3.16.2 &rarr;  <a href="chronology.html">chronology.html</a>
-  <a href="testing.html">testing.html</a>
 <li>version 3.17.0 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
 <li>version 3.18.0 &rarr;  <a href="chronology.html">chronology.html</a>
+  <a href="news.html">news.html</a>
+<li>version 3.18.1 &rarr;  <a href="chronology.html">chronology.html</a>
+  <a href="news.html">news.html</a>
+<li>version 3.18.2 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
 <li>version 3.19.0 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="news.html">news.html</a>
@@ -9116,6 +9455,7 @@ return false;
 <li>version 3.19.2 &rarr;  <a href="chronology.html">chronology.html</a>
 <li>Version 3.19.3 &rarr;  <a href="news.html">news.html</a>
 <li>version 3.19.3 &rarr;  <a href="chronology.html">chronology.html</a>
+  <a href="news.html">news.html</a>
 <li>version 3.2.0 &rarr;  <a href="chronology.html">chronology.html</a>
 <li>version 3.2.1 &rarr;  <a href="chronology.html">chronology.html</a>
 <li>version 3.2.2 &rarr;  <a href="chronology.html">chronology.html</a>
@@ -9125,6 +9465,11 @@ return false;
 <li>version 3.2.6 &rarr;  <a href="chronology.html">chronology.html</a>
 <li>version 3.2.7 &rarr;  <a href="chronology.html">chronology.html</a>
 <li>version 3.2.8 &rarr;  <a href="chronology.html">chronology.html</a>
+<li>version 3.20.0 &rarr;  <a href="chronology.html">chronology.html</a>
+  <a href="news.html">news.html</a>
+  <a href="testing.html">testing.html</a>
+<li>version 3.20.1 &rarr;  <a href="chronology.html">chronology.html</a>
+  <a href="news.html">news.html</a>
 <li>version 3.3.0 &rarr;  <a href="chronology.html">chronology.html</a>
   <a href="sharedcache.html">sharedcache.html</a>
 <li>version 3.3.1 &rarr;  <a href="chronology.html">chronology.html</a>
@@ -9574,6 +9919,7 @@ return false;
   <a href="capi3ref.html#sqlite3_vtab_cursor">capi3ref.html#sqlite3_vtab_cursor</a>
   <a href="capi3ref.html#sqlite3_vtab_on_conflict">capi3ref.html#sqlite3_vtab_on_conflict</a>
   <a href="changes.html#version_3_12_0">changes.html#version_3_12_0</a>
+  <a href="changes.html#version_3_20_0">changes.html#version_3_20_0</a>
   <a href="changes.html#version_3_7_13">changes.html#version_3_7_13</a>
   <a href="changes.html#version_3_7_9">changes.html#version_3_7_9</a>
   <a href="changes.html#version_3_8_2">changes.html#version_3_8_2</a>
@@ -9585,6 +9931,8 @@ return false;
   <a href="releaselog/3_12_0.html">releaselog/3_12_0.html</a>
   <a href="releaselog/3_12_1.html">releaselog/3_12_1.html</a>
   <a href="releaselog/3_12_2.html">releaselog/3_12_2.html</a>
+  <a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a>
+  <a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a>
   <a href="releaselog/3_7_13.html">releaselog/3_7_13.html</a>
   <a href="releaselog/3_7_9.html">releaselog/3_7_9.html</a>
   <a href="releaselog/3_8_2.html">releaselog/3_8_2.html</a>
@@ -9592,6 +9940,7 @@ return false;
   <a href="rowidtable.html">rowidtable.html</a>
   <a href="spellfix1.html">spellfix1.html</a>
   <a href="sqldiff.html">sqldiff.html</a>
+  <a href="unionvtab.html">unionvtab.html</a>
   <a href="vtab.html#tabfunc2">vtab.html#tabfunc2</a>
 <li>virtual table module &rarr;  <a href="c3ref/create_module.html">c3ref/create_module.html</a>
   <a href="c3ref/declare_vtab.html">c3ref/declare_vtab.html</a>
@@ -9606,12 +9955,16 @@ return false;
   <a href="capi3ref.html#sqlite3_vtab">capi3ref.html#sqlite3_vtab</a>
   <a href="capi3ref.html#sqlite3_vtab_cursor">capi3ref.html#sqlite3_vtab_cursor</a>
   <a href="fts5.html">fts5.html</a>
-<li>virtual tables &rarr;  <a href="c3ref/module.html">c3ref/module.html</a>
+<li>virtual tables &rarr;  <a href="c3ref/column_blob.html">c3ref/column_blob.html</a>
+  <a href="c3ref/module.html">c3ref/module.html</a>
   <a href="c3ref/preupdate_count.html">c3ref/preupdate_count.html</a>
   <a href="c3ref/stmt_readonly.html">c3ref/stmt_readonly.html</a>
+  <a href="c3ref/value_blob.html">c3ref/value_blob.html</a>
+  <a href="capi3ref.html#sqlite3_column_blob">capi3ref.html#sqlite3_column_blob</a>
   <a href="capi3ref.html#sqlite3_module">capi3ref.html#sqlite3_module</a>
   <a href="capi3ref.html#sqlite3_preupdate_count">capi3ref.html#sqlite3_preupdate_count</a>
   <a href="capi3ref.html#sqlite3_stmt_readonly">capi3ref.html#sqlite3_stmt_readonly</a>
+  <a href="capi3ref.html#sqlite3_value_blob">capi3ref.html#sqlite3_value_blob</a>
   <a href="changes.html#version_3_10_0">changes.html#version_3_10_0</a>
   <a href="changes.html#version_3_12_0">changes.html#version_3_12_0</a>
   <a href="changes.html#version_3_12_2">changes.html#version_3_12_2</a>
@@ -9910,4 +10263,4 @@ return false;
   <a href="releaselog/3_16_2.html">releaselog/3_16_2.html</a>
   <a href="releaselog/3_8_4.html">releaselog/3_8_4.html</a>
 </ul>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

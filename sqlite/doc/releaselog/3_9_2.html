@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.9.2 On 2015-11-02</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.9.2 On 2015-11-02</h2><p><ol class='lessindent'>
 <li>Fix the schema parser so that it interprets certain 
     (obscure and ill-formed)
     CREATE TABLE statements the same as legacy.  Fix for ticket
@@ -89,9 +104,9 @@ return false;
 <li>SQLITE_SOURCE_ID: "2015-11-02 18:31:45 bda77dda9697c463c3d0704014d51627fceee328"
 <li>SHA1 for sqlite3.c: 1c4013876f50bbaa3e6f0f98e0147c76287684c1
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.9.1 (2015-10-16):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <li>Fix <a href="../json1.html">the json1 extension</a> so that it does <u>not</u> recognize ASCII form-feed as a
     whitespace character, in order to comply with RFC-7159.  Fix for ticket
     <a href="https://www.sqlite.org/src/info/57eec374ae1d0a1d">57eec374ae1d0a1d</a>
@@ -99,9 +114,9 @@ return false;
     appeared after the 3.9.0 release.
 
 
-</ul></p>
+</ol></p>
 <p><b>Changes carried forward from version 3.9.0 (2015-10-14):</b></p>
-<p><ul class='lessindent'>
+<p><ol class='lessindent'>
 <p><b>Policy Changes:</b>
 <li>The <a href="../versionnumbers.html">version numbering conventions</a> for SQLite are revised to use the
     emerging standard of <a href="http://semver.org/">semantic versioning</a>.
@@ -147,7 +162,7 @@ return false;
     <a href="https://www.sqlite.org/src/info/c2a19d81652f40568c">c2a19d81652f40568c</a>.
 
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -155,4 +170,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

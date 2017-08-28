@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -125,6 +140,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/get_autocommit.html">autocommit mode</a> </li>
 <li> <a href="autoinc.html">AUTOINCREMENT</a> </li>
 <li> <a href="undoredo.html">automated undo/redo stack</a> </li>
+<li> <a href="optoverview.html#autoindex">automatic indexes</a> </li>
 <li> <a href="optoverview.html#autoindex">automatic indexing</a> </li>
 <li> <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a> </li>
 <li> <a href="lang_analyze.html#autoanalyze">automatically running ANALYZE</a> </li>
@@ -244,6 +260,9 @@ Other Documentation Indexes:
 <li> <a href="howtocompile.html#tcl">compiling the TCL interface</a> </li>
 <li> <a href="changes.html">complete list of SQLite releases</a> </li>
 <li> <a href="tclsqlite.html#complete">complete method</a> </li>
+<li> <a href="completion.html">COMPLETION</a> </li>
+<li> <a href="completion.html">COMPLETION extension</a> </li>
+<li> <a href="completion.html">COMPLETION table-valued function</a> </li>
 <li> <a href="lang_select.html#compound">compound query</a> </li>
 <li> <a href="lang_select.html#compound">compound select</a> </li>
 <li> <a href="syntax/compound-operator.html">compound-operator</a> </li>
@@ -310,6 +329,7 @@ Other Documentation Indexes:
 <li> <a href="datatype3.html#datetime">date and time datatype</a> </li>
 <li> <a href="lang_datefunc.html">date and time functions</a> </li>
 <li> <a href="lang_datefunc.html">date() SQL function</a> </li>
+<li> <a href="deterministic.html#dtexception">date/time special case</a> </li>
 <li> <a href="lang_datefunc.html">datetime() SQL function</a> </li>
 <li> <a href="debugging.html">dbghints</a> </li>
 <li> <a href="dbhash.html">dbhash</a> </li>
@@ -419,6 +439,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_memsys5">-DSQLITE_ENABLE_MEMSYS5</a> </li>
 <li> <a href="compile.html#enable_null_trim">-DSQLITE_ENABLE_NULL_TRIM</a> </li>
 <li> <a href="compile.html#enable_preupdate_hook">-DSQLITE_ENABLE_PREUPDATE_HOOK</a> </li>
+<li> <a href="compile.html#enable_qpsg">-DSQLITE_ENABLE_QPSG</a> </li>
 <li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a> </li>
 <li> <a href="compile.html#enable_session">-DSQLITE_ENABLE_SESSION</a> </li>
@@ -427,6 +448,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_stat3">-DSQLITE_ENABLE_STAT3</a> </li>
 <li> <a href="compile.html#enable_stat4">-DSQLITE_ENABLE_STAT4</a> </li>
 <li> <a href="compile.html#enable_stmt_scanstatus">-DSQLITE_ENABLE_STMT_SCANSTATUS</a> </li>
+<li> <a href="compile.html#enable_stmtvtab">-DSQLITE_ENABLE_STMTVTAB</a> </li>
 <li> <a href="compile.html#enable_tree_explain">-DSQLITE_ENABLE_TREE_EXPLAIN</a> </li>
 <li> <a href="compile.html#enable_unknown_sql_function">-DSQLITE_ENABLE_UNKNOWN_SQL_FUNCTION</a> </li>
 <li> <a href="compile.html#enable_unlock_notify">-DSQLITE_ENABLE_UNLOCK_NOTIFY</a> </li>
@@ -518,6 +540,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#win32_malloc">-DSQLITE_WIN32_MALLOC</a> </li>
 <li> <a href="compile.html#win32_malloc_validate">-DSQLITE_WIN32_MALLOC_VALIDATE</a> </li>
 <li> <a href="compile.html#zero_malloc">-DSQLITE_ZERO_MALLOC</a> </li>
+<li> <a href="cli.html#dump">.dump</a> </li>
 <li> <a href="datatype3.html">dynamic typing</a> </li>
 <li> <a href="spellfix1.html#editdist3">editdist3</a> </li>
 <li> <a href="serverless.html">embedded</a> </li>
@@ -538,7 +561,6 @@ Other Documentation Indexes:
 <li> <a href="c3ref/experimental.html">experimental</a> </li>
 <li> <a href="malloc.html#memsysx">experimental memory allocators</a> </li>
 <li> <a href="lang_explain.html">EXPLAIN</a> </li>
-<li> <a href="cli.html#explain">explain dot-command</a> </li>
 <li> <a href="eqp.html">explain query plan</a> </li>
 <li> <a href="syntax/expr.html">expr</a> </li>
 <li> <a href="syntax/expr.html">expr syntax diagram</a> </li>
@@ -673,6 +695,7 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#ifnull">ifnull() SQL function</a> </li>
 <li> <a href="pragma.html#pragma_ignore_check_constraints">ignore_check_constraints pragma</a> </li>
 <li> <a href="uri.html#uriimmutable">"immutable" query parameter</a> </li>
+<li> <a href="cli.html#csv">.import</a> </li>
 <li> <a href="imposter.html#dotimposter">.imposter dot-command</a> </li>
 <li> <a href="imposter.html">imposter tables</a> </li>
 <li> <a href="lang_expr.html#in_op">IN operator</a> </li>
@@ -870,6 +893,9 @@ Other Documentation Indexes:
 <li> <a href="sitemap.html">permuted index</a> </li>
 <li> <a href="loadext.html#persist">persistent loadable extensions</a> </li>
 <li> <a href="fts3.html#phrase">phrase queries</a> </li>
+<li> <a href="bindptr.html#ptrleak">pointer leak</a> </li>
+<li> <a href="bindptr.html">pointer passing interface</a> </li>
+<li> <a href="bindptr.html#ptrtyp">pointer types</a> </li>
 <li> <a href="custombuild.html">porting SQLite</a> </li>
 <li> <a href="transactional.html">power-safe</a> </li>
 <li> <a href="transactional.html">power-safe transactions</a> </li>
@@ -963,6 +989,7 @@ Other Documentation Indexes:
 <li> <a href="psow.html">PSOW</a> </li>
 <li> <a href="uri.html#uripsow">"psow" query parameter</a> </li>
 <li> <a href="copyright.html">public-domain</a> </li>
+<li> <a href="queryplanner-ng.html#qpstab">QPSG</a> </li>
 <li> <a href="syntax/qualified-table-name.html">qualified-table-name</a> </li>
 <li> <a href="syntax/qualified-table-name.html">qualified-table-name syntax diagram</a> </li>
 <li> <a href="lang_select.html">query</a> </li>
@@ -1037,6 +1064,7 @@ Other Documentation Indexes:
 <li> <a href="syntax/savepoint-stmt.html">savepoint-stmt</a> </li>
 <li> <a href="syntax/savepoint-stmt.html">savepoint-stmt syntax diagram</a> </li>
 <li> <a href="c3ref/c_scanstat_est.html">scanstatus options</a> </li>
+<li> <a href="cli.html#dschema">.schema</a> </li>
 <li> <a href="fileformat2.html#schemaformat">schema format</a> </li>
 <li> <a href="fileformat2.html#schemaformat">schema format number</a> </li>
 <li> <a href="pragma.html#pragma_schema_version">schema_version pragma</a> </li>
@@ -1127,6 +1155,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/bind_parameter_count.html">sqlite3_bind_parameter_count</a> </li>
 <li> <a href="c3ref/bind_parameter_index.html">sqlite3_bind_parameter_index</a> </li>
 <li> <a href="c3ref/bind_parameter_name.html">sqlite3_bind_parameter_name</a> </li>
+<li> <a href="c3ref/bind_blob.html">sqlite3_bind_pointer</a> </li>
 <li> <a href="c3ref/bind_blob.html">sqlite3_bind_text</a> </li>
 <li> <a href="c3ref/bind_blob.html">sqlite3_bind_text16</a> </li>
 <li> <a href="c3ref/bind_blob.html">sqlite3_bind_text64</a> </li>
@@ -1280,7 +1309,9 @@ Other Documentation Indexes:
 <li> <a href="c3ref/prepare.html">sqlite3_prepare</a> </li>
 <li> <a href="c3ref/prepare.html">sqlite3_prepare16</a> </li>
 <li> <a href="c3ref/prepare.html">sqlite3_prepare16_v2</a> </li>
+<li> <a href="c3ref/prepare.html">sqlite3_prepare16_v3</a> </li>
 <li> <a href="c3ref/prepare.html">sqlite3_prepare_v2</a> </li>
+<li> <a href="c3ref/prepare.html">sqlite3_prepare_v3</a> </li>
 <li> <a href="c3ref/preupdate_count.html">sqlite3_preupdate_count</a> </li>
 <li> <a href="c3ref/preupdate_count.html">sqlite3_preupdate_depth</a> </li>
 <li> <a href="c3ref/preupdate_count.html">sqlite3_preupdate_hook</a> </li>
@@ -1305,6 +1336,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/result_blob.html">sqlite3_result_int</a> </li>
 <li> <a href="c3ref/result_blob.html">sqlite3_result_int64</a> </li>
 <li> <a href="c3ref/result_blob.html">sqlite3_result_null</a> </li>
+<li> <a href="c3ref/result_blob.html">sqlite3_result_pointer</a> </li>
 <li> <a href="c3ref/result_subtype.html">sqlite3_result_subtype</a> </li>
 <li> <a href="c3ref/result_blob.html">sqlite3_result_text</a> </li>
 <li> <a href="c3ref/result_blob.html">sqlite3_result_text16</a> </li>
@@ -1373,6 +1405,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/value_blob.html">sqlite3_value_int</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_int64</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_numeric_type</a> </li>
+<li> <a href="c3ref/value_blob.html">sqlite3_value_pointer</a> </li>
 <li> <a href="c3ref/value_subtype.html">sqlite3_value_subtype</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_text</a> </li>
 <li> <a href="c3ref/value_blob.html">sqlite3_value_text16</a> </li>
@@ -1524,6 +1557,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FKEY</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION</a> </li>
+<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_TRIGGER</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_LOOKASIDE</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAINDBNAME</a> </li>
@@ -1601,6 +1635,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_memsys5">SQLITE_ENABLE_MEMSYS5</a> </li>
 <li> <a href="compile.html#enable_null_trim">SQLITE_ENABLE_NULL_TRIM</a> </li>
 <li> <a href="compile.html#enable_preupdate_hook">SQLITE_ENABLE_PREUPDATE_HOOK</a> </li>
+<li> <a href="compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> </li>
 <li> <a href="compile.html#enable_rbu">SQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a> </li>
 <li> <a href="compile.html#enable_session">SQLITE_ENABLE_SESSION</a> </li>
@@ -1609,6 +1644,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> </li>
 <li> <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> </li>
 <li> <a href="compile.html#enable_stmt_scanstatus">SQLITE_ENABLE_STMT_SCANSTATUS</a> </li>
+<li> <a href="compile.html#enable_stmtvtab">SQLITE_ENABLE_STMTVTAB</a> </li>
 <li> <a href="compile.html#enable_tree_explain">SQLITE_ENABLE_TREE_EXPLAIN</a> </li>
 <li> <a href="compile.html#enable_unknown_sql_function">SQLITE_ENABLE_UNKNOWN_SQL_FUNCTION</a> </li>
 <li> <a href="compile.html#enable_unlock_notify">SQLITE_ENABLE_UNLOCK_NOTIFY</a> </li>
@@ -1858,6 +1894,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort.html">SQLITE_PERM</a> </li>
 <li> <a href="compile.html#powersafe_overwrite">SQLITE_POWERSAFE_OVERWRITE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_PRAGMA</a> </li>
+<li> <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_PROTOCOL</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_RANGE</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_READ</a> </li>
@@ -1908,10 +1945,15 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchoverflow">SQLITE_STATUS_SCRATCH_OVERFLOW</a> </li>
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchsize">SQLITE_STATUS_SCRATCH_SIZE</a> </li>
 <li> <a href="c3ref/c_status_malloc_count.html#sqlitestatusscratchused">SQLITE_STATUS_SCRATCH_USED</a> </li>
+<li> <a href="stmt.html">sqlite_stmt</a> </li>
+<li> <a href="stmt.html">SQLITE_STMT virtual table</a> </li>
 <li> <a href="compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html">SQLITE_STMTSTATUS counter</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusautoindex">SQLITE_STMTSTATUS_AUTOINDEX</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusfullscanstep">SQLITE_STMTSTATUS_FULLSCAN_STEP</a> </li>
+<li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusmemused">SQLITE_STMTSTATUS_MEMUSED</a> </li>
+<li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusreprepare">SQLITE_STMTSTATUS_REPREPARE</a> </li>
+<li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun">SQLITE_STMTSTATUS_RUN</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort">SQLITE_STMTSTATUS_SORT</a> </li>
 <li> <a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusvmstep">SQLITE_STMTSTATUS_VM_STEP</a> </li>
 <li> <a href="c3ref/c_sync_dataonly.html">SQLITE_SYNC_DATAONLY</a> </li>
@@ -1996,6 +2038,7 @@ Other Documentation Indexes:
 <li> <a href="vtab.html#tabfunc2">table-valued function</a> </li>
 <li> <a href="lang_select.html#tabfunc1">table-valued functions in the FROM clause</a> </li>
 <li> <a href="pragma.html#pragma_table_info">table_info pragma</a> </li>
+<li> <a href="cli.html#dtables">.tables</a> </li>
 <li> <a href="tclsqlite.html">Tcl extension</a> </li>
 <li> <a href="tclsqlite.html">TCL Interface</a> </li>
 <li> <a href="tclsqlite.html#authorizer">TCL interface authorizer method</a> </li>
@@ -2053,6 +2096,7 @@ Other Documentation Indexes:
 <li> <a href="lockingv3.html#ext3-barrier-problem">the ext3 barrier problem</a> </li>
 <li> <a href="queryplanner-ng.html#fossilcasestudy">The Fossil NGQP Upgrade Case Study</a> </li>
 <li> <a href="json1.html">the json1 extension</a> </li>
+<li> <a href="stmt.html">the SQLITE_STMT extension</a> </li>
 <li> <a href="c3ref/pcache_methods2.html#thexcachesizepagecachemethod">the xCachesize() page cache method</a> </li>
 <li> <a href="c3ref/pcache_methods2.html#thexcreatepagecachemethods">the xCreate() page cache methods</a> </li>
 <li> <a href="c3ref/pcache_methods2.html#thexdestroypagecachemethod">the xDestroy() page cache method</a> </li>
@@ -2090,6 +2134,9 @@ Other Documentation Indexes:
 <li> <a href="fts3.html#unicode61">unicode61</a> </li>
 <li> <a href="uri.html">Uniform Resource Identifier</a> </li>
 <li> <a href="fts5.html#the_unindexed_column_option">unindexed</a> </li>
+<li> <a href="unionvtab.html">UNION virtual table</a> </li>
+<li> <a href="unionvtab.html">union-vtab</a> </li>
+<li> <a href="unionvtab.html">unionvtab</a> </li>
 <li> <a href="lang_createtable.html#uniqueconst">UNIQUE</a> </li>
 <li> <a href="lang_createtable.html#uniqueconst">unique constraint</a> </li>
 <li> <a href="lang_createindex.html#uniqueidx">unique index</a> </li>
@@ -2168,6 +2215,8 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_16_2.html">Version 3.16.2</a> </li>
 <li> <a href="releaselog/3_17_0.html">Version 3.17.0</a> </li>
 <li> <a href="releaselog/3_18_0.html">Version 3.18.0</a> </li>
+<li> <a href="releaselog/3_18_1.html">Version 3.18.1</a> </li>
+<li> <a href="releaselog/3_18_2.html">Version 3.18.2</a> </li>
 <li> <a href="releaselog/3_19_0.html">Version 3.19.0</a> </li>
 <li> <a href="releaselog/3_19_1.html">Version 3.19.1</a> </li>
 <li> <a href="releaselog/3_19_2.html">Version 3.19.2</a> </li>
@@ -2181,6 +2230,8 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_2_6.html">Version 3.2.6</a> </li>
 <li> <a href="releaselog/3_2_7.html">Version 3.2.7</a> </li>
 <li> <a href="releaselog/3_2_8.html">Version 3.2.8</a> </li>
+<li> <a href="releaselog/3_20_0.html">Version 3.20.0</a> </li>
+<li> <a href="releaselog/3_20_1.html">Version 3.20.1</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>
@@ -2390,4 +2441,4 @@ Other Documentation Indexes:
 <li> <a href="lang_corefunc.html#zeroblob">zeroblob() SQL function</a> </li>
 
 </ul>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -141,11 +156,11 @@ be removed in some future release.</li>
 <hr>
 <h2>List Of Objects:</h2>
 <style>
-#listtab18 tr td {vertical-align:top;}
+#listtab19 tr td {vertical-align:top;}
 </style>
-<table id='listtab18' width='100%'></table>
+<table id='listtab19' width='100%'></table>
 <script>
-var listitems18 = [{"u":"#sqlite3","x":"sqlite3","s":0},
+var listitems19 = [{"u":"#sqlite3","x":"sqlite3","s":0},
 {"u":"#sqlite3_api_routines","x":"sqlite3_api_routines","s":0},
 {"u":"#sqlite3_backup","x":"sqlite3_backup","s":0},
 {"u":"#sqlite3_blob","x":"sqlite3_blob","s":0},
@@ -175,44 +190,44 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/280);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems18.length+1)/nCol);
+var nRow = Math.ceil((listitems19.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems18.length; i++){
+for(var i=0; i<listitems19.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems18[i].u=="" || listitems18[i].s==2){
+  if(listitems19[i].u=="" || listitems19[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems18[i].u;
+    h += listitems19[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems18[i].s==2 || listitems18[i].s==3) h += "<s>"
-  h += listitems18[i].x;
-  if(listitems18[i].s==2 || listitems18[i].s==3) h += "</s>"
+  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
+  h += listitems19[i].x;
+  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
   h += ea
-  if(listitems18[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems18[i].s==3) h += "&sup1\n";
-  if(listitems18[i].s==4) h += "&sup2\n";
-  if(listitems18[i].s==5) h += "&sup3\n";
+  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems19[i].s==3) h += "&sup1\n";
+  if(listitems19[i].s==4) h += "&sup2\n";
+  if(listitems19[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab18").innerHTML = h;
+document.getElementById("listtab19").innerHTML = h;
 </script>
 <hr>
 
 <h2>List Of Constants:</h2>
 <p>Also available: <a href="rescode.html">list of error codes</a></p>
 <style>
-#listtab19 tr td {vertical-align:top;}
+#listtab20 tr td {vertical-align:top;}
 </style>
-<table id='listtab19' width='100%'></table>
+<table id='listtab20' width='100%'></table>
 <script>
-var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
+var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_ABORT_ROLLBACK","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_EXISTS","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_READ","s":0},
@@ -287,6 +302,7 @@ var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_FKEY","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
+{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_QPSG","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
@@ -481,6 +497,7 @@ var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_OPEN_AUTOPROXY","x":"SQLITE_OPEN_WAL","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PERM","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_PRAGMA","s":0},
+{"u":"#sqlitepreparepersistent","x":"SQLITE_PREPARE_PERSISTENT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_PROTOCOL","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_RANGE","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_READ","s":0},
@@ -522,6 +539,9 @@ var listitems19 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitestatusscratchused","x":"SQLITE_STATUS_SCRATCH_USED","s":0},
 {"u":"#sqlitestmtstatusautoindex","x":"SQLITE_STMTSTATUS_AUTOINDEX","s":0},
 {"u":"#sqlitestmtstatusfullscanstep","x":"SQLITE_STMTSTATUS_FULLSCAN_STEP","s":0},
+{"u":"#sqlitestmtstatusmemused","x":"SQLITE_STMTSTATUS_MEMUSED","s":0},
+{"u":"#sqlitestmtstatusreprepare","x":"SQLITE_STMTSTATUS_REPREPARE","s":0},
+{"u":"#sqlitestmtstatusrun","x":"SQLITE_STMTSTATUS_RUN","s":0},
 {"u":"#sqlitestmtstatussort","x":"SQLITE_STMTSTATUS_SORT","s":0},
 {"u":"#sqlitestmtstatusvmstep","x":"SQLITE_STMTSTATUS_VM_STEP","s":0},
 {"u":"#SQLITE_SYNC_DATAONLY","x":"SQLITE_SYNC_DATAONLY","s":0},
@@ -575,33 +595,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems19.length+1)/nCol);
+var nRow = Math.ceil((listitems20.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems19.length; i++){
+for(var i=0; i<listitems20.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems19[i].u=="" || listitems19[i].s==2){
+  if(listitems20[i].u=="" || listitems20[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems19[i].u;
+    h += listitems20[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
-  h += listitems19[i].x;
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
+  h += listitems20[i].x;
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
   h += ea
-  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems19[i].s==3) h += "&sup1\n";
-  if(listitems19[i].s==4) h += "&sup2\n";
-  if(listitems19[i].s==5) h += "&sup3\n";
+  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems20[i].s==3) h += "&sup1\n";
+  if(listitems20[i].s==4) h += "&sup2\n";
+  if(listitems20[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab19").innerHTML = h;
+document.getElementById("listtab20").innerHTML = h;
 </script>
 <hr>
 
@@ -609,15 +629,15 @@ document.getElementById("listtab19").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 227 -->
+<!-- number of functions: 232 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 5 -->
 <style>
-#listtab20 tr td {vertical-align:top;}
+#listtab21 tr td {vertical-align:top;}
 </style>
-<table id='listtab20' width='100%'></table>
+<table id='listtab21' width='100%'></table>
 <script>
-var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_aggregate_count","x":"sqlite3_aggregate_count","s":2},
 {"u":"#sqlite3_auto_extension","x":"sqlite3_auto_extension","s":0},
 {"u":"#sqlite3backupfinish","x":"sqlite3_backup_finish","s":0},
@@ -634,6 +654,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_bind_parameter_count","x":"sqlite3_bind_parameter_count","s":0},
 {"u":"#sqlite3_bind_parameter_index","x":"sqlite3_bind_parameter_index","s":0},
 {"u":"#sqlite3_bind_parameter_name","x":"sqlite3_bind_parameter_name","s":0},
+{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_pointer","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text16","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text64","s":0},
@@ -752,7 +773,9 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v3","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare_v3","s":0},
 {"u":"#sqlite3_preupdate_count","x":"sqlite3_preupdate_count","s":0},
 {"u":"#sqlite3_preupdate_count","x":"sqlite3_preupdate_depth","s":0},
 {"u":"#sqlite3_preupdate_count","x":"sqlite3_preupdate_hook","s":0},
@@ -777,6 +800,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_int","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_int64","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_null","s":0},
+{"u":"#sqlite3_result_blob","x":"sqlite3_result_pointer","s":0},
 {"u":"#sqlite3_result_subtype","x":"sqlite3_result_subtype","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_text","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_text16","s":0},
@@ -838,6 +862,7 @@ var listitems20 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_numeric_type","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_pointer","s":0},
 {"u":"#sqlite3_value_subtype","x":"sqlite3_value_subtype","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text16","s":0},
@@ -860,33 +885,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/315);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems20.length+1)/nCol);
+var nRow = Math.ceil((listitems21.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems20.length; i++){
+for(var i=0; i<listitems21.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems20[i].u=="" || listitems20[i].s==2){
+  if(listitems21[i].u=="" || listitems21[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems20[i].u;
+    h += listitems21[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
-  h += listitems20[i].x;
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
+  h += listitems21[i].x;
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
   h += ea
-  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems20[i].s==3) h += "&sup1\n";
-  if(listitems20[i].s==4) h += "&sup2\n";
-  if(listitems20[i].s==5) h += "&sup3\n";
+  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems21[i].s==3) h += "&sup1\n";
+  if(listitems21[i].s==4) h += "&sup2\n";
+  if(listitems21[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab20").innerHTML = h;
+document.getElementById("listtab21").innerHTML = h;
 </script>
 <hr>
 <a name="SQLITE_DETERMINISTIC"></a>
@@ -906,7 +931,33 @@ to <a href="#sqlite3_create_function">sqlite3_create_function()</a>, <a href="#s
 <blockquote><pre>
 #define SQLITE_INDEX_SCAN_UNIQUE      1     /* Scan visits at most 1 row */
 </pre></blockquote>
-<p></p><hr><a name="SQLITE_SHM_NLOCK"></a>
+<p></p><hr><a name="SQLITE_PREPARE_PERSISTENT"></a>
+<h2>Prepare Flags</h2>
+</div>
+<blockquote><pre>
+#define SQLITE_PREPARE_PERSISTENT              0x01
+</pre></blockquote>
+<p>
+These constants define various flags that can be passed into
+"prepFlags" parameter of the <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a> and
+<a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> interfaces.</p>
+
+<p>New flags may be added in future releases of SQLite.</p>
+
+<p><dl>
+<a name="sqlitepreparepersistent"></a>
+ <dt>SQLITE_PREPARE_PERSISTENT</dt>
+<dd>The SQLITE_PREPARE_PERSISTENT flag is a hint to the query planner
+that the prepared statement will be retained for a long time and
+probably reused many times. Without this flag, <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>
+and <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> assume that the prepared statement will
+be used just once or at most a few times and then destroyed using
+<a href="#sqlite3_finalize">sqlite3_finalize()</a> relatively soon. The current implementation acts
+on this hint by avoiding the use of <a href="malloc.html#lookaside">lookaside memory</a> so as not to
+deplete the limited store of lookaside memory. Future versions of
+SQLite may act on this hint differently.
+</dl>
+</p><hr><a name="SQLITE_SHM_NLOCK"></a>
 <h2>Maximum xShmLock index</h2>
 </div>
 <blockquote><pre>
@@ -999,11 +1050,11 @@ pointer through into calls to <a href="#sqlite3_result_blob">sqlite3_result()</a
 <a href="#sqlite3_context_db_handle">sqlite3_context_db_handle()</a>, <a href="#sqlite3_get_auxdata">sqlite3_get_auxdata()</a>,
 and/or <a href="#sqlite3_get_auxdata">sqlite3_set_auxdata()</a>.
 </p><style>
-#listtab21 tr td {vertical-align:top;}
+#listtab22 tr td {vertical-align:top;}
 </style>
-<table id='listtab21' width='100%'></table>
+<table id='listtab22' width='100%'></table>
 <script>
-var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems22 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_context_db_handle","x":"sqlite3_context_db_handle","s":0},
 {"u":"#sqlite3_get_auxdata","x":"sqlite3_get_auxdata","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_blob","s":0},
@@ -1017,6 +1068,7 @@ var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_int","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_int64","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_null","s":0},
+{"u":"#sqlite3_result_blob","x":"sqlite3_result_pointer","s":0},
 {"u":"#sqlite3_result_subtype","x":"sqlite3_result_subtype","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_text","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_text16","s":0},
@@ -1032,34 +1084,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems21.length+1)/nCol);
+var nRow = Math.ceil((listitems22.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems21.length; i++){
+for(var i=0; i<listitems22.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems21[i].u=="" || listitems21[i].s==2){
+  if(listitems22[i].u=="" || listitems22[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems21[i].u;
+    h += listitems22[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
-  h += listitems21[i].x;
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
+  h += listitems22[i].x;
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
   h += ea
-  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems21[i].s==3) h += "&sup1\n";
-  if(listitems21[i].s==4) h += "&sup2\n";
-  if(listitems21[i].s==5) h += "&sup3\n";
+  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems22[i].s==3) h += "&sup1\n";
+  if(listitems22[i].s==4) h += "&sup2\n";
+  if(listitems22[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab21").innerHTML = h;
+document.getElementById("listtab22").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_data_directory"></a>
@@ -1967,7 +2019,8 @@ index value returned is suitable for use as the second
 parameter to <a href="#sqlite3_bind_blob">sqlite3_bind()</a>.  A zero
 is returned if no matching parameter is found.  The parameter
 name must be given in UTF-8 even if the original statement
-was prepared from UTF-16 text using <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>.</p>
+was prepared from UTF-16 text using <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> or
+<a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>.</p>
 
 <p>See also: <a href="#sqlite3_bind_blob">sqlite3_bind()</a>,
 <a href="#sqlite3_bind_parameter_count">sqlite3_bind_parameter_count()</a>, and
@@ -1994,8 +2047,8 @@ and are referred to as "nameless" or "anonymous parameters".</p>
 <p>If the value N is out of range or if the N-th parameter is
 nameless, then NULL is returned.  The returned string is
 always in UTF-8 encoding even if the named parameter was
-originally specified as UTF-16 in <a href="#sqlite3_prepare">sqlite3_prepare16()</a> or
-<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>.</p>
+originally specified as UTF-16 in <a href="#sqlite3_prepare">sqlite3_prepare16()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>, or <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>.</p>
 
 <p>See also: <a href="#sqlite3_bind_blob">sqlite3_bind()</a>,
 <a href="#sqlite3_bind_parameter_count">sqlite3_bind_parameter_count()</a>, and
@@ -3398,16 +3451,18 @@ changes in future releases of SQLite.
 int sqlite3_step(sqlite3_stmt*);
 </pre></blockquote>
 <p>
-After a <a href="#sqlite3_stmt">prepared statement</a> has been prepared using either
-<a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> or one of the legacy
+After a <a href="#sqlite3_stmt">prepared statement</a> has been prepared using any of
+<a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>, <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>, <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>,
+or <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> or one of the legacy
 interfaces <a href="#sqlite3_prepare">sqlite3_prepare()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16()</a>, this function
 must be called one or more times to evaluate the statement.</p>
 
 <p>The details of the behavior of the sqlite3_step() interface depend
-on whether the statement was prepared using the newer "v2" interface
-<a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> and <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> or the older legacy
-interface <a href="#sqlite3_prepare">sqlite3_prepare()</a> and <a href="#sqlite3_prepare">sqlite3_prepare16()</a>.  The use of the
-new "v2" interface is recommended for new applications but the legacy
+on whether the statement was prepared using the newer "vX" interfaces
+<a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>, <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>, <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> or the older legacy
+interfaces <a href="#sqlite3_prepare">sqlite3_prepare()</a> and <a href="#sqlite3_prepare">sqlite3_prepare16()</a>.  The use of the
+new "vX" interface is recommended for new applications but the legacy
 interface will continue to be supported.</p>
 
 <p>In the legacy interface, the return value will be either <a href="#SQLITE_ABORT">SQLITE_BUSY</a>,
@@ -3453,7 +3508,7 @@ more threads at the same moment in time.</p>
 other than <a href="#SQLITE_ABORT">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
 <a href="#sqlite3_reset">sqlite3_reset()</a> would result in an <a href="#SQLITE_ABORT">SQLITE_MISUSE</a> return from
-sqlite3_step().  But after <a href="releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26,
+sqlite3_step().  But after <a href="releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26),
 sqlite3_step() began
 calling <a href="#sqlite3_reset">sqlite3_reset()</a> automatically in this circumstance rather
 than returning <a href="#SQLITE_ABORT">SQLITE_MISUSE</a>.  This is not considered a compatibility
@@ -3468,10 +3523,11 @@ error other than <a href="#SQLITE_ABORT">SQLITE_BUSY</a> and <a href="#SQLITE_AB
 specific <a href="rescode.html">error codes</a> that better describes the error.
 We admit that this is a goofy design.  The problem has been fixed
 with the "v2" interface.  If you prepare all of your SQL statements
-using either <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> instead
+using <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a> or <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>
+or <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a> instead
 of the legacy <a href="#sqlite3_prepare">sqlite3_prepare()</a> and <a href="#sqlite3_prepare">sqlite3_prepare16()</a> interfaces,
 then the more specific <a href="rescode.html">error codes</a> are returned directly
-by sqlite3_step().  The use of the "v2" interface is recommended.
+by sqlite3_step().  The use of the "vX" interfaces is recommended.
 </p><hr><a name="sqlite3_stmt_busy"></a>
 <h2>Determine If A Prepared Statement Has Been Reset</h2>
 </div>
@@ -3684,7 +3740,9 @@ SQLITE_ERROR and if the specified column does not exist.
 If the column-name parameter to sqlite3_table_column_metadata() is a
 NULL pointer, then this routine simply checks for the existence of the
 table and returns SQLITE_OK if the table exists and SQLITE_ERROR if it
-does not.</p>
+does not.  If the table name parameter T in a call to
+sqlite3_table_column_metadata(X,D,T,C,...) is NULL then the result is
+undefined behavior.</p>
 
 <p>The column is identified by the second, third and fourth parameters to
 this function. The second parameter is either the name of the database
@@ -4057,11 +4115,7 @@ The sqlite3_value_subtype(V) function returns the subtype for
 an <a href="#sqlite3_create_function">application-defined SQL function</a> argument V.  The subtype
 information can be used to pass a limited amount of context from
 one SQL function to another.  Use the <a href="#sqlite3_result_subtype">sqlite3_result_subtype()</a>
-routine to set the subtype for the return value of an SQL function.</p>
-
-<p>SQLite makes no use of subtype itself.  It merely passes the subtype
-from the result of one <a href="#sqlite3_create_function">application-defined SQL function</a> into the
-input of another.
+routine to set the subtype for the return value of an SQL function.
 </p><hr><a name="sqlite3_vtab_config"></a>
 <h2>Virtual Table Interface Configuration</h2>
 </div>
@@ -4320,7 +4374,7 @@ sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_fr
 <blockquote><pre>
 #define SQLITE_OK           0   /* Successful result */
 /* beginning-of-error-codes */
-#define SQLITE_ERROR        1   /* SQL error or missing database */
+#define SQLITE_ERROR        1   /* Generic error */
 #define SQLITE_INTERNAL     2   /* Internal logic error in SQLite */
 #define SQLITE_PERM         3   /* Access permission denied */
 #define SQLITE_ABORT        4   /* Callback routine requested an abort */
@@ -4335,7 +4389,7 @@ sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_fr
 #define SQLITE_FULL        13   /* Insertion failed because database is full */
 #define SQLITE_CANTOPEN    14   /* Unable to open the database file */
 #define SQLITE_PROTOCOL    15   /* Database lock protocol error */
-#define SQLITE_EMPTY       16   /* Database is empty */
+#define SQLITE_EMPTY       16   /* Not used */
 #define SQLITE_SCHEMA      17   /* The database schema changed */
 #define SQLITE_TOOBIG      18   /* String or BLOB exceeds size limit */
 #define SQLITE_CONSTRAINT  19   /* Abort due to constraint violation */
@@ -4343,7 +4397,7 @@ sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_fr
 #define SQLITE_MISUSE      21   /* Library used incorrectly */
 #define SQLITE_NOLFS       22   /* Uses OS features not supported on host */
 #define SQLITE_AUTH        23   /* Authorization denied */
-#define SQLITE_FORMAT      24   /* Auxiliary database format error */
+#define SQLITE_FORMAT      24   /* Not used */
 #define SQLITE_RANGE       25   /* 2nd parameter to sqlite3_bind out of range */
 #define SQLITE_NOTADB      26   /* File opened that is not a database file */
 #define SQLITE_NOTICE      27   /* Notifications from sqlite3_log() */
@@ -4971,6 +5025,7 @@ The default value for this setting is controlled by the
 #define SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER 1004 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION 1005 /* int int* */
 #define SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE      1006 /* int int* */
+#define SQLITE_DBCONFIG_ENABLE_QPSG           1007 /* int int* */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5075,6 +5130,17 @@ is an integer - non-zero to disable checkpoints-on-close, or zero (the
 default) to enable them. The second parameter is a pointer to an integer
 into which is written 0 or 1 to indicate whether checkpoints-on-close
 have been disabled - 0 if they are not disabled, 1 if they are.
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
+<dd>The SQLITE_DBCONFIG_ENABLE_QPSG option activates or deactivates
+the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG).  When the QPSG is active,
+a single SQL query statement will always use the same algorithm regardless
+of values of <a href="lang_expr.html#varparam">bound parameters</a>. The QPSG disables some query optimizations
+that look at the values of bound parameters, which can make some queries
+slower.  But the QPSG has the advantage of more predictable behavior.  With
+the QPSG active, SQLite will always use the same query plan in the field as
+was used during testing in the lab.
 </dd></p>
 
 <p></dl>
@@ -5632,9 +5698,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.19.3"
-#define SQLITE_VERSION_NUMBER 3019003
-#define SQLITE_SOURCE_ID      "2017-06-08 14:26:16 0ee482a1e0eae22e08edc8978c9733a96603d4509645f348ebf55b579e89636b"
+#define SQLITE_VERSION        "3.20.1"
+#define SQLITE_VERSION_NUMBER 3020001
+#define SQLITE_SOURCE_ID      "2017-08-24 16:21:36 8d3a7ea6c5690d6b7c3767558f4f01b511c55463e3f9e64506801fe9b74dce34"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -6130,6 +6196,9 @@ resolved.  The highwater mark is always 0.
 #define SQLITE_STMTSTATUS_SORT              2
 #define SQLITE_STMTSTATUS_AUTOINDEX         3
 #define SQLITE_STMTSTATUS_VM_STEP           4
+#define SQLITE_STMTSTATUS_REPREPARE         5
+#define SQLITE_STMTSTATUS_RUN               6
+#define SQLITE_STMTSTATUS_MEMUSED           99
 </pre></blockquote>
 <p>
 These preprocessor macros define integer codes that name counter
@@ -6165,7 +6234,28 @@ by the prepared statement if that number is less than or equal
 to 2147483647.  The number of virtual machine operations can be
 used as a proxy for the total work done by the prepared statement.
 If the number of virtual machine operations exceeds 2147483647
-then the value returned by this statement status code is undefined.
+then the value returned by this statement status code is undefined.</p>
+
+<p><a name="sqlitestmtstatusreprepare"></a>
+ <dt>SQLITE_STMTSTATUS_REPREPARE</dt>
+<dd>This is the number of times that the prepare statement has been
+automatically regenerated due to schema changes or change to
+<a href="lang_expr.html#varparam">bound parameters</a> that might affect the query plan.</p>
+
+<p><a name="sqlitestmtstatusrun"></a>
+ <dt>SQLITE_STMTSTATUS_RUN</dt>
+<dd>This is the number of times that the prepared statement has
+been run.  A single "run" for the purposes of this counter is one
+or more calls to <a href="#sqlite3_step">sqlite3_step()</a> followed by a call to <a href="#sqlite3_reset">sqlite3_reset()</a>.
+The counter is incremented on the first <a href="#sqlite3_step">sqlite3_step()</a> call of each
+cycle.</p>
+
+<p><a name="sqlitestmtstatusmemused"></a>
+ <dt>SQLITE_STMTSTATUS_MEMUSED</dt>
+<dd>This is the approximate number of bytes of heap memory
+used to store the prepared statement.  This value is not actually
+a counter, and so the resetFlg parameter to sqlite3_stmt_status()
+is ignored when the opcode is SQLITE_STMTSTATUS_MEMUSED.
 </dd>
 </dl>
 </p><hr><a name="sqlite3_int64"></a>
@@ -6319,11 +6409,11 @@ sqlite3 object.
  <a href="#sqlite3_close">sqlite3_close()</a>,
 <a href="#sqlite3_close">sqlite3_close_v2()</a></p>
 <style>
-#listtab22 tr td {vertical-align:top;}
+#listtab23 tr td {vertical-align:top;}
 </style>
-<table id='listtab22' width='100%'></table>
+<table id='listtab23' width='100%'></table>
 <script>
-var listitems22 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
+var listitems23 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
 {"u":"#sqlite3_busy_handler","x":"sqlite3_busy_handler","s":0},
 {"u":"#sqlite3_busy_timeout","x":"sqlite3_busy_timeout","s":0},
 {"u":"#sqlite3_changes","x":"sqlite3_changes","s":0},
@@ -6365,7 +6455,9 @@ var listitems22 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v3","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare_v3","s":0},
 {"u":"#sqlite3_profile","x":"sqlite3_profile","s":0},
 {"u":"#sqlite3_progress_handler","x":"sqlite3_progress_handler","s":0},
 {"u":"#sqlite3_commit_hook","x":"sqlite3_rollback_hook","s":0},
@@ -6385,34 +6477,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems22.length+1)/nCol);
+var nRow = Math.ceil((listitems23.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems22.length; i++){
+for(var i=0; i<listitems23.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems22[i].u=="" || listitems22[i].s==2){
+  if(listitems23[i].u=="" || listitems23[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems22[i].u;
+    h += listitems23[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
-  h += listitems22[i].x;
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
+  h += listitems23[i].x;
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
   h += ea
-  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems22[i].s==3) h += "&sup1\n";
-  if(listitems22[i].s==4) h += "&sup2\n";
-  if(listitems22[i].s==5) h += "&sup3\n";
+  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems23[i].s==3) h += "&sup1\n";
+  if(listitems23[i].s==4) h += "&sup2\n";
+  if(listitems23[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab22").innerHTML = h;
+document.getElementById("listtab23").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_pcache_methods2"></a>
@@ -6628,18 +6720,58 @@ interfaces.
 to step 2.  Do this zero or more times.
 <li> Destroy the object using <a href="#sqlite3_finalize">sqlite3_finalize()</a>.
 </ol>
-</p><p>Constructors:
- <a href="#sqlite3_prepare">sqlite3_prepare()</a>,
-<a href="#sqlite3_prepare">sqlite3_prepare16()</a>,
-<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>,
-<a href="#sqlite3_prepare">sqlite3_prepare_v2()</a></p>
+</p><style>
+#listtab24 tr td {vertical-align:top;}
+</style>
+<table id='listtab24' width='100%'></table>
+<script>
+var listitems24 = [{"u":"#sqlite3_prepare","x":"sqlite3_prepare","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare16","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v3","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare_v2","s":0},
+{"u":"#sqlite3_prepare","x":"sqlite3_prepare_v3","s":0}];
+var j = 0;
+var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
+var nCol = Math.floor(w/350);
+if(nCol<=0) nCol=1;
+var nRow = Math.ceil((listitems24.length+1)/nCol);
+var h="<tr><td colspan="+nCol;
+h += ">Constructors:</td></tr><tr><td><ul class='multicol_list'>"
+var ea
+for(var i=0; i<listitems24.length; i++){
+  if( (++j)>nRow ){
+    h += "</ul></td>\n<td><ul class='multicol_list'>\n";
+    j = 1;
+  }
+  if(listitems24[i].u=="" || listitems24[i].s==2){
+    h += "<li>"
+    ea = ""
+  }else{
+    h += "<li><a href='";
+    h += listitems24[i].u;
+    h += "'>";
+    ea = "</a>"
+  }
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
+  h += listitems24[i].x;
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
+  h += ea
+  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems24[i].s==3) h += "&sup1\n";
+  if(listitems24[i].s==4) h += "&sup2\n";
+  if(listitems24[i].s==5) h += "&sup3\n";
+}
+document.getElementById("listtab24").innerHTML = h;
+</script>
+</p>
 <p>Destructor: <a href="#sqlite3_finalize">sqlite3_finalize()</a></p>
 <style>
-#listtab23 tr td {vertical-align:top;}
+#listtab25 tr td {vertical-align:top;}
 </style>
-<table id='listtab23' width='100%'></table>
+<table id='listtab25' width='100%'></table>
 <script>
-var listitems23 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
+var listitems25 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob64","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_double","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_int","s":0},
@@ -6648,6 +6780,7 @@ var listitems23 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_bind_parameter_count","x":"sqlite3_bind_parameter_count","s":0},
 {"u":"#sqlite3_bind_parameter_index","x":"sqlite3_bind_parameter_index","s":0},
 {"u":"#sqlite3_bind_parameter_name","x":"sqlite3_bind_parameter_name","s":0},
+{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_pointer","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text16","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_text64","s":0},
@@ -6691,34 +6824,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems23.length+1)/nCol);
+var nRow = Math.ceil((listitems25.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems23.length; i++){
+for(var i=0; i<listitems25.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems23[i].u=="" || listitems23[i].s==2){
+  if(listitems25[i].u=="" || listitems25[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems23[i].u;
+    h += listitems25[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
-  h += listitems23[i].x;
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
+  if(listitems25[i].s==2 || listitems25[i].s==3) h += "<s>"
+  h += listitems25[i].x;
+  if(listitems25[i].s==2 || listitems25[i].s==3) h += "</s>"
   h += ea
-  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems23[i].s==3) h += "&sup1\n";
-  if(listitems23[i].s==4) h += "&sup2\n";
-  if(listitems23[i].s==5) h += "&sup3\n";
+  if(listitems25[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems25[i].s==3) h += "&sup1\n";
+  if(listitems25[i].s==4) h += "&sup2\n";
+  if(listitems25[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab23").innerHTML = h;
+document.getElementById("listtab25").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_value"></a>
@@ -6763,11 +6896,11 @@ Unprotected sqlite3_value objects may only be used with
 The <a href="#sqlite3_value_blob">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
-#listtab24 tr td {vertical-align:top;}
+#listtab26 tr td {vertical-align:top;}
 </style>
-<table id='listtab24' width='100%'></table>
+<table id='listtab26' width='100%'></table>
 <script>
-var listitems24 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
+var listitems26 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes16","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_double","s":0},
@@ -6776,6 +6909,7 @@ var listitems24 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_numeric_type","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_pointer","s":0},
 {"u":"#sqlite3_value_subtype","x":"sqlite3_value_subtype","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_text16","s":0},
@@ -6786,34 +6920,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems24.length+1)/nCol);
+var nRow = Math.ceil((listitems26.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems24.length; i++){
+for(var i=0; i<listitems26.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems24[i].u=="" || listitems24[i].s==2){
+  if(listitems26[i].u=="" || listitems26[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems24[i].u;
+    h += listitems26[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
-  h += listitems24[i].x;
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "<s>"
+  h += listitems26[i].x;
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "</s>"
   h += ea
-  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems24[i].s==3) h += "&sup1\n";
-  if(listitems24[i].s==4) h += "&sup2\n";
-  if(listitems24[i].s==5) h += "&sup3\n";
+  if(listitems26[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems26[i].s==3) h += "&sup1\n";
+  if(listitems26[i].s==4) h += "&sup2\n";
+  if(listitems26[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab24").innerHTML = h;
+document.getElementById("listtab26").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_aggregate_count"></a>
@@ -7553,7 +7687,8 @@ char *sqlite3_expanded_sql(sqlite3_stmt *pStmt);
 <p>
 The sqlite3_sql(P) interface returns a pointer to a copy of the UTF-8
 SQL text used to create <a href="#sqlite3_stmt">prepared statement</a> P if P was
-created by either <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>.
+created by <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>, <a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>,
+<a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>, or <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>.
 The sqlite3_expanded_sql(P) interface returns a pointer to a UTF-8
 string containing the SQL text of prepared statement P with
 <a href="lang_expr.html#varparam">bound parameters</a> expanded.</p>
@@ -8633,6 +8768,7 @@ void sqlite3_result_text16(sqlite3_context*, const void*, int, void(*)(void*));
 void sqlite3_result_text16le(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_text16be(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_value(sqlite3_context*, sqlite3_value*);
+void sqlite3_result_pointer(sqlite3_context*, void*,const char*,void(*)(void*));
 void sqlite3_result_zeroblob(sqlite3_context*, int n);
 int sqlite3_result_zeroblob64(sqlite3_context*, sqlite3_uint64 n);
 </pre></blockquote>
@@ -8731,7 +8867,7 @@ copy the content of the parameter nor call a destructor on the content
 when it has finished using that result.
 If the 4th parameter to the sqlite3_result_text* interfaces
 or sqlite3_result_blob is the special constant SQLITE_TRANSIENT
-then SQLite makes a copy of the result into space obtained from
+then SQLite makes a copy of the result into space obtained
 from <a href="#sqlite3_free">sqlite3_malloc()</a> before it returns.</p>
 
 <p>The sqlite3_result_value() interface sets the result of
@@ -8743,6 +8879,17 @@ be deallocated after sqlite3_result_value() returns without harm.
 A <a href="#sqlite3_value">protected sqlite3_value</a> object may always be used where an
 <a href="#sqlite3_value">unprotected sqlite3_value</a> object is required, so either
 kind of <a href="#sqlite3_value">sqlite3_value</a> object can be used with this interface.</p>
+
+<p>The sqlite3_result_pointer(C,P,T,D) interface sets the result to an
+SQL NULL value, just like <a href="#sqlite3_result_blob">sqlite3_result_null(C)</a>, except that it
+also associates the host-language pointer P or type T with that
+NULL value such that the pointer can be retrieved within an
+<a href="#sqlite3_create_function">application-defined SQL function</a> using <a href="#sqlite3_value_blob">sqlite3_value_pointer()</a>.
+If the D parameter is not NULL, then it is a pointer to a destructor
+for the P parameter.  SQLite invokes D with P as its only argument
+when SQLite is finished with P.  The T parameter should be a static
+string and preferably a string literal. The sqlite3_result_pointer()
+routine is part of the <a href="bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
 
 <p>If these routines are called from within the different thread
 than the one containing the application-defined function that received
@@ -8843,34 +8990,54 @@ undesirable.
 </div>
 <blockquote><pre>
 const void *sqlite3_value_blob(sqlite3_value*);
-int sqlite3_value_bytes(sqlite3_value*);
-int sqlite3_value_bytes16(sqlite3_value*);
 double sqlite3_value_double(sqlite3_value*);
 int sqlite3_value_int(sqlite3_value*);
 sqlite3_int64 sqlite3_value_int64(sqlite3_value*);
+void *sqlite3_value_pointer(sqlite3_value*, const char*);
 const unsigned char *sqlite3_value_text(sqlite3_value*);
 const void *sqlite3_value_text16(sqlite3_value*);
 const void *sqlite3_value_text16le(sqlite3_value*);
 const void *sqlite3_value_text16be(sqlite3_value*);
+int sqlite3_value_bytes(sqlite3_value*);
+int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
 </pre></blockquote>
 <p>
-The C-language implementation of SQL functions and aggregates uses
-this set of interface routines to access the parameter values on
-the function or aggregate.</p>
+<b>Summary:</b>
+<blockquote><table border=0 cellpadding=0 cellspacing=0>
+<tr><td><b>sqlite3_value_blob</b><td>&rarr;<td>BLOB value
+<tr><td><b>sqlite3_value_double</b><td>&rarr;<td>REAL value
+<tr><td><b>sqlite3_value_int</b><td>&rarr;<td>32-bit INTEGER value
+<tr><td><b>sqlite3_value_int64</b><td>&rarr;<td>64-bit INTEGER value
+<tr><td><b>sqlite3_value_pointer</b><td>&rarr;<td>Pointer value
+<tr><td><b>sqlite3_value_text</b><td>&rarr;<td>UTF-8 TEXT value
+<tr><td><b>sqlite3_value_text16</b><td>&rarr;<td>UTF-16 TEXT value in
+the native byteorder
+<tr><td><b>sqlite3_value_text16be</b><td>&rarr;<td>UTF-16be TEXT value
+<tr><td><b>sqlite3_value_text16le</b><td>&rarr;<td>UTF-16le TEXT value
+<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;
+<tr><td><b>sqlite3_value_bytes</b><td>&rarr;<td>Size of a BLOB
+or a UTF-8 TEXT in bytes
+<tr><td><b>sqlite3_value_bytes16&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Size of UTF-16
+TEXT in bytes
+<tr><td><b>sqlite3_value_type</b><td>&rarr;<td>Default
+datatype of the value
+<tr><td><b>sqlite3_value_numeric_type&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Best numeric datatype of the value
+</table></blockquote></p>
 
-<p>The xFunc (for scalar functions) or xStep (for aggregates) parameters
-to <a href="#sqlite3_create_function">sqlite3_create_function()</a> and <a href="#sqlite3_create_function">sqlite3_create_function16()</a>
-define callbacks that implement the SQL functions and aggregates.
-The 3rd parameter to these callbacks is an array of pointers to
-<a href="#sqlite3_value">protected sqlite3_value</a> objects.  There is one <a href="#sqlite3_value">sqlite3_value</a> object for
-each parameter to the SQL function.  These routines are used to
-extract values from the <a href="#sqlite3_value">sqlite3_value</a> objects.</p>
+<p><b>Details:</b></p>
+
+<p>These routines extract type, size, and content information from
+<a href="#sqlite3_value">protected sqlite3_value</a> objects.  Protected sqlite3_value objects
+are used to pass parameter information into implementation of
+<a href="#sqlite3_create_function">application-defined SQL functions</a> and <a href="vtab.html">virtual tables</a>.</p>
 
 <p>These routines work only with <a href="#sqlite3_value">protected sqlite3_value</a> objects.
 Any attempt to use these routines on an <a href="#sqlite3_value">unprotected sqlite3_value</a>
-object results in undefined behavior.</p>
+is not threadsafe.</p>
 
 <p>These routines work just like the corresponding <a href="#sqlite3_column_blob">column access functions</a>
 except that these routines take a single <a href="#sqlite3_value">protected sqlite3_value</a> object
@@ -8880,6 +9047,24 @@ pointer instead of a <a href="#sqlite3_stmt">sqlite3_stmt*</a> pointer and an in
 in the native byte-order of the host machine.  The
 sqlite3_value_text16be() and sqlite3_value_text16le() interfaces
 extract UTF-16 strings as big-endian and little-endian respectively.</p>
+
+<p>If <a href="#sqlite3_value">sqlite3_value</a> object V was initialized
+using <a href="#sqlite3_bind_blob">sqlite3_bind_pointer(S,I,P,X,D)</a> or <a href="#sqlite3_result_blob">sqlite3_result_pointer(C,P,X,D)</a>
+and if X and Y are strings that compare equal according to strcmp(X,Y),
+then sqlite3_value_pointer(V,Y) will return the pointer P.  Otherwise,
+sqlite3_value_pointer(V,Y) returns a NULL. The sqlite3_bind_pointer()
+routine is part of the <a href="bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
+
+<p>The sqlite3_value_type(V) interface returns the
+<a href="#SQLITE_BLOB">datatype code</a> for the initial datatype of the
+<a href="#sqlite3_value">sqlite3_value</a> object V. The returned value is one of <a href="#SQLITE_BLOB">SQLITE_INTEGER</a>,
+<a href="#SQLITE_BLOB">SQLITE_FLOAT</a>, <a href="#SQLITE_BLOB">SQLITE_TEXT</a>, <a href="#SQLITE_BLOB">SQLITE_BLOB</a>, or <a href="#SQLITE_BLOB">SQLITE_NULL</a>.
+Other interfaces might change the datatype for an sqlite3_value object.
+For example, if the datatype is initially SQLITE_INTEGER and
+sqlite3_value_text(V) is called to extract a text value for that
+integer, then subsequent calls to sqlite3_value_type(V) might return
+SQLITE_TEXT.  Whether or not a persistent internal datatype conversion
+occurs is undefined and may change from one release of SQLite to the next.</p>
 
 <p>The sqlite3_value_numeric_type() interface attempts to apply
 numeric affinity to the value.  This means that an attempt is
@@ -8964,6 +9149,7 @@ int sqlite3_bind_text16(sqlite3_stmt*, int, const void*, int, void(*)(void*));
 int sqlite3_bind_text64(sqlite3_stmt*, int, const char*, sqlite3_uint64,
                          void(*)(void*), unsigned char encoding);
 int sqlite3_bind_value(sqlite3_stmt*, int, const sqlite3_value*);
+int sqlite3_bind_pointer(sqlite3_stmt*, int, void*, const char*,void(*)(void*));
 int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n);
 int sqlite3_bind_zeroblob64(sqlite3_stmt*, int, sqlite3_uint64);
 </pre></blockquote>
@@ -9048,6 +9234,15 @@ content is later written using
 <a href="#sqlite3_blob_open">incremental BLOB I/O</a> routines.
 A negative value for the zeroblob results in a zero-length BLOB.</p>
 
+<p>The sqlite3_bind_pointer(S,I,P,T,D) routine causes the I-th parameter in
+<a href="#sqlite3_stmt">prepared statement</a> S to have an SQL value of NULL, but to also be
+associated with the pointer P of type T.  D is either a NULL pointer or
+a pointer to a destructor function for P. SQLite will invoke the
+destructor D with a single argument of P when it is finished using
+P.  The T parameter should be a static string, preferably a string
+literal. The sqlite3_bind_pointer() routine is part of the
+<a href="bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
+
 <p>If any of the sqlite3_bind_*() routines are called with a NULL pointer
 for the <a href="#sqlite3_stmt">prepared statement</a> or with a prepared statement for which
 <a href="#sqlite3_step">sqlite3_step()</a> has been called more recently than <a href="#sqlite3_reset">sqlite3_reset()</a>,
@@ -9086,6 +9281,14 @@ int sqlite3_prepare_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const char **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
+int sqlite3_prepare_v3(
+  sqlite3 *db,            /* Database handle */
+  const char *zSql,       /* SQL statement, UTF-8 encoded */
+  int nByte,              /* Maximum length of zSql in bytes. */
+  unsigned int prepFlags, /* Zero or more SQLITE_PREPARE_ flags */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const char **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
 int sqlite3_prepare16(
   sqlite3 *db,            /* Database handle */
   const void *zSql,       /* SQL statement, UTF-16 encoded */
@@ -9100,19 +9303,39 @@ int sqlite3_prepare16_v2(
   sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
   const void **pzTail     /* OUT: Pointer to unused portion of zSql */
 );
+int sqlite3_prepare16_v3(
+  sqlite3 *db,            /* Database handle */
+  const void *zSql,       /* SQL statement, UTF-16 encoded */
+  int nByte,              /* Maximum length of zSql in bytes. */
+  unsigned int prepFlags, /* Zero or more SQLITE_PREPARE_ flags */
+  sqlite3_stmt **ppStmt,  /* OUT: Statement handle */
+  const void **pzTail     /* OUT: Pointer to unused portion of zSql */
+);
 </pre></blockquote>
 <p>
-To execute an SQL query, it must first be compiled into a byte-code
-program using one of these routines.</p>
+To execute an SQL statement, it must first be compiled into a byte-code
+program using one of these routines.  Or, in other words, these routines
+are constructors for the <a href="#sqlite3_stmt">prepared statement</a> object.</p>
+
+<p>The preferred routine to use is <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>.  The
+<a href="#sqlite3_prepare">sqlite3_prepare()</a> interface is legacy and should be avoided.
+<a href="#sqlite3_prepare">sqlite3_prepare_v3()</a> has an extra "prepFlags" option that is used
+for special purposes.</p>
+
+<p>The use of the UTF-8 interfaces is preferred, as SQLite currently
+does all parsing using UTF-8.  The UTF-16 interfaces are provided
+as a convenience.  The UTF-16 interfaces work by converting the
+input text into UTF-8, then invoking the corresponding UTF-8 interface.</p>
 
 <p>The first argument, "db", is a <a href="#sqlite3">database connection</a> obtained from a
 prior successful call to <a href="#sqlite3_open">sqlite3_open()</a>, <a href="#sqlite3_open">sqlite3_open_v2()</a> or
 <a href="#sqlite3_open">sqlite3_open16()</a>.  The database connection must not have been closed.</p>
 
 <p>The second argument, "zSql", is the statement to be compiled, encoded
-as either UTF-8 or UTF-16.  The sqlite3_prepare() and sqlite3_prepare_v2()
-interfaces use UTF-8, and sqlite3_prepare16() and sqlite3_prepare16_v2()
-use UTF-16.</p>
+as either UTF-8 or UTF-16.  The sqlite3_prepare(), sqlite3_prepare_v2(),
+and sqlite3_prepare_v3()
+interfaces use UTF-8, and sqlite3_prepare16(), sqlite3_prepare16_v2(),
+and sqlite3_prepare16_v3() use UTF-16.</p>
 
 <p>If the nByte argument is negative, then zSql is read up to the
 first zero terminator. If nByte is positive, then it is the
@@ -9139,10 +9362,11 @@ ppStmt may not be NULL.</p>
 <p>On success, the sqlite3_prepare() family of routines return <a href="#SQLITE_ABORT">SQLITE_OK</a>;
 otherwise an <a href="rescode.html">error code</a> is returned.</p>
 
-<p>The sqlite3_prepare_v2() and sqlite3_prepare16_v2() interfaces are
-recommended for all new programs. The two older interfaces are retained
-for backwards compatibility, but their use is discouraged.
-In the "v2" interfaces, the prepared statement
+<p>The sqlite3_prepare_v2(), sqlite3_prepare_v3(), sqlite3_prepare16_v2(),
+and sqlite3_prepare16_v3() interfaces are recommended for all new programs.
+The older interfaces (sqlite3_prepare() and sqlite3_prepare16())
+are retained for backwards compatibility, but their use is discouraged.
+In the "vX" interfaces, the prepared statement
 that is returned (the <a href="#sqlite3_stmt">sqlite3_stmt</a> object) contains a copy of the
 original SQL text. This causes the <a href="#sqlite3_step">sqlite3_step()</a> interface to
 behave differently in three ways:</p>
@@ -9174,7 +9398,13 @@ The specific value of WHERE-clause <a href="lang_expr.html#varparam">parameter</
 choice of query plan if the parameter is the left-hand side of a <a href="lang_expr.html#like">LIKE</a>
 or <a href="lang_expr.html#glob">GLOB</a> operator or if the parameter is compared to an indexed column
 and the <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> compile-time option is enabled.
-</li>
+</li></p>
+
+<p><p>sqlite3_prepare_v3() differs from sqlite3_prepare_v2() only in having
+the extra prepFlags parameter, which is a bit array consisting of zero or
+more of the <a href="#sqlitepreparepersistent">SQLITE_PREPARE_*</a> flags.  The
+sqlite3_prepare_v2() interface works exactly the same as
+sqlite3_prepare_v3() with a zero prepFlags parameter.
 </ol>
 </p><hr><a name="sqlite3_create_function"></a>
 <h2>Create Or Redefine SQL Functions</h2>
@@ -9318,7 +9548,8 @@ This routine registers an authorizer callback with a particular
 <a href="#sqlite3">database connection</a>, supplied in the first argument.
 The authorizer callback is invoked as SQL statements are being compiled
 by <a href="#sqlite3_prepare">sqlite3_prepare()</a> or its variants <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a>,
-<a href="#sqlite3_prepare">sqlite3_prepare16()</a> and <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>.  At various
+<a href="#sqlite3_prepare">sqlite3_prepare_v3()</a>, <a href="#sqlite3_prepare">sqlite3_prepare16()</a>, <a href="#sqlite3_prepare">sqlite3_prepare16_v2()</a>,
+and <a href="#sqlite3_prepare">sqlite3_prepare16_v3()</a>.  At various
 points during the compilation process, as logic is being created
 to perform various actions, the authorizer callback is invoked to
 see if those actions are allowed.  The authorizer callback should
@@ -9484,18 +9715,40 @@ or <a href="#sqlite3_stmt">prepared statement</a> that invoked the busy handler.
 </div>
 <blockquote><pre>
 const void *sqlite3_column_blob(sqlite3_stmt*, int iCol);
-int sqlite3_column_bytes(sqlite3_stmt*, int iCol);
-int sqlite3_column_bytes16(sqlite3_stmt*, int iCol);
 double sqlite3_column_double(sqlite3_stmt*, int iCol);
 int sqlite3_column_int(sqlite3_stmt*, int iCol);
 sqlite3_int64 sqlite3_column_int64(sqlite3_stmt*, int iCol);
 const unsigned char *sqlite3_column_text(sqlite3_stmt*, int iCol);
 const void *sqlite3_column_text16(sqlite3_stmt*, int iCol);
-int sqlite3_column_type(sqlite3_stmt*, int iCol);
 sqlite3_value *sqlite3_column_value(sqlite3_stmt*, int iCol);
+int sqlite3_column_bytes(sqlite3_stmt*, int iCol);
+int sqlite3_column_bytes16(sqlite3_stmt*, int iCol);
+int sqlite3_column_type(sqlite3_stmt*, int iCol);
 </pre></blockquote>
 <p>
-These routines return information about a single column of the current
+<b>Summary:</b>
+<blockquote><table border=0 cellpadding=0 cellspacing=0>
+<tr><td><b>sqlite3_column_blob</b><td>&rarr;<td>BLOB result
+<tr><td><b>sqlite3_column_double</b><td>&rarr;<td>REAL result
+<tr><td><b>sqlite3_column_int</b><td>&rarr;<td>32-bit INTEGER result
+<tr><td><b>sqlite3_column_int64</b><td>&rarr;<td>64-bit INTEGER result
+<tr><td><b>sqlite3_column_text</b><td>&rarr;<td>UTF-8 TEXT result
+<tr><td><b>sqlite3_column_text16</b><td>&rarr;<td>UTF-16 TEXT result
+<tr><td><b>sqlite3_column_value</b><td>&rarr;<td>The result as an
+<a href="#sqlite3_value">unprotected sqlite3_value</a> object.
+<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;
+<tr><td><b>sqlite3_column_bytes</b><td>&rarr;<td>Size of a BLOB
+or a UTF-8 TEXT result in bytes
+<tr><td><b>sqlite3_column_bytes16&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Size of UTF-16
+TEXT in bytes
+<tr><td><b>sqlite3_column_type</b><td>&rarr;<td>Default
+datatype of the result
+</table></blockquote></p>
+
+<p><b>Details:</b></p>
+
+<p>These routines return information about a single column of the current
 result row of a query.  In every case the first argument is a pointer
 to the <a href="#sqlite3_stmt">prepared statement</a> that is being evaluated (the <a href="#sqlite3_stmt">sqlite3_stmt*</a>
 that was returned from <a href="#sqlite3_prepare">sqlite3_prepare_v2()</a> or one of its variants)
@@ -9516,15 +9769,28 @@ If <a href="#sqlite3_step">sqlite3_step()</a> or <a href="#sqlite3_reset">sqlite
 are called from a different thread while any of these routines
 are pending, then the results are undefined.</p>
 
+<p>The first six interfaces (_blob, _double, _int, _int64, _text, and _text16)
+each return the value of a result column in a specific data format.  If
+the result column is not initially in the requested format (for example,
+if the query returns an integer but the sqlite3_column_text() interface
+is used to extract the value) then an automatic type conversion is performed.</p>
+
 <p>The sqlite3_column_type() routine returns the
 <a href="#SQLITE_BLOB">datatype code</a> for the initial data type
 of the result column.  The returned value is one of <a href="#SQLITE_BLOB">SQLITE_INTEGER</a>,
-<a href="#SQLITE_BLOB">SQLITE_FLOAT</a>, <a href="#SQLITE_BLOB">SQLITE_TEXT</a>, <a href="#SQLITE_BLOB">SQLITE_BLOB</a>, or <a href="#SQLITE_BLOB">SQLITE_NULL</a>.  The value
-returned by sqlite3_column_type() is only meaningful if no type
-conversions have occurred as described below.  After a type conversion,
-the value returned by sqlite3_column_type() is undefined.  Future
+<a href="#SQLITE_BLOB">SQLITE_FLOAT</a>, <a href="#SQLITE_BLOB">SQLITE_TEXT</a>, <a href="#SQLITE_BLOB">SQLITE_BLOB</a>, or <a href="#SQLITE_BLOB">SQLITE_NULL</a>.
+The return value of sqlite3_column_type() can be used to decide which
+of the first six interface should be used to extract the column value.
+The value returned by sqlite3_column_type() is only meaningful if no
+automatic type conversions have occurred for the value in question.
+After a type conversion, the result of calling sqlite3_column_type()
+is undefined, though harmless.  Future
 versions of SQLite may change the behavior of sqlite3_column_type()
 following a type conversion.</p>
+
+<p>If the result is a BLOB or a TEXT string, then the sqlite3_column_bytes()
+or sqlite3_column_bytes16() interfaces can be used to determine the size
+of that BLOB or string.</p>
 
 <p>If the result is a BLOB or UTF-8 string then the sqlite3_column_bytes()
 routine returns the number of bytes in that BLOB or string.
@@ -9561,10 +9827,14 @@ an unprotected sqlite3_value object may only be used safely with
 If the <a href="#sqlite3_value">unprotected sqlite3_value</a> object returned by
 <a href="#sqlite3_column_blob">sqlite3_column_value()</a> is used in any other way, including calls
 to routines like <a href="#sqlite3_value_blob">sqlite3_value_int()</a>, <a href="#sqlite3_value_blob">sqlite3_value_text()</a>,
-or <a href="#sqlite3_value_blob">sqlite3_value_bytes()</a>, the behavior is not threadsafe.</p>
+or <a href="#sqlite3_value_blob">sqlite3_value_bytes()</a>, the behavior is not threadsafe.
+Hence, the sqlite3_column_value() interface
+is normally only useful within the implementation of
+<a href="#sqlite3_create_function">application-defined SQL functions</a> or <a href="vtab.html">virtual tables</a>, not within
+top-level application code.</p>
 
-<p>These routines attempt to convert the value where appropriate.  For
-example, if the internal representation is FLOAT and a text result
+<p>The these routines may attempt to convert the datatype of the result.
+For example, if the internal representation is FLOAT and a text result
 is requested, <a href="#sqlite3_mprintf">sqlite3_snprintf()</a> is used internally to perform the
 conversion automatically.  The following table details the conversions
 that are applied:</p>
@@ -9636,7 +9906,7 @@ with calls to sqlite3_column_bytes().</p>
 <p>The pointers returned are valid until a type conversion occurs as
 described above, or until <a href="#sqlite3_step">sqlite3_step()</a> or <a href="#sqlite3_reset">sqlite3_reset()</a> or
 <a href="#sqlite3_finalize">sqlite3_finalize()</a> is called.  The memory space used to hold strings
-and BLOBs is freed automatically.  Do <em>not</em> pass the pointers returned
+and BLOBs is freed automatically.  Do not pass the pointers returned
 from <a href="#sqlite3_column_blob">sqlite3_column_blob()</a>, <a href="#sqlite3_column_blob">sqlite3_column_text()</a>, etc. into
 <a href="#sqlite3_free">sqlite3_free()</a>.</p>
 
@@ -9646,4 +9916,4 @@ is either the integer 0, the floating point number 0.0, or a NULL
 pointer.  Subsequent calls to <a href="#sqlite3_errcode">sqlite3_errcode()</a> will return
 <a href="#SQLITE_ABORT">SQLITE_NOMEM</a>.
 </p><hr>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

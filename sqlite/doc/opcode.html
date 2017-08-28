@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -178,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.19.3 check-in
-<a href='https://www.sqlite.org/src/timeline?c=0ee482a1e0eae'>0ee482a1e0eae</a> dated 2017-06-08.
+ version 3.20.1 check-in
+<a href='https://www.sqlite.org/src/timeline?c=8d3a7ea6c5690'>8d3a7ea6c5690</a> dated 2017-08-24.
 
 
 
@@ -407,15 +422,15 @@ opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/453c99b891bd0b93e5fe12960be226e09675d4e9">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/b2bb208cc81814ee2cd1c04400ad25d002fa587a">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.19.3 check-in
-<a href='https://www.sqlite.org/src/timeline?c=0ee482a1e0eae'>0ee482a1e0eae</a> dated 2017-06-08.
+ version 3.20.1 check-in
+<a href='https://www.sqlite.org/src/timeline?c=8d3a7ea6c5690'>8d3a7ea6c5690</a> dated 2017-08-24.
 
 <a name="codes"></a>
 
@@ -671,6 +686,23 @@ expression refer to columns in the b-tree to which cursor P1 is pointing.</td></
 <a name="DecrJumpZero"></a>DecrJumpZero
 <td>Register P1 must hold an integer.  Decrement the value in P1
 and jump to P2 if the new value is exactly zero.</td></tr>
+<tr><td valign="top" align="center">
+<a name="DeferredSeek"></a>DeferredSeek
+<td>P1 is an open index cursor and P3 is a cursor on the corresponding
+table.  This opcode does a deferred seek of the P3 table cursor
+to the row that corresponds to the current row of P1.</p>
+
+<p>This is a deferred seek.  Nothing actually happens until
+the cursor is used to read a record.  That way, if no reads
+occur, no unnecessary I/O happens.</p>
+
+<p>P4 may be an array of integers (type P4_INTARRAY) containing
+one entry for each column in the P3 table.  If array entry a(i)
+is non-zero, then reading column a(i)-1 from cursor P3 is
+equivalent to performing the deferred seek and then reading column i
+from P1.  This information is stored in P3 and used to redirect
+reads against P3 over to P1, thus possibly avoiding the need to
+seek and read cursor P3.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Delete"></a>Delete
 <td>Delete the record at which the P1 cursor is currently pointing.</p>
@@ -1771,23 +1803,6 @@ Thus the program must guarantee that the original will not change
 during the lifetime of the copy.  Use <a href="opcode.html#Copy">Copy</a> to make a complete
 copy.</td></tr>
 <tr><td valign="top" align="center">
-<a name="Seek"></a>Seek
-<td>P1 is an open index cursor and P3 is a cursor on the corresponding
-table.  This opcode does a deferred seek of the P3 table cursor
-to the row that corresponds to the current row of P1.</p>
-
-<p>This is a deferred seek.  Nothing actually happens until
-the cursor is used to read a record.  That way, if no reads
-occur, no unnecessary I/O happens.</p>
-
-<p>P4 may be an array of integers (type P4_INTARRAY) containing
-one entry for each column in the P3 table.  If array entry a(i)
-is non-zero, then reading column a(i)-1 from cursor P3 is
-equivalent to performing the deferred seek and then reading column i
-from P1.  This information is stored in P3 and used to redirect
-reads against P3 over to P1, thus possibly avoiding the need to
-seek and read cursor P3.</td></tr>
-<tr><td valign="top" align="center">
 <a name="SeekGE"></a>SeekGE
 <td>If cursor P1 refers to an SQL table (B-Tree that uses integer keys),
 use the value in register P3 as the key.  If cursor P1 refers
@@ -2161,4 +2176,4 @@ next instruction.</p>
   </table></blockquote>
   </div>
 
-</p>
+</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

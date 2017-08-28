@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,15 +91,15 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.17.0 On 2017-02-13</h2><p><ul class='lessindent'>
+<h2>SQLite Release 3.17.0 On 2017-02-13</h2><p><ol class='lessindent'>
 <li>Approximately 25% better performance from the <a href="../rtree.html">R-Tree extension</a>.
-    <ul>
+    <ol type='a'>
     <li> Uses compiler built-ins (ex: __builtin_bswap32() or _byteswap_ulong())
          for byteswapping when available.
     <li> Uses the <a href="../c3ref/blob.html">sqlite3_blob</a> key/value access object instead of SQL
          for pulling content out of R-Tree nodes
     <li> Other miscellaneous enhancements such as loop unrolling.
-    </ul>
+    </ol>
 <li>Add the <a href="../compile.html#default_lookaside">SQLITE_DEFAULT_LOOKASIDE</a> compile-time option.
 <li>Increase the default <a href="../malloc.html#lookaside">lookaside</a>
     size from 512,125 to 1200,100 
@@ -140,7 +155,7 @@ return false;
 <li>SHA1 for sqlite3.c: cc7d708bb073c44102a59ed63ce6142da1f174d1
 
 
-</ul></p>
+</ol></p>
 
       <p>A <a href="../changes.html">complete list of SQLite releases</a>
       in a single page and a <a href="../chronology.html">chronology</a> are both also available.  
@@ -148,4 +163,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    
+    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

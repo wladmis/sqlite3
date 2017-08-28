@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -87,11 +102,15 @@ return false;
 Table Of Contents
 </a>
 <div id="toc_sub"><div class="fancy-toc1"><a href="#summary">1. Summary</a></div>
+<div class="fancy-toc2"><a href="#caveats">1.1. Caveats</a></div>
+<div class="fancy-toc2"><a href="#related_studies">1.2. Related Studies</a></div>
 <div class="fancy-toc1"><a href="#how_these_measurements_are_made">2. How These Measurements Are Made</a></div>
 <div class="fancy-toc2"><a href="#read_performance_measurements">2.1. Read Performance Measurements</a></div>
 <div class="fancy-toc2"><a href="#write_performance_measurements">2.2. Write Performance Measurements</a></div>
 <div class="fancy-toc2"><a href="#variations">2.3. Variations</a></div>
 <div class="fancy-toc1"><a href="#general_findings">3. General Findings</a></div>
+<div class="fancy-toc1"><a href="#additional_notes">4. Additional Notes</a></div>
+<div class="fancy-toc2"><a href="#compiling_and_testing_on_android">4.1. Compiling And Testing on Android</a></div>
 </div>
 </div>
 <script>
@@ -115,15 +134,10 @@ mk.innerHTML = "&#x25ba;";
 
 <h1 id="summary"><span>1. </span>Summary</h1>
 
-<center><b><font color="red">
-This report is under development.  Check back 
-in a few days for updates.
-</font></b></center>
-
-<p>Small blobs (for example, thumbnail images)
-can be read from and written to an SQLite database about 
-<a href="#approx">35% faster&sup1;</a>
-than they can be read from or written to individual files on disk.
+<p>SQLite reads and writes small blobs (for example, thumbnail images)
+<a href="#approx">35% faster&sup1;</a> than the same blobs
+can be read from or written to individual files on disk using
+fread() or fwrite().
 
 </p><p>Furthermore, a single SQLite database holding
 10-kilobyte blobs uses about 20% less disk space than
@@ -140,7 +154,15 @@ individual files are padded out to the next multiple of the filesystem
 block size, whereas the blobs are packed more tightly into an SQLite
 database.
 
-<a name="approx"></a></p><p>
+</p><p>
+The measurements in this article were made during the week of 2017-06-05
+using a version of SQLite in between 3.19.2 and 3.20.0.  You may expect
+future versions of SQLite to perform even better.
+
+</p><h2 id="caveats"><span>1.1. </span>Caveats</h2>
+
+<a name="approx"></a>
+<p>
 &sup1;The 35% figure above is approximate.  Actual timings vary
 depending on hardware, operating system, and the
 details of the experiment, and due to random performance fluctuations
@@ -149,8 +171,50 @@ Try the experiments yourself.  Report significant deviations to
 the <a href="support.html#mailinglists">mailing lists</a>.
 </p>
 
+<p>
+The 35% figure is based on running tests on every machine
+that the author has easily at hand.
+Some reviewers of this article report that SQLite has higher 
+latency than direct I/O on their systems.  We do not yet understand
+the difference.  We also see indications that SQLite does not
+perform as well as direct I/O when experiments are run using
+a cold filesystem cache.
 
-<h1 id="how_these_measurements_are_made"><span>2. </span>How These Measurements Are Made</h1>
+</p><p>
+So let your take-away be this: read/write latency for
+SQLite is competitive with read/write latency of individual files on
+disk.  Often SQLite is faster.  Sometimes SQLite is almost
+as fast.  Either way, this article disproves the common
+assumption that a relational database must be slower than direct
+filesystem I/O.
+
+</p><h2 id="related_studies"><span>1.2. </span>Related Studies</h2>
+
+<p>
+<a href="https://www.microsoft.com/en-us/research/people/gray/">Jim Gray</a>
+and others studied the read performance of BLOBs
+versus file I/O for Microsoft SQL Server and found that reading BLOBs 
+out of the 
+database was faster for BLOB sizes less than between 250KiB and 1MiB.
+(<a href="https://www.microsoft.com/en-us/research/publication/to-blob-or-not-to-blob-large-object-storage-in-a-database-or-a-filesystem/">Paper</a>).
+In that study, the database still stores the filename of the content even
+if the content is held in a separate file.  So the database is consulted
+for every BLOB, even if it is only to extract the filename.  In this
+article, the key for the BLOB is the filename, so no preliminary database
+access is required.  Because the database is never used at all when
+reading content from individual files in this article, the threshold
+at which direct file I/O becomes faster is smaller than it is in Gray's
+paper.
+
+</p><p>
+The <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> article on this website is an
+earlier investigation (circa 2011) that uses the same approach as the
+Jim Gray paper &mdash; storing the blob filenames as entries in the
+database &mdash but for SQLite instead of SQL Server.
+
+
+
+</p><h1 id="how_these_measurements_are_made"><span>2. </span>How These Measurements Are Made</h1>
 
 <p>I/O performance is measured using the
 <a href="https://www.sqlite.org/src/file/test/kvtest.c">kvtest.c</a> program
@@ -169,9 +233,13 @@ the following:
 </p><div class="codeblock"><pre>cl -I. -DSQLITE_DIRECT_OVERFLOW_READ kvtest.c sqlite3.c
 </pre></div>
 
-<p>
+<p>Instructions for compiling for Android
+are <a href="#compile-android">shown below</a>.
+
+</p><p>
 Use the resulting "kvtest" program to
-generate a test database with 100,000 random blobs, each with a random
+generate a test database with 100,000 random uncompressible
+blobs, each with a random
 size between 8,000 and 12,000 bytes
 using a command like this:
 
@@ -271,6 +339,15 @@ for the direct-to-disk tests to force them to invoke fsync() or
 FlushFileBuffers() when updating disk files.
 
 </p><p>
+By default, kvtest runs the database I/O measurements all within
+a single transaction.  Use the --multitrans option to run each blob
+read or write in a separate transaction.  The --multitrans option makes
+SQLite much slower, and uncompetitive with direct disk I/O.  This
+option proves, yet again, that to get the most performance out of
+SQLite, you should group as much database interaction as possible within
+a single transaction.
+
+</p><p>
 There are many other testing options, which can be seen by running
 the command:
 
@@ -281,23 +358,40 @@ the command:
 
 <p>The chart below shows data collected using 
 <a href="https://www.sqlite.org/src/file/test/kvtest.c">kvtest.c</a> on five different
-systems:  An old Dell laptop running Windows7, a new Lenovo laptop running
-Windows10, a Mac-Pro, an Ubuntu desktop machine, and an older Android
-phone (a Galaxy S3). All machines use SSD except the Dell which has a
-hard-drive. The test database is 100K BLOBs uniformly
-distributed between 8K and 12K in size, for a total of about 1 gigabyte
+systems:
+
+</p><ul>
+<li><b>Win7</b>: An circa-2009 Dell Inspiron laptop, Pentium dual-core
+    at 2.30GHz, 4GiB RAM, Windows7.
+</li><li><b>Win10</b>: A 2016 Lenovo YOGA 910, Intel i7-7500 at 2.70GHz,
+    16GiB RAM, Windows10.
+</li><li><b>Mac</b>: A 2015 MacBook Pro, 3.1GHz intel Core i7, 16GiB RAM,
+    MacOS 10.12.5
+</li><li><b>Ubuntu</b>: Desktop built from Intel i7-4770K at 3.50GHz, 32GiB RAM,
+    Ubuntu 16.04.2 LTS
+</li><li><b>Android</b>: Galaxy S3, ARMv7, 2GiB RAM
+</li></ul>
+
+<p>All machines use SSD except Win7 which has a
+hard-drive. The test database is 100K blobs with sizes uniformly
+distributed between 8K and 12K, for a total of about 1 gigabyte
 of content.  The database page size
 is 4KiB.  The -DSQLITE_DIRECT_OVERFLOW_READ compile-time option was
 used for all of these tests.
-The chart shows average time to read a BLOB from the SQLite database,
-in a random order, relative to the time needed to read the same BLOB
-from a file in the filesystem.  Smaller is better.  The actual timings
-vary considerably from one system to another (the Ubuntu desktop is much
-faster than the Galaxy S3 phone).  This chart shows the ratio of the
-times needed to read blobs from SQLite divided by the times needed to
-read the same blob directly from disk.  The left-most column in the chart
-is the time needed to read from disk divided by itself, and thus always
-has a value of 1.00.  That column is included for visual reference only.
+Tests were run multiple times.
+The first run was used to warm up the cache and its timings were discarded.
+
+</p><p>
+The chart below shows average time to read a blob directly from the
+filesystem versus the time needed to read the same blob from the SQLite 
+database.
+The actual timings vary considerably from one system to another 
+(the Ubuntu desktop is much
+faster than the Galaxy S3 phone, for example).  
+This chart shows the ratio of the
+times needed to read blobs from a file divided by the time needed to
+from the database.  The left-most column in the chart is the normalized
+time to read from the database, for reference.
 
 </p><p>
 In this chart, an SQL statement ("SELECT v FROM kv WHERE k=?1") 
@@ -305,13 +399,18 @@ is prepared once.  Then for each blob, the blob key value is bound
 to the ?1 parameter and the statement is evaluated to extract the
 blob content.
 
+</p><p>
+The chart shows that on Windows10, content can be read from the SQLite
+database about 5 times faster than it can be read directly from disk.
+On Android, SQLite is only about 35% faster than reading from disk.
+
 </p><center>
 <div class="'imgcontainer'">
 <img src="images/faster-read-sql.jpg">
 </div>
 <br>
-Chart 1:  100K BLOBs, avg size 10KB, random order
-using SQL
+Chart 1:  SQLite read latency relative to direct filesystem reads.<br>
+100K blobs, avg 10KB each, random order using SQL
 </center>
 
 <p>
@@ -324,22 +423,26 @@ and reading the blob content directly using the
 <img src="images/faster-read-blobapi.jpg">
 </div>
 <br>
-Chart 2:  100K BLOBs, avg size 10KB, random order<br>
-using sqlite3_blob_read()
+Chart 2:  SQLite read latency relative to direct filesystem reads.<br>
+100K blobs, avg size 10KB, random order<br>
+using sqlite3_blob_read().
 </center>
 
 <p>
-Futher performance improves can be made by using the
+Further performance improves can be made by using the
 <a href="mmap.html">memory-mapped I/O</a> feature of SQLite.  In the next chart, the
 entire 1GB database file is memory mapped and blobs are read
-(in random order) using the <a href="c3ref/blob_read.html">sqlite3_blob_read()</a> interface:
+(in random order) using the <a href="c3ref/blob_read.html">sqlite3_blob_read()</a> interface.
+With these optimizations, SQLite is twice as fast as Android
+or MacOS-X and over 10 times faster than Windows.
 
 </p><center>
 <div class="'imgcontainer'">
 <img src="images/faster-read-mmap.jpg">
 </div>
 <br>
-Chart 3:  100K BLOBs, avg size 10KB, random order<br>
+Chart 3:  SQLite read latency relative to direct filesystem reads.<br>
+100K blobs, avg size 10KB, random order<br>
 using sqlite3_blob_read() from a memory-mapped database.
 </center>
 
@@ -374,9 +477,9 @@ written causes direct-to-disk storage
 to be about 10 times or more slower than writes to SQLite.
 
 </p><p>
-The next chart compares raw direct-to-disk overwrites against
-database updates on the SQLite database in <a href="wal.html">WAL mode</a> with
-<a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to NORMAL.
+The next chart compares SQLite database updates in <a href="wal.html">WAL mode</a>
+against raw direct-to-disk overwrites of separate files on disk.
+The <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting is NORMAL.
 All database writes are in a single transaction.
 The timer for the database writes is stopped after the transaction
 commits, but before a <a href="wal.html#ckpt">checkpoint</a> is run.
@@ -389,9 +492,10 @@ setting is NORMAL instead of FULL, the transactions are not durable.
 <img src="images/faster-write-safe.jpg">
 </div>
 <br>
-Chart 4:  10K BLOBs, avg size 10KB, random order<br>
-in WAL mode with synchronous NORMAL,<br>
-exclusive of checkpoint time.
+Chart 4:  SQLite write latency relative to direct filesystem writes.<br>
+10K blobs, avg size 10KB, random order,<br>
+WAL mode with synchronous NORMAL,<br>
+exclusive of checkpoint time
 </center>
 
 <p>
@@ -413,8 +517,9 @@ data prone to corruption due to system crashes and power failures.
 <img src="images/faster-write-unsafe.jpg">
 </div>
 <br>
-Chart 5:  10K BLOBs, avg size 10KB, random order<br>
-in journaling disabled, synchronous OFF.
+Chart 5:  SQLite write latency relative to direct filesystem writes.<br>
+10K blobs, avg size 10KB, random order,<br>
+journaling disabled, synchronous OFF.
 </center>
 
 <p>
@@ -454,8 +559,14 @@ as the average blob size decreases.
 separate files on disk, for both reading and writing.
 
 </p></li><li>
-<p>Reading is about an order of magnitude faster than writing, for both
-SQLite and direct-to-disk I/O.
+<p>SQLite is much faster than direct writes to disk on Windows
+when anti-virus protection is turned on.  Since anti-virus software
+is and should be on by default in Windows, that means that SQLite
+is generally much faster than direct disk writes on Windows.
+
+</p></li><li>
+<p>Reading is about an order of magnitude faster than writing, for all
+systems and for both SQLite and direct-to-disk I/O.
 
 </p></li><li>
 <p>I/O performance varies widely depending on operating system and hardware.
@@ -470,3 +581,39 @@ gives much faster read and write performance with SQLite.
 See the <a href="intern-v-extern-blob.html">Internal Versus External BLOBs</a> article for more information.
 </p></li></ol>
 
+
+<h1 id="additional_notes"><span>4. </span>Additional Notes</h1>
+
+<a name="compile-android"></a>
+<h2 id="compiling_and_testing_on_android"><span>4.1. </span>Compiling And Testing on Android</h2>
+
+<p>
+The kvtest program is compiled and run on Android as follows.
+First install the Android SDK and NDK.  Then prepare a script
+named "android-gcc" that looks approximately like this:
+
+</p><div class="codeblock"><pre>#!/bin/sh
+#
+NDK=/home/drh/Android/Sdk/ndk-bundle
+SYSROOT=$NDK/platforms/android-16/arch-arm
+ABIN=$NDK/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin
+GCC=$ABIN/arm-linux-androideabi-gcc
+$GCC --sysroot=$SYSROOT -fPIC -pie $*
+</pre></div>
+
+<p>Make that script executable and put it on your $PATH.  Then
+compile the kvtest program as follows:
+
+</p><div class="codeblock"><pre>android-gcc -Os -I. kvtest.c sqlite3.c -o kvtest-android
+</pre></div>
+
+<p>Next, move the resulting kvtest-android executable to the Android
+device:
+
+</p><div class="codeblock"><pre>adb push kvtest-android /data/local/tmp
+</pre></div>
+
+<p>Finally use "adb shell" to get a shell prompt on the Android device,
+cd into the /data/local/tmp directory, and begin running the tests
+as with any other unix host.
+</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

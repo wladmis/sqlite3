@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_result_blob sqlite3_result_blob64 sqlite3_result_double sqlite3_result_error sqlite3_result_error16 sqlite3_result_error_code sqlite3_result_error_nomem sqlite3_result_error_toobig sqlite3_result_int sqlite3_result_int64 sqlite3_result_null sqlite3_result_text sqlite3_result_text16 sqlite3_result_text16be sqlite3_result_text16le sqlite3_result_text64 sqlite3_result_value sqlite3_result_zeroblob sqlite3_result_zeroblob64 -->
+<!-- keywords: sqlite3_result_blob sqlite3_result_blob64 sqlite3_result_double sqlite3_result_error sqlite3_result_error16 sqlite3_result_error_code sqlite3_result_error_nomem sqlite3_result_error_toobig sqlite3_result_int sqlite3_result_int64 sqlite3_result_null sqlite3_result_pointer sqlite3_result_text sqlite3_result_text16 sqlite3_result_text16be sqlite3_result_text16le sqlite3_result_text64 sqlite3_result_value sqlite3_result_zeroblob sqlite3_result_zeroblob64 -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Setting The Result Of An SQL Function</h2>
@@ -101,6 +116,7 @@ void sqlite3_result_text16(sqlite3_context*, const void*, int, void(*)(void*));
 void sqlite3_result_text16le(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_text16be(sqlite3_context*, const void*, int,void(*)(void*));
 void sqlite3_result_value(sqlite3_context*, sqlite3_value*);
+void sqlite3_result_pointer(sqlite3_context*, void*,const char*,void(*)(void*));
 void sqlite3_result_zeroblob(sqlite3_context*, int n);
 int sqlite3_result_zeroblob64(sqlite3_context*, sqlite3_uint64 n);
 </pre></blockquote>
@@ -199,7 +215,7 @@ copy the content of the parameter nor call a destructor on the content
 when it has finished using that result.
 If the 4th parameter to the sqlite3_result_text* interfaces
 or sqlite3_result_blob is the special constant SQLITE_TRANSIENT
-then SQLite makes a copy of the result into space obtained from
+then SQLite makes a copy of the result into space obtained
 from <a href="../c3ref/free.html">sqlite3_malloc()</a> before it returns.</p>
 
 <p>The sqlite3_result_value() interface sets the result of
@@ -212,10 +228,21 @@ A <a href="../c3ref/value.html">protected sqlite3_value</a> object may always be
 <a href="../c3ref/value.html">unprotected sqlite3_value</a> object is required, so either
 kind of <a href="../c3ref/value.html">sqlite3_value</a> object can be used with this interface.</p>
 
+<p>The sqlite3_result_pointer(C,P,T,D) interface sets the result to an
+SQL NULL value, just like <a href="../c3ref/result_blob.html">sqlite3_result_null(C)</a>, except that it
+also associates the host-language pointer P or type T with that
+NULL value such that the pointer can be retrieved within an
+<a href="../c3ref/create_function.html">application-defined SQL function</a> using <a href="../c3ref/value_blob.html">sqlite3_value_pointer()</a>.
+If the D parameter is not NULL, then it is a pointer to a destructor
+for the P parameter.  SQLite invokes D with P as its only argument
+when SQLite is finished with P.  The T parameter should be a static
+string and preferably a string literal. The sqlite3_result_pointer()
+routine is part of the <a href="../bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
+
 <p>If these routines are called from within the different thread
 than the one containing the application-defined function that received
 the <a href="../c3ref/context.html">sqlite3_context</a> pointer, the results are undefined.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

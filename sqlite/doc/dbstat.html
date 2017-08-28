@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -93,7 +108,7 @@ The DBSTAT Virtual Table
 The DBSTAT virtual tables is a read-only <a href="vtab.html#epovtab">eponymous virtual table</a> that returns
 information about which pages of the database files are used by which
 tables and indexes in the schema.
-The the DBSTAT virtual table is used to implement <a href="sqlanalyze.html">sqlite3_analyzer.exe</a>
+The DBSTAT virtual table is used to implement <a href="sqlanalyze.html">sqlite3_analyzer.exe</a>
 utility program, and to help compute the 
 <a href="https://www.sqlite.org/src/repo-tabsize">table size pie-chart</a> in
 the <a href="https://www.fossil-scm.org/">Fossil-implemented</a> version control system
@@ -143,17 +158,17 @@ name in the FROM clause of the query.  (See further discussion of
 </p><p>
 The schema for the dbstat virtual table is this:
 </p><div class="codeblock"><pre>CREATE TABLE dbstat(
-  name       STRING,     -- Name of table or index
-  path       INTEGER,    -- Path to page from root
-  pageno     INTEGER,    -- Page number
-  pagetype   STRING,     -- 'internal', 'leaf' or 'overflow'
-  ncell      INTEGER,    -- Cells on page (0 for overflow)
-  payload    INTEGER,    -- Bytes of payload on this page
-  unused     INTEGER,    -- Bytes of unused space on this page
-  mx_payload INTEGER,    -- Largest payload size of all cells on this page
-  pgoffset   INTEGER,    -- Offset of page in file
-  pgsize     INTEGER,    -- Size of the page
-  schema     TEXT HIDDEN -- The database being analyzed
+  name       TEXT,        -- Name of table or index
+  path       TEXT,        -- Path to page from root
+  pageno     INTEGER,     -- Page number
+  pagetype   TEXT,        -- 'internal', 'leaf' or 'overflow'
+  ncell      INTEGER,     -- Cells on page (0 for overflow)
+  payload    INTEGER,     -- Bytes of payload on this page
+  unused     INTEGER,     -- Bytes of unused space on this page
+  mx_payload INTEGER,     -- Largest payload size of all cells on this page
+  pgoffset   INTEGER,     -- Offset of page in file
+  pgsize     INTEGER,     -- Size of the page
+  schema     TEXT HIDDEN  -- Database schema being analyzed
 );
 </pre></div>
 
@@ -237,4 +252,4 @@ SELECT sum(s1.pageno+1==s2.pageno)*1.0/count(*)
  WHERE s1.rowid+1=s2.rowid;
 DROP TABLE s;
 </pre></div>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -104,7 +119,7 @@ implementing other virtual tables.
 
 
 <p>
-The CVS virtual table is not built into the SQLite amalgamation.
+The CSV virtual table is not built into the SQLite amalgamation.
 It is available as a
 <a href="https://www.sqlite.org/src/artifact?ci=trunk&filename=ext/misc/csv.c">separate source file</a>
 that can be compiled into a <a href="loadext.html">loadable extension</a>.
@@ -166,10 +181,10 @@ content of the CSV file.
 
 </p></li><li><p><b>schema=</b><i>SCHEMA</i>
 </p><p> The <b>schema=</b> argument specifies a <a href="lang_createtable.html">CREATE TABLE</a> statement that
-the CVS virtual table passes to the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> interface in
+the CSV virtual table passes to the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> interface in
 order to define the number and names of the columns in the virtual table.
 If both the <b>schema=</b> and the <b>columns=</b> arguments are omitted,
-then the CVS virtual table reads the first row of the input content in order
+then the CSV virtual table reads the first row of the input content in order
 to determine the number of columns and names the columns <b>cNNN</b> where
 <b>NNN</b> values are consecutive integers.  It is not allowed to have
 both <b>schema=</b> and <b>columns=</b> arguments.
@@ -180,4 +195,4 @@ exactly <i>N</i> columns.  If the input data contains more columns than this,
 then the excess columns are ignored.  If the input data contains fewer columns,
 then extra columns are filled with NULL.
 
-</p></li></ul>
+</p></li></ul><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

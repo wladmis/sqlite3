@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: {SQL parameter} {SQL parameters} {host parameter} {host parameter name} {host parameters} {parameter binding} sqlite3_bind_blob sqlite3_bind_blob64 sqlite3_bind_double sqlite3_bind_int sqlite3_bind_int64 sqlite3_bind_null sqlite3_bind_text sqlite3_bind_text16 sqlite3_bind_text64 sqlite3_bind_value sqlite3_bind_zeroblob sqlite3_bind_zeroblob64 -->
+<!-- keywords: {SQL parameter} {SQL parameters} {host parameter} {host parameter name} {host parameters} {parameter binding} sqlite3_bind_blob sqlite3_bind_blob64 sqlite3_bind_double sqlite3_bind_int sqlite3_bind_int64 sqlite3_bind_null sqlite3_bind_pointer sqlite3_bind_text sqlite3_bind_text16 sqlite3_bind_text64 sqlite3_bind_value sqlite3_bind_zeroblob sqlite3_bind_zeroblob64 -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Binding Values To Prepared Statements</h2>
@@ -94,6 +109,7 @@ int sqlite3_bind_text16(sqlite3_stmt*, int, const void*, int, void(*)(void*));
 int sqlite3_bind_text64(sqlite3_stmt*, int, const char*, sqlite3_uint64,
                          void(*)(void*), unsigned char encoding);
 int sqlite3_bind_value(sqlite3_stmt*, int, const sqlite3_value*);
+int sqlite3_bind_pointer(sqlite3_stmt*, int, void*, const char*,void(*)(void*));
 int sqlite3_bind_zeroblob(sqlite3_stmt*, int, int n);
 int sqlite3_bind_zeroblob64(sqlite3_stmt*, int, sqlite3_uint64);
 </pre></blockquote>
@@ -178,6 +194,15 @@ content is later written using
 <a href="../c3ref/blob_open.html">incremental BLOB I/O</a> routines.
 A negative value for the zeroblob results in a zero-length BLOB.</p>
 
+<p>The sqlite3_bind_pointer(S,I,P,T,D) routine causes the I-th parameter in
+<a href="../c3ref/stmt.html">prepared statement</a> S to have an SQL value of NULL, but to also be
+associated with the pointer P of type T.  D is either a NULL pointer or
+a pointer to a destructor function for P. SQLite will invoke the
+destructor D with a single argument of P when it is finished using
+P.  The T parameter should be a static string, preferably a string
+literal. The sqlite3_bind_pointer() routine is part of the
+<a href="../bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
+
 <p>If any of the sqlite3_bind_*() routines are called with a NULL pointer
 for the <a href="../c3ref/stmt.html">prepared statement</a> or with a prepared statement for which
 <a href="../c3ref/step.html">sqlite3_step()</a> has been called more recently than <a href="../c3ref/reset.html">sqlite3_reset()</a>,
@@ -201,4 +226,4 @@ index is out of range.  <a href="../rescode.html#nomem">SQLITE_NOMEM</a> is retu
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

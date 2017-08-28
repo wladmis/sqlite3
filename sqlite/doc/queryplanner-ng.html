@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -204,20 +219,22 @@ for each loop is normally obvious.</p>
 
 <h2 id="_the_sqlite_query_planner_stability_guarantee"><span>2.2. </span> The SQLite Query Planner Stability Guarantee</h2>
 
-<p>SQLite will always pick the same query plan for any
+<p>When the Query Planner Stability Guarantee (QPSG) is enabled
+SQLite will always pick the same query plan for any
 given SQL statement as long as:
 
 </p><ol type="a">
 <li>the database schema does not change in significant ways such as 
     adding or dropping indices,</li>
 <li>the ANALYZE command is not rerun, </li>
-<li>SQLite is not compiled with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a>
-    or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>, and</li>
 <li>the same version of SQLite is used.</li>
 </ol>
 
-<p>The SQLite stability guarantee means that if all of your queries run 
-efficiently
+<p>The QPSG is disabled by default.  It can be enabled at compile-time
+using the <a href="compile.html#enable_qpsg">SQLITE_ENABLE_QPSG</a> compile-time option, or at run-time by
+invoking <a href="c3ref/db_config.html">sqlite3_db_config</a>(db,<a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_ENABLE_QPSG</a>,1,0).
+
+</p><p>The QPSG means that if all of your queries run efficiently
 during testing, and if your application does not change the schema,
 then SQLite will not suddenly decide to start using a different
 query plan, possibly causing a performance problem, after your application 
@@ -238,9 +255,6 @@ is typically a Database Administrator (DBA) on hand to deal with these
 rare problems as they come up.  But DBAs are not available to fix problems 
 in an embedded database like SQLite, and hence SQLite is careful to
 ensure that plans do not change unexpectedly after deployment.</p>
-
-<p>The SQLite stability guarantee applies equally to the legacy query planner 
-and to the NGQP.</p>
 
 <p>It is important to note that changing versions of SQLite might cause
 changes in query plans.
@@ -827,4 +841,4 @@ in those rare cases do application developers need to get involved and
 help the query planner to do the right thing.  In the common case, the
 NGQP is just a new enhancement to SQLite that makes the application run
 a little faster and which requires no new developer thought or action.</p>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

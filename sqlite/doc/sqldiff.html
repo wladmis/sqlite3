@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -143,7 +158,7 @@ altered using command-line switches:
 <dd><p>Show only differences in the schema not the table content</p></dd>
 <dt><b>--summary</b></dt>
 <dd><p>Show how many rows have changed on each table, but do not show
-       the actual chagnes</p></dd>
+       the actual changes</p></dd>
 <dt><b>--table TABLE</b></dt>
 <dd><p>Show only the differences in content for TABLE, not for the
        entire database</p></dd>
@@ -198,7 +213,7 @@ By default, differences in the schema or content of virtual tables are
 not reported on. 
 
 </p><p>However, if a <a href="vtab.html">virtual table</a> implementation creates real tables (sometimes
-refered to as "shadow" tables) within the database to store its data in, then
+referred to as "shadow" tables) within the database to store its data in, then
 sqldiff.exe does calculate the difference between these. This can have
 surprising effects if the resulting SQL script is then run on a database that
 is not <i>exactly</i> the same as the source database. For several of SQLite's
@@ -210,4 +225,4 @@ underlying shadow tables belonging to an FTS3, FTS5 or rtree virtual table
 and instead includes the virtual table differences directly.
 
 </p></li></ol>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

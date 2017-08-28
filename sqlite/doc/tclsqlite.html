@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -238,7 +253,7 @@ to execute SQL on the database.  The syntax of the eval method looks
 like this:</p>
 
 <blockquote>
-<i>dbcmd</i>&nbsp;&nbsp;<b>eval</b>&nbsp;&nbsp;<i>sql</i>
+<i>dbcmd</i>&nbsp;&nbsp;<b>eval</b>&nbsp;&nbsp;?<i>options</i>?&nbsp;&nbsp;<i>sql</i>
 &nbsp;&nbsp;?<i>array-name</i>?&nbsp;&nbsp;?<i>script</i>?
 </blockquote>
 
@@ -309,6 +324,13 @@ in the result set of a query have the same name, then the last column
 with that name will overwrite prior values and earlier columns with the
 same name will be inaccessible.) The special array index * is
 used to store a list of column names in the order that they appear.
+</p>
+
+<p>
+Normally, NULL SQL results are stored in the array using the
+<a href="#nullvalue">nullvalue</a> setting.  However, if
+the <b>-withoutnulls</b> option is used, then NULL SQL values
+cause the corresponding array element to be unset instead.
 </p>
 
 <p>
@@ -812,6 +834,14 @@ subsequent idle callback.  Note that SQLite only allows a single WAL hook.
 By default this single WAL hook is used for the auto-checkpointing.  If you
 set up an explicit WAL hook, then that one WAL hook must ensure that checkpoints
 are occurring since the auto-checkpointing mechanism will be disabled.</p>
+
+<p>This method should return an integer value that is equivalent to an 
+SQLite error code (usually 0 for SQLITE_OK in the case of success or 1 for
+SQLITE_ERROR if some error occurs). As in <a href="c3ref/wal_hook.html">sqlite3_wal_hook()</a>, the results of
+returning an integer that does not correspond to an SQLite error code are
+undefined. If the value returned by the script cannot be interpreted as an
+integer value, or if the script throws a Tcl exception, no error is returned to
+SQLite but a Tcl background-error is raised.
 <a name="incrblob"></a>
 <h3>The "incrblob" method</h3>
 
@@ -924,4 +954,4 @@ profile callback is canceled but no new profile script is registered.
 </p>
 
 
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

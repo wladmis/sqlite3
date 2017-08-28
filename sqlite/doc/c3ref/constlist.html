@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -81,11 +96,11 @@ return false;
 <h2>List Of Constants:</h2>
 <p>Also available: <a href="../rescode.html">list of error codes</a></p>
 <style>
-#listtab19 tr td {vertical-align:top;}
+#listtab20 tr td {vertical-align:top;}
 </style>
-<table id='listtab19' width='100%'></table>
+<table id='listtab20' width='100%'></table>
 <script>
-var listitems19 = [{"u":"../rescode.html#abort","x":"SQLITE_ABORT","s":0},
+var listitems20 = [{"u":"../rescode.html#abort","x":"SQLITE_ABORT","s":0},
 {"u":"../rescode.html#abort_rollback","x":"SQLITE_ABORT_ROLLBACK","s":0},
 {"u":"../c3ref/c_access_exists.html","x":"SQLITE_ACCESS_EXISTS","s":0},
 {"u":"../c3ref/c_access_exists.html","x":"SQLITE_ACCESS_READ","s":0},
@@ -160,6 +175,7 @@ var listitems19 = [{"u":"../rescode.html#abort","x":"SQLITE_ABORT","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_ENABLE_FKEY","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION","s":0},
+{"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_ENABLE_QPSG","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
 {"u":"../c3ref/c_dbconfig_enable_fkey.html","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
@@ -354,6 +370,7 @@ var listitems19 = [{"u":"../rescode.html#abort","x":"SQLITE_ABORT","s":0},
 {"u":"../c3ref/c_open_autoproxy.html","x":"SQLITE_OPEN_WAL","s":0},
 {"u":"../rescode.html#perm","x":"SQLITE_PERM","s":0},
 {"u":"../c3ref/c_alter_table.html","x":"SQLITE_PRAGMA","s":0},
+{"u":"../c3ref/c_prepare_persistent.html#sqlitepreparepersistent","x":"SQLITE_PREPARE_PERSISTENT","s":0},
 {"u":"../rescode.html#protocol","x":"SQLITE_PROTOCOL","s":0},
 {"u":"../rescode.html#range","x":"SQLITE_RANGE","s":0},
 {"u":"../c3ref/c_alter_table.html","x":"SQLITE_READ","s":0},
@@ -395,6 +412,9 @@ var listitems19 = [{"u":"../rescode.html#abort","x":"SQLITE_ABORT","s":0},
 {"u":"../c3ref/c_status_malloc_count.html#sqlitestatusscratchused","x":"SQLITE_STATUS_SCRATCH_USED","s":0},
 {"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusautoindex","x":"SQLITE_STMTSTATUS_AUTOINDEX","s":0},
 {"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusfullscanstep","x":"SQLITE_STMTSTATUS_FULLSCAN_STEP","s":0},
+{"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusmemused","x":"SQLITE_STMTSTATUS_MEMUSED","s":0},
+{"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusreprepare","x":"SQLITE_STMTSTATUS_REPREPARE","s":0},
+{"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusrun","x":"SQLITE_STMTSTATUS_RUN","s":0},
 {"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort","x":"SQLITE_STMTSTATUS_SORT","s":0},
 {"u":"../c3ref/c_stmtstatus_counter.html#sqlitestmtstatusvmstep","x":"SQLITE_STMTSTATUS_VM_STEP","s":0},
 {"u":"../c3ref/c_sync_dataonly.html","x":"SQLITE_SYNC_DATAONLY","s":0},
@@ -448,36 +468,36 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems19.length+1)/nCol);
+var nRow = Math.ceil((listitems20.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems19.length; i++){
+for(var i=0; i<listitems20.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems19[i].u=="" || listitems19[i].s==2){
+  if(listitems20[i].u=="" || listitems20[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems19[i].u;
+    h += listitems20[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
-  h += listitems19[i].x;
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
+  h += listitems20[i].x;
+  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
   h += ea
-  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems19[i].s==3) h += "&sup1\n";
-  if(listitems19[i].s==4) h += "&sup2\n";
-  if(listitems19[i].s==5) h += "&sup3\n";
+  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems20[i].s==3) h += "&sup1\n";
+  if(listitems20[i].s==4) h += "&sup2\n";
+  if(listitems20[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab19").innerHTML = h;
+document.getElementById("listtab20").innerHTML = h;
 </script>
 <p>Other lists:
 <a href="objlist.html">Objects</a> and
 <a href="funclist.html">Functions</a> and
 <a href="../rescode.html">Result Codes</a>.</p>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

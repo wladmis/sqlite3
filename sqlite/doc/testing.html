@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="support.html">Support</a>
 <li class='desktoponly'><a href="prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -149,15 +164,15 @@ mk.innerHTML = "&#x25ba;";
 <p>The reliability and robustness of SQLite is achieved in part
 by thorough and careful testing.</p>
 
-<p>As of <a href="releaselog/3_16_2.html">version 3.16.2</a> (2017-01-06),
+<p>As of <a href="releaselog/3_20_0.html">version 3.20.0</a> (2017-08-01),
 the SQLite library consists of approximately
-122.9 KSLOC of C code.
+125.4 KSLOC of C code.
 (KSLOC means thousands of "Source Lines Of Code" or, in other words,
 lines of code excluding blank lines and comments.)
 By comparison, the project has
-745 times as much
+730 times as much
 test code and test scripts - 
-91596.1 KSLOC.</p>
+91616.0 KSLOC.</p>
 
 <h2 id="executive_summary"><span>1.1. </span>Executive Summary</h2>
 
@@ -201,9 +216,9 @@ The TCL tests are written using the
 <a href="http://www.tcl-lang.org/">TCL scripting language</a>.
 The TCL test harness itself consists of 25.3 KSLOC 
 of C code used to create the TCL interface.  The test scripts are contained
-in 1080 files totaling 
-12.7MB in size.  There are
-39035 distinct test cases, but many of the test
+in 1135 files totaling 
+13.3MB in size.  There are
+39747 distinct test cases, but many of the test
 cases are parameterized and run multiple times (with different parameters)
 so that on a full test run millions of
 separate tests are performed.
@@ -212,15 +227,16 @@ separate tests are performed.
 
 <li><p>
 The <b><a href="th3.html">TH3</a></b> test harness is a set of proprietary tests, written in
-C that provide 100% branch test coverage (and 100% MC/DC test coverage) to
+C that provide 100% branch test coverage 
+(and <a href="testing.html#mcdc">100% MC/DC test coverage</a>) to
 the core SQLite library.  The TH3 tests are designed to run
 on embedded and specialized platforms that would not easily support
 TCL or other workstation services.  TH3 tests use only the published 
 SQLite interfaces. TH3 consists of about
-56.6 MB or 773.3 KSLOC
-of C code implementing 41661 distinct test cases.
+57.3 MB or 782.3 KSLOC
+of C code implementing 42213 distinct test cases.
 TH3 tests are heavily parameterized, though, so a full-coverage test runs
-about 1.6 million different test
+about 1.7 million different test
 instances.  The cases that provide 100% branch test coverage constitute
 a subset of the total TH3 test suite.  A soak test
 prior to release does hundreds of millions of tests.
@@ -260,7 +276,7 @@ before each release of SQLite.</p>
 <p>Prior to each check-in to the SQLite source tree, developers
 typically run a subset (called "veryquick") of the Tcl tests
 consisting of about 
-135.5 thousand test cases.
+142.6 thousand test cases.
 The veryquick tests include most tests other than the anomaly, fuzz, and 
 soak tests.  The idea behind the veryquick tests are that they are
 sufficient to catch most errors, but also run in only a few minutes
@@ -417,7 +433,7 @@ resulting prepared statement is run to make sure it gives a reasonable
 result.</p>
 
 <p>The SQL fuzz generator tests are part of the TCL test suite.
-During a full test run, about 105.3 
+During a full test run, about 111.3 
 thousand fuzz SQL statements are
 generated and tested.</p>
 
@@ -687,7 +703,7 @@ testcase( mask & SQLITE_OPEN_TEMP_DB );
 if( (mask & (SQLITE_OPEN_MAIN_DB|SQLITE_OPEN_TEMP_DB))!=0 ){ ... }
 </pre></div>
 
-<p>The SQLite source code contains 844
+<p>The SQLite source code contains 846
 uses of the <tt>testcase()</tt> macro.</p>
 
 <a name="mcdc"></a>
@@ -855,7 +871,7 @@ quality of SQLite.</p>
 
 <h2 id="assert"><span>8.1. </span>Assert</h2>
 
-<p>The SQLite core contains 5191 <tt>assert()</tt>
+<p>The SQLite core contains 5285 <tt>assert()</tt>
 statements that verify function preconditions and postconditions and
 loop invariants.  Assert() is a macro which is a standard part of
 ANSI-C.  The argument is a boolean value that is assumed to always be
@@ -1092,4 +1108,4 @@ maintaining and improving the quality of SQLite.  This document has
 summarized the testing procedures that every release of SQLite undergoes
 with the hope of inspiring confidence that SQLite is
 suitable for use in mission-critical applications.</p>
-
+<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

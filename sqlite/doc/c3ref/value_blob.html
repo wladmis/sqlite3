@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-Small. Fast. Reliable.<br>Choose any three.
+<font size="6" color="red">*** DRAFT ***</font>
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -26,7 +26,7 @@ Small. Fast. Reliable.<br>Choose any three.
 <li class='desktoponly'><a href="../support.html">Support</a>
 <li class='desktoponly'><a href="../prosupport.html">Purchase</a>
 <li class='search' id='search_menubutton'>
-<a href="javascript:void(0)" onclick='toggle_div("searchmenu")'>Search</a>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
 </ul>
 </div>
 <div class="menu submenu" id="submenu">
@@ -40,7 +40,11 @@ Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="searchmenu" id="searchmenu">
 <form method="GET" action="../search">
-<span class="desktoponly">Search for:</span> <input type="text" name="q">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
 <input type="submit" value="Go">
 </form>
 </div>
@@ -52,6 +56,17 @@ if( w.style.display=="block" ){
 w.style.display = "none";
 }else{
 w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
 }
 }
 function div_off(nm){document.getElementById(nm).style.display="none";}
@@ -76,41 +91,61 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_numeric_type sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
+<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Obtaining SQL Values</h2>
 </div>
 <blockquote><pre>
 const void *sqlite3_value_blob(sqlite3_value*);
-int sqlite3_value_bytes(sqlite3_value*);
-int sqlite3_value_bytes16(sqlite3_value*);
 double sqlite3_value_double(sqlite3_value*);
 int sqlite3_value_int(sqlite3_value*);
 sqlite3_int64 sqlite3_value_int64(sqlite3_value*);
+void *sqlite3_value_pointer(sqlite3_value*, const char*);
 const unsigned char *sqlite3_value_text(sqlite3_value*);
 const void *sqlite3_value_text16(sqlite3_value*);
 const void *sqlite3_value_text16le(sqlite3_value*);
 const void *sqlite3_value_text16be(sqlite3_value*);
+int sqlite3_value_bytes(sqlite3_value*);
+int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
 </pre></blockquote>
 <p>
-The C-language implementation of SQL functions and aggregates uses
-this set of interface routines to access the parameter values on
-the function or aggregate.</p>
+<b>Summary:</b>
+<blockquote><table border=0 cellpadding=0 cellspacing=0>
+<tr><td><b>sqlite3_value_blob</b><td>&rarr;<td>BLOB value
+<tr><td><b>sqlite3_value_double</b><td>&rarr;<td>REAL value
+<tr><td><b>sqlite3_value_int</b><td>&rarr;<td>32-bit INTEGER value
+<tr><td><b>sqlite3_value_int64</b><td>&rarr;<td>64-bit INTEGER value
+<tr><td><b>sqlite3_value_pointer</b><td>&rarr;<td>Pointer value
+<tr><td><b>sqlite3_value_text</b><td>&rarr;<td>UTF-8 TEXT value
+<tr><td><b>sqlite3_value_text16</b><td>&rarr;<td>UTF-16 TEXT value in
+the native byteorder
+<tr><td><b>sqlite3_value_text16be</b><td>&rarr;<td>UTF-16be TEXT value
+<tr><td><b>sqlite3_value_text16le</b><td>&rarr;<td>UTF-16le TEXT value
+<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;
+<tr><td><b>sqlite3_value_bytes</b><td>&rarr;<td>Size of a BLOB
+or a UTF-8 TEXT in bytes
+<tr><td><b>sqlite3_value_bytes16&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Size of UTF-16
+TEXT in bytes
+<tr><td><b>sqlite3_value_type</b><td>&rarr;<td>Default
+datatype of the value
+<tr><td><b>sqlite3_value_numeric_type&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>Best numeric datatype of the value
+</table></blockquote></p>
 
-<p>The xFunc (for scalar functions) or xStep (for aggregates) parameters
-to <a href="../c3ref/create_function.html">sqlite3_create_function()</a> and <a href="../c3ref/create_function.html">sqlite3_create_function16()</a>
-define callbacks that implement the SQL functions and aggregates.
-The 3rd parameter to these callbacks is an array of pointers to
-<a href="../c3ref/value.html">protected sqlite3_value</a> objects.  There is one <a href="../c3ref/value.html">sqlite3_value</a> object for
-each parameter to the SQL function.  These routines are used to
-extract values from the <a href="../c3ref/value.html">sqlite3_value</a> objects.</p>
+<p><b>Details:</b></p>
+
+<p>These routines extract type, size, and content information from
+<a href="../c3ref/value.html">protected sqlite3_value</a> objects.  Protected sqlite3_value objects
+are used to pass parameter information into implementation of
+<a href="../c3ref/create_function.html">application-defined SQL functions</a> and <a href="../vtab.html">virtual tables</a>.</p>
 
 <p>These routines work only with <a href="../c3ref/value.html">protected sqlite3_value</a> objects.
 Any attempt to use these routines on an <a href="../c3ref/value.html">unprotected sqlite3_value</a>
-object results in undefined behavior.</p>
+is not threadsafe.</p>
 
 <p>These routines work just like the corresponding <a href="../c3ref/column_blob.html">column access functions</a>
 except that these routines take a single <a href="../c3ref/value.html">protected sqlite3_value</a> object
@@ -120,6 +155,24 @@ pointer instead of a <a href="../c3ref/stmt.html">sqlite3_stmt*</a> pointer and 
 in the native byte-order of the host machine.  The
 sqlite3_value_text16be() and sqlite3_value_text16le() interfaces
 extract UTF-16 strings as big-endian and little-endian respectively.</p>
+
+<p>If <a href="../c3ref/value.html">sqlite3_value</a> object V was initialized
+using <a href="../c3ref/bind_blob.html">sqlite3_bind_pointer(S,I,P,X,D)</a> or <a href="../c3ref/result_blob.html">sqlite3_result_pointer(C,P,X,D)</a>
+and if X and Y are strings that compare equal according to strcmp(X,Y),
+then sqlite3_value_pointer(V,Y) will return the pointer P.  Otherwise,
+sqlite3_value_pointer(V,Y) returns a NULL. The sqlite3_bind_pointer()
+routine is part of the <a href="../bindptr.html">pointer passing interface</a> added for SQLite 3.20.0.</p>
+
+<p>The sqlite3_value_type(V) interface returns the
+<a href="../c3ref/c_blob.html">datatype code</a> for the initial datatype of the
+<a href="../c3ref/value.html">sqlite3_value</a> object V. The returned value is one of <a href="../c3ref/c_blob.html">SQLITE_INTEGER</a>,
+<a href="../c3ref/c_blob.html">SQLITE_FLOAT</a>, <a href="../c3ref/c_blob.html">SQLITE_TEXT</a>, <a href="../c3ref/c_blob.html">SQLITE_BLOB</a>, or <a href="../c3ref/c_blob.html">SQLITE_NULL</a>.
+Other interfaces might change the datatype for an sqlite3_value object.
+For example, if the datatype is initially SQLITE_INTEGER and
+sqlite3_value_text(V) is called to extract a text value for that
+integer, then subsequent calls to sqlite3_value_type(V) might return
+SQLITE_TEXT.  Whether or not a persistent internal datatype conversion
+occurs is undefined and may change from one release of SQLite to the next.</p>
 
 <p>The sqlite3_value_numeric_type() interface attempts to apply
 numeric affinity to the value.  This means that an attempt is
@@ -140,4 +193,4 @@ the SQL function that supplied the <a href="../c3ref/value.html">sqlite3_value*<
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p>
+  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
