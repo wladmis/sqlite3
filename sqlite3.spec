@@ -118,7 +118,8 @@ autoreconf -i
 %configure \
 	--enable-threadsafe \
 	--disable-amalgamation \
-	--enable-load-extension
+	--enable-load-extension \
+	--enable-fts5
 
 %make_build all
 
