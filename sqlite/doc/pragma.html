@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -121,7 +121,7 @@ different in the following important respects:
     not compatible with any other SQL database engine.
 </ul>
 
-<p>The C-language API for SQLite provides the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a>
+<p>The C-language API for SQLite provides the <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a>
 <a href="c3ref/file_control.html">file control</a> which gives <a href="vfs.html">VFS</a> implementations the
 opportunity to add new PRAGMA statements or to override the meaning of
 built-in PRAGMA statements.</p>
@@ -221,7 +221,7 @@ Additional notes:
 <ul>
 <li><p>
 Table-valued functions exist only for built-in PRAGMAs, not for PRAGMAs
-defined using the <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control.
+defined using the <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpragma">SQLITE_FCNTL_PRAGMA</a> file control.
 <li><p>
 Table-valued functions exist only for PRAGMAs that return results and
 that have no side-effects.
@@ -278,6 +278,7 @@ var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_freelist_count","x":"freelist_count","s":0},
 {"u":"pragma.html#pragma_full_column_names","x":"full_column_names","s":3},
 {"u":"pragma.html#pragma_fullfsync","x":"fullfsync","s":0},
+{"u":"pragma.html#pragma_function_list","x":"function_list","s":4},
 {"u":"pragma.html#pragma_ignore_check_constraints","x":"ignore_check_constraints","s":0},
 {"u":"pragma.html#pragma_incremental_vacuum","x":"incremental_vacuum","s":0},
 {"u":"pragma.html#pragma_index_info","x":"index_info","s":0},
@@ -290,10 +291,12 @@ var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_locking_mode","x":"locking_mode","s":0},
 {"u":"pragma.html#pragma_max_page_count","x":"max_page_count","s":0},
 {"u":"pragma.html#pragma_mmap_size","x":"mmap_size","s":0},
+{"u":"pragma.html#pragma_module_list","x":"module_list","s":4},
 {"u":"pragma.html#pragma_optimize","x":"optimize","s":0},
 {"u":"pragma.html#pragma_page_count","x":"page_count","s":0},
 {"u":"pragma.html#pragma_page_size","x":"page_size","s":0},
 {"u":"pragma.html#pragma_parser_trace","x":"parser_trace","s":4},
+{"u":"pragma.html#pragma_pragma_list","x":"pragma_list","s":4},
 {"u":"pragma.html#pragma_query_only","x":"query_only","s":0},
 {"u":"pragma.html#pragma_quick_check","x":"quick_check","s":0},
 {"u":"pragma.html#pragma_read_uncommitted","x":"read_uncommitted","s":0},
@@ -356,8 +359,8 @@ document.getElementById("listtab30").innerHTML = h;
 <li>Pragmas whose names are <s>struck through</s>
 are deprecated. Do not use them. They exist
 for historical compatibility.
-<li>These pragmas are used for debugging SQLite and
-are only available when SQLite is compiled using <a href="compile.html#debug">SQLITE_DEBUG</a>.
+<li>These pragmas are only available in builds using non-standard
+compile-time options.
 <li>These pragmas are used for testing SQLite and are not recommended
 for use in application programs.</ol></p>
 <a name="pragma_application_id"></a>
@@ -858,6 +861,16 @@ for use in application programs.</ol></p>
     is off.  Only Mac OS X supports F_FULLFSYNC.</p>
 
     <p>See also <a href="pragma.html#pragma_checkpoint_fullfsync">checkpoint_fullfsync</a>.</p>
+<a name="pragma_function_list"></a>
+<h _id=pragma_function_list style="display:none"> PRAGMA function_list</h><hr>
+    <p><b>PRAGMA function_list;</b>
+    <p>This pragma returns a list of SQL functions
+    known to the database connection.
+
+     <p style='background-color: #f0e0ff;'>
+    This pragma is only available if SQLite is built using the
+    <a href="compile.html#introspection_pragmas">-DSQLITE_INTROSPECTION_PRAGMAS</a> compile-time option.
+  
 <a name="pragma_ignore_check_constraints"></a>
 <h _id=pragma_ignore_check_constraints style="display:none"> PRAGMA ignore_check_constraints</h><hr>
     <p><b>PRAGMA ignore_check_constraints  = </b><i>boolean</i><b>;</b></p>
@@ -1202,6 +1215,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
        the mmap_size pragma may be a no-op if the prior mmap_size is non-zero
        and there are other SQL statements running concurrently on the same
        <a href="c3ref/sqlite3.html">database connection</a>.</p>
+<a name="pragma_module_list"></a>
+<h _id=pragma_module_list style="display:none"> PRAGMA module_list</h><hr>
+    <p><b>PRAGMA module_list;</b>
+    <p>This pragma returns a list of 
+    <a href="vtab.html">virtual table</a> modules registered with the database connection.
+
+     <p style='background-color: #f0e0ff;'>
+    This pragma is only available if SQLite is built using the
+    <a href="compile.html#introspection_pragmas">-DSQLITE_INTROSPECTION_PRAGMAS</a> compile-time option.
+  
 <a name="pragma_optimize"></a>
 <h _id=pragma_optimize style="display:none"> PRAGMA optimize</h><hr>
   <p><b>PRAGMA optimize;
@@ -1317,6 +1340,16 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     This pragma is intended for use when debugging SQLite itself.  It
     is only available when the <a href="compile.html#debug">SQLITE_DEBUG</a> compile-time option
     is used.</p>
+  
+<a name="pragma_pragma_list"></a>
+<h _id=pragma_pragma_list style="display:none"> PRAGMA pragma_list</h><hr>
+    <p><b>PRAGMA pragma_list;</b>
+    <p>This pragma returns a list of PRAGMA commands
+    known to the database connection.
+
+     <p style='background-color: #f0e0ff;'>
+    This pragma is only available if SQLite is built using the
+    <a href="compile.html#introspection_pragmas">-DSQLITE_INTROSPECTION_PRAGMAS</a> compile-time option.
   
 <a name="pragma_query_only"></a>
 <h _id=pragma_query_only style="display:none"> PRAGMA query_only</h><hr>
@@ -1904,4 +1937,4 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     a <a href="howtocorrupt.html#cfgerr">corrupt database file</a>.</span></p>
 
 <hr>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

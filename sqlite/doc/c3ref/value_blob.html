@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
+<!-- keywords: sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Obtaining SQL Values</h2>
@@ -110,6 +110,7 @@ int sqlite3_value_bytes(sqlite3_value*);
 int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
+int sqlite3_value_nochange(sqlite3_value*);
 </pre></blockquote>
 <p>
 <b>Summary:</b>
@@ -134,6 +135,9 @@ TEXT in bytes
 datatype of the value
 <tr><td><b>sqlite3_value_numeric_type&nbsp;&nbsp;</b>
 <td>&rarr;&nbsp;&nbsp;<td>Best numeric datatype of the value
+<tr><td><b>sqlite3_value_nochange&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>True if the column is unchanged in an UPDATE
+against a virtual table.
 </table></blockquote></p>
 
 <p><b>Details:</b></p>
@@ -182,6 +186,19 @@ words, if the value is a string that looks like a number)
 then the conversion is performed.  Otherwise no conversion occurs.
 The <a href="../c3ref/c_blob.html">datatype</a> after conversion is returned.</p>
 
+<p>Within the <a href="../vtab.html#xupdate">xUpdate</a> method of a <a href="../vtab.html">virtual table</a>, the
+sqlite3_value_nochange(X) interface returns true if and only if
+the column corresponding to X is unchanged by the UPDATE operation
+that the xUpdate method call was invoked to implement and if
+and the prior <a href="../vtab.html#xcolumn">xColumn</a> method call that was invoked to extracted
+the value for that column returned without setting a result (probably
+because it queried <a href="../c3ref/vtab_nochange.html">sqlite3_vtab_nochange()</a> and found that the column
+was unchanging).  Within an <a href="../vtab.html#xupdate">xUpdate</a> method, any value for which
+sqlite3_value_nochange(X) is true will in all other respects appear
+to be a NULL value.  If sqlite3_value_nochange(X) is invoked anywhere other
+than within an <a href="../vtab.html#xupdate">xUpdate</a> method call for an UPDATE statement, then
+the return value is arbitrary and meaningless.</p>
+
 <p>Please pay particular attention to the fact that the pointer returned
 from <a href="../c3ref/value_blob.html">sqlite3_value_blob()</a>, <a href="../c3ref/value_blob.html">sqlite3_value_text()</a>, or
 <a href="../c3ref/value_blob.html">sqlite3_value_text16()</a> can be invalidated by a subsequent call to
@@ -193,4 +210,4 @@ the SQL function that supplied the <a href="../c3ref/value.html">sqlite3_value*<
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

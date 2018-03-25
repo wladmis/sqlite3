@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.20.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=8d3a7ea6c5690'>8d3a7ea6c5690</a> dated 2017-08-24.
+ version 3.22.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=4e68a76247467'>4e68a76247467</a> dated 2018-01-22.
 
 
 
@@ -417,20 +417,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 165
+<p>There are currently 167
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/b2bb208cc81814ee2cd1c04400ad25d002fa587a">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/9e7f70b7ba43c3fbf6c13960f2865278d033852c">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.20.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=8d3a7ea6c5690'>8d3a7ea6c5690</a> dated 2017-08-24.
+ version 3.22.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=4e68a76247467'>4e68a76247467</a> dated 2018-01-22.
 
 <a name="codes"></a>
 
@@ -657,25 +657,12 @@ is made of any string or blob constant.  See also <a href="opcode.html#SCopy">SC
 <td>Store the number of entries (an integer value) in the table or index
 opened by cursor P1 in register P2</td></tr>
 <tr><td valign="top" align="center">
-<a name="CreateIndex"></a>CreateIndex
-<td>Allocate a new index in the main database file if P1==0 or in the
-auxiliary database file if P1==1 or in an attached database if
-P1&gt;1.  Write the root page number of the new table into
-register P2.</p>
-
-<p>See documentation on <a href="opcode.html#CreateTable">CreateTable</a> for additional information.</td></tr>
-<tr><td valign="top" align="center">
-<a name="CreateTable"></a>CreateTable
-<td>Allocate a new table in the main database file if P1==0 or in the
-auxiliary database file if P1==1 or in an attached database if
-P1&gt;1.  Write the root page number of the new table into
-register P2</p>
-
-<p>The difference between a table and an index is this:  A table must
-have a 4-byte integer key and can have arbitrary data.  An index
-has an arbitrary key but no data.</p>
-
-<p>See also: <a href="opcode.html#CreateIndex">CreateIndex</a></td></tr>
+<a name="CreateBtree"></a>CreateBtree
+<td>Allocate a new b-tree in the main database file if P1==0 or in the
+TEMP database file if P1==1 or in an attached database if
+P1&gt;1.  The P3 argument must be 1 (BTREE_INTKEY) for a rowid table
+it must be 2 (BTREE_BLOBKEY) for a index or WITHOUT ROWID table.
+The root page number of the new b-tree is stored in register P2.</td></tr>
 <tr><td valign="top" align="center">
 <a name="CursorHint"></a>CursorHint
 <td>Provide a hint to cursor P1 that it only needs to return rows that
@@ -1099,7 +1086,10 @@ Or if P4 is blank, use the string returned by sqlite3_sql().</p>
 <p>If P2 is not zero, jump to instruction P2.</p>
 
 <p>Increment the value of P1 so that <a href="opcode.html#Once">Once</a> opcodes will jump the
-first time they are evaluated for this run.</td></tr>
+first time they are evaluated for this run.</p>
+
+<p>If P3 is not zero, then it is an address to jump to if an SQLITE_CORRUPT
+error is encountered.</td></tr>
 <tr><td valign="top" align="center">
 <a name="InitCoroutine"></a>InitCoroutine
 <td>Set up register P1 so that it will <a href="opcode.html#Yield">Yield</a> to the coroutine
@@ -1208,14 +1198,7 @@ to the following instruction.</p>
 
 <p>This opcode leaves the cursor configured to move in reverse order,
 from the end toward the beginning.  In other words, the cursor is
-configured to use <a href="opcode.html#Prev">Prev</a>, not <a href="opcode.html#Next">Next</a>.</p>
-
-<p>If P3 is -1, then the cursor is positioned at the end of the btree
-for the purpose of appending a new entry onto the btree.  In that
-case P2 must be 0.  It is assumed that the cursor is used only for
-appending and so if the cursor is valid, then the cursor must already
-be pointing at the end of the btree and so no changes are made to
-the cursor.</td></tr>
+configured to use <a href="opcode.html#Prev">Prev</a>, not <a href="opcode.html#Next">Next</a>.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Le"></a>Le
 <td>This works just like the Lt opcode except that the jump is taken if
@@ -1439,6 +1422,19 @@ NULL values will not compare equal even if SQLITE_NULLEQ is set on
 <td>Move the cursor P1 to a null row.  Any <a href="opcode.html#Column">Column</a> operations
 that occur while the cursor is on the null row will always
 write a NULL.</td></tr>
+<tr><td valign="top" align="center">
+<a name="Offset"></a>Offset
+<td>Store in register r&#91;P3&#93 the byte offset into the database file that is the
+start of the payload for the record at which that cursor P1 is currently
+pointing.</p>
+
+<p>P2 is the column number for the argument to the sqlite_offset() function.
+This opcode does not use P2 itself, but the P2 value is used by the
+code generator.  The P1, P2, and P3 operands to this opcode are the
+as as for <a href="opcode.html#Column">Column</a>.</p>
+
+<p>This opcode is only available if SQLite is compiled with the
+-DSQLITE_ENABLE_OFFSET_SQL_FUNC option.</td></tr>
 <tr><td valign="top" align="center">
 <a name="OffsetLimit"></a>OffsetLimit
 <td>This opcode performs a commonly used computation associated with
@@ -1803,6 +1799,15 @@ Thus the program must guarantee that the original will not change
 during the lifetime of the copy.  Use <a href="opcode.html#Copy">Copy</a> to make a complete
 copy.</td></tr>
 <tr><td valign="top" align="center">
+<a name="SeekEnd"></a>SeekEnd
+<td>Position cursor P1 at the end of the btree for the purpose of
+appending a new entry onto the btree.</p>
+
+<p>It is assumed that the cursor is used only for appending and so
+if the cursor is valid, then the cursor must already be pointing
+at the end of the btree and so no changes are made to
+the cursor.</td></tr>
+<tr><td valign="top" align="center">
 <a name="SeekGE"></a>SeekGE
 <td>If cursor P1 refers to an SQL table (B-Tree that uses integer keys),
 use the value in register P3 as the key.  If cursor P1 refers
@@ -2040,6 +2045,12 @@ a write lock if P3==1.</p>
 <p>P4 contains a pointer to the name of the table being locked. This is only
 used to generate an error message if the lock cannot be obtained.</td></tr>
 <tr><td valign="top" align="center">
+<a name="Trace"></a>Trace
+<td>Write P4 on the statement trace output if statement tracing is
+enabled.</p>
+
+<p>Operand P1 must be 0x7fffffff and P2 must positive.</td></tr>
+<tr><td valign="top" align="center">
 <a name="Transaction"></a>Transaction
 <td>Begin a transaction on database P1 if a transaction is not already
 active.
@@ -2092,9 +2103,15 @@ within a callback to a virtual table xSync() method. If it is, the error
 code will be set to SQLITE_LOCKED.</td></tr>
 <tr><td valign="top" align="center">
 <a name="VColumn"></a>VColumn
-<td>Store the value of the P2-th column of
-the row of the virtual-table that the
-P1 cursor is pointing to into register P3.</td></tr>
+<td>Store in register P3 the value of the P2-th column of
+the current row of the virtual-table of cursor P1.</p>
+
+<p>If the <a href="opcode.html#VColumn">VColumn</a> opcode is being used to fetch the value of
+an unchanging column during an UPDATE operation, then the P5
+value is 1.  Otherwise, P5 is 0.  The P5 value is returned
+by sqlite3_vtab_nochange() routine can can be used
+by virtual table implementations to return special "no-change"
+marks which can be more efficient, depending on the virtual table.</td></tr>
 <tr><td valign="top" align="center">
 <a name="VCreate"></a>VCreate
 <td>P2 is a register that holds the name of a virtual table in database
@@ -2176,4 +2193,4 @@ next instruction.</p>
   </table></blockquote>
   </div>
 
-</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+</p>

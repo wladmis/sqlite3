@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -130,8 +130,9 @@ sqlite3_value objects even when not strictly required.</p>
 implementation of <a href="../c3ref/create_function.html">application-defined SQL functions</a> are protected.
 The sqlite3_value object returned by
 <a href="../c3ref/column_blob.html">sqlite3_column_value()</a> is unprotected.
-Unprotected sqlite3_value objects may only be used with
-<a href="../c3ref/result_blob.html">sqlite3_result_value()</a> and <a href="../c3ref/bind_blob.html">sqlite3_bind_value()</a>.
+Unprotected sqlite3_value objects may only be used as arguments
+to <a href="../c3ref/result_blob.html">sqlite3_result_value()</a>, <a href="../c3ref/bind_blob.html">sqlite3_bind_value()</a>, and
+<a href="../c3ref/value_dup.html">sqlite3_value_dup()</a>.
 The <a href="../c3ref/value_blob.html">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
@@ -147,6 +148,7 @@ var listitems26 = [{"u":"../c3ref/value_blob.html","x":"sqlite3_value_blob","s":
 {"u":"../c3ref/value_dup.html","x":"sqlite3_value_free","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_int","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_int64","s":0},
+{"u":"../c3ref/value_blob.html","x":"sqlite3_value_nochange","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_numeric_type","s":0},
 {"u":"../c3ref/value_blob.html","x":"sqlite3_value_pointer","s":0},
 {"u":"../c3ref/value_subtype.html","x":"sqlite3_value_subtype","s":0},
@@ -192,4 +194,4 @@ document.getElementById("listtab26").innerHTML = h;
 <p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

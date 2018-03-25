@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -100,12 +100,12 @@ return false;
 #define SQLITE_STATUS_MEMORY_USED          0
 #define SQLITE_STATUS_PAGECACHE_USED       1
 #define SQLITE_STATUS_PAGECACHE_OVERFLOW   2
-#define SQLITE_STATUS_SCRATCH_USED         3
-#define SQLITE_STATUS_SCRATCH_OVERFLOW     4
+#define SQLITE_STATUS_SCRATCH_USED         3  /* NOT USED */
+#define SQLITE_STATUS_SCRATCH_OVERFLOW     4  /* NOT USED */
 #define SQLITE_STATUS_MALLOC_SIZE          5
 #define SQLITE_STATUS_PARSER_STACK         6
 #define SQLITE_STATUS_PAGECACHE_SIZE       7
-#define SQLITE_STATUS_SCRATCH_SIZE         8
+#define SQLITE_STATUS_SCRATCH_SIZE         8  /* NOT USED */
 #define SQLITE_STATUS_MALLOC_COUNT         9
 </pre></blockquote>
 <p>
@@ -118,8 +118,7 @@ that can be returned by <a href="../c3ref/status.html">sqlite3_status()</a>.</p>
 <dd>This parameter is the current amount of memory checked out
 using <a href="../c3ref/free.html">sqlite3_malloc()</a>, either directly or indirectly.  The
 figure includes calls made to <a href="../c3ref/free.html">sqlite3_malloc()</a> by the application
-and internal memory usage by the SQLite library.  Scratch memory
-controlled by <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a> and auxiliary page-cache
+and internal memory usage by the SQLite library.  Auxiliary page-cache
 memory controlled by <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a> is not included in
 this parameter.  The amount returned is the sum of the allocation
 sizes as reported by the xSize method in <a href="../c3ref/mem_methods.html">sqlite3_mem_methods</a>.</dd></p>
@@ -164,30 +163,15 @@ The value written into the *pCurrent parameter is undefined.</dd></p>
 
 <p><a name="sqlitestatusscratchused"></a>
  <dt>SQLITE_STATUS_SCRATCH_USED</dt>
-<dd>This parameter returns the number of allocations used out of the
-<a href="../malloc.html#scratch">scratch memory allocator</a> configured using
-<a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>.  The value returned is in allocations, not
-in bytes.  Since a single thread may only have one scratch allocation
-outstanding at time, this parameter also reports the number of threads
-using scratch memory at the same time.</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusscratchoverflow"></a>
  <dt>SQLITE_STATUS_SCRATCH_OVERFLOW</dt>
-<dd>This parameter returns the number of bytes of scratch memory
-allocation which could not be satisfied by the <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>
-buffer and where forced to overflow to <a href="../c3ref/free.html">sqlite3_malloc()</a>.  The values
-returned include overflows because the requested allocation was too
-larger (that is, because the requested allocation was larger than the
-"sz" parameter to <a href="../c3ref/c_config_covering_index_scan.html#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>) and because no scratch buffer
-slots were available.
-</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusscratchsize"></a>
  <dt>SQLITE_STATUS_SCRATCH_SIZE</dt>
-<dd>This parameter records the largest memory allocation request
-handed to <a href="../malloc.html#scratch">scratch memory allocator</a>.  Only the value returned in the
-*pHighwater parameter to <a href="../c3ref/status.html">sqlite3_status()</a> is of interest.
-The value written into the *pCurrent parameter is undefined.</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusparserstack"></a>
  <dt>SQLITE_STATUS_PARSER_STACK</dt>
@@ -200,4 +184,4 @@ meaningful if SQLite is compiled with <a href="../compile.html#yytrackmaxstackde
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

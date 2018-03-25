@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -144,12 +144,18 @@ the SQLite core and the underlying operating system.  The "vfs"
 in the name of the object stands for "virtual file system".  See
 the <a href="../vfs.html">VFS documentation</a> for further information.</p>
 
-<p>The value of the iVersion field is initially 1 but may be larger in
-future versions of SQLite.  Additional fields may be appended to this
-object when the iVersion value is increased.  Note that the structure
-of the sqlite3_vfs object changes in the transaction between
-SQLite version 3.5.9 and 3.6.0 and yet the iVersion field was not
-modified.</p>
+<p>The VFS interface is sometimes extended by adding new methods onto
+the end.  Each time such an extension occurs, the iVersion field
+is incremented.  The iVersion value started out as 1 in
+SQLite <a href="../releaselog/3_5_0.html">version 3.5.0</a> on 2007-09-04, then increased to 2
+with SQLite <a href="../releaselog/3_7_0.html">version 3.7.0</a> on 2010-07-21, and then increased
+to 3 with SQLite <a href="../releaselog/3_7_6.html">version 3.7.6</a> on 2011-04-12.  Additional fields
+may be appended to the sqlite3_vfs object and the iVersion value
+may increase again in future versions of SQLite.
+Note that the structure
+of the sqlite3_vfs object changes in the transition from
+SQLite <a href="../releaselog/3_5_9.html">version 3.5.9</a> to <a href="../releaselog/3_6_0.html">version 3.6.0</a> on 2008-07-16
+and yet the iVersion field was not modified.</p>
 
 <p>The szOsFile field is the size of the subclassed <a href="../c3ref/file.html">sqlite3_file</a>
 structure used by this VFS.  mxPathname is the maximum length of
@@ -297,4 +303,4 @@ any of these methods if the iVersion of the VFS is less than 3.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

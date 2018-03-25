@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -179,7 +179,7 @@ a rollback journal.  Advantages include:</p>
     mode to change the page size.
 </li><li>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
     The opening process must have write privileges for "<tt>-shm</tt>"
-    <a href="fileformat2.html#walindexformat">wal-index</a> shared memory file associated with the database, if that
+    <a href="walformat.html">wal-index</a> shared memory file associated with the database, if that
     file exists, or else write access on the directory containing
     the database file if the "<tt>-shm</tt>" file does not exist.
 </li><li>WAL might be very slightly slower (perhaps 1% or 2% slower)
@@ -472,7 +472,7 @@ operations.</p>
 
 <p>An efficient implementation of the <a href="fileformat2.html#walread">WAL read algorithm</a> requires that
 there exist a hash table in shared memory over the content of the WAL file.
-This hash table is called the <a href="fileformat2.html#walindexformat">wal-index</a>.
+This hash table is called the <a href="walformat.html">wal-index</a>.
 The wal-index is in shared memory, and so technically it does not have 
 to have a name in the host computer filesystem.  Custom
 <a href="vfs.html">VFS</a> implementations are free to implement shared 
@@ -579,7 +579,7 @@ than the page cache.
 
 <h1 id="implementation_of_shared_memory_for_the_wal_index"><span>6. </span>Implementation Of Shared-Memory For The WAL-Index</h1>
 
-<p>The <a href="fileformat2.html#walindexformat">wal-index</a> is implemented using an ordinary file that is
+<p>The <a href="walformat.html">wal-index</a> is implemented using an ordinary file that is
 mmapped for robustness.  Early (pre-release) implementations of WAL mode
 stored the wal-index in volatile shared-memory, such as files created in
 /dev/shm on Linux or /tmp on other unix systems.  The problem
@@ -692,7 +692,7 @@ the third connection will get an <a href="rescode.html#busy">SQLITE_BUSY</a> err
 <h1 id="backwards_compatibility"><span>9. </span>Backwards Compatibility</h1>
 
 <p>The database file format is unchanged for WAL mode.  However, the
-WAL file and the <a href="fileformat2.html#walindexformat">wal-index</a> are new concepts and so older versions of 
+WAL file and the <a href="walformat.html">wal-index</a> are new concepts and so older versions of 
 SQLite will not know
 how to recover a crashed SQLite database that was operating in WAL mode
 when the crash occurred.
@@ -716,4 +716,4 @@ PRAGMA journal_mode=DELETE;
 <p>Deliberately changing out of WAL mode changes the database file format
 version numbers back to 1 so that older versions of SQLite can once again 
 access the database file.</p>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

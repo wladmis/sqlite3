@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -241,12 +241,7 @@ statements) are ordinary full indexes.
 The expression following the WHERE clause may contain operators,
 literal values, and names of columns in the table being indexed.
 The WHERE clause may <em>not</em> contain subqueries, references to other
-tables, <a href="deterministic.html">non-deterministic functions</a>, or <a href="lang_expr.html#varparam">bound parameters</a>.
-The LIKE, GLOB, MATCH,
-and REGEXP operators in SQLite are implemented as functions by the same name.
-Since functions are prohibited in the 
-WHERE clause of a CREATE INDEX statement, so too are the LIKE, GLOB,
-MATCH, and REGEXP operators.</p>
+tables, <a href="deterministic.html">non-deterministic functions</a>, or <a href="lang_expr.html#varparam">bound parameters</a>.</p>
 
 <p>
 Only rows of the table for which the WHERE clause evaluates to true
@@ -400,4 +395,4 @@ by SQLite 3.8.0 is still readable and writable by prior versions as long
 as its schema contains no partial indexes.  A database that is unreadable
 by legacy versions of SQLite can be made readable simply by running
 <a href="lang_dropindex.html">DROP INDEX</a> on the partial indexes.</p>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

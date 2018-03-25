@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -168,7 +168,7 @@ functions to enable blocking locks with timeouts, to change the
 locking strategy (for example to use dot-file locks), to inquire
 about the status of a lock, or to break stale locks.  The SQLite
 core reserves all opcodes less than 100 for its own use.
-A <a href="../c3ref/c_fcntl_busyhandler.html">list of opcodes</a> less than 100 is available.
+A <a href="../c3ref/c_fcntl_begin_atomic_write.html">list of opcodes</a> less than 100 is available.
 Applications that define a custom xFileControl method should use opcodes
 greater than 100 to avoid conflicts.  VFS implementations should
 return <a href="../rescode.html#notfound">SQLITE_NOTFOUND</a> for file control opcodes that they do not
@@ -196,6 +196,7 @@ underlying device:</p>
 <li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</a>
 <li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_POWERSAFE_OVERWRITE</a>
 <li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_IMMUTABLE</a>
+<li> <a href="../c3ref/c_iocap_atomic.html">SQLITE_IOCAP_BATCH_ATOMIC</a>
 </ul></p>
 
 <p>The SQLITE_IOCAP_ATOMIC property means that all writes of
@@ -217,4 +218,4 @@ database corruption.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

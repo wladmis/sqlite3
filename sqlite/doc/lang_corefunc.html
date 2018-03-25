@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -140,6 +140,7 @@ var listitems28 = [{"u":"lang_corefunc.html#abs","x":"abs(X)","s":0},
 {"u":"lang_corefunc.html#soundex","x":"soundex(X)","s":0},
 {"u":"lang_corefunc.html#sqlite_compileoption_get","x":"sqlite_compileoption_get(N)","s":0},
 {"u":"lang_corefunc.html#sqlite_compileoption_used","x":"sqlite_compileoption_used(X)","s":0},
+{"u":"lang_corefunc.html#sqlite_offset","x":"sqlite_offset(X)","s":0},
 {"u":"lang_corefunc.html#sqlite_source_id","x":"sqlite_source_id()","s":0},
 {"u":"lang_corefunc.html#sqlite_version","x":"sqlite_version()","s":0},
 {"u":"lang_corefunc.html#substr","x":"substr(X,Y)","s":0},
@@ -464,6 +465,21 @@ document.getElementById("listtab28").innerHTML = h;
   false (0) depending on whether or not that option was used during the
   build.
 </dd>
+<a name="sqlite_offset"></a>
+<dt><p><b>sqlite_offset(<i>X</i>)</b></dt><dd><p>
+  The sqlite_offset(X) function returns the byte offset in the database
+  file for the beginning of the record from which value would be read.
+  If X is not a column in an ordinary table, then sqlite_offset(X) returns
+  NULL.  The value returned by sqlite_offset(X) might reference either the
+  original table or an index, depending on the query.  If the value X would
+  normally be extracted from an index, the sqlite_offset(X) returns the
+  offset to the corresponding index record.  If the value X would be
+  extracted from the original table, then sqlite_offset(X) returns the offset
+  to the table record.
+
+  <p>The sqlite_offset(X) SQL function is only available if SQLite is built
+  using the <a href="compile.html#enable_offset_sql_func">-DSQLITE_ENABLE_OFFSET_SQL_FUNC</a> compile-time option.
+</dd>
 <a name="sqlite_source_id"></a>
 <dt><p><b>sqlite_source_id()</b></dt><dd><p>
   The sqlite_source_id() function returns a string that identifies the
@@ -543,4 +559,4 @@ document.getElementById("listtab28").innerHTML = h;
   routine from the C/C++ interface.
 </dd>
 </dl>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

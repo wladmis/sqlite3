@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -573,7 +573,7 @@ If the xCreate method is omitted (left as a NULL pointer) then the
 virtual table is an <a href="vtab.html#epoonlyvtab">eponymous-only virtual table</a>.  New instances of
 the virtual table cannot be created using <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> and the
 virtual table can only be used via its module name.
-Note that SQLite versions prior to 3.9.0 do not understand
+Note that SQLite versions prior to 3.9.0 (2015-10-14) do not understand
 eponymous-only virtual tables and will segfault if an attempt is made
 to <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> on an eponymous-only virtual table because
 the xCreate method was not checked for null.
@@ -679,11 +679,14 @@ NOT NULL - and it uses that assumption to optimize queries against the
 virtual table.
 
 </p><p>The rowid column is not accessible on a
-WITHOUT ROWID virtual table (of course).  Furthermore, since the
-<a href="vtab.html#xupdate">xUpdate</a> method depends on having a valid rowid, the <a href="vtab.html#xupdate">xUpdate</a> method 
-must be NULL for a WITHOUT ROWID virtual table.  That in turn means that
-WITHOUT ROWID virtual tables must be read-only.
+WITHOUT ROWID virtual table (of course).
 
+</p><p>The <a href="vtab.html#xupdate">xUpdate</a> method was originally designed around having a
+<a href="lang_createtable.html#rowid">ROWID</a> as a single value.  The <a href="vtab.html#xupdate">xUpdate</a> method has been expanded to
+accommodate an arbitrary PRIMARY KEY in place of the ROWID, but the
+PRIMARY KEY must still be only one column.  For this reason, SQLite
+will reject any WITHOUT ROWID virtual table that has more than one
+PRIMARY KEY column and a non-NULL xUpdate method.
 
 <a name="xconnect"></a>
 
@@ -802,16 +805,21 @@ older version of SQLite are undefined.
 
 </p><p>In addition, there are some defined constants:
 
-</p><div class="codeblock"><pre>#define SQLITE_INDEX_CONSTRAINT_EQ      2
-#define SQLITE_INDEX_CONSTRAINT_GT      4
-#define SQLITE_INDEX_CONSTRAINT_LE      8
-#define SQLITE_INDEX_CONSTRAINT_LT     16
-#define SQLITE_INDEX_CONSTRAINT_GE     32
-#define SQLITE_INDEX_CONSTRAINT_MATCH  64
-#define SQLITE_INDEX_CONSTRAINT_LIKE   65     /* 3.10.0 and later only */
-#define SQLITE_INDEX_CONSTRAINT_GLOB   66     /* 3.10.0 and later only */
-#define SQLITE_INDEX_CONSTRAINT_REGEXP 67     /* 3.10.0 and later only */
-#define SQLITE_INDEX_SCAN_UNIQUE        1     /* Scan visits at most 1 row */
+</p><div class="codeblock"><pre>#define SQLITE_INDEX_CONSTRAINT_EQ         2
+#define SQLITE_INDEX_CONSTRAINT_GT         4
+#define SQLITE_INDEX_CONSTRAINT_LE         8
+#define SQLITE_INDEX_CONSTRAINT_LT        16
+#define SQLITE_INDEX_CONSTRAINT_GE        32
+#define SQLITE_INDEX_CONSTRAINT_MATCH     64
+#define SQLITE_INDEX_CONSTRAINT_LIKE      65  /* 3.10.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_GLOB      66  /* 3.10.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_REGEXP    67  /* 3.10.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_NE        68  /* 3.21.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_ISNOT     69  /* 3.21.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_ISNOTNULL 70  /* 3.21.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_ISNULL    71  /* 3.21.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_IS        72  /* 3.21.0 and later */
+#define SQLITE_INDEX_SCAN_UNIQUE           1  /* Scan visits at most 1 row */
 </pre></div>
 
 <p>The SQLite core calls the xBestIndex method when it is compiling a query
@@ -1243,8 +1251,9 @@ order that the columns were declared. The number of columns will
 match the table declaration that the <a href="vtab.html#xconnect">xConnect</a> or <a href="vtab.html#xcreate">xCreate</a> method made 
 using the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> call.  All hidden columns are included.
 
-</p><p>When doing an insert without a rowid (argc>1, argv[1] is an SQL NULL), the 
-implementation must set *pRowid to the rowid of the newly inserted row; 
+</p><p>When doing an insert without a rowid (argc>1, argv[1] is an SQL NULL),
+on a virtual table that uses ROWID (but not on a <a href="vtab.html#worid">WITHOUT ROWID virtual table</a>,
+the implementation must set *pRowid to the rowid of the newly inserted row; 
 this will become the value returned by the <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function. Setting this value in all the other cases is a harmless no-op;
 the SQLite engine ignores the *pRowid return value if argc==1 or 
@@ -1257,20 +1266,27 @@ object itself.
 
 </p><blockquote>
 <dl>
-<dt><b>argc = 1</b>
-</dt><dd><p>The single row with rowid equal to argv[0] is deleted. No insert occurs.
+<dt><b>argc = 1 <br> argv[0] &ne; NULL</b>
+</dt><dd><p>
+The single row with rowid or PRIMARY KEY equal to argv[0] is deleted. 
+No insert occurs.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] = NULL</b>
-</dt><dd><p>A new row is inserted with a rowid argv[1] and column values in
-       argv[2] and following.  If argv[1] is an SQL NULL,
-       the a new unique rowid is generated automatically.
+</dt><dd><p>
+A new row is inserted with column values taken from
+argv[2] and following.  In a rowid virtual table, if argv[1] is an SQL NULL,
+then a new unique rowid is generated automatically.  The argv[1] will be NULL
+for a <a href="vtab.html#worid">WITHOUT ROWID virtual table</a>, in which case the implementation should
+take the PRIMARY KEY value from the appropriate column in argv[2] and following.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] &ne; NULL <br> argv[0] = argv[1]</b>
-</dt><dd><p>The row with rowid argv[0] is updated with new values 
-       in argv[2] and following parameters.
+</dt><dd><p>
+The row with rowid or PRIMARY KEY argv[0] is updated with new values 
+in argv[2] and following parameters.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] &ne; NULL <br> argv[0] &ne; argv[1]</b>
-</dt><dd><p> The row with rowid argv[0] is updated with rowid argv[1] 
+</dt><dd><p> The row with rowid or PRIMARY KEY argv[0] is updated with 
+the rowid or PRIMARY KEY in argv[1] 
 and new values in argv[2] and following parameters. This will occur 
 when an SQL statement updates a rowid, as in the statement:
 </p><blockquote>
@@ -1290,6 +1306,25 @@ using functions such as <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> or <a
 datatype, attempting to store a value that is too
 large or too small, or attempting to change a read-only value) then the
 xUpdate must fail with an appropriate <a href="rescode.html">error code</a>.
+
+</p><p>If the xUpdate method is performing an UPDATE, then
+<a href="c3ref/value_blob.html">sqlite3_value_nochange(X)</a> can be used to discover which columns
+of the virtual table were actually modified by the UPDATE
+statement.  The <a href="c3ref/value_blob.html">sqlite3_value_nochange(X)</a> interface returns
+true for columns that do not change.
+On every UPDATE, SQLite will first invoke
+<a href="vtab.html#xcolumn">xColumn</a> separately for each unchanging column in the table to 
+obtain the value for that column.  The <a href="vtab.html#xcolumn">xColumn</a> method can
+check to see if the column is unchanged at the SQL level
+by invoking <a href="c3ref/vtab_nochange.html">sqlite3_vtab_nochange()</a>.  If <a href="vtab.html#xcolumn">xColumn</a> sees that
+the column is not being modified, it should return without setting 
+a result using one of the <a href="c3ref/result_blob.html">sqlite3_result_xxxxx()</a>
+interfaces.  Only in that case <a href="c3ref/value_blob.html">sqlite3_value_nochange()</a> will be
+true within the xUpdate method.  If <a href="vtab.html#xcolumn">xColumn</a> does
+invoke one or more <a href="c3ref/result_blob.html">sqlite3_result_xxxxx()</a>
+interfaces, then SQLite understands that as a change in the value
+of the column and the <a href="c3ref/value_blob.html">sqlite3_value_nochange()</a> call for that
+column within xUpdate will return false.
 
 </p><p>There might be one or more <a href="c3ref/vtab_cursor.html">sqlite3_vtab_cursor</a> objects open and in use 
 on the virtual table instance and perhaps even on the row of the virtual
@@ -1452,4 +1487,4 @@ None of the xSavepoint(), xRelease(), or xRollbackTo() methods will ever
 be called except in between calls to xBegin() and 
 either xCommit() or xRollback().
 </p>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

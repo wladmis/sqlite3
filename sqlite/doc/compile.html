@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -141,7 +141,7 @@ For most purposes, SQLite can be built just fine using the default
 compilation options. However, if required, the compile-time options
 documented below can be used to 
 <a href="#omitfeatures">omit SQLite features</a> (resulting in
-a <a href="footprint.html#relfootprint">smaller compiled library size</a>) or to change the
+a <a href="footprint.html">smaller compiled library size</a>) or to change the
 <a href="#defaults">default values</a> of some parameters.
 </p>
 
@@ -228,6 +228,11 @@ to run slightly faster.
 Omitting the possibility of using <a href="sharedcache.html">shared cache</a> allows many conditionals
 in performance-critical sections of the code to be eliminated.  This can
 give a noticable improvement in performance.
+
+</p></li><li><p><b><a href="compile.html#use_alloca">SQLITE_USE_ALLOCA</a></b>.
+Make use of alloca() for dynamically allocating temporary stack space for 
+use within a single function, on systems that support alloca().  Without
+this option, temporary space is allocated from the heap.
 </p></li></ol>
 
 <p>When all of the recommended compile-time options above are used,
@@ -543,7 +548,7 @@ some design situations, every little bit helps.
   space size (set by <a href="compile.html#default_mmap_size">SQLITE_DEFAULT_MMAP_SIZE</a> or
   sqlite3_config(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigmmapsize">SQLITE_CONFIG_MMAP_SIZE</a>) or the
   run-time memory-mapped I/O address space size (set by
-  sqlite3_file_control(<a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize">SQLITE_FCNTL_MMAP_SIZE</a>) or
+  sqlite3_file_control(<a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlmmapsize">SQLITE_FCNTL_MMAP_SIZE</a>) or
   <a href="pragma.html#pragma_mmap_size">PRAGMA mmap_size</a>) as long as those other settings are less than the
   maximum value defined here.
 </p></blockquote><a name="max_schema_retry"></a>
@@ -828,6 +833,24 @@ the available settings:</p>
   and the code paths that check for this capability slow down write
   performance on systems that lack atomic write capability, so this
   feature is disabled by default.
+</p></blockquote><a name="enable_batch_atomic_write"></a>
+<p><b>SQLITE_ENABLE_BATCH_ATOMIC_WRITE</b></p><blockquote><p>
+  This compile-time option enables SQLite to take advantage batch
+  atomic write capabilities in the underlying filesystem.  As of
+  SQLite version 3.21.0 (2017-10-24) this is only supported on
+  <a href="https://en.wikipedia.org/wiki/F2FS">F2FS</a>.  However, the interface
+  is implemented generically, using <a href="c3ref/file_control.html">sqlite3_file_control()</a> with
+  <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a> and <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitatomicwrite">SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</a>
+  so the capability can be added to other filesystem times in the
+  future.  When this option is enabled, SQLite automatically detects
+  that the underlying filesystem supports batch atomic writes, and
+  when it does so it avoids writing the <a href="lockingv3.html#rollback">rollback journal</a> for transaction
+  control.  This can make transactions over twice as fast, while
+  simultaneously reducing wear on SSD storage devices.
+<p>
+  Future versions of SQLite might enable the batch-atomic-write
+  capability by default, at which point this compile-time option
+  will become superfluous.
 </p></blockquote><a name="enable_column_metadata"></a>
 <p><b>SQLITE_ENABLE_COLUMN_METADATA</b></p><blockquote><p>
   When this C-preprocessor macro is defined, SQLite includes some
@@ -842,6 +865,10 @@ the available settings:</p>
   <li> <a href="c3ref/column_database_name.html">sqlite3_column_origin_name()</a> </li>
   <li> <a href="c3ref/column_database_name.html">sqlite3_column_origin_name16()</a> </li>
   </ul>
+</p></blockquote><a name="enable_dbpage_vtab"></a>
+<p><b>SQLITE_ENABLE_DBPAGE_VTAB</b></p><blockquote><p>
+  This option enables the 
+  <a href="https://sqlite.org/src/file/src/dbpage.c">sqlite_dbpage virtual table</a>.
 </p></blockquote><a name="enable_dbstat_vtab"></a>
 <p><b>SQLITE_ENABLE_DBSTAT_VTAB</b></p><blockquote><p>
   This option enables the <a href="dbstat.html">dbstat virtual table</a>.
@@ -983,6 +1010,16 @@ the available settings:</p>
   bug in the <a href="c3ref/blob_reopen.html">sqlite3_blob_reopen()</a> interface.  For those reasons,
   this optimization is disabled by default.  However, this optimization
   may be enabled by default in a future release of SQLite.
+</p></blockquote><a name="enable_offset_sql_func"></a>
+<p><b>SQLITE_ENABLE_OFFSET_SQL_FUNC</b></p><blockquote><p>
+  This option enables support for the <a href="lang_corefunc.html#sqlite_offset">sqlite_offset(X)</a> SQL function.
+  <p>
+  The <a href="lang_corefunc.html#sqlite_offset">sqlite_offset(X)</a> SQL function requires a new interface on the
+  B-tree storage engine, a new opcode in the <a href="opcode.html">virtual machine</a> that
+  runs SQL statements, and a new conditional in a critical path of the
+  code generator.  To avoid that overhead in applications that do not
+  need the utility of sqlite_offset(X), the function is disabled by
+  default.
 </p></blockquote><a name="enable_preupdate_hook"></a>
 <p><b>SQLITE_ENABLE_PREUPDATE_HOOK</b></p><blockquote><p>
   This option enables 
@@ -1023,10 +1060,7 @@ the available settings:</p>
   This compile-time option enables the <a href="stmt.html">SQLITE_STMT virtual table</a> logic.
 </p></blockquote><a name="rtree_int_only"></a>
 <p><b>SQLITE_RTREE_INT_ONLY</b></p><blockquote><p>
-  If this option is used together with <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a> then the
-  <a href="rtree.html">R*Tree extension</a> will only store 32-bit signed integer
-  coordinates and all internal computations will be done using integers
-  instead of floating point numbers.
+  This compile-time option is deprecated and untested.
 </p></blockquote><a name="enable_sqllog"></a>
 <p><b>SQLITE_ENABLE_SQLLOG</b></p><blockquote><p>
   This option enables extra code (especially the <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog">SQLITE_CONFIG_SQLLOG</a>
@@ -1089,7 +1123,7 @@ the available settings:</p>
   <a href="lang_update.html">UPDATE</a> and <a href="lang_delete.html">DELETE</a> statements.</p>
 
 <p>  <p>If this option is defined, then it must also be 
-  defined when using the 'lemon' tool to generate a parse.c
+  defined when using the <a href="lemon.html">Lemon parser generator</a> tool to generate a parse.c
   file. Because of this, this option may only be used when the library is built
   from source, not from the <a href="amalgamation.html">amalgamation</a> or from the collection of
   pre-packaged C files provided for non-Unix like platforms on the website.
@@ -1115,14 +1149,44 @@ the available settings:</p>
   its associated functionality.  See the documentation titled
   <a href="unlock_notify.html">Using the SQLite Unlock Notification Feature</a> for additional
   information.
+</p></blockquote><a name="introspection_pragmas"></a>
+<p><b>SQLITE_INTROSPECTION_PRAGMAS</b></p><blockquote><p>
+  This option adds some extra PRAGMA statements such as
+  <a href="pragma.html#pragma_function_list">PRAGMA function_list</a>, <a href="pragma.html#pragma_module_list">PRAGMA module_list</a>, and
+  <a href="pragma.html#pragma_pragma_list">PRAGMA pragma_list</a>.
 </p></blockquote><a name="soundex"></a>
 <p><b>SQLITE_SOUNDEX</b></p><blockquote><p>
   This option enables the <a href="lang_corefunc.html#soundex">soundex() SQL function</a>.
+</p></blockquote><a name="use_alloca"></a>
+<p><b>SQLITE_USE_ALLOCA</b></p><blockquote><p>
+  If this option is enabled, then the alloca() memory allocator will be
+  used in a few situations where it is appropriate.  This results in a slightly
+  smaller and faster binary.  The SQLITE_USE_ALLOCA compile-time only only 
+  works, of course, on systems that support alloca().
 </p></blockquote><a name="use_fcntl_trace"></a>
 <p><b>SQLITE_USE_FCNTL_TRACE</b></p><blockquote><p>
-  This option causes SQLite to issue extra <a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace">SQLITE_FCNTL_TRACE</a> file controls
+  This option causes SQLite to issue extra <a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltrace">SQLITE_FCNTL_TRACE</a> file controls
   to provide supplementary information to the VFS.  The "vfslog.c" extension
   makes use of this to provide enhanced logs of VFS activity.
+</p></blockquote><a name="use_zlib"></a>
+<p><b>SQLITE_USE_ZLIB</b></p><blockquote><p>
+  This option causes some extensions to link against the 
+  <a href="https://zlib.net">zlib compression library</a>.
+  <p>
+  This option has no affect on the SQLite core.  It is only used by extensions.
+  This is option is necessary for the commpression and decompression
+  functions that are part of <a href="cli.html#sqlar">SQL Archive</a> support in the
+  <a href="cli.html">command-line shell</a>.
+  <p>
+  When compiling with this option, it will normally
+  be necessary to add a linker option to include the zlib library in the
+  build.  Normal this option is "-lz" but might be different on different
+  systems.
+  <p>
+  When building with MSVC on Windows systems, one can put the zlib source
+  code in the compat/zlib subdirectory of the source tree and then add
+  the USE_ZLIB=1 option to the nmake command to cause the The Makefile.msc
+  to automatically build and use an appropriate zlib library implementation.
 </p></blockquote><a name="yytrackmaxstackdepth"></a>
 <p><b>YYTRACKMAXSTACKDEPTH</b></p><blockquote><p>
   This option causes the LALR(1) parser stack depth to be tracked
@@ -1170,7 +1234,7 @@ the available settings:</p>
 <h1 id="_options_to_omit_features"><span>9. </span> Options To Omit Features</h1>
 
 <p>The following options can be used to 
-<a href="footprint.html#relfootprint">reduce the size of the compiled library</a>
+<a href="footprint.html">reduce the size of the compiled library</a>
 by omitting unused features. This is probably only useful
 in embedded systems where space is especially tight, as even with all
 features included the SQLite library is relatively small. Don't forget
@@ -1188,7 +1252,8 @@ compilation switches all have the same effect:<br>
 </p>
 
 <p>If any of these options are defined, then the same set of SQLITE_OMIT_*
-options must also be defined when using the 'lemon' tool to generate the
+options must also be defined when using the <a href="lemon.html">Lemon parser generator</a>
+tool to generate the
 parse.c file and when compiling the 'mkkeywordhash' tool which generates 
 the keywordhash.h file.
 Because of this, these options may only be used when the library is built
@@ -1706,4 +1771,4 @@ macros is included completeness.</p>
   This macro may not be used in combination with any of <a href="compile.html#apicall">SQLITE_APICALL</a>,
   <a href="compile.html#callback">SQLITE_CALLBACK</a>, <a href="compile.html#cdecl">SQLITE_CDECL</a>, or <a href="compile.html#syscall">SQLITE_SYSCALL</a>.
 </p></blockquote>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

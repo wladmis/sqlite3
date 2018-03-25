@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -139,7 +139,6 @@ Other Documentation Indices:
 <li><b><a href="atomiccommit.html">Atomic Commit In SQLite</a></b></li>
 <li><a href="autoinc.html">Autoincrement &#151; SQLite</a></li>
 <li><b><a href="undoredo.html">Automatic Undo/Redo With SQLite</a></b></li>
-<li><a href="vfs.html">Backend (VFS) To SQLite &#151; The OS</a></li>
 <li><a href="backup.html">Backup API &#151; SQLite</a></li>
 <li><b><a href="aff_short.html">Benefits of SQLite As A File Format</a></b></li>
 <li><a href="https://sqlite.org/android/">Bindings &#151; Android</a></li>
@@ -236,6 +235,7 @@ Other Documentation Indices:
 <li><a href="aff_short.html">File Format &#151; Benefits of SQLite As A</a></li>
 <li><a href="fileformat2.html">File Format &#151; Database</a></li>
 <li><a href="appfileformat.html">File Format &#151; SQLite As An Application</a></li>
+<li><a href="walformat.html">File Format &#151; WAL mode</a></li>
 <li><b><a href="formatchng.html">File Format Changes in SQLite</a></b></li>
 <li><b><a href="lockingv3.html">File Locking And Concurrency In SQLite Version 3</a></b></li>
 <li><a href="shortnames.html">Filenames &#151; 8+3</a></li>
@@ -247,6 +247,7 @@ Other Documentation Indices:
 <li><a href="fileformat2.html">Format &#151; Database File</a></li>
 <li><a href="fileformat2.html">Format &#151; On Disk</a></li>
 <li><a href="appfileformat.html">Format &#151; SQLite As An Application File</a></li>
+<li><a href="walformat.html">Format &#151; WAL mode File</a></li>
 <li><a href="formatchng.html">Format Changes in SQLite &#151; File</a></li>
 <li><a href="https://www.fossil-scm.org/">Fossil Version Control System &#151; The</a></li>
 <li><a href="faq.html">Frequently Asked Questions &#151; SQLite</a></li>
@@ -262,6 +263,7 @@ Other Documentation Indices:
 <li><a href="deterministic.html">Functions &#151; Deterministic SQL</a></li>
 <li><a href="series.html">generate_series Table Valued Function &#151; The</a></li>
 <li><a href="queryplanner-ng.html">Generation Query Planner &#151; The Next</a></li>
+<li><a href="lemon.html">Generator &#151; The Lemon LALR(1) Parser</a></li>
 <li><a href="nulls.html">Handling in SQLite &#151; NULL</a></li>
 <li><b><a href="hirely.html">High Reliability</a></b></li>
 <li><b><a href="debugging.html">Hints for Debugging SQLite</a></b></li>
@@ -289,6 +291,7 @@ Other Documentation Indices:
 <li><a href="session.html">Interface &#151; SQLite Session Module C/C++</a></li>
 <li><a href="capi3ref.html">Interface For SQLite Version 3 &#151; C/C++</a></li>
 <li><a href="capi3.html">Interface For SQLite Version 3 (old) &#151; C/C++</a></li>
+<li><a href="vfs.html">Interface or VFS &#151; The SQLite OS</a></li>
 <li><a href="c_interface.html">interface to SQLite Version 2 &#151; The C language</a></li>
 <li><a href="tclsqlite.html">interface to the SQLite library &#151; The Tcl</a></li>
 <li><a href="bindptr.html">Interfaces &#151; Pointer Passing</a></li>
@@ -300,8 +303,10 @@ Other Documentation Indices:
 <li><a href="foreignkeys.html">Key Support &#151; SQLite Foreign</a></li>
 <li><a href="keyword_index.html">Keyword Index &#151; Website</a></li>
 <li><a href="famous.html">Known Users Of SQLite &#151; Well</a></li>
+<li><a href="lemon.html">LALR(1) Parser Generator &#151; The Lemon</a></li>
 <li><a href="c_interface.html">language interface to SQLite Version 2 &#151; The C</a></li>
 <li><a href="lang.html">Language Understood by SQLite &#151; Query</a></li>
+<li><a href="lemon.html">Lemon LALR(1) Parser Generator &#151; The</a></li>
 <li><a href="quickstart.html">Less &#151; SQLite In 5 Minutes Or</a></li>
 <li><a href="tclsqlite.html">library &#151; The Tcl interface to the SQLite</a></li>
 <li><a href="footprint.html">Library Footprint &#151; SQLite</a></li>
@@ -326,7 +331,9 @@ Other Documentation Indices:
 <li><b><a href="mmap.html">Memory Mapped I/O</a></b></li>
 <li><a href="quickstart.html">Minutes Or Less &#151; SQLite In 5</a></li>
 <li><a href="sharedcache.html">Mode &#151; SQLite Shared Cache</a></li>
+<li><a href="walformat.html">mode File Format &#151; WAL</a></li>
 <li><a href="rtree.html">Module &#151; The SQLite R*Tree</a></li>
+<li><a href="zipfile.html">Module &#151; The SQLite Zipfile</a></li>
 <li><a href="session.html">Module C/C++ Interface &#151; SQLite Session</a></li>
 <li><a href="asyncvfs.html">Module For SQLite &#151; An Asynchronous I/O</a></li>
 <li><b><a href="mostdeployed.html">Most Widely Deployed SQL Database Engine</a></b></li>
@@ -351,6 +358,7 @@ Other Documentation Indices:
 <li><a href="download.html">Page &#151; SQLite Download</a></li>
 <li><a href="index.html">Page &#151; SQLite Home</a></li>
 <li><a href="pgszchng2016.html">Page Size in SQLite Version 3.12.0 &#151; Change in Default</a></li>
+<li><a href="lemon.html">Parser Generator &#151; The Lemon LALR(1)</a></li>
 <li><b><a href="partialindex.html">Partial Indexes</a></b></li>
 <li><a href="bindptr.html">Passing Interfaces &#151; Pointer</a></li>
 <li><a href="eqp.html">PLAN &#151; EXPLAIN QUERY</a></li>
@@ -447,11 +455,13 @@ Other Documentation Indices:
 <li><a href="prosupport.html">Support &#151; SQLite Pro</a></li>
 <li><a href="support.html">Support Options &#151; SQLite</a></li>
 <li><a href="pragma.html">supported by SQLite &#151; Pragma statements</a></li>
+<li><b><a href="swarmvtab.html">Swarmvtab Virtual Table</a></b></li>
 <li><a href="syntax.html">Syntax Diagrams &#151; List of SQLite</a></li>
 <li><b><a href="syntaxdiagrams.html">Syntax Diagrams For SQLite</a></b></li>
 <li><a href="selfcontained.html">System &#151; SQLite is a Self Contained</a></li>
 <li><a href="https://www.fossil-scm.org/">System &#151; The Fossil Version Control</a></li>
 <li><b><a href="https://system.data.sqlite.org/">System.Data.SQLite</a></b></li>
+<li><a href="swarmvtab.html">Table &#151; Swarmvtab Virtual</a></li>
 <li><a href="csv.html">Table &#151; The CSV Virtual</a></li>
 <li><a href="dbstat.html">Table &#151; The DBSTAT Virtual</a></li>
 <li><a href="spellfix1.html">Table &#151; The Spellfix1 Virtual</a></li>
@@ -480,15 +490,17 @@ Other Documentation Indices:
 <li><b><a href="https://www.fossil-scm.org/">The Fossil Version Control System</a></b></li>
 <li><b><a href="series.html">The generate_series Table Valued Function</a></b></li>
 <li><b><a href="json1.html">The JSON1 Extension</a></b></li>
+<li><b><a href="lemon.html">The Lemon LALR(1) Parser Generator</a></b></li>
 <li><b><a href="queryplanner-ng.html">The Next Generation Query Planner</a></b></li>
-<li><b><a href="vfs.html">The OS Backend (VFS) To SQLite</a></b></li>
 <li><b><a href="rbu.html">The RBU Extension</a></b></li>
 <li><b><a href="sessionintro.html">The Session Extension</a></b></li>
 <li><b><a href="spellfix1.html">The Spellfix1 Virtual Table</a></b></li>
 <li><b><a href="amalgamation.html">The SQLite Amalgamation</a></b></li>
 <li><b><a href="opcode.html">The SQLite Bytecode Engine</a></b></li>
+<li><b><a href="vfs.html">The SQLite OS Interface or "VFS"</a></b></li>
 <li><b><a href="optoverview.html">The SQLite Query Optimizer Overview</a></b></li>
 <li><b><a href="rtree.html">The SQLite R*Tree Module</a></b></li>
+<li><b><a href="zipfile.html">The SQLite Zipfile Module</a></b></li>
 <li><b><a href="sqlanalyze.html">The sqlite3_analyzer.exe Utility Program</a></b></li>
 <li><b><a href="stmt.html">The SQLITE_STMT Virtual Table</a></b></li>
 <li><b><a href="tclsqlite.html">The Tcl interface to the SQLite library</a></b></li>
@@ -530,13 +542,16 @@ Other Documentation Indices:
 <li><a href="https://www.fossil-scm.org/">Version Control System &#151; The Fossil</a></li>
 <li><b><a href="versionnumbers.html">Version Numbers in SQLite</a></b></li>
 <li><a href="intern-v-extern-blob.html">Versus External BLOBs &#151; Internal</a></li>
+<li><a href="vfs.html">VFS &#151; The SQLite OS Interface or</a></li>
 <li><a href="vdbe.html">Virtual Database Engine of SQLite &#151; The</a></li>
+<li><a href="swarmvtab.html">Virtual Table &#151; Swarmvtab</a></li>
 <li><a href="csv.html">Virtual Table &#151; The CSV</a></li>
 <li><a href="dbstat.html">Virtual Table &#151; The DBSTAT</a></li>
 <li><a href="spellfix1.html">Virtual Table &#151; The Spellfix1</a></li>
 <li><a href="stmt.html">Virtual Table &#151; The SQLITE_STMT</a></li>
 <li><a href="unionvtab.html">Virtual Table &#151; The UNION</a></li>
 <li><a href="vtab.html">Virtual Table Mechanism Of SQLite &#151; The</a></li>
+<li><b><a href="walformat.html">WAL mode File Format</a></b></li>
 <li><a href="errlog.html">Warning Log &#151; The Error And</a></li>
 <li><b><a href="keyword_index.html">Website Keyword Index</a></b></li>
 <li><b><a href="famous.html">Well Known Users Of SQLite</a></b></li>
@@ -548,6 +563,7 @@ Other Documentation Indices:
 <li><a href="queryplanner.html">Work &#151; How Indexes</a></li>
 <li><b><a href="wal.html">Write Ahead Logging</a></b></li>
 <li><b><a href="zeroconf.html">Zero Configuration</a></b></li>
+<li><a href="zipfile.html">Zipfile Module &#151; The SQLite</a></li>
 
 </ul>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -245,8 +245,8 @@ return false;
 <blockquote><pre><b>
   </b><i>expr1</i><b> &gt;= </b><i>expr2</i><b> AND </b><i>expr1</i><b> &lt;= </b><i>expr3</i><b>
 </b></pre></blockquote><p>
-  Virtual terms are used for analysis only and do not cause any VDBE
-  code to be generated.
+  Virtual terms are used for analysis only and do not cause any byte-code
+  to be generated.
   If both virtual terms end up being used as constraints on an index,
   then the original BETWEEN term is omitted and the corresponding test
   is not performed on input rows.
@@ -346,7 +346,6 @@ return false;
   <li>The right-hand side of the LIKE or GLOB must be either a string literal
       or a <a href="lang_expr.html#varparam">parameter</a> bound to a string literal
       that does not begin with a wildcard character.</li>
-  <li>The ESCAPE clause cannot appear on the LIKE operator.</li>
   <li>It must not be possible to make the LIKE or GLOB operator true by
       having a numeric value (instead of a string or blob) on the
       left-hand side. This means that either:
@@ -359,13 +358,15 @@ return false;
       This constraint arises from the fact that numbers do not sort in
       lexicographical order.  For example: 9&lt;10 but '9'&gt;'10'.</li>
   <li>The built-in functions used to implement LIKE and GLOB must not
-      have been overloaded using the sqlite3_create_function() API.</li>
+      have been overloaded using the <a href="c3ref/create_function.html">sqlite3_create_function()</a> API.</li>
   <li>For the GLOB operator, the column must be indexed using the 
       built-in BINARY collating sequence.</li>
   <li>For the LIKE operator, if <a href="pragma.html#pragma_case_sensitive_like">case_sensitive_like</a> mode is enabled then
       the column must indexed using BINARY collating sequence, or if
       <a href="pragma.html#pragma_case_sensitive_like">case_sensitive_like</a> mode is disabled then the column must indexed
       using built-in NOCASE collating sequence.</li>
+  <li>If the ESCAPE option is used, the ESCAPE character must be ASCII,
+      or a single-byte character in UTF-8.
   </ol>
 </p>
 <p>
@@ -426,8 +427,6 @@ return false;
   The LIKE optimization is not attempted if the
   right-hand side is a <a href="lang_expr.html#varparam">parameter</a> and the statement was prepared using
   <a href="c3ref/prepare.html">sqlite3_prepare()</a> or <a href="c3ref/prepare.html">sqlite3_prepare16()</a>.
-  The LIKE optimization is not attempted if there is an ESCAPE phrase
-  on the LIKE operator.
 </p>
 <p>
   Suppose the initial sequence of non-wildcard characters on the right-hand
@@ -1002,12 +1001,12 @@ return false;
   For example:
 </p>
 <blockquote><pre>
-  SELECT a FROM (SELECT x+y AS a FROM t1 WHERE z<100) WHERE a>5
+  SELECT t1.a, t2.b FROM t2, (SELECT x+y AS a FROM t1 WHERE z<100) WHERE a>5
 </pre></blockquote><p>
   Would be rewritten using query flattening as:
 </p>
 <blockquote><pre>
-  SELECT x+y AS a FROM t1 WHERE z<100 AND a>5
+  SELECT t1.x+t1.y AS a, t2.b FROM t2, t1 WHERE z<100 AND a>5
 </pre></blockquote><p>
   There is a long list of conditions that must all be met in order for
   query flattening to occur.  Some of the constraints are marked as 
@@ -1016,22 +1015,24 @@ return false;
 </p>
 <p>
   <ol>
-  <li value="1">  The subquery and the outer query do not both use aggregates.
+  <li value="1">  <i>(Obsolete.  Query flattening is no longer
+                      attempted for aggregate subqueries.)</i>
 
-  <li value="2">
-  The subquery is not an aggregate or the outer query is not a join.
+  <li value="2">  <i>(Obsolete.  Query flattening is no longer
+                      attempted for aggregate subqueries.)</i>
 
   <li value="3">
-  The subquery is not the right operand of a left outer join or
-   the subquery is not itself a join.
+  The subquery is not the right operand of a LEFT JOIN then the
+   subquery may not be a join, the FROM clause of the subquery may
+   not contain a virtual table, and the outer query may not be
+   an aggregate.
 
   <li value="4">  The subquery is not DISTINCT.
 
   <li value="5"> <i>(Subsumed into constraint 4)</i>
 
-  <li value="6">
-        The subquery does not use aggregates or the outer query is not
-        DISTINCT.
+  <li value="6"> <i>(Obsolete.  Query flattening is no longer
+                      attempted for aggregate subqueries.)</i>
 
   <li value="7">
   The subquery has a FROM clause.
@@ -1043,9 +1044,7 @@ return false;
   The subquery does not use LIMIT or the outer query does not use
   aggregates.
 
-  <li value="10">
-  The subquery does not use aggregates or the outer query does not
-  use LIMIT.
+  <li value="10"> <i>(Restriction relaxed in 2005)</i>
 
   <li value="11">
   The subquery and the outer query do not both have ORDER BY clauses.
@@ -1057,23 +1056,22 @@ return false;
   <li value="14">  The subquery does not use OFFSET.
 
   <li value="15">
-  The outer query is not part of a compound select or the
-  subquery does not have a LIMIT clause.
+  The outer query is part of a compound select, then the
+  subquery may not have a LIMIT clause.
 
   <li value="16">
-  The outer query is not an aggregate or the subquery does
+  The outer query is an aggregate, then the subquery may
   not contain ORDER BY. 
 
   <li value="17">
-  The sub-query is not a compound select, or it is a UNION ALL 
-  compound clause made up entirely of non-aggregate queries, and 
-  the parent query:
-
-  <ul>
-  <li> is not itself part of a compound select,
-  <li> is not an aggregate or DISTINCT query, and
-  <li> is not a join.
-  </ul>
+  The sub-query is a compound SELECT, then
+  <ol type='a'>
+  <li> all compound operators must be UNION ALL, and
+  <li> no terms with the subquery compound may be aggregate
+       or distinct, and
+  <li> every term within the subquery must have a FROM clause, and
+  <li> the outer query may not be an aggregate, DISTINCT query, or join.
+  </ol>
 
   The parent and sub-query may contain WHERE clauses. Subject to
   rules (11), (12) and (13), they may also contain ORDER BY,
@@ -1085,35 +1083,112 @@ return false;
   columns of the sub-query.
 
   <li value="19">
-  The subquery does not use LIMIT or the outer query does not
+  If the subquery uses LIMIT then the outer query may not
   have a WHERE clause.
 
-  <li value="20">
-  If the sub-query is a compound select, then it must not use
-  an ORDER BY clause.
+  <li value="20"> <i>(Subsumed into constraint 17d.)</i>
 
   <li value="21">
-  The subquery does not use LIMIT or the outer query is not
+  The subquery uses LIMIT, then the outer query may not be
   DISTINCT.
 
-  <li value="22"> The subquery is not a recursive CTE.
+  <li value="22"> The subquery may not a recursive CTE.
 
-  <li value="23"> The parent is not a recursive CTE, or the sub-query
-  is not a compound query.
+  <li value="23"> <i>(Subsumed into constraint 17d.)</i>
+
+  <li value="24"> <i>(Obsolete. Query flattening is no longer
+                      attempted for aggregate subqueries.)</i>
   </ol>
 </p>
 <p>
   The casual reader is not expected to understand or remember any part of
   the list above.  The point of this list is to demonstrate
   that the decision of whether or not to flatten a query is complex.
-  
 </p>
 <p>
   Query flattening is an important optimization when views are used as
   each use of a view is translated into a subquery.
 </p>
+<a name="coroutines"></a>
+<h2>11.0 Subquery Co-routines</h2><p>
+  In older versions of SQLite, a subquery in the FROM clause would be
+  either flattened into the outer query, or else the subquery would be run
+  to completion
+  before the outer query started, the result set from the subquery
+  would be stored in a transient table,
+  and then the transient table would be used in the outer query.  Newer
+  versions of SQLite have a third option, which is to implement the subquery
+  using a co-routine.
+</p>
+<p>
+  A co-routine is like a subroutine in that it runs in the same thread
+  as the caller and eventually returns control back to the caller.  The
+  difference is that a co-routine also has the ability to return
+  before it has finished, and then resume where it left off the next
+  time it is called.
+</p>
+<p>
+  When a subquery is implemented as a co-routine, byte-code is generated
+  to implement the subquery as if it were a standalone query, except
+  instead of returning rows of results back to the application, the
+  co-routine yields control back to the caller after each row is computed.
+  The caller can then use that one computed row as part of its computation,
+  then invoke the co-routine again when it is ready for the next row.
+</p>
+<p>
+  Co-routines are better than storing the complete result set of the subquery
+  in a transient table because co-routines use less memory.  With a co-routine,
+  only a single row of the result needs to be remembered, whereas all rows of
+  the result must be stored for a transient table.  Also, because the
+  co-routine does not need to run to completion before the outer query
+  begins its work, the first rows of output can appear much sooner, and if
+  the overall query is aborted, less work is done overall.
+</p>
+<p>
+  On the other hand, if the result of the subquery must be scanned multiple
+  times (because, for example, it is just one table in a join) then it
+  is better to use a transient table to remember the entire result of the
+  subquery, in order to avoid computing the subquery more than once.
+</p>
+<a name="deferred_work"></a>
+<h3>11.1 Using Co-routines To Defer Work Until After The Sorting</h3><p>
+  As of SQLite version 3.21.0 (2017-10-24), the query planner will
+  always use a co-routine to implement FROM-clause subqueries that contain
+  an ORDER BY clause and that are not part of a join.  This feature allows
+  applications to shift expensive computations from before the
+  sorter until after the sorter, which can result in faster operation.
+  For example, consider this query:
+</p>
+<blockquote><pre>
+  SELECT expensive_function(a) FROM tab ORDER BY date DESC LIMIT 5;
+</pre></blockquote><p>
+  The goal of this query is to compute some value for the five most
+  recent entries in the table.  But in the query above, the
+  "expensive_function()" is invoked prior to the sort and thus is
+  invoked on every row of the table, even
+  rows that are ultimately omitted due to the LIMIT clause.
+  A co-routine can be used to work around this:
+</p>
+<blockquote><pre>
+  SELECT expensive_function(a) FROM (
+    SELECT a FROM tab ORDER BY date DESC LIMIT 5
+  );
+</pre></blockquote><p>
+  In the revised query, the subquery implemented by a co-routine computes
+  the five most recent values for "a".  Those five values are passed from the
+  co-routine up into the outer query where the "expensive_function()" is
+  invoked on only the specific rows that the application cares about.
+</p>
+<p>
+  The query planner in future versions of SQLite might grow smart enough
+  to make transformations such as the above automatically, in both directions.
+  That is to say, future versions of SQLite might transform queries of the
+  first form into the second, or queries written the second way into the
+  first.  But for now, SQLite implements each of the above queries as
+  written.
+</p>
 <a name="minmax"></a>
-<h2>11.0 The MIN/MAX optimization</h2><p>
+<h2>12.0 The MIN/MAX optimization</h2><p>
   Queries that contain a single MIN() or MAX() aggregate function whose
   argument is the left-most column of an index might be satisfied
   by doing a single index lookup rather than by scanning the entire table.
@@ -1123,7 +1198,7 @@ return false;
   SELECT MIN(x) FROM table;
   SELECT MAX(x)+1 FROM table;
 </pre></blockquote><a name="autoindex"></a>
-<h2>12.0 Automatic Indexes</h2><p>
+<h2>13.0 Automatic Indexes</h2><p>
   When no indices are available to aid the evaluation of a query, SQLite
   might create an automatic index that lasts only for the duration
   of a single SQL statement.
@@ -1190,4 +1265,4 @@ return false;
   not indicate that internal indexes and automatic indexes are related.
 </p>
 
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

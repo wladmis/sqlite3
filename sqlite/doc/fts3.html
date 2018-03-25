@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -709,7 +709,7 @@ SELECT * FROM docs WHERE docs MATCH 'title:linux problems';
 
 <i>-- Query the database for documents for which the term "linux" appears in</i>
 <i>-- the document title, and the term "driver" appears in the body of the document</i>
-<i>-- ("driver" may also appear in the title, but this alone will not satisfy the</i>.
+<i>-- ("driver" may also appear in the title, but this alone will not satisfy the</i>
 <i>-- query criteria).</i>
 SELECT * FROM docs WHERE body MATCH 'title:linux driver';
 </pre></div>
@@ -756,8 +756,8 @@ SELECT * FROM docs WHERE docs MATCH '"lin* app*"';
     A NEAR query is a query that returns documents that contain a two or
     more nominated terms or phrases within a specified proximity of each 
     other (by default with 10 or less intervening terms). A NEAR query is 
-    specified by putting the keyword "NEAR" between two phrase, term or 
-    <a href="fts3.html#termprefix">prefix queries</a>. To specify a proximity other than the default,
+    specified by putting the keyword "NEAR" between two phrase, token or 
+    token prefix queries. To specify a proximity other than the default,
     an operator of the form "NEAR/<i>&lt;N&gt;</i>" may be used, where
     <i>&lt;N&gt;</i> is the maximum number of intervening terms allowed.
     For example:
@@ -2036,7 +2036,7 @@ CREATE VIRTUAL TABLE t1 USING fts4(c1, c2, c3, c4, notindexed=c1, notindexed=c3)
 
 <p>
   Values stored in unindexed columns are not eligible to match MATCH 
-  operators. The do not influence the results of the offsets() or matchinfo()
+  operators. They do not influence the results of the offsets() or matchinfo()
   auxiliary functions. Nor will the snippet() function ever return a
   snippet based on a value stored in an unindexed column.
 
@@ -3101,6 +3101,12 @@ ORDER BY ranktable.rank DESC
   externally assigned to each column of each document. It may be registered
   with SQLite like any other user function using <a href="c3ref/create_function.html">sqlite3_create_function</a>.
 
+</p><p><b> Security Warning:</b> Because it is just an ordinary SQL function, 
+  rank() may be invoked as part of any SQL query in any context. This means
+  that the first argument passed may not be a valid matchinfo blob.
+  Implementors should take care to handle this case without causing buffer
+  overruns or other potential security problems.
+
 </p><div class="codeblock"><pre><i>/*</i>
 <i>** SQLite user defined function to use with matchinfo() to calculate the</i>
 <i>** relevancy of an FTS match. The value returned is the relevancy score</i>
@@ -3137,8 +3143,9 @@ ORDER BY ranktable.rank DESC
 <i>*/</i>
 static void rankfunc(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
   int *aMatchinfo;                <i>/* Return value of matchinfo() */</i>
-  int nCol;                       <i>/* Number of columns in the table */</i>
-  int nPhrase;                    <i>/* Number of phrases in the query */</i>
+  int nMatchinfo;                 <i>/* Number of elements in aMatchinfo&#x5B;&#x5D; */</i>
+  int nCol = 0;                   <i>/* Number of columns in the table */</i>
+  int nPhrase = 0;                <i>/* Number of phrases in the query */</i>
   int iPhrase;                    <i>/* Current phrase */</i>
   double score = 0.0;             <i>/* Value to return */</i>
 
@@ -3148,12 +3155,21 @@ static void rankfunc(sqlite3_context *pCtx, int nVal, sqlite3_value **apVal){
 <i>  ** If not, jump to wrong_number_args. Set aMatchinfo to point to the array</i>
 <i>  ** of unsigned integer values returned by FTS function matchinfo. Set</i>
 <i>  ** nPhrase to contain the number of reportable phrases in the users full-text</i>
-<i>  ** query, and nCol to the number of columns in the table.</i>
+<i>  ** query, and nCol to the number of columns in the table. Then check that the</i>
+<i>  ** size of the matchinfo blob is as expected. Return an error if it is not.</i>
 <i>  */</i>
   if( nVal&lt;1 ) goto wrong_number_args;
   aMatchinfo = (unsigned int *)sqlite3_value_blob(apVal&#x5B;0&#x5D;);
-  nPhrase = aMatchinfo&#x5B;0&#x5D;;
-  nCol = aMatchinfo&#x5B;1&#x5D;;
+  nMatchinfo = sqlite3_value_bytes(apVal&#x5B;0&#x5D;) / sizeof(int);
+  if( nMatchinfo&gt;=2 ){
+    nPhrase = aMatchinfo&#x5B;0&#x5D;;
+    nCol = aMatchinfo&#x5B;1&#x5D;;
+  }
+  if( nMatchinfo!=(2+3*nCol*nPhrase) ){
+    sqlite3_result_error(pCtx,
+      "invalid matchinfo blob passed to function rank()", -1);
+    return;
+  }
   if( nVal!=(1+nCol) ) goto wrong_number_args;
 
 <i>  /* Iterate through each phrase in the users query. */</i>
@@ -3188,4 +3204,4 @@ wrong_number_args:
   sqlite3_result_error(pCtx, "wrong number of arguments to function rank()", -1);
 }
 </pre></div>
-</integer></language-id><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+</integer></language-id>

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -97,7 +97,8 @@ return false;
 
 <p>
 The <a href="fileformat2.html">underlying file format</a> for SQLite databases does not
-change in incompatible ways.  There are literally tens of billions of
+change in incompatible ways.  There are literally hundredss of billions,
+perhaps trillions, of
 SQLite database files in circulation and the SQLite developers are
 committing to supporting those files for decades into the future.
 </p>
@@ -130,7 +131,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">1.0.32 to 2.0.0</td>
-  <td valign="top">2001-Sep-20</td>
+  <td valign="top">2001-09-20</td>
   <td>Version 1.0.X of SQLite used the GDBM library as its backend
   interface to the disk.  Beginning in version 2.0.0, GDBM was replaced
   by a custom B-Tree library written especially for SQLite.  The new
@@ -141,7 +142,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.0.8 to 2.1.0</td>
-  <td valign="top">2001-Nov-12</td>
+  <td valign="top">2001-10-12</td>
   <td>The same basic B-Tree format is used but the details of the 
   index keys were changed in order to provide better query 
   optimization opportunities.  Some of the headers were also changed in order
@@ -153,7 +154,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.1.7 to 2.2.0</td>
-  <td valign="top">2001-Dec-21</td>
+  <td valign="top">2001-12-21</td>
   <td>Beginning with version 2.2.0, SQLite no longer builds an index for
   an INTEGER PRIMARY KEY column.  Instead, it uses that column as the actual
   B-Tree key for the main table.<p>Version 2.2.0 and later of the library
@@ -169,7 +170,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.2.5 to 2.3.0</td>
-  <td valign="top">2002-Jan-30</td>
+  <td valign="top">2002-01-30</td>
   <td>Beginning with version 2.3.0, SQLite supports some additional syntax
   (the "ON CONFLICT" clause) in the CREATE TABLE and CREATE INDEX statements
   that are stored in the SQLITE_MASTER table.  If you create a database that
@@ -179,7 +180,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.3.3 to 2.4.0</td>
-  <td valign="top">2002-Mar-10</td>
+  <td valign="top">2002-03-10</td>
   <td>Beginning with version 2.4.0, SQLite added support for views. 
   Information about views is stored in the SQLITE_MASTER table.  If an older
   version of SQLite attempts to read a database that contains VIEW information
@@ -193,7 +194,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.4.12 to 2.5.0</td>
-  <td valign="top">2002-Jun-17</td>
+  <td valign="top">2002-06-17</td>
   <td>Beginning with version 2.5.0, SQLite added support for triggers. 
   Information about triggers is stored in the SQLITE_MASTER table.  If an older
   version of SQLite attempts to read a database that contains a CREATE TRIGGER
@@ -203,7 +204,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.5.6 to 2.6.0</td>
-  <td valign="top">2002-July-17</td>
+  <td valign="top">2002-07-17</td>
   <td>A design flaw in the layout of indices required a file format change
   to correct.  This change appeared in version 2.6.0.<p>
 
@@ -224,7 +225,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.6.3 to 2.7.0</td>
-  <td valign="top">2002-Aug-13</td>
+  <td valign="top">2002-08-13</td>
   <td><p>Beginning with version 2.7.0, SQLite understands two different
   datatypes: text and numeric.  Text data sorts in memcmp() order.
   Numeric data sorts in numerical order if it looks like a number,
@@ -245,7 +246,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.7.6 to 2.8.0</td>
-  <td valign="top">2003-Feb-14</td>
+  <td valign="top">2003-02-14</td>
   <td><p>Version 2.8.0 introduces a change to the format of the rollback
   journal file.  The main database file format is unchanged.  Versions
   2.7.6 and earlier can read and write 2.8.0 databases and vice versa.
@@ -263,7 +264,7 @@ occurred since version 1.0.0:
 </tr>
 <tr>
   <td valign="top">2.8.14 to 3.0.0</td>
-  <td valign="top">2004-Jun-18</td>
+  <td valign="top">2004-06-18</td>
   <td><p>Version 3.0.0 is a major upgrade for SQLite that incorporates
   support for UTF-16, BLOBs, and a more compact encoding that results
   in database files that are typically 25% to 50% smaller.  The new file
@@ -273,4 +274,4 @@ occurred since version 1.0.0:
 </tr>
 </table>
 </blockquote>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

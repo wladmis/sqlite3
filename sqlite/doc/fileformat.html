@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -146,8 +146,9 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#wal_file_format">4.1. WAL File Format</a></div>
 <div class="fancy-toc2"><a href="#checksum_algorithm">4.2. Checksum Algorithm</a></div>
 <div class="fancy-toc2"><a href="#checkpoint_algorithm">4.3. Checkpoint Algorithm</a></div>
-<div class="fancy-toc2"><a href="#reader_algorithm">4.4. Reader Algorithm</a></div>
-<div class="fancy-toc2"><a href="#wal_index_format">4.5. WAL-Index Format</a></div>
+<div class="fancy-toc2"><a href="#wal_reset">4.4. WAL Reset</a></div>
+<div class="fancy-toc2"><a href="#reader_algorithm">4.5. Reader Algorithm</a></div>
+<div class="fancy-toc2"><a href="#wal_index_format">4.6. WAL-Index Format</a></div>
 </div>
 </div>
 <script>
@@ -171,7 +172,8 @@ mk.innerHTML = "&#x25ba;";
 
 
 <p>This document describes and defines the on-disk database file
-format used by SQLite.</p>
+format used by all releases of SQLite since 
+version 3.0.0 (2004-06-18).</p>
 
 <h1 id="the_database_file"><span>1. </span>The Database File</h1>
 
@@ -210,7 +212,8 @@ hit the maximum file size limit of the underlying filesystem or disk
 hardware long before it hits its own internal size limit.</p>
 
 <p>In common use, SQLite databases tend to range in size from a few kilobytes
-to a few gigabytes.</p>
+to a few gigabytes, though terabyte-size SQLite databases are known to exist
+in production.</p>
 
 <p>At any point in time, every page in the main database has a single
 use which is one of the following:
@@ -322,7 +325,8 @@ terminator character at the end.</p>
 <h3 id="page_size"><span>1.2.2. </span>Page Size</h3>
 
 <p>The two-byte value beginning at offset 16 determines the page size of 
-the database.  For SQLite versions 3.7.0.1 and earlier, this value is 
+the database.  For SQLite versions 3.7.0.1 (2010-08-04)
+and earlier, this value is 
 interpreted as a big-endian integer and must be a power of two between
 512 and 32768, inclusive.  Beginning with SQLite <a href="releaselog/3_7_1.html">version 3.7.1</a>
 (2010-08-23), a page
@@ -334,6 +338,8 @@ This value can be interpreted as a big-endian
 Or one can view the two-byte field as a little endian number and say
 that it represents the page size divided by 256.  These two 
 interpretations of the page-size field are equivalent.</p>
+
+<a name="vnums"></a>
 
 <h3 id="file_format_version_numbers"><span>1.2.3. </span>File format version numbers</h3>
 
@@ -412,8 +418,8 @@ the in-header database size is not valid.</p>
 it is non-zero and if the 4-byte <a href="fileformat2.html#chngctr">change counter</a> at offset 24
 exactly matches the 4-byte <a href="fileformat2.html#validfor">version-valid-for number</a> at offset 92.
 The in-header database size is always valid 
-when the database is only modified using recent versions of SQLite
-(versions 3.7.0 and later).
+when the database is only modified using recent versions of SQLite,
+versions 3.7.0 (2010-07-21) and later.
 If a legacy version of SQLite writes to the database, it will not
 know to update the in-header database size and so the in-header
 database size could be incorrect.  But legacy versions of SQLite
@@ -554,6 +560,8 @@ the version number is valid for and is sometimes called the
 <p>All other bytes of the database file header are reserved for
 future expansion and must be set to zero.</p>
 
+<a name="lockbyte"></a>
+
 <h2 id="the_lock_byte_page"><span>1.3. </span>The Lock-Byte Page</h2>
 
 <p>The lock-byte page is the single page of the database file
@@ -575,10 +583,11 @@ needs and proclivities of the underlying system.  The unix and win32
 lock-byte page, but third-party VFS implementations for
 other operating systems might.</p>
 
-<p>The lock-byte page arose from the need to support Win95 which had
-only mandatory file locking.  All modern operating systems that we know of
-support advisory file locking, and so the lock-byte page is not really
-needed any more, but is retained for backwards compatibility.</p>
+<p>The lock-byte page arose from the need to support Win95 which was the
+predominant operating system when this file format was designed and which 
+only supported mandatory file locking.  All modern operating systems that
+we know of support advisory file locking, and so the lock-byte page is
+not really needed any more, but is retained for backwards compatibility.</p>
 
 <a name="freelist"></a>
 
@@ -607,7 +616,8 @@ L+1 inclusive contain page numbers for freelist leaf pages.</p>
 <p>Freelist leaf pages contain no information.  SQLite avoids reading or
 writing freelist leaf pages in order to reduce disk I/O.</p>
 
-<p>A bug in SQLite versions prior to 3.6.0 caused the database to be
+<p>A bug in SQLite versions prior to 3.6.0 (2008-07-16)
+caused the database to be
 reported as corrupt if any of the last 6 entries in the freelist trunk page 
 array contained non-zero values.  Newer versions of SQLite do not have
 this problem.  However, newer versions of SQLite still avoid using the 
@@ -1131,8 +1141,13 @@ Value is the integer 0. (Only available for <a href="fileformat2.html#schemaform
 </td></tr><tr><td valign="top" align="center">9</td><td valign="top" align="center">0</td><td align="left">
 Value is the integer 1. (Only available for <a href="fileformat2.html#schemaformat">schema format</a> 4 and higher.)
 </td></tr><tr><td valign="top" align="center">10,11
-    </td><td valign="top" align="center">&nbsp;</td><td align="left">
-<i>Not used.  Reserved for expansion.</i>
+    </td><td valign="top" align="center"><i>variable</i></td><td align="left">
+<i>Reserved for internal use.  These serial type codes will
+   never appear in a well-formed database file, but they
+   might be used in transient and temporary database files
+   that SQLite sometimes generates for its own use.
+   The meanings of these codes can shift from one release
+   of SQLite to the next.</i>
 </td></tr><tr><td valign="top" align="center">N&#x2265;12 and even
     </td><td valign="top" align="center">(N-12)/2</td><td align="left">
 Value is a BLOB that is (N-12)/2 bytes in length.
@@ -1548,7 +1563,8 @@ WITHOUT ROWID table.
 
 <p>The sqlite_stat2 is only created and is only used if SQLite is compiled
 with SQLITE_ENABLE_STAT2 and if the SQLite version number is between
-3.6.18 and 3.7.8.  The sqlite_stat2 table is neither read nor written by any
+3.6.18 (2009-09-11) and 3.7.8 (2011-09-19).
+The sqlite_stat2 table is neither read nor written by any
 version of SQLite before 3.6.18 nor after 3.7.8.
 The sqlite_stat2 table contains additional information
 about the distribution of keys within an index.
@@ -1587,12 +1603,12 @@ sqlite_stat2 table, if is exists, is simply ignored.
 
 <p>The sqlite_stat3 is only used if SQLite is compiled
 with <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> or <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a>
-and if the SQLite version number is 3.7.9 or greater.
+and if the SQLite version number is 3.7.9 (2011-11-01) or greater.
 The sqlite_stat3 table is neither read nor written by any
 version of SQLite before 3.7.9.
 If the <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> compile-time option is used and the
-SQLite version number is 3.8.1 or greater, then sqlite_stat3 might
-be read but not written.
+SQLite version number is 3.8.1 (2013-10-17) or greater,
+then sqlite_stat3 might be read but not written.
 The sqlite_stat3 table contains additional information
 about the distribution of keys within an index, information that the
 query planner can use to devise better and faster query algorithms.
@@ -1632,7 +1648,8 @@ sample S1 must have a smaller rowid than sample S2.
 
 <p>The sqlite_stat4 is only created and is only used if SQLite is compiled
 with <a href="compile.html#enable_stat4">SQLITE_ENABLE_STAT4</a> and if the SQLite version number is
-3.8.1 or greater.  The sqlite_stat4 table is neither read nor written by any
+3.8.1 (2013-10-17) or greater.
+The sqlite_stat4 table is neither read nor written by any
 version of SQLite before 3.8.1.
 The sqlite_stat4 table contains additional information
 about the distribution of keys within an index or the distribution of
@@ -1990,16 +2007,35 @@ The xSync operations serve as write barriers - all writes launched
 before the xSync must complete before any write that launches after the
 xSync begins.</p>
 
-<p>After a checkpoint, new write transactions overwrite
-the WAL file from the beginning.  At the start of the first new
+<p>A checkpoint need not run to completion.  It might be that some
+readers are still using older transactions with data that is contained
+in the database file.  In that case, transferring content for newer
+transactions from the WAL file into the database would delete the content
+out from under readers still using the older transactions.  To avoid that,
+checkpoints only run to completion if all reader are using the
+last transaction in the WAL.
+
+<a name="walreset"></a>
+
+</p><h2 id="wal_reset"><span>4.4. </span>WAL Reset</h2>
+
+<p>After a complete checkpoint, if no other connections are in transactions
+that use the WAL, then subsequent write transactions can
+overwrite the WAL file from the beginning.  This is called "resetting the
+WAL".  At the start of the first new
 write transaction, the WAL header salt-1 value is incremented
 and the salt-2 value is randomized.  These changes to the salts invalidate
 old frames in the WAL that have already been checkpointed but not yet
 overwritten, and prevent them from being checkpointed again.</p>
 
+<p>The WAL file can optionally be truncated on a reset, but it need not be.
+Performance is usually a little better if the WAL is not truncate, since
+filesystems generally will overwrite an existing file faster than they
+will grow a file.
+
 <a name="walread"></a>
 
-<h2 id="reader_algorithm"><span>4.4. </span>Reader Algorithm</h2>
+</p><h2 id="reader_algorithm"><span>4.5. </span>Reader Algorithm</h2>
 
 <p>To read a page from the database (call it page number P), a reader
 first checks the WAL to see if it contains page P.  If so, then the
@@ -2009,8 +2045,9 @@ contains no copies of page P that are valid and which are a commit
 frame or are followed by a commit frame, then page P is read from
 the database file.</p>
 
-<p>To start a read transaction, the reader records the index of the last
-valid frame in the WAL.  The reader uses this recorded "mxFrame" value
+<p>To start a read transaction, the reader records the number of value
+frames in the WAL as "mxFrame".  (<a href="walformat.html#mxframe">More detail</a>)
+The reader uses this recorded mxFrame value
 for all subsequent read operations.  New transactions can be appended
 to the WAL, but as long as the reader uses its original mxFrame value
 and ignores subsequently appended content, the reader will see a 
@@ -2028,16 +2065,17 @@ search for frames of a particular page.</p>
 
 <a name="walindexformat"></a>
 
-<h2 id="wal_index_format"><span>4.5. </span>WAL-Index Format</h2>
+<h2 id="wal_index_format"><span>4.6. </span>WAL-Index Format</h2>
 
 <p>Conceptually, the wal-index is shared memory, though the current
-VFS implementations use a mmapped file for the wal-index.  The mmapped
+VFS implementations use a memory-mapped file for operating-system
+portability.  The memory-mapped
 file is in the same directory as the database and has the same name
 as the database with a "<tt>-shm</tt>" suffix appended.  Because
 the wal-index is shared memory, SQLite does not support 
 <a href="pragma.html#pragma_journal_mode">journal_mode=WAL</a> 
-on a network filesystem when clients are on different machines.
-All users of the database must be able to share the same memory.</p>
+on a network filesystem when clients are on different machines, as
+all clients of the database must be able to share the same memory.</p>
 
 <p>The purpose of the wal-index is to answer this question quickly:</p>
 
@@ -2064,6 +2102,6 @@ byte order of the host computer.</p>
 <p>This document is concerned with the persistent state of the database
 file, and since the wal-index is a transient structure, no further 
 information about the format of the wal-index will be provided here.
-Complete details on the format of the wal-index are contained within
-comments in SQLite source code.</p>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+Additional details on the format of the wal-index are contained in
+the separate <a href="walformat.html">WAL-index File Format</a> document.</p>
+

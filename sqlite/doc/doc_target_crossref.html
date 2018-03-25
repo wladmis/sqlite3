@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -133,7 +133,7 @@ return false;
 <li><a href="c3ref/busy_handler.html">c3ref/busy_handler.html</a> &rarr; {busy handler} {busy-handler callback} sqlite3_busy_handler</li>
 <li><a href="c3ref/busy_timeout.html">c3ref/busy_timeout.html</a> &rarr; sqlite3_busy_timeout</li>
 <li><a href="c3ref/c_abort.html">c3ref/c_abort.html</a> &rarr; {result code definitions}</li>
-<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_IOERR_AUTH SQLITE_IOERR_VNODE {extended result code definitions}</li>
+<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_IOERR_AUTH SQLITE_IOERR_BEGIN_ATOMIC SQLITE_IOERR_COMMIT_ATOMIC SQLITE_IOERR_ROLLBACK_ATOMIC SQLITE_IOERR_VNODE {extended result code definitions}</li>
 <li><a href="c3ref/c_access_exists.html">c3ref/c_access_exists.html</a> &rarr; SQLITE_ACCESS_EXISTS SQLITE_ACCESS_READ SQLITE_ACCESS_READWRITE</li>
 <li><a href="c3ref/c_alter_table.html">c3ref/c_alter_table.html</a> &rarr; SQLITE_ALTER_TABLE SQLITE_ANALYZE SQLITE_ATTACH SQLITE_COPY SQLITE_CREATE_INDEX SQLITE_CREATE_TABLE SQLITE_CREATE_TEMP_INDEX SQLITE_CREATE_TEMP_TABLE SQLITE_CREATE_TEMP_TRIGGER SQLITE_CREATE_TEMP_VIEW SQLITE_CREATE_TRIGGER SQLITE_CREATE_VIEW SQLITE_CREATE_VTABLE SQLITE_DELETE SQLITE_DETACH SQLITE_DROP_INDEX SQLITE_DROP_TABLE SQLITE_DROP_TEMP_INDEX SQLITE_DROP_TEMP_TABLE SQLITE_DROP_TEMP_TRIGGER SQLITE_DROP_TEMP_VIEW SQLITE_DROP_TRIGGER SQLITE_DROP_VIEW SQLITE_DROP_VTABLE SQLITE_FUNCTION SQLITE_INSERT SQLITE_PRAGMA SQLITE_READ SQLITE_RECURSIVE SQLITE_REINDEX SQLITE_SAVEPOINT SQLITE_SELECT SQLITE_TRANSACTION SQLITE_UPDATE</li>
 <li><a href="c3ref/c_any.html">c3ref/c_any.html</a> &rarr; SQLITE_ANY SQLITE_UTF16 SQLITE_UTF16BE SQLITE_UTF16LE SQLITE_UTF16_ALIGNED SQLITE_UTF8</li>
@@ -161,11 +161,12 @@ return false;
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigscratch">c3ref/c_config_covering_index_scan.html#sqliteconfigscratch</a> &rarr; SQLITE_CONFIG_SCRATCH</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigserialized">c3ref/c_config_covering_index_scan.html#sqliteconfigserialized</a> &rarr; SQLITE_CONFIG_SERIALIZED</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread</a> &rarr; SQLITE_CONFIG_SINGLETHREAD</li>
+<li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsmallmalloc">c3ref/c_config_covering_index_scan.html#sqliteconfigsmallmalloc</a> &rarr; SQLITE_CONFIG_SMALL_MALLOC</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog">c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog</a> &rarr; SQLITE_CONFIG_SQLLOG</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill</a> &rarr; SQLITE_CONFIG_STMTJRNL_SPILL</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">c3ref/c_config_covering_index_scan.html#sqliteconfiguri</a> &rarr; SQLITE_CONFIG_URI</li>
 <li><a href="c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize">c3ref/c_config_covering_index_scan.html#sqliteconfigwin32heapsize</a> &rarr; SQLITE_CONFIG_WIN32_HEAPSIZE</li>
-<li><a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a> &rarr; SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</li>
+<li><a href="c3ref/c_dbconfig_enable_fkey.html">c3ref/c_dbconfig_enable_fkey.html</a> &rarr; SQLITE_DBCONFIG_ENABLE_FKEY SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION SQLITE_DBCONFIG_ENABLE_QPSG SQLITE_DBCONFIG_ENABLE_TRIGGER SQLITE_DBCONFIG_LOOKASIDE SQLITE_DBCONFIG_MAINDBNAME SQLITE_DBCONFIG_MAX SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE SQLITE_DBCONFIG_TRIGGER_EQP</li>
 <li><a href="c3ref/c_dbstatus_options.html">c3ref/c_dbstatus_options.html</a> &rarr; {SQLITE_DBSTATUS options} SQLITE_DBSTATUS_MAX</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit</a> &rarr; SQLITE_DBSTATUS_CACHE_HIT</li>
 <li><a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss">c3ref/c_dbstatus_options.html#sqlitedbstatuscachemiss</a> &rarr; SQLITE_DBSTATUS_CACHE_MISS</li>
@@ -182,35 +183,38 @@ return false;
 <li><a href="c3ref/c_deny.html">c3ref/c_deny.html</a> &rarr; SQLITE_DENY SQLITE_IGNORE</li>
 <li><a href="c3ref/c_deterministic.html">c3ref/c_deterministic.html</a> &rarr; SQLITE_DETERMINISTIC</li>
 <li><a href="c3ref/c_fail.html">c3ref/c_fail.html</a> &rarr; SQLITE_FAIL SQLITE_REPLACE SQLITE_ROLLBACK {conflict resolution mode}</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html">c3ref/c_fcntl_busyhandler.html</a> &rarr; SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_PDB SQLITE_FCNTL_SET_LOCKPROXYFILE {file control opcode} {file control opcodes}</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler">c3ref/c_fcntl_busyhandler.html#sqlitefcntlbusyhandler</a> &rarr; SQLITE_FCNTL_BUSYHANDLER</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize">c3ref/c_fcntl_busyhandler.html#sqlitefcntlchunksize</a> &rarr; SQLITE_FCNTL_CHUNK_SIZE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo">c3ref/c_fcntl_busyhandler.html#sqlitefcntlcommitphasetwo</a> &rarr; SQLITE_FCNTL_COMMIT_PHASETWO</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlfilepointer">c3ref/c_fcntl_busyhandler.html#sqlitefcntlfilepointer</a> &rarr; SQLITE_FCNTL_FILE_POINTER</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved">c3ref/c_fcntl_busyhandler.html#sqlitefcntlhasmoved</a> &rarr; SQLITE_FCNTL_HAS_MOVED</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer">c3ref/c_fcntl_busyhandler.html#sqlitefcntljournalpointer</a> &rarr; SQLITE_FCNTL_JOURNAL_POINTER</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntllockstate">c3ref/c_fcntl_busyhandler.html#sqlitefcntllockstate</a> &rarr; SQLITE_FCNTL_LOCKSTATE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize">c3ref/c_fcntl_busyhandler.html#sqlitefcntlmmapsize</a> &rarr; SQLITE_FCNTL_MMAP_SIZE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntloverwrite">c3ref/c_fcntl_busyhandler.html#sqlitefcntloverwrite</a> &rarr; SQLITE_FCNTL_OVERWRITE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpersistwal">c3ref/c_fcntl_busyhandler.html#sqlitefcntlpersistwal</a> &rarr; SQLITE_FCNTL_PERSIST_WAL</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpowersafeoverwrite">c3ref/c_fcntl_busyhandler.html#sqlitefcntlpowersafeoverwrite</a> &rarr; SQLITE_FCNTL_POWERSAFE_OVERWRITE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma">c3ref/c_fcntl_busyhandler.html#sqlitefcntlpragma</a> &rarr; SQLITE_FCNTL_PRAGMA</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlrbu">c3ref/c_fcntl_busyhandler.html#sqlitefcntlrbu</a> &rarr; SQLITE_FCNTL_RBU</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsizehint">c3ref/c_fcntl_busyhandler.html#sqlitefcntlsizehint</a> &rarr; SQLITE_FCNTL_SIZE_HINT</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsync">c3ref/c_fcntl_busyhandler.html#sqlitefcntlsync</a> &rarr; SQLITE_FCNTL_SYNC</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted</a> &rarr; SQLITE_FCNTL_SYNC_OMITTED</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename">c3ref/c_fcntl_busyhandler.html#sqlitefcntltempfilename</a> &rarr; SQLITE_FCNTL_TEMPFILENAME</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace">c3ref/c_fcntl_busyhandler.html#sqlitefcntltrace</a> &rarr; SQLITE_FCNTL_TRACE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfsname">c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfsname</a> &rarr; SQLITE_FCNTL_VFSNAME</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfspointer">c3ref/c_fcntl_busyhandler.html#sqlitefcntlvfspointer</a> &rarr; SQLITE_FCNTL_VFS_POINTER</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwalblock">c3ref/c_fcntl_busyhandler.html#sqlitefcntlwalblock</a> &rarr; SQLITE_FCNTL_WAL_BLOCK</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32avretry">c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32avretry</a> &rarr; SQLITE_FCNTL_WIN32_AV_RETRY</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32gethandle">c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32gethandle</a> &rarr; SQLITE_FCNTL_WIN32_GET_HANDLE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32sethandle">c3ref/c_fcntl_busyhandler.html#sqlitefcntlwin32sethandle</a> &rarr; SQLITE_FCNTL_WIN32_SET_HANDLE</li>
-<li><a href="c3ref/c_fcntl_busyhandler.html#sqlitefcntlzipvfs">c3ref/c_fcntl_busyhandler.html#sqlitefcntlzipvfs</a> &rarr; SQLITE_FCNTL_ZIPVFS</li>
-<li><a href="c3ref/c_index_constraint_eq.html">c3ref/c_index_constraint_eq.html</a> &rarr; SQLITE_INDEX_CONSTRAINT_EQ SQLITE_INDEX_CONSTRAINT_GE SQLITE_INDEX_CONSTRAINT_GLOB SQLITE_INDEX_CONSTRAINT_GT SQLITE_INDEX_CONSTRAINT_LE SQLITE_INDEX_CONSTRAINT_LIKE SQLITE_INDEX_CONSTRAINT_LT SQLITE_INDEX_CONSTRAINT_MATCH SQLITE_INDEX_CONSTRAINT_REGEXP</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html">c3ref/c_fcntl_begin_atomic_write.html</a> &rarr; SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_PDB SQLITE_FCNTL_SET_LOCKPROXYFILE {file control opcode} {file control opcodes}</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlbeginatomicwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlbeginatomicwrite</a> &rarr; SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlbusyhandler">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlbusyhandler</a> &rarr; SQLITE_FCNTL_BUSYHANDLER</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlchunksize">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlchunksize</a> &rarr; SQLITE_FCNTL_CHUNK_SIZE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitatomicwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitatomicwrite</a> &rarr; SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitphasetwo">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitphasetwo</a> &rarr; SQLITE_FCNTL_COMMIT_PHASETWO</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer</a> &rarr; SQLITE_FCNTL_FILE_POINTER</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlhasmoved">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlhasmoved</a> &rarr; SQLITE_FCNTL_HAS_MOVED</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntljournalpointer">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntljournalpointer</a> &rarr; SQLITE_FCNTL_JOURNAL_POINTER</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntllockstate">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntllockstate</a> &rarr; SQLITE_FCNTL_LOCKSTATE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlmmapsize">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlmmapsize</a> &rarr; SQLITE_FCNTL_MMAP_SIZE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntloverwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntloverwrite</a> &rarr; SQLITE_FCNTL_OVERWRITE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpersistwal">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpersistwal</a> &rarr; SQLITE_FCNTL_PERSIST_WAL</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpowersafeoverwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpowersafeoverwrite</a> &rarr; SQLITE_FCNTL_POWERSAFE_OVERWRITE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpragma">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpragma</a> &rarr; SQLITE_FCNTL_PRAGMA</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrbu">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrbu</a> &rarr; SQLITE_FCNTL_RBU</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrollbackatomicwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlrollbackatomicwrite</a> &rarr; SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizehint">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsizehint</a> &rarr; SQLITE_FCNTL_SIZE_HINT</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsync">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsync</a> &rarr; SQLITE_FCNTL_SYNC</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted</a> &rarr; SQLITE_FCNTL_SYNC_OMITTED</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltempfilename">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltempfilename</a> &rarr; SQLITE_FCNTL_TEMPFILENAME</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltrace">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntltrace</a> &rarr; SQLITE_FCNTL_TRACE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlvfsname">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlvfsname</a> &rarr; SQLITE_FCNTL_VFSNAME</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlvfspointer">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlvfspointer</a> &rarr; SQLITE_FCNTL_VFS_POINTER</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwalblock">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwalblock</a> &rarr; SQLITE_FCNTL_WAL_BLOCK</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32avretry">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32avretry</a> &rarr; SQLITE_FCNTL_WIN32_AV_RETRY</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32gethandle">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32gethandle</a> &rarr; SQLITE_FCNTL_WIN32_GET_HANDLE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32sethandle">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32sethandle</a> &rarr; SQLITE_FCNTL_WIN32_SET_HANDLE</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlzipvfs">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlzipvfs</a> &rarr; SQLITE_FCNTL_ZIPVFS</li>
+<li><a href="c3ref/c_index_constraint_eq.html">c3ref/c_index_constraint_eq.html</a> &rarr; SQLITE_INDEX_CONSTRAINT_EQ SQLITE_INDEX_CONSTRAINT_GE SQLITE_INDEX_CONSTRAINT_GLOB SQLITE_INDEX_CONSTRAINT_GT SQLITE_INDEX_CONSTRAINT_IS SQLITE_INDEX_CONSTRAINT_ISNOT SQLITE_INDEX_CONSTRAINT_ISNOTNULL SQLITE_INDEX_CONSTRAINT_ISNULL SQLITE_INDEX_CONSTRAINT_LE SQLITE_INDEX_CONSTRAINT_LIKE SQLITE_INDEX_CONSTRAINT_LT SQLITE_INDEX_CONSTRAINT_MATCH SQLITE_INDEX_CONSTRAINT_NE SQLITE_INDEX_CONSTRAINT_REGEXP</li>
 <li><a href="c3ref/c_index_scan_unique.html">c3ref/c_index_scan_unique.html</a> &rarr; SQLITE_INDEX_SCAN_UNIQUE</li>
-<li><a href="c3ref/c_iocap_atomic.html">c3ref/c_iocap_atomic.html</a> &rarr; SQLITE_IOCAP_ATOMIC SQLITE_IOCAP_ATOMIC16K SQLITE_IOCAP_ATOMIC1K SQLITE_IOCAP_ATOMIC2K SQLITE_IOCAP_ATOMIC32K SQLITE_IOCAP_ATOMIC4K SQLITE_IOCAP_ATOMIC512 SQLITE_IOCAP_ATOMIC64K SQLITE_IOCAP_ATOMIC8K SQLITE_IOCAP_IMMUTABLE SQLITE_IOCAP_POWERSAFE_OVERWRITE SQLITE_IOCAP_SAFE_APPEND SQLITE_IOCAP_SEQUENTIAL SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</li>
+<li><a href="c3ref/c_iocap_atomic.html">c3ref/c_iocap_atomic.html</a> &rarr; SQLITE_IOCAP_ATOMIC SQLITE_IOCAP_ATOMIC16K SQLITE_IOCAP_ATOMIC1K SQLITE_IOCAP_ATOMIC2K SQLITE_IOCAP_ATOMIC32K SQLITE_IOCAP_ATOMIC4K SQLITE_IOCAP_ATOMIC512 SQLITE_IOCAP_ATOMIC64K SQLITE_IOCAP_ATOMIC8K SQLITE_IOCAP_BATCH_ATOMIC SQLITE_IOCAP_IMMUTABLE SQLITE_IOCAP_POWERSAFE_OVERWRITE SQLITE_IOCAP_SAFE_APPEND SQLITE_IOCAP_SEQUENTIAL SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</li>
 <li><a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a> &rarr; {limit categories} {limit category}</li>
 <li><a href="c3ref/c_limit_attached.html#sqlitelimitattached">c3ref/c_limit_attached.html#sqlitelimitattached</a> &rarr; SQLITE_LIMIT_ATTACHED</li>
 <li><a href="c3ref/c_limit_attached.html#sqlitelimitcolumn">c3ref/c_limit_attached.html#sqlitelimitcolumn</a> &rarr; SQLITE_LIMIT_COLUMN</li>
@@ -259,7 +263,7 @@ return false;
 <li><a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort">c3ref/c_stmtstatus_counter.html#sqlitestmtstatussort</a> &rarr; SQLITE_STMTSTATUS_SORT</li>
 <li><a href="c3ref/c_stmtstatus_counter.html#sqlitestmtstatusvmstep">c3ref/c_stmtstatus_counter.html#sqlitestmtstatusvmstep</a> &rarr; SQLITE_STMTSTATUS_VM_STEP</li>
 <li><a href="c3ref/c_sync_dataonly.html">c3ref/c_sync_dataonly.html</a> &rarr; SQLITE_SYNC_DATAONLY SQLITE_SYNC_FULL SQLITE_SYNC_NORMAL</li>
-<li><a href="c3ref/c_testctrl_always.html">c3ref/c_testctrl_always.html</a> &rarr; SQLITE_TESTCTRL_ALWAYS SQLITE_TESTCTRL_ASSERT SQLITE_TESTCTRL_BENIGN_MALLOC_HOOKS SQLITE_TESTCTRL_BITVEC_TEST SQLITE_TESTCTRL_BYTEORDER SQLITE_TESTCTRL_EXPLAIN_STMT SQLITE_TESTCTRL_FAULT_INSTALL SQLITE_TESTCTRL_FIRST SQLITE_TESTCTRL_IMPOSTER SQLITE_TESTCTRL_ISINIT SQLITE_TESTCTRL_ISKEYWORD SQLITE_TESTCTRL_LAST SQLITE_TESTCTRL_LOCALTIME_FAULT SQLITE_TESTCTRL_NEVER_CORRUPT SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD SQLITE_TESTCTRL_OPTIMIZATIONS SQLITE_TESTCTRL_PENDING_BYTE SQLITE_TESTCTRL_PRNG_RESET SQLITE_TESTCTRL_PRNG_RESTORE SQLITE_TESTCTRL_PRNG_SAVE SQLITE_TESTCTRL_RESERVE SQLITE_TESTCTRL_SCRATCHMALLOC SQLITE_TESTCTRL_SORTER_MMAP SQLITE_TESTCTRL_VDBE_COVERAGE</li>
+<li><a href="c3ref/c_testctrl_always.html">c3ref/c_testctrl_always.html</a> &rarr; SQLITE_TESTCTRL_ALWAYS SQLITE_TESTCTRL_ASSERT SQLITE_TESTCTRL_BENIGN_MALLOC_HOOKS SQLITE_TESTCTRL_BITVEC_TEST SQLITE_TESTCTRL_BYTEORDER SQLITE_TESTCTRL_EXPLAIN_STMT SQLITE_TESTCTRL_FAULT_INSTALL SQLITE_TESTCTRL_FIRST SQLITE_TESTCTRL_IMPOSTER SQLITE_TESTCTRL_ISINIT SQLITE_TESTCTRL_ISKEYWORD SQLITE_TESTCTRL_LAST SQLITE_TESTCTRL_LOCALTIME_FAULT SQLITE_TESTCTRL_NEVER_CORRUPT SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD SQLITE_TESTCTRL_OPTIMIZATIONS SQLITE_TESTCTRL_PARSER_COVERAGE SQLITE_TESTCTRL_PENDING_BYTE SQLITE_TESTCTRL_PRNG_RESET SQLITE_TESTCTRL_PRNG_RESTORE SQLITE_TESTCTRL_PRNG_SAVE SQLITE_TESTCTRL_RESERVE SQLITE_TESTCTRL_SCRATCHMALLOC SQLITE_TESTCTRL_SORTER_MMAP SQLITE_TESTCTRL_VDBE_COVERAGE</li>
 <li><a href="c3ref/c_trace.html">c3ref/c_trace.html</a> &rarr; SQLITE_TRACE</li>
 <li><a href="c3ref/c_trace.html#sqlitetraceclose">c3ref/c_trace.html#sqlitetraceclose</a> &rarr; SQLITE_TRACE_CLOSE</li>
 <li><a href="c3ref/c_trace.html#sqlitetraceprofile">c3ref/c_trace.html#sqlitetraceprofile</a> &rarr; SQLITE_TRACE_PROFILE</li>
@@ -394,7 +398,7 @@ return false;
 <li><a href="c3ref/uri_boolean.html">c3ref/uri_boolean.html</a> &rarr; sqlite3_uri_boolean sqlite3_uri_int64 sqlite3_uri_parameter</li>
 <li><a href="c3ref/user_data.html">c3ref/user_data.html</a> &rarr; sqlite3_user_data</li>
 <li><a href="c3ref/value.html">c3ref/value.html</a> &rarr; {protected sqlite3_value} sqlite3_value {unprotected sqlite3_value}</li>
-<li><a href="c3ref/value_blob.html">c3ref/value_blob.html</a> &rarr; sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type</li>
+<li><a href="c3ref/value_blob.html">c3ref/value_blob.html</a> &rarr; sqlite3_value_blob sqlite3_value_bytes sqlite3_value_bytes16 sqlite3_value_double sqlite3_value_int sqlite3_value_int64 sqlite3_value_nochange sqlite3_value_numeric_type sqlite3_value_pointer sqlite3_value_text sqlite3_value_text16 sqlite3_value_text16be sqlite3_value_text16le sqlite3_value_type</li>
 <li><a href="c3ref/value_dup.html">c3ref/value_dup.html</a> &rarr; sqlite3_value_dup sqlite3_value_free</li>
 <li><a href="c3ref/value_subtype.html">c3ref/value_subtype.html</a> &rarr; sqlite3_value_subtype</li>
 <li><a href="c3ref/vfs.html">c3ref/vfs.html</a> &rarr; sqlite3_vfs</li>
@@ -402,8 +406,10 @@ return false;
 <li><a href="c3ref/vfs.html#sqlite3vfsxopen">c3ref/vfs.html#sqlite3vfsxopen</a> &rarr; sqlite3_vfs.xOpen</li>
 <li><a href="c3ref/vfs_find.html">c3ref/vfs_find.html</a> &rarr; sqlite3_vfs_find sqlite3_vfs_register sqlite3_vfs_unregister</li>
 <li><a href="c3ref/vtab.html">c3ref/vtab.html</a> &rarr; sqlite3_vtab</li>
+<li><a href="c3ref/vtab_collation.html">c3ref/vtab_collation.html</a> &rarr; sqlite3_vtab_collation</li>
 <li><a href="c3ref/vtab_config.html">c3ref/vtab_config.html</a> &rarr; sqlite3_vtab_config</li>
 <li><a href="c3ref/vtab_cursor.html">c3ref/vtab_cursor.html</a> &rarr; sqlite3_vtab_cursor {virtual table cursor}</li>
+<li><a href="c3ref/vtab_nochange.html">c3ref/vtab_nochange.html</a> &rarr; sqlite3_vtab_nochange</li>
 <li><a href="c3ref/vtab_on_conflict.html">c3ref/vtab_on_conflict.html</a> &rarr; sqlite3_vtab_on_conflict</li>
 <li><a href="c3ref/wal_autocheckpoint.html">c3ref/wal_autocheckpoint.html</a> &rarr; sqlite3_wal_autocheckpoint</li>
 <li><a href="c3ref/wal_checkpoint.html">c3ref/wal_checkpoint.html</a> &rarr; sqlite3_wal_checkpoint</li>
@@ -420,10 +426,14 @@ return false;
 <li><a href="cli.html#dschema">cli.html#dschema</a> &rarr; .schema</li>
 <li><a href="cli.html#dtables">cli.html#dtables</a> &rarr; .tables</li>
 <li><a href="cli.html#dump">cli.html#dump</a> &rarr; .dump</li>
+<li><a href="cli.html#editfunc">cli.html#editfunc</a> &rarr; {edit SQL function}</li>
+<li><a href="cli.html#exexcel*">cli.html#exexcel*</a> &rarr; {export to excel}</li>
+<li><a href="cli.html#expert">cli.html#expert</a> &rarr; {.expert command}</li>
 <li><a href="cli.html#fileio">cli.html#fileio</a> &rarr; {file I/O functions}</li>
 <li><a href="cli.html#fullschema">cli.html#fullschema</a> &rarr; .fullschema {the .fullschema dot-command}</li>
 <li><a href="cli.html#selftest">cli.html#selftest</a> &rarr; {.selftest dot-command}</li>
 <li><a href="cli.html#sha3sum">cli.html#sha3sum</a> &rarr; {.sha3sum dot-command}</li>
+<li><a href="cli.html#sqlar">cli.html#sqlar</a> &rarr; {.archive command} {SQL Archive}</li>
 <li><a href="compile.html">compile.html</a> &rarr; {compile-time options}</li>
 <li><a href="compile.html#4_byte_aligned_malloc">compile.html#4_byte_aligned_malloc</a> &rarr; -DSQLITE_4_BYTE_ALIGNED_MALLOC SQLITE_4_BYTE_ALIGNED_MALLOC</li>
 <li><a href="compile.html#allow_covering_index_scan">compile.html#allow_covering_index_scan</a> &rarr; -DSQLITE_ALLOW_COVERING_INDEX_SCAN SQLITE_ALLOW_COVERING_INDEX_SCAN</li>
@@ -461,7 +471,9 @@ return false;
 <li><a href="compile.html#enable_8_3_names">compile.html#enable_8_3_names</a> &rarr; -DSQLITE_ENABLE_8_3_NAMES SQLITE_ENABLE_8_3_NAMES</li>
 <li><a href="compile.html#enable_api_armor">compile.html#enable_api_armor</a> &rarr; -DSQLITE_ENABLE_API_ARMOR SQLITE_ENABLE_API_ARMOR</li>
 <li><a href="compile.html#enable_atomic_write">compile.html#enable_atomic_write</a> &rarr; -DSQLITE_ENABLE_ATOMIC_WRITE SQLITE_ENABLE_ATOMIC_WRITE</li>
+<li><a href="compile.html#enable_batch_atomic_write">compile.html#enable_batch_atomic_write</a> &rarr; -DSQLITE_ENABLE_BATCH_ATOMIC_WRITE SQLITE_ENABLE_BATCH_ATOMIC_WRITE</li>
 <li><a href="compile.html#enable_column_metadata">compile.html#enable_column_metadata</a> &rarr; -DSQLITE_ENABLE_COLUMN_METADATA SQLITE_ENABLE_COLUMN_METADATA</li>
+<li><a href="compile.html#enable_dbpage_vtab">compile.html#enable_dbpage_vtab</a> &rarr; -DSQLITE_ENABLE_DBPAGE_VTAB SQLITE_ENABLE_DBPAGE_VTAB</li>
 <li><a href="compile.html#enable_dbstat_vtab">compile.html#enable_dbstat_vtab</a> &rarr; -DSQLITE_ENABLE_DBSTAT_VTAB SQLITE_ENABLE_DBSTAT_VTAB</li>
 <li><a href="compile.html#enable_explain_comments">compile.html#enable_explain_comments</a> &rarr; -DSQLITE_ENABLE_EXPLAIN_COMMENTS SQLITE_ENABLE_EXPLAIN_COMMENTS</li>
 <li><a href="compile.html#enable_fts3">compile.html#enable_fts3</a> &rarr; -DSQLITE_ENABLE_FTS3 SQLITE_ENABLE_FTS3</li>
@@ -477,6 +489,7 @@ return false;
 <li><a href="compile.html#enable_memsys3">compile.html#enable_memsys3</a> &rarr; -DSQLITE_ENABLE_MEMSYS3 SQLITE_ENABLE_MEMSYS3</li>
 <li><a href="compile.html#enable_memsys5">compile.html#enable_memsys5</a> &rarr; -DSQLITE_ENABLE_MEMSYS5 SQLITE_ENABLE_MEMSYS5</li>
 <li><a href="compile.html#enable_null_trim">compile.html#enable_null_trim</a> &rarr; -DSQLITE_ENABLE_NULL_TRIM SQLITE_ENABLE_NULL_TRIM</li>
+<li><a href="compile.html#enable_offset_sql_func">compile.html#enable_offset_sql_func</a> &rarr; -DSQLITE_ENABLE_OFFSET_SQL_FUNC SQLITE_ENABLE_OFFSET_SQL_FUNC</li>
 <li><a href="compile.html#enable_preupdate_hook">compile.html#enable_preupdate_hook</a> &rarr; -DSQLITE_ENABLE_PREUPDATE_HOOK SQLITE_ENABLE_PREUPDATE_HOOK</li>
 <li><a href="compile.html#enable_qpsg">compile.html#enable_qpsg</a> &rarr; -DSQLITE_ENABLE_QPSG SQLITE_ENABLE_QPSG</li>
 <li><a href="compile.html#enable_rbu">compile.html#enable_rbu</a> &rarr; -DSQLITE_ENABLE_RBU SQLITE_ENABLE_RBU</li>
@@ -497,6 +510,7 @@ return false;
 <li><a href="compile.html#fts3_max_expr_depth">compile.html#fts3_max_expr_depth</a> &rarr; -DSQLITE_FTS3_MAX_EXPR_DEPTH SQLITE_FTS3_MAX_EXPR_DEPTH</li>
 <li><a href="compile.html#gmtime_r">compile.html#gmtime_r</a> &rarr; -DHAVE_GMTIME_R HAVE_GMTIME_R</li>
 <li><a href="compile.html#have_isnan">compile.html#have_isnan</a> &rarr; -DSQLITE_HAVE_ISNAN SQLITE_HAVE_ISNAN</li>
+<li><a href="compile.html#introspection_pragmas">compile.html#introspection_pragmas</a> &rarr; -DSQLITE_INTROSPECTION_PRAGMAS SQLITE_INTROSPECTION_PRAGMAS</li>
 <li><a href="compile.html#isnan">compile.html#isnan</a> &rarr; -DHAVE_ISNAN HAVE_ISNAN</li>
 <li><a href="compile.html#like_doesnt_match_blobs">compile.html#like_doesnt_match_blobs</a> &rarr; -DSQLITE_LIKE_DOESNT_MATCH_BLOBS SQLITE_LIKE_DOESNT_MATCH_BLOBS</li>
 <li><a href="compile.html#localtime_r">compile.html#localtime_r</a> &rarr; -DHAVE_LOCALTIME_R HAVE_LOCALTIME_R</li>
@@ -583,8 +597,10 @@ return false;
 <li><a href="compile.html#threadsafe">compile.html#threadsafe</a> &rarr; -DSQLITE_THREADSAFE SQLITE_THREADSAFE</li>
 <li><a href="compile.html#trace_size_limit">compile.html#trace_size_limit</a> &rarr; -DSQLITE_TRACE_SIZE_LIMIT SQLITE_TRACE_SIZE_LIMIT</li>
 <li><a href="compile.html#untestable">compile.html#untestable</a> &rarr; -DSQLITE_UNTESTABLE SQLITE_UNTESTABLE</li>
+<li><a href="compile.html#use_alloca">compile.html#use_alloca</a> &rarr; -DSQLITE_USE_ALLOCA SQLITE_USE_ALLOCA</li>
 <li><a href="compile.html#use_fcntl_trace">compile.html#use_fcntl_trace</a> &rarr; -DSQLITE_USE_FCNTL_TRACE SQLITE_USE_FCNTL_TRACE</li>
 <li><a href="compile.html#use_uri">compile.html#use_uri</a> &rarr; -DSQLITE_USE_URI SQLITE_USE_URI</li>
+<li><a href="compile.html#use_zlib">compile.html#use_zlib</a> &rarr; -DSQLITE_USE_ZLIB SQLITE_USE_ZLIB</li>
 <li><a href="compile.html#usleep">compile.html#usleep</a> &rarr; -DHAVE_USLEEP HAVE_USLEEP</li>
 <li><a href="compile.html#utime">compile.html#utime</a> &rarr; -DHAVE_UTIME HAVE_UTIME</li>
 <li><a href="compile.html#win32_heap_create">compile.html#win32_heap_create</a> &rarr; -DSQLITE_WIN32_HEAP_CREATE SQLITE_WIN32_HEAP_CREATE</li>
@@ -637,6 +653,7 @@ return false;
 <li><a href="fileformat2.html#filesize">fileformat2.html#filesize</a> &rarr; {in-header database size}</li>
 <li><a href="fileformat2.html#freelist">fileformat2.html#freelist</a> &rarr; {free-page list} freelist</li>
 <li><a href="fileformat2.html#intschema">fileformat2.html#intschema</a> &rarr; {internal index} {internal indexes} {internal schema object} {internal schema objects} {internal table} {internal tables}</li>
+<li><a href="fileformat2.html#lockbyte">fileformat2.html#lockbyte</a> &rarr; {lock-byte page}</li>
 <li><a href="fileformat2.html#ovflpgs">fileformat2.html#ovflpgs</a> &rarr; {overflow page} {overflow pages}</li>
 <li><a href="fileformat2.html#record_format">fileformat2.html#record_format</a> &rarr; {record format}</li>
 <li><a href="fileformat2.html#rollbackjournal">fileformat2.html#rollbackjournal</a> &rarr; {rollback journal format}</li>
@@ -651,13 +668,13 @@ return false;
 <li><a href="fileformat2.html#usable_size">fileformat2.html#usable_size</a> &rarr; {usable size}</li>
 <li><a href="fileformat2.html#validfor">fileformat2.html#validfor</a> &rarr; {version-valid-for number}</li>
 <li><a href="fileformat2.html#varint">fileformat2.html#varint</a> &rarr; {variable-length integer} varint</li>
+<li><a href="fileformat2.html#vnums">fileformat2.html#vnums</a> &rarr; {file format version numbers}</li>
 <li><a href="fileformat2.html#walcksm">fileformat2.html#walcksm</a> &rarr; {WAL checksum algorithm}</li>
 <li><a href="fileformat2.html#walformat">fileformat2.html#walformat</a> &rarr; {WAL format}</li>
-<li><a href="fileformat2.html#walindexformat">fileformat2.html#walindexformat</a> &rarr; {WAL-index format} wal-index</li>
 <li><a href="fileformat2.html#walread">fileformat2.html#walread</a> &rarr; {WAL read algorithm}</li>
+<li><a href="fileformat2.html#walreset">fileformat2.html#walreset</a> &rarr; {WAL reset} {reset the WAL}</li>
 <li><a href="fileio.html">fileio.html</a> &rarr; {file I/O}</li>
-<li><a href="footprint.html">footprint.html</a> &rarr; footprint {library size}</li>
-<li><a href="footprint.html#relfootprint">footprint.html#relfootprint</a> &rarr; relfootprint</li>
+<li><a href="footprint.html">footprint.html</a> &rarr; footprint {library size} relfootprint</li>
 <li><a href="foreignkeys.html">foreignkeys.html</a> &rarr; {FOREIGN KEY constraints} {foreign key constraint} {foreign key constraints}</li>
 <li><a href="foreignkeys.html#fk_actions">foreignkeys.html#fk_actions</a> &rarr; {foreign key actions}</li>
 <li><a href="foreignkeys.html#fk_enable">foreignkeys.html#fk_enable</a> &rarr; {foreign key constraints are enabled}</li>
@@ -716,6 +733,7 @@ return false;
 <li><a href="fts5.html#_custom_auxiliary_functions_api_reference_">fts5.html#_custom_auxiliary_functions_api_reference_</a> &rarr; {custom auxiliary functions}</li>
 <li><a href="fts5.html#_summary_of_technical_differences_">fts5.html#_summary_of_technical_differences_</a> &rarr; {fts5 technical differences}</li>
 <li><a href="fts5.html#appendix_a">fts5.html#appendix_a</a> &rarr; {comparison with fts4}</li>
+<li><a href="fts5.html#carrotq">fts5.html#carrotq</a> &rarr; {FTS5 initial token}</li>
 <li><a href="fts5.html#compiling_and_using_fts5">fts5.html#compiling_and_using_fts5</a> &rarr; {FTS5 building}</li>
 <li><a href="fts5.html#contentless_tables">fts5.html#contentless_tables</a> &rarr; {FTS5 contentless tables}</li>
 <li><a href="fts5.html#custom_auxiliary_functions">fts5.html#custom_auxiliary_functions</a> &rarr; {FTS5 custom auxiliary functions}</li>
@@ -725,6 +743,7 @@ return false;
 <li><a href="fts5.html#external_content_tables">fts5.html#external_content_tables</a> &rarr; {FTS5 external content tables}</li>
 <li><a href="fts5.html#fts5_boolean_operators">fts5.html#fts5_boolean_operators</a> &rarr; {FTS5 boolean operators}</li>
 <li><a href="fts5.html#fts5_column_filters">fts5.html#fts5_column_filters</a> &rarr; {FTS5 column filters}</li>
+<li><a href="fts5.html#fts5_initial_token_queries">fts5.html#fts5_initial_token_queries</a> &rarr; {FTS5 initial token queries}</li>
 <li><a href="fts5.html#fts5_near_queries">fts5.html#fts5_near_queries</a> &rarr; {FTS5 NEAR queries}</li>
 <li><a href="fts5.html#fts5_phrases">fts5.html#fts5_phrases</a> &rarr; {FTS5 Phrases}</li>
 <li><a href="fts5.html#fts5_prefix_queries">fts5.html#fts5_prefix_queries</a> &rarr; {FTS5 prefix queries}</li>
@@ -834,6 +853,7 @@ return false;
 <li><a href="lang_corefunc.html#soundex">lang_corefunc.html#soundex</a> &rarr; soundex {soundex SQL function}</li>
 <li><a href="lang_corefunc.html#sqlite_compileoption_get">lang_corefunc.html#sqlite_compileoption_get</a> &rarr; sqlite_compileoption_get {sqlite_compileoption_get SQL function}</li>
 <li><a href="lang_corefunc.html#sqlite_compileoption_used">lang_corefunc.html#sqlite_compileoption_used</a> &rarr; sqlite_compileoption_used {sqlite_compileoption_used SQL function}</li>
+<li><a href="lang_corefunc.html#sqlite_offset">lang_corefunc.html#sqlite_offset</a> &rarr; sqlite_offset {sqlite_offset SQL function}</li>
 <li><a href="lang_corefunc.html#sqlite_source_id">lang_corefunc.html#sqlite_source_id</a> &rarr; sqlite_source_id {sqlite_source_id SQL function}</li>
 <li><a href="lang_corefunc.html#sqlite_version">lang_corefunc.html#sqlite_version</a> &rarr; sqlite_version {sqlite_version SQL function}</li>
 <li><a href="lang_corefunc.html#substr">lang_corefunc.html#substr</a> &rarr; substr {substr SQL function}</li>
@@ -922,6 +942,7 @@ return false;
 <li><a href="lang_with.html#ordinarycte">lang_with.html#ordinarycte</a> &rarr; {ordinary common table expressions}</li>
 <li><a href="lang_with.html#recursivecte">lang_with.html#recursivecte</a> &rarr; {recursive common table expression} {recursive common table expressions} {recursive query}</li>
 <li><a href="lang_with.html#sudoku">lang_with.html#sudoku</a> &rarr; {solve Sudoku puzzles}</li>
+<li><a href="lemon.html">lemon.html</a> &rarr; Lemon {Lemon LALR parser generator} {Lemon parser generator}</li>
 <li><a href="limits.html">limits.html</a> &rarr; limits</li>
 <li><a href="limits.html#max_attached">limits.html#max_attached</a> &rarr; SQLITE_MAX_ATTACHED</li>
 <li><a href="limits.html#max_column">limits.html#max_column</a> &rarr; SQLITE_MAX_COLUMN</li>
@@ -960,7 +981,6 @@ return false;
 <li><a href="malloc.html#memsysx">malloc.html#memsysx</a> &rarr; {experimental memory allocators}</li>
 <li><a href="malloc.html#nofrag">malloc.html#nofrag</a> &rarr; {Robson proof}</li>
 <li><a href="malloc.html#pagecache">malloc.html#pagecache</a> &rarr; {pagecache memory allocator}</li>
-<li><a href="malloc.html#scratch">malloc.html#scratch</a> &rarr; {scratch memory allocator}</li>
 <li><a href="malloc.html#win32heap">malloc.html#win32heap</a> &rarr; {Win32 native memory allocator}</li>
 <li><a href="mmap.html">mmap.html</a> &rarr; {memory-mapped I/O} mmap</li>
 <li><a href="mostdeployed.html">mostdeployed.html</a> &rarr; {most used} {most widely deployed} {most widely used}</li>
@@ -970,8 +990,9 @@ return false;
 <li><a href="opcode.html#subprog">opcode.html#subprog</a> &rarr; subprograms</li>
 <li><a href="optoverview.html">optoverview.html</a> &rarr; {SQLite query planner} optimizer {query planner}</li>
 <li><a href="optoverview.html#autoindex">optoverview.html#autoindex</a> &rarr; {Automatic indexing} {automatic indexes} {automatic indexing}</li>
+<li><a href="optoverview.html#coroutines">optoverview.html#coroutines</a> &rarr; co-routines {subquery co-routines}</li>
 <li><a href="optoverview.html#crossjoin">optoverview.html#crossjoin</a> &rarr; {CROSS JOIN} {Manual Control Of Query Plans Using CROSS JOIN}</li>
-<li><a href="optoverview.html#flattening">optoverview.html#flattening</a> &rarr; {flattening optimization}</li>
+<li><a href="optoverview.html#flattening">optoverview.html#flattening</a> &rarr; {flattening optimization} {query flattener}</li>
 <li><a href="optoverview.html#like_opt">optoverview.html#like_opt</a> &rarr; {LIKE optimization}</li>
 <li><a href="optoverview.html#manctrl">optoverview.html#manctrl</a> &rarr; {Manual Control Of Query Plans Using SQLITE_STAT Tables}</li>
 <li><a href="optoverview.html#or_opt">optoverview.html#or_opt</a> &rarr; {OR optimization} {or optimization}</li>
@@ -1008,6 +1029,7 @@ return false;
 <li><a href="pragma.html#pragma_freelist_count">pragma.html#pragma_freelist_count</a> &rarr; {PRAGMA freelist_count} freelist_count {freelist_count pragma}</li>
 <li><a href="pragma.html#pragma_full_column_names">pragma.html#pragma_full_column_names</a> &rarr; {PRAGMA full_column_names} full_column_names {full_column_names pragma}</li>
 <li><a href="pragma.html#pragma_fullfsync">pragma.html#pragma_fullfsync</a> &rarr; {PRAGMA fullfsync} fullfsync {fullfsync pragma}</li>
+<li><a href="pragma.html#pragma_function_list">pragma.html#pragma_function_list</a> &rarr; {PRAGMA function_list} function_list {function_list pragma}</li>
 <li><a href="pragma.html#pragma_ignore_check_constraints">pragma.html#pragma_ignore_check_constraints</a> &rarr; {PRAGMA ignore_check_constraints} ignore_check_constraints {ignore_check_constraints pragma}</li>
 <li><a href="pragma.html#pragma_incremental_vacuum">pragma.html#pragma_incremental_vacuum</a> &rarr; {PRAGMA incremental_vacuum} incremental_vacuum {incremental_vacuum pragma}</li>
 <li><a href="pragma.html#pragma_index_info">pragma.html#pragma_index_info</a> &rarr; {PRAGMA index_info} index_info {index_info pragma}</li>
@@ -1020,10 +1042,12 @@ return false;
 <li><a href="pragma.html#pragma_locking_mode">pragma.html#pragma_locking_mode</a> &rarr; {PRAGMA locking_mode} locking_mode {locking_mode pragma}</li>
 <li><a href="pragma.html#pragma_max_page_count">pragma.html#pragma_max_page_count</a> &rarr; {PRAGMA max_page_count} max_page_count {max_page_count pragma}</li>
 <li><a href="pragma.html#pragma_mmap_size">pragma.html#pragma_mmap_size</a> &rarr; {PRAGMA mmap_size} mmap_size {mmap_size pragma}</li>
+<li><a href="pragma.html#pragma_module_list">pragma.html#pragma_module_list</a> &rarr; {PRAGMA module_list} module_list {module_list pragma}</li>
 <li><a href="pragma.html#pragma_optimize">pragma.html#pragma_optimize</a> &rarr; {PRAGMA optimize} optimize {optimize pragma}</li>
 <li><a href="pragma.html#pragma_page_count">pragma.html#pragma_page_count</a> &rarr; {PRAGMA page_count} page_count {page_count pragma}</li>
 <li><a href="pragma.html#pragma_page_size">pragma.html#pragma_page_size</a> &rarr; {PRAGMA page_size} page_size {page_size pragma}</li>
 <li><a href="pragma.html#pragma_parser_trace">pragma.html#pragma_parser_trace</a> &rarr; {PRAGMA parser_trace} parser_trace {parser_trace pragma}</li>
+<li><a href="pragma.html#pragma_pragma_list">pragma.html#pragma_pragma_list</a> &rarr; {PRAGMA pragma_list} pragma_list {pragma_list pragma}</li>
 <li><a href="pragma.html#pragma_query_only">pragma.html#pragma_query_only</a> &rarr; {PRAGMA query_only} query_only {query_only pragma}</li>
 <li><a href="pragma.html#pragma_quick_check">pragma.html#pragma_quick_check</a> &rarr; {PRAGMA quick_check} quick_check {quick_check pragma}</li>
 <li><a href="pragma.html#pragma_read_uncommitted">pragma.html#pragma_read_uncommitted</a> &rarr; {PRAGMA read_uncommitted} read_uncommitted {read_uncommitted pragma}</li>
@@ -1117,6 +1141,8 @@ return false;
 <li><a href="releaselog/3_1_6.html">releaselog/3_1_6.html</a> &rarr; {Version 3.1.6} {version 3.1.6}</li>
 <li><a href="releaselog/3_20_0.html">releaselog/3_20_0.html</a> &rarr; {Version 3.20.0} {version 3.20.0}</li>
 <li><a href="releaselog/3_20_1.html">releaselog/3_20_1.html</a> &rarr; {Version 3.20.1} {version 3.20.1}</li>
+<li><a href="releaselog/3_21_0.html">releaselog/3_21_0.html</a> &rarr; {Version 3.21.0} {version 3.21.0}</li>
+<li><a href="releaselog/3_22_0.html">releaselog/3_22_0.html</a> &rarr; {Version 3.22.0} {version 3.22.0}</li>
 <li><a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a> &rarr; {Version 3.2.0} {version 3.2.0}</li>
 <li><a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a> &rarr; {Version 3.2.1} {version 3.2.1}</li>
 <li><a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a> &rarr; {Version 3.2.2} {version 3.2.2}</li>
@@ -1277,6 +1303,8 @@ return false;
 <li><a href="rescode.html#done">rescode.html#done</a> &rarr; SQLITE_DONE</li>
 <li><a href="rescode.html#empty">rescode.html#empty</a> &rarr; SQLITE_EMPTY</li>
 <li><a href="rescode.html#error">rescode.html#error</a> &rarr; SQLITE_ERROR</li>
+<li><a href="rescode.html#error_missing_collseq">rescode.html#error_missing_collseq</a> &rarr; SQLITE_ERROR_MISSING_COLLSEQ</li>
+<li><a href="rescode.html#error_retry">rescode.html#error_retry</a> &rarr; SQLITE_ERROR_RETRY</li>
 <li><a href="rescode.html#extrc">rescode.html#extrc</a> &rarr; {extended error code} {extended error codes} {extended result code} {extended result codes}</li>
 <li><a href="rescode.html#format">rescode.html#format</a> &rarr; SQLITE_FORMAT</li>
 <li><a href="rescode.html#full">rescode.html#full</a> &rarr; SQLITE_FULL</li>
@@ -1327,8 +1355,10 @@ return false;
 <li><a href="rescode.html#pve">rescode.html#pve</a> &rarr; ext-v-prim {primary versus extended result codes}</li>
 <li><a href="rescode.html#range">rescode.html#range</a> &rarr; SQLITE_RANGE</li>
 <li><a href="rescode.html#readonly">rescode.html#readonly</a> &rarr; SQLITE_READONLY</li>
+<li><a href="rescode.html#readonly_cantinit">rescode.html#readonly_cantinit</a> &rarr; SQLITE_READONLY_CANTINIT</li>
 <li><a href="rescode.html#readonly_cantlock">rescode.html#readonly_cantlock</a> &rarr; SQLITE_READONLY_CANTLOCK</li>
 <li><a href="rescode.html#readonly_dbmoved">rescode.html#readonly_dbmoved</a> &rarr; SQLITE_READONLY_DBMOVED</li>
+<li><a href="rescode.html#readonly_directory">rescode.html#readonly_directory</a> &rarr; SQLITE_READONLY_DIRECTORY</li>
 <li><a href="rescode.html#readonly_recovery">rescode.html#readonly_recovery</a> &rarr; SQLITE_READONLY_RECOVERY</li>
 <li><a href="rescode.html#readonly_rollback">rescode.html#readonly_rollback</a> &rarr; SQLITE_READONLY_ROLLBACK</li>
 <li><a href="rescode.html#row">rescode.html#row</a> &rarr; SQLITE_ROW</li>
@@ -1341,6 +1371,7 @@ return false;
 <li><a href="rtree.html">rtree.html</a> &rarr; {R-Tree extension} R-Trees RTREE rtree</li>
 <li><a href="rtree.html#customquery">rtree.html#customquery</a> &rarr; {custom r-tree queries}</li>
 <li><a href="rtree.html#intrtree">rtree.html#intrtree</a> &rarr; {integer-valued r-trees}</li>
+<li><a href="rtree.html#rtreecheck">rtree.html#rtreecheck</a> &rarr; rtreecheck</li>
 <li><a href="rtree.html#xquery">rtree.html#xquery</a> &rarr; sqlite3_rtree_query_callback {xQueryFunc RTree callback}</li>
 <li><a href="selfcontained.html">selfcontained.html</a> &rarr; low-dependency self-contained</li>
 <li><a href="series.html">series.html</a> &rarr; generate_series series</li>
@@ -1392,6 +1423,14 @@ return false;
 <li><a href="sqldiff.html">sqldiff.html</a> &rarr; sqldiff sqldiff.exe</li>
 <li><a href="stmt.html">stmt.html</a> &rarr; {SQLITE_STMT virtual table} sqlite_stmt {the SQLITE_STMT extension}</li>
 <li><a href="support.html#mailinglists">support.html#mailinglists</a> &rarr; {mailing lists}</li>
+<li><a href="swarmvtab.html#advanced_usage">swarmvtab.html#advanced_usage</a> &rarr; advanced</li>
+<li><a href="swarmvtab.html#compiling_and_using_swarmvtab">swarmvtab.html#compiling_and_using_swarmvtab</a> &rarr; compilation</li>
+<li><a href="swarmvtab.html#component_table_context_values">swarmvtab.html#component_table_context_values</a> &rarr; {swarmvtab context}</li>
+<li><a href="swarmvtab.html#overview">swarmvtab.html#overview</a> &rarr; swarmvtab</li>
+<li><a href="swarmvtab.html#sql_parameters">swarmvtab.html#sql_parameters</a> &rarr; {sql parameters}</li>
+<li><a href="swarmvtab.html#the_maxopen_parameter">swarmvtab.html#the_maxopen_parameter</a> &rarr; {maxopen parameter}</li>
+<li><a href="swarmvtab.html#the_missing_callback">swarmvtab.html#the_missing_callback</a> &rarr; {missing callback}</li>
+<li><a href="swarmvtab.html#the_openclose_callback">swarmvtab.html#the_openclose_callback</a> &rarr; {openclose callback}</li>
 <li><a href="syntax/alter-table-stmt.html">syntax/alter-table-stmt.html</a> &rarr; alter-table-stmt {alter-table-stmt syntax diagram}</li>
 <li><a href="syntax/analyze-stmt.html">syntax/analyze-stmt.html</a> &rarr; analyze-stmt {analyze-stmt syntax diagram}</li>
 <li><a href="syntax/attach-stmt.html">syntax/attach-stmt.html</a> &rarr; attach-stmt {attach-stmt syntax diagram}</li>
@@ -1522,7 +1561,7 @@ return false;
 <li><a href="uri.html#urivfs">uri.html#urivfs</a> &rarr; {vfs query parameter}</li>
 <li><a href="versionnumbers.html">versionnumbers.html</a> &rarr; {version numbering conventions}</li>
 <li><a href="vfs.html">vfs.html</a> &rarr; {OS backend} VFS VFSes</li>
-<li><a href="vfs.html#shim">vfs.html#shim</a> &rarr; {VFS shims} shims</li>
+<li><a href="vfs.html#shim">vfs.html#shim</a> &rarr; {VFS shim} {VFS shims} shims</li>
 <li><a href="vtab.html">vtab.html</a> &rarr; {virtual table} {virtual tables}</li>
 <li><a href="vtab.html#colUsed">vtab.html#colUsed</a> &rarr; {colUsed field}</li>
 <li><a href="vtab.html#epoonlyvtab">vtab.html#epoonlyvtab</a> &rarr; {eponymous-only virtual table}</li>
@@ -1530,7 +1569,7 @@ return false;
 <li><a href="vtab.html#hiddencol">vtab.html#hiddencol</a> &rarr; {hidden column} {hidden columns}</li>
 <li><a href="vtab.html#sqlite3_module.xDestroy">vtab.html#sqlite3_module.xDestroy</a> &rarr; xDestroy</li>
 <li><a href="vtab.html#tabfunc2">vtab.html#tabfunc2</a> &rarr; {table-valued function} {table-valued functions}</li>
-<li><a href="vtab.html#worid">vtab.html#worid</a> &rarr; {WITHOUT ROWID virtual tables}</li>
+<li><a href="vtab.html#worid">vtab.html#worid</a> &rarr; {WITHOUT ROWID virtual table} {WITHOUT ROWID virtual tables}</li>
 <li><a href="vtab.html#xBegin">vtab.html#xBegin</a> &rarr; sqlite3_module.xBegin xBegin</li>
 <li><a href="vtab.html#xbestindex">vtab.html#xbestindex</a> &rarr; sqlite3_module.xBestIndex xBestIndex</li>
 <li><a href="vtab.html#xclose">vtab.html#xclose</a> &rarr; sqlite3_module.xClose</li>
@@ -1559,6 +1598,11 @@ return false;
 <li><a href="wal.html#concurrency">wal.html#concurrency</a> &rarr; {WAL concurrency}</li>
 <li><a href="wal.html#noshm">wal.html#noshm</a> &rarr; {WAL without shared memory}</li>
 <li><a href="wal.html#readonly">wal.html#readonly</a> &rarr; {read-only WAL databases}</li>
+<li><a href="walformat.html">walformat.html</a> &rarr; {WAL-index File Format} {WAL-index format} wal-index</li>
+<li><a href="walformat.html#locks">walformat.html#locks</a> &rarr; {WAL-mode locks}</li>
+<li><a href="walformat.html#mxframe">walformat.html#mxframe</a> &rarr; mxFrame</li>
+<li><a href="walformat.html#nbackfill">walformat.html#nbackfill</a> &rarr; nBackfill</li>
+<li><a href="walformat.html#recovery">walformat.html#recovery</a> &rarr; {WAL-mode crash recovery} recovery</li>
 <li><a href="whentouse.html#dbcklst">whentouse.html#dbcklst</a> &rarr; {decision checklist}</li>
 <li><a href="whentouse.html#serversidedb">whentouse.html#serversidedb</a> &rarr; {server-side database}</li>
 <li><a href="whentouse.html#website">whentouse.html#website</a> &rarr; {using SQLite for websites}</li>
@@ -1566,5 +1610,7 @@ return false;
 <li><a href="withoutrowid.html#bene">withoutrowid.html#bene</a> &rarr; {benefits of using WITHOUT ROWID}</li>
 <li><a href="withoutrowid.html#wtu">withoutrowid.html#wtu</a> &rarr; {when to use WITHOUT ROWID}</li>
 <li><a href="zeroconf.html">zeroconf.html</a> &rarr; zero-configuration</li>
+<li><a href="zipfile.html">zipfile.html</a> &rarr; {Zipfile virtual table} zipfile</li>
+<li><a href="zipfile.html#adding_entries_to_a_zip_archive">zipfile.html#adding_entries_to_a_zip_archive</a> &rarr; {Adding to Zip}</li>
 </ul>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

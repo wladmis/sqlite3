@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -113,9 +113,9 @@ are passed directly through to the second and third parameters of
 the xFileControl method.  The return value of the xFileControl
 method becomes the return value of this routine.</p>
 
-<p>The SQLITE_FCNTL_FILE_POINTER value for the op parameter causes
+<p>The <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a> value for the op parameter causes
 a pointer to the underlying <a href="../c3ref/file.html">sqlite3_file</a> object to be written into
-the space pointed to by the 4th parameter.  The SQLITE_FCNTL_FILE_POINTER
+the space pointed to by the 4th parameter.  The <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a>
 case is a short-circuit path which does not actually invoke the
 underlying sqlite3_io_methods.xFileControl method.</p>
 
@@ -127,8 +127,8 @@ also return SQLITE_ERROR.  There is no way to distinguish between
 an incorrect zDbName and an SQLITE_ERROR return from the underlying
 xFileControl method.</p>
 
-<p>See also: <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntllockstate">SQLITE_FCNTL_LOCKSTATE</a>
+<p>See also: <a href="../c3ref/c_fcntl_begin_atomic_write.html">file control opcodes</a>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

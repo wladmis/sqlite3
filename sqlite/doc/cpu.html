@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -133,9 +133,9 @@ mk.innerHTML = "&#x25ba;";
 <h1 id="overview"><span>1. </span>Overview</h1>
 
 <p>The graph below shows the number of CPU cycles used by SQLite on a
-standard workload, for all versions of SQLite going back about 5.5 years.
-The number of CPU cycles used by SQLite has been
-halved in just the past three years.
+standard workload, for all versions of SQLite going back about 9 years.
+Recent version so SQLite use less then a third of the CPU cycles 
+compared to older versions.
 
 </p><p>
 This article describes how the SQLite developers measure CPU usage,
@@ -149,7 +149,7 @@ CPU usage of the SQLite library.
 <div class="imgcontainer">
 <img src="./images/cpu-usage.jpg"></div><br>
 Measured using cachegrind on Ubuntu 16.04 on x64 with gcc 5.4.0 and -Os.<br>
-Values normalized so that version 3.20.0 is 100%.
+Values normalized so that version 3.21.0 is 100%.
 <hr>
 </center>
 
@@ -351,4 +351,4 @@ but do not necessary correlate well with real-world timings.
 Time spent doing I/O is not reflected in the CPU cycle counts,
 and I/O time predominates in many SQLite usage scenarios.
 </p></li></ul>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

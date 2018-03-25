@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -272,6 +272,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqliteconfigscratch","x":"SQLITE_CONFIG_SCRATCH","s":0},
 {"u":"#sqliteconfigserialized","x":"SQLITE_CONFIG_SERIALIZED","s":0},
 {"u":"#sqliteconfigsinglethread","x":"SQLITE_CONFIG_SINGLETHREAD","s":0},
+{"u":"#sqliteconfigsmallmalloc","x":"SQLITE_CONFIG_SMALL_MALLOC","s":0},
 {"u":"#sqliteconfigsqllog","x":"SQLITE_CONFIG_SQLLOG","s":0},
 {"u":"#sqliteconfigstmtjrnlspill","x":"SQLITE_CONFIG_STMTJRNL_SPILL","s":0},
 {"u":"#sqliteconfiguri","x":"SQLITE_CONFIG_URI","s":0},
@@ -306,7 +307,9 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_ENABLE_TRIGGER","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_LOOKASIDE","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAINDBNAME","s":0},
+{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_MAX","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE","s":0},
+{"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_TRIGGER_EQP","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
 {"u":"#sqlitedbstatuscacheused","x":"SQLITE_DBSTATUS_CACHE_USED","s":0},
@@ -336,24 +339,29 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_DROP_VTABLE","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_EMPTY","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_ERROR","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_ERROR_MISSING_COLLSEQ","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_ERROR_RETRY","s":0},
 {"u":"#SQLITE_FAIL","x":"SQLITE_FAIL","s":0},
+{"u":"#sqlitefcntlbeginatomicwrite","x":"SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","s":0},
 {"u":"#sqlitefcntlbusyhandler","x":"SQLITE_FCNTL_BUSYHANDLER","s":0},
 {"u":"#sqlitefcntlchunksize","x":"SQLITE_FCNTL_CHUNK_SIZE","s":0},
+{"u":"#sqlitefcntlcommitatomicwrite","x":"SQLITE_FCNTL_COMMIT_ATOMIC_WRITE","s":0},
 {"u":"#sqlitefcntlcommitphasetwo","x":"SQLITE_FCNTL_COMMIT_PHASETWO","s":0},
 {"u":"#sqlitefcntlfilepointer","x":"SQLITE_FCNTL_FILE_POINTER","s":0},
-{"u":"#SQLITE_FCNTL_BUSYHANDLER","x":"SQLITE_FCNTL_GET_LOCKPROXYFILE","s":0},
+{"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_GET_LOCKPROXYFILE","s":0},
 {"u":"#sqlitefcntlhasmoved","x":"SQLITE_FCNTL_HAS_MOVED","s":0},
 {"u":"#sqlitefcntljournalpointer","x":"SQLITE_FCNTL_JOURNAL_POINTER","s":0},
-{"u":"#SQLITE_FCNTL_BUSYHANDLER","x":"SQLITE_FCNTL_LAST_ERRNO","s":0},
+{"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_LAST_ERRNO","s":0},
 {"u":"#sqlitefcntllockstate","x":"SQLITE_FCNTL_LOCKSTATE","s":0},
 {"u":"#sqlitefcntlmmapsize","x":"SQLITE_FCNTL_MMAP_SIZE","s":0},
 {"u":"#sqlitefcntloverwrite","x":"SQLITE_FCNTL_OVERWRITE","s":0},
-{"u":"#SQLITE_FCNTL_BUSYHANDLER","x":"SQLITE_FCNTL_PDB","s":0},
+{"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_PDB","s":0},
 {"u":"#sqlitefcntlpersistwal","x":"SQLITE_FCNTL_PERSIST_WAL","s":0},
 {"u":"#sqlitefcntlpowersafeoverwrite","x":"SQLITE_FCNTL_POWERSAFE_OVERWRITE","s":0},
 {"u":"#sqlitefcntlpragma","x":"SQLITE_FCNTL_PRAGMA","s":0},
 {"u":"#sqlitefcntlrbu","x":"SQLITE_FCNTL_RBU","s":0},
-{"u":"#SQLITE_FCNTL_BUSYHANDLER","x":"SQLITE_FCNTL_SET_LOCKPROXYFILE","s":0},
+{"u":"#sqlitefcntlrollbackatomicwrite","x":"SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE","s":0},
+{"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_SET_LOCKPROXYFILE","s":0},
 {"u":"#sqlitefcntlsizehint","x":"SQLITE_FCNTL_SIZE_HINT","s":0},
 {"u":"#sqlitefcntlsync","x":"SQLITE_FCNTL_SYNC","s":0},
 {"u":"#sqlitefcntlsyncomitted","x":"SQLITE_FCNTL_SYNC_OMITTED","s":0},
@@ -375,10 +383,15 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_GE","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_GLOB","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_GT","s":0},
+{"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_IS","s":0},
+{"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_ISNOT","s":0},
+{"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_ISNOTNULL","s":0},
+{"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_ISNULL","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_LE","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_LIKE","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_LT","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_MATCH","s":0},
+{"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_NE","s":0},
 {"u":"#SQLITE_INDEX_CONSTRAINT_EQ","x":"SQLITE_INDEX_CONSTRAINT_REGEXP","s":0},
 {"u":"#SQLITE_INDEX_SCAN_UNIQUE","x":"SQLITE_INDEX_SCAN_UNIQUE","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_INSERT","s":0},
@@ -394,6 +407,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_ATOMIC512","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_ATOMIC64K","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_ATOMIC8K","s":0},
+{"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_BATCH_ATOMIC","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_IMMUTABLE","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_POWERSAFE_OVERWRITE","s":0},
 {"u":"#SQLITE_IOCAP_ATOMIC","x":"SQLITE_IOCAP_SAFE_APPEND","s":0},
@@ -402,9 +416,11 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_IOERR","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_ACCESS","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_AUTH","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_BEGIN_ATOMIC","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_BLOCKED","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_CHECKRESERVEDLOCK","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_CLOSE","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_COMMIT_ATOMIC","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_CONVPATH","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_DELETE","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_DELETE_NOENT","s":0},
@@ -418,6 +434,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_NOMEM","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_RDLOCK","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_READ","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_ROLLBACK_ATOMIC","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_SEEK","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_SHMLOCK","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_IOERR_SHMMAP","s":0},
@@ -502,8 +519,10 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_RANGE","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_READ","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_READONLY","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_CANTINIT","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_CANTLOCK","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_DBMOVED","s":0},
+{"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_DIRECTORY","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_RECOVERY","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_READONLY_ROLLBACK","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_RECURSIVE","s":0},
@@ -563,6 +582,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_NEVER_CORRUPT","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_OPTIMIZATIONS","s":0},
+{"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PARSER_COVERAGE","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PENDING_BYTE","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PRNG_RESET","s":0},
 {"u":"#SQLITE_TESTCTRL_ALWAYS","x":"SQLITE_TESTCTRL_PRNG_RESTORE","s":0},
@@ -629,7 +649,7 @@ document.getElementById("listtab20").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 232 -->
+<!-- number of functions: 235 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 5 -->
 <style>
@@ -861,6 +881,7 @@ var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_free","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_nochange","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_numeric_type","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_pointer","s":0},
 {"u":"#sqlite3_value_subtype","x":"sqlite3_value_subtype","s":0},
@@ -875,7 +896,9 @@ var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_vfs_find","x":"sqlite3_vfs_unregister","s":0},
 {"u":"#sqlite3_mprintf","x":"sqlite3_vmprintf","s":0},
 {"u":"#sqlite3_mprintf","x":"sqlite3_vsnprintf","s":0},
+{"u":"#sqlite3_vtab_collation","x":"sqlite3_vtab_collation","s":0},
 {"u":"#sqlite3_vtab_config","x":"sqlite3_vtab_config","s":0},
+{"u":"#sqlite3_vtab_nochange","x":"sqlite3_vtab_nochange","s":0},
 {"u":"#sqlite3_vtab_on_conflict","x":"sqlite3_vtab_on_conflict","s":0},
 {"u":"#sqlite3_wal_autocheckpoint","x":"sqlite3_wal_autocheckpoint","s":0},
 {"u":"#sqlite3_wal_checkpoint","x":"sqlite3_wal_checkpoint","s":0},
@@ -1372,7 +1395,7 @@ functions to enable blocking locks with timeouts, to change the
 locking strategy (for example to use dot-file locks), to inquire
 about the status of a lock, or to break stale locks.  The SQLite
 core reserves all opcodes less than 100 for its own use.
-A <a href="#SQLITE_FCNTL_BUSYHANDLER">list of opcodes</a> less than 100 is available.
+A <a href="#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE">list of opcodes</a> less than 100 is available.
 Applications that define a custom xFileControl method should use opcodes
 greater than 100 to avoid conflicts.  VFS implementations should
 return <a href="#SQLITE_ABORT">SQLITE_NOTFOUND</a> for file control opcodes that they do not
@@ -1400,6 +1423,7 @@ underlying device:</p>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</a>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_POWERSAFE_OVERWRITE</a>
 <li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_IMMUTABLE</a>
+<li> <a href="#SQLITE_IOCAP_ATOMIC">SQLITE_IOCAP_BATCH_ATOMIC</a>
 </ul></p>
 
 <p>The SQLITE_IOCAP_ATOMIC property means that all writes of
@@ -1727,12 +1751,18 @@ the SQLite core and the underlying operating system.  The "vfs"
 in the name of the object stands for "virtual file system".  See
 the <a href="vfs.html">VFS documentation</a> for further information.</p>
 
-<p>The value of the iVersion field is initially 1 but may be larger in
-future versions of SQLite.  Additional fields may be appended to this
-object when the iVersion value is increased.  Note that the structure
-of the sqlite3_vfs object changes in the transaction between
-SQLite version 3.5.9 and 3.6.0 and yet the iVersion field was not
-modified.</p>
+<p>The VFS interface is sometimes extended by adding new methods onto
+the end.  Each time such an extension occurs, the iVersion field
+is incremented.  The iVersion value started out as 1 in
+SQLite <a href="releaselog/3_5_0.html">version 3.5.0</a> on 2007-09-04, then increased to 2
+with SQLite <a href="releaselog/3_7_0.html">version 3.7.0</a> on 2010-07-21, and then increased
+to 3 with SQLite <a href="releaselog/3_7_6.html">version 3.7.6</a> on 2011-04-12.  Additional fields
+may be appended to the sqlite3_vfs object and the iVersion value
+may increase again in future versions of SQLite.
+Note that the structure
+of the sqlite3_vfs object changes in the transition from
+SQLite <a href="releaselog/3_5_9.html">version 3.5.9</a> to <a href="releaselog/3_6_0.html">version 3.6.0</a> on 2008-07-16
+and yet the iVersion field was not modified.</p>
 
 <p>The szOsFile field is the size of the subclassed <a href="#sqlite3_file">sqlite3_file</a>
 structure used by this VFS.  mxPathname is the maximum length of
@@ -2781,9 +2811,9 @@ are passed directly through to the second and third parameters of
 the xFileControl method.  The return value of the xFileControl
 method becomes the return value of this routine.</p>
 
-<p>The SQLITE_FCNTL_FILE_POINTER value for the op parameter causes
+<p>The <a href="#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a> value for the op parameter causes
 a pointer to the underlying <a href="#sqlite3_file">sqlite3_file</a> object to be written into
-the space pointed to by the 4th parameter.  The SQLITE_FCNTL_FILE_POINTER
+the space pointed to by the 4th parameter.  The <a href="#sqlitefcntlfilepointer">SQLITE_FCNTL_FILE_POINTER</a>
 case is a short-circuit path which does not actually invoke the
 underlying sqlite3_io_methods.xFileControl method.</p>
 
@@ -2795,7 +2825,7 @@ also return SQLITE_ERROR.  There is no way to distinguish between
 an incorrect zDbName and an SQLITE_ERROR return from the underlying
 xFileControl method.</p>
 
-<p>See also: <a href="#sqlitefcntllockstate">SQLITE_FCNTL_LOCKSTATE</a>
+<p>See also: <a href="#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE">file control opcodes</a>
 </p><hr><a name="sqlite3_finalize"></a>
 <h2>Destroy A Prepared Statement Object</h2>
 </div>
@@ -3508,7 +3538,7 @@ more threads at the same moment in time.</p>
 other than <a href="#SQLITE_ABORT">SQLITE_ROW</a> before any subsequent invocation of
 sqlite3_step().  Failure to reset the prepared statement using
 <a href="#sqlite3_reset">sqlite3_reset()</a> would result in an <a href="#SQLITE_ABORT">SQLITE_MISUSE</a> return from
-sqlite3_step().  But after <a href="releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26),
+sqlite3_step().  But after <a href="releaselog/3_6_23_1.html">version 3.6.23.1</a> (2010-03-26,
 sqlite3_step() began
 calling <a href="#sqlite3_reset">sqlite3_reset()</a> automatically in this circumstance rather
 than returning <a href="#SQLITE_ABORT">SQLITE_MISUSE</a>.  This is not considered a compatibility
@@ -4116,6 +4146,22 @@ an <a href="#sqlite3_create_function">application-defined SQL function</a> argum
 information can be used to pass a limited amount of context from
 one SQL function to another.  Use the <a href="#sqlite3_result_subtype">sqlite3_result_subtype()</a>
 routine to set the subtype for the return value of an SQL function.
+</p><hr><a name="sqlite3_vtab_collation"></a>
+<h2>Determine The Collation For a Virtual Table Constraint</h2>
+</div>
+<blockquote><pre>
+const char *sqlite3_vtab_collation(sqlite3_index_info*,int);
+</pre></blockquote>
+<p>
+This function may only be called from within a call to the <a href="vtab.html#xbestindex">xBestIndex</a>
+method of a <a href="vtab.html">virtual table</a>.</p>
+
+<p>The first argument must be the sqlite3_index_info object that is the
+first parameter to the xBestIndex() method. The second argument must be
+an index into the aConstraint[] array belonging to the sqlite3_index_info
+structure passed to xBestIndex. This function returns a pointer to a buffer
+containing the name of the collation sequence for the corresponding
+constraint.
 </p><hr><a name="sqlite3_vtab_config"></a>
 <h2>Virtual Table Interface Configuration</h2>
 </div>
@@ -4133,6 +4179,26 @@ xCreate virtual table method then the behavior is undefined.</p>
 <p>At present, there is only one option that may be configured using
 this function. (See <a href="#SQLITE_VTAB_CONSTRAINT_SUPPORT">SQLITE_VTAB_CONSTRAINT_SUPPORT</a>.)  Further options
 may be added in the future.
+</p><hr><a name="sqlite3_vtab_nochange"></a>
+<h2>Determine If Virtual Table Column Access Is For UPDATE</h2>
+</div>
+<blockquote><pre>
+int sqlite3_vtab_nochange(sqlite3_context*);
+</pre></blockquote>
+<p>
+If the sqlite3_vtab_nochange(X) routine is called within the <a href="vtab.html#xcolumn">xColumn</a>
+method of a <a href="vtab.html">virtual table</a>, then it returns true if and only if the
+column is being fetched as part of an UPDATE operation during which the
+column value will not change.  Applications might use this to substitute
+a lighter-weight value to return that the corresponding <a href="vtab.html#xupdate">xUpdate</a> method
+understands as a "no-change" value.</p>
+
+<p>If the <a href="vtab.html#xcolumn">xColumn</a> method calls sqlite3_vtab_nochange() and finds that
+the column is not changed by the UPDATE statement, they the xColumn
+method can optionally return without setting a result, without calling
+any of the <a href="#sqlite3_result_blob">sqlite3_result_xxxxx() interfaces</a>.
+In that case, <a href="#sqlite3_value_blob">sqlite3_value_nochange(X)</a> will return true for the
+same column in the <a href="vtab.html#xupdate">xUpdate</a> method.
 </p><hr><a name="sqlite3_vtab_on_conflict"></a>
 <h2>Determine The Virtual Table Conflict Policy</h2>
 </div>
@@ -4389,7 +4455,7 @@ sqlite3_snapshot objects is <a href="#sqlite3_snapshot_free">sqlite3_snapshot_fr
 #define SQLITE_FULL        13   /* Insertion failed because database is full */
 #define SQLITE_CANTOPEN    14   /* Unable to open the database file */
 #define SQLITE_PROTOCOL    15   /* Database lock protocol error */
-#define SQLITE_EMPTY       16   /* Not used */
+#define SQLITE_EMPTY       16   /* Internal use only */
 #define SQLITE_SCHEMA      17   /* The database schema changed */
 #define SQLITE_TOOBIG      18   /* String or BLOB exceeds size limit */
 #define SQLITE_CONSTRAINT  19   /* Abort due to constraint violation */
@@ -4417,6 +4483,8 @@ here in order to indicate success or failure.</p>
 <h2>Extended Result Codes</h2>
 </div>
 <blockquote><pre>
+#define SQLITE_ERROR_MISSING_COLLSEQ   (SQLITE_ERROR | (1&lt;&lt;8))
+#define SQLITE_ERROR_RETRY             (SQLITE_ERROR | (2&lt;&lt;8))
 #define SQLITE_IOERR_READ              (SQLITE_IOERR | (1&lt;&lt;8))
 #define SQLITE_IOERR_SHORT_READ        (SQLITE_IOERR | (2&lt;&lt;8))
 #define SQLITE_IOERR_WRITE             (SQLITE_IOERR | (3&lt;&lt;8))
@@ -4445,6 +4513,9 @@ here in order to indicate success or failure.</p>
 #define SQLITE_IOERR_CONVPATH          (SQLITE_IOERR | (26&lt;&lt;8))
 #define SQLITE_IOERR_VNODE             (SQLITE_IOERR | (27&lt;&lt;8))
 #define SQLITE_IOERR_AUTH              (SQLITE_IOERR | (28&lt;&lt;8))
+#define SQLITE_IOERR_BEGIN_ATOMIC      (SQLITE_IOERR | (29&lt;&lt;8))
+#define SQLITE_IOERR_COMMIT_ATOMIC     (SQLITE_IOERR | (30&lt;&lt;8))
+#define SQLITE_IOERR_ROLLBACK_ATOMIC   (SQLITE_IOERR | (31&lt;&lt;8))
 #define SQLITE_LOCKED_SHAREDCACHE      (SQLITE_LOCKED |  (1&lt;&lt;8))
 #define SQLITE_BUSY_RECOVERY           (SQLITE_BUSY   |  (1&lt;&lt;8))
 #define SQLITE_BUSY_SNAPSHOT           (SQLITE_BUSY   |  (2&lt;&lt;8))
@@ -4457,6 +4528,8 @@ here in order to indicate success or failure.</p>
 #define SQLITE_READONLY_CANTLOCK       (SQLITE_READONLY | (2&lt;&lt;8))
 #define SQLITE_READONLY_ROLLBACK       (SQLITE_READONLY | (3&lt;&lt;8))
 #define SQLITE_READONLY_DBMOVED        (SQLITE_READONLY | (4&lt;&lt;8))
+#define SQLITE_READONLY_CANTINIT       (SQLITE_READONLY | (5&lt;&lt;8))
+#define SQLITE_READONLY_DIRECTORY      (SQLITE_READONLY | (6&lt;&lt;8))
 #define SQLITE_ABORT_ROLLBACK          (SQLITE_ABORT | (2&lt;&lt;8))
 #define SQLITE_CONSTRAINT_CHECK        (SQLITE_CONSTRAINT | (1&lt;&lt;8))
 #define SQLITE_CONSTRAINT_COMMITHOOK   (SQLITE_CONSTRAINT | (2&lt;&lt;8))
@@ -4637,7 +4710,7 @@ meaning of each of these checkpoint modes.
 #define SQLITE_CONFIG_SERIALIZED    3  /* nil */
 #define SQLITE_CONFIG_MALLOC        4  /* sqlite3_mem_methods* */
 #define SQLITE_CONFIG_GETMALLOC     5  /* sqlite3_mem_methods* */
-#define SQLITE_CONFIG_SCRATCH       6  /* void*, int sz, int N */
+#define SQLITE_CONFIG_SCRATCH       6  /* No longer used */
 #define SQLITE_CONFIG_PAGECACHE     7  /* void*, int sz, int N */
 #define SQLITE_CONFIG_HEAP          8  /* void*, int nByte, int min */
 #define SQLITE_CONFIG_MEMSTATUS     9  /* boolean */
@@ -4658,6 +4731,7 @@ meaning of each of these checkpoint modes.
 #define SQLITE_CONFIG_PCACHE_HDRSZ        24  /* int *psz */
 #define SQLITE_CONFIG_PMASZ               25  /* unsigned int szPma */
 #define SQLITE_CONFIG_STMTJRNL_SPILL      26  /* int nByte */
+#define SQLITE_CONFIG_SMALL_MALLOC        27  /* boolean */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -4735,6 +4809,17 @@ This option can be used to overload the default memory allocation
 routines with a wrapper that simulations memory allocation failure or
 tracks memory usage, for example. </dd></p>
 
+<p><a name="sqliteconfigsmallmalloc"></a>
+ <dt>SQLITE_CONFIG_SMALL_MALLOC</dt>
+<dd> The SQLITE_CONFIG_SMALL_MALLOC option takes single argument of
+type int, interpreted as a boolean, which if true provides a hint to
+SQLite that it should avoid large memory allocations if possible.
+SQLite will run faster if it is free to make large memory allocations,
+but some application might prefer to run slower in exchange for
+guarantees about memory fragmentation that are possible if large
+allocations are avoided.  This hint is normally off.
+</dd></p>
+
 <p><a name="sqliteconfigmemstatus"></a>
  <dt>SQLITE_CONFIG_MEMSTATUS</dt>
 <dd> The SQLITE_CONFIG_MEMSTATUS option takes single argument of type int,
@@ -4754,25 +4839,7 @@ allocation statistics are disabled by default.
 
 <p><a name="sqliteconfigscratch"></a>
  <dt>SQLITE_CONFIG_SCRATCH</dt>
-<dd> The SQLITE_CONFIG_SCRATCH option specifies a static memory buffer
-that SQLite can use for scratch memory.  There are three arguments
-to SQLITE_CONFIG_SCRATCH:  A pointer an 8-byte
-aligned memory buffer from which the scratch allocations will be
-drawn, the size of each scratch allocation (sz),
-and the maximum number of scratch allocations (N).
-The first argument must be a pointer to an 8-byte aligned buffer
-of at least sz*N bytes of memory.
-SQLite will not use more than one scratch buffers per thread.
-SQLite will never request a scratch buffer that is more than 6
-times the database page size.
-If SQLite needs needs additional
-scratch memory beyond what is provided by this configuration option, then
-<a href="#sqlite3_free">sqlite3_malloc()</a> will be used to obtain the memory needed.<p>
-When the application provides any amount of scratch memory using
-SQLITE_CONFIG_SCRATCH, SQLite avoids unnecessary large
-<a href="#sqlite3_free">heap allocations</a>.
-This can help <a href="malloc.html#nofrag">prevent memory allocation failures</a> due to heap
-fragmentation in low-memory embedded systems.
+<dd> The SQLITE_CONFIG_SCRATCH option is no longer used.
 </dd></p>
 
 <p><a name="sqliteconfigpagecache"></a>
@@ -4810,8 +4877,7 @@ additional cache line. </dd></p>
  <dt>SQLITE_CONFIG_HEAP</dt>
 <dd> The SQLITE_CONFIG_HEAP option specifies a static memory buffer
 that SQLite will use for all of its dynamic memory allocation needs
-beyond those provided for by <a href="#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a> and
-<a href="#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a>.
+beyond those provided for by <a href="#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a>.
 The SQLITE_CONFIG_HEAP option is only available if SQLite is compiled
 with either <a href="compile.html#enable_memsys3">SQLITE_ENABLE_MEMSYS3</a> or <a href="compile.html#enable_memsys5">SQLITE_ENABLE_MEMSYS5</a> and returns
 <a href="#SQLITE_ABORT">SQLITE_ERROR</a> if invoked otherwise.
@@ -5026,6 +5092,8 @@ The default value for this setting is controlled by the
 #define SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION 1005 /* int int* */
 #define SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE      1006 /* int int* */
 #define SQLITE_DBCONFIG_ENABLE_QPSG           1007 /* int int* */
+#define SQLITE_DBCONFIG_TRIGGER_EQP           1008 /* int int* */
+#define SQLITE_DBCONFIG_MAX                   1008 /* Largest DBCONFIG */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -5130,9 +5198,8 @@ is an integer - non-zero to disable checkpoints-on-close, or zero (the
 default) to enable them. The second parameter is a pointer to an integer
 into which is written 0 or 1 to indicate whether checkpoints-on-close
 have been disabled - 0 if they are not disabled, 1 if they are.
-</dd></p>
-
-<p><dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
+</dd>
+<dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
 <dd>The SQLITE_DBCONFIG_ENABLE_QPSG option activates or deactivates
 the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG).  When the QPSG is active,
 a single SQL query statement will always use the same algorithm regardless
@@ -5141,9 +5208,18 @@ that look at the values of bound parameters, which can make some queries
 slower.  But the QPSG has the advantage of more predictable behavior.  With
 the QPSG active, SQLite will always use the same query plan in the field as
 was used during testing in the lab.
-</dd></p>
-
-<p></dl>
+</dd>
+<dt>SQLITE_DBCONFIG_TRIGGER_EQP</dt>
+<dd> By default, the output of EXPLAIN QUERY PLAN commands does not
+include output for any operations performed by trigger programs. This
+option is used to set or clear (the default) a flag that governs this
+behavior. The first parameter passed to this operation is an integer -
+non-zero to enable output for trigger programs, or zero to disable it.
+The second parameter is a pointer to an integer into which is written
+0 or 1 to indicate whether output-for-triggers has been disabled - 0 if
+it is not disabled, 1 if it is.
+</dd>
+</dl>
 </p><hr><a name="SQLITE_DENY"></a>
 <h2>Authorizer Return Codes</h2>
 </div>
@@ -5178,7 +5254,7 @@ is for the SQL statement being evaluated.</p>
 <p>Note that the <a href="#SQLITE_DENY">SQLITE_IGNORE</a> constant is also used as a potential
 return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()</a> callback and that
 <a href="#SQLITE_ABORT">SQLITE_ABORT</a> is also a <a href="rescode.html">result code</a>.
-</p><hr><a name="SQLITE_FCNTL_BUSYHANDLER"></a>
+</p><hr><a name="SQLITE_FCNTL_BEGIN_ATOMIC_WRITE"></a>
 <h2>Standard File Control Opcodes</h2>
 </div>
 <blockquote><pre>
@@ -5211,6 +5287,9 @@ return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()
 #define SQLITE_FCNTL_JOURNAL_POINTER        28
 #define SQLITE_FCNTL_WIN32_GET_HANDLE       29
 #define SQLITE_FCNTL_PDB                    30
+#define SQLITE_FCNTL_BEGIN_ATOMIC_WRITE     31
+#define SQLITE_FCNTL_COMMIT_ATOMIC_WRITE    32
+#define SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE  33
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -5470,21 +5549,63 @@ VFS should return SQLITE_NOTFOUND for this opcode.</p>
 
 The <a href="#sqlitefcntlrbu">SQLITE_FCNTL_RBU</a> opcode is implemented by the special VFS used by
 the RBU extension only.  All other VFS should return SQLITE_NOTFOUND for
-this opcode.
+this opcode.</p>
+
+<p><li><a name="sqlitefcntlbeginatomicwrite"></a>
+
+If the <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a> opcode returns SQLITE_OK, then
+the file descriptor is placed in "batch write mode", which
+means all subsequent write operations will be deferred and done
+atomically at the next <a href="#sqlitefcntlcommitatomicwrite">SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</a>.  Systems
+that do not support batch atomic writes will return SQLITE_NOTFOUND.
+Following a successful SQLITE_FCNTL_BEGIN_ATOMIC_WRITE and prior to
+the closing <a href="#sqlitefcntlcommitatomicwrite">SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</a> or
+<a href="#sqlitefcntlrollbackatomicwrite">SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE</a>, SQLite will make
+no VFS interface calls on the same <a href="#sqlite3_file">sqlite3_file</a> file descriptor
+except for calls to the xWrite method and the xFileControl method
+with <a href="#sqlitefcntlsizehint">SQLITE_FCNTL_SIZE_HINT</a>.</p>
+
+<p><li><a name="sqlitefcntlcommitatomicwrite"></a>
+
+The <a href="#sqlitefcntlcommitatomicwrite">SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</a> opcode causes all write
+operations since the previous successful call to
+<a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a> to be performed atomically.
+This file control returns <a href="#SQLITE_ABORT">SQLITE_OK</a> if and only if the writes were
+all performed successfully and have been committed to persistent storage.
+Regardless of whether or not it is successful, this file control takes
+the file descriptor out of batch write mode so that all subsequent
+write operations are independent.
+SQLite will never invoke SQLITE_FCNTL_COMMIT_ATOMIC_WRITE without
+a prior successful call to <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a>.</p>
+
+<p><li><a name="sqlitefcntlrollbackatomicwrite"></a>
+
+The <a href="#sqlitefcntlrollbackatomicwrite">SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE</a> opcode causes all write
+operations since the previous successful call to
+<a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a> to be rolled back.
+This file control takes the file descriptor out of batch write mode
+so that all subsequent write operations are independent.
+SQLite will never invoke SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE without
+a prior successful call to <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a>.
 </ul>
 </p><hr><a name="SQLITE_INDEX_CONSTRAINT_EQ"></a>
 <h2>Virtual Table Constraint Operator Codes</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_INDEX_CONSTRAINT_EQ      2
-#define SQLITE_INDEX_CONSTRAINT_GT      4
-#define SQLITE_INDEX_CONSTRAINT_LE      8
-#define SQLITE_INDEX_CONSTRAINT_LT     16
-#define SQLITE_INDEX_CONSTRAINT_GE     32
-#define SQLITE_INDEX_CONSTRAINT_MATCH  64
-#define SQLITE_INDEX_CONSTRAINT_LIKE   65
-#define SQLITE_INDEX_CONSTRAINT_GLOB   66
-#define SQLITE_INDEX_CONSTRAINT_REGEXP 67
+#define SQLITE_INDEX_CONSTRAINT_EQ         2
+#define SQLITE_INDEX_CONSTRAINT_GT         4
+#define SQLITE_INDEX_CONSTRAINT_LE         8
+#define SQLITE_INDEX_CONSTRAINT_LT        16
+#define SQLITE_INDEX_CONSTRAINT_GE        32
+#define SQLITE_INDEX_CONSTRAINT_MATCH     64
+#define SQLITE_INDEX_CONSTRAINT_LIKE      65
+#define SQLITE_INDEX_CONSTRAINT_GLOB      66
+#define SQLITE_INDEX_CONSTRAINT_REGEXP    67
+#define SQLITE_INDEX_CONSTRAINT_NE        68
+#define SQLITE_INDEX_CONSTRAINT_ISNOT     69
+#define SQLITE_INDEX_CONSTRAINT_ISNOTNULL 70
+#define SQLITE_INDEX_CONSTRAINT_ISNULL    71
+#define SQLITE_INDEX_CONSTRAINT_IS        72
 </pre></blockquote>
 <p>
 These macros defined the allowed values for the
@@ -5509,6 +5630,7 @@ a query that uses a <a href="vtab.html">virtual table</a>.
 #define SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN  0x00000800
 #define SQLITE_IOCAP_POWERSAFE_OVERWRITE    0x00001000
 #define SQLITE_IOCAP_IMMUTABLE              0x00002000
+#define SQLITE_IOCAP_BATCH_ATOMIC           0x00004000
 </pre></blockquote>
 <p>
 The xDeviceCharacteristics method of the <a href="#sqlite3_io_methods">sqlite3_io_methods</a>
@@ -5534,7 +5656,12 @@ guaranteed to be unchanged.  The SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN
 flag indicates that a file cannot be deleted when open.  The
 SQLITE_IOCAP_IMMUTABLE flag indicates that the file is on
 read-only media and cannot be changed even by processes with
-elevated privileges.
+elevated privileges.</p>
+
+<p>The SQLITE_IOCAP_BATCH_ATOMIC property means that the underlying
+filesystem supports doing multiple write operations atomically when those
+write operations are bracketed by <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a> and
+<a href="#sqlitefcntlcommitatomicwrite">SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</a>.
 </p><hr><a name="SQLITE_LOCK_EXCLUSIVE"></a>
 <h2>File Locking Levels</h2>
 </div>
@@ -5698,9 +5825,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.20.1"
-#define SQLITE_VERSION_NUMBER 3020001
-#define SQLITE_SOURCE_ID      "2017-08-24 16:21:36 8d3a7ea6c5690d6b7c3767558f4f01b511c55463e3f9e64506801fe9b74dce34"
+#define SQLITE_VERSION        "3.22.0"
+#define SQLITE_VERSION_NUMBER 3022000
+#define SQLITE_SOURCE_ID      "2018-01-22 14:19:34 4e68a76247467e65985b2ccad31534bffbc4e624af05963682fe39b7cfd4alt1"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -5722,7 +5849,9 @@ system</a>.  The SQLITE_SOURCE_ID macro evaluates to
 a string which identifies a particular check-in of SQLite
 within its configuration management system.  The SQLITE_SOURCE_ID
 string contains the date and time of the check-in (UTC) and a SHA1
-or SHA3-256 hash of the entire source tree.</p>
+or SHA3-256 hash of the entire source tree.  If the source code has
+been edited in any way since it was last checked in, then the last
+four hexadecimal digits of the hash may be modified.</p>
 
 <p>See also: <a href="#sqlite3_libversion">sqlite3_libversion()</a>,
 <a href="#sqlite3_libversion">sqlite3_libversion_number()</a>, <a href="#sqlite3_libversion">sqlite3_sourceid()</a>,
@@ -5753,12 +5882,12 @@ C++ compilers.
 #define SQLITE_STATUS_MEMORY_USED          0
 #define SQLITE_STATUS_PAGECACHE_USED       1
 #define SQLITE_STATUS_PAGECACHE_OVERFLOW   2
-#define SQLITE_STATUS_SCRATCH_USED         3
-#define SQLITE_STATUS_SCRATCH_OVERFLOW     4
+#define SQLITE_STATUS_SCRATCH_USED         3  /* NOT USED */
+#define SQLITE_STATUS_SCRATCH_OVERFLOW     4  /* NOT USED */
 #define SQLITE_STATUS_MALLOC_SIZE          5
 #define SQLITE_STATUS_PARSER_STACK         6
 #define SQLITE_STATUS_PAGECACHE_SIZE       7
-#define SQLITE_STATUS_SCRATCH_SIZE         8
+#define SQLITE_STATUS_SCRATCH_SIZE         8  /* NOT USED */
 #define SQLITE_STATUS_MALLOC_COUNT         9
 </pre></blockquote>
 <p>
@@ -5771,8 +5900,7 @@ that can be returned by <a href="#sqlite3_status">sqlite3_status()</a>.</p>
 <dd>This parameter is the current amount of memory checked out
 using <a href="#sqlite3_free">sqlite3_malloc()</a>, either directly or indirectly.  The
 figure includes calls made to <a href="#sqlite3_free">sqlite3_malloc()</a> by the application
-and internal memory usage by the SQLite library.  Scratch memory
-controlled by <a href="#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a> and auxiliary page-cache
+and internal memory usage by the SQLite library.  Auxiliary page-cache
 memory controlled by <a href="#sqliteconfigpagecache">SQLITE_CONFIG_PAGECACHE</a> is not included in
 this parameter.  The amount returned is the sum of the allocation
 sizes as reported by the xSize method in <a href="#sqlite3_mem_methods">sqlite3_mem_methods</a>.</dd></p>
@@ -5817,30 +5945,15 @@ The value written into the *pCurrent parameter is undefined.</dd></p>
 
 <p><a name="sqlitestatusscratchused"></a>
  <dt>SQLITE_STATUS_SCRATCH_USED</dt>
-<dd>This parameter returns the number of allocations used out of the
-<a href="malloc.html#scratch">scratch memory allocator</a> configured using
-<a href="#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>.  The value returned is in allocations, not
-in bytes.  Since a single thread may only have one scratch allocation
-outstanding at time, this parameter also reports the number of threads
-using scratch memory at the same time.</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusscratchoverflow"></a>
  <dt>SQLITE_STATUS_SCRATCH_OVERFLOW</dt>
-<dd>This parameter returns the number of bytes of scratch memory
-allocation which could not be satisfied by the <a href="#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>
-buffer and where forced to overflow to <a href="#sqlite3_free">sqlite3_malloc()</a>.  The values
-returned include overflows because the requested allocation was too
-larger (that is, because the requested allocation was larger than the
-"sz" parameter to <a href="#sqliteconfigscratch">SQLITE_CONFIG_SCRATCH</a>) and because no scratch buffer
-slots were available.
-</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusscratchsize"></a>
  <dt>SQLITE_STATUS_SCRATCH_SIZE</dt>
-<dd>This parameter records the largest memory allocation request
-handed to <a href="malloc.html#scratch">scratch memory allocator</a>.  Only the value returned in the
-*pHighwater parameter to <a href="#sqlite3_status">sqlite3_status()</a> is of interest.
-The value written into the *pCurrent parameter is undefined.</dd></p>
+<dd>No longer used.</dd></p>
 
 <p><a name="sqlitestatusparserstack"></a>
  <dt>SQLITE_STATUS_PARSER_STACK</dt>
@@ -5898,7 +6011,7 @@ cares about the difference.)
 #define SQLITE_TESTCTRL_RESERVE                 14
 #define SQLITE_TESTCTRL_OPTIMIZATIONS           15
 #define SQLITE_TESTCTRL_ISKEYWORD               16
-#define SQLITE_TESTCTRL_SCRATCHMALLOC           17
+#define SQLITE_TESTCTRL_SCRATCHMALLOC           17  /* NOT USED */
 #define SQLITE_TESTCTRL_LOCALTIME_FAULT         18
 #define SQLITE_TESTCTRL_EXPLAIN_STMT            19  /* NOT USED */
 #define SQLITE_TESTCTRL_ONCE_RESET_THRESHOLD    19
@@ -5908,7 +6021,8 @@ cares about the difference.)
 #define SQLITE_TESTCTRL_ISINIT                  23
 #define SQLITE_TESTCTRL_SORTER_MMAP             24
 #define SQLITE_TESTCTRL_IMPOSTER                25
-#define SQLITE_TESTCTRL_LAST                    25
+#define SQLITE_TESTCTRL_PARSER_COVERAGE         26
+#define SQLITE_TESTCTRL_LAST                    26  /* Largest TESTCTRL */
 </pre></blockquote>
 <p>
 These constants are the valid operation code parameters used
@@ -5929,8 +6043,8 @@ Applications should not use any of these parameters or the
 </pre></blockquote>
 <p>
 These constants identify classes of events that can be monitored
-using the <a href="#sqlite3_trace_v2">sqlite3_trace_v2()</a> tracing logic.  The third argument
-to <a href="#sqlite3_trace_v2">sqlite3_trace_v2()</a> is an OR-ed combination of one or more of
+using the <a href="#sqlite3_trace_v2">sqlite3_trace_v2()</a> tracing logic.  The M argument
+to <a href="#sqlite3_trace_v2">sqlite3_trace_v2(D,M,X,P)</a> is an OR-ed combination of one or more of
 the following constants.  The first argument to the trace callback
 is one of the following constants.</p>
 
@@ -6891,8 +7005,9 @@ sqlite3_value objects even when not strictly required.</p>
 implementation of <a href="#sqlite3_create_function">application-defined SQL functions</a> are protected.
 The sqlite3_value object returned by
 <a href="#sqlite3_column_blob">sqlite3_column_value()</a> is unprotected.
-Unprotected sqlite3_value objects may only be used with
-<a href="#sqlite3_result_blob">sqlite3_result_value()</a> and <a href="#sqlite3_bind_blob">sqlite3_bind_value()</a>.
+Unprotected sqlite3_value objects may only be used as arguments
+to <a href="#sqlite3_result_blob">sqlite3_result_value()</a>, <a href="#sqlite3_bind_blob">sqlite3_bind_value()</a>, and
+<a href="#sqlite3_value_dup">sqlite3_value_dup()</a>.
 The <a href="#sqlite3_value_blob">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
@@ -6908,6 +7023,7 @@ var listitems26 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_dup","x":"sqlite3_value_free","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_int64","s":0},
+{"u":"#sqlite3_value_blob","x":"sqlite3_value_nochange","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_numeric_type","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_pointer","s":0},
 {"u":"#sqlite3_value_subtype","x":"sqlite3_value_subtype","s":0},
@@ -8052,7 +8168,7 @@ compiled with matching library and header files.</p>
 
 <p><blockquote><pre>
 assert( sqlite3_libversion_number()==SQLITE_VERSION_NUMBER );
-assert( strcmp(sqlite3_sourceid(),SQLITE_SOURCE_ID)==0 );
+assert( strncmp(sqlite3_sourceid(),SQLITE_SOURCE_ID,80)==0 );
 assert( strcmp(sqlite3_libversion(),SQLITE_VERSION)==0 );
 </pre></blockquote></p>
 
@@ -8064,7 +8180,9 @@ direct access to string constants within the DLL.  The
 sqlite3_libversion_number() function returns an integer equal to
 <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION_NUMBER</a>.  The sqlite3_sourceid() function returns
 a pointer to a string constant whose value is the same as the
-<a href="#SQLITE_SOURCE_ID">SQLITE_SOURCE_ID</a> C preprocessor macro.</p>
+<a href="#SQLITE_SOURCE_ID">SQLITE_SOURCE_ID</a> C preprocessor macro.  Except if SQLite is built
+using an edited copy of <a href="amalgamation.html">the amalgamation</a>, then the last four characters
+of the hash might be different from <a href="#SQLITE_SOURCE_ID">SQLITE_SOURCE_ID</a>.</p>
 
 <p>See also: <a href="lang_corefunc.html#sqlite_version">sqlite_version()</a> and <a href="lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a>.
 </p><hr><a name="sqlite3_memory_highwater"></a>
@@ -8465,10 +8583,10 @@ automatically deleted as soon as the database connection is closed.</p>
 <p>If <a href="uri.html">URI filename</a> interpretation is enabled, and the filename argument
 begins with "file:", then the filename is interpreted as a URI. URI
 filename interpretation is enabled if the <a href="#SQLITE_OPEN_AUTOPROXY">SQLITE_OPEN_URI</a> flag is
-set in the fourth argument to sqlite3_open_v2(), or if it has
+set in the third argument to sqlite3_open_v2(), or if it has
 been enabled globally using the <a href="#sqliteconfiguri">SQLITE_CONFIG_URI</a> option with the
 <a href="#sqlite3_config">sqlite3_config()</a> method or by the <a href="compile.html#use_uri">SQLITE_USE_URI</a> compile-time option.
-As of SQLite version 3.7.7, URI filename interpretation is turned off
+URI filename interpretation is turned off
 by default, but future releases of SQLite might enable URI filename
 interpretation by default.  See "<a href="uri.html">URI filenames</a>" for additional
 information.</p>
@@ -9002,6 +9120,7 @@ int sqlite3_value_bytes(sqlite3_value*);
 int sqlite3_value_bytes16(sqlite3_value*);
 int sqlite3_value_type(sqlite3_value*);
 int sqlite3_value_numeric_type(sqlite3_value*);
+int sqlite3_value_nochange(sqlite3_value*);
 </pre></blockquote>
 <p>
 <b>Summary:</b>
@@ -9026,6 +9145,9 @@ TEXT in bytes
 datatype of the value
 <tr><td><b>sqlite3_value_numeric_type&nbsp;&nbsp;</b>
 <td>&rarr;&nbsp;&nbsp;<td>Best numeric datatype of the value
+<tr><td><b>sqlite3_value_nochange&nbsp;&nbsp;</b>
+<td>&rarr;&nbsp;&nbsp;<td>True if the column is unchanged in an UPDATE
+against a virtual table.
 </table></blockquote></p>
 
 <p><b>Details:</b></p>
@@ -9073,6 +9195,19 @@ such a conversion is possible without loss of information (in other
 words, if the value is a string that looks like a number)
 then the conversion is performed.  Otherwise no conversion occurs.
 The <a href="#SQLITE_BLOB">datatype</a> after conversion is returned.</p>
+
+<p>Within the <a href="vtab.html#xupdate">xUpdate</a> method of a <a href="vtab.html">virtual table</a>, the
+sqlite3_value_nochange(X) interface returns true if and only if
+the column corresponding to X is unchanged by the UPDATE operation
+that the xUpdate method call was invoked to implement and if
+and the prior <a href="vtab.html#xcolumn">xColumn</a> method call that was invoked to extracted
+the value for that column returned without setting a result (probably
+because it queried <a href="#sqlite3_vtab_nochange">sqlite3_vtab_nochange()</a> and found that the column
+was unchanging).  Within an <a href="vtab.html#xupdate">xUpdate</a> method, any value for which
+sqlite3_value_nochange(X) is true will in all other respects appear
+to be a NULL value.  If sqlite3_value_nochange(X) is invoked anywhere other
+than within an <a href="vtab.html#xupdate">xUpdate</a> method call for an UPDATE statement, then
+the return value is arbitrary and meaningless.</p>
 
 <p>Please pay particular attention to the fact that the pointer returned
 from <a href="#sqlite3_value_blob">sqlite3_value_blob()</a>, <a href="#sqlite3_value_blob">sqlite3_value_text()</a>, or
@@ -9916,4 +10051,4 @@ is either the integer 0, the floating point number 0.0, or a NULL
 pointer.  Subsequent calls to <a href="#sqlite3_errcode">sqlite3_errcode()</a> will return
 <a href="#SQLITE_ABORT">SQLITE_NOMEM</a>.
 </p><hr>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+

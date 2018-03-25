@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="sqlite.css" rel="stylesheet">
-<title>The OS Backend (VFS) To SQLite</title>
+<title>The SQLite OS Interface or "VFS"</title>
 <!-- path= -->
 </head>
 <body>
@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -91,12 +91,47 @@ return false;
 }
 </script>
 </div>
-
-
-
-<h1 align="center">
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
 The SQLite OS Interface or "VFS"
-</h1>
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#introduction">1. Introduction</a></div>
+<div class="fancy-toc1"><a href="#the_vfs_in_relation_to_the_rest_of_sqlite">2. The VFS In Relation To The Rest Of SQLite</a></div>
+<div class="fancy-toc1"><a href="#multiple_vfses">3. Multiple VFSes</a></div>
+<div class="fancy-toc2"><a href="#standard_unix_vfses">3.1. Standard Unix VFSes</a></div>
+<div class="fancy-toc2"><a href="#standard_windows_vfses">3.2. Standard Windows VFSes</a></div>
+<div class="fancy-toc2"><a href="#specifying_which_vfs_to_use">3.3. Specifying Which VFS To Use</a></div>
+<div class="fancy-toc2"><a href="#vfs_shims">3.4. VFS Shims</a></div>
+<div class="fancy-toc2"><a href="#other_example_vfses">3.5. Other Example VFSes</a></div>
+<div class="fancy-toc1"><a href="#vfs_implementations">4. VFS Implementations</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
+
+
+
+
+
+<h1 id="introduction"><span>1. </span>Introduction</h1>
 
 <p>
 This article describes the SQLite OS portability layer or "VFS" - the
@@ -104,8 +139,11 @@ module at the bottom of the SQLite implementation stack
 that provides portability across operating systems.
 </p>
 
+<h1 id="the_vfs_in_relation_to_the_rest_of_sqlite"><span>2. </span>The VFS In Relation To The Rest Of SQLite</h1>
+
+<div>
 <img src="images/vfs1.gif" align="right" hspace="10">
-<h2>1.0 The VFS In Relation To The Rest Of SQLite</h2>
+</div>
 
 <p>
 The internal organization of the SQLite library can be viewed as the
@@ -142,7 +180,7 @@ Hence, porting SQLite to a new
 operating system is simply a matter of writing a new OS interface layer
 or "VFS".</p>
 
-<h2>2.0 Multiple VFSes</h2>
+<h1 id="multiple_vfses"><span>3. </span>Multiple VFSes</h1>
 
 <p>
 The standard SQLite source tree contains built-in VFSes for unix
@@ -161,24 +199,26 @@ the <a href="lang_attach.html">ATTACH</a> command, then each attached database m
 different VFS.
 </p>
 
+<h2 id="standard_unix_vfses"><span>3.1. </span>Standard Unix VFSes</h2>
+
 <p>
-Unix builds come with multiple VFSes built-in.  The default VFS
-for unix is called "unix" and is the VFS used in an overwhelming
-majority of applications.  Other VFSes that can be found in unix
-may include:
+Unix builds come with multiple built-in VFSes.  The default VFS
+for unix is called "unix" and is used in most applications.
+Other VFSes that might be found in unix (depending on compile-time
+options) include:
 </p>
 
 <ol>
 <li><p><b>unix-dotfile</b> - uses dot-file locking rather than
           POSIX advisory locks.
-<li><p><b>unix-excl</b> - obtains and holds an exclusive lock on
+</p></li><li><p><b>unix-excl</b> - obtains and holds an exclusive lock on
           database files, preventing other processes from accessing the
-          database.  Also keeps the <a href="fileformat2.html#walindexformat">wal-index</a> in heap rather than in
+          database.  Also keeps the <a href="walformat.html">wal-index</a> in heap rather than in
           shared memory.
-<li><p><b>unix-none</b> - all file locking operations are no-ops.
-<li><p><b>unix-namedsem</b> - uses named semaphores for file locking.
+</p></li><li><p><b>unix-none</b> - all file locking operations are no-ops.
+</p></li><li><p><b>unix-namedsem</b> - uses named semaphores for file locking.
        VXWorks only.
-</ol>
+</p></li></ol>
 
 <p>
 The various unix VFSes differ only in the way they handle file locking -
@@ -196,7 +236,28 @@ Programmers are encouraged to use only "unix" or "unix-excl" unless
 there is a compelling reason to do otherwise.
 </p>
 
-<h2>2.1 Specifying Which VFS To Use</h2>
+<h2 id="standard_windows_vfses"><span>3.2. </span>Standard Windows VFSes</h2>
+
+
+<p>
+Windows builds also come with multiple built-in VFSes.  The default
+Windows VFS is called "win32" and is used in most applications.
+Other VFSes that might be found on windows builds include:
+</p>
+
+<ol>
+<li><p><b>win32-longpath</b> - like "win32" except that pathnames can
+          be up to 65534 bytes in length, whereas pathnames max out at
+          1040 bytes in "win32".
+</p></li><li><p><b>win32-none</b> - all file locking operations are no-ops.
+</p></li><li><p><b>win32-longpath-none</b> - combination of "win32-longpath"
+          and "win32-none" - long pathnames are supported and all lock
+          operations are no-ops.
+</p></li></ol>
+
+<p>As with unix, most of the code for the various Windows VFSes is shared.
+
+</p><h2 id="specifying_which_vfs_to_use"><span>3.3. </span>Specifying Which VFS To Use</h2>
 
 <p>
 There is always one VFS which is the default VFS.  On unix systems,
@@ -245,7 +306,7 @@ default VFS is used if no VFS is specified otherwise.
 
 <a name="shim"></a>
 
-<h2>2.2 VFS Shims</h2>
+<h2 id="vfs_shims"><span>3.4. </span>VFS Shims</h2>
 
 <p>
 From the point of view of the uppers layers of the SQLite stack, each
@@ -264,7 +325,7 @@ into a log file, then passes control off to another VFS to do the actual
 work.
 </p>
 
-<h2>2.3 Other Example VFSes</h2>
+<h2 id="other_example_vfses"><span>3.5. </span>Other Example VFSes</h2>
 
 <p>
 The following are other VFS implementations available in the public
@@ -273,6 +334,15 @@ SQLite source tree:
 
 <ul>
 <li><p>
+<a href="http://www.sqlite.org/src/file/ext/misc/appendvfs.c">appendvfs.c</a> -
+This VFS allows an SQLite database to be appended to the end of some
+other file.  This can be used, for example, to append an SQLite database
+onto the end of an executable such that the executable where it can
+then be easily located by the executable when needed.  The
+<a href="cli.html">command-line shell</a> will use this VFS if launched with the --append
+option.
+
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_demovfs.c">test_demovfs.c</a> - 
 This file implements a very simple VFS named "demo" that uses POSIX 
 functions such as
@@ -283,11 +353,11 @@ on unix platforms.  The "demo" VFS is deliberately kept very simple
 so that it can be used as a learning aid or as template for building
 other VFSes or for porting SQLite to new operating systems.
 
-<li><p>
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_quota.c">test_quota.c</a> - 
 This file implements a shim called "quota" that enforces cumulative
 file size limits on a collection of database files.  An auxiliary
-interface is used to define "quote groups".  A quota group is a
+interface is used to define "quota groups".  A quota group is a
 set of files (database files, journals, and temporary files) whose
 names all match a <a href="lang_expr.html#glob">GLOB</a> pattern.  The sum of the sizes of all files
 in each quota group is tracked, and if that sum exceeds a threshold
@@ -297,7 +367,7 @@ that would have exceeded the quota to fail with an
 <a href="rescode.html#full">SQLITE_FULL</a> error.  One of the uses of this shim is used to enforce 
 resource limits on application databases in Firefox.
 
-<li><p>
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_multiplex.c">test_multiplex.c</a> - 
 This file implements a shim that allows database files to exceed the
 maximum file size of the underlying filesystem.  This shim presents
@@ -307,7 +377,7 @@ is split up into many smaller files on the underlying system.
 This shim has been used, for example, to allow databases to grow
 larger than 2 gibibytes on FAT16 filesystems.
 
-<li><p>
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_onefile.c">test_onefile.c</a> - 
 This file implements a demonstration VFS named "fs" that shows how SQLite 
 can be used on an embedded device that lacks a filesystem.  Content is
@@ -316,7 +386,7 @@ demonstration code could be used by a gadget with a limited amount of
 flash memory to make SQLite behave as the filesystem for the flash memory
 on the device.
 
-<li><p>
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_journal.c">test_journal.c</a> - 
 This file implements a shim used during SQLite testing that verifies that
 the database and rollback journal are written in the correct order and
@@ -329,13 +399,13 @@ Running a large suite of test cases using this shim provides added
 assurance that SQLite databases will not be damaged by unexpected
 power failures or device resets.
 
-<li><p>
+</p></li><li><p>
 <a href="http://www.sqlite.org/src/doc/trunk/src/test_vfs.c">test_vfs.c</a> - 
 This file implements a shim that can be used to simulate filesystem faults.
 This shim is used during testing to verify that SQLite responses sanely
 to hardware malfunctions or to other error conditions such as running out
 of filesystem space that are difficult to test on a real system.
-</ul>
+</p></li></ul>
 
 <p>
 There are other VFS implementations both in the core SQLite source code
@@ -344,7 +414,7 @@ exhaustive but merely representative of the kinds of features that can
 be realized using the VFS interface.
 </p>
 
-<h2>3.0 VFS Implementations</h2>
+<h1 id="vfs_implementations"><span>4. </span>VFS Implementations</h1>
 
 <p>
 A new VFS is implemented by subclassing three objects:
@@ -352,9 +422,9 @@ A new VFS is implemented by subclassing three objects:
 
 <ul>
 <li><a href="c3ref/vfs.html">sqlite3_vfs</a>
-<li><a href="c3ref/io_methods.html">sqlite3_io_methods</a>
-<li><a href="c3ref/file.html">sqlite3_file</a>
-</ul>
+</li><li><a href="c3ref/io_methods.html">sqlite3_io_methods</a>
+</li><li><a href="c3ref/file.html">sqlite3_file</a>
+</li></ul>
 
 <p>
 An <a href="c3ref/vfs.html">sqlite3_vfs</a> object defines the name of the VFS and the core
@@ -396,5 +466,3 @@ those objects are not registered directly with SQLite.  Instead, the
 of the <a href="c3ref/io_methods.html">sqlite3_io_methods</a> object.
 </p>
 
-<h2>To Be Continued...</h2>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>

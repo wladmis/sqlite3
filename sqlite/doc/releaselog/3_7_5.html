@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -113,7 +113,7 @@ return false;
 <li> Change the xFileControl() methods on all built-in VFSes to return
      <a href="../rescode.html#notfound">SQLITE_NOTFOUND</a> instead of <a href="../rescode.html#error">SQLITE_ERROR</a> for an unrecognized
      operation code.
-<li> The SQLite core invokes the <a href="../c3ref/c_fcntl_busyhandler.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> 
+<li> The SQLite core invokes the <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlsyncomitted">SQLITE_FCNTL_SYNC_OMITTED</a> 
      <a href="../c3ref/file_control.html">file control</a>
      to the VFS in place of a call to xSync if the database has
      <a href="../pragma.html#pragma_synchronous">PRAGMA synchronous</a> set to OFF.
@@ -126,4 +126,4 @@ return false;
       check-in is available at
       <a href="http://www.sqlite.org/src/timeline">
       SQLite version control site</a>.</p>
-    <p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+    

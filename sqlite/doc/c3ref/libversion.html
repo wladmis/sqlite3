@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -113,7 +113,7 @@ compiled with matching library and header files.</p>
 
 <p><blockquote><pre>
 assert( sqlite3_libversion_number()==SQLITE_VERSION_NUMBER );
-assert( strcmp(sqlite3_sourceid(),SQLITE_SOURCE_ID)==0 );
+assert( strncmp(sqlite3_sourceid(),SQLITE_SOURCE_ID,80)==0 );
 assert( strcmp(sqlite3_libversion(),SQLITE_VERSION)==0 );
 </pre></blockquote></p>
 
@@ -125,10 +125,12 @@ direct access to string constants within the DLL.  The
 sqlite3_libversion_number() function returns an integer equal to
 <a href="../c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>.  The sqlite3_sourceid() function returns
 a pointer to a string constant whose value is the same as the
-<a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> C preprocessor macro.</p>
+<a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a> C preprocessor macro.  Except if SQLite is built
+using an edited copy of <a href="../amalgamation.html">the amalgamation</a>, then the last four characters
+of the hash might be different from <a href="../c3ref/c_source_id.html">SQLITE_SOURCE_ID</a>.</p>
 
 <p>See also: <a href="../lang_corefunc.html#sqlite_version">sqlite_version()</a> and <a href="../lang_corefunc.html#sqlite_source_id">sqlite_source_id()</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
-  <a href="funclist.html">Functions</a>.</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+  <a href="funclist.html">Functions</a>.</p>

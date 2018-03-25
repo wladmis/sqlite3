@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -114,6 +114,9 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#the_legacy_xgeom_callback">6.1. The Legacy xGeom Callback</a></div>
 <div class="fancy-toc2"><a href="#the_new_xqueryfunc_callback">6.2. The New xQueryFunc Callback</a></div>
 <div class="fancy-toc2"><a href="#additional_considerations_for_custom_queries">6.3. Additional Considerations for Custom Queries</a></div>
+<div class="fancy-toc1"><a href="#implementation_details">7. Implementation Details</a></div>
+<div class="fancy-toc2"><a href="#shadow_tables">7.1. Shadow Tables</a></div>
+<div class="fancy-toc2"><a href="#integrity_check_using_the_rtreecheck_sql_function">7.2. Integrity Check using the rtreecheck() SQL function</a></div>
 </div>
 </div>
 <script>
@@ -473,12 +476,6 @@ CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,z1);
 <p>
 An rtree_i32 stores coordinates as 32-bit signed integers.  But it still
 using floating point computations internally as part of the r-tree algorithm.
-For applications running on processors without hardware floating point,
-it might be desirable to have a pure integer implementation of r-trees.
-This is accomplished by compiling with the <a href="compile.html#rtree_int_only">SQLITE_RTREE_INT_ONLY</a> option.
-When SQLITE_RTREE_INT_ONLY is used, both the "rtree" and the "rtree_i32"
-virtual tables store 32-bit integers and only integer values are used for
-internal computations.
 
 <a name="customquery"></a>
 
@@ -705,4 +702,76 @@ as they are connected by AND operators.  However,
 the R*Tree query engine only contains a single priority queue.  The priority
 assigned to each node in the search is the lowest priority returned by any
 of the MATCH operators.
-</p><p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+
+</p><h1 id="implementation_details"><span>7. </span>Implementation Details</h1>
+
+<p>
+The following sections describe some low-level details of the R*Tree implementation,
+that might be useful for trouble-shooting or performance analysis.
+
+</p><h2 id="shadow_tables"><span>7.1. </span>Shadow Tables</h2>
+
+<p>The content of an R*Tree index is actually stored in three ordinary
+SQLite tables with names derived from the name of the R*Tree.  These
+three tables are called "shadow tables".  This is their schema:
+
+</p><div class="codeblock"><pre>CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
+CREATE TABLE %_parent(nodeno INTEGER PRIMARY KEY, parentnode INTEGER)
+CREATE TABLE %_rowid(rowid INTEGER PRIMARY KEY, nodeno INTEGER)
+</pre></div>
+
+<p>The "%" in the name of each shadow table is replaced by the name of the
+R*Tree virtual table.  So, if the name of the R*Tree table is "xyz" then
+the three shadow tables would be "xyz_node", "xyz_parent", and "xyz_rowid".
+
+</p><p>There is one entry in the %_node table for each R*Tree node.  An
+R*Tree node consists of one or more entries that are proximate to one another.
+The nodes of an R*Tree for a tree.  All nodes other than the root have an
+entry in the %_parent shadow table that identifies the parent node.
+Each entry in an R*Tree has a rowid.  The %_rowid shadow table maps entry
+rowids to the node that contains that entry.
+
+<a name="rtreecheck"></a>
+
+</p><h2 id="integrity_check_using_the_rtreecheck_sql_function"><span>7.2. </span>Integrity Check using the rtreecheck() SQL function</h2>
+
+<p>The scalar SQL function rtreecheck(R) or rtreecheck(S,R) runs an
+integrity check on the rtree table named R contained within database S.
+The function returns a human-language description of any problems found,
+or the string 'ok' if everything is ok.  Running rtreecheck() on an R*Tree
+virtual table is similar to running <a href="pragma.html#pragma_integrity_check">PRAGMA integrity_check</a> on a
+database.
+
+</p><p>Example: To verify that an R*Tree named "demo_index" is well-formed
+and internally consistent, run:
+
+</p><div class="codeblock"><pre>SELECT rtreecheck('demo_index');
+</pre></div>
+
+<p>The rtreecheck() function performs the following checks:
+
+</p><ol>
+<li><p>
+For each cell in the r-tree structure (%_node table), that:
+</p><ol type="a">
+<li><p> for each dimension, (coord1 &lt;= coord2).
+</p></li><li><p> unless the cell is on the root node, that the cell is bounded
+        by the parent cell on the parent node.
+</p></li><li><p> for leaf nodes, that there is an entry in the %_rowid 
+        table corresponding to the cell's rowid value that 
+        points to the correct node.
+</p></li><li><p> for cells on non-leaf nodes, that there is an entry in the 
+        %_parent table mapping from the cell's child node to the
+        node that it resides on.
+</p></li></ol>
+</li><li><p>
+That there are the same number of entries in the %_rowid table
+as there are leaf cells in the r-tree structure, and that there
+is a leaf cell that corresponds to each entry in the %_rowid table.
+</p></li><li><p>
+That there are the same number of entries in the %_parent table
+as there are non-leaf cells in the r-tree structure, and that 
+there is a non-leaf cell that corresponds to each entry in the 
+%_parent table.
+</p></li></ol>
+

@@ -13,7 +13,7 @@
 </a>
 <div><!-- IE hack to prevent disappearing logo --></div>
 <div class="tagline desktoponly">
-<font size="6" color="red">*** DRAFT ***</font>
+Small. Fast. Reliable.<br>Choose any three.
 </div>
 <div class="menu mainmenu">
 <ul>
@@ -109,9 +109,10 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#fts5_strings">3.1. FTS5 Strings</a></div>
 <div class="fancy-toc2"><a href="#fts5_phrases">3.2. FTS5 Phrases</a></div>
 <div class="fancy-toc2"><a href="#fts5_prefix_queries">3.3. FTS5 Prefix Queries</a></div>
-<div class="fancy-toc2"><a href="#fts5_near_queries">3.4. FTS5 NEAR Queries</a></div>
-<div class="fancy-toc2"><a href="#fts5_column_filters">3.5. FTS5 Column Filters</a></div>
-<div class="fancy-toc2"><a href="#fts5_boolean_operators">3.6. FTS5 Boolean Operators</a></div>
+<div class="fancy-toc2"><a href="#fts5_initial_token_queries">3.4. FTS5 Initial Token Queries</a></div>
+<div class="fancy-toc2"><a href="#fts5_near_queries">3.5. FTS5 NEAR Queries</a></div>
+<div class="fancy-toc2"><a href="#fts5_column_filters">3.6. FTS5 Column Filters</a></div>
+<div class="fancy-toc2"><a href="#fts5_boolean_operators">3.7. FTS5 Boolean Operators</a></div>
 <div class="fancy-toc1"><a href="#fts5_table_creation_and_initialization">4. FTS5 Table Creation and Initialization</a></div>
 <div class="fancy-toc2"><a href="#the_unindexed_column_option">4.1. The UNINDEXED column option</a></div>
 <div class="fancy-toc2"><a href="#prefix_indexes">4.2. Prefix Indexes</a></div>
@@ -347,7 +348,7 @@ A detailed explanation follows.
 </p><div class="codeblock"><pre>&lt;phrase&gt;    := string &#91;*]
 &lt;phrase&gt;    := &lt;phrase&gt; + &lt;phrase&gt;
 &lt;neargroup&gt; := NEAR ( &lt;phrase&gt; &lt;phrase&gt; ... &#91;, N] )
-&lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;phrase&gt;
+&lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &#91;&#94;] &lt;phrase&gt;
 &lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] &lt;neargroup&gt;
 &lt;query&gt;     := &#91; &#91;-] &lt;colspec&gt; :] ( &lt;query&gt; )
 &lt;query&gt;     := &lt;query&gt; AND &lt;query&gt;
@@ -430,8 +431,28 @@ which will likely discard it (or perhaps, depending on the specific tokenizer
 in use, include it as part of the final token) instead of recognizing it as
 a special FTS character.
 
-</p><a name="fts5_near_queries"></a>
-<h2 tags="FTS5 NEAR queries" id="fts5_near_queries"><span>3.4. </span>FTS5 NEAR Queries</h2>
+<a name="carrotq"></a>
+
+</p><a name="fts5_initial_token_queries"></a>
+<h2 tags="FTS5 initial token queries" id="fts5_initial_token_queries"><span>3.4. </span>FTS5 Initial Token Queries</h2>
+<p>
+If a "&#94;" character appears immediately before a phrase that is not part of a
+NEAR query, then that phrase only matches a document only if it starts at the
+first token in a column. The "&#94;" syntax may be combined with a 
+<a href="fts5.html#fts5_column_filters">column filter</a>, but may not be inserted into the middle of
+a phrase.
+
+</p><div class="codeblock"><pre>... MATCH '&#94;one'              <i>-- first token in any column must be "one"</i>
+... MATCH '&#94; one + two'       <i>-- phrase "one two" must appear at start of a column</i>
+... MATCH '&#94; "one two"'       <i>-- same as previous </i>
+... MATCH 'a : &#94;two'          <i>-- first token of column "a" must be "two"</i>
+... MATCH 'NEAR(&#94;one, two)'   <b>-- syntax error! </b>
+... MATCH 'one + &#94;two'        <b>-- syntax error! </b>
+... MATCH '"&#94;one two"'        <b>-- May not work as expected!</b>
+</pre></div>
+
+<a name="fts5_near_queries"></a>
+<h2 tags="FTS5 NEAR queries" id="fts5_near_queries"><span>3.5. </span>FTS5 NEAR Queries</h2>
 
 <p>Two or more phrases may be grouped into a <b>NEAR group</b>. A NEAR group
 is specified by the token "NEAR" (case sensitive) followed by an open
@@ -471,7 +492,7 @@ INSERT INTO f(rowid, x) VALUES(1, 'A B C D x x x E F x');
 </pre></div>
 
 <a name="fts5_column_filters"></a>
-<h2 tags="FTS5 column filters" id="fts5_column_filters"><span>3.5. </span>FTS5 Column Filters</h2>
+<h2 tags="FTS5 column filters" id="fts5_column_filters"><span>3.6. </span>FTS5 Column Filters</h2>
 
 <p>
 A single phrase or NEAR group may be restricted to matching text within a
@@ -531,7 +552,7 @@ SELECT * FROM ft WHERE b MATCH 'a : xyz';
 </pre></div>
 
 <a name="fts5_boolean_operators"></a>
-<h2 tags="FTS5 boolean operators" id="fts5_boolean_operators"><span>3.6. </span>FTS5 Boolean Operators</h2>
+<h2 tags="FTS5 boolean operators" id="fts5_boolean_operators"><span>3.7. </span>FTS5 Boolean Operators</h2>
 
 <p>
 Phrases and NEAR groups may be arranged into expressions using <b>boolean
@@ -1673,7 +1694,18 @@ struct fts5_tokenizer {
 #define FTS5_TOKEN_COLOCATED    0x0001      <i>/* Same position as prev. token */</i>
 </pre></div>
 
-<p> When an FTS5 table uses the custom tokenizer, the FTS5 core calls xCreate()
+<p> The implementation is registered with the FTS5 module by calling the
+xCreateTokenizer() method of the fts5_api object. If there is already a
+tokenizer with the same name, it is replaced.  If a non-NULL xDestroy parameter
+is passed to xCreateTokenizer(), it is invoked with a copy of the pContext
+pointer passed as the only argument when the database handle is closed or when
+the tokenizer is replaced.
+
+</p><p> If successful, xCreateTokenizer() returns SQLITE_OK. Otherwise, it
+returns an SQLite error code. In this case the xDestroy function is <b>not</b> 
+invoked.
+
+</p><p> When an FTS5 table uses the custom tokenizer, the FTS5 core calls xCreate()
 once to create a tokenizer, then xTokenize() zero or more times to tokenize
 strings, then xDelete() to free any resources allocated by xCreate(). More
 specifically:
@@ -1890,6 +1922,10 @@ If a non-NULL xDestroy parameter is passed to xCreateFunction(), it is invoked
 with a copy of the pContext pointer passed as the only argument when the
 database handle is closed or when the registered auxiliary function is
 replaced.
+
+</p><p> If successful, xCreateFunction() returns SQLITE_OK. Otherwise, it
+returns an SQLite error code. In this case the xDestroy function is <b>not</b> 
+invoked.
 
 </p><p> The final three arguments passed to the auxiliary function callback are
 similar to the three arguments passed to the implementation of a scalar SQL
@@ -2299,9 +2335,10 @@ is available whenever FTS5 is.
 </p><p> Each fts5vocab table is associated with a single FTS5 table. An fts5vocab
 table is usually created by specifying two arguments in place of column names
 in the CREATE VIRTUAL TABLE statement - the name of the associated FTS5 table
-and the type of fts5vocab table. Currently there are two types of fts5vocab
-table, "row" and "col". Unless the fts5vocab table is created within the "temp"
-database, it must be part of the same database as the associated FTS5 table.
+and the type of fts5vocab table. Currently there are three types of fts5vocab
+table; "row", "col" and "instance". Unless the fts5vocab table is created
+within the "temp" database, it must be part of the same database as the
+associated FTS5 table.
 
 </p><div class="codeblock"><pre><i>-- Create an fts5vocab "row" table to query the full-text index belonging
 -- to FTS5 table "ft1".</i>
@@ -2310,6 +2347,10 @@ CREATE VIRTUAL TABLE ft1_v USING fts5vocab('ft1', 'row');
 <i>-- Create an fts5vocab "col" table to query the full-text index belonging
 -- to FTS5 table "ft2".</i>
 CREATE VIRTUAL TABLE ft2_v USING fts5vocab(ft2, col);
+
+<i>-- Create an fts5vocab "instance" table to query the full-text index
+-- belonging to FTS5 table "ft3".</i>
+CREATE VIRTUAL TABLE ft3_v USING fts5vocab(ft3, instance);
 </pre></div>
 
 <p> If an fts5vocab table is created in the temp database, it may be associated
@@ -2325,6 +2366,10 @@ CREATE VIRTUAL TABLE temp.ft1_v USING fts5vocab(main, 'ft1', 'row');
 <i>-- Create an fts5vocab "col" table to query the full-text index belonging
 -- to FTS5 table "ft2" in attached database "aux".</i>
 CREATE VIRTUAL TABLE temp.ft2_v USING fts5vocab('aux', ft2, col);
+
+<i>-- Create an fts5vocab "instance" table to query the full-text index 
+-- belonging to FTS5 table "ft3" in attached database "other".</i>
+CREATE VIRTUAL TABLE temp.ft2_v USING fts5vocab('aux', ft3, 'instance');
 </pre></div>
 
 <p> Specifying three arguments when creating an fts5vocab table in any database
@@ -2353,7 +2398,28 @@ combination in the associated FTS5 table. Table columns are as follows:
                    column $col of the FTS5 table (considering all rows). 
 </td></tr></table>
 
-<p>Example:
+<p> An fts5vocab table of type "instance" contains one row for each term
+instance stored in the associated FTS index. Assuming the FTS5 table is
+created with the 'detail' option set to 'full', table columns are as follows:
+
+</p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
+  <tr style="text-align:left"><th>Column</th><th>Contents
+  </th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>term</td><td>   The term, as stored in the FTS5 index.
+  </td></tr><tr style="text-align:left"><td>doc</td><td>    The rowid of the document that contains the term instance.
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>col</td><td>    The name of the column that contains the term instance.
+  </td></tr><tr style="text-align:left"><td>offset</td><td> The index of the term instance within its column. Terms 
+                     are numbered in order of occurence starting from 0.
+</td></tr></table>
+
+<p> If the FTS5 table is created with the 'detail' option set to 'col', then
+the <i>offset</i> column of an instance virtual table always contains NULL.
+In this case there is one row in the table for each unique term/doc/col 
+combination. Or, if the FTS5 table is created with 'detail' set to 'none',
+then both <i>offset</i> and <i>col</i> always contain NULL values. For
+detail=none FTS5 tables, there is one row in the fts5vocab table for each
+unique term/doc combination.
+
+</p><p>Example:
 
 </p><div class="codeblock"><pre><i>-- Assuming a database created using:</i>
 CREATE VIRTUAL TABLE ft1 USING fts5(c1, c2);
@@ -2379,6 +2445,25 @@ CREATE VIRTUAL TABLE ft1_v_col USING fts5vocab(ft1, col);
 --    date   | 1 | 3
 --</i>
 CREATE VIRTUAL TABLE ft1_v_row USING fts5vocab(ft1, row);
+
+<i>-- And, for type "instance"
+INSERT INTO ft1 VALUES('apple banana cherry', 'banana banana cherry');
+INSERT INTO ft1 VALUES('cherry cherry cherry', 'date date date');
+--
+--    apple  | 1 | c1 | 0
+--    banana | 1 | c1 | 1
+--    banana | 1 | c2 | 0
+--    banana | 1 | c2 | 1
+--    cherry | 1 | c1 | 2
+--    cherry | 1 | c2 | 2
+--    cherry | 2 | c1 | 0
+--    cherry | 2 | c1 | 1
+--    cherry | 2 | c1 | 2
+--    date   | 2 | c2 | 0
+--    date   | 2 | c2 | 1
+--    date   | 2 | c2 | 2
+--</i>
+CREATE VIRTUAL TABLE ft1_v_instance USING fts5vocab(ft1, instance);
 </pre></div>
 
 
@@ -2574,4 +2659,4 @@ using FTS5.
        the amount of processing that may take place within any given 
        INSERT, UPDATE or DELETE operation.
 </p></li></ul>
-<p align="center"><font size="6" color="red">*** DRAFT ***</font></p>
+
