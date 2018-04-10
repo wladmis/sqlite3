@@ -872,6 +872,13 @@ the available settings:</p>
 </p></blockquote><a name="enable_dbstat_vtab"></a>
 <p><b>SQLITE_ENABLE_DBSTAT_VTAB</b></p><blockquote><p>
   This option enables the <a href="dbstat.html">dbstat virtual table</a>.
+</p></blockquote><a name="enable_deserialize"></a>
+<p><b>SQLITE_ENABLE_DESERIALIZE</b></p><blockquote><p>
+  This option enables the <a href="c3ref/serialize.html">sqlite3_serialize()</a> and <a href="c3ref/deserialize.html">sqlite3_deserialize()</a>
+  interfaces.
+  <p>
+  Future releases of SQLite might enable those interfaces by default and
+  instead offer an SQLITE_OMIT_DESERIALIZE option to leave them out.
 </p></blockquote><a name="enable_explain_comments"></a>
 <p><b>SQLITE_ENABLE_EXPLAIN_COMMENTS</b></p><blockquote><p>
   This option adds extra logic to SQLite that inserts comment text into the
@@ -1175,7 +1182,7 @@ the available settings:</p>
   <p>
   This option has no affect on the SQLite core.  It is only used by extensions.
   This is option is necessary for the commpression and decompression
-  functions that are part of <a href="cli.html#sqlar">SQL Archive</a> support in the
+  functions that are part of <a href="sqlar.html">SQL Archive</a> support in the
   <a href="cli.html">command-line shell</a>.
   <p>
   When compiling with this option, it will normally

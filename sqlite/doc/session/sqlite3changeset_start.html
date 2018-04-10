@@ -102,14 +102,14 @@ If successful, *pp is set to point to the iterator handle and SQLITE_OK
 is returned. Otherwise, if an error occurs, *pp is set to zero and an
 SQLite error code is returned.</p>
 
-<p>The following functions can be used to advance and query a changeset
+<p>The following functions can be used to advance and query a changeset 
 iterator created by this function:</p>
 
 <p><ul>
-<li> <a href="../session/sqlite3changeset_next.html">sqlite3changeset_next()</a>
-<li> <a href="../session/sqlite3changeset_op.html">sqlite3changeset_op()</a>
-<li> <a href="../session/sqlite3changeset_new.html">sqlite3changeset_new()</a>
-<li> <a href="../session/sqlite3changeset_old.html">sqlite3changeset_old()</a>
+  <li> <a href="../session/sqlite3changeset_next.html">sqlite3changeset_next()</a>
+  <li> <a href="../session/sqlite3changeset_op.html">sqlite3changeset_op()</a>
+  <li> <a href="../session/sqlite3changeset_new.html">sqlite3changeset_new()</a>
+  <li> <a href="../session/sqlite3changeset_old.html">sqlite3changeset_old()</a>
 </ul></p>
 
 <p>It is the responsibility of the caller to eventually destroy the iterator
@@ -119,12 +119,12 @@ destroyed.</p>
 
 <p>Assuming the changeset blob was created by one of the
 <a href="../session/sqlite3session_changeset.html">sqlite3session_changeset()</a>, <a href="../session/sqlite3changeset_concat.html">sqlite3changeset_concat()</a> or
-<a href="../session/sqlite3changeset_invert.html">sqlite3changeset_invert()</a> functions, all changes within the changeset
-that apply to a single table are grouped together. This means that when
-an application iterates through a changeset using an iterator created by
-this function, all changes that relate to a single table are visited
-consecutively. There is no chance that the iterator will visit a change
-the applies to table X, then one for table Y, and then later on visit
+<a href="../session/sqlite3changeset_invert.html">sqlite3changeset_invert()</a> functions, all changes within the changeset 
+that apply to a single table are grouped together. This means that when 
+an application iterates through a changeset using an iterator created by 
+this function, all changes that relate to a single table are visited 
+consecutively. There is no chance that the iterator will visit a change 
+the applies to table X, then one for table Y, and then later on visit 
 another change for table X.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

@@ -92,7 +92,58 @@ return false;
 </script>
 </div>
 <a href="intro.html"><h2>Session Module C Interface</h2></a><h2>Changeset Iterator Handle</h2><blockquote><pre>typedef struct sqlite3_changeset_iter sqlite3_changeset_iter;
-</pre></blockquote><p></p><p>See also lists of
+</pre></blockquote><p>
+An instance of this object acts as a cursor for iterating
+over the elements of a <a href="../sessionintro.html#changeset">changeset</a> or <a href="../sessionintro.html#changeset">patchset</a>.
+</p><p>Constructor: <a href="../session/sqlite3changeset_start.html">sqlite3changeset_start()</a></p>
+<style>
+#listtab38 tr td {vertical-align:top;}
+</style>
+<table id='listtab38' width='100%'></table>
+<script>
+var listitems38 = [{"u":"../session/sqlite3changeset_conflict.html","x":"sqlite3changeset_conflict","s":0},
+{"u":"../session/sqlite3changeset_finalize.html","x":"sqlite3changeset_finalize","s":0},
+{"u":"../session/sqlite3changeset_fk_conflicts.html","x":"sqlite3changeset_fk_conflicts","s":0},
+{"u":"../session/sqlite3changeset_new.html","x":"sqlite3changeset_new","s":0},
+{"u":"../session/sqlite3changeset_next.html","x":"sqlite3changeset_next","s":0},
+{"u":"../session/sqlite3changeset_old.html","x":"sqlite3changeset_old","s":0},
+{"u":"../session/sqlite3changeset_op.html","x":"sqlite3changeset_op","s":0},
+{"u":"../session/sqlite3changeset_pk.html","x":"sqlite3changeset_pk","s":0}];
+var j = 0;
+var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
+var nCol = Math.floor(w/350);
+if(nCol<=0) nCol=1;
+var nRow = Math.ceil((listitems38.length+1)/nCol);
+var h="<tr><td colspan="+nCol;
+h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
+var ea
+for(var i=0; i<listitems38.length; i++){
+  if( (++j)>nRow ){
+    h += "</ul></td>\n<td><ul class='multicol_list'>\n";
+    j = 1;
+  }
+  if(listitems38[i].u=="" || listitems38[i].s==2){
+    h += "<li>"
+    ea = ""
+  }else{
+    h += "<li><a href='";
+    h += listitems38[i].u;
+    h += "'>";
+    ea = "</a>"
+  }
+  if(listitems38[i].s==2 || listitems38[i].s==3) h += "<s>"
+  h += listitems38[i].x;
+  if(listitems38[i].s==2 || listitems38[i].s==3) h += "</s>"
+  h += ea
+  if(listitems38[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems38[i].s==3) h += "&sup1\n";
+  if(listitems38[i].s==4) h += "&sup2\n";
+  if(listitems38[i].s==5) h += "&sup3\n";
+}
+document.getElementById("listtab38").innerHTML = h;
+</script>
+</p>
+<p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>

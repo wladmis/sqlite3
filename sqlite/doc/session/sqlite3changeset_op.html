@@ -108,14 +108,14 @@ is not the case, this function returns <a href="../rescode.html#misuse">SQLITE_M
 <p>If argument pzTab is not NULL, then *pzTab is set to point to a
 nul-terminated utf-8 encoded string containing the name of the table
 affected by the current change. The buffer remains valid until either
-sqlite3changeset_next() is called on the iterator or until the
-conflict-handler function returns. If pnCol is not NULL, then *pnCol is
+sqlite3changeset_next() is called on the iterator or until the 
+conflict-handler function returns. If pnCol is not NULL, then *pnCol is 
 set to the number of columns in the table affected by the change. If
 pbIncorrect is not NULL, then *pbIndirect is set to true (1) if the change
 is an indirect change, or false (0) otherwise. See the documentation for
 <a href="../session/sqlite3session_indirect.html">sqlite3session_indirect()</a> for a description of direct and indirect
-changes. Finally, if pOp is not NULL, then *pOp is set to one of
-<a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> or <a href="../c3ref/c_alter_table.html">SQLITE_UPDATE</a>, depending on the
+changes. Finally, if pOp is not NULL, then *pOp is set to one of 
+<a href="../c3ref/c_alter_table.html">SQLITE_INSERT</a>, <a href="../c3ref/c_alter_table.html">SQLITE_DELETE</a> or <a href="../c3ref/c_alter_table.html">SQLITE_UPDATE</a>, depending on the 
 type of change that the iterator currently points to.</p>
 
 <p>If no error occurs, SQLITE_OK is returned. If an error does occur, an

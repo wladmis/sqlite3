@@ -193,7 +193,7 @@ Use an alternative <a href="vfs.html">VFS</a> named by the argument.
 <p>
 Once an SQLite database is open, it can be controlled using 
 methods of the <i>dbcmd</i>.
-There are currently 33 methods
+There are currently 38 methods
 defined.</p>
 
 
@@ -210,27 +210,32 @@ defined.</p>
 <li><a href="#commit_hook">commit_hook</a></li>
 <li><a href="#complete">complete</a></li>
 <li><a href="#copy">copy</a></li>
+<li><a href="#deserialize">deserialize</a></li>
+<li><a href="#enable_load_extension">enable_load_extension</a></li>
 </ul></td>
 <td valign='top'><ul>
-<li><a href="#enable_load_extension">enable_load_extension</a></li>
 <li><a href="#errorcode">errorcode</a></li>
 <li><a href="#eval">eval</a></li>
 <li><a href="#exists">exists</a></li>
 <li><a href="#function">function</a></li>
 <li><a href="#incrblob">incrblob</a></li>
+<li><a href="#interrupt">interrupt</a></li>
 <li><a href="#last_insert_rowid">last_insert_rowid</a></li>
 <li><a href="#nullvalue">nullvalue</a></li>
 <li><a href="#onecolumn">onecolumn</a></li>
+<li><a href="#preupdate">preupdate</a></li>
 <li><a href="#profile">profile</a></li>
 <li><a href="#progress">progress</a></li>
+<li><a href="#restore">restore</a></li>
 </ul></td>
 <td valign='top'><ul>
-<li><a href="#restore">restore</a></li>
 <li><a href="#rollback_hook">rollback_hook</a></li>
+<li><a href="#serialize">serialize</a></li>
 <li><a href="#status">status</a></li>
 <li><a href="#timeout">timeout</a></li>
 <li><a href="#total_changes">total_changes</a></li>
 <li><a href="#trace">trace</a></li>
+<li><a href="#trace_v2">trace_v2</a></li>
 <li><a href="#transaction">transaction</a></li>
 <li><a href="#unlock_notify">unlock_notify</a></li>
 <li><a href="#update_hook">update_hook</a></li>
@@ -875,6 +880,61 @@ statement is compiled.  The text of the SQL is appended as a single string
 to the command before it is invoked.  This can be used (for example) to
 keep a log of all SQL operations that an application performs.
 </p>
+<a name="trace_v2"></a>
+<h3>The "trace_v2" method</h3>
+
+
+<p>The "trace_v2" method registers a callback that is invoked as each SQL
+statement is compiled. The syntax is as follows:
+
+
+<blockquote>
+<i>dbcmd</i>&nbsp;&nbsp;<b>trace_v2</b>&nbsp;&nbsp;?<i>callback</i>?&nbsp;&nbsp;?<i>mask</i>?
+</blockquote>
+
+<p>This command causes the "callback" script to be invoked whenever
+certain conditions occurs.  The conditions are determined by the <i>mask</i>
+argument, which should be a TCL-list of zero or more of the following
+keywords:
+
+<ul>
+<li> <b>statement</b>
+<li> <b>profile</b>
+<li> <b>row</b>
+<li> <b>close</b>
+</ul>
+
+<p>Traces for <b>statement</b> invoke the callback with two arguments
+whenever a new SQL statement is run.
+The first argument is an integer which is the value of the pointer
+to the underlying <a href="c3ref/stmt.html">sqlite3_stmt</a> object.  This integer can be used
+to correlate SQL statement text with the result of a <b>profile</b>
+or <b>row</b> callback. The second argument is the
+unexpanded text of the SQL statement being run.  By "unexpanded", we
+mean that variable substitutions in the text are not expanded into the
+variable values.  This is different from the behavior of the "trace"
+method which does expand variable substitutions.
+
+<p>Traces for <b>profile</b> invoke the callback with two arguments
+as each SQL statement finishes.  The first argument is an integer which
+is the value of the underlying <a href="c3ref/stmt.html">sqlite3_stmt</a> object.  The second
+argument is the approximate run-time for the statement in nanoseconds.
+The run-time is the best estimate available depending on the capabilities
+of the platform on which the application is running.
+
+<p>Traces for <b>row</b> invoke the callback with a single argument
+whenever a new result row is available from an SQL statement.
+The argument is an integer which is the value of the underlying
+<a href="c3ref/stmt.html">sqlite3_stmt</a> object pointer.
+
+<p>Traces for <b>close</b> invoke the callback with a single argument
+as the database connection is closing.  The argument is an integer which
+is the value of a pointer to the underlying <a href="c3ref/sqlite3.html">sqlite3</a> object that is
+closing.
+
+<p>There can only be a single trace callback registered on a database
+connection.  Each use of "trace" or "trace_v2" cancels all prior
+trace callback.
 <a name="backup"></a>
 <h3>The "backup" method</h3>
 
@@ -918,10 +978,55 @@ in the <a href="lang_attach.html">ATTACH</a> command.</p>
 
 <p>The <i>source-filename</i> is the name of an existing well-formed SQLite
 database file from which the content is extracted.</p>
+<a name="serialize"></a>
+<h3>The "serialize" method</h3>
+
+
+<p>The "serialize" method creates a BLOB which is a complete copy of an
+underlying database.  The syntax is like this:
+
+<blockquote>
+<i>dbcmd</i>&nbsp;&nbsp;<b>serialize</b>&nbsp;&nbsp;?<i>database</i>?
+</blockquote>
+
+<p>The optional argument is the name of the schema or database to be serialized.
+The default value is "main".
+
+<p>This routine returns a TCL byte-array that is the complete content of
+the identified database.  This byte-array can be written into a file and
+then used as an ordinary SQLite database, or it can be sent over a TCP/IP
+connection to some other application, or passed to the "deserialize" method
+of another database connection.
+
+<p>This method only functions if SQLite is compiled with -DSQLITE_ENABLE_DESERIALIZE
+<a name="deserialize"></a>
+<h3>The "deserialize" method</h3>
+
+<p>The "deserialize" method takes a TCL byte-array that contains an SQLite
+database file and adds it to the database connection.  The syntax is:
+
+<blockquote>
+<i>dbcmd</i>&nbsp;&nbsp;<b>deserialize</b>&nbsp;&nbsp;?<i>database</i>?&nbsp;&nbsp;<i>value</i>
+</blockquote>
+
+<p>The option <i>database</i> argument identifies which attached database
+should receive the deserialization.  The default is "main".
+
+<p>This command causes SQLite to disconnect from the previous database and
+reattach to an in-memory database with the content in <i>value</i>.  If <i>value</i>
+is not a byte-array containing a well-defined SQLite database, then subsequent
+commands will likely return <a href="rescode.html#corrupt">SQLITE_CORRUPT</a> errors.
+
+<p>This method only functions if SQLite is compiled with -DSQLITE_ENABLE_DESERIALIZE
+<a name="interrupt"></a>
+<h3>The "interrupt" method</h3>
+
+<p>The "interrupt" method invokes the <a href="c3ref/interrupt.html">sqlite3_interrupt()</a> interface, causing
+any pending queries to halt.
 <a name="version"></a>
 <h3>The "version" method</h3>
 
-  Return the current library version. For example, "3.6.17".
+  Return the current library version. For example, "3.23.0".
 <a name="profile"></a>
 <h3>The "profile" method</h3>
 
@@ -952,6 +1057,5 @@ profile callback is canceled but no new profile script is registered.
    interface to the SQLite core library for testing purposes.  The use of
    this method by applications is discouraged.
 </p>
-
 
 

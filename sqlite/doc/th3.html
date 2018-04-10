@@ -436,7 +436,7 @@ SQLite 3.14.1 2016-08-11 13:08:14 34aed3a318a413fd180604365546c1f530d1c60c
 </pre></div>
 
 <p>As can be seen above, a single run
-of multitest.tcl invokes th3make dozens or times and takes between 12 and 24
+of multitest.tcl invokes th3make dozens of times and takes between 12 and 24
 CPU hours.  The middle section of the output shows the arguments to each
 individual th3make run and the result and elapse time for that th3make.
 All build products and output for the separate th3make runs are
@@ -499,8 +499,8 @@ running a mutation test:
 minutes on a fast workstation, and there are two tests for each
 branch instructions, and over 20,000 branch instructions.  Efforts are
 made to expedite operation.  For example, TH3 is compiled in such a
-way that it exists as soon as it finds the first error, and as many
-of the mutations are easily detected,  many cycles happen in ly
+way that it exits as soon as it finds the first error, and as many
+of the mutations are easily detected,  many cycles happen in only
 a few seconds.  Nevertheless, the mutation-test.tcl script includes
 command-line options to limit the range of code lines tested so that
 mutation testing only needs to be performed on blocks of code that

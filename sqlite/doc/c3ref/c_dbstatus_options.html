@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: {SQLITE_DBSTATUS options} SQLITE_DBSTATUS_CACHE_HIT SQLITE_DBSTATUS_CACHE_MISS SQLITE_DBSTATUS_CACHE_USED SQLITE_DBSTATUS_CACHE_USED_SHARED SQLITE_DBSTATUS_CACHE_WRITE SQLITE_DBSTATUS_DEFERRED_FKS SQLITE_DBSTATUS_LOOKASIDE_HIT SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE SQLITE_DBSTATUS_LOOKASIDE_USED SQLITE_DBSTATUS_MAX SQLITE_DBSTATUS_SCHEMA_USED SQLITE_DBSTATUS_STMT_USED -->
+<!-- keywords: {SQLITE_DBSTATUS options} SQLITE_DBSTATUS_CACHE_HIT SQLITE_DBSTATUS_CACHE_MISS SQLITE_DBSTATUS_CACHE_SPILL SQLITE_DBSTATUS_CACHE_USED SQLITE_DBSTATUS_CACHE_USED_SHARED SQLITE_DBSTATUS_CACHE_WRITE SQLITE_DBSTATUS_DEFERRED_FKS SQLITE_DBSTATUS_LOOKASIDE_HIT SQLITE_DBSTATUS_LOOKASIDE_MISS_FULL SQLITE_DBSTATUS_LOOKASIDE_MISS_SIZE SQLITE_DBSTATUS_LOOKASIDE_USED SQLITE_DBSTATUS_MAX SQLITE_DBSTATUS_SCHEMA_USED SQLITE_DBSTATUS_STMT_USED -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Status Parameters for database connections</h2>
@@ -109,7 +109,8 @@ return false;
 #define SQLITE_DBSTATUS_CACHE_WRITE          9
 #define SQLITE_DBSTATUS_DEFERRED_FKS        10
 #define SQLITE_DBSTATUS_CACHE_USED_SHARED   11
-#define SQLITE_DBSTATUS_MAX                 11   /* Largest defined DBSTATUS */
+#define SQLITE_DBSTATUS_CACHE_SPILL         12
+#define SQLITE_DBSTATUS_MAX                 12   /* Largest defined DBSTATUS */
 </pre></blockquote>
 <p>
 These constants are the available integer "verbs" that can be passed as
@@ -212,6 +213,16 @@ transaction rollback or database recovery operations are not included.
 If an IO or other error occurs while writing a page to disk, the effect
 on subsequent SQLITE_DBSTATUS_CACHE_WRITE requests is undefined. The
 highwater mark associated with SQLITE_DBSTATUS_CACHE_WRITE is always 0.
+</dd></p>
+
+<p><a name="sqlitedbstatuscachespill"></a>
+ <dt>SQLITE_DBSTATUS_CACHE_SPILL</dt>
+<dd>This parameter returns the number of dirty cache entries that have
+been written to disk in the middle of a transaction due to the page
+cache overflowing. Transactions are more efficient if they are written
+to disk all at once. When pages spill mid-transaction, that introduces
+additional overhead. This parameter can be used help identify
+inefficiencies that can be resolve by increasing the cache size.
 </dd></p>
 
 <p><a name="sqlitedbstatusdeferredfks"></a>

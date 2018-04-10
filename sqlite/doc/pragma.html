@@ -249,11 +249,11 @@ cannot use this feature.
 <hr /><a name="toc"></a>
 <h2>List Of PRAGMAs</h2>
 <style>
-#listtab30 tr td {vertical-align:top;}
+#listtab32 tr td {vertical-align:top;}
 </style>
-<table id='listtab30' width='100%'></table>
+<table id='listtab32' width='100%'></table>
 <script>
-var listitems30 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
+var listitems32 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
 {"u":"pragma.html#pragma_auto_vacuum","x":"auto_vacuum","s":0},
 {"u":"pragma.html#pragma_automatic_index","x":"automatic_index","s":0},
 {"u":"pragma.html#pragma_busy_timeout","x":"busy_timeout","s":0},
@@ -325,33 +325,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/250);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems30.length+1)/nCol);
+var nRow = Math.ceil((listitems32.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems30.length; i++){
+for(var i=0; i<listitems32.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems30[i].u=="" || listitems30[i].s==2){
+  if(listitems32[i].u=="" || listitems32[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems30[i].u;
+    h += listitems32[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems30[i].s==2 || listitems30[i].s==3) h += "<s>"
-  h += listitems30[i].x;
-  if(listitems30[i].s==2 || listitems30[i].s==3) h += "</s>"
+  if(listitems32[i].s==2 || listitems32[i].s==3) h += "<s>"
+  h += listitems32[i].x;
+  if(listitems32[i].s==2 || listitems32[i].s==3) h += "</s>"
   h += ea
-  if(listitems30[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems30[i].s==3) h += "&sup1\n";
-  if(listitems30[i].s==4) h += "&sup2\n";
-  if(listitems30[i].s==5) h += "&sup3\n";
+  if(listitems32[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems32[i].s==3) h += "&sup1\n";
+  if(listitems32[i].s==4) h += "&sup2\n";
+  if(listitems32[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab30").innerHTML = h;
+document.getElementById("listtab32").innerHTML = h;
 </script>
 
 <p>Notes:
@@ -1611,10 +1611,6 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     synchronous=FULL.
     If durability is not a concern, then synchronous=NORMAL is normally
     all one needs in WAL mode.</p>
-
-    <p>The default setting is usually synchronous=FULL.
-    The <a href="compile.html#extra_durable">SQLITE_EXTRA_DURABLE</a> compile-time option changes the
-    default to synchronous=EXTRA.</p>
 
     <p>The TEMP schema always has synchronous=OFF since the content of
     of TEMP is ephemeral and is not expected to survive a power outage.

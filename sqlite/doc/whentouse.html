@@ -155,10 +155,11 @@ menu option can be implemented using the <a href="backup.html">backup API</a>.
 </p>
 
 <p>There are many benefits to this approach, including improved
-application performance, reduced cost and complexity, and
+performance, reduced cost and complexity, and
 improved reliability.  See technical notes
-<a href="aff_short.html">here</a> and 
-<a href="appfileformat.html">here</a> for details.
+<a href="aff_short.html">"aff_short.html"</a> and 
+<a href="appfileformat.html">"appfileformat.html"</a> and
+<a href="fasterthanfs.html">"fasterthanfs.html"</a> for more information.
 
 <a name="website"></a>
 
@@ -253,10 +254,10 @@ connections, but each SQLite database is only used by one connection.</p>
 
 </li>
 
-<li><p><b>File archives</b></p>
+<li><p><b>File archive and/or data container</b></p>
 
 <p>
-The <a href="https://www.sqlite.org/sqlar">SQLite Archiver</a> project shows how
+The <a href="sqlar.html">SQLite Archive</a> idea shows how
 SQLite can be used as a substitute for ZIP archives or Tarballs.
 An archive of files stored in SQLite is only very slightly larger, and
 in some cases actually smaller, than the equivalent ZIP archive.
@@ -264,7 +265,24 @@ And an SQLite archive features incremental and atomic updating
 and the ability to store much richer metadata.
 </p>
 
-<p>SQLite archives are useful as the distribution format for software
+<p><a href="https://www.fossil-scm.org/">Fossil</a> version 2.5 and later offers
+<a href="sqlar.html">SQLite Archive files</a> as a download format, in addition
+to traditional tarball and ZIP archive.
+The <a href="cli.html">sqlite3.exe command-line shell</a> version 3.22.0 and later will create,
+list, or unpack an SQL archiving using the 
+<a href="cli.html#sqlar">.archive command</a>.</p>
+
+<p>
+SQLite is a good solution for any situation that requires bundling
+diverse content into a self-contained and self-describing package 
+for shipment across a network.
+Content is encoding in a 
+<a href="fileformat2.html">well-defined, cross-platform, and stable file format</a>.
+The encoding is efficient, and receivers can extract small subsets
+of the content without having to read and parse the entire file.
+</p>
+
+<p>SQL archives are useful as the distribution format for software
 or content updates that are broadcast to many clients.  Variations
 on this idea are used, for example, to transmit TV programming guides
 to set-top boxes and to send over-the-air updates to vehicle navigation
@@ -279,7 +297,9 @@ systems.</p>
 <a href="http://man.he.net/man3/fwrite">fwrite()</a> to create and
 manage files of data in home-grown formats.  SQLite works 
 particularly well as a
-replacement for these <i>ad hoc</i> data files.</p>
+replacement for these <i>ad hoc</i> data files.
+Contrary to intuition, SQLite can be <a href="fasterthanfs.html">faster than the filesystem</a>
+for reading and writing content to disk.
 </li>
 
 <li><p><b>Internal or temporary databases</b></p>

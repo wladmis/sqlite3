@@ -117,13 +117,13 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#loading_extensions">11. Loading Extensions</a></div>
 <div class="fancy-toc1"><a href="#cryptographic_hashes_of_database_content">12. Cryptographic Hashes Of Database Content</a></div>
 <div class="fancy-toc1"><a href="#database_content_self_tests">13. Database Content Self-Tests</a></div>
-<div class="fancy-toc1"><a href="#sqlar_archive_support">14. SQLAR Archive Support</a></div>
-<div class="fancy-toc2"><a href="#_sqlar_create_command_">14.1.  SQLAR Create Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlar_extract_command_">14.2.  SQLAR Extract Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlar_list_command_">14.3.  SQLAR List Command </a></div>
-<div class="fancy-toc2"><a href="#_sqlar_update_command_">14.4.  SQLAR Update Command </a></div>
+<div class="fancy-toc1"><a href="#sqlite_archive_support">14. SQLite Archive Support</a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_create_command_">14.1.  SQLite Archive Create Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_extract_command_">14.2.  SQLite Archive Extract Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_list_command_">14.3.  SQLite Archive List Command </a></div>
+<div class="fancy-toc2"><a href="#_sqlite_archive_update_command_">14.4.  SQLite Archive Update Command </a></div>
 <div class="fancy-toc2"><a href="#_operations_on_zip_archives_">14.5.  Operations On ZIP Archives </a></div>
-<div class="fancy-toc2"><a href="#_sql_used_to_implement_sqlar_operations_">14.6.  SQL Used To Implement SQLAR Operations </a></div>
+<div class="fancy-toc2"><a href="#_sql_used_to_implement_sqlite_archive_operations_">14.6.  SQL Used To Implement SQLite Archive Operations </a></div>
 <div class="fancy-toc1"><a href="#index_recommendations_sqlite_expert_">15. Index Recommendations (SQLite Expert)</a></div>
 <div class="fancy-toc1"><a href="#other_dot_commands">16. Other Dot Commands</a></div>
 <div class="fancy-toc1"><a href="#using_sqlite3_in_a_shell_script">17. Using sqlite3 in a shell script</a></div>
@@ -980,14 +980,14 @@ refer to tables that are not constant.
 
 <a name="sqlar"></a>
 
-</p><h1 id="sqlar_archive_support"><span>14. </span>SQLAR Archive Support</h1>
+</p><h1 id="sqlite_archive_support"><span>14. </span>SQLite Archive Support</h1>
 
-<p>The ".archive" dot-command (often abbreviated as ".ar")
-provides built-in support for the 
-<a href="https://sqlite.org/sqlar">SQLite ARchive format</a>. The interface is similar to
+<p>The ".archive" dot-command and the "-A" command-line option
+provide built-in support for the 
+<a href="sqlar.html">SQLite Archive format</a>. The interface is similar to
 that of the "tar" command on unix systems. Each invocation of the ".ar"
 command must specify a single command option. The following commands
-are available:
+are available for ".archive":
 
 </p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
   <tr style="text-align:left"><th style="width:15ex">Option</th><th style="width:17ex">Long&nbsp;Option</th><th>Purpose
@@ -1020,6 +1020,16 @@ some do not. The following modifier options are available:
 </td></tr></table>
 
 <p>
+For command-line usage, add the short style command-line options immediately
+following the "-A", without an intervening space.  All subsequent arguments
+are considered to be part of the .archive command.  For example, the following 
+commands are equivalent:
+
+</p><div class="codeblock"><pre>sqlite3 new_archive.db -Acv file1 file2 file3
+sqlite3 new_archive.db ".ar -tv file1 file2 file3"
+</pre></div>
+
+<p>
 Long and short style options may be mixed. For example, the following are
 equivalent:
 
@@ -1039,14 +1049,14 @@ next, and any remaining words are considered command arguments. For example:
 .ar cCf dir1 new_archive.db file1 file2 file3
 </pre></div>
 
-<h2 id="_sqlar_create_command_"><span>14.1. </span> SQLAR Create Command </h2>
+<h2 id="_sqlite_archive_create_command_"><span>14.1. </span> SQLite Archive Create Command </h2>
 
 <p>Create a new archive, overwriting any existing archive (either in the current
 "main" db or in the file specified by a --file option). Each argument following
 the options is a file to add to the archive. Directories are imported
 recursively. See above for examples.
 
-</p><h2 id="_sqlar_extract_command_"><span>14.2. </span> SQLAR Extract Command </h2>
+</p><h2 id="_sqlite_archive_extract_command_"><span>14.2. </span> SQLite Archive Extract Command </h2>
 
 <p>Extract files from the archive (either to the current working directory or
 to the directory specified by a --directory option). If there are no arguments
@@ -1063,7 +1073,7 @@ specified files are not part of the archive.
 .ar fCx ar.db dir1 file1
 </pre></div>
 
-<h2 id="_sqlar_list_command_"><span>14.3. </span> SQLAR List Command </h2>
+<h2 id="_sqlite_archive_list_command_"><span>14.3. </span> SQLite Archive List Command </h2>
 
 <p>List the contents of the archive. If no arguments are specified, then all
 files are listed. Otherwise, only those specified as arguments are. Currently,
@@ -1074,7 +1084,7 @@ change in the future.
 .ar --list
 </pre></div>
 
-<h2 id="_sqlar_update_command_"><span>14.4. </span> SQLAR Update Command </h2>
+<h2 id="_sqlite_archive_update_command_"><span>14.4. </span> SQLite Archive Update Command </h2>
 
 <p> This command works the same way as the --create command, except that 
 it does not delete the current archive before commencing. New versions of
@@ -1084,26 +1094,34 @@ the initial contents of the archive (if any) remain intact.
 
 </p><h2 id="_operations_on_zip_archives_"><span>14.5. </span> Operations On ZIP Archives </h2>
 
-<p>If FILE is a ZIP archive rather than an SQLAR, the ".archive" command still
-works, except that only --extract and --list operations are supported.
-ZIP archives are currently read-only to SQLite.  (This limitation may be
-relaxed in a future release.)
+<p>If FILE is a ZIP archive rather than an SQLite Archive, the ".archive"
+command and the "-A" command-line option still work.  This is accomplished
+using of the <a href="zipfile.html">zipfile</a> extension.
+Hence, the following commands are roughly equivalent,
+differing only in output formatting:
 
-</p><h2 id="_sql_used_to_implement_sqlar_operations_"><span>14.6. </span> SQL Used To Implement SQLAR Operations </h2>
+</p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
+  <tr style="text-align:left"><th>Traditional Command</th><th>Equivalent sqlite3.exe Command
+  </th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>unzip archive.zip</td><td>sqlite3 -Axf archive.zip
+  </td></tr><tr style="text-align:left"><td>unzip -l archive.zip</td><td>sqlite3 -Atvf archive.zip
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>zip -r archive2.zip dir</td><td>sqlite3 -Acf archive2.zip dir
+</td></tr></table>
 
-<p>The various SQLAR Archive commands are implemented using SQL statements.
-Application developers can easily add SQLAR Archive reading and writing
+<h2 id="_sql_used_to_implement_sqlite_archive_operations_"><span>14.6. </span> SQL Used To Implement SQLite Archive Operations </h2>
+
+<p>The various SQLite Archive Archive commands are implemented using SQL statements.
+Application developers can easily add SQLite Archive Archive reading and writing
 support to their own projects by running the appropriate SQL.
 
-</p><p>To see what SQL statements are used to implement an SQLAR Archive
+</p><p>To see what SQL statements are used to implement an SQLite Archive
 operation, add the --dryrun or -n option.  This causes the SQL to be
 displayed but inhibits the execution of the SQL.
 
-</p><p>The SQL statements used to implement SQLAR operations make use of
+</p><p>The SQL statements used to implement SQLite Archive operations make use of
 various <a href="loadext.html">loadable extensions</a>.  These extensions are all available in
 the <a href="https://sqlite.org/src">SQLite source tree</a> in the
 <a href="https://sqlite.org/src/file/ext/misc">ext/misc/ subfolder</a>.
-The extensions needed for full SQLAR support include:
+The extensions needed for full SQLite Archive support include:
 
 </p><ol>
 <li><p>
@@ -1119,13 +1137,13 @@ strings after the fashion of the "ls -l" command.
 <a href="https://sqlite.org/src/file/ext/misc/sqlar.c">sqlar.c</a> &mdash;
 This extension adds the sqlar_compress() and sqlar_uncompress()
 functions that are needed to compress and uncompress file content
-as it is insert and extracted from an SQLAR.
+as it is insert and extracted from an SQLite Archive.
 
 </p></li><li><p>
 <a href="zipfile.html">zipfile.c</a> &mdash;
 This extension implements the "zipfile(FILE)" table-valued function
 which is used to read ZIP archives.  This extension is only needed
-when reading ZIP archives instead of SQLAR archives.
+when reading ZIP archives instead of SQLite archives.
 
 </p></li><li><p>
 <a href="https://sqlite.org/src/file/ext/misc/appendvfs.c">appendvfs.c</a> &mdash;

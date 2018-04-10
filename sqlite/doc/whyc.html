@@ -106,6 +106,8 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#compatibility">1.2. Compatibility</a></div>
 <div class="fancy-toc2"><a href="#low_dependency">1.3. Low-Dependency</a></div>
 <div class="fancy-toc2"><a href="#stability">1.4. Stability</a></div>
+<div class="fancy-toc1"><a href="#why_isn_t_sqlite_coded_in_an_object_oriented_language_">2. Why Isn't SQLite Coded In An Object-Oriented Language?</a></div>
+<div class="fancy-toc1"><a href="#why_isn_t_sqlite_coded_in_a_safe_language_">3. Why Isn't SQLite Coded In A "Safe" Language?</a></div>
 </div>
 </div>
 <script>
@@ -128,11 +130,18 @@ mk.innerHTML = "&#x25ba;";
 
 <h1 id="c_is_best"><span>1. </span>C Is Best</h1>
 
+<blockquote><table border="'1'"><tr><td>
+Note: Sections 2.0 and 3.0 of this article were added in response
+to comments on 
+<a href="https://news.ycombinator.com/item?id=16585120">Hacker News</a> and
+<a href="https://www.reddit.com/r/programming/comments/84fzoc/why_is_sqlite_coded_in_c/">Reddit</a>.
+</td></tr></table></blockquote>
+
 <p>
 Since its inception on 2000-05-29, SQLite has been implemented in generic C.
 C was and continues to be the best language for implementing a software
 library like SQLite.  There are no plans to recode SQLite in any other
-programming language anytime soon.
+programming language at this time.
 
 </p><p>
 The reasons why C is the best language to implement SQLite include:
@@ -162,7 +171,7 @@ programming, because none are.
 
 </p><h2 id="compatibility"><span>1.2. </span>Compatibility</h2>
 
-<p>Nearly all systems have the ability to call with libraries
+<p>Nearly all systems have the ability to call libraries
 written in C.  This is not true of other implementation languages.
 
 </p><p>So, for example, Android applications written in Java are able to
@@ -175,7 +184,7 @@ had it been written in Java.
 
 </p><h2 id="low_dependency"><span>1.3. </span>Low-Dependency</h2>
 
-<p>Libraries written in C doe not have a huge run-time dependency.
+<p>Libraries written in C do not have a huge run-time dependency.
 In its minimum configuration, SQLite requires only the following
 routines from the standard C library:
 
@@ -218,4 +227,137 @@ This is exactly what one wants when developing a module like SQLite.
 Writing a small, fast, and reliable database engine is hard enough as it
 is without the implementation language changing out from under you with
 each update to the implementation language specification.
+
+</p><h1 id="why_isn_t_sqlite_coded_in_an_object_oriented_language_"><span>2. </span>Why Isn't SQLite Coded In An Object-Oriented Language?</h1>
+
+<p>
+Some programmers cannot imagine developing a complex system like
+SQLite in a language that is not "object oriented".  So why is
+SQLite not coded in C++ or Java?
+
+</p><ol>
+<li><p>
+Libraries written in C++ or Java can generally only be used by
+applications written in the same language. It is difficult to
+get an application written in Haskell or Java to invoke a library
+written in C++.  On the other hand, libraries written in C are
+callable from any programming language.
+
+</p></li><li><p>
+Object-Oriented is a design pattern, not a programming language.
+You can do object-oriented programming in any language you want,
+including assembly language.  Some languages (ex: C++ or Java) make
+object-oriented easier.  But you can still do object-oriented programming
+in languages like C.
+
+</p></li><li><p>
+Object-oriented is not the only valid design pattern.
+Many programmers have been taught to think purely in terms of
+objects.  And, to be fair, objects are often a good way to
+decompose a problem.  But objects are not the only way, and are
+not always the best way to decompose a problem.  Sometimes good old
+procedural code is easier to write, easier to maintain and understand,
+and faster than object-oriented code.
+
+</p></li><li><p>
+When SQLite was first being developed, Java was a young and immature
+language.  C++ was older, but was undergoing such growing pains that
+it was difficult to find any two C++ compilers that worked the same
+way.  So C was definitely a better choice back when SQLite was first
+being developed.  The situation is less stark now, but there is little
+to no benefit in recoding SQLite at this point.
+</p></li></ol>
+
+<h1 id="why_isn_t_sqlite_coded_in_a_safe_language_"><span>3. </span>Why Isn't SQLite Coded In A "Safe" Language?</h1>
+
+<p>
+There has lately been a lot of interest in "safe" programming languages
+like Rust or Go in which it is impossible, or is at least difficult, to make
+common programming errors like memory leaks or array overruns.  So the
+question often arises as to why SQLite is not coded in a "safe" language.
+
+</p><ol>
+<li><p>
+None of the safe programming languages existed for the first 10 years
+of SQLite's existence.  SQLite could be recoded in Go or Rust, but doing
+so would probably introduce far more bugs than would be fixed, and it
+seems also likely to result in slower code.
+
+</p></li><li><p>
+Safe programming languages solve the easy problems: memory leaks,
+use-after-free errors, array overruns, etc.  Safe languages provide
+no help beyond ordinary C code in solving the rather more difficult
+problem of computing a correct answer to an SQL statement.
+
+</p></li><li><p>
+Safe languages are often touted for helping to prevent
+security vulnerabilities. True enough, but SQLite is
+not a particularly security-sensitive library.  If an application is
+running untrusted and unverified SQL, then it already has much bigger
+security issues (SQL injection) that no "safe" language will fix.
+</p><p>
+It is true that applications sometimes import complete binary SQLite
+database files from untrusted sources, and such imports could present a
+possible attack vector.  However, those code paths in SQLite are
+limited and are extremely well tested.  And pre-validation routines 
+are available to applications that want to read untrusted databases
+that can help detect possible attacks prior to use.
+
+</p></li><li><p>
+Some "safe" languages (ex: Go) dislike the use of assert().  But
+the use of assert() is a vital part of keeping SQLite maintainable.
+The lack of assert() in Go is a show-stopper as far as the developers
+of SQLite are concerned.  See the <a href="assert.html">The Use Of assert() In SQLite</a>
+article for additional information.
+
+</p></li><li><p>
+Safe languages insert additional machine branches to do things like
+verify that array accesses are in-bounds.  In correct code, those
+branches are never taken.  That means that the machine code cannot
+be 100% branch tested, which is an important component of SQLite's
+quality strategy.
+
+</p></li><li><p>
+Safe languages usually want to abort if they encounter an out-of-memory
+(OOM) situation.  SQLite is designed to recovery gracefully from an OOM.
+It is unclear how this could be accomplished in the current crop of
+safe languages.
+
+</p></li><li><p>
+All of the existing safe languages are new.  The developers of SQLite
+applaud the efforts of computer language researchers in trying to
+develop languages that are easier to program safely.  We encourage these
+efforts to continue.  Be we ourselves are more interested in old and
+boring languages when it comes to implementing SQLite.
+</p></li></ol>
+
+<p>
+All that said, it is possible that SQLite might
+one day be recoded in Rust.  Recoding SQLite in Go is unlikely
+since Go hates assert().  But Rust is a possibility.  Some
+preconditions that must occur before SQLite is recoded in Rust
+include:
+
+</p><p>
+</p><ol type="A">
+<li> Rust needs to mature a little more, stop changing so fast, and
+     move further toward being old and boring.
+</li><li> Rust needs to demonstrate that it can be used to create general-purpose
+     libraries that are callable from all other programming languages.
+</li><li> Rust needs to demonstrate that it can produce object code that
+     works on obscure embedded devices, including devices that lack
+     an operating system.
+</li><li> Rust needs to pick up the necessary tooling that enables one to
+     do 100% branch coverage testing of the compiled binaries.
+</li><li> Rust needs a mechanism to recover gracefully from OOM errors.
+</li><li> Rust needs to demonstrate that it can do the kinds of work that
+     C does in SQLite without a significant speed penalty.
+</li></ol>
+
+<p>
+If you are a "rustacean" and feel that Rust already meets the
+preconditions listed above, and that SQLite should be recoded in
+Rust, then you are welcomed and encouraged
+to contact the SQLite developers privately
+and argue your case.
 </p>

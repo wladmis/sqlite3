@@ -149,15 +149,11 @@ With all features enabled, the <a href="footprint.html">library size</a> can be 
 depending on the target platform and compiler optimization settings.
 (64-bit code is larger.  And some compiler optimizations
 such as aggressive function inlining and loop unrolling can cause the
-object code to be much larger.)  If optional features are omitted, the
-size of the SQLite library can be reduced below 300KiB.  SQLite can also
-be made to run in minimal stack space (4KiB) and
-very little heap (100KiB), making SQLite a popular database engine 
-choice on memory constrained gadgets such as cellphones, PDAs, and MP3 players.
+object code to be much larger.)
 There is a tradeoff between memory usage and speed.  
 SQLite generally runs faster the more memory
 you give it.  Nevertheless, performance is usually quite good even
-in low-memory environments.  Depending on how it is used, SQLite be
+in low-memory environments.  Depending on how it is used, SQLite can be
 <a href="fasterthanfs.html">faster than direct filesystem I/O</a>.</p>
 
 <p>SQLite is 

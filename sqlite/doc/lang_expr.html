@@ -691,7 +691,18 @@ the <span class='yyterm'>type-name</span>.
         the TEXT value and the remainder ignored. Any leading spaces in the
         TEXT value when converting from TEXT to INTEGER are ignored. If there
         is no prefix that can be interpreted as an integer number, the result
-        of the conversion is 0.  The CAST operator understands decimal
+        of the conversion is 0.  If the prefix integer is greater than
+        +9223372036854775807 then the result of the cast is exactly
+        +9223372036854775807.  Similarly, if the prefix integer is
+        less than -9223372036854775808 then the result of the cast is
+        exactly -9223372036854775808.
+
+        <p>When casting to INTEGER, if the text looks like a floating point
+        value with an exponent, the exponent will be ignored because it is
+        no part of the integer prefix.  For example,
+        "(CAST '123e+5' AS INTEGER)" results in 123, not in 12300000.
+
+        <p> The CAST operator understands decimal
         integers only &mdash; conversion of <a href="lang_expr.html#hexint">hexadecimal integers</a> stops 
         at the "x" in the "0x" prefix of the hexadecimal integer string 
         and thus result of the CAST is always zero.
@@ -755,6 +766,19 @@ All other values are considered true.
 <p>For example, the values NULL, 0.0, 0, 'english' and '0' are all considered
 to be false. Values 1, 1.0, 0.1, -0.1 and '1english' are considered to 
 be true.
+
+<p>Beginning with SQLite 3.23.0 (2018-04-02), SQLite recognizes the
+identifiers "TRUE" and "FALSE" as boolean literals, if and only if those
+identifiers are not already used for some other meaning.  If there already
+exists columns or tables or other objects named TRUE or FALSE, then for
+the sake of backwards compatibility, the TRUE and FALSE identifiers refer
+to those other objects, not to the boolean values.
+
+<p>The boolean identifiers TRUE and FALSE are usually just aliases for
+the integer values 1 and 0, respectively.  However, if TRUE or FALSE
+occur on the right-hand side of an IS operator, then they form new
+unary postfix operators "IS TRUE" and "IS FALSE" which test the boolean
+value of the operand on the left.
 
 <h3>Functions</h3>
 <p>SQLite supports many <a href="lang_corefunc.html">simple</a> and <a href="lang_aggfunc.html">aggregate</a>

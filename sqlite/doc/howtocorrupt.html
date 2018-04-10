@@ -127,7 +127,7 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#_bugs_in_sqlite">8.  Bugs in SQLite</a></div>
 <div class="fancy-toc2"><a href="#_false_corruption_reports_due_to_database_shrinkage">8.1.  False corruption reports due to database shrinkage</a></div>
 <div class="fancy-toc2"><a href="#_corruption_following_switches_between_rollback_and_wal_modes">8.2.  Corruption following switches between rollback and WAL modes</a></div>
-<div class="fancy-toc2"><a href="#_i_o_while_obtaining_a_lock_leads_to_corruption">8.3.  I/O while obtaining a lock leads to corruption</a></div>
+<div class="fancy-toc2"><a href="#_i_o_error_while_obtaining_a_lock_leads_to_corruption">8.3.  I/O error while obtaining a lock leads to corruption</a></div>
 <div class="fancy-toc2"><a href="#_database_pages_leak_from_the_free_page_list">8.4.  Database pages leak from the free page list</a></div>
 <div class="fancy-toc2"><a href="#_corruption_following_alternating_writes_from_3_6_and_3_7_">8.5.  Corruption following alternating writes from 3.6 and 3.7.</a></div>
 <div class="fancy-toc2"><a href="#_race_condition_in_recovery_on_windows_system_">8.6.  Race condition in recovery on windows system.</a></div>
@@ -632,7 +632,7 @@ cause database corruption.</p>
 observed in the wild.  The problem was fixed on 2011-01-27 and in version
 3.7.5.</p>
 
-<h2 id="_i_o_while_obtaining_a_lock_leads_to_corruption"><span>8.3. </span> I/O while obtaining a lock leads to corruption</h2>
+<h2 id="_i_o_error_while_obtaining_a_lock_leads_to_corruption"><span>8.3. </span> I/O error while obtaining a lock leads to corruption</h2>
 
 <p>If the operating system returns an I/O error while attempting to obtain
 a certain lock on shared memory in <a href="wal.html">WAL mode</a> then SQLite might fail 
@@ -689,7 +689,7 @@ one of those processes to get a false indication that the recovery
 has already completed, allowing that process to continue using the
 database file without running recovery first.  If that process writes
 to the file, then the file might go corrupt.  This race condition
-had apparently existing in all prior versions of SQLite for Windows going
+had apparently existed in all prior versions of SQLite for Windows going
 back to 2004.  But the race was very tight.  Practically speaking, you
 need a fast multi-core machine in which you launch two processes to run
 recovery at the same moment on two separate cores.  This defect was

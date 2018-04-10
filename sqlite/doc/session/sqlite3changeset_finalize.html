@@ -103,19 +103,21 @@ function with an iterator passed to a conflict-handler by
 call has no effect.</p>
 
 <p>If an error was encountered within a call to an sqlite3changeset_xxx()
-function (for example an <a href="../rescode.html#corrupt">SQLITE_CORRUPT</a> in <a href="../session/sqlite3changeset_next.html">sqlite3changeset_next()</a> or an
+function (for example an <a href="../rescode.html#corrupt">SQLITE_CORRUPT</a> in <a href="../session/sqlite3changeset_next.html">sqlite3changeset_next()</a> or an 
 <a href="../rescode.html#nomem">SQLITE_NOMEM</a> in <a href="../session/sqlite3changeset_new.html">sqlite3changeset_new()</a>) then an error code corresponding
 to that error is returned by this function. Otherwise, SQLITE_OK is
 returned. This is to allow the following pattern (pseudo-code):</p>
 
-<p>sqlite3changeset_start();
-while( SQLITE_ROW==sqlite3changeset_next() ){
-// Do something with change.
-}
-rc = sqlite3changeset_finalize();
-if( rc!=SQLITE_OK ){
-// An error has occurred
-}
+<p><pre>
+  sqlite3changeset_start();
+  while( SQLITE_ROW==sqlite3changeset_next() ){
+    // Do something with change.
+  }
+  rc = sqlite3changeset_finalize();
+  if( rc!=SQLITE_OK ){
+    // An error has occurred 
+  }
+</pre>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

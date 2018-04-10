@@ -109,6 +109,7 @@ Table Of Contents
 <div class="fancy-toc3"><a href="#adding_entries_to_a_zip_archive">3.2.1. Adding Entries to a Zip Archive</a></div>
 <div class="fancy-toc3"><a href="#_deleting_zip_archive_entries_">3.2.2.  Deleting Zip Archive Entries </a></div>
 <div class="fancy-toc3"><a href="#_updating_existing_zip_archive_entries_">3.2.3.  Updating Existing Zip Archive Entries </a></div>
+<div class="fancy-toc2"><a href="#_the_zipfile_aggregate_function_">3.3.  The zipfile() Aggregate Function </a></div>
 </div>
 </div>
 <script>
@@ -171,6 +172,18 @@ extension with. The second and third arguments should both be passed 0.
 
 </p><h1 id="using_zipfile"><span>3. </span>Using Zipfile</h1>
 
+<p>The zipfile module provides three similar interfaces for accessing, updating
+and creating zip file archives:
+
+</p><ol>
+  <li> A table-valued function, which provides read-only access to existing
+       archives, either from the file-system or in-memory.
+  </li><li> A virtual table, which provides read and write access to archives
+       stored in the file-system.
+  </li><li> An SQL aggregate function, which can be used to create new archives
+       in memory.
+</li></ol>
+
 <p>The zipfile module provides two similar interfaces for accessing zip
 archives. A table-valued function, which provides read-only access to
 existing archives, and a virtual table interface, which provides both
@@ -179,11 +192,22 @@ read and write access.
 </p><h2 id="table_valued_function_read_only_access_"><span>3.1. </span>Table-Valued Function (read-only access)</h2>
 
 <p>For reading existing zip archives, the Zipfile module provides a
-<a href="vtab.html#tabfunc2">table-valued function</a> that accepts a single argument - the path to the zip
-archive to be read. For example, to inspect the contents of zip archive
-"test.zip" from the current directory:
+<a href="vtab.html#tabfunc2">table-valued function</a> that accepts a single argument. If the argument
+is a text value, then it is a path to a zip archive to read from the
+file-system. Or, if the argument is an SQL blob, then it is the zip
+archive data itself.
+
+</p><p>For example, to inspect the contents of zip archive "test.zip" from 
+the current directory:
 
 </p><div class="codeblock"><pre>SELECT * FROM zipfile('test.zip');
+</pre></div>
+
+<p>Or, from the SQLite shell tool (the <a href="cli.html#fileio">readfile()</a> 
+function reads the contents of a file from the file-system and returns it as a
+blob):
+
+</p><div class="codeblock"><pre>SELECT * FROM zipfile( readfile('test.zip') );
 </pre></div>
 
 <p>The table-valued function returns one row for each record (file, 
@@ -253,7 +277,7 @@ manipulate zip archives.
 </p><p>To insert a symbolic link, the user must also supply a "mode" value.
 For example, to add a symbolic link from "link.txt" to "m.txt":
 
-</p><div class="codeblock"><pre>INSERT INTO temp.zip(name, mode, data) VALUES('link.txt', 'lrwx-rw-rw', 'abcdefghi');
+</p><div class="codeblock"><pre>INSERT INTO temp.zip(name, mode, data) VALUES('link.txt', 'lrwxrw-rw-', 'abcdefghi');
 </pre></div>
 
 <p>The following rules and caveats apply to the values specified as part of
@@ -367,4 +391,39 @@ other than NULL.
 </p><p>The data and method columns may also be set as described for an INSERT
 above.  
 
-</p>
+</p><h2 id="_the_zipfile_aggregate_function_"><span>3.3. </span> The zipfile() Aggregate Function </h2>
+
+<p> New zip archives may be constructed entirely within memory using the
+zipfile() aggregate function. Each row visited by the aggregate function
+adds an entry to the zip archive. The value returned is a blob containing
+the entire archive image.
+
+</p><p> The zipfile() aggregate function may be called with 2, 4 or 5 
+arguments. If it is called with 5 arguments, then the entry added to
+the archive is equivalent to inserting the same values into the "name", 
+"mode", "mtime", "data" and "method" columns of a zipfile virtual table.
+
+</p><p> If zipfile() is invoked with 2 arguments, then the entry added to
+the archive is equivalent to that added by inserting the same two values into
+the "name" and "data" columns of a zipfile virtual table, with all
+other values set to NULL. If invoked with 4 arguments, it is equivalent
+to inserting the 4 values into the "name", "mode", "mtime" and "data"
+columns. In other words, the following pairs of queries are equivalent:
+
+</p><div class="codeblock"><pre>SELECT zipfile(name, data) ...
+SELECT zipfile(name, NULL, NULL, data, NULL) ...
+
+SELECT zipfile(name, mode, mtime, data) ...
+SELECT zipfile(name, mode, mtime, data, NULL) ...
+</pre></div>
+
+<p> For example, to create an archive containing two text files, "a.txt" and
+"b.txt", containing the text "abc" and "123" respectively:
+
+</p><div class="codeblock"><pre>WITH contents(name, data) AS (
+  VALUES('a.txt', 'abc') UNION ALL
+  VALUES('b.txt', '123')
+)
+SELECT zipfile(name, data) FROM contents;
+</pre></div>
+

@@ -156,11 +156,11 @@ be removed in some future release.</li>
 <hr>
 <h2>List Of Objects:</h2>
 <style>
-#listtab19 tr td {vertical-align:top;}
+#listtab21 tr td {vertical-align:top;}
 </style>
-<table id='listtab19' width='100%'></table>
+<table id='listtab21' width='100%'></table>
 <script>
-var listitems19 = [{"u":"#sqlite3","x":"sqlite3","s":0},
+var listitems21 = [{"u":"#sqlite3","x":"sqlite3","s":0},
 {"u":"#sqlite3_api_routines","x":"sqlite3_api_routines","s":0},
 {"u":"#sqlite3_backup","x":"sqlite3_backup","s":0},
 {"u":"#sqlite3_blob","x":"sqlite3_blob","s":0},
@@ -190,44 +190,44 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/280);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems19.length+1)/nCol);
+var nRow = Math.ceil((listitems21.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems19.length; i++){
+for(var i=0; i<listitems21.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems19[i].u=="" || listitems19[i].s==2){
+  if(listitems21[i].u=="" || listitems21[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems19[i].u;
+    h += listitems21[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "<s>"
-  h += listitems19[i].x;
-  if(listitems19[i].s==2 || listitems19[i].s==3) h += "</s>"
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
+  h += listitems21[i].x;
+  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
   h += ea
-  if(listitems19[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems19[i].s==3) h += "&sup1\n";
-  if(listitems19[i].s==4) h += "&sup2\n";
-  if(listitems19[i].s==5) h += "&sup3\n";
+  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems21[i].s==3) h += "&sup1\n";
+  if(listitems21[i].s==4) h += "&sup2\n";
+  if(listitems21[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab19").innerHTML = h;
+document.getElementById("listtab21").innerHTML = h;
 </script>
 <hr>
 
 <h2>List Of Constants:</h2>
 <p>Also available: <a href="rescode.html">list of error codes</a></p>
 <style>
-#listtab20 tr td {vertical-align:top;}
+#listtab22 tr td {vertical-align:top;}
 </style>
-<table id='listtab20' width='100%'></table>
+<table id='listtab22' width='100%'></table>
 <script>
-var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
+var listitems22 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_ABORT_ROLLBACK","x":"SQLITE_ABORT_ROLLBACK","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_EXISTS","s":0},
 {"u":"#SQLITE_ACCESS_EXISTS","x":"SQLITE_ACCESS_READ","s":0},
@@ -312,6 +312,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#SQLITE_DBCONFIG_ENABLE_FKEY","x":"SQLITE_DBCONFIG_TRIGGER_EQP","s":0},
 {"u":"#sqlitedbstatuscachehit","x":"SQLITE_DBSTATUS_CACHE_HIT","s":0},
 {"u":"#sqlitedbstatuscachemiss","x":"SQLITE_DBSTATUS_CACHE_MISS","s":0},
+{"u":"#sqlitedbstatuscachespill","x":"SQLITE_DBSTATUS_CACHE_SPILL","s":0},
 {"u":"#sqlitedbstatuscacheused","x":"SQLITE_DBSTATUS_CACHE_USED","s":0},
 {"u":"#sqlitedbstatuscacheusedshared","x":"SQLITE_DBSTATUS_CACHE_USED_SHARED","s":0},
 {"u":"#sqlitedbstatuscachewrite","x":"SQLITE_DBSTATUS_CACHE_WRITE","s":0},
@@ -325,6 +326,9 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitedbstatusstmtused","x":"SQLITE_DBSTATUS_STMT_USED","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_DELETE","s":0},
 {"u":"#SQLITE_DENY","x":"SQLITE_DENY","s":0},
+{"u":"#SQLITE_DESERIALIZE_FREEONCLOSE","x":"SQLITE_DESERIALIZE_FREEONCLOSE","s":0},
+{"u":"#SQLITE_DESERIALIZE_FREEONCLOSE","x":"SQLITE_DESERIALIZE_READONLY","s":0},
+{"u":"#SQLITE_DESERIALIZE_FREEONCLOSE","x":"SQLITE_DESERIALIZE_RESIZEABLE","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_DETACH","s":0},
 {"u":"#SQLITE_DETERMINISTIC","x":"SQLITE_DETERMINISTIC","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_DONE","s":0},
@@ -353,6 +357,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitefcntljournalpointer","x":"SQLITE_FCNTL_JOURNAL_POINTER","s":0},
 {"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_LAST_ERRNO","s":0},
 {"u":"#sqlitefcntllockstate","x":"SQLITE_FCNTL_LOCKSTATE","s":0},
+{"u":"#sqlitefcntllocktimeout","x":"SQLITE_FCNTL_LOCK_TIMEOUT","s":0},
 {"u":"#sqlitefcntlmmapsize","x":"SQLITE_FCNTL_MMAP_SIZE","s":0},
 {"u":"#sqlitefcntloverwrite","x":"SQLITE_FCNTL_OVERWRITE","s":0},
 {"u":"#SQLITE_FCNTL_BEGIN_ATOMIC_WRITE","x":"SQLITE_FCNTL_PDB","s":0},
@@ -539,6 +544,7 @@ var listitems20 = [{"u":"#SQLITE_ABORT","x":"SQLITE_ABORT","s":0},
 {"u":"#sqlitescanstatselectid","x":"SQLITE_SCANSTAT_SELECTID","s":0},
 {"u":"#SQLITE_ABORT","x":"SQLITE_SCHEMA","s":0},
 {"u":"#SQLITE_ALTER_TABLE","x":"SQLITE_SELECT","s":0},
+{"u":"#SQLITE_SERIALIZE_NOCOPY","x":"SQLITE_SERIALIZE_NOCOPY","s":0},
 {"u":"#SQLITE_SHM_EXCLUSIVE","x":"SQLITE_SHM_EXCLUSIVE","s":0},
 {"u":"#SQLITE_SHM_EXCLUSIVE","x":"SQLITE_SHM_LOCK","s":0},
 {"u":"#SQLITE_SHM_NLOCK","x":"SQLITE_SHM_NLOCK","s":0},
@@ -615,33 +621,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/400);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems20.length+1)/nCol);
+var nRow = Math.ceil((listitems22.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems20.length; i++){
+for(var i=0; i<listitems22.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems20[i].u=="" || listitems20[i].s==2){
+  if(listitems22[i].u=="" || listitems22[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems20[i].u;
+    h += listitems22[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "<s>"
-  h += listitems20[i].x;
-  if(listitems20[i].s==2 || listitems20[i].s==3) h += "</s>"
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
+  h += listitems22[i].x;
+  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
   h += ea
-  if(listitems20[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems20[i].s==3) h += "&sup1\n";
-  if(listitems20[i].s==4) h += "&sup2\n";
-  if(listitems20[i].s==5) h += "&sup3\n";
+  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems22[i].s==3) h += "&sup1\n";
+  if(listitems22[i].s==4) h += "&sup2\n";
+  if(listitems22[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab20").innerHTML = h;
+document.getElementById("listtab22").innerHTML = h;
 </script>
 <hr>
 
@@ -649,15 +655,15 @@ document.getElementById("listtab20").innerHTML = h;
 <p>Note: Functions marked with "<small><i>(exp)</i></small>"
 are <a href="capi3ref.html">experimental</a> and functions whose names are
 <s>struck through</s> are <a href="capi3ref.html">deprecated</a>.</p>
-<!-- number of functions: 235 -->
+<!-- number of functions: 237 -->
 <!-- number of deprecated functions: 7 -->
 <!-- number of experimental functions: 5 -->
 <style>
-#listtab21 tr td {vertical-align:top;}
+#listtab23 tr td {vertical-align:top;}
 </style>
-<table id='listtab21' width='100%'></table>
+<table id='listtab23' width='100%'></table>
 <script>
-var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems23 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_aggregate_count","x":"sqlite3_aggregate_count","s":2},
 {"u":"#sqlite3_auto_extension","x":"sqlite3_auto_extension","s":0},
 {"u":"#sqlite3backupfinish","x":"sqlite3_backup_finish","s":0},
@@ -742,6 +748,7 @@ var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_db_release_memory","x":"sqlite3_db_release_memory","s":0},
 {"u":"#sqlite3_db_status","x":"sqlite3_db_status","s":0},
 {"u":"#sqlite3_declare_vtab","x":"sqlite3_declare_vtab","s":0},
+{"u":"#sqlite3_deserialize","x":"sqlite3_deserialize","s":0},
 {"u":"#sqlite3_enable_load_extension","x":"sqlite3_enable_load_extension","s":0},
 {"u":"#sqlite3_enable_shared_cache","x":"sqlite3_enable_shared_cache","s":0},
 {"u":"#sqlite3_errcode","x":"sqlite3_errcode","s":0},
@@ -831,6 +838,7 @@ var listitems21 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_cont
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_zeroblob","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_zeroblob64","s":0},
 {"u":"#sqlite3_commit_hook","x":"sqlite3_rollback_hook","s":0},
+{"u":"#sqlite3_serialize","x":"sqlite3_serialize","s":0},
 {"u":"#sqlite3_set_authorizer","x":"sqlite3_set_authorizer","s":0},
 {"u":"#sqlite3_get_auxdata","x":"sqlite3_set_auxdata","s":0},
 {"u":"#sqlite3_set_last_insert_rowid","x":"sqlite3_set_last_insert_rowid","s":0},
@@ -908,33 +916,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/315);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems21.length+1)/nCol);
+var nRow = Math.ceil((listitems23.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems21.length; i++){
+for(var i=0; i<listitems23.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems21[i].u=="" || listitems21[i].s==2){
+  if(listitems23[i].u=="" || listitems23[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems21[i].u;
+    h += listitems23[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "<s>"
-  h += listitems21[i].x;
-  if(listitems21[i].s==2 || listitems21[i].s==3) h += "</s>"
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
+  h += listitems23[i].x;
+  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
   h += ea
-  if(listitems21[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems21[i].s==3) h += "&sup1\n";
-  if(listitems21[i].s==4) h += "&sup2\n";
-  if(listitems21[i].s==5) h += "&sup3\n";
+  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems23[i].s==3) h += "&sup1\n";
+  if(listitems23[i].s==4) h += "&sup2\n";
+  if(listitems23[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab21").innerHTML = h;
+document.getElementById("listtab23").innerHTML = h;
 </script>
 <hr>
 <a name="SQLITE_DETERMINISTIC"></a>
@@ -980,6 +988,23 @@ on this hint by avoiding the use of <a href="malloc.html#lookaside">lookaside me
 deplete the limited store of lookaside memory. Future versions of
 SQLite may act on this hint differently.
 </dl>
+</p><hr><a name="SQLITE_SERIALIZE_NOCOPY"></a>
+<h2>Flags for sqlite3_serialize</h2>
+</div>
+<blockquote><pre>
+#define SQLITE_SERIALIZE_NOCOPY 0x001   /* Do no memory allocations */
+</pre></blockquote>
+<p>
+Zero or more of the following constants can be OR-ed together for
+the F argument to <a href="#sqlite3_serialize">sqlite3_serialize(D,S,P,F)</a>.</p>
+
+<p>SQLITE_SERIALIZE_NOCOPY means that <a href="#sqlite3_serialize">sqlite3_serialize()</a> will return
+a pointer to contiguous in-memory database that it is currently using,
+without making a copy of the database.  If SQLite is not currently using
+a contiguous in-memory database, then this option causes
+<a href="#sqlite3_serialize">sqlite3_serialize()</a> to return a NULL pointer.  SQLite will only be
+using a contiguous in-memory database if it has been initialized by a
+prior call to <a href="#sqlite3_deserialize">sqlite3_deserialize()</a>.
 </p><hr><a name="SQLITE_SHM_NLOCK"></a>
 <h2>Maximum xShmLock index</h2>
 </div>
@@ -1073,11 +1098,11 @@ pointer through into calls to <a href="#sqlite3_result_blob">sqlite3_result()</a
 <a href="#sqlite3_context_db_handle">sqlite3_context_db_handle()</a>, <a href="#sqlite3_get_auxdata">sqlite3_get_auxdata()</a>,
 and/or <a href="#sqlite3_get_auxdata">sqlite3_set_auxdata()</a>.
 </p><style>
-#listtab22 tr td {vertical-align:top;}
+#listtab24 tr td {vertical-align:top;}
 </style>
-<table id='listtab22' width='100%'></table>
+<table id='listtab24' width='100%'></table>
 <script>
-var listitems22 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
+var listitems24 = [{"u":"#sqlite3_aggregate_context","x":"sqlite3_aggregate_context","s":0},
 {"u":"#sqlite3_context_db_handle","x":"sqlite3_context_db_handle","s":0},
 {"u":"#sqlite3_get_auxdata","x":"sqlite3_get_auxdata","s":0},
 {"u":"#sqlite3_result_blob","x":"sqlite3_result_blob","s":0},
@@ -1107,34 +1132,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems22.length+1)/nCol);
+var nRow = Math.ceil((listitems24.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems22.length; i++){
+for(var i=0; i<listitems24.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems22[i].u=="" || listitems22[i].s==2){
+  if(listitems24[i].u=="" || listitems24[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems22[i].u;
+    h += listitems24[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "<s>"
-  h += listitems22[i].x;
-  if(listitems22[i].s==2 || listitems22[i].s==3) h += "</s>"
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
+  h += listitems24[i].x;
+  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
   h += ea
-  if(listitems22[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems22[i].s==3) h += "&sup1\n";
-  if(listitems22[i].s==4) h += "&sup2\n";
-  if(listitems22[i].s==5) h += "&sup3\n";
+  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems24[i].s==3) h += "&sup1\n";
+  if(listitems24[i].s==4) h += "&sup2\n";
+  if(listitems24[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab22").innerHTML = h;
+document.getElementById("listtab24").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_data_directory"></a>
@@ -2646,6 +2671,45 @@ The <a href="vtab.html#xcreate">xCreate</a> and <a href="vtab.html#xconnect">xCo
 <a href="#sqlite3_module">virtual table module</a> call this interface
 to declare the format (the names and datatypes of the columns) of
 the virtual tables they implement.
+</p><hr><a name="sqlite3_deserialize"></a>
+<h2>Deserialize a database</h2>
+</div>
+<blockquote><pre>
+int sqlite3_deserialize(
+  sqlite3 *db,            /* The database connection */
+  const char *zSchema,    /* Which DB to reopen with the deserialization */
+  unsigned char *pData,   /* The serialized database content */
+  sqlite3_int64 szDb,     /* Number bytes in the deserialization */
+  sqlite3_int64 szBuf,    /* Total size of buffer pData[] */
+  unsigned mFlags         /* Zero or more SQLITE_DESERIALIZE_* flags */
+);
+</pre></blockquote>
+<p>
+The sqlite3_deserialize(D,S,P,N,M,F) interface causes the
+<a href="#sqlite3">database connection</a> D to disconnect from database S and then
+reopen S as an in-memory database based on the serialization contained
+in P.  The serialized database P is N bytes in size.  M is the size of
+the buffer P, which might be larger than N.  If M is larger than N, and
+the SQLITE_DESERIALIZE_READONLY bit is not set in F, then SQLite is
+permitted to add content to the in-memory database as long as the total
+size does not exceed M bytes.</p>
+
+<p>If the SQLITE_DESERIALIZE_FREEONCLOSE bit is set in F, then SQLite will
+invoke sqlite3_free() on the serialization buffer when the database
+connection closes.  If the SQLITE_DESERIALIZE_RESIZEABLE bit is set, then
+SQLite will try to increase the buffer size using sqlite3_realloc64()
+if writes on the database cause it to grow larger than M bytes.</p>
+
+<p>The sqlite3_deserialize() interface will fail with SQLITE_BUSY if the
+database is currently in a read transaction or is involved in a backup
+operation.</p>
+
+<p>If sqlite3_deserialize(D,S,P,N,M,F) fails for any reason and if the
+SQLITE_DESERIALIZE_FREEONCLOSE bit is set in argument F, then
+<a href="#sqlite3_free">sqlite3_free()</a> is invoked on argument P prior to returning.</p>
+
+<p>This interface is only available if SQLite is compiled with the
+<a href="compile.html#enable_deserialize">SQLITE_ENABLE_DESERIALIZE</a> option.
 </p><hr><a name="sqlite3_enable_load_extension"></a>
 <h2>Enable Or Disable Extension Loading</h2>
 </div>
@@ -3230,6 +3294,50 @@ of the subtype T are preserved in current versions of SQLite;
 higher order bits are discarded.
 The number of subtype bytes preserved by SQLite might increase
 in future releases of SQLite.
+</p><hr><a name="sqlite3_serialize"></a>
+<h2>Serialize a database</h2>
+</div>
+<blockquote><pre>
+unsigned char *sqlite3_serialize(
+  sqlite3 *db,           /* The database connection */
+  const char *zSchema,   /* Which DB to serialize. ex: "main", "temp", ... */
+  sqlite3_int64 *piSize, /* Write size of the DB here, if not NULL */
+  unsigned int mFlags    /* Zero or more SQLITE_SERIALIZE_* flags */
+);
+</pre></blockquote>
+<p>
+The sqlite3_serialize(D,S,P,F) interface returns a pointer to memory
+that is a serialization of the S database on <a href="#sqlite3">database connection</a> D.
+If P is not a NULL pointer, then the size of the database in bytes
+is written into *P.</p>
+
+<p>For an ordinary on-disk database file, the serialization is just a
+copy of the disk file.  For an in-memory database or a "TEMP" database,
+the serialization is the same sequence of bytes which would be written
+to disk if that database where backed up to disk.</p>
+
+<p>The usual case is that sqlite3_serialize() copies the serialization of
+the database into memory obtained from <a href="#sqlite3_free">sqlite3_malloc64()</a> and returns
+a pointer to that memory.  The caller is responsible for freeing the
+returned value to avoid a memory leak.  However, if the F argument
+contains the SQLITE_SERIALIZE_NOCOPY bit, then no memory allocations
+are made, and the sqlite3_serialize() function will return a pointer
+to the contiguous memory representation of the database that SQLite
+is currently using for that database, or NULL if the no such contiguous
+memory representation of the database exists.  A contiguous memory
+representation of the database will usually only exist if there has
+been a prior call to <a href="#sqlite3_deserialize">sqlite3_deserialize(D,S,...)</a> with the same
+values of D and S.
+The size of the database is written into *P even if the
+SQLITE_SERIALIZE_NOCOPY bit is set but no contigious copy
+of the database exists.</p>
+
+<p>A call to sqlite3_serialize(D,S,P,F) might return NULL even if the
+SQLITE_SERIALIZE_NOCOPY bit is omitted from argument F if a memory
+allocation error occurs.</p>
+
+<p>This interface is only available if SQLite is compiled with the
+<a href="compile.html#enable_deserialize">SQLITE_ENABLE_DESERIALIZE</a> option.
 </p><hr><a name="sqlite3_set_last_insert_rowid"></a>
 <h2>Set the Last Insert Rowid value.</h2>
 </div>
@@ -5194,12 +5302,14 @@ database handle, SQLite checks if this will mean that there are now no
 connections at all to the database. If so, it performs a checkpoint
 operation before closing the connection. This option may be used to
 override this behaviour. The first parameter passed to this operation
-is an integer - non-zero to disable checkpoints-on-close, or zero (the
-default) to enable them. The second parameter is a pointer to an integer
+is an integer - positive to disable checkpoints-on-close, or zero (the
+default) to enable them, and negative to leave the setting unchanged.
+The second parameter is a pointer to an integer
 into which is written 0 or 1 to indicate whether checkpoints-on-close
 have been disabled - 0 if they are not disabled, 1 if they are.
-</dd>
-<dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_ENABLE_QPSG</dt>
 <dd>The SQLITE_DBCONFIG_ENABLE_QPSG option activates or deactivates
 the <a href="queryplanner-ng.html#qpstab">query planner stability guarantee</a> (QPSG).  When the QPSG is active,
 a single SQL query statement will always use the same algorithm regardless
@@ -5208,13 +5318,20 @@ that look at the values of bound parameters, which can make some queries
 slower.  But the QPSG has the advantage of more predictable behavior.  With
 the QPSG active, SQLite will always use the same query plan in the field as
 was used during testing in the lab.
-</dd>
-<dt>SQLITE_DBCONFIG_TRIGGER_EQP</dt>
+The first argument to this setting is an integer which is 0 to disable
+the QPSG, positive to enable QPSG, or negative to leave the setting
+unchanged. The second parameter is a pointer to an integer into which
+is written 0 or 1 to indicate whether the QPSG is disabled or enabled
+following this call.
+</dd></p>
+
+<p><dt>SQLITE_DBCONFIG_TRIGGER_EQP</dt>
 <dd> By default, the output of EXPLAIN QUERY PLAN commands does not
 include output for any operations performed by trigger programs. This
 option is used to set or clear (the default) a flag that governs this
 behavior. The first parameter passed to this operation is an integer -
-non-zero to enable output for trigger programs, or zero to disable it.
+positive to enable output for trigger programs, or zero to disable it,
+or negative to leave the setting unchanged.
 The second parameter is a pointer to an integer into which is written
 0 or 1 to indicate whether output-for-triggers has been disabled - 0 if
 it is not disabled, 1 if it is.
@@ -5236,6 +5353,32 @@ information.</p>
 
 <p>Note that SQLITE_IGNORE is also used as a <a href="#SQLITE_FAIL">conflict resolution mode</a>
 returned from the <a href="#sqlite3_vtab_on_conflict">sqlite3_vtab_on_conflict()</a> interface.
+</p><hr><a name="SQLITE_DESERIALIZE_FREEONCLOSE"></a>
+<h2>Flags for sqlite3_deserialize()</h2>
+</div>
+<blockquote><pre>
+#define SQLITE_DESERIALIZE_FREEONCLOSE 1 /* Call sqlite3_free() on close */
+#define SQLITE_DESERIALIZE_RESIZEABLE  2 /* Resize using sqlite3_realloc64() */
+#define SQLITE_DESERIALIZE_READONLY    4 /* Database is read-only */
+</pre></blockquote>
+<p>
+The following are allowed values for 6th argument (the F argument) to
+the <a href="#sqlite3_deserialize">sqlite3_deserialize(D,S,P,N,M,F)</a> interface.</p>
+
+<p>The SQLITE_DESERIALIZE_FREEONCLOSE means that the database serialization
+in the P argument is held in memory obtained from <a href="#sqlite3_free">sqlite3_malloc64()</a>
+and that SQLite should take ownership of this memory and automatically
+free it when it has finished using it.  Without this flag, the caller
+is resposible for freeing any dynamically allocated memory.</p>
+
+<p>The SQLITE_DESERIALIZE_RESIZEABLE flag means that SQLite is allowed to
+grow the size of the database using calls to <a href="#sqlite3_free">sqlite3_realloc64()</a>.  This
+flag should only be used if SQLITE_DESERIALIZE_FREEONCLOSE is also used.
+Without this flag, the deserialized database cannot increase in size beyond
+the number of bytes specified by the M parameter.</p>
+
+<p>The SQLITE_DESERIALIZE_READONLY flag means that the deserialized database
+should be treated as read-only.
 </p><hr><a name="SQLITE_FAIL"></a>
 <h2>Conflict resolution modes</h2>
 </div>
@@ -5290,6 +5433,7 @@ return value from the <a href="#sqlite3_set_authorizer">sqlite3_set_authorizer()
 #define SQLITE_FCNTL_BEGIN_ATOMIC_WRITE     31
 #define SQLITE_FCNTL_COMMIT_ATOMIC_WRITE    32
 #define SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE  33
+#define SQLITE_FCNTL_LOCK_TIMEOUT           34
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -5586,7 +5730,14 @@ operations since the previous successful call to
 This file control takes the file descriptor out of batch write mode
 so that all subsequent write operations are independent.
 SQLite will never invoke SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE without
-a prior successful call to <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a>.
+a prior successful call to <a href="#sqlitefcntlbeginatomicwrite">SQLITE_FCNTL_BEGIN_ATOMIC_WRITE</a>.</p>
+
+<p><li><a name="sqlitefcntllocktimeout"></a>
+
+The <a href="#sqlitefcntllocktimeout">SQLITE_FCNTL_LOCK_TIMEOUT</a> opcode causes attempts to obtain
+a file lock using the xLock or xShmLock methods of the VFS to wait
+for up to M milliseconds before failing, where M is the single
+unsigned integer parameter.
 </ul>
 </p><hr><a name="SQLITE_INDEX_CONSTRAINT_EQ"></a>
 <h2>Virtual Table Constraint Operator Codes</h2>
@@ -5825,9 +5976,9 @@ and EXCLUSIVE.
 <h2>Compile-Time Library Version Numbers</h2>
 </div>
 <blockquote><pre>
-#define SQLITE_VERSION        "3.22.0"
-#define SQLITE_VERSION_NUMBER 3022000
-#define SQLITE_SOURCE_ID      "2018-01-22 14:19:34 4e68a76247467e65985b2ccad31534bffbc4e624af05963682fe39b7cfd4alt1"
+#define SQLITE_VERSION        "3.23.0"
+#define SQLITE_VERSION_NUMBER 3023000
+#define SQLITE_SOURCE_ID      "2018-04-02 11:04:16 736b53f57f70b23172c30880186dce7ad9baa3b74e3838cae5847cffb98f5cd2"
 </pre></blockquote>
 <p>
 The <a href="#SQLITE_SOURCE_ID">SQLITE_VERSION</a> C preprocessor macro in the sqlite3.h header
@@ -6190,7 +6341,8 @@ in a single prepared statement, an SQLITE_NOMEM error is returned.</dd></p>
 #define SQLITE_DBSTATUS_CACHE_WRITE          9
 #define SQLITE_DBSTATUS_DEFERRED_FKS        10
 #define SQLITE_DBSTATUS_CACHE_USED_SHARED   11
-#define SQLITE_DBSTATUS_MAX                 11   /* Largest defined DBSTATUS */
+#define SQLITE_DBSTATUS_CACHE_SPILL         12
+#define SQLITE_DBSTATUS_MAX                 12   /* Largest defined DBSTATUS */
 </pre></blockquote>
 <p>
 These constants are the available integer "verbs" that can be passed as
@@ -6293,6 +6445,16 @@ transaction rollback or database recovery operations are not included.
 If an IO or other error occurs while writing a page to disk, the effect
 on subsequent SQLITE_DBSTATUS_CACHE_WRITE requests is undefined. The
 highwater mark associated with SQLITE_DBSTATUS_CACHE_WRITE is always 0.
+</dd></p>
+
+<p><a name="sqlitedbstatuscachespill"></a>
+ <dt>SQLITE_DBSTATUS_CACHE_SPILL</dt>
+<dd>This parameter returns the number of dirty cache entries that have
+been written to disk in the middle of a transaction due to the page
+cache overflowing. Transactions are more efficient if they are written
+to disk all at once. When pages spill mid-transaction, that introduces
+additional overhead. This parameter can be used help identify
+inefficiencies that can be resolve by increasing the cache size.
 </dd></p>
 
 <p><a name="sqlitedbstatusdeferredfks"></a>
@@ -6523,11 +6685,11 @@ sqlite3 object.
  <a href="#sqlite3_close">sqlite3_close()</a>,
 <a href="#sqlite3_close">sqlite3_close_v2()</a></p>
 <style>
-#listtab23 tr td {vertical-align:top;}
+#listtab25 tr td {vertical-align:top;}
 </style>
-<table id='listtab23' width='100%'></table>
+<table id='listtab25' width='100%'></table>
 <script>
-var listitems23 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
+var listitems25 = [{"u":"#sqlite3_blob_open","x":"sqlite3_blob_open","s":0},
 {"u":"#sqlite3_busy_handler","x":"sqlite3_busy_handler","s":0},
 {"u":"#sqlite3_busy_timeout","x":"sqlite3_busy_timeout","s":0},
 {"u":"#sqlite3_changes","x":"sqlite3_changes","s":0},
@@ -6591,34 +6753,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems23.length+1)/nCol);
+var nRow = Math.ceil((listitems25.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems23.length; i++){
+for(var i=0; i<listitems25.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems23[i].u=="" || listitems23[i].s==2){
+  if(listitems25[i].u=="" || listitems25[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems23[i].u;
+    h += listitems25[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "<s>"
-  h += listitems23[i].x;
-  if(listitems23[i].s==2 || listitems23[i].s==3) h += "</s>"
+  if(listitems25[i].s==2 || listitems25[i].s==3) h += "<s>"
+  h += listitems25[i].x;
+  if(listitems25[i].s==2 || listitems25[i].s==3) h += "</s>"
   h += ea
-  if(listitems23[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems23[i].s==3) h += "&sup1\n";
-  if(listitems23[i].s==4) h += "&sup2\n";
-  if(listitems23[i].s==5) h += "&sup3\n";
+  if(listitems25[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems25[i].s==3) h += "&sup1\n";
+  if(listitems25[i].s==4) h += "&sup2\n";
+  if(listitems25[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab23").innerHTML = h;
+document.getElementById("listtab25").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_pcache_methods2"></a>
@@ -6835,11 +6997,11 @@ to step 2.  Do this zero or more times.
 <li> Destroy the object using <a href="#sqlite3_finalize">sqlite3_finalize()</a>.
 </ol>
 </p><style>
-#listtab24 tr td {vertical-align:top;}
+#listtab26 tr td {vertical-align:top;}
 </style>
-<table id='listtab24' width='100%'></table>
+<table id='listtab26' width='100%'></table>
 <script>
-var listitems24 = [{"u":"#sqlite3_prepare","x":"sqlite3_prepare","s":0},
+var listitems26 = [{"u":"#sqlite3_prepare","x":"sqlite3_prepare","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v2","s":0},
 {"u":"#sqlite3_prepare","x":"sqlite3_prepare16_v3","s":0},
@@ -6849,43 +7011,43 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems24.length+1)/nCol);
+var nRow = Math.ceil((listitems26.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Constructors:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems24.length; i++){
+for(var i=0; i<listitems26.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems24[i].u=="" || listitems24[i].s==2){
+  if(listitems26[i].u=="" || listitems26[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems24[i].u;
+    h += listitems26[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "<s>"
-  h += listitems24[i].x;
-  if(listitems24[i].s==2 || listitems24[i].s==3) h += "</s>"
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "<s>"
+  h += listitems26[i].x;
+  if(listitems26[i].s==2 || listitems26[i].s==3) h += "</s>"
   h += ea
-  if(listitems24[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems24[i].s==3) h += "&sup1\n";
-  if(listitems24[i].s==4) h += "&sup2\n";
-  if(listitems24[i].s==5) h += "&sup3\n";
+  if(listitems26[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems26[i].s==3) h += "&sup1\n";
+  if(listitems26[i].s==4) h += "&sup2\n";
+  if(listitems26[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab24").innerHTML = h;
+document.getElementById("listtab26").innerHTML = h;
 </script>
 </p>
 <p>Destructor: <a href="#sqlite3_finalize">sqlite3_finalize()</a></p>
 <style>
-#listtab25 tr td {vertical-align:top;}
+#listtab27 tr td {vertical-align:top;}
 </style>
-<table id='listtab25' width='100%'></table>
+<table id='listtab27' width='100%'></table>
 <script>
-var listitems25 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
+var listitems27 = [{"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_blob64","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_double","s":0},
 {"u":"#sqlite3_bind_blob","x":"sqlite3_bind_int","s":0},
@@ -6938,34 +7100,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems25.length+1)/nCol);
+var nRow = Math.ceil((listitems27.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems25.length; i++){
+for(var i=0; i<listitems27.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems25[i].u=="" || listitems25[i].s==2){
+  if(listitems27[i].u=="" || listitems27[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems25[i].u;
+    h += listitems27[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems25[i].s==2 || listitems25[i].s==3) h += "<s>"
-  h += listitems25[i].x;
-  if(listitems25[i].s==2 || listitems25[i].s==3) h += "</s>"
+  if(listitems27[i].s==2 || listitems27[i].s==3) h += "<s>"
+  h += listitems27[i].x;
+  if(listitems27[i].s==2 || listitems27[i].s==3) h += "</s>"
   h += ea
-  if(listitems25[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems25[i].s==3) h += "&sup1\n";
-  if(listitems25[i].s==4) h += "&sup2\n";
-  if(listitems25[i].s==5) h += "&sup3\n";
+  if(listitems27[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems27[i].s==3) h += "&sup1\n";
+  if(listitems27[i].s==4) h += "&sup2\n";
+  if(listitems27[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab25").innerHTML = h;
+document.getElementById("listtab27").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_value"></a>
@@ -7011,11 +7173,11 @@ to <a href="#sqlite3_result_blob">sqlite3_result_value()</a>, <a href="#sqlite3_
 The <a href="#sqlite3_value_blob">sqlite3_value_type()</a> family of
 interfaces require protected sqlite3_value objects.
 </p><style>
-#listtab26 tr td {vertical-align:top;}
+#listtab28 tr td {vertical-align:top;}
 </style>
-<table id='listtab26' width='100%'></table>
+<table id='listtab28' width='100%'></table>
 <script>
-var listitems26 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
+var listitems28 = [{"u":"#sqlite3_value_blob","x":"sqlite3_value_blob","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_bytes16","s":0},
 {"u":"#sqlite3_value_blob","x":"sqlite3_value_double","s":0},
@@ -7036,34 +7198,34 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/350);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems26.length+1)/nCol);
+var nRow = Math.ceil((listitems28.length+1)/nCol);
 var h="<tr><td colspan="+nCol;
 h += ">Methods:</td></tr><tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems26.length; i++){
+for(var i=0; i<listitems28.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems26[i].u=="" || listitems26[i].s==2){
+  if(listitems28[i].u=="" || listitems28[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems26[i].u;
+    h += listitems28[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems26[i].s==2 || listitems26[i].s==3) h += "<s>"
-  h += listitems26[i].x;
-  if(listitems26[i].s==2 || listitems26[i].s==3) h += "</s>"
+  if(listitems28[i].s==2 || listitems28[i].s==3) h += "<s>"
+  h += listitems28[i].x;
+  if(listitems28[i].s==2 || listitems28[i].s==3) h += "</s>"
   h += ea
-  if(listitems26[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems26[i].s==3) h += "&sup1\n";
-  if(listitems26[i].s==4) h += "&sup2\n";
-  if(listitems26[i].s==5) h += "&sup3\n";
+  if(listitems28[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems28[i].s==3) h += "&sup1\n";
+  if(listitems28[i].s==4) h += "&sup2\n";
+  if(listitems28[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab26").innerHTML = h;
+document.getElementById("listtab28").innerHTML = h;
 </script>
 </p>
 <hr><a name="sqlite3_aggregate_count"></a>
@@ -8224,16 +8386,16 @@ char *sqlite3_vsnprintf(int,char*,const char*, va_list);
 <p>
 These routines are work-alikes of the "printf()" family of functions
 from the standard C library.
-These routines understand most of the common K&R formatting options,
-plus some additional non-standard formats, detailed below.
-Note that some of the more obscure formatting options from recent
-C-library standards are omitted from this implementation.</p>
+These routines understand most of the common formatting options from
+the standard library printf()
+plus some additional non-standard formats (<a href="printf.html#percentq">%q</a>, <a href="printf.html#percentq">%Q</a>, <a href="printf.html#percentw">%w</a>, and <a href="printf.html#percentz">%z</a>).
+See the <a href="printf.html">built-in printf()</a> documentation for details.</p>
 
 <p>The sqlite3_mprintf() and sqlite3_vmprintf() routines write their
-results into memory obtained from <a href="#sqlite3_free">sqlite3_malloc()</a>.
+results into memory obtained from <a href="#sqlite3_free">sqlite3_malloc64()</a>.
 The strings returned by these two routines should be
 released by <a href="#sqlite3_free">sqlite3_free()</a>.  Both routines return a
-NULL pointer if <a href="#sqlite3_free">sqlite3_malloc()</a> is unable to allocate enough
+NULL pointer if <a href="#sqlite3_free">sqlite3_malloc64()</a> is unable to allocate enough
 memory to hold the resulting string.</p>
 
 <p>The sqlite3_snprintf() routine is similar to "snprintf()" from
@@ -8257,71 +8419,7 @@ written will be n-1 characters.</p>
 
 <p>The sqlite3_vsnprintf() routine is a varargs version of sqlite3_snprintf().</p>
 
-<p>These routines all implement some additional formatting
-options that are useful for constructing SQL statements.
-All of the usual printf() formatting options apply.  In addition, there
-is are "%q", "%Q", "%w" and "%z" options.</p>
-
-<p>The %q option works like %s in that it substitutes a nul-terminated
-string from the argument list.  But %q also doubles every '\'' character.
-%q is designed for use inside a string literal.  By doubling each '\''
-character it escapes that character and allows it to be inserted into
-the string.</p>
-
-<p>For example, assume the string variable zText contains text as follows:</p>
-
-<p><blockquote><pre>
-char *zText = "It's a happy day!";
-</pre></blockquote></p>
-
-<p>One can use this text in an SQL statement as follows:</p>
-
-<p><blockquote><pre>
-char *zSQL = sqlite3_mprintf("INSERT INTO table VALUES('%q')", zText);
-sqlite3_exec(db, zSQL, 0, 0, 0);
-sqlite3_free(zSQL);
-</pre></blockquote></p>
-
-<p>Because the %q format string is used, the '\'' character in zText
-is escaped and the SQL generated is as follows:</p>
-
-<p><blockquote><pre>
-INSERT INTO table1 VALUES('It''s a happy day!')
-</pre></blockquote></p>
-
-<p>This is correct.  Had we used %s instead of %q, the generated SQL
-would have looked like this:</p>
-
-<p><blockquote><pre>
-INSERT INTO table1 VALUES('It's a happy day!');
-</pre></blockquote></p>
-
-<p>This second example is an SQL syntax error.  As a general rule you should
-always use %q instead of %s when inserting text into a string literal.</p>
-
-<p>The %Q option works like %q except it also adds single quotes around
-the outside of the total string.  Additionally, if the parameter in the
-argument list is a NULL pointer, %Q substitutes the text "NULL" (without
-single quotes).  So, for example, one could say:</p>
-
-<p><blockquote><pre>
-char *zSQL = sqlite3_mprintf("INSERT INTO table VALUES(%Q)", zText);
-sqlite3_exec(db, zSQL, 0, 0, 0);
-sqlite3_free(zSQL);
-</pre></blockquote></p>
-
-<p>The code above will render a correct SQL statement in the zSQL
-variable even if the zText variable is a NULL pointer.</p>
-
-<p>The "%w" formatting option is like "%q" except that it expects to
-be contained within double-quotes instead of single quotes, and it
-escapes the double-quote character instead of the single-quote
-character.  The "%w" formatting option is intended for safely inserting
-table and column names into a constructed SQL statement.</p>
-
-<p>The "%z" formatting option works like "%s" but with the
-addition that after the string has been read and copied into
-the result, <a href="#sqlite3_free">sqlite3_free()</a> is called on the input string.
+<p>See also:  <a href="printf.html">built-in printf()</a>, <a href="lang_corefunc.html#printf">printf() SQL function</a>
 </p><hr><a name="sqlite3_mutex_alloc"></a>
 <h2>Mutexes</h2>
 </div>
@@ -9533,14 +9631,14 @@ The specific value of WHERE-clause <a href="lang_expr.html#varparam">parameter</
 choice of query plan if the parameter is the left-hand side of a <a href="lang_expr.html#like">LIKE</a>
 or <a href="lang_expr.html#glob">GLOB</a> operator or if the parameter is compared to an indexed column
 and the <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> compile-time option is enabled.
-</li></p>
+</li>
+</ol></p>
 
 <p><p>sqlite3_prepare_v3() differs from sqlite3_prepare_v2() only in having
 the extra prepFlags parameter, which is a bit array consisting of zero or
 more of the <a href="#sqlitepreparepersistent">SQLITE_PREPARE_*</a> flags.  The
 sqlite3_prepare_v2() interface works exactly the same as
 sqlite3_prepare_v3() with a zero prepFlags parameter.
-</ol>
 </p><hr><a name="sqlite3_create_function"></a>
 <h2>Create Or Redefine SQL Functions</h2>
 </div>

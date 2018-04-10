@@ -106,32 +106,47 @@ return false;
   ),
   void *pCtx                      /* First argument passed to xConflict */
 );
+int sqlite3changeset_apply_v2(
+  sqlite3 *db,                    /* Apply change to "main" db of this handle */
+  int nChangeset,                 /* Size of changeset in bytes */
+  void *pChangeset,               /* Changeset blob */
+  int(*xFilter)(
+    void *pCtx,                   /* Copy of sixth arg to _apply() */
+    const char *zTab              /* Table name */
+  ),
+  int(*xConflict)(
+    void *pCtx,                   /* Copy of sixth arg to _apply() */
+    int eConflict,                /* DATA, MISSING, CONFLICT, CONSTRAINT */
+    sqlite3_changeset_iter *p     /* Handle describing change and conflict */
+  ),
+  void *pCtx,                     /* First argument passed to xConflict */
+  void **ppRebase, int *pnRebase
+);
 </pre></blockquote><p>
-Apply a changeset to a database. This function attempts to update the
-"main" database attached to handle db with the changes found in the
-changeset passed via the second and third arguments.</p>
+Apply a changeset or patchset to a database. These functions attempt to
+update the "main" database attached to handle db with the changes found in
+the changeset passed via the second and third arguments. </p>
 
-<p>The fourth argument (xFilter) passed to this function is the "filter
+<p>The fourth argument (xFilter) passed to these functions is the "filter
 callback". If it is not NULL, then for each table affected by at least one
 change in the changeset, the filter callback is invoked with
 the table name as the second argument, and a copy of the context pointer
-passed as the sixth argument to this function as the first. If the "filter
-callback" returns zero, then no attempt is made to apply any changes to
-the table. Otherwise, if the return value is non-zero or the xFilter
-argument to this function is NULL, all changes related to the table are
-attempted.</p>
+passed as the sixth argument as the first. If the "filter callback"
+returns zero, then no attempt is made to apply any changes to the table.
+Otherwise, if the return value is non-zero or the xFilter argument to
+is NULL, all changes related to the table are attempted.</p>
 
-<p>For each table that is not excluded by the filter callback, this function
-tests that the target database contains a compatible table. A table is
+<p>For each table that is not excluded by the filter callback, this function 
+tests that the target database contains a compatible table. A table is 
 considered compatible if all of the following are true:</p>
 
 <p><ul>
-<li> The table has the same name as the name recorded in the
-changeset, and
-<li> The table has at least as many columns as recorded in the
-changeset, and
-<li> The table has primary key columns in the same position as
-recorded in the changeset.
+  <li> The table has the same name as the name recorded in the 
+       changeset, and
+  <li> The table has at least as many columns as recorded in the 
+       changeset, and
+  <li> The table has primary key columns in the same position as 
+       recorded in the changeset.
 </ul></p>
 
 <p>If there is no compatible table, it is not an error, but none of the
@@ -139,11 +154,11 @@ changes associated with the table are applied. A warning message is issued
 via the sqlite3_log() mechanism with the error code SQLITE_SCHEMA. At most
 one such warning is issued for each table in the changeset.</p>
 
-<p>For each change for which there is a compatible table, an attempt is made
-to modify the table contents according to the UPDATE, INSERT or DELETE
-change. If a change cannot be applied cleanly, the conflict handler
-function passed as the fifth argument to sqlite3changeset_apply() may be
-invoked. A description of exactly when the conflict handler is invoked for
+<p>For each change for which there is a compatible table, an attempt is made 
+to modify the table contents according to the UPDATE, INSERT or DELETE 
+change. If a change cannot be applied cleanly, the conflict handler 
+function passed as the fifth argument to sqlite3changeset_apply() may be 
+invoked. A description of exactly when the conflict handler is invoked for 
 each type of change is below.</p>
 
 <p>Unlike the xFilter argument, xConflict may not be passed NULL. The results
@@ -151,88 +166,88 @@ of passing anything other than a valid function pointer as the xConflict
 argument are undefined.</p>
 
 <p>Each time the conflict handler function is invoked, it must return one
-of <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_OMIT</a>, <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_ABORT</a> or
+of <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_OMIT</a>, <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_ABORT</a> or 
 <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>. SQLITE_CHANGESET_REPLACE may only be returned
 if the second argument passed to the conflict handler is either
 SQLITE_CHANGESET_DATA or SQLITE_CHANGESET_CONFLICT. If the conflict-handler
 returns an illegal value, any changes already made are rolled back and
-the call to sqlite3changeset_apply() returns SQLITE_MISUSE. Different
+the call to sqlite3changeset_apply() returns SQLITE_MISUSE. Different 
 actions are taken by sqlite3changeset_apply() depending on the value
 returned by each invocation of the conflict-handler function. Refer to
-the documentation for the three
+the documentation for the three 
 <a href="../session/c_changeset_abort.html">available return values</a> for details.</p>
 
 <p><dl>
 <dt>DELETE Changes<dd>
-For each DELETE change, this function checks if the target database
-contains a row with the same primary key value (or values) as the
-original row values stored in the changeset. If it does, and the values
-stored in all non-primary key columns also match the values stored in
-the changeset the row is deleted from the target database.</p>
+  For each DELETE change, the function checks if the target database 
+  contains a row with the same primary key value (or values) as the 
+  original row values stored in the changeset. If it does, and the values 
+  stored in all non-primary key columns also match the values stored in 
+  the changeset the row is deleted from the target database.</p>
 
-<p>If a row with matching primary key values is found, but one or more of
-the non-primary key fields contains a value different from the original
-row value stored in the changeset, the conflict-handler function is
-invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_DATA</a> as the second argument. If the
-database table has more columns than are recorded in the changeset,
-only the values of those non-primary key fields are compared against
-the current database contents - any trailing database table columns
-are ignored.</p>
+<p>  If a row with matching primary key values is found, but one or more of
+  the non-primary key fields contains a value different from the original
+  row value stored in the changeset, the conflict-handler function is
+  invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_DATA</a> as the second argument. If the
+  database table has more columns than are recorded in the changeset,
+  only the values of those non-primary key fields are compared against
+  the current database contents - any trailing database table columns
+  are ignored.</p>
 
-<p>If no row with matching primary key values is found in the database,
-the conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a>
-passed as the second argument.</p>
+<p>  If no row with matching primary key values is found in the database,
+  the conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a>
+  passed as the second argument.</p>
 
-<p>If the DELETE operation is attempted, but SQLite returns SQLITE_CONSTRAINT
-(which can only happen if a foreign key constraint is violated), the
-conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a>
-passed as the second argument. This includes the case where the DELETE
-operation is attempted because an earlier call to the conflict handler
-function returned <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.</p>
+<p>  If the DELETE operation is attempted, but SQLite returns SQLITE_CONSTRAINT
+  (which can only happen if a foreign key constraint is violated), the
+  conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a>
+  passed as the second argument. This includes the case where the DELETE
+  operation is attempted because an earlier call to the conflict handler
+  function returned <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.</p>
 
 <p><dt>INSERT Changes<dd>
-For each INSERT change, an attempt is made to insert the new row into
-the database. If the changeset row contains fewer fields than the
-database table, the trailing fields are populated with their default
-values.</p>
+  For each INSERT change, an attempt is made to insert the new row into
+  the database. If the changeset row contains fewer fields than the
+  database table, the trailing fields are populated with their default
+  values.</p>
 
-<p>If the attempt to insert the row fails because the database already
-contains a row with the same primary key values, the conflict handler
-function is invoked with the second argument set to
-<a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONFLICT</a>.</p>
+<p>  If the attempt to insert the row fails because the database already 
+  contains a row with the same primary key values, the conflict handler
+  function is invoked with the second argument set to 
+  <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONFLICT</a>.</p>
 
-<p>If the attempt to insert the row fails because of some other constraint
-violation (e.g. NOT NULL or UNIQUE), the conflict handler function is
-invoked with the second argument set to <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a>.
-This includes the case where the INSERT operation is re-attempted because
-an earlier call to the conflict handler function returned
-<a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.</p>
+<p>  If the attempt to insert the row fails because of some other constraint
+  violation (e.g. NOT NULL or UNIQUE), the conflict handler function is 
+  invoked with the second argument set to <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a>.
+  This includes the case where the INSERT operation is re-attempted because 
+  an earlier call to the conflict handler function returned 
+  <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.</p>
 
 <p><dt>UPDATE Changes<dd>
-For each UPDATE change, this function checks if the target database
-contains a row with the same primary key value (or values) as the
-original row values stored in the changeset. If it does, and the values
-stored in all modified non-primary key columns also match the values
-stored in the changeset the row is updated within the target database.</p>
+  For each UPDATE change, the function checks if the target database 
+  contains a row with the same primary key value (or values) as the 
+  original row values stored in the changeset. If it does, and the values 
+  stored in all modified non-primary key columns also match the values
+  stored in the changeset the row is updated within the target database.</p>
 
-<p>If a row with matching primary key values is found, but one or more of
-the modified non-primary key fields contains a value different from an
-original row value stored in the changeset, the conflict-handler function
-is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_DATA</a> as the second argument. Since
-UPDATE changes only contain values for non-primary key fields that are
-to be modified, only those fields need to match the original values to
-avoid the SQLITE_CHANGESET_DATA conflict-handler callback.</p>
+<p>  If a row with matching primary key values is found, but one or more of
+  the modified non-primary key fields contains a value different from an
+  original row value stored in the changeset, the conflict-handler function
+  is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_DATA</a> as the second argument. Since
+  UPDATE changes only contain values for non-primary key fields that are
+  to be modified, only those fields need to match the original values to
+  avoid the SQLITE_CHANGESET_DATA conflict-handler callback.</p>
 
-<p>If no row with matching primary key values is found in the database,
-the conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a>
-passed as the second argument.</p>
+<p>  If no row with matching primary key values is found in the database,
+  the conflict-handler function is invoked with <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_NOTFOUND</a>
+  passed as the second argument.</p>
 
-<p>If the UPDATE operation is attempted, but SQLite returns
-SQLITE_CONSTRAINT, the conflict-handler function is invoked with
-<a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a> passed as the second argument.
-This includes the case where the UPDATE operation is attempted after
-an earlier call to the conflict handler function returned
-<a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.
+<p>  If the UPDATE operation is attempted, but SQLite returns 
+  SQLITE_CONSTRAINT, the conflict-handler function is invoked with 
+  <a href="../session/c_changeset_conflict.html">SQLITE_CHANGESET_CONSTRAINT</a> passed as the second argument.
+  This includes the case where the UPDATE operation is attempted after 
+  an earlier call to the conflict handler function returned
+  <a href="../session/c_changeset_abort.html">SQLITE_CHANGESET_REPLACE</a>.  
 </dl></p>
 
 <p>It is safe to execute SQL statements, including those that write to the
@@ -240,11 +255,21 @@ table that the callback related to, from within the xConflict callback.
 This can be used to further customize the applications conflict
 resolution strategy.</p>
 
-<p>All changes made by this function are enclosed in a savepoint transaction.
+<p>All changes made by these functions are enclosed in a savepoint transaction.
 If any other error (aside from a constraint failure when attempting to
 write to the target database) occurs, then the savepoint transaction is
-rolled back, restoring the target database to its original state, and an
-SQLite error code returned.
+rolled back, restoring the target database to its original state, and an 
+SQLite error code returned.</p>
+
+<p>If the output parameters (ppRebase) and (pnRebase) are non-NULL and
+the input is a changeset (not a patchset), then sqlite3changeset_apply_v2()
+may set (*ppRebase) to point to a "rebase" that may be used with the 
+sqlite3_rebaser APIs buffer before returning. In this case (*pnRebase)
+is set to the size of the buffer in bytes. It is the responsibility of the
+caller to eventually free any such buffer using sqlite3_free(). The buffer
+is only allocated and populated if one or more conflicts were encountered
+while applying the patchset. See comments surrounding the sqlite3_rebaser
+APIs for further details.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

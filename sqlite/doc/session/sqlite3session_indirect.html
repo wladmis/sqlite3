@@ -97,10 +97,10 @@ Each change recorded by a session object is marked as either direct or
 indirect. A change is marked as indirect if either:</p>
 
 <p><ul>
-<li> The session object "indirect" flag is set when the change is
-made, or
-<li> The change is made by an SQL trigger or foreign key action
-instead of directly as a result of a users SQL statement.
+  <li> The session object "indirect" flag is set when the change is
+       made, or
+  <li> The change is made by an SQL trigger or foreign key action 
+       instead of directly as a result of a users SQL statement.
 </ul></p>
 
 <p>If a single row is affected by more than one operation within a session,
@@ -111,10 +111,10 @@ for an indirect change above, or direct otherwise.</p>
 flag.  If the second argument passed to this function is zero, then the
 indirect flag is cleared. If it is greater than zero, the indirect flag
 is set. Passing a value less than zero does not modify the current value
-of the indirect flag, and may be used to query the current state of the
+of the indirect flag, and may be used to query the current state of the 
 indirect flag for the specified session object.</p>
 
-<p>The return value indicates the final state of the indirect flag: 0 if
+<p>The return value indicates the final state of the indirect flag: 0 if 
 it is clear, or 1 if it is set.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

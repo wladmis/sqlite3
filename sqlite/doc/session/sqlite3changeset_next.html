@@ -104,12 +104,12 @@ is not empty, the first call to this function advances the iterator to
 point to the first change in the changeset. Each subsequent call advances
 the iterator to point to the next change in the changeset (if any). If
 no error occurs and the iterator points to a valid change after a call
-to sqlite3changeset_next() has advanced it, SQLITE_ROW is returned.
+to sqlite3changeset_next() has advanced it, SQLITE_ROW is returned. 
 Otherwise, if all changes in the changeset have already been visited,
 SQLITE_DONE is returned.</p>
 
-<p>If an error occurs, an SQLite error code is returned. Possible error
-codes include SQLITE_CORRUPT (if the changeset buffer is corrupt) or
+<p>If an error occurs, an SQLite error code is returned. Possible error 
+codes include SQLITE_CORRUPT (if the changeset buffer is corrupt) or 
 SQLITE_NOMEM.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

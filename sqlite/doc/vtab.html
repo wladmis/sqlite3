@@ -288,7 +288,8 @@ the dbstat virtual table in the build.)
 <p>A virtual table is eponymous if its <a href="vtab.html#xcreate">xCreate</a> method is the exact same
 function as the <a href="vtab.html#xconnect">xConnect</a> method, or if the <a href="vtab.html#xcreate">xCreate</a> method is NULL.
 The <a href="vtab.html#xcreate">xCreate</a> method is called when a virtual table is first created
-using the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.  The <a href="vtab.html#xconnect">xConnect</a> method whenever
+using the <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.  The <a href="vtab.html#xconnect">xConnect</a> method 
+is invoked whenever
 a database connection attaches to or reparses a schema. When these two methods
 are the same, that indicates that the virtual table has no persistent
 state that needs to be created and destroyed.

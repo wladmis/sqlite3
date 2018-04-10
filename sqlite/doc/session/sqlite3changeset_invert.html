@@ -101,9 +101,9 @@ changeset to a database reverses the effects of applying the uninverted
 changeset. Specifically:</p>
 
 <p><ul>
-<li> Each DELETE change is changed to an INSERT, and
-<li> Each INSERT change is changed to a DELETE, and
-<li> For each UPDATE change, the old.* and new.* values are exchanged.
+  <li> Each DELETE change is changed to an INSERT, and
+  <li> Each INSERT change is changed to a DELETE, and
+  <li> For each UPDATE change, the old.* and new.* values are exchanged.
 </ul></p>
 
 <p>This function does not change the order in which changes appear within
@@ -115,7 +115,7 @@ SQLITE_OK is returned. If an error occurs, both *pnOut and *ppOut are
 zeroed and an SQLite error code returned.</p>
 
 <p>It is the responsibility of the caller to eventually call sqlite3_free()
-on the *ppOut pointer to free the buffer allocation following a successful
+on the *ppOut pointer to free the buffer allocation following a successful 
 call to this function.</p>
 
 <p>WARNING/TODO: This function currently assumes that the input is a valid

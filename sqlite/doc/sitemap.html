@@ -132,9 +132,11 @@ Other Documentation Indices:
 <li><a href="threadsafe.html">Applications &#151; Using SQLite In Multi Threaded</a></li>
 <li><b><a href="whentouse.html">Appropriate Uses For SQLite</a></b></li>
 <li><b><a href="arch.html">Architecture of SQLite</a></b></li>
+<li><a href="sqlar.html">Archive Files &#151; SQLite</a></li>
 <li><a href="https://sqlite.org/sqlar/">Archiver (sqlar.exe) &#151; SQLite</a></li>
 <li><a href="np1queryprob.html">Are Efficient In SQLite &#151; Many Small Queries</a></li>
 <li><a href="faq.html">Asked Questions &#151; SQLite Frequently</a></li>
+<li><a href="assert.html">assert() In SQLite &#151; The Use Of</a></li>
 <li><a href="asyncvfs.html">Asynchronous I/O Module For SQLite &#151; An</a></li>
 <li><b><a href="atomiccommit.html">Atomic Commit In SQLite</a></b></li>
 <li><a href="autoinc.html">Autoincrement &#151; SQLite</a></li>
@@ -146,6 +148,7 @@ Other Documentation Indices:
 <li><b><a href="books.html">Books About SQLite</a></b></li>
 <li><a href="privatebranch.html">Branches Of SQLite &#151; Maintaining Private</a></li>
 <li><a href="custombuild.html">Builds Of SQLite &#151; Custom</a></li>
+<li><a href="printf.html">Built in printf() &#151; SQLite's</a></li>
 <li><a href="opcode.html">Bytecode Engine &#151; The SQLite</a></li>
 <li><b><a href="capi3ref.html">C/C++ API Reference</a></b></li>
 <li><a href="cintro.html">C/C++ Interface &#151; An Introduction To The SQLite</a></li>
@@ -161,6 +164,7 @@ Other Documentation Indices:
 <li><a href="formatchng.html">Changes in SQLite &#151; File Format</a></li>
 <li><b><a href="withoutrowid.html">Clustered Indexes and the WITHOUT ROWID Optimization</a></b></li>
 <li><a href="getthecode.html">Code &#151; How To Download Canonical SQLite Source</a></li>
+<li><b><a href="codeofconduct.html">Code Of Conduct</a></b></li>
 <li><a href="whyc.html">Coded In C &#151; Why Is SQLite</a></li>
 <li><a href="rescode.html">Codes &#151; Result and Error</a></li>
 <li><b><a href="cli.html">Command Line Shell For SQLite</a></b></li>
@@ -170,6 +174,7 @@ Other Documentation Indices:
 <li><b><a href="compile.html">Compile time Options</a></b></li>
 <li><a href="completion.html">COMPLETION() Table Valued Function &#151; The</a></li>
 <li><a href="lockingv3.html">Concurrency In SQLite Version 3 &#151; File Locking And</a></li>
+<li><a href="codeofconduct.html">Conduct &#151; Code Of</a></li>
 <li><a href="zeroconf.html">Configuration &#151; Zero</a></li>
 <li><a href="conflict.html">Conflict Resolution in SQLite &#151; Constraint</a></li>
 <li><a href="consortium.html">Consortium &#151; SQLite</a></li>
@@ -239,6 +244,7 @@ Other Documentation Indices:
 <li><b><a href="formatchng.html">File Format Changes in SQLite</a></b></li>
 <li><b><a href="lockingv3.html">File Locking And Concurrency In SQLite Version 3</a></b></li>
 <li><a href="shortnames.html">Filenames &#151; 8+3</a></li>
+<li><a href="sqlar.html">Files &#151; SQLite Archive</a></li>
 <li><a href="tempfiles.html">Files Used By SQLite &#151; Temporary</a></li>
 <li><a href="fasterthanfs.html">Filesystem &#151; 35% Faster Than The</a></li>
 <li><a href="footprint.html">Footprint &#151; SQLite Library</a></li>
@@ -321,6 +327,7 @@ Other Documentation Indices:
 <li><a href="wal.html">Logging &#151; Write Ahead</a></li>
 <li><b><a href="lts.html">Long Term Support</a></b></li>
 <li><b><a href="privatebranch.html">Maintaining Private Branches Of SQLite</a></b></li>
+<li><a href="qmplan.html">Management &#151; Quality</a></li>
 <li><b><a href="np1queryprob.html">Many Small Queries Are Efficient In SQLite</a></b></li>
 <li><a href="sitemap.html">Map &#151; SQLite Site</a></li>
 <li><a href="mmap.html">Mapped I/O &#151; Memory</a></li>
@@ -367,10 +374,12 @@ Other Documentation Indices:
 <li><b><a href="bindptr.html">Pointer Passing Interfaces</a></b></li>
 <li><b><a href="psow.html">Powersafe Overwrite</a></b></li>
 <li><b><a href="pragma.html">Pragma statements supported by SQLite</a></b></li>
+<li><a href="printf.html">printf() &#151; SQLite's Built in</a></li>
 <li><a href="privatebranch.html">Private Branches Of SQLite &#151; Maintaining</a></li>
 <li><a href="prosupport.html">Pro Support &#151; SQLite</a></li>
 <li><a href="dbhash.html">Program &#151; The dbhash.exe Utility</a></li>
 <li><a href="sqlanalyze.html">Program &#151; The sqlite3_analyzer.exe Utility</a></li>
+<li><b><a href="qmplan.html">Quality Management</a></b></li>
 <li><a href="np1queryprob.html">Queries Are Efficient In SQLite &#151; Many Small</a></li>
 <li><b><a href="lang.html">Query Language Understood by SQLite</a></b></li>
 <li><a href="optoverview.html">Query Optimizer Overview &#151; The SQLite</a></li>
@@ -413,6 +422,7 @@ Other Documentation Indices:
 <li><b><a href="omitted.html">SQL Features That SQLite Does Not Implement</a></b></li>
 <li><a href="deterministic.html">SQL Functions &#151; Deterministic</a></li>
 <li><b><a href="sqldiff.html">sqldiff.exe: Database Difference Utility</a></b></li>
+<li><b><a href="sqlar.html">SQLite Archive Files</a></b></li>
 <li><b><a href="https://sqlite.org/sqlar/">SQLite Archiver (sqlar.exe)</a></b></li>
 <li><b><a href="appfileformat.html">SQLite As An Application File Format</a></b></li>
 <li><b><a href="autoinc.html">SQLite Autoincrement</a></b></li>
@@ -445,6 +455,7 @@ Other Documentation Indices:
 <li><b><a href="support.html">SQLite Support Options</a></b></li>
 <li><b><a href="unlock_notify.html">SQLite Unlock Notify API</a></b></li>
 <li><b><a href="version3.html">SQLite Version 3 Overview</a></b></li>
+<li><b><a href="printf.html">SQLite's Built in printf()</a></b></li>
 <li><a href="sqlanalyze.html">sqlite3_analyzer.exe Utility Program &#151; The</a></li>
 <li><b><a href="onefile.html">SQLite: Single File Database</a></b></li>
 <li><a href="affcase1.html">SQLite? &#151; What If OpenDocument Used</a></li>
@@ -505,6 +516,7 @@ Other Documentation Indices:
 <li><b><a href="stmt.html">The SQLITE_STMT Virtual Table</a></b></li>
 <li><b><a href="tclsqlite.html">The Tcl interface to the SQLite library</a></b></li>
 <li><b><a href="unionvtab.html">The UNION Virtual Table</a></b></li>
+<li><b><a href="assert.html">The Use Of assert() In SQLite</a></b></li>
 <li><b><a href="vdbe.html">The Virtual Database Engine of SQLite</a></b></li>
 <li><b><a href="vtab.html">The Virtual Table Mechanism Of SQLite</a></b></li>
 <li><a href="threadsafe.html">Threaded Applications &#151; Using SQLite In Multi</a></li>
@@ -517,6 +529,7 @@ Other Documentation Indices:
 <li><a href="unionvtab.html">UNION Virtual Table &#151; The</a></li>
 <li><a href="unlock_notify.html">Unlock Notify API &#151; SQLite</a></li>
 <li><a href="cpu.html">Usage in SQLite &#151; Measuring and Reducing CPU</a></li>
+<li><a href="assert.html">Use Of assert() In SQLite &#151; The</a></li>
 <li><a href="tempfiles.html">Used By SQLite &#151; Temporary Files</a></li>
 <li><a href="affcase1.html">Used SQLite? &#151; What If OpenDocument</a></li>
 <li><a href="famous.html">Users Of SQLite &#151; Well Known</a></li>

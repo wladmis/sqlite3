@@ -162,6 +162,9 @@ Appendix A: Comparison with FTS3/4
 <div class="fancy-toc2"><a href="#_summary_of_technical_differences_">
 Summary of Technical Differences
 </a></div>
+<div class="fancy-toc1"><a href="#appendix_b">
+Appendix B: Shadow tables created by FTS5
+</a></div>
 </div>
 </div>
 <script>
@@ -2659,4 +2662,41 @@ using FTS5.
        the amount of processing that may take place within any given 
        INSERT, UPDATE or DELETE operation.
 </p></li></ul>
+
+<a name="appendix_b"></a>
+<h1 id="appendix_b" nonumber="1" tags="fts5 shadow tables">
+  Appendix B: Shadow tables created by FTS5
+</h1>
+
+<p>
+When an FTS5 virtual table is created in a database, between 3 and 5 real
+tables are created in the database. These are known as "shadow" tables, and are
+used by the virtual table module to store persistent data. They should not
+be accessed directly by the user. Many other virtual table modules, including
+<a href="fts3.html">FTS3</a> and <a href="rtree.html">rtree</a>, also create and use shadow tables.
+
+</p><p>FTS5 creates the following shadow tables. In each case the actual table name
+is based on the name of the FTS5 virtual table (in the following table, replace
+&lt;name&gt; with the name of the virtual table to find the actual shadow
+table name).
+
+</p><table striped="1" style="margin:1em auto; width:80%; border-spacing:0">
+<tr style="text-align:left"><th>Table&nbsp;Name</th><th>Contents
+</th></tr><tr style="text-align:left;background-color:#DDDDDD"><td>&lt;name&gt;_data</td><td> This table contains most of the full-text index data.
+</td></tr><tr style="text-align:left"><td>&lt;name&gt;_idx</td><td> This table contains the remainder of the full-text
+index data. It is almost always much smaller than the &lt;name&gt;_data table.
+</td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>&lt;name&gt;_config</td><td> Contains the values of persistent
+configuration parameters.
+</td></tr><tr style="text-align:left"><td>&lt;name&gt;_content</td><td> Contains the actual data inserted into the 
+FTS5 table. This shadow table is not present for 
+<a href="fts5.html#contentless_tables">contentless</a> or 
+<a href="fts5.html#external_content_tables">external content</a> FTS5 tables.
+</td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>&lt;name&gt;_docsize</td><td> Contains the size of each column of each
+row in the virtual table in tokens. This shadow table is not present if 
+the <a href="fts5.html#the_columnsize_option">"columnsize" option</a> is set to 0.
+</td></tr></table>
+
+
+
+
 

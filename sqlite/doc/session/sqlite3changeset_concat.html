@@ -100,24 +100,26 @@ return false;
   void **ppOut                    /* OUT: Buffer containing output changeset */
 );
 </pre></blockquote><p>
-This function is used to concatenate two changesets, A and B, into a
+This function is used to concatenate two changesets, A and B, into a 
 single changeset. The result is a changeset equivalent to applying
-changeset A followed by changeset B.</p>
+changeset A followed by changeset B. </p>
 
-<p>This function combines the two input changesets using an
+<p>This function combines the two input changesets using an 
 sqlite3_changegroup object. Calling it produces similar results as the
 following code fragment:</p>
 
-<p>sqlite3_changegroup *pGrp;
-rc = sqlite3_changegroup_new(&pGrp);
-if( rc==SQLITE_OK ) rc = sqlite3changegroup_add(pGrp, nA, pA);
-if( rc==SQLITE_OK ) rc = sqlite3changegroup_add(pGrp, nB, pB);
-if( rc==SQLITE_OK ){
-rc = sqlite3changegroup_output(pGrp, pnOut, ppOut);
-}else{
-*ppOut = 0;
-*pnOut = 0;
-}</p>
+<p><pre>
+  sqlite3_changegroup *pGrp;
+  rc = sqlite3_changegroup_new(&pGrp);
+  if( rc==SQLITE_OK ) rc = sqlite3changegroup_add(pGrp, nA, pA);
+  if( rc==SQLITE_OK ) rc = sqlite3changegroup_add(pGrp, nB, pB);
+  if( rc==SQLITE_OK ){
+    rc = sqlite3changegroup_output(pGrp, pnOut, ppOut);
+  }else{
+    *ppOut = 0;
+    *pnOut = 0;
+  }
+</pre></p>
 
 <p>Refer to the sqlite3_changegroup documentation below for details.
 </p><p>See also lists of

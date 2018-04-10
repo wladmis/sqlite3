@@ -97,17 +97,17 @@ return false;
 );
 </pre></blockquote><p>
 If argument zTab is not NULL, then it is the name of a table to attach
-to the session object passed as the first argument. All subsequent changes
-made to the table while the session object is enabled will be recorded. See
+to the session object passed as the first argument. All subsequent changes 
+made to the table while the session object is enabled will be recorded. See 
 documentation for <a href="../session/sqlite3session_changeset.html">sqlite3session_changeset()</a> for further details.</p>
 
 <p>Or, if argument zTab is NULL, then changes are recorded for all tables
-in the database. If additional tables are added to the database (by
-executing "CREATE TABLE" statements) after this call is made, changes for
+in the database. If additional tables are added to the database (by 
+executing "CREATE TABLE" statements) after this call is made, changes for 
 the new tables are also recorded.</p>
 
 <p>Changes can only be recorded for tables that have a PRIMARY KEY explicitly
-defined as part of their CREATE TABLE statement. It does not matter if the
+defined as part of their CREATE TABLE statement. It does not matter if the 
 PRIMARY KEY is an "INTEGER PRIMARY KEY" (rowid alias) or not. The PRIMARY
 KEY may consist of a single column, or may be a composite key.</p>
 
@@ -118,29 +118,29 @@ no changes will be recorded in either of these scenarios.</p>
 <p>Changes are not recorded for individual rows that have NULL values stored
 in one or more of their PRIMARY KEY columns.</p>
 
-<p>SQLITE_OK is returned if the call completes without error. Or, if an error
+<p>SQLITE_OK is returned if the call completes without error. Or, if an error 
 occurs, an SQLite error code (e.g. SQLITE_NOMEM) is returned.</p>
 
 <p><h3>Special sqlite_stat1 Handling</h3></p>
 
-<p>As of SQLite version 3.22.0, the "sqlite_stat1" table is an exception to
+<p>As of SQLite version 3.22.0, the "sqlite_stat1" table is an exception to 
 some of the rules above. In SQLite, the schema of sqlite_stat1 is:
-<pre>
-&nbsp;     CREATE TABLE sqlite_stat1(tbl,idx,stat)
-</pre></p>
+ <pre>
+ &nbsp;     CREATE TABLE sqlite_stat1(tbl,idx,stat)  
+ </pre></p>
 
-<p>Even though sqlite_stat1 does not have a PRIMARY KEY, changes are
-recorded for it as if the PRIMARY KEY is (tbl,idx). Additionally, changes
+<p>Even though sqlite_stat1 does not have a PRIMARY KEY, changes are 
+recorded for it as if the PRIMARY KEY is (tbl,idx). Additionally, changes 
 are recorded for rows for which (idx IS NULL) is true. However, for such
 rows a zero-length blob (SQL value X'') is stored in the changeset or
 patchset instead of a NULL value. This allows such changesets to be
 manipulated by legacy implementations of sqlite3changeset_invert(),
 concat() and similar.</p>
 
-<p>The sqlite3changeset_apply() function automatically converts the
+<p>The sqlite3changeset_apply() function automatically converts the 
 zero-length blob back to a NULL value when updating the sqlite_stat1
 table. However, if the application calls sqlite3changeset_new(),
-sqlite3changeset_old() or sqlite3changeset_conflict on a changeset
+sqlite3changeset_old() or sqlite3changeset_conflict on a changeset 
 iterator directly (including on a changeset iterator passed to a
 conflict-handler callback) then the X'' value is returned. The application
 must translate X'' to NULL itself if required.</p>

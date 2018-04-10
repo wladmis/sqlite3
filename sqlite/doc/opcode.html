@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.22.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=4e68a76247467'>4e68a76247467</a> dated 2018-01-22.
+ version 3.23.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=736b53f57f70b'>736b53f57f70b</a> dated 2018-04-02.
 
 
 
@@ -417,20 +417,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 167
+<p>There are currently 168
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/9e7f70b7ba43c3fbf6c13960f2865278d033852c">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/261f44a76689fd3928cd42168486905a1bb8df97">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.22.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=4e68a76247467'>4e68a76247467</a> dated 2018-01-22.
+ version 3.23.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=736b53f57f70b'>736b53f57f70b</a> dated 2018-04-02.
 
 <a name="codes"></a>
 
@@ -1174,6 +1174,24 @@ file, not the main database file.</p>
 <a name="IsNull"></a>IsNull
 <td>Jump to P2 if the value in register P1 is NULL.</td></tr>
 <tr><td valign="top" align="center">
+<a name="IsTrue"></a>IsTrue
+<td>This opcode implements the IS TRUE, IS FALSE, IS NOT TRUE, and
+IS NOT FALSE operators.</p>
+
+<p>Interpret the value in register P1 as a boolean value.  Store that
+boolean (a 0 or 1) in register P2.  Or if the value in register P1 is
+NULL, then the P3 is stored in register P2.  Invert the answer if P4
+is 1.</p>
+
+<p>The logic is summarized like this:</p>
+
+<p><ul>
+<li> If P3==0 and P4==0  then  r&#91;P2&#93 := r&#91;P1&#93 IS TRUE
+<li> If P3==1 and P4==1  then  r&#91;P2&#93 := r&#91;P1&#93 IS FALSE
+<li> If P3==0 and P4==1  then  r&#91;P2&#93 := r&#91;P1&#93 IS NOT TRUE
+<li> If P3==1 and P4==0  then  r&#91;P2&#93 := r&#91;P1&#93 IS NOT FALSE
+</ul></td></tr>
+<tr><td valign="top" align="center">
 <a name="JournalMode"></a>JournalMode
 <td>Change the journal mode of database P1 to P3. P3 must be one of the
 PAGER_JOURNALMODE_XXX values. If changing between the various rollback
@@ -1431,7 +1449,7 @@ pointing.</p>
 <p>P2 is the column number for the argument to the sqlite_offset() function.
 This opcode does not use P2 itself, but the P2 value is used by the
 code generator.  The P1, P2, and P3 operands to this opcode are the
-as as for <a href="opcode.html#Column">Column</a>.</p>
+same as for <a href="opcode.html#Column">Column</a>.</p>
 
 <p>This opcode is only available if SQLite is compiled with the
 -DSQLITE_ENABLE_OFFSET_SQL_FUNC option.</td></tr>

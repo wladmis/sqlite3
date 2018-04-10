@@ -93,16 +93,16 @@ return false;
 </div>
 <a href="intro.html"><h2>Session Module C Interface</h2></a><h2>Test if a changeset has recorded any changes.</h2><blockquote><pre>int sqlite3session_isempty(sqlite3_session *pSession);
 </pre></blockquote><p>
-Return non-zero if no changes to attached tables have been recorded by
-the session object passed as the first argument. Otherwise, if one or
+Return non-zero if no changes to attached tables have been recorded by 
+the session object passed as the first argument. Otherwise, if one or 
 more changes have been recorded, return zero.</p>
 
 <p>Even if this function returns zero, it is possible that calling
 <a href="../session/sqlite3session_changeset.html">sqlite3session_changeset()</a> on the session handle may still return a
-changeset that contains no changes. This can happen when a row in
-an attached table is modified and then later on the original values
+changeset that contains no changes. This can happen when a row in 
+an attached table is modified and then later on the original values 
 are restored. However, if this function returns non-zero, then it is
-guaranteed that a call to sqlite3session_changeset() will return a
+guaranteed that a call to sqlite3session_changeset() will return a 
 changeset containing zero changes.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

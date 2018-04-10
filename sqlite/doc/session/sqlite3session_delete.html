@@ -93,13 +93,13 @@ return false;
 </div>
 <a href="intro.html"><h2>Session Module C Interface</h2></a><h2>Delete A Session Object</h2><blockquote><pre>void sqlite3session_delete(sqlite3_session *pSession);
 </pre></blockquote><p>
-Delete a session object previously allocated using
+Delete a session object previously allocated using 
 <a href="../session/sqlite3session_create.html">sqlite3session_create()</a>. Once a session object has been deleted, the
 results of attempting to use pSession with any other session module
 function are undefined.</p>
 
 <p>Session objects must be deleted before the database handle to which they
-are attached is closed. Refer to the documentation for
+are attached is closed. Refer to the documentation for 
 <a href="../session/sqlite3session_create.html">sqlite3session_create()</a> for details.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

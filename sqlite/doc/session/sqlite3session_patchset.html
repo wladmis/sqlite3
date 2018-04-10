@@ -100,19 +100,19 @@ return false;
 The differences between a patchset and a changeset are that:</p>
 
 <p><ul>
-<li> DELETE records consist of the primary key fields only. The
-original values of other fields are omitted.
-<li> The original values of any modified fields are omitted from
-UPDATE records.
+  <li> DELETE records consist of the primary key fields only. The 
+       original values of other fields are omitted.
+  <li> The original values of any modified fields are omitted from 
+       UPDATE records.
 </ul></p>
 
-<p>A patchset blob may be used with up to date versions of all
-sqlite3changeset_xxx API functions except for sqlite3changeset_invert(),
+<p>A patchset blob may be used with up to date versions of all 
+sqlite3changeset_xxx API functions except for sqlite3changeset_invert(), 
 which returns SQLITE_CORRUPT if it is passed a patchset. Similarly,
 attempting to use a patchset blob with old versions of the
-sqlite3changeset_xxx APIs also provokes an SQLITE_CORRUPT error.</p>
+sqlite3changeset_xxx APIs also provokes an SQLITE_CORRUPT error. </p>
 
-<p>Because the non-primary key "old.*" fields are omitted, no
+<p>Because the non-primary key "old.*" fields are omitted, no 
 SQLITE_CHANGESET_DATA conflicts can be detected or reported if a patchset
 is passed to the sqlite3changeset_apply() API. Other conflict types work
 in the same way as for changesets.</p>
