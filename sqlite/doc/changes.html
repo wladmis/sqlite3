@@ -105,6 +105,26 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_23_1"></a>
+<h3>2018-04-10 (3.23.1)</h3><p><ol class='lessindent'>
+<li> Fix two problems in the new <a href="optoverview.html#leftjoinreduction">LEFT JOIN strength reduction optimization</a>.
+     Tickets <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>
+     and <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>.
+<li> Fix misbehavior of the FTS5 xBestIndex method.  Ticket
+     <a href="https://sqlite.org/src/info/2b8aed9f7c9e61e8">2b8aed9f7c9e61e8</a>.
+<li> Fix a harmless reference to an uninitialized virtual machine register.
+     Ticket <a href="https://sqlite.org/src/info/093420fc0eb7cba7">093420fc0eb7cba7</a>.
+<li> Fix the <a href="cli.html">CLI</a> so that it builds with -DSQLITE_UNTESTABLE
+<li> Fix the <a href="https://sqlite.org/src/file/ext/misc/eval.c">eval.c</a> extension
+     so that it works with <a href="pragma.html#pragma_empty_result_callbacks">PRAGMA empty_result_callbacks=ON</a>.
+<li> Fix the <a href="series.html">generate_series</a> virtual table so that it correctly returns
+     no rows if any of its constraints are NULL.
+<li> Performance enhancements in the parser.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2018-04-10 17:39:29 4bb2294022060e61de7da5c227a69ccd846ba330e31626ebcd59a94efd148b3b"
+<li>SHA3-256 for sqlite3.c: 65750d1e506f416a0b0b9dd22d171379679c733e3460549754dc68c92705b5dc
+
+</ol></p>
 <a name="version_3_23_0"></a>
 <h3>2018-04-02 (3.23.0)</h3><p><ol class='lessindent'>
 <li> Add the <a href="c3ref/serialize.html">sqlite3_serialize()</a> and <a href="c3ref/deserialize.html">sqlite3_deserialize()</a> interfaces when
@@ -993,10 +1013,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.7.4 (2014-12-09):</b></p>
-
-<li>Bug fix: Add in a mutex that was omitted from the previous release.
-
 <p><b>Bug fixes backported into patch release 3.8.7.3 (2014-12-05):</b></p>
 
 <li>Bug fix: Ensure the cached KeyInfo objects (an internal abstraction not visible to the
@@ -1008,6 +1024,22 @@ with a home-baked pie.</center>
     NULL even if the column has a NOT NULL constraint.  Do not apply optimizations that
     assume the column is never NULL.  Ticket
     <a href="https://www.sqlite.org/src/info/6f2222d550f5b0ee7ed">6f2222d550f5b0ee7ed</a>.
+
+
+<p><b>Bug fixes backported into patch release 3.8.7.2 (2014-11-18):</b></p>
+
+<li>Enhance the <a href="lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
+    as the schema is unchanged.  Formerly, a ROLLBACK would cause all pending queries to
+    fail with an <a href="rescode.html#abort">SQLITE_ABORT</a> or <a href="rescode.html#abort_rollback">SQLITE_ABORT_ROLLBACK</a> error.  That error is still returned
+    if the ROLLBACK modifies the schema.
+<li>Bug fix: Make sure that NULL results from OP_Column are fully and completely NULL and
+    do not have the MEM_Ephem bit set.
+    Ticket <a href="http://www.sqlite.org/src/info/094d39a4c95ee4">094d39a4c95ee4</a>.
+<li>Bug fix:  The %c format in sqlite3_mprintf() is able to handle precisions greater than 70.
+<li>Bug fix:  Do not automatically remove the DISTINCT keyword from a SELECT that forms
+    the right-hand side of an IN operator since it is necessary if the SELECT also 
+    contains a LIMIT.
+    Ticket <a href="http://www.sqlite.org/src/info/db87229497">db87229497</a>.
 
 
 </ol></p>

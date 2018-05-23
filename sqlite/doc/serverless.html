@@ -91,10 +91,18 @@ return false;
 }
 </script>
 </div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+SQLite Is Serverless
+</div>
+</div>
 
 
 
-<h2>SQLite Is Serverless</h2>
+
+
+<h1 id="sqlite_is_serverless"><span>1. </span>SQLite Is Serverless</h1>
 
 <p>
 Most SQL database engines are implemented as a separate server process.
@@ -135,3 +143,57 @@ known to this author that allows multiple applications
 to access the same database at the same time. 
 </p>
 
+<h1 id="classic_serverless_vs_neo_serverless"><span>2. </span>Classic Serverless Vs. Neo-Serverless</h1>
+
+<p>
+<i>(This section was added on 2018-04-02)</i>
+
+</p><p>
+Recently, folks have begun to use the
+word "serverless" to mean something subtly different from its intended
+meaning in this document.  Here are two possible definitions of "serverless":
+
+</p><ol>
+<li><p>
+<b>Classic Serverless:</b>
+The database engine runs within the same process, thread, and address space
+as the application.  There is no message passing or network activity.
+
+</p></li><li><p>
+<b>Neo-Serverless:</b>
+The database engine runs in a separate namespace from the application,
+probably on a separate machine, but the database is provided as a
+turn-key service by the hosting provider, requires no management or
+administration by the application owners, and is so easy to use
+that the developers can think of the database as being serverless
+even if it really does use a server under the covers.
+</p></li></ol>
+
+<p>
+SQLite is an example of a classic serverless database engine.
+With SQLite, there are no other processes, threads, machines, or
+other mechanisms (apart from host computer OS and filesystem)
+to help provide database services or implementation.  There really
+is no server.
+
+</p><p>
+<a href="https://docs.microsoft.com/en-us/azure/cosmos-db/serverless-computing-database">Microsoft Azure Cosmo DB</a>
+and
+<a href="https://aws.amazon.com/s3/">Amazon S3</a>
+are examples of a neo-serverless databases.
+These database are implemented by server processes running separately
+in the cloud.
+But the servers are maintained and administered by the ISP, not by
+the application developer.
+Application developers just use the service.  Developers do not have to
+provision, configure, or manage database server instances, as all of that
+work is handled automatically by the service provider.  Database servers
+do in fact exist, they are just hidden from the developers.
+
+</p><p>
+It is important to understand these two different definitions for
+"serverless".
+When a database claims to be "serverless",
+be sure to discern whether they mean "classic serverless"
+or "neo-serverless".
+</p>

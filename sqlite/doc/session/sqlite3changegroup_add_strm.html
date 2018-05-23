@@ -120,7 +120,8 @@ int sqlite3changeset_apply_v2_strm(
     sqlite3_changeset_iter *p     /* Handle describing change and conflict */
   ),
   void *pCtx,                     /* First argument passed to xConflict */
-  void **ppRebase, int *pnRebase
+  void **ppRebase, int *pnRebase,
+  int flags
 );
 int sqlite3changeset_concat_strm(
   int (*xInputA)(void *pIn, void *pData, int *pnData),
@@ -173,6 +174,7 @@ corresponding non-streaming API functions:</p>
 <p><table border=1 style="margin-left:8ex;margin-right:8ex">
   <tr><th>Streaming function<th>Non-streaming equivalent</th>
   <tr><td>sqlite3changeset_apply_strm<td><a href="../session/sqlite3changeset_apply.html">sqlite3changeset_apply</a> 
+  <tr><td>sqlite3changeset_apply_strm_v2<td><a href="../session/sqlite3changeset_apply.html">sqlite3changeset_apply_v2</a> 
   <tr><td>sqlite3changeset_concat_strm<td><a href="../session/sqlite3changeset_concat.html">sqlite3changeset_concat</a> 
   <tr><td>sqlite3changeset_invert_strm<td><a href="../session/sqlite3changeset_invert.html">sqlite3changeset_invert</a> 
   <tr><td>sqlite3changeset_start_strm<td><a href="../session/sqlite3changeset_start.html">sqlite3changeset_start</a> 

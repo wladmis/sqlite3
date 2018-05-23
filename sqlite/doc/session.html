@@ -163,7 +163,8 @@ document.getElementById("listtab35").innerHTML = h;
 </style>
 <table id='listtab36' width='100%'></table>
 <script>
-var listitems36 = [{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_ABORT","s":0},
+var listitems36 = [{"u":"#SQLITE_CHANGESETAPPLY_NOSAVEPOINT","x":"SQLITE_CHANGESETAPPLY_NOSAVEPOINT","s":0},
+{"u":"#SQLITE_CHANGESET_ABORT","x":"SQLITE_CHANGESET_ABORT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONFLICT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_CONSTRAINT","s":0},
 {"u":"#SQLITE_CHANGESET_CONFLICT","x":"SQLITE_CHANGESET_DATA","s":0},
@@ -285,7 +286,22 @@ for(var i=0; i<listitems37.length; i++){
 document.getElementById("listtab37").innerHTML = h;
 </script>
 <hr>
-<a name="sqlite3_changegroup"></a>
+<a name="SQLITE_CHANGESETAPPLY_NOSAVEPOINT"></a>
+<h2>Flags for sqlite3changeset_apply_v2</h2><blockquote><pre>#define SQLITE_CHANGESETAPPLY_NOSAVEPOINT   0x0001
+</pre></blockquote><p>
+The following flags may passed via the 9th parameter to
+<a href="#sqlite3changeset_apply">sqlite3changeset_apply_v2</a> and <a href="#sqlite3changegroup_add_strm">sqlite3changeset_apply_v2_strm</a>:</p>
+
+<p><dl>
+<dt>SQLITE_CHANGESETAPPLY_NOSAVEPOINT <dd>
+  Usually, the sessions module encloses all operations performed by
+  a single call to apply_v2() or apply_v2_strm() in a <a href="lang_savepoint.html">SAVEPOINT</a>. The
+  SAVEPOINT is committed if the changeset or patchset is successfully
+  applied, or rolled back if an error occurs. Specifying this flag
+  causes the sessions module to omit this savepoint. In this case, if the
+  caller has an open transaction or savepoint when apply_v2() is called, 
+  it may revert the partially applied changeset by rolling it back.
+</p><hr><a name="sqlite3_changegroup"></a>
 <h2>Changegroup Handle</h2><blockquote><pre>typedef struct sqlite3_changegroup sqlite3_changegroup;
 </pre></blockquote><p>
 A changegroup is an object used to combine two or more 
@@ -1464,7 +1480,8 @@ int sqlite3changeset_apply_v2_strm(
     sqlite3_changeset_iter *p     /* Handle describing change and conflict */
   ),
   void *pCtx,                     /* First argument passed to xConflict */
-  void **ppRebase, int *pnRebase
+  void **ppRebase, int *pnRebase,
+  int flags
 );
 int sqlite3changeset_concat_strm(
   int (*xInputA)(void *pIn, void *pData, int *pnData),
@@ -1517,6 +1534,7 @@ corresponding non-streaming API functions:</p>
 <p><table border=1 style="margin-left:8ex;margin-right:8ex">
   <tr><th>Streaming function<th>Non-streaming equivalent</th>
   <tr><td>sqlite3changeset_apply_strm<td><a href="#sqlite3changeset_apply">sqlite3changeset_apply</a> 
+  <tr><td>sqlite3changeset_apply_strm_v2<td><a href="#sqlite3changeset_apply">sqlite3changeset_apply_v2</a> 
   <tr><td>sqlite3changeset_concat_strm<td><a href="#sqlite3changeset_concat">sqlite3changeset_concat</a> 
   <tr><td>sqlite3changeset_invert_strm<td><a href="#sqlite3changeset_invert">sqlite3changeset_invert</a> 
   <tr><td>sqlite3changeset_start_strm<td><a href="#sqlite3changeset_start">sqlite3changeset_start</a> 
@@ -1626,7 +1644,8 @@ int sqlite3changeset_apply_v2(
     sqlite3_changeset_iter *p     /* Handle describing change and conflict */
   ),
   void *pCtx,                     /* First argument passed to xConflict */
-  void **ppRebase, int *pnRebase
+  void **ppRebase, int *pnRebase, /* OUT: Rebase data */
+  int flags                       /* Combination of SESSION_APPLY_* flags */
 );
 </pre></blockquote><p>
 Apply a changeset or patchset to a database. These functions attempt to
@@ -1775,6 +1794,13 @@ is set to the size of the buffer in bytes. It is the responsibility of the
 caller to eventually free any such buffer using sqlite3_free(). The buffer
 is only allocated and populated if one or more conflicts were encountered
 while applying the patchset. See comments surrounding the sqlite3_rebaser
-APIs for further details.
+APIs for further details.</p>
+
+<p>The behavior of sqlite3changeset_apply_v2() and its streaming equivalent
+may be modified by passing a combination of
+<a href="#SQLITE_CHANGESETAPPLY_NOSAVEPOINT">supported flags</a> as the 9th parameter.</p>
+
+<p>Note that the sqlite3changeset_apply_v2() API is still <b>experimental</b>
+and therefore subject to change.
 </p><hr>
 

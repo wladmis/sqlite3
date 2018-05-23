@@ -112,6 +112,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#_two_processes_using_different_locking_protocols">2.3.  Two processes using different locking protocols</a></div>
 <div class="fancy-toc2"><a href="#_unlinking_or_renaming_a_database_file_while_in_use">2.4.  Unlinking or renaming a database file while in use</a></div>
 <div class="fancy-toc2"><a href="#_multiple_links_to_the_same_file">2.5.  Multiple links to the same file</a></div>
+<div class="fancy-toc2"><a href="#_carrying_an_open_database_connection_across_a_fork_">2.6.  Carrying an open database connection across a fork() </a></div>
 <div class="fancy-toc1"><a href="#_failure_to_sync">3.  Failure to sync</a></div>
 <div class="fancy-toc2"><a href="#_disk_drives_that_do_not_honor_sync_requests">3.1.  Disk drives that do not honor sync requests</a></div>
 <div class="fancy-toc2"><a href="#_disabling_sync_using_pragmas">3.2.  Disabling sync using PRAGMAs</a></div>
@@ -385,7 +386,25 @@ canonical name.  Prior to version 3.10.0, opening a database file
 through a symbolic link was similar to opening a database file
 that had multiple hard links and resulted in undefined behavior.</p>
 
-<h1 id="_failure_to_sync"><span>3. </span> Failure to sync</h1>
+<a name="fork"></a>
+
+<h2 id="_carrying_an_open_database_connection_across_a_fork_"><span>2.6. </span> Carrying an open database connection across a fork() </h2>
+
+<p> Do not open an SQLite database connection, then fork(), then try
+to use that database connection in the child process.  All kinds of
+locking problems will result and you can easily end up with a corrupt
+database.  SQLite is not designed to support that kind of behavior.
+Any database connection that is used in a child process must be opened
+in the child process, not inherited from the parent.
+
+</p><p> Do not even call <a href="c3ref/close.html">sqlite3_close()</a> on a database connection from a
+child process if the connection was opened in the parent.  It is safe
+to close the underlying file descriptor, but the <a href="c3ref/close.html">sqlite3_close()</a>
+interface might invoke cleanup activities that will delete content out
+from under the parent, leading to errors and perhaps even database
+corruption.
+
+</p><h1 id="_failure_to_sync"><span>3. </span> Failure to sync</h1>
 
 <p>In order to guarantee that database files are always consistent, SQLite
 will occasionally ask the operating system to flush all pending writes to

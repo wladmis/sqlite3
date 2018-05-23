@@ -1,0 +1,302 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link href="sqlite.css" rel="stylesheet">
+<title>Why SQLite Does Not Use Git</title>
+<!-- path= -->
+</head>
+<body>
+<div class=nosearch>
+<a href="index.html">
+<img class="logo" src="images/sqlite370_banner.gif" alt="SQLite" border="0">
+</a>
+<div><!-- IE hack to prevent disappearing logo --></div>
+<div class="tagline desktoponly">
+Small. Fast. Reliable.<br>Choose any three.
+</div>
+<div class="menu mainmenu">
+<ul>
+<li><a href="index.html">Home</a>
+<li class='mobileonly'><a href="javascript:void(0)" onclick='toggle_div("submenu")'>Menu</a>
+<li class='wideonly'><a href='about.html'>About</a>
+<li class='desktoponly'><a href="docs.html">Documentation</a>
+<li class='desktoponly'><a href="download.html">Download</a>
+<li class='wideonly'><a href='copyright.html'>License</a>
+<li class='desktoponly'><a href="support.html">Support</a>
+<li class='desktoponly'><a href="prosupport.html">Purchase</a>
+<li class='search' id='search_menubutton'>
+<a href="javascript:void(0)" onclick='toggle_search()'>Search</a>
+</ul>
+</div>
+<div class="menu submenu" id="submenu">
+<ul>
+<li><a href='about.html'>About</a>
+<li><a href='docs.html'>Documentation</a>
+<li><a href='download.html'>Download</a>
+<li><a href='support.html'>Support</a>
+<li><a href='prosupport.html'>Purchase</a>
+</ul>
+</div>
+<div class="searchmenu" id="searchmenu">
+<form method="GET" action="search">
+<select name="s" id="searchtype">
+<option value="d">Search Documentation</option>
+<option value="c">Search Changelog</option>
+</select>
+<input type="text" name="q" id="searchbox" value="">
+<input type="submit" value="Go">
+</form>
+</div>
+</div>
+<script>
+function toggle_div(nm) {
+var w = document.getElementById(nm);
+if( w.style.display=="block" ){
+w.style.display = "none";
+}else{
+w.style.display = "block";
+}
+}
+function toggle_search() {
+var w = document.getElementById("searchmenu");
+if( w.style.display=="block" ){
+w.style.display = "none";
+} else {
+w.style.display = "block";
+setTimeout(function(){
+document.getElementById("searchbox").focus()
+}, 30);
+}
+}
+function div_off(nm){document.getElementById(nm).style.display="none";}
+window.onbeforeunload = function(e){div_off("submenu");}
+/* Disable the Search feature if we are not operating from CGI, since */
+/* Search is accomplished using CGI and will not work without it. */
+if( !location.origin.match || !location.origin.match(/http/) ){
+document.getElementById("search_menubutton").style.display = "none";
+}
+/* Used by the Hide/Show button beside syntax diagrams, to toggle the */
+function hideorshow(btn,obj){
+var x = document.getElementById(obj);
+var b = document.getElementById(btn);
+if( x.style.display!='none' ){
+x.style.display = 'none';
+b.innerHTML='show';
+}else{
+x.style.display = '';
+b.innerHTML='hide';
+}
+return false;
+}
+</script>
+</div>
+<div class=fancy>
+<div class=nosearch>
+<div class="fancy_title">
+Why SQLite Does Not Use Git
+</div>
+<div class="fancy_toc">
+<a onclick="toggle_toc()">
+<span class="fancy_toc_mark" id="toc_mk">&#x25ba;</span>
+Table Of Contents
+</a>
+<div id="toc_sub"><div class="fancy-toc1"><a href="#introduction">1. Introduction</a></div>
+<div class="fancy-toc1"><a href="#a_few_reasons_why_sqlite_does_not_use_git">2. A Few Reasons Why SQLite Does Not Use Git</a></div>
+<div class="fancy-toc2"><a href="#see_also">2.1. See Also</a></div>
+<div class="fancy-toc1"><a href="#a_git_user_s_guide_to_accessing_sqlite_source_code">3. A Git-User's Guide To Accessing SQLite Source Code</a></div>
+<div class="fancy-toc2"><a href="#github_mirrors">3.1. GitHub Mirrors</a></div>
+<div class="fancy-toc2"><a href="#web_access">3.2. Web Access</a></div>
+<div class="fancy-toc2"><a href="#fossil_access">3.3. Fossil Access</a></div>
+</div>
+</div>
+<script>
+function toggle_toc(){
+var sub = document.getElementById("toc_sub")
+var mk = document.getElementById("toc_mk")
+if( sub.style.display!="block" ){
+sub.style.display = "block";
+mk.innerHTML = "&#x25bc;";
+} else {
+sub.style.display = "none";
+mk.innerHTML = "&#x25ba;";
+}
+}
+</script>
+</div>
+
+
+
+
+<h1 id="introduction"><span>1. </span>Introduction</h1>
+
+<p>
+SQLite does not use the
+<a href="https://git-scm.org">Git</a> version control system.
+SQLite uses
+<a href="https://fossil-scm.org/">Fossil</a> instead.
+Fossil and Git are both block-chain version-control systems.
+They are both "distributed".  They both store content as a 
+sequence of immutable check-ins identified by a cryptographic
+hash.  Git is wildly popular, to the point that many younger
+developers are familiar with nothing else.  And yet, the developers
+of SQLite prefer Fossil.  This article tries to explain why.
+
+</p><h1 id="a_few_reasons_why_sqlite_does_not_use_git"><span>2. </span>A Few Reasons Why SQLite Does Not Use Git</h1>
+
+<ol>
+<li><p>
+With Git, it is very difficult to find the successors (decendents) of
+a check-in.
+
+</p><p>
+Git allows you to go backwards in time.  Given the latest
+check-in on a branch, Git lets you see all the ancestors of that
+check-in.  But Git makes it very difficult to move in the other
+direction.  Given some historical check-in, it is quite challenging
+in Git to find out what came next.  It can be done, but it is sufficiently
+difficult and slow that nobody ever does it.  There is no button in
+GitHub that shows the descendents of a check-in.
+
+</p><p>
+This is a deal-breaker, a show-stopper.  The principle maintainer
+of SQLite cannot function effectively without being able to view
+the successors of a check-in.  This one issue is sufficient reason
+to not use Git, in the view of the designer of SQLite.
+
+</p></li><li><p>
+The mental model for Git is needlessly complex and consequently
+distracts attention from software under development.  A user of Git
+needs to keep all of the following in mind:
+</p><ol type="'a'">
+<li> The working directory
+</li><li> The "index" or staging area
+</li><li> The local head
+</li><li> The local copy of the remote head
+</li><li> The actual remote head
+</li></ol>
+<p>
+Git contains commands (or options on commands) for moving and
+comparing content between all of these locations. 
+
+</p><p>In contrast,
+Fossil users only need to think about their working directory and
+the check-in they are working on.  That is 60% less distraction.
+Every developer has a finite number of brain-cycles.  Fossil
+requires fewer brain-cycles to operate, thus freeing up 
+intellectual resources to focus on the software under development.
+
+</p></li><li><p>
+Git does not track branch history.  This makes review of historical
+branches tedious.
+
+</p><p>
+As an example, consider display of a single historical
+branch of SQLite as rendered by GitHub and by Fossil:
+
+</p><ul>
+<li><b>GitHub:</b> <a href="https://github.com/mackyle/sqlite/commits/prefer-coroutine-sort-subquery">https://github.com/mackyle/sqlite/commits/prefer-coroutine-sort-subquery</a>
+</li><li><b>Fossil:</b> <a href="https://sqlite.org/src/timeline?r=prefer-coroutine-sort-subquery">https://sqlite.org/src/timeline?r=prefer-coroutine-sort-subquery</a>
+</li></ul>
+
+<p>
+The Fossil view clearly shows that the branch was eventually merged back into
+trunk.  It shows where the branch started, and it shows two occasions where changes
+on trunk were merged into the branch.  GitHub shows none of this.  In fact, the
+GitHub display is mostly useless in trying to figure out what happened.
+
+</p></li><li><p>
+Git lacks native wiki and bug tracking.
+If you want these essential features, you have to install additional software
+such as GitLab, or else use a third-party service such as GitHub.  And even
+then, the wiki and bug reports are centralized, not distributed.
+
+</p></li><li><p>
+Git requires more administrative support.
+Setting up a website for a project to use Git requires a lot more software,
+and a lot more work, than setting up a similar site with an integrated package
+like Fossil.
+
+</p></li><li><p>Nobody really understands Git.
+<img src="https://www.fossil-scm.org/fossil/doc/trunk/www/xkcd-git.gif"><br>
+(credit: <a href="https://xkcd.com/1597/">https://xkcd.com/1597/</a>)
+</p></li></ol>
+
+<h2 id="see_also"><span>2.1. </span>See Also</h2>
+
+<p>Other pages that talk about Fossil and Git include:
+</p><ul>
+<li><p><a href="https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki">Fossil vs. Git</a>
+</p></li><li><p><a href="https://www.fossil-scm.org/fossil/doc/trunk/www/quotes.wiki">What others say about Fossil and Git</a>
+</p></li></ul>
+
+<h1 id="a_git_user_s_guide_to_accessing_sqlite_source_code"><span>3. </span>A Git-User's Guide To Accessing SQLite Source Code</h1>
+
+<p>
+If you are a devoted Git user and have no intention of changing,
+you can still easily access SQLite.  This section gives some hints
+on how to do so.
+
+</p><h2 id="github_mirrors"><span>3.1. </span>GitHub Mirrors</h2>
+
+<p>
+There is a mirror of the SQLite source tree on GitHub at
+<a href="https://github.com/mackyle/sqlite">https://github.com/mackyle/sqlite</a>.  This mirror is maintained
+by user "mackyle" who is unaffiliated with, and unknown to,
+the official SQLite development team.  We do not know mackyle,
+but we observe that he does a terrific job of keeping his mirror
+current, and so if you want to access the SQLite source code on
+GitHub, his mirror is the recommended source.
+
+</p><h2 id="web_access"><span>3.2. </span>Web Access</h2>
+
+<p>
+The <a href="https://sqlite.org/src/timeline">SQLite Fossil Repository</a> contains links
+for downloading  a Tarball, ZIP Archive, or <a href="sqlar.html">SQLite Archive</a> for any
+historical version of SQLite.  The URLs for these downloads are
+simple and can be incorporated easily into automated tools.  The format is:
+
+</p><center>
+<tt>https://sqlite.org/src/tarball/</tt><i>VERSION</i><tt>/sqlite.tar.gz</tt>
+</center>
+
+<p>
+Simply replace <i>VERSION</i> with some description of the version to be
+downloaded.  The <i>VERSION</i> can be a prefix of the cryptographic hash
+name of a specific check-in, or the name of a branch (in which case the
+most recent version of the branch is fetched) or a tag for a specific
+check-in like "version-3.23.0".
+
+</p><h2 id="fossil_access"><span>3.3. </span>Fossil Access</h2>
+
+<p>
+Fossil is really easy to install and use.  Here are the steps for unix.
+(Windows is similar.)
+
+</p><ol>
+<li>
+Download the self-contained Fossil executable from
+<a href="https://fossil-scm.org/fossil/uv/download.html">https://fossil-scm.org/fossil/uv/download.html</a> and put the executable
+somewhere on your $PATH.
+</li><li><tt>mkdir ~/fossils</tt>
+</li><li><tt>fossil clone https://fossil-scm.org/fossil ~/fossils/sqlite.fossil</tt>
+</li><li><tt>mkdir ~/sqlite; cd ~/sqlite</tt>
+</li><li><tt>fossil open ~/sqlite.fossil .</tt>
+</li></ol>
+
+<p>
+Subsequently, to update your check-out, simply type:
+
+</p><blockquote>
+<tt>fossil up </tt><i>VERSION</i>
+</blockquote>
+
+<p>
+Use "trunk" for version to get the latest trunk version of SQLite.
+Or use a prefix of a cryptographic hash name, or the name of some branch
+or tag.
+
+</p><p>
+Use the "<tt>fossil ui</tt>" command from within the ~/sqlite checkout to
+bring up a local copy of the website.
+</p>

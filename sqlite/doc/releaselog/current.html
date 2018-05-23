@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <link href="../sqlite.css" rel="stylesheet">
-<title>SQLite Release 3.23.0 On 2018-04-02</title>
+<title>SQLite Release 3.23.1 On 2018-04-10</title>
 <!-- path=../ -->
 </head>
 <body>
@@ -91,7 +91,27 @@ return false;
 }
 </script>
 </div>
-<h2>SQLite Release 3.23.0 On 2018-04-02</h2><p><ol class='lessindent'>
+<h2>SQLite Release 3.23.1 On 2018-04-10</h2><p><ol class='lessindent'>
+<li> Fix two problems in the new <a href="../optoverview.html#leftjoinreduction">LEFT JOIN strength reduction optimization</a>.
+     Tickets <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>
+     and <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>.
+<li> Fix misbehavior of the FTS5 xBestIndex method.  Ticket
+     <a href="https://sqlite.org/src/info/2b8aed9f7c9e61e8">2b8aed9f7c9e61e8</a>.
+<li> Fix a harmless reference to an uninitialized virtual machine register.
+     Ticket <a href="https://sqlite.org/src/info/093420fc0eb7cba7">093420fc0eb7cba7</a>.
+<li> Fix the <a href="../cli.html">CLI</a> so that it builds with -DSQLITE_UNTESTABLE
+<li> Fix the <a href="https://sqlite.org/src/file/ext/misc/eval.c">eval.c</a> extension
+     so that it works with <a href="../pragma.html#pragma_empty_result_callbacks">PRAGMA empty_result_callbacks=ON</a>.
+<li> Fix the <a href="../series.html">generate_series</a> virtual table so that it correctly returns
+     no rows if any of its constraints are NULL.
+<li> Performance enhancements in the parser.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2018-04-10 17:39:29 4bb2294022060e61de7da5c227a69ccd846ba330e31626ebcd59a94efd148b3b"
+<li>SHA3-256 for sqlite3.c: 65750d1e506f416a0b0b9dd22d171379679c733e3460549754dc68c92705b5dc
+
+</ol></p>
+<p><b>Changes carried forward from version 3.23.0 (2018-04-02):</b></p>
+<p><ol class='lessindent'>
 <li> Add the <a href="../c3ref/serialize.html">sqlite3_serialize()</a> and <a href="../c3ref/deserialize.html">sqlite3_deserialize()</a> interfaces when
      the <a href="../compile.html#enable_deserialize">SQLITE_ENABLE_DESERIALIZE</a> compile-time option is used.
 <li> Recognize TRUE and FALSE as constants.  (For compatibility, if there
@@ -184,9 +204,6 @@ return false;
        <a href="../lang_createtable.html#rowid">INTEGER PRIMARY KEY</a>.  Check-in
        <a href="https://www.sqlite.org/src/info/b850dd159918af56">b850dd159918af56</a>.
 </ol>
-<p><b>Hashes:</b>
-<li>SQLITE_SOURCE_ID: "2018-04-02 11:04:16 736b53f57f70b23172c30880186dce7ad9baa3b74e3838cae5847cffb98f5cd2"
-<li>SHA3-256 for sqlite3.c: 4bed3dc2dc905ff55e2c21fd2725551fc0ca50912a9c96c6af712a4289cb24fa
 
 </ol></p>
 

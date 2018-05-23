@@ -120,7 +120,8 @@ int sqlite3changeset_apply_v2(
     sqlite3_changeset_iter *p     /* Handle describing change and conflict */
   ),
   void *pCtx,                     /* First argument passed to xConflict */
-  void **ppRebase, int *pnRebase
+  void **ppRebase, int *pnRebase, /* OUT: Rebase data */
+  int flags                       /* Combination of SESSION_APPLY_* flags */
 );
 </pre></blockquote><p>
 Apply a changeset or patchset to a database. These functions attempt to
@@ -269,7 +270,14 @@ is set to the size of the buffer in bytes. It is the responsibility of the
 caller to eventually free any such buffer using sqlite3_free(). The buffer
 is only allocated and populated if one or more conflicts were encountered
 while applying the patchset. See comments surrounding the sqlite3_rebaser
-APIs for further details.
+APIs for further details.</p>
+
+<p>The behavior of sqlite3changeset_apply_v2() and its streaming equivalent
+may be modified by passing a combination of
+<a href="../session/c_changesetapply_nosavepoint.html">supported flags</a> as the 9th parameter.</p>
+
+<p>Note that the sqlite3changeset_apply_v2() API is still <b>experimental</b>
+and therefore subject to change.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

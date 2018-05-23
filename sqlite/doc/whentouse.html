@@ -93,6 +93,7 @@ return false;
 </div>
 
 
+
 <h1 align="center">Appropriate Uses For SQLite</h1>
 
 <p>
@@ -160,6 +161,10 @@ improved reliability.  See technical notes
 <a href="aff_short.html">"aff_short.html"</a> and 
 <a href="appfileformat.html">"appfileformat.html"</a> and
 <a href="fasterthanfs.html">"fasterthanfs.html"</a> for more information.
+This use case is closely related to the
+<a href="#wireproto">data transfer format</a> and
+<a href="#container">data container</a> use cases below.
+</li>
 
 <a name="website"></a>
 
@@ -250,9 +255,33 @@ using separate database files for different subdomains.  For
 example, the server might have a separate SQLite database for each
 user, so that the server can handle hundreds or thousands of simultaneous
 connections, but each SQLite database is only used by one connection.</p>
-
-
 </li>
+
+<a name="wireproto"></a>
+
+<li><p><b>Data transfer format</b><p>
+
+<p>Because an SQLite database is a single compact file in a
+<a href="fileformat2.html">well-defined cross-platform format</a>, it is often used
+as a container for transfering content from one system to another.
+The sender gathers content into an SQLite database file, transfers
+that one file to the receiver, then the receiver uses SQL to extract
+the content as needed.
+
+<p>An SQLite database facilitates data transfer between systems even
+when the endpoints have different word sizes and/or byte orders.
+The data can be a complex mix of large binary blobs, text, and small
+numeric or boolean values.  The data format can be easily extended
+by adding new tables and/or columns, without breaking legacy receivers.
+The SQL query language means that receivers are not required to parse
+the entire transfer all at once, but can instead query the
+received content as needed.  The data format is "transparent" in the
+sense that it is easily decoded for human viewing using 
+a variety of universally available, open-source tools, from multiple
+vendors.
+</li>
+
+<a name="container"></a>
 
 <li><p><b>File archive and/or data container</b></p>
 
@@ -402,7 +431,7 @@ disk files, and perhaps across multiple volumes.
 <p>
 SQLite supports an unlimited number of simultaneous readers, but it 
 will only allow one writer at any instant in time.
-For many situations, this is not a problem.  Writer queue up. Each application
+For many situations, this is not a problem.  Writers queue up. Each application
 does its database work quickly and moves on, and no lock lasts for more
 than a few dozen milliseconds. But there are some applications that require
 more concurrency, and those applications may need to seek a different
