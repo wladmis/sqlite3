@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_CONFIG_COVERING_INDEX_SCAN SQLITE_CONFIG_GETMALLOC SQLITE_CONFIG_GETMUTEX SQLITE_CONFIG_GETPCACHE SQLITE_CONFIG_GETPCACHE2 SQLITE_CONFIG_HEAP SQLITE_CONFIG_LOG SQLITE_CONFIG_LOOKASIDE SQLITE_CONFIG_MALLOC SQLITE_CONFIG_MEMSTATUS SQLITE_CONFIG_MMAP_SIZE SQLITE_CONFIG_MULTITHREAD SQLITE_CONFIG_MUTEX SQLITE_CONFIG_PAGECACHE SQLITE_CONFIG_PCACHE SQLITE_CONFIG_PCACHE2 SQLITE_CONFIG_PCACHE_HDRSZ SQLITE_CONFIG_PMASZ SQLITE_CONFIG_SCRATCH SQLITE_CONFIG_SERIALIZED SQLITE_CONFIG_SINGLETHREAD SQLITE_CONFIG_SMALL_MALLOC SQLITE_CONFIG_SQLLOG SQLITE_CONFIG_STMTJRNL_SPILL SQLITE_CONFIG_URI SQLITE_CONFIG_WIN32_HEAPSIZE {configuration option} -->
+<!-- keywords: SQLITE_CONFIG_COVERING_INDEX_SCAN SQLITE_CONFIG_GETMALLOC SQLITE_CONFIG_GETMUTEX SQLITE_CONFIG_GETPCACHE SQLITE_CONFIG_GETPCACHE2 SQLITE_CONFIG_HEAP SQLITE_CONFIG_LOG SQLITE_CONFIG_LOOKASIDE SQLITE_CONFIG_MALLOC SQLITE_CONFIG_MEMSTATUS SQLITE_CONFIG_MMAP_SIZE SQLITE_CONFIG_MULTITHREAD SQLITE_CONFIG_MUTEX SQLITE_CONFIG_PAGECACHE SQLITE_CONFIG_PCACHE SQLITE_CONFIG_PCACHE2 SQLITE_CONFIG_PCACHE_HDRSZ SQLITE_CONFIG_PMASZ SQLITE_CONFIG_SCRATCH SQLITE_CONFIG_SERIALIZED SQLITE_CONFIG_SINGLETHREAD SQLITE_CONFIG_SMALL_MALLOC SQLITE_CONFIG_SORTERREF_SIZE SQLITE_CONFIG_SQLLOG SQLITE_CONFIG_STMTJRNL_SPILL SQLITE_CONFIG_URI SQLITE_CONFIG_WIN32_HEAPSIZE {configuration option} -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Configuration Options</h2>
@@ -124,6 +124,7 @@ return false;
 #define SQLITE_CONFIG_PMASZ               25  /* unsigned int szPma */
 #define SQLITE_CONFIG_STMTJRNL_SPILL      26  /* int nByte */
 #define SQLITE_CONFIG_SMALL_MALLOC        27  /* boolean */
+#define SQLITE_CONFIG_SORTERREF_SIZE      28  /* int nByte */
 </pre></blockquote>
 <p>
 These constants are the available integer configuration options that
@@ -470,7 +471,24 @@ Since many statement journals never become large, setting the spill
 threshold to a value such as 64KiB can greatly reduce the amount of
 I/O required to support statement rollback.
 The default value for this setting is controlled by the
-<a href="../compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> compile-time option.
+<a href="../compile.html#stmtjrnl_spill">SQLITE_STMTJRNL_SPILL</a> compile-time option.</p>
+
+<p><a name="sqliteconfigsorterrefsize"></a>
+
+<dt>SQLITE_CONFIG_SORTERREF_SIZE
+<dd>The SQLITE_CONFIG_SORTERREF_SIZE option accepts a single parameter
+of type (int) - the new value of the sorter-reference size threshold.
+Usually, when SQLite uses an external sort to order records according
+to an ORDER BY clause, all fields required by the caller are present in the
+sorted records. However, if SQLite determines based on the declared type
+of a table column that its values are likely to be very large - larger
+than the configured sorter-reference size threshold - then a reference
+is stored in each sorted record and the required column values loaded
+from the database as records are returned in sorted order. The default
+value for this option is to never use this optimization. Specifying a
+negative value for this option restores the default behaviour.
+This option is only available if SQLite is compiled with the
+<a href="../compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> compile-time option.
 </dl>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

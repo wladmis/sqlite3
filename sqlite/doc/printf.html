@@ -141,8 +141,10 @@ accessible via the following interfaces:
 </li><li> <a href="c3ref/mprintf.html">sqlite3_mprintf()</a> &rarr; Store the formatted string in memory obtained
      <a href="c3ref/free.html">sqlite3_malloc64()</a>.
 </li><li> <a href="c3ref/mprintf.html">sqlite3_snprintf()</a> &rarr; Store the formatted string in a static buffer
+</li><li> <a href="c3ref/str_append.html">sqlite3_str_appendf()</a> &rarr; Append formatted text to a dynamic string
 </li><li> <a href="c3ref/mprintf.html">sqlite3_vmprintf()</a> &rarr; Varargs version of sqlite3_mprintf()
 </li><li> <a href="c3ref/mprintf.html">sqlite3_vsnprintf()</a> &rarr; Varargs version of sqlite3_snprintf()
+</li><li> <a href="c3ref/str_append.html">sqlite3_str_vappendf()</a> &rarr; Varargs version of sqlite3_str_appendf()
 </li></ul>
 
 <p>The same core string formatter is also used internally by SQLite.
@@ -282,7 +284,7 @@ The other elements of the substitution are optional.
 </td></tr><tr>
 <td>x, X
 </td><td>The argument is an integer which is displayed in hexadecimal.
-    Lower-case hexadecimal is used for %x and and upper-case is used
+    Lower-case hexadecimal is used for %x and upper-case is used
     for %X
 </td></tr><tr>
 <td>o

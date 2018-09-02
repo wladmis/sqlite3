@@ -105,11 +105,79 @@ http://www.sqlite.org/src/timeline?t=release</a>.
 See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 </p>
 
+<a name="version_3_24_0"></a>
+<h3>2018-06-04 (3.24.0)</h3><p><ol class='lessindent'>
+<li> Add support for PostgreSQL-style <a href="lang_UPSERT.html">UPSERT</a>.
+<li> Add support for <a href="rtree.html#auxcol">auxiliary columns in r-tree tables</a>.
+<li> Add C-language APIs for discovering SQL keywords used by
+     SQLite: <a href="c3ref/keyword_check.html">sqlite3_keyword_count()</a>, <a href="c3ref/keyword_check.html">sqlite3_keyword_name()</a>, and
+     <a href="c3ref/keyword_check.html">sqlite3_keyword_check()</a>.
+<li> Add C-language APIs for dynamic strings based on the
+     <a href="c3ref/str.html">sqlite3_str</a> object.
+<li> Enhance <a href="lang_altertable.html">ALTER TABLE</a> so that it recognizes "true" and "false" as
+     valid arguments to DEFAULT.
+<li> Add the sorter-reference optimization as a compile-time option.
+     Only available if compiled with SQLITE_ENABLE_SORTER_REFERENCES.
+<li> Improve the format of the <a href="eqp.html">EXPLAIN QUERY PLAN</a> raw output, so that
+     it gives better information about the query plan and about the
+     relationships between the various components of the plan.
+<li> Added the <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_RESET_DATABASE</a> option to the
+     <a href="c3ref/db_config.html">sqlite3_db_config()</a> API.
+<p><b><a href="cli.html">CLI</a> Enhancements:</b>
+<li> Automatically intercepts the raw <a href="eqp.html">EXPLAIN QUERY PLAN</a> 
+     output and reformats it into an ASCII-art graph.
+<li> Lines that begin with "#" and that are not in the middle of an
+     SQL statement are interpreted as comments.
+<li> Added the --append option to the ".backup" command.
+<li> Added the ".dbconfig" command.
+<p><b>Performance:</b>
+<li> <a href="lang_update.html">UPDATE</a> avoids writing database pages that do not actually change.
+     For example, "UPDATE t1 SET x=25 WHERE y=?" becomes a no-op if the
+     value in column x is already 25.  Similarly, 
+     when doing <a href="lang_update.html">UPDATE</a> on records that span multiple pages, only write
+     the subset of pages that contain the changed value(s).
+<li> Queries that use ORDER BY and LIMIT now try to avoid computing
+     rows that cannot possibly come in under the LIMIT. This can greatly
+     improve performance of ORDER BY LIMIT queries, especially when the
+     LIMIT is small relative to the number of unrestricted output rows.
+<li> The <a href="optoverview.html#or_opt">OR optimization</a> is allowed to proceed
+     even if the OR expression has also been converted into an IN
+     expression.  Uses of the OR optimization are now also 
+     <a href="eqp.html#or-opt">more clearly shown</a> in the <a href="eqp.html">EXPLAIN QUERY PLAN</a> output.
+<li> The query planner is more aggressive about using
+     <a href="optoverview.html#autoindex">automatic indexes</a> for views and subqueries for which it is
+     not possible to create a persistent index.
+<li> Make use of the one-pass UPDATE and DELETE query plans in the
+     <a href="rtree.html">R-Tree extension</a> where appropriate.
+<li> Performance improvements in the LEMON-generated parser.
+<p><b>Bug fixes:</b>
+<li> For the right-hand table of a LEFT JOIN, compute the values
+     of expressions directly rather than loading precomputed values
+     out of an <a href="expridx.html">expression index</a> as the expression index might
+     not contain the correct value.  Ticket
+     <a href="https://sqlite.org/src/info/7fa8049685b50b5aeb0c2">7fa8049685b50b5aeb0c2</a>
+<li> Do not attempt to use terms from the WHERE clause to enable
+     indexed lookup of the right-hand table of a LEFT JOIN.  Ticket
+     <a href="https://sqlite.org/src/info/4ba5abf65c5b0f9a96a7a">4ba5abf65c5b0f9a96a7a</a>
+<li> Fix a memory leak that can occur following a failure to open error
+     in the <a href="csv.html">CSV virtual table</a>
+<li> Fix a long-standing problem wherein a corrupt schema on the
+     <a href="fileformat2.html#seqtab">sqlite_sequence</a> table used by <a href="autoinc.html">AUTOINCREMENT</a> can lead to
+     a crash. Ticket
+     <a href="https://www.sqlite.org/src/info/d8dc2b3a58cd5dc29">d8dc2b3a58cd5dc2918a1</a>
+<li> Fix the <a href="json1.html#jeach">json_each()</a> function so that it returns
+     valid results on its "fullkey" column when the input is a simple value
+     rather than an array or object.
+<p><b>Hashes:</b>
+<li>SQLITE_SOURCE_ID: "2018-06-04 19:24:41 c7ee0833225bfd8c5ec2f9bf62b97c4e04d03bd9566366d5221ac8fb199a87ca"
+<li>SHA3-256 for sqlite3.c: 0d384704e1c66026228336d1e91771d295bf688c9c44c7a44f25a4c16c26ab3c
+
+</ol></p>
 <a name="version_3_23_1"></a>
 <h3>2018-04-10 (3.23.1)</h3><p><ol class='lessindent'>
 <li> Fix two problems in the new <a href="optoverview.html#leftjoinreduction">LEFT JOIN strength reduction optimization</a>.
      Tickets <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>
-     and <a href="https://sqlite.org/src/info/1e39b966ae9ee739">1e39b966ae9ee739</a>.
+     and <a href="https://sqlite.org/src/info/fac496b61722daf2">fac496b61722daf2</a>.
 <li> Fix misbehavior of the FTS5 xBestIndex method.  Ticket
      <a href="https://sqlite.org/src/info/2b8aed9f7c9e61e8">2b8aed9f7c9e61e8</a>.
 <li> Fix a harmless reference to an uninitialized virtual machine register.
@@ -442,7 +510,7 @@ See the <a href="chronology.html">chronology</a> a succinct listing of releases.
 <li> The built-in <a href="lang_datefunc.html">date and time functions</a> have been enhanced so that they can be
      used in <a href="lang_createtable.html#ckconst">CHECK constraints</a>, in <a href="expridx.html">indexes on expressions</a>, and in the WHERE clauses
      of <a href="partialindex.html">partial indexes</a>, provided that they do not use the 'now', 'localtime', or
-     'utc' keywords.  <a href="deterministic.html#dtexception">Futher information</a>.
+     'utc' keywords.  <a href="deterministic.html#dtexception">More information</a>.
 <li> Added the <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and <a href="c3ref/prepare.html">sqlite3_prepare16_v3()</a> interfaces
      with the extra "prepFlags" parameters.
 <li> Provide the <a href="c3ref/c_prepare_persistent.html#sqlitepreparepersistent">SQLITE_PREPARE_PERSISTENT</a> flag for <a href="c3ref/prepare.html">sqlite3_prepare_v3()</a> and
@@ -1013,19 +1081,6 @@ with a home-baked pie.</center>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.7.3 (2014-12-05):</b></p>
-
-<li>Bug fix: Ensure the cached KeyInfo objects (an internal abstraction not visible to the
-    application) do not go stale when operating in <a href="sharedcache.html">shared cache mode</a> and frequently closing
-    and reopening some database connections while leaving other database connections on the
-    same shared cache open continuously.  Ticket 
-    <a href="https://www.sqlite.org/src/info/e4a18565a36884b00edf">e4a18565a36884b00edf</a>.
-<li>Bug fix: Recognize that any column in the right-hand table of a LEFT JOIN can be
-    NULL even if the column has a NOT NULL constraint.  Do not apply optimizations that
-    assume the column is never NULL.  Ticket
-    <a href="https://www.sqlite.org/src/info/6f2222d550f5b0ee7ed">6f2222d550f5b0ee7ed</a>.
-
-
 <p><b>Bug fixes backported into patch release 3.8.7.2 (2014-11-18):</b></p>
 
 <li>Enhance the <a href="lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
@@ -1040,6 +1095,18 @@ with a home-baked pie.</center>
     the right-hand side of an IN operator since it is necessary if the SELECT also 
     contains a LIMIT.
     Ticket <a href="http://www.sqlite.org/src/info/db87229497">db87229497</a>.
+
+
+<p><b>Bug fixes backported into patch release 3.8.7.1 (2014-10-29):</b></p>
+
+<li>In <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=TRUNCATE</a> mode, call fsync() immediately after truncating
+    the journal file to ensure that the transaction is durable across a power loss.
+<li>Fix an assertion fault that can occur when updating the NULL value of a field
+    at the end of a table that was added using <a href="lang_altertable.html">ALTER TABLE ADD COLUMN</a>.
+<li>Do not attempt to use the strchrnul() function from the standard C library unless
+    the HAVE_STRCHRNULL compile-time option is set.
+<li>Fix a couple of problems associated with running an UPDATE or DELETE on a
+    <a href="lang_createview.html">VIEW</a> with a <a href="lang_createtable.html#rowid">rowid</a> in the WHERE clause.
 
 
 </ol></p>

@@ -92,16 +92,23 @@ return false;
 </script>
 </div>
 <div class=nosearch><h1 align="center">SQL As Understood By SQLite</h1><p><a href="lang.html">[Top]</a></p><h2>ON CONFLICT clause</h2></div><p><b><a href="syntax/conflict-clause.html">conflict-clause:</a></b>
-<button id='x1141' onclick='hideorshow("x1141","x1142")'>hide</button></p>
- <div id='x1142' class='imgcontainer'>
+<button id='x1233' onclick='hideorshow("x1233","x1234")'>hide</button></p>
+ <div id='x1234' class='imgcontainer'>
  <img alt="syntax diagram conflict-clause" src="images/syntax/conflict-clause.gif" />
 </div>
 
 
-<p>The ON CONFLICT clause is not a separate SQL command.  It is a
-non-standard clause that can appear in many other SQL commands.
+<p>The ON CONFLICT clause is a
+non-standard extension specific to SQLite 
+that can appear in many other SQL commands.
 It is given its own section in this document because it is not
 part of standard SQL and therefore might not be familiar.</p>
+
+<p>The ON CONFLICT clause described here has been a part of
+SQLite since before version 3.0.0 (2004-06-18).  The phrase
+"ON&nbsp;CONFLICT" is also part of <a href="lang_UPSERT.html">UPSERT</a>, which is an extension
+to <a href="lang_insert.html">INSERT</a> added in version 3.24.0 (2018-06-04).  Do not
+confuse these two separate uses of the "ON&nbsp;CONFLICT" phrase.
 
 <p>The syntax for the ON CONFLICT clause is as shown above for
 the CREATE TABLE command.  For the INSERT and

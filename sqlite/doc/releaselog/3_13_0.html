@@ -129,19 +129,6 @@ return false;
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
 
-<p><b>Bug fixes backported into patch release 3.8.7.3 (2014-12-05):</b></p>
-
-<li>Bug fix: Ensure the cached KeyInfo objects (an internal abstraction not visible to the
-    application) do not go stale when operating in <a href="../sharedcache.html">shared cache mode</a> and frequently closing
-    and reopening some database connections while leaving other database connections on the
-    same shared cache open continuously.  Ticket 
-    <a href="https://www.sqlite.org/src/info/e4a18565a36884b00edf">e4a18565a36884b00edf</a>.
-<li>Bug fix: Recognize that any column in the right-hand table of a LEFT JOIN can be
-    NULL even if the column has a NOT NULL constraint.  Do not apply optimizations that
-    assume the column is never NULL.  Ticket
-    <a href="https://www.sqlite.org/src/info/6f2222d550f5b0ee7ed">6f2222d550f5b0ee7ed</a>.
-
-
 <p><b>Bug fixes backported into patch release 3.8.7.2 (2014-11-18):</b></p>
 
 <li>Enhance the <a href="../lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
@@ -156,6 +143,18 @@ return false;
     the right-hand side of an IN operator since it is necessary if the SELECT also 
     contains a LIMIT.
     Ticket <a href="http://www.sqlite.org/src/info/db87229497">db87229497</a>.
+
+
+<p><b>Bug fixes backported into patch release 3.8.7.1 (2014-10-29):</b></p>
+
+<li>In <a href="../pragma.html#pragma_journal_mode">PRAGMA journal_mode=TRUNCATE</a> mode, call fsync() immediately after truncating
+    the journal file to ensure that the transaction is durable across a power loss.
+<li>Fix an assertion fault that can occur when updating the NULL value of a field
+    at the end of a table that was added using <a href="../lang_altertable.html">ALTER TABLE ADD COLUMN</a>.
+<li>Do not attempt to use the strchrnul() function from the standard C library unless
+    the HAVE_STRCHRNULL compile-time option is set.
+<li>Fix a couple of problems associated with running an UPDATE or DELETE on a
+    <a href="../lang_createview.html">VIEW</a> with a <a href="../lang_createtable.html#rowid">rowid</a> in the WHERE clause.
 
 
 </ol></p>

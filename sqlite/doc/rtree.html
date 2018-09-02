@@ -109,6 +109,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#querying_an_r_tree_index">3.3. Querying An R*Tree Index</a></div>
 <div class="fancy-toc2"><a href="#roundoff_error">3.4. Roundoff Error</a></div>
 <div class="fancy-toc1"><a href="#using_r_trees_effectively">4. Using R*Trees Effectively</a></div>
+<div class="fancy-toc2"><a href="#auxiliary_columns">4.1. Auxiliary Columns</a></div>
 <div class="fancy-toc1"><a href="#integer_valued_r_trees">5. Integer-Valued R-Trees</a></div>
 <div class="fancy-toc1"><a href="#custom_r_tree_queries">6. Custom R-Tree Queries</a></div>
 <div class="fancy-toc2"><a href="#the_legacy_xgeom_callback">6.1. The Legacy xGeom Callback</a></div>
@@ -379,7 +380,8 @@ lower coordinates and rounding up the top coordinates, in each dimension.
 </p><h1 id="using_r_trees_effectively"><span>4. </span>Using R*Trees Effectively</h1>
 
 <p>
-The only information that an R*Tree index stores about an object is
+For SQLite versions prior to 3.24.0 (2018-06-04),
+the only information that an R*Tree index stores about an object is
 its integer ID and its bounding box.  Additional information needs to
 be stored in separate tables and related to the R*Tree index using
 the primary key.  For the example above, one might create an auxiliary
@@ -424,6 +426,7 @@ Then an efficient way to find the name of all objects located within
 the North Carolina 12th District, one may be to run a query like this:
 </p>
 
+<a name="diquery"></a>
 <blockquote><pre>
 SELECT objname FROM demo_data, demo_index
  WHERE demo_data.id=demo_index.id
@@ -459,6 +462,49 @@ The use of the R*Tree in the penultimate query reduces the number of
 calls to contained_in() function to a small subset of the entire table.
 The R*Tree index did not find the exact answer itself, it merely
 limited the search space.</p>
+
+<a name="auxcol"></a>
+
+<h2 id="auxiliary_columns"><span>4.1. </span>Auxiliary Columns</h2>
+
+<p>
+Beginning with SQLite version 3.24.0 (2018-06-04), r-tree tables
+can have auxiliary columns that store arbitrary data.
+Auxiliary columns can be used in place of
+secondary tables such as "demo_data".
+
+</p><p>
+Auxiliary columns are marked with a "+" symbol before the column name.
+Auxiliary columns must come after all of the coordinate boundary columns.
+There is a limit of no more than 100 auxiliary columns.
+The following example shows an r-tree table with auxiliary columns that
+is equivalent to the two tables "demo_index" and "demo_data" above:
+
+</p><blockquote><pre>
+CREATE VIRTUAL TABLE demo_index2 USING rtree(
+   id,              -- Integer primary key
+   minX, maxX,      -- Minimum and maximum X coordinate
+   minY, maxY,      -- Minimum and maximum Y coordinate
+   +objname TEXT,   -- name of the object
+   +objtype TEXT,   -- object type
+   +boundary BLOB   -- detailed boundary of object
+);
+</pre></blockquote>
+
+<p>
+By combining location data and related information into the same
+table, auxiliary columns can provide a cleaner model
+and reduce the need to joins.
+For example, the earlier
+<a href="#diquery">join between demo_index and demo_data</a> can now
+be written as a simple query, like this:
+
+</p><blockquote><pre>
+SELECT objname FROM demo_index2
+ WHERE contained_in(boundary, :boundary)
+   AND minX&gt;=-81.0 AND maxX&lt;=-79.6
+   AND minY&gt;=35.0 AND maxY&gt;=36.2;
+</pre></blockquote>
 
 <a name="intrtree"></a>
 
@@ -621,6 +667,8 @@ struct sqlite3_rtree_query_info {
   int eParentWithin;                /* Visibility of parent node */
   int eWithin;                      /* OUT: Visiblity */
   sqlite3_rtree_dbl rScore;         /* OUT: Write the score here */
+  /* The following fields are only available in 3.8.11 and later */
+  sqlite3_value **apSqlParam;       /* Original SQL values of parameters */
 };
 </pre></blockquote>
 
@@ -630,7 +678,7 @@ The sqlite3_rtree_query_info structure also contains nCoord and aCoord fields
 which have the same meaning as the parameter of the same name in the xGeom callback.
 
 </p><p>The xQueryFunc must set the eWithin field of sqlite3_rtree_query_info to
-on of the values NOT_WITHIN, PARTLY_WITHIN, or FULLY_WITHIN depending on whether
+one of the values NOT_WITHIN, PARTLY_WITHIN, or FULLY_WITHIN depending on whether
 or not the bounding box defined by aCoord[] is completely outside the region,
 overlaps the region, or is completely inside the region, respectively.  In
 addition, the xQueryFunc must set the rScore field to a non-negative value that

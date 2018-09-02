@@ -99,7 +99,11 @@ return false;
 <blockquote><pre>
 #define SQLITE_INDEX_SCAN_UNIQUE      1     /* Scan visits at most 1 row */
 </pre></blockquote>
-<p></p><p>See also lists of
+<p>
+Virtual table implementations are allowed to set the
+<a href="../c3ref/index_info.html">sqlite3_index_info</a>.idxFlags field to some combination of
+these bits.
+</p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and
   <a href="funclist.html">Functions</a>.</p>

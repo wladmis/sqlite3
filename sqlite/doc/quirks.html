@@ -256,7 +256,7 @@ recognizes TRUE and FALSE keywords as aliases for integer values 1 and 0,
 respectively.
 This provides better compatibility with other SQL implementations.
 But to retain backwards compatibility, if there are columns named TRUE or
-FALSE, then the keywords are treated as indentifiers referencing those
+FALSE, then the keywords are treated as identifiers referencing those
 columns, rather than BOOLEAN literals.
 
 </p><h2 id="no_separate_datetime_datatype"><span>3.2. </span>No Separate DATETIME Datatype</h2>
@@ -327,7 +327,7 @@ This feature has two uses:
 <li><p>
 With SQLite (but not any other SQL implementation that we know of) if
 an aggregate query contains a single min() or max() function, then the
-values of columns used in the output are taken from the the row where
+values of columns used in the output are taken from the row where
 the min() or max() value was achieved.  If two or more rows have the
 same min() or max() value, then the columns values will be chosen arbitrarily
 from one of those rows.

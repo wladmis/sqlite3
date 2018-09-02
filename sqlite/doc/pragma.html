@@ -130,16 +130,16 @@ built-in PRAGMA statements.</p>
 <hr /><a name="syntax"></a>
 <h2>PRAGMA command syntax</h2>
 <p><b><a href="syntax/pragma-stmt.html">pragma-stmt:</a></b>
-<button id='x1477' onclick='hideorshow("x1477","x1478")'>hide</button></p>
- <div id='x1478' class='imgcontainer'>
+<button id='x1569' onclick='hideorshow("x1569","x1570")'>hide</button></p>
+ <div id='x1570' class='imgcontainer'>
  <img alt="syntax diagram pragma-stmt" src="images/syntax/pragma-stmt.gif" />
 <p><b><a href="syntax/pragma-value.html">pragma-value:</a></b>
-<button id='x1479' onclick='hideorshow("x1479","x1480")'>hide</button></p>
- <div id='x1480' class='imgcontainer'>
+<button id='x1571' onclick='hideorshow("x1571","x1572")'>hide</button></p>
+ <div id='x1572' class='imgcontainer'>
  <img alt="syntax diagram pragma-value" src="images/syntax/pragma-value.gif" />
 <p><b><a href="syntax/signed-number.html">signed-number:</a></b>
-<button id='x1481' onclick='hideorshow("x1481","x1482")'>show</button></p>
- <div id='x1482' style='display:none;' class='imgcontainer'>
+<button id='x1573' onclick='hideorshow("x1573","x1574")'>show</button></p>
+ <div id='x1574' style='display:none;' class='imgcontainer'>
  <img alt="syntax diagram signed-number" src="images/syntax/signed-number.gif" />
 </div>
 </div>
@@ -249,11 +249,11 @@ cannot use this feature.
 <hr /><a name="toc"></a>
 <h2>List Of PRAGMAs</h2>
 <style>
-#listtab32 tr td {vertical-align:top;}
+#listtab34 tr td {vertical-align:top;}
 </style>
-<table id='listtab32' width='100%'></table>
+<table id='listtab34' width='100%'></table>
 <script>
-var listitems32 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
+var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id","s":0},
 {"u":"pragma.html#pragma_auto_vacuum","x":"auto_vacuum","s":0},
 {"u":"pragma.html#pragma_automatic_index","x":"automatic_index","s":0},
 {"u":"pragma.html#pragma_busy_timeout","x":"busy_timeout","s":0},
@@ -325,33 +325,33 @@ var j = 0;
 var w = Math.max(document.documentElement.clientWidth,  window.innerWidth || 0);
 var nCol = Math.floor(w/250);
 if(nCol<=0) nCol=1;
-var nRow = Math.ceil((listitems32.length+1)/nCol);
+var nRow = Math.ceil((listitems34.length+1)/nCol);
 var h="<tr><td><ul class='multicol_list'>"
 var ea
-for(var i=0; i<listitems32.length; i++){
+for(var i=0; i<listitems34.length; i++){
   if( (++j)>nRow ){
     h += "</ul></td>\n<td><ul class='multicol_list'>\n";
     j = 1;
   }
-  if(listitems32[i].u=="" || listitems32[i].s==2){
+  if(listitems34[i].u=="" || listitems34[i].s==2){
     h += "<li>"
     ea = ""
   }else{
     h += "<li><a href='";
-    h += listitems32[i].u;
+    h += listitems34[i].u;
     h += "'>";
     ea = "</a>"
   }
-  if(listitems32[i].s==2 || listitems32[i].s==3) h += "<s>"
-  h += listitems32[i].x;
-  if(listitems32[i].s==2 || listitems32[i].s==3) h += "</s>"
+  if(listitems34[i].s==2 || listitems34[i].s==3) h += "<s>"
+  h += listitems34[i].x;
+  if(listitems34[i].s==2 || listitems34[i].s==3) h += "</s>"
   h += ea
-  if(listitems32[i].s==1) h += "<small><i>(exp)</i></small>\n";
-  if(listitems32[i].s==3) h += "&sup1\n";
-  if(listitems32[i].s==4) h += "&sup2\n";
-  if(listitems32[i].s==5) h += "&sup3\n";
+  if(listitems34[i].s==1) h += "<small><i>(exp)</i></small>\n";
+  if(listitems34[i].s==3) h += "&sup1\n";
+  if(listitems34[i].s==4) h += "&sup2\n";
+  if(listitems34[i].s==5) h += "&sup3\n";
 }
-document.getElementById("listtab32").innerHTML = h;
+document.getElementById("listtab34").innerHTML = h;
 </script>
 
 <p>Notes:
@@ -582,8 +582,8 @@ for use in application programs.</ol></p>
     returns a single row of data consisting of one integer value - the
     number of rows inserted, modified or deleted by the command. The 
     returned change count does not include any insertions, modifications
-    or deletions performed by triggers, or any changes made automatically
-    by <a href="foreignkeys.html#fk_actions">foreign key actions</a>.</p>
+    or deletions performed by triggers, any changes made automatically
+    by <a href="foreignkeys.html#fk_actions">foreign key actions</a>, or updates caused by an <a href="lang_UPSERT.html">upsert</a>.</p>
 
     <p>Another way to get the row change counts is to use the
     <a href="c3ref/changes.html">sqlite3_changes()</a> or <a href="c3ref/total_changes.html">sqlite3_total_changes()</a> interfaces.
@@ -1583,9 +1583,15 @@ PRAGMA <b>main.</b>locking_mode=EXCLUSIVE;
     engine will still sync at the most critical moments, but less often
     than in FULL mode.  There is a very small (though non-zero) chance that
     a power failure at just the wrong time could corrupt the database in
-    NORMAL mode.  But in practice, you are more likely to suffer
-    a catastrophic disk failure or some other unrecoverable hardware
-    fault.  Many applications choose NORMAL when in <a href="wal.html">WAL mode</a>.</dd>
+    <a href="pragma.html#pragma_journal_mode">journal_mode</a>=DELETE on an older filesystem.
+    <a href="wal.html">WAL mode</a> is safe from corruption with synchronous=NORMAL, and probably
+    DELETE mode is safe too on modern filesystems.  WAL mode is always consistent
+    with synchronous=NORMAL, but WAL mode does lose durability.  A transaction
+    committed in WAL mode with synchronous=NORMAL might roll back following
+    a power loss or system crash.  Transactions are durable across application
+    crashes regardless of the synchronous setting or journal mode.
+    The synchronous=NORMAL setting is a good choice for most applications
+    running in <a href="wal.html">WAL mode</a>.</dd>
     <dt><b>OFF</b> (0)</dt>
     <dd>
     With synchronous OFF (0), SQLite continues without syncing

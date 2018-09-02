@@ -141,7 +141,7 @@ implemented on unix and windows.
 structure of a database file and of the write-head log file used in
 <a href="wal.html">WAL mode</a>.  But details of the locking protocol and of the format
 of the WAL-index are deliberately omitted since those details
-are left to descretion of individual <a href="vfs.html">VFS</a> implementations.  This
+are left to discretion of individual <a href="vfs.html">VFS</a> implementations.  This
 document fills in those missing details for the unix and windows <a href="vfs.html">VFSes</a>.
 
 </p><p>For completeness, some of the higher level formatting information
@@ -268,8 +268,11 @@ three main divisions as follows:
 </tr></table>
 </center>
 
-<p>Individual fields of the shm header are all unsigned integers
-in the native byte-order of the host machine.
+<p>Individual fields of the shm header, except for the
+salt values copied from the WAL header, are unsigned integers
+in the native byte-order of the host machine.  The salt values
+are exact copies from the WAL header and are in whatever byte
+order is used by the WAL file.
 The size of integers may be 8, 16, 32, or 64 bits.
 A detailed breakout of the individual fields of the shm header
 follows:
@@ -318,6 +321,9 @@ follows:
 <tr>
 <td>32..39</td><td>aSalt</td>
 <td>The two salt value copied from the WAL file header.
+These values are in the byte-order of the WAL file, which
+might be different from the native byte-order of the
+machine.
 </td></tr>
 <tr>
 <td>40..47</td><td>aCksum</td>
@@ -347,7 +353,7 @@ follows:
 </td></tr>
 <tr>
 <td>132..136</td><td>&nbsp;</td>
-<td>Unused space reserved for futher expansion.
+<td>Unused space reserved for further expansion.
 </td></tr>
 </table>
 </center>

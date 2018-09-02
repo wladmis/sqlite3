@@ -104,11 +104,11 @@ If the sqlite3_vtab_nochange(X) routine is called within the <a href="../vtab.ht
 method of a <a href="../vtab.html">virtual table</a>, then it returns true if and only if the
 column is being fetched as part of an UPDATE operation during which the
 column value will not change.  Applications might use this to substitute
-a lighter-weight value to return that the corresponding <a href="../vtab.html#xupdate">xUpdate</a> method
-understands as a "no-change" value.</p>
+a return value that is less expensive to compute and that the corresponding
+<a href="../vtab.html#xupdate">xUpdate</a> method understands as a "no-change" value.</p>
 
 <p>If the <a href="../vtab.html#xcolumn">xColumn</a> method calls sqlite3_vtab_nochange() and finds that
-the column is not changed by the UPDATE statement, they the xColumn
+the column is not changed by the UPDATE statement, then the xColumn
 method can optionally return without setting a result, without calling
 any of the <a href="../c3ref/result_blob.html">sqlite3_result_xxxxx() interfaces</a>.
 In that case, <a href="../c3ref/value_blob.html">sqlite3_value_nochange(X)</a> will return true for the

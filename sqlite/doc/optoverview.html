@@ -1459,7 +1459,7 @@ SELECT x, y, b
 </p><div class="codeblock"><pre>SELECT x, y, b
   FROM t2
   JOIN (SELECT DISTINCT a, b FROM t1 WHERE b BETWEEN 10 AND 20)
- WHERE b BETWEEN 10 AND 10;
+ WHERE b BETWEEN 10 AND 20;
 </pre></div>
 
 <p>
@@ -1540,7 +1540,7 @@ SELECT x, y, b
   referenced.
 
 </p><p>
-  Here is an simple example of omitting a LEFT JOIN:
+  Here is a simple example of omitting a LEFT JOIN:
 
 </p><div class="codeblock"><pre>CREATE TABLE t1(ipk INTEGER PRIMARY KEY, v1);
 CREATE TABLE t2(ipk INTEGER PRIMARY KEY, v2);

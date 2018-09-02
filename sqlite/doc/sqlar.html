@@ -246,6 +246,16 @@ and decompression of content.  Even this tiny extension can be omitted
 if the files in the archive are uncompressed.  In contrast, supporting
 ZIP Archives and/or Tarballs requires either separate libraries or
 lots of extra custom code, or sometimes both.
+
+</p></li><li><p>
+An SQLite Archive can work around firewall-imposed censorship.
+For example, certain file types that are considered "dangerous" 
+(examples: DLLs) will be
+<a href="https://support.google.com/mail/answer/6590">blocked by Gmail</a>
+and probably many other email services and firewall, even if those
+files are wrapped inside a ZIP Archive or Tarball.
+But these firewall usually do not care about SQLite Archives and
+so content can be put inside an SQLite Archive to evade censorship.
 </p></li></ol>
 
 <h1 id="disadvantages_of_sqlite_archives"><span>3. </span>Disadvantages Of SQLite Archives</h1>
@@ -320,13 +330,23 @@ files in the current directory:
 </pre></div>
 
 <p>
+To add or update files in an existing SQLite Archive:
+
+</p><div class="codeblock"><pre>sqlite3 example.sqlar -Au *.md
+</pre></div>
+
+<p>
 For usage hints and a summary of all options, simply give the <a href="cli.html">CLI</a>
 the -A option with no additional arguments:
 
 </p><div class="codeblock"><pre>sqlite3 -A
 </pre></div>
 
-<h2 id="other_command_line_tools"><span>4.1. </span>Other command-line tools</h2>
+<p>
+All of these commands work the same way if the filename argument is
+is a ZIP Archive instead of an SQLite database.
+
+</p><h2 id="other_command_line_tools"><span>4.1. </span>Other command-line tools</h2>
 
 <p>
 Just as there is the "zip" program to manage ZIP Archives, and the

@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.23.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=4bb2294022060'>4bb2294022060</a> dated 2018-04-10.
+ version 3.24.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=c7ee0833225bf'>c7ee0833225bf</a> dated 2018-06-04.
 
 
 
@@ -417,20 +417,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 168
+<p>There are currently 169
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/261f44a76689fd3928cd42168486905a1bb8df97">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/2626b3cd2c98e21f16496c0bf669d734eba0e23d">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.23.1 check-in
-<a href='https://www.sqlite.org/src/timeline?c=4bb2294022060'>4bb2294022060</a> dated 2018-04-10.
+ version 3.24.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=c7ee0833225bf'>c7ee0833225bf</a> dated 2018-06-04.
 
 <a name="codes"></a>
 
@@ -439,6 +439,14 @@ The opcodes shown in the table below are valid for SQLite
   <div class="optab">
   <blockquote><table cellspacing=0 border=1 cellpaddin>
   <tr><th>Opcode Name</th><th>Description</th></tr>
+<tr><td valign="top" align="center">
+<a name="Abortable"></a>Abortable
+<td>Verify that an Abort can happen.  Assert if an Abort at this point
+might cause database corruption.  This opcode only appears in debugging
+builds.</p>
+
+<p>An Abort is safe if either there have been no writes, or if there is
+an active statement journal.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Add"></a>Add
 <td>Add the value in register P1 to the value in register P2
@@ -661,7 +669,7 @@ opened by cursor P1 in register P2</td></tr>
 <td>Allocate a new b-tree in the main database file if P1==0 or in the
 TEMP database file if P1==1 or in an attached database if
 P1&gt;1.  The P3 argument must be 1 (BTREE_INTKEY) for a rowid table
-it must be 2 (BTREE_BLOBKEY) for a index or WITHOUT ROWID table.
+it must be 2 (BTREE_BLOBKEY) for an index or WITHOUT ROWID table.
 The root page number of the new b-tree is stored in register P2.</td></tr>
 <tr><td valign="top" align="center">
 <a name="CursorHint"></a>CursorHint
@@ -1747,10 +1755,10 @@ If cursor P2 is a table, then the content extracted is the data.</p>
 <p>If the P1 cursor must be pointing to a valid row (not a NULL row)
 of a real table, not a pseudo-table.</p>
 
-<p>If P3!=0 then this opcode is allowed to make an ephermeral pointer
+<p>If P3!=0 then this opcode is allowed to make an ephemeral pointer
 into the database page.  That means that the content of the output
 register will be invalidated as soon as the cursor moves - including
-moves caused by other cursors that "save" the the current cursors
+moves caused by other cursors that "save" the current cursors
 position in order that they can write to the same table.  If P3==0
 then a copy of the data is made into memory.  P3!=0 is faster, but
 P3==0 is safer.</p>
@@ -2127,7 +2135,7 @@ the current row of the virtual-table of cursor P1.</p>
 <p>If the <a href="opcode.html#VColumn">VColumn</a> opcode is being used to fetch the value of
 an unchanging column during an UPDATE operation, then the P5
 value is 1.  Otherwise, P5 is 0.  The P5 value is returned
-by sqlite3_vtab_nochange() routine can can be used
+by sqlite3_vtab_nochange() routine and can be used
 by virtual table implementations to return special "no-change"
 marks which can be more efficient, depending on the virtual table.</td></tr>
 <tr><td valign="top" align="center">

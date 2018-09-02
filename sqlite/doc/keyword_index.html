@@ -152,6 +152,7 @@ Other Documentation Indexes:
 <li> <a href="pragma.html#pragma_automatic_index">automatic_index pragma</a> </li>
 <li> <a href="lang_analyze.html#autoanalyze">automatically running ANALYZE</a> </li>
 <li> <a href="fts3.html#*fts4automergecmd">"automerge" command</a> </li>
+<li> <a href="rtree.html#auxcol">auxiliary columns in r-tree tables</a> </li>
 <li> <a href="fts5.html#sorting_by_auxiliary_function_results">auxiliary function mapping</a> </li>
 <li> <a href="lang_aggfunc.html#avg">avg() aggregate function</a> </li>
 <li> <a href="wal.html#bigwal">avoiding large WAL files</a> </li>
@@ -466,6 +467,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_rbu">-DSQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">-DSQLITE_ENABLE_RTREE</a> </li>
 <li> <a href="compile.html#enable_session">-DSQLITE_ENABLE_SESSION</a> </li>
+<li> <a href="compile.html#enable_sorter_references">-DSQLITE_ENABLE_SORTER_REFERENCES</a> </li>
 <li> <a href="compile.html#enable_sqllog">-DSQLITE_ENABLE_SQLLOG</a> </li>
 <li> <a href="compile.html#enable_stat2">-DSQLITE_ENABLE_STAT2</a> </li>
 <li> <a href="compile.html#enable_stat3">-DSQLITE_ENABLE_STAT3</a> </li>
@@ -567,6 +569,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#win32_malloc_validate">-DSQLITE_WIN32_MALLOC_VALIDATE</a> </li>
 <li> <a href="compile.html#zero_malloc">-DSQLITE_ZERO_MALLOC</a> </li>
 <li> <a href="cli.html#dump">.dump</a> </li>
+<li> <a href="c3ref/str.html">dynamic string</a> </li>
 <li> <a href="datatype3.html">dynamic typing</a> </li>
 <li> <a href="cli.html#editfunc">edit() SQL function</a> </li>
 <li> <a href="spellfix1.html#editdist3">editdist3</a> </li>
@@ -836,6 +839,7 @@ Other Documentation Indexes:
 <li> <a href="lang_select.html#limitoffset">LIMIT</a> </li>
 <li> <a href="c3ref/c_limit_attached.html">limit category</a> </li>
 <li> <a href="opcode.html#codes">list of current bytecodes</a> </li>
+<li> <a href="vtablist.html">list of virtual tables</a> </li>
 <li> <a href="lang_expr.html#litvalue">literal value</a> </li>
 <li> <a href="syntax/literal-value.html">literal-value</a> </li>
 <li> <a href="syntax/literal-value.html">literal-value syntax diagram</a> </li>
@@ -1079,7 +1083,9 @@ Other Documentation Indexes:
 <li> <a href="wal.html#readonly">read-only WAL databases</a> </li>
 <li> <a href="pragma.html#pragma_read_uncommitted">read_uncommitted pragma</a> </li>
 <li> <a href="fts3.html#*fts4rebuidcmd">"rebuild" command</a> </li>
+<li> <a href="locrsf.html">recommended by the US Library of Congress</a> </li>
 <li> <a href="compile.html#rcmd">recommended compile-time options</a> </li>
+<li> <a href="locrsf.html">recommended storage format</a> </li>
 <li> <a href="fileformat2.html#record_format">record format</a> </li>
 <li> <a href="walformat.html#recovery">recovery</a> </li>
 <li> <a href="lang_with.html#recursivecte">recursive common table expression</a> </li>
@@ -1325,6 +1331,9 @@ Other Documentation Indexes:
 <li> <a href="c3ref/int64.html">sqlite3_int64</a> </li>
 <li> <a href="c3ref/interrupt.html">sqlite3_interrupt</a> </li>
 <li> <a href="c3ref/io_methods.html">sqlite3_io_methods</a> </li>
+<li> <a href="c3ref/keyword_check.html">sqlite3_keyword_check</a> </li>
+<li> <a href="c3ref/keyword_check.html">sqlite3_keyword_count</a> </li>
+<li> <a href="c3ref/keyword_check.html">sqlite3_keyword_name</a> </li>
 <li> <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid</a> </li>
 <li> <a href="c3ref/libversion.html">sqlite3_libversion</a> </li>
 <li> <a href="c3ref/libversion.html">sqlite3_libversion_number</a> </li>
@@ -1448,6 +1457,18 @@ Other Documentation Indexes:
 <li> <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus</a> </li>
 <li> <a href="c3ref/stmt_scanstatus_reset.html">sqlite3_stmt_scanstatus_reset</a> </li>
 <li> <a href="c3ref/stmt_status.html">sqlite3_stmt_status</a> </li>
+<li> <a href="c3ref/str.html">sqlite3_str</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_append</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_appendall</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_appendchar</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_appendf</a> </li>
+<li> <a href="c3ref/str_errcode.html">sqlite3_str_errcode</a> </li>
+<li> <a href="c3ref/str_finish.html">sqlite3_str_finish</a> </li>
+<li> <a href="c3ref/str_errcode.html">sqlite3_str_length</a> </li>
+<li> <a href="c3ref/str_new.html">sqlite3_str_new</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_reset</a> </li>
+<li> <a href="c3ref/str_errcode.html">sqlite3_str_value</a> </li>
+<li> <a href="c3ref/str_append.html">sqlite3_str_vappendf</a> </li>
 <li> <a href="c3ref/strglob.html">sqlite3_strglob</a> </li>
 <li> <a href="c3ref/stricmp.html">sqlite3_stricmp</a> </li>
 <li> <a href="c3ref/strlike.html">sqlite3_strlike</a> </li>
@@ -1506,6 +1527,9 @@ Other Documentation Indexes:
 <li> <a href="c3ref/wal_checkpoint.html">sqlite3_wal_checkpoint</a> </li>
 <li> <a href="c3ref/wal_checkpoint_v2.html">sqlite3_wal_checkpoint_v2</a> </li>
 <li> <a href="c3ref/wal_hook.html">sqlite3_wal_hook</a> </li>
+<li> <a href="c3ref/win32_set_directory.html">sqlite3_win32_set_directory</a> </li>
+<li> <a href="c3ref/win32_set_directory.html">sqlite3_win32_set_directory16</a> </li>
+<li> <a href="c3ref/win32_set_directory.html">sqlite3_win32_set_directory8</a> </li>
 <li> <a href="session/sqlite3changegroup_add.html">sqlite3changegroup_add</a> </li>
 <li> <a href="session/sqlite3changegroup_add_strm.html">sqlite3changegroup_add_strm</a> </li>
 <li> <a href="session/sqlite3changegroup_delete.html">sqlite3changegroup_delete</a> </li>
@@ -1613,6 +1637,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigserialized">SQLITE_CONFIG_SERIALIZED</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsinglethread">SQLITE_CONFIG_SINGLETHREAD</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsmallmalloc">SQLITE_CONFIG_SMALL_MALLOC</a> </li>
+<li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsorterrefsize">SQLITE_CONFIG_SORTERREF_SIZE</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsqllog">SQLITE_CONFIG_SQLLOG</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfigstmtjrnlspill">SQLITE_CONFIG_STMTJRNL_SPILL</a> </li>
 <li> <a href="c3ref/c_config_covering_index_scan.html#sqliteconfiguri">SQLITE_CONFIG_URI</a> </li>
@@ -1630,6 +1655,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_CONSTRAINT_VTAB</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_COPY</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_CORRUPT</a> </li>
+<li> <a href="c3ref/c_abort_rollback.html">SQLITE_CORRUPT_SEQUENCE</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_CORRUPT_VTAB</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_INDEX</a> </li>
 <li> <a href="c3ref/c_alter_table.html">SQLITE_CREATE_TABLE</a> </li>
@@ -1649,6 +1675,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAINDBNAME</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_MAX</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE</a> </li>
+<li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_RESET_DATABASE</a> </li>
 <li> <a href="c3ref/c_dbconfig_enable_fkey.html">SQLITE_DBCONFIG_TRIGGER_EQP</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html">SQLITE_DBSTATUS options</a> </li>
 <li> <a href="c3ref/c_dbstatus_options.html#sqlitedbstatuscachehit">SQLITE_DBSTATUS_CACHE_HIT</a> </li>
@@ -1735,6 +1762,7 @@ Other Documentation Indexes:
 <li> <a href="compile.html#enable_rbu">SQLITE_ENABLE_RBU</a> </li>
 <li> <a href="compile.html#enable_rtree">SQLITE_ENABLE_RTREE</a> </li>
 <li> <a href="compile.html#enable_session">SQLITE_ENABLE_SESSION</a> </li>
+<li> <a href="compile.html#enable_sorter_references">SQLITE_ENABLE_SORTER_REFERENCES</a> </li>
 <li> <a href="compile.html#enable_sqllog">SQLITE_ENABLE_SQLLOG</a> </li>
 <li> <a href="compile.html#enable_stat2">SQLITE_ENABLE_STAT2</a> </li>
 <li> <a href="compile.html#enable_stat3">SQLITE_ENABLE_STAT3</a> </li>
@@ -1878,6 +1906,7 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_lock_exclusive.html">SQLITE_LOCK_SHARED</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_LOCKED</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_LOCKED_SHAREDCACHE</a> </li>
+<li> <a href="c3ref/c_abort_rollback.html">SQLITE_LOCKED_VTAB</a> </li>
 <li> <a href="fileformat2.html#sqlite_master">sqlite_master</a> </li>
 <li> <a href="fileformat2.html#sqlite_master">sqlite_master table</a> </li>
 <li> <a href="limits.html#max_attached">SQLITE_MAX_ATTACHED</a> </li>
@@ -2132,9 +2161,11 @@ Other Documentation Indexes:
 <li> <a href="c3ref/c_vtab_constraint_support.html">SQLITE_VTAB_CONSTRAINT_SUPPORT</a> </li>
 <li> <a href="c3ref/c_abort.html">SQLITE_WARNING</a> </li>
 <li> <a href="c3ref/c_abort_rollback.html">SQLITE_WARNING_AUTOINDEX</a> </li>
+<li> <a href="c3ref/c_win32_data_directory_type.html">SQLITE_WIN32_DATA_DIRECTORY_TYPE</a> </li>
 <li> <a href="compile.html#win32_heap_create">SQLITE_WIN32_HEAP_CREATE</a> </li>
 <li> <a href="compile.html#win32_malloc">SQLITE_WIN32_MALLOC</a> </li>
 <li> <a href="compile.html#win32_malloc_validate">SQLITE_WIN32_MALLOC_VALIDATE</a> </li>
+<li> <a href="c3ref/c_win32_data_directory_type.html">SQLITE_WIN32_TEMP_DIRECTORY_TYPE</a> </li>
 <li> <a href="compile.html#zero_malloc">SQLITE_ZERO_MALLOC</a> </li>
 <li> <a href="uri.html#coreqp">standard query parameters</a> </li>
 <li> <a href="tempfiles.html#stmtjrnl">statement journal</a> </li>
@@ -2280,6 +2311,10 @@ Other Documentation Indexes:
 <li> <a href="syntax/update-stmt-limited.html">update-stmt-limited syntax diagram</a> </li>
 <li> <a href="tclsqlite.html#update_hook">update_hook method</a> </li>
 <li> <a href="lang_corefunc.html#upper">upper() SQL function</a> </li>
+<li> <a href="lang_UPSERT.html">UPSERT</a> </li>
+<li> <a href="lang_UPSERT.html">upsert clause</a> </li>
+<li> <a href="syntax/upsert-clause.html">upsert-clause</a> </li>
+<li> <a href="syntax/upsert-clause.html">upsert-clause syntax diagram</a> </li>
 <li> <a href="uri.html">URI</a> </li>
 <li> <a href="uri.html">URI filename</a> </li>
 <li> <a href="c3ref/open.html#urifilenameexamples">URI filename examples</a> </li>
@@ -2366,6 +2401,7 @@ Other Documentation Indexes:
 <li> <a href="releaselog/3_23_0.html">Version 3.23.0.0</a> </li>
 <li> <a href="releaselog/3_23_1.html">Version 3.23.1</a> </li>
 <li> <a href="releaselog/3_23_1.html">Version 3.23.1.0</a> </li>
+<li> <a href="releaselog/3_24_0.html">Version 3.24.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0</a> </li>
 <li> <a href="releaselog/3_3_0.html">Version 3.3.0.0</a> </li>
 <li> <a href="releaselog/3_3_1.html">Version 3.3.1</a> </li>
@@ -2520,6 +2556,7 @@ Other Documentation Indexes:
 <li> <a href="opcode.html">virtual machine instructions</a> </li>
 <li> <a href="vtab.html">virtual table</a> </li>
 <li> <a href="c3ref/vtab_cursor.html">virtual table cursor</a> </li>
+<li> <a href="vtablist.html">virtual table list</a> </li>
 <li> <a href="c3ref/module.html">virtual table module</a> </li>
 <li> <a href="wal.html">WAL</a> </li>
 <li> <a href="wal.html#bkwrds">WAL backwards compatibility</a> </li>

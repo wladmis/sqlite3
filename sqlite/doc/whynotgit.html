@@ -102,12 +102,19 @@ Why SQLite Does Not Use Git
 Table Of Contents
 </a>
 <div id="toc_sub"><div class="fancy-toc1"><a href="#introduction">1. Introduction</a></div>
+<div class="fancy-toc2"><a href="#edits">1.1. Edits</a></div>
 <div class="fancy-toc1"><a href="#a_few_reasons_why_sqlite_does_not_use_git">2. A Few Reasons Why SQLite Does Not Use Git</a></div>
-<div class="fancy-toc2"><a href="#see_also">2.1. See Also</a></div>
+<div class="fancy-toc2"><a href="#git_makes_it_difficult_to_find_successors_descendents_of_a_check_in">2.1. Git makes it difficult to find successors (descendents)
+of a check-in</a></div>
+<div class="fancy-toc2"><a href="#the_mental_model_for_git_is_needlessly_complex">2.2. The mental model for Git is needlessly complex</a></div>
+<div class="fancy-toc2"><a href="#git_does_not_track_historical_branch_names">2.3. Git does not track historical branch names</a></div>
+<div class="fancy-toc2"><a href="#git_requires_more_administrative_support">2.4. Git requires more administrative support</a></div>
+<div class="fancy-toc2"><a href="#git_provides_a_poor_user_experience">2.5. Git provides a poor user experience</a></div>
 <div class="fancy-toc1"><a href="#a_git_user_s_guide_to_accessing_sqlite_source_code">3. A Git-User's Guide To Accessing SQLite Source Code</a></div>
 <div class="fancy-toc2"><a href="#github_mirrors">3.1. GitHub Mirrors</a></div>
 <div class="fancy-toc2"><a href="#web_access">3.2. Web Access</a></div>
 <div class="fancy-toc2"><a href="#fossil_access">3.3. Fossil Access</a></div>
+<div class="fancy-toc1"><a href="#see_also">4. See Also</a></div>
 </div>
 </div>
 <script>
@@ -134,39 +141,110 @@ mk.innerHTML = "&#x25ba;";
 SQLite does not use the
 <a href="https://git-scm.org">Git</a> version control system.
 SQLite uses
-<a href="https://fossil-scm.org/">Fossil</a> instead.
-Fossil and Git are both block-chain version-control systems.
-They are both "distributed".  They both store content as a 
-sequence of immutable check-ins identified by a cryptographic
-hash.  Git is wildly popular, to the point that many younger
-developers are familiar with nothing else.  And yet, the developers
-of SQLite prefer Fossil.  This article tries to explain why.
+<a href="https://fossil-scm.org/">Fossil</a> instead, which is a
+version control system that was specifically designed
+and written to support SQLite.
+
+</p><p>
+People sometimes ask why SQLite does not use the
+<a href="https://git-scm.org">Git</a> version control system like everybody
+else.
+This article attempts to answer that question.  Also,
+in <a href="#getthecode">section 3</a>, 
+this article provides hints to Git users
+about how they can easily access the SQLite source code.
+
+</p><p>
+This article is <u>not</u> a comparison between Fossil
+and Git.  See
+<a href="https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki">https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki</a>
+for a comparison of the two systems.
+
+</p><h2 id="edits"><span>1.1. </span>Edits</h2>
+
+<p>
+This article has been revised multiple times in an attempt
+to improve clarity, address concerns and misgivings,
+and to fix errors identified on
+<a href="https://news.ycombinator.com/item?id=16806114">Hacker News</a>,
+<a href="https://www.reddit.com/r/programming/comments/8c2niw/why_sqlite_does_not_use_git/">Reddit</a>
+and
+<a href="https://lobste.rs/s/slcntl/why_sqlite_does_not_use_git">Lobsters</a>.
+The complete edit history can be seen at
+<a href="https://sqlite.org/docsrc/finfo/pages/whynotgit.in">https://sqlite.org/docsrc/finfo/pages/whynotgit.in</a>.
+
 
 </p><h1 id="a_few_reasons_why_sqlite_does_not_use_git"><span>2. </span>A Few Reasons Why SQLite Does Not Use Git</h1>
 
-<ol>
-<li><p>
-With Git, it is very difficult to find the successors (decendents) of
-a check-in.
+<p>
+One could summarize the reason why SQLite does not use Git in
+a single sentence:  The lead SQLite developer finds Git to be
+unpalatable.  If you like Git and want to use it, that's great.
+I do not like Git and would rather use something that I think
+is better.
 
 </p><p>
-Git allows you to go backwards in time.  Given the latest
+The following are a few of the reasons why I do not like Git:
+
+</p><h2 id="git_makes_it_difficult_to_find_successors_descendents_of_a_check_in"><span>2.1. </span>Git makes it difficult to find successors (descendents)
+of a check-in</h2>
+
+<p>
+Git allows you to go backwards in time easily.  Given the latest
 check-in on a branch, Git lets you see all the ancestors of that
-check-in.  But Git makes it very difficult to move in the other
+check-in.  But Git makes it difficult to move in the other
 direction.  Given some historical check-in, it is quite challenging
 in Git to find out what came next.  It can be done, but it is sufficiently
-difficult and slow that nobody ever does it.  There is no button in
-GitHub that shows the descendents of a check-in.
+difficult and people rarely do it.  Common interfaces for Git,
+such as GitHub, do not support the ability.
+
+</p><p>It is not impossible to find the descendents of a check-in
+in Git.  It is merely difficult.  For example,
+there is a 
+<a href="https://stackoverflow.com/questions/27960605/find-all-the-direct-descendants-of-a-given-commit#27962018">stackoverflow page</a>
+showing the command sequence for finding the descendents of a check-in
+in unix:
+
+</p><div class="codeblock"><pre>git rev-list --all --parents | grep ".\{40\}.*<parent_sha1>.*" | awk '{print $1}'
+</parent_sha1>
+</pre></div>
+
+<p>
+This command sequence is a lot to memorize and type.  (One would want
+to create a bash alias or short shell script if it were used frequently.)
+Furthermore, it is not quite the same thing.  The command above gives
+one a list of descendents without showing the branching structure, which
+is important for understanding what happened.
+In contrast, Fossil offers displays such as
+<a href="https://sqlite.org/src/timeline?d=8a439a6dda390d74&n=15">https://sqlite.org/src/timeline?d=8a439a6dda390d74&n=15</a>, which
+is a tremendous help in analyzing the aftermath of historical changes.
 
 </p><p>
-This is a deal-breaker, a show-stopper.  The principle maintainer
-of SQLite cannot function effectively without being able to view
-the successors of a check-in.  This one issue is sufficient reason
-to not use Git, in the view of the designer of SQLite.
+And it is not really about just finding the descendents of a check-in
+from time to time.  The fact that descendents are readily available in
+Fossil means that the information pervades the web pages provided by
+Fossil.  One example: Every Fossil check-in information page
+(<a href="https://www.sqlite.org/src/info/ec7addc87f97bcff">example</a>) shows
+a small "Context" graph of the immediate predecessor and successors 
+to that check-in.  This helps the user maintain better situational
+awareness, and it provides useful capabilities, such as the ability
+click forward to the next check-in in sequence.  Another example:
+Fossil easily shows the context around a specific check-in
+(<a href="https://www.sqlite.org/src/timeline?c=2018-03-16&n=10">example</a>)
+which again helps to promote situational awareness and a deeper
+understanding of what is happening in the code.
 
-</p></li><li><p>
-The mental model for Git is needlessly complex and consequently
-distracts attention from software under development.  A user of Git
+</p><p>
+All of the above is possible with Git, given the right extensions
+and tools and using the right commands.  But it is not easy to do,
+and so it rarely gets done.  Consequently, developers have less awareness
+of what is happening in the code.
+
+</p><h2 id="the_mental_model_for_git_is_needlessly_complex"><span>2.2. </span>The mental model for Git is needlessly complex</h2>
+
+<p>
+The complexity of Git
+distracts attention from the software under development.  A user of Git
 needs to keep all of the following in mind:
 </p><ol type="'a'">
 <li> The working directory
@@ -186,8 +264,22 @@ Every developer has a finite number of brain-cycles.  Fossil
 requires fewer brain-cycles to operate, thus freeing up 
 intellectual resources to focus on the software under development.
 
-</p></li><li><p>
-Git does not track branch history.  This makes review of historical
+</p><p>One user of both Git and Fossil
+<a href="https://news.ycombinator.com/item?id=16806955">writes in HN</a>:
+
+</p><blockquote><i>
+Fossil gives me peace of mind that I have everything ... synced to 
+the server with a single command....
+I never get this peace of mind with git.
+</i></blockquote>
+
+<h2 id="git_does_not_track_historical_branch_names"><span>2.3. </span>Git does not track historical branch names</h2>
+
+<p>
+Git keeps the complete DAG of the check-in sequence.  But branch
+tags are local information that is not synced and not retained
+once a branch closes.
+This makes review of historical
 branches tedious.
 
 </p><p>
@@ -205,37 +297,69 @@ trunk.  It shows where the branch started, and it shows two occasions where chan
 on trunk were merged into the branch.  GitHub shows none of this.  In fact, the
 GitHub display is mostly useless in trying to figure out what happened.
 
-</p></li><li><p>
-Git lacks native wiki and bug tracking.
-If you want these essential features, you have to install additional software
-such as GitLab, or else use a third-party service such as GitHub.  And even
-then, the wiki and bug reports are centralized, not distributed.
+</p><p>
+Many readers have recommended various third-party GUIs for Git that
+might do a better job of showing historical development activity.  Maybe
+some of them do work better than native Git and/or GitHub, though they
+will all be hampered by the fact that Git does not preserve historical
+branch names across syncs.  And even if those other tools are better,
+the fact that it is necessary to go to a third-party tool to get the information
+desired does not speak well of the core system.
 
-</p></li><li><p>
-Git requires more administrative support.
-Setting up a website for a project to use Git requires a lot more software,
-and a lot more work, than setting up a similar site with an integrated package
-like Fossil.
-
-</p></li><li><p>Nobody really understands Git.
-<img src="https://www.fossil-scm.org/fossil/doc/trunk/www/xkcd-git.gif"><br>
-(credit: <a href="https://xkcd.com/1597/">https://xkcd.com/1597/</a>)
-</p></li></ol>
-
-<h2 id="see_also"><span>2.1. </span>See Also</h2>
-
-<p>Other pages that talk about Fossil and Git include:
-</p><ul>
-<li><p><a href="https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki">Fossil vs. Git</a>
-</p></li><li><p><a href="https://www.fossil-scm.org/fossil/doc/trunk/www/quotes.wiki">What others say about Fossil and Git</a>
-</p></li></ul>
-
-<h1 id="a_git_user_s_guide_to_accessing_sqlite_source_code"><span>3. </span>A Git-User's Guide To Accessing SQLite Source Code</h1>
+</p><h2 id="git_requires_more_administrative_support"><span>2.4. </span>Git requires more administrative support</h2>
 
 <p>
-If you are a devoted Git user and have no intention of changing,
-you can still easily access SQLite.  This section gives some hints
-on how to do so.
+Git is complex software.
+One needs an installer of some kind to put Git on a developer
+workstation, or to upgrade to a newer version of Git.
+Setting up a Git server is non-trivial.  One could use GitHub,
+but that introduces another third-party dependency and a
+centralized service, which mitigate the key advantage of Git
+which is that it is "distributed".  There are various free
+alternatives to GitHub, such as GitLab, but those too have
+a lot of dependencies and require a lot of server setup.
+
+</p><p>
+In contrast, Fossil is a single standalone binary which one
+installs by placing it to $PATH.  That one binary contains all
+the functionality of core Git and also GitHub and/or GitLab.  It
+manages a community server with wiki and bug tracking, provides
+packaged downloads for consumers, login managements, and so forth,
+with no extra software required.
+
+</p><p>
+Less administration means that programmers spend more time working
+on the software (SQLite in this case) and less time fussing with
+the version control system.
+
+</p><h2 id="git_provides_a_poor_user_experience"><span>2.5. </span>Git provides a poor user experience</h2>
+
+<p>The following <a href="https://xkcd.com/1597/">https://xkcd.com/1597/</a> cartoon is an
+exaggeration, yet hits close to home:
+
+</p><p>
+<img src="https://www.fossil-scm.org/fossil/doc/trunk/www/xkcd-git.gif">
+
+</p><p>Let's be real.  Few people seriously dispute that Git provides
+a suboptimal user experience.  A lot of 
+the underlying implementation shows through into the user
+interface.  The interface is so bad that there is even a
+parody site that generates
+<a href="https://git-man-page-generator.lokaltog.net/">fake git man pages</a>.
+
+</p><p>Designing software is hard.  It takes a lot of focus.
+A good version control system should provide the developer with
+assistance, not frustration.  Git has gotten better in this
+regard over the past decade, but it still has a long way to go.
+And so, the developers of SQLite plan to continue using a
+different version control system for now.
+
+<a name="getthecode"></a>
+</p><h1 id="a_git_user_s_guide_to_accessing_sqlite_source_code"><span>3. </span>A Git-User's Guide To Accessing SQLite Source Code</h1>
+
+<p>
+If you are a devoted Git user, you can still easily access SQLite.  
+This section gives some hints on how to do so.
 
 </p><h2 id="github_mirrors"><span>3.1. </span>GitHub Mirrors</h2>
 
@@ -256,21 +380,46 @@ for downloading  a Tarball, ZIP Archive, or <a href="sqlar.html">SQLite Archive<
 historical version of SQLite.  The URLs for these downloads are
 simple and can be incorporated easily into automated tools.  The format is:
 
-</p><center>
+</p><blockquote>
 <tt>https://sqlite.org/src/tarball/</tt><i>VERSION</i><tt>/sqlite.tar.gz</tt>
-</center>
+</blockquote>
 
 <p>
 Simply replace <i>VERSION</i> with some description of the version to be
 downloaded.  The <i>VERSION</i> can be a prefix of the cryptographic hash
 name of a specific check-in, or the name of a branch (in which case the
 most recent version of the branch is fetched) or a tag for a specific
-check-in like "version-3.23.0".
+check-in like "version-3.23.1":
+
+</p><blockquote>
+<tt>https://sqlite.org/src/tarball/version-3.23.1/sqlite.tar.gz</tt>
+</blockquote>
+
+
+<p>To get the latest release, use "release"
+for <i>VERSION</i>, like this:
+
+</p><blockquote>
+<tt>https://sqlite.org/src/tarball/release/sqlite.tar.gz</tt>
+</blockquote>
+
+<p>
+To get the latest trunk check-in, us "trunk" for <i>VERSION</i>:
+
+</p><blockquote>
+<tt>https://sqlite.org/src/tarball/trunk/sqlite.tar.gz</tt>
+</blockquote>
+
+<p>
+And so forth.
+For ZIP archives and SQLite Archives, simply change the "/tarball/" element
+into either "/zip/" or "/sqlar/", and maybe also change the name of the
+download file to have a ".zip" or ".sqlar" suffix.
 
 </p><h2 id="fossil_access"><span>3.3. </span>Fossil Access</h2>
 
 <p>
-Fossil is really easy to install and use.  Here are the steps for unix.
+Fossil is easy to install and use.  Here are the steps for unix.
 (Windows is similar.)
 
 </p><ol>
@@ -279,24 +428,48 @@ Download the self-contained Fossil executable from
 <a href="https://fossil-scm.org/fossil/uv/download.html">https://fossil-scm.org/fossil/uv/download.html</a> and put the executable
 somewhere on your $PATH.
 </li><li><tt>mkdir ~/fossils</tt>
-</li><li><tt>fossil clone https://fossil-scm.org/fossil ~/fossils/sqlite.fossil</tt>
+</li><li><tt>fossil clone https://sqlite.org/src ~/fossils/sqlite.fossil</tt>
 </li><li><tt>mkdir ~/sqlite; cd ~/sqlite</tt>
-</li><li><tt>fossil open ~/sqlite.fossil .</tt>
+</li><li><tt>fossil open ~/fossils/sqlite.fossil</tt>
 </li></ol>
 
 <p>
-Subsequently, to update your check-out, simply type:
+At this point you are ready to type "<tt>./configure; make</tt>"
+(or on Windows with MSVC, "<tt>nmake /f Makefile.msc</tt>").
+
+</p><p>
+To change your checkout to a different version of Fossil use
+the "update" command:
 
 </p><blockquote>
-<tt>fossil up </tt><i>VERSION</i>
+<tt>fossil update </tt><i>VERSION</i>
 </blockquote>
 
 <p>
-Use "trunk" for version to get the latest trunk version of SQLite.
+Use "trunk" for <i>VERSION</i> to get the latest trunk version of SQLite.
 Or use a prefix of a cryptographic hash name, or the name of some branch
-or tag.
+or tag.  See
+<a href="https://fossil-scm.org/fossil/doc/trunk/www/checkin_names.wiki">https://fossil-scm.org/fossil/doc/trunk/www/checkin_names.wiki</a> for more
+suggestions on what names can be used for <i>VERSION</i>.
 
 </p><p>
 Use the "<tt>fossil ui</tt>" command from within the ~/sqlite checkout to
 bring up a local copy of the website.
-</p>
+
+</p><p>
+Additional documentation on Fossil can be found at
+<a href="https://fossil-scm.org/fossil/doc/trunk/www/permutedindex.html">https://fossil-scm.org/fossil/doc/trunk/www/permutedindex.html</a>
+
+</p><p>
+Do not be afraid to explore and experiment.
+Without a log-in you won't be able to
+push back any changes you make, so you cannot damage the project.
+
+</p><h1 id="see_also"><span>4. </span>See Also</h1>
+
+<p>Other pages that talk about Fossil and Git include:
+</p><ul>
+<li><p><a href="https://fossil-scm.org/fossil/doc/trunk/www/fossil-v-git.wiki">Fossil vs. Git</a>
+</p></li><li><p><a href="https://www.fossil-scm.org/fossil/doc/trunk/www/quotes.wiki">What others say about Fossil and Git</a>
+</p></li></ul>
+

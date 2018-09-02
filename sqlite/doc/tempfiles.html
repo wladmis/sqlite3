@@ -370,15 +370,18 @@ to another database might roll back.  The master journal causes all
 changes in all databases to either rollback or commit together.
 </p>
 
-
+<p>
 The master journal file is only created for <a href="lang_transaction.html">COMMIT</a> operations that
 involve multiple database files where at least two of the databases 
 meet all of the following requirements:
-<ol>
+
+</p><ol>
 <li>The database is modified by the transaction
 </li><li>The <a href="pragma.html#pragma_synchronous">PRAGMA synchronous</a> setting is not OFF
 </li><li>The <a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode</a> is not OFF, MEMORY, or WAL
 </li></ol>
+
+<p>
 This means that SQLite transactions are not atomic
 across multiple database files on a power-loss when the database 
 files have synchronous turned off or when they are using journal 
@@ -389,7 +392,7 @@ a transaction commit is interrupted by a power loss.  For
 across a power-loss, but in the case of a multi-file transactions,
 some files might rollback while others roll forward after
 power is restored.
-
+</p>
 
 
 <a name="stmtjrnl"></a>

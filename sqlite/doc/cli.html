@@ -108,7 +108,7 @@ Table Of Contents
 <div class="fancy-toc1"><a href="#changing_output_formats">5. Changing Output Formats</a></div>
 <div class="fancy-toc1"><a href="#writing_results_to_a_file">6. Writing results to a file</a></div>
 <div class="fancy-toc2"><a href="#file_i_o_functions">6.1. File I/O Functions</a></div>
-<div class="fancy-toc2"><a href="#the_edit_sql_funtion">6.2. The edit() SQL funtion</a></div>
+<div class="fancy-toc2"><a href="#the_edit_sql_function">6.2. The edit() SQL function</a></div>
 <div class="fancy-toc1"><a href="#querying_the_database_schema">7. Querying the database schema</a></div>
 <div class="fancy-toc1"><a href="#csv_import">8. CSV Import</a></div>
 <div class="fancy-toc1"><a href="#csv_export">9. CSV Export</a></div>
@@ -273,6 +273,7 @@ at any time.  For example:
 .archive ...           Manage SQL archives: ".archive --help" for details
 .auth ON|OFF           Show authorizer callbacks
 .backup ?DB? FILE      Backup DB (default "main") to FILE
+                         Add "--append" to open using appendvfs.
 .bail on|off           Stop after hitting an error.  Default OFF
 .binary on|off         Turn binary output on or off.  Default OFF
 .cd DIRECTORY          Change the working directory to DIRECTORY
@@ -280,6 +281,7 @@ at any time.  For example:
 .check GLOB            Fail if output since .testcase does not match
 .clone NEWDB           Clone data into NEWDB from the existing database
 .databases             List names and files of attached databases
+.dbconfig ?op? ?val?   List or change sqlite3_db_config() options
 .dbinfo ?DB?           Show status information about the database
 .dump ?TABLE? ...      Dump the database in an SQL text format
                          If TABLE specified, only dump tables matching
@@ -320,6 +322,7 @@ at any time.  For example:
                          on the output.
 .open ?OPTIONS? ?FILE? Close existing database and reopen FILE
                          The --new option starts with an empty file
+                         Other options: --readonly --append --zip
 .output ?FILE?         Send output to FILE or stdout
 .print STRING...       Print literal STRING
 .prompt MAIN CONTINUE  Replace the standard prompts
@@ -609,7 +612,7 @@ source file in the <a href="download.html#srctree">SQLite source code repositori
 
 <a name="editfunc"></a>
 
-</p><h2 id="the_edit_sql_funtion"><span>6.2. </span>The edit() SQL funtion</h2>
+</p><h2 id="the_edit_sql_function"><span>6.2. </span>The edit() SQL function</h2>
 
 <p>The CLI has another build-in SQL function named edit().  Edit() takes
 one or two arguments.  The first argument is a value - usually a large
@@ -1285,7 +1288,7 @@ the usual configure-make command works:
 
 <p>
 The configure-make works whether your are building from the canonical sources
-from the source tree, or from a amalgamated bundle.  There are few
+from the source tree, or from an amalgamated bundle.  There are few
 dependencies.  When building from canonical sources, a working 
 <a href="https://www.tcl.tk/man/tcl8.3/UserCmd/tclsh.htm">tclsh</a> is required.
 If using an amalgamation bundle, all the preprocessing work normally 

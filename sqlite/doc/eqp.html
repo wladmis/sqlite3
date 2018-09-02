@@ -106,7 +106,6 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#temporary_sorting_b_trees">1.2. Temporary Sorting B-Trees</a></div>
 <div class="fancy-toc2"><a href="#subqueries">1.3. Subqueries</a></div>
 <div class="fancy-toc2"><a href="#compound_queries">1.4. Compound Queries</a></div>
-<div class="fancy-toc1"><a href="#sample_code">2. Sample Code</a></div>
 </div>
 </div>
 <script>
@@ -132,10 +131,16 @@ mk.innerHTML = "&#x25ba;";
 <h1 id="the_explain_query_plan_command"><span>1. </span>The EXPLAIN QUERY PLAN Command</h1>
 
 <p style="margin-left:10ex;margin-right:10ex">
-<b>Warning: The data returned by the EXPLAIN QUERY PLAN command is 
+<b>Warning:</b> The data returned by the EXPLAIN QUERY PLAN command is 
 intended for interactive debugging only.  The output format may change
 between SQLite releases. Applications should not depend on the output
-format of the EXPLAIN QUERY PLAN command.</b>
+format of the EXPLAIN QUERY PLAN command.
+
+</p><p style="margin-left:10ex;margin-right:10ex">
+<b>Alert:</b> As warned above, the EXPLAIN QUERY PLAN output format did
+change substantially with the version 3.24.0 release (2018-06-04).
+Further changes are possible in subsequent releases.
+
 
 </p><p>The <a href="lang_explain.html">EXPLAIN QUERY PLAN</a> SQL command is used to obtain a high-level
 description of the strategy or plan that SQLite uses to implement a specific
@@ -150,14 +155,32 @@ information is available separately:
 </li><li> The <a href="queryplanner-ng.html">next generation query planner</a>.
 </li></ul>
 
-<p>An EXPLAIN QUERY PLAN command returns zero or more rows of four columns
-each. The column names are "selectid", "order", "from", "detail". The
-first three columns contain an integer value. The final
-column, "detail", contains a text value which carries most of
-the useful information.
+<p>A query plan is represented as a tree.
+In raw form, as returned by <a href="c3ref/step.html">sqlite3_step()</a>, each node of the tree
+consists of four fields:  A integer node id, an integer parent id,
+an auxiliary integer field that is not currently used, and a description
+of the node.
+The entire tree is therefore a table with four columns and zero or more
+rows.
+The <a href="cli.html">command-line shell</a> will usually intercept this table and renders
+it as an ASCII-art graph for more convenient viewing.  To defeat the
+shells automatic graph rendering, simply include extra white space
+in between any of the "EXPLAIN", "QUERY", and/or "PLAN" keywords and
+the output will appear in a (less helpful) tabular format.
+
+</p><p>One can also set the <a href="cli.html">CLI</a> into automatic EXPLAIN QUERY PLAN mode
+using the ".eqp on" command:
+
+</p><div class="codeblock"><pre>sqlite&gt; .eqp on
+</pre></div>
+
+<p> In automatic EXPLAIN QUERY PLAN mode, the shell automatically runs
+a separate EXPLAIN QUERY PLAN query for each statement you enter and
+displays the result before actually running the query.  Use the
+".eqp off" command to turn automatic EXPLAIN QUERY PLAN mode back off.
 
 </p><p>EXPLAIN QUERY PLAN is most useful on a SELECT statement,
-but may also be appear with other statements that read data from database
+but may also appear with other statements that read data from database
 tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
 
 </p><h2 id="table_and_index_scans"><span>1.1. </span>Table and Index Scans</h2>
@@ -190,8 +213,9 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
 <p>
   For example, the following EXPLAIN QUERY PLAN command operates on a SELECT
   statement that is implemented by performing a full-table scan on table t1:
-</p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
-0|0|0|SCAN TABLE t1
+</p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
+QUERY PLAN
+`--SCAN TABLE t1
 </pre></div>
 
 <p>
@@ -203,7 +227,8 @@ tables (e.g. UPDATE, DELETE, INSERT INTO ... SELECT).
   identified. For example:
 </p><div class="codeblock"><pre>sqlite&gt; CREATE INDEX i1 ON t1(a);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
-0|0|0|SEARCH TABLE t1 USING INDEX i1
+QUERY PLAN
+`--SEARCH TABLE t1 USING INDEX i1 (a=?)
 </pre></div>
 
 <p>
@@ -213,7 +238,8 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   example can, and that fact is reflected in the output:
 </p><div class="codeblock"><pre>sqlite&gt; CREATE INDEX i2 ON t1(a, b);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1; 
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
+QUERY PLAN
+`--SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
 </pre></div>
 
 <p>
@@ -221,37 +247,40 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT a, b FROM t1 WHERE a=1;
   SELECT query that features a join is analyzed using EXPLAIN QUERY PLAN, one
   SCAN or SEARCH record is output for each nested loop. For example:
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t1, t2 WHERE t1.a=1 AND t1.b>2;
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
-0|1|1|SCAN TABLE t2
+QUERY PLAN
+|--SEARCH TABLE t1 USING INDEX i2 (a=? AND b>?)
+`--SCAN TABLE t2
 </pre></div>
 
 <p>
-  The second column of output (column "order") indicates the nesting order. In
-  this case, the scan of table t1 using index i2 is the outer loop (order=0)
-  and the full-table scan of table t2 (order=1) is the inner loop. The third
-  column (column "from"), indicates the position in the FROM clause of the
-  SELECT statement that the table associated with each scan occurs in. In the
-  case above, table t1 occupies the first position in the FROM clause, so the
-  value of column "from" is 0 in the first record. Table t2 is in the
-  second position, so the "from" column for the corresponding SCAN record is
-  set to 1. In the following example, the positions of t1 and t2 in the FROM 
-  clause of the SELECT are reversed. The query strategy remains the same, but
-  the values in the "from" column of the output are adjusted accordingly.
+  The order of the entries indicates the nesting order. In
+  this case, the scan of table t1 using index i2 is the outer loop (since it
+  appears first)
+  and the full-table scan of table t2 is the inner loop (since it appears
+  last).
+  In the following example, the positions of t1 and t2 in the FROM 
+  clause of the SELECT are reversed. The query strategy remains the same.
+  The output from EXPLAIN QUERY PLAN shows how the query is actually
+  evaluated, not how it is specified in the SQL statement.
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT t1.*, t2.* FROM t2, t1 WHERE t1.a=1 AND t1.b>2;
-0|0|1|SEARCH TABLE t1 USING COVERING INDEX i2 (a=? AND b>?)
-0|1|0|SCAN TABLE t2
+QUERY PLAN
+|--SEARCH TABLE t1 USING INDEX i2 (a=? AND b>?)
+`--SCAN TABLE t2
 </pre></div>
+
+<a name="or-opt"></a>
 
 <p>
   If the WHERE clause of a query contains an OR expression, then SQLite might
-  use the <a href="queryplanner.html#or_in_where">"OR by union"</a> strategy (also described 
-  <a href="optoverview.html#or_opt">here</a>). In this case there will be two SEARCH records, one
-  for each index, with the same values in both the "order" and "from" columns.
-  For example: 
+  use the <a href="queryplanner.html#or_in_where">"OR by union"</a> strategy (also known as the
+  <a href="optoverview.html#or_opt">OR optimization</a>). In this case there will be single top-level record
+  for the search, with two sub-records, one for each index:
 </p><div class="codeblock"><pre>sqlite&gt; CREATE INDEX i3 ON t1(b);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
-0|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
-0|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
+QUERY PLAN
+`--MULTI-INDEX OR
+   |--SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
+   `--SEARCH TABLE t1 USING INDEX i3 (b=?)
 </pre></div>
 
 <h2 id="temporary_sorting_b_trees"><span>1.2. </span>Temporary Sorting B-Trees</h2>
@@ -266,9 +295,10 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
   the form "USE TEMP B-TREE FOR xxx", where xxx is one of "ORDER BY",
   "GROUP BY" or "DISTINCT". For example:
 
-</p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
-0|0|0|SCAN TABLE t2
-0|0|0|USE TEMP B-TREE FOR ORDER BY
+</p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c;
+QUERY PLAN
+|--SCAN TABLE t2
+`--USE TEMP B-TREE FOR ORDER BY
 </pre></div>
 
 <p>
@@ -277,140 +307,121 @@ sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM t1 WHERE a=1 OR b=2;
 
 </p><div class="codeblock"><pre>sqlite&gt; CREATE INDEX i4 ON t2(c);
 sqlite&gt; EXPLAIN QUERY PLAN SELECT c, d FROM t2 ORDER BY c; 
-0|0|0|SCAN TABLE t2 USING INDEX i4
+QUERY PLAN
+`--SCAN TABLE t2 USING INDEX i4
 </pre></div>
 
 <h2 id="subqueries"><span>1.3. </span>Subqueries</h2>
 
 <p>
-  In all the examples above, the first column (column "selectid") is always
-  set to 0. If a query contains sub-selects, either as part of the FROM
-  clause or as part of SQL expressions, then the output of EXPLAIN QUERY
-  PLAN also includes a report for each sub-select. Each sub-select is assigned
-  a distinct, non-zero "selectid" value. The top-level SELECT statement is
-  always assigned the selectid value 0. For example:
+  In all the examples above, there has only been a single SELECT statement.
+  If a query contains sub-selects, those are shown as being children of
+  the outer SELECT.  For example:
 
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT (SELECT b FROM t1 WHERE a=0), (SELECT a FROM t1 WHERE b=t2.c) FROM t2;
-0|0|0|SCAN TABLE t2
-0|0|0|EXECUTE SCALAR SUBQUERY 1
-1|0|0|SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
-0|0|0|EXECUTE CORRELATED SCALAR SUBQUERY 2
-2|0|0|SEARCH TABLE t1 USING INDEX i3 (b=?)
+|--SCAN TABLE t2 USING COVERING INDEX i4
+|--SCALAR SUBQUERY
+|  `--SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
+`--CORRELATED SCALAR SUBQUERY
+   `--SEARCH TABLE t1 USING INDEX i3 (b=?)
 </pre></div>
 
 <p>
-  The example above contains a pair of scalar subqueries assigned selectid 
-  values 1 and 2. As well as a SCAN record, there are also 2 "EXECUTE" 
-  records associated with the top level subquery (selectid 0), indicating
-  that subqueries 1 and 2 are executed by the top level query in a scalar
-  context. The CORRELATED qualifier present in the EXECUTE record associated
-  with scalar subquery 2 indicates that the query must be run separately
-  for each row visited by the top level query. Its absence in the record
-  associated with subquery 1 means that the subquery is only run once and
-  the result cached. In other words, subquery 2 may be more performance
-  critical, as it may be run many times whereas subquery 1 is only ever run
-  once.
+  The example above contains two "SCALAR" subqueries.  The subqueries
+  are SCALAR in the sense that they return a single value - a one-row,
+  one-column table.  If the actual query returns more than that, then
+  only the first column of the first row is used.
+</p><p>
+  The first subquery above is constant with respect to the outer query.
+  The value for the first subquery can be computed once and then reused
+  for each row of the outer SELECT.  The second subquery, however, is
+  "CORRELATED".  The value of the second subquery changes depending
+  on values in the current row of the outer query.  Hence, the second
+  subquery must be run once for each output row in the outer SELECT.
 
 </p><p>
   Unless the <a href="optoverview.html#flattening">flattening optimization</a> is applied, if a subquery appears in
-  the FROM clause of a SELECT statement, SQLite executes the subquery and
-  stores the results in a temporary table. It then uses the contents of the 
-  temporary table in place of the subquery to execute the parent query. This
-  is shown in the output of EXPLAIN QUERY PLAN by substituting a 
-  "SCAN SUBQUERY" record for the "SCAN TABLE" record that normally appears
-  for each element in the FROM clause. For example:
+  the FROM clause of a SELECT statement, SQLite can either run the subquery and
+  stores the results in a temporary table, or it can run the subquery as a
+  co-routine.  The following query is an example of the latter.  The subquery
+  is run by a co-routine.  The outer query blocks whenever it needs another
+  row of input from the subquery.  Control switches to the co-routine which
+  produces the desired output row, then control switches back to the main
+  routine which continues processing.  
 
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT count(*) FROM (SELECT max(b) AS x FROM t1 GROUP BY a) GROUP BY x;
-1|0|0|SCAN TABLE t1 USING COVERING INDEX i2
-0|0|0|SCAN SUBQUERY 1
-0|0|0|USE TEMP B-TREE FOR GROUP BY
+QUERY PLAN
+|--CO-ROUTINE 0x20FC3E0
+|  `--SCAN TABLE t1 USING COVERING INDEX i2
+|--SCAN SUBQUERY 0x20FC3E0
+`--USE TEMP B-TREE FOR GROUP BY
 </pre></div>
 
 <p>
+  
   If the <a href="optoverview.html#flattening">flattening optimization</a> is used on a subquery in the FROM clause
-  of a SELECT statement, then the output of EXPLAIN QUERY PLAN reflects this.
-  For example, in the following there is no "SCAN SUBQUERY" record even though
-  there is a subquery in the FROM clause of the top level SELECT. Instead, since
-  the flattening optimization does apply in this case, the EXPLAIN QUERY PLAN
-  report shows that the top level query is implemented using a nested loop join
-  of tables t1 and t2.
+  of a SELECT statement, that effectively merges the subquery into the outer
+  query.  The output of EXPLAIN QUERY PLAN reflects this, as in the following
+  example:
 
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT * FROM (SELECT * FROM t2 WHERE c=1), t1;
-0|0|0|SEARCH TABLE t2 USING INDEX i4 (c=?)
-0|1|1|SCAN TABLE t1
+QUERY PLAN
+|--SEARCH TABLE t2 USING INDEX i4 (c=?)
+`--SCAN TABLE t1
+</pre></div>
+
+<p>
+
+  If the content of a subquery might need to be visited more than once, then
+  the use of a co-routine is undesirable, as the co-routine would then have to
+  compute the data more than once.  And if the subquery cannot be flattened,
+  that means the subquery must be manifested into a transient table.
+
+</p><div class="codeblock"><pre>sqlite&gt; SELECT * FROM
+      &gt;   (SELECT * FROM t1 WHERE a=1 ORDER BY b LIMIT 2) AS x,
+      &gt;   (SELECT * FROM t2 WHERE c=1 ORDER BY d LIMIT 2) AS y;
+QUERY PLAN
+|--MATERIALIZE 0x18F06F0
+|  `--SEARCH TABLE t1 USING COVERING INDEX i2 (a=?)
+|--MATERIALIZE 0x18F80D0
+|  |--SEARCH TABLE t2 USING INDEX i4 (c=?)
+|  `--USE TEMP B-TREE FOR ORDER BY
+|--SCAN SUBQUERY 0x18F06F0 AS x
+`--SCAN SUBQUERY 0x18F80D0 AS y
 </pre></div>
 
 <h2 id="compound_queries"><span>1.4. </span>Compound Queries</h2>
 
 <p>
   Each component query of a <a href="lang_select.html#compound">compound query</a> (UNION, UNION ALL, EXCEPT or 
-  INTERSECT) is assigned its own selectid and reported on separately. A
-  single record is output for the parent (compound query) identifying the
-  operation, and whether or not a temporary b-tree is used to implement
-  it. For example:
+  INTERSECT) is assigned computed separately and is given its own line in
+  the EXPLAIN QUERY PLAN output.
 
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT a FROM t1 UNION SELECT c FROM t2;
-1|0|0|SCAN TABLE t1
-2|0|0|SCAN TABLE t2
-0|0|0|COMPOUND SUBQUERIES 1 AND 2 USING TEMP B-TREE (UNION)
+QUERY PLAN
+`--COMPOUND QUERY
+   |--LEFT-MOST SUBQUERY
+   |  `--SCAN TABLE t1 USING COVERING INDEX i1
+   `--UNION USING TEMP B-TREE
+      `--SCAN TABLE t2 USING COVERING INDEX i4
 </pre></div>
 
 <p>
   The "USING TEMP B-TREE" clause in the above output indicates that a 
   temporary b-tree structure is used to implement the UNION of the results
-  of the two sub-selects. If the temporary b-tree were not required, as
-  in the following example, the clause is not present.
+  of the two sub-selects.  An alternative method of computing a compound
+  is to run each subquery as a co-routine, arrange for their outputs to
+  appear in sorted order, and merge the results together.  When the query
+  planner chooses this latter approach, the EXPLAIN QUERY PLAN output
+  looks like this:
 
 </p><div class="codeblock"><pre>sqlite&gt; EXPLAIN QUERY PLAN SELECT a FROM t1 EXCEPT SELECT d FROM t2 ORDER BY 1;
-1|0|0|SCAN TABLE t1 USING COVERING INDEX i2
-2|0|0|SCAN TABLE t2
-2|0|0|USE TEMP B-TREE FOR ORDER BY
-0|0|0|COMPOUND SUBQUERIES 1 AND 2 (EXCEPT)
-</pre></div>
-
-<h1 id="sample_code"><span>2. </span>Sample Code</h1>
-
-<p>Sometimes, within a large application, it may be inconvenient to modify
-code to generate EXPLAIN QUERY PLAN commands for the SELECT queries being
-investigated. From within an interactive debugging session, it may be almost
-impossible. In these situations, a function similar to the following may
-be useful. This particular function is passed an SQLite statement handle as an
-argument and outputs the corresponding EXPLAIN QUERY PLAN report to standard
-output. Application specific versions may output the report to an application
-log or similar.
-
-
-</p><div class="codeblock"><pre>/*
-** Argument pStmt is a prepared SQL statement. This function compiles
-** an EXPLAIN QUERY PLAN command to report on the prepared statement,
-** and prints the report to stdout using printf().
-*/
-int printExplainQueryPlan(sqlite3_stmt *pStmt){
-  const char *zSql;               /* Input SQL */
-  char *zExplain;                 /* SQL with EXPLAIN QUERY PLAN prepended */
-  sqlite3_stmt *pExplain;         /* Compiled EXPLAIN QUERY PLAN command */
-  int rc;                         /* Return code from sqlite3_prepare_v2() */
-
-  zSql = sqlite3_sql(pStmt);
-  if( zSql==0 ) return SQLITE_ERROR;
-
-  zExplain = sqlite3_mprintf("EXPLAIN QUERY PLAN %s", zSql);
-  if( zExplain==0 ) return SQLITE_NOMEM;
-
-  rc = sqlite3_prepare_v2(sqlite3_db_handle(pStmt), zExplain, -1, &pExplain, 0);
-  sqlite3_free(zExplain);
-  if( rc!=SQLITE_OK ) return rc;
-
-  while( SQLITE_ROW==sqlite3_step(pExplain) ){
-    int iSelectid = sqlite3_column_int(pExplain, 0);
-    int iOrder = sqlite3_column_int(pExplain, 1);
-    int iFrom = sqlite3_column_int(pExplain, 2);
-    const char *zDetail = (const char *)sqlite3_column_text(pExplain, 3);
-
-    printf("%d %d %d %s\n", iSelectid, iOrder, iFrom, zDetail);
-  }
-
-  return sqlite3_finalize(pExplain);
-}
+QUERY PLAN
+`--MERGE (EXCEPT)
+   |--LEFT
+   |  `--SCAN TABLE t1 USING COVERING INDEX i1
+   `--RIGHT
+      |--SCAN TABLE t2
+      `--USE TEMP B-TREE FOR ORDER BY
 </pre></div>
 

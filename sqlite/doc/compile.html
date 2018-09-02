@@ -1056,6 +1056,37 @@ the available settings:</p>
 </p></blockquote><a name="enable_session"></a>
 <p><b>SQLITE_ENABLE_SESSION</b></p><blockquote><p>
   This option enables the <a href="sessionintro.html">session extension</a>.
+</p></blockquote><a name="enable_sorter_references"></a>
+<p><b>SQLITE_ENABLE_SORTER_REFERENCES</b></p><blockquote><p>
+  This option activates an optimization that reduces the memory required
+  by the sorter at the cost of doing additional B-tree lookups after
+  the sort has occurred.
+  <p>
+  The default sorting procedure is to gather all information that will
+  ultimately be output into a "record" and pass that complete record
+  to the sorter.  But in some cases, for example if some of the output
+  columns consists of large BLOB values, the size of the each record
+  can be large, which means that the sorter has to either use more memory,
+  and/or write more content to temporary storage.
+  <p>
+  When SQLITE_ENABLE_SORTER_PREFERENCES is enabled, the records passed to
+  the sorter often contain only a <a href="lang_createtable.html#rowid">ROWID</a> value.  Such records are much
+  smaller.  This means the sorter has much less "payload" to deal with and
+  can run faster.  After sorting has occurred, the ROWID is used to look up 
+  the output column values in the original table.  That requires another
+  search into the table, and could potentially result in a slowdown.  Or,
+  it might be a performance win, depending on how large the values are.
+  <p>
+  Even when the SQLITE_ENABLE_SORTER_PREFERENCES compile-time option is on,
+  sorter references are still disabled by default.  To use sorter references,
+  the application must set a sorter reference size threshold using the
+  <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsorterrefsize">SQLITE_CONFIG_SORTERREF_SIZE</a>) interface at start-time.
+  <p>
+  Because the SQLite developers do not know whether the 
+  SQLITE_ENABLE_SORTER_PERFERENCES option will help or hurt performance,
+  it is disabled by default at this time (2018-05-04).  It might be enabled
+  by default in some future release, depending on what is learned about its
+  inpact on performance.
 </p></blockquote><a name="enable_stmt_scanstatus"></a>
 <p><b>SQLITE_ENABLE_STMT_SCANSTATUS</b></p><blockquote><p>
   This option enables the <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus()</a> interface.  The

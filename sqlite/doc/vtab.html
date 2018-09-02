@@ -207,14 +207,17 @@ virtual table on demand.
 </li><li> Enabling SQL manipulation of data in statistics packages like R
 </li></ul>
 
+<p>See the <a href="vtablist.html">list of virtual tables</a> page for a longer list of actual
+virtual table implementations.
 
-<h2 id="usage"><span>1.1. </span>Usage</h2>
+
+</p><h2 id="usage"><span>1.1. </span>Usage</h2>
 
 <p>A virtual table is created using a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
 
 <p><b><a href="syntax/create-virtual-table-stmt.html">create-virtual-table-stmt:</a></b>
-<button id='x1483' onclick='hideorshow("x1483","x1484")'>hide</button></p>
- <div id='x1484' class='imgcontainer'>
+<button id='x1575' onclick='hideorshow("x1575","x1576")'>hide</button></p>
+ <div id='x1576' class='imgcontainer'>
  <img alt="syntax diagram create-virtual-table-stmt" src="images/syntax/create-virtual-table-stmt.gif" />
 </div>
 
@@ -1253,7 +1256,7 @@ match the table declaration that the <a href="vtab.html#xconnect">xConnect</a> o
 using the <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> call.  All hidden columns are included.
 
 </p><p>When doing an insert without a rowid (argc>1, argv[1] is an SQL NULL),
-on a virtual table that uses ROWID (but not on a <a href="vtab.html#worid">WITHOUT ROWID virtual table</a>,
+on a virtual table that uses ROWID (but not on a <a href="vtab.html#worid">WITHOUT ROWID virtual table</a>),
 the implementation must set *pRowid to the rowid of the newly inserted row; 
 this will become the value returned by the <a href="c3ref/last_insert_rowid.html">sqlite3_last_insert_rowid()</a>
 function. Setting this value in all the other cases is a harmless no-op;
@@ -1269,12 +1272,12 @@ object itself.
 <dl>
 <dt><b>argc = 1 <br> argv[0] &ne; NULL</b>
 </dt><dd><p>
-The single row with rowid or PRIMARY KEY equal to argv[0] is deleted. 
+DELETE: The single row with rowid or PRIMARY KEY equal to argv[0] is deleted. 
 No insert occurs.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] = NULL</b>
 </dt><dd><p>
-A new row is inserted with column values taken from
+INSERT: A new row is inserted with column values taken from
 argv[2] and following.  In a rowid virtual table, if argv[1] is an SQL NULL,
 then a new unique rowid is generated automatically.  The argv[1] will be NULL
 for a <a href="vtab.html#worid">WITHOUT ROWID virtual table</a>, in which case the implementation should
@@ -1282,11 +1285,14 @@ take the PRIMARY KEY value from the appropriate column in argv[2] and following.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] &ne; NULL <br> argv[0] = argv[1]</b>
 </dt><dd><p>
+UPDATE:
 The row with rowid or PRIMARY KEY argv[0] is updated with new values 
 in argv[2] and following parameters.
 
 </p></dd><dt><b>argc &gt; 1 <br> argv[0] &ne; NULL <br> argv[0] &ne; argv[1]</b>
-</dt><dd><p> The row with rowid or PRIMARY KEY argv[0] is updated with 
+</dt><dd><p>
+UPDATE with rowid or PRIMARY KEY change:
+The row with rowid or PRIMARY KEY argv[0] is updated with 
 the rowid or PRIMARY KEY in argv[1] 
 and new values in argv[2] and following parameters. This will occur 
 when an SQL statement updates a rowid, as in the statement:

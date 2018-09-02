@@ -177,11 +177,16 @@ a rollback journal.  Advantages include:</p>
     mode, either on an empty database or by using <a href="lang_vacuum.html">VACUUM</a> or by restoring
     from a backup using the <a href="backup.html">backup API</a>.  You must be in a rollback journal
     mode to change the page size.
-</li><li>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
+</li><li><s>It is not possible to open <a href="wal.html#readonly">read-only WAL databases</a>.
     The opening process must have write privileges for "<tt>-shm</tt>"
     <a href="walformat.html">wal-index</a> shared memory file associated with the database, if that
     file exists, or else write access on the directory containing
-    the database file if the "<tt>-shm</tt>" file does not exist.
+    the database file if the "<tt>-shm</tt>" file does not exist.</s>
+    Beginning with <a href="releaselog/3_22_0.html">version 3.22.0</a> (2018-01-22), a read-only 
+    WAL-mode database file can be opened if
+    the <tt>-shm</tt> and <tt>-wal</tt> files
+    already exists or those files can be created or the
+    <a href="uri.html#uriimmutable">database is immutable</a>.
 </li><li>WAL might be very slightly slower (perhaps 1% or 2% slower)
     than the traditional rollback-journal approach
     in applications that do mostly reads and seldom write.
@@ -456,49 +461,27 @@ connections to the same database file if it is set on any one connection.
 
 <h1 id="read_only_databases"><span>4. </span>Read-Only Databases</h1>
 
-<p>No SQLite database (regardless of whether or not it is WAL mode) is
-readable if it is located on read-only media and it requires recovery.
-So, for example, if an application crashes and leaves an SQLite database
-with a <a href="lockingv3.html#hotjrnl">hot journal</a>, that database cannot be opened unless the opening
-process has write privilege on the database file, the directory
-containing the database file, and the hot journal.  This is because the 
-incomplete transaction left over from the crash must be rolled back prior 
-to reading the database and that rollback cannot occur without write 
-permission on all files and the directory containing them.</p>
+<p>Older versions of SQLite could not read a WAL-mode database that was
+read-only.  In other words, write access was required in order to read a
+WAL-mode database.  This constraint was relaxed beginning with
+SQLite <a href="releaselog/3_22_0.html">version 3.22.0</a> (2018-01-22).
 
-<p>A database in WAL mode cannot generally be opened from read-only 
-media because even ordinary reads in WAL mode require recovery-like
-operations.</p>
+</p><p>On newer versions of SQLite,
+a WAL-mode database on read-only media, or a WAL-mode database that lacks
+write permission, can still be read as long as one or more of the following
+conditions are met:
+</p><ol>
+<li>The <tt>-shm</tt> and <tt>-wal</tt> files already exists and are readable
+</li><li>There is write permission on the directory containing the database so
+    that the <tt>-shm</tt> and <tt>-wal</tt> files can be created.
+</li><li>The database connection is opened using the
+    <a href="uri.html#uriimmutable">immutable query parameter</a>.
+</li></ol>
 
-<p>An efficient implementation of the <a href="fileformat2.html#walread">WAL read algorithm</a> requires that
-there exist a hash table in shared memory over the content of the WAL file.
-This hash table is called the <a href="walformat.html">wal-index</a>.
-The wal-index is in shared memory, and so technically it does not have 
-to have a name in the host computer filesystem.  Custom
-<a href="vfs.html">VFS</a> implementations are free to implement shared 
-memory in any way they see fit, but the default unix and windows 
-drivers that come built-in with SQLite implement shared memory
-using <a href="http://en.wikipedia.org/wiki/Mmap">mmapped files</a>
-named using the suffix "<tt>-shm</tt>" and
-located in the same directory as the database file.  The wal-index must
-be rebuilt upon first access, even by readers, and so in order to open
-the WAL database, write access is required on the "<tt>-shm</tt>" shared
-memory file if the file exists, or else write access is required on the
-directory containing the database so that the wal-index can be created if
-it does not already exist.
-This does not preclude custom VFS implementations that implement shared 
-memory differently from being able to access read-only WAL databases, but
-it does prevent the default unix and windows backends from accessing
-WAL databases on read-only media.</p>
-
-<p>Hence, SQLite databases should always be converted to 
-<a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=DELETE</a> prior to being transferred
-to read-only media.</p>
-
-<p>Also, if multiple processes are to access a WAL mode database, then
-all processes should run under user or group IDs that give them write
-access to the database files, the WAL file, the shared memory 
-<tt>-shm</tt> file, and the containing directory.</p>
+<p>Even though it is possible to open a read-only WAL-mode database,
+it is good practice is to converted to 
+<a href="pragma.html#pragma_journal_mode">PRAGMA journal_mode=DELETE</a> prior to burning an
+SQLite database image onto read-only media.</p>
 
 <a name="bigwal"></a>
 
