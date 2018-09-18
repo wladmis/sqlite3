@@ -220,9 +220,8 @@ new record to the database.
 A new R*Tree index is created as follows:
 </p>
 
-<blockquote><pre>
-CREATE VIRTUAL TABLE <em>&lt;name&gt;</em> USING rtree(<em>&lt;column-names&gt;</em>);
-</pre></blockquote>
+<div class="codeblock"><pre>CREATE VIRTUAL TABLE <em>&lt;name&gt;</em> USING rtree(<em>&lt;column-names&gt;</em>);
+</pre></div>
 
 <p>
 The <em>&lt;name&gt;</em> is the name your application chooses for the
@@ -232,11 +231,10 @@ The virtual &lt;name&gt; table creates three "shadow" tables to actually
 store its content.  The names of these shadow tables are:
 </p>
 
-<blockquote>
-<em>&lt;name&gt;</em><strong>_node</strong><br>
+<div class="codeblock"><pre><em>&lt;name&gt;</em><strong>_node</strong><br>
 <em>&lt;name&gt;</em><strong>_rowid</strong><br>
 <em>&lt;name&gt;</em><strong>_parent</strong>
-</blockquote>
+</pre></div>
 
 <p>
 The shadow tables are ordinary SQLite data tables.  You can query them 
@@ -253,13 +251,12 @@ As an example, consider creating a two-dimensional R*Tree index for use in
 spatial queries:
 </p>
 
-<blockquote><pre>
-CREATE VIRTUAL TABLE demo_index USING rtree(
+<div class="codeblock"><pre>CREATE VIRTUAL TABLE demo_index USING rtree(
    id,              -- Integer primary key
    minX, maxX,      -- Minimum and maximum X coordinate
    minY, maxY       -- Minimum and maximum Y coordinate
 );
-</pre></blockquote>
+</pre></div>
 
 <h2 id="populating_an_r_tree_index"><span>3.2. </span>Populating An R*Tree Index</h2>
 
@@ -269,8 +266,7 @@ index just like on regular tables.  So to insert some data into our sample
 R*Tree index, we can do something like this:
 </p>
 
-<blockquote><pre>
-INSERT INTO demo_index VALUES(
+<div class="codeblock"><pre>INSERT INTO demo_index VALUES(
     1,                   -- Primary key -- SQLite.org headquarters
     -80.7749, -80.7747,  -- Longitude range
     35.3776, 35.3778     -- Latitude range
@@ -280,7 +276,7 @@ INSERT INTO demo_index VALUES(
     -81.0, -79.6,
     35.0, 36.2
 );
-</pre></blockquote>
+</pre></div>
 
 <p>
 The entries above might represent (for example) a bounding box around
@@ -297,9 +293,8 @@ implementation is designed to make two kinds of queries especially
 efficient.  First, queries against the primary key are efficient:
 </p>
 
-<blockquote><pre>
-SELECT * FROM demo_index WHERE id=1;
-</pre></blockquote>
+<div class="codeblock"><pre>SELECT * FROM demo_index WHERE id=1;
+</pre></div>
 
 <p>
 Of course, an ordinary SQLite table will also do a query against its
@@ -310,11 +305,10 @@ ranges.  To find all elements of the index that are contained within
 the vicinity of Charlotte, North Carolina, one might do:
 </p>
 
-<blockquote><pre>
-SELECT id FROM demo_index
+<div class="codeblock"><pre>SELECT id FROM demo_index
  WHERE minX&gt;=-81.08 AND maxX&lt;=-80.58
    AND minY&gt;=35.00  AND maxY&lt;=35.44;
-</pre></blockquote>
+</pre></div>
 
 <p>
 The query above would very quickly locate the id of 1 even if the
@@ -324,11 +318,10 @@ queries.  For example, to find all bounding boxes that overlap the
 Charlotte area:
 </p>
 
-<blockquote><pre>
-SELECT id FROM demo_index
+<div class="codeblock"><pre>SELECT id FROM demo_index
  WHERE maxX&gt;=-81.08 AND minX&lt;=-80.58
    AND maxY&gt;=35.00  AND minY&lt;=35.44;
-</pre></blockquote>
+</pre></div>
 
 <p>
 This second query would find both entry 1 (the SQLite.org office) which
@@ -344,10 +337,9 @@ One might, for example, want to query all objects that overlap with
 the 35th parallel:
 </p>
 
-<blockquote><pre>
-SELECT id FROM demo_index
+<div class="codeblock"><pre>SELECT id FROM demo_index
  WHERE maxY&gt;=35.0  AND minY&lt;=35.0;
-</pre></blockquote>
+</pre></div>
 
 <p>
 But, generally speaking, the more constraints that the R*Tree module
@@ -388,14 +380,13 @@ the primary key.  For the example above, one might create an auxiliary
 table as follows:
 </p>
 
-<blockquote><pre>
-CREATE TABLE demo_data(
+<div class="codeblock"><pre>CREATE TABLE demo_data(
   id INTEGER PRIMARY KEY,  -- primary key
   objname TEXT,            -- name of the object
   objtype TEXT,            -- object type
   boundary BLOB            -- detailed boundary of object
 );
-</pre></blockquote>
+</pre></div>
 
 <p>
 In this example, the demo_data.boundary field is intended to hold some
@@ -427,13 +418,12 @@ the North Carolina 12th District, one may be to run a query like this:
 </p>
 
 <a name="diquery"></a>
-<blockquote><pre>
-SELECT objname FROM demo_data, demo_index
+<div class="codeblock"><pre>SELECT objname FROM demo_data, demo_index
  WHERE demo_data.id=demo_index.id
    AND contained_in(demo_data.boundary, :boundary)
    AND minX&gt;=-81.0 AND maxX&lt;=-79.6
    AND minY&gt;=35.0 AND maxY&gt;=36.2;
-</pre></blockquote>
+</pre></div>
 
 <p>In the query above, one would presumably bind the binary BLOB 
 description of the precise boundary of the 12th district to the
@@ -451,10 +441,9 @@ the demo_data table is returned as the next row of query result.</p>
 <p>One would get the same answer without the use of the R*Tree index
 using the following simpler query:</p>
 
-<blockquote><pre>
-SELECT objname FROM demo_data
+<div class="codeblock"><pre>SELECT objname FROM demo_data
  WHERE contained_in(demo_data.boundary, :boundary);
-</pre></blockquote>
+</pre></div>
 
 <p>The problem with this latter query is that it must apply the
 contained_in() function to millions of entries in the demo_data table.
@@ -480,8 +469,7 @@ There is a limit of no more than 100 auxiliary columns.
 The following example shows an r-tree table with auxiliary columns that
 is equivalent to the two tables "demo_index" and "demo_data" above:
 
-</p><blockquote><pre>
-CREATE VIRTUAL TABLE demo_index2 USING rtree(
+</p><div class="codeblock"><pre>CREATE VIRTUAL TABLE demo_index2 USING rtree(
    id,              -- Integer primary key
    minX, maxX,      -- Minimum and maximum X coordinate
    minY, maxY,      -- Minimum and maximum Y coordinate
@@ -489,7 +477,7 @@ CREATE VIRTUAL TABLE demo_index2 USING rtree(
    +objtype TEXT,   -- object type
    +boundary BLOB   -- detailed boundary of object
 );
-</pre></blockquote>
+</pre></div>
 
 <p>
 By combining location data and related information into the same
@@ -499,12 +487,11 @@ For example, the earlier
 <a href="#diquery">join between demo_index and demo_data</a> can now
 be written as a simple query, like this:
 
-</p><blockquote><pre>
-SELECT objname FROM demo_index2
+</p><div class="codeblock"><pre>SELECT objname FROM demo_index2
  WHERE contained_in(boundary, :boundary)
    AND minX&gt;=-81.0 AND maxX&lt;=-79.6
    AND minY&gt;=35.0 AND maxY&gt;=36.2;
-</pre></blockquote>
+</pre></div>
 
 <a name="intrtree"></a>
 
@@ -515,9 +502,8 @@ The default virtual table ("rtree") normally stores coordinates as
 single-precision (4-byte) floating point numbers.  If integer coordinates
 are desired, declare the table using "rtree_i32" instead:
 
-</p><blockquote><pre>
-CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,z1);
-</pre></blockquote>
+</p><div class="codeblock"><pre>CREATE VIRTUAL TABLE intrtree USING rtree_i32(id,x0,x1,y0,y1,z0,z1);
+</pre></div>
 
 <p>
 An rtree_i32 stores coordinates as 32-bit signed integers.  But it still
@@ -541,8 +527,7 @@ in 3-D space.
 implemented by the application and registered with SQLite via a call to one
 of the following two APIs:
 
-</p><blockquote><pre>
-int sqlite3_rtree_query_callback(
+</p><div class="codeblock"><pre>int sqlite3_rtree_query_callback(
   sqlite3 *db,
   const char *zQueryFunc,
   int (*xQueryFunc)(sqlite3_rtree_query_info*),
@@ -555,7 +540,7 @@ int sqlite3_rtree_geometry_callback(
   int (*xGeom)(sqlite3_rtree_geometry *, int nCoord, double *aCoord, int *pRes),
   void *pContext
 );
-</pre></blockquote>
+</pre></div>
 
 <p>The sqlite3_rtree_query_callback() became available with SQLite
 <a href="releaselog/3_8_5.html">version 3.8.5</a> (2014-06-04) and is the preferred interface.
@@ -573,16 +558,15 @@ if a particular object or subtree overlaps the desired region.
 R*Tree entries that overlap with a circle centered a 45.3,22.9 with a
 radius of 5.0:
 
-</p><blockquote><pre>
-SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
-</pre></blockquote>
+</p><div class="codeblock"><pre>SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
+
 
 <p>The SQL syntax for custom queries is the same regardless of which
 interface, sqlite3_rtree_geometry_callback() or sqlite3_rtree_query_callback(),
 is used to register the SQL function.  However, the newer query-style
 callbacks give the application greater control over how the query proceeds.
 
-</p><h2 id="the_legacy_xgeom_callback"><span>6.1. </span>The Legacy xGeom Callback</h2>
+</p><h2>The Legacy xGeom Callback</h2>
 
 <p>The legacy xGeom callback is invoked with four arguments.  The first
 argument is a pointer to an sqlite3_rtree_geometry structure which provides
@@ -608,7 +592,7 @@ structure are initialized by SQLite but are
 not subsequently modified.  The callback is free to make changes to the
 pUser and xDelUser elements of the structure if desired.
 
-</p><blockquote><pre>
+</p><codeblock>
 typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
 struct sqlite3_rtree_geometry {
   void *pContext;                 /* Copy of pContext passed to s_r_g_c() */
@@ -617,7 +601,7 @@ struct sqlite3_rtree_geometry {
   void *pUser;                    /* Callback implementation user data */
   void (*xDelUser)(void *);       /* Called by SQLite to clean up pUser */
 };
-</pre></blockquote>
+</codeblock>
 
 <p>The pContext member of the sqlite3_rtree_geometry
 structure is always set to a copy of the pContext
@@ -641,7 +625,7 @@ may be set to a destructor function for the pUser value.
 
 <a name="xquery"></a>
 
-</p><h2 id="the_new_xqueryfunc_callback"><span>6.2. </span>The New xQueryFunc Callback</h2>
+</p><h2>The New xQueryFunc Callback</h2>
 
 <p>The newer xQueryFunc callback receives more information from the r-tree
 query engine on each call, and it sends more information back to the query engine
@@ -650,7 +634,7 @@ To help keep the interface manageable, the xQueryFunc callback sends and receive
 information from the query engine as fields in the
 sqlite3_rtree_query_info structure:
 
-</p><blockquote><pre>
+</p><codeblock>
 struct sqlite3_rtree_query_info {
   void *pContext;                   /* pContext from when function registered */
   int nParam;                       /* Number of function parameters */
@@ -670,7 +654,7 @@ struct sqlite3_rtree_query_info {
   /* The following fields are only available in 3.8.11 and later */
   sqlite3_value **apSqlParam;       /* Original SQL values of parameters */
 };
-</pre></blockquote>
+</codeblock>
 
 <p>The first five fields of the sqlite3_rtree_query_info structure are identical
 to the sqlite3_rtree_geometry structure, and have exactly the same meaning.
@@ -735,7 +719,7 @@ containing subtree of the current row.  The anQueue field is an array
 of mxLevel+1 unsigned integers that tell the current number of elements in
 the priority queue at each level.
 
-</p><h2 id="additional_considerations_for_custom_queries"><span>6.3. </span>Additional Considerations for Custom Queries</h2>
+</p><h2>Additional Considerations for Custom Queries</h2>
 
 <p>
 The MATCH operator of a custom R*Tree query function must be a top-level
@@ -751,22 +735,23 @@ the R*Tree query engine only contains a single priority queue.  The priority
 assigned to each node in the search is the lowest priority returned by any
 of the MATCH operators.
 
-</p><h1 id="implementation_details"><span>7. </span>Implementation Details</h1>
+</p><h1>Implementation Details</h1>
 
 <p>
 The following sections describe some low-level details of the R*Tree implementation,
 that might be useful for trouble-shooting or performance analysis.
 
-</p><h2 id="shadow_tables"><span>7.1. </span>Shadow Tables</h2>
+</p><h2>Shadow Tables</h2>
 
 <p>The content of an R*Tree index is actually stored in three ordinary
 SQLite tables with names derived from the name of the R*Tree.  These
 three tables are called "shadow tables".  This is their schema:
 
-</p><div class="codeblock"><pre>CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
+</p><codeblock>
+CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
 CREATE TABLE %_parent(nodeno INTEGER PRIMARY KEY, parentnode INTEGER)
 CREATE TABLE %_rowid(rowid INTEGER PRIMARY KEY, nodeno INTEGER)
-</pre></div>
+</codeblock>
 
 <p>The "%" in the name of each shadow table is replaced by the name of the
 R*Tree virtual table.  So, if the name of the R*Tree table is "xyz" then
@@ -781,7 +766,7 @@ rowids to the node that contains that entry.
 
 <a name="rtreecheck"></a>
 
-</p><h2 id="integrity_check_using_the_rtreecheck_sql_function"><span>7.2. </span>Integrity Check using the rtreecheck() SQL function</h2>
+</p><h2>Integrity Check using the rtreecheck() SQL function</h2>
 
 <p>The scalar SQL function rtreecheck(R) or rtreecheck(S,R) runs an
 integrity check on the rtree table named R contained within database S.
@@ -793,8 +778,9 @@ database.
 </p><p>Example: To verify that an R*Tree named "demo_index" is well-formed
 and internally consistent, run:
 
-</p><div class="codeblock"><pre>SELECT rtreecheck('demo_index');
-</pre></div>
+</p><codeblock>
+SELECT rtreecheck('demo_index');
+</codeblock>
 
 <p>The rtreecheck() function performs the following checks:
 
@@ -822,4 +808,4 @@ as there are non-leaf cells in the r-tree structure, and that
 there is a non-leaf cell that corresponds to each entry in the 
 %_parent table.
 </p></li></ol>
-
+</pre></div>

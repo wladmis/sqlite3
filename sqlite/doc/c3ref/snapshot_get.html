@@ -103,7 +103,7 @@ int sqlite3_snapshot_get(
   sqlite3_snapshot **ppSnapshot
 );
 </pre></blockquote>
-<p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
+<p>
 The <a href="../c3ref/snapshot_get.html">sqlite3_snapshot_get(D,S,P)</a> interface attempts to make a
 new <a href="../c3ref/snapshot.html">sqlite3_snapshot</a> object that records the current state of
 schema S in database connection D.  On success, the
@@ -118,7 +118,7 @@ called, SQLITE_ERROR is returned. The final value of *P is undefined
 in this case.</p>
 
 <p><ul>
-<li> The database handle must be in <a href="../c3ref/get_autocommit.html">autocommit mode</a>.</p>
+<li> The database handle must not be in <a href="../c3ref/get_autocommit.html">autocommit mode</a>.</p>
 
 <p><li> Schema S of <a href="../c3ref/sqlite3.html">database connection</a> D must be a <a href="../wal.html">WAL mode</a> database.</p>
 
@@ -141,7 +141,7 @@ whether or not a read transaction is opened on schema S is undefined.</p>
 to avoid a memory leak.</p>
 
 <p>The <a href="../c3ref/snapshot_get.html">sqlite3_snapshot_get()</a> interface is only available when the
-SQLITE_ENABLE_SNAPSHOT compile-time option is used.
+<a href="../compile.html#enable_snapshot">SQLITE_ENABLE_SNAPSHOT</a> compile-time option is used.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

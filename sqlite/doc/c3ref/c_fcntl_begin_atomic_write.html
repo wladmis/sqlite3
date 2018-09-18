@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: SQLITE_FCNTL_BEGIN_ATOMIC_WRITE SQLITE_FCNTL_BUSYHANDLER SQLITE_FCNTL_CHUNK_SIZE SQLITE_FCNTL_COMMIT_ATOMIC_WRITE SQLITE_FCNTL_COMMIT_PHASETWO SQLITE_FCNTL_FILE_POINTER SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_HAS_MOVED SQLITE_FCNTL_JOURNAL_POINTER SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_LOCKSTATE SQLITE_FCNTL_LOCK_TIMEOUT SQLITE_FCNTL_MMAP_SIZE SQLITE_FCNTL_OVERWRITE SQLITE_FCNTL_PDB SQLITE_FCNTL_PERSIST_WAL SQLITE_FCNTL_POWERSAFE_OVERWRITE SQLITE_FCNTL_PRAGMA SQLITE_FCNTL_RBU SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE SQLITE_FCNTL_SET_LOCKPROXYFILE SQLITE_FCNTL_SIZE_HINT SQLITE_FCNTL_SYNC SQLITE_FCNTL_SYNC_OMITTED SQLITE_FCNTL_TEMPFILENAME SQLITE_FCNTL_TRACE SQLITE_FCNTL_VFSNAME SQLITE_FCNTL_VFS_POINTER SQLITE_FCNTL_WAL_BLOCK SQLITE_FCNTL_WIN32_AV_RETRY SQLITE_FCNTL_WIN32_GET_HANDLE SQLITE_FCNTL_WIN32_SET_HANDLE SQLITE_FCNTL_ZIPVFS {file control opcode} {file control opcodes} -->
+<!-- keywords: SQLITE_FCNTL_BEGIN_ATOMIC_WRITE SQLITE_FCNTL_BUSYHANDLER SQLITE_FCNTL_CHUNK_SIZE SQLITE_FCNTL_COMMIT_ATOMIC_WRITE SQLITE_FCNTL_COMMIT_PHASETWO SQLITE_FCNTL_DATA_VERSION SQLITE_FCNTL_FILE_POINTER SQLITE_FCNTL_GET_LOCKPROXYFILE SQLITE_FCNTL_HAS_MOVED SQLITE_FCNTL_JOURNAL_POINTER SQLITE_FCNTL_LAST_ERRNO SQLITE_FCNTL_LOCKSTATE SQLITE_FCNTL_LOCK_TIMEOUT SQLITE_FCNTL_MMAP_SIZE SQLITE_FCNTL_OVERWRITE SQLITE_FCNTL_PDB SQLITE_FCNTL_PERSIST_WAL SQLITE_FCNTL_POWERSAFE_OVERWRITE SQLITE_FCNTL_PRAGMA SQLITE_FCNTL_RBU SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE SQLITE_FCNTL_SET_LOCKPROXYFILE SQLITE_FCNTL_SIZE_HINT SQLITE_FCNTL_SYNC SQLITE_FCNTL_SYNC_OMITTED SQLITE_FCNTL_TEMPFILENAME SQLITE_FCNTL_TRACE SQLITE_FCNTL_VFSNAME SQLITE_FCNTL_VFS_POINTER SQLITE_FCNTL_WAL_BLOCK SQLITE_FCNTL_WIN32_AV_RETRY SQLITE_FCNTL_WIN32_GET_HANDLE SQLITE_FCNTL_WIN32_SET_HANDLE SQLITE_FCNTL_ZIPVFS {file control opcode} {file control opcodes} -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Standard File Control Opcodes</h2>
@@ -130,6 +130,7 @@ return false;
 #define SQLITE_FCNTL_COMMIT_ATOMIC_WRITE    32
 #define SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE  33
 #define SQLITE_FCNTL_LOCK_TIMEOUT           34
+#define SQLITE_FCNTL_DATA_VERSION           35
 </pre></blockquote>
 <p>
 These integer constants are opcodes for the xFileControl method
@@ -229,7 +230,8 @@ interrogated.  The zDbName parameter is ignored.</p>
 
 The <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlpersistwal">SQLITE_FCNTL_PERSIST_WAL</a> opcode is used to set or query the
 persistent <a href="../wal.html">Write Ahead Log</a> setting.  By default, the auxiliary
-write ahead log and shared memory files used for transaction control
+write ahead log (<a href="../wal.html#walfile">WAL file</a>) and shared memory
+files used for transaction control
 are automatically deleted when the latest connection to the database
 closes.  Setting persistent WAL mode causes those files to persist after
 close.  Persisting the files is useful when other processes that do not
@@ -433,7 +435,28 @@ a prior successful call to <a href="../c3ref/c_fcntl_begin_atomic_write.html#sql
 The <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntllocktimeout">SQLITE_FCNTL_LOCK_TIMEOUT</a> opcode causes attempts to obtain
 a file lock using the xLock or xShmLock methods of the VFS to wait
 for up to M milliseconds before failing, where M is the single
-unsigned integer parameter.
+unsigned integer parameter.</p>
+
+<p><li><a name="sqlitefcntldataversion"></a>
+
+The <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntldataversion">SQLITE_FCNTL_DATA_VERSION</a> opcode is used to detect changes to
+a database file.  The argument is a pointer to a 32-bit unsigned integer.
+The "data version" for the pager is written into the pointer.  The
+"data version" changes whenever any change occurs to the corresponding
+database file, either through SQL statements on the same database
+connection or through transactions committed by separate database
+connections possibly in other processes. The <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a>
+interface can be used to find if any database on the connection has changed,
+but that interface responds to changes on TEMP as well as MAIN and does
+not provide a mechanism to detect changes to MAIN only.  Also, the
+<a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface responds to internal changes only and
+omits changes made by other database connections.  The
+<a href="../pragma.html#pragma_data_version">PRAGMA data_version</a> command provide a mechanism to detect changes to
+a single attached database that occur due to other database connections,
+but omits changes implemented by the database connection on which it is
+called.  This file control is the only mechanism to detect changes that
+happen either internally or externally and that are associated with
+a particular attached database.
 </ul>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,

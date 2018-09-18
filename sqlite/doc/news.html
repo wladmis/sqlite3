@@ -95,7 +95,34 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2018_06_04"></a><h3>2018-06-04 - Release 3.24.0</h3><blockquote>
+<a name="2018_09_15"></a><h3>2018-09-15 - Release 3.25.0</h3><blockquote>
+SQLite <a href="releaselog/3_25_0.html">version 3.25.0</a> is a regularly scheduled maintenance release.
+Two big enhancements in this release:
+<ol>
+<li><p>
+Support for <a href="windowfunctions.html">window functions</a> was added, using the PostgreSQL documentation
+as the baseline.
+<li><p>
+The <a href="lang_altertable.html">ALTER TABLE</a> command was enhanced to support renaming of columns, and
+so that column and table renames are propagated into trigger bodies and views.
+</ol>
+<p>In addition, there are various performance enhancements and minor fixes.
+<p>One bug of note is 
+<a href="https://www.sqlite.org/src/info/9936b2fa443fec03ff25">ticket 9936b2fa443fec</a>
+which describes a hard-to-reach condition where the ORDER BY LIMIT
+optimization might cause an infinite loop during query evaluation.  
+This ticket raised a lot of
+concern on 
+<a href="https://news.ycombinator.com/item?id=17964243">HackerNews</a> and
+<a href="https://www.reddit.com/r/programming/comments/9ezy8c/serious_bug_causing_infinite_loop_in_some_queries/">Reddit</a>,
+probably due to my choice of the ticket
+title.  "Infinite Loop" sounds scary.  But I argue that the bug isn't really
+all that bad in that it is very difficult to reach, will show up during
+testing (rather than magically appearing after a product is
+deployed), does not cause any data loss, and does not return an
+incorrect result.  It was an important error, but not nearly as dire
+as many people interpreted it to be.  And, in any event, it is fixed now.
+</blockquote><hr width="50%"><a name="2018_06_04"></a><h3>2018-06-04 - Release 3.24.0</h3><blockquote>
 SQLite <a href="releaselog/3_24_0.html">version 3.24.0</a> is a regularly scheduled maintenance release.
 Highlights of this release include support for PostgreSQL-style
 UPSERT and improved performance, especially for ORDER BY LIMIT queries.

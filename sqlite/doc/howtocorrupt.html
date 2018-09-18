@@ -105,6 +105,7 @@ Table Of Contents
 <div class="fancy-toc2"><a href="#_continuing_to_use_a_file_descriptor_after_it_has_been_closed">1.1.  Continuing to use a file descriptor after it has been closed</a></div>
 <div class="fancy-toc2"><a href="#_backup_or_restore_while_a_transaction_is_active">1.2.  Backup or restore while a transaction is active</a></div>
 <div class="fancy-toc2"><a href="#_deleting_a_hot_journal">1.3.  Deleting a hot journal</a></div>
+<div class="fancy-toc2"><a href="#_mispairing_database_files_and_hot_journals_">1.4.  Mispairing database files and hot journals </a></div>
 <div class="fancy-toc1"><a href="#_file_locking_problems">2.  File locking problems</a></div>
 <div class="fancy-toc2"><a href="#_filesystems_with_broken_or_missing_lock_implementations">2.1.  Filesystems with broken or missing lock implementations</a></div>
 <div class="fancy-toc2"><a href="#_posix_advisory_locks_canceled_by_a_separate_thread_doing_close_">2.2.  Posix advisory locks canceled by a separate thread doing close()</a></div>
@@ -224,20 +225,40 @@ be copied together with the database file itself.</p>
 <h2 id="_deleting_a_hot_journal"><span>1.3. </span> Deleting a hot journal</h2>
 
 <p>SQLite normally stores all content in a single disk file.  However,
-while performing a transaction, information necessary to roll back that
-transaction following a crash or power failure is stored in auxiliary
-journal files.  These journal files have the same name as the
+while performing a transaction, information necessary to recover the
+database following a crash or power failure is stored in auxiliary
+journal files.  Such journal files are described as <a href="fileformat2.html#hotjrnl">"hot"</a>.
+The journal files have the same name as the
 original database file with the addition
 of <tt>-journal</tt> or <tt>-wal</tt> suffix.</p>
 
 <p>SQLite must see the journal files in order to recover from a crash
-or power failure.  If the journal files are moved, deleted, or renamed
+or power failure.  If the <a href="fileformat2.html#hotjrnl">hot journal files</a> are moved, deleted, or renamed
 after a crash or power failure, then automatic recovery will not work
 and the database may go corrupt.</p>
 
 <p>Another manifestation of this problem is
 <a href="shortnames.html#db83corrupt">database corruption caused by inconsistent use of 8+3 filenames</a>.</p>
 
+<a name="roguejrnl"></a>
+
+<h2 id="_mispairing_database_files_and_hot_journals_"><span>1.4. </span> Mispairing database files and hot journals </h2>
+
+<p> The previous example is a specific case of a more general problem:
+The state of an SQLite database is controlled by both the
+database file and the journal file.  In a quiescent state, the journal
+file does not exist and only the database file matters.
+But if the journal file does exist, it must be
+kept together with the database to avoid corruption.  The following
+actions are all likely to lead to corruption:
+</p><ul>
+<li> Swapping journal files between two different databases.
+</li><li> Overwritting a journal file with a different journal file.
+</li><li> Moving a journal file from one database to another.
+</li><li> Copying a database file without also copying its journal.
+</li><li> Overwriting a database file with another without also
+     deleting any hot journal associated with the original database.
+</li></ul>
 
 <h1 id="_file_locking_problems"><span>2. </span> File locking problems</h1>
 

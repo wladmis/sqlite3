@@ -741,9 +741,16 @@ sections:
 <p> The unicode tokenizer classifies all unicode characters as either 
 "separator" or "token" characters. By default all space and punctuation
 characters, as defined by Unicode 6.1, are considered separators, and all 
-other characters as token characters. Each contiguous run of one or more 
-token characters is considered to be a token. The tokenizer is case-insensitive
-according to the rules defined by Unicode 6.1.
+other characters as token characters. More specifically, all unicode 
+characters assigned to a 
+<a href="https://en.wikipedia.org/wiki/Unicode_character_property#General_Category">
+general category</a> beginning with "L" or "N" (letters and numbers,
+specifically) or to category "Co" ("other, private use") are considered tokens.
+All other characters are separators.
+ 
+</p><p>Each contiguous run of one or more token characters is considered to be a
+token. The tokenizer is case-insensitive according to the rules defined by
+Unicode 6.1.
 
 </p><p> By default, diacritics are removed from all Latin script characters. This
 means, for example, that "A", "a", "&#192;", "&#224;", "&#194;" and "&#226;"
@@ -760,13 +767,21 @@ following options:
   diacritics are removed from all latin script characters as described above.
   If it is clear, they are not. 
 
-  </td></tr><tr style="text-align:left"><td> tokenchars
+  </td></tr><tr style="text-align:left"><td> categories
+  </td><td>This option may be used to modify the set of Unicode general categories
+  that are considered to correspond to token characters. The argument must
+  consist of a space separated list of two-character general category
+  abbreviations (e.g. "Lu" or "Nd"), or of the same with the second character
+  replaced with an asterix ("*"), interpreted as a glob pattern. The default
+  value is "L* N* Co".
+
+  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td> tokenchars
   </td><td> This option is used to specify additional unicode characters that 
   should be considered token characters, even if they are white-space or
   punctuation characters according to Unicode 6.1. All characters in the
   string that this option is set to are considered token characters.
 
-  </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td> separators
+  </td></tr><tr style="text-align:left"><td> separators
   </td><td> This option is used to specify additional unicode characters that 
   should be considered as separator characters, even if they are token
   characters according to Unicode 6.1. All characters in the string that 
@@ -780,6 +795,15 @@ following options:
 -- to be part of tokens. </i>
 CREATE VIRTUAL TABLE ft USING fts5(a, b, 
     tokenize = "unicode61 remove_diacritics 0 tokenchars '-_'"
+);
+</pre></div>
+
+<p> or:
+
+</p><div class="codeblock"><pre><i>-- Create an FTS5 table that, as well as the default token character classes,</i>
+<i>-- considers characters in class "Mn" to be token characters.</i>
+CREATE VIRTUAL TABLE ft USING fts5(a, b, 
+    tokenize = "unicode61 categories 'L* N* Co Mn'"
 );
 </pre></div>
 
@@ -1443,7 +1467,7 @@ of merged data have been written to the database, where N is the absolute
 value of the parameter specified as part of the 'merge' command. The size of
 each page is as configured by the <a href="fts5.html#the_pgsz_configuration_option">FTS5 pgsz option</a>.
 
-</p><p> If the parameter is a postive value, B-tree structures are only eligible
+</p><p> If the parameter is a positive value, B-tree structures are only eligible
 for merging if one of the following is true:
 
 </p><ul>
@@ -1476,7 +1500,7 @@ same way as the <a href="fts5.html#the_optimize_command">FTS5 optimize command</
 to the FTS index while this process is ongoing, FTS5 will move the new 
 b-tree to the same level as the existing b-trees and restart the merge. To
 avoid this, only the first call to 'merge' should specify a negative parameter.
-Each subsequent call to 'merge' should specify a postive value so that the
+Each subsequent call to 'merge' should specify a positive value so that the
 merge started by the first call is run to completion even if new b-trees are
 added to the FTS index.
 
@@ -1841,7 +1865,7 @@ specifically:
             This way, even if the tokenizer does not provide synonyms
             when tokenizing query text (it should not - to do would be
             inefficient), it doesn't matter if the user queries for 
-            'first + place' or '1st + place', as there are entires in the
+            'first + place' or '1st + place', as there are entries in the
             FTS index corresponding to both forms of the first token.
    </p></li></ol>
 <p>
@@ -1868,7 +1892,7 @@ xToken(pCtx, 0, "place",                  5, 12, 17);
    extra data to the FTS index or require FTS5 to query for multiple terms,
    so it is efficient in terms of disk space and query speed. However, it
    does not support prefix queries very well. If, as suggested above, the
-   token "first" is subsituted for "1st" by the tokenizer, then the query:
+   token "first" is substituted for "1st" by the tokenizer, then the query:
 </p><p>
    </p><div class="codeblock"><pre>... MATCH '1s*'
 </pre></div>
@@ -2411,7 +2435,7 @@ created with the 'detail' option set to 'full', table columns are as follows:
   </td></tr><tr style="text-align:left"><td>doc</td><td>    The rowid of the document that contains the term instance.
   </td></tr><tr style="text-align:left;background-color:#DDDDDD"><td>col</td><td>    The name of the column that contains the term instance.
   </td></tr><tr style="text-align:left"><td>offset</td><td> The index of the term instance within its column. Terms 
-                     are numbered in order of occurence starting from 0.
+                     are numbered in order of occurrence starting from 0.
 </td></tr></table>
 
 <p> If the FTS5 table is created with the 'detail' option set to 'col', then
@@ -2695,8 +2719,4 @@ FTS5 table. This shadow table is not present for
 row in the virtual table in tokens. This shadow table is not present if 
 the <a href="fts5.html#the_columnsize_option">"columnsize" option</a> is set to 0.
 </td></tr></table>
-
-
-
-
 

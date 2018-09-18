@@ -988,7 +988,7 @@ necessarily wrap around, as most people expect.)
 and can easily lead to incorrect answers, SQLite works very hard to avoid it.
 For example,
 when adding two integer column values together as part of an SQL statement,
-SQLite does not simple add them together using the C-language "+" operator.
+SQLite does not simply add them together using the C-language "+" operator.
 Instead, it first checks to make sure the
 addition will not overflow, and if it will, it does the addition using
 floating point instead.

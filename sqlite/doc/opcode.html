@@ -193,8 +193,8 @@ output from SQLite, you should reference the version of this document
 that corresponds to the version of SQLite that ran the <a href="lang_explain.html">EXPLAIN</a>.
 Otherwise, the description of the opcodes may not be accurate.
 This document is derived from SQLite
- version 3.24.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=c7ee0833225bf'>c7ee0833225bf</a> dated 2018-06-04.
+ version 3.25.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=b63af6c3bd331'>b63af6c3bd331</a> dated 2018-09-15.
 
 
 
@@ -417,20 +417,20 @@ pragmas include:
 
 <h1 id="the_opcodes"><span>4. </span>The Opcodes</h1>
 
-<p>There are currently 169
+<p>There are currently 171
 opcodes defined by the virtual machine.
 All currently defined opcodes are described in the table below.
 This table was generated automatically by scanning the source code
 from the file
-<a href="http://www.sqlite.org/src/artifact/2626b3cd2c98e21f16496c0bf669d734eba0e23d">vdbe.c</a>.
+<a href="http://www.sqlite.org/src/artifact/e18ecc9f08bb1d6db3fe2d4a76e7c6213f422506">vdbe.c</a>.
 
 
 </p><p>Remember: The VDBE opcodes are <u>not</u> part of the interface 
 definition for SQLite.  The number of opcodes and their names and meanings
 change from one release of SQLite to the next.
 The opcodes shown in the table below are valid for SQLite
- version 3.24.0 check-in
-<a href='https://www.sqlite.org/src/timeline?c=c7ee0833225bf'>c7ee0833225bf</a> dated 2018-06-04.
+ version 3.25.0 check-in
+<a href='https://www.sqlite.org/src/timeline?c=b63af6c3bd331'>b63af6c3bd331</a> dated 2018-09-15.
 
 <a name="codes"></a>
 
@@ -467,39 +467,59 @@ string indicates the column affinity that should be used for the N-th
 memory cell in the range.</td></tr>
 <tr><td valign="top" align="center">
 <a name="AggFinal"></a>AggFinal
-<td>Execute the finalizer function for an aggregate.  P1 is
-the memory location that is the accumulator for the aggregate.</p>
+<td>P1 is the memory location that is the accumulator for an aggregate
+or window function.  Execute the finalizer function
+for an aggregate and store the result in P1.</p>
 
 <p>P2 is the number of arguments that the step function takes and
 P4 is a pointer to the FuncDef for this function.  The P2
 argument is not used by this opcode.  It is only there to disambiguate
 functions that can take varying numbers of arguments.  The
-P4 argument is only needed for the degenerate case where
+P4 argument is only needed for the case where
 the step function was not previously called.</td></tr>
 <tr><td valign="top" align="center">
+<a name="AggInverse"></a>AggInverse
+<td>Execute the xInverse function for an aggregate.
+The function has P5 arguments.  P4 is a pointer to the
+FuncDef structure that specifies the function.  Register P3 is the
+accumulator.</p>
+
+<p>The P5 arguments are taken from register P2 and its
+successors.</td></tr>
+<tr><td valign="top" align="center">
 <a name="AggStep"></a>AggStep
-<td>Execute the step function for an aggregate.  The
-function has P5 arguments.   P4 is a pointer to an sqlite3_context
-object that is used to run the function.  Register P3 is
-as the accumulator.</p>
+<td>Execute the xStep function for an aggregate.
+The function has P5 arguments.  P4 is a pointer to the
+FuncDef structure that specifies the function.  Register P3 is the
+accumulator.</p>
+
+<p>The P5 arguments are taken from register P2 and its
+successors.</td></tr>
+<tr><td valign="top" align="center">
+<a name="AggStep1"></a>AggStep1
+<td>Execute the xStep (if P1==0) or xInverse (if P1!=0) function for an
+aggregate.  The function has P5 arguments.  P4 is a pointer to the
+FuncDef structure that specifies the function.  Register P3 is the
+accumulator.</p>
 
 <p>The P5 arguments are taken from register P2 and its
 successors.</p>
 
-<p>This opcode is initially coded as <a href="opcode.html#AggStep0">AggStep0</a>.  On first evaluation,
+<p>This opcode is initially coded as OP_AggStep0.  On first evaluation,
 the FuncDef stored in P4 is converted into an sqlite3_context and
 the opcode is changed.  In this way, the initialization of the
 sqlite3_context only happens once, instead of on each call to the
 step function.</td></tr>
 <tr><td valign="top" align="center">
-<a name="AggStep0"></a>AggStep0
-<td>Execute the step function for an aggregate.  The
-function has P5 arguments.   P4 is a pointer to the FuncDef
-structure that specifies the function.  Register P3 is the
-accumulator.</p>
+<a name="AggValue"></a>AggValue
+<td>Invoke the xValue() function and store the result in register P3.</p>
 
-<p>The P5 arguments are taken from register P2 and its
-successors.</td></tr>
+<p>P2 is the number of arguments that the step function takes and
+P4 is a pointer to the FuncDef for this function.  The P2
+argument is not used by this opcode.  It is only there to disambiguate
+functions that can take varying numbers of arguments.  The
+P4 argument is only needed for the case where
+the step function was not previously called.</td></tr>
 <tr><td valign="top" align="center">
 <a name="And"></a>And
 <td>Take the logical AND of the values in registers P1 and P2 and
@@ -840,7 +860,13 @@ reprepare itself (if it was originally created using sqlite3_prepare_v2())
 or it will fail with SQLITE_SCHEMA.</p>
 
 <p>If P1 is 0, then all SQL statements become expired. If P1 is non-zero,
-then only the currently executing statement is expired.</td></tr>
+then only the currently executing statement is expired.</p>
+
+<p>If P2 is 0, then SQL statements are expired immediately.  If P2 is 1,
+then running SQL statements are allowed to continue to run to completion.
+The P2==1 case occurs when a CREATE INDEX or similar schema change happens
+that might help the statement run faster but which does not affect the
+correctness of operation.</td></tr>
 <tr><td valign="top" align="center">
 <a name="FkCounter"></a>FkCounter
 <td>Increment a "constraint counter" by P2 (P2 may be negative or positive).
@@ -1048,6 +1074,31 @@ the rowid of the table entry to which this index entry points.</p>
 <td>Jump to P2 if the value in register P1 is true.  The value
 is considered true if it is numeric and non-zero.  If the value
 in P1 is NULL then take the jump if and only if P3 is non-zero.</td></tr>
+<tr><td valign="top" align="center">
+<a name="IfNoHope"></a>IfNoHope
+<td>Register P3 is the first of P4 registers that form an unpacked
+record.</p>
+
+<p>Cursor P1 is on an index btree.  If the seekHit flag is set on P1, then
+this opcode is a no-op.  But if the seekHit flag of P1 is clear, then
+check to see if there is any entry in P1 that matches the
+prefix identified by P3 and P4.  If no entry matches the prefix,
+jump to P2.  Otherwise fall through.</p>
+
+<p>This opcode behaves like <a href="opcode.html#NotFound">NotFound</a> if the seekHit
+flag is clear and it behaves like <a href="opcode.html#Noop">Noop</a> if the seekHit flag is set.</p>
+
+<p>This opcode is used in IN clause processing for a multi-column key.
+If an IN clause is attached to an element of the key other than the
+left-most element, and if there are no matches on the most recent
+seek over the whole key, then it might be that one of the key element
+to the left is prohibiting a match, and hence there is "no hope" of
+any match regardless of how many IN clause elements are checked.
+In such a case, we abandon the IN clause search early, using this
+opcode.  The opcode name comes from the fact that the
+jump is taken if there is "no hope" of achieving a match.</p>
+
+<p>See also: <a href="opcode.html#NotFound">NotFound</a>, <a href="opcode.html#SeekHit">SeekHit</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="IfNot"></a>IfNot
 <td>Jump to P2 if the value in register P1 is False.  The value
@@ -1357,11 +1408,7 @@ sqlite3BtreeNext().</p>
 <p>If P5 is positive and the jump is taken, then event counter
 number P5-1 in the prepared statement is incremented.</p>
 
-<p>See also: <a href="opcode.html#Prev">Prev</a>, <a href="opcode.html#NextIfOpen">NextIfOpen</a></td></tr>
-<tr><td valign="top" align="center">
-<a name="NextIfOpen"></a>NextIfOpen
-<td>This opcode works just like <a href="opcode.html#Next">Next</a> except that if cursor P1 is not
-open it behaves a no-op.</td></tr>
+<p>See also: <a href="opcode.html#Prev">Prev</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="NoConflict"></a>NoConflict
 <td>If P4==0 then register P3 holds a blob constructed by <a href="opcode.html#MakeRecord">MakeRecord</a>.  If
@@ -1429,7 +1476,7 @@ matching entry.</p>
 advanced in either direction.  In other words, the <a href="opcode.html#Next">Next</a> and <a href="opcode.html#Prev">Prev</a>
 opcodes do not work after this operation.</p>
 
-<p>See also: <a href="opcode.html#Found">Found</a>, <a href="opcode.html#NotExists">NotExists</a>, <a href="opcode.html#NoConflict">NoConflict</a></td></tr>
+<p>See also: <a href="opcode.html#Found">Found</a>, <a href="opcode.html#NotExists">NotExists</a>, <a href="opcode.html#NoConflict">NoConflict</a>, <a href="opcode.html#IfNoHope">IfNoHope</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="NotNull"></a>NotNull
 <td>Jump to P2 if the value in register P1 is not NULL.</td></tr>
@@ -1546,43 +1593,54 @@ database.  Give the new cursor an identifier of P1.  The P1
 values need not be contiguous but all P1 values should be small integers.
 It is an error for P1 to be negative.</p>
 
-<p>If P5!=0 then use the content of register P2 as the root page, not
-the value of P2 itself.</p>
-
-<p>There will be a read lock on the database whenever there is an
-open cursor.  If the database was unlocked prior to this instruction
-then a read lock is acquired as part of this instruction.  A read
-lock allows other processes to read the database but prohibits
-any other process from modifying the database.  The read lock is
-released when all cursors are closed.  If this instruction attempts
-to get a read lock but fails, the script terminates with an
-SQLITE_BUSY error code.</p>
+<p>Allowed P5 bits:
+<ul>
+<li>  <b>0x02 OPFLAG_SEEKEQ</b>: This cursor will only be used for
+equality lookups (implemented as a pair of opcodes <a href="opcode.html#SeekGE">SeekGE</a>/<a href="opcode.html#IdxGT">IdxGT</a>
+of <a href="opcode.html#SeekLE">SeekLE</a>/<a href="opcode.html#IdxGT">IdxGT</a>)
+</ul></p>
 
 <p>The P4 value may be either an integer (P4_INT32) or a pointer to
 a KeyInfo structure (P4_KEYINFO). If it is a pointer to a KeyInfo
-structure, then said structure defines the content and collating
-sequence of the index being opened. Otherwise, if P4 is an integer
-value, it is set to the number of columns in the table.</p>
+object, then table being opened must be an <a href="fileformat2.html#btypes">index b-tree</a> where the
+KeyInfo object defines the content and collating
+sequence of that index b-tree. Otherwise, if P4 is an integer
+value, then the table being opened must be a <a href="fileformat2.html#btypes">table b-tree</a> with a
+number of columns no less than the value of P4.</p>
 
 <p>See also: <a href="opcode.html#OpenWrite">OpenWrite</a>, <a href="opcode.html#ReopenIdx">ReopenIdx</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="OpenWrite"></a>OpenWrite
 <td>Open a read/write cursor named P1 on the table or index whose root
-page is P2.  Or if P5!=0 use the content of register P2 to find the
-root page.</p>
+page is P2 (or whose root page is held in register P2 if the
+OPFLAG_P2ISREG bit is set in P5 - see below).</p>
 
 <p>The P4 value may be either an integer (P4_INT32) or a pointer to
 a KeyInfo structure (P4_KEYINFO). If it is a pointer to a KeyInfo
-structure, then said structure defines the content and collating
-sequence of the index being opened. Otherwise, if P4 is an integer
-value, it is set to the number of columns in the table, or to the
-largest index of any column of the table that is actually used.</p>
+object, then table being opened must be an <a href="fileformat2.html#btypes">index b-tree</a> where the
+KeyInfo object defines the content and collating
+sequence of that index b-tree. Otherwise, if P4 is an integer
+value, then the table being opened must be a <a href="fileformat2.html#btypes">table b-tree</a> with a
+number of columns no less than the value of P4.</p>
 
-<p>This instruction works just like <a href="opcode.html#OpenRead">OpenRead</a> except that it opens the cursor
-in read/write mode.  For a given table, there can be one or more read-only
-cursors or a single read/write cursor but not both.</p>
+<p>Allowed P5 bits:
+<ul>
+<li>  <b>0x02 OPFLAG_SEEKEQ</b>: This cursor will only be used for
+equality lookups (implemented as a pair of opcodes <a href="opcode.html#SeekGE">SeekGE</a>/<a href="opcode.html#IdxGT">IdxGT</a>
+of <a href="opcode.html#SeekLE">SeekLE</a>/<a href="opcode.html#IdxGT">IdxGT</a>)
+<li>  <b>0x08 OPFLAG_FORDELETE</b>: This cursor is used only to seek
+and subsequently delete entries in an index btree.  This is a
+hint to the storage engine that the storage engine is allowed to
+ignore.  The hint is not used by the official SQLite b*tree storage
+engine, but is used by COMDB2.
+<li>  <b>0x10 OPFLAG_P2ISREG</b>: Use the content of register P2
+as the root page, not the value of P2 itself.
+</ul></p>
 
-<p>See also <a href="opcode.html#OpenRead">OpenRead</a>.</td></tr>
+<p>This instruction works like <a href="opcode.html#OpenRead">OpenRead</a> except that it opens the cursor
+in read/write mode.</p>
+
+<p>See also: <a href="opcode.html#OpenRead">OpenRead</a>, <a href="opcode.html#ReopenIdx">ReopenIdx</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="Or"></a>Or
 <td>Take the logical OR of the values in register P1 and P2 and
@@ -1608,7 +1666,8 @@ calling <a href="opcode.html#Program">Program</a> instruction.</td></tr>
 <tr><td valign="top" align="center">
 <a name="ParseSchema"></a>ParseSchema
 <td>Read and parse all entries from the SQLITE_MASTER table of database P1
-that match the WHERE clause P4.</p>
+that match the WHERE clause P4.  If P4 is a NULL pointer, then the
+entire schema for P1 is reparsed.</p>
 
 <p>This opcode invokes the parser to create a new virtual machine,
 then runs the new virtual machine.  It is thus a re-entrant opcode.</td></tr>
@@ -1647,10 +1706,6 @@ sqlite3BtreePrevious().</p>
 
 <p>If P5 is positive and the jump is taken, then event counter
 number P5-1 in the prepared statement is incremented.</td></tr>
-<tr><td valign="top" align="center">
-<a name="PrevIfOpen"></a>PrevIfOpen
-<td>This opcode works just like <a href="opcode.html#Prev">Prev</a> except that if cursor P1 is not
-open it behaves a no-op.</td></tr>
 <tr><td valign="top" align="center">
 <a name="Program"></a>Program
 <td>Execute the trigger program passed as P4 (type P4_SUBPROGRAM).</p>
@@ -1696,16 +1751,24 @@ If the value in register P1 is zero the result is NULL.
 If either operand is NULL, the result is NULL.</td></tr>
 <tr><td valign="top" align="center">
 <a name="ReopenIdx"></a>ReopenIdx
-<td>The <a href="opcode.html#ReopenIdx">ReopenIdx</a> opcode works exactly like ReadOpen except that it first
-checks to see if the cursor on P1 is already open with a root page
-number of P2 and if it is this opcode becomes a no-op.  In other words,
+<td>The <a href="opcode.html#ReopenIdx">ReopenIdx</a> opcode works like <a href="opcode.html#OpenRead">OpenRead</a> except that it first
+checks to see if the cursor on P1 is already open on the same
+b-tree and if it is this opcode becomes a no-op.  In other words,
 if the cursor is already open, do not reopen it.</p>
 
-<p>The <a href="opcode.html#ReopenIdx">ReopenIdx</a> opcode may only be used with P5==0 and with P4 being
-a P4_KEYINFO object.  Furthermore, the P3 value must be the same as
-every other <a href="opcode.html#ReopenIdx">ReopenIdx</a> or <a href="opcode.html#OpenRead">OpenRead</a> for the same cursor number.</p>
+<p>The <a href="opcode.html#ReopenIdx">ReopenIdx</a> opcode may only be used with P5==0 or P5==OPFLAG_SEEKEQ
+and with P4 being a P4_KEYINFO object.  Furthermore, the P3 value must
+be the same as every other <a href="opcode.html#ReopenIdx">ReopenIdx</a> or <a href="opcode.html#OpenRead">OpenRead</a> for the same cursor
+number.</p>
 
-<p>See the <a href="opcode.html#OpenRead">OpenRead</a> opcode documentation for additional information.</td></tr>
+<p>Allowed P5 bits:
+<ul>
+<li>  <b>0x02 OPFLAG_SEEKEQ</b>: This cursor will only be used for
+equality lookups (implemented as a pair of opcodes <a href="opcode.html#SeekGE">SeekGE</a>/<a href="opcode.html#IdxGT">IdxGT</a>
+of <a href="opcode.html#SeekLE">SeekLE</a>/<a href="opcode.html#IdxGT">IdxGT</a>)
+</ul></p>
+
+<p>See also: <a href="opcode.html#OpenRead">OpenRead</a>, <a href="opcode.html#OpenWrite">OpenWrite</a></td></tr>
 <tr><td valign="top" align="center">
 <a name="ResetCount"></a>ResetCount
 <td>The value of the change counter is copied to the database handle
@@ -1737,6 +1800,10 @@ will refer to the first entry in the database table or index.
 If the table or index is empty, jump immediately to P2.
 If the table or index is not empty, fall through to the following
 instruction.</p>
+
+<p>If P5 is non-zero and the table is not empty, then the "skip-next"
+flag is set on the cursor so that the next <a href="opcode.html#Next">Next</a> instruction
+executed on it is a no-op.</p>
 
 <p>This opcode leaves the cursor configured to move in forward order,
 from the beginning toward the end.  In other words, the cursor is
@@ -1872,6 +1939,13 @@ from the beginning toward the end.  In other words, the cursor is
 configured to use <a href="opcode.html#Next">Next</a>, not <a href="opcode.html#Prev">Prev</a>.</p>
 
 <p>See also: <a href="opcode.html#Found">Found</a>, <a href="opcode.html#NotFound">NotFound</a>, SeekLt, SeekGe, SeekLe</td></tr>
+<tr><td valign="top" align="center">
+<a name="SeekHit"></a>SeekHit
+<td>Set the seekHit flag on cursor P1 to the value in P2.
+The seekHit flag is used by the <a href="opcode.html#IfNoHope">IfNoHope</a> opcode.</p>
+
+<p>P1 must be a valid b-tree cursor.  P2 must be a boolean value,
+either 0 or 1.</td></tr>
 <tr><td valign="top" align="center">
 <a name="SeekLE"></a>SeekLE
 <td>If cursor P1 refers to an SQL table (B-Tree that uses integer keys),

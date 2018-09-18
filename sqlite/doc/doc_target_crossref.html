@@ -134,7 +134,7 @@ return false;
 <li><a href="c3ref/busy_handler.html">c3ref/busy_handler.html</a> &rarr; {busy handler} {busy-handler callback} sqlite3_busy_handler</li>
 <li><a href="c3ref/busy_timeout.html">c3ref/busy_timeout.html</a> &rarr; sqlite3_busy_timeout</li>
 <li><a href="c3ref/c_abort.html">c3ref/c_abort.html</a> &rarr; {result code definitions}</li>
-<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_CORRUPT_SEQUENCE SQLITE_IOERR_AUTH SQLITE_IOERR_BEGIN_ATOMIC SQLITE_IOERR_COMMIT_ATOMIC SQLITE_IOERR_ROLLBACK_ATOMIC SQLITE_IOERR_VNODE SQLITE_LOCKED_VTAB {extended result code definitions}</li>
+<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_CANTOPEN_DIRTYWAL SQLITE_CORRUPT_SEQUENCE SQLITE_ERROR_SNAPSHOT SQLITE_IOERR_AUTH SQLITE_IOERR_BEGIN_ATOMIC SQLITE_IOERR_COMMIT_ATOMIC SQLITE_IOERR_ROLLBACK_ATOMIC SQLITE_IOERR_VNODE SQLITE_LOCKED_VTAB {extended result code definitions}</li>
 <li><a href="c3ref/c_access_exists.html">c3ref/c_access_exists.html</a> &rarr; SQLITE_ACCESS_EXISTS SQLITE_ACCESS_READ SQLITE_ACCESS_READWRITE</li>
 <li><a href="c3ref/c_alter_table.html">c3ref/c_alter_table.html</a> &rarr; SQLITE_ALTER_TABLE SQLITE_ANALYZE SQLITE_ATTACH SQLITE_COPY SQLITE_CREATE_INDEX SQLITE_CREATE_TABLE SQLITE_CREATE_TEMP_INDEX SQLITE_CREATE_TEMP_TABLE SQLITE_CREATE_TEMP_TRIGGER SQLITE_CREATE_TEMP_VIEW SQLITE_CREATE_TRIGGER SQLITE_CREATE_VIEW SQLITE_CREATE_VTABLE SQLITE_DELETE SQLITE_DETACH SQLITE_DROP_INDEX SQLITE_DROP_TABLE SQLITE_DROP_TEMP_INDEX SQLITE_DROP_TEMP_TABLE SQLITE_DROP_TEMP_TRIGGER SQLITE_DROP_TEMP_VIEW SQLITE_DROP_TRIGGER SQLITE_DROP_VIEW SQLITE_DROP_VTABLE SQLITE_FUNCTION SQLITE_INSERT SQLITE_PRAGMA SQLITE_READ SQLITE_RECURSIVE SQLITE_REINDEX SQLITE_SAVEPOINT SQLITE_SELECT SQLITE_TRANSACTION SQLITE_UPDATE</li>
 <li><a href="c3ref/c_any.html">c3ref/c_any.html</a> &rarr; SQLITE_ANY SQLITE_UTF16 SQLITE_UTF16BE SQLITE_UTF16LE SQLITE_UTF16_ALIGNED SQLITE_UTF8</li>
@@ -193,6 +193,7 @@ return false;
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlchunksize">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlchunksize</a> &rarr; SQLITE_FCNTL_CHUNK_SIZE</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitatomicwrite">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitatomicwrite</a> &rarr; SQLITE_FCNTL_COMMIT_ATOMIC_WRITE</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitphasetwo">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlcommitphasetwo</a> &rarr; SQLITE_FCNTL_COMMIT_PHASETWO</li>
+<li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntldataversion">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntldataversion</a> &rarr; SQLITE_FCNTL_DATA_VERSION</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlfilepointer</a> &rarr; SQLITE_FCNTL_FILE_POINTER</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlhasmoved">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlhasmoved</a> &rarr; SQLITE_FCNTL_HAS_MOVED</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntljournalpointer">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntljournalpointer</a> &rarr; SQLITE_FCNTL_JOURNAL_POINTER</li>
@@ -217,7 +218,7 @@ return false;
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32gethandle">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32gethandle</a> &rarr; SQLITE_FCNTL_WIN32_GET_HANDLE</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32sethandle">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlwin32sethandle</a> &rarr; SQLITE_FCNTL_WIN32_SET_HANDLE</li>
 <li><a href="c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlzipvfs">c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntlzipvfs</a> &rarr; SQLITE_FCNTL_ZIPVFS</li>
-<li><a href="c3ref/c_index_constraint_eq.html">c3ref/c_index_constraint_eq.html</a> &rarr; SQLITE_INDEX_CONSTRAINT_EQ SQLITE_INDEX_CONSTRAINT_GE SQLITE_INDEX_CONSTRAINT_GLOB SQLITE_INDEX_CONSTRAINT_GT SQLITE_INDEX_CONSTRAINT_IS SQLITE_INDEX_CONSTRAINT_ISNOT SQLITE_INDEX_CONSTRAINT_ISNOTNULL SQLITE_INDEX_CONSTRAINT_ISNULL SQLITE_INDEX_CONSTRAINT_LE SQLITE_INDEX_CONSTRAINT_LIKE SQLITE_INDEX_CONSTRAINT_LT SQLITE_INDEX_CONSTRAINT_MATCH SQLITE_INDEX_CONSTRAINT_NE SQLITE_INDEX_CONSTRAINT_REGEXP</li>
+<li><a href="c3ref/c_index_constraint_eq.html">c3ref/c_index_constraint_eq.html</a> &rarr; SQLITE_INDEX_CONSTRAINT_EQ SQLITE_INDEX_CONSTRAINT_FUNCTION SQLITE_INDEX_CONSTRAINT_GE SQLITE_INDEX_CONSTRAINT_GLOB SQLITE_INDEX_CONSTRAINT_GT SQLITE_INDEX_CONSTRAINT_IS SQLITE_INDEX_CONSTRAINT_ISNOT SQLITE_INDEX_CONSTRAINT_ISNOTNULL SQLITE_INDEX_CONSTRAINT_ISNULL SQLITE_INDEX_CONSTRAINT_LE SQLITE_INDEX_CONSTRAINT_LIKE SQLITE_INDEX_CONSTRAINT_LT SQLITE_INDEX_CONSTRAINT_MATCH SQLITE_INDEX_CONSTRAINT_NE SQLITE_INDEX_CONSTRAINT_REGEXP</li>
 <li><a href="c3ref/c_index_scan_unique.html">c3ref/c_index_scan_unique.html</a> &rarr; SQLITE_INDEX_SCAN_UNIQUE</li>
 <li><a href="c3ref/c_iocap_atomic.html">c3ref/c_iocap_atomic.html</a> &rarr; SQLITE_IOCAP_ATOMIC SQLITE_IOCAP_ATOMIC16K SQLITE_IOCAP_ATOMIC1K SQLITE_IOCAP_ATOMIC2K SQLITE_IOCAP_ATOMIC32K SQLITE_IOCAP_ATOMIC4K SQLITE_IOCAP_ATOMIC512 SQLITE_IOCAP_ATOMIC64K SQLITE_IOCAP_ATOMIC8K SQLITE_IOCAP_BATCH_ATOMIC SQLITE_IOCAP_IMMUTABLE SQLITE_IOCAP_POWERSAFE_OVERWRITE SQLITE_IOCAP_SAFE_APPEND SQLITE_IOCAP_SEQUENTIAL SQLITE_IOCAP_UNDELETABLE_WHEN_OPEN</li>
 <li><a href="c3ref/c_limit_attached.html">c3ref/c_limit_attached.html</a> &rarr; {limit categories} {limit category}</li>
@@ -294,7 +295,7 @@ return false;
 <li><a href="c3ref/context.html">c3ref/context.html</a> &rarr; sqlite3_context</li>
 <li><a href="c3ref/context_db_handle.html">c3ref/context_db_handle.html</a> &rarr; sqlite3_context_db_handle</li>
 <li><a href="c3ref/create_collation.html">c3ref/create_collation.html</a> &rarr; sqlite3_create_collation sqlite3_create_collation16 sqlite3_create_collation_v2</li>
-<li><a href="c3ref/create_function.html">c3ref/create_function.html</a> &rarr; {application-defined SQL function} {application-defined SQL functions} {function creation routines} sqlite3_create_function sqlite3_create_function16 sqlite3_create_function_v2</li>
+<li><a href="c3ref/create_function.html">c3ref/create_function.html</a> &rarr; {application-defined SQL function} {application-defined SQL functions} {function creation routines} sqlite3_create_function sqlite3_create_function16 sqlite3_create_function_v2 sqlite3_create_window_function</li>
 <li><a href="c3ref/create_module.html">c3ref/create_module.html</a> &rarr; sqlite3_create_module sqlite3_create_module_v2</li>
 <li><a href="c3ref/data_count.html">c3ref/data_count.html</a> &rarr; sqlite3_data_count</li>
 <li><a href="c3ref/data_directory.html">c3ref/data_directory.html</a> &rarr; sqlite3_data_directory</li>
@@ -316,7 +317,7 @@ return false;
 <li><a href="c3ref/experimental.html">c3ref/experimental.html</a> &rarr; deprecated experimental</li>
 <li><a href="c3ref/extended_result_codes.html">c3ref/extended_result_codes.html</a> &rarr; sqlite3_extended_result_codes</li>
 <li><a href="c3ref/file.html">c3ref/file.html</a> &rarr; sqlite3_file</li>
-<li><a href="c3ref/file_control.html">c3ref/file_control.html</a> &rarr; sqlite3_file_control</li>
+<li><a href="c3ref/file_control.html">c3ref/file_control.html</a> &rarr; {file control} sqlite3_file_control</li>
 <li><a href="c3ref/finalize.html">c3ref/finalize.html</a> &rarr; sqlite3_finalize</li>
 <li><a href="c3ref/free.html">c3ref/free.html</a> &rarr; sqlite3_free sqlite3_malloc sqlite3_malloc64 sqlite3_msize sqlite3_realloc sqlite3_realloc64</li>
 <li><a href="c3ref/free_table.html">c3ref/free_table.html</a> &rarr; sqlite3_free_table sqlite3_get_table</li>
@@ -498,6 +499,7 @@ return false;
 <li><a href="compile.html#enable_fts3_tokenizer">compile.html#enable_fts3_tokenizer</a> &rarr; -DSQLITE_ENABLE_FTS3_TOKENIZER SQLITE_ENABLE_FTS3_TOKENIZER</li>
 <li><a href="compile.html#enable_fts4">compile.html#enable_fts4</a> &rarr; -DSQLITE_ENABLE_FTS4 SQLITE_ENABLE_FTS4</li>
 <li><a href="compile.html#enable_fts5">compile.html#enable_fts5</a> &rarr; -DSQLITE_ENABLE_FTS5 SQLITE_ENABLE_FTS5</li>
+<li><a href="compile.html#enable_geopoly">compile.html#enable_geopoly</a> &rarr; -DSQLITE_ENABLE_GEOPOLY SQLITE_ENABLE_GEOPOLY</li>
 <li><a href="compile.html#enable_icu">compile.html#enable_icu</a> &rarr; -DSQLITE_ENABLE_ICU SQLITE_ENABLE_ICU</li>
 <li><a href="compile.html#enable_iotrace">compile.html#enable_iotrace</a> &rarr; -DSQLITE_ENABLE_IOTRACE SQLITE_ENABLE_IOTRACE</li>
 <li><a href="compile.html#enable_json1">compile.html#enable_json1</a> &rarr; -DSQLITE_ENABLE_JSON1 SQLITE_ENABLE_JSON1</li>
@@ -512,6 +514,7 @@ return false;
 <li><a href="compile.html#enable_rbu">compile.html#enable_rbu</a> &rarr; -DSQLITE_ENABLE_RBU SQLITE_ENABLE_RBU</li>
 <li><a href="compile.html#enable_rtree">compile.html#enable_rtree</a> &rarr; -DSQLITE_ENABLE_RTREE SQLITE_ENABLE_RTREE</li>
 <li><a href="compile.html#enable_session">compile.html#enable_session</a> &rarr; -DSQLITE_ENABLE_SESSION SQLITE_ENABLE_SESSION</li>
+<li><a href="compile.html#enable_snapshot">compile.html#enable_snapshot</a> &rarr; -DSQLITE_ENABLE_SNAPSHOT SQLITE_ENABLE_SNAPSHOT</li>
 <li><a href="compile.html#enable_sorter_references">compile.html#enable_sorter_references</a> &rarr; -DSQLITE_ENABLE_SORTER_REFERENCES SQLITE_ENABLE_SORTER_REFERENCES</li>
 <li><a href="compile.html#enable_sqllog">compile.html#enable_sqllog</a> &rarr; -DSQLITE_ENABLE_SQLLOG SQLITE_ENABLE_SQLLOG</li>
 <li><a href="compile.html#enable_stat2">compile.html#enable_stat2</a> &rarr; -DSQLITE_ENABLE_STAT2 SQLITE_ENABLE_STAT2</li>
@@ -668,6 +671,7 @@ return false;
 <li><a href="fileformat2.html">fileformat2.html</a> &rarr; {file format} {second edition file format document}</li>
 <li><a href="fileformat2.html#appid">fileformat2.html#appid</a> &rarr; {Application ID}</li>
 <li><a href="fileformat2.html#btree">fileformat2.html#btree</a> &rarr; B-Trees B-tree</li>
+<li><a href="fileformat2.html#btypes">fileformat2.html#btypes</a> &rarr; {index b-tree} {table b-tree}</li>
 <li><a href="fileformat2.html#cell_payload">fileformat2.html#cell_payload</a> &rarr; {cell payload}</li>
 <li><a href="fileformat2.html#cellformat">fileformat2.html#cellformat</a> &rarr; {cell format summary}</li>
 <li><a href="fileformat2.html#chngctr">fileformat2.html#chngctr</a> &rarr; {change counter}</li>
@@ -675,6 +679,7 @@ return false;
 <li><a href="fileformat2.html#enc">fileformat2.html#enc</a> &rarr; {text encoding}</li>
 <li><a href="fileformat2.html#filesize">fileformat2.html#filesize</a> &rarr; {in-header database size}</li>
 <li><a href="fileformat2.html#freelist">fileformat2.html#freelist</a> &rarr; {free-page list} freelist</li>
+<li><a href="fileformat2.html#hotjrnl">fileformat2.html#hotjrnl</a> &rarr; {hot journal} {hot journal files}</li>
 <li><a href="fileformat2.html#intschema">fileformat2.html#intschema</a> &rarr; {internal index} {internal indexes} {internal schema object} {internal schema objects} {internal table} {internal tables}</li>
 <li><a href="fileformat2.html#lockbyte">fileformat2.html#lockbyte</a> &rarr; {lock-byte page}</li>
 <li><a href="fileformat2.html#ovflpgs">fileformat2.html#ovflpgs</a> &rarr; {overflow page} {overflow pages}</li>
@@ -693,7 +698,7 @@ return false;
 <li><a href="fileformat2.html#varint">fileformat2.html#varint</a> &rarr; {variable-length integer} varint</li>
 <li><a href="fileformat2.html#vnums">fileformat2.html#vnums</a> &rarr; {file format version numbers}</li>
 <li><a href="fileformat2.html#walcksm">fileformat2.html#walcksm</a> &rarr; {WAL checksum algorithm}</li>
-<li><a href="fileformat2.html#walformat">fileformat2.html#walformat</a> &rarr; {WAL format}</li>
+<li><a href="fileformat2.html#walformat">fileformat2.html#walformat</a> &rarr; {WAL file format} {WAL format}</li>
 <li><a href="fileformat2.html#walread">fileformat2.html#walread</a> &rarr; {WAL read algorithm}</li>
 <li><a href="fileformat2.html#walreset">fileformat2.html#walreset</a> &rarr; {WAL reset} {reset the WAL}</li>
 <li><a href="fileio.html">fileio.html</a> &rarr; {file I/O}</li>
@@ -794,6 +799,16 @@ return false;
 <li><a href="fts5.html#the_usermerge_configuration_option">fts5.html#the_usermerge_configuration_option</a> &rarr; {FTS5 usermerge option}</li>
 <li><a href="fts5.html#tokenizers">fts5.html#tokenizers</a> &rarr; {FTS5 tokenizers}</li>
 <li><a href="fullsql.html">fullsql.html</a> &rarr; {Full-featured SQL} {full-featured SQL}</li>
+<li><a href="geopoly.html">geopoly.html</a> &rarr; {Geopoly extension} {Geopoly module} geopoly</li>
+<li><a href="geopoly.html#garea">geopoly.html#garea</a> &rarr; geopoly_area</li>
+<li><a href="geopoly.html#gbbox">geopoly.html#gbbox</a> &rarr; geopoly_bbox geopoly_group_bbox</li>
+<li><a href="geopoly.html#gblob">geopoly.html#gblob</a> &rarr; geopoly_blob</li>
+<li><a href="geopoly.html#gjson">geopoly.html#gjson</a> &rarr; geopoly_json</li>
+<li><a href="geopoly.html#goverlap">geopoly.html#goverlap</a> &rarr; geopoly_overlap</li>
+<li><a href="geopoly.html#gpoint">geopoly.html#gpoint</a> &rarr; geopoly_constains_point</li>
+<li><a href="geopoly.html#gsvg">geopoly.html#gsvg</a> &rarr; geopoly_svg</li>
+<li><a href="geopoly.html#gwithin">geopoly.html#gwithin</a> &rarr; geopoly_within</li>
+<li><a href="geopoly.html#xform">geopoly.html#xform</a> &rarr; geopoly_xform</li>
 <li><a href="getthecode.html">getthecode.html</a> &rarr; {canonical source code} {get the canonical source code}</li>
 <li><a href="getthecode.html#clone">getthecode.html#clone</a> &rarr; {clone the entire repository}</li>
 <li><a href="hirely.html">hirely.html</a> &rarr; high-reliability</li>
@@ -807,6 +822,7 @@ return false;
 <li><a href="howtocorrupt.html#cfgerr">howtocorrupt.html#cfgerr</a> &rarr; cfgerrors</li>
 <li><a href="howtocorrupt.html#delhotjrnl">howtocorrupt.html#delhotjrnl</a> &rarr; {deleting a hot journal}</li>
 <li><a href="howtocorrupt.html#fscorruption">howtocorrupt.html#fscorruption</a> &rarr; {filesystem corruption}</li>
+<li><a href="howtocorrupt.html#roguejrnl">howtocorrupt.html#roguejrnl</a> &rarr; {separating a database from its journal}</li>
 <li><a href="howtocorrupt.html#unlink">howtocorrupt.html#unlink</a> &rarr; {unlink corruption} {unlinked database files}</li>
 <li><a href="imposter.html">imposter.html</a> &rarr; {imposter tables}</li>
 <li><a href="imposter.html#dotimposter">imposter.html#dotimposter</a> &rarr; {.imposter dot-command}</li>
@@ -928,9 +944,10 @@ return false;
 <li><a href="lang_expr.html#castexpr">lang_expr.html#castexpr</a> &rarr; CAST {CAST expression} {CAST operator} cast</li>
 <li><a href="lang_expr.html#collateop">lang_expr.html#collateop</a> &rarr; {COLLATE operator}</li>
 <li><a href="lang_expr.html#cosub">lang_expr.html#cosub</a> &rarr; {correlated subqueries}</li>
+<li><a href="lang_expr.html#exists_op">lang_expr.html#exists_op</a> &rarr; {EXISTS operator} {NOT EXISTS operator}</li>
 <li><a href="lang_expr.html#glob">lang_expr.html#glob</a> &rarr; GLOB</li>
 <li><a href="lang_expr.html#hexint">lang_expr.html#hexint</a> &rarr; {hexadecimal integer literals} {hexadecimal integers}</li>
-<li><a href="lang_expr.html#in_op">lang_expr.html#in_op</a> &rarr; {EXISTS operator} {IN operator} {NOT EXISTS operator} {NOT IN operator}</li>
+<li><a href="lang_expr.html#in_op">lang_expr.html#in_op</a> &rarr; {IN operator} {NOT IN operator}</li>
 <li><a href="lang_expr.html#isisnot">lang_expr.html#isisnot</a> &rarr; {IS NOT operator} {IS operator}</li>
 <li><a href="lang_expr.html#like">lang_expr.html#like</a> &rarr; ESCAPE LIKE</li>
 <li><a href="lang_expr.html#litvalue">lang_expr.html#litvalue</a> &rarr; {literal value}</li>
@@ -987,7 +1004,6 @@ return false;
 <li><a href="lockingv3.html">lockingv3.html</a> &rarr; {file locking and concurrency control}</li>
 <li><a href="lockingv3.html#excl_lock">lockingv3.html#excl_lock</a> &rarr; EXCLUSIVE {EXCLUSIVE lock} {exclusive lock}</li>
 <li><a href="lockingv3.html#ext3-barrier-problem">lockingv3.html#ext3-barrier-problem</a> &rarr; {the ext3 barrier problem}</li>
-<li><a href="lockingv3.html#hotjrnl">lockingv3.html#hotjrnl</a> &rarr; {hot journal}</li>
 <li><a href="lockingv3.html#how_to_corrupt">lockingv3.html#how_to_corrupt</a> &rarr; {How To Corrupt Your Database Files}</li>
 <li><a href="lockingv3.html#locking">lockingv3.html#locking</a> &rarr; {file locking states}</li>
 <li><a href="lockingv3.html#pending_lock">lockingv3.html#pending_lock</a> &rarr; PENDING {PENDING lock} {pending lock}</li>
@@ -1180,6 +1196,7 @@ return false;
 <li><a href="releaselog/3_23_0.html">releaselog/3_23_0.html</a> &rarr; {Version 3.23.0} {Version 3.23.0.0} {version 3.23.0} {version 3.23.0.0}</li>
 <li><a href="releaselog/3_23_1.html">releaselog/3_23_1.html</a> &rarr; {Version 3.23.1} {Version 3.23.1.0} {version 3.23.1} {version 3.23.1.0}</li>
 <li><a href="releaselog/3_24_0.html">releaselog/3_24_0.html</a> &rarr; {Version 3.24.0} {version 3.24.0}</li>
+<li><a href="releaselog/3_25_0.html">releaselog/3_25_0.html</a> &rarr; {Version 3.25.0} {version 3.25.0}</li>
 <li><a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a> &rarr; {Version 3.2.0} {version 3.2.0}</li>
 <li><a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a> &rarr; {Version 3.2.1} {version 3.2.1}</li>
 <li><a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a> &rarr; {Version 3.2.2} {version 3.2.2}</li>
@@ -1507,7 +1524,10 @@ return false;
 <li><a href="syntax/drop-view-stmt.html">syntax/drop-view-stmt.html</a> &rarr; drop-view-stmt {drop-view-stmt syntax diagram}</li>
 <li><a href="syntax/expr.html">syntax/expr.html</a> &rarr; expr {expr syntax diagram}</li>
 <li><a href="syntax/factored-select-stmt.html">syntax/factored-select-stmt.html</a> &rarr; factored-select-stmt {factored-select-stmt syntax diagram}</li>
+<li><a href="syntax/filter.html">syntax/filter.html</a> &rarr; filter {filter syntax diagram}</li>
 <li><a href="syntax/foreign-key-clause.html">syntax/foreign-key-clause.html</a> &rarr; foreign-key-clause {foreign-key-clause syntax diagram}</li>
+<li><a href="syntax/frame-spec.html">syntax/frame-spec.html</a> &rarr; frame-spec {frame-spec syntax diagram}</li>
+<li><a href="syntax/function-invocation.html">syntax/function-invocation.html</a> &rarr; function-invocation {function-invocation syntax diagram}</li>
 <li><a href="syntax/indexed-column.html">syntax/indexed-column.html</a> &rarr; indexed-column {indexed-column syntax diagram}</li>
 <li><a href="syntax/insert-stmt.html">syntax/insert-stmt.html</a> &rarr; insert-stmt {insert-stmt syntax diagram}</li>
 <li><a href="syntax/join-clause.html">syntax/join-clause.html</a> &rarr; join-clause {join-clause syntax diagram}</li>
@@ -1539,6 +1559,8 @@ return false;
 <li><a href="syntax/update-stmt.html">syntax/update-stmt.html</a> &rarr; update-stmt {update-stmt syntax diagram}</li>
 <li><a href="syntax/upsert-clause.html">syntax/upsert-clause.html</a> &rarr; upsert-clause {upsert-clause syntax diagram}</li>
 <li><a href="syntax/vacuum-stmt.html">syntax/vacuum-stmt.html</a> &rarr; vacuum-stmt {vacuum-stmt syntax diagram}</li>
+<li><a href="syntax/window-defn.html">syntax/window-defn.html</a> &rarr; window-defn {window-defn syntax diagram}</li>
+<li><a href="syntax/window-function-invocation.html">syntax/window-function-invocation.html</a> &rarr; window-function-invocation {window-function-invocation syntax diagram}</li>
 <li><a href="syntax/with-clause.html">syntax/with-clause.html</a> &rarr; with-clause {with-clause syntax diagram}</li>
 <li><a href="syntaxdiagrams.html">syntaxdiagrams.html</a> &rarr; {syntax diagrams}</li>
 <li><a href="tclsqlite.html">tclsqlite.html</a> &rarr; {TCL Interface} {Tcl extension}</li>
@@ -1653,6 +1675,7 @@ return false;
 <li><a href="wal.html#concurrency">wal.html#concurrency</a> &rarr; {WAL concurrency}</li>
 <li><a href="wal.html#noshm">wal.html#noshm</a> &rarr; {WAL without shared memory}</li>
 <li><a href="wal.html#readonly">wal.html#readonly</a> &rarr; {read-only WAL databases}</li>
+<li><a href="wal.html#walfile">wal.html#walfile</a> &rarr; {WAL file}</li>
 <li><a href="walformat.html">walformat.html</a> &rarr; {WAL-index File Format} {WAL-index format} wal-index</li>
 <li><a href="walformat.html#locks">walformat.html#locks</a> &rarr; {WAL-mode locks}</li>
 <li><a href="walformat.html#mxframe">walformat.html#mxframe</a> &rarr; mxFrame</li>
@@ -1664,6 +1687,9 @@ return false;
 <li><a href="whentouse.html#serversidedb">whentouse.html#serversidedb</a> &rarr; {server-side database}</li>
 <li><a href="whentouse.html#website">whentouse.html#website</a> &rarr; {using SQLite for websites}</li>
 <li><a href="whentouse.html#wireproto">whentouse.html#wireproto</a> &rarr; {data transfer format}</li>
+<li><a href="windowfunctions.html">windowfunctions.html</a> &rarr; {window functions}</li>
+<li><a href="windowfunctions.html#aggregate_window_functions">windowfunctions.html#aggregate_window_functions</a> &rarr; {aggregate window functions}</li>
+<li><a href="windowfunctions.html#user_defined_aggregate_window_functions">windowfunctions.html#user_defined_aggregate_window_functions</a> &rarr; {user-defined window functions}</li>
 <li><a href="withoutrowid.html">withoutrowid.html</a> &rarr; {Clustered indexes} {WITHOUT ROWID} {WITHOUT rowid}</li>
 <li><a href="withoutrowid.html#bene">withoutrowid.html#bene</a> &rarr; {benefits of using WITHOUT ROWID}</li>
 <li><a href="withoutrowid.html#wtu">withoutrowid.html#wtu</a> &rarr; {when to use WITHOUT ROWID}</li>

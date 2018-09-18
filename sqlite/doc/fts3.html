@@ -1832,8 +1832,10 @@ CREATE VIRTUAL TABLE t3 USING fts4(content="t2", a, c);
   When a users query on the FTS table requires a column value other than
   docid, FTS attempts to read the requested value from the corresponding column of
   the row in the content table with a rowid value equal to the current FTS
-  docid. Or, if such a row cannot be found in the content table, a NULL
-  value is used instead. For example:
+  docid. Only the subset of content-table columns duplicated in the FTS/34
+  table declaration can be queried for - to retrieve values from any other
+  columns the content table must be queried directly. Or, if such a row cannot
+  be found in the content table, a NULL value is used instead. For example:
 
 </p><div class="codeblock"><pre>CREATE TABLE t2(id INTEGER PRIMARY KEY, a, b, c);
 CREATE VIRTUAL TABLE t3 USING fts4(content="t2", b, c);

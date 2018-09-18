@@ -111,12 +111,25 @@ count, but those made as part of REPLACE constraint resolution are
 not. Changes to a view that are intercepted by INSTEAD OF triggers
 are not counted.</p>
 
-<p>See also the <a href="../c3ref/changes.html">sqlite3_changes()</a> interface, the
-<a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#total_changes">total_changes() SQL function</a>.</p>
+<p>This the <a href="../c3ref/total_changes.html">sqlite3_total_changes(D)</a> interface only reports the number
+of rows that changed due to SQL statement run against database
+connection D.  Any changes by other database connections are ignored.
+To detect changes against a database file from other database
+connections use the <a href="../pragma.html#pragma_data_version">PRAGMA data_version</a> command or the
+<a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntldataversion">SQLITE_FCNTL_DATA_VERSION</a> <a href="../c3ref/file_control.html">file control</a>.</p>
 
 <p>If a separate thread makes changes on the same database connection
 while <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> is running then the value
-returned is unpredictable and not meaningful.
+returned is unpredictable and not meaningful.</p>
+
+<p>See also:
+<ul>
+<li> the <a href="../c3ref/changes.html">sqlite3_changes()</a> interface
+<li> the <a href="../pragma.html#pragma_count_changes">count_changes pragma</a>
+<li> the <a href="../lang_corefunc.html#changes">changes() SQL function</a>
+<li> the <a href="../pragma.html#pragma_data_version">data_version pragma</a>
+<li> the <a href="../c3ref/c_fcntl_begin_atomic_write.html#sqlitefcntldataversion">SQLITE_FCNTL_DATA_VERSION</a> <a href="../c3ref/file_control.html">file control</a>
+</ul>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

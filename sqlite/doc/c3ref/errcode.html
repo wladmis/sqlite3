@@ -108,12 +108,23 @@ If the most recent sqlite3_* API call associated with
 <a href="../c3ref/sqlite3.html">database connection</a> D failed, then the sqlite3_errcode(D) interface
 returns the numeric <a href="../rescode.html">result code</a> or <a href="../rescode.html#extrc">extended result code</a> for that
 API call.
-If the most recent API call was successful,
-then the return value from sqlite3_errcode() is undefined.
 The sqlite3_extended_errcode()
 interface is the same except that it always returns the
 <a href="../rescode.html#extrc">extended result code</a> even when extended result codes are
 disabled.</p>
+
+<p>The values returned by sqlite3_errcode() and/or
+sqlite3_extended_errcode() might change with each API call.
+Except, there are some interfaces that are guaranteed to never
+change the value of the error code.  The error-code preserving
+interfaces are:</p>
+
+<p><ul>
+<li> sqlite3_errcode()
+<li> sqlite3_extended_errcode()
+<li> sqlite3_errmsg()
+<li> sqlite3_errmsg16()
+</ul></p>
 
 <p>The sqlite3_errmsg() and sqlite3_errmsg16() return English-language
 text that describes the error, as either UTF-8 or UTF-16 respectively.

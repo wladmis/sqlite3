@@ -1007,7 +1007,7 @@ in numeric order.
 <p>
   The SQLITE_NOTICE_RECOVER_ROLLBACK result code is
   passed to the callback of
-  <a href="c3ref/log.html">sqlite3_log()</a> when a <a href="lockingv3.html#hotjrnl">hot journal</a> is rolled back.
+  <a href="c3ref/log.html">sqlite3_log()</a> when a <a href="fileformat2.html#hotjrnl">hot journal</a> is rolled back.
 
 
 <!--------------------------------------------------------------->
@@ -1016,7 +1016,7 @@ in numeric order.
 <p>
   The SQLITE_READONLY_ROLLBACK error code is an <a href="rescode.html#pve">extended error code</a>
   for <a href="rescode.html#readonly">SQLITE_READONLY</a>.  The SQLITE_READONLY_ROLLBACK error code indicates
-  that a database cannot be opened because it has a <a href="lockingv3.html#hotjrnl">hot journal</a> that
+  that a database cannot be opened because it has a <a href="fileformat2.html#hotjrnl">hot journal</a> that
   needs to be rolled back but cannot because the database is readonly.
 
 

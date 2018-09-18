@@ -293,11 +293,25 @@ and BLOBs is freed automatically.  Do not pass the pointers returned
 from <a href="../c3ref/column_blob.html">sqlite3_column_blob()</a>, <a href="../c3ref/column_blob.html">sqlite3_column_text()</a>, etc. into
 <a href="../c3ref/free.html">sqlite3_free()</a>.</p>
 
-<p>If a memory allocation error occurs during the evaluation of any
-of these routines, a default value is returned.  The default value
-is either the integer 0, the floating point number 0.0, or a NULL
-pointer.  Subsequent calls to <a href="../c3ref/errcode.html">sqlite3_errcode()</a> will return
-<a href="../rescode.html#nomem">SQLITE_NOMEM</a>.
+<p>As long as the input parameters are correct, these routines will only
+fail if an out-of-memory error occurs during a format conversion.
+Only the following subset of interfaces are subject to out-of-memory
+errors:</p>
+
+<p><ul>
+<li> sqlite3_column_blob()
+<li> sqlite3_column_text()
+<li> sqlite3_column_text16()
+<li> sqlite3_column_bytes()
+<li> sqlite3_column_bytes16()
+</ul></p>
+
+<p>If an out-of-memory error occurs, then the return value from these
+routines is the same as if the column had contained an SQL NULL value.
+Valid SQL NULL returns can be distinguished from out-of-memory errors
+by invoking the <a href="../c3ref/errcode.html">sqlite3_errcode()</a> immediately after the suspect
+return value is obtained and before any
+other SQLite interface is called on the same <a href="../c3ref/sqlite3.html">database connection</a>.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

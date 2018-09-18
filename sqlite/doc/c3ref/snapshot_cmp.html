@@ -102,7 +102,7 @@ int sqlite3_snapshot_cmp(
   sqlite3_snapshot *p2
 );
 </pre></blockquote>
-<p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
+<p>
 The sqlite3_snapshot_cmp(P1, P2) interface is used to compare the ages
 of two valid snapshot handles.</p>
 
@@ -119,7 +119,10 @@ is undefined.</p>
 
 <p>Otherwise, this API returns a negative value if P1 refers to an older
 snapshot than P2, zero if the two handles refer to the same database
-snapshot, and a positive value if P1 is a newer snapshot than P2.
+snapshot, and a positive value if P1 is a newer snapshot than P2.</p>
+
+<p>This interface is only available if SQLite is compiled with the
+<a href="../compile.html#enable_snapshot">SQLITE_ENABLE_SNAPSHOT</a> option.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

@@ -922,6 +922,10 @@ the available settings:</p>
 <p><b>SQLITE_ENABLE_FTS5</b></p><blockquote><p>
   When this option is defined in the <a href="amalgamation.html">amalgamation</a>, versions 5
   of the full-text search engine (<a href="fts5.html">fts5</a>) is added to the build automatically.
+</p></blockquote><a name="enable_geopoly"></a>
+<p><b>SQLITE_ENABLE_GEOPOLY</b></p><blockquote><p>
+  When this option is defined in the <a href="amalgamation.html">amalgamation</a>, the <a href="geopoly.html">Geopoly extension</a>
+  is included in the build.
 </p></blockquote><a name="enable_icu"></a>
 <p><b>SQLITE_ENABLE_ICU</b></p><blockquote><p>
   This option causes the 
@@ -1056,6 +1060,17 @@ the available settings:</p>
 </p></blockquote><a name="enable_session"></a>
 <p><b>SQLITE_ENABLE_SESSION</b></p><blockquote><p>
   This option enables the <a href="sessionintro.html">session extension</a>.
+</p></blockquote><a name="enable_snapshot"></a>
+<p><b>SQLITE_ENABLE_SNAPSHOT</b></p><blockquote><p>
+  This option enables the code to support the <a href="c3ref/snapshot.html">sqlite3_snapshot</a> object
+  and its related interfaces:
+  <ul>
+  <li> <a href="c3ref/snapshot_get.html">sqlite3_snapshot_get()</a> (constructor)
+  <li> <a href="c3ref/snapshot_free.html">sqlite3_snapshot_free()</a> (destructor)
+  <li> <a href="c3ref/snapshot_open.html">sqlite3_snapshot_open()</a>
+  <li> <a href="c3ref/snapshot_cmp.html">sqlite3_snapshot_cmp()</a>
+  <li> <a href="c3ref/snapshot_recover.html">sqlite3_snapshot_recover()</a>
+  </ul>
 </p></blockquote><a name="enable_sorter_references"></a>
 <p><b>SQLITE_ENABLE_SORTER_REFERENCES</b></p><blockquote><p>
   This option activates an optimization that reduces the memory required
@@ -1069,7 +1084,7 @@ the available settings:</p>
   can be large, which means that the sorter has to either use more memory,
   and/or write more content to temporary storage.
   <p>
-  When SQLITE_ENABLE_SORTER_PREFERENCES is enabled, the records passed to
+  When SQLITE_ENABLE_SORTER_REFERENCES is enabled, the records passed to
   the sorter often contain only a <a href="lang_createtable.html#rowid">ROWID</a> value.  Such records are much
   smaller.  This means the sorter has much less "payload" to deal with and
   can run faster.  After sorting has occurred, the ROWID is used to look up 
@@ -1077,16 +1092,16 @@ the available settings:</p>
   search into the table, and could potentially result in a slowdown.  Or,
   it might be a performance win, depending on how large the values are.
   <p>
-  Even when the SQLITE_ENABLE_SORTER_PREFERENCES compile-time option is on,
+  Even when the SQLITE_ENABLE_SORTER_REFERENCES compile-time option is on,
   sorter references are still disabled by default.  To use sorter references,
   the application must set a sorter reference size threshold using the
   <a href="c3ref/config.html">sqlite3_config</a>(<a href="c3ref/c_config_covering_index_scan.html#sqliteconfigsorterrefsize">SQLITE_CONFIG_SORTERREF_SIZE</a>) interface at start-time.
   <p>
   Because the SQLite developers do not know whether the 
-  SQLITE_ENABLE_SORTER_PERFERENCES option will help or hurt performance,
+  SQLITE_ENABLE_SORTER_REFERENCES option will help or hurt performance,
   it is disabled by default at this time (2018-05-04).  It might be enabled
   by default in some future release, depending on what is learned about its
-  inpact on performance.
+  impact on performance.
 </p></blockquote><a name="enable_stmt_scanstatus"></a>
 <p><b>SQLITE_ENABLE_STMT_SCANSTATUS</b></p><blockquote><p>
   This option enables the <a href="c3ref/stmt_scanstatus.html">sqlite3_stmt_scanstatus()</a> interface.  The

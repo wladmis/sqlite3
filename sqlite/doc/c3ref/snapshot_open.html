@@ -103,24 +103,35 @@ int sqlite3_snapshot_open(
   sqlite3_snapshot *pSnapshot
 );
 </pre></blockquote>
-<p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
-The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> interface starts a
-read transaction for schema S of
-<a href="../c3ref/sqlite3.html">database connection</a> D such that the read transaction
-refers to historical <a href="../c3ref/snapshot.html">snapshot</a> P, rather than the most
-recent change to the database.
-The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface returns SQLITE_OK on success
-or an appropriate <a href="../rescode.html">error code</a> if it fails.</p>
+<p>
+The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> interface either starts a new read
+transaction or upgrades an existing one for schema S of
+<a href="../c3ref/sqlite3.html">database connection</a> D such that the read transaction refers to
+historical <a href="../c3ref/snapshot.html">snapshot</a> P, rather than the most recent change to the
+database. The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface returns SQLITE_OK
+on success or an appropriate <a href="../rescode.html">error code</a> if it fails.</p>
 
-<p>In order to succeed, a call to <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> must be
-the first operation following the <a href="../lang_transaction.html">BEGIN</a> that takes the schema S
-out of <a href="../c3ref/get_autocommit.html">autocommit mode</a>.
-In other words, schema S must not currently be in
-a transaction for <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> to work, but the
-database connection D must be out of <a href="../c3ref/get_autocommit.html">autocommit mode</a>.
-A <a href="../c3ref/snapshot.html">snapshot</a> will fail to open if it has been overwritten by a
-<a href="../wal.html#ckpt">checkpoint</a>.
-A call to <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> will fail if the
+<p>In order to succeed, the database connection must not be in
+<a href="../c3ref/get_autocommit.html">autocommit mode</a> when <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> is called. If there
+is already a read transaction open on schema S, then the database handle
+must have no active statements (SELECT statements that have been passed
+to sqlite3_step() but not sqlite3_reset() or sqlite3_finalize()).
+SQLITE_ERROR is returned if either of these conditions is violated, or
+if schema S does not exist, or if the snapshot object is invalid.</p>
+
+<p>A call to sqlite3_snapshot_open() will fail to open if the specified
+snapshot has been overwritten by a <a href="../wal.html#ckpt">checkpoint</a>. In this case
+SQLITE_ERROR_SNAPSHOT is returned.</p>
+
+<p>If there is already a read transaction open when this function is
+invoked, then the same read transaction remains open (on the same
+database snapshot) if SQLITE_ERROR, SQLITE_BUSY or SQLITE_ERROR_SNAPSHOT
+is returned. If another error code - for example SQLITE_PROTOCOL or an
+SQLITE_IOERR error code - is returned, then the final state of the
+read transaction is undefined. If SQLITE_OK is returned, then the
+read transaction is now open on database snapshot P.</p>
+
+<p>A call to <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open(D,S,P)</a> will fail if the
 database connection D does not know that the database file for
 schema S is in <a href="../wal.html">WAL mode</a>.  A database connection might not know
 that the database file is in <a href="../wal.html">WAL mode</a> if there has been no prior
@@ -130,7 +141,7 @@ after the most recent I/O on the database connection.
 database connection in order to make it ready to use snapshots.)</p>
 
 <p>The <a href="../c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface is only available when the
-SQLITE_ENABLE_SNAPSHOT compile-time option is used.
+<a href="../compile.html#enable_snapshot">SQLITE_ENABLE_SNAPSHOT</a> compile-time option is used.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

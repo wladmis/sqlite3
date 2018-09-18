@@ -116,11 +116,15 @@ return false;
 <li> Added the --append option to the ".backup" command.
 <li> Added the ".dbconfig" command.
 <p><b>Performance:</b>
-<li> <a href="../lang_update.html">UPDATE</a> avoids writing database pages that do not actually change.
-     For example, "UPDATE t1 SET x=25 WHERE y=?" becomes a no-op if the
-     value in column x is already 25.  Similarly, 
-     when doing <a href="../lang_update.html">UPDATE</a> on records that span multiple pages, only write
-     the subset of pages that contain the changed value(s).
+<li> <a href="../lang_update.html">UPDATE</a> avoids unnecessary low-level disk writes when the contents
+     of the database file do not actually change.
+     For example, "UPDATE t1 SET x=25 WHERE y=?" generates no extra 
+     disk I/O if the value in column x is already 25.  Similarly, 
+     when doing <a href="../lang_update.html">UPDATE</a> on records that span multiple pages, only
+     the subset of pages that actually change are written to disk.
+     This is a low-level performance optimization only and does not
+     affect the behavior of TRIGGERs or other higher level SQL
+     structures.
 <li> Queries that use ORDER BY and LIMIT now try to avoid computing
      rows that cannot possibly come in under the LIMIT. This can greatly
      improve performance of ORDER BY LIMIT queries, especially when the

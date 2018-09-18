@@ -459,7 +459,7 @@ be used to force strings to be recognized as JSON.
 in the JSON array X, or 0 if X is some kind of JSON value other
 than an array.  The json_array_length(X,P) locates the array at path P
 within X and returns the length of that array, or 0 if path P locates
-a element or X other than a JSON array, and NULL if path P does not
+an element or X other than a JSON array, and NULL if path P does not
 locate any element of X.  Errors are thrown if either X is not 
 well-formed JSON or if P is not a well-formed path.
 
@@ -742,7 +742,7 @@ of X.  The json_type(X,P) function returns the "type" of the element
 in X that is selected by path P.  The "type" returned by json_type() is
 on of the following an SQL text values:
 'null', 'true', 'false', 'integer', 'real', 'text', 'array', or 'object'.
-If the path P in json_type(X,P) selects a element that does not exist
+If the path P in json_type(X,P) selects an element that does not exist
 in X, then this function returns NULL.
 
 </p><p>The json_type() function throws an error if any of its arguments are

@@ -216,8 +216,8 @@ virtual table implementations.
 <p>A virtual table is created using a <a href="lang_createvtab.html">CREATE VIRTUAL TABLE</a> statement.
 
 <p><b><a href="syntax/create-virtual-table-stmt.html">create-virtual-table-stmt:</a></b>
-<button id='x1575' onclick='hideorshow("x1575","x1576")'>hide</button></p>
- <div id='x1576' class='imgcontainer'>
+<button id='x2041' onclick='hideorshow("x2041","x2042")'>hide</button></p>
+ <div id='x2042' class='imgcontainer'>
  <img alt="syntax diagram create-virtual-table-stmt" src="images/syntax/create-virtual-table-stmt.gif" />
 </div>
 
@@ -414,11 +414,11 @@ the behavior of a virtual table.  The module structure looks like this:
 struct sqlite3_module {
   int iVersion;
   int (*xCreate)(sqlite3*, void *pAux,
-               int argc, char **argv,
+               int argc, char *const*argv,
                sqlite3_vtab **ppVTab,
                char **pzErr);
   int (*xConnect)(sqlite3*, void *pAux,
-               int argc, char **argv,
+               int argc, char *const*argv,
                sqlite3_vtab **ppVTab,
                char **pzErr);
   int (*xBestIndex)(sqlite3_vtab *pVTab, sqlite3_index_info*);
@@ -503,7 +503,7 @@ for "sqlite3_create_module".
 <h2 id="the_xcreate_method"><span>2.1. </span>The xCreate Method</h2>
 
 <div class="codeblock"><pre>int (*xCreate)(sqlite3 *db, void *pAux,
-             int argc, char **argv,
+             int argc, char *const*argv,
              sqlite3_vtab **ppVTab,
              char **pzErr);
 </pre></div>
@@ -697,7 +697,7 @@ PRIMARY KEY column and a non-NULL xUpdate method.
 </p><h2 id="the_xconnect_method"><span>2.2. </span>The xConnect Method</h2>
 
 <div class="codeblock"><pre>int (*xConnect)(sqlite3*, void *pAux,
-             int argc, char **argv,
+             int argc, char *const*argv,
              sqlite3_vtab **ppVTab,
              char **pzErr);
 </pre></div>
@@ -823,6 +823,7 @@ older version of SQLite are undefined.
 #define SQLITE_INDEX_CONSTRAINT_ISNOTNULL 70  /* 3.21.0 and later */
 #define SQLITE_INDEX_CONSTRAINT_ISNULL    71  /* 3.21.0 and later */
 #define SQLITE_INDEX_CONSTRAINT_IS        72  /* 3.21.0 and later */
+#define SQLITE_INDEX_CONSTRAINT_FUNCTION 150  /* 3.25.0 and later */
 #define SQLITE_INDEX_SCAN_UNIQUE           1  /* Scan visits at most 1 row */
 </pre></div>
 
@@ -872,7 +873,7 @@ the number of rows that need to be searched. The aConstraint[] array
 contains one entry for each constraint. There will be exactly 
 nConstraint entries in that array.
 
-</p><p>Each constraint will correspond to a term in the WHERE clause
+</p><p>Each constraint will usually correspond to a term in the WHERE clause
 or in a USING or ON clause that is of the form
 
 </p><blockquote>
@@ -904,7 +905,7 @@ x &lt;= 100
 y &lt; 999
 </pre></div>
 
-<p>For each constraint, the aConstraint[].iColumn field indicates which 
+<p>For such each constraint, the aConstraint[].iColumn field indicates which 
 column appears on the left-hand side of the constraint.
 The first column of the virtual table is column 0. 
 The rowid of the virtual table is column -1. 
@@ -914,6 +915,17 @@ into operator values.
 Columns occur in the order they were defined by the call to
 <a href="c3ref/declare_vtab.html">sqlite3_declare_vtab()</a> in the <a href="vtab.html#xcreate">xCreate</a> or <a href="vtab.html#xconnect">xConnect</a> method.
 Hidden columns are counted when determining the column index.
+
+</p><p>If the <a href="vtab.html#xfindfunction">xFindFunction()</a> method for the virtual table is defined, and 
+if xFindFunction() sometimes returns <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> or
+larger, then the constraints might also be of the form:
+
+</p><blockquote>
+     FUNCTION( column, EXPR)
+</blockquote>
+
+<p>In this case the aConstraint[].op value is the same as the value
+returned by <a href="vtab.html#xfindfunction">xFindFunction()</a> for FUNCTION.
 
 </p><p>The aConstraint[] array contains information about all constraints 
 that apply to the virtual table. But some of the constraints might
@@ -1369,9 +1381,38 @@ the virtual table, the number of arguments to the function, and the
 name of the function. If no overloading is desired, this method
 returns 0. To overload the function, this method writes the new 
 function implementation into *pxFunc and writes user data into *ppArg 
-and returns 1.
+and returns either 1 or a number between
+<a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> and 255.
 
-</p><p>Note that infix functions (<a href="lang_expr.html#like">LIKE</a>, <a href="lang_expr.html#glob">GLOB</a>, <a href="lang_expr.html#regexp">REGEXP</a>, and <a href="lang_expr.html#match">MATCH</a>) reverse 
+</p><p>Historically, the return value from xFindFunction() was either zero
+or one.  Zero means that the function is not overloaded and one means that
+it is overload.  The ability to return values of 
+<a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> or greater was added in
+version 3.25.0 (2018-09-15).  If xFindFunction returns
+<a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> or greater, than means that the function
+takes two arguments and the function
+can be used as a boolean in the WHERE clause of a query and that
+the virtual table is able to exploit that function to speed up the query
+result.  When xFindFunction returns <a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> or 
+larger, the value returned becomes the sqlite3_index_info.aConstraint.op
+value for one of the constraints passed into <a href="vtab.html#xbestindex">xBestIndex()</a> and the second
+argument becomes the value corresponding to that constraint that is passed
+to <a href="vtab.html#xfilter">xFilter()</a>.  This enables the
+xBestIndex()/xFilter implementations to use the function to speed
+its search.
+
+</p><p>The technique of having xFindFunction() return values of
+<a href="c3ref/c_index_constraint_eq.html">SQLITE_INDEX_CONSTRAINT_FUNCTION</a> was initially used in the implementation
+of the <a href="geopoly.html">Geopoly module</a>.  The xFindFunction() method of that module returns
+SQLITE_INDEX_CONSTRAINT_FUNCTION for the <a href="geopoly.html#goverlap">geopoly_overlap()</a> SQL function
+and it returns
+SQLITE_INDEX_CONSTRAINT_FUNCTION+1 for the <a href="geopoly.html#gwithin">geopoly_within()</a> SQL function.
+This permits search optimizations for queries such as:
+
+</p><div class="codeblock"><pre>SELECT * FROM geopolytab WHERE geopoly_overlap(_shape, $query_polygon);
+</pre></div>
+
+<p>Note that infix functions (<a href="lang_expr.html#like">LIKE</a>, <a href="lang_expr.html#glob">GLOB</a>, <a href="lang_expr.html#regexp">REGEXP</a>, and <a href="lang_expr.html#match">MATCH</a>) reverse 
 the order of their arguments. So "like(A,B)" is equivalent to "B like A". 
 For the form "B like A" the B term is considered the first argument 
 to the function. But for "like(A,B)" the A term is considered the 

@@ -99,13 +99,13 @@ return false;
 <blockquote><pre>
 void sqlite3_snapshot_free(sqlite3_snapshot*);
 </pre></blockquote>
-<p><b>Important:</b> This interface is <a href="../c3ref/experimental.html">experimental</a> and is subject to change without notice.</p><p>
+<p>
 The <a href="../c3ref/snapshot_free.html">sqlite3_snapshot_free(P)</a> interface destroys <a href="../c3ref/snapshot.html">sqlite3_snapshot</a> P.
 The application must eventually free every <a href="../c3ref/snapshot.html">sqlite3_snapshot</a> object
 using this routine to avoid a memory leak.</p>
 
 <p>The <a href="../c3ref/snapshot_free.html">sqlite3_snapshot_free()</a> interface is only available when the
-SQLITE_ENABLE_SNAPSHOT compile-time option is used.
+<a href="../compile.html#enable_snapshot">SQLITE_ENABLE_SNAPSHOT</a> compile-time option is used.
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

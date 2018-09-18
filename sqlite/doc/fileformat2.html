@@ -102,30 +102,31 @@ Database File Format
 Table Of Contents
 </a>
 <div id="toc_sub"><div class="fancy-toc1"><a href="#the_database_file">1. The Database File</a></div>
-<div class="fancy-toc2"><a href="#pages">1.1. Pages</a></div>
-<div class="fancy-toc2"><a href="#the_database_header">1.2. The Database Header</a></div>
-<div class="fancy-toc3"><a href="#magic_header_string">1.2.1. Magic Header String</a></div>
-<div class="fancy-toc3"><a href="#page_size">1.2.2. Page Size</a></div>
-<div class="fancy-toc3"><a href="#file_format_version_numbers">1.2.3. File format version numbers</a></div>
-<div class="fancy-toc3"><a href="#reserved_bytes_per_page">1.2.4. Reserved bytes per page</a></div>
-<div class="fancy-toc3"><a href="#payload_fractions">1.2.5. Payload fractions</a></div>
-<div class="fancy-toc3"><a href="#file_change_counter">1.2.6. File change counter</a></div>
-<div class="fancy-toc3"><a href="#in_header_database_size">1.2.7. In-header database size</a></div>
-<div class="fancy-toc3"><a href="#free_page_list">1.2.8. Free page list</a></div>
-<div class="fancy-toc3"><a href="#schema_cookie">1.2.9. Schema cookie</a></div>
-<div class="fancy-toc3"><a href="#schema_format_number">1.2.10. Schema format number</a></div>
-<div class="fancy-toc3"><a href="#suggested_cache_size">1.2.11. Suggested cache size</a></div>
-<div class="fancy-toc3"><a href="#incremental_vacuum_settings">1.2.12. Incremental vacuum settings</a></div>
-<div class="fancy-toc3"><a href="#text_encoding">1.2.13. Text encoding</a></div>
-<div class="fancy-toc3"><a href="#user_version_number">1.2.14. User version number</a></div>
-<div class="fancy-toc3"><a href="#application_id">1.2.15. Application ID</a></div>
-<div class="fancy-toc3"><a href="#write_library_version_number_and_version_valid_for_number">1.2.16. Write library version number and version-valid-for number</a></div>
-<div class="fancy-toc3"><a href="#header_space_reserved_for_expansion">1.2.17. Header space reserved for expansion</a></div>
-<div class="fancy-toc2"><a href="#the_lock_byte_page">1.3. The Lock-Byte Page</a></div>
-<div class="fancy-toc2"><a href="#the_freelist">1.4. The Freelist</a></div>
-<div class="fancy-toc2"><a href="#b_tree_pages">1.5. B-tree Pages</a></div>
-<div class="fancy-toc2"><a href="#cell_payload_overflow_pages">1.6. Cell Payload Overflow Pages</a></div>
-<div class="fancy-toc2"><a href="#pointer_map_or_ptrmap_pages">1.7. Pointer Map or Ptrmap Pages</a></div>
+<div class="fancy-toc2"><a href="#hot_journals">1.1. Hot Journals</a></div>
+<div class="fancy-toc2"><a href="#pages">1.2. Pages</a></div>
+<div class="fancy-toc2"><a href="#the_database_header">1.3. The Database Header</a></div>
+<div class="fancy-toc3"><a href="#magic_header_string">1.3.1. Magic Header String</a></div>
+<div class="fancy-toc3"><a href="#page_size">1.3.2. Page Size</a></div>
+<div class="fancy-toc3"><a href="#file_format_version_numbers">1.3.3. File format version numbers</a></div>
+<div class="fancy-toc3"><a href="#reserved_bytes_per_page">1.3.4. Reserved bytes per page</a></div>
+<div class="fancy-toc3"><a href="#payload_fractions">1.3.5. Payload fractions</a></div>
+<div class="fancy-toc3"><a href="#file_change_counter">1.3.6. File change counter</a></div>
+<div class="fancy-toc3"><a href="#in_header_database_size">1.3.7. In-header database size</a></div>
+<div class="fancy-toc3"><a href="#free_page_list">1.3.8. Free page list</a></div>
+<div class="fancy-toc3"><a href="#schema_cookie">1.3.9. Schema cookie</a></div>
+<div class="fancy-toc3"><a href="#schema_format_number">1.3.10. Schema format number</a></div>
+<div class="fancy-toc3"><a href="#suggested_cache_size">1.3.11. Suggested cache size</a></div>
+<div class="fancy-toc3"><a href="#incremental_vacuum_settings">1.3.12. Incremental vacuum settings</a></div>
+<div class="fancy-toc3"><a href="#text_encoding">1.3.13. Text encoding</a></div>
+<div class="fancy-toc3"><a href="#user_version_number">1.3.14. User version number</a></div>
+<div class="fancy-toc3"><a href="#application_id">1.3.15. Application ID</a></div>
+<div class="fancy-toc3"><a href="#write_library_version_number_and_version_valid_for_number">1.3.16. Write library version number and version-valid-for number</a></div>
+<div class="fancy-toc3"><a href="#header_space_reserved_for_expansion">1.3.17. Header space reserved for expansion</a></div>
+<div class="fancy-toc2"><a href="#the_lock_byte_page">1.4. The Lock-Byte Page</a></div>
+<div class="fancy-toc2"><a href="#the_freelist">1.5. The Freelist</a></div>
+<div class="fancy-toc2"><a href="#b_tree_pages">1.6. B-tree Pages</a></div>
+<div class="fancy-toc2"><a href="#cell_payload_overflow_pages">1.7. Cell Payload Overflow Pages</a></div>
+<div class="fancy-toc2"><a href="#pointer_map_or_ptrmap_pages">1.8. Pointer Map or Ptrmap Pages</a></div>
 <div class="fancy-toc1"><a href="#schema_layer">2. Schema Layer</a></div>
 <div class="fancy-toc2"><a href="#record_format">2.1. Record Format</a></div>
 <div class="fancy-toc2"><a href="#record_sort_order">2.2. Record Sort Order</a></div>
@@ -183,7 +184,11 @@ contained in a single file on disk called the "main database file".</p>
 <p>During a transaction, SQLite stores additional information 
 in a second file called the "rollback journal", or if SQLite is in
 <a href="wal.html">WAL mode</a>, a write-ahead log file.
-If the application or
+
+<a name="hotjrnl"></a>
+
+</p><h2 id="hot_journals"><span>1.1. </span>Hot Journals</h2>
+<p>If the application or
 host computer crashes before the transaction completes, then the rollback
 journal or write-ahead log contains information needed 
 to restore the main database file to a consistent state.  When a rollback 
@@ -195,7 +200,7 @@ database and so cannot be ignored.  This document defines the format
 of a rollback journal and the write-ahead log file, but the focus is
 on the main database file.</p>
 
-<h2 id="pages"><span>1.1. </span>Pages</h2>
+<h2 id="pages"><span>1.2. </span>Pages</h2>
 
 <p>The main database file consists of one or more pages.  The size of a
 page is a power of two between 512 and 65536 inclusive.  All pages within
@@ -253,7 +258,7 @@ reduce disk I/O.</p>
 
 <a name="database_header"></a>
 
-<h2 id="the_database_header"><span>1.2. </span>The Database Header</h2>
+<h2 id="the_database_header"><span>1.3. </span>The Database Header</h2>
 
 <p>The first 100 bytes of the database file comprise the database file 
 header.  The database file header is divided into fields as shown by
@@ -315,14 +320,14 @@ The <a href="fileformat2.html#validfor">version-valid-for number</a>.
 <a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a>
 </td></tr></table></center>
 
-<h3 id="magic_header_string"><span>1.2.1. </span>Magic Header String</h3>
+<h3 id="magic_header_string"><span>1.3.1. </span>Magic Header String</h3>
 
 <p>Every valid SQLite database file begins with the following 16 bytes 
 (in hex): 53 51 4c 69 74 65 20 66 6f 72 6d 61 74 20 33 00.  This byte sequence
 corresponds to the UTF-8 string "SQLite format 3" including the nul
 terminator character at the end.</p>
 
-<h3 id="page_size"><span>1.2.2. </span>Page Size</h3>
+<h3 id="page_size"><span>1.3.2. </span>Page Size</h3>
 
 <p>The two-byte value beginning at offset 16 determines the page size of 
 the database.  For SQLite versions 3.7.0.1 (2010-08-04)
@@ -341,7 +346,7 @@ interpretations of the page-size field are equivalent.</p>
 
 <a name="vnums"></a>
 
-<h3 id="file_format_version_numbers"><span>1.2.3. </span>File format version numbers</h3>
+<h3 id="file_format_version_numbers"><span>1.3.3. </span>File format version numbers</h3>
 
 <p>The file format write version and file format read version at offsets
 18 and 19 are intended to allow for enhancements of the file format
@@ -353,7 +358,7 @@ version is 1 or 2 but the write version is greater than 2, then the database
 file must be treated as read-only.  If a database file with a read version
 greater than 2 is encountered, then that database cannot be read or written.</p>
 
-<h3 id="reserved_bytes_per_page"><span>1.2.4. </span>Reserved bytes per page</h3>
+<h3 id="reserved_bytes_per_page"><span>1.3.4. </span>Reserved bytes per page</h3>
 
 <p>SQLite has the ability to set aside a small number of extra bytes at
 the end of every page for use by extensions.  These extra bytes are
@@ -372,7 +377,7 @@ size of a page might be an odd number.  However, the usable size is not
 allowed to be less than 480.  In other words, if the page size is 512,
 then the reserved space size cannot exceed 32.</p>
 
-<h3 id="payload_fractions"><span>1.2.5. </span>Payload fractions</h3>
+<h3 id="payload_fractions"><span>1.3.5. </span>Payload fractions</h3>
 
 <p>The maximum and minimum embedded payload fractions and the leaf
 payload fraction values must be 64, 32, and 32.  These values were
@@ -382,7 +387,7 @@ functionality is not supported and there are no current plans to add
 support in the future.  Hence, these three bytes are fixed at the
 values specified.</p>
 
-<h3 id="file_change_counter"><span>1.2.6. </span>File change counter</h3>
+<h3 id="file_change_counter"><span>1.3.6. </span>File change counter</h3>
 
 <a name="chngctr"></a>
 
@@ -400,7 +405,7 @@ The file change counter facilitates this.</p>
 and so the change counter is not needed.  Hence, the change counter might
 not be incremented on each transaction in WAL mode.</p>
 
-<h3 id="in_header_database_size"><span>1.2.7. </span>In-header database size</h3>
+<h3 id="in_header_database_size"><span>1.3.7. </span>In-header database size</h3>
 
 <a name="filesize"></a>
 
@@ -428,7 +433,7 @@ so it will not match the change-counter.  Hence, invalid in-header
 database sizes can be detected (and ignored) by observing when
 the change-counter does not match the version-valid-for number.</p>
 
-<h3 id="free_page_list"><span>1.2.8. </span>Free page list</h3>
+<h3 id="free_page_list"><span>1.3.8. </span>Free page list</h3>
 
 <p>Unused pages in the database file are stored on a freelist.  The
 4-byte big-endian integer at offset 32 stores the page number of
@@ -436,7 +441,7 @@ the first page of the freelist, or zero if the freelist is empty.
 The 4-byte big-endian integer at offset 36 stores stores the total 
 number of pages on the freelist.</p>
 
-<h3 id="schema_cookie"><span>1.2.9. </span>Schema cookie</h3>
+<h3 id="schema_cookie"><span>1.3.9. </span>Schema cookie</h3>
 
 <p>The schema cookie is a 4-byte big-endian integer at offset 40
 that is incremented whenever the database schema changes.  A 
@@ -450,7 +455,7 @@ error.</p>
 
 <a name="schemaformat"></a>
 
-<h3 id="schema_format_number"><span>1.2.10. </span>Schema format number</h3>
+<h3 id="schema_format_number"><span>1.3.10. </span>Schema format number</h3>
 
 <p>The schema format number is a 4-byte big-endian integer at offset 44.
 The schema format number is similar to the file format read and write
@@ -486,7 +491,7 @@ The format version number can be made to default to 1 instead of 4 by
 setting <a href="compile.html#default_file_format">SQLITE_DEFAULT_FILE_FORMAT</a>=1 at compile-time.
 </p>
 
-<h3 id="suggested_cache_size"><span>1.2.11. </span>Suggested cache size</h3>
+<h3 id="suggested_cache_size"><span>1.3.11. </span>Suggested cache size</h3>
 
 <p>The 4-byte big-endian signed integer at offset 48 is the suggested
 cache size in pages for the database file.  The value is a suggestion
@@ -494,7 +499,7 @@ only and SQLite is under no obligation to honor it.  The absolute value
 of the integer is used as the suggested size.  The suggested cache size
 can be set using the <a href="pragma.html#pragma_default_cache_size">default_cache_size pragma</a>.</p>
 
-<h3 id="incremental_vacuum_settings"><span>1.2.12. </span>Incremental vacuum settings</h3>
+<h3 id="incremental_vacuum_settings"><span>1.3.12. </span>Incremental vacuum settings</h3>
 
 <p>The two 4-byte big-endian integers at offsets 52 and 64 are used
 to manage the <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> and <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> modes.  If
@@ -510,7 +515,7 @@ the integer at offset 64 must also be zero.</p>
 
 <a name="enc"></a>
 
-<h3 id="text_encoding"><span>1.2.13. </span>Text encoding</h3>
+<h3 id="text_encoding"><span>1.3.13. </span>Text encoding</h3>
 
 <p>The 4-byte big-endian integer at offset 56 determines the encoding
 used for all text strings stored in the database.  
@@ -522,7 +527,7 @@ The sqlite3.h header file defines C-preprocessor macros SQLITE_UTF8 as 1,
 SQLITE_UTF16LE as 2, and SQLITE_UTF16BE as 3, to use in place of
 the numeric codes for the text encoding.</p>
 
-<h3 id="user_version_number"><span>1.2.14. </span>User version number</h3>
+<h3 id="user_version_number"><span>1.3.14. </span>User version number</h3>
 
 <p>The 4-byte big-endian integer at offset 60 is the user version which
 is set and queried by the <a href="pragma.html#pragma_user_version">user_version pragma</a>.  The user version is
@@ -530,7 +535,7 @@ not used by SQLite.</p>
 
 <a name="appid"></a>
 
-<h3 id="application_id"><span>1.2.15. </span>Application ID</h3>
+<h3 id="application_id"><span>1.3.15. </span>Application ID</h3>
 
 <p>The 4-byte big-endian integer at offset 68 is an "Application ID" that
 can be set by the <a href="pragma.html#pragma_application_id">PRAGMA application_id</a> command in order to identify the
@@ -545,7 +550,7 @@ file in the SQLite source repository.</p>
 
 <a name="validfor"></a>
 
-<h3 id="write_library_version_number_and_version_valid_for_number"><span>1.2.16. </span>Write library version number and version-valid-for number</h3>
+<h3 id="write_library_version_number_and_version_valid_for_number"><span>1.3.16. </span>Write library version number and version-valid-for number</h3>
 
 <p>The 4-byte big-endian integer at offset 96 stores the 
 <a href="c3ref/c_source_id.html">SQLITE_VERSION_NUMBER</a> value for the SQLite library that most
@@ -555,14 +560,14 @@ was stored.  The integer at offset 92 indicates which transaction
 the version number is valid for and is sometimes called the
 "version-valid-for number".
 
-</p><h3 id="header_space_reserved_for_expansion"><span>1.2.17. </span>Header space reserved for expansion</h3>
+</p><h3 id="header_space_reserved_for_expansion"><span>1.3.17. </span>Header space reserved for expansion</h3>
 
 <p>All other bytes of the database file header are reserved for
 future expansion and must be set to zero.</p>
 
 <a name="lockbyte"></a>
 
-<h2 id="the_lock_byte_page"><span>1.3. </span>The Lock-Byte Page</h2>
+<h2 id="the_lock_byte_page"><span>1.4. </span>The Lock-Byte Page</h2>
 
 <p>The lock-byte page is the single page of the database file
 that contains the bytes at offsets between 1073741824 and 1073742335,
@@ -591,7 +596,7 @@ not really needed any more, but is retained for backwards compatibility.</p>
 
 <a name="freelist"></a>
 
-<h2 id="the_freelist"><span>1.4. </span>The Freelist</h2>
+<h2 id="the_freelist"><span>1.5. </span>The Freelist</h2>
 
 <p>A database file might contain one or more pages that are not in
 active use.  Unused pages can come about, for example, when information
@@ -633,7 +638,7 @@ of the file.</p>
 
 <a name="btree"></a>
 
-<h2 id="b_tree_pages"><span>1.5. </span>B-tree Pages</h2>
+<h2 id="b_tree_pages"><span>1.6. </span>B-tree Pages</h2>
 
 <p>The b-tree algorithm provides key/data storage with unique and
 ordered keys on page-oriented storage devices.
@@ -688,6 +693,8 @@ that consists of a single page that is both a leaf and the root.
 Because there are pointers from parents to children, every page of a
 complete b-tree can be located if only the root page is known.  Hence,
 b-trees are identified by their root page number.</p>
+
+<a name="btypes"></a>
 
 <p>A b-tree page is either a table b-tree page or an index b-tree page.
 All pages within each complete b-tree are of the same type: either table
@@ -1002,7 +1009,7 @@ work well, even if they are a little complex.</p>
 
 <a name="ovflpgs"></a>
 
-<h2 id="cell_payload_overflow_pages"><span>1.6. </span>Cell Payload Overflow Pages</h2>
+<h2 id="cell_payload_overflow_pages"><span>1.7. </span>Cell Payload Overflow Pages</h2>
 
 <p>When the payload of a b-tree cell is too large for the b-tree page,
 the surplus is spilled onto overflow pages.  Overflow pages form a linked
@@ -1011,7 +1018,7 @@ integer which is the page number of the next page in the chain, or zero
 for the final page in the chain.  The fifth byte through the last usable
 byte are used to hold overflow content.</p>
 
-<h2 id="pointer_map_or_ptrmap_pages"><span>1.7. </span>Pointer Map or Ptrmap Pages</h2>
+<h2 id="pointer_map_or_ptrmap_pages"><span>1.8. </span>Pointer Map or Ptrmap Pages</h2>
 
 <p>Pointer map or ptrmap pages are extra pages inserted into the database
 to make the operation of <a href="pragma.html#pragma_auto_vacuum">auto_vacuum</a> and <a href="pragma.html#pragma_incremental_vacuum">incremental_vacuum</a> modes
@@ -1883,7 +1890,7 @@ file and has the same name as the database file but with the string
 
 <h2 id="wal_file_format"><span>4.1. </span>WAL File Format</h2>
 
-<p>A WAL file consists of a header followed by zero or more "frames".
+<p>A <a href="wal.html#walfile">WAL file</a> consists of a header followed by zero or more "frames".
 Each frame records the revised content of a single page from the
 database file.  All changes to the database are recorded by writing
 frames into the WAL.  Transactions commit when a frame is written that

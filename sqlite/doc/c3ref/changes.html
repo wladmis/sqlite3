@@ -140,12 +140,17 @@ If it is used by the second or subsequent such statement within a trigger
 program, the value returned reflects the number of rows modified by the
 previous INSERT, UPDATE or DELETE statement within the same trigger.</p>
 
-<p>See also the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface, the
-<a href="../pragma.html#pragma_count_changes">count_changes pragma</a>, and the <a href="../lang_corefunc.html#changes">changes() SQL function</a>.</p>
-
 <p>If a separate thread makes changes on the same database connection
 while <a href="../c3ref/changes.html">sqlite3_changes()</a> is running then the value returned
-is unpredictable and not meaningful.
+is unpredictable and not meaningful.</p>
+
+<p>See also:
+<ul>
+<li> the <a href="../c3ref/total_changes.html">sqlite3_total_changes()</a> interface
+<li> the <a href="../pragma.html#pragma_count_changes">count_changes pragma</a>
+<li> the <a href="../lang_corefunc.html#changes">changes() SQL function</a>
+<li> the <a href="../pragma.html#pragma_data_version">data_version pragma</a>
+</ul>
 </p><p>See also lists of
   <a href="objlist.html">Objects</a>,
   <a href="constlist.html">Constants</a>, and

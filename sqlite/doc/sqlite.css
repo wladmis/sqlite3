@@ -226,6 +226,13 @@ a:visited { color: #734559 }
   padding-right: 4px;
   line-height: 125%;
 }
+.yynonterm {
+  background: #fff;
+  border: 1px solid #000;
+  padding-left: 2px;
+  padding-right: 2px;
+  line-height: 125%;
+}
 
 /* Container for an image */
 .imgcontainer img {

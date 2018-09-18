@@ -124,26 +124,10 @@ return false;
     of the compound inner SELECT are non-aggregate, not just the last term. Fix for ticket
     <a href="https://www.sqlite.org/src/info/f7f8c97e97597">f7f8c97e97597</a>.
 <li>Fix a locking race condition in Windows that can occur when two or more processes
-    attempt to recover the same <a href="../lockingv3.html#hotjrnl">hot journal</a> at the same time.
+    attempt to recover the same <a href="../fileformat2.html#hotjrnl">hot journal</a> at the same time.
 <p><b>Hashes:</b>
 <li>SQLITE_SOURCE_ID: "2016-05-18 10:57:30 fc49f556e48970561d7ab6a2f24fdd7d9eb81ff2"
 <li>SHA1 for sqlite3.c: 9b9171b1e6ce7a980e6b714e9c0d9112657ad552
-
-<p><b>Bug fixes backported into patch release 3.8.7.2 (2014-11-18):</b></p>
-
-<li>Enhance the <a href="../lang_transaction.html">ROLLBACK</a> command so that pending queries are allowed to continue as long
-    as the schema is unchanged.  Formerly, a ROLLBACK would cause all pending queries to
-    fail with an <a href="../rescode.html#abort">SQLITE_ABORT</a> or <a href="../rescode.html#abort_rollback">SQLITE_ABORT_ROLLBACK</a> error.  That error is still returned
-    if the ROLLBACK modifies the schema.
-<li>Bug fix: Make sure that NULL results from OP_Column are fully and completely NULL and
-    do not have the MEM_Ephem bit set.
-    Ticket <a href="http://www.sqlite.org/src/info/094d39a4c95ee4">094d39a4c95ee4</a>.
-<li>Bug fix:  The %c format in sqlite3_mprintf() is able to handle precisions greater than 70.
-<li>Bug fix:  Do not automatically remove the DISTINCT keyword from a SELECT that forms
-    the right-hand side of an IN operator since it is necessary if the SELECT also 
-    contains a LIMIT.
-    Ticket <a href="http://www.sqlite.org/src/info/db87229497">db87229497</a>.
-
 
 <p><b>Bug fixes backported into patch release 3.8.7.1 (2014-10-29):</b></p>
 
@@ -156,6 +140,66 @@ return false;
 <li>Fix a couple of problems associated with running an UPDATE or DELETE on a
     <a href="../lang_createview.html">VIEW</a> with a <a href="../lang_createtable.html#rowid">rowid</a> in the WHERE clause.
 
+
+<p><b>Bug fixes backported into patch release 3.8.7 (2014-10-17):</b></p>
+
+<p><b>Performance Enhancements:</b>
+<li>Many micro-optimizations result in 20.3% more work for the same number
+    of CPU cycles relative to the previous release. 
+    The cumulative performance increase since <a href="../releaselog/3_8_0.html">version 3.8.0</a> is 61%.
+    (Measured using 
+    <a href="http://valgrind.org/docs/manual/cg-manual.html">cachegrind</a> on the
+    <a href="http://www.sqlite.org/src/artifact/83f6b3318f7ee">speedtest1.c</a> workload on
+    Ubuntu 13.10 x64 with gcc 4.8.1 and -Os. Your performance may vary.)
+<li>The sorter can use auxiliary helper threads to increase real-time response.
+    This feature is off by default and may be
+    enabled using the <a href="../pragma.html#pragma_threads">PRAGMA threads</a> command or the <a href="../compile.html#default_worker_threads">SQLITE_DEFAULT_WORKER_THREADS</a>
+    compile-time option.
+<li>Enhance the <a href="../optoverview.html#skipscan">skip-scan</a> optimization so that it is able to skip index terms that
+    occur in the middle of the index, not just as the left-hand side of the index.
+<li>Improved optimization of <a href="../lang_expr.html#castexpr">CAST</a> operators.
+<li>Various improvements in how the query planner uses <a href="../fileformat2.html#stat4tab">sqlite_stat4</a>
+    information to estimate plan costs.
+<p><b>New Features:</b>
+<li>Added new interfaces with 64-bit length parameters:
+    <a href="../c3ref/free.html">sqlite3_malloc64()</a>,
+    <a href="../c3ref/free.html">sqlite3_realloc64()</a>,
+    <a href="../c3ref/bind_blob.html">sqlite3_bind_blob64()</a>,
+    <a href="../c3ref/result_blob.html">sqlite3_result_blob64()</a>,
+    <a href="../c3ref/bind_blob.html">sqlite3_bind_text64()</a>, and
+    <a href="../c3ref/result_blob.html">sqlite3_result_text64()</a>.
+<li>Added the new interface <a href="../c3ref/free.html">sqlite3_msize()</a> that returns the size of a memory allocation
+    obtained from <a href="../c3ref/free.html">sqlite3_malloc64()</a> and its variants.
+<li>Added the <a href="../c3ref/c_limit_attached.html#sqlitelimitworkerthreads">SQLITE_LIMIT_WORKER_THREADS</a> option to <a href="../c3ref/limit.html">sqlite3_limit()</a> and
+    <a href="../pragma.html#pragma_threads">PRAGMA threads</a> command for configuring the number of available worker threads.
+<li>The <a href="../spellfix1.html">spellfix1</a> extension allows the application to optionally specify the rowid for
+    each INSERT.
+<li>Added the <a href="http://www.sqlite.org/src/doc/trunk/ext/userauth/user-auth.txt">User Authentication</a>
+    extension.
+<p><b>Bug Fixes:</b>
+<li>Fix a bug in the <a href="../partialindex.html">partial index</a> implementation that might result in an incorrect
+    answer if a partial index is used in a subquery or in a <a href="../lang_createview.html">view</a>.
+    Ticket <a href="http://www.sqlite.org/src/info/98d973b8f5">98d973b8f5</a>.
+<li>Fix a query planner bug that might cause a table to be scanned in the wrong direction
+    (thus reversing the order of output) when a DESC index is used to implement the ORDER BY
+    clause on a query that has an identical GROUP BY clause.
+    Ticket <a href="http://www.sqlite.org/src/info/ba7cbfaedc7e6">ba7cbfaedc7e6</a>.
+<li>Fix a bug in <a href="../c3ref/profile.html">sqlite3_trace()</a> that was causing it to sometimes fail to print
+    an SQL statement if that statement needed to be re-prepared.
+    Ticket <a href="http://www.sqlite.org/src/info/11d5aa455e0d98f3c1e6a08">11d5aa455e0d98f3c1e6a08</a>
+<li>Fix a faulty assert() statement.
+    Ticket <a href="http://www.sqlite.org/src/info/369d57fb8e5ccdff06f1">369d57fb8e5ccdff06f1</a>
+<p><b>Test, Debug, and Analysis Changes:</b>
+<li>Show ASCII-art abstract syntax tree diagrams using the ".selecttrace"
+    and ".wheretrace" commands in the 
+    <a href="../cli.html">command-line shell</a> when compiled with <a href="../compile.html#debug">SQLITE_DEBUG</a>, SQLITE_ENABLE_SELECTTRACE,
+    and SQLITE_ENABLE_WHERETRACE.  Also provide the sqlite3TreeViewExpr() and
+    sqlite3TreeViewSelect() entry points that can be invoked from with the
+    debugger to show the parse tree when stopped at a breakpoint.
+<li>Drop support for SQLITE_ENABLE_TREE_EXPLAIN.  The SELECTTRACE mechanism provides
+    more useful diagnostics information.
+<li>New options to the <a href="../cli.html">command-line shell</a> for configuring auxiliary
+    memory usage: --pagecache, --lookaside, and --scratch.
 
 </ol></p>
 

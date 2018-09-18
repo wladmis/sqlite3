@@ -91,7 +91,7 @@ return false;
 }
 </script>
 </div>
-<!-- keywords: {application-defined SQL function} {application-defined SQL functions} {function creation routines} sqlite3_create_function sqlite3_create_function16 sqlite3_create_function_v2 -->
+<!-- keywords: {application-defined SQL function} {application-defined SQL functions} {function creation routines} sqlite3_create_function sqlite3_create_function16 sqlite3_create_function_v2 sqlite3_create_window_function -->
 <div class=nosearch>
 <a href="intro.html"><h2>SQLite C Interface</h2></a>
 <h2>Create Or Redefine SQL Functions</h2>
@@ -128,15 +128,29 @@ int sqlite3_create_function_v2(
   void (*xFinal)(sqlite3_context*),
   void(*xDestroy)(void*)
 );
+int sqlite3_create_window_function(
+  sqlite3 *db,
+  const char *zFunctionName,
+  int nArg,
+  int eTextRep,
+  void *pApp,
+  void (*xStep)(sqlite3_context*,int,sqlite3_value**),
+  void (*xFinal)(sqlite3_context*),
+  void (*xValue)(sqlite3_context*),
+  void (*xInverse)(sqlite3_context*,int,sqlite3_value**),
+  void(*xDestroy)(void*)
+);
 </pre></blockquote>
 <p>
 These functions (collectively known as "function creation routines")
 are used to add SQL functions or aggregates or to redefine the behavior
-of existing SQL functions or aggregates.  The only differences between
-these routines are the text encoding expected for
-the second parameter (the name of the function being created)
-and the presence or absence of a destructor callback for
-the application data pointer.</p>
+of existing SQL functions or aggregates. The only differences between
+the three "sqlite3_create_function*" routines are the text encoding
+expected for the second parameter (the name of the function being
+created) and the presence or absence of a destructor callback for
+the application data pointer. Function sqlite3_create_window_function()
+is similar, but allows the user to supply the extra callback functions
+needed by <a href="../windowfunctions.html#aggregate_window_functions">aggregate window functions</a>.</p>
 
 <p>The first parameter is the <a href="../c3ref/sqlite3.html">database connection</a> to which the SQL
 function is to be added.  If an application uses more than one database
@@ -182,7 +196,8 @@ of the <a href="../c3ref/c_deterministic.html">SQLITE_DETERMINISTIC</a> flag is 
 <p>The fifth parameter is an arbitrary pointer.  The implementation of the
 function can gain access to this pointer using <a href="../c3ref/user_data.html">sqlite3_user_data()</a>.</p>
 
-<p>The sixth, seventh and eighth parameters, xFunc, xStep and xFinal, are
+<p>The sixth, seventh and eighth parameters passed to the three
+"sqlite3_create_function*" functions, xFunc, xStep and xFinal, are
 pointers to C-language functions that implement the SQL function or
 aggregate. A scalar SQL function requires an implementation of the xFunc
 callback only; NULL pointers must be passed as the xStep and xFinal
@@ -191,15 +206,24 @@ and xFinal and NULL pointer must be passed for xFunc. To delete an existing
 SQL function or aggregate, pass NULL pointers for all three function
 callbacks.</p>
 
-<p>If the ninth parameter to sqlite3_create_function_v2() is not NULL,
-then it is destructor for the application data pointer.
-The destructor is invoked when the function is deleted, either by being
-overloaded or when the database connection closes.
-The destructor is also invoked if the call to
-sqlite3_create_function_v2() fails.
-When the destructor callback of the tenth parameter is invoked, it
-is passed a single argument which is a copy of the application data
-pointer which was the fifth parameter to sqlite3_create_function_v2().</p>
+<p>The sixth, seventh, eighth and ninth parameters (xStep, xFinal, xValue
+and xInverse) passed to sqlite3_create_window_function are pointers to
+C-language callbacks that implement the new function. xStep and xFinal
+must both be non-NULL. xValue and xInverse may either both be NULL, in
+which case a regular aggregate function is created, or must both be
+non-NULL, in which case the new function may be used as either an aggregate
+or aggregate window function. More details regarding the implementation
+of aggregate window functions are
+<a href="../windowfunctions.html#user_defined_aggregate_window_functions">available here</a>.</p>
+
+<p>If the final parameter to sqlite3_create_function_v2() or
+sqlite3_create_window_function() is not NULL, then it is destructor for
+the application data pointer. The destructor is invoked when the function
+is deleted, either by being overloaded or when the database connection
+closes. The destructor is also invoked if the call to
+sqlite3_create_function_v2() fails.  When the destructor callback is
+invoked, it is passed a single argument which is a copy of the application
+data pointer which was the fifth parameter to sqlite3_create_function_v2().</p>
 
 <p>It is permitted to register multiple implementations of the same
 functions with the same name but with either differing numbers of
