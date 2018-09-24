@@ -714,7 +714,7 @@ cache</i> entries shall be discarded.
     entry can be found and the database page data is loaded from the database
     file, it is cached in the <i>page cache</i> in case the same data is 
     needed again later. Because reading from the database file is assumed to
-    be an order of magnitude faster than reading from main-memory, caching
+    be an order of magnitude slower than reading from main-memory, caching
     database page content in the <i>page cache</i> to minimize the number
     of read operations performed on the database file is a significant
     performance enhancement.

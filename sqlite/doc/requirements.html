@@ -526,6 +526,10 @@ comments in the source code.
 <dd><p>When the EXPLAIN QUERY PLAN phrase appears, the statement returns high-level information regarding the query plan that would have been used.
 <i>(source: <a href="lang_explain.html">lang_explain.html</a>, checked-by: th3/cov1/vdbeaux01.test, matrix: <a href='matrix/lang_explain.html#R-01592-27714-26694-24809-12949-19667-58343-14650'>context</a>, <a href='matrix/matrix_dlang_explain.html#R-01592-27714-26694-24809-12949-19667-58343-14650'>detail</a>)</i></p></dd>
 
+<dt><b>R-01610-34403-13857-15414-33964-29900-30338-20168</b></dt>
+<dd><p><img src="images/syntax/alter-table-stmt.gif"><br>
+<i>(source: <a href="syntax/alter-table-stmt.html">syntax/alter-table-stmt.html</a>, matrix: <a href='matrix/syntax/alter-table-stmt.html#R-01610-34403-13857-15414-33964-29900-30338-20168'>context</a>, <a href='matrix/matrix_dalter_table_stmt.html#R-01610-34403-13857-15414-33964-29900-30338-20168'>detail</a>)</i></p></dd>
+
 <dt><b>R-01612-30877-07572-17003-08953-37118-55537-45996</b></dt>
 <dd><p>The "vfs" parameter may be used to specify the name of a VFS object that provides the operating system interface that should be used to access the database file on disk.
 <i>(source: <a href="c3ref/open.html">c3ref/open.html</a>, checked-by: tcl/e_uri.test, matrix: <a href='matrix/c3ref/open.html#R-01612-30877-07572-17003-08953-37118-55537-45996'>context</a>, <a href='matrix/matrix_dopen.html#R-01612-30877-07572-17003-08953-37118-55537-45996'>detail</a>)</i></p></dd>
@@ -613,10 +617,6 @@ comments in the source code.
 <dt><b>R-02223-49279-19512-29951-11875-18036-12006-07318</b></dt>
 <dd><p>Subject to filtering associated with the DISTINCT keyword, the number of rows returned by an aggregate query with a GROUP BY clause is the same as the number of groups of rows produced by applying the GROUP BY and HAVING clauses to the filtered input dataset.
 <i>(source: <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test, matrix: <a href='matrix/lang_select.html#R-02223-49279-19512-29951-11875-18036-12006-07318'>context</a>, <a href='matrix/matrix_dlang_select.html#R-02223-49279-19512-29951-11875-18036-12006-07318'>detail</a>)</i></p></dd>
-
-<dt><b>R-02287-33529-57702-51380-05125-54682-23740-46632</b></dt>
-<dd><p>The shadow tables are ordinary SQLite data tables.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-02287-33529-57702-51380-05125-54682-23740-46632'>context</a>, <a href='matrix/matrix_drtree.html#R-02287-33529-57702-51380-05125-54682-23740-46632'>detail</a>)</i></p></dd>
 
 <dt><b>R-02336-39303-27290-23991-25845-02494-13210-07983</b></dt>
 <dd><p>The value returned is one of SQLITE_ROLLBACK, SQLITE_IGNORE, SQLITE_FAIL, SQLITE_ABORT, or SQLITE_REPLACE, according to the ON CONFLICT mode of the SQL statement that triggered the call to the xUpdate method of the virtual table.
@@ -765,10 +765,6 @@ comments in the source code.
 <dt><b>R-03014-26414-56458-20281-20451-13984-34730-16215</b></dt>
 <dd><p>If the LIMIT expression evaluates to a negative value, then there is no upper bound on the number of rows returned.
 <i>(source: <a href="lang_select.html">lang_select.html</a>, checked-by: tcl/e_select.test, matrix: <a href='matrix/lang_select.html#R-03014-26414-56458-20281-20451-13984-34730-16215'>context</a>, <a href='matrix/matrix_dlang_select.html#R-03014-26414-56458-20281-20451-13984-34730-16215'>detail</a>)</i></p></dd>
-
-<dt><b>R-03031-24356-65405-31144-24091-48279-38334-39454</b></dt>
-<dd><p>First, queries against the primary key are efficient: SELECT * FROM demo_index WHERE id=1;
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-03031-24356-65405-31144-24091-48279-38334-39454'>context</a>, <a href='matrix/matrix_drtree.html#R-03031-24356-65405-31144-24091-48279-38334-39454'>detail</a>)</i></p></dd>
 
 <dt><b>R-03040-34580-06414-61878-61161-08528-60209-55771</b></dt>
 <dd><p>To change auto-vacuum modes, first use the auto_vacuum pragma to set the new desired mode, then invoke the VACUUM command to reorganize the entire database file.
@@ -1042,10 +1038,6 @@ comments in the source code.
 <dd><p><img src="images/syntax/detach-stmt.gif"><br>
 <i>(source: <a href="syntax/detach-stmt.html">syntax/detach-stmt.html</a>, matrix: <a href='matrix/syntax/detach-stmt.html#R-04335-27713-02336-23457-12771-00938-16157-33880'>context</a>, <a href='matrix/matrix_ddetach_stmt.html#R-04335-27713-02336-23457-12771-00938-16157-33880'>detail</a>)</i></p></dd>
 
-<dt><b>R-04338-23101-00276-58244-31553-31422-17859-30717</b></dt>
-<dd><p><img src="images/syntax/alter-table-stmt.gif"><br>
-<i>(source: <a href="syntax/alter-table-stmt.html">syntax/alter-table-stmt.html</a>, matrix: <a href='matrix/syntax/alter-table-stmt.html#R-04338-23101-00276-58244-31553-31422-17859-30717'>context</a>, <a href='matrix/matrix_dalter_table_stmt.html#R-04338-23101-00276-58244-31553-31422-17859-30717'>detail</a>)</i></p></dd>
-
 <dt><b>R-04425-13680-18982-00806-50027-50568-09550-24420</b></dt>
 <dd><p>The amount of space allocated by sqlite3_aggregate_context(C,N) is determined by the N parameter on first successful call. Changing the value of N in subsequent call to sqlite3_aggregate_context() within the same aggregate function instance will not resize the memory allocation.
 <i>(source: <a href="c3ref/aggregate_context.html">c3ref/aggregate_context.html</a>, checked-by: th3/req1/aggcntx01.test, matrix: <a href='matrix/c3ref/aggregate_context.html#R-04425-13680-18982-00806-50027-50568-09550-24420'>context</a>, <a href='matrix/matrix_daggregate_context.html#R-04425-13680-18982-00806-50027-50568-09550-24420'>detail</a>)</i></p></dd>
@@ -1246,10 +1238,6 @@ comments in the source code.
 <dd><p>If the integrity_check pragma finds problems, strings are returned (as multiple rows with a single column per row) which describe the problems.
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/integrityck01.test, matrix: <a href='matrix/pragma.html#R-05529-49311-19385-25088-51848-47183-58001-39726'>context</a>, <a href='matrix/matrix_dpragma.html#R-05529-49311-19385-25088-51848-47183-58001-39726'>detail</a>)</i></p></dd>
 
-<dt><b>R-05552-15084-05102-10878-43028-26070-39117-22765</b></dt>
-<dd><p>CREATE VIRTUAL TABLE demo_index2 USING rtree( id, -- Integer primary key minX, maxX, -- Minimum and maximum X coordinate minY, maxY, -- Minimum and maximum Y coordinate +objname TEXT, -- name of the object +objtype TEXT, -- object type +boundary BLOB -- detailed boundary of object );
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-05552-15084-05102-10878-43028-26070-39117-22765'>context</a>, <a href='matrix/matrix_drtree.html#R-05552-15084-05102-10878-43028-26070-39117-22765'>detail</a>)</i></p></dd>
-
 <dt><b>R-05617-50091-64320-09946-64698-41149-46478-61865</b></dt>
 <dd><p>In the DELETE mode, the rollback journal is deleted at the conclusion of each transaction.
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/pragma24.test, matrix: <a href='matrix/pragma.html#R-05617-50091-64320-09946-64698-41149-46478-61865'>context</a>, <a href='matrix/matrix_dpragma.html#R-05617-50091-64320-09946-64698-41149-46478-61865'>detail</a>)</i></p></dd>
@@ -1261,10 +1249,6 @@ comments in the source code.
 <dt><b>R-05646-15132-11020-10123-43884-18508-24247-46472</b></dt>
 <dd><p>When synchronous is NORMAL (1), the SQLite database engine will still sync at the most critical moments, but less often than in FULL mode.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-05646-15132-11020-10123-43884-18508-24247-46472'>context</a>, <a href='matrix/matrix_dpragma.html#R-05646-15132-11020-10123-43884-18508-24247-46472'>detail</a>)</i></p></dd>
-
-<dt><b>R-05650-46070-32640-12192-03987-30502-33558-23123</b></dt>
-<dd><p>And you can UPDATE, DELETE, INSERT or even DROP the shadow tables, though doing so will corrupt your R*Tree index.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-05650-46070-32640-12192-03987-30502-33558-23123'>context</a>, <a href='matrix/matrix_drtree.html#R-05650-46070-32640-12192-03987-30502-33558-23123'>detail</a>)</i></p></dd>
 
 <dt><b>R-05658-50861-03980-59142-22738-32773-09138-30302</b></dt>
 <dd><p>SQLite only understands the hexadecimal integer notation when it appears in the SQL statement text, not when it appears as part of the content of the database.
@@ -2238,10 +2222,6 @@ comments in the source code.
 <dd><p>PRAGMA schema.freelist_count; Return the number of unused pages in the database file.
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: tcl/pragma2.test, th3/req1/pragma21.test, matrix: <a href='matrix/pragma.html#R-11211-21323-44589-16843-54908-31937-00970-23693'>context</a>, <a href='matrix/matrix_dpragma.html#R-11211-21323-44589-16843-54908-31937-00970-23693'>detail</a>)</i></p></dd>
 
-<dt><b>R-11241-54478-18941-45655-01844-39578-11562-47598</b></dt>
-<dd><p>As an example, consider creating a two-dimensional R*Tree index for use in spatial queries: CREATE VIRTUAL TABLE demo_index USING rtree( id, -- Integer primary key minX, maxX, -- Minimum and maximum X coordinate minY, maxY -- Minimum and maximum Y coordinate );
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-11241-54478-18941-45655-01844-39578-11562-47598'>context</a>, <a href='matrix/matrix_drtree.html#R-11241-54478-18941-45655-01844-39578-11562-47598'>detail</a>)</i></p></dd>
-
 <dt><b>R-11255-19907-56460-39957-30226-19999-22429-23256</b></dt>
 <dd><p>The following command-line session demonstrates this: sqlite> PRAGMA foreign_keys; 0 sqlite> PRAGMA foreign_keys = ON; sqlite> PRAGMA foreign_keys; 1 sqlite> PRAGMA foreign_keys = OFF; sqlite> PRAGMA foreign_keys; 0
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: tcl/e_fkey.test, th3/req1/foreignkeys04.test, matrix: <a href='matrix/foreignkeys.html#R-11255-19907-56460-39957-30226-19999-22429-23256'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-11255-19907-56460-39957-30226-19999-22429-23256'>detail</a>)</i></p></dd>
@@ -2309,6 +2289,10 @@ comments in the source code.
 <dt><b>R-11576-11990-36701-63648-24289-51988-09315-26987</b></dt>
 <dd><p>An attempt to invoke the BEGIN command within a transaction will fail with an error, regardless of whether the transaction was started by SAVEPOINT or a prior BEGIN.
 <i>(source: <a href="lang_transaction.html">lang_transaction.html</a>, matrix: <a href='matrix/lang_transaction.html#R-11576-11990-36701-63648-24289-51988-09315-26987'>context</a>, <a href='matrix/matrix_dlang_transaction.html#R-11576-11990-36701-63648-24289-51988-09315-26987'>detail</a>)</i></p></dd>
+
+<dt><b>R-11597-28820-19644-15951-00432-47946-29968-28252</b></dt>
+<dd><p>A new R*Tree index is created as follows: CREATE VIRTUAL TABLE <name> USING rtree(<column-names>); The <name> is the name your application chooses for the R*Tree index and <column-names> is a comma separated list of between 3 and 11 columns. The virtual <name> table creates three "shadow" tables to actually store its content. The names of these shadow tables are: <name>_node <name>_rowid <name>_parent The shadow tables are ordinary SQLite data tables. You can query them directly if you like, though this unlikely to reveal anything particularly useful. And you can UPDATE, DELETE, INSERT or even DROP the shadow tables, though doing so will corrupt your R*Tree index. So it is best to simply ignore the shadow tables. Recognize that they hold your R*Tree index information and let it go as that. As an example, consider creating a two-dimensional R*Tree index for use in spatial queries: CREATE VIRTUAL TABLE demo_index USING rtree( id, -- Integer primary key minX, maxX, -- Minimum and maximum X coordinate minY, maxY -- Minimum and maximum Y coordinate ); 3.2. Populating An R*Tree Index The usual INSERT, UPDATE, and DELETE commands work on an R*Tree index just like on regular tables. So to insert some data into our sample R*Tree index, we can do something like this: INSERT INTO demo_index VALUES( 1, -- Primary key -- SQLite.org headquarters -80.7749, -80.7747, -- Longitude range 35.3776, 35.3778 -- Latitude range ); INSERT INTO demo_index VALUES( 2, -- NC 12th Congressional District in 2010 -81.0, -79.6, 35.0, 36.2 ); The entries above might represent (for example) a bounding box around the main office for SQLite.org and bounding box around the 12th Congressional District of North Carolina (prior to the 2011 redistricting) in which SQLite.org was located. 3.3. Querying An R*Tree Index Any valid query will work against an R*Tree index. But the R*Tree implementation is designed to make two kinds of queries especially efficient. First, queries against the primary key are efficient: SELECT * FROM demo_index WHERE id=1; Of course, an ordinary SQLite table will also do a query against its integer primary key efficiently, so the previous is no big deal. The real reason for using an R*Tree is so that you can efficiently do inequality queries against the coordinate ranges. To find all elements of the index that are contained within the vicinity of Charlotte, North Carolina, one might do: SELECT id FROM demo_index WHERE minX>=-81.08 AND maxX<=-80.58 AND minY>=35.00 AND maxY<=35.44; The query above would very quickly locate the id of 1 even if the R*Tree contained millions of entries. The previous is an example of a "contained-within" query. The R*Tree also supports "overlapping" queries. For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX<=-80.58 AND maxY>=35.00 AND minY<=35.44; This second query would find both entry 1 (the SQLite.org office) which is entirely contained within the query box and also the 12th Congressional District which extends well outside the query box but still overlaps the query box.
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-11597-28820-19644-15951-00432-47946-29968-28252'>context</a>, <a href='matrix/matrix_drtree.html#R-11597-28820-19644-15951-00432-47946-29968-28252'>detail</a>)</i></p></dd>
 
 <dt><b>R-11620-22743-59737-64939-21707-40674-29550-48097</b></dt>
 <dd><p>A colon followed by an identifier name holds a spot for a named parameter with the name :AAAA.
@@ -2650,10 +2634,6 @@ comments in the source code.
 <dd><p>Newer versions of SQLite use the in-header database size if it is available but fall back to the actual file size if the in-header database size is not valid.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-13591-51789-59523-18205-42201-39107-10748-36836'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-13591-51789-59523-18205-42201-39107-10748-36836'>detail</a>)</i></p></dd>
 
-<dt><b>R-13593-05152-64764-04192-23453-35097-07783-21770</b></dt>
-<dd><p>The application_id PRAGMA is used to query or set the 32-bit unsigned big-endian "Application ID" integer located at offset 68 into the database header.
-<i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/cov1/pragma20.test, matrix: <a href='matrix/pragma.html#R-13593-05152-64764-04192-23453-35097-07783-21770'>context</a>, <a href='matrix/matrix_dpragma.html#R-13593-05152-64764-04192-23453-35097-07783-21770'>detail</a>)</i></p></dd>
-
 <dt><b>R-13595-45863-41975-17982-37007-43143-15451-31635</b></dt>
 <dd><p>Note that SQLite allows the parenthesized list of scalar values on the right-hand side of an IN or NOT IN operator to be an empty list but most other SQL database database engines and the SQL92 standard require the list to contain at least one element.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/tkt-80e031a00f.test, matrix: <a href='matrix/lang_expr.html#R-13595-45863-41975-17982-37007-43143-15451-31635'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-13595-45863-41975-17982-37007-43143-15451-31635'>detail</a>)</i></p></dd>
@@ -2806,10 +2786,6 @@ comments in the source code.
 <dd><p>This option sets the threading mode to Multi-thread.
 <i>(source: <a href="c3ref/c_config_covering_index_scan.html">c3ref/c_config_covering_index_scan.html</a>, checked-by: src/main.c, matrix: <a href='matrix/c3ref/c_config_covering_index_scan.html#R-14374-42468-63596-09513-53214-31321-61248-26314'>context</a>, <a href='matrix/matrix_dc_config_covering_index_scan.html#R-14374-42468-63596-09513-53214-31321-61248-26314'>detail</a>)</i></p></dd>
 
-<dt><b>R-14396-37867-24413-20088-54172-40989-25899-41989</b></dt>
-<dd><p>The SQLITE_FCNTL_FILE_POINTER case is a short-circuit path which does not actually invoke the underlying sqlite3_io_methods.
-<i>(source: <a href="c3ref/file_control.html">c3ref/file_control.html</a>, matrix: <a href='matrix/c3ref/file_control.html#R-14396-37867-24413-20088-54172-40989-25899-41989'>context</a>, <a href='matrix/matrix_dfile_control.html#R-14396-37867-24413-20088-54172-40989-25899-41989'>detail</a>)</i></p></dd>
-
 <dt><b>R-14413-31567-12478-15952-22976-18615-46799-38246</b></dt>
 <dd><p>The schema of the sqlite_stat1 table is as follows: CREATE TABLE sqlite_stat1(tbl,idx,stat);
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-14413-31567-12478-15952-22976-18615-46799-38246'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-14413-31567-12478-15952-22976-18615-46799-38246'>detail</a>)</i></p></dd>
@@ -2929,10 +2905,6 @@ comments in the source code.
 <dt><b>R-15111-17896-62926-21896-36187-36992-24278-56286</b></dt>
 <dd><p>Numeric values (serial types 1 through 9) sort after NULLs and in numeric order.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: th3/req1/fileformat05.test, matrix: <a href='matrix/fileformat2.html#R-15111-17896-62926-21896-36187-36992-24278-56286'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-15111-17896-62926-21896-36187-36992-24278-56286'>detail</a>)</i></p></dd>
-
-<dt><b>R-15142-18077-19638-26452-28411-07428-50333-27294</b></dt>
-<dd><p>A new R*Tree index is created as follows: CREATE VIRTUAL TABLE <name> USING rtree(<column-names>);
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-15142-18077-19638-26452-28411-07428-50333-27294'>context</a>, <a href='matrix/matrix_drtree.html#R-15142-18077-19638-26452-28411-07428-50333-27294'>detail</a>)</i></p></dd>
 
 <dt><b>R-15162-34851-63939-05950-21084-00823-32030-36120</b></dt>
 <dd><p>If the 5th parameter to sqlite3_exec() is not NULL then any error message is written into memory obtained from sqlite3_malloc() and passed back through the 5th parameter.
@@ -3486,6 +3458,10 @@ comments in the source code.
 <dd><p>The name of a result column is the value of the "AS" clause for that column, if there is an AS clause.
 <i>(source: <a href="c3ref/column_name.html">c3ref/column_name.html</a>, matrix: <a href='matrix/c3ref/column_name.html#R-17768-43126-25682-30166-03658-34000-04918-35023'>context</a>, <a href='matrix/matrix_dcolumn_name.html#R-17768-43126-25682-30166-03658-34000-04918-35023'>detail</a>)</i></p></dd>
 
+<dt><b>R-17784-08205-07510-46755-33017-49924-02897-50961</b></dt>
+<dd><p>The sqlite3_snapshot_open(D,S,P) interface either starts a new read transaction or upgrades an existing one for schema S of database connection D such that the read transaction refers to historical snapshot P, rather than the most recent change to the database.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-17784-08205-07510-46755-33017-49924-02897-50961'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-17784-08205-07510-46755-33017-49924-02897-50961'>detail</a>)</i></p></dd>
+
 <dt><b>R-17805-37710-17139-40895-40838-31681-06316-29590</b></dt>
 <dd><p>However, SQLite will nest the loops in a different order if doing so will help it to select better indices.
 <i>(source: <a href="optoverview.html">optoverview.html</a>, matrix: <a href='matrix/optoverview.html#R-17805-37710-17139-40895-40838-31681-06316-29590'>context</a>, <a href='matrix/matrix_doptoverview.html#R-17805-37710-17139-40895-40838-31681-06316-29590'>detail</a>)</i></p></dd>
@@ -3509,10 +3485,6 @@ comments in the source code.
 <dt><b>R-17874-21123-26215-56857-37279-50732-34133-47276</b></dt>
 <dd><p>The first column of an SQLite R*Tree is similar to an integer primary key column of a normal SQLite table.
 <i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-17874-21123-26215-56857-37279-50732-34133-47276'>context</a>, <a href='matrix/matrix_drtree.html#R-17874-21123-26215-56857-37279-50732-34133-47276'>detail</a>)</i></p></dd>
-
-<dt><b>R-17878-35294-47697-18266-55769-35956-00477-22042</b></dt>
-<dd><p>However, if there are any view definitions, or statements executed by triggers that refer to the table being renamed, these are not automatically modified to use the new table name.
-<i>(source: <a href="lang_altertable.html">lang_altertable.html</a>, checked-by: th3/req1/altertable01.test, matrix: <a href='matrix/lang_altertable.html#R-17878-35294-47697-18266-55769-35956-00477-22042'>context</a>, <a href='matrix/matrix_dlang_altertable.html#R-17878-35294-47697-18266-55769-35956-00477-22042'>detail</a>)</i></p></dd>
 
 <dt><b>R-17899-04554-16139-08865-17180-48146-22421-25181</b></dt>
 <dd><p>Table names that begin with "sqlite_" are reserved for internal use. It is an error to attempt to create a table with a name that starts with "sqlite_".
@@ -3593,10 +3565,6 @@ comments in the source code.
 <dt><b>R-18401-29434-64954-06986-64183-65174-36377-46247</b></dt>
 <dd><p>The ROLLBACK TO command reverts the state of the database back to what it was just after the corresponding SAVEPOINT.
 <i>(source: <a href="lang_savepoint.html">lang_savepoint.html</a>, matrix: <a href='matrix/lang_savepoint.html#R-18401-29434-64954-06986-64183-65174-36377-46247'>context</a>, <a href='matrix/matrix_dlang_savepoint.html#R-18401-29434-64954-06986-64183-65174-36377-46247'>detail</a>)</i></p></dd>
-
-<dt><b>R-18415-27776-07007-60952-17009-63601-11235-60103</b></dt>
-<dd><p>For the purposes of the DEFAULT clause, an expression is considered constant if it does contains no sub-queries, column or table references, bound parameters, or string literals enclosed in double-quotes instead of single-quotes.
-<i>(source: <a href="lang_createtable.html">lang_createtable.html</a>, checked-by: tcl/e_createtable.test, matrix: <a href='matrix/lang_createtable.html#R-18415-27776-07007-60952-17009-63601-11235-60103'>context</a>, <a href='matrix/matrix_dlang_createtable.html#R-18415-27776-07007-60952-17009-63601-11235-60103'>detail</a>)</i></p></dd>
 
 <dt><b>R-18439-38548-20374-55698-53430-21042-59445-48532</b></dt>
 <dd><p>In other words, if the left-hand dataset consists of Nleft rows of Mleft columns, and the right-hand dataset of Nright rows of Mright columns, then the cartesian product is a dataset of Nleft&times;Nright rows, each containing Mleft+Mright columns.
@@ -3792,7 +3760,7 @@ comments in the source code.
 
 <dt><b>R-19214-60454-47296-46962-57562-56608-53058-41795</b></dt>
 <dd><p>Regardless of the compile-time configuration, any identifier that is not on the following 136 element list is not a keyword to the SQL parser in SQLite: ABORT ACTION ADD AFTER ALL ALTER ANALYZE AND AS ASC ATTACH AUTOINCREMENT BEFORE BEGIN BETWEEN BY CASCADE CASE CAST CHECK COLLATE COLUMN COMMIT CONFLICT CONSTRAINT CREATE CROSS CURRENT CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP DATABASE DEFAULT DEFERRABLE DEFERRED DELETE DESC DETACH DISTINCT DO DROP EACH ELSE END ESCAPE EXCEPT EXCLUSIVE EXISTS EXPLAIN FAIL FILTER FOLLOWING FOR FOREIGN FROM FULL GLOB GROUP HAVING IF IGNORE IMMEDIATE IN INDEX INDEXED INITIALLY INNER INSERT INSTEAD INTERSECT INTO IS ISNULL JOIN KEY LEFT LIKE LIMIT MATCH NATURAL NO NOT NOTHING NOTNULL NULL OF OFFSET ON OR ORDER OUTER OVER PARTITION PLAN PRAGMA PRECEDING PRIMARY QUERY RAISE RANGE RECURSIVE REFERENCES REGEXP REINDEX RELEASE RENAME REPLACE RESTRICT RIGHT ROLLBACK ROW ROWS SAVEPOINT SELECT SET TABLE TEMP TEMPORARY THEN TO TRANSACTION TRIGGER UNBOUNDED UNION UNIQUE UPDATE USING VACUUM VALUES VIEW VIRTUAL WHEN WHERE WINDOW WITH WITHOUT
-<i>(source: <a href="lang_keywords.html">lang_keywords.html</a>, matrix: <a href='matrix/lang_keywords.html#R-19214-60454-47296-46962-57562-56608-53058-41795'>context</a>, <a href='matrix/matrix_dlang_keywords.html#R-19214-60454-47296-46962-57562-56608-53058-41795'>detail</a>)</i></p></dd>
+<i>(source: <a href="lang_keywords.html">lang_keywords.html</a>, checked-by: th3/req1/keyword01.test, matrix: <a href='matrix/lang_keywords.html#R-19214-60454-47296-46962-57562-56608-53058-41795'>context</a>, <a href='matrix/matrix_dlang_keywords.html#R-19214-60454-47296-46962-57562-56608-53058-41795'>detail</a>)</i></p></dd>
 
 <dt><b>R-19218-01018-34190-29408-05030-57766-08679-20332</b></dt>
 <dd><p>If the column-name list after table-name is omitted then the number of values inserted into each row must be the same as the number of columns in the table.
@@ -3982,6 +3950,10 @@ comments in the source code.
 <dd><p>The X argument is a pointer to a string which is the unexpanded SQL text of the prepared statement or an SQL comment that indicates the invocation of a trigger.
 <i>(source: <a href="c3ref/c_trace.html">c3ref/c_trace.html</a>, checked-by: th3/cov1/trace01.test, matrix: <a href='matrix/c3ref/c_trace.html#R-20053-18593-57587-13858-53773-26981-59084-43132'>context</a>, <a href='matrix/matrix_dc_trace.html#R-20053-18593-57587-13858-53773-26981-59084-43132'>detail</a>)</i></p></dd>
 
+<dt><b>R-20111-12873-06694-53393-06638-09093-12890-49161</b></dt>
+<dd><p>In order to succeed, the database connection must not be in autocommit mode when sqlite3_snapshot_open(D,S,P) is called.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-20111-12873-06694-53393-06638-09093-12890-49161'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-20111-12873-06694-53393-06638-09093-12890-49161'>detail</a>)</i></p></dd>
+
 <dt><b>R-20124-57769-12967-06011-36499-08186-14693-61176</b></dt>
 <dd><p>If a schema-name is specified, then the view is created in the specified database.
 <i>(source: <a href="lang_createview.html">lang_createview.html</a>, checked-by: th3/req1/view01.test, matrix: <a href='matrix/lang_createview.html#R-20124-57769-12967-06011-36499-08186-14693-61176'>context</a>, <a href='matrix/matrix_dlang_createview.html#R-20124-57769-12967-06011-36499-08186-14693-61176'>detail</a>)</i></p></dd>
@@ -4137,10 +4109,6 @@ comments in the source code.
 <dt><b>R-21024-07855-27912-21826-13192-43444-47677-34434</b></dt>
 <dd><p>The primary key columns appear in the order they they were declared in the PRIMARY KEY clause and the remaining columns appear in the order they occur in the CREATE TABLE statement.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-21024-07855-27912-21826-13192-43444-47677-34434'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-21024-07855-27912-21826-13192-43444-47677-34434'>detail</a>)</i></p></dd>
-
-<dt><b>R-21062-30088-46553-38702-08225-06060-08730-53281</b></dt>
-<dd><p>For the example above, one might create an auxiliary table as follows: CREATE TABLE demo_data( id INTEGER PRIMARY KEY, -- primary key objname TEXT, -- name of the object objtype TEXT, -- object type boundary BLOB -- detailed boundary of object );
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-21062-30088-46553-38702-08225-06060-08730-53281'>context</a>, <a href='matrix/matrix_drtree.html#R-21062-30088-46553-38702-08225-06060-08730-53281'>detail</a>)</i></p></dd>
 
 <dt><b>R-21115-58321-25716-23770-11415-21637-17771-56749</b></dt>
 <dd><p>If a column-name list is specified, then the number of values in each term of the VALUE list must match the number of specified columns.
@@ -4317,10 +4285,6 @@ comments in the source code.
 <dt><b>R-22484-49535-05658-48568-12441-17149-15045-25439</b></dt>
 <dd><p>Leading spaces are removed.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-22484-49535-05658-48568-12441-17149-15045-25439'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-22484-49535-05658-48568-12441-17149-15045-25439'>detail</a>)</i></p></dd>
-
-<dt><b>R-22490-27246-39721-62527-58944-44667-39725-60392</b></dt>
-<dd><p>One might, for example, want to query all objects that overlap with the 35th parallel: SELECT id FROM demo_index WHERE maxY>=35.0 AND minY<=35.0;
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-22490-27246-39721-62527-58944-44667-39725-60392'>context</a>, <a href='matrix/matrix_drtree.html#R-22490-27246-39721-62527-58944-44667-39725-60392'>detail</a>)</i></p></dd>
 
 <dt><b>R-22511-33242-53982-27627-41881-51518-34601-24400</b></dt>
 <dd><p>This is the number of times that the prepared statement has been run.
@@ -4853,10 +4817,6 @@ comments in the source code.
 <dt><b>R-24874-01721-30373-30915-48096-44417-56853-33182</b></dt>
 <dd><p>If sqlite3_collation_needed16() is used, the names are passed as UTF-16 in machine native byte order.
 <i>(source: <a href="c3ref/collation_needed.html">c3ref/collation_needed.html</a>, matrix: <a href='matrix/c3ref/collation_needed.html#R-24874-01721-30373-30915-48096-44417-56853-33182'>context</a>, <a href='matrix/matrix_dcollation_needed.html#R-24874-01721-30373-30915-48096-44417-56853-33182'>detail</a>)</i></p></dd>
-
-<dt><b>R-24884-23543-23693-37223-33863-51380-19088-32186</b></dt>
-<dd><p>To find all elements of the index that are contained within the vicinity of Charlotte, North Carolina, one might do: SELECT id FROM demo_index WHERE minX>=-81.08 AND maxX<=-80.58 AND minY>=35.00 AND maxY<=35.44;
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-24884-23543-23693-37223-33863-51380-19088-32186'>context</a>, <a href='matrix/matrix_drtree.html#R-24884-23543-23693-37223-33863-51380-19088-32186'>detail</a>)</i></p></dd>
 
 <dt><b>R-24896-34661-16790-51948-60772-09392-38798-62711</b></dt>
 <dd><p>The sqlite_stat4.tbl column holds name of the table that owns the index that the row describes
@@ -5930,10 +5890,6 @@ comments in the source code.
 <dd><p>The argument to the SQLITE_FCNTL_PRAGMA file control is an array of pointers to strings (char**) in which the second element of the array is the name of the pragma and the third element is the argument to the pragma or NULL if the pragma has no argument.
 <i>(source: <a href="c3ref/c_fcntl_begin_atomic_write.html">c3ref/c_fcntl_begin_atomic_write.html</a>, checked-by: src/pragma.c, src/test_multiplex.c, matrix: <a href='matrix/c3ref/c_fcntl_begin_atomic_write.html#R-29875-31678-61620-24152-15277-25938-13734-04890'>context</a>, <a href='matrix/matrix_dc_fcntl_begin_atomic_write.html#R-29875-31678-61620-24152-15277-25938-13734-04890'>detail</a>)</i></p></dd>
 
-<dt><b>R-29893-27796-00757-54960-07346-15618-09863-54887</b></dt>
-<dd><p>For example, to find all bounding boxes that overlap the Charlotte area: SELECT id FROM demo_index WHERE maxX>=-81.08 AND minX<=-80.58 AND maxY>=35.00 AND minY<=35.44;
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-29893-27796-00757-54960-07346-15618-09863-54887'>context</a>, <a href='matrix/matrix_drtree.html#R-29893-27796-00757-54960-07346-15618-09863-54887'>detail</a>)</i></p></dd>
-
 <dt><b>R-29897-28851-11131-17538-15635-12313-50588-15022</b></dt>
 <dd><p>Such transactions usually persist until the next COMMIT or ROLLBACK command. But a transaction will also ROLLBACK if the database is closed or if an error occurs and the ROLLBACK conflict resolution algorithm is specified.
 <i>(source: <a href="lang_transaction.html">lang_transaction.html</a>, matrix: <a href='matrix/lang_transaction.html#R-29897-28851-11131-17538-15635-12313-50588-15022'>context</a>, <a href='matrix/matrix_dlang_transaction.html#R-29897-28851-11131-17538-15635-12313-50588-15022'>detail</a>)</i></p></dd>
@@ -6217,10 +6173,6 @@ comments in the source code.
 <dt><b>R-31305-35170-11464-64098-34506-16219-33057-18056</b></dt>
 <dd><p>After the header and zero padding are zero or more page records.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-31305-35170-11464-64098-34506-16219-33057-18056'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-31305-35170-11464-64098-34506-16219-33057-18056'>detail</a>)</i></p></dd>
-
-<dt><b>R-31310-22333-18574-57043-24725-36788-30807-54807</b></dt>
-<dd><p>In other words, schema S must not currently be in a transaction for sqlite3_snapshot_open(D,S,P) to work, but the database connection D must be out of autocommit mode.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-31310-22333-18574-57043-24725-36788-30807-54807'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-31310-22333-18574-57043-24725-36788-30807-54807'>detail</a>)</i></p></dd>
 
 <dt><b>R-31312-33516-05278-47140-12669-18608-41834-55008</b></dt>
 <dd><p>The lower(X) function returns a copy of string X with all ASCII characters converted to lower case.
@@ -6566,10 +6518,6 @@ comments in the source code.
 <dd><p>AUTOINCREMENT does not work on WITHOUT ROWID tables.
 <i>(source: <a href="withoutrowid.html">withoutrowid.html</a>, checked-by: tcl/without_rowid5.test, th3/cov1/withoutrowid01.test, matrix: <a href='matrix/withoutrowid.html#R-33142-02092-43419-10432-03484-54260-43121-37781'>context</a>, <a href='matrix/matrix_dwithoutrowid.html#R-33142-02092-43419-10432-03484-54260-43121-37781'>detail</a>)</i></p></dd>
 
-<dt><b>R-33198-05775-12486-51098-43766-32149-25799-18917</b></dt>
-<dd><p>In order to succeed, a call to sqlite3_snapshot_open(D,S,P) must be the first operation following the BEGIN that takes the schema S out of autocommit mode.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-33198-05775-12486-51098-43766-32149-25799-18917'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-33198-05775-12486-51098-43766-32149-25799-18917'>detail</a>)</i></p></dd>
-
 <dt><b>R-33211-38833-64331-54724-35381-31821-05246-63257</b></dt>
 <dd><p>These routines do not parse the SQL statements thus will not detect syntactically incorrect SQL.
 <i>(source: <a href="c3ref/complete.html">c3ref/complete.html</a>, checked-by: th3/cov1/complete01.test, matrix: <a href='matrix/c3ref/complete.html#R-33211-38833-64331-54724-35381-31821-05246-63257'>context</a>, <a href='matrix/matrix_dcomplete.html#R-33211-38833-64331-54724-35381-31821-05246-63257'>detail</a>)</i></p></dd>
@@ -6609,6 +6557,10 @@ comments in the source code.
 <dt><b>R-33414-20006-38430-38330-20007-08440-33108-23538</b></dt>
 <dd><p>The SQLITE_UTF16 and SQLITE_UTF16_ALIGNED values for eTextRep force strings to be UTF16 with native byte order.
 <i>(source: <a href="c3ref/create_collation.html">c3ref/create_collation.html</a>, checked-by: th3/req1/createcoll01.test, matrix: <a href='matrix/c3ref/create_collation.html#R-33414-20006-38430-38330-20007-08440-33108-23538'>context</a>, <a href='matrix/matrix_dcreate_collation.html#R-33414-20006-38430-38330-20007-08440-33108-23538'>detail</a>)</i></p></dd>
+
+<dt><b>R-33440-07331-05623-12245-41589-49905-51548-00120</b></dt>
+<dd><p>For the purposes of the DEFAULT clause, an expression is considered constant if it contains no sub-queries, column or table references, bound parameters, or string literals enclosed in double-quotes instead of single-quotes.
+<i>(source: <a href="lang_createtable.html">lang_createtable.html</a>, checked-by: tcl/e_createtable.test, matrix: <a href='matrix/lang_createtable.html#R-33440-07331-05623-12245-41589-49905-51548-00120'>context</a>, <a href='matrix/matrix_dlang_createtable.html#R-33440-07331-05623-12245-41589-49905-51548-00120'>detail</a>)</i></p></dd>
 
 <dt><b>R-33443-64794-37777-63092-51102-53301-52354-10216</b></dt>
 <dd><p>For non-TEMP triggers, the table to be modified or queried must exist in the same database as the table or view to which the trigger is attached.
@@ -6906,10 +6858,6 @@ comments in the source code.
 <dd><p>The first argument to the callback is a copy of the third argument to sqlite3_update_hook().
 <i>(source: <a href="c3ref/update_hook.html">c3ref/update_hook.html</a>, checked-by: th3/cov1/main15.test, matrix: <a href='matrix/c3ref/update_hook.html#R-34837-12462-62420-33748-07267-00170-63881-53119'>context</a>, <a href='matrix/matrix_dupdate_hook.html#R-34837-12462-62420-33748-07267-00170-63881-53119'>detail</a>)</i></p></dd>
 
-<dt><b>R-34910-54196-06833-20425-61938-49960-21267-08360</b></dt>
-<dd><p>The sixth, seventh, eighth and ninth parameters (xStep, xFinal, xValue and xInverse) passed to sqlite3_create_window_function are pointers to C-lanugage callbacks that implement the new function.
-<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-34910-54196-06833-20425-61938-49960-21267-08360'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-34910-54196-06833-20425-61938-49960-21267-08360'>detail</a>)</i></p></dd>
-
 <dt><b>R-34918-27009-22149-14301-56506-15307-06517-16770</b></dt>
 <dd><p>The INDEXED BY and NOT INDEXED clauses are not supported for UPDATE and DELETE statements.
 <i>(source: <a href="lang_createtrigger.html">lang_createtrigger.html</a>, matrix: <a href='matrix/lang_createtrigger.html#R-34918-27009-22149-14301-56506-15307-06517-16770'>context</a>, <a href='matrix/matrix_dlang_createtrigger.html#R-34918-27009-22149-14301-56506-15307-06517-16770'>detail</a>)</i></p></dd>
@@ -6965,10 +6913,6 @@ comments in the source code.
 <dt><b>R-35036-36587-25670-53930-46391-17517-28623-46452</b></dt>
 <dd><p>For a WITHOUT ROWID table, N will be the number of columns in the primary key.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-35036-36587-25670-53930-46391-17517-28623-46452'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-35036-36587-25670-53930-46391-17517-28623-46452'>detail</a>)</i></p></dd>
-
-<dt><b>R-35040-01730-43982-30750-52073-28087-17408-35843</b></dt>
-<dd><p>A snapshot will fail to open if it has been overwritten by a checkpoint.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-35040-01730-43982-30750-52073-28087-17408-35843'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-35040-01730-43982-30750-52073-28087-17408-35843'>detail</a>)</i></p></dd>
 
 <dt><b>R-35040-63004-09413-17967-18828-35998-50185-50384</b></dt>
 <dd><p>The "weekday" modifier advances the date forward to the next date where the weekday number is N.
@@ -7209,10 +7153,6 @@ comments in the source code.
 <dt><b>R-36190-27688-09198-02833-32879-47498-11674-13730</b></dt>
 <dd><p>PRAGMA schema.page_size; PRAGMA schema.page_size = bytes; Query or set the page size of the database.
 <i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-36190-27688-09198-02833-32879-47498-11674-13730'>context</a>, <a href='matrix/matrix_dpragma.html#R-36190-27688-09198-02833-32879-47498-11674-13730'>detail</a>)</i></p></dd>
-
-<dt><b>R-36195-31555-35544-12860-62754-30693-28143-39954</b></dt>
-<dd><p>The usual INSERT, UPDATE, and DELETE commands work on an R*Tree index just like on regular tables.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-36195-31555-35544-12860-62754-30693-28143-39954'>context</a>, <a href='matrix/matrix_drtree.html#R-36195-31555-35544-12860-62754-30693-28143-39954'>detail</a>)</i></p></dd>
 
 <dt><b>R-36231-30731-18114-11584-03409-00455-24711-59821</b></dt>
 <dd><p>The COLLATE operator has a higher precedence (binds more tightly) than any binary operator and any unary prefix operator except "~".
@@ -7910,10 +7850,6 @@ comments in the source code.
 <dd><p>A comma (",") is used as the separator if Y is omitted.
 <i>(source: <a href="lang_aggfunc.html">lang_aggfunc.html</a>, checked-by: th3/req1/aggfunc01.test, matrix: <a href='matrix/lang_aggfunc.html#R-39910-14723-21123-44064-38823-12161-58690-10248'>context</a>, <a href='matrix/matrix_dlang_aggfunc.html#R-39910-14723-21123-44064-38823-12161-58690-10248'>detail</a>)</i></p></dd>
 
-<dt><b>R-39992-63473-63522-38384-26605-22520-32296-40971</b></dt>
-<dd><p>So to insert some data into our sample R*Tree index, we can do something like this: INSERT INTO demo_index VALUES( 1, -- Primary key -- SQLite.org headquarters -80.7749, -80.7747, -- Longitude range 35.3776, 35.3778 -- Latitude range ); INSERT INTO demo_index VALUES( 2, -- NC 12th Congressional District in 2010 -81.0, -79.6, 35.0, 36.2 );
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-39992-63473-63522-38384-26605-22520-32296-40971'>context</a>, <a href='matrix/matrix_drtree.html#R-39992-63473-63522-38384-26605-22520-32296-40971'>detail</a>)</i></p></dd>
-
 <dt><b>R-40025-59984-53912-08799-37788-65154-58103-39921</b></dt>
 <dd><p>Expressions in an index may only refer to columns in the table that is being indexed.
 <i>(source: <a href="lang_createindex.html">lang_createindex.html</a>, matrix: <a href='matrix/lang_createindex.html#R-40025-59984-53912-08799-37788-65154-58103-39921'>context</a>, <a href='matrix/matrix_dlang_createindex.html#R-40025-59984-53912-08799-37788-65154-58103-39921'>detail</a>)</i></p></dd>
@@ -8105,10 +8041,6 @@ comments in the source code.
 <dt><b>R-40812-03570-58737-26450-04451-50021-12578-43661</b></dt>
 <dd><p>If no negative ROWID values are inserted explicitly, then automatically generated ROWID values will always be greater than zero.
 <i>(source: <a href="autoinc.html">autoinc.html</a>, checked-by: src/vdbe.c, th3/cov1/vdbe23.test, matrix: <a href='matrix/autoinc.html#R-40812-03570-58737-26450-04451-50021-12578-43661'>context</a>, <a href='matrix/matrix_dautoinc.html#R-40812-03570-58737-26450-04451-50021-12578-43661'>detail</a>)</i></p></dd>
-
-<dt><b>R-40827-27357-46487-27198-26867-15174-62736-47681</b></dt>
-<dd><p>If foreign key constraints are enabled when a table is renamed, then any REFERENCES clauses in any table (either the table being renamed or some other table) that refer to the table being renamed are modified to refer to the renamed table by its new name.
-<i>(source: <a href="lang_altertable.html">lang_altertable.html</a>, checked-by: th3/req1/altertable01.test, matrix: <a href='matrix/lang_altertable.html#R-40827-27357-46487-27198-26867-15174-62736-47681'>context</a>, <a href='matrix/matrix_dlang_altertable.html#R-40827-27357-46487-27198-26867-15174-62736-47681'>detail</a>)</i></p></dd>
 
 <dt><b>R-40858-03003-08666-12472-31051-52566-61637-28947</b></dt>
 <dd><p>The fourth parameter to sqlite3_open_v2() is the name of the sqlite3_vfs object that defines the operating system interface that the new database connection should use.
@@ -8410,10 +8342,6 @@ comments in the source code.
 <dd><p>The SQLITE_MAX_TRIGGER_DEPTH and SQLITE_LIMIT_TRIGGER_DEPTH settings determine the maximum allowable depth of trigger program recursion. For the purposes of these limits, foreign key actions are considered trigger programs.
 <i>(source: <a href="foreignkeys.html">foreignkeys.html</a>, checked-by: tcl/e_fkey.test, th3/req1/foreignkeys24.test, matrix: <a href='matrix/foreignkeys.html#R-42264-30503-59734-27182-09604-54439-24686-19729'>context</a>, <a href='matrix/matrix_dforeignkeys.html#R-42264-30503-59734-27182-09604-54439-24686-19729'>detail</a>)</i></p></dd>
 
-<dt><b>R-42285-56877-09234-46641-17073-37053-15248-47437</b></dt>
-<dd><p>The sqlite3_snapshot_open(D,S,P) interface starts a read transaction for schema S of database connection D such that the read transaction refers to historical snapshot P, rather than the most recent change to the database.
-<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-42285-56877-09234-46641-17073-37053-15248-47437'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-42285-56877-09234-46641-17073-37053-15248-47437'>detail</a>)</i></p></dd>
-
 <dt><b>R-42297-37851-22979-34861-45337-51350-47253-02521</b></dt>
 <dd><p>The parameter name must be given in UTF-8 even if the original statement was prepared from UTF-16 text using sqlite3_prepare16_v2() or sqlite3_prepare16_v3().
 <i>(source: <a href="c3ref/bind_parameter_index.html">c3ref/bind_parameter_index.html</a>, checked-by: th3/req1/bind03.test, matrix: <a href='matrix/c3ref/bind_parameter_index.html#R-42297-37851-22979-34861-45337-51350-47253-02521'>context</a>, <a href='matrix/matrix_dbind_parameter_index.html#R-42297-37851-22979-34861-45337-51350-47253-02521'>detail</a>)</i></p></dd>
@@ -8605,6 +8533,10 @@ comments in the source code.
 <dt><b>R-43217-29904-47266-41497-40047-57138-51637-14307</b></dt>
 <dd><p>This routine returns the N-th compile-time option used to build SQLite or NULL if N is out of range.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: th3/cov1/ctime02.test, matrix: <a href='matrix/lang_corefunc.html#R-43217-29904-47266-41497-40047-57138-51637-14307'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-43217-29904-47266-41497-40047-57138-51637-14307'>detail</a>)</i></p></dd>
+
+<dt><b>R-43220-55620-43136-39687-48748-00625-63724-05829</b></dt>
+<dd><p>One might, for example, want to query all objects that overlap with the 35th parallel: SELECT id FROM demo_index WHERE maxY>=35.0 AND minY<=35.0; But, generally speaking, the more constraints that the R*Tree module has to work with, and the smaller the bounding box, the faster the results will come back. 3.4. Roundoff Error By default, coordinates are stored in an R*Tree using 32-bit floating point values. When a coordinate cannot be exactly represented by a 32-bit floating point number, the lower-bound coordinates are rounded down and the upper-bound coordinates are rounded up. Thus, bounding boxes might be slightly larger than specified, but will never be any smaller. This is exactly what is desired for doing the more common "overlapping" queries where the application wants to find every entry in the R*Tree that overlaps a query bounding box. Rounding the entry bounding boxes outward might cause a few extra entries to appears in an overlapping query if the edge of the entry bounding box corresponds to an edge of the query bounding box. But the overlapping query will never miss a valid table entry. However, for a "contained-within" style query, rounding the bounding boxes outward might cause some entries to be excluded from the result set if the edge of the entry bounding box corresponds to the edge of the query bounding box. To guard against this, applications should expand their contained-within query boxes slightly (by 0.000012%) by rounding down the lower coordinates and rounding up the top coordinates, in each dimension. 4. Using R*Trees Effectively For SQLite versions prior to 3.24.0 (2018-06-04), the only information that an R*Tree index stores about an object is its integer ID and its bounding box. Additional information needs to be stored in separate tables and related to the R*Tree index using the primary key. For the example above, one might create an auxiliary table as follows: CREATE TABLE demo_data( id INTEGER PRIMARY KEY, -- primary key objname TEXT, -- name of the object objtype TEXT, -- object type boundary BLOB -- detailed boundary of object ); In this example, the demo_data.boundary field is intended to hold some kind of binary representation of the precise boundaries of the object. The R*Tree index only holds an axis-aligned rectangular boundary for the object. The R*Tree boundary is just an approximation of the true object boundary. So what typically happens is that the R*Tree index is used to narrow a search down to a list of candidate objects and then more detailed and expensive computations are done on each candidate to find if the candidate truly meets the search criteria. Key Point: An R*Tree index does not normally provide the exact answer but merely reduces the set of potential answers from millions to dozens. Suppose the demo_data.boundary field holds some proprietary data description of a complex two-dimensional boundary for an object and suppose that the application has used the sqlite3_create_function() interface to created application-defined functions "contained_in" and "overlaps" accepting two demo_data.boundary objects and return true or false. One may assume that "contained_in" and "overlaps" are relatively slow functions that we do not want to invoke too frequently. Then an efficient way to find the name of all objects located within the North Carolina 12th District, one may be to run a query like this: SELECT objname FROM demo_data, demo_index WHERE demo_data.id=demo_index.id AND contained_in(demo_data.boundary, :boundary) AND minX>=-81.0 AND maxX<=-79.6 AND minY>=35.0 AND maxY>=36.2; In the query above, one would presumably bind the binary BLOB description of the precise boundary of the 12th district to the ":boundary" parameter. Notice how the query above works: The R*Tree index runs in the outer loop to find entries that are contained within the bounding box of longitude -81..-79.6 and latitude 35.0..36.2. For each object identifier found, SQLite looks up the corresponding entry in the demo_data table. It then uses the boundary field from the demo_data table as a parameter to the contained_in() function and if that function returns true, the objname field from the demo_data table is returned as the next row of query result. One would get the same answer without the use of the R*Tree index using the following simpler query: SELECT objname FROM demo_data WHERE contained_in(demo_data.boundary, :boundary); The problem with this latter query is that it must apply the contained_in() function to millions of entries in the demo_data table. The use of the R*Tree in the penultimate query reduces the number of calls to contained_in() function to a small subset of the entire table. The R*Tree index did not find the exact answer itself, it merely limited the search space. 4.1. Auxiliary Columns Beginning with SQLite version 3.24.0 (2018-06-04), r-tree tables can have auxiliary columns that store arbitrary data. Auxiliary columns can be used in place of secondary tables such as "demo_data". Auxiliary columns are marked with a "+" symbol before the column name. Auxiliary columns must come after all of the coordinate boundary columns. There is a limit of no more than 100 auxiliary columns. The following example shows an r-tree table with auxiliary columns that is equivalent to the two tables "demo_index" and "demo_data" above: CREATE VIRTUAL TABLE demo_index2 USING rtree( id, -- Integer primary key minX, maxX, -- Minimum and maximum X coordinate minY, maxY, -- Minimum and maximum Y coordinate +objname TEXT, -- name of the object +objtype TEXT, -- object type +boundary BLOB -- detailed boundary of object );
+<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-43220-55620-43136-39687-48748-00625-63724-05829'>context</a>, <a href='matrix/matrix_drtree.html#R-43220-55620-43136-39687-48748-00625-63724-05829'>detail</a>)</i></p></dd>
 
 <dt><b>R-43230-40115-50366-23982-20450-64068-63336-08552</b></dt>
 <dd><p>Any process or thread can select READ UNCOMMITTED isolation, but SERIALIZABLE will still be used except between connections that share a common page and schema cache.
@@ -9110,6 +9042,10 @@ comments in the source code.
 <dd><p>If the sqlite_sequence.seq value for an AUTOINCREMENT table is manually set to something other than an integer and there is a subsequent attempt to insert the or update the AUTOINCREMENT table, then the behavior is undefined.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-45363-38948-33312-55000-36938-65231-54003-14501'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-45363-38948-33312-55000-36938-65231-54003-14501'>detail</a>)</i></p></dd>
 
+<dt><b>R-45387-42504-16923-07908-20467-28557-08879-46075</b></dt>
+<dd><p>A call to sqlite3_snapshot_open() will fail to open if the specified snapshot has been overwritten by a checkpoint.
+<i>(source: <a href="c3ref/snapshot_open.html">c3ref/snapshot_open.html</a>, matrix: <a href='matrix/c3ref/snapshot_open.html#R-45387-42504-16923-07908-20467-28557-08879-46075'>context</a>, <a href='matrix/matrix_dsnapshot_open.html#R-45387-42504-16923-07908-20467-28557-08879-46075'>detail</a>)</i></p></dd>
+
 <dt><b>R-45406-28279-14866-09757-51891-25484-53799-50932</b></dt>
 <dd><p>The first read operation against a database creates a SHARED lock and the first write operation creates a RESERVED lock.
 <i>(source: <a href="lang_transaction.html">lang_transaction.html</a>, matrix: <a href='matrix/lang_transaction.html#R-45406-28279-14866-09757-51891-25484-53799-50932'>context</a>, <a href='matrix/matrix_dlang_transaction.html#R-45406-28279-14866-09757-51891-25484-53799-50932'>detail</a>)</i></p></dd>
@@ -9205,10 +9141,6 @@ comments in the source code.
 <dt><b>R-45878-07697-09901-50980-47387-13868-52582-57913</b></dt>
 <dd><p>If the REINDEX keyword is followed by a collation-sequence name, then all indices in all attached databases that use the named collation sequences are recreated.
 <i>(source: <a href="lang_reindex.html">lang_reindex.html</a>, checked-by: tcl/e_reindex.test, matrix: <a href='matrix/lang_reindex.html#R-45878-07697-09901-50980-47387-13868-52582-57913'>context</a>, <a href='matrix/matrix_dlang_reindex.html#R-45878-07697-09901-50980-47387-13868-52582-57913'>detail</a>)</i></p></dd>
-
-<dt><b>R-45880-07724-18025-09257-41536-03477-46499-61988</b></dt>
-<dd><p>Any valid query will work against an R*Tree index.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-45880-07724-18025-09257-41536-03477-46499-61988'>context</a>, <a href='matrix/matrix_drtree.html#R-45880-07724-18025-09257-41536-03477-46499-61988'>detail</a>)</i></p></dd>
 
 <dt><b>R-45882-09372-45562-22355-27454-39457-08272-55277</b></dt>
 <dd><p>SQL parameters of the form "?NNN" or ":AAA" or "@AAA" or "$AAA" have a name which is the string "?NNN" or ":AAA" or "@AAA" or "$AAA" respectively. In other words, the initial ":" or "$" or "@" or "?" is included as part of the name.
@@ -9481,10 +9413,6 @@ comments in the source code.
 <dt><b>R-47224-48532-62948-64824-54403-32645-39277-62522</b></dt>
 <dd><p>When an applicable constraint violation occurs, the ABORT resolution algorithm aborts the current SQL statement with an SQLITE_CONSTRAINT error and backs out any changes made by the current SQL statement; but changes caused by prior SQL statements within the same transaction are preserved and the transaction remains active.
 <i>(source: <a href="lang_conflict.html">lang_conflict.html</a>, checked-by: th3/req1/conflict01.test, matrix: <a href='matrix/lang_conflict.html#R-47224-48532-62948-64824-54403-32645-39277-62522'>context</a>, <a href='matrix/matrix_dlang_conflict.html#R-47224-48532-62948-64824-54403-32645-39277-62522'>detail</a>)</i></p></dd>
-
-<dt><b>R-47229-44664-45989-28398-08189-62059-57845-17972</b></dt>
-<dd><p>The virtual <name> table creates three "shadow" tables to actually store its content. The names of these shadow tables are: <name>_node <name>_rowid <name>_parent
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-47229-44664-45989-28398-08189-62059-57845-17972'>context</a>, <a href='matrix/matrix_drtree.html#R-47229-44664-45989-28398-08189-62059-57845-17972'>detail</a>)</i></p></dd>
 
 <dt><b>R-47237-20641-51298-30597-19533-32249-45130-16580</b></dt>
 <dd><p>The parameter N is the approximate number of virtual machine instructions that are evaluated between successive invocations of the callback X.
@@ -10466,10 +10394,6 @@ comments in the source code.
 <dd><p>When the right operand is an empty set, the result of IN is false and the result of NOT IN is true, regardless of the left operand and even if the left operand is NULL.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/tkt-80e031a00f.test, matrix: <a href='matrix/lang_expr.html#R-52275-55503-36173-27620-56866-61017-01277-04274'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-52275-55503-36173-27620-56866-61017-01277-04274'>detail</a>)</i></p></dd>
 
-<dt><b>R-52283-25228-19541-55999-19496-13674-36111-40642</b></dt>
-<dd><p>This second query would find both entry 1 (the SQLite.org office) which is entirely contained within the query box and also the 12th Congressional District which extends well outside the query box but still overlaps the query box.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-52283-25228-19541-55999-19496-13674-36111-40642'>context</a>, <a href='matrix/matrix_drtree.html#R-52283-25228-19541-55999-19496-13674-36111-40642'>detail</a>)</i></p></dd>
-
 <dt><b>R-52293-58497-02008-48685-44667-03336-29126-34066</b></dt>
 <dd><p>If this option is set to an empty string the default VFS object is used.
 <i>(source: <a href="c3ref/open.html">c3ref/open.html</a>, checked-by: tcl/e_uri.test, matrix: <a href='matrix/c3ref/open.html#R-52293-58497-02008-48685-44667-03336-29126-34066'>context</a>, <a href='matrix/matrix_dopen.html#R-52293-58497-02008-48685-44667-03336-29126-34066'>detail</a>)</i></p></dd>
@@ -10821,6 +10745,10 @@ comments in the source code.
 <dt><b>R-54105-45069-36894-51687-59300-29186-60662-50296</b></dt>
 <dd><p>Changing the foreign_keys setting affects the execution of all statements prepared using the database connection, including those prepared before the setting was changed.
 <i>(source: <a href="pragma.html">pragma.html</a>, checked-by: th3/req1/pragma18.test, matrix: <a href='matrix/pragma.html#R-54105-45069-36894-51687-59300-29186-60662-50296'>context</a>, <a href='matrix/matrix_dpragma.html#R-54105-45069-36894-51687-59300-29186-60662-50296'>detail</a>)</i></p></dd>
+
+<dt><b>R-54138-14726-01342-01077-27366-45054-60392-40592</b></dt>
+<dd><p>The sixth, seventh, eighth and ninth parameters (xStep, xFinal, xValue and xInverse) passed to sqlite3_create_window_function are pointers to C-language callbacks that implement the new function.
+<i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-54138-14726-01342-01077-27366-45054-60392-40592'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-54138-14726-01342-01077-27366-45054-60392-40592'>detail</a>)</i></p></dd>
 
 <dt><b>R-54142-41346-32014-56293-25636-63110-30822-28140</b></dt>
 <dd><p>The properties of the DROP TABLE and ALTER TABLE commands described above only apply if foreign keys are enabled.
@@ -11306,10 +11234,6 @@ comments in the source code.
 <dd><p>The sqlite_sequence row for an AUTOINCREMENT table is automatically deleted when the table is dropped.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-56960-03061-20836-21931-13129-13661-26943-05315'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-56960-03061-20836-21931-13129-13661-26943-05315'>detail</a>)</i></p></dd>
 
-<dt><b>R-56985-05306-57401-30586-53381-19063-22094-04979</b></dt>
-<dd><p>Then an efficient way to find the name of all objects located within the North Carolina 12th District, one may be to run a query like this: SELECT objname FROM demo_data, demo_index WHERE demo_data.id=demo_index.id AND contained_in(demo_data.boundary, :boundary) AND minX>=-81.0 AND maxX<=-79.6 AND minY>=35.0 AND maxY>=36.2;
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-56985-05306-57401-30586-53381-19063-22094-04979'>context</a>, <a href='matrix/matrix_drtree.html#R-56985-05306-57401-30586-53381-19063-22094-04979'>detail</a>)</i></p></dd>
-
 <dt><b>R-57019-29874-21566-05710-22141-45725-52460-50437</b></dt>
 <dd><p>Attempt to return the underlying operating system error code or error number that caused the most recent I/O error or failure to open a file.
 <i>(source: <a href="c3ref/system_errno.html">c3ref/system_errno.html</a>, matrix: <a href='matrix/c3ref/system_errno.html#R-57019-29874-21566-05710-22141-45725-52460-50437'>context</a>, <a href='matrix/matrix_dsystem_errno.html#R-57019-29874-21566-05710-22141-45725-52460-50437'>detail</a>)</i></p></dd>
@@ -11794,10 +11718,6 @@ comments in the source code.
 <dd><p>A value of 10 (0x0a) means the page is a leaf index b-tree page.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, checked-by: src/btree.c, matrix: <a href='matrix/fileformat2.html#R-59615-42828-32025-62941-63094-03389-26549-04394'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-59615-42828-32025-62941-63094-03389-26549-04394'>detail</a>)</i></p></dd>
 
-<dt><b>R-59621-62546-01433-46833-62451-30016-12740-49042</b></dt>
-<dd><p>The query above would very quickly locate the id of 1 even if the R*Tree contained millions of entries.
-<i>(source: <a href="rtree.html">rtree.html</a>, matrix: <a href='matrix/rtree.html#R-59621-62546-01433-46833-62451-30016-12740-49042'>context</a>, <a href='matrix/matrix_drtree.html#R-59621-62546-01433-46833-62451-30016-12740-49042'>detail</a>)</i></p></dd>
-
 <dt><b>R-59626-52827-57662-05724-48441-25095-54534-18435</b></dt>
 <dd><p>The name of the collation is a UTF-8 string for sqlite3_create_collation() and sqlite3_create_collation_v2() and a UTF-16 string in native byte order for sqlite3_create_collation16().
 <i>(source: <a href="c3ref/create_collation.html">c3ref/create_collation.html</a>, checked-by: th3/req1/createcoll01.test, matrix: <a href='matrix/c3ref/create_collation.html#R-59626-52827-57662-05724-48441-25095-54534-18435'>context</a>, <a href='matrix/matrix_dcreate_collation.html#R-59626-52827-57662-05724-48441-25095-54534-18435'>detail</a>)</i></p></dd>
@@ -11997,6 +11917,10 @@ comments in the source code.
 <dt><b>R-60735-46752-55529-42699-37701-47683-08130-22396</b></dt>
 <dd><p>BLOBs are encoded as hexadecimal literals.
 <i>(source: <a href="lang_corefunc.html">lang_corefunc.html</a>, checked-by: th3/cov1/func02.test, matrix: <a href='matrix/lang_corefunc.html#R-60735-46752-55529-42699-37701-47683-08130-22396'>context</a>, <a href='matrix/matrix_dlang_corefunc.html#R-60735-46752-55529-42699-37701-47683-08130-22396'>detail</a>)</i></p></dd>
+
+<dt><b>R-60755-45226-57184-35002-64218-27799-00922-32350</b></dt>
+<dd><p>The application_id PRAGMA is used to query or set the 32-bit signed big-endian "Application ID" integer located at offset 68 into the database header.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>context</a>, <a href='matrix/matrix_dpragma.html#R-60755-45226-57184-35002-64218-27799-00922-32350'>detail</a>)</i></p></dd>
 
 <dt><b>R-60758-29241-24503-58415-42517-14147-34293-65020</b></dt>
 <dd><p>The RELEASE command causes all savepoints back to and including the most recent savepoint with a matching name to be removed from the transaction stack.
