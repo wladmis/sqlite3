@@ -151,7 +151,7 @@ The <b>json1</b> extension is a <a href="loadext.html">loadable extension</a> th
 implements fifteen <a href="c3ref/create_function.html">application-defined SQL functions</a> and
 two <a href="vtab.html#tabfunc2">table-valued functions</a> that are useful for
 managing <a href="http://json.org/">JSON</a> content stored in an SQLite database.
-Twelve of the fourteen SQL functions are  scalar functions:
+There are thirteen scalar functions:
 
 </p><ol>
 <li value='1'>
@@ -863,7 +863,7 @@ CREATE TABLE json_tree(
     value ANY,           -- value for the current element
     type TEXT,           -- 'object','array','string','integer', etc.
     atom ANY,            -- value for primitive types, null for array & object
-    id INTEGER           -- integer ID for this element
+    id INTEGER,          -- integer ID for this element
     parent INTEGER,      -- integer ID for the parent of this element
     fullkey TEXT,        -- full path describing the current element
     path TEXT,           -- path to the container of the current row

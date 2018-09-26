@@ -287,6 +287,7 @@ var listitems34 = [{"u":"pragma.html#pragma_application_id","x":"application_id"
 {"u":"pragma.html#pragma_integrity_check","x":"integrity_check","s":0},
 {"u":"pragma.html#pragma_journal_mode","x":"journal_mode","s":0},
 {"u":"pragma.html#pragma_journal_size_limit","x":"journal_size_limit","s":0},
+{"u":"pragma.html#pragma_legacy_alter_table","x":"legacy_alter_table","s":0},
 {"u":"pragma.html#pragma_legacy_file_format","x":"legacy_file_format","s":0},
 {"u":"pragma.html#pragma_locking_mode","x":"locking_mode","s":0},
 {"u":"pragma.html#pragma_max_page_count","x":"max_page_count","s":0},
@@ -1088,6 +1089,35 @@ for use in application programs.</ol></p>
   There is no way to change the journal size limit on all attached databases
   using a single PRAGMA statement.  The size limit must be set separately for
   each attached database.
+<a name="pragma_legacy_alter_table"></a>
+<h _id=pragma_legacy_alter_table style="display:none"> PRAGMA legacy_alter_table</h><hr>
+   <p><b>PRAGMA legacy_alter_table;
+       <br>PRAGMA legacy_alter_table = <i>boolean</i></b></p>
+    <p>This pragma sets or queries the value of the legacy_alter_table
+    flag.  When this flag is on, the ALTER TABLE RENAME
+    command (for changing the name of a table) works as it did
+    in SQLite 3.24.0 (2018-06-04) and earlier.  More specifically,
+    when this flag is on
+    the ALTER TABLE RENAME command only rewrites the initial occurrence
+    of the table name in its CREATE TABLE statement and in any associated
+    CREATE INDEX and CREATE TRIGGER statements.  Other references to the
+    table are unmodifed, including:
+    <ul>
+    <li> References to the table within the bodies of triggers and views.
+    <li> References to the table within CHECK constraints in the original
+         CREATE TABLE statement.
+    <li> References to the table within the WHERE clauses of <a href="partialindex.html">partial indexes</a>.
+    </ul>
+    The default setting for this pragma is OFF, which means that all
+    references to the table anywhere in the schema are converted to the new name.
+    <p>This pragma is provided as a work-around for older programs that
+    contain code that expect the incomplete behavior
+    of ALTER TABLE RENAME found in older versions of SQLite.
+    New applications should leave this flag turned off.
+    <p>For compability with older <a href="vtab.html">virtual table</a> implementations,
+    this flag is turned on temporarily while the <a href="vtab.html#xrename">sqlite3_module.xRename</a>
+    method is being run.  The value of this flag is restore after the 
+    <a href="vtab.html#xrename">sqlite3_module.xRename</a> method finishes.
 <a name="pragma_legacy_file_format"></a>
 <h _id=pragma_legacy_file_format style="display:none"> PRAGMA legacy_file_format</h><hr>
    <p><b>PRAGMA legacy_file_format;

@@ -271,8 +271,11 @@ the original date is February 29 of a leapyear and the modifier is
 <p>The "start of" modifiers (7 through 9) shift the date backwards 
 to the beginning of the current month, year or day.</p>
 
-<p>The "weekday" modifier advances the date forward to the next date 
-where the weekday number is N. Sunday is 0, Monday is 1, and so forth.</p>
+<p>The "weekday" modifier advances the date forward, if necessary,
+to the next date where the weekday number is N. Sunday is 0, Monday is 1,
+and so forth.
+If the date is already on the desired weekday, the "weekday" modifier
+leaves the date unchanged.  </p>
 
 <p>The "unixepoch" modifier (11) only works if it immediately follows 
 a timestring in the DDDDDDDDDD format. 

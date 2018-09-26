@@ -95,7 +95,25 @@ return false;
 
 <h2>Recent News</h2>
 
-<a name="2018_09_15"></a><h3>2018-09-15 - Release 3.25.0</h3><blockquote>
+<a name="2018_09_25"></a><h3>2018-09-25 - Release 3.25.2</h3><blockquote>
+SQLite <a href="releaselog/3_25_2.html">version 3.25.2</a> is another patch against 3.25.0 that fixes still
+more problems associated with the new <a href="windowfunctions.html">window function</a> feature and the
+<a href="lang_altertable.html">ALTER TABLE</a> enhancements.  Of particular note is the new
+<a href="pragma.html#pragma_legacy_alter_table">PRAGMA legacy_alter_table=ON</a> command, which causes the ALTER TABLE RENAME
+command to behave in the same goofy way that it did before the enhancements
+found in version 3.25.0 &rarr; references to renamed tables that are inside
+the bodies of triggers and views are not updated.  The legacy behavior is
+arguably a bug, but some programs depend on the older buggy behavior.  The
+3.25.2 release also contains a fix to <a href="windowfunctions.html">window function</a> processing for
+VIEWs.  There also a slew of other minor fixes that affect obscure
+compile-time options.  See the
+<a href="https://sqlite.org/src/timeline?r=branch-3.25">Fossil Timeline</a> for
+details.
+</blockquote><hr width="50%"><a name="2018_09_18"></a><h3>2018-09-18 - Release 3.25.1</h3><blockquote>
+SQLite <a href="releaselog/3_25_1.html">version 3.25.1</a> is a patch against version 3.25.0 that contains
+two one-line fixes for bug that were introduced in version 3.25.0.
+See the change log for details.  Upgrading from 3.25.0 is recommended.
+</blockquote><hr width="50%"><a name="2018_09_15"></a><h3>2018-09-15 - Release 3.25.0</h3><blockquote>
 SQLite <a href="releaselog/3_25_0.html">version 3.25.0</a> is a regularly scheduled maintenance release.
 Two big enhancements in this release:
 <ol>
