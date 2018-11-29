@@ -2318,6 +2318,13 @@ static void generateWithRecursiveQuery(
   Expr *pLimit;                 /* Saved LIMIT and OFFSET */
   int regLimit, regOffset;      /* Registers used by LIMIT and OFFSET */
 
+#ifndef SQLITE_OMIT_WINDOWFUNC
+  if( p->pWin ){
+    sqlite3ErrorMsg(pParse, "cannot use window functions in recursive queries");
+    return;
+  }
+#endif
+
   /* Obtain authorization to do a recursive query */
   if( sqlite3AuthCheck(pParse, SQLITE_RECURSIVE, 0, 0, 0) ) return;
 
@@ -4067,7 +4074,7 @@ static int flattenSubquery(
 #endif /* !defined(SQLITE_OMIT_SUBQUERY) || !defined(SQLITE_OMIT_VIEW) */
 
 /*
-** A structure to keep track of all of the column values that fixed to
+** A structure to keep track of all of the column values that are fixed to
 ** a known value due to WHERE clause constraints of the form COLUMN=VALUE.
 */
 typedef struct WhereConst WhereConst;
@@ -4079,13 +4086,28 @@ struct WhereConst {
 };
 
 /*
-** Add a new entry to the pConst object
+** Add a new entry to the pConst object.  Except, do not add duplicate
+** pColumn entires.
 */
 static void constInsert(
-  WhereConst *pConst,
-  Expr *pColumn,
-  Expr *pValue
+  WhereConst *pConst,      /* The WhereConst into which we are inserting */
+  Expr *pColumn,           /* The COLUMN part of the constraint */
+  Expr *pValue             /* The VALUE part of the constraint */
 ){
+  int i;
+  assert( pColumn->op==TK_COLUMN );
+
+  /* 2018-10-25 ticket [cf5ed20f]
+  ** Make sure the same pColumn is not inserted more than once */
+  for(i=0; i<pConst->nConst; i++){
+    const Expr *pExpr = pConst->apExpr[i*2];
+    assert( pExpr->op==TK_COLUMN );
+    if( pExpr->iTable==pColumn->iTable
+     && pExpr->iColumn==pColumn->iColumn
+    ){
+      return;  /* Already present.  Return without doing anything. */
+    }
+  }
 
   pConst->nConst++;
   pConst->apExpr = sqlite3DbReallocOrFree(pConst->pParse->db, pConst->apExpr,

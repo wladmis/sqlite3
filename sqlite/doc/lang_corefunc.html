@@ -221,8 +221,13 @@ document.getElementById("listtab32").innerHTML = h;
   The glob(X,Y) function is equivalent to the
   expression "<b>Y GLOB X</b>".
   Note that the X and Y arguments are reversed in the glob() function
-  relative to the infix <a href="lang_expr.html#glob">GLOB</a> operator.
-  If the <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface is used to
+  relative to the infix <a href="lang_expr.html#glob">GLOB</a> operator.  Y is the string and X is the
+  pattern.  So, for example, the following expressions are equivalent:
+  <blockquote><pre>
+     name GLOB '*helium*'
+     glob('*helium*',name)
+  </pre></blockquote>
+  <p>If the <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface is used to
   override the glob(X,Y) function with an alternative implementation then
   the <a href="lang_expr.html#glob">GLOB</a> operator will invoke the alternative implementation.
 </dd>
@@ -277,6 +282,12 @@ document.getElementById("listtab32").innerHTML = h;
   like() function is invoked with three arguments.  Otherwise, it is
   invoked with two arguments only. Note that the X and Y parameters are
   reversed in the like() function relative to the infix <a href="lang_expr.html#like">LIKE</a> operator.
+  X is the pattern and Y is the string to match against that pattern.
+  Hence, the following expressions are equivalent:
+  <blockquote><pre>
+     name LIKE '%neon%'
+     like('%neon%',name)
+  </pre></blockquote>
   The <a href="c3ref/create_function.html">sqlite3_create_function()</a> interface can be used to override the
   like() function and thereby change the operation of the
   <a href="lang_expr.html#like">LIKE</a> operator.  When overriding the like() function, it may be important

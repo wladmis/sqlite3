@@ -234,6 +234,8 @@ additional features:
 <li> The table named on the left-hand side of the AS keyword must appear
      exactly once in the FROM clause of the right-most SELECT statement
      of the compound select, and nowhere else.
+<li> The right-most SELECT of the compound select must not make use of
+     <a href="lang_aggfunc.html">aggregate</a> or <a href="windowfunctions.html">window functions</a>.
 </ol>
 
 <p>To put it another way, a recursive common table expression must

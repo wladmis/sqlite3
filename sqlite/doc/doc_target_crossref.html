@@ -134,7 +134,7 @@ return false;
 <li><a href="c3ref/busy_handler.html">c3ref/busy_handler.html</a> &rarr; {busy handler} {busy-handler callback} sqlite3_busy_handler</li>
 <li><a href="c3ref/busy_timeout.html">c3ref/busy_timeout.html</a> &rarr; sqlite3_busy_timeout</li>
 <li><a href="c3ref/c_abort.html">c3ref/c_abort.html</a> &rarr; {result code definitions}</li>
-<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_CANTOPEN_DIRTYWAL SQLITE_CORRUPT_SEQUENCE SQLITE_ERROR_SNAPSHOT SQLITE_IOERR_AUTH SQLITE_IOERR_BEGIN_ATOMIC SQLITE_IOERR_COMMIT_ATOMIC SQLITE_IOERR_ROLLBACK_ATOMIC SQLITE_IOERR_VNODE SQLITE_LOCKED_VTAB {extended result code definitions}</li>
+<li><a href="c3ref/c_abort_rollback.html">c3ref/c_abort_rollback.html</a> &rarr; SQLITE_AUTH_USER SQLITE_IOERR_AUTH SQLITE_IOERR_BEGIN_ATOMIC SQLITE_IOERR_COMMIT_ATOMIC SQLITE_IOERR_ROLLBACK_ATOMIC SQLITE_IOERR_VNODE {extended result code definitions}</li>
 <li><a href="c3ref/c_access_exists.html">c3ref/c_access_exists.html</a> &rarr; SQLITE_ACCESS_EXISTS SQLITE_ACCESS_READ SQLITE_ACCESS_READWRITE</li>
 <li><a href="c3ref/c_alter_table.html">c3ref/c_alter_table.html</a> &rarr; SQLITE_ALTER_TABLE SQLITE_ANALYZE SQLITE_ATTACH SQLITE_COPY SQLITE_CREATE_INDEX SQLITE_CREATE_TABLE SQLITE_CREATE_TEMP_INDEX SQLITE_CREATE_TEMP_TABLE SQLITE_CREATE_TEMP_TRIGGER SQLITE_CREATE_TEMP_VIEW SQLITE_CREATE_TRIGGER SQLITE_CREATE_VIEW SQLITE_CREATE_VTABLE SQLITE_DELETE SQLITE_DETACH SQLITE_DROP_INDEX SQLITE_DROP_TABLE SQLITE_DROP_TEMP_INDEX SQLITE_DROP_TEMP_TABLE SQLITE_DROP_TEMP_TRIGGER SQLITE_DROP_TEMP_VIEW SQLITE_DROP_TRIGGER SQLITE_DROP_VIEW SQLITE_DROP_VTABLE SQLITE_FUNCTION SQLITE_INSERT SQLITE_PRAGMA SQLITE_READ SQLITE_RECURSIVE SQLITE_REINDEX SQLITE_SAVEPOINT SQLITE_SELECT SQLITE_TRANSACTION SQLITE_UPDATE</li>
 <li><a href="c3ref/c_any.html">c3ref/c_any.html</a> &rarr; SQLITE_ANY SQLITE_UTF16 SQLITE_UTF16BE SQLITE_UTF16LE SQLITE_UTF16_ALIGNED SQLITE_UTF8</li>
@@ -451,6 +451,8 @@ return false;
 <li><a href="cli.html#selftest">cli.html#selftest</a> &rarr; {.selftest dot-command}</li>
 <li><a href="cli.html#sha3sum">cli.html#sha3sum</a> &rarr; {.sha3sum dot-command}</li>
 <li><a href="cli.html#sqlar">cli.html#sqlar</a> &rarr; {.archive command}</li>
+<li><a href="codeofconduct.html">codeofconduct.html</a> &rarr; {Code of Conduct}</li>
+<li><a href="codeofethics.html">codeofethics.html</a> &rarr; {Code of Ethics} {Code of Ethics of the Project Founder}</li>
 <li><a href="compile.html">compile.html</a> &rarr; {compile-time options}</li>
 <li><a href="compile.html#4_byte_aligned_malloc">compile.html#4_byte_aligned_malloc</a> &rarr; -DSQLITE_4_BYTE_ALIGNED_MALLOC SQLITE_4_BYTE_ALIGNED_MALLOC</li>
 <li><a href="compile.html#allow_covering_index_scan">compile.html#allow_covering_index_scan</a> &rarr; -DSQLITE_ALLOW_COVERING_INDEX_SCAN SQLITE_ALLOW_COVERING_INDEX_SCAN</li>
@@ -1200,6 +1202,7 @@ return false;
 <li><a href="releaselog/3_25_0.html">releaselog/3_25_0.html</a> &rarr; {Version 3.25.0} {version 3.25.0}</li>
 <li><a href="releaselog/3_25_1.html">releaselog/3_25_1.html</a> &rarr; {Version 3.25.1} {version 3.25.1}</li>
 <li><a href="releaselog/3_25_2.html">releaselog/3_25_2.html</a> &rarr; {Version 3.25.2} {version 3.25.2}</li>
+<li><a href="releaselog/3_25_3.html">releaselog/3_25_3.html</a> &rarr; {Version 3.25.3} {version 3.25.3}</li>
 <li><a href="releaselog/3_2_0.html">releaselog/3_2_0.html</a> &rarr; {Version 3.2.0} {version 3.2.0}</li>
 <li><a href="releaselog/3_2_1.html">releaselog/3_2_1.html</a> &rarr; {Version 3.2.1} {version 3.2.1}</li>
 <li><a href="releaselog/3_2_2.html">releaselog/3_2_2.html</a> &rarr; {Version 3.2.2} {version 3.2.2}</li>
@@ -1341,6 +1344,7 @@ return false;
 <li><a href="rescode.html#busy_snapshot">rescode.html#busy_snapshot</a> &rarr; SQLITE_BUSY_SNAPSHOT</li>
 <li><a href="rescode.html#cantopen">rescode.html#cantopen</a> &rarr; SQLITE_CANTOPEN</li>
 <li><a href="rescode.html#cantopen_convpath">rescode.html#cantopen_convpath</a> &rarr; SQLITE_CANTOPEN_CONVPATH</li>
+<li><a href="rescode.html#cantopen_dirtywal">rescode.html#cantopen_dirtywal</a> &rarr; SQLITE_CANTOPEN_DIRTYWAL</li>
 <li><a href="rescode.html#cantopen_fullpath">rescode.html#cantopen_fullpath</a> &rarr; SQLITE_CANTOPEN_FULLPATH</li>
 <li><a href="rescode.html#cantopen_isdir">rescode.html#cantopen_isdir</a> &rarr; SQLITE_CANTOPEN_ISDIR</li>
 <li><a href="rescode.html#cantopen_notempdir">rescode.html#cantopen_notempdir</a> &rarr; SQLITE_CANTOPEN_NOTEMPDIR</li>
@@ -1356,12 +1360,14 @@ return false;
 <li><a href="rescode.html#constraint_unique">rescode.html#constraint_unique</a> &rarr; SQLITE_CONSTRAINT_UNIQUE</li>
 <li><a href="rescode.html#constraint_vtab">rescode.html#constraint_vtab</a> &rarr; SQLITE_CONSTRAINT_VTAB</li>
 <li><a href="rescode.html#corrupt">rescode.html#corrupt</a> &rarr; SQLITE_CORRUPT</li>
+<li><a href="rescode.html#corrupt_sequence">rescode.html#corrupt_sequence</a> &rarr; SQLITE_CORRUPT_SEQUENCE</li>
 <li><a href="rescode.html#corrupt_vtab">rescode.html#corrupt_vtab</a> &rarr; SQLITE_CORRUPT_VTAB</li>
 <li><a href="rescode.html#done">rescode.html#done</a> &rarr; SQLITE_DONE</li>
 <li><a href="rescode.html#empty">rescode.html#empty</a> &rarr; SQLITE_EMPTY</li>
 <li><a href="rescode.html#error">rescode.html#error</a> &rarr; SQLITE_ERROR</li>
 <li><a href="rescode.html#error_missing_collseq">rescode.html#error_missing_collseq</a> &rarr; SQLITE_ERROR_MISSING_COLLSEQ</li>
 <li><a href="rescode.html#error_retry">rescode.html#error_retry</a> &rarr; SQLITE_ERROR_RETRY</li>
+<li><a href="rescode.html#error_snapshot">rescode.html#error_snapshot</a> &rarr; SQLITE_ERROR_SNAPSHOT</li>
 <li><a href="rescode.html#extrc">rescode.html#extrc</a> &rarr; {extended error code} {extended error codes} {extended result code} {extended result codes}</li>
 <li><a href="rescode.html#format">rescode.html#format</a> &rarr; SQLITE_FORMAT</li>
 <li><a href="rescode.html#full">rescode.html#full</a> &rarr; SQLITE_FULL</li>
@@ -1396,6 +1402,7 @@ return false;
 <li><a href="rescode.html#ioerr_write">rescode.html#ioerr_write</a> &rarr; SQLITE_IOERR_WRITE</li>
 <li><a href="rescode.html#locked">rescode.html#locked</a> &rarr; SQLITE_LOCKED</li>
 <li><a href="rescode.html#locked_sharedcache">rescode.html#locked_sharedcache</a> &rarr; SQLITE_LOCKED_SHAREDCACHE</li>
+<li><a href="rescode.html#locked_vtab">rescode.html#locked_vtab</a> &rarr; SQLITE_LOCKED_VTAB</li>
 <li><a href="rescode.html#mismatch">rescode.html#mismatch</a> &rarr; SQLITE_MISMATCH</li>
 <li><a href="rescode.html#misuse">rescode.html#misuse</a> &rarr; SQLITE_MISUSE</li>
 <li><a href="rescode.html#nolfs">rescode.html#nolfs</a> &rarr; SQLITE_NOLFS</li>

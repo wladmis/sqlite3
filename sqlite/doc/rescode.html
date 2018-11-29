@@ -284,6 +284,7 @@ var listitems36 = [{"u":"rescode.html#abort_rollback","x":"SQLITE_ABORT_ROLLBACK
 {"u":"rescode.html#busy_recovery","x":"SQLITE_BUSY_RECOVERY&nbsp;(261)","s":0},
 {"u":"rescode.html#busy_snapshot","x":"SQLITE_BUSY_SNAPSHOT&nbsp;(517)","s":0},
 {"u":"rescode.html#cantopen_convpath","x":"SQLITE_CANTOPEN_CONVPATH&nbsp;(1038)","s":0},
+{"u":"rescode.html#cantopen_dirtywal","x":"SQLITE_CANTOPEN_DIRTYWAL&nbsp;(1294)","s":0},
 {"u":"rescode.html#cantopen_fullpath","x":"SQLITE_CANTOPEN_FULLPATH&nbsp;(782)","s":0},
 {"u":"rescode.html#cantopen_isdir","x":"SQLITE_CANTOPEN_ISDIR&nbsp;(526)","s":0},
 {"u":"rescode.html#cantopen_notempdir","x":"SQLITE_CANTOPEN_NOTEMPDIR&nbsp;(270)","s":0},
@@ -297,9 +298,11 @@ var listitems36 = [{"u":"rescode.html#abort_rollback","x":"SQLITE_ABORT_ROLLBACK
 {"u":"rescode.html#constraint_trigger","x":"SQLITE_CONSTRAINT_TRIGGER&nbsp;(1811)","s":0},
 {"u":"rescode.html#constraint_unique","x":"SQLITE_CONSTRAINT_UNIQUE&nbsp;(2067)","s":0},
 {"u":"rescode.html#constraint_vtab","x":"SQLITE_CONSTRAINT_VTAB&nbsp;(2323)","s":0},
+{"u":"rescode.html#corrupt_sequence","x":"SQLITE_CORRUPT_SEQUENCE&nbsp;(523)","s":0},
 {"u":"rescode.html#corrupt_vtab","x":"SQLITE_CORRUPT_VTAB&nbsp;(267)","s":0},
 {"u":"rescode.html#error_missing_collseq","x":"SQLITE_ERROR_MISSING_COLLSEQ&nbsp;(257)","s":0},
 {"u":"rescode.html#error_retry","x":"SQLITE_ERROR_RETRY&nbsp;(513)","s":0},
+{"u":"rescode.html#error_snapshot","x":"SQLITE_ERROR_SNAPSHOT&nbsp;(769)","s":0},
 {"u":"rescode.html#ioerr_access","x":"SQLITE_IOERR_ACCESS&nbsp;(3338)","s":0},
 {"u":"rescode.html#ioerr_blocked","x":"SQLITE_IOERR_BLOCKED&nbsp;(2826)","s":0},
 {"u":"rescode.html#ioerr_checkreservedlock","x":"SQLITE_IOERR_CHECKRESERVEDLOCK&nbsp;(3594)","s":0},
@@ -327,6 +330,7 @@ var listitems36 = [{"u":"rescode.html#abort_rollback","x":"SQLITE_ABORT_ROLLBACK
 {"u":"rescode.html#ioerr_unlock","x":"SQLITE_IOERR_UNLOCK&nbsp;(2058)","s":0},
 {"u":"rescode.html#ioerr_write","x":"SQLITE_IOERR_WRITE&nbsp;(778)","s":0},
 {"u":"rescode.html#locked_sharedcache","x":"SQLITE_LOCKED_SHAREDCACHE&nbsp;(262)","s":0},
+{"u":"rescode.html#locked_vtab","x":"SQLITE_LOCKED_VTAB&nbsp;(518)","s":0},
 {"u":"rescode.html#notice_recover_rollback","x":"SQLITE_NOTICE_RECOVER_ROLLBACK&nbsp;(539)","s":0},
 {"u":"rescode.html#notice_recover_wal","x":"SQLITE_NOTICE_RECOVER_WAL&nbsp;(283)","s":0},
 {"u":"rescode.html#ok_load_permanently","x":"SQLITE_OK_LOAD_PERMANENTLY&nbsp;(256)","s":0},
@@ -962,6 +966,23 @@ in numeric order.
 
 
 <!--------------------------------------------------------------->
+<a name="locked_vtab"></a>
+<h3>(518) SQLITE_LOCKED_VTAB</h3>
+<p>
+  The SQLITE_LOCKED_VTAB result code is not used by the SQLite core, but
+  it is available for use by extensions.  Virtual table implementations
+  can return this result code to indicate that they cannot complete the
+  current operation because of locks held by other threads or processes.
+  <p>
+  The <a href="rtree.html">R-Tree extension</a> returns this result code when an attempt is made
+  to update the R-Tree while another prepared statement is actively reading
+  the R-Tree.  The update cannot proceed because any change to an R-Tree
+  might involve reshuffling and rebalancing of nodes, which would disrupt
+  read cursors, causing some rows to be repeated and other rows to be
+  omitted.
+
+
+<!--------------------------------------------------------------->
 <a name="readonly_cantlock"></a>
 <h3>(520) SQLITE_READONLY_CANTLOCK</h3>
 <p>
@@ -979,6 +1000,21 @@ in numeric order.
   for <a href="rescode.html#ioerr">SQLITE_IOERR</a> indicating that a read attempt in the <a href="vfs.html">VFS</a> layer
   was unable to obtain as many bytes as was requested.  This might be
   due to a truncated file.
+
+
+<!--------------------------------------------------------------->
+<a name="corrupt_sequence"></a>
+<h3>(523) SQLITE_CORRUPT_SEQUENCE</h3>
+<p>
+  The SQLITE_CORRUPT_SEQUENCE result code means that the schema of
+  the sqlite_sequence table is corrupt.  The sqlite_sequence table
+  is used to help implement the <a href="autoinc.html">AUTOINCREMENT</a> feature.  The
+  sqlite_sequence table should have the following format:
+  <blockquote><pre>
+  CREATE TABLE sqlite_sequence(name,seq);
+  </pre></blockquote>
+  <p>If SQLite discovers that the sqlite_sequence table has any other
+  format, it returns the SQLITE_CORRUPT_SEQUENCE error.
 
 
 <!--------------------------------------------------------------->
@@ -1008,6 +1044,18 @@ in numeric order.
   The SQLITE_NOTICE_RECOVER_ROLLBACK result code is
   passed to the callback of
   <a href="c3ref/log.html">sqlite3_log()</a> when a <a href="fileformat2.html#hotjrnl">hot journal</a> is rolled back.
+
+
+<!--------------------------------------------------------------->
+<a name="error_snapshot"></a>
+<h3>(769) SQLITE_ERROR_SNAPSHOT</h3>
+<p>
+  The SQLITE_ERROR_SNAPSHOT result code might be returned when attempting
+  to start a read transaction on an historical version of the database
+  by using the <a href="c3ref/snapshot_open.html">sqlite3_snapshot_open()</a> interface.  If the historical
+  snapshot is no longer available, then the read transaction will fail
+  with the SQLITE_ERROR_SNAPSHOT.  This error code is only possible if
+  SQLite is compiled with <a href="compile.html#enable_snapshot">-DSQLITE_ENABLE_SNAPSHOT</a>.
 
 
 <!--------------------------------------------------------------->
@@ -1123,6 +1171,13 @@ in numeric order.
   ensure that those files will still appear in the filesystem following
   a power loss or system crash.  This error code indicates a problem
   attempting to perform that fsync().
+
+
+<!--------------------------------------------------------------->
+<a name="cantopen_dirtywal"></a>
+<h3>(1294) SQLITE_CANTOPEN_DIRTYWAL</h3>
+<p>
+  The SQLITE_CANTOPEN_DIRTYWAL result code is not used at this time.
 
 
 <!--------------------------------------------------------------->

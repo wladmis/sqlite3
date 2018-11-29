@@ -2254,6 +2254,10 @@ comments in the source code.
 <dd><p>Named parameters are also numbered. The number assigned is one greater than the largest parameter number already assigned.
 <i>(source: <a href="lang_expr.html">lang_expr.html</a>, checked-by: tcl/e_expr.test, matrix: <a href='matrix/lang_expr.html#R-11370-04520-26477-32393-15829-52644-05616-39032'>context</a>, <a href='matrix/matrix_dlang_expr.html#R-11370-04520-26477-32393-15829-52644-05616-39032'>detail</a>)</i></p></dd>
 
+<dt><b>R-11398-59782-13218-29813-17547-63643-18963-49629</b></dt>
+<dd><p>The "weekday" modifier advances the date forward, if necessary, to the next date where the weekday number is N.
+<i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-11398-59782-13218-29813-17547-63643-18963-49629'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-11398-59782-13218-29813-17547-63643-18963-49629'>detail</a>)</i></p></dd>
+
 <dt><b>R-11423-52711-44857-10860-28486-08502-59467-30884</b></dt>
 <dd><p>If either operand is a column, then the collating function of that column is used with precedence to the left operand.
 <i>(source: <a href="datatype3.html">datatype3.html</a>, checked-by: th3/req1/datatype3_09.test, matrix: <a href='matrix/datatype3.html#R-11423-52711-44857-10860-28486-08502-59467-30884'>context</a>, <a href='matrix/matrix_ddatatype3.html#R-11423-52711-44857-10860-28486-08502-59467-30884'>detail</a>)</i></p></dd>
@@ -6290,6 +6294,10 @@ comments in the source code.
 <dd><p>The size of a blob may not be changed by this interface.
 <i>(source: <a href="c3ref/blob_open.html">c3ref/blob_open.html</a>, checked-by: th3/cov1/vdbeblob01.test, matrix: <a href='matrix/c3ref/blob_open.html#R-31812-49659-31326-36358-44931-00819-19755-27412'>context</a>, <a href='matrix/matrix_dblob_open.html#R-31812-49659-31326-36358-44931-00819-19755-27412'>detail</a>)</i></p></dd>
 
+<dt><b>R-31816-13824-03247-24421-35841-11575-32489-23110</b></dt>
+<dd><p>PRAGMA legacy_alter_table; PRAGMA legacy_alter_table = boolean This pragma sets or queries the value of the legacy_alter_table flag.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-31816-13824-03247-24421-35841-11575-32489-23110'>context</a>, <a href='matrix/matrix_dpragma.html#R-31816-13824-03247-24421-35841-11575-32489-23110'>detail</a>)</i></p></dd>
+
 <dt><b>R-31820-22006-44575-45426-57001-50586-37778-41806</b></dt>
 <dd><p>If the final parameter to sqlite3_create_function_v2() or sqlite3_create_window_function() is not NULL, then it is destructor for the application data pointer. The destructor is invoked when the function is deleted, either by being overloaded or when the database connection closes.
 <i>(source: <a href="c3ref/create_function.html">c3ref/create_function.html</a>, matrix: <a href='matrix/c3ref/create_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>context</a>, <a href='matrix/matrix_dcreate_function.html#R-31820-22006-44575-45426-57001-50586-37778-41806'>detail</a>)</i></p></dd>
@@ -6913,10 +6921,6 @@ comments in the source code.
 <dt><b>R-35036-36587-25670-53930-46391-17517-28623-46452</b></dt>
 <dd><p>For a WITHOUT ROWID table, N will be the number of columns in the primary key.
 <i>(source: <a href="fileformat2.html">fileformat2.html</a>, matrix: <a href='matrix/fileformat2.html#R-35036-36587-25670-53930-46391-17517-28623-46452'>context</a>, <a href='matrix/matrix_dfileformat2.html#R-35036-36587-25670-53930-46391-17517-28623-46452'>detail</a>)</i></p></dd>
-
-<dt><b>R-35040-63004-09413-17967-18828-35998-50185-50384</b></dt>
-<dd><p>The "weekday" modifier advances the date forward to the next date where the weekday number is N.
-<i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, checked-by: th3/req1/date01.test, matrix: <a href='matrix/lang_datefunc.html#R-35040-63004-09413-17967-18828-35998-50185-50384'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-35040-63004-09413-17967-18828-35998-50185-50384'>detail</a>)</i></p></dd>
 
 <dt><b>R-35049-22776-26849-33887-63149-61153-21714-11740</b></dt>
 <dd><p>The "unixepoch" modifier (11) only works if it immediately follows a timestring in the DDDDDDDDDD format.
@@ -9926,6 +9930,10 @@ comments in the source code.
 <dd><p>If the argument is a table name, then only that table and the indices associated with that table are analyzed.
 <i>(source: <a href="lang_analyze.html">lang_analyze.html</a>, checked-by: th3/req1/analyze01.test, matrix: <a href='matrix/lang_analyze.html#R-49846-38160-32658-53011-14500-27650-55616-46897'>context</a>, <a href='matrix/matrix_dlang_analyze.html#R-49846-38160-32658-53011-14500-27650-55616-46897'>detail</a>)</i></p></dd>
 
+<dt><b>R-49851-43011-30572-52632-23403-60290-47065-63539</b></dt>
+<dd><p>When this flag is on, the ALTER TABLE RENAME command (for changing the name of a table) works as it did in SQLite 3.24.0 (2018-06-04) and earlier.
+<i>(source: <a href="pragma.html">pragma.html</a>, matrix: <a href='matrix/pragma.html#R-49851-43011-30572-52632-23403-60290-47065-63539'>context</a>, <a href='matrix/matrix_dpragma.html#R-49851-43011-30572-52632-23403-60290-47065-63539'>detail</a>)</i></p></dd>
+
 <dt><b>R-49858-53293-55345-56898-28930-13121-51128-08876</b></dt>
 <dd><p>If a column-name list follows the view-name, then that list determines the names of the columns for the view.
 <i>(source: <a href="lang_createview.html">lang_createview.html</a>, matrix: <a href='matrix/lang_createview.html#R-49858-53293-55345-56898-28930-13121-51128-08876'>context</a>, <a href='matrix/matrix_dlang_createview.html#R-49858-53293-55345-56898-28930-13121-51128-08876'>detail</a>)</i></p></dd>
@@ -11641,6 +11649,10 @@ comments in the source code.
 <dt><b>R-59172-51198-22956-23364-43321-06820-15140-44023</b></dt>
 <dd><p>If the transaction stack is not empty when the BEGIN command is invoked, then the command fails with an error.
 <i>(source: <a href="lang_savepoint.html">lang_savepoint.html</a>, matrix: <a href='matrix/lang_savepoint.html#R-59172-51198-22956-23364-43321-06820-15140-44023'>context</a>, <a href='matrix/matrix_dlang_savepoint.html#R-59172-51198-22956-23364-43321-06820-15140-44023'>detail</a>)</i></p></dd>
+
+<dt><b>R-59177-30964-27370-56053-61429-49243-22831-00049</b></dt>
+<dd><p>If the date is already on the desired weekday, the "weekday" modifier leaves the date unchanged.
+<i>(source: <a href="lang_datefunc.html">lang_datefunc.html</a>, matrix: <a href='matrix/lang_datefunc.html#R-59177-30964-27370-56053-61429-49243-22831-00049'>context</a>, <a href='matrix/matrix_dlang_datefunc.html#R-59177-30964-27370-56053-61429-49243-22831-00049'>detail</a>)</i></p></dd>
 
 <dt><b>R-59182-40522-06703-03529-14405-50301-30896-08116</b></dt>
 <dd><p>The SQLITE_VERSION C preprocessor macro in the sqlite3.h header evaluates to a string literal that is the SQLite version in the format "X.Y.Z" where X is the major version number (always 3 for SQLite3) and Y is the minor version number and Z is the release number.

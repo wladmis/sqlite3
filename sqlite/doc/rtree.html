@@ -559,14 +559,14 @@ R*Tree entries that overlap with a circle centered a 45.3,22.9 with a
 radius of 5.0:
 
 </p><div class="codeblock"><pre>SELECT id FROM demo_index WHERE id MATCH circle(45.3, 22.9, 5.0)
-
+</pre></div>
 
 <p>The SQL syntax for custom queries is the same regardless of which
 interface, sqlite3_rtree_geometry_callback() or sqlite3_rtree_query_callback(),
 is used to register the SQL function.  However, the newer query-style
 callbacks give the application greater control over how the query proceeds.
 
-</p><h2>The Legacy xGeom Callback</h2>
+</p><h2 id="the_legacy_xgeom_callback"><span>6.1. </span>The Legacy xGeom Callback</h2>
 
 <p>The legacy xGeom callback is invoked with four arguments.  The first
 argument is a pointer to an sqlite3_rtree_geometry structure which provides
@@ -592,8 +592,7 @@ structure are initialized by SQLite but are
 not subsequently modified.  The callback is free to make changes to the
 pUser and xDelUser elements of the structure if desired.
 
-</p><codeblock>
-typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
+</p><div class="codeblock"><pre>typedef struct sqlite3_rtree_geometry sqlite3_rtree_geometry;
 struct sqlite3_rtree_geometry {
   void *pContext;                 /* Copy of pContext passed to s_r_g_c() */
   int nParam;                     /* Size of array aParam */
@@ -601,7 +600,7 @@ struct sqlite3_rtree_geometry {
   void *pUser;                    /* Callback implementation user data */
   void (*xDelUser)(void *);       /* Called by SQLite to clean up pUser */
 };
-</codeblock>
+</pre></div>
 
 <p>The pContext member of the sqlite3_rtree_geometry
 structure is always set to a copy of the pContext
@@ -625,7 +624,7 @@ may be set to a destructor function for the pUser value.
 
 <a name="xquery"></a>
 
-</p><h2>The New xQueryFunc Callback</h2>
+</p><h2 id="the_new_xqueryfunc_callback"><span>6.2. </span>The New xQueryFunc Callback</h2>
 
 <p>The newer xQueryFunc callback receives more information from the r-tree
 query engine on each call, and it sends more information back to the query engine
@@ -634,8 +633,7 @@ To help keep the interface manageable, the xQueryFunc callback sends and receive
 information from the query engine as fields in the
 sqlite3_rtree_query_info structure:
 
-</p><codeblock>
-struct sqlite3_rtree_query_info {
+</p><div class="codeblock"><pre>struct sqlite3_rtree_query_info {
   void *pContext;                   /* pContext from when function registered */
   int nParam;                       /* Number of function parameters */
   sqlite3_rtree_dbl *aParam;        /* value of function parameters */
@@ -654,7 +652,7 @@ struct sqlite3_rtree_query_info {
   /* The following fields are only available in 3.8.11 and later */
   sqlite3_value **apSqlParam;       /* Original SQL values of parameters */
 };
-</codeblock>
+</pre></div>
 
 <p>The first five fields of the sqlite3_rtree_query_info structure are identical
 to the sqlite3_rtree_geometry structure, and have exactly the same meaning.
@@ -719,7 +717,7 @@ containing subtree of the current row.  The anQueue field is an array
 of mxLevel+1 unsigned integers that tell the current number of elements in
 the priority queue at each level.
 
-</p><h2>Additional Considerations for Custom Queries</h2>
+</p><h2 id="additional_considerations_for_custom_queries"><span>6.3. </span>Additional Considerations for Custom Queries</h2>
 
 <p>
 The MATCH operator of a custom R*Tree query function must be a top-level
@@ -735,23 +733,22 @@ the R*Tree query engine only contains a single priority queue.  The priority
 assigned to each node in the search is the lowest priority returned by any
 of the MATCH operators.
 
-</p><h1>Implementation Details</h1>
+</p><h1 id="implementation_details"><span>7. </span>Implementation Details</h1>
 
 <p>
 The following sections describe some low-level details of the R*Tree implementation,
 that might be useful for trouble-shooting or performance analysis.
 
-</p><h2>Shadow Tables</h2>
+</p><h2 id="shadow_tables"><span>7.1. </span>Shadow Tables</h2>
 
 <p>The content of an R*Tree index is actually stored in three ordinary
 SQLite tables with names derived from the name of the R*Tree.  These
 three tables are called "shadow tables".  This is their schema:
 
-</p><codeblock>
-CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
+</p><div class="codeblock"><pre>CREATE TABLE %_node(nodeno INTEGER PRIMARY KEY, data BLOB)
 CREATE TABLE %_parent(nodeno INTEGER PRIMARY KEY, parentnode INTEGER)
 CREATE TABLE %_rowid(rowid INTEGER PRIMARY KEY, nodeno INTEGER)
-</codeblock>
+</pre></div>
 
 <p>The "%" in the name of each shadow table is replaced by the name of the
 R*Tree virtual table.  So, if the name of the R*Tree table is "xyz" then
@@ -766,7 +763,7 @@ rowids to the node that contains that entry.
 
 <a name="rtreecheck"></a>
 
-</p><h2>Integrity Check using the rtreecheck() SQL function</h2>
+</p><h2 id="integrity_check_using_the_rtreecheck_sql_function"><span>7.2. </span>Integrity Check using the rtreecheck() SQL function</h2>
 
 <p>The scalar SQL function rtreecheck(R) or rtreecheck(S,R) runs an
 integrity check on the rtree table named R contained within database S.
@@ -778,9 +775,8 @@ database.
 </p><p>Example: To verify that an R*Tree named "demo_index" is well-formed
 and internally consistent, run:
 
-</p><codeblock>
-SELECT rtreecheck('demo_index');
-</codeblock>
+</p><div class="codeblock"><pre>SELECT rtreecheck('demo_index');
+</pre></div>
 
 <p>The rtreecheck() function performs the following checks:
 
@@ -808,4 +804,4 @@ as there are non-leaf cells in the r-tree structure, and that
 there is a non-leaf cell that corresponds to each entry in the 
 %_parent table.
 </p></li></ol>
-</pre></div>
+
